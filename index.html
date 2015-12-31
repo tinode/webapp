@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>React Tutorial</title>
+    <!-- Not present in the tutorial. Just for basic styling. -->
+    <link rel="stylesheet" href="css/bootstrap.css" />
+    <link rel="stylesheet" href="css/base.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.15/browser.js"></script>
+  </head>
+  <body>
+    <div id="mountPoint"></div>
+
+    <script type="text/babel">
+    var CurrentUser = React.createClass({
+      render: function() {
+        return (
+          <nav id="main-navbar" className="navbar navbar-inverse">
+            <div className="container">
+              <div className="navbar-header">
+                <button type="button" className="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                  <span className="icon-bar"></span>
+                  <span className="icon-bar"></span>
+                  <span className="icon-bar"></span>
+                </button>
+                <a href="#" className="pull-left"><img id="self-avatar" className="avatar" alt="avatar" src="avatar.svg" /></a>
+                <span className="navbar-brand" href="#">Alice Johnson</span>
+              </div>
+              <div className="navbar-collapse collapse">
+                <ul className="nav navbar-nav navbar-right ">
+                  <li><a href="#"><span className="glyphicon glyphicon-user"></span></a></li>
+                  <li><a href="#"><span className="glyphicon glyphicon-cog"></span></a></li>
+                  <li><a href="https://github.com/tinode/chat/"><span className="glyphicon glyphicon-info-sign"></span></a></li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+        );
+      }
+    });
+
+    var NewTopic = React.createClass({
+      render: function() {
+        return (
+          <div className="input-group">
+            <label htmlFor="addTopic" className="sr-only">Add user or topic</label>
+            <input id="addTopic" className="form-control" type="text" placeholder="Add topic" />
+            <span className="input-group-btn"><button className="btn btn-default" type="button">
+              <i className="glyphicon glyphicon-plus-sign"></i>
+            </button></span>
+          </div>
+        );
+      }
+    });
+
+    var Contact = React.createClass({
+        render: function() {
+          return (
+            <li className="media">
+              <a href="#" className="pull-left"><img src="avatar.svg" className="avatar img-circle" alt="" /></a>
+              <div className="media-body">
+                <span className="text-muted pull-right"><span className="offline">&#x25cf;</span> <small className="text-muted">30 min ago</small></span>
+                <strong>Carol Xmas</strong> <span className="label label-success label-as-badge">2</span>
+                <p>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                  Lorem ipsum dolor <a href="#"># ipsum dolor </a>adipiscing elit.
+                </p>
+              </div>
+            </li>
+          );
+        }
+    });
+
+    var ContactList = React.createClass({
+      render: function() {
+        return (
+          <div className="contactList">
+            <ul className="media-list">
+              <Contact />
+            </ul>
+          </div>
+        );
+      }
+    });
+
+    var ContactBox = React.createClass({
+      render: function() {
+        return (
+          <div className="contactBox">
+            <CurrentUser />
+            <div className="container-fluid">
+            <NewTopic />
+            <ContactList />
+            </div>
+          </div>
+        );
+      }
+    });
+
+    ReactDOM.render(
+      <ContactBox />,
+      document.getElementById('mountPoint')
+    );
+    </script>
+
+  </body>
+</html>
