@@ -7,33 +7,77 @@
     <!-- Not present in the tutorial. Just for basic styling. -->
     <link rel="stylesheet" href="css/bootstrap.css" />
     <link rel="stylesheet" href="css/base.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-dom.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.15/browser.js"></script>
+    <script src="https://fb.me/react-0.14.5.js"></script>
+    <script src="https://fb.me/react-dom-0.14.5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+  </head>
   </head>
   <body>
     <div id="mountPoint"></div>
-
     <script type="text/babel">
+    var LoginNavbar = React.createClass({
+      render: function() {
+        return (
+          <nav className="navbar navbar-inverse">
+            <div className="container-fluid">
+              <div className="navbar-header">
+                <a className="navbar-brand" href="#">Tinode Demo Chat</a>
+              </div>
+              <div>
+                <ul className="nav navbar-nav navbar-right">
+                  <li><a href="#"><big><span className="glyphicon glyphicon-option-vertical"></span></big></a></li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+        );
+      }
+    })
+
+    var LoginForm = React.createClass({
+      handleSubmit: function(e) {
+        e.preventDefault();
+        this.props.onLogin(true);
+      },
+      render: function() {
+        return (
+          <div className="container-fluid">
+            <form className="form-signin" onSubmit={this.handleSubmit}>
+              <label htmlFor="inputLogin" className="sr-only">Login</label>
+              <input type="text" id="inputLogin" className="form-control" placeholder="Login (alice, bob, carol, dave, frank)" required autofocus />
+              <label htmlFor="inputPassword" className="sr-only">Password</label>
+              <input type="password" id="inputPassword" className="form-control" placeholder="Password (alice123, bob123, ...)" required />
+              <br />
+              <button className="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+            </form>
+          </div>
+        );
+      }
+    })
+
+    var LoginView = React.createClass({
+      render: function() {
+        return (
+          <div>
+            <LoginNavbar />
+            <LoginForm onLogin={this.props.onLogin} />
+          </div>
+        );
+      }
+    })
+
     var CurrentUser = React.createClass({
       render: function() {
         return (
           <nav id="main-navbar" className="navbar navbar-inverse">
-            <div className="container">
+            <div className="container-fluid">
               <div className="navbar-header">
-                <button type="button" className="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                  <span className="icon-bar"></span>
-                  <span className="icon-bar"></span>
-                  <span className="icon-bar"></span>
-                </button>
                 <a href="#" className="pull-left"><img id="self-avatar" className="avatar" alt="avatar" src="avatar.svg" /></a>
                 <span className="navbar-brand" href="#">Alice Johnson</span>
               </div>
-              <div className="navbar-collapse collapse">
-                <ul className="nav navbar-nav navbar-right ">
-                  <li><a href="#"><span className="glyphicon glyphicon-user"></span></a></li>
-                  <li><a href="#"><span className="glyphicon glyphicon-cog"></span></a></li>
-                  <li><a href="https://github.com/tinode/chat/"><span className="glyphicon glyphicon-info-sign"></span></a></li>
+              <div>
+                <ul className="nav navbar-nav navbar-right">
+                  <li><a href="#"><big><span className="glyphicon glyphicon-cog"></span></big></a></li>
                 </ul>
               </div>
             </div>
@@ -56,52 +100,128 @@
       }
     });
 
+    var contactsData = [
+      {id: "usrBOB", public: "Bob Smith", comment: "This is another comment", online: {now: true}, unread: 0},
+      {id: "usrCAROL", public: "Carol Xmas", comment: "No comments", online: {now: false, when: "1 hour ago"}, unread: 2},
+      {id: "usrDAVE", public: "Dave Goliaphsson", comment: "This is a comment", online: {now: false, when: "30 min ago"}, unread: 0}
+    ];
+
     var Contact = React.createClass({
         render: function() {
           return (
-            <li className="media">
+            <li className="media contact">
               <a href="#" className="pull-left"><img src="avatar.svg" className="avatar img-circle" alt="" /></a>
               <div className="media-body">
-                <span className="text-muted pull-right"><span className="offline">&#x25cf;</span> <small className="text-muted">30 min ago</small></span>
-                <strong>Carol Xmas</strong> <span className="label label-success label-as-badge">2</span>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Lorem ipsum dolor <a href="#"># ipsum dolor </a>adipiscing elit.
-                </p>
+                <Contact.Online when={this.props.when} now={this.props.now} />
+                <strong>{this.props.public}</strong> <Contact.Unread count={this.props.unread} />
+                <p>{this.props.comment}</p>
               </div>
             </li>
           );
         }
     });
 
+    Contact.Unread = React.createClass({
+        render: function() {
+          var showUnreadBadge;
+          if (this.props.count > 0) {
+            showUnreadBadge = <span className="label label-success label-as-badge">{this.props.count}</span>;
+          }
+          return (
+            <span>&nbsp;{showUnreadBadge}</span>
+          );
+        }
+    })
+
+    Contact.Online = React.createClass({
+        render: function() {
+          var lastOnline = '';
+          if (!this.props.online && this.props.when) {
+            lastOnline = this.props.when;
+          } else {
+            lastOnline = 'online';
+          }
+
+          return (
+            <span className="text-muted pull-right">
+              <span className={this.props.now ? "online" : "offline"}>&#x25cf;</span> <small className="text-muted">&nbsp;{lastOnline}</small>
+            </span>
+          );
+        }
+    })
+
     var ContactList = React.createClass({
       render: function() {
+        var contactNodes = this.props.data.map(function(c) {
+          return (
+            <Contact public={c.public} comment={c.comment} unread={c.unread}
+              when={c.online.when} now={c.online.now} key={c.id} />
+          );
+        });
         return (
           <div className="contactList">
             <ul className="media-list">
-              <Contact />
+              {contactNodes}
             </ul>
           </div>
         );
       }
     });
 
-    var ContactBox = React.createClass({
+    var ContactsView = React.createClass({
+      getInitialState: function() {
+        return {contacts: []};
+      },
+      componentDidMount: function() {
+        this.setState({contacts: contactsData});
+      },
       render: function() {
         return (
           <div className="contactBox">
             <CurrentUser />
             <div className="container-fluid">
             <NewTopic />
-            <ContactList />
+            <ContactList data={this.state.contacts} />
             </div>
           </div>
         );
       }
     });
 
+    var AppView = React.createClass({
+      getInitialState: function() {
+        return {loggedIn: false};
+      },
+      handleLogin: function(ok) {
+        this.setState({loggedIn: ok});
+      },
+      render: function() {
+        return (
+          <div className="container-fluid">
+          <div className="row">
+            <div className="menuContainer">
+              {this.state.loggedIn ? <ContactsView data={contactsData} /> : <LoginView onLogin={this.handleLogin} />}
+            </div>
+            <div className="col-md-12 messagesContainer">
+              <div className="row">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Chat with X</h3>
+                </div>
+                <div class="panel-body">
+                  Messages go here
+                </div>
+              </div>
+              </div>
+            </div>
+          </div>
+          </div>
+        );
+      }
+    })
+
     ReactDOM.render(
-      <ContactBox />,
+      <AppView />,
       document.getElementById('mountPoint')
     );
     </script>
