@@ -25,7 +25,16 @@
               </div>
               <div>
                 <ul className="nav navbar-nav navbar-right">
-                  <li><a href="#"><big><span className="glyphicon glyphicon-option-vertical"></span></big></a></li>
+                  <li className="dropdown">
+                    <a href="#" className="dropdown-toggle" data-toggle="dropdown">
+                      <big><span className="glyphicon glyphicon-option-vertical"></span></big>
+                    </a>
+                    <ul className="dropdown-menu">
+                      <li><a href="#"><span className="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                      <li><a href="#"><span className="glyphicon glyphicon-cog"></span> Settings</a></li>
+                      <li><a href="https://github.com/tinode/chat/"><span className="glyphicon glyphicon-info-sign"></span> About</a></li>
+                    </ul>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -204,11 +213,11 @@
             </div>
             <div className="col-md-12 messagesContainer">
               <div className="row">
-              <div class="panel panel-default">
-                <div class="panel-heading">
-                  <h3 class="panel-title">Chat with X</h3>
+              <div className="panel panel-default">
+                <div className="panel-heading">
+                  <h3 className="panel-title">Chat with X</h3>
                 </div>
-                <div class="panel-body">
+                <div className="panel-body">
                   Messages go here
                 </div>
               </div>
