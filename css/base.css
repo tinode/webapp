@@ -1,3 +1,14 @@
+html, body {
+  margin:0;
+  padding:0;
+  height:100%;
+}
+
+.fullScreen {
+  width: 100%!important;
+  height: 100%!important;
+}
+
 .menuContainer {
   width: 30em;
   margin: 0;
@@ -11,7 +22,7 @@
 }
 
 .messagesContainer {
-  width: 100%;
+  width: auto;
   height: 100%;
 }
 
@@ -148,4 +159,9 @@
 
 .chatBox-body > p + p {
   margin-top: 0.5em;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
 }
