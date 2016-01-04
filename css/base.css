@@ -2,29 +2,88 @@ html, body {
   margin:0;
   padding:0;
   height:100%;
+  width:100%;
+  overflow-x: hidden;
 }
 
 .fullScreen {
-  width: 100%!important;
-  height: 100%!important;
+  height:100%;
+  width:100%;
 }
 
-.menuContainer {
-  width: 30em;
-  margin: 0;
-  padding: 0;
-  position: fixed;
-  height: 100%;
+/* Top-level layout style: sidebar + main view */
+#mountPoint {
+    padding-left: 0;
+    transition: all 0.5s ease;
+    height: 100%;
 }
 
-.messagesContainer {
-  margin-left: 30em;
+#mountPoint.toggled {
+    padding-left: 30em;
 }
 
-.messagesContainer {
-  width: auto;
-  height: 100%;
+#sidebar-wrapper {
+    position: fixed;
+    left: 30em;
+    width: 0;
+    height: 100%;
+    margin-left: -30em;
+    overflow-y: auto;
+    transition: all 0.5s ease;
 }
+
+#mountPoint.toggled #sidebar-wrapper {
+    width: 30em;
+}
+
+#page-content-wrapper {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: #CCF
+}
+
+#mountPoint.toggled #page-content-wrapper {
+    position: absolute;
+    margin-right: -30em;
+}
+
+.sidebar-nav {
+    position: absolute;
+    top: 0;
+    width: 30em;
+    margin: 0;
+    padding: 0;
+}
+
+@media(min-width:768px) {
+    #mountPoint {
+        padding-left: 30em;
+    }
+
+    #mountPoint.toggled {
+        padding-left: 0;
+    }
+
+    #sidebar-wrapper {
+        width: 30em;
+    }
+
+    #mountPoint.toggled #sidebar-wrapper {
+        width: 0;
+    }
+
+    #page-content-wrapper {
+        position: relative;
+        height: 100%;
+    }
+
+    #mountPoint.toggled #page-content-wrapper {
+        position: relative;
+        margin-right: 0;
+    }
+}
+/* END of top-level layout */
 
 .avatar {
   width: 32pt;
@@ -32,6 +91,7 @@ html, body {
 }
 
 .navbar {
+  height: 64px;
   margin-bottom: 0.2em;
 }
 
@@ -73,6 +133,47 @@ html, body {
   color: #999;
 }
 
+.fullHeight {
+  height: 100%;
+  overflow: hidden;
+}
+
+.fullViewPort {
+  height: 98vh;
+  overflow-y: hidden;
+}
+
+.col-lg-12 {
+  padding: 0;
+  margin: 0;
+}
+
+#chatTitle {
+  z-index: 2;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 64px;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+#messagesPanel {
+  overflow-y: scroll;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+#messagesView {
+  padding-top: 70px;
+}
+
+#sendMessagePanel {
+  position: absolute;
+  bottom: 0;
+  box-shadow: 0px -1px 2px rgba(0, 0, 0, 0.15);
+}
+
 .chatBox {
   list-style: none;
   padding: 1.5em 0 1.5em;
@@ -82,6 +183,7 @@ html, body {
 .chatBox > li {
   margin-bottom: 1em;
   position: relative;
+  x-white-space: pre;
 }
 
 .chatBox > li:before,
@@ -159,9 +261,4 @@ html, body {
 
 .chatBox-body > p + p {
   margin-top: 0.5em;
-}
-
-footer {
-  position: fixed;
-  bottom: 0;
 }
