@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>React Tutorial</title>
+    <title>Tinode example: chat in react.js</title>
     <!-- Not present in the tutorial. Just for basic styling. -->
     <link rel="stylesheet" href="css/bootstrap.css" />
     <link rel="stylesheet" href="css/base.css" />
@@ -59,7 +59,17 @@
       }
     })
 
+    /* BEGIN Login */
     var LoginForm = React.createClass({
+      getInitialState: function() {
+        return {login: '', password: ''};
+      },
+      handleLoginChange: function(e) {
+        this.setState({login: e.target.value});
+      },
+      handlePasswordChange: function(e) {
+        this.setState({password: e.target.value});
+      },
       handleSubmit: function(e) {
         e.preventDefault();
         this.props.onLogin(true);
@@ -69,9 +79,17 @@
           <div className="container-fluid">
             <form className="form-signin" onSubmit={this.handleSubmit}>
               <label htmlFor="inputLogin" className="sr-only">Login</label>
-              <input type="text" id="inputLogin" className="form-control" placeholder="Login (alice, bob, carol, dave, frank)" required autofocus />
+              <input type="text" id="inputLogin" className="form-control"
+                placeholder="Login (alice, bob, carol, dave, frank)"
+                value={this.state.login}
+                onChange={this.handleLoginChange}
+                required autofocus />
               <label htmlFor="inputPassword" className="sr-only">Password</label>
-              <input type="password" id="inputPassword" className="form-control" placeholder="Password (alice123, bob123, ...)" required />
+              <input type="password" id="inputPassword" className="form-control"
+                placeholder="Password (alice123, bob123, ...)"
+                value={this.state.password}
+                onChange={this.handlePasswordChange}
+                required />
               <br />
               <button className="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
             </form>
@@ -90,7 +108,11 @@
         );
       }
     })
+    /* END Login */
 
+    /* BEGIN Contact list (list of topics) */
+
+    /*Contacts caption */
     var CurrentUser = React.createClass({
       render: function() {
         return (
@@ -111,6 +133,7 @@
       }
     });
 
+    /* A form for initiating a new topic */
     var NewTopic = React.createClass({
       render: function() {
         return (
@@ -131,6 +154,107 @@
       {id: "usrDAVE", public: "Dave Goliaphsson", comment: "This is a comment", online: {now: false, when: "30 min ago"}, unread: 0}
     ];
 
+    /* A single topic */
+    var Contact = React.createClass({
+        handleClick: function() {
+          this.props.onSelected(this.props.public);
+        },
+        render: function() {
+          return (
+            <li className="media contact" onClick={this.handleClick}>
+              <a href="#" className="pull-left"><img src="avatar.svg" className="avatar img-circle" alt="" /></a>
+              <div className="media-body">
+                <Contact.Online when={this.props.when} now={this.props.now} />
+                <strong>{this.props.public}</strong> <Contact.Unread count={this.props.unread} />
+                <p>{this.props.comment}</p>
+              </div>
+            </li>
+          );
+        }
+    });
+
+    /* The counter of unread messages in the topic */
+    Contact.Unread = React.createClass({
+        render: function() {
+          var showUnreadBadge = null;
+          if (this.props.count > 0) {
+            showUnreadBadge = <span className="label label-primary label-as-badge">{this.props.count}</span>;
+          }
+          return (
+            <span>{showUnreadBadge}</span>
+          );
+        }
+    })
+
+    /* Online indicator */
+    Contact.Online = React.createClass({
+        render: function() {
+          var lastOnline = '';
+          if (!this.props.online && this.props.when) {
+            lastOnline = this.props.when;
+          } else {
+            lastOnline = 'online now';
+          }
+
+          return (
+            <span className="text-muted pull-right">
+              <span className={this.props.now ? "online" : "offline"}>&#x25cf;</span> <small className="text-muted">&nbsp;{lastOnline}</small>
+            </span>
+          );
+        }
+    })
+
+    /* List of comtacts/topics */
+    var ContactList = React.createClass({
+      getInitialState: function() {
+        return {selected: false};
+      },
+      onSelectionChange: function(sel) {
+        this.props.onTopicSelected(sel);
+      },
+      render: function() {
+        var contactNodes = this.props.data.map(function(c) {
+          return (
+            <Contact public={c.public} comment={c.comment}
+              unread={c.unread}
+              when={c.online.when} now={c.online.now}
+              onSelected={this.onSelectionChange} key={c.id} />
+          );
+        }, this);
+        return (
+          <div className="contactList">
+            <ul className="media-list">
+              {contactNodes}
+            </ul>
+          </div>
+        );
+      }
+    });
+
+    /* The panel to hold all contacts-related stuff together */
+    var ContactsView = React.createClass({
+      getInitialState: function() {
+        return {contacts: []};
+      },
+      componentDidMount: function() {
+        this.setState({contacts: contactsData});
+      },
+      render: function() {
+        return (
+          <div className="contactBox">
+            <CurrentUser />
+            <div className="container-fluid">
+            <NewTopic />
+            <ContactList data={this.state.contacts}
+              onTopicSelected={this.props.onTopicSelected} />
+            </div>
+          </div>
+        );
+      }
+    });
+    /* END Contact list */
+
+    /* BEGIN Conversation panel */
     var messagesList = [
       {
         id: 1, content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sit amet tellus interdum. \
@@ -159,88 +283,6 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
       {id: 7, content: "OK!", timestamp: new Date(2016, 0, 3, 18, 19, 20, 567), response: true}
     ];
 
-    var Contact = React.createClass({
-        render: function() {
-          return (
-            <li className="media contact">
-              <a href="#" className="pull-left"><img src="avatar.svg" className="avatar img-circle" alt="" /></a>
-              <div className="media-body">
-                <Contact.Online when={this.props.when} now={this.props.now} />
-                <strong>{this.props.public}</strong> <Contact.Unread count={this.props.unread} />
-                <p>{this.props.comment}</p>
-              </div>
-            </li>
-          );
-        }
-    });
-
-    Contact.Unread = React.createClass({
-        render: function() {
-          var showUnreadBadge;
-          if (this.props.count > 0) {
-            showUnreadBadge = <span className="label label-success label-as-badge">{this.props.count}</span>;
-          }
-          return (
-            <span>&nbsp;{showUnreadBadge}</span>
-          );
-        }
-    })
-
-    Contact.Online = React.createClass({
-        render: function() {
-          var lastOnline = '';
-          if (!this.props.online && this.props.when) {
-            lastOnline = this.props.when;
-          } else {
-            lastOnline = 'online';
-          }
-
-          return (
-            <span className="text-muted pull-right">
-              <span className={this.props.now ? "online" : "offline"}>&#x25cf;</span> <small className="text-muted">&nbsp;{lastOnline}</small>
-            </span>
-          );
-        }
-    })
-
-    var ContactList = React.createClass({
-      render: function() {
-        var contactNodes = this.props.data.map(function(c) {
-          return (
-            <Contact public={c.public} comment={c.comment} unread={c.unread}
-              when={c.online.when} now={c.online.now} key={c.id} />
-          );
-        });
-        return (
-          <div className="contactList">
-            <ul className="media-list">
-              {contactNodes}
-            </ul>
-          </div>
-        );
-      }
-    });
-
-    var ContactsView = React.createClass({
-      getInitialState: function() {
-        return {contacts: []};
-      },
-      componentDidMount: function() {
-        this.setState({contacts: contactsData});
-      },
-      render: function() {
-        return (
-          <div className="contactBox">
-            <CurrentUser />
-            <div className="container-fluid">
-            <NewTopic />
-            <ContactList data={this.state.contacts} />
-            </div>
-          </div>
-        );
-      }
-    });
-
     var Message = React.createClass({
       getInitialState: function() {
         return {received: 0};
@@ -263,6 +305,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
       }
     });
 
+    /* Received/read indicator */
     Message.ReceivedMarker = React.createClass({
       getInitialState: function() {
         return {received: 0};
@@ -281,6 +324,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
       }
     });
 
+    /* Send message form */
     Message.Send = React.createClass({
       render: function() {
         return (
@@ -296,6 +340,21 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
         );
       }
     });
+
+    /* This is just a static page to show when no conversation is selected */
+    var DummyMessagesView = React.createClass({
+      render: function() {
+        return (
+          <div className="panel panel-default fullHeight">
+          <div className="panel-body text-center center-block fullHeight" id="dummyView">
+            <div><img id="logo" alt="logo" src="group.svg" />
+            <h3>Tinode Demo Chat</h3></div>
+          </div>
+          </div>
+        );
+      }
+    });
+
     var MessagesView = React.createClass({
       getInitialState: function() {
         return {messages: []};
@@ -310,19 +369,34 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
           );
         });
         return (
-          <ul className="chatBox">
-            {messageNodes}
-          </ul>
+          <div className="panel panel-default fullViewPort" id="messagesPanel">
+            <div className="panel-heading" id="chatTitle">
+              <h3 className="panel-title">{this.props.topic}</h3>
+            </div>
+            <div className="panel-body" id="messagesView">
+              <ul className="chatBox">
+                {messageNodes}
+              </ul>
+            </div>
+            <div className="panel-footer" id="sendMessagePanel">
+              <Message.Send />
+            </div>
+          </div>
         );
       }
     });
+    /* END Conversation panel */
+
 
     var AppView = React.createClass({
       getInitialState: function() {
-        return {loggedIn: false, chatTitle: "Bob Smith"};
+        return {loggedIn: false, selTopic: ''};
       },
       handleLogin: function(ok) {
         this.setState({loggedIn: ok});
+      },
+      handleTopicSelected: function(topic) {
+        this.setState({selTopic: topic});
       },
       render: function() {
         return (
@@ -330,7 +404,10 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
 
           <div id="sidebar-wrapper">
             <div className="sidebar-nav">
-              {this.state.loggedIn ? <ContactsView data={contactsData} /> : <LoginView onLogin={this.handleLogin} />}
+              {this.state.loggedIn ?
+                <ContactsView data={contactsData}
+                  onTopicSelected={this.handleTopicSelected} /> :
+                <LoginView onLogin={this.handleLogin} />}
             </div>
           </div>
 
@@ -338,17 +415,9 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
             <div className="container-fluid fullHeight">
               <div className="row fullHeight">
                 <div className="col-lg-12 fullHeight">
-                  <div className="panel panel-default fullViewPort" id="messagesPanel">
-                    <div className="panel-heading" id="chatTitle">
-                      <h3 className="panel-title">{this.state.chatTitle}</h3>
-                    </div>
-                    <div className="panel-body" id="messagesView">
-                      <MessagesView />
-                    </div>
-                    <div className="panel-footer" id="sendMessagePanel">
-                      <Message.Send />
-                    </div>
-                  </div>
+                  {this.state.selTopic ?
+                    <MessagesView topic={this.state.selTopic} /> :
+                    <DummyMessagesView />}
                 </div>
               </div>
             </div>

@@ -103,6 +103,7 @@ html, body {
 
 .label-as-badge {
   border-radius: 1em;
+  margin-left: 1em;
 }
 
 .contactList {
@@ -162,6 +163,7 @@ html, body {
   overflow-y: scroll;
   padding-top: 0;
   padding-bottom: 0;
+  background-image: url("../ignasi_pattern_s.png");
 }
 
 #messagesView {
@@ -172,6 +174,13 @@ html, body {
   position: absolute;
   bottom: 0;
   box-shadow: 0px -1px 2px rgba(0, 0, 0, 0.15);
+}
+
+#dummyView {
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #E9E9FF;
 }
 
 .chatBox {
@@ -200,8 +209,8 @@ html, body {
   max-width: 90%;
   float: right;
   background-color: #EFE;
-  border: 1px solid #CCC;
-  border-radius: 2px;
+  border: 1px solid #CDC;
+  border-radius: 4px;
   padding: 1em;
   position: relative;
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.15);
@@ -233,6 +242,7 @@ html, body {
 
 .chatBox > li.chatBox-inverted > .chatBox-panel {
   background-color: #EEF;
+  border: 1px solid #CCD;
   float: left;
 }
 
