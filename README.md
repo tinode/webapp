@@ -1,5 +1,5 @@
-# react-js
+# Example single-page app chat
 
-Web chat using bootstrap and react.js
+Example using Tinode to build a single-page app chat. The app uses bootstrap and react.js.
 
-Work in progress. It does not work yet.
+Work in progress. It's just a JS + HTML shell not hooked up to a server.
