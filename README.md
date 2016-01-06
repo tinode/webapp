@@ -6,4 +6,4 @@ Example using Tinode to build a single-page chat application. The app uses boots
 
 This is work in progress. So far it's just a JS + HTML shell not hooked up to a server.
 
-Try it at http://api.tinode.co/x/samples/example-react-js/
+Try it at http://api.tinode.co/x/example-react-js/
