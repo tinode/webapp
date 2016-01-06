@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Tinode example: chat web application in react.js</title>
+    <link rel="shortcut icon" href="img/logo32x32.png" />
     <!-- Customized Bootstrap style (material design). -->
     <link rel="stylesheet" href="css/bootstrap.css" />
     <!-- Styles for local elements -->
@@ -34,38 +35,8 @@
         {hour12: false, year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'});
     }
 
-    /* BEGIN Login */
-    var LoginNavbar = React.createClass({
-      render: function() {
-        return (
-          <nav className="navbar navbar-inverse">
-            <div className="container-fluid">
-              <div className="navbar-header">
-                <a className="navbar-brand" href="#">Tinode Demo Chat</a>
-              </div>
-              <div>
-                <ul className="nav navbar-nav navbar-right">
-                  <li className="dropdown">
-                    <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button"
-                      aria-haspopup="true" aria-expanded="false">
-                      <big><span className="glyphicon glyphicon-option-vertical"></span></big>
-                    </a>
-                    <ul className="dropdown-menu">
-                      <li><a href="#"><span className="glyphicon glyphicon-user"></span> Sign Up</a></li>
-                      <li><a href="#"><span className="glyphicon glyphicon-cog"></span> Settings</a></li>
-                      <li><a href="https://github.com/tinode/chat/"><span
-                        className="glyphicon glyphicon-info-sign"></span> About</a></li>
-                    </ul>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </nav>
-        );
-      }
-    })
-
-    var LoginForm = React.createClass({
+    /* BEGIN Login: a login form */
+    var LoginView = React.createClass({
       getInitialState: function() {
         return {login: '', password: ''};
       },
@@ -77,7 +48,7 @@
       },
       handleSubmit: function(e) {
         e.preventDefault();
-        this.props.onLogin(true);
+        this.props.onLogin(this.state.login, this.state.password);
       },
       render: function() {
         return (
@@ -96,48 +67,186 @@
                 onChange={this.handlePasswordChange}
                 required />
               <br />
-              <button className="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+              <button className="btn btn-primary" type="submit">Sign in</button>
             </form>
-          </div>
-        );
-      }
-    })
-
-    var LoginView = React.createClass({
-      render: function() {
-        return (
-          <div>
-            <LoginNavbar />
-            <LoginForm onLogin={this.props.onLogin} />
           </div>
         );
       }
     })
     /* END Login */
 
-    /* BEGIN Contact list (list of topics) */
+    /* BEGIN Account registration */
+    var CreateAccountView = React.createClass({
+      getInitialState: function() {
+        return {login: '', password: '', password2: '', public: '', private: ''};
+      },
+      handleLoginChange: function(e) {
+        this.setState({login: e.target.value});
+      },
+      handlePasswordChange: function(e) {
+        this.setState({password: e.target.value});
+      },
+      handlePassword2Change: function(e) {
+        this.setState({password2: e.target.value});
+      },
+      handlePublicChange: function(e) {
+        this.setState({public: e.target.value});
+      },
+      handlePrivateChange: function(e) {
+        this.setState({private: e.target.value});
+      },
+      handleSubmit: function(e) {
+        e.preventDefault();
+        if (this.state.password != this.state.password2) {
 
-    /*Contacts caption */
-    var CurrentUser = React.createClass({
+        }
+        this.props.onCreateAccount(this.state.login, this.state.password, this.state.public, this.state.private);
+      },
       render: function() {
         return (
-          <nav id="main-navbar" className="navbar navbar-inverse">
+          <div className="container-fluid">
+            <form onSubmit={this.handleSubmit} onCancel={this.props.onCancel}>
+              <label htmlFor="signupLogin" className="sr-only">Login</label>
+              <input type="text" id="signupLogin" className="form-control" placeholder="Login"
+                value={this.state.login} onChange={this.handleLoginChange} required autofocus />
+              <label htmlFor="signupPassword" className="sr-only">Password</label>
+              <input type="password" id="signupPassword" className="form-control" placeholder="Password"
+                value={this.state.password} onChange={this.handlePasswordChange} required />
+              <label htmlFor="signupPassword2" className="sr-only">Repeat password</label>
+              <input type="password" id="signupPassword" className="form-control" placeholder="Repeat password"
+                value={this.state.password2} onChange={this.handlePassword2Change} required />
+              <label htmlFor="signupPublic" className="sr-only">Account public data</label>
+              <textarea id="signupPublic" className="form-control" rows="3" onChange={this.handlePublicChange}
+                value={this.state.public} placeholder="Public: text or valid JSON"></textarea>
+              <label htmlFor="signupPrivate" className="sr-only">Account private data</label>
+              <textarea id="signupPrivate" className="form-control" rows="3" onChange={this.handlePrivateChange}
+                value={this.state.private} placeholder="Private: text or valid JSON"></textarea>
+              <br />
+              <button className="btn btn-primary" type="submit">Sign up</button>
+            </form>
+          </div>
+        );
+      }
+    });
+    /* END Account registration */
+
+    /* BEGIN Tinode config panel */
+    var SettingsView = React.createClass({
+      render: function() {
+        return (
+          <div className="container-fluid">
+          <h3>Not implemented</h3>
+          </div>
+        );
+      }
+    });
+    /* END Tinode config panel */
+
+    /* BEGIN Manage side panel - handle Login, Account Registration, and Contacts views */
+    var SideNavbar = React.createClass({
+      render: function() {
+        var avatar = null;
+        if (this.props.avatar) {
+          var src = this.props.avatar === true ? "img/avatar.svg" : this.props.avatar;
+          avatar = <img id="self-avatar" className="avatar pull-left" alt="avatar" src={src} />
+        }
+        return (
+          <nav className="navbar navbar-inverse">
             <div className="container-fluid">
               <div className="navbar-header">
-                <a href="#" className="pull-left"><img id="self-avatar" className="avatar" alt="avatar"
-                  src="avatar.svg" /></a>
-                <span className="navbar-brand" href="#">Alice Johnson</span>
+                {avatar}
+                <span className="navbar-brand">{this.props.title}</span>
               </div>
               <div>
                 <ul className="nav navbar-nav navbar-right">
-                  <li><a href="#"><big><span className="glyphicon glyphicon-cog"></span></big></a></li>
+                  {this.props.state === 'login' ?
+                    <SideNavbar.MenuStart onSignUp={this.props.onSignUp} onSettings={this.props.onSettings} /> :
+                    this.props.state === 'settings' ?
+                    <SideNavbar.MenuCancel onCancel={this.props.onCancel} /> :
+                    this.props.state === 'register' ?
+                    <SideNavbar.MenuCancel onCancel={this.props.onCancel} /> :
+                    this.props.state === 'contacts' ?
+                    <SideNavbar.MenuSettings onSettings={this.props.onSettings} /> : null}
                 </ul>
               </div>
             </div>
           </nav>
         );
       }
+    })
+
+    SideNavbar.MenuStart = React.createClass({
+      render: function() {
+        return (
+          <li className="dropdown">
+            <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+              aria-expanded="false">
+              <big><span className="glyphicon glyphicon-option-vertical"></span></big>
+            </a>
+            <ul className="dropdown-menu">
+              <li><a href="#" onClick={this.props.onSignUp}><span className="glyphicon glyphicon-user"></span> Sign Up</a></li>
+              <li><a href="#" onClick={this.props.onSettings}><span className="glyphicon glyphicon-cog"></span> Settings</a></li>
+            </ul>
+          </li>
+        );
+      }
+    })
+
+    SideNavbar.MenuCancel = React.createClass({
+      render: function() {
+        return (
+          <li><a href="#" onClick={this.props.onCancel}><big><span className="glyphicon glyphicon-remove"></span></big></a></li>
+        );
+      }
+    })
+
+    SideNavbar.MenuSettings = React.createClass({
+      render: function() {
+        return (
+          <li><a href="#" onClick={this.props.onSettings}><big><span className="glyphicon glyphicon-cog"></span></big></a></li>
+        );
+      }
+    })
+
+    var SidepanelView = React.createClass({
+      render: function() {
+        var title = null;
+        var avatar = false;
+        switch (this.props.state) {
+          case 'login':
+            title = "Sign In"; break;
+          case 'register':
+            title = "Create Account"; break;
+          case 'settings':
+            title = "Settings"; break;
+          case 'contacts':
+            title = "Alice Johnson";
+            avatar = true;
+          default:;
+        };
+        return (
+          <div className="sidebar-nav">
+            <SideNavbar state={this.props.state}
+              title={title} avatar={avatar}
+              onSignUp={this.props.onSignUp}
+              onSettings={this.props.onSettings}
+              onCancel={this.props.onCancel} />
+            {this.props.state === 'login' ?
+              <LoginView onLogin={this.props.onLogin} /> :
+              this.props.state === 'register' ?
+              <CreateAccountView onCreateAccount={this.props.onCreateAccount} onCancel={this.props.onCancel} /> :
+              this.props.state === 'settings' ?
+              <SettingsView onCancel={this.props.onCancel} /> :
+              this.props.state === 'contacts' ?
+              <ContactsView data={this.props.contactsData} onTopicSelected={this.props.onTopicSelected} /> :
+              null}
+          </div>
+        );
+      }
     });
+    /* END Side panel */
+
+    /* BEGIN Contact list (list of topics) */
 
     /* A form for initiating a new topic */
     var NewTopic = React.createClass({
@@ -168,7 +277,7 @@
         render: function() {
           return (
             <li className="media contact" onClick={this.handleClick}>
-              <a href="#" className="pull-left"><img src="avatar.svg" className="avatar img-circle" alt="" /></a>
+              <a href="#" className="pull-left"><img src="img/avatar.svg" className="avatar img-circle" alt="" /></a>
               <div className="media-body">
                 <Contact.Online when={this.props.when} now={this.props.now} />
                 <strong>{this.props.public}</strong> <Contact.Unread count={this.props.unread} />
@@ -192,7 +301,7 @@
         }
     })
 
-    /* Online indicator */
+    /* Online/offline indicator */
     Contact.Online = React.createClass({
         render: function() {
           var lastOnline = '';
@@ -210,7 +319,7 @@
         }
     })
 
-    /* List of comtacts/topics */
+    /* List of contacts/topics */
     var ContactList = React.createClass({
       getInitialState: function() {
         return {selected: false};
@@ -248,7 +357,6 @@
       render: function() {
         return (
           <div className="contactBox">
-            <CurrentUser />
             <div className="container-fluid">
             <NewTopic />
             <ContactList data={this.state.contacts}
@@ -353,8 +461,8 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
         return (
           <div className="panel panel-default fullHeight">
           <div className="panel-body text-center center-block fullHeight" id="dummyView">
-            <div><img id="logo" alt="logo" src="group.svg" />
-            <h3>Tinode Demo Chat</h3></div>
+            <div><a href="https://github.com/tinode/chat/"><img id="logo" alt="logo" src="img/logo.svg" />
+            <h3>Tinode Demo Chat</h3></a></div>
           </div>
           </div>
         );
@@ -393,28 +501,46 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
     });
     /* END Conversation panel */
 
-
+    /* The top-level class to hold all fuinctionality together */
     var AppView = React.createClass({
       getInitialState: function() {
-        return {loggedIn: false, selTopic: ''};
+        return {sidePanel: 'login', loggedIn: false, selTopic: ''};
       },
-      handleLogin: function(ok) {
-        this.setState({loggedIn: ok});
+      handleLogin: function(login, password) {
+        this.setState({sidePanel: 'contacts', loggedIn: true});
+      },
+      handleNewAccount: function(login_, password_, public_, private_) {
+
       },
       handleTopicSelected: function(topic) {
         this.setState({selTopic: topic});
+      },
+      handleSignUp: function() {
+        this.setState({sidePanel: 'register'});
+      },
+      handleSettings: function() {
+        this.setState({sidePanel: 'settings'});
+      },
+      handleSidepanelCancel: function() {
+        if (this.state.loggedIn) {
+          this.setState({sidePanel: 'contacts'});
+        } else {
+          this.setState({sidePanel: 'login'});
+        }
       },
       render: function() {
         return (
           <div className="fullScreen">
 
           <div id="sidebar-wrapper">
-            <div className="sidebar-nav">
-              {this.state.loggedIn ?
-                <ContactsView data={contactsData}
-                  onTopicSelected={this.handleTopicSelected} /> :
-                <LoginView onLogin={this.handleLogin} />}
-            </div>
+            <SidepanelView
+              state={this.state.sidePanel}
+              onSignUp={this.handleSignUp}
+              onSettings={this.handleSettings}
+              onLogin={this.handleLogin}
+              onCreateAccount={this.handleNewAccount}
+              onTopicSelected={this.handleTopicSelected}
+              onCancel={this.handleSidepanelCancel} />
           </div>
 
           <div id="page-content-wrapper">
