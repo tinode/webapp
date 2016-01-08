@@ -16,11 +16,15 @@
     <!-- Some scripts to make bootstrap more dynamic -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="tinode-0.5.1.js"></script>
   </head>
   </head>
   <body>
     <div id="mountPoint"></div>
     <script type="text/babel">
+    var HOST = "api.tinode.co";
+    var API_KEY = "AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K";
+
     function shortDateFormat(then) {
 	    var now = new Date();
       if (then.getFullYear() == now.getFullYear()) {
@@ -504,10 +508,21 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
     /* The top-level class to hold all fuinctionality together */
     var AppView = React.createClass({
       getInitialState: function() {
-        return {sidePanel: 'login', loggedIn: false, selTopic: ''};
+        return {sidePanel: 'login', loggedIn: false, selTopic: '', tinode: undefined};
+      },
+      componentDidMount: function() {
+        Tinode.enableLogging(true);
+        // Setup with default transport
+        Tinode.setup(HOST, API_KEY);
       },
       handleLogin: function(login, password) {
-        this.setState({sidePanel: 'contacts', loggedIn: true});
+        Tinode.connect().then(function(){
+          return Tinode.loginBasic(login, password);
+        }).then(function(){
+          this.setState({sidePanel: 'contacts', loggedIn: true});
+        }).catch(function(err) {
+          console.log(err);
+        });
       },
       handleNewAccount: function(login_, password_, public_, private_) {
 

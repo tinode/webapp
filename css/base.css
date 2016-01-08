@@ -163,7 +163,7 @@ html, body {
   overflow-y: scroll;
   padding-top: 0;
   padding-bottom: 0;
-  background-image: url("../ignasi_pattern_s.png");
+  background-image: url("../img/ignasi_pattern_s.png");
 }
 
 #messagesView {
