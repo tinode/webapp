@@ -85,6 +85,20 @@ html, body {
 }
 /* END of top-level layout */
 
+/* Making the alert box less tall */
+.alert-block {
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
+  margin-bottom: 3px;
+  height: 2.3em;
+}
+
+.alert-error {
+  background-color: #FCC;
+  border-color: #C99;
+  color: #600;
+}
+
 .avatar {
   width: 32pt;
   height: auto;

@@ -42,19 +42,36 @@
     /* BEGIN Login: a login form */
     var LoginView = React.createClass({
       getInitialState: function() {
-        return {login: '', password: ''};
+        return {
+          login: '',
+          password: '',
+          errorCleared: false
+        };
       },
       handleLoginChange: function(e) {
+        if (!this.state.errorCleared) {
+          this.props.onClearError();
+          this.setState({errorCleared: true});
+        }
         this.setState({login: e.target.value});
       },
       handlePasswordChange: function(e) {
+        if (!this.state.errorCleared) {
+          this.props.onClearError();
+          this.setState({errorCleared: true});
+        }
         this.setState({password: e.target.value});
       },
       handleSubmit: function(e) {
         e.preventDefault();
+        this.setState({errorCleared: false, submitDisabled: true});
         this.props.onLogin(this.state.login, this.state.password);
       },
       render: function() {
+        var submitClassList = "btn btn-primary";
+        if (this.props.disabled) {
+          submitClassList += " disabled";
+        }
         return (
           <div className="container-fluid">
             <form className="form-signin" onSubmit={this.handleSubmit}>
@@ -71,7 +88,7 @@
                 onChange={this.handlePasswordChange}
                 required />
               <br />
-              <button className="btn btn-primary" type="submit">Sign in</button>
+              <button className={submitClassList} type="submit">Sign in</button>
             </form>
           </div>
         );
@@ -213,6 +230,18 @@
     })
 
     var SidepanelView = React.createClass({
+      getInitialState: function() {
+        return {
+          showErrorText: true,
+        };
+      },
+      handleClearErrorText: function() {
+        this.setState({showErrorText: false});
+      },
+      handleLoginRequested: function(login, password) {
+        this.props.onLogin(login, password);
+        this.setState({showErrorText: true});
+      },
       render: function() {
         var title = null;
         var avatar = false;
@@ -235,8 +264,11 @@
               onSignUp={this.props.onSignUp}
               onSettings={this.props.onSettings}
               onCancel={this.props.onCancel} />
+            <SidepanelView.ErrorPanel showError={this.state.showErrorText} errorText={this.props.errorText} />
             {this.props.state === 'login' ?
-              <LoginView onLogin={this.props.onLogin} /> :
+              <LoginView disabled={this.props.loginDisabled}
+                onLogin={this.handleLoginRequested}
+                onClearError={this.handleClearErrorText} /> :
               this.props.state === 'register' ?
               <CreateAccountView onCreateAccount={this.props.onCreateAccount} onCancel={this.props.onCancel} /> :
               this.props.state === 'settings' ?
@@ -248,6 +280,21 @@
         );
       }
     });
+
+    SidepanelView.ErrorPanel = React.createClass({
+      render: function() {
+        var classList = "alert alert-block";
+        var errorText = null;
+        if (this.props.errorText && this.props.showError) {
+          classList += " alert-error";
+          errorText = this.props.errorText;
+        }
+        return (
+          <div className={classList}>{errorText}</div>
+        );
+      }
+    });
+
     /* END Side panel */
 
     /* BEGIN Contact list (list of topics) */
@@ -508,7 +555,13 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
     /* The top-level class to hold all fuinctionality together */
     var AppView = React.createClass({
       getInitialState: function() {
-        return {sidePanel: 'login', loggedIn: false, selTopic: '', tinode: undefined};
+        return {
+          sidePanel: 'login',
+          loggedIn: false,
+          errorText: '',
+          selTopic: '',
+          loginDisabled: false
+        };
       },
       componentDidMount: function() {
         Tinode.enableLogging(true);
@@ -516,12 +569,14 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
         Tinode.setup(HOST, API_KEY);
       },
       handleLogin: function(login, password) {
-        Tinode.connect().then(function(){
+        var instance = this;
+        this.setState({loginDisabled: true, errorText: ''});
+        Tinode.connect().then(function() {
           return Tinode.loginBasic(login, password);
-        }).then(function(){
-          this.setState({sidePanel: 'contacts', loggedIn: true});
+        }).then(function() {
+          instance.setState({sidePanel: 'contacts', loggedIn: true});
         }).catch(function(err) {
-          console.log(err);
+          instance.setState({loginDisabled: false, errorText: err.message});
         });
       },
       handleNewAccount: function(login_, password_, public_, private_) {
@@ -550,6 +605,8 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
           <div id="sidebar-wrapper">
             <SidepanelView
               state={this.state.sidePanel}
+              loginDisabled={this.state.loginDisabled}
+              errorText={this.state.errorText}
               onSignUp={this.handleSignUp}
               onSettings={this.handleSettings}
               onLogin={this.handleLogin}
