@@ -253,7 +253,7 @@
           case 'settings':
             title = "Settings"; break;
           case 'contacts':
-            title = "Alice Johnson";
+            title = this.props.title;
             avatar = true;
           default:;
         };
@@ -557,15 +557,16 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
       getInitialState: function() {
         return {
           sidePanel: 'login',
+          sideTitle: 'not set',
           loggedIn: false,
           errorText: '',
-          selTopic: '',
+          selectedTopicName: '',
           loginDisabled: false
         };
       },
       componentDidMount: function() {
         Tinode.enableLogging(true);
-        // Setup with default transport
+        // Setup with default transport.
         Tinode.setup(HOST, API_KEY);
       },
       handleLogin: function(login, password) {
@@ -575,8 +576,12 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
           return Tinode.loginBasic(login, password);
         }).then(function() {
           instance.setState({loggedIn: true});
-          var me = new Tinode.Topic("me");
-          me.subscribe();
+          var me = Tinode.getMeTopic();
+          // Subscribe, fetch topic info and the list of subscriptions.
+          return me.subscribe({get: "info sub"});
+        }).then(function() {
+          var me = Tinode.getMeTopic();
+          instance.setState({sidePanel: "contacts", sideTitle: me.public});
         }).catch(function(err) {
           instance.setState({loginDisabled: false, errorText: err.message});
         });
@@ -585,7 +590,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
 
       },
       handleTopicSelected: function(topic) {
-        this.setState({selTopic: topic});
+        this.setState({selectedTopicName: topic});
       },
       handleSignUp: function() {
         this.setState({sidePanel: 'register'});
@@ -607,6 +612,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
           <div id="sidebar-wrapper">
             <SidepanelView
               state={this.state.sidePanel}
+              title={this.state.sideTitle}
               loginDisabled={this.state.loginDisabled}
               errorText={this.state.errorText}
               onSignUp={this.handleSignUp}
@@ -622,7 +628,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
               <div className="row fullHeight">
                 <div className="col-lg-12 fullHeight">
                   {this.state.selTopic ?
-                    <MessagesView topic={this.state.selTopic} /> :
+                    <MessagesView topic={this.state.selectedTopicName} /> :
                     <DummyMessagesView />}
                 </div>
               </div>
