@@ -574,7 +574,9 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
         Tinode.connect().then(function() {
           return Tinode.loginBasic(login, password);
         }).then(function() {
-          instance.setState({sidePanel: 'contacts', loggedIn: true});
+          instance.setState({loggedIn: true});
+          var me = new Tinode.Topic("me");
+          me.subscribe();
         }).catch(function(err) {
           instance.setState({loginDisabled: false, errorText: err.message});
         });
