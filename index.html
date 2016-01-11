@@ -10,8 +10,8 @@
     <!-- Styles for local elements -->
     <link rel="stylesheet" href="css/base.css" />
     <!-- ReactJs scripts -->
-    <script src="https://fb.me/react-0.14.5.js"></script>
-    <script src="https://fb.me/react-dom-0.14.5.js"></script>
+    <script src="https://fb.me/react-0.14.6.js"></script>
+    <script src="https://fb.me/react-dom-0.14.6.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
     <!-- Some scripts to make bootstrap more dynamic -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -274,7 +274,7 @@
               this.props.state === 'settings' ?
               <SettingsView onCancel={this.props.onCancel} /> :
               this.props.state === 'contacts' ?
-              <ContactsView data={this.props.contactsData} onTopicSelected={this.props.onTopicSelected} /> :
+              <ContactsView data={this.props.subscriptions} onTopicSelected={this.props.onTopicSelected} /> :
               null}
           </div>
         );
@@ -317,7 +317,13 @@
     var contactsData = [
       {id: "usrBOB", public: "Bob Smith", comment: "This is another comment", online: {now: true}, unread: 0},
       {id: "usrCAROL", public: "Carol Xmas", comment: "No comments", online: {now: false, when: "1 hour ago"}, unread: 2},
-      {id: "usrDAVE", public: "Dave Goliaphsson", comment: "This is a comment", online: {now: false, when: "30 min ago"}, unread: 0}
+      {id: "usrDAVE", public: "Dave Goliaphsson", comment: "This is a comment", online: {now: false, when: "30 min ago"}, unread: 0},
+      {id: "usrBOB2", public: "Bob Smith", comment: "This is another comment", online: {now: true}, unread: 0},
+      {id: "usrCAROL2", public: "Carol Xmas", comment: "No comments", online: {now: false, when: "1 hour ago"}, unread: 2},
+      {id: "usrDAVE2", public: "Dave Goliaphsson", comment: "This is a comment", online: {now: false, when: "30 min ago"}, unread: 0},
+      {id: "usrBOB3", public: "Bob Smith", comment: "This is another comment", online: {now: true}, unread: 0},
+      {id: "usrCAROL3", public: "Carol Xmas", comment: "No comments", online: {now: false, when: "1 hour ago"}, unread: 2},
+      {id: "usrDAVE3", public: "Dave Goliaphsson", comment: "This is a comment", online: {now: false, when: "30 min ago"}, unread: 0}
     ];
 
     /* A single topic */
@@ -379,14 +385,16 @@
         this.props.onTopicSelected(sel);
       },
       render: function() {
-        var contactNodes = this.props.data.map(function(c) {
-          return (
-            <Contact public={c.public} comment={c.comment}
-              unread={c.unread}
-              when={c.online.when} now={c.online.now}
-              onSelected={this.onSelectionChange} key={c.id} />
-          );
-        }, this);
+        var contactNodes = null;
+        if (this.props.data) {
+          contactNodes = Object.keys(this.props.data).map(function(key) {
+            var c = this.props.data[key];
+            return (
+              <Contact public={c.public} comment={c.private} unread={c.unread}
+                onSelected={this.onSelectionChange} key={c.topic} />
+              );
+          }, this);
+        }
         return (
           <div className="contactList">
             <ul className="media-list">
@@ -399,18 +407,12 @@
 
     /* The panel to hold all contacts-related stuff together */
     var ContactsView = React.createClass({
-      getInitialState: function() {
-        return {contacts: []};
-      },
-      componentDidMount: function() {
-        this.setState({contacts: contactsData});
-      },
       render: function() {
         return (
           <div className="contactBox">
             <div className="container-fluid">
             <NewTopic />
-            <ContactList data={this.state.contacts}
+            <ContactList data={this.props.data}
               onTopicSelected={this.props.onTopicSelected} />
             </div>
           </div>
@@ -561,7 +563,8 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
           loggedIn: false,
           errorText: '',
           selectedTopicName: '',
-          loginDisabled: false
+          loginDisabled: false,
+          subscriptions: {}
         };
       },
       componentDidMount: function() {
@@ -577,14 +580,26 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
         }).then(function() {
           instance.setState({loggedIn: true});
           var me = Tinode.getMeTopic();
+          me.onInfoChange = instance.handleMeInfoChange;
+          me.onSubsChange = instance.handleMeSubsChange;
           // Subscribe, fetch topic info and the list of subscriptions.
           return me.subscribe({get: "info sub"});
         }).then(function() {
           var me = Tinode.getMeTopic();
-          instance.setState({sidePanel: "contacts", sideTitle: me.public});
+          instance.setState({sidePanel: "contacts"});
         }).catch(function(err) {
           instance.setState({loginDisabled: false, errorText: err.message});
         });
+      },
+      handleMeInfoChange: function(info) {
+        this.setState({sideTitle: info.public});
+      },
+      handleMeSubsChange: function(sub) {
+        var subs = this.state.subscriptions;
+        subs[sub.topic] = sub;
+        console.log("in handleMeSubsChange, processing " + JSON.stringify(sub));
+        this.setState({subscriptions: subs});
+        console.log("in handleMeSubsChange, subs length: ", this.state.subscriptions.length);
       },
       handleNewAccount: function(login_, password_, public_, private_) {
 
@@ -613,6 +628,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
             <SidepanelView
               state={this.state.sidePanel}
               title={this.state.sideTitle}
+              subscriptions={this.state.subscriptions}
               loginDisabled={this.state.loginDisabled}
               errorText={this.state.errorText}
               onSignUp={this.handleSignUp}
@@ -627,7 +643,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
             <div className="container-fluid fullHeight">
               <div className="row fullHeight">
                 <div className="col-lg-12 fullHeight">
-                  {this.state.selTopic ?
+                  {this.state.selectedTopicName ?
                     <MessagesView topic={this.state.selectedTopicName} /> :
                     <DummyMessagesView />}
                 </div>
