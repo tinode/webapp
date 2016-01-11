@@ -597,9 +597,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
       handleMeSubsChange: function(sub) {
         var subs = this.state.subscriptions;
         subs[sub.topic] = sub;
-        console.log("in handleMeSubsChange, processing " + JSON.stringify(sub));
         this.setState({subscriptions: subs});
-        console.log("in handleMeSubsChange, subs length: ", this.state.subscriptions.length);
       },
       handleNewAccount: function(login_, password_, public_, private_) {
 

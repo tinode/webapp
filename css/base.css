@@ -52,7 +52,7 @@ html, body {
   width: 30em;
   margin: 0;
   padding: 0;
-  x-height: 100%;
+  height: 100%;
 }
 
 @media(min-width:768px) {
