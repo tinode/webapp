@@ -258,7 +258,7 @@
           default:;
         };
         return (
-          <div className="sidebar-nav">
+          <div className="sidepanel-nav">
             <SideNavbar state={this.props.state}
               title={title} avatar={avatar}
               onSignUp={this.props.onSignUp}
@@ -315,15 +315,15 @@
     });
 
     var contactsData = [
-      {id: "usrBOB", public: "Bob Smith", comment: "This is another comment", online: {now: true}, unread: 0},
-      {id: "usrCAROL", public: "Carol Xmas", comment: "No comments", online: {now: false, when: "1 hour ago"}, unread: 2},
-      {id: "usrDAVE", public: "Dave Goliaphsson", comment: "This is a comment", online: {now: false, when: "30 min ago"}, unread: 0},
-      {id: "usrBOB2", public: "Bob Smith", comment: "This is another comment", online: {now: true}, unread: 0},
-      {id: "usrCAROL2", public: "Carol Xmas", comment: "No comments", online: {now: false, when: "1 hour ago"}, unread: 2},
-      {id: "usrDAVE2", public: "Dave Goliaphsson", comment: "This is a comment", online: {now: false, when: "30 min ago"}, unread: 0},
-      {id: "usrBOB3", public: "Bob Smith", comment: "This is another comment", online: {now: true}, unread: 0},
-      {id: "usrCAROL3", public: "Carol Xmas", comment: "No comments", online: {now: false, when: "1 hour ago"}, unread: 2},
-      {id: "usrDAVE3", public: "Dave Goliaphsson", comment: "This is a comment", online: {now: false, when: "30 min ago"}, unread: 0}
+      {topic: "usrBOB", public: "Bob Smith", private: "This is another comment", online: {now: true}, unread: 0},
+      {topic: "usrCAROL", public: "Carol Xmas", private: "No comments", online: {now: false, when: "1 hour ago"}, unread: 2},
+      {topic: "usrDAVE", public: "Dave Goliaphsson", private: "This is a comment", online: {now: false, when: "30 min ago"}, unread: 0},
+      {topic: "usrBOB2", public: "Bob Smith", private: "This is another comment", online: {now: true}, unread: 0},
+      {topic: "usrCAROL2", public: "Carol Xmas", private: "No comments", online: {now: false, when: "1 hour ago"}, unread: 2},
+      {topic: "usrDAVE2", public: "Dave Goliaphsson", private: "This is a comment", online: {now: false, when: "30 min ago"}, unread: 0},
+      {topic: "usrBOB3", public: "Bob Smith", private: "This is another comment", online: {now: true}, unread: 0},
+      {topic: "usrCAROL3", public: "Carol Xmas", private: "No comments", online: {now: false, when: "1 hour ago"}, unread: 2},
+      {topic: "usrDAVE3", public: "Dave Goliaphsson", private: "This is a comment", online: {now: false, when: "30 min ago"}, unread: 0}
     ];
 
     /* A single topic */
@@ -405,7 +405,7 @@
       }
     });
 
-    /* The panel to hold all contacts-related stuff together */
+    /* The panel holds all contacts-related stuff */
     var ContactsView = React.createClass({
       render: function() {
         return (
@@ -624,7 +624,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
         return (
           <div className="fullScreen">
 
-          <div id="sidebar-wrapper">
+          <div id="sidepanel-wrapper">
             <SidepanelView
               state={this.state.sidePanel}
               title={this.state.sideTitle}
