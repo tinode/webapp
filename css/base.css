@@ -119,9 +119,21 @@ html, body {
   margin-left: 1em;
 }
 
+.contactBox {
+  overflow: hidden;
+}
+
+#newTopicInput {
+  z-index: 3;
+  background-color: #FFF;
+  padding-bottom: 0.25em;
+}
+
 .contactList {
-  padding: 0.5em;
-  height: 85vh;
+  z-index: 1;
+  padding: 9.5em 0.5em 0.5em 0.5em;
+  margin-top: -9em;
+  height: 100vh;
   overflow-y: scroll;
 }
 
@@ -165,7 +177,7 @@ html, body {
 }
 
 #chatTitle {
-  z-index: 2;
+  z-index: 3;
   position: absolute;
   left: 0;
   right: 0;
@@ -207,7 +219,6 @@ html, body {
 .chatBox > li {
   margin-bottom: 1em;
   position: relative;
-  x-white-space: pre;
 }
 
 .chatBox > li:before,
