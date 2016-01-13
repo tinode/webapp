@@ -329,7 +329,7 @@
     /* A single topic */
     var Contact = React.createClass({
         handleClick: function() {
-          this.props.onSelected(this.props.public);
+          this.props.onSelected(this.props.topic);
         },
         render: function() {
           return (
@@ -391,7 +391,7 @@
             var c = this.props.data[key];
             return (
               <Contact public={c.public} comment={c.private} unread={c.unread}
-                onSelected={this.onSelectionChange} key={c.topic} />
+                onSelected={this.onSelectionChange} topic={c.topic} key={c.topic} />
               );
           }, this);
         }
@@ -591,8 +591,15 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
           instance.setState({loginDisabled: false, errorText: err.message});
         });
       },
+      handleInfoChange: function(info) {
+        console.log(info);
+        this.setState({selectedTopicName: info.public});
+      },
       handleMeInfoChange: function(info) {
         this.setState({sideTitle: info.public});
+      },
+      handleSubsUpdated: function(uids) {
+        console.log(uids);
       },
       handleMeSubsChange: function(sub) {
         var subs = this.state.subscriptions;
@@ -602,8 +609,19 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
       handleNewAccount: function(login_, password_, public_, private_) {
 
       },
-      handleTopicSelected: function(topic) {
-        this.setState({selectedTopicName: topic});
+      handleNewMessage: function(msg) {
+        console.log(msg);
+      },
+      handleTopicSelected: function(topicName) {
+        var topic = Tinode.getTopic(topicName);
+        if (topic.isSubscribed()) {
+          this.handleInfoChange(topic);
+        } else {
+          topic.onData = this.handleNewMessage;
+          topic.onInfoChange = this.handleInfoChange;
+          topic.onSubsUpdated = this.handleSubsUpdated;
+          topic.subscribe({get: "info sub data"});
+        }
       },
       handleSignUp: function() {
         this.setState({sidePanel: 'register'});
