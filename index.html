@@ -65,7 +65,7 @@
       handleSubmit: function(e) {
         e.preventDefault();
         this.setState({errorCleared: false, submitDisabled: true});
-        this.props.onLogin(this.state.login, this.state.password);
+        this.props.onLogin(this.state.login.trim(), this.state.password.trim());
       },
       render: function() {
         var submitClassList = "btn btn-primary";
@@ -524,21 +524,52 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
 
     var MessagesView = React.createClass({
       getInitialState: function() {
-        return {messages: []};
+        return {
+          messages: [],
+          title: ''
+        };
       },
       componentDidMount: function() {
-        this.setState({messages: messagesList});
+        this.propsChange(this.props);
+      },
+      componentWillReceiveProps: function(nextProps) {
+        this.propsChange(nextProps);
+      },
+      propsChange: function(props) {
+        var topic = Tinode.getTopic(props.topic);
+        // Clear messages cached in the component
+        this.setState({messages: []});
+        if (topic.isSubscribed()) {
+          this.handleInfoChange(topic);
+        } else {
+          topic.onData = this.handleNewMessage;
+          topic.onInfoChange = this.handleInfoChange;
+          topic.onSubsUpdated = this.handleSubsUpdated;
+          topic.subscribe({get: "info sub data"});
+        }
+      },
+      handleInfoChange: function(info) {
+        console.log("handleInfoChange: " + info);
+        this.setState({title: info.public});
+      },
+      handleSubsUpdated: function(uids) {
+
+      },
+      handleNewMessage: function(msg) {
+        this.setState({messages: this.state.messages.concat(msg)});
       },
       render: function() {
+        var me = Tinode.getCurrentUserID();
         var messageNodes = this.state.messages.map(function(msg) {
+          var isReply = !(msg.from === me);
           return (
-            <Message content={msg.content} timestamp={msg.timestamp} response={msg.response} key={msg.id} />
+            <Message content={msg.content} timestamp={msg.ts} response={isReply} key={msg.seq} />
           );
         });
         return (
           <div className="panel panel-default fullViewPort" id="messagesPanel">
             <div className="panel-heading" id="chatTitle">
-              <h3 className="panel-title">{this.props.topic}</h3>
+              <h3 className="panel-title">{this.state.title}</h3>
             </div>
             <div className="panel-body" id="messagesView">
               <ul className="chatBox">
@@ -562,7 +593,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
           sideTitle: 'not set',
           loggedIn: false,
           errorText: '',
-          selectedTopicName: '',
+          topicSelected: '',
           loginDisabled: false,
           subscriptions: {}
         };
@@ -591,15 +622,8 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
           instance.setState({loginDisabled: false, errorText: err.message});
         });
       },
-      handleInfoChange: function(info) {
-        console.log(info);
-        this.setState({selectedTopicName: info.public});
-      },
       handleMeInfoChange: function(info) {
         this.setState({sideTitle: info.public});
-      },
-      handleSubsUpdated: function(uids) {
-        console.log(uids);
       },
       handleMeSubsChange: function(sub) {
         var subs = this.state.subscriptions;
@@ -609,19 +633,8 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
       handleNewAccount: function(login_, password_, public_, private_) {
 
       },
-      handleNewMessage: function(msg) {
-        console.log(msg);
-      },
       handleTopicSelected: function(topicName) {
-        var topic = Tinode.getTopic(topicName);
-        if (topic.isSubscribed()) {
-          this.handleInfoChange(topic);
-        } else {
-          topic.onData = this.handleNewMessage;
-          topic.onInfoChange = this.handleInfoChange;
-          topic.onSubsUpdated = this.handleSubsUpdated;
-          topic.subscribe({get: "info sub data"});
-        }
+        this.setState({topicSelected: topicName});
       },
       handleSignUp: function() {
         this.setState({sidePanel: 'register'});
@@ -659,8 +672,8 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
             <div className="container-fluid fullHeight">
               <div className="row fullHeight">
                 <div className="col-lg-12 fullHeight">
-                  {this.state.selectedTopicName ?
-                    <MessagesView topic={this.state.selectedTopicName} /> :
+                  {this.state.topicSelected ?
+                    <MessagesView topic={this.state.topicSelected} /> :
                     <DummyMessagesView />}
                 </div>
               </div>
