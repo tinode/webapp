@@ -520,6 +520,13 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
           keypressTimestamp: new Date().getTime() - KEYPRESS_NOTIFICATION - 1
         };
       },
+      handleSend: function(e) {
+        var message = this.state.message.trim();
+        if (message) {
+          this.props.sendMessage(this.state.message.trim());
+          this.setState({message: ''});
+        }
+      },
       handleMessageTyping: function(e) {
         var newState = {message: e.target.value};
         var now = new Date().getTime();
@@ -539,24 +546,10 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
             <input id="sendMessage" className="form-control" type="text" placeholder="New message"
               value={this.state.message} onChange={this.handleMessageTyping} />
             <span className= "input-group-btn">
-              <button className= "btn btn-default" type = "button">
+              <button className= "btn btn-default" type="button" onClick={this.handleSend}>
                 <i className="glyphicon glyphicon-send"></i>
               </button>
             </span>
-          </div>
-        );
-      }
-    });
-
-    /* This is just a static page to show when no conversation is selected */
-    var DummyMessagesView = React.createClass({
-      render: function() {
-        return (
-          <div className="panel panel-default fullHeight">
-          <div className="panel-body text-center center-block fullHeight" id="dummyView">
-            <div><a href="https://github.com/tinode/chat/"><img id="logo" alt="logo" src="img/logo.svg" />
-            <h3>Tinode Demo Chat</h3></a></div>
-          </div>
           </div>
         );
       }
@@ -582,7 +575,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
         if (topic.isSubscribed()) {
           this.handleInfoChange(topic);
           topic.messages(function(msg) {
-            msgs = [msg].concat(msgs);
+            msgs = msgs.concat(msg);
           });
         } else {
           topic.onData = this.handleNewMessage;
@@ -603,7 +596,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
         // FIXME(gene): handleNewMessage is bound to all loaded topics as onData. Unbind it when switching topics.
         // Ignore messages from all other topics but the current one.
         if (this.state.topic === msg.topic) {
-          this.setState({messages: [msg].concat(this.state.messages)});
+          this.setState({messages: this.state.messages.concat(msg)});
         }
       },
       render: function() {
@@ -626,12 +619,27 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
               </ul>
             </div>
             <div className="panel-footer" id="sendMessagePanel">
-              <Message.Send topic={this.props.topic} />
+              <Message.Send topic={this.props.topic} sendMessage={this.props.sendMessage} />
             </div>
           </div>
         );
       }
     });
+
+    /* This is just a static page to show when no conversation is selected */
+    var DummyMessagesView = React.createClass({
+      render: function() {
+        return (
+          <div className="panel panel-default fullHeight">
+          <div className="panel-body text-center center-block fullHeight" id="dummyView">
+            <div><a href="https://github.com/tinode/chat/"><img id="logo" alt="logo" src="img/logo.svg" />
+            <h3>Tinode Demo Chat</h3></a></div>
+          </div>
+          </div>
+        );
+      }
+    });
+
     /* END Conversation panel */
 
     /* The top-level class to hold all fuinctionality together */
@@ -685,6 +693,10 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
       handleTopicSelected: function(topicName) {
         this.setState({topicSelected: topicName});
       },
+      handleSendMessage: function(msg) {
+        var topic = Tinode.getTopic(this.state.topicSelected);
+        topic.publish(msg);
+      },
       handleSignUp: function() {
         this.setState({sidePanel: 'register'});
       },
@@ -722,7 +734,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
               <div className="row fullHeight">
                 <div className="col-lg-12 fullHeight">
                   {this.state.topicSelected ?
-                    <MessagesView topic={this.state.topicSelected} /> :
+                    <MessagesView topic={this.state.topicSelected} sendMessage={this.handleSendMessage} /> :
                     <DummyMessagesView />}
                 </div>
               </div>
