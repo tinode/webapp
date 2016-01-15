@@ -234,7 +234,7 @@ html, body {
 .chatBox > li > .chatBox-panel {
   max-width: 90%;
   float: right;
-  background-color: #EFE;
+  background-color: #DFD;
   border: 1px solid #CDC;
   border-radius: 4px;
   padding: 1em;
@@ -260,14 +260,14 @@ html, body {
   right: -11px;
   display: inline-block;
   border-top: 11px solid transparent;
-  border-left: 11px solid #EFE;
-  border-right: 0 solid #EEF;
+  border-left: 11px solid #DFD;
+  border-right: 0 solid #DDF;
   border-bottom: 11px solid transparent;
   content: " ";
 }
 
 .chatBox > li.chatBox-inverted > .chatBox-panel {
-  background-color: #EEF;
+  background-color: #DDF;
   border: 1px solid #CCD;
   float: left;
 }

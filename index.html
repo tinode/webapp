@@ -24,6 +24,8 @@
     <script type="text/babel">
     var HOST = "api.tinode.co";
     var API_KEY = "AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K";
+    // Minimum time between two keypress notifications, milliseconds
+    var KEYPRESS_NOTIFICATION = 5*1000;
 
     function shortDateFormat(then) {
 	    var now = new Date();
@@ -332,12 +334,16 @@
           this.props.onSelected(this.props.topic);
         },
         render: function() {
+          var title = this.props.public;
+          if (title.length > 26) {
+            title = title.substring(0, 24) + "...";
+          }
           return (
             <li className="media contact" onClick={this.handleClick}>
               <a href="#" className="pull-left"><img src="img/avatar.svg" className="avatar img-circle" alt="" /></a>
               <div className="media-body">
                 <Contact.Online when={this.props.when} now={this.props.now} />
-                <strong>{this.props.public}</strong> <Contact.Unread count={this.props.unread} />
+                <strong>{title}</strong> <Contact.Unread count={this.props.unread} />
                 <p>{this.props.comment}</p>
               </div>
             </li>
@@ -389,8 +395,10 @@
         if (this.props.data) {
           contactNodes = Object.keys(this.props.data).map(function(key) {
             var c = this.props.data[key];
+            // FIXME(gene): add support for received/read count
+            var unread = c.seq;
             return (
-              <Contact public={c.public} comment={c.private} unread={c.unread}
+              <Contact public={c.public} comment={c.private} unread={unread}
                 onSelected={this.onSelectionChange} topic={c.topic} key={c.topic} />
               );
           }, this);
@@ -422,6 +430,7 @@
     /* END Contact list */
 
     /* BEGIN Conversation panel */
+    /* Don't delete it for now: maybe needed for debugging
     var messagesList = [
       {
         id: 1, content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sit amet tellus interdum. \
@@ -449,21 +458,22 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
       {id: 6, content: "No way.", timestamp: new Date(2016, 0, 3, 15, 16, 17, 567), response: false},
       {id: 7, content: "OK!", timestamp: new Date(2016, 0, 3, 18, 19, 20, 567), response: true}
     ];
-
+    */
+    var received = {
+      SENDING: -1,
+      SERVER: 0,
+      CLIENT: 1,
+      READ: 2
+    };
     var Message = React.createClass({
-      getInitialState: function() {
-        return {received: 0};
-      },
       render: function() {
-        var timestamp = shortDateFormat(this.props.timestamp);
         return (
           <li className={this.props.response ? 'chatBox-inverted' : null}>
             <div className="chatBox-panel">
               <div className="chatBox-body">
                 <p>{this.props.content}
-                  <span className="pull-right timestamp">
-                    <small className="text-muted">{timestamp}</small> <Message.ReceivedMarker />
-                  </span>
+                <Message.ReceivedMarker response={this.props.response}
+                  timestamp={this.props.timestamp} received={this.props.received} />
                 </p>
               </div>
             </div>
@@ -474,30 +484,60 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
 
     /* Received/read indicator */
     Message.ReceivedMarker = React.createClass({
-      getInitialState: function() {
-        return {received: 0};
-      },
       render: function() {
-        var checkMark = null;
-        if (this.state.received > 0) {
-          checkMark = '&#x2714;';
-          if (this.state.received > 1) {
-            checkMark += <span style="margin-left:-0.5em;">&#x2714;</span>;
+        var timestamp = (this.props.received === received.SENDING) ?
+          "sending ..." :
+          shortDateFormat(this.props.timestamp);
+        var marker = null;
+        // These markers make sense for own messages only.
+        if (!this.props.response) {
+          if (this.props.received === received.SENDING) {
+            marker = '\u231A'; // watch face
+          } else if (this.props.received === received.SERVER || this.props.received === received.CLIENT) {
+            marker = '\u2714'; // checkmark
+            if (this.props.received === received.CLIENT) {
+              var style = {marginLeft: "-0.5em"};
+              marker += <span style={style}>&#x2714;</span>;
+            }
+          } else if (this.props.received === received.READ) {
+            marker = '\u1F441'; // open eye
           }
         }
         return (
-          <span>{checkMark}</span>
+          <span className="pull-right timestamp">
+            <small className="text-muted">{timestamp}</small> {marker}
+          </span>
         );
       }
     });
 
     /* Send message form */
     Message.Send = React.createClass({
+      getInitialState:function() {
+        return {
+          message: '',
+          // Make initial keypress time as if it happened 5001 milliseconds in the past.
+          keypressTimestamp: new Date().getTime() - KEYPRESS_NOTIFICATION - 1
+        };
+      },
+      handleMessageTyping: function(e) {
+        var newState = {message: e.target.value};
+        var now = new Date().getTime();
+        if (now - this.state.keypressTimestamp > KEYPRESS_NOTIFICATION) {
+          var topic = Tinode.getTopic(this.props.topic);
+          if (topic.isSubscribed()) {
+            topic.noteKeyPress();
+          }
+          newState.keypressTimestamp = now;
+        }
+        this.setState(newState);
+      },
       render: function() {
         return (
           <div className="input-group">
             <label htmlFor="sendMessage" className="sr-only">Add topic</label>
-            <input id="sendMessage" className="form-control" type="text" placeholder="New message" />
+            <input id="sendMessage" className="form-control" type="text" placeholder="New message"
+              value={this.state.message} onChange={this.handleMessageTyping} />
             <span className= "input-group-btn">
               <button className= "btn btn-default" type = "button">
                 <i className="glyphicon glyphicon-send"></i>
@@ -526,6 +566,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
       getInitialState: function() {
         return {
           messages: [],
+          topic: '',
           title: ''
         };
       },
@@ -536,17 +577,20 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
         this.propsChange(nextProps);
       },
       propsChange: function(props) {
+        var msgs = [];
         var topic = Tinode.getTopic(props.topic);
-        // Clear messages cached in the component
-        this.setState({messages: []});
         if (topic.isSubscribed()) {
           this.handleInfoChange(topic);
+          topic.messages(function(msg) {
+            msgs = [msg].concat(msgs);
+          });
         } else {
           topic.onData = this.handleNewMessage;
           topic.onInfoChange = this.handleInfoChange;
           topic.onSubsUpdated = this.handleSubsUpdated;
           topic.subscribe({get: "info sub data"});
         }
+        this.setState({messages: msgs, topic: props.topic});
       },
       handleInfoChange: function(info) {
         console.log("handleInfoChange: " + info);
@@ -556,10 +600,15 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
 
       },
       handleNewMessage: function(msg) {
-        this.setState({messages: this.state.messages.concat(msg)});
+        // FIXME(gene): handleNewMessage is bound to all loaded topics as onData. Unbind it when switching topics.
+        // Ignore messages from all other topics but the current one.
+        if (this.state.topic === msg.topic) {
+          this.setState({messages: [msg].concat(this.state.messages)});
+        }
       },
       render: function() {
         var me = Tinode.getCurrentUserID();
+        var topic = Tinode.getTopic(this.state.topic);
         var messageNodes = this.state.messages.map(function(msg) {
           var isReply = !(msg.from === me);
           return (
@@ -577,7 +626,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
               </ul>
             </div>
             <div className="panel-footer" id="sendMessagePanel">
-              <Message.Send />
+              <Message.Send topic={this.props.topic} />
             </div>
           </div>
         );
