@@ -14,19 +14,23 @@
     <script src="https://fb.me/react-dom-0.14.6.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
     <!-- Some scripts to make bootstrap more dynamic -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <!--script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script-->
+    <!--script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script-->
     <script src="tinode-0.5.1.js"></script>
   </head>
   </head>
   <body>
     <div id="mountPoint"></div>
     <script type="text/babel">
+    // Host name and posrt to connect to
     var HOST = "api.tinode.co";
+    // var HOST = "localhost:6060";
+    // API key. Use https://github.com/tinode/chat/tree/master/keygen to generate your own
     var API_KEY = "AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K";
     // Minimum time between two keypress notifications, milliseconds
     var KEYPRESS_NOTIFICATION = 5*1000;
 
+    // Short representation of time in the past.
     function shortDateFormat(then) {
 	    var now = new Date();
       if (then.getFullYear() == now.getFullYear()) {
@@ -66,7 +70,7 @@
       },
       handleSubmit: function(e) {
         e.preventDefault();
-        this.setState({errorCleared: false, submitDisabled: true});
+        this.setState({errorCleared: false});
         this.props.onLogin(this.state.login.trim(), this.state.password.trim());
       },
       render: function() {
@@ -101,7 +105,14 @@
     /* BEGIN Account registration */
     var CreateAccountView = React.createClass({
       getInitialState: function() {
-        return {login: '', password: '', password2: '', public: '', private: ''};
+        return {
+          login: '',
+          password: '',
+          password2: '',
+          public: '',
+          private: '',
+          errorCleared: false
+        };
       },
       handleLoginChange: function(e) {
         this.setState({login: e.target.value});
@@ -120,12 +131,19 @@
       },
       handleSubmit: function(e) {
         e.preventDefault();
-        if (this.state.password != this.state.password2) {
+        if (this.state.password.trim() != this.state.password2.trim()) {
 
+        } else {
+          this.setState({errorCleared: false});
+          this.props.onCreateAccount(this.state.login.trim(), this.state.password.trim(),
+            this.state.public.trim(), this.state.private.trim());
         }
-        this.props.onCreateAccount(this.state.login, this.state.password, this.state.public, this.state.private);
       },
       render: function() {
+        var submitClassList = "btn btn-primary";
+        if (this.props.disabled) {
+          submitClassList += " disabled";
+        }
         return (
           <div className="container-fluid">
             <form onSubmit={this.handleSubmit} onCancel={this.props.onCancel}>
@@ -145,7 +163,7 @@
               <textarea id="signupPrivate" className="form-control" rows="3" onChange={this.handlePrivateChange}
                 value={this.state.private} placeholder="Private: text or valid JSON"></textarea>
               <br />
-              <button className="btn btn-primary" type="submit">Sign up</button>
+              <button className={submitClassList} type="submit">Sign up</button>
             </form>
           </div>
         );
@@ -197,7 +215,7 @@
         );
       }
     })
-
+/*
     SideNavbar.MenuStart = React.createClass({
       render: function() {
         return (
@@ -213,7 +231,22 @@
           </li>
         );
       }
-    })
+    });
+*/
+    SideNavbar.MenuStart = React.createClass({
+      render: function() {
+        return (
+          <li>
+            <ul className="nav navbar-nav">
+              <li><a href="#"
+                onClick={this.props.onSignUp}><big><span className="glyphicon glyphicon-user"></span></big></a></li>
+              <li><a href="#"
+                onClick={this.props.onSettings}><big><span className="glyphicon glyphicon-cog"></span></big></a></li>
+            </ul>
+          </li>
+        );
+      }
+    });
 
     SideNavbar.MenuCancel = React.createClass({
       render: function() {
@@ -316,6 +349,7 @@
       }
     });
 
+    /*
     var contactsData = [
       {topic: "usrBOB", public: "Bob Smith", private: "This is another comment", online: {now: true}, unread: 0},
       {topic: "usrCAROL", public: "Carol Xmas", private: "No comments", online: {now: false, when: "1 hour ago"}, unread: 2},
@@ -327,6 +361,7 @@
       {topic: "usrCAROL3", public: "Carol Xmas", private: "No comments", online: {now: false, when: "1 hour ago"}, unread: 2},
       {topic: "usrDAVE3", public: "Dave Goliaphsson", private: "This is a comment", online: {now: false, when: "30 min ago"}, unread: 0}
     ];
+    */
 
     /* A single topic */
     var Contact = React.createClass({
@@ -688,7 +723,13 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
         this.setState({subscriptions: subs});
       },
       handleNewAccount: function(login_, password_, public_, private_) {
-
+        var instance = this;
+        Tinode.connect().then(function(){
+          return Tinode.createUserBasic(login_, password_,
+            {login: "basic", public: public_, private: private_});
+        }).catch(function(err) {
+          instance.setState({errorText: err.message});
+        });
       },
       handleTopicSelected: function(topicName) {
         this.setState({topicSelected: topicName});
