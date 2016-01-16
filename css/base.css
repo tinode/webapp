@@ -131,14 +131,14 @@ html, body {
 
 .contactList {
   z-index: 1;
-  padding: 9.5em 0.5em 0.5em 0.5em;
+  padding: 9.5em 0em 0.5em 0em;
   margin-top: -9em;
   height: 100vh;
   overflow-y: scroll;
 }
 
 .contactList li {
-  padding: 0.5em;
+  padding: 0.25em;
 }
 
 .contactList li:hover {
