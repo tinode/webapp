@@ -27,8 +27,12 @@
     // var HOST = "localhost:6060";
     // API key. Use https://github.com/tinode/chat/tree/master/keygen to generate your own
     var API_KEY = "AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K";
-    // Minimum time between two keypress notifications, milliseconds
-    var KEYPRESS_NOTIFICATION = 5*1000;
+    // Minimum time between two keypress notifications, milliseconds.
+    var KEYPRESS_DELAY = 5*1000;
+    // Delay before sending a {note} for reciving a message, milliseconds.
+    var RECEIVED_DELAY = 500;
+    // Delay before sending a read notification, milliseconds.
+    var READ_DELAY = 3*1000;
 
     // Short representation of time in the past.
     function shortDateFormat(then) {
@@ -370,8 +374,8 @@
         },
         render: function() {
           var title = this.props.public;
-          if (title.length > 26) {
-            title = title.substring(0, 24) + "...";
+          if (title.length > 32) {
+            title = title.substring(0, 30) + "...";
           }
           return (
             <li className="media contact" onClick={this.handleClick}>
@@ -403,10 +407,12 @@
     Contact.Online = React.createClass({
         render: function() {
           var lastOnline = '';
-          if (!this.props.online && this.props.when) {
+          if (this.props.now) {
+            lastOnline = "online now";
+          } else if (this.props.when) {
             lastOnline = this.props.when;
           } else {
-            lastOnline = 'online now';
+            lastOnline = "offline";
           }
 
           return (
@@ -423,6 +429,7 @@
         return {selected: false};
       },
       onSelectionChange: function(sel) {
+        console.log("ContactList.onSelectionChange: " + sel);
         this.props.onTopicSelected(sel);
       },
       render: function() {
@@ -430,10 +437,19 @@
         if (this.props.data) {
           contactNodes = Object.keys(this.props.data).map(function(key) {
             var c = this.props.data[key];
-            // FIXME(gene): add support for received/read count
+            var online = false;
+            var lastSeen = null;
+            if (c.seen) {
+              lastSeen = shortDateFormat(new Date(c.seen.when));
+              // TODO(gene): also handle user agent in c.seen.ua
+            }
             var unread = c.seq;
+            if (c.read > 0) {
+              unread -= c.read;
+            }
+
             return (
-              <Contact public={c.public} comment={c.private} unread={unread}
+              <Contact public={c.public} comment={c.private} unread={unread} now={online} when={lastSeen}
                 onSelected={this.onSelectionChange} topic={c.topic} key={c.topic} />
               );
           }, this);
@@ -494,7 +510,8 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
       {id: 7, content: "OK!", timestamp: new Date(2016, 0, 3, 18, 19, 20, 567), response: true}
     ];
     */
-    var received = {
+    var Received = {
+      UNDEF: -2,
       SENDING: -1,
       SERVER: 0,
       CLIENT: 1,
@@ -520,27 +537,26 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
     /* Received/read indicator */
     Message.ReceivedMarker = React.createClass({
       render: function() {
-        var timestamp = (this.props.received === received.SENDING) ?
+        var timestamp = (this.props.received === Received.SENDING) ?
           "sending ..." :
           shortDateFormat(this.props.timestamp);
         var marker = null;
-        // These markers make sense for own messages only.
-        if (!this.props.response) {
-          if (this.props.received === received.SENDING) {
-            marker = '\u231A'; // watch face
-          } else if (this.props.received === received.SERVER || this.props.received === received.CLIENT) {
-            marker = '\u2714'; // checkmark
-            if (this.props.received === received.CLIENT) {
-              var style = {marginLeft: "-0.5em"};
-              marker += <span style={style}>&#x2714;</span>;
-            }
-          } else if (this.props.received === received.READ) {
-            marker = '\u1F441'; // open eye
+
+        if (this.props.received === Received.SENDING) {
+          marker = '\u231A'; // watch face
+        } else if (this.props.received === Received.SERVER || this.props.received === Received.CLIENT) {
+          marker = '\u2714'; // checkmark
+          if (this.props.received === Received.CLIENT) {
+            var style = {marginLeft: "-0.5em"};
+            marker += <span style={style}>{'\u2714'}</span>;
           }
+        } else if (this.props.received === Received.READ) {
+          marker = '\uD83D\uDC41'; // open eye
         }
+
         return (
           <span className="pull-right timestamp">
-            <small className="text-muted">{timestamp}</small> {marker}
+            <small className="text-muted">{timestamp}{'\u00a0'}{marker}</small>
           </span>
         );
       }
@@ -552,7 +568,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
         return {
           message: '',
           // Make initial keypress time as if it happened 5001 milliseconds in the past.
-          keypressTimestamp: new Date().getTime() - KEYPRESS_NOTIFICATION - 1
+          keypressTimestamp: new Date().getTime() - KEYPRESS_DELAY - 1
         };
       },
       handleSend: function(e) {
@@ -565,7 +581,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
       handleMessageTyping: function(e) {
         var newState = {message: e.target.value};
         var now = new Date().getTime();
-        if (now - this.state.keypressTimestamp > KEYPRESS_NOTIFICATION) {
+        if (now - this.state.keypressTimestamp > KEYPRESS_DELAY) {
           var topic = Tinode.getTopic(this.props.topic);
           if (topic.isSubscribed()) {
             topic.noteKeyPress();
@@ -598,27 +614,49 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
           title: ''
         };
       },
-      componentDidMount: function() {
+      // Scroll last message into view on component update e.g. on message received.
+      componentDidUpdate: function() {
+        var node = ReactDOM.findDOMNode(this);
+        if (node) {
+          node.scrollTop = node.scrollHeight;
+        }
+      },
+      componentWillMount: function() {
         this.propsChange(this.props);
       },
       componentWillReceiveProps: function(nextProps) {
         this.propsChange(nextProps);
       },
       propsChange: function(props) {
-        var msgs = [];
-        var topic = Tinode.getTopic(props.topic);
-        if (topic.isSubscribed()) {
-          this.handleInfoChange(topic);
-          topic.messages(function(msg) {
-            msgs = msgs.concat(msg);
-          });
-        } else {
+        if (props.topicSelected != this.state.topic) {
+          var msgs = [];
+          var topic = Tinode.getTopic(props.topicSelected);
+          // Bind the new topic to component.
           topic.onData = this.handleNewMessage;
-          topic.onInfoChange = this.handleInfoChange;
+          topic.onMetaInfo = this.handleInfoChange;
           topic.onSubsUpdated = this.handleSubsUpdated;
-          topic.subscribe({get: "info sub data"});
+          // Unbind the previous topic from this component.
+          if (this.state.topic) {
+            var oldTopic = Tinode.getTopic(this.state.topic);
+            oldTopic.onData = undefined;
+            oldTopic.onMetaInfo = undefined;
+            oldTopic.onSubsUpdated = undefined;
+          }
+
+          if (topic.isSubscribed()) {
+            this.handleInfoChange(topic);
+            topic.messages(function(msg) {
+              msgs = msgs.concat(msg);
+            });
+          } else {
+            topic.subscribe({get: "info sub data"});
+          }
+
+          // The user switched a topic before the timer has triggered, kill it.
+          clearTimeout(this.readTimer);
+
+          this.setState({messages: msgs, topic: props.topicSelected});
         }
-        this.setState({messages: msgs, topic: props.topic});
       },
       handleInfoChange: function(info) {
         console.log("handleInfoChange: " + info);
@@ -628,19 +666,32 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
 
       },
       handleNewMessage: function(msg) {
-        // FIXME(gene): handleNewMessage is bound to all loaded topics as onData. Unbind it when switching topics.
-        // Ignore messages from all other topics but the current one.
-        if (this.state.topic === msg.topic) {
-          this.setState({messages: this.state.messages.concat(msg)});
-        }
+        this.setState({messages: this.state.messages.concat(msg)});
+        // Aknowledge all messages, including own messges.
+        clearTimeout(this.readTimer);
+        this.readTimer = setTimeout(function() {
+          Tinode.getTopic(msg.topic).noteRead(msg.seq);
+        }, READ_DELAY);
+        this.props.onData(msg);
       },
       render: function() {
         var me = Tinode.getCurrentUserID();
         var topic = Tinode.getTopic(this.state.topic);
         var messageNodes = this.state.messages.map(function(msg) {
           var isReply = !(msg.from === me);
+          var msgReceived = Received.UNDEF;
+          if (!isReply) {
+            if (topic.msgReadCount(msg.seq) > 1) {
+              msgReceived = Received.READ;
+            } else if (topic.msgRecvCount(msg.seq) > 1) {
+              msgReceived = Received.CLIENT;
+            } else {
+              msgReceived = Received.SERVER;
+            }
+          }
           return (
-            <Message content={msg.content} timestamp={msg.ts} response={isReply} key={msg.seq} />
+            <Message content={msg.content} timestamp={msg.ts} response={isReply}
+              received={msgReceived} key={msg.seq} />
           );
         });
         return (
@@ -654,7 +705,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
               </ul>
             </div>
             <div className="panel-footer" id="sendMessagePanel">
-              <Message.Send topic={this.props.topic} sendMessage={this.props.sendMessage} />
+              <Message.Send topic={this.props.topicSelected} sendMessage={this.props.sendMessage} />
             </div>
           </div>
         );
@@ -692,35 +743,51 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
       },
       componentDidMount: function() {
         Tinode.enableLogging(true);
-        // Setup with default transport.
+        // Setup with the default transport, usually websocket.
         Tinode.setup(HOST, API_KEY);
       },
       handleLogin: function(login, password) {
         var instance = this;
         this.setState({loginDisabled: true, errorText: ''});
         Tinode.connect().then(function() {
+          // Login
           return Tinode.loginBasic(login, password);
         }).then(function() {
+          // Subscribe to me, fetch current user's info and a list of
+          // topic subscriptions (contact list).
           instance.setState({loggedIn: true});
           var me = Tinode.getMeTopic();
-          me.onInfoChange = instance.handleMeInfoChange;
-          me.onSubsChange = instance.handleMeSubsChange;
+          me.onMetaInfo = instance.tnMeInfoChange;
+          me.onMetaSub = instance.tnMeSubsChange;
           // Subscribe, fetch topic info and the list of subscriptions.
           return me.subscribe({get: "info sub"});
         }).then(function() {
-          var me = Tinode.getMeTopic();
+          // Success! Hide Login panel, show contact list.
           instance.setState({sidePanel: "contacts"});
         }).catch(function(err) {
           instance.setState({loginDisabled: false, errorText: err.message});
         });
       },
-      handleMeInfoChange: function(info) {
+      tnMeInfoChange: function(info) {
         this.setState({sideTitle: info.public});
       },
-      handleMeSubsChange: function(sub) {
+      tnMeSubsChange: function(sub) {
         var subs = this.state.subscriptions;
+        var topic = Tinode.getTopic(sub.topic);
+        topic.onPres = this.tnPresence;
         subs[sub.topic] = sub;
         this.setState({subscriptions: subs});
+      },
+      // Sending "received" notifications
+      tnData: function(data) {
+        clearTimeout(this.receivedTimer);
+        this.receivedTimer = setTimeout(function() {
+          this.receivedTimer = undefined;
+          Tinode.getTopic(data.topic).noteRecv(data.seq);
+        }, RECEIVED_DELAY);
+      },
+      tnPresence: function(pres) {
+        console.log(pres);
       },
       handleNewAccount: function(login_, password_, public_, private_) {
         var instance = this;
@@ -775,7 +842,8 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
               <div className="row fullHeight">
                 <div className="col-lg-12 fullHeight">
                   {this.state.topicSelected ?
-                    <MessagesView topic={this.state.topicSelected} sendMessage={this.handleSendMessage} /> :
+                    <MessagesView topicSelected={this.state.topicSelected} onData={this.tnData}
+                      sendMessage={this.handleSendMessage} /> :
                     <DummyMessagesView />}
                 </div>
               </div>
