@@ -278,7 +278,7 @@
         this.setState({showErrorText: false});
       },
       handleLoginRequested: function(login, password) {
-        this.props.onLogin(login, password);
+        this.props.onLoginRequest(login, password);
         this.setState({showErrorText: true});
       },
       render: function() {
@@ -401,7 +401,7 @@
             <span>{showUnreadBadge}</span>
           );
         }
-    })
+    });
 
     /* Online/offline indicator */
     Contact.Online = React.createClass({
@@ -421,58 +421,66 @@
             </span>
           );
         }
-    })
+    });
 
-    /* List of contacts/topics */
-    var ContactList = React.createClass({
+    /* ContactsView holds all contacts-related stuff */
+    var ContactsView = React.createClass({
       getInitialState: function() {
-        return {selected: false};
+        return {subscriptions: []};
+      },
+      componentWillMount: function() {
+        var me = Tinode.getMeTopic();
+        me.onContactUpdate = this.tnMeContactUpdate;
+        me.onData = this.tnInvite;
+        me.onSubsUpdated = this.tnMeSubsUpdated;
+      },
+      tnMeContactUpdate: function(what, cont) {
+        console.log("changed: " + what + " in " + cont.topic);
+        this.forceUpdate();
+      },
+      tnInvite: function(invite) {
+        console.log(invite);
+      },
+      tnMeSubsUpdated: function(names) {
+        /*var subs = [];
+        Tinode.getMeTopic().contacts(function(cont) {
+          subs.push(cont);
+        });
+        this.setState({subscriptions: subs});
+        */
+        this.forceUpdate();
       },
       onSelectionChange: function(sel) {
-        console.log("ContactList.onSelectionChange: " + sel);
         this.props.onTopicSelected(sel);
       },
       render: function() {
-        var contactNodes = null;
-        if (this.props.data) {
-          contactNodes = Object.keys(this.props.data).map(function(key) {
-            var c = this.props.data[key];
-            var online = false;
-            var lastSeen = null;
-            if (c.seen) {
-              lastSeen = shortDateFormat(new Date(c.seen.when));
-              // TODO(gene): also handle user agent in c.seen.ua
-            }
-            var unread = c.seq;
-            if (c.read > 0) {
-              unread -= c.read;
-            }
+        var contactNodes = [];
+        Tinode.getMeTopic().contacts(function(c) {
+          var online = false;
+          var lastSeen = null;
+          if (c.seen) {
+            lastSeen = shortDateFormat(new Date(c.seen.when));
+            // TODO(gene): also handle user agent in c.seen.ua
+          }
+          var unread = c.seq;
+          if (c.read > 0) {
+            unread -= c.read;
+          }
+          contactNodes.push(
+            <Contact public={c.public} comment={c.private} unread={unread} now={online} when={lastSeen}
+              onSelected={this.onSelectionChange} topic={c.topic} key={c.topic} />
+          );
+        }, this);
 
-            return (
-              <Contact public={c.public} comment={c.private} unread={unread} now={online} when={lastSeen}
-                onSelected={this.onSelectionChange} topic={c.topic} key={c.topic} />
-              );
-          }, this);
-        }
-        return (
-          <div className="contactList">
-            <ul className="media-list">
-              {contactNodes}
-            </ul>
-          </div>
-        );
-      }
-    });
-
-    /* The panel holds all contacts-related stuff */
-    var ContactsView = React.createClass({
-      render: function() {
         return (
           <div className="contactBox">
             <div className="container-fluid">
-            <NewTopic />
-            <ContactList data={this.props.data}
-              onTopicSelected={this.props.onTopicSelected} />
+              <NewTopic />
+              <div className="contactList">
+                <ul className="media-list">
+                  {contactNodes}
+                </ul>
+              </div>
             </div>
           </div>
         );
@@ -616,10 +624,12 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
       },
       // Scroll last message into view on component update e.g. on message received.
       componentDidUpdate: function() {
-        var node = ReactDOM.findDOMNode(this);
-        if (node) {
-          node.scrollTop = node.scrollHeight;
-        }
+        //var node = ReactDOM.findDOMNode(this);
+        //if (node) {
+        //  node.scrollTop = node.scrollHeight;
+        //}
+        var node = this.refs.messagesPanel;
+        node.scrollTop = node.scrollHeight;
       },
       componentWillMount: function() {
         this.propsChange(this.props);
@@ -652,7 +662,8 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
             topic.subscribe({get: "info sub data"});
           }
 
-          // The user switched a topic before the timer has triggered, kill it.
+          // The user switched to the new topic before the timer for
+          // the previous topic has triggered, kill it.
           clearTimeout(this.readTimer);
 
           this.setState({messages: msgs, topic: props.topicSelected});
@@ -695,7 +706,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
           );
         });
         return (
-          <div className="panel panel-default fullViewPort" id="messagesPanel">
+          <div className="panel panel-default fullViewPort" id="messagesPanel" ref="messagesPanel">
             <div className="panel-heading" id="chatTitle">
               <h3 className="panel-title">{this.state.title}</h3>
             </div>
@@ -732,8 +743,8 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
     var AppView = React.createClass({
       getInitialState: function() {
         return {
-          sidePanel: 'login',
-          sideTitle: 'not set',
+          sidePanelSelected: 'login',
+          sidePanelTitle: 'not set',
           loggedIn: false,
           errorText: '',
           topicSelected: '',
@@ -743,40 +754,34 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
       },
       componentDidMount: function() {
         Tinode.enableLogging(true);
+        Tinode.onDisconnect = this.handleDicsonnect;
         // Setup with the default transport, usually websocket.
         Tinode.setup(HOST, API_KEY);
       },
-      handleLogin: function(login, password) {
+      handleDicsonnect: function() {
+        console.log("DISCONNECTED!");
+      },
+      // User clicked Login button in the side panel.
+      handleLoginRequest: function(login, password) {
         var instance = this;
         this.setState({loginDisabled: true, errorText: ''});
         Tinode.connect().then(function() {
           // Login
           return Tinode.loginBasic(login, password);
         }).then(function() {
-          // Subscribe to me, fetch current user's info and a list of
-          // topic subscriptions (contact list).
-          instance.setState({loggedIn: true});
+          // Logged in fine, subscribe to 'me' attaching callbacks from the contacts view.
           var me = Tinode.getMeTopic();
-          me.onMetaInfo = instance.tnMeInfoChange;
-          me.onMetaSub = instance.tnMeSubsChange;
+          me.onMetaInfo = instance.tnMeMetaInfo;
+          instance.setState({sidePanelSelected: "contacts", loggedIn: true});
           // Subscribe, fetch topic info and the list of subscriptions.
-          return me.subscribe({get: "info sub"});
-        }).then(function() {
-          // Success! Hide Login panel, show contact list.
-          instance.setState({sidePanel: "contacts"});
+          me.subscribe({get: "info sub data"});
         }).catch(function(err) {
+          // Login failed, report error
           instance.setState({loginDisabled: false, errorText: err.message});
         });
       },
-      tnMeInfoChange: function(info) {
-        this.setState({sideTitle: info.public});
-      },
-      tnMeSubsChange: function(sub) {
-        var subs = this.state.subscriptions;
-        var topic = Tinode.getTopic(sub.topic);
-        topic.onPres = this.tnPresence;
-        subs[sub.topic] = sub;
-        this.setState({subscriptions: subs});
+      tnMeMetaInfo: function(info) {
+        this.setState({sidePanelTitle: info.public});
       },
       // Sending "received" notifications
       tnData: function(data) {
@@ -786,9 +791,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
           Tinode.getTopic(data.topic).noteRecv(data.seq);
         }, RECEIVED_DELAY);
       },
-      tnPresence: function(pres) {
-        console.log(pres);
-      },
+      // Registration of a new account.
       handleNewAccount: function(login_, password_, public_, private_) {
         var instance = this;
         Tinode.connect().then(function(){
@@ -798,24 +801,29 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
           instance.setState({errorText: err.message});
         });
       },
+      // User clicked on a contact in the side panel.
       handleTopicSelected: function(topicName) {
         this.setState({topicSelected: topicName});
       },
+      // User clicked on a message send button.
       handleSendMessage: function(msg) {
         var topic = Tinode.getTopic(this.state.topicSelected);
         topic.publish(msg);
       },
+      // User chose a Sign Up menu item.
       handleSignUp: function() {
-        this.setState({sidePanel: 'register'});
+        this.setState({sidePanelSelected: 'register'});
       },
+      // User chose Settings menu item.
       handleSettings: function() {
-        this.setState({sidePanel: 'settings'});
+        this.setState({sidePanelSelected: 'settings'});
       },
+      // User clicked Cancel button in Setting or Sign Up panel.
       handleSidepanelCancel: function() {
         if (this.state.loggedIn) {
-          this.setState({sidePanel: 'contacts'});
+          this.setState({sidePanelSelected: 'contacts'});
         } else {
-          this.setState({sidePanel: 'login'});
+          this.setState({sidePanelSelected: 'login'});
         }
       },
       render: function() {
@@ -824,14 +832,14 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
 
           <div id="sidepanel-wrapper">
             <SidepanelView
-              state={this.state.sidePanel}
-              title={this.state.sideTitle}
+              state={this.state.sidePanelSelected}
+              title={this.state.sidePanelTitle}
               subscriptions={this.state.subscriptions}
               loginDisabled={this.state.loginDisabled}
               errorText={this.state.errorText}
               onSignUp={this.handleSignUp}
               onSettings={this.handleSettings}
-              onLogin={this.handleLogin}
+              onLoginRequest={this.handleLoginRequest}
               onCreateAccount={this.handleNewAccount}
               onTopicSelected={this.handleTopicSelected}
               onCancel={this.handleSidepanelCancel} />
