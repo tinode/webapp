@@ -395,7 +395,8 @@
         render: function() {
           var showUnreadBadge = null;
           if (this.props.count > 0) {
-            showUnreadBadge = <span className="label label-primary label-as-badge">{this.props.count}</span>;
+            var count = this.props.count > 99 ? "99+" : this.props.count;
+            showUnreadBadge = <span className="label label-primary label-as-badge">{count}</span>;
           }
           return (
             <span>{showUnreadBadge}</span>
@@ -408,7 +409,7 @@
         render: function() {
           var lastOnline = '';
           if (this.props.now) {
-            lastOnline = "online now";
+            lastOnline = "online";
           } else if (this.props.when) {
             lastOnline = this.props.when;
           } else {
@@ -417,7 +418,8 @@
 
           return (
             <span className="text-muted pull-right">
-              <span className={this.props.now ? "online" : "offline"}>&#x25cf;</span> <small className="text-muted">&nbsp;{lastOnline}</small>
+              <span className={this.props.now ? "online" : "offline"}>&#x25cf;</span>
+              <small>&nbsp;{lastOnline}</small>
             </span>
           );
         }
@@ -456,10 +458,9 @@
       render: function() {
         var contactNodes = [];
         Tinode.getMeTopic().contacts(function(c) {
-          var online = false;
           var lastSeen = null;
           if (c.seen) {
-            lastSeen = shortDateFormat(new Date(c.seen.when));
+            lastSeen = shortDateFormat(c.seen.when);
             // TODO(gene): also handle user agent in c.seen.ua
           }
           var unread = c.seq;
@@ -467,7 +468,7 @@
             unread -= c.read;
           }
           contactNodes.push(
-            <Contact public={c.public} comment={c.private} unread={unread} now={online} when={lastSeen}
+            <Contact public={c.public} comment={c.private} unread={unread} now={c.online} when={lastSeen}
               onSelected={this.onSelectionChange} topic={c.topic} key={c.topic} />
           );
         }, this);
@@ -744,7 +745,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
       getInitialState: function() {
         return {
           sidePanelSelected: 'login',
-          sidePanelTitle: 'not set',
+          sidePanelTitle: null,
           loggedIn: false,
           errorText: '',
           topicSelected: '',
@@ -759,7 +760,15 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
         Tinode.setup(HOST, API_KEY);
       },
       handleDicsonnect: function() {
-        console.log("DISCONNECTED!");
+        this.setState({
+          sidePanelSelected: 'login',
+          sidePanelTitle: null,
+          loggedIn: false,
+          errorText: 'disconnected',
+          topicSelected: '',
+          loginDisabled: false,
+          subscriptions: {}
+        });
       },
       // User clicked Login button in the side panel.
       handleLoginRequest: function(login, password) {
