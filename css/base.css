@@ -210,6 +210,7 @@ html, body {
   background-color: #E9E9FF;
 }
 
+/*
 .chatBox {
   list-style: none;
   padding: 1.5em 0 1.5em;
@@ -297,4 +298,146 @@ html, body {
 
 .chatBox-body > p + p {
   margin-top: 0.5em;
+}
+*/
+
+/* CSS talk bubble */
+.chat-box {
+  list-style: none;
+  padding: 0 0 5em 0;
+}
+
+.chat-box li {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  align-items: flex-end;
+}
+
+.chat-box li.right {
+  justify-content: flex-end;
+}
+
+.chat-box .bubble {
+  position: relative;
+	max-width: 32em;
+	height: auto;
+  padding: 1.5em 0 1.5em;
+	background-color: #ef9a9a;
+  border: 1px solid #e53935;
+
+  margin: 0;
+  padding: 0.5em;
+  text-align: left;
+}
+
+.chat-box li.single {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.chat-box li.single .bubble {
+  border-radius: 0.5em;
+	-webkit-border-radius: 0.5em;
+	-moz-border-radius: 0.5em;
+}
+
+.chat-box li.first {
+  margin-top: 0.5em;
+  margin-bottom: 0.05em;
+}
+
+.chat-box li.first .bubble {
+  border-radius: 0.5em 0.5em 0 0;
+	-webkit-border-radius: 0.5em 0.5em 0 0;
+	-moz-border-radius: 0.5em 0.5em 0 0;
+}
+
+.chat-box li.middle {
+  margin-top: 0.05em;
+  margin-bottom: 0.05em;
+}
+
+.chat-box li.middle .bubble {
+  border-radius: 0;
+}
+
+.chat-box li.last {
+  margin-top: 0.05em;
+  margin-bottom: 0.5em;
+}
+
+.chat-box li.last .bubble {
+  border-radius: 0 0 0.5em 0.5em;
+	-webkit-border-radius: 0 0 0.5em 0.5em;
+	-moz-border-radius: 0 0 0.5em 0.5em;
+}
+
+/* Left triangle placed bottom left flush. */
+.chat-box li.left .tip::before {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  right: auto;
+  left: -11px;
+  top: auto;
+  bottom: -1px; /* border-width */
+  border: 10px solid;
+  border-color: transparent transparent #e53935 transparent;
+}
+.chat-box li.left .tip::after{
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  right: auto;
+  left: -9px;
+  top: auto;
+  bottom: 0;
+  border: 9px solid;
+  border-color: transparent transparent #ef9a9a transparent;
+}
+
+/* Right triangle placed bottom right flush. */
+.chat-box li.right .tip::before {
+	content: '';
+	position: absolute;
+	width: 0;
+	height: 0;
+  left: auto;
+	right: -11px;
+  top: auto;
+	bottom: -1px; /* border-width */
+	border: 10px solid;
+	border-color: transparent transparent #e53935 transparent;
+}
+.chat-box li.right .tip::after {
+	content: '';
+	position: absolute;
+	width: 0;
+	height: 0;
+  left: auto;
+	right: -9px;
+  top: auto;
+	bottom: 0;
+	border: 9px solid;
+	border-color: transparent transparent #ef9a9a transparent;
+}
+
+.chat-box .avatar {
+  width: 40px;
+  text-align: center;
+}
+
+.chat-box .avatar img {
+  width: 32px;
+  display: block;
+  position: relative;
+  left: 4px;
+  border-radius: 50%;
+}
+
+.chat-box .bubble p {
+  margin: 0;
 }

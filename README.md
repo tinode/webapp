@@ -7,3 +7,5 @@ This is work in progress. Bugs are expected.
 Try it at http://api.tinode.co/x/example-react-js/
 
 License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+
+Avatar photos from [https://www.pexels.com/] under [CC0 license](https://www.pexels.com/photo-license/).
