@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Tinode example: chat web application in react.js</title>
     <link rel="shortcut icon" href="img/logo32x32.png" />
+    <!-- Google's Roboto font -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400italic,700&subset=latin,cyrillic"
+      rel="stylesheet" type="text/css" />
+    <!-- Google's material design icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     <!-- Customized Bootstrap style (material design). -->
     <link rel="stylesheet" href="css/bootstrap.css" />
     <!-- Styles for local elements -->
@@ -82,12 +87,12 @@
         this.props.onLogin(this.state.login.trim(), this.state.password.trim());
       },
       render: function() {
-        var submitClassList = "btn btn-primary";
+        var submitClassList = "blue";
         if (this.props.disabled) {
           submitClassList += " disabled";
         }
         return (
-          <div className="container-fluid">
+          <div>
             <form className="form-signin" onSubmit={this.handleSubmit}>
               <label htmlFor="inputLogin" className="sr-only">Login</label>
               <input type="text" id="inputLogin" className="form-control"
@@ -102,7 +107,7 @@
                 onChange={this.handlePasswordChange}
                 required />
               <br />
-              <button className={submitClassList} type="submit">Sign in</button>
+              <button className={submitClassList} type="submit">SIGN IN</button>
             </form>
           </div>
         );
@@ -148,12 +153,12 @@
         }
       },
       render: function() {
-        var submitClassList = "btn btn-primary";
+        var submitClassList = "blue";
         if (this.props.disabled) {
           submitClassList += " disabled";
         }
         return (
-          <div className="container-fluid">
+          <div>
             <form onSubmit={this.handleSubmit} onCancel={this.props.onCancel}>
               <label htmlFor="signupLogin" className="sr-only">Login</label>
               <input type="text" id="signupLogin" className="form-control" placeholder="Login"
@@ -171,7 +176,7 @@
               <textarea id="signupPrivate" className="form-control" rows="3" onChange={this.handlePrivateChange}
                 value={this.state.private} placeholder="Private: text or valid JSON"></textarea>
               <br />
-              <button className={submitClassList} type="submit">Sign up</button>
+              <button className={submitClassList} type="submit">SIGN UP</button>
             </form>
           </div>
         );
@@ -197,29 +202,21 @@
         var avatar = null;
         if (this.props.avatar) {
           var src = this.props.avatar === true ? "img/avatar.svg" : this.props.avatar;
-          avatar = <img id="self-avatar" className="avatar pull-left" alt="avatar" src={src} />
+          avatar = <img id="self-avatar" alt="avatar" src={src} />
         }
         return (
-          <nav className="navbar navbar-inverse">
-            <div className="container-fluid">
-              <div className="navbar-header">
-                {avatar}
-                <span className="navbar-brand">{this.props.title}</span>
-              </div>
-              <div>
-                <ul className="nav navbar-nav navbar-right">
-                  {this.props.state === 'login' ?
-                    <SideNavbar.MenuStart onSignUp={this.props.onSignUp} onSettings={this.props.onSettings} /> :
+            <div id="side-caption-panel">
+              {avatar}
+              <div id="sidepanel-title">{this.props.title}</div>
+              {this.props.state === 'login' ?
+                  <SideNavbar.MenuStart onSignUp={this.props.onSignUp} onSettings={this.props.onSettings} /> :
                     this.props.state === 'settings' ?
                     <SideNavbar.MenuCancel onCancel={this.props.onCancel} /> :
                     this.props.state === 'register' ?
                     <SideNavbar.MenuCancel onCancel={this.props.onCancel} /> :
                     this.props.state === 'contacts' ?
                     <SideNavbar.MenuSettings onSettings={this.props.onSettings} /> : null}
-                </ul>
-              </div>
             </div>
-          </nav>
         );
       }
     })
@@ -227,14 +224,11 @@
     SideNavbar.MenuStart = React.createClass({
       render: function() {
         return (
-          <li>
-            <ul className="nav navbar-nav">
-              <li><a href="#"
-                onClick={this.props.onSignUp}><big><span className="glyphicon glyphicon-user"></span></big></a></li>
-              <li><a href="#"
-                onClick={this.props.onSettings}><big><span className="glyphicon glyphicon-cog"></span></big></a></li>
-            </ul>
-          </li>
+            <div>
+              <a href="#" onClick={this.props.onSignUp}><i className="material-icons medium">person_add</i></a>
+              &nbsp;
+              <a href="#" onClick={this.props.onSettings}><i className="material-icons medium">settings</i></a>
+            </div>
         );
       }
     });
@@ -242,7 +236,7 @@
     SideNavbar.MenuCancel = React.createClass({
       render: function() {
         return (
-          <li><a href="#" onClick={this.props.onCancel}><big><span className="glyphicon glyphicon-remove"></span></big></a></li>
+          <a href="#" onClick={this.props.onCancel}><i className="material-icons medium">close</i></a>
         );
       }
     })
@@ -250,7 +244,7 @@
     SideNavbar.MenuSettings = React.createClass({
       render: function() {
         return (
-          <li><a href="#" onClick={this.props.onSettings}><big><span className="glyphicon glyphicon-cog"></span></big></a></li>
+          <a href="#" onClick={this.props.onSettings}><i className="material-icons medium">settings</i></a>
         );
       }
     })
@@ -284,7 +278,7 @@
           default:;
         };
         return (
-          <div className="sidepanel-nav">
+          <div id="sidepanel">
             <SideNavbar state={this.props.state}
               title={title} avatar={avatar}
               onSignUp={this.props.onSignUp}
@@ -309,14 +303,14 @@
 
     SidepanelView.ErrorPanel = React.createClass({
       render: function() {
-        var classList = "alert alert-block";
-        var errorText = null;
+        var errorClass = null;
+        var errorText = ' ';
         if (this.props.errorText && this.props.showError) {
-          classList += " alert-error";
+          errorClass = "error-alert";
           errorText = this.props.errorText;
         }
         return (
-          <div className={classList}>{errorText}</div>
+          <div id="alert-box" className={errorClass}>{errorText}</div>
         );
       }
     });
@@ -325,7 +319,7 @@
 
     /* BEGIN Contact list (list of topics) */
 
-    /* A form for initiating a new topic */
+    /* A form for initiating a new topic
     var NewTopic = React.createClass({
       render: function() {
         return (
@@ -333,12 +327,13 @@
             <label htmlFor="addTopic" className="sr-only">Add user or topic</label>
             <input id="addTopic" className="form-control" type="text" placeholder="Add topic" />
             <span className="input-group-btn"><button className="btn btn-default" type="button">
-              <i className="glyphicon glyphicon-plus-sign"></i>
+              <i className="material-icons">add</i>
             </button></span>
           </div>
         );
       }
     });
+    */
 
     /*
     var contactsData = [
@@ -365,10 +360,12 @@
             title = title.substring(0, 30) + "...";
           }
           return (
-            <li className="media contact" onClick={this.handleClick}>
-              <a href="#" className="pull-left"><img src="img/avatar.svg" className="avatar img-circle" alt="" /></a>
-              <div className="media-body">
-                <Contact.Online when={this.props.when} now={this.props.now} />
+            <li onClick={this.handleClick}>
+              <div className="avatar-box">
+                <img src="img/avatar.svg" className="avatar" alt="" />
+                <span className={this.props.now ? "online" : "offline"}>&#x25cf;</span>
+              </div>
+              <div>
                 <strong>{title}</strong> <Contact.Unread count={this.props.unread} />
                 <p>{this.props.comment}</p>
               </div>
@@ -383,31 +380,10 @@
           var showUnreadBadge = null;
           if (this.props.count > 0) {
             var count = this.props.count > 99 ? "99+" : this.props.count;
-            showUnreadBadge = <span className="label label-primary label-as-badge">{count}</span>;
+            showUnreadBadge = <span className="badge">{count}</span>;
           }
           return (
             <span>{showUnreadBadge}</span>
-          );
-        }
-    });
-
-    /* Online/offline indicator */
-    Contact.Online = React.createClass({
-        render: function() {
-          var lastOnline = '';
-          if (this.props.now) {
-            lastOnline = "online";
-          } else if (this.props.when) {
-            lastOnline = this.props.when;
-          } else {
-            lastOnline = "offline";
-          }
-
-          return (
-            <span className="text-muted pull-right">
-              <span className={this.props.now ? "online" : "offline"}>&#x25cf;</span>
-              <small>&nbsp;{lastOnline}</small>
-            </span>
           );
         }
     });
@@ -461,15 +437,11 @@
         }, this);
 
         return (
-          <div className="contactBox">
-            <div className="container-fluid">
-              <NewTopic />
-              <div className="contactList">
-                <ul className="media-list">
-                  {contactNodes}
-                </ul>
-              </div>
-            </div>
+          <div id="contacts-panel">
+            <ul id="contact-box">
+              {contactNodes}
+            </ul>
+          <button className="round blue" id="add-topic"><i className="material-icons big">add</i></button>
           </div>
         );
       }
@@ -516,9 +488,15 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
     var Message = React.createClass({
       render: function() {
         var liClass = (this.props.response ? "left" : "right") + " " + this.props.sequence;
+        var colors = {
+          backgroundColor: materialColor[materialColorIndex[this.props.userIndex]]["100"],
+          borderColor: materialColor[materialColorIndex[this.props.userIndex]]["100"]
+        };
+        var bubbleClass = (this.props.sequence === "single" || this.props.sequence === "last") ?
+          "bubble tip" : "bubble";
         return (
           <li className={liClass}>
-            <div className="bubble tip">
+            <div className={bubbleClass} style={colors}>
               <p>{this.props.content}
               <Message.ReceivedMarker response={this.props.response}
                   timestamp={this.props.timestamp} received={this.props.received} />
@@ -538,65 +516,19 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
         var marker = null;
 
         if (this.props.received === Received.SENDING) {
-          marker = '\u231A'; // watch face
-        } else if (this.props.received === Received.SERVER || this.props.received === Received.CLIENT) {
-          marker = '\u2714'; // checkmark
-          if (this.props.received === Received.CLIENT) {
-            var style = {marginLeft: "-0.5em"};
-            marker += <span style={style}>{'\u2714'}</span>;
-          }
+          marker = (<i className="material-icons small">access_time</i>); // watch face
+        } else if (this.props.received === Received.SERVER) {
+          marker = (<i className="material-icons small">done</i>); // checkmark
+        } else if (this.props.received === Received.CLIENT) {
+          marker = (<i className="material-icons small">done_all</i>); // double checkmark
         } else if (this.props.received === Received.READ) {
-          marker = '\uD83D\uDC41'; // open eye
+          marker = (<i className="material-icons small blue">done_all</i>); // open eye
         }
 
         return (
           <span className="pull-right timestamp">
-            <small className="text-muted">{timestamp}{'\u00a0'}{marker}</small>
+            {timestamp}{'\u00a0'}{marker}
           </span>
-        );
-      }
-    });
-
-    /* Send message form */
-    Message.Send = React.createClass({
-      getInitialState:function() {
-        return {
-          message: '',
-          // Make initial keypress time as if it happened 5001 milliseconds in the past.
-          keypressTimestamp: new Date().getTime() - KEYPRESS_DELAY - 1
-        };
-      },
-      handleSend: function(e) {
-        var message = this.state.message.trim();
-        if (message) {
-          this.props.sendMessage(this.state.message.trim());
-          this.setState({message: ''});
-        }
-      },
-      handleMessageTyping: function(e) {
-        var newState = {message: e.target.value};
-        var now = new Date().getTime();
-        if (now - this.state.keypressTimestamp > KEYPRESS_DELAY) {
-          var topic = Tinode.getTopic(this.props.topic);
-          if (topic.isSubscribed()) {
-            topic.noteKeyPress();
-          }
-          newState.keypressTimestamp = now;
-        }
-        this.setState(newState);
-      },
-      render: function() {
-        return (
-          <div className="input-group">
-            <label htmlFor="sendMessage" className="sr-only">Add topic</label>
-            <input id="sendMessage" className="form-control" type="text" placeholder="New message"
-              value={this.state.message} onChange={this.handleMessageTyping} />
-            <span className= "input-group-btn">
-              <button className= "btn btn-default" type="button" onClick={this.handleSend}>
-                <i className="glyphicon glyphicon-send"></i>
-              </button>
-            </span>
-          </div>
         );
       }
     });
@@ -615,8 +547,8 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
         //if (node) {
         //  node.scrollTop = node.scrollHeight;
         //}
-        var node = this.refs.messagesPanel;
-        node.scrollTop = node.scrollHeight;
+        //var node = this.refs.messagesPanel;
+        //node.scrollTop = node.scrollHeight;
       },
       componentWillMount: function() {
         this.propsChange(this.props);
@@ -673,53 +605,119 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
         this.props.onData(msg);
       },
       render: function() {
-        var me = Tinode.getCurrentUserID();
-        var topic = Tinode.getTopic(this.state.topic);
-        var previousFrom = null;
-        var messageNodes = this.state.messages.map(function(msg) {
-          var isReply = !(msg.from === me);
-          var msgReceived = Received.UNDEF;
-          if (!isReply) {
-            if (topic.msgReadCount(msg.seq) > 1) {
-              msgReceived = Received.READ;
-            } else if (topic.msgRecvCount(msg.seq) > 1) {
-              msgReceived = Received.CLIENT;
-            } else {
-              msgReceived = Received.SERVER;
+        var component = null;
+        if (this.state.topic) {
+          var messageNodes = [];
+          var me = Tinode.getCurrentUserID();
+          var topic = Tinode.getTopic(this.state.topic);
+          var previousFrom = null;
+          for (var i=0; i<this.state.messages.length; i++) {
+            var msg = this.state.messages[i];
+            var nextFrom = (i + 1 < this.state.messages.length) ? this.state.messages[i+1].from : null;
+            var sequence = "single";
+            if (msg.from === previousFrom) {
+              if (msg.from === nextFrom) {
+                sequence = "middle";
+              } else {
+                sequence = "last";
+              }
+            } else if (msg.from === nextFrom) {
+              sequence = "first";
             }
+            previousFrom = msg.from;
+
+            var isReply = !(msg.from === me);
+            var msgReceived = Received.UNDEF;
+            if (!isReply) {
+              if (topic.msgReadCount(msg.seq) > 1) {
+                msgReceived = Received.READ;
+              } else if (topic.msgRecvCount(msg.seq) > 1) {
+                msgReceived = Received.CLIENT;
+              } else {
+                msgReceived = Received.SERVER;
+              }
+            }
+            messageNodes.push(
+              <Message content={msg.content} timestamp={msg.ts} response={isReply}
+                userIndex={msg.$userIndex} sequence={sequence} received={msgReceived} key={msg.seq} />
+            );
           }
-          return (
-            <Message content={msg.content} timestamp={msg.ts} response={isReply}
-              sequence = {sequence} received={msgReceived} key={msg.seq} />
+          component = (
+            <div id="topic-view">
+              <div id="topic-caption-panel">
+                <h4>{this.state.title}</h4>
+              </div>
+              <div id="messages-panel" ref="messagesPanel">
+                <ul className="chat-box">
+                  {messageNodes}
+                </ul>
+              </div>
+              <div id="send-message-panel">
+                <MessagesView.Send topic={this.props.topicSelected} sendMessage={this.props.sendMessage} />
+              </div>
+            </div>
           );
-        });
+        } else {
+          component = (
+            <MessagesView.Dummy />
+          );
+        }
+        return component;
+      }
+    });
+
+    /* Send message form */
+    MessagesView.Send = React.createClass({
+      getInitialState:function() {
+        return {
+          message: '',
+          // Make initial keypress time as if it happened 5001 milliseconds in the past.
+          keypressTimestamp: new Date().getTime() - KEYPRESS_DELAY - 1
+        };
+      },
+      handleSend: function(e) {
+        var message = this.state.message.trim();
+        if (message) {
+          this.props.sendMessage(this.state.message.trim());
+          this.setState({message: ''});
+        }
+      },
+      handleMessageTyping: function(e) {
+        var newState = {message: e.target.value};
+        var now = new Date().getTime();
+        if (now - this.state.keypressTimestamp > KEYPRESS_DELAY) {
+          var topic = Tinode.getTopic(this.props.topic);
+          if (topic.isSubscribed()) {
+            topic.noteKeyPress();
+          }
+          newState.keypressTimestamp = now;
+        }
+        this.setState(newState);
+      },
+      render: function() {
         return (
-          <div className="panel panel-default fullViewPort" id="messagesPanel" ref="messagesPanel">
-            <div className="panel-heading" id="chatTitle">
-              <h3 className="panel-title">{this.state.title}</h3>
-            </div>
-            <div className="panel-body" id="messagesView">
-              <ul className="chat-box">
-                {messageNodes}
-              </ul>
-            </div>
-            <div className="panel-footer" id="sendMessagePanel">
-              <Message.Send topic={this.props.topicSelected} sendMessage={this.props.sendMessage} />
-            </div>
+          <div>
+            <input id="sendMessage" type="text" placeholder="New message"
+              value={this.state.message} onChange={this.handleMessageTyping} />
+            <a href="#" onClick={this.handleSend}>
+              <i className="material-icons">send</i>
+            </a>
           </div>
         );
       }
     });
 
-    /* This is just a static page to show when no conversation is selected */
-    var DummyMessagesView = React.createClass({
+    /* This is just a static page to display when no conversation is selected. */
+    MessagesView.Dummy = React.createClass({
       render: function() {
         return (
-          <div className="panel panel-default fullHeight">
-          <div className="panel-body text-center center-block fullHeight" id="dummyView">
-            <div><a href="https://github.com/tinode/chat/"><img id="logo" alt="logo" src="img/logo.svg" />
-            <h3>Tinode Demo Chat</h3></a></div>
-          </div>
+          <div id="dummy-view">
+            <a href="https://github.com/tinode/chat/">
+              <div>
+                <img id="logo" alt="logo" src="img/logo.svg" />
+                <h4>Tinode Demo Chat</h4>
+              </div>
+            </a>
           </div>
         );
       }
@@ -824,9 +822,8 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
       },
       render: function() {
         return (
-          <div className="fullScreen">
+          <div id="app-container">
 
-          <div id="sidepanel-wrapper">
             <SidepanelView
               state={this.state.sidePanelSelected}
               title={this.state.sidePanelTitle}
@@ -839,20 +836,11 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
               onCreateAccount={this.handleNewAccount}
               onTopicSelected={this.handleTopicSelected}
               onCancel={this.handleSidepanelCancel} />
-          </div>
 
-          <div id="page-content-wrapper">
-            <div className="container-fluid fullHeight">
-              <div className="row fullHeight">
-                <div className="col-lg-12 fullHeight">
-                  {this.state.topicSelected ?
-                    <MessagesView topicSelected={this.state.topicSelected} onData={this.tnData}
-                      sendMessage={this.handleSendMessage} /> :
-                    <DummyMessagesView />}
-                </div>
-              </div>
-            </div>
-          </div>
+            <MessagesView
+              topicSelected={this.state.topicSelected}
+              onData={this.tnData}
+              sendMessage={this.handleSendMessage} />
 
           </div>
         );
@@ -865,10 +853,10 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
     );
     </script>
     <script type="text/javascript">
-    var materialColorIndex = ["red", "pink", "purple", "deep-purple", "indigo", "blue", "light-blue", "cyan", "teal",
-      "green","light-green","lime","yellow", "amber", "orange", "deep-orange", "brown", "grey", "blue-grey"];
+    var materialColorIndex = ["red", "green", "blue", "yellow", "grey", "pink", "light-green", "indigo", "deep-purple",
+      "light-blue", "deep-orange", "cyan", "lime","amber", "purple", "orange", "teal", "brown", "blue-grey"];
     var materialShadeIndex = ["50", "100", "200", "300", "400", "500", "600", "700", "800", "900"];
-    var materialColors = {
+    var materialColor = {
       "red": {
         "50": "#ffebee",
         "100": "#ffcdd2",

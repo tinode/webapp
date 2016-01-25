@@ -1,123 +1,196 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
 html, body {
-  margin:0;
-  padding:0;
   height:100%;
   width:100%;
-  overflow-x: hidden;
+  font-family: 'Roboto', Arial, sans-serif;
+  overflow: hidden;
+  background-color: silver;
 }
 
-.fullScreen {
-  height:100%;
-  width:100%;
-}
-
-/* Top-level layout style: sidepanel + main view */
 #mountPoint {
-  padding-left: 0;
-  transition: all 0.5s ease;
+  height: 100%;
+  padding-top: 1em;
+  padding-bottom: 4em;
+}
+
+/* Top-level application layout style: sidepanel + main view */
+#app-container {
+  position: relative;
+  display: flex;
+  height: 100%;
+  width: 80em;
+  overflow: hidden;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 1px 2px 0.3em gray;
+  background-color: white;
+}
+
+#sidepanel {
+  display: flex;
+  flex-direction: column;
+  width: 30em;
   height: 100%;
 }
 
-#mountPoint.toggled {
-  padding-left: 30em;
-}
-
-#sidepanel-wrapper {
-  position: fixed;
-  left: 30em;
-  width: 0;
-  height: 100vh;
-  margin-left: -30em;
-  transition: all 0.5s ease;
-}
-
-#mountPoint.toggled #sidepanel-wrapper {
-  width: 30em;
-}
-
-#page-content-wrapper {
+#topic-view {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
-  position: absolute;
-}
-
-#mountPoint.toggled #page-content-wrapper {
-  position: absolute;
-  margin-right: -30em;
-}
-
-.sidepanel-nav {
-  position: absolute;
-  top: 0;
-  width: 30em;
-  margin: 0;
-  padding: 0;
-  height: 100%;
-}
-
-@media(min-width:768px) {
-  #mountPoint {
-    padding-left: 30em;
-  }
-
-  #mountPoint.toggled {
-    padding-left: 0;
-  }
-
-  #sidepanel-wrapper {
-    width: 30em;
-  }
-
-  #mountPoint.toggled #sidepanel-wrapper {
-    width: 0;
-  }
-
-  #page-content-wrapper {
-    position: relative;
-    height: 100%;
-  }
-
-  #mountPoint.toggled #page-content-wrapper {
-    position: relative;
-    margin-right: 0;
-  }
 }
 /* END of top-level layout */
 
-/* Making the alert box less tall */
-.alert-block {
-  padding-top: 0.25em;
-  padding-bottom: 0.25em;
-  margin-bottom: 3px;
-  height: 2.3em;
+/* Sidepanel styles */
+#side-caption-panel {
+  display: flex;
+  align-items: center;
+  x-justify-content: space-between;
+  flex: none;
+  padding: 0.5em;
+  height: 4.5em;
+
+  background-color: #039be5; /* light-blue 600 */
+  color: #b3e5fc; /* light-blue 100 */
+
+  box-shadow: 0 1px 1px -1px gray;
+  z-index: 1; /* otherwise the shadow becomes invisible */
 }
 
-.alert-error {
-  background-color: #FCC;
-  border-color: #C99;
+#side-caption-panel a {
+  color: #b3e5fc; /* light-blue 100 */
+  padding-left: 0.5em;
+  vertical-align: -1.5em; /* icons are bigger than the declared font size */
+}
+
+#side-caption-panel :hover {
+  color: white;
+}
+
+#sidepanel-title {
+  margin-right: auto;
+  margin-left: 0.5em;
+  font-size: 2rem;
+}
+
+#self-avatar {
+  width: 3em;
+  height: auto;
+  flex: none;
+}
+
+/* Area which displays an error message */
+#alert-box {
+  padding: 0.5em;
+  background-color: transparent;
+}
+#alert-box.error-alert {
+  background-color: #ffcdd2;
+  border-color: #d32f2f;
   color: #600;
 }
 
-.avatar {
-  width: 32pt;
+/* List of contacts */
+#contacts-panel {
+  position: relative;
+  overflow-y: scroll;
+}
+
+#contact-box {
+  list-style: none;
+}
+
+#contact-box li {
+  display: flex;
+  padding: 0.5em;
+  min-height: 3.5em;
+  overflow: hidden;
+}
+#contact-box li:hover {
+  background-color: #fffde7; /* yellow 50 highlight */
+}
+
+/* Avatar and online-offline indicator */
+#contact-box .avatar-box {
+  margin-right: 1em;
+  position: relative;
+  width: 3em;
+  height: 3em;
+  overflow: hidden;
+  padding: 0;
+}
+#contact-box .avatar {
+  width: 3em;
   height: auto;
 }
 
-.navbar {
-  height: 64px;
-  margin-bottom: 0.2em;
+/* Online-offline indicator positioned inside avatar-box */
+#contact-box .online, .offline {
+  font-size: 1.5em;
+  position: absolute;
+  right: 0;
+  bottom: -0.5em;
+}
+#contact-box .online {
+  color: #66bb6a;
+}
+#contact-box .offline {
+  color: #999;
 }
 
-.navbar .avatar {
-  margin-left: 4pt;
-  margin-right: 4pt;
-  margin-top: 8pt;
+#add-topic {
+  position: absolute;
+  right: 1em;
+  bottom: 1em;
+}
+/* END of avatar box */
+
+/* END of sidepanel styles */
+
+/* Topic/messages view */
+#topic-caption-panel {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex: none;
+  padding: 0.5em;
+  height: 4.5em;
+  background-color: #b0bec5;
+  box-shadow: 0 1px 1px -1px gray;
+  z-index: 1; /* otherwise the shadow becomes invisible */
 }
 
-.label-as-badge {
-  border-radius: 1em;
-  margin-left: 0.5em;
+#messages-panel {
+  padding: 0.75em;
+  overflow-y: scroll;
+  background-color: #eceff1;
+  background-image: url("../img/ignasi_pattern_s.png");
 }
+
+/* Footer-panel with the input for the new message */
+#send-message-panel {
+  flex: none;
+  margin-top: auto;
+  padding: 0.5em;
+}
+
+/* A static panel shown when no topic is selected */
+#dummy-view {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e0f7fa;
+}
+
+/* END of topic/mesages view */
+
 
 .contactBox {
   overflow: hidden;
@@ -130,7 +203,6 @@ html, body {
 }
 
 .contactList {
-  z-index: 1;
   padding: 9.5em 0em 0.5em 0em;
   margin-top: -9em;
   height: 100vh;
@@ -149,18 +221,6 @@ html, body {
   margin-top: 0;
 }
 
-.online, .offline {
-  font-size: 14pt;
-}
-
-.online {
-  color: #8B7;
-}
-
-.offline {
-  color: #999;
-}
-
 .fullHeight {
   height: 100%;
   overflow: hidden;
@@ -176,135 +236,11 @@ html, body {
   margin: 0;
 }
 
-#chatTitle {
-  z-index: 3;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 64px;
-  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.15);
-}
-
-#messagesPanel {
-  overflow-y: scroll;
-  padding-top: 0;
-  padding-bottom: 0;
-  background-image: url("../img/ignasi_pattern_s.png");
-}
-
-#messagesView {
-  padding-top: 70px;
-}
-
-#sendMessagePanel {
-  position: absolute;
-  bottom: 0;
-  box-shadow: 0px -1px 2px rgba(0, 0, 0, 0.15);
-}
-
-#dummyView {
-  display:flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #E9E9FF;
-}
-
-/*
-.chatBox {
-  list-style: none;
-  padding: 1.5em 0 1.5em;
-  position: relative;
-}
-
-.chatBox > li {
-  margin-bottom: 1em;
-  position: relative;
-}
-
-.chatBox > li:before,
-.chatBox > li:after {
-  content: " ";
-  display: table;
-}
-
-.chatBox > li:after {
-  clear: both;
-}
-
-.chatBox > li > .chatBox-panel {
-  max-width: 90%;
-  float: right;
-  background-color: #DFD;
-  border: 1px solid #CDC;
-  border-radius: 4px;
-  padding: 1em;
-  position: relative;
-  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.15);
-}
-
-.chatBox > li > .chatBox-panel:before {
-  position: absolute;
-  top: 9px;
-  right: -12px;
-  display: inline-block;
-  border-top: 12px solid transparent;
-  border-left: 12px solid #CCC;
-  border-right: 0px solid #CCC;
-  border-bottom: 12px solid transparent;
-  content: " ";
-}
-
-.chatBox > li > .chatBox-panel:after {
-  position: absolute;
-  top: 10px;
-  right: -11px;
-  display: inline-block;
-  border-top: 11px solid transparent;
-  border-left: 11px solid #DFD;
-  border-right: 0 solid #DDF;
-  border-bottom: 11px solid transparent;
-  content: " ";
-}
-
-.chatBox > li.chatBox-inverted > .chatBox-panel {
-  background-color: #DDF;
-  border: 1px solid #CCD;
-  float: left;
-}
-
-.chatBox > li.chatBox-inverted > .chatBox-panel:before {
-  border-left-width: 0;
-  border-right-width: 12px;
-  left: -12px;
-  right: auto;
-}
-
-.chatBox > li.chatBox-inverted > .chatBox-panel:after {
-  border-left-width: 0;
-  border-right-width: 11px;
-  left: -11px;
-  right: auto;
-}
-
-.chatBox .timestamp {
-  padding-left: 3em;
-}
-
-.chatBox-body > p,
-.chatBox-body > ul {
-  margin-bottom: 0;
-}
-
-.chatBox-body > p + p {
-  margin-top: 0.5em;
-}
-*/
-
-/* CSS talk bubble */
+/* Talk bubbles */
 .chat-box {
   list-style: none;
-  padding: 0 0 5em 0;
+  padding: 0 0 3.5em 0;
+  margin: 0 1em 0 1em;
 }
 
 .chat-box li {
@@ -321,56 +257,40 @@ html, body {
 .chat-box .bubble {
   position: relative;
 	max-width: 32em;
+  min-width: 16em;
 	height: auto;
-  padding: 1.5em 0 1.5em;
-	background-color: #ef9a9a;
-  border: 1px solid #e53935;
-
+  padding: 0.75em 0.5em 0.75em 1.25em;
   margin: 0;
-  padding: 0.5em;
   text-align: left;
-}
 
-.chat-box li.single {
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
-}
-
-.chat-box li.single .bubble {
   border-radius: 0.5em;
 	-webkit-border-radius: 0.5em;
 	-moz-border-radius: 0.5em;
+
+  /* tested in chrome 47 on mac - performance sucks
+  -webkit-filter: drop-shadow(0px 1px 1px -1px rgba(0,0,0,0.3));
+  -filter: drop-shadow(0px 1px 1px -1px rgba(0,0,0,0.3));
+  */
+}
+
+.chat-box li.single {
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
 }
 
 .chat-box li.first {
-  margin-top: 0.5em;
-  margin-bottom: 0.05em;
-}
-
-.chat-box li.first .bubble {
-  border-radius: 0.5em 0.5em 0 0;
-	-webkit-border-radius: 0.5em 0.5em 0 0;
-	-moz-border-radius: 0.5em 0.5em 0 0;
+  margin-top: 0.75em;
+  margin-bottom: 0.15em;
 }
 
 .chat-box li.middle {
-  margin-top: 0.05em;
-  margin-bottom: 0.05em;
-}
-
-.chat-box li.middle .bubble {
-  border-radius: 0;
+  margin-top: 0.15em;
+  margin-bottom: 0.15em;
 }
 
 .chat-box li.last {
-  margin-top: 0.05em;
-  margin-bottom: 0.5em;
-}
-
-.chat-box li.last .bubble {
-  border-radius: 0 0 0.5em 0.5em;
-	-webkit-border-radius: 0 0 0.5em 0.5em;
-	-moz-border-radius: 0 0 0.5em 0.5em;
+  margin-top: 0.15em;
+  margin-bottom: 0.75em;
 }
 
 /* Left triangle placed bottom left flush. */
@@ -380,23 +300,14 @@ html, body {
   width: 0;
   height: 0;
   right: auto;
-  left: -11px;
-  top: auto;
-  bottom: -1px; /* border-width */
-  border: 10px solid;
-  border-color: transparent transparent #e53935 transparent;
-}
-.chat-box li.left .tip::after{
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 0;
-  right: auto;
-  left: -9px;
+  left: -10px;
   top: auto;
   bottom: 0;
-  border: 9px solid;
-  border-color: transparent transparent #ef9a9a transparent;
+  border: 10px solid;
+  border-top-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: inherit;
+  border-left-color: transparent;
 }
 
 /* Right triangle placed bottom right flush. */
@@ -406,23 +317,14 @@ html, body {
 	width: 0;
 	height: 0;
   left: auto;
-	right: -11px;
-  top: auto;
-	bottom: -1px; /* border-width */
-	border: 10px solid;
-	border-color: transparent transparent #e53935 transparent;
-}
-.chat-box li.right .tip::after {
-	content: '';
-	position: absolute;
-	width: 0;
-	height: 0;
-  left: auto;
-	right: -9px;
+	right: -10px;
   top: auto;
 	bottom: 0;
-	border: 9px solid;
-	border-color: transparent transparent #ef9a9a transparent;
+	border: 10px solid;
+  border-top-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: inherit;
+  border-left-color: transparent;
 }
 
 .chat-box .avatar {
@@ -440,4 +342,132 @@ html, body {
 
 .chat-box .bubble p {
   margin: 0;
+}
+
+/* Typing notification bubble */
+.chat-box .typing {
+  display: inline-block;
+  border-radius: 0.5em;
+  width: 2em;
+  padding: 0.25em 0.35em;
+  vertical-align: middle;
+  text-align: center;
+  color: #aaa;
+}
+
+.chat-box li.single .typing {
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
+}
+
+.chat-box li.last .typing {
+  margin-top: 0.15em;
+  margin-bottom: 0.75em;
+}
+
+.chat-box .timestamp {
+  font-size: 80%;
+  color: #777;
+  padding-left: 1.5em;
+  padding-top: 0.5em;
+}
+
+/* END of talk bubbles */
+
+/* Input fields and buttons */
+button {
+  display: inline-block;
+  margin: 0;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  padding: 0.25em 1em;
+  font-size: 1.35rem;
+  border-radius: 2px;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.25);
+}
+
+button[disabled],
+html input[disabled] {
+  cursor: default;
+  opacity: 0.65;
+  box-shadow: none;
+}
+
+button.round {
+  border-radius: 50%;
+  width: 5rem;
+  height: 5rem;
+  line-height: 1;
+  outline: none; /* otherwise a square outline is shown */
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.25);
+  z-index: 2;
+}
+button.blue {
+  background-color: #2196f3; /* blue 500 */
+  color: white;
+}
+
+button:active {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+
+input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #999;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  transition: border 0.2s ease-in-out, box-shadow: 0.2s ease-in-out;
+}
+input:focus {
+  border-bottom: 1px solid #2196f3;
+  box-shadow: inset 0 -1px 0 #2196f3;
+}
+
+/* END of input and buttons */
+
+/* Modal dialog */
+.overlay {
+  position: absolute;
+  display: flex;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  background-color: rgba(0,0,0,0.5);
+}
+.modal-dialog {
+  background-color: white;
+  margin: auto;
+}
+/* END of modal dialog */
+
+/* Miscellaneous */
+
+/* Badge with the number of unread messages */
+.badge {
+  background-color: #0097A7;
+  color: white;
+  border-radius: 1em;
+}
+
+/* Color of buttons */
+.blue {
+  color: #2196f3; /* blue 500 */
+}
+
+/* Material icons resized from the default 24pt */
+.material-icons {
+  font-size: 2rem;
+}
+.material-icons.small {
+  font-size: 1.5rem;
 }
