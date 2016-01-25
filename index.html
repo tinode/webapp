@@ -11,7 +11,7 @@
     <!-- Google's material design icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     <!-- Customized Bootstrap style (material design). -->
-    <link rel="stylesheet" href="css/bootstrap.css" />
+    <!--link rel="stylesheet" href="css/bootstrap.css" /-->
     <!-- Styles for local elements -->
     <link rel="stylesheet" href="css/base.css" />
     <!-- ReactJs scripts -->
@@ -652,9 +652,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
                   {messageNodes}
                 </ul>
               </div>
-              <div id="send-message-panel">
-                <MessagesView.Send topic={this.props.topicSelected} sendMessage={this.props.sendMessage} />
-              </div>
+              <MessagesView.Send topic={this.props.topicSelected} sendMessage={this.props.sendMessage} />
             </div>
           );
         } else {
@@ -696,7 +694,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
       },
       render: function() {
         return (
-          <div>
+          <div id="send-message-panel">
             <input id="sendMessage" type="text" placeholder="New message"
               value={this.state.message} onChange={this.handleMessageTyping} />
             <a href="#" onClick={this.handleSend}>

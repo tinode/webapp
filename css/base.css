@@ -428,7 +428,7 @@ input {
 }
 input:focus {
   border-bottom: 1px solid #2196f3;
-  box-shadow: inset 0 -1px 0 #2196f3;
+  box-shadow: inset 0 -1px 0 rgba(33, 150, 243, 0.25);
 }
 
 /* END of input and buttons */
