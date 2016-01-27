@@ -25,6 +25,11 @@
   </head>
   </head>
   <body>
+    <!--
+    <i class="material-icons">group</i>
+    <i class="material-icons" id="self-avatar">person</i>
+    -->
+
     <div id="mountPoint"></div>
     <script type="text/babel">
     // Host name and posrt to connect to
@@ -93,21 +98,20 @@
         }
         return (
           <div>
-            <form className="form-signin" onSubmit={this.handleSubmit}>
-              <label htmlFor="inputLogin" className="sr-only">Login</label>
-              <input type="text" id="inputLogin" className="form-control"
+            <form id="login-form" onSubmit={this.handleSubmit}>
+              <input type="text" id="inputLogin"
                 placeholder="Login (alice, bob, carol, dave, frank)"
                 value={this.state.login}
                 onChange={this.handleLoginChange}
                 required autofocus />
-              <label htmlFor="inputPassword" className="sr-only">Password</label>
-              <input type="password" id="inputPassword" className="form-control"
+              <input type="password" id="inputPassword"
                 placeholder="Password (alice123, bob123, ...)"
                 value={this.state.password}
                 onChange={this.handlePasswordChange}
                 required />
-              <br />
-              <button className={submitClassList} type="submit">SIGN IN</button>
+              <div className="dialog-buttons">
+                <button className={submitClassList} type="submit">Sign in</button>
+              </div>
             </form>
           </div>
         );
@@ -159,24 +163,20 @@
         }
         return (
           <div>
-            <form onSubmit={this.handleSubmit} onCancel={this.props.onCancel}>
-              <label htmlFor="signupLogin" className="sr-only">Login</label>
-              <input type="text" id="signupLogin" className="form-control" placeholder="Login"
+            <form id="signup-form" onSubmit={this.handleSubmit} onCancel={this.props.onCancel}>
+              <input type="text" placeholder="Login"
                 value={this.state.login} onChange={this.handleLoginChange} required autofocus />
-              <label htmlFor="signupPassword" className="sr-only">Password</label>
-              <input type="password" id="signupPassword" className="form-control" placeholder="Password"
+              <input type="password" placeholder="Password"
                 value={this.state.password} onChange={this.handlePasswordChange} required />
-              <label htmlFor="signupPassword2" className="sr-only">Repeat password</label>
-              <input type="password" id="signupPassword" className="form-control" placeholder="Repeat password"
+              <input type="password" placeholder="Repeat password"
                 value={this.state.password2} onChange={this.handlePassword2Change} required />
-              <label htmlFor="signupPublic" className="sr-only">Account public data</label>
-              <textarea id="signupPublic" className="form-control" rows="3" onChange={this.handlePublicChange}
+              <textarea rows="3" onChange={this.handlePublicChange}
                 value={this.state.public} placeholder="Public: text or valid JSON"></textarea>
-              <label htmlFor="signupPrivate" className="sr-only">Account private data</label>
-              <textarea id="signupPrivate" className="form-control" rows="3" onChange={this.handlePrivateChange}
+              <textarea rows="3" onChange={this.handlePrivateChange}
                 value={this.state.private} placeholder="Private: text or valid JSON"></textarea>
-              <br />
-              <button className={submitClassList} type="submit">SIGN UP</button>
+              <div className="dialog-buttons">
+                <button className={submitClassList} type="submit">Sign up</button>
+              </div>
             </form>
           </div>
         );
@@ -188,8 +188,8 @@
     var SettingsView = React.createClass({
       render: function() {
         return (
-          <div className="container-fluid">
-          <h3>Not implemented</h3>
+          <div id="settings-form">
+            <big>Not implemented</big>
           </div>
         );
       }
@@ -200,14 +200,15 @@
     var SideNavbar = React.createClass({
       render: function() {
         var avatar = null;
-        if (this.props.avatar) {
-          var src = this.props.avatar === true ? "img/avatar.svg" : this.props.avatar;
-          avatar = <img id="self-avatar" alt="avatar" src={src} />
+        if (this.props.avatar === true) {
+          avatar = ( <i class="material-icons" id="self-avatar">person</i> );
+        else if (this.props.avatar) {
+          avatar = ( <img id="self-avatar" alt="avatar" src={this.props.avatar} /> );
         }
         return (
             <div id="side-caption-panel">
               {avatar}
-              <div id="sidepanel-title">{this.props.title}</div>
+              <div id="sidepanel-title" className="panel-title">{this.props.title}</div>
               {this.props.state === 'login' ?
                   <SideNavbar.MenuStart onSignUp={this.props.onSignUp} onSettings={this.props.onSettings} /> :
                     this.props.state === 'settings' ?
@@ -225,9 +226,9 @@
       render: function() {
         return (
             <div>
-              <a href="#" onClick={this.props.onSignUp}><i className="material-icons medium">person_add</i></a>
+              <a href="#" onClick={this.props.onSignUp}><i className="material-icons">person_add</i></a>
               &nbsp;
-              <a href="#" onClick={this.props.onSettings}><i className="material-icons medium">settings</i></a>
+              <a href="#" onClick={this.props.onSettings}><i className="material-icons">settings</i></a>
             </div>
         );
       }
@@ -236,7 +237,7 @@
     SideNavbar.MenuCancel = React.createClass({
       render: function() {
         return (
-          <a href="#" onClick={this.props.onCancel}><i className="material-icons medium">close</i></a>
+          <a href="#" onClick={this.props.onCancel}><i className="material-icons">close</i></a>
         );
       }
     })
@@ -244,7 +245,7 @@
     SideNavbar.MenuSettings = React.createClass({
       render: function() {
         return (
-          <a href="#" onClick={this.props.onSettings}><i className="material-icons medium">settings</i></a>
+          <a href="#" onClick={this.props.onSettings}><i className="material-icons">settings</i></a>
         );
       }
     })
@@ -359,14 +360,15 @@
           if (title.length > 32) {
             title = title.substring(0, 30) + "...";
           }
+          var selected = (this.props.selected === this.props.topic) ? "selected" : null;
           return (
-            <li onClick={this.handleClick}>
+            <li className={selected} onClick={this.handleClick}>
               <div className="avatar-box">
                 <img src="img/avatar.svg" className="avatar" alt="" />
                 <span className={this.props.now ? "online" : "offline"}>&#x25cf;</span>
               </div>
               <div>
-                <strong>{title}</strong> <Contact.Unread count={this.props.unread} />
+                <span className="contact-title">{title}</span> <Contact.Unread count={this.props.unread} />
                 <p>{this.props.comment}</p>
               </div>
             </li>
@@ -379,7 +381,7 @@
         render: function() {
           var showUnreadBadge = null;
           if (this.props.count > 0) {
-            var count = this.props.count > 99 ? "99+" : this.props.count;
+            var count = this.props.count > 9 ? "9+" : this.props.count;
             showUnreadBadge = <span className="badge">{count}</span>;
           }
           return (
@@ -391,7 +393,10 @@
     /* ContactsView holds all contacts-related stuff */
     var ContactsView = React.createClass({
       getInitialState: function() {
-        return {subscriptions: []};
+        return {
+          subscriptions: [],
+          selected: null
+        };
       },
       componentWillMount: function() {
         var me = Tinode.getMeTopic();
@@ -416,22 +421,18 @@
         this.forceUpdate();
       },
       onSelectionChange: function(sel) {
+        this.setState({selected: sel});
         this.props.onTopicSelected(sel);
       },
       render: function() {
         var contactNodes = [];
         Tinode.getMeTopic().contacts(function(c) {
-          var lastSeen = null;
-          if (c.seen) {
-            lastSeen = shortDateFormat(c.seen.when);
-            // TODO(gene): also handle user agent in c.seen.ua
-          }
           var unread = c.seq;
           if (c.read > 0) {
             unread -= c.read;
           }
           contactNodes.push(
-            <Contact public={c.public} comment={c.private} unread={unread} now={c.online} when={lastSeen}
+            <Contact public={c.public} comment={c.private} unread={unread} now={c.online} selected={this.state.selected}
               onSelected={this.onSelectionChange} topic={c.topic} key={c.topic} />
           );
         }, this);
@@ -543,12 +544,12 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
       },
       // Scroll last message into view on component update e.g. on message received.
       componentDidUpdate: function() {
-        //var node = ReactDOM.findDOMNode(this);
-        //if (node) {
-        //  node.scrollTop = node.scrollHeight;
-        //}
-        //var node = this.refs.messagesPanel;
-        //node.scrollTop = node.scrollHeight;
+        var node = this.refs.messagesPanel;
+        if (node) {
+          console.log("scrollToBottom: top=" + node.scrollTop + ", height="+ node.scrollHeight);
+          node.scrollTop = node.scrollHeight;
+          console.log("scrollToBottom: top=" + node.scrollTop + ", height="+ node.scrollHeight);
+        }
       },
       componentWillMount: function() {
         this.propsChange(this.props);
@@ -608,7 +609,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
         var component = null;
         if (this.state.topic) {
           var messageNodes = [];
-          var me = Tinode.getCurrentUserID();
+          var myUid = Tinode.getCurrentUserID();
           var topic = Tinode.getTopic(this.state.topic);
           var previousFrom = null;
           for (var i=0; i<this.state.messages.length; i++) {
@@ -626,7 +627,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
             }
             previousFrom = msg.from;
 
-            var isReply = !(msg.from === me);
+            var isReply = !(msg.from === myUid);
             var msgReceived = Received.UNDEF;
             if (!isReply) {
               if (topic.msgReadCount(msg.seq) > 1) {
@@ -642,10 +643,27 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
                 userIndex={msg.$userIndex} sequence={sequence} received={msgReceived} key={msg.seq} />
             );
           }
+
+          var lastSeen = null;
+          /*
+          var cont = Tinode.getMeTopic().getContact(this.state.topic);
+          if (cont.getType() == "p2p") {
+            if (cont.online) {
+              lastSeen = "online now";
+            } else if (cont.seen) {
+              lastSeen = shortDateFormat(c.seen.when);
+              // TODO(gene): also handle user agent in c.seen.ua
+            }
+          }
+          */
           component = (
             <div id="topic-view">
               <div id="topic-caption-panel">
-                <h4>{this.state.title}</h4>
+                <div>
+                  <div id="topic-title" className="panel-title">{this.state.title}</div>
+                  <div id="topic-last-seen">{lastSeen}</div>
+                </div>
+                <div>users online and menu buttons</div>
               </div>
               <div id="messages-panel" ref="messagesPanel">
                 <ul className="chat-box">
@@ -713,7 +731,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
             <a href="https://github.com/tinode/chat/">
               <div>
                 <img id="logo" alt="logo" src="img/logo.svg" />
-                <h4>Tinode Demo Chat</h4>
+                <h2>Tinode Demo Chat</h2>
               </div>
             </a>
           </div>

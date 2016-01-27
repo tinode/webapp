@@ -4,18 +4,147 @@
   margin: 0;
 }
 
+/* Basic elements defined */
+
 html, body {
   height:100%;
   width:100%;
   font-family: 'Roboto', Arial, sans-serif;
+  font-size: 10pt;
+  color: #666;
   overflow: hidden;
   background-color: silver;
+  box-shadow: inset 0 10em #3949AB; /* the deep-plue stripe accross the top */
 }
+
+a {
+  color: #2196f3;
+  text-decoration: none;
+}
+a:hover,
+a:focus {
+  color: #0a6ebd;
+  text-decoration: underline;
+}
+a:focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+
+form {
+  font-size: 1.2rem;
+}
+
+/* Input fields and buttons */
+
+button {
+  display: inline-block;
+  font-family: inherit;
+  font-size: 1.1rem;
+  height: 2.2em;
+  line-height: 2.2em;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  padding-left: 2em;
+  padding-right: 2em;
+  border-radius: 2px;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.25);
+  text-transform: uppercase;
+
+}
+
+button[disabled],
+html input[disabled] {
+  cursor: default;
+  opacity: 0.65;
+  box-shadow: none;
+}
+
+button.round {
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  padding: 0;
+  line-height: 1;
+  outline: none; /* otherwise a square outline is shown */
+  box-shadow: 0 2px 0.5rem 0 rgba(0, 0, 0, 0.25);
+  z-index: 2;
+}
+
+button:focus, button:hover, button:active {
+  color: #fff;
+}
+button:active {
+  box-shadow: inset 0 3px 0.5rem rgba(0, 0, 0, 0.125);
+}
+
+button.blue {
+  background-color: #1e88e5; /* blue 600 */
+  color: white;
+}
+button.blue:focus, button.blue:hover, button.blue:active {
+  background-color: #1976d2;
+}
+
+textarea, input {
+  font-family: inherit;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  border-radius: 0.2em;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+  width: 100%;
+  margin: 0.25em 0;
+  padding: 0 0.125em;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+  box-sizing: border-box;
+  color: #666;
+}
+textarea:focus,input:focus {
+  border-bottom: 1px solid #2196f3;
+  box-shadow: 0 1px 0 rgba(33, 150, 243, 0.25);
+}
+input {
+  height: 2.5em;
+}
+textarea {
+  resize: none;
+}
+/* Scrollbar styling for Chrome. Firefox does not support scrollbar styling.  */
+::-webkit-scrollbar {
+	width: 0.6rem;
+}
+
+::-webkit-scrollbar-track {
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2);
+	background-color: rgba(255,255,255,0.1);
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: rgba(0,0,0,0.3);
+}
+
+/* END of input and buttons */
+
+form {
+  padding: 0.5em 1em;
+  line-height: 1.75;
+  font-size: 1.2rem;
+}
+
+/* END of basic elements */
 
 #mountPoint {
   height: 100%;
   padding-top: 1em;
-  padding-bottom: 4em;
+  padding-bottom: 3em;
 }
 
 /* Top-level application layout style: sidepanel + main view */
@@ -27,11 +156,13 @@ html, body {
   overflow: hidden;
   margin-left: auto;
   margin-right: auto;
+  border-radius: 0.25em;
   box-shadow: 1px 2px 0.3em gray;
   background-color: white;
 }
 
 #sidepanel {
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 30em;
@@ -47,25 +178,35 @@ html, body {
 /* END of top-level layout */
 
 /* Sidepanel styles */
+.panel-title {
+  font-size: 1.4rem;
+}
+
+.dialog-buttons {
+  display: flex;
+  padding: 0.5em;
+  justify-content: flex-end;
+}
+
 #side-caption-panel {
   display: flex;
   align-items: center;
   x-justify-content: space-between;
   flex: none;
   padding: 0.5em;
-  height: 4.5em;
+  height: 4em;
 
-  background-color: #039be5; /* light-blue 600 */
-  color: #b3e5fc; /* light-blue 100 */
+  background-color: #2196f3; /* blue 500 */
+  color: #bbdefb; /* light-blue 100 */
 
-  box-shadow: 0 1px 1px -1px gray;
+  box-shadow: 0 1px 2px gray;
   z-index: 1; /* otherwise the shadow becomes invisible */
 }
 
 #side-caption-panel a {
-  color: #b3e5fc; /* light-blue 100 */
+  color: #bbdefb; /* blue 100 */
   padding-left: 0.5em;
-  vertical-align: -1.5em; /* icons are bigger than the declared font size */
+  vertical-align: -1em; /* icons are bigger than the declared font size */
 }
 
 #side-caption-panel :hover {
@@ -75,7 +216,6 @@ html, body {
 #sidepanel-title {
   margin-right: auto;
   margin-left: 0.5em;
-  font-size: 2rem;
 }
 
 #self-avatar {
@@ -97,8 +237,8 @@ html, body {
 
 /* List of contacts */
 #contacts-panel {
-  position: relative;
-  overflow-y: scroll;
+  overflow-y: auto;
+  margin-bottom: auto;
 }
 
 #contact-box {
@@ -112,7 +252,14 @@ html, body {
   overflow: hidden;
 }
 #contact-box li:hover {
-  background-color: #fffde7; /* yellow 50 highlight */
+  background-color: #eceff1; /* blue-gray 50 highlight */
+}
+#contact-box li.selected {
+  background-color: #cfd8dc; /* blue-gray 100 highlight */
+}
+
+#contact-box .contact-title {
+  font-size: 1.05rem;
 }
 
 /* Avatar and online-offline indicator */
@@ -132,9 +279,10 @@ html, body {
 /* Online-offline indicator positioned inside avatar-box */
 #contact-box .online, .offline {
   font-size: 1.5em;
+  line-height: 1;
   position: absolute;
   right: 0;
-  bottom: -0.5em;
+  bottom: 0;
 }
 #contact-box .online {
   color: #66bb6a;
@@ -159,24 +307,37 @@ html, body {
   justify-content: space-between;
   flex: none;
   padding: 0.5em;
-  height: 4.5em;
+  height: 4em;
   background-color: #b0bec5;
-  box-shadow: 0 1px 1px -1px gray;
+  box-shadow: 0 1px 2px gray;
   z-index: 1; /* otherwise the shadow becomes invisible */
 }
 
+/*
+#topic-title {
+}
+#topic-last-seen {
+}
+*/
+
+/* Scrollable panel where the messages are shown */
 #messages-panel {
   padding: 0.75em;
   overflow-y: scroll;
   background-color: #eceff1;
+  height: 100%;
   background-image: url("../img/ignasi_pattern_s.png");
 }
 
 /* Footer-panel with the input for the new message */
 #send-message-panel {
+  display: flex;
+  align-items: center;
   flex: none;
-  margin-top: auto;
   padding: 0.5em;
+  background-color: #eceff1;
+  box-shadow: 0 -1px rgba(0,0,0,0.1); /* Faint shadow above panel */
+  z-index: 2;
 }
 
 /* A static panel shown when no topic is selected */
@@ -187,53 +348,6 @@ html, body {
   align-items: center;
   justify-content: center;
   background-color: #e0f7fa;
-}
-
-/* END of topic/mesages view */
-
-
-.contactBox {
-  overflow: hidden;
-}
-
-#newTopicInput {
-  z-index: 3;
-  background-color: #FFF;
-  padding-bottom: 0.25em;
-}
-
-.contactList {
-  padding: 9.5em 0em 0.5em 0em;
-  margin-top: -9em;
-  height: 100vh;
-  overflow-y: scroll;
-}
-
-.contactList li {
-  padding: 0.25em;
-}
-
-.contactList li:hover {
-  background-color: #EEE;
-}
-
-.contact {
-  margin-top: 0;
-}
-
-.fullHeight {
-  height: 100%;
-  overflow: hidden;
-}
-
-.fullViewPort {
-  height: 99vh;
-  overflow-y: hidden;
-}
-
-.col-lg-12 {
-  padding: 0;
-  margin: 0;
 }
 
 /* Talk bubbles */
@@ -373,65 +487,8 @@ html, body {
 }
 
 /* END of talk bubbles */
+/* END of topic/mesages view */
 
-/* Input fields and buttons */
-button {
-  display: inline-block;
-  margin: 0;
-  font-weight: normal;
-  text-align: center;
-  vertical-align: middle;
-  touch-action: manipulation;
-  cursor: pointer;
-  border: 1px solid transparent;
-  white-space: nowrap;
-  padding: 0.25em 1em;
-  font-size: 1.35rem;
-  border-radius: 2px;
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.25);
-}
-
-button[disabled],
-html input[disabled] {
-  cursor: default;
-  opacity: 0.65;
-  box-shadow: none;
-}
-
-button.round {
-  border-radius: 50%;
-  width: 5rem;
-  height: 5rem;
-  line-height: 1;
-  outline: none; /* otherwise a square outline is shown */
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.25);
-  z-index: 2;
-}
-button.blue {
-  background-color: #2196f3; /* blue 500 */
-  color: white;
-}
-
-button:active {
-  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-}
-
-input {
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid #999;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  outline: none;
-  transition: border 0.2s ease-in-out, box-shadow: 0.2s ease-in-out;
-}
-input:focus {
-  border-bottom: 1px solid #2196f3;
-  box-shadow: inset 0 -1px 0 rgba(33, 150, 243, 0.25);
-}
-
-/* END of input and buttons */
 
 /* Modal dialog */
 .overlay {
@@ -454,9 +511,15 @@ input:focus {
 
 /* Badge with the number of unread messages */
 .badge {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: bold;
   background-color: #0097A7;
   color: white;
   border-radius: 1em;
+  padding: 0.25em;
+  min-width: 1.5em;
+  text-align: center;
 }
 
 /* Color of buttons */
@@ -466,8 +529,9 @@ input:focus {
 
 /* Material icons resized from the default 24pt */
 .material-icons {
-  font-size: 2rem;
+  font-size: 1.4rem;
+  line-height: 1;
 }
 .material-icons.small {
-  font-size: 1.5rem;
+  font-size: 1rem;
 }
