@@ -219,7 +219,7 @@ form {
 }
 
 #self-avatar {
-  width: 30pt;
+  width: 3rem;
   height: auto;
   flex: none;
 }
@@ -247,8 +247,8 @@ form {
 
 #contact-box li {
   display: flex;
-  padding: 0.5em;
-  min-height: 3.5em;
+  padding: 0.35rem 0.25rem 0.5rem 0.35rem;
+  min-height: 3.5rem;
   overflow: hidden;
 }
 #contact-box li:hover {
@@ -264,15 +264,15 @@ form {
 
 /* Avatar and online-offline indicator */
 #contact-box .avatar-box {
-  margin-right: 1rem;
+  margin-right: 0.5rem;
   position: relative;
-  width: 30pt;
-  height: 30pt;
+  width: 3rem;
+  height: 3rem;
   overflow: hidden;
   padding: 0;
 }
 #contact-box .avatar {
-  width: 30pt;
+  width: 3rem;
   height: auto;
 }
 
@@ -288,7 +288,7 @@ form {
   color: #4caf50;
 }
 #contact-box .offline {
-  color: #9e9e9e;
+  color: #888;
 }
 
 #add-topic {
@@ -537,10 +537,10 @@ form {
 }
 
 #self-avatar.material-icons, .avatar-box .material-icons {
-  font-size: 30pt;
+  font-size: 2.8rem;
 }
 .avatar-box .material-icons {
-  color: #fafafa;
+  color: rgba(250, 250, 250, 0.8); /* #fafafa, gray 50 */
   background-color: #bdbdbd;
   border-radius: 2pt;
 }

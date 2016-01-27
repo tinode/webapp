@@ -402,7 +402,8 @@
         me.onSubsUpdated = this.tnMeSubsUpdated;
       },
       tnMeContactUpdate: function(what, cont) {
-        console.log("changed: " + what + " in " + cont.topic);
+        console.log("changed: " + what + " in :");
+        console.log(cont);
         this.forceUpdate();
       },
       tnInvite: function(invite) {
@@ -684,18 +685,18 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
           keypressTimestamp: new Date().getTime() - KEYPRESS_DELAY - 1
         };
       },
-      handleSend: function(e) {
+      handleSend: function() {
         var message = this.state.message.trim();
         if (message) {
           this.props.sendMessage(this.state.message.trim());
           this.setState({message: ''});
         }
       },
+      /* Send on Enter key */
       handleKeyPress: function(e) {
+        /* Remove this if you don't want Enter to trigger send */
         if (e.key === 'Enter') {
-          console.log('do validate');
-        } else {
-          console.log(e.key);
+          this.handleSend();
         }
       },
       handleMessageTyping: function(e) {
