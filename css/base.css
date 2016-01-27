@@ -219,7 +219,7 @@ form {
 }
 
 #self-avatar {
-  width: 3em;
+  width: 30pt;
   height: auto;
   flex: none;
 }
@@ -264,15 +264,15 @@ form {
 
 /* Avatar and online-offline indicator */
 #contact-box .avatar-box {
-  margin-right: 1em;
+  margin-right: 1rem;
   position: relative;
-  width: 3em;
-  height: 3em;
+  width: 30pt;
+  height: 30pt;
   overflow: hidden;
   padding: 0;
 }
 #contact-box .avatar {
-  width: 3em;
+  width: 30pt;
   height: auto;
 }
 
@@ -285,10 +285,10 @@ form {
   bottom: 0;
 }
 #contact-box .online {
-  color: #66bb6a;
+  color: #4caf50;
 }
 #contact-box .offline {
-  color: #999;
+  color: #9e9e9e;
 }
 
 #add-topic {
@@ -534,4 +534,13 @@ form {
 }
 .material-icons.small {
   font-size: 1rem;
+}
+
+#self-avatar.material-icons, .avatar-box .material-icons {
+  font-size: 30pt;
+}
+.avatar-box .material-icons {
+  color: #fafafa;
+  background-color: #bdbdbd;
+  border-radius: 2pt;
 }

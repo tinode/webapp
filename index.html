@@ -25,11 +25,6 @@
   </head>
   </head>
   <body>
-    <!--
-    <i class="material-icons">group</i>
-    <i class="material-icons" id="self-avatar">person</i>
-    -->
-
     <div id="mountPoint"></div>
     <script type="text/babel">
     // Host name and posrt to connect to
@@ -201,9 +196,9 @@
       render: function() {
         var avatar = null;
         if (this.props.avatar === true) {
-          avatar = ( <i class="material-icons" id="self-avatar">person</i> );
-        else if (this.props.avatar) {
-          avatar = ( <img id="self-avatar" alt="avatar" src={this.props.avatar} /> );
+          avatar = <i id="self-avatar" className="material-icons">account_box</i>;
+        } else if (this.props.avatar) {
+          avatar = <img id="self-avatar" alt="avatar" src={this.props.avatar} />;
         }
         return (
             <div id="side-caption-panel">
@@ -361,10 +356,12 @@
             title = title.substring(0, 30) + "...";
           }
           var selected = (this.props.selected === this.props.topic) ? "selected" : null;
+          var avatar = (Tinode.getTopicType(this.props.topic) === "grp") ? <i className="material-icons">group</i> :
+            <i className="material-icons">person</i>;
           return (
             <li className={selected} onClick={this.handleClick}>
               <div className="avatar-box">
-                <img src="img/avatar.svg" className="avatar" alt="" />
+                {avatar}
                 <span className={this.props.now ? "online" : "offline"}>&#x25cf;</span>
               </div>
               <div>
@@ -546,9 +543,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
       componentDidUpdate: function() {
         var node = this.refs.messagesPanel;
         if (node) {
-          console.log("scrollToBottom: top=" + node.scrollTop + ", height="+ node.scrollHeight);
           node.scrollTop = node.scrollHeight;
-          console.log("scrollToBottom: top=" + node.scrollTop + ", height="+ node.scrollHeight);
         }
       },
       componentWillMount: function() {
@@ -590,7 +585,6 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
         }
       },
       handleInfoChange: function(info) {
-        console.log("handleInfoChange: " + info);
         this.setState({title: info.public});
       },
       handleSubsUpdated: function(uids) {
@@ -645,17 +639,16 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
           }
 
           var lastSeen = null;
-          /*
           var cont = Tinode.getMeTopic().getContact(this.state.topic);
-          if (cont.getType() == "p2p") {
+          if (cont && Tinode.getTopicType(cont.topic) === "p2p") {
             if (cont.online) {
               lastSeen = "online now";
             } else if (cont.seen) {
-              lastSeen = shortDateFormat(c.seen.when);
+              lastSeen = "Last seen: " + shortDateFormat(cont.seen.when);
               // TODO(gene): also handle user agent in c.seen.ua
             }
           }
-          */
+
           component = (
             <div id="topic-view">
               <div id="topic-caption-panel">
@@ -698,6 +691,13 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
           this.setState({message: ''});
         }
       },
+      handleKeyPress: function(e) {
+        if (e.key === 'Enter') {
+          console.log('do validate');
+        } else {
+          console.log(e.key);
+        }
+      },
       handleMessageTyping: function(e) {
         var newState = {message: e.target.value};
         var now = new Date().getTime();
@@ -714,7 +714,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
         return (
           <div id="send-message-panel">
             <input id="sendMessage" type="text" placeholder="New message"
-              value={this.state.message} onChange={this.handleMessageTyping} />
+              value={this.state.message} onChange={this.handleMessageTyping} onKeyPress={this.handleKeyPress} />
             <a href="#" onClick={this.handleSend}>
               <i className="material-icons">send</i>
             </a>
