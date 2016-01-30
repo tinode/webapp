@@ -27,9 +27,11 @@
   <body>
     <div id="mountPoint"></div>
     <script type="text/babel">
+    // Name of this application, used in the User-Agent
+    var APP_NAME = "TinodeReact/1.0";
     // Host name and posrt to connect to
-    var HOST = "api.tinode.co";
-    //var HOST = "localhost:6060";
+    // var HOST = "api.tinode.co";
+    var HOST = "localhost:6060";
 
     // API key. Use https://github.com/tinode/chat/tree/master/keygen to generate your own
     var API_KEY = "AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K";
@@ -56,6 +58,11 @@
       }
       return then.toLocaleDateString(undefined,
         {hour12: false, year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'});
+    }
+
+    // Make a data URL from vcard.photo
+    function makeImageUrl(photo) {
+      return photo ? 'data:image/' + photo.type + ';base64,' + photo.data : null;
     }
 
     /* BEGIN Login: a login form */
@@ -115,14 +122,15 @@
     /* END Login */
 
     /* BEGIN Account registration */
+
     var CreateAccountView = React.createClass({
       getInitialState: function() {
         return {
           login: '',
           password: '',
           password2: '',
-          public: '',
-          private: '',
+          fn: '', // full/formatted name
+          imageDataUrl: null,
           errorCleared: false
         };
       },
@@ -135,11 +143,11 @@
       handlePassword2Change: function(e) {
         this.setState({password2: e.target.value});
       },
-      handlePublicChange: function(e) {
-        this.setState({public: e.target.value});
+      handleFnChange: function(e) {
+        this.setState({fn: e.target.value});
       },
-      handlePrivateChange: function(e) {
-        this.setState({private: e.target.value});
+      handleImageChanged: function(img) {
+        this.setState({imageDataUrl: img});
       },
       handleSubmit: function(e) {
         e.preventDefault();
@@ -147,8 +155,20 @@
 
         } else {
           this.setState({errorCleared: false});
-          this.props.onCreateAccount(this.state.login.trim(), this.state.password.trim(),
-            this.state.public.trim(), this.state.private.trim());
+          var vcard = null;
+          if (this.state.name.trim() || this.state.imageDataUrl) {
+            vcard = {
+              fn: this.state.name.trim(),
+            };
+            if (this.state.imageDataUrl) {
+              dataStart = this.state.imageDataUrl.indexOf(",");
+              vcard.photo = {
+                data: this.state.imageDataUrl.substring(dataStart),
+                type: "jpg"
+              };
+            }
+          }
+          this.props.onCreateAccount(this.state.login.trim(), this.state.password.trim(), vcard);
         }
       },
       render: function() {
@@ -159,20 +179,71 @@
         return (
           <div>
             <form id="signup-form" onSubmit={this.handleSubmit} onCancel={this.props.onCancel}>
-              <input type="text" placeholder="Login"
-                value={this.state.login} onChange={this.handleLoginChange} required autofocus />
-              <input type="password" placeholder="Password"
-                value={this.state.password} onChange={this.handlePasswordChange} required />
-              <input type="password" placeholder="Repeat password"
-                value={this.state.password2} onChange={this.handlePassword2Change} required />
-              <textarea rows="3" onChange={this.handlePublicChange}
-                value={this.state.public} placeholder="Public: text or valid JSON"></textarea>
-              <textarea rows="3" onChange={this.handlePrivateChange}
-                value={this.state.private} placeholder="Private: text or valid JSON"></textarea>
+              <div id="signup-form-one">
+                <div>
+                  <input type="text" placeholder="Login"
+                    value={this.state.login} onChange={this.handleLoginChange} required autofocus />
+                  <input type="password" placeholder="Password"
+                    value={this.state.password} onChange={this.handlePasswordChange} required />
+                  <input type="password" placeholder="Repeat password"
+                    value={this.state.password2} onChange={this.handlePassword2Change} required />
+                </div>
+                <CreateAccountView.AvatarUpload onImageChanged={this.handleImageChanged} />
+              </div>
+              <input type="text" placeholder="Full name, e.g. John Doe"
+                value={this.state.fn} onChange={this.handleFnChange} required />
               <div className="dialog-buttons">
                 <button className={submitClassList} type="submit">Sign up</button>
               </div>
             </form>
+          </div>
+        );
+      }
+    });
+
+    CreateAccountView.AvatarUpload = React.createClass({
+      getInitialState: function() {
+        return {
+          dataUrl: null
+        };
+      },
+      handleFileUpload(e) {
+        console.log("handleFileUpload");
+        var instance = this;
+        var img = new Image();
+        img.crossOrigin = 'Anonymous';
+        img.onload = function() {
+          var canvas = document.createElement('CANVAS');
+          canvas.width = canvas.height = 64;
+          var ctx = canvas.getContext('2d');
+          var sx = 0, sy = 0, size;
+          if (this.height > this.width) {
+            size = this.width;
+            sy = (this.height - size) / 2;
+          } else {
+        	  size = this.height;
+            sx = (this.width - size) / 2;
+          }
+ 				  ctx.imageSmoothingEnabled = true;
+          ctx.drawImage(this, sx, sy, size, size, 0, 0, 64, 64);
+          instance.setState({dataUrl: canvas.toDataURL("image/jpg")});
+          canvas = null;
+          console.log("handleFileUpload.onLoad: done");
+        };
+        console.log(e);
+        img.src = URL.createObjectURL(e.target.files[0]);
+      },
+      render: function() {
+        return (
+          <div className="avatar-upload">
+            {this.state.dataUrl ?
+              <img src={this.state.dataUrl} className="preview" /> :
+              <div className="blank">48&times;48</div>}
+            <input type="file" id="file-input-avatar" className="inputfile hidden"
+              accept="image/*" onChange={this.handleFileUpload} />
+            <label htmlFor="file-input-avatar" className="round">
+              <i className="material-icons">file_upload</i>
+            </label>
           </div>
         );
       }
@@ -270,7 +341,7 @@
             title = "Settings"; break;
           case 'contacts':
             title = this.props.title;
-            avatar = true;
+            avatar = this.props.avatar;
           default:;
         };
         return (
@@ -280,17 +351,29 @@
               onSignUp={this.props.onSignUp}
               onSettings={this.props.onSettings}
               onCancel={this.props.onCancel} />
-            <SidepanelView.ErrorPanel showError={this.state.showErrorText} errorText={this.props.errorText} />
+
+            <SidepanelView.ErrorPanel
+              showError={this.state.showErrorText}
+              errorText={this.props.errorText} />
+
             {this.props.state === 'login' ?
               <LoginView disabled={this.props.loginDisabled}
                 onLogin={this.handleLoginRequested}
                 onClearError={this.handleClearErrorText} /> :
+
               this.props.state === 'register' ?
-              <CreateAccountView onCreateAccount={this.props.onCreateAccount} onCancel={this.props.onCancel} /> :
+              <CreateAccountView
+                onCreateAccount={this.props.onCreateAccount}
+                onCancel={this.props.onCancel} /> :
+
               this.props.state === 'settings' ?
               <SettingsView onCancel={this.props.onCancel} /> :
+
               this.props.state === 'contacts' ?
-              <ContactsView data={this.props.subscriptions} onTopicSelected={this.props.onTopicSelected} /> :
+              <ContactsView
+                data={this.props.subscriptions}
+                onTopicSelected={this.props.onTopicSelected}
+                onNewTopic={this.props.onNewTopic} /> :
               null}
           </div>
         );
@@ -331,33 +414,22 @@
     });
     */
 
-    /*
-    var contactsData = [
-      {topic: "usrBOB", public: "Bob Smith", private: "This is another comment", online: {now: true}, unread: 0},
-      {topic: "usrCAROL", public: "Carol Xmas", private: "No comments", online: {now: false, when: "1 hour ago"}, unread: 2},
-      {topic: "usrDAVE", public: "Dave Goliaphsson", private: "This is a comment", online: {now: false, when: "30 min ago"}, unread: 0},
-      {topic: "usrBOB2", public: "Bob Smith", private: "This is another comment", online: {now: true}, unread: 0},
-      {topic: "usrCAROL2", public: "Carol Xmas", private: "No comments", online: {now: false, when: "1 hour ago"}, unread: 2},
-      {topic: "usrDAVE2", public: "Dave Goliaphsson", private: "This is a comment", online: {now: false, when: "30 min ago"}, unread: 0},
-      {topic: "usrBOB3", public: "Bob Smith", private: "This is another comment", online: {now: true}, unread: 0},
-      {topic: "usrCAROL3", public: "Carol Xmas", private: "No comments", online: {now: false, when: "1 hour ago"}, unread: 2},
-      {topic: "usrDAVE3", public: "Dave Goliaphsson", private: "This is a comment", online: {now: false, when: "30 min ago"}, unread: 0}
-    ];
-    */
-
     /* A single topic */
     var Contact = React.createClass({
         handleClick: function() {
           this.props.onSelected(this.props.topic);
         },
         render: function() {
-          var title = this.props.public;
-          if (title.length > 32) {
-            title = title.substring(0, 30) + "...";
+          var title = this.props.title;
+          if (title.length > 30) {
+            title = title.substring(0, 28) + "...";
           }
           var selected = (this.props.selected === this.props.topic) ? "selected" : null;
-          var avatar = (Tinode.getTopicType(this.props.topic) === "grp") ? <i className="material-icons">group</i> :
-            <i className="material-icons">person</i>;
+          var avatar = this.props.avatar ?
+              <img src={this.props.avatar} className="avatar" /> :
+              (Tinode.getTopicType(this.props.topic) === "grp") ?
+                <i className="material-icons">group</i> :
+                <i className="material-icons">person</i>;
           return (
             <li className={selected} onClick={this.handleClick}>
               <div className="avatar-box">
@@ -402,9 +474,12 @@
         me.onSubsUpdated = this.tnMeSubsUpdated;
       },
       tnMeContactUpdate: function(what, cont) {
-        console.log("changed: " + what + " in :");
-        console.log(cont);
-        this.forceUpdate();
+        if (what === "on" || what === "off" || what === "read") {
+          this.forceUpdate();
+        } else {
+          console.log("changed (not updating for it): " + what + " in :");
+          console.log(cont);
+        }
       },
       tnInvite: function(invite) {
         console.log(invite);
@@ -430,8 +505,15 @@
             unread -= c.read;
           }
           contactNodes.push(
-            <Contact public={c.public} comment={c.private} unread={unread} now={c.online} selected={this.state.selected}
-              onSelected={this.onSelectionChange} topic={c.topic} key={c.topic} />
+            <Contact
+              title={c.public.vcard.fn}
+              avatar={makeImageUrl(c.public.vcard.photo)}
+              comment={c.private}
+              unread={unread} now={c.online}
+              selected={this.state.selected}
+              onSelected={this.onSelectionChange}
+              topic={c.topic}
+              key={c.topic} />
           );
         }, this);
 
@@ -440,7 +522,9 @@
             <ul id="contact-box">
               {contactNodes}
             </ul>
-          <button className="round blue" id="add-topic"><i className="material-icons big">add</i></button>
+            <button className="round blue" id="add-topic" onClick={this.props.onNewTopic}>
+              <i className="material-icons big">add</i>
+            </button>
           </div>
         );
       }
@@ -498,7 +582,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
             <div className={bubbleClass} style={colors}>
               <p>{this.props.content}
               <Message.ReceivedMarker response={this.props.response}
-                  timestamp={this.props.timestamp} received={this.props.received} />
+                timestamp={this.props.timestamp} received={this.props.received} />
               </p>
             </div>
           </li>
@@ -554,17 +638,19 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
         this.propsChange(nextProps);
       },
       propsChange: function(props) {
-        if (props.topicSelected != this.state.topic) {
+        if (props.topicSelected && (props.topicSelected != this.state.topic)) {
           var msgs = [];
           var topic = Tinode.getTopic(props.topicSelected);
           // Bind the new topic to component.
           topic.onData = this.handleNewMessage;
+          topic.onInfo = this.handleInfoReceipt;
           topic.onMetaInfo = this.handleInfoChange;
           topic.onSubsUpdated = this.handleSubsUpdated;
           // Unbind the previous topic from this component.
           if (this.state.topic) {
             var oldTopic = Tinode.getTopic(this.state.topic);
             oldTopic.onData = undefined;
+            oldTopic.onInfo = undefined;
             oldTopic.onMetaInfo = undefined;
             oldTopic.onSubsUpdated = undefined;
           }
@@ -586,7 +672,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
         }
       },
       handleInfoChange: function(info) {
-        this.setState({title: info.public});
+        this.setState({title: info.public.vcard.fn});
       },
       handleSubsUpdated: function(uids) {
 
@@ -599,6 +685,20 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
           Tinode.getTopic(msg.topic).noteRead(msg.seq);
         }, READ_DELAY);
         this.props.onData(msg);
+      },
+      handleInfoReceipt: function(info) {
+        switch (info.what) {
+          case "kp":
+            console.log("show typing notification");
+            break;
+          case "read":
+          case "recv":
+            // Redraw due to changed recv/read status.
+            this.forceUpdate();
+            break;
+          default:
+            console.log("other change in topic: " + info.what);
+        }
       },
       render: function() {
         var component = null;
@@ -625,9 +725,9 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
             var isReply = !(msg.from === myUid);
             var msgReceived = Received.UNDEF;
             if (!isReply) {
-              if (topic.msgReadCount(msg.seq) > 1) {
+              if (topic.msgReadCount(msg.seq) > 0) {
                 msgReceived = Received.READ;
-              } else if (topic.msgRecvCount(msg.seq) > 1) {
+              } else if (topic.msgRecvCount(msg.seq) > 0) {
                 msgReceived = Received.CLIENT;
               } else {
                 msgReceived = Received.SERVER;
@@ -739,8 +839,45 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
         );
       }
     });
-
     /* END Conversation panel */
+
+    /* This is a div which covers the entire AppView and shows selected modal dialog box */
+    var ModalDialogWrapper = React.createClass({
+      render: function() {
+        var dialog = null;
+        switch (this.props.dialog) {
+          case "new-topic":
+            dialog = <ModalDialogWrapper.NewTopic
+              onOk={this.props.onOk}
+              onCancel={this.props.onCancel} />;
+            break;
+          default:
+            break;
+        }
+        if (dialog) {
+          dialog = <div className="dialog-overlay">{dialog}</div>;
+        }
+        return dialog;
+      }
+    });
+
+    ModalDialogWrapper.NewTopic = React.createClass({
+      render: function() {
+        return (
+          <div className="modal-dialog">
+            <div className="title-panel">
+              New topic
+            </div>
+            <div className="body-panel">Not implemented</div>
+            <div className="dialog-buttons">
+              <a href="#" onClick={this.props.onOk}>Yes</a>
+              <a href="#" onClick={this.props.onCancel}>OK</a>
+            </div>
+          </div>
+        );
+      }
+    });
+    /* End of modal dialog wrapper */
 
     /* The top-level class to hold all fuinctionality together */
     var AppView = React.createClass({
@@ -748,6 +885,8 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
         return {
           sidePanelSelected: 'login',
           sidePanelTitle: null,
+          sidePanelAvatar: null,
+          dialogSelected: null,
           loggedIn: false,
           errorText: '',
           topicSelected: '',
@@ -759,12 +898,14 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
         Tinode.enableLogging(true);
         Tinode.onDisconnect = this.handleDicsonnect;
         // Setup with the default transport, usually websocket.
-        Tinode.setup(HOST, API_KEY);
+        Tinode.setup(APP_NAME, HOST, API_KEY);
       },
       handleDicsonnect: function() {
         this.setState({
           sidePanelSelected: 'login',
           sidePanelTitle: null,
+          sidePanelAvatar: null,
+          dialogSelected: null,
           loggedIn: false,
           errorText: 'disconnected',
           topicSelected: '',
@@ -792,7 +933,10 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
         });
       },
       tnMeMetaInfo: function(info) {
-        this.setState({sidePanelTitle: info.public});
+        this.setState({
+          sidePanelTitle: info.public.vcard.fn,
+          sidePanelAvatar: makeImageUrl(info.public.vcard.photo)
+        });
       },
       // Sending "received" notifications
       tnData: function(data) {
@@ -837,13 +981,24 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
           this.setState({sidePanelSelected: 'login'});
         }
       },
+      handleNewTopic: function() {
+        this.setState({dialogSelected: 'new-topic'});
+      },
+      handleDialogCancel: function() {
+        this.setState({dialogSelected: null});
+      },
       render: function() {
         return (
           <div id="app-container">
+            <ModalDialogWrapper
+              dialog={this.state.dialogSelected}
+              onOk={this.handleDialogCancel}
+              onCancel={this.handleDialogCancel} />
 
             <SidepanelView
               state={this.state.sidePanelSelected}
               title={this.state.sidePanelTitle}
+              avatar={this.state.sidePanelAvatar}
               subscriptions={this.state.subscriptions}
               loginDisabled={this.state.loginDisabled}
               errorText={this.state.errorText}
@@ -852,6 +1007,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
               onLoginRequest={this.handleLoginRequest}
               onCreateAccount={this.handleNewAccount}
               onTopicSelected={this.handleTopicSelected}
+              onNewTopic={this.handleNewTopic}
               onCancel={this.handleSidepanelCancel} />
 
             <MessagesView

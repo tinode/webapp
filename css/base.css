@@ -56,7 +56,6 @@ button {
   border-radius: 2px;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.25);
   text-transform: uppercase;
-
 }
 
 button[disabled],
@@ -71,10 +70,18 @@ button.round {
   width: 3rem;
   height: 3rem;
   padding: 0;
-  line-height: 1;
+  margin: 0;
+  line-height: 3.5rem;
   outline: none; /* otherwise a square outline is shown */
   box-shadow: 0 2px 0.5rem 0 rgba(0, 0, 0, 0.25);
   z-index: 2;
+}
+
+button.round.small {
+  width: 2rem;
+  height: 2rem;
+  line-height: 2rem;
+  box-shadow: 0 2px 0.35rem 0 rgba(0, 0, 0, 0.25);
 }
 
 button:focus, button:hover, button:active {
@@ -82,6 +89,9 @@ button:focus, button:hover, button:active {
 }
 button:active {
   box-shadow: inset 0 3px 0.5rem rgba(0, 0, 0, 0.125);
+}
+button:active.round.small {
+  box-shadow: inset 0 2px 0.35rem rgba(0, 0, 0, 0.125);
 }
 
 button.blue {
@@ -92,27 +102,44 @@ button.blue:focus, button.blue:hover, button.blue:active {
   background-color: #1976d2;
 }
 
+button.blue {
+  background-color: #1e88e5; /* blue 600 */
+  color: white;
+}
+button.blue:focus, button.blue:hover, button.blue:active {
+  background-color: #1976d2;
+}
+
+button.white {
+  background-color: #FFF;
+  color: #2196f3; /* blue 500 */
+}
+button.white:focus, button.white:hover, button.blue:active {
+  background-color: #e3f2fd;
+}
+
 textarea, input {
   font-family: inherit;
+  font-size: 1.05rem;
   background: transparent;
   border: none;
   border-bottom: 1px solid #ccc;
-  border-radius: 0.2em;
+  border-radius: 0.2rem;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
   width: 100%;
-  margin: 0.25em 0;
-  padding: 0 0.125em;
+  margin: 0.25rem 0;
+  padding: 0 0.125rem;
   outline: none;
   transition: all 0.2s ease-in-out;
   box-sizing: border-box;
   color: #666;
 }
-textarea:focus,input:focus {
+textarea:focus, input:focus {
   border-bottom: 1px solid #2196f3;
   box-shadow: 0 1px 0 rgba(33, 150, 243, 0.25);
 }
 input {
-  height: 2.5em;
+  height: 2.5rem;
 }
 textarea {
   resize: none;
@@ -134,7 +161,7 @@ textarea {
 /* END of input and buttons */
 
 form {
-  padding: 0.5em 1em;
+  padding: 0.5em 0.75em;
   line-height: 1.75;
   font-size: 1.2rem;
 }
@@ -191,7 +218,6 @@ form {
 #side-caption-panel {
   display: flex;
   align-items: center;
-  x-justify-content: space-between;
   flex: none;
   padding: 0.5em;
   height: 4em;
@@ -222,6 +248,7 @@ form {
   width: 3rem;
   height: auto;
   flex: none;
+  border-radius: 33%;
 }
 
 /* Area which displays an error message */
@@ -239,6 +266,7 @@ form {
 #contacts-panel {
   overflow-y: auto;
   margin-bottom: auto;
+  height: 100%;
 }
 
 #contact-box {
@@ -264,7 +292,7 @@ form {
 
 /* Avatar and online-offline indicator */
 #contact-box .avatar-box {
-  margin-right: 0.5rem;
+  margin-right: 0.35rem;
   position: relative;
   width: 3rem;
   height: 3rem;
@@ -274,6 +302,7 @@ form {
 #contact-box .avatar {
   width: 3rem;
   height: auto;
+  border-radius: 33%;
 }
 
 /* Online-offline indicator positioned inside avatar-box */
@@ -281,8 +310,8 @@ form {
   font-size: 1.5em;
   line-height: 1;
   position: absolute;
-  right: 0;
-  bottom: 0;
+  right: -0.1rem;
+  bottom: -0.1rem;
 }
 #contact-box .online {
   color: #4caf50;
@@ -298,6 +327,90 @@ form {
 }
 /* END of avatar box */
 
+/* New account panel (signup form) */
+#signup-form {
+  display: flex;
+  flex-direction: column;
+}
+
+#signup-form-one {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Styling of avatar upload area in the New Account panel */
+.avatar-upload {
+  position: relative;
+  text-align: center;
+  vertical-align: middle;
+  width: 4.5rem;
+  height: auto;
+  box-sizing: border-box;
+  margin: 0 0.5rem;
+  padding: 0;
+}
+
+.avatar-upload .blank {
+  border: 1px dashed #999;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  width: 4.5rem;
+  height: 4.5rem;
+  overflow: hidden;
+  color: #999;
+  vertical-align: middle;
+  line-height: 4.5rem;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.avatar-upload .preview {
+  border-radius: 0.75rem;
+  width: 4.5rem;
+  height: 4.5rem;
+  overflow: hidden;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.avatar-upload .inputfile.hidden {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+}
+
+.avatar-upload .inputfile + label.round {
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+  cursor: pointer;
+  width: 2.5rem;
+  height: 2.5rem;
+  line-height: 3rem;
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+  position: absolute;
+  top: 3.875rem;
+  left: 1rem;
+  background-color: #fafafa;
+}
+
+.avatar-upload .inputfile:focus + label.round {
+	outline: none;
+}
+
+.avatar-upload .inputfile:focus + label,
+.avatar-upload .inputfile + label:hover {
+  background-color: #e3f2fd;
+  color: #42a5f5;
+}
+/* END of avatar upload */
+/* END of new account panel */
 /* END of sidepanel styles */
 
 /* Topic/messages view */
@@ -370,16 +483,16 @@ form {
 
 .chat-box .bubble {
   position: relative;
-	max-width: 32em;
-  min-width: 16em;
+	max-width: 40rem;
+  min-width: 12rem;
 	height: auto;
-  padding: 0.75em 0.5em 0.75em 1.25em;
+  padding: 0.75rem 0.5rem 0.75rem 1.25rem;
   margin: 0;
   text-align: left;
 
-  border-radius: 0.5em;
-	-webkit-border-radius: 0.5em;
-	-moz-border-radius: 0.5em;
+  border-radius: 0.5rem;
+	-webkit-border-radius: 0.5rem;
+	-moz-border-radius: 0.5rem;
 
   /* tested in chrome 47 on mac - performance sucks
   -webkit-filter: drop-shadow(0px 1px 1px -1px rgba(0,0,0,0.3));
@@ -388,23 +501,23 @@ form {
 }
 
 .chat-box li.single {
-  margin-top: 0.75em;
-  margin-bottom: 0.75em;
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
 }
 
 .chat-box li.first {
-  margin-top: 0.75em;
-  margin-bottom: 0.15em;
+  margin-top: 0.75rem;
+  margin-bottom: 0.15rem;
 }
 
 .chat-box li.middle {
-  margin-top: 0.15em;
-  margin-bottom: 0.15em;
+  margin-top: 0.15rem;
+  margin-bottom: 0.15rem;
 }
 
 .chat-box li.last {
-  margin-top: 0.15em;
-  margin-bottom: 0.75em;
+  margin-top: 0.15rem;
+  margin-bottom: 0.75rem;
 }
 
 /* Left triangle placed bottom left flush. */
@@ -428,6 +541,8 @@ form {
 .chat-box li.right .tip::before {
 	content: '';
 	position: absolute;
+  display: flex;
+  justify-content: space-between;
 	width: 0;
 	height: 0;
   left: auto;
@@ -441,49 +556,44 @@ form {
   border-left-color: transparent;
 }
 
-.chat-box .avatar {
-  width: 40px;
+.chat-box .avatar-box {
+  width: 3rem;
   text-align: center;
 }
 
-.chat-box .avatar img {
-  width: 32px;
+.chat-box .avatar-box img {
+  width: 2.4rem;
   display: block;
   position: relative;
-  left: 4px;
-  border-radius: 50%;
+  left: 0.3rem;
+  border-radius: 33%;
 }
 
 .chat-box .bubble p {
+  display: flex;
+  justify-content: space-between;
   margin: 0;
+}
+
+.chat-box .timestamp {
+  display: inline-block;
+  font-size: 80%;
+  color: #777;
+  padding-left: 1.5em;
+  padding-top: 0.5em;
+  white-space: nowrap;
 }
 
 /* Typing notification bubble */
 .chat-box .typing {
   display: inline-block;
-  border-radius: 0.5em;
-  width: 2em;
-  padding: 0.25em 0.35em;
+  border-radius: 0.5rem;
+  width: 2rem;
+  padding: 0.25rem 0.35rem;
   vertical-align: middle;
   text-align: center;
   color: #aaa;
-}
-
-.chat-box li.single .typing {
-  margin-top: 0.75em;
-  margin-bottom: 0.75em;
-}
-
-.chat-box li.last .typing {
-  margin-top: 0.15em;
-  margin-bottom: 0.75em;
-}
-
-.chat-box .timestamp {
-  font-size: 80%;
-  color: #777;
-  padding-left: 1.5em;
-  padding-top: 0.5em;
+  margin-top: 0.75rem;
 }
 
 /* END of talk bubbles */
@@ -491,7 +601,7 @@ form {
 
 
 /* Modal dialog */
-.overlay {
+.dialog-overlay {
   position: absolute;
   display: flex;
   top: 0;
@@ -499,12 +609,44 @@ form {
   width: 100%;
   height: 100%;
   z-index: 10;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0,0,0,0.25);
 }
 .modal-dialog {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   background-color: white;
+  min-width: 24rem;
+  min-height: 16rem;
   margin: auto;
+  border-radius: 0.3rem;
+  box-shadow: 0 0.5rem 1rem 0 rgba(0,0,0, 0.25);
 }
+
+.modal-dialog .title-panel {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.4rem;
+  padding: 1rem;
+}
+.modal-dialog .body-panel {
+  margin: auto 0.5rem auto 0.5rem;
+}
+
+.modal-dialog .dialog-buttons {
+  border-top: 1px solid #f5f5f5;
+  background-color: #fafafa
+}
+
+.modal-dialog .dialog-buttons a {
+  display: inline-block;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-size: 1.1rem;
+  padding: 0.35rem 1.5rem;
+}
+
+
 /* END of modal dialog */
 
 /* Miscellaneous */
@@ -518,7 +660,7 @@ form {
   color: white;
   border-radius: 1em;
   padding: 0.25em;
-  min-width: 1.5em;
+  min-width: 1.75em;
   text-align: center;
 }
 
