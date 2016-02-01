@@ -29,9 +29,10 @@
     <script type="text/babel">
     // Name of this application, used in the User-Agent
     var APP_NAME = "TinodeReact/1.0";
+
     // Host name and posrt to connect to
     var HOST = "api.tinode.co";
-    //var HOST = "localhost:6060";
+    // var HOST = "localhost:6060";
 
     // API key. Use https://github.com/tinode/chat/tree/master/keygen to generate your own
     var API_KEY = "AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K";
@@ -44,6 +45,10 @@
 
     // Delay before sending a read notification, milliseconds.
     var READ_DELAY = 3*1000;
+
+    // Mediaquery breakpoint between desktop and mobile, in px. Should match the value
+    // in @meadia (max-size: 640px) in base.css
+    var MEDIA_BREAKPOINT = 640;
 
     // Short representation of time in the past.
     function shortDateFormat(then) {
@@ -94,9 +99,9 @@
         this.props.onLogin(this.state.login.trim(), this.state.password.trim());
       },
       render: function() {
-        var submitClassList = "blue";
+        var submitClasses = "blue";
         if (this.props.disabled) {
-          submitClassList += " disabled";
+          submitClasses += " disabled";
         }
         return (
           <div>
@@ -112,7 +117,7 @@
                 onChange={this.handlePasswordChange}
                 required />
               <div className="dialog-buttons">
-                <button className={submitClassList} type="submit">Sign in</button>
+                <button className={submitClasses} type="submit">Sign in</button>
               </div>
             </form>
           </div>
@@ -172,9 +177,9 @@
         }
       },
       render: function() {
-        var submitClassList = "blue";
+        var submitClasses = "blue";
         if (this.props.disabled) {
-          submitClassList += " disabled";
+          submitClasses += " disabled";
         }
         return (
           <div>
@@ -191,9 +196,9 @@
                 <CreateAccountView.AvatarUpload onImageChanged={this.handleImageChanged} />
               </div>
               <input type="text" placeholder="Full name, e.g. John Doe"
-                value={this.state.fn} onChange={this.handleFnChange} required />
+                value={this.state.fn} onChange={this.handleFnChange} />
               <div className="dialog-buttons">
-                <button className={submitClassList} type="submit">Sign up</button>
+                <button className={submitClasses} type="submit">Sign up</button>
               </div>
             </form>
           </div>
@@ -208,7 +213,6 @@
         };
       },
       handleFileUpload(e) {
-        console.log("handleFileUpload");
         var instance = this;
         var img = new Image();
         img.crossOrigin = 'Anonymous';
@@ -228,9 +232,7 @@
           ctx.drawImage(this, sx, sy, size, size, 0, 0, 64, 64);
           instance.setState({dataUrl: canvas.toDataURL("image/jpg")});
           canvas = null;
-          console.log("handleFileUpload.onLoad: done");
         };
-        console.log(e);
         img.src = URL.createObjectURL(e.target.files[0]);
       },
       render: function() {
@@ -238,7 +240,7 @@
           <div className="avatar-upload">
             {this.state.dataUrl ?
               <img src={this.state.dataUrl} className="preview" /> :
-              <div className="blank">48&times;48</div>}
+              <div className="blank">64&times;64</div>}
             <input type="file" id="file-input-avatar" className="inputfile hidden"
               accept="image/*" onChange={this.handleFileUpload} />
             <label htmlFor="file-input-avatar" className="round">
@@ -252,11 +254,43 @@
 
     /* BEGIN Tinode config panel */
     var SettingsView = React.createClass({
+      getInitialState: function() {
+        return {
+          hostName: HOST,
+        };
+      },
+      handleSubmit: function(e) {
+        e.preventDefault();
+      },
+      handleHostNameChange: function(e) {
+        this.setState({hostName: e.target.value});
+      },
       render: function() {
         return (
-          <div id="settings-form">
-            <big>Not implemented</big>
-          </div>
+          <form id="settings-form" onSubmit={this.handleSubmit}>
+            <p>This form does not do anything yet</p>
+            <label htmlFor="host-name">Host:</label>
+            <input type="text" id="host-name" placeholder="api.tinode.co"
+              value={this.state.hostName} onChange={this.handleHostNameChange} required autofocus />
+            <p>Wire transport:</p>
+            <ul>
+              <li>
+                <input type="radio" id="transport-default" name="transport-select" defaultChecked />
+                <label htmlFor="transport-default">default</label>
+              </li>
+              <li>
+                <input type="radio" id="transport-ws" name="transport-select" />
+                <label htmlFor="transport-ws">websocket</label>
+              </li>
+              <li>
+                <input type="radio" id="transport-lp" name="transport-select" />
+                <label htmlFor="transport-lp">long polling</label>
+              </li>
+            </ul>
+            <div className="dialog-buttons">
+              <button type="submit" className="blue">Update</button>
+            </div>
+          </form>
         );
       }
     });
@@ -278,6 +312,8 @@
               {this.props.state === 'login' ?
                   <SideNavbar.MenuStart onSignUp={this.props.onSignUp} onSettings={this.props.onSettings} /> :
                     this.props.state === 'settings' ?
+                    <SideNavbar.MenuCancel onCancel={this.props.onCancel} /> :
+                    this.props.state === 'edit-account' ?
                     <SideNavbar.MenuCancel onCancel={this.props.onCancel} /> :
                     this.props.state === 'register' ?
                     <SideNavbar.MenuCancel onCancel={this.props.onCancel} /> :
@@ -339,13 +375,15 @@
             title = "Create Account"; break;
           case 'settings':
             title = "Settings"; break;
+          case 'edit-account':
+            title = "Edit Account"; break;
           case 'contacts':
             title = this.props.title;
             avatar = this.props.avatar;
           default:;
         };
         return (
-          <div id="sidepanel">
+          <div id="sidepanel" className={this.props.hideSelf ? 'nodisplay' : null}>
             <SideNavbar state={this.props.state}
               title={title} avatar={avatar}
               onSignUp={this.props.onSignUp}
@@ -368,6 +406,9 @@
 
               this.props.state === 'settings' ?
               <SettingsView onCancel={this.props.onCancel} /> :
+
+              this.props.state === 'edit-account' ?
+              <EditAccountView onCancel={this.props.onCancel} /> :
 
               this.props.state === 'contacts' ?
               <ContactsView
@@ -395,6 +436,18 @@
     });
 
     /* END Side panel */
+
+    /* EditAccount parameters */
+    var EditAccountView = React.createClass({
+      render: function() {
+        return (
+          <form id="edit-account">
+            <p>Not implemented</p>
+          </form>
+        );
+      }
+    });
+    /* END EditAccount */
 
     /* BEGIN Contact list (list of topics) */
 
@@ -532,35 +585,6 @@
     /* END Contact list */
 
     /* BEGIN Conversation panel */
-    /* Don't delete it for now: maybe needed for debugging
-    var messagesList = [
-      {
-        id: 1, content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sit amet tellus interdum. \
-Integer sodales accumsan sem, ut malesuada velit egestas vel. Aenean consequat consectetur justo eget venenatis. Morbi \
-eleifend fringilla urna euismod tristique. Nullam at magna vel mauris rutrum finibus. Duis eu dignissim magna. Donec \
-        lobortis suscipit vulputate. Cras luctus elit ex, vitae lobortis magna lobortis bibendum.",
-        timestamp: new Date(2015, 11, 31, 22, 23, 24, 567), response: false
-      },
-      {
-        id: 2, content: "Duis porttitor est nec diam lobortis, non aliquam risus aliquam. \
-Nulla vitae est aliquam, egestas nunc dapibus, dapibus risus.\
-Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. \
-Nullam vitae condimentum lectus, quis maximus elit.\
-\
-Nunc ac nisi risus. Integer eget augue vel risus commodo blandit. Nulla faucibus convallis neque sed eleifend. Vestibulum\
-dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac habitasse platea dictumst.",
-        timestamp: new Date(2016, 0, 1, 2, 3, 4, 567),
-        response: true
-      },
-      {id: 3, content: "Ooga chaka ooga ooga!", timestamp: new Date(2016, 0, 2, 16, 17, 18, 567), response: false},
-      {id: 4, content: "Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. \
-      Nullam vitae condimentum lectus, quis maximus elit.", timestamp: new Date(2016, 0, 3, 1, 2, 3, 567), response: true},
-      {id: 5, content: "Integer sodales accumsan sem, ut malesuada velit egestas vel. Aenean consequat consectetur justo eget venenatis.",
-        timestamp: new Date(2016, 0, 3, 4, 5, 6, 567), response: true},
-      {id: 6, content: "No way.", timestamp: new Date(2016, 0, 3, 15, 16, 17, 567), response: false},
-      {id: 7, content: "OK!", timestamp: new Date(2016, 0, 3, 18, 19, 20, 567), response: true}
-    ];
-    */
     var Received = {
       UNDEF: -2,
       SENDING: -1,
@@ -751,13 +775,18 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
           }
 
           component = (
-            <div id="topic-view">
+            <div id="topic-view" className={this.props.hideSelf ? 'nodisplay' : null}>
               <div id="topic-caption-panel">
-                <div>
+                {this.props.displayMobile ?
+                  <a href="#" id="hide-message-view" onClick={this.props.onHideMessageView}>
+                    <i className="material-icons big">arrow_back</i>
+                  </a> :
+                  null}
+                <div id="topic-title-group">
                   <div id="topic-title" className="panel-title">{this.state.title}</div>
                   <div id="topic-last-seen">{lastSeen}</div>
                 </div>
-                <div>users online and menu buttons</div>
+                <div id="topic-users">users online and menu buttons</div>
               </div>
               <div id="messages-panel" ref="messagesPanel">
                 <ul className="chat-box">
@@ -769,7 +798,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
           );
         } else {
           component = (
-            <MessagesView.Dummy />
+            <MessagesView.Dummy hideSelf={this.props.hideSelf} />
           );
         }
         return component;
@@ -827,13 +856,13 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
     /* This is just a static page to display when no conversation is selected. */
     MessagesView.Dummy = React.createClass({
       render: function() {
+        var version = document.lastModified;
         return (
-          <div id="dummy-view">
+          <div id="dummy-view" className={this.props.hideSelf ? 'nodisplay' : null}>
             <a href="https://github.com/tinode/chat/">
-              <div>
-                <img id="logo" alt="logo" src="img/logo.svg" />
-                <h2>Tinode Demo Chat</h2>
-              </div>
+              <img id="logo" alt="logo" src="img/logo.svg" />
+              <h2>Tinode Demo Chat</h2>
+              <p>Version: {version}</p>
             </a>
           </div>
         );
@@ -891,16 +920,30 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
           errorText: '',
           topicSelected: '',
           loginDisabled: false,
-          subscriptions: {}
+          subscriptions: {},
+          displayMobile: (window.innerWidth <= MEDIA_BREAKPOINT),
+          mobilePanel: 'sidepanel'
         };
       },
       componentDidMount: function() {
+        window.addEventListener('resize', this.handleResize);
         Tinode.enableLogging(true);
-        Tinode.onDisconnect = this.handleDicsonnect;
+        Tinode.onDisconnect = this.handleDisconnect;
         // Setup with the default transport, usually websocket.
         Tinode.setup(APP_NAME, HOST, API_KEY);
       },
-      handleDicsonnect: function() {
+      componentWillUnmount: function(){
+        window.removeEventListener('resize', this.handleResize);
+      },
+      handleResize: function(){
+        var mobile = document.documentElement.clientWidth <= MEDIA_BREAKPOINT;
+        if (this.state.displayMobile != mobile) {
+          this.setState({displayMobile: mobile});
+        }
+        console.log("viewport (mob=" + mobile + "): " + document.documentElement.clientWidth +
+          "x" + document.documentElement.clientHeight);
+      },
+      handleDisconnect: function() {
         this.setState({
           sidePanelSelected: 'login',
           sidePanelTitle: null,
@@ -910,7 +953,8 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
           errorText: 'disconnected',
           topicSelected: '',
           loginDisabled: false,
-          subscriptions: {}
+          subscriptions: {},
+          mobilePanel: 'sidepanel'
         });
       },
       // User clicked Login button in the side panel.
@@ -949,7 +993,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
       // Registration of a new account.
       handleNewAccount: function(login_, password_, public_, private_) {
         var instance = this;
-        Tinode.connect().then(function(){
+        Tinode.connect().then(function() {
           return Tinode.createUserBasic(login_, password_,
             {login: "basic", public: public_, private: private_});
         }).catch(function(err) {
@@ -958,7 +1002,11 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
       },
       // User clicked on a contact in the side panel.
       handleTopicSelected: function(topicName) {
-        this.setState({topicSelected: topicName});
+        this.setState({topicSelected: topicName, mobilePanel: 'topic-view'});
+      },
+      // In mobile view user requested to show sidepanel
+      handleHideMessageView: function() {
+        this.setState({mobilePanel: 'sidepanel'});
       },
       // User clicked on a message send button.
       handleSendMessage: function(msg) {
@@ -971,7 +1019,7 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
       },
       // User chose Settings menu item.
       handleSettings: function() {
-        this.setState({sidePanelSelected: 'settings'});
+        this.setState({sidePanelSelected: this.state.loggedIn ? 'edit-account' : 'settings'});
       },
       // User clicked Cancel button in Setting or Sign Up panel.
       handleSidepanelCancel: function() {
@@ -996,6 +1044,8 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
               onCancel={this.handleDialogCancel} />
 
             <SidepanelView
+              displayMobile={this.state.displayMobile}
+              hideSelf={(this.state.displayMobile && this.state.mobilePanel !== 'sidepanel')}
               state={this.state.sidePanelSelected}
               title={this.state.sidePanelTitle}
               avatar={this.state.sidePanelAvatar}
@@ -1011,6 +1061,9 @@ dignissim a diam a hendrerit. Nulla vel est ut quam rhoncus pulvinar. In hac hab
               onCancel={this.handleSidepanelCancel} />
 
             <MessagesView
+              onHideMessageView={this.handleHideMessageView}
+              displayMobile={this.state.displayMobile}
+              hideSelf={(this.state.displayMobile && this.state.mobilePanel !== 'topic-view')}
               topicSelected={this.state.topicSelected}
               onData={this.tnData}
               sendMessage={this.handleSendMessage} />

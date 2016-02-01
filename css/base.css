@@ -14,7 +14,7 @@ html, body {
   color: #666;
   overflow: hidden;
   background-color: silver;
-  box-shadow: inset 0 10em #3949AB; /* the deep-plue stripe accross the top */
+  box-shadow: inset 0 10rem #3949AB; /* the deep-plue stripe accross the top */
 }
 
 a {
@@ -36,6 +36,9 @@ form {
   font-size: 1.2rem;
 }
 
+form label {
+  font-size: 1rem;
+}
 /* Input fields and buttons */
 
 button {
@@ -123,26 +126,30 @@ textarea, input {
   font-size: 1.05rem;
   background: transparent;
   border: none;
-  border-bottom: 1px solid #ccc;
-  border-radius: 0.2rem;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-  width: 100%;
   margin: 0.25rem 0;
   padding: 0 0.125rem;
   outline: none;
-  transition: all 0.2s ease-in-out;
   box-sizing: border-box;
   color: #666;
 }
-textarea:focus, input:focus {
-  border-bottom: 1px solid #2196f3;
-  box-shadow: 0 1px 0 rgba(33, 150, 243, 0.25);
-}
-input {
-  height: 2.5rem;
-}
 textarea {
   resize: none;
+}
+input[type="text"],
+input[type="password"],
+textarea {
+  height: 2.5rem;
+  border-bottom: 1px solid #ccc;
+  border-radius: 0.2rem;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+  width: 100%;
+}
+textarea:focus,
+input[type="text"]:focus,
+input[type="password"]:focus {
+  border-bottom: 1px solid #2196f3;
+  box-shadow: 0 1px 0 rgba(33, 150, 243, 0.25);
 }
 /* Scrollbar styling for Chrome. Firefox does not support scrollbar styling.  */
 ::-webkit-scrollbar {
@@ -161,7 +168,7 @@ textarea {
 /* END of input and buttons */
 
 form {
-  padding: 0.5em 0.75em;
+  padding: 0.5rem 0.75rem;
   line-height: 1.75;
   font-size: 1.2rem;
 }
@@ -170,8 +177,8 @@ form {
 
 #mountPoint {
   height: 100%;
-  padding-top: 1em;
-  padding-bottom: 3em;
+  padding-top: 1rem;
+  padding-bottom: 3rem;
 }
 
 /* Top-level application layout style: sidepanel + main view */
@@ -179,12 +186,12 @@ form {
   position: relative;
   display: flex;
   height: 100%;
-  width: 80em;
+  max-width: 80rem;
   overflow: hidden;
   margin-left: auto;
   margin-right: auto;
-  border-radius: 0.25em;
-  box-shadow: 1px 2px 0.3em gray;
+  border-radius: 0.25rem;
+  box-shadow: 1px 2px 0.3rem gray;
   background-color: white;
 }
 
@@ -192,7 +199,8 @@ form {
   position: relative;
   display: flex;
   flex-direction: column;
-  width: 30em;
+  width: 24rem;
+  min-width: 24rem;
   height: 100%;
 }
 
@@ -202,6 +210,28 @@ form {
   width: 100%;
   height: 100%;
 }
+
+@media (max-width: 960px) {
+  #mountPoint {
+    padding: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  #app-container {
+    width: 100%;
+  }
+
+  #sidepanel {
+    width: 100%;
+  }
+}
+
+/* Class to alternatively hide sidepanel/topic-view */
+.nodisplay {
+  display: none!important;
+}
+
 /* END of top-level layout */
 
 /* Sidepanel styles */
@@ -250,6 +280,20 @@ form {
   flex: none;
   border-radius: 33%;
 }
+
+/* Application settings */
+#settings-form ul {
+  list-style: none;
+}
+
+#settings-form li {
+  vertical-align: middle;
+}
+#settings-form label {
+  display: inline-block;
+  padding-left: 0.5rem;
+}
+
 
 /* Area which displays an error message */
 #alert-box {
@@ -302,7 +346,7 @@ form {
 #contact-box .avatar {
   width: 3rem;
   height: auto;
-  border-radius: 33%;
+  border-radius: 40%;
 }
 
 /* Online-offline indicator positioned inside avatar-box */
@@ -347,7 +391,7 @@ form {
   width: 4.5rem;
   height: auto;
   box-sizing: border-box;
-  margin: 0 0.5rem;
+  margin-left: 0.5rem;
   padding: 0;
 }
 
@@ -416,26 +460,28 @@ form {
 /* Topic/messages view */
 #topic-caption-panel {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
+  align-items:center;;
+  justify-content: flex-start;
   flex: none;
-  padding: 0.5em;
-  height: 4em;
+  padding: 0.5rem;
+  height: 4rem;
   background-color: #b0bec5;
   box-shadow: 0 1px 2px gray;
   z-index: 1; /* otherwise the shadow becomes invisible */
 }
 
-/*
-#topic-title {
+#hide-message-view {
+  display: block;
+  margin-right: 0.5rem;
 }
-#topic-last-seen {
+
+#topic-users {
+  margin-left: auto;
 }
-*/
 
 /* Scrollable panel where the messages are shown */
 #messages-panel {
-  padding: 0.75em;
+  padding: 0.75rem;
   overflow-y: scroll;
   background-color: #eceff1;
   height: 100%;
@@ -447,7 +493,7 @@ form {
   display: flex;
   align-items: center;
   flex: none;
-  padding: 0.5em;
+  padding: 0.5rem;
   background-color: #eceff1;
   box-shadow: 0 -1px rgba(0,0,0,0.1); /* Faint shadow above panel */
   z-index: 2;
@@ -462,12 +508,18 @@ form {
   justify-content: center;
   background-color: #e0f7fa;
 }
+#dummy-view a {
+  text-decoration: none;
+  display: block;
+  text-align: center;
+  vertical-align: middle;
+}
 
 /* Talk bubbles */
 .chat-box {
   list-style: none;
-  padding: 0 0 3.5em 0;
-  margin: 0 1em 0 1em;
+  padding: 0 0 3.5rem 0;
+  margin: 0 0.5rem;
 }
 
 .chat-box li {
@@ -683,6 +735,6 @@ form {
 }
 .avatar-box .material-icons {
   color: rgba(250, 250, 250, 0.8); /* #fafafa, gray 50 */
-  background-color: #bdbdbd;
-  border-radius: 2pt;
+  background-color: #e0e0e0;
+  border-radius: 40%;
 }
