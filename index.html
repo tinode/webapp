@@ -21,18 +21,18 @@
     <!-- Some scripts to make bootstrap more dynamic -->
     <!--script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script-->
     <!--script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script-->
-    <script src="tinode-0.5.1.js"></script>
+    <script src="tinode.js"></script>
   </head>
   </head>
   <body>
     <div id="mountPoint"></div>
     <script type="text/babel">
     // Name of this application, used in the User-Agent
-    var APP_NAME = "TinodeReact/1.0";
+    var APP_NAME = "TinodeReact/0.6";
 
-    // Host name and posrt to connect to
-    var HOST = "api.tinode.co";
-    // var HOST = "localhost:6060";
+    // Host name and port to connect to
+    // var HOST = "api.tinode.co";
+    var HOST = "localhost:6060";
 
     // API key. Use https://github.com/tinode/chat/tree/master/keygen to generate your own
     var API_KEY = "AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K";
@@ -668,24 +668,24 @@
           // Bind the new topic to component.
           topic.onData = this.handleNewMessage;
           topic.onInfo = this.handleInfoReceipt;
-          topic.onMetaInfo = this.handleInfoChange;
+          topic.onMetaDesc = this.handleDescChange;
           topic.onSubsUpdated = this.handleSubsUpdated;
           // Unbind the previous topic from this component.
           if (this.state.topic) {
             var oldTopic = Tinode.getTopic(this.state.topic);
             oldTopic.onData = undefined;
             oldTopic.onInfo = undefined;
-            oldTopic.onMetaInfo = undefined;
+            oldTopic.onMetaDesc = undefined;
             oldTopic.onSubsUpdated = undefined;
           }
 
           if (topic.isSubscribed()) {
-            this.handleInfoChange(topic);
+            this.handleDescChange(topic);
             topic.messages(function(msg) {
               msgs = msgs.concat(msg);
             });
           } else {
-            topic.subscribe({get: "info sub data"});
+            topic.subscribe({get: {desc: {}, sub: {}, data: {}}});
           }
 
           // The user switched to the new topic before the timer for
@@ -695,8 +695,8 @@
           this.setState({messages: msgs, topic: props.topicSelected});
         }
       },
-      handleInfoChange: function(info) {
-        this.setState({title: info.public.vcard.fn});
+      handleDescChange: function(desc) {
+        this.setState({title: desc.public.vcard.fn});
       },
       handleSubsUpdated: function(uids) {
 
@@ -940,8 +940,6 @@
         if (this.state.displayMobile != mobile) {
           this.setState({displayMobile: mobile});
         }
-        console.log("viewport (mob=" + mobile + "): " + document.documentElement.clientWidth +
-          "x" + document.documentElement.clientHeight);
       },
       handleDisconnect: function() {
         this.setState({
@@ -967,19 +965,19 @@
         }).then(function() {
           // Logged in fine, subscribe to 'me' attaching callbacks from the contacts view.
           var me = Tinode.getMeTopic();
-          me.onMetaInfo = instance.tnMeMetaInfo;
+          me.onMetaDesc = instance.tnMeMetaDesc;
           instance.setState({sidePanelSelected: "contacts", loggedIn: true});
-          // Subscribe, fetch topic info and the list of subscriptions.
-          me.subscribe({get: "info sub data"});
+          // Subscribe, fetch topic desc, the list of subscriptions, and messages (invites).
+          me.subscribe({get: {desc: {}, sub: {}, data: {}}});
         }).catch(function(err) {
           // Login failed, report error
           instance.setState({loginDisabled: false, errorText: err.message});
         });
       },
-      tnMeMetaInfo: function(info) {
+      tnMeMetaDesc: function(desc) {
         this.setState({
-          sidePanelTitle: info.public.vcard.fn,
-          sidePanelAvatar: makeImageUrl(info.public.vcard.photo)
+          sidePanelTitle: desc.public.vcard.fn,
+          sidePanelAvatar: makeImageUrl(desc.public.vcard.photo)
         });
       },
       // Sending "received" notifications
