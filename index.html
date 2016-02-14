@@ -65,7 +65,7 @@
         {hour12: false, year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'});
     }
 
-    // Make a data URL from vcard.photo
+    // Make a data URL from public.photo
     function makeImageUrl(photo) {
       return photo ? 'data:image/' + photo.type + ';base64,' + photo.data : null;
     }
@@ -157,7 +157,7 @@
       handleSubmit: function(e) {
         e.preventDefault();
         if (this.state.password.trim() != this.state.password2.trim()) {
-
+          // FIXME(gene): report an error here.
         } else {
           this.setState({errorCleared: false});
           var vcard = null;
@@ -559,8 +559,8 @@
           }
           contactNodes.push(
             <Contact
-              title={c.public.vcard.fn}
-              avatar={makeImageUrl(c.public.vcard.photo)}
+              title={c.public.fn}
+              avatar={makeImageUrl(c.public.photo)}
               comment={c.private}
               unread={unread} now={c.online}
               selected={this.state.selected}
@@ -696,7 +696,7 @@
         }
       },
       handleInfoChange: function(info) {
-        this.setState({title: info.public.vcard.fn});
+        this.setState({title: info.public.fn});
       },
       handleSubsUpdated: function(uids) {
 
@@ -978,8 +978,8 @@
       },
       tnMeMetaInfo: function(info) {
         this.setState({
-          sidePanelTitle: info.public.vcard.fn,
-          sidePanelAvatar: makeImageUrl(info.public.vcard.photo)
+          sidePanelTitle: info.public.fn,
+          sidePanelAvatar: makeImageUrl(info.public.photo)
         });
       },
       // Sending "received" notifications
