@@ -15,14 +15,13 @@
     <!-- Styles for local elements -->
     <link rel="stylesheet" href="css/base.css" />
     <!-- ReactJs scripts -->
-    <script src="https://fb.me/react-0.14.6.js"></script>
-    <script src="https://fb.me/react-dom-0.14.6.js"></script>
+    <script src="https://fb.me/react-0.14.7.js"></script>
+    <script src="https://fb.me/react-dom-0.14.7.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
     <!-- Some scripts to make bootstrap more dynamic -->
     <!--script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script-->
     <!--script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script-->
     <script src="tinode.js"></script>
-  </head>
   </head>
   <body>
     <div id="mountPoint"></div>
@@ -65,7 +64,7 @@
         {hour12: false, year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'});
     }
 
-    // Make a data URL from vcard.photo
+    // Make a data URL from public.photo
     function makeImageUrl(photo) {
       return photo ? 'data:image/' + photo.type + ';base64,' + photo.data : null;
     }
@@ -157,7 +156,7 @@
       handleSubmit: function(e) {
         e.preventDefault();
         if (this.state.password.trim() != this.state.password2.trim()) {
-
+          // FIXME(gene): report an error here.
         } else {
           this.setState({errorCleared: false});
           var vcard = null;
