@@ -278,7 +278,7 @@ form {
   width: 3rem;
   height: auto;
   flex: none;
-  border-radius: 33%;
+  border-radius: 50%;
 }
 
 /* Application settings */
@@ -346,7 +346,7 @@ form {
 #contact-box .avatar {
   width: 3rem;
   height: auto;
-  border-radius: 40%;
+  border-radius: 50%;
 }
 
 /* Online-offline indicator positioned inside avatar-box */
@@ -735,6 +735,6 @@ form {
 }
 .avatar-box .material-icons {
   color: rgba(250, 250, 250, 0.8); /* #fafafa, gray 50 */
-  background-color: #e0e0e0;
-  border-radius: 40%;
+  background-color: #757575;
+  border-radius: 50%;
 }
