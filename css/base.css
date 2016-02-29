@@ -2,6 +2,8 @@
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  font-family: Roboto, Arial, sans-serif;
+  text-rendering: optimizeLegibility;
 }
 
 /* Basic elements defined */
@@ -9,7 +11,6 @@
 html, body {
   height:100%;
   width:100%;
-  font-family: 'Roboto', Arial, sans-serif;
   font-size: 10pt;
   color: #666;
   overflow: hidden;
@@ -173,6 +174,42 @@ form {
   font-size: 1.2rem;
 }
 
+/* BEGIN Popup/dropdown menu */
+
+ul.menu {
+  position: absolute;
+  left: -1.5rem;
+  top: 1.5rem;
+  list-style: none;
+  width: 12rem;
+  border-radius: 0.2rem;
+  padding-top: 0.35rem;
+  padding-bottom: 0.35rem;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, .45);
+  background-color: white;
+  z-index: 3;
+}
+
+ul.menu > li {
+  padding: 0.75rem 0.75rem 0.75rem 1.25rem;
+}
+
+ul.menu > li:hover {
+  background-color: #f5f5f5;
+}
+
+ul.menu > li.separator {
+  padding: 0;
+  margin: 2px;
+  height: 1px;
+  background-color: #ccc;
+}
+
+ul.menu > li.separator:hover {
+  background-color: #ccc;
+}
+/* END popup/dropdown menu */
+
 /* END of basic elements */
 
 #mountPoint {
@@ -297,18 +334,22 @@ form {
 
 /* Area which displays an error message */
 #alert-box {
-  padding: 0.5em;
   background-color: transparent;
+  height: 0;
+  overflow: hidden;
 }
 #alert-box.error-alert {
+  padding: 0.5em;
   background-color: #ffcdd2;
   border-color: #d32f2f;
-  color: #600;
+  color: #b71c1c;
+  height: auto;
 }
 
 /* List of contacts */
 #contacts-panel {
   overflow-y: auto;
+  margin-top: 1rem;:
   margin-bottom: auto;
   height: 100%;
 }
@@ -317,21 +358,40 @@ form {
   list-style: none;
 }
 
-#contact-box li {
+#contact-box > li {
   display: flex;
   padding: 0.35rem 0.25rem 0.5rem 0.35rem;
   min-height: 3.5rem;
-  overflow: hidden;
 }
-#contact-box li:hover {
+#contact-box > li:hover {
   background-color: #eceff1; /* blue-gray 50 highlight */
 }
-#contact-box li.selected {
+#contact-box > li.selected {
   background-color: #cfd8dc; /* blue-gray 100 highlight */
 }
 
 #contact-box .contact-title {
   font-size: 1.05rem;
+}
+
+/* The down arrow head - trigger for context menu in contacts list */
+#contact-box li .menuTrigger {
+  position: relative;
+  margin-left: auto;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background-color: transparent;
+}
+#contact-box li:hover .menuTrigger {
+  background-color: white;
+}
+
+#contact-box li .menuTrigger a {
+  color: transparent;
+}
+#contact-box li:hover .menuTrigger a {
+  color: #757575;
 }
 
 /* Avatar and online-offline indicator */
@@ -363,25 +423,32 @@ form {
 #contact-box .offline {
   color: #888;
 }
+/* END of avatar box */
 
 #add-topic {
   position: absolute;
   right: 1em;
   bottom: 1em;
 }
-/* END of avatar box */
 
-/* New account panel (signup form) */
-#signup-form {
+/* Various forms inside a panel (signup form, new topic form) */
+.panel-form {
   display: flex;
   flex-direction: column;
 }
 
-#signup-form-one {
+.panel-form-one {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
 }
+
+.panel-form-two {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
 
 /* Styling of avatar upload area in the New Account panel */
 .avatar-upload {
@@ -698,8 +765,68 @@ form {
   padding: 0.35rem 1.5rem;
 }
 
-
 /* END of modal dialog */
+
+/* BEGIN Tabs */
+.tabbar {
+  padding-top: 1rem;
+  background: #eeeeee; /* #2196f3; */
+}
+
+.tabbar > ul {
+  list-style:none;
+  margin:0;
+  width:100%;
+  overflow:hidden;
+  padding:0;
+  margin-left:1rem;
+}
+
+.tabbar > ul > li {
+  float: left;
+}
+
+.tabbar > ul > li > a {
+  position: relative;
+  text-decoration: none;
+  text-transform: uppercase;
+  display: block;
+  min-width: 6rem;
+  text-align: center;
+  line-height: 2rem;
+  font-weight: 400;
+  font-size: 1.1rem;
+  color: rgba(33,150,243,0.6);
+  overflow: hidden;
+  box-shadow: inset 0 -2px 2.5px -1px rgba(0,0,0,0.5);
+}
+
+.tabbar li.active > a {
+  color: #2196f3;
+}
+
+.tabbar li.active > a:after {
+  height:0.15rem;
+  display:block;
+  content:"";
+  bottom:0;
+  left:0;
+  position: absolute;
+  background: #2196f3;
+  animation: tabbar-border-expand 0.2s cubic-bezier(0.4, 0.0, 0.4, 1) 0s alternate forwards;
+}
+
+@keyframes tabbar-border-expand {
+  0% {
+    opacity:0;
+    width:0;
+  }
+  100% {
+    opacity:1;
+    width:100%;
+  }
+}
+/* END Tabs */
 
 /* Miscellaneous */
 

@@ -27,8 +27,8 @@
     var APP_NAME = "TinodeReact/0.6";
 
     // Host name and port to connect to
-    var HOST = "api.tinode.co";
-    // var HOST = "localhost:6060";
+    // var HOST = "api.tinode.co";
+    var HOST = "localhost:6060";
 
     // API key. Use https://github.com/tinode/chat/tree/master/keygen to generate your own
     var API_KEY = "AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K";
@@ -65,6 +65,68 @@
     function makeImageUrl(photo) {
       return photo ? 'data:image/' + photo.type + ';base64,' + photo.data : null;
     }
+
+    /* BEGIN Popup/dropdown menu */
+    var Menu = React.createClass({
+      getInitialState: function() {
+        return {
+          visible: this.props.visible
+        };
+      },
+      componentWillUnmount: function() {
+        document.removeEventListener('mousedown', this.handlePageClick, false);
+      },
+      componentWillReceiveProps: function(nextProps) {
+        this.setState({visible: nextProps.visible});
+        if (nextProps.visible) {
+          document.addEventListener('mousedown', this.handlePageClick, false);
+        } else {
+          document.removeEventListener('mousedown', this.handlePageClick, false);
+        }
+      },
+      handlePageClick: function(e) {
+        if (ReactDOM.findDOMNode(this).contains(e.target)) {
+          console.log("click in menu, exiting");
+          return;
+        }
+        e.stopPropagation();
+        document.removeEventListener('mousedown', this.handlePageClick);
+        console.log("click outside of menu");
+        this.setState({visible: false});
+      },
+      handleClick: function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.setState({visible: false});
+        this.props.onResult(this.props.topic, this.props.items[e.currentTarget.dataset.id]);
+      },
+      render: function() {
+        if (!this.state.visible) {
+          return null;
+        }
+        var count = 0;
+        var menuItems = [];
+        var instance = this;
+        this.props.items.map(function(item) {
+          if (item === "-") {
+            menuItems.push(
+              <li className="separator" key={count} />
+            );
+          } else {
+            menuItems.push(
+              <li onClick={instance.handleClick} data-id={count} key={count}>{item}</li>
+            );
+          }
+          count++;
+        });
+        return (
+          <ul className="menu">
+            {menuItems}
+          </ul>
+        );
+      }
+    });
+    /* END Popup/dropdown menu */
 
     /* BEGIN Login: a login form */
     var LoginView = React.createClass({
@@ -179,9 +241,9 @@
         }
         return (
           <div>
-            <form id="signup-form" onSubmit={this.handleSubmit} onCancel={this.props.onCancel}>
-              <div id="signup-form-one">
-                <div>
+            <form className="panel-form" onSubmit={this.handleSubmit} onCancel={this.props.onCancel}>
+              <div className="panel-form-one">
+                <div className="panel-form-two">
                   <input type="text" placeholder="Login"
                     value={this.state.login} onChange={this.handleLoginChange} required autofocus />
                   <input type="password" placeholder="Password"
@@ -189,7 +251,7 @@
                   <input type="password" placeholder="Repeat password"
                     value={this.state.password2} onChange={this.handlePassword2Change} required />
                 </div>
-                <CreateAccountView.AvatarUpload onImageChanged={this.handleImageChanged} />
+                <AvatarUpload onImageChanged={this.handleImageChanged} />
               </div>
               <input type="text" placeholder="Full name, e.g. John Doe"
                 value={this.state.fn} onChange={this.handleFnChange} />
@@ -202,7 +264,7 @@
       }
     });
 
-    CreateAccountView.AvatarUpload = React.createClass({
+    var AvatarUpload = React.createClass({
       getInitialState: function() {
         return {
           dataUrl: null
@@ -248,6 +310,65 @@
     });
     /* END Account registration */
 
+    /* BEGIN Create new topic and invite users or send an invite */
+    var NewTopicView = React.createClass({
+      getInitialState: function() {
+        return {
+          tabSelected: "p2p",
+          fn: '', // full/formatted name
+          imageDataUrl: null
+        };
+      },
+      handleTabClick: function(e) {
+        e.preventDefault();
+        this.setState({tabSelected: e.currentTarget.dataset.id});
+      },
+      handleFnChange: function(e) {
+        this.setState({fn: e.target.value});
+      },
+      handleImageChanged: function(img) {
+        this.setState({imageDataUrl: img});
+      },
+      handleGroupSubmit: function(e) {
+        e.preventDefault();
+      },
+      render: function() {
+        var submitClasses = "blue";
+        if (this.props.disabled) {
+          submitClasses += " disabled";
+        }
+        return (
+          <div>
+            <div className="tabbar">
+              <ul>
+                <li className={this.state.tabSelected === "p2p" ? "active" : null}>
+                  <a href="#" data-id="p2p" onClick={this.handleTabClick}>1:1</a>
+                </li>
+                <li className={this.state.tabSelected === "grp" ? "active" : null}>
+                  <a href="#"  data-id="grp" onClick={this.handleTabClick}>group</a>
+                </li>
+              </ul>
+            </div>
+            {this.state.tabSelected === "grp" ?
+              <form className="panel-form" onSubmit={this.handleGroupSubmit} onCancel={this.props.onCancel}>
+                <div className="panel-form-one">
+                  <div className="panel-form-two">
+                    <input type="text" placeholder="Name of the topic to create"
+                      value={this.state.fn} onChange={this.handleFnChange} autofocus required />
+                    <div className="dialog-buttons">
+                      <button className={submitClasses} type="submit">Create</button>
+                    </div>
+                  </div>
+                  <AvatarUpload onImageChanged={this.handleImageChanged} />
+                </div>
+              </form>
+              : null}
+          </div>
+        );
+      }
+    });
+    /* END Create new topic and invite users or send an invite */
+
     /* BEGIN Tinode config panel */
     var SettingsView = React.createClass({
       getInitialState: function() {
@@ -292,7 +413,7 @@
     });
     /* END Tinode config panel */
 
-    /* BEGIN Manage side panel - handle Login, Account Registration, and Contacts views */
+    /* BEGIN Manage side panel - handle Login, Account Registration, Contacts, NewTopic views */
     var SideNavbar = React.createClass({
       render: function() {
         var avatar = null;
@@ -307,14 +428,17 @@
               <div id="sidepanel-title" className="panel-title">{this.props.title}</div>
               {this.props.state === 'login' ?
                   <SideNavbar.MenuStart onSignUp={this.props.onSignUp} onSettings={this.props.onSettings} /> :
-                    this.props.state === 'settings' ?
-                    <SideNavbar.MenuCancel onCancel={this.props.onCancel} /> :
-                    this.props.state === 'edit-account' ?
-                    <SideNavbar.MenuCancel onCancel={this.props.onCancel} /> :
-                    this.props.state === 'register' ?
-                    <SideNavbar.MenuCancel onCancel={this.props.onCancel} /> :
-                    this.props.state === 'contacts' ?
-                    <SideNavbar.MenuSettings onSettings={this.props.onSettings} /> : null}
+                this.props.state === 'settings' ?
+                  <SideNavbar.MenuCancel onCancel={this.props.onCancel} /> :
+                this.props.state === 'edit-account' ?
+                  <SideNavbar.MenuCancel onCancel={this.props.onCancel} /> :
+                this.props.state === 'register' ?
+                  <SideNavbar.MenuCancel onCancel={this.props.onCancel} /> :
+                this.props.state === 'contacts' ?
+                  <SideNavbar.MenuContacts onNewTopic={this.props.onNewTopic} onSettings={this.props.onSettings} /> :
+                this.props.state === 'new-topic' ?
+                  <SideNavbar.MenuCancel onCancel={this.props.onCancel} /> :
+                null}
             </div>
         );
       }
@@ -340,10 +464,14 @@
       }
     })
 
-    SideNavbar.MenuSettings = React.createClass({
+    SideNavbar.MenuContacts = React.createClass({
       render: function() {
         return (
-          <a href="#" onClick={this.props.onSettings}><i className="material-icons">settings</i></a>
+          <div>
+            <a href="#" onClick={this.props.onNewTopic}><i className="material-icons">add_circle</i></a>
+            &nbsp;
+            <a href="#" onClick={this.props.onSettings}><i className="material-icons">settings</i></a>
+          </div>
         );
       }
     })
@@ -376,6 +504,10 @@
           case 'contacts':
             title = this.props.title;
             avatar = this.props.avatar;
+            break;
+          case 'new-topic':
+            title = "Start New Chat";
+            break;
           default:;
         };
         return (
@@ -384,6 +516,7 @@
               title={title} avatar={avatar}
               onSignUp={this.props.onSignUp}
               onSettings={this.props.onSettings}
+              onNewTopic={this.props.onNewTopic}
               onCancel={this.props.onCancel} />
 
             <SidepanelView.ErrorPanel
@@ -409,8 +542,14 @@
               this.props.state === 'contacts' ?
               <ContactsView
                 data={this.props.subscriptions}
-                onTopicSelected={this.props.onTopicSelected}
-                onNewTopic={this.props.onNewTopic} /> :
+                onTopicSelected={this.props.onTopicSelected} /> :
+
+              this.props.state === 'new-topic' ?
+              <NewTopicView
+                data={this.props.subscriptions}
+                onContactSelected={this.props.onContactSelected}
+                onStartNewTopic={this.props.onStartNewTopic} /> :
+
               null}
           </div>
         );
@@ -446,35 +585,33 @@
     /* END EditAccount */
 
     /* BEGIN Contact list (list of topics) */
-
-    /* A form for initiating a new topic
-    var NewTopic = React.createClass({
-      render: function() {
-        return (
-          <div className="input-group" id="newTopicInput">
-            <label htmlFor="addTopic" className="sr-only">Add user or topic</label>
-            <input id="addTopic" className="form-control" type="text" placeholder="Add topic" />
-            <span className="input-group-btn"><button className="btn btn-default" type="button">
-              <i className="material-icons">add</i>
-            </button></span>
-          </div>
-        );
-      }
-    });
-    */
-
     /* A single topic */
+    var contactMenuItems = ["Delete chat", "Mute", "Block"];
     var Contact = React.createClass({
-        handleClick: function() {
-          this.props.onSelected(this.props.topic);
-        },
-        render: function() {
-          var title = this.props.title;
-          if (title.length > 30) {
-            title = title.substring(0, 28) + "...";
-          }
-          var selected = (this.props.selected === this.props.topic) ? "selected" : null;
-          var avatar = this.props.avatar ?
+      getInitialState: function() {
+        return {
+          menuShownFor: null
+        };
+      },
+      handleClick: function() {
+        this.props.onSelected(this.props.topic);
+      },
+      handleContextClick: function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.setState({menuShownFor: this.props.topic});
+      },
+      handleMenuAction: function(topic, action) {
+        console.log("Menu clicked '" + action + "' for topic " + topic);
+        this.setState({menuShownFor: null});
+      },
+      render: function() {
+        var title = this.props.title;
+        if (title.length > 30) {
+          title = title.substring(0, 28) + "...";
+        }
+        var selected = (this.props.selected === this.props.topic) ? "selected" : null;
+        var avatar = this.props.avatar ?
               <img src={this.props.avatar} className="avatar" /> :
               (Tinode.getTopicType(this.props.topic) === "grp") ?
                 <i className="material-icons">group</i> :
@@ -489,9 +626,18 @@
                 <span className="contact-title">{title}</span> <Contact.Unread count={this.props.unread} />
                 <p>{this.props.comment}</p>
               </div>
+              <span className="menuTrigger">
+                <a href="#" onClick={this.handleContextClick}>
+                  <i className="material-icons">arrow_drop_down</i>
+                </a>
+                <Menu items={contactMenuItems}
+                  topic={this.props.topic}
+                  onResult={this.handleMenuAction}
+                  visible={this.state.menuShownFor ? true : false} />
+              </span>
             </li>
           );
-        }
+      }
     });
 
     /* The counter of unread messages in the topic */
@@ -573,9 +719,6 @@
             <ul id="contact-box">
               {contactNodes}
             </ul>
-            <button className="round blue" id="add-topic" onClick={this.props.onNewTopic}>
-              <i className="material-icons big">add</i>
-            </button>
           </div>
         );
       }
@@ -1046,7 +1189,7 @@
         }
       },
       handleNewTopic: function() {
-        this.setState({dialogSelected: 'new-topic'});
+        this.setState({sidePanelSelected: 'new-topic'});
       },
       handleDialogCancel: function() {
         this.setState({dialogSelected: null});
