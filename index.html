@@ -316,8 +316,28 @@
         return {
           tabSelected: "p2p",
           fn: '', // full/formatted name
+          search: null, // search string
           imageDataUrl: null
         };
+      },
+      componentWillMount: function() {
+        var fnd = Tinode.getFndTopic();
+        fnd.onSubsUpdated = this.fndSubsUpdated;
+        fnd.subscribe()
+          .then(function() {
+            fnd.setMeta({desc: {private: ["tel:17025550005"]}});
+          })
+          .then(function() {
+            fnd.getMeta({sub: {}});
+          });
+      },
+      componentWillUnmount: function() {
+        var fnd = Tinode.getFndTopic();
+        fnd.onSubsUpdated = undefined;
+      },
+      fndSubsUpdated: function(keys) {
+        console.log(keys);
+        //this.forceUpdate();
       },
       handleTabClick: function(e) {
         e.preventDefault();
@@ -350,7 +370,7 @@
               </ul>
             </div>
             {this.state.tabSelected === "grp" ?
-              <form className="panel-form" onSubmit={this.handleGroupSubmit} onCancel={this.props.onCancel}>
+              <form className="panel-form" onSubmit={this.handleGroupSubmit}>
                 <div className="panel-form-one">
                   <div className="panel-form-two">
                     <input type="text" placeholder="Name of the topic to create"
@@ -363,6 +383,15 @@
                 </div>
               </form>
               : null}
+              <form className="panel-form" onSubmit={this.handleFindContacts}>
+                <div className="panel-form-one">
+                <input type="text" placeholder="Find people by email or phone" value={this.state.search}
+                  onChange={this.handleSearchChange} required />
+                  <a href="#" onClick={this.handleSearch}>
+                    <i className="material-icons">search</i>
+                  </a>
+                </div>
+              </form>
           </div>
         );
       }
