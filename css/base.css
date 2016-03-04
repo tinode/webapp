@@ -347,35 +347,35 @@ ul.menu > li.separator:hover {
 }
 
 /* List of contacts */
-#contacts-panel {
+.contacts-panel {
   overflow-y: auto;
   margin-top: 1rem;:
   margin-bottom: auto;
   height: 100%;
 }
 
-#contact-box {
+.contact-box {
   list-style: none;
 }
 
-#contact-box > li {
+.contact-box > li {
   display: flex;
   padding: 0.35rem 0.25rem 0.5rem 0.35rem;
   min-height: 3.5rem;
 }
-#contact-box > li:hover {
+.contact-box > li:hover {
   background-color: #eceff1; /* blue-gray 50 highlight */
 }
-#contact-box > li.selected {
+.contact-box > li.selected {
   background-color: #cfd8dc; /* blue-gray 100 highlight */
 }
 
-#contact-box .contact-title {
+.contact-box .contact-title {
   font-size: 1.05rem;
 }
 
 /* The down arrow head - trigger for context menu in contacts list */
-#contact-box li .menuTrigger {
+.contact-box li .menuTrigger {
   position: relative;
   margin-left: auto;
   width: 1.5rem;
@@ -383,19 +383,19 @@ ul.menu > li.separator:hover {
   border-radius: 50%;
   background-color: transparent;
 }
-#contact-box li:hover .menuTrigger {
+.contact-box li:hover .menuTrigger {
   background-color: white;
 }
 
-#contact-box li .menuTrigger a {
+.contact-box li .menuTrigger a {
   color: transparent;
 }
-#contact-box li:hover .menuTrigger a {
+.contact-box li:hover .menuTrigger a {
   color: #757575;
 }
 
 /* Avatar and online-offline indicator */
-#contact-box .avatar-box {
+.contact-box .avatar-box {
   margin-right: 0.35rem;
   position: relative;
   width: 3rem;
@@ -403,25 +403,32 @@ ul.menu > li.separator:hover {
   overflow: hidden;
   padding: 0;
 }
-#contact-box .avatar {
+.contact-box .avatar {
   width: 3rem;
   height: auto;
   border-radius: 50%;
 }
+.contact-box .text-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
 
 /* Online-offline indicator positioned inside avatar-box */
-#contact-box .online, .offline {
-  font-size: 1.5em;
-  line-height: 1;
+.contact-box .online, .offline {
+  display: inline-block;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
   position: absolute;
-  right: -0.1rem;
-  bottom: -0.1rem;
+  right: 0;
+  bottom: 0;
 }
-#contact-box .online {
-  color: #4caf50;
+.contact-box .online {
+  background-color: #4caf50;
 }
-#contact-box .offline {
-  color: #888;
+.contact-box .offline {
+  background-color: #888;
 }
 /* END of avatar box */
 
@@ -840,6 +847,7 @@ ul.menu > li.separator:hover {
   border-radius: 1em;
   padding: 0.25em;
   min-width: 1.75em;
+  margin-left: 0.5rem;
   text-align: center;
 }
 
