@@ -380,13 +380,7 @@ ul.menu > li.separator:hover {
   margin-left: auto;
   width: 1.5rem;
   height: 1.5rem;
-  border-radius: 50%;
-  background-color: transparent;
 }
-.contact-box li:hover .menuTrigger {
-  background-color: white;
-}
-
 .contact-box li .menuTrigger a {
   color: transparent;
 }
@@ -534,7 +528,7 @@ ul.menu > li.separator:hover {
 /* Topic/messages view */
 #topic-caption-panel {
   display: flex;
-  align-items:center;;
+  align-items:center;
   justify-content: flex-start;
   flex: none;
   padding: 0.5rem;
@@ -542,6 +536,10 @@ ul.menu > li.separator:hover {
   background-color: #b0bec5;
   box-shadow: 0 1px 2px gray;
   z-index: 1; /* otherwise the shadow becomes invisible */
+}
+#topic-caption-panel a {
+  color: #757575;
+  text-decoration: none;
 }
 
 #hide-message-view {
@@ -551,6 +549,7 @@ ul.menu > li.separator:hover {
 
 #topic-users {
   margin-left: auto;
+  margin-right: 1rem;
 }
 
 /* Scrollable panel where the messages are shown */

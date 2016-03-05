@@ -66,6 +66,99 @@
       return photo ? 'data:image/' + photo.type + ';base64,' + photo.data : null;
     }
 
+    /* BEGIN Popup/dropdown menu */
+    var ContextMenu = React.createClass({
+      componentWillUnmount: function() {
+        this.toggle(false);
+      },
+      componentWillReceiveProps: function(nextProps) {
+        this.toggle(nextProps.visible);
+      },
+      toggle: function(visible) {
+        if (visible) {
+          document.addEventListener('mousedown', this.handlePageClick, false);
+          document.addEventListener('keyup', this.handleEscapeKey, false);
+        } else {
+          document.removeEventListener('mousedown', this.handlePageClick, false);
+          document.removeEventListener('keyup', this.handleEscapeKey, false);
+        }
+      },
+      handlePageClick: function(e) {
+        if (ReactDOM.findDOMNode(this).contains(e.target)) {
+          return;
+        }
+        e.preventDefault();
+        e.stopPropagation();
+        this.props.hide();
+      },
+      handleEscapeKey: function(e) {
+        if (e.keyCode === 27) {
+          this.props.hide();
+        }
+      },
+      handleClick: function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.props.hide();
+        this.props.onResult(this.props.items[e.currentTarget.dataset.id]);
+      },
+      render: function() {
+        if (!this.props.visible) {
+          return null;
+        }
+        var position = {};
+        if (this.props.position.left) {
+          position.left = this.props.position.left + 'px';
+        }
+        if (this.props.position.top) {
+          position.top = this.props.position.top + 'px';
+        }
+        if (this.props.position.right) {
+          position.right = this.props.position.right + 'px';
+        }
+        if (this.props.position.bottom) {
+          position.bottom = this.props.position.bottom + 'px';
+        }
+
+        var count = 0;
+        var menuItems = [];
+        var instance = this;
+        this.props.items.map(function(item) {
+          if (item === "-") {
+            menuItems.push(
+              <li className="separator" key={count} />
+            );
+          } else {
+            menuItems.push(
+              <li onClick={instance.handleClick} data-id={count} key={count}>{item}</li>
+            );
+          }
+          count++;
+        });
+        return (
+          <ul className="menu" style={position}>
+            {menuItems}
+          </ul>
+        );
+      }
+    });
+
+    var ContextMenuMixin = {
+      handleContextClick: function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.props.showContextMenu(e.pageY, e.pageX, ["Delete chat", "Mute", "Block"], this.handleMenuAction);
+      },
+      handleMenuAction: function(action) {
+        if (this.props.topic) {
+          console.log("Menu action: " + action + " for topic " + this.props.topic);
+        } else {
+          console.log("Menu action: " + action + " WITHOUT topic!");
+        }
+      }
+    };
+    /* END Popup/dropdown menu */
+
     /* BEGIN Login: a login form */
     var LoginView = React.createClass({
       getInitialState: function() {
@@ -424,6 +517,7 @@
               this.props.state === 'contacts' ?
               <ContactsView
                 data={this.props.subscriptions}
+                topicSelected={this.props.topicSelected}
                 showContextMenu={this.props.showContextMenu}
                 onTopicSelected={this.props.onTopicSelected} /> :
 
@@ -470,19 +564,11 @@
     /* BEGIN Contact list (list of topics) */
     /* A single topic */;
     var Contact = React.createClass({
+      mixins: [ContextMenuMixin],
       handleClick: function(e) {
         e.preventDefault();
         e.stopPropagation();
         this.props.onSelected(this.props.topic);
-      },
-      handleContextClick: function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log("pageX=" + e.pageX + ", pageY=" + e.pageY);
-        this.props.showContextMenu(e.pageY, e.pageX, ["Delete chat", "Mute", "Block"], this.handleMenuAction);
-      },
-      handleMenuAction: function(action) {
-        console.log("Menu clicked '" + action + "' for topic " + this.props.topic);
       },
       render: function() {
         var title = this.props.title;
@@ -544,8 +630,7 @@
     var ContactsView = React.createClass({
       getInitialState: function() {
         return {
-          subscriptions: [],
-          selected: null
+          subscriptions: []
         };
       },
       componentWillMount: function() {
@@ -582,10 +667,6 @@
       tnMeSubsUpdated: function(names) {
         this.forceUpdate();
       },
-      handleSelectionChange: function(sel) {
-        this.setState({selected: sel});
-        this.props.onTopicSelected(sel);
-      },
       render: function() {
         var contactNodes = [];
         Tinode.getMeTopic().contacts(function(c) {
@@ -599,8 +680,8 @@
               avatar={makeImageUrl(c.public ? c.public.photo : null)}
               comment={c.private}
               unread={unread} now={c.online}
-              selected={this.state.selected}
-              onSelected={this.handleSelectionChange}
+              selected={this.props.topicSelected}
+              onSelected={this.props.onTopicSelected}
               showContextMenu={this.props.showContextMenu}
               topic={c.topic}
               key={c.topic} />
@@ -754,15 +835,20 @@
       },
       render: function() {
         var contactNodes = [];
+        // Don't attempt to create P2P topics which already exist. Server will reject the duplicates.
+        var me = Tinode.getMeTopic();
         Tinode.getFndTopic().subscribers(function(s) {
+          var cont = me ? me.getContact(s.user) : null;
+          var key = cont ? cont.topic : s.user;
+
           contactNodes.push(
             <Contact
               title={((s.public && s.public.fn) || s.private)}
               avatar={makeImageUrl(s.public ? s.public.photo : null)}
               selected={this.state.selectedUser}
               onSelected={this.handleSelectionChange}
-              topic={s.user}
-              key={s.user} />
+              topic={key}
+              key={key} />
           );
         }, this);
         return (
@@ -865,6 +951,7 @@
     });
 
     var MessagesView = React.createClass({
+      mixins: [ContextMenuMixin],
       getInitialState: function() {
         return {
           messages: [],
@@ -886,9 +973,9 @@
         this.propsChange(nextProps);
       },
       propsChange: function(props) {
-        if (props.topicSelected && (props.topicSelected != this.state.topic)) {
+        if (props.topic && (props.topic != this.state.topic)) {
           var msgs = [];
-          var topic = Tinode.getTopic(props.topicSelected);
+          var topic = Tinode.getTopic(props.topic);
           // Bind the new topic to component.
           topic.onData = this.handleNewMessage;
           topic.onInfo = this.handleInfoReceipt;
@@ -916,7 +1003,7 @@
           // the previous topic has triggered, kill it.
           clearTimeout(this.readTimer);
 
-          this.setState({messages: msgs, topic: props.topicSelected});
+          this.setState({messages: msgs, topic: props.topic});
         }
       },
       handleDescChange: function(desc) {
@@ -1013,13 +1100,18 @@
                   <div id="topic-last-seen">{lastSeen}</div>
                 </div>
                 <div id="topic-users">users online and menu buttons</div>
+                <div>
+                  <a href="#" onClick={this.handleContextClick}>
+                    <i className="material-icons big">more_vert</i>
+                  </a>
+                </div>
               </div>
               <div id="messages-panel" ref="messagesPanel">
                 <ul className="chat-box">
                   {messageNodes}
                 </ul>
               </div>
-              <MessagesView.Send topic={this.props.topicSelected} sendMessage={this.props.sendMessage} />
+              <MessagesView.Send topic={this.props.topic} sendMessage={this.props.sendMessage} />
             </div>
           );
         } else {
@@ -1134,74 +1226,6 @@
     });
     /* End of modal dialog wrapper */
 
-    /* BEGIN Popup/dropdown menu */
-    var ContextMenu = React.createClass({
-      componentWillUnmount: function() {
-        this.toggle(false);
-      },
-      componentWillReceiveProps: function(nextProps) {
-        this.toggle(nextProps.visible);
-      },
-      toggle: function(visible) {
-        if (visible) {
-          document.addEventListener('mousedown', this.handlePageClick, false);
-          document.addEventListener('keyup', this.handleEscapeKey, false);
-        } else {
-          document.removeEventListener('mousedown', this.handlePageClick, false);
-          document.removeEventListener('keyup', this.handleEscapeKey, false);
-        }
-      },
-      handlePageClick: function(e) {
-        if (ReactDOM.findDOMNode(this).contains(e.target)) {
-          return;
-        }
-        e.preventDefault();
-        e.stopPropagation();
-        this.props.hide();
-      },
-      handleEscapeKey: function(e) {
-        if (e.keyCode === 27) {
-          this.props.hide();
-        }
-      },
-      handleClick: function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        this.props.hide();
-        this.props.onResult(this.props.items[e.currentTarget.dataset.id]);
-      },
-      render: function() {
-        if (!this.props.visible) {
-          return null;
-        }
-        var position = {
-          left: this.props.position.left + 'px',
-          top: this.props.position.top + 'px'
-        };
-        var count = 0;
-        var menuItems = [];
-        var instance = this;
-        this.props.items.map(function(item) {
-          if (item === "-") {
-            menuItems.push(
-              <li className="separator" key={count} />
-            );
-          } else {
-            menuItems.push(
-              <li onClick={instance.handleClick} data-id={count} key={count}>{item}</li>
-            );
-          }
-          count++;
-        });
-        return (
-          <ul className="menu" style={position}>
-            {menuItems}
-          </ul>
-        );
-      }
-    });
-    /* END Popup/dropdown menu */
-
     /* The top-level class to hold all fuinctionality together */
     var AppView = React.createClass({
       getInitialState: function() {
@@ -1222,7 +1246,7 @@
       },
       componentDidMount: function() {
         window.addEventListener('resize', this.handleResize);
-        Tinode.enableLogging(true);
+        Tinode.enableLogging(true, true);
         Tinode.onDisconnect = this.handleDisconnect;
         // Setup with the default transport, usually websocket.
         Tinode.setup(APP_NAME, HOST, API_KEY);
@@ -1333,39 +1357,60 @@
       // Create of a new topic. New P2P topic requires peer's name.
       handleNewTopicRequest: function(peerName, vcard) {
         var instance = this;
-        var topic = peerName ? Tinode.getTopic(peerName) : Tinode.newTopic();
-        var params = {get: {desc: {}, sub: {}, data: {}}};
-        params.set = peerName ? undefined : {set: {desc: {public: vcard}}};
-        topic.subscribe(params).then(function() {
-          if (peerName) {
-            instance.setState({
-              errorText: '',
-              topicSelected: topic.name,
-              sidePanelSelected: 'contacts',
-              mobilePanel: 'topic-view'
-            });
-          } else {
-            console.log("new group topic created: " + topic.name);
-          }
-        }).catch(function(err) {
-          instance.setState({errorText: err.message});
-        });
+
+        // Check if user clicked on an existing connection.
+        if (Tinode.getTopicType(peerName) === "p2p") {
+          instance.setState({
+            errorText: '',
+            topicSelected: peerName,
+            sidePanelSelected: 'contacts',
+            mobilePanel: 'topic-view'
+          });
+        } else {
+          var topic = peerName ? Tinode.newTopicWith(peerName) : Tinode.newTopic();
+          var params = {get: {desc: {}, sub: {}, data: {}}};
+          params.set = peerName ? undefined : {set: {desc: {public: vcard}}};
+          topic.subscribe(params).then(function() {
+            if (peerName) {
+              instance.setState({
+                errorText: '',
+                topicSelected: topic.name,
+                sidePanelSelected: 'contacts',
+                mobilePanel: 'topic-view'
+              });
+            } else {
+              console.log("new group topic created: " + topic.name);
+            }
+          }).catch(function(err) {
+            instance.setState({errorText: err.message});
+          });
+        }
       },
       handleDialogCancel: function() {
         this.setState({dialogSelected: null});
       },
       handleShowContextMenu: function(y, x, items, callback) {
-        console.log("SHOW ContextMenu called");
         var bounds = ReactDOM.findDOMNode(this).getBoundingClientRect();
+        // Ensure that menu is inside the app-container.
+        var pos = {};
+        if (bounds.bottom - y < items.length * 20) {
+          pos.bottom = (y - bounds.top);
+        } else {
+          pos.top = (y - bounds.top);
+        }
+        if (bounds.right - x < 120) {
+          pos.right = (x - bounds.left);
+        } else {
+          pos.left = (x - bounds.left);
+        }
         this.setState({
           contextMenuVisible: true,
-          contextMenuPosition: {top: (y - bounds.top), left: (x - bounds.left)},
+          contextMenuPosition: pos,
           contextMenuItems: items,
           handleContextMenuClick: callback
         });
       },
       handleHideContextMenu: function() {
-        console.log("HIDE ContextMenu called");
         this.setState({
           contextMenuVisible: false,
           contextMenuPosition: {top: 0, left: 0},
@@ -1397,6 +1442,7 @@
               subscriptions={this.state.subscriptions}
               loginDisabled={this.state.loginDisabled}
               errorText={this.state.errorText}
+              topicSelected={this.state.topicSelected}
 
               onSignUp={this.handleNewAccount}
               onSettings={this.handleSettings}
@@ -1412,8 +1458,9 @@
               onHideMessageView={this.handleHideMessageView}
               displayMobile={this.state.displayMobile}
               hideSelf={(this.state.displayMobile && this.state.mobilePanel !== 'topic-view')}
-              topicSelected={this.state.topicSelected}
+              topic={this.state.topicSelected}
               onData={this.tnData}
+              showContextMenu={this.handleShowContextMenu}
               sendMessage={this.handleSendMessage} />
 
           </div>
