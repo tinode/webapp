@@ -106,19 +106,10 @@
         if (!this.props.visible) {
           return null;
         }
-        var position = {};
-        if (this.props.position.left) {
-          position.left = this.props.position.left + 'px';
-        }
-        if (this.props.position.top) {
-          position.top = this.props.position.top + 'px';
-        }
-        if (this.props.position.right) {
-          position.right = this.props.position.right + 'px';
-        }
-        if (this.props.position.bottom) {
-          position.bottom = this.props.position.bottom + 'px';
-        }
+        var position = {
+          left: (this.props.position.hEdge ? this.props.position.left - 100 : this.props.position.left) + 'px',
+          top: (this.props.position.vEdge ? this.props.position.top - 20 * this.props.items.length : this.props.position.top) + 'px'
+        };
 
         var count = 0;
         var menuItems = [];
@@ -1392,17 +1383,12 @@
       handleShowContextMenu: function(y, x, items, callback) {
         var bounds = ReactDOM.findDOMNode(this).getBoundingClientRect();
         // Ensure that menu is inside the app-container.
-        var pos = {};
-        if (bounds.bottom - y < items.length * 20) {
-          pos.bottom = (y - bounds.top);
-        } else {
-          pos.top = (y - bounds.top);
-        }
-        if (bounds.right - x < 120) {
-          pos.right = (x - bounds.left);
-        } else {
-          pos.left = (x - bounds.left);
-        }
+        var pos = {
+          left: (x - bounds.left),
+          top: (y - bounds.top),
+          vEdge: (bounds.bottom - y < items.length * 20),
+          hEdge: (bounds.right - x < 120)
+        };
         this.setState({
           contextMenuVisible: true,
           contextMenuPosition: pos,
