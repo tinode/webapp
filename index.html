@@ -45,6 +45,8 @@
     // Mediaquery breakpoint between desktop and mobile, in px. Should match the value
     // in @meadia (max-size: 640px) in base.css
     var MEDIA_BREAKPOINT = 640;
+    // Size of rem unit in pixels. Default 1rem = 10pt = 13px.
+    var REM_SIZE = 13;
 
     // Short representation of time in the past.
     function shortDateFormat(then) {
@@ -107,8 +109,8 @@
           return null;
         }
         var position = {
-          left: (this.props.position.hEdge ? this.props.position.left - 100 : this.props.position.left) + 'px',
-          top: (this.props.position.vEdge ? this.props.position.top - 20 * this.props.items.length : this.props.position.top) + 'px'
+          left: this.props.position.left + 'px',
+          top: this.props.position.top + 'px'
         };
 
         var count = 0;
@@ -138,13 +140,47 @@
       handleContextClick: function(e) {
         e.preventDefault();
         e.stopPropagation();
-        this.props.showContextMenu(e.pageY, e.pageX, ["Delete chat", "Mute", "Block"], this.handleMenuAction);
+        this.props.showContextMenu(e.pageY, e.pageX, this.getMenuItems(), this.handleMenuAction);
       },
       handleMenuAction: function(action) {
-        if (this.props.topic) {
-          console.log("Menu action: " + action + " for topic " + this.props.topic);
+        var topic = Tinode.getTopic(this.props.topic);
+        switch (action) {
+          case "Edit":
+            console.log("Edit topic not implemented");
+            break;
+          case "Clear chat":
+            topic.delMessages({before: 0, hard: false});
+            break;
+          case "Mute":
+            var m = topic.getAccessMode().clearMode('P');
+            topic.setMeta({sub: {mode: m.toString()}});
+            break;
+          case "Unmute": break;
+            var m = topic.getAccessMode().addMode('P');
+            topic.setMeta({sub: {mode: m.toString()}});
+            break;
+          case "Block": break;
+            var m = topic.getAccessMode().addMode('X');
+            topic.setMeta({sub: {mode: m.toString()}});
+            break;
+          case "Unblock": break;
+            var m = topic.getAccessMode().clearMode('X').addMode('RWP');
+            topic.setMeta({sub: {mode: m.toString()}});
+            break;
+          case "Delete":
+            topic.delTopic();
+            break;
+          default: break;
+        }
+      },
+      getMenuItems: function() {
+        var mode = Tinode.getMeTopic().getAccessMode(this.props.topic);
+        if (Tinode.getTopicType(this.props.topic) === "grp") {
+          return ["Edit", "Clear chat", mode.canPresence() ? "Mute" : "Unmute",
+            mode.isBanned() ? "Unblock" : "Block", "Delete"];
         } else {
-          console.log("Menu action: " + action + " WITHOUT topic!");
+          return ["Clear chat", mode.canPresence() ? "Mute" : "Unmute",
+            mode.isBanned() ? "Unblock" : "Block", "Delete"];
         }
       }
     };
@@ -619,11 +655,6 @@
 
     /* ContactsView holds all contacts-related stuff */
     var ContactsView = React.createClass({
-      getInitialState: function() {
-        return {
-          subscriptions: []
-        };
-      },
       componentWillMount: function() {
         var me = Tinode.getMeTopic();
         me.onContactUpdate = this.tnMeContactUpdate;
@@ -636,16 +667,24 @@
         me.onData = undefined;
         me.onSubsUpdated = undefined;
       },
+      // Reactions to updates to the contact list.
       tnMeContactUpdate: function(what, cont) {
         if (what === "on" || what === "off" || what === "read") {
           this.forceUpdate();
         } else if (what === "msg") {
-          // Skip update if the topic is currently open, otherwise a badge will annoyingly pop up.
-          if (this.state.selected !== cont.topic) {
+          // Skip update if the topic is currently open, otherwise the badge will annoyingly flash.
+          if (this.props.topicSelected !== cont.src) {
             this.forceUpdate();
           }
         } else if (what === "recv") {
           // Explicitly ignoring "recv"
+        } else if (what === "del") {
+          // Currently selected topic is deleted, clear selection.
+          if (this.props.topicSelected === cont.src) {
+            this.props.onTopicSelected(null);
+          }
+          // Redraw without the deleted topic.
+          this.forceUpdate();
         } else {
           // TODO(gene): handle other types of notifications
           console.log("changed (not updating for it): " + what + " in:");
@@ -1359,8 +1398,11 @@
           });
         } else {
           var topic = peerName ? Tinode.newTopicWith(peerName) : Tinode.newTopic();
-          var params = {get: {desc: {}, sub: {}, data: {}}};
-          params.set = peerName ? undefined : {set: {desc: {public: vcard}}};
+          var params = {get: {desc: {}, data: {}}};
+          if (!peerName) {
+            params.get.sub = {}; // Fetch subs for grp topics only. Subscriptions for a p2p topic are useless.
+            params.set = {set: {desc: {public: vcard}}};
+          }
           topic.subscribe(params).then(function() {
             if (peerName) {
               instance.setState({
@@ -1383,12 +1425,13 @@
       handleShowContextMenu: function(y, x, items, callback) {
         var bounds = ReactDOM.findDOMNode(this).getBoundingClientRect();
         // Ensure that menu is inside the app-container.
+        var hSize = 12 * REM_SIZE;
+        var vSize = REM_SIZE * (0.7 + items.length * 2.5);
         var pos = {
-          left: (x - bounds.left),
-          top: (y - bounds.top),
-          vEdge: (bounds.bottom - y < items.length * 20),
-          hEdge: (bounds.right - x < 120)
+          left: (bounds.right - x < hSize) ? (x - bounds.left - hSize) : (x - bounds.left),
+          top: (bounds.bottom - y < vSize) ? (y - bounds.top - vSize) : (y - bounds.top)
         };
+
         this.setState({
           contextMenuVisible: true,
           contextMenuPosition: pos,

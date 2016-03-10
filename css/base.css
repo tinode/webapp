@@ -178,8 +178,6 @@ form {
 
 ul.menu {
   position: absolute;
-  left: -1.5rem;
-  top: 1.5rem;
   list-style: none;
   width: 12rem;
   border-radius: 0.2rem;
@@ -187,7 +185,7 @@ ul.menu {
   padding-bottom: 0.35rem;
   box-shadow: 0 1px 6px rgba(0, 0, 0, .45);
   background-color: white;
-  z-index: 3;
+  z-index: 4;
 }
 
 ul.menu > li {
