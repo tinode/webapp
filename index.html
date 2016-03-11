@@ -673,14 +673,14 @@
           this.forceUpdate();
         } else if (what === "msg") {
           // Skip update if the topic is currently open, otherwise the badge will annoyingly flash.
-          if (this.props.topicSelected !== cont.src) {
+          if (this.props.topicSelected !== cont.topic) {
             this.forceUpdate();
           }
         } else if (what === "recv") {
           // Explicitly ignoring "recv"
         } else if (what === "del") {
           // Currently selected topic is deleted, clear selection.
-          if (this.props.topicSelected === cont.src) {
+          if (this.props.topicSelected === cont.topic) {
             this.props.onTopicSelected(null);
           }
           // Redraw without the deleted topic.
@@ -688,7 +688,6 @@
         } else {
           // TODO(gene): handle other types of notifications
           console.log("changed (not updating for it): " + what + " in:");
-          console.log(cont);
         }
       },
       tnInvite: function(invite) {
@@ -765,7 +764,6 @@
         }
       },
       handleGroupSubmit: function(name, dataUrl) {
-        //this.setState({errorCleared: false});
         var vcard = null;
         if (name || dataUrl) {
           vcard = {
@@ -783,20 +781,21 @@
       },
       render: function() {
         return (
-          <div>
-            <div className="tabbar">
-              <ul>
-                <li className={this.state.tabSelected === "p2p" ? "active" : null}>
-                  <a href="#" data-id="p2p" onClick={this.handleTabClick}>1:1</a>
-                </li>
-                <li className={this.state.tabSelected === "grp" ? "active" : null}>
-                  <a href="#"  data-id="grp" onClick={this.handleTabClick}>group</a>
-                </li>
-              </ul>
-            </div>
+          <div className="flex-column">
+            <ul className="tabbar">
+              <li className={this.state.tabSelected === "p2p" ? "active" : null}>
+                <a href="#" data-id="p2p" onClick={this.handleTabClick}>1:1</a>
+              </li>
+              <li className={this.state.tabSelected === "grp" ? "active" : null}>
+                <a href="#"  data-id="grp" onClick={this.handleTabClick}>group</a>
+              </li>
+            </ul>
             {this.state.tabSelected === "grp" ?
               <NewTopicView.Group onSubmit={this.handleGroupSubmit} /> :
-              <NewTopicView.SelectContacts onContactSelected={this.handleContactSelected} type="p2p" />}
+              <div className="flex-column">
+                <NewTopicView.SearchContacts type="p2p" />
+                <NewTopicView.ContactsList onContactSelected={this.handleContactSelected} type="p2p" />
+              </div>}
           </div>
         );
       }
@@ -813,7 +812,6 @@
         this.setState({fn: e.target.value});
       },
       handleImageChanged: function(img) {
-        console.log(img);
         this.setState({imageDataUrl: img});
       },
       handleSubmit: function(e) {
@@ -842,10 +840,37 @@
       }
     });
 
-    NewTopicView.SelectContacts = React.createClass({
+    NewTopicView.SearchContacts = React.createClass({
       getInitialState: function() {
         return {
-          search: null,
+          search: null
+        };
+      },
+      handleSearchChange: function(e) {
+        this.setState({search: e.target.value});
+      },
+      handleSearch: function(e) {
+        e.preventDefault();
+        console.log("will search for '" + this.state.search + "'");
+      },
+      render: function() {
+        return (
+          <form className="panel-form" onSubmit={this.handleFindContacts}>
+            <div className="panel-form-one">
+            <input type="text" placeholder="Emails or phones to find" value={this.state.search}
+              onChange={this.handleSearchChange} required />
+              <a href="#" onClick={this.handleSearch}>
+                <i className="material-icons">search</i>
+              </a>
+            </div>
+          </form>
+        );
+      }
+    });
+
+    NewTopicView.ContactsList = React.createClass({
+      getInitialState: function() {
+        return {
           selectedUser: null
         };
       },
@@ -855,13 +880,6 @@
         } else {
           console.log(sel);
         }
-      },
-      handleSearchChange: function(e) {
-        this.setState({search: e.target.value});
-      },
-      handleSearch: function(e) {
-        e.preventDefault();
-        console.log("will search for '" + this.state.search + "'");
       },
       render: function() {
         var contactNodes = [];
@@ -882,21 +900,10 @@
           );
         }, this);
         return (
-          <div>
-            <form className="panel-form" onSubmit={this.handleFindContacts}>
-              <div className="panel-form-one">
-              <input type="text" placeholder="Emails or phones to find" value={this.state.search}
-                onChange={this.handleSearchChange} required />
-                <a href="#" onClick={this.handleSearch}>
-                  <i className="material-icons">search</i>
-                </a>
-              </div>
-            </form>
-            <div className="contacts-panel">
-              <ul className="contact-box">
-                {contactNodes}
-              </ul>
-            </div>
+          <div className="contacts-panel">
+            <ul className="contact-box">
+              {contactNodes}
+            </ul>
           </div>
         );
       }
@@ -1003,7 +1010,9 @@
         this.propsChange(nextProps);
       },
       propsChange: function(props) {
-        if (props.topic && (props.topic != this.state.topic)) {
+        if (!props.topic) {
+          this.setState({messages: [], topic: null});
+        } else if (props.topic != this.state.topic) {
           var msgs = [];
           var topic = Tinode.getTopic(props.topic);
           // Bind the new topic to component.
@@ -1341,9 +1350,15 @@
           Tinode.getTopic(data.topic).noteRecv(data.seq);
         }, RECEIVED_DELAY);
       },
-      // User clicked on a contact in the side panel.
+      // User clicked on a contact in the side panel or deleted a contact.
       handleTopicSelected: function(topicName) {
-        this.setState({topicSelected: topicName, mobilePanel: 'topic-view'});
+        if (topicName) {
+          // Contact selected
+          this.setState({topicSelected: topicName, mobilePanel: 'topic-view'});
+        } else {
+          // Currently selected contact deleted
+          this.setState({topicSelected: null, mobilePanel: 'sidepanel'});
+        }
       },
       // In mobile view user requested to show sidepanel
       handleHideMessageView: function() {
@@ -1401,19 +1416,15 @@
           var params = {get: {desc: {}, data: {}}};
           if (!peerName) {
             params.get.sub = {}; // Fetch subs for grp topics only. Subscriptions for a p2p topic are useless.
-            params.set = {set: {desc: {public: vcard}}};
+            params.set = {desc: {public: vcard}};
           }
           topic.subscribe(params).then(function() {
-            if (peerName) {
-              instance.setState({
-                errorText: '',
-                topicSelected: topic.name,
-                sidePanelSelected: 'contacts',
-                mobilePanel: 'topic-view'
-              });
-            } else {
-              console.log("new group topic created: " + topic.name);
-            }
+            instance.setState({
+              errorText: '',
+              topicSelected: topic.name,
+              sidePanelSelected: 'contacts',
+              mobilePanel: 'topic-view'
+            });
           }).catch(function(err) {
             instance.setState({errorText: err.message});
           });
