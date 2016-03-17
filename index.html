@@ -190,7 +190,7 @@
     var LoginView = React.createClass({
       getInitialState: function() {
         return {
-          login: '',
+          login: this.props.login,
           password: '',
           errorCleared: false
         };
@@ -526,7 +526,8 @@
               errorText={this.props.errorText} />
 
             {this.props.state === 'login' ?
-              <LoginView disabled={this.props.loginDisabled}
+              <LoginView login={this.props.login}
+                disabled={this.props.loginDisabled}
                 onLogin={this.handleLoginRequested}
                 onClearError={this.handleClearErrorText} /> :
 
@@ -1155,7 +1156,7 @@
           );
         } else {
           component = (
-            <MessagesView.Dummy hideSelf={this.props.hideSelf} />
+            <MessagesView.Dummy hideSelf={this.props.hideSelf} serverVersion={this.props.serverVersion} />
           );
         }
         return component;
@@ -1214,12 +1215,14 @@
     MessagesView.Dummy = React.createClass({
       render: function() {
         var version = document.lastModified;
+        var serverVersion = this.props.serverVersion ? ("Server: " + this.props.serverVersion) : null;
         return (
           <div id="dummy-view" className={this.props.hideSelf ? 'nodisplay' : null}>
             <a href="https://github.com/tinode/chat/">
               <img id="logo" alt="logo" src="img/logo.svg" />
               <h2>Tinode Demo Chat</h2>
-              <p>Version: {version}</p>
+              <p>Client: {version}</p>
+              <p>{serverVersion}</p>
             </a>
           </div>
         );
@@ -1274,18 +1277,22 @@
           sidePanelAvatar: null,
           dialogSelected: null,
           contextMenuVisible: false,
+          login: null,
+          password: null,
           loggedIn: false,
           errorText: '',
           topicSelected: '',
           loginDisabled: false,
           subscriptions: {},
           displayMobile: (window.innerWidth <= MEDIA_BREAKPOINT),
-          mobilePanel: 'sidepanel'
+          mobilePanel: 'sidepanel',
+          serverVersion: 'no connection'
         };
       },
       componentDidMount: function() {
         window.addEventListener('resize', this.handleResize);
         Tinode.enableLogging(true, true);
+        Tinode.onConnect = this.handleConnected;
         Tinode.onDisconnect = this.handleDisconnect;
         // Setup with the default transport, usually websocket.
         Tinode.setup(APP_NAME, HOST, API_KEY);
@@ -1297,6 +1304,42 @@
         var mobile = document.documentElement.clientWidth <= MEDIA_BREAKPOINT;
         if (this.state.displayMobile != mobile) {
           this.setState({displayMobile: mobile});
+        }
+      },
+      handleConnected: function(code, text, params) {
+        if (params) {
+          this.setState({serverVersion: params.ver + " (" + (params.build ? params.build : "none") + ")"});
+        }
+        this.doLogin(this.state.login, this.state.password);
+      },
+      doLogin: function(login, password) {
+        var instance = this;
+
+        // Try t login with token. If token is not available, try password. If no password, ask for it.
+        var promise = null;
+        var token = Tinode.getLoginToken();
+        if (password) {
+          this.setState({password: null});
+          promise = Tinode.loginBasic(login, password);
+        } else if (token) {
+          promise = Tinode.loginToken(token.token);
+        } else {
+          this.setState({loginDisabled: false});
+        }
+
+        if (promise) {
+          this.setState({errorText: ''});
+          promise.then(function() {
+            // Logged in fine, subscribe to 'me' attaching callbacks from the contacts view.
+            var me = Tinode.getMeTopic();
+            me.onMetaDesc = instance.tnMeMetaDesc;
+            instance.setState({sidePanelSelected: "contacts", loggedIn: true});
+            // Subscribe, fetch topic desc, the list of subscriptions, and messages (invites).
+            me.subscribe({get: {desc: {}, sub: {}, data: {}}});
+          }).catch(function(err) {
+            // Login failed, report error
+            instance.setState({loginDisabled: false, errorText: err.message});
+          });
         }
       },
       handleDisconnect: function() {
@@ -1314,27 +1357,22 @@
           contextMenuVisible: false,
           contextMenuPosition: {top: 0, left: 0},
           contextMenuItems: null,
-          handleContextMenuClick: undefined
+          handleContextMenuClick: undefined,
+          serverVersion: 'no connection'
         });
       },
       // User clicked Login button in the side panel.
       handleLoginRequest: function(login, password) {
         var instance = this;
-        this.setState({loginDisabled: true, errorText: ''});
-        Tinode.connect().then(function() {
-          // Login
-          return Tinode.loginBasic(login, password);
-        }).then(function() {
-          // Logged in fine, subscribe to 'me' attaching callbacks from the contacts view.
-          var me = Tinode.getMeTopic();
-          me.onMetaDesc = instance.tnMeMetaDesc;
-          instance.setState({sidePanelSelected: "contacts", loggedIn: true});
-          // Subscribe, fetch topic desc, the list of subscriptions, and messages (invites).
-          me.subscribe({get: {desc: {}, sub: {}, data: {}}});
-        }).catch(function(err) {
-          // Login failed, report error
-          instance.setState({loginDisabled: false, errorText: err.message});
-        });
+        this.setState({loginDisabled: true, errorText: '', login: login, password: password});
+        if (Tinode.isConnected()) {
+          this.doLogin(login, password);
+        } else {
+          Tinode.connect().catch(function(err) {
+            // Socket error
+            instance.setState({loginDisabled: false, errorText: err.message});
+          });
+        }
       },
       tnMeMetaDesc: function(desc) {
         this.setState({
@@ -1480,6 +1518,7 @@
               title={this.state.sidePanelTitle}
               avatar={this.state.sidePanelAvatar}
               subscriptions={this.state.subscriptions}
+              login={this.state.login}
               loginDisabled={this.state.loginDisabled}
               errorText={this.state.errorText}
               topicSelected={this.state.topicSelected}
@@ -1499,6 +1538,7 @@
               displayMobile={this.state.displayMobile}
               hideSelf={(this.state.displayMobile && this.state.mobilePanel !== 'topic-view')}
               topic={this.state.topicSelected}
+              serverVersion={this.state.serverVersion}
               onData={this.tnData}
               showContextMenu={this.handleShowContextMenu}
               sendMessage={this.handleSendMessage} />
