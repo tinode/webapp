@@ -1215,15 +1215,16 @@
     MessagesView.Dummy = React.createClass({
       render: function() {
         var version = document.lastModified;
-        var serverVersion = this.props.serverVersion ? ("Server: " + this.props.serverVersion) : null;
         return (
           <div id="dummy-view" className={this.props.hideSelf ? 'nodisplay' : null}>
+            <div>
             <a href="https://github.com/tinode/chat/">
               <img id="logo" alt="logo" src="img/logo.svg" />
               <h2>Tinode Demo Chat</h2>
-              <p>Client: {version}</p>
-              <p>{serverVersion}</p>
             </a>
+            <p>Client: {version}</p>
+            <p>Server: {this.props.serverVersion} ({HOST})</p>
+            </div>
           </div>
         );
       }
