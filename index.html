@@ -24,7 +24,7 @@
     <div id="mountPoint"></div>
     <script type="text/babel">
     // Name of this application, used in the User-Agent
-    var APP_NAME = "TinodeReact/0.6";
+    var APP_NAME = "TinodeReact/0.7";
 
     // Host name and port to connect to
     // var HOST = "api.tinode.co";
@@ -375,16 +375,36 @@
     var SettingsView = React.createClass({
       getInitialState: function() {
         return {
-          hostName: HOST,
+          hostName: this.props.serverAddress,
+          transport: "def"
         };
       },
       handleSubmit: function(e) {
         e.preventDefault();
+        this.props.onUpdate(this.state.hostName, this.state.transport);
       },
       handleHostNameChange: function(e) {
         this.setState({hostName: e.target.value});
       },
+      handleTransportSelected: function(e) {
+        this.setState({transport: e.currentTarget.value});
+      },
       render: function() {
+        var names = {def: "default", ws: "websocket", lp: "long polling"};
+        var transportOptions = [];
+        var instance = this;
+        ["def", "ws", "lp"].map(function(item){
+          var id = "transport-" + item;
+          var name = names[item];
+          transportOptions.push(
+            <li key={item}>
+              <input type="radio" id={id} name="transport-select" value={item}
+                checked={instance.state.transport === item}
+                onChange={instance.handleTransportSelected} />
+              <label htmlFor={id}>{name}</label>
+            </li>
+          );
+        });
         return (
           <form id="settings-form" onSubmit={this.handleSubmit}>
             <p>This form does not do anything yet</p>
@@ -393,18 +413,7 @@
               value={this.state.hostName} onChange={this.handleHostNameChange} required autofocus />
             <p>Wire transport:</p>
             <ul>
-              <li>
-                <input type="radio" id="transport-default" name="transport-select" defaultChecked />
-                <label htmlFor="transport-default">default</label>
-              </li>
-              <li>
-                <input type="radio" id="transport-ws" name="transport-select" />
-                <label htmlFor="transport-ws">websocket</label>
-              </li>
-              <li>
-                <input type="radio" id="transport-lp" name="transport-select" />
-                <label htmlFor="transport-lp">long polling</label>
-              </li>
+              {transportOptions}
             </ul>
             <div className="dialog-buttons">
               <button type="submit" className="blue">Update</button>
@@ -537,7 +546,10 @@
                 onCancel={this.props.onCancel} /> :
 
               this.props.state === 'settings' ?
-              <SettingsView onCancel={this.props.onCancel} /> :
+              <SettingsView onCancel={this.props.onCancel}
+                serverAddress={this.props.serverAddress}
+                onUpdate={this.props.onConnectionSettings}
+                /> :
 
               this.props.state === 'edit-account' ?
               <EditAccountView onCancel={this.props.onCancel} /> :
@@ -1156,7 +1168,9 @@
           );
         } else {
           component = (
-            <MessagesView.Dummy hideSelf={this.props.hideSelf} serverVersion={this.props.serverVersion} />
+            <MessagesView.Dummy hideSelf={this.props.hideSelf}
+              serverVersion={this.props.serverVersion}
+              serverAddress={this.props.serverAddress} />
           );
         }
         return component;
@@ -1223,7 +1237,7 @@
               <h2>Tinode Demo Chat</h2>
             </a>
             <p>Client: {version}</p>
-            <p>Server: {this.props.serverVersion} ({HOST})</p>
+            <p>Server: {this.props.serverVersion} ({this.props.serverAddress})</p>
             </div>
           </div>
         );
@@ -1273,6 +1287,8 @@
     var AppView = React.createClass({
       getInitialState: function() {
         return {
+          transport: null,
+          serverAddress: HOST,
           sidePanelSelected: 'login',
           sidePanelTitle: null,
           sidePanelAvatar: null,
@@ -1295,8 +1311,11 @@
         Tinode.enableLogging(true, true);
         Tinode.onConnect = this.handleConnected;
         Tinode.onDisconnect = this.handleDisconnect;
-        // Setup with the default transport, usually websocket.
-        Tinode.setup(APP_NAME, HOST, API_KEY);
+        this.tnSetup(this.state.serverAddress, this.state.transport);
+      },
+      // Setup transport (usually websocket) and server address. This will terminate connection with the server.
+      tnSetup: function(serverAddress, transport) {
+        Tinode.setup(APP_NAME, serverAddress, API_KEY, transport);
       },
       componentWillUnmount: function(){
         window.removeEventListener('resize', this.handleResize);
@@ -1307,10 +1326,23 @@
           this.setState({displayMobile: mobile});
         }
       },
-      handleConnected: function(code, text, params) {
-        if (params) {
-          this.setState({serverVersion: params.ver + " (" + (params.build ? params.build : "none") + ")"});
+      // User clicked Login button in the side panel.
+      handleLoginRequest: function(login, password) {
+        var instance = this;
+        this.setState({loginDisabled: true, errorText: '', login: login, password: password});
+        if (Tinode.isConnected()) {
+          this.doLogin(login, password);
+        } else {
+          Tinode.connect().catch(function(err) {
+            // Socket error
+            instance.setState({loginDisabled: false, errorText: err.message});
+          });
         }
+      },
+      // Connection succeeded.
+      handleConnected: function() {
+        var params = Tinode.getServerInfo();
+        this.setState({serverVersion: params.ver + " (" + (params.build ? params.build : "none") + ")"});
         this.doLogin(this.state.login, this.state.password);
       },
       doLogin: function(login, password) {
@@ -1362,19 +1394,6 @@
           serverVersion: 'no connection'
         });
       },
-      // User clicked Login button in the side panel.
-      handleLoginRequest: function(login, password) {
-        var instance = this;
-        this.setState({loginDisabled: true, errorText: '', login: login, password: password});
-        if (Tinode.isConnected()) {
-          this.doLogin(login, password);
-        } else {
-          Tinode.connect().catch(function(err) {
-            // Socket error
-            instance.setState({loginDisabled: false, errorText: err.message});
-          });
-        }
-      },
       tnMeMetaDesc: function(desc) {
         this.setState({
           sidePanelTitle: desc.public.fn,
@@ -1425,6 +1444,11 @@
       // User chose Settings menu item.
       handleSettings: function() {
         this.setState({sidePanelSelected: this.state.loggedIn ? 'edit-account' : 'settings'});
+      },
+      // User updated connection parameters - transport and server address
+      handleConnectionSettings: function(serverAddress, transport) {
+        this.setState({serverAddress: serverAddress, transport: transport, sidePanelSelected: 'login'});
+        this.tnSetup(serverAddress, transport);
       },
       // User clicked Cancel button in Setting or Sign Up panel.
       handleSidepanelCancel: function() {
@@ -1524,6 +1548,9 @@
               errorText={this.state.errorText}
               topicSelected={this.state.topicSelected}
 
+              serverAddress={this.state.serverAddress}
+              onConnectionSettings={this.handleConnectionSettings}
+
               onSignUp={this.handleNewAccount}
               onSettings={this.handleSettings}
               onLoginRequest={this.handleLoginRequest}
@@ -1540,6 +1567,7 @@
               hideSelf={(this.state.displayMobile && this.state.mobilePanel !== 'topic-view')}
               topic={this.state.topicSelected}
               serverVersion={this.state.serverVersion}
+              serverAddress={this.state.serverAddress}
               onData={this.tnData}
               showContextMenu={this.handleShowContextMenu}
               sendMessage={this.handleSendMessage} />
