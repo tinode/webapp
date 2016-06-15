@@ -15,8 +15,8 @@
     <!-- Styles for local elements -->
     <link rel="stylesheet" href="css/base.css" />
     <!-- ReactJs scripts -->
-    <script src="https://fb.me/react-0.14.7.js"></script>
-    <script src="https://fb.me/react-dom-0.14.7.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.1.0/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.1.0/react-dom.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
     <script src="tinode.js"></script>
   </head>
@@ -856,7 +856,7 @@
     NewTopicView.SearchContacts = React.createClass({
       getInitialState: function() {
         return {
-          search: null
+          search: ''
         };
       },
       handleSearchChange: function(e) {
@@ -1294,8 +1294,8 @@
           sidePanelAvatar: null,
           dialogSelected: null,
           contextMenuVisible: false,
-          login: null,
-          password: null,
+          login: '',
+          password: '',
           loggedIn: false,
           errorText: '',
           topicSelected: '',
