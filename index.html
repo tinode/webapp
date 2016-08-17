@@ -148,7 +148,7 @@
           case "Edit":
             console.log("Edit topic not implemented");
             break;
-          case "Clear chat":
+          case "Clear messages":
             topic.delMessages({before: 0, hard: false});
             break;
           case "Mute":
@@ -176,10 +176,10 @@
       getMenuItems: function() {
         var mode = Tinode.getMeTopic().getAccessMode(this.props.topic);
         if (Tinode.getTopicType(this.props.topic) === "grp") {
-          return ["Edit", "Clear chat", mode.canPresence() ? "Mute" : "Unmute",
+          return ["Edit", "Clear messages", mode.canPresence() ? "Mute" : "Unmute",
             mode.isBanned() ? "Unblock" : "Block", "Delete"];
         } else {
-          return ["Clear chat", mode.canPresence() ? "Mute" : "Unmute",
+          return ["Clear messages", mode.canPresence() ? "Mute" : "Unmute",
             mode.isBanned() ? "Unblock" : "Block", "Delete"];
         }
       }
@@ -685,22 +685,29 @@
         if (what === "on" || what === "off" || what === "read") {
           this.forceUpdate();
         } else if (what === "msg") {
+          // New message received
+
           // Skip update if the topic is currently open, otherwise the badge will annoyingly flash.
           if (this.props.topicSelected !== cont.topic) {
             this.forceUpdate();
           }
         } else if (what === "recv") {
-          // Explicitly ignoring "recv"
-        } else if (what === "del") {
-          // Currently selected topic is deleted, clear selection.
+          // Explicitly ignoring "recv" -- it causes no visible updates to contact list.
+        } else if (what === "gone" || what === "unsub") {
+          // Topic deleted or user unsubscribed. Remove topic from view.
+
+          // If the currently selected topic is gone, clear the selection.
           if (this.props.topicSelected === cont.topic) {
             this.props.onTopicSelected(null);
           }
           // Redraw without the deleted topic.
           this.forceUpdate();
         } else {
-          // TODO(gene): handle other types of notifications
-          console.log("changed (not updating for it): " + what + " in:");
+          // TODO(gene): handle other types of notifications:
+          // * ua -- user agent changes (may display a pictogram for mobile/desktop)
+          // * upd -- topic 'public' updated (fetch new public and refresh)
+          // * del -- messages deleted (hard or soft) -- reset pill counter
+          console.log("changed (not updating for it): " + what + " in: " + cont.topic);
         }
       },
       tnInvite: function(invite) {
