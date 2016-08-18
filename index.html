@@ -145,7 +145,7 @@
       handleMenuAction: function(action) {
         var topic = Tinode.getTopic(this.props.topic);
         switch (action) {
-          case "Edit":
+          case "Edit...":
             console.log("Edit topic not implemented");
             break;
           case "Clear messages":
@@ -155,15 +155,15 @@
             var m = topic.getAccessMode().clearMode('P');
             topic.setMeta({sub: {mode: m.toString()}});
             break;
-          case "Unmute": break;
+          case "Unmute":
             var m = topic.getAccessMode().addMode('P');
             topic.setMeta({sub: {mode: m.toString()}});
             break;
-          case "Block": break;
+          case "Block":
             var m = topic.getAccessMode().addMode('X');
             topic.setMeta({sub: {mode: m.toString()}});
             break;
-          case "Unblock": break;
+          case "Unblock":
             var m = topic.getAccessMode().clearMode('X').addMode('RWP');
             topic.setMeta({sub: {mode: m.toString()}});
             break;
@@ -176,7 +176,7 @@
       getMenuItems: function() {
         var mode = Tinode.getMeTopic().getAccessMode(this.props.topic);
         if (Tinode.getTopicType(this.props.topic) === "grp") {
-          return ["Edit", "Clear messages", mode.canPresence() ? "Mute" : "Unmute",
+          return ["Edit...", "Clear messages", mode.canPresence() ? "Mute" : "Unmute",
             mode.isBanned() ? "Unblock" : "Block", "Delete"];
         } else {
           return ["Clear messages", mode.canPresence() ? "Mute" : "Unmute",
