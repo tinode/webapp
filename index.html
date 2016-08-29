@@ -65,7 +65,8 @@
 
     // Make a data URL from public.photo
     function makeImageUrl(photo) {
-      return photo ? 'data:image/' + photo.type + ';base64,' + photo.data : null;
+      return (photo && photo.type && photo.data) ?
+        'data:image/' + photo.type + ';base64,' + photo.data : null;
     }
 
     /* BEGIN Popup/dropdown menu */
@@ -514,7 +515,7 @@
             title = "Edit Account"; break;
           case 'contacts':
             title = this.props.title;
-            avatar = this.props.avatar;
+            avatar = this.props.avatar ? this.props.avatar : true;
             break;
           case 'new-topic':
             title = "Start New Chat";
@@ -871,14 +872,16 @@
       },
       handleSearch: function(e) {
         e.preventDefault();
-        console.log("will search for '" + this.state.search + "'");
+        // Split query string by either space or comma, filter out empty strings.
+        var query = this.state.search.split(/[,\s]/).filter(Boolean);
+        console.log("will search for ", query);
       },
       render: function() {
         return (
           <form className="panel-form" onSubmit={this.handleFindContacts}>
             <div className="panel-form-one">
-            <input type="text" placeholder="Emails or phones to find" value={this.state.search}
-              onChange={this.handleSearchChange} required />
+            <input type="text" placeholder="Space or comma separated list: email:alice@example.com, tel:17025550003..."
+              value={this.state.search} onChange={this.handleSearchChange} required />
               <a href="#" onClick={this.handleSearch}>
                 <i className="material-icons">search</i>
               </a>
