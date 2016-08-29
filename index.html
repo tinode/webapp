@@ -15,9 +15,14 @@
     <!-- Styles for local elements -->
     <link rel="stylesheet" href="css/base.css" />
     <!-- ReactJs scripts -->
+    <script src="https://npmcdn.com/react@15.3.1/dist/react.js"></script>
+    <script src="https://npmcdn.com/react-dom@15.3.1/dist/react-dom.js"></script>
+    <script src="https://npmcdn.com/babel-core@5.8.38/browser.min.js"></script>
+    <!--
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.1.0/react.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.1.0/react-dom.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+    -->
     <script src="tinode.js"></script>
   </head>
   <body>
@@ -227,7 +232,7 @@
                 placeholder="Login (alice, bob, carol, dave, frank)"
                 value={this.state.login}
                 onChange={this.handleLoginChange}
-                required autofocus />
+                required autoFocus />
               <input type="password" id="inputPassword"
                 placeholder="Password (alice123, bob123, ...)"
                 value={this.state.password}
@@ -304,7 +309,7 @@
               <div className="panel-form-one">
                 <div className="panel-form-two">
                   <input type="text" placeholder="Login"
-                    value={this.state.login} onChange={this.handleLoginChange} required autofocus />
+                    value={this.state.login} onChange={this.handleLoginChange} required autoFocus />
                   <input type="password" placeholder="Password"
                     value={this.state.password} onChange={this.handlePasswordChange} required />
                   <input type="password" placeholder="Repeat password"
@@ -411,7 +416,7 @@
             <p>This form does not do anything yet</p>
             <label htmlFor="host-name">Host:</label>
             <input type="text" id="host-name" placeholder="api.tinode.co"
-              value={this.state.hostName} onChange={this.handleHostNameChange} required autofocus />
+              value={this.state.hostName} onChange={this.handleHostNameChange} required autoFocus />
             <p>Wire transport:</p>
             <ul>
               {transportOptions}
@@ -849,7 +854,7 @@
             <div className="panel-form-one">
               <div className="panel-form-two">
                 <input type="text" placeholder="Name of the topic to create"
-                  value={this.state.fn} onChange={this.handleFnChange} autofocus required />
+                  value={this.state.fn} onChange={this.handleFnChange} autoFocus required />
                 <div className="dialog-buttons">
                   <button className={submitClasses} type="submit">Create</button>
                 </div>
@@ -1238,7 +1243,7 @@
     /* This is just a static page to display when no conversation is selected. */
     MessagesView.Dummy = React.createClass({
       render: function() {
-        var version = document.lastModified;
+        var version = Tinode.getVersion() + " build " + document.lastModified;
         return (
           <div id="dummy-view" className={this.props.hideSelf ? 'nodisplay' : null}>
             <div>
