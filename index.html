@@ -24,7 +24,7 @@
     <div id="mountPoint"></div>
     <script type="text/babel">
     // Name of this application, used in the User-Agent
-    var APP_NAME = "TinodeReact/0.7";
+    var APP_NAME = "TinodeReact/0.8";
 
     // Host name and port to connect to
     // var HOST = "api.tinode.co";
@@ -278,10 +278,12 @@
         } else {
           this.setState({errorCleared: false});
           var vcard = null;
-          if (this.state.name.trim() || this.state.imageDataUrl) {
-            vcard = {
-              fn: this.state.name.trim(),
-            };
+
+          if ((this.state.fn && this.state.fn.trim()) || this.state.imageDataUrl) {
+            vcard = {};
+            if (this.state.fn) {
+              vcard.fn = this.state.fn.trim();
+            }
             if (this.state.imageDataUrl) {
               var dataStart = this.state.imageDataUrl.indexOf(",");
               vcard.photo = {
@@ -300,7 +302,7 @@
         }
         return (
           <div>
-            <form className="panel-form" onSubmit={this.handleSubmit} onCancel={this.props.onCancel}>
+            <form className="panel-form" onSubmit={this.handleSubmit}>
               <div className="panel-form-one">
                 <div className="panel-form-two">
                   <input type="text" placeholder="Login"
@@ -565,7 +567,7 @@
               this.props.state === 'new-topic' ?
               <NewTopicView
                 data={this.props.subscriptions}
-                onContactSelected={this.props.onContactSelected}
+                onSearchContacts={this.props.onSearchContacts}
                 onCreateTopic={this.props.onCreateTopic} /> :
 
               null}
@@ -814,7 +816,7 @@
             {this.state.tabSelected === "grp" ?
               <NewTopicView.Group onSubmit={this.handleGroupSubmit} /> :
               <div className="flex-column">
-                <NewTopicView.SearchContacts type="p2p" />
+                <NewTopicView.SearchContacts type="p2p" onSearchContacts={this.props.onSearchContacts} />
                 <NewTopicView.ContactsList onContactSelected={this.handleContactSelected} type="p2p" />
               </div>}
           </div>
@@ -837,7 +839,9 @@
       },
       handleSubmit: function(e) {
         e.preventDefault();
-        this.props.onSubmit(this.state.fn.trim(), this.state.imageDataUrl);
+        if (this.state.fn && this.state.fn.trim()) {
+          this.props.onSubmit(this.state.fn.trim(), this.state.imageDataUrl);
+        }
       },
       render: function() {
         var submitClasses = "blue";
@@ -874,7 +878,9 @@
         e.preventDefault();
         // Split query string by either space or comma, filter out empty strings.
         var query = this.state.search.split(/[,\s]/).filter(Boolean);
-        console.log("will search for ", query);
+        if (query.length > 0) {
+          this.props.onSearchContacts(query);
+        }
       },
       render: function() {
         return (
@@ -1503,6 +1509,15 @@
           });
         }
       },
+      /** Called when the user enters a contact into the contact search field in the NewAccount panel
+        @param query {Array} is an array of contacts to search for
+       */
+      handleSearchContacts: function(query) {
+          var find = Tinode.getFndTopic();
+          find.setMeta({desc: {private: query}}).then(function() {
+            find.getMeta({sub: {}});
+          });
+      },
       handleDialogCancel: function() {
         this.setState({dialogSelected: null});
       },
@@ -1566,6 +1581,7 @@
               onLoginRequest={this.handleLoginRequest}
               onCreateAccount={this.handleNewAccountRequest}
               onTopicSelected={this.handleTopicSelected}
+              onSearchContacts={this.handleSearchContacts}
               onCreateTopic={this.handleNewTopicRequest}
               onNewTopic={this.handleNewTopic}
               onCancel={this.handleSidepanelCancel}
