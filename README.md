@@ -15,4 +15,4 @@ Photos from https://www.pexels.com/ under [CC0 license](https://www.pexels.com/p
 
 Background pattern from http://subtlepatterns.com/, commercial and non-commercial use allowed with attribution.
 
-![App screenshot](pic-20160130.png)
+![App screenshot](web-topic.png)

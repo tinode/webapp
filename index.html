@@ -882,12 +882,17 @@
           this.props.onSearchContacts(query);
         }
       },
+      handleKeyPress: function(e) {
+        if (e.key === 'Enter') {
+          this.handleSearch(e);
+        }
+      },
       render: function() {
         return (
           <form className="panel-form" onSubmit={this.handleFindContacts}>
             <div className="panel-form-one">
-            <input type="text" placeholder="Space or comma separated list: email:alice@example.com, tel:17025550003..."
-              value={this.state.search} onChange={this.handleSearchChange} required />
+            <input type="text" placeholder="Comma separated list: email:alice@example.com, tel:17025550003..."
+              value={this.state.search} onChange={this.handleSearchChange} onKeyPress={this.handleKeyPress} required />
               <a href="#" onClick={this.handleSearch}>
                 <i className="material-icons">search</i>
               </a>
