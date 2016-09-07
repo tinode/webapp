@@ -482,7 +482,7 @@
       render: function() {
         return (
           <div>
-            <a href="#" onClick={this.props.onNewTopic}><i className="material-icons">add_circle</i></a>
+            <a href="#" onClick={this.props.onNewTopic}><i className="material-icons">chat</i></a>
             &nbsp;
             <a href="#" onClick={this.props.onSettings}><i className="material-icons">settings</i></a>
           </div>
@@ -756,20 +756,25 @@
       getInitialState: function() {
         return {
           tabSelected: "p2p",
+          searchQuery: '',
           contactSelected: null
         };
       },
       componentWillMount: function() {
         var fnd = Tinode.getFndTopic();
         fnd.onSubsUpdated = this.fndSubsUpdated;
-        fnd.subscribe()
-          .then(function() {
-            fnd.getMeta({sub: {}});
-          });
+        fnd.onMetaDesc = this.fndMetaDesc;
+        fnd.subscribe({get: {sub: {}, desc: {}}});
       },
       componentWillUnmount: function() {
         var fnd = Tinode.getFndTopic();
         fnd.onSubsUpdated = undefined;
+        fnd.onMetaDesc = undefined;
+      },
+      fndMetaDesc: function(desc) {
+        if (desc.private) {
+          this.setState({searchQuery: desc.private.toString()});
+        }
       },
       fndSubsUpdated: function() {
         //console.log(keys);
@@ -816,7 +821,9 @@
             {this.state.tabSelected === "grp" ?
               <NewTopicView.Group onSubmit={this.handleGroupSubmit} /> :
               <div className="flex-column">
-                <NewTopicView.SearchContacts type="p2p" onSearchContacts={this.props.onSearchContacts} />
+                <NewTopicView.SearchContacts type="p2p"
+                  searchQuery={this.state.searchQuery}
+                  onSearchContacts={this.props.onSearchContacts} />
                 <NewTopicView.ContactsList onContactSelected={this.handleContactSelected} type="p2p" />
               </div>}
           </div>
@@ -870,6 +877,9 @@
         return {
           search: ''
         };
+      },
+      componentWillReceiveProps: function(nextProps) {
+        this.setState({search: nextProps.searchQuery});
       },
       handleSearchChange: function(e) {
         this.setState({search: e.target.value});
@@ -1520,7 +1530,7 @@
       handleSearchContacts: function(query) {
           var find = Tinode.getFndTopic();
           find.setMeta({desc: {private: query}}).then(function() {
-            find.getMeta({sub: {}});
+            find.getMeta({sub: {}, desc: {}});
           });
       },
       handleDialogCancel: function() {
