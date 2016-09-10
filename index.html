@@ -764,7 +764,11 @@
         var fnd = Tinode.getFndTopic();
         fnd.onSubsUpdated = this.fndSubsUpdated;
         fnd.onMetaDesc = this.fndMetaDesc;
-        fnd.subscribe({get: {sub: {}, desc: {}}});
+        if (fnd.isSubscribed()) {
+          this.setState({searchQuery: fnd.private.toString()});
+        } else {
+          fnd.subscribe({get: {sub: {}, desc: {}}});
+        }
       },
       componentWillUnmount: function() {
         var fnd = Tinode.getFndTopic();
@@ -875,7 +879,7 @@
     NewTopicView.SearchContacts = React.createClass({
       getInitialState: function() {
         return {
-          search: ''
+          search: this.props.searchQuery
         };
       },
       componentWillReceiveProps: function(nextProps) {
