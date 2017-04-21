@@ -26,9 +26,10 @@
     // Name of this application, used in the User-Agent
     var APP_NAME = "TinodeReact/0.10";
 
-    // Host name and port to connect to
-    var HOST = "api.tinode.co";
-    // var HOST = "localhost:6060";
+    var KNOWN_HOSTS = {hosted: "api.tinode.co", local: "localhost:6060"};
+    // Default host name and port to connect to.
+    var DEFAULT_HOST = KNOWN_HOSTS.hosted;
+    // var DEFAULT_HOST = KNOWN_HOSTS.local;
 
     // API key. Use https://github.com/tinode/chat/tree/master/keygen to generate your own
     var API_KEY = "AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K";
@@ -67,6 +68,17 @@
     function makeImageUrl(photo) {
       return (photo && photo.type && photo.data) ?
         'data:image/' + photo.type + ';base64,' + photo.data : null;
+    }
+
+    // Detect server address from the URL
+    function detectServerAddress() {
+      var host = DEFAULT_HOST;
+      if (window.location.protocol === 'file:' || window.location.hostname === 'localhost') {
+        host = KNOWN_HOSTS.local;
+      } else if (window.location.hostname) {
+        host = window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+      }
+      return host;
     }
 
     /* BEGIN Popup/dropdown menu */
@@ -189,12 +201,45 @@
     };
     /* END Popup/dropdown menu */
 
+    /* BEGIN Combobox for selecting host name */
+    var HostSelector = React.createClass({
+      getInitialState: function() {
+        return {
+          hostName: this.props.serverAddress
+        };
+      },
+      handleHostNameChange: function(e) {
+        this.setState({hostName: e.target.value});
+        this.props.onServerAddressChange(e.target.value.trim());
+      },
+      render: function() {
+        var hostOptions = [];
+        for (var key in KNOWN_HOSTS) {
+          var item = KNOWN_HOSTS[key];
+          hostOptions.push(
+            <option key={item} value={item} />
+          );
+        }
+        return (
+          <div>
+            <label htmlFor="host-name">Server address:</label>
+            <input type="search" id="host-name" placeholder={this.props.hostName} list="known-hosts"
+              value={this.state.hostName} onChange={this.handleHostNameChange} />
+            <datalist id="known-hosts">
+              {hostOptions}
+            </datalist>
+          </div>);
+      }
+    });
+    /* END Combobox for selecting host name */
+
     /* BEGIN Login: a login form */
     var LoginView = React.createClass({
       getInitialState: function() {
         return {
           login: this.props.login,
           password: '',
+          hostName: this.props.serverAddress,
           errorCleared: false
         };
       },
@@ -212,9 +257,14 @@
         }
         this.setState({password: e.target.value});
       },
+      handleServerAddressChange: function(name) {
+        this.setState({hostName: name});
+      },
       handleSubmit: function(e) {
         e.preventDefault();
         this.setState({errorCleared: false});
+        console.log("LoginView handleSubmit '" + this.state.hostName + "'");
+        this.props.onServerAddressChange(this.state.hostName);
         this.props.onLogin(this.state.login.trim(), this.state.password.trim());
       },
       render: function() {
@@ -235,6 +285,8 @@
                 value={this.state.password}
                 onChange={this.handlePasswordChange}
                 required />
+              <HostSelector serverAddress={this.props.serverAddress}
+                onServerAddressChange={this.handleServerAddressChange} />
               <div className="dialog-buttons">
                 <button className={submitClasses} type="submit">Sign in</button>
               </div>
@@ -242,7 +294,7 @@
           </div>
         );
       }
-    })
+    });
     /* END Login */
 
     /* BEGIN Account registration */
@@ -388,8 +440,8 @@
         e.preventDefault();
         this.props.onUpdate(this.state.hostName, this.state.transport);
       },
-      handleHostNameChange: function(e) {
-        this.setState({hostName: e.target.value});
+      handleHostNameChange: function(name) {
+        this.setState({hostName: name});
       },
       handleTransportSelected: function(e) {
         this.setState({transport: e.currentTarget.value});
@@ -413,9 +465,9 @@
         return (
           <form id="settings-form" onSubmit={this.handleSubmit}>
             <p>This form does not do anything yet</p>
-            <label htmlFor="host-name">Host:</label>
-            <input type="text" id="host-name" placeholder="api.tinode.co"
-              value={this.state.hostName} onChange={this.handleHostNameChange} required autoFocus />
+            <HostSelector
+              serverAddress={this.props.serverAddress}
+              onHostNameChange={this.handleHostNameChange} />
             <p>Wire transport:</p>
             <ul>
               {transportOptions}
@@ -495,7 +547,7 @@
     var SidepanelView = React.createClass({
       getInitialState: function() {
         return {
-          showErrorText: true,
+          showErrorText: true
         };
       },
       handleClearErrorText: function() {
@@ -542,7 +594,9 @@
             {this.props.state === 'login' ?
               <LoginView login={this.props.login}
                 disabled={this.props.loginDisabled}
+                serverAddress={this.props.serverAddress}
                 onLogin={this.handleLoginRequested}
+                onServerAddressChange={this.props.onConnectionSettings}
                 onClearError={this.handleClearErrorText} /> :
 
               this.props.state === 'register' ?
@@ -1325,7 +1379,7 @@
       getInitialState: function() {
         return {
           transport: null,
-          serverAddress: HOST,
+          serverAddress: detectServerAddress(),
           sidePanelSelected: 'login',
           sidePanelTitle: null,
           sidePanelAvatar: null,
@@ -1370,7 +1424,7 @@
         if (Tinode.isConnected()) {
           this.doLogin(login, password);
         } else {
-          Tinode.connect().catch(function(err) {
+          Tinode.connect(this.state.serverAddress).catch(function(err) {
             // Socket error
             instance.setState({loginDisabled: false, errorText: err.message});
           });
@@ -1471,7 +1525,7 @@
       // Actual registration of a new account.
       handleNewAccountRequest: function(login_, password_, public_, private_) {
         var instance = this;
-        Tinode.connect().then(function() {
+        Tinode.connect(this.state.serverAddress).then(function() {
           return Tinode.createUserBasic(login_, password_,
             {login: "basic", public: public_, private: private_});
         }).catch(function(err) {
@@ -1484,6 +1538,8 @@
       },
       // User updated connection parameters - transport and server address
       handleConnectionSettings: function(serverAddress, transport) {
+        transport = transport || this.state.transport;
+        serverAddress = serverAddress || this.state.serverAddress;
         this.setState({serverAddress: serverAddress, transport: transport, sidePanelSelected: 'login'});
         this.tnSetup(serverAddress, transport);
       },
