@@ -164,6 +164,7 @@
         }
         switch (action) {
           case "Edit...":
+            // TODO(gene): implement topic editing
             console.log("Topic editing not implemented");
             break;
           case "Clear messages":
@@ -189,7 +190,6 @@
       },
       getMenuItems: function() {
         var acs = Tinode.getMeTopic().getAccessMode(this.props.topic);
-        console.log(acs);
         if (Tinode.getTopicType(this.props.topic) === "grp") {
           return ["Edit...", "Clear messages", acs.isMuted() ? "Unmute" : "Mute",
             acs.isBanned() ? "Unblock" : "Block", "Delete"];
@@ -205,12 +205,18 @@
     var HostSelector = React.createClass({
       getInitialState: function() {
         return {
-          hostName: this.props.serverAddress
+          hostName: this.props.serverAddress,
+          changed: false
         };
       },
       handleHostNameChange: function(e) {
-        this.setState({hostName: e.target.value});
-        this.props.onServerAddressChange(e.target.value.trim());
+        this.setState({hostName: e.target.value, changed: true});
+      },
+      handleEditingFinished: function() {
+        if (this.state.changed) {
+          this.setState({changed: false});
+          this.props.onServerAddressChange(this.state.hostName.trim());
+        }
       },
       render: function() {
         var hostOptions = [];
@@ -224,7 +230,8 @@
           <div>
             <label htmlFor="host-name">Server address:</label>
             <input type="search" id="host-name" placeholder={this.props.hostName} list="known-hosts"
-              value={this.state.hostName} onChange={this.handleHostNameChange} />
+              value={this.state.hostName} onChange={this.handleHostNameChange}
+              onBlur={this.handleEditingFinished} required />
             <datalist id="known-hosts">
               {hostOptions}
             </datalist>
@@ -243,28 +250,28 @@
           errorCleared: false
         };
       },
-      handleLoginChange: function(e) {
+      clearError: function() {
         if (!this.state.errorCleared) {
           this.props.onClearError();
           this.setState({errorCleared: true});
         }
+      },
+      handleLoginChange: function(e) {
+        this.clearError();
         this.setState({login: e.target.value});
       },
       handlePasswordChange: function(e) {
-        if (!this.state.errorCleared) {
-          this.props.onClearError();
-          this.setState({errorCleared: true});
-        }
+        this.clearError();
         this.setState({password: e.target.value});
       },
       handleServerAddressChange: function(name) {
+        this.clearError();
         this.setState({hostName: name});
+        this.props.onServerAddressChange(name);
       },
       handleSubmit: function(e) {
         e.preventDefault();
         this.setState({errorCleared: false});
-        console.log("LoginView handleSubmit '" + this.state.hostName + "'");
-        this.props.onServerAddressChange(this.state.hostName);
         this.props.onLogin(this.state.login.trim(), this.state.password.trim());
       },
       render: function() {
@@ -770,6 +777,8 @@
         }
       },
       tnInvite: function(invite) {
+        // TODO(gene): implement invite handling
+        console.log("Got invite:");
         console.log(invite);
       },
       tnMeSubsUpdated: function(names) {
@@ -848,6 +857,7 @@
         if (this.state.tabSelected === "p2p") {
           this.props.onCreateTopic(sel, undefined);
         } else {
+          // TODO(gene): implement handling of group invites
           console.log("handle group invite " + sel);
         }
       },
@@ -1424,7 +1434,7 @@
         if (Tinode.isConnected()) {
           this.doLogin(login, password);
         } else {
-          Tinode.connect(this.state.serverAddress).catch(function(err) {
+          Tinode.connect().catch(function(err) {
             // Socket error
             instance.setState({loginDisabled: false, errorText: err.message});
           });
