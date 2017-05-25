@@ -1476,14 +1476,14 @@
           });
         }
       },
-      handleDisconnect: function() {
+      handleDisconnect: function(err) {
         this.setState({
           sidePanelSelected: 'login',
           sidePanelTitle: null,
           sidePanelAvatar: null,
           dialogSelected: null,
           loggedIn: false,
-          errorText: 'disconnected',
+          errorText: err && err.message ? err.message : 'disconnected',
           topicSelected: '',
           loginDisabled: false,
           subscriptions: {},

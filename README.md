@@ -6,8 +6,8 @@ and [icons](https://google.github.io/material-design-icons/#icon-font-for-the-we
 
 This is work in progress. Bugs are expected. The app was tested in the latest Chrome & Firefox only.
 
-Try it at http://api.tinode.co/x/example-react-js/. Login as one of `alice`, `bob`, `carol`, `dave`, `frank`.
-Password is `<login>123`, e.g. login for `alice` is `alice123`.
+Try it live at http://api.tinode.co/x/example-react-js/. Login as one of `alice`, `bob`, `carol`, `dave`, `frank`.
+Password is `<login>123`, e.g. password for `alice` is `alice123`.
 
 License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
