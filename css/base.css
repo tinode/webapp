@@ -152,6 +152,7 @@ input[type="password"]:focus {
   border-bottom: 1px solid #2196f3;
   box-shadow: 0 1px 0 rgba(33, 150, 243, 0.25);
 }
+
 /* Scrollbar styling for Chrome. Firefox does not support scrollbar styling.  */
 ::-webkit-scrollbar {
 	width: 0.6rem;
@@ -260,6 +261,17 @@ ul.menu > li.separator:hover {
   #sidepanel {
     width: 100%;
   }
+}
+
+/* Generic announcement text, centered vertically and horizontally */
+.center-medium-text {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 1.4rem;
 }
 
 /* Class to alternatively hide sidepanel/topic-view */
@@ -427,7 +439,7 @@ ul.menu > li.separator:hover {
   background-color: #4caf50;
 }
 .contact-box .offline {
-  background-color: #888;
+  background-color: #C0C0C0;
 }
 /* END of avatar box */
 

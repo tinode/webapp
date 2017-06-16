@@ -168,7 +168,9 @@
             console.log("Topic editing not implemented");
             break;
           case "Clear messages":
-            topic.delMessages({before: 0, hard: false});
+            topic.delMessagesAll(false).then(function(){
+              console.log("refresh message list");
+            });
             break;
           case "Mute":
             metaParam('-P');
@@ -177,10 +179,10 @@
             metaParam('+P');
             break;
           case "Block":
-            metaParam('+X');
+            metaParam('-J');
             break;
           case "Unblock":
-            metaParam('-X');
+            metaParam('+J');
             break;
           case "Delete":
             topic.delTopic();
@@ -192,10 +194,10 @@
         var acs = Tinode.getMeTopic().getAccessMode(this.props.topic);
         if (Tinode.getTopicType(this.props.topic) === "grp") {
           return ["Edit...", "Clear messages", acs.isMuted() ? "Unmute" : "Mute",
-            acs.isBanned() ? "Unblock" : "Block", "Delete"];
+            !acs.isJoiner() ? "Unblock" : "Block", "Delete"];
         } else {
           return ["Clear messages", acs.isMuted() ? "Unmute" : "Mute",
-            acs.isBanned() ? "Unblock" : "Block", "Delete"];
+            !acs.isJoiner() ? "Unblock" : "Block", "Delete"];
         }
       }
     };
@@ -684,30 +686,31 @@
           title = title.substring(0, 28) + "...";
         }
         var selected = (this.props.selected === this.props.topic) ? "selected" : null;
+        var online = this.props.now ? "online" : "offline";
         var avatar = this.props.avatar ?
               <img src={this.props.avatar} className="avatar" /> :
               (Tinode.getTopicType(this.props.topic) === "grp") ?
                 <i className="material-icons">group</i> :
                 <i className="material-icons">person</i>;
-          return (
-            <li className={selected} onClick={this.handleClick}>
-              <div className="avatar-box">
-                {avatar}
-                {this.props.now ? <span className="online"></span> : null}
-              </div>
-              <div className="text-box">
-                <div><span className="contact-title">{title}</span>
-                {this.props.unread > 0 ? <Contact.Unread count={this.props.unread} /> : null}</div>
-                {this.props.comment ? <div>{this.props.comment}</div> : null}
-              </div>
-              {this.props.showContextMenu ?
-                <span className="menuTrigger">
-                  <a href="#" onClick={this.handleContextClick}>
-                    <i className="material-icons">expand_more</i>
-                  </a>
-                </span> : null}
+        return (
+          <li className={selected} onClick={this.handleClick}>
+            <div className="avatar-box">
+              {avatar}
+              <span className={online} />
+            </div>
+            <div className="text-box">
+              <div><span className="contact-title">{title}</span>
+              {this.props.unread > 0 ? <Contact.Unread count={this.props.unread} /> : null}</div>
+              {this.props.comment ? <div>{this.props.comment}</div> : null}
+            </div>
+            {this.props.showContextMenu ?
+              <span className="menuTrigger">
+                <a href="#" onClick={this.handleContextClick}>
+                  <i className="material-icons">expand_more</i>
+                </a>
+              </span> : null}
             </li>
-          );
+        );
       }
     });
 
@@ -807,9 +810,14 @@
 
         return (
           <div className="contacts-panel">
-            <ul className="contact-box">
-              {contactNodes}
-            </ul>
+            {contactNodes.length > 0 ?
+              <ul className="contact-box">
+                {contactNodes}
+              </ul>
+              :
+              <p className="center-medium-text">
+                You have no chats<br />¯\_(ツ)_/¯
+              </p>}
           </div>
         );
       }
@@ -830,7 +838,7 @@
         fnd.onSubsUpdated = this.fndSubsUpdated;
         fnd.onMetaDesc = this.fndMetaDesc;
         if (fnd.isSubscribed()) {
-          this.setState({searchQuery: fnd.private.toString()});
+          this.setState({searchQuery: fnd.private ? fnd.private.toString() : ''});
         } else {
           fnd.subscribe({get: {sub: {}, desc: {}}});
         }
@@ -1168,13 +1176,23 @@
         console.log("topic subscriptions updated");
       },
       handleNewMessage: function(msg) {
-        this.setState({messages: this.state.messages.concat(msg)});
-        // Aknowledge all messages, including own messges.
         clearTimeout(this.readTimer);
-        this.readTimer = setTimeout(function() {
-          Tinode.getTopic(msg.topic).noteRead(msg.seq);
-        }, READ_DELAY);
-        this.props.onData(msg);
+        if (msg) {
+          this.setState({messages: this.state.messages.concat(msg)});
+          // Aknowledge all messages, including own messges.
+          this.readTimer = setTimeout(function() {
+            Tinode.getTopic(msg.topic).noteRead(msg.seq);
+          }, READ_DELAY);
+          this.props.onData(msg);
+        } else {
+          // msg could be null if one or more messages were deleted.
+          // Just regenerate the message list;
+          var _messages = [];
+          Tinode.getTopic(this.state.topic).messages(function(m) {
+            _messages.concat(m);
+          });
+          this.setState({messages: _messages});
+        }
       },
       handleInfoReceipt: function(info) {
         switch (info.what) {
@@ -1462,20 +1480,27 @@
         }
 
         if (promise) {
-          this.setState({errorText: ''});
           promise.then(function() {
-            // Logged in fine, subscribe to 'me' attaching callbacks from the contacts view.
-            var me = Tinode.getMeTopic();
-            me.onMetaDesc = instance.tnMeMetaDesc;
-            instance.setState({sidePanelSelected: "contacts", loggedIn: true});
-            // Subscribe, fetch topic desc, the list of subscriptions, and messages (invites).
-            me.subscribe({get: {desc: {}, sub: {}, data: {}}});
-          }).catch(function(err) {
+            instance.handleLoginSuccessful(instance);
+          })
+          .catch(function(err) {
             // Login failed, report error
             instance.setState({loginDisabled: false, errorText: err.message});
           });
         }
       },
+
+      handleLoginSuccessful: function(instance) {
+        instance.setState({errorText: ''});
+
+        // Logged in fine, subscribe to 'me' attaching callbacks from the contacts view.
+        var me = Tinode.getMeTopic();
+        me.onMetaDesc = instance.tnMeMetaDesc;
+        instance.setState({sidePanelSelected: "contacts", loggedIn: true});
+        // Subscribe, fetch topic desc, the list of subscriptions, and messages (invites).
+        me.subscribe({get: {desc: {}, sub: {}, data: {}}});
+      },
+
       handleDisconnect: function(err) {
         this.setState({
           sidePanelSelected: 'login',
@@ -1535,12 +1560,17 @@
       // Actual registration of a new account.
       handleNewAccountRequest: function(login_, password_, public_, private_) {
         var instance = this;
-        Tinode.connect(this.state.serverAddress).then(function() {
-          return Tinode.createUserBasic(login_, password_,
-            {login: "basic", public: public_, private: private_});
-        }).catch(function(err) {
-          instance.setState({errorText: err.message});
-        });
+        Tinode.connect(this.state.serverAddress)
+          .then(function() {
+            return Tinode.createUserBasic(login_, password_,
+              {login: "basic", public: public_, private: private_});
+          })
+          .then(function() {
+            instance.handleLoginSuccessful(instance);
+          })
+          .catch(function(err) {
+            instance.setState({errorText: err.message});
+          });
       },
       // User chose Settings menu item.
       handleSettings: function() {
