@@ -70,6 +70,18 @@
         'data:image/' + photo.type + ';base64,' + photo.data : null;
     }
 
+    // Get 32 bit integer hash value for a string. Ideally it should produce the same value
+    // as Java's String#hash().
+    function stringHash(value) {
+      var hash = 0;
+      value = "" + value;
+      for (var i = 0; i < value.length; i++) {
+        hash = ((hash<<5)-hash) + value.charCodeAt(i);
+        hash = hash & hash; // Convert to 32bit integer
+      }
+      return hash;
+    }
+
     // Detect server address from the URL
     function detectServerAddress() {
       var host = DEFAULT_HOST;
@@ -203,6 +215,28 @@
     };
     /* END Popup/dropdown menu */
 
+    /* BEGIN Lettertile: Avatar box: either a bitmap or a letter tile or a stock icon. */
+    var LetterTile = React.createClass({
+      render: function() {
+        var avatar = null;
+        if (this.props.avatar === true) {
+          if (this.props.topic && this.props.title && this.props.title.trim()) {
+            var letter = this.props.title.trim().charAt(0);
+            var color = "lettertile color" + (Math.abs(stringHash(this.props.topic)) % 16);
+            avatar = <div className={color}>{letter}</div>
+          } else {
+            avatar = (Tinode.getTopicType(this.props.topic) === "grp") ?
+              <i className="material-icons">group</i> :
+              <i className="material-icons">person</i>;
+          }
+        } else if (this.props.avatar) {
+          avatar = <img className="avatar" alt="avatar" src={this.props.avatar} />;
+        }
+        return (<div>{avatar}</div>);
+      }
+    });
+    /* END Lettertile */
+
     /* BEGIN Combobox for selecting host name */
     var HostSelector = React.createClass({
       getInitialState: function() {
@@ -307,7 +341,6 @@
     /* END Login */
 
     /* BEGIN Account registration */
-
     var CreateAccountView = React.createClass({
       getInitialState: function() {
         return {
@@ -493,15 +526,10 @@
     /* BEGIN Manage side panel - handle Login, Account Registration, Contacts, NewTopic views */
     var SideNavbar = React.createClass({
       render: function() {
-        var avatar = null;
-        if (this.props.avatar === true) {
-          avatar = <i id="self-avatar" className="material-icons">account_box</i>;
-        } else if (this.props.avatar) {
-          avatar = <img id="self-avatar" alt="avatar" src={this.props.avatar} />;
-        }
         return (
             <div id="side-caption-panel">
-              {avatar}
+              <div id="self-avatar"><LetterTile
+                avatar={this.props.avatar} topic={this.props.myUserId} title={this.props.title} /></div>
               <div id="sidepanel-title" className="panel-title">{this.props.title}</div>
               {this.props.state === 'login' ?
                   <SideNavbar.MenuStart onSignUp={this.props.onSignUp} onSettings={this.props.onSettings} /> :
@@ -591,6 +619,7 @@
           <div id="sidepanel" className={this.props.hideSelf ? 'nodisplay' : null}>
             <SideNavbar state={this.props.state}
               title={title} avatar={avatar}
+              myUserId={this.props.myUserId}
               onSignUp={this.props.onSignUp}
               onSettings={this.props.onSettings}
               onNewTopic={this.props.onNewTopic}
@@ -687,15 +716,12 @@
         }
         var selected = (this.props.selected === this.props.topic) ? "selected" : null;
         var online = this.props.now ? "online" : "offline";
-        var avatar = this.props.avatar ?
-              <img src={this.props.avatar} className="avatar" /> :
-              (Tinode.getTopicType(this.props.topic) === "grp") ?
-                <i className="material-icons">group</i> :
-                <i className="material-icons">person</i>;
+        var avatar = this.props.avatar ? this.props.avatar : true;
         return (
           <li className={selected} onClick={this.handleClick}>
             <div className="avatar-box">
-              {avatar}
+              <LetterTile
+                avatar={avatar} title={this.props.title} topic={this.props.topic} />
               <span className={online} />
             </div>
             <div className="text-box">
@@ -1212,7 +1238,6 @@
         var component = null;
         if (this.state.topic) {
           var messageNodes = [];
-          var myUid = Tinode.getCurrentUserID();
           var topic = Tinode.getTopic(this.state.topic);
           var previousFrom = null;
           for (var i=0; i<this.state.messages.length; i++) {
@@ -1230,7 +1255,7 @@
             }
             previousFrom = msg.from;
 
-            var isReply = !(msg.from === myUid);
+            var isReply = !(msg.from === this.props.myUserId);
             var msgReceived = Received.UNDEF;
             if (!isReply) {
               if (topic.msgReadCount(msg.seq) > 0) {
@@ -1415,7 +1440,7 @@
           contextMenuVisible: false,
           login: '',
           password: '',
-          loggedIn: false,
+          myUserId: null,
           errorText: '',
           topicSelected: '',
           loginDisabled: false,
@@ -1496,7 +1521,7 @@
         // Logged in fine, subscribe to 'me' attaching callbacks from the contacts view.
         var me = Tinode.getMeTopic();
         me.onMetaDesc = instance.tnMeMetaDesc;
-        instance.setState({sidePanelSelected: "contacts", loggedIn: true});
+        instance.setState({sidePanelSelected: "contacts", myUserId: Tinode.getCurrentUserID()});
         // Subscribe, fetch topic desc, the list of subscriptions, and messages (invites).
         me.subscribe({get: {desc: {}, sub: {}, data: {}}});
       },
@@ -1507,7 +1532,7 @@
           sidePanelTitle: null,
           sidePanelAvatar: null,
           dialogSelected: null,
-          loggedIn: false,
+          myUserId: null,
           errorText: err && err.message ? err.message : 'disconnected',
           topicSelected: '',
           loginDisabled: false,
@@ -1574,7 +1599,7 @@
       },
       // User chose Settings menu item.
       handleSettings: function() {
-        this.setState({sidePanelSelected: this.state.loggedIn ? 'edit-account' : 'settings'});
+        this.setState({sidePanelSelected: this.state.myUserId ? 'edit-account' : 'settings'});
       },
       // User updated connection parameters - transport and server address
       handleConnectionSettings: function(serverAddress, transport) {
@@ -1585,7 +1610,7 @@
       },
       // User clicked Cancel button in Setting or Sign Up panel.
       handleSidepanelCancel: function() {
-        if (this.state.loggedIn) {
+        if (this.state.myUserId) {
           this.setState({sidePanelSelected: 'contacts'});
         } else {
           this.setState({sidePanelSelected: 'login'});
@@ -1686,6 +1711,7 @@
               avatar={this.state.sidePanelAvatar}
               subscriptions={this.state.subscriptions}
               login={this.state.login}
+              myUserId={this.state.myUserId}
               loginDisabled={this.state.loginDisabled}
               errorText={this.state.errorText}
               topicSelected={this.state.topicSelected}
@@ -1702,6 +1728,7 @@
               onCreateTopic={this.handleNewTopicRequest}
               onNewTopic={this.handleNewTopic}
               onCancel={this.handleSidepanelCancel}
+
               showContextMenu={this.handleShowContextMenu} />
 
             <MessagesView
@@ -1709,6 +1736,7 @@
               displayMobile={this.state.displayMobile}
               hideSelf={(this.state.displayMobile && this.state.mobilePanel !== 'topic-view')}
               topic={this.state.topicSelected}
+              myUserId={this.state.myUserId}
               serverVersion={this.state.serverVersion}
               serverAddress={this.state.serverAddress}
               onData={this.tnData}

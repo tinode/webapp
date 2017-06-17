@@ -40,6 +40,13 @@ form {
 form label {
   font-size: 1rem;
 }
+
+img.avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
 /* Input fields and buttons */
 
 button {
@@ -872,6 +879,71 @@ ul.tabbar li.active > a:after {
   color: #2196f3; /* blue 500 */
 }
 
+/* Letter tile base style */
+.lettertile {
+  display: flex;
+  color: rgba(250, 250, 250, 0.8); /* #FAFAFA, gray 50 */
+  font-size: 1.8rem;
+  line-height: 1;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  text-transform: uppercase;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Colors of letter tiles */
+.lettertile.color0 {
+  background-color: #c5e1a5;
+}
+.lettertile.color1 {
+  background-color: #ef9a9a;
+}
+.lettertile.color2 {
+  background-color: #90caf9;
+}
+.lettertile.color3 {
+  background-color: #fff59d;
+}
+.lettertile.color4 {
+  background-color: #b0bec5;
+}
+.lettertile.color5 {
+  background-color: #f48fb1;
+}
+.lettertile.color6 {
+  background-color: #b39ddb;
+}
+.lettertile.color7 {
+  background-color: #9fa8da;
+}
+.lettertile.color8 {
+  background-color: #ffab91;
+}
+.lettertile.color9 {
+  background-color: #ffe082;
+}
+.lettertile.color10 {
+  background-color: #a5d6a7;
+}
+.lettertile.color11 {
+  background-color: #bcaaa4;
+}
+.lettertile.color12 {
+  background-color: #eeeeee;
+}
+.lettertile.color13 {
+  background-color: #80deea;
+}
+.lettertile.color14 {
+  background-color: #e6ee9c;
+}
+.lettertile.color15 {
+  background-color: #ce93d8;
+}
+
 /* Material icons resized from the default 24pt */
 .material-icons {
   font-size: 1.4rem;
@@ -882,10 +954,10 @@ ul.tabbar li.active > a:after {
 }
 
 #self-avatar.material-icons, .avatar-box .material-icons {
-  font-size: 2.8rem;
+  font-size: 3rem;
 }
 .avatar-box .material-icons {
   color: rgba(250, 250, 250, 0.8); /* #fafafa, gray 50 */
-  background-color: #757575;
+  background-color: #c0c0c0;
   border-radius: 50%;
 }
