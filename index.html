@@ -51,16 +51,17 @@
 
     // Short representation of time in the past.
     function shortDateFormat(then) {
+      var locale = window.navigator.userLanguage || window.navigator.language;
 	    var now = new Date();
       if (then.getFullYear() == now.getFullYear()) {
   	    if (then.getMonth() == now.getMonth() && then.getDate() == now.getDate()) {
-    	    return then.toLocaleTimeString(undefined, {hour12: false, hour: '2-digit', minute: '2-digit'});
+    	    return then.toLocaleTimeString(locale, {hour12: false, hour: '2-digit', minute: '2-digit'});
         } else {
-    	    return then.toLocaleDateString(undefined,
+    	    return then.toLocaleDateString(locale,
             {hour12: false, month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'});
         }
       }
-      return then.toLocaleDateString(undefined,
+      return then.toLocaleDateString(locale,
         {hour12: false, year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'});
     }
 
@@ -127,103 +128,59 @@
         e.preventDefault();
         e.stopPropagation();
         this.props.hide();
-        this.props.onResult(this.props.items[e.currentTarget.dataset.id]);
+        this.props.onAction(this.props.topic, this.props.items[e.currentTarget.dataset.id]);
       },
+
       render: function() {
         if (!this.props.visible) {
           return null;
         }
+
+        // Ensure that menu is inside the app-container.
+        var hSize = 12 * REM_SIZE;
+        var vSize = REM_SIZE * (0.7 + this.props.items.length * 2.5);
+        var left = (this.props.bounds.right - this.props.clickAt.x < hSize) ?
+            (this.props.clickAt.x - this.props.bounds.left - hSize) :
+            (this.props.clickAt.x - this.props.bounds.left);
+        var top = (this.props.bounds.bottom - this.props.clickAt.y < vSize) ?
+            (this.props.clickAt.y - this.props.bounds.top - vSize) :
+            (this.props.clickAt.y - this.props.bounds.top);
+
         var position = {
-          left: this.props.position.left + 'px',
-          top: this.props.position.top + 'px'
+          left: left + "px",
+          top: top + "px"
         };
 
         var count = 0;
-        var menuItems = [];
         var instance = this;
+        var menu = [];
         this.props.items.map(function(item) {
-          if (item === "-") {
-            menuItems.push(
+          menu.push(
+            item === "-" ?
               <li className="separator" key={count} />
-            );
-          } else {
-            menuItems.push(
+              :
               <li onClick={instance.handleClick} data-id={count} key={count}>{item}</li>
-            );
-          }
+          );
           count++;
         });
         return (
           <ul className="menu" style={position}>
-            {menuItems}
+            {menu}
           </ul>
         );
       }
     });
-
-    var ContextMenuMixin = {
-      handleContextClick: function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        this.props.showContextMenu(e.pageY, e.pageX, this.getMenuItems(), this.handleMenuAction);
-      },
-      handleMenuAction: function(action) {
-        var topic = Tinode.getTopic(this.props.topic);
-        var metaParam = function(p) {
-          var am = topic.getAccessMode();
-          am.updateWant(p);
-          topic.setMeta({sub: {mode: am.getWant()}});
-        }
-        switch (action) {
-          case "Edit...":
-            // TODO(gene): implement topic editing
-            console.log("Topic editing not implemented");
-            break;
-          case "Clear messages":
-            topic.delMessagesAll(false).then(function(){
-              console.log("refresh message list");
-            });
-            break;
-          case "Mute":
-            metaParam('-P');
-            break;
-          case "Unmute":
-            metaParam('+P');
-            break;
-          case "Block":
-            metaParam('-J');
-            break;
-          case "Unblock":
-            metaParam('+J');
-            break;
-          case "Delete":
-            topic.delTopic();
-            break;
-          default: break;
-        }
-      },
-      getMenuItems: function() {
-        var acs = Tinode.getMeTopic().getAccessMode(this.props.topic);
-        if (Tinode.getTopicType(this.props.topic) === "grp") {
-          return ["Edit...", "Clear messages", acs.isMuted() ? "Unmute" : "Mute",
-            !acs.isJoiner() ? "Unblock" : "Block", "Delete"];
-        } else {
-          return ["Clear messages", acs.isMuted() ? "Unmute" : "Mute",
-            !acs.isJoiner() ? "Unblock" : "Block", "Delete"];
-        }
-      }
-    };
     /* END Popup/dropdown menu */
 
     /* BEGIN Lettertile: Avatar box: either a bitmap or a letter tile or a stock icon. */
-    var LetterTile = React.createClass({
-      render: function() {
-        var avatar = null;
+    class LetterTile extends React.PureComponent {
+      render() {
+        var avatar;
         if (this.props.avatar === true) {
           if (this.props.topic && this.props.title && this.props.title.trim()) {
             var letter = this.props.title.trim().charAt(0);
             var color = "lettertile color" + (Math.abs(stringHash(this.props.topic)) % 16);
-            avatar = <div className={color}>{letter}</div>
+            avatar = (<div className={color}><div>{letter}</div></div>)
           } else {
             avatar = (Tinode.getTopicType(this.props.topic) === "grp") ?
               <i className="material-icons">group</i> :
@@ -231,30 +188,38 @@
           }
         } else if (this.props.avatar) {
           avatar = <img className="avatar" alt="avatar" src={this.props.avatar} />;
+        } else {
+          avatar = null;
         }
-        return (<div>{avatar}</div>);
+        return avatar;
       }
-    });
+    }
     /* END Lettertile */
 
     /* BEGIN Combobox for selecting host name */
-    var HostSelector = React.createClass({
-      getInitialState: function() {
-        return {
+    class HostSelector extends React.PureComponent {
+      constructor(props) {
+        super(props);
+        this.state = {
           hostName: this.props.serverAddress,
           changed: false
         };
-      },
-      handleHostNameChange: function(e) {
+        this.handleHostNameChange = this.handleHostNameChange.bind(this);
+        this.handleEditingFinished = this.handleEditingFinished.bind(this);
+      }
+
+      handleHostNameChange(e) {
         this.setState({hostName: e.target.value, changed: true});
-      },
-      handleEditingFinished: function() {
+      }
+
+      handleEditingFinished() {
         if (this.state.changed) {
           this.setState({changed: false});
           this.props.onServerAddressChange(this.state.hostName.trim());
         }
-      },
-      render: function() {
+      }
+
+      render() {
         var hostOptions = [];
         for (var key in KNOWN_HOSTS) {
           var item = KNOWN_HOSTS[key];
@@ -273,7 +238,7 @@
             </datalist>
           </div>);
       }
-    });
+    }
     /* END Combobox for selecting host name */
 
     /* BEGIN Login: a login form */
@@ -701,12 +666,18 @@
     /* BEGIN Contact list (list of topics) */
     /* A single topic */;
     var Contact = React.createClass({
-      mixins: [ContextMenuMixin],
       handleClick: function(e) {
         e.preventDefault();
         e.stopPropagation();
         this.props.onSelected(this.props.topic);
       },
+
+      handleContextClick: function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.props.showContextMenu(this.props.topic, e.pageY, e.pageX);
+      },
+
       render: function() {
         var title = this.props.title;
         if (!title) {
@@ -741,9 +712,10 @@
     });
 
     /*
-    <ContextMenu items={this.props.contactMenuItems}
+    <ContextMenu
+      items={this.props.MenuItems}
       topic={this.props.topic}
-      onResult={this.handleMenuAction}
+      onAction={this.handleMenuAction}
       visible={this.state.menuShownFor ? true : false} />
     */
 
@@ -755,9 +727,7 @@
             var count = this.props.count > 9 ? "9+" : this.props.count;
             showUnreadBadge = <span className="badge">{count}</span>;
           }
-          return (
-            <span>{showUnreadBadge}</span>
-          );
+          return showUnreadBadge;
         }
     });
 
@@ -1068,41 +1038,32 @@
       READ: 2
     };
 
-    // Material colors, shade #200; 16 colors.
-    var messageColors = [
-      {bgColor: "#c5e1a5", color: "#212121"}, {bgColor: "#ef9a9a", color: "#212121"},
-      {bgColor: "#90caf9", color: "#212121"}, {bgColor: "#fff59d", color: "#212121"},
-      {bgColor: "#b0bec5", color: "#212121"}, {bgColor: "#f48fb1", color: "#212121"},
-      {bgColor: "#b39ddb", color: "#212121"}, {bgColor: "#9fa8da", color: "#212121"},
-      {bgColor: "#ffab91", color: "#212121"}, {bgColor: "#ffe082", color: "#212121"},
-      {bgColor: "#a5d6a7", color: "#212121"}, {bgColor: "#bcaaa4", color: "#212121"},
-      {bgColor: "#eeeeee", color: "#212121"}, {bgColor: "#80deea", color: "#212121"},
-      {bgColor: "#e6ee9c", color: "#212121"}, {bgColor: "#ce93d8", color: "#212121"}
-    ];
-    // Colors for user's own messages
-    var selfColor = {bgColor: "#fafafa", color: "#212121"};
     var Message = React.createClass({
       render: function() {
-        var liClass = (this.props.response ? "left" : "right") + " " + this.props.sequence;
-        var colors;
-        colors = this.props.response ? {
-            backgroundColor: messageColors[this.props.userIndex].bgColor,
-            borderColor: messageColors[this.props.userIndex].bgColor,
-            color: messageColors[this.props.userIndex].color
-          } : {
-            backgroundColor: selfColor.bgColor,
-            borderColor: selfColor.bgColor,
-            color: selfColor.color
-          };
+        var sideClass = this.props.sequence + " " + (this.props.response ? "left" : "right");
         var bubbleClass = (this.props.sequence === "single" || this.props.sequence === "last") ?
           "bubble tip" : "bubble";
+        var avatar = this.props.userAvatar || true;
+        var fullDisplay = (this.props.userFrom && this.props.response &&
+          (this.props.sequence === "single" || this.props.sequence === "last"));
         return (
-          <li className={liClass}>
-            <div className={bubbleClass} style={colors}>
-              <p>{this.props.content}
-              <Message.ReceivedMarker response={this.props.response}
-                timestamp={this.props.timestamp} received={this.props.received} />
-              </p>
+          <li className={sideClass}>
+            {this.props.userFrom && this.props.response ?
+              <div className="avatar-box">
+                {fullDisplay ?
+                  <LetterTile topic={this.props.userFrom}
+                    title={this.props.userName} avatar={avatar} /> :
+                  null}
+              </div> :
+              null}
+            <div>
+              <div className={bubbleClass}>
+                <p>{this.props.content}
+                <Message.ReceivedMarker response={this.props.response}
+                  timestamp={this.props.timestamp} received={this.props.received} />
+                </p>
+              </div>
+              {fullDisplay ? <div className="author">{this.props.userName}</div> : null}
             </div>
           </li>
         );
@@ -1128,7 +1089,7 @@
         }
 
         return (
-          <span className="pull-right timestamp">
+          <span className="timestamp">
             {timestamp}{'\u00a0'}{marker}
           </span>
         );
@@ -1136,12 +1097,12 @@
     });
 
     var MessagesView = React.createClass({
-      mixins: [ContextMenuMixin],
       getInitialState: function() {
         return {
           messages: [],
           topic: '',
-          title: ''
+          title: '',
+          avatar: null
         };
       },
       // Scroll last message into view on component update e.g. on message received.
@@ -1195,7 +1156,10 @@
       },
       handleDescChange: function(desc) {
         if (desc.public) {
-          this.setState({title: desc.public.fn});
+          this.setState({
+            title: desc.public.fn,
+            avatar: makeImageUrl(desc.public.photo)
+          });
         }
       },
       handleSubsUpdated: function(uids) {
@@ -1234,11 +1198,18 @@
             console.log("other change in topic: " + info.what);
         }
       },
+      handleContextClick: function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.props.showContextMenu(this.state.topic, e.pageY, e.pageX);
+      },
+
       render: function() {
         var component = null;
         if (this.state.topic) {
           var messageNodes = [];
           var topic = Tinode.getTopic(this.state.topic);
+          var groupTopic = topic.getType() === "grp";
           var previousFrom = null;
           for (var i=0; i<this.state.messages.length; i++) {
             var msg = this.state.messages[i];
@@ -1266,9 +1237,22 @@
                 msgReceived = Received.SERVER;
               }
             }
+            var userName, userAvatar, userFrom, chatBoxClass;
+            if (groupTopic) {
+              var user = topic.userDesc(msg.from);
+              if (user && user.public) {
+                userName = user.public.fn;
+                userAvatar = makeImageUrl(user.public.photo);
+              }
+              userFrom = msg.from;
+              chatBoxClass="chat-box group";
+            } else {
+              chatBoxClass="chat-box";
+            }
             messageNodes.push(
               <Message content={msg.content} timestamp={msg.ts} response={isReply}
-                userIndex={msg.$userIndex} sequence={sequence} received={msgReceived} key={msg.seq} />
+                userFrom={userFrom} userName={userName} userAvatar={userAvatar}
+                sequence={sequence} received={msgReceived} key={msg.seq} />
             );
           }
 
@@ -1282,15 +1266,23 @@
               // TODO(gene): also handle user agent in c.seen.ua
             }
           }
-
+          var avatar = this.state.avatar || true;
           component = (
             <div id="topic-view" className={this.props.hideSelf ? 'nodisplay' : null}>
               <div id="topic-caption-panel">
                 {this.props.displayMobile ?
                   <a href="#" id="hide-message-view" onClick={this.props.onHideMessageView}>
                     <i className="material-icons big">arrow_back</i>
-                  </a> :
+                  </a>
+                  :
                   null}
+                {this.props.displayMobile ?
+                  <div className="avatar-box">
+                    <LetterTile avatar={avatar}
+                      topic={this.state.topic} title={this.state.title} />
+                    <span className="online" />
+                  </div>
+                  : null}
                 <div id="topic-title-group">
                   <div id="topic-title" className="panel-title">{this.state.title}</div>
                   <div id="topic-last-seen">{lastSeen}</div>
@@ -1303,7 +1295,7 @@
                 </div>
               </div>
               <div id="messages-panel" ref="messagesPanel">
-                <ul className="chat-box">
+                <ul className={chatBoxClass}>
                   {messageNodes}
                 </ul>
               </div>
@@ -1447,6 +1439,11 @@
           subscriptions: {},
           displayMobile: (window.innerWidth <= MEDIA_BREAKPOINT),
           mobilePanel: 'sidepanel',
+          contextMenuVisible: false,
+          contextMenuBounds: null,
+          contextMenuClickAt: null,
+          contextMenuTopic: '',
+          contextMenuItems: [],
           serverVersion: 'no connection'
         };
       },
@@ -1539,9 +1536,10 @@
           subscriptions: {},
           mobilePanel: 'sidepanel',
           contextMenuVisible: false,
-          contextMenuPosition: {top: 0, left: 0},
-          contextMenuItems: null,
-          handleContextMenuClick: undefined,
+          contextMenuBounds: null,
+          contextMenuClickAt: null,
+          contextMenuTopic: '',
+          contextMenuItems: [],
           serverVersion: 'no connection'
         });
       },
@@ -1663,31 +1661,84 @@
       handleDialogCancel: function() {
         this.setState({dialogSelected: null});
       },
-      handleShowContextMenu: function(y, x, items, callback) {
-        var bounds = ReactDOM.findDOMNode(this).getBoundingClientRect();
-        // Ensure that menu is inside the app-container.
-        var hSize = 12 * REM_SIZE;
-        var vSize = REM_SIZE * (0.7 + items.length * 2.5);
-        var pos = {
-          left: (bounds.right - x < hSize) ? (x - bounds.left - hSize) : (x - bounds.left),
-          top: (bounds.bottom - y < vSize) ? (y - bounds.top - vSize) : (y - bounds.top)
-        };
-
+      handleShowContextMenu: function(topicName, y, x) {
+        var muted = false, blocked = false;
+        var topic = Tinode.getTopic(topicName);
+        if (topic) {
+          var acs = topic.getAccessMode();
+          muted = acs && acs.isMuted();
+          blocked = acs && !acs.isJoiner();
+        }
         this.setState({
           contextMenuVisible: true,
-          contextMenuPosition: pos,
-          contextMenuItems: items,
-          handleContextMenuClick: callback
+          contextMenuClickAt: {x: x, y: y},
+          contextMenuTopic: topicName,
+          contextMenuItems: [
+            "Info",
+            "Clear messages",
+            muted ? "Unmute" : "Mute",
+            blocked ? "Unblock" : "Block",
+            "Delete"
+          ],
+          contextMenuBounds: ReactDOM.findDOMNode(this).getBoundingClientRect()
         });
       },
       handleHideContextMenu: function() {
         this.setState({
           contextMenuVisible: false,
-          contextMenuPosition: {top: 0, left: 0},
-          contextMenuItems: null,
-          handleContextMenuClick: undefined
+          contextMenuClickAt: null,
+          contextMenuTopic: '',
+          contextMenuBounds: null
         });
       },
+      // Menu click.
+      handleContextMenuAction: function(topicName, action) {
+        if (!topicName || !action) {
+          return;
+        }
+
+        var topic = Tinode.getTopic(topicName);
+        if (!topic) {
+          return;
+        }
+
+        var metaParam = function(want) {
+          var am = topic.getAccessMode();
+          am.updateWant(want);
+          topic.setMeta({sub: {mode: am.getWant()}});
+        }
+
+        switch (action) {
+          case "Info":
+            // TODO(gene): implement topic info
+            console.log("Topic info not implemented");
+            break;
+          case "Clear messages":
+            topic.delMessagesAll(false).then(function(){
+              console.log("refresh message list");
+            });
+            break;
+          case "Mute":
+            metaParam('-P');
+            break;
+          case "Unmute":
+            metaParam('+P');
+            break;
+          case "Block":
+            metaParam('-J');
+            break;
+          case "Unblock":
+            metaParam('+J');
+            break;
+          case "Delete":
+            topic.delTopic();
+            break;
+          default:
+            console.log("Unknown menu action '" + action + "'");
+            break;
+        }
+      },
+
       render: function() {
         return (
           <div id="app-container">
@@ -1697,11 +1748,13 @@
               onCancel={this.handleDialogCancel} />
 
             <ContextMenu
-              position={this.state.contextMenuPosition}
-              items={this.state.contextMenuItems}
-              onResult={this.state.handleContextMenuClick}
+              bounds={this.state.contextMenuBounds}
+              clickAt={this.state.contextMenuClickAt}
               visible={this.state.contextMenuVisible}
-              hide={this.handleHideContextMenu} />
+              topic={this.state.contextMenuTopic}
+              items={this.state.contextMenuItems}
+              hide={this.handleHideContextMenu}
+              onAction={this.handleContextMenuAction} />
 
             <SidepanelView
               displayMobile={this.state.displayMobile}

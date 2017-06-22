@@ -6,8 +6,7 @@ and [icons](https://google.github.io/material-design-icons/#icon-font-for-the-we
 
 This is work in progress. Bugs are expected. The app was tested in the latest Chrome & Firefox only.
 
-Try it live at http://api.tinode.co/x/example-react-js/. Login as one of `alice`, `bob`, `carol`, `dave`, `frank`.
-Password is `<login>123`, e.g. password for `alice` is `alice123`.
+Try it (possibly older version) live at http://api.tinode.co/x/example-react-js/. Login as one of `alice`, `bob`, `carol`, `dave`, `frank`. Password is `<login>123`, e.g. password for `alice` is `alice123`.
 
 License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
@@ -15,4 +14,13 @@ Photos from https://www.pexels.com/ under [CC0 license](https://www.pexels.com/p
 
 Background pattern from http://subtlepatterns.com/, commercial and non-commercial use allowed with attribution.
 
-![App screenshot](web-topic.png)
+## Responsive design
+
+### Desktop
+
+<img src="web-desktop.png" alt="Desktop web: full app" width=540 />
+
+### Mobile
+
+<img src="web-mobile-contacts.png" alt="Mobile web: contacts" width=401 />
+<img src="web-mobile-chat.png" alt="Mobile web: chat" width=485 />

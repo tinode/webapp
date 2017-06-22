@@ -418,6 +418,7 @@ ul.menu > li.separator:hover {
   position: relative;
   width: 3rem;
   height: 3rem;
+  font-size: 1.8rem;
   overflow: hidden;
   padding: 0;
 }
@@ -566,9 +567,15 @@ ul.menu > li.separator:hover {
   text-decoration: none;
 }
 
+#topic-caption-panel .avatar-box {
+  width: 3rem;
+  height: 3rem;
+  margin-right: 0.35rem;
+}
+
 #hide-message-view {
   display: block;
-  margin-right: 0.5rem;
+  margin-right: 0.35rem;
 }
 
 #topic-users {
@@ -619,6 +626,11 @@ ul.menu > li.separator:hover {
   margin: 0 0.5rem;
 }
 
+/* Group chats have avatars on the left. Make left margin smaller */
+.chat-box.group {
+  margin-left: -0.4rem;
+}
+
 .chat-box li {
   display: flex;
   margin: 0;
@@ -626,7 +638,7 @@ ul.menu > li.separator:hover {
   align-items: flex-end;
 }
 
-.chat-box li.right {
+.chat-box .right {
   justify-content: flex-end;
 }
 
@@ -650,12 +662,12 @@ ul.menu > li.separator:hover {
 }
 
 .chat-box li.single {
-  margin-top: 0.75rem;
-  margin-bottom: 0.75rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
 }
 
 .chat-box li.first {
-  margin-top: 0.75rem;
+  margin-top: 0.25rem;
   margin-bottom: 0.15rem;
 }
 
@@ -666,11 +678,19 @@ ul.menu > li.separator:hover {
 
 .chat-box li.last {
   margin-top: 0.15rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.chat-box .left .bubble {
+  background-color: #c5e1a5;
+}
+
+.chat-box .right .bubble {
+  background-color: #fafafa;
 }
 
 /* Left triangle placed bottom left flush. */
-.chat-box li.left .tip::before {
+.chat-box .left .tip::before {
   content: '';
   position: absolute;
   width: 0;
@@ -680,6 +700,7 @@ ul.menu > li.separator:hover {
   top: auto;
   bottom: 0;
   border: 10px solid;
+  color: #c5e1a5;
   border-top-color: transparent;
   border-right-color: transparent;
   border-bottom-color: inherit;
@@ -687,7 +708,7 @@ ul.menu > li.separator:hover {
 }
 
 /* Right triangle placed bottom right flush. */
-.chat-box li.right .tip::before {
+.chat-box .right .tip::before {
 	content: '';
 	position: absolute;
   display: flex;
@@ -699,6 +720,7 @@ ul.menu > li.separator:hover {
   top: auto;
 	bottom: 0;
 	border: 10px solid;
+  color: #fafafa;
   border-top-color: transparent;
   border-right-color: transparent;
   border-bottom-color: inherit;
@@ -706,30 +728,36 @@ ul.menu > li.separator:hover {
 }
 
 .chat-box .avatar-box {
-  width: 3rem;
-  text-align: center;
-}
-
-.chat-box .avatar-box img {
-  width: 2.4rem;
-  display: block;
   position: relative;
-  left: 0.3rem;
-  border-radius: 33%;
+  width: 1.4rem;
+  height: 1.4rem;
+  font-size: 0.8rem;
+  margin-bottom: 0.8rem;
+  margin-right: 0.8rem;
 }
 
 .chat-box .bubble p {
-  display: flex;
-  justify-content: space-between;
+  color: #212121;
   margin: 0;
+}
+/* The timestamp is a floating element. Need to ensure p is expanded
+ * to accomodate it. It's usually called clearfix. */
+.chat-box .bubble p:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
 }
 
 .chat-box .timestamp {
   display: inline-block;
+  position:relative;
   font-size: 80%;
   color: #777;
-  padding-left: 1.5em;
-  padding-top: 0.5em;
+  padding-left: 1rem;
+  top: 0.5em;
+  float: right;
   white-space: nowrap;
 }
 
@@ -743,6 +771,14 @@ ul.menu > li.separator:hover {
   text-align: center;
   color: #aaa;
   margin-top: 0.75rem;
+}
+
+/* The name of the person who sent the message
+ * (group chat only)
+ */
+.chat-box .author {
+    font-size: 80%;
+    color:#777;
 }
 
 /* END of talk bubbles */
@@ -881,67 +917,124 @@ ul.tabbar li.active > a:after {
 
 /* Letter tile base style */
 .lettertile {
-  display: flex;
-  color: rgba(250, 250, 250, 0.8); /* #FAFAFA, gray 50 */
-  font-size: 1.8rem;
-  line-height: 1;
-  width: 3rem;
-  height: 3rem;
+  width: 100%;
+  padding-bottom: 100%;
   border-radius: 50%;
+  position: relative;
+}
+
+/* Responsive square box for text tiles */
+.lettertile > div {
+  display: flex;
+  position: absolute;
+  top: 0; bottom: 0; left: 0; right: 0;
   text-transform: uppercase;
   align-items: center;
   justify-content: center;
   text-align: center;
+  border-radius: 50%;
+  line-height: 1;
+  color: rgba(250, 250, 250, 0.8); /* default text color #FAFAFA, gray 50 */
 }
 
 /* Colors of letter tiles */
 .lettertile.color0 {
-  background-color: #c5e1a5;
-}
-.lettertile.color1 {
   background-color: #ef9a9a;
 }
-.lettertile.color2 {
+.lettertile.color1 {
   background-color: #90caf9;
 }
-.lettertile.color3 {
-  background-color: #fff59d;
-}
-.lettertile.color4 {
+.lettertile.color2 {
   background-color: #b0bec5;
 }
-.lettertile.color5 {
-  background-color: #f48fb1;
-}
-.lettertile.color6 {
+.lettertile.color3 {
   background-color: #b39ddb;
 }
-.lettertile.color7 {
-  background-color: #9fa8da;
-}
-.lettertile.color8 {
+.lettertile.color4 {
   background-color: #ffab91;
 }
-.lettertile.color9 {
-  background-color: #ffe082;
-}
-.lettertile.color10 {
+.lettertile.color5 {
   background-color: #a5d6a7;
 }
-.lettertile.color11 {
-  background-color: #bcaaa4;
-}
-.lettertile.color12 {
+.lettertile.color6 {
   background-color: #eeeeee;
 }
+.lettertile.color7 {
+  background-color: #e6ee9c;
+}
+.lettertile.color8 {
+  background-color: #c5e1a5;
+}
+.lettertile.color9 {
+  background-color: #fff59d;
+}
+.lettertile.color10 {
+  background-color: #f48fb1;
+}
+.lettertile.color11 {
+  background-color: #9fa8da;
+}
+.lettertile.color12 {
+  background-color: #ffe082;
+}
 .lettertile.color13 {
-  background-color: #80deea;
+  background-color: #bcaaa4;
 }
 .lettertile.color14 {
-  background-color: #e6ee9c;
+  background-color: #80deea;
 }
 .lettertile.color15 {
   background-color: #ce93d8;
+}
+
+/* Darker version of letter tile colors */
+.lettertile.dark-color0 {
+  background-color: #C62828;
+}
+.lettertile.dark-color1 {
+  background-color: #AD1457;
+}
+.lettertile.dark-color2 {
+  background-color: #6A1B9A;
+}
+.lettertile.dark-color3 {
+  background-color: #4527A0;
+}
+.lettertile.dark-color4 {
+  background-color: #283593;
+}
+.lettertile.dark-color5 {
+  background-color: #1565C0;
+}
+.lettertile.dark-color6 {
+  background-color: #0277BD;
+}
+.lettertile.dark-color7 {
+  background-color: #00838F;
+}
+.lettertile.dark-color8 {
+  background-color: #00695C;
+}
+.lettertile.dark-color9 {
+  background-color: #2E7D32;
+}
+.lettertile.dark-color10 {
+  background-color: #558B2F;
+}
+.lettertile.dark-color11 {
+  background-color: #9E9D24;
+}
+.lettertile.dark-color12 {
+  background-color: #F9A825;
+}
+.lettertile.dark-color13 {
+  background-color: #FF8F00;
+}
+.lettertile.dark-color14 {
+  background-color: #EF6C00;
+}
+.lettertile.dark-color15 {
+  background-color: #D84315;
 }
 
 /* Material icons resized from the default 24pt */
