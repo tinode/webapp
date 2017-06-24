@@ -18,9 +18,13 @@ Background pattern from http://subtlepatterns.com/, commercial and non-commercia
 
 ### Desktop
 
-<img src="web-desktop.png" alt="Desktop web: full app" width=540 />
+<p align="center">
+  <img src="web-desktop.png" alt="Desktop web: full app" width=540 />
+</p>
 
 ### Mobile
 
-<img src="web-mobile-contacts.png" alt="Mobile web: contacts" width=401 />
-<img src="web-mobile-chat.png" alt="Mobile web: chat" width=485 />
+<p align="center" nowrap>
+  <img src="web-mobile-contacts.png" alt="Mobile web: contacts" width=401 />
+  <img src="web-mobile-chat.png" alt="Mobile web: chat" width=485 />
+</p>

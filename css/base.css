@@ -18,6 +18,15 @@ html, body {
   box-shadow: inset 0 10rem #3949AB; /* the deep-plue stripe accross the top */
 }
 
+tt {
+  font-family: Roboto Mono, monospace;
+}
+
+hr {
+  height: 1px;
+  color: #666;
+}
+
 a {
   color: #2196f3;
   text-decoration: none;
@@ -34,11 +43,18 @@ a:focus {
 }
 
 form {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
+  padding: 0.5rem 0.75rem;
+  line-height: 1.75;
 }
 
 form label {
-  font-size: 1rem;
+  font-size: 1.1rem;
+}
+
+form label.small {
+  color: #1e88e5;
+  font-size: 0.95rem;
 }
 
 img.avatar {
@@ -131,13 +147,12 @@ button.white:focus, button.white:hover, button.blue:active {
 
 textarea, input {
   font-family: inherit;
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   background: transparent;
   border: none;
   margin: 0.25rem 0;
   padding: 0 0.125rem;
   outline: none;
-  box-sizing: border-box;
   color: #666;
 }
 textarea {
@@ -148,7 +163,6 @@ input[type="password"],
 textarea {
   height: 2.5rem;
   border-bottom: 1px solid #ccc;
-  border-radius: 0.2rem;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease-in-out;
   width: 100%;
@@ -158,6 +172,12 @@ input[type="text"]:focus,
 input[type="password"]:focus {
   border-bottom: 1px solid #2196f3;
   box-shadow: 0 1px 0 rgba(33, 150, 243, 0.25);
+}
+
+input[type="text"]::placeholder,
+input[type="password"]::placeholder,
+textarea::placeholder {
+  color: #bbb;
 }
 
 /* Scrollbar styling for Chrome. Firefox does not support scrollbar styling.  */
@@ -175,12 +195,6 @@ input[type="password"]:focus {
 }
 
 /* END of input and buttons */
-
-form {
-  padding: 0.5rem 0.75rem;
-  line-height: 1.75;
-  font-size: 1.2rem;
-}
 
 /* BEGIN Popup/dropdown menu */
 
@@ -254,6 +268,14 @@ ul.menu > li.separator:hover {
   height: 100%;
 }
 
+#info-view {
+  display: flex;
+  flex-direction: column;
+  width: 24rem;
+  min-width: 24rem;
+  height: 100%;
+}
+
 @media (max-width: 960px) {
   #mountPoint {
     padding: 0;
@@ -266,6 +288,10 @@ ul.menu > li.separator:hover {
   }
 
   #sidepanel {
+    width: 100%;
+  }
+
+  #info-view {
     width: 100%;
   }
 }
@@ -281,10 +307,37 @@ ul.menu > li.separator:hover {
   font-size: 1.4rem;
 }
 
-/* Class to alternatively hide sidepanel/topic-view */
+/* Class to alternatively hide sidepanel/topic-view/info-view */
 .nodisplay {
   display: none!important;
 }
+
+/* BEGIN InPlaceEdit styles */
+.in-place-edit {
+  display: inline-block;
+  font-family: inherit;
+  font-size: 1.1rem;
+  height: 2.5rem;
+  line-height: 1.5;
+  margin: 0.25rem 0.125rem;
+  -x-padding: 0 0.125rem;
+  width: 100%;
+  vertical-align: baseline;
+  border-bottom: 1px dashed #ddd;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.in-place-edit.disabled {
+  border-bottom: none;
+  cursor: default;
+}
+
+.in-place-edit.placeholder {
+  color: #bbb;
+}
+
+/* END of InPlaceEdit styles */
 
 /* END of top-level layout */
 
@@ -293,30 +346,37 @@ ul.menu > li.separator:hover {
   font-size: 1.4rem;
 }
 
-.dialog-buttons {
-  display: flex;
-  padding: 0.5em;
-  justify-content: flex-end;
-}
-
-#side-caption-panel {
+.caption-panel {
   display: flex;
   align-items: center;
   flex: none;
   padding: 0.5em;
   height: 4em;
 
-  background-color: #2196f3; /* blue 500 */
-  color: #bbdefb; /* light-blue 100 */
-
   box-shadow: 0 1px 2px gray;
   z-index: 1; /* otherwise the shadow becomes invisible */
 }
 
+.dialog-buttons {
+  display: flex;
+  padding: 0.5em;
+  justify-content: flex-end;
+}
+
+.avatar-box {
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+#side-caption-panel {
+  background-color: #2196f3; /* blue 500 */
+  color: #bbdefb; /* light-blue 100 */
+}
+
 #side-caption-panel a {
   color: #bbdefb; /* blue 100 */
-  padding-left: 0.5em;
-  vertical-align: -1em; /* icons are bigger than the declared font size */
+  padding-left: 0.5rem;
+  line-height: 1;
 }
 
 #side-caption-panel :hover {
@@ -330,9 +390,14 @@ ul.menu > li.separator:hover {
 
 #self-avatar {
   width: 3rem;
+  min-width: 3rem;
   height: 3rem;
   flex: none;
   border-radius: 50%;
+}
+
+#self-avatar.avatar-box {
+  font-size: 1.8rem;
 }
 
 /* Application settings */
@@ -417,6 +482,7 @@ ul.menu > li.separator:hover {
   margin-right: 0.35rem;
   position: relative;
   width: 3rem;
+  min-width: 3rem;
   height: 3rem;
   font-size: 1.8rem;
   overflow: hidden;
@@ -472,7 +538,7 @@ ul.menu > li.separator:hover {
 .panel-form-two {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  flex-grow: 1;
 }
 
 
@@ -481,36 +547,32 @@ ul.menu > li.separator:hover {
   position: relative;
   text-align: center;
   vertical-align: middle;
-  width: 4.5rem;
-  height: auto;
-  box-sizing: border-box;
+  flex-shrink: 0;
+  width: 7rem;
+  height: 7rem;
   margin-left: 0.5rem;
   padding: 0;
+  border-radius: 50%;
 }
 
 .avatar-upload .blank {
+  text-align: center;
+  vertical-align: middle;
   border: 1px dashed #999;
-  border-radius: 0.75rem;
   font-size: 1rem;
-  width: 4.5rem;
-  height: 4.5rem;
+  width: 7rem;
+  height: 7rem;
   overflow: hidden;
   color: #999;
-  vertical-align: middle;
-  line-height: 4.5rem;
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+  line-height: 7rem;
+  border-radius: 50%;
 }
 
 .avatar-upload .preview {
-  border-radius: 0.75rem;
-  width: 4.5rem;
-  height: 4.5rem;
+  width: 7rem;
+  height: 7rem;
   overflow: hidden;
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+  border-radius: 50%;
 }
 
 .avatar-upload .inputfile.hidden {
@@ -526,14 +588,14 @@ ul.menu > li.separator:hover {
   vertical-align: middle;
   text-align: center;
   cursor: pointer;
-  width: 2.5rem;
-  height: 2.5rem;
-  line-height: 3rem;
+  width: 3rem;
+  height: 3rem;
+  line-height: 4rem;
   border-radius: 50%;
   box-shadow: 0 1px 4px rgba(0,0,0,0.4);
   position: absolute;
-  top: 3.875rem;
-  left: 1rem;
+  top: 6rem;
+  left: 2rem;
   background-color: #fafafa;
 }
 
@@ -552,24 +614,23 @@ ul.menu > li.separator:hover {
 
 /* Topic/messages view */
 #topic-caption-panel {
-  display: flex;
-  align-items:center;
-  justify-content: flex-start;
-  flex: none;
-  padding: 0.5rem;
-  height: 4rem;
   background-color: #b0bec5;
-  box-shadow: 0 1px 2px gray;
-  z-index: 1; /* otherwise the shadow becomes invisible */
 }
 #topic-caption-panel a {
   color: #757575;
   text-decoration: none;
 }
 
+#topic-caption-panel :hover {
+  color: black;
+}
+
+
 #topic-caption-panel .avatar-box {
   width: 3rem;
+  min-width: 3rem;
   height: 3rem;
+  font-size: 1.8rem;
   margin-right: 0.35rem;
 }
 
@@ -730,7 +791,9 @@ ul.menu > li.separator:hover {
 .chat-box .avatar-box {
   position: relative;
   width: 1.4rem;
+  min-width: 1.4rem;
   height: 1.4rem;
+  min-height: 1.4rem;
   font-size: 0.8rem;
   margin-bottom: 0.8rem;
   margin-right: 0.8rem;
@@ -784,6 +847,24 @@ ul.menu > li.separator:hover {
 /* END of talk bubbles */
 /* END of topic/mesages view */
 
+/* InfoView styles */
+#info-caption-panel {
+  background-color: #b0bec5;
+}
+#info-caption-panel a {
+  color: #757575;
+  line-height: 1;
+  text-decoration: none;
+}
+#info-caption-panel :hover {
+  color: black;
+}
+
+#info-title {
+  margin-right: auto;
+}
+
+/* END of InfoView */
 
 /* Modal dialog */
 .dialog-overlay {
@@ -915,7 +996,7 @@ ul.tabbar li.active > a:after {
   color: #2196f3; /* blue 500 */
 }
 
-/* Letter tile base style */
+/* Letter tile base style, responsive square box */
 .lettertile {
   width: 100%;
   padding-bottom: 100%;
@@ -923,9 +1004,11 @@ ul.tabbar li.active > a:after {
   position: relative;
 }
 
-/* Responsive square box for text tiles */
+/* Div with letter tile content */
 .lettertile > div {
   display: flex;
+  flex-shrink: 0;
+  flex-grow: 0;
   position: absolute;
   top: 0; bottom: 0; left: 0; right: 0;
   text-transform: uppercase;

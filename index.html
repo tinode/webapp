@@ -67,6 +67,8 @@
 
     // Make a data URL from public.photo
     function makeImageUrl(photo) {
+      //console.log("makeImageUrl");
+      //console.log(photo);
       return (photo && photo.type && photo.data) ?
         'data:image/' + photo.type + ';base64,' + photo.data : null;
     }
@@ -92,6 +94,26 @@
         host = window.location.hostname + (window.location.port ? ':' + window.location.port : '');
       }
       return host;
+    }
+
+    // Create VCard which represents topic 'public' info
+    function vcard(fn, imageDataUrl) {
+      var card = null;
+
+      if ((fn && fn.trim()) || imageDataUrl) {
+        card = {};
+        if (fn) {
+          card.fn = fn.trim();
+        }
+        if (imageDataUrl) {
+          var dataStart = imageDataUrl.indexOf(",");
+          card.photo = {
+            data: imageDataUrl.substring(dataStart+1),
+            type: "jpg"
+          };
+        }
+      }
+      return card;
     }
 
     /* BEGIN Popup/dropdown menu */
@@ -172,6 +194,15 @@
     });
     /* END Popup/dropdown menu */
 
+    /* The X menu to be displayed in title bars */
+    var MenuCancel = React.createClass({
+      render: function() {
+        return (
+          <a href="#" onClick={this.props.onCancel}><i className="material-icons">close</i></a>
+        );
+      }
+    });
+
     /* BEGIN Lettertile: Avatar box: either a bitmap or a letter tile or a stock icon. */
     class LetterTile extends React.PureComponent {
       render() {
@@ -195,6 +226,66 @@
       }
     }
     /* END Lettertile */
+
+    /* BEGIN In-place text editor. Shows text with an icon
+     * which toggles it into an input field */
+    var InPlaceEdit = React.createClass({
+      getInitialState: function() {
+        return {
+          active: this.props.state,
+          text: this.props.text || "",
+          changed: false
+        };
+      },
+
+      handeTextChange: function(e) {
+        this.setState({text: e.target.value});
+      },
+
+      handleKeyPress: function(e) {
+        if (e.keyCode === 27) {
+          this.setState({text: this.props.text, active: false});
+        }
+      },
+
+      handleStartEditing: function() {
+        ReactDOM.findDOMNode(this).focus();
+        this.setState({active: !this.props.readOnly});
+      },
+
+      handleEditingFinished: function() {
+        this.setState({active: false});
+        if (this.state.text !== this.props.text) {
+          this.props.onFinished(this.state.text);
+        }
+      },
+
+      render: function() {
+        var spanText = this.props.type === "password" ?
+          "••••••••" : this.state.text;
+        var spanClass = "in-place-edit" +
+          (this.props.readOnly ? " disabled" : "");
+        if (!spanText) {
+          spanText = this.props.placeholder;
+          spanClass += " placeholder";
+        }
+        return (
+          this.state.active ?
+            <input type={this.props.type || "text"}
+              value={this.state.text}
+              placeholder={this.props.placeholder}
+              onChange={this.handeTextChange}
+              onKeyPress={this.handleKeyPress}
+              onBlur={this.handleEditingFinished}
+              autoFocus />
+            :
+            <span className={spanClass}
+              onClick={this.handleStartEditing}>{spanText}</span>
+        );
+      }
+    });
+
+    /* END InPlaceEdit */
 
     /* BEGIN Combobox for selecting host name */
     class HostSelector extends React.PureComponent {
@@ -338,22 +429,10 @@
           // FIXME(gene): report an error here.
         } else {
           this.setState({errorCleared: false});
-          var vcard = null;
-
-          if ((this.state.fn && this.state.fn.trim()) || this.state.imageDataUrl) {
-            vcard = {};
-            if (this.state.fn) {
-              vcard.fn = this.state.fn.trim();
-            }
-            if (this.state.imageDataUrl) {
-              var dataStart = this.state.imageDataUrl.indexOf(",");
-              vcard.photo = {
-                data: this.state.imageDataUrl.substring(dataStart+1),
-                type: "jpg"
-              };
-            }
-          }
-          this.props.onCreateAccount(this.state.login.trim(), this.state.password.trim(), vcard);
+          this.props.onCreateAccount(
+            this.state.login.trim(),
+            this.state.password.trim(),
+            vcard(this.state.fn, this.state.imageDataUrl));
         }
       },
       render: function() {
@@ -362,26 +441,24 @@
           submitClasses += " disabled";
         }
         return (
-          <div>
-            <form className="panel-form" onSubmit={this.handleSubmit}>
-              <div className="panel-form-one">
-                <div className="panel-form-two">
-                  <input type="text" placeholder="Login"
-                    value={this.state.login} onChange={this.handleLoginChange} required autoFocus />
-                  <input type="password" placeholder="Password"
-                    value={this.state.password} onChange={this.handlePasswordChange} required />
-                  <input type="password" placeholder="Repeat password"
-                    value={this.state.password2} onChange={this.handlePassword2Change} required />
-                </div>
-                <AvatarUpload onImageChanged={this.handleImageChanged} />
+          <form className="panel-form" onSubmit={this.handleSubmit}>
+            <div className="panel-form-one">
+              <div className="panel-form-two">
+                <input type="text" placeholder="Login"
+                  value={this.state.login} onChange={this.handleLoginChange} required autoFocus />
+                <input type="password" placeholder="Password"
+                  value={this.state.password} onChange={this.handlePasswordChange} required />
+                <input type="password" placeholder="Repeat password"
+                  value={this.state.password2} onChange={this.handlePassword2Change} required />
               </div>
-              <input type="text" placeholder="Full name, e.g. John Doe"
-                value={this.state.fn} onChange={this.handleFnChange} />
-              <div className="dialog-buttons">
-                <button className={submitClasses} type="submit">Sign up</button>
-              </div>
-            </form>
-          </div>
+              <AvatarUpload onImageChanged={this.handleImageChanged} />
+            </div>
+            <input type="text" placeholder="Full name, e.g. John Doe"
+              value={this.state.fn} onChange={this.handleFnChange} />
+            <div className="dialog-buttons">
+              <button className={submitClasses} type="submit">Sign up</button>
+            </div>
+          </form>
         );
       }
     });
@@ -389,7 +466,7 @@
     var AvatarUpload = React.createClass({
       getInitialState: function() {
         return {
-          dataUrl: null
+          dataUrl: this.props.avatar
         };
       },
       handleFileUpload(e) {
@@ -398,7 +475,7 @@
         img.crossOrigin = 'Anonymous';
         img.onload = function() {
           var canvas = document.createElement('CANVAS');
-          canvas.width = canvas.height = 64;
+          canvas.width = canvas.height = 128;
           var ctx = canvas.getContext('2d');
           var sx = 0, sy = 0, size;
           if (this.height > this.width) {
@@ -409,7 +486,7 @@
             sx = (this.width - size) / 2;
           }
  				  ctx.imageSmoothingEnabled = true;
-          ctx.drawImage(this, sx, sy, size, size, 0, 0, 64, 64);
+          ctx.drawImage(this, sx, sy, size, size, 0, 0, canvas.width, canvas.height);
           var bits = canvas.toDataURL("image/jpg");
           canvas = null;
 
@@ -423,12 +500,14 @@
           <div className="avatar-upload">
             {this.state.dataUrl ?
               <img src={this.state.dataUrl} className="preview" /> :
-              <div className="blank">64&times;64</div>}
-            <input type="file" id="file-input-avatar" className="inputfile hidden"
-              accept="image/*" onChange={this.handleFileUpload} />
+              <div className="blank">128&times;128</div>}
+            {this.props.readOnly ? null :
+              <input type="file" id="file-input-avatar" className="inputfile hidden"
+                accept="image/*" onChange={this.handleFileUpload} />}
+            {this.props.readOnly ? null :
             <label htmlFor="file-input-avatar" className="round">
               <i className="material-icons">file_upload</i>
-            </label>
+            </label>}
           </div>
         );
       }
@@ -492,22 +571,22 @@
     var SideNavbar = React.createClass({
       render: function() {
         return (
-            <div id="side-caption-panel">
-              <div id="self-avatar"><LetterTile
+            <div id="side-caption-panel" className="caption-panel">
+              <div id="self-avatar" className="avatar-box"><LetterTile
                 avatar={this.props.avatar} topic={this.props.myUserId} title={this.props.title} /></div>
               <div id="sidepanel-title" className="panel-title">{this.props.title}</div>
               {this.props.state === 'login' ?
                   <SideNavbar.MenuStart onSignUp={this.props.onSignUp} onSettings={this.props.onSettings} /> :
                 this.props.state === 'settings' ?
-                  <SideNavbar.MenuCancel onCancel={this.props.onCancel} /> :
+                  <MenuCancel onCancel={this.props.onCancel} /> :
                 this.props.state === 'edit-account' ?
-                  <SideNavbar.MenuCancel onCancel={this.props.onCancel} /> :
+                  <MenuCancel onCancel={this.props.onCancel} /> :
                 this.props.state === 'register' ?
-                  <SideNavbar.MenuCancel onCancel={this.props.onCancel} /> :
+                  <MenuCancel onCancel={this.props.onCancel} /> :
                 this.props.state === 'contacts' ?
                   <SideNavbar.MenuContacts onNewTopic={this.props.onNewTopic} onSettings={this.props.onSettings} /> :
                 this.props.state === 'new-topic' ?
-                  <SideNavbar.MenuCancel onCancel={this.props.onCancel} /> :
+                  <MenuCancel onCancel={this.props.onCancel} /> :
                 null}
             </div>
         );
@@ -525,14 +604,6 @@
         );
       }
     });
-
-    SideNavbar.MenuCancel = React.createClass({
-      render: function() {
-        return (
-          <a href="#" onClick={this.props.onCancel}><i className="material-icons">close</i></a>
-        );
-      }
-    })
 
     SideNavbar.MenuContacts = React.createClass({
       render: function() {
@@ -614,7 +685,10 @@
                 /> :
 
               this.props.state === 'edit-account' ?
-              <EditAccountView onCancel={this.props.onCancel} /> :
+              <EditAccountView
+                login={this.props.login}
+                onSubmit={this.props.onUpdateAccount}
+                onCancel={this.props.onCancel} /> :
 
               this.props.state === 'contacts' ?
               <ContactsView
@@ -653,10 +727,89 @@
 
     /* EditAccount parameters */
     var EditAccountView = React.createClass({
+      getInitialState: function() {
+        return {
+          updated: false,
+          address: null,
+          fullName: undefined,
+          avatar: null,
+          login: undefined,
+          password: undefined
+        };
+      },
+      componentWillMount: function() {
+        var me = Tinode.getMeTopic();
+        me.onMetaDesc = this.onMetaDesc;
+        var defacs = me.getDefaultAccess();
+        this.setState({
+          fullName: me.public ? me.public.fn : undefined,
+          avatar: makeImageUrl(me.public ? me.public.photo : null),
+          address: Tinode.getCurrentUserID(),
+          login: this.props.login,
+          auth: defacs.auth,
+          anon: defacs.anon
+        });
+      },
+      componentWillUnmount: function() {
+        var me = Tinode.getMeTopic();
+        me.onMetaDesc = undefined;
+      },
+
+      onMetaDesc: function(desc) {
+        // Update form with changed values
+      },
+
+      handleFullNameUpdate: function(fn) {
+        this.setState({updated: true, fullName: fn});
+      },
+      handlePasswordUpdate: function(pwd) {
+        this.setState({updated: true, password: pwd});
+      },
+      handleImageChanged: function(img) {
+        this.setState({updated: true, avatar: img});
+      },
+
+      handleSubmit: function(e) {
+        e.preventDefault();
+        if (this.state.updated) {
+          this.props.onSubmit(this.state.password,
+            vcard(this.state.fullName, this.state.avatar));
+        }
+      },
+
       render: function() {
         return (
-          <form id="edit-account">
-            <p>Not implemented</p>
+          <form id="edit-account" className="panel-form" onSubmit={this.handleSubmit}>
+            <div className="panel-form-one">
+              <div className="panel-form-two">
+                <div><label className="small">Your name</label></div>
+                <div><InPlaceEdit
+                    placeholder="Full name, e.g. John Doe"
+                    text={this.state.fullName}
+                    onFinished={this.handleFullNameUpdate} /></div>
+                <div><label className="small">Password</label></div>
+                <div><InPlaceEdit
+                    placeholder="Unchanged"
+                    type="password"
+                    onFinished={this.handlePasswordUpdate} /></div>
+              </div>
+              <AvatarUpload
+                avatar={this.state.avatar}
+                onImageChanged={this.handleImageChanged} />
+            </div>
+            <br />
+            <hr />
+            <br />
+            <div>
+              <div>Login: <tt>{this.state.login}</tt></div>
+              <div>Address: <tt>{this.state.address}</tt></div>
+              <div>Default access mode:</div>
+              <div>&nbsp;&nbsp;Auth: <tt>{this.state.auth}</tt></div>
+              <div>&nbsp;&nbsp;Anon: <tt>{this.state.anon}</tt></div>
+            </div>
+            <div className="dialog-buttons">
+              <button className="blue" type="submit">Update</button>
+            </div>
           </form>
         );
       }
@@ -866,20 +1019,7 @@
         }
       },
       handleGroupSubmit: function(name, dataUrl) {
-        var vcard = null;
-        if (name || dataUrl) {
-          vcard = {
-            fn: name,
-          };
-          if (dataUrl) {
-            var dataStart = dataUrl.indexOf(",");
-            vcard.photo = {
-              data: dataUrl.substring(dataStart+1),
-              type: "jpg"
-            };
-          }
-        }
-        this.props.onCreateTopic(undefined, vcard);
+        this.props.onCreateTopic(undefined, vcard(name, dataUrl));
       },
       render: function() {
         return (
@@ -1026,8 +1166,117 @@
         );
       }
     });
-
     /* END Create new topic and invite users or send an invite */
+
+    /* BEGIN InfoView: panel with topic/user info */
+    var InfoView = React.createClass({
+      getInitialState: function() {
+        return {
+          updated: false,
+          address: null,
+          fullName: undefined,
+          avatar: null,
+          private: null
+        };
+      },
+      componentWillMount: function() {
+        var topic = Tinode.getTopic(this.props.topic);
+        if (!topic) {
+          return;
+        }
+
+        topic.onMetaDesc = this.onMetaDesc;
+        var defacs = topic.getDefaultAccess() || {};
+        this.setState({
+          fullName: topic.public ? topic.public.fn : undefined,
+          avatar: makeImageUrl(topic.public ? topic.public.photo : null),
+          private: topic.private,
+          address: topic.name,
+          auth: defacs.auth,
+          anon: defacs.anon
+        });
+      },
+      componentWillUnmount: function() {
+        var topic = Tinode.getTopic(this.props.topic);
+        if (!topic) {
+          return;
+        }
+        topic.onMetaDesc = undefined;
+      },
+
+      onMetaDesc: function(desc) {
+        // Update form with changed values
+      },
+
+      handleFullNameUpdate: function(fn) {
+        this.setState({updated: true, fullName: fn});
+      },
+      handlePrivateUpdate: function(priv) {
+        this.setState({updated: true, private: priv});
+      },
+      handleImageChanged: function(img) {
+        this.setState({updated: true, avatar: img});
+      },
+
+      handleSubmit: function(e) {
+        e.preventDefault();
+        if (this.state.updated) {
+          this.props.onSubmit(this.props.topic,
+            vcard(this.state.fullName,this.state.avatar),
+            this.state.private);
+        }
+      },
+
+      render: function() {
+        return (
+          <div id="info-view">
+            <div className="caption-panel" id="info-caption-panel">
+              <div className="panel-title" id="info-title">Info</div>
+              <div>
+                <MenuCancel onCancel={this.props.onCancel} />
+              </div>
+            </div>
+            <form id="edit-account" className="panel-form" onSubmit={this.handleSubmit}>
+              <div className="panel-form-one">
+                <div className="panel-form-two">
+                  <div><label className="small">Name</label></div>
+                  <div><InPlaceEdit
+                      placeholder="Group name"
+                      text={this.state.fullName}
+                      onFinished={this.handleFullNameUpdate} /></div>
+                  <div><label className="small">Private comment</label></div>
+                  <div><InPlaceEdit
+                      placeholder="Visible to you only"
+                      text={this.state.private}
+                      onFinished={this.handlePrivateUpdate} /></div>
+                </div>
+                <AvatarUpload
+                  avatar={this.state.avatar}
+                  onImageChanged={this.handleImageChanged} />
+              </div>
+              <hr />
+              <br />
+              <div>
+                <div>Address: <tt>{this.state.address}</tt></div>
+                {this.state.auth || this.state.anon ?
+                  <div>
+                    <div>Default access mode:</div>
+                    <div>&nbsp;&nbsp;Auth: <tt>{this.state.auth}</tt></div>
+                    <div>&nbsp;&nbsp;Anon: <tt>{this.state.anon}</tt></div>
+                  </div>
+                  :
+                  null
+                }
+              </div>
+              <div className="dialog-buttons">
+                <button className="blue" type="submit">Update</button>
+              </div>
+            </form>
+          </div>
+        );
+      }
+    });
+    /* END InfoView */
 
     /* BEGIN Conversation panel */
     var Received = {
@@ -1132,6 +1381,7 @@
           // Unbind the previous topic from this component.
           if (this.state.topic) {
             var oldTopic = Tinode.getTopic(this.state.topic);
+            oldTopic.leave(false);
             oldTopic.onData = undefined;
             oldTopic.onInfo = undefined;
             oldTopic.onMetaDesc = undefined;
@@ -1269,9 +1519,9 @@
           var avatar = this.state.avatar || true;
           component = (
             <div id="topic-view" className={this.props.hideSelf ? 'nodisplay' : null}>
-              <div id="topic-caption-panel">
+              <div id="topic-caption-panel" className="caption-panel">
                 {this.props.displayMobile ?
-                  <a href="#" id="hide-message-view" onClick={this.props.onHideMessageView}>
+                  <a href="#" id="hide-message-view" onClick={this.props.onHideMessagesView}>
                     <i className="material-icons big">arrow_back</i>
                   </a>
                   :
@@ -1287,7 +1537,7 @@
                   <div id="topic-title" className="panel-title">{this.state.title}</div>
                   <div id="topic-last-seen">{lastSeen}</div>
                 </div>
-                <div id="topic-users">users online and menu buttons</div>
+                <div id="topic-users"></div>
                 <div>
                   <a href="#" onClick={this.handleContextClick}>
                     <i className="material-icons big">more_vert</i>
@@ -1438,6 +1688,7 @@
           loginDisabled: false,
           subscriptions: {},
           displayMobile: (window.innerWidth <= MEDIA_BREAKPOINT),
+          showInfoPanel: false,
           mobilePanel: 'sidepanel',
           contextMenuVisible: false,
           contextMenuBounds: null,
@@ -1534,6 +1785,7 @@
           topicSelected: '',
           loginDisabled: false,
           subscriptions: {},
+          showInfoPanel: false,
           mobilePanel: 'sidepanel',
           contextMenuVisible: false,
           contextMenuBounds: null,
@@ -1561,14 +1813,22 @@
       handleTopicSelected: function(topicName) {
         if (topicName) {
           // Contact selected
-          this.setState({topicSelected: topicName, mobilePanel: 'topic-view'});
+          this.setState({
+            topicSelected: topicName,
+            mobilePanel: 'topic-view',
+            showInfoPanel: false
+          });
         } else {
           // Currently selected contact deleted
-          this.setState({topicSelected: null, mobilePanel: 'sidepanel'});
+          this.setState({
+            topicSelected: null,
+            mobilePanel: 'sidepanel',
+            showInfoPanel: false
+          });
         }
       },
       // In mobile view user requested to show sidepanel
-      handleHideMessageView: function() {
+      handleHideMessagesView: function() {
         this.setState({mobilePanel: 'sidepanel'});
       },
       // User clicked on a message send button.
@@ -1585,8 +1845,8 @@
         var instance = this;
         Tinode.connect(this.state.serverAddress)
           .then(function() {
-            return Tinode.createUserBasic(login_, password_,
-              {login: "basic", public: public_, private: private_});
+            return Tinode.createAccountBasic(login_, password_,
+              {login: true, public: public_, private: private_});
           })
           .then(function() {
             instance.handleLoginSuccessful(instance);
@@ -1594,6 +1854,15 @@
           .catch(function(err) {
             instance.setState({errorText: err.message});
           });
+      },
+
+      handleUpdateAccountRequest: function(password, pub, priv) {
+        this.handleSidepanelCancel();
+        var me = Tinode.getMeTopic();
+        me.setMeta({desc: {public: pub, private: priv}});
+        if (password) {
+          Tinode.updateAccountBasic(null, Tinode.getCurrentLogin(), password);
+        }
       },
       // User chose Settings menu item.
       handleSettings: function() {
@@ -1619,7 +1888,7 @@
         this.setState({sidePanelSelected: 'new-topic'});
       },
       // Create of a new topic. New P2P topic requires peer's name.
-      handleNewTopicRequest: function(peerName, vcard) {
+      handleNewTopicRequest: function(peerName, pub) {
         var instance = this;
 
         // Check if user clicked on an existing connection.
@@ -1635,7 +1904,7 @@
           var params = {get: {desc: {}, data: {}}};
           if (!peerName) {
             params.get.sub = {}; // Fetch subs for grp topics only. Subscriptions for a p2p topic are useless.
-            params.set = {desc: {public: vcard}};
+            params.set = {desc: {public: pub}};
           }
           topic.subscribe(params).then(function() {
             instance.setState({
@@ -1648,6 +1917,11 @@
             instance.setState({errorText: err.message});
           });
         }
+      },
+
+      handleTopicUpdateRequest: function(topicName, pub, priv) {
+        var topic = Tinode.getTopic(topicName);
+        topic.setMeta({desc: {public: pub, private: priv}});
       },
       /** Called when the user enters a contact into the contact search field in the NewAccount panel
         @param query {Array} is an array of contacts to search for
@@ -1710,8 +1984,7 @@
 
         switch (action) {
           case "Info":
-            // TODO(gene): implement topic info
-            console.log("Topic info not implemented");
+            this.handleShowInfoView();
             break;
           case "Clear messages":
             topic.delMessagesAll(false).then(function(){
@@ -1738,7 +2011,12 @@
             break;
         }
       },
-
+      handleShowInfoView: function() {
+        this.setState({showInfoPanel: true});
+      },
+      handleHideInfoView: function() {
+        this.setState({showInfoPanel: false});
+      },
       render: function() {
         return (
           <div id="app-container">
@@ -1776,6 +2054,7 @@
               onSettings={this.handleSettings}
               onLoginRequest={this.handleLoginRequest}
               onCreateAccount={this.handleNewAccountRequest}
+              onUpdateAccount={this.handleUpdateAccountRequest}
               onTopicSelected={this.handleTopicSelected}
               onSearchContacts={this.handleSearchContacts}
               onCreateTopic={this.handleNewTopicRequest}
@@ -1785,7 +2064,7 @@
               showContextMenu={this.handleShowContextMenu} />
 
             <MessagesView
-              onHideMessageView={this.handleHideMessageView}
+              onHideMessagesView={this.handleHideMessagesView}
               displayMobile={this.state.displayMobile}
               hideSelf={(this.state.displayMobile && this.state.mobilePanel !== 'topic-view')}
               topic={this.state.topicSelected}
@@ -1796,6 +2075,15 @@
               showContextMenu={this.handleShowContextMenu}
               sendMessage={this.handleSendMessage} />
 
+            {this.state.showInfoPanel ?
+              <InfoView
+                topic={this.state.topicSelected}
+                onSubmit={this.handleTopicUpdateRequest}
+                onCancel={this.handleHideInfoView}
+                />
+              :
+              null
+            }
           </div>
         );
       }
