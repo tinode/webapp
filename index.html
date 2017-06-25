@@ -225,6 +225,8 @@
         return avatar;
       }
     }
+
+
     /* END Lettertile */
 
     /* BEGIN In-place text editor. Shows text with an icon
@@ -269,6 +271,9 @@
           spanText = this.props.placeholder;
           spanClass += " placeholder";
         }
+        if (spanText.length > 16) {
+          spanText = spanText.substring(0, 16) + "...";
+        }
         return (
           this.state.active ?
             <input type={this.props.type || "text"}
@@ -279,8 +284,9 @@
               onBlur={this.handleEditingFinished}
               autoFocus />
             :
-            <span className={spanClass}
-              onClick={this.handleStartEditing}>{spanText}</span>
+            <span className={spanClass} onClick={this.handleStartEditing}>
+              <span className="content">{spanText}</span>
+            </span>
         );
       }
     });
@@ -518,16 +524,12 @@
     var SettingsView = React.createClass({
       getInitialState: function() {
         return {
-          hostName: this.props.serverAddress,
           transport: "def"
         };
       },
       handleSubmit: function(e) {
         e.preventDefault();
-        this.props.onUpdate(this.state.hostName, this.state.transport);
-      },
-      handleHostNameChange: function(name) {
-        this.setState({hostName: name});
+        this.props.onUpdate(null, this.state.transport);
       },
       handleTransportSelected: function(e) {
         this.setState({transport: e.currentTarget.value});
@@ -550,12 +552,8 @@
         });
         return (
           <form id="settings-form" onSubmit={this.handleSubmit}>
-            <p>This form does not do anything yet</p>
-            <HostSelector
-              serverAddress={this.props.serverAddress}
-              onHostNameChange={this.handleHostNameChange} />
-            <p>Wire transport:</p>
-            <ul>
+            <label className="small">Wire transport:</label>
+            <ul className="quoted">
               {transportOptions}
             </ul>
             <div className="dialog-buttons">
@@ -680,7 +678,6 @@
 
               this.props.state === 'settings' ?
               <SettingsView onCancel={this.props.onCancel}
-                serverAddress={this.props.serverAddress}
                 onUpdate={this.props.onConnectionSettings}
                 /> :
 
@@ -729,7 +726,8 @@
     var EditAccountView = React.createClass({
       getInitialState: function() {
         return {
-          updated: false,
+          updatedDesc: false,
+          updatedPasswd: false,
           address: null,
           fullName: undefined,
           avatar: null,
@@ -760,20 +758,21 @@
       },
 
       handleFullNameUpdate: function(fn) {
-        this.setState({updated: true, fullName: fn});
+        this.setState({updatedDesc: true, fullName: fn});
       },
       handlePasswordUpdate: function(pwd) {
-        this.setState({updated: true, password: pwd});
+        this.setState({updatedPasswd: true, password: pwd});
       },
       handleImageChanged: function(img) {
-        this.setState({updated: true, avatar: img});
+        this.setState({updatedDesc: true, avatar: img});
       },
 
       handleSubmit: function(e) {
         e.preventDefault();
-        if (this.state.updated) {
-          this.props.onSubmit(this.state.password,
-            vcard(this.state.fullName, this.state.avatar));
+        if (this.state.updatedDesc || this.state.updatedPasswd) {
+          this.props.onSubmit(
+            this.state.updatedPasswd ? this.state.password : null,
+            this.state.updatedDesc ? vcard(this.state.fullName, this.state.avatar) : null);
         }
       },
 
@@ -797,15 +796,15 @@
                 avatar={this.state.avatar}
                 onImageChanged={this.handleImageChanged} />
             </div>
-            <br />
-            <hr />
-            <br />
             <div>
               <div>Login: <tt>{this.state.login}</tt></div>
               <div>Address: <tt>{this.state.address}</tt></div>
-              <div>Default access mode:</div>
-              <div>&nbsp;&nbsp;Auth: <tt>{this.state.auth}</tt></div>
-              <div>&nbsp;&nbsp;Anon: <tt>{this.state.anon}</tt></div>
+
+              <div><label className="small">Default access mode:</label></div>
+              <div className="quoted">
+                <div>Auth: <tt>{this.state.auth}</tt></div>
+                <div>Anon: <tt>{this.state.anon}</tt></div>
+              </div>
             </div>
             <div className="dialog-buttons">
               <button className="blue" type="submit">Update</button>
@@ -1172,6 +1171,7 @@
     var InfoView = React.createClass({
       getInitialState: function() {
         return {
+          owner: false,
           updated: false,
           address: null,
           fullName: undefined,
@@ -1187,7 +1187,9 @@
 
         topic.onMetaDesc = this.onMetaDesc;
         var defacs = topic.getDefaultAccess() || {};
+        var acs = topic.getAccessMode();
         this.setState({
+          owner: acs && acs.isOwner(),
           fullName: topic.public ? topic.public.fn : undefined,
           avatar: makeImageUrl(topic.public ? topic.public.photo : null),
           private: topic.private,
@@ -1242,6 +1244,7 @@
                   <div><label className="small">Name</label></div>
                   <div><InPlaceEdit
                       placeholder="Group name"
+                      readOnly={!this.state.owner}
                       text={this.state.fullName}
                       onFinished={this.handleFullNameUpdate} /></div>
                   <div><label className="small">Private comment</label></div>
@@ -1254,15 +1257,15 @@
                   avatar={this.state.avatar}
                   onImageChanged={this.handleImageChanged} />
               </div>
-              <hr />
-              <br />
               <div>
                 <div>Address: <tt>{this.state.address}</tt></div>
                 {this.state.auth || this.state.anon ?
                   <div>
-                    <div>Default access mode:</div>
-                    <div>&nbsp;&nbsp;Auth: <tt>{this.state.auth}</tt></div>
-                    <div>&nbsp;&nbsp;Anon: <tt>{this.state.anon}</tt></div>
+                    <div><label className="small">Default access mode:</label></div>
+                    <div className="quoted">
+                      <div>Auth: <tt>{this.state.auth}</tt></div>
+                      <div>Anon: <tt>{this.state.anon}</tt></div>
+                    </div>
                   </div>
                   :
                   null
@@ -1526,13 +1529,11 @@
                   </a>
                   :
                   null}
-                {this.props.displayMobile ?
-                  <div className="avatar-box">
-                    <LetterTile avatar={avatar}
-                      topic={this.state.topic} title={this.state.title} />
-                    <span className="online" />
-                  </div>
-                  : null}
+                <div className="avatar-box">
+                  <LetterTile avatar={avatar}
+                    topic={this.state.topic} title={this.state.title} />
+                  <span className="online" />
+                </div>
                 <div id="topic-title-group">
                   <div id="topic-title" className="panel-title">{this.state.title}</div>
                   <div id="topic-last-seen">{lastSeen}</div>
@@ -1858,8 +1859,9 @@
 
       handleUpdateAccountRequest: function(password, pub, priv) {
         this.handleSidepanelCancel();
-        var me = Tinode.getMeTopic();
-        me.setMeta({desc: {public: pub, private: priv}});
+        if (pub || priv) {
+          Tinode.getMeTopic().setMeta({desc: {public: pub, private: priv}});
+        }
         if (password) {
           Tinode.updateAccountBasic(null, Tinode.getCurrentLogin(), password);
         }
@@ -2066,7 +2068,8 @@
             <MessagesView
               onHideMessagesView={this.handleHideMessagesView}
               displayMobile={this.state.displayMobile}
-              hideSelf={(this.state.displayMobile && this.state.mobilePanel !== 'topic-view')}
+              hideSelf={(this.state.displayMobile &&
+                (this.state.mobilePanel !== 'topic-view' || this.state.showInfoPanel))}
               topic={this.state.topicSelected}
               myUserId={this.state.myUserId}
               serverVersion={this.state.serverVersion}

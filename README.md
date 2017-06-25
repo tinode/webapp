@@ -14,17 +14,27 @@ Photos from https://www.pexels.com/ under [CC0 license](https://www.pexels.com/p
 
 Background pattern from http://subtlepatterns.com/, commercial and non-commercial use allowed with attribution.
 
+## Missing functionality
+
+* Cannot manage group members.
+* Editing chat parameters is incomplete and buggy.
+* Cannot send images or other media.
+* No typing indicators.
+* No indicators of chat status (muted, blocked, etc.).
+* Long polling as a wire transport does not work.
+* Browser push notifications are missing.
+* No encryption.
+
 ## Responsive design
 
 ### Desktop
 
 <p align="center">
-  <img src="web-desktop.png" alt="Desktop web: full app" width=540 />
+  <img src="web-desktop.png" alt="Desktop web: full app" width=866 />
 </p>
 
 ### Mobile
 
-<p align="center" nowrap>
-  <img src="web-mobile-contacts.png" alt="Mobile web: contacts" width=401 />
-  <img src="web-mobile-chat.png" alt="Mobile web: chat" width=485 />
+<p align="center">
+  <img src="web-mob-contacts.png" alt="Mobile web: contacts" width=323 /> <img src="web-mob-chat.png" alt="Mobile web: chat" width=323 /> <img src="web-mob-topicinfo.png" alt="Mobile web: topic info" width=323 />
 </p>

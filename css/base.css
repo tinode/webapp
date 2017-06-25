@@ -22,11 +22,6 @@ tt {
   font-family: Roboto Mono, monospace;
 }
 
-hr {
-  height: 1px;
-  color: #666;
-}
-
 a {
   color: #2196f3;
   text-decoration: none;
@@ -78,8 +73,8 @@ button {
   cursor: pointer;
   border: 1px solid transparent;
   white-space: nowrap;
-  padding-left: 2em;
-  padding-right: 2em;
+  padding-left: 2rem;
+  padding-right: 2rem;
   border-radius: 2px;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.25);
   text-transform: uppercase;
@@ -256,8 +251,10 @@ ul.menu > li.separator:hover {
   position: relative;
   display: flex;
   flex-direction: column;
+  flex-grow: 0.3;
+  flex-shrink: 0.3;
   width: 24rem;
-  min-width: 24rem;
+  min-width: 18rem;
   height: 100%;
 }
 
@@ -271,8 +268,10 @@ ul.menu > li.separator:hover {
 #info-view {
   display: flex;
   flex-direction: column;
+  flex-grow: 0.3;
+  flex-shrink: 0.3;
   width: 24rem;
-  min-width: 24rem;
+  min-width: 18rem;
   height: 100%;
 }
 
@@ -285,6 +284,8 @@ ul.menu > li.separator:hover {
 @media (max-width: 640px) {
   #app-container {
     width: 100%;
+    border-radius: 0;
+    box-shadow: none;
   }
 
   #sidepanel {
@@ -312,6 +313,11 @@ ul.menu > li.separator:hover {
   display: none!important;
 }
 
+/* Quoted div */
+.quoted {
+  padding-left: 1.5rem;
+}
+
 /* BEGIN InPlaceEdit styles */
 .in-place-edit {
   display: inline-block;
@@ -320,12 +326,10 @@ ul.menu > li.separator:hover {
   height: 2.5rem;
   line-height: 1.5;
   margin: 0.25rem 0.125rem;
-  -x-padding: 0 0.125rem;
   width: 100%;
   vertical-align: baseline;
   border-bottom: 1px dashed #ddd;
   cursor: pointer;
-  overflow: hidden;
 }
 
 .in-place-edit.disabled {
@@ -337,6 +341,12 @@ ul.menu > li.separator:hover {
   color: #bbb;
 }
 
+.in-place-edit .content {
+  display: block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden
+}
 /* END of InPlaceEdit styles */
 
 /* END of top-level layout */
@@ -350,8 +360,8 @@ ul.menu > li.separator:hover {
   display: flex;
   align-items: center;
   flex: none;
-  padding: 0.5em;
-  height: 4em;
+  padding: 0.5rem;
+  height: 4rem;
 
   box-shadow: 0 1px 2px gray;
   z-index: 1; /* otherwise the shadow becomes invisible */
@@ -359,7 +369,7 @@ ul.menu > li.separator:hover {
 
 .dialog-buttons {
   display: flex;
-  padding: 0.5em;
+  padding: 0.5rem;
   justify-content: flex-end;
 }
 
@@ -385,7 +395,7 @@ ul.menu > li.separator:hover {
 
 #sidepanel-title {
   margin-right: auto;
-  margin-left: 0.5em;
+  margin-left: 0.5rem;
 }
 
 #self-avatar {
@@ -421,7 +431,7 @@ ul.menu > li.separator:hover {
   overflow: hidden;
 }
 #alert-box.error-alert {
-  padding: 0.5em;
+  padding: 0.5rem;
   background-color: #ffcdd2;
   border-color: #d32f2f;
   color: #b71c1c;
@@ -484,6 +494,7 @@ ul.menu > li.separator:hover {
   width: 3rem;
   min-width: 3rem;
   height: 3rem;
+  min-height: 3rem;
   font-size: 1.8rem;
   overflow: hidden;
   padding: 0;
@@ -503,7 +514,10 @@ ul.menu > li.separator:hover {
 .contact-box .online, .offline {
   display: inline-block;
   width: 0.75rem;
+  min-width: 0.75rem;
   height: 0.75rem;
+  min-height: 0.75rem;
+  flex-shrink: 0;
   border-radius: 50%;
   position: absolute;
   right: 0;
@@ -519,8 +533,8 @@ ul.menu > li.separator:hover {
 
 #add-topic {
   position: absolute;
-  right: 1em;
-  bottom: 1em;
+  right: 1rem;
+  bottom: 1rem;
 }
 
 /* Various forms inside a panel (signup form, new topic form) */
@@ -544,15 +558,21 @@ ul.menu > li.separator:hover {
 
 /* Styling of avatar upload area in the New Account panel */
 .avatar-upload {
-  position: relative;
-  text-align: center;
-  vertical-align: middle;
+  display: flex;
+  flex-direction: column;
   flex-shrink: 0;
   width: 7rem;
-  height: 7rem;
+  height: 9rem;
   margin-left: 0.5rem;
   padding: 0;
-  border-radius: 50%;
+}
+/* Clearfix */
+.avatar-upload:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
 }
 
 .avatar-upload .blank {
@@ -560,6 +580,7 @@ ul.menu > li.separator:hover {
   vertical-align: middle;
   border: 1px dashed #999;
   font-size: 1rem;
+  flex-shrink: 0;
   width: 7rem;
   height: 7rem;
   overflow: hidden;
@@ -584,18 +605,19 @@ ul.menu > li.separator:hover {
 }
 
 .avatar-upload .inputfile + label.round {
-  display: inline-block;
-  vertical-align: middle;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   width: 3rem;
   height: 3rem;
-  line-height: 4rem;
+  line-height: 3rem;
   border-radius: 50%;
   box-shadow: 0 1px 4px rgba(0,0,0,0.4);
-  position: absolute;
-  top: 6rem;
-  left: 2rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: -1rem;
+  bottom: 0;
   background-color: #fafafa;
 }
 
@@ -724,7 +746,7 @@ ul.menu > li.separator:hover {
 
 .chat-box li.single {
   margin-top: 0.25rem;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.75rem;
 }
 
 .chat-box li.first {
@@ -739,7 +761,7 @@ ul.menu > li.separator:hover {
 
 .chat-box li.last {
   margin-top: 0.15rem;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.75rem;
 }
 
 .chat-box .left .bubble {
@@ -819,7 +841,7 @@ ul.menu > li.separator:hover {
   font-size: 80%;
   color: #777;
   padding-left: 1rem;
-  top: 0.5em;
+  top: 0.5rem;
   float: right;
   white-space: nowrap;
 }
@@ -980,15 +1002,17 @@ ul.tabbar li.active > a:after {
 /* Badge with the number of unread messages */
 .badge {
   display: inline-block;
-  font-size: 0.8rem;
-  font-weight: bold;
+  font-size: 0.75rem;
+  font-weight: bolder;
   background-color: #0097A7;
   color: white;
-  border-radius: 1em;
-  padding: 0.25em;
-  min-width: 1.75em;
+  border-radius: 50%;
+  padding: 0.25rem;
+  min-width: 1.4rem;
   margin-left: 0.5rem;
+  line-height: 1;
   text-align: center;
+  vertical-align: middle;
 }
 
 /* Color of buttons */
