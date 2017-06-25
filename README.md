@@ -27,14 +27,14 @@ Background pattern from http://subtlepatterns.com/, commercial and non-commercia
 
 ## Responsive design
 
-### Desktop
+### Desktop screenshot
 
 <p align="center">
   <img src="web-desktop.png" alt="Desktop web: full app" width=866 />
 </p>
 
-### Mobile
+### Mobile screenshots
 
 <p align="center">
-  <img src="web-mob-contacts.png" alt="Mobile web: contacts" width="30%" /> <img src="web-mob-chat.png" alt="Mobile web: chat" width="30%" /> <img src="web-mob-topicinfo.png" alt="Mobile web: topic info" width="30%" />
+  <img src="web-mob-contacts.png" alt="Mobile web: contacts" width=323 /> <img src="web-mob-chat.png" alt="Mobile web: chat" width=323 /> <img src="web-mob-topicinfo.png" alt="Mobile web: topic info" width=323 />
 </p>
