@@ -461,6 +461,7 @@ ul.menu > li.separator:hover {
   display: flex;
   padding: 0.35rem 0.25rem 0.5rem 0.35rem;
   min-height: 3.5rem;
+  border-bottom: 1px solid #eee;
 }
 .contact-box > li:hover {
   background-color: #eceff1; /* blue-gray 50 highlight */
@@ -1044,6 +1045,10 @@ ul.tabbar li.active > a:after {
   color: rgba(250, 250, 250, 0.8); /* default text color #FAFAFA, gray 50 */
 }
 
+.lettertile:hover {
+  color: white;
+}
+
 /* Colors of letter tiles */
 .lettertile.color0 {
   background-color: #ef9a9a;
@@ -1073,7 +1078,7 @@ ul.tabbar li.active > a:after {
   background-color: #c5e1a5;
 }
 .lettertile.color9 {
-  background-color: #fff59d;
+  background-color: #f0e57d;
 }
 .lettertile.color10 {
   background-color: #f48fb1;
@@ -1160,4 +1165,14 @@ ul.tabbar li.active > a:after {
   color: rgba(250, 250, 250, 0.8); /* #fafafa, gray 50 */
   background-color: #c0c0c0;
   border-radius: 50%;
+}
+
+.chip {
+  display: inline-block;
+  background-color: white;
+  height: 2rem;
+  line-height: 2;
+  border-radius: 1rem;
+  padding: 0 1rem;
+  background-color: #ccc;
 }

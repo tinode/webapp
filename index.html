@@ -885,6 +885,11 @@
 
     /* ContactsView holds all contacts-related stuff */
     var ContactsView = React.createClass({
+      getInitialState: function() {
+        return {
+          contactList: this.prepareContactList()
+        };
+      },
       componentWillMount: function() {
         var me = Tinode.getMeTopic();
         me.onContactUpdate = this.tnMeContactUpdate;
@@ -900,13 +905,13 @@
       // Reactions to updates to the contact list.
       tnMeContactUpdate: function(what, cont) {
         if (what === "on" || what === "off" || what === "read") {
-          this.forceUpdate();
+          this.resetContactList();
         } else if (what === "msg") {
           // New message received
 
           // Skip update if the topic is currently open, otherwise the badge will annoyingly flash.
           if (this.props.topicSelected !== cont.topic) {
-            this.forceUpdate();
+            this.resetContactList();
           }
         } else if (what === "recv") {
           // Explicitly ignoring "recv" -- it causes no visible updates to contact list.
@@ -918,7 +923,7 @@
             this.props.onTopicSelected(null);
           }
           // Redraw without the deleted topic.
-          this.forceUpdate();
+          this.resetContactList();
         } else {
           // TODO(gene): handle other types of notifications:
           // * ua -- user agent changes (may display a pictogram for mobile/desktop)
@@ -927,34 +932,68 @@
           console.log("changed (not updating for it): " + what + " in: " + cont.topic);
         }
       },
+
       tnInvite: function(invite) {
         // TODO(gene): implement invite handling
         console.log("Got invite:");
         console.log(invite);
       },
+
       tnMeSubsUpdated: function(names) {
-        this.forceUpdate();
+        this.resetContactList();
       },
+
+      prepareContactList: function() {
+        var contacts = [];
+        Tinode.getMeTopic().contacts(function(c) {
+          c.unread = c.seq;
+          if (c.read > 0) {
+            c.unread -= c.read;
+          }
+          contacts.push(c);
+        }, this);
+
+        return contacts;
+      },
+
+      resetContactList: function() {
+        this.setState({contactList: this.prepareContactList()});
+      },
+
+      render: function() {
+        return (
+          <ContactList
+            contacts={this.state.contactList}
+            emptyListMessage={<span>You have no chats<br />¯\_(ツ)_/¯</span>}
+            topicSelected={this.props.topicSelected}
+            onTopicSelected={this.props.onTopicSelected}
+            showContextMenu={this.props.showContextMenu} />
+        );
+      }
+    });
+    /* END Contact list */
+
+    /* BEGIN ContactList: component for showing a list of contacts,
+     * such as a list of group members group chat */
+    var ContactList = React.createClass({
       render: function() {
         var contactNodes = [];
-        Tinode.getMeTopic().contacts(function(c) {
-          var unread = c.seq;
-          if (c.read > 0) {
-            unread -= c.read;
-          }
-          contactNodes.push(
-            <Contact
-              title={c.public ? c.public.fn : null}
-              avatar={makeImageUrl(c.public ? c.public.photo : null)}
-              comment={c.private}
-              unread={unread} now={c.online}
-              selected={this.props.topicSelected}
-              onSelected={this.props.onTopicSelected}
-              showContextMenu={this.props.showContextMenu}
-              topic={c.topic}
-              key={c.topic} />
-          );
-        }, this);
+        if (this.props.contacts && this.props.contacts.length > 0) {
+          this.props.contacts.map(function(c) {
+            contactNodes.push(
+              <Contact
+                title={c.public ? c.public.fn : null}
+                avatar={makeImageUrl(c.public ? c.public.photo : null)}
+                comment={c.private}
+                unread={c.unread} now={c.online}
+                selected={this.props.topicSelected}
+                onSelected={this.props.onTopicSelected}
+                showContextMenu={this.props.showContextMenu}
+                topic={c.topic}
+                key={c.topic} />
+            );
+          }, this);
+        }
 
         return (
           <div className="contacts-panel">
@@ -963,14 +1002,14 @@
                 {contactNodes}
               </ul>
               :
-              <p className="center-medium-text">
-                You have no chats<br />¯\_(ツ)_/¯
-              </p>}
+              <div className="center-medium-text">
+                {this.props.emptyListMessage}
+              </div>}
           </div>
         );
       }
     });
-    /* END Contact list */
+    /* END ContactList */
 
     /* BEGIN Create new topic and invite users or send an invite */
     var NewTopicView = React.createClass({
