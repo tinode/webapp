@@ -40,14 +40,15 @@ a:focus {
 form {
   font-size: 1.1rem;
   padding: 0.5rem 0.75rem;
-  line-height: 1.75;
+  line-height: 1.5;
 }
 
-form label {
+label {
   font-size: 1.1rem;
+  margin-right: auto;
 }
 
-form label.small {
+label.small {
   color: #1e88e5;
   font-size: 0.95rem;
 }
@@ -251,7 +252,7 @@ ul.menu > li.separator:hover {
   position: relative;
   display: flex;
   flex-direction: column;
-  flex-grow: 0.3;
+  flex-grow: 0;
   flex-shrink: 0.3;
   width: 24rem;
   min-width: 18rem;
@@ -268,7 +269,7 @@ ul.menu > li.separator:hover {
 #info-view {
   display: flex;
   flex-direction: column;
-  flex-grow: 0.3;
+  flex-grow: 0;
   flex-shrink: 0.3;
   width: 24rem;
   min-width: 18rem;
@@ -461,6 +462,8 @@ ul.menu > li.separator:hover {
   display: flex;
   padding: 0.35rem 0.25rem 0.5rem 0.35rem;
   min-height: 3.5rem;
+  flex-grow: 0;
+  flex-shrink: 0;
   border-bottom: 1px solid #eee;
 }
 .contact-box > li:hover {
@@ -544,20 +547,35 @@ ul.menu > li.separator:hover {
   flex-direction: column;
 }
 
-.panel-form-one {
+.panel-form-row {
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  padding: 0.5rem 0.75rem;
+  line-height: 1.5;
+  flex-grow: 0;
+  flex-shrink: 0;
 }
 
-.panel-form-two {
+.panel-form-column {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  flex-grow: 0;
+  flex-shrink: 0;
+  padding: 0.5rem 0.75rem;
+  line-height: 1.5;
+}
+/* Make sure padding is only applied at
+   the top level panel */
+.panel-form-row > .panel-form-column {
+    padding: 0!important;
+    flex-grow: 1;
+}
+.panel-form-column > .panel-form-row {
+    padding: 0!important;
 }
 
-
-/* Styling of avatar upload area in the New Account panel */
+/* Styling of avatar upload control */
 .avatar-upload {
   display: flex;
   flex-direction: column;
@@ -565,6 +583,7 @@ ul.menu > li.separator:hover {
   width: 7rem;
   height: 9rem;
   margin-left: 0.5rem;
+  font-size: 4.5rem;
   padding: 0;
 }
 /* Clearfix */
