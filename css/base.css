@@ -37,6 +37,29 @@ a:focus {
   outline-offset: -2px;
 }
 
+a.red:hover,
+a.red:focus {
+  color: #F44336;
+}
+
+a.flat-button {
+  display: flex;
+  align-items: center;
+  margin: 0.15rem 0.35rem;
+  height: 2em;
+  line-height: 2em;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+a.flat-button:hover,
+a.flat-button:focus {
+  text-decoration: none;
+}
+
 form {
   font-size: 1.1rem;
   padding: 0.5rem 0.75rem;
@@ -225,6 +248,16 @@ ul.menu > li.separator:hover {
   background-color: #ccc;
 }
 /* END popup/dropdown menu */
+
+/* Generic text colors */
+.blue {
+  color: #2196f3; /* blue 500 */
+}
+
+.red {
+  color: #D32F2F; /* red 700 */
+}
+/* END generic text colors */
 
 /* END of basic elements */
 
@@ -447,9 +480,9 @@ ul.menu > li.separator:hover {
   overflow: hidden;
 }
 
-.contacts-panel {
+.scrollable-panel {
   overflow-y: auto;
-  margin-top: 1rem;:
+  margin-top: 0.25rem;
   margin-bottom: auto;
   height: 100%;
 }
@@ -1035,11 +1068,6 @@ ul.tabbar li.active > a:after {
   vertical-align: middle;
 }
 
-/* Color of buttons */
-.blue {
-  color: #2196f3; /* blue 500 */
-}
-
 /* Letter tile base style, responsive square box */
 .lettertile {
   width: 100%;
@@ -1178,7 +1206,7 @@ ul.tabbar li.active > a:after {
 }
 
 #self-avatar.material-icons, .avatar-box .material-icons {
-  font-size: 3rem;
+  font-size: 2.4rem;
 }
 .avatar-box .material-icons {
   color: rgba(250, 250, 250, 0.8); /* #fafafa, gray 50 */

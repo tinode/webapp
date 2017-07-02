@@ -262,7 +262,8 @@
       handleEditingFinished: function() {
         this.setState({active: false});
         var text = this.state.text.trim();
-        if (text !== this.props.text) {
+        if ((text || this.props.text) && (text !== this.props.text)) {
+          console.log("'" + text + "' != '" + this.props.text + "'");
           this.props.onFinished(text);
         }
       },
@@ -452,7 +453,7 @@
           submitClasses += " disabled";
         }
         return (
-          <form className="panel-form" onSubmit={this.handleSubmit}>
+          <div className="panel-form">
             <div className="panel-form-row">
               <div className="panel-form-column">
                 <input type="text" placeholder="Login"
@@ -464,12 +465,14 @@
               </div>
               <AvatarUpload onImageChanged={this.handleImageChanged} />
             </div>
-            <input type="text" placeholder="Full name, e.g. John Doe"
-              value={this.state.fn} onChange={this.handleFnChange} />
-            <div className="dialog-buttons">
-              <button className={submitClasses} type="submit">Sign up</button>
+            <div  className="panel-form-row">
+              <input type="text" placeholder="Full name, e.g. John Doe"
+                value={this.state.fn} onChange={this.handleFnChange} />
             </div>
-          </form>
+            <div className="dialog-buttons">
+              <button className={submitClasses} onClick={this.handleSubmit}>Sign up</button>
+            </div>
+          </div>
         );
       }
     });
@@ -841,11 +844,10 @@
         } else if (title.length > 30) {
           title = title.substring(0, 28) + "...";
         }
-        var selected = (this.props.selected === this.props.topic) ? "selected" : null;
         var online = this.props.now ? "online" : "offline";
         var avatar = this.props.avatar ? this.props.avatar : true;
         return (
-          <li className={selected} onClick={this.handleClick}>
+          <li className={this.props.selected ? "selected" : null} onClick={this.handleClick}>
             <div className="avatar-box">
               <LetterTile
                 avatar={avatar} title={this.props.title} topic={this.props.topic} />
@@ -983,19 +985,37 @@
     var ContactList = React.createClass({
       render: function() {
         var contactNodes = [];
+        var instance = this;
         if (this.props.contacts && this.props.contacts.length > 0) {
           this.props.contacts.map(function(c) {
             var key = c.topic ? c.topic : c.user;
             if (!key) {
               console.log("empty key!");
+              return;
             }
+
+            // If filter function is provided, filter out the items
+            // which don't satisfy the condition.
+            if (instance.props.filterFunc && instance.props.filter {
+              var content = [key];
+              if (c.private) {
+                content.push(c.private);
+              }
+              if (c.public && c.public.fn) {
+                content.push(c.public.fn);
+              }
+              if (!instance.props.filter(instance.props.filter, content)) {
+                return;
+              }
+            }
+
             contactNodes.push(
               <Contact
                 title={c.public ? c.public.fn : null}
                 avatar={makeImageUrl(c.public ? c.public.photo : null)}
                 comment={c.private}
                 unread={c.unread} now={c.online}
-                selected={this.props.topicSelected}
+                selected={this.props.topicSelected === key}
                 showOnline={this.props.showOnline}
                 onSelected={this.props.onTopicSelected}
                 showContextMenu={this.props.showContextMenu}
@@ -1006,7 +1026,7 @@
         }
 
         return (
-          <div className="contacts-panel">
+          <div className={this.props.noScroll ? null : "scrollable-panel"}>
             {contactNodes.length > 0 ?
               <ul className="contact-box">
                 {contactNodes}
@@ -1027,6 +1047,7 @@
         return {
           tabSelected: "p2p",
           searchQuery: '',
+          contactList: [],
           contactSelected: null
         };
       },
@@ -1036,6 +1057,7 @@
         fnd.onMetaDesc = this.fndMetaDesc;
         if (fnd.isSubscribed()) {
           this.setState({searchQuery: fnd.private ? fnd.private.toString() : ''});
+          this.fndSubsUpdated();
         } else {
           fnd.subscribe({get: {sub: {}, desc: {}}});
         }
@@ -1051,8 +1073,12 @@
         }
       },
       fndSubsUpdated: function() {
-        //console.log(keys);
-        this.forceUpdate();
+        var contacts = [];
+        // Don't attempt to create P2P topics which already exist. Server will reject the duplicates.
+        Tinode.getFndTopic().subscribers(function(s) {
+          contacts.push(s);
+        });
+        this.setState({contactList: contacts});
       },
       handleTabClick: function(e) {
         e.preventDefault();
@@ -1086,7 +1112,13 @@
                 <NewTopicView.SearchContacts type="p2p"
                   searchQuery={this.state.searchQuery}
                   onSearchContacts={this.props.onSearchContacts} />
-                <NewTopicView.ContactsList onContactSelected={this.handleContactSelected} type="p2p" />
+                <ContactList
+                  contacts={this.state.contactList}
+                  emptyListMessage="Use search to find contacts"
+                  topicSelected={this.state.selectedContact}
+                  showOnline={false}
+                  showContextMenu={false}
+                  onTopicSelected={this.handleContactSelected} />
               </div>}
           </div>
         );
@@ -1097,11 +1129,15 @@
       getInitialState: function() {
         return {
           fn: '', // full/formatted name
+          private: '',
           imageDataUrl: null
         };
       },
       handleFnChange: function(e) {
         this.setState({fn: e.target.value});
+      },
+      handlePrivateChange: function(e) {
+        this.setState({private: e.target.value});
       },
       handleImageChanged: function(img) {
         this.setState({imageDataUrl: img});
@@ -1109,7 +1145,8 @@
       handleSubmit: function(e) {
         e.preventDefault();
         if (this.state.fn && this.state.fn.trim()) {
-          this.props.onSubmit(this.state.fn.trim(), this.state.imageDataUrl);
+          this.props.onSubmit(this.state.fn.trim(),
+            this.state.imageDataUrl, this.state.private.trim());
         }
       },
       render: function() {
@@ -1118,18 +1155,22 @@
           submitClasses += " disabled";
         }
         return (
-          <form className="panel-form" onSubmit={this.handleSubmit}>
+          <div className="panel-form">
             <div className="panel-form-row">
               <div className="panel-form-column">
-                <input type="text" placeholder="Name of the topic to create"
+                <label className="small" htmlFor="new-topic-fn">Group name</label>
+                <input type="text" id="new-topic-fn" placeholder="Freeform name of the group"
                   value={this.state.fn} onChange={this.handleFnChange} autoFocus required />
-                <div className="dialog-buttons">
-                  <button className={submitClasses} type="submit">Create</button>
-                </div>
+                <label className="small" htmlFor="new-topic-priv">Private comment</label>
+                <input type="text" id="new-topic-priv" placeholder="Visible to you only"
+                  value={this.state.private} onChange={this.handlePrivateChange} />
               </div>
               <AvatarUpload onImageChanged={this.handleImageChanged} />
             </div>
-          </form>
+            <div className="dialog-buttons">
+              <button className={submitClasses} onClick={this.handleSubmit}>Create</button>
+            </div>
+          </div>
         );
       }
     });
@@ -1161,55 +1202,15 @@
       },
       render: function() {
         return (
-          <form className="panel-form" onSubmit={this.handleFindContacts}>
+          <div className="panel-form">
             <div className="panel-form-row">
-            <input type="text" placeholder="Comma separated list: email:alice@example.com, tel:17025550003..."
-              value={this.state.search} onChange={this.handleSearchChange} onKeyPress={this.handleKeyPress} required />
+            <input type="text" placeholder="List like email:alice@example.com, tel:17025550003..."
+              value={this.state.search} onChange={this.handleSearchChange}
+              onKeyPress={this.handleKeyPress} required />
               <a href="#" onClick={this.handleSearch}>
                 <i className="material-icons">search</i>
               </a>
             </div>
-          </form>
-        );
-      }
-    });
-
-    NewTopicView.ContactsList = React.createClass({
-      getInitialState: function() {
-        return {
-          selectedUser: null
-        };
-      },
-      handleSelectionChange: function(sel) {
-        if (this.props.type === "p2p") {
-          this.props.onContactSelected(sel);
-        } else {
-          console.log(sel);
-        }
-      },
-      render: function() {
-        var contactNodes = [];
-        // Don't attempt to create P2P topics which already exist. Server will reject the duplicates.
-        var me = Tinode.getMeTopic();
-        Tinode.getFndTopic().subscribers(function(s) {
-          var cont = me ? me.getContact(s.user) : null;
-          var key = cont ? cont.topic : s.user;
-
-          contactNodes.push(
-            <Contact
-              title={((s.public && s.public.fn) || s.private)}
-              avatar={makeImageUrl(s.public ? s.public.photo : null)}
-              selected={this.state.selectedUser}
-              onSelected={this.handleSelectionChange}
-              topic={key}
-              key={key} />
-          );
-        }, this);
-        return (
-          <div className="contacts-panel">
-            <ul className="contact-box">
-              {contactNodes}
-            </ul>
           </div>
         );
       }
@@ -1228,6 +1229,9 @@
           private: null,
           selectedContact: null,
           muted: undefined,
+          access: null,
+          auth: null,
+          anon: null,
           contactList: []
         };
       },
@@ -1267,14 +1271,17 @@
         var acs = topic.getAccessMode();
         this.setState({
           owner: acs && acs.isOwner(),
+          sharer: acs && (acs.isAdmin() || acs.isSharer()),
+          muted: acs && acs.isMuted(),
+
           fullName: topic.public ? topic.public.fn : undefined,
           avatar: makeImageUrl(topic.public ? topic.public.photo : null),
           private: topic.private,
           address: topic.name,
           groupTopic: (topic.getType() === "grp"),
+          access: acs.getMode(),
           auth: defacs.auth,
-          anon: defacs.anon,
-          muted: acs && acs.isMuted()
+          anon: defacs.anon
         });
       },
 
@@ -1295,24 +1302,28 @@
       },
 
       handleFullNameUpdate: function(fn) {
-        this.setState({fullName: fn});
-        this.props.onSubmit(this.props.topic,
-          vcard(fn, this.state.avatar),
-          null);
+        if (this.state.fullName !== fn) {
+          this.setState({fullName: fn});
+          this.props.onSubmit(this.props.topic,
+            vcard(fn, this.state.avatar),
+            null);
+        }
       },
 
       handlePrivateUpdate: function(priv) {
-        this.setState({private: priv});
-        this.props.onSubmit(this.props.topic,
-          null,
-          priv);
+        if (this.state.priv !== priv) {
+          this.setState({private: priv});
+          this.props.onSubmit(this.props.topic,
+            null,
+            priv);
+        }
       },
 
       handleImageChanged: function(img) {
         this.setState({avatar: img});
         this.props.onSubmit(this.props.topic,
           vcard(this.state.fullName, img),
-          priv);
+          null);
       },
 
       handleMuted: function(e) {
@@ -1321,21 +1332,20 @@
         this.props.onChangePermissions(this.props.topic, checked ? "-P" : "+P");
       },
 
+      handleAddMembers: function() {
+        this.props.onAddMember(this.props.topic);
+      },
+
+      handleLeave: function() {
+        this.props.onLeaveTopic(this.props.topic);
+      },
+
       handleMemberSelected: function(uid) {
         this.setState({selectedContact: uid});
       },
 
       handleContextMenu: function(item) {
         console.log("context menu: " + item);
-      },
-
-      handleSubmit: function(e) {
-        e.preventDefault();
-        if (this.state.updated) {
-          this.props.onSubmit(this.props.topic,
-            vcard(this.state.fullName,this.state.avatar),
-            this.state.private);
-        }
       },
 
       render: function() {
@@ -1347,63 +1357,89 @@
                 <MenuCancel onCancel={this.props.onCancel} />
               </div>
             </div>
-            <div className="panel-form-row">
+            <div id="info-view-content" className="scrollable-panel">
+              <div className="panel-form-row">
+                <div className="panel-form-column">
+                  <div><label className="small">Name</label></div>
+                  <div><InPlaceEdit
+                      placeholder="Group name"
+                      readOnly={!this.state.owner}
+                      text={this.state.fullName}
+                      onFinished={this.handleFullNameUpdate} /></div>
+                  <div><label className="small">Private comment</label></div>
+                  <div><InPlaceEdit
+                      placeholder="Visible to you only"
+                      text={this.state.private}
+                      onFinished={this.handlePrivateUpdate} /></div>
+                </div>
+                <AvatarUpload
+                  avatar={this.state.avatar}
+                  readOnly={!this.state.owner}
+                  uid={this.props.topic}
+                  title={this.state.fullName}
+                  onImageChanged={this.handleImageChanged} />
+              </div>
               <div className="panel-form-column">
-                <div><label className="small">Name</label></div>
-                <div><InPlaceEdit
-                    placeholder="Group name"
-                    readOnly={!this.state.owner}
-                    text={this.state.fullName}
-                    onFinished={this.handleFullNameUpdate} /></div>
-                <div><label className="small">Private comment</label></div>
-                <div><InPlaceEdit
-                    placeholder="Visible to you only"
-                    text={this.state.private}
-                    onFinished={this.handlePrivateUpdate} /></div>
-              </div>
-              <AvatarUpload
-                avatar={this.state.avatar}
-                readOnly={!this.state.owner}
-                uid={this.props.topic}
-                title={this.state.fullName}
-                onImageChanged={this.handleImageChanged} />
-            </div>
-            <div className="panel-form-column">
-              <div className="panel-form-row">
-                <label>Address:</label>
-                <tt>{this.state.address}</tt>
-              </div>
-              <div className="panel-form-row">
-                <label htmlFor="info-muted">Muted:</label>
-                <input id="info-muted" type="checkbox" checked={this.state.muted}
-                    onChange={this.handleMuted} />
-              </div>
-              {this.state.auth || this.state.anon ?
-                <div>
-                  <div><label className="small">Default access mode:</label></div>
-                  <div className="quoted">
-                    <div>Auth: <tt>{this.state.auth}</tt></div>
-                    <div>Anon: <tt>{this.state.anon}</tt></div>
+                <div className="panel-form-row">
+                  <label>Address:</label>
+                  <tt>{this.state.address}</tt>
+                </div>
+                <div className="panel-form-row">
+                  <label>Permissions:</label>
+                  <tt>{this.state.access}</tt>
+                </div>
+                <div className="panel-form-row">
+                  <label htmlFor="info-muted">Muted:</label>
+                  <input id="info-muted" type="checkbox" checked={this.state.muted}
+                      onChange={this.handleMuted} />
+                </div>
+                {this.state.auth || this.state.anon ?
+                  <div>
+                    <div><label className="small">Default access mode:</label></div>
+                    <div className="quoted">
+                      <div>Auth: <tt>{this.state.auth}</tt></div>
+                      <div>Anon: <tt>{this.state.anon}</tt></div>
+                    </div>
                   </div>
+                  :
+                  null
+                }
+              </div>
+              {this.state.groupTopic ?
+                <div className="panel-form-column">
+                  <div className="panel-form-row">
+                    <label className="small">Group members:</label>
+                  </div>
+                  <div className="panel-form-row">
+                    {this.state.sharer ?
+                      <a href="#" className="flat-button" onClick={this.handleAddMembers}>
+                        <i className="material-icons">person_add</i> Add members
+                      </a>
+                      : null}
+                    {!this.state.owner ?
+                      <a href="#" className="red flat-button" onClick={this.handleLeave}>
+                        <i className="material-icons">exit_to_app</i> Leave
+                      </a>
+                      : null}
+                  </div>
+                  <ContactList
+                    contacts={this.state.contactList}
+                    emptyListMessage="No members"
+                    topicSelected={this.state.selectedContact}
+                    showOnline={false}
+                    noScroll={true}
+                    onTopicSelected={this.handleMemberSelected}
+                    showContextMenu={this.handleContextMenu}
+                  />
                 </div>
                 :
-                null
+                <div className="panel-form-row">
+                  <a href="#" className="red flat-button" onClick={this.handleLeave}>
+                    <i className="material-icons">exit_to_app</i> Leave
+                  </a>
+                </div>
               }
             </div>
-            {this.state.groupTopic ?
-              <div className="panel-form-row">
-                <label className="small">Group members:</label>
-              </div> : null}
-            {this.state.groupTopic ?
-              <ContactList
-                contacts={this.state.contactList}
-                emptyListMessage="No members"
-                topicSelected={this.state.selectedContact}
-                showOnline={false}
-                onTopicSelected={this.handleMemberSelected}
-                showContextMenu={this.handleContextMenu}
-              />
-            : null}
           </div>
         );
       }
@@ -2027,7 +2063,8 @@
             errorText: '',
             topicSelected: peerName,
             sidePanelSelected: 'contacts',
-            mobilePanel: 'topic-view'
+            mobilePanel: 'topic-view',
+            showInfoPanel: false
           });
         } else {
           var topic = peerName ? Tinode.newTopicWith(peerName) : Tinode.newTopic();
@@ -2041,7 +2078,8 @@
               errorText: '',
               topicSelected: topic.name,
               sidePanelSelected: 'contacts',
-              mobilePanel: 'topic-view'
+              mobilePanel: 'topic-view',
+              showInfoPanel: false
             });
           }).catch(function(err) {
             instance.setState({errorText: err.message});
@@ -2049,20 +2087,36 @@
         }
       },
 
+      handleManageGroupMembers: function(topicName) {
+        // FIXME(gene): launch group member manager
+      },
+
       handleTopicUpdateRequest: function(topicName, pub, priv) {
         var topic = Tinode.getTopic(topicName);
-        topic.setMeta({desc: {public: pub, private: priv}});
+        if (topic) {
+          topic.setMeta({desc: {public: pub, private: priv}});
+        }
       },
 
       handleChangePermissions: function(topicName, want) {
         var topic = Tinode.getTopic(topicName);
+        if (topic) {
+          var am = topic.getAccessMode();
+          am.updateWant(want);
+          topic.setMeta({sub: {mode: am.getWant()}});
+        }
+      },
+
+      handleLeaveUnsubRequest: function(topicName) {
+        var topic = Tinode.getTopic(topicName);
         if (!topic) {
           return;
         }
-
-        var am = topic.getAccessMode();
-        am.updateWant(want);
-        topic.setMeta({sub: {mode: am.getWant()}});
+        var instance = this;
+        topic.leave(true).then(function(ctrl) {
+          // Hide MessageView and InfoView panels.
+          instance.setState({topicSelected: '', showInfoPanel: false});
+        });
       },
 
       /** Called when the user enters a contact into the contact search field in the NewAccount panel
@@ -2070,7 +2124,7 @@
        */
       handleSearchContacts: function(query) {
           var find = Tinode.getFndTopic();
-          find.setMeta({desc: {private: query}}).then(function() {
+          find.setMeta({desc: {private: query}}).then(function(ctrl) {
             find.getMeta({sub: {}, desc: {}});
           });
       },
@@ -2224,6 +2278,8 @@
                 onSubmit={this.handleTopicUpdateRequest}
                 onCancel={this.handleHideInfoView}
                 onChangePermissions={this.handleChangePermissions}
+                onLeaveTopic={this.handleLeaveUnsubRequest}
+                onAddMember={this.handleManageGroupMembers}
                 />
               :
               null

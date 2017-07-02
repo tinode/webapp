@@ -16,14 +16,14 @@ Background pattern from http://subtlepatterns.com/, commercial and non-commercia
 
 ## Missing functionality
 
-* Cannot manage group members.
-* Editing chat parameters is incomplete and buggy.
+* Cannot manage members of group chats.
 * Cannot send images or other media.
 * No typing indicators.
-* No indicators of chat status (muted, blocked, etc.).
+* No indication of chat status (muted, blocked, etc.).
 * Long polling as a wire transport does not work.
 * Browser push notifications are missing.
 * No encryption.
+* Editing chat parameters is incomplete.
 
 ## Responsive design
 
