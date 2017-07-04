@@ -408,6 +408,7 @@ ul.menu > li.separator:hover {
 }
 
 .avatar-box {
+  position: relative;
   flex-grow: 0;
   flex-shrink: 0;
 }
@@ -489,6 +490,7 @@ ul.menu > li.separator:hover {
 
 .contact-box {
   list-style: none;
+  overflow-x: hidden;
 }
 
 .contact-box > li {
@@ -498,6 +500,8 @@ ul.menu > li.separator:hover {
   flex-grow: 0;
   flex-shrink: 0;
   border-bottom: 1px solid #eee;
+  border-collapse: collapse;
+  overflow-x: hidden;
 }
 .contact-box > li:hover {
   background-color: #eceff1; /* blue-gray 50 highlight */
@@ -506,8 +510,19 @@ ul.menu > li.separator:hover {
   background-color: #cfd8dc; /* blue-gray 100 highlight */
 }
 
+.contact-box .text-box {
+  overflow-x: hidden;
+}
+
 .contact-box .contact-title {
   font-size: 1.05rem;
+  text-overflow: ellipsis;
+  overflow: hidden
+}
+
+.contact-box .contact-comment {
+  text-overflow: ellipsis;
+  overflow: hidden
 }
 
 /* The down arrow head - trigger for context menu in contacts list */
@@ -558,7 +573,7 @@ ul.menu > li.separator:hover {
   border-radius: 50%;
   position: absolute;
   right: 0;
-  bottom: 0;
+  bottom: 0.1rem;
 }
 .contact-box .online {
   background-color: #4caf50;
@@ -619,6 +634,13 @@ ul.menu > li.separator:hover {
   font-size: 4.5rem;
   padding: 0;
 }
+
+.avatar-upload .avatar-box {
+  position: relative;
+  width: 7rem;
+  height: 7rem;
+}
+
 /* Clearfix */
 .avatar-upload:after {
   content: ".";
@@ -702,6 +724,7 @@ ul.menu > li.separator:hover {
 
 
 #topic-caption-panel .avatar-box {
+  position: relative;
   width: 3rem;
   min-width: 3rem;
   height: 3rem;
@@ -1073,7 +1096,6 @@ ul.tabbar li.active > a:after {
   width: 100%;
   padding-bottom: 100%;
   border-radius: 50%;
-  position: relative;
 }
 
 /* Div with letter tile content */
@@ -1214,12 +1236,85 @@ ul.tabbar li.active > a:after {
   border-radius: 50%;
 }
 
-.chip {
+.chip-input {
+  display: flex;
+  flex-wrap: wrap;
+  cursor: text;
+  font-size: 1.1rem;
+  font-weight: normal;
+  background: transparent;
+  border-bottom: 1px solid #ccc;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+  width: 100%;
+  margin: 0.25rem 0;
+  padding: 0 0.125rem 0.35rem 0.125rem;
+  outline: none;
+  color: #666;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+}
+
+.chip-input.focused,
+.chip-input:focus {
+  border-bottom: 1px solid #2196f3;
+  box-shadow: 0 1px 0 rgba(33, 150, 243, 0.25);
+}
+
+.chip-input > input[type="text"] {
   display: inline-block;
-  background-color: white;
-  height: 2rem;
-  line-height: 2;
-  border-radius: 1rem;
-  padding: 0 1rem;
-  background-color: #ccc;
+  width: auto;
+  border: none;
+  line-height: 1.8;
+  box-shadow: none;
+  min-width: 4rem;
+  flex: 1 0 auto;
+  height: 1.8rem;
+  margin: 0.125rem;
+}
+
+.chip {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  height: 1.8rem;
+  line-height: 1.8;
+  border-radius: 0.9rem;
+  margin: 0.125rem;
+  background-color: #eee;
+  white-space: nowrap;
+}
+
+.chip > a {
+  display: inline-block;
+  color: #ccc;
+  background-color: #aaa;
+  border-radius: 50%;
+  margin: 0.3rem;
+  width: 1.175rem;
+  height: 1.175rem;
+  line-height: 1.15;
+  text-decoration: none;
+}
+
+.chip > a:focus,
+.chip > a:hover {
+  text-decoration: none;
+  color: #ddd;
+  background-color: #bbb;
+}
+
+.chip .avatar-box {
+  position: relative;
+  width: 1.8rem;
+  min-width: 1.8rem;
+  height: 1.8rem;
+  min-height: 1.8rem;
+  font-size: 1rem;
+  margin-right: 0.2rem;
+}
+
+.chip .avatar-box .material-icons {
+  font-size: 1.8rem;
 }

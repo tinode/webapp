@@ -210,7 +210,7 @@
         if (this.props.avatar === true) {
           if (this.props.topic && this.props.title && this.props.title.trim()) {
             var letter = this.props.title.trim().charAt(0);
-            var color = "lettertile color" + (Math.abs(stringHash(this.props.topic)) % 16);
+            var color = "lettertile dark-color" + (Math.abs(stringHash(this.props.topic)) % 16);
             avatar = (<div className={color}><div>{letter}</div></div>)
           } else {
             avatar = (Tinode.getTopicType(this.props.topic) === "grp") ?
@@ -296,7 +296,6 @@
         );
       }
     });
-
     /* END InPlaceEdit */
 
     /* BEGIN Combobox for selecting host name */
@@ -343,6 +342,98 @@
       }
     }
     /* END Combobox for selecting host name */
+
+    /* BEGIN ChipInput: group membership widget */
+    var ChipInput = React.createClass({
+      getInitialState: function() {
+          return {
+            chips: this.props.chips,
+            placeholder: this.props.chips ? "" : this.props.prompt,
+            input: '',
+            focused: false
+          };
+      },
+
+      handleTextInput: function(e) {
+        console.log(e.target.value);
+        this.setState({input: e.target.value});
+      },
+
+      handleChipCancel: function(item) {
+        console.log("cancel " + item);
+      },
+
+      handleFocusGained: function() {
+        this.setState({focused: true});
+      },
+
+      handleFocusLost: function() {
+        this.setState({focused: false});
+      },
+
+      handleKeyDown: function(e) {
+        if (e.key === 'Backspace') {
+          if (this.state.input.length == 0 && this.state.chips.length > 0) {
+            var updated = this.state.chips.slice();
+            updated.splice(-1);
+            this.setState({chips: updated});
+          }
+        }
+      },
+
+      render: function() {
+        var chips = [];
+        var instance = this;
+        this.state.chips.map(function(item) {
+          chips.push(
+            <ChipInput.Chip
+              onCancel={instance.handleChipCancel}
+              avatar={makeImageUrl(item.public ? item.public.photo : null)}
+              title={item.public ? item.public.fn : undefined}
+              topic={item.user}
+              key={item.user} />
+          );
+        });
+        var className = "chip-input" + (this.state.focused ? " focused" : "");
+        return (
+          <div className={className} tabIndex="0">
+          {chips}
+          <input type="text"
+            placeholder={this.state.placeholder}
+            onChange={this.handleTextInput}
+            onFocus={this.handleFocusGained}
+            onBlur={this.handleFocusLost}
+            onKeyDown={this.handleKeyDown}
+            value={this.state.input}
+            autoFocus />
+          </div>
+        );
+      }
+    });
+
+    ChipInput.Chip = React.createClass({
+      handleCancel: function() {
+        this.props.onCancel(this.props.title);
+      },
+
+      render: function() {
+        return (
+          <div className="chip">
+            <div className="avatar-box">
+              <LetterTile
+                avatar={this.props.avatar || true}
+                topic={this.props.topic}
+                title={this.props.title} />
+            </div>
+            <span>{this.props.title}</span>
+            {this.props.onCancel ?
+              <a href="#" onClick={this.handleCancel} >&times;</a>
+              : null}
+          </div>
+        );
+      }
+    });
+    /* END ChipInput */
 
     /* BEGIN Login: a login form */
     var LoginView = React.createClass({
@@ -515,7 +606,10 @@
             {this.state.dataUrl ?
               <img src={this.state.dataUrl} className="preview" /> :
               this.props.readOnly && this.props.uid ?
-                <LetterTile avatar={true} topic={this.props.uid} title={this.props.title} /> :
+                <div className="avatar-box">
+                  <LetterTile avatar={true} topic={this.props.uid} title={this.props.title} />
+                </div>
+                :
                 <div className="blank">128&times;128</div>}
             {this.props.readOnly ? null :
               <input type="file" id="file-input-avatar" className="inputfile hidden"
@@ -856,7 +950,7 @@
             <div className="text-box">
               <div><span className="contact-title">{title}</span>
               {this.props.unread > 0 ? <Contact.Unread count={this.props.unread} /> : null}</div>
-              {this.props.comment ? <div>{this.props.comment}</div> : null}
+              {this.props.comment ? <div className="contact-comment">{this.props.comment}</div> : null}
             </div>
             {this.props.showContextMenu ?
               <span className="menuTrigger">
@@ -996,7 +1090,7 @@
 
             // If filter function is provided, filter out the items
             // which don't satisfy the condition.
-            if (instance.props.filterFunc && instance.props.filter {
+            if (instance.props.filterFunc && instance.props.filter) {
               var content = [key];
               if (c.private) {
                 content.push(c.private);
@@ -1040,6 +1134,34 @@
       }
     });
     /* END ContactList */
+
+    /* BEGIN GroupMembers: controlc for managing a list of group members */
+    var GroupManager = React.createClass({
+      getInitialState: function() {
+        return {
+          members: this.props.members || [],
+          contacts: this.props.contacts || [],
+        };
+      },
+
+      handleContactSelected: function(contact) {
+
+      },
+
+      render: function() {
+        return (
+          <div className="panel-form-column">
+            <ChipInput
+              chips={this.state.members}
+              prompt="add members" />
+            <ContactList
+              contacts={this.props.contacts}
+              onTopicSelected={this.handleContactSelected}/>
+          </div>
+        );
+      }
+    });
+    /* END GroupManager */
 
     /* BEGIN Create new topic and invite users or send an invite */
     var NewTopicView = React.createClass({
@@ -1161,6 +1283,7 @@
                 <label className="small" htmlFor="new-topic-fn">Group name</label>
                 <input type="text" id="new-topic-fn" placeholder="Freeform name of the group"
                   value={this.state.fn} onChange={this.handleFnChange} autoFocus required />
+                <br />
                 <label className="small" htmlFor="new-topic-priv">Private comment</label>
                 <input type="text" id="new-topic-priv" placeholder="Visible to you only"
                   value={this.state.private} onChange={this.handlePrivateChange} />
@@ -1232,9 +1355,11 @@
           access: null,
           auth: null,
           anon: null,
-          contactList: []
+          contactList: [],
+          showMemberPanel: false
         };
       },
+
       componentWillMount: function() {
         var topic = Tinode.getTopic(this.props.topic);
         if (!topic) {
@@ -1333,7 +1458,8 @@
       },
 
       handleAddMembers: function() {
-        this.props.onAddMember(this.props.topic);
+        // this.props.onAddMember(this.props.topic);
+        this.setState({showMemberPanel: true});
       },
 
       handleLeave: function() {
@@ -1357,89 +1483,94 @@
                 <MenuCancel onCancel={this.props.onCancel} />
               </div>
             </div>
-            <div id="info-view-content" className="scrollable-panel">
-              <div className="panel-form-row">
-                <div className="panel-form-column">
-                  <div><label className="small">Name</label></div>
-                  <div><InPlaceEdit
-                      placeholder="Group name"
-                      readOnly={!this.state.owner}
-                      text={this.state.fullName}
-                      onFinished={this.handleFullNameUpdate} /></div>
-                  <div><label className="small">Private comment</label></div>
-                  <div><InPlaceEdit
-                      placeholder="Visible to you only"
-                      text={this.state.private}
-                      onFinished={this.handlePrivateUpdate} /></div>
-                </div>
-                <AvatarUpload
-                  avatar={this.state.avatar}
-                  readOnly={!this.state.owner}
-                  uid={this.props.topic}
-                  title={this.state.fullName}
-                  onImageChanged={this.handleImageChanged} />
-              </div>
-              <div className="panel-form-column">
+            {this.state.showMemberPanel ?
+              <GroupManager
+                members={this.state.contactList} />
+              :
+              <div id="info-view-content" className="scrollable-panel">
                 <div className="panel-form-row">
-                  <label>Address:</label>
-                  <tt>{this.state.address}</tt>
-                </div>
-                <div className="panel-form-row">
-                  <label>Permissions:</label>
-                  <tt>{this.state.access}</tt>
-                </div>
-                <div className="panel-form-row">
-                  <label htmlFor="info-muted">Muted:</label>
-                  <input id="info-muted" type="checkbox" checked={this.state.muted}
-                      onChange={this.handleMuted} />
-                </div>
-                {this.state.auth || this.state.anon ?
-                  <div>
-                    <div><label className="small">Default access mode:</label></div>
-                    <div className="quoted">
-                      <div>Auth: <tt>{this.state.auth}</tt></div>
-                      <div>Anon: <tt>{this.state.anon}</tt></div>
-                    </div>
+                  <div className="panel-form-column">
+                    <div><label className="small">Name</label></div>
+                    <div><InPlaceEdit
+                        placeholder="Group name"
+                        readOnly={!this.state.owner}
+                        text={this.state.fullName}
+                        onFinished={this.handleFullNameUpdate} /></div>
+                    <div><label className="small">Private comment</label></div>
+                    <div><InPlaceEdit
+                        placeholder="Visible to you only"
+                        text={this.state.private}
+                        onFinished={this.handlePrivateUpdate} /></div>
                   </div>
+                  <AvatarUpload
+                    avatar={this.state.avatar}
+                    readOnly={!this.state.owner}
+                    uid={this.props.topic}
+                    title={this.state.fullName}
+                    onImageChanged={this.handleImageChanged} />
+                </div>
+                <div className="panel-form-column">
+                  <div className="panel-form-row">
+                    <label>Address:</label>
+                    <tt>{this.state.address}</tt>
+                  </div>
+                  <div className="panel-form-row">
+                    <label>Permissions:</label>
+                    <tt>{this.state.access}</tt>
+                  </div>
+                  <div className="panel-form-row">
+                    <label htmlFor="info-muted">Muted:</label>
+                    <input id="info-muted" type="checkbox" checked={this.state.muted}
+                        onChange={this.handleMuted} />
+                  </div>
+                  {this.state.auth || this.state.anon ?
+                    <div>
+                      <div><label className="small">Default access mode:</label></div>
+                      <div className="quoted">
+                        <div>Auth: <tt>{this.state.auth}</tt></div>
+                        <div>Anon: <tt>{this.state.anon}</tt></div>
+                      </div>
+                    </div>
                   :
                   null
                 }
+                </div>
+                {this.state.groupTopic ?
+                  <div className="panel-form-column">
+                    <div className="panel-form-row">
+                      <label className="small">Group members:</label>
+                    </div>
+                    <div className="panel-form-row">
+                      {this.state.sharer ?
+                        <a href="#" className="flat-button" onClick={this.handleAddMembers}>
+                          <i className="material-icons">person_add</i> Add members
+                        </a>
+                        : null}
+                      {!this.state.owner ?
+                        <a href="#" className="red flat-button" onClick={this.handleLeave}>
+                          <i className="material-icons">exit_to_app</i> Leave
+                        </a>
+                        : null}
+                    </div>
+                    <ContactList
+                      contacts={this.state.contactList}
+                      emptyListMessage="No members"
+                      topicSelected={this.state.selectedContact}
+                      showOnline={false}
+                      noScroll={true}
+                      onTopicSelected={this.handleMemberSelected}
+                      showContextMenu={this.handleContextMenu}
+                    />
+                  </div>
+                  :
+                  <div className="panel-form-row">
+                    <a href="#" className="red flat-button" onClick={this.handleLeave}>
+                      <i className="material-icons">exit_to_app</i> Leave
+                    </a>
+                  </div>
+                }
               </div>
-              {this.state.groupTopic ?
-                <div className="panel-form-column">
-                  <div className="panel-form-row">
-                    <label className="small">Group members:</label>
-                  </div>
-                  <div className="panel-form-row">
-                    {this.state.sharer ?
-                      <a href="#" className="flat-button" onClick={this.handleAddMembers}>
-                        <i className="material-icons">person_add</i> Add members
-                      </a>
-                      : null}
-                    {!this.state.owner ?
-                      <a href="#" className="red flat-button" onClick={this.handleLeave}>
-                        <i className="material-icons">exit_to_app</i> Leave
-                      </a>
-                      : null}
-                  </div>
-                  <ContactList
-                    contacts={this.state.contactList}
-                    emptyListMessage="No members"
-                    topicSelected={this.state.selectedContact}
-                    showOnline={false}
-                    noScroll={true}
-                    onTopicSelected={this.handleMemberSelected}
-                    showContextMenu={this.handleContextMenu}
-                  />
-                </div>
-                :
-                <div className="panel-form-row">
-                  <a href="#" className="red flat-button" onClick={this.handleLeave}>
-                    <i className="material-icons">exit_to_app</i> Leave
-                  </a>
-                </div>
-              }
-            </div>
+            }
           </div>
         );
       }
@@ -2087,9 +2218,9 @@
         }
       },
 
-      handleManageGroupMembers: function(topicName) {
+      //handleManageGroupMembers: function(topicName) {
         // FIXME(gene): launch group member manager
-      },
+      //onAddMember},
 
       handleTopicUpdateRequest: function(topicName, pub, priv) {
         var topic = Tinode.getTopic(topicName);
