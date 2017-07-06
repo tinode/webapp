@@ -8,7 +8,7 @@
     <!-- Browser styling for Chrome, FF, Opera -->
     <meta name="theme-color" content="#3949AB">
     <!-- Google's Roboto font -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400italic,700&subset=latin,cyrillic"
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400italic,500,700&subset=latin,cyrillic"
       rel="stylesheet" type="text/css" />
     <!-- Google's material design icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
@@ -263,7 +263,6 @@
         this.setState({active: false});
         var text = this.state.text.trim();
         if ((text || this.props.text) && (text !== this.props.text)) {
-          console.log("'" + text + "' != '" + this.props.text + "'");
           this.props.onFinished(text);
         }
       },
@@ -347,20 +346,31 @@
     var ChipInput = React.createClass({
       getInitialState: function() {
           return {
-            chips: this.props.chips,
             placeholder: this.props.chips ? "" : this.props.prompt,
             input: '',
             focused: false
           };
       },
-
-      handleTextInput: function(e) {
-        console.log(e.target.value);
-        this.setState({input: e.target.value});
+      componentWillReceiveProps: function(newProps) {
+        this.setState({
+          input: ''
+        });
       },
 
-      handleChipCancel: function(item) {
-        console.log("cancel " + item);
+      handleTextInput: function(e) {
+        this.setState({input: e.target.value});
+        if (this.props.filter) {
+          this.props.filter(e.target.value);
+        }
+      },
+
+      removeChipAt: function(idx) {
+        var removed = this.props.chips[idx];
+        this.props.onChipRemoved(removed.user, idx);
+      },
+
+      handleChipCancel: function(item, idx) {
+        this.removeChipAt(idx);
       },
 
       handleFocusGained: function() {
@@ -373,10 +383,8 @@
 
       handleKeyDown: function(e) {
         if (e.key === 'Backspace') {
-          if (this.state.input.length == 0 && this.state.chips.length > 0) {
-            var updated = this.state.chips.slice();
-            updated.splice(-1);
-            this.setState({chips: updated});
+          if (this.state.input.length == 0 && this.props.chips.length > 0) {
+            this.removeChipAt(this.props.chips.length-1);
           }
         }
       },
@@ -384,28 +392,31 @@
       render: function() {
         var chips = [];
         var instance = this;
-        this.state.chips.map(function(item) {
+        var count = 0;
+        this.props.chips.map(function(item) {
           chips.push(
             <ChipInput.Chip
               onCancel={instance.handleChipCancel}
               avatar={makeImageUrl(item.public ? item.public.photo : null)}
               title={item.public ? item.public.fn : undefined}
               topic={item.user}
-              key={item.user} />
+              index={count}
+              key={count} />
           );
+          count++;
         });
         var className = "chip-input" + (this.state.focused ? " focused" : "");
         return (
-          <div className={className} tabIndex="0">
-          {chips}
-          <input type="text"
-            placeholder={this.state.placeholder}
-            onChange={this.handleTextInput}
-            onFocus={this.handleFocusGained}
-            onBlur={this.handleFocusLost}
-            onKeyDown={this.handleKeyDown}
-            value={this.state.input}
-            autoFocus />
+          <div className={className}>
+            {chips}
+            <input type="text"
+              placeholder={this.state.placeholder}
+              onChange={this.handleTextInput}
+              onFocus={this.handleFocusGained}
+              onBlur={this.handleFocusLost}
+              onKeyDown={this.handleKeyDown}
+              value={this.state.input}
+              autoFocus />
           </div>
         );
       }
@@ -413,7 +424,7 @@
 
     ChipInput.Chip = React.createClass({
       handleCancel: function() {
-        this.props.onCancel(this.props.title);
+        this.props.onCancel(this.props.topic, this.props.index);
       },
 
       render: function() {
@@ -800,7 +811,9 @@
 
               this.props.state === 'new-topic' ?
               <NewTopicView
-                data={this.props.subscriptions}
+                contactsSearchQuery={this.props.contactsSearchQuery}
+                foundContacts={this.props.foundContacts}
+                onInitFind={this.props.onInitFind}
                 onSearchContacts={this.props.onSearchContacts}
                 onCreateTopic={this.props.onCreateTopic} /> :
 
@@ -922,7 +935,7 @@
       handleClick: function(e) {
         e.preventDefault();
         e.stopPropagation();
-        this.props.onSelected(this.props.topic);
+        this.props.onSelected(this.props.topic, this.props.index);
       },
 
       handleContextClick: function(e) {
@@ -941,11 +954,16 @@
         var online = this.props.now ? "online" : "offline";
         var avatar = this.props.avatar ? this.props.avatar : true;
         return (
-          <li className={this.props.selected ? "selected" : null} onClick={this.handleClick}>
+          <li className={!this.props.showCheckmark && this.props.selected ? "selected" : null}
+            onClick={this.handleClick}>
             <div className="avatar-box">
               <LetterTile
                 avatar={avatar} title={this.props.title} topic={this.props.topic} />
-              {this.props.showOnline ? <span className={online} /> : null}
+
+              {this.props.showOnline ? <span className={online} /> :
+                (this.props.showCheckmark && this.props.selected ?
+                <i className="checkmark material-icons">check_circle</i>
+                : null)}
             </div>
             <div className="text-box">
               <div><span className="contact-title">{title}</span>
@@ -1075,16 +1093,18 @@
     /* END Contact list */
 
     /* BEGIN ContactList: component for showing a list of contacts,
-     * such as a list of group members group chat */
+     * such as a list of group members in a group chat */
     var ContactList = React.createClass({
       render: function() {
         var contactNodes = [];
         var instance = this;
+        var showCheckmark = Array.isArray(this.props.topicSelected);
+
         if (this.props.contacts && this.props.contacts.length > 0) {
           this.props.contacts.map(function(c) {
             var key = c.topic ? c.topic : c.user;
             if (!key) {
-              console.log("empty key!");
+              console.error("empty key!");
               return;
             }
 
@@ -1103,17 +1123,23 @@
               }
             }
 
+            var selected = showCheckmark ?
+              (this.props.topicSelected.indexOf(key) > -1) :
+              (this.props.topicSelected === key);
+
             contactNodes.push(
               <Contact
                 title={c.public ? c.public.fn : null}
                 avatar={makeImageUrl(c.public ? c.public.photo : null)}
                 comment={c.private}
                 unread={c.unread} now={c.online}
-                selected={this.props.topicSelected === key}
+                showCheckmark={showCheckmark}
+                selected={selected}
                 showOnline={this.props.showOnline}
                 onSelected={this.props.onTopicSelected}
                 showContextMenu={this.props.showContextMenu}
                 topic={key}
+                index={contactNodes.length}
                 key={key} />
             );
           }, this);
@@ -1139,24 +1165,118 @@
     var GroupManager = React.createClass({
       getInitialState: function() {
         return {
-          members: this.props.members || [],
-          contacts: this.props.contacts || [],
+          members: this.props.members,
+          contacts: this.props.contacts,
+          index: this.indexMembers(this.props.members),
+          selectedContacts: this.selectedContacts(this.props.members)
         };
       },
 
-      handleContactSelected: function(contact) {
+      indexMembers: function(members) {
+        var index = {};
+        members.map(function(m) {
+          index[m.user] = {delta: 0, present: true}; // Delta: 0 unchanged, +1 added, -1 removed
+        });
+        return index;
+      },
 
+      selectedContacts: function(members) {
+        var sel = [];
+        members.map(function(m) {
+          sel.push(m.user);
+        });
+        return sel;
+      },
+
+      handleContactSelected: function(userId, index) {
+        var status = this.state.index[userId];
+        if (status) {
+          if (status.present) {
+            // Prevent duplicate members
+            return;
+          }
+          status.delta += 1;
+          status.present = true;
+        } else {
+          status = {delta: 1, present: true};
+        }
+
+        var m = this.state.members.slice();
+        m.push(this.props.contacts[index]);
+
+        var sel = this.selectedContacts(m);
+
+        var i = this.state.index;
+        i[userId] = status;
+
+        this.setState({members: m, index: i, selectedContacts: sel});
+      },
+
+      handleMemberRemoved: function(userId, index) {
+        var status = this.state.index[userId];
+        if (!status || !status.present) {
+          return;
+        }
+        status.present = false;
+        status.delta -= 1;
+
+        var m = this.state.members.slice();
+        m.splice(index, 1);
+
+        var sel = this.selectedContacts(m);
+
+        var i = this.state.index;
+        i[userId] = status;
+
+        this.setState({members: m, index: i, selectedContacts: sel});
+      },
+
+      handleSubmit: function() {
+        var instance = this;
+        var members = [];
+        var added = [];
+        var removed = [];
+
+        var keys = Object.keys(this.state.index);
+        keys.map(function(k) {
+          if (instance.state.index[k].present) {
+            members.push(k);
+          }
+
+          if (instance.state.index[k].delta > 0) {
+            added.push(k);
+          } else if (instance.state.index[k].delta < 0) {
+            removed.push(k);
+          }
+        });
+        this.props.onSubmit(members, added, removed);
+      },
+
+      handleCancel: function() {
+        this.props.onCancel();
       },
 
       render: function() {
         return (
-          <div className="panel-form-column">
+          <div id="group-manager">
+            <div className="panel-form-row">
+              <label className="small">Group members</label>
+            </div>
             <ChipInput
-              chips={this.state.members}
-              prompt="add members" />
+                chips={this.state.members}
+                prompt="add members"
+                onChipRemoved={this.handleMemberRemoved} />
+            <div className="panel-form-row">
+              <label className="small">All contacts</label>
+            </div>
             <ContactList
               contacts={this.props.contacts}
-              onTopicSelected={this.handleContactSelected}/>
+              topicSelected={this.state.selectedContacts}
+              onTopicSelected={this.handleContactSelected} />
+            <div id="group-manager-buttons" className="panel-form-row">
+              <button className="blue" onClick={this.handleSubmit}>OK</button>
+              <button className="white" onClick={this.handleCancel}>Cancel</button>
+            </div>
           </div>
         );
       }
@@ -1168,39 +1288,19 @@
       getInitialState: function() {
         return {
           tabSelected: "p2p",
-          searchQuery: '',
-          contactList: [],
+          searchQuery: this.props.contactsSearchQuery,
+          contactList: this.props.foundContacts,
           contactSelected: null
         };
       },
       componentWillMount: function() {
-        var fnd = Tinode.getFndTopic();
-        fnd.onSubsUpdated = this.fndSubsUpdated;
-        fnd.onMetaDesc = this.fndMetaDesc;
-        if (fnd.isSubscribed()) {
-          this.setState({searchQuery: fnd.private ? fnd.private.toString() : ''});
-          this.fndSubsUpdated();
-        } else {
-          fnd.subscribe({get: {sub: {}, desc: {}}});
-        }
+        this.props.onInitFind();
       },
-      componentWillUnmount: function() {
-        var fnd = Tinode.getFndTopic();
-        fnd.onSubsUpdated = undefined;
-        fnd.onMetaDesc = undefined;
-      },
-      fndMetaDesc: function(desc) {
-        if (desc.private) {
-          this.setState({searchQuery: desc.private.toString()});
-        }
-      },
-      fndSubsUpdated: function() {
-        var contacts = [];
-        // Don't attempt to create P2P topics which already exist. Server will reject the duplicates.
-        Tinode.getFndTopic().subscribers(function(s) {
-          contacts.push(s);
+      componentWillReceiveProps: function(nextProps) {
+        this.setState({
+          searchQuery: nextProps.contactsSearchQuery,
+          contactList: nextProps.foundContacts
         });
-        this.setState({contactList: contacts});
       },
       handleTabClick: function(e) {
         e.preventDefault();
@@ -1370,6 +1470,8 @@
         topic.onSubsUpdated = this.onSubsUpdated;
         this.resetDesc(topic);
         this.resetSubs(topic);
+
+        this.props.onInitFind();
       },
 
       componentWillUnmount: function() {
@@ -1457,9 +1559,19 @@
         this.props.onChangePermissions(this.props.topic, checked ? "-P" : "+P");
       },
 
-      handleAddMembers: function() {
+      handleShowAddMembers: function() {
         // this.props.onAddMember(this.props.topic);
         this.setState({showMemberPanel: true});
+      },
+
+      handleHideAddMembers: function() {
+        // this.props.onAddMember(this.props.topic);
+        this.setState({showMemberPanel: false});
+      },
+
+      handleMemberUpdateRequest: function(members, added, removed) {
+        this.props.onMemberUpdateRequest(this.props.topic, added, removed);
+        this.setState({showMemberPanel: false});
       },
 
       handleLeave: function() {
@@ -1485,7 +1597,10 @@
             </div>
             {this.state.showMemberPanel ?
               <GroupManager
-                members={this.state.contactList} />
+                members={this.state.contactList}
+                contacts={this.props.foundContacts}
+                onCancel={this.handleHideAddMembers}
+                onSubmit={this.handleMemberUpdateRequest} />
               :
               <div id="info-view-content" className="scrollable-panel">
                 <div className="panel-form-row">
@@ -1542,7 +1657,7 @@
                     </div>
                     <div className="panel-form-row">
                       {this.state.sharer ?
-                        <a href="#" className="flat-button" onClick={this.handleAddMembers}>
+                        <a href="#" className="flat-button" onClick={this.handleShowAddMembers}>
                           <i className="material-icons">person_add</i> Add members
                         </a>
                         : null}
@@ -1992,7 +2107,9 @@
           contextMenuClickAt: null,
           contextMenuTopic: '',
           contextMenuItems: [],
-          serverVersion: 'no connection'
+          serverVersion: 'no connection',
+          contactsSearchQuery: '',
+          foundContacts: []
         };
       },
       componentDidMount: function() {
@@ -2106,6 +2223,44 @@
           Tinode.getTopic(data.topic).noteRecv(data.seq);
         }, RECEIVED_DELAY);
       },
+
+      /* Fnd topic: find contacts by tokens */
+      tnInitFind: function() {
+        var fnd = Tinode.getFndTopic();
+        fnd.onSubsUpdated = this.tnFndSubsUpdated;
+        fnd.onMetaDesc = this.tnFndMetaDesc;
+        if (fnd.isSubscribed()) {
+          this.setState({contactsSearchQuery: fnd.private ? fnd.private.toString() : ''});
+          this.tnFndSubsUpdated();
+        } else {
+          fnd.subscribe({get: {sub: {}, desc: {}}});
+        }
+      },
+
+      tnFndMetaDesc: function(desc) {
+        if (desc.private) {
+          this.setState({contactsSearchQuery: desc.private.toString()});
+        }
+      },
+
+      tnFndSubsUpdated: function() {
+        var contacts = [];
+        // Don't attempt to create P2P topics which already exist. Server will reject the duplicates.
+        Tinode.getFndTopic().subscribers(function(s) {
+          contacts.push(s);
+        });
+        this.setState({foundContacts: contacts});
+      },
+      /** Called when the user enters a contact into the contact search field in the NewAccount panel
+        @param query {Array} is an array of contacts to search for
+       */
+      handleSearchContacts: function(query) {
+          var find = Tinode.getFndTopic();
+          find.setMeta({desc: {private: query}}).then(function(ctrl) {
+            find.getMeta({sub: {}, desc: {}});
+          });
+      },
+
       // User clicked on a contact in the side panel or deleted a contact.
       handleTopicSelected: function(topicName) {
         if (topicName) {
@@ -2250,15 +2405,6 @@
         });
       },
 
-      /** Called when the user enters a contact into the contact search field in the NewAccount panel
-        @param query {Array} is an array of contacts to search for
-       */
-      handleSearchContacts: function(query) {
-          var find = Tinode.getFndTopic();
-          find.setMeta({desc: {private: query}}).then(function(ctrl) {
-            find.getMeta({sub: {}, desc: {}});
-          });
-      },
       handleDialogCancel: function() {
         this.setState({dialogSelected: null});
       },
@@ -2344,6 +2490,29 @@
       handleHideInfoView: function() {
         this.setState({showInfoPanel: false});
       },
+      handleMemberUpdateRequest: function(topicName, added, removed) {
+        if (!topicName) {
+          return;
+        }
+
+        var topic = Tinode.getTopic(topicName);
+        if (!topic) {
+          return;
+        }
+
+        if (added && added.length > 0) {
+          added.map(function(uid) {
+            topic.invite(uid, null, "Join my group!");
+          });
+        }
+
+        if (removed && removed.length > 0) {
+          removed.map(function(uid) {
+            topic.delSubscription(uid);
+          });
+        }
+      },
+
       render: function() {
         return (
           <div id="app-container">
@@ -2383,10 +2552,14 @@
               onCreateAccount={this.handleNewAccountRequest}
               onUpdateAccount={this.handleUpdateAccountRequest}
               onTopicSelected={this.handleTopicSelected}
-              onSearchContacts={this.handleSearchContacts}
               onCreateTopic={this.handleNewTopicRequest}
               onNewTopic={this.handleNewTopic}
               onCancel={this.handleSidepanelCancel}
+
+              onInitFind={this.tnInitFind}
+              contactsSearchQuery={this.state.contactsSearchQuery}
+              foundContacts={this.state.foundContacts}
+              onSearchContacts={this.handleSearchContacts}
 
               showContextMenu={this.handleShowContextMenu} />
 
@@ -2406,11 +2579,14 @@
             {this.state.showInfoPanel ?
               <InfoView
                 topic={this.state.topicSelected}
+                foundContacts={this.state.foundContacts}
                 onSubmit={this.handleTopicUpdateRequest}
                 onCancel={this.handleHideInfoView}
                 onChangePermissions={this.handleChangePermissions}
+                onMemberUpdateRequest={this.handleMemberUpdateRequest}
                 onLeaveTopic={this.handleLeaveUnsubRequest}
                 onAddMember={this.handleManageGroupMembers}
+                onInitFind={this.tnInitFind}
                 />
               :
               null

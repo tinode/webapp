@@ -183,7 +183,7 @@ textarea {
   height: 2.5rem;
   border-bottom: 1px solid #ccc;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease-in-out;
+  transition: all 0.1s ease-in-out;
   width: 100%;
 }
 textarea:focus,
@@ -581,6 +581,22 @@ ul.menu > li.separator:hover {
 .contact-box .offline {
   background-color: #C0C0C0;
 }
+
+.contact-box .checkmark.material-icons {
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 1.5rem;
+  line-height: 1.5rem;
+  vertical-align: middle;
+  color: #0097A7;
+  position: absolute;
+  right: 0.05rem;
+  bottom: 0.05rem;
+  background-color: white;
+  overflow: visible;
+  border: 0.0px solid transparent;
+}
 /* END of avatar box */
 
 #add-topic {
@@ -756,10 +772,11 @@ ul.menu > li.separator:hover {
   display: flex;
   align-items: center;
   flex: none;
-  padding: 0.5rem;
+  padding: 0.4rem;
   background-color: #eceff1;
   box-shadow: 0 -1px rgba(0,0,0,0.1); /* Faint shadow above panel */
   z-index: 2;
+  height: 4rem;
 }
 
 /* A static panel shown when no topic is selected */
@@ -962,6 +979,24 @@ ul.menu > li.separator:hover {
   margin-right: auto;
 }
 
+#group-manager {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+#group-manager-buttons {
+  display: flex;
+  background-color: #eceff1;
+  box-shadow: 0 -1px rgba(0,0,0,0.1); /* Faint shadow above panel */
+  z-index: 2;
+  justify-content: space-around;
+  padding: 0.4rem;
+  height: 4rem;
+  border-left: 1px solid #ccc;
+}
+
 /* END of InfoView */
 
 /* Modal dialog */
@@ -1043,7 +1078,7 @@ ul.tabbar > li > a {
   font-size: 1.1rem;
   color: rgba(33,150,243,0.6);
   overflow: hidden;
-  box-shadow: inset 0 -2px 2.5px -1px rgba(0,0,0,0.5);
+  box-shadow: inset 0 -2px 2.5px -1px rgba(0,0,0,0.25);
 }
 
 ul.tabbar li.active > a {
@@ -1083,10 +1118,10 @@ ul.tabbar li.active > a:after {
   background-color: #0097A7;
   color: white;
   border-radius: 50%;
-  padding: 0.25rem;
-  min-width: 1.4rem;
+  width: 1.35rem;
+  height: 1.35rem;
   margin-left: 0.5rem;
-  line-height: 1;
+  line-height: 1.35rem;
   text-align: center;
   vertical-align: middle;
 }
@@ -1245,10 +1280,12 @@ ul.tabbar li.active > a:after {
   background: transparent;
   border-bottom: 1px solid #ccc;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease-in-out;
+  transition: all 0.1s ease-in-out;
   width: 100%;
-  margin: 0.25rem 0;
-  padding: 0 0.125rem 0.35rem 0.125rem;
+  max-height: 8rem;
+  overflow-y: scroll;
+  margin: 0.25rem 0rem 0.25rem 0rem;
+  padding: 0 0 0.5rem 0.5rem;
   outline: none;
   color: #666;
   align-items: center;
@@ -1256,8 +1293,7 @@ ul.tabbar li.active > a:after {
   text-align: center;
 }
 
-.chip-input.focused,
-.chip-input:focus {
+.chip-input.focused {
   border-bottom: 1px solid #2196f3;
   box-shadow: 0 1px 0 rgba(33, 150, 243, 0.25);
 }
@@ -1284,6 +1320,7 @@ ul.tabbar li.active > a:after {
   margin: 0.125rem;
   background-color: #eee;
   white-space: nowrap;
+  font-size: 90%;
 }
 
 .chip > a {
