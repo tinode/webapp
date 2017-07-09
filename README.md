@@ -10,20 +10,19 @@ Try it (possibly older version) live at http://api.tinode.co/x/example-react-js/
 
 License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
-Photos from https://www.pexels.com/ under [CC0 license](https://www.pexels.com/photo-license/).
+Sample avatar photos from https://www.pexels.com/ under [CC0 license](https://www.pexels.com/photo-license/).
 
 Background pattern from http://subtlepatterns.com/, commercial and non-commercial use allowed with attribution.
 
 ## Missing functionality
 
-* Cannot manage members of group chats.
 * Cannot send images or other media.
 * No typing indicators.
 * No indication of chat status (muted, blocked, etc.).
 * Long polling as a wire transport does not work.
 * Browser push notifications are missing.
 * No encryption.
-* Editing chat parameters is incomplete.
+* Editing chat permissions is incomplete.
 
 ## Responsive design
 

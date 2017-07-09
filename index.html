@@ -347,26 +347,55 @@
       getInitialState: function() {
           return {
             placeholder: this.props.chips ? "" : this.props.prompt,
+            sortedChips: this.sortChips(this.props.chips, this.props.required),
+            chipIndex: this.indexChips(this.props.chips),
             input: '',
             focused: false
           };
       },
+
       componentWillReceiveProps: function(newProps) {
         this.setState({
-          input: ''
+          sortedChips: this.sortChips(newProps.chips, newProps.required),
+          chipIndex: this.indexChips(newProps.chips)
         });
+      },
+
+      // Map chip index to user name
+      indexChips: function(chips) {
+        var index = {};
+        var count = 0;
+        chips.map(function(item) {
+          index[item.user] = count;
+          count ++;
+        });
+        return index;
+      },
+
+      // Have non-removable chips appear before all other chips.
+      sortChips: function(chips, keep) {
+        var required = [];
+        var normal = [];
+        chips.map(function(item) {
+          if (item.user === keep) {
+            required.push(item);
+          } else {
+            normal.push(item);
+          }
+        });
+        return required.concat(normal);
       },
 
       handleTextInput: function(e) {
         this.setState({input: e.target.value});
-        if (this.props.filter) {
-          this.props.filter(e.target.value);
+        if (this.props.filterFunc) {
+          this.props.filterFunc(e.target.value);
         }
       },
 
       removeChipAt: function(idx) {
-        var removed = this.props.chips[idx];
-        this.props.onChipRemoved(removed.user, idx);
+        var removed = this.state.sortedChips[idx];
+        this.props.onChipRemoved(removed.user, this.state.chipIndex[removed.user]);
       },
 
       handleChipCancel: function(item, idx) {
@@ -383,25 +412,30 @@
 
       handleKeyDown: function(e) {
         if (e.key === 'Backspace') {
-          if (this.state.input.length == 0 && this.props.chips.length > 0) {
-            this.removeChipAt(this.props.chips.length-1);
+          if (this.state.input.length == 0 && this.state.sortedChips.length > 0) {
+            var at = this.state.sortedChips.length - 1;
+            if (this.state.sortedChips[at].user !== this.props.required) {
+              this.removeChipAt(at);
+            }
           }
         }
       },
 
       render: function() {
         var chips = [];
+
         var instance = this;
         var count = 0;
-        this.props.chips.map(function(item) {
+        this.state.sortedChips.map(function(item) {
           chips.push(
             <ChipInput.Chip
               onCancel={instance.handleChipCancel}
               avatar={makeImageUrl(item.public ? item.public.photo : null)}
               title={item.public ? item.public.fn : undefined}
               topic={item.user}
+              required={item.user === instance.props.required}
               index={count}
-              key={count} />
+              key={item.user} />
           );
           count++;
         });
@@ -437,9 +471,9 @@
                 title={this.props.title} />
             </div>
             <span>{this.props.title}</span>
-            {this.props.onCancel ?
+            {this.props.onCancel && !this.props.required ?
               <a href="#" onClick={this.handleCancel} >&times;</a>
-              : null}
+              : <span className="spacer" />}
           </div>
         );
       }
@@ -906,6 +940,7 @@
                 title={this.state.fullName}
                 onImageChanged={this.handleImageChanged} />
             </div>
+            <div className="hr" />
             <div className="panel-form-column">
               <div className="panel-form-row">
                 <label>Login:</label>
@@ -1103,22 +1138,18 @@
         if (this.props.contacts && this.props.contacts.length > 0) {
           this.props.contacts.map(function(c) {
             var key = c.topic ? c.topic : c.user;
-            if (!key) {
-              console.error("empty key!");
-              return;
-            }
 
             // If filter function is provided, filter out the items
             // which don't satisfy the condition.
             if (instance.props.filterFunc && instance.props.filter) {
               var content = [key];
               if (c.private) {
-                content.push(c.private);
+                content.push(("" + c.private).toLowerCase());
               }
               if (c.public && c.public.fn) {
-                content.push(c.public.fn);
+                content.push(("" + c.public.fn).toLowerCase());
               }
-              if (!instance.props.filter(instance.props.filter, content)) {
+              if (!instance.props.filterFunc(instance.props.filter, content)) {
                 return;
               }
             }
@@ -1168,6 +1199,8 @@
           members: this.props.members,
           contacts: this.props.contacts,
           index: this.indexMembers(this.props.members),
+          contactFilter: '',
+          noContactsMessage: 'You have no contacts :-(',
           selectedContacts: this.selectedContacts(this.props.members)
         };
       },
@@ -1231,6 +1264,26 @@
         this.setState({members: m, index: i, selectedContacts: sel});
       },
 
+      handleContactFilter: function(val) {
+        var msg = !val ?
+          "You have no contacts :-(" :
+          "No contacts match '" + val + "'";
+
+        this.setState({contactFilter: val, noContactsMessage: msg});
+      },
+
+      doContactFiltering: function(filter, values) {
+        if (filter) {
+          for (var i=0; i<values.length; i++) {
+            if (values[i].indexOf(filter) >= 0) {
+              return true;
+            }
+          }
+          return false;
+        }
+        return true;
+      },
+
       handleSubmit: function() {
         var instance = this;
         var members = [];
@@ -1264,7 +1317,9 @@
             </div>
             <ChipInput
                 chips={this.state.members}
+                required={this.props.requiredMember}
                 prompt="add members"
+                filterFunc={this.handleContactFilter}
                 onChipRemoved={this.handleMemberRemoved} />
             <div className="panel-form-row">
               <label className="small">All contacts</label>
@@ -1272,6 +1327,9 @@
             <ContactList
               contacts={this.props.contacts}
               topicSelected={this.state.selectedContacts}
+              filter={this.state.contactFilter}
+              filterFunc={this.doContactFiltering}
+              emptyListMessage={this.state.noContactsMessage}
               onTopicSelected={this.handleContactSelected} />
             <div id="group-manager-buttons" className="panel-form-row">
               <button className="blue" onClick={this.handleSubmit}>OK</button>
@@ -1598,6 +1656,7 @@
             {this.state.showMemberPanel ?
               <GroupManager
                 members={this.state.contactList}
+                requiredMember={this.props.myUserId}
                 contacts={this.props.foundContacts}
                 onCancel={this.handleHideAddMembers}
                 onSubmit={this.handleMemberUpdateRequest} />
@@ -1624,6 +1683,7 @@
                     title={this.state.fullName}
                     onImageChanged={this.handleImageChanged} />
                 </div>
+                <div className="hr" />
                 <div className="panel-form-column">
                   <div className="panel-form-row">
                     <label>Address:</label>
@@ -1650,6 +1710,7 @@
                   null
                 }
                 </div>
+                <div className="hr" />
                 {this.state.groupTopic ?
                   <div className="panel-form-column">
                     <div className="panel-form-row">
@@ -2580,6 +2641,7 @@
               <InfoView
                 topic={this.state.topicSelected}
                 foundContacts={this.state.foundContacts}
+                myUserId={this.state.myUserId}
                 onSubmit={this.handleTopicUpdateRequest}
                 onCancel={this.handleHideInfoView}
                 onChangePermissions={this.handleChangePermissions}
