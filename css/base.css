@@ -37,17 +37,41 @@ a:focus {
   outline-offset: -2px;
 }
 
+a.red:hover,
+a.red:focus {
+  color: #F44336;
+}
+
+a.flat-button {
+  display: flex;
+  align-items: center;
+  margin: 0.15rem 0.35rem;
+  height: 2em;
+  line-height: 2em;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+a.flat-button:hover,
+a.flat-button:focus {
+  text-decoration: none;
+}
+
 form {
   font-size: 1.1rem;
   padding: 0.5rem 0.75rem;
-  line-height: 1.75;
+  line-height: 1.5;
 }
 
-form label {
+label {
   font-size: 1.1rem;
+  margin-right: auto;
 }
 
-form label.small {
+label.small {
   color: #1e88e5;
   font-size: 0.95rem;
 }
@@ -159,7 +183,7 @@ textarea {
   height: 2.5rem;
   border-bottom: 1px solid #ccc;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease-in-out;
+  transition: all 0.1s ease-in-out;
   width: 100%;
 }
 textarea:focus,
@@ -225,6 +249,26 @@ ul.menu > li.separator:hover {
 }
 /* END popup/dropdown menu */
 
+/* Generic text colors */
+.blue {
+  color: #2196f3; /* blue 500 */
+}
+
+.red {
+  color: #D32F2F; /* red 700 */
+}
+
+.hr {
+  display: block;
+  width: 100%;
+  height: 0.6rem;
+  background-color: #f0f0f0;
+  box-shadow: inset 0 0.25rem 0.25rem -0.25rem rgba(0,0,0,0.15),
+    inset 0 -0.25rem 0.25rem -0.25rem rgba(0,0,0,0.15);
+}
+
+/* END generic text colors */
+
 /* END of basic elements */
 
 #mountPoint {
@@ -251,7 +295,7 @@ ul.menu > li.separator:hover {
   position: relative;
   display: flex;
   flex-direction: column;
-  flex-grow: 0.3;
+  flex-grow: 0;
   flex-shrink: 0.3;
   width: 24rem;
   min-width: 18rem;
@@ -268,7 +312,7 @@ ul.menu > li.separator:hover {
 #info-view {
   display: flex;
   flex-direction: column;
-  flex-grow: 0.3;
+  flex-grow: 0;
   flex-shrink: 0.3;
   width: 24rem;
   min-width: 18rem;
@@ -374,6 +418,7 @@ ul.menu > li.separator:hover {
 }
 
 .avatar-box {
+  position: relative;
   flex-grow: 0;
   flex-shrink: 0;
 }
@@ -446,21 +491,27 @@ ul.menu > li.separator:hover {
   overflow: hidden;
 }
 
-.contacts-panel {
+.scrollable-panel {
   overflow-y: auto;
-  margin-top: 1rem;:
+  margin-top: 0.25rem;
   margin-bottom: auto;
   height: 100%;
 }
 
 .contact-box {
   list-style: none;
+  overflow-x: hidden;
 }
 
 .contact-box > li {
   display: flex;
   padding: 0.35rem 0.25rem 0.5rem 0.35rem;
   min-height: 3.5rem;
+  flex-grow: 0;
+  flex-shrink: 0;
+  border-bottom: 1px solid #eee;
+  border-collapse: collapse;
+  overflow-x: hidden;
 }
 .contact-box > li:hover {
   background-color: #eceff1; /* blue-gray 50 highlight */
@@ -469,8 +520,19 @@ ul.menu > li.separator:hover {
   background-color: #cfd8dc; /* blue-gray 100 highlight */
 }
 
+.contact-box .text-box {
+  overflow-x: hidden;
+}
+
 .contact-box .contact-title {
   font-size: 1.05rem;
+  text-overflow: ellipsis;
+  overflow: hidden
+}
+
+.contact-box .contact-comment {
+  text-overflow: ellipsis;
+  overflow: hidden
 }
 
 /* The down arrow head - trigger for context menu in contacts list */
@@ -521,13 +583,29 @@ ul.menu > li.separator:hover {
   border-radius: 50%;
   position: absolute;
   right: 0;
-  bottom: 0;
+  bottom: 0.1rem;
 }
 .contact-box .online {
   background-color: #4caf50;
 }
 .contact-box .offline {
   background-color: #C0C0C0;
+}
+
+.contact-box .checkmark.material-icons {
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 1.5rem;
+  line-height: 1.5rem;
+  vertical-align: middle;
+  color: #0097A7;
+  position: absolute;
+  right: 0.05rem;
+  bottom: 0.05rem;
+  background-color: white;
+  overflow: visible;
+  border: 0.0px solid transparent;
 }
 /* END of avatar box */
 
@@ -543,20 +621,35 @@ ul.menu > li.separator:hover {
   flex-direction: column;
 }
 
-.panel-form-one {
+.panel-form-row {
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  padding: 0.5rem 0.75rem;
+  line-height: 1.5;
+  flex-grow: 0;
+  flex-shrink: 0;
 }
 
-.panel-form-two {
+.panel-form-column {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  flex-grow: 0;
+  flex-shrink: 0;
+  padding: 0.5rem 0.75rem;
+  line-height: 1.5;
+}
+/* Make sure padding is only applied at
+   the top level panel */
+.panel-form-row > .panel-form-column {
+    padding: 0!important;
+    flex-grow: 1;
+}
+.panel-form-column > .panel-form-row {
+    padding: 0!important;
 }
 
-
-/* Styling of avatar upload area in the New Account panel */
+/* Styling of avatar upload control */
 .avatar-upload {
   display: flex;
   flex-direction: column;
@@ -564,8 +657,16 @@ ul.menu > li.separator:hover {
   width: 7rem;
   height: 9rem;
   margin-left: 0.5rem;
+  font-size: 4.5rem;
   padding: 0;
 }
+
+.avatar-upload .avatar-box {
+  position: relative;
+  width: 7rem;
+  height: 7rem;
+}
+
 /* Clearfix */
 .avatar-upload:after {
   content: ".";
@@ -649,6 +750,7 @@ ul.menu > li.separator:hover {
 
 
 #topic-caption-panel .avatar-box {
+  position: relative;
   width: 3rem;
   min-width: 3rem;
   height: 3rem;
@@ -680,10 +782,11 @@ ul.menu > li.separator:hover {
   display: flex;
   align-items: center;
   flex: none;
-  padding: 0.5rem;
+  padding: 0.4rem;
   background-color: #eceff1;
   box-shadow: 0 -1px rgba(0,0,0,0.1); /* Faint shadow above panel */
   z-index: 2;
+  height: 4rem;
 }
 
 /* A static panel shown when no topic is selected */
@@ -886,6 +989,24 @@ ul.menu > li.separator:hover {
   margin-right: auto;
 }
 
+#group-manager {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+#group-manager-buttons {
+  display: flex;
+  background-color: #eceff1;
+  box-shadow: 0 -1px rgba(0,0,0,0.1); /* Faint shadow above panel */
+  z-index: 2;
+  justify-content: space-around;
+  padding: 0.4rem;
+  height: 4rem;
+  border-left: 1px solid #ccc;
+}
+
 /* END of InfoView */
 
 /* Modal dialog */
@@ -967,7 +1088,7 @@ ul.tabbar > li > a {
   font-size: 1.1rem;
   color: rgba(33,150,243,0.6);
   overflow: hidden;
-  box-shadow: inset 0 -2px 2.5px -1px rgba(0,0,0,0.5);
+  box-shadow: inset 0 -2px 2.5px -1px rgba(0,0,0,0.25);
 }
 
 ul.tabbar li.active > a {
@@ -1007,17 +1128,12 @@ ul.tabbar li.active > a:after {
   background-color: #0097A7;
   color: white;
   border-radius: 50%;
-  padding: 0.25rem;
-  min-width: 1.4rem;
+  width: 1.35rem;
+  height: 1.35rem;
   margin-left: 0.5rem;
-  line-height: 1;
+  line-height: 1.35rem;
   text-align: center;
   vertical-align: middle;
-}
-
-/* Color of buttons */
-.blue {
-  color: #2196f3; /* blue 500 */
 }
 
 /* Letter tile base style, responsive square box */
@@ -1025,7 +1141,6 @@ ul.tabbar li.active > a:after {
   width: 100%;
   padding-bottom: 100%;
   border-radius: 50%;
-  position: relative;
 }
 
 /* Div with letter tile content */
@@ -1042,6 +1157,10 @@ ul.tabbar li.active > a:after {
   border-radius: 50%;
   line-height: 1;
   color: rgba(250, 250, 250, 0.8); /* default text color #FAFAFA, gray 50 */
+}
+
+.lettertile:hover {
+  color: white;
 }
 
 /* Colors of letter tiles */
@@ -1073,7 +1192,7 @@ ul.tabbar li.active > a:after {
   background-color: #c5e1a5;
 }
 .lettertile.color9 {
-  background-color: #fff59d;
+  background-color: #f0e57d;
 }
 .lettertile.color10 {
   background-color: #f48fb1;
@@ -1154,10 +1273,104 @@ ul.tabbar li.active > a:after {
 }
 
 #self-avatar.material-icons, .avatar-box .material-icons {
-  font-size: 3rem;
+  font-size: 2.4rem;
 }
 .avatar-box .material-icons {
   color: rgba(250, 250, 250, 0.8); /* #fafafa, gray 50 */
   background-color: #c0c0c0;
   border-radius: 50%;
+}
+
+.chip-input {
+  display: flex;
+  flex-wrap: wrap;
+  flex-grow: 1;
+  cursor: text;
+  font-size: 1.1rem;
+  font-weight: normal;
+  background: transparent;
+  border-bottom: 1px solid #ccc;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+  transition: all 0.1s ease-in-out;
+  width: 100%;
+  max-height: 10rem;
+  min-height: 4rem;
+  overflow-y: scroll;
+  margin: 0.25rem 0rem 0.25rem 0rem;
+  padding: 0 0 0.5rem 0.5rem;
+  outline: none;
+  color: #666;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+}
+
+.chip-input.focused {
+  border-bottom: 1px solid #2196f3;
+  box-shadow: 0 1px 0 rgba(33, 150, 243, 0.25);
+}
+
+.chip-input > input[type="text"] {
+  display: inline-block;
+  width: auto;
+  border: none;
+  line-height: 1.8;
+  box-shadow: none;
+  min-width: 4rem;
+  flex: 1 0 auto;
+  height: 1.8rem;
+  margin: 0.125rem;
+}
+
+.chip {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  height: 1.8rem;
+  line-height: 1.8;
+  border-radius: 0.9rem;
+  margin: 0.125rem;
+  background-color: #eee;
+  white-space: nowrap;
+  font-size: 90%;
+}
+
+.chip > a {
+  display: inline-block;
+  color: #ccc;
+  background-color: #aaa;
+  border-radius: 50%;
+  margin: 0.3rem;
+  width: 1.175rem;
+  height: 1.175rem;
+  line-height: 1.15;
+  text-decoration: none;
+}
+
+.chip > a:focus,
+.chip > a:hover {
+  text-decoration: none;
+  color: #ddd;
+  background-color: #bbb;
+}
+
+.chip .avatar-box {
+  position: relative;
+  width: 1.8rem;
+  min-width: 1.8rem;
+  height: 1.8rem;
+  min-height: 1.8rem;
+  font-size: 1rem;
+  margin-right: 0.2rem;
+}
+
+.chip .avatar-box .material-icons {
+  font-size: 1.8rem;
+}
+
+.chip .spacer {
+  display: inline-block;
+  margin: 0.3rem;
+  width: 0.25rem;
+  height: 1.175rem;
 }
