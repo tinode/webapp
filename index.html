@@ -1514,7 +1514,7 @@
           auth: null,
           anon: null,
           contactList: [],
-          showMemberPanel: false
+          showMemberPanel: this.props.showMemberPanel
         };
       },
 
@@ -2162,6 +2162,7 @@
           subscriptions: {},
           displayMobile: (window.innerWidth <= MEDIA_BREAKPOINT),
           showInfoPanel: false,
+          infoPanelShowMembers: false,
           mobilePanel: 'sidepanel',
           contextMenuVisible: false,
           contextMenuBounds: null,
@@ -2261,6 +2262,7 @@
           loginDisabled: false,
           subscriptions: {},
           showInfoPanel: false,
+          infoPanelShowMembers: false,
           mobilePanel: 'sidepanel',
           contextMenuVisible: false,
           contextMenuBounds: null,
@@ -2426,7 +2428,8 @@
               topicSelected: topic.name,
               sidePanelSelected: 'contacts',
               mobilePanel: 'topic-view',
-              showInfoPanel: false
+              showInfoPanel: true,
+              infoPanelShowMembers: true
             });
           }).catch(function(err) {
             instance.setState({errorText: err.message});
@@ -2462,7 +2465,11 @@
         var instance = this;
         topic.leave(true).then(function(ctrl) {
           // Hide MessageView and InfoView panels.
-          instance.setState({topicSelected: '', showInfoPanel: false});
+          instance.setState({
+            topicSelected: '',
+            showInfoPanel: false,
+            infoPanelShowMembers: false
+          });
         });
       },
 
@@ -2546,10 +2553,10 @@
         }
       },
       handleShowInfoView: function() {
-        this.setState({showInfoPanel: true});
+        this.setState({showInfoPanel: true, infoPanelShowMembers: false});
       },
       handleHideInfoView: function() {
-        this.setState({showInfoPanel: false});
+        this.setState({showInfoPanel: false, infoPanelShowMembers: false});
       },
       handleMemberUpdateRequest: function(topicName, added, removed) {
         if (!topicName) {
@@ -2642,6 +2649,7 @@
                 topic={this.state.topicSelected}
                 foundContacts={this.state.foundContacts}
                 myUserId={this.state.myUserId}
+                showMemberPanel={this.state.infoPanelShowMembers}
                 onSubmit={this.handleTopicUpdateRequest}
                 onCancel={this.handleHideInfoView}
                 onChangePermissions={this.handleChangePermissions}
