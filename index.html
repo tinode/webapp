@@ -342,6 +342,104 @@
     }
     /* END Combobox for selecting host name */
 
+    /* BEGIN CheckBox: styled checkbox */
+    class CheckBox extends React.PureComponent {
+      constructor(props) {
+        super(props);
+
+        this.handleChange = this.handleChange.bind(this);
+      }
+
+      handleChange() {
+        this.props.onChange(this.props.name, !this.props.checked);
+      }
+
+      render() {
+        return (
+          this.props.checked ?
+            <i className="material-icons blue" onClick={this.handleChange}>check_box</i> :
+            <i className="material-icons blue" onClick={this.handleChange}>check_box_outline_blank</i>
+        );
+      }
+    }
+    /* END CheckBox */
+
+    /* BEGIN PermissionsEditor: Component for editing permissions */
+    // <PermissionsEditor mode="JWROD" skip="O" onChange={this.handleCheckboxTest} />
+    var PermissionsEditor = React.createClass({
+      getInitialState: function() {
+        return {
+          mode: (this.props.mode || "").replace("N", "")
+        };
+      },
+
+      handleChange: function(val) {
+        var mode = this.state.mode;
+        var idx = mode.indexOf(val);
+        if (idx == -1) {
+          mode += val;
+        } else {
+          mode = mode.replace(val, "");
+        }
+        this.setState({mode: mode});
+      },
+
+      handleSubmit: function() {
+        var mode = this.state.mode || "N";
+        if (mode !== this.props.mode) {
+          this.props.onSubmit(mode);
+        } else {
+          this.props.onCancel();
+        }
+      },
+
+      handleCancel: function() {
+        this.props.onCancel();
+      },
+
+      render: function() {
+        var all = 'JRWPASDO';
+        var names = {
+          'J': 'Join (J)',
+          'R': 'Read (R)',
+          'W': 'Write (W)',
+          'P': 'Get notified (P)',
+          'A': 'Approve (A)',
+          'S': 'Share (S)',
+          'D': 'Delete (D)',
+          'O': 'Owner (O)'
+        };
+        var skip = this.props.skip || "";
+        var mode = this.state.mode || "";
+        var items = [];
+        for (var i=0; i<all.length; i++) {
+          var c = all.charAt(i);
+          if (skip.indexOf(c) >= 0) {
+            continue;
+          }
+          items.push(
+            <li key={c}><CheckBox name={c}
+              checked={(mode.indexOf(c) > -1)} onChange={this.handleChange}/> {names[c]}</li>
+          );
+        }
+
+        return (
+          <div className="panel-form-column">
+            <label className="small">Permissions</label>
+            <ul className="permission-editor">
+              {items}
+            </ul>
+            <br />
+            <div className="dialog-buttons">
+              <button className="blue" onClick={this.handleSubmit}>Ok</button>
+              <button className="white" onClick={this.handleCancel}>Cancel</button>
+            </div>
+          </div>
+        );
+      }
+    });
+    /* END PermissionsEditor */
+
     /* BEGIN ChipInput: group membership widget */
     var ChipInput = React.createClass({
       getInitialState: function() {
@@ -514,6 +612,7 @@
         this.setState({errorCleared: false});
         this.props.onLogin(this.state.login.trim(), this.state.password.trim());
       },
+
       render: function() {
         var submitClasses = "blue";
         if (this.props.disabled) {
@@ -1514,7 +1613,8 @@
           auth: null,
           anon: null,
           contactList: [],
-          showMemberPanel: this.props.showMemberPanel
+          showMemberPanel: this.props.showMemberPanel,
+          showPermissionEditorFor: undefined
         };
       },
 
@@ -1542,6 +1642,7 @@
       },
 
       resetSubs: function(topic) {
+        console.log("Reset subs");
         var contacts = [];
         topic.subscribers(function(sub){
           contacts.push(sub);
@@ -1552,6 +1653,8 @@
       },
 
       resetDesc: function(topic) {
+        console.log("Reset desc");
+
         var defacs = topic.getDefaultAccess() || {};
         var acs = topic.getAccessMode();
         this.setState({
@@ -1589,7 +1692,7 @@
       handleFullNameUpdate: function(fn) {
         if (this.state.fullName !== fn) {
           this.setState({fullName: fn});
-          this.props.onSubmit(this.props.topic,
+          this.props.onTopicDescUpdate(this.props.topic,
             vcard(fn, this.state.avatar),
             null);
         }
@@ -1598,7 +1701,7 @@
       handlePrivateUpdate: function(priv) {
         if (this.state.priv !== priv) {
           this.setState({private: priv});
-          this.props.onSubmit(this.props.topic,
+          this.props.onTopicDescUpdate(this.props.topic,
             null,
             priv);
         }
@@ -1606,15 +1709,41 @@
 
       handleImageChanged: function(img) {
         this.setState({avatar: img});
-        this.props.onSubmit(this.props.topic,
+        this.props.onTopicDescUpdate(this.props.topic,
           vcard(this.state.fullName, img),
           null);
       },
 
-      handleMuted: function(e) {
-        var checked = e.target.checked;
+      handleMuted: function(ignored, checked) {
         this.setState({muted: checked});
         this.props.onChangePermissions(this.props.topic, checked ? "-P" : "+P");
+      },
+
+      handlePermissionsChanged: function(perm) {
+        if (this.state.showPermissionEditorFor === 'auth') {
+          this.props.onTopicDescUpdate(this.props.topic, null, null, {auth: perm});
+        } else if (this.state.showPermissionEditorFor === 'anon') {
+          this.props.onTopicDescUpdate(this.props.topic, null, null, {anon: perm});
+        } else if (this.state.showPermissionEditorFor === 'mode') {
+          console.log("Change permissions to " + perm);
+          this.props.onChangePermissions(this.props.topic, perm);
+        }
+
+        this.setState({showPermissionEditorFor: undefined});
+      },
+
+      handleLaunchPermissionsEditor: function(which) {
+        this.setState({
+          showPermissionEditorFor: which,
+          editedPermissions: which === 'mode' ?
+            this.state.access :
+            which === 'auth' ? this.state.auth : this.state.anon,
+          editedPermissionsSkipped: "O"
+        });
+      },
+
+      handleHidePermissionsEditor: function() {
+        this.setState({showPermissionEditorFor: undefined});
       },
 
       handleShowAddMembers: function() {
@@ -1661,6 +1790,14 @@
                 onCancel={this.handleHideAddMembers}
                 onSubmit={this.handleMemberUpdateRequest} />
               :
+            this.state.showPermissionEditorFor ?
+              <PermissionsEditor
+                mode={this.state.editedPermissions}
+                skip={this.state.editedPermissionsSkipped}
+                onSubmit={this.handlePermissionsChanged}
+                onCancel={this.handleHidePermissionsEditor}
+                />
+              :
               <div id="info-view-content" className="scrollable-panel">
                 <div className="panel-form-row">
                   <div className="panel-form-column">
@@ -1691,19 +1828,28 @@
                   </div>
                   <div className="panel-form-row">
                     <label>Permissions:</label>
-                    <tt>{this.state.access}</tt>
+                    <tt className="clickable"
+                      onClick={this.handleLaunchPermissionsEditor.bind(this, 'mode')}>
+                      {this.state.access}
+                    </tt>
                   </div>
                   <div className="panel-form-row">
-                    <label htmlFor="info-muted">Muted:</label>
-                    <input id="info-muted" type="checkbox" checked={this.state.muted}
+                    <label>Muted:</label>
+                    <CheckBox name="P" checked={this.state.muted}
                         onChange={this.handleMuted} />
                   </div>
                   {this.state.auth || this.state.anon ?
                     <div>
                       <div><label className="small">Default access mode:</label></div>
                       <div className="quoted">
-                        <div>Auth: <tt>{this.state.auth}</tt></div>
-                        <div>Anon: <tt>{this.state.anon}</tt></div>
+                        <div>Auth: <tt  className="clickable"
+                          onClick={this.handleLaunchPermissionsEditor.bind(this, 'auth')}>
+                          {this.state.auth}
+                        </tt></div>
+                        <div>Anon: <tt className="clickable"
+                          onClick={this.handleLaunchPermissionsEditor.bind(this, 'anon')}>
+                          {this.state.anon}
+                        </tt></div>
                       </div>
                     </div>
                   :
@@ -2441,10 +2587,20 @@
         // FIXME(gene): launch group member manager
       //onAddMember},
 
-      handleTopicUpdateRequest: function(topicName, pub, priv) {
+      handleTopicUpdateRequest: function(topicName, pub, priv, permissions) {
         var topic = Tinode.getTopic(topicName);
         if (topic) {
-          topic.setMeta({desc: {public: pub, private: priv}});
+          var params = {};
+          if (pub) {
+            params.public = pub;
+          }
+          if (priv) {
+            params.private = priv;
+          }
+          if (permissions) {
+            params.defacs = permissions;
+          }
+          topic.setMeta({desc: params});
         }
       },
 
@@ -2650,7 +2806,7 @@
                 foundContacts={this.state.foundContacts}
                 myUserId={this.state.myUserId}
                 showMemberPanel={this.state.infoPanelShowMembers}
-                onSubmit={this.handleTopicUpdateRequest}
+                onTopicDescUpdate={this.handleTopicUpdateRequest}
                 onCancel={this.handleHideInfoView}
                 onChangePermissions={this.handleChangePermissions}
                 onMemberUpdateRequest={this.handleMemberUpdateRequest}

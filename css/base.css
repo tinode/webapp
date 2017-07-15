@@ -393,6 +393,28 @@ ul.menu > li.separator:hover {
 }
 /* END of InPlaceEdit styles */
 
+ul.permission-editor {
+  list-style-type: none;
+}
+
+ul.permission-editor > li {
+  margin: 0.35rem 0;
+  font-size: 1.1rem;
+  vertical-align: middle;
+}
+
+.permission-editor .material-icons {
+  font-size: 1.1rem;
+  line-height: 1.1rem;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.clickable {
+  border-bottom: 1px dashed #ddd;
+  cursor: pointer;
+}
+
 /* END of top-level layout */
 
 /* Sidepanel styles */
@@ -415,6 +437,10 @@ ul.menu > li.separator:hover {
   display: flex;
   padding: 0.5rem;
   justify-content: flex-end;
+}
+
+.dialog-buttons button {
+  margin: 0 0.5rem;
 }
 
 .avatar-box {
