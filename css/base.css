@@ -558,7 +558,8 @@ ul.permission-editor > li {
 
 .contact-box .contact-comment {
   text-overflow: ellipsis;
-  overflow: hidden
+  overflow: hidden;
+  font-weight: lighter;
 }
 
 /* The down arrow head - trigger for context menu in contacts list */
