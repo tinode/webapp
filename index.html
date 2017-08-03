@@ -116,6 +116,15 @@
       return card;
     }
 
+    // construct email params
+    function email(emailAddress) {
+      var tags = [];
+      if(emailAddress) {
+          tags.push("email:" + emailAddress);
+      }
+      return tags
+    }
+
     /* BEGIN Popup/dropdown menu */
     var ContextMenu = React.createClass({
       componentWillUnmount: function() {
@@ -650,6 +659,7 @@
           login: '',
           password: '',
           password2: '',
+          email: '',
           fn: '', // full/formatted name
           imageDataUrl: null,
           errorCleared: false
@@ -663,6 +673,9 @@
       },
       handlePassword2Change: function(e) {
         this.setState({password2: e.target.value});
+      },
+      handleEmailChange: function(e) {
+        this.setState({email: e.target.value})
       },
       handleFnChange: function(e) {
         this.setState({fn: e.target.value});
@@ -679,7 +692,9 @@
           this.props.onCreateAccount(
             this.state.login.trim(),
             this.state.password.trim(),
-            vcard(this.state.fn, this.state.imageDataUrl));
+            vcard(this.state.fn, this.state.imageDataUrl),
+            null,
+            email(this.state.email));
         }
       },
       render: function() {
@@ -701,8 +716,12 @@
               <AvatarUpload onImageChanged={this.handleImageChanged} />
             </div>
             <div  className="panel-form-row">
+              <input type="text" placeholder="Email, e.g john.doe@example.com"
+                value={this.state.email} onChange={this.handleEmailChange} required/>
+            </div>
+            <div  className="panel-form-row">
               <input type="text" placeholder="Full name, e.g. John Doe"
-                value={this.state.fn} onChange={this.handleFnChange} />
+                value={this.state.fn} onChange={this.handleFnChange} required/>
             </div>
             <div className="dialog-buttons">
               <button className={submitClasses} onClick={this.handleSubmit}>Sign up</button>
@@ -2502,12 +2521,13 @@
         this.setState({sidePanelSelected: 'register'});
       },
       // Actual registration of a new account.
-      handleNewAccountRequest: function(login_, password_, public_, private_) {
+      handleNewAccountRequest: function(login_, password_, public_, private_, tags_) {
         var instance = this;
+        tags_ = tags_ || []; // init tags_ value just in case undefined
         Tinode.connect(this.state.serverAddress)
           .then(function() {
             return Tinode.createAccountBasic(login_, password_,
-              {login: true, public: public_, private: private_});
+              {defacs: {auth: "JRWPS", anon: "N"}, public: public_, private: private_, tags: tags_});
           })
           .then(function() {
             instance.handleLoginSuccessful(instance);
