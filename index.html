@@ -116,13 +116,12 @@
       return card;
     }
 
-    // construct email params
-    function email(emailAddress) {
-      var tags = [];
-      if(emailAddress) {
-          tags.push("email:" + emailAddress);
+    // Construct a user discovery tag
+    function to_tag(tagname, value) {
+      if (tagname && value) {
+          return [tagname + ":" + value];
       }
-      return tags
+      return undefined;
     }
 
     /* BEGIN Popup/dropdown menu */
@@ -694,7 +693,7 @@
             this.state.password.trim(),
             vcard(this.state.fn, this.state.imageDataUrl),
             null,
-            email(this.state.email));
+            to_tag("email", this.state.email));
         }
       },
       render: function() {
