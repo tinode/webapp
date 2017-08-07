@@ -1651,7 +1651,9 @@
         this.resetDesc(topic);
         this.resetSubs(topic);
 
-        this.props.onInitFind();
+        if (topic.getType() === "grp") {
+          this.props.onInitFind();
+        }
       },
 
       componentWillUnmount: function() {
@@ -1664,7 +1666,6 @@
       },
 
       resetSubs: function(topic) {
-        console.log("Reset subs");
         var contacts = [];
         topic.subscribers(function(sub){
           contacts.push(sub);
@@ -1675,8 +1676,6 @@
       },
 
       resetDesc: function(topic) {
-        console.log("Reset desc");
-
         var defacs = topic.getDefaultAccess() || {};
         var acs = topic.getAccessMode();
         this.setState({
@@ -1747,7 +1746,6 @@
         } else if (this.state.showPermissionEditorFor === 'anon') {
           this.props.onTopicDescUpdate(this.props.topic, null, null, {anon: perm});
         } else if (this.state.showPermissionEditorFor === 'mode') {
-          console.log("Change permissions to " + perm);
           this.props.onChangePermissions(this.props.topic, perm);
         }
 
@@ -2530,7 +2528,7 @@
         Tinode.connect(this.state.serverAddress)
           .then(function() {
             return Tinode.createAccountBasic(login_, password_,
-              {defacs: {auth: "JRWPS", anon: "N"}, public: public_, private: private_, tags: tags_});
+              {public: public_, private: private_, tags: tags_});
           })
           .then(function() {
             instance.handleLoginSuccessful(instance);
