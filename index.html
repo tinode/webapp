@@ -2022,7 +2022,9 @@
           // Unbind the previous topic from this component.
           if (this.state.topic) {
             var oldTopic = Tinode.getTopic(this.state.topic);
-            oldTopic.leave(false);
+            if (oldTopic.isSubscribed()) {
+              oldTopic.leave(false);
+            }
             oldTopic.onData = undefined;
             oldTopic.onInfo = undefined;
             oldTopic.onMetaDesc = undefined;
@@ -2030,11 +2032,13 @@
           }
 
           if (topic.isSubscribed()) {
+            console.log("topic " + props.topic + " is subscribed");
             this.handleDescChange(topic);
             topic.messages(function(msg) {
               msgs = msgs.concat(msg);
             });
           } else {
+            console.log("topic " + props.topic + " is NOT subscribed");
             topic.subscribe({get: {desc: {}, sub: {}, data: {}}});
           }
 
@@ -2054,7 +2058,7 @@
         }
       },
       handleSubsUpdated: function(uids) {
-        console.log("topic subscriptions updated");
+        // console.log("topic subscriptions updated");
       },
       handleNewMessage: function(msg) {
         clearTimeout(this.readTimer);
@@ -2573,35 +2577,25 @@
       handleNewTopicRequest: function(peerName, pub) {
         var instance = this;
 
-        // Check if user clicked on an existing connection.
-        if (Tinode.getTopicType(peerName) === "p2p") {
+        var topic = peerName ? Tinode.newTopicWith(peerName) : Tinode.newTopic();
+        var params = {get: {desc: {}, data: {}}};
+        if (!peerName) {
+          params.get.sub = {};
+          params.set = {desc: {public: pub}};
+        }
+
+        topic.subscribe(params).then(function() {
           instance.setState({
             errorText: '',
-            topicSelected: peerName,
+            topicSelected: topic.name,
             sidePanelSelected: 'contacts',
             mobilePanel: 'topic-view',
-            showInfoPanel: false
+            showInfoPanel: false,
+            infoPanelShowMembers: peerName ? false : true
           });
-        } else {
-          var topic = peerName ? Tinode.newTopicWith(peerName) : Tinode.newTopic();
-          var params = {get: {desc: {}, data: {}}};
-          if (!peerName) {
-            params.get.sub = {}; // Fetch subs for grp topics only. Subscriptions for a p2p topic are useless.
-            params.set = {desc: {public: pub}};
-          }
-          topic.subscribe(params).then(function() {
-            instance.setState({
-              errorText: '',
-              topicSelected: topic.name,
-              sidePanelSelected: 'contacts',
-              mobilePanel: 'topic-view',
-              showInfoPanel: true,
-              infoPanelShowMembers: true
-            });
-          }).catch(function(err) {
-            instance.setState({errorText: err.message});
-          });
-        }
+        }).catch(function(err) {
+          instance.setState({errorText: err.message});
+        });
       },
 
       //handleManageGroupMembers: function(topicName) {
