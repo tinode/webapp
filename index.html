@@ -2384,14 +2384,14 @@
       doLogin: function(login, password) {
         var instance = this;
 
-        // Try t login with token. If token is not available, try password. If no password, ask for it.
+        // Try to login with token. If token is not available, try password. If no password, ask for it.
         var promise = null;
         var token = Tinode.getLoginToken();
-        if (password) {
+        if (token) {
+          promise = Tinode.loginToken(token.token);
+        } else if (password) {
           this.setState({password: null});
           promise = Tinode.loginBasic(login, password);
-        } else if (token) {
-          promise = Tinode.loginToken(token.token);
         } else {
           this.setState({loginDisabled: false});
         }
