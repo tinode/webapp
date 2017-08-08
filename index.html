@@ -1698,8 +1698,6 @@
             modeGiven2: user2.acs.getGiven(),
             modeWant2: user2.acs.getWant(),
           });
-          console.log("Processed resetSub");
-          console.log(user2);
         } else {
           topic.subscribers(function(sub){
             contacts.push(sub);
@@ -1950,7 +1948,7 @@
                         </tt></div>
                         <div>{this.state.fullName}&prime;s: <tt className="clickable"
                           onClick={this.handleLaunchPermissionsEditor.bind(this, 'given')}>
-                          {this.state.modeGiven}
+                          {this.state.modeGiven2}
                         </tt></div>
                       </div>
                     </div>
