@@ -1654,6 +1654,8 @@
           access: null,
           modeGiven: null,
           modeWant: null,
+          modeGiven2: null, // P2P topic, the other user mode given
+          modeWant2: null,  // P2P topic, the other user mode want
           auth: null,
           anon: null,
           contactList: [],
@@ -1689,12 +1691,23 @@
 
       resetSubs: function(topic) {
         var contacts = [];
-        topic.subscribers(function(sub){
-          contacts.push(sub);
-        }, this);
-        this.setState({
-          contactList: contacts
-        });
+        if (topic.getType() === "p2p") {
+          // Fetch the other party in the p2p conversation.
+          var user2 = topic.subscriber(this.props.topic);
+          this.setState({
+            modeGiven2: user2.acs.getGiven(),
+            modeWant2: user2.acs.getWant(),
+          });
+          console.log("Processed resetSub");
+          console.log(user2);
+        } else {
+          topic.subscribers(function(sub){
+            contacts.push(sub);
+          }, this);
+          this.setState({
+            contactList: contacts
+          });
+        }
       },
 
       resetDesc: function(topic) {
@@ -1727,6 +1740,7 @@
       },
 
       onSubsUpdated: function() {
+        console.log("onSubsUpdated");
         var topic = Tinode.getTopic(this.props.topic);
         if (!topic) {
           return;
@@ -1764,7 +1778,7 @@
         this.props.onChangePermissions(this.props.topic, checked ? "-P" : "+P");
       },
 
-      handlePermissionsChanged: function(perm, uid) {
+      handlePermissionsChanged: function(perm) {
         switch (this.state.showPermissionEditorFor) {
           case 'auth':
             this.props.onTopicDescUpdate(this.props.topic, null, null, {auth: perm});
@@ -1777,7 +1791,7 @@
             this.props.onChangePermissions(this.props.topic, perm);
             break;
           case 'given':
-            this.props.onChangePermissions(this.props.topic, perm, uid);
+            this.props.onChangePermissions(this.props.topic, perm, this.props.topic);
             break;
         }
 
@@ -1798,8 +1812,8 @@
             titleCompare = 'Granted';
             break;
           case 'given':
-            toEdit = this.state.modeGiven;
-            toCompare = this.state.modeWant;
+            toEdit = this.state.modeGiven2;
+            toCompare = this.state.modeWant2;
             titleEdit = 'Granted';
             titleCompare = 'Requested';
             break;
@@ -1914,17 +1928,33 @@
                     <tt>{this.state.address}</tt>
                   </div>
                   <div className="panel-form-row">
-                    <label>Permissions:</label>
-                    <tt className="clickable"
-                      onClick={this.handleLaunchPermissionsEditor.bind(this, 'want')}>
-                      {this.state.access}
-                    </tt>
-                  </div>
-                  <div className="panel-form-row">
                     <label>Muted:</label>
                     <CheckBox name="P" checked={this.state.muted}
                         onChange={this.handleMuted} />
                   </div>
+                  {this.state.groupTopic ?
+                    <div className="panel-form-row">
+                      <label>Your permissions:</label>
+                      <tt className="clickable"
+                        onClick={this.handleLaunchPermissionsEditor.bind(this, 'want')}>
+                        {this.state.access}
+                      </tt>
+                    </div>
+                    :
+                    <div>
+                      <div><label className="small">Permissions:</label></div>
+                      <div className="quoted">
+                        <div>Yours: <tt className="clickable"
+                          onClick={this.handleLaunchPermissionsEditor.bind(this, 'want')}>
+                          {this.state.access}
+                        </tt></div>
+                        <div>{this.state.fullName}&prime;s: <tt className="clickable"
+                          onClick={this.handleLaunchPermissionsEditor.bind(this, 'given')}>
+                          {this.state.modeGiven}
+                        </tt></div>
+                      </div>
+                    </div>
+                  }
                   {this.state.auth || this.state.anon ?
                     <div>
                       <div><label className="small">Default access mode:</label></div>
@@ -2099,13 +2129,11 @@
           }
 
           if (topic.isSubscribed()) {
-            console.log("topic " + props.topic + " is subscribed");
             this.handleDescChange(topic);
             topic.messages(function(msg) {
               msgs = msgs.concat(msg);
             });
           } else {
-            console.log("topic " + props.topic + " is NOT subscribed");
             topic.subscribe({get: {desc: {}, sub: {}, data: {}}});
           }
 
@@ -2645,9 +2673,8 @@
         var instance = this;
 
         var topic = peerName ? Tinode.newTopicWith(peerName) : Tinode.newTopic();
-        var params = {get: {desc: {}, data: {}}};
+        var params = {get: {desc: {}, data: {}, sub: {}}};
         if (!peerName) {
-          params.get.sub = {};
           params.set = {desc: {public: pub}};
         }
 
@@ -2664,10 +2691,6 @@
           instance.setState({errorText: err.message});
         });
       },
-
-      //handleManageGroupMembers: function(topicName) {
-        // FIXME(gene): launch group member manager
-      //onAddMember},
 
       handleTopicUpdateRequest: function(topicName, pub, priv, permissions) {
         var topic = Tinode.getTopic(topicName);
