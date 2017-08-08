@@ -393,21 +393,29 @@ ul.menu > li.separator:hover {
 }
 /* END of InPlaceEdit styles */
 
-ul.permission-editor {
-  list-style-type: none;
+table.permission-editor {
+  width: 100%;
 }
 
-ul.permission-editor > li {
+table.permission-editor td {
   margin: 0.35rem 0;
   font-size: 1.1rem;
   vertical-align: middle;
+}
+
+table.permission-editor td.checkbox {
+  text-align: center;
 }
 
 .permission-editor .material-icons {
   font-size: 1.1rem;
   line-height: 1.1rem;
   vertical-align: middle;
+}
+
+.material-icons.clickable {
   cursor: pointer;
+  border-bottom: none;
 }
 
 .clickable {

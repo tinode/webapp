@@ -358,7 +358,6 @@
     class CheckBox extends React.PureComponent {
       constructor(props) {
         super(props);
-
         this.handleChange = this.handleChange.bind(this);
       }
 
@@ -368,9 +367,15 @@
 
       render() {
         return (
-          this.props.checked ?
-            <i className="material-icons blue" onClick={this.handleChange}>check_box</i> :
-            <i className="material-icons blue" onClick={this.handleChange}>check_box_outline_blank</i>
+          this.props.onChange ? (
+            this.props.checked ?
+              <i className="material-icons blue clickable" onClick={this.handleChange}>check_box</i> :
+              <i className="material-icons blue clickable" onClick={this.handleChange}>check_box_outline_blank</i>
+            ) : (
+              this.props.checked ?
+                <i className="material-icons">check_box</i> :
+                <i className="material-icons">check_box_outline_blank</i>
+            )
         );
       }
     }
@@ -381,7 +386,7 @@
     var PermissionsEditor = React.createClass({
       getInitialState: function() {
         return {
-          mode: (this.props.mode || "").replace("N", "")
+          mode: this.props.mode
         };
       },
 
@@ -421,8 +426,10 @@
           'D': 'Delete (D)',
           'O': 'Owner (O)'
         };
+
         var skip = this.props.skip || "";
-        var mode = this.state.mode || "";
+        var mode = (this.state.mode || "").replace("N", "");
+        var compare = (this.props.compare || "").replace("N", "");
         var items = [];
         for (var i=0; i<all.length; i++) {
           var c = all.charAt(i);
@@ -430,17 +437,30 @@
             continue;
           }
           items.push(
-            <li key={c}><CheckBox name={c}
-              checked={(mode.indexOf(c) > -1)} onChange={this.handleChange}/> {names[c]}</li>
+            <tr key={c}>
+              <td>{names[c]}</td>
+              <td className="checkbox">
+                <CheckBox name={c} checked={(mode.indexOf(c) > -1)} onChange={this.handleChange}/>
+              </td>{this.props.compare ? <td className="checkbox">
+                <CheckBox name={c} checked={(compare.indexOf(c) > -1)}/>
+              </td> : null}
+            </tr>
           );
         }
 
         return (
           <div className="panel-form-column">
             <label className="small">Permissions</label>
-            <ul className="permission-editor">
+            <table className="permission-editor">
+            {this.props.compare ?
+              <thead><tr>
+                <th></th><th>{this.props.modeTitle}</th>
+                <th>{this.props.compareTitle}</th>
+              </tr></thead> :
+              null}
+            <tbody>
               {items}
-            </ul>
+            </tbody></table>
             <br />
             <div className="dialog-buttons">
               <button className="blue" onClick={this.handleSubmit}>Ok</button>
@@ -1632,6 +1652,8 @@
           selectedContact: null,
           muted: undefined,
           access: null,
+          modeGiven: null,
+          modeWant: null,
           auth: null,
           anon: null,
           contactList: [],
@@ -1689,6 +1711,8 @@
           address: topic.name,
           groupTopic: (topic.getType() === "grp"),
           access: acs.getMode(),
+          modeGiven: acs.getGiven(),
+          modeWant: acs.getWant(),
           auth: defacs.auth,
           anon: defacs.anon
         });
@@ -1740,25 +1764,64 @@
         this.props.onChangePermissions(this.props.topic, checked ? "-P" : "+P");
       },
 
-      handlePermissionsChanged: function(perm) {
-        if (this.state.showPermissionEditorFor === 'auth') {
-          this.props.onTopicDescUpdate(this.props.topic, null, null, {auth: perm});
-        } else if (this.state.showPermissionEditorFor === 'anon') {
-          this.props.onTopicDescUpdate(this.props.topic, null, null, {anon: perm});
-        } else if (this.state.showPermissionEditorFor === 'mode') {
-          this.props.onChangePermissions(this.props.topic, perm);
+      handlePermissionsChanged: function(perm, uid) {
+        switch (this.state.showPermissionEditorFor) {
+          case 'auth':
+            this.props.onTopicDescUpdate(this.props.topic, null, null, {auth: perm});
+            break;
+          case 'anon':
+            this.props.onTopicDescUpdate(this.props.topic, null, null, {anon: perm});
+            break;
+          case 'mode':
+          case 'want':
+            this.props.onChangePermissions(this.props.topic, perm);
+            break;
+          case 'given':
+            this.props.onChangePermissions(this.props.topic, perm, uid);
+            break;
         }
 
         this.setState({showPermissionEditorFor: undefined});
       },
 
       handleLaunchPermissionsEditor: function(which) {
+        var toEdit, toCompare, toSkip, titleEdit, titleCompare;
+        switch (which) {
+          case 'mode':
+            toEdit = this.state.access;
+            break;
+          case 'want':
+            toEdit = this.state.modeWant;
+            toCompare = this.state.modeGiven;
+            toSkip ='O';
+            titleEdit = 'Requested';
+            titleCompare = 'Granted';
+            break;
+          case 'given':
+            toEdit = this.state.modeGiven;
+            toCompare = this.state.modeWant;
+            titleEdit = 'Granted';
+            titleCompare = 'Requested';
+            break;
+          case 'auth':
+            toEdit = this.state.auth;
+            toSkip = 'O';
+            break;
+          case 'anon':
+            toEdit = this.state.auth;
+            toSkip = 'O';
+            break;
+          default:
+            console.log("Unknown permission editing mode '" + which + "'");
+            break;
+        }
         this.setState({
           showPermissionEditorFor: which,
-          editedPermissions: which === 'mode' ?
-            this.state.access :
-            which === 'auth' ? this.state.auth : this.state.anon,
-          editedPermissionsSkipped: "O"
+          editedPermissions: toEdit,
+          immutablePermissions: toCompare,
+          editedPermissionsTitle: titleEdit,
+          immutablePermissionsTitle: titleCompare,
+          editedPermissionsSkipped: toSkip
         });
       },
 
@@ -1813,6 +1876,10 @@
             this.state.showPermissionEditorFor ?
               <PermissionsEditor
                 mode={this.state.editedPermissions}
+                compare={this.state.immutablePermissions}
+                skip={this.state.editedPermissionsSkipped}
+                modeTitle={this.state.editedPermissionsTitle}
+                compareTitle={this.state.immutablePermissionsTitle}
                 skip={this.state.editedPermissionsSkipped}
                 onSubmit={this.handlePermissionsChanged}
                 onCancel={this.handleHidePermissionsEditor}
@@ -1849,7 +1916,7 @@
                   <div className="panel-form-row">
                     <label>Permissions:</label>
                     <tt className="clickable"
-                      onClick={this.handleLaunchPermissionsEditor.bind(this, 'mode')}>
+                      onClick={this.handleLaunchPermissionsEditor.bind(this, 'want')}>
                       {this.state.access}
                     </tt>
                   </div>
@@ -2619,12 +2686,18 @@
         }
       },
 
-      handleChangePermissions: function(topicName, want) {
+      handleChangePermissions: function(topicName, mode, uid) {
         var topic = Tinode.getTopic(topicName);
         if (topic) {
           var am = topic.getAccessMode();
-          am.updateWant(want);
-          topic.setMeta({sub: {mode: am.getWant()}});
+          if (uid) {
+            am.updateGiven(mode);
+            mode = am.getGiven();
+          } else {
+            am.updateWant(mode);
+            mode = am.getWant();
+          }
+          topic.setMeta({sub: {user: uid, mode: mode}});
         }
       },
 
