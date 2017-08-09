@@ -405,6 +405,7 @@ table.permission-editor td {
 
 table.permission-editor td.checkbox {
   text-align: center;
+  color: #999;
 }
 
 .permission-editor .material-icons {
