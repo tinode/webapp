@@ -12,6 +12,121 @@
 //
 // JSON data representation is similar to Draft.js raw formatting.
 
+/*
+Text:
+
+  this is *bold*, `code` and _italic_ ~strike~ eol
+  none *bold _italic_* eol
+  this is a url: http://www.example.com/path?a=b%20c#fragment, and another www.tinode.co
+  this is a @mention and a #hashtag in a string
+  plain unformatted text
+
+Sample JSON format of the text above:
+{
+   "blocks":[
+      {
+         "text":"this is bold, code and italic strike eol",
+         "styles":[
+            {
+               "offset":8,
+               "len":4,
+               "style":"BO"
+            },
+            {
+               "offset":14,
+               "len":4,
+               "style":"CO"
+            },
+            {
+               "offset":23,
+               "len":6,
+               "style":"IT"
+            },
+            {
+               "offset":30,
+               "len":6,
+               "style":"ST"
+            }
+         ]
+      },
+      {
+         "text":"none bold italic eol",
+         "styles":[
+            {
+               "offset":10,
+               "len":6,
+               "style":"IT"
+            },
+            {
+               "offset":5,
+               "len":11,
+               "style":"BO"
+            }
+         ]
+      },
+      {
+         "text":"this is a url: http://www.example.com/path?a=b%20c#fragment, and another www.tinode.co",
+         "ent":[
+            {
+               "offset":15,
+               "len":44,
+               "key":0
+            },
+            {
+               "offset":73,
+               "len":13,
+               "key":1
+            }
+         ]
+      },
+      {
+         "text":"this is a @mention and a #hashtag in a string",
+         "ent":[
+            {
+               "offset":10,
+               "len":8,
+               "key":2
+            },
+            {
+               "offset":25,
+               "len":8,
+               "key":3
+            }
+         ]
+      },
+      {
+         "text":"plain unformatted text"
+      }
+   ],
+   "refs":[
+      {
+         "type":"LN",
+         "data":{
+            "url":"http://www.example.com/path?a=b%20c#fragment"
+         }
+      },
+      {
+         "type":"LN",
+         "data":{
+            "url":"http://www.tinode.co"
+         }
+      },
+      {
+         "type":"MN",
+         "data":{
+            "val":"mention"
+         }
+      },
+      {
+         "type":"HT",
+         "data":{
+            "val":"hashtag"
+         }
+      }
+   ]
+}
+*/
+
 (function(environment) { // closure for web browsers
   'use strict';
 
@@ -306,7 +421,6 @@
           entities = extractEntities(block.text);
           var ranges = [];
           if (entities.length > 0) {
-            console.log(JSON.stringify(entities));
             for (var i in entities) {
               // {offset: match['index'], unique: match[0], len: match[0].length, data: ent.packer(), type: ent.name}
               var ent = entities[i];
