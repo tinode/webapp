@@ -1,22 +1,186 @@
-// Basic parser and formatter for simple rich text.
-// JSON data representation is similar to Draft.js
+// Basic parser and formatter for very simple rich text. Mostly targeted at
+// mobile use cases similar to Telegram and WhatsApp.
+//
+// Supports:
+//   *abc* -> <b>abc</b>
+//   _abc_ -> <i>abc</i>
+//   ~abc~ -> <del>abc</del>
+//   `abc` -> <tt>abc</tt>
+// Nested frmatting is supported, e.g. *abc _def_* -> <b>abc <i>def</i></b>
+//
+// URLs, @mentions, and #hashtags are extracted.
+//
+// JSON data representation is similar to Draft.js.
+
 (function(environment) { // closure for web browsers
   'use strict';
 
   var Drafty = (function() {
+
+    // Take a string and defined earlier style spans, re-compose them into a tree where each leaf is
+    // a same-style (or no style) string. I.e. 'hello *bold _italic_* and ~more~ world' ->
+    // ('hello ', (b: 'bold ', (i: 'italic')), ' and ', (s: 'more'), ' world');
+    //
+    // This is needed in order to clear markup, i.e. 'hello *world*' -> 'hello world' and convert
+    // ranges from markup-ed offsets to plain text offsets;
+    //
+    // Take string and chunks. Pick first chunk: 1. if it starts at the offset 0, clip the substring
+    // equal in length to the chunk.
+    function chunkify(line, start, end, spans) {
+      var chunks = [];
+
+      if (spans.length == 0) {
+        return [];
+      }
+
+      for (var i in spans) {
+        // Get the next chunk from the queue
+        var span = spans[i];
+
+        // Grab the initial unstyled chunk
+        if (span.start > start) {
+          chunks.push({text: line.slice(start, span.start)});
+        }
+
+        // Grab the styled chunk. It may include subchunks.
+        var chunk = {type: span.type};
+        var chld = chunkify(line, span.start + 1, span.end - 1, span.children);
+        if (chld.length > 0) {
+          chunk.children = chld;
+        } else {
+          chunk.text = span.text;
+        }
+        chunks.push(chunk);
+        start = span.end + 1; // '+1' is to skip the formatting character
+      }
+
+      // Grab the remaining unstyled chunk, after the last span
+      if (start < end) {
+        chunks.push({text: line.slice(start, end)});
+      }
+
+      return chunks;
+    }
+
+    // Detect starts and ends of formatting spans
+    function spannify(original, re_start, re_end, type) {
+      var result = [];
+      var index = 0;
+      var line = original.slice(0); // make a copy;
+
+      while (line.length > 0) {
+        // match[0]; // match, like '*abc*'
+        // match[1]; // match captured in parenthesis, like 'abc'
+        // match['index']; // offset where the match started.
+
+        // Find the opening token.
+        var start = re_start.exec(line);
+        if (start == null) {
+          break;
+        }
+        // The actual offset may not be at the beginning of the match. Find it in the matched string.
+        var start_offset = start['index'] + start[0].lastIndexOf(start[1]);
+        // Clip the processed part of the string.
+        line = line.slice(start_offset + 1);
+        // start_offset is an offset within the clipped string. Convert to original index.
+        start_offset += index;
+        // Index now point to the beginning of 'line' within the 'original' string.
+        index = start_offset + 1;
+
+        // Find the matching closing token.
+        var end = re_end.exec(line);
+        if (end == null) {
+          break;
+        }
+        var end_offset = end['index'] + end[0].indexOf(end[1]);
+        // Clip the processed part of the string.
+        line = line.slice(end_offset + 1);
+        // Update offsets
+        end_offset += index;
+        // Index now point to the beginning of 'line' within the 'original' string.
+        index = end_offset + 1;
+
+        result.push({
+          text: original.slice(start_offset+1, end_offset),
+          children: [],
+          start: start_offset,
+          end: end_offset,
+          type: type
+        });
+      }
+
+      return result;
+    }
+
+    function toTree(spans) {
+      if (spans.length == 0) {
+        return [];
+      }
+
+      // Throw away overlapping spans.
+      var cleaned = [spans[0]];
+      var last = spans[0];
+      for (var i = 1; i < spans.length; i++) {
+        // Keep spans which start after the end of the previous span or those which
+        // are complete within the previous span.
+
+        if (spans[i].start > last.end) {
+          // Span is completely outside of the previous span.
+          cleaned.push(spans[i]);
+          last = spans[i];
+        } else if (spans[i].end < last.end) {
+          // Span is fully inside of the previous span. Push to subnode.
+          last.children.push(spans[i]);
+        }
+        // Span could partially overlap, ignoring it as invalid.
+      }
+
+      // Recursively rearrange the subnodes.
+      for (var i in cleaned) {
+        cleaned[i].children = toTree(cleaned[i].children);
+      }
+
+      return cleaned;
+    }
+
+    // finally convert the chunks to format suitable for serialization.
+    function toDrafty(chunks, startAt) {
+      var plain = "";
+      var ranges = [];
+      for (var i in chunks) {
+        var chunk = chunks[i];
+        if (!chunk.text) {
+          var drafty = toDrafty(chunk.children, plain.length + startAt);
+          chunk.text = drafty.text;
+          ranges = ranges.concat(drafty.ranges);
+        }
+
+        if (chunk.type) {
+          ranges.push({offset: plain.length + startAt, len: chunk.text.length, style: chunk.type});
+        }
+
+        plain += chunk.text;
+      }
+      return {text: plain, ranges: ranges};
+    }
+
+    // Splice two strings: insert second string into the first one at the given index
+    function splice(src, at, insert) {
+      return src.slice(0, at) + insert + src.slice(at);
+    }
 
     return {
       parse: function(content) {
         // Regular expressions for parsing inline formats
         var inlineStyles = [
           // Bold, *bold text*
-          {name: "BO", re: /(\*(?:[^\s*]|(?:[^\s*]*[^*]*[^\s*]))\*)/g},
+          {name: "BO", start: /(?:^|\W)(\*)[^\s*]/, end: /[^\s*](\*)(?:$|\W)/},
           // Italic, _italic text_
-          {name: "IT", re: /(_(?:[^\s_]|(?:[^\s_]*[^_]*[^\s_]))_)/g},
+          {name: "IT", start: /(?:^|[\W_])(_)[^\s_]/, end: /[^\s_](_)(?:$|[\W_])/},
           // Strikethough, ~strike this though~
-          {name: "ST", re: /(~(?:[^\s~]|(?:[^\s~]*[^~]*[^\s~]))~)/g},
+          {name: "ST", start: /(?:^|\W)(~)[^\s~]/g, end: /[^\s~](~)(?:$|\W)/},
           // Code block `this is monospace`
-          {name: "CO", re: /(`[^`]+`)/g}
+          {name: "CO", start: /(?:^|\W)(`)[^`]/, end: /[^`](`)(?:$|\W)/}
         ];
 
         var entities = [
@@ -37,79 +201,31 @@
 
         //
         lines.map(function(line) {
-          console.log("processing line: '" + line + "'");
           var spans = [];
           // Find formatted spans in the string.
           // Try to match each style.
           inlineStyles.map(function(style) {
-            var match;
             // Each style could be matched multiple times.
-            while ((match = style.re.exec(line)) !== null) {
-              // match[0]; // match, like '*abc*'
-              // match[1]; // matched text in parenthesis, like 'abc'
-              // match['index']; // offset where the match started.
-              spans.push({
-                match: match[1],
-                text: match[1].substring(1, match[1].length-1),
-                offset: match['index'],
-                len: match[1].length,
-                type: style.name
-              });
-            }
+            spans = spans.concat(spannify(line, style.start, style.end, style.name));
           });
 
-          var ranges = [];
           if (spans.length == 0) {
             blocks.push({text: line});
           } else {
-            console.log(JSON.stringify(spans));
-
             // Sort spans by style occurence early -> late
             spans.sort(function(a,b) {
-              return a.offset - b.offset;
+              return a.start - b.start;
             });
 
-            // Clear formatting characters from the string, leave just the plain text.
-            // Save formatting to inlineStylesRanges array
-            var chunks = [];
-            var start = 0;
-            for (var i = 0; i < spans.length; i++) {
-              // Skip empty or invalid (overlapping) chunk.
-              if (start > spans[i].offset) {
-                continue;
-              }
+            // Convert an array of possibly overlapping spans into a tree
+            spans = toTree(spans);
 
-              // Grab the initial unstyled chunk
-              if (start < spans[i].offset) {
-                chunks.push({text: line.slice(start, spans[i].offset)});
-                start = spans[i].offset;
-                console.log(i + ": " + chunks[chunks.length-1].text);
-              }
+            // Build tree representation of the format.
+            var chunks = chunkify(line, 0, line.length, spans);
 
-              // Grab the styled chunk
-              chunks.push({text: line.slice(start, start + spans[i].len), style: spans[i]});
-              console.log(i + ": " + chunks[chunks.length-1].text);
-              // And grab the unstyled span till the next chunk
-              start = start + spans[i].len;
-              var end = (i < spans.length - 1) ? spans[i+1].offset : undefined;
-              chunks.push({text: line.slice(start, end)});
-              console.log(i + ": " + chunks[chunks.length-1].text);
-              start = end; // does not matter if undefined.
-            }
-            console.log("CHUNKS");
-            console.log(JSON.stringify(chunks));
-            /*
-              var offset = spans[i].offset - shiftBy;
-              line = line.slice(0, offset) +
-                spans[i].text +
-                line.slice(offset + spans[i].len);
-              console.log(line);
-              shiftBy += 2;
-              // Save style
-              ranges.push({offset: offset, length: spans[i].len - 2, type: spans[i].type});
-            }
-            */
-            blocks.push({text: line, styleRanges: ranges});
+            var drafty = toDrafty(chunks, 0);
+
+            blocks.push({text: drafty.text, styles: drafty.ranges});
           }
         });
 
@@ -126,12 +242,21 @@
         var {blocks} = json;
         var text = "";
         for (var i in blocks) {
-          var shiftBy = 0;
           var line = blocks[i].text;
-          if (blocks[i].styleRanges) {
-            for (var j in blocks[i].styleRanges) {
-              var range = blocks[i].styleRanges[j];
-              line = line.slice(0, range.offset + shiftBy);
+          var markup = [];
+          if (blocks[i].styles) {
+            for (var j in blocks[i].styles) {
+              var range = blocks[i].styles[j];
+              markup.push({idx: range.offset, what: TAGS[range.style][0]});
+              markup.push({idx: range.offset + range.len, what: TAGS[range.style][1]});
+            }
+
+            markup.sort(function(a, b) {
+              return b.idx - a.idx; // in descending order
+            });
+
+            for (var j in markup) {
+              line = splice(line, markup[j].idx, markup[j].what);
             }
           }
           text += line + "<br>";
