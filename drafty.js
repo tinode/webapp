@@ -25,7 +25,7 @@ Sample JSON representation of the text above:
   "blocks":[
     {
       "txt":"this is bold, code, italic and deleted.",
-      "fmt":[  
+      "fmt":[
         {
           "at":8,
           "len":4,
@@ -516,7 +516,7 @@ Sample JSON representation of the text above:
        */
       toPlainText: function(content) {
         var {blocks} = content;
-        var text = blocks[0].text;
+        var text = blocks[0].txt;
         for (var i = 1; i < blocks.length; i++) {
           text += "\n" + blocks[i].txt;
         }
