@@ -14,116 +14,136 @@
 
 /*
 Text:
-
-  this is *bold*, `code` and _italic_ ~strike~ eol
-  none *bold _italic_* eol
-  this is a url: http://www.example.com/path?a=b%20c#fragment, and another www.tinode.co
+  this is *bold*, `code`, _italic_ and ~deleted~.
+  nested styles: *just bold _bold-italic_*
+  couple of urls: http://www.example.com/path?a=b%20c#fragment, and bolded *www.tinode.co*
   this is a @mention and a #hashtag in a string
-  plain unformatted text
+  the _#hashtag_ used again
 
-Sample JSON format of the text above:
+Sample JSON representation of the text above:
 {
-   "blocks":[
-      {
-         "text":"this is bold, code and italic strike eol",
-         "styles":[
-            {
-               "offset":8,
-               "len":4,
-               "style":"BO"
-            },
-            {
-               "offset":14,
-               "len":4,
-               "style":"CO"
-            },
-            {
-               "offset":23,
-               "len":6,
-               "style":"IT"
-            },
-            {
-               "offset":30,
-               "len":6,
-               "style":"ST"
-            }
-         ]
-      },
-      {
-         "text":"none bold italic eol",
-         "styles":[
-            {
-               "offset":10,
-               "len":6,
-               "style":"IT"
-            },
-            {
-               "offset":5,
-               "len":11,
-               "style":"BO"
-            }
-         ]
-      },
-      {
-         "text":"this is a url: http://www.example.com/path?a=b%20c#fragment, and another www.tinode.co",
-         "ent":[
-            {
-               "offset":15,
-               "len":44,
-               "key":0
-            },
-            {
-               "offset":73,
-               "len":13,
-               "key":1
-            }
-         ]
-      },
-      {
-         "text":"this is a @mention and a #hashtag in a string",
-         "ent":[
-            {
-               "offset":10,
-               "len":8,
-               "key":2
-            },
-            {
-               "offset":25,
-               "len":8,
-               "key":3
-            }
-         ]
-      },
-      {
-         "text":"plain unformatted text"
+  "blocks":[
+    {
+      "txt":"this is bold, code, italic and deleted.",
+      "fmt":[  
+        {
+          "at":8,
+          "len":4,
+          "tp":"BO"
+        },
+        {
+          "at":14,
+          "len":4,
+          "tp":"CO"
+        },
+        {
+          "at":20,
+          "len":6,
+          "tp":"IT"
+        },
+        {
+          "at":31,
+          "len":7,
+          "tp":"ST"
+        }
+      ]
+    },
+    {
+      "txt":"nested styles: just bold bold-italic",
+      "fmt":[
+        {
+          "at":25,
+          "len":11,
+          "tp":"IT"
+        },
+        {
+          "at":15,
+          "len":21,
+          "tp":"BO"
+        }
+      ]
+    },
+    {
+      "txt":"couple of urls: http://www.example.com/path?a=b%20c#fragment, and bolded www.tinode.co",
+      "fmt":[
+        {
+          "at":73,
+          "len":13,
+          "tp":"BO"
+        }
+      ],
+      "ent":[
+        {
+          "at":16,
+          "len":44,
+          "key":0
+        },
+        {
+          "at":73,
+          "len":13,
+          "key":1
+        }
+      ]
+    },
+    {
+      "txt":"this is a @mention and a #hashtag in a string",
+      "ent":[
+        {
+          "at":10,
+          "len":8,
+          "key":2
+        },
+        {
+          "at":25,
+          "len":8,
+          "key":3
+        }
+      ]
+    },
+    {
+      "txt":"the #hashtag used again",
+      "fmt":[
+        {
+          "at":4,
+          "len":8,
+          "tp":"IT"
+        }
+      ],
+      "ent":[
+        {
+          "at":4,
+          "len":8,
+          "key":3
+        }
+      ]
+    }
+  ],
+  "refs":[
+    {
+      "tp":"LN",
+      "data":{
+        "url":"http://www.example.com/path?a=b%20c#fragment"
       }
-   ],
-   "refs":[
-      {
-         "type":"LN",
-         "data":{
-            "url":"http://www.example.com/path?a=b%20c#fragment"
-         }
-      },
-      {
-         "type":"LN",
-         "data":{
-            "url":"http://www.tinode.co"
-         }
-      },
-      {
-         "type":"MN",
-         "data":{
-            "val":"mention"
-         }
-      },
-      {
-         "type":"HT",
-         "data":{
-            "val":"hashtag"
-         }
+    },
+    {
+      "tp":"LN",
+      "data":{
+        "url":"http://www.tinode.co"
       }
-   ]
+    },
+    {
+      "tp":"MN",
+      "data":{
+        "val":"mention"
+      }
+    },
+    {
+      "tp":"HT",
+      "data":{
+        "val":"hashtag"
+      }
+    }
+  ]
 }
 */
 
@@ -358,17 +378,17 @@ Sample JSON format of the text above:
         var chunk = chunks[i];
         if (!chunk.text) {
           var drafty = toDrafty(chunk.children, plain.length + startAt);
-          chunk.text = drafty.text;
-          ranges = ranges.concat(drafty.ranges);
+          chunk.text = drafty.txt;
+          ranges = ranges.concat(drafty.fmt);
         }
 
         if (chunk.type) {
-          ranges.push({offset: plain.length + startAt, len: chunk.text.length, style: chunk.type});
+          ranges.push({at: plain.length + startAt, len: chunk.text.length, tp: chunk.type});
         }
 
         plain += chunk.text;
       }
-      return {text: plain, ranges: ranges};
+      return {txt: plain, fmt: ranges};
     }
 
     // Splice two strings: insert second string into the first one at the given index
@@ -377,6 +397,9 @@ Sample JSON format of the text above:
     }
 
     return {
+      /**
+       * Parse text into structured representation.
+       */
       parse: function(content) {
         // Split text into lines. It makes formatting easier
         var lines = content.split('\n');
@@ -399,7 +422,7 @@ Sample JSON format of the text above:
 
           var block;
           if (spans.length == 0) {
-            block = {text: line};
+            block = {txt: line};
           } else {
             // Sort spans by style occurence early -> late
             spans.sort(function(a,b) {
@@ -414,11 +437,11 @@ Sample JSON format of the text above:
 
             var drafty = toDrafty(chunks, 0);
 
-            block = {text: drafty.text, styles: drafty.ranges};
+            block = {txt: drafty.txt, fmt: drafty.fmt};
           }
 
           // Extract entities from the cleaned up string.
-          entities = extractEntities(block.text);
+          entities = extractEntities(block.txt);
           var ranges = [];
           if (entities.length > 0) {
             for (var i in entities) {
@@ -428,9 +451,9 @@ Sample JSON format of the text above:
               if (!index) {
                 index = entityMap.length;
                 entityIndex[ent.unique] = index;
-                entityMap.push({type: ent.type, data: ent.data});
+                entityMap.push({tp: ent.type, data: ent.data});
               }
-              ranges.push({offset: ent.offset, len: ent.len, key: index});
+              ranges.push({at: ent.offset, len: ent.len, key: index});
             }
             block.ent = ranges;
           }
@@ -445,19 +468,22 @@ Sample JSON format of the text above:
         return result;
       },
 
-      format: function(content) {
+      /**
+       * Given structured representation of rich text, convert it to HTML.
+       */
+      toHTML: function(content) {
         var {blocks} = content;
         var {refs} = content;
 
         var text = "";
         for (var i in blocks) {
-          var line = blocks[i].text;
+          var line = blocks[i].txt;
           var markup = [];
-          if (blocks[i].styles) {
-            for (var j in blocks[i].styles) {
-              var range = blocks[i].styles[j];
-              markup.push({idx: range.offset, what: STYLE_DECOR[range.style][0]});
-              markup.push({idx: range.offset + range.len, what: STYLE_DECOR[range.style][1]});
+          if (blocks[i].fmt) {
+            for (var j in blocks[i].fmt) {
+              var range = blocks[i].fmt[j];
+              markup.push({idx: range.at, what: STYLE_DECOR[range.tp][0]});
+              markup.push({idx: range.at + range.len, what: STYLE_DECOR[range.tp][1]});
             }
           }
 
@@ -465,8 +491,8 @@ Sample JSON format of the text above:
             for (var j in blocks[i].ent) {
               var range = blocks[i].ent[j];
               var entity = refs[range.key];
-              markup.push({idx: range.offset, what: ENTITY_DECOR[entity.type].open(entity.data)});
-              markup.push({idx: range.offset + range.len, what: ENTITY_DECOR[entity.type].close(entity.data)});
+              markup.push({idx: range.at, what: ENTITY_DECOR[entity.tp].open(entity.data)});
+              markup.push({idx: range.at + range.len, what: ENTITY_DECOR[entity.tp].close(entity.data)});
             }
           }
 
@@ -482,7 +508,37 @@ Sample JSON format of the text above:
           text += line + "<br>";
         }
         return text;
+      },
+
+      /*
+       * Given structured representation of rich text, convert it to plain text.
+       * The only structure preserved is line breaks as \n.
+       */
+      toPlainText: function(content) {
+        var {blocks} = content;
+        var text = blocks[0].text;
+        for (var i = 1; i < blocks.length; i++) {
+          text += "\n" + blocks[i].txt;
+        }
+        return text;
+      },
+
+      /**
+       * Returns true if content has no markup and no entities.
+       */
+      isPlain: function(content) {
+        if (content.refs) {
+          return false;
+        }
+        var {blocks} = content;
+        for (var i in blocks) {
+          if (blocks[i].fmt) {
+            return false;
+          }
+        }
+        return true;
       }
+
     };
   });
 
