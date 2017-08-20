@@ -825,6 +825,10 @@ table.permission-editor td.checkbox {
   height: 4rem;
 }
 
+#sendMessage {
+  overflow: hidden;
+}
+
 /* A static panel shown when no topic is selected */
 #dummy-view {
   width: 100%;

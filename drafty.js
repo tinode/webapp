@@ -29,7 +29,7 @@ Sample JSON representation of the text above:
         {
           "at":8,
           "len":4,
-          "tp":"BO"
+          "tp":"ST"
         },
         {
           "at":14,
@@ -39,12 +39,12 @@ Sample JSON representation of the text above:
         {
           "at":20,
           "len":6,
-          "tp":"IT"
+          "tp":"EM"
         },
         {
           "at":31,
           "len":7,
-          "tp":"ST"
+          "tp":"DL"
         }
       ]
     },
@@ -54,12 +54,12 @@ Sample JSON representation of the text above:
         {
           "at":25,
           "len":11,
-          "tp":"IT"
+          "tp":"EM"
         },
         {
           "at":15,
           "len":21,
-          "tp":"BO"
+          "tp":"ST"
         }
       ]
     },
@@ -69,7 +69,7 @@ Sample JSON representation of the text above:
         {
           "at":73,
           "len":13,
-          "tp":"BO"
+          "tp":"ST"
         }
       ],
       "ent":[
@@ -106,7 +106,7 @@ Sample JSON representation of the text above:
         {
           "at":4,
           "len":8,
-          "tp":"IT"
+          "tp":"EM"
         }
       ],
       "ent":[
@@ -153,12 +153,12 @@ Sample JSON representation of the text above:
   // Regular expressions for parsing inline formats. Javascript does not support lookbehind,
   // so it's a bit messy.
   var INLINE_STYLES = [
-    // Bold, *bold text*
-    {name: "BO", start: /(?:^|\W)(\*)[^\s*]/, end: /[^\s*](\*)(?=$|\W)/},
-    // Italic, _italic text_
-    {name: "IT", start: /(?:^|[\W_])(_)[^\s_]/, end: /[^\s_](_)(?=$|[\W_])/},
-    // Strikethough, ~strike this though~
-    {name: "ST", start: /(?:^|\W)(~)[^\s~]/g, end: /[^\s~](~)(?=$|\W)/},
+    // Strong = bold, *bold text*
+    {name: "ST", start: /(?:^|\W)(\*)[^\s*]/, end: /[^\s*](\*)(?=$|\W)/},
+    // Emphesized = italic, _italic text_
+    {name: "EM", start: /(?:^|[\W_])(_)[^\s_]/, end: /[^\s_](_)(?=$|[\W_])/},
+    // Deleted, ~strike this though~
+    {name: "DL", start: /(?:^|\W)(~)[^\s~]/g, end: /[^\s~](~)(?=$|\W)/},
     // Code block `this is monospace`
     {name: "CO", start: /(?:^|\W)(`)[^`]/, end: /[^`](`)(?=$|\W)/}
   ];
@@ -168,7 +168,7 @@ Sample JSON representation of the text above:
     // URLs
     {name: "LN", dataName: "url",
       pack: function(val) {
-        // Check if the protocol is pecified, if not use http
+        // Check if the protocol is specified, if not use http
         if (!/^[a-z]+:\/\//i.test(val)) {
           val = 'http://' + val;
         }
@@ -182,14 +182,14 @@ Sample JSON representation of the text above:
     // Hashtags #hashtag
     {name: "HT", dataName: "val",
       pack: function(val) { return {val: val.slice(1)}; },
-      re: /\B#(\w\w+)/g}
+      re: /\b#(\w\w+)/g}
   ];
 
   // Formatting HTML tags
   var STYLE_DECOR = {
-    BO: ['<b>', '</b>'],
-    IT: ['<i>', '</i>'],
-    ST: ['<del>', '</del>'],
+    ST: ['<b>', '</b>'],
+    EM: ['<i>', '</i>'],
+    DL: ['<del>', '</del>'],
     CO: ['<tt>', '</tt>']
   };
 
@@ -253,7 +253,7 @@ Sample JSON representation of the text above:
     }
 
     // Detect starts and ends of formatting spans. Unformatted spans are
-    // ignored at this time.
+    // ignored at this stage.
     function spannify(original, re_start, re_end, type) {
       var result = [];
       var index = 0;
@@ -269,8 +269,8 @@ Sample JSON representation of the text above:
         if (start == null) {
           break;
         }
-        // Because javascript RegExp does not support lookbehind, the actual offset may not be at the beginning of
-        // the match. Find it in the matched string.
+        // Because javascript RegExp does not support lookbehind, the actual offset may not point
+        // at the markup character. Find it in the matched string.
         var start_offset = start['index'] + start[0].lastIndexOf(start[1]);
         // Clip the processed part of the string.
         line = line.slice(start_offset + 1);
@@ -337,11 +337,11 @@ Sample JSON representation of the text above:
     }
 
     // Get a list of entities from a text.
-    function extractEntities(line, re, name) {
+    function extractEntities(line) {
       var match;
       var extracted = [];
       ENTITY_TYPES.map(function(ent) {
-        while((match = ent.re.exec(line)) !== null) {
+        while ((match = ent.re.exec(line)) !== null) {
           extracted.push({
             offset: match['index'],
             len: match[0].length,
@@ -371,13 +371,13 @@ Sample JSON representation of the text above:
     }
 
     // Convert the chunks into format suitable for serialization.
-    function toDrafty(chunks, startAt) {
+    function draftify(chunks, startAt) {
       var plain = "";
       var ranges = [];
       for (var i in chunks) {
         var chunk = chunks[i];
         if (!chunk.text) {
-          var drafty = toDrafty(chunk.children, plain.length + startAt);
+          var drafty = draftify(chunk.children, plain.length + startAt);
           chunk.text = drafty.txt;
           ranges = ranges.concat(drafty.fmt);
         }
@@ -401,8 +401,8 @@ Sample JSON representation of the text above:
        * Parse text into structured representation.
        */
       parse: function(content) {
-        // Split text into lines. It makes formatting easier
-        var lines = content.split('\n');
+        // Split text into lines. It makes further processing easier.
+        var lines = content.split(/\r?\n/);
         // Holds formatted lines
         var blocks = [];
         // Holds entities referenced from text
@@ -432,10 +432,11 @@ Sample JSON representation of the text above:
             // Convert an array of possibly overlapping spans into a tree
             spans = toTree(spans);
 
-            // Build tree representation of the format.
+            // Build a tree representation of the entire string, not
+            // just the formatted parts.
             var chunks = chunkify(line, 0, line.length, spans);
 
-            var drafty = toDrafty(chunks, 0);
+            var drafty = draftify(chunks, 0);
 
             block = {txt: drafty.txt, fmt: drafty.fmt};
           }
@@ -475,7 +476,7 @@ Sample JSON representation of the text above:
         var {blocks} = content;
         var {refs} = content;
 
-        var text = "";
+        var text = [];
         for (var i in blocks) {
           var line = blocks[i].txt;
           var markup = [];
@@ -505,9 +506,9 @@ Sample JSON representation of the text above:
               line = splice(line, markup[j].idx, markup[j].what);
             }
           }
-          text += line + "<br>";
+          text.push(line);
         }
-        return text;
+        return text.join("<br/>");
       },
 
       /*

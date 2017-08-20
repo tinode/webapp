@@ -19,6 +19,7 @@
     <script src="https://unpkg.com/react-dom@15.4/dist/react-dom.js"></script>
     <script src="https://unpkg.com/babel-standalone@6.24.0/babel.min.js"></script>
     <script src="tinode.js"></script>
+    <script src="drafty.js"></script>
   </head>
   <body>
     <div id="mountPoint"></div>
@@ -2318,9 +2319,15 @@
       },
       /* Send on Enter key */
       handleKeyPress: function(e) {
-        /* Remove this if you don't want Enter to trigger send */
+        // Remove this if you don't want Enter to trigger send
         if (e.key === 'Enter') {
-          this.handleSend();
+          // Have Shift-Enter insert a line break instead
+          if (!e.shiftKey) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.handleSend();
+          }
         }
       },
       handleMessageTyping: function(e) {
@@ -2338,7 +2345,7 @@
       render: function() {
         return (
           <div id="send-message-panel">
-            <input id="sendMessage" type="text" placeholder="New message"
+            <textarea id="sendMessage" placeholder="New message"
               value={this.state.message} onChange={this.handleMessageTyping} onKeyPress={this.handleKeyPress} />
             <a href="#" onClick={this.handleSend}>
               <i className="material-icons">send</i>
@@ -2613,7 +2620,15 @@
       // User clicked on a message send button.
       handleSendMessage: function(msg) {
         var topic = Tinode.getTopic(this.state.topicSelected);
-        topic.publish(msg);
+        // Check if the message is formatted.
+        var dft = Drafty.parse(msg);
+        if (Drafty.isPlain(dft)) {
+          // The message is simple text. Sned if as text/plain.
+          topic.publish(msg);
+        } else {
+          // Formatted message. Send it as a Drafty object.
+          topic.publish(dft, undefined, "text/x-drafty+json");
+        }
       },
       // User chose a Sign Up menu item.
       handleNewAccount: function() {
