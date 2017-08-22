@@ -1,4 +1,4 @@
-// Basic parser and formatter for very simple rich text. Mostly targeted at
+// Basic parser and formatter for very simple text markup. Mostly targeted at
 // mobile use cases similar to Telegram and WhatsApp.
 //
 // Supports:
@@ -8,9 +8,9 @@
 //   `abc` -> <tt>abc</tt>
 // Nested frmatting is supported, e.g. *abc _def_* -> <b>abc <i>def</i></b>
 //
-// URLs, @mentions, and #hashtags are extracted.
+// URLs, @mentions, and #hashtags are extracted and converted into links.
 //
-// JSON data representation is similar to Draft.js raw formatting.
+// JSON data representation is similar (easily converted) to Draft.js raw formatting.
 
 /*
 Text:
@@ -185,26 +185,38 @@ Sample JSON representation of the text above:
       re: /\b#(\w\w+)/g}
   ];
 
-  // Formatting HTML tags
-  var STYLE_DECOR = {
-    ST: ['<b>', '</b>'],
-    EM: ['<i>', '</i>'],
-    DL: ['<del>', '</del>'],
-    CO: ['<tt>', '</tt>']
+  // HTML tag name suggestions
+  var TAG_NAMES = {
+    ST: 'b',
+    EM: 'i',
+    DL: 'del',
+    CO: 'tt',
+    BR: 'br',
+    LN: 'a',
+    MN: 'a',
+    HT: 'a'
   };
 
-  var ENTITY_DECOR = {
+  // Helpers for converting Drafty to HTML.
+  var DECORATORS = {
+    ST: { open: function() { return '<b>'; }, close: function() { return '</b>'; }},
+    EM: { open: function() { return '<i>'; }, close: function() { return '</i>'}},
+    DL: { open: function() { return '<del>'; }, close: function() { return '</del>'}},
+    CO: { open: function() { return '<tt>'; }, close: function() { return '</tt>'}},
     LN: {
       open: function(data) { return '<a href="' + data.url + '">'; },
-      close: function(data) { return '</a>'; }
+      close: function(data) { return '</a>'; },
+      props: function(data) { return { href: data.url, target: "_blank" }; },
     },
     MN: {
       open: function(data) { return '<a href="#' + data.val + '">'; },
-      close: function(data) { return '</a>'; }
+      close: function(data) { return '</a>'; },
+      props: function(data) { return { name: data.val }; },
     },
     HT: {
       open: function(data) { return '<a href="#' + data.val + '">'; },
-      close: function(data) { return '</a>'; }
+      close: function(data) { return '</a>'; },
+      props: function(data) { return { name: data.val }; },
     }
   };
 
@@ -250,6 +262,40 @@ Sample JSON representation of the text above:
       }
 
       return chunks;
+    }
+
+    // Same as chunkify but used for formatting.
+    function forEach(line, start, end, spans, formatter, context) {
+      // Add un-styled range before the styled span starts.
+      // Process ranges calling formatter for each range.
+      var result = [];
+      for (var i = 0; i < spans.length; i++) {
+        var span = spans[i];
+
+        // Add un-styled range before the styled span starts.
+        if (start < span.at) {
+          result.push(formatter.call(context, null, undefined, line.slice(start, span.at)));
+          start = span.at;
+        }
+        // Get all spans which are within current span.
+        var subspans = [];
+        for (var si = i + 1; si < spans.length && spans[si].at < span.at + span.len; si++) {
+          subspans.push(spans[si]);
+          i = si;
+        }
+
+        result.push(formatter.call(context, span.tp, span.data,
+          forEach(line, start, span.at + span.len, subspans, formatter, context)));
+
+        start = span.at + span.len;
+      }
+
+      // Add the last unformatted range.
+      if (start < end) {
+        result.push(formatter.call(context, null, undefined, line.slice(start)));
+      }
+
+      return result;
     }
 
     // Detect starts and ends of formatting spans. Unformatted spans are
@@ -470,9 +516,16 @@ Sample JSON representation of the text above:
       },
 
       /**
-       * Given structured representation of rich text, convert it to HTML.
+       * Given the structured representation of rich text, convert it to HTML.
+       * No attempt is made to strip pre-existing html markup.
+       * This is potentially unsafe because block.txt may contain malicious
+       * markup.
+       *
+       * @param {drafy} content - structured representation of rich text.
+       *
+       * @return HTML-representation of content
        */
-      toHTML: function(content) {
+      unsafeToHTML: function(content) {
         var {blocks} = content;
         var {refs} = content;
 
@@ -483,8 +536,8 @@ Sample JSON representation of the text above:
           if (blocks[i].fmt) {
             for (var j in blocks[i].fmt) {
               var range = blocks[i].fmt[j];
-              markup.push({idx: range.at, what: STYLE_DECOR[range.tp][0]});
-              markup.push({idx: range.at + range.len, what: STYLE_DECOR[range.tp][1]});
+              markup.push({idx: range.at, what: DECORATORS[range.tp].open()});
+              markup.push({idx: range.at + range.len, what: DECORATORS[range.tp].close()});
             }
           }
 
@@ -492,8 +545,8 @@ Sample JSON representation of the text above:
             for (var j in blocks[i].ent) {
               var range = blocks[i].ent[j];
               var entity = refs[range.key];
-              markup.push({idx: range.at, what: ENTITY_DECOR[entity.tp].open(entity.data)});
-              markup.push({idx: range.at + range.len, what: ENTITY_DECOR[entity.tp].close(entity.data)});
+              markup.push({idx: range.at, what: DECORATORS[entity.tp].open(entity.data)});
+              markup.push({idx: range.at + range.len, what: DECORATORS[entity.tp].close(entity.data)});
             }
           }
 
@@ -511,33 +564,113 @@ Sample JSON representation of the text above:
         return text.join("<br/>");
       },
 
-      /*
+      /**
+       * Transform using custom formatting.
+       *
+       * @param {Drafty} content - content to transform.
+       * @param {function} formatter - callback which transforms individual elements
+       * @param {Object} context - context provided to formatter as 'this'.
+       *
+       * @return {Object} context
+       */
+      format: function(content, formatter, context) {
+        var {blocks} = content;
+        var {refs} = content;
+
+        var result = [];
+
+        // Process blocks one by one
+        for (var i=0;i < blocks.length; i++) {
+          var block = blocks[i];
+          var spans = [];
+
+          // Merge markup ranges and sort in ascending order.
+          if (block.fmt) {
+            spans = spans.concat(block.fmt);
+          }
+          if (block.ent) {
+            spans = spans.concat(block.ent);
+          }
+
+          // Soft spans first by start index (asc) then by length (desc).
+          spans.sort(function(a, b) {
+            if (a.at - b.at == 0) {
+              return b.len - a.len; // longer one comes first (<0)
+            }
+            return a.at - b.at;
+          });
+
+          // Denormalize entities.
+          spans.map(function(s) {
+            if (s.key + 1 > 0) {
+              s.data = refs[s.key].data;
+              s.tp = refs[s.key].tp;
+            }
+          });
+
+          result = result.concat(forEach(block.txt, 0, block.txt.length - 1, spans, formatter, context));
+
+          if (i != blocks.length - 1) {
+            // Add line break
+            result.push(formatter.call(context, "BR"));
+          }
+        }
+
+        return result;
+      },
+
+      /**
        * Given structured representation of rich text, convert it to plain text.
        * The only structure preserved is line breaks as \n.
+       *
+       * @param {drafty} content - content to convert to plain text.
        */
       toPlainText: function(content) {
         var {blocks} = content;
         var text = blocks[0].txt;
         for (var i = 1; i < blocks.length; i++) {
-          text += "\n" + blocks[i].txt;
+          text += (lineBreak ? lineBreak.call(context) : "\n") + blocks[i].txt;
         }
         return text;
       },
 
       /**
        * Returns true if content has no markup and no entities.
+       *
+       * @param {drafty} content - content to check for presence of markup.
+       * @param {boolean} noLineBreaks - true to treat line breaks as markup, false
+       *                                 to treat them as plain text.
+       * @returns true is content is plain text, false otherwise.
        */
-      isPlain: function(content) {
+      isPlainText: function(content, noLineBreaks) {
         if (content.refs) {
           return false;
         }
+
         var {blocks} = content;
+
+        if (noLineBreaks && blocks.length > 1) {
+          return false;
+        }
+
         for (var i in blocks) {
           if (blocks[i].fmt) {
             return false;
           }
         }
         return true;
+      },
+
+      tagName: function(style) {
+        return TAG_NAMES[style];
+      },
+
+      attrValue: function(style, data) {
+        if (data && DECORATORS[style]) {
+          return DECORATORS[style].props(data);
+        }
+
+        return undefined;
       }
 
     };
@@ -547,4 +680,4 @@ Sample JSON representation of the text above:
   if (typeof(environment.Drafty) === 'undefined') {
     environment.Drafty = Drafty();
   }
-})(this); // 'this' will be window object for the browsers.
+})(this); // 'this' will be a window object for the browsers.

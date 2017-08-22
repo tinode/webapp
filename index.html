@@ -2027,12 +2027,38 @@
 
     var Message = React.createClass({
       render: function() {
+        var elementKey = 0;
+
+        var formatter = function(style, data, values) {
+          elementKey += 1;
+          var el = Drafty.tagName(style);
+          if (el) {
+            var attr = Drafty.attrValue(style, data) || {};
+            attr.key = elementKey;
+            return React.createElement(el, attr, values);
+          } else {
+            return values;
+          }
+        };
+
         var sideClass = this.props.sequence + " " + (this.props.response ? "left" : "right");
         var bubbleClass = (this.props.sequence === "single" || this.props.sequence === "last") ?
           "bubble tip" : "bubble";
         var avatar = this.props.userAvatar || true;
         var fullDisplay = (this.props.userFrom && this.props.response &&
           (this.props.sequence === "single" || this.props.sequence === "last"));
+
+        var content = this.props.content;
+        if (this.props.mimeType === "text/x-drafty+json") {
+          content = React.createElement('span', null, Drafty.format(content, formatter));
+        } else {
+          // Handle line breaks in plain text.
+          // Regex capure group keep line breaks in the array.
+          content = content.split(/(\n)/g).map(function(line, idx) {
+            return line.match("\n") ? <br key={idx} /> : line;
+          });
+        }
+
         return (
           <li className={sideClass}>
             {this.props.userFrom && this.props.response ?
@@ -2045,7 +2071,7 @@
               null}
             <div>
               <div className={bubbleClass}>
-                <p>{this.props.content}
+                <p>{content}
                 <Message.ReceivedMarker response={this.props.response}
                   timestamp={this.props.timestamp} received={this.props.received} />
                 </p>
@@ -2239,8 +2265,10 @@
             } else {
               chatBoxClass="chat-box";
             }
+
             messageNodes.push(
-              <Message content={msg.content} timestamp={msg.ts} response={isReply}
+              <Message content={msg.content} mimeType={msg.head ? msg.head.mime : null}
+                timestamp={msg.ts} response={isReply}
                 userFrom={userFrom} userName={userName} userAvatar={userAvatar}
                 sequence={sequence} received={msgReceived} key={msg.seq} />
             );
@@ -2622,7 +2650,7 @@
         var topic = Tinode.getTopic(this.state.topicSelected);
         // Check if the message is formatted.
         var dft = Drafty.parse(msg);
-        if (Drafty.isPlain(dft)) {
+        if (Drafty.isPlainText(dft)) {
           // The message is simple text. Sned if as text/plain.
           topic.publish(msg);
         } else {
