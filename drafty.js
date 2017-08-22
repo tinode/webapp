@@ -529,6 +529,10 @@ Sample JSON representation of the text above:
         var {blocks} = content;
         var {refs} = content;
 
+        if (!blocks) {
+          return '';
+        }
+
         var text = [];
         for (var i in blocks) {
           var line = blocks[i].txt;
@@ -577,10 +581,14 @@ Sample JSON representation of the text above:
         var {blocks} = content;
         var {refs} = content;
 
+        if (!blocks) {
+          return [];
+        }
+
         var result = [];
 
         // Process blocks one by one
-        for (var i=0;i < blocks.length; i++) {
+        for (var i = 0; i < blocks.length; i++) {
           var block = blocks[i];
           var spans = [];
 
@@ -627,6 +635,11 @@ Sample JSON representation of the text above:
        */
       toPlainText: function(content) {
         var {blocks} = content;
+
+        if (!blocks) {
+          return '';
+        }
+
         var text = blocks[0].txt;
         for (var i = 1; i < blocks.length; i++) {
           text += (lineBreak ? lineBreak.call(context) : "\n") + blocks[i].txt;
@@ -648,6 +661,10 @@ Sample JSON representation of the text above:
         }
 
         var {blocks} = content;
+
+        if (!blocks) {
+          return true;
+        }
 
         if (noLineBreaks && blocks.length > 1) {
           return false;
