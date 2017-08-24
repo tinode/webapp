@@ -10,119 +10,112 @@
 //
 // URLs, @mentions, and #hashtags are extracted and converted into links.
 //
-// JSON data representation is similar (easily converted) to Draft.js raw formatting.
+// JSON data representation is inspired by Draft.js raw formatting.
 
 /*
 Text:
-  this is *bold*, `code`, _italic_ and ~deleted~.
-  nested styles: *just bold _bold-italic_*
-  couple of urls: http://www.example.com/path?a=b%20c#fragment, and bolded *www.tinode.co*
+  this is *bold*, `code` and _italic_, ~strike~
+  combined *bold and _italic_*
+  an url: https://www.example.com/abc#fragment and another _www.tinode.co_
   this is a @mention and a #hashtag in a string
-  the _#hashtag_ used again
+  second #hashtag
 
 Sample JSON representation of the text above:
 {
-  "blocks":[
+  "txt":"this is bold, code and italic, strike combined bold and italic an url: https://www.example.com/abc#fragment " +
+        "and another www.tinode.co this is a @mention and a #hashtag in a string second #hashtag",
+  "fmt":[
     {
-      "txt":"this is bold, code, italic and deleted.",
-      "fmt":[
-        {
-          "at":8,
-          "len":4,
-          "tp":"ST"
-        },
-        {
-          "at":14,
-          "len":4,
-          "tp":"CO"
-        },
-        {
-          "at":20,
-          "len":6,
-          "tp":"EM"
-        },
-        {
-          "at":31,
-          "len":7,
-          "tp":"DL"
-        }
-      ]
+      "at":8,
+      "len":4,
+      "tp":"ST"
     },
     {
-      "txt":"nested styles: just bold bold-italic",
-      "fmt":[
-        {
-          "at":25,
-          "len":11,
-          "tp":"EM"
-        },
-        {
-          "at":15,
-          "len":21,
-          "tp":"ST"
-        }
-      ]
+      "at":14,
+      "len":4,
+      "tp":"CO"
     },
     {
-      "txt":"couple of urls: http://www.example.com/path?a=b%20c#fragment, and bolded www.tinode.co",
-      "fmt":[
-        {
-          "at":73,
-          "len":13,
-          "tp":"ST"
-        }
-      ],
-      "ent":[
-        {
-          "at":16,
-          "len":44,
-          "key":0
-        },
-        {
-          "at":73,
-          "len":13,
-          "key":1
-        }
-      ]
+      "at":23,
+      "len":6,
+      "tp":"EM"
     },
     {
-      "txt":"this is a @mention and a #hashtag in a string",
-      "ent":[
-        {
-          "at":10,
-          "len":8,
-          "key":2
-        },
-        {
-          "at":25,
-          "len":8,
-          "key":3
-        }
-      ]
+      "at":31,
+      "len":6,
+      "tp":"DL"
     },
     {
-      "txt":"the #hashtag used again",
-      "fmt":[
-        {
-          "at":4,
-          "len":8,
-          "tp":"EM"
-        }
-      ],
-      "ent":[
-        {
-          "at":4,
-          "len":8,
-          "key":3
-        }
-      ]
+      "tp":"BR",
+      "len":1,
+      "at":37
+    },
+    {
+      "at":56,
+      "len":6,
+      "tp":"EM"
+    },
+    {
+      "at":47,
+      "len":15,
+      "tp":"ST"
+    },
+    {
+      "tp":"BR",
+      "len":1,
+      "at":62
+    },
+    {
+      "at":120,
+      "len":13,
+      "tp":"EM"
+    },
+    {
+      "at":71,
+      "len":36,
+      "key":0
+    },
+    {
+      "at":120,
+      "len":13,
+      "key":1
+    },
+    {
+      "tp":"BR",
+      "len":1,
+      "at":133
+    },
+    {
+      "at":144,
+      "len":8,
+      "key":2
+    },
+    {
+      "at":159,
+      "len":8,
+      "key":3
+    },
+    {
+      "tp":"BR",
+      "len":1,
+      "at":179
+    },
+    {
+      "at":187,
+      "len":8,
+      "key":3
+    },
+    {
+      "tp":"BR",
+      "len":1,
+      "at":195
     }
   ],
   "refs":[
     {
       "tp":"LN",
       "data":{
-        "url":"http://www.example.com/path?a=b%20c#fragment"
+        "url":"https://www.example.com/abc#fragment"
       }
     },
     {
@@ -158,12 +151,12 @@ Sample JSON representation of the text above:
     // Emphesized = italic, _italic text_
     {name: "EM", start: /(?:^|[\W_])(_)[^\s_]/, end: /[^\s_](_)(?=$|[\W_])/},
     // Deleted, ~strike this though~
-    {name: "DL", start: /(?:^|\W)(~)[^\s~]/g, end: /[^\s~](~)(?=$|\W)/},
+    {name: "DL", start: /(?:^|\W)(~)[^\s~]/, end: /[^\s~](~)(?=$|\W)/},
     // Code block `this is monospace`
     {name: "CO", start: /(?:^|\W)(`)[^`]/, end: /[^`](`)(?=$|\W)/}
   ];
 
-  // RegExps for entity extraction
+  // RegExps for entity extraction (RF = reference)
   var ENTITY_TYPES = [
     // URLs
     {name: "LN", dataName: "url",
@@ -182,19 +175,19 @@ Sample JSON representation of the text above:
     // Hashtags #hashtag
     {name: "HT", dataName: "val",
       pack: function(val) { return {val: val.slice(1)}; },
-      re: /\b#(\w\w+)/g}
+      re: /\B#(\w\w+)/g}
   ];
 
   // HTML tag name suggestions
-  var TAG_NAMES = {
-    ST: 'b',
-    EM: 'i',
-    DL: 'del',
-    CO: 'tt',
-    BR: 'br',
-    LN: 'a',
-    MN: 'a',
-    HT: 'a'
+  var HTML_TAGS = {
+    ST: { name: 'b', isVoid: false },
+    EM: { name: 'i', isVoid: false },
+    DL: { name: 'del', isVoid: false },
+    CO: { name: 'tt', isVoid: false },
+    BR: { name: 'br', isVoid: true },
+    LN: { name: 'a', isVoid: false },
+    MN: { name: 'a', isVoid: false },
+    HT: { name: 'a', isVoid: false }
   };
 
   // Helpers for converting Drafty to HTML.
@@ -203,6 +196,7 @@ Sample JSON representation of the text above:
     EM: { open: function() { return '<i>'; }, close: function() { return '</i>'}},
     DL: { open: function() { return '<del>'; }, close: function() { return '</del>'}},
     CO: { open: function() { return '<tt>'; }, close: function() { return '</tt>'}},
+    BR: { open: function() { return ''; }, close: function() { return '<br/>'}},
     LN: {
       open: function(data) { return '<a href="' + data.url + '">'; },
       close: function(data) { return '</a>'; },
@@ -284,15 +278,16 @@ Sample JSON representation of the text above:
           i = si;
         }
 
+        var tag = HTML_TAGS[span.tp] || {};
         result.push(formatter.call(context, span.tp, span.data,
-          forEach(line, start, span.at + span.len, subspans, formatter, context)));
+          tag.isVoid ? null : forEach(line, start, span.at + span.len, subspans, formatter, context)));
 
         start = span.at + span.len;
       }
 
       // Add the last unformatted range.
       if (start < end) {
-        result.push(formatter.call(context, null, undefined, line.slice(start)));
+        result.push(formatter.call(context, null, undefined, line.slice(start, end)));
       }
 
       return result;
@@ -315,6 +310,7 @@ Sample JSON representation of the text above:
         if (start == null) {
           break;
         }
+
         // Because javascript RegExp does not support lookbehind, the actual offset may not point
         // at the markup character. Find it in the matched string.
         var start_offset = start['index'] + start[0].lastIndexOf(start[1]);
@@ -326,7 +322,7 @@ Sample JSON representation of the text above:
         index = start_offset + 1;
 
         // Find the matching closing token.
-        var end = re_end.exec(line);
+        var end = re_end ? re_end.exec(line) : null;
         if (end == null) {
           break;
         }
@@ -449,12 +445,13 @@ Sample JSON representation of the text above:
       parse: function(content) {
         // Split text into lines. It makes further processing easier.
         var lines = content.split(/\r?\n/);
-        // Holds formatted lines
-        var blocks = [];
+
         // Holds entities referenced from text
         var entityMap = [];
         var entityIndex = {};
-        //
+
+        // Processing lines one by one, hold intermediate result in blx.
+        var blx = [];
         lines.map(function(line) {
           var spans = [];
           var entities = [];
@@ -489,8 +486,8 @@ Sample JSON representation of the text above:
 
           // Extract entities from the cleaned up string.
           entities = extractEntities(block.txt);
-          var ranges = [];
           if (entities.length > 0) {
+            var ranges = [];
             for (var i in entities) {
               // {offset: match['index'], unique: match[0], len: match[0].length, data: ent.packer(), type: ent.name}
               var ent = entities[i];
@@ -505,12 +502,42 @@ Sample JSON representation of the text above:
             block.ent = ranges;
           }
 
-          blocks.push(block);
+          blx.push(block);
         });
 
-        var result = {blocks: blocks};
-        if (entityMap.length > 0) {
-          result.refs = entityMap;
+        var result = {txt: ""};
+
+        // Merge lines and save line breaks as BR inline formatting.
+        if (blx.length > 0) {
+          result.txt = blx[0].txt;
+          result.fmt = (blx[0].fmt || []).concat(blx[0].ent || []);
+
+          for (var i = 1; i<blx.length; i++) {
+            var block = blx[i];
+            var offset = result.txt.length + 1;
+
+            result.fmt.push({tp: "BR", len: 1, at: offset - 1});
+
+            result.txt += " " + block.txt;
+            if (block.fmt) {
+              result.fmt = result.fmt.concat(block.fmt.map(function(s) {
+                s.at += offset; return s;
+              }));
+            }
+            if (block.ent) {
+              result.fmt = result.fmt.concat(block.ent.map(function(s) {
+                s.at += offset; return s;
+              }));
+            }
+          }
+
+          if (result.fmt.length ==  0) {
+            delete result.fmt;
+          }
+
+          if (entityMap.length > 0) {
+            result.refs = entityMap;
+          }
         }
         return result;
       },
@@ -526,46 +553,39 @@ Sample JSON representation of the text above:
        * @return HTML-representation of content
        */
       unsafeToHTML: function(content) {
-        var {blocks} = content;
-        var {refs} = content;
+        var {txt, fmt, refs} = content;
 
-        if (!blocks) {
-          return '';
-        }
-
-        var text = [];
-        for (var i in blocks) {
-          var line = blocks[i].txt;
-          var markup = [];
-          if (blocks[i].fmt) {
-            for (var j in blocks[i].fmt) {
-              var range = blocks[i].fmt[j];
-              markup.push({idx: range.at, what: DECORATORS[range.tp].open()});
-              markup.push({idx: range.at + range.len, what: DECORATORS[range.tp].close()});
-            }
-          }
-
-          if (blocks[i].ent) {
-            for (var j in blocks[i].ent) {
-              var range = blocks[i].ent[j];
+        var markup = [];
+        if (fmt) {
+          for (var i in fmt) {
+            var range = fmt[i];
+            var tp = range.tp, data;
+            if (!tp) {
               var entity = refs[range.key];
-              markup.push({idx: range.at, what: DECORATORS[entity.tp].open(entity.data)});
-              markup.push({idx: range.at + range.len, what: DECORATORS[entity.tp].close(entity.data)});
+              if (entity) {
+                tp = entity.tp;
+                data = entity.data;
+              }
+            }
+
+            if (DECORATORS[tp]) {
+              markup.push({idx: range.at, what: DECORATORS[tp].open(data)});
+              markup.push({idx: range.at + range.len, what: DECORATORS[tp].close(data)});
             }
           }
-
-          if (markup.length > 0) {
-            markup.sort(function(a, b) {
-              return b.idx - a.idx; // in descending order
-            });
-
-            for (var j in markup) {
-              line = splice(line, markup[j].idx, markup[j].what);
-            }
-          }
-          text.push(line);
         }
-        return text.join("<br/>");
+
+        markup.sort(function(a, b) {
+          return b.idx - a.idx; // in descending order
+        });
+
+        for (var i in markup) {
+          if (markup[i].what) {
+            txt = splice(txt, markup[i].idx, markup[i].what);
+          }
+        }
+
+        return txt;
       },
 
       /**
@@ -578,116 +598,87 @@ Sample JSON representation of the text above:
        * @return {Object} context
        */
       format: function(content, formatter, context) {
-        var {blocks} = content;
-        var {refs} = content;
+        var {txt, fmt, refs} = content;
 
-        if (!blocks) {
-          return [];
+        if (!fmt) {
+          return [txt];
         }
 
-        var result = [];
+        var spans = [].concat(fmt);
 
-        // Process blocks one by one
-        for (var i = 0; i < blocks.length; i++) {
-          var block = blocks[i];
-          var spans = [];
-
-          // Merge markup ranges and sort in ascending order.
-          if (block.fmt) {
-            spans = spans.concat(block.fmt);
+        // Soft spans first by start index (asc) then by length (desc).
+        spans.sort(function(a, b) {
+          if (a.at - b.at == 0) {
+            return b.len - a.len; // longer one comes first (<0)
           }
-          if (block.ent) {
-            spans = spans.concat(block.ent);
+          return a.at - b.at;
+        });
+
+        // Denormalize entities into spans. Create a copy of the objects to leave
+        // original Drafty object unchanged.
+        spans = spans.map(function(s) {
+          var data;
+          var tp = s.tp;
+          if (s.key + 1 > 0) {
+            data = refs[s.key].data;
+            tp = refs[s.key].tp;
           }
+          return {tp: tp, data: data, at: s.at, len: s.len};
+        });
 
-          // Soft spans first by start index (asc) then by length (desc).
-          spans.sort(function(a, b) {
-            if (a.at - b.at == 0) {
-              return b.len - a.len; // longer one comes first (<0)
-            }
-            return a.at - b.at;
-          });
-
-          // Denormalize entities.
-          spans.map(function(s) {
-            if (s.key + 1 > 0) {
-              s.data = refs[s.key].data;
-              s.tp = refs[s.key].tp;
-            }
-          });
-
-          result = result.concat(forEach(block.txt, 0, block.txt.length - 1, spans, formatter, context));
-
-          if (i != blocks.length - 1) {
-            // Add line break
-            result.push(formatter.call(context, "BR"));
-          }
-        }
-
-        return result;
+        return forEach(txt, 0, txt.length, spans, formatter, context);
       },
 
       /**
        * Given structured representation of rich text, convert it to plain text.
-       * The only structure preserved is line breaks as \n.
        *
        * @param {drafty} content - content to convert to plain text.
        */
       toPlainText: function(content) {
-        var {blocks} = content;
-
-        if (!blocks) {
-          return '';
-        }
-
-        var text = blocks[0].txt;
-        for (var i = 1; i < blocks.length; i++) {
-          text += (lineBreak ? lineBreak.call(context) : "\n") + blocks[i].txt;
-        }
-        return text;
+        return content.text;
       },
 
       /**
        * Returns true if content has no markup and no entities.
        *
        * @param {drafty} content - content to check for presence of markup.
-       * @param {boolean} noLineBreaks - true to treat line breaks as markup, false
-       *                                 to treat them as plain text.
        * @returns true is content is plain text, false otherwise.
        */
       isPlainText: function(content, noLineBreaks) {
-        if (content.refs) {
-          return false;
-        }
-
-        var {blocks} = content;
-
-        if (!blocks) {
-          return true;
-        }
-
-        if (noLineBreaks && blocks.length > 1) {
-          return false;
-        }
-
-        for (var i in blocks) {
-          if (blocks[i].fmt) {
-            return false;
-          }
-        }
-        return true;
+        return !(content.fmt || content.refs);
       },
 
+      /**
+       * Get HTML tag for a given two-letter style name
+       * @param {string} style - two-letter style, like ST or LN
+       * @returns
+       */
       tagName: function(style) {
-        return TAG_NAMES[style];
+        return HTML_TAGS[style] ? HTML_TAGS[style].name : undefined;
       },
 
+      /**
+       * For a given data bundle generate an object with HTML attributes,
+       * for instance, given {url: "http://www.example.com/"} return
+       * {href: "http://www.example.com/"}
+       * @param {stting} style - tw-letter style to generate attributes for.
+       * @param {Object} data - data bundle to convert to attributes
+       * @returns object with HTML attributes.
+       */
       attrValue: function(style, data) {
         if (data && DECORATORS[style]) {
           return DECORATORS[style].props(data);
         }
 
         return undefined;
+      },
+
+      /**
+       * Content MIME type.
+       * @returns string suitabe for HTTP Content-Type field.
+       */
+      getContentType: function() {
+        return "text/x-drafty";
       }
 
     };

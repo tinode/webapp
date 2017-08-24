@@ -2030,6 +2030,8 @@
         var elementKey = 0;
 
         var formatter = function(style, data, values) {
+          // console.log("El: " + style + ", data: " + JSON.stringify(data) + ", values: " + JSON.stringify(values));
+
           elementKey += 1;
           var el = Drafty.tagName(style);
           if (el) {
@@ -2049,14 +2051,8 @@
           (this.props.sequence === "single" || this.props.sequence === "last"));
 
         var content = this.props.content;
-        if (this.props.mimeType === "text/x-drafty+json") {
+        if (this.props.mimeType === Drafty.getContentType()) {
           content = React.createElement('span', null, Drafty.format(content, formatter));
-        } else {
-          // Handle line breaks in plain text.
-          // Regex capure group keep line breaks in the array.
-          content = content.split(/(\n)/g).map(function(line, idx) {
-            return line.match("\n") ? <br key={idx} /> : line;
-          });
         }
 
         return (
@@ -2655,7 +2651,7 @@
           topic.publish(msg);
         } else {
           // Formatted message. Send it as a Drafty object.
-          topic.publish(dft, undefined, "text/x-drafty+json");
+          topic.publish(dft, undefined, Drafty.getContentType());
         }
       },
       // User chose a Sign Up menu item.
