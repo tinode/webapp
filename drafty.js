@@ -32,7 +32,7 @@ Sample JSON representation of the text above:
        { "at":144, "len":8, "key":2 },{ "at":159, "len":8, "key":3 },{ "tp":"BR", "len":1, "at":179 },
        { "at":187, "len":8, "key":3 },{ "tp":"BR", "len":1, "at":195 }
    ],
-   "refs": [
+   "ent": [
        { "tp":"LN", "data":{ "url":"https://www.example.com/abc#fragment" } },
        { "tp":"LN", "data":{ "url":"http://www.tinode.co" } },
        { "tp":"MN", "data":{ "val":"mention" } },
@@ -283,14 +283,14 @@ Sample JSON representation of the text above:
     function extractEntities(line) {
       var match;
       var extracted = [];
-      ENTITY_TYPES.map(function(ent) {
-        while ((match = ent.re.exec(line)) !== null) {
+      ENTITY_TYPES.map(function(entity) {
+        while ((match = entity.re.exec(line)) !== null) {
           extracted.push({
             offset: match['index'],
             len: match[0].length,
             unique: match[0],
-            data: ent.pack(match[0]),
-            type: ent.name});
+            data: entity.pack(match[0]),
+            type: entity.name});
         }
       });
 
@@ -391,14 +391,14 @@ Sample JSON representation of the text above:
             var ranges = [];
             for (var i in entities) {
               // {offset: match['index'], unique: match[0], len: match[0].length, data: ent.packer(), type: ent.name}
-              var ent = entities[i];
-              var index = entityIndex[ent.unique];
+              var entity = entities[i];
+              var index = entityIndex[entity.unique];
               if (!index) {
                 index = entityMap.length;
-                entityIndex[ent.unique] = index;
-                entityMap.push({tp: ent.type, data: ent.data});
+                entityIndex[entity.unique] = index;
+                entityMap.push({tp: entity.type, data: entity.data});
               }
-              ranges.push({at: ent.offset, len: ent.len, key: index});
+              ranges.push({at: entity.offset, len: entity.len, key: index});
             }
             block.ent = ranges;
           }
@@ -437,7 +437,7 @@ Sample JSON representation of the text above:
           }
 
           if (entityMap.length > 0) {
-            result.refs = entityMap;
+            result.ent = entityMap;
           }
         }
         return result;
@@ -454,7 +454,7 @@ Sample JSON representation of the text above:
        * @return HTML-representation of content
        */
       unsafeToHTML: function(content) {
-        var {txt, fmt, refs} = content;
+        var {txt, fmt, ent} = content;
 
         var markup = [];
         if (fmt) {
@@ -462,7 +462,7 @@ Sample JSON representation of the text above:
             var range = fmt[i];
             var tp = range.tp, data;
             if (!tp) {
-              var entity = refs[range.key];
+              var entity = ent[range.key];
               if (entity) {
                 tp = entity.tp;
                 data = entity.data;
@@ -499,7 +499,7 @@ Sample JSON representation of the text above:
        * @return {Object} context
        */
       format: function(content, formatter, context) {
-        var {txt, fmt, refs} = content;
+        var {txt, fmt, ent} = content;
 
         if (!fmt) {
           return [txt];
@@ -521,8 +521,8 @@ Sample JSON representation of the text above:
           var data;
           var tp = s.tp;
           if (s.key + 1 > 0) {
-            data = refs[s.key].data;
-            tp = refs[s.key].tp;
+            data = ent[s.key].data;
+            tp = ent[s.key].tp;
           }
           return {tp: tp, data: data, at: s.at, len: s.len};
         });
@@ -546,7 +546,7 @@ Sample JSON representation of the text above:
        * @returns true is content is plain text, false otherwise.
        */
       isPlainText: function(content, noLineBreaks) {
-        return !(content.fmt || content.refs);
+        return !(content.fmt || content.ent);
       },
 
       /**

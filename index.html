@@ -385,7 +385,7 @@
     var PermissionsEditor = React.createClass({
       getInitialState: function() {
         return {
-          mode: this.props.mode
+          mode: (this.props.mode || "").replace("N", "")
         };
       },
 
@@ -427,7 +427,7 @@
         };
 
         var skip = this.props.skip || "";
-        var mode = (this.state.mode || "").replace("N", "");
+        var mode = this.state.mode;
         var compare = (this.props.compare || "").replace("N", "");
         var items = [];
         for (var i=0; i<all.length; i++) {
@@ -1715,6 +1715,7 @@
         var acs = topic.getAccessMode();
         this.setState({
           owner: acs && acs.isOwner(),
+          admin: acs && acs.isAdmin(),
           sharer: acs && (acs.isAdmin() || acs.isSharer()),
           muted: acs && acs.isMuted(),
 
@@ -1822,7 +1823,7 @@
             toSkip = 'O';
             break;
           case 'anon':
-            toEdit = this.state.auth;
+            toEdit = this.state.anon;
             toSkip = 'O';
             break;
           default:
@@ -1955,18 +1956,28 @@
                       </div>
                     </div>
                   }
-                  {this.state.auth || this.state.anon ?
+                  {this.state.sharer && (this.state.auth || this.state.anon) ?
                     <div>
                       <div><label className="small">Default access mode:</label></div>
                       <div className="quoted">
-                        <div>Auth: <tt  className="clickable"
-                          onClick={this.handleLaunchPermissionsEditor.bind(this, 'auth')}>
-                          {this.state.auth}
-                        </tt></div>
-                        <div>Anon: <tt className="clickable"
-                          onClick={this.handleLaunchPermissionsEditor.bind(this, 'anon')}>
-                          {this.state.anon}
-                        </tt></div>
+                        <div>Auth: {this.state.admin ?
+                          <tt className="clickable"
+                            onClick={this.handleLaunchPermissionsEditor.bind(this, 'auth')}>
+                            {this.state.auth}
+                          </tt>
+                          :
+                          <tt>{this.state.auth}</tt>
+                        }
+                        </div>
+                        <div>Anon: {this.state.admin ?
+                          <tt className="clickable"
+                            onClick={this.handleLaunchPermissionsEditor.bind(this, 'anon')}>
+                            {this.state.anon}
+                          </tt>
+                          :
+                          <tt>{this.state.anon}</tt>
+                        }
+                        </div>
                       </div>
                     </div>
                   :
