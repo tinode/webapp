@@ -128,6 +128,66 @@
     }
 
     /* BEGIN Popup/dropdown menu */
+
+    // Function is used by context menu to set permissions.
+    function topicPermissionSetter(mode, topicName, uid) {
+      var topic = Tinode.getTopic(topicName);
+      if (!topic) {
+        console.log("Topic not found: " + topicName);
+        return;
+      }
+
+      var am;
+      if (uid) {
+        var user = topic.subscriber(uid);
+        if (!user) {
+          console.log("Subscriber not found: " + topicName + "[" + uid + "]");
+          return;
+        }
+        am = user.acs.updateGiven(mode).getGiven();
+      } else {
+        am = topic.getAccessMode().updateWant(mode).getWant();
+      }
+      topic.setMeta({sub: {user: uid, mode: am}});
+    }
+
+    // Context menu items.
+    var ContextMenuItems = {
+        "topic_info":     {title: "Info", handler: null},
+
+        "messages_clear": {title: "Clear messages", handler: function(topicName) {
+          var topic = Tinode.getTopic(topicName);
+          if (!topic) {
+            console.log("Topic not found: " + topicName);
+            return;
+          }
+          topic.delMessagesAll(false).then(function(){
+            console.log("refresh message list");
+          });
+        }},
+        "message_delete": {title: "Delete", handler: null},
+
+        "topic_unmute":   {title: "Unmute", handler: topicPermissionSetter.bind("+P")},
+        "topic_mute":     {title: "Mute", handler: topicPermissionSetter.bind("-P")},
+        "topic_unblock":  {title: "Unblock", handler: topicPermissionSetter.bind("+J")},
+        "topic_block":    {title: "Block", handler: topicPermissionSetter.bind("-J")},
+        "topic_delete":   {title: "Delete", handler: function(topicName) {
+          var topic = Tinode.getTopic(topicName);
+          if (!topic) {
+            console.log("Topic not found: " + topicName);
+            return;
+          }
+          topic.delTopic();
+        }},
+
+        "permissions":    {title: "Permissions", handler: null},
+        "member_delete":  {title: "Delete", handler: null},
+        "member_mute":    {title: "Mute", handler: topicPermissionSetter.bind("-P")},
+        "member_unmute":  {title: "Unmute", handler: topicPermissionSetter.bind("+P")},
+        "member_block":   {title: "Block", handler: topicPermissionSetter.bind("-J")},
+        "member_unblock": {title: "Unblock", handler: topicPermissionSetter.bind("+J")},
+    };
+
     var ContextMenu = React.createClass({
       componentWillUnmount: function() {
         this.toggle(false);
@@ -161,7 +221,9 @@
         e.preventDefault();
         e.stopPropagation();
         this.props.hide();
-        this.props.onAction(this.props.topic, this.props.items[e.currentTarget.dataset.id]);
+        var item = this.props.items[e.currentTarget.dataset.id];
+        item.handler(this.props.topic, this.props.user);
+        //this.props.onAction(this.props.topic, this.props.items[e.currentTarget.dataset.id]);
       },
 
       render: function() {
@@ -169,9 +231,24 @@
           return null;
         }
 
+        var count = 0;
+        var instance = this;
+        var menu = [];
+        this.props.items.map(function(item) {
+          if (item && item.title) {
+            menu.push(
+              item.title === "-" ?
+                <li className="separator" key={count} />
+                :
+                <li onClick={instance.handleClick} data-id={count} key={count}>{item.title}</li>
+            );
+          }
+          count++;
+        });
+
         // Ensure that menu is inside the app-container.
         var hSize = 12 * REM_SIZE;
-        var vSize = REM_SIZE * (0.7 + this.props.items.length * 2.5);
+        var vSize = REM_SIZE * (0.7 + menu.length * 2.5);
         var left = (this.props.bounds.right - this.props.clickAt.x < hSize) ?
             (this.props.clickAt.x - this.props.bounds.left - hSize) :
             (this.props.clickAt.x - this.props.bounds.left);
@@ -184,18 +261,6 @@
           top: top + "px"
         };
 
-        var count = 0;
-        var instance = this;
-        var menu = [];
-        this.props.items.map(function(item) {
-          menu.push(
-            item === "-" ?
-              <li className="separator" key={count} />
-              :
-              <li onClick={instance.handleClick} data-id={count} key={count}>{item}</li>
-          );
-          count++;
-        });
         return (
           <ul className="menu" style={position}>
             {menu}
@@ -1159,14 +1224,6 @@
       }
     });
 
-    /*
-    <ContextMenu
-      items={this.props.MenuItems}
-      topic={this.props.topic}
-      onAction={this.handleMenuAction}
-      visible={this.state.menuShownFor ? true : false} />
-    */
-
     /* The counter of unread messages in the topic */
     Contact.Unread = React.createClass({
         render: function() {
@@ -1867,8 +1924,9 @@
         this.setState({selectedContact: uid});
       },
 
-      handleContextMenu: function(item) {
-        console.log("context menu: " + item);
+      handleContextMenu: function(item, x, y) {
+        console.log(arguments);
+        this.props.showContextMenu(item, x, y);
       },
 
       render: function() {
@@ -2221,6 +2279,7 @@
             console.log("other change in topic: " + info.what);
         }
       },
+
       handleContextClick: function(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -2793,23 +2852,26 @@
         this.setState({dialogSelected: null});
       },
       handleShowContextMenu: function(topicName, y, x) {
-        var muted = false, blocked = false;
+        var muted = false, blocked = false, subscribed = false;
         var topic = Tinode.getTopic(topicName);
         if (topic) {
-          var acs = topic.getAccessMode();
-          muted = acs && acs.isMuted();
-          blocked = acs && !acs.isJoiner();
+          if (topic.isSubscribed()) {
+            subscribed = true;
+            var acs = topic.getAccessMode();
+            muted = acs && acs.isMuted();
+            blocked = acs && !acs.isJoiner();
+          }
         }
         this.setState({
           contextMenuVisible: true,
           contextMenuClickAt: {x: x, y: y},
           contextMenuTopic: topicName,
           contextMenuItems: [
-            "Info",
-            "Clear messages",
-            muted ? "Unmute" : "Mute",
-            blocked ? "Unblock" : "Block",
-            "Delete"
+            subscribed ? {title: "Info", handler: this.handleShowInfoView} : null,
+            subscribed ? ContextMenuItems["messages_clear"] : null,
+            subscribed ? (muted ? ContextMenuItems["topic_unmute"] : ContextMenuItems["topic_mute"]) : null,
+            subscribed ? (blocked ? ContextMenuItems["topic_unblock"] : ContextMenuItems["topic_block"]) : null,
+            ContextMenuItems["topic_delete"]
           ],
           contextMenuBounds: ReactDOM.findDOMNode(this).getBoundingClientRect()
         });
@@ -2973,6 +3035,8 @@
                 onLeaveTopic={this.handleLeaveUnsubRequest}
                 onAddMember={this.handleManageGroupMembers}
                 onInitFind={this.tnInitFind}
+
+                showContextMenu={this.handleShowContextMenu}
                 />
               :
               null
