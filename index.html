@@ -127,10 +127,12 @@
       return undefined;
     }
 
-    /* BEGIN Popup/dropdown menu */
+    /* BEGIN Context Menu: popup/dropdown menu */
 
     // Function is used by context menu to set permissions.
     function topicPermissionSetter(mode, topicName, uid) {
+      console.log("topicPermissionSetter called with arguments:");
+      console.log(arguments);
       var topic = Tinode.getTopic(topicName);
       if (!topic) {
         console.log("Topic not found: " + topicName);
@@ -167,10 +169,10 @@
         }},
         "message_delete": {title: "Delete", handler: null},
 
-        "topic_unmute":   {title: "Unmute", handler: topicPermissionSetter.bind("+P")},
-        "topic_mute":     {title: "Mute", handler: topicPermissionSetter.bind("-P")},
-        "topic_unblock":  {title: "Unblock", handler: topicPermissionSetter.bind("+J")},
-        "topic_block":    {title: "Block", handler: topicPermissionSetter.bind("-J")},
+        "topic_unmute":   {title: "Unmute", handler: topicPermissionSetter.bind(this, "+P")},
+        "topic_mute":     {title: "Mute", handler: topicPermissionSetter.bind(this, "-P")},
+        "topic_unblock":  {title: "Unblock", handler: topicPermissionSetter.bind(this, "+J")},
+        "topic_block":    {title: "Block", handler: topicPermissionSetter.bind(this, "-J")},
         "topic_delete":   {title: "Delete", handler: function(topicName) {
           var topic = Tinode.getTopic(topicName);
           if (!topic) {
@@ -180,12 +182,19 @@
           topic.delTopic();
         }},
 
-        "permissions":    {title: "Permissions", handler: null},
-        "member_delete":  {title: "Delete", handler: null},
-        "member_mute":    {title: "Mute", handler: topicPermissionSetter.bind("-P")},
-        "member_unmute":  {title: "Unmute", handler: topicPermissionSetter.bind("+P")},
-        "member_block":   {title: "Block", handler: topicPermissionSetter.bind("-J")},
-        "member_unblock": {title: "Unblock", handler: topicPermissionSetter.bind("+J")},
+        "permissions":    {title: "Edit permissions", handler: null},
+        "member_delete":  {title: "Remove", handler: function(topicName, user) {
+          var topic = Tinode.getTopic(topicName);
+          if (!topic || !user) {
+            console.log("Topic or user not found: '" + topicName + "', '" + user + "'");
+            return;
+          }
+          topic.delSubscription(user);
+        }},
+        "member_mute":    {title: "Mute", handler: topicPermissionSetter.bind(this, "-P")},
+        "member_unmute":  {title: "Unmute", handler: topicPermissionSetter.bind(this, "+P")},
+        "member_block":   {title: "Block", handler: topicPermissionSetter.bind(this, "-J")},
+        "member_unblock": {title: "Unblock", handler: topicPermissionSetter.bind(this, "+J")},
     };
 
     var ContextMenu = React.createClass({
@@ -223,7 +232,6 @@
         this.props.hide();
         var item = this.props.items[e.currentTarget.dataset.id];
         item.handler(this.props.topic, this.props.user);
-        //this.props.onAction(this.props.topic, this.props.items[e.currentTarget.dataset.id]);
       },
 
       render: function() {
@@ -517,6 +525,10 @@
 
         return (
           <div className="panel-form-column">
+            {this.props.userTitle ?
+              <ul className="contact-box"><Contact
+                title={this.props.userTitle}
+                avatar={makeImageUrl(this.props.userAvatar ? this.props.userAvatar : null)} /></ul> : null}
             <label className="small">Permissions</label>
             <table className="permission-editor">
             {this.props.compare ?
@@ -1178,13 +1190,15 @@
       handleClick: function(e) {
         e.preventDefault();
         e.stopPropagation();
-        this.props.onSelected(this.props.topic, this.props.index);
+        if (this.props.onSelected) {
+          this.props.onSelected(this.props.item, this.props.index);
+        }
       },
 
       handleContextClick: function(e) {
         e.preventDefault();
         e.stopPropagation();
-        this.props.showContextMenu(this.props.topic, e.pageY, e.pageX);
+        this.props.showContextMenu(this.props.item, e.pageY, e.pageX);
       },
 
       render: function() {
@@ -1201,7 +1215,7 @@
             onClick={this.handleClick}>
             <div className="avatar-box">
               <LetterTile
-                avatar={avatar} title={this.props.title} topic={this.props.topic} />
+                avatar={avatar} title={this.props.title} topic={this.props.item} />
 
               {this.props.showOnline ? <span className={online} /> :
                 (this.props.showCheckmark && this.props.selected ?
@@ -1210,7 +1224,8 @@
             </div>
             <div className="text-box">
               <div><span className="contact-title">{title}</span>
-              {this.props.unread > 0 ? <Contact.Unread count={this.props.unread} /> : null}</div>
+              {this.props.showUnread && (this.props.unread > 0) ?
+                <Contact.Unread count={this.props.unread} /> : null}</div>
               {this.props.comment ? <div className="contact-comment">{this.props.comment}</div> : null}
             </div>
             {this.props.showContextMenu ?
@@ -1320,6 +1335,7 @@
             emptyListMessage={<span>You have no chats<br />¯\_(ツ)_/¯</span>}
             topicSelected={this.props.topicSelected}
             showOnline={true}
+            showUnread={true}
             onTopicSelected={this.props.onTopicSelected}
             showContextMenu={this.props.showContextMenu} />
         );
@@ -1367,9 +1383,10 @@
                 showCheckmark={showCheckmark}
                 selected={selected}
                 showOnline={this.props.showOnline}
+                showUnread={this.props.showUnread}
                 onSelected={this.props.onTopicSelected}
                 showContextMenu={this.props.showContextMenu}
-                topic={key}
+                item={key}
                 index={contactNodes.length}
                 key={key} />
             );
@@ -1392,7 +1409,7 @@
     });
     /* END ContactList */
 
-    /* BEGIN GroupMembers: controlc for managing a list of group members */
+    /* BEGIN GroupMembers: control for managing a list of group members */
     var GroupManager = React.createClass({
       getInitialState: function() {
         return {
@@ -1530,6 +1547,8 @@
               filter={this.state.contactFilter}
               filterFunc={this.doContactFiltering}
               emptyListMessage={this.state.noContactsMessage}
+              showOnline={false}
+              showUnread={false}
               onTopicSelected={this.handleContactSelected} />
             <div id="group-manager-buttons" className="panel-form-row">
               <button className="blue" onClick={this.handleSubmit}>OK</button>
@@ -1597,6 +1616,7 @@
                   emptyListMessage="Use search to find contacts"
                   topicSelected={this.state.selectedContact}
                   showOnline={false}
+                  showUnread={false}
                   showContextMenu={false}
                   onTopicSelected={this.handleContactSelected} />
               </div>}
@@ -1703,13 +1723,15 @@
       getInitialState: function() {
         return {
           owner: false,
+          admin: false,
+          sharer: false,
+          muted: false,
           address: null,
           groupTopic: undefined,
           fullName: undefined,
           avatar: null,
           private: null,
           selectedContact: null,
-          muted: undefined,
           access: null,
           modeGiven: null,
           modeWant: null,
@@ -1850,13 +1872,19 @@
           case 'given':
             this.props.onChangePermissions(this.props.topic, perm, this.props.topic);
             break;
+          case 'user':
+            this.props.onChangePermissions(this.props.topic, perm, this.state.userPermissionsEdited);
+            break;
         }
 
         this.setState({showPermissionEditorFor: undefined});
       },
 
-      handleLaunchPermissionsEditor: function(which) {
-        var toEdit, toCompare, toSkip, titleEdit, titleCompare;
+      handleLaunchPermissionsEditor: function(which, uid) {
+        console.log("handleLaunchPermissionsEditor called with arguments");
+        console.log(arguments);
+
+        var toEdit, toCompare, toSkip, titleEdit, titleCompare, userTitle, userAvatar
         switch (which) {
           case 'mode':
             toEdit = this.state.access;
@@ -1883,17 +1911,40 @@
             toEdit = this.state.anon;
             toSkip = 'O';
             break;
+          case 'user': {
+            var topic = Tinode.getTopic(this.props.topic);
+            if (!topic) {
+              return;
+            }
+            var user = topic.subscriber(uid);
+            if (!user || !user.acs) {
+              return;
+            }
+            toEdit = user.acs.getGiven();
+            toCompare = user.acs.getWant();
+            toSkip = this.state.owner ? '' : 'O';
+            titleEdit = 'Granted';
+            titleCompare = 'Requested';
+            if (user.public) {
+              userTitle = user.public.fn;
+              userAvatar = user.public.photo;
+            }
+            break;
+          }
           default:
             console.log("Unknown permission editing mode '" + which + "'");
             break;
         }
         this.setState({
           showPermissionEditorFor: which,
+          userPermissionsEdited: uid,
+          userPermissionsTitle: userTitle,
+          userPermissionsAvatar: userAvatar,
           editedPermissions: toEdit,
           immutablePermissions: toCompare,
           editedPermissionsTitle: titleEdit,
           immutablePermissionsTitle: titleCompare,
-          editedPermissionsSkipped: toSkip
+          editedPermissionsSkipped: toSkip,
         });
       },
 
@@ -1925,8 +1976,28 @@
       },
 
       handleContextMenu: function(item, x, y) {
+        console.log("handleContextMenu called with agruments");
         console.log(arguments);
-        this.props.showContextMenu(item, x, y);
+
+        var instance = this;
+        var topic = Tinode.getTopic(this.props.topic);
+        if (!topic) {
+          return;
+        }
+        var user = topic.subscriber(item);
+        if (!user || !user.acs) {
+          return;
+        }
+
+        var menuItems = [
+          {title: "Edit permissions", handler: function() {
+            instance.handleLaunchPermissionsEditor("user", item);
+          }},
+          ContextMenuItems["member_delete"],
+          user.acs.isMuted() ? ContextMenuItems["member_unmute"] : ContextMenuItems["member_mute"],
+          user.acs.isJoiner() ? ContextMenuItems["member_block"] : ContextMenuItems["member_unblock"]
+        ];
+        this.props.showContextMenu(this.props.topic, x, y, item, menuItems);
       },
 
       render: function() {
@@ -1953,6 +2024,8 @@
                 skip={this.state.editedPermissionsSkipped}
                 modeTitle={this.state.editedPermissionsTitle}
                 compareTitle={this.state.immutablePermissionsTitle}
+                userTitle={this.state.userPermissionsTitle}
+                userAvatar={this.state.userPermissionsAvatar}
                 skip={this.state.editedPermissionsSkipped}
                 onSubmit={this.handlePermissionsChanged}
                 onCancel={this.handleHidePermissionsEditor}
@@ -2065,9 +2138,10 @@
                       emptyListMessage="No members"
                       topicSelected={this.state.selectedContact}
                       showOnline={false}
+                      showUnread={false}
                       noScroll={true}
                       onTopicSelected={this.handleMemberSelected}
-                      showContextMenu={this.handleContextMenu}
+                      showContextMenu={this.state.admin ? this.handleContextMenu : false}
                     />
                   </div>
                   :
@@ -2851,7 +2925,22 @@
       handleDialogCancel: function() {
         this.setState({dialogSelected: null});
       },
-      handleShowContextMenu: function(topicName, y, x) {
+
+      handleShowContextMenu: function(topicName, y, x, uid, menuItems) {
+        console.log("handleShowContextMenu called with arguments");
+        console.log(arguments);
+
+        this.setState({
+          contextMenuVisible: true,
+          contextMenuClickAt: {x: x, y: y},
+          contextMenuTopic: topicName,
+          contextMenuUser: uid,
+          contextMenuItems: menuItems || this.defaultTopicContextMenu(topicName),
+          contextMenuBounds: ReactDOM.findDOMNode(this).getBoundingClientRect()
+        });
+      },
+
+      defaultTopicContextMenu: function(topicName) {
         var muted = false, blocked = false, subscribed = false;
         var topic = Tinode.getTopic(topicName);
         if (topic) {
@@ -2862,74 +2951,26 @@
             blocked = acs && !acs.isJoiner();
           }
         }
-        this.setState({
-          contextMenuVisible: true,
-          contextMenuClickAt: {x: x, y: y},
-          contextMenuTopic: topicName,
-          contextMenuItems: [
-            subscribed ? {title: "Info", handler: this.handleShowInfoView} : null,
-            subscribed ? ContextMenuItems["messages_clear"] : null,
-            subscribed ? (muted ? ContextMenuItems["topic_unmute"] : ContextMenuItems["topic_mute"]) : null,
-            subscribed ? (blocked ? ContextMenuItems["topic_unblock"] : ContextMenuItems["topic_block"]) : null,
-            ContextMenuItems["topic_delete"]
-          ],
-          contextMenuBounds: ReactDOM.findDOMNode(this).getBoundingClientRect()
-        });
+
+        return [
+          subscribed ? {title: "Info", handler: this.handleShowInfoView} : null,
+          subscribed ? ContextMenuItems["messages_clear"] : null,
+          subscribed ? (muted ? ContextMenuItems["topic_unmute"] : ContextMenuItems["topic_mute"]) : null,
+          subscribed ? (blocked ? ContextMenuItems["topic_unblock"] : ContextMenuItems["topic_block"]) : null,
+          ContextMenuItems["topic_delete"]
+        ];
       },
+
       handleHideContextMenu: function() {
         this.setState({
           contextMenuVisible: false,
           contextMenuClickAt: null,
-          contextMenuTopic: '',
+          contextMenuTopic: null,
+          contextMenuUser: null,
           contextMenuBounds: null
         });
       },
-      // Menu click.
-      handleContextMenuAction: function(topicName, action) {
-        if (!topicName || !action) {
-          return;
-        }
 
-        var topic = Tinode.getTopic(topicName);
-        if (!topic) {
-          return;
-        }
-
-        var metaParam = function(want) {
-          var am = topic.getAccessMode();
-          am.updateWant(want);
-          topic.setMeta({sub: {mode: am.getWant()}});
-        }
-
-        switch (action) {
-          case "Info":
-            this.handleShowInfoView();
-            break;
-          case "Clear messages":
-            topic.delMessagesAll(false).then(function(){
-              console.log("refresh message list");
-            });
-            break;
-          case "Mute":
-            metaParam('-P');
-            break;
-          case "Unmute":
-            metaParam('+P');
-            break;
-          case "Block":
-            metaParam('-J');
-            break;
-          case "Unblock":
-            metaParam('+J');
-            break;
-          case "Delete":
-            topic.delTopic();
-            break;
-          default:
-            console.log("Unknown menu action '" + action + "'");
-            break;
-        }
-      },
       handleShowInfoView: function() {
         this.setState({showInfoPanel: true, infoPanelShowMembers: false});
       },
@@ -2972,6 +3013,7 @@
               clickAt={this.state.contextMenuClickAt}
               visible={this.state.contextMenuVisible}
               topic={this.state.contextMenuTopic}
+              user={this.state.contextMenuUser}
               items={this.state.contextMenuItems}
               hide={this.handleHideContextMenu}
               onAction={this.handleContextMenuAction} />
