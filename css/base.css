@@ -1161,7 +1161,7 @@ ul.tabbar li.active > a:after {
 /* Miscellaneous */
 
 /* Badge with the number of unread messages */
-.badge {
+.unread {
   display: inline-block;
   font-size: 0.75rem;
   font-weight: bolder;
@@ -1174,6 +1174,39 @@ ul.tabbar li.active > a:after {
   line-height: 1.35rem;
   text-align: center;
   vertical-align: middle;
+}
+
+/* Badge with a label, like [you], [muted], etc */
+.badge {
+  font-family: monospace;
+  font-size: 0.75rem;
+  border: 1px solid #666;
+  background-color: #eee;
+  color: #666;
+  padding: 0 0.15rem 0 0.15rem;
+  margin-left: 0.1rem;
+  margin-right: 0.1rem;
+  border-radius: 0.15rem;
+  display: inline-block;
+  align-self: flex-start;
+}
+
+.badge.green {
+  border-color: #383;
+  background-color: #efe;
+  color: #383;
+}
+
+.badge.yellow {
+  border-color: #660;
+  background-color: #ffe;
+  color: #660;
+}
+
+.badge.red {
+  border-color: #933;
+  background-color: #fee;
+  color: #933;
 }
 
 /* Letter tile base style, responsive square box */

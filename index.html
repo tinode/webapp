@@ -131,8 +131,6 @@
 
     // Function is used by context menu to set permissions.
     function topicPermissionSetter(mode, topicName, uid) {
-      console.log("topicPermissionSetter called with arguments:");
-      console.log(arguments);
       var topic = Tinode.getTopic(topicName);
       if (!topic) {
         console.log("Topic not found: " + topicName);
@@ -527,6 +525,7 @@
           <div className="panel-form-column">
             {this.props.userTitle ?
               <ul className="contact-box"><Contact
+                item={this.props.item}
                 title={this.props.userTitle}
                 avatar={makeImageUrl(this.props.userAvatar ? this.props.userAvatar : null)} /></ul> : null}
             <label className="small">Permissions</label>
@@ -1210,6 +1209,19 @@
         }
         var online = this.props.now ? "online" : "offline";
         var avatar = this.props.avatar ? this.props.avatar : true;
+        var badges = [];
+        if (this.props.badges && this.props.badges.length > 0) {
+          var count = 0;
+          this.props.badges.map(function(b) {
+            var style = "badge" + (b.color ? " " + b.color : "");
+            badges.push(<span className={style} key={count}>{b.name}</span>);
+            count ++;
+          });
+        }
+        if (this.props.mode) {
+          badges.push(<span className="badge" key="mode">{this.props.mode}</span>);
+        }
+
         return (
           <li className={!this.props.showCheckmark && this.props.selected ? "selected" : null}
             onClick={this.handleClick}>
@@ -1224,9 +1236,10 @@
             </div>
             <div className="text-box">
               <div><span className="contact-title">{title}</span>
-              {this.props.showUnread && (this.props.unread > 0) ?
-                <Contact.Unread count={this.props.unread} /> : null}</div>
+              {this.props.unread > 0 ? <Contact.Unread count={this.props.unread} /> : null}
+              </div>
               {this.props.comment ? <div className="contact-comment">{this.props.comment}</div> : null}
+              <span>{badges}</span>
             </div>
             {this.props.showContextMenu ?
               <span className="menuTrigger">
@@ -1245,9 +1258,26 @@
           var showUnreadBadge = null;
           if (this.props.count > 0) {
             var count = this.props.count > 9 ? "9+" : this.props.count;
-            showUnreadBadge = <span className="badge">{count}</span>;
+            showUnreadBadge = <span className="unread">{count}</span>;
           }
           return showUnreadBadge;
+        }
+    });
+
+    /* Contact's labels: [you], [muted], [blocked], etc */
+    Contact.Badges = React.createClass({
+        render: function() {
+          var badges = null;
+          if (this.props.badges && this.props.badges.length > 0) {
+            var count = 0;
+            badges = [];
+            this.props.badges.map(function(b) {
+              var style = "badge" + (b.color ? " " + b.color : "");
+              badges.push(<span className={style} key={count}>{b.name}</span>);
+              count ++;
+            });
+          }
+          return badges;
         }
     });
 
@@ -1261,7 +1291,6 @@
       componentWillMount: function() {
         var me = Tinode.getMeTopic();
         me.onContactUpdate = this.tnMeContactUpdate;
-        me.onData = this.tnInvite;
         me.onSubsUpdated = this.tnMeSubsUpdated;
       },
       componentWillUnmount: function() {
@@ -1301,12 +1330,6 @@
         }
       },
 
-      tnInvite: function(invite) {
-        // TODO(gene): implement invite handling
-        console.log("Got invite:");
-        console.log(invite);
-      },
-
       tnMeSubsUpdated: function(names) {
         this.resetContactList();
       },
@@ -1314,10 +1337,7 @@
       prepareContactList: function() {
         var contacts = [];
         Tinode.getMeTopic().contacts(function(c) {
-          c.unread = c.seq;
-          if (c.read > 0) {
-            c.unread -= c.read;
-          }
+          c.unread = c.seq - (c.read > 0 ? c.read : 0);
           contacts.push(c);
         }, this);
 
@@ -1347,6 +1367,7 @@
      * such as a list of group members in a group chat */
     var ContactList = React.createClass({
       render: function() {
+        var me = Tinode.getCurrentUserID();
         var contactNodes = [];
         var instance = this;
         var showCheckmark = Array.isArray(this.props.topicSelected);
@@ -1354,7 +1375,6 @@
         if (this.props.contacts && this.props.contacts.length > 0) {
           this.props.contacts.map(function(c) {
             var key = c.topic ? c.topic : c.user;
-
             // If filter function is provided, filter out the items
             // which don't satisfy the condition.
             if (instance.props.filterFunc && instance.props.filter) {
@@ -1374,16 +1394,24 @@
               (this.props.topicSelected.indexOf(key) > -1) :
               (this.props.topicSelected === key);
 
+            var mode = this.props.showMode && c.acs ? c.acs.getMode() : null;
+
+            var badges = (key === me ? [{name:'you',color:'green'}] : null);
+
+            var comment = Array.isArray(c.private) ? c.private.join(", ") : c.private;
+
             contactNodes.push(
               <Contact
                 title={c.public ? c.public.fn : null}
                 avatar={makeImageUrl(c.public ? c.public.photo : null)}
-                comment={c.private}
-                unread={c.unread} now={c.online}
+                comment={comment}
+                unread={this.props.showUnread ? c.unread : 0}
+                now={c.online}
+                mode={mode}
+                badges={badges}
                 showCheckmark={showCheckmark}
                 selected={selected}
                 showOnline={this.props.showOnline}
-                showUnread={this.props.showUnread}
                 onSelected={this.props.onTopicSelected}
                 showContextMenu={this.props.showContextMenu}
                 item={key}
@@ -1414,7 +1442,6 @@
       getInitialState: function() {
         return {
           members: this.props.members,
-          contacts: this.props.contacts,
           index: this.indexMembers(this.props.members),
           contactFilter: '',
           noContactsMessage: 'You have no contacts :-(',
@@ -1586,13 +1613,13 @@
       handleContactSelected: function(sel) {
         if (this.state.tabSelected === "p2p") {
           this.props.onCreateTopic(sel, undefined);
-        } else {
-          // TODO(gene): implement handling of group invites
-          console.log("handle group invite " + sel);
         }
       },
       handleGroupSubmit: function(name, dataUrl) {
         this.props.onCreateTopic(undefined, vcard(name, dataUrl));
+      },
+      handleGroupSubscribe: function(topicName) {
+        this.props.onCreateTopic(topicName);
       },
       render: function() {
         return (
@@ -1602,11 +1629,16 @@
                 <a href="#" data-id="p2p" onClick={this.handleTabClick}>1:1</a>
               </li>
               <li className={this.state.tabSelected === "grp" ? "active" : null}>
-                <a href="#"  data-id="grp" onClick={this.handleTabClick}>group</a>
+                <a href="#" data-id="grp" onClick={this.handleTabClick}>group</a>
+              </li>
+              <li className={this.state.tabSelected === "byId" ? "active" : null}>
+                <a href="#" data-id="byId" onClick={this.handleTabClick}>by id</a>
               </li>
             </ul>
             {this.state.tabSelected === "grp" ?
               <NewTopicView.Group onSubmit={this.handleGroupSubmit} /> :
+              this.state.tabSelected === "byId" ?
+              <NewTopicView.ById onSubmit={this.handleGroupSubscribe} /> :
               <div className="flex-column">
                 <NewTopicView.SearchContacts type="p2p"
                   searchQuery={this.state.searchQuery}
@@ -1711,6 +1743,42 @@
               <a href="#" onClick={this.handleSearch}>
                 <i className="material-icons">search</i>
               </a>
+            </div>
+          </div>
+        );
+      }
+    });
+
+    NewTopicView.ById = React.createClass({
+      getInitialState: function() {
+        return {
+          groupId: '',
+        };
+      },
+      handleChange: function(e) {
+        this.setState({groupId: e.target.value});
+      },
+      handleKeyPress: function(e) {
+        if (e.key === 'Enter') {
+          this.handleSubmit(e);
+        }
+      },
+      handleSubmit: function(e) {
+        e.preventDefault();
+        if (this.state.groupId && this.state.groupId.trim()) {
+          this.props.onSubmit(this.state.groupId.trim());
+        }
+      },
+      render: function() {
+        return (
+          <div className="panel-form">
+            <div className="panel-form-row">
+            <input type="text" placeholder="Group ID"
+              value={this.state.groupId} onChange={this.handleChange}
+              onKeyPress={this.handleKeyPress} required />
+            </div>
+            <div className="dialog-buttons">
+              <button className="blue" onClick={this.handleSubmit}>Subscribe</button>
             </div>
           </div>
         );
@@ -1881,9 +1949,6 @@
       },
 
       handleLaunchPermissionsEditor: function(which, uid) {
-        console.log("handleLaunchPermissionsEditor called with arguments");
-        console.log(arguments);
-
         var toEdit, toCompare, toSkip, titleEdit, titleCompare, userTitle, userAvatar
         switch (which) {
           case 'mode':
@@ -1976,9 +2041,6 @@
       },
 
       handleContextMenu: function(item, x, y) {
-        console.log("handleContextMenu called with agruments");
-        console.log(arguments);
-
         var instance = this;
         var topic = Tinode.getTopic(this.props.topic);
         if (!topic) {
@@ -2025,6 +2087,7 @@
                 modeTitle={this.state.editedPermissionsTitle}
                 compareTitle={this.state.immutablePermissionsTitle}
                 userTitle={this.state.userPermissionsTitle}
+                item={this.state.userPermissionsEdited}
                 userAvatar={this.state.userPermissionsAvatar}
                 skip={this.state.editedPermissionsSkipped}
                 onSubmit={this.handlePermissionsChanged}
@@ -2139,6 +2202,7 @@
                       topicSelected={this.state.selectedContact}
                       showOnline={false}
                       showUnread={false}
+                      showMode={true}
                       noScroll={true}
                       onTopicSelected={this.handleMemberSelected}
                       showContextMenu={this.state.admin ? this.handleContextMenu : false}
@@ -2927,9 +2991,6 @@
       },
 
       handleShowContextMenu: function(topicName, y, x, uid, menuItems) {
-        console.log("handleShowContextMenu called with arguments");
-        console.log(arguments);
-
         this.setState({
           contextMenuVisible: true,
           contextMenuClickAt: {x: x, y: y},
@@ -2989,7 +3050,7 @@
 
         if (added && added.length > 0) {
           added.map(function(uid) {
-            topic.invite(uid, null, "Join my group!");
+            topic.invite(uid, null);
           });
         }
 
