@@ -1447,3 +1447,39 @@ ul.tabbar li.active > a:after {
   width: 0.25rem;
   height: 1.175rem;
 }
+
+.load-spinner-box {
+  position: absolute;
+  box-shadow: 0.1rem 0.1rem 0.15rem 1px rgba(0,0,0,0.25);
+  border-radius: 50%;
+  padding: 0.25rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  left: 0;
+  right: 0;
+  top: 5rem;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: white;
+  z-index: 2;
+}
+
+.loader-spinner {
+  border: 0.35rem solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 0.35rem solid #1e88e5;
+  width: 2rem;
+  height: 2rem;
+  -webkit-animation: spin 1.5s linear infinite;
+  animation: spin 1.5s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

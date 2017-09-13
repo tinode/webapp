@@ -47,8 +47,11 @@
     // Mediaquery breakpoint between desktop and mobile, in px. Should match the value
     // in @meadia (max-size: 640px) in base.css
     var MEDIA_BREAKPOINT = 640;
-    // Size of rem unit in pixels. Default 1rem = 10pt = 13px.
+    // Size of css 'rem' unit in pixels. Default 1rem = 10pt = 13px.
     var REM_SIZE = 13;
+
+    // Number of chat messages to fetch in one call.
+    var MESSAGES_PAGE = 24;
 
     // Short representation of time in the past.
     function shortDateFormat(then) {
@@ -284,6 +287,13 @@
         );
       }
     });
+
+    class LoadSpinner extends React.PureComponent {
+      render() {
+        return (this.props.show ?
+          <div className="load-spinner-box"><div className="loader-spinner"></div></div> : null);
+      }
+    }
 
     /* BEGIN Lettertile: Avatar box: either a bitmap or a letter tile or a stock icon. */
     class LetterTile extends React.PureComponent {
@@ -2318,25 +2328,35 @@
           messages: [],
           topic: '',
           title: '',
-          avatar: null
+          avatar: null,
+          scrollPosition: 0
         };
       },
+
       // Scroll last message into view on component update e.g. on message received.
       componentDidUpdate: function() {
-        var node = this.refs.messagesPanel;
-        if (node) {
-          node.scrollTop = node.scrollHeight;
+        if (this.messagesScroller) {
+          this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition;
         }
       },
+
       componentWillMount: function() {
         this.propsChange(this.props);
+      },
+
+      componentWillUnmount: function() {
+        this.leave();
+        if (this.messagesScroller) {
+          this.messagesScroller.removeEventListener('scroll', this.fetchMoreMessages);
+        }
       },
       componentWillReceiveProps: function(nextProps) {
         this.propsChange(nextProps);
       },
       propsChange: function(props) {
-        if (!props.topic) {
+        if (!props || !props.topic) {
           this.setState({messages: [], topic: null});
+          this.leave();
         } else if (props.topic != this.state.topic) {
           var msgs = [];
           var topic = Tinode.getTopic(props.topic);
@@ -2346,8 +2366,29 @@
           topic.onMetaDesc = this.handleDescChange;
           topic.onSubsUpdated = this.handleSubsUpdated;
           // Unbind the previous topic from this component.
-          if (this.state.topic) {
-            var oldTopic = Tinode.getTopic(this.state.topic);
+          this.leave();
+
+          if (topic.isSubscribed()) {
+            this.handleDescChange(topic);
+            topic.messages(function(msg) {
+              msgs = msgs.concat(msg);
+            });
+          } else {
+            topic.subscribe({get: {desc: {}, sub: {}, data: {limit: MESSAGES_PAGE}}});
+          }
+
+          // The user switched to the new topic before the timer for
+          // the previous topic has triggered, kill it.
+          clearTimeout(this.readTimer);
+
+          this.setState({messages: msgs, topic: props.topic, scrollPosition: 0});
+        }
+      },
+
+      leave: function() {
+        if (this.state.topic) {
+          var oldTopic = Tinode.getTopic(this.state.topic);
+          if (oldTopic) {
             if (oldTopic.isSubscribed()) {
               oldTopic.leave(false);
             }
@@ -2356,23 +2397,38 @@
             oldTopic.onMetaDesc = undefined;
             oldTopic.onSubsUpdated = undefined;
           }
-
-          if (topic.isSubscribed()) {
-            this.handleDescChange(topic);
-            topic.messages(function(msg) {
-              msgs = msgs.concat(msg);
-            });
-          } else {
-            topic.subscribe({get: {desc: {}, sub: {}, data: {}}});
-          }
-
-          // The user switched to the new topic before the timer for
-          // the previous topic has triggered, kill it.
-          clearTimeout(this.readTimer);
-
-          this.setState({messages: msgs, topic: props.topic});
         }
       },
+
+      handleScrollReference: function(node) {
+        if (node) {
+          node.addEventListener('scroll', this.fetchMoreMessages);
+          this.messagesScroller = node;
+        }
+      },
+
+      fetchMoreMessages: function(event) {
+        var instance = this;
+        if (event.target.scrollTop <= 0) {
+          var started = false;
+          var newState = {scrollPosition: event.target.scrollHeight - event.target.scrollTop};
+          this.setState(function(prevState, props) {
+            if (!prevState.fetchingMessages) {
+              var topic = Tinode.getTopic(instance.state.topic);
+              if (topic && topic.msgHasMore()) {
+                newState.fetchingMessages = true;
+                console.log("START fetching messages from " + topic._minSeq);
+                topic.getMessagesPage(MESSAGES_PAGE).then(function() {
+                  instance.setState({fetchingMessages: false});
+                  console.log("DONE fetching messages");
+                });
+              }
+            }
+            return newState;
+          });
+        }
+      },
+
       handleDescChange: function(desc) {
         if (desc.public) {
           this.setState({
@@ -2386,22 +2442,28 @@
       },
       handleNewMessage: function(msg) {
         clearTimeout(this.readTimer);
+        // Regenerate messages list
+        var topic = Tinode.getTopic(this.state.topic);
+        var newState = {messages: []};
+        topic.messages(function(m) {
+          newState.messages = newState.messages.concat(m);
+        });
+
+        // msg could be null if one or more messages were deleted.
         if (msg) {
-          this.setState({messages: this.state.messages.concat(msg)});
+          // If the message is added to the end of the message list,
+          // scroll to the bottom.
+          if (topic.msgPosition(msg.seq) <= 1) {
+            newState.scrollPosition = 0;
+          }
           // Aknowledge all messages, including own messges.
           this.readTimer = setTimeout(function() {
-            Tinode.getTopic(msg.topic).noteRead(msg.seq);
+            topic.noteRead(msg.seq);
           }, READ_DELAY);
           this.props.onData(msg);
-        } else {
-          // msg could be null if one or more messages were deleted.
-          // Just regenerate the message list;
-          var _messages = [];
-          Tinode.getTopic(this.state.topic).messages(function(m) {
-            _messages.concat(m);
-          });
-          this.setState({messages: _messages});
         }
+
+        this.setState(newState);
       },
       handleInfoReceipt: function(info) {
         switch (info.what) {
@@ -2422,6 +2484,10 @@
         e.preventDefault();
         e.stopPropagation();
         this.props.showContextMenu(this.state.topic, e.pageY, e.pageX);
+      },
+
+      handleBackNavigation: function() {
+        this.props.onHideMessagesView();
       },
 
       render: function() {
@@ -2493,7 +2559,7 @@
             <div id="topic-view" className={this.props.hideSelf ? 'nodisplay' : null}>
               <div id="topic-caption-panel" className="caption-panel">
                 {this.props.displayMobile ?
-                  <a href="#" id="hide-message-view" onClick={this.props.onHideMessagesView}>
+                  <a href="#" id="hide-message-view" onClick={this.handleBackNavigation}>
                     <i className="material-icons big">arrow_back</i>
                   </a>
                   :
@@ -2514,8 +2580,9 @@
                   </a>
                 </div>
               </div>
-              <div id="messages-panel" ref="messagesPanel">
-                <ul className={chatBoxClass}>
+              <LoadSpinner show={this.state.fetchingMessages} />
+              <div id="messages-panel" ref={this.handleScrollReference}>
+                <ul id="scroller" className={chatBoxClass}>
                   {messageNodes}
                 </ul>
               </div>
@@ -2847,7 +2914,11 @@
       },
       // In mobile view user requested to show sidepanel
       handleHideMessagesView: function() {
-        this.setState({mobilePanel: 'sidepanel'});
+        this.setState({
+          mobilePanel: 'sidepanel',
+          topicSelected: null,
+          showInfoPanel: false
+        });
       },
       // User clicked on a message send button.
       handleSendMessage: function(msg) {
