@@ -2342,6 +2342,9 @@
 
       componentWillMount: function() {
         this.propsChange(this.props);
+        if (this.messagesScroller) {
+          this.messagesScroller.addEventListener('scroll', this.fetchMoreMessages);
+        }
       },
 
       componentWillUnmount: function() {
@@ -2368,20 +2371,28 @@
           // Unbind the previous topic from this component.
           this.leave();
 
-          if (topic.isSubscribed()) {
-            this.handleDescChange(topic);
-            topic.messages(function(msg) {
-              msgs = msgs.concat(msg);
-            });
-          } else {
-            topic.subscribe({get: {desc: {}, sub: {}, data: {limit: MESSAGES_PAGE}}});
+          this.handleDescChange(topic);
+          topic.messages(function(msg) {
+            msgs = msgs.concat(msg);
+          });
+
+          if (!topic.isSubscribed()) {
+            topic.subscribe(topic.startMetaQuery()
+              .withLaterDesc()
+              .withLaterSub()
+              .withLaterData(MESSAGES_PAGE)
+              .build());
           }
 
           // The user switched to the new topic before the timer for
           // the previous topic has triggered, kill it.
           clearTimeout(this.readTimer);
 
-          this.setState({messages: msgs, topic: props.topic, scrollPosition: 0});
+          this.setState({
+            messages: msgs,
+            topic: props.topic,
+            scrollPosition: 0
+          });
         }
       },
 
@@ -2417,10 +2428,8 @@
               var topic = Tinode.getTopic(instance.state.topic);
               if (topic && topic.msgHasMore()) {
                 newState.fetchingMessages = true;
-                console.log("START fetching messages from " + topic._minSeq);
                 topic.getMessagesPage(MESSAGES_PAGE).then(function() {
                   instance.setState({fetchingMessages: false});
-                  console.log("DONE fetching messages");
                 });
               }
             }
@@ -2437,6 +2446,7 @@
           });
         }
       },
+
       handleSubsUpdated: function(uids) {
         // console.log("topic subscriptions updated");
       },
@@ -2816,8 +2826,8 @@
         var me = Tinode.getMeTopic();
         me.onMetaDesc = instance.tnMeMetaDesc;
         instance.setState({sidePanelSelected: "contacts", myUserId: Tinode.getCurrentUserID()});
-        // Subscribe, fetch topic desc, the list of subscriptions, and messages (invites).
-        me.subscribe({get: {desc: {}, sub: {}, data: {}}});
+        // Subscribe, fetch topic desc, the list of subscriptions. Messages are not fetched.
+        me.subscribe(me.startMetaQuery().withLaterSub().withLaterDesc().build());
       },
 
       handleDisconnect: function(err) {
@@ -2866,7 +2876,7 @@
           this.setState({contactsSearchQuery: fnd.private ? fnd.private.toString() : ''});
           this.tnFndSubsUpdated();
         } else {
-          fnd.subscribe({get: {sub: {}, desc: {}}});
+          fnd.subscribe(fnd.startMetaQuery().withSub().withLaterDesc().build());
         }
       },
 
@@ -2888,9 +2898,9 @@
         @param query {Array} is an array of contacts to search for
        */
       handleSearchContacts: function(query) {
-          var find = Tinode.getFndTopic();
-          find.setMeta({desc: {private: query}}).then(function(ctrl) {
-            find.getMeta({sub: {}, desc: {}});
+          var fnd = Tinode.getFndTopic();
+          fnd.setMeta({desc: {private: query}}).then(function(ctrl) {
+            fnd.getMeta(fnd.startMetaQuery().withSub().withLaterDesc().build());
           });
       },
 
@@ -2990,12 +3000,13 @@
         var instance = this;
 
         var topic = peerName ? Tinode.newTopicWith(peerName) : Tinode.newTopic();
-        var params = {get: {desc: {}, data: {}, sub: {}}};
+        var query = topic.startMetaQuery().withDesc().withSub().withData();
+        var setParams;
         if (!peerName) {
-          params.set = {desc: {public: pub}};
+          setParams = {desc: {public: pub}};
         }
 
-        topic.subscribe(params).then(function() {
+        topic.subscribe(query.build(), setParams).then(function() {
           instance.setState({
             errorText: '',
             topicSelected: topic.name,

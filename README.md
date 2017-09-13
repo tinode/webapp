@@ -17,9 +17,9 @@ Background pattern from http://subtlepatterns.com/, commercial and non-commercia
 ## Missing functionality
 
 * Cannot send images or other media.
+* Cannot delete messages.
 * No typing indicators.
 * No indication of chat status (muted, blocked, etc.).
-* Long polling as a wire transport does not work.
 * Browser push notifications are missing.
 * No encryption.
 * Editing chat permissions is incomplete.
