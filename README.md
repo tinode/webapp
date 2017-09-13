@@ -35,5 +35,5 @@ Background pattern from http://subtlepatterns.com/, commercial and non-commercia
 ### Mobile screenshots
 
 <p align="center">
-  <img src="web-mob-contacts-1.png" alt="Mobile web: contacts" width=323 border=1 /> <kbd><img src="web-mob-chat-1.png" alt="Mobile web: chat" width=323 /></kbd> <img src="web-mob-info-1.png" alt="Mobile web: topic info" width=323 style="border: 1px solid gray" /> <img src="web-mob-new-chat-1.png" alt="Mobile web: start new chat" width=323 style="border: 1px solid gray" />
+  <img src="web-mob-contacts-1.png" alt="Mobile web: contacts" width=323 border=1 /> <kbd><img src="web-mob-chat-1.png" alt="Mobile web: chat" width=323 /></kbd> <kbd><img src="web-mob-info-1.png" alt="Mobile web: topic info" width=323 /></kbd> <kbd><img src="web-mob-new-chat-1.png" alt="Mobile web: start new chat" width=323 /></kbd>
 </p>
