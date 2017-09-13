@@ -29,11 +29,11 @@ Background pattern from http://subtlepatterns.com/, commercial and non-commercia
 ### Desktop screenshot
 
 <p align="center">
-  <img src="web-desktop.png" alt="Desktop web: full app" width=866 />
+  <img src="web-desktop-1.png" alt="Desktop web: full app" width=866 />
 </p>
 
 ### Mobile screenshots
 
 <p align="center">
-  <img src="web-mob-contacts.png" alt="Mobile web: contacts" width=323 /> <img src="web-mob-chat.png" alt="Mobile web: chat" width=323 /> <img src="web-mob-topicinfo.png" alt="Mobile web: topic info" width=323 />
+  <img src="web-mob-contacts-1.png" alt="Mobile web: contacts" width=323 /> <img src="web-mob-chat-1.png" alt="Mobile web: chat" width=323 /> <img src="web-mob-info-1.png" alt="Mobile web: topic info" width=323 /> <img src="web-mob-new-chat-1.png" alt="Mobile web: start new chat" width=323 />
 </p>
