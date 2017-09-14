@@ -327,9 +327,16 @@
       getInitialState: function() {
         return {
           active: this.props.state,
-          text: this.props.text || "",
-          changed: false
+          text: this.props.text || ""
         };
+      },
+
+      componentWillReceiveProps: function(newProps) {
+        // If text has changed while in read mode, update text and discard changes.
+        // Ignore update if in edit mode.
+        if (this.props.text != newProps.text && !this.state.active) {
+          this.setState({text: newProps.text || ""});
+        }
       },
 
       handeTextChange: function(e) {
@@ -347,8 +354,10 @@
       },
 
       handleStartEditing: function() {
-        ReactDOM.findDOMNode(this).focus();
-        this.setState({active: !this.props.readOnly});
+        if (!this.props.readOnly) {
+          ReactDOM.findDOMNode(this).focus();
+          this.setState({active: true});
+        }
       },
 
       handleEditingFinished: function() {
@@ -1828,9 +1837,21 @@
         if (!topic) {
           return;
         }
-
-        topic.onMetaDesc = this.onMetaDesc;
-        topic.onSubsUpdated = this.onSubsUpdated;
+        var instance = this;
+        this.previousMetaDesc = topic.onMetaDesc;
+        topic.onMetaDesc = function(desc) {
+          instance.onMetaDesc(desc);
+          if (instance.previousMetaDesc) {
+            instance.previousMetaDesc(desc);
+          }
+        };
+        this.previousSubsUpdated = topic.onSubsUpdated;
+        topic.onSubsUpdated = function(subs) {
+          instance.onSubsUpdated(subs);
+          if (instance.previousSubsUpdated) {
+            instance.previousSubsUpdated(subs);
+          }
+        }
         this.resetDesc(topic);
         this.resetSubs(topic);
 
@@ -1844,8 +1865,8 @@
         if (!topic) {
           return;
         }
-        topic.onMetaDesc = undefined;
-        topic.onSubsUpdated = undefined;
+        topic.onMetaDesc = this.previousMetaDesc;
+        topic.onSubsUpdated = this.previousSubsUpdated;
       },
 
       resetSubs: function(topic) {
@@ -1870,6 +1891,8 @@
       resetDesc: function(topic) {
         var defacs = topic.getDefaultAccess() || {};
         var acs = topic.getAccessMode();
+        console.log("InfoView: reset desc");
+        console.log(topic.public);
         this.setState({
           owner: acs && acs.isOwner(),
           admin: acs && acs.isAdmin(),
