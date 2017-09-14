@@ -36,7 +36,7 @@
     var API_KEY = "AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K";
 
     // Minimum time between two keypress notifications, milliseconds.
-    var KEYPRESS_DELAY = 5*1000;
+    var KEYPRESS_DELAY = 3*1000;
 
     // Delay before sending a {note} for reciving a message, milliseconds.
     var RECEIVED_DELAY = 500;
@@ -2352,7 +2352,8 @@
           topic: '',
           title: '',
           avatar: null,
-          scrollPosition: 0
+          scrollPosition: 0,
+          typingIndicator: false
         };
       },
 
@@ -2500,9 +2501,17 @@
       },
       handleInfoReceipt: function(info) {
         switch (info.what) {
-          case "kp":
-            console.log("show typing notification");
+          case "kp": {
+            clearTimeout(this.keyPressTimer);
+            var instance = this;
+            this.keyPressTimer = setTimeout(function() {
+              instance.setState({typingIndicator: false});
+            }, KEYPRESS_DELAY + 1000);
+            if (!this.state.typingIndicator) {
+              this.setState({typingIndicator: true});
+            }
             break;
+          }
           case "read":
           case "recv":
             // Redraw due to changed recv/read status.
@@ -2583,11 +2592,12 @@
             if (cont.online) {
               lastSeen = "online now";
             } else if (cont.seen) {
-              lastSeen = "Last seen: " + shortDateFormat(cont.seen.when);
+              lastSeen = "Last active: " + shortDateFormat(cont.seen.when);
               // TODO(gene): also handle user agent in c.seen.ua
             }
           }
           var avatar = this.state.avatar || true;
+          var online = cont && cont.online ? "online" + (this.state.typingIndicator ? " typing" : "") : "offline";
           component = (
             <div id="topic-view" className={this.props.hideSelf ? 'nodisplay' : null}>
               <div id="topic-caption-panel" className="caption-panel">
@@ -2600,7 +2610,7 @@
                 <div className="avatar-box">
                   <LetterTile avatar={avatar}
                     topic={this.state.topic} title={this.state.title} />
-                  <span className="online" />
+                  <span className={online} />
                 </div>
                 <div id="topic-title-group">
                   <div id="topic-title" className="panel-title">{this.state.title}</div>

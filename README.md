@@ -18,7 +18,6 @@ Background pattern from http://subtlepatterns.com/, commercial and non-commercia
 
 * Cannot send images or other media.
 * Cannot delete messages.
-* No typing indicators.
 * No indication of chat status (muted, blocked, etc.).
 * Browser push notifications are missing.
 * No encryption.

@@ -628,6 +628,24 @@ table.permission-editor td.checkbox {
   background-color: #C0C0C0;
 }
 
+/* Typing indicator: animation of the online dot */
+.online.typing {
+  animation: typing 1.5s infinite;
+}
+
+@keyframes typing {
+  0%    { background-color: #40C040; }
+  25%   { background-image: radial-gradient(#30D030 0%, #40C040 67%); }
+  33.3% { background-image: radial-gradient(#10EE10 0%, #40C040 50%); }
+  41.7% { background-image: radial-gradient(#00FF00 0%, #40C040 35%); }
+  50%   { background-image: radial-gradient(#30D030 0%, #40C040 67%); }
+  58.3% { background-image: radial-gradient(#10EE10 0%, #40C040 50%); }
+  66.7% { background-image: radial-gradient(#00FF00 0%, #40C040 35%); }
+  75%   { background-image: radial-gradient(#30D030 0%, #40C040 67%); }
+  83.3% { background-image: radial-gradient(#10EE10 0%, #40C040 50%); }
+  91.6% { background-image: radial-gradient(#00FF00 0%, #40C040 35%); }
+}
+
 .contact-box .checkmark.material-icons {
   display: inline-block;
   width: 1.5rem;
@@ -1472,11 +1490,6 @@ ul.tabbar li.active > a:after {
   height: 2rem;
   -webkit-animation: spin 1.5s linear infinite;
   animation: spin 1.5s linear infinite;
-}
-
-@-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
 }
 
 @keyframes spin {
