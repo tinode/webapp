@@ -609,7 +609,7 @@ table.permission-editor td.checkbox {
 }
 
 /* Online-offline indicator positioned inside avatar-box */
-.contact-box .online, .offline {
+.avatar-box .online, .offline {
   display: inline-block;
   width: 0.75rem;
   min-width: 0.75rem;
@@ -621,10 +621,10 @@ table.permission-editor td.checkbox {
   right: 0;
   bottom: 0.1rem;
 }
-.contact-box .online {
+.avatar-box .online {
   background-color: #4caf50;
 }
-.contact-box .offline {
+.avatar-box .offline {
   background-color: #C0C0C0;
 }
 

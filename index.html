@@ -2876,10 +2876,12 @@
         });
       },
       tnMeMetaDesc: function(desc) {
-        this.setState({
-          sidePanelTitle: desc.public.fn,
-          sidePanelAvatar: makeImageUrl(desc.public.photo)
-        });
+        if (desc && desc.public) {
+          this.setState({
+            sidePanelTitle: desc.public.fn,
+            sidePanelAvatar: makeImageUrl(desc.public.photo)
+          });
+        }
       },
       // Sending "received" notifications
       tnData: function(data) {
