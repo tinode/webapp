@@ -2860,7 +2860,7 @@
         me.onMetaDesc = instance.tnMeMetaDesc;
         instance.setState({sidePanelSelected: "contacts", myUserId: Tinode.getCurrentUserID()});
         // Subscribe, fetch topic desc, the list of subscriptions. Messages are not fetched.
-        me.subscribe(me.startMetaQuery().withLaterSub().withLaterDesc().build());
+        me.subscribe(me.startMetaQuery().withLaterSub().withDesc().build());
       },
 
       handleDisconnect: function(err) {
