@@ -507,6 +507,12 @@ Sample JSON representation of the text above:
 
         var spans = [].concat(fmt);
 
+        // Zero values may have been stripped. Restore them.
+        spans.map(function(s) {
+          s.at = s.at || 0;
+          s.len = s.len || 0;
+        });
+
         // Soft spans first by start index (asc) then by length (desc).
         spans.sort(function(a, b) {
           if (a.at - b.at == 0) {
@@ -515,17 +521,22 @@ Sample JSON representation of the text above:
           return a.at - b.at;
         });
 
+        console.log(spans);
+
         // Denormalize entities into spans. Create a copy of the objects to leave
         // original Drafty object unchanged.
         spans = spans.map(function(s) {
           var data;
           var tp = s.tp;
-          if (s.key + 1 > 0) {
+          if (!tp) {
+            s.key = s.key || 0;
             data = ent[s.key].data;
             tp = ent[s.key].tp;
           }
           return {tp: tp, data: data, at: s.at, len: s.len};
         });
+
+        console.log(spans);
 
         return forEach(txt, 0, txt.length, spans, formatter, context);
       },
