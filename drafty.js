@@ -521,8 +521,6 @@ Sample JSON representation of the text above:
           return a.at - b.at;
         });
 
-        console.log(spans);
-
         // Denormalize entities into spans. Create a copy of the objects to leave
         // original Drafty object unchanged.
         spans = spans.map(function(s) {
@@ -535,8 +533,6 @@ Sample JSON representation of the text above:
           }
           return {tp: tp, data: data, at: s.at, len: s.len};
         });
-
-        console.log(spans);
 
         return forEach(txt, 0, txt.length, spans, formatter, context);
       },

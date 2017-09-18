@@ -505,17 +505,52 @@ table.permission-editor td.checkbox {
 
 
 /* Area which displays an error message */
-#alert-box {
-  background-color: transparent;
-  height: 0;
+.alert-box {
+  position: relative;
+  display: none;
   overflow: hidden;
+  padding: 1rem 1.5rem 1rem 0.5rem;
 }
-#alert-box.error-alert {
-  padding: 0.5rem;
+.alert-box .cancel {
+  position: absolute;
+  right: 0.25rem;
+  top: 0.5rem;
+}
+
+.alert-box.error {
+  display: block;
   background-color: #ffcdd2;
-  border-color: #d32f2f;
+  border-bottom: 1px solid #ffbfc8;
   color: #b71c1c;
-  height: auto;
+}
+.alert-box.warning {
+  display: block;
+  background-color: #fff9c4;
+  border-bottom: 1px solid #fff59d;
+  color: #607d8b;
+}
+.alert-box .cancel .material-icons {
+  font-size: 1rem;
+}
+.alert-box.error .cancel .material-icons {
+  color: #b71c1c;
+}
+.alert-box.warning .cancel .material-icons {
+  color: #757575;
+}
+.alert-box .icon {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 0.5rem;
+}
+.alert-box .icon .material-icons {
+  font-size: 1.5rem;
+}
+.alert-box.warning .icon .material-icons {
+  color: #fbc02d;
+}
+.alert-box.error .icon .material-icons {
+  color: #ef5350;
 }
 
 /* List of contacts */
@@ -1488,7 +1523,6 @@ ul.tabbar li.active > a:after {
   border-top: 0.35rem solid #1e88e5;
   width: 2rem;
   height: 2rem;
-  -webkit-animation: spin 1.5s linear infinite;
   animation: spin 1.5s linear infinite;
 }
 
