@@ -1130,7 +1130,6 @@
       },
       componentWillMount: function() {
         var me = Tinode.getMeTopic();
-        me.onMetaDesc = this.onMetaDesc;
         var defacs = me.getDefaultAccess();
         this.setState({
           fullName: me.public ? me.public.fn : undefined,
@@ -1140,13 +1139,9 @@
           anon: defacs.anon
         });
       },
+
       componentWillUnmount: function() {
         var me = Tinode.getMeTopic();
-        me.onMetaDesc = undefined;
-      },
-
-      onMetaDesc: function(desc) {
-        // Update form with changed values
       },
 
       handleFullNameUpdate: function(fn) {
@@ -1321,7 +1316,6 @@
       componentWillUnmount: function() {
         var me = Tinode.getMeTopic();
         me.onContactUpdate = undefined;
-        me.onData = undefined;
         me.onSubsUpdated = undefined;
       },
       // Reactions to updates to the contact list.
@@ -2867,6 +2861,7 @@
         this.setState({serverVersion: params.ver + " (" + (params.build ? params.build : "none") + ")"});
         this.doLogin(this.state.login, this.state.password);
       },
+
       doLogin: function(login, password) {
         var instance = this;
 
@@ -3292,8 +3287,8 @@
 
             <MessagesView
               displayMobile={this.state.displayMobile}
-              hideSelf={(this.state.displayMobile &&
-                (this.state.mobilePanel !== 'topic-view' || this.state.showInfoPanel))}
+              hideSelf={this.state.displayMobile &&
+                (this.state.mobilePanel !== 'topic-view' || this.state.showInfoPanel)}
               topic={this.state.topicSelected}
               myUserId={this.state.myUserId}
               serverVersion={this.state.serverVersion}
