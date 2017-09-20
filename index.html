@@ -2358,8 +2358,9 @@
       },
 
       // Scroll last message into view on component update e.g. on message received.
-      componentDidUpdate: function() {
-        if (this.messagesScroller) {
+      componentDidUpdate: function(prevProps, prevState) {
+        if (this.messagesScroller &&
+          (prevState.title != this.state.title || prevState.messages.length != this.state.messages.length)) {
           this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition;
         }
       },
@@ -2415,7 +2416,6 @@
             topic: props.topic,
             scrollPosition: 0
           });
-
           tryToResubscribe = true;
         }
 
