@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Tinode example: chat web application in react.js</title>
-    <link rel="shortcut icon" href="img/logo32x32.png" />
+    <link id="shortcut-icon" rel="shortcut icon" href="img/logo32x32.png" />
     <!-- Browser styling for Chrome, FF, Opera -->
     <meta name="theme-color" content="#3949AB">
     <!-- Google's Roboto font -->
@@ -75,6 +75,20 @@
         'data:image/' + photo.type + ';base64,' + photo.data : null;
     }
 
+    // Make shortcut icon appear with a green dot.
+    function updateFavicon(on) {
+      var oldIcon = document.getElementById("shortcut-icon");
+      if (oldIcon) {
+        var head = document.head || document.getElementsByTagName('head')[0];
+        var newIcon = document.createElement('link');
+        newIcon.type = "image/png";
+        newIcon.id = "shortcut-icon";
+        newIcon.rel = "shortcut icon";
+        newIcon.href = "img/logo32x32" + (on ? 'a' : '') + ".png";
+        head.removeChild(oldIcon);
+        head.appendChild(newIcon);
+      }
+    }
     // Get 32 bit integer hash value for a string. Ideally it should produce the same value
     // as Java's String#hash().
     function stringHash(value) {
@@ -1067,7 +1081,6 @@
 
               this.props.state === 'contacts' ?
               <ContactsView
-                data={this.props.subscriptions}
                 topicSelected={this.props.topicSelected}
                 showContextMenu={this.props.showContextMenu}
                 onTopicSelected={this.props.onTopicSelected} /> :
@@ -1355,10 +1368,14 @@
 
       prepareContactList: function() {
         var contacts = [];
+        var totalUnread = 0;
         Tinode.getMeTopic().contacts(function(c) {
           c.unread = c.seq - (c.read > 0 ? c.read : 0);
+          totalUnread += c.unread;
           contacts.push(c);
         }, this);
+
+        updateFavicon(totalUnread > 0);
 
         return contacts;
       },
@@ -2800,7 +2817,6 @@
           liveConnection: navigator.onLine,
           topicSelected: '',
           loginDisabled: false,
-          subscriptions: {},
           displayMobile: (window.innerWidth <= MEDIA_BREAKPOINT),
           showInfoPanel: false,
           infoPanelShowMembers: false,
@@ -3272,7 +3288,6 @@
               state={this.state.sidePanelSelected}
               title={this.state.sidePanelTitle}
               avatar={this.state.sidePanelAvatar}
-              subscriptions={this.state.subscriptions}
               login={this.state.login}
               myUserId={this.state.myUserId}
               loginDisabled={this.state.loginDisabled}

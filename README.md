@@ -6,7 +6,7 @@ and [icons](https://google.github.io/material-design-icons/#icon-font-for-the-we
 
 This is work in progress. Bugs are expected. The app was tested in the latest Chrome & Firefox only.
 
-Try it (possibly newer or older version) live at https://api.tinode.co/x/example-react-js/. Login as one of `alice`, `bob`, `carol`, `dave`, `frank`. Password is `<login>123`, e.g. password for `alice` is `alice123`. You can discover other users by email or phone by prefixing them with `email:` or `tel:` respectively. Emails are `<login>@example.com`, e.g. `alice@example.com`, phones are `17025550001` through `17025550009`. The demo is reset every night at 2:15 am Pacific time.
+Try possibly newer or older version live at https://api.tinode.co/x/example-react-js/. Login as one of `alice`, `bob`, `carol`, `dave`, `frank`. Password is `<login>123`, e.g. password for `alice` is `alice123`. You can discover other users by email or phone by prefixing them with `email:` or `tel:` respectively. Emails are `<login>@example.com`, e.g. `alice@example.com`, phones are `17025550001` through `17025550009`. The demo is reset every night at 2:15am Pacific time.
 
 License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
@@ -20,7 +20,7 @@ Background pattern from http://subtlepatterns.com/, commercial and non-commercia
 * Cannot delete messages.
 * No indication of chat status (muted, blocked, etc.).
 * Browser push notifications are missing.
-* No encryption.
+* No end-to-end encryption.
 * Editing chat permissions is incomplete.
 
 ## Responsive design
