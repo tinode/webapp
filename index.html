@@ -2272,8 +2272,6 @@
         var elementKey = 0;
 
         var formatter = function(style, data, values) {
-          // console.log("El: " + style + ", data: " + JSON.stringify(data) + ", values: " + JSON.stringify(values));
-
           elementKey += 1;
           var el = Drafty.tagName(style);
           if (el) {
@@ -2383,13 +2381,22 @@
         this.propsChange(nextProps);
       },
       propsChange: function(props) {
-        var instance = this;
         if (!props || !props.topic) {
           this.setState({messages: [], topic: null});
           this.leave();
-        } else if (props.topic != this.state.topic) {
+          return;
+        }
+
+        if (this.props.connected && !props.connected) {
+          // connection lost, do nothing
+          return;
+        }
+
+        var tryToResubscribe = !this.props.connected && props.connected;
+
+        var topic = Tinode.getTopic(props.topic);
+        if (props.topic != this.state.topic) {
           var msgs = [];
-          var topic = Tinode.getTopic(props.topic);
           // Bind the new topic to component.
           topic.onData = this.handleNewMessage;
           topic.onInfo = this.handleInfoReceipt;
@@ -2403,26 +2410,29 @@
             msgs = msgs.concat(msg);
           });
 
-          if (!topic.isSubscribed()) {
-            topic.subscribe(topic.startMetaQuery()
-              .withLaterDesc()
-              .withLaterSub()
-              .withLaterData(MESSAGES_PAGE)
-              .build()).catch(function(err){
-                instance.props.onError(err.message, "err");
-              });
-          }
-
-          // The user switched to the new topic before the timer for
-          // the previous topic has triggered, kill it.
-          clearTimeout(this.readTimer);
-
           this.setState({
             messages: msgs,
             topic: props.topic,
             scrollPosition: 0
           });
+
+          tryToResubscribe = true;
         }
+
+        if (!topic.isSubscribed() && tryToResubscribe) {
+          var instance = this;
+          topic.subscribe(topic.startMetaQuery()
+            .withLaterDesc()
+            .withLaterSub()
+            .withLaterData(MESSAGES_PAGE)
+            .build()).catch(function(err){
+              instance.props.onError(err.message, "err");
+            });
+        }
+
+        // The user switched to the new topic before the timer for
+        // the previous topic has triggered, kill it.
+        clearTimeout(this.readTimer);
       },
 
       leave: function() {
@@ -2774,6 +2784,7 @@
     var AppView = React.createClass({
       getInitialState: function() {
         return {
+          connected: false,
           transport: null,
           serverAddress: detectServerAddress(),
           sidePanelSelected: 'login',
@@ -2858,7 +2869,9 @@
       // Connection succeeded.
       handleConnected: function() {
         var params = Tinode.getServerInfo();
-        this.setState({serverVersion: params.ver + " (" + (params.build ? params.build : "none") + ")"});
+        this.setState({
+          serverVersion: params.ver + " (" + (params.build ? params.build : "none") + ")"
+        });
         this.doLogin(this.state.login, this.state.password);
       },
 
@@ -2894,7 +2907,11 @@
         // Logged in fine, subscribe to 'me' attaching callbacks from the contacts view.
         var me = Tinode.getMeTopic();
         me.onMetaDesc = instance.tnMeMetaDesc;
-        instance.setState({sidePanelSelected: "contacts", myUserId: Tinode.getCurrentUserID()});
+        instance.setState({
+          connected: true,
+          sidePanelSelected: "contacts",
+          myUserId: Tinode.getCurrentUserID()
+        });
         // Subscribe, fetch topic desc, the list of subscriptions. Messages are not fetched.
         me.subscribe(me.startMetaQuery().withLaterSub().withDesc().build()).catch(function(err){
           instance.handleError(err.message, "err");
@@ -2903,15 +2920,12 @@
 
       handleDisconnect: function(err) {
         this.setState({
+          connected: false,
           dialogSelected: null,
           errorText: err && err.message ? err.message : 'Disconnected',
           errorLevel: err && err.message ? "err" : "warn",
           loginDisabled: false,
           contextMenuVisible: false,
-          contextMenuBounds: null,
-          contextMenuClickAt: null,
-          contextMenuTopic: '',
-          contextMenuItems: [],
           serverVersion: 'no connection'
         });
       },
@@ -3252,6 +3266,7 @@
               onError={this.handleError} />
 
             <SidepanelView
+              connected={this.state.connected}
               displayMobile={this.state.displayMobile}
               hideSelf={this.state.displayMobile && this.state.mobilePanel !== 'sidepanel'}
               state={this.state.sidePanelSelected}
@@ -3286,6 +3301,7 @@
               showContextMenu={this.handleShowContextMenu} />
 
             <MessagesView
+              connected={this.state.connected}
               displayMobile={this.state.displayMobile}
               hideSelf={this.state.displayMobile &&
                 (this.state.mobilePanel !== 'topic-view' || this.state.showInfoPanel)}
@@ -3304,6 +3320,7 @@
 
             {this.state.showInfoPanel ?
               <InfoView
+                connected={this.state.connected}
                 displayMobile={this.state.displayMobile}
                 topic={this.state.topicSelected}
                 foundContacts={this.state.foundContacts}
