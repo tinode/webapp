@@ -73,7 +73,7 @@ Sample JSON representation of the text above:
     {name: "MN", dataName: "val",
       pack: function(val) { return {val: val.slice(1)}; },
       re: /\B@(\w\w+)/g},
-    // Hashtags #hashtag
+    // Hashtags #hashtag, like metion 2 or more characters.
     {name: "HT", dataName: "val",
       pack: function(val) { return {val: val.slice(1)}; },
       re: /\B#(\w\w+)/g}
@@ -114,6 +114,22 @@ Sample JSON representation of the text above:
       props: function(data) { return { name: data.val }; },
     }
   };
+
+  // Convert base64-encoded string into Blob.
+  function base64toBlob(b64Data, contentType) {
+    var SLICE_SIZE = 1024;
+    var byteChars = atob(b64Data);
+    var chunks = [];
+    for (var offset = 0; offset < byteChars.length; offset += SLICE_SIZE) {
+      var slice = byteChars.slice(offset, offset + SLICE_SIZE);
+      var byteNumbers = new Array(slice.length);
+      for (var i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+      chunks.push(new Uint8Array(byteNumbers));
+    }
+    return new Blob(chunks, {type: contentType});
+  }
 
   var Drafty = (function() {
 
