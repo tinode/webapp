@@ -116,19 +116,16 @@ Sample JSON representation of the text above:
   };
 
   // Convert base64-encoded string into Blob.
-  function base64toBlob(b64Data, contentType) {
-    var SLICE_SIZE = 1024;
-    var byteChars = atob(b64Data);
-    var chunks = [];
-    for (var offset = 0; offset < byteChars.length; offset += SLICE_SIZE) {
-      var slice = byteChars.slice(offset, offset + SLICE_SIZE);
-      var byteNumbers = new Array(slice.length);
-      for (var i = 0; i < slice.length; i++) {
-        byteNumbers[i] = slice.charCodeAt(i);
-      }
-      chunks.push(new Uint8Array(byteNumbers));
+  function base64toBlob (b64, contentType) {
+    var bin = atob(b64);
+    var length = bin.length;
+    var buf = new ArrayBuffer(length);
+    var arr = new Uint8Array(buf);
+    for (var i = 0; i < length; i++) {
+      arr[i] = bin.charCodeAt(i);
     }
-    return new Blob(chunks, {type: contentType});
+
+    return new Blob([buf], {type: contentType});
   }
 
   var Drafty = (function() {

@@ -2370,6 +2370,8 @@
           title: '',
           avatar: null,
           scrollPosition: 0,
+          readOnly: false,
+          writeOnly: false,
           typingIndicator: false
         };
       },
@@ -2507,6 +2509,13 @@
             avatar: makeImageUrl(desc.public.photo)
           });
         }
+        var acs = desc.getAccessMode();
+        if (acs) {
+          this.setState({
+            readOnly: !acs.isWriter(),
+            writeOnly: !acs.isReader()
+          });
+        }
       },
 
       handleSubsUpdated: function(uids) {
@@ -2636,6 +2645,7 @@
           }
           var avatar = this.state.avatar || true;
           var online = cont && cont.online ? "online" + (this.state.typingIndicator ? " typing" : "") : "offline";
+
           component = (
             <div id="topic-view" className={this.props.hideSelf ? 'nodisplay' : null}>
               <div id="topic-caption-panel" className="caption-panel">
@@ -2666,11 +2676,16 @@
                   level={this.props.errorLevel}
                   text={this.props.errorText} /> : null}
               <LoadSpinner show={this.state.fetchingMessages} />
-              <div id="messages-panel" ref={this.handleScrollReference}>
+              <div id="messages-panel"
+                className={this.state.writeOnly ? "write-only" : null}
+                ref={this.handleScrollReference}>
                 <ul id="scroller" className={chatBoxClass}>
                   {messageNodes}
                 </ul>
               </div>
+              {this.state.writeOnly ?
+                <div id="write-only-note">no access to messages</div>
+                : null}
               <MessagesView.Send topic={this.props.topic} sendMessage={this.props.sendMessage} />
             </div>
           );

@@ -825,6 +825,10 @@ table.permission-editor td.checkbox {
 /* END of sidepanel styles */
 
 /* Topic/messages view */
+#topic-view {
+  position: relative;
+}
+
 #topic-caption-panel {
   background-color: #b0bec5;
 }
@@ -836,7 +840,6 @@ table.permission-editor td.checkbox {
 #topic-caption-panel :hover {
   color: black;
 }
-
 
 #topic-caption-panel .avatar-box {
   position: relative;
@@ -859,6 +862,7 @@ table.permission-editor td.checkbox {
 
 /* Scrollable panel where the messages are shown */
 #messages-panel {
+  position: relative;
   padding: 0.75rem;
   overflow-y: scroll;
   background-color: #eceff1;
@@ -866,6 +870,31 @@ table.permission-editor td.checkbox {
   background-image: url("../img/ignasi_pattern_s.png");
 }
 
+#messages-panel.write-only::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top:0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-image: repeating-linear-gradient(45deg,
+    transparent, transparent 0.5rem, rgba(255,255,255,.5) 0.5rem, rgba(255,255,255,.5) 1rem);
+}
+
+#write-only-note {
+  position: absolute;
+  background-color: white;
+  color: #666;
+  height: auto;
+  width: auto;
+  line-height: 2rem;
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 0.25rem 1.5rem;
+}
 /* Footer-panel with the input for the new message */
 #send-message-panel {
   display: flex;
