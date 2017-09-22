@@ -2515,11 +2515,10 @@
             avatar: makeImageUrl(desc.public.photo)
           });
         }
-        var acs = desc.getAccessMode();
-        if (acs) {
+        if (desc.acs) {
           this.setState({
-            readOnly: !acs.isWriter(),
-            writeOnly: !acs.isReader()
+            readOnly: !desc.acs.isWriter(),
+            writeOnly: !desc.acs.isReader()
           });
         }
       },
