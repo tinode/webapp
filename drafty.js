@@ -88,8 +88,22 @@ Sample JSON representation of the text above:
     BR: { name: 'br', isVoid: true },
     LN: { name: 'a', isVoid: false },
     MN: { name: 'a', isVoid: false },
-    HT: { name: 'a', isVoid: false }
+    HT: { name: 'a', isVoid: false },
+    XT: { name: '', isVoid: true }
   };
+
+  // Convert base64-encoded string into Blob.
+  function base64toObjectUrl(b64, contentType) {
+    var bin = atob(b64);
+    var length = bin.length;
+    var buf = new ArrayBuffer(length);
+    var arr = new Uint8Array(buf);
+    for (var i = 0; i < length; i++) {
+      arr[i] = bin.charCodeAt(i);
+    }
+
+    return URL.createObjectURL(new Blob([buf], {type: contentType}));
+  }
 
   // Helpers for converting Drafty to HTML.
   var DECORATORS = {
@@ -112,21 +126,13 @@ Sample JSON representation of the text above:
       open: function(data) { return '<a href="#' + data.val + '">'; },
       close: function(data) { return '</a>'; },
       props: function(data) { return { name: data.val }; },
+    },
+    XT: {
+      open: function() { return ''; },
+      close: function(data) { return '<img src="' + base64toObjectUrl(data.val, data.mime) + '" />'},
+      props: function(data) { return { src: base64toObjectUrl(data.val, data.mime) }; },
     }
   };
-
-  // Convert base64-encoded string into Blob.
-  function base64toBlob (b64, contentType) {
-    var bin = atob(b64);
-    var length = bin.length;
-    var buf = new ArrayBuffer(length);
-    var arr = new Uint8Array(buf);
-    for (var i = 0; i < length; i++) {
-      arr[i] = bin.charCodeAt(i);
-    }
-
-    return new Blob([buf], {type: contentType});
-  }
 
   var Drafty = (function() {
 
@@ -456,6 +462,31 @@ Sample JSON representation of the text above:
         return result;
       },
 
+      addZeroLengthMedia: function(content, at, tag, mime, previewBits, external) {
+        content = content || {txt: ""};
+        content.ent = content.ent || [];
+        content.fmt = content.fmt || [];
+
+        var entity = {
+          tp: tag ? tag : "XT",
+          data: {
+            mime: mime,
+            val: previewBits,
+            ext: external
+          }
+        };
+        var range = {
+          at: at,
+          len: 0,
+          key: content.ent.length
+        };
+
+        content.fmt.push(range);
+        content.ent.push(entity);
+
+        return content;
+      },
+
       /**
        * Given the structured representation of rich text, convert it to HTML.
        * No attempt is made to strip pre-existing html markup.
@@ -582,7 +613,7 @@ Sample JSON representation of the text above:
        * For a given data bundle generate an object with HTML attributes,
        * for instance, given {url: "http://www.example.com/"} return
        * {href: "http://www.example.com/"}
-       * @param {stting} style - tw-letter style to generate attributes for.
+       * @param {string} style - tw-letter style to generate attributes for.
        * @param {Object} data - data bundle to convert to attributes
        * @returns object with HTML attributes.
        */
