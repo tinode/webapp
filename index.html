@@ -1083,7 +1083,8 @@
               <ContactsView
                 topicSelected={this.props.topicSelected}
                 showContextMenu={this.props.showContextMenu}
-                onTopicSelected={this.props.onTopicSelected} /> :
+                onTopicSelected={this.props.onTopicSelected}
+                onOnlineChange={this.props.onOnlineChange} /> :
 
               this.props.state === 'new-topic' ?
               <NewTopicView
@@ -1333,7 +1334,12 @@
       },
       // Reactions to updates to the contact list.
       tnMeContactUpdate: function(what, cont) {
-        if (what === "on" || what === "off" || what === "read") {
+        if (what === "on" || what === "off") {
+          this.resetContactList();
+          if (this.props.topicSelected === cont.topic) {
+            this.props.onOnlineChange(what === "on");
+          }
+        } else if (what === "read") {
           this.resetContactList();
         } else if (what === "msg") {
           // New message received
@@ -1356,7 +1362,7 @@
         } else {
           // TODO(gene): handle other types of notifications:
           // * ua -- user agent changes (may display a pictogram for mobile/desktop)
-          // * upd -- topic 'public' updated (fetch new public and refresh)
+          // * upd -- topic 'public' updated
           // * del -- messages deleted (hard or soft) -- reset pill counter
           console.log("changed (not updating for it): " + what + " in: " + cont.topic);
         }
@@ -2644,7 +2650,7 @@
             }
           }
           var avatar = this.state.avatar || true;
-          var online = cont && cont.online ? "online" + (this.state.typingIndicator ? " typing" : "") : "offline";
+          var online = this.props.online ? "online" + (this.state.typingIndicator ? " typing" : "") : "offline";
 
           component = (
             <div id="topic-view" className={this.props.hideSelf ? 'nodisplay' : null}>
@@ -2831,6 +2837,7 @@
           errorLevel: null,
           liveConnection: navigator.onLine,
           topicSelected: '',
+          topicSelectedOnline: false,
           loginDisabled: false,
           displayMobile: (window.innerWidth <= MEDIA_BREAKPOINT),
           showInfoPanel: false,
@@ -3038,6 +3045,11 @@
           });
         }
       },
+
+      handleTopicSelectedOnline: function(online) {
+        this.setState({topicSelectedOnline: online});
+      },
+
       // In mobile view user requested to show sidepanel
       handleHideMessagesView: function() {
         this.setState({
@@ -3321,6 +3333,7 @@
               onCreateTopic={this.handleNewTopicRequest}
               onNewTopic={this.handleNewTopic}
               onCancel={this.handleSidepanelCancel}
+              onOnlineChange={this.handleTopicSelectedOnline}
 
               onInitFind={this.tnInitFind}
               contactsSearchQuery={this.state.contactsSearchQuery}
@@ -3331,6 +3344,7 @@
 
             <MessagesView
               connected={this.state.connected}
+              online={this.state.topicSelectedOnline}
               displayMobile={this.state.displayMobile}
               hideSelf={this.state.displayMobile &&
                 (this.state.mobilePanel !== 'topic-view' || this.state.showInfoPanel)}
