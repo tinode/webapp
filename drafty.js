@@ -89,7 +89,7 @@ Sample JSON representation of the text above:
     LN: { name: 'a', isVoid: false },
     MN: { name: 'a', isVoid: false },
     HT: { name: 'a', isVoid: false },
-    XT: { name: '', isVoid: true }
+    IM: { name: 'img', isVoid: true }
   };
 
   // Convert base64-encoded string into Blob.
@@ -127,10 +127,27 @@ Sample JSON representation of the text above:
       close: function(data) { return '</a>'; },
       props: function(data) { return { name: data.val }; },
     },
-    XT: {
-      open: function() { return ''; },
-      close: function(data) { return '<img src="' + base64toObjectUrl(data.val, data.mime) + '" />'},
-      props: function(data) { return { src: base64toObjectUrl(data.val, data.mime) }; },
+    IM: {
+      open: function(data) {
+        var blobUrl = base64toObjectUrl(data.val, data.mime);
+        var res = (data.name ? '<a href="' + blobUrl + '" download="' + data.name + '">' : '') +
+          '<img src="' + blobUrl + '"' +
+            (data.width ? ' width="' + data.width + '"' : '') +
+            (data.height ? ' height="' + data.height + '"' : '') + ' border="0" />';
+        console.log("open: " + res);
+        return res;
+      },
+      close: function(data) {
+        return (data.name ? '</a>' : '');
+      },
+      props: function(data) {
+        return {
+          src: base64toObjectUrl(data.val, data.mime),
+          width: data.width,
+          height: data.height,
+          download: data.name
+        };
+      },
     }
   };
 
@@ -462,17 +479,30 @@ Sample JSON representation of the text above:
         return result;
       },
 
-      addZeroLengthMedia: function(content, at, tag, mime, previewBits, external) {
+      /**
+       * Add inline image to drafty content
+       *
+       * @param {Drafty} content object to add image to
+       * @param {integer} at index where the object is inserted
+       * @param {string} mime mime-type of the image, e.g. "image/png"
+       * @param {string} bits base64-encoded image content
+       * @param {integer} width width of the image
+       * @param {integer} height height of the image
+       * @param {string} fname file name suggestion for downloading the image.
+       */
+      insertImage: function(content, at, mime, base64bits, width, height, fname) {
         content = content || {txt: ""};
         content.ent = content.ent || [];
         content.fmt = content.fmt || [];
 
         var entity = {
-          tp: tag ? tag : "XT",
+          tp: "IM",
           data: {
             mime: mime,
-            val: previewBits,
-            ext: external
+            val: base64bits,
+            width: width,
+            height: height,
+            name: fname
           }
         };
         var range = {
@@ -514,8 +544,10 @@ Sample JSON representation of the text above:
             }
 
             if (DECORATORS[tp]) {
-              markup.push({idx: range.at, what: DECORATORS[tp].open(data)});
+              // Because we later sort in descending order, closing markup must come first.
+              // Otherwise zero-length objects will not be represented correctly.
               markup.push({idx: range.at + range.len, what: DECORATORS[tp].close(data)});
+              markup.push({idx: range.at, what: DECORATORS[tp].open(data)});
             }
           }
         }

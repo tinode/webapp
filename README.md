@@ -16,10 +16,10 @@ Background pattern from http://subtlepatterns.com/, commercial and non-commercia
 
 ## Missing functionality
 
-* Cannot send images or other media.
+* Previews not generated for videos, audio or other docs.
 * Cannot delete messages.
-* No indication of chat status (muted, blocked, etc.).
-* Browser push notifications are missing.
+* No indication of some chat statuses (muted, blocked, etc.).
+* Browser push notifications are not implemented.
 * No end-to-end encryption.
 * Editing chat permissions is incomplete.
 

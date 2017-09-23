@@ -2691,7 +2691,10 @@
               {this.state.writeOnly ?
                 <div id="write-only-note">no access to messages</div>
                 : null}
-              <MessagesView.Send topic={this.props.topic} sendMessage={this.props.sendMessage} />
+              <MessagesView.Send
+                topic={this.props.topic}
+                disabled={this.state.readOnly}
+                sendMessage={this.props.sendMessage} />
             </div>
           );
         } else {
@@ -2713,6 +2716,12 @@
           // Make initial keypress time as if it happened 5001 milliseconds in the past.
           keypressTimestamp: new Date().getTime() - KEYPRESS_DELAY - 1
         };
+      },
+      handleAttachImage: function() {
+
+      },
+      handleAttachFile: function() {
+
       },
       handleSend: function() {
         var message = this.state.message.trim();
@@ -2747,13 +2756,30 @@
         this.setState(newState);
       },
       render: function() {
+        var prompt = this.props.disabled ? "Publishing disabled" : "New message";
+        var instance = this;
         return (
           <div id="send-message-panel">
-            <textarea id="sendMessage" placeholder="New message"
-              value={this.state.message} onChange={this.handleMessageTyping} onKeyPress={this.handleKeyPress} />
-            <a href="#" onClick={this.handleSend}>
-              <i className="material-icons">send</i>
-            </a>
+            {this.props.disabled ?
+              <i className="material-icons disabled">photo</i> :
+              <a href="#" onClick={function(e) {instance.attachImage.click();}}>
+                <i className="material-icons secondary">photo</i>
+              </a>}
+            {this.props.disabled ?
+              <i className="material-icons disabled">attach_file</i> :
+              <a href="#" onClick={function(e) {instance.attachFile.click();}}>
+                <i className="material-icons secondary">attach_file</i>
+              </a>}
+            <textarea id="sendMessage" placeholder={prompt}
+              disabled={this.props.disabled} value={this.state.message}
+              onChange={this.handleMessageTyping} onKeyPress={this.handleKeyPress} />
+              {this.props.disabled ?
+                <i className="material-icons disabled">send</i> :
+                <a href="#" onClick={this.handleSend}><i className="material-icons">send</i></a>}
+          <input type="file" ref={function(ref) {instance.attachFile = ref;}}
+            onChange={this.handleAttachFile} style={{display: 'none'}} />
+          <input type="file" ref={function(ref) {instance.attachImage = ref;}} accept="image/*"
+            onChange={this.handleAttachImage} style={{display: 'none'}} />
           </div>
         );
       }

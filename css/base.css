@@ -900,7 +900,7 @@ table.permission-editor td.checkbox {
   display: flex;
   align-items: center;
   flex: none;
-  padding: 0.4rem;
+  padding: 0.4rem 0.4rem 0.4rem 0.6rem;
   background-color: #eceff1;
   box-shadow: 0 -1px rgba(0,0,0,0.1); /* Faint shadow above panel */
   z-index: 2;
@@ -909,6 +909,18 @@ table.permission-editor td.checkbox {
 
 #sendMessage {
   overflow: hidden;
+}
+
+#send-message-panel .material-icons {
+  min-width: 1.5rem;
+}
+
+#send-message-panel .material-icons.secondary, .material-icons.disabled {
+  color: #999!important;
+}
+
+#send-message-panel .material-icons.secondary:hover {
+  color: #2196f3!important;
 }
 
 /* A static panel shown when no topic is selected */
