@@ -376,10 +376,16 @@ Sample JSON representation of the text above:
     }
 
     return {
+
       /**
-       * Parse text into structured representation.
+       * Parse plain text into structured representation.
        */
       parse: function(content) {
+        // Make sure we are parsing strings only.
+        if (typeof content != "string") {
+          return null;
+        }
+
         // Split text into lines. It makes further processing easier.
         var lines = content.split(/\r?\n/);
 
@@ -491,11 +497,16 @@ Sample JSON representation of the text above:
        * @param {string} fname file name suggestion for downloading the image.
        */
       insertImage: function(content, at, mime, base64bits, width, height, fname) {
-        content = content || {txt: ""};
+        content = content || {txt: " "};
         content.ent = content.ent || [];
         content.fmt = content.fmt || [];
 
-        var entity = {
+        content.fmt.push({
+          at: at,
+          len: 1,
+          key: content.ent.length
+        });
+        content.ent.push({
           tp: "IM",
           data: {
             mime: mime,
@@ -504,15 +515,30 @@ Sample JSON representation of the text above:
             height: height,
             name: fname
           }
-        };
-        var range = {
-          at: at,
+        });
+
+        return content;
+      },
+
+      attachFile: function(content, mime, base64bits, fname) {
+        content = content || {txt: ""};
+        content.ent = content.ent || [];
+        content.fmt = content.fmt || [];
+
+        content.fmt.push({
+          at: -1,
           len: 0,
           key: content.ent.length
-        };
+        });
 
-        content.fmt.push(range);
-        content.ent.push(entity);
+        content.ent.push({
+          tp: "EX",
+          data: {
+            mime: mime,
+            val: base64bits,
+            name: fname
+          }
+        });
 
         return content;
       },
@@ -577,6 +603,8 @@ Sample JSON representation of the text above:
       format: function(content, formatter, context) {
         var {txt, fmt, ent} = content;
 
+        txt = txt || "";
+
         if (!fmt) {
           return [txt];
         }
@@ -625,13 +653,56 @@ Sample JSON representation of the text above:
       /**
        * Returns true if content has no markup and no entities.
        *
-       * @param {drafty} content - content to check for presence of markup.
+       * @param {Drafty} content - content to check for presence of markup.
        * @returns true is content is plain text, false otherwise.
        */
       isPlainText: function(content, noLineBreaks) {
         return !(content.fmt || content.ent);
       },
 
+      /**
+       * Check if the drafty content has attachments.
+       *
+       * @param {Drafty} content - content to check for attachments.
+       * @returns true if there are attachments.
+       */
+      hasAttachment: function(content) {
+        if (content.ent && content.ent.length > 0) {
+          for (var i in content.ent) {
+            if (content.ent[i].tp == "EX") {
+              return true;
+            }
+          }
+        }
+        return false;
+      },
+
+      /**
+       * Enumerate attachments
+       *
+       * @param {Drafty} content - drafty object to process for attachments.
+       * @param {function} callback - callback to call for each attachment.
+       * @param {Object} content - value of "this" for callback.
+       */
+      attachments: function(content, callback, context) {
+        if (content.ent && content.ent.length > 0) {
+          for (var i in content.ent) {
+            if (content.ent[i].tp == "EX") {
+              callback.call(context, content.ent[i].data, i);
+            }
+          }
+        }
+      },
+
+      // Get blob URL for a given entity
+      getBlobUrl: function(entity) {
+        return base64toObjectUrl(entity.val, entity.mime);
+      },
+
+      getAttachmentSize: function(entity) {
+        // Value is base64 encoded. The actual object size is smaller than the encoded length.
+        return entity.val ? (entity.val.length * 0.75) | 0 : 0;
+      },
       /**
        * Get HTML tag for a given two-letter style name
        * @param {string} style - two-letter style, like ST or LN
@@ -664,7 +735,6 @@ Sample JSON representation of the text above:
       getContentType: function() {
         return "text/x-drafty";
       }
-
     };
   });
 

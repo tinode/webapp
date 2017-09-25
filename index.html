@@ -53,6 +53,10 @@
     // Number of chat messages to fetch in one call.
     var MESSAGES_PAGE = 24;
 
+    // Maximum allowed attachment size = 128K. Increade this limit to a
+    // greater value in production. Also increase max_message_size in server config.
+    var MAX_ATTACHMENT_SIZE = 1 << 17;
+
     // Short representation of time in the past.
     function shortDateFormat(then) {
       var locale = window.navigator.userLanguage || window.navigator.language;
@@ -142,6 +146,19 @@
         return tags;
       }
       return undefined;
+    }
+
+    // Convert a number of bytes to human-readable format.
+    function bytesToHumanSize(bytes) {
+      if(!bytes || bytes == 0) {
+        return '0 Bytes';
+      }
+
+      var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+      var bucket = Math.floor(Math.log2(bytes) / 10) | 0;
+      var count = bytes / Math.pow(1024, bucket);
+      var round = bucket > 0 ? (count < 10 ? 2 : (count < 100 ? 1 : 0)) : 0;
+      return count.toFixed(round) + ' ' + sizes[bucket];
     }
 
     /* BEGIN Context Menu: popup/dropdown menu */
@@ -2314,7 +2331,13 @@
           (this.props.sequence === "single" || this.props.sequence === "last"));
 
         var content = this.props.content;
+        var attachments = [];
         if (this.props.mimeType === Drafty.getContentType()) {
+          Drafty.attachments(content, function(att, i) {
+            attachments.push(<Message.Attachment
+              filename={att.name} blobUrl={Drafty.getBlobUrl(att)}
+              size={bytesToHumanSize(Drafty.getAttachmentSize(att))} key={i} />);
+          }, this);
           content = React.createElement('span', null, Drafty.format(content, formatter));
         }
 
@@ -2331,6 +2354,7 @@
             <div>
               <div className={bubbleClass}>
                 <p>{content}
+                {attachments}
                 <Message.ReceivedMarker response={this.props.response}
                   timestamp={this.props.timestamp} received={this.props.received} />
                 </p>
@@ -2364,6 +2388,26 @@
           <span className="timestamp">
             {timestamp}{'\u00a0'}{marker}
           </span>
+        );
+      }
+    });
+
+    Message.Attachment = React.createClass({
+      render: function() {
+        var filename = this.props.filename || "file_attachment";
+        if (filename.length > 36) {
+          filename = filename.substring(0, 16) + "..." + filename.substring(-16);
+        }
+        return (
+          <div className="attachment">
+            <div><i className="material-icons big gray">insert_drive_file</i></div>
+            <div className="flex-column">
+              <div>{filename} <span className="small">({this.props.size})</span></div>
+              <div><a href={this.props.blobUrl} download={this.props.filename}>
+                <i className="material-icons">file_download</i> save
+              </a></div>
+            </div>
+          </div>
         );
       }
     });
@@ -2694,7 +2738,8 @@
               <MessagesView.Send
                 topic={this.props.topic}
                 disabled={this.state.readOnly}
-                sendMessage={this.props.sendMessage} />
+                sendMessage={this.props.sendMessage}
+                onError={this.props.onError} />
             </div>
           );
         } else {
@@ -2717,12 +2762,36 @@
           keypressTimestamp: new Date().getTime() - KEYPRESS_DELAY - 1
         };
       },
-      handleAttachImage: function() {
 
+      handleAttachImage: function(e) {
+        if (e.target.files && e.target.files.length > 0) {
+          var file = e.target.files[0];
+          if (file.size > MAX_ATTACHMENT_SIZE) {
+            this.props.onError("The image size " + bytesToHumanSize(file.size) +
+            " exceeds the "  + bytesToHumanSize(MAX_ATTACHMENT_SIZE) + " limit.", "err");
+            return;
+          }
+        }
       },
-      handleAttachFile: function() {
 
+      handleAttachFile: function(e) {
+        if (e.target.files && e.target.files.length > 0) {
+          var file = e.target.files[0];
+          if (file.size > MAX_ATTACHMENT_SIZE) {
+            this.props.onError("The file size " + bytesToHumanSize(file.size) +
+            " exceeds the " + bytesToHumanSize(MAX_ATTACHMENT_SIZE) + " attachment limit.", "err");
+            return;
+          }
+
+          var reader  = new FileReader();
+          var instance = this;
+          reader.addEventListener("load", function () {
+            instance.props.sendMessage(Drafty.attachFile(null, file.type, reader.result.split(',')[1], file.name));
+          }, false);
+          reader.readAsDataURL(file);
+        }
       },
+
       handleSend: function() {
         var message = this.state.message.trim();
         if (message) {
@@ -2762,12 +2831,12 @@
           <div id="send-message-panel">
             {this.props.disabled ?
               <i className="material-icons disabled">photo</i> :
-              <a href="#" onClick={function(e) {instance.attachImage.click();}}>
+              <a href="#" onClick={function(e) {instance.attachImage.click();}} title="Add image">
                 <i className="material-icons secondary">photo</i>
               </a>}
             {this.props.disabled ?
               <i className="material-icons disabled">attach_file</i> :
-              <a href="#" onClick={function(e) {instance.attachFile.click();}}>
+              <a href="#" onClick={function(e) {instance.attachFile.click();}} title="Attach file">
                 <i className="material-icons secondary">attach_file</i>
               </a>}
             <textarea id="sendMessage" placeholder={prompt}
@@ -2775,7 +2844,7 @@
               onChange={this.handleMessageTyping} onKeyPress={this.handleKeyPress} />
               {this.props.disabled ?
                 <i className="material-icons disabled">send</i> :
-                <a href="#" onClick={this.handleSend}><i className="material-icons">send</i></a>}
+                <a href="#" onClick={this.handleSend} title="Send"><i className="material-icons">send</i></a>}
           <input type="file" ref={function(ref) {instance.attachFile = ref;}}
             onChange={this.handleAttachFile} style={{display: 'none'}} />
           <input type="file" ref={function(ref) {instance.attachImage = ref;}} accept="image/*"
@@ -3088,7 +3157,7 @@
         var topic = Tinode.getTopic(this.state.topicSelected);
         var instance = this;
         // Check if the message is formatted.
-        var dft = Drafty.parse(msg);
+        var dft = Drafty.parse(msg) || msg;
         if (Drafty.isPlainText(dft)) {
           // The message is simple text. Sned if as text/plain.
           topic.publish(msg).catch(function(err) {

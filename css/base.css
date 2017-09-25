@@ -258,6 +258,10 @@ ul.menu > li.separator:hover {
   color: #D32F2F; /* red 700 */
 }
 
+.gray {
+  color: #757575;
+}
+
 .hr {
   display: block;
   width: 100%;
@@ -518,13 +522,13 @@ table.permission-editor td.checkbox {
 }
 
 .alert-box.error {
-  display: block;
+  display: flex;
   background-color: #ffcdd2;
   border-bottom: 1px solid #ffbfc8;
   color: #b71c1c;
 }
 .alert-box.warning {
-  display: block;
+  display: flex;
   background-color: #fff9c4;
   border-bottom: 1px solid #fff59d;
   color: #607d8b;
@@ -539,7 +543,7 @@ table.permission-editor td.checkbox {
   color: #757575;
 }
 .alert-box .icon {
-  display: inline-block;
+  display: block;
   vertical-align: middle;
   margin-right: 0.5rem;
 }
@@ -912,7 +916,7 @@ table.permission-editor td.checkbox {
 }
 
 #send-message-panel .material-icons {
-  min-width: 1.5rem;
+  min-width: 1.75rem;
 }
 
 #send-message-panel .material-icons.secondary, .material-icons.disabled {
@@ -1101,6 +1105,17 @@ table.permission-editor td.checkbox {
 .chat-box .author {
     font-size: 80%;
     color:#777;
+}
+
+/* Attachment styles */
+.attachment {
+  display: flex;
+}
+.attachment .material-icons {
+  vertical-align: middle;
+}
+.attachment:last-of-type {
+  margin-bottom: -1rem;
 }
 
 /* END of talk bubbles */
@@ -1437,6 +1452,9 @@ ul.tabbar li.active > a:after {
 }
 .material-icons.small {
   font-size: 1rem;
+}
+.material-icons.big {
+  font-size: 2.4rem;
 }
 
 #self-avatar.material-icons, .avatar-box .material-icons {
