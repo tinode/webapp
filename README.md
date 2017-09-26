@@ -28,7 +28,7 @@ Background pattern from http://subtlepatterns.com/, commercial and non-commercia
 ### Desktop screenshot
 
 <p align="center">
-  <img src="web-desktop-1.png" alt="Desktop web: full app" width=866 />
+  <img src="web-desktop-2.png" alt="Desktop web: full app" width=866 />
 </p>
 
 ### Mobile screenshots

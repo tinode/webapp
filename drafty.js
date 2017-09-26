@@ -89,7 +89,7 @@ Sample JSON representation of the text above:
     LN: { name: 'a', isVoid: false },
     MN: { name: 'a', isVoid: false },
     HT: { name: 'a', isVoid: false },
-    IM: { name: 'img', isVoid: true }
+    IM: { name: ['a','img'], isVoid: true }
   };
 
   // Convert base64-encoded string into Blob.
@@ -141,12 +141,18 @@ Sample JSON representation of the text above:
         return (data.name ? '</a>' : '');
       },
       props: function(data) {
-        return {
-          src: base64toObjectUrl(data.val, data.mime),
-          width: data.width,
-          height: data.height,
-          download: data.name
-        };
+        var url = base64toObjectUrl(data.val, data.mime);
+        return [
+          {
+            download: data.name,
+            href: url
+          },
+          {
+            src: url,
+            width: data.width,
+            height: data.height,
+          }
+        ];
       },
     }
   };
@@ -702,6 +708,10 @@ Sample JSON representation of the text above:
       getAttachmentSize: function(entity) {
         // Value is base64 encoded. The actual object size is smaller than the encoded length.
         return entity.val ? (entity.val.length * 0.75) | 0 : 0;
+      },
+
+      getAttachmentType: function(entity) {
+        return entity.mime || "text/plain";
       },
       /**
        * Get HTML tag for a given two-letter style name

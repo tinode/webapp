@@ -262,6 +262,10 @@ ul.menu > li.separator:hover {
   color: #757575;
 }
 
+.small {
+  font-size: 90%;
+}
+
 .hr {
   display: block;
   width: 100%;
@@ -415,7 +419,6 @@ table.permission-editor td.checkbox {
 .permission-editor .material-icons {
   font-size: 1.1rem;
   line-height: 1.1rem;
-  vertical-align: middle;
 }
 
 .material-icons.clickable {
@@ -544,7 +547,6 @@ table.permission-editor td.checkbox {
 }
 .alert-box .icon {
   display: block;
-  vertical-align: middle;
   margin-right: 0.5rem;
 }
 .alert-box .icon .material-icons {
@@ -691,7 +693,6 @@ table.permission-editor td.checkbox {
   height: 1.5rem;
   font-size: 1.5rem;
   line-height: 1.5rem;
-  vertical-align: middle;
   color: #0097A7;
   position: absolute;
   right: 0.05rem;
@@ -943,6 +944,49 @@ table.permission-editor td.checkbox {
   vertical-align: middle;
 }
 
+#image-preview {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  background-color: rgba(255,255,255,0.90);
+}
+
+#image-preview-caption-panel {
+  display: flex;
+  justify-content: space-between;
+  background-color: transparent;
+  line-height: 2.5rem;
+  height: 2.5rem;
+  padding: 1rem 0.75rem 0 0.75rem;
+}
+
+#image-preview-caption-panel a {
+  color: #757575;
+  text-decoration: none;
+}
+
+#image-preview-caption-panel a:hover {
+  color: black;
+}
+
+#image-preview-container {
+  margin: auto;
+  overflow: hidden;
+}
+
+#image-preview-footer {
+  display: flex;
+  justify-content: space-around;
+  height: 3.2rem;
+  line-height: 1.5rem;
+  background-color: transparent;
+}
+
 /* Talk bubbles */
 .chat-box {
   list-style: none;
@@ -1078,7 +1122,7 @@ table.permission-editor td.checkbox {
 
 .chat-box .timestamp {
   display: inline-block;
-  position:relative;
+  position: relative;
   font-size: 80%;
   color: #777;
   padding-left: 1rem;
@@ -1107,12 +1151,19 @@ table.permission-editor td.checkbox {
     color:#777;
 }
 
+/* Inline image styles */
+.inline-image {
+  max-width: 36rem;
+  max-height: 24rem;
+  overflow: hidden;
+  border-radius: 0.1rem;
+  cursor: pointer;
+  display: block;
+}
+
 /* Attachment styles */
 .attachment {
   display: flex;
-}
-.attachment .material-icons {
-  vertical-align: middle;
 }
 .attachment:last-of-type {
   margin-bottom: -1rem;
@@ -1162,12 +1213,13 @@ table.permission-editor td.checkbox {
 .dialog-overlay {
   position: absolute;
   display: flex;
+  flex-direction: column;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   z-index: 10;
-  background-color: rgba(0,0,0,0.25);
+  background-color: rgba(255,255,255,0.90);
 }
 .modal-dialog {
   display: flex;
@@ -1449,6 +1501,7 @@ ul.tabbar li.active > a:after {
 .material-icons {
   font-size: 1.4rem;
   line-height: 1;
+  vertical-align: middle;
 }
 .material-icons.small {
   font-size: 1rem;

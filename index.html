@@ -57,6 +57,10 @@
     // greater value in production. Also increase max_message_size in server config.
     var MAX_ATTACHMENT_SIZE = 1 << 17;
 
+    // Maximum allowed linear dimension of an inline image in pixels. You may want
+    // to adjust it to 1600 or 2400 for production.
+    var MAX_IMAGE_SIZE = 768;
+
     // Short representation of time in the past.
     function shortDateFormat(then) {
       var locale = window.navigator.userLanguage || window.navigator.language;
@@ -77,6 +81,38 @@
     function makeImageUrl(photo) {
       return (photo && photo.type && photo.data) ?
         'data:image/' + photo.type + ';base64,' + photo.data : null;
+    }
+
+    // Convert uploaded image into a base64-encoded string.
+    function imageFileToBase64(file, callback) {
+      var img = new Image();
+      img.crossOrigin = 'Anonymous';
+      img.onload = function() {
+        var width, height;
+        if (this.height > this.width) {
+          height = this.height;
+          while(height > MAX_IMAGE_SIZE) {
+            height = height >> 1;
+          }
+          width = (this.width * height / this.height) | 0;
+        } else {
+          width = this.width;
+          while(width > MAX_IMAGE_SIZE) {
+            width = width >> 1;
+          }
+          height = (this.height * width / this.width) | 0;
+        }
+        var canvas = document.createElement('CANVAS');
+        canvas.width = width;
+        canvas.height = height;
+        var ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = true;
+        ctx.drawImage(this, 0, 0, this.width, this.height, 0, 0, canvas.width, canvas.height);
+        var imageBits = canvas.toDataURL("image/jpeg");
+        canvas = null;
+        callback(imageBits, width, height);
+      };
+      img.src = URL.createObjectURL(file);
     }
 
     // Make shortcut icon appear with a green dot.
@@ -2308,18 +2344,56 @@
     };
 
     var Message = React.createClass({
+      handlePreviewImage: function(e) {
+        e.preventDefault();
+        this.props.onImagePreview({
+          url: e.target.src,
+          filename: e.target.title,
+          width: e.target.dataset.width,
+          height: e.target.dataset.height,
+          size: e.target.dataset.size,
+          type: e.target.dataset.mime
+        });
+      },
       render: function() {
         var elementKey = 0;
 
         var formatter = function(style, data, values) {
           elementKey += 1;
-          var el = Drafty.tagName(style);
-          if (el) {
-            var attr = Drafty.attrValue(style, data) || {};
-            attr.key = elementKey;
-            return React.createElement(el, attr, values);
+          if (style == "IM") {
+            // Handle inline image
+            var width = data.width, height = data.height;
+            var style = null;
+            if (width && height) {
+              var scale = 1.0;
+              if (data.width > REM_SIZE * 36) {
+                scale = REM_SIZE * 36 / data.width;
+              }
+              if (data.height * scale > REM_SIZE * 24) {
+                scale = REM_SIZE * 24 / data.height;
+              }
+              style = {
+                width: Math.round(data.width * scale / REM_SIZE) + "rem",
+                height: Math.round(data.height * scale / REM_SIZE) + "rem"
+              }
+            }
+            var url = Drafty.getBlobUrl(data);
+            return (
+              <img className="inline-image" onClick={this.handlePreviewImage}
+                data-width={data.width} data-height={data.height}
+                data-size={Drafty.getAttachmentSize(data)}
+                data-mime={Drafty.getAttachmentType(data)}
+                src={url} style={style} alt="" title={data.name} />
+            );
           } else {
-            return values;
+            var el = Drafty.tagName(style);
+            if (el) {
+              var attr = Drafty.attrValue(style, data) || {};
+              attr.key = elementKey;
+              return React.createElement(el, attr, values);
+            } else {
+              return values;
+            }
           }
         };
 
@@ -2338,7 +2412,7 @@
               filename={att.name} blobUrl={Drafty.getBlobUrl(att)}
               size={bytesToHumanSize(Drafty.getAttachmentSize(att))} key={i} />);
           }, this);
-          content = React.createElement('span', null, Drafty.format(content, formatter));
+          content = React.createElement('span', null, Drafty.format(content, formatter, this));
         }
 
         return (
@@ -2402,7 +2476,7 @@
           <div className="attachment">
             <div><i className="material-icons big gray">insert_drive_file</i></div>
             <div className="flex-column">
-              <div>{filename} <span className="small">({this.props.size})</span></div>
+              <div>{filename} <span className="small gray">({this.props.size})</span></div>
               <div><a href={this.props.blobUrl} download={this.props.filename}>
                 <i className="material-icons">file_download</i> save
               </a></div>
@@ -2422,7 +2496,8 @@
           scrollPosition: 0,
           readOnly: false,
           writeOnly: false,
-          typingIndicator: false
+          typingIndicator: false,
+          imagePreview: null
         };
       },
 
@@ -2483,6 +2558,7 @@
           this.setState({
             messages: msgs,
             topic: props.topic,
+            imagePreview: null,
             scrollPosition: 0
           });
           tryToResubscribe = true;
@@ -2618,6 +2694,14 @@
         }
       },
 
+      handleImagePreview: function(content) {
+        this.setState({ imagePreview: content });
+      },
+
+      handleCloseImagePreview: function() {
+        this.setState({ imagePreview: null });
+      },
+
       handleContextClick: function(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -2678,7 +2762,8 @@
               <Message content={msg.content} mimeType={msg.head ? msg.head.mime : null}
                 timestamp={msg.ts} response={isReply}
                 userFrom={userFrom} userName={userName} userAvatar={userAvatar}
-                sequence={sequence} received={msgReceived} key={msg.seq} />
+                sequence={sequence} received={msgReceived}
+                onImagePreview={this.handleImagePreview} key={msg.seq} />
             );
           }
 
@@ -2700,7 +2785,7 @@
               <div id="topic-caption-panel" className="caption-panel">
                 {this.props.displayMobile ?
                   <a href="#" id="hide-message-view" onClick={this.handleBackNavigation}>
-                    <i className="material-icons big">arrow_back</i>
+                    <i className="material-icons">arrow_back</i>
                   </a>
                   :
                   null}
@@ -2716,7 +2801,7 @@
                 <div id="topic-users"></div>
                 <div>
                   <a href="#" onClick={this.handleContextClick}>
-                    <i className="material-icons big">more_vert</i>
+                    <i className="material-icons">more_vert</i>
                   </a>
                 </div>
               </div>
@@ -2740,6 +2825,9 @@
                 disabled={this.state.readOnly}
                 sendMessage={this.props.sendMessage}
                 onError={this.props.onError} />
+              {this.state.imagePreview ?
+                <MessagesView.ImagePreview content={this.state.imagePreview}
+                  onClose={this.handleCloseImagePreview} /> : null}
             </div>
           );
         } else {
@@ -2766,11 +2854,18 @@
       handleAttachImage: function(e) {
         if (e.target.files && e.target.files.length > 0) {
           var file = e.target.files[0];
-          if (file.size > MAX_ATTACHMENT_SIZE) {
-            this.props.onError("The image size " + bytesToHumanSize(file.size) +
-            " exceeds the "  + bytesToHumanSize(MAX_ATTACHMENT_SIZE) + " limit.", "err");
-            return;
-          }
+          var instance = this;
+          imageFileToBase64(file, function(bits, width, height) {
+            if (bits.length > MAX_ATTACHMENT_SIZE) {
+              this.props.onError("The image size " + bytesToHumanSize(bits.length) +
+              " exceeds the "  + bytesToHumanSize(MAX_ATTACHMENT_SIZE) + " limit.", "err");
+              return;
+            }
+
+            instance.props.sendMessage(Drafty.insertImage(null,
+              0, file.type, bits.split(',')[1], width, height,
+              file.name));
+          });
         }
       },
 
@@ -2785,7 +2880,7 @@
 
           var reader  = new FileReader();
           var instance = this;
-          reader.addEventListener("load", function () {
+          reader.addEventListener("load", function() {
             instance.props.sendMessage(Drafty.attachFile(null, file.type, reader.result.split(',')[1], file.name));
           }, false);
           reader.readAsDataURL(file);
@@ -2872,45 +2967,63 @@
         );
       }
     });
-    /* END Conversation panel */
 
-    /* This is a div which covers the entire AppView and shows selected modal dialog box */
-    var ModalDialogWrapper = React.createClass({
-      render: function() {
-        var dialog = null;
-        switch (this.props.dialog) {
-          case "new-topic":
-            dialog = <ModalDialogWrapper.NewTopic
-              onOk={this.props.onOk}
-              onCancel={this.props.onCancel} />;
-            break;
-          default:
-            break;
-        }
-        if (dialog) {
-          dialog = <div className="dialog-overlay">{dialog}</div>;
-        }
-        return dialog;
-      }
-    });
+    MessagesView.ImagePreview = React.createClass({
+      getInitialState: function() {
+        return {};
+      },
 
-    ModalDialogWrapper.NewTopic = React.createClass({
+      componentDidMount: function() {
+        this.setState({
+          width: this.container.clientWidth,
+          height: this.container.clientHeight - REM_SIZE * 7
+        });
+      },
+
       render: function() {
+        if (!this.props.content) {
+          return null;
+        }
+
+        var instance = this;
+        var width = null, height = null;
+        console.log(this.props.content.width, this.props.content.height, this.state.width, this.state.height);
+        if (this.props.content.width && this.props.content.height) {
+          width = Math.max(Math.min(this.state.width, this.props.content.width), 8);
+          height = Math.max(Math.min(this.state.height, this.props.content.height), 8);
+          var scale = Math.min(width / this.props.content.width, height / this.props.content.height, 1.0);
+          width = (this.props.content.width * scale) | 0;
+          height = (this.props.content.height * scale) | 0;
+        }
+        var filename = this.props.content.filename;
+        if (filename.length > 20) {
+          filename = filename.slice(0, 8) + "..." + filename.slice(-8);
+        }
         return (
-          <div className="modal-dialog">
-            <div className="title-panel">
-              New topic
+          <div id="image-preview" ref={function(ref) {instance.container = ref; }}
+            onClick={this.props.onClose}>
+            <div id="image-preview-caption-panel">
+              <a href="#" download={this.props.content.filename}>
+                <i className="material-icons">file_download</i> download
+              </a>
+              <a href="#" onClick={this.props.onClose}><i className="material-icons gray">close</i></a>
             </div>
-            <div className="body-panel">Not implemented</div>
-            <div className="dialog-buttons">
-              <a href="#" onClick={this.props.onOk}>Yes</a>
-              <a href="#" onClick={this.props.onCancel}>OK</a>
+            <div id="image-preview-container">
+              <img src={this.props.content.url} width={width} height={height} />
+            </div>
+            <div id="image-preview-footer">
+              <div><div><b>File name</b>:</div><div><span title={this.props.content.filename}>{filename}</span></div></div>
+              <div><div><b>Content type</b>:</div><div>{this.props.content.type}</div></div>
+              <div>
+                <div><b>Size</b>:</div>
+                <div>{this.props.content.width} &times; {this.props.content.height} px; {bytesToHumanSize(this.props.content.size)}</div>
+              </div>
             </div>
           </div>
         );
       }
     });
-    /* End of modal dialog wrapper */
+    /* END Conversation panel */
 
     /* The top-level class to hold all fuinctionality together */
     var AppView = React.createClass({
@@ -3385,11 +3498,6 @@
       render: function() {
         return (
           <div id="app-container">
-            <ModalDialogWrapper
-              dialog={this.state.dialogSelected}
-              onOk={this.handleDialogCancel}
-              onCancel={this.handleDialogCancel} />
-
             <ContextMenu
               bounds={this.state.contextMenuBounds}
               clickAt={this.state.contextMenuClickAt}
