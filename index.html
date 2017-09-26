@@ -83,34 +83,34 @@
         'data:image/' + photo.type + ';base64,' + photo.data : null;
     }
 
+    // Scale liner dimensions to fit uder certain size
+    function imageScaleDown(width, height, maxWidth, maxHeight) {
+      if (!width || !height || !maxWidth || !maxHeight) {
+        return null;
+      }
+      var scale = Math.min(
+        Math.min(width, maxWidth) / width,
+        Math.min(height, maxHeight) / height
+      );
+
+      return {width: (width * scale) | 0, height: (height * scale) | 0};
+    }
+
     // Convert uploaded image into a base64-encoded string.
     function imageFileToBase64(file, callback) {
       var img = new Image();
       img.crossOrigin = 'Anonymous';
       img.onload = function() {
-        var width, height;
-        if (this.height > this.width) {
-          height = this.height;
-          while(height > MAX_IMAGE_SIZE) {
-            height = height >> 1;
-          }
-          width = (this.width * height / this.height) | 0;
-        } else {
-          width = this.width;
-          while(width > MAX_IMAGE_SIZE) {
-            width = width >> 1;
-          }
-          height = (this.height * width / this.width) | 0;
-        }
+        var size = imageScaleDown(this.width, this.height, MAX_IMAGE_SIZE, MAX_IMAGE_SIZE);
         var canvas = document.createElement('CANVAS');
-        canvas.width = width;
-        canvas.height = height;
+        canvas.width = size.width;
+        canvas.height = size.height;
         var ctx = canvas.getContext('2d');
         ctx.imageSmoothingEnabled = true;
         ctx.drawImage(this, 0, 0, this.width, this.height, 0, 0, canvas.width, canvas.height);
         var imageBits = canvas.toDataURL("image/jpeg");
         canvas = null;
-        callback(imageBits, width, height);
+        callback(imageBits, size.width, size.height);
       };
       img.src = URL.createObjectURL(file);
     }
@@ -2360,40 +2360,20 @@
 
         var formatter = function(style, data, values) {
           elementKey += 1;
-          if (style == "IM") {
-            // Handle inline image
-            var width = data.width, height = data.height;
-            var style = null;
-            if (width && height) {
-              var scale = 1.0;
-              if (data.width > REM_SIZE * 36) {
-                scale = REM_SIZE * 36 / data.width;
-              }
-              if (data.height * scale > REM_SIZE * 24) {
-                scale = REM_SIZE * 24 / data.height;
-              }
-              style = {
-                width: Math.round(data.width * scale / REM_SIZE) + "rem",
-                height: Math.round(data.height * scale / REM_SIZE) + "rem"
-              }
+          var el = Drafty.tagName(style);
+          if (el) {
+            var attr = Drafty.attrValue(style, data) || {};
+            attr.key = elementKey;
+            if (style == "IM") {
+              // Additional processing for images
+              var size = imageScaleDown(data.width, data.height, REM_SIZE * 36, REM_SIZE * 24);
+              attr.className = "inline-image";
+              attr.style = size ? { width: size.width + "px", height: size.height + "px" } : null;
+              attr.onClick = this.handlePreviewImage;
             }
-            var url = Drafty.getBlobUrl(data);
-            return (
-              <img className="inline-image" onClick={this.handlePreviewImage}
-                data-width={data.width} data-height={data.height}
-                data-size={Drafty.getAttachmentSize(data)}
-                data-mime={Drafty.getAttachmentType(data)}
-                src={url} style={style} alt="" title={data.name} />
-            );
+            return React.createElement(el, attr, values);
           } else {
-            var el = Drafty.tagName(style);
-            if (el) {
-              var attr = Drafty.attrValue(style, data) || {};
-              attr.key = elementKey;
-              return React.createElement(el, attr, values);
-            } else {
-              return values;
-            }
+            return values;
           }
         };
 
@@ -2984,23 +2964,22 @@
         if (!this.props.content) {
           return null;
         }
-
         var instance = this;
-        var width = null, height = null;
-        console.log(this.props.content.width, this.props.content.height, this.state.width, this.state.height);
-        if (this.props.content.width && this.props.content.height) {
-          width = Math.max(Math.min(this.state.width, this.props.content.width), 8);
-          height = Math.max(Math.min(this.state.height, this.props.content.height), 8);
-          var scale = Math.min(width / this.props.content.width, height / this.props.content.height, 1.0);
-          width = (this.props.content.width * scale) | 0;
-          height = (this.props.content.height * scale) | 0;
+        var size = imageScaleDown(this.props.content.width, this.props.content.height,
+          this.state.width, this.state.hight);
+        if (size) {
+          size.width += "px";
+          size.height += "px";
+        } else {
+          size = (this.props.content.width > this.props.content.height) ?
+            {width: '100%'} : {height: '100%'};
         }
         var filename = this.props.content.filename;
         if (filename.length > 20) {
           filename = filename.slice(0, 8) + "..." + filename.slice(-8);
         }
         return (
-          <div id="image-preview" ref={function(ref) {instance.container = ref; }}
+          <div id="image-preview" ref={function(ref) {instance.container = ref;}}
             onClick={this.props.onClose}>
             <div id="image-preview-caption-panel">
               <a href="#" download={this.props.content.filename}>
@@ -3009,7 +2988,7 @@
               <a href="#" onClick={this.props.onClose}><i className="material-icons gray">close</i></a>
             </div>
             <div id="image-preview-container">
-              <img src={this.props.content.url} width={width} height={height} />
+              <img src={this.props.content.url} style={size} />
             </div>
             <div id="image-preview-footer">
               <div><div><b>File name</b>:</div><div><span title={this.props.content.filename}>{filename}</span></div></div>

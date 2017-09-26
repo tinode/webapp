@@ -89,7 +89,7 @@ Sample JSON representation of the text above:
     LN: { name: 'a', isVoid: false },
     MN: { name: 'a', isVoid: false },
     HT: { name: 'a', isVoid: false },
-    IM: { name: ['a','img'], isVoid: true }
+    IM: { name: 'img', isVoid: true }
   };
 
   // Convert base64-encoded string into Blob.
@@ -142,17 +142,15 @@ Sample JSON representation of the text above:
       },
       props: function(data) {
         var url = base64toObjectUrl(data.val, data.mime);
-        return [
-          {
-            download: data.name,
-            href: url
-          },
-          {
-            src: url,
-            width: data.width,
-            height: data.height,
-          }
-        ];
+        return {
+          src: url,
+          title: data.name,
+          'data-width': data.width,
+          'data-height': data.height,
+          'data-name': data.name,
+          'data-size': (data.val.length * 0.75) | 0,
+          'data-mime': data.mime
+        };
       },
     }
   };
