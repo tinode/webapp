@@ -2366,7 +2366,8 @@
             attr.key = elementKey;
             if (style == "IM") {
               // Additional processing for images
-              var size = imageScaleDown(data.width, data.height, REM_SIZE * 36, REM_SIZE * 24);
+              var size = imageScaleDown(data.width, data.height,
+                Math.min(this.props.viewportWidth - REM_SIZE * 4, REM_SIZE * 36), REM_SIZE * 24);
               attr.className = "inline-image";
               attr.style = size ? { width: size.width + "px", height: size.height + "px" } : null;
               attr.onClick = this.handlePreviewImage;
@@ -2743,6 +2744,7 @@
                 timestamp={msg.ts} response={isReply}
                 userFrom={userFrom} userName={userName} userAvatar={userAvatar}
                 sequence={sequence} received={msgReceived}
+                viewportWidth={this.props.viewportWidth}
                 onImagePreview={this.handleImagePreview} key={msg.seq} />
             );
           }
@@ -3045,6 +3047,8 @@
         window.addEventListener('online', function(e) { instance.handleOnline(true); });
         window.addEventListener('offline', function(e) { instance.handleOnline(false); });
 
+        this.setState({viewportWidth: document.documentElement.clientWidth});
+
         Tinode.enableLogging(true, true);
         Tinode.onConnect = this.handleConnected;
         Tinode.onDisconnect = this.handleDisconnect;
@@ -3056,6 +3060,7 @@
       },
       handleResize: function() {
         var mobile = document.documentElement.clientWidth <= MEDIA_BREAKPOINT;
+        this.setState({viewportWidth: document.documentElement.clientWidth});
         if (this.state.displayMobile != mobile) {
           this.setState({displayMobile: mobile});
         }
@@ -3527,6 +3532,7 @@
               connected={this.state.connected}
               online={this.state.topicSelectedOnline}
               displayMobile={this.state.displayMobile}
+              viewportWidth={this.state.viewportWidth}
               hideSelf={this.state.displayMobile &&
                 (this.state.mobilePanel !== 'topic-view' || this.state.showInfoPanel)}
               topic={this.state.topicSelected}
