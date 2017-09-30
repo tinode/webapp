@@ -50,6 +50,9 @@
     // Size of css 'rem' unit in pixels. Default 1rem = 10pt = 13px.
     var REM_SIZE = 13;
 
+    // Size of the avatar image
+    var AVATAR_SIZE = 128;
+
     // Number of chat messages to fetch in one call.
     var MESSAGES_PAGE = 24;
 
@@ -60,6 +63,12 @@
     // Maximum allowed linear dimension of an inline image in pixels. You may want
     // to adjust it to 1600 or 2400 for production.
     var MAX_IMAGE_SIZE = 768;
+
+    // Supported image MIME types and corresponding file extensions.
+    var SUPPORTED_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/x-icon',
+      'image/vnd.microsoft.icon', 'image/svg', 'image/svg+xml'];
+    var MIME_EXTENSIONS   = ['jpg',        'gif',       'png',       'ico',
+      'ico',                      'svg',       'svg'];
 
     // Short representation of time in the past.
     function shortDateFormat(then) {
@@ -83,8 +92,8 @@
         'data:image/' + photo.type + ';base64,' + photo.data : null;
     }
 
-    // Scale liner dimensions to fit uder certain size
-    function imageScaleDown(width, height, maxWidth, maxHeight) {
+    // Scale liner dimensions down to fit uder certain size.
+    function fitImageSize(width, height, maxWidth, maxHeight) {
       if (!width || !height || !maxWidth || !maxHeight) {
         return null;
       }
@@ -93,26 +102,119 @@
         Math.min(height, maxHeight) / height
       );
 
-      return {width: (width * scale) | 0, height: (height * scale) | 0};
+      var size = {width: (width * scale) | 0, height: (height * scale) | 0};
+      if (maxWidth == maxHeight) {
+        // Also calculate parameters for making the image square.
+        size.square = Math.min(width, height);
+        size.xoffset = ((width - size.square) / 2) | 0;
+        size.yoffset = ((height - size.square) / 2) | 0;
+      }
+      return size;
     }
 
-    // Convert uploaded image into a base64-encoded string.
-    function imageFileToBase64(file, callback) {
+    // Ensure file's extension matches mime content type
+    function fileNameForMime(fname, mime) {
+      var idx = SUPPORTED_FORMATS.indexOf(mime);
+      var ext = MIME_EXTENSIONS[idx];
+
+      var at = fname.lastIndexOf('.');
+      if (at >= 0) {
+        fname = fname.substring(0, at);
+      }
+      return fname + '.' + ext;
+    }
+
+    // Get mime type from data URL header.
+    function getMimeType(header) {
+      var mime = /^data:(image\/[-+a-z0-9.]+);base64/.exec(header);
+      return (mime && mime.length > 1) ? mime[1] : null;
+    }
+
+    // Convert uploaded image into a base64-encoded string possibly scaling
+    // linear dimensions.
+    function imageFileScaledToBase64(file, width, height, forceSquare, onSuccess, onError) {
       var img = new Image();
       img.crossOrigin = 'Anonymous';
+      img.onerror = function(err) {
+        onError("Image format unrecognized");
+      }
       img.onload = function() {
-        var size = imageScaleDown(this.width, this.height, MAX_IMAGE_SIZE, MAX_IMAGE_SIZE);
+        var size = fitImageSize(this.width, this.height, width, height);
+        if (!size) {
+          onError("Invalid image");
+          return;
+        }
         var canvas = document.createElement('CANVAS');
-        canvas.width = size.width;
-        canvas.height = size.height;
+        if (forceSquare) {
+          canvas.width = canvas.height = width;
+        } else {
+          canvas.width = size.width;
+          canvas.height = size.height;
+        }
         var ctx = canvas.getContext('2d');
         ctx.imageSmoothingEnabled = true;
-        ctx.drawImage(this, 0, 0, this.width, this.height, 0, 0, canvas.width, canvas.height);
-        var imageBits = canvas.toDataURL("image/jpeg");
+        if (forceSquare) {
+          ctx.drawImage(this, size.xoffset, size.yoffset, size.square, size.square,
+            0, 0, canvas.width, canvas.height);
+        } else {
+          ctx.drawImage(this, 0, 0, this.width, this.height,
+            0, 0, canvas.width, canvas.height);
+        }
+        var mime = (forceSquare || SUPPORTED_FORMATS.indexOf(file.type) < 0) ? "image/jpeg" : file.type;
+        var imageBits = canvas.toDataURL(mime);
+        var parts = imageBits.split(',');
+        // Get actual image type: 'data:image/png;base64,'
+        mime = getMimeType(parts[0]);
+        if (!mime) {
+          onError("Unsupported image format");
+          return;
+        }
+        // Ensure the image is not too large
+        var quality = 0.78;
+        while (mime == "image/jpeg" && imageBits.length * 0.75 > MAX_ATTACHMENT_SIZE && quality > 0.15) {
+          imageBits = canvas.toDataURL(mime, quality);
+          quality *= 0.84;
+        }
+        if (imageBits.length * 0.75 > MAX_ATTACHMENT_SIZE) {
+          onError("The image size " + bytesToHumanSize(imageBits.length * 0.75) +
+            " exceeds the "  + bytesToHumanSize(MAX_ATTACHMENT_SIZE) + " limit.", "err");
+          return;
+        }
         canvas = null;
-        callback(imageBits, size.width, size.height);
+        onSuccess(imageBits.split(',')[1], mime, size.width, size.height, fileNameForMime(file.name, mime));
       };
       img.src = URL.createObjectURL(file);
+    }
+
+    // Convert uploaded image file to base64-encoded string without scaling/converting the image
+    function imageFileToBase64(file, onSuccess, onError) {
+      if (file.size > MAX_ATTACHMENT_SIZE) {
+        onError("The file size " + bytesToHumanSize(file.size) +
+          " exceeds the "  + bytesToHumanSize(MAX_ATTACHMENT_SIZE) + " limit.", "err");
+        return;
+      }
+
+      var reader  = new FileReader();
+      reader.addEventListener("load", function() {
+        var parts = reader.result.split(',');
+        var mime = getMimeType(parts[0]);
+        if (!mime) {
+          onError("Failed to process image file");
+          return;
+        }
+
+        // Get image size.
+        var img = new Image();
+        img.crossOrigin = 'Anonymous';
+        img.onload = function() {
+          onSuccess(parts[1], mime, this.width, this.height, fileNameForMime(file.name, mime));
+        }
+        img.onerror = function(err) {
+          onError("Image format unrecognized");
+        }
+        img.src = URL.createObjectURL(file);
+      }, false);
+      reader.readAsDataURL(file);
     }
 
     // Make shortcut icon appear with a green dot.
@@ -901,9 +1003,11 @@
                 <input type="password" placeholder="Repeat password"
                   value={this.state.password2} onChange={this.handlePassword2Change} required />
               </div>
-              <AvatarUpload onImageChanged={this.handleImageChanged} />
+              <AvatarUpload
+                onImageChanged={this.handleImageChanged}
+                onError={this.props.onError} />
             </div>
-            <div  className="panel-form-row">
+            <div className="panel-form-row">
               <input type="text" placeholder="Email, e.g john.doe@example.com"
                 value={this.state.email} onChange={this.handleEmailChange} required/>
             </div>
@@ -927,29 +1031,17 @@
       },
       handleFileUpload(e) {
         var instance = this;
-        var img = new Image();
-        img.crossOrigin = 'Anonymous';
-        img.onload = function() {
-          var canvas = document.createElement('CANVAS');
-          canvas.width = canvas.height = 128;
-          var ctx = canvas.getContext('2d');
-          var sx = 0, sy = 0, size;
-          if (this.height > this.width) {
-            size = this.width;
-            sy = (this.height - size) / 2;
-          } else {
-        	  size = this.height;
-            sx = (this.width - size) / 2;
-          }
- 				  ctx.imageSmoothingEnabled = true;
-          ctx.drawImage(this, sx, sy, size, size, 0, 0, canvas.width, canvas.height);
-          var bits = canvas.toDataURL("image/jpeg");
-          canvas = null;
-
-          instance.setState({dataUrl: bits});
-          instance.props.onImageChanged(bits);
-        };
-        img.src = URL.createObjectURL(e.target.files[0]);
+        imageFileScaledToBase64(e.target.files[0], AVATAR_SIZE, AVATAR_SIZE, true,
+          // Success
+          function(base64bits, mime) {
+            var du = makeImageUrl({data: base64bits, type: mime});
+            instance.setState({dataUrl: du});
+            instance.props.onImageChanged(du);
+          },
+          // Failure
+          function(err) {
+            this.props.onError(err, "err");
+          });
       },
       render: function() {
         return (
@@ -1119,7 +1211,8 @@
               this.props.state === 'register' ?
               <CreateAccountView
                 onCreateAccount={this.props.onCreateAccount}
-                onCancel={this.props.onCancel} /> :
+                onCancel={this.props.onCancel}
+                onError={this.props.onError} /> :
 
               this.props.state === 'settings' ?
               <SettingsView onCancel={this.props.onCancel}
@@ -1130,7 +1223,8 @@
               <EditAccountView
                 login={this.props.login}
                 onSubmit={this.props.onUpdateAccount}
-                onCancel={this.props.onCancel} /> :
+                onCancel={this.props.onCancel}
+                onError={this.props.onError} /> :
 
               this.props.state === 'contacts' ?
               <ContactsView
@@ -1145,7 +1239,8 @@
                 foundContacts={this.props.foundContacts}
                 onInitFind={this.props.onInitFind}
                 onSearchContacts={this.props.onSearchContacts}
-                onCreateTopic={this.props.onCreateTopic} /> :
+                onCreateTopic={this.props.onCreateTopic}
+                onError={this.props.onError} /> :
 
               null}
           </div>
@@ -1244,7 +1339,8 @@
                 avatar={this.state.avatar}
                 uid={this.state.address}
                 title={this.state.fullName}
-                onImageChanged={this.handleImageChanged} />
+                onImageChanged={this.handleImageChanged}
+                onError={this.props.onError} />
             </div>
             <div className="hr" />
             <div className="panel-form-column">
@@ -1793,7 +1889,9 @@
                 <input type="text" id="new-topic-priv" placeholder="Visible to you only"
                   value={this.state.private} onChange={this.handlePrivateChange} />
               </div>
-              <AvatarUpload onImageChanged={this.handleImageChanged} />
+              <AvatarUpload
+                onError={this.props.onError}
+                onImageChanged={this.handleImageChanged} />
             </div>
             <div className="dialog-buttons">
               <button className={submitClasses} onClick={this.handleSubmit}>Create</button>
@@ -2225,7 +2323,8 @@
                     readOnly={!this.state.owner}
                     uid={this.props.topic}
                     title={this.state.fullName}
-                    onImageChanged={this.handleImageChanged} />
+                    onImageChanged={this.handleImageChanged}
+                    onError={this.props.onError} />
                 </div>
                 <div className="hr" />
                 <div className="panel-form-column">
@@ -2366,7 +2465,7 @@
             attr.key = elementKey;
             if (style == "IM") {
               // Additional processing for images
-              var size = imageScaleDown(data.width, data.height,
+              var size = fitImageSize(data.width, data.height,
                 Math.min(this.props.viewportWidth - REM_SIZE * 4, REM_SIZE * 36), REM_SIZE * 24);
               attr.className = "inline-image";
               attr.style = size ? { width: size.width + "px", height: size.height + "px" } : null;
@@ -2835,19 +2934,34 @@
 
       handleAttachImage: function(e) {
         if (e.target.files && e.target.files.length > 0) {
-          var file = e.target.files[0];
           var instance = this;
-          imageFileToBase64(file, function(bits, width, height) {
-            if (bits.length > MAX_ATTACHMENT_SIZE) {
-              this.props.onError("The image size " + bytesToHumanSize(bits.length) +
-              " exceeds the "  + bytesToHumanSize(MAX_ATTACHMENT_SIZE) + " limit.", "err");
-              return;
-            }
-
-            instance.props.sendMessage(Drafty.insertImage(null,
-              0, file.type, bits.split(',')[1], width, height,
-              file.name));
-          });
+          var files = e.target.files;
+          // Check if the uploaded file is indeed an image and if it isn't too large.
+          if (files[0].size > MAX_ATTACHMENT_SIZE || SUPPORTED_FORMATS.indexOf(files[0].type) < 0) {
+            // Convert image for size or format.
+            imageFileScaledToBase64(files[0], MAX_IMAGE_SIZE, MAX_IMAGE_SIZE, false,
+              // Success
+              function(bits, mime, width, height, fname) {
+                instance.props.sendMessage(Drafty.insertImage(null,
+                  0, mime, bits, width, height, fname));
+              },
+              // Failure
+              function(err) {
+                instance.props.onError(err, "err");
+              });
+          } else {
+            // Image can be uploaded as is. No conversion is needed.
+            imageFileToBase64(files[0],
+              // Success
+              function(bits, mime, width, height, fname) {
+                instance.props.sendMessage(Drafty.insertImage(null,
+                  0, mime, bits, width, height, fname));
+              },
+              // Failure
+              function(err) {
+                instance.props.onError(err, "err");
+              });
+          }
         }
       },
 
@@ -2967,7 +3081,7 @@
           return null;
         }
         var instance = this;
-        var size = imageScaleDown(this.props.content.width, this.props.content.height,
+        var size = fitImageSize(this.props.content.width, this.props.content.height,
           this.state.width, this.state.hight);
         if (size) {
           size.width += "px";
@@ -3520,6 +3634,7 @@
               onNewTopic={this.handleNewTopic}
               onCancel={this.handleSidepanelCancel}
               onOnlineChange={this.handleTopicSelectedOnline}
+              onError={this.handleError}
 
               onInitFind={this.tnInitFind}
               contactsSearchQuery={this.state.contactsSearchQuery}
@@ -3566,6 +3681,7 @@
                 onLeaveTopic={this.handleLeaveUnsubRequest}
                 onAddMember={this.handleManageGroupMembers}
                 onInitFind={this.tnInitFind}
+                onError={this.handleError}
 
                 showContextMenu={this.handleShowContextMenu}
                 />
