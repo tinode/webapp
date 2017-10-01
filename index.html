@@ -1197,7 +1197,8 @@
 
             <ErrorPanel
               level={this.props.errorLevel}
-              text={this.props.errorText} />
+              text={this.props.errorText}
+              onClearError={this.props.onError} />
 
             {this.props.state === 'login' ?
               <LoginView login={this.props.login}
@@ -1259,6 +1260,9 @@
 
       hide: function() {
         this.setState({show: false});
+        if (this.props.onClearError) {
+          this.props.onClearError();
+        }
       },
 
       render: function() {
@@ -2277,7 +2281,8 @@
             {this.props.displayMobile ?
               <ErrorPanel
                 level={this.props.errorLevel}
-                text={this.props.errorText} /> : null}
+                text={this.props.errorText}
+                onClearError={this.props.onError} /> : null}
             {this.state.showMemberPanel ?
               <GroupManager
                 members={this.state.contactList}
@@ -2887,7 +2892,8 @@
               {this.props.displayMobile ?
                 <ErrorPanel
                   level={this.props.errorLevel}
-                  text={this.props.errorText} /> : null}
+                  text={this.props.errorText}
+                  onClearError={this.props.onError} /> : null}
               <LoadSpinner show={this.state.fetchingMessages} />
               <div id="messages-panel"
                 className={this.state.writeOnly ? "write-only" : null}
