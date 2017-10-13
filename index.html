@@ -300,18 +300,18 @@
     /* BEGIN Context Menu: popup/dropdown menu */
 
     // Function is used by context menu to set permissions.
-    function topicPermissionSetter(mode, topicName, uid, errorHandler) {
-      var topic = Tinode.getTopic(topicName);
+    function topicPermissionSetter(mode, params, errorHandler) {
+      var topic = Tinode.getTopic(params.topicName);
       if (!topic) {
-        console.log("Topic not found: " + topicName);
+        console.log("Topic not found: " + params.topicName);
         return;
       }
 
       var am;
-      if (uid) {
-        var user = topic.subscriber(uid);
+      if (params.user) {
+        var user = topic.subscriber(params.user);
         if (!user) {
-          console.log("Subscriber not found: " + topicName + "[" + uid + "]");
+          console.log("Subscriber not found: " + params.topicName + "[" + params.user + "]");
           return;
         }
         am = user.acs.updateGiven(mode).getGiven();
@@ -332,40 +332,71 @@
     var ContextMenuItems = {
         "topic_info":     {title: "Info", handler: null},
 
-        "messages_clear": {title: "Clear messages", handler: function(topicName) {
-          var topic = Tinode.getTopic(topicName);
+        "messages_clear": {title: "Clear messages", handler: function(params, errorHandler) {
+          var topic = Tinode.getTopic(params.topicName);
           if (!topic) {
-            console.log("Topic not found: " + topicName);
+            console.log("Topic not found: " + params.topicName);
             return;
           }
 
           topic.delMessagesAll(false).then(function(){
             console.log("refresh message list");
+          }).catch(function(err) {
+            if (errorHandler) {
+              errorHandler(err.message, "err");
+            } else {
+              console.log(err);
+            }
           });
         }},
-        "message_delete": {title: "Delete", handler: null},
+        "message_delete": {title: "Delete", handler: function(params, errorHandler) {
+          var topic = Tinode.getTopic(params.topicName);
+          if (!topic) {
+            console.log("Topic not found: " + params.topicName);
+            return;
+          }
+          topic.delMessagesList([params.seq], false).catch(function(err) {
+            if (errorHandler) {
+              errorHandler(err.message, "err");
+            } else {
+              console.log(err);
+            }
+          });
+        }},
 
         "topic_unmute":   {title: "Unmute", handler: topicPermissionSetter.bind(this, "+P")},
         "topic_mute":     {title: "Mute", handler: topicPermissionSetter.bind(this, "-P")},
         "topic_unblock":  {title: "Unblock", handler: topicPermissionSetter.bind(this, "+J")},
         "topic_block":    {title: "Block", handler: topicPermissionSetter.bind(this, "-J")},
-        "topic_delete":   {title: "Delete", handler: function(topicName) {
-          var topic = Tinode.getTopic(topicName);
+        "topic_delete":   {title: "Delete", handler: function(params, errorHandler) {
+          var topic = Tinode.getTopic(params.topicName);
           if (!topic) {
-            console.log("Topic not found: " + topicName);
+            console.log("Topic not found: " + params.topicName);
             return;
           }
-          topic.delTopic();
+          topic.delTopic().catch(function(err) {
+            if (errorHandler) {
+              errorHandler(err.message, "err");
+            } else {
+              console.log(err);
+            }
+          });
         }},
 
         "permissions":    {title: "Edit permissions", handler: null},
-        "member_delete":  {title: "Remove", handler: function(topicName, user) {
-          var topic = Tinode.getTopic(topicName);
-          if (!topic || !user) {
-            console.log("Topic or user not found: '" + topicName + "', '" + user + "'");
+        "member_delete":  {title: "Remove", handler: function(params, errorHandler) {
+          var topic = Tinode.getTopic(params.topicName);
+          if (!topic || !params.user) {
+            console.log("Topic or user not found: '" + params.topicName + "', '" + params.user + "'");
             return;
           }
-          topic.delSubscription(user);
+          topic.delSubscription(params.user).catch(function(err) {
+            if (errorHandler) {
+              errorHandler(err.message, "err");
+            } else {
+              console.log(err);
+            }
+          });
         }},
         "member_mute":    {title: "Mute", handler: topicPermissionSetter.bind(this, "-P")},
         "member_unmute":  {title: "Unmute", handler: topicPermissionSetter.bind(this, "+P")},
@@ -407,7 +438,7 @@
         e.stopPropagation();
         this.props.hide();
         var item = this.props.items[e.currentTarget.dataset.id];
-        item.handler(this.props.topic, this.props.user, this.props.onError);
+        item.handler(this.props.params, this.props.onError);
       },
 
       render: function() {
@@ -1382,7 +1413,7 @@
       handleContextClick: function(e) {
         e.preventDefault();
         e.stopPropagation();
-        this.props.showContextMenu(this.props.item, e.pageY, e.pageX);
+        this.props.showContextMenu({ topicName: this.props.item, y: e.pageY, x: e.pageX });
       },
 
       render: function() {
@@ -2266,7 +2297,7 @@
           user.acs.isMuted() ? ContextMenuItems["member_unmute"] : ContextMenuItems["member_mute"],
           user.acs.isJoiner() ? ContextMenuItems["member_block"] : ContextMenuItems["member_unblock"]
         ];
-        this.props.showContextMenu(this.props.topic, x, y, item, menuItems);
+        this.props.showContextMenu({ topicName: this.props.topic, x: x, y: y, user: item }, menuItems);
       },
 
       render: function() {
@@ -2461,7 +2492,7 @@
       handleContextClick: function(e) {
         e.preventDefault();
         e.stopPropagation();
-        this.props.showContextMenu(this.props.seq, e.pageY, e.pageX);
+        this.props.showContextMenu({ seq: this.props.seq, y: e.pageY, x: e.pageX });
       },
 
       render: function() {
@@ -2804,11 +2835,12 @@
       handleContextClick: function(e) {
         e.preventDefault();
         e.stopPropagation();
-        this.props.showContextMenu(this.state.topic, e.pageY, e.pageX);
+        this.props.showContextMenu({ topicName: this.state.topic, y: e.pageY, x: e.pageX });
       },
 
-      handleMessageContextMenu: function(seq, y, x) {
-        console.log("Message cklicked", seq, x, y);
+      handleShowContextMenuMessage: function(params) {
+        params.topicName = this.state.topic;
+        this.props.showContextMenu(params, [ContextMenuItems["message_delete"]]);
       },
 
       handleBackNavigation: function() {
@@ -2867,7 +2899,7 @@
                 userFrom={userFrom} userName={userName} userAvatar={userAvatar}
                 sequence={sequence} received={msgReceived}
                 viewportWidth={this.props.viewportWidth}
-                showContextMenu={this.handleMessageContextMenu}
+                showContextMenu={this.handleShowContextMenuMessage}
                 onImagePreview={this.handleImagePreview} key={msg.seq} />
             );
           }
@@ -3173,7 +3205,7 @@
           contextMenuVisible: false,
           contextMenuBounds: null,
           contextMenuClickAt: null,
-          contextMenuTopic: '',
+          contextMenuParams: null,
           contextMenuItems: [],
           serverVersion: 'no connection',
           contactsSearchQuery: '',
@@ -3544,13 +3576,12 @@
         this.setState({dialogSelected: null});
       },
 
-      handleShowContextMenu: function(topicName, y, x, uid, menuItems) {
+      handleShowContextMenu: function(params, menuItems) {
         this.setState({
           contextMenuVisible: true,
-          contextMenuClickAt: {x: x, y: y},
-          contextMenuTopic: topicName,
-          contextMenuUser: uid,
-          contextMenuItems: menuItems || this.defaultTopicContextMenu(topicName),
+          contextMenuClickAt: {x: params.x, y: params.y},
+          contextMenuParams: params,
+          contextMenuItems: menuItems || this.defaultTopicContextMenu(params.topicName),
           contextMenuBounds: ReactDOM.findDOMNode(this).getBoundingClientRect()
         });
       },
@@ -3580,8 +3611,7 @@
         this.setState({
           contextMenuVisible: false,
           contextMenuClickAt: null,
-          contextMenuTopic: null,
-          contextMenuUser: null,
+          contextMenuParams: null,
           contextMenuBounds: null
         });
       },
@@ -3625,8 +3655,7 @@
               bounds={this.state.contextMenuBounds}
               clickAt={this.state.contextMenuClickAt}
               visible={this.state.contextMenuVisible}
-              topic={this.state.contextMenuTopic}
-              user={this.state.contextMenuUser}
+              params={this.state.contextMenuParams}
               items={this.state.contextMenuItems}
               hide={this.handleHideContextMenu}
               onAction={this.handleContextMenuAction}
