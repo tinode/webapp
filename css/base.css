@@ -247,6 +247,36 @@ ul.menu > li.separator {
 ul.menu > li.separator:hover {
   background-color: #ccc;
 }
+
+/* The down arrow head - trigger for context menu */
+li .menuTrigger {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  width: 1.5rem;
+  height: 1.2rem;
+  line-height: 1.2rem;
+  border-radius: 0.6rem;
+  text-align: center;
+  opacity: 0;
+}
+li:hover .menuTrigger {
+  opacity: 1.0;
+}
+
+li:hover .menuTrigger a {
+  color: #757575;
+}
+
+li.left:hover .menuTrigger {
+  -text-shadow: #c5e1a5 0 0 15px, #c5e1a5 0 0 5px;
+  background-image: radial-gradient(#c5e1a5 40%, transparent 75%);
+}
+li.right:hover .menuTrigger {
+  -text-shadow: #fafafa 0 0 15px, #fafafa 0 0 5px;
+  background-image: radial-gradient(#fafafa 40%, transparent 75%);
+}
+
 /* END popup/dropdown menu */
 
 /* Generic text colors */
@@ -581,6 +611,7 @@ table.permission-editor td.checkbox {
 
 .contact-box > li {
   display: flex;
+  position: relative;
   padding: 0.35rem 0.25rem 0.5rem 0.35rem;
   min-height: 3.5rem;
   flex-grow: 0;
@@ -610,20 +641,6 @@ table.permission-editor td.checkbox {
   text-overflow: ellipsis;
   overflow: hidden;
   font-weight: lighter;
-}
-
-/* The down arrow head - trigger for context menu in contacts list */
-.contact-box li .menuTrigger {
-  position: relative;
-  margin-left: auto;
-  width: 1.5rem;
-  height: 1.5rem;
-}
-.contact-box li .menuTrigger a {
-  color: transparent;
-}
-.contact-box li:hover .menuTrigger a {
-  color: #757575;
 }
 
 /* Avatar and online-offline indicator */
@@ -1011,6 +1028,7 @@ table.permission-editor td.checkbox {
 }
 
 .chat-box .bubble {
+  display: flex;
   position: relative;
 	max-width: 40rem;
   min-width: 12rem;

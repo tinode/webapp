@@ -274,9 +274,9 @@
 
     // Construct a user discovery tag
     function to_tags(tagsObj) {
-      if(tagsObj && Object.keys(tagsObj).length > 0) {
+      if (tagsObj && Object.keys(tagsObj).length > 0) {
         var tags = [];
-        for(var key in tagsObj) {
+        for (var key in tagsObj) {
           tags.push(key + ":" + tagsObj[key]);
         }
         return tags;
@@ -286,7 +286,7 @@
 
     // Convert a number of bytes to human-readable format.
     function bytesToHumanSize(bytes) {
-      if(!bytes || bytes == 0) {
+      if (!bytes || bytes == 0) {
         return '0 Bytes';
       }
 
@@ -2457,6 +2457,13 @@
           type: e.target.dataset.mime
         });
       },
+
+      handleContextClick: function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.props.showContextMenu(this.props.seq, e.pageY, e.pageX);
+      },
+
       render: function() {
         var elementKey = 0;
 
@@ -2515,6 +2522,11 @@
                 <Message.ReceivedMarker response={this.props.response}
                   timestamp={this.props.timestamp} received={this.props.received} />
                 </p>
+                <span className="menuTrigger">
+                  <a href="#" onClick={this.handleContextClick}>
+                    <i className="material-icons">expand_more</i>
+                  </a>
+                </span>
               </div>
               {fullDisplay ? <div className="author">{this.props.userName}</div> : null}
             </div>
@@ -2635,7 +2647,9 @@
 
           this.handleDescChange(topic);
           topic.messages(function(msg) {
-            msgs = msgs.concat(msg);
+            if (!msg.deleted) {
+              msgs = msgs.concat(msg);
+            }
           });
 
           this.setState({
@@ -2735,11 +2749,13 @@
         var topic = Tinode.getTopic(this.state.topic);
         var newState = {messages: []};
         topic.messages(function(m) {
-          newState.messages = newState.messages.concat(m);
+          if (!m.deleted) {
+            newState.messages = newState.messages.concat(m);
+          }
         });
 
         // msg could be null if one or more messages were deleted.
-        if (msg) {
+        if (msg && !msg.deleted) {
           // If the message is added to the end of the message list,
           // scroll to the bottom.
           if (topic.msgPosition(msg.seq) <= 1) {
@@ -2789,6 +2805,10 @@
         e.preventDefault();
         e.stopPropagation();
         this.props.showContextMenu(this.state.topic, e.pageY, e.pageX);
+      },
+
+      handleMessageContextMenu: function(seq, y, x) {
+        console.log("Message cklicked", seq, x, y);
       },
 
       handleBackNavigation: function() {
@@ -2843,10 +2863,11 @@
 
             messageNodes.push(
               <Message content={msg.content} mimeType={msg.head ? msg.head.mime : null}
-                timestamp={msg.ts} response={isReply}
+                timestamp={msg.ts} response={isReply} seq={msg.seq}
                 userFrom={userFrom} userName={userName} userAvatar={userAvatar}
                 sequence={sequence} received={msgReceived}
                 viewportWidth={this.props.viewportWidth}
+                showContextMenu={this.handleMessageContextMenu}
                 onImagePreview={this.handleImagePreview} key={msg.seq} />
             );
           }
