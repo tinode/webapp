@@ -4,7 +4,7 @@ Example using [Tinode](https://github.com/tinode/chat/) to build a single-page c
 [React](https://facebook.github.io/react/), Google's material design [fonts](https://www.google.com/fonts/)
 and [icons](https://google.github.io/material-design-icons/#icon-font-for-the-web). The [Tinode javascript library](https://github.com/tinode/tinode-js/) has no external dependencies. Overall it's a lot like open source WhatsApp or Telegram web apps.
 
-This is work in progress. Bugs are expected. The app was tested in the latest Chrome & Firefox only.
+Although the app is generally usable, keep in mind that this is work in progress. Some bugs probably exist. The app was tested in the latest Chrome & Firefox only.
 
 Try possibly newer or older version live at https://api.tinode.co/x/example-react-js/. Login as one of `alice`, `bob`, `carol`, `dave`, `frank`. Password is `<login>123`, e.g. password for `alice` is `alice123`. You can discover other users by email or phone by prefixing them with `email:` or `tel:` respectively. Emails are `<login>@example.com`, e.g. `alice@example.com`, phones are `17025550001` through `17025550009`. The demo is reset every night at 2:15am Pacific time.
 
@@ -16,12 +16,12 @@ Background pattern from http://subtlepatterns.com/, commercial and non-commercia
 
 ## Missing functionality
 
-* Previews not generated for videos, audio or other docs.
-* Cannot delete messages.
+* Previews not generated for videos, audio, links or docs.
 * No indication of some chat statuses (muted, blocked, etc.).
 * Browser push notifications are not implemented.
 * No end-to-end encryption.
 * Editing chat permissions is incomplete.
+* Emoji support is weak.
 
 ## Responsive design
 
