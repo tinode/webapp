@@ -2596,7 +2596,7 @@
       render: function() {
         var filename = this.props.filename || "file_attachment";
         if (filename.length > 36) {
-          filename = filename.substring(0, 16) + "..." + filename.substring(-16);
+          filename = filename.substr(0, 16) + "..." + filename.substr(-16);
         }
         return (
           <div className="attachment">
