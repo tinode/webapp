@@ -307,9 +307,9 @@
         return;
       }
 
-      var am;
+      var am, user;
       if (params.user) {
-        var user = topic.subscriber(params.user);
+        user = topic.subscriber(params.user);
         if (!user) {
           console.log("Subscriber not found: " + params.topicName + "[" + params.user + "]");
           return;
@@ -318,8 +318,9 @@
       } else {
         am = topic.getAccessMode().updateWant(mode).getWant();
       }
+
       var instance = this;
-      topic.setMeta({sub: {user: uid, mode: am}}).catch(function(err) {
+      topic.setMeta({sub: {user: params.user, mode: am}}).catch(function(err) {
         if (errorHandler) {
           errorHandler(err.message, "err");
         } else {
