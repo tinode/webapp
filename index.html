@@ -329,42 +329,38 @@
       });
     }
 
+    function deleteMessages(all, hard, params, errorHandler) {
+      var topic = Tinode.getTopic(params.topicName);
+      if (!topic) {
+        console.log("Topic not found: " + params.topicName);
+        return;
+      }
+      var promise = all ? topic.delMessagesAll(false) : topic.delMessagesList([params.seq], hard);
+      promise.catch(function(err) {
+        if (errorHandler) {
+          errorHandler(err.message, "err");
+        } else {
+          console.log(err);
+        }
+      });
+    }
+
     // Context menu items.
     var ContextMenuItems = {
         "topic_info":     {title: "Info", handler: null},
 
         "messages_clear": {title: "Clear messages", handler: function(params, errorHandler) {
-          var topic = Tinode.getTopic(params.topicName);
-          if (!topic) {
-            console.log("Topic not found: " + params.topicName);
-            return;
-          }
-
-          topic.delMessagesAll(false).then(function(){
-            console.log("refresh message list");
-          }).catch(function(err) {
-            if (errorHandler) {
-              errorHandler(err.message, "err");
-            } else {
-              console.log(err);
-            }
-          });
+          deleteMessages(true, false, params, errorHandler);
+        }},
+        "messages_clear_hard": {title: "Clear for All", handler: function(params, errorHandler) {
+          deleteMessages(true, true, params, errorHandler);
         }},
         "message_delete": {title: "Delete", handler: function(params, errorHandler) {
-          var topic = Tinode.getTopic(params.topicName);
-          if (!topic) {
-            console.log("Topic not found: " + params.topicName);
-            return;
-          }
-          topic.delMessagesList([params.seq], false).catch(function(err) {
-            if (errorHandler) {
-              errorHandler(err.message, "err");
-            } else {
-              console.log(err);
-            }
-          });
+          deleteMessages(false, false, params, errorHandler);
         }},
-
+        "message_delete_hard": {title: "Delete for All", handler: function(params, errorHandler) {
+          deleteMessages(false, true, params, errorHandler);
+        }},
         "topic_unmute":   {title: "Unmute", handler: topicPermissionSetter.bind(this, "+P")},
         "topic_mute":     {title: "Mute", handler: topicPermissionSetter.bind(this, "-P")},
         "topic_unblock":  {title: "Unblock", handler: topicPermissionSetter.bind(this, "+J")},
@@ -2699,6 +2695,7 @@
             .withLaterDesc()
             .withLaterSub()
             .withLaterData(MESSAGES_PAGE)
+            .withLaterDel()
             .build()).catch(function(err){
               instance.props.onError(err.message, "err");
             });
@@ -2790,7 +2787,7 @@
         if (msg && !msg.deleted) {
           // If the message is added to the end of the message list,
           // scroll to the bottom.
-          if (topic.msgPosition(msg.seq) <= 1) {
+          if (topic.isNewMessage(msg.seq)) {
             newState.scrollPosition = 0;
           }
           // Aknowledge all messages, including own messges.
@@ -2841,7 +2838,15 @@
 
       handleShowContextMenuMessage: function(params) {
         params.topicName = this.state.topic;
-        this.props.showContextMenu(params, [ContextMenuItems["message_delete"]]);
+        var menuItems = [ContextMenuItems["message_delete"]];
+        var topic = Tinode.getTopic(params.topicName);
+        if (topic) {
+          var acs = topic.getAccessMode();
+          if (acs && acs.isDeleter()) {
+            menuItems.push(ContextMenuItems["message_delete_hard"]);
+          }
+        }
+        this.props.showContextMenu(params, menuItems);
       },
 
       handleBackNavigation: function() {
@@ -3588,7 +3593,7 @@
       },
 
       defaultTopicContextMenu: function(topicName) {
-        var muted = false, blocked = false, subscribed = false;
+        var muted = false, blocked = false, subscribed = false, deleter = false;
         var topic = Tinode.getTopic(topicName);
         if (topic) {
           if (topic.isSubscribed()) {
@@ -3596,12 +3601,14 @@
             var acs = topic.getAccessMode();
             muted = acs && acs.isMuted();
             blocked = acs && !acs.isJoiner();
+            deleter = acs && acs.isDeleter();
           }
         }
 
         return [
           subscribed ? {title: "Info", handler: this.handleShowInfoView} : null,
           subscribed ? ContextMenuItems["messages_clear"] : null,
+          subscribed && deleter ? ContextMenuItems["messages_clear_hard"] : null,
           subscribed ? (muted ? ContextMenuItems["topic_unmute"] : ContextMenuItems["topic_mute"]) : null,
           subscribed ? (blocked ? ContextMenuItems["topic_unblock"] : ContextMenuItems["topic_block"]) : null,
           ContextMenuItems["topic_delete"]
