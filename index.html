@@ -2739,7 +2739,7 @@
           this.setState(function(prevState, props) {
             if (!prevState.fetchingMessages) {
               var topic = Tinode.getTopic(instance.state.topic);
-              if (topic && topic.msgHasMore()) {
+              if (topic && topic.isSubscribed() && topic.msgHasMore()) {
                 newState.fetchingMessages = true;
                 topic.getMessagesPage(MESSAGES_PAGE).then(function() {
                   instance.setState({fetchingMessages: false});
