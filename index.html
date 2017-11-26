@@ -2275,26 +2275,30 @@
         this.setState({selectedContact: uid});
       },
 
-      handleContextMenu: function(item, x, y) {
+      handleContextMenu: function(params) {
         var instance = this;
         var topic = Tinode.getTopic(this.props.topic);
         if (!topic) {
           return;
         }
-        var user = topic.subscriber(item);
+        var user = topic.subscriber(params.topicName);
         if (!user || !user.acs) {
           return;
         }
 
         var menuItems = [
           {title: "Edit permissions", handler: function() {
-            instance.handleLaunchPermissionsEditor("user", item);
+            instance.handleLaunchPermissionsEditor("user", params.topicName);
           }},
           ContextMenuItems["member_delete"],
           user.acs.isMuted() ? ContextMenuItems["member_unmute"] : ContextMenuItems["member_mute"],
           user.acs.isJoiner() ? ContextMenuItems["member_block"] : ContextMenuItems["member_unblock"]
         ];
-        this.props.showContextMenu({ topicName: this.props.topic, x: x, y: y, user: item }, menuItems);
+        this.props.showContextMenu({
+          topicName: this.props.topic,
+          x: params.x,
+          y: params.y,
+          user: params.topicName}, menuItems);
       },
 
       render: function() {
