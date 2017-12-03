@@ -335,7 +335,9 @@
         console.log("Topic not found: " + params.topicName);
         return;
       }
-      var promise = all ? topic.delMessagesAll(false) : topic.delMessagesList([params.seq], hard);
+      var promise = all ?
+        topic.delMessagesAll(hard) : 
+        topic.delMessagesList([params.seq], hard);
       promise.catch(function(err) {
         if (errorHandler) {
           errorHandler(err.message, "err");
