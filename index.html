@@ -336,7 +336,7 @@
         return;
       }
       var promise = all ?
-        topic.delMessagesAll(hard) : 
+        topic.delMessagesAll(hard) :
         topic.delMessagesList([params.seq], hard);
       promise.catch(function(err) {
         if (errorHandler) {
@@ -1405,7 +1405,7 @@
         e.preventDefault();
         e.stopPropagation();
         if (this.props.onSelected) {
-          this.props.onSelected(this.props.item, this.props.index);
+          this.props.onSelected(this.props.item, this.props.index, this.props.now);
         }
       },
 
@@ -3402,20 +3402,22 @@
       },
 
       // User clicked on a contact in the side panel or deleted a contact.
-      handleTopicSelected: function(topicName) {
+      handleTopicSelected: function(topicName, unused_index, online) {
         if (topicName) {
           // Contact selected
           this.setState({
             topicSelected: topicName,
             mobilePanel: 'topic-view',
-            showInfoPanel: false
+            showInfoPanel: false,
+            topicSelectedOnline: online
           });
         } else {
           // Currently selected contact deleted
           this.setState({
             topicSelected: null,
             mobilePanel: 'sidepanel',
-            showInfoPanel: false
+            showInfoPanel: false,
+            topicSelectedOnline: false
           });
         }
       },
@@ -3573,7 +3575,7 @@
         }
         var instance = this;
         topic.leave(true).then(function(ctrl) {
-          // Hide MessageView and InfoView panels.
+          // Hide MessagesView and InfoView panels.
           instance.setState({
             topicSelected: '',
             showInfoPanel: false,
