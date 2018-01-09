@@ -2779,7 +2779,6 @@
         // console.log("topic subscriptions updated");
       },
       handleNewMessage: function(msg) {
-        clearTimeout(this.readTimer);
         // Regenerate messages list
         var topic = Tinode.getTopic(this.state.topic);
         var newState = {messages: []};
@@ -2791,6 +2790,8 @@
 
         // msg could be null if one or more messages were deleted.
         if (msg && !msg.deleted) {
+          clearTimeout(this.readTimer);
+
           // If the message is added to the end of the message list,
           // scroll to the bottom.
           if (topic.isNewMessage(msg.seq)) {
