@@ -882,6 +882,16 @@ table.permission-editor td.checkbox {
   margin-right: 1rem;
 }
 
+#topic-users .avatar-box {
+  display: inline-block;
+  width: 1.8rem;
+  min-width: 1.8rem;
+  height: 1.8rem;
+  min-height: 1.8rem;
+  font-size: 1rem;
+  margin-right: 0.2rem;
+}
+
 /* Scrollable panel where the messages are shown */
 #messages-panel {
   position: relative;

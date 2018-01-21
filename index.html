@@ -916,6 +916,38 @@
     });
     /* END ChipInput */
 
+    /* BEGIN GroupSubs: a list of group subscribers currently online */
+    var GroupSubs = React.createClass({
+      getInitialState: function() {
+        return {
+          onlineSubs: this.props.subscribers ? this.props.subscribers : []
+        };
+      },
+
+      componentWillReceiveProps: function(nextProps) {
+        this.setState({onlineSubs: nextProps.subscribers ? nextProps.subscribers : []});
+      },
+
+      render: function() {
+        var usersOnline = [];
+        this.state.onlineSubs.map(function(sub) {
+          usersOnline.push(
+            <div className="avatar-box">
+              <LetterTile
+                topic={sub.user}
+                avatar={makeImageUrl(sub.public ? sub.public.photo : null)}
+                title={sub.public ? sub.public.fn : null}
+                key={sub.user} />
+            </div>
+          );
+        });
+        return (
+          <div id="topic-users">{usersOnline}</div>
+        );
+      }
+    });
+    /* END GroupSubs */
+
     /* BEGIN Login: a login form */
     var LoginView = React.createClass({
       getInitialState: function() {
@@ -2619,6 +2651,7 @@
       getInitialState: function() {
         return {
           messages: [],
+          onlineSubs: [],
           topic: '',
           title: '',
           avatar: null,
@@ -2656,7 +2689,7 @@
       },
       propsChange: function(props) {
         if (!props || !props.topic) {
-          this.setState({messages: [], topic: null});
+          this.setState({messages: [], onlineSubs: [], topic: null});
           this.leave();
           return;
         }
@@ -2671,15 +2704,24 @@
         var topic = Tinode.getTopic(props.topic);
         if (props.topic != this.state.topic) {
           var msgs = [];
+          var subs = [];
+
           // Bind the new topic to component.
           topic.onData = this.handleNewMessage;
           topic.onInfo = this.handleInfoReceipt;
           topic.onMetaDesc = this.handleDescChange;
           topic.onSubsUpdated = this.handleSubsUpdated;
+          topic.onPres = this.handleSubsUpdated;
           // Unbind the previous topic from this component.
           this.leave();
 
           this.handleDescChange(topic);
+          topic.subscribers(function(sub) {
+            if (sub.online) {
+              subs.push(sub);
+            }
+          });
+
           topic.messages(function(msg) {
             if (!msg.deleted) {
               msgs = msgs.concat(msg);
@@ -2688,6 +2730,7 @@
 
           this.setState({
             messages: msgs,
+            onlineSubs: subs,
             topic: props.topic,
             imagePreview: null,
             scrollPosition: 0
@@ -2726,6 +2769,7 @@
             oldTopic.onInfo = undefined;
             oldTopic.onMetaDesc = undefined;
             oldTopic.onSubsUpdated = undefined;
+            oldTopic.onPres = undefined;
           }
         }
       },
@@ -2775,9 +2819,24 @@
         }
       },
 
-      handleSubsUpdated: function(uids) {
-        // console.log("topic subscriptions updated");
+      handleSubsUpdated: function() {
+        if (this.state.topic) {
+          var subs = [];
+          var myId = this.props.myUserId;
+          var topic = Tinode.getTopic(this.state.topic);
+          topic.subscribers(function(sub) {
+            console.log("processing sub", sub);
+            if (sub.online && sub.user != myId) {
+              console.log("sub added", sub);
+              subs.push(sub);
+            }
+          });
+          this.setState({onlineSubs: subs});
+          console.log("subs in list:", subs);
+        }
+        console.log("topic subscriptions updated");
       },
+
       handleNewMessage: function(msg) {
         // Regenerate messages list
         var topic = Tinode.getTopic(this.state.topic);
@@ -2806,6 +2865,7 @@
 
         this.setState(newState);
       },
+
       handleInfoReceipt: function(info) {
         switch (info.what) {
           case "kp": {
@@ -2948,7 +3008,11 @@
                   <div id="topic-title" className="panel-title">{this.state.title}</div>
                   <div id="topic-last-seen">{lastSeen}</div>
                 </div>
-                <div id="topic-users"></div>
+                {groupTopic ?
+                  <GroupSubs
+                    subscribers={this.state.onlineSubs} /> :
+                  <div id="topic-users" />
+                }
                 <div>
                   <a href="#" onClick={this.handleContextClick}>
                     <i className="material-icons">more_vert</i>
