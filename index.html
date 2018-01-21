@@ -2825,16 +2825,12 @@
           var myId = this.props.myUserId;
           var topic = Tinode.getTopic(this.state.topic);
           topic.subscribers(function(sub) {
-            console.log("processing sub", sub);
             if (sub.online && sub.user != myId) {
-              console.log("sub added", sub);
               subs.push(sub);
             }
           });
           this.setState({onlineSubs: subs});
-          console.log("subs in list:", subs);
         }
-        console.log("topic subscriptions updated");
       },
 
       handleNewMessage: function(msg) {
