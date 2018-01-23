@@ -3709,18 +3709,21 @@
           return;
         }
 
+        var instance = this;
+
         if (added && added.length > 0) {
           added.map(function(uid) {
-            topic.invite(uid, null);
+            topic.invite(uid, null).catch(function(err) {
+              instance.handleError(err.message, "err");
+            });
           });
         }
 
-        var instance = this;
         if (removed && removed.length > 0) {
           removed.map(function(uid) {
             topic.delSubscription(uid).catch(function(err) {
               instance.handleError(err.message, "err");
-            });;
+            });
           });
         }
       },
