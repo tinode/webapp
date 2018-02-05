@@ -660,6 +660,13 @@ table.permission-editor td.checkbox {
   height: 3rem;
   border-radius: 50%;
 }
+.contact-box .avatar-box > .material-icons {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 3rem;
+  height: 3rem;
+}
 .contact-box .text-box {
   display: flex;
   flex-direction: column;
@@ -1530,6 +1537,7 @@ ul.tabbar li.active > a:after {
   font-size: 1.4rem;
   line-height: 1;
   vertical-align: middle;
+  text-align: center;
 }
 .material-icons.small {
   font-size: 1rem;
