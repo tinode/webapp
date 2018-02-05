@@ -1,0 +1,20 @@
+{
+  "short_name": "Tinode chat",
+  "name": "Tinode chat",
+  "icons": [
+    {
+      "src":"img/logo192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src":"img/logo96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/x/example-react-js/",
+  "background_color": "silver",
+  "theme_color": "#3949AB",
+  "display": "standalone"
+}
