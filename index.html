@@ -1247,7 +1247,6 @@
             break;
           default:;
         };
-        console.log("SidepanelView", this.props.foundContacts);
         return (
           <div id="sidepanel" className={this.props.hideSelf ? 'nodisplay' : null}>
             <SideNavbar state={this.props.state}
@@ -1627,10 +1626,8 @@
         var contactNodes = [];
         var instance = this;
         var showCheckmark = Array.isArray(this.props.topicSelected);
-        console.log("ContactList", this.props.contacts);
         if (this.props.contacts && this.props.contacts.length > 0) {
           this.props.contacts.map(function(c) {
-            console.log("ContactList", c);
             var key = c.topic ? c.topic : c.user;
             // If filter function is provided, filter out the items
             // which don't satisfy the condition.
@@ -1847,7 +1844,6 @@
     /* BEGIN Create new topic and invite users or send an invite */
     var NewTopicView = React.createClass({
       getInitialState: function() {
-        console.log("NewTopicView", this.props.foundContacts);
         return {
           tabSelected: "p2p",
           searchQuery: this.props.contactsSearchQuery,
@@ -1859,7 +1855,6 @@
         this.props.onInitFind();
       },
       componentWillReceiveProps: function(nextProps) {
-        console.log("NewTopicView-new props", nextProps.foundContacts);
         this.setState({
           searchQuery: nextProps.contactsSearchQuery,
           contactList: nextProps.foundContacts
@@ -1874,10 +1869,10 @@
           this.props.onCreateTopic(sel, undefined);
         }
       },
-      handleGroupSubmit: function(name, dataUrl, priv) {
+      handleNewGroupSubmit: function(name, dataUrl, priv) {
         this.props.onCreateTopic(undefined, vcard(name, dataUrl), priv);
       },
-      handleGroupSubscribe: function(topicName) {
+      handleGroupByID: function(topicName) {
         this.props.onCreateTopic(topicName);
       },
       render: function() {
@@ -1895,9 +1890,9 @@
               </li>
             </ul>
             {this.state.tabSelected === "grp" ?
-              <NewTopicView.Group onSubmit={this.handleGroupSubmit} /> :
+              <NewTopicView.Group onSubmit={this.handleNewGroupSubmit} /> :
               this.state.tabSelected === "byId" ?
-              <NewTopicView.ById onSubmit={this.handleGroupSubscribe} /> :
+              <NewTopicView.ById onSubmit={this.handleGroupByID} /> :
               <div className="flex-column">
                 <NewTopicView.SearchContacts type="p2p"
                   searchQuery={this.state.searchQuery}
