@@ -2696,7 +2696,8 @@
         }
 
         if (this.props.connected && !props.connected) {
-          // connection lost, do nothing
+          // connection lost, clear online subs
+          this.setState({onlineSubs: []});
           return;
         }
 
@@ -2717,8 +2718,9 @@
           this.leave();
 
           this.handleDescChange(topic);
+          var myId = this.props.myUserId;
           topic.subscribers(function(sub) {
-            if (sub.online) {
+            if (sub.online && sub.user != myId) {
               subs.push(sub);
             }
           });
