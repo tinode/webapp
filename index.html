@@ -2031,7 +2031,7 @@
         return (
           <div className="panel-form">
             <div className="panel-form-row">
-            <input type="text" placeholder="Group ID"
+            <input type="text" placeholder="Group or User ID"
               value={this.state.groupId} onChange={this.handleChange}
               onKeyPress={this.handleKeyPress} required />
             </div>
@@ -2695,7 +2695,7 @@
           return;
         }
 
-        if (this.props.connected && !props.connected) {
+        if (!props.connected) {
           // connection lost, clear online subs
           this.setState({onlineSubs: []});
           return;
@@ -3397,6 +3397,7 @@
       handleDisconnect: function(err) {
         this.setState({
           connected: false,
+          topicSelectedOnline: false,
           dialogSelected: null,
           errorText: err && err.message ? err.message : 'Disconnected',
           errorLevel: err && err.message ? "err" : "warn",
