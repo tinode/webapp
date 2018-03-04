@@ -1353,7 +1353,8 @@
           fullName: undefined,
           avatar: null,
           login: undefined,
-          password: undefined
+          password: undefined,
+          tags: []
         };
       },
       componentWillMount: function() {
@@ -1364,12 +1365,13 @@
           avatar: makeImageUrl(me.public ? me.public.photo : null),
           address: Tinode.getCurrentUserID(),
           auth: defacs.auth,
-          anon: defacs.anon
+          anon: defacs.anon,
+          tags: me.tags()
         });
       },
 
       componentWillUnmount: function() {
-        var me = Tinode.getMeTopic();
+        // Not needed?
       },
 
       handleFullNameUpdate: function(fn) {
@@ -1386,6 +1388,16 @@
       },
 
       render: function() {
+        var tags = [];
+        this.state.tags.map(function(tag) {
+          if (tags.length > 0) {
+            tags.push(" ");
+          }
+          tags.push(<tt key={tag}>{tag}</tt>);
+        });
+        if (tags.length == 0) {
+          tags = <i>none</i>;
+        }
         return (
           <div id="edit-account" className="panel-form">
             <div className="panel-form-row">
@@ -1425,6 +1437,11 @@
                 <div>Auth: <tt>{this.state.auth}</tt></div>
                 <div>Anon: <tt>{this.state.anon}</tt></div>
               </div>
+            </div>
+            <div className="hr" />
+            <div className="panel-form-column">
+              <div><label className="small">Tags (user discovery):</label></div>
+              <div className="quoted">{tags}</div>
             </div>
           </div>
         );
@@ -2748,6 +2765,7 @@
             .withLaterSub()
             .withLaterData(MESSAGES_PAGE)
             .withLaterDel()
+            .withTags()
             .build()).catch(function(err){
               instance.props.onError(err.message, "err");
             });
@@ -3389,7 +3407,13 @@
           myUserId: Tinode.getCurrentUserID()
         });
         // Subscribe, fetch topic desc, the list of subscriptions. Messages are not fetched.
-        me.subscribe(me.startMetaQuery().withLaterSub().withDesc().build()).catch(function(err){
+        me.subscribe(
+          me.startMetaQuery().
+            withLaterSub().
+            withDesc().
+            withTags().
+            build()
+          ).catch(function(err){
           instance.handleError(err.message, "err");
         });
       },
