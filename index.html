@@ -1406,19 +1406,16 @@
             this.handleAddTag(text.substr(0, text.length-1));
           }
         }
-        console.log(text);
       },
       handleAddTag: function(tag) {
         var tags = this.state.tags.slice(0);
         tags.push(tag);
         this.setState({tags: tags});
-        console.log("add tag", tag, tags);
       },
       handleRemoveTag: function(tag, index) {
         var tags = this.state.tags.slice(0);
         tags.splice(index, 1);
         this.setState({tags: tags});
-        console.log("tag removed", tag, index, tags);
       },
 
       render: function() {
@@ -1646,11 +1643,10 @@
         var contacts = [];
         var totalUnread = 0;
         Tinode.getMeTopic().contacts(function(c) {
-          c.unread = c.seq - (c.read > 0 ? c.read : 0);
+          c.unread = (c.seq - c.read) || 0;
           totalUnread += c.unread;
           contacts.push(c);
         }, this);
-
         updateFavicon(totalUnread > 0);
 
         return contacts;
