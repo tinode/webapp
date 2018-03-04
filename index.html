@@ -795,7 +795,8 @@
       componentWillReceiveProps: function(newProps) {
         this.setState({
           sortedChips: this.sortChips(newProps.chips, newProps.required),
-          chipIndex: this.indexChips(newProps.chips)
+          chipIndex: this.indexChips(newProps.chips),
+          input: ''
         });
       },
 
@@ -856,6 +857,10 @@
               this.removeChipAt(at);
             }
           }
+        } else if (e.key === 'Enter') {
+          if (this.props.onEnter) {
+            this.props.onEnter(this.state.input);
+          }
         }
       },
 
@@ -870,6 +875,7 @@
               onCancel={instance.handleChipCancel}
               avatar={makeImageUrl(item.public ? item.public.photo : null)}
               title={item.public ? item.public.fn : undefined}
+              noAvatar={instance.props.avatarDisabled}
               topic={item.user}
               required={item.user === instance.props.required}
               index={count}
@@ -900,15 +906,19 @@
       },
 
       render: function() {
+        var title = this.props.title || this.props.topic;
         return (
           <div className="chip">
-            <div className="avatar-box">
-              <LetterTile
-                avatar={this.props.avatar || true}
-                topic={this.props.topic}
-                title={this.props.title} />
-            </div>
-            <span>{this.props.title}</span>
+            {this.props.noAvatar ?
+              <span className="spacer" /> :
+              <div className="avatar-box">
+                <LetterTile
+                  avatar={this.props.avatar || true}
+                  topic={this.props.topic}
+                  title={this.props.title} />
+              </div>
+            }
+            <span>{title}</span>
             {this.props.onCancel && !this.props.required ?
               <a href="#" onClick={this.handleCancel} >&times;</a>
               : <span className="spacer" />}
@@ -1354,6 +1364,7 @@
           avatar: null,
           login: undefined,
           password: undefined,
+          tagInput: '',
           tags: []
         };
       },
@@ -1387,13 +1398,34 @@
         this.props.onSubmit(null, vcard(this.state.fullName, img));
       },
 
+      handleTagInput: function(text) {
+        // Check if user entered ',', ' ' or ';'
+        if (text.length > 0) {
+          var last = text[text.length-1];
+          if (last == ',' || last == ' ' || last == ';') {
+            this.handleAddTag(text.substr(0, text.length-1));
+          }
+        }
+        console.log(text);
+      },
+      handleAddTag: function(tag) {
+        var tags = this.state.tags.slice(0);
+        tags.push(tag);
+        this.setState({tags: tags});
+        console.log("add tag", tag, tags);
+      },
+      handleRemoveTag: function(tag, index) {
+        var tags = this.state.tags.slice(0);
+        tags.splice(index, 1);
+        this.setState({tags: tags});
+        console.log("tag removed", tag, index, tags);
+      },
+
       render: function() {
         var tags = [];
+        var instance = this;
         this.state.tags.map(function(tag) {
-          if (tags.length > 0) {
-            tags.push(" ");
-          }
-          tags.push(<tt key={tag}>{tag}</tt>);
+          tags.push({user: tag});
         });
         if (tags.length == 0) {
           tags = <i>none</i>;
@@ -1441,7 +1473,13 @@
             <div className="hr" />
             <div className="panel-form-column">
               <div><label className="small">Tags (user discovery):</label></div>
-              <div className="quoted">{tags}</div>
+              <ChipInput
+                chips={tags}
+                avatarDisabled={true}
+                prompt="Add tags"
+                onEnter={this.handleAddTag}
+                onChipRemoved={this.handleRemoveTag}
+                filterFunc={this.handleTagInput} />
             </div>
           </div>
         );
