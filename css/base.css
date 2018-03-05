@@ -1382,6 +1382,7 @@ ul.tabbar li.active > a:after {
   padding: 0 0.15rem 0 0.15rem;
   margin-left: 0.1rem;
   margin-right: 0.1rem;
+  margin-bottom: 0.1rem;
   border-radius: 0.15rem;
   display: inline-block;
   align-self: flex-start;

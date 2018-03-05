@@ -286,6 +286,23 @@
       return undefined;
     }
 
+    // Deep-shallow compare two arrays.
+    function arrayEqual(a, b) {
+      // Compare lengths first.
+      if (a.length != b.length) {
+        return false;
+      }
+      // Order of elements is ignored.
+      a.sort();
+      b.sort();
+      for (var i = 0, l = a.length; i < l; i++) {
+        if (a[i] !== b[i]) {
+          return false;
+        }
+      }
+      return true;
+    }
+
     // Convert a number of bytes to human-readable format.
     function bytesToHumanSize(bytes) {
       if (!bytes || bytes == 0) {
@@ -795,9 +812,12 @@
       componentWillReceiveProps: function(newProps) {
         this.setState({
           sortedChips: this.sortChips(newProps.chips, newProps.required),
-          chipIndex: this.indexChips(newProps.chips),
-          input: ''
+          chipIndex: this.indexChips(newProps.chips)
         });
+        if (newProps.chips.length > this.props.chips.length) {
+          // Chip added: clear input.
+          this.setState({input: ''});
+        }
       },
 
       // Map chip index to user name
@@ -1296,6 +1316,7 @@
               <EditAccountView
                 login={this.props.login}
                 onSubmit={this.props.onUpdateAccount}
+                onUpdateTags={this.props.onUpdateAccountTags}
                 onCancel={this.props.onCancel}
                 onError={this.props.onError} /> :
 
@@ -1364,7 +1385,7 @@
           avatar: null,
           login: undefined,
           password: undefined,
-          tagInput: '',
+          previousOnTags: undefined,
           tags: []
         };
       },
@@ -1377,12 +1398,20 @@
           address: Tinode.getCurrentUserID(),
           auth: defacs.auth,
           anon: defacs.anon,
-          tags: me.tags()
+          tags: me.tags(),
+          previousOnTags: me.onTagsUpdated,
+          showTagManager: false
         });
+        me.onTagsUpdated = this.tnNewTags;
       },
 
       componentWillUnmount: function() {
-        // Not needed?
+        var me = Tinode.getMeTopic();
+        me.onTagsUpdated = this.state.previousOnTags;
+      },
+
+      tnNewTags: function(tags) {
+        this.setState({tags: tags});
       },
 
       handleFullNameUpdate: function(fn) {
@@ -1398,34 +1427,30 @@
         this.props.onSubmit(null, vcard(this.state.fullName, img));
       },
 
-      handleTagInput: function(text) {
-        // Check if user entered ',', ' ' or ';'
-        if (text.length > 0) {
-          var last = text[text.length-1];
-          if (last == ',' || last == ' ' || last == ';') {
-            this.handleAddTag(text.substr(0, text.length-1));
-          }
+      handleShowTagManager: function() {
+        this.setState({showTagManager: true});
+      },
+
+      handleHideTagManager: function() {
+        this.setState({showTagManager: false});
+      },
+
+      handleTagsUpdated: function(tags) {
+        this.setState({showTagManager: false});
+        // Check if tags have actually changed.
+        if (arrayEqual(this.state.tags.slice(0), tags.slice(0))) {
+          return;
         }
-      },
-      handleAddTag: function(tag) {
-        var tags = this.state.tags.slice(0);
-        tags.push(tag);
-        this.setState({tags: tags});
-      },
-      handleRemoveTag: function(tag, index) {
-        var tags = this.state.tags.slice(0);
-        tags.splice(index, 1);
-        this.setState({tags: tags});
+        this.props.onUpdateTags(tags);
       },
 
       render: function() {
         var tags = [];
-        var instance = this;
         this.state.tags.map(function(tag) {
-          tags.push({user: tag});
+          tags.push(<span className="badge" key={tags.length}>{tag}</span>);
         });
         if (tags.length == 0) {
-          tags = <i>none</i>;
+          tags = <i>No tags defined. Add some.</i>;
         }
         return (
           <div id="edit-account" className="panel-form">
@@ -1468,21 +1493,113 @@
               </div>
             </div>
             <div className="hr" />
-            <div className="panel-form-column">
-              <div><label className="small">Tags (user discovery):</label></div>
-              <ChipInput
-                chips={tags}
-                avatarDisabled={true}
-                prompt="Add tags"
-                onEnter={this.handleAddTag}
-                onChipRemoved={this.handleRemoveTag}
-                filterFunc={this.handleTagInput} />
-            </div>
+            {this.state.showTagManager ?
+              <TagManager
+                tags={this.state.tags}
+                onSubmit={this.handleTagsUpdated}
+                onCancel={this.handleHideTagManager} />
+              :
+              <div className="panel-form-column">
+                <div><label className="small">Tags (user discovery):</label></div>
+                <a href="#" className="flat-button" onClick={this.handleShowTagManager}>
+                  <i className="material-icons">edit</i> Manage tags
+                </a>
+                <span>{tags}</span>
+              </div>
+            }
           </div>
         );
       }
     });
     /* END EditAccount */
+
+    /* BEGIN TagManager: edit topic or user tags */
+    var TagManager = React.createClass({
+      getInitialState: function() {
+        return {
+          tags: this.wrapTags(this.props.tags),
+          tagInput: '',
+          noTagsMessage: 'Add some tags'
+        };
+      },
+
+      wrapTags: function(tags) {
+        var wrapped = [];
+        tags.map(function(tag) {
+          wrapped.push({user: tag});
+        });
+        return wrapped;
+      },
+
+      unwrapTags: function(tags) {
+        var unwrapped = [];
+        tags.map(function(tag) {
+          unwrapped.push(tag.user);
+        });
+        return unwrapped;
+      },
+
+      handleTagInput: function(text) {
+        this.setState({tagInput: text});
+        // Check if user entered ',', ' ' or ';'
+        if (text.length > 0) {
+          var last = text[text.length-1];
+          if (last == ',' || last == ' ' || last == ';') {
+            this.handleAddTag(text.substr(0, text.length-1));
+          }
+        }
+      },
+
+      handleAddTag: function(tag) {
+        tag = tag.trim();
+        if (tag.length > 0) {
+          var tags = this.state.tags.slice(0);
+          tags.push({user: tag});
+          this.setState({tags: tags, tagInput: ''});
+        }
+      },
+
+      handleRemoveTag: function(tag, index) {
+        var tags = this.state.tags.slice(0);
+        tags.splice(index, 1);
+        this.setState({tags: tags});
+      },
+
+      handleSubmit: function() {
+        var tags = this.unwrapTags(this.state.tags);
+        var inp = this.state.tagInput.trim();
+        if (inp.length > 0) {
+          tags.push(inp);
+        }
+        this.props.onSubmit(tags);
+      },
+
+      handleCancel: function() {
+        this.props.onCancel();
+      },
+
+      render: function() {
+        return (
+          <div id="tag-manager">
+            <div className="panel-form-row">
+              <label className="small">Tags (user discovery)</label>
+            </div>
+            <ChipInput
+              chips={this.state.tags}
+              avatarDisabled={true}
+              prompt={this.state.noTagsMessage}
+              onEnter={this.handleAddTag}
+              onChipRemoved={this.handleRemoveTag}
+              filterFunc={this.handleTagInput} />
+            <div id="tag-manager-buttons" className="panel-form-row">
+              <button className="blue" onClick={this.handleSubmit}>OK</button>
+              <button className="white" onClick={this.handleCancel}>Cancel</button>
+            </div>
+          </div>
+        );
+      }
+    });
+    /* END TagManager */
 
     /* BEGIN Contact list (list of topics) */
     /* A single topic */;
@@ -3607,6 +3724,14 @@
           });
         }
       },
+
+      handleUpdateAccountTagsRequest: function(tags) {
+        var instance = this;
+        Tinode.getMeTopic().setMeta({tags: tags}).catch(function(err) {
+          instance.handleError(err.message, "err");
+        });
+      },
+
       // User chose Settings menu item.
       handleSettings: function() {
         this.setState({sidePanelSelected: this.state.myUserId ? 'edit-account' : 'settings'});
@@ -3825,6 +3950,7 @@
               onLoginRequest={this.handleLoginRequest}
               onCreateAccount={this.handleNewAccountRequest}
               onUpdateAccount={this.handleUpdateAccountRequest}
+              onUpdateAccountTags={this.handleUpdateAccountTagsRequest}
               onTopicSelected={this.handleTopicSelected}
               onCreateTopic={this.handleNewTopicRequest}
               onNewTopic={this.handleNewTopic}
