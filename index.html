@@ -39,12 +39,13 @@
 
     // Minimum time between two keypress notifications, milliseconds.
     var KEYPRESS_DELAY = 3*1000;
-
     // Delay before sending a {note} for reciving a message, milliseconds.
     var RECEIVED_DELAY = 500;
-
     // Delay before sending a read notification, milliseconds.
     var READ_DELAY = 1000;
+
+    // The shortest allowed tag length. Matches one on the server.
+    var MIN_TAG_LENGTH = 4;
 
     // Mediaquery breakpoint between desktop and mobile, in px. Should match the value
     // in @meadia (max-size: 640px) in base.css
@@ -1014,11 +1015,13 @@
             <form id="login-form" onSubmit={this.handleSubmit}>
               <input type="text" id="inputLogin"
                 placeholder="Login (alice, bob, carol, dave, frank)"
+                autocomplete="username"
                 value={this.state.login}
                 onChange={this.handleLoginChange}
                 required autoFocus />
               <input type="password" id="inputPassword"
                 placeholder="Password (alice123, bob123, ...)"
+                autocomplete="current-password"
                 value={this.state.password}
                 onChange={this.handlePasswordChange}
                 required />
@@ -1545,7 +1548,10 @@
         if (text.length > 0) {
           var last = text[text.length-1];
           if (last == ',' || last == ' ' || last == ';') {
-            this.handleAddTag(text.substr(0, text.length-1));
+            var tag = text.substr(0, text.length-1).trim();
+            if (tag.length >= MIN_TAG_LENGTH) {
+              this.handleAddTag(tag);
+            }
           }
         }
       },
@@ -3462,6 +3468,7 @@
         window.addEventListener('resize', this.handleResize);
         window.addEventListener('online', function(e) { instance.handleOnline(true); });
         window.addEventListener('offline', function(e) { instance.handleOnline(false); });
+        window.addEventListener('hashchange', this.handleHashRoute);
 
         this.setState({viewportWidth: document.documentElement.clientWidth});
 
@@ -3480,6 +3487,9 @@
         if (this.state.displayMobile != mobile) {
           this.setState({displayMobile: mobile});
         }
+      },
+      handleHashRoute: function(e) {
+        console.log("hashchange", location.hash, e.oldURL, e.newURL);
       },
       handleOnline: function(online) {
         var newState = {liveConnection: online};
