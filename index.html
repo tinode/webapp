@@ -1078,8 +1078,7 @@
             this.state.login.trim(),
             this.state.password.trim(),
             vcard(this.state.fn, this.state.imageDataUrl),
-            null,
-            to_tags({"email": this.state.email}));
+            {"type": "email", "val": this.state.email});
         }
       },
       render: function() {
@@ -1266,19 +1265,26 @@
         var avatar = false;
         switch (this.props.state) {
           case 'login':
-            title = "Sign In"; break;
+            title = "Sign In";
+            break;
           case 'register':
-            title = "Create Account"; break;
+            title = "Create Account";
+            break;
           case 'settings':
-            title = "Settings"; break;
+            title = "Settings";
+            break;
           case 'edit-account':
-            title = "Edit Account"; break;
+            title = "Edit Account";
+            break;
           case 'contacts':
             title = this.props.title;
             avatar = this.props.avatar ? this.props.avatar : true;
             break;
           case 'new-topic':
             title = "Start New Chat";
+            break;
+          case 'validation':
+            title = "Confirm Credentials";
             break;
           default:;
         };
@@ -1338,6 +1344,9 @@
                 onSearchContacts={this.props.onSearchContacts}
                 onCreateTopic={this.props.onCreateTopic}
                 onError={this.props.onError} /> :
+
+              this.props.state === 'validation' ?
+              <div><input type="text" /> [confirm]</div> :
 
               null}
           </div>
@@ -3460,7 +3469,8 @@
           contextMenuItems: [],
           serverVersion: 'no connection',
           contactsSearchQuery: '',
-          foundContacts: []
+          foundContacts: [],
+          validation: []
         };
       },
       componentDidMount: function() {
@@ -3546,14 +3556,26 @@
         }
 
         if (promise) {
-          promise.then(function() {
-            instance.handleLoginSuccessful(instance);
+          promise.then(function(ctrl) {
+            console.log(ctrl);
+            if (ctrl.code >= 300 && ctrl.text === "validate credentials") {
+              instance.handleCredentialsRequest(ctrl.params);
+            } else {
+              instance.handleLoginSuccessful(instance);
+            }
           }).catch(function(err) {
             // Login failed, report error
             instance.setState({loginDisabled: false});
             instance.handleError(err.message, "err");
           });
         }
+      },
+
+      handleCredentialsRequest: function(params) {
+        this.setState({
+          sidePanelSelected: 'validation',
+          validation: params.cred
+        });
       },
 
       handleLoginSuccessful: function(instance) {
@@ -3707,15 +3729,21 @@
         this.setState({sidePanelSelected: 'register'});
       },
       // Actual registration of a new account.
-      handleNewAccountRequest: function(login_, password_, public_, private_, tags_) {
+      handleNewAccountRequest: function(login_, password_, public_, cred_, tags_) {
         var instance = this;
-        tags_ = tags_ || []; // init tags_ value just in case undefined
         Tinode.connect(this.state.serverAddress)
           .then(function() {
+            if (cred_ && !Array.isArray(cred_)) {
+              cred_ = [cred_];
+            }
             return Tinode.createAccountBasic(login_, password_,
-              {public: public_, private: private_, tags: tags_});
-          }).then(function() {
-            instance.handleLoginSuccessful(instance);
+              {public: public_, cred: cred_, tags: tags_});
+          }).then(function(ctrl) {
+            if (ctrl.code >= 300 && ctrl.text === "validate credentials") {
+              instance.handleCredentialsRequest(ctrl.params);
+            } else {
+              instance.handleLoginSuccessful(instance);
+            }
           }).catch(function(err) {
             instance.handleError(err.message, "err");
           });
