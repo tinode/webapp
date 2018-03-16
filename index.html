@@ -1211,22 +1211,17 @@
       render: function() {
         return (
             <div id="side-caption-panel" className="caption-panel">
-              <div id="self-avatar" className="avatar-box"><LetterTile
-                avatar={this.props.avatar} topic={this.props.myUserId} title={this.props.title} /></div>
+              <div id="self-avatar" className="avatar-box">
+                <LetterTile avatar={this.props.avatar} topic={this.props.myUserId} title={this.props.title} />
+              </div>
               <div id="sidepanel-title" className="panel-title">{this.props.title}</div>
               {this.props.state === 'login' ?
                   <SideNavbar.MenuStart onSignUp={this.props.onSignUp} onSettings={this.props.onSettings} /> :
-                this.props.state === 'settings' ?
-                  <MenuCancel onCancel={this.props.onCancel} /> :
-                this.props.state === 'edit-account' ?
-                  <MenuCancel onCancel={this.props.onCancel} /> :
-                this.props.state === 'register' ?
-                  <MenuCancel onCancel={this.props.onCancel} /> :
                 this.props.state === 'contacts' ?
                   <SideNavbar.MenuContacts onNewTopic={this.props.onNewTopic} onSettings={this.props.onSettings} /> :
-                this.props.state === 'new-topic' ?
-                  <MenuCancel onCancel={this.props.onCancel} /> :
                 null}
+              {this.props.onCancel ?
+                 <MenuCancel onCancel={this.props.onCancel} /> : null}
             </div>
         );
       }
@@ -1263,18 +1258,22 @@
       render: function() {
         var title = null;
         var avatar = false;
+        var onCancel = undefined;
         switch (this.props.state) {
           case 'login':
             title = "Sign In";
             break;
           case 'register':
             title = "Create Account";
+            onCancel = this.props.onCancel;
             break;
           case 'settings':
             title = "Settings";
+            onCancel = this.props.onCancel;
             break;
           case 'edit-account':
             title = "Edit Account";
+            onCancel = this.props.onCancel;
             break;
           case 'contacts':
             title = this.props.title;
@@ -1282,9 +1281,11 @@
             break;
           case 'new-topic':
             title = "Start New Chat";
+            onCancel = this.props.onCancel;
             break;
           case 'validation':
             title = "Confirm Credentials";
+            onCancel = this.props.onCancel;
             break;
           default:;
         };
@@ -1296,7 +1297,7 @@
               onSignUp={this.props.onSignUp}
               onSettings={this.props.onSettings}
               onNewTopic={this.props.onNewTopic}
-              onCancel={this.props.onCancel} />
+              onCancel={onCancel} />
 
             <ErrorPanel
               level={this.props.errorLevel}
@@ -1346,7 +1347,11 @@
                 onError={this.props.onError} /> :
 
               this.props.state === 'validation' ?
-              <div><input type="text" /> [confirm]</div> :
+              <ValidationView
+                onSubmit={this.props.onValidateCredentials}
+                validation={this.props.validation}
+                onCancel={this.props.onCancel}
+                onError={this.props.onError} /> :
 
               null}
           </div>
@@ -2226,6 +2231,51 @@
       }
     });
     /* END Create new topic and invite users or send an invite */
+
+    /* BEGIN ValidationView: panel for confirming credentials, like email or phone */
+    var ValidationView = React.createClass({
+      getInitialState: function() {
+        return {
+          code: '',
+        };
+      },
+      handleChange: function(e) {
+        this.setState({code: e.target.value});
+      },
+      handleKeyPress: function(e) {
+        if (e.key === 'Enter') {
+          this.handleSubmit(e);
+        }
+      },
+      handleSubmit: function(e) {
+        e.preventDefault();
+        if (this.state.code && this.state.code.trim()) {
+          this.props.onSubmit(this.props.validation[0], this.state.code.trim());
+        }
+      },
+      render: function() {
+        var methods = {'email': 'email', 'tel': 'phone'};
+        var method = methods[this.props.validation[0]] || this.props.validation[0];
+        return (
+          <div className="panel-form">
+            <div className="panel-form-row">
+              <label className="small" htmlFor="enter-confirmation-code">
+                Enter confirmation code sent to you by {method}:
+              </label>
+            </div>
+            <div className="panel-form-row">
+            <input type="text" id="enter-confirmation-code" placeholder="The code is 123456"
+              value={this.state.code} onChange={this.handleChange}
+              onKeyPress={this.handleKeyPress} required />
+            </div>
+            <div className="dialog-buttons">
+              <button className="blue" onClick={this.handleSubmit}>Confirm</button>
+            </div>
+          </div>
+        );
+      }
+    });
+    /* END ValidationView */
 
     /* BEGIN InfoView: panel with topic/user info */
     var InfoView = React.createClass({
@@ -3540,24 +3590,30 @@
         this.doLogin(this.state.login, this.state.password);
       },
 
-      doLogin: function(login, password) {
-        var instance = this;
+      doLogin: function(login, password, cred) {
+        console.log("doLogin", login, password, cred);
 
+        var instance = this;
+        cred = cred ? Tinode.addCredential(null, cred.type, null, null, cred.resp).cred : undefined;
+
+        console.log("doLogin cred=", cred);
         // Try to login with token. If token is not available, try password. If no password, ask for it.
         var promise = null;
         var token = Tinode.getLoginToken();
+        
+        console.log("doLogin token=", token);
+
         if (token) {
-          promise = Tinode.loginToken(token.token);
+          promise = Tinode.loginToken(token.token, cred);
         } else if (password) {
           this.setState({password: null});
-          promise = Tinode.loginBasic(login, password);
+          promise = Tinode.loginBasic(login, password, cred);
         } else {
           this.setState({loginDisabled: false});
         }
 
         if (promise) {
           promise.then(function(ctrl) {
-            console.log(ctrl);
             if (ctrl.code >= 300 && ctrl.text === "validate credentials") {
               instance.handleCredentialsRequest(ctrl.params);
             } else {
@@ -3953,6 +4009,10 @@
         }
       },
 
+      handleValidateCredentialsRequest: function(cred, code) {
+        this.doLogin(null, null, {type: cred, resp: code});
+      },
+
       render: function() {
         return (
           <div id="app-container">
@@ -3979,6 +4039,7 @@
               errorText={this.state.errorText}
               errorLevel={this.state.errorLevel}
               topicSelected={this.state.topicSelected}
+              validation={this.state.validation}
 
               serverAddress={this.state.serverAddress}
               onConnectionSettings={this.handleConnectionSettings}
@@ -3995,6 +4056,7 @@
               onCancel={this.handleSidepanelCancel}
               onOnlineChange={this.handleTopicSelectedOnline}
               onError={this.handleError}
+              onValidateCredentials={this.handleValidateCredentialsRequest}
 
               onInitFind={this.tnInitFind}
               contactsSearchQuery={this.state.contactsSearchQuery}
