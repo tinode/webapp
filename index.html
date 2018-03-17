@@ -1078,7 +1078,7 @@
             this.state.login.trim(),
             this.state.password.trim(),
             vcard(this.state.fn, this.state.imageDataUrl),
-            {"type": "email", "val": this.state.email});
+            {"meth": "email", "val": this.state.email});
         }
       },
       render: function() {
@@ -3600,7 +3600,7 @@
         // Try to login with token. If token is not available, try password. If no password, ask for it.
         var promise = null;
         var token = Tinode.getLoginToken();
-        
+
         console.log("doLogin token=", token);
 
         if (token) {
