@@ -1015,13 +1015,13 @@
             <form id="login-form" onSubmit={this.handleSubmit}>
               <input type="text" id="inputLogin"
                 placeholder="Login (alice, bob, carol, dave, frank)"
-                autocomplete="username"
+                autoComplete="username"
                 value={this.state.login}
                 onChange={this.handleLoginChange}
                 required autoFocus />
               <input type="password" id="inputPassword"
                 placeholder="Password (alice123, bob123, ...)"
-                autocomplete="current-password"
+                autoComplete="current-password"
                 value={this.state.password}
                 onChange={this.handlePasswordChange}
                 required />
@@ -1786,6 +1786,11 @@
         }, this);
         updateFavicon(totalUnread > 0);
 
+        // Sort: most recent to less recent.
+        //contacts.sort(function(a, b) {
+        //  return a.updated - b.updated;
+        //});
+
         return contacts;
       },
 
@@ -2211,8 +2216,11 @@
       },
       handleSubmit: function(e) {
         e.preventDefault();
-        if (this.state.groupId && this.state.groupId.trim()) {
-          this.props.onSubmit(this.state.groupId.trim());
+        if (this.state.groupId) {
+          var name = this.state.groupId.trim();
+          if (name.length > 3 && (name.substr(0, 3) == 'usr' || name.substr(0, 3) == 'grp')) {
+            this.props.onSubmit(name);
+          }
         }
       },
       render: function() {
@@ -3591,17 +3599,11 @@
       },
 
       doLogin: function(login, password, cred) {
-        console.log("doLogin", login, password, cred);
-
         var instance = this;
         cred = cred ? Tinode.addCredential(null, cred.type, null, null, cred.resp).cred : undefined;
-
-        console.log("doLogin cred=", cred);
         // Try to login with token. If token is not available, try password. If no password, ask for it.
         var promise = null;
         var token = Tinode.getLoginToken();
-
-        console.log("doLogin token=", token);
 
         if (token) {
           promise = Tinode.loginToken(token.token, cred);
