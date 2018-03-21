@@ -1011,27 +1011,25 @@
           submitClasses += " disabled";
         }
         return (
-          <div>
-            <form id="login-form" onSubmit={this.handleSubmit}>
-              <input type="text" id="inputLogin"
-                placeholder="Login (alice, bob, carol, dave, frank)"
-                autoComplete="username"
-                value={this.state.login}
-                onChange={this.handleLoginChange}
-                required autoFocus />
-              <input type="password" id="inputPassword"
-                placeholder="Password (alice123, bob123, ...)"
-                autoComplete="current-password"
-                value={this.state.password}
-                onChange={this.handlePasswordChange}
-                required />
-              <HostSelector serverAddress={this.props.serverAddress}
-                onServerAddressChange={this.handleServerAddressChange} />
-              <div className="dialog-buttons">
-                <button className={submitClasses} type="submit">Sign in</button>
-              </div>
-            </form>
-          </div>
+          <form id="login-form" onSubmit={this.handleSubmit}>
+            <input type="text" id="inputLogin"
+              placeholder="Login (alice, bob, carol, dave, frank)"
+              autoComplete="username"
+              value={this.state.login}
+              onChange={this.handleLoginChange}
+              required autoFocus />
+            <input type="password" id="inputPassword"
+              placeholder="Password (alice123, bob123, ...)"
+              autoComplete="current-password"
+              value={this.state.password}
+              onChange={this.handlePasswordChange}
+              required />
+            <HostSelector serverAddress={this.props.serverAddress}
+              onServerAddressChange={this.handleServerAddressChange} />
+            <div className="dialog-buttons">
+              <button className={submitClasses} type="submit">Sign in</button>
+            </div>
+          </form>
         );
       }
     });
@@ -1071,8 +1069,9 @@
       handleSubmit: function(e) {
         e.preventDefault();
         if (this.state.password.trim() != this.state.password2.trim()) {
-          // FIXME(gene): report an error here.
+          this.props.onError("Passwords don't match", "warn");
         } else {
+          // TODO: check email for validity
           this.setState({errorCleared: false});
           this.props.onCreateAccount(
             this.state.login.trim(),
@@ -1087,7 +1086,7 @@
           submitClasses += " disabled";
         }
         return (
-          <div className="panel-form">
+          <form className="panel-form-column" onSubmit={this.handleSubmit}>
             <div className="panel-form-row">
               <div className="panel-form-column">
                 <input type="text" placeholder="Login"
@@ -1102,7 +1101,7 @@
                 onError={this.props.onError} />
             </div>
             <div className="panel-form-row">
-              <input type="text" placeholder="Email, e.g john.doe@example.com"
+              <input type="email" placeholder="Email, e.g john.doe@example.com"
                 value={this.state.email} onChange={this.handleEmailChange} required/>
             </div>
             <div  className="panel-form-row">
@@ -1110,9 +1109,9 @@
                 value={this.state.fn} onChange={this.handleFnChange} required/>
             </div>
             <div className="dialog-buttons">
-              <button className={submitClasses} onClick={this.handleSubmit}>Sign up</button>
+              <button className={submitClasses} type="submit">Sign up</button>
             </div>
-          </div>
+          </form>
         );
       }
     });
@@ -2190,7 +2189,7 @@
             <div className="panel-form-row">
             <input type="text" placeholder="List like email:alice@example.com, tel:17025550003..."
               value={this.state.search} onChange={this.handleSearchChange}
-              onKeyPress={this.handleKeyPress} required />
+              onKeyPress={this.handleKeyPress} required autoFocus />
               <a href="#" onClick={this.handleSearch}>
                 <i className="material-icons">search</i>
               </a>
@@ -3407,7 +3406,8 @@
               </a>}
             <textarea id="sendMessage" placeholder={prompt}
               disabled={this.props.disabled} value={this.state.message}
-              onChange={this.handleMessageTyping} onKeyPress={this.handleKeyPress} />
+              onChange={this.handleMessageTyping} onKeyPress={this.handleKeyPress}
+              autoFocus />
               {this.props.disabled ?
                 <i className="material-icons disabled">send</i> :
                 <a href="#" onClick={this.handleSend} title="Send"><i className="material-icons">send</i></a>}
@@ -3600,7 +3600,7 @@
 
       doLogin: function(login, password, cred) {
         var instance = this;
-        cred = cred ? Tinode.addCredential(null, cred.type, null, null, cred.resp).cred : undefined;
+        cred = cred ? Tinode.addCredential(null, cred).cred : undefined;
         // Try to login with token. If token is not available, try password. If no password, ask for it.
         var promise = null;
         var token = Tinode.getLoginToken();
@@ -3791,11 +3791,8 @@
         var instance = this;
         Tinode.connect(this.state.serverAddress)
           .then(function() {
-            if (cred_ && !Array.isArray(cred_)) {
-              cred_ = [cred_];
-            }
-            return Tinode.createAccountBasic(login_, password_,
-              {public: public_, cred: cred_, tags: tags_});
+            var params = Tinode.addCredential({public: public_, tags: tags_}, cred_);
+            return Tinode.createAccountBasic(login_, password_, params);
           }).then(function(ctrl) {
             if (ctrl.code >= 300 && ctrl.text === "validate credentials") {
               instance.handleCredentialsRequest(ctrl.params);
