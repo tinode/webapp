@@ -3839,9 +3839,9 @@
       // User clicked Cancel button in Setting or Sign Up panel.
       handleSidepanelCancel: function() {
         if (this.state.myUserId) {
-          this.setState({sidePanelSelected: 'contacts'});
+          this.setState({sidePanelSelected: 'contacts', errorText: '', errorLevel: null});
         } else {
-          this.setState({sidePanelSelected: 'login'});
+          this.setState({sidePanelSelected: 'login', errorText: '', errorLevel: null});
         }
       },
       // User clicked a (+) menu item.
@@ -4009,7 +4009,7 @@
       },
 
       handleValidateCredentialsRequest: function(cred, code) {
-        this.doLogin(null, null, {type: cred, resp: code});
+        this.doLogin(null, null, {meth: cred, resp: code});
       },
 
       render: function() {
