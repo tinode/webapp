@@ -34,6 +34,9 @@
     var DEFAULT_HOST = KNOWN_HOSTS.hosted;
     // var DEFAULT_HOST = KNOWN_HOSTS.local;
 
+    // Sound to play on message received.
+    var POP_SOUND = new Audio('audio/msg.mp3');
+    
     // API key. Use https://github.com/tinode/chat/tree/master/keygen to generate your own
     var API_KEY = "AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K";
 
@@ -232,6 +235,7 @@
         head.appendChild(newIcon);
       }
     }
+
     // Get 32 bit integer hash value for a string. Ideally it should produce the same value
     // as Java's String#hash().
     function stringHash(value) {
@@ -1748,10 +1752,12 @@
           this.resetContactList();
         } else if (what === "msg") {
           // New message received
-
           // Skip update if the topic is currently open, otherwise the badge will annoyingly flash.
           if (this.props.topicSelected !== cont.topic) {
+            POP_SOUND.play();
             this.resetContactList();
+          } else if (document.hidden) {
+            POP_SOUND.play();
           }
         } else if (what === "recv") {
           // Explicitly ignoring "recv" -- it causes no visible updates to contact list.
