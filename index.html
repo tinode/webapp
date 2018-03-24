@@ -1135,6 +1135,8 @@
           function(err) {
             this.props.onError(err, "err");
           });
+        // Clear the value so the same file can be uploaded again.
+        e.target.value = '';
       },
       render: function() {
         return (
@@ -3337,6 +3339,8 @@
               });
           }
         }
+        // Clear the value so the same file can be uploaded again.
+        e.target.value = '';
       },
 
       handleAttachFile: function(e) {
@@ -3355,6 +3359,8 @@
           }, false);
           reader.readAsDataURL(file);
         }
+        // Clear the value so the same file can be uploaded again.
+        e.target.value = '';
       },
 
       handleSend: function() {
@@ -3605,11 +3611,11 @@
         var promise = null;
         var token = Tinode.getLoginToken();
 
-        if (token) {
-          promise = Tinode.loginToken(token.token, cred);
-        } else if (password) {
+        if (login && password) {
           this.setState({password: null});
           promise = Tinode.loginBasic(login, password, cred);
+        } else if (token) {
+          promise = Tinode.loginToken(token.token, cred);
         } else {
           this.setState({loginDisabled: false});
         }
