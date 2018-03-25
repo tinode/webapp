@@ -1093,11 +1093,11 @@
           <form className="panel-form-column" onSubmit={this.handleSubmit}>
             <div className="panel-form-row">
               <div className="panel-form-column">
-                <input type="text" placeholder="Login"
+                <input type="text" placeholder="Login" autoComplete="user-name"
                   value={this.state.login} onChange={this.handleLoginChange} required autoFocus />
-                <input type="password" placeholder="Password"
+                <input type="password" placeholder="Password" autoComplete="new-password"
                   value={this.state.password} onChange={this.handlePasswordChange} required />
-                <input type="password" placeholder="Repeat password"
+                <input type="password" placeholder="Repeat password" autoComplete="new-password"
                   value={this.state.password2} onChange={this.handlePassword2Change} required />
               </div>
               <AvatarUpload
@@ -1106,10 +1106,10 @@
             </div>
             <div className="panel-form-row">
               <input type="email" placeholder="Email, e.g john.doe@example.com"
-                value={this.state.email} onChange={this.handleEmailChange} required/>
+                autoComplete="email" value={this.state.email} onChange={this.handleEmailChange} required/>
             </div>
             <div  className="panel-form-row">
-              <input type="text" placeholder="Full name, e.g. John Doe"
+              <input type="text" placeholder="Full name, e.g. John Doe" autoComplete="name"
                 value={this.state.fn} onChange={this.handleFnChange} required/>
             </div>
             <div className="dialog-buttons">
@@ -1789,7 +1789,10 @@
         var contacts = [];
         var totalUnread = 0;
         Tinode.getMeTopic().contacts(function(c) {
-          c.unread = (c.seq - c.read) || 0;
+          // Force to integers;
+          c.seq = ~~c.seq;
+          c.read = ~~c.read;
+          c.unread = c.seq - c.read;
           totalUnread += c.unread;
           contacts.push(c);
         }, this);

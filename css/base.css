@@ -469,6 +469,9 @@ table.permission-editor td.checkbox {
 /* Sidepanel styles */
 .panel-title {
   font-size: 1.4rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .caption-panel {
@@ -477,7 +480,7 @@ table.permission-editor td.checkbox {
   flex: none;
   padding: 0.5rem;
   height: 4rem;
-
+  white-space: nowrap;
   box-shadow: 0 1px 2px gray;
   z-index: 1; /* otherwise the shadow becomes invisible */
 }
@@ -643,6 +646,7 @@ table.permission-editor td.checkbox {
 .contact-box .contact-comment {
   text-overflow: ellipsis;
   overflow: hidden;
+  white-space: nowrap;
   font-weight: lighter;
 }
 
