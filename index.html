@@ -36,7 +36,7 @@
 
     // Sound to play on message received.
     var POP_SOUND = new Audio('audio/msg.mp3');
-    
+
     // API key. Use https://github.com/tinode/chat/tree/master/keygen to generate your own
     var API_KEY = "AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K";
 
@@ -1754,10 +1754,12 @@
           // New message received
           // Skip update if the topic is currently open, otherwise the badge will annoyingly flash.
           if (this.props.topicSelected !== cont.topic) {
-            POP_SOUND.play();
+            // Disable sound for now. Need to add a config option.
+            // POP_SOUND.play();
             this.resetContactList();
           } else if (document.hidden) {
-            POP_SOUND.play();
+            // Disable sound for now.
+            // POP_SOUND.play();
           }
         } else if (what === "recv") {
           // Explicitly ignoring "recv" -- it causes no visible updates to contact list.
