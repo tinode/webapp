@@ -972,7 +972,7 @@
             <div className="avatar-box">
               <LetterTile
                 topic={sub.user}
-                avatar={makeImageUrl(sub.public ? sub.public.photo : null)}
+                avatar={makeImageUrl(sub.public ? sub.public.photo : null) || true}
                 title={sub.public ? sub.public.fn : null}
                 key={sub.user} />
             </div>
