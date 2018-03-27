@@ -2992,6 +2992,10 @@
             scrollPosition: 0
           });
           tryToResubscribe = true;
+
+          // The user switched to the new topic before the timer for
+          // the previous topic has triggered, kill it.
+          clearTimeout(this.readTimer);
         }
 
         if (!topic.isSubscribed() && tryToResubscribe) {
@@ -3006,10 +3010,6 @@
               instance.props.onError(err.message, "err");
             });
         }
-
-        // The user switched to the new topic before the timer for
-        // the previous topic has triggered, kill it.
-        clearTimeout(this.readTimer);
       },
 
       leave: function() {
@@ -3610,7 +3610,7 @@
       handleConnected: function() {
         var params = Tinode.getServerInfo();
         this.setState({
-          serverVersion: params.ver + " (" + (params.build ? params.build : "none") + ")"
+          serverVersion: params.ver + " " + (params.build ? params.build : "none") + "; "
         });
         this.doLogin(this.state.login, this.state.password);
       },
