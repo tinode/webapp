@@ -913,7 +913,7 @@
           if (this.props.onEnter) {
             this.props.onEnter(this.state.input);
           }
-        } else if (e.keyCode === 27) {
+        } else if (e.key === 'Escape') {
           if (this.props.onCancel) {
             this.props.onCancel();
           }
@@ -1643,6 +1643,7 @@
                 avatarDisabled={true}
                 prompt={this.state.noTagsMessage}
                 onEnter={this.handleAddTag}
+                onCancel={this.handleCancel}
                 onChipRemoved={this.handleRemoveTag}
                 filterFunc={this.handleTagInput} />
               {this.props.onSubmit || this.props.onCancel ?
