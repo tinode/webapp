@@ -2089,8 +2089,8 @@
           this.props.onCreateTopic(sel, undefined);
         }
       },
-      handleNewGroupSubmit: function(name, dataUrl, priv) {
-        this.props.onCreateTopic(undefined, vcard(name, dataUrl), priv);
+      handleNewGroupSubmit: function(name, dataUrl, priv, tags) {
+        this.props.onCreateTopic(undefined, vcard(name, dataUrl), priv, tags);
       },
       handleGroupByID: function(topicName) {
         this.props.onCreateTopic(topicName);
@@ -2149,14 +2149,15 @@
       handleImageChanged: function(img) {
         this.setState({imageDataUrl: img});
       },
-      handleTagsUpdated: function(tags) {
+      handleTagsChanged: function(tags) {
         this.setState({tags: tags});
       },
       handleSubmit: function(e) {
         e.preventDefault();
         if (this.state.fn && this.state.fn.trim()) {
           this.props.onSubmit(this.state.fn.trim(),
-            this.state.imageDataUrl, this.state.private.trim());
+            this.state.imageDataUrl, this.state.private.trim(),
+            this.state.tags);
         }
       },
       render: function() {
@@ -2181,8 +2182,9 @@
                 onImageChanged={this.handleImageChanged} />
             </div>
             <TagManager
-              tags={this.state.tags}
+              tags={[]}
               activated={true}
+              onTagsChanged={this.handleTagsChanged}
               title="Optional tags (search and discovery)" />
             <div className="dialog-buttons">
               <button className={submitClasses}>Create</button>
@@ -3887,13 +3889,13 @@
         this.setState({sidePanelSelected: 'new-topic'});
       },
       // Create of a new topic. New P2P topic requires peer's name.
-      handleNewTopicRequest: function(peerName, pub, priv) {
+      handleNewTopicRequest: function(peerName, pub, priv, tags) {
         var instance = this;
         var topic = peerName ? Tinode.newTopicWith(peerName) : Tinode.newTopic();
         var query = topic.startMetaQuery().withDesc().withSub().withData();
         var setParams;
         if (!peerName) {
-          setParams = {desc: {public: pub, private: priv}};
+          setParams = {desc: {public: pub, private: priv}, tags: tags};
         }
 
         topic.subscribe(query.build(), setParams).then(function() {
