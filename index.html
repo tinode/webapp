@@ -1449,14 +1449,6 @@
         this.props.onSubmit(null, vcard(this.state.fullName, img));
       },
 
-      handleShowTagManager: function() {
-        this.setState({showTagManager: true});
-      },
-
-      handleHideTagManager: function() {
-        this.setState({showTagManager: false});
-      },
-
       handleTagsUpdated: function(tags) {
         this.setState({showTagManager: false});
         // Check if tags have actually changed.
@@ -1464,6 +1456,10 @@
           return;
         }
         this.props.onUpdateTags(tags);
+      },
+
+      handleHideTagManager: function() {
+        // do nothing. Needed to enable Cancel button in tag manager.
       },
 
       render: function() {
@@ -1515,20 +1511,12 @@
               </div>
             </div>
             <div className="hr" />
-            {this.state.showTagManager ?
-              <TagManager
-                tags={this.state.tags}
-                onSubmit={this.handleTagsUpdated}
-                onCancel={this.handleHideTagManager} />
-              :
-              <div className="panel-form-column">
-                <div><label className="small">Tags (user discovery):</label></div>
-                <a href="#" className="flat-button" onClick={this.handleShowTagManager}>
-                  <i className="material-icons">edit</i> Manage tags
-                </a>
-                <span>{tags}</span>
-              </div>
-            }
+            <TagManager
+              title="Tags (user discovery)"
+              activated={false}
+              tags={this.state.tags}
+              onSubmit={this.handleTagsUpdated}
+              onCancel={this.handleHideTagManager} />
           </div>
         );
       }
@@ -1539,26 +1527,15 @@
     var TagManager = React.createClass({
       getInitialState: function() {
         return {
-          tags: this.wrapTags(this.props.tags),
+          tags: this.props.tags,
           tagInput: '',
+          activated: this.props.activated,
           noTagsMessage: 'Add some tags'
         };
       },
 
-      wrapTags: function(tags) {
-        var wrapped = [];
-        tags.map(function(tag) {
-          wrapped.push({user: tag});
-        });
-        return wrapped;
-      },
-
-      unwrapTags: function(tags) {
-        var unwrapped = [];
-        tags.map(function(tag) {
-          unwrapped.push(tag.user);
-        });
-        return unwrapped;
+      handleShowTagManager: function() {
+        this.setState({activated: true});
       },
 
       handleTagInput: function(text) {
@@ -1579,8 +1556,11 @@
         tag = tag.trim();
         if (tag.length > 0) {
           var tags = this.state.tags.slice(0);
-          tags.push({user: tag});
+          tags.push(tag);
           this.setState({tags: tags, tagInput: ''});
+        }
+        if (this.props.onTagsChanged) {
+          this.props.onTagsChanged(tags);
         }
       },
 
@@ -1588,38 +1568,69 @@
         var tags = this.state.tags.slice(0);
         tags.splice(index, 1);
         this.setState({tags: tags});
+        if (this.props.onTagsChanged) {
+          this.props.onTagsChanged(tags);
+        }
       },
 
       handleSubmit: function() {
-        var tags = this.unwrapTags(this.state.tags);
+        var tags = this.state.tags.slice(0);
         var inp = this.state.tagInput.trim();
         if (inp.length > 0) {
           tags.push(inp);
         }
         this.props.onSubmit(tags);
+        this.setState({activated: false, tags: tags});
       },
 
       handleCancel: function() {
+        this.setState({activated: false, tags: this.props.tags});
         this.props.onCancel();
       },
 
       render: function() {
+        var tags = [];
+        if (this.state.activated) {
+          this.state.tags.map(function(tag) {
+            tags.push({user: tag});
+          });
+        } else {
+          this.state.tags.map(function(tag) {
+            tags.push(<span className="badge" key={tags.length}>{tag}</span>);
+          });
+          if (tags.length == 0) {
+            tags = <i>No tags defined. Add some.</i>;
+          }
+        }
         return (
-          <div id="tag-manager">
+          <div className="panel-form-column">
             <div className="panel-form-row">
-              <label className="small">Tags (user discovery)</label>
+              <label className="small">{this.props.title}</label>
             </div>
-            <ChipInput
-              chips={this.state.tags}
-              avatarDisabled={true}
-              prompt={this.state.noTagsMessage}
-              onEnter={this.handleAddTag}
-              onChipRemoved={this.handleRemoveTag}
-              filterFunc={this.handleTagInput} />
-            <div id="tag-manager-buttons" className="panel-form-row">
-              <button className="blue" onClick={this.handleSubmit}>OK</button>
-              <button className="white" onClick={this.handleCancel}>Cancel</button>
-            </div>
+            {this.state.activated ?
+              <div>
+              <ChipInput
+                chips={tags}
+                avatarDisabled={true}
+                prompt={this.state.noTagsMessage}
+                onEnter={this.handleAddTag}
+                onChipRemoved={this.handleRemoveTag}
+                filterFunc={this.handleTagInput} />
+              {this.props.onSubmit || this.props.onCancel ?
+                <div id="tag-manager-buttons" className="panel-form-row">
+                  <button className="blue" onClick={this.handleSubmit}>OK</button>
+                  <button className="white" onClick={this.handleCancel}>Cancel</button>
+                </div>
+              : null}
+              </div>
+            :
+              <div>
+                <a href="#" className="flat-button" onClick={this.handleShowTagManager}>
+                  <i className="material-icons">edit</i> Manage tags
+                </a>
+                <span>{tags}</span>
+              </div>
+          }
           </div>
         );
       }
@@ -2020,12 +2031,14 @@
             <div className="panel-form-row">
               <label className="small">Group members</label>
             </div>
-            <ChipInput
+            <div className="panel-form-row">
+              <ChipInput
                 chips={this.state.members}
                 required={this.props.requiredMember}
                 prompt="add members"
                 filterFunc={this.handleContactFilter}
                 onChipRemoved={this.handleMemberRemoved} />
+            </div>
             <div className="panel-form-row">
               <label className="small">All contacts</label>
             </div>
@@ -2123,7 +2136,8 @@
         return {
           fn: '', // full/formatted name
           private: '',
-          imageDataUrl: null
+          imageDataUrl: null,
+          tags: []
         };
       },
       handleFnChange: function(e) {
@@ -2134,6 +2148,9 @@
       },
       handleImageChanged: function(img) {
         this.setState({imageDataUrl: img});
+      },
+      handleTagsUpdated: function(tags) {
+        this.setState({tags: tags});
       },
       handleSubmit: function(e) {
         e.preventDefault();
@@ -2148,7 +2165,7 @@
           submitClasses += " disabled";
         }
         return (
-          <div className="panel-form">
+          <form className="panel-form" onSubmit={this.handleSubmit}>
             <div className="panel-form-row">
               <div className="panel-form-column">
                 <label className="small" htmlFor="new-topic-fn">Group name</label>
@@ -2163,10 +2180,14 @@
                 onError={this.props.onError}
                 onImageChanged={this.handleImageChanged} />
             </div>
+            <TagManager
+              tags={this.state.tags}
+              activated={true}
+              title="Optional tags (search and discovery)" />
             <div className="dialog-buttons">
-              <button className={submitClasses} onClick={this.handleSubmit}>Create</button>
+              <button className={submitClasses}>Create</button>
             </div>
-          </div>
+          </form>
         );
       }
     });

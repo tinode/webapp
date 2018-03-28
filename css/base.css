@@ -744,6 +744,7 @@ table.permission-editor td.checkbox {
 .panel-form {
   display: flex;
   flex-direction: column;
+  padding: 0;
 }
 
 .panel-form-row {
@@ -1574,12 +1575,10 @@ ul.tabbar li.active > a:after {
   border-bottom: 1px solid #ccc;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
   transition: all 0.1s ease-in-out;
-  width: 100%;
   max-height: 10rem;
   min-height: 4rem;
   overflow-y: scroll;
-  margin: 0.25rem 0rem 0.25rem 0rem;
-  padding: 0 0 0.5rem 0.5rem;
+  margin: 0.25rem 0 0.25rem 0;
   outline: none;
   color: #666;
   align-items: center;
