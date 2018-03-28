@@ -913,6 +913,10 @@
           if (this.props.onEnter) {
             this.props.onEnter(this.state.input);
           }
+        } else if (e.keyCode === 27) {
+          if (this.props.onCancel) {
+            this.props.onCancel();
+          }
         }
       },
 
@@ -1170,6 +1174,9 @@
         e.target.value = '';
       },
       render: function() {
+        // Randomize id value in case more than one AvatarUpload is shown
+        // at the same time.
+        var randId = "file-input-avatar-" + (Math.random() + '').substr(2);
         return (
           <div className="avatar-upload">
             {this.state.dataUrl ?
@@ -1181,10 +1188,10 @@
                 :
                 <div className="blank">128&times;128</div>}
             {this.props.readOnly ? null :
-              <input type="file" id="file-input-avatar" className="inputfile hidden"
+              <input type="file" id={randId} className="inputfile hidden"
                 accept="image/*" onChange={this.handleFileUpload} />}
             {this.props.readOnly ? null :
-            <label htmlFor="file-input-avatar" className="round">
+            <label htmlFor={randId} className="round">
               <i className="material-icons">file_upload</i>
             </label>}
           </div>
@@ -1448,8 +1455,7 @@
           auth: defacs.auth,
           anon: defacs.anon,
           tags: me.tags(),
-          previousOnTags: me.onTagsUpdated,
-          showTagManager: false
+          previousOnTags: me.onTagsUpdated
         });
         me.onTagsUpdated = this.tnNewTags;
       },
@@ -1477,16 +1483,11 @@
       },
 
       handleTagsUpdated: function(tags) {
-        this.setState({showTagManager: false});
         // Check if tags have actually changed.
         if (arrayEqual(this.state.tags.slice(0), tags.slice(0))) {
           return;
         }
         this.props.onUpdateTags(tags);
-      },
-
-      handleHideTagManager: function() {
-        // do nothing. Needed to enable Cancel button in tag manager.
       },
 
       render: function() {
@@ -1542,8 +1543,7 @@
               title="Tags (user discovery)"
               activated={false}
               tags={this.state.tags}
-              onSubmit={this.handleTagsUpdated}
-              onCancel={this.handleHideTagManager} />
+              onSubmit={this.handleTagsUpdated} />
           </div>
         );
       }
@@ -1607,12 +1607,14 @@
           tags.push(inp);
         }
         this.props.onSubmit(tags);
-        this.setState({activated: false, tags: tags});
+        this.setState({activated: false, tagInput: '', tags: tags});
       },
 
       handleCancel: function() {
-        this.setState({activated: false, tags: this.props.tags});
-        this.props.onCancel();
+        this.setState({activated: false, tagInput: '', tags: this.props.tags});
+        if (this.props.onCancel) {
+          this.props.onCancel();
+        }
       },
 
       render: function() {
@@ -2369,6 +2371,7 @@
           auth: null,
           anon: null,
           contactList: [],
+          tags: [],
           showMemberPanel: this.props.showMemberPanel,
           showPermissionEditorFor: undefined,
           moreInfoExpanded: false
@@ -2395,11 +2398,24 @@
             instance.previousSubsUpdated(subs);
           }
         }
+
         this.resetDesc(topic);
         this.resetSubs(topic);
 
         if (topic.getType() === "grp") {
           this.props.onInitFind();
+
+          this.previousTagsUpdated = topic.onTagsUpdated;
+          topic.onTagsUpdated = function(tags) {
+            instance.onTagsUpdated(tags);
+            if (instance.previousTagsUpdated) {
+              instance.previousTagsUpdated(tags);
+            }
+          }
+
+          this.setState({tags: topic.tags()});
+        } else {
+          this.previousTagsUpdated = undefined;
         }
       },
 
@@ -2410,6 +2426,7 @@
         }
         topic.onMetaDesc = this.previousMetaDesc;
         topic.onSubsUpdated = this.previousSubsUpdated;
+        topic.onTagsUpdated = this.previousTagsUpdated;
       },
 
       resetSubs: function(topic) {
@@ -2467,6 +2484,10 @@
           return;
         }
         this.resetSubs(topic);
+      },
+
+      onTagsUpdated: function(tags) {
+        this.setState({tags: tags});
       },
 
       handleFullNameUpdate: function(fn) {
@@ -2615,6 +2636,9 @@
       },
       handleMoreInfo: function(open) {
         this.setState({moreInfoExpanded: open});
+      },
+      handleTagsUpdated: function(tags) {
+        this.props.onTopicTagsUpdate(this.props.topic, tags);
       },
       handleContextMenu: function(params) {
         var instance = this;
@@ -2774,6 +2798,12 @@
                   null
                   }
                 </div>
+                <div className="hr" />
+                <TagManager
+                  title="Tags"
+                  tags={this.state.tags}
+                  activated={false}
+                  onSubmit={this.handleTagsUpdated} />
                 <div className="hr" />
                 {this.state.groupTopic ?
                   <div className="panel-form-column">
@@ -3989,6 +4019,16 @@
         }
       },
 
+      handleTagsUpdated: function(topicName, tags) {
+        var topic = Tinode.getTopic(topicName);
+        if (topic) {
+          var instance = this;
+          topic.setMeta({tags: tags}).catch(function(err) {
+            instance.handleError(err.message, "err");
+          });
+        }
+      },
+
       handleLeaveUnsubRequest: function(topicName) {
         var topic = Tinode.getTopic(topicName);
         if (!topic) {
@@ -4181,6 +4221,7 @@
                 onMemberUpdateRequest={this.handleMemberUpdateRequest}
                 onLeaveTopic={this.handleLeaveUnsubRequest}
                 onAddMember={this.handleManageGroupMembers}
+                onTopicTagsUpdate={this.handleTagsUpdated}
                 onInitFind={this.tnInitFind}
                 onError={this.handleError}
 
