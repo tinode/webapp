@@ -528,6 +528,33 @@
       }
     }
 
+    // Toggle [Title text >] -> [Title text v]
+    class MoreButton extends React.PureComponent {
+      constructor(props) {
+        super(props);
+
+        this.state = {
+          open: this.props.open
+        };
+        this.handleToggle = this.handleToggle.bind(this);
+      }
+
+      handleToggle() {
+        var open = !this.state.open;
+        this.setState({open: open});
+        if (this.props.onToggle) {
+          this.props.onToggle(open);
+        }
+      }
+
+      render() {
+        return (<label className="small" onClick={this.handleToggle}>{this.props.title}...
+          {this.state.open ? <i className="material-icons">expand_more</i> :
+            <i className="material-icons">chevron_right</i>}
+          </label>);
+      }
+    }
+
     /* BEGIN Lettertile: Avatar box: either a bitmap or a letter tile or a stock icon. */
     class LetterTile extends React.PureComponent {
       render() {
@@ -2343,7 +2370,8 @@
           anon: null,
           contactList: [],
           showMemberPanel: this.props.showMemberPanel,
-          showPermissionEditorFor: undefined
+          showPermissionEditorFor: undefined,
+          moreInfoExpanded: false
         };
       },
 
@@ -2585,7 +2613,9 @@
       handleMemberSelected: function(uid) {
         this.setState({selectedContact: uid});
       },
-
+      handleMoreInfo: function(open) {
+        this.setState({moreInfoExpanded: open});
+      },
       handleContextMenu: function(params) {
         var instance = this;
         var topic = Tinode.getTopic(this.props.topic);
@@ -2675,64 +2705,74 @@
                 <div className="hr" />
                 <div className="panel-form-column">
                   <div className="panel-form-row">
-                    <label>Address:</label>
-                    <tt>{this.state.address}</tt>
-                  </div>
-                  <div className="panel-form-row">
                     <label>Muted:</label>
                     <CheckBox name="P" checked={this.state.muted}
                         onChange={this.handleMuted} />
                   </div>
-                  {this.state.groupTopic ?
+                  <MoreButton
+                    title="More"
+                    open={this.state.moreInfoExpanded}
+                    onToggle={this.handleMoreInfo} />
+                  {this.state.moreInfoExpanded ?
+                    <div className="panel-form-column">
                     <div className="panel-form-row">
-                      <label>Your permissions:</label>
-                      <tt className="clickable"
-                        onClick={this.handleLaunchPermissionsEditor.bind(this, 'want')}>
-                        {this.state.access}
-                      </tt>
+                      <label>Address:</label>
+                      <tt>{this.state.address}</tt>
                     </div>
-                    :
-                    <div>
-                      <div><label className="small">Permissions:</label></div>
-                      <div className="quoted">
-                        <div>Yours: &nbsp;<tt className="clickable"
+                    {this.state.groupTopic ?
+                      <div className="panel-form-row">
+                        <label>Your permissions:</label>
+                        <tt className="clickable"
                           onClick={this.handleLaunchPermissionsEditor.bind(this, 'want')}>
                           {this.state.access}
-                        </tt></div>
-                        <div>{this.state.fullName}&prime;s: &nbsp;<tt className="clickable"
-                          onClick={this.handleLaunchPermissionsEditor.bind(this, 'given')}>
-                          {this.state.modeGiven2}
-                        </tt></div>
+                        </tt>
                       </div>
-                    </div>
-                  }
-                  {this.state.sharer && (this.state.auth || this.state.anon) ?
-                    <div>
-                      <div><label className="small">Default access mode:</label></div>
-                      <div className="quoted">
-                        <div>Auth: {this.state.admin ?
-                          <tt className="clickable"
-                            onClick={this.handleLaunchPermissionsEditor.bind(this, 'auth')}>
-                            {this.state.auth}
-                          </tt>
-                          :
-                          <tt>{this.state.auth}</tt>
-                        }
-                        </div>
-                        <div>Anon: {this.state.admin ?
-                          <tt className="clickable"
-                            onClick={this.handleLaunchPermissionsEditor.bind(this, 'anon')}>
-                            {this.state.anon}
-                          </tt>
-                          :
-                          <tt>{this.state.anon}</tt>
-                        }
+                      :
+                      <div>
+                        <div><label className="small">Permissions:</label></div>
+                        <div className="quoted">
+                          <div>Yours: &nbsp;<tt className="clickable"
+                            onClick={this.handleLaunchPermissionsEditor.bind(this, 'want')}>
+                            {this.state.access}
+                          </tt></div>
+                          <div>{this.state.fullName}&prime;s: &nbsp;<tt className="clickable"
+                            onClick={this.handleLaunchPermissionsEditor.bind(this, 'given')}>
+                            {this.state.modeGiven2}
+                          </tt></div>
                         </div>
                       </div>
+                    }
+                    {this.state.sharer && (this.state.auth || this.state.anon) ?
+                      <div>
+                        <div><label className="small">Default access mode:</label></div>
+                        <div className="quoted">
+                          <div>Auth: {this.state.admin ?
+                            <tt className="clickable"
+                              onClick={this.handleLaunchPermissionsEditor.bind(this, 'auth')}>
+                              {this.state.auth}
+                            </tt>
+                            :
+                            <tt>{this.state.auth}</tt>
+                          }
+                          </div>
+                          <div>Anon: {this.state.admin ?
+                            <tt className="clickable"
+                              onClick={this.handleLaunchPermissionsEditor.bind(this, 'anon')}>
+                              {this.state.anon}
+                            </tt>
+                            :
+                            <tt>{this.state.anon}</tt>
+                          }
+                          </div>
+                        </div>
+                      </div>
+                      :
+                      null
+                    }
                     </div>
                   :
                   null
-                }
+                  }
                 </div>
                 <div className="hr" />
                 {this.state.groupTopic ?

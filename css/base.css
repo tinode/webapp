@@ -765,13 +765,17 @@ table.permission-editor td.checkbox {
   padding: 0.5rem 0.75rem;
   line-height: 1.5;
 }
+
 /* Make sure padding is only applied at
    the top level panel */
-.panel-form-row > .panel-form-column {
+.panel-form-row > .panel-form-column,
+.panel-form-column > .panel-form-column {
     padding: 0!important;
     flex-grow: 1;
 }
-.panel-form-column > .panel-form-row {
+.panel-form-column > .panel-form-row,
+.panel-form-row > .panel-form-row
+ {
     padding: 0!important;
 }
 
