@@ -2639,7 +2639,9 @@
         this.setState({moreInfoExpanded: open});
       },
       handleTagsUpdated: function(tags) {
-        this.props.onTopicTagsUpdate(this.props.topic, tags);
+        if (!arrayEqual(this.state.tags.slice(0), tags.slice(0))) {
+          this.props.onTopicTagsUpdate(this.props.topic, tags);
+        }
       },
       handleContextMenu: function(params) {
         var instance = this;
