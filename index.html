@@ -3974,6 +3974,7 @@
         topic.subscribe(query.build(), setParams).then(function() {
           instance.setState({
             topicSelected: topic.name,
+            topicSelectedOnline: false,
             sidePanelSelected: 'contacts',
             mobilePanel: 'topic-view',
             showInfoPanel: false,
