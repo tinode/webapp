@@ -751,8 +751,10 @@
       },
 
       handleSubmit: function() {
-        var mode = this.state.mode || "N";
-        if (mode !== this.props.mode) {
+        // Normalize string, otherwise cannot check if mode has changed.
+        var mode = (this.state.mode || "N").split('').sort().join('');
+        var before = (this.props.mode || "N").split('').sort().join('')
+        if (mode !== before) {
           this.props.onSubmit(mode);
         } else {
           this.props.onCancel();
@@ -1813,6 +1815,9 @@
           }
           // Redraw without the deleted topic.
           this.resetContactList();
+        } else if (what === "acs") {
+          // Permissions changed.
+          console.log("app: permissions changed");
         } else {
           // TODO(gene): handle other types of notifications:
           // * ua -- user agent changes (may display a pictogram for mobile/desktop)
