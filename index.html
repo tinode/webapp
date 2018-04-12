@@ -1373,9 +1373,11 @@
 
               this.props.state === 'contacts' ?
               <ContactsView
+                connected={this.props.connected}
                 topicSelected={this.props.topicSelected}
                 showContextMenu={this.props.showContextMenu}
                 onTopicSelected={this.props.onTopicSelected}
+                onAcsChange={this.props.onAcsChange}
                 onOnlineChange={this.props.onOnlineChange} /> :
 
               this.props.state === 'new-topic' ?
@@ -1676,7 +1678,7 @@
         e.preventDefault();
         e.stopPropagation();
         if (this.props.onSelected) {
-          this.props.onSelected(this.props.item, this.props.index, this.props.now);
+          this.props.onSelected(this.props.item, this.props.index, this.props.now, this.props.acs);
         }
       },
 
@@ -1704,8 +1706,8 @@
             count ++;
           });
         }
-        if (this.props.mode) {
-          badges.push(<span className="badge" key="mode">{this.props.mode}</span>);
+        if (this.props.showMode && this.props.acs) {
+          badges.push(<span className="badge" key="mode">{this.props.acs.getMode()}</span>);
         }
 
         return (
@@ -1816,8 +1818,11 @@
           // Redraw without the deleted topic.
           this.resetContactList();
         } else if (what === "acs") {
-          // Permissions changed.
-          console.log("app: permissions changed");
+          // Permissions changed. If it's for the currently selected topic,
+          // update the views.
+          if (this.props.topicSelected === cont.topic) {
+            this.props.onAcsChange(cont.acs);
+          }
         } else {
           // TODO(gene): handle other types of notifications:
           // * ua -- user agent changes (may display a pictogram for mobile/desktop)
@@ -1859,6 +1864,7 @@
       render: function() {
         return (
           <ContactList
+            connected={this.props.connected}
             contacts={this.state.contactList}
             emptyListMessage={<span>You have no chats<br />¯\_(ツ)_/¯</span>}
             topicSelected={this.props.topicSelected}
@@ -1900,11 +1906,7 @@
             var selected = showCheckmark ?
               (this.props.topicSelected.indexOf(key) > -1) :
               (this.props.topicSelected === key);
-
-            var mode = this.props.showMode && c.acs ? c.acs.getMode() : null;
-
             var badges = (key === me ? [{name:'you',color:'green'}] : null);
-
             var comment = Array.isArray(c.private) ? c.private.join(", ") : c.private;
 
             contactNodes.push(
@@ -1913,8 +1915,9 @@
                 avatar={makeImageUrl(c.public ? c.public.photo : null)}
                 comment={comment}
                 unread={this.props.showUnread ? c.unread : 0}
-                now={c.online}
-                mode={mode}
+                now={c.online && this.props.connected}
+                acs={c.acs}
+                showMode={this.props.showMode}
                 badges={badges}
                 showCheckmark={showCheckmark}
                 selected={selected}
@@ -2380,48 +2383,51 @@
           tags: [],
           showMemberPanel: this.props.showMemberPanel,
           showPermissionEditorFor: undefined,
-          moreInfoExpanded: false
+          moreInfoExpanded: false,
+          previousMetaDesc: undefined,
+          previousSubsUpdated: undefined,
+          previousTagsUpdated: undefined
         };
       },
 
       componentWillMount: function() {
-        var topic = Tinode.getTopic(this.props.topic);
+        this.initInfoView(this.props);
+      },
+
+      initInfoView: function(props) {
+        console.log("InfoView.initInfoView");
+
+        var topic = Tinode.getTopic(props.topic);
         if (!topic) {
           return;
         }
-        var instance = this;
-        this.previousMetaDesc = topic.onMetaDesc;
-        topic.onMetaDesc = function(desc) {
-          instance.onMetaDesc(desc);
-          if (instance.previousMetaDesc) {
-            instance.previousMetaDesc(desc);
-          }
-        };
-        this.previousSubsUpdated = topic.onSubsUpdated;
-        topic.onSubsUpdated = function(subs) {
-          instance.onSubsUpdated(subs);
-          if (instance.previousSubsUpdated) {
-            instance.previousSubsUpdated(subs);
-          }
-        }
 
-        this.resetDesc(topic);
-        this.resetSubs(topic);
+        this.previousMetaDesc = topic.onMetaDesc;
+        topic.onMetaDesc = this.onMetaDesc;
+
+        this.previousSubsUpdated = topic.onSubsUpdated;
+        topic.onSubsUpdated = this.onSubsUpdated;
 
         if (topic.getType() === "grp") {
-          this.props.onInitFind();
-
           this.previousTagsUpdated = topic.onTagsUpdated;
-          topic.onTagsUpdated = function(tags) {
-            instance.onTagsUpdated(tags);
-            if (instance.previousTagsUpdated) {
-              instance.previousTagsUpdated(tags);
-            }
-          }
-
-          this.setState({tags: topic.tags()});
+          topic.onTagsUpdated = this.onTagsUpdated;
         } else {
           this.previousTagsUpdated = undefined;
+        }
+
+        this.resetInfoView(topic, props, true);
+      },
+
+      resetInfoView: function(topic, props, forced) {
+        console.log("InfoView.resetInfoView");
+
+        if (forced || this.props.topic != props.topic) {
+          this.resetDesc(topic, props);
+          this.resetSubs(topic, props);
+
+          if (topic.getType() === "grp") {
+            this.setState({tags: topic.tags()});
+          }
         }
       },
 
@@ -2435,65 +2441,90 @@
         topic.onTagsUpdated = this.previousTagsUpdated;
       },
 
-      resetSubs: function(topic) {
-        var contacts = [];
-        if (topic.getType() === "p2p") {
-          // Fetch the other party in the p2p conversation.
-          var user2 = topic.subscriber(this.props.topic);
-          this.setState({
-            modeGiven2: user2.acs.getGiven(),
-            modeWant2: user2.acs.getWant(),
-          });
-        } else {
-          topic.subscribers(function(sub){
-            contacts.push(sub);
-          }, this);
-          this.setState({
-            contactList: contacts
-          });
+      componentWillReceiveProps: function(props) {
+        console.log("InfoView.componentWillReceiveProps");
+        var topic = Tinode.getTopic(props.topic);
+        if (!topic) {
+          return;
         }
+        this.resetInfoView(topic, props);
       },
 
-      resetDesc: function(topic) {
+      resetSubs: function(topic, props) {
+        console.log("InfoView.resetSubs");
+        var newState = {contactList: []};
+        if (topic.getType() === "p2p") {
+          // Fetch the other party in the p2p conversation.
+          var user2 = topic.subscriber(props.topic);
+          newState.modeGiven2 = user2.acs.getGiven();
+          newState.modeWant2 = user2.acs.getWant();
+        }
+        topic.subscribers(function(sub){
+          newState.contactList.push(sub);
+        }, this);
+
+        this.setState(newState);
+      },
+
+      resetDesc: function(topic, props) {
+        console.log("InfoView.resetDesc");
+
         var defacs = topic.getDefaultAccess() || {};
-        var acs = topic.getAccessMode();
         this.setState({
-          owner: acs && acs.isOwner(),
-          admin: acs && acs.isAdmin(),
-          sharer: acs && (acs.isAdmin() || acs.isSharer()),
-          muted: acs && acs.isMuted(),
+          owner: props.acs.isOwner(),
+          admin: props.acs.isAdmin(),
+          sharer: (props.acs.isAdmin() || props.acs.isSharer()),
+          muted: props.acs.isMuted(),
 
           fullName: topic.public ? topic.public.fn : undefined,
           avatar: makeImageUrl(topic.public ? topic.public.photo : null),
           private: topic.private,
           address: topic.name,
           groupTopic: (topic.getType() === "grp"),
-          access: acs.getMode(),
-          modeGiven: acs.getGiven(),
-          modeWant: acs.getWant(),
+          access: props.acs.getMode(),
+          modeGiven: props.acs.getGiven(),
+          modeWant: props.acs.getWant(),
           auth: defacs.auth,
           anon: defacs.anon
         });
       },
 
       onMetaDesc: function(desc) {
+        console.log("InfoView.onMetaDesc")
         var topic = Tinode.getTopic(this.props.topic);
         if (!topic) {
           return;
         }
-        this.resetDesc(topic);
+        this.resetDesc(topic, this.props);
+
+        if (this.previousMetaDesc && this.previousMetaDesc != this.onMetaDesc) {
+          console.log("InfoView.previousMetaDesc");
+          this.previousMetaDesc(desc);
+        }
       },
 
       onSubsUpdated: function() {
+        console.log("InfoView.onSubsUpdated");
         var topic = Tinode.getTopic(this.props.topic);
         if (!topic) {
           return;
         }
-        this.resetSubs(topic);
+        this.resetSubs(topic, this.props);
+
+        if (this.previousSubsUpdated && this.previousSubsUpdated != this.onSubsUpdated) {
+          console.log("InfoView.previousSubsUpdated");
+          this.previousSubsUpdated();
+        }
       },
 
       onTagsUpdated: function(tags) {
+        console.log("InfoView.onTagsUpdated");
         this.setState({tags: tags});
+
+        if (this.previousTagsUpdated && this.previousTagsUpdated != this.onTagsUpdated) {
+          console.log("InfoView.previousTagsUpdated");
+          this.previousTagsUpdated();
+        }
       },
 
       handleFullNameUpdate: function(fn) {
@@ -3011,8 +3042,8 @@
           title: '',
           avatar: null,
           scrollPosition: 0,
-          readOnly: false,
-          writeOnly: false,
+          readOnly: this.props.acs ? !this.props.acs.isWriter() : false,
+          writeOnly: this.props.acs ? !this.props.acs.isReader() : false,
           typingIndicator: false,
           imagePreview: null
         };
@@ -3090,7 +3121,7 @@
             onlineSubs: subs,
             topic: props.topic,
             imagePreview: null,
-            scrollPosition: 0
+            scrollPosition: 0,
           });
           tryToResubscribe = true;
 
@@ -3098,6 +3129,11 @@
           // the previous topic has triggered, kill it.
           clearTimeout(this.readTimer);
         }
+
+        this.setState({
+          readOnly: props.acs ? !props.acs.isWriter() : false,
+          writeOnly: props.acs ? !props.acs.isReader() : false
+        });
 
         if (!topic.isSubscribed() && tryToResubscribe) {
           var instance = this;
@@ -3633,6 +3669,7 @@
           liveConnection: navigator.onLine,
           topicSelected: '',
           topicSelectedOnline: false,
+          topicSelectedAcs: null,
           loginDisabled: false,
           displayMobile: (window.innerWidth <= MEDIA_BREAKPOINT),
           showInfoPanel: false,
@@ -3719,7 +3756,7 @@
       doLogin: function(login, password, cred) {
         var instance = this;
         cred = cred ? Tinode.addCredential(null, cred).cred : undefined;
-        // Try to login with token. If token is not available, try password. If no password, ask for it.
+        // Try to login with login/password. If they are not available, try token. If no token, ask for login/password.
         var promise = null;
         var token = Tinode.getLoginToken();
 
@@ -3850,14 +3887,17 @@
       },
 
       // User clicked on a contact in the side panel or deleted a contact.
-      handleTopicSelected: function(topicName, unused_index, online) {
+      handleTopicSelected: function(topicName, unused_index, online, acs) {
         if (topicName) {
           // Contact selected
           this.setState({
             topicSelected: topicName,
             mobilePanel: 'topic-view',
             showInfoPanel: false,
-            topicSelectedOnline: online
+            topicSelectedOnline: online,
+            topicSelectedAcs: acs,
+            sidePanelSelected: 'contacts',
+            infoPanelShowMembers: Tinode.getTopicType(topicName) === "grp"
           });
         } else {
           // Currently selected contact deleted
@@ -3865,13 +3905,20 @@
             topicSelected: null,
             mobilePanel: 'sidepanel',
             showInfoPanel: false,
-            topicSelectedOnline: false
+            topicSelectedOnline: false,
+            topicSelectedAcs: null,
+            infoPanelShowMembers: false
           });
         }
       },
 
       handleTopicSelectedOnline: function(online) {
         this.setState({topicSelectedOnline: online});
+      },
+      // Permissions of a currently selected topic have been updated by server.
+      handleTopicSelectedAcs: function(acs) {
+        console.log("update acs in MessagesView", acs);
+        this.setState({topicSelectedAcs: acs});
       },
 
       // In mobile view user requested to show sidepanel
@@ -3977,14 +4024,7 @@
         }
 
         topic.subscribe(query.build(), setParams).then(function() {
-          instance.setState({
-            topicSelected: topic.name,
-            topicSelectedOnline: false,
-            sidePanelSelected: 'contacts',
-            mobilePanel: 'topic-view',
-            showInfoPanel: false,
-            infoPanelShowMembers: peerName ? false : true
-          });
+          instance.handleTopicSelected(topic.name, undefined, false, topic.getAccessMode());
         }).catch(function(err) {
           instance.handleError(err.message, "err");
         });
@@ -4183,6 +4223,7 @@
               onNewTopic={this.handleNewTopic}
               onCancel={this.handleSidepanelCancel}
               onOnlineChange={this.handleTopicSelectedOnline}
+              onAcsChange={this.handleTopicSelectedAcs}
               onError={this.handleError}
               onValidateCredentials={this.handleValidateCredentialsRequest}
 
@@ -4196,6 +4237,7 @@
             <MessagesView
               connected={this.state.connected}
               online={this.state.topicSelectedOnline}
+              acs={this.state.topicSelectedAcs}
               displayMobile={this.state.displayMobile}
               viewportWidth={this.state.viewportWidth}
               hideSelf={this.state.displayMobile &&
@@ -4219,6 +4261,7 @@
                 displayMobile={this.state.displayMobile}
                 topic={this.state.topicSelected}
                 foundContacts={this.state.foundContacts}
+                acs={this.state.topicSelectedAcs}
                 myUserId={this.state.myUserId}
                 errorText={this.state.errorText}
                 errorLevel={this.state.errorLevel}
