@@ -2395,8 +2395,6 @@
       },
 
       initInfoView: function(props) {
-        console.log("InfoView.initInfoView");
-
         var topic = Tinode.getTopic(props.topic);
         if (!topic) {
           return;
@@ -2419,8 +2417,6 @@
       },
 
       resetInfoView: function(topic, props, forced) {
-        console.log("InfoView.resetInfoView");
-
         if (forced || this.props.topic != props.topic) {
           this.resetDesc(topic, props);
           this.resetSubs(topic, props);
@@ -2442,7 +2438,6 @@
       },
 
       componentWillReceiveProps: function(props) {
-        console.log("InfoView.componentWillReceiveProps");
         var topic = Tinode.getTopic(props.topic);
         if (!topic) {
           return;
@@ -2451,46 +2446,45 @@
       },
 
       resetSubs: function(topic, props) {
-        console.log("InfoView.resetSubs");
         var newState = {contactList: []};
         if (topic.getType() === "p2p") {
           // Fetch the other party in the p2p conversation.
           var user2 = topic.subscriber(props.topic);
           newState.modeGiven2 = user2.acs.getGiven();
           newState.modeWant2 = user2.acs.getWant();
+        } else {
+          topic.subscribers(function(sub){
+            console.log(sub);
+            newState.contactList.push(sub);
+          }, this);
         }
-        topic.subscribers(function(sub){
-          newState.contactList.push(sub);
-        }, this);
 
         this.setState(newState);
       },
 
       resetDesc: function(topic, props) {
-        console.log("InfoView.resetDesc");
-
         var defacs = topic.getDefaultAccess() || {};
+        var acs = topic.getAccessMode();
         this.setState({
-          owner: props.acs.isOwner(),
-          admin: props.acs.isAdmin(),
-          sharer: (props.acs.isAdmin() || props.acs.isSharer()),
-          muted: props.acs.isMuted(),
+          owner: acs && acs.isOwner(),
+          admin: acs && acs.isAdmin(),
+          sharer: acs && (acs.isAdmin() || acs.isSharer()),
+          muted: acs && acs.isMuted(),
 
           fullName: topic.public ? topic.public.fn : undefined,
           avatar: makeImageUrl(topic.public ? topic.public.photo : null),
           private: topic.private,
           address: topic.name,
           groupTopic: (topic.getType() === "grp"),
-          access: props.acs.getMode(),
-          modeGiven: props.acs.getGiven(),
-          modeWant: props.acs.getWant(),
+          access: acs ? acs.getMode() : undefined,
+          modeGiven: acs ? acs.getGiven() : undefined,
+          modeWant: acs ? acs.getWant() : undefined,
           auth: defacs.auth,
           anon: defacs.anon
         });
       },
 
       onMetaDesc: function(desc) {
-        console.log("InfoView.onMetaDesc")
         var topic = Tinode.getTopic(this.props.topic);
         if (!topic) {
           return;
@@ -2498,13 +2492,11 @@
         this.resetDesc(topic, this.props);
 
         if (this.previousMetaDesc && this.previousMetaDesc != this.onMetaDesc) {
-          console.log("InfoView.previousMetaDesc");
           this.previousMetaDesc(desc);
         }
       },
 
       onSubsUpdated: function() {
-        console.log("InfoView.onSubsUpdated");
         var topic = Tinode.getTopic(this.props.topic);
         if (!topic) {
           return;
@@ -2512,17 +2504,14 @@
         this.resetSubs(topic, this.props);
 
         if (this.previousSubsUpdated && this.previousSubsUpdated != this.onSubsUpdated) {
-          console.log("InfoView.previousSubsUpdated");
           this.previousSubsUpdated();
         }
       },
 
       onTagsUpdated: function(tags) {
-        console.log("InfoView.onTagsUpdated");
         this.setState({tags: tags});
 
         if (this.previousTagsUpdated && this.previousTagsUpdated != this.onTagsUpdated) {
-          console.log("InfoView.previousTagsUpdated");
           this.previousTagsUpdated();
         }
       },
@@ -3275,7 +3264,7 @@
             this.forceUpdate();
             break;
           default:
-            console.log("other change in topic: " + info.what);
+            console.log("Other change in topic: " + info.what);
         }
       },
 
@@ -3917,7 +3906,6 @@
       },
       // Permissions of a currently selected topic have been updated by server.
       handleTopicSelectedAcs: function(acs) {
-        console.log("update acs in MessagesView", acs);
         this.setState({topicSelectedAcs: acs});
       },
 
@@ -4261,7 +4249,6 @@
                 displayMobile={this.state.displayMobile}
                 topic={this.state.topicSelected}
                 foundContacts={this.state.foundContacts}
-                acs={this.state.topicSelectedAcs}
                 myUserId={this.state.myUserId}
                 errorText={this.state.errorText}
                 errorLevel={this.state.errorLevel}
