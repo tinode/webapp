@@ -1906,7 +1906,15 @@
             var selected = showCheckmark ?
               (this.props.topicSelected.indexOf(key) > -1) :
               (this.props.topicSelected === key);
-            var badges = (key === me ? [{name:'you',color:'green'}] : null);
+            var badges = [];
+            if (this.props.showMode) {
+              if (key === me) {
+                badges.push({name: 'you', color: 'green'});
+              }
+              if (c.acs && c.acs.isOwner()) {
+                badges.push({name: 'owner'});
+              }
+            }
             var comment = Array.isArray(c.private) ? c.private.join(", ") : c.private;
 
             contactNodes.push(
@@ -2454,7 +2462,6 @@
           newState.modeWant2 = user2.acs.getWant();
         } else {
           topic.subscribers(function(sub){
-            console.log(sub);
             newState.contactList.push(sub);
           }, this);
         }
