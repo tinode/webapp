@@ -2158,7 +2158,9 @@
             {this.state.tabSelected === "grp" ?
               <NewTopicView.Group onSubmit={this.handleNewGroupSubmit} /> :
               this.state.tabSelected === "byId" ?
-              <NewTopicView.ById onSubmit={this.handleGroupByID} /> :
+              <NewTopicView.ById
+                onSubmit={this.handleGroupByID}
+                onError={this.props.onError} /> :
               <div className="flex-column">
                 <NewTopicView.SearchContacts type="p2p"
                   searchQuery={this.state.searchQuery}
@@ -2301,6 +2303,8 @@
           var name = this.state.groupId.trim();
           if (name.length > 3 && (name.substr(0, 3) == 'usr' || name.substr(0, 3) == 'grp')) {
             this.props.onSubmit(name);
+          } else {
+            this.props.onError("Invalid ID", "err");
           }
         }
       },
