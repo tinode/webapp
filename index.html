@@ -1847,6 +1847,9 @@
           totalUnread += c.unread;
           contacts.push(c);
         }, this);
+        contacts.sort(function(a,b){
+          return b.touched - a.touched;
+        });
         updateFavicon(totalUnread > 0);
 
         // Sort: most recent to less recent.
