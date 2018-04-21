@@ -74,6 +74,16 @@
     var SUPPORTED_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
     var MIME_EXTENSIONS   = ['jpg',        'gif',       'png',       'svg',       'svg'];
 
+    // Helper functions for storing values in localStorage.
+    // By default localStorage can store only strings, not objects or other types.
+    Storage.prototype.setObject = function(key, value) {
+      this.setItem(key, JSON.stringify(value));
+    }
+    Storage.prototype.getObject = function(key) {
+      var value = this.getItem(key);
+      return value && JSON.parse(value);
+    }
+
     // Short representation of time in the past.
     function shortDateFormat(then) {
       var locale = window.navigator.userLanguage || window.navigator.language;
@@ -1025,6 +1035,7 @@
           login: this.props.login,
           password: '',
           hostName: this.props.serverAddress,
+          saveToken: localStorage.getObject("keep-logged-in")
         };
       },
       handleLoginChange: function(e) {
@@ -1036,6 +1047,10 @@
       handleServerAddressChange: function(name) {
         this.setState({hostName: name});
         this.props.onServerAddressChange(name);
+      },
+      handleToggleSaveToken: function() {
+        localStorage.setObject("keep-logged-in", !this.state.saveToken);
+        this.setState({saveToken: !this.state.saveToken});
       },
       handleSubmit: function(e) {
         e.preventDefault();
@@ -1061,8 +1076,15 @@
               value={this.state.password}
               onChange={this.handlePasswordChange}
               required />
-            <HostSelector serverAddress={this.props.serverAddress}
-              onServerAddressChange={this.handleServerAddressChange} />
+            <div className="panel-form-row">
+              <HostSelector serverAddress={this.props.serverAddress}
+                onServerAddressChange={this.handleServerAddressChange} />
+            </div>
+            <div className="panel-form-row">
+              <CheckBox id="save-token" name="save-token" checked={this.state.saveToken}
+                onChange={this.handleToggleSaveToken} />
+              <label forHtml="save-token">&nbsp;Keep me logged in</label>
+            </div>
             <div className="dialog-buttons">
               <button className={submitClasses} type="submit">Sign in</button>
             </div>
@@ -1368,6 +1390,7 @@
                 login={this.props.login}
                 onSubmit={this.props.onUpdateAccount}
                 onUpdateTags={this.props.onUpdateAccountTags}
+                onLogout={this.props.onLogout}
                 onCancel={this.props.onCancel}
                 onError={this.props.onError} /> :
 
@@ -1548,6 +1571,12 @@
               activated={false}
               tags={this.state.tags}
               onSubmit={this.handleTagsUpdated} />
+            <div className="hr" />
+            <div className="panel-form-column">
+              <a href="#" className="red flat-button" onClick={this.props.onLogout}>
+                <i className="material-icons">exit_to_app</i> Logout
+              </a>
+            </div>
           </div>
         );
       }
@@ -3702,6 +3731,17 @@
         Tinode.onConnect = this.handleConnected;
         Tinode.onDisconnect = this.handleDisconnect;
         this.tnSetup(this.state.serverAddress, this.state.transport);
+        var token = localStorage.getObject("auth-token");
+        if (token) {
+          // When reading from storage, date is returned as string.
+          token.expires = new Date(token.expires);
+          Tinode.setAuthToken(token);
+          console.log("read token", token);
+          Tinode.connect().catch(function(err) {
+            // Socket error
+            instance.handleError(err.message, "err");
+          });
+        }
       },
       // Setup transport (usually websocket) and server address. This will terminate connection with the server.
       tnSetup: function(serverAddress, transport) {
@@ -3761,7 +3801,7 @@
         cred = cred ? Tinode.addCredential(null, cred).cred : undefined;
         // Try to login with login/password. If they are not available, try token. If no token, ask for login/password.
         var promise = null;
-        var token = Tinode.getLoginToken();
+        var token = Tinode.getAuthToken();
 
         if (login && password) {
           this.setState({password: null});
@@ -3783,6 +3823,7 @@
             // Login failed, report error
             instance.setState({loginDisabled: false});
             instance.handleError(err.message, "err");
+            localStorage.removeItem("auth-token");
           });
         }
       },
@@ -3796,6 +3837,9 @@
 
       handleLoginSuccessful: function(instance) {
         instance.handleError("", null);
+
+        // Refresh authentication token.
+        localStorage.setObject("auth-token", Tinode.getAuthToken());
 
         // Logged in fine, subscribe to 'me' attaching callbacks from the contacts view.
         var me = Tinode.getMeTopic();
@@ -4080,6 +4124,14 @@
         }
       },
 
+      handleLogout: function() {
+        localStorage.removeItem("auth-token");
+        // Tell Tinode to close connection and clear the caches.
+        // Re-initialize state.
+        // Re-initialize Tinode.
+        console.log("Logout not fully implemented");
+      },
+
       handleLeaveUnsubRequest: function(topicName) {
         var topic = Tinode.getTopic(topicName);
         if (!topic) {
@@ -4223,6 +4275,7 @@
               onTopicSelected={this.handleTopicSelected}
               onCreateTopic={this.handleNewTopicRequest}
               onNewTopic={this.handleNewTopic}
+              onLogout={this.handleLogout}
               onCancel={this.handleSidepanelCancel}
               onOnlineChange={this.handleTopicSelectedOnline}
               onAcsChange={this.handleTopicSelectedAcs}
