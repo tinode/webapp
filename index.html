@@ -261,16 +261,22 @@
     // Parse hash as in http://www.example.com/path#hash as if it were
     // path and arguments.
     function parseUrlHash(hash) {
-      var parser = document.createElement('a');
-      parser.href = '/' + hash.substr(1);
+      // Split path from args, path -> parts[0], args->path[1]
+      var parts = hash.split('?', 2);
       var params = {};
-      parser.search.substr(1).split("&").forEach(function(part) {
-        var item = part.split("=");
-        if (item[0]) {
-          params[decodeURIComponent(item[0])] = decodeURIComponent(item[1]);
-        }
-      });
-      return {path: parser.pathname.substr(1).split("/"), params: params};
+      var path = [];
+      if (parts[0]) {
+        path = parts[0].substr(1).split("/");
+      }
+      if (parts[1]) {
+        parts[1].split("&").forEach(function(part) {
+          var item = part.split("=");
+          if (item[0]) {
+            params[decodeURIComponent(item[0])] = decodeURIComponent(item[1]);
+          }
+        });
+      }
+      return {path: path, params: params};
     }
 
     function composeUrlHash(path, params) {
@@ -1356,7 +1362,8 @@
         var title = null;
         var avatar = false;
         var onCancel = undefined;
-        switch (this.props.state) {
+        var view = this.props.state || (this.props.myUserId ? 'contacts' : 'login');
+        switch (view) {
           case 'login':
             title = "Sign In";
             break;
@@ -1368,7 +1375,7 @@
             title = "Settings";
             onCancel = this.props.onCancel;
             break;
-          case 'edit-account':
+          case 'edit':
             title = "Edit Account";
             onCancel = this.props.onCancel;
             break;
@@ -1376,11 +1383,11 @@
             title = this.props.title;
             avatar = this.props.avatar ? this.props.avatar : true;
             break;
-          case 'new-topic':
+          case 'newtpk':
             title = "Start New Chat";
             onCancel = this.props.onCancel;
             break;
-          case 'validation':
+          case 'cred':
             title = "Confirm Credentials";
             onCancel = this.props.onCancel;
             break;
@@ -1388,7 +1395,7 @@
         };
         return (
           <div id="sidepanel" className={this.props.hideSelf ? 'nodisplay' : null}>
-            <SideNavbar state={this.props.state}
+            <SideNavbar state={view}
               title={title} avatar={avatar}
               myUserId={this.props.myUserId}
               onSignUp={this.props.onSignUp}
@@ -1401,25 +1408,25 @@
               text={this.props.errorText}
               onClearError={this.props.onError} />
 
-            {this.props.state === 'login' ?
+            {view === 'login' ?
               <LoginView login={this.props.login}
                 disabled={this.props.loginDisabled}
                 serverAddress={this.props.serverAddress}
                 onLogin={this.handleLoginRequested}
                 onServerAddressChange={this.props.onConnectionSettings} /> :
 
-              this.props.state === 'register' ?
+              view === 'register' ?
               <CreateAccountView
                 onCreateAccount={this.props.onCreateAccount}
                 onCancel={this.props.onCancel}
                 onError={this.props.onError} /> :
 
-              this.props.state === 'settings' ?
+              view === 'settings' ?
               <SettingsView onCancel={this.props.onCancel}
                 onUpdate={this.props.onConnectionSettings}
                 /> :
 
-              this.props.state === 'edit-account' ?
+              view === 'edit' ?
               <EditAccountView
                 login={this.props.login}
                 onSubmit={this.props.onUpdateAccount}
@@ -1428,7 +1435,7 @@
                 onCancel={this.props.onCancel}
                 onError={this.props.onError} /> :
 
-              this.props.state === 'contacts' ?
+              view === 'contacts' ?
               <ContactsView
                 connected={this.props.connected}
                 topicSelected={this.props.topicSelected}
@@ -1437,7 +1444,7 @@
                 onAcsChange={this.props.onAcsChange}
                 onOnlineChange={this.props.onOnlineChange} /> :
 
-              this.props.state === 'new-topic' ?
+              view === 'newtpk' ?
               <NewTopicView
                 contactsSearchQuery={this.props.contactsSearchQuery}
                 foundContacts={this.props.foundContacts}
@@ -1446,7 +1453,7 @@
                 onCreateTopic={this.props.onCreateTopic}
                 onError={this.props.onError} /> :
 
-              this.props.state === 'validation' ?
+              view === 'cred' ?
               <ValidationView
                 onSubmit={this.props.onValidateCredentials}
                 validation={this.props.validation}
@@ -2194,17 +2201,21 @@
       },
       handleTabClick: function(e) {
         e.preventDefault();
+        window.location.hash = addParamToHash(window.location.hash, 'tab', e.currentTarget.dataset.id);
         this.setState({tabSelected: e.currentTarget.dataset.id, contactSelected: null});
       },
       handleContactSelected: function(sel) {
         if (this.state.tabSelected === "p2p") {
+          window.location.hash = removeParamFromHash(window.location.hash, 'tab');
           this.props.onCreateTopic(sel, undefined);
         }
       },
       handleNewGroupSubmit: function(name, dataUrl, priv, tags) {
+        window.location.hash = removeParamFromHash(window.location.hash, 'tab');
         this.props.onCreateTopic(undefined, vcard(name, dataUrl), priv, tags);
       },
       handleGroupByID: function(topicName) {
+        window.location.hash = removeParamFromHash(window.location.hash, 'tab');
         this.props.onCreateTopic(topicName);
       },
       render: function() {
@@ -2217,13 +2228,13 @@
               <li className={this.state.tabSelected === "grp" ? "active" : null}>
                 <a href="javascript:;" data-id="grp" onClick={this.handleTabClick}>group</a>
               </li>
-              <li className={this.state.tabSelected === "byId" ? "active" : null}>
+              <li className={this.state.tabSelected === "byid" ? "active" : null}>
                 <a href="javascript:;" data-id="byId" onClick={this.handleTabClick}>by id</a>
               </li>
             </ul>
             {this.state.tabSelected === "grp" ?
               <NewTopicView.Group onSubmit={this.handleNewGroupSubmit} /> :
-              this.state.tabSelected === "byId" ?
+              this.state.tabSelected === "byid" ?
               <NewTopicView.ById
                 onSubmit={this.handleGroupByID}
                 onError={this.props.onError} /> :
@@ -3771,7 +3782,6 @@
           // When reading from storage, date is returned as string.
           token.expires = new Date(token.expires);
           Tinode.setAuthToken(token);
-          console.log("read token", token);
           Tinode.connect().catch(function(err) {
             // Socket error
             instance.handleError(err.message, "err");
@@ -3864,9 +3874,9 @@
       },
 
       handleCredentialsRequest: function(params) {
-        window.location.hash = "validation/" + this.state.topicSelected + "/" + params.cred;
+        window.location.hash = composeUrlHash(["cred", this.state.topicSelected], {cred: params.cred});
         this.setState({
-          sidePanelSelected: 'validation',
+          sidePanelSelected: 'cred',
           validation: params.cred
         });
       },
@@ -3883,7 +3893,7 @@
         window.location.hash = "";
         instance.setState({
           connected: true,
-          sidePanelSelected: "contacts",
+          sidePanelSelected: '',
           myUserId: Tinode.getCurrentUserID()
         });
         // Subscribe, fetch topic desc, the list of subscriptions. Messages are not fetched.
@@ -3975,7 +3985,9 @@
         if (topicName) {
           // Contact selected
           if (this.state.topicSelected != topicName) {
-            window.location.hash = this.state.sidePanelSelected + "/" + topicName;
+            var parsed = parseUrlHash(window.location.hash);
+            parsed.path[1] = topicName;
+            window.location.hash = composeUrlHash(parsed.path, parsed.params);
           }
           this.setState({
             topicSelected: topicName,
@@ -3983,13 +3995,14 @@
             showInfoPanel: false,
             topicSelectedOnline: online,
             topicSelectedAcs: acs,
-            sidePanelSelected: 'contacts',
+            sidePanelSelected: '',
             infoPanelShowMembers: Tinode.getTopicType(topicName) === "grp"
           });
         } else {
           if (this.state.topicSelected) {
-            console.log("topic deleted");
-            window.history.replaceState({}, "", this.state.sidePanelSelected);
+            var parsed = parseUrlHash(window.location.hash);
+            parsed.path[1] = '';
+            window.history.replaceState({}, "", composeUrlHash(parsed.path, parsed.params));
           }
           // Currently selected contact deleted
           this.setState({
@@ -4039,7 +4052,9 @@
       },
       // User chose a Sign Up menu item.
       handleNewAccount: function() {
-        window.location.hash = "register";
+        var parsed = parseUrlHash(window.location.hash);
+        parsed.path[0] = 'register';
+        window.location.hash = composeUrlHash(parsed.path, parsed.params);
         this.setState({sidePanelSelected: 'register'});
       },
       // Actual registration of a new account.
@@ -4083,8 +4098,10 @@
 
       // User chose Settings menu item.
       handleSettings: function() {
-        window.location.hash = this.state.myUserId ? 'edit' : 'settings';
-        this.setState({sidePanelSelected: this.state.myUserId ? 'edit-account' : 'settings'});
+        var parsed = parseUrlHash(window.location.hash);
+        parsed.path[0] = this.state.myUserId ? 'edit' : 'settings';
+        window.location.hash = composeUrlHash(parsed.path, parsed.params);
+        this.setState({sidePanelSelected: this.state.myUserId ? 'edit' : 'settings'});
       },
       // User updated connection parameters - transport and server address
       handleConnectionSettings: function(serverAddress, transport) {
@@ -4095,18 +4112,17 @@
       },
       // User clicked Cancel button in Setting or Sign Up panel.
       handleSidepanelCancel: function() {
-        if (this.state.myUserId) {
-          window.location.hash = "/" + this.state.topicSelected;
-          this.setState({sidePanelSelected: 'contacts', errorText: '', errorLevel: null});
-        } else {
-          window.location.hash = '';
-          this.setState({sidePanelSelected: 'login', errorText: '', errorLevel: null});
-        }
+        var parsed = parseUrlHash(window.location.hash);
+        parsed.path[0] = '';
+        window.location.hash = composeUrlHash(parsed.path, parsed.params);
+        this.setState({sidePanelSelected: '', errorText: '', errorLevel: null});
       },
       // User clicked a (+) menu item.
       handleNewTopic: function() {
-        window.location.hash = 'new';
-        this.setState({sidePanelSelected: 'new-topic'});
+        var parsed = parseUrlHash(window.location.hash);
+        parsed.path[0] = 'newtpk';
+        window.location.hash = composeUrlHash(parsed.path, parsed.params);
+        this.setState({sidePanelSelected: 'newtpk'});
       },
       // Create of a new topic. New P2P topic requires peer's name.
       handleNewTopicRequest: function(peerName, pub, priv, tags) {
