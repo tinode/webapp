@@ -258,6 +258,35 @@
       return hash;
     }
 
+    // Parse hash as in http://www.example.com/path#hash as if it were
+    // path and arguments.
+    function parseUrlHash(hash) {
+      var parser = document.createElement('a');
+      parser.href = '/' + location.hash.substr(1);
+      var params = {};
+      parser.search.substr(1).split("&").forEach(function(part) {
+        var item = part.split("=");
+        if (item[0]) {
+          params[decodeURIComponent(item[0])] = decodeURIComponent(item[1]);
+        }
+      });
+      return {path: parser.pathname, params: params};
+    }
+
+    function composeUrlHash(path, params) {
+      var url = path;
+      var args = [];
+      for (var key in params) {
+        if (params.hasOwnProperty(key)) {
+          args.push(key + "=" + params[key]);
+        }
+      }
+      if (args.length > 0) {
+        url += "?" + args.join("&");
+      }
+      return url.
+    }
+
     // Detect server address from the URL
     function detectServerAddress() {
       var host = DEFAULT_HOST;
@@ -287,18 +316,6 @@
         }
       }
       return card;
-    }
-
-    // Construct a user discovery tag
-    function to_tags(tagsObj) {
-      if (tagsObj && Object.keys(tagsObj).length > 0) {
-        var tags = [];
-        for (var key in tagsObj) {
-          tags.push(key + ":" + tagsObj[key]);
-        }
-        return tags;
-      }
-      return undefined;
     }
 
     // Deep-shallow compare two arrays.
@@ -3755,7 +3772,7 @@
         }
       },
       handleHashRoute: function(e) {
-        console.log("hashchange", location.hash, e.oldURL, e.newURL);
+        console.log("hashchange", location.hash);
       },
       handleOnline: function(online) {
         var newState = {liveConnection: online};
@@ -3937,6 +3954,7 @@
       handleTopicSelected: function(topicName, unused_index, online, acs) {
         if (topicName) {
           // Contact selected
+          location.hash = topicName;
           this.setState({
             topicSelected: topicName,
             mobilePanel: 'topic-view',
@@ -3947,6 +3965,7 @@
             infoPanelShowMembers: Tinode.getTopicType(topicName) === "grp"
           });
         } else {
+          location.hash = null;
           // Currently selected contact deleted
           this.setState({
             topicSelected: null,
@@ -4126,10 +4145,8 @@
 
       handleLogout: function() {
         localStorage.removeItem("auth-token");
-        // Tell Tinode to close connection and clear the caches.
-        // Re-initialize state.
-        // Re-initialize Tinode.
-        console.log("Logout not fully implemented");
+        this.setState(this.getInitialState());
+        this.tnSetup(this.state.serverAddress, this.state.transport);
       },
 
       handleLeaveUnsubRequest: function(topicName) {
