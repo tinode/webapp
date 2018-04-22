@@ -4114,6 +4114,9 @@
       handleSidepanelCancel: function() {
         var parsed = parseUrlHash(window.location.hash);
         parsed.path[0] = '';
+        if (parsed.params) {
+          delete parsed.params.tab;
+        }
         window.location.hash = composeUrlHash(parsed.path, parsed.params);
         this.setState({sidePanelSelected: '', errorText: '', errorLevel: null});
       },
