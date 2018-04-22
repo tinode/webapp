@@ -262,7 +262,7 @@
     // path and arguments.
     function parseUrlHash(hash) {
       var parser = document.createElement('a');
-      parser.href = '/' + location.hash.substr(1);
+      parser.href = '/' + hash.substr(1);
       var params = {};
       parser.search.substr(1).split("&").forEach(function(part) {
         var item = part.split("=");
@@ -270,11 +270,11 @@
           params[decodeURIComponent(item[0])] = decodeURIComponent(item[1]);
         }
       });
-      return {path: parser.pathname, params: params};
+      return {path: parser.pathname.substr(1).split("/"), params: params};
     }
 
     function composeUrlHash(path, params) {
-      var url = path;
+      var url = path.join("/");
       var args = [];
       for (var key in params) {
         if (params.hasOwnProperty(key)) {
@@ -284,7 +284,24 @@
       if (args.length > 0) {
         url += "?" + args.join("&");
       }
-      return url.
+      return url;
+    }
+
+    function addParamToHash(hash, key, value) {
+      var hash = parseUrlHash(hash);
+      if (!hash.params) {
+        hash.params = {};
+      }
+      hash.params[key] = value;
+      return composeUrlHash(hash.path, hash.params);
+    }
+
+    function removeParamFromHash(hash, key) {
+      var hash = parseUrlHash(hash);
+      if (hash.params) {
+        delete hash.params[key];
+      }
+      return composeUrlHash(hash.path, hash.params);
     }
 
     // Detect server address from the URL
@@ -543,7 +560,7 @@
 
       render() {
         return (
-          <a href="#" onClick={this.props.onCancel}><i className="material-icons">close</i></a>
+          <a href="javascript:;" onClick={this.props.onCancel}><i className="material-icons">close</i></a>
         );
       }
     }
@@ -1005,7 +1022,7 @@
             }
             <span>{title}</span>
             {this.props.onCancel && !this.props.required ?
-              <a href="#" onClick={this.handleCancel} >&times;</a>
+              <a href="javascript:;" onClick={this.handleCancel} >&times;</a>
               : <span className="spacer" />}
           </div>
         );
@@ -1311,9 +1328,9 @@
       render: function() {
         return (
             <div>
-              <a href="#" onClick={this.props.onSignUp}><i className="material-icons">person_add</i></a>
+              <a href="javascript:;" onClick={this.props.onSignUp}><i className="material-icons">person_add</i></a>
               &nbsp;
-              <a href="#" onClick={this.props.onSettings}><i className="material-icons">settings</i></a>
+              <a href="javascript:;" onClick={this.props.onSettings}><i className="material-icons">settings</i></a>
             </div>
         );
       }
@@ -1323,9 +1340,9 @@
       render: function() {
         return (
           <div>
-            <a href="#" onClick={this.props.onNewTopic}><i className="material-icons">chat</i></a>
+            <a href="javascript:;" onClick={this.props.onNewTopic}><i className="material-icons">chat</i></a>
             &nbsp;
-            <a href="#" onClick={this.props.onSettings}><i className="material-icons">settings</i></a>
+            <a href="javascript:;" onClick={this.props.onSettings}><i className="material-icons">settings</i></a>
           </div>
         );
       }
@@ -1590,7 +1607,7 @@
               onSubmit={this.handleTagsUpdated} />
             <div className="hr" />
             <div className="panel-form-column">
-              <a href="#" className="red flat-button" onClick={this.props.onLogout}>
+              <a href="javascript:;" className="red flat-button" onClick={this.props.onLogout}>
                 <i className="material-icons">exit_to_app</i> Logout
               </a>
             </div>
@@ -1705,7 +1722,7 @@
               </div>
             :
               <div>
-                <a href="#" className="flat-button" onClick={this.handleShowTagManager}>
+                <a href="javascript:;" className="flat-button" onClick={this.handleShowTagManager}>
                   <i className="material-icons">edit</i> Manage tags
                 </a>
                 <span>{tags}</span>
@@ -1777,7 +1794,7 @@
             </div>
             {this.props.showContextMenu ?
               <span className="menuTrigger">
-                <a href="#" onClick={this.handleContextClick}>
+                <a href="javascript:;" onClick={this.handleContextClick}>
                   <i className="material-icons">expand_more</i>
                 </a>
               </span> : null}
@@ -2195,13 +2212,13 @@
           <div className="flex-column">
             <ul className="tabbar">
               <li className={this.state.tabSelected === "p2p" ? "active" : null}>
-                <a href="#" data-id="p2p" onClick={this.handleTabClick}>1:1</a>
+                <a href="javascript:;" data-id="p2p" onClick={this.handleTabClick}>1:1</a>
               </li>
               <li className={this.state.tabSelected === "grp" ? "active" : null}>
-                <a href="#" data-id="grp" onClick={this.handleTabClick}>group</a>
+                <a href="javascript:;" data-id="grp" onClick={this.handleTabClick}>group</a>
               </li>
               <li className={this.state.tabSelected === "byId" ? "active" : null}>
-                <a href="#" data-id="byId" onClick={this.handleTabClick}>by id</a>
+                <a href="javascript:;" data-id="byId" onClick={this.handleTabClick}>by id</a>
               </li>
             </ul>
             {this.state.tabSelected === "grp" ?
@@ -2323,7 +2340,7 @@
             <input type="text" placeholder="List like email:alice@example.com, tel:17025550003..."
               value={this.state.search} onChange={this.handleSearchChange}
               onKeyPress={this.handleKeyPress} required autoFocus />
-              <a href="#" onClick={this.handleSearch}>
+              <a href="javascript:;" onClick={this.handleSearch}>
                 <i className="material-icons">search</i>
               </a>
             </div>
@@ -2728,6 +2745,7 @@
           this.props.onTopicTagsUpdate(this.props.topic, tags);
         }
       },
+
       handleContextMenu: function(params) {
         var instance = this;
         var topic = Tinode.getTopic(this.props.topic);
@@ -2900,12 +2918,12 @@
                     </div>
                     <div className="panel-form-row">
                       {this.state.sharer ?
-                        <a href="#" className="flat-button" onClick={this.handleShowAddMembers}>
+                        <a href="javascript:;" className="flat-button" onClick={this.handleShowAddMembers}>
                           <i className="material-icons">person_add</i> Add members
                         </a>
                         : null}
                       {!this.state.owner ?
-                        <a href="#" className="red flat-button" onClick={this.handleLeave}>
+                        <a href="javascript:;" className="red flat-button" onClick={this.handleLeave}>
                           <i className="material-icons">exit_to_app</i> Leave
                         </a>
                         : null}
@@ -2924,7 +2942,7 @@
                   </div>
                   :
                   <div className="panel-form-row">
-                    <a href="#" className="red flat-button" onClick={this.handleLeave}>
+                    <a href="javascript:;" className="red flat-button" onClick={this.handleLeave}>
                       <i className="material-icons">exit_to_app</i> Leave
                     </a>
                   </div>
@@ -3024,7 +3042,7 @@
                   timestamp={this.props.timestamp} received={this.props.received} />
                 </p>
                 <span className="menuTrigger">
-                  <a href="#" onClick={this.handleContextClick}>
+                  <a href="javascript:;" onClick={this.handleContextClick}>
                     <i className="material-icons">expand_more</i>
                   </a>
                 </span>
@@ -3433,7 +3451,7 @@
             <div id="topic-view" className={this.props.hideSelf ? 'nodisplay' : null}>
               <div id="topic-caption-panel" className="caption-panel">
                 {this.props.displayMobile ?
-                  <a href="#" id="hide-message-view" onClick={this.handleBackNavigation}>
+                  <a href="javascript:;" id="hide-message-view" onClick={this.handleBackNavigation}>
                     <i className="material-icons">arrow_back</i>
                   </a>
                   :
@@ -3453,7 +3471,7 @@
                   <div id="topic-users" />
                 }
                 <div>
-                  <a href="#" onClick={this.handleContextClick}>
+                  <a href="javascript:;" onClick={this.handleContextClick}>
                     <i className="material-icons">more_vert</i>
                   </a>
                 </div>
@@ -3599,12 +3617,12 @@
           <div id="send-message-panel">
             {this.props.disabled ?
               <i className="material-icons disabled">photo</i> :
-              <a href="#" onClick={function(e) {instance.attachImage.click();}} title="Add image">
+              <a href="javascript:;" onClick={function(e) {instance.attachImage.click();}} title="Add image">
                 <i className="material-icons secondary">photo</i>
               </a>}
             {this.props.disabled ?
               <i className="material-icons disabled">attach_file</i> :
-              <a href="#" onClick={function(e) {instance.attachFile.click();}} title="Attach file">
+              <a href="javascript:;" onClick={function(e) {instance.attachFile.click();}} title="Attach file">
                 <i className="material-icons secondary">attach_file</i>
               </a>}
             <textarea id="sendMessage" placeholder={prompt}
@@ -3613,7 +3631,7 @@
               autoFocus />
               {this.props.disabled ?
                 <i className="material-icons disabled">send</i> :
-                <a href="#" onClick={this.handleSend} title="Send"><i className="material-icons">send</i></a>}
+                <a href="javascript:;" onClick={this.handleSend} title="Send"><i className="material-icons">send</i></a>}
           <input type="file" ref={function(ref) {instance.attachFile = ref;}}
             onChange={this.handleAttachFile} style={{display: 'none'}} />
           <input type="file" ref={function(ref) {instance.attachImage = ref;}} accept="image/*"
@@ -3676,10 +3694,10 @@
           <div id="image-preview" ref={function(ref) {instance.container = ref;}}
             onClick={this.props.onClose}>
             <div id="image-preview-caption-panel">
-              <a href="#" download={this.props.content.filename}>
+              <a href="javascript:;" download={this.props.content.filename}>
                 <i className="material-icons">file_download</i> download
               </a>
-              <a href="#" onClick={this.props.onClose}><i className="material-icons gray">close</i></a>
+              <a href="javascript:;" onClick={this.props.onClose}><i className="material-icons gray">close</i></a>
             </div>
             <div id="image-preview-container">
               <img src={this.props.content.url} style={size} />
@@ -3772,7 +3790,7 @@
         }
       },
       handleHashRoute: function(e) {
-        console.log("hashchange", location.hash);
+        console.log("hashchange", parseUrlHash(window.location.hash));
       },
       handleOnline: function(online) {
         var newState = {liveConnection: online};
@@ -3846,6 +3864,7 @@
       },
 
       handleCredentialsRequest: function(params) {
+        window.location.hash = "validation/" + this.state.topicSelected + "/" + params.cred;
         this.setState({
           sidePanelSelected: 'validation',
           validation: params.cred
@@ -3861,6 +3880,7 @@
         // Logged in fine, subscribe to 'me' attaching callbacks from the contacts view.
         var me = Tinode.getMeTopic();
         me.onMetaDesc = instance.tnMeMetaDesc;
+        window.location.hash = "";
         instance.setState({
           connected: true,
           sidePanelSelected: "contacts",
@@ -3954,7 +3974,9 @@
       handleTopicSelected: function(topicName, unused_index, online, acs) {
         if (topicName) {
           // Contact selected
-          location.hash = topicName;
+          if (this.state.topicSelected != topicName) {
+            window.location.hash = this.state.sidePanelSelected + "/" + topicName;
+          }
           this.setState({
             topicSelected: topicName,
             mobilePanel: 'topic-view',
@@ -3965,7 +3987,10 @@
             infoPanelShowMembers: Tinode.getTopicType(topicName) === "grp"
           });
         } else {
-          location.hash = null;
+          if (this.state.topicSelected) {
+            console.log("topic deleted");
+            window.history.replaceState({}, "", this.state.sidePanelSelected);
+          }
           // Currently selected contact deleted
           this.setState({
             topicSelected: null,
@@ -4014,6 +4039,7 @@
       },
       // User chose a Sign Up menu item.
       handleNewAccount: function() {
+        window.location.hash = "register";
         this.setState({sidePanelSelected: 'register'});
       },
       // Actual registration of a new account.
@@ -4057,6 +4083,7 @@
 
       // User chose Settings menu item.
       handleSettings: function() {
+        window.location.hash = this.state.myUserId ? 'edit' : 'settings';
         this.setState({sidePanelSelected: this.state.myUserId ? 'edit-account' : 'settings'});
       },
       // User updated connection parameters - transport and server address
@@ -4069,13 +4096,16 @@
       // User clicked Cancel button in Setting or Sign Up panel.
       handleSidepanelCancel: function() {
         if (this.state.myUserId) {
+          window.location.hash = "/" + this.state.topicSelected;
           this.setState({sidePanelSelected: 'contacts', errorText: '', errorLevel: null});
         } else {
+          window.location.hash = '';
           this.setState({sidePanelSelected: 'login', errorText: '', errorLevel: null});
         }
       },
       // User clicked a (+) menu item.
       handleNewTopic: function() {
+        window.location.hash = 'new';
         this.setState({sidePanelSelected: 'new-topic'});
       },
       // Create of a new topic. New P2P topic requires peer's name.
@@ -4214,9 +4244,11 @@
       },
 
       handleShowInfoView: function() {
+        window.location.hash = addParamToHash(window.location.hash, 'info', true);
         this.setState({showInfoPanel: true, infoPanelShowMembers: false});
       },
       handleHideInfoView: function() {
+        window.location.hash = removeParamFromHash(window.location.hash, 'info');
         this.setState({showInfoPanel: false, infoPanelShowMembers: false});
       },
       handleMemberUpdateRequest: function(topicName, added, removed) {
