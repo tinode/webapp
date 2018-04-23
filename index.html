@@ -2229,7 +2229,7 @@
                 <a href="javascript:;" data-id="grp" onClick={this.handleTabClick}>group</a>
               </li>
               <li className={this.state.tabSelected === "byid" ? "active" : null}>
-                <a href="javascript:;" data-id="byId" onClick={this.handleTabClick}>by id</a>
+                <a href="javascript:;" data-id="byid" onClick={this.handleTabClick}>by id</a>
               </li>
             </ul>
             {this.state.tabSelected === "grp" ?
@@ -3800,7 +3800,59 @@
         }
       },
       handleHashRoute: function(e) {
-        console.log("hashchange", parseUrlHash(window.location.hash));
+        var hash = parseUrlHash(window.location.hash);
+        if (hash.path && hash.path.length >0) {
+          switch (hash.path[0]) {
+            case 'register':
+              console.log("Registration");
+              break;
+            case 'settings':
+              console.log("Connection settings");
+              break;
+            case 'edit':
+              console.log("Edit account");
+              break;
+            case 'cred':
+              console.log("Validate credentials");
+              break;
+            case 'newtpk':
+              console.log("New topic");
+              break;
+            case '':
+              console.log("Login or Contacts.");
+              break;
+            default:
+              console.log("Unknown path", hash.path[0]);
+          }
+        }
+        if (hash.path.length > 1) {
+          if (hash.path[1]) {
+            console.log("Set topic to", hash.path[1]);
+          } else {
+            console.log("Set topic to dummy view");
+          }
+        }
+
+        for (var key in hash.params) {
+          if (hash.params.hasOwnProperty(key)) {
+            switch (key) {
+              case 'code':
+                console.log("Validation code=", hash.params[key]);
+                break;
+              case 'meth':
+                console.log("Validation method=", hash.params[key]);
+                break;
+              case 'info':
+                console.log("InfoView open?", hash.params[key]);
+                break;
+              case 'tab':
+                console.log("NewTopic tab=", hash.params[key]);
+                break;
+              default:
+                console.log("Unknown parameter", key, hash.params[key]);
+            }
+          }
+        }
       },
       handleOnline: function(online) {
         var newState = {liveConnection: online};
