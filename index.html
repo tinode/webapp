@@ -3799,48 +3799,36 @@
           this.setState({displayMobile: mobile});
         }
       },
+
+      // Handle for hashchange event: display appropriate panels.
       handleHashRoute: function(e) {
         var hash = parseUrlHash(window.location.hash);
+        // Left-side panel selector.
         if (hash.path && hash.path.length >0) {
-          switch (hash.path[0]) {
-            case 'register':
-              console.log("Registration");
-              break;
-            case 'settings':
-              console.log("Connection settings");
-              break;
-            case 'edit':
-              console.log("Edit account");
-              break;
-            case 'cred':
-              console.log("Validate credentials");
-              break;
-            case 'newtpk':
-              console.log("New topic");
-              break;
-            case '':
-              console.log("Login or Contacts.");
-              break;
-            default:
-              console.log("Unknown path", hash.path[0]);
-          }
-        }
-        if (hash.path.length > 1) {
-          if (hash.path[1]) {
-            console.log("Set topic to", hash.path[1]);
+          if (['register','settings','edit','cred','newtpk',''].includes(hash.path[0])) {
+            this.setState({sidePanelSelected: hash.path[0]});
           } else {
-            console.log("Set topic to dummy view");
+            console.log("Unknown sidepanel view", hash.path[0]);
           }
         }
-
+        // Topic for MessagesView selector.
+        if (hash.path.length > 1) {
+          var tp = Tinode.getTopicType(hash.path[1]);
+          if (tp) {
+            this.setState({topicSelected: hash.path[1]});
+          } else {
+            this.setState({topicSelected: null});
+          }
+        }
+        // Additional parameters of panels.
         for (var key in hash.params) {
           if (hash.params.hasOwnProperty(key)) {
             switch (key) {
               case 'code':
                 console.log("Validation code=", hash.params[key]);
                 break;
-              case 'meth':
-                console.log("Validation method=", hash.params[key]);
+              case 'cred':
+                this.setState({validation: hash.params[key]});
                 break;
               case 'info':
                 console.log("InfoView open?", hash.params[key]);
@@ -3854,6 +3842,7 @@
           }
         }
       },
+
       handleOnline: function(online) {
         var newState = {liveConnection: online};
         if (online) {
@@ -3926,11 +3915,10 @@
       },
 
       handleCredentialsRequest: function(params) {
-        window.location.hash = composeUrlHash(["cred", this.state.topicSelected], {cred: params.cred});
-        this.setState({
-          sidePanelSelected: 'cred',
-          validation: params.cred
-        });
+        var parsed = parseUrlHash(window.location.hash);
+        parsed.path[0] = 'cred';
+        parsed.params['cred'] = params.cred;
+        window.location.hash = composeUrlHash(parsed.path, parsed.params);
       },
 
       handleLoginSuccessful: function(instance) {
@@ -4042,7 +4030,6 @@
             window.location.hash = composeUrlHash(parsed.path, parsed.params);
           }
           this.setState({
-            topicSelected: topicName,
             mobilePanel: 'topic-view',
             showInfoPanel: false,
             topicSelectedOnline: online,
@@ -4058,7 +4045,6 @@
           }
           // Currently selected contact deleted
           this.setState({
-            topicSelected: null,
             mobilePanel: 'sidepanel',
             showInfoPanel: false,
             topicSelectedOnline: false,
@@ -4107,7 +4093,6 @@
         var parsed = parseUrlHash(window.location.hash);
         parsed.path[0] = 'register';
         window.location.hash = composeUrlHash(parsed.path, parsed.params);
-        this.setState({sidePanelSelected: 'register'});
       },
       // Actual registration of a new account.
       handleNewAccountRequest: function(login_, password_, public_, cred_, tags_) {
@@ -4153,7 +4138,6 @@
         var parsed = parseUrlHash(window.location.hash);
         parsed.path[0] = this.state.myUserId ? 'edit' : 'settings';
         window.location.hash = composeUrlHash(parsed.path, parsed.params);
-        this.setState({sidePanelSelected: this.state.myUserId ? 'edit' : 'settings'});
       },
       // User updated connection parameters - transport and server address
       handleConnectionSettings: function(serverAddress, transport) {
@@ -4170,14 +4154,13 @@
           delete parsed.params.tab;
         }
         window.location.hash = composeUrlHash(parsed.path, parsed.params);
-        this.setState({sidePanelSelected: '', errorText: '', errorLevel: null});
+        this.setState({errorText: '', errorLevel: null});
       },
       // User clicked a (+) menu item.
       handleNewTopic: function() {
         var parsed = parseUrlHash(window.location.hash);
         parsed.path[0] = 'newtpk';
         window.location.hash = composeUrlHash(parsed.path, parsed.params);
-        this.setState({sidePanelSelected: 'newtpk'});
       },
       // Create of a new topic. New P2P topic requires peer's name.
       handleNewTopicRequest: function(peerName, pub, priv, tags) {
