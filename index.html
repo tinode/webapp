@@ -258,6 +258,8 @@
       return hash;
     }
 
+    // Helper functions for hash navigation.
+
     // Parse hash as in http://www.example.com/path#hash as if it were
     // path and arguments.
     function parseUrlHash(hash) {
@@ -293,22 +295,31 @@
       return url;
     }
 
-    function addParamToHash(hash, key, value) {
-      var hash = parseUrlHash(hash);
-      if (!hash.params) {
-        hash.params = {};
-      }
-      hash.params[key] = value;
-      return composeUrlHash(hash.path, hash.params);
+    function addUrlParam(hash, key, value) {
+      var parsed = parseUrlHash(hash);
+      parsed.params[key] = value;
+      return composeUrlHash(parsed.path, parsed.params);
     }
 
-    function removeParamFromHash(hash, key) {
-      var hash = parseUrlHash(hash);
-      if (hash.params) {
-        delete hash.params[key];
-      }
-      return composeUrlHash(hash.path, hash.params);
+    function removeUrlParam(hash, key) {
+      var parsed = parseUrlHash(hash);
+      delete parsed.params[key];
+      return composeUrlHash(parsed.path, parsed.params);
     }
+    function setUrlSidePanel(hash, sidepanel) {
+      var parsed = parseUrlHash(hash);
+      parsed.path[0] = sidepanel;
+      return composeUrlHash(parsed.path, parsed.params);
+    }
+    function setUrlTopic(hash, topic) {
+      var parsed = parseUrlHash(hash);
+      parsed.path[1] = topic;
+      // Close InfoView on topic change.
+      delete parsed.params.info;
+      return composeUrlHash(parsed.path, parsed.params);
+    }
+    // END of hash navigation helper functions
+
 
     // Detect server address from the URL
     function detectServerAddress() {
@@ -2201,21 +2212,21 @@
       },
       handleTabClick: function(e) {
         e.preventDefault();
-        window.location.hash = addParamToHash(window.location.hash, 'tab', e.currentTarget.dataset.id);
+        window.location.hash = addUrlParam(window.location.hash, 'tab', e.currentTarget.dataset.id);
         this.setState({tabSelected: e.currentTarget.dataset.id, contactSelected: null});
       },
       handleContactSelected: function(sel) {
         if (this.state.tabSelected === "p2p") {
-          window.location.hash = removeParamFromHash(window.location.hash, 'tab');
+          window.location.hash = removeUrlParam(window.location.hash, 'tab');
           this.props.onCreateTopic(sel, undefined);
         }
       },
       handleNewGroupSubmit: function(name, dataUrl, priv, tags) {
-        window.location.hash = removeParamFromHash(window.location.hash, 'tab');
+        window.location.hash = removeUrlParam(window.location.hash, 'tab');
         this.props.onCreateTopic(undefined, vcard(name, dataUrl), priv, tags);
       },
       handleGroupByID: function(topicName) {
-        window.location.hash = removeParamFromHash(window.location.hash, 'tab');
+        window.location.hash = removeUrlParam(window.location.hash, 'tab');
         this.props.onCreateTopic(topicName);
       },
       render: function() {
@@ -2406,7 +2417,7 @@
     var ValidationView = React.createClass({
       getInitialState: function() {
         return {
-          code: '',
+          code: this.props.credCode || '',
         };
       },
       handleChange: function(e) {
@@ -2420,12 +2431,12 @@
       handleSubmit: function(e) {
         e.preventDefault();
         if (this.state.code && this.state.code.trim()) {
-          this.props.onSubmit(this.props.credMethod[0], this.state.code.trim());
+          this.props.onSubmit(this.props.credMethod, this.state.code.trim());
         }
       },
       render: function() {
         var methods = {'email': 'email', 'tel': 'phone'};
-        var method = methods[this.props.credMethod[0]] || this.props.credMethod[0];
+        var method = methods[this.props.credMethod] || this.props.credMethod;
         return (
           <div className="panel-form">
             <div className="panel-form-row">
@@ -3767,7 +3778,7 @@
           serverVersion: 'no connection',
           contactsSearchQuery: '',
           foundContacts: [],
-          credMethod: []
+          credMethod: ''
         };
       },
       componentDidMount: function() {
@@ -3807,11 +3818,11 @@
       },
 
       // Handle for hashchange event: display appropriate panels.
-      handleHashRoute: function(e) {
+      handleHashRoute: function() {
         var hash = parseUrlHash(window.location.hash);
         // Left-side panel selector.
         if (hash.path && hash.path.length >0) {
-          if (['register','settings','edit','cred','newtpk',''].includes(hash.path[0])) {
+          if (['register','settings','edit','cred','newtpk','contacts',''].includes(hash.path[0])) {
             this.setState({sidePanelSelected: hash.path[0]});
           } else {
             console.log("Unknown sidepanel view", hash.path[0]);
@@ -3829,7 +3840,7 @@
         // Additional parameters of panels.
         this.setState({
           credCode: hash.params.code,
-          credMethod: hash.params.cred,
+          credMethod: hash.params.method,
           showInfoPanel: hash.params.info,
           newTopicTabSelected: hash.params.tab
         });
@@ -3875,8 +3886,14 @@
       },
 
       doLogin: function(login, password, cred) {
-        var instance = this;
-        cred = cred ? Tinode.addCredential(null, cred).cred : undefined;
+        if (Tinode.isAuthenticated()) {
+          // Already logged in. Go to default screen.
+          window.location.hash = "";
+        }
+
+        cred = cred ? Tinode.addCredential(null, cred) : undefined;
+        cred = cred ? cred.cred : undefined;
+
         // Try to login with login/password. If they are not available, try token. If no token, ask for login/password.
         var promise = null;
         var token = Tinode.getAuthToken();
@@ -3890,6 +3907,7 @@
           this.setState({loginDisabled: false});
         }
 
+        var instance = this;
         if (promise) {
           promise.then(function(ctrl) {
             if (ctrl.code >= 300 && ctrl.text === "validate credentials") {
@@ -3902,6 +3920,7 @@
             instance.setState({loginDisabled: false});
             instance.handleError(err.message, "err");
             localStorage.removeItem("auth-token");
+            window.location.hash = "";
           });
         }
       },
@@ -3909,7 +3928,7 @@
       handleCredentialsRequest: function(params) {
         var parsed = parseUrlHash(window.location.hash);
         parsed.path[0] = 'cred';
-        parsed.params['cred'] = params.cred;
+        parsed.params['method'] = params.cred[0];
         window.location.hash = composeUrlHash(parsed.path, parsed.params);
       },
 
@@ -3922,10 +3941,13 @@
         // Logged in fine, subscribe to 'me' attaching callbacks from the contacts view.
         var me = Tinode.getMeTopic();
         me.onMetaDesc = instance.tnMeMetaDesc;
-        window.location.hash = "";
+        if (!window.location.hash) {
+          window.location.hash = 'contacts';
+        } else {
+          instance.handleHashRoute();
+        }
         instance.setState({
           connected: true,
-          sidePanelSelected: '',
           myUserId: Tinode.getCurrentUserID()
         });
         // Subscribe, fetch topic desc, the list of subscriptions. Messages are not fetched.
@@ -4017,28 +4039,25 @@
         if (topicName) {
           // Contact selected
           if (this.state.topicSelected != topicName) {
-            var parsed = parseUrlHash(window.location.hash);
-            parsed.path[1] = topicName;
-            window.location.hash = composeUrlHash(parsed.path, parsed.params);
+            window.location.hash = setUrlTopic(window.location.hash, topicName);
           }
           this.setState({
+            errorText: '',
+            errorLevel: null,
             mobilePanel: 'topic-view',
-            showInfoPanel: false,
             topicSelectedOnline: online,
             topicSelectedAcs: acs,
-            sidePanelSelected: '',
             infoPanelShowMembers: Tinode.getTopicType(topicName) === "grp"
           });
         } else {
           if (this.state.topicSelected) {
-            var parsed = parseUrlHash(window.location.hash);
-            parsed.path[1] = '';
-            window.history.replaceState({}, "", composeUrlHash(parsed.path, parsed.params));
+            window.history.replaceState({}, "", setUrlTopic(window.location.hash, ''));
           }
           // Currently selected contact deleted
           this.setState({
+            errorText: '',
+            errorLevel: null,
             mobilePanel: 'sidepanel',
-            showInfoPanel: false,
             topicSelectedOnline: false,
             topicSelectedAcs: null,
             infoPanelShowMembers: false
@@ -4082,9 +4101,7 @@
       },
       // User chose a Sign Up menu item.
       handleNewAccount: function() {
-        var parsed = parseUrlHash(window.location.hash);
-        parsed.path[0] = 'register';
-        window.location.hash = composeUrlHash(parsed.path, parsed.params);
+        window.location.hash = setUrlSidePanel(window.location.hash, 'register');
       },
       // Actual registration of a new account.
       handleNewAccountRequest: function(login_, password_, public_, cred_, tags_) {
@@ -4127,9 +4144,7 @@
 
       // User chose Settings menu item.
       handleSettings: function() {
-        var parsed = parseUrlHash(window.location.hash);
-        parsed.path[0] = this.state.myUserId ? 'edit' : 'settings';
-        window.location.hash = composeUrlHash(parsed.path, parsed.params);
+        window.location.hash = setUrlSidePanel(window.location.hash, this.state.myUserId ? 'edit' : 'settings');
       },
       // User updated connection parameters - transport and server address
       handleConnectionSettings: function(serverAddress, transport) {
@@ -4141,7 +4156,7 @@
       // User clicked Cancel button in Setting or Sign Up panel.
       handleSidepanelCancel: function() {
         var parsed = parseUrlHash(window.location.hash);
-        parsed.path[0] = '';
+        parsed.path[0] = this.state.myUserId ? 'contacts' : '';
         if (parsed.params) {
           delete parsed.params.tab;
         }
@@ -4150,9 +4165,7 @@
       },
       // User clicked a (+) menu item.
       handleNewTopic: function() {
-        var parsed = parseUrlHash(window.location.hash);
-        parsed.path[0] = 'newtpk';
-        window.location.hash = composeUrlHash(parsed.path, parsed.params);
+        window.location.hash = setUrlSidePanel(window.location.hash, 'newtpk');
       },
       // Create of a new topic. New P2P topic requires peer's name.
       handleNewTopicRequest: function(peerName, pub, priv, tags) {
@@ -4223,6 +4236,7 @@
         localStorage.removeItem("auth-token");
         this.setState(this.getInitialState());
         this.tnSetup(this.state.serverAddress, this.state.transport);
+        window.location.hash = "";
       },
 
       handleLeaveUnsubRequest: function(topicName) {
@@ -4233,9 +4247,8 @@
         var instance = this;
         topic.leave(true).then(function(ctrl) {
           // Hide MessagesView and InfoView panels.
+          window.location.hash = setUrlTopic(window.location.hash, '');
           instance.setState({
-            topicSelected: '',
-            showInfoPanel: false,
             infoPanelShowMembers: false
           });
         }).catch(function(err) {
@@ -4290,11 +4303,11 @@
       },
 
       handleShowInfoView: function() {
-        window.location.hash = addParamToHash(window.location.hash, 'info', true);
+        window.location.hash = addUrlParam(window.location.hash, 'info', true);
         this.setState({showInfoPanel: true, infoPanelShowMembers: false});
       },
       handleHideInfoView: function() {
-        window.location.hash = removeParamFromHash(window.location.hash, 'info');
+        window.location.hash = removeUrlParam(window.location.hash, 'info');
         this.setState({showInfoPanel: false, infoPanelShowMembers: false});
       },
       handleMemberUpdateRequest: function(topicName, added, removed) {
