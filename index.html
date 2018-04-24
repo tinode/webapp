@@ -1456,7 +1456,7 @@
               view === 'cred' ?
               <ValidationView
                 onSubmit={this.props.onValidateCredentials}
-                validation={this.props.validation}
+                credMethod={this.props.credMethod}
                 onCancel={this.props.onCancel}
                 onError={this.props.onError} /> :
 
@@ -2420,12 +2420,12 @@
       handleSubmit: function(e) {
         e.preventDefault();
         if (this.state.code && this.state.code.trim()) {
-          this.props.onSubmit(this.props.validation[0], this.state.code.trim());
+          this.props.onSubmit(this.props.credMethod[0], this.state.code.trim());
         }
       },
       render: function() {
         var methods = {'email': 'email', 'tel': 'phone'};
-        var method = methods[this.props.validation[0]] || this.props.validation[0];
+        var method = methods[this.props.credMethod[0]] || this.props.credMethod[0];
         return (
           <div className="panel-form">
             <div className="panel-form-row">
@@ -3120,8 +3120,8 @@
           title: '',
           avatar: null,
           scrollPosition: 0,
-          readOnly: this.props.acs ? !this.props.acs.isWriter() : false,
-          writeOnly: this.props.acs ? !this.props.acs.isReader() : false,
+          readOnly: this.props.acs ? !this.props.acs.isWriter() : true,
+          writeOnly: this.props.acs ? !this.props.acs.isReader() : true,
           typingIndicator: false,
           imagePreview: null
         };
@@ -3209,8 +3209,8 @@
         }
 
         this.setState({
-          readOnly: props.acs ? !props.acs.isWriter() : false,
-          writeOnly: props.acs ? !props.acs.isReader() : false
+          readOnly: props.acs ? !props.acs.isWriter() : true,
+          writeOnly: props.acs ? !props.acs.isReader() : true
         });
 
         if (!topic.isSubscribed() && tryToResubscribe) {
@@ -3223,6 +3223,12 @@
             .withTags()
             .build()).catch(function(err){
               instance.props.onError(err.message, "err");
+              instance.setState({
+                title: "Not found",
+                avatar: null,
+                readOnly: true,
+                writeOnly: true
+              });
             });
         }
       },
@@ -3761,7 +3767,7 @@
           serverVersion: 'no connection',
           contactsSearchQuery: '',
           foundContacts: [],
-          validation: []
+          credMethod: []
         };
       },
       componentDidMount: function() {
@@ -3821,26 +3827,12 @@
           }
         }
         // Additional parameters of panels.
-        for (var key in hash.params) {
-          if (hash.params.hasOwnProperty(key)) {
-            switch (key) {
-              case 'code':
-                console.log("Validation code=", hash.params[key]);
-                break;
-              case 'cred':
-                this.setState({validation: hash.params[key]});
-                break;
-              case 'info':
-                console.log("InfoView open?", hash.params[key]);
-                break;
-              case 'tab':
-                console.log("NewTopic tab=", hash.params[key]);
-                break;
-              default:
-                console.log("Unknown parameter", key, hash.params[key]);
-            }
-          }
-        }
+        this.setState({
+          credCode: hash.params.code,
+          credMethod: hash.params.cred,
+          showInfoPanel: hash.params.info,
+          newTopicTabSelected: hash.params.tab
+        });
       },
 
       handleOnline: function(online) {
@@ -4364,7 +4356,7 @@
               errorText={this.state.errorText}
               errorLevel={this.state.errorLevel}
               topicSelected={this.state.topicSelected}
-              validation={this.state.validation}
+              credMethod={this.state.credMethod}
 
               serverAddress={this.state.serverAddress}
               onConnectionSettings={this.handleConnectionSettings}
