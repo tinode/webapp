@@ -3798,7 +3798,10 @@
         Tinode.onConnect = this.handleConnected;
         Tinode.onDisconnect = this.handleDisconnect;
         this.tnSetup(this.state.serverAddress, this.state.transport);
-        var token = localStorage.getObject("auth-token");
+        var token;
+        if (localStorage.getObject("keep-logged-in")) {
+          token = localStorage.getObject("auth-token");
+        }
         if (token) {
           // When reading from storage, date is returned as string.
           token.expires = new Date(token.expires);
@@ -3940,8 +3943,9 @@
         instance.handleError("", null);
 
         // Refresh authentication token.
-        localStorage.setObject("auth-token", Tinode.getAuthToken());
-
+        if (localStorage.getObject("keep-logged-in")) {
+          localStorage.setObject("auth-token", Tinode.getAuthToken());
+        }
         // Logged in fine, subscribe to 'me' attaching callbacks from the contacts view.
         var me = Tinode.getMeTopic();
         me.onMetaDesc = instance.tnMeMetaDesc;
