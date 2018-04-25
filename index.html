@@ -1466,8 +1466,9 @@
 
               view === 'cred' ?
               <ValidationView
-                onSubmit={this.props.onValidateCredentials}
+                credCode={this.props.credCode}
                 credMethod={this.props.credMethod}
+                onSubmit={this.props.onValidateCredentials}
                 onCancel={this.props.onCancel}
                 onError={this.props.onError} /> :
 
@@ -2417,8 +2418,11 @@
     var ValidationView = React.createClass({
       getInitialState: function() {
         return {
-          code: this.props.credCode || '',
+          code: this.props.credCode
         };
+      },
+      componentWillReceiveProps: function(nextProps) {
+        this.setState({code: nextProps.credCode});
       },
       handleChange: function(e) {
         this.setState({code: e.target.value});
@@ -4158,6 +4162,8 @@
         var parsed = parseUrlHash(window.location.hash);
         parsed.path[0] = this.state.myUserId ? 'contacts' : '';
         if (parsed.params) {
+          delete parsed.params.code;
+          delete parsed.params.method;
           delete parsed.params.tab;
         }
         window.location.hash = composeUrlHash(parsed.path, parsed.params);
@@ -4370,6 +4376,7 @@
               errorLevel={this.state.errorLevel}
               topicSelected={this.state.topicSelected}
               credMethod={this.state.credMethod}
+              credCode={this.state.credCode}
 
               serverAddress={this.state.serverAddress}
               onConnectionSettings={this.handleConnectionSettings}
