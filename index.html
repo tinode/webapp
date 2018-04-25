@@ -4080,10 +4080,9 @@
       // In mobile view user requested to show sidepanel
       handleHideMessagesView: function() {
         this.setState({
-          mobilePanel: 'sidepanel',
-          topicSelected: null,
-          showInfoPanel: false
+          mobilePanel: 'sidepanel'
         });
+        window.location.hash = setUrlTopic(window.location.hash, null);
       },
       // User clicked on a message send button.
       handleSendMessage: function(msg) {
