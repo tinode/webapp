@@ -1855,24 +1855,24 @@
     var ContactsView = React.createClass({
       getInitialState: function() {
         return {
-          contactList: this.prepareContactList()
+          contactList: this.prepareContactList(),
+          initialLoadComplete: false
         };
       },
       componentWillMount: function() {
         var me = Tinode.getMeTopic();
-        me.onContactUpdate = this.tnMeContactUpdate;
-        me.onSubsUpdated = this.tnMeSubsUpdated;
-      },
-      componentWillUnmount: function() {
-        var me = Tinode.getMeTopic();
-        me.onContactUpdate = undefined;
-        me.onSubsUpdated = undefined;
+        if (!me.onContactUpdate) {
+          me.onContactUpdate = this.tnMeContactUpdate;
+          me.onSubsUpdated = this.tnMeSubsUpdated;
+        }
       },
       // Reactions to updates to the contact list.
       tnMeContactUpdate: function(what, cont) {
-        if (what === "on" || what === "off") {
+        console.log("presence", this.props.topicSelected, cont.topic, what);
+        if (what == "on" || what == "off") {
           this.resetContactList();
           if (this.props.topicSelected === cont.topic) {
+            console.log("Online/offline", cont.topic, what);
             this.props.onOnlineChange(what === "on");
           }
         } else if (what === "read") {
@@ -1934,16 +1934,14 @@
         });
         updateFavicon(totalUnread > 0);
 
-        // Sort: most recent to less recent.
-        //contacts.sort(function(a, b) {
-        //  return a.updated - b.updated;
-        //});
-
         return contacts;
       },
 
       resetContactList: function() {
-        this.setState({contactList: this.prepareContactList()});
+        if (!this.state.initialLoadComplete) {
+          console.log("update winodow.location.hash now!!!");
+        }
+        this.setState({contactList: this.prepareContactList(), initialLoadComplete: true});
       },
 
       render: function() {
@@ -3512,18 +3510,20 @@
                 <ErrorPanel
                   level={this.props.errorLevel}
                   text={this.props.errorText}
-                  onClearError={this.props.onError} /> : null}
-              <LoadSpinner show={this.state.fetchingMessages} />
-              <div id="messages-panel"
-                className={this.state.writeOnly ? "write-only" : null}
-                ref={this.handleScrollReference}>
-                <ul id="scroller" className={chatBoxClass}>
-                  {messageNodes}
-                </ul>
-              </div>
-              {this.state.writeOnly ?
-                <div id="write-only-note">no access to messages</div>
+                  onClearError={this.props.onError} />
                 : null}
+              <LoadSpinner show={this.state.fetchingMessages} />
+              <div id="messages-panel" ref={this.handleScrollReference}>
+                {this.state.writeOnly ?
+                  <div id="write-only-background">
+                    <div id="write-only-note">no access to messages</div>
+                  </div>
+                  :
+                  <ul id="scroller" className={chatBoxClass}>
+                    {messageNodes}
+                  </ul>
+                }
+              </div>
               <MessagesView.Send
                 topic={this.props.topic}
                 disabled={this.state.readOnly}
@@ -3810,6 +3810,8 @@
             // Socket error
             instance.handleError(err.message, "err");
           });
+        } else {
+          window.location.hash = "";
         }
       },
       // Setup transport (usually websocket) and server address. This will terminate connection with the server.
@@ -3836,11 +3838,14 @@
           }
         }
         // Topic for MessagesView selector.
+        console.log("hashchange", window.location.hash, hash.path);
         if (hash.path.length > 1) {
           var tp = Tinode.getTopicType(hash.path[1]);
           if (tp) {
+            console.log("setting topicSelected to", hash.path[1]);
             this.setState({topicSelected: hash.path[1]});
           } else {
+            console.log("setting topicSelected to null");
             this.setState({topicSelected: null});
           }
         }
@@ -3896,6 +3901,7 @@
         if (Tinode.isAuthenticated()) {
           // Already logged in. Go to default screen.
           window.location.hash = "";
+          return;
         }
 
         cred = cred ? Tinode.addCredential(null, cred) : undefined;
@@ -3949,11 +3955,6 @@
         // Logged in fine, subscribe to 'me' attaching callbacks from the contacts view.
         var me = Tinode.getMeTopic();
         me.onMetaDesc = instance.tnMeMetaDesc;
-        if (!window.location.hash) {
-          window.location.hash = 'contacts';
-        } else {
-          instance.handleHashRoute();
-        }
         instance.setState({
           connected: true,
           myUserId: Tinode.getCurrentUserID()
@@ -3968,6 +3969,7 @@
           ).catch(function(err){
           instance.handleError(err.message, "err");
         });
+        window.location.hash = setUrlSidePanel(window.location.hash, 'contacts');
       },
 
       handleDisconnect: function(err) {
@@ -4059,7 +4061,7 @@
           });
         } else {
           if (this.state.topicSelected) {
-            window.history.replaceState({}, "", setUrlTopic(window.location.hash, ''));
+            window.location.hash = setUrlTopic(window.location.hash, null);
           }
           // Currently selected contact deleted
           this.setState({
@@ -4178,6 +4180,7 @@
       },
       // Create of a new topic. New P2P topic requires peer's name.
       handleNewTopicRequest: function(peerName, pub, priv, tags) {
+        console.log("handleNewTopicRequest");
         var instance = this;
         var topic = peerName ? Tinode.newTopicWith(peerName) : Tinode.newTopic();
         var query = topic.startMetaQuery().withDesc().withSub().withData();
@@ -4187,7 +4190,9 @@
         }
 
         topic.subscribe(query.build(), setParams).then(function() {
-          instance.handleTopicSelected(topic.name, undefined, false, topic.getAccessMode());
+          console.log("subscribe successful", Tinode.isTopicOnline(topic.name));
+          window.location.hash = setUrlSidePanel(window.location.hash, 'contacts');
+          instance.handleTopicSelected(topic.name, undefined, Tinode.isTopicOnline(topic.name), topic.getAccessMode());
         }).catch(function(err) {
           instance.handleError(err.message, "err");
         });

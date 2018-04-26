@@ -922,14 +922,9 @@ table.permission-editor td.checkbox {
   background-image: url("../img/ignasi_pattern_s.png");
 }
 
-#messages-panel.write-only::after {
-  content: "";
-  display: block;
-  position: absolute;
-  top:0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+#write-only-background {
+  height: 100%;
+  width: 100%;
   background-image: repeating-linear-gradient(45deg,
     transparent, transparent 0.5rem, rgba(255,255,255,.5) 0.5rem, rgba(255,255,255,.5) 1rem);
 }
