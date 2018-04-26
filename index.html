@@ -1919,6 +1919,7 @@
       },
 
       prepareContactList: function() {
+        var instance = this;
         var contacts = [];
         var totalUnread = 0;
         Tinode.getMeTopic().contacts(function(c) {
@@ -1928,6 +1929,10 @@
           c.unread = c.seq - c.read;
           totalUnread += c.unread;
           contacts.push(c);
+          if (instance.props.topicSelected == c.topic) {
+            instance.props.onOnlineChange(c.online);
+            instance.props.onAcsChange(c.acs);
+          }
         }, this);
         contacts.sort(function(a,b){
           return b.touched - a.touched;
@@ -3643,7 +3648,7 @@
         this.setState(newState);
       },
       render: function() {
-        var prompt = this.props.disabled ? "Publishing disabled" : "New message";
+        var prompt = this.props.disabled ? "Messaging disabled" : "New message";
         var instance = this;
         return (
           <div id="send-message-panel">
@@ -3810,6 +3815,11 @@
             // Socket error
             instance.handleError(err.message, "err");
           });
+          var parsed = parseUrlHash(window.location.hash);
+          delete parsed.params.info;
+          delete parsed.params.tab;
+          parsed.path[0] = '';
+          window.location.hash = composeUrlHash(parsed.path, parsed.params);
         } else {
           window.location.hash = "";
         }
@@ -3967,8 +3977,9 @@
             withTags().
             build()
           ).catch(function(err){
-          instance.handleError(err.message, "err");
-        });
+            localStorage.removeItem("auth-token");
+            instance.handleError(err.message, "err");
+          });
         window.location.hash = setUrlSidePanel(window.location.hash, 'contacts');
       },
 
@@ -4190,7 +4201,6 @@
         }
 
         topic.subscribe(query.build(), setParams).then(function() {
-          console.log("subscribe successful", Tinode.isTopicOnline(topic.name));
           window.location.hash = setUrlSidePanel(window.location.hash, 'contacts');
           instance.handleTopicSelected(topic.name, undefined, Tinode.isTopicOnline(topic.name), topic.getAccessMode());
         }).catch(function(err) {
