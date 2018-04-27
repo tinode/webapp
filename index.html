@@ -3858,10 +3858,14 @@
           }
         }
         // Topic for MessagesView selector.
-        if (hash.path.length > 1) {
+        if (hash.path.length > 1 && hash.path[1] != this.state.topicSelected) {
           var tp = Tinode.getTopicType(hash.path[1]);
           if (tp) {
-            this.setState({topicSelected: hash.path[1]});
+            this.setState({
+              topicSelected: hash.path[1],
+              topicSelectedOnline: false,
+              topicSelectedAcs: null
+            });
           } else {
             this.setState({topicSelected: null});
           }
