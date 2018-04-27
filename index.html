@@ -3990,6 +3990,7 @@
           ).catch(function(err){
             localStorage.removeItem("auth-token");
             instance.handleError(err.message, "err");
+            window.location.hash = "";
           });
         window.location.hash = setUrlSidePanel(window.location.hash, 'contacts');
       },
