@@ -3528,16 +3528,19 @@
                   onClearError={this.props.onError} />
                 : null}
               <LoadSpinner show={this.state.fetchingMessages} />
-              <div id="messages-panel" ref={this.handleScrollReference}>
-                {this.state.writeOnly ?
-                  <div id="write-only-background">
-                    <div id="write-only-note">no access to messages</div>
-                  </div>
-                  :
+              <div id="messages-container">
+                <div id="messages-panel" ref={this.handleScrollReference}>
                   <ul id="scroller" className={chatBoxClass}>
                     {messageNodes}
                   </ul>
-                }
+                </div>
+              {this.state.writeOnly ?
+                <div id="write-only-background">
+                  <div id="write-only-note">no access to messages</div>
+                </div>
+                :
+                null
+              }
               </div>
               <MessagesView.Send
                 topic={this.props.topic}

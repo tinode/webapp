@@ -922,11 +922,20 @@ table.permission-editor td.checkbox {
   background-image: url("../img/ignasi_pattern_s.png");
 }
 
+#messages-container {
+  position: relative;
+  overflow-y: hidden;
+  height: 100%;
+}
+
 #write-only-background {
+  position: absolute;
+  top: 0;
+  left: 0;
   height: 100%;
   width: 100%;
-  background-image: repeating-linear-gradient(45deg,
-    transparent, transparent 0.5rem, rgba(255,255,255,.5) 0.5rem, rgba(255,255,255,.5) 1rem);
+  background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.5), rgba(255,255,255,.5) 0.5rem,
+    rgba(255,255,255,.8) 0.5rem, rgba(255,255,255,.8) 1rem);
 }
 
 #write-only-note {
@@ -941,6 +950,7 @@ table.permission-editor td.checkbox {
   left: 50%;
   transform: translate(-50%, -50%);
   padding: 0.25rem 1.5rem;
+  box-shadow: 0.1rem 0.1rem 0.1rem rgba(0,0,0,0.2);
 }
 /* Footer-panel with the input for the new message */
 #send-message-panel {
