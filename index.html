@@ -1647,6 +1647,10 @@
         };
       },
 
+      componentWillReceiveProps: function(nextProps){
+        this.setState({tags: nextProps.tags});
+      },
+
       handleShowTagManager: function() {
         this.setState({activated: true});
       },
@@ -1693,7 +1697,7 @@
           tags.push(inp);
         }
         this.props.onSubmit(tags);
-        this.setState({activated: false, tagInput: '', tags: tags});
+        this.setState({activated: false, tagInput: '', tags: this.props.tags});
       },
 
       handleCancel: function() {
@@ -4174,9 +4178,10 @@
 
       handleUpdateAccountTagsRequest: function(tags) {
         var instance = this;
-        Tinode.getMeTopic().setMeta({tags: tags}).catch(function(err) {
-          instance.handleError(err.message, "err");
-        });
+        Tinode.getMeTopic().setMeta({tags: tags})
+          .catch(function(err) {
+            instance.handleError(err.message, "err");
+          });
       },
 
       // User chose Settings menu item.
