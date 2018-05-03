@@ -962,6 +962,9 @@
 
       handleFocusLost: function() {
         this.setState({focused: false});
+        if (this.props.onFocusLost) {
+          this.props.onFocusLost(this.state.input);
+        }
       },
 
       handleKeyDown: function(e) {
@@ -1647,7 +1650,7 @@
         };
       },
 
-      componentWillReceiveProps: function(nextProps){
+      componentWillReceiveProps: function(nextProps) {
         this.setState({tags: nextProps.tags});
       },
 
@@ -1675,9 +1678,10 @@
           var tags = this.state.tags.slice(0);
           tags.push(tag);
           this.setState({tags: tags, tagInput: ''});
-        }
-        if (this.props.onTagsChanged) {
-          this.props.onTagsChanged(tags);
+
+          if (this.props.onTagsChanged) {
+            this.props.onTagsChanged(tags);
+          }
         }
       },
 
@@ -1695,6 +1699,9 @@
         var inp = this.state.tagInput.trim();
         if (inp.length > 0) {
           tags.push(inp);
+          if (this.props.onTagsChanged) {
+            this.props.onTagsChanged(tags);
+          }
         }
         this.props.onSubmit(tags);
         this.setState({activated: false, tagInput: '', tags: this.props.tags});
@@ -1733,6 +1740,7 @@
                 avatarDisabled={true}
                 prompt={this.state.noTagsMessage}
                 onEnter={this.handleAddTag}
+                onFocusLost={this.handleAddTag}
                 onCancel={this.handleCancel}
                 onChipRemoved={this.handleRemoveTag}
                 filterFunc={this.handleTagInput} />
@@ -2336,7 +2344,7 @@
                 onImageChanged={this.handleImageChanged} />
             </div>
             <TagManager
-              tags={[]}
+              tags={this.state.tags}
               activated={true}
               onTagsChanged={this.handleTagsChanged}
               title="Optional tags (search and discovery)" />
@@ -4215,13 +4223,13 @@
       handleNewTopicRequest: function(peerName, pub, priv, tags) {
         var instance = this;
         var topic = peerName ? Tinode.newTopicWith(peerName) : Tinode.newTopic();
-        var query = topic.startMetaQuery().withDesc().withSub().withData();
+        var query = topic.startMetaQuery().withDesc().withSub().withData().withTags().build();
         var setParams;
         if (!peerName) {
           setParams = {desc: {public: pub, private: priv}, tags: tags};
         }
 
-        topic.subscribe(query.build(), setParams).then(function() {
+        topic.subscribe(query, setParams).then(function() {
           window.location.hash = setUrlSidePanel(window.location.hash, 'contacts');
           instance.handleTopicSelected(topic.name, undefined, Tinode.isTopicOnline(topic.name), topic.getAccessMode());
         }).catch(function(err) {
