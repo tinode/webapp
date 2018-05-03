@@ -1870,12 +1870,17 @@
           contactList: this.prepareContactList()
         };
       },
+
       componentWillMount: function() {
         var me = Tinode.getMeTopic();
-        if (!me.onContactUpdate) {
-          me.onContactUpdate = this.tnMeContactUpdate;
-          me.onSubsUpdated = this.tnMeSubsUpdated;
-        }
+        me.onContactUpdate = this.tnMeContactUpdate;
+        me.onSubsUpdated = this.tnMeSubsUpdated;
+      },
+
+      componentWillUnmount: function() {
+        var me = Tinode.getMeTopic();
+        me.onContactUpdate = undefined;
+        me.onSubsUpdated = undefined;
       },
 
       componentWillReceiveProps: function(nextProps) {
@@ -1917,7 +1922,6 @@
           // Explicitly ignoring "recv" -- it causes no visible updates to contact list.
         } else if (what === "gone" || what === "unsub") {
           // Topic deleted or user unsubscribed. Remove topic from view.
-
           // If the currently selected topic is gone, clear the selection.
           if (this.props.topicSelected === cont.topic) {
             this.props.onTopicSelected(null);
@@ -1963,7 +1967,6 @@
           return b.touched - a.touched;
         });
         updateFavicon(totalUnread > 0);
-
         return contacts;
       },
 
