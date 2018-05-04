@@ -966,6 +966,7 @@ table.permission-editor td.checkbox {
 
 #sendMessage {
   overflow: hidden;
+  overflow-wrap: break-word;
 }
 
 #send-message-panel .material-icons {
@@ -1162,6 +1163,8 @@ table.permission-editor td.checkbox {
 .chat-box .bubble p {
   color: #212121;
   margin: 0;
+  max-width: 36rem;
+  overflow-wrap: break-word;
 }
 /* The timestamp is a floating element. Need to ensure p is expanded
  * to accomodate it. It's usually called clearfix. */
@@ -1207,7 +1210,7 @@ table.permission-editor td.checkbox {
 /* Inline image styles */
 .inline-image {
   max-width: 36rem;
-  max-height: 24rem;
+  max-height: 22rem;
   overflow: hidden;
   border-radius: 0.1rem;
   cursor: pointer;
