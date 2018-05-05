@@ -1005,7 +1005,7 @@ table.permission-editor td.checkbox {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 10;
+  z-index: 2;
   background-color: rgba(255,255,255,0.90);
 }
 
@@ -1014,7 +1014,7 @@ table.permission-editor td.checkbox {
   justify-content: space-between;
   background-color: transparent;
   line-height: 2.5rem;
-  height: 2.5rem;
+  height: 3.5rem;
   padding: 1rem 0.75rem 0 0.75rem;
 }
 
@@ -1210,7 +1210,7 @@ table.permission-editor td.checkbox {
 /* Inline image styles */
 .inline-image {
   max-width: 36rem;
-  max-height: 22rem;
+  max-height: 24rem;
   overflow: hidden;
   border-radius: 0.1rem;
   cursor: pointer;
