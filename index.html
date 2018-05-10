@@ -2373,8 +2373,7 @@
       },
       handleSearch: function(e) {
         e.preventDefault();
-        // Split query string by either space or comma, filter out empty strings.
-        var query = this.state.search.split(/[,\s]/).filter(Boolean);
+        var query = this.state.search.trim();
         if (query.length > 0) {
           this.props.onSearchContacts(query);
         }
@@ -3258,13 +3257,13 @@
 
         if (!topic.isSubscribed() && tryToResubscribe) {
           var instance = this;
-          topic.subscribe(topic.startMetaQuery()
+          var getQuery = topic.startMetaQuery()
             .withLaterDesc()
             .withLaterSub()
             .withLaterData(MESSAGES_PAGE)
-            .withLaterDel()
-            .withTags()
-            .build()).catch(function(err){
+            .withLaterDel();
+          getQuery = topic.getType() == 'grp' ? getQuery.withTags() : getQuery;
+          topic.subscribe(getQuery.build()).catch(function(err){
               instance.props.onError(err.message, "err");
               instance.setState({
                 title: "Not found",
@@ -4003,7 +4002,6 @@
           me.startMetaQuery().
             withLaterSub().
             withDesc().
-            withTags().
             build()
           ).catch(function(err){
             localStorage.removeItem("auth-token");
@@ -4052,7 +4050,7 @@
           this.setState({contactsSearchQuery: fnd.private ? fnd.private.toString() : ''});
           this.tnFndSubsUpdated();
         } else {
-          fnd.subscribe(fnd.startMetaQuery().withSub().withLaterDesc().build()).catch(function(err){
+          fnd.subscribe(fnd.startMetaQuery().withSub().withLaterDesc().withTags().build()).catch(function(err){
             instance.handleError(err.message, "err");
           });
         }
@@ -4226,13 +4224,13 @@
       handleNewTopicRequest: function(peerName, pub, priv, tags) {
         var instance = this;
         var topic = peerName ? Tinode.newTopicWith(peerName) : Tinode.newTopic();
-        var query = topic.startMetaQuery().withDesc().withSub().withData().withTags().build();
+        var query = topic.startMetaQuery().withDesc().withSub().withData();
         var setParams;
         if (!peerName) {
+          query = query.withTags();
           setParams = {desc: {public: pub, private: priv}, tags: tags};
         }
-
-        topic.subscribe(query, setParams).then(function() {
+        topic.subscribe(query.build(), setParams).then(function() {
           window.location.hash = setUrlSidePanel(window.location.hash, 'contacts');
           instance.handleTopicSelected(topic.name, undefined, Tinode.isTopicOnline(topic.name), topic.getAccessMode());
         }).catch(function(err) {
