@@ -4076,8 +4076,9 @@
       handleSearchContacts: function(query) {
         var fnd = Tinode.getFndTopic();
         var instance = this;
-        fnd.setMeta({desc: {private: query}}).then(function(ctrl) {
-          fnd.getMeta(fnd.startMetaQuery().withSub().withLaterDesc().build());
+        fnd.setMeta({desc: {private: query}})
+          .then(function(ctrl) {
+            return fnd.getMeta(fnd.startMetaQuery().withSub().withLaterDesc().build());
         }).catch(function(err){
           instance.handleError(err.message, "err");
         });
