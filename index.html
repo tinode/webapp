@@ -1531,21 +1531,28 @@
       componentWillMount: function() {
         var me = Tinode.getMeTopic();
         var defacs = me.getDefaultAccess();
+        var fnd = Tinode.getFndTopic();
         this.setState({
           fullName: me.public ? me.public.fn : undefined,
           avatar: makeImageUrl(me.public ? me.public.photo : null),
           address: Tinode.getCurrentUserID(),
           auth: defacs.auth,
           anon: defacs.anon,
-          tags: me.tags(),
-          previousOnTags: me.onTagsUpdated
+          tags: fnd.tags(),
+          previousOnTags: fnd.onTagsUpdated
         });
-        me.onTagsUpdated = this.tnNewTags;
+        fnd.onTagsUpdated = this.tnNewTags;
+        if (!fnd.isSubscribed()) {
+          var instance = this;
+          fnd.subscribe(fnd.startMetaQuery().withLaterDesc().withTags().build()).catch(function(err){
+            instance.props.onError(err.message, "err");
+          });
+        }
       },
 
       componentWillUnmount: function() {
-        var me = Tinode.getMeTopic();
-        me.onTagsUpdated = this.state.previousOnTags;
+        var fnd = Tinode.getFndTopic();
+        fnd.onTagsUpdated = this.state.previousOnTags;
       },
 
       tnNewTags: function(tags) {
@@ -4188,7 +4195,7 @@
 
       handleUpdateAccountTagsRequest: function(tags) {
         var instance = this;
-        Tinode.getMeTopic().setMeta({tags: tags})
+        Tinode.getFndTopic().setMeta({tags: tags})
           .catch(function(err) {
             instance.handleError(err.message, "err");
           });
