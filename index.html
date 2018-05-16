@@ -2585,11 +2585,14 @@
         var newState = {contactList: []};
         if (topic.getType() === "p2p") {
           // Fetch the other party in the p2p conversation.
+          // Topic may not be ready yet, so check if user is found.
           var user2 = topic.subscriber(props.topic);
-          newState.modeGiven2 = user2.acs.getGiven();
-          newState.modeWant2 = user2.acs.getWant();
+          if (user2) {
+            newState.modeGiven2 = user2.acs.getGiven();
+            newState.modeWant2 = user2.acs.getWant();
+          }
         } else {
-          topic.subscribers(function(sub){
+          topic.subscribers(function(sub) {
             newState.contactList.push(sub);
           }, this);
         }
