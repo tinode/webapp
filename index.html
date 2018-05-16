@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Tinode example: chat web application in react.js</title>
+    <title>Tinode</title>
     <link rel="manifest" href="manifest.json">
     <link id="shortcut-icon" rel="shortcut icon" href="img/logo32x32.png" />
     <link rel="apple-touch-icon" sizes="192x192" href="img/logo192.png" type="image/png" />
@@ -231,8 +231,8 @@
       reader.readAsDataURL(file);
     }
 
-    // Make shortcut icon appear with a green dot.
-    function updateFavicon(on) {
+    // Make shortcut icon appear with a green dot + show unread count in title.
+    function updateFavicon(count) {
       var oldIcon = document.getElementById("shortcut-icon");
       if (oldIcon) {
         var head = document.head || document.getElementsByTagName('head')[0];
@@ -240,10 +240,11 @@
         newIcon.type = "image/png";
         newIcon.id = "shortcut-icon";
         newIcon.rel = "shortcut icon";
-        newIcon.href = "img/logo32x32" + (on ? 'a' : '') + ".png";
+        newIcon.href = "img/logo32x32" + (count > 0 ? 'a' : '') + ".png";
         head.removeChild(oldIcon);
         head.appendChild(newIcon);
       }
+      document.title = (count > 0 ? '('+count+') ' : '') + "Tinode";
     }
 
     // Get 32 bit integer hash value for a string. Ideally it should produce the same value
@@ -1957,13 +1958,13 @@
       prepareContactList: function() {
         var instance = this;
         var contacts = [];
-        var totalUnread = 0;
+        var unreadThreads = 0;
         Tinode.getMeTopic().contacts(function(c) {
           // Force to integers;
           c.seq = ~~c.seq;
           c.read = ~~c.read;
           c.unread = c.seq - c.read;
-          totalUnread += c.unread;
+          unreadThreads += c.unread > 0 ? 1 : 0;
           contacts.push(c);
           if (instance.props.topicSelected == c.topic) {
             instance.props.onOnlineChange(c.online);
@@ -1973,7 +1974,7 @@
         contacts.sort(function(a,b){
           return b.touched - a.touched;
         });
-        updateFavicon(totalUnread > 0);
+        updateFavicon(unreadThreads);
         return contacts;
       },
 
@@ -2776,12 +2777,11 @@
       },
 
       handleShowAddMembers: function() {
-        // this.props.onAddMember(this.props.topic);
+        this.props.onInitFind();
         this.setState({showMemberPanel: true});
       },
 
       handleHideAddMembers: function() {
-        // this.props.onAddMember(this.props.topic);
         this.setState({showMemberPanel: false});
       },
 
@@ -3308,6 +3308,7 @@
         }
       },
 
+      // Get older messages
       fetchMoreMessages: function(event) {
         var instance = this;
         if (event.target.scrollTop <= 0) {
@@ -3316,7 +3317,7 @@
           this.setState(function(prevState, props) {
             if (!prevState.fetchingMessages) {
               var topic = Tinode.getTopic(instance.state.topic);
-              if (topic && topic.isSubscribed() && topic.msgHasMore()) {
+              if (topic && topic.isSubscribed() && topic.msgHasMoreMessages()) {
                 newState.fetchingMessages = true;
                 topic.getMessagesPage(MESSAGES_PAGE).then(function() {
                   instance.setState({fetchingMessages: false});
@@ -4050,13 +4051,13 @@
       /* Fnd topic: find contacts by tokens */
       tnInitFind: function() {
         var fnd = Tinode.getFndTopic();
-        fnd.onSubsUpdated = this.tnFndSubsUpdated;
-        fnd.onMetaDesc = this.tnFndMetaDesc;
-        var instance = this;
         if (fnd.isSubscribed()) {
           this.setState({contactsSearchQuery: fnd.private ? fnd.private.toString() : ''});
           this.tnFndSubsUpdated();
         } else {
+          fnd.onSubsUpdated = this.tnFndSubsUpdated;
+          fnd.onMetaDesc = this.tnFndMetaDesc;
+          var instance = this;
           fnd.subscribe(fnd.startMetaQuery().withSub().withLaterDesc().withTags().build()).catch(function(err){
             instance.handleError(err.message, "err");
           });
