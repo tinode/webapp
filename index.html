@@ -2501,6 +2501,7 @@
     var InfoView = React.createClass({
       getInitialState: function() {
         return {
+          topic: null,
           owner: false,
           admin: false,
           sharer: false,
@@ -2539,24 +2540,23 @@
           return;
         }
 
-        this.previousMetaDesc = topic.onMetaDesc;
-        topic.onMetaDesc = this.onMetaDesc;
+        if (this.previousMetaDesc != topic.onMetaDesc) {
+          this.previousMetaDesc = topic.onMetaDesc;
+          topic.onMetaDesc = this.onMetaDesc;
 
-        this.previousSubsUpdated = topic.onSubsUpdated;
-        topic.onSubsUpdated = this.onSubsUpdated;
+          this.previousSubsUpdated = topic.onSubsUpdated;
+          topic.onSubsUpdated = this.onSubsUpdated;
 
-        if (topic.getType() === "grp") {
-          this.previousTagsUpdated = topic.onTagsUpdated;
-          topic.onTagsUpdated = this.onTagsUpdated;
-        } else {
-          this.previousTagsUpdated = undefined;
+          if (topic.getType() === "grp") {
+            this.previousTagsUpdated = topic.onTagsUpdated;
+            topic.onTagsUpdated = this.onTagsUpdated;
+          } else {
+            this.previousTagsUpdated = undefined;
+          }
         }
 
-        this.resetInfoView(topic, props, true);
-      },
-
-      resetInfoView: function(topic, props, forced) {
-        if (forced || this.props.topic != props.topic) {
+        if (this.state.topic != props.topic) {
+          this.setState({topic: props.topic});
           this.resetDesc(topic, props);
           this.resetSubs(topic, props);
 
@@ -2571,17 +2571,14 @@
         if (!topic) {
           return;
         }
+        this.setState({topic: null});
         topic.onMetaDesc = this.previousMetaDesc;
         topic.onSubsUpdated = this.previousSubsUpdated;
         topic.onTagsUpdated = this.previousTagsUpdated;
       },
 
       componentWillReceiveProps: function(nextProps) {
-        var topic = Tinode.getTopic(nextProps.topic);
-        if (!topic) {
-          return;
-        }
-        this.resetInfoView(topic, nextProps);
+        this.initInfoView(nextProps);
       },
 
       resetSubs: function(topic, props) {
