@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <title>Tinode</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Tinode</title>
-    <link rel="manifest" href="manifest.json">
-    <link id="shortcut-icon" rel="shortcut icon" href="img/logo32x32.png" />
-    <link rel="apple-touch-icon" sizes="192x192" href="img/logo192.png" type="image/png" />
+    <meta name="application-name" content="Tinode">
+    <meta name="description" content="Instant messaging">
+    <meta name="application-url" content="https://api.tinode.co/x/">
     <!-- Browser styling for Chrome, FF, Opera -->
     <meta name="theme-color" content="#3949AB">
+    <!-- Ask Google not to offer page translation -->
+    <meta name="google" value="notranslate">
+
+    <link rel="manifest" href="manifest.json">
+    <link id="shortcut-icon" rel="shortcut icon" href="img/logo32x32.png" type="image/png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="img/logo192.png" type="image/png" />
+    <link rel="canonical" href="https://api.tinode.co/x/"/>
     <!-- Google's Roboto font -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400italic,500,700&subset=latin,cyrillic"
       rel="stylesheet" type="text/css" />
@@ -16,11 +23,14 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     <!-- Styles for local elements -->
     <link rel="stylesheet" href="css/base.css" />
+
     <!-- ReactJs scripts -->
     <script src="https://unpkg.com/react@15/dist/react.min.js"></script>
     <script src="https://unpkg.com/react-dom@15/dist/react-dom.min.js"></script>
     <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+    <!-- core functionality -->
     <script src="tinode.js"></script>
+    <!-- message formatting -->
     <script src="drafty.js"></script>
   </head>
   <body>
@@ -1159,7 +1169,8 @@
           email: '',
           fn: '', // full/formatted name
           imageDataUrl: null,
-          errorCleared: false
+          errorCleared: false,
+          saveToken: localStorage.getObject("keep-logged-in")
         };
       },
       handleLoginChange: function(e) {
@@ -1179,6 +1190,10 @@
       },
       handleImageChanged: function(img) {
         this.setState({imageDataUrl: img});
+      },
+      handleToggleSaveToken: function() {
+        localStorage.setObject("keep-logged-in", !this.state.saveToken);
+        this.setState({saveToken: !this.state.saveToken});
       },
       handleSubmit: function(e) {
         e.preventDefault();
@@ -1221,6 +1236,11 @@
             <div  className="panel-form-row">
               <input type="text" placeholder="Full name, e.g. John Doe" autoComplete="name"
                 value={this.state.fn} onChange={this.handleFnChange} required/>
+            </div>
+            <div className="panel-form-row">
+              <CheckBox id="save-token" name="save-token" checked={this.state.saveToken}
+                onChange={this.handleToggleSaveToken} />
+              <label forHtml="save-token">&nbsp;Keep me logged in</label>
             </div>
             <div className="dialog-buttons">
               <button className={submitClasses} type="submit">Sign up</button>
