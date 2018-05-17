@@ -3254,7 +3254,7 @@
 
           // The user switched to the new topic before the timer for
           // the previous topic has triggered, kill it.
-          clearTimeout(this.readTimer);
+          this.props.readTimerHandler(null);
         }
 
         this.setState({
@@ -3373,17 +3373,15 @@
 
         // msg could be null if one or more messages were deleted.
         if (msg && !msg.deleted) {
-          clearTimeout(this.readTimer);
-
           // If the message is added to the end of the message list,
           // scroll to the bottom.
           if (topic.isNewMessage(msg.seq)) {
             newState.scrollPosition = 0;
           }
           // Aknowledge all messages, including own messges.
-          this.readTimer = setTimeout(function() {
+          this.props.readTimerHandler(function() {
             topic.noteRead(msg.seq);
-          }, READ_DELAY);
+          });
           this.props.onData(msg);
         }
 
@@ -3831,6 +3829,8 @@
         window.addEventListener('online', function(e) { instance.handleOnline(true); });
         window.addEventListener('offline', function(e) { instance.handleOnline(false); });
         window.addEventListener('hashchange', this.handleHashRoute);
+        // Window/tab visible or invisible for pausing timers.
+        document.addEventListener("visibilitychange", this.handleVisibilityEvent);
 
         this.setState({viewportWidth: document.documentElement.clientWidth});
 
@@ -3858,6 +3858,8 @@
         } else {
           window.location.hash = "";
         }
+        this.readTimer = null;
+        this.readTimerCallback = null;
       },
       // Setup transport (usually websocket) and server address. This will terminate connection with the server.
       tnSetup: function(serverAddress, transport) {
@@ -3912,6 +3914,24 @@
           this.handleError("No connection", "warn");
         }
         this.setState({liveConnection: online});
+      },
+
+      // Handling read notifications here to be able to pause
+      // them then the window/tab is not visible.
+      handleAppVisibility: function(visible, callback) {
+        clearTimeout(this.readTimer);
+        this.readTimerCallback = callback;
+        if (visible && callback) {
+          this.readTimer = setTimeout(callback, READ_DELAY);
+        } else {
+          this.readTimer = null;
+        }
+      },
+      handleReadTimer: function(callback) {
+        this.handleAppVisibility(!document.hidden, callback);
+      },
+      handleVisibilityEvent: function() {
+        this.handleAppVisibility(!document.hidden, this.readTimerCallback);
       },
 
       handleError: function(err, level) {
@@ -4479,6 +4499,7 @@
               onHideMessagesView={this.handleHideMessagesView}
               onData={this.tnData}
               onError={this.handleError}
+              readTimerHandler={this.handleReadTimer}
               showContextMenu={this.handleShowContextMenu}
               sendMessage={this.handleSendMessage} />
 
