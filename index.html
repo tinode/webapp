@@ -3877,12 +3877,15 @@
       handleHashRoute: function() {
         var hash = parseUrlHash(window.location.hash);
         // Left-side panel selector.
-        if (hash.path && hash.path.length >0) {
+        if (hash.path && hash.path.length > 0) {
           if (['register','settings','edit','cred','newtpk','contacts',''].includes(hash.path[0])) {
             this.setState({sidePanelSelected: hash.path[0]});
           } else {
             console.log("Unknown sidepanel view", hash.path[0]);
           }
+        } else {
+          // Empty hashpath
+          this.setState({sidePanelSelected: ''});
         }
         // Topic for MessagesView selector.
         if (hash.path.length > 1 && hash.path[1] != this.state.topicSelected) {
