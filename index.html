@@ -47,6 +47,9 @@
     // Sound to play on message received.
     var POP_SOUND = new Audio('audio/msg.mp3');
 
+    // Unicode symbol used to clear objects
+    var DEL_CHAR = "\u2421";
+
     // API key. Use https://github.com/tinode/chat/tree/master/keygen to generate your own
     var API_KEY = "AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K";
 
@@ -2390,11 +2393,15 @@
     NewTopicView.SearchContacts = React.createClass({
       getInitialState: function() {
         return {
+          edited: false,
           search: this.props.searchQuery
         };
       },
-      componentWillReceiveProps: function(nextProps) {
-        this.setState({search: nextProps.searchQuery});
+      componentWillUnmount: function() {
+        if (this.state.search) {
+          this.setState({search: ''});
+          this.props.onSearchContacts(DEL_CHAR);
+        }
       },
       handleSearchChange: function(e) {
         this.setState({search: e.target.value});
@@ -2403,8 +2410,15 @@
         e.preventDefault();
         var query = this.state.search.trim();
         if (query.length > 0) {
+          this.setState({edited: true});
           this.props.onSearchContacts(query);
         }
+      },
+      handleClear: function() {
+        if (this.state.edited || this.state.search) {
+          this.props.onSearchContacts(DEL_CHAR);
+        }
+        this.setState({search: '', edited: false});
       },
       handleKeyPress: function(e) {
         if (e.key === 'Enter') {
@@ -2415,11 +2429,13 @@
         return (
           <div className="panel-form">
             <div className="panel-form-row">
-            <input type="text" placeholder="List like email:alice@example.com, tel:17025550003..."
-              value={this.state.search} onChange={this.handleSearchChange}
-              onKeyPress={this.handleKeyPress} required autoFocus />
-              <a href="javascript:;" onClick={this.handleSearch}>
-                <i className="material-icons">search</i>
+              <i className="material-icons search">search</i>
+              <input className="search" type="text"
+                placeholder="List like email:alice@example.com, tel:17025550003..."
+                value={this.state.search} onChange={this.handleSearchChange}
+                onKeyPress={this.handleKeyPress} required autoFocus />
+              <a href="javascript:;" onClick={this.handleClear}>
+                <i className="material-icons">close</i>
               </a>
             </div>
           </div>
@@ -4095,21 +4111,14 @@
       tnInitFind: function() {
         var fnd = Tinode.getFndTopic();
         if (fnd.isSubscribed()) {
-          this.setState({contactsSearchQuery: fnd.private ? fnd.private.toString() : ''});
+          this.setState({contactsSearchQuery: ''});
           this.tnFndSubsUpdated();
         } else {
           fnd.onSubsUpdated = this.tnFndSubsUpdated;
-          fnd.onMetaDesc = this.tnFndMetaDesc;
           var instance = this;
-          fnd.subscribe(fnd.startMetaQuery().withSub().withLaterDesc().withTags().build()).catch(function(err){
+          fnd.subscribe(fnd.startMetaQuery().withSub().withTags().build()).catch(function(err){
             instance.handleError(err.message, "err");
           });
-        }
-      },
-
-      tnFndMetaDesc: function(desc) {
-        if (desc.private) {
-          this.setState({contactsSearchQuery: desc.private.toString()});
         }
       },
 
@@ -4127,9 +4136,8 @@
       handleSearchContacts: function(query) {
         var fnd = Tinode.getFndTopic();
         var instance = this;
-        fnd.setMeta({desc: {private: query}})
-          .then(function(ctrl) {
-            return fnd.getMeta(fnd.startMetaQuery().withSub().withLaterDesc().build());
+        fnd.setMeta({desc: {public: query}}).then(function(ctrl) {
+          return fnd.getMeta(fnd.startMetaQuery().withSub().build());
         }).catch(function(err){
           instance.handleError(err.message, "err");
         });

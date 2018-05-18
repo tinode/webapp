@@ -547,6 +547,14 @@ table.permission-editor td.checkbox {
   padding-left: 0.5rem;
 }
 
+/* Input with a search icon on the left */
+input.search {
+  text-indent: 1.4rem;
+}
+i.search {
+  position: absolute;
+  left: .6rem;
+}
 
 /* Area which displays an error message */
 .alert-box {
@@ -703,20 +711,15 @@ table.permission-editor td.checkbox {
 
 /* Typing indicator: animation of the online dot */
 .online.typing {
-  animation: typing 1.5s infinite;
+  animation: typing 0.5s infinite;
 }
-
 @keyframes typing {
-  0%    { background-color: #40C040; }
-  25%   { background-image: radial-gradient(#30D030 0%, #40C040 67%); }
-  33.3% { background-image: radial-gradient(#10EE10 0%, #40C040 50%); }
-  41.7% { background-image: radial-gradient(#00FF00 0%, #40C040 35%); }
-  50%   { background-image: radial-gradient(#30D030 0%, #40C040 67%); }
-  58.3% { background-image: radial-gradient(#10EE10 0%, #40C040 50%); }
-  66.7% { background-image: radial-gradient(#00FF00 0%, #40C040 35%); }
-  75%   { background-image: radial-gradient(#30D030 0%, #40C040 67%); }
-  83.3% { background-image: radial-gradient(#10EE10 0%, #40C040 50%); }
-  91.6% { background-image: radial-gradient(#00FF00 0%, #40C040 35%); }
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-0.3rem);
+  }
 }
 
 .contact-box .checkmark.material-icons {
