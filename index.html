@@ -2036,8 +2036,8 @@
             // which don't satisfy the condition.
             if (instance.props.filterFunc && instance.props.filter) {
               var content = [key];
-              if (c.private) {
-                content.push(("" + c.private).toLowerCase());
+              if (c.private && c.private.comment) {
+                content.push(("" + c.private.comment).toLowerCase());
               }
               if (c.public && c.public.fn) {
                 content.push(("" + c.public.fn).toLowerCase());
@@ -2059,7 +2059,8 @@
                 badges.push({name: 'owner'});
               }
             }
-            var comment = Array.isArray(c.private) ? c.private.join(", ") : c.private;
+            var comment = Array.isArray(c.private) ?
+              c.private.join(", ") : (c.private ? c.private.comment : null);
 
             contactNodes.push(
               <Contact
@@ -2647,7 +2648,7 @@
 
           fullName: topic.public ? topic.public.fn : undefined,
           avatar: makeImageUrl(topic.public ? topic.public.photo : null),
-          private: topic.private,
+          private: topic.private ? topic.private.comment : null,
           address: topic.name,
           groupTopic: (topic.getType() === "grp"),
           access: acs ? acs.getMode() : undefined,
@@ -4307,7 +4308,7 @@
             params.public = pub;
           }
           if (priv) {
-            params.private = priv;
+            params.private = {comment: priv};
           }
           if (permissions) {
             params.defacs = permissions;
