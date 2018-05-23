@@ -383,6 +383,8 @@ Sample JSON representation of the text above:
 
       /**
        * Parse plain text into structured representation.
+       * @param {String} content plain-text content to parse.
+       * @return {Drafty} parsed object.
        */
       parse: function(content) {
         // Make sure we are parsing strings only.
@@ -490,12 +492,12 @@ Sample JSON representation of the text above:
       },
 
       /**
-       * Add inline image to drafty content
+       * Add inline image to Drafty content
        *
-       * @param {Drafty} content object to add image to
-       * @param {integer} at index where the object is inserted
+       * @param {Drafty} content object to add image to.
+       * @param {integer} at index where the object is inserted. The length of the image is always 1.
        * @param {string} mime mime-type of the image, e.g. "image/png"
-       * @param {string} bits base64-encoded image content
+       * @param {string} base64bits base64-encoded image content
        * @param {integer} width width of the image
        * @param {integer} height height of the image
        * @param {string} fname file name suggestion for downloading the image.
@@ -524,6 +526,14 @@ Sample JSON representation of the text above:
         return content;
       },
 
+      /**
+       * Add file to Drafty content.
+       *
+       * @param {Drafty} content object to add image to.
+       * @param {string} mime mime-type of the image, e.g. "image/png"
+       * @param {string} base64bits base64-encoded image content
+       * @param {string} fname file name suggestion for downloading the image.
+       */
       attachFile: function(content, mime, base64bits, fname) {
         content = content || {txt: ""};
         content.ent = content.ent || [];
@@ -550,12 +560,12 @@ Sample JSON representation of the text above:
       /**
        * Given the structured representation of rich text, convert it to HTML.
        * No attempt is made to strip pre-existing html markup.
-       * This is potentially unsafe because block.txt may contain malicious
+       * This is potentially unsafe because `content.txt` may contain malicious
        * markup.
        *
        * @param {drafy} content - structured representation of rich text.
        *
-       * @return HTML-representation of content
+       * @return HTML-representation of content.
        */
       unsafeToHTML: function(content) {
         var {txt, fmt, ent} = content;
@@ -596,13 +606,23 @@ Sample JSON representation of the text above:
       },
 
       /**
-       * Transform using custom formatting.
+       * Callback for applying custom formatting/transformation to a Drafty object.
+       * Called once for each syle span.
+       *
+       * @callback Formatter
+       * @param {string} style style code such as "ST" or "IM".
+       * @param {Object} data entity's data
+       * @param {Object} values possibly styled subspans contained in this style span.
+       */
+
+      /**
+       * Transform Drafty using custom formatting.
        *
        * @param {Drafty} content - content to transform.
-       * @param {function} formatter - callback which transforms individual elements
+       * @param {Formatter} formatter - callback which transforms individual elements
        * @param {Object} context - context provided to formatter as 'this'.
        *
-       * @return {Object} context
+       * @return {Object} transformed object
        */
       format: function(content, formatter, context) {
         var {txt, fmt, ent} = content;
@@ -648,10 +668,10 @@ Sample JSON representation of the text above:
       /**
        * Given structured representation of rich text, convert it to plain text.
        *
-       * @param {drafty} content - content to convert to plain text.
+       * @param {Drafty} content - content to convert to plain text.
        */
       toPlainText: function(content) {
-        return content.text;
+        return content.txt;
       },
 
       /**
@@ -660,7 +680,7 @@ Sample JSON representation of the text above:
        * @param {Drafty} content - content to check for presence of markup.
        * @returns true is content is plain text, false otherwise.
        */
-      isPlainText: function(content, noLineBreaks) {
+      isPlainText: function(content) {
         return !(content.fmt || content.ent);
       },
 
@@ -682,10 +702,19 @@ Sample JSON representation of the text above:
       },
 
       /**
+       * Callback for applying custom formatting/transformation to a Drafty object.
+       * Called once for each syle span.
+       *
+       * @callback AttachmentCallback
+       * @param {Object} data attachment data
+       * @param {number} index attachment's index in `content.ent`.
+       */
+
+      /**
        * Enumerate attachments
        *
        * @param {Drafty} content - drafty object to process for attachments.
-       * @param {function} callback - callback to call for each attachment.
+       * @param {AttachmentCallback} callback - callback to call for each attachment.
        * @param {Object} content - value of "this" for callback.
        */
       attachments: function(content, callback, context) {
@@ -698,19 +727,34 @@ Sample JSON representation of the text above:
         }
       },
 
-      // Get blob URL for a given entity
+      /**
+       * Get blob URL for a given entity.
+       *
+       * @param {Object} entity to get the URl from.
+       */
       getBlobUrl: function(entity) {
         return base64toObjectUrl(entity.val, entity.mime);
       },
 
-      getAttachmentSize: function(entity) {
+      /**
+       * Get approximate size of the entity.
+       *
+       * @param {Object} entity to get the size for.
+       */
+      getEntitySize: function(entity) {
         // Value is base64 encoded. The actual object size is smaller than the encoded length.
         return entity.val ? (entity.val.length * 0.75) | 0 : 0;
       },
 
-      getAttachmentType: function(entity) {
+      /**
+       * Get entity mime type.
+       *
+       * @param {Object} entity to get the type for.
+       */
+      getEntityMimeType: function(entity) {
         return entity.mime || "text/plain";
       },
+
       /**
        * Get HTML tag for a given two-letter style name
        * @param {string} style - two-letter style, like ST or LN
@@ -737,7 +781,7 @@ Sample JSON representation of the text above:
       },
 
       /**
-       * Content MIME type.
+       * Drafty MIME type.
        * @returns string suitabe for HTTP Content-Type field.
        */
       getContentType: function() {

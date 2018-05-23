@@ -3116,7 +3116,7 @@
           Drafty.attachments(content, function(att, i) {
             attachments.push(<Message.Attachment
               filename={att.name} blobUrl={Drafty.getBlobUrl(att)}
-              size={bytesToHumanSize(Drafty.getAttachmentSize(att))} key={i} />);
+              size={bytesToHumanSize(Drafty.getEntitySize(att))} key={i} />);
           }, this);
           content = React.createElement('span', null, Drafty.format(content, formatter, this));
         }
