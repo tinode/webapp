@@ -84,7 +84,7 @@
     var MAX_IMAGE_SIZE = 768;
 
     // Supported image MIME types and corresponding file extensions.
-    var SUPPORTED_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
+    var SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
     var MIME_EXTENSIONS   = ['jpg',        'gif',       'png',       'svg',       'svg'];
 
     // Helper functions for storing values in localStorage.
@@ -111,6 +111,19 @@
       }
       return then.toLocaleDateString(locale,
         {hour12: false, year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'});
+    }
+
+    // Convert a number of bytes to human-readable format.
+    function bytesToHumanSize(bytes) {
+      if (!bytes || bytes == 0) {
+        return '0 Bytes';
+      }
+
+      var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+      var bucket = Math.floor(Math.log2(bytes) / 10) | 0;
+      var count = bytes / Math.pow(1024, bucket);
+      var round = bucket > 0 ? (count < 10 ? 2 : (count < 100 ? 1 : 0)) : 0;
+      return count.toFixed(round) + ' ' + sizes[bucket];
     }
 
     // Make a data URL from public.photo
@@ -141,7 +154,7 @@
 
     // Ensure file's extension matches mime content type
     function fileNameForMime(fname, mime) {
-      var idx = SUPPORTED_FORMATS.indexOf(mime);
+      var idx = SUPPORTED_IMAGE_FORMATS.indexOf(mime);
       var ext = MIME_EXTENSIONS[idx];
 
       var at = fname.lastIndexOf('.');
@@ -187,7 +200,7 @@
           ctx.drawImage(this, 0, 0, this.width, this.height,
             0, 0, canvas.width, canvas.height);
         }
-        var mime = (forceSquare || SUPPORTED_FORMATS.indexOf(file.type) < 0) ? "image/jpeg" : file.type;
+        var mime = (forceSquare || SUPPORTED_IMAGE_FORMATS.indexOf(file.type) < 0) ? "image/jpeg" : file.type;
         var imageBits = canvas.toDataURL(mime);
         var parts = imageBits.split(',');
         // Get actual image type: 'data:image/png;base64,'
@@ -216,12 +229,12 @@
     // Convert uploaded image file to base64-encoded string without scaling/converting the image
     function imageFileToBase64(file, onSuccess, onError) {
       if (file.size > MAX_ATTACHMENT_SIZE) {
-        onError("The file size " + bytesToHumanSize(file.size) +
+        onError("The image size " + bytesToHumanSize(file.size) +
           " exceeds the "  + bytesToHumanSize(MAX_ATTACHMENT_SIZE) + " limit.", "err");
         return;
       }
 
-      var reader  = new FileReader();
+      var reader = new FileReader();
       reader.addEventListener("load", function() {
         var parts = reader.result.split(',');
         var mime = getMimeType(parts[0]);
@@ -242,6 +255,45 @@
         img.src = URL.createObjectURL(file);
       }, false);
       reader.readAsDataURL(file);
+    }
+
+    function fileToBase64(file, onSuccess, onError) {
+      if (file.size <= MAX_ATTACHMENT_SIZE) {
+        var reader = new FileReader();
+        reader.addEventListener("load", function() {
+          onSuccess(file.type, reader.result.split(',')[1], file.name);
+        });
+        reader.readAsDataURL(file);
+      } else {
+        onError("The file size " + bytesToHumanSize(file.size) +
+          " exceeds the "  + bytesToHumanSize(MAX_ATTACHMENT_SIZE) + " limit.", "err");
+      }
+    }
+
+    // File pasted from the clipboard. It's either an inline image or a file attachment.
+    function filePasted(event, onImageSuccess, onAttachmentSuccess, onError) {
+      var items = (event.clipboardData || event.originalEvent.clipboardData || {}).items;
+      for (var i in items) {
+        var item = items[i];
+        if (item.kind === "file") {
+          var file = item.getAsFile();
+          if (file.type.split("/")[0] == "image") {
+            // Handle inline image
+            if (file.size > MAX_ATTACHMENT_SIZE) {
+              imageFileScaledToBase64(file, MAX_IMAGE_SIZE, MAX_IMAGE_SIZE, false, onImageSuccess, onError);
+            } else {
+              imageFileToBase64(file, onImageSuccess, onError);
+            }
+          } else {
+            // Handle file attachment
+            fileToBase64(file, onAttachmentSuccess, onError)
+          }
+          // Indicate that the pasted data contains a file.
+          return true;
+        }
+      }
+      // No file found.
+      return false;
     }
 
     // Make shortcut icon appear with a green dot + show unread count in title.
@@ -381,19 +433,6 @@
         }
       }
       return true;
-    }
-
-    // Convert a number of bytes to human-readable format.
-    function bytesToHumanSize(bytes) {
-      if (!bytes || bytes == 0) {
-        return '0 Bytes';
-      }
-
-      var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-      var bucket = Math.floor(Math.log2(bytes) / 10) | 0;
-      var count = bytes / Math.pow(1024, bucket);
-      var round = bucket > 0 ? (count < 10 ? 2 : (count < 100 ? 1 : 0)) : 0;
-      return count.toFixed(round) + ' ' + sizes[bucket];
     }
 
     /* BEGIN Context Menu: popup/dropdown menu */
@@ -3630,12 +3669,40 @@
         };
       },
 
+      componentDidMount: function() {
+        this.pasteFile.addEventListener('paste', this.handlePasteEvent, false);
+      },
+
+      componentWillUnmount: function() {
+        this.pasteFile.removeEventListener('paste', this.handlePasteEvent, false)
+      },
+
+      handlePasteEvent: function(e) {
+        if (this.props.disabled) {
+          return;
+        }
+        var instance = this;
+        if (filePasted(e,
+          function(bits, mime, width, height, fname) {
+            instance.props.sendMessage(Drafty.insertImage(null,
+              0, mime, bits, width, height, fname));
+          },
+          function(mime, bits, fname) {
+            instance.props.sendMessage(Drafty.attachFile(null, mime, bits, fname));
+          },
+          instance.props.onError)) {
+
+          // If file was pasted, don't paste base64 daata into input field.
+          e.preventDefault();
+        }
+      },
+
       handleAttachImage: function(e) {
         if (e.target.files && e.target.files.length > 0) {
           var instance = this;
           var files = e.target.files;
           // Check if the uploaded file is indeed an image and if it isn't too large.
-          if (files[0].size > MAX_ATTACHMENT_SIZE || SUPPORTED_FORMATS.indexOf(files[0].type) < 0) {
+          if (files[0].size > MAX_ATTACHMENT_SIZE || SUPPORTED_IMAGE_FORMATS.indexOf(files[0].type) < 0) {
             // Convert image for size or format.
             imageFileScaledToBase64(files[0], MAX_IMAGE_SIZE, MAX_IMAGE_SIZE, false,
               // Success
@@ -3667,19 +3734,12 @@
 
       handleAttachFile: function(e) {
         if (e.target.files && e.target.files.length > 0) {
-          var file = e.target.files[0];
-          if (file.size > MAX_ATTACHMENT_SIZE) {
-            this.props.onError("The file size " + bytesToHumanSize(file.size) +
-            " exceeds the " + bytesToHumanSize(MAX_ATTACHMENT_SIZE) + " attachment limit.", "err");
-            return;
-          }
-
-          var reader  = new FileReader();
           var instance = this;
-          reader.addEventListener("load", function() {
-            instance.props.sendMessage(Drafty.attachFile(null, file.type, reader.result.split(',')[1], file.name));
-          }, false);
-          reader.readAsDataURL(file);
+          fileToBase64(e.target.files[0],
+            function(mime, bits, fname) {
+              instance.props.sendMessage(Drafty.attachFile(null, mime, bits, fname));
+            },
+            this.props.onError);
         }
         // Clear the value so the same file can be uploaded again.
         e.target.value = '';
@@ -3735,6 +3795,7 @@
             <textarea id="sendMessage" placeholder={prompt}
               disabled={this.props.disabled} value={this.state.message}
               onChange={this.handleMessageTyping} onKeyPress={this.handleKeyPress}
+              ref={function(ref) {instance.pasteFile = ref;}}
               autoFocus />
               {this.props.disabled ?
                 <i className="material-icons disabled">send</i> :
