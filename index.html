@@ -277,7 +277,11 @@
         var item = items[i];
         if (item.kind === "file") {
           var file = item.getAsFile();
-          if (file.type.split("/")[0] == "image") {
+          if (!file) {
+            console.log("Failed to get file object from pasted file item", item.kind, item.type);
+            continue;
+          }
+          if (file.type && file.type.split("/")[0] == "image") {
             // Handle inline image
             if (file.size > MAX_ATTACHMENT_SIZE) {
               imageFileScaledToBase64(file, MAX_IMAGE_SIZE, MAX_IMAGE_SIZE, false, onImageSuccess, onError);
@@ -691,9 +695,42 @@
         return avatar;
       }
     }
-
-
     /* END Lettertile */
+
+    /* File uload spinner with a cancel inside */
+    class FileUploadProgress extends React.PureComponent {
+      constructor(props) {
+        super(props);
+
+        this.state = {
+          progress: 0
+        };
+      }
+
+      render() {
+        var halfclip, progress1, progress2;
+        if (this.state.progress < 0.5) {
+          halfclip = {display: "block"};
+          progress1 = {transform: "rotate(" + (this.state.progress*360) + "deg)"};
+          progress2 = {display: "none"};
+        } else {
+          halfclip = {display: "none"};
+          progress1 = {transform: "rotate(180deg)"};
+          progress2 = {display: "block", transform: "rotate(" + (180 + (this.state.progress-0.5)*360) + "deg)"};
+        }
+        return (
+          <div className="upload-container">
+            <div className="half active" style={progress1}></div>
+            <div className="half clip" style={halfclip}></div>
+            <div className="half active" style={progress2}></div>
+            <div className="inner">{this.props.onCancel ?
+              <MenuCancel onCancel={this.props.onCancel} /> :
+              null}
+            </div>
+          </div>
+        );
+      }
+    }
 
     /* BEGIN In-place text editor. Shows text with an icon
      * which toggles it into an input field */
