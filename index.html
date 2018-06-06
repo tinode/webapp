@@ -75,9 +75,14 @@
     // Number of chat messages to fetch in one call.
     var MESSAGES_PAGE = 24;
 
-    // Maximum allowed attachment size = 128K. Increade this limit to a
-    // greater value in production. Also increase max_message_size in server config.
-    var MAX_ATTACHMENT_SIZE = 1 << 17;
+    // Maximum in-band attachment size = 128K (included directly into message). Increade
+    // this limit to a greater value in production, if desired. Also increase max_message_size
+    // in server config.
+    var MAX_INBAND_ATTACHMENT_SIZE = 1 << 17;
+
+    // Absolute maximum attachment size to be used with the server = 8MB. Increase to
+    // something like 100MB in production.
+    var MAX_EXTERN_ATTACHMENT_SIZE = 1 << 23;
 
     // Maximum allowed linear dimension of an inline image in pixels. You may want
     // to adjust it to 1600 or 2400 for production.
@@ -85,7 +90,7 @@
 
     // Supported image MIME types and corresponding file extensions.
     var SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
-    var MIME_EXTENSIONS   = ['jpg',        'gif',       'png',       'svg',       'svg'];
+    var MIME_EXTENSIONS         = ['jpg',        'gif',       'png',       'svg',       'svg'];
 
     // Helper functions for storing values in localStorage.
     // By default localStorage can store only strings, not objects or other types.
@@ -211,13 +216,13 @@
         }
         // Ensure the image is not too large
         var quality = 0.78;
-        while (mime == "image/jpeg" && imageBits.length * 0.75 > MAX_ATTACHMENT_SIZE && quality > 0.15) {
+        while (mime == "image/jpeg" && imageBits.length * 0.75 > MAX_INBAND_ATTACHMENT_SIZE && quality > 0.15) {
           imageBits = canvas.toDataURL(mime, quality);
           quality *= 0.84;
         }
-        if (imageBits.length * 0.75 > MAX_ATTACHMENT_SIZE) {
+        if (imageBits.length * 0.75 > MAX_INBAND_ATTACHMENT_SIZE) {
           onError("The image size " + bytesToHumanSize(imageBits.length * 0.75) +
-            " exceeds the "  + bytesToHumanSize(MAX_ATTACHMENT_SIZE) + " limit.", "err");
+            " exceeds the "  + bytesToHumanSize(MAX_INBAND_ATTACHMENT_SIZE) + " limit.", "err");
           return;
         }
         canvas = null;
@@ -228,9 +233,9 @@
 
     // Convert uploaded image file to base64-encoded string without scaling/converting the image
     function imageFileToBase64(file, onSuccess, onError) {
-      if (file.size > MAX_ATTACHMENT_SIZE) {
+      if (file.size > MAX_INBAND_ATTACHMENT_SIZE) {
         onError("The image size " + bytesToHumanSize(file.size) +
-          " exceeds the "  + bytesToHumanSize(MAX_ATTACHMENT_SIZE) + " limit.", "err");
+          " exceeds the "  + bytesToHumanSize(MAX_INBAND_ATTACHMENT_SIZE) + " limit.", "err");
         return;
       }
 
@@ -258,7 +263,7 @@
     }
 
     function fileToBase64(file, onSuccess, onError) {
-      if (file.size <= MAX_ATTACHMENT_SIZE) {
+      if (file.size <= MAX_INBAND_ATTACHMENT_SIZE) {
         var reader = new FileReader();
         reader.addEventListener("load", function() {
           onSuccess(file.type, reader.result.split(',')[1], file.name);
@@ -266,7 +271,7 @@
         reader.readAsDataURL(file);
       } else {
         onError("The file size " + bytesToHumanSize(file.size) +
-          " exceeds the "  + bytesToHumanSize(MAX_ATTACHMENT_SIZE) + " limit.", "err");
+          " exceeds the "  + bytesToHumanSize(MAX_INBAND_ATTACHMENT_SIZE) + " limit.", "err");
       }
     }
 
@@ -283,7 +288,7 @@
           }
           if (file.type && file.type.split("/")[0] == "image") {
             // Handle inline image
-            if (file.size > MAX_ATTACHMENT_SIZE) {
+            if (file.size > MAX_INBAND_ATTACHMENT_SIZE || SUPPORTED_IMAGE_FORMATS.indexOf(file.type) < 0) {
               imageFileScaledToBase64(file, MAX_IMAGE_SIZE, MAX_IMAGE_SIZE, false, onImageSuccess, onError);
             } else {
               imageFileToBase64(file, onImageSuccess, onError);
@@ -3777,7 +3782,7 @@
           var instance = this;
           var files = e.target.files;
           // Check if the uploaded file is indeed an image and if it isn't too large.
-          if (files[0].size > MAX_ATTACHMENT_SIZE || SUPPORTED_IMAGE_FORMATS.indexOf(files[0].type) < 0) {
+          if (files[0].size > MAX_INBAND_ATTACHMENT_SIZE || SUPPORTED_IMAGE_FORMATS.indexOf(files[0].type) < 0) {
             // Convert image for size or format.
             imageFileScaledToBase64(files[0], MAX_IMAGE_SIZE, MAX_IMAGE_SIZE, false,
               // Success
@@ -3911,7 +3916,7 @@
       componentDidMount: function() {
         this.setState({
           width: this.container.clientWidth,
-          height: this.container.clientHeight - REM_SIZE * 7
+          height: this.container.clientHeight
         });
       },
 
@@ -3921,7 +3926,7 @@
         }
         var instance = this;
         var size = fitImageSize(this.props.content.width, this.props.content.height,
-          this.state.width, this.state.hight);
+          this.state.width, this.state.height);
         if (size) {
           size.width += "px";
           size.height += "px";
@@ -3929,20 +3934,22 @@
           size = (this.props.content.width > this.props.content.height) ?
             {width: '100%'} : {height: '100%'};
         }
+        size.maxWidth = "100%";
+        size.maxHeight = "100%";
+
         var filename = this.props.content.filename;
         if (filename.length > 20) {
           filename = filename.slice(0, 8) + "..." + filename.slice(-8);
         }
         return (
-          <div id="image-preview" ref={function(ref) {instance.container = ref;}}
-            onClick={this.props.onClose}>
+          <div id="image-preview" onClick={this.props.onClose}>
             <div id="image-preview-caption-panel">
               <a href="javascript:;" download={this.props.content.filename}>
                 <i className="material-icons">file_download</i> download
               </a>
               <a href="javascript:;" onClick={this.props.onClose}><i className="material-icons gray">close</i></a>
             </div>
-            <div id="image-preview-container">
+            <div id="image-preview-container" ref={function(ref) {instance.container = ref;}}>
               <img src={this.props.content.url} style={size} />
             </div>
             <div id="image-preview-footer">
