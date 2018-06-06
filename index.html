@@ -703,30 +703,15 @@
         super(props);
 
         this.state = {
-          progress: 0
+          progress: 0.33
         };
       }
 
       render() {
-        var halfclip, progress1, progress2;
-        if (this.state.progress < 0.5) {
-          halfclip = {display: "block"};
-          progress1 = {transform: "rotate(" + (this.state.progress*360) + "deg)"};
-          progress2 = {display: "none"};
-        } else {
-          halfclip = {display: "none"};
-          progress1 = {transform: "rotate(180deg)"};
-          progress2 = {display: "block", transform: "rotate(" + (180 + (this.state.progress-0.5)*360) + "deg)"};
-        }
         return (
-          <div className="upload-container">
-            <div className="half active" style={progress1}></div>
-            <div className="half clip" style={halfclip}></div>
-            <div className="half active" style={progress2}></div>
-            <div className="inner">{this.props.onCancel ?
-              <MenuCancel onCancel={this.props.onCancel} /> :
-              null}
-            </div>
+          <div className="uploader">
+            <div><span style={{width: (this.state.progress * 100) + "%"}}></span></div>
+            <a href="javascript:;" onClick={this.props.onCancel}><i className="material-icons">close</i> cancel</a>
           </div>
         );
       }
@@ -1576,6 +1561,7 @@
                 onError={this.props.onError} /> :
 
               null}
+              <FileUploadProgress />
           </div>
         );
       }

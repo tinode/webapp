@@ -1703,33 +1703,24 @@ ul.tabbar li.active > a:after {
 }
 
 /* File upload styles */
-.upload-container {
-  width: 2rem;
-  height: 2rem;
-  padding: 0;
-  margin: 0;
+.uploader {
+  display: flex;
+}
+/* Gray uploader bar of fixed length (background) */
+.uploader > div {
   position: relative;
-  background-color: #CCF;
-  border-radius: 50%;
+  height: 0.6rem;
+  padding: 0.15rem;
+  margin: 0.3rem;
+  width: 6rem;
+  border-radius: 0.1rem;
+  background-color: silver;
 }
-.upload-container .half {
+/* Colored uploader progress bar of variable length */
+.uploader > div > span {
   position: absolute;
-  top: 0; left: 0; width: 1rem; height: 2rem;
-  border-radius: 1rem 0 0 1rem;
-  transform-origin: 1rem 1rem;
-}
-.upload-container .half.active {
-  background-color: #66F;
-}
-.upload-container .half.clip {
-  background-color: #CCF;
-}
-.upload-container .inner {
-  font-size: 80%;
-  position: absolute;
-  top: 0.25rem; left: 0.25rem; right: 0.25rem; bottom: 0.25rem;
-  text-align: center;
-  line-height: 1.5rem;
-  border-radius: 50%;
-  background-color: white;
+  display: inline-block;
+  height: 0.3rem;
+  background-color: #1e88e5;
+  border-radius: 0.08rem;
 }
