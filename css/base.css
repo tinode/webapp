@@ -1225,7 +1225,7 @@ i.search {
   display: flex;
 }
 .attachment:last-of-type {
-  margin-bottom: -1rem;
+  margin-bottom: -0.45rem;
 }
 
 /* END of talk bubbles */
@@ -1711,7 +1711,7 @@ ul.tabbar li.active > a:after {
   position: relative;
   height: 0.6rem;
   padding: 0.15rem;
-  margin: 0.3rem;
+  margin: 0.35rem;
   width: 6rem;
   border-radius: 0.1rem;
   background-color: silver;

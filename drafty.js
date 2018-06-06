@@ -129,9 +129,10 @@ Sample JSON representation of the text above:
     },
     IM: {
       open: function(data) {
-        var blobUrl = base64toObjectUrl(data.val, data.mime);
-        var res = (data.name ? '<a href="' + blobUrl + '" download="' + data.name + '">' : '') +
-          '<img src="' + blobUrl + '"' +
+        var previewUrl = data.val ? base64toObjectUrl(data.val, data.mime) : data.ref;
+        var downloadUrl = data.ref ? data.ref : previewUrl;
+        var res = (data.name ? '<a href="' + downloadUrl + '" download="' + data.name + '">' : '') +
+          '<img src="' + previewUrl + '"' +
             (data.width ? ' width="' + data.width + '"' : '') +
             (data.height ? ' height="' + data.height + '"' : '') + ' border="0" />';
         console.log("open: " + res);
@@ -497,12 +498,14 @@ Sample JSON representation of the text above:
        * @param {Drafty} content object to add image to.
        * @param {integer} at index where the object is inserted. The length of the image is always 1.
        * @param {string} mime mime-type of the image, e.g. "image/png"
-       * @param {string} base64bits base64-encoded image content
+       * @param {string} base64bits base64-encoded image content (or preview, if large image is attached)
        * @param {integer} width width of the image
        * @param {integer} height height of the image
        * @param {string} fname file name suggestion for downloading the image.
+       * @param {string} refurl reference to the content. Could be null or undefined.
+       * @param {integer} size size of the external file. Treat is as an untrusted hint.
        */
-      insertImage: function(content, at, mime, base64bits, width, height, fname) {
+      insertImage: function(content, at, mime, base64bits, width, height, fname, refurl, size) {
         content = content || {txt: " "};
         content.ent = content.ent || [];
         content.fmt = content.fmt || [];
@@ -519,7 +522,9 @@ Sample JSON representation of the text above:
             val: base64bits,
             width: width,
             height: height,
-            name: fname
+            name: fname,
+            ref: refurl,
+            size: size | 0
           }
         });
 
@@ -527,14 +532,16 @@ Sample JSON representation of the text above:
       },
 
       /**
-       * Add file to Drafty content.
+       * Add file to Drafty content. Either as a blob or as a reference.
        *
-       * @param {Drafty} content object to add image to.
-       * @param {string} mime mime-type of the image, e.g. "image/png"
-       * @param {string} base64bits base64-encoded image content
-       * @param {string} fname file name suggestion for downloading the image.
+       * @param {Drafty} content object to attach file to.
+       * @param {string} mime mime-type of the file, e.g. "image/png"
+       * @param {string} base64bits base64-encoded file content
+       * @param {string} fname file name suggestion for downloading.
+       * @param {string} refurl reference to the content. Could be null or undefined.
+       * @param {integer} size size of the external file. Treat is as an untrusted hint.
        */
-      attachFile: function(content, mime, base64bits, fname) {
+      attachFile: function(content, mime, base64bits, fname, refurl, size) {
         content = content || {txt: ""};
         content.ent = content.ent || [];
         content.fmt = content.fmt || [];
@@ -550,7 +557,9 @@ Sample JSON representation of the text above:
           data: {
             mime: mime,
             val: base64bits,
-            name: fname
+            name: fname,
+            ref: refurl,
+            size: size | 0
           }
         });
 
@@ -567,7 +576,7 @@ Sample JSON representation of the text above:
        *
        * @return HTML-representation of content.
        */
-      unsafeToHTML: function(content) {
+      UNSAFE_toHTML: function(content) {
         var {txt, fmt, ent} = content;
 
         var markup = [];
@@ -742,8 +751,9 @@ Sample JSON representation of the text above:
        * @param {Object} entity to get the size for.
        */
       getEntitySize: function(entity) {
-        // Value is base64 encoded. The actual object size is smaller than the encoded length.
-        return entity.val ? (entity.val.length * 0.75) | 0 : 0;
+        // Either size hint or length of value. The value is base64 encoded,
+        // the actual object size is smaller than the encoded length.
+        return entity.size ? entity.size : entity.val ? (entity.val.length * 0.75) | 0 : 0;
       },
 
       /**

@@ -1561,7 +1561,6 @@
                 onError={this.props.onError} /> :
 
               null}
-              <FileUploadProgress />
           </div>
         );
       }
@@ -3178,7 +3177,7 @@
           Drafty.attachments(content, function(att, i) {
             attachments.push(<Message.Attachment
               filename={att.name} blobUrl={Drafty.getBlobUrl(att)}
-              size={bytesToHumanSize(Drafty.getEntitySize(att))} key={i} />);
+              size={Drafty.getEntitySize(att)} key={i} />);
           }, this);
           content = React.createElement('span', null, Drafty.format(content, formatter, this));
         }
@@ -3213,6 +3212,34 @@
       }
     });
 
+    var MessageUploader = React.createClass({
+      render: function() {
+        var sideClass = this.props.sequence + " right";
+        var bubbleClass = "bubble tip";
+
+        var attachments = [
+          <Message.Attachment
+            filename={this.props.filename} size={this.props.size}
+            uploader={true}
+            progress={this.props.progress}/>
+        ];
+
+        return (
+          <li className={sideClass}>
+            <div>
+              <div className="bubble tip">
+                <p>{attachments}
+                <Message.ReceivedMarker response={this.props.response}
+                  timestamp={this.props.timestamp} received={this.props.received} />
+                </p>
+              </div>
+            </div>
+          </li>
+        );
+      }
+    });
+
+
     /* Received/read indicator */
     Message.ReceivedMarker = React.createClass({
       render: function() {
@@ -3245,14 +3272,21 @@
         if (filename.length > 36) {
           filename = filename.substr(0, 16) + "..." + filename.substr(-16);
         }
+        var size = this.props.size > 0 ?
+          <span className="small gray">({bytesToHumanSize(this.props.size)})</span> :
+          null;
         return (
           <div className="attachment">
             <div><i className="material-icons big gray">insert_drive_file</i></div>
             <div className="flex-column">
-              <div>{filename} <span className="small gray">({this.props.size})</span></div>
-              <div><a href={this.props.blobUrl} download={this.props.filename}>
-                <i className="material-icons">file_download</i> save
-              </a></div>
+              <div>{filename} {size}</div>
+              {this.props.uploader ?
+                <FileUploadProgress progress={this.props.progress} />
+                :
+                <div><a href={this.props.blobUrl} download={this.props.filename}>
+                  <i className="material-icons">file_download</i> save
+                </a></div>
+              }
             </div>
           </div>
         );
@@ -3263,6 +3297,7 @@
       getInitialState: function() {
         return {
           messages: [],
+          uploadFile: "test_upload_file.pdf",
           onlineSubs: [],
           topic: '',
           title: '',
@@ -3550,7 +3585,12 @@
           var previousFrom = null;
           for (var i=0; i<this.state.messages.length; i++) {
             var msg = this.state.messages[i];
-            var nextFrom = (i + 1 < this.state.messages.length) ? this.state.messages[i+1].from : null;
+            var nextFrom = null;
+            if (i + 1 < this.state.messages.length) {
+              nextFrom = this.state.messages[i+1].from
+            } else if (this.state.uploadFile) {
+              nextFrom = this.props.myUserId;
+            }
             var sequence = "single";
             if (msg.from === previousFrom) {
               if (msg.from === nextFrom) {
@@ -3595,6 +3635,18 @@
                 viewportWidth={this.props.viewportWidth}
                 showContextMenu={this.handleShowContextMenuMessage}
                 onImagePreview={this.handleImagePreview} key={msg.seq} />
+            );
+          }
+
+          // Upload in progress: display it as an unsent message.
+          if (this.state.uploadFile) {
+            var sequence = (this.state.messages.length > 0 &&
+              this.state.messages[this.state.messages.length-1].from === this.props.myUserId) ? "last" : "single";
+            messageNodes.push(
+              <MessageUploader filename={this.state.uploadFile}
+                size={123456} sequence={sequence} received={Received.SENDING}
+                viewportWidth={this.props.viewportWidth}
+                key="uploader" />
             );
           }
 
