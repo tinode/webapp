@@ -129,7 +129,8 @@ Sample JSON representation of the text above:
     },
     IM: {
       open: function(data) {
-        var previewUrl = data.val ? base64toObjectUrl(data.val, data.mime) : data.ref;
+        // Don't use data.ref for preview: it's a security risk. 
+        var previewUrl = base64toObjectUrl(data.val, data.mime);
         var downloadUrl = data.ref ? data.ref : previewUrl;
         var res = (data.name ? '<a href="' + downloadUrl + '" download="' + data.name + '">' : '') +
           '<img src="' + previewUrl + '"' +
@@ -737,11 +738,22 @@ Sample JSON representation of the text above:
       },
 
       /**
-       * Get blob URL for a given entity.
+       * Given the entity, get URL which can be used for downloading
+       * entity data.
        *
        * @param {Object} entity to get the URl from.
        */
-      getBlobUrl: function(entity) {
+      getDownloadUrl: function(entity) {
+        return entity.ref ? entity.ref : base64toObjectUrl(entity.val, entity.mime);
+      },
+
+      /**
+       * Given the entity, get URL which can be used for previewing
+       * the entity.
+       *
+       * @param {Object} entity to get the URl from.
+       */
+      getPreviewUrl: function(entity) {
         return base64toObjectUrl(entity.val, entity.mime);
       },
 

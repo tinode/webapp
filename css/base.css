@@ -1714,7 +1714,7 @@ ul.tabbar li.active > a:after {
   margin: 0.35rem;
   width: 6rem;
   border-radius: 0.1rem;
-  background-color: silver;
+  background-color: #cfd8dc;
 }
 /* Colored uploader progress bar of variable length */
 .uploader > div > span {
