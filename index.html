@@ -75,7 +75,7 @@
     // Number of chat messages to fetch in one call.
     var MESSAGES_PAGE = 24;
 
-    // Maximum in-band attachment size = 128K (included directly into message). Increade
+    // Maximum in-band attachment size = 128K (included directly into the message). Increase
     // this limit to a greater value in production, if desired. Also increase max_message_size
     // in server config.
     var MAX_INBAND_ATTACHMENT_SIZE = 1 << 17;
@@ -233,12 +233,6 @@
 
     // Convert uploaded image file to base64-encoded string without scaling/converting the image
     function imageFileToBase64(file, onSuccess, onError) {
-      if (file.size > MAX_INBAND_ATTACHMENT_SIZE) {
-        onError("The image size " + bytesToHumanSize(file.size) +
-          " exceeds the "  + bytesToHumanSize(MAX_INBAND_ATTACHMENT_SIZE) + " limit.", "err");
-        return;
-      }
-
       var reader = new FileReader();
       reader.addEventListener("load", function() {
         var parts = reader.result.split(',');
@@ -255,7 +249,7 @@
           onSuccess(parts[1], mime, this.width, this.height, fileNameForMime(file.name, mime));
         }
         img.onerror = function(err) {
-          onError("Image format unrecognized");
+          onError("Image format not recognized");
         }
         img.src = URL.createObjectURL(file);
       }, false);
@@ -263,16 +257,11 @@
     }
 
     function fileToBase64(file, onSuccess, onError) {
-      if (file.size <= MAX_INBAND_ATTACHMENT_SIZE) {
-        var reader = new FileReader();
-        reader.addEventListener("load", function() {
-          onSuccess(file.type, reader.result.split(',')[1], file.name);
-        });
-        reader.readAsDataURL(file);
-      } else {
-        onError("The file size " + bytesToHumanSize(file.size) +
-          " exceeds the "  + bytesToHumanSize(MAX_INBAND_ATTACHMENT_SIZE) + " limit.", "err");
-      }
+      var reader = new FileReader();
+      reader.addEventListener("load", function() {
+        onSuccess(file.type, reader.result.split(',')[1], file.name);
+      });
+      reader.readAsDataURL(file);
     }
 
     // File pasted from the clipboard. It's either an inline image or a file attachment.
@@ -3581,6 +3570,9 @@
         this.props.onHideMessagesView();
       },
 
+      handleUploadProgress: function(progress) {
+      },
+
       render: function() {
         var component = null;
         if (this.state.topic) {
@@ -3722,6 +3714,7 @@
                 topic={this.props.topic}
                 disabled={this.state.readOnly}
                 sendMessage={this.props.sendMessage}
+                onUploadProgress={this.handleUploadProgress}
                 onError={this.props.onError} />
               {this.state.imagePreview ?
                 <MessagesView.ImagePreview content={this.state.imagePreview}
@@ -3815,11 +3808,35 @@
       handleAttachFile: function(e) {
         if (e.target.files && e.target.files.length > 0) {
           var instance = this;
-          fileToBase64(e.target.files[0],
-            function(mime, bits, fname) {
-              instance.props.sendMessage(Drafty.attachFile(null, mime, bits, fname));
-            },
-            this.props.onError);
+          var file = e.target.files[0];
+          if (file.size > MAX_EXTERN_ATTACHMENT_SIZE) {
+            // Too large.
+            this.props.onError("The file size " + bytesToHumanSize(file.size) +
+              " exceeds the "  + bytesToHumanSize(MAX_EXTERN_ATTACHMENT_SIZE) + " limit.", "err");
+          } else if (file.size > MAX_INBAND_ATTACHMENT_SIZE) {
+            // To large to send inband - uploading out of band and sending as a link.
+            var uploader = Tinode.getFileUploader();
+            if (!uploader) {
+              this.props.onError("Cannot initiate file upload.");
+            }
+            uploader.upload(file, function(progress) {
+              instance.props.onUploadProgress(progress);
+            }).then(function(ctrl) {
+              // Success.
+              console.log("Success!", ctrl, ctrl.params);
+              instance.props.sendMessage(
+                Drafty.attachFile(null, file.type, null, file.name, ctrl.params.url, file.size));
+            }).catch(function(err) {
+              instance.props.onError("Failed to upload file: " + err.message, "err");
+            });
+          } else {
+            // Small enough to send inband.
+            fileToBase64(file,
+              function(mime, bits, fname) {
+                instance.props.sendMessage(Drafty.attachFile(null, mime, bits, fname));
+              },
+              this.props.onError);
+          }
         }
         // Clear the value so the same file can be uploaded again.
         e.target.value = '';
@@ -3938,8 +3955,9 @@
         size.maxHeight = "100%";
 
         var filename = this.props.content.filename;
-        if (filename.length > 20) {
-          filename = filename.slice(0, 8) + "..." + filename.slice(-8);
+        var maxlength = (this.props.content.width / REM_SIZE) | 0;
+        if (filename.length > maxlength) {
+          filename = filename.slice(0, maxlength-2) + "..." + filename.slice(2-maxlength);
         }
         return (
           <div id="image-preview" onClick={this.props.onClose}>
