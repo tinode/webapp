@@ -216,9 +216,12 @@
         }
         // Ensure the image is not too large
         var quality = 0.78;
-        while (mime == "image/jpeg" && imageBits.length * 0.75 > MAX_INBAND_ATTACHMENT_SIZE && quality > 0.15) {
-          imageBits = canvas.toDataURL(mime, quality);
-          quality *= 0.84;
+        if (mime == "image/jpeg") {
+          // Reduce size of the jpeg by reducing image quality
+          while (imageBits.length * 0.75 > MAX_INBAND_ATTACHMENT_SIZE && quality > 0.45) {
+            imageBits = canvas.toDataURL(mime, quality);
+            quality *= 0.84;
+          }
         }
         if (imageBits.length * 0.75 > MAX_INBAND_ATTACHMENT_SIZE) {
           onError("The image size " + bytesToHumanSize(imageBits.length * 0.75) +
@@ -3256,6 +3259,21 @@
 
     Message.Attachment = React.createClass({
       render: function() {
+        var url = this.props.downloadUrl;
+        // Detect if the download URL is relative or absolute.
+        // Don't send credentials if the URL is absolute: we don't want to send secret
+        // keys to a third-party server.
+        if (!(/^(?:(?:[a-z]+:)?\/\/)/i.test(url))) {
+          // Relative URL. Convert to absolute and add authentication credentials as parameters.
+          var tmp = new URL(url, window.location);
+          var token = Tinode.getAuthToken();
+          if (token) {
+            tmp.searchParams.append("auth", "token");
+            tmp.searchParams.append("secret", token.token);
+          }
+          tmp.searchParams.append("apikey", API_KEY);
+          url = tmp.toString();
+        }
         var filename = this.props.filename || "file_attachment";
         if (filename.length > 36) {
           filename = filename.substr(0, 16) + "..." + filename.substr(-16);
@@ -3271,7 +3289,7 @@
               {this.props.uploader ?
                 <FileUploadProgress progress={this.props.progress} />
                 :
-                <div><a href={this.props.downloadUrl} download={this.props.filename}>
+                <div><a href={url} download={this.props.filename}>
                   <i className="material-icons">file_download</i> save
                 </a></div>
               }
@@ -3780,11 +3798,11 @@
       handleAttachImage: function(e) {
         if (e.target.files && e.target.files.length > 0) {
           var instance = this;
-          var files = e.target.files;
+          var file = e.target.files[0];
           // Check if the uploaded file is indeed an image and if it isn't too large.
-          if (files[0].size > MAX_INBAND_ATTACHMENT_SIZE || SUPPORTED_IMAGE_FORMATS.indexOf(files[0].type) < 0) {
+          if (file.size > MAX_INBAND_ATTACHMENT_SIZE || SUPPORTED_IMAGE_FORMATS.indexOf(file.type) < 0) {
             // Convert image for size or format.
-            imageFileScaledToBase64(files[0], MAX_IMAGE_SIZE, MAX_IMAGE_SIZE, false,
+            imageFileScaledToBase64(file, MAX_IMAGE_SIZE, MAX_IMAGE_SIZE, false,
               // Success
               function(bits, mime, width, height, fname) {
                 instance.props.sendMessage(Drafty.insertImage(null,
@@ -3795,8 +3813,9 @@
                 instance.props.onError(err, "err");
               });
           } else {
+            console.log("File size is OK", file.size, MAX_INBAND_ATTACHMENT_SIZE);
             // Image can be uploaded as is. No conversion is needed.
-            imageFileToBase64(files[0],
+            imageFileToBase64(file,
               // Success
               function(bits, mime, width, height, fname) {
                 instance.props.sendMessage(Drafty.insertImage(null,
@@ -3831,12 +3850,13 @@
               instance.props.onUploadProgress(progress);
             }).then(function(ctrl) {
               // Success.
-              console.log("Success!", ctrl, ctrl.params);
               instance.props.sendMessage(
                 Drafty.attachFile(null, file.type, null, file.name, ctrl.params.url, file.size));
               instance.props.onUploadFinish(true);
             }).catch(function(err) {
-              instance.props.onError("Failed to upload file: " + err.message, "err");
+              if (err) {
+                instance.props.onError("Failed to upload file: " + err.message, "err");
+              }
               instance.props.onUploadFinish(false);
             });
           } else {

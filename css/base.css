@@ -1718,7 +1718,6 @@ ul.tabbar li.active > a:after {
 }
 /* Colored uploader progress bar of variable length */
 .uploader > div > span {
-  position: absolute;
   display: inline-block;
   height: 0.3rem;
   background-color: #1e88e5;
