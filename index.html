@@ -695,16 +695,12 @@
     class FileUploadProgress extends React.PureComponent {
       constructor(props) {
         super(props);
-
-        this.state = {
-          progress: 0.33
-        };
       }
 
       render() {
         return (
           <div className="uploader">
-            <div><span style={{width: (this.state.progress * 100) + "%"}}></span></div>
+            <div><span style={{width: (this.props.progress * 100) + "%"}}></span></div>
             <a href="javascript:;" onClick={this.props.onCancel}><i className="material-icons">close</i> cancel</a>
           </div>
         );
@@ -3213,9 +3209,7 @@
 
         var attachments = [
           <Message.Attachment
-            filename={this.props.filename} size={this.props.size}
-            uploader={true}
-            progress={this.props.progress}/>
+            uploader={true} filename={this.props.filename} size={this.props.size} progress={this.props.progress}/>
         ];
 
         return (
@@ -3291,7 +3285,8 @@
       getInitialState: function() {
         return {
           messages: [],
-          uploadFile: "test_upload_file.pdf",
+          uploadFile: null,
+          uploadProgress: 0,
           onlineSubs: [],
           topic: '',
           title: '',
@@ -3570,7 +3565,14 @@
         this.props.onHideMessagesView();
       },
 
+      handleStartUpload: function(filename, size) {
+        this.setState({uploadFile: {name: filename, size: size}, uploadProgress: 0});
+      },
+      handleFinishUpload: function(success) {
+        this.setState({uploadFile: null});
+      },
       handleUploadProgress: function(progress) {
+        this.setState({uploadProgress: progress});
       },
 
       render: function() {
@@ -3583,11 +3585,13 @@
           for (var i=0; i<this.state.messages.length; i++) {
             var msg = this.state.messages[i];
             var nextFrom = null;
+
             if (i + 1 < this.state.messages.length) {
               nextFrom = this.state.messages[i+1].from
             } else if (this.state.uploadFile) {
               nextFrom = this.props.myUserId;
             }
+
             var sequence = "single";
             if (msg.from === previousFrom) {
               if (msg.from === nextFrom) {
@@ -3638,10 +3642,11 @@
           // Upload in progress: display it as an unsent message.
           if (this.state.uploadFile) {
             var sequence = (this.state.messages.length > 0 &&
-              this.state.messages[this.state.messages.length-1].from === this.props.myUserId) ? "last" : "single";
+              this.state.messages[this.state.messages.length-1].from == this.props.myUserId) ? "last" : "single";
             messageNodes.push(
-              <MessageUploader filename={this.state.uploadFile}
-                size={123456} sequence={sequence} received={Received.SENDING}
+              <MessageUploader filename={this.state.uploadFile.name}
+                size={this.state.uploadFile.size} sequence={sequence} received={Received.SENDING}
+                progress={this.state.uploadProgress}
                 viewportWidth={this.props.viewportWidth}
                 key="uploader" />
             );
@@ -3714,6 +3719,8 @@
                 topic={this.props.topic}
                 disabled={this.state.readOnly}
                 sendMessage={this.props.sendMessage}
+                onUploadStart={this.handleStartUpload}
+                onUploadFinish={this.handleFinishUpload}
                 onUploadProgress={this.handleUploadProgress}
                 onError={this.props.onError} />
               {this.state.imagePreview ?
@@ -3819,6 +3826,7 @@
             if (!uploader) {
               this.props.onError("Cannot initiate file upload.");
             }
+            this.props.onUploadStart(file.name, file.size);
             uploader.upload(file, function(progress) {
               instance.props.onUploadProgress(progress);
             }).then(function(ctrl) {
@@ -3826,8 +3834,10 @@
               console.log("Success!", ctrl, ctrl.params);
               instance.props.sendMessage(
                 Drafty.attachFile(null, file.type, null, file.name, ctrl.params.url, file.size));
+              instance.props.onUploadFinish(true);
             }).catch(function(err) {
               instance.props.onError("Failed to upload file: " + err.message, "err");
+              instance.props.onUploadFinish(false);
             });
           } else {
             // Small enough to send inband.
