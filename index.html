@@ -704,7 +704,11 @@
         return (
           <div className="uploader">
             <div><span style={{width: (this.props.progress * 100) + "%"}}></span></div>
-            <a href="javascript:;" onClick={this.props.onCancel}><i className="material-icons">close</i> cancel</a>
+            {this.props.progress < 0.999 ?
+              <a href="javascript:;" onClick={this.props.onCancel}><i className="material-icons">close</i> cancel</a>
+              :
+              <span>finishing...</span>
+            }
           </div>
         );
       }
@@ -3212,7 +3216,8 @@
 
         var attachments = [
           <Message.Attachment
-            uploader={true} filename={this.props.filename} size={this.props.size} progress={this.props.progress}/>
+            uploader={true} filename={this.props.filename} size={this.props.size}
+            progress={this.props.progress} onCancelUpload={this.props.onCancelUpload} />
         ];
 
         return (
@@ -3287,7 +3292,7 @@
             <div className="flex-column">
               <div>{filename} {size}</div>
               {this.props.uploader ?
-                <FileUploadProgress progress={this.props.progress} />
+                <FileUploadProgress progress={this.props.progress} onCancel={this.props.onCancelUpload} />
                 :
                 <div><a href={url} download={this.props.filename}>
                   <i className="material-icons">file_download</i> save
@@ -3320,7 +3325,9 @@
       // Scroll last message into view on component update e.g. on message received.
       componentDidUpdate: function(prevProps, prevState) {
         if (this.messagesScroller &&
-          (prevState.title != this.state.title || prevState.messages.length != this.state.messages.length)) {
+          (prevState.title != this.state.title ||
+            prevState.messages.length != this.state.messages.length ||
+            prevState.uploadFile != this.state.uploadFile)) {
           this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition;
         }
       },
@@ -3390,6 +3397,8 @@
             topic: props.topic,
             imagePreview: null,
             scrollPosition: 0,
+            uploadFile: null,
+            uploadProgress: 0,
           });
           tryToResubscribe = true;
 
@@ -3583,14 +3592,28 @@
         this.props.onHideMessagesView();
       },
 
-      handleStartUpload: function(filename, size) {
-        this.setState({uploadFile: {name: filename, size: size}, uploadProgress: 0});
+      handleStartUpload: function(filename, size, uploader) {
+        this.setState({
+          uploadFile: {
+            name: filename,
+            size: size,
+            uploader: uploader,
+          },
+          uploadProgress: 0,
+          scrollPosition: 0,
+        });
       },
       handleFinishUpload: function(success) {
         this.setState({uploadFile: null});
       },
       handleUploadProgress: function(progress) {
         this.setState({uploadProgress: progress});
+      },
+      handleCancelUpload: function() {
+        if (this.state.uploadFile && this.state.uploadFile.uploader) {
+          this.state.uploadFile.uploader.cancel();
+        }
+        this.setState({uploadFile: null});
       },
 
       render: function() {
@@ -3665,6 +3688,7 @@
               <MessageUploader filename={this.state.uploadFile.name}
                 size={this.state.uploadFile.size} sequence={sequence} received={Received.SENDING}
                 progress={this.state.uploadProgress}
+                onCancelUpload={this.handleCancelUpload}
                 viewportWidth={this.props.viewportWidth}
                 key="uploader" />
             );
@@ -3844,8 +3868,9 @@
             var uploader = Tinode.getFileUploader();
             if (!uploader) {
               this.props.onError("Cannot initiate file upload.");
+              return;
             }
-            this.props.onUploadStart(file.name, file.size);
+            this.props.onUploadStart(file.name, file.size, uploader);
             uploader.upload(file, function(progress) {
               instance.props.onUploadProgress(progress);
             }).then(function(ctrl) {

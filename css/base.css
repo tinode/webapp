@@ -1713,6 +1713,7 @@ ul.tabbar li.active > a:after {
   padding: 0.15rem;
   margin: 0.35rem;
   width: 6rem;
+  line-height: 0;
   border-radius: 0.1rem;
   background-color: #cfd8dc;
 }
