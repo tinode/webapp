@@ -3174,7 +3174,8 @@
           Drafty.attachments(content, function(att, i) {
             attachments.push(<Message.Attachment
               filename={att.name} downloadUrl={Drafty.getDownloadUrl(att)}
-              size={Drafty.getEntitySize(att)} key={i} />);
+              mimetype={att.mime} size={Drafty.getEntitySize(att)}
+              onError={this.props.onError} key={i} />);
           }, this);
           content = React.createElement('span', null, Drafty.format(content, formatter, this));
         }
@@ -3217,7 +3218,9 @@
         var attachments = [
           <Message.Attachment
             uploader={true} filename={this.props.filename} size={this.props.size}
-            progress={this.props.progress} onCancelUpload={this.props.onCancelUpload} />
+            progress={this.props.progress}
+            onCancelUpload={this.props.onCancelUpload}
+            onError={this.props.onError} />
         ];
 
         return (
@@ -3263,22 +3266,38 @@
     });
 
     Message.Attachment = React.createClass({
-      render: function() {
-        var url = this.props.downloadUrl;
-        // Detect if the download URL is relative or absolute.
-        // Don't send credentials if the URL is absolute: we don't want to send secret
-        // keys to a third-party server.
-        if (!(/^(?:(?:[a-z]+:)?\/\/)/i.test(url))) {
-          // Relative URL. Convert to absolute and add authentication credentials as parameters.
-          var tmp = new URL(url, window.location);
-          var token = Tinode.getAuthToken();
-          if (token) {
-            tmp.searchParams.append("auth", "token");
-            tmp.searchParams.append("secret", token.token);
+      getInitialState: function() {
+        return {
+          downloader: null,
+          progress: 0
+        };
+      },
+
+      downloadFile: function(url, filename, mimetype) {
+        var downloader = Tinode.getLargeFileHelper();
+        this.setState({downloader: downloader});
+        var instance = this;
+        downloader.download(url, filename, mimetype, function(e) {
+          instance.setState({progress: e.loaded / instance.props.size});
+        }).then(function() {
+          instance.setState({downloader: null, progress: 0});
+        }).catch(function(err) {
+          if (err) {
+            instance.props.onError("Error downloading file: " + err.message, "err");
           }
-          tmp.searchParams.append("apikey", API_KEY);
-          url = tmp.toString();
+          instance.setState({downloader: null, progress: 0});
+        });
+      },
+
+      handleCancel: function() {
+        if (this.props.uploader) {
+          this.props.onCancelUpload();
+        } else if (this.state.downloader) {
+          this.state.downloader.cancel();
         }
+      },
+
+      render: function() {
         var filename = this.props.filename || "file_attachment";
         if (filename.length > 36) {
           filename = filename.substr(0, 16) + "..." + filename.substr(-16);
@@ -3286,15 +3305,34 @@
         var size = this.props.size > 0 ?
           <span className="small gray">({bytesToHumanSize(this.props.size)})</span> :
           null;
+
+        // Detect if the download URL is relative or absolute.
+        // If the URL is relative use LargeFileHelper to attach authentication
+        // credentials to the request.
+        var url, download, helperFunc;
+        if (!this.props.uploader && !this.state.downloader &&
+            !(/^(?:(?:[a-z]+:)?\/\/)/i.test(this.props.downloadUrl))) {
+          // Relative URL. Use download helper.
+          url = "javascript:;";
+          var instance = this;
+          helperFunc = function(e) {
+            instance.downloadFile(instance.props.downloadUrl, instance.props.filename, instance.props.mimetype);
+          };
+        } else {
+          url = this.props.downloadUrl;
+          helperFunc = null;
+        }
+        download = this.props.filename;
+        var progress = this.props.uploader ? this.props.progress : this.state.progress;
         return (
           <div className="attachment">
             <div><i className="material-icons big gray">insert_drive_file</i></div>
             <div className="flex-column">
               <div>{filename} {size}</div>
-              {this.props.uploader ?
-                <FileUploadProgress progress={this.props.progress} onCancel={this.props.onCancelUpload} />
+              {this.props.uploader || this.state.downloader ?
+                <FileUploadProgress progress={progress} onCancel={this.handleCancel} />
                 :
-                <div><a href={url} download={this.props.filename}>
+                <div><a href={url} download={download} onClick={helperFunc} >
                   <i className="material-icons">file_download</i> save
                 </a></div>
               }
@@ -3676,7 +3714,9 @@
                 sequence={sequence} received={msgReceived}
                 viewportWidth={this.props.viewportWidth}
                 showContextMenu={this.handleShowContextMenuMessage}
-                onImagePreview={this.handleImagePreview} key={msg.seq} />
+                onImagePreview={this.handleImagePreview}
+                onError={this.props.onError}
+                key={msg.seq} />
             );
           }
 
@@ -3687,9 +3727,9 @@
             messageNodes.push(
               <MessageUploader filename={this.state.uploadFile.name}
                 size={this.state.uploadFile.size} sequence={sequence} received={Received.SENDING}
-                progress={this.state.uploadProgress}
+                progress={this.state.uploadProgress} viewportWidth={this.props.viewportWidth}
                 onCancelUpload={this.handleCancelUpload}
-                viewportWidth={this.props.viewportWidth}
+                onError={this.props.onError}
                 key="uploader" />
             );
           }
@@ -3865,7 +3905,7 @@
               " exceeds the "  + bytesToHumanSize(MAX_EXTERN_ATTACHMENT_SIZE) + " limit.", "err");
           } else if (file.size > MAX_INBAND_ATTACHMENT_SIZE) {
             // To large to send inband - uploading out of band and sending as a link.
-            var uploader = Tinode.getFileUploader();
+            var uploader = Tinode.getLargeFileHelper();
             if (!uploader) {
               this.props.onError("Cannot initiate file upload.");
               return;
