@@ -137,22 +137,38 @@
         'data:image/' + photo.type + ';base64,' + photo.data : null;
     }
 
-    // Scale liner dimensions down to fit uder certain size.
-    function fitImageSize(width, height, maxWidth, maxHeight) {
+    // Calculate linear dimensions for scaling image down to fit under a certain size.
+    // Returns an object which contains destination sizes, source sizes, and offsets
+    // into source (when making square images).
+    function fitImageSize(width, height, maxWidth, maxHeight, forceSquare) {
       if (!width || !height || !maxWidth || !maxHeight) {
         return null;
       }
+
+      if (forceSquare) {
+        maxWidth = maxHeight = Math.min(maxWidth, maxHeight);
+      }
+
       var scale = Math.min(
         Math.min(width, maxWidth) / width,
         Math.min(height, maxHeight) / height
       );
 
-      var size = {width: (width * scale) | 0, height: (height * scale) | 0};
-      if (maxWidth == maxHeight) {
+      var size = {
+        dstWidth: (width * scale) | 0,
+        dstHeight: (height * scale) | 0,
+      };
+
+      if (forceSquare) {
         // Also calculate parameters for making the image square.
-        size.square = Math.min(width, height);
-        size.xoffset = ((width - size.square) / 2) | 0;
-        size.yoffset = ((height - size.square) / 2) | 0;
+        size.dstWidth = size.dstHeight = Math.min(size.dstWidth, size.dstHeight);
+        size.srcWidth = size.srcHeight = Math.min(width, height);
+        size.xoffset = ((width - size.srcWidth) / 2) | 0;
+        size.yoffset = ((height - size.srcWidth) / 2) | 0;
+      } else {
+        size.xoffset = size.yoffset = 0;
+        size.srcWidth = width;
+        size.srcHeight = height;
       }
       return size;
     }
@@ -176,7 +192,7 @@
     }
 
     // Convert uploaded image into a base64-encoded string possibly scaling
-    // linear dimensions.
+    // linear dimensions or constraining to a square.
     function imageFileScaledToBase64(file, width, height, forceSquare, onSuccess, onError) {
       var img = new Image();
       img.crossOrigin = 'Anonymous';
@@ -184,28 +200,22 @@
         onError("Image format unrecognized");
       }
       img.onload = function() {
-        var size = fitImageSize(this.width, this.height, width, height);
-        if (!size) {
+        var dim = fitImageSize(this.width, this.height, width, height, forceSquare);
+        if (!dim) {
           onError("Invalid image");
           return;
         }
-        var canvas = document.createElement('CANVAS');
-        if (forceSquare) {
-          canvas.width = canvas.height = width;
-        } else {
-          canvas.width = size.width;
-          canvas.height = size.height;
-        }
+        var canvas = document.createElement("canvas");
+        canvas.width = dim.dstWidth;
+        canvas.height = dim.dstHeight;
         var ctx = canvas.getContext('2d');
         ctx.imageSmoothingEnabled = true;
-        if (forceSquare) {
-          ctx.drawImage(this, size.xoffset, size.yoffset, size.square, size.square,
-            0, 0, canvas.width, canvas.height);
-        } else {
-          ctx.drawImage(this, 0, 0, this.width, this.height,
-            0, 0, canvas.width, canvas.height);
-        }
-        var mime = (forceSquare || SUPPORTED_IMAGE_FORMATS.indexOf(file.type) < 0) ? "image/jpeg" : file.type;
+        ctx.drawImage(this, dim.xoffset, dim.yoffset, dim.srcWidth, dim.srcHeight,
+          0, 0, dim.dstWidth, dim.dstHeight);
+
+        var mime = (this.width != dim.dstWidth ||
+          this.height != dim.dstHeight ||
+          SUPPORTED_IMAGE_FORMATS.indexOf(file.type) < 0) ? "image/jpeg" : file.type;
         var imageBits = canvas.toDataURL(mime);
         var parts = imageBits.split(',');
         // Get actual image type: 'data:image/png;base64,'
@@ -229,7 +239,7 @@
           return;
         }
         canvas = null;
-        onSuccess(imageBits.split(',')[1], mime, size.width, size.height, fileNameForMime(file.name, mime));
+        onSuccess(imageBits.split(',')[1], mime, dim.dstWidth, dim.dstHeight, fileNameForMime(file.name, mime));
       };
       img.src = URL.createObjectURL(file);
     }
@@ -3149,10 +3159,10 @@
             attr.key = elementKey;
             if (style == "IM") {
               // Additional processing for images
-              var size = fitImageSize(data.width, data.height,
-                Math.min(this.props.viewportWidth - REM_SIZE * 4, REM_SIZE * 36), REM_SIZE * 24);
+              var dim = fitImageSize(data.width, data.height,
+                Math.min(this.props.viewportWidth - REM_SIZE * 4, REM_SIZE * 36), REM_SIZE * 24, false);
               attr.className = "inline-image";
-              attr.style = size ? { width: size.width + "px", height: size.height + "px" } : null;
+              attr.style = dim ? { width: dim.dstWidth + "px", height: dim.dstHeight + "px" } : null;
               attr.onClick = this.handlePreviewImage;
             }
             return React.createElement(el, attr, values);
@@ -4037,15 +4047,10 @@
           return null;
         }
         var instance = this;
-        var size = fitImageSize(this.props.content.width, this.props.content.height,
-          this.state.width, this.state.height);
-        if (size) {
-          size.width += "px";
-          size.height += "px";
-        } else {
-          size = (this.props.content.width > this.props.content.height) ?
-            {width: '100%'} : {height: '100%'};
-        }
+        var dim = fitImageSize(this.props.content.width, this.props.content.height,
+          this.state.width, this.state.height, false);
+        var size = dim ? { width: dim.dstWidth + "px", height: dim.dstHeight + "px" } :
+          ((this.props.content.width > this.props.content.height) ? {width: '100%'} : {height: '100%'});
         size.maxWidth = "100%";
         size.maxHeight = "100%";
 
