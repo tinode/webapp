@@ -4460,13 +4460,23 @@
         // Check if the message is formatted.
         var dft = Drafty.parse(msg) || msg;
         if (Drafty.isPlainText(dft)) {
-          // The message is simple text. Sned if as text/plain.
+          // The message is unformatted text. Send if as text/plain.
           topic.publish(msg).catch(function(err) {
             instance.handleError(err.message, "err");
           });;
         } else {
+          // The message is a Drafty object.
+          var attachments = [];
+          dft.attachments(function(data) {
+            if (data.ref) {
+              attachments.push(data.ref);
+            }
+          });
+          if (attachments.length < 1) {
+            attachments = null;
+          }
           // Formatted message. Send it as a Drafty object.
-          topic.publish(dft, undefined, Drafty.getContentType()).catch(function(err) {
+          topic.publish(dft, undefined, Drafty.getContentType(), attachments).catch(function(err) {
             instance.handleError(err.message, "err");
           });
         }

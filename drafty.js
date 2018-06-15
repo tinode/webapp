@@ -129,7 +129,7 @@ Sample JSON representation of the text above:
     },
     IM: {
       open: function(data) {
-        // Don't use data.ref for preview: it's a security risk. 
+        // Don't use data.ref for preview: it's a security risk.
         var previewUrl = base64toObjectUrl(data.val, data.mime);
         var downloadUrl = data.ref ? data.ref : previewUrl;
         var res = (data.name ? '<a href="' + downloadUrl + '" download="' + data.name + '">' : '') +
