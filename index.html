@@ -1327,6 +1327,13 @@
           dataUrl: this.props.avatar
         };
       },
+
+      componentWillReceiveProps: function(nextProps) {
+        if (this.props.avatar != nextProps.avatar) {
+          this.setState({dataUrl: nextProps.avatar});
+        }
+      },
+
       handleFileUpload(e) {
         var instance = this;
         imageFileScaledToBase64(e.target.files[0], AVATAR_SIZE, AVATAR_SIZE, true,
@@ -2635,17 +2642,13 @@
         };
       },
 
-      componentWillMount: function() {
-        this.initInfoView(this.props);
-      },
-
       initInfoView: function(props) {
         var topic = Tinode.getTopic(props.topic);
         if (!topic) {
           return;
         }
 
-        if (this.previousMetaDesc != topic.onMetaDesc) {
+        if (this.onMetaDesc != topic.onMetaDesc) {
           this.previousMetaDesc = topic.onMetaDesc;
           topic.onMetaDesc = this.onMetaDesc;
 
@@ -2671,6 +2674,11 @@
         }
       },
 
+      // No need to separately handle componentWillMount.
+      componentWillReceiveProps: function(nextProps) {
+        this.initInfoView(nextProps);
+      },
+
       componentWillUnmount: function() {
         var topic = Tinode.getTopic(this.props.topic);
         if (!topic) {
@@ -2680,10 +2688,6 @@
         topic.onMetaDesc = this.previousMetaDesc;
         topic.onSubsUpdated = this.previousSubsUpdated;
         topic.onTagsUpdated = this.previousTagsUpdated;
-      },
-
-      componentWillReceiveProps: function(nextProps) {
-        this.initInfoView(nextProps);
       },
 
       resetSubs: function(topic, props) {
@@ -4467,7 +4471,7 @@
         } else {
           // The message is a Drafty object.
           var attachments = [];
-          dft.attachments(function(data) {
+          Drafty.attachments(dft, function(data) {
             if (data.ref) {
               attachments.push(data.ref);
             }
