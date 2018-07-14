@@ -472,8 +472,6 @@
       topic.setMeta({sub: {user: params.user, mode: am}}).catch(function(err) {
         if (errorHandler) {
           errorHandler(err.message, "err");
-        } else {
-          console.log(err);
         }
       });
     }
@@ -490,8 +488,6 @@
       promise.catch(function(err) {
         if (errorHandler) {
           errorHandler(err.message, "err");
-        } else {
-          console.log(err);
         }
       });
     }
@@ -525,8 +521,6 @@
           topic.delTopic().catch(function(err) {
             if (errorHandler) {
               errorHandler(err.message, "err");
-            } else {
-              console.log(err);
             }
           });
         }},
@@ -541,8 +535,6 @@
           topic.delSubscription(params.user).catch(function(err) {
             if (errorHandler) {
               errorHandler(err.message, "err");
-            } else {
-              console.log(err);
             }
           });
         }},
