@@ -25,9 +25,9 @@
     <link rel="stylesheet" href="css/base.css" />
 
     <!-- ReactJs scripts -->
-    <script src="https://unpkg.com/react@15/dist/react.min.js"></script>
-    <script src="https://unpkg.com/react-dom@15/dist/react-dom.min.js"></script>
-    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <!-- core functionality -->
     <script src="tinode.js"></script>
     <!-- message formatting -->
@@ -544,14 +544,25 @@
         "member_unblock": {title: "Unblock", handler: topicPermissionSetter.bind(this, "+J")},
     };
 
-    var ContextMenu = React.createClass({
-      componentWillUnmount: function() {
+    class ContextMenu extends React.Component {
+      constructor(props) {
+        super(props);
+
+        this.toggle = this.toggle.bind(this);
+        this.handlePageClick = this.handlePageClick.bind(this);
+        this.handleEscapeKey = this.handleEscapeKey.bind(this);
+        this.handleClick = this.handleClick.bind(this);
+      }
+
+      componentWillUnmount() {
         this.toggle(false);
-      },
-      componentWillReceiveProps: function(nextProps) {
+      }
+
+      componentWillReceiveProps(nextProps) {
         this.toggle(nextProps.visible);
-      },
-      toggle: function(visible) {
+      }
+
+      toggle(visible) {
         if (visible) {
           document.addEventListener('mousedown', this.handlePageClick, false);
           document.addEventListener('keyup', this.handleEscapeKey, false);
@@ -559,29 +570,32 @@
           document.removeEventListener('mousedown', this.handlePageClick, false);
           document.removeEventListener('keyup', this.handleEscapeKey, false);
         }
-      },
-      handlePageClick: function(e) {
+      }
+
+      handlePageClick(e) {
         if (ReactDOM.findDOMNode(this).contains(e.target)) {
           return;
         }
         e.preventDefault();
         e.stopPropagation();
         this.props.hide();
-      },
-      handleEscapeKey: function(e) {
+      }
+
+      handleEscapeKey(e) {
         if (e.keyCode === 27) {
           this.props.hide();
         }
-      },
-      handleClick: function(e) {
+      }
+
+      handleClick(e) {
         e.preventDefault();
         e.stopPropagation();
         this.props.hide();
         var item = this.props.items[e.currentTarget.dataset.id];
         item.handler(this.props.params, this.props.onError);
-      },
+      }
 
-      render: function() {
+      render() {
         if (!this.props.visible) {
           return null;
         }
@@ -622,7 +636,7 @@
           </ul>
         );
       }
-    });
+    }
     /* END Popup/dropdown menu */
 
     /* The X menu to be displayed in title bars */
@@ -651,7 +665,7 @@
         super(props);
 
         this.state = {
-          open: this.props.open
+          open: props.open
         };
         this.handleToggle = this.handleToggle.bind(this);
       }
@@ -718,27 +732,34 @@
 
     /* BEGIN In-place text editor. Shows text with an icon
      * which toggles it into an input field */
-    var InPlaceEdit = React.createClass({
-      getInitialState: function() {
-        return {
-          active: this.props.state,
-          text: this.props.text || ""
-        };
-      },
+    class InPlaceEdit extends React.Component {
+      constructor(props) {
+        super(props);
 
-      componentWillReceiveProps: function(nextProps) {
+        this.state = {
+          active: props.state,
+          text: props.text || ""
+        };
+
+        this.handeTextChange = this.handeTextChange.bind(this);
+        this.handleKeyDown = this.handleKeyDown.bind(this);
+        this.handleStartEditing = this.handleStartEditing.bind(this);
+        this.handleEditingFinished = this.handleEditingFinished.bind(this);
+      }
+
+      componentWillReceiveProps(nextProps) {
         // If text has changed while in read mode, update text and discard changes.
         // Ignore update if in edit mode.
         if (this.props.text != nextProps.text && !this.state.active) {
           this.setState({text: nextProps.text || ""});
         }
-      },
+      }
 
-      handeTextChange: function(e) {
+      handeTextChange(e) {
         this.setState({text: e.target.value});
-      },
+      }
 
-      handleKeyDown: function(e) {
+      handleKeyDown(e) {
         if (e.keyCode === 27) {
           // Escape pressed
           this.setState({text: this.props.text, active: false});
@@ -746,24 +767,24 @@
           // Enter pressed
           this.handleEditingFinished();
         }
-      },
+      }
 
-      handleStartEditing: function() {
+      handleStartEditing() {
         if (!this.props.readOnly) {
           ReactDOM.findDOMNode(this).focus();
           this.setState({active: true});
         }
-      },
+      }
 
-      handleEditingFinished: function() {
+      handleEditingFinished() {
         this.setState({active: false});
         var text = this.state.text.trim();
         if ((text || this.props.text) && (text !== this.props.text)) {
           this.props.onFinished(text);
         }
-      },
+      }
 
-      render: function() {
+      render() {
         var spanText = this.props.type === "password" ?
           "••••••••" : this.state.text;
         var spanClass = "in-place-edit" +
@@ -790,7 +811,7 @@
             </span>
         );
       }
-    });
+    };
     /* END InPlaceEdit */
 
     /* BEGIN Combobox for selecting host name */
@@ -798,7 +819,7 @@
       constructor(props) {
         super(props);
         this.state = {
-          hostName: this.props.serverAddress,
+          hostName: props.serverAddress,
           changed: false
         };
         this.handleHostNameChange = this.handleHostNameChange.bind(this);
@@ -867,14 +888,20 @@
 
     /* BEGIN PermissionsEditor: Component for editing permissions */
     // <PermissionsEditor mode="JWROD" skip="O" onChange={this.handleCheckboxTest} />
-    var PermissionsEditor = React.createClass({
-      getInitialState: function() {
-        return {
-          mode: (this.props.mode || "").replace("N", "")
-        };
-      },
+    class PermissionsEditor extends React.Component {
+      constructor(props) {
+        super(props);
 
-      handleChange: function(val) {
+        this.state = {
+          mode: (props.mode || "").replace("N", "")
+        };
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleCancel = this.handleCancel.bind(this);
+      }
+
+      handleChange(val) {
         var mode = this.state.mode;
         var idx = mode.indexOf(val);
         if (idx == -1) {
@@ -883,9 +910,9 @@
           mode = mode.replace(val, "");
         }
         this.setState({mode: mode});
-      },
+      }
 
-      handleSubmit: function() {
+      handleSubmit() {
         // Normalize string, otherwise cannot check if mode has changed.
         var mode = (this.state.mode || "N").split('').sort().join('');
         var before = (this.props.mode || "N").split('').sort().join('')
@@ -894,13 +921,13 @@
         } else {
           this.props.onCancel();
         }
-      },
+      }
 
-      handleCancel: function() {
+      handleCancel() {
         this.props.onCancel();
-      },
+      }
 
-      render: function() {
+      render() {
         var all = 'JRWPASDO';
         var names = {
           'J': 'Join (J)',
@@ -963,22 +990,35 @@
           </div>
         );
       }
-    });
+    };
     /* END PermissionsEditor */
 
     /* BEGIN ChipInput: group membership widget */
-    var ChipInput = React.createClass({
-      getInitialState: function() {
-          return {
-            placeholder: this.props.chips ? "" : this.props.prompt,
-            sortedChips: this.sortChips(this.props.chips, this.props.required),
-            chipIndex: this.indexChips(this.props.chips),
-            input: '',
-            focused: false
-          };
-      },
+    class ChipInput extends React.Component {
+      constructor(props) {
+        super(props);
 
-      componentWillReceiveProps: function(nextProps) {
+        // FIXME: these two methods should be static.
+        this.indexChips = this.indexChips.bind(this);
+        this.sortChips = this.sortChips.bind(this);
+
+        this.state = {
+          placeholder: props.chips ? "" : props.prompt,
+          sortedChips: this.sortChips(props.chips, props.required),
+          chipIndex: this.indexChips(props.chips),
+          input: '',
+          focused: false
+        };
+
+        this.handleTextInput = this.handleTextInput.bind(this);
+        this.removeChipAt = this.removeChipAt.bind(this);
+        this.handleChipCancel = this.handleChipCancel.bind(this);
+        this.handleFocusGained = this.handleFocusGained.bind(this);
+        this.handleFocusLost = this.handleFocusLost.bind(this);
+        this.handleKeyDown = this.handleKeyDown.bind(this);
+      }
+
+      componentWillReceiveProps(nextProps) {
         this.setState({
           sortedChips: this.sortChips(nextProps.chips, nextProps.required),
           chipIndex: this.indexChips(nextProps.chips)
@@ -987,10 +1027,11 @@
           // Chip added: clear input.
           this.setState({input: ''});
         }
-      },
+      }
 
       // Map chip index to user name
-      indexChips: function(chips) {
+      // FIXME: convert to static method.
+      indexChips(chips) {
         var index = {};
         var count = 0;
         chips.map(function(item) {
@@ -998,10 +1039,11 @@
           count ++;
         });
         return index;
-      },
+      }
 
       // Have non-removable chips appear before all other chips.
-      sortChips: function(chips, keep) {
+      // FIXME: convert to static method.
+      sortChips(chips, keep) {
         var required = [];
         var normal = [];
         chips.map(function(item) {
@@ -1012,36 +1054,36 @@
           }
         });
         return required.concat(normal);
-      },
+      }
 
-      handleTextInput: function(e) {
+      handleTextInput(e) {
         this.setState({input: e.target.value});
         if (this.props.filterFunc) {
           this.props.filterFunc(e.target.value);
         }
-      },
+      }
 
-      removeChipAt: function(idx) {
+      removeChipAt(idx) {
         var removed = this.state.sortedChips[idx];
         this.props.onChipRemoved(removed.user, this.state.chipIndex[removed.user]);
-      },
+      }
 
-      handleChipCancel: function(item, idx) {
+      handleChipCancel(item, idx) {
         this.removeChipAt(idx);
-      },
+      }
 
-      handleFocusGained: function() {
+      handleFocusGained() {
         this.setState({focused: true});
-      },
+      }
 
-      handleFocusLost: function() {
+      handleFocusLost() {
         this.setState({focused: false});
         if (this.props.onFocusLost) {
           this.props.onFocusLost(this.state.input);
         }
-      },
+      }
 
-      handleKeyDown: function(e) {
+      handleKeyDown(e) {
         if (e.key === 'Backspace') {
           if (this.state.input.length == 0 && this.state.sortedChips.length > 0) {
             var at = this.state.sortedChips.length - 1;
@@ -1058,16 +1100,16 @@
             this.props.onCancel();
           }
         }
-      },
+      }
 
-      render: function() {
+      render() {
         var chips = [];
 
         var instance = this;
         var count = 0;
         this.state.sortedChips.map(function(item) {
           chips.push(
-            <ChipInput.Chip
+            <Chip
               onCancel={instance.handleChipCancel}
               avatar={makeImageUrl(item.public ? item.public.photo : null)}
               title={item.public ? item.public.fn : undefined}
@@ -1094,14 +1136,20 @@
           </div>
         );
       }
-    });
+    };
 
-    ChipInput.Chip = React.createClass({
-      handleCancel: function() {
+    class Chip extends React.PureComponent {
+      constructor(props) {
+        super(props);
+
+        this.handleCancel = this.handleCancel.bind(this);
+      }
+
+      handleCancel() {
         this.props.onCancel(this.props.topic, this.props.index);
-      },
+      }
 
-      render: function() {
+      render() {
         var title = this.props.title || this.props.topic;
         return (
           <div className="chip">
@@ -1121,22 +1169,22 @@
           </div>
         );
       }
-    });
+    };
     /* END ChipInput */
 
     /* BEGIN GroupSubs: a list of group subscribers currently online */
-    var GroupSubs = React.createClass({
-      getInitialState: function() {
-        return {
-          onlineSubs: this.props.subscribers ? this.props.subscribers : []
+    class GroupSubs extends React.Component {
+      constructor(props) {
+        this.state = {
+          onlineSubs: props.subscribers || []
         };
-      },
+      }
 
-      componentWillReceiveProps: function(nextProps) {
+      componentWillReceiveProps(nextProps) {
         this.setState({onlineSubs: nextProps.subscribers ? nextProps.subscribers : []});
-      },
+      }
 
-      render: function() {
+      render() {
         var usersOnline = [];
         this.state.onlineSubs.map(function(sub) {
           usersOnline.push(
@@ -1153,39 +1201,51 @@
           <div id="topic-users">{usersOnline}</div>
         );
       }
-    });
+    };
     /* END GroupSubs */
 
     /* BEGIN Login: a login form */
-    var LoginView = React.createClass({
-      getInitialState: function() {
-        return {
-          login: this.props.login,
+    class LoginView extends React.Component {
+      constructor(props) {
+        super(props);
+
+        this.state = {
+          login: props.login,
           password: '',
-          hostName: this.props.serverAddress,
+          hostName: props.serverAddress,
           saveToken: localStorage.getObject("keep-logged-in")
         };
-      },
-      handleLoginChange: function(e) {
+        this.handleLoginChange = this.handleLoginChange.bind(this);
+        this.handlePasswordChange = this.handlePasswordChange.bind(this);
+        this.handleServerAddressChange = this.handleServerAddressChange.bind(this);
+        this.handleToggleSaveToken = this.handleToggleSaveToken.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+      }
+
+      handleLoginChange(e) {
         this.setState({login: e.target.value});
-      },
-      handlePasswordChange: function(e) {
+      }
+
+      handlePasswordChange(e) {
         this.setState({password: e.target.value});
-      },
-      handleServerAddressChange: function(name) {
+      }
+
+      handleServerAddressChange(name) {
         this.setState({hostName: name});
         this.props.onServerAddressChange(name);
-      },
-      handleToggleSaveToken: function() {
+      }
+
+      handleToggleSaveToken() {
         localStorage.setObject("keep-logged-in", !this.state.saveToken);
         this.setState({saveToken: !this.state.saveToken});
-      },
-      handleSubmit: function(e) {
+      }
+
+      handleSubmit(e) {
         e.preventDefault();
         this.props.onLogin(this.state.login.trim(), this.state.password.trim());
-      },
+      }
 
-      render: function() {
+      render() {
         var submitClasses = "blue";
         if (this.props.disabled) {
           submitClasses += " disabled";
@@ -1219,13 +1279,14 @@
           </form>
         );
       }
-    });
+    };
     /* END Login */
 
     /* BEGIN Account registration */
-    var CreateAccountView = React.createClass({
-      getInitialState: function() {
-        return {
+    class CreateAccountView extends React.PureComponent {
+      constructor(props) {
+        super(props);
+        this.state = {
           login: '',
           password: '',
           password2: '',
@@ -1235,30 +1296,46 @@
           errorCleared: false,
           saveToken: localStorage.getObject("keep-logged-in")
         };
-      },
-      handleLoginChange: function(e) {
+        this.handleLoginChange = this.handleLoginChange.bind(this);
+        this.handlePasswordChange = this.handlePasswordChange.bind(this);
+        this.handlePassword2Change = this.handlePassword2Change.bind(this);
+        this.handleEmailChange = this.handleEmailChange.bind(this);
+        this.handleFnChange = this.handleFnChange.bind(this);
+        this.handleImageChanged = this.handleImageChanged.bind(this);
+        this.handleToggleSaveToken = this.handleToggleSaveToken.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+      }
+
+      handleLoginChange(e) {
         this.setState({login: e.target.value});
-      },
-      handlePasswordChange: function(e) {
+      }
+
+      handlePasswordChange(e) {
         this.setState({password: e.target.value});
-      },
-      handlePassword2Change: function(e) {
+      }
+
+      handlePassword2Change(e) {
         this.setState({password2: e.target.value});
-      },
-      handleEmailChange: function(e) {
+      }
+
+      handleEmailChange(e) {
         this.setState({email: e.target.value})
-      },
-      handleFnChange: function(e) {
+      }
+
+      handleFnChange(e) {
         this.setState({fn: e.target.value});
-      },
-      handleImageChanged: function(img) {
+      }
+
+      handleImageChanged(img) {
         this.setState({imageDataUrl: img});
-      },
-      handleToggleSaveToken: function() {
+      }
+
+      handleToggleSaveToken() {
         localStorage.setObject("keep-logged-in", !this.state.saveToken);
         this.setState({saveToken: !this.state.saveToken});
-      },
-      handleSubmit: function(e) {
+      }
+
+      handleSubmit(e) {
         e.preventDefault();
         if (this.state.password.trim() != this.state.password2.trim()) {
           this.props.onError("Passwords don't match", "warn");
@@ -1271,8 +1348,9 @@
             vcard(this.state.fn, this.state.imageDataUrl),
             {"meth": "email", "val": this.state.email});
         }
-      },
-      render: function() {
+      }
+
+      render() {
         var submitClasses = "blue";
         if (this.props.disabled) {
           submitClasses += " disabled";
@@ -1311,20 +1389,24 @@
           </form>
         );
       }
-    });
+    };
 
-    var AvatarUpload = React.createClass({
-      getInitialState: function() {
-        return {
-          dataUrl: this.props.avatar
+    class AvatarUpload extends React.Component {
+      constructor(props) {
+        super(props);
+
+        this.state = {
+          dataUrl: props.avatar
         };
-      },
 
-      componentWillReceiveProps: function(nextProps) {
+        this.handleFileUpload = this.handleFileUpload.bind(this);
+      }
+
+      componentWillReceiveProps(nextProps) {
         if (this.props.avatar != nextProps.avatar) {
           this.setState({dataUrl: nextProps.avatar});
         }
-      },
+      }
 
       handleFileUpload(e) {
         var instance = this;
@@ -1341,8 +1423,9 @@
           });
         // Clear the value so the same file can be uploaded again.
         e.target.value = '';
-      },
-      render: function() {
+      }
+
+      render() {
         // Randomize id value in case more than one AvatarUpload is shown
         // at the same time.
         var randId = "file-input-avatar-" + (Math.random() + '').substr(2);
@@ -1366,24 +1449,32 @@
           </div>
         );
       }
-    });
+    };
     /* END Account registration */
 
     /* BEGIN Tinode config panel */
-    var SettingsView = React.createClass({
-      getInitialState: function() {
-        return {
+    class SettingsView extends React.PureComponent {
+      constructor(props) {
+        super(props);
+
+        this.state = {
           transport: "def"
         };
-      },
-      handleSubmit: function(e) {
+
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleTransportSelected = this.handleTransportSelected.bind(this);
+      }
+
+      handleSubmit(e) {
         e.preventDefault();
         this.props.onUpdate(null, this.state.transport);
-      },
-      handleTransportSelected: function(e) {
+      }
+
+      handleTransportSelected(e) {
         this.setState({transport: e.currentTarget.value});
-      },
-      render: function() {
+      }
+
+      render() {
         var names = {def: "default", ws: "websocket", lp: "long polling"};
         var transportOptions = [];
         var instance = this;
@@ -1411,12 +1502,12 @@
           </form>
         );
       }
-    });
+    };
     /* END Tinode config panel */
 
     /* BEGIN Manage side panel - handle Login, Account Registration, Contacts, NewTopic views */
-    var SideNavbar = React.createClass({
-      render: function() {
+    class SideNavbar extends React.PureComponent {
+      render() {
         return (
             <div id="side-caption-panel" className="caption-panel">
               <div id="self-avatar" className="avatar-box">
@@ -1424,19 +1515,19 @@
               </div>
               <div id="sidepanel-title" className="panel-title">{this.props.title}</div>
               {this.props.state === 'login' ?
-                  <SideNavbar.MenuStart onSignUp={this.props.onSignUp} onSettings={this.props.onSettings} /> :
+                  <MenuStart onSignUp={this.props.onSignUp} onSettings={this.props.onSettings} /> :
                 this.props.state === 'contacts' ?
-                  <SideNavbar.MenuContacts onNewTopic={this.props.onNewTopic} onSettings={this.props.onSettings} /> :
+                  <MenuContacts onNewTopic={this.props.onNewTopic} onSettings={this.props.onSettings} /> :
                 null}
               {this.props.onCancel ?
                  <MenuCancel onCancel={this.props.onCancel} /> : null}
             </div>
         );
       }
-    })
+    };
 
-    SideNavbar.MenuStart = React.createClass({
-      render: function() {
+    class MenuStart extends React.PureComponent {
+      render() {
         return (
             <div>
               <a href="javascript:;" onClick={this.props.onSignUp}><i className="material-icons">person_add</i></a>
@@ -1445,10 +1536,10 @@
             </div>
         );
       }
-    });
+    };
 
-    SideNavbar.MenuContacts = React.createClass({
-      render: function() {
+    class MenuContacts extends React.PureComponent {
+      render() {
         return (
           <div>
             <a href="javascript:;" onClick={this.props.onNewTopic}><i className="material-icons">chat</i></a>
@@ -1457,13 +1548,20 @@
           </div>
         );
       }
-    });
+    };
 
-    var SidepanelView = React.createClass({
-      handleLoginRequested: function(login, password) {
+    class SidepanelView extends React.Component {
+      constructor(props) {
+        super(props);
+
+        this.handleLoginRequested = this.handleLoginRequested.bind(this);
+      }
+
+      handleLoginRequested(login, password) {
         this.props.onLoginRequest(login, password);
-      },
-      render: function() {
+      }
+
+      render() {
         var title = null;
         var avatar = false;
         var onCancel = undefined;
@@ -1570,27 +1668,31 @@
           </div>
         );
       }
-    });
+    };
 
-    var ErrorPanel = React.createClass({
-      getInitialState: function() {
-        return {
+    class ErrorPanel extends React.PureComponent {
+      constructor(props) {
+        super(props);
+
+        this.state = {
           show: false,
         };
-      },
 
-      componentWillReceiveProps: function(nextProps) {
+        this.hide = this.hide.bind(this);
+      }
+
+      componentWillReceiveProps(nextProps) {
         this.setState({show: !(!nextProps.level)});
-      },
+      }
 
-      hide: function() {
+      hide() {
         this.setState({show: false});
         if (this.props.onClearError) {
           this.props.onClearError();
         }
-      },
+      }
 
-      render: function() {
+      render() {
         var icon = this.props.level == "err" ? "error": "warning";
         return (
           <div className={this.state.show ?
@@ -1602,14 +1704,16 @@
           </div>
         );
       }
-    });
+    };
 
     /* END Side panel */
 
     /* EditAccount parameters */
-    var EditAccountView = React.createClass({
-      getInitialState: function() {
-        return {
+    class EditAccountView extends React.Component {
+      constructor(props) {
+        super(props);
+
+        this.state = {
           address: null,
           fullName: undefined,
           avatar: null,
@@ -1618,8 +1722,15 @@
           previousOnTags: undefined,
           tags: []
         };
-      },
-      componentWillMount: function() {
+
+        this.tnNewTags = this.tnNewTags.bind(this);
+        this.handleFullNameUpdate = this.handleFullNameUpdate.bind(this);
+        this.handlePasswordUpdate = this.handlePasswordUpdate.bind(this);
+        this.handleImageChanged = this.handleImageChanged.bind(this);
+        this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
+      }
+
+      componentWillMount() {
         var me = Tinode.getMeTopic();
         var defacs = me.getDefaultAccess();
         var fnd = Tinode.getFndTopic();
@@ -1639,39 +1750,41 @@
             instance.props.onError(err.message, "err");
           });
         }
-      },
+      }
 
-      componentWillUnmount: function() {
+      componentWillUnmount() {
         var fnd = Tinode.getFndTopic();
         fnd.onTagsUpdated = this.state.previousOnTags;
-      },
+      }
 
-      tnNewTags: function(tags) {
+      tnNewTags(tags) {
         this.setState({tags: tags});
-      },
+      }
 
-      handleFullNameUpdate: function(fn) {
+      handleFullNameUpdate(fn) {
         this.setState({fullName: fn});
         this.props.onSubmit(null, vcard(fn, this.state.avatar));
-      },
-      handlePasswordUpdate: function(pwd) {
+      }
+
+      handlePasswordUpdate(pwd) {
         this.setState({password: pwd});
         this.props.onSubmit(pwd, null);
-      },
-      handleImageChanged: function(img) {
+      }
+
+      handleImageChanged(img) {
         this.setState({avatar: img});
         this.props.onSubmit(null, vcard(this.state.fullName, img));
-      },
+      }
 
-      handleTagsUpdated: function(tags) {
+      handleTagsUpdated(tags) {
         // Check if tags have actually changed.
         if (arrayEqual(this.state.tags.slice(0), tags.slice(0))) {
           return;
         }
         this.props.onUpdateTags(tags);
-      },
+      }
 
-      render: function() {
+      render() {
         var tags = [];
         this.state.tags.map(function(tag) {
           tags.push(<span className="badge" key={tags.length}>{tag}</span>);
@@ -1734,29 +1847,38 @@
           </div>
         );
       }
-    });
+    };
     /* END EditAccount */
 
     /* BEGIN TagManager: edit topic or user tags */
-    var TagManager = React.createClass({
-      getInitialState: function() {
-        return {
+    class TagManager extends React.Component {
+      constructor(props) {
+        super(props);
+
+        this.state = {
           tags: this.props.tags,
           tagInput: '',
           activated: this.props.activated,
           noTagsMessage: 'Add some tags'
         };
-      },
 
-      componentWillReceiveProps: function(nextProps) {
+        this.handleShowTagManager = this.handleShowTagManager.bind(this);
+        this.handleTagInput = this.handleTagInput.bind(this);
+        this.handleAddTag = this.handleAddTag.bind(this);
+        this.handleRemoveTag = this.handleRemoveTag.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleCancel = this.handleCancel.bind(this);
+      }
+
+      componentWillReceiveProps(nextProps) {
         this.setState({tags: nextProps.tags});
-      },
+      }
 
-      handleShowTagManager: function() {
+      handleShowTagManager() {
         this.setState({activated: true});
-      },
+      }
 
-      handleTagInput: function(text) {
+      handleTagInput(text) {
         this.setState({tagInput: text});
         // Check if user entered ',', ' ' or ';'
         if (text.length > 0) {
@@ -1768,9 +1890,9 @@
             }
           }
         }
-      },
+      }
 
-      handleAddTag: function(tag) {
+      handleAddTag(tag) {
         tag = tag.trim();
         if (tag.length > 0) {
           var tags = this.state.tags.slice(0);
@@ -1781,18 +1903,18 @@
             this.props.onTagsChanged(tags);
           }
         }
-      },
+      }
 
-      handleRemoveTag: function(tag, index) {
+      handleRemoveTag(tag, index) {
         var tags = this.state.tags.slice(0);
         tags.splice(index, 1);
         this.setState({tags: tags});
         if (this.props.onTagsChanged) {
           this.props.onTagsChanged(tags);
         }
-      },
+      }
 
-      handleSubmit: function() {
+      handleSubmit() {
         var tags = this.state.tags.slice(0);
         var inp = this.state.tagInput.trim();
         if (inp.length > 0) {
@@ -1803,16 +1925,16 @@
         }
         this.props.onSubmit(tags);
         this.setState({activated: false, tagInput: '', tags: this.props.tags});
-      },
+      }
 
-      handleCancel: function() {
+      handleCancel() {
         this.setState({activated: false, tagInput: '', tags: this.props.tags});
         if (this.props.onCancel) {
           this.props.onCancel();
         }
-      },
+      }
 
-      render: function() {
+      render() {
         var tags = [];
         if (this.state.activated) {
           this.state.tags.map(function(tag) {
@@ -1860,27 +1982,34 @@
           </div>
         );
       }
-    });
+    };
     /* END TagManager */
 
     /* BEGIN Contact list (list of topics) */
     /* A single topic */;
-    var Contact = React.createClass({
-      handleClick: function(e) {
+    class Contact extends React.Component {
+      constructor(props) {
+        super(props);
+
+        this.handleClick = this.handleClick.bind(this);
+        this.handleContextClick = this.handleContextClick.bind(this);
+      }
+
+      handleClick(e) {
         e.preventDefault();
         e.stopPropagation();
         if (this.props.onSelected) {
           this.props.onSelected(this.props.item, this.props.index, this.props.now, this.props.acs);
         }
-      },
+      }
 
-      handleContextClick: function(e) {
+      handleContextClick(e) {
         e.preventDefault();
         e.stopPropagation();
         this.props.showContextMenu({ topicName: this.props.item, y: e.pageY, x: e.pageX });
-      },
+      }
 
-      render: function() {
+      render() {
         var title = this.props.title;
         if (!title) {
           title = <i>unknown</i>;
@@ -1916,7 +2045,7 @@
             </div>
             <div className="text-box">
               <div><span className="contact-title">{title}</span>
-              {this.props.unread > 0 ? <Contact.Unread count={this.props.unread} /> : null}
+              {this.props.unread > 0 ? <UnreadBadge count={this.props.unread} /> : null}
               </div>
               {this.props.comment ? <div className="contact-comment">{this.props.comment}</div> : null}
               <span>{badges}</span>
@@ -1930,11 +2059,11 @@
             </li>
         );
       }
-    });
+    };
 
     /* The counter of unread messages in the topic */
-    Contact.Unread = React.createClass({
-        render: function() {
+    class UnreadBadge extends React.PureComponent {
+        render() {
           var showUnreadBadge = null;
           if (this.props.count > 0) {
             var count = this.props.count > 9 ? "9+" : this.props.count;
@@ -1942,11 +2071,12 @@
           }
           return showUnreadBadge;
         }
-    });
+    };
 
     /* Contact's labels: [you], [muted], [blocked], etc */
-    Contact.Badges = React.createClass({
-        render: function() {
+    // FIXME: this class is unused
+    class ContactBadges_UNUSED_REMOVE extends React.Component {
+        render() {
           var badges = null;
           if (this.props.badges && this.props.badges.length > 0) {
             var count = 0;
@@ -1959,29 +2089,38 @@
           }
           return badges;
         }
-    });
+    };
 
     /* ContactsView holds all contacts-related stuff */
-    var ContactsView = React.createClass({
-      getInitialState: function() {
-        return {
+    class ContactsView extends React.Component {
+      constructor(props) {
+        super(props);
+
+        // FIXME: make static
+        this.prepareContactList = this.prepareContactList.bind(this);
+
+        this.state = {
           contactList: this.prepareContactList()
         };
-      },
 
-      componentWillMount: function() {
+        this.tnMeContactUpdate = this.tnMeContactUpdate.bind(this);
+        this.tnMeSubsUpdated = this.tnMeSubsUpdated.bind(this);
+        this.resetContactList = this.resetContactList.bind(this);
+      }
+
+      componentWillMount() {
         var me = Tinode.getMeTopic();
         me.onContactUpdate = this.tnMeContactUpdate;
         me.onSubsUpdated = this.tnMeSubsUpdated;
-      },
+      }
 
-      componentWillUnmount: function() {
+      componentWillUnmount() {
         var me = Tinode.getMeTopic();
         me.onContactUpdate = undefined;
         me.onSubsUpdated = undefined;
-      },
+      }
 
-      componentWillReceiveProps: function(nextProps) {
+      componentWillReceiveProps(nextProps) {
         if (this.props.topicSelected != nextProps.topicSelected) {
           // If topicSelecetd is changed externally, update the
           // topic with online status and access mode.
@@ -1994,10 +2133,10 @@
             }
           }
         }
-      },
+      }
 
       // Reactions to updates to the contact list.
-      tnMeContactUpdate: function(what, cont) {
+      tnMeContactUpdate(what, cont) {
         if (what == "on" || what == "off") {
           this.resetContactList();
           if (this.props.topicSelected == cont.topic) {
@@ -2039,13 +2178,14 @@
           // * del -- messages deleted (hard or soft) -- reset pill counter.
           console.log("Unsupported (yet) presence update:" + what + " in: " + cont.topic);
         }
-      },
+      }
 
-      tnMeSubsUpdated: function(names) {
+      tnMeSubsUpdated(names) {
         this.resetContactList();
-      },
+      }
 
-      prepareContactList: function() {
+      // FIXME: make this method static.
+      prepareContactList() {
         var instance = this;
         var contacts = [];
         var unreadThreads = 0;
@@ -2066,13 +2206,13 @@
         });
         updateFavicon(unreadThreads);
         return contacts;
-      },
+      }
 
-      resetContactList: function() {
+      resetContactList() {
         this.setState({contactList: this.prepareContactList()});
-      },
+      }
 
-      render: function() {
+      render() {
         return (
           <ContactList
             connected={this.props.connected}
@@ -2085,13 +2225,13 @@
             showContextMenu={this.props.showContextMenu} />
         );
       }
-    });
+    };
     /* END Contact list */
 
     /* BEGIN ContactList: component for showing a list of contacts,
      * such as a list of group members in a group chat */
-    var ContactList = React.createClass({
-      render: function() {
+    class ContactList extends React.Component {
+      render() {
         var me = Tinode.getCurrentUserID();
         var contactNodes = [];
         var instance = this;
@@ -2164,38 +2304,48 @@
           </div>
         );
       }
-    });
+    };
     /* END ContactList */
 
     /* BEGIN GroupMembers: control for managing a list of group members */
-    var GroupManager = React.createClass({
-      getInitialState: function() {
-        return {
-          members: this.props.members,
-          index: this.indexMembers(this.props.members),
+    class GroupManager extends React.Component {
+      constructor(props) {
+        super(props);
+
+        this.state = {
+          members: props.members,
+          index: this.indexMembers(props.members),
           contactFilter: '',
           noContactsMessage: 'You have no contacts :-(',
-          selectedContacts: this.selectedContacts(this.props.members)
+          selectedContacts: this.selectedContacts(props.members)
         };
-      },
 
-      indexMembers: function(members) {
+        this.handleContactSelected = this.handleContactSelected.bind(this);
+        this.handleMemberRemoved = this.handleMemberRemoved.bind(this);
+        this.handleContactFilter = this.handleContactFilter.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleCancel = this.handleCancel.bind(this);
+      }
+
+      // FIXME: make method static
+      indexMembers(members) {
         var index = {};
         members.map(function(m) {
           index[m.user] = {delta: 0, present: true}; // Delta: 0 unchanged, +1 added, -1 removed
         });
         return index;
-      },
+      }
 
-      selectedContacts: function(members) {
+      // FIXME: make method static
+      selectedContacts(members) {
         var sel = [];
         members.map(function(m) {
           sel.push(m.user);
         });
         return sel;
-      },
+      }
 
-      handleContactSelected: function(userId, index) {
+      handleContactSelected(userId, index) {
         var status = this.state.index[userId];
         if (status) {
           if (status.present) {
@@ -2217,9 +2367,9 @@
         i[userId] = status;
 
         this.setState({members: m, index: i, selectedContacts: sel});
-      },
+      }
 
-      handleMemberRemoved: function(userId, index) {
+      handleMemberRemoved(userId, index) {
         var status = this.state.index[userId];
         if (!status || !status.present) {
           return;
@@ -2236,17 +2386,18 @@
         i[userId] = status;
 
         this.setState({members: m, index: i, selectedContacts: sel});
-      },
+      }
 
-      handleContactFilter: function(val) {
+      handleContactFilter(val) {
         var msg = !val ?
           "You have no contacts :-(" :
           "No contacts match '" + val + "'";
 
         this.setState({contactFilter: val, noContactsMessage: msg});
-      },
+      }
 
-      doContactFiltering: function(filter, values) {
+      // FIXME: make static
+      doContactFiltering(filter, values) {
         if (filter) {
           for (var i=0; i<values.length; i++) {
             if (values[i].indexOf(filter) >= 0) {
@@ -2256,9 +2407,9 @@
           return false;
         }
         return true;
-      },
+      }
 
-      handleSubmit: function() {
+      handleSubmit() {
         var instance = this;
         var members = [];
         var added = [];
@@ -2277,13 +2428,13 @@
           }
         });
         this.props.onSubmit(members, added, removed);
-      },
+      }
 
-      handleCancel: function() {
+      handleCancel() {
         this.props.onCancel();
-      },
+      }
 
-      render: function() {
+      render() {
         return (
           <div id="group-manager">
             <div className="panel-form-row">
@@ -2316,48 +2467,62 @@
           </div>
         );
       }
-    });
+    };
     /* END GroupManager */
 
     /* BEGIN Create new topic and invite users or send an invite */
-    var NewTopicView = React.createClass({
-      getInitialState: function() {
-        return {
+    class NewTopicView extends React.Component {
+      constructor(props) {
+        super(props);
+
+        this.state = {
           tabSelected: "p2p",
-          searchQuery: this.props.contactsSearchQuery,
-          contactList: this.props.foundContacts,
+          searchQuery: props.contactsSearchQuery,
+          contactList: props.foundContacts,
           contactSelected: null
         };
-      },
-      componentWillMount: function() {
+
+        this.handleTabClick = this.handleTabClick.bind(this);
+        this.handleContactSelected = this.handleContactSelected.bind(this);
+        this.handleNewGroupSubmit = this.handleNewGroupSubmit.bind(this);
+        this.handleGroupByID = this.handleGroupByID.bind(this);
+      }
+
+      componentWillMount() {
         this.props.onInitFind();
-      },
-      componentWillReceiveProps: function(nextProps) {
+      }
+
+      componentWillReceiveProps(nextProps) {
         this.setState({
           searchQuery: nextProps.contactsSearchQuery,
           contactList: nextProps.foundContacts
         });
-      },
-      handleTabClick: function(e) {
+      }
+
+      handleTabClick(e) {
         e.preventDefault();
         window.location.hash = addUrlParam(window.location.hash, 'tab', e.currentTarget.dataset.id);
         this.setState({tabSelected: e.currentTarget.dataset.id, contactSelected: null});
-      },
-      handleContactSelected: function(sel) {
+      }
+
+      handleContactSelected(sel) {
         if (this.state.tabSelected === "p2p") {
           window.location.hash = removeUrlParam(window.location.hash, 'tab');
           this.props.onCreateTopic(sel, undefined);
         }
-      },
-      handleNewGroupSubmit: function(name, dataUrl, priv, tags) {
+      }
+
+      handleNewGroupSubmit(name, dataUrl, priv, tags) {
         window.location.hash = removeUrlParam(window.location.hash, 'tab');
         this.props.onCreateTopic(undefined, vcard(name, dataUrl), priv, tags);
-      },
-      handleGroupByID: function(topicName) {
+      }
+
+      handleGroupByID(topicName) {
         window.location.hash = removeUrlParam(window.location.hash, 'tab');
         this.props.onCreateTopic(topicName);
-      },
-      render: function() {
+      }
+
+      render() {
         return (
           <div className="flex-column">
             <ul className="tabbar">
@@ -2372,13 +2537,13 @@
               </li>
             </ul>
             {this.state.tabSelected === "grp" ?
-              <NewTopicView.Group onSubmit={this.handleNewGroupSubmit} /> :
+              <NewTopicGroup onSubmit={this.handleNewGroupSubmit} /> :
               this.state.tabSelected === "byid" ?
-              <NewTopicView.ById
+              <NewTopicById
                 onSubmit={this.handleGroupByID}
                 onError={this.props.onError} /> :
               <div className="flex-column">
-                <NewTopicView.SearchContacts type="p2p"
+                <SearchContacts type="p2p"
                   searchQuery={this.state.searchQuery}
                   onSearchContacts={this.props.onSearchContacts} />
                 <ContactList
@@ -2393,38 +2558,53 @@
           </div>
         );
       }
-    });
+    };
 
-    NewTopicView.Group = React.createClass({
-      getInitialState: function() {
-        return {
+    class NewTopicGroup extends React.PureComponent {
+      constructor(props) {
+        super(props);
+
+        this.state = {
           fn: '', // full/formatted name
           private: '',
           imageDataUrl: null,
           tags: []
         };
-      },
-      handleFnChange: function(e) {
+
+        this.handleFnChange = this.handleFnChange.bind(this);
+        this.handlePrivateChange = this.handlePrivateChange.bind(this);
+        this.handleImageChanged = this.handleImageChanged.bind(this);
+        this.handleTagsChanged = this.handleTagsChanged.bind(this);
+        this.handleTagsChanged = this.handleTagsChanged.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+      }
+
+      handleFnChange(e) {
         this.setState({fn: e.target.value});
-      },
-      handlePrivateChange: function(e) {
+      }
+
+      handlePrivateChange(e) {
         this.setState({private: e.target.value});
-      },
-      handleImageChanged: function(img) {
+      }
+
+      handleImageChanged(img) {
         this.setState({imageDataUrl: img});
-      },
-      handleTagsChanged: function(tags) {
+      }
+
+      handleTagsChanged(tags) {
         this.setState({tags: tags});
-      },
-      handleSubmit: function(e) {
+      }
+
+      handleSubmit(e) {
         e.preventDefault();
         if (this.state.fn && this.state.fn.trim()) {
           this.props.onSubmit(this.state.fn.trim(),
             this.state.imageDataUrl, this.state.private.trim(),
             this.state.tags);
         }
-      },
-      render: function() {
+      }
+
+      render() {
         var submitClasses = "blue";
         if (this.props.disabled) {
           submitClasses += " disabled";
@@ -2456,44 +2636,57 @@
           </form>
         );
       }
-    });
+    };
 
-    NewTopicView.SearchContacts = React.createClass({
-      getInitialState: function() {
-        return {
+    class SearchContacts extends React.Component {
+      constructor(props) {
+        super(props);
+
+        this.state = {
           edited: false,
-          search: this.props.searchQuery
+          search: props.searchQuery
         };
-      },
-      componentWillUnmount: function() {
+
+        this.handleSearchChange = this.handleSearchChange.bind(this);
+        this.handleSearch = this.handleSearch.bind(this);
+        this.handleClear = this.handleClear.bind(this);
+        this.handleKeyPress = this.handleKeyPress.bind(this);
+      }
+
+      componentWillUnmount() {
         if (this.state.search) {
           this.setState({search: ''});
           this.props.onSearchContacts(DEL_CHAR);
         }
-      },
-      handleSearchChange: function(e) {
+      }
+
+      handleSearchChange(e) {
         this.setState({search: e.target.value});
-      },
-      handleSearch: function(e) {
+      }
+
+      handleSearch(e) {
         e.preventDefault();
         var query = this.state.search.trim();
         if (query.length > 0) {
           this.setState({edited: true});
           this.props.onSearchContacts(query);
         }
-      },
-      handleClear: function() {
+      }
+
+      handleClear() {
         if (this.state.edited || this.state.search) {
           this.props.onSearchContacts(DEL_CHAR);
         }
         this.setState({search: '', edited: false});
-      },
-      handleKeyPress: function(e) {
+      }
+
+      handleKeyPress(e) {
         if (e.key === 'Enter') {
           this.handleSearch(e);
         }
-      },
-      render: function() {
+      }
+
+      render() {
         return (
           <div className="panel-form">
             <div className="panel-form-row">
@@ -2509,23 +2702,32 @@
           </div>
         );
       }
-    });
+    };
 
-    NewTopicView.ById = React.createClass({
-      getInitialState: function() {
-        return {
+    class NewTopicById extends React.PureComponent {
+      constructor(props) {
+        super(props);
+
+        this.state = {
           groupId: '',
         };
-      },
-      handleChange: function(e) {
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleKeyPress = this.handleKeyPress.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+      }
+
+      handleChange(e) {
         this.setState({groupId: e.target.value});
-      },
-      handleKeyPress: function(e) {
+      }
+
+      handleKeyPress(e) {
         if (e.key === 'Enter') {
           this.handleSubmit(e);
         }
-      },
-      handleSubmit: function(e) {
+      }
+
+      handleSubmit(e) {
         e.preventDefault();
         if (this.state.groupId) {
           var name = this.state.groupId.trim();
@@ -2535,8 +2737,9 @@
             this.props.onError("Invalid ID", "err");
           }
         }
-      },
-      render: function() {
+      }
+
+      render() {
         return (
           <div className="panel-form">
             <div className="panel-form-row">
@@ -2550,34 +2753,45 @@
           </div>
         );
       }
-    });
+    };
     /* END Create new topic and invite users or send an invite */
 
     /* BEGIN ValidationView: panel for confirming credentials, like email or phone */
-    var ValidationView = React.createClass({
-      getInitialState: function() {
-        return {
-          code: this.props.credCode
+    class ValidationView extends React.PureComponent {
+      constructor(props) {
+        super(props);
+
+        this.state = {
+          code: props.credCode
         };
-      },
-      componentWillReceiveProps: function(nextProps) {
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleKeyPress = this.handleKeyPress.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+      }
+
+      componentWillReceiveProps(nextProps) {
         this.setState({code: nextProps.credCode});
-      },
-      handleChange: function(e) {
+      }
+
+      handleChange(e) {
         this.setState({code: e.target.value});
-      },
-      handleKeyPress: function(e) {
+      }
+
+      handleKeyPress(e) {
         if (e.key === 'Enter') {
           this.handleSubmit(e);
         }
-      },
-      handleSubmit: function(e) {
+      }
+
+      handleSubmit(e) {
         e.preventDefault();
         if (this.state.code && this.state.code.trim()) {
           this.props.onSubmit(this.props.credMethod, this.state.code.trim());
         }
-      },
-      render: function() {
+      }
+
+      render() {
         var methods = {'email': 'email', 'tel': 'phone'};
         var method = methods[this.props.credMethod] || this.props.credMethod;
         return (
@@ -2598,13 +2812,15 @@
           </div>
         );
       }
-    });
+    };
     /* END ValidationView */
 
     /* BEGIN InfoView: panel with topic/user info */
-    var InfoView = React.createClass({
-      getInitialState: function() {
-        return {
+    class InfoView extends React.Component {
+      constructor(props) {
+        super(props);
+
+        this.state = {
           topic: null,
           owner: false,
           admin: false,
@@ -2625,16 +2841,38 @@
           anon: null,
           contactList: [],
           tags: [],
-          showMemberPanel: this.props.showMemberPanel,
+          showMemberPanel: props.showMemberPanel,
           showPermissionEditorFor: undefined,
           moreInfoExpanded: false,
           previousMetaDesc: undefined,
           previousSubsUpdated: undefined,
           previousTagsUpdated: undefined
         };
-      },
 
-      initInfoView: function(props) {
+        this.initInfoView = this.initInfoView.bind(this);
+        this.resetSubs = this.resetSubs.bind(this);
+        this.resetDesc = this.resetDesc.bind(this);
+        this.onMetaDesc = this.onMetaDesc.bind(this);
+        this.onSubsUpdated = this.onSubsUpdated.bind(this);
+        this.onTagsUpdated = this.onTagsUpdated.bind(this);
+        this.handleFullNameUpdate = this.handleFullNameUpdate.bind(this);
+        this.handlePrivateUpdate = this.handlePrivateUpdate.bind(this);
+        this.handleImageChanged = this.handleImageChanged.bind(this);
+        this.handleMuted = this.handleMuted.bind(this);
+        this.handlePermissionsChanged = this.handlePermissionsChanged.bind(this);
+        this.handleLaunchPermissionsEditor = this.handleLaunchPermissionsEditor.bind(this);
+        this.handleHidePermissionsEditor = this.handleHidePermissionsEditor.bind(this);
+        this.handleShowAddMembers = this.handleShowAddMembers.bind(this);
+        this.handleHideAddMembers = this.handleHideAddMembers.bind(this);
+        this.handleMemberUpdateRequest = this.handleMemberUpdateRequest.bind(this);
+        this.handleLeave = this.handleLeave.bind(this);
+        this.handleMemberSelected = this.handleMemberSelected.bind(this);
+        this.handleMoreInfo = this.handleMoreInfo.bind(this);
+        this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
+        this.handleContextMenu = this.handleContextMenu.bind(this);
+      }
+
+      initInfoView(props) {
         var topic = Tinode.getTopic(props.topic);
         if (!topic) {
           return;
@@ -2664,14 +2902,14 @@
             this.setState({tags: topic.tags()});
           }
         }
-      },
+      }
 
       // No need to separately handle componentWillMount.
-      componentWillReceiveProps: function(nextProps) {
+      componentWillReceiveProps(nextProps) {
         this.initInfoView(nextProps);
-      },
+      }
 
-      componentWillUnmount: function() {
+      componentWillUnmount() {
         var topic = Tinode.getTopic(this.props.topic);
         if (!topic) {
           return;
@@ -2680,9 +2918,9 @@
         topic.onMetaDesc = this.previousMetaDesc;
         topic.onSubsUpdated = this.previousSubsUpdated;
         topic.onTagsUpdated = this.previousTagsUpdated;
-      },
+      }
 
-      resetSubs: function(topic, props) {
+      resetSubs(topic, props) {
         var newState = {contactList: []};
         if (topic.getType() === "p2p") {
           // Fetch the other party in the p2p conversation.
@@ -2699,9 +2937,9 @@
         }
 
         this.setState(newState);
-      },
+      }
 
-      resetDesc: function(topic, props) {
+      resetDesc(topic, props) {
         var defacs = topic.getDefaultAccess() || {};
         var acs = topic.getAccessMode();
         this.setState({
@@ -2721,9 +2959,9 @@
           auth: defacs.auth,
           anon: defacs.anon
         });
-      },
+      }
 
-      onMetaDesc: function(desc) {
+      onMetaDesc(desc) {
         var topic = Tinode.getTopic(this.props.topic);
         if (!topic) {
           return;
@@ -2733,9 +2971,9 @@
         if (this.previousMetaDesc && this.previousMetaDesc != this.onMetaDesc) {
           this.previousMetaDesc(desc);
         }
-      },
+      }
 
-      onSubsUpdated: function() {
+      onSubsUpdated() {
         var topic = Tinode.getTopic(this.props.topic);
         if (!topic) {
           return;
@@ -2745,47 +2983,47 @@
         if (this.previousSubsUpdated && this.previousSubsUpdated != this.onSubsUpdated) {
           this.previousSubsUpdated();
         }
-      },
+      }
 
-      onTagsUpdated: function(tags) {
+      onTagsUpdated(tags) {
         this.setState({tags: tags});
 
         if (this.previousTagsUpdated && this.previousTagsUpdated != this.onTagsUpdated) {
           this.previousTagsUpdated();
         }
-      },
+      }
 
-      handleFullNameUpdate: function(fn) {
+      handleFullNameUpdate(fn) {
         if (this.state.fullName !== fn) {
           this.setState({fullName: fn});
           this.props.onTopicDescUpdate(this.props.topic,
             vcard(fn, this.state.avatar),
             null);
         }
-      },
+      }
 
-      handlePrivateUpdate: function(priv) {
+      handlePrivateUpdate(priv) {
         if (this.state.priv !== priv) {
           this.setState({private: priv});
           this.props.onTopicDescUpdate(this.props.topic,
             null,
             priv);
         }
-      },
+      }
 
-      handleImageChanged: function(img) {
+      handleImageChanged(img) {
         this.setState({avatar: img});
         this.props.onTopicDescUpdate(this.props.topic,
           vcard(this.state.fullName, img),
           null);
-      },
+      }
 
-      handleMuted: function(ignored, checked) {
+      handleMuted(ignored, checked) {
         this.setState({muted: checked});
         this.props.onChangePermissions(this.props.topic, checked ? "-P" : "+P");
-      },
+      }
 
-      handlePermissionsChanged: function(perm) {
+      handlePermissionsChanged(perm) {
         switch (this.state.showPermissionEditorFor) {
           case 'auth':
             this.props.onTopicDescUpdate(this.props.topic, null, null, {auth: perm});
@@ -2806,9 +3044,9 @@
         }
 
         this.setState({showPermissionEditorFor: undefined});
-      },
+      }
 
-      handleLaunchPermissionsEditor: function(which, uid) {
+      handleLaunchPermissionsEditor(which, uid) {
         var toEdit, toCompare, toSkip, titleEdit, titleCompare, userTitle, userAvatar
         switch (which) {
           case 'mode':
@@ -2871,43 +3109,45 @@
           immutablePermissionsTitle: titleCompare,
           editedPermissionsSkipped: toSkip,
         });
-      },
+      }
 
-      handleHidePermissionsEditor: function() {
+      handleHidePermissionsEditor() {
         this.setState({showPermissionEditorFor: undefined});
-      },
+      }
 
-      handleShowAddMembers: function() {
+      handleShowAddMembers() {
         this.props.onInitFind();
         this.setState({showMemberPanel: true});
-      },
+      }
 
-      handleHideAddMembers: function() {
+      handleHideAddMembers() {
         this.setState({showMemberPanel: false});
-      },
+      }
 
-      handleMemberUpdateRequest: function(members, added, removed) {
+      handleMemberUpdateRequest(members, added, removed) {
         this.props.onMemberUpdateRequest(this.props.topic, added, removed);
         this.setState({showMemberPanel: false});
-      },
+      }
 
-      handleLeave: function() {
+      handleLeave() {
         this.props.onLeaveTopic(this.props.topic);
-      },
+      }
 
-      handleMemberSelected: function(uid) {
+      handleMemberSelected(uid) {
         this.setState({selectedContact: uid});
-      },
-      handleMoreInfo: function(open) {
+      }
+
+      handleMoreInfo(open) {
         this.setState({moreInfoExpanded: open});
-      },
-      handleTagsUpdated: function(tags) {
+      }
+
+      handleTagsUpdated(tags) {
         if (!arrayEqual(this.state.tags.slice(0), tags.slice(0))) {
           this.props.onTopicTagsUpdate(this.props.topic, tags);
         }
-      },
+      }
 
-      handleContextMenu: function(params) {
+      handleContextMenu(params) {
         var instance = this;
         var topic = Tinode.getTopic(this.props.topic);
         if (!topic) {
@@ -2931,9 +3171,9 @@
           x: params.x,
           y: params.y,
           user: params.topicName}, menuItems);
-      },
+      }
 
-      render: function() {
+      render() {
         return (
           <div id="info-view">
             <div className="caption-panel" id="info-caption-panel">
@@ -3113,7 +3353,7 @@
           </div>
         );
       }
-    });
+    };
     /* END InfoView */
 
     /* BEGIN Conversation panel */
@@ -3125,8 +3365,15 @@
       READ: 2
     };
 
-    var Message = React.createClass({
-      handlePreviewImage: function(e) {
+    class Message extends React.Component {
+      constructor(props) {
+        super(props);
+
+        this.handlePreviewImage = this.handlePreviewImage.bind(this);
+        this.handleContextClick = this.handleContextClick.bind(this);
+      }
+
+      handlePreviewImage(e) {
         e.preventDefault();
         this.props.onImagePreview({
           url: e.target.src,
@@ -3136,15 +3383,15 @@
           size: e.target.dataset.size,
           type: e.target.dataset.mime
         });
-      },
+      }
 
-      handleContextClick: function(e) {
+      handleContextClick(e) {
         e.preventDefault();
         e.stopPropagation();
         this.props.showContextMenu({ seq: this.props.seq, y: e.pageY, x: e.pageX });
-      },
+      }
 
-      render: function() {
+      render() {
         var elementKey = 0;
 
         var formatter = function(style, data, values) {
@@ -3178,7 +3425,7 @@
         var attachments = [];
         if (this.props.mimeType === Drafty.getContentType()) {
           Drafty.attachments(content, function(att, i) {
-            attachments.push(<Message.Attachment
+            attachments.push(<Attachment
               filename={att.name} downloadUrl={Drafty.getDownloadUrl(att)}
               mimetype={att.mime} size={Drafty.getEntitySize(att)}
               onError={this.props.onError} key={i} />);
@@ -3200,7 +3447,7 @@
               <div className={bubbleClass}>
                 <p>{content}
                 {attachments}
-                <Message.ReceivedMarker response={this.props.response}
+                <ReceivedMarker response={this.props.response}
                   timestamp={this.props.timestamp} received={this.props.received} />
                 </p>
                 <span className="menuTrigger">
@@ -3214,15 +3461,15 @@
           </li>
         );
       }
-    });
+    };
 
-    var MessageUploader = React.createClass({
-      render: function() {
+    class MessageUploader extends React.PureComponent {
+      render() {
         var sideClass = this.props.sequence + " right";
         var bubbleClass = "bubble tip";
 
         var attachments = [
-          <Message.Attachment
+          <Attachment
             uploader={true} filename={this.props.filename} size={this.props.size}
             progress={this.props.progress}
             onCancelUpload={this.props.onCancelUpload}
@@ -3234,7 +3481,7 @@
             <div>
               <div className="bubble tip">
                 <p>{attachments}
-                <Message.ReceivedMarker response={this.props.response}
+                <ReceivedMarker response={this.props.response}
                   timestamp={this.props.timestamp} received={this.props.received} />
                 </p>
               </div>
@@ -3242,12 +3489,12 @@
           </li>
         );
       }
-    });
+    };
 
 
     /* Received/read indicator */
-    Message.ReceivedMarker = React.createClass({
-      render: function() {
+    class ReceivedMarker extends React.PureComponent {
+      render() {
         var timestamp = (this.props.received === Received.SENDING) ?
           "sending ..." :
           shortDateFormat(this.props.timestamp);
@@ -3269,17 +3516,22 @@
           </span>
         );
       }
-    });
+    };
 
-    Message.Attachment = React.createClass({
-      getInitialState: function() {
-        return {
+    class Attachment extends React.Component {
+      constructor(props) {
+        super(props);
+
+        this.state = {
           downloader: null,
           progress: 0
         };
-      },
 
-      downloadFile: function(url, filename, mimetype) {
+        this.downloadFile = this.downloadFile.bind(this);
+        this.handleCancel = this.handleCancel.bind(this);
+      }
+
+      downloadFile(url, filename, mimetype) {
         var downloader = Tinode.getLargeFileHelper();
         this.setState({downloader: downloader});
         var instance = this;
@@ -3293,17 +3545,17 @@
           }
           instance.setState({downloader: null, progress: 0});
         });
-      },
+      }
 
-      handleCancel: function() {
+      handleCancel() {
         if (this.props.uploader) {
           this.props.onCancelUpload();
         } else if (this.state.downloader) {
           this.state.downloader.cancel();
         }
-      },
+      }
 
-      render: function() {
+      render() {
         var filename = this.props.filename || "file_attachment";
         if (filename.length > 36) {
           filename = filename.substr(0, 16) + "..." + filename.substr(-16);
@@ -3346,11 +3598,13 @@
           </div>
         );
       }
-    });
+    };
 
-    var MessagesView = React.createClass({
-      getInitialState: function() {
-        return {
+    class MessagesView extends React.Component {
+      constructor(props) {
+        super(props);
+
+        this.state = {
           messages: [],
           uploadFile: null,
           uploadProgress: 0,
@@ -3359,40 +3613,60 @@
           title: '',
           avatar: null,
           scrollPosition: 0,
-          readOnly: this.props.acs ? !this.props.acs.isWriter() : true,
-          writeOnly: this.props.acs ? !this.props.acs.isReader() : true,
+          readOnly: props.acs ? !props.acs.isWriter() : true,
+          writeOnly: props.acs ? !props.acs.isReader() : true,
           typingIndicator: false,
           imagePreview: null
         };
-      },
+
+        this.propsChange = this.propsChange.bind(this);
+        this.leave = this.leave.bind(this);
+        this.handleScrollReference = this.handleScrollReference.bind(this);
+        this.fetchMoreMessages = this.fetchMoreMessages.bind(this);
+        this.handleDescChange = this.handleDescChange.bind(this);
+        this.handleSubsUpdated = this.handleSubsUpdated.bind(this);
+        this.handleNewMessage = this.handleNewMessage.bind(this);
+        this.handleInfoReceipt = this.handleInfoReceipt.bind(this);
+        this.handleImagePreview = this.handleImagePreview.bind(this);
+        this.handleCloseImagePreview = this.handleCloseImagePreview.bind(this);
+        this.handleContextClick = this.handleContextClick.bind(this);
+        this.handleShowContextMenuMessage = this.handleShowContextMenuMessage.bind(this);
+        this.handleBackNavigation = this.handleBackNavigation.bind(this);
+        this.handleStartUpload = this.handleStartUpload.bind(this);
+        this.handleFinishUpload = this.handleFinishUpload.bind(this);
+        this.handleUploadProgress = this.handleUploadProgress.bind(this);
+        this.handleCancelUpload = this.handleCancelUpload.bind(this);
+      }
 
       // Scroll last message into view on component update e.g. on message received.
-      componentDidUpdate: function(prevProps, prevState) {
+      componentDidUpdate(prevProps, prevState) {
         if (this.messagesScroller &&
           (prevState.title != this.state.title ||
             prevState.messages.length != this.state.messages.length ||
             prevState.uploadFile != this.state.uploadFile)) {
           this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition;
         }
-      },
+      }
 
-      componentWillMount: function() {
+      componentWillMount() {
         this.propsChange(this.props);
         if (this.messagesScroller) {
           this.messagesScroller.addEventListener('scroll', this.fetchMoreMessages);
         }
-      },
+      }
 
-      componentWillUnmount: function() {
+      componentWillUnmount() {
         this.leave();
         if (this.messagesScroller) {
           this.messagesScroller.removeEventListener('scroll', this.fetchMoreMessages);
         }
-      },
-      componentWillReceiveProps: function(nextProps) {
+      }
+
+      componentWillReceiveProps(nextProps) {
         this.propsChange(nextProps);
-      },
-      propsChange: function(props) {
+      }
+
+      propsChange(props) {
         if (!props || !props.topic) {
           this.setState({messages: [], onlineSubs: [], topic: null});
           this.leave();
@@ -3474,9 +3748,9 @@
               });
             });
         }
-      },
+      }
 
-      leave: function() {
+      leave() {
         if (this.state.topic) {
           var oldTopic = Tinode.getTopic(this.state.topic);
           if (oldTopic) {
@@ -3493,17 +3767,17 @@
             oldTopic.onPres = undefined;
           }
         }
-      },
+      }
 
-      handleScrollReference: function(node) {
+      handleScrollReference(node) {
         if (node) {
           node.addEventListener('scroll', this.fetchMoreMessages);
           this.messagesScroller = node;
         }
-      },
+      }
 
       // Get older messages
-      fetchMoreMessages: function(event) {
+      fetchMoreMessages(event) {
         var instance = this;
         if (event.target.scrollTop <= 0) {
           var started = false;
@@ -3524,9 +3798,9 @@
             return newState;
           });
         }
-      },
+      }
 
-      handleDescChange: function(desc) {
+      handleDescChange(desc) {
         if (desc.public) {
           this.setState({
             title: desc.public.fn,
@@ -3539,9 +3813,9 @@
             writeOnly: !desc.acs.isReader()
           });
         }
-      },
+      }
 
-      handleSubsUpdated: function() {
+      handleSubsUpdated() {
         if (this.state.topic) {
           var subs = [];
           var myId = this.props.myUserId;
@@ -3553,9 +3827,9 @@
           });
           this.setState({onlineSubs: subs});
         }
-      },
+      }
 
-      handleNewMessage: function(msg) {
+      handleNewMessage(msg) {
         // Regenerate messages list
         var topic = Tinode.getTopic(this.state.topic);
         var newState = {messages: []};
@@ -3580,9 +3854,9 @@
         }
 
         this.setState(newState);
-      },
+      }
 
-      handleInfoReceipt: function(info) {
+      handleInfoReceipt(info) {
         switch (info.what) {
           case "kp": {
             clearTimeout(this.keyPressTimer);
@@ -3603,23 +3877,23 @@
           default:
             console.log("Other change in topic: " + info.what);
         }
-      },
+      }
 
-      handleImagePreview: function(content) {
+      handleImagePreview(content) {
         this.setState({ imagePreview: content });
-      },
+      }
 
-      handleCloseImagePreview: function() {
+      handleCloseImagePreview() {
         this.setState({ imagePreview: null });
-      },
+      }
 
-      handleContextClick: function(e) {
+      handleContextClick(e) {
         e.preventDefault();
         e.stopPropagation();
         this.props.showContextMenu({ topicName: this.state.topic, y: e.pageY, x: e.pageX });
-      },
+      }
 
-      handleShowContextMenuMessage: function(params) {
+      handleShowContextMenuMessage(params) {
         params.topicName = this.state.topic;
         var menuItems = [ContextMenuItems["message_delete"]];
         var topic = Tinode.getTopic(params.topicName);
@@ -3630,13 +3904,13 @@
           }
         }
         this.props.showContextMenu(params, menuItems);
-      },
+      }
 
-      handleBackNavigation: function() {
+      handleBackNavigation() {
         this.props.onHideMessagesView();
-      },
+      }
 
-      handleStartUpload: function(filename, size, uploader) {
+      handleStartUpload(filename, size, uploader) {
         this.setState({
           uploadFile: {
             name: filename,
@@ -3646,21 +3920,24 @@
           uploadProgress: 0,
           scrollPosition: 0,
         });
-      },
-      handleFinishUpload: function(success) {
+      }
+
+      handleFinishUpload(success) {
         this.setState({uploadFile: null});
-      },
-      handleUploadProgress: function(progress) {
+      }
+
+      handleUploadProgress(progress) {
         this.setState({uploadProgress: progress});
-      },
-      handleCancelUpload: function() {
+      }
+
+      handleCancelUpload() {
         if (this.state.uploadFile && this.state.uploadFile.uploader) {
           this.state.uploadFile.uploader.cancel();
         }
         this.setState({uploadFile: null});
-      },
+      }
 
-      render: function() {
+      render() {
         var component = null;
         if (this.state.topic) {
           var messageNodes = [];
@@ -3803,7 +4080,7 @@
                 null
               }
               </div>
-              <MessagesView.Send
+              <SendMessage
                 topic={this.props.topic}
                 disabled={this.state.readOnly}
                 sendMessage={this.props.sendMessage}
@@ -3812,40 +4089,49 @@
                 onUploadProgress={this.handleUploadProgress}
                 onError={this.props.onError} />
               {this.state.imagePreview ?
-                <MessagesView.ImagePreview content={this.state.imagePreview}
+                <ImagePreview content={this.state.imagePreview}
                   onClose={this.handleCloseImagePreview} /> : null}
             </div>
           );
         } else {
           component = (
-            <MessagesView.Dummy hideSelf={this.props.hideSelf}
+            <LogoView hideSelf={this.props.hideSelf}
               serverVersion={this.props.serverVersion}
               serverAddress={this.props.serverAddress} />
           );
         }
         return component;
       }
-    });
+    };
 
     /* Send message form */
-    MessagesView.Send = React.createClass({
-      getInitialState:function() {
-        return {
+    class SendMessage extends React.PureComponent {
+      constructor(props) {
+        super(props);
+
+        this.state = {
           message: '',
           // Make initial keypress time as if it happened 5001 milliseconds in the past.
           keypressTimestamp: new Date().getTime() - KEYPRESS_DELAY - 1
         };
-      },
 
-      componentDidMount: function() {
+        this.handlePasteEvent = this.handlePasteEvent.bind(this);
+        this.handleAttachImage = this.handleAttachImage.bind(this);
+        this.handleAttachFile = this.handleAttachFile.bind(this);
+        this.handleSend = this.handleSend.bind(this);
+        this.handleKeyPress = this.handleKeyPress.bind(this);
+        this.handleMessageTyping = this.handleMessageTyping.bind(this);
+      }
+
+      componentDidMount() {
         this.pasteFile.addEventListener('paste', this.handlePasteEvent, false);
-      },
+      }
 
-      componentWillUnmount: function() {
+      componentWillUnmount() {
         this.pasteFile.removeEventListener('paste', this.handlePasteEvent, false)
-      },
+      }
 
-      handlePasteEvent: function(e) {
+      handlePasteEvent(e) {
         if (this.props.disabled) {
           return;
         }
@@ -3863,9 +4149,9 @@
           // If file was pasted, don't paste base64 daata into input field.
           e.preventDefault();
         }
-      },
+      }
 
-      handleAttachImage: function(e) {
+      handleAttachImage(e) {
         if (e.target.files && e.target.files.length > 0) {
           var instance = this;
           var file = e.target.files[0];
@@ -3899,9 +4185,9 @@
         }
         // Clear the value so the same file can be uploaded again.
         e.target.value = '';
-      },
+      }
 
-      handleAttachFile: function(e) {
+      handleAttachFile(e) {
         if (e.target.files && e.target.files.length > 0) {
           var instance = this;
           var file = e.target.files[0];
@@ -3941,17 +4227,18 @@
         }
         // Clear the value so the same file can be uploaded again.
         e.target.value = '';
-      },
+      }
 
-      handleSend: function() {
+      handleSend() {
         var message = this.state.message.trim();
         if (message) {
           this.props.sendMessage(this.state.message.trim());
           this.setState({message: ''});
         }
-      },
+      }
+
       /* Send on Enter key */
-      handleKeyPress: function(e) {
+      handleKeyPress(e) {
         // Remove this if you don't want Enter to trigger send
         if (e.key === 'Enter') {
           // Have Shift-Enter insert a line break instead
@@ -3962,8 +4249,9 @@
             this.handleSend();
           }
         }
-      },
-      handleMessageTyping: function(e) {
+      }
+
+      handleMessageTyping(e) {
         var newState = {message: e.target.value};
         var now = new Date().getTime();
         if (now - this.state.keypressTimestamp > KEYPRESS_DELAY) {
@@ -3974,8 +4262,9 @@
           newState.keypressTimestamp = now;
         }
         this.setState(newState);
-      },
-      render: function() {
+      }
+
+      render() {
         var prompt = this.props.disabled ? "Messaging disabled" : "New message";
         var instance = this;
         return (
@@ -4005,11 +4294,11 @@
           </div>
         );
       }
-    });
+    };
 
     /* This is just a static page to display when no conversation is selected. */
-    MessagesView.Dummy = React.createClass({
-      render: function() {
+    class LogoView extends React.PureComponent {
+      render() {
         var version = Tinode.getVersion() + " build " + document.lastModified;
         return (
           <div id="dummy-view" className={this.props.hideSelf ? 'nodisplay' : null}>
@@ -4024,21 +4313,23 @@
           </div>
         );
       }
-    });
+    };
 
-    MessagesView.ImagePreview = React.createClass({
-      getInitialState: function() {
-        return {};
-      },
+    class ImagePreview extends React.PureComponent {
+      constructor(props) {
+        super(props);
 
-      componentDidMount: function() {
+        this.state = {};
+      }
+
+      componentDidMount() {
         this.setState({
           width: this.container.clientWidth,
           height: this.container.clientHeight
         });
-      },
+      }
 
-      render: function() {
+      render() {
         if (!this.props.content) {
           return null;
         }
@@ -4077,13 +4368,15 @@
           </div>
         );
       }
-    });
+    };
     /* END Conversation panel */
 
     /* The top-level class to hold all fuinctionality together */
-    var AppView = React.createClass({
-      getInitialState: function() {
-        return {
+    class AppView extends React.Component {
+      constructor(props) {
+        super(props);
+
+        this.state = {
           connected: false,
           transport: null,
           serverAddress: detectServerAddress(),
@@ -4116,8 +4409,54 @@
           foundContacts: [],
           credMethod: ''
         };
-      },
-      componentDidMount: function() {
+        this.handleResize = this.handleResize.bind(this);
+        this.handleHashRoute = this.handleHashRoute.bind(this);
+        this.handleOnline = this.handleOnline.bind(this);
+        this.handleAppVisibility = this.handleAppVisibility.bind(this);
+        this.handleReadTimer = this.handleReadTimer.bind(this);
+        this.handleVisibilityEvent = this.handleVisibilityEvent.bind(this);
+        this.handleError = this.handleError.bind(this);
+        this.handleLoginRequest = this.handleLoginRequest.bind(this);
+        this.handleConnected = this.handleConnected.bind(this);
+        this.doLogin = this.doLogin.bind(this);
+        this.handleCredentialsRequest = this.handleCredentialsRequest.bind(this);
+        this.handleLoginSuccessful = this.handleLoginSuccessful.bind(this);
+        this.handleDisconnect = this.handleDisconnect.bind(this);
+        this.tnMeMetaDesc = this.tnMeMetaDesc.bind(this);
+        this.tnData = this.tnData.bind(this);
+        this.tnInitFind = this.tnInitFind.bind(this);
+        this.tnFndSubsUpdated = this.tnFndSubsUpdated.bind(this);
+        this.handleSearchContacts = this.handleSearchContacts.bind(this);
+        this.handleTopicSelected = this.handleTopicSelected.bind(this);
+        this.handleTopicSelectedOnline = this.handleTopicSelectedOnline.bind(this);
+        this.handleTopicSelectedAcs = this.handleTopicSelectedAcs.bind(this);
+        this.handleHideMessagesView = this.handleHideMessagesView.bind(this);
+        this.handleSendMessage = this.handleSendMessage.bind(this);
+        this.handleNewAccount = this.handleNewAccount.bind(this);
+        this.handleNewAccountRequest = this.handleNewAccountRequest.bind(this);
+        this.handleUpdateAccountRequest = this.handleUpdateAccountRequest.bind(this);
+        this.handleUpdateAccountTagsRequest = this.handleUpdateAccountTagsRequest.bind(this);
+        this.handleSettings = this.handleSettings.bind(this);
+        this.handleConnectionSettings = this.handleConnectionSettings.bind(this);
+        this.handleSidepanelCancel = this.handleSidepanelCancel.bind(this);
+        this.handleNewTopic = this.handleNewTopic.bind(this);
+        this.handleNewTopicRequest = this.handleNewTopicRequest.bind(this);
+        this.handleTopicUpdateRequest = this.handleTopicUpdateRequest.bind(this);
+        this.handleChangePermissions = this.handleChangePermissions.bind(this);
+        this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
+        this.handleLogout = this.handleLogout.bind(this);
+        this.handleLeaveUnsubRequest = this.handleLeaveUnsubRequest.bind(this);
+        this.handleDialogCancel = this.handleDialogCancel.bind(this);
+        this.handleShowContextMenu = this.handleShowContextMenu.bind(this);
+        this.defaultTopicContextMenu = this.defaultTopicContextMenu.bind(this);
+        this.handleHideContextMenu = this.handleHideContextMenu.bind(this);
+        this.handleShowInfoView = this.handleShowInfoView.bind(this);
+        this.handleHideInfoView = this.handleHideInfoView.bind(this);
+        this.handleMemberUpdateRequest = this.handleMemberUpdateRequest.bind(this);
+        this.handleValidateCredentialsRequest = this.handleValidateCredentialsRequest.bind(this);
+      }
+
+      componentDidMount() {
         var instance = this;
         window.addEventListener('resize', this.handleResize);
         window.addEventListener('online', function(e) { instance.handleOnline(true); });
@@ -4154,21 +4493,24 @@
         }
         this.readTimer = null;
         this.readTimerCallback = null;
-      },
+      }
+
       // Setup transport (usually websocket) and server address. This will terminate connection with the server.
-      tnSetup: function(serverAddress, transport) {
+      // FIXME: make static
+      tnSetup(serverAddress, transport) {
         Tinode.setup(APP_NAME, serverAddress, API_KEY, transport);
-      },
-      handleResize: function() {
+      }
+
+      handleResize() {
         var mobile = document.documentElement.clientWidth <= MEDIA_BREAKPOINT;
         this.setState({viewportWidth: document.documentElement.clientWidth});
         if (this.state.displayMobile != mobile) {
           this.setState({displayMobile: mobile});
         }
-      },
+      }
 
       // Handle for hashchange event: display appropriate panels.
-      handleHashRoute: function() {
+      handleHashRoute() {
         var hash = parseUrlHash(window.location.hash);
         // Left-side panel selector.
         if (hash.path && hash.path.length > 0) {
@@ -4201,9 +4543,9 @@
           showInfoPanel: hash.params.info,
           newTopicTabSelected: hash.params.tab
         });
-      },
+      }
 
-      handleOnline: function(online) {
+      handleOnline(online) {
         var newState = {liveConnection: online};
         if (online) {
           this.handleError("", null);
@@ -4211,11 +4553,11 @@
           this.handleError("No connection", "warn");
         }
         this.setState({liveConnection: online});
-      },
+      }
 
       // Handling read notifications here to be able to pause
       // them then the window/tab is not visible.
-      handleAppVisibility: function(visible, callback) {
+      handleAppVisibility(visible, callback) {
         clearTimeout(this.readTimer);
         this.readTimerCallback = callback;
         if (visible && callback) {
@@ -4223,20 +4565,22 @@
         } else {
           this.readTimer = null;
         }
-      },
-      handleReadTimer: function(callback) {
-        this.handleAppVisibility(!document.hidden, callback);
-      },
-      handleVisibilityEvent: function() {
-        this.handleAppVisibility(!document.hidden, this.readTimerCallback);
-      },
+      }
 
-      handleError: function(err, level) {
+      handleReadTimer(callback) {
+        this.handleAppVisibility(!document.hidden, callback);
+      }
+
+      handleVisibilityEvent() {
+        this.handleAppVisibility(!document.hidden, this.readTimerCallback);
+      }
+
+      handleError(err, level) {
         this.setState({errorText: err, errorLevel: level});
-      },
+      }
 
       // User clicked Login button in the side panel.
-      handleLoginRequest: function(login, password) {
+      handleLoginRequest(login, password) {
         var instance = this;
         this.setState({loginDisabled: true, login: login, password: password});
         this.handleError("", null);
@@ -4250,17 +4594,18 @@
             instance.handleError(err.message, "err");
           });
         }
-      },
+      }
+
       // Connection succeeded.
-      handleConnected: function() {
+      handleConnected() {
         var params = Tinode.getServerInfo();
         this.setState({
           serverVersion: params.ver + " " + (params.build ? params.build : "none") + "; "
         });
         this.doLogin(this.state.login, this.state.password);
-      },
+      }
 
-      doLogin: function(login, password, cred) {
+      doLogin(login, password, cred) {
         if (Tinode.isAuthenticated()) {
           // Already logged in. Go to default screen.
           window.location.hash = "";
@@ -4299,16 +4644,16 @@
             window.location.hash = "";
           });
         }
-      },
+      }
 
-      handleCredentialsRequest: function(params) {
+      handleCredentialsRequest(params) {
         var parsed = parseUrlHash(window.location.hash);
         parsed.path[0] = 'cred';
         parsed.params['method'] = params.cred[0];
         window.location.hash = composeUrlHash(parsed.path, parsed.params);
-      },
+      }
 
-      handleLoginSuccessful: function(instance) {
+      handleLoginSuccessful(instance) {
         instance.handleError("", null);
 
         // Refresh authentication token.
@@ -4334,9 +4679,9 @@
             window.location.hash = "";
           });
         window.location.hash = setUrlSidePanel(window.location.hash, 'contacts');
-      },
+      }
 
-      handleDisconnect: function(err) {
+      handleDisconnect(err) {
         this.setState({
           connected: false,
           topicSelectedOnline: false,
@@ -4347,26 +4692,28 @@
           contextMenuVisible: false,
           serverVersion: 'no connection'
         });
-      },
-      tnMeMetaDesc: function(desc) {
+      }
+
+      tnMeMetaDesc(desc) {
         if (desc && desc.public) {
           this.setState({
             sidePanelTitle: desc.public.fn,
             sidePanelAvatar: makeImageUrl(desc.public.photo)
           });
         }
-      },
+      }
+
       // Sending "received" notifications
-      tnData: function(data) {
+      tnData(data) {
         clearTimeout(this.receivedTimer);
         this.receivedTimer = setTimeout(function() {
           this.receivedTimer = undefined;
           Tinode.getTopic(data.topic).noteRecv(data.seq);
         }, RECEIVED_DELAY);
-      },
+      }
 
       /* Fnd topic: find contacts by tokens */
-      tnInitFind: function() {
+      tnInitFind() {
         var fnd = Tinode.getFndTopic();
         if (fnd.isSubscribed()) {
           this.setState({contactsSearchQuery: ''});
@@ -4378,20 +4725,20 @@
             instance.handleError(err.message, "err");
           });
         }
-      },
+      }
 
-      tnFndSubsUpdated: function() {
+      tnFndSubsUpdated() {
         var contacts = [];
         // Don't attempt to create P2P topics which already exist. Server will reject the duplicates.
         Tinode.getFndTopic().contacts(function(s) {
           contacts.push(s);
         });
         this.setState({foundContacts: contacts});
-      },
+      }
       /** Called when the user enters a contact into the contact search field in the NewAccount panel
         @param query {Array} is an array of contacts to search for
        */
-      handleSearchContacts: function(query) {
+      handleSearchContacts(query) {
         var fnd = Tinode.getFndTopic();
         var instance = this;
         fnd.setMeta({desc: {public: query}}).then(function(ctrl) {
@@ -4399,10 +4746,10 @@
         }).catch(function(err){
           instance.handleError(err.message, "err");
         });
-      },
+      }
 
       // User clicked on a contact in the side panel or deleted a contact.
-      handleTopicSelected: function(topicName, unused_index, online, acs) {
+      handleTopicSelected(topicName, unused_index, online, acs) {
         if (topicName) {
           // Contact selected
           if (this.state.topicSelected != topicName) {
@@ -4430,27 +4777,28 @@
             infoPanelShowMembers: false
           });
         }
-      },
+      }
 
-      handleTopicSelectedOnline: function(online) {
+      handleTopicSelectedOnline(online) {
         if (typeof online == 'boolean') {
           this.setState({topicSelectedOnline: online});
         }
-      },
+      }
       // Permissions of a currently selected topic have been updated by server.
-      handleTopicSelectedAcs: function(acs) {
+      handleTopicSelectedAcs(acs) {
         this.setState({topicSelectedAcs: acs});
-      },
+      }
 
       // In mobile view user requested to show sidepanel
-      handleHideMessagesView: function() {
+      handleHideMessagesView() {
         this.setState({
           mobilePanel: 'sidepanel'
         });
         window.location.hash = setUrlTopic(window.location.hash, null);
-      },
+      }
+
       // User clicked on a message send button.
-      handleSendMessage: function(msg) {
+      handleSendMessage(msg) {
         var topic = Tinode.getTopic(this.state.topicSelected);
         var instance = this;
         // Check if the message is formatted.
@@ -4476,13 +4824,15 @@
             instance.handleError(err.message, "err");
           });
         }
-      },
+      }
+
       // User chose a Sign Up menu item.
-      handleNewAccount: function() {
+      handleNewAccount() {
         window.location.hash = setUrlSidePanel(window.location.hash, 'register');
-      },
+      }
+
       // Actual registration of a new account.
-      handleNewAccountRequest: function(login_, password_, public_, cred_, tags_) {
+      handleNewAccountRequest(login_, password_, public_, cred_, tags_) {
         var instance = this;
         Tinode.connect(this.state.serverAddress)
           .then(function() {
@@ -4497,9 +4847,9 @@
           }).catch(function(err) {
             instance.handleError(err.message, "err");
           });
-      },
+      }
 
-      handleUpdateAccountRequest: function(password, pub, priv) {
+      handleUpdateAccountRequest(password, pub, priv) {
         var instance = this;
         if (pub || priv) {
           Tinode.getMeTopic().setMeta({desc: {public: pub, private: priv}}).catch(function(err) {
@@ -4511,29 +4861,31 @@
             instance.handleError(err.message, "err");
           });
         }
-      },
+      }
 
-      handleUpdateAccountTagsRequest: function(tags) {
+      handleUpdateAccountTagsRequest(tags) {
         var instance = this;
         Tinode.getFndTopic().setMeta({tags: tags})
           .catch(function(err) {
             instance.handleError(err.message, "err");
           });
-      },
+      }
 
       // User chose Settings menu item.
-      handleSettings: function() {
+      handleSettings() {
         window.location.hash = setUrlSidePanel(window.location.hash, this.state.myUserId ? 'edit' : 'settings');
-      },
+      }
+
       // User updated connection parameters - transport and server address
-      handleConnectionSettings: function(serverAddress, transport) {
+      handleConnectionSettings(serverAddress, transport) {
         transport = transport || this.state.transport;
         serverAddress = serverAddress || this.state.serverAddress;
         this.setState({serverAddress: serverAddress, transport: transport, sidePanelSelected: 'login'});
         this.tnSetup(serverAddress, transport);
-      },
+      }
+
       // User clicked Cancel button in Setting or Sign Up panel.
-      handleSidepanelCancel: function() {
+      handleSidepanelCancel() {
         var parsed = parseUrlHash(window.location.hash);
         parsed.path[0] = this.state.myUserId ? 'contacts' : '';
         if (parsed.params) {
@@ -4543,13 +4895,15 @@
         }
         window.location.hash = composeUrlHash(parsed.path, parsed.params);
         this.setState({errorText: '', errorLevel: null});
-      },
+      }
+
       // User clicked a (+) menu item.
-      handleNewTopic: function() {
+      handleNewTopic() {
         window.location.hash = setUrlSidePanel(window.location.hash, 'newtpk');
-      },
+      }
+
       // Create of a new topic. New P2P topic requires peer's name.
-      handleNewTopicRequest: function(peerName, pub, priv, tags) {
+      handleNewTopicRequest(peerName, pub, priv, tags) {
         var instance = this;
         var topic = peerName ? Tinode.newTopicWith(peerName) : Tinode.newTopic();
         var query = topic.startMetaQuery().withDesc().withSub().withData();
@@ -4564,9 +4918,9 @@
         }).catch(function(err) {
           instance.handleError(err.message, "err");
         });
-      },
+      }
 
-      handleTopicUpdateRequest: function(topicName, pub, priv, permissions) {
+      handleTopicUpdateRequest(topicName, pub, priv, permissions) {
         var instance = this;
         var topic = Tinode.getTopic(topicName);
         if (topic) {
@@ -4584,9 +4938,9 @@
             instance.handleError(err.message, "err");
           });
         }
-      },
+      }
 
-      handleChangePermissions: function(topicName, mode, uid) {
+      handleChangePermissions(topicName, mode, uid) {
         var instance = this;
         var topic = Tinode.getTopic(topicName);
         if (topic) {
@@ -4602,9 +4956,9 @@
             instance.handleError(err.message, "err");
           });
         }
-      },
+      }
 
-      handleTagsUpdated: function(topicName, tags) {
+      handleTagsUpdated(topicName, tags) {
         var topic = Tinode.getTopic(topicName);
         if (topic) {
           var instance = this;
@@ -4612,16 +4966,16 @@
             instance.handleError(err.message, "err");
           });
         }
-      },
+      }
 
-      handleLogout: function() {
+      handleLogout() {
         localStorage.removeItem("auth-token");
         this.setState(this.getInitialState());
         this.tnSetup(this.state.serverAddress, this.state.transport);
         window.location.hash = "";
-      },
+      }
 
-      handleLeaveUnsubRequest: function(topicName) {
+      handleLeaveUnsubRequest(topicName) {
         var topic = Tinode.getTopic(topicName);
         if (!topic) {
           return;
@@ -4636,13 +4990,13 @@
         }).catch(function(err) {
           instance.handleError(err.message, "err");
         });
-      },
+      }
 
-      handleDialogCancel: function() {
+      handleDialogCancel() {
         this.setState({dialogSelected: null});
-      },
+      }
 
-      handleShowContextMenu: function(params, menuItems) {
+      handleShowContextMenu(params, menuItems) {
         this.setState({
           contextMenuVisible: true,
           contextMenuClickAt: {x: params.x, y: params.y},
@@ -4650,9 +5004,9 @@
           contextMenuItems: menuItems || this.defaultTopicContextMenu(params.topicName),
           contextMenuBounds: ReactDOM.findDOMNode(this).getBoundingClientRect()
         });
-      },
+      }
 
-      defaultTopicContextMenu: function(topicName) {
+      defaultTopicContextMenu(topicName) {
         var muted = false, blocked = false, subscribed = false, deleter = false;
         var topic = Tinode.getTopic(topicName);
         if (topic) {
@@ -4673,26 +5027,28 @@
           subscribed ? (blocked ? ContextMenuItems["topic_unblock"] : ContextMenuItems["topic_block"]) : null,
           ContextMenuItems["topic_delete"]
         ];
-      },
+      }
 
-      handleHideContextMenu: function() {
+      handleHideContextMenu() {
         this.setState({
           contextMenuVisible: false,
           contextMenuClickAt: null,
           contextMenuParams: null,
           contextMenuBounds: null
         });
-      },
+      }
 
-      handleShowInfoView: function() {
+      handleShowInfoView() {
         window.location.hash = addUrlParam(window.location.hash, 'info', true);
         this.setState({showInfoPanel: true, infoPanelShowMembers: false});
-      },
-      handleHideInfoView: function() {
+      }
+
+      handleHideInfoView() {
         window.location.hash = removeUrlParam(window.location.hash, 'info');
         this.setState({showInfoPanel: false, infoPanelShowMembers: false});
-      },
-      handleMemberUpdateRequest: function(topicName, added, removed) {
+      }
+
+      handleMemberUpdateRequest(topicName, added, removed) {
         if (!topicName) {
           return;
         }
@@ -4719,13 +5075,13 @@
             });
           });
         }
-      },
+      }
 
-      handleValidateCredentialsRequest: function(cred, code) {
+      handleValidateCredentialsRequest(cred, code) {
         this.doLogin(null, null, {meth: cred, resp: code});
-      },
+      }
 
-      render: function() {
+      render() {
         return (
           <div id="app-container">
             <ContextMenu
@@ -4831,7 +5187,7 @@
           </div>
         );
       }
-    })
+    };
 
     ReactDOM.render(
       <AppView />,
