@@ -818,10 +818,12 @@
     class HostSelector extends React.PureComponent {
       constructor(props) {
         super(props);
+
         this.state = {
           hostName: props.serverAddress,
           changed: false
         };
+
         this.handleHostNameChange = this.handleHostNameChange.bind(this);
         this.handleEditingFinished = this.handleEditingFinished.bind(this);
       }
@@ -863,6 +865,7 @@
     class CheckBox extends React.PureComponent {
       constructor(props) {
         super(props);
+
         this.handleChange = this.handleChange.bind(this);
       }
 
@@ -1175,6 +1178,8 @@
     /* BEGIN GroupSubs: a list of group subscribers currently online */
     class GroupSubs extends React.Component {
       constructor(props) {
+        super(props);
+
         this.state = {
           onlineSubs: props.subscribers || []
         };
@@ -1186,7 +1191,7 @@
 
       render() {
         var usersOnline = [];
-        this.state.onlineSubs.map(function(sub) {
+        this.state.onlineSubs.map((sub) => {
           usersOnline.push(
             <div className="avatar-box">
               <LetterTile
@@ -1286,6 +1291,7 @@
     class CreateAccountView extends React.PureComponent {
       constructor(props) {
         super(props);
+
         this.state = {
           login: '',
           password: '',
@@ -1296,6 +1302,7 @@
           errorCleared: false,
           saveToken: localStorage.getObject("keep-logged-in")
         };
+
         this.handleLoginChange = this.handleLoginChange.bind(this);
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
         this.handlePassword2Change = this.handlePassword2Change.bind(this);
@@ -4409,6 +4416,7 @@
           foundContacts: [],
           credMethod: ''
         };
+
         this.handleResize = this.handleResize.bind(this);
         this.handleHashRoute = this.handleHashRoute.bind(this);
         this.handleOnline = this.handleOnline.bind(this);
@@ -4493,6 +4501,12 @@
         }
         this.readTimer = null;
         this.readTimerCallback = null;
+      }
+
+      componentWillUnmount() {
+        window.removeEventListener('resize', this.handleResize);
+        window.removeEventListener('hashchange', this.handleHashRoute);
+        document.removeEventListener("visibilitychange", this.handleVisibilityEvent);
       }
 
       // Setup transport (usually websocket) and server address. This will terminate connection with the server.
@@ -4630,13 +4644,13 @@
 
         var instance = this;
         if (promise) {
-          promise.then(function(ctrl) {
+          promise.then((ctrl) => {
             if (ctrl.code >= 300 && ctrl.text === "validate credentials") {
               instance.handleCredentialsRequest(ctrl.params);
             } else {
               instance.handleLoginSuccessful(instance);
             }
-          }).catch(function(err) {
+          }).catch((err) => {
             // Login failed, report error
             instance.setState({loginDisabled: false});
             instance.handleError(err.message, "err");
