@@ -4383,39 +4383,7 @@
       constructor(props) {
         super(props);
 
-        this.state = {
-          connected: false,
-          transport: null,
-          serverAddress: detectServerAddress(),
-          sidePanelSelected: 'login',
-          sidePanelTitle: null,
-          sidePanelAvatar: null,
-          dialogSelected: null,
-          contextMenuVisible: false,
-          login: '',
-          password: '',
-          myUserId: null,
-          errorText: '',
-          errorLevel: null,
-          liveConnection: navigator.onLine,
-          topicSelected: '',
-          topicSelectedOnline: false,
-          topicSelectedAcs: null,
-          loginDisabled: false,
-          displayMobile: (window.innerWidth <= MEDIA_BREAKPOINT),
-          showInfoPanel: false,
-          infoPanelShowMembers: false,
-          mobilePanel: 'sidepanel',
-          contextMenuVisible: false,
-          contextMenuBounds: null,
-          contextMenuClickAt: null,
-          contextMenuParams: null,
-          contextMenuItems: [],
-          serverVersion: 'no connection',
-          contactsSearchQuery: '',
-          foundContacts: [],
-          credMethod: ''
-        };
+        this.state = this.getInitialState();
 
         this.handleResize = this.handleResize.bind(this);
         this.handleHashRoute = this.handleHashRoute.bind(this);
@@ -4462,6 +4430,42 @@
         this.handleHideInfoView = this.handleHideInfoView.bind(this);
         this.handleMemberUpdateRequest = this.handleMemberUpdateRequest.bind(this);
         this.handleValidateCredentialsRequest = this.handleValidateCredentialsRequest.bind(this);
+      }
+
+      getInitialState() {
+        return {
+          connected: false,
+          transport: null,
+          serverAddress: detectServerAddress(),
+          sidePanelSelected: 'login',
+          sidePanelTitle: null,
+          sidePanelAvatar: null,
+          dialogSelected: null,
+          contextMenuVisible: false,
+          login: '',
+          password: '',
+          myUserId: null,
+          errorText: '',
+          errorLevel: null,
+          liveConnection: navigator.onLine,
+          topicSelected: '',
+          topicSelectedOnline: false,
+          topicSelectedAcs: null,
+          loginDisabled: false,
+          displayMobile: (window.innerWidth <= MEDIA_BREAKPOINT),
+          showInfoPanel: false,
+          infoPanelShowMembers: false,
+          mobilePanel: 'sidepanel',
+          contextMenuVisible: false,
+          contextMenuBounds: null,
+          contextMenuClickAt: null,
+          contextMenuParams: null,
+          contextMenuItems: [],
+          serverVersion: 'no connection',
+          contactsSearchQuery: '',
+          foundContacts: [],
+          credMethod: ''
+        };
       }
 
       componentDidMount() {
