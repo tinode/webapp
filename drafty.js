@@ -98,7 +98,7 @@ Sample JSON representation of the text above:
     try {
       bin = atob(b64);
     } catch (err) {
-      console.log("Drafty: failed to decode base64-encoded object", err.message, b64);
+      console.log("Drafty: failed to decode base64-encoded object", err.message);
       bin = atob("");
     }
     var length = bin.length;
