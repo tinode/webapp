@@ -94,7 +94,13 @@ Sample JSON representation of the text above:
 
   // Convert base64-encoded string into Blob.
   function base64toObjectUrl(b64, contentType) {
-    var bin = atob(b64);
+    var bin;
+    try {
+      bin = atob(b64);
+    } catch (err) {
+      console.log("Drafty: failed to decode base64-encoded object", err.message, b64);
+      bin = atob("");
+    }
     var length = bin.length;
     var buf = new ArrayBuffer(length);
     var arr = new Uint8Array(buf);
