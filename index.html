@@ -3364,15 +3364,7 @@
     /* END InfoView */
 
     /* BEGIN Conversation panel */
-    var Received = {
-      UNDEF: -2,
-      SENDING: -1,
-      SERVER: 0,
-      CLIENT: 1,
-      READ: 2
-    };
-
-    class Message extends React.Component {
+    class ChatMessage extends React.Component {
       constructor(props) {
         super(props);
 
@@ -3502,18 +3494,20 @@
     /* Received/read indicator */
     class ReceivedMarker extends React.PureComponent {
       render() {
-        var timestamp = (this.props.received === Received.SENDING) ?
+        console.log("Message status:", this.props.received);
+
+        var timestamp = (this.props.received == Tinode.MESSAGE_STATUS_PENDING) ?
           "sending ..." :
           shortDateFormat(this.props.timestamp);
-        var marker = null;
 
-        if (this.props.received === Received.SENDING) {
+        var marker = null;
+        if (this.props.received == Tinode.MESSAGE_STATUS_PENDING) {
           marker = (<i className="material-icons small">access_time</i>); // watch face
-        } else if (this.props.received === Received.SERVER) {
+        } else if (this.props.received == Tinode.MESSAGE_STATUS_SENT) {
           marker = (<i className="material-icons small">done</i>); // checkmark
-        } else if (this.props.received === Received.CLIENT) {
+        } else if (this.props.received == Tinode.MESSAGE_STATUS_RECEIVED) {
           marker = (<i className="material-icons small">done_all</i>); // double checkmark
-        } else if (this.props.received === Received.READ) {
+        } else if (this.props.received == Tinode.MESSAGE_STATUS_READ) {
           marker = (<i className="material-icons small blue">done_all</i>); // open eye
         }
 
@@ -3974,16 +3968,8 @@
             previousFrom = msg.from;
 
             var isReply = !(msg.from === this.props.myUserId);
-            var msgReceived = Received.UNDEF;
-            if (!isReply) {
-              if (topic.msgReadCount(msg.seq) > 0) {
-                msgReceived = Received.READ;
-              } else if (topic.msgRecvCount(msg.seq) > 0) {
-                msgReceived = Received.CLIENT;
-              } else {
-                msgReceived = Received.SERVER;
-              }
-            }
+            var msgDeliveryStatus = topic.msgStatus(msg);
+
             var userName, userAvatar, userFrom, chatBoxClass;
             if (groupTopic) {
               var user = topic.userDesc(msg.from);
@@ -3998,10 +3984,10 @@
             }
 
             messageNodes.push(
-              <Message content={msg.content} mimeType={msg.head ? msg.head.mime : null}
+              <ChatMessage content={msg.content} mimeType={msg.head ? msg.head.mime : null}
                 timestamp={msg.ts} response={isReply} seq={msg.seq}
                 userFrom={userFrom} userName={userName} userAvatar={userAvatar}
-                sequence={sequence} received={msgReceived}
+                sequence={sequence} received={msgDeliveryStatus}
                 viewportWidth={this.props.viewportWidth}
                 showContextMenu={this.handleShowContextMenuMessage}
                 onImagePreview={this.handleImagePreview}
@@ -4016,7 +4002,7 @@
               this.state.messages[this.state.messages.length-1].from == this.props.myUserId) ? "last" : "single";
             messageNodes.push(
               <MessageUploader filename={this.state.uploadFile.name}
-                size={this.state.uploadFile.size} sequence={sequence} received={Received.SENDING}
+                size={this.state.uploadFile.size} sequence={sequence} received={Tinode.MESSAGE_STATUS_PENDING}
                 progress={this.state.uploadProgress} viewportWidth={this.props.viewportWidth}
                 onCancelUpload={this.handleCancelUpload}
                 onError={this.props.onError}
@@ -4823,7 +4809,7 @@
         var dft = Drafty.parse(msg) || msg;
         if (Drafty.isPlainText(dft)) {
           // The message is unformatted text. Send if as text/plain.
-          topic.publish(msg).catch(function(err) {
+          topic.publishDraft(topic.createMessage(msg)).catch(function(err) {
             instance.handleError(err.message, "err");
           });;
         } else {
