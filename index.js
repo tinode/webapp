@@ -240,6 +240,7 @@ function fileToBase64(file, onSuccess, onError) {
 }
 
 // File pasted from the clipboard. It's either an inline image or a file attachment.
+// FIXME: handle large files out of band.
 function filePasted(event, onImageSuccess, onAttachmentSuccess, onError) {
   var items = (event.clipboardData || event.originalEvent.clipboardData || {}).items;
   for (var i in items) {
@@ -963,14 +964,10 @@ class ChipInput extends React.Component {
   constructor(props) {
     super(props);
 
-    // FIXME: these two methods should be static.
-    this.indexChips = this.indexChips.bind(this);
-    this.sortChips = this.sortChips.bind(this);
-
     this.state = {
       placeholder: props.chips ? "" : props.prompt,
-      sortedChips: this.sortChips(props.chips, props.required),
-      chipIndex: this.indexChips(props.chips),
+      sortedChips: ChipInput.sortChips(props.chips, props.required),
+      chipIndex: ChipInput.indexChips(props.chips),
       input: '',
       focused: false
     };
@@ -985,8 +982,8 @@ class ChipInput extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      sortedChips: this.sortChips(nextProps.chips, nextProps.required),
-      chipIndex: this.indexChips(nextProps.chips)
+      sortedChips: ChipInput.sortChips(nextProps.chips, nextProps.required),
+      chipIndex: ChipInput.indexChips(nextProps.chips)
     });
     if (nextProps.chips.length > this.props.chips.length) {
       // Chip added: clear input.
@@ -995,8 +992,7 @@ class ChipInput extends React.Component {
   }
 
   // Map chip index to user name
-  // FIXME: convert to static method.
-  indexChips(chips) {
+  static indexChips(chips) {
     var index = {};
     var count = 0;
     chips.map(function(item) {
@@ -1007,8 +1003,7 @@ class ChipInput extends React.Component {
   }
 
   // Have non-removable chips appear before all other chips.
-  // FIXME: convert to static method.
-  sortChips(chips, keep) {
+  static sortChips(chips, keep) {
     var required = [];
     var normal = [];
     chips.map(function(item) {
@@ -2043,7 +2038,7 @@ class UnreadBadge extends React.PureComponent {
 };
 
 /* Contact's labels: [you], [muted], [blocked], etc */
-// FIXME: this class is unused
+// FIXME: this class is unused.
 class ContactBadges_UNUSED_REMOVE extends React.Component {
     render() {
       var badges = null;
@@ -2065,7 +2060,6 @@ class ContactsView extends React.Component {
   constructor(props) {
     super(props);
 
-    // FIXME: make static
     this.prepareContactList = this.prepareContactList.bind(this);
 
     this.state = {
@@ -2153,7 +2147,6 @@ class ContactsView extends React.Component {
     this.resetContactList();
   }
 
-  // FIXME: make this method static.
   prepareContactList() {
     var instance = this;
     var contacts = [];
@@ -2283,10 +2276,10 @@ class GroupManager extends React.Component {
 
     this.state = {
       members: props.members,
-      index: this.indexMembers(props.members),
+      index: GroupManager.indexMembers(props.members),
       contactFilter: '',
       noContactsMessage: 'You have no contacts :-(',
-      selectedContacts: this.selectedContacts(props.members)
+      selectedContacts: GroupManager.selectedContacts(props.members)
     };
 
     this.handleContactSelected = this.handleContactSelected.bind(this);
@@ -2296,8 +2289,7 @@ class GroupManager extends React.Component {
     this.handleCancel = this.handleCancel.bind(this);
   }
 
-  // FIXME: make method static
-  indexMembers(members) {
+  static indexMembers(members) {
     var index = {};
     members.map(function(m) {
       index[m.user] = {delta: 0, present: true}; // Delta: 0 unchanged, +1 added, -1 removed
@@ -2305,8 +2297,7 @@ class GroupManager extends React.Component {
     return index;
   }
 
-  // FIXME: make method static
-  selectedContacts(members) {
+  static selectedContacts(members) {
     var sel = [];
     members.map(function(m) {
       sel.push(m.user);
@@ -2365,8 +2356,7 @@ class GroupManager extends React.Component {
     this.setState({contactFilter: val, noContactsMessage: msg});
   }
 
-  // FIXME: make static
-  doContactFiltering(filter, values) {
+  static doContactFiltering(filter, values) {
     if (filter) {
       for (var i=0; i<values.length; i++) {
         if (values[i].indexOf(filter) >= 0) {
@@ -2424,7 +2414,7 @@ class GroupManager extends React.Component {
           contacts={this.props.contacts}
           topicSelected={this.state.selectedContacts}
           filter={this.state.contactFilter}
-          filterFunc={this.doContactFiltering}
+          filterFunc={GroupManager.doContactFiltering}
           emptyListMessage={this.state.noContactsMessage}
           showOnline={false}
           showUnread={false}
@@ -3384,12 +3374,16 @@ class ChatMessage extends React.Component {
 
     var content = this.props.content;
     var attachments = [];
-    if (this.props.mimeType === Drafty.getContentType()) {
+    if (this.props.mimeType == Drafty.getContentType()) {
       Drafty.attachments(content, function(att, i) {
-        attachments.push(<AttachmentProgress
-          filename={att.name} downloadUrl={Drafty.getDownloadUrl(att)}
+        attachments.push(<Attachment
+          downloadUrl={Drafty.getDownloadUrl(att)}
+          filename={att.name} uploader={Drafty.isUploading(att)}
           mimetype={att.mime} size={Drafty.getEntitySize(att)}
-          onError={this.props.onError} key={i} />);
+          progress={this.props.progress}
+          onCancelUpload={this.props.onCancelUpload}
+          onError={this.props.onError}
+          key={i} />);
       }, this);
       content = React.createElement('span', null, Drafty.format(content, formatter, this));
     }
@@ -3408,8 +3402,10 @@ class ChatMessage extends React.Component {
           <div className={bubbleClass}>
             <p>{content}
             {attachments}
-            <ReceivedMarker response={this.props.response}
-              timestamp={this.props.timestamp} received={this.props.received} />
+            <ReceivedMarker
+              response={this.props.response}
+              timestamp={this.props.timestamp}
+              received={this.props.received} />
             </p>
             <span className="menuTrigger">
               <a href="javascript:;" onClick={this.handleContextClick}>
@@ -3430,7 +3426,7 @@ class MessageUploader extends React.PureComponent {
     var bubbleClass = "bubble tip";
 
     var attachments = [
-      <AttachmentProgress
+      <Attachment
         uploader={true} filename={this.props.filename} size={this.props.size}
         progress={this.props.progress}
         onCancelUpload={this.props.onCancelUpload}
@@ -3442,8 +3438,10 @@ class MessageUploader extends React.PureComponent {
         <div>
           <div className="bubble tip">
             <p>{attachments}
-            <ReceivedMarker response={this.props.response}
-              timestamp={this.props.timestamp} received={this.props.received} />
+            <ReceivedMarker
+              response={this.props.response}
+              timestamp={this.props.timestamp}
+              received={this.props.received} />
             </p>
           </div>
         </div>
@@ -3479,7 +3477,7 @@ class ReceivedMarker extends React.PureComponent {
   }
 };
 
-class AttachmentProgress extends React.Component {
+class Attachment extends React.Component {
   constructor(props) {
     super(props);
 
@@ -3517,25 +3515,24 @@ class AttachmentProgress extends React.Component {
   }
 
   render() {
-    var filename = this.props.filename || "file_attachment";
+    let filename = this.props.filename || "file_attachment";
     if (filename.length > 36) {
       filename = filename.substr(0, 16) + "..." + filename.substr(-16);
     }
-    var size = this.props.size > 0 ?
+    let size = this.props.size > 0 ?
       <span className="small gray">({bytesToHumanSize(this.props.size)})</span> :
       null;
 
     // Detect if the download URL is relative or absolute.
     // If the URL is relative use LargeFileHelper to attach authentication
     // credentials to the request.
-    var url, helperFunc;
+    let url, helperFunc;
     if (!this.props.uploader && !this.state.downloader &&
         !(/^(?:(?:[a-z]+:)?\/\/)/i.test(this.props.downloadUrl))) {
       // Relative URL. Use download helper.
       url = "javascript:;";
-      var instance = this;
-      helperFunc = function(e) {
-        instance.downloadFile(instance.props.downloadUrl, instance.props.filename, instance.props.mimetype);
+      helperFunc = (e) => {
+        this.downloadFile(this.props.downloadUrl, this.props.filename, this.props.mimetype);
       };
     } else {
       url = this.props.downloadUrl;
@@ -3591,8 +3588,6 @@ class MessagesView extends React.Component {
     this.handleContextClick = this.handleContextClick.bind(this);
     this.handleShowContextMenuMessage = this.handleShowContextMenuMessage.bind(this);
     this.handleBackNavigation = this.handleBackNavigation.bind(this);
-    this.handleUploadProgress = this.handleUploadProgress.bind(this);
-    this.handleCancelUpload = this.handleCancelUpload.bind(this);
   }
 
   // Scroll last message into view on component update e.g. on message received.
@@ -3865,17 +3860,6 @@ class MessagesView extends React.Component {
     this.props.onHideMessagesView();
   }
 
-  handleUploadProgress(progress) {
-    this.setState({uploadProgress: progress});
-  }
-
-  handleCancelUpload() {
-    if (this.state.uploadFile && this.state.uploadFile.uploader) {
-      this.state.uploadFile.uploader.cancel();
-    }
-    this.setState({uploadFile: null});
-  }
-
   render() {
     var component = null;
     if (this.state.topic) {
@@ -3999,7 +3983,6 @@ class MessagesView extends React.Component {
             topic={this.props.topic}
             disabled={this.state.readOnly}
             sendMessage={this.props.sendMessage}
-            onUploadProgress={this.handleUploadProgress}
             onError={this.props.onError} />
           {this.state.imagePreview ?
             <ImagePreview content={this.state.imagePreview}
@@ -4048,52 +4031,51 @@ class SendMessage extends React.PureComponent {
     if (this.props.disabled) {
       return;
     }
-    var instance = this;
+    // FIXME: handle large files too.
     if (filePasted(e,
-      function(bits, mime, width, height, fname) {
-        instance.props.sendMessage(Drafty.insertImage(null,
+      (bits, mime, width, height, fname) => {
+        this.props.sendMessage(Drafty.insertImage(null,
           0, mime, bits, width, height, fname));
       },
-      function(mime, bits, fname) {
-        instance.props.sendMessage(Drafty.attachFile(null, mime, bits, fname));
+      (mime, bits, fname) => {
+        this.props.sendMessage(Drafty.attachFile(null, mime, bits, fname));
       },
-      instance.props.onError)) {
+      this.props.onError)) {
 
-      // If file was pasted, don't paste base64 daata into input field.
+      // If a file was pasted, don't paste base64 data into input field.
       e.preventDefault();
     }
   }
 
   handleAttachImage(e) {
     if (e.target.files && e.target.files.length > 0) {
-      var instance = this;
-      var file = e.target.files[0];
+      let file = e.target.files[0];
       // Check if the uploaded file is indeed an image and if it isn't too large.
       if (file.size > MAX_INBAND_ATTACHMENT_SIZE || SUPPORTED_IMAGE_FORMATS.indexOf(file.type) < 0) {
         // Convert image for size or format.
         imageFileScaledToBase64(file, MAX_IMAGE_SIZE, MAX_IMAGE_SIZE, false,
           // Success
-          function(bits, mime, width, height, fname) {
-            instance.props.sendMessage(Drafty.insertImage(null,
+          (bits, mime, width, height, fname) => {
+            this.props.sendMessage(Drafty.insertImage(null,
               0, mime, bits, width, height, fname));
           },
           // Failure
-          function(err) {
-            instance.props.onError(err, "err");
+          (err) => {
+            this.props.onError(err, "err");
           });
       } else {
-        console.log("File size is OK", file.size, MAX_INBAND_ATTACHMENT_SIZE);
         // Image can be uploaded as is. No conversion is needed.
         imageFileToBase64(file,
           // Success
-          function(bits, mime, width, height, fname) {
-            instance.props.sendMessage(Drafty.insertImage(null,
+          (bits, mime, width, height, fname) => {
+            this.props.sendMessage(Drafty.insertImage(null,
               0, mime, bits, width, height, fname));
           },
           // Failure
-          function(err) {
-            instance.props.onError(err, "err");
-          });
+          (err) => {
+            this.props.onError(err, "err");
+          }
+        );
       }
     }
     // Clear the value so the same file can be uploaded again.
@@ -4102,32 +4084,31 @@ class SendMessage extends React.PureComponent {
 
   handleAttachFile(e) {
     if (e.target.files && e.target.files.length > 0) {
-      var instance = this;
       var file = e.target.files[0];
       if (file.size > MAX_EXTERN_ATTACHMENT_SIZE) {
         // Too large.
         this.props.onError("The file size " + bytesToHumanSize(file.size) +
           " exceeds the "  + bytesToHumanSize(MAX_EXTERN_ATTACHMENT_SIZE) + " limit.", "err");
       } else if (file.size > MAX_INBAND_ATTACHMENT_SIZE) {
-        // To large to send inband - uploading out of band and sending as a link.
-        var uploader = Tinode.getLargeFileHelper();
+        // Too large to send inband - uploading out of band and sending as a link.
+        let uploader = Tinode.getLargeFileHelper();
         if (!uploader) {
           this.props.onError("Cannot initiate file upload.");
           return;
         }
-        this.props.sendMessage(
-          Drafty.attachFile(null, file.type, null, file.name, ctrl.params.url, file.size),
-          uploader.upload(file, function(progress) {
-            instance.props.onUploadProgress(progress);
-          })
-        );
+        // Format data and initiate upload.
+        let uploadCompletionPromise = uploader.upload(file);
+        let msg = Drafty.attachFile(null, file.type, null, file.name, file.size, uploadCompletionPromise);
+        // Pass data and the uploader to the AppView.
+        this.props.sendMessage(msg, uploadCompletionPromise, uploader);
       } else {
         // Small enough to send inband.
         fileToBase64(file,
-          function(mime, bits, fname) {
-            instance.props.sendMessage(Drafty.attachFile(null, mime, bits, fname));
+          (mime, bits, fname) => {
+            this.props.sendMessage(Drafty.attachFile(null, mime, bits, fname));
           },
-          this.props.onError);
+          this.props.onError
+        );
       }
     }
     // Clear the value so the same file can be uploaded again.
@@ -4380,7 +4361,7 @@ class AppView extends React.Component {
     Tinode.enableLogging(true, true);
     Tinode.onConnect = this.handleConnected;
     Tinode.onDisconnect = this.handleDisconnect;
-    this.tnSetup(this.state.serverAddress, this.state.transport);
+    AppView.tnSetup(this.state.serverAddress, this.state.transport);
     var token;
     if (localStorage.getObject("keep-logged-in")) {
       token = localStorage.getObject("auth-token");
@@ -4412,8 +4393,7 @@ class AppView extends React.Component {
   }
 
   // Setup transport (usually websocket) and server address. This will terminate connection with the server.
-  // FIXME: make static
-  tnSetup(serverAddress, transport) {
+  static tnSetup(serverAddress, transport) {
     Tinode.setup(APP_NAME, serverAddress, API_KEY, transport);
   }
 
@@ -4713,35 +4693,15 @@ class AppView extends React.Component {
     window.location.hash = setUrlTopic(window.location.hash, null);
   }
 
-  // User clicked on a message send button.
-  handleSendMessage(msg, promise) {
-    var topic = Tinode.getTopic(this.state.topicSelected);
-    var instance = this;
-    // Check if the message is formatted.
-    var dft = Drafty.parse(msg) || msg;
-    if (Drafty.isPlainText(dft)) {
-      // The message is unformatted text. Send if as text/plain.
-      topic.publishDraft(topic.createMessage(msg), promise)
-        .catch(function(err) {
-          instance.handleError(err.message, "err");
-        });
-    } else {
-      // The message is a Drafty object.
-      var attachments = [];
-      Drafty.attachments(dft, function(data) {
-        if (data.ref) {
-          attachments.push(data.ref);
-        }
-      });
-      if (attachments.length < 1) {
-        attachments = null;
-      }
-      // Formatted message. Send it as a Drafty object.
-      topic.publishDraft(topic.createMessage(dft, undefined, Drafty.getContentType(), attachments), promise)
-        .catch(function(err) {
-          instance.handleError(err.message, "err");
-        });
-    }
+  // User is sending a message, either plain text or a drafty object with attachments.
+  handleSendMessage(msg, promise, uploader) {
+    let topic = Tinode.getTopic(this.state.topicSelected);
+    msg = topic.createMessage(Drafty.parse(msg) || msg);
+
+    topic.publishDraft(msg, promise)
+      .catch((err) => {
+        this.handleError(err.message, "err");
+    });
   }
 
   // User chose a Sign Up menu item.
@@ -4799,7 +4759,7 @@ class AppView extends React.Component {
     transport = transport || this.state.transport;
     serverAddress = serverAddress || this.state.serverAddress;
     this.setState({serverAddress: serverAddress, transport: transport, sidePanelSelected: 'login'});
-    this.tnSetup(serverAddress, transport);
+    AppView.tnSetup(serverAddress, transport);
   }
 
   // User clicked Cancel button in Setting or Sign Up panel.
@@ -4889,7 +4849,7 @@ class AppView extends React.Component {
   handleLogout() {
     localStorage.removeItem("auth-token");
     this.setState(this.getInitialState());
-    this.tnSetup(this.state.serverAddress, this.state.transport);
+    AppView.tnSetup(this.state.serverAddress, this.state.transport);
     window.location.hash = "";
   }
 
