@@ -4680,12 +4680,18 @@ class AppView extends React.Component {
   // User is sending a message, either plain text or a drafty object with attachments.
   handleSendMessage(msg, promise, uploader) {
     let topic = Tinode.getTopic(this.state.topicSelected);
-    msg = topic.createMessage(Drafty.parse(msg) || msg);
+    let dft = Drafty.parse(msg);
+    if (dft && !Drafty.isPlainText(dft)) {
+      msg = dft;
+    }
+    msg = topic.createMessage(msg);
     msg._uploader = uploader;
-    promise.catch((err) => {
-      this.handleError(err.message, "err");
-    });
 
+    if (promise) {
+      promise.catch((err) => {
+        this.handleError(err.message, "err");
+      });
+    }
     topic.publishDraft(msg, promise)
       .catch((err) => {
         this.handleError(err.message, "err");
