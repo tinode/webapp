@@ -86,10 +86,10 @@ function bytesToHumanSize(bytes) {
     return '0 Bytes';
   }
 
-  var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-  var bucket = Math.floor(Math.log2(bytes) / 10) | 0;
+  var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB'];
+  var bucket = Math.min(Math.floor(Math.log2(bytes) / 10) | 0, sizes.length-1);
   var count = bytes / Math.pow(1024, bucket);
-  var round = bucket > 0 ? (count < 10 ? 2 : (count < 100 ? 1 : 0)) : 0;
+  var round = bucket > 0 ? (count < 3 ? 2 : (count < 30 ? 1 : 0)) : 0;
   return count.toFixed(round) + ' ' + sizes[bucket];
 }
 
@@ -672,26 +672,6 @@ class LetterTile extends React.PureComponent {
   }
 }
 /* END Lettertile */
-
-/* File uload spinner with a cancel inside */
-class FileUploadProgress extends React.PureComponent {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    return (
-      <div className="uploader">
-        <div><span style={{width: (this.props.progress * 100) + "%"}}></span></div>
-        {this.props.progress < 0.999 ?
-          <a href="javascript:;" onClick={this.props.onCancel}><i className="material-icons">close</i> cancel</a>
-          :
-          <span>finishing...</span>
-        }
-      </div>
-    );
-  }
-}
 
 /* BEGIN In-place text editor. Shows text with an icon
  * which toggles it into an input field */
@@ -3320,8 +3300,17 @@ class ChatMessage extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      progress: 0
+    };
+
+    if (props.uploader) {
+      props.uploader.onProgress = this.handleProgress.bind(this);
+    }
+
     this.handlePreviewImage = this.handlePreviewImage.bind(this);
     this.handleContextClick = this.handleContextClick.bind(this);
+    this.handleCancelUpload = this.handleCancelUpload.bind(this);
   }
 
   handlePreviewImage(e) {
@@ -3340,6 +3329,14 @@ class ChatMessage extends React.Component {
     e.preventDefault();
     e.stopPropagation();
     this.props.showContextMenu({ seq: this.props.seq, y: e.pageY, x: e.pageX });
+  }
+
+  handleProgress(ratio) {
+    this.setState({progress: ratio});
+  }
+
+  handleCancelUpload() {
+    this.props.uploader.cancel();
   }
 
   render() {
@@ -3380,8 +3377,8 @@ class ChatMessage extends React.Component {
           downloadUrl={Drafty.getDownloadUrl(att)}
           filename={att.name} uploader={Drafty.isUploading(att)}
           mimetype={att.mime} size={Drafty.getEntitySize(att)}
-          progress={this.props.progress}
-          onCancelUpload={this.props.onCancelUpload}
+          progress={this.state.progress}
+          onCancelUpload={this.handleCancelUpload}
           onError={this.props.onError}
           key={i} />);
       }, this);
@@ -3403,7 +3400,6 @@ class ChatMessage extends React.Component {
             <p>{content}
             {attachments}
             <ReceivedMarker
-              response={this.props.response}
               timestamp={this.props.timestamp}
               received={this.props.received} />
             </p>
@@ -3419,37 +3415,6 @@ class ChatMessage extends React.Component {
     );
   }
 };
-
-class MessageUploader extends React.PureComponent {
-  render() {
-    var sideClass = this.props.sequence + " right";
-    var bubbleClass = "bubble tip";
-
-    var attachments = [
-      <Attachment
-        uploader={true} filename={this.props.filename} size={this.props.size}
-        progress={this.props.progress}
-        onCancelUpload={this.props.onCancelUpload}
-        onError={this.props.onError} />
-    ];
-
-    return (
-      <li className={sideClass}>
-        <div>
-          <div className="bubble tip">
-            <p>{attachments}
-            <ReceivedMarker
-              response={this.props.response}
-              timestamp={this.props.timestamp}
-              received={this.props.received} />
-            </p>
-          </div>
-        </div>
-      </li>
-    );
-  }
-};
-
 
 /* Received/read indicator */
 class ReceivedMarker extends React.PureComponent {
@@ -3477,6 +3442,22 @@ class ReceivedMarker extends React.PureComponent {
   }
 };
 
+/* File uload/download progress indicator with a cancel inside */
+class FileProgress extends React.PureComponent {
+  render() {
+    return (
+      <div className="uploader">
+        <div><span style={{width: (this.props.progress * 100) + "%"}}></span></div>
+        {this.props.progress < 0.999 ?
+          <a href="javascript:;" onClick={this.props.onCancel}><i className="material-icons">close</i> cancel</a>
+          :
+          <span>finishing...</span>
+        }
+      </div>
+    );
+  }
+}
+
 class Attachment extends React.Component {
   constructor(props) {
     super(props);
@@ -3493,16 +3474,15 @@ class Attachment extends React.Component {
   downloadFile(url, filename, mimetype) {
     var downloader = Tinode.getLargeFileHelper();
     this.setState({downloader: downloader});
-    var instance = this;
-    downloader.download(url, filename, mimetype, function(e) {
-      instance.setState({progress: e.loaded / instance.props.size});
-    }).then(function() {
-      instance.setState({downloader: null, progress: 0});
-    }).catch(function(err) {
+    downloader.download(url, filename, mimetype, (loaded) => {
+      this.setState({progress: loaded / this.props.size});
+    }).then(() => {
+      this.setState({downloader: null, progress: 0});
+    }).catch((err) => {
       if (err) {
-        instance.props.onError("Error downloading file: " + err.message, "err");
+        this.props.onError("Error downloading file: " + err.message, "err");
       }
-      instance.setState({downloader: null, progress: 0});
+      this.setState({downloader: null, progress: 0});
     });
   }
 
@@ -3538,14 +3518,14 @@ class Attachment extends React.Component {
       url = this.props.downloadUrl;
       helperFunc = null;
     }
-    var progress = this.props.uploader ? this.props.progress : this.state.progress;
     return (
       <div className="attachment">
         <div><i className="material-icons big gray">insert_drive_file</i></div>
         <div className="flex-column">
           <div>{filename} {size}</div>
           {this.props.uploader || this.state.downloader ?
-            <FileUploadProgress progress={progress} onCancel={this.handleCancel} />
+            <FileProgress progress={this.props.uploader ? this.props.progress : this.state.progress}
+              onCancel={this.handleCancel} />
             :
             <div><a href={url} download={this.props.filename} onClick={helperFunc} >
               <i className="material-icons">file_download</i> save
@@ -3563,7 +3543,6 @@ class MessagesView extends React.Component {
 
     this.state = {
       messages: [],
-      uploadProgress: 0,
       onlineSubs: [],
       topic: '',
       title: '',
@@ -3665,8 +3644,7 @@ class MessagesView extends React.Component {
         onlineSubs: subs,
         topic: props.topic,
         imagePreview: null,
-        scrollPosition: 0,
-        uploadProgress: 0,
+        scrollPosition: 0
       });
       tryToResubscribe = true;
 
@@ -3796,10 +3774,13 @@ class MessagesView extends React.Component {
       if (topic.isNewMessage(msg.seq)) {
         newState.scrollPosition = 0;
       }
+
       // Aknowledge all messages, including own messges.
-      this.props.readTimerHandler(function() {
-        topic.noteRead(msg.seq);
-      });
+      if (topic.msgStatus(msg) != Tinode.MESSAGE_STATUS_PENDING) {
+        this.props.readTimerHandler(() => {
+          topic.noteRead(msg.seq);
+        });
+      }
       this.props.onData(msg);
     }
 
@@ -3888,7 +3869,7 @@ class MessagesView extends React.Component {
         previousFrom = msg.from;
 
         var isReply = !(msg.from === this.props.myUserId);
-        var msgDeliveryStatus = topic.msgStatus(msg);
+        var deliveryStatus = topic.msgStatus(msg);
 
         var userName, userAvatar, userFrom, chatBoxClass;
         if (groupTopic) {
@@ -3907,7 +3888,7 @@ class MessagesView extends React.Component {
           <ChatMessage content={msg.content} mimeType={msg.head ? msg.head.mime : null}
             timestamp={msg.ts} response={isReply} seq={msg.seq}
             userFrom={userFrom} userName={userName} userAvatar={userAvatar}
-            sequence={sequence} received={msgDeliveryStatus}
+            sequence={sequence} received={deliveryStatus} uploader={msg._uploader}
             viewportWidth={this.props.viewportWidth}
             showContextMenu={this.handleShowContextMenuMessage}
             onImagePreview={this.handleImagePreview}
@@ -4601,11 +4582,14 @@ class AppView extends React.Component {
 
   // Sending "received" notifications
   tnData(data) {
-    clearTimeout(this.receivedTimer);
-    this.receivedTimer = setTimeout(function() {
-      this.receivedTimer = undefined;
-      Tinode.getTopic(data.topic).noteRecv(data.seq);
-    }, RECEIVED_DELAY);
+    let topic = Tinode.getTopic(data.topic);
+    if (topic.msgStatus(data) != Tinode.MESSAGE_STATUS_PENDING) {
+      clearTimeout(this.receivedTimer);
+      this.receivedTimer = setTimeout(() => {
+        this.receivedTimer = undefined;
+        topic.noteRecv(data.seq);
+      }, RECEIVED_DELAY);
+    }
   }
 
   /* Fnd topic: find contacts by tokens */
@@ -4697,11 +4681,15 @@ class AppView extends React.Component {
   handleSendMessage(msg, promise, uploader) {
     let topic = Tinode.getTopic(this.state.topicSelected);
     msg = topic.createMessage(Drafty.parse(msg) || msg);
+    msg._uploader = uploader;
+    promise.catch((err) => {
+      this.handleError(err.message, "err");
+    });
 
     topic.publishDraft(msg, promise)
       .catch((err) => {
         this.handleError(err.message, "err");
-    });
+      });
   }
 
   // User chose a Sign Up menu item.
