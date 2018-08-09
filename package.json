@@ -1,0 +1,30 @@
+{
+  "name": "TinodeWeb",
+  "description": "Javascript bindings for Tinode",
+  "version": "0.15.4-rc1",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tinode/example-react-js.git"
+  },
+  "scripts": {
+    "build": "babel --presets react ./ -d lib",
+    "babel-version": "babel --version"
+  },
+  "keywords": [
+    "instant messenger",
+    "messenger",
+    "chat"
+  ],
+  "main": "index.js",
+  "bugs": {
+    "url": "https://github.com/tinode/tinode-js/issues"
+  },
+  "homepage": "https://github.com/tinode/chat",
+  "email": "gene@tinode.co",
+  "license": "Apache-2.0"
+}
