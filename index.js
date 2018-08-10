@@ -54,6 +54,9 @@ var MAX_IMAGE_SIZE = 768;
 var SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
 var MIME_EXTENSIONS         = ['jpg',        'gif',       'png',       'svg',       'svg'];
 
+// Tinode is defined in 'tinode.js'.
+var Drafty = Tinode.Drafty;
+
 // Helper functions for storing values in localStorage.
 // By default localStorage can store only strings, not objects or other types.
 Storage.prototype.setObject = function(key, value) {
