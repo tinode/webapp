@@ -1,10 +1,12 @@
 {
-  "name": "TinodeWeb",
-  "description": "Javascript bindings for Tinode",
-  "version": "0.15.4-rc1",
+  "name": "tinode-webapp",
+  "description": "Tinode Web Client",
+  "version": "0.15.4-rc3",
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-minify": "^0.4.3",
     "babel-preset-env": "^1.7.0",
+    "babel-preset-minify": "^0.4.3",
     "babel-preset-react": "^6.24.1"
   },
   "repository": {
@@ -12,7 +14,7 @@
     "url": "https://github.com/tinode/example-react-js.git"
   },
   "scripts": {
-    "build": "babel --presets react ./ -d lib",
+    "build": "babel ./index.js --presets react,minify --out-file ./index.min.js",
     "babel-version": "babel --version"
   },
   "keywords": [
@@ -22,7 +24,7 @@
   ],
   "main": "index.js",
   "bugs": {
-    "url": "https://github.com/tinode/tinode-js/issues"
+    "url": "https://github.com/tinode/example-react-js/issues"
   },
   "homepage": "https://github.com/tinode/chat",
   "email": "gene@tinode.co",

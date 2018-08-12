@@ -1,3 +1,5 @@
+<!-- DEVELOPMENT version of the web app. Links to online babel transformer and non-babelified app script -->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -27,11 +29,13 @@
     <!-- ReactJs scripts -->
     <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <!-- core tinode library -->
     <script src="tinode.js"></script>
+    <!-- the application -->
+    <script type="text/babel" src="index.js"></script>
   </head>
   <body>
     <div id="mountPoint"></div>
-    <script src="index.min.js"></script>
   </body>
 </html>

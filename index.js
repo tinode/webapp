@@ -4083,7 +4083,7 @@ class SendMessage extends React.PureComponent {
         // Format data and initiate upload.
         let uploadCompletionPromise = uploader.upload(file);
         let msg = Drafty.attachFile(null, file.type, null, file.name, file.size, uploadCompletionPromise);
-        // Pass data and the uploader to the AppView.
+        // Pass data and the uploader to the TinodeWeb.
         this.props.sendMessage(msg, uploadCompletionPromise, uploader);
       } else {
         // Small enough to send inband.
@@ -4242,7 +4242,7 @@ class ImagePreview extends React.PureComponent {
 /* END Conversation panel */
 
 /* The top-level class to hold all fuinctionality together */
-class AppView extends React.Component {
+class TinodeWeb extends React.Component {
   constructor(props) {
     super(props);
 
@@ -4345,7 +4345,7 @@ class AppView extends React.Component {
     Tinode.enableLogging(true, true);
     Tinode.onConnect = this.handleConnected;
     Tinode.onDisconnect = this.handleDisconnect;
-    AppView.tnSetup(this.state.serverAddress, this.state.transport);
+    TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport);
     var token;
     if (localStorage.getObject("keep-logged-in")) {
       token = localStorage.getObject("auth-token");
@@ -4756,7 +4756,7 @@ class AppView extends React.Component {
     transport = transport || this.state.transport;
     serverAddress = serverAddress || this.state.serverAddress;
     this.setState({serverAddress: serverAddress, transport: transport, sidePanelSelected: 'login'});
-    AppView.tnSetup(serverAddress, transport);
+    TinodeWeb.tnSetup(serverAddress, transport);
   }
 
   // User clicked Cancel button in Setting or Sign Up panel.
@@ -4846,7 +4846,7 @@ class AppView extends React.Component {
   handleLogout() {
     localStorage.removeItem("auth-token");
     this.setState(this.getInitialState());
-    AppView.tnSetup(this.state.serverAddress, this.state.transport);
+    TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport);
     window.location.hash = "";
   }
 
@@ -5065,6 +5065,6 @@ class AppView extends React.Component {
 };
 
 ReactDOM.render(
-  <AppView />,
+  <TinodeWeb />,
   document.getElementById('mountPoint')
 );
