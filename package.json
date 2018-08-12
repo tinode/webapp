@@ -18,9 +18,12 @@
     "babel-version": "babel --version"
   },
   "keywords": [
-    "instant messenger",
+    "chat",
+    "instant-messenger",
+    "message",
     "messenger",
-    "chat"
+    "react",
+    "web"
   ],
   "main": "index.js",
   "bugs": {
