@@ -1,22 +1,46 @@
 {
   "name": "tinode-webapp",
   "description": "Tinode Web Client",
-  "version": "0.15.4-rc3",
+  "version": "0.15.4",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-minify": "^0.4.3",
     "babel-preset-env": "^1.7.0",
     "babel-preset-minify": "^0.4.3",
-    "babel-preset-react": "^6.24.1"
+    "babel-preset-react": "^6.24.1",
+    "cssnano": "^4.0.5"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/tinode/example-react-js.git"
   },
   "scripts": {
-    "build": "babel ./index.js --presets react,minify --out-file ./index.min.js",
+    "build": "npm run build:js && npm run build:css",
+    "build:js": "babel ./index.js --presets react,minify --out-file ./index.min.js",
+    "build:css": "postcss css/base.css > css/base.min.css",
     "babel-version": "babel --version"
   },
+  "files": [
+    "audio/msg.mp3",
+    "css/base.css",
+    "css/base.min.css",
+    "img/ignasi_pattern_s.png",
+    "img/logo.svg",
+    "img/logo32x32.png",
+    "img/logo32x32a.png",
+    "img/logo96.png",
+    "img/logo192.png",
+    "index-dev.html",
+    "index.html",
+    "index.js",
+    "index.min.js",
+    "manifest.json",
+    "web-desktop-2.png",
+    "web-mob-chat-1.png",
+    "web-mob-contacts-1.png",
+    "web-mob-info-1.png",
+    "web-mob-new-chat-1.png"
+  ],
   "keywords": [
     "chat",
     "instant-messenger",
