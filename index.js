@@ -662,7 +662,7 @@ class LetterTile extends React.PureComponent {
         var color = "lettertile dark-color" + (Math.abs(stringHash(this.props.topic)) % 16);
         avatar = (<div className={color}><div>{letter}</div></div>)
       } else {
-        avatar = (Tinode.getTopicType(this.props.topic) === "grp") ?
+        avatar = (Tinode.topicType(this.props.topic) === "grp") ?
           <i className="material-icons">group</i> :
           <i className="material-icons">person</i>;
       }
@@ -2839,10 +2839,6 @@ class InfoView extends React.Component {
       this.setState({topic: props.topic});
       this.resetDesc(topic, props);
       this.resetSubs(topic, props);
-
-      if (topic.getType() === "grp") {
-        this.setState({tags: topic.tags()});
-      }
     }
   }
 
@@ -2901,6 +2897,13 @@ class InfoView extends React.Component {
       auth: defacs.auth,
       anon: defacs.anon
     });
+
+    if (topic.getType() === "grp" && acs && acs.isOwner()) {
+      // Requesting tags: owner is editing the topic.
+      topic.getMeta(topic.startMetaQuery().withTags().build()).then(() => {
+        this.setState({tags: topic.tags()});
+      });
+    }
   }
 
   onMetaDesc(desc) {
@@ -3248,12 +3251,16 @@ class InfoView extends React.Component {
               }
             </div>
             <div className="hr" />
-            <TagManager
-              title="Tags"
-              tags={this.state.tags}
-              activated={false}
-              onSubmit={this.handleTagsUpdated} />
-            <div className="hr" />
+            {this.state.owner ?
+              <TagManager
+                title="Tags"
+                tags={this.state.tags}
+                activated={false}
+                onSubmit={this.handleTagsUpdated} />
+              :
+              null
+            }
+            {this.state.owner ? <div className="hr" /> : null }
             {this.state.groupTopic ?
               <div className="panel-form-column">
                 <div className="panel-form-row">
@@ -3662,20 +3669,29 @@ class MessagesView extends React.Component {
     });
 
     if (!topic.isSubscribed() && tryToResubscribe) {
-      var instance = this;
       var getQuery = topic.startMetaQuery()
         .withLaterDesc()
         .withLaterSub()
         .withLaterData(MESSAGES_PAGE)
         .withLaterDel();
-      getQuery = topic.getType() == 'grp' ? getQuery.withTags() : getQuery;
-      topic.subscribe(getQuery.build()).catch(function(err){
-          instance.props.onError(err.message, "err");
-          instance.setState({
+      // Don't request the tags. They are useless unless the user
+      // is the owner and is editing the topic.
+      // getQuery = topic.getType() == 'grp' ? getQuery.withTags() : getQuery;
+      // Show "loading" spinner.
+      this.setState({ fetchingMessages: true });
+      topic.subscribe(getQuery.build())
+        .then(() => {
+          // Hide spinner.
+          this.setState({ fetchingMessages: false });
+        })
+        .catch((err) => {
+          this.props.onError(err.message, "err");
+          this.setState({
             title: "Not found",
             avatar: null,
             readOnly: true,
-            writeOnly: true
+            writeOnly: true,
+            fetchingMessages: false
           });
         });
     }
@@ -3902,7 +3918,7 @@ class MessagesView extends React.Component {
 
       var lastSeen = null;
       var cont = Tinode.getMeTopic().getContact(this.state.topic);
-      if (cont && Tinode.getTopicType(cont.topic) === "p2p") {
+      if (cont && Tinode.topicType(cont.topic) === "p2p") {
         if (cont.online) {
           lastSeen = "online now";
         } else if (cont.seen) {
@@ -4405,7 +4421,7 @@ class TinodeWeb extends React.Component {
     }
     // Topic for MessagesView selector.
     if (hash.path.length > 1 && hash.path[1] != this.state.topicSelected) {
-      var tp = Tinode.getTopicType(hash.path[1]);
+      var tp = Tinode.topicType(hash.path[1]);
       if (tp) {
         this.setState({
           topicSelected: hash.path[1],
@@ -4644,7 +4660,7 @@ class TinodeWeb extends React.Component {
         mobilePanel: 'topic-view',
         topicSelectedOnline: online,
         topicSelectedAcs: acs,
-        infoPanelShowMembers: Tinode.getTopicType(topicName) === "grp"
+        infoPanelShowMembers: Tinode.topicType(topicName) === "grp"
       });
     } else {
       if (this.state.topicSelected) {
@@ -4694,6 +4710,12 @@ class TinodeWeb extends React.Component {
       promise.catch((err) => {
         this.handleError(err.message, "err");
       });
+    }
+    if (!topic.isSubscribed()) {
+      if (!promise) {
+        promise = Promise.resolve();
+      }
+      promise = promise.then(() => { return topic.subscribe(); });
     }
     topic.publishDraft(msg, promise)
       .catch((err) => {
@@ -4784,6 +4806,8 @@ class TinodeWeb extends React.Component {
     var query = topic.startMetaQuery().withDesc().withSub().withData();
     var setParams;
     if (!peerName) {
+      // Creator is the owner, has access to tags.
+      // Fetch default group topic tags, if any.
       query = query.withTags();
       setParams = {desc: {public: pub, private: priv}, tags: tags};
     }

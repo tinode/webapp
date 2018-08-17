@@ -1,7 +1,7 @@
 {
   "name": "tinode-webapp",
   "description": "Tinode Web Client",
-  "version": "0.15.4",
+  "version": "0.15.5-rc1",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-minify": "^0.4.3",
