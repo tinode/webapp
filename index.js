@@ -2900,9 +2900,7 @@ class InfoView extends React.Component {
 
     if (topic.getType() === "grp" && acs && acs.isOwner()) {
       // Requesting tags: owner is editing the topic.
-      topic.getMeta(topic.startMetaQuery().withTags().build()).then(() => {
-        this.setState({tags: topic.tags()});
-      });
+      topic.getMeta(topic.startMetaQuery().withTags().build());
     }
   }
 
