@@ -1660,14 +1660,17 @@ class EditAccountView extends React.Component {
   constructor(props) {
     super(props);
 
+    let me = Tinode.getMeTopic();
+    let defacs = me.getDefaultAccess();
+    let fnd = Tinode.getFndTopic();
     this.state = {
-      address: null,
-      fullName: undefined,
-      avatar: null,
-      login: undefined,
-      password: undefined,
-      previousOnTags: undefined,
-      tags: []
+      fullName: me.public ? me.public.fn : undefined,
+      avatar: makeImageUrl(me.public ? me.public.photo : null),
+      address: Tinode.getCurrentUserID(),
+      auth: defacs.auth,
+      anon: defacs.anon,
+      tags: fnd.tags(),
+      previousOnTags: fnd.onTagsUpdated
     };
 
     this.tnNewTags = this.tnNewTags.bind(this);
@@ -1677,24 +1680,12 @@ class EditAccountView extends React.Component {
     this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
   }
 
-  componentWillMount() {
-    var me = Tinode.getMeTopic();
-    var defacs = me.getDefaultAccess();
-    var fnd = Tinode.getFndTopic();
-    this.setState({
-      fullName: me.public ? me.public.fn : undefined,
-      avatar: makeImageUrl(me.public ? me.public.photo : null),
-      address: Tinode.getCurrentUserID(),
-      auth: defacs.auth,
-      anon: defacs.anon,
-      tags: fnd.tags(),
-      previousOnTags: fnd.onTagsUpdated
-    });
+  componentDidMount() {
+    let fnd = Tinode.getFndTopic();
     fnd.onTagsUpdated = this.tnNewTags;
     if (!fnd.isSubscribed()) {
-      var instance = this;
-      fnd.subscribe(fnd.startMetaQuery().withLaterDesc().withTags().build()).catch(function(err){
-        instance.props.onError(err.message, "err");
+      fnd.subscribe(fnd.startMetaQuery().withLaterDesc().withTags().build()).catch((err) => {
+        this.props.onError(err.message, "err");
       });
     }
   }
@@ -3820,7 +3811,7 @@ class MessagesView extends React.Component {
         this.forceUpdate();
         break;
       default:
-        console.log("Other change in topic: " + info.what);
+        console.log("Other change in topic: ", info.what);
     }
   }
 
