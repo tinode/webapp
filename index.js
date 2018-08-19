@@ -418,7 +418,7 @@ function arrayEqual(a, b) {
 function topicPermissionSetter(mode, params, errorHandler) {
   var topic = Tinode.getTopic(params.topicName);
   if (!topic) {
-    console.log("Topic not found: " + params.topicName);
+    console.log("Topic not found", params.topicName);
     return;
   }
 
@@ -426,7 +426,7 @@ function topicPermissionSetter(mode, params, errorHandler) {
   if (params.user) {
     user = topic.subscriber(params.user);
     if (!user) {
-      console.log("Subscriber not found: " + params.topicName + "[" + params.user + "]");
+      console.log("Subscriber not found", params.topicName + "[" + params.user + "]");
       return;
     }
     am = user.acs.updateGiven(mode).getGiven();
@@ -445,7 +445,7 @@ function topicPermissionSetter(mode, params, errorHandler) {
 function deleteMessages(all, hard, params, errorHandler) {
   var topic = Tinode.getTopic(params.topicName);
   if (!topic) {
-    console.log("Topic not found: " + params.topicName);
+    console.log("Topic not found: ", params.topicName);
     return;
   }
   var promise = all ?
@@ -481,7 +481,7 @@ var ContextMenuItems = {
     "topic_delete":   {title: "Delete", handler: function(params, errorHandler) {
       var topic = Tinode.getTopic(params.topicName);
       if (!topic) {
-        console.log("Topic not found: " + params.topicName);
+        console.log("Topic not found: ", params.topicName);
         return;
       }
       topic.delTopic().catch(function(err) {
@@ -2117,11 +2117,12 @@ class ContactsView extends React.Component {
       if (this.props.topicSelected === cont.topic) {
         this.props.onAcsChange(cont.acs);
       }
+    } else if (what == "del") {
+      // messages deleted (hard or soft) -- update pill counter.
     } else {
       // TODO(gene): handle other types of notifications:
       // * ua -- user agent changes (maybe display a pictogram for mobile/desktop).
       // * upd -- topic 'public' updated, issue getMeta().
-      // * del -- messages deleted (hard or soft) -- reset pill counter.
       console.log("Unsupported (yet) presence update:" + what + " in: " + cont.topic);
     }
   }
@@ -2783,7 +2784,7 @@ class InfoView extends React.Component {
       anon: null,
       contactList: [],
       tags: [],
-      showMemberPanel: props.showMemberPanel,
+      showMemberPanel: false,
       showPermissionEditorFor: undefined,
       moreInfoExpanded: false,
       previousMetaDesc: undefined,
@@ -2791,7 +2792,6 @@ class InfoView extends React.Component {
       previousTagsUpdated: undefined
     };
 
-    this.initInfoView = this.initInfoView.bind(this);
     this.resetSubs = this.resetSubs.bind(this);
     this.resetDesc = this.resetDesc.bind(this);
     this.onMetaDesc = this.onMetaDesc.bind(this);
@@ -2814,7 +2814,8 @@ class InfoView extends React.Component {
     this.handleContextMenu = this.handleContextMenu.bind(this);
   }
 
-  initInfoView(props) {
+  // No need to separately handle componentWillMount.
+  componentWillReceiveProps(props) {
     var topic = Tinode.getTopic(props.topic);
     if (!topic) {
       return;
@@ -2840,11 +2841,6 @@ class InfoView extends React.Component {
       this.resetDesc(topic, props);
       this.resetSubs(topic, props);
     }
-  }
-
-  // No need to separately handle componentWillMount.
-  componentWillReceiveProps(nextProps) {
-    this.initInfoView(nextProps);
   }
 
   componentWillUnmount() {
@@ -2891,6 +2887,7 @@ class InfoView extends React.Component {
       private: topic.private ? topic.private.comment : null,
       address: topic.name,
       groupTopic: (topic.getType() === "grp"),
+      showMemberPanel: false,
       access: acs ? acs.getMode() : undefined,
       modeGiven: acs ? acs.getGiven() : undefined,
       modeWant: acs ? acs.getWant() : undefined,
@@ -4331,7 +4328,6 @@ class TinodeWeb extends React.Component {
       loginDisabled: false,
       displayMobile: (window.innerWidth <= MEDIA_BREAKPOINT),
       showInfoPanel: false,
-      infoPanelShowMembers: false,
       mobilePanel: 'sidepanel',
       contextMenuVisible: false,
       contextMenuBounds: null,
@@ -4658,7 +4654,7 @@ class TinodeWeb extends React.Component {
         mobilePanel: 'topic-view',
         topicSelectedOnline: online,
         topicSelectedAcs: acs,
-        infoPanelShowMembers: Tinode.topicType(topicName) === "grp"
+        showInfoPanel: false
       });
     } else {
       if (this.state.topicSelected) {
@@ -4671,7 +4667,7 @@ class TinodeWeb extends React.Component {
         mobilePanel: 'sidepanel',
         topicSelectedOnline: false,
         topicSelectedAcs: null,
-        infoPanelShowMembers: false
+        showInfoPanel: false
       });
     }
   }
@@ -4877,15 +4873,12 @@ class TinodeWeb extends React.Component {
     if (!topic) {
       return;
     }
-    var instance = this;
-    topic.leave(true).then(function(ctrl) {
+
+    topic.leave(true).then((ctrl) => {
       // Hide MessagesView and InfoView panels.
       window.location.hash = setUrlTopic(window.location.hash, '');
-      instance.setState({
-        infoPanelShowMembers: false
-      });
-    }).catch(function(err) {
-      instance.handleError(err.message, "err");
+    }).catch((err) => {
+      this.handleError(err.message, "err");
     });
   }
 
@@ -4937,12 +4930,12 @@ class TinodeWeb extends React.Component {
 
   handleShowInfoView() {
     window.location.hash = addUrlParam(window.location.hash, 'info', true);
-    this.setState({showInfoPanel: true, infoPanelShowMembers: false});
+    this.setState({showInfoPanel: true});
   }
 
   handleHideInfoView() {
     window.location.hash = removeUrlParam(window.location.hash, 'info');
-    this.setState({showInfoPanel: false, infoPanelShowMembers: false});
+    this.setState({showInfoPanel: false});
   }
 
   handleMemberUpdateRequest(topicName, added, removed) {
@@ -5065,7 +5058,6 @@ class TinodeWeb extends React.Component {
             errorText={this.state.errorText}
             errorLevel={this.state.errorLevel}
 
-            showMemberPanel={this.state.infoPanelShowMembers}
             onTopicDescUpdate={this.handleTopicUpdateRequest}
             onCancel={this.handleHideInfoView}
             onChangePermissions={this.handleChangePermissions}

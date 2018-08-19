@@ -17,7 +17,6 @@ Background pattern from http://subtlepatterns.com/, commercial and non-commercia
 ## Missing functionality
 
 * Previews not generated for videos, audio, links or docs.
-* No indication of some chat statuses (muted, blocked, etc.).
 * Browser push notifications are not implemented.
 * No end-to-end encryption.
 * Editing chat permissions is incomplete.
