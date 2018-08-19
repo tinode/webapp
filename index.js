@@ -2043,9 +2043,7 @@ class ContactsView extends React.Component {
     this.tnMeContactUpdate = this.tnMeContactUpdate.bind(this);
     this.tnMeSubsUpdated = this.tnMeSubsUpdated.bind(this);
     this.resetContactList = this.resetContactList.bind(this);
-  }
 
-  componentWillMount() {
     var me = Tinode.getMeTopic();
     me.onContactUpdate = this.tnMeContactUpdate;
     me.onSubsUpdated = this.tnMeSubsUpdated;
@@ -2422,7 +2420,7 @@ class NewTopicView extends React.Component {
     this.handleGroupByID = this.handleGroupByID.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.onInitFind();
   }
 
@@ -3574,7 +3572,7 @@ class MessagesView extends React.Component {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.propsChange(this.props);
     if (this.messagesScroller) {
       this.messagesScroller.addEventListener('scroll', this.fetchMoreMessages);
