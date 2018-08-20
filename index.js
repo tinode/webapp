@@ -37,10 +37,13 @@ var AVATAR_SIZE = 128;
 // Number of chat messages to fetch in one call.
 var MESSAGES_PAGE = 24;
 
-// Maximum in-band attachment size = 128K (included directly into the message). Increase
-// this limit to a greater value in production, if desired. Also increase max_message_size
-// in server config.
-var MAX_INBAND_ATTACHMENT_SIZE = 1 << 17;
+// Maximum in-band (included directly into the message) attachment size which fits into
+// a message of 256K in size, assuming base64 encoding and 1024 bytes of overhead.
+// This is size of an object *before* base64 encoding is applied.
+// Increase this limit to a greater value in production, if desired. Also increase
+// max_message_size in server config.
+//  MAX_INBAND_ATTACHMENT_SIZE = base64DecodedLen(max_message_size - overhead);
+var MAX_INBAND_ATTACHMENT_SIZE = 195840;
 
 // Absolute maximum attachment size to be used with the server = 8MB. Increase to
 // something like 100MB in production.
@@ -48,7 +51,7 @@ var MAX_EXTERN_ATTACHMENT_SIZE = 1 << 23;
 
 // Maximum allowed linear dimension of an inline image in pixels. You may want
 // to adjust it to 1600 or 2400 for production.
-var MAX_IMAGE_SIZE = 768;
+var MAX_IMAGE_DIM = 768;
 
 // Supported image MIME types and corresponding file extensions.
 var SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
@@ -156,6 +159,18 @@ function getMimeType(header) {
   return (mime && mime.length > 1) ? mime[1] : null;
 }
 
+// Given length of a binary object in bytes, calculate the length after
+// base64 encoding.
+function base64EncodedLen(n) {
+  return Math.floor((n + 2) / 3) * 4;
+}
+
+// Given length of a base64-encoded object, calculate decoded size of the
+// pbject in bytes.
+function base64DecodedLen(n) {
+  return Math.floor(n / 4) * 3;
+}
+
 // Convert uploaded image into a base64-encoded string possibly scaling
 // linear dimensions or constraining to a square.
 function imageFileScaledToBase64(file, width, height, forceSquare, onSuccess, onError) {
@@ -193,13 +208,13 @@ function imageFileScaledToBase64(file, width, height, forceSquare, onSuccess, on
     var quality = 0.78;
     if (mime == "image/jpeg") {
       // Reduce size of the jpeg by reducing image quality
-      while (imageBits.length * 0.75 > MAX_INBAND_ATTACHMENT_SIZE && quality > 0.45) {
+      while (base64DecodedLen(imageBits.length) > MAX_INBAND_ATTACHMENT_SIZE && quality > 0.45) {
         imageBits = canvas.toDataURL(mime, quality);
         quality *= 0.84;
       }
     }
-    if (imageBits.length * 0.75 > MAX_INBAND_ATTACHMENT_SIZE) {
-      onError("The image size " + bytesToHumanSize(imageBits.length * 0.75) +
+    if (base64DecodedLen(imageBits.length) > MAX_INBAND_ATTACHMENT_SIZE) {
+      onError("The image size " + bytesToHumanSize(base64DecodedLen(imageBits.length)) +
         " exceeds the "  + bytesToHumanSize(MAX_INBAND_ATTACHMENT_SIZE) + " limit.", "err");
       return;
     }
@@ -257,7 +272,7 @@ function filePasted(event, onImageSuccess, onAttachmentSuccess, onError) {
       if (file.type && file.type.split("/")[0] == "image") {
         // Handle inline image
         if (file.size > MAX_INBAND_ATTACHMENT_SIZE || SUPPORTED_IMAGE_FORMATS.indexOf(file.type) < 0) {
-          imageFileScaledToBase64(file, MAX_IMAGE_SIZE, MAX_IMAGE_SIZE, false, onImageSuccess, onError);
+          imageFileScaledToBase64(file, MAX_IMAGE_DIM, MAX_IMAGE_DIM, false, onImageSuccess, onError);
         } else {
           imageFileToBase64(file, onImageSuccess, onError);
         }
@@ -448,6 +463,12 @@ function deleteMessages(all, hard, params, errorHandler) {
     console.log("Topic not found: ", params.topicName);
     return;
   }
+  // We don't know if the message is still pending (e.g. attachment is being uploaded),
+  // so try cancelling first. No harm if we can't cancel.
+  if (topic.cancelSend(params.seq)) {
+    return new Promise.resolve();
+  }
+  // Can't cancel. Delete instead.
   var promise = all ?
     topic.delMessagesAll(hard) :
     topic.delMessagesList([params.seq], hard);
@@ -2803,7 +2824,7 @@ class InfoView extends React.Component {
     this.handleContextMenu = this.handleContextMenu.bind(this);
   }
 
-  // No need to separately handle componentWillMount.
+  // No need to separately handle component mount.
   componentWillReceiveProps(props) {
     var topic = Tinode.getTopic(props.topic);
     if (!topic) {
@@ -3413,12 +3434,12 @@ class ChatMessage extends React.Component {
 /* Received/read indicator */
 class ReceivedMarker extends React.PureComponent {
   render() {
-    var timestamp = (this.props.received == Tinode.MESSAGE_STATUS_PENDING) ?
+    var timestamp = (this.props.received <= Tinode.MESSAGE_STATUS_SENDING) ?
       "sending ..." :
       shortDateFormat(this.props.timestamp);
 
     var marker = null;
-    if (this.props.received == Tinode.MESSAGE_STATUS_PENDING) {
+    if (this.props.received <= Tinode.MESSAGE_STATUS_SENDING) {
       marker = (<i className="material-icons small">access_time</i>); // watch face
     } else if (this.props.received == Tinode.MESSAGE_STATUS_SENT) {
       marker = (<i className="material-icons small">done</i>); // checkmark
@@ -3779,7 +3800,8 @@ class MessagesView extends React.Component {
       }
 
       // Aknowledge all messages, including own messges.
-      if (topic.msgStatus(msg) != Tinode.MESSAGE_STATUS_PENDING) {
+      let status = topic.msgStatus(msg);
+      if (status >= Tinode.MESSAGE_STATUS_SENT) {
         this.props.readTimerHandler(() => {
           topic.noteRead(msg.seq);
         });
@@ -4037,7 +4059,7 @@ class SendMessage extends React.PureComponent {
       // Check if the uploaded file is indeed an image and if it isn't too large.
       if (file.size > MAX_INBAND_ATTACHMENT_SIZE || SUPPORTED_IMAGE_FORMATS.indexOf(file.type) < 0) {
         // Convert image for size or format.
-        imageFileScaledToBase64(file, MAX_IMAGE_SIZE, MAX_IMAGE_SIZE, false,
+        imageFileScaledToBase64(file, MAX_IMAGE_DIM, MAX_IMAGE_DIM, false,
           // Success
           (bits, mime, width, height, fname) => {
             this.props.sendMessage(Drafty.insertImage(null,
@@ -4585,7 +4607,7 @@ class TinodeWeb extends React.Component {
   // Sending "received" notifications
   tnData(data) {
     let topic = Tinode.getTopic(data.topic);
-    if (topic.msgStatus(data) != Tinode.MESSAGE_STATUS_PENDING) {
+    if (topic.msgStatus(data) > Tinode.MESSAGE_STATUS_SENDING) {
       clearTimeout(this.receivedTimer);
       this.receivedTimer = setTimeout(() => {
         this.receivedTimer = undefined;
