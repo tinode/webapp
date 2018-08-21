@@ -325,15 +325,15 @@ function stringHash(value) {
 // path and arguments.
 function parseUrlHash(hash) {
   // Split path from args, path -> parts[0], args->path[1]
-  var parts = hash.split('?', 2);
-  var params = {};
-  var path = [];
+  let parts = hash.split('?', 2);
+  let params = {};
+  let path = [];
   if (parts[0]) {
     path = parts[0].substr(1).split("/");
   }
   if (parts[1]) {
     parts[1].split("&").forEach(function(part) {
-      var item = part.split("=");
+      let item = part.split("=");
       if (item[0]) {
         params[decodeURIComponent(item[0])] = decodeURIComponent(item[1]);
       }
@@ -4271,7 +4271,7 @@ class TinodeWeb extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = this.getInitialState();
+    this.state = this.getBlankState();
 
     this.handleResize = this.handleResize.bind(this);
     this.handleHashRoute = this.handleHashRoute.bind(this);
@@ -4318,9 +4318,11 @@ class TinodeWeb extends React.Component {
     this.handleHideInfoView = this.handleHideInfoView.bind(this);
     this.handleMemberUpdateRequest = this.handleMemberUpdateRequest.bind(this);
     this.handleValidateCredentialsRequest = this.handleValidateCredentialsRequest.bind(this);
+
+    this.handleHashRoute();
   }
 
-  getInitialState() {
+  getBlankState() {
     return {
       connected: false,
       transport: null,
@@ -4351,7 +4353,8 @@ class TinodeWeb extends React.Component {
       serverVersion: 'no connection',
       contactsSearchQuery: '',
       foundContacts: [],
-      credMethod: ''
+      credMethod: undefined,
+      credCode: undefined
     };
   }
 
@@ -4440,10 +4443,17 @@ class TinodeWeb extends React.Component {
         this.setState({topicSelected: null});
       }
     }
+
+    // Save validation credentials, if available.
+    if (hash.params.code && hash.params.method) {
+      this.setState({
+        credCode: hash.params.code,
+        credMethod: hash.params.method
+      });
+    }
+
     // Additional parameters of panels.
     this.setState({
-      credCode: hash.params.code,
-      credMethod: hash.params.method,
       showInfoPanel: hash.params.info,
       newTopicTabSelected: hash.params.tab
     });
@@ -4490,7 +4500,7 @@ class TinodeWeb extends React.Component {
     this.handleError("", null);
 
     if (Tinode.isConnected()) {
-      this.doLogin(login, password);
+      this.doLogin(login, password, {meth: this.state.credMethod, resp: this.state.credCode});
     } else {
       Tinode.connect().catch(function(err) {
         // Socket error
@@ -4506,7 +4516,7 @@ class TinodeWeb extends React.Component {
     this.setState({
       serverVersion: params.ver + " " + (params.build ? params.build : "none") + "; "
     });
-    this.doLogin(this.state.login, this.state.password);
+    this.doLogin(this.state.login, this.state.password, {meth: this.state.credMethod, resp: this.state.credCode});
   }
 
   doLogin(login, password, cred) {
@@ -4520,33 +4530,34 @@ class TinodeWeb extends React.Component {
     cred = cred ? cred.cred : undefined;
 
     // Try to login with login/password. If they are not available, try token. If no token, ask for login/password.
-    var promise = null;
-    var token = Tinode.getAuthToken();
-
+    let promise = null;
+    let token = Tinode.getAuthToken();
     if (login && password) {
       this.setState({password: null});
       promise = Tinode.loginBasic(login, password, cred);
     } else if (token) {
       promise = Tinode.loginToken(token.token, cred);
-    } else {
-      this.setState({loginDisabled: false});
     }
 
-    var instance = this;
     if (promise) {
       promise.then((ctrl) => {
         if (ctrl.code >= 300 && ctrl.text === "validate credentials") {
-          instance.handleCredentialsRequest(ctrl.params);
+          this.handleCredentialsRequest(ctrl.params);
         } else {
-          instance.handleLoginSuccessful(instance);
+          this.handleLoginSuccessful(this);
         }
       }).catch((err) => {
-        // Login failed, report error
-        instance.setState({loginDisabled: false});
-        instance.handleError(err.message, "err");
+        // Login failed, report error.
+        this.setState({loginDisabled: false, credMethod: undefined, credCode: undefined});
+        this.handleError(err.message, "err");
         localStorage.removeItem("auth-token");
         window.location.hash = "";
       });
+    } else {
+      // No login credentials provided.
+      // Make sure we are on the login page.
+      window.location.hash = "";
+      this.setState({loginDisabled: false});
     }
   }
 
@@ -4569,6 +4580,8 @@ class TinodeWeb extends React.Component {
     me.onMetaDesc = instance.tnMeMetaDesc;
     instance.setState({
       connected: true,
+      credMethod: undefined,
+      credCode: undefined,
       myUserId: Tinode.getCurrentUserID()
     });
     // Subscribe, fetch topic desc, the list of subscriptions. Messages are not fetched.
@@ -4877,7 +4890,7 @@ class TinodeWeb extends React.Component {
 
   handleLogout() {
     localStorage.removeItem("auth-token");
-    this.setState(this.getInitialState());
+    this.setState(this.getBlankState());
     TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport);
     window.location.hash = "";
   }
@@ -4982,6 +4995,7 @@ class TinodeWeb extends React.Component {
   }
 
   handleValidateCredentialsRequest(cred, code) {
+    this.setState({credMethod: cred, credCode: code});
     this.doLogin(null, null, {meth: cred, resp: code});
   }
 
