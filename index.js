@@ -117,12 +117,12 @@ function fitImageSize(width, height, maxWidth, maxHeight, forceSquare) {
     maxWidth = maxHeight = Math.min(maxWidth, maxHeight);
   }
 
-  var scale = Math.min(
+  let scale = Math.min(
     Math.min(width, maxWidth) / width,
     Math.min(height, maxHeight) / height
   );
 
-  var size = {
+  let size = {
     dstWidth: (width * scale) | 0,
     dstHeight: (height * scale) | 0,
   };
@@ -206,6 +206,9 @@ function imageFileScaledToBase64(file, width, height, forceSquare, onSuccess, on
     }
     // Ensure the image is not too large
     var quality = 0.78;
+    if (base64DecodedLen(imageBits.length) > MAX_INBAND_ATTACHMENT_SIZE) {
+      mime = "image/jpeg";
+    }
     if (mime == "image/jpeg") {
       // Reduce size of the jpeg by reducing image quality
       while (base64DecodedLen(imageBits.length) > MAX_INBAND_ATTACHMENT_SIZE && quality > 0.45) {
