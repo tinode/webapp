@@ -1,41 +1,41 @@
 // Name of this application, used in the User-Agent
-var APP_NAME = "TinodeWeb/0.15";
+const APP_NAME = "TinodeWeb/0.15";
 
-var KNOWN_HOSTS = {hosted: "api.tinode.co", local: "localhost:6060"};
+const KNOWN_HOSTS = {hosted: "api.tinode.co", local: "localhost:6060"};
 // Default host name and port to connect to.
-var DEFAULT_HOST = KNOWN_HOSTS.hosted;
+const DEFAULT_HOST = KNOWN_HOSTS.hosted;
 // var DEFAULT_HOST = KNOWN_HOSTS.local;
 
 // Sound to play on message received.
-var POP_SOUND = new Audio('audio/msg.mp3');
+const POP_SOUND = new Audio('audio/msg.mp3');
 
 // Unicode symbol used to clear objects
-var DEL_CHAR = "\u2421";
+const DEL_CHAR = "\u2421";
 
 // API key. Use https://github.com/tinode/chat/tree/master/keygen to generate your own
-var API_KEY = "AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K";
+const API_KEY = "AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K";
 
 // Minimum time between two keypress notifications, milliseconds.
-var KEYPRESS_DELAY = 3*1000;
+const KEYPRESS_DELAY = 3*1000;
 // Delay before sending a {note} for reciving a message, milliseconds.
-var RECEIVED_DELAY = 500;
+const RECEIVED_DELAY = 500;
 // Delay before sending a read notification, milliseconds.
-var READ_DELAY = 1000;
+const READ_DELAY = 1000;
 
 // The shortest allowed tag length. Matches one on the server.
-var MIN_TAG_LENGTH = 4;
+const MIN_TAG_LENGTH = 4;
 
 // Mediaquery breakpoint between desktop and mobile, in px. Should match the value
 // in @meadia (max-size: 640px) in base.css
-var MEDIA_BREAKPOINT = 640;
+const MEDIA_BREAKPOINT = 640;
 // Size of css 'rem' unit in pixels. Default 1rem = 10pt = 13px.
-var REM_SIZE = 13;
+const REM_SIZE = 13;
 
 // Size of the avatar image
-var AVATAR_SIZE = 128;
+const AVATAR_SIZE = 128;
 
 // Number of chat messages to fetch in one call.
-var MESSAGES_PAGE = 24;
+const MESSAGES_PAGE = 24;
 
 // Maximum in-band (included directly into the message) attachment size which fits into
 // a message of 256K in size, assuming base64 encoding and 1024 bytes of overhead.
@@ -43,19 +43,19 @@ var MESSAGES_PAGE = 24;
 // Increase this limit to a greater value in production, if desired. Also increase
 // max_message_size in server config.
 //  MAX_INBAND_ATTACHMENT_SIZE = base64DecodedLen(max_message_size - overhead);
-var MAX_INBAND_ATTACHMENT_SIZE = 195840;
+const MAX_INBAND_ATTACHMENT_SIZE = 195840;
 
 // Absolute maximum attachment size to be used with the server = 8MB. Increase to
 // something like 100MB in production.
-var MAX_EXTERN_ATTACHMENT_SIZE = 1 << 23;
+const MAX_EXTERN_ATTACHMENT_SIZE = 1 << 23;
 
 // Maximum allowed linear dimension of an inline image in pixels. You may want
 // to adjust it to 1600 or 2400 for production.
-var MAX_IMAGE_DIM = 768;
+const MAX_IMAGE_DIM = 768;
 
 // Supported image MIME types and corresponding file extensions.
-var SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
-var MIME_EXTENSIONS         = ['jpg',        'gif',       'png',       'svg',       'svg'];
+const SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
+const MIME_EXTENSIONS         = ['jpg',        'gif',       'png',       'svg',       'svg'];
 
 // Tinode is defined in 'tinode.js'.
 var Drafty = Tinode.Drafty;
