@@ -18,7 +18,7 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": "/x/example-react-js/",
+  "start_url": "/",
   "background_color": "silver",
   "theme_color": "#3949AB",
   "display": "standalone"
