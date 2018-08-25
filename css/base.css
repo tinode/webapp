@@ -1339,14 +1339,14 @@ ul.tabbar > li {
 ul.tabbar > li > a {
   position: relative;
   padding-top: 0.75rem;
-  text-decoration: none;
-  text-transform: uppercase;
   display: block;
-  min-width: 6rem;
+  min-width: 6.5rem;
   text-align: center;
   line-height: 2rem;
   font-weight: 400;
-  font-size: 1.1rem;
+  font-size: 1.25rem;
+  font-variant: small-caps;
+  text-decoration: none;
   color: rgba(33,150,243,0.6);
   overflow: hidden;
   box-shadow: inset 0 -2px 2.5px -1px rgba(0,0,0,0.25);

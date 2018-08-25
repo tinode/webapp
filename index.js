@@ -1429,16 +1429,22 @@ class SettingsView extends React.PureComponent {
     super(props);
 
     this.state = {
-      transport: "def"
+      transport: props.transport || "def",
+      messageSounds: props.messageSounds
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleMessageSoundsToggle = this.handleMessageSoundsToggle.bind(this);
     this.handleTransportSelected = this.handleTransportSelected.bind(this);
   }
 
   handleSubmit(e) {
     e.preventDefault();
-    this.props.onUpdate(null, this.state.transport);
+    this.props.onUpdate(null, this.state.transport, this.state.messageSounds);
+  }
+
+  handleMessageSoundsToggle(unused, checked) {
+    this.setState({messageSounds: checked});
   }
 
   handleTransportSelected(e) {
@@ -1463,10 +1469,20 @@ class SettingsView extends React.PureComponent {
     });
     return (
       <form id="settings-form" onSubmit={this.handleSubmit}>
-        <label className="small">Wire transport:</label>
-        <ul className="quoted">
-          {transportOptions}
-        </ul>
+        <div className="panel-form-row">
+          <label forHtml="message-sound">Message sound:</label>
+          <CheckBox id="message-sound"
+            checked={this.state.messageSounds}
+            onChange={this.handleMessageSoundsToggle} />
+        </div>
+        <div className="panel-form-row">
+          <label className="small">Wire transport:</label>
+        </div>
+        <div className="panel-form-row">
+          <ul className="quoted">
+            {transportOptions}
+          </ul>
+        </div>
         <div className="dialog-buttons">
           <button type="submit" className="blue">Update</button>
         </div>
@@ -1587,7 +1603,7 @@ class SidepanelView extends React.Component {
             disabled={this.props.loginDisabled}
             serverAddress={this.props.serverAddress}
             onLogin={this.handleLoginRequested}
-            onServerAddressChange={this.props.onConnectionSettings} /> :
+            onServerAddressChange={this.props.onGlobalSettings} /> :
 
           view === 'register' ?
           <CreateAccountView
@@ -1596,8 +1612,11 @@ class SidepanelView extends React.Component {
             onError={this.props.onError} /> :
 
           view === 'settings' ?
-          <SettingsView onCancel={this.props.onCancel}
-            onUpdate={this.props.onConnectionSettings}
+          <SettingsView
+            transport={this.props.transport}
+            messageSounds={this.props.messageSounds}
+            onCancel={this.props.onCancel}
+            onUpdate={this.props.onGlobalSettings}
             /> :
 
           view === 'edit' ?
@@ -1614,6 +1633,7 @@ class SidepanelView extends React.Component {
             connected={this.props.connected}
             topicSelected={this.props.topicSelected}
             showContextMenu={this.props.showContextMenu}
+            messageSounds={this.props.messageSounds}
             onTopicSelected={this.props.onTopicSelected}
             onAcsChange={this.props.onAcsChange}
             onOnlineChange={this.props.onOnlineChange} /> :
@@ -2037,16 +2057,15 @@ class UnreadBadge extends React.PureComponent {
 
 /* Contact's labels: [you], [muted], [blocked], etc */
 // FIXME: this class is unused.
-class ContactBadges_UNUSED_REMOVE extends React.Component {
+class ContactBadges_UNUSED_REMOVE extends React.PureComponent {
     render() {
-      var badges = null;
+      let badges = null;
       if (this.props.badges && this.props.badges.length > 0) {
-        var count = 0;
         badges = [];
         this.props.badges.map(function(b) {
           var style = "badge" + (b.color ? " " + b.color : "");
-          badges.push(<span className={style} key={count}>{b.name}</span>);
-          count ++;
+          // Badge names are expected to be unique, so using the name as the key.
+          badges.push(<span className={style} key={b.name}>{b.name}</span>);
         });
       }
       return badges;
@@ -2107,12 +2126,12 @@ class ContactsView extends React.Component {
       // New message received
       // Skip update if the topic is currently open, otherwise the badge will annoyingly flash.
       if (this.props.topicSelected !== cont.topic) {
-        // Disable sound for now. Need to add a config option.
-        // POP_SOUND.play();
+        if (this.props.messageSounds) {
+          POP_SOUND.play();
+        }
         this.resetContactList();
-      } else if (document.hidden) {
-        // Disable sound for now.
-        // POP_SOUND.play();
+      } else if (document.hidden && this.props.messageSounds) {
+        POP_SOUND.play();
       }
     } else if (what === "recv") {
       // Explicitly ignoring "recv" -- it causes no visible updates to contact list.
@@ -2434,8 +2453,7 @@ class NewTopicView extends React.Component {
     this.state = {
       tabSelected: "p2p",
       searchQuery: props.contactsSearchQuery,
-      contactList: props.foundContacts,
-      contactSelected: null
+      contactList: props.foundContacts
     };
 
     this.handleTabClick = this.handleTabClick.bind(this);
@@ -2448,17 +2466,24 @@ class NewTopicView extends React.Component {
     this.props.onInitFind();
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps_DISABLED(props) {
     this.setState({
+      searchQuery: props.contactsSearchQuery,
+      contactList: props.foundContacts
+    });
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState){
+    return {
       searchQuery: nextProps.contactsSearchQuery,
       contactList: nextProps.foundContacts
-    });
+    };
   }
 
   handleTabClick(e) {
     e.preventDefault();
     window.location.hash = addUrlParam(window.location.hash, 'tab', e.currentTarget.dataset.id);
-    this.setState({tabSelected: e.currentTarget.dataset.id, contactSelected: null});
+    this.setState({tabSelected: e.currentTarget.dataset.id});
   }
 
   handleContactSelected(sel) {
@@ -2483,10 +2508,10 @@ class NewTopicView extends React.Component {
       <div className="flex-column">
         <ul className="tabbar">
           <li className={this.state.tabSelected === "p2p" ? "active" : null}>
-            <a href="javascript:;" data-id="p2p" onClick={this.handleTabClick}>1:1</a>
+            <a href="javascript:;" data-id="p2p" onClick={this.handleTabClick}>find</a>
           </li>
           <li className={this.state.tabSelected === "grp" ? "active" : null}>
-            <a href="javascript:;" data-id="grp" onClick={this.handleTabClick}>group</a>
+            <a href="javascript:;" data-id="grp" onClick={this.handleTabClick}>new group</a>
           </li>
           <li className={this.state.tabSelected === "byid" ? "active" : null}>
             <a href="javascript:;" data-id="byid" onClick={this.handleTabClick}>by id</a>
@@ -2606,7 +2631,7 @@ class SearchContacts extends React.Component {
     this.handleSearchChange = this.handleSearchChange.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.handleClear = this.handleClear.bind(this);
-    this.handleKeyPress = this.handleKeyPress.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   componentWillUnmount() {
@@ -2626,6 +2651,8 @@ class SearchContacts extends React.Component {
     if (query.length > 0) {
       this.setState({edited: true});
       this.props.onSearchContacts(query);
+    } else if (this.props.searchQuery) {
+      this.props.onSearchContacts(DEL_CHAR);
     }
   }
 
@@ -2636,9 +2663,11 @@ class SearchContacts extends React.Component {
     this.setState({search: '', edited: false});
   }
 
-  handleKeyPress(e) {
+  handleKeyDown(e) {
     if (e.key === 'Enter') {
       this.handleSearch(e);
+    } else if (e.key === 'Escape') {
+      this.handleClear();
     }
   }
 
@@ -2650,7 +2679,7 @@ class SearchContacts extends React.Component {
           <input className="search" type="text"
             placeholder="List like email:alice@example.com, tel:17025550003..."
             value={this.state.search} onChange={this.handleSearchChange}
-            onKeyPress={this.handleKeyPress} required autoFocus />
+            onKeyDown={this.handleKeyDown} required autoFocus />
           <a href="javascript:;" onClick={this.handleClear}>
             <i className="material-icons">close</i>
           </a>
@@ -4301,7 +4330,7 @@ class TinodeWeb extends React.Component {
     this.handleUpdateAccountRequest = this.handleUpdateAccountRequest.bind(this);
     this.handleUpdateAccountTagsRequest = this.handleUpdateAccountTagsRequest.bind(this);
     this.handleSettings = this.handleSettings.bind(this);
-    this.handleConnectionSettings = this.handleConnectionSettings.bind(this);
+    this.handleGlobalSettings = this.handleGlobalSettings.bind(this);
     this.handleSidepanelCancel = this.handleSidepanelCancel.bind(this);
     this.handleNewTopic = this.handleNewTopic.bind(this);
     this.handleNewTopicRequest = this.handleNewTopicRequest.bind(this);
@@ -4323,10 +4352,14 @@ class TinodeWeb extends React.Component {
   }
 
   getBlankState() {
+    let settings = localStorage.getObject("settings") || {};
+
     return {
       connected: false,
-      transport: null,
-      serverAddress: detectServerAddress(),
+      transport: settings.transport || null,
+      serverAddress: settings.serverAddress || detectServerAddress(),
+      // "On" is the default, so saving the "off" state.
+      messageSounds: !settings.messageSoundsOff,
       sidePanelSelected: 'login',
       sidePanelTitle: null,
       sidePanelAvatar: null,
@@ -4351,7 +4384,7 @@ class TinodeWeb extends React.Component {
       contextMenuParams: null,
       contextMenuItems: [],
       serverVersion: 'no connection',
-      contactsSearchQuery: '',
+      contactsSearchQuery: undefined,
       foundContacts: [],
       credMethod: undefined,
       credCode: undefined
@@ -4640,9 +4673,8 @@ class TinodeWeb extends React.Component {
       this.tnFndSubsUpdated();
     } else {
       fnd.onSubsUpdated = this.tnFndSubsUpdated;
-      var instance = this;
-      fnd.subscribe(fnd.startMetaQuery().withSub().withTags().build()).catch(function(err){
-        instance.handleError(err.message, "err");
+      fnd.subscribe(fnd.startMetaQuery().withSub().withTags().build()).catch((err) => {
+        this.handleError(err.message, "err");
       });
     }
   }
@@ -4655,16 +4687,17 @@ class TinodeWeb extends React.Component {
     });
     this.setState({foundContacts: contacts});
   }
+
   /** Called when the user enters a contact into the contact search field in the NewAccount panel
     @param query {Array} is an array of contacts to search for
    */
   handleSearchContacts(query) {
     var fnd = Tinode.getFndTopic();
-    var instance = this;
-    fnd.setMeta({desc: {public: query}}).then(function(ctrl) {
+    this.setState({contactsSearchQuery: query == DEL_CHAR ? '' : query});
+    fnd.setMeta({desc: {public: query}}).then((ctrl) => {
       return fnd.getMeta(fnd.startMetaQuery().withSub().build());
-    }).catch(function(err){
-      instance.handleError(err.message, "err");
+    }).catch((err) => {
+      this.handleError(err.message, "err");
     });
   }
 
@@ -4794,11 +4827,23 @@ class TinodeWeb extends React.Component {
     window.location.hash = setUrlSidePanel(window.location.hash, this.state.myUserId ? 'edit' : 'settings');
   }
 
-  // User updated connection parameters - transport and server address
-  handleConnectionSettings(serverAddress, transport) {
+  // User updated global parameters.
+  handleGlobalSettings(serverAddress, transport, messageSounds) {
     transport = transport || this.state.transport;
     serverAddress = serverAddress || this.state.serverAddress;
-    this.setState({serverAddress: serverAddress, transport: transport, sidePanelSelected: 'login'});
+    messageSounds = (typeof messageSounds == 'boolean') ? messageSounds : this.state.messageSounds;
+
+    this.setState({
+      serverAddress: serverAddress,
+      transport: transport,
+      messageSounds: messageSounds,
+      sidePanelSelected: 'login'
+    });
+    localStorage.setObject({
+      serverAddress: serverAddress,
+      messageSoundsOff: !messageSounds,
+      transport: this.state.transport
+    });
     TinodeWeb.tnSetup(serverAddress, transport);
   }
 
@@ -5028,8 +5073,10 @@ class TinodeWeb extends React.Component {
           credMethod={this.state.credMethod}
           credCode={this.state.credCode}
 
+          transport={this.state.transport}
+          messageSounds={this.state.messageSounds}
           serverAddress={this.state.serverAddress}
-          onConnectionSettings={this.handleConnectionSettings}
+          onGlobalSettings={this.handleGlobalSettings}
 
           onSignUp={this.handleNewAccount}
           onSettings={this.handleSettings}
