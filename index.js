@@ -2466,14 +2466,7 @@ class NewTopicView extends React.Component {
     this.props.onInitFind();
   }
 
-  componentWillReceiveProps_DISABLED(props) {
-    this.setState({
-      searchQuery: props.contactsSearchQuery,
-      contactList: props.foundContacts
-    });
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState){
+  static getDerivedStateFromProps(nextProps, prevState) {
     return {
       searchQuery: nextProps.contactsSearchQuery,
       contactList: nextProps.foundContacts
