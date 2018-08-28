@@ -4471,11 +4471,11 @@ class TinodeWeb extends React.Component {
     }
 
     // Save validation credentials, if available.
-    if (hash.params.code && hash.params.method) {
-      this.setState({
-        credCode: hash.params.code,
-        credMethod: hash.params.method
-      });
+    if (hash.params.method) {
+      this.setState({ credMethod: hash.params.method });
+    }
+    if (hash.params.code) {
+      this.setState({ credCode: hash.params.code });
     }
 
     // Additional parameters of panels.
@@ -4521,17 +4521,16 @@ class TinodeWeb extends React.Component {
 
   // User clicked Login button in the side panel.
   handleLoginRequest(login, password) {
-    var instance = this;
     this.setState({loginDisabled: true, login: login, password: password});
     this.handleError("", null);
 
     if (Tinode.isConnected()) {
       this.doLogin(login, password, {meth: this.state.credMethod, resp: this.state.credCode});
     } else {
-      Tinode.connect().catch(function(err) {
+      Tinode.connect().catch((err) => {
         // Socket error
-        instance.setState({loginDisabled: false});
-        instance.handleError(err.message, "err");
+        this.setState({loginDisabled: false});
+        this.handleError(err.message, "err");
       });
     }
   }
@@ -4568,6 +4567,9 @@ class TinodeWeb extends React.Component {
     if (promise) {
       promise.then((ctrl) => {
         if (ctrl.code >= 300 && ctrl.text === "validate credentials") {
+          if (cred) {
+            this.handleError("Code does not match", "warn");
+          }
           this.handleCredentialsRequest(ctrl.params);
         } else {
           this.handleLoginSuccessful(this);
@@ -4777,19 +4779,18 @@ class TinodeWeb extends React.Component {
 
   // Actual registration of a new account.
   handleNewAccountRequest(login_, password_, public_, cred_, tags_) {
-    var instance = this;
     Tinode.connect(this.state.serverAddress)
       .then(function() {
         var params = Tinode.addCredential({public: public_, tags: tags_}, cred_);
         return Tinode.createAccountBasic(login_, password_, params);
-      }).then(function(ctrl) {
+      }).then((ctrl) => {
         if (ctrl.code >= 300 && ctrl.text === "validate credentials") {
-          instance.handleCredentialsRequest(ctrl.params);
+          this.handleCredentialsRequest(ctrl.params);
         } else {
-          instance.handleLoginSuccessful(instance);
+          this.handleLoginSuccessful(this);
         }
-      }).catch(function(err) {
-        instance.handleError(err.message, "err");
+      }).catch((err) => {
+        this.handleError(err.message, "err");
       });
   }
 
