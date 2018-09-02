@@ -2780,7 +2780,7 @@ class ValidationView extends React.PureComponent {
           </label>
         </div>
         <div className="panel-form-row">
-        <input type="text" id="enter-confirmation-code" placeholder="The code is 123456"
+        <input type="text" id="enter-confirmation-code" placeholder="Numbers only"
           value={this.state.code} onChange={this.handleChange}
           onKeyPress={this.handleKeyPress} required />
         </div>
