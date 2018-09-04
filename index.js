@@ -1504,7 +1504,7 @@ class SettingsView extends React.PureComponent {
             onChange={this.handleCheckboxClick} />
         </div>
         <div className="panel-form-row">
-          <label forHtml="desktop-alerts">Desktop alerts{!this.props.desktopAlertsEnabled ? ' (requires HTTPS)' : null}:</label>
+          <label forHtml="desktop-alerts">Notification alerts{!this.props.desktopAlertsEnabled ? ' (requires HTTPS)' : null}:</label>
           <CheckBox name="alert" id="desktop-alerts"
             checked={this.state.desktopAlerts}
             onChange={this.props.desktopAlertsEnabled ? this.handleCheckboxClick : null} />
