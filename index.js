@@ -384,13 +384,23 @@ function setUrlTopic(hash, topic) {
 
 // Detect server address from the URL
 function detectServerAddress() {
-  var host = DEFAULT_HOST;
-  if (window.location.protocol === 'file:' || window.location.hostname === 'localhost') {
-    host = KNOWN_HOSTS.local;
-  } else if (window.location.hostname) {
-    host = window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+  let host = DEFAULT_HOST;
+  if (typeof window.location == 'object') {
+    if (window.location.protocol == 'file:' || window.location.hostname == 'localhost') {
+      host = KNOWN_HOSTS.local;
+    } else if (window.location.hostname) {
+      host = window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+    }
   }
   return host;
+}
+
+// Detect if the page is served over HTTPS.
+function isSecureConnection() {
+  if (typeof window.location == 'object') {
+    return window.location.protocol == 'https:';
+  }
+  return false;
 }
 
 // Create VCard which represents topic 'public' info
@@ -475,7 +485,7 @@ function deleteMessages(all, hard, params, errorHandler) {
   var promise = all ?
     topic.delMessagesAll(hard) :
     topic.delMessagesList([params.seq], hard);
-  promise.catch(function(err) {
+  promise.catch((err) => {
     if (errorHandler) {
       errorHandler(err.message, "err");
     }
@@ -548,7 +558,7 @@ class ContextMenu extends React.Component {
     this.toggle(false);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.toggle(nextProps.visible);
   }
 
@@ -581,7 +591,7 @@ class ContextMenu extends React.Component {
     e.preventDefault();
     e.stopPropagation();
     this.props.hide();
-    var item = this.props.items[e.currentTarget.dataset.id];
+    let item = this.props.items[e.currentTarget.dataset.id];
     item.handler(this.props.params, this.props.onError);
   }
 
@@ -590,16 +600,15 @@ class ContextMenu extends React.Component {
       return null;
     }
 
-    var count = 0;
-    var instance = this;
-    var menu = [];
-    this.props.items.map(function(item) {
+    let count = 0;
+    let menu = [];
+    this.props.items.map((item) => {
       if (item && item.title) {
         menu.push(
           item.title === "-" ?
             <li className="separator" key={count} />
             :
-            <li onClick={instance.handleClick} data-id={count} key={count}>{item.title}</li>
+            <li onClick={this.handleClick} data-id={count} key={count}>{item.title}</li>
         );
       }
       count++;
@@ -661,7 +670,7 @@ class MoreButton extends React.PureComponent {
   }
 
   handleToggle() {
-    var open = !this.state.open;
+    let open = !this.state.open;
     this.setState({open: open});
     if (this.props.onToggle) {
       this.props.onToggle(open);
@@ -679,11 +688,11 @@ class MoreButton extends React.PureComponent {
 /* BEGIN Lettertile: Avatar box: either a bitmap or a letter tile or a stock icon. */
 class LetterTile extends React.PureComponent {
   render() {
-    var avatar;
+    let avatar;
     if (this.props.avatar === true) {
       if (this.props.topic && this.props.title && this.props.title.trim()) {
-        var letter = this.props.title.trim().charAt(0);
-        var color = "lettertile dark-color" + (Math.abs(stringHash(this.props.topic)) % 16);
+        let letter = this.props.title.trim().charAt(0);
+        let color = "lettertile dark-color" + (Math.abs(stringHash(this.props.topic)) % 16);
         avatar = (<div className={color}><div>{letter}</div></div>)
       } else {
         avatar = (Tinode.topicType(this.props.topic) === "grp") ?
@@ -708,6 +717,7 @@ class InPlaceEdit extends React.Component {
 
     this.state = {
       active: props.state,
+      initialText: props.text || "",
       text: props.text || ""
     };
 
@@ -717,12 +727,16 @@ class InPlaceEdit extends React.Component {
     this.handleEditingFinished = this.handleEditingFinished.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
+  static getDerivedStateFromProps(nextProps, prevState) {
     // If text has changed while in read mode, update text and discard changes.
     // Ignore update if in edit mode.
-    if (this.props.text != nextProps.text && !this.state.active) {
-      this.setState({text: nextProps.text || ""});
+    if (prevState.initialText != nextProps.text && !prevState.active) {
+      return {
+        initialText: nextProps.text || "",
+        text: nextProps.text || ""
+      };
     }
+    return null;
   }
 
   handeTextChange(e) {
@@ -875,8 +889,8 @@ class PermissionsEditor extends React.Component {
   }
 
   handleChange(val) {
-    var mode = this.state.mode;
-    var idx = mode.indexOf(val);
+    let mode = this.state.mode;
+    let idx = mode.indexOf(val);
     if (idx == -1) {
       mode += val;
     } else {
@@ -901,8 +915,8 @@ class PermissionsEditor extends React.Component {
   }
 
   render() {
-    var all = 'JRWPASDO';
-    var names = {
+    const all = 'JRWPASDO';
+    const names = {
       'J': 'Join (J)',
       'R': 'Read (R)',
       'W': 'Write (W)',
@@ -913,12 +927,12 @@ class PermissionsEditor extends React.Component {
       'O': 'Owner (O)'
     };
 
-    var skip = this.props.skip || "";
-    var mode = this.state.mode;
-    var compare = (this.props.compare || "").replace("N", "");
-    var items = [];
-    for (var i=0; i<all.length; i++) {
-      var c = all.charAt(i);
+    let skip = this.props.skip || "";
+    let mode = this.state.mode;
+    let compare = (this.props.compare || "").replace("N", "");
+    let items = [];
+    for (let i=0; i<all.length; i++) {
+      let c = all.charAt(i);
       if (skip.indexOf(c) >= 0 && mode.indexOf(c) < 0) {
         // Permission is marked as inactive: hide unchecked permissions, disable checked permissions
         continue;
@@ -987,7 +1001,7 @@ class ChipInput extends React.Component {
     this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState({
       sortedChips: ChipInput.sortChips(nextProps.chips, nextProps.required),
       chipIndex: ChipInput.indexChips(nextProps.chips)
@@ -1149,8 +1163,10 @@ class GroupSubs extends React.Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({onlineSubs: nextProps.subscribers ? nextProps.subscribers : []});
+  static getDerivedStateFromProps(nextProps, prevState) {
+    return {
+      onlineSubs: nextProps.subscribers ? nextProps.subscribers : []
+    };
   }
 
   render() {
@@ -1373,10 +1389,13 @@ class AvatarUpload extends React.Component {
     this.handleFileUpload = this.handleFileUpload.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.avatar != nextProps.avatar) {
-      this.setState({dataUrl: nextProps.avatar});
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (prevState.dataUrl != nextProps.avatar) {
+      return {
+        dataUrl: nextProps.avatar
+      };
     }
+    return null;
   }
 
   handleFileUpload(e) {
@@ -1430,21 +1449,30 @@ class SettingsView extends React.PureComponent {
 
     this.state = {
       transport: props.transport || "def",
-      messageSounds: props.messageSounds
+      messageSounds: props.messageSounds,
+      desktopAlerts: props.desktopAlerts && props.desktopAlertsEnabled
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleMessageSoundsToggle = this.handleMessageSoundsToggle.bind(this);
+    this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
     this.handleTransportSelected = this.handleTransportSelected.bind(this);
   }
 
   handleSubmit(e) {
     e.preventDefault();
-    this.props.onUpdate(null, this.state.transport, this.state.messageSounds);
+    this.props.onUpdate({
+      transport: this.state.transport,
+      messageSounds: this.state.messageSounds,
+      desktopAlerts: this.state.desktopAlerts
+    });
   }
 
-  handleMessageSoundsToggle(unused, checked) {
-    this.setState({messageSounds: checked});
+  handleCheckboxClick(what, checked) {
+    if (what == "sound") {
+      this.setState({messageSounds: checked});
+    } else if (what == "alert") {
+      this.setState({desktopAlerts: checked});
+    }
   }
 
   handleTransportSelected(e) {
@@ -1471,9 +1499,15 @@ class SettingsView extends React.PureComponent {
       <form id="settings-form" onSubmit={this.handleSubmit}>
         <div className="panel-form-row">
           <label forHtml="message-sound">Message sound:</label>
-          <CheckBox id="message-sound"
+          <CheckBox name="sound" id="message-sound"
             checked={this.state.messageSounds}
-            onChange={this.handleMessageSoundsToggle} />
+            onChange={this.handleCheckboxClick} />
+        </div>
+        <div className="panel-form-row">
+          <label forHtml="desktop-alerts">Desktop alerts{!this.props.desktopAlertsEnabled ? ' (requires HTTPS)' : null}:</label>
+          <CheckBox name="alert" id="desktop-alerts"
+            checked={this.state.desktopAlerts}
+            onChange={this.props.desktopAlertsEnabled ? this.handleCheckboxClick : null} />
         </div>
         <div className="panel-form-row">
           <label className="small">Wire transport:</label>
@@ -1615,6 +1649,8 @@ class SidepanelView extends React.Component {
           <SettingsView
             transport={this.props.transport}
             messageSounds={this.props.messageSounds}
+            desktopAlerts={this.props.desktopAlerts}
+            desktopAlertsEnabled={this.props.desktopAlertsEnabled}
             onCancel={this.props.onCancel}
             onUpdate={this.props.onGlobalSettings}
             /> :
@@ -1672,8 +1708,10 @@ class ErrorPanel extends React.PureComponent {
     this.hide = this.hide.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({show: !(!nextProps.level)});
+  static getDerivedStateFromProps(nextProps, prevState) {
+    return {
+      show: !(!nextProps.level)
+    };
   }
 
   hide() {
@@ -1852,8 +1890,8 @@ class TagManager extends React.Component {
     this.handleCancel = this.handleCancel.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({tags: nextProps.tags});
+  static getDerivedStateFromProps(nextProps, prevState) {
+    return {tags: nextProps.tags};
   }
 
   handleShowTagManager() {
@@ -2098,7 +2136,7 @@ class ContactsView extends React.Component {
     me.onSubsUpdated = undefined;
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.topicSelected != nextProps.topicSelected) {
       // If topicSelecetd is changed externally, update the
       // topic with online status and access mode.
@@ -2748,8 +2786,8 @@ class ValidationView extends React.PureComponent {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({code: nextProps.credCode});
+  static getDerivedStateFromProps(nextProps, prevState) {
+    return {code: nextProps.credCode};
   }
 
   handleChange(e) {
@@ -2850,7 +2888,7 @@ class InfoView extends React.Component {
   }
 
   // No need to separately handle component mount.
-  componentWillReceiveProps(props) {
+  UNSAFE_componentWillReceiveProps(props) {
     var topic = Tinode.getTopic(props.topic);
     if (!topic) {
       return;
@@ -3213,7 +3251,7 @@ class InfoView extends React.Component {
               <div className="panel-form-row">
                 <label>Muted:</label>
                 <CheckBox name="P" checked={this.state.muted}
-                    onChange={this.handleMuted} />
+                  onChange={this.handleMuted} />
               </div>
               <MoreButton
                 title="More"
@@ -3633,7 +3671,7 @@ class MessagesView extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.propsChange(nextProps);
   }
 
@@ -4352,6 +4390,9 @@ class TinodeWeb extends React.Component {
       serverAddress: settings.serverAddress || detectServerAddress(),
       // "On" is the default, so saving the "off" state.
       messageSounds: !settings.messageSoundsOff,
+      desktopAlerts: settings.desktopAlerts,
+      desktopAlertsEnabled: isSecureConnection(),
+
       sidePanelSelected: 'login',
       sidePanelTitle: null,
       sidePanelAvatar: null,
@@ -4821,22 +4862,25 @@ class TinodeWeb extends React.Component {
   }
 
   // User updated global parameters.
-  handleGlobalSettings(serverAddress, transport, messageSounds) {
-    transport = transport || this.state.transport;
-    serverAddress = serverAddress || this.state.serverAddress;
-    messageSounds = (typeof messageSounds == 'boolean') ? messageSounds : this.state.messageSounds;
+  handleGlobalSettings(settings) {
+    let serverAddress = settings.serverAddress || this.state.serverAddress;
+    let transport = settings.transport || this.state.transport;
+    let messageSounds = (typeof settings.messageSounds == 'boolean') ? settings.messageSounds : this.state.messageSounds;
+    let desktopAlerts = settings.desktopAlerts || this.state.desktopAlerts;
 
     this.setState({
       serverAddress: serverAddress,
       transport: transport,
       messageSounds: messageSounds,
-      sidePanelSelected: 'login'
+      desktopAlerts: desktopAlerts,
     });
     localStorage.setObject({
       serverAddress: serverAddress,
       messageSoundsOff: !messageSounds,
-      transport: this.state.transport
+      transport: this.state.transport,
+      desktopAlerts: desktopAlerts
     });
+    window.location.hash = setUrlSidePanel(window.location.hash, '');
     TinodeWeb.tnSetup(serverAddress, transport);
   }
 
@@ -5068,6 +5112,8 @@ class TinodeWeb extends React.Component {
 
           transport={this.state.transport}
           messageSounds={this.state.messageSounds}
+          desktopAlerts={this.state.desktopAlerts}
+          desktopAlertsEnabled={this.state.desktopAlertsEnabled}
           serverAddress={this.state.serverAddress}
           onGlobalSettings={this.handleGlobalSettings}
 
