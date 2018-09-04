@@ -16,8 +16,9 @@
   },
   "scripts": {
     "build": "npm run build:babel && npm run build:prod && npm run build:css",
-    "build:prod": "browserify ./index.js --standalone Webapp --plugin tinyify > ./umd/webapp.prod.js",
-    "build:babel": "babel ./webapp.js --presets react,minify --out-file ./index.min.js",
+    "build:dev": "browserify ./src/index.js --standalone TinodeWeb > ./umd/webapp.dev.js",
+    "build:prod": "browserify ./src/index.js --standalone TinodeWeb --plugin tinyify > ./umd/webapp.prod.js",
+    "build:babel": "babel ./src/webapp.js --presets react --out-file ./webapp.js",
     "build:css": "postcss css/base.css > css/base.min.css",
     "babel-version": "babel --version"
   },

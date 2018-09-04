@@ -1,8 +1,7 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
-var Tinode = require('tinode-sdk');
-var Drafty = Tinode.Drafty;
-var TinodeWeb = require('webapp.js')
+let React = require('react');
+let ReactDOM = require('react-dom');
+let Tinode = require('tinode-sdk');
+let TinodeWeb = require('webapp.js')
 
 ReactDOM.render(
   <TinodeWeb />,
