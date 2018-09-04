@@ -6,13 +6,17 @@ and [icons](https://google.github.io/material-design-icons/#icon-font-for-the-we
 
 Although the app is generally usable, keep in mind that this is work in progress. Some bugs probably exist. The app was tested in the latest Chrome & Firefox only. NPM [is available](https://www.npmjs.com/package/tinode-webapp).
 
-Try possibly newer or older version live at https://api.tinode.co/. Login as one of `alice`, `bob`, `carol`, `dave`, `frank`. Password is `<login>123`, e.g. password for `alice` is `alice123`. You can discover other users by email or phone by prefixing them with `email:` or `tel:` respectively. Emails are `<login>@example.com`, e.g. `alice@example.com`, phones are `17025550001` through `17025550009`. The demo is reset every night at 2:15am Pacific time.
-
-License: [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+Try possibly newer or older version live at https://api.tinode.co/. For login and other instructions [see here](https://github.com/tinode/chat/#demo).
 
 Sample avatar photos from https://www.pexels.com/ under [CC0 license](https://www.pexels.com/photo-license/).
 
 Background pattern from http://subtlepatterns.com/, commercial and non-commercial use allowed with attribution.
+
+## Getting support
+
+* Read [client-side](http://tinode.github.io/js-api/) and [server-side](https://github.com/tinode/chat/blob/master/docs/API.md) API documentation.
+* For support, general questions, discussions post to [https://groups.google.com/d/forum/tinode](https://groups.google.com/d/forum/tinode).
+* For bugs and feature requests [open an issue](https://github.com/tinode/webchat/issues/new).
 
 ## Missing functionality
 
