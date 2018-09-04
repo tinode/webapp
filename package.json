@@ -16,8 +16,8 @@
   },
   "scripts": {
     "build": "npm run build:babel && npm run build:prod && npm run build:css",
-    "build:dev": "browserify ./src/index.js --standalone TinodeWeb > ./umd/webapp.dev.js",
-    "build:prod": "browserify ./src/index.js --standalone TinodeWeb --plugin tinyify > ./umd/webapp.prod.js",
+    "build:dev": "browserify ./src/index.js --standalone Webapp > ./umd/index.dev.js",
+    "build:prod": "browserify ./src/index.js --standalone Webapp --plugin tinyify > ./umd/index.prod.js",
     "build:babel": "babel ./src/webapp.js --presets react --out-file ./webapp.js",
     "build:css": "postcss css/base.css > css/base.min.css",
     "babel-version": "babel --version"
@@ -57,5 +57,11 @@
   },
   "homepage": "https://github.com/tinode/chat",
   "email": "gene@tinode.co",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "dependencies": {
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
+    "tinode-sdk": "^0.15.5",
+    "tinyify": "^2.4.3"
+  }
 }

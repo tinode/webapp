@@ -1,9 +1,12 @@
-let React = require('react');
-let ReactDOM = require('react-dom');
-let Tinode = require('tinode-sdk');
-let TinodeWeb = require('webapp.js')
+// Put all packages together.
+// Used to generate umd/index.prod.js
+
+var React = require('react');
+var ReactDOM = require('react-dom');
+var Tinode = require('tinode-sdk');
+var TinodeWeb = require('../webapp.js')
 
 ReactDOM.render(
-  <TinodeWeb />,
+  React.createElement(TinodeWeb, null),
   document.getElementById('mountPoint')
 );

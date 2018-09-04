@@ -5192,7 +5192,6 @@ class TinodeWeb extends React.Component {
   }
 };
 
-ReactDOM.render(
-  <TinodeWeb />,
-  document.getElementById('mountPoint')
-);
+if (typeof module != 'undefined') {
+  module.exports = TinodeWeb;
+}
