@@ -3601,6 +3601,7 @@ class MessagesView extends React.Component {
     this.handleDescChange = this.handleDescChange.bind(this);
     this.handleSubsUpdated = this.handleSubsUpdated.bind(this);
     this.handleNewMessage = this.handleNewMessage.bind(this);
+    this.handleAllMessagesReceived = this.handleAllMessagesReceived.bind(this);
     this.handleInfoReceipt = this.handleInfoReceipt.bind(this);
     this.handleImagePreview = this.handleImagePreview.bind(this);
     this.handleCloseImagePreview = this.handleCloseImagePreview.bind(this);
@@ -3658,6 +3659,7 @@ class MessagesView extends React.Component {
 
       // Bind the new topic to component.
       topic.onData = this.handleNewMessage;
+      topic.onAllMessagesReceived = this.handleAllMessagesReceived;
       topic.onInfo = this.handleInfoReceipt;
       topic.onMetaDesc = this.handleDescChange;
       topic.onSubsUpdated = this.handleSubsUpdated;
@@ -3710,10 +3712,6 @@ class MessagesView extends React.Component {
       // Show "loading" spinner.
       this.setState({ fetchingMessages: true });
       topic.subscribe(getQuery.build())
-        .then(() => {
-          // Hide spinner.
-          this.setState({ fetchingMessages: false });
-        })
         .catch((err) => {
           this.props.onError(err.message, "err");
           this.setState({
@@ -3738,6 +3736,7 @@ class MessagesView extends React.Component {
           });
         }
         oldTopic.onData = undefined;
+        oldTopic.onAllMessagesReceived = undefined;
         oldTopic.onInfo = undefined;
         oldTopic.onMetaDesc = undefined;
         oldTopic.onSubsUpdated = undefined;
@@ -3755,20 +3754,16 @@ class MessagesView extends React.Component {
 
   // Get older messages
   fetchMoreMessages(event) {
-    var instance = this;
     if (event.target.scrollTop <= 0) {
-      var started = false;
-      var newState = {scrollPosition: event.target.scrollHeight - event.target.scrollTop};
-      this.setState(function(prevState, props) {
+      let newState = {scrollPosition: event.target.scrollHeight - event.target.scrollTop};
+      this.setState((prevState, props) => {
         if (!prevState.fetchingMessages) {
-          var topic = Tinode.getTopic(instance.state.topic);
+          var topic = Tinode.getTopic(this.state.topic);
           if (topic && topic.isSubscribed() && topic.msgHasMoreMessages()) {
             newState.fetchingMessages = true;
-            topic.getMessagesPage(MESSAGES_PAGE).then(function() {
-              instance.setState({fetchingMessages: false});
-            }).catch(function(err) {
-              instance.setState({fetchingMessages: false});
-              instance.props.onError(err.message, "err");
+            topic.getMessagesPage(MESSAGES_PAGE).catch((err) => {
+              this.setState({fetchingMessages: false});
+              this.props.onError(err.message, "err");
             });
           }
         }
@@ -3835,6 +3830,10 @@ class MessagesView extends React.Component {
     }
 
     this.setState(newState);
+  }
+
+  handleAllMessagesReceived(count) {
+    this.setState({fetchingMessages: false});
   }
 
   handleInfoReceipt(info) {
