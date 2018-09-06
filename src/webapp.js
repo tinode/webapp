@@ -427,7 +427,7 @@ function vcard(fn, imageDataUrl) {
   return card;
 }
 
-// Deep-shallow compare two arrays.
+// Deep-shallow compare two arrays: shallow compare each element.
 function arrayEqual(a, b) {
   // Compare lengths first.
   if (a.length != b.length) {
@@ -446,134 +446,75 @@ function arrayEqual(a, b) {
 
 /* BEGIN Context Menu: popup/dropdown menu */
 
-// Function is used by context menu to set permissions.
-function topicPermissionSetter(mode, params, errorHandler) {
-  var topic = Tinode.getTopic(params.topicName);
-  if (!topic) {
-    console.log("Topic not found", params.topicName);
-    return;
-  }
-
-  var am, user;
-  if (params.user) {
-    user = topic.subscriber(params.user);
-    if (!user) {
-      console.log("Subscriber not found", params.topicName + "[" + params.user + "]");
-      return;
-    }
-    am = user.acs.updateGiven(mode).getGiven();
-  } else {
-    am = topic.getAccessMode().updateWant(mode).getWant();
-  }
-
-  var instance = this;
-  topic.setMeta({sub: {user: params.user, mode: am}}).catch(function(err) {
-    if (errorHandler) {
-      errorHandler(err.message, "err");
-    }
-  });
-}
-
-function deleteMessages(all, hard, params, errorHandler) {
-  var topic = Tinode.getTopic(params.topicName);
-  if (!topic) {
-    console.log("Topic not found: ", params.topicName);
-    return;
-  }
-  // We don't know if the message is still pending (e.g. attachment is being uploaded),
-  // so try cancelling first. No harm if we can't cancel.
-  if (topic.cancelSend(params.seq)) {
-    return new Promise.resolve();
-  }
-  // Can't cancel. Delete instead.
-  var promise = all ?
-    topic.delMessagesAll(hard) :
-    topic.delMessagesList([params.seq], hard);
-  promise.catch((err) => {
-    if (errorHandler) {
-      errorHandler(err.message, "err");
-    }
-  });
-}
-
-// Context menu items.
-var ContextMenuItems = {
-    "topic_info":     {title: "Info", handler: null},
-
-    "messages_clear": {title: "Clear messages", handler: function(params, errorHandler) {
-      deleteMessages(true, false, params, errorHandler);
-    }},
-    "messages_clear_hard": {title: "Clear for All", handler: function(params, errorHandler) {
-      deleteMessages(true, true, params, errorHandler);
-    }},
-    "message_delete": {title: "Delete", handler: function(params, errorHandler) {
-      deleteMessages(false, false, params, errorHandler);
-    }},
-    "message_delete_hard": {title: "Delete for All", handler: function(params, errorHandler) {
-      deleteMessages(false, true, params, errorHandler);
-    }},
-    "topic_unmute":   {title: "Unmute", handler: topicPermissionSetter.bind(this, "+P")},
-    "topic_mute":     {title: "Mute", handler: topicPermissionSetter.bind(this, "-P")},
-    "topic_unblock":  {title: "Unblock", handler: topicPermissionSetter.bind(this, "+J")},
-    "topic_block":    {title: "Block", handler: topicPermissionSetter.bind(this, "-J")},
-    "topic_delete":   {title: "Delete", handler: function(params, errorHandler) {
-      var topic = Tinode.getTopic(params.topicName);
-      if (!topic) {
-        console.log("Topic not found: ", params.topicName);
-        return;
-      }
-      topic.delTopic().catch(function(err) {
-        if (errorHandler) {
-          errorHandler(err.message, "err");
-        }
-      });
-    }},
-
-    "permissions":    {title: "Edit permissions", handler: null},
-    "member_delete":  {title: "Remove", handler: function(params, errorHandler) {
-      var topic = Tinode.getTopic(params.topicName);
-      if (!topic || !params.user) {
-        console.log("Topic or user not found: '" + params.topicName + "', '" + params.user + "'");
-        return;
-      }
-      topic.delSubscription(params.user).catch(function(err) {
-        if (errorHandler) {
-          errorHandler(err.message, "err");
-        }
-      });
-    }},
-    "member_mute":    {title: "Mute", handler: topicPermissionSetter.bind(this, "-P")},
-    "member_unmute":  {title: "Unmute", handler: topicPermissionSetter.bind(this, "+P")},
-    "member_block":   {title: "Block", handler: topicPermissionSetter.bind(this, "-J")},
-    "member_unblock": {title: "Unblock", handler: topicPermissionSetter.bind(this, "+J")},
-};
-
 class ContextMenu extends React.Component {
   constructor(props) {
     super(props);
 
-    this.toggle = this.toggle.bind(this);
     this.handlePageClick = this.handlePageClick.bind(this);
     this.handleEscapeKey = this.handleEscapeKey.bind(this);
     this.handleClick = this.handleClick.bind(this);
+
+    // Preconfigured menu items.
+    this.MenuItems = {
+      "topic_info":     {title: "Info", handler: null},
+
+      "messages_clear": {title: "Clear messages", handler: (params, errorHandler) => {
+        this.deleteMessages(true, false, params, errorHandler);
+      }},
+      "messages_clear_hard": {title: "Clear for All", handler: (params, errorHandler) => {
+        this.deleteMessages(true, true, params, errorHandler);
+      }},
+      "message_delete": {title: "Delete", handler: (params, errorHandler) => {
+        this.deleteMessages(false, false, params, errorHandler);
+      }},
+      "message_delete_hard": {title: "Delete for All", handler: (params, errorHandler) => {
+        this.deleteMessages(false, true, params, errorHandler);
+      }},
+      "topic_unmute":   {title: "Unmute", handler: this.topicPermissionSetter.bind(this, "+P")},
+      "topic_mute":     {title: "Mute", handler: this.topicPermissionSetter.bind(this, "-P")},
+      "topic_unblock":  {title: "Unblock", handler: this.topicPermissionSetter.bind(this, "+J")},
+      "topic_block":    {title: "Block", handler: this.topicPermissionSetter.bind(this, "-J")},
+      "topic_delete":   {title: "Delete", handler: (params, errorHandler) => {
+        var topic = Tinode.getTopic(params.topicName);
+        if (!topic) {
+          console.log("Topic not found: ", params.topicName);
+          return;
+        }
+        topic.delTopic().catch(function(err) {
+          if (errorHandler) {
+            errorHandler(err.message, "err");
+          }
+        });
+      }},
+
+      "permissions":    {title: "Edit permissions", handler: null},
+      "member_delete":  {title: "Remove", handler: (params, errorHandler) => {
+        var topic = Tinode.getTopic(params.topicName);
+        if (!topic || !params.user) {
+          console.log("Topic or user not found: '" + params.topicName + "', '" + params.user + "'");
+          return;
+        }
+        topic.delSubscription(params.user).catch((err) => {
+          if (errorHandler) {
+            errorHandler(err.message, "err");
+          }
+        });
+      }},
+      "member_mute":    {title: "Mute", handler: this.topicPermissionSetter.bind(this, "-P")},
+      "member_unmute":  {title: "Unmute", handler: this.topicPermissionSetter.bind(this, "+P")},
+      "member_block":   {title: "Block", handler: this.topicPermissionSetter.bind(this, "-J")},
+      "member_unblock": {title: "Unblock", handler: this.topicPermissionSetter.bind(this, "+J")},
+    };
+  }
+
+  componentDidMount() {
+    document.addEventListener('mousedown', this.handlePageClick, false);
+    document.addEventListener('keyup', this.handleEscapeKey, false);
   }
 
   componentWillUnmount() {
-    this.toggle(false);
-  }
-
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    this.toggle(nextProps.visible);
-  }
-
-  toggle(visible) {
-    if (visible) {
-      document.addEventListener('mousedown', this.handlePageClick, false);
-      document.addEventListener('keyup', this.handleEscapeKey, false);
-    } else {
-      document.removeEventListener('mousedown', this.handlePageClick, false);
-      document.removeEventListener('keyup', this.handleEscapeKey, false);
-    }
+    document.removeEventListener('mousedown', this.handlePageClick, false);
+    document.removeEventListener('keyup', this.handleEscapeKey, false);
   }
 
   handlePageClick(e) {
@@ -599,17 +540,67 @@ class ContextMenu extends React.Component {
     item.handler(this.props.params, this.props.onError);
   }
 
-  render() {
-    if (!this.props.visible) {
-      return null;
+  // Menu Actions
+
+  deleteMessages(all, hard, params, errorHandler) {
+    var topic = this.props.tinode.getTopic(params.topicName);
+    if (!topic) {
+      console.log("Topic not found: ", params.topicName);
+      return;
+    }
+    // We don't know if the message is still pending (e.g. attachment is being uploaded),
+    // so try cancelling first. No harm if we can't cancel.
+    if (topic.cancelSend(params.seq)) {
+      return new Promise.resolve();
+    }
+    // Can't cancel. Delete instead.
+    var promise = all ?
+      topic.delMessagesAll(hard) :
+      topic.delMessagesList([params.seq], hard);
+    promise.catch((err) => {
+      if (errorHandler) {
+        errorHandler(err.message, "err");
+      }
+    });
+  }
+
+  // Function is used by context menu to set permissions.
+  topicPermissionSetter(mode, params, errorHandler) {
+    var topic = this.props.tinode.getTopic(params.topicName);
+    if (!topic) {
+      console.log("Topic not found", params.topicName);
+      return;
     }
 
+    var am, user;
+    if (params.user) {
+      user = topic.subscriber(params.user);
+      if (!user) {
+        console.log("Subscriber not found", params.topicName + "[" + params.user + "]");
+        return;
+      }
+      am = user.acs.updateGiven(mode).getGiven();
+    } else {
+      am = topic.getAccessMode().updateWant(mode).getWant();
+    }
+
+    topic.setMeta({sub: {user: params.user, mode: am}}).catch((err) => {
+      if (errorHandler) {
+        errorHandler(err.message, "err");
+      }
+    });
+  }
+
+  render() {
     let count = 0;
     let menu = [];
     this.props.items.map((item) => {
+      if (typeof item == 'string') {
+        item = this.MenuItems[item];
+      }
       if (item && item.title) {
         menu.push(
-          item.title === "-" ?
+          item.title == "-" ?
             <li className="separator" key={count} />
             :
             <li onClick={this.handleClick} data-id={count} key={count}>{item.title}</li>
@@ -699,7 +690,7 @@ class LetterTile extends React.PureComponent {
         let color = "lettertile dark-color" + (Math.abs(stringHash(this.props.topic)) % 16);
         avatar = (<div className={color}><div>{letter}</div></div>)
       } else {
-        avatar = (Tinode.topicType(this.props.topic) === "grp") ?
+        avatar = (Tinode.topicType(this.props.topic) == "grp") ?
           <i className="material-icons">group</i> :
           <i className="material-icons">person</i>;
       }
@@ -1089,18 +1080,16 @@ class ChipInput extends React.Component {
 
   render() {
     var chips = [];
-
-    var instance = this;
     var count = 0;
-    this.state.sortedChips.map(function(item) {
+    this.state.sortedChips.map((item) => {
       chips.push(
         <Chip
           onCancel={instance.handleChipCancel}
           avatar={makeImageUrl(item.public ? item.public.photo : null)}
           title={item.public ? item.public.fn : undefined}
-          noAvatar={instance.props.avatarDisabled}
+          noAvatar={this.props.avatarDisabled}
           topic={item.user}
-          required={item.user === instance.props.required}
+          required={item.user === this.props.required}
           index={count}
           key={item.user} />
       );
@@ -1429,7 +1418,10 @@ class AvatarUpload extends React.Component {
           <img src={this.state.dataUrl} className="preview" /> :
           this.props.readOnly && this.props.uid ?
             <div className="avatar-box">
-              <LetterTile avatar={true} topic={this.props.uid} title={this.props.title} />
+              <LetterTile
+                avatar={true}
+                topic={this.props.uid}
+                title={this.props.title} />
             </div>
             :
             <div className="blank">128&times;128</div>}
@@ -1536,7 +1528,10 @@ class SideNavbar extends React.PureComponent {
     return (
         <div id="side-caption-panel" className="caption-panel">
           <div id="self-avatar" className="avatar-box">
-            <LetterTile avatar={this.props.avatar} topic={this.props.myUserId} title={this.props.title} />
+            <LetterTile
+              avatar={this.props.avatar}
+              topic={this.props.myUserId}
+              title={this.props.title} />
           </div>
           <div id="sidepanel-title" className="panel-title">{this.props.title}</div>
           {this.props.state === 'login' ?
@@ -2060,8 +2055,9 @@ class Contact extends React.Component {
         onClick={this.handleClick}>
         <div className="avatar-box">
           <LetterTile
-            avatar={avatar} title={this.props.title} topic={this.props.item} />
-
+            avatar={avatar}
+            title={this.props.title}
+            topic={this.props.item} />
           {this.props.showOnline ? <span className={online} /> :
             (this.props.showCheckmark && this.props.selected ?
             <i className="checkmark material-icons">check_circle</i>
@@ -2254,14 +2250,13 @@ class ContactList extends React.Component {
   render() {
     var me = Tinode.getCurrentUserID();
     var contactNodes = [];
-    var instance = this;
     var showCheckmark = Array.isArray(this.props.topicSelected);
     if (this.props.contacts && this.props.contacts.length > 0) {
-      this.props.contacts.map(function(c) {
+      this.props.contacts.map((c) => {
         var key = c.topic ? c.topic : c.user;
         // If filter function is provided, filter out the items
         // which don't satisfy the condition.
-        if (instance.props.filterFunc && instance.props.filter) {
+        if (this.props.filterFunc && this.props.filter) {
           var content = [key];
           if (c.private && c.private.comment) {
             content.push(("" + c.private.comment).toLowerCase());
@@ -2269,7 +2264,7 @@ class ContactList extends React.Component {
           if (c.public && c.public.fn) {
             content.push(("" + c.public.fn).toLowerCase());
           }
-          if (!instance.props.filterFunc(instance.props.filter, content)) {
+          if (!this.props.filterFunc(this.props.filter, content)) {
             return;
           }
         }
@@ -2905,7 +2900,7 @@ class InfoView extends React.Component {
       this.previousSubsUpdated = topic.onSubsUpdated;
       topic.onSubsUpdated = this.onSubsUpdated;
 
-      if (topic.getType() === "grp") {
+      if (topic.getType() == "grp") {
         this.previousTagsUpdated = topic.onTagsUpdated;
         topic.onTagsUpdated = this.onTagsUpdated;
       } else {
@@ -2933,7 +2928,7 @@ class InfoView extends React.Component {
 
   resetSubs(topic, props) {
     var newState = {contactList: []};
-    if (topic.getType() === "p2p") {
+    if (topic.getType() == "p2p") {
       // Fetch the other party in the p2p conversation.
       // Topic may not be ready yet, so check if user is found.
       var user2 = topic.subscriber(props.topic);
@@ -2963,7 +2958,7 @@ class InfoView extends React.Component {
       avatar: makeImageUrl(topic.public ? topic.public.photo : null),
       private: topic.private ? topic.private.comment : null,
       address: topic.name,
-      groupTopic: (topic.getType() === "grp"),
+      groupTopic: (topic.getType() == "grp"),
       showMemberPanel: false,
       access: acs ? acs.getMode() : undefined,
       modeGiven: acs ? acs.getGiven() : undefined,
@@ -3179,9 +3174,9 @@ class InfoView extends React.Component {
       {title: "Edit permissions", handler: function() {
         instance.handleLaunchPermissionsEditor("user", params.topicName);
       }},
-      ContextMenuItems["member_delete"],
-      user.acs.isMuted() ? ContextMenuItems["member_unmute"] : ContextMenuItems["member_mute"],
-      user.acs.isJoiner() ? ContextMenuItems["member_block"] : ContextMenuItems["member_unblock"]
+      "member_delete",
+      user.acs.isMuted() ? "member_unmute" : "member_mute",
+      user.acs.isJoiner() ? "member_block" : "member_unblock"
     ];
     this.props.showContextMenu({
       topicName: this.props.topic,
@@ -3472,8 +3467,10 @@ class ChatMessage extends React.Component {
         {this.props.userFrom && this.props.response ?
           <div className="avatar-box">
             {fullDisplay ?
-              <LetterTile topic={this.props.userFrom}
-                title={this.props.userName} avatar={avatar} /> :
+              <LetterTile
+                topic={this.props.userFrom}
+                title={this.props.userName}
+                avatar={avatar} /> :
               null}
           </div> :
           null}
@@ -3917,12 +3914,12 @@ class MessagesView extends React.Component {
 
   handleShowContextMenuMessage(params) {
     params.topicName = this.state.topic;
-    var menuItems = [ContextMenuItems["message_delete"]];
+    var menuItems = ["message_delete"];
     var topic = Tinode.getTopic(params.topicName);
     if (topic) {
       var acs = topic.getAccessMode();
       if (acs && acs.isDeleter()) {
-        menuItems.push(ContextMenuItems["message_delete_hard"]);
+        menuItems.push("message_delete_hard");
       }
     }
     this.props.showContextMenu(params, menuItems);
@@ -3937,7 +3934,7 @@ class MessagesView extends React.Component {
     if (this.state.topic) {
       var messageNodes = [];
       var topic = Tinode.getTopic(this.state.topic);
-      var groupTopic = topic.getType() === "grp";
+      var groupTopic = topic.getType() == "grp";
       var previousFrom = null;
       for (var i=0; i<this.state.messages.length; i++) {
         var msg = this.state.messages[i];
@@ -3988,9 +3985,10 @@ class MessagesView extends React.Component {
         );
       }
 
-      var lastSeen = null;
-      var cont = Tinode.getMeTopic().getContact(this.state.topic);
-      if (cont && Tinode.topicType(cont.topic) === "p2p") {
+      let lastSeen = null;
+      let topicType = Tinode.topicType(cont.topic);
+      let cont = this.props.tinode.getMeTopic().getContact(this.state.topic);
+      if (cont && topicType == "p2p") {
         if (cont.online) {
           lastSeen = "online now";
         } else if (cont.seen) {
@@ -4011,8 +4009,10 @@ class MessagesView extends React.Component {
               :
               null}
             <div className="avatar-box">
-              <LetterTile avatar={avatar}
-                topic={this.state.topic} title={this.state.title} />
+              <LetterTile
+                avatar={avatar}
+                topic={this.state.topic}
+                title={this.state.title} />
               <span className={online} />
             </div>
             <div id="topic-title-group">
@@ -4505,7 +4505,7 @@ class TinodeWeb extends React.Component {
     }
     // Topic for MessagesView selector.
     if (hash.path.length > 1 && hash.path[1] != this.state.topicSelected) {
-      var tp = this.state.tinode.topicType(hash.path[1]);
+      var tp = Tinode.topicType(hash.path[1]);
       if (tp) {
         this.setState({
           topicSelected: hash.path[1],
@@ -5023,11 +5023,11 @@ class TinodeWeb extends React.Component {
 
     return [
       subscribed ? {title: "Info", handler: this.handleShowInfoView} : null,
-      subscribed ? ContextMenuItems["messages_clear"] : null,
-      subscribed && deleter ? ContextMenuItems["messages_clear_hard"] : null,
-      subscribed ? (muted ? ContextMenuItems["topic_unmute"] : ContextMenuItems["topic_mute"]) : null,
-      subscribed ? (blocked ? ContextMenuItems["topic_unblock"] : ContextMenuItems["topic_block"]) : null,
-      ContextMenuItems["topic_delete"]
+      subscribed ? "messages_clear" : null,
+      subscribed && deleter ? "messages_clear_hard" : null,
+      subscribed ? (muted ? "topic_unmute" : "topic_mute") : null,
+      subscribed ? (blocked ? "topic_unblock" : "topic_block") : null,
+      "topic_delete"
     ];
   }
 
@@ -5085,15 +5085,19 @@ class TinodeWeb extends React.Component {
   render() {
     return (
       <div id="app-container">
-        <ContextMenu
-          bounds={this.state.contextMenuBounds}
-          clickAt={this.state.contextMenuClickAt}
-          visible={this.state.contextMenuVisible}
-          params={this.state.contextMenuParams}
-          items={this.state.contextMenuItems}
-          hide={this.handleHideContextMenu}
-          onAction={this.handleContextMenuAction}
-          onError={this.handleError} />
+        {this.state.contextMenuVisible ?
+          <ContextMenu
+            tinode={this.state.tinode}
+            bounds={this.state.contextMenuBounds}
+            clickAt={this.state.contextMenuClickAt}
+            params={this.state.contextMenuParams}
+            items={this.state.contextMenuItems}
+            hide={this.handleHideContextMenu}
+            onAction={this.handleContextMenuAction}
+            onError={this.handleError} />
+          :
+          null
+        }
 
         <SidepanelView
           connected={this.state.connected}
@@ -5142,6 +5146,7 @@ class TinodeWeb extends React.Component {
           showContextMenu={this.handleShowContextMenu} />
 
         <MessagesView
+          tinode={this.state.tinode}
           connected={this.state.connected}
           online={this.state.topicSelectedOnline}
           acs={this.state.topicSelectedAcs}
@@ -5165,6 +5170,7 @@ class TinodeWeb extends React.Component {
 
         {this.state.showInfoPanel ?
           <InfoView
+            tinode={this.state.tinode}
             connected={this.state.connected}
             displayMobile={this.state.displayMobile}
             topic={this.state.topicSelected}
