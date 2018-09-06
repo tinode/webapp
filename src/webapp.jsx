@@ -1,4 +1,6 @@
-// Name of this application, used in the User-Agent
+// Babel JSX
+
+// Name of this application, used in the User-Agent.
 const APP_NAME = "TinodeWeb/0.15";
 
 const KNOWN_HOSTS = {hosted: "api.tinode.co", local: "localhost:6060"};
@@ -475,7 +477,7 @@ class ContextMenu extends React.Component {
       "topic_unblock":  {title: "Unblock", handler: this.topicPermissionSetter.bind(this, "+J")},
       "topic_block":    {title: "Block", handler: this.topicPermissionSetter.bind(this, "-J")},
       "topic_delete":   {title: "Delete", handler: (params, errorHandler) => {
-        var topic = Tinode.getTopic(params.topicName);
+        let topic = this.props.tinode.getTopic(params.topicName);
         if (!topic) {
           console.log("Topic not found: ", params.topicName);
           return;
@@ -489,7 +491,7 @@ class ContextMenu extends React.Component {
 
       "permissions":    {title: "Edit permissions", handler: null},
       "member_delete":  {title: "Remove", handler: (params, errorHandler) => {
-        var topic = Tinode.getTopic(params.topicName);
+        let topic = this.props.tinode.getTopic(params.topicName);
         if (!topic || !params.user) {
           console.log("Topic or user not found: '" + params.topicName + "', '" + params.user + "'");
           return;
@@ -1618,8 +1620,10 @@ class SidepanelView extends React.Component {
     };
     return (
       <div id="sidepanel" className={this.props.hideSelf ? 'nodisplay' : null}>
-        <SideNavbar state={view}
-          title={title} avatar={avatar}
+        <SideNavbar
+          state={view}
+          title={title}
+          avatar={avatar}
           myUserId={this.props.myUserId}
           onSignUp={this.props.onSignUp}
           onSettings={this.props.onSettings}
@@ -1632,7 +1636,8 @@ class SidepanelView extends React.Component {
           onClearError={this.props.onError} />
 
         {view === 'login' ?
-          <LoginView login={this.props.login}
+          <LoginView
+            login={this.props.login}
             disabled={this.props.loginDisabled}
             serverAddress={this.props.serverAddress}
             onLogin={this.handleLoginRequested}
@@ -1656,6 +1661,8 @@ class SidepanelView extends React.Component {
 
           view === 'edit' ?
           <EditAccountView
+            tinode={this.props.tinode}
+            myUserId={this.props.myUserId}
             login={this.props.login}
             onSubmit={this.props.onUpdateAccount}
             onUpdateTags={this.props.onUpdateAccountTags}
@@ -1665,6 +1672,8 @@ class SidepanelView extends React.Component {
 
           view === 'contacts' ?
           <ContactsView
+            tinode={this.props.tinode}
+            myUserId={this.props.myUserId}
             connected={this.props.connected}
             topicSelected={this.props.topicSelected}
             showContextMenu={this.props.showContextMenu}
@@ -1741,13 +1750,12 @@ class EditAccountView extends React.Component {
   constructor(props) {
     super(props);
 
-    let me = Tinode.getMeTopic();
+    let me = this.props.tinode.getMeTopic();
     let defacs = me.getDefaultAccess();
-    let fnd = Tinode.getFndTopic();
+    let fnd = this.props.tinode.getFndTopic();
     this.state = {
       fullName: me.public ? me.public.fn : undefined,
       avatar: makeImageUrl(me.public ? me.public.photo : null),
-      address: Tinode.getCurrentUserID(),
       auth: defacs.auth,
       anon: defacs.anon,
       tags: fnd.tags(),
@@ -1762,7 +1770,7 @@ class EditAccountView extends React.Component {
   }
 
   componentDidMount() {
-    let fnd = Tinode.getFndTopic();
+    let fnd = this.props.tinode.getFndTopic();
     fnd.onTagsUpdated = this.tnNewTags;
     if (!fnd.isSubscribed()) {
       fnd.subscribe(fnd.startMetaQuery().withLaterDesc().withTags().build()).catch((err) => {
@@ -1772,7 +1780,7 @@ class EditAccountView extends React.Component {
   }
 
   componentWillUnmount() {
-    var fnd = Tinode.getFndTopic();
+    var fnd = this.props.tinode.getFndTopic();
     fnd.onTagsUpdated = this.state.previousOnTags;
   }
 
@@ -1828,7 +1836,7 @@ class EditAccountView extends React.Component {
           </div>
           <AvatarUpload
             avatar={this.state.avatar}
-            uid={this.state.address}
+            uid={this.props.myUserId}
             title={this.state.fullName}
             onImageChanged={this.handleImageChanged}
             onError={this.props.onError} />
@@ -1841,7 +1849,7 @@ class EditAccountView extends React.Component {
           </div>
           <div className="panel-form-row">
             <label>Address:</label>
-            <tt>{this.state.address}</tt>
+            <tt>{this.props.myUserId}</tt>
           </div>
           <div>
             <label className="small">Default access mode:</label>
@@ -2125,13 +2133,13 @@ class ContactsView extends React.Component {
     this.tnMeSubsUpdated = this.tnMeSubsUpdated.bind(this);
     this.resetContactList = this.resetContactList.bind(this);
 
-    var me = Tinode.getMeTopic();
+    var me = this.props.tinode.getMeTopic();
     me.onContactUpdate = this.tnMeContactUpdate;
     me.onSubsUpdated = this.tnMeSubsUpdated;
   }
 
   componentWillUnmount() {
-    var me = Tinode.getMeTopic();
+    var me = this.props.tinode.getMeTopic();
     me.onContactUpdate = undefined;
     me.onSubsUpdated = undefined;
   }
@@ -2202,21 +2210,20 @@ class ContactsView extends React.Component {
   }
 
   prepareContactList() {
-    var instance = this;
     var contacts = [];
     var unreadThreads = 0;
-    Tinode.getMeTopic().contacts(function(c) {
+    this.props.tinode.getMeTopic().contacts((c) => {
       // Force to integers;
       c.seq = ~~c.seq;
       c.read = ~~c.read;
       c.unread = c.seq - c.read;
       unreadThreads += c.unread > 0 ? 1 : 0;
       contacts.push(c);
-      if (instance.props.topicSelected == c.topic) {
-        instance.props.onOnlineChange(c.online);
-        instance.props.onAcsChange(c.acs);
+      if (this.props.topicSelected == c.topic) {
+        this.props.onOnlineChange(c.online);
+        this.props.onAcsChange(c.acs);
       }
-    }, this);
+    });
     contacts.sort(function(a,b){
       return b.touched - a.touched;
     });
@@ -2235,6 +2242,7 @@ class ContactsView extends React.Component {
         contacts={this.state.contactList}
         emptyListMessage={<span>You have no chats<br />¯\_(ツ)_/¯</span>}
         topicSelected={this.props.topicSelected}
+        myUserId={this.props.myUserId}
         showOnline={true}
         showUnread={true}
         onTopicSelected={this.props.onTopicSelected}
@@ -2248,7 +2256,6 @@ class ContactsView extends React.Component {
  * such as a list of group members in a group chat */
 class ContactList extends React.Component {
   render() {
-    var me = Tinode.getCurrentUserID();
     var contactNodes = [];
     var showCheckmark = Array.isArray(this.props.topicSelected);
     if (this.props.contacts && this.props.contacts.length > 0) {
@@ -2274,7 +2281,7 @@ class ContactList extends React.Component {
           (this.props.topicSelected === key);
         var badges = [];
         if (this.props.showMode) {
-          if (key === me) {
+          if (key === this.props.myUserId) {
             badges.push({name: 'you', color: 'green'});
           }
           if (c.acs && c.acs.isOwner()) {
@@ -2465,6 +2472,7 @@ class GroupManager extends React.Component {
         </div>
         <ContactList
           contacts={this.props.contacts}
+          myUserId={this.props.myUserId}
           topicSelected={this.state.selectedContacts}
           filter={this.state.contactFilter}
           filterFunc={GroupManager.doContactFiltering}
@@ -2559,6 +2567,7 @@ class NewTopicView extends React.Component {
               onSearchContacts={this.props.onSearchContacts} />
             <ContactList
               contacts={this.state.contactList}
+              myUserId={this.props.myUserId}
               emptyListMessage="Use search to find contacts"
               topicSelected={this.state.selectedContact}
               showOnline={false}
@@ -2888,7 +2897,7 @@ class InfoView extends React.Component {
 
   // No need to separately handle component mount.
   UNSAFE_componentWillReceiveProps(props) {
-    var topic = Tinode.getTopic(props.topic);
+    var topic = this.props.tinode.getTopic(props.topic);
     if (!topic) {
       return;
     }
@@ -2916,7 +2925,7 @@ class InfoView extends React.Component {
   }
 
   componentWillUnmount() {
-    var topic = Tinode.getTopic(this.props.topic);
+    var topic = this.props.tinode.getTopic(this.props.topic);
     if (!topic) {
       return;
     }
@@ -2974,7 +2983,7 @@ class InfoView extends React.Component {
   }
 
   onMetaDesc(desc) {
-    var topic = Tinode.getTopic(this.props.topic);
+    var topic = this.props.tinode.getTopic(this.props.topic);
     if (!topic) {
       return;
     }
@@ -2986,7 +2995,7 @@ class InfoView extends React.Component {
   }
 
   onSubsUpdated() {
-    var topic = Tinode.getTopic(this.props.topic);
+    var topic = this.props.tinode.getTopic(this.props.topic);
     if (!topic) {
       return;
     }
@@ -3087,7 +3096,7 @@ class InfoView extends React.Component {
         toSkip = 'O';
         break;
       case 'user': {
-        var topic = Tinode.getTopic(this.props.topic);
+        var topic = this.props.tinode.getTopic(this.props.topic);
         if (!topic) {
           return;
         }
@@ -3161,7 +3170,7 @@ class InfoView extends React.Component {
 
   handleContextMenu(params) {
     var instance = this;
-    var topic = Tinode.getTopic(this.props.topic);
+    var topic = this.props.tinode.getTopic(this.props.topic);
     if (!topic) {
       return;
     }
@@ -3203,6 +3212,7 @@ class InfoView extends React.Component {
           <GroupManager
             members={this.state.contactList}
             requiredMember={this.props.myUserId}
+            myUserId={this.props.myUserId}
             contacts={this.props.foundContacts}
             onCancel={this.handleHideAddMembers}
             onSubmit={this.handleMemberUpdateRequest} />
@@ -3347,6 +3357,7 @@ class InfoView extends React.Component {
                 </div>
                 <ContactList
                   contacts={this.state.contactList}
+                  myUserId={this.props.myUserId}
                   emptyListMessage="No members"
                   topicSelected={this.state.selectedContact}
                   showOnline={false}
@@ -3451,6 +3462,7 @@ class ChatMessage extends React.Component {
     if (this.props.mimeType == Drafty.getContentType()) {
       Drafty.attachments(content, function(att, i) {
         attachments.push(<Attachment
+          tinode={this.props.tinode}
           downloadUrl={Drafty.getDownloadUrl(att)}
           filename={att.name} uploader={Drafty.isUploading(att)}
           mimetype={att.mime} size={Drafty.getEntitySize(att)}
@@ -3551,7 +3563,7 @@ class Attachment extends React.Component {
   }
 
   downloadFile(url, filename, mimetype) {
-    var downloader = Tinode.getLargeFileHelper();
+    var downloader = this.props.tinode.getLargeFileHelper();
     this.setState({downloader: downloader});
     downloader.download(url, filename, mimetype, (loaded) => {
       this.setState({progress: loaded / this.props.size});
@@ -3691,7 +3703,7 @@ class MessagesView extends React.Component {
 
     var tryToResubscribe = !this.props.connected && props.connected;
 
-    var topic = Tinode.getTopic(props.topic);
+    var topic = this.props.tinode.getTopic(props.topic);
     if (props.topic != this.state.topic) {
       var msgs = [];
       var subs = [];
@@ -3707,9 +3719,8 @@ class MessagesView extends React.Component {
       this.leave();
 
       this.handleDescChange(topic);
-      var myId = this.props.myUserId;
-      topic.subscribers(function(sub) {
-        if (sub.online && sub.user != myId) {
+      topic.subscribers((sub) => {
+        if (sub.online && sub.user != this.props.myUserId) {
           subs.push(sub);
         }
       });
@@ -3766,7 +3777,7 @@ class MessagesView extends React.Component {
 
   leave() {
     if (this.state.topic) {
-      var oldTopic = Tinode.getTopic(this.state.topic);
+      var oldTopic = this.props.tinode.getTopic(this.state.topic);
       if (oldTopic) {
         if (oldTopic.isSubscribed()) {
           oldTopic.leave(false).catch(function(err) {
@@ -3797,7 +3808,7 @@ class MessagesView extends React.Component {
       let newState = {scrollPosition: event.target.scrollHeight - event.target.scrollTop};
       this.setState((prevState, props) => {
         if (!prevState.fetchingMessages) {
-          var topic = Tinode.getTopic(this.state.topic);
+          var topic = this.props.tinode.getTopic(this.state.topic);
           if (topic && topic.isSubscribed() && topic.msgHasMoreMessages()) {
             newState.fetchingMessages = true;
             topic.getMessagesPage(MESSAGES_PAGE).catch((err) => {
@@ -3829,10 +3840,9 @@ class MessagesView extends React.Component {
   handleSubsUpdated() {
     if (this.state.topic) {
       var subs = [];
-      var myId = this.props.myUserId;
-      var topic = Tinode.getTopic(this.state.topic);
-      topic.subscribers(function(sub) {
-        if (sub.online && sub.user != myId) {
+      var topic = this.props.tinode.getTopic(this.state.topic);
+      topic.subscribers((sub) => {
+        if (sub.online && sub.user != this.props.myUserId) {
           subs.push(sub);
         }
       });
@@ -3842,7 +3852,7 @@ class MessagesView extends React.Component {
 
   handleNewMessage(msg) {
     // Regenerate messages list
-    var topic = Tinode.getTopic(this.state.topic);
+    var topic = this.props.tinode.getTopic(this.state.topic);
     var newState = {messages: []};
     topic.messages(function(m) {
       if (!m.deleted) {
@@ -3915,7 +3925,7 @@ class MessagesView extends React.Component {
   handleShowContextMenuMessage(params) {
     params.topicName = this.state.topic;
     var menuItems = ["message_delete"];
-    var topic = Tinode.getTopic(params.topicName);
+    var topic = this.props.tinode.getTopic(params.topicName);
     if (topic) {
       var acs = topic.getAccessMode();
       if (acs && acs.isDeleter()) {
@@ -3933,7 +3943,7 @@ class MessagesView extends React.Component {
     var component = null;
     if (this.state.topic) {
       var messageNodes = [];
-      var topic = Tinode.getTopic(this.state.topic);
+      var topic = this.props.tinode.getTopic(this.state.topic);
       var groupTopic = topic.getType() == "grp";
       var previousFrom = null;
       for (var i=0; i<this.state.messages.length; i++) {
@@ -3973,7 +3983,10 @@ class MessagesView extends React.Component {
         }
 
         messageNodes.push(
-          <ChatMessage content={msg.content} mimeType={msg.head ? msg.head.mime : null}
+          <ChatMessage
+            tinode={this.props.tinode}
+            content={msg.content}
+            mimeType={msg.head ? msg.head.mime : null}
             timestamp={msg.ts} response={isReply} seq={msg.seq}
             userFrom={userFrom} userName={userName} userAvatar={userAvatar}
             sequence={sequence} received={deliveryStatus} uploader={msg._uploader}
@@ -3986,9 +3999,8 @@ class MessagesView extends React.Component {
       }
 
       let lastSeen = null;
-      let topicType = Tinode.topicType(cont.topic);
       let cont = this.props.tinode.getMeTopic().getContact(this.state.topic);
-      if (cont && topicType == "p2p") {
+      if (cont && Tinode.topicType(cont.topic) == "p2p") {
         if (cont.online) {
           lastSeen = "online now";
         } else if (cont.seen) {
@@ -4052,6 +4064,7 @@ class MessagesView extends React.Component {
           }
           </div>
           <SendMessage
+            tinode={this.props.tinode}
             topic={this.props.topic}
             disabled={this.state.readOnly}
             sendMessage={this.props.sendMessage}
@@ -4163,7 +4176,7 @@ class SendMessage extends React.PureComponent {
           " exceeds the "  + bytesToHumanSize(MAX_EXTERN_ATTACHMENT_SIZE) + " limit.", "err");
       } else if (file.size > MAX_INBAND_ATTACHMENT_SIZE) {
         // Too large to send inband - uploading out of band and sending as a link.
-        let uploader = Tinode.getLargeFileHelper();
+        let uploader = this.props.tinode.getLargeFileHelper();
         if (!uploader) {
           this.props.onError("Cannot initiate file upload.");
           return;
@@ -4213,7 +4226,7 @@ class SendMessage extends React.PureComponent {
     var newState = {message: e.target.value};
     var now = new Date().getTime();
     if (now - this.state.keypressTimestamp > KEYPRESS_DELAY) {
-      var topic = Tinode.getTopic(this.props.topic);
+      var topic = this.props.tinode.getTopic(this.props.topic);
       if (topic.isSubscribed()) {
         topic.noteKeyPress();
       }
@@ -4563,6 +4576,9 @@ class TinodeWeb extends React.Component {
   }
 
   handleError(err, level) {
+    if (err && level) {
+      throw new Error(err);
+    }
     this.setState({errorText: err, errorLevel: level});
   }
 
@@ -4597,10 +4613,8 @@ class TinodeWeb extends React.Component {
       navigateTo("");
       return;
     }
-
-    cred = cred ? this.state.tinode.addCredential(null, cred) : undefined;
-    cred = cred ? cred.cred : undefined;
-
+    // Sanitize and package credentail.
+    cred = Tinode.credential(cred);
     // Try to login with login/password. If they are not available, try token. If no token, ask for login/password.
     let promise = null;
     let token = this.state.tinode.getAuthToken();
@@ -4619,7 +4633,7 @@ class TinodeWeb extends React.Component {
           }
           this.handleCredentialsRequest(ctrl.params);
         } else {
-          this.handleLoginSuccessful(this);
+          this.handleLoginSuccessful();
         }
       }).catch((err) => {
         // Login failed, report error.
@@ -4643,8 +4657,8 @@ class TinodeWeb extends React.Component {
     navigateTo(composeUrlHash(parsed.path, parsed.params));
   }
 
-  handleLoginSuccessful(instance) {
-    instance.handleError("", null);
+  handleLoginSuccessful() {
+    this.handleError("", null);
 
     // Refresh authentication token.
     if (localStorage.getObject("keep-logged-in")) {
@@ -4652,8 +4666,8 @@ class TinodeWeb extends React.Component {
     }
     // Logged in fine, subscribe to 'me' attaching callbacks from the contacts view.
     var me = this.state.tinode.getMeTopic();
-    me.onMetaDesc = instance.tnMeMetaDesc;
-    instance.setState({
+    me.onMetaDesc = this.tnMeMetaDesc;
+    this.setState({
       connected: true,
       credMethod: undefined,
       credCode: undefined,
@@ -4665,9 +4679,9 @@ class TinodeWeb extends React.Component {
         withLaterSub().
         withDesc().
         build()
-      ).catch(function(err){
+      ).catch((err) => {
         localStorage.removeItem("auth-token");
-        instance.handleError(err.message, "err");
+        this.handleError(err.message, "err");
         navigateTo("");
       });
     navigateTo(setUrlSidePanel(window.location.hash, 'contacts'));
@@ -4698,7 +4712,7 @@ class TinodeWeb extends React.Component {
   // Sending "received" notifications
   tnData(data) {
     let topic = this.state.tinode.getTopic(data.topic);
-    if (topic.msgStatus(data) > this.state.tinode.MESSAGE_STATUS_SENDING) {
+    if (topic.msgStatus(data) > Tinode.MESSAGE_STATUS_SENDING) {
       clearTimeout(this.receivedTimer);
       this.receivedTimer = setTimeout(() => {
         this.receivedTimer = undefined;
@@ -4709,7 +4723,7 @@ class TinodeWeb extends React.Component {
 
   /* Fnd topic: find contacts by tokens */
   tnInitFind() {
-    var fnd = Tinode.getFndTopic();
+    var fnd = this.state.tinode.getFndTopic();
     if (fnd.isSubscribed()) {
       this.setState({contactsSearchQuery: ''});
       this.tnFndSubsUpdated();
@@ -4828,8 +4842,8 @@ class TinodeWeb extends React.Component {
   handleNewAccountRequest(login_, password_, public_, cred_, tags_) {
     this.state.tinode.connect(this.state.serverAddress)
       .then(() => {
-        var params = this.state.tinode.addCredential({public: public_, tags: tags_}, cred_);
-        return this.state.tinode.createAccountBasic(login_, password_, params);
+        return this.state.tinode.createAccountBasic(login_, password_,
+          {public: public_, tags: tags_, cred: Tinode.credential(cred_)});
       }).then((ctrl) => {
         if (ctrl.code >= 300 && ctrl.text === "validate credentials") {
           this.handleCredentialsRequest(ctrl.params);
@@ -4848,7 +4862,7 @@ class TinodeWeb extends React.Component {
       });
     }
     if (password) {
-      this.state.tinode.updateAccountBasic(null, Tinode.getCurrentLogin(), password).catch((err) => {
+      this.state.tinode.updateAccountBasic(null, this.state.tinode.getCurrentLogin(), password).catch((err) => {
         this.handleError(err.message, "err");
       });
     }
@@ -5100,6 +5114,7 @@ class TinodeWeb extends React.Component {
         }
 
         <SidepanelView
+          tinode={this.state.tinode}
           connected={this.state.connected}
           displayMobile={this.state.displayMobile}
           hideSelf={this.state.displayMobile && this.state.mobilePanel !== 'sidepanel'}

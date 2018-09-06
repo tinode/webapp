@@ -18,7 +18,7 @@
     "build": "npm run build:babel && npm run build:prod && npm run build:css",
     "build:dev": "browserify ./src/index.js --standalone Webapp > ./umd/index.dev.js",
     "build:prod": "browserify ./src/index.js --standalone Webapp --plugin tinyify > ./umd/index.prod.js",
-    "build:babel": "babel ./src/webapp.js --presets react --out-file ./webapp.js",
+    "build:babel": "babel ./src/webapp.jsx --presets react --out-file ./webapp.js",
     "build:css": "postcss css/base.css > css/base.min.css",
     "babel-version": "babel --version"
   },
