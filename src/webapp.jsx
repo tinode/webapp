@@ -4576,9 +4576,6 @@ class TinodeWeb extends React.Component {
   }
 
   handleError(err, level) {
-    if (err && level) {
-      throw new Error(err);
-    }
     this.setState({errorText: err, errorLevel: level});
   }
 
