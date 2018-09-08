@@ -11,9 +11,6 @@ const DEFAULT_HOST = KNOWN_HOSTS.hosted;
 // Sound to play on message received.
 const POP_SOUND = new Audio('audio/msg.mp3');
 
-// Unicode symbol used to clear objects
-const DEL_CHAR = "\u2421";
-
 // API key. Use https://github.com/tinode/chat/tree/master/keygen to generate your own
 const API_KEY = "AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K";
 
@@ -58,9 +55,6 @@ const MAX_IMAGE_DIM = 768;
 // Supported image MIME types and corresponding file extensions.
 const SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
 const MIME_EXTENSIONS         = ['jpg',        'gif',       'png',       'svg',       'svg'];
-
-// Tinode is defined in 'tinode.js'.
-var Drafty = Tinode.Drafty;
 
 // Helper functions for storing values in localStorage.
 // By default localStorage can store only strings, not objects or other types.
@@ -482,7 +476,7 @@ class ContextMenu extends React.Component {
           console.log("Topic not found: ", params.topicName);
           return;
         }
-        topic.delTopic().catch(function(err) {
+        topic.delTopic().catch((err) => {
           if (errorHandler) {
             errorHandler(err.message, "err");
           }
@@ -1394,16 +1388,15 @@ class AvatarUpload extends React.Component {
   }
 
   handleFileUpload(e) {
-    var instance = this;
     imageFileScaledToBase64(e.target.files[0], AVATAR_SIZE, AVATAR_SIZE, true,
       // Success
-      function(base64bits, mime) {
+      (base64bits, mime) => {
         var du = makeImageUrl({data: base64bits, type: mime});
-        instance.setState({dataUrl: du});
-        instance.props.onImageChanged(du);
+        this.setState({dataUrl: du});
+        this.props.onImageChanged(du);
       },
       // Failure
-      function(err) {
+      (err) => {
         this.props.onError(err, "err");
       });
     // Clear the value so the same file can be uploaded again.
@@ -1676,6 +1669,7 @@ class SidepanelView extends React.Component {
             myUserId={this.props.myUserId}
             connected={this.props.connected}
             topicSelected={this.props.topicSelected}
+            chatList={this.props.chatList}
             showContextMenu={this.props.showContextMenu}
             messageSounds={this.props.messageSounds}
             onTopicSelected={this.props.onTopicSelected}
@@ -1685,7 +1679,7 @@ class SidepanelView extends React.Component {
           view === 'newtpk' ?
           <NewTopicView
             contactsSearchQuery={this.props.contactsSearchQuery}
-            foundContacts={this.props.foundContacts}
+            searchResults={this.props.searchResults}
             onInitFind={this.props.onInitFind}
             onSearchContacts={this.props.onSearchContacts}
             onCreateTopic={this.props.onCreateTopic}
@@ -2123,116 +2117,24 @@ class ContactsView extends React.Component {
   constructor(props) {
     super(props);
 
-    this.prepareContactList = this.prepareContactList.bind(this);
-
-    this.state = {
-      contactList: this.prepareContactList()
-    };
-
-    this.tnMeContactUpdate = this.tnMeContactUpdate.bind(this);
-    this.tnMeSubsUpdated = this.tnMeSubsUpdated.bind(this);
-    this.resetContactList = this.resetContactList.bind(this);
-
-    var me = this.props.tinode.getMeTopic();
-    me.onContactUpdate = this.tnMeContactUpdate;
-    me.onSubsUpdated = this.tnMeSubsUpdated;
+    this.state = ContactsView.getDerivedStateFromProps(props, {});
   }
 
-  componentWillUnmount() {
-    var me = this.props.tinode.getMeTopic();
-    me.onContactUpdate = undefined;
-    me.onSubsUpdated = undefined;
-  }
-
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (this.props.topicSelected != nextProps.topicSelected) {
-      // If topicSelecetd is changed externally, update the
-      // topic with online status and access mode.
-      for (var i=0;i<this.state.contactList.length;i++) {
-        var c = this.state.contactList[i];
-        if (c.topic == nextProps.topicSelected) {
-          nextProps.onOnlineChange(c.online);
-          nextProps.onAcsChange(c.acs);
-          break;
-        }
-      }
-    }
-  }
-
-  // Reactions to updates to the contact list.
-  tnMeContactUpdate(what, cont) {
-    if (what == "on" || what == "off") {
-      this.resetContactList();
-      if (this.props.topicSelected == cont.topic) {
-        this.props.onOnlineChange(what === "on");
-      }
-    } else if (what === "read") {
-      this.resetContactList();
-    } else if (what === "msg") {
-      // New message received
-      // Skip update if the topic is currently open, otherwise the badge will annoyingly flash.
-      if (this.props.topicSelected !== cont.topic) {
-        if (this.props.messageSounds) {
-          POP_SOUND.play();
-        }
-        this.resetContactList();
-      } else if (document.hidden && this.props.messageSounds) {
-        POP_SOUND.play();
-      }
-    } else if (what === "recv") {
-      // Explicitly ignoring "recv" -- it causes no visible updates to contact list.
-    } else if (what === "gone" || what === "unsub") {
-      // Topic deleted or user unsubscribed. Remove topic from view.
-      // If the currently selected topic is gone, clear the selection.
-      if (this.props.topicSelected === cont.topic) {
-        this.props.onTopicSelected(null);
-      }
-      // Redraw without the deleted topic.
-      this.resetContactList();
-    } else if (what === "acs") {
-      // Permissions changed. If it's for the currently selected topic,
-      // update the views.
-      if (this.props.topicSelected === cont.topic) {
-        this.props.onAcsChange(cont.acs);
-      }
-    } else if (what == "del") {
-      // messages deleted (hard or soft) -- update pill counter.
-    } else {
-      // TODO(gene): handle other types of notifications:
-      // * ua -- user agent changes (maybe display a pictogram for mobile/desktop).
-      // * upd -- topic 'public' updated, issue getMeta().
-      console.log("Unsupported (yet) presence update:" + what + " in: " + cont.topic);
-    }
-  }
-
-  tnMeSubsUpdated(names) {
-    this.resetContactList();
-  }
-
-  prepareContactList() {
-    var contacts = [];
-    var unreadThreads = 0;
-    this.props.tinode.getMeTopic().contacts((c) => {
-      // Force to integers;
-      c.seq = ~~c.seq;
-      c.read = ~~c.read;
-      c.unread = c.seq - c.read;
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let contacts = [];
+    let unreadThreads = 0;
+    nextProps.chatList.map((c) => {
       unreadThreads += c.unread > 0 ? 1 : 0;
       contacts.push(c);
-      if (this.props.topicSelected == c.topic) {
-        this.props.onOnlineChange(c.online);
-        this.props.onAcsChange(c.acs);
-      }
     });
-    contacts.sort(function(a,b){
+
+    contacts.sort(function(a, b){
       return b.touched - a.touched;
     });
-    updateFavicon(unreadThreads);
-    return contacts;
-  }
 
-  resetContactList() {
-    this.setState({contactList: this.prepareContactList()});
+    updateFavicon(unreadThreads);
+
+    return {contactList: contacts};
   }
 
   render() {
@@ -2498,7 +2400,7 @@ class NewTopicView extends React.Component {
     this.state = {
       tabSelected: "p2p",
       searchQuery: props.contactsSearchQuery,
-      contactList: props.foundContacts
+      contactList: props.searchResults
     };
 
     this.handleTabClick = this.handleTabClick.bind(this);
@@ -2514,7 +2416,7 @@ class NewTopicView extends React.Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     return {
       searchQuery: nextProps.contactsSearchQuery,
-      contactList: nextProps.foundContacts
+      contactList: nextProps.searchResults
     };
   }
 
@@ -2676,7 +2578,7 @@ class SearchContacts extends React.Component {
   componentWillUnmount() {
     if (this.state.search) {
       this.setState({search: ''});
-      this.props.onSearchContacts(DEL_CHAR);
+      this.props.onSearchContacts(Tinode.DEL_CHAR);
     }
   }
 
@@ -2691,13 +2593,13 @@ class SearchContacts extends React.Component {
       this.setState({edited: true});
       this.props.onSearchContacts(query);
     } else if (this.props.searchQuery) {
-      this.props.onSearchContacts(DEL_CHAR);
+      this.props.onSearchContacts(Tinode.DEL_CHAR);
     }
   }
 
   handleClear() {
     if (this.state.edited || this.state.search) {
-      this.props.onSearchContacts(DEL_CHAR);
+      this.props.onSearchContacts(Tinode.DEL_CHAR);
     }
     this.setState({search: '', edited: false});
   }
@@ -3213,7 +3115,7 @@ class InfoView extends React.Component {
             members={this.state.contactList}
             requiredMember={this.props.myUserId}
             myUserId={this.props.myUserId}
-            contacts={this.props.foundContacts}
+            contacts={this.props.searchableContacts}
             onCancel={this.handleHideAddMembers}
             onSubmit={this.handleMemberUpdateRequest} />
           :
@@ -4363,6 +4265,9 @@ class TinodeWeb extends React.Component {
     this.handleLoginSuccessful = this.handleLoginSuccessful.bind(this);
     this.handleDisconnect = this.handleDisconnect.bind(this);
     this.tnMeMetaDesc = this.tnMeMetaDesc.bind(this);
+    this.tnMeContactUpdate = this.tnMeContactUpdate.bind(this);
+    this.tnMeSubsUpdated = this.tnMeSubsUpdated.bind(this);
+    this.resetContactList = this.resetContactList.bind(this);
     this.tnData = this.tnData.bind(this);
     this.tnInitFind = this.tnInitFind.bind(this);
     this.tnFndSubsUpdated = this.tnFndSubsUpdated.bind(this);
@@ -4406,10 +4311,14 @@ class TinodeWeb extends React.Component {
       connected: false,
       transport: settings.transport || null,
       serverAddress: settings.serverAddress || detectServerAddress(),
+      serverVersion: 'no connection',
       // "On" is the default, so saving the "off" state.
       messageSounds: !settings.messageSoundsOff,
       desktopAlerts: settings.desktopAlerts,
       desktopAlertsEnabled: isSecureConnection(),
+
+      errorText: '',
+      errorLevel: null,
 
       sidePanelSelected: 'login',
       sidePanelTitle: null,
@@ -4419,8 +4328,6 @@ class TinodeWeb extends React.Component {
       login: '',
       password: '',
       myUserId: null,
-      errorText: '',
-      errorLevel: null,
       liveConnection: navigator.onLine,
       topicSelected: '',
       topicSelectedOnline: false,
@@ -4429,14 +4336,20 @@ class TinodeWeb extends React.Component {
       displayMobile: (window.innerWidth <= MEDIA_BREAKPOINT),
       showInfoPanel: false,
       mobilePanel: 'sidepanel',
+
       contextMenuVisible: false,
       contextMenuBounds: null,
       contextMenuClickAt: null,
       contextMenuParams: null,
       contextMenuItems: [],
-      serverVersion: 'no connection',
+
       contactsSearchQuery: undefined,
-      foundContacts: [],
+      // Chats as shown in the ContactsView
+      chatList: [],
+      // Contacts returned by a search query.
+      searchResults: [],
+      // Merged results of a search query and p2p chats.
+      searchableContacts: [],
       credMethod: undefined,
       credCode: undefined
     };
@@ -4664,6 +4577,8 @@ class TinodeWeb extends React.Component {
     // Logged in fine, subscribe to 'me' attaching callbacks from the contacts view.
     var me = this.state.tinode.getMeTopic();
     me.onMetaDesc = this.tnMeMetaDesc;
+    me.onContactUpdate = this.tnMeContactUpdate;
+    me.onSubsUpdated = this.tnMeSubsUpdated;
     this.setState({
       connected: true,
       credMethod: undefined,
@@ -4706,6 +4621,77 @@ class TinodeWeb extends React.Component {
     }
   }
 
+  // Reactions to updates to the contact list.
+  tnMeContactUpdate(what, cont) {
+    if (what == "on" || what == "off") {
+      this.resetContactList();
+      if (this.state.topicSelected == cont.topic) {
+        this.setState({topicSelectedOnline: (what === "on")});
+      }
+    } else if (what == "read") {
+      this.resetContactList();
+    } else if (what == "msg") {
+      // New message received
+      // Skip update if the topic is currently open, otherwise the badge will annoyingly flash.
+      if (this.this.topicSelected !== cont.topic) {
+        if (this.state.messageSounds) {
+          POP_SOUND.play();
+        }
+        this.resetContactList();
+      } else if (document.hidden && this.state.messageSounds) {
+        POP_SOUND.play();
+      }
+    } else if (what == "recv") {
+      // Explicitly ignoring "recv" -- it causes no visible updates to contact list.
+    } else if (what == "gone" || what == "unsub") {
+      // Topic deleted or user unsubscribed. Remove topic from view.
+      // If the currently selected topic is gone, clear the selection.
+      if (this.state.topicSelected == cont.topic) {
+        this.handleTopicSelected(null);
+      }
+      // Redraw without the deleted topic.
+      this.resetContactList();
+    } else if (what == "acs") {
+      // Permissions changed. If it's for the currently selected topic,
+      // update the views.
+      if (this.state.topicSelected == cont.topic) {
+        this.setState({topicSelectedAcs: cont.acs});
+      }
+    } else if (what == "del") {
+      // messages deleted (hard or soft) -- update pill counter.
+    } else {
+      // TODO(gene): handle other types of notifications:
+      // * ua -- user agent changes (maybe display a pictogram for mobile/desktop).
+      // * upd -- topic 'public' updated, issue getMeta().
+      console.log("Unsupported (yet) presence update:" + what + " in: " + cont.topic);
+    }
+  }
+
+  tnMeSubsUpdated(unused) {
+    this.resetContactList();
+  }
+
+  resetContactList() {
+    let newState = {
+      chatList: []
+    };
+    this.state.tinode.getMeTopic().contacts((c) => {
+      newState.chatList.push(c);
+      if (this.state.topicSelected == c.topic) {
+        newState.topicSelected = c.online;
+        newState.topicSelectedAcs = c.acs;
+      }
+    });
+    // Merge search results and chat list.
+    let merged = {};
+    for (const c of newState.chatList.concat(this.state.searchResults)) {
+      merged[c.topic] = c;
+    }
+    newState.searchableContacts = Object.values(merged);
+    console.log("Resetting contact list 2", newState);
+    this.setState(newState);
+  }
+
   // Sending "received" notifications
   tnData(data) {
     let topic = this.state.tinode.getTopic(data.topic);
@@ -4720,7 +4706,7 @@ class TinodeWeb extends React.Component {
 
   /* Fnd topic: find contacts by tokens */
   tnInitFind() {
-    var fnd = this.state.tinode.getFndTopic();
+    let fnd = this.state.tinode.getFndTopic();
     if (fnd.isSubscribed()) {
       this.setState({contactsSearchQuery: ''});
       this.tnFndSubsUpdated();
@@ -4733,12 +4719,15 @@ class TinodeWeb extends React.Component {
   }
 
   tnFndSubsUpdated() {
-    var contacts = [];
+    let contacts = [];
     // Don't attempt to create P2P topics which already exist. Server will reject the duplicates.
     this.state.tinode.getFndTopic().contacts((s) => {
       contacts.push(s);
     });
-    this.setState({foundContacts: contacts});
+    this.setState({
+      searchResults: contacts,
+      searchableContacts: mergeContacts(contacts, this.state.chatList)
+    });
   }
 
   /** Called when the user enters a contact into the contact search field in the NewAccount panel
@@ -4746,7 +4735,7 @@ class TinodeWeb extends React.Component {
    */
   handleSearchContacts(query) {
     var fnd = this.state.tinode.getFndTopic();
-    this.setState({contactsSearchQuery: query == DEL_CHAR ? '' : query});
+    this.setState({contactsSearchQuery: query == Tinode.DEL_CHAR ? '' : query});
     fnd.setMeta({desc: {public: query}}).then((ctrl) => {
       return fnd.getMeta(fnd.startMetaQuery().withSub().build());
     }).catch((err) => {
@@ -4807,10 +4796,16 @@ class TinodeWeb extends React.Component {
   handleSendMessage(msg, promise, uploader) {
     let topic = this.state.tinode.getTopic(this.state.topicSelected);
     let dft = Drafty.parse(msg);
+    let mimeType, attachments;
     if (dft && !Drafty.isPlainText(dft)) {
       msg = dft;
+      mimeType = Drafty.getContentType();
+      if (Drafty.hasAttachments(data)) {
+        attachments = [];
+        Drafty.attachments(data, (val) => { attachments.push(val); });
+      }
     }
-    msg = topic.createMessage(msg);
+    msg = topic.createMessage(msg, false, mimeType, attachments);
     msg._uploader = uploader;
 
     if (promise) {
@@ -5124,6 +5119,7 @@ class TinodeWeb extends React.Component {
           errorText={this.state.errorText}
           errorLevel={this.state.errorLevel}
           topicSelected={this.state.topicSelected}
+          chatList={this.state.chatList}
           credMethod={this.state.credMethod}
           credCode={this.state.credCode}
 
@@ -5152,7 +5148,7 @@ class TinodeWeb extends React.Component {
 
           onInitFind={this.tnInitFind}
           contactsSearchQuery={this.state.contactsSearchQuery}
-          foundContacts={this.state.foundContacts}
+          searchResults={this.state.searchResults}
           onSearchContacts={this.handleSearchContacts}
 
           showContextMenu={this.handleShowContextMenu} />
@@ -5186,7 +5182,7 @@ class TinodeWeb extends React.Component {
             connected={this.state.connected}
             displayMobile={this.state.displayMobile}
             topic={this.state.topicSelected}
-            foundContacts={this.state.foundContacts}
+            searchableContacts={this.state.searchableContacts}
             myUserId={this.state.myUserId}
             errorText={this.state.errorText}
             errorLevel={this.state.errorLevel}

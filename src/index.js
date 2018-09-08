@@ -4,7 +4,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var Tinode = require('tinode-sdk');
-var TinodeWeb = require('../webapp.js')
+var TinodeWeb = require('../webapp.js');
 
 ReactDOM.render(
   React.createElement(TinodeWeb, null),

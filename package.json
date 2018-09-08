@@ -51,12 +51,13 @@
     "react",
     "web"
   ],
-  "main": "index.js",
+  "main": "./umd/tinode.prod.js",
   "bugs": {
     "url": "https://github.com/tinode/example-react-js/issues"
   },
   "homepage": "https://github.com/tinode/chat",
-  "email": "gene@tinode.co",
+  "email": "info@tinode.co",
+  "author": "Tinode Authors <info@tinode.co>",
   "license": "Apache-2.0",
   "dependencies": {
     "react": "^16.4.2",
