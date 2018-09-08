@@ -1672,9 +1672,7 @@ class SidepanelView extends React.Component {
             chatList={this.props.chatList}
             showContextMenu={this.props.showContextMenu}
             messageSounds={this.props.messageSounds}
-            onTopicSelected={this.props.onTopicSelected}
-            onAcsChange={this.props.onAcsChange}
-            onOnlineChange={this.props.onOnlineChange} /> :
+            onTopicSelected={this.props.onTopicSelected} /> :
 
           view === 'newtpk' ?
           <NewTopicView
@@ -4273,8 +4271,6 @@ class TinodeWeb extends React.Component {
     this.tnFndSubsUpdated = this.tnFndSubsUpdated.bind(this);
     this.handleSearchContacts = this.handleSearchContacts.bind(this);
     this.handleTopicSelected = this.handleTopicSelected.bind(this);
-    this.handleTopicSelectedOnline = this.handleTopicSelectedOnline.bind(this);
-    this.handleTopicSelectedAcs = this.handleTopicSelectedAcs.bind(this);
     this.handleHideMessagesView = this.handleHideMessagesView.bind(this);
     this.handleSendMessage = this.handleSendMessage.bind(this);
     this.handleNewAccount = this.handleNewAccount.bind(this);
@@ -4633,7 +4629,7 @@ class TinodeWeb extends React.Component {
     } else if (what == "msg") {
       // New message received
       // Skip update if the topic is currently open, otherwise the badge will annoyingly flash.
-      if (this.this.topicSelected !== cont.topic) {
+      if (this.this.topicSelected != cont.topic) {
         if (this.state.messageSounds) {
           POP_SOUND.play();
         }
@@ -4678,7 +4674,7 @@ class TinodeWeb extends React.Component {
     this.state.tinode.getMeTopic().contacts((c) => {
       newState.chatList.push(c);
       if (this.state.topicSelected == c.topic) {
-        newState.topicSelected = c.online;
+        newState.topicSelectedOnline = c.online;
         newState.topicSelectedAcs = c.acs;
       }
     });
@@ -4688,7 +4684,6 @@ class TinodeWeb extends React.Component {
       merged[c.topic] = c;
     }
     newState.searchableContacts = Object.values(merged);
-    console.log("Resetting contact list 2", newState);
     this.setState(newState);
   }
 
@@ -4772,16 +4767,6 @@ class TinodeWeb extends React.Component {
         showInfoPanel: false
       });
     }
-  }
-
-  handleTopicSelectedOnline(online) {
-    if (typeof online == 'boolean') {
-      this.setState({topicSelectedOnline: online});
-    }
-  }
-  // Permissions of a currently selected topic have been updated by server.
-  handleTopicSelectedAcs(acs) {
-    this.setState({topicSelectedAcs: acs});
   }
 
   // In mobile view user requested to show sidepanel
@@ -5141,8 +5126,6 @@ class TinodeWeb extends React.Component {
           onNewTopic={this.handleNewTopic}
           onLogout={this.handleLogout}
           onCancel={this.handleSidepanelCancel}
-          onOnlineChange={this.handleTopicSelectedOnline}
-          onAcsChange={this.handleTopicSelectedAcs}
           onError={this.handleError}
           onValidateCredentials={this.handleValidateCredentialsRequest}
 
