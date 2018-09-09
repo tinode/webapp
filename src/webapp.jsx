@@ -4898,7 +4898,7 @@ class TinodeWeb extends React.Component {
     navigateTo(setUrlSidePanel(window.location.hash, 'newtpk'));
   }
 
-  // Create of a new topic. New P2P topic requires peer's name.
+  // Create a new topic. New P2P topic requires peer's name.
   handleNewTopicRequest(peerName, pub, priv, tags) {
     var topic = peerName ? this.state.tinode.newTopicWith(peerName) : this.state.tinode.newTopic();
     var query = topic.startMetaQuery().withDesc().withSub().withData();
