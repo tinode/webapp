@@ -4629,7 +4629,7 @@ class TinodeWeb extends React.Component {
     } else if (what == "msg") {
       // New message received
       // Skip update if the topic is currently open, otherwise the badge will annoyingly flash.
-      if (this.this.topicSelected != cont.topic) {
+      if (this.state.topicSelected != cont.topic) {
         if (this.state.messageSounds) {
           POP_SOUND.play();
         }
