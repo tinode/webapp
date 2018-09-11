@@ -2337,7 +2337,7 @@ class GroupManager extends React.Component {
     var m = this.state.members.slice();
     m.push(this.props.contacts[index]);
 
-    var sel = this.selectedContacts(m);
+    var sel = GroupManager.selectedContacts(m);
 
     var i = this.state.index;
     i[userId] = status;
@@ -2356,7 +2356,7 @@ class GroupManager extends React.Component {
     var m = this.state.members.slice();
     m.splice(index, 1);
 
-    var sel = this.selectedContacts(m);
+    var sel = GroupManager.selectedContacts(m);
 
     var i = this.state.index;
     i[userId] = status;
