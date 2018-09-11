@@ -3391,7 +3391,7 @@ class ChatMessage extends React.Component {
           null}
         <div>
           <div className={bubbleClass}>
-            <div className="content">{content}
+            <div className="message-content">{content}
             {attachments}
             <ReceivedMarker
               timestamp={this.props.timestamp}
