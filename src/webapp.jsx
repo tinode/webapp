@@ -4714,14 +4714,18 @@ class TinodeWeb extends React.Component {
   }
 
   tnFndSubsUpdated() {
-    let contacts = [];
+    let foundContacts = [];
     // Don't attempt to create P2P topics which already exist. Server will reject the duplicates.
     this.state.tinode.getFndTopic().contacts((s) => {
-      contacts.push(s);
+      foundContacts.push(s);
     });
+    let merged = {};
+    for (const c of foundContacts.concat(this.state.chatList)) {
+      merged[c.topic] = c;
+    }
     this.setState({
-      searchResults: contacts,
-      searchableContacts: mergeContacts(contacts, this.state.chatList)
+      searchResults: foundContacts,
+      searchableContacts: Object.values(merged)
     });
   }
 
