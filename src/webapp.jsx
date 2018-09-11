@@ -533,6 +533,9 @@ class ContextMenu extends React.Component {
     e.stopPropagation();
     this.props.hide();
     let item = this.props.items[e.currentTarget.dataset.id];
+    if (typeof item == 'string') {
+      item = this.MenuItems[item];
+    }
     item.handler(this.props.params, this.props.onError);
   }
 
@@ -1245,7 +1248,7 @@ class LoginView extends React.Component {
         <div className="panel-form-row">
           <CheckBox id="save-token" name="save-token" checked={this.state.saveToken}
             onChange={this.handleToggleSaveToken} />
-          <label forHtml="save-token">&nbsp;Keep me logged in</label>
+          <label htmlFor="save-token">&nbsp;Keep me logged in</label>
         </div>
         <div className="dialog-buttons">
           <button className={submitClasses} type="submit">Sign in</button>
@@ -1357,7 +1360,7 @@ class CreateAccountView extends React.PureComponent {
         <div className="panel-form-row">
           <CheckBox id="save-token" name="save-token" checked={this.state.saveToken}
             onChange={this.handleToggleSaveToken} />
-          <label forHtml="save-token">&nbsp;Keep me logged in</label>
+          <label htmlFor="save-token">&nbsp;Keep me logged in</label>
         </div>
         <div className="dialog-buttons">
           <button className={submitClasses} type="submit">Sign up</button>
@@ -1489,13 +1492,13 @@ class SettingsView extends React.PureComponent {
     return (
       <form id="settings-form" onSubmit={this.handleSubmit}>
         <div className="panel-form-row">
-          <label forHtml="message-sound">Message sound:</label>
+          <label htmlFor="message-sound">Message sound:</label>
           <CheckBox name="sound" id="message-sound"
             checked={this.state.messageSounds}
             onChange={this.handleCheckboxClick} />
         </div>
         <div className="panel-form-row">
-          <label forHtml="desktop-alerts">Notification alerts{!this.props.desktopAlertsEnabled ? ' (requires HTTPS)' : null}:</label>
+          <label htmlFor="desktop-alerts">Notification alerts{!this.props.desktopAlertsEnabled ? ' (requires HTTPS)' : null}:</label>
           <CheckBox name="alert" id="desktop-alerts"
             checked={this.state.desktopAlerts}
             onChange={this.props.desktopAlertsEnabled ? this.handleCheckboxClick : null} />
@@ -3388,7 +3391,7 @@ class ChatMessage extends React.Component {
           null}
         <div>
           <div className={bubbleClass}>
-            <p>{content}
+            <div className="content">{content}
             {attachments}
             <ReceivedMarker
               timestamp={this.props.timestamp}
@@ -4295,8 +4298,6 @@ class TinodeWeb extends React.Component {
     this.handleHideInfoView = this.handleHideInfoView.bind(this);
     this.handleMemberUpdateRequest = this.handleMemberUpdateRequest.bind(this);
     this.handleValidateCredentialsRequest = this.handleValidateCredentialsRequest.bind(this);
-
-    this.handleHashRoute();
   }
 
   getBlankState() {
@@ -4339,7 +4340,7 @@ class TinodeWeb extends React.Component {
       contextMenuParams: null,
       contextMenuItems: [],
 
-      contactsSearchQuery: undefined,
+      contactsSearchQuery: '',
       // Chats as shown in the ContactsView
       chatList: [],
       // Contacts returned by a search query.
@@ -4390,6 +4391,8 @@ class TinodeWeb extends React.Component {
     }
     this.readTimer = null;
     this.readTimerCallback = null;
+
+    this.handleHashRoute();
   }
 
   componentWillUnmount() {
@@ -4765,6 +4768,8 @@ class TinodeWeb extends React.Component {
 
   // User clicked on a contact in the side panel or deleted a contact.
   handleTopicSelected(topicName, unused_index, online, acs) {
+    console.log("handleTopicSelected", topicName, online, acs);
+
     if (topicName) {
       // Contact selected
       if (this.state.topicSelected != topicName) {
@@ -4802,19 +4807,25 @@ class TinodeWeb extends React.Component {
     navigateTo(setUrlTopic(window.location.hash, null));
   }
 
-  // User is sending a message, either plain text or a drafty object with attachments.
+  // User is sending a message, either plain text or a drafty object, possibly
+  // with attachments.
   handleSendMessage(msg, promise, uploader) {
     let topic = this.state.tinode.getTopic(this.state.topicSelected);
-    let dft = Drafty.parse(msg);
     let mimeType, attachments;
+    let dft = typeof msg == 'string' ? Drafty.parse(msg) : msg;
     if (dft && !Drafty.isPlainText(dft)) {
       msg = dft;
       mimeType = Drafty.getContentType();
-      if (Drafty.hasAttachments(data)) {
+      if (Drafty.hasAttachments(msg)) {
         attachments = [];
-        Drafty.attachments(data, (val) => { attachments.push(val); });
+        Drafty.attachments(msg, (val) => {
+          if (val.ref) {
+            attachments.push(val.ref);
+          }
+        });
       }
     }
+
     msg = topic.createMessage(msg, false, mimeType, attachments);
     msg._uploader = uploader;
 
@@ -4829,6 +4840,7 @@ class TinodeWeb extends React.Component {
       }
       promise = promise.then(() => { return topic.subscribe(); });
     }
+
     topic.publishDraft(msg, promise)
       .catch((err) => {
         this.handleError(err.message, "err");

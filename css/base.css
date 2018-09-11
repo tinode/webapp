@@ -1164,15 +1164,15 @@ i.search {
   margin-right: 0.8rem;
 }
 
-.chat-box .bubble p {
+.chat-box .bubble div.message-content {
   color: #212121;
   margin: 0;
   max-width: 36rem;
   overflow-wrap: break-word;
 }
-/* The timestamp is a floating element. Need to ensure p is expanded
+/* The timestamp is a floating element. Need to ensure div.message-content is expanded
  * to accomodate it. It's usually called clearfix. */
-.chat-box .bubble p:after {
+.chat-box .bubble div.message-content:after {
   content: ".";
   display: block;
   height: 0;
