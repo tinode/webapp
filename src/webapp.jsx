@@ -1080,7 +1080,7 @@ class ChipInput extends React.Component {
     this.state.sortedChips.map((item) => {
       chips.push(
         <Chip
-          onCancel={instance.handleChipCancel}
+          onCancel={this.handleChipCancel}
           avatar={makeImageUrl(item.public ? item.public.photo : null)}
           title={item.public ? item.public.fn : undefined}
           noAvatar={this.props.avatarDisabled}
@@ -4667,6 +4667,35 @@ class TinodeWeb extends React.Component {
     this.resetContactList();
   }
 
+  // Merge search results and contact list to create a single flat
+  // list of kown contacts for GroupManager to use.
+  static prepareSearchableContacts(chatList, foundContacts) {
+    let merged = {};
+
+    // For chatList topics merge only p2p topics and convert them to the
+    // same format as foundContacts.
+    for (const c of chatList) {
+      if (Tinode.topicType(c.topic) == "p2p") {
+          merged[c.topic] = {
+            user: c.topic,
+            updated: c.updated,
+            public: c.public,
+            private: c.private,
+            acs: c.acs
+          };
+      }
+    }
+
+    // Add all foundCountacts if they have not been added already.
+    for (const c of foundContacts) {
+      if (!merged[c.user]) {
+        merged[c.user] = c;
+      }
+    }
+
+    return Object.values(merged);
+  }
+
   resetContactList() {
     let newState = {
       chatList: []
@@ -4679,11 +4708,7 @@ class TinodeWeb extends React.Component {
       }
     });
     // Merge search results and chat list.
-    let merged = {};
-    for (const c of newState.chatList.concat(this.state.searchResults)) {
-      merged[c.topic] = c;
-    }
-    newState.searchableContacts = Object.values(merged);
+    newState.searchableContacts = TinodeWeb.prepareSearchableContacts(newState.chatList, this.state.searchResults);
     this.setState(newState);
   }
 
@@ -4719,13 +4744,9 @@ class TinodeWeb extends React.Component {
     this.state.tinode.getFndTopic().contacts((s) => {
       foundContacts.push(s);
     });
-    let merged = {};
-    for (const c of foundContacts.concat(this.state.chatList)) {
-      merged[c.topic] = c;
-    }
     this.setState({
       searchResults: foundContacts,
-      searchableContacts: Object.values(merged)
+      searchableContacts: TinodeWeb.prepareSearchableContacts(this.state.chatList, foundContacts)
     });
   }
 
