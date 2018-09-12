@@ -1,7 +1,7 @@
 {
   "name": "tinode-webapp",
   "description": "Tinode Web Client",
-  "version": "0.15.5",
+  "version": "0.15.6-rc1",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-minify": "^0.4.3",
@@ -18,11 +18,13 @@
     "build": "npm run build:babel && npm run build:prod && npm run build:css",
     "build:dev": "browserify ./src/index.js --standalone Webapp > ./umd/index.dev.js",
     "build:prod": "browserify ./src/index.js --standalone Webapp --plugin tinyify > ./umd/index.prod.js",
-    "build:babel": "babel ./src/webapp.jsx --presets react --out-file ./webapp.js",
+    "build:babel": "babel ./src/webapp.jsx --presets react --out-file ./src/webapp.js",
     "build:css": "postcss css/base.css > css/base.min.css",
     "babel-version": "babel --version"
   },
   "files": [
+    "src/index.js",
+    "src/webapp.jsx",
     "audio/msg.mp3",
     "css/base.css",
     "css/base.min.css",

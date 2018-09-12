@@ -3354,11 +3354,11 @@ class ChatMessage extends React.Component {
     };
 
     var sideClass = this.props.sequence + " " + (this.props.response ? "left" : "right");
-    var bubbleClass = (this.props.sequence === "single" || this.props.sequence === "last") ?
+    var bubbleClass = (this.props.sequence == "single" || this.props.sequence == "last") ?
       "bubble tip" : "bubble";
     var avatar = this.props.userAvatar || true;
     var fullDisplay = (this.props.userFrom && this.props.response &&
-      (this.props.sequence === "single" || this.props.sequence === "last"));
+      (this.props.sequence == "single" || this.props.sequence == "last"));
 
     var content = this.props.content;
     var attachments = [];
@@ -3375,6 +3375,8 @@ class ChatMessage extends React.Component {
           key={i} />);
       }, this);
       content = React.createElement('span', null, Drafty.format(content, formatter, this));
+    } else if (typeof content != 'string') {
+      content = <span><i className="material-icons">error_outline</i> <i>invalid content</i></span>
     }
 
     return (
@@ -3391,12 +3393,13 @@ class ChatMessage extends React.Component {
           null}
         <div>
           <div className={bubbleClass}>
-            <div className="message-content">{content}
-            {attachments}
-            <ReceivedMarker
-              timestamp={this.props.timestamp}
-              received={this.props.received} />
-            </p>
+            <div className="message-content">
+              {content}
+              {attachments}
+              <ReceivedMarker
+                timestamp={this.props.timestamp}
+                received={this.props.received} />
+            </div>
             <span className="menuTrigger">
               <a href="javascript:;" onClick={this.handleContextClick}>
                 <i className="material-icons">expand_more</i>
@@ -3858,18 +3861,18 @@ class MessagesView extends React.Component {
         }
 
         var sequence = "single";
-        if (msg.from === previousFrom) {
-          if (msg.from === nextFrom) {
+        if (msg.from == previousFrom) {
+          if (msg.from == nextFrom) {
             sequence = "middle";
           } else {
             sequence = "last";
           }
-        } else if (msg.from === nextFrom) {
+        } else if (msg.from == nextFrom) {
           sequence = "first";
         }
         previousFrom = msg.from;
 
-        var isReply = !(msg.from === this.props.myUserId);
+        var isReply = !(msg.from == this.props.myUserId);
         var deliveryStatus = topic.msgStatus(msg);
 
         var userName, userAvatar, userFrom, chatBoxClass;
@@ -4811,34 +4814,22 @@ class TinodeWeb extends React.Component {
   // with attachments.
   handleSendMessage(msg, promise, uploader) {
     let topic = this.state.tinode.getTopic(this.state.topicSelected);
-    let mimeType, attachments;
-    let dft = typeof msg == 'string' ? Drafty.parse(msg) : msg;
-    if (dft && !Drafty.isPlainText(dft)) {
-      msg = dft;
-      mimeType = Drafty.getContentType();
-      if (Drafty.hasAttachments(msg)) {
-        attachments = [];
-        Drafty.attachments(msg, (val) => {
-          if (val.ref) {
-            attachments.push(val.ref);
-          }
-        });
-      }
-    }
 
-    msg = topic.createMessage(msg, false, mimeType, attachments);
+    msg = topic.createMessage(msg, false);
+    // The uploader is used to show progress.
     msg._uploader = uploader;
 
-    if (promise) {
-      promise.catch((err) => {
-        this.handleError(err.message, "err");
-      });
-    }
     if (!topic.isSubscribed()) {
       if (!promise) {
         promise = Promise.resolve();
       }
       promise = promise.then(() => { return topic.subscribe(); });
+    }
+
+    if (promise) {
+      promise = promise.catch((err) => {
+        this.handleError(err.message, "err");
+      });
     }
 
     topic.publishDraft(msg, promise)
