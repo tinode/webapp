@@ -1893,7 +1893,10 @@ class TagManager extends React.Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    return {tags: nextProps.tags};
+    if (!arrayEqual(nextProps.tags, prevState.tags) && !prevState.activated) {
+      return {tags: nextProps.tags};
+    }
+    return null;
   }
 
   handleShowTagManager() {
@@ -1917,10 +1920,9 @@ class TagManager extends React.Component {
   handleAddTag(tag) {
     tag = tag.trim();
     if (tag.length > 0) {
-      var tags = this.state.tags.slice(0);
+      let tags = this.state.tags.slice(0);
       tags.push(tag);
       this.setState({tags: tags, tagInput: ''});
-
       if (this.props.onTagsChanged) {
         this.props.onTagsChanged(tags);
       }
@@ -1937,8 +1939,8 @@ class TagManager extends React.Component {
   }
 
   handleSubmit() {
-    var tags = this.state.tags.slice(0);
-    var inp = this.state.tagInput.trim();
+    let tags = this.state.tags.slice(0);
+    let inp = this.state.tagInput.trim();
     if (inp.length > 0) {
       tags.push(inp);
       if (this.props.onTagsChanged) {
@@ -1976,7 +1978,7 @@ class TagManager extends React.Component {
           <label className="small">{this.props.title}</label>
         </div>
         {this.state.activated ?
-          <div>
+        <div>
           <ChipInput
             chips={tags}
             avatarDisabled={true}
@@ -1992,14 +1994,14 @@ class TagManager extends React.Component {
               <button className="white" onClick={this.handleCancel}>Cancel</button>
             </div>
           : null}
-          </div>
+        </div>
         :
-          <div>
-            <a href="javascript:;" className="flat-button" onClick={this.handleShowTagManager}>
-              <i className="material-icons">edit</i> Manage tags
-            </a>
-            <span>{tags}</span>
-          </div>
+        <div>
+          <a href="javascript:;" className="flat-button" onClick={this.handleShowTagManager}>
+            <i className="material-icons">edit</i> Manage tags
+          </a>
+          <span>{tags}</span>
+        </div>
       }
       </div>
     );
@@ -3533,6 +3535,7 @@ class Attachment extends React.Component {
     );
   }
 };
+const NOT_FOUND_TOPIC_TITLE = "Not found";
 
 class MessagesView extends React.Component {
   constructor(props) {
@@ -3607,12 +3610,17 @@ class MessagesView extends React.Component {
       return;
     }
 
-    var tryToResubscribe = !this.props.connected && props.connected;
+    let topic = this.props.tinode.getTopic(props.topic);
+    if (!topic) {
+      return;
+    }
 
-    var topic = this.props.tinode.getTopic(props.topic);
+    let newGroupTopic = Tinode.isNewGroupTopicName(props.topic);
+    let tryToResubscribe = !this.props.connected && props.connected;
+
     if (props.topic != this.state.topic) {
-      var msgs = [];
-      var subs = [];
+      let msgs = [];
+      let subs = [];
 
       // Bind the new topic to component.
       topic.onData = this.handleNewMessage;
@@ -3657,21 +3665,26 @@ class MessagesView extends React.Component {
     });
 
     if (!topic.isSubscribed() && tryToResubscribe) {
-      var getQuery = topic.startMetaQuery()
+      let getQuery = topic.startMetaQuery()
         .withLaterDesc()
         .withLaterSub()
         .withLaterData(MESSAGES_PAGE)
         .withLaterDel();
+      let setQuery = newGroupTopic ? props.newGroupTopicParams : undefined;
       // Don't request the tags. They are useless unless the user
       // is the owner and is editing the topic.
       // getQuery = topic.getType() == 'grp' ? getQuery.withTags() : getQuery;
       // Show "loading" spinner.
       this.setState({ fetchingMessages: true });
-      topic.subscribe(getQuery.build())
+      topic.subscribe(getQuery.build(), setQuery)
+        .then((ctrl) => {
+          this.setState({topic: ctrl.topic});
+          this.props.onNewTopicCreated(props.topic, ctrl.topic);
+        })
         .catch((err) => {
           this.props.onError(err.message, "err");
           this.setState({
-            title: "Not found",
+            title: NOT_FOUND_TOPIC_TITLE,
             avatar: null,
             readOnly: true,
             writeOnly: true,
@@ -3683,20 +3696,24 @@ class MessagesView extends React.Component {
 
   leave() {
     if (this.state.topic) {
-      var oldTopic = this.props.tinode.getTopic(this.state.topic);
+      let oldTopic = this.props.tinode.getTopic(this.state.topic);
       if (oldTopic) {
         if (oldTopic.isSubscribed()) {
-          oldTopic.leave(false).catch(function(err) {
-            // do nothing
-            console.log(err);
-          });
+          oldTopic.leave(false)
+            .then((ctrl) => {
+              this.setState({fetchingMessages: false});
+              oldTopic.onData = undefined;
+              oldTopic.onAllMessagesReceived = undefined;
+              oldTopic.onInfo = undefined;
+              oldTopic.onMetaDesc = undefined;
+              oldTopic.onSubsUpdated = undefined;
+              oldTopic.onPres = undefined;
+            })
+            .catch((err) => {
+              // do nothing
+              console.log(err);
+            });
         }
-        oldTopic.onData = undefined;
-        oldTopic.onAllMessagesReceived = undefined;
-        oldTopic.onInfo = undefined;
-        oldTopic.onMetaDesc = undefined;
-        oldTopic.onSubsUpdated = undefined;
-        oldTopic.onPres = undefined;
       }
     }
   }
@@ -3733,6 +3750,11 @@ class MessagesView extends React.Component {
       this.setState({
         title: desc.public.fn,
         avatar: makeImageUrl(desc.public.photo)
+      });
+    } else {
+      this.setState({
+        title: NOT_FOUND_TOPIC_TITLE,
+        avatar: null
       });
     }
     if (desc.acs) {
@@ -4288,6 +4310,7 @@ class TinodeWeb extends React.Component {
     this.handleSidepanelCancel = this.handleSidepanelCancel.bind(this);
     this.handleNewTopic = this.handleNewTopic.bind(this);
     this.handleNewTopicRequest = this.handleNewTopicRequest.bind(this);
+    this.handleNewTopicCreated = this.handleNewTopicCreated.bind(this);
     this.handleTopicUpdateRequest = this.handleTopicUpdateRequest.bind(this);
     this.handleChangePermissions = this.handleChangePermissions.bind(this);
     this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
@@ -4332,6 +4355,7 @@ class TinodeWeb extends React.Component {
       topicSelected: '',
       topicSelectedOnline: false,
       topicSelectedAcs: null,
+      newGroupTopicParams: null,
       loginDisabled: false,
       displayMobile: (window.innerWidth <= MEDIA_BREAKPOINT),
       showInfoPanel: false,
@@ -4420,29 +4444,23 @@ class TinodeWeb extends React.Component {
   // Handle for hashchange event: display appropriate panels.
   handleHashRoute() {
     var hash = parseUrlHash(window.location.hash);
-    // Left-side panel selector.
     if (hash.path && hash.path.length > 0) {
+      // Left-side panel selector.
       if (['register','settings','edit','cred','newtpk','contacts',''].includes(hash.path[0])) {
         this.setState({sidePanelSelected: hash.path[0]});
       } else {
         console.log("Unknown sidepanel view", hash.path[0]);
       }
+
+      // Topic for MessagesView selector.
+      if (hash.path.length > 1 && hash.path[1] != this.state.topicSelected) {
+        this.setState({
+          topicSelected: Tinode.topicType(hash.path[1]) ? hash.path[1] : null
+        });
+      }
     } else {
       // Empty hashpath
       this.setState({sidePanelSelected: ''});
-    }
-    // Topic for MessagesView selector.
-    if (hash.path.length > 1 && hash.path[1] != this.state.topicSelected) {
-      var tp = Tinode.topicType(hash.path[1]);
-      if (tp) {
-        this.setState({
-          topicSelected: hash.path[1],
-          topicSelectedOnline: false,
-          topicSelectedAcs: null
-        });
-      } else {
-        this.setState({topicSelected: null});
-      }
     }
 
     // Save validation credentials, if available.
@@ -4771,13 +4789,7 @@ class TinodeWeb extends React.Component {
 
   // User clicked on a contact in the side panel or deleted a contact.
   handleTopicSelected(topicName, unused_index, online, acs) {
-    console.log("handleTopicSelected", topicName, online, acs);
-
     if (topicName) {
-      // Contact selected
-      if (this.state.topicSelected != topicName) {
-        navigateTo(setUrlTopic(window.location.hash, topicName));
-      }
       this.setState({
         errorText: '',
         errorLevel: null,
@@ -4786,10 +4798,11 @@ class TinodeWeb extends React.Component {
         topicSelectedAcs: acs,
         showInfoPanel: false
       });
-    } else {
-      if (this.state.topicSelected) {
-        navigateTo(setUrlTopic(window.location.hash, null));
+      // Contact selected
+      if (this.state.topicSelected != topicName) {
+        navigateTo(setUrlTopic("", topicName));
       }
+    } else {
       // Currently selected contact deleted
       this.setState({
         errorText: '',
@@ -4799,6 +4812,9 @@ class TinodeWeb extends React.Component {
         topicSelectedAcs: null,
         showInfoPanel: false
       });
+      if (this.state.topicSelected) {
+        navigateTo(setUrlTopic("", null));
+      }
     }
   }
 
@@ -4926,24 +4942,29 @@ class TinodeWeb extends React.Component {
     navigateTo(setUrlSidePanel(window.location.hash, 'newtpk'));
   }
 
-  // Create a new topic. New P2P topic requires peer's name.
+  // Request to start a new topic. New P2P topic requires peer's name.
   handleNewTopicRequest(peerName, pub, priv, tags) {
-    var topic = peerName ? this.state.tinode.newTopicWith(peerName) : this.state.tinode.newTopic();
-    var query = topic.startMetaQuery().withDesc().withSub().withData();
-    var setParams;
+    var topicName = peerName || this.state.tinode.newGroupTopicName();
     if (!peerName) {
-      // Creator is the owner, has access to tags.
-      // Fetch default group topic tags, if any.
-      query = query.withTags();
-      setParams = {desc: {public: pub, private: priv}, tags: tags};
+      this.setState(
+        {newGroupTopicParams: {desc: {public: pub, private: priv}, tags: tags}},
+        () => {this.handleTopicSelected(topicName)}
+      );
+    } else {
+      this.handleTopicSelected(topicName);
     }
-    topic.subscribe(query.build(), setParams).then(() => {
-      navigateTo(setUrlSidePanel(window.location.hash, 'contacts'));
-      this.handleTopicSelected(topic.name, undefined,
-        this.state.tinode.isTopicOnline(topic.name), topic.getAccessMode());
-    }).catch((err) => {
-      this.handleError(err.message, "err");
-    });
+  }
+
+  // New topic was creted, here is the new topic name.
+  handleNewTopicCreated(oldName, newName) {
+    console.log("handleNewTopicCreated", oldName, newName);
+
+    if (this.state.topicSelected == oldName && oldName != newName) {
+      // If the current URl contains the old topic name, replace it with new.
+      // Update the name of the selected topic first so the navigator doen't clear
+      // the state.
+      this.setState({topicSelected: newName}, () => { navigateTo(setUrlTopic("", newName)); });
+    }
   }
 
   handleTopicUpdateRequest(topicName, pub, priv, permissions) {
@@ -5179,10 +5200,12 @@ class TinodeWeb extends React.Component {
           serverAddress={this.state.serverAddress}
           errorText={this.state.errorText}
           errorLevel={this.state.errorLevel}
+          newGroupTopicParams={this.state.newGroupTopicParams}
 
           onHideMessagesView={this.handleHideMessagesView}
           onData={this.tnData}
           onError={this.handleError}
+          onNewTopicCreated={this.handleNewTopicCreated}
           readTimerHandler={this.handleReadTimer}
           showContextMenu={this.handleShowContextMenu}
           sendMessage={this.handleSendMessage} />
