@@ -2,13 +2,16 @@
 
 Single-page web chat application built with [Tinode](https://github.com/tinode/chat/). The app uses
 [React](https://facebook.github.io/react/), Google's material design [fonts](https://www.google.com/fonts/)
-and [icons](https://google.github.io/material-design-icons/#icon-font-for-the-web). The [Tinode javascript library](https://github.com/tinode/tinode-js/) has no external dependencies. Overall it's a lot like open source WhatsApp or Telegram web apps.
+and [icons](https://google.github.io/material-design-icons/#icon-font-for-the-web). The [Tinode javascript SDK](https://github.com/tinode/tinode-js/) has no external dependencies.
+Overall it's a lot like open source WhatsApp or Telegram web apps.
+
+The app is very small: all in all less than 150KB minified and gzipped. That includes React, ReactDOM, fonts, graphics, css etc.
 
 Although the app is generally usable, keep in mind that this is work in progress. Some bugs probably exist. The app was tested in the latest Chrome & Firefox only. NPM [is available](https://www.npmjs.com/package/tinode-webapp).
 
 Try possibly newer or older version live at https://api.tinode.co/. For login and other instructions [see here](https://github.com/tinode/chat/#demo).
 
-Sample avatar photos from https://www.pexels.com/ under [CC0 license](https://www.pexels.com/photo-license/).
+Demo avatar photos are from https://www.pexels.com/ under [CC0 license](https://www.pexels.com/photo-license/).
 
 Background pattern from http://subtlepatterns.com/, commercial and non-commercial use allowed with attribution.
 
