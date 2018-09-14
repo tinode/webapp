@@ -18455,10 +18455,10 @@ if (process.env.NODE_ENV === 'production') {
 }).call(this,require('_process'))
 },{"./cjs/react-dom.development.js":18,"./cjs/react-dom.production.min.js":19,"_process":27}],21:[function(require,module,exports){
 (function (process){
-/** @license React v16.4.2
+/** @license React v16.5.1
  * react.development.js
  *
- * Copyright (c) 2013-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -18473,15 +18473,11 @@ if (process.env.NODE_ENV !== "production") {
 'use strict';
 
 var _assign = require('object-assign');
-var invariant = require('fbjs/lib/invariant');
-var emptyObject = require('fbjs/lib/emptyObject');
-var warning = require('fbjs/lib/warning');
-var emptyFunction = require('fbjs/lib/emptyFunction');
 var checkPropTypes = require('prop-types/checkPropTypes');
 
 // TODO: this is special because it gets imported during build.
 
-var ReactVersion = '16.4.2';
+var ReactVersion = '16.5.1';
 
 // The Symbol used to tag the ReactElement-like types. If there is no native Symbol
 // nor polyfill, then a plain number is used for performance.
@@ -18496,13 +18492,13 @@ var REACT_PROVIDER_TYPE = hasSymbol ? Symbol.for('react.provider') : 0xeacd;
 var REACT_CONTEXT_TYPE = hasSymbol ? Symbol.for('react.context') : 0xeace;
 var REACT_ASYNC_MODE_TYPE = hasSymbol ? Symbol.for('react.async_mode') : 0xeacf;
 var REACT_FORWARD_REF_TYPE = hasSymbol ? Symbol.for('react.forward_ref') : 0xead0;
-var REACT_TIMEOUT_TYPE = hasSymbol ? Symbol.for('react.timeout') : 0xead1;
+var REACT_PLACEHOLDER_TYPE = hasSymbol ? Symbol.for('react.placeholder') : 0xead1;
 
 var MAYBE_ITERATOR_SYMBOL = typeof Symbol === 'function' && Symbol.iterator;
 var FAUX_ITERATOR_SYMBOL = '@@iterator';
 
 function getIteratorFn(maybeIterable) {
-  if (maybeIterable === null || typeof maybeIterable === 'undefined') {
+  if (maybeIterable === null || typeof maybeIterable !== 'object') {
     return null;
   }
   var maybeIterator = MAYBE_ITERATOR_SYMBOL && maybeIterable[MAYBE_ITERATOR_SYMBOL] || maybeIterable[FAUX_ITERATOR_SYMBOL];
@@ -18511,9 +18507,6 @@ function getIteratorFn(maybeIterable) {
   }
   return null;
 }
-
-// Relying on the `invariant()` implementation lets us
-// have preserve the format and params in the www builds.
 
 // Exports ReactDOM.createRoot
 
@@ -18545,7 +18538,62 @@ var enableSuspense = false;
 // Gather advanced timing metrics for Profiler subtrees.
 
 
+// Track which interactions trigger each commit.
+
+
 // Only used in www builds.
+
+
+// Only used in www builds.
+
+
+// React Fire: prevent the value and checked attributes from syncing
+// with their related DOM properties
+
+/**
+ * Use invariant() to assert state which your program assumes to be true.
+ *
+ * Provide sprintf-style format (only %s is supported) and arguments
+ * to provide information about what broke and what you were
+ * expecting.
+ *
+ * The invariant message will be stripped in production, but the invariant
+ * will remain to ensure logic does not differ in production.
+ */
+
+var validateFormat = function () {};
+
+{
+  validateFormat = function (format) {
+    if (format === undefined) {
+      throw new Error('invariant requires an error message argument');
+    }
+  };
+}
+
+function invariant(condition, format, a, b, c, d, e, f) {
+  validateFormat(format);
+
+  if (!condition) {
+    var error = void 0;
+    if (format === undefined) {
+      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
+    } else {
+      var args = [a, b, c, d, e, f];
+      var argIndex = 0;
+      error = new Error(format.replace(/%s/g, function () {
+        return args[argIndex++];
+      }));
+      error.name = 'Invariant Violation';
+    }
+
+    error.framesToPop = 1; // we don't care about invariant's own frame
+    throw error;
+  }
+}
+
+// Relying on the `invariant()` implementation lets us
+// preserve the format and params in the www builds.
 
 /**
  * Forked from fbjs/warning:
@@ -18586,7 +18634,7 @@ var lowPriorityWarning = function () {};
 
   lowPriorityWarning = function (condition, format) {
     if (format === undefined) {
-      throw new Error('`warning(condition, format, ...args)` requires a warning ' + 'message argument');
+      throw new Error('`lowPriorityWarning(condition, format, ...args)` requires a warning ' + 'message argument');
     }
     if (!condition) {
       for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
@@ -18600,6 +18648,95 @@ var lowPriorityWarning = function () {};
 
 var lowPriorityWarning$1 = lowPriorityWarning;
 
+/**
+ * Similar to invariant but only logs a warning if the condition is not met.
+ * This can be used to log issues in development environments in critical
+ * paths. Removing the logging code for production environments will keep the
+ * same logic and follow the same code paths.
+ */
+
+var warningWithoutStack = function () {};
+
+{
+  warningWithoutStack = function (condition, format) {
+    for (var _len = arguments.length, args = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+      args[_key - 2] = arguments[_key];
+    }
+
+    if (format === undefined) {
+      throw new Error('`warningWithoutStack(condition, format, ...args)` requires a warning ' + 'message argument');
+    }
+    if (args.length > 8) {
+      // Check before the condition to catch violations early.
+      throw new Error('warningWithoutStack() currently supports at most 8 arguments.');
+    }
+    if (condition) {
+      return;
+    }
+    if (typeof console !== 'undefined') {
+      var _args$map = args.map(function (item) {
+        return '' + item;
+      }),
+          a = _args$map[0],
+          b = _args$map[1],
+          c = _args$map[2],
+          d = _args$map[3],
+          e = _args$map[4],
+          f = _args$map[5],
+          g = _args$map[6],
+          h = _args$map[7];
+
+      var message = 'Warning: ' + format;
+
+      // We intentionally don't use spread (or .apply) because it breaks IE9:
+      // https://github.com/facebook/react/issues/13610
+      switch (args.length) {
+        case 0:
+          console.error(message);
+          break;
+        case 1:
+          console.error(message, a);
+          break;
+        case 2:
+          console.error(message, a, b);
+          break;
+        case 3:
+          console.error(message, a, b, c);
+          break;
+        case 4:
+          console.error(message, a, b, c, d);
+          break;
+        case 5:
+          console.error(message, a, b, c, d, e);
+          break;
+        case 6:
+          console.error(message, a, b, c, d, e, f);
+          break;
+        case 7:
+          console.error(message, a, b, c, d, e, f, g);
+          break;
+        case 8:
+          console.error(message, a, b, c, d, e, f, g, h);
+          break;
+        default:
+          throw new Error('warningWithoutStack() currently supports at most 8 arguments.');
+      }
+    }
+    try {
+      // --- Welcome to debugging React ---
+      // This error was thrown as a convenience so that you can use this stack
+      // to find the callsite that caused this warning to fire.
+      var argIndex = 0;
+      var _message = 'Warning: ' + format.replace(/%s/g, function () {
+        return args[argIndex++];
+      });
+      throw new Error(_message);
+    } catch (x) {}
+  };
+}
+
+var warningWithoutStack$1 = warningWithoutStack;
+
 var didWarnStateUpdateForUnmountedComponent = {};
 
 function warnNoop(publicInstance, callerName) {
@@ -18610,7 +18747,7 @@ function warnNoop(publicInstance, callerName) {
     if (didWarnStateUpdateForUnmountedComponent[warningKey]) {
       return;
     }
-    warning(false, "Can't call %s on a component that is not yet mounted. " + 'This is a no-op, but it might indicate a bug in your application. ' + 'Instead, assign to `this.state` directly or define a `state = {};` ' + 'class property with the desired state in the %s component.', callerName, componentName);
+    warningWithoutStack$1(false, "Can't call %s on a component that is not yet mounted. " + 'This is a no-op, but it might indicate a bug in your application. ' + 'Instead, assign to `this.state` directly or define a `state = {};` ' + 'class property with the desired state in the %s component.', callerName, componentName);
     didWarnStateUpdateForUnmountedComponent[warningKey] = true;
   }
 }
@@ -18683,12 +18820,18 @@ var ReactNoopUpdateQueue = {
   }
 };
 
+var emptyObject = {};
+{
+  Object.freeze(emptyObject);
+}
+
 /**
  * Base class helpers for the updating state of a component.
  */
 function Component(props, context, updater) {
   this.props = props;
   this.context = context;
+  // If a component has string refs, we will assign a different object later.
   this.refs = emptyObject;
   // We initialize the default updater but the real one gets injected by the
   // renderer.
@@ -18779,6 +18922,7 @@ ComponentDummy.prototype = Component.prototype;
 function PureComponent(props, context, updater) {
   this.props = props;
   this.context = context;
+  // If a component has string refs, we will assign a different object later.
   this.refs = emptyObject;
   this.updater = updater || ReactNoopUpdateQueue;
 }
@@ -18811,8 +18955,176 @@ var ReactCurrentOwner = {
    * @internal
    * @type {ReactComponent}
    */
-  current: null
+  current: null,
+  currentDispatcher: null
 };
+
+var BEFORE_SLASH_RE = /^(.*)[\\\/]/;
+
+var describeComponentFrame = function (name, source, ownerName) {
+  var sourceInfo = '';
+  if (source) {
+    var path = source.fileName;
+    var fileName = path.replace(BEFORE_SLASH_RE, '');
+    {
+      // In DEV, include code for a common special case:
+      // prefer "folder/index.js" instead of just "index.js".
+      if (/^index\./.test(fileName)) {
+        var match = path.match(BEFORE_SLASH_RE);
+        if (match) {
+          var pathBeforeSlash = match[1];
+          if (pathBeforeSlash) {
+            var folderName = pathBeforeSlash.replace(BEFORE_SLASH_RE, '');
+            fileName = folderName + '/' + fileName;
+          }
+        }
+      }
+    }
+    sourceInfo = ' (at ' + fileName + ':' + source.lineNumber + ')';
+  } else if (ownerName) {
+    sourceInfo = ' (created by ' + ownerName + ')';
+  }
+  return '\n    in ' + (name || 'Unknown') + sourceInfo;
+};
+
+var Resolved = 1;
+
+
+
+
+function refineResolvedThenable(thenable) {
+  return thenable._reactStatus === Resolved ? thenable._reactResult : null;
+}
+
+function getComponentName(type) {
+  if (type == null) {
+    // Host root, text node or just invalid type.
+    return null;
+  }
+  {
+    if (typeof type.tag === 'number') {
+      warningWithoutStack$1(false, 'Received an unexpected object in getComponentName(). ' + 'This is likely a bug in React. Please file an issue.');
+    }
+  }
+  if (typeof type === 'function') {
+    return type.displayName || type.name || null;
+  }
+  if (typeof type === 'string') {
+    return type;
+  }
+  switch (type) {
+    case REACT_ASYNC_MODE_TYPE:
+      return 'AsyncMode';
+    case REACT_FRAGMENT_TYPE:
+      return 'Fragment';
+    case REACT_PORTAL_TYPE:
+      return 'Portal';
+    case REACT_PROFILER_TYPE:
+      return 'Profiler';
+    case REACT_STRICT_MODE_TYPE:
+      return 'StrictMode';
+    case REACT_PLACEHOLDER_TYPE:
+      return 'Placeholder';
+  }
+  if (typeof type === 'object') {
+    switch (type.$$typeof) {
+      case REACT_CONTEXT_TYPE:
+        return 'Context.Consumer';
+      case REACT_PROVIDER_TYPE:
+        return 'Context.Provider';
+      case REACT_FORWARD_REF_TYPE:
+        var renderFn = type.render;
+        var functionName = renderFn.displayName || renderFn.name || '';
+        return type.displayName || (functionName !== '' ? 'ForwardRef(' + functionName + ')' : 'ForwardRef');
+    }
+    if (typeof type.then === 'function') {
+      var thenable = type;
+      var resolvedThenable = refineResolvedThenable(thenable);
+      if (resolvedThenable) {
+        return getComponentName(resolvedThenable);
+      }
+    }
+  }
+  return null;
+}
+
+var ReactDebugCurrentFrame = {};
+
+var currentlyValidatingElement = null;
+
+function setCurrentlyValidatingElement(element) {
+  {
+    currentlyValidatingElement = element;
+  }
+}
+
+{
+  // Stack implementation injected by the current renderer.
+  ReactDebugCurrentFrame.getCurrentStack = null;
+
+  ReactDebugCurrentFrame.getStackAddendum = function () {
+    var stack = '';
+
+    // Add an extra top frame while an element is being validated
+    if (currentlyValidatingElement) {
+      var name = getComponentName(currentlyValidatingElement.type);
+      var owner = currentlyValidatingElement._owner;
+      stack += describeComponentFrame(name, currentlyValidatingElement._source, owner && getComponentName(owner.type));
+    }
+
+    // Delegate to the injected renderer-specific implementation
+    var impl = ReactDebugCurrentFrame.getCurrentStack;
+    if (impl) {
+      stack += impl() || '';
+    }
+
+    return stack;
+  };
+}
+
+var ReactSharedInternals = {
+  ReactCurrentOwner: ReactCurrentOwner,
+  // Used by renderers to avoid bundling object-assign twice in UMD bundles:
+  assign: _assign
+};
+
+{
+  _assign(ReactSharedInternals, {
+    // These should not be included in production.
+    ReactDebugCurrentFrame: ReactDebugCurrentFrame,
+    // Shim for React DOM 16.0.0 which still destructured (but not used) this.
+    // TODO: remove in React 17.0.
+    ReactComponentTreeHook: {}
+  });
+}
+
+/**
+ * Similar to invariant but only logs a warning if the condition is not met.
+ * This can be used to log issues in development environments in critical
+ * paths. Removing the logging code for production environments will keep the
+ * same logic and follow the same code paths.
+ */
+
+var warning = warningWithoutStack$1;
+
+{
+  warning = function (condition, format) {
+    if (condition) {
+      return;
+    }
+    var ReactDebugCurrentFrame = ReactSharedInternals.ReactDebugCurrentFrame;
+    var stack = ReactDebugCurrentFrame.getStackAddendum();
+    // eslint-disable-next-line react-internal/warning-and-invariant-args
+
+    for (var _len = arguments.length, args = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+      args[_key - 2] = arguments[_key];
+    }
+
+    warningWithoutStack$1.apply(undefined, [false, format + '%s'].concat(args, [stack]));
+  };
+}
+
+var warning$1 = warning;
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
 
@@ -18854,7 +19166,7 @@ function defineKeyPropWarningGetter(props, displayName) {
   var warnAboutAccessingKey = function () {
     if (!specialPropKeyWarningShown) {
       specialPropKeyWarningShown = true;
-      warning(false, '%s: `key` is not a prop. Trying to access it will result ' + 'in `undefined` being returned. If you need to access the same ' + 'value within the child component, you should pass it as a different ' + 'prop. (https://fb.me/react-special-props)', displayName);
+      warningWithoutStack$1(false, '%s: `key` is not a prop. Trying to access it will result ' + 'in `undefined` being returned. If you need to access the same ' + 'value within the child component, you should pass it as a different ' + 'prop. (https://fb.me/react-special-props)', displayName);
     }
   };
   warnAboutAccessingKey.isReactWarning = true;
@@ -18868,7 +19180,7 @@ function defineRefPropWarningGetter(props, displayName) {
   var warnAboutAccessingRef = function () {
     if (!specialPropRefWarningShown) {
       specialPropRefWarningShown = true;
-      warning(false, '%s: `ref` is not a prop. Trying to access it will result ' + 'in `undefined` being returned. If you need to access the same ' + 'value within the child component, you should pass it as a different ' + 'prop. (https://fb.me/react-special-props)', displayName);
+      warningWithoutStack$1(false, '%s: `ref` is not a prop. Trying to access it will result ' + 'in `undefined` being returned. If you need to access the same ' + 'value within the child component, you should pass it as a different ' + 'prop. (https://fb.me/react-special-props)', displayName);
     }
   };
   warnAboutAccessingRef.isReactWarning = true;
@@ -19016,14 +19328,12 @@ function createElement(type, config, children) {
   }
   {
     if (key || ref) {
-      if (typeof props.$$typeof === 'undefined' || props.$$typeof !== REACT_ELEMENT_TYPE) {
-        var displayName = typeof type === 'function' ? type.displayName || type.name || 'Unknown' : type;
-        if (key) {
-          defineKeyPropWarningGetter(props, displayName);
-        }
-        if (ref) {
-          defineRefPropWarningGetter(props, displayName);
-        }
+      var displayName = typeof type === 'function' ? type.displayName || type.name || 'Unknown' : type;
+      if (key) {
+        defineKeyPropWarningGetter(props, displayName);
+      }
+      if (ref) {
+        defineRefPropWarningGetter(props, displayName);
       }
     }
   }
@@ -19114,26 +19424,11 @@ function cloneElement(element, config, children) {
  * Verifies the object is a ReactElement.
  * See https://reactjs.org/docs/react-api.html#isvalidelement
  * @param {?object} object
- * @return {boolean} True if `object` is a valid component.
+ * @return {boolean} True if `object` is a ReactElement.
  * @final
  */
 function isValidElement(object) {
   return typeof object === 'object' && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
-}
-
-var ReactDebugCurrentFrame = {};
-
-{
-  // Component that is being worked on
-  ReactDebugCurrentFrame.getCurrentStack = null;
-
-  ReactDebugCurrentFrame.getStackAddendum = function () {
-    var impl = ReactDebugCurrentFrame.getCurrentStack;
-    if (impl) {
-      return impl();
-    }
-    return null;
-  };
 }
 
 var SEPARATOR = '.';
@@ -19263,7 +19558,7 @@ function traverseAllChildrenImpl(children, nameSoFar, callback, traverseContext)
       {
         // Warn about using Maps as children
         if (iteratorFn === children.entries) {
-          !didWarnAboutMaps ? warning(false, 'Using Maps as children is unsupported and will likely yield ' + 'unexpected results. Convert it to a sequence/iterable of keyed ' + 'ReactElements instead.%s', ReactDebugCurrentFrame.getStackAddendum()) : void 0;
+          !didWarnAboutMaps ? warning$1(false, 'Using Maps as children is unsupported and will likely yield ' + 'unexpected results. Convert it to a sequence/iterable of keyed ' + 'ReactElements instead.') : void 0;
           didWarnAboutMaps = true;
         }
       }
@@ -19368,7 +19663,9 @@ function mapSingleChildIntoContext(bookKeeping, child, childKey) {
 
   var mappedChild = func.call(context, child, bookKeeping.count++);
   if (Array.isArray(mappedChild)) {
-    mapIntoWithKeyPrefixInternal(mappedChild, result, childKey, emptyFunction.thatReturnsArgument);
+    mapIntoWithKeyPrefixInternal(mappedChild, result, childKey, function (c) {
+      return c;
+    });
   } else if (mappedChild != null) {
     if (isValidElement(mappedChild)) {
       mappedChild = cloneAndReplaceKey(mappedChild,
@@ -19422,7 +19719,9 @@ function mapChildren(children, func, context) {
  * @return {number} The number of children.
  */
 function countChildren(children) {
-  return traverseAllChildren(children, emptyFunction.thatReturnsNull, null);
+  return traverseAllChildren(children, function () {
+    return null;
+  }, null);
 }
 
 /**
@@ -19433,7 +19732,9 @@ function countChildren(children) {
  */
 function toArray(children) {
   var result = [];
-  mapIntoWithKeyPrefixInternal(children, result, null, emptyFunction.thatReturnsArgument);
+  mapIntoWithKeyPrefixInternal(children, result, null, function (child) {
+    return child;
+  });
   return result;
 }
 
@@ -19456,31 +19757,35 @@ function onlyChild(children) {
   return children;
 }
 
+function readContext(context, observedBits) {
+  var dispatcher = ReactCurrentOwner.currentDispatcher;
+  !(dispatcher !== null) ? invariant(false, 'Context.unstable_read(): Context can only be read while React is rendering, e.g. inside the render method or getDerivedStateFromProps.') : void 0;
+  return dispatcher.readContext(context, observedBits);
+}
+
 function createContext(defaultValue, calculateChangedBits) {
   if (calculateChangedBits === undefined) {
     calculateChangedBits = null;
   } else {
     {
-      !(calculateChangedBits === null || typeof calculateChangedBits === 'function') ? warning(false, 'createContext: Expected the optional second argument to be a ' + 'function. Instead received: %s', calculateChangedBits) : void 0;
+      !(calculateChangedBits === null || typeof calculateChangedBits === 'function') ? warningWithoutStack$1(false, 'createContext: Expected the optional second argument to be a ' + 'function. Instead received: %s', calculateChangedBits) : void 0;
     }
   }
 
   var context = {
     $$typeof: REACT_CONTEXT_TYPE,
     _calculateChangedBits: calculateChangedBits,
-    _defaultValue: defaultValue,
-    _currentValue: defaultValue,
     // As a workaround to support multiple concurrent renderers, we categorize
     // some renderers as primary and others as secondary. We only expect
     // there to be two concurrent renderers at most: React Native (primary) and
     // Fabric (secondary); React DOM (primary) and React ART (secondary).
     // Secondary renderers store their context values on separate fields.
+    _currentValue: defaultValue,
     _currentValue2: defaultValue,
-    _changedBits: 0,
-    _changedBits2: 0,
     // These are circular
     Provider: null,
-    Consumer: null
+    Consumer: null,
+    unstable_read: null
   };
 
   context.Provider = {
@@ -19488,6 +19793,7 @@ function createContext(defaultValue, calculateChangedBits) {
     _context: context
   };
   context.Consumer = context;
+  context.unstable_read = readContext.bind(null, context);
 
   {
     context._currentRenderer = null;
@@ -19497,12 +19803,36 @@ function createContext(defaultValue, calculateChangedBits) {
   return context;
 }
 
+function lazy(ctor) {
+  var thenable = null;
+  return {
+    then: function (resolve, reject) {
+      if (thenable === null) {
+        // Lazily create thenable by wrapping in an extra thenable.
+        thenable = ctor();
+        ctor = null;
+      }
+      return thenable.then(resolve, reject);
+    },
+
+    // React uses these fields to store the result.
+    _reactStatus: -1,
+    _reactResult: null
+  };
+}
+
 function forwardRef(render) {
   {
-    !(typeof render === 'function') ? warning(false, 'forwardRef requires a render function but was given %s.', render === null ? 'null' : typeof render) : void 0;
+    if (typeof render !== 'function') {
+      warningWithoutStack$1(false, 'forwardRef requires a render function but was given %s.', render === null ? 'null' : typeof render);
+    } else {
+      !(
+      // Do not warn for 0 arguments because it could be due to usage of the 'arguments' object
+      render.length === 0 || render.length === 2) ? warningWithoutStack$1(false, 'forwardRef render functions accept exactly two parameters: props and ref. %s', render.length === 1 ? 'Did you forget to use the ref parameter?' : 'Any additional parameter will be undefined.') : void 0;
+    }
 
     if (render != null) {
-      !(render.defaultProps == null && render.propTypes == null) ? warning(false, 'forwardRef render functions do not support propTypes or defaultProps. ' + 'Did you accidentally pass a React component?') : void 0;
+      !(render.defaultProps == null && render.propTypes == null) ? warningWithoutStack$1(false, 'forwardRef render functions do not support propTypes or defaultProps. ' + 'Did you accidentally pass a React component?') : void 0;
     }
   }
 
@@ -19512,51 +19842,10 @@ function forwardRef(render) {
   };
 }
 
-var describeComponentFrame = function (name, source, ownerName) {
-  return '\n    in ' + (name || 'Unknown') + (source ? ' (at ' + source.fileName.replace(/^.*[\\\/]/, '') + ':' + source.lineNumber + ')' : ownerName ? ' (created by ' + ownerName + ')' : '');
-};
-
 function isValidElementType(type) {
   return typeof type === 'string' || typeof type === 'function' ||
   // Note: its typeof might be other than 'symbol' or 'number' if it's a polyfill.
-  type === REACT_FRAGMENT_TYPE || type === REACT_ASYNC_MODE_TYPE || type === REACT_PROFILER_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_TIMEOUT_TYPE || typeof type === 'object' && type !== null && (type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE);
-}
-
-function getComponentName(fiber) {
-  var type = fiber.type;
-
-  if (typeof type === 'function') {
-    return type.displayName || type.name;
-  }
-  if (typeof type === 'string') {
-    return type;
-  }
-  switch (type) {
-    case REACT_ASYNC_MODE_TYPE:
-      return 'AsyncMode';
-    case REACT_CONTEXT_TYPE:
-      return 'Context.Consumer';
-    case REACT_FRAGMENT_TYPE:
-      return 'ReactFragment';
-    case REACT_PORTAL_TYPE:
-      return 'ReactPortal';
-    case REACT_PROFILER_TYPE:
-      return 'Profiler(' + fiber.pendingProps.id + ')';
-    case REACT_PROVIDER_TYPE:
-      return 'Context.Provider';
-    case REACT_STRICT_MODE_TYPE:
-      return 'StrictMode';
-    case REACT_TIMEOUT_TYPE:
-      return 'Timeout';
-  }
-  if (typeof type === 'object' && type !== null) {
-    switch (type.$$typeof) {
-      case REACT_FORWARD_REF_TYPE:
-        var functionName = type.render.displayName || type.render.name || '';
-        return functionName !== '' ? 'ForwardRef(' + functionName + ')' : 'ForwardRef';
-    }
-  }
-  return null;
+  type === REACT_FRAGMENT_TYPE || type === REACT_ASYNC_MODE_TYPE || type === REACT_PROFILER_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_PLACEHOLDER_TYPE || typeof type === 'object' && type !== null && (typeof type.then === 'function' || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE);
 }
 
 /**
@@ -19566,52 +19855,15 @@ function getComponentName(fiber) {
  * that support it.
  */
 
-var currentlyValidatingElement = void 0;
 var propTypesMisspellWarningShown = void 0;
 
-var getDisplayName = function () {};
-var getStackAddendum = function () {};
-
 {
-  currentlyValidatingElement = null;
-
   propTypesMisspellWarningShown = false;
-
-  getDisplayName = function (element) {
-    if (element == null) {
-      return '#empty';
-    } else if (typeof element === 'string' || typeof element === 'number') {
-      return '#text';
-    } else if (typeof element.type === 'string') {
-      return element.type;
-    }
-
-    var type = element.type;
-    if (type === REACT_FRAGMENT_TYPE) {
-      return 'React.Fragment';
-    } else if (typeof type === 'object' && type !== null && type.$$typeof === REACT_FORWARD_REF_TYPE) {
-      var functionName = type.render.displayName || type.render.name || '';
-      return functionName !== '' ? 'ForwardRef(' + functionName + ')' : 'ForwardRef';
-    } else {
-      return type.displayName || type.name || 'Unknown';
-    }
-  };
-
-  getStackAddendum = function () {
-    var stack = '';
-    if (currentlyValidatingElement) {
-      var name = getDisplayName(currentlyValidatingElement);
-      var owner = currentlyValidatingElement._owner;
-      stack += describeComponentFrame(name, currentlyValidatingElement._source, owner && getComponentName(owner));
-    }
-    stack += ReactDebugCurrentFrame.getStackAddendum() || '';
-    return stack;
-  };
 }
 
 function getDeclarationErrorAddendum() {
   if (ReactCurrentOwner.current) {
-    var name = getComponentName(ReactCurrentOwner.current);
+    var name = getComponentName(ReactCurrentOwner.current.type);
     if (name) {
       return '\n\nCheck the render method of `' + name + '`.';
     }
@@ -19677,14 +19929,14 @@ function validateExplicitKey(element, parentType) {
   var childOwner = '';
   if (element && element._owner && element._owner !== ReactCurrentOwner.current) {
     // Give the component that originally created this child.
-    childOwner = ' It was passed a child from ' + getComponentName(element._owner) + '.';
+    childOwner = ' It was passed a child from ' + getComponentName(element._owner.type) + '.';
   }
 
-  currentlyValidatingElement = element;
+  setCurrentlyValidatingElement(element);
   {
-    warning(false, 'Each child in an array or iterator should have a unique "key" prop.' + '%s%s See https://fb.me/react-warning-keys for more information.%s', currentComponentErrorInfo, childOwner, getStackAddendum());
+    warning$1(false, 'Each child in an array or iterator should have a unique "key" prop.' + '%s%s See https://fb.me/react-warning-keys for more information.', currentComponentErrorInfo, childOwner);
   }
-  currentlyValidatingElement = null;
+  setCurrentlyValidatingElement(null);
 }
 
 /**
@@ -19747,21 +19999,21 @@ function validatePropTypes(element) {
   } else if (typeof type === 'object' && type !== null && type.$$typeof === REACT_FORWARD_REF_TYPE) {
     // ForwardRef
     var functionName = type.render.displayName || type.render.name || '';
-    name = functionName !== '' ? 'ForwardRef(' + functionName + ')' : 'ForwardRef';
+    name = type.displayName || (functionName !== '' ? 'ForwardRef(' + functionName + ')' : 'ForwardRef');
     propTypes = type.propTypes;
   } else {
     return;
   }
   if (propTypes) {
-    currentlyValidatingElement = element;
-    checkPropTypes(propTypes, element.props, 'prop', name, getStackAddendum);
-    currentlyValidatingElement = null;
+    setCurrentlyValidatingElement(element);
+    checkPropTypes(propTypes, element.props, 'prop', name, ReactDebugCurrentFrame.getStackAddendum);
+    setCurrentlyValidatingElement(null);
   } else if (type.PropTypes !== undefined && !propTypesMisspellWarningShown) {
     propTypesMisspellWarningShown = true;
-    warning(false, 'Component %s declared `PropTypes` instead of `propTypes`. Did you misspell the property assignment?', name || 'Unknown');
+    warningWithoutStack$1(false, 'Component %s declared `PropTypes` instead of `propTypes`. Did you misspell the property assignment?', name || 'Unknown');
   }
   if (typeof type.getDefaultProps === 'function') {
-    !type.getDefaultProps.isReactClassApproved ? warning(false, 'getDefaultProps is only used on classic React.createClass ' + 'definitions. Use a static property named `defaultProps` instead.') : void 0;
+    !type.getDefaultProps.isReactClassApproved ? warningWithoutStack$1(false, 'getDefaultProps is only used on classic React.createClass ' + 'definitions. Use a static property named `defaultProps` instead.') : void 0;
   }
 }
 
@@ -19770,22 +20022,22 @@ function validatePropTypes(element) {
  * @param {ReactElement} fragment
  */
 function validateFragmentProps(fragment) {
-  currentlyValidatingElement = fragment;
+  setCurrentlyValidatingElement(fragment);
 
   var keys = Object.keys(fragment.props);
   for (var i = 0; i < keys.length; i++) {
     var key = keys[i];
     if (key !== 'children' && key !== 'key') {
-      warning(false, 'Invalid prop `%s` supplied to `React.Fragment`. ' + 'React.Fragment can only have `key` and `children` props.%s', key, getStackAddendum());
+      warning$1(false, 'Invalid prop `%s` supplied to `React.Fragment`. ' + 'React.Fragment can only have `key` and `children` props.', key);
       break;
     }
   }
 
   if (fragment.ref !== null) {
-    warning(false, 'Invalid attribute `ref` supplied to `React.Fragment`.%s', getStackAddendum());
+    warning$1(false, 'Invalid attribute `ref` supplied to `React.Fragment`.');
   }
 
-  currentlyValidatingElement = null;
+  setCurrentlyValidatingElement(null);
 }
 
 function createElementWithValidation(type, props, children) {
@@ -19806,18 +20058,19 @@ function createElementWithValidation(type, props, children) {
       info += getDeclarationErrorAddendum();
     }
 
-    info += getStackAddendum() || '';
-
     var typeString = void 0;
     if (type === null) {
       typeString = 'null';
     } else if (Array.isArray(type)) {
       typeString = 'array';
+    } else if (type !== undefined && type.$$typeof === REACT_ELEMENT_TYPE) {
+      typeString = '<' + (getComponentName(type.type) || 'Unknown') + ' />';
+      info = ' Did you accidentally export a JSX literal instead of a component?';
     } else {
       typeString = typeof type;
     }
 
-    warning(false, 'React.createElement: type is invalid -- expected a string (for ' + 'built-in components) or a class/function (for composite ' + 'components) but got: %s.%s', typeString, info);
+    warning$1(false, 'React.createElement: type is invalid -- expected a string (for ' + 'built-in components) or a class/function (for composite ' + 'components) but got: %s.%s', typeString, info);
   }
 
   var element = createElement.apply(this, arguments);
@@ -19905,25 +20158,12 @@ var React = {
 
   version: ReactVersion,
 
-  __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED: {
-    ReactCurrentOwner: ReactCurrentOwner,
-    // Used by renderers to avoid bundling object-assign twice in UMD bundles:
-    assign: _assign
-  }
+  __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED: ReactSharedInternals
 };
 
 if (enableSuspense) {
-  React.Timeout = REACT_TIMEOUT_TYPE;
-}
-
-{
-  _assign(React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED, {
-    // These should not be included in production.
-    ReactDebugCurrentFrame: ReactDebugCurrentFrame,
-    // Shim for React DOM 16.0.0 which still destructured (but not used) this.
-    // TODO: remove in React 17.0.
-    ReactComponentTreeHook: {}
-  });
+  React.Placeholder = REACT_PLACEHOLDER_TYPE;
+  React.lazy = lazy;
 }
 
 
@@ -19936,38 +20176,40 @@ var React$3 = ( React$2 && React ) || React$2;
 
 // TODO: decide on the top-level export form.
 // This is hacky but makes it work with both Rollup and Jest.
-var react = React$3.default ? React$3.default : React$3;
+var react = React$3.default || React$3;
 
 module.exports = react;
   })();
 }
 
 }).call(this,require('_process'))
-},{"_process":27,"fbjs/lib/emptyFunction":5,"fbjs/lib/emptyObject":6,"fbjs/lib/invariant":10,"fbjs/lib/warning":14,"object-assign":15,"prop-types/checkPropTypes":16}],22:[function(require,module,exports){
-/** @license React v16.4.2
+},{"_process":27,"object-assign":15,"prop-types/checkPropTypes":16}],22:[function(require,module,exports){
+/** @license React v16.5.1
  * react.production.min.js
  *
- * Copyright (c) 2013-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
 
-'use strict';var k=require("object-assign"),n=require("fbjs/lib/invariant"),p=require("fbjs/lib/emptyObject"),q=require("fbjs/lib/emptyFunction"),r="function"===typeof Symbol&&Symbol.for,t=r?Symbol.for("react.element"):60103,u=r?Symbol.for("react.portal"):60106,v=r?Symbol.for("react.fragment"):60107,w=r?Symbol.for("react.strict_mode"):60108,x=r?Symbol.for("react.profiler"):60114,y=r?Symbol.for("react.provider"):60109,z=r?Symbol.for("react.context"):60110,A=r?Symbol.for("react.async_mode"):60111,B=
-r?Symbol.for("react.forward_ref"):60112;r&&Symbol.for("react.timeout");var C="function"===typeof Symbol&&Symbol.iterator;function D(a){for(var b=arguments.length-1,e="https://reactjs.org/docs/error-decoder.html?invariant="+a,c=0;c<b;c++)e+="&args[]="+encodeURIComponent(arguments[c+1]);n(!1,"Minified React error #"+a+"; visit %s for the full message or use the non-minified dev environment for full errors and additional helpful warnings. ",e)}
-var E={isMounted:function(){return!1},enqueueForceUpdate:function(){},enqueueReplaceState:function(){},enqueueSetState:function(){}};function F(a,b,e){this.props=a;this.context=b;this.refs=p;this.updater=e||E}F.prototype.isReactComponent={};F.prototype.setState=function(a,b){"object"!==typeof a&&"function"!==typeof a&&null!=a?D("85"):void 0;this.updater.enqueueSetState(this,a,b,"setState")};F.prototype.forceUpdate=function(a){this.updater.enqueueForceUpdate(this,a,"forceUpdate")};function G(){}
-G.prototype=F.prototype;function H(a,b,e){this.props=a;this.context=b;this.refs=p;this.updater=e||E}var I=H.prototype=new G;I.constructor=H;k(I,F.prototype);I.isPureReactComponent=!0;var J={current:null},K=Object.prototype.hasOwnProperty,L={key:!0,ref:!0,__self:!0,__source:!0};
-function M(a,b,e){var c=void 0,d={},g=null,h=null;if(null!=b)for(c in void 0!==b.ref&&(h=b.ref),void 0!==b.key&&(g=""+b.key),b)K.call(b,c)&&!L.hasOwnProperty(c)&&(d[c]=b[c]);var f=arguments.length-2;if(1===f)d.children=e;else if(1<f){for(var l=Array(f),m=0;m<f;m++)l[m]=arguments[m+2];d.children=l}if(a&&a.defaultProps)for(c in f=a.defaultProps,f)void 0===d[c]&&(d[c]=f[c]);return{$$typeof:t,type:a,key:g,ref:h,props:d,_owner:J.current}}
-function N(a){return"object"===typeof a&&null!==a&&a.$$typeof===t}function escape(a){var b={"=":"=0",":":"=2"};return"$"+(""+a).replace(/[=:]/g,function(a){return b[a]})}var O=/\/+/g,P=[];function Q(a,b,e,c){if(P.length){var d=P.pop();d.result=a;d.keyPrefix=b;d.func=e;d.context=c;d.count=0;return d}return{result:a,keyPrefix:b,func:e,context:c,count:0}}function R(a){a.result=null;a.keyPrefix=null;a.func=null;a.context=null;a.count=0;10>P.length&&P.push(a)}
-function S(a,b,e,c){var d=typeof a;if("undefined"===d||"boolean"===d)a=null;var g=!1;if(null===a)g=!0;else switch(d){case "string":case "number":g=!0;break;case "object":switch(a.$$typeof){case t:case u:g=!0}}if(g)return e(c,a,""===b?"."+T(a,0):b),1;g=0;b=""===b?".":b+":";if(Array.isArray(a))for(var h=0;h<a.length;h++){d=a[h];var f=b+T(d,h);g+=S(d,f,e,c)}else if(null===a||"undefined"===typeof a?f=null:(f=C&&a[C]||a["@@iterator"],f="function"===typeof f?f:null),"function"===typeof f)for(a=f.call(a),
-h=0;!(d=a.next()).done;)d=d.value,f=b+T(d,h++),g+=S(d,f,e,c);else"object"===d&&(e=""+a,D("31","[object Object]"===e?"object with keys {"+Object.keys(a).join(", ")+"}":e,""));return g}function T(a,b){return"object"===typeof a&&null!==a&&null!=a.key?escape(a.key):b.toString(36)}function U(a,b){a.func.call(a.context,b,a.count++)}
-function V(a,b,e){var c=a.result,d=a.keyPrefix;a=a.func.call(a.context,b,a.count++);Array.isArray(a)?W(a,c,e,q.thatReturnsArgument):null!=a&&(N(a)&&(b=d+(!a.key||b&&b.key===a.key?"":(""+a.key).replace(O,"$&/")+"/")+e,a={$$typeof:t,type:a.type,key:b,ref:a.ref,props:a.props,_owner:a._owner}),c.push(a))}function W(a,b,e,c,d){var g="";null!=e&&(g=(""+e).replace(O,"$&/")+"/");b=Q(b,g,c,d);null==a||S(a,"",V,b);R(b)}
-var X={Children:{map:function(a,b,e){if(null==a)return a;var c=[];W(a,c,null,b,e);return c},forEach:function(a,b,e){if(null==a)return a;b=Q(null,null,b,e);null==a||S(a,"",U,b);R(b)},count:function(a){return null==a?0:S(a,"",q.thatReturnsNull,null)},toArray:function(a){var b=[];W(a,b,null,q.thatReturnsArgument);return b},only:function(a){N(a)?void 0:D("143");return a}},createRef:function(){return{current:null}},Component:F,PureComponent:H,createContext:function(a,b){void 0===b&&(b=null);a={$$typeof:z,
-_calculateChangedBits:b,_defaultValue:a,_currentValue:a,_currentValue2:a,_changedBits:0,_changedBits2:0,Provider:null,Consumer:null};a.Provider={$$typeof:y,_context:a};return a.Consumer=a},forwardRef:function(a){return{$$typeof:B,render:a}},Fragment:v,StrictMode:w,unstable_AsyncMode:A,unstable_Profiler:x,createElement:M,cloneElement:function(a,b,e){null===a||void 0===a?D("267",a):void 0;var c=void 0,d=k({},a.props),g=a.key,h=a.ref,f=a._owner;if(null!=b){void 0!==b.ref&&(h=b.ref,f=J.current);void 0!==
-b.key&&(g=""+b.key);var l=void 0;a.type&&a.type.defaultProps&&(l=a.type.defaultProps);for(c in b)K.call(b,c)&&!L.hasOwnProperty(c)&&(d[c]=void 0===b[c]&&void 0!==l?l[c]:b[c])}c=arguments.length-2;if(1===c)d.children=e;else if(1<c){l=Array(c);for(var m=0;m<c;m++)l[m]=arguments[m+2];d.children=l}return{$$typeof:t,type:a.type,key:g,ref:h,props:d,_owner:f}},createFactory:function(a){var b=M.bind(null,a);b.type=a;return b},isValidElement:N,version:"16.4.2",__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED:{ReactCurrentOwner:J,
-assign:k}},Y={default:X},Z=Y&&X||Y;module.exports=Z.default?Z.default:Z;
+'use strict';var m=require("object-assign"),n="function"===typeof Symbol&&Symbol.for,p=n?Symbol.for("react.element"):60103,q=n?Symbol.for("react.portal"):60106,r=n?Symbol.for("react.fragment"):60107,t=n?Symbol.for("react.strict_mode"):60108,u=n?Symbol.for("react.profiler"):60114,v=n?Symbol.for("react.provider"):60109,w=n?Symbol.for("react.context"):60110,x=n?Symbol.for("react.async_mode"):60111,y=n?Symbol.for("react.forward_ref"):60112;n&&Symbol.for("react.placeholder");
+var z="function"===typeof Symbol&&Symbol.iterator;function A(a,b,d,c,e,g,h,f){if(!a){a=void 0;if(void 0===b)a=Error("Minified exception occurred; use the non-minified dev environment for the full error message and additional helpful warnings.");else{var k=[d,c,e,g,h,f],l=0;a=Error(b.replace(/%s/g,function(){return k[l++]}));a.name="Invariant Violation"}a.framesToPop=1;throw a;}}
+function B(a){for(var b=arguments.length-1,d="https://reactjs.org/docs/error-decoder.html?invariant="+a,c=0;c<b;c++)d+="&args[]="+encodeURIComponent(arguments[c+1]);A(!1,"Minified React error #"+a+"; visit %s for the full message or use the non-minified dev environment for full errors and additional helpful warnings. ",d)}var C={isMounted:function(){return!1},enqueueForceUpdate:function(){},enqueueReplaceState:function(){},enqueueSetState:function(){}},D={};
+function E(a,b,d){this.props=a;this.context=b;this.refs=D;this.updater=d||C}E.prototype.isReactComponent={};E.prototype.setState=function(a,b){"object"!==typeof a&&"function"!==typeof a&&null!=a?B("85"):void 0;this.updater.enqueueSetState(this,a,b,"setState")};E.prototype.forceUpdate=function(a){this.updater.enqueueForceUpdate(this,a,"forceUpdate")};function F(){}F.prototype=E.prototype;function G(a,b,d){this.props=a;this.context=b;this.refs=D;this.updater=d||C}var H=G.prototype=new F;
+H.constructor=G;m(H,E.prototype);H.isPureReactComponent=!0;var I={current:null,currentDispatcher:null},J=Object.prototype.hasOwnProperty,K={key:!0,ref:!0,__self:!0,__source:!0};
+function L(a,b,d){var c=void 0,e={},g=null,h=null;if(null!=b)for(c in void 0!==b.ref&&(h=b.ref),void 0!==b.key&&(g=""+b.key),b)J.call(b,c)&&!K.hasOwnProperty(c)&&(e[c]=b[c]);var f=arguments.length-2;if(1===f)e.children=d;else if(1<f){for(var k=Array(f),l=0;l<f;l++)k[l]=arguments[l+2];e.children=k}if(a&&a.defaultProps)for(c in f=a.defaultProps,f)void 0===e[c]&&(e[c]=f[c]);return{$$typeof:p,type:a,key:g,ref:h,props:e,_owner:I.current}}
+function M(a,b){return{$$typeof:p,type:a.type,key:b,ref:a.ref,props:a.props,_owner:a._owner}}function N(a){return"object"===typeof a&&null!==a&&a.$$typeof===p}function escape(a){var b={"=":"=0",":":"=2"};return"$"+(""+a).replace(/[=:]/g,function(a){return b[a]})}var O=/\/+/g,P=[];function Q(a,b,d,c){if(P.length){var e=P.pop();e.result=a;e.keyPrefix=b;e.func=d;e.context=c;e.count=0;return e}return{result:a,keyPrefix:b,func:d,context:c,count:0}}
+function R(a){a.result=null;a.keyPrefix=null;a.func=null;a.context=null;a.count=0;10>P.length&&P.push(a)}
+function S(a,b,d,c){var e=typeof a;if("undefined"===e||"boolean"===e)a=null;var g=!1;if(null===a)g=!0;else switch(e){case "string":case "number":g=!0;break;case "object":switch(a.$$typeof){case p:case q:g=!0}}if(g)return d(c,a,""===b?"."+T(a,0):b),1;g=0;b=""===b?".":b+":";if(Array.isArray(a))for(var h=0;h<a.length;h++){e=a[h];var f=b+T(e,h);g+=S(e,f,d,c)}else if(null===a||"object"!==typeof a?f=null:(f=z&&a[z]||a["@@iterator"],f="function"===typeof f?f:null),"function"===typeof f)for(a=f.call(a),h=
+0;!(e=a.next()).done;)e=e.value,f=b+T(e,h++),g+=S(e,f,d,c);else"object"===e&&(d=""+a,B("31","[object Object]"===d?"object with keys {"+Object.keys(a).join(", ")+"}":d,""));return g}function U(a,b,d){return null==a?0:S(a,"",b,d)}function T(a,b){return"object"===typeof a&&null!==a&&null!=a.key?escape(a.key):b.toString(36)}function V(a,b){a.func.call(a.context,b,a.count++)}
+function aa(a,b,d){var c=a.result,e=a.keyPrefix;a=a.func.call(a.context,b,a.count++);Array.isArray(a)?W(a,c,d,function(a){return a}):null!=a&&(N(a)&&(a=M(a,e+(!a.key||b&&b.key===a.key?"":(""+a.key).replace(O,"$&/")+"/")+d)),c.push(a))}function W(a,b,d,c,e){var g="";null!=d&&(g=(""+d).replace(O,"$&/")+"/");b=Q(b,g,c,e);U(a,aa,b);R(b)}function ba(a,b){var d=I.currentDispatcher;null===d?B("277"):void 0;return d.readContext(a,b)}
+var X={Children:{map:function(a,b,d){if(null==a)return a;var c=[];W(a,c,null,b,d);return c},forEach:function(a,b,d){if(null==a)return a;b=Q(null,null,b,d);U(a,V,b);R(b)},count:function(a){return U(a,function(){return null},null)},toArray:function(a){var b=[];W(a,b,null,function(a){return a});return b},only:function(a){N(a)?void 0:B("143");return a}},createRef:function(){return{current:null}},Component:E,PureComponent:G,createContext:function(a,b){void 0===b&&(b=null);a={$$typeof:w,_calculateChangedBits:b,
+_currentValue:a,_currentValue2:a,Provider:null,Consumer:null,unstable_read:null};a.Provider={$$typeof:v,_context:a};a.Consumer=a;a.unstable_read=ba.bind(null,a);return a},forwardRef:function(a){return{$$typeof:y,render:a}},Fragment:r,StrictMode:t,unstable_AsyncMode:x,unstable_Profiler:u,createElement:L,cloneElement:function(a,b,d){null===a||void 0===a?B("267",a):void 0;var c=void 0,e=m({},a.props),g=a.key,h=a.ref,f=a._owner;if(null!=b){void 0!==b.ref&&(h=b.ref,f=I.current);void 0!==b.key&&(g=""+b.key);
+var k=void 0;a.type&&a.type.defaultProps&&(k=a.type.defaultProps);for(c in b)J.call(b,c)&&!K.hasOwnProperty(c)&&(e[c]=void 0===b[c]&&void 0!==k?k[c]:b[c])}c=arguments.length-2;if(1===c)e.children=d;else if(1<c){k=Array(c);for(var l=0;l<c;l++)k[l]=arguments[l+2];e.children=k}return{$$typeof:p,type:a.type,key:g,ref:h,props:e,_owner:f}},createFactory:function(a){var b=L.bind(null,a);b.type=a;return b},isValidElement:N,version:"16.5.1",__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED:{ReactCurrentOwner:I,
+assign:m}},Y={default:X},Z=Y&&X||Y;module.exports=Z.default||Z;
 
-},{"fbjs/lib/emptyFunction":5,"fbjs/lib/emptyObject":6,"fbjs/lib/invariant":10,"object-assign":15}],23:[function(require,module,exports){
+},{"object-assign":15}],23:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -19980,24 +20222,41 @@ if (process.env.NODE_ENV === 'production') {
 }).call(this,require('_process'))
 },{"./cjs/react.development.js":21,"./cjs/react.production.min.js":22,"_process":27}],24:[function(require,module,exports){
 (function (global){
-!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{("undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:this).Tinode=e()}}(function(){const e=[{name:"ST",start:/(?:^|\W)(\*)[^\s*]/,end:/[^\s*](\*)(?=$|\W)/},{name:"EM",start:/(?:^|[\W_])(_)[^\s_]/,end:/[^\s_](_)(?=$|[\W_])/},{name:"DL",start:/(?:^|\W)(~)[^\s~]/,end:/[^\s~](~)(?=$|\W)/},{name:"CO",start:/(?:^|\W)(`)[^`]/,end:/[^`](`)(?=$|\W)/}],t=[{name:"LN",dataName:"url",pack:function(e){return/^[a-z]+:\/\//i.test(e)||(e="http://"+e),{url:e}},re:/(https?:\/\/)?(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b(?:[-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)/g},{name:"MN",dataName:"val",pack:function(e){return{val:e.slice(1)}},re:/\B@(\w\w+)/g},{name:"HT",dataName:"val",pack:function(e){return{val:e.slice(1)}},re:/\B#(\w\w+)/g}],n={ST:{name:"b",isVoid:!1},EM:{name:"i",isVoid:!1},DL:{name:"del",isVoid:!1},CO:{name:"tt",isVoid:!1},BR:{name:"br",isVoid:!0},LN:{name:"a",isVoid:!1},MN:{name:"a",isVoid:!1},HT:{name:"a",isVoid:!1},IM:{name:"img",isVoid:!0}};function s(e,t){var n;try{n=atob(e)}catch(e){console.log("Drafty: failed to decode base64-encoded object",e.message),n=atob("")}for(var s=n.length,r=new ArrayBuffer(s),i=new Uint8Array(r),a=0;a<s;a++)i[a]=n.charCodeAt(a);return URL.createObjectURL(new Blob([r],{type:t}))}var r={ST:{open:function(){return"<b>"},close:function(){return"</b>"}},EM:{open:function(){return"<i>"},close:function(){return"</i>"}},DL:{open:function(){return"<del>"},close:function(){return"</del>"}},CO:{open:function(){return"<tt>"},close:function(){return"</tt>"}},BR:{open:function(){return""},close:function(){return"<br/>"}},LN:{open:function(e){return'<a href="'+e.url+'">'},close:function(e){return"</a>"},props:function(e){return{href:e.url,target:"_blank"}}},MN:{open:function(e){return'<a href="#'+e.val+'">'},close:function(e){return"</a>"},props:function(e){return{name:e.val}}},HT:{open:function(e){return'<a href="#'+e.val+'">'},close:function(e){return"</a>"},props:function(e){return{name:e.val}}},IM:{open:function(e){var t=s(e.val,e.mime),n=e.ref?e.ref:t,r=(e.name?'<a href="'+n+'" download="'+e.name+'">':"")+'<img src="'+t+'"'+(e.width?' width="'+e.width+'"':"")+(e.height?' height="'+e.height+'"':"")+' border="0" />';return console.log("open: "+r),r},close:function(e){return e.name?"</a>":""},props:function(e){return{src:s(e.val,e.mime),title:e.name,"data-width":e.width,"data-height":e.height,"data-name":e.name,"data-size":.75*e.val.length|0,"data-mime":e.mime}}}},i={parse:function(n){if("string"!=typeof n)return null;var s=n.split(/\r?\n/),r=[],i={},a=[];s.map(function(n){var s,o,c=[];if(e.map(function(e){c=c.concat(function(e,t,n,s){for(var r=[],i=0,a=e.slice(0);a.length>0;){var o=t.exec(a);if(null==o)break;var c=o.index+o[0].lastIndexOf(o[1]);a=a.slice(c+1),i=(c+=i)+1;var u=n?n.exec(a):null;if(null==u)break;var l=u.index+u[0].indexOf(u[1]);a=a.slice(l+1),i=(l+=i)+1,r.push({text:e.slice(c+1,l),children:[],start:c,end:l,type:s})}return r}(n,e.start,e.end,e.name))}),0==c.length)o={txt:n};else{c.sort(function(e,t){return e.start-t.start}),c=function e(t){if(0==t.length)return[];for(var n=[t[0]],s=t[0],r=1;r<t.length;r++)t[r].start>s.end?(n.push(t[r]),s=t[r]):t[r].end<s.end&&s.children.push(t[r]);for(var r in n)n[r].children=e(n[r].children);return n}(c);var u=function e(t,n){var s="",r=[];for(var i in t){var a=t[i];if(!a.text){var o=e(a.children,s.length+n);a.text=o.txt,r=r.concat(o.fmt)}a.type&&r.push({at:s.length+n,len:a.text.length,tp:a.type}),s+=a.text}return{txt:s,fmt:r}}(function e(t,n,s,r){var i=[];if(0==r.length)return[];for(var a in r){var o=r[a];o.start>n&&i.push({text:t.slice(n,o.start)});var c={type:o.type},u=e(t,o.start+1,o.end-1,o.children);u.length>0?c.children=u:c.text=o.text,i.push(c),n=o.end+1}return n<s&&i.push({text:t.slice(n,s)}),i}(n,0,n.length,c),0);o={txt:u.txt,fmt:u.fmt}}if((s=function(e){var n,s=[];if(t.map(function(t){for(;null!==(n=t.re.exec(e));)s.push({offset:n.index,len:n[0].length,unique:n[0],data:t.pack(n[0]),type:t.name})}),0==s.length)return s;s.sort(function(e,t){return e.offset-t.offset});var r=-1;return s=s.filter(function(e){var t=e.offset>r;return r=e.offset+e.len,t})}(o.txt)).length>0){var l=[];for(var h in s){var d=s[h],f=i[d.unique];f||(f=r.length,i[d.unique]=f,r.push({tp:d.type,data:d.data})),l.push({at:d.offset,len:d.len,key:f})}o.ent=l}a.push(o)});var o={txt:""};if(a.length>0){o.txt=a[0].txt,o.fmt=(a[0].fmt||[]).concat(a[0].ent||[]);for(var c=1;c<a.length;c++){var u=a[c],l=o.txt.length+1;o.fmt.push({tp:"BR",len:1,at:l-1}),o.txt+=" "+u.txt,u.fmt&&(o.fmt=o.fmt.concat(u.fmt.map(function(e){return e.at+=l,e}))),u.ent&&(o.fmt=o.fmt.concat(u.ent.map(function(e){return e.at+=l,e})))}0==o.fmt.length&&delete o.fmt,r.length>0&&(o.ent=r)}return o},insertImage:function(e,t,n,s,r,i,a,o,c){return(e=e||{txt:" "}).ent=e.ent||[],e.fmt=e.fmt||[],e.fmt.push({at:t,len:1,key:e.ent.length}),e.ent.push({tp:"IM",data:{mime:n,val:s,width:r,height:i,name:a,ref:c,size:0|o}}),e},attachFile:function(e,t,n,s,r,i){(e=e||{txt:""}).ent=e.ent||[],e.fmt=e.fmt||[],e.fmt.push({at:-1,len:0,key:e.ent.length});let a={tp:"EX",data:{mime:t,val:n,name:s,ref:i,size:0|r}};return i instanceof Promise&&i.then(e=>{a.data.ref=e},e=>{}),e.ent.push(a),e},UNSAFE_toHTML:function(e){var t,n,s,{txt:i,fmt:a,ent:o}=e,c=[];if(a)for(var u in a){var l,h=a[u],d=h.tp;if(!d){var f=o[h.key];f&&(d=f.tp,l=f.data)}r[d]&&(c.push({idx:h.at+h.len,what:r[d].close(l)}),c.push({idx:h.at,what:r[d].open(l)}))}for(var u in c.sort(function(e,t){return t.idx-e.idx}),c)c[u].what&&(t=i,n=c[u].idx,s=c[u].what,i=t.slice(0,n)+s+t.slice(n));return i},format:function(e,t,s){var{txt:r,fmt:i,ent:a}=e;if(r=r||"",!i)return[r];var o=[].concat(i);return o.map(function(e){e.at=e.at||0,e.len=e.len||0}),o.sort(function(e,t){return e.at-t.at==0?t.len-e.len:e.at-t.at}),o=o.map(function(e){var t,n=e.tp;return n||(e.key=e.key||0,t=a[e.key].data,n=a[e.key].tp),{tp:n,data:t,at:e.at,len:e.len}}),function e(t,s,r,i,a,o){for(var c=[],u=0;u<i.length;u++){var l=i[u];s<l.at&&(c.push(a.call(o,null,void 0,t.slice(s,l.at))),s=l.at);for(var h=[],d=u+1;d<i.length&&i[d].at<l.at+l.len;d++)h.push(i[d]),u=d;var f=n[l.tp]||{};c.push(a.call(o,l.tp,l.data,f.isVoid?null:e(t,s,l.at+l.len,h,a,o))),s=l.at+l.len}return s<r&&c.push(a.call(o,null,void 0,t.slice(s,r))),c}(r,0,r.length,o,t,s)},toPlainText:function(e){return e.txt},isPlainText:function(e){return!(e.fmt||e.ent)},hasAttachments:function(e){if(e.ent&&e.ent.length>0)for(var t in e.ent)if("EX"==e.ent[t].tp)return!0;return!1},attachments:function(e,t,n){if(e.ent&&e.ent.length>0)for(var s in e.ent)"EX"==e.ent[s].tp&&t.call(n,e.ent[s].data,s)},getDownloadUrl:function(e){let t=null;return e.val?t=s(e.val,e.mime):"string"==typeof e.ref&&(t=e.ref),t},isUploading:function(e){return e.ref instanceof Promise},getPreviewUrl:function(e){return e.val?s(e.val,e.mime):null},getEntitySize:function(e){return e.size?e.size:e.val?.75*e.val.length|0:0},getEntityMimeType:function(e){return e.mime||"text/plain"},tagName:function(e){return n[e]?n[e].name:void 0},attrValue:function(e,t){if(t&&r[e])return r[e].props(t)},getContentType:function(){return"text/x-drafty"}},a={};const o="0",c="0.15",u="tinodejs/"+c,l="new",h="me",d="fnd",f="new",p=268435455,g=0,v=1,m=2,b=3,_=4,w=5,M=6;function S(e){return btoa(encodeURIComponent(e).replace(/%([0-9A-F]{2})/g,function(e,t){return String.fromCharCode("0x"+t)}))}function D(e,t,n){if(null==t)return e;if("object"!=typeof t)return t||e;if(t instanceof Date)return t;if(t instanceof O)return new O(t);if(t instanceof Array)return t.length>0?t:e;for(var s in e||(e=t.constructor()),t)!t.hasOwnProperty(s)||!t[s]&&!1!==t[s]||n&&n[s]||"_generated"==s||(e[s]=D(e[s],t[s]));return e}function y(e,t,n,s){return e[t]=D(e[t],n,s),e[t]}function T(){var e=null;if("withCredentials"in new XMLHttpRequest)e=new XMLHttpRequest;else{if("undefined"==typeof XDomainRequest)throw new Error("browser not supported");e=new XDomainRequest}return e}function x(e,t){if("ts"===e&&"string"==typeof t&&t.length>=20&&t.length<=24){var n=new Date(t);if(n)return n}else if("acs"===e&&"object"==typeof t)return new O(t);return t}function E(e,t){return"string"==typeof t&&t.length>128?"<"+t.length+", bytes: "+t.substring(0,12)+"..."+t.substring(t.length-12)+">":function(e,t){if(t instanceof Date)t=function(e){if(e&&0!=e.getTime()){var t=e.getUTCMilliseconds();return e.getUTCFullYear()+"-"+n(e.getUTCMonth()+1)+"-"+n(e.getUTCDate())+"T"+n(e.getUTCHours())+":"+n(e.getUTCMinutes())+":"+n(e.getUTCSeconds())+(t?"."+n(t,3):"")+"Z"}function n(e,t){return"0".repeat((t=t||2)-(""+e).length)+e}}(t);else if(null==t||!1===t||Array.isArray(t)&&0==t.length||"object"==typeof t&&0===Object.keys(t).length)return;return t}(0,t)}function R(e,t,n){var s=null;return"http"!==t&&"https"!==t&&"ws"!==t&&"wss"!==t||(s=t+"://","/"!==(s+=e).charAt(s.length-1)&&(s+="/"),s+="v"+o+"/channels","http"!==t&&"https"!==t||(s+="/lp"),s+="?apikey="+n),s}var A=function(e,t){var n,s,r,i,a=t;const o=2e3,c=10,u=.3;var l=null,h=0,d=!1;function f(e){n.logger&&n.logger(e)}function p(){var e=null;return{connect:function(t){return e&&1===e.readyState?Promise.resolve():(t&&(s=t),new Promise(function(t,p){var g=R(s,r?"wss":"ws",i);f("Connecting to: "+g);var v=new WebSocket(g);v.onopen=function(e){d=!1,n.onOpen&&n.onOpen(),t(),a&&(window.clearTimeout(l),l=null,h=0)},v.onclose=function(t){e=null,n.onDisconnect&&n.onDisconnect(null),!d&&a&&function(){window.clearTimeout(l);var e=o*(Math.pow(2,h)*(1+u*Math.random()));h=h>=c?h:h+1,l=setTimeout(function(){console.log("Reconnecting, iter="+h+", timeout="+e),d||n.connect().catch(function(){})},e)}()},v.onerror=function(e){p(e)},v.onmessage=function(e){n.onMessage&&n.onMessage(e.data)},e=v}))},disconnect:function(){e&&(d=!0,e.close()),e=null},sendText:function(t){if(!e||e.readyState!=e.OPEN)throw new Error("Websocket is not connected");e.send(t)},isConnected:function(){return e&&1===e.readyState}}}function g(){var e=null,t=null,a=null;return{connect:function(a){return a&&(s=a),new Promise(function(a,o){var c=R(s,r?"https":"http",i);f("Connecting to: "+c),(t=function t(s,r,i){var a=T();return a.onreadystatechange=function(o){if(4==a.readyState)if(201==a.status){var c=JSON.parse(a.responseText,x);a.responseText,e=s+"&sid="+c.ctrl.params.sid,(a=t(e)).send(null),n.onOpen&&n.onOpen(),r&&r()}else 200==a.status?(n.onMessage&&n.onMessage(a.responseText),(a=t(e)).send(null)):(i&&i(a.responseText),n.onMessage&&n.onMessage(a.responseText),n.onDisconnect&&n.onDisconnect(new Error(a.status+" "+a.responseText)))},a.open("GET",s,!0),a}(c,a,o)).send(null)}).catch(function(){})},disconnect:function(){a&&(a.abort(),a=null),t&&(t.abort(),t=null),n.onDisconnect&&n.onDisconnect(null),e=null},sendText:function(t){var n,s;if(n=e,(s=T()).onreadystatechange=function(e){if(4==s.readyState&&s.status>=400)throw new Error("LP sender failed, "+s.status)},s.open("POST",n,!0),!(a=s)||1!=a.readyState)throw new Error("Long poller failed to connect");a.send(t)},isConnected:function(){return t&&!0}}}return(n="lp"===e?g():"ws"===e?p():window.WebSocket?p():g()).setup=function(e,t,n){s=e,r=t,i=n},n.onMessage=void 0,n.onDisconnect=void 0,n.onOpen=void 0,n.logger=void 0,n},U=function(){var e;return{getInstance:function(){return e||(e=function(){var t="Undefined",n="undefined",s="";"undefined"!=typeof navigator&&(s=function(e){var t,n=(e=(e||"").replace(" (KHTML, like Gecko)","")).match(/(AppleWebKit\/[.\d]+)/i);if(n){for(var s=["chrome","safari","mobile","version"],r=e.substr(n.index+n[0].length).split(" "),i=[],a=0;a<r.length;a++){var o=/([\w.]+)[\/]([\.\d]+)/.exec(r[a]);o&&i.push([o[1],o[2],s.findIndex(function(e){return e==o[1].toLowerCase()})])}i.sort(function(e,t){var n=e[2]-t[2];return 0!=n?n:t[0].length-e[0].length}),t=i.length>0?i[0][0]+"/"+i[0][1]:n[1]}else t=/trident/i.test(e)?(n=/(?:\brv[ :]+([.\d]+))|(?:\bMSIE ([.\d]+))/g.exec(e))?"MSIE/"+(n[1]||n[2]):"MSIE/?":/firefox/i.test(e)?(n=/Firefox\/([.\d]+)/g.exec(e))?"Firefox/"+n[1]:"Firefox/?":/presto/i.test(e)?(n=/Opera\/([.\d]+)/g.exec(e))?"Opera/"+n[1]:"Opera/?":(n=/([\w.]+)\/([.\d]+)/.exec(e))?n[1]+"/"+n[2]:(n=e.split(" "))[0];if((n=t.split("/")).length>1){var c=n[1].split(".");t=n[0]+"/"+c[0]+(c[1]?"."+c[1]:"")}return t}(navigator.userAgent),n=navigator.platform);var r=!1,i=!1,a=null,o=null,y=null,T=!1,R=null,U=null,I=0,O=null,k={},j={};function L(e){if(r){var t=new Date,n=("0"+t.getUTCHours()).slice(-2)+":"+("0"+t.getUTCMinutes()).slice(-2)+":"+("0"+t.getUTCSeconds()).slice(-2)+":"+("0"+t.getUTCMilliseconds()).slice(-3);console.log("["+n+"] "+e)}}function W(e,t,n){k[e+":"+t]=n}function F(e,t){return k[e+":"+t]}function V(e,t){delete k[e+":"+t]}function G(e){e._cacheGetUser=function(e){var t=F("user",e);if(t)return{user:e,public:D({},t)}},e._cachePutUser=function(e,t){return W("user",e,D({},t.public))},e._cacheDelUser=function(e){return V("user",e)},e._cachePutSelf=function(){return W("topic",e.name,e)},e._cacheDelSelf=function(){return V("topic",e.name)}}var H=function(e){var t=null;return e&&(t=new Promise(function(t,n){j[e]={resolve:t,reject:n}})),t};function J(){return 0!=I?""+I++:void 0}function z(e,r){switch(e){case"hi":return{hi:{id:J(),ver:c,ua:t+" ("+(s?s+"; ":"")+n+"); "+u}};case"acc":return{acc:{id:J(),user:null,scheme:null,secret:null,login:!1,tags:null,desc:{},cred:{}}};case"login":return{login:{id:J(),scheme:null,secret:null}};case"sub":return{sub:{id:J(),topic:r,set:{},get:{}}};case"leave":return{leave:{id:J(),topic:r,unsub:!1}};case"pub":return{pub:{id:J(),topic:r,noecho:!1,head:null,content:{}}};case"get":return{get:{id:J(),topic:r,what:null,desc:{},sub:{},data:{}}};case"set":return{set:{id:J(),topic:r,desc:{},sub:{},tags:[]}};case"del":return{del:{id:J(),topic:r,what:null,delseq:null,user:null,hard:!1}};case"note":return{note:{topic:r,what:null,seq:void 0}};default:throw new Error("Unknown packet type requested: "+e)}}function B(e,t){let n;t&&(n=H(t)),e=function e(t){return Object.keys(t).forEach(function(n){"_"==n[0]?delete t[n]:t[n]?Array.isArray(t[n])&&0==t[n].length?delete t[n]:t[n]?"object"!=typeof t[n]||t[n]instanceof Date||(e(t[n]),0==Object.getOwnPropertyNames(t[n]).length&&delete t[n]):delete t[n]:delete t[n]}),t}(e);var s=JSON.stringify(e);return L("out: "+(i?JSON.stringify(e,E):s)),a.sendText(s),n}function K(t){if(t){e.onRawMessage&&e.onRawMessage(t);var n,s,r,a,o,c=JSON.parse(t,x);if(c)if(L("in: "+(i?JSON.stringify(c,E):t)),e.onMessage&&e.onMessage(c),c.ctrl)e.onCtrlMessage&&e.onCtrlMessage(c.ctrl),c.ctrl.id&&(n=c.ctrl.id,s=c.ctrl.code,r=c.ctrl,a=c.ctrl.text,(o=j[n])&&(delete j[n],s>=200&&s<400?o.resolve&&o.resolve(r):o.reject&&o.reject(new Error("Error: "+a+" ("+s+")"))));else if(c.meta)(u=F("topic",c.meta.topic))&&u._routeMeta(c.meta),e.onMetaMessage&&e.onMetaMessage(c.meta);else if(c.data)(u=F("topic",c.data.topic))&&u._routeData(c.data),e.onDataMessage&&e.onDataMessage(c.data);else if(c.pres)(u=F("topic",c.pres.topic))&&u._routePres(c.pres),e.onPresMessage&&e.onPresMessage(c.pres);else if(c.info){var u;(u=F("topic",c.info.topic))&&u._routeInfo(c.info),e.onInfoMessage&&e.onInfoMessage(c.info)}else L("ERROR: Unknown packet received.");else L("in: "+t),L("ERROR: failed to parse data")}}function Q(){e.hello()}function X(t){O=null,T=!1,function(e,t){for(var n in k)if(s=k[n],void(0===n.lastIndexOf("topic:",0)&&s._resetSub()))break;var s}(),e.onDisconnect&&e.onDisconnect(t)}function $(t){y=t.params.user,T=t&&t.code>=200&&t.code<300,U=t.params&&t.params.token&&t.params.expires?{token:t.params.token,expires:new Date(t.params.expires)}:null,e.onLogin&&e.onLogin(t.code,t.text)}return{setup:function(e,n,s,r){I=Math.floor(65535*Math.random()+65535),t=e||"Undefined",o=s,y=null,T=!1,R=null,U=null,O=null,k={},j={},a&&a.disconnect(),(a=A(r,!0)).logger=L,a.onMessage=K,a.onDisconnect=X,a.onOpen=Q,a.setup(n,"https:"==location.protocol,s)},connect:function(e){return a.connect(e)},disconnect:function(){a&&a.disconnect()},isConnected:function(){return a&&a.isConnected()},isAuthenticated:function(){return T},account:function(e,t,n,s,r){var i=z("acc");return i.acc.user=e,i.acc.scheme=t,i.acc.secret=n,i.acc.login=s,r&&(i.acc.desc.defacs=r.defacs,i.acc.desc.public=r.public,i.acc.desc.private=r.private,i.acc.tags=r.tags,i.acc.cred=r.cred),B(i,i.acc.id)},createAccount:function(t,n,s,r){var i=e.account(f,t,n,s,r);return s&&(i=i.then(function(e){return $(e),e})),i},createAccountBasic:function(t,n,s){return t=t||"",n=n||"",e.createAccount("basic",S(t+":"+n),!0,s)},updateAccountBasic:function(t,n,s){return n=n||"",s=s||"",e.account(t,"basic",S(n+":"+s),!1,null)},addCredential:function(e,t,n,s,r){return"object"==typeof t&&({val:n,params:s,resp:r,meth:t}=t),t&&(n||r)&&(e||(e={}),e.cred||(e.cred=[]),e.cred.push({meth:t,val:n,resp:r,params:s})),e},hello:function(){var t=z("hi");return B(t,t.hi.id).then(function(t){return t.params&&(O=t.params),e.onConnect&&e.onConnect(),t}).catch(function(t){e.onDisconnect&&e.onDisconnect(t)})},login:function(e,t,n){var s=z("login");return s.login.scheme=e,s.login.secret=t,s.login.cred=n,B(s,s.login.id).then(function(e){return $(e),e})},loginBasic:function(t,n,s){return e.login("basic",S(t+":"+n),s).then(function(e){return R=t,e})},loginToken:function(t,n){return e.login("token",t,n)},getAuthToken:function(){return U&&U.expires.getTime()>Date.now()?U:(U=null,null)},setAuthToken:function(e){U=e},subscribe:function(e,t,n){var s=z("sub",e);return e||(e=l),s.sub.get=t,n&&(n.sub&&(s.sub.set.sub=n.sub),e===l&&n.desc&&(s.sub.set.desc=n.desc),n.tags&&(s.sub.set.tags=n.tags)),B(s,s.sub.id)},leave:function(e,t){var n=z("leave",e);return n.leave.unsub=t,B(n,n.leave.id)},createMessage:function(e,t,n,s,r){var i=z("pub",e);return i.pub.noecho=n,i.pub.content=t,(s||Array.isArray(r))&&(i.pub.head={mime:s,attachments:r}),i.pub},publish:function(t,n,s,r,i){return e.publishMessage(e.createMessage(t,n,s,r,i))},publishMessage:function(e){return(e=Object.assign({},e)).seq=void 0,e.from=void 0,e.ts=void 0,B({pub:e},e.id)},getMeta:function(e,t){var n=z("get",e);return n.get=D(n.get,t),B(n,n.get.id)},setMeta:function(e,t){var n=z("set",e),s=[];return t&&["desc","sub","tags"].map(function(e){t.hasOwnProperty(e)&&(s.push(e),n.set[e]=t[e])}),0==s.length?Promise.reject(new Error("Invalid {set} parameters")):B(n,n.set.id)},delMessages:function(e,t,n){var s=z("del",e);return s.del.what="msg",s.del.delseq=t,s.del.hard=n,B(s,s.del.id)},delTopic:function(e){var t=z("del",e);return t.del.what="topic",B(t,t.del.id).then(function(t){return V("topic",e),t})},delSubscription:function(e,t){var n=z("del",e);return n.del.what="sub",n.del.user=t,B(n,n.del.id)},note:function(e,t,n){if(n<=0||n>=p)console.log("Invalid message id "+n);else{var s=z("note",e);s.note.what=t,s.note.seq=n,B(s)}},noteKeyPress:function(e){var t=z("note",e);t.note.what="kp",B(t)},getTopic:function(e){var t=F("topic",e);return!t&&e&&((t=e===h?new q:e===d?new C:new P(e))._new=!1,W("topic",e,t)),t&&G(t),t},newTopic:function(e){var t=new P(void 0,e);return G(t),t},newTopicWith:function(e,t){var n=new P(e,t);return G(n),n},getMeTopic:function(){return e.getTopic(h)},getFndTopic:function(){return e.getTopic(d)},getLargeFileHelper:function(){var t=e.getAuthToken();return t?new N(o,t.token,J()):null},getCurrentUserID:function(){return y},getCurrentLogin:function(){return R},getServerInfo:function(){return O},getVersion:function(){return c},enableLogging:function(e,t){r=e,i=t},topicType:function(e){return{me:"me",fnd:"fnd",grp:"grp",new:"grp",usr:"p2p"}["string"==typeof e?e.substring(0,3):"xxx"]},isTopicOnline:function(t){var n=e.getTopic(h),s=n&&n.getContact(t);return s&&s.online},wantAkn:function(e){I=e?Math.floor(16777215*Math.random()+16777215):0},onWebsocketOpen:void 0,onConnect:void 0,onDisconnect:void 0,onLogin:void 0,onCtrlMessage:void 0,onDataMessage:void 0,onPresMessage:void 0,onMessage:void 0,onRawMessage:void 0,MESSAGE_STATUS_NONE:g,MESSAGE_STATUS_QUEUED:v,MESSAGE_STATUS_SENDING:m,MESSAGE_STATUS_SENT:b,MESSAGE_STATUS_RECEIVED:_,MESSAGE_STATUS_READ:w,MESSAGE_STATUS_TO_ME:M}}()),e}}}(),I=function(e){this.topic=e,this.what={}};I.prototype={withData:function(e,t,n){return this.what.data={since:e,before:t,limit:n},this},withLaterData:function(e){return this.withData(this.topic._maxSeq>0?this.topic._maxSeq+1:void 0,void 0,e)},withEarlierData:function(e){return this.withData(void 0,this.topic._minSeq>0?this.topic._minSeq:void 0,e)},withDesc:function(e){return this.what.desc={ims:e},this},withLaterDesc:function(){return this.withDesc(this.topic._lastDescUpdate)},withSub:function(e,t,n){var s={ims:e,limit:t};return"me"==this.topic.getType()?s.topic=n:s.user=n,this.what.sub=s,this},withOneSub:function(e,t){return this.withSub(e,void 0,t)},withLaterOneSub:function(e){return this.withOneSub(this.topic._lastSubsUpdate,e)},withLaterSub:function(e){return this.withSub(this.topic._lastSubsUpdate,e)},withTags:function(){return this.what.tags=!0,this},withDel:function(e,t){return(e||t)&&(this.what.del={since:e,limit:t}),this},withLaterDel:function(e){return this.withDel(this.topic._maxSeq>0?this.topic._maxDel+1:void 0,e)},build:function(){var e={},t=[],n=this;return["data","sub","desc","tags","del"].map(function(s){n.what.hasOwnProperty(s)&&(t.push(s),Object.getOwnPropertyNames(n.what[s]).length>0&&(e[s]=n.what[s]))}),t.length>0?e.what=t.join(" "):e=void 0,e}};var O=function(e){e&&(this.given="number"==typeof e.given?e.given:O.decode(e.given),this.want="number"==typeof e.want?e.want:O.decode(e.want),this.mode=e.mode?"number"==typeof e.mode?e.mode:O.decode(e.mode):this.given&this.want)};O._NONE=0,O._JOIN=1,O._READ=2,O._WRITE=4,O._PRES=8,O._APPROVE=16,O._SHARE=32,O._DELETE=64,O._OWNER=128,O._BITMASK=O._JOIN|O._READ|O._WRITE|O._PRES|O._APPROVE|O._SHARE|O._DELETE|O._OWNER,O._INVALID=1048576,O.decode=function(e){if(!e)return null;if("number"==typeof e)return e&O._BITMASK;if("N"===e||"n"===e)return O._NONE;for(var t={J:O._JOIN,R:O._READ,W:O._WRITE,P:O._PRES,A:O._APPROVE,S:O._SHARE,D:O._DELETE,O:O._OWNER},n=O._NONE,s=0;s<e.length;s++){var r=t[e.charAt(s).toUpperCase()];r&&(n|=r)}return n},O.encode=function(e){if(null===e||e===O._INVALID)return null;if(e===O._NONE)return"N";for(var t=["J","R","W","P","A","S","D","O"],n="",s=0;s<t.length;s++)0!=(e&1<<s)&&(n+=t[s]);return n},O.update=function(e,t){if(!t||"string"!=typeof t)return e;var n=t.charAt(0);if("+"==n||"-"==n){for(var s=e,r=t.split(/([-+])/),i=1;i<r.length-1;i+=2){n=r[i];var a=O.decode(r[i+1]);if(a==O._INVALID)return e;null!=a&&("+"===n?s|=a:"-"===n&&(s&=~a))}e=s}else(s=O.decode(t))!=O._INVALID&&(e=s);return e},O.prototype={setMode:function(e){return this.mode=O.decode(e),this},updateMode:function(e){return this.mode=O.update(this.mode,e),this},getMode:function(){return O.encode(this.mode)},setGiven:function(e){return this.given=O.decode(e),this},updateGiven:function(e){return this.given=O.update(this.given,e),this},getGiven:function(){return O.encode(this.given)},setWant:function(e){return this.want=O.decode(e),this},updateWant:function(e){return this.want=O.update(this.want,e),this},getWant:function(){return O.encode(this.want)},updateAll:function(e){return e&&(this.updateGiven(e.given),this.updateWant(e.want),this.mode=this.given&this.want),this},isOwner:function(){return 0!=(this.mode&O._OWNER)},isMuted:function(){return 0==(this.mode&O._PRES)},isPresencer:function(){return 0!=(this.mode&O._PRES)},isJoiner:function(){return 0!=(this.mode&O._JOIN)},isReader:function(){return 0!=(this.mode&O._READ)},isWriter:function(){return 0!=(this.mode&O._WRITE)},isApprover:function(){return 0!=(this.mode&O._APPROVE)},isAdmin:function(){return this.isOwner()||this.isApprover()},isSharer:function(){return 0!=(this.mode&O._SHARE)},isDeleter:function(){return 0!=(this.mode&O._DELETE)}};var P=function(e,t){this.name=e,this.created=null,this.updated=null,this.touched=null,this.acs=new O(null),this.private=null,this.public=null,this._users={},this._queuedSeqId=p,this._maxSeq=0,this._minSeq=0,this._noEarlierMsgs=!1,this._maxDel=0,this._tags=[],this._messages=function(e){var t=[];function n(t,n,s){for(var r=0,i=n.length-1,a=0,o=0,c=!1;r<=i;)if((o=e(n[a=(r+i)/2|0],t))<0)r=a+1;else{if(!(o>0)){c=!0;break}i=a-1}return c?a:s?-1:o<0?a+1:a}function s(e,t){var s=n(e,t,!1);return t.splice(s,0,e),t}return e=e||function(e,t){return e===t?0:e<t?-1:1},{getAt:function(e){return t[e]},put:function(){var e;for(var n in e=1==arguments.length&&Array.isArray(arguments[0])?arguments[0]:arguments)s(e[n],t)},delAt:function(e){var n=t.splice(e,1);if(n&&n.length>0)return n[0]},delRange:function(e,n){return t.splice(e,n-e)},size:function(){return t.length},reset:function(e){t=[]},forEach:function(e,n,s,r){n|=0,s=s||t.length;for(var i=n;i<s;i++)e.call(r,t[i],i)},find:function(e,s){return n(e,t,!s)}}}(function(e,t){return e.seq-t.seq}),this._subscribed=!1,this._lastDescUpdate=null,this._lastSubsUpdate=null,this._new=!0,t&&(this.onData=t.onData,this.onMeta=t.onMeta,this.onPres=t.onPres,this.onInfo=t.onInfo,this.onMetaDesc=t.onMetaDesc,this.onMetaSub=t.onMetaSub,this.onSubsUpdated=t.onSubsUpdated,this.onTagsUpdated=t.onTagsUpdated,this.onDeleteTopic=t.onDeleteTopic)};P.prototype={isSubscribed:function(){return this._subscribed},subscribe:function(e,t){if(this._subscribed)return Promise.resolve(this);var n=this.name,s=U.getInstance(),r=this;return s.subscribe(n||l,e,t).then(function(e){if(e.code>=300)return e;if(r._subscribed=!0,r.acs=e.params&&e.params.acs?e.params.acs:r.acs,r._new){r._new=!1,r.name=e.topic,r.created=e.ts,r.updated=e.ts,r.touched=e.ts,r._cachePutSelf();var n=s.getMeTopic();n&&n._processMetaSub([{_generated:!0,topic:r.name,created:e.ts,updated:e.ts,touched:e.ts,acs:r.acs}]),t&&t.desc&&(t.desc._generated=!0,r._processMetaDesc(t.desc))}return e})},publish:function(e){return this.publishMessage(this.createMessage(e))},createMessage:function(e,t){var n,s;return i.isPlainText(e)||(n=i.getContentType(),i.hasAttachments(e)&&(s=[],i.attachments(e,e=>{s.push(e)}))),U.getInstance().createMessage(this.name,e,t,n,s)},publishMessage:function(e){return this._subscribed?(e._sending=!0,U.getInstance().publishMessage(e)):Promise.reject(new Error("Cannot publish on inactive topic"))},publishDraft:function(e,t){return t||this._subscribed?(e.seq=this._getQueuedSeqId(),e._generated=!0,e.ts=new Date,e.from=U.getInstance().getCurrentUserID(),e.noecho=!0,this._messages.put(e),this.onData&&this.onData(e),(t||Promise.resolve()).then(()=>e._cancelled?{code:300,text:"cancelled"}:this.publishMessage(e).then(t=>(e._sending=!1,e.seq=t.params.seq,e.ts=t.ts,this._routeData(e),t)),t=>{e._sending=!1,this._messages.delAt(this._messages.find(e)),this.onData&&this.onData()})):Promise.reject(new Error("Cannot publish on inactive topic"))},leave:function(e){return this._subscribed||e?U.getInstance().leave(this.name,e).then(t=>(this._resetSub(),e&&this._gone(),t)):Promise.reject(new Error("Cannot leave inactive topic"))},getMeta:function(e){return this._subscribed?U.getInstance().getMeta(this.name,e):(console.log("Attempt to query inactive topic",this.name),Promise.reject(new Error("Cannot query inactive topic")))},getMessagesPage:function(e,t){var n=this.startMetaQuery();t?n.withLaterData(e):n.withEarlierData(e);var s=this.getMeta(n.build());if(!t){var r=this;s=s.then(function(e){e&&e.params&&!e.params.count&&(r._noEarlierMsgs=!0)})}return s},setMeta:function(e){if(!this._subscribed)return Promise.reject(new Error("Cannot update inactive topic"));var t=this;e.tags&&(e.tags=function(e){var t=[];if(Array.isArray(e)){for(var n=0,s=e.length;n<s;n++){var r=e[n];r&&(r=r.trim().toLowerCase()).length>1&&t.push(r)}t.sort().filter(function(e,t,n){return!t||e!=n[t-1]})}return 0==t.length&&t.push("\u2421"),t}(e.tags));var n=U.getInstance();return n.setMeta(this.name,e).then(function(s){return s&&s.code>=300?s:(e.sub&&(s.params&&s.params.acs&&(e.sub.acs=s.params.acs,e.sub.updated=s.ts),e.sub.user||(e.sub.user=n.getCurrentUserID(),e.desc||(e.desc={})),e.sub._generated=!0,t._processMetaSub([e.sub])),e.desc&&(s.params&&s.params.acs&&(e.desc.acs=s.params.acs,e.desc.updated=s.ts),t._processMetaDesc(e.desc)),e.tags&&t._processMetaTags(e.tags),s)})},invite:function(e,t){return this.setMeta({sub:{user:e,mode:t}})},delMessages:function(e,t){if(!this._subscribed)return Promise.reject(new Error("Cannot delete messages in inactive topic"));e.sort(function(e,t){return e.low<t.low||e.low==t.low&&(!t.hi||e.hi>=t.hi)});let n,s=e.reduce((e,t)=>(t.low<p&&(!t.hi||t.hi<p?e.push(t):e.push({low:t.low,hi:this._maxSeq+1})),e),[]);return(n=e.length>0?U.getInstance().delMessages(this.name,s,t):Promise.resolve({params:{del:0}})).then(t=>(t.params.del>this._maxDel&&(this._maxDel=t.params.del),e.map(e=>{e.hi?this.flushMessageRange(e.low,e.hi):this.flushMessage(e.low)}),this.onData&&this.onData(),t))},delMessagesAll:function(e){return this.delMessages([{low:1,hi:this._maxSeq+1,_all:!0}],e)},delMessagesList:function(e,t){e.sort((e,t)=>e-t);var n=e.reduce((e,t)=>{if(0==e.length)e.push({low:t});else{let n=e[e.length-1];!n.hi&&t!=n.low+1||t>n.hi?e.push({low:t}):n.hi=n.hi?Math.max(n.hi,t+1):t+1}return e},[]);return this.delMessages(n,t)},delTopic:function(){var e=this;return U.getInstance().delTopic(this.name).then(function(t){return e._resetSub(),e._gone(),t})},delSubscription:function(e){if(!this._subscribed)return Promise.reject(new Error("Cannot delete subscription in inactive topic"));var t=this;return U.getInstance().delSubscription(this.name,e).then(function(n){return delete t._users[e],t.onSubsUpdated&&t.onSubsUpdated(Object.keys(t._users)),n})},note:function(e,t){var n=U.getInstance(),s=this._users[n.getCurrentUserID()];s?((!s[e]||s[e]<t)&&(this._subscribed?n.note(this.name,e,t):console.log("Not sending {note} on inactive topic")),s[e]=t):console.log("note(): user not found "+n.getCurrentUserID());var r=n.getMeTopic();r&&r.setMsgReadRecv(this.name,e,t)},noteRecv:function(e){this.note("recv",e)},noteRead:function(e){this.note("read",e)},noteKeyPress:function(){this._subscribed?U.getInstance().noteKeyPress(this.name):console.log("Cannot send notification in inactive topic")},userDesc:function(e){var t=this._cacheGetUser(e);if(t)return t},subscribers:function(e,t){var n=e||this.onMetaSub;if(n)for(var s in this._users)n.call(t,this._users[s],s,this._users)},tags:function(){return this._tags.slice(0)},subscriber:function(e){return this._users[e]},messages:function(e,t,n,s){var r=e||this.onData;if(r){let e="number"==typeof t?this._messages.find({seq:t}):void 0,i="number"==typeof n?this._messages.find({seq:n},!0):void 0;-1!=e&&-1!=i&&this._messages.forEach(r,e,i,s)}},msgReceiptCount:function(e,t){var n=0,s=U.getInstance().getCurrentUserID();if(t>0)for(var r in this._users){var i=this._users[r];i.user!==s&&i[e]>=t&&n++}return n},msgReadCount:function(e){return this.msgReceiptCount("read",e)},msgRecvCount:function(e){return this.msgReceiptCount("recv",e)},msgHasMoreMessages:function(e){return e?this.seq>this._maxSeq:this._minSeq>1&&!this._noEarlierMsgs},isNewMessage:function(e){return this._maxSeq<=e},flushMessage:function(e){let t=this._messages.find({seq:e});return t>=0?this._messages.delAt(t):void 0},flushMessageRange:function(e,t){let n=this._messages.find({seq:e});return n>=0?this._messages.delRange(n,this._messages.find({seq:t},!0)):[]},cancelSend:function(e){let t=this._messages.find({seq:e});if(t>=0){let e=this._messages.getAt(t);if(this.msgStatus(e)==v)return e._cancelled=!0,this._messages.delAt(t),!0}return!1},getType:function(){return U.getInstance().topicType(this.name)},getAccessMode:function(){return this.acs},getDefaultAccess:function(){return this.defacs},startMetaQuery:function(){return new I(this)},msgStatus:function(e){var t=g;return e.from==U.getInstance().getCurrentUserID()?e._sending?t=m:e.seq>=p?t=v:this.msgReadCount(e.seq)>0?t=w:this.msgRecvCount(e.seq)>0?t=_:e.seq>0&&(t=b):t=M,t},_routeData:function(e){e.content&&((!this.touched||this.touched<e.ts)&&(this.touched=e.ts),e._generated||this._messages.put(e)),e.seq>this._maxSeq&&(this._maxSeq=e.seq),(e.seq<this._minSeq||0==this._minSeq)&&(this._minSeq=e.seq),this.onData&&this.onData(e);var t=U.getInstance().getMeTopic();t&&t.setMsgReadRecv(this.name,"msg",e.seq,e.ts)},_routeMeta:function(e){e.desc&&(this._lastDescUpdate=e.ts,this._processMetaDesc(e.desc)),e.sub&&e.sub.length>0&&(this._lastSubsUpdate=e.ts,this._processMetaSub(e.sub)),e.del&&this._processDelMessages(e.del.clear,e.del.delseq),e.tags&&this._processMetaTags(e.tags),this.onMeta&&this.onMeta(e)},_routePres:function(e){var t;switch(e.what){case"del":this._processDelMessages(e.clear,e.delseq);break;case"on":case"off":(t=this._users[e.src])?t.online="on"==e.what:console.log("Presence update for an unknown user",this.name,e.src);break;case"acs":let s="me"==e.src?U.getInstance().getCurrentUserID():e.src;if(t=this._users[s])t.acs.updateAll(e.dacs),s==U.getInstance().getCurrentUserID()&&this.acs.updateAll(e.dacs),t.acs&&t.acs.mode!=O._NONE||("p2p"==this.getType()&&this.leave(),this._processMetaSub([{user:s,deleted:new Date,_generated:!0}]));else{var n=(new O).updateAll(e.dacs);n&&n.mode!=O._NONE&&((t=this._cacheGetUser(s))?t.acs=n:(t={user:s,acs:n},this.getMeta(this.startMetaQuery().withOneSub(void 0,s).build())),t._generated=!0,t.updated=new Date,this._processMetaSub([t]))}break;default:console.log("Ignored presence update",e.what)}this.onPres&&this.onPres(e)},_routeInfo:function(e){if("kp"!==e.what){var t=this._users[e.from];t&&(t[e.what]=e.seq)}this.onInfo&&this.onInfo(e)},_processMetaDesc:function(e,t){if(D(this,e),"string"==typeof this.created&&(this.created=new Date(this.created)),"string"==typeof this.updated&&(this.updated=new Date(this.updated)),"string"==typeof this.touched&&(this.touched=new Date(this.touched)),"me"!==this.name&&!t&&!e._generated){var n=U.getInstance().getMeTopic();n&&n._processMetaSub([{_generated:!0,topic:this.name,updated:this.updated,touched:this.touched,acs:this.acs,public:this.public,private:this.private}])}this.onMetaDesc&&this.onMetaDesc(this)},_processMetaSub:function(e){var t=void 0;for(var n in e){var s=e[n];if(s.user){s.updated=new Date(s.updated),s.deleted=s.deleted?new Date(s.deleted):null;var r=null;s.deleted?(delete this._users[s.user],r=s):((r=this._users[s.user])||(r=this._cacheGetUser(s.user)),r=this._updateCachedUser(s.user,s,s._generated)),this.onMetaSub&&this.onMetaSub(r)}else s._generated||(t=s)}t&&this.onMetaDesc&&this.onMetaDesc(t),this.onSubsUpdated&&this.onSubsUpdated(Object.keys(this._users))},_processMetaTags:function(e){1==e.length&&"\u2421"==e[0]&&(e=[]),this._tags=e,this.onTagsUpdated&&this.onTagsUpdated(e)},_processDelMessages:function(e,t){this._maxDel=Math.max(e,this._maxDel),this.clear=Math.max(e,this.clear);var n=this,s=0;Array.isArray(t)&&t.map(function(e){if(e.hi)for(var t=e.low;t<e.hi;t++)s++,n.flushMessage(t);else s++,n.flushMessage(e.low)}),s>0&&this.onData&&this.onData()},_resetSub:function(){this._subscribed=!1},_gone:function(){var e=U.getInstance().getMeTopic();e&&e._routePres({_generated:!0,what:"gone",topic:"me",src:this.name}),this.onDeleteTopic&&this.onDeleteTopic()},_updateCachedUser:function(e,t,n){var s=this._cacheGetUser(e);return s?s=D(s,t):(n&&this.getMeta(this.startMetaQuery().withLaterOneSub(e).build()),s=D({},t)),this._cachePutUser(e,s),y(this._users,e,s)},_getQueuedSeqId:function(){return this._queuedSeqId++}};var q=function(e){P.call(this,h,e),this._contacts={},e&&(this.onContactUpdate=e.onContactUpdate)};q.prototype=Object.create(P.prototype,{_processMetaSub:{value:function(e){var t=U.getInstance(),n=0;for(var s in e){var r=e[s],i=r.topic;if(i!==d){r.updated=new Date(r.updated),r.touched=r.touched?new Date(r.touched):null,r.deleted=r.deleted?new Date(r.deleted):null;var a=null;if(r.deleted)a=r,delete this._contacts[i];else if(r.seen&&r.seen.when&&(r.seen.when=new Date(r.seen.when)),a=y(this._contacts,i,r),"p2p"===t.topicType(i)&&this._cachePutUser(i,a),!r._generated){var o=t.getTopic(i);o&&o._processMetaDesc(r,!0)}n++,this.onMetaSub&&this.onMetaSub(a)}}n>0&&this.onSubsUpdated&&this.onSubsUpdated(Object.keys(this._contacts))},enumerable:!0,configurable:!0,writable:!1},_routePres:{value:function(e){var t=this._contacts[e.src];if(t){switch(e.what){case"on":t.online=!0;break;case"off":t.online&&(t.online=!1,t.seen?t.seen.when=new Date:t.seen={when:new Date});break;case"msg":t.touched=new Date,t.seq=e.seq;break;case"upd":this.getMeta(this.startMetaQuery().withLaterOneSub(e.src).build());break;case"acs":t.acs?t.acs.updateAll(e.dacs):t.acs=(new O).updateAll(e.dacs);break;case"ua":t.seen={when:new Date,ua:e.ua};break;case"recv":t.recv=t.recv?Math.max(t.recv,e.seq):e.seq;break;case"read":t.read=t.read?Math.max(t.read,e.seq):e.seq;break;case"gone":delete this._contacts[e.src]}this.onContactUpdate&&this.onContactUpdate(e.what,t)}else if("acs"==e.what){var n=new O(e.dacs);if(!n||n.mode==O._INVALID)return void console.log("Invalid access mode update",e.src,e.dacs);if(n.mode==O._NONE)return void console.log("Removing non-existent subscription",e.src,e.dacs);this.getMeta(this.startMetaQuery().withOneSub(void 0,e.src).build()),this._contacts[e.src]={topic:e.src,online:!1,acs:n}}this.onPres&&this.onPres(e)},enumerable:!0,configurable:!0,writable:!1},publish:{value:function(){return Promise.reject(new Error("Publishing to 'me' is not supported"))},enumerable:!0,configurable:!0,writable:!1},contacts:{value:function(e,t){var n=e||this.onMetaSub;if(n)for(var s in this._contacts)n.call(t,this._contacts[s],s,this._contacts)},enumerable:!0,configurable:!0,writable:!0},setMsgReadRecv:{value:function(e,t,n,s){var r,i=this._contacts[e],a=!1;i&&("recv"===t?(r=i.recv,i.recv=i.recv?Math.max(i.recv,n):n,a=r!=i.recv):"read"===t?(r=i.read,i.read=i.read?Math.max(i.read,n):n,a=r!=i.read,i.recv<i.read&&(i.recv=i.read,a=!0)):"msg"===t&&(r=i.seq,i.seq=i.seq?Math.max(i.seq,n):n,(!i.touched||i.touched<s)&&(i.touched=s),a=r!=i.seq),!a||i.acs&&i.acs.isMuted()||!this.onContactUpdate||this.onContactUpdate(t,i))},enumerable:!0,configurable:!0,writable:!0},getContact:{value:function(e){return this._contacts[e]},enumerable:!0,configurable:!0,writable:!0},unreadCount:{value:function(e){var t=this._contacts[e];return t?(t.seq=~~t.seq,t.read=~~t.read,t.seq-t.read):0},enumerable:!0,configurable:!0,writable:!0},getAccessMode:{value:function(e){var t=this._contacts[e];return t?t.acs:null},enumerable:!0,configurable:!0,writable:!0}}),q.prototype.constructor=q;var C=function(e){P.call(this,d,e),this._contacts={}};C.prototype=Object.create(P.prototype,{_processMetaSub:{value:function(e){U.getInstance();var t=Object.getOwnPropertyNames(this._contacts).length;for(var n in this._contacts={},e){var s=e[n],r=s.topic?s.topic:s.user;s.updated=new Date(s.updated),s.seen&&s.seen.when&&(s.seen.when=new Date(s.seen.when)),s=y(this._contacts,r,s),t++,this.onMetaSub&&this.onMetaSub(s)}t>0&&this.onSubsUpdated&&this.onSubsUpdated(Object.keys(this._contacts))},enumerable:!0,configurable:!0,writable:!1},publish:{value:function(){return Promise.reject(new Error("Publishing to 'fnd' is not supported"))},enumerable:!0,configurable:!0,writable:!1},setMeta:{value:function(e){var t=this;return Object.getPrototypeOf(C.prototype).setMeta.call(this,e).then(function(){Object.keys(t._contacts).length>0&&(t._contacts={},t.onSubsUpdated&&t.onSubsUpdated([]))})},enumerable:!0,configurable:!0,writable:!1},contacts:{value:function(e,t){var n=e||this.onMetaSub;if(n)for(var s in this._contacts)n.call(t,this._contacts[s],s,this._contacts)},enumerable:!0,configurable:!0,writable:!0}}),C.prototype.constructor=C;var N=function(e,t,n){this._apiKey=e,this._authToken=t,this._msgId=n,this.xhr=T(),this.toResolve=null,this.toReject=null,this.onProgress=null,this.onSuccess=null,this.onFailure=null};N.prototype={upload:function(e,t,n,s){var r=this;this.xhr.open("POST","/v"+o+"/file/u/",!0),this.xhr.setRequestHeader("X-Tinode-APIKey",this._apiKey),this.xhr.setRequestHeader("Authorization","Token "+this._authToken);var i=new Promise((e,t)=>{this.toResolve=e,this.toReject=t});this.onProgress=t,this.onSuccess=n,this.onFailure=s,this.xhr.upload.onprogress=function(e){e.lengthComputable&&r.onProgress&&r.onProgress(e.loaded/e.total)},this.xhr.onload=function(){var e;try{e=JSON.parse(this.response,x)}catch(e){console.log("Invalid server response in LargeFileHelper",this.response)}this.status>=200&&this.status<300?(r.toResolve&&r.toResolve(e.ctrl.params.url),r.onSuccess&&r.onSuccess(e.ctrl)):this.status>=400?(r.toReject&&r.toReject(new Error(e.ctrl.text+" ("+e.ctrl.code+")")),r.onFailure&&r.onFailure(e.ctrl)):console.log("Unexpected server response status",this.status,this.response)},this.xhr.onerror=function(e){r.toReject&&r.toReject(new Error("failed")),r.onFailure&&r.onFailure(null)},this.xhr.onabort=function(e){r.toReject&&r.toReject(new Error("upload cancelled by user")),r.onFailure&&r.onFailure(null)};try{var a=new FormData;a.append("file",e),a.set("id",this._msgId),this.xhr.send(a)}catch(e){this.toReject&&this.toReject(e),this.onFailure&&this.onFailure(null)}return i},download:function(e,t,n,s){if(!/^(?:(?:[a-z]+:)?\/\/)/i.test(e)){var r=this;this.xhr.open("GET",e,!0),this.xhr.setRequestHeader("X-Tinode-APIKey",this._apiKey),this.xhr.setRequestHeader("Authorization","Token "+this._authToken),this.xhr.responseType="blob",this.onProgress=s,this.xhr.onprogress=function(e){r.onProgress&&r.onProgress(e.loaded)};var i=new Promise((e,t)=>{this.toResolve=e,this.toReject=t});this.xhr.onload=function(){if(200==this.status){var e=document.createElement("a");e.href=window.URL.createObjectURL(new Blob([this.response],{type:n})),e.style.display="none",e.setAttribute("download",t),document.body.appendChild(e),e.click(),document.body.removeChild(e),window.URL.revokeObjectURL(e.href),r.toResolve&&r.toResolve()}else if(this.status>=400&&r.toReject){var s=new FileReader;s.onload=function(){try{var e=JSON.parse(this.result,x);r.toReject(new Error(e.ctrl.text+" ("+e.ctrl.code+")"))}catch(e){console.log("Invalid server response in LargeFileHelper",this.result),r.toReject(e)}},s.readAsText(this.response)}},this.xhr.onerror=function(e){r.toReject&&r.toReject(new Error("failed"))},this.xhr.onabort=function(){r.toReject&&r.toReject(null)};try{this.xhr.send()}catch(e){this.toReject&&this.toReject(e)}return i}console.log("The URL '"+e+"' must be relative, not absolute")},cancel:function(){this.xhr&&this.xhr.readyState<4&&this.xhr.abort()},getId:function(){return this._msgId}};var k=function(e,t){this.status=k.STATUS_NONE,this.topic=e,this.content=t};return k.STATUS_NONE=g,k.STATUS_QUEUED=v,k.STATUS_SENDING=m,k.STATUS_SENT=b,k.STATUS_RECEIVED=_,k.STATUS_READ=w,k.STATUS_TO_ME=M,k.prototype={toJSON:function(){},fromJSON:function(e){}},k.prototype.constructor=k,(a=U.getInstance()).Drafty=i,a});
+!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{("undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:this).Tinode=e()}}(function(){var e;const t=[{name:"ST",start:/(?:^|\W)(\*)[^\s*]/,end:/[^\s*](\*)(?=$|\W)/},{name:"EM",start:/(?:^|[\W_])(_)[^\s_]/,end:/[^\s_](_)(?=$|[\W_])/},{name:"DL",start:/(?:^|\W)(~)[^\s~]/,end:/[^\s~](~)(?=$|\W)/},{name:"CO",start:/(?:^|\W)(`)[^`]/,end:/[^`](`)(?=$|\W)/}],n=[{name:"LN",dataName:"url",pack:function(e){return/^[a-z]+:\/\//i.test(e)||(e="http://"+e),{url:e}},re:/(https?:\/\/)?(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b(?:[-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)/g},{name:"MN",dataName:"val",pack:function(e){return{val:e.slice(1)}},re:/\B@(\w\w+)/g},{name:"HT",dataName:"val",pack:function(e){return{val:e.slice(1)}},re:/\B#(\w\w+)/g}],s={ST:{name:"b",isVoid:!1},EM:{name:"i",isVoid:!1},DL:{name:"del",isVoid:!1},CO:{name:"tt",isVoid:!1},BR:{name:"br",isVoid:!0},LN:{name:"a",isVoid:!1},MN:{name:"a",isVoid:!1},HT:{name:"a",isVoid:!1},IM:{name:"img",isVoid:!0}};function i(e,t){var n;try{n=atob(e)}catch(e){console.log("Drafty: failed to decode base64-encoded object",e.message),n=atob("")}for(var s=n.length,i=new ArrayBuffer(s),r=new Uint8Array(i),a=0;a<s;a++)r[a]=n.charCodeAt(a);return URL.createObjectURL(new Blob([i],{type:t}))}var r={ST:{open:function(){return"<b>"},close:function(){return"</b>"}},EM:{open:function(){return"<i>"},close:function(){return"</i>"}},DL:{open:function(){return"<del>"},close:function(){return"</del>"}},CO:{open:function(){return"<tt>"},close:function(){return"</tt>"}},BR:{open:function(){return""},close:function(){return"<br/>"}},LN:{open:function(e){return'<a href="'+e.url+'">'},close:function(e){return"</a>"},props:function(e){return{href:e.url,target:"_blank"}}},MN:{open:function(e){return'<a href="#'+e.val+'">'},close:function(e){return"</a>"},props:function(e){return{name:e.val}}},HT:{open:function(e){return'<a href="#'+e.val+'">'},close:function(e){return"</a>"},props:function(e){return{name:e.val}}},IM:{open:function(e){var t=i(e.val,e.mime),n=e.ref?e.ref:t,s=(e.name?'<a href="'+n+'" download="'+e.name+'">':"")+'<img src="'+t+'"'+(e.width?' width="'+e.width+'"':"")+(e.height?' height="'+e.height+'"':"")+' border="0" />';return console.log("open: "+s),s},close:function(e){return e.name?"</a>":""},props:function(e){return{src:i(e.val,e.mime),title:e.name,"data-width":e.width,"data-height":e.height,"data-name":e.name,"data-size":.75*e.val.length|0,"data-mime":e.mime}}}},a=function(){};a.parse=function(e){if("string"!=typeof e)return null;var s=e.split(/\r?\n/),i=[],r={},a=[];s.map(function(e){var s,o,c=[];if(t.map(function(t){c=c.concat(function(e,t,n,s){for(var i=[],r=0,a=e.slice(0);a.length>0;){var o=t.exec(a);if(null==o)break;var c=o.index+o[0].lastIndexOf(o[1]);a=a.slice(c+1),r=(c+=r)+1;var u=n?n.exec(a):null;if(null==u)break;var h=u.index+u[0].indexOf(u[1]);a=a.slice(h+1),r=(h+=r)+1,i.push({text:e.slice(c+1,h),children:[],start:c,end:h,type:s})}return i}(e,t.start,t.end,t.name))}),0==c.length)o={txt:e};else{c.sort(function(e,t){return e.start-t.start}),c=function e(t){if(0==t.length)return[];for(var n=[t[0]],s=t[0],i=1;i<t.length;i++)t[i].start>s.end?(n.push(t[i]),s=t[i]):t[i].end<s.end&&s.children.push(t[i]);for(var i in n)n[i].children=e(n[i].children);return n}(c);var u=function e(t,n){var s="",i=[];for(var r in t){var a=t[r];if(!a.text){var o=e(a.children,s.length+n);a.text=o.txt,i=i.concat(o.fmt)}a.type&&i.push({at:s.length+n,len:a.text.length,tp:a.type}),s+=a.text}return{txt:s,fmt:i}}(function e(t,n,s,i){var r=[];if(0==i.length)return[];for(var a in i){var o=i[a];o.start>n&&r.push({text:t.slice(n,o.start)});var c={type:o.type},u=e(t,o.start+1,o.end-1,o.children);u.length>0?c.children=u:c.text=o.text,r.push(c),n=o.end+1}return n<s&&r.push({text:t.slice(n,s)}),r}(e,0,e.length,c),0);o={txt:u.txt,fmt:u.fmt}}if((s=function(e){var t,s=[];if(n.map(function(n){for(;null!==(t=n.re.exec(e));)s.push({offset:t.index,len:t[0].length,unique:t[0],data:n.pack(t[0]),type:n.name})}),0==s.length)return s;s.sort(function(e,t){return e.offset-t.offset});var i=-1;return s=s.filter(function(e){var t=e.offset>i;return i=e.offset+e.len,t})}(o.txt)).length>0){var h=[];for(var l in s){var d=s[l],f=r[d.unique];f||(f=i.length,r[d.unique]=f,i.push({tp:d.type,data:d.data})),h.push({at:d.offset,len:d.len,key:f})}o.ent=h}a.push(o)});var o={txt:""};if(a.length>0){o.txt=a[0].txt,o.fmt=(a[0].fmt||[]).concat(a[0].ent||[]);for(var c=1;c<a.length;c++){var u=a[c],h=o.txt.length+1;o.fmt.push({tp:"BR",len:1,at:h-1}),o.txt+=" "+u.txt,u.fmt&&(o.fmt=o.fmt.concat(u.fmt.map(function(e){return e.at+=h,e}))),u.ent&&(o.fmt=o.fmt.concat(u.ent.map(function(e){return e.at+=h,e})))}0==o.fmt.length&&delete o.fmt,i.length>0&&(o.ent=i)}return o},a.insertImage=function(e,t,n,s,i,r,a,o,c){return(e=e||{txt:" "}).ent=e.ent||[],e.fmt=e.fmt||[],e.fmt.push({at:t,len:1,key:e.ent.length}),e.ent.push({tp:"IM",data:{mime:n,val:s,width:i,height:r,name:a,ref:c,size:0|o}}),e},a.attachFile=function(e,t,n,s,i,r){(e=e||{txt:""}).ent=e.ent||[],e.fmt=e.fmt||[],e.fmt.push({at:-1,len:0,key:e.ent.length});let a={tp:"EX",data:{mime:t,val:n,name:s,ref:r,size:0|i}};return r instanceof Promise&&(a.data.ref=r.then(e=>{a.data.ref=e},e=>{})),e.ent.push(a),e},a.UNSAFE_toHTML=function(e){var t,n,s,{txt:i,fmt:a,ent:o}=e,c=[];if(a)for(var u in a){var h,l=a[u],d=l.tp;if(!d){var f=o[l.key];f&&(d=f.tp,h=f.data)}r[d]&&(c.push({idx:l.at+l.len,what:r[d].close(h)}),c.push({idx:l.at,what:r[d].open(h)}))}for(var u in c.sort(function(e,t){return t.idx-e.idx}),c)c[u].what&&(t=i,n=c[u].idx,s=c[u].what,i=t.slice(0,n)+s+t.slice(n));return i},a.format=function(e,t,n){var{txt:i,fmt:r,ent:a}=e;if(i=i||"",!r)return[i];var o=[].concat(r);return o.map(function(e){e.at=e.at||0,e.len=e.len||0}),o.sort(function(e,t){return e.at-t.at==0?t.len-e.len:e.at-t.at}),o=o.map(function(e){var t,n=e.tp;return n||(e.key=e.key||0,t=a[e.key].data,n=a[e.key].tp),{tp:n,data:t,at:e.at,len:e.len}}),function e(t,n,i,r,a,o){for(var c=[],u=0;u<r.length;u++){var h=r[u];n<h.at&&(c.push(a.call(o,null,void 0,t.slice(n,h.at))),n=h.at);for(var l=[],d=u+1;d<r.length&&r[d].at<h.at+h.len;d++)l.push(r[d]),u=d;var f=s[h.tp]||{};c.push(a.call(o,h.tp,h.data,f.isVoid?null:e(t,n,h.at+h.len,l,a,o))),n=h.at+h.len}return n<i&&c.push(a.call(o,null,void 0,t.slice(n,i))),c}(i,0,i.length,o,t,n)},a.toPlainText=function(e){return"string"==typeof e?e:e.txt},a.isPlainText=function(e){return"string"==typeof e||!(e.fmt||e.ent)},a.hasAttachments=function(e){if(e.ent&&e.ent.length>0)for(var t in e.ent)if("EX"==e.ent[t].tp)return!0;return!1},a.attachments=function(e,t,n){if(e.ent&&e.ent.length>0)for(var s in e.ent)"EX"==e.ent[s].tp&&t.call(n,e.ent[s].data,s)},a.getDownloadUrl=function(e){let t=null;return e.val?t=i(e.val,e.mime):"string"==typeof e.ref&&(t=e.ref),t},a.isUploading=function(e){return e.ref instanceof Promise},a.getPreviewUrl=function(e){return e.val?i(e.val,e.mime):null},a.getEntitySize=function(e){return e.size?e.size:e.val?.75*e.val.length|0:0},a.getEntityMimeType=function(e){return e.mime||"text/plain"},a.tagName=function(e){return s[e]?s[e].name:void 0},a.attrValue=function(e,t){if(t&&r[e])return r[e].props(t)},a.getContentType=function(){return"text/x-drafty"},e=a;const o="0";function c(e){return btoa(encodeURIComponent(e).replace(/%([0-9A-F]{2})/g,function(e,t){return String.fromCharCode("0x"+t)}))}function u(e,t,n){if(null==t)return e;if("object"!=typeof t)return t||e;if(t instanceof Date)return t;if(t instanceof v)return new v(t);if(t instanceof Array)return t.length>0?t:e;for(var s in e||(e=t.constructor()),t)!t.hasOwnProperty(s)||!t[s]&&!1!==t[s]||n&&n[s]||"_generated"==s||(e[s]=u(e[s],t[s]));return e}function h(e,t,n,s){return e[t]=u(e[t],n,s),e[t]}function l(){var e=null;if("withCredentials"in new XMLHttpRequest)e=new XMLHttpRequest;else{if("undefined"==typeof XDomainRequest)throw new Error("browser not supported");e=new XDomainRequest}return e}function d(e,t){if("ts"===e&&"string"==typeof t&&t.length>=20&&t.length<=24){var n=new Date(t);if(n)return n}else if("acs"===e&&"object"==typeof t)return new v(t);return t}function f(e,t){return"string"==typeof t&&t.length>128?"<"+t.length+", bytes: "+t.substring(0,12)+"..."+t.substring(t.length-12)+">":function(e,t){if(t instanceof Date)t=function(e){if(e&&0!=e.getTime()){var t=e.getUTCMilliseconds();return e.getUTCFullYear()+"-"+n(e.getUTCMonth()+1)+"-"+n(e.getUTCDate())+"T"+n(e.getUTCHours())+":"+n(e.getUTCMinutes())+":"+n(e.getUTCSeconds())+(t?"."+n(t,3):"")+"Z"}function n(e,t){return"0".repeat((t=t||2)-(""+e).length)+e}}(t);else if(null==t||!1===t||Array.isArray(t)&&0==t.length||"object"==typeof t&&0===Object.keys(t).length)return;return t}(0,t)}function p(e,t,n){var s=null;return"http"!==t&&"https"!==t&&"ws"!==t&&"wss"!==t||(s=t+"://","/"!==(s+=e).charAt(s.length-1)&&(s+="/"),s+="v"+o+"/channels","http"!==t&&"https"!==t||(s+="/lp"),s+="?apikey="+n),s}var g=function(e,t,n,s,i){let r=e,a=s,o=t;var c=i;const u=2e3,h=10,f=.3;let g=null,_=0,m=!1,v=e=>{this.logger&&this.logger(e)};function b(e){var t=null;e.connect=function(n){return t&&1===t.readyState?Promise.resolve():(n&&(r=n),new Promise(function(n,s){var i=p(r,a?"wss":"ws",o);v("Connecting to: "+i);var l=new WebSocket(i);l.onopen=function(t){m=!1,e.onOpen&&e.onOpen(),n(),c&&(window.clearTimeout(g),g=null,_=0)},l.onclose=function(n){t=null,e.onDisconnect&&e.onDisconnect(null),!m&&c&&function(){clearTimeout(g);var e=u*(Math.pow(2,_)*(1+f*Math.random()));_=_>=h?_:_+1,g=setTimeout(()=>{v("Reconnecting, iter="+_+", timeout="+e),m||this.connect().catch(function(){})},e)}.call(e)},l.onerror=function(e){s(e)},l.onmessage=function(t){e.onMessage&&e.onMessage(t.data)},t=l}))},e.disconnect=function(){t&&(m=!0,t.close()),t=null},e.sendText=function(e){if(!t||t.readyState!=t.OPEN)throw new Error("Websocket is not connected");t.send(e)},e.isConnected=function(){return t&&1===t.readyState}}function w(e){var t=null,n=null,s=null;e.connect=function(s){return s&&(r=s),new Promise(function(s,i){var c=p(r,a?"https":"http",o);v("Connecting to: "+c),(n=function n(s,i,r){var a=l();return a.onreadystatechange=function(o){if(4==a.readyState)if(201==a.status){var c=JSON.parse(a.responseText,d);a.responseText,t=s+"&sid="+c.ctrl.params.sid,(a=n(t)).send(null),e.onOpen&&e.onOpen(),i&&i()}else 200==a.status?(e.onMessage&&e.onMessage(a.responseText),(a=n(t)).send(null)):(r&&r(a.responseText),e.onMessage&&e.onMessage(a.responseText),e.onDisconnect&&e.onDisconnect(new Error(a.status+" "+a.responseText)))},a.open("GET",s,!0),a}(c,s,i)).send(null)}).catch(function(){})},e.disconnect=function(){s&&(s.abort(),s=null),n&&(n.abort(),n=null),e.onDisconnect&&e.onDisconnect(null),t=null},e.sendText=function(e){var n,i;if(n=t,(i=l()).onreadystatechange=function(e){if(4==i.readyState&&i.status>=400)throw new Error("LP sender failed, "+i.status)},i.open("POST",n,!0),!(s=i)||1!=s.readyState)throw new Error("Long poller failed to connect");s.send(e)},e.isConnected=function(){return n&&!0}}"lp"===n?w(this):"ws"===n?b(this):"object"==typeof window&&window.WebSocket?b(this):w(this),this.onMessage=void 0,this.onDisconnect=void 0,this.onOpen=void 0,this.logger=void 0},_=function(e,t,n,s,i){this._appName=e||"Undefined",this._apiKey=n,this._browser="",this._platform="undefined","undefined"!=typeof navigator&&(this._browser=function(e){var t,n=(e=(e||"").replace(" (KHTML, like Gecko)","")).match(/(AppleWebKit\/[.\d]+)/i);if(n){for(var s=["chrome","safari","mobile","version"],i=e.substr(n.index+n[0].length).split(" "),r=[],a=0;a<i.length;a++){var o=/([\w.]+)[\/]([\.\d]+)/.exec(i[a]);o&&r.push([o[1],o[2],s.findIndex(function(e){return e==o[1].toLowerCase()})])}r.sort(function(e,t){var n=e[2]-t[2];return 0!=n?n:t[0].length-e[0].length}),t=r.length>0?r[0][0]+"/"+r[0][1]:n[1]}else t=/trident/i.test(e)?(n=/(?:\brv[ :]+([.\d]+))|(?:\bMSIE ([.\d]+))/g.exec(e))?"MSIE/"+(n[1]||n[2]):"MSIE/?":/firefox/i.test(e)?(n=/Firefox\/([.\d]+)/g.exec(e))?"Firefox/"+n[1]:"Firefox/?":/presto/i.test(e)?(n=/Opera\/([.\d]+)/g.exec(e))?"Opera/"+n[1]:"Opera/?":(n=/([\w.]+)\/([.\d]+)/.exec(e))?n[1]+"/"+n[2]:(n=e.split(" "))[0];if((n=t.split("/")).length>1){var c=n[1].split(".");t=n[0]+"/"+c[0]+(c[1]?"."+c[1]:"")}return t}(navigator.userAgent),this._platform=navigator.platform),this._loggingEnabled=!1,this._trimLongStrings=!1,this._myUID=null,this._authenticated=!1,this._login=null,this._authToken=null,this._inPacketCount=0,this._messageId=Math.floor(65535*Math.random()+65535),this._serverInfo=null,this._pendingPromises={},this._connection=new g(t,n,s,i,!0),this.logger=(e=>{if(this._loggingEnabled){var t=new Date,n=("0"+t.getUTCHours()).slice(-2)+":"+("0"+t.getUTCMinutes()).slice(-2)+":"+("0"+t.getUTCSeconds()).slice(-2)+":"+("0"+t.getUTCMilliseconds()).slice(-3);console.log("["+n+"] "+e)}}),this._connection.logger=this.logger,this._cache={};let r=this.cachePut=((e,t,n)=>{this._cache[e+":"+t]=n}),a=this.cacheGet=((e,t)=>this._cache[e+":"+t]),o=this.cacheDel=((e,t)=>{delete this._cache[e+":"+t]}),c=this.cacheMap=((e,t)=>{for(var n in this._cache)if(e(this._cache[n],n,t))break});this.attachCacheToTopic=(e=>{e._tinode=this,e._cacheGetUser=(e=>{var t=a("user",e);if(t)return{user:e,public:u({},t)}}),e._cachePutUser=((e,t)=>r("user",e,u({},t.public))),e._cacheDelUser=(e=>o("user",e)),e._cachePutSelf=(()=>r("topic",e.name,e)),e._cacheDelSelf=(()=>o("topic",e.name))});let h=(e,t,n,s)=>{var i=this._pendingPromises[e];i&&(delete this._pendingPromises[e],t>=200&&t<400?i.resolve&&i.resolve(n):i.reject&&i.reject(new Error("Error: "+s+" ("+t+")")))},l=e=>{var t=null;return e&&(t=new Promise((t,n)=>{this._pendingPromises[e]={resolve:t,reject:n}})),t},p=this.getNextUniqueId=(()=>0!=this._messageId?""+this._messageId++:void 0),_=()=>this._appName+" ("+(this._browser?this._browser+"; ":"")+this._platform+"); tinodejs/0.15";this.initPacket=((e,t)=>{switch(e){case"hi":return{hi:{id:p(),ver:"0.15",ua:_()}};case"acc":return{acc:{id:p(),user:null,scheme:null,secret:null,login:!1,tags:null,desc:{},cred:{}}};case"login":return{login:{id:p(),scheme:null,secret:null}};case"sub":return{sub:{id:p(),topic:t,set:{},get:{}}};case"leave":return{leave:{id:p(),topic:t,unsub:!1}};case"pub":return{pub:{id:p(),topic:t,noecho:!1,head:null,content:{}}};case"get":return{get:{id:p(),topic:t,what:null,desc:{},sub:{},data:{}}};case"set":return{set:{id:p(),topic:t,desc:{},sub:{},tags:[]}};case"del":return{del:{id:p(),topic:t,what:null,delseq:null,user:null,hard:!1}};case"note":return{note:{topic:t,what:null,seq:void 0}};default:throw new Error("Unknown packet type requested: "+e)}}),this.send=((e,t)=>{let n;t&&(n=l(t)),e=function e(t){return Object.keys(t).forEach(function(n){"_"==n[0]?delete t[n]:t[n]?Array.isArray(t[n])&&0==t[n].length?delete t[n]:t[n]?"object"!=typeof t[n]||t[n]instanceof Date||(e(t[n]),0==Object.getOwnPropertyNames(t[n]).length&&delete t[n]):delete t[n]:delete t[n]}),t}(e);var s=JSON.stringify(e);return this.logger("out: "+(this._trimLongStrings?JSON.stringify(e,f):s)),this._connection.sendText(s),n}),this.loginSuccessful=(e=>{this._myUID=e.params.user,this._authenticated=e&&e.code>=200&&e.code<300,e.params&&e.params.token&&e.params.expires?this._authToken={token:e.params.token,expires:new Date(e.params.expires)}:this._authToken=null,this.onLogin&&this.onLogin(e.code,e.text)}),this._connection.onMessage=(e=>{if(e){this._inPacketCount++,this.onRawMessage&&this.onRawMessage(e);var t=JSON.parse(e,d);if(t)if(this.logger("in: "+(this._trimLongStrings?JSON.stringify(t,f):e)),this.onMessage&&this.onMessage(t),t.ctrl)this.onCtrlMessage&&this.onCtrlMessage(t.ctrl),t.ctrl.id&&h(t.ctrl.id,t.ctrl.code,t.ctrl,t.ctrl.text),t.ctrl.params&&"data"==t.ctrl.params.what&&(n=a("topic",t.ctrl.topic))&&n._allMessagesReceived(t.ctrl.params.count);else if(t.meta)(n=a("topic",t.meta.topic))&&n._routeMeta(t.meta),this.onMetaMessage&&this.onMetaMessage(t.meta);else if(t.data)(n=a("topic",t.data.topic))&&n._routeData(t.data),this.onDataMessage&&this.onDataMessage(t.data);else if(t.pres)(n=a("topic",t.pres.topic))&&n._routePres(t.pres),this.onPresMessage&&this.onPresMessage(t.pres);else if(t.info){var n;(n=a("topic",t.info.topic))&&n._routeInfo(t.info),this.onInfoMessage&&this.onInfoMessage(t.info)}else this.logger("ERROR: Unknown packet received.");else this.logger("in: "+e),this.logger("ERROR: failed to parse data")}}),this._connection.onOpen=(()=>{this.hello()}),this._connection.onDisconnect=(e=>{this._inPacketCount=0,this._serverInfo=null,this._authenticated=!1,c((e,t)=>{0===t.lastIndexOf("topic:",0)&&e._resetSub()}),this.onDisconnect&&this.onDisconnect(e)})};_.credential=function(e,t,n,s){return"object"==typeof e&&({val:t,params:n,resp:s,meth:e}=e),e&&(t||s)?[{meth:e,val:t,resp:s,params:n}]:null},_.topicType=function(e){return{me:"me",fnd:"fnd",grp:"grp",new:"grp",usr:"p2p"}["string"==typeof e?e.substring(0,3):"xxx"]},_.isNewGroupTopicName=function(e){return"string"==typeof e&&"new"==e.substring(0,3)},_.getVersion=function(){return"0.15"},_.MESSAGE_STATUS_NONE=0,_.MESSAGE_STATUS_QUEUED=1,_.MESSAGE_STATUS_SENDING=2,_.MESSAGE_STATUS_SENT=3,_.MESSAGE_STATUS_RECEIVED=4,_.MESSAGE_STATUS_READ=5,_.MESSAGE_STATUS_TO_ME=6,_.DEL_CHAR="\u2421",_.prototype={connect:function(e){return this._connection.connect(e)},disconnect:function(){this._connection&&this._connection.disconnect()},isConnected:function(){return this._connection&&this._connection.isConnected()},isAuthenticated:function(){return this._authenticated},account:function(e,t,n,s,i){var r=this.initPacket("acc");return r.acc.user=e,r.acc.scheme=t,r.acc.secret=n,r.acc.login=s,i&&(r.acc.desc.defacs=i.defacs,r.acc.desc.public=i.public,r.acc.desc.private=i.private,r.acc.tags=i.tags,r.acc.cred=i.cred),this.send(r,r.acc.id)},createAccount:function(e,t,n,s){var i=this.account("new",e,t,n,s);return n&&(i=i.then(e=>(this.loginSuccessful(e),e))),i},createAccountBasic:function(e,t,n){return e=e||"",t=t||"",this.createAccount("basic",c(e+":"+t),!0,n)},updateAccountBasic:function(e,t,n){return t=t||"",n=n||"",this.account(e,"basic",c(t+":"+n),!1,null)},hello:function(){var e=this.initPacket("hi");return this.send(e,e.hi.id).then(e=>(e.params&&(this._serverInfo=e.params),this.onConnect&&this.onConnect(),e)).catch(e=>{this.onDisconnect&&this.onDisconnect(e)})},login:function(e,t,n){var s=this.initPacket("login");return s.login.scheme=e,s.login.secret=t,s.login.cred=n,this.send(s,s.login.id).then(e=>(this.loginSuccessful(e),e))},loginBasic:function(e,t,n){return this.login("basic",c(e+":"+t),n).then(t=>(this._login=e,t))},loginToken:function(e,t){return this.login("token",e,t)},getAuthToken:function(){return this._authToken&&this._authToken.expires.getTime()>Date.now()?this._authToken:(this._authToken=null,null)},setAuthToken:function(e){this._authToken=e},subscribe:function(e,t,n){var s=this.initPacket("sub",e);return e||(e="new"),s.sub.get=t,n&&(n.sub&&(s.sub.set.sub=n.sub),_.isNewGroupTopicName(e)&&n.desc&&(s.sub.set.desc=n.desc),n.tags&&(s.sub.set.tags=n.tags)),this.send(s,s.sub.id)},leave:function(e,t){var n=this.initPacket("leave",e);return n.leave.unsub=t,this.send(n,n.leave.id)},createMessage:function(e,t,n){let s=this.initPacket("pub",e),i="string"==typeof t?Drafty.parse(t):t;return i&&!Drafty.isPlainText(i)&&(s.pub.head={mime:Drafty.getContentType()},t=i),s.pub.noecho=n,s.pub.content=t,s.pub},publish:function(e,t,n){return this.publishMessage(this.createMessage(e,t,n))},publishMessage:function(e){return(e=Object.assign({},e)).seq=void 0,e.from=void 0,e.ts=void 0,this.send({pub:e},e.id)},getMeta:function(e,t){var n=this.initPacket("get",e);return n.get=u(n.get,t),this.send(n,n.get.id)},setMeta:function(e,t){var n=this.initPacket("set",e),s=[];return t&&["desc","sub","tags"].map(function(e){t.hasOwnProperty(e)&&(s.push(e),n.set[e]=t[e])}),0==s.length?Promise.reject(new Error("Invalid {set} parameters")):this.send(n,n.set.id)},delMessages:function(e,t,n){var s=this.initPacket("del",e);return s.del.what="msg",s.del.delseq=t,s.del.hard=n,this.send(s,s.del.id)},delTopic:function(e){var t=this.initPacket("del",e);return t.del.what="topic",this.send(t,t.del.id).then(t=>(this.cacheDel("topic",e),this.ctrl))},delSubscription:function(e,t){var n=this.initPacket("del",e);return n.del.what="sub",n.del.user=t,this.send(n,n.del.id)},note:function(e,t,n){if(n<=0||n>=268435455)throw new Error("Invalid message id "+n);var s=this.initPacket("note",e);s.note.what=t,s.note.seq=n,this.send(s)},noteKeyPress:function(e){var t=this.initPacket("note",e);t.note.what="kp",this.send(t)},getTopic:function(e){var t=this.cacheGet("topic",e);return!t&&e&&(t="me"==e?new w:"fnd"==e?new M:new b(e),this.cachePut("topic",e,t),this.attachCacheToTopic(t)),t},newTopic:function(e){var t=new b("new",e);return this.attachCacheToTopic(t),t},newGroupTopicName:function(){return"new"+this.getNextUniqueId()},newTopicWith:function(e,t){var n=new b(e,t);return this.attachCacheToTopic(n),n},getMeTopic:function(){return this.getTopic("me")},getFndTopic:function(){return this.getTopic("fnd")},getLargeFileHelper:function(){return new S(this)},getCurrentUserID:function(){return this._myUID},getCurrentLogin:function(){return this._login},getServerInfo:function(){return this._serverInfo},enableLogging:function(e,t){this._loggingEnabled=e,this._trimLongStrings=t},isTopicOnline:function(e){var t=this.getMeTopic(),n=t&&t.getContact(e);return n&&n.online},wantAkn:function(e){this._messageId=e?Math.floor(16777215*Math.random()+16777215):0},onWebsocketOpen:void 0,onConnect:void 0,onDisconnect:void 0,onLogin:void 0,onCtrlMessage:void 0,onDataMessage:void 0,onPresMessage:void 0,onMessage:void 0,onRawMessage:void 0};var m=function(e){this.topic=e;var t=e._tinode.getMeTopic();this.contact=t&&t.getContact(e.name),this.what={}};m.prototype={_get_ims:function(){let e=this.contact&&this.contact.updated,t=this.topic._lastDescUpdate||0;return e>t?e:t},withData:function(e,t,n){return this.what.data={since:e,before:t,limit:n},this},withLaterData:function(e){return this.withData(this.topic._maxSeq>0?this.topic._maxSeq+1:void 0,void 0,e)},withEarlierData:function(e){return this.withData(void 0,this.topic._minSeq>0?this.topic._minSeq:void 0,e)},withDesc:function(e){return this.what.desc={ims:e},this},withLaterDesc:function(){return this.withDesc(this._get_ims())},withSub:function(e,t,n){var s={ims:e,limit:t};return"me"==this.topic.getType()?s.topic=n:s.user=n,this.what.sub=s,this},withOneSub:function(e,t){return this.withSub(e,void 0,t)},withLaterOneSub:function(e){return this.withOneSub(this.topic._lastSubsUpdate,e)},withLaterSub:function(e){return this.withSub("p2p"==this.topic.getType()?this._get_ims():this.topic._lastSubsUpdate,e)},withTags:function(){return this.what.tags=!0,this},withDel:function(e,t){return(e||t)&&(this.what.del={since:e,limit:t}),this},withLaterDel:function(e){return this.withDel(this.topic._maxSeq>0?this.topic._maxDel+1:void 0,e)},build:function(){var e={},t=[],n=this;return["data","sub","desc","tags","del"].map(function(s){n.what.hasOwnProperty(s)&&(t.push(s),Object.getOwnPropertyNames(n.what[s]).length>0&&(e[s]=n.what[s]))}),t.length>0?e.what=t.join(" "):e=void 0,e}};var v=function(e){e&&(this.given="number"==typeof e.given?e.given:v.decode(e.given),this.want="number"==typeof e.want?e.want:v.decode(e.want),this.mode=e.mode?"number"==typeof e.mode?e.mode:v.decode(e.mode):this.given&this.want)};v._NONE=0,v._JOIN=1,v._READ=2,v._WRITE=4,v._PRES=8,v._APPROVE=16,v._SHARE=32,v._DELETE=64,v._OWNER=128,v._BITMASK=v._JOIN|v._READ|v._WRITE|v._PRES|v._APPROVE|v._SHARE|v._DELETE|v._OWNER,v._INVALID=1048576,v.decode=function(e){if(!e)return null;if("number"==typeof e)return e&v._BITMASK;if("N"===e||"n"===e)return v._NONE;for(var t={J:v._JOIN,R:v._READ,W:v._WRITE,P:v._PRES,A:v._APPROVE,S:v._SHARE,D:v._DELETE,O:v._OWNER},n=v._NONE,s=0;s<e.length;s++){var i=t[e.charAt(s).toUpperCase()];i&&(n|=i)}return n},v.encode=function(e){if(null===e||e===v._INVALID)return null;if(e===v._NONE)return"N";for(var t=["J","R","W","P","A","S","D","O"],n="",s=0;s<t.length;s++)0!=(e&1<<s)&&(n+=t[s]);return n},v.update=function(e,t){if(!t||"string"!=typeof t)return e;var n=t.charAt(0);if("+"==n||"-"==n){for(var s=e,i=t.split(/([-+])/),r=1;r<i.length-1;r+=2){n=i[r];var a=v.decode(i[r+1]);if(a==v._INVALID)return e;null!=a&&("+"===n?s|=a:"-"===n&&(s&=~a))}e=s}else(s=v.decode(t))!=v._INVALID&&(e=s);return e},v.prototype={setMode:function(e){return this.mode=v.decode(e),this},updateMode:function(e){return this.mode=v.update(this.mode,e),this},getMode:function(){return v.encode(this.mode)},setGiven:function(e){return this.given=v.decode(e),this},updateGiven:function(e){return this.given=v.update(this.given,e),this},getGiven:function(){return v.encode(this.given)},setWant:function(e){return this.want=v.decode(e),this},updateWant:function(e){return this.want=v.update(this.want,e),this},getWant:function(){return v.encode(this.want)},updateAll:function(e){return e&&(this.updateGiven(e.given),this.updateWant(e.want),this.mode=this.given&this.want),this},isOwner:function(){return 0!=(this.mode&v._OWNER)},isMuted:function(){return 0==(this.mode&v._PRES)},isPresencer:function(){return 0!=(this.mode&v._PRES)},isJoiner:function(){return 0!=(this.mode&v._JOIN)},isReader:function(){return 0!=(this.mode&v._READ)},isWriter:function(){return 0!=(this.mode&v._WRITE)},isApprover:function(){return 0!=(this.mode&v._APPROVE)},isAdmin:function(){return this.isOwner()||this.isApprover()},isSharer:function(){return 0!=(this.mode&v._SHARE)},isDeleter:function(){return 0!=(this.mode&v._DELETE)}};var b=function(e,t){this._tinode=null,this.name=e,this.created=null,this.updated=null,this.touched=null,this.acs=new v(null),this.private=null,this.public=null,this._users={},this._queuedSeqId=268435455,this._maxSeq=0,this._minSeq=0,this._noEarlierMsgs=!1,this._maxDel=0,this._tags=[],this._messages=function(e){var t=[];function n(t,n,s){for(var i=0,r=n.length-1,a=0,o=0,c=!1;i<=r;)if((o=e(n[a=(i+r)/2|0],t))<0)i=a+1;else{if(!(o>0)){c=!0;break}r=a-1}return c?a:s?-1:o<0?a+1:a}function s(e,t){var s=n(e,t,!1);return t.splice(s,0,e),t}return e=e||function(e,t){return e===t?0:e<t?-1:1},{getAt:function(e){return t[e]},put:function(){var e;for(var n in e=1==arguments.length&&Array.isArray(arguments[0])?arguments[0]:arguments)s(e[n],t)},delAt:function(e){var n=t.splice(e,1);if(n&&n.length>0)return n[0]},delRange:function(e,n){return t.splice(e,n-e)},size:function(){return t.length},reset:function(e){t=[]},forEach:function(e,n,s,i){n|=0,s=s||t.length;for(var r=n;r<s;r++)e.call(i,t[r],r)},find:function(e,s){return n(e,t,!s)}}}(function(e,t){return e.seq-t.seq}),this._subscribed=!1,this._lastDescUpdate=null,this._lastSubsUpdate=null,this._new=!0,t&&(this.onData=t.onData,this.onMeta=t.onMeta,this.onPres=t.onPres,this.onInfo=t.onInfo,this.onMetaDesc=t.onMetaDesc,this.onMetaSub=t.onMetaSub,this.onSubsUpdated=t.onSubsUpdated,this.onTagsUpdated=t.onTagsUpdated,this.onDeleteTopic=t.onDeleteTopic,this.onAllMessagesReceived=t.onAllMessagesReceived)};b.prototype={isSubscribed:function(){return this._subscribed},subscribe:function(e,t){if(this._subscribed)return Promise.resolve(this);var n=this.name;return this._tinode.subscribe(n||"new",e,t).then(e=>{if(e.code>=300)return e;if(this._subscribed=!0,this.acs=e.params&&e.params.acs?e.params.acs:this.acs,this._new){this._new=!1,this.name=e.topic,this.created=e.ts,this.updated=e.ts,this.touched=e.ts,this._cachePutSelf();var n=this._tinode.getMeTopic();n&&n._processMetaSub([{_generated:!0,topic:this.name,created:e.ts,updated:e.ts,touched:e.ts,acs:this.acs}]),t&&t.desc&&(t.desc._generated=!0,this._processMetaDesc(t.desc))}return e})},publish:function(e,t){return this.publishMessage(this.createMessage(e,t))},createMessage:function(e,t){return this._tinode.createMessage(this.name,e,t)},publishMessage:function(e){if(!this._subscribed)return Promise.reject(new Error("Cannot publish on inactive topic"));if(Drafty.hasAttachments(e.content)){let t=[];Drafty.attachments(e.content,e=>{t.push(e.ref)}),e.head.attachments=t}return e._sending=!0,this._tinode.publishMessage(e)},publishDraft:function(e,t){return t||this._subscribed?(e.seq=this._getQueuedSeqId(),e._generated=!0,e.ts=new Date,e.from=this._tinode.getCurrentUserID(),e.noecho=!0,this._messages.put(e),this.onData&&this.onData(e),(t||Promise.resolve()).then(()=>e._cancelled?{code:300,text:"cancelled"}:this.publishMessage(e).then(t=>(e._sending=!1,e.seq=t.params.seq,e.ts=t.ts,this._routeData(e),t)),t=>{e._sending=!1,this._messages.delAt(this._messages.find(e)),this.onData&&this.onData()})):Promise.reject(new Error("Cannot publish on inactive topic"))},leave:function(e){return this._subscribed||e?this._tinode.leave(this.name,e).then(t=>(this._resetSub(),e&&this._gone(),t)):Promise.reject(new Error("Cannot leave inactive topic"))},getMeta:function(e){return this._subscribed?this._tinode.getMeta(this.name,e):Promise.reject(new Error("Cannot query inactive topic"))},getMessagesPage:function(e,t){var n=this.startMetaQuery();t?n.withLaterData(e):n.withEarlierData(e);var s=this.getMeta(n.build());return t||(s=s.then(e=>{e&&e.params&&!e.params.count&&(this._noEarlierMsgs=!0)})),s},setMeta:function(e){return this._subscribed?(e.tags&&(e.tags=function(e){var t=[];if(Array.isArray(e)){for(var n=0,s=e.length;n<s;n++){var i=e[n];i&&(i=i.trim().toLowerCase()).length>1&&t.push(i)}t.sort().filter(function(e,t,n){return!t||e!=n[t-1]})}return 0==t.length&&t.push(_.DEL_CHAR),t}(e.tags)),this._tinode.setMeta(this.name,e).then(t=>t&&t.code>=300?t:(e.sub&&(t.params&&t.params.acs&&(e.sub.acs=t.params.acs,e.sub.updated=t.ts),e.sub.user||(e.sub.user=this._tinode.getCurrentUserID(),e.desc||(e.desc={})),e.sub._generated=!0,this._processMetaSub([e.sub])),e.desc&&(t.params&&t.params.acs&&(e.desc.acs=t.params.acs,e.desc.updated=t.ts),this._processMetaDesc(e.desc)),e.tags&&this._processMetaTags(e.tags),t))):Promise.reject(new Error("Cannot update inactive topic"))},invite:function(e,t){return this.setMeta({sub:{user:e,mode:t}})},delMessages:function(e,t){if(!this._subscribed)return Promise.reject(new Error("Cannot delete messages in inactive topic"));e.sort(function(e,t){return e.low<t.low||e.low==t.low&&(!t.hi||e.hi>=t.hi)});let n,s=e.reduce((e,t)=>(t.low<268435455&&(!t.hi||t.hi<268435455?e.push(t):e.push({low:t.low,hi:this._maxSeq+1})),e),[]);return(n=e.length>0?this._tinode.delMessages(this.name,s,t):Promise.resolve({params:{del:0}})).then(t=>(t.params.del>this._maxDel&&(this._maxDel=t.params.del),e.map(e=>{e.hi?this.flushMessageRange(e.low,e.hi):this.flushMessage(e.low)}),this.onData&&this.onData(),t))},delMessagesAll:function(e){return this.delMessages([{low:1,hi:this._maxSeq+1,_all:!0}],e)},delMessagesList:function(e,t){e.sort((e,t)=>e-t);var n=e.reduce((e,t)=>{if(0==e.length)e.push({low:t});else{let n=e[e.length-1];!n.hi&&t!=n.low+1||t>n.hi?e.push({low:t}):n.hi=n.hi?Math.max(n.hi,t+1):t+1}return e},[]);return this.delMessages(n,t)},delTopic:function(){var e=this;return this._tinode.delTopic(this.name).then(function(t){return e._resetSub(),e._gone(),t})},delSubscription:function(e){return this._subscribed?this._tinode.delSubscription(this.name,e).then(t=>(delete this._users[e],this.onSubsUpdated&&this.onSubsUpdated(Object.keys(this._users)),t)):Promise.reject(new Error("Cannot delete subscription in inactive topic"))},note:function(e,t){var n=this._users[this._tinode.getCurrentUserID()];n?((!n[e]||n[e]<t)&&(this._subscribed?this._tinode.note(this.name,e,t):this._tinode.logger("Not sending {note} on inactive topic")),n[e]=t):this._tinode.logger("note(): user not found "+this._tinode.getCurrentUserID());var s=this._tinode.getMeTopic();s&&s.setMsgReadRecv(this.name,e,t)},noteRecv:function(e){this.note("recv",e)},noteRead:function(e){this.note("read",e)},noteKeyPress:function(){this._subscribed?this._tinode.noteKeyPress(this.name):this._tinode.logger("Cannot send notification in inactive topic")},userDesc:function(e){var t=this._cacheGetUser(e);if(t)return t},subscribers:function(e,t){var n=e||this.onMetaSub;if(n)for(var s in this._users)n.call(t,this._users[s],s,this._users)},tags:function(){return this._tags.slice(0)},subscriber:function(e){return this._users[e]},messages:function(e,t,n,s){var i=e||this.onData;if(i){let e="number"==typeof t?this._messages.find({seq:t}):void 0,r="number"==typeof n?this._messages.find({seq:n},!0):void 0;-1!=e&&-1!=r&&this._messages.forEach(i,e,r,s)}},msgReceiptCount:function(e,t){var n=0,s=this._tinode.getCurrentUserID();if(t>0)for(var i in this._users){var r=this._users[i];r.user!==s&&r[e]>=t&&n++}return n},msgReadCount:function(e){return this.msgReceiptCount("read",e)},msgRecvCount:function(e){return this.msgReceiptCount("recv",e)},msgHasMoreMessages:function(e){return e?this.seq>this._maxSeq:this._minSeq>1&&!this._noEarlierMsgs},isNewMessage:function(e){return this._maxSeq<=e},flushMessage:function(e){let t=this._messages.find({seq:e});return t>=0?this._messages.delAt(t):void 0},flushMessageRange:function(e,t){let n=this._messages.find({seq:e});return n>=0?this._messages.delRange(n,this._messages.find({seq:t},!0)):[]},cancelSend:function(e){let t=this._messages.find({seq:e});if(t>=0){let e=this._messages.getAt(t);if(1==this.msgStatus(e))return e._cancelled=!0,this._messages.delAt(t),!0}return!1},getType:function(){return _.topicType(this.name)},getAccessMode:function(){return this.acs},getDefaultAccess:function(){return this.defacs},startMetaQuery:function(){return new m(this)},msgStatus:function(e){var t=0;return e.from==this._tinode.getCurrentUserID()?e._sending?t=2:e.seq>=268435455?t=1:this.msgReadCount(e.seq)>0?t=5:this.msgRecvCount(e.seq)>0?t=4:e.seq>0&&(t=3):t=6,t},_routeData:function(e){e.content&&((!this.touched||this.touched<e.ts)&&(this.touched=e.ts),e._generated||this._messages.put(e)),e.seq>this._maxSeq&&(this._maxSeq=e.seq),(e.seq<this._minSeq||0==this._minSeq)&&(this._minSeq=e.seq),this.onData&&this.onData(e);var t=this._tinode.getMeTopic();t&&t.setMsgReadRecv(this.name,"msg",e.seq,e.ts)},_routeMeta:function(e){e.desc&&(this._lastDescUpdate=e.ts,this._processMetaDesc(e.desc)),e.sub&&e.sub.length>0&&(this._lastSubsUpdate=e.ts,this._processMetaSub(e.sub)),e.del&&this._processDelMessages(e.del.clear,e.del.delseq),e.tags&&this._processMetaTags(e.tags),this.onMeta&&this.onMeta(e)},_routePres:function(e){var t;switch(e.what){case"del":this._processDelMessages(e.clear,e.delseq);break;case"on":case"off":(t=this._users[e.src])?t.online="on"==e.what:this._tinode.logger("Presence update for an unknown user",this.name,e.src);break;case"acs":let s="me"==e.src?this._tinode.getCurrentUserID():e.src;if(t=this._users[s])t.acs.updateAll(e.dacs),s==this._tinode.getCurrentUserID()&&this.acs.updateAll(e.dacs),t.acs&&t.acs.mode!=v._NONE||("p2p"==this.getType()&&this.leave(),this._processMetaSub([{user:s,deleted:new Date,_generated:!0}]));else{var n=(new v).updateAll(e.dacs);n&&n.mode!=v._NONE&&((t=this._cacheGetUser(s))?t.acs=n:(t={user:s,acs:n},this.getMeta(this.startMetaQuery().withOneSub(void 0,s).build())),t._generated=!0,t.updated=new Date,this._processMetaSub([t]))}break;default:this._tinode.logger("Ignored presence update",e.what)}this.onPres&&this.onPres(e)},_routeInfo:function(e){if("kp"!==e.what){var t=this._users[e.from];t&&(t[e.what]=e.seq)}this.onInfo&&this.onInfo(e)},_processMetaDesc:function(e,t){if(u(this,e),"string"==typeof this.created&&(this.created=new Date(this.created)),"string"==typeof this.updated&&(this.updated=new Date(this.updated)),"string"==typeof this.touched&&(this.touched=new Date(this.touched)),"me"!==this.name&&!t&&!e._generated){var n=this._tinode.getMeTopic();n&&n._processMetaSub([{_generated:!0,topic:this.name,updated:this.updated,touched:this.touched,acs:this.acs,public:this.public,private:this.private}])}this.onMetaDesc&&this.onMetaDesc(this)},_processMetaSub:function(e){var t=void 0;for(var n in e){var s=e[n];if(s.user){s.updated=new Date(s.updated),s.deleted=s.deleted?new Date(s.deleted):null;var i=null;s.deleted?(delete this._users[s.user],i=s):((i=this._users[s.user])||(i=this._cacheGetUser(s.user)),i=this._updateCachedUser(s.user,s,s._generated)),this.onMetaSub&&this.onMetaSub(i)}else s._generated||(t=s)}t&&this.onMetaDesc&&this.onMetaDesc(t),this.onSubsUpdated&&this.onSubsUpdated(Object.keys(this._users))},_processMetaTags:function(e){1==e.length&&e[0]==_.DEL_CHAR&&(e=[]),this._tags=e,this.onTagsUpdated&&this.onTagsUpdated(e)},_processDelMessages:function(e,t){this._maxDel=Math.max(e,this._maxDel),this.clear=Math.max(e,this.clear);var n=this,s=0;Array.isArray(t)&&t.map(function(e){if(e.hi)for(var t=e.low;t<e.hi;t++)s++,n.flushMessage(t);else s++,n.flushMessage(e.low)}),s>0&&this.onData&&this.onData()},_allMessagesReceived:function(e){this.onAllMessagesReceived&&this.onAllMessagesReceived(e)},_resetSub:function(){this._subscribed=!1},_gone:function(){var e=this._tinode.getMeTopic();e&&e._routePres({_generated:!0,what:"gone",topic:"me",src:this.name}),this.onDeleteTopic&&this.onDeleteTopic()},_updateCachedUser:function(e,t,n){var s=this._cacheGetUser(e);return s?s=u(s,t):(n&&this.getMeta(this.startMetaQuery().withLaterOneSub(e).build()),s=u({},t)),this._cachePutUser(e,s),h(this._users,e,s)},_getQueuedSeqId:function(){return this._queuedSeqId++}};var w=function(e){b.call(this,"me",e),this._contacts={},e&&(this.onContactUpdate=e.onContactUpdate)};w.prototype=Object.create(b.prototype,{_processMetaSub:{value:function(e){var t=0;for(var n in e){var s=e[n],i=s.topic;if("fnd"!=i&&"me"!=i){s.updated=new Date(s.updated),s.touched=s.touched?new Date(s.touched):null,s.deleted=s.deleted?new Date(s.deleted):null,s.seq=0|s.seq,s.recv=0|s.recv,s.read=0|s.read,s.unread=s.seq-s.read;var r=null;if(s.deleted)r=s,delete this._contacts[i];else if(s.seen&&s.seen.when&&(s.seen.when=new Date(s.seen.when)),r=h(this._contacts,i,s),"p2p"==_.topicType(i)&&this._cachePutUser(i,r),!s._generated){var a=this._tinode.getTopic(i);a&&a._processMetaDesc(s,!0)}t++,this.onMetaSub&&this.onMetaSub(r)}}t>0&&this.onSubsUpdated&&this.onSubsUpdated(Object.keys(this._contacts))},enumerable:!0,configurable:!0,writable:!1},_routePres:{value:function(e){var t=this._contacts[e.src];if(t){switch(e.what){case"on":t.online=!0;break;case"off":t.online&&(t.online=!1,t.seen?t.seen.when=new Date:t.seen={when:new Date});break;case"msg":t.touched=new Date,t.seq=0|e.seq,t.unread=t.seq-t.read;break;case"upd":this.getMeta(this.startMetaQuery().withLaterOneSub(e.src).build());break;case"acs":t.acs?t.acs.updateAll(e.dacs):t.acs=(new v).updateAll(e.dacs);break;case"ua":t.seen={when:new Date,ua:e.ua};break;case"recv":t.recv=t.recv?Math.max(t.recv,e.seq):0|e.seq;break;case"read":t.read=t.read?Math.max(t.read,e.seq):0|e.seq,t.unread=t.seq-t.read;break;case"gone":delete this._contacts[e.src]}this.onContactUpdate&&this.onContactUpdate(e.what,t)}else if("acs"==e.what){var n=new v(e.dacs);if(!n||n.mode==v._INVALID)return void this._tinode.logger("Invalid access mode update",e.src,e.dacs);if(n.mode==v._NONE)return void this._tinode.logger("Removing non-existent subscription",e.src,e.dacs);this.getMeta(this.startMetaQuery().withOneSub(void 0,e.src).build()),this._contacts[e.src]={topic:e.src,online:!1,acs:n}}this.onPres&&this.onPres(e)},enumerable:!0,configurable:!0,writable:!1},publish:{value:function(){return Promise.reject(new Error("Publishing to 'me' is not supported"))},enumerable:!0,configurable:!0,writable:!1},contacts:{value:function(e,t){var n=e||this.onMetaSub;if(n)for(var s in this._contacts)n.call(t,this._contacts[s],s,this._contacts)},enumerable:!0,configurable:!0,writable:!0},setMsgReadRecv:{value:function(e,t,n,s){var i,r=this._contacts[e],a=!1;r&&(n|=0,"recv"===t?(i=r.recv,r.recv=r.recv?Math.max(r.recv,n):n,a=i!=r.recv):"read"===t?(i=r.read,r.read=r.read?Math.max(r.read,n):n,r.unread=r.seq-r.read,a=i!=r.read,r.recv<r.read&&(r.recv=r.read,a=!0)):"msg"===t&&(i=r.seq,r.seq=r.seq?Math.max(r.seq,n):n,r.unread=r.seq-r.read,(!r.touched||r.touched<s)&&(r.touched=s),a=i!=r.seq),!a||r.acs&&r.acs.isMuted()||!this.onContactUpdate||this.onContactUpdate(t,r))},enumerable:!0,configurable:!0,writable:!0},getContact:{value:function(e){return this._contacts[e]},enumerable:!0,configurable:!0,writable:!0},getAccessMode:{value:function(e){var t=this._contacts[e];return t?t.acs:null},enumerable:!0,configurable:!0,writable:!0}}),w.prototype.constructor=w;var M=function(e){b.call(this,"fnd",e),this._contacts={}};M.prototype=Object.create(b.prototype,{_processMetaSub:{value:function(e){var t=Object.getOwnPropertyNames(this._contacts).length;for(var n in this._contacts={},e){var s=e[n],i=s.topic?s.topic:s.user;s.updated=new Date(s.updated),s.seen&&s.seen.when&&(s.seen.when=new Date(s.seen.when)),s=h(this._contacts,i,s),t++,this.onMetaSub&&this.onMetaSub(s)}t>0&&this.onSubsUpdated&&this.onSubsUpdated(Object.keys(this._contacts))},enumerable:!0,configurable:!0,writable:!1},publish:{value:function(){return Promise.reject(new Error("Publishing to 'fnd' is not supported"))},enumerable:!0,configurable:!0,writable:!1},setMeta:{value:function(e){var t=this;return Object.getPrototypeOf(M.prototype).setMeta.call(this,e).then(function(){Object.keys(t._contacts).length>0&&(t._contacts={},t.onSubsUpdated&&t.onSubsUpdated([]))})},enumerable:!0,configurable:!0,writable:!1},contacts:{value:function(e,t){var n=e||this.onMetaSub;if(n)for(var s in this._contacts)n.call(t,this._contacts[s],s,this._contacts)},enumerable:!0,configurable:!0,writable:!0}}),M.prototype.constructor=M;var S=function(e){this._tinode=e,this._apiKey=e._apiKey,this._authToken=e.getAuthToken(),this._msgId=e.getNextUniqueId(),this.xhr=l(),this.toResolve=null,this.toReject=null,this.onProgress=null,this.onSuccess=null,this.onFailure=null};S.prototype={upload:function(e,t,n,s){if(!this._authToken)throw new Error("Must authenticate first");var i=this;this.xhr.open("POST","/v"+o+"/file/u/",!0),this.xhr.setRequestHeader("X-Tinode-APIKey",this._apiKey),this.xhr.setRequestHeader("X-Tinode-Auth","Token "+this._authToken.token);var r=new Promise((e,t)=>{this.toResolve=e,this.toReject=t});this.onProgress=t,this.onSuccess=n,this.onFailure=s,this.xhr.upload.onprogress=function(e){e.lengthComputable&&i.onProgress&&i.onProgress(e.loaded/e.total)},this.xhr.onload=function(){var e;try{e=JSON.parse(this.response,d)}catch(e){i._tinode.logger("Invalid server response in LargeFileHelper",this.response)}this.status>=200&&this.status<300?(i.toResolve&&i.toResolve(e.ctrl.params.url),i.onSuccess&&i.onSuccess(e.ctrl)):this.status>=400?(i.toReject&&i.toReject(new Error(e.ctrl.text+" ("+e.ctrl.code+")")),i.onFailure&&i.onFailure(e.ctrl)):i._tinode.logger("Unexpected server response status",this.status,this.response)},this.xhr.onerror=function(e){i.toReject&&i.toReject(new Error("failed")),i.onFailure&&i.onFailure(null)},this.xhr.onabort=function(e){i.toReject&&i.toReject(new Error("upload cancelled by user")),i.onFailure&&i.onFailure(null)};try{var a=new FormData;a.append("file",e),a.set("id",this._msgId),this.xhr.send(a)}catch(e){this.toReject&&this.toReject(e),this.onFailure&&this.onFailure(null)}return r},download:function(e,t,n,s){if(/^(?:(?:[a-z]+:)?\/\/)/i.test(e))throw new Error("The URL '"+e+"' must be relative, not absolute");if(!this._authToken)throw new Error("Must authenticate first");var i=this;this.xhr.open("GET",e,!0),this.xhr.setRequestHeader("X-Tinode-APIKey",this._apiKey),this.xhr.setRequestHeader("X-Tinode-Auth","Token "+this._authToken.token),this.xhr.responseType="blob",this.onProgress=s,this.xhr.onprogress=function(e){i.onProgress&&i.onProgress(e.loaded)};var r=new Promise((e,t)=>{this.toResolve=e,this.toReject=t});this.xhr.onload=function(){if(200==this.status){var e=document.createElement("a");e.href=window.URL.createObjectURL(new Blob([this.response],{type:n})),e.style.display="none",e.setAttribute("download",t),document.body.appendChild(e),e.click(),document.body.removeChild(e),window.URL.revokeObjectURL(e.href),i.toResolve&&i.toResolve()}else if(this.status>=400&&i.toReject){var s=new FileReader;s.onload=function(){try{var e=JSON.parse(this.result,d);i.toReject(new Error(e.ctrl.text+" ("+e.ctrl.code+")"))}catch(e){i._tinode.logger("Invalid server response in LargeFileHelper",this.result),i.toReject(e)}},s.readAsText(this.response)}},this.xhr.onerror=function(e){i.toReject&&i.toReject(new Error("failed"))},this.xhr.onabort=function(){i.toReject&&i.toReject(null)};try{this.xhr.send()}catch(e){this.toReject&&this.toReject(e)}return r},cancel:function(){this.xhr&&this.xhr.readyState<4&&this.xhr.abort()},getId:function(){return this._msgId}};var T=function(e,t){this.status=T.STATUS_NONE,this.topic=e,this.content=t};T.STATUS_NONE=0,T.STATUS_QUEUED=1,T.STATUS_SENDING=2,T.STATUS_SENT=3,T.STATUS_RECEIVED=4,T.STATUS_READ=5,T.STATUS_TO_ME=6,T.prototype={toJSON:function(){},fromJSON:function(e){}},T.prototype.constructor=T;var D={};return(D=_).Drafty=e,D});
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],25:[function(require,module,exports){
 // Put all packages together.
 // Used to generate umd/index.prod.js
 
+console.log("starting", typeof require);
+
 var React = require('react');
 var ReactDOM = require('react-dom');
-var Tinode = require('tinode-sdk');
-var TinodeWeb = require('../webapp.js')
+var TinodeWeb = require('./webapp.js');
 
 ReactDOM.render(
   React.createElement(TinodeWeb, null),
   document.getElementById('mountPoint')
 );
 
-},{"../webapp.js":26,"react":23,"react-dom":20,"tinode-sdk":24}],26:[function(require,module,exports){
-// Name of this application, used in the User-Agent
+},{"./webapp.js":26,"react":23,"react-dom":20}],26:[function(require,module,exports){
+console.log("starting", typeof require, typeof React, typeof Tinode);
+if (typeof require == 'function') {
+  if (typeof React == 'undefined') {
+    var React = require('react');
+    console.log("React defined:", typeof React);
+  }
+  if (typeof Tinode == 'undefined') {
+    var Tinode = require('tinode-sdk');
+    var Drafty = Tinode.Drafty;
+    console.log("Tinode defined:", typeof Tinode, typeof Drafty);
+  }
+}
+console.log("finishing", typeof require, typeof React, typeof Tinode);
+
+// Babel JSX
+
+// Name of this application, used in the User-Agent.
 const APP_NAME = "TinodeWeb/0.15";
 
 const KNOWN_HOSTS = { hosted: "api.tinode.co", local: "localhost:6060" };
@@ -20007,9 +20266,6 @@ const DEFAULT_HOST = KNOWN_HOSTS.hosted;
 
 // Sound to play on message received.
 const POP_SOUND = new Audio('audio/msg.mp3');
-
-// Unicode symbol used to clear objects
-const DEL_CHAR = "\u2421";
 
 // API key. Use https://github.com/tinode/chat/tree/master/keygen to generate your own
 const API_KEY = "AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K";
@@ -20055,9 +20311,6 @@ const MAX_IMAGE_DIM = 768;
 // Supported image MIME types and corresponding file extensions.
 const SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
 const MIME_EXTENSIONS = ['jpg', 'gif', 'png', 'svg', 'svg'];
-
-// Tinode is defined in 'tinode.js'.
-var Drafty = Tinode.Drafty;
 
 // Helper functions for storing values in localStorage.
 // By default localStorage can store only strings, not objects or other types.
@@ -20331,6 +20584,10 @@ function parseUrlHash(hash) {
   return { path: path, params: params };
 }
 
+function navigateTo(url) {
+  window.location.hash = url;
+}
+
 function composeUrlHash(path, params) {
   var url = path.join("/");
   var args = [];
@@ -20412,7 +20669,7 @@ function vcard(fn, imageDataUrl) {
   return card;
 }
 
-// Deep-shallow compare two arrays.
+// Deep-shallow compare two arrays: shallow compare each element.
 function arrayEqual(a, b) {
   // Compare lengths first.
   if (a.length != b.length) {
@@ -20431,132 +20688,75 @@ function arrayEqual(a, b) {
 
 /* BEGIN Context Menu: popup/dropdown menu */
 
-// Function is used by context menu to set permissions.
-function topicPermissionSetter(mode, params, errorHandler) {
-  var topic = Tinode.getTopic(params.topicName);
-  if (!topic) {
-    console.log("Topic not found", params.topicName);
-    return;
-  }
-
-  var am, user;
-  if (params.user) {
-    user = topic.subscriber(params.user);
-    if (!user) {
-      console.log("Subscriber not found", params.topicName + "[" + params.user + "]");
-      return;
-    }
-    am = user.acs.updateGiven(mode).getGiven();
-  } else {
-    am = topic.getAccessMode().updateWant(mode).getWant();
-  }
-
-  var instance = this;
-  topic.setMeta({ sub: { user: params.user, mode: am } }).catch(function (err) {
-    if (errorHandler) {
-      errorHandler(err.message, "err");
-    }
-  });
-}
-
-function deleteMessages(all, hard, params, errorHandler) {
-  var topic = Tinode.getTopic(params.topicName);
-  if (!topic) {
-    console.log("Topic not found: ", params.topicName);
-    return;
-  }
-  // We don't know if the message is still pending (e.g. attachment is being uploaded),
-  // so try cancelling first. No harm if we can't cancel.
-  if (topic.cancelSend(params.seq)) {
-    return new Promise.resolve();
-  }
-  // Can't cancel. Delete instead.
-  var promise = all ? topic.delMessagesAll(hard) : topic.delMessagesList([params.seq], hard);
-  promise.catch(err => {
-    if (errorHandler) {
-      errorHandler(err.message, "err");
-    }
-  });
-}
-
-// Context menu items.
-var ContextMenuItems = {
-  "topic_info": { title: "Info", handler: null },
-
-  "messages_clear": { title: "Clear messages", handler: function (params, errorHandler) {
-      deleteMessages(true, false, params, errorHandler);
-    } },
-  "messages_clear_hard": { title: "Clear for All", handler: function (params, errorHandler) {
-      deleteMessages(true, true, params, errorHandler);
-    } },
-  "message_delete": { title: "Delete", handler: function (params, errorHandler) {
-      deleteMessages(false, false, params, errorHandler);
-    } },
-  "message_delete_hard": { title: "Delete for All", handler: function (params, errorHandler) {
-      deleteMessages(false, true, params, errorHandler);
-    } },
-  "topic_unmute": { title: "Unmute", handler: topicPermissionSetter.bind(this, "+P") },
-  "topic_mute": { title: "Mute", handler: topicPermissionSetter.bind(this, "-P") },
-  "topic_unblock": { title: "Unblock", handler: topicPermissionSetter.bind(this, "+J") },
-  "topic_block": { title: "Block", handler: topicPermissionSetter.bind(this, "-J") },
-  "topic_delete": { title: "Delete", handler: function (params, errorHandler) {
-      var topic = Tinode.getTopic(params.topicName);
-      if (!topic) {
-        console.log("Topic not found: ", params.topicName);
-        return;
-      }
-      topic.delTopic().catch(function (err) {
-        if (errorHandler) {
-          errorHandler(err.message, "err");
-        }
-      });
-    } },
-
-  "permissions": { title: "Edit permissions", handler: null },
-  "member_delete": { title: "Remove", handler: function (params, errorHandler) {
-      var topic = Tinode.getTopic(params.topicName);
-      if (!topic || !params.user) {
-        console.log("Topic or user not found: '" + params.topicName + "', '" + params.user + "'");
-        return;
-      }
-      topic.delSubscription(params.user).catch(function (err) {
-        if (errorHandler) {
-          errorHandler(err.message, "err");
-        }
-      });
-    } },
-  "member_mute": { title: "Mute", handler: topicPermissionSetter.bind(this, "-P") },
-  "member_unmute": { title: "Unmute", handler: topicPermissionSetter.bind(this, "+P") },
-  "member_block": { title: "Block", handler: topicPermissionSetter.bind(this, "-J") },
-  "member_unblock": { title: "Unblock", handler: topicPermissionSetter.bind(this, "+J") }
-};
-
 class ContextMenu extends React.Component {
   constructor(props) {
     super(props);
 
-    this.toggle = this.toggle.bind(this);
     this.handlePageClick = this.handlePageClick.bind(this);
     this.handleEscapeKey = this.handleEscapeKey.bind(this);
     this.handleClick = this.handleClick.bind(this);
+
+    // Preconfigured menu items.
+    this.MenuItems = {
+      "topic_info": { title: "Info", handler: null },
+
+      "messages_clear": { title: "Clear messages", handler: (params, errorHandler) => {
+          this.deleteMessages(true, false, params, errorHandler);
+        } },
+      "messages_clear_hard": { title: "Clear for All", handler: (params, errorHandler) => {
+          this.deleteMessages(true, true, params, errorHandler);
+        } },
+      "message_delete": { title: "Delete", handler: (params, errorHandler) => {
+          this.deleteMessages(false, false, params, errorHandler);
+        } },
+      "message_delete_hard": { title: "Delete for All", handler: (params, errorHandler) => {
+          this.deleteMessages(false, true, params, errorHandler);
+        } },
+      "topic_unmute": { title: "Unmute", handler: this.topicPermissionSetter.bind(this, "+P") },
+      "topic_mute": { title: "Mute", handler: this.topicPermissionSetter.bind(this, "-P") },
+      "topic_unblock": { title: "Unblock", handler: this.topicPermissionSetter.bind(this, "+J") },
+      "topic_block": { title: "Block", handler: this.topicPermissionSetter.bind(this, "-J") },
+      "topic_delete": { title: "Delete", handler: (params, errorHandler) => {
+          let topic = this.props.tinode.getTopic(params.topicName);
+          if (!topic) {
+            console.log("Topic not found: ", params.topicName);
+            return;
+          }
+          topic.delTopic().catch(err => {
+            if (errorHandler) {
+              errorHandler(err.message, "err");
+            }
+          });
+        } },
+
+      "permissions": { title: "Edit permissions", handler: null },
+      "member_delete": { title: "Remove", handler: (params, errorHandler) => {
+          let topic = this.props.tinode.getTopic(params.topicName);
+          if (!topic || !params.user) {
+            console.log("Topic or user not found: '" + params.topicName + "', '" + params.user + "'");
+            return;
+          }
+          topic.delSubscription(params.user).catch(err => {
+            if (errorHandler) {
+              errorHandler(err.message, "err");
+            }
+          });
+        } },
+      "member_mute": { title: "Mute", handler: this.topicPermissionSetter.bind(this, "-P") },
+      "member_unmute": { title: "Unmute", handler: this.topicPermissionSetter.bind(this, "+P") },
+      "member_block": { title: "Block", handler: this.topicPermissionSetter.bind(this, "-J") },
+      "member_unblock": { title: "Unblock", handler: this.topicPermissionSetter.bind(this, "+J") }
+    };
+  }
+
+  componentDidMount() {
+    document.addEventListener('mousedown', this.handlePageClick, false);
+    document.addEventListener('keyup', this.handleEscapeKey, false);
   }
 
   componentWillUnmount() {
-    this.toggle(false);
-  }
-
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    this.toggle(nextProps.visible);
-  }
-
-  toggle(visible) {
-    if (visible) {
-      document.addEventListener('mousedown', this.handlePageClick, false);
-      document.addEventListener('keyup', this.handleEscapeKey, false);
-    } else {
-      document.removeEventListener('mousedown', this.handlePageClick, false);
-      document.removeEventListener('keyup', this.handleEscapeKey, false);
-    }
+    document.removeEventListener('mousedown', this.handlePageClick, false);
+    document.removeEventListener('keyup', this.handleEscapeKey, false);
   }
 
   handlePageClick(e) {
@@ -20579,21 +20779,72 @@ class ContextMenu extends React.Component {
     e.stopPropagation();
     this.props.hide();
     let item = this.props.items[e.currentTarget.dataset.id];
+    if (typeof item == 'string') {
+      item = this.MenuItems[item];
+    }
     item.handler(this.props.params, this.props.onError);
   }
 
-  render() {
-    if (!this.props.visible) {
-      return null;
+  // Menu Actions
+
+  deleteMessages(all, hard, params, errorHandler) {
+    var topic = this.props.tinode.getTopic(params.topicName);
+    if (!topic) {
+      console.log("Topic not found: ", params.topicName);
+      return;
+    }
+    // We don't know if the message is still pending (e.g. attachment is being uploaded),
+    // so try cancelling first. No harm if we can't cancel.
+    if (topic.cancelSend(params.seq)) {
+      return new Promise.resolve();
+    }
+    // Can't cancel. Delete instead.
+    var promise = all ? topic.delMessagesAll(hard) : topic.delMessagesList([params.seq], hard);
+    promise.catch(err => {
+      if (errorHandler) {
+        errorHandler(err.message, "err");
+      }
+    });
+  }
+
+  // Function is used by context menu to set permissions.
+  topicPermissionSetter(mode, params, errorHandler) {
+    var topic = this.props.tinode.getTopic(params.topicName);
+    if (!topic) {
+      console.log("Topic not found", params.topicName);
+      return;
     }
 
+    var am, user;
+    if (params.user) {
+      user = topic.subscriber(params.user);
+      if (!user) {
+        console.log("Subscriber not found", params.topicName + "[" + params.user + "]");
+        return;
+      }
+      am = user.acs.updateGiven(mode).getGiven();
+    } else {
+      am = topic.getAccessMode().updateWant(mode).getWant();
+    }
+
+    topic.setMeta({ sub: { user: params.user, mode: am } }).catch(err => {
+      if (errorHandler) {
+        errorHandler(err.message, "err");
+      }
+    });
+  }
+
+  render() {
     let count = 0;
     let menu = [];
     this.props.items.map(item => {
+      if (typeof item == 'string') {
+        item = this.MenuItems[item];
+      }
       if (item && item.title) {
-        menu.push(item.title === "-" ? React.createElement("li", { className: "separator", key: count }) : React.createElement(
-          "li",
-          { onClick: this.handleClick, "data-id": count, key: count },
+        menu.push(item.title == "-" ? React.createElement('li', { className: 'separator', key: count }) : React.createElement(
+          'li',
+          { onClick: this.handleClick, 'data-id': count, key: count },
           item.title
         ));
       }
@@ -20612,8 +20863,8 @@ class ContextMenu extends React.Component {
     };
 
     return React.createElement(
-      "ul",
-      { className: "menu", style: position },
+      'ul',
+      { className: 'menu', style: position },
       menu
     );
   }
@@ -20628,12 +20879,12 @@ class MenuCancel extends React.PureComponent {
 
   render() {
     return React.createElement(
-      "a",
-      { href: "javascript:;", onClick: this.props.onCancel },
+      'a',
+      { href: 'javascript:;', onClick: this.props.onCancel },
       React.createElement(
-        "i",
-        { className: "material-icons" },
-        "close"
+        'i',
+        { className: 'material-icons' },
+        'close'
       )
     );
   }
@@ -20642,9 +20893,9 @@ class MenuCancel extends React.PureComponent {
 class LoadSpinner extends React.PureComponent {
   render() {
     return this.props.show ? React.createElement(
-      "div",
-      { className: "load-spinner-box" },
-      React.createElement("div", { className: "loader-spinner" })
+      'div',
+      { className: 'load-spinner-box' },
+      React.createElement('div', { className: 'loader-spinner' })
     ) : null;
   }
 }
@@ -20670,18 +20921,18 @@ class MoreButton extends React.PureComponent {
 
   render() {
     return React.createElement(
-      "label",
-      { className: "small", onClick: this.handleToggle },
+      'label',
+      { className: 'small', onClick: this.handleToggle },
       this.props.title,
-      "...",
+      '...',
       this.state.open ? React.createElement(
-        "i",
-        { className: "material-icons" },
-        "expand_more"
+        'i',
+        { className: 'material-icons' },
+        'expand_more'
       ) : React.createElement(
-        "i",
-        { className: "material-icons" },
-        "chevron_right"
+        'i',
+        { className: 'material-icons' },
+        'chevron_right'
       )
     );
   }
@@ -20696,27 +20947,27 @@ class LetterTile extends React.PureComponent {
         let letter = this.props.title.trim().charAt(0);
         let color = "lettertile dark-color" + Math.abs(stringHash(this.props.topic)) % 16;
         avatar = React.createElement(
-          "div",
+          'div',
           { className: color },
           React.createElement(
-            "div",
+            'div',
             null,
             letter
           )
         );
       } else {
-        avatar = Tinode.topicType(this.props.topic) === "grp" ? React.createElement(
-          "i",
-          { className: "material-icons" },
-          "group"
+        avatar = Tinode.topicType(this.props.topic) == "grp" ? React.createElement(
+          'i',
+          { className: 'material-icons' },
+          'group'
         ) : React.createElement(
-          "i",
-          { className: "material-icons" },
-          "person"
+          'i',
+          { className: 'material-icons' },
+          'person'
         );
       }
     } else if (this.props.avatar) {
-      avatar = React.createElement("img", { className: "avatar", alt: "avatar", src: this.props.avatar });
+      avatar = React.createElement('img', { className: 'avatar', alt: 'avatar', src: this.props.avatar });
     } else {
       avatar = null;
     }
@@ -20794,18 +21045,18 @@ class InPlaceEdit extends React.Component {
     if (spanText.length > 20) {
       spanText = spanText.substring(0, 19) + "...";
     }
-    return this.state.active ? React.createElement("input", { type: this.props.type || "text",
+    return this.state.active ? React.createElement('input', { type: this.props.type || "text",
       value: this.state.text,
       placeholder: this.props.placeholder,
       onChange: this.handeTextChange,
       onKeyDown: this.handleKeyDown,
       onBlur: this.handleEditingFinished,
       autoFocus: true }) : React.createElement(
-      "span",
+      'span',
       { className: spanClass, onClick: this.handleStartEditing },
       React.createElement(
-        "span",
-        { className: "content" },
+        'span',
+        { className: 'content' },
         spanText
       )
     );
@@ -20842,22 +21093,22 @@ class HostSelector extends React.PureComponent {
     var hostOptions = [];
     for (var key in KNOWN_HOSTS) {
       var item = KNOWN_HOSTS[key];
-      hostOptions.push(React.createElement("option", { key: item, value: item }));
+      hostOptions.push(React.createElement('option', { key: item, value: item }));
     }
     return React.createElement(
-      "div",
+      'div',
       null,
       React.createElement(
-        "label",
-        { htmlFor: "host-name" },
-        "Server address:"
+        'label',
+        { htmlFor: 'host-name' },
+        'Server address:'
       ),
-      React.createElement("input", { type: "search", id: "host-name", placeholder: this.props.hostName, list: "known-hosts",
+      React.createElement('input', { type: 'search', id: 'host-name', placeholder: this.props.hostName, list: 'known-hosts',
         value: this.state.hostName, onChange: this.handleHostNameChange,
         onBlur: this.handleEditingFinished, required: true }),
       React.createElement(
-        "datalist",
-        { id: "known-hosts" },
+        'datalist',
+        { id: 'known-hosts' },
         hostOptions
       )
     );
@@ -20879,21 +21130,21 @@ class CheckBox extends React.PureComponent {
 
   render() {
     return this.props.onChange ? this.props.checked ? React.createElement(
-      "i",
-      { className: "material-icons blue clickable", onClick: this.handleChange },
-      "check_box"
+      'i',
+      { className: 'material-icons blue clickable', onClick: this.handleChange },
+      'check_box'
     ) : React.createElement(
-      "i",
-      { className: "material-icons blue clickable", onClick: this.handleChange },
-      "check_box_outline_blank"
+      'i',
+      { className: 'material-icons blue clickable', onClick: this.handleChange },
+      'check_box_outline_blank'
     ) : this.props.checked ? React.createElement(
-      "i",
-      { className: "material-icons" },
-      "check_box"
+      'i',
+      { className: 'material-icons' },
+      'check_box'
     ) : React.createElement(
-      "i",
-      { className: "material-icons" },
-      "check_box_outline_blank"
+      'i',
+      { className: 'material-icons' },
+      'check_box_outline_blank'
     );
   }
 }
@@ -20964,83 +21215,83 @@ class PermissionsEditor extends React.Component {
         continue;
       }
       items.push(React.createElement(
-        "tr",
+        'tr',
         { key: c },
         React.createElement(
-          "td",
+          'td',
           null,
           names[c]
         ),
         React.createElement(
-          "td",
-          { className: "checkbox" },
+          'td',
+          { className: 'checkbox' },
           skip.indexOf(c) < 0 ? React.createElement(CheckBox, { name: c, checked: mode.indexOf(c) >= 0, onChange: this.handleChange }) : React.createElement(CheckBox, { name: c, checked: mode.indexOf(c) >= 0 })
         ),
         this.props.compare ? React.createElement(
-          "td",
-          { className: "checkbox" },
+          'td',
+          { className: 'checkbox' },
           React.createElement(CheckBox, { name: c, checked: compare.indexOf(c) >= 0 })
         ) : null
       ));
     }
 
     return React.createElement(
-      "div",
-      { className: "panel-form-column" },
+      'div',
+      { className: 'panel-form-column' },
       this.props.userTitle ? React.createElement(
-        "ul",
-        { className: "contact-box" },
+        'ul',
+        { className: 'contact-box' },
         React.createElement(Contact, {
           item: this.props.item,
           title: this.props.userTitle,
           avatar: makeImageUrl(this.props.userAvatar ? this.props.userAvatar : null) })
       ) : null,
       React.createElement(
-        "label",
-        { className: "small" },
-        "Permissions"
+        'label',
+        { className: 'small' },
+        'Permissions'
       ),
       React.createElement(
-        "table",
-        { className: "permission-editor" },
+        'table',
+        { className: 'permission-editor' },
         this.props.compare ? React.createElement(
-          "thead",
+          'thead',
           null,
           React.createElement(
-            "tr",
+            'tr',
             null,
-            React.createElement("th", null),
+            React.createElement('th', null),
             React.createElement(
-              "th",
+              'th',
               null,
               this.props.modeTitle
             ),
             React.createElement(
-              "th",
+              'th',
               null,
               this.props.compareTitle
             )
           )
         ) : null,
         React.createElement(
-          "tbody",
+          'tbody',
           null,
           items
         )
       ),
-      React.createElement("br", null),
+      React.createElement('br', null),
       React.createElement(
-        "div",
-        { className: "dialog-buttons" },
+        'div',
+        { className: 'dialog-buttons' },
         React.createElement(
-          "button",
-          { className: "blue", onClick: this.handleSubmit },
-          "Ok"
+          'button',
+          { className: 'blue', onClick: this.handleSubmit },
+          'Ok'
         ),
         React.createElement(
-          "button",
-          { className: "white", onClick: this.handleCancel },
-          "Cancel"
+          'button',
+          { className: 'white', onClick: this.handleCancel },
+          'Cancel'
         )
       )
     );
@@ -21153,27 +21404,25 @@ class ChipInput extends React.Component {
 
   render() {
     var chips = [];
-
-    var instance = this;
     var count = 0;
-    this.state.sortedChips.map(function (item) {
+    this.state.sortedChips.map(item => {
       chips.push(React.createElement(Chip, {
-        onCancel: instance.handleChipCancel,
+        onCancel: this.handleChipCancel,
         avatar: makeImageUrl(item.public ? item.public.photo : null),
         title: item.public ? item.public.fn : undefined,
-        noAvatar: instance.props.avatarDisabled,
+        noAvatar: this.props.avatarDisabled,
         topic: item.user,
-        required: item.user === instance.props.required,
+        required: item.user === this.props.required,
         index: count,
         key: item.user }));
       count++;
     });
     var className = "chip-input" + (this.state.focused ? " focused" : "");
     return React.createElement(
-      "div",
+      'div',
       { className: className },
       chips,
-      React.createElement("input", { type: "text",
+      React.createElement('input', { type: 'text',
         placeholder: this.state.placeholder,
         onChange: this.handleTextInput,
         onFocus: this.handleFocusGained,
@@ -21199,26 +21448,26 @@ class Chip extends React.PureComponent {
   render() {
     var title = this.props.title || this.props.topic;
     return React.createElement(
-      "div",
-      { className: "chip" },
-      this.props.noAvatar ? React.createElement("span", { className: "spacer" }) : React.createElement(
-        "div",
-        { className: "avatar-box" },
+      'div',
+      { className: 'chip' },
+      this.props.noAvatar ? React.createElement('span', { className: 'spacer' }) : React.createElement(
+        'div',
+        { className: 'avatar-box' },
         React.createElement(LetterTile, {
           avatar: this.props.avatar || true,
           topic: this.props.topic,
           title: this.props.title })
       ),
       React.createElement(
-        "span",
+        'span',
         null,
         title
       ),
       this.props.onCancel && !this.props.required ? React.createElement(
-        "a",
-        { href: "javascript:;", onClick: this.handleCancel },
-        "\xD7"
-      ) : React.createElement("span", { className: "spacer" })
+        'a',
+        { href: 'javascript:;', onClick: this.handleCancel },
+        '\xD7'
+      ) : React.createElement('span', { className: 'spacer' })
     );
   }
 };
@@ -21244,8 +21493,8 @@ class GroupSubs extends React.Component {
     var usersOnline = [];
     this.state.onlineSubs.map(sub => {
       usersOnline.push(React.createElement(
-        "div",
-        { className: "avatar-box" },
+        'div',
+        { className: 'avatar-box' },
         React.createElement(LetterTile, {
           topic: sub.user,
           avatar: makeImageUrl(sub.public ? sub.public.photo : null) || true,
@@ -21254,8 +21503,8 @@ class GroupSubs extends React.Component {
       ));
     });
     return React.createElement(
-      "div",
-      { id: "topic-users" },
+      'div',
+      { id: 'topic-users' },
       usersOnline
     );
   }
@@ -21309,44 +21558,44 @@ class LoginView extends React.Component {
       submitClasses += " disabled";
     }
     return React.createElement(
-      "form",
-      { id: "login-form", onSubmit: this.handleSubmit },
-      React.createElement("input", { type: "text", id: "inputLogin",
-        placeholder: "Login (alice, bob, carol, dave, frank)",
-        autoComplete: "username",
+      'form',
+      { id: 'login-form', onSubmit: this.handleSubmit },
+      React.createElement('input', { type: 'text', id: 'inputLogin',
+        placeholder: 'Login (alice, bob, carol, dave, frank)',
+        autoComplete: 'username',
         value: this.state.login,
         onChange: this.handleLoginChange,
         required: true, autoFocus: true }),
-      React.createElement("input", { type: "password", id: "inputPassword",
-        placeholder: "Password (alice123, bob123, ...)",
-        autoComplete: "current-password",
+      React.createElement('input', { type: 'password', id: 'inputPassword',
+        placeholder: 'Password (alice123, bob123, ...)',
+        autoComplete: 'current-password',
         value: this.state.password,
         onChange: this.handlePasswordChange,
         required: true }),
       React.createElement(
-        "div",
-        { className: "panel-form-row" },
+        'div',
+        { className: 'panel-form-row' },
         React.createElement(HostSelector, { serverAddress: this.props.serverAddress,
           onServerAddressChange: this.handleServerAddressChange })
       ),
       React.createElement(
-        "div",
-        { className: "panel-form-row" },
-        React.createElement(CheckBox, { id: "save-token", name: "save-token", checked: this.state.saveToken,
+        'div',
+        { className: 'panel-form-row' },
+        React.createElement(CheckBox, { id: 'save-token', name: 'save-token', checked: this.state.saveToken,
           onChange: this.handleToggleSaveToken }),
         React.createElement(
-          "label",
-          { forHtml: "save-token" },
-          "\xA0Keep me logged in"
+          'label',
+          { htmlFor: 'save-token' },
+          '\xA0Keep me logged in'
         )
       ),
       React.createElement(
-        "div",
-        { className: "dialog-buttons" },
+        'div',
+        { className: 'dialog-buttons' },
         React.createElement(
-          "button",
-          { className: submitClasses, type: "submit" },
-          "Sign in"
+          'button',
+          { className: submitClasses, type: 'submit' },
+          'Sign in'
         )
       )
     );
@@ -21426,19 +21675,19 @@ class CreateAccountView extends React.PureComponent {
       submitClasses += " disabled";
     }
     return React.createElement(
-      "form",
-      { className: "panel-form-column", onSubmit: this.handleSubmit },
+      'form',
+      { className: 'panel-form-column', onSubmit: this.handleSubmit },
       React.createElement(
-        "div",
-        { className: "panel-form-row" },
+        'div',
+        { className: 'panel-form-row' },
         React.createElement(
-          "div",
-          { className: "panel-form-column" },
-          React.createElement("input", { type: "text", placeholder: "Login", autoComplete: "user-name",
+          'div',
+          { className: 'panel-form-column' },
+          React.createElement('input', { type: 'text', placeholder: 'Login', autoComplete: 'user-name',
             value: this.state.login, onChange: this.handleLoginChange, required: true, autoFocus: true }),
-          React.createElement("input", { type: "password", placeholder: "Password", autoComplete: "new-password",
+          React.createElement('input', { type: 'password', placeholder: 'Password', autoComplete: 'new-password',
             value: this.state.password, onChange: this.handlePasswordChange, required: true }),
-          React.createElement("input", { type: "password", placeholder: "Repeat password", autoComplete: "new-password",
+          React.createElement('input', { type: 'password', placeholder: 'Repeat password', autoComplete: 'new-password',
             value: this.state.password2, onChange: this.handlePassword2Change, required: true })
         ),
         React.createElement(AvatarUpload, {
@@ -21446,35 +21695,35 @@ class CreateAccountView extends React.PureComponent {
           onError: this.props.onError })
       ),
       React.createElement(
-        "div",
-        { className: "panel-form-row" },
-        React.createElement("input", { type: "email", placeholder: "Email, e.g john.doe@example.com",
-          autoComplete: "email", value: this.state.email, onChange: this.handleEmailChange, required: true })
+        'div',
+        { className: 'panel-form-row' },
+        React.createElement('input', { type: 'email', placeholder: 'Email, e.g john.doe@example.com',
+          autoComplete: 'email', value: this.state.email, onChange: this.handleEmailChange, required: true })
       ),
       React.createElement(
-        "div",
-        { className: "panel-form-row" },
-        React.createElement("input", { type: "text", placeholder: "Full name, e.g. John Doe", autoComplete: "name",
+        'div',
+        { className: 'panel-form-row' },
+        React.createElement('input', { type: 'text', placeholder: 'Full name, e.g. John Doe', autoComplete: 'name',
           value: this.state.fn, onChange: this.handleFnChange, required: true })
       ),
       React.createElement(
-        "div",
-        { className: "panel-form-row" },
-        React.createElement(CheckBox, { id: "save-token", name: "save-token", checked: this.state.saveToken,
+        'div',
+        { className: 'panel-form-row' },
+        React.createElement(CheckBox, { id: 'save-token', name: 'save-token', checked: this.state.saveToken,
           onChange: this.handleToggleSaveToken }),
         React.createElement(
-          "label",
-          { forHtml: "save-token" },
-          "\xA0Keep me logged in"
+          'label',
+          { htmlFor: 'save-token' },
+          '\xA0Keep me logged in'
         )
       ),
       React.createElement(
-        "div",
-        { className: "dialog-buttons" },
+        'div',
+        { className: 'dialog-buttons' },
         React.createElement(
-          "button",
-          { className: submitClasses, type: "submit" },
-          "Sign up"
+          'button',
+          { className: submitClasses, type: 'submit' },
+          'Sign up'
         )
       )
     );
@@ -21502,16 +21751,15 @@ class AvatarUpload extends React.Component {
   }
 
   handleFileUpload(e) {
-    var instance = this;
     imageFileScaledToBase64(e.target.files[0], AVATAR_SIZE, AVATAR_SIZE, true,
     // Success
-    function (base64bits, mime) {
+    (base64bits, mime) => {
       var du = makeImageUrl({ data: base64bits, type: mime });
-      instance.setState({ dataUrl: du });
-      instance.props.onImageChanged(du);
+      this.setState({ dataUrl: du });
+      this.props.onImageChanged(du);
     },
     // Failure
-    function (err) {
+    err => {
       this.props.onError(err, "err");
     });
     // Clear the value so the same file can be uploaded again.
@@ -21523,26 +21771,29 @@ class AvatarUpload extends React.Component {
     // at the same time.
     var randId = "file-input-avatar-" + (Math.random() + '').substr(2);
     return React.createElement(
-      "div",
-      { className: "avatar-upload" },
-      this.state.dataUrl ? React.createElement("img", { src: this.state.dataUrl, className: "preview" }) : this.props.readOnly && this.props.uid ? React.createElement(
-        "div",
-        { className: "avatar-box" },
-        React.createElement(LetterTile, { avatar: true, topic: this.props.uid, title: this.props.title })
+      'div',
+      { className: 'avatar-upload' },
+      this.state.dataUrl ? React.createElement('img', { src: this.state.dataUrl, className: 'preview' }) : this.props.readOnly && this.props.uid ? React.createElement(
+        'div',
+        { className: 'avatar-box' },
+        React.createElement(LetterTile, {
+          avatar: true,
+          topic: this.props.uid,
+          title: this.props.title })
       ) : React.createElement(
-        "div",
-        { className: "blank" },
-        "128\xD7128"
+        'div',
+        { className: 'blank' },
+        '128\xD7128'
       ),
-      this.props.readOnly ? null : React.createElement("input", { type: "file", id: randId, className: "inputfile hidden",
-        accept: "image/*", onChange: this.handleFileUpload }),
+      this.props.readOnly ? null : React.createElement('input', { type: 'file', id: randId, className: 'inputfile hidden',
+        accept: 'image/*', onChange: this.handleFileUpload }),
       this.props.readOnly ? null : React.createElement(
-        "label",
-        { htmlFor: randId, className: "round" },
+        'label',
+        { htmlFor: randId, className: 'round' },
         React.createElement(
-          "i",
-          { className: "material-icons" },
-          "file_upload"
+          'i',
+          { className: 'material-icons' },
+          'file_upload'
         )
       )
     );
@@ -21595,72 +21846,72 @@ class SettingsView extends React.PureComponent {
       var id = "transport-" + item;
       var name = names[item];
       transportOptions.push(React.createElement(
-        "li",
+        'li',
         { key: item },
-        React.createElement("input", { type: "radio", id: id, name: "transport-select", value: item,
+        React.createElement('input', { type: 'radio', id: id, name: 'transport-select', value: item,
           checked: instance.state.transport === item,
           onChange: instance.handleTransportSelected }),
         React.createElement(
-          "label",
+          'label',
           { htmlFor: id },
           name
         )
       ));
     });
     return React.createElement(
-      "form",
-      { id: "settings-form", onSubmit: this.handleSubmit },
+      'form',
+      { id: 'settings-form', onSubmit: this.handleSubmit },
       React.createElement(
-        "div",
-        { className: "panel-form-row" },
+        'div',
+        { className: 'panel-form-row' },
         React.createElement(
-          "label",
-          { forHtml: "message-sound" },
-          "Message sound:"
+          'label',
+          { htmlFor: 'message-sound' },
+          'Message sound:'
         ),
-        React.createElement(CheckBox, { name: "sound", id: "message-sound",
+        React.createElement(CheckBox, { name: 'sound', id: 'message-sound',
           checked: this.state.messageSounds,
           onChange: this.handleCheckboxClick })
       ),
       React.createElement(
-        "div",
-        { className: "panel-form-row" },
+        'div',
+        { className: 'panel-form-row' },
         React.createElement(
-          "label",
-          { forHtml: "desktop-alerts" },
-          "Notification alerts",
+          'label',
+          { htmlFor: 'desktop-alerts' },
+          'Notification alerts',
           !this.props.desktopAlertsEnabled ? ' (requires HTTPS)' : null,
-          ":"
+          ':'
         ),
-        React.createElement(CheckBox, { name: "alert", id: "desktop-alerts",
+        React.createElement(CheckBox, { name: 'alert', id: 'desktop-alerts',
           checked: this.state.desktopAlerts,
           onChange: this.props.desktopAlertsEnabled ? this.handleCheckboxClick : null })
       ),
       React.createElement(
-        "div",
-        { className: "panel-form-row" },
+        'div',
+        { className: 'panel-form-row' },
         React.createElement(
-          "label",
-          { className: "small" },
-          "Wire transport:"
+          'label',
+          { className: 'small' },
+          'Wire transport:'
         )
       ),
       React.createElement(
-        "div",
-        { className: "panel-form-row" },
+        'div',
+        { className: 'panel-form-row' },
         React.createElement(
-          "ul",
-          { className: "quoted" },
+          'ul',
+          { className: 'quoted' },
           transportOptions
         )
       ),
       React.createElement(
-        "div",
-        { className: "dialog-buttons" },
+        'div',
+        { className: 'dialog-buttons' },
         React.createElement(
-          "button",
-          { type: "submit", className: "blue" },
-          "Update"
+          'button',
+          { type: 'submit', className: 'blue' },
+          'Update'
         )
       )
     );
@@ -21672,16 +21923,19 @@ class SettingsView extends React.PureComponent {
 class SideNavbar extends React.PureComponent {
   render() {
     return React.createElement(
-      "div",
-      { id: "side-caption-panel", className: "caption-panel" },
+      'div',
+      { id: 'side-caption-panel', className: 'caption-panel' },
       React.createElement(
-        "div",
-        { id: "self-avatar", className: "avatar-box" },
-        React.createElement(LetterTile, { avatar: this.props.avatar, topic: this.props.myUserId, title: this.props.title })
+        'div',
+        { id: 'self-avatar', className: 'avatar-box' },
+        React.createElement(LetterTile, {
+          avatar: this.props.avatar,
+          topic: this.props.myUserId,
+          title: this.props.title })
       ),
       React.createElement(
-        "div",
-        { id: "sidepanel-title", className: "panel-title" },
+        'div',
+        { id: 'sidepanel-title', className: 'panel-title' },
         this.props.title
       ),
       this.props.state === 'login' ? React.createElement(MenuStart, { onSignUp: this.props.onSignUp, onSettings: this.props.onSettings }) : this.props.state === 'contacts' ? React.createElement(MenuContacts, { onNewTopic: this.props.onNewTopic, onSettings: this.props.onSettings }) : null,
@@ -21693,25 +21947,25 @@ class SideNavbar extends React.PureComponent {
 class MenuStart extends React.PureComponent {
   render() {
     return React.createElement(
-      "div",
+      'div',
       null,
       React.createElement(
-        "a",
-        { href: "javascript:;", onClick: this.props.onSignUp },
+        'a',
+        { href: 'javascript:;', onClick: this.props.onSignUp },
         React.createElement(
-          "i",
-          { className: "material-icons" },
-          "person_add"
+          'i',
+          { className: 'material-icons' },
+          'person_add'
         )
       ),
-      "\xA0",
+      '\xA0',
       React.createElement(
-        "a",
-        { href: "javascript:;", onClick: this.props.onSettings },
+        'a',
+        { href: 'javascript:;', onClick: this.props.onSettings },
         React.createElement(
-          "i",
-          { className: "material-icons" },
-          "settings"
+          'i',
+          { className: 'material-icons' },
+          'settings'
         )
       )
     );
@@ -21721,25 +21975,25 @@ class MenuStart extends React.PureComponent {
 class MenuContacts extends React.PureComponent {
   render() {
     return React.createElement(
-      "div",
+      'div',
       null,
       React.createElement(
-        "a",
-        { href: "javascript:;", onClick: this.props.onNewTopic },
+        'a',
+        { href: 'javascript:;', onClick: this.props.onNewTopic },
         React.createElement(
-          "i",
-          { className: "material-icons" },
-          "chat"
+          'i',
+          { className: 'material-icons' },
+          'chat'
         )
       ),
-      "\xA0",
+      '\xA0',
       React.createElement(
-        "a",
-        { href: "javascript:;", onClick: this.props.onSettings },
+        'a',
+        { href: 'javascript:;', onClick: this.props.onSettings },
         React.createElement(
-          "i",
-          { className: "material-icons" },
-          "settings"
+          'i',
+          { className: 'material-icons' },
+          'settings'
         )
       )
     );
@@ -21794,10 +22048,12 @@ class SidepanelView extends React.Component {
         ;
     };
     return React.createElement(
-      "div",
-      { id: "sidepanel", className: this.props.hideSelf ? 'nodisplay' : null },
-      React.createElement(SideNavbar, { state: view,
-        title: title, avatar: avatar,
+      'div',
+      { id: 'sidepanel', className: this.props.hideSelf ? 'nodisplay' : null },
+      React.createElement(SideNavbar, {
+        state: view,
+        title: title,
+        avatar: avatar,
         myUserId: this.props.myUserId,
         onSignUp: this.props.onSignUp,
         onSettings: this.props.onSettings,
@@ -21807,7 +22063,8 @@ class SidepanelView extends React.Component {
         level: this.props.errorLevel,
         text: this.props.errorText,
         onClearError: this.props.onError }),
-      view === 'login' ? React.createElement(LoginView, { login: this.props.login,
+      view === 'login' ? React.createElement(LoginView, {
+        login: this.props.login,
         disabled: this.props.loginDisabled,
         serverAddress: this.props.serverAddress,
         onLogin: this.handleLoginRequested,
@@ -21822,21 +22079,24 @@ class SidepanelView extends React.Component {
         onCancel: this.props.onCancel,
         onUpdate: this.props.onGlobalSettings
       }) : view === 'edit' ? React.createElement(EditAccountView, {
+        tinode: this.props.tinode,
+        myUserId: this.props.myUserId,
         login: this.props.login,
         onSubmit: this.props.onUpdateAccount,
         onUpdateTags: this.props.onUpdateAccountTags,
         onLogout: this.props.onLogout,
         onCancel: this.props.onCancel,
         onError: this.props.onError }) : view === 'contacts' ? React.createElement(ContactsView, {
+        tinode: this.props.tinode,
+        myUserId: this.props.myUserId,
         connected: this.props.connected,
         topicSelected: this.props.topicSelected,
+        chatList: this.props.chatList,
         showContextMenu: this.props.showContextMenu,
         messageSounds: this.props.messageSounds,
-        onTopicSelected: this.props.onTopicSelected,
-        onAcsChange: this.props.onAcsChange,
-        onOnlineChange: this.props.onOnlineChange }) : view === 'newtpk' ? React.createElement(NewTopicView, {
+        onTopicSelected: this.props.onTopicSelected }) : view === 'newtpk' ? React.createElement(NewTopicView, {
         contactsSearchQuery: this.props.contactsSearchQuery,
-        foundContacts: this.props.foundContacts,
+        searchResults: this.props.searchResults,
         onInitFind: this.props.onInitFind,
         onSearchContacts: this.props.onSearchContacts,
         onCreateTopic: this.props.onCreateTopic,
@@ -21877,21 +22137,21 @@ class ErrorPanel extends React.PureComponent {
   render() {
     var icon = this.props.level == "err" ? "error" : "warning";
     return React.createElement(
-      "div",
+      'div',
       { className: this.state.show ? this.props.level == "err" ? "alert-box error" : "alert-box warning" : "alert-box" },
       React.createElement(
-        "div",
-        { className: "icon" },
+        'div',
+        { className: 'icon' },
         React.createElement(
-          "i",
-          { className: "material-icons" },
+          'i',
+          { className: 'material-icons' },
           icon
         )
       ),
       this.props.text,
       React.createElement(
-        "div",
-        { className: "cancel" },
+        'div',
+        { className: 'cancel' },
         React.createElement(MenuCancel, { onCancel: this.hide })
       )
     );
@@ -21905,13 +22165,12 @@ class EditAccountView extends React.Component {
   constructor(props) {
     super(props);
 
-    let me = Tinode.getMeTopic();
+    let me = this.props.tinode.getMeTopic();
     let defacs = me.getDefaultAccess();
-    let fnd = Tinode.getFndTopic();
+    let fnd = this.props.tinode.getFndTopic();
     this.state = {
       fullName: me.public ? me.public.fn : undefined,
       avatar: makeImageUrl(me.public ? me.public.photo : null),
-      address: Tinode.getCurrentUserID(),
       auth: defacs.auth,
       anon: defacs.anon,
       tags: fnd.tags(),
@@ -21926,7 +22185,7 @@ class EditAccountView extends React.Component {
   }
 
   componentDidMount() {
-    let fnd = Tinode.getFndTopic();
+    let fnd = this.props.tinode.getFndTopic();
     fnd.onTagsUpdated = this.tnNewTags;
     if (!fnd.isSubscribed()) {
       fnd.subscribe(fnd.startMetaQuery().withLaterDesc().withTags().build()).catch(err => {
@@ -21936,7 +22195,7 @@ class EditAccountView extends React.Component {
   }
 
   componentWillUnmount() {
-    var fnd = Tinode.getFndTopic();
+    var fnd = this.props.tinode.getFndTopic();
     fnd.onTagsUpdated = this.state.previousOnTags;
   }
 
@@ -21971,154 +22230,154 @@ class EditAccountView extends React.Component {
     var tags = [];
     this.state.tags.map(function (tag) {
       tags.push(React.createElement(
-        "span",
-        { className: "badge", key: tags.length },
+        'span',
+        { className: 'badge', key: tags.length },
         tag
       ));
     });
     if (tags.length == 0) {
       tags = React.createElement(
-        "i",
+        'i',
         null,
-        "No tags defined. Add some."
+        'No tags defined. Add some.'
       );
     }
     return React.createElement(
-      "div",
-      { id: "edit-account", className: "panel-form" },
+      'div',
+      { id: 'edit-account', className: 'panel-form' },
       React.createElement(
-        "div",
-        { className: "panel-form-row" },
+        'div',
+        { className: 'panel-form-row' },
         React.createElement(
-          "div",
-          { className: "panel-form-column" },
+          'div',
+          { className: 'panel-form-column' },
           React.createElement(
-            "div",
+            'div',
             null,
             React.createElement(
-              "label",
-              { className: "small" },
-              "Your name"
+              'label',
+              { className: 'small' },
+              'Your name'
             )
           ),
           React.createElement(
-            "div",
+            'div',
             null,
             React.createElement(InPlaceEdit, {
-              placeholder: "Full name, e.g. John Doe",
+              placeholder: 'Full name, e.g. John Doe',
               text: this.state.fullName,
               onFinished: this.handleFullNameUpdate })
           ),
           React.createElement(
-            "div",
+            'div',
             null,
             React.createElement(
-              "label",
-              { className: "small" },
-              "Password"
+              'label',
+              { className: 'small' },
+              'Password'
             )
           ),
           React.createElement(
-            "div",
+            'div',
             null,
             React.createElement(InPlaceEdit, {
-              placeholder: "Unchanged",
-              type: "password",
+              placeholder: 'Unchanged',
+              type: 'password',
               onFinished: this.handlePasswordUpdate })
           )
         ),
         React.createElement(AvatarUpload, {
           avatar: this.state.avatar,
-          uid: this.state.address,
+          uid: this.props.myUserId,
           title: this.state.fullName,
           onImageChanged: this.handleImageChanged,
           onError: this.props.onError })
       ),
-      React.createElement("div", { className: "hr" }),
+      React.createElement('div', { className: 'hr' }),
       React.createElement(
-        "div",
-        { className: "panel-form-column" },
+        'div',
+        { className: 'panel-form-column' },
         React.createElement(
-          "div",
-          { className: "panel-form-row" },
+          'div',
+          { className: 'panel-form-row' },
           React.createElement(
-            "label",
+            'label',
             null,
-            "Login:"
+            'Login:'
           ),
           React.createElement(
-            "tt",
+            'tt',
             null,
             this.props.login
           )
         ),
         React.createElement(
-          "div",
-          { className: "panel-form-row" },
+          'div',
+          { className: 'panel-form-row' },
           React.createElement(
-            "label",
+            'label',
             null,
-            "Address:"
+            'Address:'
           ),
           React.createElement(
-            "tt",
+            'tt',
             null,
-            this.state.address
+            this.props.myUserId
           )
         ),
         React.createElement(
-          "div",
+          'div',
           null,
           React.createElement(
-            "label",
-            { className: "small" },
-            "Default access mode:"
+            'label',
+            { className: 'small' },
+            'Default access mode:'
           )
         ),
         React.createElement(
-          "div",
-          { className: "quoted" },
+          'div',
+          { className: 'quoted' },
           React.createElement(
-            "div",
+            'div',
             null,
-            "Auth: ",
+            'Auth: ',
             React.createElement(
-              "tt",
+              'tt',
               null,
               this.state.auth
             )
           ),
           React.createElement(
-            "div",
+            'div',
             null,
-            "Anon: ",
+            'Anon: ',
             React.createElement(
-              "tt",
+              'tt',
               null,
               this.state.anon
             )
           )
         )
       ),
-      React.createElement("div", { className: "hr" }),
+      React.createElement('div', { className: 'hr' }),
       React.createElement(TagManager, {
-        title: "Tags (user discovery)",
+        title: 'Tags (user discovery)',
         activated: false,
         tags: this.state.tags,
         onSubmit: this.handleTagsUpdated }),
-      React.createElement("div", { className: "hr" }),
+      React.createElement('div', { className: 'hr' }),
       React.createElement(
-        "div",
-        { className: "panel-form-column" },
+        'div',
+        { className: 'panel-form-column' },
         React.createElement(
-          "a",
-          { href: "javascript:;", className: "red flat-button", onClick: this.props.onLogout },
+          'a',
+          { href: 'javascript:;', className: 'red flat-button', onClick: this.props.onLogout },
           React.createElement(
-            "i",
-            { className: "material-icons" },
-            "exit_to_app"
+            'i',
+            { className: 'material-icons' },
+            'exit_to_app'
           ),
-          " Logout"
+          ' Logout'
         )
       )
     );
@@ -22147,7 +22406,10 @@ class TagManager extends React.Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    return { tags: nextProps.tags };
+    if (!arrayEqual(nextProps.tags, prevState.tags) && !prevState.activated) {
+      return { tags: nextProps.tags };
+    }
+    return null;
   }
 
   handleShowTagManager() {
@@ -22171,10 +22433,9 @@ class TagManager extends React.Component {
   handleAddTag(tag) {
     tag = tag.trim();
     if (tag.length > 0) {
-      var tags = this.state.tags.slice(0);
+      let tags = this.state.tags.slice(0);
       tags.push(tag);
       this.setState({ tags: tags, tagInput: '' });
-
       if (this.props.onTagsChanged) {
         this.props.onTagsChanged(tags);
       }
@@ -22191,8 +22452,8 @@ class TagManager extends React.Component {
   }
 
   handleSubmit() {
-    var tags = this.state.tags.slice(0);
-    var inp = this.state.tagInput.trim();
+    let tags = this.state.tags.slice(0);
+    let inp = this.state.tagInput.trim();
     if (inp.length > 0) {
       tags.push(inp);
       if (this.props.onTagsChanged) {
@@ -22219,33 +22480,33 @@ class TagManager extends React.Component {
     } else {
       this.state.tags.map(function (tag) {
         tags.push(React.createElement(
-          "span",
-          { className: "badge", key: tags.length },
+          'span',
+          { className: 'badge', key: tags.length },
           tag
         ));
       });
       if (tags.length == 0) {
         tags = React.createElement(
-          "i",
+          'i',
           null,
-          "No tags defined. Add some."
+          'No tags defined. Add some.'
         );
       }
     }
     return React.createElement(
-      "div",
-      { className: "panel-form-column" },
+      'div',
+      { className: 'panel-form-column' },
       React.createElement(
-        "div",
-        { className: "panel-form-row" },
+        'div',
+        { className: 'panel-form-row' },
         React.createElement(
-          "label",
-          { className: "small" },
+          'label',
+          { className: 'small' },
           this.props.title
         )
       ),
       this.state.activated ? React.createElement(
-        "div",
+        'div',
         null,
         React.createElement(ChipInput, {
           chips: tags,
@@ -22257,34 +22518,34 @@ class TagManager extends React.Component {
           onChipRemoved: this.handleRemoveTag,
           filterFunc: this.handleTagInput }),
         this.props.onSubmit || this.props.onCancel ? React.createElement(
-          "div",
-          { id: "tag-manager-buttons", className: "panel-form-row" },
+          'div',
+          { id: 'tag-manager-buttons', className: 'panel-form-row' },
           React.createElement(
-            "button",
-            { className: "blue", onClick: this.handleSubmit },
-            "OK"
+            'button',
+            { className: 'blue', onClick: this.handleSubmit },
+            'OK'
           ),
           React.createElement(
-            "button",
-            { className: "white", onClick: this.handleCancel },
-            "Cancel"
+            'button',
+            { className: 'white', onClick: this.handleCancel },
+            'Cancel'
           )
         ) : null
       ) : React.createElement(
-        "div",
+        'div',
         null,
         React.createElement(
-          "a",
-          { href: "javascript:;", className: "flat-button", onClick: this.handleShowTagManager },
+          'a',
+          { href: 'javascript:;', className: 'flat-button', onClick: this.handleShowTagManager },
           React.createElement(
-            "i",
-            { className: "material-icons" },
-            "edit"
+            'i',
+            { className: 'material-icons' },
+            'edit'
           ),
-          " Manage tags"
+          ' Manage tags'
         ),
         React.createElement(
-          "span",
+          'span',
           null,
           tags
         )
@@ -22322,9 +22583,9 @@ class Contact extends React.Component {
     var title = this.props.title;
     if (!title) {
       title = React.createElement(
-        "i",
+        'i',
         null,
-        "unknown"
+        'unknown'
       );
     } else if (title.length > 30) {
       title = title.substring(0, 28) + "...";
@@ -22337,7 +22598,7 @@ class Contact extends React.Component {
       this.props.badges.map(function (b) {
         var style = "badge" + (b.color ? " " + b.color : "");
         badges.push(React.createElement(
-          "span",
+          'span',
           { className: style, key: count },
           b.name
         ));
@@ -22346,61 +22607,63 @@ class Contact extends React.Component {
     }
     if (this.props.showMode && this.props.acs) {
       badges.push(React.createElement(
-        "span",
-        { className: "badge", key: "mode" },
+        'span',
+        { className: 'badge', key: 'mode' },
         this.props.acs.getMode()
       ));
     }
 
     return React.createElement(
-      "li",
+      'li',
       { className: !this.props.showCheckmark && this.props.selected ? "selected" : null,
         onClick: this.handleClick },
       React.createElement(
-        "div",
-        { className: "avatar-box" },
+        'div',
+        { className: 'avatar-box' },
         React.createElement(LetterTile, {
-          avatar: avatar, title: this.props.title, topic: this.props.item }),
-        this.props.showOnline ? React.createElement("span", { className: online }) : this.props.showCheckmark && this.props.selected ? React.createElement(
-          "i",
-          { className: "checkmark material-icons" },
-          "check_circle"
+          avatar: avatar,
+          title: this.props.title,
+          topic: this.props.item }),
+        this.props.showOnline ? React.createElement('span', { className: online }) : this.props.showCheckmark && this.props.selected ? React.createElement(
+          'i',
+          { className: 'checkmark material-icons' },
+          'check_circle'
         ) : null
       ),
       React.createElement(
-        "div",
-        { className: "text-box" },
+        'div',
+        { className: 'text-box' },
         React.createElement(
-          "div",
+          'div',
           null,
           React.createElement(
-            "span",
-            { className: "contact-title" },
+            'span',
+            { className: 'contact-title' },
             title
           ),
           this.props.unread > 0 ? React.createElement(UnreadBadge, { count: this.props.unread }) : null
         ),
         this.props.comment ? React.createElement(
-          "div",
-          { className: "contact-comment" },
+          'div',
+          { className: 'contact-comment' },
           this.props.comment
         ) : null,
         React.createElement(
-          "span",
+          'span',
           null,
           badges
         )
       ),
       this.props.showContextMenu ? React.createElement(
-        "span",
-        { className: "menuTrigger" },
+        'span',
+        { className: 'menuTrigger' },
         React.createElement(
-          "a",
-          { href: "javascript:;", onClick: this.handleContextClick },
+          'a',
+          { href: 'javascript:;', onClick: this.handleContextClick },
           React.createElement(
-            "i",
-            { className: "material-icons" },
-            "expand_more"
+            'i',
+            { className: 'material-icons' },
+            'expand_more'
           )
         )
       ) : null
@@ -22415,8 +22678,8 @@ class UnreadBadge extends React.PureComponent {
     if (this.props.count > 0) {
       var count = this.props.count > 9 ? "9+" : this.props.count;
       showUnreadBadge = React.createElement(
-        "span",
-        { className: "unread" },
+        'span',
+        { className: 'unread' },
         count
       );
     }
@@ -22435,7 +22698,7 @@ class ContactBadges_UNUSED_REMOVE extends React.PureComponent {
         var style = "badge" + (b.color ? " " + b.color : "");
         // Badge names are expected to be unique, so using the name as the key.
         badges.push(React.createElement(
-          "span",
+          'span',
           { className: style, key: b.name },
           b.name
         ));
@@ -22450,117 +22713,24 @@ class ContactsView extends React.Component {
   constructor(props) {
     super(props);
 
-    this.prepareContactList = this.prepareContactList.bind(this);
-
-    this.state = {
-      contactList: this.prepareContactList()
-    };
-
-    this.tnMeContactUpdate = this.tnMeContactUpdate.bind(this);
-    this.tnMeSubsUpdated = this.tnMeSubsUpdated.bind(this);
-    this.resetContactList = this.resetContactList.bind(this);
-
-    var me = Tinode.getMeTopic();
-    me.onContactUpdate = this.tnMeContactUpdate;
-    me.onSubsUpdated = this.tnMeSubsUpdated;
+    this.state = ContactsView.getDerivedStateFromProps(props, {});
   }
 
-  componentWillUnmount() {
-    var me = Tinode.getMeTopic();
-    me.onContactUpdate = undefined;
-    me.onSubsUpdated = undefined;
-  }
-
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (this.props.topicSelected != nextProps.topicSelected) {
-      // If topicSelecetd is changed externally, update the
-      // topic with online status and access mode.
-      for (var i = 0; i < this.state.contactList.length; i++) {
-        var c = this.state.contactList[i];
-        if (c.topic == nextProps.topicSelected) {
-          nextProps.onOnlineChange(c.online);
-          nextProps.onAcsChange(c.acs);
-          break;
-        }
-      }
-    }
-  }
-
-  // Reactions to updates to the contact list.
-  tnMeContactUpdate(what, cont) {
-    if (what == "on" || what == "off") {
-      this.resetContactList();
-      if (this.props.topicSelected == cont.topic) {
-        this.props.onOnlineChange(what === "on");
-      }
-    } else if (what === "read") {
-      this.resetContactList();
-    } else if (what === "msg") {
-      // New message received
-      // Skip update if the topic is currently open, otherwise the badge will annoyingly flash.
-      if (this.props.topicSelected !== cont.topic) {
-        if (this.props.messageSounds) {
-          POP_SOUND.play();
-        }
-        this.resetContactList();
-      } else if (document.hidden && this.props.messageSounds) {
-        POP_SOUND.play();
-      }
-    } else if (what === "recv") {
-      // Explicitly ignoring "recv" -- it causes no visible updates to contact list.
-    } else if (what === "gone" || what === "unsub") {
-      // Topic deleted or user unsubscribed. Remove topic from view.
-      // If the currently selected topic is gone, clear the selection.
-      if (this.props.topicSelected === cont.topic) {
-        this.props.onTopicSelected(null);
-      }
-      // Redraw without the deleted topic.
-      this.resetContactList();
-    } else if (what === "acs") {
-      // Permissions changed. If it's for the currently selected topic,
-      // update the views.
-      if (this.props.topicSelected === cont.topic) {
-        this.props.onAcsChange(cont.acs);
-      }
-    } else if (what == "del") {
-      // messages deleted (hard or soft) -- update pill counter.
-    } else {
-      // TODO(gene): handle other types of notifications:
-      // * ua -- user agent changes (maybe display a pictogram for mobile/desktop).
-      // * upd -- topic 'public' updated, issue getMeta().
-      console.log("Unsupported (yet) presence update:" + what + " in: " + cont.topic);
-    }
-  }
-
-  tnMeSubsUpdated(names) {
-    this.resetContactList();
-  }
-
-  prepareContactList() {
-    var instance = this;
-    var contacts = [];
-    var unreadThreads = 0;
-    Tinode.getMeTopic().contacts(function (c) {
-      // Force to integers;
-      c.seq = ~~c.seq;
-      c.read = ~~c.read;
-      c.unread = c.seq - c.read;
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let contacts = [];
+    let unreadThreads = 0;
+    nextProps.chatList.map(c => {
       unreadThreads += c.unread > 0 ? 1 : 0;
       contacts.push(c);
-      if (instance.props.topicSelected == c.topic) {
-        instance.props.onOnlineChange(c.online);
-        instance.props.onAcsChange(c.acs);
-      }
-    }, this);
+    });
+
     contacts.sort(function (a, b) {
       return b.touched - a.touched;
     });
-    updateFavicon(unreadThreads);
-    return contacts;
-  }
 
-  resetContactList() {
-    this.setState({ contactList: this.prepareContactList() });
+    updateFavicon(unreadThreads);
+
+    return { contactList: contacts };
   }
 
   render() {
@@ -22568,13 +22738,14 @@ class ContactsView extends React.Component {
       connected: this.props.connected,
       contacts: this.state.contactList,
       emptyListMessage: React.createElement(
-        "span",
+        'span',
         null,
-        "You have no chats",
-        React.createElement("br", null),
-        "\xAF\\_(\u30C4)_/\xAF"
+        'You have no chats',
+        React.createElement('br', null),
+        '\xAF\\_(\u30C4)_/\xAF'
       ),
       topicSelected: this.props.topicSelected,
+      myUserId: this.props.myUserId,
       showOnline: true,
       showUnread: true,
       onTopicSelected: this.props.onTopicSelected,
@@ -22587,16 +22758,14 @@ class ContactsView extends React.Component {
  * such as a list of group members in a group chat */
 class ContactList extends React.Component {
   render() {
-    var me = Tinode.getCurrentUserID();
     var contactNodes = [];
-    var instance = this;
     var showCheckmark = Array.isArray(this.props.topicSelected);
     if (this.props.contacts && this.props.contacts.length > 0) {
-      this.props.contacts.map(function (c) {
+      this.props.contacts.map(c => {
         var key = c.topic ? c.topic : c.user;
         // If filter function is provided, filter out the items
         // which don't satisfy the condition.
-        if (instance.props.filterFunc && instance.props.filter) {
+        if (this.props.filterFunc && this.props.filter) {
           var content = [key];
           if (c.private && c.private.comment) {
             content.push(("" + c.private.comment).toLowerCase());
@@ -22604,7 +22773,7 @@ class ContactList extends React.Component {
           if (c.public && c.public.fn) {
             content.push(("" + c.public.fn).toLowerCase());
           }
-          if (!instance.props.filterFunc(instance.props.filter, content)) {
+          if (!this.props.filterFunc(this.props.filter, content)) {
             return;
           }
         }
@@ -22612,7 +22781,7 @@ class ContactList extends React.Component {
         var selected = showCheckmark ? this.props.topicSelected.indexOf(key) > -1 : this.props.topicSelected === key;
         var badges = [];
         if (this.props.showMode) {
-          if (key === me) {
+          if (key === this.props.myUserId) {
             badges.push({ name: 'you', color: 'green' });
           }
           if (c.acs && c.acs.isOwner()) {
@@ -22642,15 +22811,15 @@ class ContactList extends React.Component {
     }
 
     return React.createElement(
-      "div",
+      'div',
       { className: this.props.noScroll ? null : "scrollable-panel" },
       contactNodes.length > 0 ? React.createElement(
-        "ul",
-        { className: "contact-box" },
+        'ul',
+        { className: 'contact-box' },
         contactNodes
       ) : React.createElement(
-        "div",
-        { className: "center-medium-text" },
+        'div',
+        { className: 'center-medium-text' },
         this.props.emptyListMessage
       )
     );
@@ -22710,7 +22879,7 @@ class GroupManager extends React.Component {
     var m = this.state.members.slice();
     m.push(this.props.contacts[index]);
 
-    var sel = this.selectedContacts(m);
+    var sel = GroupManager.selectedContacts(m);
 
     var i = this.state.index;
     i[userId] = status;
@@ -22729,7 +22898,7 @@ class GroupManager extends React.Component {
     var m = this.state.members.slice();
     m.splice(index, 1);
 
-    var sel = this.selectedContacts(m);
+    var sel = GroupManager.selectedContacts(m);
 
     var i = this.state.index;
     i[userId] = status;
@@ -22782,38 +22951,39 @@ class GroupManager extends React.Component {
 
   render() {
     return React.createElement(
-      "div",
-      { id: "group-manager" },
+      'div',
+      { id: 'group-manager' },
       React.createElement(
-        "div",
-        { className: "panel-form-row" },
+        'div',
+        { className: 'panel-form-row' },
         React.createElement(
-          "label",
-          { className: "small" },
-          "Group members"
+          'label',
+          { className: 'small' },
+          'Group members'
         )
       ),
       React.createElement(
-        "div",
-        { className: "panel-form-row" },
+        'div',
+        { className: 'panel-form-row' },
         React.createElement(ChipInput, {
           chips: this.state.members,
           required: this.props.requiredMember,
-          prompt: "add members",
+          prompt: 'add members',
           filterFunc: this.handleContactFilter,
           onChipRemoved: this.handleMemberRemoved })
       ),
       React.createElement(
-        "div",
-        { className: "panel-form-row" },
+        'div',
+        { className: 'panel-form-row' },
         React.createElement(
-          "label",
-          { className: "small" },
-          "All contacts"
+          'label',
+          { className: 'small' },
+          'All contacts'
         )
       ),
       React.createElement(ContactList, {
         contacts: this.props.contacts,
+        myUserId: this.props.myUserId,
         topicSelected: this.state.selectedContacts,
         filter: this.state.contactFilter,
         filterFunc: GroupManager.doContactFiltering,
@@ -22822,17 +22992,17 @@ class GroupManager extends React.Component {
         showUnread: false,
         onTopicSelected: this.handleContactSelected }),
       React.createElement(
-        "div",
-        { id: "group-manager-buttons", className: "panel-form-row" },
+        'div',
+        { id: 'group-manager-buttons', className: 'panel-form-row' },
         React.createElement(
-          "button",
-          { className: "blue", onClick: this.handleSubmit },
-          "OK"
+          'button',
+          { className: 'blue', onClick: this.handleSubmit },
+          'OK'
         ),
         React.createElement(
-          "button",
-          { className: "white", onClick: this.handleCancel },
-          "Cancel"
+          'button',
+          { className: 'white', onClick: this.handleCancel },
+          'Cancel'
         )
       )
     );
@@ -22848,7 +23018,7 @@ class NewTopicView extends React.Component {
     this.state = {
       tabSelected: "p2p",
       searchQuery: props.contactsSearchQuery,
-      contactList: props.foundContacts
+      contactList: props.searchResults
     };
 
     this.handleTabClick = this.handleTabClick.bind(this);
@@ -22864,79 +23034,80 @@ class NewTopicView extends React.Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     return {
       searchQuery: nextProps.contactsSearchQuery,
-      contactList: nextProps.foundContacts
+      contactList: nextProps.searchResults
     };
   }
 
   handleTabClick(e) {
     e.preventDefault();
-    window.location.hash = addUrlParam(window.location.hash, 'tab', e.currentTarget.dataset.id);
+    navigateTo(addUrlParam(window.location.hash, 'tab', e.currentTarget.dataset.id));
     this.setState({ tabSelected: e.currentTarget.dataset.id });
   }
 
   handleContactSelected(sel) {
     if (this.state.tabSelected === "p2p") {
-      window.location.hash = removeUrlParam(window.location.hash, 'tab');
+      navigateTo(removeUrlParam(window.location.hash, 'tab'));
       this.props.onCreateTopic(sel, undefined);
     }
   }
 
   handleNewGroupSubmit(name, dataUrl, priv, tags) {
-    window.location.hash = removeUrlParam(window.location.hash, 'tab');
+    navigateTo(removeUrlParam(window.location.hash, 'tab'));
     this.props.onCreateTopic(undefined, vcard(name, dataUrl), priv, tags);
   }
 
   handleGroupByID(topicName) {
-    window.location.hash = removeUrlParam(window.location.hash, 'tab');
+    navigateTo(removeUrlParam(window.location.hash, 'tab'));
     this.props.onCreateTopic(topicName);
   }
 
   render() {
     return React.createElement(
-      "div",
-      { className: "flex-column" },
+      'div',
+      { className: 'flex-column' },
       React.createElement(
-        "ul",
-        { className: "tabbar" },
+        'ul',
+        { className: 'tabbar' },
         React.createElement(
-          "li",
+          'li',
           { className: this.state.tabSelected === "p2p" ? "active" : null },
           React.createElement(
-            "a",
-            { href: "javascript:;", "data-id": "p2p", onClick: this.handleTabClick },
-            "find"
+            'a',
+            { href: 'javascript:;', 'data-id': 'p2p', onClick: this.handleTabClick },
+            'find'
           )
         ),
         React.createElement(
-          "li",
+          'li',
           { className: this.state.tabSelected === "grp" ? "active" : null },
           React.createElement(
-            "a",
-            { href: "javascript:;", "data-id": "grp", onClick: this.handleTabClick },
-            "new group"
+            'a',
+            { href: 'javascript:;', 'data-id': 'grp', onClick: this.handleTabClick },
+            'new group'
           )
         ),
         React.createElement(
-          "li",
+          'li',
           { className: this.state.tabSelected === "byid" ? "active" : null },
           React.createElement(
-            "a",
-            { href: "javascript:;", "data-id": "byid", onClick: this.handleTabClick },
-            "by id"
+            'a',
+            { href: 'javascript:;', 'data-id': 'byid', onClick: this.handleTabClick },
+            'by id'
           )
         )
       ),
       this.state.tabSelected === "grp" ? React.createElement(NewTopicGroup, { onSubmit: this.handleNewGroupSubmit }) : this.state.tabSelected === "byid" ? React.createElement(NewTopicById, {
         onSubmit: this.handleGroupByID,
         onError: this.props.onError }) : React.createElement(
-        "div",
-        { className: "flex-column" },
-        React.createElement(SearchContacts, { type: "p2p",
+        'div',
+        { className: 'flex-column' },
+        React.createElement(SearchContacts, { type: 'p2p',
           searchQuery: this.state.searchQuery,
           onSearchContacts: this.props.onSearchContacts }),
         React.createElement(ContactList, {
           contacts: this.state.contactList,
-          emptyListMessage: "Use search to find contacts",
+          myUserId: this.props.myUserId,
+          emptyListMessage: 'Use search to find contacts',
           topicSelected: this.state.selectedContact,
           showOnline: false,
           showUnread: false,
@@ -22995,28 +23166,28 @@ class NewTopicGroup extends React.PureComponent {
       submitClasses += " disabled";
     }
     return React.createElement(
-      "form",
-      { className: "panel-form", onSubmit: this.handleSubmit },
+      'form',
+      { className: 'panel-form', onSubmit: this.handleSubmit },
       React.createElement(
-        "div",
-        { className: "panel-form-row" },
+        'div',
+        { className: 'panel-form-row' },
         React.createElement(
-          "div",
-          { className: "panel-form-column" },
+          'div',
+          { className: 'panel-form-column' },
           React.createElement(
-            "label",
-            { className: "small", htmlFor: "new-topic-fn" },
-            "Group name"
+            'label',
+            { className: 'small', htmlFor: 'new-topic-fn' },
+            'Group name'
           ),
-          React.createElement("input", { type: "text", id: "new-topic-fn", placeholder: "Freeform name of the group",
+          React.createElement('input', { type: 'text', id: 'new-topic-fn', placeholder: 'Freeform name of the group',
             value: this.state.fn, onChange: this.handleFnChange, autoFocus: true, required: true }),
-          React.createElement("br", null),
+          React.createElement('br', null),
           React.createElement(
-            "label",
-            { className: "small", htmlFor: "new-topic-priv" },
-            "Private comment"
+            'label',
+            { className: 'small', htmlFor: 'new-topic-priv' },
+            'Private comment'
           ),
-          React.createElement("input", { type: "text", id: "new-topic-priv", placeholder: "Visible to you only",
+          React.createElement('input', { type: 'text', id: 'new-topic-priv', placeholder: 'Visible to you only',
             value: this.state.private, onChange: this.handlePrivateChange })
         ),
         React.createElement(AvatarUpload, {
@@ -23027,14 +23198,14 @@ class NewTopicGroup extends React.PureComponent {
         tags: this.state.tags,
         activated: true,
         onTagsChanged: this.handleTagsChanged,
-        title: "Optional tags (search and discovery)" }),
+        title: 'Optional tags (search and discovery)' }),
       React.createElement(
-        "div",
-        { className: "dialog-buttons" },
+        'div',
+        { className: 'dialog-buttons' },
         React.createElement(
-          "button",
+          'button',
           { className: submitClasses },
-          "Create"
+          'Create'
         )
       )
     );
@@ -23059,7 +23230,7 @@ class SearchContacts extends React.Component {
   componentWillUnmount() {
     if (this.state.search) {
       this.setState({ search: '' });
-      this.props.onSearchContacts(DEL_CHAR);
+      this.props.onSearchContacts(Tinode.DEL_CHAR);
     }
   }
 
@@ -23074,13 +23245,13 @@ class SearchContacts extends React.Component {
       this.setState({ edited: true });
       this.props.onSearchContacts(query);
     } else if (this.props.searchQuery) {
-      this.props.onSearchContacts(DEL_CHAR);
+      this.props.onSearchContacts(Tinode.DEL_CHAR);
     }
   }
 
   handleClear() {
     if (this.state.edited || this.state.search) {
-      this.props.onSearchContacts(DEL_CHAR);
+      this.props.onSearchContacts(Tinode.DEL_CHAR);
     }
     this.setState({ search: '', edited: false });
   }
@@ -23095,27 +23266,27 @@ class SearchContacts extends React.Component {
 
   render() {
     return React.createElement(
-      "div",
-      { className: "panel-form" },
+      'div',
+      { className: 'panel-form' },
       React.createElement(
-        "div",
-        { className: "panel-form-row" },
+        'div',
+        { className: 'panel-form-row' },
         React.createElement(
-          "i",
-          { className: "material-icons search" },
-          "search"
+          'i',
+          { className: 'material-icons search' },
+          'search'
         ),
-        React.createElement("input", { className: "search", type: "text",
-          placeholder: "List like email:alice@example.com, tel:17025550003...",
+        React.createElement('input', { className: 'search', type: 'text',
+          placeholder: 'List like email:alice@example.com, tel:17025550003...',
           value: this.state.search, onChange: this.handleSearchChange,
           onKeyDown: this.handleKeyDown, required: true, autoFocus: true }),
         React.createElement(
-          "a",
-          { href: "javascript:;", onClick: this.handleClear },
+          'a',
+          { href: 'javascript:;', onClick: this.handleClear },
           React.createElement(
-            "i",
-            { className: "material-icons" },
-            "close"
+            'i',
+            { className: 'material-icons' },
+            'close'
           )
         )
       )
@@ -23160,22 +23331,22 @@ class NewTopicById extends React.PureComponent {
 
   render() {
     return React.createElement(
-      "div",
-      { className: "panel-form" },
+      'div',
+      { className: 'panel-form' },
       React.createElement(
-        "div",
-        { className: "panel-form-row" },
-        React.createElement("input", { type: "text", placeholder: "Group or User ID",
+        'div',
+        { className: 'panel-form-row' },
+        React.createElement('input', { type: 'text', placeholder: 'Group or User ID',
           value: this.state.groupId, onChange: this.handleChange,
           onKeyPress: this.handleKeyPress, required: true })
       ),
       React.createElement(
-        "div",
-        { className: "dialog-buttons" },
+        'div',
+        { className: 'dialog-buttons' },
         React.createElement(
-          "button",
-          { className: "blue", onClick: this.handleSubmit },
-          "Subscribe"
+          'button',
+          { className: 'blue', onClick: this.handleSubmit },
+          'Subscribe'
         )
       )
     );
@@ -23222,33 +23393,33 @@ class ValidationView extends React.PureComponent {
     var methods = { 'email': 'email', 'tel': 'phone' };
     var method = methods[this.props.credMethod] || this.props.credMethod;
     return React.createElement(
-      "div",
-      { className: "panel-form" },
+      'div',
+      { className: 'panel-form' },
       React.createElement(
-        "div",
-        { className: "panel-form-row" },
+        'div',
+        { className: 'panel-form-row' },
         React.createElement(
-          "label",
-          { className: "small", htmlFor: "enter-confirmation-code" },
-          "Enter confirmation code sent to you by ",
+          'label',
+          { className: 'small', htmlFor: 'enter-confirmation-code' },
+          'Enter confirmation code sent to you by ',
           method,
-          ":"
+          ':'
         )
       ),
       React.createElement(
-        "div",
-        { className: "panel-form-row" },
-        React.createElement("input", { type: "text", id: "enter-confirmation-code", placeholder: "Numbers only",
+        'div',
+        { className: 'panel-form-row' },
+        React.createElement('input', { type: 'text', id: 'enter-confirmation-code', placeholder: 'Numbers only',
           value: this.state.code, onChange: this.handleChange,
           onKeyPress: this.handleKeyPress, required: true })
       ),
       React.createElement(
-        "div",
-        { className: "dialog-buttons" },
+        'div',
+        { className: 'dialog-buttons' },
         React.createElement(
-          "button",
-          { className: "blue", onClick: this.handleSubmit },
-          "Confirm"
+          'button',
+          { className: 'blue', onClick: this.handleSubmit },
+          'Confirm'
         )
       )
     );
@@ -23314,7 +23485,7 @@ class InfoView extends React.Component {
 
   // No need to separately handle component mount.
   UNSAFE_componentWillReceiveProps(props) {
-    var topic = Tinode.getTopic(props.topic);
+    var topic = this.props.tinode.getTopic(props.topic);
     if (!topic) {
       return;
     }
@@ -23326,7 +23497,7 @@ class InfoView extends React.Component {
       this.previousSubsUpdated = topic.onSubsUpdated;
       topic.onSubsUpdated = this.onSubsUpdated;
 
-      if (topic.getType() === "grp") {
+      if (topic.getType() == "grp") {
         this.previousTagsUpdated = topic.onTagsUpdated;
         topic.onTagsUpdated = this.onTagsUpdated;
       } else {
@@ -23342,7 +23513,7 @@ class InfoView extends React.Component {
   }
 
   componentWillUnmount() {
-    var topic = Tinode.getTopic(this.props.topic);
+    var topic = this.props.tinode.getTopic(this.props.topic);
     if (!topic) {
       return;
     }
@@ -23354,7 +23525,7 @@ class InfoView extends React.Component {
 
   resetSubs(topic, props) {
     var newState = { contactList: [] };
-    if (topic.getType() === "p2p") {
+    if (topic.getType() == "p2p") {
       // Fetch the other party in the p2p conversation.
       // Topic may not be ready yet, so check if user is found.
       var user2 = topic.subscriber(props.topic);
@@ -23384,7 +23555,7 @@ class InfoView extends React.Component {
       avatar: makeImageUrl(topic.public ? topic.public.photo : null),
       private: topic.private ? topic.private.comment : null,
       address: topic.name,
-      groupTopic: topic.getType() === "grp",
+      groupTopic: topic.getType() == "grp",
       showMemberPanel: false,
       access: acs ? acs.getMode() : undefined,
       modeGiven: acs ? acs.getGiven() : undefined,
@@ -23400,7 +23571,7 @@ class InfoView extends React.Component {
   }
 
   onMetaDesc(desc) {
-    var topic = Tinode.getTopic(this.props.topic);
+    var topic = this.props.tinode.getTopic(this.props.topic);
     if (!topic) {
       return;
     }
@@ -23412,7 +23583,7 @@ class InfoView extends React.Component {
   }
 
   onSubsUpdated() {
-    var topic = Tinode.getTopic(this.props.topic);
+    var topic = this.props.tinode.getTopic(this.props.topic);
     if (!topic) {
       return;
     }
@@ -23508,7 +23679,7 @@ class InfoView extends React.Component {
         break;
       case 'user':
         {
-          var topic = Tinode.getTopic(this.props.topic);
+          var topic = this.props.tinode.getTopic(this.props.topic);
           if (!topic) {
             return;
           }
@@ -23582,7 +23753,7 @@ class InfoView extends React.Component {
 
   handleContextMenu(params) {
     var instance = this;
-    var topic = Tinode.getTopic(this.props.topic);
+    var topic = this.props.tinode.getTopic(this.props.topic);
     if (!topic) {
       return;
     }
@@ -23593,7 +23764,7 @@ class InfoView extends React.Component {
 
     var menuItems = [{ title: "Edit permissions", handler: function () {
         instance.handleLaunchPermissionsEditor("user", params.topicName);
-      } }, ContextMenuItems["member_delete"], user.acs.isMuted() ? ContextMenuItems["member_unmute"] : ContextMenuItems["member_mute"], user.acs.isJoiner() ? ContextMenuItems["member_block"] : ContextMenuItems["member_unblock"]];
+      } }, "member_delete", user.acs.isMuted() ? "member_unmute" : "member_mute", user.acs.isJoiner() ? "member_block" : "member_unblock"];
     this.props.showContextMenu({
       topicName: this.props.topic,
       x: params.x,
@@ -23603,18 +23774,18 @@ class InfoView extends React.Component {
 
   render() {
     return React.createElement(
-      "div",
-      { id: "info-view" },
+      'div',
+      { id: 'info-view' },
       React.createElement(
-        "div",
-        { className: "caption-panel", id: "info-caption-panel" },
+        'div',
+        { className: 'caption-panel', id: 'info-caption-panel' },
         React.createElement(
-          "div",
-          { className: "panel-title", id: "info-title" },
-          "Info"
+          'div',
+          { className: 'panel-title', id: 'info-title' },
+          'Info'
         ),
         React.createElement(
-          "div",
+          'div',
           null,
           React.createElement(MenuCancel, { onCancel: this.props.onCancel })
         )
@@ -23626,7 +23797,8 @@ class InfoView extends React.Component {
       this.state.showMemberPanel ? React.createElement(GroupManager, {
         members: this.state.contactList,
         requiredMember: this.props.myUserId,
-        contacts: this.props.foundContacts,
+        myUserId: this.props.myUserId,
+        contacts: this.props.searchableContacts,
         onCancel: this.handleHideAddMembers,
         onSubmit: this.handleMemberUpdateRequest }) : this.state.showPermissionEditorFor ? React.createElement(PermissionsEditor, {
         mode: this.state.editedPermissions,
@@ -23641,46 +23813,46 @@ class InfoView extends React.Component {
         onSubmit: this.handlePermissionsChanged,
         onCancel: this.handleHidePermissionsEditor
       }) : React.createElement(
-        "div",
-        { id: "info-view-content", className: "scrollable-panel" },
+        'div',
+        { id: 'info-view-content', className: 'scrollable-panel' },
         React.createElement(
-          "div",
-          { className: "panel-form-row" },
+          'div',
+          { className: 'panel-form-row' },
           React.createElement(
-            "div",
-            { className: "panel-form-column" },
+            'div',
+            { className: 'panel-form-column' },
             React.createElement(
-              "div",
+              'div',
               null,
               React.createElement(
-                "label",
-                { className: "small" },
-                "Name"
+                'label',
+                { className: 'small' },
+                'Name'
               )
             ),
             React.createElement(
-              "div",
+              'div',
               null,
               React.createElement(InPlaceEdit, {
-                placeholder: "Group name",
+                placeholder: 'Group name',
                 readOnly: !this.state.owner,
                 text: this.state.fullName,
                 onFinished: this.handleFullNameUpdate })
             ),
             React.createElement(
-              "div",
+              'div',
               null,
               React.createElement(
-                "label",
-                { className: "small" },
-                "Private comment"
+                'label',
+                { className: 'small' },
+                'Private comment'
               )
             ),
             React.createElement(
-              "div",
+              'div',
               null,
               React.createElement(InPlaceEdit, {
-                placeholder: "Visible to you only",
+                placeholder: 'Visible to you only',
                 text: this.state.private,
                 onFinished: this.handlePrivateUpdate })
             )
@@ -23693,90 +23865,90 @@ class InfoView extends React.Component {
             onImageChanged: this.handleImageChanged,
             onError: this.props.onError })
         ),
-        React.createElement("div", { className: "hr" }),
+        React.createElement('div', { className: 'hr' }),
         React.createElement(
-          "div",
-          { className: "panel-form-column" },
+          'div',
+          { className: 'panel-form-column' },
           React.createElement(
-            "div",
-            { className: "panel-form-row" },
+            'div',
+            { className: 'panel-form-row' },
             React.createElement(
-              "label",
+              'label',
               null,
-              "Muted:"
+              'Muted:'
             ),
-            React.createElement(CheckBox, { name: "P", checked: this.state.muted,
+            React.createElement(CheckBox, { name: 'P', checked: this.state.muted,
               onChange: this.handleMuted })
           ),
           React.createElement(MoreButton, {
-            title: "More",
+            title: 'More',
             open: this.state.moreInfoExpanded,
             onToggle: this.handleMoreInfo }),
           this.state.moreInfoExpanded ? React.createElement(
-            "div",
-            { className: "panel-form-column" },
+            'div',
+            { className: 'panel-form-column' },
             React.createElement(
-              "div",
-              { className: "panel-form-row" },
+              'div',
+              { className: 'panel-form-row' },
               React.createElement(
-                "label",
+                'label',
                 null,
-                "Address:"
+                'Address:'
               ),
               React.createElement(
-                "tt",
+                'tt',
                 null,
                 this.state.address
               )
             ),
             this.state.groupTopic ? React.createElement(
-              "div",
-              { className: "panel-form-row" },
+              'div',
+              { className: 'panel-form-row' },
               React.createElement(
-                "label",
+                'label',
                 null,
-                "Your permissions:"
+                'Your permissions:'
               ),
               React.createElement(
-                "tt",
-                { className: "clickable",
+                'tt',
+                { className: 'clickable',
                   onClick: this.handleLaunchPermissionsEditor.bind(this, 'want') },
                 this.state.access
               )
             ) : React.createElement(
-              "div",
+              'div',
               null,
               React.createElement(
-                "div",
+                'div',
                 null,
                 React.createElement(
-                  "label",
-                  { className: "small" },
-                  "Permissions:"
+                  'label',
+                  { className: 'small' },
+                  'Permissions:'
                 )
               ),
               React.createElement(
-                "div",
-                { className: "quoted" },
+                'div',
+                { className: 'quoted' },
                 React.createElement(
-                  "div",
+                  'div',
                   null,
-                  "Yours: \xA0",
+                  'Yours: \xA0',
                   React.createElement(
-                    "tt",
-                    { className: "clickable",
+                    'tt',
+                    { className: 'clickable',
                       onClick: this.handleLaunchPermissionsEditor.bind(this, 'want') },
                     this.state.access
                   )
                 ),
                 React.createElement(
-                  "div",
+                  'div',
                   null,
                   this.state.fullName,
-                  "\u2032s: \xA0",
+                  '\u2032s: \xA0',
                   React.createElement(
-                    "tt",
-                    { className: "clickable",
+                    'tt',
+                    { className: 'clickable',
                       onClick: this.handleLaunchPermissionsEditor.bind(this, 'given') },
                     this.state.modeGiven2
                   )
@@ -23784,46 +23956,46 @@ class InfoView extends React.Component {
               )
             ),
             this.state.sharer && (this.state.auth || this.state.anon) ? React.createElement(
-              "div",
+              'div',
               null,
               React.createElement(
-                "div",
+                'div',
                 null,
                 React.createElement(
-                  "label",
-                  { className: "small" },
-                  "Default access mode:"
+                  'label',
+                  { className: 'small' },
+                  'Default access mode:'
                 )
               ),
               React.createElement(
-                "div",
-                { className: "quoted" },
+                'div',
+                { className: 'quoted' },
                 React.createElement(
-                  "div",
+                  'div',
                   null,
-                  "Auth: ",
+                  'Auth: ',
                   this.state.admin ? React.createElement(
-                    "tt",
-                    { className: "clickable",
+                    'tt',
+                    { className: 'clickable',
                       onClick: this.handleLaunchPermissionsEditor.bind(this, 'auth') },
                     this.state.auth
                   ) : React.createElement(
-                    "tt",
+                    'tt',
                     null,
                     this.state.auth
                   )
                 ),
                 React.createElement(
-                  "div",
+                  'div',
                   null,
-                  "Anon: ",
+                  'Anon: ',
                   this.state.admin ? React.createElement(
-                    "tt",
-                    { className: "clickable",
+                    'tt',
+                    { className: 'clickable',
                       onClick: this.handleLaunchPermissionsEditor.bind(this, 'anon') },
                     this.state.anon
                   ) : React.createElement(
-                    "tt",
+                    'tt',
                     null,
                     this.state.anon
                   )
@@ -23832,52 +24004,53 @@ class InfoView extends React.Component {
             ) : null
           ) : null
         ),
-        React.createElement("div", { className: "hr" }),
+        React.createElement('div', { className: 'hr' }),
         this.state.owner ? React.createElement(TagManager, {
-          title: "Tags",
+          title: 'Tags',
           tags: this.state.tags,
           activated: false,
           onSubmit: this.handleTagsUpdated }) : null,
-        this.state.owner ? React.createElement("div", { className: "hr" }) : null,
+        this.state.owner ? React.createElement('div', { className: 'hr' }) : null,
         this.state.groupTopic ? React.createElement(
-          "div",
-          { className: "panel-form-column" },
+          'div',
+          { className: 'panel-form-column' },
           React.createElement(
-            "div",
-            { className: "panel-form-row" },
+            'div',
+            { className: 'panel-form-row' },
             React.createElement(
-              "label",
-              { className: "small" },
-              "Group members:"
+              'label',
+              { className: 'small' },
+              'Group members:'
             )
           ),
           React.createElement(
-            "div",
-            { className: "panel-form-row" },
+            'div',
+            { className: 'panel-form-row' },
             this.state.sharer ? React.createElement(
-              "a",
-              { href: "javascript:;", className: "flat-button", onClick: this.handleShowAddMembers },
+              'a',
+              { href: 'javascript:;', className: 'flat-button', onClick: this.handleShowAddMembers },
               React.createElement(
-                "i",
-                { className: "material-icons" },
-                "person_add"
+                'i',
+                { className: 'material-icons' },
+                'person_add'
               ),
-              " Add members"
+              ' Add members'
             ) : null,
             !this.state.owner ? React.createElement(
-              "a",
-              { href: "javascript:;", className: "red flat-button", onClick: this.handleLeave },
+              'a',
+              { href: 'javascript:;', className: 'red flat-button', onClick: this.handleLeave },
               React.createElement(
-                "i",
-                { className: "material-icons" },
-                "exit_to_app"
+                'i',
+                { className: 'material-icons' },
+                'exit_to_app'
               ),
-              " Leave"
+              ' Leave'
             ) : null
           ),
           React.createElement(ContactList, {
             contacts: this.state.contactList,
-            emptyListMessage: "No members",
+            myUserId: this.props.myUserId,
+            emptyListMessage: 'No members',
             topicSelected: this.state.selectedContact,
             showOnline: false,
             showUnread: false,
@@ -23887,17 +24060,17 @@ class InfoView extends React.Component {
             showContextMenu: this.state.admin ? this.handleContextMenu : false
           })
         ) : React.createElement(
-          "div",
-          { className: "panel-form-row" },
+          'div',
+          { className: 'panel-form-row' },
           React.createElement(
-            "a",
-            { href: "javascript:;", className: "red flat-button", onClick: this.handleLeave },
+            'a',
+            { href: 'javascript:;', className: 'red flat-button', onClick: this.handleLeave },
             React.createElement(
-              "i",
-              { className: "material-icons" },
-              "exit_to_app"
+              'i',
+              { className: 'material-icons' },
+              'exit_to_app'
             ),
-            " Leave"
+            ' Leave'
           )
         )
       )
@@ -23973,15 +24146,16 @@ class ChatMessage extends React.Component {
     };
 
     var sideClass = this.props.sequence + " " + (this.props.response ? "left" : "right");
-    var bubbleClass = this.props.sequence === "single" || this.props.sequence === "last" ? "bubble tip" : "bubble";
+    var bubbleClass = this.props.sequence == "single" || this.props.sequence == "last" ? "bubble tip" : "bubble";
     var avatar = this.props.userAvatar || true;
-    var fullDisplay = this.props.userFrom && this.props.response && (this.props.sequence === "single" || this.props.sequence === "last");
+    var fullDisplay = this.props.userFrom && this.props.response && (this.props.sequence == "single" || this.props.sequence == "last");
 
     var content = this.props.content;
     var attachments = [];
     if (this.props.mimeType == Drafty.getContentType()) {
       Drafty.attachments(content, function (att, i) {
         attachments.push(React.createElement(Attachment, {
+          tinode: this.props.tinode,
           downloadUrl: Drafty.getDownloadUrl(att),
           filename: att.name, uploader: Drafty.isUploading(att),
           mimetype: att.mime, size: Drafty.getEntitySize(att),
@@ -23991,26 +24165,44 @@ class ChatMessage extends React.Component {
           key: i }));
       }, this);
       content = React.createElement('span', null, Drafty.format(content, formatter, this));
+    } else if (typeof content != 'string') {
+      content = React.createElement(
+        'span',
+        null,
+        React.createElement(
+          'i',
+          { className: 'material-icons' },
+          'error_outline'
+        ),
+        ' ',
+        React.createElement(
+          'i',
+          null,
+          'invalid content'
+        )
+      );
     }
 
     return React.createElement(
-      "li",
+      'li',
       { className: sideClass },
       this.props.userFrom && this.props.response ? React.createElement(
-        "div",
-        { className: "avatar-box" },
-        fullDisplay ? React.createElement(LetterTile, { topic: this.props.userFrom,
-          title: this.props.userName, avatar: avatar }) : null
+        'div',
+        { className: 'avatar-box' },
+        fullDisplay ? React.createElement(LetterTile, {
+          topic: this.props.userFrom,
+          title: this.props.userName,
+          avatar: avatar }) : null
       ) : null,
       React.createElement(
-        "div",
+        'div',
         null,
         React.createElement(
-          "div",
+          'div',
           { className: bubbleClass },
           React.createElement(
-            "p",
-            null,
+            'div',
+            { className: 'message-content' },
             content,
             attachments,
             React.createElement(ReceivedMarker, {
@@ -24018,22 +24210,22 @@ class ChatMessage extends React.Component {
               received: this.props.received })
           ),
           React.createElement(
-            "span",
-            { className: "menuTrigger" },
+            'span',
+            { className: 'menuTrigger' },
             React.createElement(
-              "a",
-              { href: "javascript:;", onClick: this.handleContextClick },
+              'a',
+              { href: 'javascript:;', onClick: this.handleContextClick },
               React.createElement(
-                "i",
-                { className: "material-icons" },
-                "expand_more"
+                'i',
+                { className: 'material-icons' },
+                'expand_more'
               )
             )
           )
         ),
         fullDisplay ? React.createElement(
-          "div",
-          { className: "author" },
+          'div',
+          { className: 'author' },
           this.props.userName
         ) : null
       )
@@ -24049,33 +24241,33 @@ class ReceivedMarker extends React.PureComponent {
     var marker = null;
     if (this.props.received <= Tinode.MESSAGE_STATUS_SENDING) {
       marker = React.createElement(
-        "i",
-        { className: "material-icons small" },
-        "access_time"
+        'i',
+        { className: 'material-icons small' },
+        'access_time'
       ); // watch face
     } else if (this.props.received == Tinode.MESSAGE_STATUS_SENT) {
       marker = React.createElement(
-        "i",
-        { className: "material-icons small" },
-        "done"
+        'i',
+        { className: 'material-icons small' },
+        'done'
       ); // checkmark
     } else if (this.props.received == Tinode.MESSAGE_STATUS_RECEIVED) {
       marker = React.createElement(
-        "i",
-        { className: "material-icons small" },
-        "done_all"
+        'i',
+        { className: 'material-icons small' },
+        'done_all'
       ); // double checkmark
     } else if (this.props.received == Tinode.MESSAGE_STATUS_READ) {
       marker = React.createElement(
-        "i",
-        { className: "material-icons small blue" },
-        "done_all"
+        'i',
+        { className: 'material-icons small blue' },
+        'done_all'
       ); // open eye
     }
 
     return React.createElement(
-      "span",
-      { className: "timestamp" },
+      'span',
+      { className: 'timestamp' },
       timestamp,
       '\u00a0',
       marker
@@ -24087,26 +24279,26 @@ class ReceivedMarker extends React.PureComponent {
 class FileProgress extends React.PureComponent {
   render() {
     return React.createElement(
-      "div",
-      { className: "uploader" },
+      'div',
+      { className: 'uploader' },
       React.createElement(
-        "div",
+        'div',
         null,
-        React.createElement("span", { style: { width: this.props.progress * 100 + "%" } })
+        React.createElement('span', { style: { width: this.props.progress * 100 + "%" } })
       ),
       this.props.progress < 0.999 ? React.createElement(
-        "a",
-        { href: "javascript:;", onClick: this.props.onCancel },
+        'a',
+        { href: 'javascript:;', onClick: this.props.onCancel },
         React.createElement(
-          "i",
-          { className: "material-icons" },
-          "close"
+          'i',
+          { className: 'material-icons' },
+          'close'
         ),
-        " cancel"
+        ' cancel'
       ) : React.createElement(
-        "span",
+        'span',
         null,
-        "finishing..."
+        'finishing...'
       )
     );
   }
@@ -24126,7 +24318,7 @@ class Attachment extends React.Component {
   }
 
   downloadFile(url, filename, mimetype) {
-    var downloader = Tinode.getLargeFileHelper();
+    var downloader = this.props.tinode.getLargeFileHelper();
     this.setState({ downloader: downloader });
     downloader.download(url, filename, mimetype, loaded => {
       this.setState({ progress: loaded / this.props.size });
@@ -24154,11 +24346,11 @@ class Attachment extends React.Component {
       filename = filename.substr(0, 16) + "..." + filename.substr(-16);
     }
     let size = this.props.size > 0 ? React.createElement(
-      "span",
-      { className: "small gray" },
-      "(",
+      'span',
+      { className: 'small gray' },
+      '(',
       bytesToHumanSize(this.props.size),
-      ")"
+      ')'
     ) : null;
 
     // Detect if the download URL is relative or absolute.
@@ -24176,46 +24368,47 @@ class Attachment extends React.Component {
       helperFunc = null;
     }
     return React.createElement(
-      "div",
-      { className: "attachment" },
+      'div',
+      { className: 'attachment' },
       React.createElement(
-        "div",
+        'div',
         null,
         React.createElement(
-          "i",
-          { className: "material-icons big gray" },
-          "insert_drive_file"
+          'i',
+          { className: 'material-icons big gray' },
+          'insert_drive_file'
         )
       ),
       React.createElement(
-        "div",
-        { className: "flex-column" },
+        'div',
+        { className: 'flex-column' },
         React.createElement(
-          "div",
+          'div',
           null,
           filename,
-          " ",
+          ' ',
           size
         ),
         this.props.uploader || this.state.downloader ? React.createElement(FileProgress, { progress: this.props.uploader ? this.props.progress : this.state.progress,
           onCancel: this.handleCancel }) : React.createElement(
-          "div",
+          'div',
           null,
           React.createElement(
-            "a",
+            'a',
             { href: url, download: this.props.filename, onClick: helperFunc },
             React.createElement(
-              "i",
-              { className: "material-icons" },
-              "file_download"
+              'i',
+              { className: 'material-icons' },
+              'file_download'
             ),
-            " save"
+            ' save'
           )
         )
       )
     );
   }
 };
+const NOT_FOUND_TOPIC_TITLE = "Not found";
 
 class MessagesView extends React.Component {
   constructor(props) {
@@ -24288,12 +24481,17 @@ class MessagesView extends React.Component {
       return;
     }
 
-    var tryToResubscribe = !this.props.connected && props.connected;
+    let topic = this.props.tinode.getTopic(props.topic);
+    if (!topic) {
+      return;
+    }
 
-    var topic = Tinode.getTopic(props.topic);
+    let newGroupTopic = Tinode.isNewGroupTopicName(props.topic);
+    let tryToResubscribe = !this.props.connected && props.connected;
+
     if (props.topic != this.state.topic) {
-      var msgs = [];
-      var subs = [];
+      let msgs = [];
+      let subs = [];
 
       // Bind the new topic to component.
       topic.onData = this.handleNewMessage;
@@ -24306,9 +24504,8 @@ class MessagesView extends React.Component {
       this.leave();
 
       this.handleDescChange(topic);
-      var myId = this.props.myUserId;
-      topic.subscribers(function (sub) {
-        if (sub.online && sub.user != myId) {
+      topic.subscribers(sub => {
+        if (sub.online && sub.user != this.props.myUserId) {
           subs.push(sub);
         }
       });
@@ -24339,16 +24536,20 @@ class MessagesView extends React.Component {
     });
 
     if (!topic.isSubscribed() && tryToResubscribe) {
-      var getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub().withLaterData(MESSAGES_PAGE).withLaterDel();
+      let getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub().withLaterData(MESSAGES_PAGE).withLaterDel();
+      let setQuery = newGroupTopic ? props.newGroupTopicParams : undefined;
       // Don't request the tags. They are useless unless the user
       // is the owner and is editing the topic.
       // getQuery = topic.getType() == 'grp' ? getQuery.withTags() : getQuery;
       // Show "loading" spinner.
       this.setState({ fetchingMessages: true });
-      topic.subscribe(getQuery.build()).catch(err => {
+      topic.subscribe(getQuery.build(), setQuery).then(ctrl => {
+        this.setState({ topic: ctrl.topic });
+        this.props.onNewTopicCreated(props.topic, ctrl.topic);
+      }).catch(err => {
         this.props.onError(err.message, "err");
         this.setState({
-          title: "Not found",
+          title: NOT_FOUND_TOPIC_TITLE,
           avatar: null,
           readOnly: true,
           writeOnly: true,
@@ -24360,20 +24561,22 @@ class MessagesView extends React.Component {
 
   leave() {
     if (this.state.topic) {
-      var oldTopic = Tinode.getTopic(this.state.topic);
+      let oldTopic = this.props.tinode.getTopic(this.state.topic);
       if (oldTopic) {
         if (oldTopic.isSubscribed()) {
-          oldTopic.leave(false).catch(function (err) {
+          oldTopic.leave(false).then(ctrl => {
+            this.setState({ fetchingMessages: false });
+            oldTopic.onData = undefined;
+            oldTopic.onAllMessagesReceived = undefined;
+            oldTopic.onInfo = undefined;
+            oldTopic.onMetaDesc = undefined;
+            oldTopic.onSubsUpdated = undefined;
+            oldTopic.onPres = undefined;
+          }).catch(err => {
             // do nothing
             console.log(err);
           });
         }
-        oldTopic.onData = undefined;
-        oldTopic.onAllMessagesReceived = undefined;
-        oldTopic.onInfo = undefined;
-        oldTopic.onMetaDesc = undefined;
-        oldTopic.onSubsUpdated = undefined;
-        oldTopic.onPres = undefined;
       }
     }
   }
@@ -24391,7 +24594,7 @@ class MessagesView extends React.Component {
       let newState = { scrollPosition: event.target.scrollHeight - event.target.scrollTop };
       this.setState((prevState, props) => {
         if (!prevState.fetchingMessages) {
-          var topic = Tinode.getTopic(this.state.topic);
+          var topic = this.props.tinode.getTopic(this.state.topic);
           if (topic && topic.isSubscribed() && topic.msgHasMoreMessages()) {
             newState.fetchingMessages = true;
             topic.getMessagesPage(MESSAGES_PAGE).catch(err => {
@@ -24411,6 +24614,11 @@ class MessagesView extends React.Component {
         title: desc.public.fn,
         avatar: makeImageUrl(desc.public.photo)
       });
+    } else {
+      this.setState({
+        title: NOT_FOUND_TOPIC_TITLE,
+        avatar: null
+      });
     }
     if (desc.acs) {
       this.setState({
@@ -24423,10 +24631,9 @@ class MessagesView extends React.Component {
   handleSubsUpdated() {
     if (this.state.topic) {
       var subs = [];
-      var myId = this.props.myUserId;
-      var topic = Tinode.getTopic(this.state.topic);
-      topic.subscribers(function (sub) {
-        if (sub.online && sub.user != myId) {
+      var topic = this.props.tinode.getTopic(this.state.topic);
+      topic.subscribers(sub => {
+        if (sub.online && sub.user != this.props.myUserId) {
           subs.push(sub);
         }
       });
@@ -24436,7 +24643,7 @@ class MessagesView extends React.Component {
 
   handleNewMessage(msg) {
     // Regenerate messages list
-    var topic = Tinode.getTopic(this.state.topic);
+    var topic = this.props.tinode.getTopic(this.state.topic);
     var newState = { messages: [] };
     topic.messages(function (m) {
       if (!m.deleted) {
@@ -24509,12 +24716,12 @@ class MessagesView extends React.Component {
 
   handleShowContextMenuMessage(params) {
     params.topicName = this.state.topic;
-    var menuItems = [ContextMenuItems["message_delete"]];
-    var topic = Tinode.getTopic(params.topicName);
+    var menuItems = ["message_delete"];
+    var topic = this.props.tinode.getTopic(params.topicName);
     if (topic) {
       var acs = topic.getAccessMode();
       if (acs && acs.isDeleter()) {
-        menuItems.push(ContextMenuItems["message_delete_hard"]);
+        menuItems.push("message_delete_hard");
       }
     }
     this.props.showContextMenu(params, menuItems);
@@ -24528,8 +24735,8 @@ class MessagesView extends React.Component {
     var component = null;
     if (this.state.topic) {
       var messageNodes = [];
-      var topic = Tinode.getTopic(this.state.topic);
-      var groupTopic = topic.getType() === "grp";
+      var topic = this.props.tinode.getTopic(this.state.topic);
+      var groupTopic = topic.getType() == "grp";
       var previousFrom = null;
       for (var i = 0; i < this.state.messages.length; i++) {
         var msg = this.state.messages[i];
@@ -24540,18 +24747,18 @@ class MessagesView extends React.Component {
         }
 
         var sequence = "single";
-        if (msg.from === previousFrom) {
-          if (msg.from === nextFrom) {
+        if (msg.from == previousFrom) {
+          if (msg.from == nextFrom) {
             sequence = "middle";
           } else {
             sequence = "last";
           }
-        } else if (msg.from === nextFrom) {
+        } else if (msg.from == nextFrom) {
           sequence = "first";
         }
         previousFrom = msg.from;
 
-        var isReply = !(msg.from === this.props.myUserId);
+        var isReply = !(msg.from == this.props.myUserId);
         var deliveryStatus = topic.msgStatus(msg);
 
         var userName, userAvatar, userFrom, chatBoxClass;
@@ -24567,7 +24774,10 @@ class MessagesView extends React.Component {
           chatBoxClass = "chat-box";
         }
 
-        messageNodes.push(React.createElement(ChatMessage, { content: msg.content, mimeType: msg.head ? msg.head.mime : null,
+        messageNodes.push(React.createElement(ChatMessage, {
+          tinode: this.props.tinode,
+          content: msg.content,
+          mimeType: msg.head ? msg.head.mime : null,
           timestamp: msg.ts, response: isReply, seq: msg.seq,
           userFrom: userFrom, userName: userName, userAvatar: userAvatar,
           sequence: sequence, received: deliveryStatus, uploader: msg._uploader,
@@ -24578,9 +24788,9 @@ class MessagesView extends React.Component {
           key: msg.seq }));
       }
 
-      var lastSeen = null;
-      var cont = Tinode.getMeTopic().getContact(this.state.topic);
-      if (cont && Tinode.topicType(cont.topic) === "p2p") {
+      let lastSeen = null;
+      let cont = this.props.tinode.getMeTopic().getContact(this.state.topic);
+      if (cont && Tinode.topicType(cont.topic) == "p2p") {
         if (cont.online) {
           lastSeen = "online now";
         } else if (cont.seen) {
@@ -24592,53 +24802,55 @@ class MessagesView extends React.Component {
       var online = this.props.online ? "online" + (this.state.typingIndicator ? " typing" : "") : "offline";
 
       component = React.createElement(
-        "div",
-        { id: "topic-view", className: this.props.hideSelf ? 'nodisplay' : null },
+        'div',
+        { id: 'topic-view', className: this.props.hideSelf ? 'nodisplay' : null },
         React.createElement(
-          "div",
-          { id: "topic-caption-panel", className: "caption-panel" },
+          'div',
+          { id: 'topic-caption-panel', className: 'caption-panel' },
           this.props.displayMobile ? React.createElement(
-            "a",
-            { href: "javascript:;", id: "hide-message-view", onClick: this.handleBackNavigation },
+            'a',
+            { href: 'javascript:;', id: 'hide-message-view', onClick: this.handleBackNavigation },
             React.createElement(
-              "i",
-              { className: "material-icons" },
-              "arrow_back"
+              'i',
+              { className: 'material-icons' },
+              'arrow_back'
             )
           ) : null,
           React.createElement(
-            "div",
-            { className: "avatar-box" },
-            React.createElement(LetterTile, { avatar: avatar,
-              topic: this.state.topic, title: this.state.title }),
-            React.createElement("span", { className: online })
+            'div',
+            { className: 'avatar-box' },
+            React.createElement(LetterTile, {
+              avatar: avatar,
+              topic: this.state.topic,
+              title: this.state.title }),
+            React.createElement('span', { className: online })
           ),
           React.createElement(
-            "div",
-            { id: "topic-title-group" },
+            'div',
+            { id: 'topic-title-group' },
             React.createElement(
-              "div",
-              { id: "topic-title", className: "panel-title" },
+              'div',
+              { id: 'topic-title', className: 'panel-title' },
               this.state.title
             ),
             React.createElement(
-              "div",
-              { id: "topic-last-seen" },
+              'div',
+              { id: 'topic-last-seen' },
               lastSeen
             )
           ),
           groupTopic ? React.createElement(GroupSubs, {
-            subscribers: this.state.onlineSubs }) : React.createElement("div", { id: "topic-users" }),
+            subscribers: this.state.onlineSubs }) : React.createElement('div', { id: 'topic-users' }),
           React.createElement(
-            "div",
+            'div',
             null,
             React.createElement(
-              "a",
-              { href: "javascript:;", onClick: this.handleContextClick },
+              'a',
+              { href: 'javascript:;', onClick: this.handleContextClick },
               React.createElement(
-                "i",
-                { className: "material-icons" },
-                "more_vert"
+                'i',
+                { className: 'material-icons' },
+                'more_vert'
               )
             )
           )
@@ -24649,28 +24861,29 @@ class MessagesView extends React.Component {
           onClearError: this.props.onError }) : null,
         React.createElement(LoadSpinner, { show: this.state.fetchingMessages }),
         React.createElement(
-          "div",
-          { id: "messages-container" },
+          'div',
+          { id: 'messages-container' },
           React.createElement(
-            "div",
-            { id: "messages-panel", ref: this.handleScrollReference },
+            'div',
+            { id: 'messages-panel', ref: this.handleScrollReference },
             React.createElement(
-              "ul",
-              { id: "scroller", className: chatBoxClass },
+              'ul',
+              { id: 'scroller', className: chatBoxClass },
               messageNodes
             )
           ),
           this.state.writeOnly ? React.createElement(
-            "div",
-            { id: "write-only-background" },
+            'div',
+            { id: 'write-only-background' },
             React.createElement(
-              "div",
-              { id: "write-only-note" },
-              "no access to messages"
+              'div',
+              { id: 'write-only-note' },
+              'no access to messages'
             )
           ) : null
         ),
         React.createElement(SendMessage, {
+          tinode: this.props.tinode,
           topic: this.props.topic,
           disabled: this.state.readOnly,
           sendMessage: this.props.sendMessage,
@@ -24770,7 +24983,7 @@ class SendMessage extends React.PureComponent {
         this.props.onError("The file size " + bytesToHumanSize(file.size) + " exceeds the " + bytesToHumanSize(MAX_EXTERN_ATTACHMENT_SIZE) + " limit.", "err");
       } else if (file.size > MAX_INBAND_ATTACHMENT_SIZE) {
         // Too large to send inband - uploading out of band and sending as a link.
-        let uploader = Tinode.getLargeFileHelper();
+        let uploader = this.props.tinode.getLargeFileHelper();
         if (!uploader) {
           this.props.onError("Cannot initiate file upload.");
           return;
@@ -24817,7 +25030,7 @@ class SendMessage extends React.PureComponent {
     var newState = { message: e.target.value };
     var now = new Date().getTime();
     if (now - this.state.keypressTimestamp > KEYPRESS_DELAY) {
-      var topic = Tinode.getTopic(this.props.topic);
+      var topic = this.props.tinode.getTopic(this.props.topic);
       if (topic.isSubscribed()) {
         topic.noteKeyPress();
       }
@@ -24830,39 +25043,39 @@ class SendMessage extends React.PureComponent {
     var prompt = this.props.disabled ? "Messaging disabled" : "New message";
     var instance = this;
     return React.createElement(
-      "div",
-      { id: "send-message-panel" },
+      'div',
+      { id: 'send-message-panel' },
       this.props.disabled ? React.createElement(
-        "i",
-        { className: "material-icons disabled" },
-        "photo"
+        'i',
+        { className: 'material-icons disabled' },
+        'photo'
       ) : React.createElement(
-        "a",
-        { href: "javascript:;", onClick: function (e) {
+        'a',
+        { href: 'javascript:;', onClick: function (e) {
             instance.attachImage.click();
-          }, title: "Add image" },
+          }, title: 'Add image' },
         React.createElement(
-          "i",
-          { className: "material-icons secondary" },
-          "photo"
+          'i',
+          { className: 'material-icons secondary' },
+          'photo'
         )
       ),
       this.props.disabled ? React.createElement(
-        "i",
-        { className: "material-icons disabled" },
-        "attach_file"
+        'i',
+        { className: 'material-icons disabled' },
+        'attach_file'
       ) : React.createElement(
-        "a",
-        { href: "javascript:;", onClick: function (e) {
+        'a',
+        { href: 'javascript:;', onClick: function (e) {
             instance.attachFile.click();
-          }, title: "Attach file" },
+          }, title: 'Attach file' },
         React.createElement(
-          "i",
-          { className: "material-icons secondary" },
-          "attach_file"
+          'i',
+          { className: 'material-icons secondary' },
+          'attach_file'
         )
       ),
-      React.createElement("textarea", { id: "sendMessage", placeholder: prompt,
+      React.createElement('textarea', { id: 'sendMessage', placeholder: prompt,
         disabled: this.props.disabled, value: this.state.message,
         onChange: this.handleMessageTyping, onKeyPress: this.handleKeyPress,
         ref: function (ref) {
@@ -24870,25 +25083,25 @@ class SendMessage extends React.PureComponent {
         },
         autoFocus: true }),
       this.props.disabled ? React.createElement(
-        "i",
-        { className: "material-icons disabled" },
-        "send"
+        'i',
+        { className: 'material-icons disabled' },
+        'send'
       ) : React.createElement(
-        "a",
-        { href: "javascript:;", onClick: this.handleSend, title: "Send" },
+        'a',
+        { href: 'javascript:;', onClick: this.handleSend, title: 'Send' },
         React.createElement(
-          "i",
-          { className: "material-icons" },
-          "send"
+          'i',
+          { className: 'material-icons' },
+          'send'
         )
       ),
-      React.createElement("input", { type: "file", ref: function (ref) {
+      React.createElement('input', { type: 'file', ref: function (ref) {
           instance.attachFile = ref;
         },
         onChange: this.handleAttachFile, style: { display: 'none' } }),
-      React.createElement("input", { type: "file", ref: function (ref) {
+      React.createElement('input', { type: 'file', ref: function (ref) {
           instance.attachImage = ref;
-        }, accept: "image/*",
+        }, accept: 'image/*',
         onChange: this.handleAttachImage, style: { display: 'none' } })
     );
   }
@@ -24899,35 +25112,35 @@ class LogoView extends React.PureComponent {
   render() {
     var version = Tinode.getVersion() + " build " + document.lastModified;
     return React.createElement(
-      "div",
-      { id: "dummy-view", className: this.props.hideSelf ? 'nodisplay' : null },
+      'div',
+      { id: 'dummy-view', className: this.props.hideSelf ? 'nodisplay' : null },
       React.createElement(
-        "div",
+        'div',
         null,
         React.createElement(
-          "a",
-          { href: "https://github.com/tinode/chat/" },
-          React.createElement("img", { id: "logo", alt: "logo", src: "img/logo.svg" }),
+          'a',
+          { href: 'https://github.com/tinode/chat/' },
+          React.createElement('img', { id: 'logo', alt: 'logo', src: 'img/logo.svg' }),
           React.createElement(
-            "h2",
+            'h2',
             null,
-            "Tinode Demo Chat"
+            'Tinode Demo Chat'
           )
         ),
         React.createElement(
-          "p",
+          'p',
           null,
-          "Client: ",
+          'Client: ',
           version
         ),
         React.createElement(
-          "p",
+          'p',
           null,
-          "Server: ",
+          'Server: ',
           this.props.serverVersion,
-          " (",
+          ' (',
           this.props.serverAddress,
-          ")"
+          ')'
         )
       )
     );
@@ -24964,103 +25177,103 @@ class ImagePreview extends React.PureComponent {
       filename = filename.slice(0, maxlength - 2) + "..." + filename.slice(2 - maxlength);
     }
     return React.createElement(
-      "div",
-      { id: "image-preview", onClick: this.props.onClose },
+      'div',
+      { id: 'image-preview', onClick: this.props.onClose },
       React.createElement(
-        "div",
-        { id: "image-preview-caption-panel" },
+        'div',
+        { id: 'image-preview-caption-panel' },
         React.createElement(
-          "a",
-          { href: "javascript:;", download: this.props.content.filename },
+          'a',
+          { href: 'javascript:;', download: this.props.content.filename },
           React.createElement(
-            "i",
-            { className: "material-icons" },
-            "file_download"
+            'i',
+            { className: 'material-icons' },
+            'file_download'
           ),
-          " download"
+          ' download'
         ),
         React.createElement(
-          "a",
-          { href: "javascript:;", onClick: this.props.onClose },
+          'a',
+          { href: 'javascript:;', onClick: this.props.onClose },
           React.createElement(
-            "i",
-            { className: "material-icons gray" },
-            "close"
+            'i',
+            { className: 'material-icons gray' },
+            'close'
           )
         )
       ),
       React.createElement(
-        "div",
-        { id: "image-preview-container", ref: function (ref) {
+        'div',
+        { id: 'image-preview-container', ref: function (ref) {
             instance.container = ref;
           } },
-        React.createElement("img", { src: this.props.content.url, style: size })
+        React.createElement('img', { src: this.props.content.url, style: size })
       ),
       React.createElement(
-        "div",
-        { id: "image-preview-footer" },
+        'div',
+        { id: 'image-preview-footer' },
         React.createElement(
-          "div",
+          'div',
           null,
           React.createElement(
-            "div",
+            'div',
             null,
             React.createElement(
-              "b",
+              'b',
               null,
-              "File name"
+              'File name'
             ),
-            ":"
+            ':'
           ),
           React.createElement(
-            "div",
+            'div',
             null,
             React.createElement(
-              "span",
+              'span',
               { title: this.props.content.filename },
               filename
             )
           )
         ),
         React.createElement(
-          "div",
+          'div',
           null,
           React.createElement(
-            "div",
+            'div',
             null,
             React.createElement(
-              "b",
+              'b',
               null,
-              "Content type"
+              'Content type'
             ),
-            ":"
+            ':'
           ),
           React.createElement(
-            "div",
+            'div',
             null,
             this.props.content.type
           )
         ),
         React.createElement(
-          "div",
+          'div',
           null,
           React.createElement(
-            "div",
+            'div',
             null,
             React.createElement(
-              "b",
+              'b',
               null,
-              "Size"
+              'Size'
             ),
-            ":"
+            ':'
           ),
           React.createElement(
-            "div",
+            'div',
             null,
             this.props.content.width,
-            " \xD7 ",
+            ' \xD7 ',
             this.props.content.height,
-            " px; ",
+            ' px; ',
             bytesToHumanSize(this.props.content.size)
           )
         )
@@ -25091,13 +25304,14 @@ class TinodeWeb extends React.Component {
     this.handleLoginSuccessful = this.handleLoginSuccessful.bind(this);
     this.handleDisconnect = this.handleDisconnect.bind(this);
     this.tnMeMetaDesc = this.tnMeMetaDesc.bind(this);
+    this.tnMeContactUpdate = this.tnMeContactUpdate.bind(this);
+    this.tnMeSubsUpdated = this.tnMeSubsUpdated.bind(this);
+    this.resetContactList = this.resetContactList.bind(this);
     this.tnData = this.tnData.bind(this);
     this.tnInitFind = this.tnInitFind.bind(this);
     this.tnFndSubsUpdated = this.tnFndSubsUpdated.bind(this);
     this.handleSearchContacts = this.handleSearchContacts.bind(this);
     this.handleTopicSelected = this.handleTopicSelected.bind(this);
-    this.handleTopicSelectedOnline = this.handleTopicSelectedOnline.bind(this);
-    this.handleTopicSelectedAcs = this.handleTopicSelectedAcs.bind(this);
     this.handleHideMessagesView = this.handleHideMessagesView.bind(this);
     this.handleSendMessage = this.handleSendMessage.bind(this);
     this.handleNewAccount = this.handleNewAccount.bind(this);
@@ -25109,6 +25323,7 @@ class TinodeWeb extends React.Component {
     this.handleSidepanelCancel = this.handleSidepanelCancel.bind(this);
     this.handleNewTopic = this.handleNewTopic.bind(this);
     this.handleNewTopicRequest = this.handleNewTopicRequest.bind(this);
+    this.handleNewTopicCreated = this.handleNewTopicCreated.bind(this);
     this.handleTopicUpdateRequest = this.handleTopicUpdateRequest.bind(this);
     this.handleChangePermissions = this.handleChangePermissions.bind(this);
     this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
@@ -25122,21 +25337,24 @@ class TinodeWeb extends React.Component {
     this.handleHideInfoView = this.handleHideInfoView.bind(this);
     this.handleMemberUpdateRequest = this.handleMemberUpdateRequest.bind(this);
     this.handleValidateCredentialsRequest = this.handleValidateCredentialsRequest.bind(this);
-
-    this.handleHashRoute();
   }
 
   getBlankState() {
     let settings = localStorage.getObject("settings") || {};
 
     return {
+      tinode: null,
       connected: false,
       transport: settings.transport || null,
       serverAddress: settings.serverAddress || detectServerAddress(),
+      serverVersion: 'no connection',
       // "On" is the default, so saving the "off" state.
       messageSounds: !settings.messageSoundsOff,
       desktopAlerts: settings.desktopAlerts,
       desktopAlertsEnabled: isSecureConnection(),
+
+      errorText: '',
+      errorLevel: null,
 
       sidePanelSelected: 'login',
       sidePanelTitle: null,
@@ -25146,37 +25364,41 @@ class TinodeWeb extends React.Component {
       login: '',
       password: '',
       myUserId: null,
-      errorText: '',
-      errorLevel: null,
       liveConnection: navigator.onLine,
       topicSelected: '',
       topicSelectedOnline: false,
       topicSelectedAcs: null,
+      newGroupTopicParams: null,
       loginDisabled: false,
       displayMobile: window.innerWidth <= MEDIA_BREAKPOINT,
       showInfoPanel: false,
       mobilePanel: 'sidepanel',
+
       contextMenuVisible: false,
       contextMenuBounds: null,
       contextMenuClickAt: null,
       contextMenuParams: null,
       contextMenuItems: [],
-      serverVersion: 'no connection',
-      contactsSearchQuery: undefined,
-      foundContacts: [],
+
+      contactsSearchQuery: '',
+      // Chats as shown in the ContactsView
+      chatList: [],
+      // Contacts returned by a search query.
+      searchResults: [],
+      // Merged results of a search query and p2p chats.
+      searchableContacts: [],
       credMethod: undefined,
       credCode: undefined
     };
   }
 
   componentDidMount() {
-    var instance = this;
     window.addEventListener('resize', this.handleResize);
-    window.addEventListener('online', function (e) {
-      instance.handleOnline(true);
+    window.addEventListener('online', e => {
+      this.handleOnline(true);
     });
-    window.addEventListener('offline', function (e) {
-      instance.handleOnline(false);
+    window.addEventListener('offline', e => {
+      this.handleOnline(false);
     });
     window.addEventListener('hashchange', this.handleHashRoute);
     // Window/tab visible or invisible for pausing timers.
@@ -25184,10 +25406,13 @@ class TinodeWeb extends React.Component {
 
     this.setState({ viewportWidth: document.documentElement.clientWidth });
 
-    Tinode.enableLogging(true, true);
-    Tinode.onConnect = this.handleConnected;
-    Tinode.onDisconnect = this.handleDisconnect;
-    TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport);
+    let tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport);
+
+    this.setState({ tinode: tinode });
+
+    tinode.enableLogging(true, true);
+    tinode.onConnect = this.handleConnected;
+    tinode.onDisconnect = this.handleDisconnect;
     var token;
     if (localStorage.getObject("keep-logged-in")) {
       token = localStorage.getObject("auth-token");
@@ -25195,21 +25420,23 @@ class TinodeWeb extends React.Component {
     if (token) {
       // When reading from storage, date is returned as string.
       token.expires = new Date(token.expires);
-      Tinode.setAuthToken(token);
-      Tinode.connect().catch(function (err) {
+      tinode.setAuthToken(token);
+      tinode.connect().catch(err => {
         // Socket error
-        instance.handleError(err.message, "err");
+        this.handleError(err.message, "err");
       });
       var parsed = parseUrlHash(window.location.hash);
       delete parsed.params.info;
       delete parsed.params.tab;
       parsed.path[0] = '';
-      window.location.hash = composeUrlHash(parsed.path, parsed.params);
+      navigateTo(composeUrlHash(parsed.path, parsed.params));
     } else {
-      window.location.hash = "";
+      navigateTo("");
     }
     this.readTimer = null;
     this.readTimerCallback = null;
+
+    this.handleHashRoute();
   }
 
   componentWillUnmount() {
@@ -25220,7 +25447,7 @@ class TinodeWeb extends React.Component {
 
   // Setup transport (usually websocket) and server address. This will terminate connection with the server.
   static tnSetup(serverAddress, transport) {
-    Tinode.setup(APP_NAME, serverAddress, API_KEY, transport);
+    return new Tinode(APP_NAME, serverAddress, API_KEY, transport, isSecureConnection());
   }
 
   handleResize() {
@@ -25234,29 +25461,23 @@ class TinodeWeb extends React.Component {
   // Handle for hashchange event: display appropriate panels.
   handleHashRoute() {
     var hash = parseUrlHash(window.location.hash);
-    // Left-side panel selector.
     if (hash.path && hash.path.length > 0) {
+      // Left-side panel selector.
       if (['register', 'settings', 'edit', 'cred', 'newtpk', 'contacts', ''].includes(hash.path[0])) {
         this.setState({ sidePanelSelected: hash.path[0] });
       } else {
         console.log("Unknown sidepanel view", hash.path[0]);
       }
+
+      // Topic for MessagesView selector.
+      if (hash.path.length > 1 && hash.path[1] != this.state.topicSelected) {
+        this.setState({
+          topicSelected: Tinode.topicType(hash.path[1]) ? hash.path[1] : null
+        });
+      }
     } else {
       // Empty hashpath
       this.setState({ sidePanelSelected: '' });
-    }
-    // Topic for MessagesView selector.
-    if (hash.path.length > 1 && hash.path[1] != this.state.topicSelected) {
-      var tp = Tinode.topicType(hash.path[1]);
-      if (tp) {
-        this.setState({
-          topicSelected: hash.path[1],
-          topicSelectedOnline: false,
-          topicSelectedAcs: null
-        });
-      } else {
-        this.setState({ topicSelected: null });
-      }
     }
 
     // Save validation credentials, if available.
@@ -25313,10 +25534,10 @@ class TinodeWeb extends React.Component {
     this.setState({ loginDisabled: true, login: login, password: password });
     this.handleError("", null);
 
-    if (Tinode.isConnected()) {
+    if (this.state.tinode.isConnected()) {
       this.doLogin(login, password, { meth: this.state.credMethod, resp: this.state.credCode });
     } else {
-      Tinode.connect().catch(err => {
+      this.state.tinode.connect().catch(err => {
         // Socket error
         this.setState({ loginDisabled: false });
         this.handleError(err.message, "err");
@@ -25326,7 +25547,7 @@ class TinodeWeb extends React.Component {
 
   // Connection succeeded.
   handleConnected() {
-    var params = Tinode.getServerInfo();
+    var params = this.state.tinode.getServerInfo();
     this.setState({
       serverVersion: params.ver + " " + (params.build ? params.build : "none") + "; "
     });
@@ -25334,23 +25555,21 @@ class TinodeWeb extends React.Component {
   }
 
   doLogin(login, password, cred) {
-    if (Tinode.isAuthenticated()) {
+    if (this.state.tinode.isAuthenticated()) {
       // Already logged in. Go to default screen.
-      window.location.hash = "";
+      navigateTo("");
       return;
     }
-
-    cred = cred ? Tinode.addCredential(null, cred) : undefined;
-    cred = cred ? cred.cred : undefined;
-
+    // Sanitize and package credentail.
+    cred = Tinode.credential(cred);
     // Try to login with login/password. If they are not available, try token. If no token, ask for login/password.
     let promise = null;
-    let token = Tinode.getAuthToken();
+    let token = this.state.tinode.getAuthToken();
     if (login && password) {
       this.setState({ password: null });
-      promise = Tinode.loginBasic(login, password, cred);
+      promise = this.state.tinode.loginBasic(login, password, cred);
     } else if (token) {
-      promise = Tinode.loginToken(token.token, cred);
+      promise = this.state.tinode.loginToken(token.token, cred);
     }
 
     if (promise) {
@@ -25361,19 +25580,19 @@ class TinodeWeb extends React.Component {
           }
           this.handleCredentialsRequest(ctrl.params);
         } else {
-          this.handleLoginSuccessful(this);
+          this.handleLoginSuccessful();
         }
       }).catch(err => {
         // Login failed, report error.
         this.setState({ loginDisabled: false, credMethod: undefined, credCode: undefined });
         this.handleError(err.message, "err");
         localStorage.removeItem("auth-token");
-        window.location.hash = "";
+        navigateTo("");
       });
     } else {
       // No login credentials provided.
       // Make sure we are on the login page.
-      window.location.hash = "";
+      navigateTo("");
       this.setState({ loginDisabled: false });
     }
   }
@@ -25382,32 +25601,34 @@ class TinodeWeb extends React.Component {
     var parsed = parseUrlHash(window.location.hash);
     parsed.path[0] = 'cred';
     parsed.params['method'] = params.cred[0];
-    window.location.hash = composeUrlHash(parsed.path, parsed.params);
+    navigateTo(composeUrlHash(parsed.path, parsed.params));
   }
 
-  handleLoginSuccessful(instance) {
-    instance.handleError("", null);
+  handleLoginSuccessful() {
+    this.handleError("", null);
 
     // Refresh authentication token.
     if (localStorage.getObject("keep-logged-in")) {
-      localStorage.setObject("auth-token", Tinode.getAuthToken());
+      localStorage.setObject("auth-token", this.state.tinode.getAuthToken());
     }
     // Logged in fine, subscribe to 'me' attaching callbacks from the contacts view.
-    var me = Tinode.getMeTopic();
-    me.onMetaDesc = instance.tnMeMetaDesc;
-    instance.setState({
+    var me = this.state.tinode.getMeTopic();
+    me.onMetaDesc = this.tnMeMetaDesc;
+    me.onContactUpdate = this.tnMeContactUpdate;
+    me.onSubsUpdated = this.tnMeSubsUpdated;
+    this.setState({
       connected: true,
       credMethod: undefined,
       credCode: undefined,
-      myUserId: Tinode.getCurrentUserID()
+      myUserId: this.state.tinode.getCurrentUserID()
     });
     // Subscribe, fetch topic desc, the list of subscriptions. Messages are not fetched.
-    me.subscribe(me.startMetaQuery().withLaterSub().withDesc().build()).catch(function (err) {
+    me.subscribe(me.startMetaQuery().withLaterSub().withDesc().build()).catch(err => {
       localStorage.removeItem("auth-token");
-      instance.handleError(err.message, "err");
-      window.location.hash = "";
+      this.handleError(err.message, "err");
+      navigateTo("");
     });
-    window.location.hash = setUrlSidePanel(window.location.hash, 'contacts');
+    navigateTo(setUrlSidePanel(window.location.hash, 'contacts'));
   }
 
   handleDisconnect(err) {
@@ -25432,9 +25653,104 @@ class TinodeWeb extends React.Component {
     }
   }
 
+  // Reactions to updates to the contact list.
+  tnMeContactUpdate(what, cont) {
+    if (what == "on" || what == "off") {
+      this.resetContactList();
+      if (this.state.topicSelected == cont.topic) {
+        this.setState({ topicSelectedOnline: what === "on" });
+      }
+    } else if (what == "read") {
+      this.resetContactList();
+    } else if (what == "msg") {
+      // New message received
+      // Skip update if the topic is currently open, otherwise the badge will annoyingly flash.
+      if (this.state.topicSelected != cont.topic) {
+        if (this.state.messageSounds) {
+          POP_SOUND.play();
+        }
+        this.resetContactList();
+      } else if (document.hidden && this.state.messageSounds) {
+        POP_SOUND.play();
+      }
+    } else if (what == "recv") {
+      // Explicitly ignoring "recv" -- it causes no visible updates to contact list.
+    } else if (what == "gone" || what == "unsub") {
+      // Topic deleted or user unsubscribed. Remove topic from view.
+      // If the currently selected topic is gone, clear the selection.
+      if (this.state.topicSelected == cont.topic) {
+        this.handleTopicSelected(null);
+      }
+      // Redraw without the deleted topic.
+      this.resetContactList();
+    } else if (what == "acs") {
+      // Permissions changed. If it's for the currently selected topic,
+      // update the views.
+      if (this.state.topicSelected == cont.topic) {
+        this.setState({ topicSelectedAcs: cont.acs });
+      }
+    } else if (what == "del") {
+      // messages deleted (hard or soft) -- update pill counter.
+    } else {
+      // TODO(gene): handle other types of notifications:
+      // * ua -- user agent changes (maybe display a pictogram for mobile/desktop).
+      // * upd -- topic 'public' updated, issue getMeta().
+      console.log("Unsupported (yet) presence update:" + what + " in: " + cont.topic);
+    }
+  }
+
+  tnMeSubsUpdated(unused) {
+    this.resetContactList();
+  }
+
+  // Merge search results and contact list to create a single flat
+  // list of kown contacts for GroupManager to use.
+  static prepareSearchableContacts(chatList, foundContacts) {
+    let merged = {};
+
+    // For chatList topics merge only p2p topics and convert them to the
+    // same format as foundContacts.
+    for (const c of chatList) {
+      if (Tinode.topicType(c.topic) == "p2p") {
+        merged[c.topic] = {
+          user: c.topic,
+          updated: c.updated,
+          public: c.public,
+          private: c.private,
+          acs: c.acs
+        };
+      }
+    }
+
+    // Add all foundCountacts if they have not been added already.
+    for (const c of foundContacts) {
+      if (!merged[c.user]) {
+        merged[c.user] = c;
+      }
+    }
+
+    return Object.values(merged);
+  }
+
+  resetContactList() {
+    let newState = {
+      chatList: []
+    };
+    this.state.tinode.getMeTopic().contacts(c => {
+      newState.chatList.push(c);
+      if (this.state.topicSelected == c.topic) {
+        newState.topicSelectedOnline = c.online;
+        newState.topicSelectedAcs = c.acs;
+      }
+    });
+    // Merge search results and chat list.
+    newState.searchableContacts = TinodeWeb.prepareSearchableContacts(newState.chatList, this.state.searchResults);
+    this.setState(newState);
+  }
+
   // Sending "received" notifications
   tnData(data) {
-    let topic = Tinode.getTopic(data.topic);
+    let topic = this.state.tinode.getTopic(data.topic);
     if (topic.msgStatus(data) > Tinode.MESSAGE_STATUS_SENDING) {
       clearTimeout(this.receivedTimer);
       this.receivedTimer = setTimeout(() => {
@@ -25446,7 +25762,7 @@ class TinodeWeb extends React.Component {
 
   /* Fnd topic: find contacts by tokens */
   tnInitFind() {
-    var fnd = Tinode.getFndTopic();
+    let fnd = this.state.tinode.getFndTopic();
     if (fnd.isSubscribed()) {
       this.setState({ contactsSearchQuery: '' });
       this.tnFndSubsUpdated();
@@ -25459,20 +25775,23 @@ class TinodeWeb extends React.Component {
   }
 
   tnFndSubsUpdated() {
-    var contacts = [];
+    let foundContacts = [];
     // Don't attempt to create P2P topics which already exist. Server will reject the duplicates.
-    Tinode.getFndTopic().contacts(function (s) {
-      contacts.push(s);
+    this.state.tinode.getFndTopic().contacts(s => {
+      foundContacts.push(s);
     });
-    this.setState({ foundContacts: contacts });
+    this.setState({
+      searchResults: foundContacts,
+      searchableContacts: TinodeWeb.prepareSearchableContacts(this.state.chatList, foundContacts)
+    });
   }
 
   /** Called when the user enters a contact into the contact search field in the NewAccount panel
     @param query {Array} is an array of contacts to search for
    */
   handleSearchContacts(query) {
-    var fnd = Tinode.getFndTopic();
-    this.setState({ contactsSearchQuery: query == DEL_CHAR ? '' : query });
+    var fnd = this.state.tinode.getFndTopic();
+    this.setState({ contactsSearchQuery: query == Tinode.DEL_CHAR ? '' : query });
     fnd.setMeta({ desc: { public: query } }).then(ctrl => {
       return fnd.getMeta(fnd.startMetaQuery().withSub().build());
     }).catch(err => {
@@ -25483,10 +25802,6 @@ class TinodeWeb extends React.Component {
   // User clicked on a contact in the side panel or deleted a contact.
   handleTopicSelected(topicName, unused_index, online, acs) {
     if (topicName) {
-      // Contact selected
-      if (this.state.topicSelected != topicName) {
-        window.location.hash = setUrlTopic(window.location.hash, topicName);
-      }
       this.setState({
         errorText: '',
         errorLevel: null,
@@ -25495,10 +25810,11 @@ class TinodeWeb extends React.Component {
         topicSelectedAcs: acs,
         showInfoPanel: false
       });
-    } else {
-      if (this.state.topicSelected) {
-        window.location.hash = setUrlTopic(window.location.hash, null);
+      // Contact selected
+      if (this.state.topicSelected != topicName) {
+        navigateTo(setUrlTopic("", topicName));
       }
+    } else {
       // Currently selected contact deleted
       this.setState({
         errorText: '',
@@ -25508,17 +25824,10 @@ class TinodeWeb extends React.Component {
         topicSelectedAcs: null,
         showInfoPanel: false
       });
+      if (this.state.topicSelected) {
+        navigateTo(setUrlTopic("", null));
+      }
     }
-  }
-
-  handleTopicSelectedOnline(online) {
-    if (typeof online == 'boolean') {
-      this.setState({ topicSelectedOnline: online });
-    }
-  }
-  // Permissions of a currently selected topic have been updated by server.
-  handleTopicSelectedAcs(acs) {
-    this.setState({ topicSelectedAcs: acs });
   }
 
   // In mobile view user requested to show sidepanel
@@ -25526,24 +25835,18 @@ class TinodeWeb extends React.Component {
     this.setState({
       mobilePanel: 'sidepanel'
     });
-    window.location.hash = setUrlTopic(window.location.hash, null);
+    navigateTo(setUrlTopic(window.location.hash, null));
   }
 
-  // User is sending a message, either plain text or a drafty object with attachments.
+  // User is sending a message, either plain text or a drafty object, possibly
+  // with attachments.
   handleSendMessage(msg, promise, uploader) {
-    let topic = Tinode.getTopic(this.state.topicSelected);
-    let dft = Drafty.parse(msg);
-    if (dft && !Drafty.isPlainText(dft)) {
-      msg = dft;
-    }
-    msg = topic.createMessage(msg);
+    let topic = this.state.tinode.getTopic(this.state.topicSelected);
+
+    msg = topic.createMessage(msg, false);
+    // The uploader is used to show progress.
     msg._uploader = uploader;
 
-    if (promise) {
-      promise.catch(err => {
-        this.handleError(err.message, "err");
-      });
-    }
     if (!topic.isSubscribed()) {
       if (!promise) {
         promise = Promise.resolve();
@@ -25552,6 +25855,13 @@ class TinodeWeb extends React.Component {
         return topic.subscribe();
       });
     }
+
+    if (promise) {
+      promise = promise.catch(err => {
+        this.handleError(err.message, "err");
+      });
+    }
+
     topic.publishDraft(msg, promise).catch(err => {
       this.handleError(err.message, "err");
     });
@@ -25559,14 +25869,13 @@ class TinodeWeb extends React.Component {
 
   // User chose a Sign Up menu item.
   handleNewAccount() {
-    window.location.hash = setUrlSidePanel(window.location.hash, 'register');
+    navigateTo(setUrlSidePanel(window.location.hash, 'register'));
   }
 
   // Actual registration of a new account.
   handleNewAccountRequest(login_, password_, public_, cred_, tags_) {
-    Tinode.connect(this.state.serverAddress).then(function () {
-      var params = Tinode.addCredential({ public: public_, tags: tags_ }, cred_);
-      return Tinode.createAccountBasic(login_, password_, params);
+    this.state.tinode.connect(this.state.serverAddress).then(() => {
+      return this.state.tinode.createAccountBasic(login_, password_, { public: public_, tags: tags_, cred: Tinode.credential(cred_) });
     }).then(ctrl => {
       if (ctrl.code >= 300 && ctrl.text === "validate credentials") {
         this.handleCredentialsRequest(ctrl.params);
@@ -25579,29 +25888,27 @@ class TinodeWeb extends React.Component {
   }
 
   handleUpdateAccountRequest(password, pub, priv) {
-    var instance = this;
     if (pub || priv) {
-      Tinode.getMeTopic().setMeta({ desc: { public: pub, private: priv } }).catch(function (err) {
-        instance.handleError(err.message, "err");
+      this.state.tinode.getMeTopic().setMeta({ desc: { public: pub, private: priv } }).catch(err => {
+        this.handleError(err.message, "err");
       });
     }
     if (password) {
-      Tinode.updateAccountBasic(null, Tinode.getCurrentLogin(), password).catch(function (err) {
-        instance.handleError(err.message, "err");
+      this.state.tinode.updateAccountBasic(null, this.state.tinode.getCurrentLogin(), password).catch(err => {
+        this.handleError(err.message, "err");
       });
     }
   }
 
   handleUpdateAccountTagsRequest(tags) {
-    var instance = this;
-    Tinode.getFndTopic().setMeta({ tags: tags }).catch(function (err) {
-      instance.handleError(err.message, "err");
+    this.state.tinode.getFndTopic().setMeta({ tags: tags }).catch(err => {
+      this.handleError(err.message, "err");
     });
   }
 
   // User chose Settings menu item.
   handleSettings() {
-    window.location.hash = setUrlSidePanel(window.location.hash, this.state.myUserId ? 'edit' : 'settings');
+    navigateTo(setUrlSidePanel(window.location.hash, this.state.myUserId ? 'edit' : 'settings'));
   }
 
   // User updated global parameters.
@@ -25615,7 +25922,8 @@ class TinodeWeb extends React.Component {
       serverAddress: serverAddress,
       transport: transport,
       messageSounds: messageSounds,
-      desktopAlerts: desktopAlerts
+      desktopAlerts: desktopAlerts,
+      tinode: TinodeWeb.tnSetup(serverAddress, transport)
     });
     localStorage.setObject({
       serverAddress: serverAddress,
@@ -25623,8 +25931,7 @@ class TinodeWeb extends React.Component {
       transport: this.state.transport,
       desktopAlerts: desktopAlerts
     });
-    window.location.hash = setUrlSidePanel(window.location.hash, '');
-    TinodeWeb.tnSetup(serverAddress, transport);
+    navigateTo(setUrlSidePanel(window.location.hash, ''));
   }
 
   // User clicked Cancel button in Setting or Sign Up panel.
@@ -25636,38 +25943,43 @@ class TinodeWeb extends React.Component {
       delete parsed.params.method;
       delete parsed.params.tab;
     }
-    window.location.hash = composeUrlHash(parsed.path, parsed.params);
+    navigateTo(composeUrlHash(parsed.path, parsed.params));
     this.setState({ errorText: '', errorLevel: null });
   }
 
   // User clicked a (+) menu item.
   handleNewTopic() {
-    window.location.hash = setUrlSidePanel(window.location.hash, 'newtpk');
+    navigateTo(setUrlSidePanel(window.location.hash, 'newtpk'));
   }
 
-  // Create of a new topic. New P2P topic requires peer's name.
+  // Request to start a new topic. New P2P topic requires peer's name.
   handleNewTopicRequest(peerName, pub, priv, tags) {
-    var instance = this;
-    var topic = peerName ? Tinode.newTopicWith(peerName) : Tinode.newTopic();
-    var query = topic.startMetaQuery().withDesc().withSub().withData();
-    var setParams;
+    var topicName = peerName || this.state.tinode.newGroupTopicName();
     if (!peerName) {
-      // Creator is the owner, has access to tags.
-      // Fetch default group topic tags, if any.
-      query = query.withTags();
-      setParams = { desc: { public: pub, private: priv }, tags: tags };
+      this.setState({ newGroupTopicParams: { desc: { public: pub, private: priv }, tags: tags } }, () => {
+        this.handleTopicSelected(topicName);
+      });
+    } else {
+      this.handleTopicSelected(topicName);
     }
-    topic.subscribe(query.build(), setParams).then(function () {
-      window.location.hash = setUrlSidePanel(window.location.hash, 'contacts');
-      instance.handleTopicSelected(topic.name, undefined, Tinode.isTopicOnline(topic.name), topic.getAccessMode());
-    }).catch(function (err) {
-      instance.handleError(err.message, "err");
-    });
+  }
+
+  // New topic was creted, here is the new topic name.
+  handleNewTopicCreated(oldName, newName) {
+    console.log("handleNewTopicCreated", oldName, newName);
+
+    if (this.state.topicSelected == oldName && oldName != newName) {
+      // If the current URl contains the old topic name, replace it with new.
+      // Update the name of the selected topic first so the navigator doen't clear
+      // the state.
+      this.setState({ topicSelected: newName }, () => {
+        navigateTo(setUrlTopic("", newName));
+      });
+    }
   }
 
   handleTopicUpdateRequest(topicName, pub, priv, permissions) {
-    var instance = this;
-    var topic = Tinode.getTopic(topicName);
+    var topic = this.state.tinode.getTopic(topicName);
     if (topic) {
       var params = {};
       if (pub) {
@@ -25679,15 +25991,14 @@ class TinodeWeb extends React.Component {
       if (permissions) {
         params.defacs = permissions;
       }
-      topic.setMeta({ desc: params }).catch(function (err) {
-        instance.handleError(err.message, "err");
+      topic.setMeta({ desc: params }).catch(err => {
+        this.handleError(err.message, "err");
       });
     }
   }
 
   handleChangePermissions(topicName, mode, uid) {
-    var instance = this;
-    var topic = Tinode.getTopic(topicName);
+    var topic = this.state.tinode.getTopic(topicName);
     if (topic) {
       var am = topic.getAccessMode();
       if (uid) {
@@ -25697,18 +26008,18 @@ class TinodeWeb extends React.Component {
         am.updateWant(mode);
         mode = am.getWant();
       }
-      topic.setMeta({ sub: { user: uid, mode: mode } }).catch(function (err) {
-        instance.handleError(err.message, "err");
+      topic.setMeta({ sub: { user: uid, mode: mode } }).catch(err => {
+        this.handleError(err.message, "err");
       });
     }
   }
 
   handleTagsUpdated(topicName, tags) {
-    var topic = Tinode.getTopic(topicName);
+    var topic = this.state.tinode.getTopic(topicName);
     if (topic) {
       var instance = this;
-      topic.setMeta({ tags: tags }).catch(function (err) {
-        instance.handleError(err.message, "err");
+      topic.setMeta({ tags: tags }).catch(err => {
+        this.handleError(err.message, "err");
       });
     }
   }
@@ -25716,19 +26027,19 @@ class TinodeWeb extends React.Component {
   handleLogout() {
     localStorage.removeItem("auth-token");
     this.setState(this.getBlankState());
-    TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport);
-    window.location.hash = "";
+    this.setState({ tinode: TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport) });
+    navigateTo("");
   }
 
   handleLeaveUnsubRequest(topicName) {
-    var topic = Tinode.getTopic(topicName);
+    var topic = this.state.tinode.getTopic(topicName);
     if (!topic) {
       return;
     }
 
     topic.leave(true).then(ctrl => {
       // Hide MessagesView and InfoView panels.
-      window.location.hash = setUrlTopic(window.location.hash, '');
+      navigateTo(setUrlTopic(window.location.hash, ''));
     }).catch(err => {
       this.handleError(err.message, "err");
     });
@@ -25753,7 +26064,7 @@ class TinodeWeb extends React.Component {
         blocked = false,
         subscribed = false,
         deleter = false;
-    var topic = Tinode.getTopic(topicName);
+    var topic = this.state.tinode.getTopic(topicName);
     if (topic) {
       if (topic.isSubscribed()) {
         subscribed = true;
@@ -25764,7 +26075,7 @@ class TinodeWeb extends React.Component {
       }
     }
 
-    return [subscribed ? { title: "Info", handler: this.handleShowInfoView } : null, subscribed ? ContextMenuItems["messages_clear"] : null, subscribed && deleter ? ContextMenuItems["messages_clear_hard"] : null, subscribed ? muted ? ContextMenuItems["topic_unmute"] : ContextMenuItems["topic_mute"] : null, subscribed ? blocked ? ContextMenuItems["topic_unblock"] : ContextMenuItems["topic_block"] : null, ContextMenuItems["topic_delete"]];
+    return [subscribed ? { title: "Info", handler: this.handleShowInfoView } : null, subscribed ? "messages_clear" : null, subscribed && deleter ? "messages_clear_hard" : null, subscribed ? muted ? "topic_unmute" : "topic_mute" : null, subscribed ? blocked ? "topic_unblock" : "topic_block" : null, "topic_delete"];
   }
 
   handleHideContextMenu() {
@@ -25777,12 +26088,12 @@ class TinodeWeb extends React.Component {
   }
 
   handleShowInfoView() {
-    window.location.hash = addUrlParam(window.location.hash, 'info', true);
+    navigateTo(addUrlParam(window.location.hash, 'info', true));
     this.setState({ showInfoPanel: true });
   }
 
   handleHideInfoView() {
-    window.location.hash = removeUrlParam(window.location.hash, 'info');
+    navigateTo(removeUrlParam(window.location.hash, 'info'));
     this.setState({ showInfoPanel: false });
   }
 
@@ -25791,25 +26102,23 @@ class TinodeWeb extends React.Component {
       return;
     }
 
-    var topic = Tinode.getTopic(topicName);
+    var topic = this.state.tinode.getTopic(topicName);
     if (!topic) {
       return;
     }
 
-    var instance = this;
-
     if (added && added.length > 0) {
-      added.map(function (uid) {
-        topic.invite(uid, null).catch(function (err) {
-          instance.handleError(err.message, "err");
+      added.map(uid => {
+        topic.invite(uid, null).catch(err => {
+          this.handleError(err.message, "err");
         });
       });
     }
 
     if (removed && removed.length > 0) {
-      removed.map(function (uid) {
-        topic.delSubscription(uid).catch(function (err) {
-          instance.handleError(err.message, "err");
+      removed.map(uid => {
+        topic.delSubscription(uid).catch(err => {
+          this.handleError(err.message, "err");
         });
       });
     }
@@ -25822,18 +26131,19 @@ class TinodeWeb extends React.Component {
 
   render() {
     return React.createElement(
-      "div",
-      { id: "app-container" },
-      React.createElement(ContextMenu, {
+      'div',
+      { id: 'app-container' },
+      this.state.contextMenuVisible ? React.createElement(ContextMenu, {
+        tinode: this.state.tinode,
         bounds: this.state.contextMenuBounds,
         clickAt: this.state.contextMenuClickAt,
-        visible: this.state.contextMenuVisible,
         params: this.state.contextMenuParams,
         items: this.state.contextMenuItems,
         hide: this.handleHideContextMenu,
         onAction: this.handleContextMenuAction,
-        onError: this.handleError }),
+        onError: this.handleError }) : null,
       React.createElement(SidepanelView, {
+        tinode: this.state.tinode,
         connected: this.state.connected,
         displayMobile: this.state.displayMobile,
         hideSelf: this.state.displayMobile && this.state.mobilePanel !== 'sidepanel',
@@ -25846,6 +26156,7 @@ class TinodeWeb extends React.Component {
         errorText: this.state.errorText,
         errorLevel: this.state.errorLevel,
         topicSelected: this.state.topicSelected,
+        chatList: this.state.chatList,
         credMethod: this.state.credMethod,
         credCode: this.state.credCode,
 
@@ -25867,18 +26178,17 @@ class TinodeWeb extends React.Component {
         onNewTopic: this.handleNewTopic,
         onLogout: this.handleLogout,
         onCancel: this.handleSidepanelCancel,
-        onOnlineChange: this.handleTopicSelectedOnline,
-        onAcsChange: this.handleTopicSelectedAcs,
         onError: this.handleError,
         onValidateCredentials: this.handleValidateCredentialsRequest,
 
         onInitFind: this.tnInitFind,
         contactsSearchQuery: this.state.contactsSearchQuery,
-        foundContacts: this.state.foundContacts,
+        searchResults: this.state.searchResults,
         onSearchContacts: this.handleSearchContacts,
 
         showContextMenu: this.handleShowContextMenu }),
       React.createElement(MessagesView, {
+        tinode: this.state.tinode,
         connected: this.state.connected,
         online: this.state.topicSelectedOnline,
         acs: this.state.topicSelectedAcs,
@@ -25891,18 +26201,21 @@ class TinodeWeb extends React.Component {
         serverAddress: this.state.serverAddress,
         errorText: this.state.errorText,
         errorLevel: this.state.errorLevel,
+        newGroupTopicParams: this.state.newGroupTopicParams,
 
         onHideMessagesView: this.handleHideMessagesView,
         onData: this.tnData,
         onError: this.handleError,
+        onNewTopicCreated: this.handleNewTopicCreated,
         readTimerHandler: this.handleReadTimer,
         showContextMenu: this.handleShowContextMenu,
         sendMessage: this.handleSendMessage }),
       this.state.showInfoPanel ? React.createElement(InfoView, {
+        tinode: this.state.tinode,
         connected: this.state.connected,
         displayMobile: this.state.displayMobile,
         topic: this.state.topicSelected,
-        foundContacts: this.state.foundContacts,
+        searchableContacts: this.state.searchableContacts,
         myUserId: this.state.myUserId,
         errorText: this.state.errorText,
         errorLevel: this.state.errorLevel,
@@ -25925,7 +26238,7 @@ class TinodeWeb extends React.Component {
 
 module.exports = TinodeWeb;
 
-},{}],27:[function(require,module,exports){
+},{"react":23,"tinode-sdk":24}],27:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 

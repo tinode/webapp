@@ -15,16 +15,20 @@
     "url": "https://github.com/tinode/example-react-js.git"
   },
   "scripts": {
-    "build": "npm run build:babel && npm run build:prod && npm run build:css",
-    "build:dev": "browserify ./src/index.js --standalone Webapp > ./umd/index.dev.js",
-    "build:prod": "browserify ./src/index.js --standalone Webapp --plugin tinyify > ./umd/index.prod.js",
+    "build": "npm run build:babel && npm run build:js-prod && npm run build:css",
+    "build:dev": "npm run build:babel && npm run build:js-dev",
+    "build:js-prod": "browserify ./src/index.js --standalone Webapp --plugin tinyify > ./umd/index.prod.js",
+    "build:js-dev": "browserify ./src/index.js --standalone Webapp > ./umd/index.dev.js",
     "build:babel": "babel ./src/webapp.jsx --presets react --out-file ./src/webapp.js",
     "build:css": "postcss css/base.css > css/base.min.css",
-    "babel-version": "babel --version"
+    "babel-version": "babel --version",
+    "prepublish": "rm -rf ./umd && npm run build"
   },
   "files": [
     "src/index.js",
     "src/webapp.jsx",
+    "umd/index.prod.js",
+    "umd/index.dev.js",
     "audio/msg.mp3",
     "css/base.css",
     "css/base.min.css",
@@ -53,7 +57,7 @@
     "react",
     "web"
   ],
-  "main": "./umd/tinode.prod.js",
+  "main": "umd/index.prod.js",
   "bugs": {
     "url": "https://github.com/tinode/example-react-js/issues"
   },
@@ -62,9 +66,9 @@
   "author": "Tinode Authors <info@tinode.co>",
   "license": "Apache-2.0",
   "dependencies": {
-    "react": "^16.4.2",
+    "react": "^16.5.1",
     "react-dom": "^16.4.2",
-    "tinode-sdk": "^0.15.5",
+    "tinode-sdk": "^0.15.6-rc1",
     "tinyify": "^2.4.3"
   }
 }

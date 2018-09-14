@@ -1,3 +1,13 @@
+if (typeof require == 'function') {
+  if (typeof React == 'undefined') {
+    var React = require('react');
+  }
+  if (typeof Tinode == 'undefined') {
+    var Tinode = require('tinode-sdk');
+    var Drafty = Tinode.Drafty;
+  }
+}
+
 // Babel JSX
 
 // Name of this application, used in the User-Agent.
@@ -5241,6 +5251,4 @@ class TinodeWeb extends React.Component {
   }
 };
 
-if (typeof module != 'undefined') {
-  module.exports = TinodeWeb;
-}
+module.exports = TinodeWeb;
