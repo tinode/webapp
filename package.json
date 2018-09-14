@@ -21,8 +21,7 @@
     "build:js-dev": "browserify ./src/index.js --standalone Webapp > ./umd/index.dev.js",
     "build:babel": "babel ./src/webapp.jsx --presets react --out-file ./src/webapp.js",
     "build:css": "postcss css/base.css > css/base.min.css",
-    "babel-version": "babel --version",
-    "prepublish": "rm -rf ./umd && npm run build"
+    "babel-version": "babel --version"
   },
   "files": [
     "src/index.js",

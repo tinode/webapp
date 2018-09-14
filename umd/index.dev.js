@@ -20228,8 +20228,6 @@ if (process.env.NODE_ENV === 'production') {
 // Put all packages together.
 // Used to generate umd/index.prod.js
 
-console.log("starting", typeof require);
-
 var React = require('react');
 var ReactDOM = require('react-dom');
 var TinodeWeb = require('./webapp.js');
@@ -20240,19 +20238,15 @@ ReactDOM.render(
 );
 
 },{"./webapp.js":26,"react":23,"react-dom":20}],26:[function(require,module,exports){
-console.log("starting", typeof require, typeof React, typeof Tinode);
 if (typeof require == 'function') {
   if (typeof React == 'undefined') {
     var React = require('react');
-    console.log("React defined:", typeof React);
   }
   if (typeof Tinode == 'undefined') {
     var Tinode = require('tinode-sdk');
     var Drafty = Tinode.Drafty;
-    console.log("Tinode defined:", typeof Tinode, typeof Drafty);
   }
 }
-console.log("finishing", typeof require, typeof React, typeof Tinode);
 
 // Babel JSX
 
