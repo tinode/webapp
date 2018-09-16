@@ -1,3 +1,7 @@
+// Babel JSX
+
+'use strict';
+
 if (typeof require == 'function') {
   if (typeof React == 'undefined') {
     var React = require('react');
@@ -7,8 +11,6 @@ if (typeof require == 'function') {
     var Drafty = Tinode.Drafty;
   }
 }
-
-// Babel JSX
 
 // Name of this application, used in the User-Agent.
 const APP_NAME = "TinodeWeb/0.15";
@@ -1175,12 +1177,11 @@ class GroupSubs extends React.Component {
     var usersOnline = [];
     this.state.onlineSubs.map((sub) => {
       usersOnline.push(
-        <div className="avatar-box">
+        <div className="avatar-box" key={sub.user}>
           <LetterTile
             topic={sub.user}
             avatar={makeImageUrl(sub.public ? sub.public.photo : null) || true}
-            title={sub.public ? sub.public.fn : null}
-            key={sub.user} />
+            title={sub.public ? sub.public.fn : null} />
         </div>
       );
     });
@@ -4208,7 +4209,8 @@ class SendMessage extends React.PureComponent {
 /* This is just a static page to display when no conversation is selected. */
 class LogoView extends React.PureComponent {
   render() {
-    var version = Tinode.getVersion() + " build " + document.lastModified;
+    var version = APP_NAME + " (" + Tinode.getLibrary() + "-" +
+      (new Date(document.lastModified)).toISOString() + ")";
     return (
       <div id="dummy-view" className={this.props.hideSelf ? 'nodisplay' : null}>
         <div>
@@ -4967,8 +4969,6 @@ class TinodeWeb extends React.Component {
 
   // New topic was creted, here is the new topic name.
   handleNewTopicCreated(oldName, newName) {
-    console.log("handleNewTopicCreated", oldName, newName);
-
     if (this.state.topicSelected == oldName && oldName != newName) {
       // If the current URl contains the old topic name, replace it with new.
       // Update the name of the selected topic first so the navigator doen't clear

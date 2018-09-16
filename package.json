@@ -1,27 +1,25 @@
 {
   "name": "tinode-webapp",
-  "description": "Tinode Web Client",
-  "version": "0.15.6-rc1",
+  "description": "Tinode messenger for the web",
+  "version": "0.15.6-rc2",
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-minify": "^0.4.3",
     "babel-preset-env": "^1.7.0",
-    "babel-preset-minify": "^0.4.3",
     "babel-preset-react": "^6.24.1",
-    "cssnano": "^4.0.5"
+    "cssnano": "^4.0.5",
+    "uglify-es": "^3.3.9"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/tinode/example-react-js.git"
   },
   "scripts": {
-    "build": "npm run build:babel && npm run build:js-prod && npm run build:css",
-    "build:dev": "npm run build:babel && npm run build:js-dev",
-    "build:js-prod": "browserify ./src/index.js --standalone Webapp --plugin tinyify > ./umd/index.prod.js",
-    "build:js-dev": "browserify ./src/index.js --standalone Webapp > ./umd/index.dev.js",
+    "build": "npm run build:babel && npm run build:prod && npm run build:dev && npm run build:css",
+    "build:prod": "browserify ./src/index.js --standalone Webapp | uglifyjs --compress --mangle > ./umd/index.prod.js",
+    "build:dev": "browserify ./src/index.js --standalone Webapp > ./umd/index.dev.js",
     "build:babel": "babel ./src/webapp.jsx --presets react --out-file ./src/webapp.js",
     "build:css": "postcss css/base.css > css/base.min.css",
-    "babel-version": "babel --version"
+    "vers": "echo \"{\\\"version\\\": \\\"`node -p -e \"require('./package.json').version\"`\\\"}\" > version.json"
   },
   "files": [
     "src/index.js",
@@ -67,7 +65,6 @@
   "dependencies": {
     "react": "^16.5.1",
     "react-dom": "^16.4.2",
-    "tinode-sdk": "^0.15.6-rc1",
-    "tinyify": "^2.4.3"
+    "tinode-sdk": "^0.15.6-rc3"
   }
 }
