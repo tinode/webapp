@@ -1240,13 +1240,13 @@ class LoginView extends React.Component {
     return (
       <form id="login-form" onSubmit={this.handleSubmit}>
         <input type="text" id="inputLogin"
-          placeholder="Login (alice, bob, carol, dave, frank)"
+          placeholder="Login"
           autoComplete="username"
           value={this.state.login}
           onChange={this.handleLoginChange}
           required autoFocus />
         <input type="password" id="inputPassword"
-          placeholder="Password (alice123, bob123, ...)"
+          placeholder="Password"
           autoComplete="current-password"
           value={this.state.password}
           onChange={this.handlePasswordChange}
