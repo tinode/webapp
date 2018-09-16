@@ -9,8 +9,8 @@
     <title>Tinode</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="application-name" content="Tinode">
-    <meta name="description" content="Instant messenger">
+    <meta name="application-name" content="TinodeWeb">
+    <meta name="description" content="Tinode instant messenger">
     <meta name="application-url" content="https://api.tinode.co/">
     <!-- Browser styling for Chrome, FF, Opera -->
     <meta name="theme-color" content="#3949AB">
@@ -32,7 +32,11 @@
     <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
     <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Firebase push notifications. -->
+    <script crossorigin src="https://unpkg.com/firebase@5/firebase-app.js"></script>
+    <script crossorigin src="https://unpkg.com/firebase@5/firebase-messaging.js"></script>
   </head>
+
   <body>
     <div id="mountPoint"></div>
     <script>
@@ -42,6 +46,7 @@
     <!-- core tinode libraries -->
     <script src="src/drafty.js"></script>
     <script src="src/tinode.js"></script>
+    <script src="src/firebase-push.js"></script>
     <!-- the application -->
     <script type="text/babel" src="src/webapp.jsx"></script>
     <script type="text/babel">

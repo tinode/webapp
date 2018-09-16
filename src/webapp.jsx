@@ -4209,14 +4209,13 @@ class SendMessage extends React.PureComponent {
 /* This is just a static page to display when no conversation is selected. */
 class LogoView extends React.PureComponent {
   render() {
-    var version = APP_NAME + " (" + Tinode.getLibrary() + "-" +
-      (new Date(document.lastModified)).toISOString() + ")";
+    var version = APP_NAME + " (" + Tinode.getLibrary() + ")";
     return (
       <div id="dummy-view" className={this.props.hideSelf ? 'nodisplay' : null}>
         <div>
         <a href="https://github.com/tinode/chat/">
           <img id="logo" alt="logo" src="img/logo.svg" />
-          <h2>Tinode Demo Chat</h2>
+          <h2>Tinode Web</h2>
         </a>
         <p>Client: {version}</p>
         <p>Server: {this.props.serverVersion} ({this.props.serverAddress})</p>
