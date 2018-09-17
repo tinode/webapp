@@ -20245,6 +20245,7 @@ ReactDOM.render(
 if (typeof require == 'function') {
   if (typeof React == 'undefined') {
     var React = require('react');
+    var ReactDOM = require('react-dom');
   }
   if (typeof Tinode == 'undefined') {
     var Tinode = require('tinode-sdk');
@@ -26231,7 +26232,7 @@ class TinodeWeb extends React.Component {
 
 module.exports = TinodeWeb;
 
-},{"react":23,"tinode-sdk":24}],27:[function(require,module,exports){
+},{"react":23,"react-dom":20,"tinode-sdk":24}],27:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
