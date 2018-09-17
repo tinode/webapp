@@ -5,6 +5,7 @@
 if (typeof require == 'function') {
   if (typeof React == 'undefined') {
     var React = require('react');
+    var ReactDOM = require('react-dom');
   }
   if (typeof Tinode == 'undefined') {
     var Tinode = require('tinode-sdk');
