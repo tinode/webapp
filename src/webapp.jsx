@@ -4959,7 +4959,7 @@ class TinodeWeb extends React.Component {
     var topicName = peerName || this.state.tinode.newGroupTopicName();
     if (!peerName) {
       this.setState(
-        {newGroupTopicParams: {desc: {public: pub, private: priv}, tags: tags}},
+        {newGroupTopicParams: {desc: {public: pub, private: {comment: priv}}, tags: tags}},
         () => {this.handleTopicSelected(topicName)}
       );
     } else {
