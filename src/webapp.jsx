@@ -4210,8 +4210,7 @@ class SendMessage extends React.PureComponent {
 /* This is just a static page to display when no conversation is selected. */
 class LogoView extends React.PureComponent {
   render() {
-    var version = APP_NAME + " (" + Tinode.getLibrary() + "-" +
-      (new Date(document.lastModified)).toISOString() + ")";
+    var version = APP_NAME + " (" + Tinode.getLibrary() + ")";
     return (
       <div id="dummy-view" className={this.props.hideSelf ? 'nodisplay' : null}>
         <div>
