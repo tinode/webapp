@@ -20245,6 +20245,7 @@ ReactDOM.render(
 if (typeof require == 'function') {
   if (typeof React == 'undefined') {
     var React = require('react');
+    var ReactDOM = require('react-dom');
   }
   if (typeof Tinode == 'undefined') {
     var Tinode = require('tinode-sdk');
@@ -25105,7 +25106,7 @@ class SendMessage extends React.PureComponent {
 /* This is just a static page to display when no conversation is selected. */
 class LogoView extends React.PureComponent {
   render() {
-    var version = APP_NAME + " (" + Tinode.getLibrary() + "-" + new Date(document.lastModified).toISOString() + ")";
+    var version = APP_NAME + " (" + Tinode.getLibrary() + ")";
     return React.createElement(
       'div',
       { id: 'dummy-view', className: this.props.hideSelf ? 'nodisplay' : null },
@@ -25119,7 +25120,7 @@ class LogoView extends React.PureComponent {
           React.createElement(
             'h2',
             null,
-            'Tinode Demo Chat'
+            'Tinode Web'
           )
         ),
         React.createElement(
@@ -25951,7 +25952,7 @@ class TinodeWeb extends React.Component {
   handleNewTopicRequest(peerName, pub, priv, tags) {
     var topicName = peerName || this.state.tinode.newGroupTopicName();
     if (!peerName) {
-      this.setState({ newGroupTopicParams: { desc: { public: pub, private: priv }, tags: tags } }, () => {
+      this.setState({ newGroupTopicParams: { desc: { public: pub, private: { comment: priv } }, tags: tags } }, () => {
         this.handleTopicSelected(topicName);
       });
     } else {
@@ -26231,7 +26232,7 @@ class TinodeWeb extends React.Component {
 
 module.exports = TinodeWeb;
 
-},{"react":23,"tinode-sdk":24}],27:[function(require,module,exports){
+},{"react":23,"react-dom":20,"tinode-sdk":24}],27:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
