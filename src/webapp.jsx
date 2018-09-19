@@ -27,6 +27,12 @@ const POP_SOUND = new Audio('audio/msg.mp3');
 // API key. Use https://github.com/tinode/chat/tree/master/keygen to generate your own
 const API_KEY = "AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K";
 
+// Firebase is used for desktop alerts (push notifications).
+// If you deploy your own server, you must change these FIREBASE_... values to your own.
+const FIREBASE_VAPID_KEY = "BOgQVPOMzIMXUpsYGpbVkZoEBc0ifKY_f2kSU5DNDGYI6i6CoKqqxDd7w7PJ3FaGRBgVGJffldETumOx831jl58";
+const FIREBASE_API_KEY = "AIzaSyD6X4ULR-RUsobvs1zZ2bHdJuPz39q2tbQ";
+const FIREBASE_SENDER_ID = "114126160546";
+
 // Minimum time between two keypress notifications, milliseconds.
 const KEYPRESS_DELAY = 3*1000;
 // Delay before sending a {note} for reciving a message, milliseconds.
@@ -4319,6 +4325,7 @@ class TinodeWeb extends React.Component {
     this.handleUpdateAccountTagsRequest = this.handleUpdateAccountTagsRequest.bind(this);
     this.handleSettings = this.handleSettings.bind(this);
     this.handleGlobalSettings = this.handleGlobalSettings.bind(this);
+    this.initDesktopAlerts = this.initDesktopAlerts.bind(this);
     this.handleSidepanelCancel = this.handleSidepanelCancel.bind(this);
     this.handleNewTopic = this.handleNewTopic.bind(this);
     this.handleNewTopicRequest = this.handleNewTopicRequest.bind(this);
@@ -4350,7 +4357,7 @@ class TinodeWeb extends React.Component {
       // "On" is the default, so saving the "off" state.
       messageSounds: !settings.messageSoundsOff,
       desktopAlerts: settings.desktopAlerts,
-      desktopAlertsEnabled: isSecureConnection(),
+      desktopAlertsEnabled: !isSecureConnection() && (typeof firebase != 'undefined') && (typeof navigator != 'undefined'),
 
       errorText: '',
       errorLevel: null,
@@ -4405,13 +4412,30 @@ class TinodeWeb extends React.Component {
 
     this.setState({tinode: tinode});
 
+    if (this.state.desktopAlertsEnabled) {
+      let app = firebase.initializeApp({
+        apiKey: FIREBASE_API_KEY,
+        messagingSenderId: FIREBASE_SENDER_ID,
+      }, APP_NAME);
+      let fbPush = app.messaging();
+      fbPush.usePublicVapidKey(FIREBASE_VAPID_KEY);
+      navigator.serviceWorker.register('/service-worker.js').then((reg) => {
+        // Registration was successful
+        this.initDesktopAlerts(fbPush, this.state.desktopAlerts, reg);
+      }, (err) => {
+        // registration failed :(
+        console.log('Failed to register service worker:', err);
+      });
+    }
+
     tinode.enableLogging(true, true);
     tinode.onConnect = this.handleConnected;
     tinode.onDisconnect = this.handleDisconnect;
-    var token;
+    let token, firebasePushToken;
     if (localStorage.getObject("keep-logged-in")) {
       token = localStorage.getObject("auth-token");
     }
+
     if (token) {
       // When reading from storage, date is returned as string.
       token.expires = new Date(token.expires);
@@ -4428,6 +4452,7 @@ class TinodeWeb extends React.Component {
     } else {
       navigateTo("");
     }
+
     this.readTimer = null;
     this.readTimerCallback = null;
 
@@ -4915,10 +4940,12 @@ class TinodeWeb extends React.Component {
 
   // User updated global parameters.
   handleGlobalSettings(settings) {
+    console.log("handleGlobalSettings", settings);
+
     let serverAddress = settings.serverAddress || this.state.serverAddress;
     let transport = settings.transport || this.state.transport;
     let messageSounds = (typeof settings.messageSounds == 'boolean') ? settings.messageSounds : this.state.messageSounds;
-    let desktopAlerts = settings.desktopAlerts || this.state.desktopAlerts;
+    let desktopAlerts = settings.desktopAlerts;
 
     this.setState({
       serverAddress: serverAddress,
@@ -4936,6 +4963,67 @@ class TinodeWeb extends React.Component {
     navigateTo(setUrlSidePanel(window.location.hash, ''));
   }
 
+  // Initialize desktop alerts = push notifications.
+  initDesktopAlerts(fbPush, enabled, reg) {
+    let oldToken = localStorage.getObject("firebase-token");
+    if (enabled) {
+      fbPush.useServiceWorker(reg);
+      if (!oldToken) {
+        fbPush.requestPermission().then(() => {
+          console.log("firebase: permission granted");
+          // Token will be received in onTokenRefresh.
+        }).catch(function(err) {
+          this.handleError(err.message, "err");
+          this.setState({desktopAlerts: false, firebaseToken: null});
+          console.log("Failed to get permission to notify.", err);
+        });
+      } else {
+        this.setState({"firebaseToken": oldToken});
+      }
+    } else if (oldToken) {
+      FirebasePush.deleteToken(oldToken).then(function() {
+        console.log('Token deleted.');
+        localStorage.removeItem("firebase-token");
+        this.setState({desktopAlerts: false, firebaseToken: null});
+      }).catch(function(err) {
+        console.log('Unable to delete token. ', err);
+      });
+    }
+
+    fbPush.onTokenRefresh(() => {
+      fbPush.getToken().then((refreshedToken) => {
+        this.setState({"firebaseToken": refreshedToken});
+        if (refreshedToken != oldToken) {
+          localStorage.save("firebase-token", refreshedToken);
+          console.log("send new token to server", refreshedToken);
+        }
+      }).catch(function(err) {
+        this.handleError(err.message, "err");
+        console.log("Failed to retrieve firebase token", err);
+      });
+    });
+
+    fbPush.onMessage(function(payload) {
+      console.log('Message received. ', payload);
+    });
+  }
+
+  requestPermission() {
+    console.log('Requesting permission...');
+    // [START request_permission]
+    FirebasePush.requestPermission().then(function() {
+      console.log('Notification permission granted.');
+      // TODO(developer): Retrieve an Instance ID token for use with FCM.
+      // [START_EXCLUDE]
+      // In many cases once an app has been granted notification permission, it
+      // should update its UI reflecting this.
+      resetUI();
+      // [END_EXCLUDE]
+    }).catch(function(err) {
+      console.log('Unable to get permission to notify.', err);
+    });
+    // [END request_permission]
+  }
   // User clicked Cancel button in Setting or Sign Up panel.
   handleSidepanelCancel() {
     var parsed = parseUrlHash(window.location.hash);
