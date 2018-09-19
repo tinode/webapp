@@ -11,6 +11,10 @@ if (typeof require == 'function') {
     var Tinode = require('tinode-sdk');
     var Drafty = Tinode.Drafty;
   }
+  if (typeof firebase == 'undefined') {
+    var firebase = require('firebase/app');
+    require('firebase/messaging');
+  }
 }
 
 // Name of this application, used in the User-Agent.
