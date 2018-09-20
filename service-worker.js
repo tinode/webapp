@@ -18,6 +18,7 @@ firebase.messaging().setBackgroundMessageHandler(function(payload) {
     body: payload.notification.body || "",
     icon: '/img/logo96.png'
   };
-
+  console.log("background message", payload);
+  
   return self.registration.showNotification(title, options);
 });

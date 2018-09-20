@@ -15,10 +15,11 @@ if (typeof require == 'function') {
     var firebase = require('firebase/app');
     require('firebase/messaging');
   }
+  var package_version = require('../version.json').version;
 }
 
 // Name of this application, used in the User-Agent.
-const APP_NAME = "TinodeWeb/0.15";
+const APP_NAME = "TinodeWeb/" + (package_version || "0.15");
 
 const KNOWN_HOSTS = {hosted: "api.tinode.co", local: "localhost:6060"};
 // Default host name and port to connect to.
@@ -81,12 +82,20 @@ const MIME_EXTENSIONS         = ['jpg',        'gif',       'png',       'svg', 
 
 // Helper functions for storing values in localStorage.
 // By default localStorage can store only strings, not objects or other types.
+
+// Replace old object with the new one.
 Storage.prototype.setObject = function(key, value) {
   this.setItem(key, JSON.stringify(value));
 }
+// Get stored object.
 Storage.prototype.getObject = function(key) {
-  var value = this.getItem(key);
+  let value = this.getItem(key);
   return value && JSON.parse(value);
+}
+// Partially or wholly update stored object.
+Storage.prototype.updateObject = function(key, value) {
+  let oldVal = this.getObject(key);
+  this.setObject(key, Object.assign(oldVal || {}, value));
 }
 
 // Short representation of time in the past.
@@ -856,15 +865,15 @@ class HostSelector extends React.PureComponent {
       );
     }
     return (
-      <div>
-        <label htmlFor="host-name">Server address:</label>
+      <div className="panel-form-row">
         <input type="search" id="host-name" placeholder={this.props.hostName} list="known-hosts"
-          value={this.state.hostName} onChange={this.handleHostNameChange}
+          className="quoted" value={this.state.hostName} onChange={this.handleHostNameChange}
           onBlur={this.handleEditingFinished} required />
         <datalist id="known-hosts">
           {hostOptions}
         </datalist>
-      </div>);
+      </div>
+    );
   }
 }
 /* END Combobox for selecting host name */
@@ -1223,7 +1232,6 @@ class LoginView extends React.Component {
     };
     this.handleLoginChange = this.handleLoginChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
-    this.handleServerAddressChange = this.handleServerAddressChange.bind(this);
     this.handleToggleSaveToken = this.handleToggleSaveToken.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -1234,11 +1242,6 @@ class LoginView extends React.Component {
 
   handlePasswordChange(e) {
     this.setState({password: e.target.value});
-  }
-
-  handleServerAddressChange(name) {
-    this.setState({hostName: name});
-    this.props.onServerAddressChange(name);
   }
 
   handleToggleSaveToken() {
@@ -1270,10 +1273,6 @@ class LoginView extends React.Component {
           value={this.state.password}
           onChange={this.handlePasswordChange}
           required />
-        <div className="panel-form-row">
-          <HostSelector serverAddress={this.props.serverAddress}
-            onServerAddressChange={this.handleServerAddressChange} />
-        </div>
         <div className="panel-form-row">
           <CheckBox id="save-token" name="save-token" checked={this.state.saveToken}
             onChange={this.handleToggleSaveToken} />
@@ -1472,34 +1471,29 @@ class SettingsView extends React.PureComponent {
 
     this.state = {
       transport: props.transport || "def",
-      messageSounds: props.messageSounds,
-      desktopAlerts: props.desktopAlerts && props.desktopAlertsEnabled
+      serverAddress: props.serverAddress,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
     this.handleTransportSelected = this.handleTransportSelected.bind(this);
+    this.handleServerAddressChange = this.handleServerAddressChange.bind(this);
   }
 
   handleSubmit(e) {
     e.preventDefault();
     this.props.onUpdate({
       transport: this.state.transport,
-      messageSounds: this.state.messageSounds,
-      desktopAlerts: this.state.desktopAlerts
+      serverAddress: this.state.serverAddress
     });
-  }
-
-  handleCheckboxClick(what, checked) {
-    if (what == "sound") {
-      this.setState({messageSounds: checked});
-    } else if (what == "alert") {
-      this.setState({desktopAlerts: checked});
-    }
   }
 
   handleTransportSelected(e) {
     this.setState({transport: e.currentTarget.value});
+  }
+
+  handleServerAddressChange(name) {
+    this.setState({serverAddress: name});
+    this.props.onServerAddressChange(name);
   }
 
   render() {
@@ -1519,19 +1513,12 @@ class SettingsView extends React.PureComponent {
       );
     });
     return (
-      <form id="settings-form" onSubmit={this.handleSubmit}>
+      <form id="settings-form" className="panel-form" onSubmit={this.handleSubmit}>
         <div className="panel-form-row">
-          <label htmlFor="message-sound">Message sound:</label>
-          <CheckBox name="sound" id="message-sound"
-            checked={this.state.messageSounds}
-            onChange={this.handleCheckboxClick} />
+          <label className="small">Server to use:</label>
         </div>
-        <div className="panel-form-row">
-          <label htmlFor="desktop-alerts">Notification alerts{!this.props.desktopAlertsEnabled ? ' (requires HTTPS)' : null}:</label>
-          <CheckBox name="alert" id="desktop-alerts"
-            checked={this.state.desktopAlerts}
-            onChange={this.props.desktopAlertsEnabled ? this.handleCheckboxClick : null} />
-        </div>
+        <HostSelector serverAddress={this.state.serverAddress}
+          onServerAddressChange={this.handleServerAddressChange} />
         <div className="panel-form-row">
           <label className="small">Wire transport:</label>
         </div>
@@ -1664,9 +1651,7 @@ class SidepanelView extends React.Component {
           <LoginView
             login={this.props.login}
             disabled={this.props.loginDisabled}
-            serverAddress={this.props.serverAddress}
-            onLogin={this.handleLoginRequested}
-            onServerAddressChange={this.props.onGlobalSettings} /> :
+            onLogin={this.handleLoginRequested} /> :
 
           view === 'register' ?
           <CreateAccountView
@@ -1677,20 +1662,22 @@ class SidepanelView extends React.Component {
           view === 'settings' ?
           <SettingsView
             transport={this.props.transport}
-            messageSounds={this.props.messageSounds}
-            desktopAlerts={this.props.desktopAlerts}
-            desktopAlertsEnabled={this.props.desktopAlertsEnabled}
+            serverAddress={this.props.serverAddress}
+            onServerAddressChange={this.props.onGlobalSettings}
             onCancel={this.props.onCancel}
-            onUpdate={this.props.onGlobalSettings}
-            /> :
+            onUpdate={this.props.onGlobalSettings} /> :
 
           view === 'edit' ?
           <EditAccountView
             tinode={this.props.tinode}
             myUserId={this.props.myUserId}
-            login={this.props.login}
+            messageSounds={this.props.messageSounds}
+            desktopAlerts={this.props.desktopAlerts}
+            desktopAlertsEnabled={this.props.desktopAlertsEnabled}
             onSubmit={this.props.onUpdateAccount}
             onUpdateTags={this.props.onUpdateAccountTags}
+            onTogglePushNotifications={this.props.onTogglePushNotifications}
+            onToggleMessageSounds={this.props.onToggleMessageSounds}
             onLogout={this.props.onLogout}
             onCancel={this.props.onCancel}
             onError={this.props.onError} /> :
@@ -1703,7 +1690,6 @@ class SidepanelView extends React.Component {
             topicSelected={this.props.topicSelected}
             chatList={this.props.chatList}
             showContextMenu={this.props.showContextMenu}
-            messageSounds={this.props.messageSounds}
             onTopicSelected={this.props.onTopicSelected} /> :
 
           view === 'newtpk' ?
@@ -1790,6 +1776,7 @@ class EditAccountView extends React.Component {
     this.handleFullNameUpdate = this.handleFullNameUpdate.bind(this);
     this.handlePasswordUpdate = this.handlePasswordUpdate.bind(this);
     this.handleImageChanged = this.handleImageChanged.bind(this);
+    this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
     this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
   }
 
@@ -1827,6 +1814,14 @@ class EditAccountView extends React.Component {
     this.props.onSubmit(null, vcard(this.state.fullName, img));
   }
 
+  handleCheckboxClick(what, checked) {
+    if (what == "sound") {
+      this.props.onToggleMessageSounds(checked);
+    } else if (what == "alert") {
+      this.props.onTogglePushNotifications(checked);
+    }
+  }
+
   handleTagsUpdated(tags) {
     // Check if tags have actually changed.
     if (arrayEqual(this.state.tags.slice(0), tags.slice(0))) {
@@ -1844,7 +1839,7 @@ class EditAccountView extends React.Component {
       tags = <i>No tags defined. Add some.</i>;
     }
     return (
-      <div id="edit-account" className="panel-form">
+      <div id="edit-account" className="scrollable-panel">
         <div className="panel-form-row">
           <div className="panel-form-column">
             <div><label className="small">Your name</label></div>
@@ -1868,10 +1863,6 @@ class EditAccountView extends React.Component {
         <div className="hr" />
         <div className="panel-form-column">
           <div className="panel-form-row">
-            <label>Login:</label>
-            <tt>{this.props.login}</tt>
-          </div>
-          <div className="panel-form-row">
             <label>Address:</label>
             <tt>{this.props.myUserId}</tt>
           </div>
@@ -1882,6 +1873,20 @@ class EditAccountView extends React.Component {
             <div>Auth: <tt>{this.state.auth}</tt></div>
             <div>Anon: <tt>{this.state.anon}</tt></div>
           </div>
+        </div>
+        <div className="hr" />
+        <div className="panel-form-row">
+          <label htmlFor="message-sound">Message sound:</label>
+          <CheckBox name="sound" id="message-sound"
+            checked={this.props.messageSounds}
+            onChange={this.handleCheckboxClick} />
+        </div>
+        <div className="panel-form-row">
+          <label htmlFor="desktop-alerts">Notification
+            alerts{!this.props.desktopAlertsEnabled ? ' (requires HTTPS)' : null}:</label>
+          <CheckBox name="alert" id="desktop-alerts"
+            checked={this.props.desktopAlerts}
+            onChange={this.props.desktopAlertsEnabled ? this.handleCheckboxClick : null} />
         </div>
         <div className="hr" />
         <TagManager
@@ -3724,26 +3729,22 @@ class MessagesView extends React.Component {
   }
 
   leave() {
-    if (this.state.topic) {
-      let oldTopic = this.props.tinode.getTopic(this.state.topic);
-      if (oldTopic) {
-        if (oldTopic.isSubscribed()) {
-          oldTopic.leave(false)
-            .then((ctrl) => {
-              this.setState({fetchingMessages: false});
-              oldTopic.onData = undefined;
-              oldTopic.onAllMessagesReceived = undefined;
-              oldTopic.onInfo = undefined;
-              oldTopic.onMetaDesc = undefined;
-              oldTopic.onSubsUpdated = undefined;
-              oldTopic.onPres = undefined;
-            })
-            .catch((err) => {
-              // do nothing
-              console.log(err);
-            });
-        }
-      }
+    if (!this.state.topic) {
+      return;
+    }
+    let oldTopic = this.props.tinode.getTopic(this.state.topic);
+    if (oldTopic && oldTopic.isSubscribed()) {
+      oldTopic.leave(false).finally(() => {
+        // We don't care if the request succeeded or failed.
+        // The topic is dead regardless.
+        this.setState({fetchingMessages: false});
+        oldTopic.onData = undefined;
+        oldTopic.onAllMessagesReceived = undefined;
+        oldTopic.onInfo = undefined;
+        oldTopic.onMetaDesc = undefined;
+        oldTopic.onSubsUpdated = undefined;
+        oldTopic.onPres = undefined;
+      });
     }
   }
 
@@ -4336,6 +4337,7 @@ class TinodeWeb extends React.Component {
     this.handleUpdateAccountTagsRequest = this.handleUpdateAccountTagsRequest.bind(this);
     this.handleSettings = this.handleSettings.bind(this);
     this.handleGlobalSettings = this.handleGlobalSettings.bind(this);
+    this.handleToggleMessageSounds = this.handleToggleMessageSounds.bind(this);
     this.initDesktopAlerts = this.initDesktopAlerts.bind(this);
     this.togglePushToken = this.togglePushToken.bind(this);
     this.requestPushToken = this.requestPushToken.bind(this);
@@ -4437,7 +4439,7 @@ class TinodeWeb extends React.Component {
           this.initDesktopAlerts();
           if (this.state.desktopAlerts) {
             if (!this.state.firebaseToken) {
-              this.togglePushToken(true, null);
+              this.togglePushToken(true);
             } else {
               this.tinode.setDeviceToken(this.state.firebaseToken);
             }
@@ -4967,24 +4969,15 @@ class TinodeWeb extends React.Component {
   handleGlobalSettings(settings) {
     let serverAddress = settings.serverAddress || this.state.serverAddress;
     let transport = settings.transport || this.state.transport;
-    let messageSounds = (typeof settings.messageSounds == 'boolean') ? settings.messageSounds : this.state.messageSounds;
-
-    if (settings.desktopAlerts != this.state.desktopAlerts) {
-      this.togglePushToken(settings.desktopAlerts, this.state.firebaseToken);
-    }
 
     this.setState({
       serverAddress: serverAddress,
       transport: transport,
-      messageSounds: messageSounds,
-      desktopAlerts: settings.desktopAlerts,
       tinode: TinodeWeb.tnSetup(serverAddress, transport),
     });
     localStorage.setObject("settings", {
       serverAddress: serverAddress,
-      messageSoundsOff: !messageSounds,
       transport: transport,
-      desktopAlerts: settings.desktopAlerts,
     });
 
     navigateTo(setUrlSidePanel(window.location.hash, ''));
@@ -4995,7 +4988,7 @@ class TinodeWeb extends React.Component {
     // Google could not be bothered to mention that
     // onTokenRefresh is never called.
     this.fbPush.onTokenRefresh(() => {
-      this.requestPushToken(this.state.firebaseToken, true);
+      this.requestPushToken(true);
     });
 
     this.fbPush.onMessage((payload) => {
@@ -5004,22 +4997,24 @@ class TinodeWeb extends React.Component {
     });
   }
 
-  togglePushToken(enabled, oldToken) {
+  togglePushToken(enabled) {
     if (enabled) {
-      if (!oldToken) {
+      if (!this.state.firebaseToken) {
         this.fbPush.requestPermission().then(() => {
-          this.requestPushToken(oldToken);
+          this.requestPushToken(true);
         }).catch((err) => {
           this.handleError(err.message, "err");
           this.setState({desktopAlerts: false, firebaseToken: null});
+          localStorage.updateObject("settings", {desktopAlerts: false});
           console.log("Failed to get permission to notify.", err);
         });
+      } else {
+        this.setState({desktopAlerts: true});
+        localStorage.updateObject("settings", {desktopAlerts: true});
       }
-    } else if (oldToken) {
-      this.fbPush.deleteToken(oldToken).then(() => {
-        let settings = localStorage.getObject("settings");
-        settings.desktopAlerts = false;
-        localStorage.setObject("settings", settings);
+    } else if (this.state.firebaseToken) {
+      this.fbPush.deleteToken(this.state.firebaseToken).then(() => {
+        localStorage.updateObject("settings", {desktopAlerts: false});
         localStorage.removeItem("firebase-token");
         this.setState({desktopAlerts: false, firebaseToken: null});
       }).catch((err) => {
@@ -5027,19 +5022,28 @@ class TinodeWeb extends React.Component {
       });
     } else {
       this.setState({desktopAlerts: false, firebaseToken: null});
+      localStorage.updateObject("settings", {desktopAlerts: false});
     }
   }
 
-  requestPushToken(oldToken, sendToServer) {
+  requestPushToken(sendToServer) {
     this.fbPush.getToken().then((refreshedToken) => {
-      this.setState({"firebaseToken": refreshedToken});
-      if (refreshedToken != oldToken) {
-        localStorage.setObject("firebase-token", refreshedToken);
+      if (refreshedToken != this.state.firebaseToken) {
         this.tinode.setDeviceToken(refreshedToken, sendToServer);
+        localStorage.setObject("firebase-token", refreshedToken);
       }
+      this.setState({firebaseToken: refreshedToken, desktopAlerts: true});
+      localStorage.updateObject("settings", {desktopAlerts: true});
     }).catch((err) => {
       this.handleError(err.message, "err");
       console.log("Failed to retrieve firebase token", err);
+    });
+  }
+
+  handleToggleMessageSounds(enabled) {
+    this.setState({messageSounds: enabled});
+    localStorage.updateObject("settings", {
+      messageSoundsOff: !enabled
     });
   }
 
@@ -5133,7 +5137,10 @@ class TinodeWeb extends React.Component {
   handleLogout() {
     localStorage.removeItem("auth-token");
     this.setState(this.getBlankState());
-    this.setState({tinode: TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport)});
+    if (this.tinode) {
+      this.tinode.disconnect();
+    }
+    this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport);
     navigateTo("");
   }
 
@@ -5287,6 +5294,8 @@ class TinodeWeb extends React.Component {
           onCreateAccount={this.handleNewAccountRequest}
           onUpdateAccount={this.handleUpdateAccountRequest}
           onUpdateAccountTags={this.handleUpdateAccountTagsRequest}
+          onTogglePushNotifications={this.togglePushToken}
+          onToggleMessageSounds={this.handleToggleMessageSounds}
           onTopicSelected={this.handleTopicSelected}
           onCreateTopic={this.handleNewTopicRequest}
           onNewTopic={this.handleNewTopic}

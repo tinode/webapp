@@ -180,17 +180,26 @@ textarea {
 input[type="text"],
 input[type="email"],
 input[type="password"],
+input[type="search"],
 textarea {
   height: 2.5rem;
   border-bottom: 1px solid #ccc;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
   transition: all 0.1s ease-in-out;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
   width: 100%;
 }
+
 textarea:focus,
 input[type="text"]:focus,
 input[type="email"]:focus,
-input[type="password"]:focus {
+input[type="password"]:focus,
+input[type="search"]:focus {
   border-bottom: 1px solid #2196f3;
   box-shadow: 0 1px 0 rgba(33, 150, 243, 0.25);
 }
@@ -198,6 +207,7 @@ input[type="password"]:focus {
 input[type="text"]::placeholder,
 input[type="email"]::placeholder,
 input[type="password"]::placeholder,
+input[type="search"]::placeholder,
 textarea::placeholder {
   color: #bbb;
 }
@@ -401,7 +411,7 @@ li.right:hover .menuTrigger {
 
 /* Quoted div */
 .quoted {
-  padding-left: 1.5rem;
+  margin-left: 1.5rem;
 }
 
 /* BEGIN InPlaceEdit styles */

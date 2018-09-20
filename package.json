@@ -14,7 +14,7 @@
     "url": "https://github.com/tinode/example-react-js.git"
   },
   "scripts": {
-    "build": "npm run build:babel && npm run build:prod && npm run build:dev && npm run build:css",
+    "build": "npm run vers && npm run build:babel && npm run build:prod && npm run build:dev && npm run build:css",
     "build:prod": "browserify ./src/index.js --standalone Webapp | uglifyjs --compress --mangle > ./umd/index.prod.js",
     "build:dev": "browserify ./src/index.js --standalone Webapp > ./umd/index.dev.js",
     "build:babel": "babel ./src/webapp.jsx --presets react --out-file ./src/webapp.js",
@@ -66,6 +66,6 @@
     "firebase": "^5.5.0",
     "react": "^16.5.1",
     "react-dom": "^16.4.2",
-    "tinode-sdk": "^0.15.6-rc3"
+    "tinode-sdk": "^0.15.6-rc4"
   }
 }
