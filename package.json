@@ -40,7 +40,7 @@
     "index.js",
     "index.min.js",
     "manifest.json",
-    "service-worker.js"
+    "service-worker.js",
     "web-desktop-2.png",
     "web-mob-chat-1.png",
     "web-mob-contacts-1.png",
