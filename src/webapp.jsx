@@ -1694,7 +1694,6 @@ class SidepanelView extends React.Component {
 
           view === 'newtpk' ?
           <NewTopicView
-            contactsSearchQuery={this.props.contactsSearchQuery}
             searchResults={this.props.searchResults}
             onInitFind={this.props.onInitFind}
             onSearchContacts={this.props.onSearchContacts}
@@ -2436,7 +2435,6 @@ class NewTopicView extends React.Component {
 
     this.state = {
       tabSelected: "p2p",
-      searchQuery: props.contactsSearchQuery,
       contactList: props.searchResults
     };
 
@@ -2452,7 +2450,6 @@ class NewTopicView extends React.Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     return {
-      searchQuery: nextProps.contactsSearchQuery,
       contactList: nextProps.searchResults
     };
   }
@@ -2502,7 +2499,6 @@ class NewTopicView extends React.Component {
             onError={this.props.onError} /> :
           <div className="flex-column">
             <SearchContacts type="p2p"
-              searchQuery={this.state.searchQuery}
               onSearchContacts={this.props.onSearchContacts} />
             <ContactList
               contacts={this.state.contactList}
@@ -2597,13 +2593,13 @@ class NewTopicGroup extends React.PureComponent {
   }
 };
 
-class SearchContacts extends React.Component {
+class SearchContacts extends React.PureComponent {
   constructor(props) {
     super(props);
 
     this.state = {
       edited: false,
-      search: props.searchQuery
+      search: ''
     };
 
     this.handleSearchChange = this.handleSearchChange.bind(this);
@@ -2613,8 +2609,8 @@ class SearchContacts extends React.Component {
   }
 
   componentWillUnmount() {
-    if (this.state.search) {
-      this.setState({search: ''});
+    if (this.state.edited) {
+      this.setState({search: '', edited: false});
       this.props.onSearchContacts(Tinode.DEL_CHAR);
     }
   }
@@ -2626,16 +2622,12 @@ class SearchContacts extends React.Component {
   handleSearch(e) {
     e.preventDefault();
     var query = this.state.search.trim();
-    if (query.length > 0) {
-      this.setState({edited: true});
-      this.props.onSearchContacts(query);
-    } else if (this.props.searchQuery) {
-      this.props.onSearchContacts(Tinode.DEL_CHAR);
-    }
+    this.setState({edited: (query.length > 0)});
+    this.props.onSearchContacts(query.length > 0 ? query : Tinode.DEL_CHAR);
   }
 
   handleClear() {
-    if (this.state.edited || this.state.search) {
+    if (this.state.edited) {
       this.props.onSearchContacts(Tinode.DEL_CHAR);
     }
     this.setState({search: '', edited: false});
@@ -4402,7 +4394,6 @@ class TinodeWeb extends React.Component {
       contextMenuParams: null,
       contextMenuItems: [],
 
-      contactsSearchQuery: '',
       // Chats as shown in the ContactsView
       chatList: [],
       // Contacts returned by a search query.
@@ -4816,7 +4807,6 @@ class TinodeWeb extends React.Component {
   tnInitFind() {
     let fnd = this.tinode.getFndTopic();
     if (fnd.isSubscribed()) {
-      this.setState({contactsSearchQuery: ''});
       this.tnFndSubsUpdated();
     } else {
       fnd.onSubsUpdated = this.tnFndSubsUpdated;
@@ -4843,7 +4833,6 @@ class TinodeWeb extends React.Component {
    */
   handleSearchContacts(query) {
     var fnd = this.tinode.getFndTopic();
-    this.setState({contactsSearchQuery: query == Tinode.DEL_CHAR ? '' : query});
     fnd.setMeta({desc: {public: query}}).then((ctrl) => {
       return fnd.getMeta(fnd.startMetaQuery().withSub().build());
     }).catch((err) => {
@@ -5305,7 +5294,6 @@ class TinodeWeb extends React.Component {
           onValidateCredentials={this.handleValidateCredentialsRequest}
 
           onInitFind={this.tnInitFind}
-          contactsSearchQuery={this.state.contactsSearchQuery}
           searchResults={this.state.searchResults}
           onSearchContacts={this.handleSearchContacts}
 
