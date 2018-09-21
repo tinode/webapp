@@ -4847,12 +4847,14 @@ class TinodeWeb extends React.Component {
         errorText: '',
         errorLevel: null,
         mobilePanel: 'topic-view',
-        topicSelectedOnline: online,
-        topicSelectedAcs: acs,
         showInfoPanel: false
       });
-      // Contact selected
+      // Different contact selected.
       if (this.state.topicSelected != topicName) {
+        this.setState({
+          topicSelectedOnline: online,
+          topicSelectedAcs: acs
+        });
         navigateTo(setUrlTopic("", topicName));
       }
     } else {
