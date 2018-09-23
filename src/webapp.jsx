@@ -2717,16 +2717,12 @@ class ValidationView extends React.PureComponent {
     super(props);
 
     this.state = {
-      code: props.credCode
+      code: props.credCode || ''
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    return {code: nextProps.credCode};
   }
 
   handleChange(e) {
