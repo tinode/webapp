@@ -7,7 +7,7 @@ Overall it's a lot like open source WhatsApp or Telegram web apps.
 
 The app is about 200KB minified and gzipped. That includes all dependencies (React, ReactDOM), fonts, graphics, css etc.
 
-Although the app is generally usable, keep in mind that this is work in progress. Some bugs probably exist. The app was tested in the latest Chrome & Firefox only. NPM [is available](https://www.npmjs.com/package/tinode-webapp).
+Although the app is generally usable, keep in mind that this is work in progress. Some bugs probably exist. The app was tested in the latest Chrome & Firefox only. NPM package is available at https://www.npmjs.com/package/tinode-webapp.
 
 Try possibly newer or older version live at https://api.tinode.co/. For login and other instructions [see here](https://github.com/tinode/chat/#demo).
 

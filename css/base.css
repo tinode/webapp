@@ -31,11 +31,6 @@ a:focus {
   color: #0a6ebd;
   text-decoration: underline;
 }
-a:focus {
-  outline: thin dotted;
-  outline: 5px auto -webkit-focus-ring-color;
-  outline-offset: -2px;
-}
 
 a.red:hover,
 a.red:focus {
@@ -1088,13 +1083,6 @@ i.search {
   text-align: left;
 
   border-radius: 0.5rem;
-	-webkit-border-radius: 0.5rem;
-	-moz-border-radius: 0.5rem;
-
-  /* tested in chrome 47 on mac - performance sucks
-  -webkit-filter: drop-shadow(0px 1px 1px -1px rgba(0,0,0,0.3));
-  -filter: drop-shadow(0px 1px 1px -1px rgba(0,0,0,0.3));
-  */
 }
 
 .chat-box li.single {
