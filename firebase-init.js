@@ -1,7 +1,4 @@
 // Get these values for your project from the https://console.firebase.google.com/
-// You can get most of this file at
-// Project Settings -> General -> Your Apps -> [Add app] -> [Add Firebase to your Web app]
-// The `messagingVapidKey` needs to be added separately.
 const FIREBASE_INIT = {
   // Project Settings -> Cloud Messaging, "Sender ID".
   messagingSenderId: "114126160546",

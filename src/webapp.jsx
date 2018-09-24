@@ -4980,7 +4980,6 @@ class TinodeWeb extends React.Component {
     if (enabled) {
       if (!this.state.firebaseToken) {
         this.fbPush.requestPermission().then(() => {
-          console.log("got permission, requesting token");
           this.requestPushToken(true);
         }).catch((err) => {
           this.handleError(err.message, "err");
@@ -5007,9 +5006,7 @@ class TinodeWeb extends React.Component {
   }
 
   requestPushToken(sendToServer) {
-    console.log("requestPushToken", sendToServer);
     this.fbPush.getToken().then((refreshedToken) => {
-      console.log("got token", refreshedToken, this.state.firebaseToken);
       if (refreshedToken != this.state.firebaseToken) {
         this.tinode.setDeviceToken(refreshedToken, sendToServer);
         localStorage.setObject("firebase-token", refreshedToken);
