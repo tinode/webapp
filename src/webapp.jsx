@@ -32,12 +32,6 @@ const POP_SOUND = new Audio('audio/msg.mp3');
 // API key. Use https://github.com/tinode/chat/tree/master/keygen to generate your own
 const API_KEY = "AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K";
 
-// Firebase is used for desktop alerts (push notifications).
-// If you deploy your own server, you must change these FIREBASE_... values to your own.
-const FIREBASE_VAPID_KEY = "BOgQVPOMzIMXUpsYGpbVkZoEBc0ifKY_f2kSU5DNDGYI6i6CoKqqxDd7w7PJ3FaGRBgVGJffldETumOx831jl58";
-const FIREBASE_PUBLIC_API_KEY = "AIzaSyD6X4ULR-RUsobvs1zZ2bHdJuPz39q2tbQ";
-const FIREBASE_SENDER_ID = "114126160546";
-
 // Minimum time between two keypress notifications, milliseconds.
 const KEYPRESS_DELAY = 3*1000;
 // Delay before sending a {note} for reciving a message, milliseconds.
@@ -4360,7 +4354,8 @@ class TinodeWeb extends React.Component {
       messageSounds: !settings.messageSoundsOff,
       desktopAlerts: settings.desktopAlerts,
       desktopAlertsEnabled: (isSecureConnection() || isLocalHost()) &&
-        (typeof firebase != 'undefined') && (typeof navigator != 'undefined'),
+        (typeof firebase != 'undefined') && (typeof navigator != 'undefined') &&
+        (typeof FIREBASE_INIT != 'undefined'),
       firebaseToken: localStorage.getObject("firebase-token"),
 
       errorText: '',
@@ -4416,11 +4411,8 @@ class TinodeWeb extends React.Component {
     // Initialize desktop alerts.
     if (this.state.desktopAlertsEnabled) {
       try {
-        this.fbPush = firebase.initializeApp({
-          apiKey: FIREBASE_PUBLIC_API_KEY,
-          messagingSenderId: FIREBASE_SENDER_ID,
-        }, APP_NAME).messaging();
-        this.fbPush.usePublicVapidKey(FIREBASE_VAPID_KEY);
+        this.fbPush = firebase.initializeApp(FIREBASE_INIT, APP_NAME).messaging();
+        this.fbPush.usePublicVapidKey(FIREBASE_INIT.messagingVapidKey);
         navigator.serviceWorker.register('/service-worker.js').then((reg) => {
           this.fbPush.useServiceWorker(reg);
           this.initDesktopAlerts();
@@ -4988,6 +4980,7 @@ class TinodeWeb extends React.Component {
     if (enabled) {
       if (!this.state.firebaseToken) {
         this.fbPush.requestPermission().then(() => {
+          console.log("got permission, requesting token");
           this.requestPushToken(true);
         }).catch((err) => {
           this.handleError(err.message, "err");
@@ -5000,12 +4993,12 @@ class TinodeWeb extends React.Component {
         localStorage.updateObject("settings", {desktopAlerts: true});
       }
     } else if (this.state.firebaseToken) {
-      this.fbPush.deleteToken(this.state.firebaseToken).then(() => {
+      this.fbPush.deleteToken(this.state.firebaseToken).catch((err) => {
+        console.log("Unable to delete token.", err);
+      }).finally(() => {
         localStorage.updateObject("settings", {desktopAlerts: false});
         localStorage.removeItem("firebase-token");
         this.setState({desktopAlerts: false, firebaseToken: null});
-      }).catch((err) => {
-        console.log("Unable to delete token.", err);
       });
     } else {
       this.setState({desktopAlerts: false, firebaseToken: null});
@@ -5014,7 +5007,9 @@ class TinodeWeb extends React.Component {
   }
 
   requestPushToken(sendToServer) {
+    console.log("requestPushToken", sendToServer);
     this.fbPush.getToken().then((refreshedToken) => {
+      console.log("got token", refreshedToken, this.state.firebaseToken);
       if (refreshedToken != this.state.firebaseToken) {
         this.tinode.setDeviceToken(refreshedToken, sendToServer);
         localStorage.setObject("firebase-token", refreshedToken);
@@ -5123,10 +5118,11 @@ class TinodeWeb extends React.Component {
 
   handleLogout() {
     localStorage.removeItem("auth-token");
-    this.setState(this.getBlankState());
     if (this.tinode) {
+      this.tinode.onDisconnect = undefined;
       this.tinode.disconnect();
     }
+    this.setState(this.getBlankState());
     this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport);
     navigateTo("");
   }
