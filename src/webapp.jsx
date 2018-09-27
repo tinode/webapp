@@ -3603,7 +3603,7 @@ class MessagesView extends React.Component {
   }
 
   componentWillUnmount() {
-    this.leave();
+    this.leave(this.state.topic);
     if (this.messagesScroller) {
       this.messagesScroller.removeEventListener('scroll', this.fetchMoreMessages);
     }
@@ -3615,8 +3615,8 @@ class MessagesView extends React.Component {
 
   propsChange(props) {
     if (!props || !props.topic) {
-      this.setState({messages: [], onlineSubs: [], topic: null});
-      this.leave();
+      let oldTopic = this.state.topic;
+      this.setState({messages: [], onlineSubs: [], topic: null}, this.leave(oldTopic));
       return;
     }
 
@@ -3646,7 +3646,7 @@ class MessagesView extends React.Component {
       topic.onSubsUpdated = this.handleSubsUpdated;
       topic.onPres = this.handleSubsUpdated;
       // Unbind the previous topic from this component.
-      this.leave();
+      this.leave(this.state.topic);
 
       this.handleDescChange(topic);
       topic.subscribers((sub) => {
@@ -3710,23 +3710,25 @@ class MessagesView extends React.Component {
     }
   }
 
-  leave() {
-    if (!this.state.topic) {
+  leave(oldTopicName) {
+    if (!oldTopicName) {
       return;
     }
-    let oldTopic = this.props.tinode.getTopic(this.state.topic);
+    let oldTopic = this.props.tinode.getTopic(oldTopicName);
     if (oldTopic && oldTopic.isSubscribed()) {
-      oldTopic.leave(false).finally(() => {
-        // We don't care if the request succeeded or failed.
-        // The topic is dead regardless.
-        this.setState({fetchingMessages: false});
-        oldTopic.onData = undefined;
-        oldTopic.onAllMessagesReceived = undefined;
-        oldTopic.onInfo = undefined;
-        oldTopic.onMetaDesc = undefined;
-        oldTopic.onSubsUpdated = undefined;
-        oldTopic.onPres = undefined;
-      });
+      oldTopic.leave(false)
+        .catch(() => { /* do nothing here */ })
+        .finally(() => {
+          // We don't care if the request succeeded or failed.
+          // The topic is dead regardless.
+          this.setState({fetchingMessages: false});
+          oldTopic.onData = undefined;
+          oldTopic.onAllMessagesReceived = undefined;
+          oldTopic.onInfo = undefined;
+          oldTopic.onMetaDesc = undefined;
+          oldTopic.onSubsUpdated = undefined;
+          oldTopic.onPres = undefined;
+        });
     }
   }
 
