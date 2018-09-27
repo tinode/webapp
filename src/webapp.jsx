@@ -5116,6 +5116,7 @@ class TinodeWeb extends React.Component {
   }
 
   handleLogout() {
+    updateFavicon(0);
     localStorage.removeItem("auth-token");
     if (this.tinode) {
       this.tinode.onDisconnect = undefined;
