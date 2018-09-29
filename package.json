@@ -65,7 +65,7 @@
   "author": "Tinode Authors <info@tinode.co>",
   "license": "Apache-2.0",
   "dependencies": {
-    "firebase": "^5.5.0",
+    "firebase": "^5.5.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "tinode-sdk": "^0.15.7-rc2"
