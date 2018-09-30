@@ -815,7 +815,7 @@ class InPlaceEdit extends React.Component {
           placeholder={this.props.placeholder}
           required={this.props.required ? 'required' : ''}
           autoComplete={this.props.autoComplete}
-          autoFocus={this.props.autoFocus ? 'autoFocus' : ''}
+          autoFocus
           onChange={this.handeTextChange}
           onKeyDown={this.handleKeyDown}
           onBlur={this.handleEditingFinished} />
