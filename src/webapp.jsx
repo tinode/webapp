@@ -1270,7 +1270,8 @@ class LoginView extends React.Component {
         <div className="panel-form-row">
           <CheckBox id="save-token" name="save-token" checked={this.state.saveToken}
             onChange={this.handleToggleSaveToken} />
-          <label htmlFor="save-token">&nbsp;Keep me logged in</label>
+          <label htmlFor="save-token">&nbsp;Stay logged in</label>
+          <a href="#reset">Forgot password?</a>
         </div>
         <div className="dialog-buttons">
           <button className={submitClasses} type="submit">Sign in</button>
@@ -1382,7 +1383,7 @@ class CreateAccountView extends React.PureComponent {
         <div className="panel-form-row">
           <CheckBox id="save-token" name="save-token" checked={this.state.saveToken}
             onChange={this.handleToggleSaveToken} />
-          <label htmlFor="save-token">&nbsp;Keep me logged in</label>
+          <label htmlFor="save-token">&nbsp;Stay logged in</label>
         </div>
         <div className="dialog-buttons">
           <button className={submitClasses} type="submit">Sign up</button>
@@ -1457,6 +1458,51 @@ class AvatarUpload extends React.Component {
   }
 };
 /* END Account registration */
+
+
+/* BEGIN PasswordResetView: a password reset form */
+class PasswordResetView extends React.PureComponent {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      email: '',
+    };
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleEmailChange = this.handleEmailChange.bind(this);
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    this.props.onSubmit("email", this.state.email.trim());
+  }
+
+  handleEmailChange(e) {
+    this.setState({email: e.target.value});
+  }
+
+  render() {
+    return (
+      <form id="password-reset-form" onSubmit={this.handleSubmit}>
+        <p>Email with instructions for resetting your password will be sent
+        to the following email address:</p>
+        <input type="email" id="inputEmail"
+          placeholder="Your registration email"
+          autoComplete="email"
+          value={this.state.email}
+          onChange={this.handleEmailChange}
+          required autoFocus />
+        <div className="dialog-buttons">
+          <button className="blue" type="submit">Send request</button>
+        </div>
+      </form>
+    );
+  }
+}
+
+/* END PasswordResetView */
+
 
 /* BEGIN Tinode config panel */
 class SettingsView extends React.PureComponent {
@@ -1622,6 +1668,10 @@ class SidepanelView extends React.Component {
         title = "Confirm Credentials";
         onCancel = this.props.onCancel;
         break;
+      case 'reset':
+        title = "Reset Password";
+        onCancel = this.props.onCancel;
+        break;
       default:;
     };
     return (
@@ -1702,6 +1752,9 @@ class SidepanelView extends React.Component {
             onCancel={this.props.onCancel}
             onError={this.props.onError} /> :
 
+          view === 'reset' ?
+          <PasswordResetView
+            onSubmit={this.props.onPasswordReset} /> :
           null}
       </div>
     );
@@ -4342,6 +4395,7 @@ class TinodeWeb extends React.Component {
     this.handleHideInfoView = this.handleHideInfoView.bind(this);
     this.handleMemberUpdateRequest = this.handleMemberUpdateRequest.bind(this);
     this.handleValidateCredentialsRequest = this.handleValidateCredentialsRequest.bind(this);
+    this.handlePasswordResetRequest = this.handlePasswordResetRequest.bind(this);
   }
 
   getBlankState() {
@@ -4491,7 +4545,7 @@ class TinodeWeb extends React.Component {
     var hash = parseUrlHash(window.location.hash);
     if (hash.path && hash.path.length > 0) {
       // Left-side panel selector.
-      if (['register','settings','edit','cred','newtpk','contacts',''].includes(hash.path[0])) {
+      if (['register','settings','edit','cred','reset','newtpk','contacts',''].includes(hash.path[0])) {
         this.setState({sidePanelSelected: hash.path[0]});
       } else {
         console.log("Unknown sidepanel view", hash.path[0]);
@@ -5229,6 +5283,24 @@ class TinodeWeb extends React.Component {
     this.doLogin(null, null, {meth: cred, resp: code});
   }
 
+  handlePasswordResetRequest(method, value) {
+    if (this.tinode.isConnected()) {
+      this.tinode.resetAuthSecret("basic", method, value)
+        .catch((err) => {
+          this.handleError(err.message, "err");
+        });
+    } else {
+      this.tinode.connect()
+        .then(() => {
+          this.tinode.resetAuthSecret("basic", method, value)
+        })
+        .catch((err) => {
+          // Socket error
+          this.handleError(err.message, "err");
+        });
+    }
+  }
+
   render() {
     return (
       <div id="app-container">
@@ -5286,6 +5358,7 @@ class TinodeWeb extends React.Component {
           onCancel={this.handleSidepanelCancel}
           onError={this.handleError}
           onValidateCredentials={this.handleValidateCredentialsRequest}
+          onPasswordReset={this.handlePasswordResetRequest}
 
           onInitFind={this.tnInitFind}
           searchResults={this.state.searchResults}
