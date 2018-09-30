@@ -743,9 +743,9 @@ class InPlaceEdit extends React.Component {
     super(props);
 
     this.state = {
-      active: props.state,
-      initialText: props.text || "",
-      text: props.text || ""
+      active: props.active,
+      initialValue: props.value || "",
+      value: props.value || ""
     };
 
     this.handeTextChange = this.handeTextChange.bind(this);
@@ -757,23 +757,23 @@ class InPlaceEdit extends React.Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     // If text has changed while in read mode, update text and discard changes.
     // Ignore update if in edit mode.
-    if (prevState.initialText != nextProps.text && !prevState.active) {
+    if (prevState.initialValue != nextProps.value && !prevState.active) {
       return {
-        initialText: nextProps.text || "",
-        text: nextProps.text || ""
+        initialValue: nextProps.value || "",
+        value: nextProps.value || ""
       };
     }
     return null;
   }
 
   handeTextChange(e) {
-    this.setState({text: e.target.value});
+    this.setState({value: e.target.value});
   }
 
   handleKeyDown(e) {
     if (e.keyCode === 27) {
       // Escape pressed
-      this.setState({text: this.props.text, active: false});
+      this.setState({value: this.props.value, active: false});
     } else if (e.keyCode === 13) {
       // Enter pressed
       this.handleEditingFinished();
@@ -789,33 +789,36 @@ class InPlaceEdit extends React.Component {
 
   handleEditingFinished() {
     this.setState({active: false});
-    var text = this.state.text.trim();
-    if ((text || this.props.text) && (text !== this.props.text)) {
-      this.props.onFinished(text);
+    let value = this.state.value.trim();
+    if ((value || this.props.value) && (value !== this.props.value)) {
+      this.props.onFinished(value);
     }
   }
 
   render() {
-    var spanText = this.props.type === "password" ?
-      "••••••••" : this.state.text;
-    var spanClass = "in-place-edit" +
-      (this.props.readOnly ? " disabled" : "");
-    if (!spanText) {
-      spanText = this.props.placeholder;
-      spanClass += " placeholder";
-    }
-    if (spanText.length > 20) {
-      spanText = spanText.substring(0, 19) + "...";
+    if (!this.state.active) {
+      var spanText = this.props.type == "password" ? "••••••••" : this.state.value;
+      var spanClass = "in-place-edit" +
+        (this.props.readOnly ? " disabled" : "");
+      if (!spanText) {
+        spanText = this.props.placeholder;
+        spanClass += " placeholder";
+      }
+      if (spanText.length > 20) {
+        spanText = spanText.substring(0, 19) + "...";
+      }
     }
     return (
       this.state.active ?
         <input type={this.props.type || "text"}
-          value={this.state.text}
+          value={this.state.value}
           placeholder={this.props.placeholder}
+          required={this.props.required ? 'required' : ''}
+          autoComplete={this.props.autoComplete}
+          autoFocus={this.props.autoFocus ? 'autoFocus' : ''}
           onChange={this.handeTextChange}
           onKeyDown={this.handleKeyDown}
-          onBlur={this.handleEditingFinished}
-          autoFocus />
+          onBlur={this.handleEditingFinished} />
         :
         <span className={spanClass} onClick={this.handleStartEditing}>
           <span className="content">{spanText}</span>
@@ -823,6 +826,73 @@ class InPlaceEdit extends React.Component {
     );
   }
 };
+
+class VisiblePassword extends React.PureComponent {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      value: this.props.value,
+      visible: false
+    };
+
+    this.handleVisibility = this.handleVisibility.bind(this);
+    this.handeTextChange = this.handeTextChange.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.handleEditingFinished = this.handleEditingFinished.bind(this);
+  }
+
+  handeTextChange(e) {
+    this.setState({value: e.target.value});
+    if (this.props.onChange) {
+      this.props.onChange(e);
+    }
+  }
+
+  handleVisibility(e) {
+    e.preventDefault();
+    this.setState({visible: !this.state.visible});
+  }
+
+  handleKeyDown(e) {
+    if (e.keyCode === 27) {
+      // Escape pressed
+      this.setState({value: this.props.value, active: false});
+    } else if (e.keyCode === 13) {
+      // Enter pressed
+      this.handleEditingFinished();
+    }
+  }
+
+  handleEditingFinished() {
+    if (this.props.onFinished) {
+      this.props.onFinished(this.state.value);
+    }
+  }
+
+  render() {
+    return (
+      <div>
+        <input className="with-visibility"
+          type={this.state.visible ? "text" : "password"}
+          value={this.state.value}
+          placeholder={this.props.placeholder}
+          required={this.props.required ? 'required' : ''}
+          autoFocus={this.props.autoFocus ? 'autoFocus' : ''}
+          autoComplete={this.props.autoComplete}
+          onChange={this.handeTextChange}
+          onKeyDown={this.handleKeyDown}
+          onBlur={this.handleEditingFinished} />
+        <span onClick={this.handleVisibility}>
+          <i className="material-icons clickable light-gray">
+            {this.state.visible ? 'visibility' : 'visibility_off'}
+          </i>
+        </span>
+      </div>
+    );
+  }
+}
+
 /* END InPlaceEdit */
 
 /* BEGIN Combobox for selecting host name */
@@ -1261,12 +1331,12 @@ class LoginView extends React.Component {
           value={this.state.login}
           onChange={this.handleLoginChange}
           required autoFocus />
-        <input type="password" id="inputPassword"
+        <VisiblePassword type="password" id="inputPassword"
           placeholder="Password"
           autoComplete="current-password"
           value={this.state.password}
           onChange={this.handlePasswordChange}
-          required />
+          required={true} />
         <div className="panel-form-row">
           <CheckBox id="save-token" name="save-token" checked={this.state.saveToken}
             onChange={this.handleToggleSaveToken} />
@@ -1290,7 +1360,6 @@ class CreateAccountView extends React.PureComponent {
     this.state = {
       login: '',
       password: '',
-      password2: '',
       email: '',
       fn: '', // full/formatted name
       imageDataUrl: null,
@@ -1300,7 +1369,6 @@ class CreateAccountView extends React.PureComponent {
 
     this.handleLoginChange = this.handleLoginChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
-    this.handlePassword2Change = this.handlePassword2Change.bind(this);
     this.handleEmailChange = this.handleEmailChange.bind(this);
     this.handleFnChange = this.handleFnChange.bind(this);
     this.handleImageChanged = this.handleImageChanged.bind(this);
@@ -1312,12 +1380,8 @@ class CreateAccountView extends React.PureComponent {
     this.setState({login: e.target.value});
   }
 
-  handlePasswordChange(e) {
-    this.setState({password: e.target.value});
-  }
-
-  handlePassword2Change(e) {
-    this.setState({password2: e.target.value});
+  handlePasswordChange(password) {
+    this.setState({password: password});
   }
 
   handleEmailChange(e) {
@@ -1339,17 +1403,13 @@ class CreateAccountView extends React.PureComponent {
 
   handleSubmit(e) {
     e.preventDefault();
-    if (this.state.password.trim() != this.state.password2.trim()) {
-      this.props.onError("Passwords don't match", "warn");
-    } else {
-      // TODO: check email for validity
-      this.setState({errorCleared: false});
-      this.props.onCreateAccount(
-        this.state.login.trim(),
-        this.state.password.trim(),
-        vcard(this.state.fn, this.state.imageDataUrl),
-        {"meth": "email", "val": this.state.email});
-    }
+    // TODO: check email for validity
+    this.setState({errorCleared: false});
+    this.props.onCreateAccount(
+      this.state.login.trim(),
+      this.state.password.trim(),
+      vcard(this.state.fn, this.state.imageDataUrl),
+      {"meth": "email", "val": this.state.email});
   }
 
   render() {
@@ -1363,22 +1423,21 @@ class CreateAccountView extends React.PureComponent {
           <div className="panel-form-column">
             <input type="text" placeholder="Login" autoComplete="user-name"
               value={this.state.login} onChange={this.handleLoginChange} required autoFocus />
-            <input type="password" placeholder="Password" autoComplete="new-password"
-              value={this.state.password} onChange={this.handlePasswordChange} required />
-            <input type="password" placeholder="Repeat password" autoComplete="new-password"
-              value={this.state.password2} onChange={this.handlePassword2Change} required />
+            <VisiblePassword placeholder="Password" autoComplete="new-password"
+              value={this.state.password} onFinished={this.handlePasswordChange}
+              required={true} />
           </div>
           <AvatarUpload
             onImageChanged={this.handleImageChanged}
             onError={this.props.onError} />
         </div>
-        <div className="panel-form-row">
-          <input type="email" placeholder="Email, e.g john.doe@example.com"
-            autoComplete="email" value={this.state.email} onChange={this.handleEmailChange} required/>
-        </div>
         <div  className="panel-form-row">
           <input type="text" placeholder="Full name, e.g. John Doe" autoComplete="name"
             value={this.state.fn} onChange={this.handleFnChange} required/>
+        </div>
+        <div className="panel-form-row">
+          <input type="email" placeholder="Email, e.g john.doe@example.com"
+            autoComplete="email" value={this.state.email} onChange={this.handleEmailChange} required/>
         </div>
         <div className="panel-form-row">
           <CheckBox id="save-token" name="save-token" checked={this.state.saveToken}
@@ -1467,6 +1526,7 @@ class PasswordResetView extends React.PureComponent {
 
     this.state = {
       email: '',
+      password: ''
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -1475,32 +1535,50 @@ class PasswordResetView extends React.PureComponent {
 
   handleSubmit(e) {
     e.preventDefault();
-    this.props.onSubmit("email", this.state.email.trim());
+    if (this.props.token) {
+      this.props.onSubmit(null, this.state.password.trim());
+    } else {
+      this.props.onSubmit("email", this.state.email.trim());
+    }
   }
 
   handleEmailChange(e) {
     this.setState({email: e.target.value});
   }
 
+  handlePasswordChange(e) {
+    this.setState({password: e.target.value});
+  }
+
   render() {
+    let buttonText = this.props.token ?  "Reset" : "Send request";
     return (
       <form id="password-reset-form" onSubmit={this.handleSubmit}>
-        <p>Email with instructions for resetting your password will be sent
-        to the following email address:</p>
-        <input type="email" id="inputEmail"
-          placeholder="Your registration email"
-          autoComplete="email"
-          value={this.state.email}
-          onChange={this.handleEmailChange}
-          required autoFocus />
+        {!this.props.token ?
+          <React.Fragment>
+            <label htmlFor="inputEmail">Send a password reset email:</label>
+            <input type="email" id="inputEmail"
+              placeholder="Your registration email"
+              autoComplete="email"
+              value={this.state.email}
+              onChange={this.handleEmailChange}
+              required autoFocus />
+          </React.Fragment>
+          :
+          <VisiblePassword
+            placeholder="Enter new password"
+            autoComplete="new-password"
+            value={this.state.password}
+            required={true} autoFocus={true}
+            onChange={this.handlePasswordChange} />
+        }
         <div className="dialog-buttons">
-          <button className="blue" type="submit">Send request</button>
+          <button className="blue" type="submit">{buttonText}</button>
         </div>
       </form>
     );
   }
 }
-
 /* END PasswordResetView */
 
 
@@ -1891,7 +1969,7 @@ class EditAccountView extends React.Component {
             <div><label className="small">Your name</label></div>
             <div><InPlaceEdit
                 placeholder="Full name, e.g. John Doe"
-                text={this.state.fullName}
+                value={this.state.fullName}
                 onFinished={this.handleFullNameUpdate} /></div>
             <div><label className="small">Password</label></div>
             <div><InPlaceEdit
@@ -3213,12 +3291,12 @@ class InfoView extends React.Component {
                 <div><InPlaceEdit
                     placeholder="Group name"
                     readOnly={!this.state.owner}
-                    text={this.state.fullName}
+                    value={this.state.fullName}
                     onFinished={this.handleFullNameUpdate} /></div>
                 <div><label className="small">Private comment</label></div>
                 <div><InPlaceEdit
                     placeholder="Visible to you only"
-                    text={this.state.private}
+                    value={this.state.private}
                     onFinished={this.handlePrivateUpdate} /></div>
               </div>
               <AvatarUpload
@@ -5284,21 +5362,15 @@ class TinodeWeb extends React.Component {
   }
 
   handlePasswordResetRequest(method, value) {
-    if (this.tinode.isConnected()) {
-      this.tinode.resetAuthSecret("basic", method, value)
-        .catch((err) => {
-          this.handleError(err.message, "err");
-        });
-    } else {
-      this.tinode.connect()
-        .then(() => {
-          this.tinode.resetAuthSecret("basic", method, value)
-        })
-        .catch((err) => {
-          // Socket error
-          this.handleError(err.message, "err");
-        });
-    }
+    // If already connected, connnect() will return a resolved promise.
+    this.tinode.connect()
+      .then(() => {
+        this.tinode.requestResetAuthSecret("basic", method, value)
+      })
+      .catch((err) => {
+        // Socket error
+        this.handleError(err.message, "err");
+      });
   }
 
   render() {

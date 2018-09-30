@@ -207,6 +207,12 @@ textarea::placeholder {
   color: #bbb;
 }
 
+input[type="text"].with-visibility,
+input[type="password"].with-visibility {
+  margin-right:-2rem;
+  padding-right:2rem;
+}
+
 /* Scrollbar styling for Chrome. Firefox does not support scrollbar styling.  */
 ::-webkit-scrollbar {
 	width: 0.6rem;
@@ -298,6 +304,10 @@ li.right:hover .menuTrigger {
 
 .gray {
   color: #757575;
+}
+
+.light-gray {
+  color: #bbb;
 }
 
 .small {
@@ -415,7 +425,7 @@ li.right:hover .menuTrigger {
   font-family: inherit;
   font-size: 1.1rem;
   height: 2.5rem;
-  line-height: 1.5;
+  line-height: 2.0;
   margin: 0.25rem 0.125rem;
   width: 100%;
   vertical-align: baseline;
