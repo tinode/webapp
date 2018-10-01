@@ -27774,7 +27774,7 @@ if (process.env.NODE_ENV === 'production') {
 }).call(this,require('_process'))
 },{"./cjs/schedule-tracing.development.js":17,"./cjs/schedule-tracing.production.min.js":18,"_process":28}],23:[function(require,module,exports){
 (function (global){
-!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{("undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:this).Tinode=e()}}(function(){var e={};const t=[{name:"ST",start:/(?:^|\W)(\*)[^\s*]/,end:/[^\s*](\*)(?=$|\W)/},{name:"EM",start:/(?:^|[\W_])(_)[^\s_]/,end:/[^\s_](_)(?=$|[\W_])/},{name:"DL",start:/(?:^|\W)(~)[^\s~]/,end:/[^\s~](~)(?=$|\W)/},{name:"CO",start:/(?:^|\W)(`)[^`]/,end:/[^`](`)(?=$|\W)/}],n=[{name:"LN",dataName:"url",pack:function(e){return/^[a-z]+:\/\//i.test(e)||(e="http://"+e),{url:e}},re:/(https?:\/\/)?(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b(?:[-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)/g},{name:"MN",dataName:"val",pack:function(e){return{val:e.slice(1)}},re:/\B@(\w\w+)/g},{name:"HT",dataName:"val",pack:function(e){return{val:e.slice(1)}},re:/\B#(\w\w+)/g}],s={ST:{name:"b",isVoid:!1},EM:{name:"i",isVoid:!1},DL:{name:"del",isVoid:!1},CO:{name:"tt",isVoid:!1},BR:{name:"br",isVoid:!0},LN:{name:"a",isVoid:!1},MN:{name:"a",isVoid:!1},HT:{name:"a",isVoid:!1},IM:{name:"img",isVoid:!0}};function i(e,t){var n;try{n=atob(e)}catch(e){console.log("Drafty: failed to decode base64-encoded object",e.message),n=atob("")}for(var s=n.length,i=new ArrayBuffer(s),r=new Uint8Array(i),a=0;a<s;a++)r[a]=n.charCodeAt(a);return URL.createObjectURL(new Blob([i],{type:t}))}var r={ST:{open:function(){return"<b>"},close:function(){return"</b>"}},EM:{open:function(){return"<i>"},close:function(){return"</i>"}},DL:{open:function(){return"<del>"},close:function(){return"</del>"}},CO:{open:function(){return"<tt>"},close:function(){return"</tt>"}},BR:{open:function(){return""},close:function(){return"<br/>"}},LN:{open:function(e){return'<a href="'+e.url+'">'},close:function(e){return"</a>"},props:function(e){return{href:e.url,target:"_blank"}}},MN:{open:function(e){return'<a href="#'+e.val+'">'},close:function(e){return"</a>"},props:function(e){return{name:e.val}}},HT:{open:function(e){return'<a href="#'+e.val+'">'},close:function(e){return"</a>"},props:function(e){return{name:e.val}}},IM:{open:function(e){var t=i(e.val,e.mime),n=e.ref?e.ref:t,s=(e.name?'<a href="'+n+'" download="'+e.name+'">':"")+'<img src="'+t+'"'+(e.width?' width="'+e.width+'"':"")+(e.height?' height="'+e.height+'"':"")+' border="0" />';return console.log("open: "+s),s},close:function(e){return e.name?"</a>":""},props:function(e){return{src:i(e.val,e.mime),title:e.name,"data-width":e.width,"data-height":e.height,"data-name":e.name,"data-size":.75*e.val.length|0,"data-mime":e.mime}}}},a=function(){};a.parse=function(e){if("string"!=typeof e)return null;var s=e.split(/\r?\n/),i=[],r={},a=[];s.map(function(e){var s,o,c=[];if(t.map(function(t){c=c.concat(function(e,t,n,s){for(var i=[],r=0,a=e.slice(0);a.length>0;){var o=t.exec(a);if(null==o)break;var c=o.index+o[0].lastIndexOf(o[1]);a=a.slice(c+1),r=(c+=r)+1;var u=n?n.exec(a):null;if(null==u)break;var h=u.index+u[0].indexOf(u[1]);a=a.slice(h+1),r=(h+=r)+1,i.push({text:e.slice(c+1,h),children:[],start:c,end:h,type:s})}return i}(e,t.start,t.end,t.name))}),0==c.length)o={txt:e};else{c.sort(function(e,t){return e.start-t.start}),c=function e(t){if(0==t.length)return[];for(var n=[t[0]],s=t[0],i=1;i<t.length;i++)t[i].start>s.end?(n.push(t[i]),s=t[i]):t[i].end<s.end&&s.children.push(t[i]);for(var i in n)n[i].children=e(n[i].children);return n}(c);var u=function e(t,n){var s="",i=[];for(var r in t){var a=t[r];if(!a.text){var o=e(a.children,s.length+n);a.text=o.txt,i=i.concat(o.fmt)}a.type&&i.push({at:s.length+n,len:a.text.length,tp:a.type}),s+=a.text}return{txt:s,fmt:i}}(function e(t,n,s,i){var r=[];if(0==i.length)return[];for(var a in i){var o=i[a];o.start>n&&r.push({text:t.slice(n,o.start)});var c={type:o.type},u=e(t,o.start+1,o.end-1,o.children);u.length>0?c.children=u:c.text=o.text,r.push(c),n=o.end+1}return n<s&&r.push({text:t.slice(n,s)}),r}(e,0,e.length,c),0);o={txt:u.txt,fmt:u.fmt}}if((s=function(e){var t,s=[];if(n.map(function(n){for(;null!==(t=n.re.exec(e));)s.push({offset:t.index,len:t[0].length,unique:t[0],data:n.pack(t[0]),type:n.name})}),0==s.length)return s;s.sort(function(e,t){return e.offset-t.offset});var i=-1;return s=s.filter(function(e){var t=e.offset>i;return i=e.offset+e.len,t})}(o.txt)).length>0){var h=[];for(var l in s){var d=s[l],f=r[d.unique];f||(f=i.length,r[d.unique]=f,i.push({tp:d.type,data:d.data})),h.push({at:d.offset,len:d.len,key:f})}o.ent=h}a.push(o)});var o={txt:""};if(a.length>0){o.txt=a[0].txt,o.fmt=(a[0].fmt||[]).concat(a[0].ent||[]);for(var c=1;c<a.length;c++){var u=a[c],h=o.txt.length+1;o.fmt.push({tp:"BR",len:1,at:h-1}),o.txt+=" "+u.txt,u.fmt&&(o.fmt=o.fmt.concat(u.fmt.map(function(e){return e.at+=h,e}))),u.ent&&(o.fmt=o.fmt.concat(u.ent.map(function(e){return e.at+=h,e})))}0==o.fmt.length&&delete o.fmt,i.length>0&&(o.ent=i)}return o},a.insertImage=function(e,t,n,s,i,r,a,o,c){return(e=e||{txt:" "}).ent=e.ent||[],e.fmt=e.fmt||[],e.fmt.push({at:t,len:1,key:e.ent.length}),e.ent.push({tp:"IM",data:{mime:n,val:s,width:i,height:r,name:a,ref:c,size:0|o}}),e},a.attachFile=function(e,t,n,s,i,r){(e=e||{txt:""}).ent=e.ent||[],e.fmt=e.fmt||[],e.fmt.push({at:-1,len:0,key:e.ent.length});let a={tp:"EX",data:{mime:t,val:n,name:s,ref:r,size:0|i}};return r instanceof Promise&&(a.data.ref=r.then(e=>{a.data.ref=e},e=>{})),e.ent.push(a),e},a.UNSAFE_toHTML=function(e){var t,n,s,{txt:i,fmt:a,ent:o}=e,c=[];if(a)for(var u in a){var h,l=a[u],d=l.tp;if(!d){var f=o[l.key];f&&(d=f.tp,h=f.data)}r[d]&&(c.push({idx:l.at+l.len,what:r[d].close(h)}),c.push({idx:l.at,what:r[d].open(h)}))}for(var u in c.sort(function(e,t){return t.idx-e.idx}),c)c[u].what&&(t=i,n=c[u].idx,s=c[u].what,i=t.slice(0,n)+s+t.slice(n));return i},a.format=function(e,t,n){var{txt:i,fmt:r,ent:a}=e;if(i=i||"",!r)return[i];var o=[].concat(r);return o.map(function(e){e.at=e.at||0,e.len=e.len||0}),o.sort(function(e,t){return e.at-t.at==0?t.len-e.len:e.at-t.at}),o=o.map(function(e){var t,n=e.tp;return n||(e.key=e.key||0,t=a[e.key].data,n=a[e.key].tp),{tp:n,data:t,at:e.at,len:e.len}}),function e(t,n,i,r,a,o){for(var c=[],u=0;u<r.length;u++){var h=r[u];n<h.at&&(c.push(a.call(o,null,void 0,t.slice(n,h.at))),n=h.at);for(var l=[],d=u+1;d<r.length&&r[d].at<h.at+h.len;d++)l.push(r[d]),u=d;var f=s[h.tp]||{};c.push(a.call(o,h.tp,h.data,f.isVoid?null:e(t,n,h.at+h.len,l,a,o))),n=h.at+h.len}return n<i&&c.push(a.call(o,null,void 0,t.slice(n,i))),c}(i,0,i.length,o,t,n)},a.toPlainText=function(e){return"string"==typeof e?e:e.txt},a.isPlainText=function(e){return"string"==typeof e||!(e.fmt||e.ent)},a.hasAttachments=function(e){if(e.ent&&e.ent.length>0)for(var t in e.ent)if("EX"==e.ent[t].tp)return!0;return!1},a.attachments=function(e,t,n){if(e.ent&&e.ent.length>0)for(var s in e.ent)"EX"==e.ent[s].tp&&t.call(n,e.ent[s].data,s)},a.getDownloadUrl=function(e){let t=null;return e.val?t=i(e.val,e.mime):"string"==typeof e.ref&&(t=e.ref),t},a.isUploading=function(e){return e.ref instanceof Promise},a.getPreviewUrl=function(e){return e.val?i(e.val,e.mime):null},a.getEntitySize=function(e){return e.size?e.size:e.val?.75*e.val.length|0:0},a.getEntityMimeType=function(e){return e.mime||"text/plain"},a.tagName=function(e){return s[e]?s[e].name:void 0},a.attrValue=function(e,t){if(t&&r[e])return r[e].props(t)},a.getContentType=function(){return"text/x-drafty"},e=a;var o={};if("function"==typeof require)var c="0.15.7-rc2";const u="0",h=c||"0.15",l="tinodejs/"+h;function d(e){return btoa(encodeURIComponent(e).replace(/%([0-9A-F]{2})/g,function(e,t){return String.fromCharCode("0x"+t)}))}function f(e,t,n){if(null==t)return e;if("object"!=typeof t)return t||e;if(t instanceof Date)return t;if(t instanceof S)return new S(t);if(t instanceof Array)return t.length>0?t:e;for(var s in e||(e=t.constructor()),t)!t.hasOwnProperty(s)||!t[s]&&!1!==t[s]||n&&n[s]||"_generated"==s||(e[s]=f(e[s],t[s]));return e}function p(e,t,n,s){return e[t]=f(e[t],n,s),e[t]}function g(){var e=null;if("withCredentials"in new XMLHttpRequest)e=new XMLHttpRequest;else{if("undefined"==typeof XDomainRequest)throw new Error("browser not supported");e=new XDomainRequest}return e}function _(e,t){if("ts"===e&&"string"==typeof t&&t.length>=20&&t.length<=24){var n=new Date(t);if(n)return n}else if("acs"===e&&"object"==typeof t)return new S(t);return t}function m(e,t){return"string"==typeof t&&t.length>128?"<"+t.length+", bytes: "+t.substring(0,12)+"..."+t.substring(t.length-12)+">":function(e,t){if(t instanceof Date)t=function(e){if(e&&0!=e.getTime()){var t=e.getUTCMilliseconds();return e.getUTCFullYear()+"-"+n(e.getUTCMonth()+1)+"-"+n(e.getUTCDate())+"T"+n(e.getUTCHours())+":"+n(e.getUTCMinutes())+":"+n(e.getUTCSeconds())+(t?"."+n(t,3):"")+"Z"}function n(e,t){return"0".repeat((t=t||2)-(""+e).length)+e}}(t);else if(null==t||!1===t||Array.isArray(t)&&0==t.length||"object"==typeof t&&0===Object.keys(t).length)return;return t}(0,t)}function v(e,t,n){var s=null;return"http"!==t&&"https"!==t&&"ws"!==t&&"wss"!==t||(s=t+"://","/"!==(s+=e).charAt(s.length-1)&&(s+="/"),s+="v"+u+"/channels","http"!==t&&"https"!==t||(s+="/lp"),s+="?apikey="+n),s}var b=function(e,t,n,s,i){let r=e,a=s,o=t;var c=i;const u=2e3,h=10,l=.3;let d=null,f=0,p=!1,m=e=>{this.logger&&this.logger(e)};function b(e){var t=null;e.connect=function(n){return t&&1===t.readyState?Promise.resolve():(n&&(r=n),new Promise(function(n,s){var i=v(r,a?"wss":"ws",o);m("Connecting to: "+i);var g=new WebSocket(i);g.onopen=function(t){p=!1,e.onOpen&&e.onOpen(),n(),c&&(window.clearTimeout(d),d=null,f=0)},g.onclose=function(n){t=null,e.onDisconnect&&e.onDisconnect(null),!p&&c&&function(){clearTimeout(d);var e=u*(Math.pow(2,f)*(1+l*Math.random()));f=f>=h?f:f+1,d=setTimeout(()=>{m("Reconnecting, iter="+f+", timeout="+e),p||this.connect().catch(function(){})},e)}.call(e)},g.onerror=function(e){s(e)},g.onmessage=function(t){e.onMessage&&e.onMessage(t.data)},t=g}))},e.disconnect=function(){t&&(p=!0,t.close()),t=null},e.sendText=function(e){if(!t||t.readyState!=t.OPEN)throw new Error("Websocket is not connected");t.send(e)},e.isConnected=function(){return t&&1===t.readyState}}function w(e){var t=null,n=null,s=null;e.connect=function(s){return s&&(r=s),new Promise(function(s,i){var c=v(r,a?"https":"http",o);m("Connecting to: "+c),(n=function n(s,i,r){var a=g();return a.onreadystatechange=function(o){if(4==a.readyState)if(201==a.status){var c=JSON.parse(a.responseText,_);a.responseText,t=s+"&sid="+c.ctrl.params.sid,(a=n(t)).send(null),e.onOpen&&e.onOpen(),i&&i()}else 200==a.status?(e.onMessage&&e.onMessage(a.responseText),(a=n(t)).send(null)):(r&&r(a.responseText),e.onMessage&&e.onMessage(a.responseText),e.onDisconnect&&e.onDisconnect(new Error(a.status+" "+a.responseText)))},a.open("GET",s,!0),a}(c,s,i)).send(null)}).catch(function(){})},e.disconnect=function(){s&&(s.abort(),s=null),n&&(n.abort(),n=null),e.onDisconnect&&e.onDisconnect(null),t=null},e.sendText=function(e){var n,i;if(n=t,(i=g()).onreadystatechange=function(e){if(4==i.readyState&&i.status>=400)throw new Error("LP sender failed, "+i.status)},i.open("POST",n,!0),!(s=i)||1!=s.readyState)throw new Error("Long poller failed to connect");s.send(e)},e.isConnected=function(){return n&&!0}}"lp"===n?w(this):"ws"===n?b(this):"object"==typeof window&&window.WebSocket?b(this):w(this),this.onMessage=void 0,this.onDisconnect=void 0,this.onOpen=void 0,this.logger=void 0},w=function(e,t,n,s,i){this._appName=e||"Undefined",this._apiKey=n,this._browser="",this._platform="undefined",this._humanLanguage="xx","undefined"!=typeof navigator&&(this._browser=function(e){var t,n=(e=(e||"").replace(" (KHTML, like Gecko)","")).match(/(AppleWebKit\/[.\d]+)/i);if(n){for(var s=["chrome","safari","mobile","version"],i=e.substr(n.index+n[0].length).split(" "),r=[],a=0;a<i.length;a++){var o=/([\w.]+)[\/]([\.\d]+)/.exec(i[a]);o&&r.push([o[1],o[2],s.findIndex(function(e){return e==o[1].toLowerCase()})])}r.sort(function(e,t){var n=e[2]-t[2];return 0!=n?n:t[0].length-e[0].length}),t=r.length>0?r[0][0]+"/"+r[0][1]:n[1]}else t=/trident/i.test(e)?(n=/(?:\brv[ :]+([.\d]+))|(?:\bMSIE ([.\d]+))/g.exec(e))?"MSIE/"+(n[1]||n[2]):"MSIE/?":/firefox/i.test(e)?(n=/Firefox\/([.\d]+)/g.exec(e))?"Firefox/"+n[1]:"Firefox/?":/presto/i.test(e)?(n=/Opera\/([.\d]+)/g.exec(e))?"Opera/"+n[1]:"Opera/?":(n=/([\w.]+)\/([.\d]+)/.exec(e))?n[1]+"/"+n[2]:(n=e.split(" "))[0];if((n=t.split("/")).length>1){var c=n[1].split(".");t=n[0]+"/"+c[0]+(c[1]?"."+c[1]:"")}return t}(navigator.userAgent),this._platform=navigator.platform,this._humanLanguage=navigator.language||"en-US"),this._loggingEnabled=!1,this._trimLongStrings=!1,this._myUID=null,this._authenticated=!1,this._login=null,this._authToken=null,this._inPacketCount=0,this._messageId=Math.floor(65535*Math.random()+65535),this._serverInfo=null,this._deviceToken=null,this._pendingPromises={},this._connection=new b(t,n,s,i,!0),this.logger=(e=>{if(this._loggingEnabled){var t=new Date,n=("0"+t.getUTCHours()).slice(-2)+":"+("0"+t.getUTCMinutes()).slice(-2)+":"+("0"+t.getUTCSeconds()).slice(-2)+":"+("0"+t.getUTCMilliseconds()).slice(-3);console.log("["+n+"] "+e)}}),this._connection.logger=this.logger,this._cache={};let r=this.cachePut=((e,t,n)=>{this._cache[e+":"+t]=n}),a=this.cacheGet=((e,t)=>this._cache[e+":"+t]),o=this.cacheDel=((e,t)=>{delete this._cache[e+":"+t]}),c=this.cacheMap=((e,t)=>{for(var n in this._cache)if(e(this._cache[n],n,t))break});this.attachCacheToTopic=(e=>{e._tinode=this,e._cacheGetUser=(e=>{var t=a("user",e);if(t)return{user:e,public:f({},t)}}),e._cachePutUser=((e,t)=>r("user",e,f({},t.public))),e._cacheDelUser=(e=>o("user",e)),e._cachePutSelf=(()=>r("topic",e.name,e)),e._cacheDelSelf=(()=>o("topic",e.name))});let u=(e,t,n,s)=>{var i=this._pendingPromises[e];i&&(delete this._pendingPromises[e],t>=200&&t<400?i.resolve&&i.resolve(n):i.reject&&i.reject(new Error("Error: "+s+" ("+t+")")))},d=e=>{var t=null;return e&&(t=new Promise((t,n)=>{this._pendingPromises[e]={resolve:t,reject:n}})),t},p=this.getNextUniqueId=(()=>0!=this._messageId?""+this._messageId++:void 0),g=()=>this._appName+" ("+(this._browser?this._browser+"; ":"")+this._platform+"); "+l;this.initPacket=((e,t)=>{switch(e){case"hi":return{hi:{id:p(),ver:h,ua:g(),dev:this._deviceToken,lang:this._humanLanguage}};case"acc":return{acc:{id:p(),user:null,scheme:null,secret:null,login:!1,tags:null,desc:{},cred:{}}};case"login":return{login:{id:p(),scheme:null,secret:null}};case"sub":return{sub:{id:p(),topic:t,set:{},get:{}}};case"leave":return{leave:{id:p(),topic:t,unsub:!1}};case"pub":return{pub:{id:p(),topic:t,noecho:!1,head:null,content:{}}};case"get":return{get:{id:p(),topic:t,what:null,desc:{},sub:{},data:{}}};case"set":return{set:{id:p(),topic:t,desc:{},sub:{},tags:[]}};case"del":return{del:{id:p(),topic:t,what:null,delseq:null,user:null,hard:!1}};case"note":return{note:{topic:t,what:null,seq:void 0}};default:throw new Error("Unknown packet type requested: "+e)}}),this.send=((e,t)=>{let n;t&&(n=d(t)),e=function e(t){return Object.keys(t).forEach(function(n){"_"==n[0]?delete t[n]:t[n]?Array.isArray(t[n])&&0==t[n].length?delete t[n]:t[n]?"object"!=typeof t[n]||t[n]instanceof Date||(e(t[n]),0==Object.getOwnPropertyNames(t[n]).length&&delete t[n]):delete t[n]:delete t[n]}),t}(e);var s=JSON.stringify(e);this.logger("out: "+(this._trimLongStrings?JSON.stringify(e,m):s));try{this._connection.sendText(s)}catch(e){if(!t)throw e;u(t,503,null,e.message)}return n}),this.loginSuccessful=(e=>{this._myUID=e.params.user,this._authenticated=e&&e.code>=200&&e.code<300,e.params&&e.params.token&&e.params.expires?this._authToken={token:e.params.token,expires:new Date(e.params.expires)}:this._authToken=null,this.onLogin&&this.onLogin(e.code,e.text)}),this._connection.onMessage=(e=>{if(e){this._inPacketCount++,this.onRawMessage&&this.onRawMessage(e);var t=JSON.parse(e,_);if(t)if(this.logger("in: "+(this._trimLongStrings?JSON.stringify(t,m):e)),this.onMessage&&this.onMessage(t),t.ctrl)this.onCtrlMessage&&this.onCtrlMessage(t.ctrl),t.ctrl.id&&u(t.ctrl.id,t.ctrl.code,t.ctrl,t.ctrl.text),t.ctrl.params&&"data"==t.ctrl.params.what&&(n=a("topic",t.ctrl.topic))&&n._allMessagesReceived(t.ctrl.params.count);else if(t.meta)(n=a("topic",t.meta.topic))&&n._routeMeta(t.meta),this.onMetaMessage&&this.onMetaMessage(t.meta);else if(t.data)(n=a("topic",t.data.topic))&&n._routeData(t.data),this.onDataMessage&&this.onDataMessage(t.data);else if(t.pres)(n=a("topic",t.pres.topic))&&n._routePres(t.pres),this.onPresMessage&&this.onPresMessage(t.pres);else if(t.info){var n;(n=a("topic",t.info.topic))&&n._routeInfo(t.info),this.onInfoMessage&&this.onInfoMessage(t.info)}else this.logger("ERROR: Unknown packet received.");else this.logger("in: "+e),this.logger("ERROR: failed to parse data")}}),this._connection.onOpen=(()=>{this.hello()}),this._connection.onDisconnect=(e=>{this._inPacketCount=0,this._serverInfo=null,this._authenticated=!1,c((e,t)=>{0===t.lastIndexOf("topic:",0)&&e._resetSub()}),this.onDisconnect&&this.onDisconnect(e)})};w.credential=function(e,t,n,s){return"object"==typeof e&&({val:t,params:n,resp:s,meth:e}=e),e&&(t||s)?[{meth:e,val:t,resp:s,params:n}]:null},w.topicType=function(e){return{me:"me",fnd:"fnd",grp:"grp",new:"grp",usr:"p2p"}["string"==typeof e?e.substring(0,3):"xxx"]},w.isNewGroupTopicName=function(e){return"string"==typeof e&&"new"==e.substring(0,3)},w.getVersion=function(){return h},w.getLibrary=function(){return l},w.MESSAGE_STATUS_NONE=0,w.MESSAGE_STATUS_QUEUED=1,w.MESSAGE_STATUS_SENDING=2,w.MESSAGE_STATUS_SENT=3,w.MESSAGE_STATUS_RECEIVED=4,w.MESSAGE_STATUS_READ=5,w.MESSAGE_STATUS_TO_ME=6,w.DEL_CHAR="\u2421",w.prototype={connect:function(e){return this._connection.connect(e)},disconnect:function(){this._connection&&this._connection.disconnect()},isConnected:function(){return this._connection&&this._connection.isConnected()},isAuthenticated:function(){return this._authenticated},account:function(e,t,n,s,i){var r=this.initPacket("acc");return r.acc.user=e,r.acc.scheme=t,r.acc.secret=n,r.acc.login=s,i&&(r.acc.desc.defacs=i.defacs,r.acc.desc.public=i.public,r.acc.desc.private=i.private,r.acc.tags=i.tags,r.acc.cred=i.cred),this.send(r,r.acc.id)},createAccount:function(e,t,n,s){var i=this.account("new",e,t,n,s);return n&&(i=i.then(e=>(this.loginSuccessful(e),e))),i},createAccountBasic:function(e,t,n){return e=e||"",t=t||"",this.createAccount("basic",d(e+":"+t),!0,n)},updateAccountBasic:function(e,t,n){return t=t||"",n=n||"",this.account(e,"basic",d(t+":"+n),!1,null)},hello:function(){var e=this.initPacket("hi");return this.send(e,e.hi.id).then(e=>(e.params&&(this._serverInfo=e.params),this.onConnect&&this.onConnect(),e)).catch(e=>{this.onDisconnect&&this.onDisconnect(e)})},setDeviceToken:function(e,t){let n=!1;return e&&e!=this._deviceToken&&(this._deviceToken=e,t&&this.isConnected()&&this.isAuthenticated()&&(this.send({hi:{dev:e}}),n=!0)),n},login:function(e,t,n){var s=this.initPacket("login");return s.login.scheme=e,s.login.secret=t,s.login.cred=n,this.send(s,s.login.id).then(e=>(this.loginSuccessful(e),e))},loginBasic:function(e,t,n){return this.login("basic",d(e+":"+t),n).then(t=>(this._login=e,t))},loginToken:function(e,t){return this.login("token",e,t)},getAuthToken:function(){return this._authToken&&this._authToken.expires.getTime()>Date.now()?this._authToken:(this._authToken=null,null)},setAuthToken:function(e){this._authToken=e},subscribe:function(e,t,n){var s=this.initPacket("sub",e);return e||(e="new"),s.sub.get=t,n&&(n.sub&&(s.sub.set.sub=n.sub),w.isNewGroupTopicName(e)&&n.desc&&(s.sub.set.desc=n.desc),n.tags&&(s.sub.set.tags=n.tags)),this.send(s,s.sub.id)},leave:function(e,t){var n=this.initPacket("leave",e);return n.leave.unsub=t,this.send(n,n.leave.id)},createMessage:function(t,n,s){let i=this.initPacket("pub",t),r="string"==typeof n?e.parse(n):n;return r&&!e.isPlainText(r)&&(i.pub.head={mime:e.getContentType()},n=r),i.pub.noecho=s,i.pub.content=n,i.pub},publish:function(e,t,n){return this.publishMessage(this.createMessage(e,t,n))},publishMessage:function(e){return(e=Object.assign({},e)).seq=void 0,e.from=void 0,e.ts=void 0,this.send({pub:e},e.id)},getMeta:function(e,t){var n=this.initPacket("get",e);return n.get=f(n.get,t),this.send(n,n.get.id)},setMeta:function(e,t){var n=this.initPacket("set",e),s=[];return t&&["desc","sub","tags"].map(function(e){t.hasOwnProperty(e)&&(s.push(e),n.set[e]=t[e])}),0==s.length?Promise.reject(new Error("Invalid {set} parameters")):this.send(n,n.set.id)},delMessages:function(e,t,n){var s=this.initPacket("del",e);return s.del.what="msg",s.del.delseq=t,s.del.hard=n,this.send(s,s.del.id)},delTopic:function(e){var t=this.initPacket("del",e);return t.del.what="topic",this.send(t,t.del.id).then(t=>(this.cacheDel("topic",e),this.ctrl))},delSubscription:function(e,t){var n=this.initPacket("del",e);return n.del.what="sub",n.del.user=t,this.send(n,n.del.id)},note:function(e,t,n){if(n<=0||n>=268435455)throw new Error("Invalid message id "+n);var s=this.initPacket("note",e);s.note.what=t,s.note.seq=n,this.send(s)},noteKeyPress:function(e){var t=this.initPacket("note",e);t.note.what="kp",this.send(t)},getTopic:function(e){var t=this.cacheGet("topic",e);return!t&&e&&(t="me"==e?new y:"fnd"==e?new D:new T(e),this.cachePut("topic",e,t),this.attachCacheToTopic(t)),t},newTopic:function(e){var t=new T("new",e);return this.attachCacheToTopic(t),t},newGroupTopicName:function(){return"new"+this.getNextUniqueId()},newTopicWith:function(e,t){var n=new T(e,t);return this.attachCacheToTopic(n),n},getMeTopic:function(){return this.getTopic("me")},getFndTopic:function(){return this.getTopic("fnd")},getLargeFileHelper:function(){return new E(this)},getCurrentUserID:function(){return this._myUID},getCurrentLogin:function(){return this._login},getServerInfo:function(){return this._serverInfo},enableLogging:function(e,t){this._loggingEnabled=e,this._trimLongStrings=t},isTopicOnline:function(e){var t=this.getMeTopic(),n=t&&t.getContact(e);return n&&n.online},wantAkn:function(e){this._messageId=e?Math.floor(16777215*Math.random()+16777215):0},onWebsocketOpen:void 0,onConnect:void 0,onDisconnect:void 0,onLogin:void 0,onCtrlMessage:void 0,onDataMessage:void 0,onPresMessage:void 0,onMessage:void 0,onRawMessage:void 0};var M=function(e){this.topic=e;var t=e._tinode.getMeTopic();this.contact=t&&t.getContact(e.name),this.what={}};M.prototype={_get_ims:function(){let e=this.contact&&this.contact.updated,t=this.topic._lastDescUpdate||0;return e>t?e:t},withData:function(e,t,n){return this.what.data={since:e,before:t,limit:n},this},withLaterData:function(e){return this.withData(this.topic._maxSeq>0?this.topic._maxSeq+1:void 0,void 0,e)},withEarlierData:function(e){return this.withData(void 0,this.topic._minSeq>0?this.topic._minSeq:void 0,e)},withDesc:function(e){return this.what.desc={ims:e},this},withLaterDesc:function(){return this.withDesc(this._get_ims())},withSub:function(e,t,n){var s={ims:e,limit:t};return"me"==this.topic.getType()?s.topic=n:s.user=n,this.what.sub=s,this},withOneSub:function(e,t){return this.withSub(e,void 0,t)},withLaterOneSub:function(e){return this.withOneSub(this.topic._lastSubsUpdate,e)},withLaterSub:function(e){return this.withSub("p2p"==this.topic.getType()?this._get_ims():this.topic._lastSubsUpdate,e)},withTags:function(){return this.what.tags=!0,this},withDel:function(e,t){return(e||t)&&(this.what.del={since:e,limit:t}),this},withLaterDel:function(e){return this.withDel(this.topic._maxSeq>0?this.topic._maxDel+1:void 0,e)},build:function(){var e={},t=[],n=this;return["data","sub","desc","tags","del"].map(function(s){n.what.hasOwnProperty(s)&&(t.push(s),Object.getOwnPropertyNames(n.what[s]).length>0&&(e[s]=n.what[s]))}),t.length>0?e.what=t.join(" "):e=void 0,e}};var S=function(e){e&&(this.given="number"==typeof e.given?e.given:S.decode(e.given),this.want="number"==typeof e.want?e.want:S.decode(e.want),this.mode=e.mode?"number"==typeof e.mode?e.mode:S.decode(e.mode):this.given&this.want)};S._NONE=0,S._JOIN=1,S._READ=2,S._WRITE=4,S._PRES=8,S._APPROVE=16,S._SHARE=32,S._DELETE=64,S._OWNER=128,S._BITMASK=S._JOIN|S._READ|S._WRITE|S._PRES|S._APPROVE|S._SHARE|S._DELETE|S._OWNER,S._INVALID=1048576,S.decode=function(e){if(!e)return null;if("number"==typeof e)return e&S._BITMASK;if("N"===e||"n"===e)return S._NONE;for(var t={J:S._JOIN,R:S._READ,W:S._WRITE,P:S._PRES,A:S._APPROVE,S:S._SHARE,D:S._DELETE,O:S._OWNER},n=S._NONE,s=0;s<e.length;s++){var i=t[e.charAt(s).toUpperCase()];i&&(n|=i)}return n},S.encode=function(e){if(null===e||e===S._INVALID)return null;if(e===S._NONE)return"N";for(var t=["J","R","W","P","A","S","D","O"],n="",s=0;s<t.length;s++)0!=(e&1<<s)&&(n+=t[s]);return n},S.update=function(e,t){if(!t||"string"!=typeof t)return e;var n=t.charAt(0);if("+"==n||"-"==n){for(var s=e,i=t.split(/([-+])/),r=1;r<i.length-1;r+=2){n=i[r];var a=S.decode(i[r+1]);if(a==S._INVALID)return e;null!=a&&("+"===n?s|=a:"-"===n&&(s&=~a))}e=s}else(s=S.decode(t))!=S._INVALID&&(e=s);return e},S.prototype={setMode:function(e){return this.mode=S.decode(e),this},updateMode:function(e){return this.mode=S.update(this.mode,e),this},getMode:function(){return S.encode(this.mode)},setGiven:function(e){return this.given=S.decode(e),this},updateGiven:function(e){return this.given=S.update(this.given,e),this},getGiven:function(){return S.encode(this.given)},setWant:function(e){return this.want=S.decode(e),this},updateWant:function(e){return this.want=S.update(this.want,e),this},getWant:function(){return S.encode(this.want)},updateAll:function(e){return e&&(this.updateGiven(e.given),this.updateWant(e.want),this.mode=this.given&this.want),this},isOwner:function(){return 0!=(this.mode&S._OWNER)},isMuted:function(){return 0==(this.mode&S._PRES)},isPresencer:function(){return 0!=(this.mode&S._PRES)},isJoiner:function(){return 0!=(this.mode&S._JOIN)},isReader:function(){return 0!=(this.mode&S._READ)},isWriter:function(){return 0!=(this.mode&S._WRITE)},isApprover:function(){return 0!=(this.mode&S._APPROVE)},isAdmin:function(){return this.isOwner()||this.isApprover()},isSharer:function(){return 0!=(this.mode&S._SHARE)},isDeleter:function(){return 0!=(this.mode&S._DELETE)}};var T=function(e,t){this._tinode=null,this.name=e,this.created=null,this.updated=null,this.touched=null,this.acs=new S(null),this.private=null,this.public=null,this._users={},this._queuedSeqId=268435455,this._maxSeq=0,this._minSeq=0,this._noEarlierMsgs=!1,this._maxDel=0,this._tags=[],this._messages=function(e){var t=[];function n(t,n,s){for(var i=0,r=n.length-1,a=0,o=0,c=!1;i<=r;)if((o=e(n[a=(i+r)/2|0],t))<0)i=a+1;else{if(!(o>0)){c=!0;break}r=a-1}return c?a:s?-1:o<0?a+1:a}function s(e,t){var s=n(e,t,!1);return t.splice(s,0,e),t}return e=e||function(e,t){return e===t?0:e<t?-1:1},{getAt:function(e){return t[e]},put:function(){var e;for(var n in e=1==arguments.length&&Array.isArray(arguments[0])?arguments[0]:arguments)s(e[n],t)},delAt:function(e){var n=t.splice(e,1);if(n&&n.length>0)return n[0]},delRange:function(e,n){return t.splice(e,n-e)},size:function(){return t.length},reset:function(e){t=[]},forEach:function(e,n,s,i){n|=0,s=s||t.length;for(var r=n;r<s;r++)e.call(i,t[r],r)},find:function(e,s){return n(e,t,!s)}}}(function(e,t){return e.seq-t.seq}),this._subscribed=!1,this._lastDescUpdate=null,this._lastSubsUpdate=null,this._new=!0,t&&(this.onData=t.onData,this.onMeta=t.onMeta,this.onPres=t.onPres,this.onInfo=t.onInfo,this.onMetaDesc=t.onMetaDesc,this.onMetaSub=t.onMetaSub,this.onSubsUpdated=t.onSubsUpdated,this.onTagsUpdated=t.onTagsUpdated,this.onDeleteTopic=t.onDeleteTopic,this.onAllMessagesReceived=t.onAllMessagesReceived)};T.prototype={isSubscribed:function(){return this._subscribed},subscribe:function(e,t){if(this._subscribed)return Promise.resolve(this);var n=this.name;return this._tinode.subscribe(n||"new",e,t).then(e=>{if(e.code>=300)return e;if(this._subscribed=!0,this.acs=e.params&&e.params.acs?e.params.acs:this.acs,this._new){this._new=!1,this.name=e.topic,this.created=e.ts,this.updated=e.ts,this.touched=e.ts,this._cachePutSelf();var n=this._tinode.getMeTopic();n&&n._processMetaSub([{_generated:!0,topic:this.name,created:e.ts,updated:e.ts,touched:e.ts,acs:this.acs}]),t&&t.desc&&(t.desc._generated=!0,this._processMetaDesc(t.desc))}return e})},publish:function(e,t){return this.publishMessage(this.createMessage(e,t))},createMessage:function(e,t){return this._tinode.createMessage(this.name,e,t)},publishMessage:function(t){if(!this._subscribed)return Promise.reject(new Error("Cannot publish on inactive topic"));if(e.hasAttachments(t.content)){let n=[];e.attachments(t.content,e=>{n.push(e.ref)}),t.head.attachments=n}return t._sending=!0,this._tinode.publishMessage(t)},publishDraft:function(e,t){return t||this._subscribed?(e.seq=this._getQueuedSeqId(),e._generated=!0,e.ts=new Date,e.from=this._tinode.getCurrentUserID(),e.noecho=!0,this._messages.put(e),this.onData&&this.onData(e),(t||Promise.resolve()).then(()=>e._cancelled?{code:300,text:"cancelled"}:this.publishMessage(e).then(t=>(e._sending=!1,e.seq=t.params.seq,e.ts=t.ts,this._routeData(e),t)),t=>{e._sending=!1,this._messages.delAt(this._messages.find(e)),this.onData&&this.onData()})):Promise.reject(new Error("Cannot publish on inactive topic"))},leave:function(e){return this._subscribed||e?this._tinode.leave(this.name,e).then(t=>(this._resetSub(),e&&this._gone(),t)):Promise.reject(new Error("Cannot leave inactive topic"))},getMeta:function(e){return this._subscribed?this._tinode.getMeta(this.name,e):Promise.reject(new Error("Cannot query inactive topic"))},getMessagesPage:function(e,t){var n=this.startMetaQuery();t?n.withLaterData(e):n.withEarlierData(e);var s=this.getMeta(n.build());return t||(s=s.then(e=>{e&&e.params&&!e.params.count&&(this._noEarlierMsgs=!0)})),s},setMeta:function(e){return this._subscribed?(e.tags&&(e.tags=function(e){var t=[];if(Array.isArray(e)){for(var n=0,s=e.length;n<s;n++){var i=e[n];i&&(i=i.trim().toLowerCase()).length>1&&t.push(i)}t.sort().filter(function(e,t,n){return!t||e!=n[t-1]})}return 0==t.length&&t.push(w.DEL_CHAR),t}(e.tags)),this._tinode.setMeta(this.name,e).then(t=>t&&t.code>=300?t:(e.sub&&(t.params&&t.params.acs&&(e.sub.acs=t.params.acs,e.sub.updated=t.ts),e.sub.user||(e.sub.user=this._tinode.getCurrentUserID(),e.desc||(e.desc={})),e.sub._generated=!0,this._processMetaSub([e.sub])),e.desc&&(t.params&&t.params.acs&&(e.desc.acs=t.params.acs,e.desc.updated=t.ts),this._processMetaDesc(e.desc)),e.tags&&this._processMetaTags(e.tags),t))):Promise.reject(new Error("Cannot update inactive topic"))},invite:function(e,t){return this.setMeta({sub:{user:e,mode:t}})},delMessages:function(e,t){if(!this._subscribed)return Promise.reject(new Error("Cannot delete messages in inactive topic"));e.sort(function(e,t){return e.low<t.low||e.low==t.low&&(!t.hi||e.hi>=t.hi)});let n,s=e.reduce((e,t)=>(t.low<268435455&&(!t.hi||t.hi<268435455?e.push(t):e.push({low:t.low,hi:this._maxSeq+1})),e),[]);return(n=e.length>0?this._tinode.delMessages(this.name,s,t):Promise.resolve({params:{del:0}})).then(t=>(t.params.del>this._maxDel&&(this._maxDel=t.params.del),e.map(e=>{e.hi?this.flushMessageRange(e.low,e.hi):this.flushMessage(e.low)}),this.onData&&this.onData(),t))},delMessagesAll:function(e){return this.delMessages([{low:1,hi:this._maxSeq+1,_all:!0}],e)},delMessagesList:function(e,t){e.sort((e,t)=>e-t);var n=e.reduce((e,t)=>{if(0==e.length)e.push({low:t});else{let n=e[e.length-1];!n.hi&&t!=n.low+1||t>n.hi?e.push({low:t}):n.hi=n.hi?Math.max(n.hi,t+1):t+1}return e},[]);return this.delMessages(n,t)},delTopic:function(){var e=this;return this._tinode.delTopic(this.name).then(function(t){return e._resetSub(),e._gone(),t})},delSubscription:function(e){return this._subscribed?this._tinode.delSubscription(this.name,e).then(t=>(delete this._users[e],this.onSubsUpdated&&this.onSubsUpdated(Object.keys(this._users)),t)):Promise.reject(new Error("Cannot delete subscription in inactive topic"))},note:function(e,t){var n=this._users[this._tinode.getCurrentUserID()];n?((!n[e]||n[e]<t)&&(this._subscribed?this._tinode.note(this.name,e,t):this._tinode.logger("Not sending {note} on inactive topic")),n[e]=t):this._tinode.logger("note(): user not found "+this._tinode.getCurrentUserID());var s=this._tinode.getMeTopic();s&&s.setMsgReadRecv(this.name,e,t)},noteRecv:function(e){this.note("recv",e)},noteRead:function(e){this.note("read",e)},noteKeyPress:function(){this._subscribed?this._tinode.noteKeyPress(this.name):this._tinode.logger("Cannot send notification in inactive topic")},userDesc:function(e){var t=this._cacheGetUser(e);if(t)return t},subscribers:function(e,t){var n=e||this.onMetaSub;if(n)for(var s in this._users)n.call(t,this._users[s],s,this._users)},tags:function(){return this._tags.slice(0)},subscriber:function(e){return this._users[e]},messages:function(e,t,n,s){var i=e||this.onData;if(i){let e="number"==typeof t?this._messages.find({seq:t}):void 0,r="number"==typeof n?this._messages.find({seq:n},!0):void 0;-1!=e&&-1!=r&&this._messages.forEach(i,e,r,s)}},msgReceiptCount:function(e,t){var n=0,s=this._tinode.getCurrentUserID();if(t>0)for(var i in this._users){var r=this._users[i];r.user!==s&&r[e]>=t&&n++}return n},msgReadCount:function(e){return this.msgReceiptCount("read",e)},msgRecvCount:function(e){return this.msgReceiptCount("recv",e)},msgHasMoreMessages:function(e){return e?this.seq>this._maxSeq:this._minSeq>1&&!this._noEarlierMsgs},isNewMessage:function(e){return this._maxSeq<=e},flushMessage:function(e){let t=this._messages.find({seq:e});return t>=0?this._messages.delAt(t):void 0},flushMessageRange:function(e,t){let n=this._messages.find({seq:e});return n>=0?this._messages.delRange(n,this._messages.find({seq:t},!0)):[]},cancelSend:function(e){let t=this._messages.find({seq:e});if(t>=0){let e=this._messages.getAt(t);if(1==this.msgStatus(e))return e._cancelled=!0,this._messages.delAt(t),!0}return!1},getType:function(){return w.topicType(this.name)},getAccessMode:function(){return this.acs},getDefaultAccess:function(){return this.defacs},startMetaQuery:function(){return new M(this)},msgStatus:function(e){var t=0;return e.from==this._tinode.getCurrentUserID()?e._sending?t=2:e.seq>=268435455?t=1:this.msgReadCount(e.seq)>0?t=5:this.msgRecvCount(e.seq)>0?t=4:e.seq>0&&(t=3):t=6,t},_routeData:function(e){e.content&&((!this.touched||this.touched<e.ts)&&(this.touched=e.ts),e._generated||this._messages.put(e)),e.seq>this._maxSeq&&(this._maxSeq=e.seq),(e.seq<this._minSeq||0==this._minSeq)&&(this._minSeq=e.seq),this.onData&&this.onData(e);var t=this._tinode.getMeTopic();t&&t.setMsgReadRecv(this.name,"msg",e.seq,e.ts)},_routeMeta:function(e){e.desc&&(this._lastDescUpdate=e.ts,this._processMetaDesc(e.desc)),e.sub&&e.sub.length>0&&(this._lastSubsUpdate=e.ts,this._processMetaSub(e.sub)),e.del&&this._processDelMessages(e.del.clear,e.del.delseq),e.tags&&this._processMetaTags(e.tags),this.onMeta&&this.onMeta(e)},_routePres:function(e){var t;switch(e.what){case"del":this._processDelMessages(e.clear,e.delseq);break;case"on":case"off":(t=this._users[e.src])?t.online="on"==e.what:this._tinode.logger("Presence update for an unknown user",this.name,e.src);break;case"acs":let s="me"==e.src?this._tinode.getCurrentUserID():e.src;if(t=this._users[s])t.acs.updateAll(e.dacs),s==this._tinode.getCurrentUserID()&&this.acs.updateAll(e.dacs),t.acs&&t.acs.mode!=S._NONE||("p2p"==this.getType()&&this.leave(),this._processMetaSub([{user:s,deleted:new Date,_generated:!0}]));else{var n=(new S).updateAll(e.dacs);n&&n.mode!=S._NONE&&((t=this._cacheGetUser(s))?t.acs=n:(t={user:s,acs:n},this.getMeta(this.startMetaQuery().withOneSub(void 0,s).build())),t._generated=!0,t.updated=new Date,this._processMetaSub([t]))}break;default:this._tinode.logger("Ignored presence update",e.what)}this.onPres&&this.onPres(e)},_routeInfo:function(e){if("kp"!==e.what){var t=this._users[e.from];t&&(t[e.what]=e.seq)}this.onInfo&&this.onInfo(e)},_processMetaDesc:function(e,t){if(f(this,e),"string"==typeof this.created&&(this.created=new Date(this.created)),"string"==typeof this.updated&&(this.updated=new Date(this.updated)),"string"==typeof this.touched&&(this.touched=new Date(this.touched)),"me"!==this.name&&!t&&!e._generated){var n=this._tinode.getMeTopic();n&&n._processMetaSub([{_generated:!0,topic:this.name,updated:this.updated,touched:this.touched,acs:this.acs,public:this.public,private:this.private}])}this.onMetaDesc&&this.onMetaDesc(this)},_processMetaSub:function(e){var t=void 0;for(var n in e){var s=e[n];if(s.user){s.updated=new Date(s.updated),s.deleted=s.deleted?new Date(s.deleted):null;var i=null;s.deleted?(delete this._users[s.user],i=s):((i=this._users[s.user])||(i=this._cacheGetUser(s.user)),i=this._updateCachedUser(s.user,s,s._generated)),this.onMetaSub&&this.onMetaSub(i)}else s._generated||(t=s)}t&&this.onMetaDesc&&this.onMetaDesc(t),this.onSubsUpdated&&this.onSubsUpdated(Object.keys(this._users))},_processMetaTags:function(e){1==e.length&&e[0]==w.DEL_CHAR&&(e=[]),this._tags=e,this.onTagsUpdated&&this.onTagsUpdated(e)},_processDelMessages:function(e,t){this._maxDel=Math.max(e,this._maxDel),this.clear=Math.max(e,this.clear);var n=this,s=0;Array.isArray(t)&&t.map(function(e){if(e.hi)for(var t=e.low;t<e.hi;t++)s++,n.flushMessage(t);else s++,n.flushMessage(e.low)}),s>0&&this.onData&&this.onData()},_allMessagesReceived:function(e){this.onAllMessagesReceived&&this.onAllMessagesReceived(e)},_resetSub:function(){this._subscribed=!1},_gone:function(){this._messages.reset(),this._users={},this.acs=new S(null),this.private=null,this.public=null,this._maxSeq=0,this._minSeq=0,this._subscribed=!1;var e=this._tinode.getMeTopic();e&&e._routePres({_generated:!0,what:"gone",topic:"me",src:this.name}),this.onDeleteTopic&&this.onDeleteTopic()},_updateCachedUser:function(e,t,n){var s=this._cacheGetUser(e);return s?s=f(s,t):(n&&this.getMeta(this.startMetaQuery().withLaterOneSub(e).build()),s=f({},t)),this._cachePutUser(e,s),p(this._users,e,s)},_getQueuedSeqId:function(){return this._queuedSeqId++}};var y=function(e){T.call(this,"me",e),this._contacts={},e&&(this.onContactUpdate=e.onContactUpdate)};y.prototype=Object.create(T.prototype,{_processMetaSub:{value:function(e){var t=0;for(var n in e){var s=e[n],i=s.topic;if("fnd"!=i&&"me"!=i){s.updated=new Date(s.updated),s.touched=s.touched?new Date(s.touched):null,s.deleted=s.deleted?new Date(s.deleted):null,s.seq=0|s.seq,s.recv=0|s.recv,s.read=0|s.read,s.unread=s.seq-s.read;var r=null;if(s.deleted)r=s,delete this._contacts[i];else if(s.seen&&s.seen.when&&(s.seen.when=new Date(s.seen.when)),r=p(this._contacts,i,s),"p2p"==w.topicType(i)&&this._cachePutUser(i,r),!s._generated){var a=this._tinode.getTopic(i);a&&a._processMetaDesc(s,!0)}t++,this.onMetaSub&&this.onMetaSub(r)}}t>0&&this.onSubsUpdated&&this.onSubsUpdated(Object.keys(this._contacts))},enumerable:!0,configurable:!0,writable:!1},_routePres:{value:function(e){var t=this._contacts[e.src];if(t){switch(e.what){case"on":t.online=!0;break;case"off":t.online&&(t.online=!1,t.seen?t.seen.when=new Date:t.seen={when:new Date});break;case"msg":t.touched=new Date,t.seq=0|e.seq,t.unread=t.seq-t.read;break;case"upd":this.getMeta(this.startMetaQuery().withLaterOneSub(e.src).build());break;case"acs":t.acs?t.acs.updateAll(e.dacs):t.acs=(new S).updateAll(e.dacs);break;case"ua":t.seen={when:new Date,ua:e.ua};break;case"recv":t.recv=t.recv?Math.max(t.recv,e.seq):0|e.seq;break;case"read":t.read=t.read?Math.max(t.read,e.seq):0|e.seq,t.unread=t.seq-t.read;break;case"gone":delete this._contacts[e.src]}this.onContactUpdate&&this.onContactUpdate(e.what,t)}else if("acs"==e.what){var n=new S(e.dacs);if(!n||n.mode==S._INVALID)return void this._tinode.logger("Invalid access mode update",e.src,e.dacs);if(n.mode==S._NONE)return void this._tinode.logger("Removing non-existent subscription",e.src,e.dacs);this.getMeta(this.startMetaQuery().withOneSub(void 0,e.src).build()),this._contacts[e.src]={topic:e.src,online:!1,acs:n}}this.onPres&&this.onPres(e)},enumerable:!0,configurable:!0,writable:!1},publish:{value:function(){return Promise.reject(new Error("Publishing to 'me' is not supported"))},enumerable:!0,configurable:!0,writable:!1},contacts:{value:function(e,t){var n=e||this.onMetaSub;if(n)for(var s in this._contacts)n.call(t,this._contacts[s],s,this._contacts)},enumerable:!0,configurable:!0,writable:!0},setMsgReadRecv:{value:function(e,t,n,s){var i,r=this._contacts[e],a=!1;r&&(n|=0,"recv"===t?(i=r.recv,r.recv=r.recv?Math.max(r.recv,n):n,a=i!=r.recv):"read"===t?(i=r.read,r.read=r.read?Math.max(r.read,n):n,r.unread=r.seq-r.read,a=i!=r.read,r.recv<r.read&&(r.recv=r.read,a=!0)):"msg"===t&&(i=r.seq,r.seq=r.seq?Math.max(r.seq,n):n,r.unread=r.seq-r.read,(!r.touched||r.touched<s)&&(r.touched=s),a=i!=r.seq),!a||r.acs&&r.acs.isMuted()||!this.onContactUpdate||this.onContactUpdate(t,r))},enumerable:!0,configurable:!0,writable:!0},getContact:{value:function(e){return this._contacts[e]},enumerable:!0,configurable:!0,writable:!0},getAccessMode:{value:function(e){var t=this._contacts[e];return t?t.acs:null},enumerable:!0,configurable:!0,writable:!0}}),y.prototype.constructor=y;var D=function(e){T.call(this,"fnd",e),this._contacts={}};D.prototype=Object.create(T.prototype,{_processMetaSub:{value:function(e){var t=Object.getOwnPropertyNames(this._contacts).length;for(var n in this._contacts={},e){var s=e[n],i=s.topic?s.topic:s.user;s.updated=new Date(s.updated),s.seen&&s.seen.when&&(s.seen.when=new Date(s.seen.when)),s=p(this._contacts,i,s),t++,this.onMetaSub&&this.onMetaSub(s)}t>0&&this.onSubsUpdated&&this.onSubsUpdated(Object.keys(this._contacts))},enumerable:!0,configurable:!0,writable:!1},publish:{value:function(){return Promise.reject(new Error("Publishing to 'fnd' is not supported"))},enumerable:!0,configurable:!0,writable:!1},setMeta:{value:function(e){var t=this;return Object.getPrototypeOf(D.prototype).setMeta.call(this,e).then(function(){Object.keys(t._contacts).length>0&&(t._contacts={},t.onSubsUpdated&&t.onSubsUpdated([]))})},enumerable:!0,configurable:!0,writable:!1},contacts:{value:function(e,t){var n=e||this.onMetaSub;if(n)for(var s in this._contacts)n.call(t,this._contacts[s],s,this._contacts)},enumerable:!0,configurable:!0,writable:!0}}),D.prototype.constructor=D;var E=function(e){this._tinode=e,this._apiKey=e._apiKey,this._authToken=e.getAuthToken(),this._msgId=e.getNextUniqueId(),this.xhr=g(),this.toResolve=null,this.toReject=null,this.onProgress=null,this.onSuccess=null,this.onFailure=null};E.prototype={upload:function(e,t,n,s){if(!this._authToken)throw new Error("Must authenticate first");var i=this;this.xhr.open("POST","/v"+u+"/file/u/",!0),this.xhr.setRequestHeader("X-Tinode-APIKey",this._apiKey),this.xhr.setRequestHeader("X-Tinode-Auth","Token "+this._authToken.token);var r=new Promise((e,t)=>{this.toResolve=e,this.toReject=t});this.onProgress=t,this.onSuccess=n,this.onFailure=s,this.xhr.upload.onprogress=function(e){e.lengthComputable&&i.onProgress&&i.onProgress(e.loaded/e.total)},this.xhr.onload=function(){var e;try{e=JSON.parse(this.response,_)}catch(e){i._tinode.logger("Invalid server response in LargeFileHelper",this.response)}this.status>=200&&this.status<300?(i.toResolve&&i.toResolve(e.ctrl.params.url),i.onSuccess&&i.onSuccess(e.ctrl)):this.status>=400?(i.toReject&&i.toReject(new Error(e.ctrl.text+" ("+e.ctrl.code+")")),i.onFailure&&i.onFailure(e.ctrl)):i._tinode.logger("Unexpected server response status",this.status,this.response)},this.xhr.onerror=function(e){i.toReject&&i.toReject(new Error("failed")),i.onFailure&&i.onFailure(null)},this.xhr.onabort=function(e){i.toReject&&i.toReject(new Error("upload cancelled by user")),i.onFailure&&i.onFailure(null)};try{var a=new FormData;a.append("file",e),a.set("id",this._msgId),this.xhr.send(a)}catch(e){this.toReject&&this.toReject(e),this.onFailure&&this.onFailure(null)}return r},download:function(e,t,n,s){if(/^(?:(?:[a-z]+:)?\/\/)/i.test(e))throw new Error("The URL '"+e+"' must be relative, not absolute");if(!this._authToken)throw new Error("Must authenticate first");var i=this;this.xhr.open("GET",e,!0),this.xhr.setRequestHeader("X-Tinode-APIKey",this._apiKey),this.xhr.setRequestHeader("X-Tinode-Auth","Token "+this._authToken.token),this.xhr.responseType="blob",this.onProgress=s,this.xhr.onprogress=function(e){i.onProgress&&i.onProgress(e.loaded)};var r=new Promise((e,t)=>{this.toResolve=e,this.toReject=t});this.xhr.onload=function(){if(200==this.status){var e=document.createElement("a");e.href=window.URL.createObjectURL(new Blob([this.response],{type:n})),e.style.display="none",e.setAttribute("download",t),document.body.appendChild(e),e.click(),document.body.removeChild(e),window.URL.revokeObjectURL(e.href),i.toResolve&&i.toResolve()}else if(this.status>=400&&i.toReject){var s=new FileReader;s.onload=function(){try{var e=JSON.parse(this.result,_);i.toReject(new Error(e.ctrl.text+" ("+e.ctrl.code+")"))}catch(e){i._tinode.logger("Invalid server response in LargeFileHelper",this.result),i.toReject(e)}},s.readAsText(this.response)}},this.xhr.onerror=function(e){i.toReject&&i.toReject(new Error("failed"))},this.xhr.onabort=function(){i.toReject&&i.toReject(null)};try{this.xhr.send()}catch(e){this.toReject&&this.toReject(e)}return r},cancel:function(){this.xhr&&this.xhr.readyState<4&&this.xhr.abort()},getId:function(){return this._msgId}};var x=function(e,t){this.status=x.STATUS_NONE,this.topic=e,this.content=t};return x.STATUS_NONE=0,x.STATUS_QUEUED=1,x.STATUS_SENDING=2,x.STATUS_SENT=3,x.STATUS_RECEIVED=4,x.STATUS_READ=5,x.STATUS_TO_ME=6,x.prototype={toJSON:function(){},fromJSON:function(e){}},x.prototype.constructor=x,(o=w).Drafty=e,o});
+!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{("undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:this).Tinode=e()}}(function(){var e={};const t=[{name:"ST",start:/(?:^|\W)(\*)[^\s*]/,end:/[^\s*](\*)(?=$|\W)/},{name:"EM",start:/(?:^|[\W_])(_)[^\s_]/,end:/[^\s_](_)(?=$|[\W_])/},{name:"DL",start:/(?:^|\W)(~)[^\s~]/,end:/[^\s~](~)(?=$|\W)/},{name:"CO",start:/(?:^|\W)(`)[^`]/,end:/[^`](`)(?=$|\W)/}],n=[{name:"LN",dataName:"url",pack:function(e){return/^[a-z]+:\/\//i.test(e)||(e="http://"+e),{url:e}},re:/(https?:\/\/)?(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b(?:[-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)/g},{name:"MN",dataName:"val",pack:function(e){return{val:e.slice(1)}},re:/\B@(\w\w+)/g},{name:"HT",dataName:"val",pack:function(e){return{val:e.slice(1)}},re:/\B#(\w\w+)/g}],s={ST:{name:"b",isVoid:!1},EM:{name:"i",isVoid:!1},DL:{name:"del",isVoid:!1},CO:{name:"tt",isVoid:!1},BR:{name:"br",isVoid:!0},LN:{name:"a",isVoid:!1},MN:{name:"a",isVoid:!1},HT:{name:"a",isVoid:!1},IM:{name:"img",isVoid:!0}};function i(e,t){var n;try{n=atob(e)}catch(e){console.log("Drafty: failed to decode base64-encoded object",e.message),n=atob("")}for(var s=n.length,i=new ArrayBuffer(s),r=new Uint8Array(i),a=0;a<s;a++)r[a]=n.charCodeAt(a);return URL.createObjectURL(new Blob([i],{type:t}))}var r={ST:{open:function(){return"<b>"},close:function(){return"</b>"}},EM:{open:function(){return"<i>"},close:function(){return"</i>"}},DL:{open:function(){return"<del>"},close:function(){return"</del>"}},CO:{open:function(){return"<tt>"},close:function(){return"</tt>"}},BR:{open:function(){return""},close:function(){return"<br/>"}},LN:{open:function(e){return'<a href="'+e.url+'">'},close:function(e){return"</a>"},props:function(e){return{href:e.url,target:"_blank"}}},MN:{open:function(e){return'<a href="#'+e.val+'">'},close:function(e){return"</a>"},props:function(e){return{name:e.val}}},HT:{open:function(e){return'<a href="#'+e.val+'">'},close:function(e){return"</a>"},props:function(e){return{name:e.val}}},IM:{open:function(e){var t=i(e.val,e.mime),n=e.ref?e.ref:t,s=(e.name?'<a href="'+n+'" download="'+e.name+'">':"")+'<img src="'+t+'"'+(e.width?' width="'+e.width+'"':"")+(e.height?' height="'+e.height+'"':"")+' border="0" />';return console.log("open: "+s),s},close:function(e){return e.name?"</a>":""},props:function(e){return{src:i(e.val,e.mime),title:e.name,"data-width":e.width,"data-height":e.height,"data-name":e.name,"data-size":.75*e.val.length|0,"data-mime":e.mime}}}},a=function(){};a.parse=function(e){if("string"!=typeof e)return null;var s=e.split(/\r?\n/),i=[],r={},a=[];s.map(function(e){var s,o,c=[];if(t.map(function(t){c=c.concat(function(e,t,n,s){for(var i=[],r=0,a=e.slice(0);a.length>0;){var o=t.exec(a);if(null==o)break;var c=o.index+o[0].lastIndexOf(o[1]);a=a.slice(c+1),r=(c+=r)+1;var u=n?n.exec(a):null;if(null==u)break;var h=u.index+u[0].indexOf(u[1]);a=a.slice(h+1),r=(h+=r)+1,i.push({text:e.slice(c+1,h),children:[],start:c,end:h,type:s})}return i}(e,t.start,t.end,t.name))}),0==c.length)o={txt:e};else{c.sort(function(e,t){return e.start-t.start}),c=function e(t){if(0==t.length)return[];for(var n=[t[0]],s=t[0],i=1;i<t.length;i++)t[i].start>s.end?(n.push(t[i]),s=t[i]):t[i].end<s.end&&s.children.push(t[i]);for(var i in n)n[i].children=e(n[i].children);return n}(c);var u=function e(t,n){var s="",i=[];for(var r in t){var a=t[r];if(!a.text){var o=e(a.children,s.length+n);a.text=o.txt,i=i.concat(o.fmt)}a.type&&i.push({at:s.length+n,len:a.text.length,tp:a.type}),s+=a.text}return{txt:s,fmt:i}}(function e(t,n,s,i){var r=[];if(0==i.length)return[];for(var a in i){var o=i[a];o.start>n&&r.push({text:t.slice(n,o.start)});var c={type:o.type},u=e(t,o.start+1,o.end-1,o.children);u.length>0?c.children=u:c.text=o.text,r.push(c),n=o.end+1}return n<s&&r.push({text:t.slice(n,s)}),r}(e,0,e.length,c),0);o={txt:u.txt,fmt:u.fmt}}if((s=function(e){var t,s=[];if(n.map(function(n){for(;null!==(t=n.re.exec(e));)s.push({offset:t.index,len:t[0].length,unique:t[0],data:n.pack(t[0]),type:n.name})}),0==s.length)return s;s.sort(function(e,t){return e.offset-t.offset});var i=-1;return s=s.filter(function(e){var t=e.offset>i;return i=e.offset+e.len,t})}(o.txt)).length>0){var h=[];for(var l in s){var d=s[l],f=r[d.unique];f||(f=i.length,r[d.unique]=f,i.push({tp:d.type,data:d.data})),h.push({at:d.offset,len:d.len,key:f})}o.ent=h}a.push(o)});var o={txt:""};if(a.length>0){o.txt=a[0].txt,o.fmt=(a[0].fmt||[]).concat(a[0].ent||[]);for(var c=1;c<a.length;c++){var u=a[c],h=o.txt.length+1;o.fmt.push({tp:"BR",len:1,at:h-1}),o.txt+=" "+u.txt,u.fmt&&(o.fmt=o.fmt.concat(u.fmt.map(function(e){return e.at+=h,e}))),u.ent&&(o.fmt=o.fmt.concat(u.ent.map(function(e){return e.at+=h,e})))}0==o.fmt.length&&delete o.fmt,i.length>0&&(o.ent=i)}return o},a.insertImage=function(e,t,n,s,i,r,a,o,c){return(e=e||{txt:" "}).ent=e.ent||[],e.fmt=e.fmt||[],e.fmt.push({at:t,len:1,key:e.ent.length}),e.ent.push({tp:"IM",data:{mime:n,val:s,width:i,height:r,name:a,ref:c,size:0|o}}),e},a.attachFile=function(e,t,n,s,i,r){(e=e||{txt:""}).ent=e.ent||[],e.fmt=e.fmt||[],e.fmt.push({at:-1,len:0,key:e.ent.length});let a={tp:"EX",data:{mime:t,val:n,name:s,ref:r,size:0|i}};return r instanceof Promise&&(a.data.ref=r.then(e=>{a.data.ref=e},e=>{})),e.ent.push(a),e},a.UNSAFE_toHTML=function(e){var t,n,s,{txt:i,fmt:a,ent:o}=e,c=[];if(a)for(var u in a){var h,l=a[u],d=l.tp;if(!d){var f=o[l.key];f&&(d=f.tp,h=f.data)}r[d]&&(c.push({idx:l.at+l.len,what:r[d].close(h)}),c.push({idx:l.at,what:r[d].open(h)}))}for(var u in c.sort(function(e,t){return t.idx-e.idx}),c)c[u].what&&(t=i,n=c[u].idx,s=c[u].what,i=t.slice(0,n)+s+t.slice(n));return i},a.format=function(e,t,n){var{txt:i,fmt:r,ent:a}=e;if(i=i||"",!r)return[i];var o=[].concat(r);return o.map(function(e){e.at=e.at||0,e.len=e.len||0}),o.sort(function(e,t){return e.at-t.at==0?t.len-e.len:e.at-t.at}),o=o.map(function(e){var t,n=e.tp;return n||(e.key=e.key||0,t=a[e.key].data,n=a[e.key].tp),{tp:n,data:t,at:e.at,len:e.len}}),function e(t,n,i,r,a,o){for(var c=[],u=0;u<r.length;u++){var h=r[u];n<h.at&&(c.push(a.call(o,null,void 0,t.slice(n,h.at))),n=h.at);for(var l=[],d=u+1;d<r.length&&r[d].at<h.at+h.len;d++)l.push(r[d]),u=d;var f=s[h.tp]||{};c.push(a.call(o,h.tp,h.data,f.isVoid?null:e(t,n,h.at+h.len,l,a,o))),n=h.at+h.len}return n<i&&c.push(a.call(o,null,void 0,t.slice(n,i))),c}(i,0,i.length,o,t,n)},a.toPlainText=function(e){return"string"==typeof e?e:e.txt},a.isPlainText=function(e){return"string"==typeof e||!(e.fmt||e.ent)},a.hasAttachments=function(e){if(e.ent&&e.ent.length>0)for(var t in e.ent)if("EX"==e.ent[t].tp)return!0;return!1},a.attachments=function(e,t,n){if(e.ent&&e.ent.length>0)for(var s in e.ent)"EX"==e.ent[s].tp&&t.call(n,e.ent[s].data,s)},a.getDownloadUrl=function(e){let t=null;return e.val?t=i(e.val,e.mime):"string"==typeof e.ref&&(t=e.ref),t},a.isUploading=function(e){return e.ref instanceof Promise},a.getPreviewUrl=function(e){return e.val?i(e.val,e.mime):null},a.getEntitySize=function(e){return e.size?e.size:e.val?.75*e.val.length|0:0},a.getEntityMimeType=function(e){return e.mime||"text/plain"},a.tagName=function(e){return s[e]?s[e].name:void 0},a.attrValue=function(e,t){if(t&&r[e])return r[e].props(t)},a.getContentType=function(){return"text/x-drafty"},e=a;var o={};if("function"==typeof require)var c="0.15.7-rc3";const u="0",h=c||"0.15",l="tinodejs/"+h;function d(e){return btoa(encodeURIComponent(e).replace(/%([0-9A-F]{2})/g,function(e,t){return String.fromCharCode("0x"+t)}))}function f(e,t,n){if(null==t)return e;if("object"!=typeof t)return t||e;if(t instanceof Date)return t;if(t instanceof S)return new S(t);if(t instanceof Array)return t.length>0?t:e;for(var s in e||(e=t.constructor()),t)!t.hasOwnProperty(s)||!t[s]&&!1!==t[s]||n&&n[s]||"_generated"==s||(e[s]=f(e[s],t[s]));return e}function p(e,t,n,s){return e[t]=f(e[t],n,s),e[t]}function g(){var e=null;if("withCredentials"in new XMLHttpRequest)e=new XMLHttpRequest;else{if("undefined"==typeof XDomainRequest)throw new Error("browser not supported");e=new XDomainRequest}return e}function _(e,t){if("ts"===e&&"string"==typeof t&&t.length>=20&&t.length<=24){var n=new Date(t);if(n)return n}else if("acs"===e&&"object"==typeof t)return new S(t);return t}function m(e,t){return"string"==typeof t&&t.length>128?"<"+t.length+", bytes: "+t.substring(0,12)+"..."+t.substring(t.length-12)+">":function(e,t){if(t instanceof Date)t=function(e){if(e&&0!=e.getTime()){var t=e.getUTCMilliseconds();return e.getUTCFullYear()+"-"+n(e.getUTCMonth()+1)+"-"+n(e.getUTCDate())+"T"+n(e.getUTCHours())+":"+n(e.getUTCMinutes())+":"+n(e.getUTCSeconds())+(t?"."+n(t,3):"")+"Z"}function n(e,t){return"0".repeat((t=t||2)-(""+e).length)+e}}(t);else if(null==t||!1===t||Array.isArray(t)&&0==t.length||"object"==typeof t&&0===Object.keys(t).length)return;return t}(0,t)}function v(e,t,n){var s=null;return"http"!==t&&"https"!==t&&"ws"!==t&&"wss"!==t||(s=t+"://","/"!==(s+=e).charAt(s.length-1)&&(s+="/"),s+="v"+u+"/channels","http"!==t&&"https"!==t||(s+="/lp"),s+="?apikey="+n),s}var b=function(e,t,n,s,i){let r=e,a=s,o=t;var c=i;const u=2e3,h=10,l=.3;let d=null,f=0,p=!1,m=e=>{this.logger&&this.logger(e)};function b(e){var t=null;e.connect=function(n){return t&&1===t.readyState?Promise.resolve():(n&&(r=n),new Promise(function(n,s){var i=v(r,a?"wss":"ws",o);m("Connecting to: "+i);var g=new WebSocket(i);g.onopen=function(t){p=!1,e.onOpen&&e.onOpen(),n(),c&&(window.clearTimeout(d),d=null,f=0)},g.onclose=function(n){t=null,e.onDisconnect&&e.onDisconnect(null),!p&&c&&function(){clearTimeout(d);var e=u*(Math.pow(2,f)*(1+l*Math.random()));f=f>=h?f:f+1,d=setTimeout(()=>{m("Reconnecting, iter="+f+", timeout="+e),p||this.connect().catch(function(){})},e)}.call(e)},g.onerror=function(e){s(e)},g.onmessage=function(t){e.onMessage&&e.onMessage(t.data)},t=g}))},e.disconnect=function(){t&&(p=!0,t.close()),t=null},e.sendText=function(e){if(!t||t.readyState!=t.OPEN)throw new Error("Websocket is not connected");t.send(e)},e.isConnected=function(){return t&&1===t.readyState}}function w(e){var t=null,n=null,s=null;e.connect=function(s){return n?Promise.resolve():(s&&(r=s),new Promise(function(s,i){var c=v(r,a?"https":"http",o);m("Connecting to: "+c),(n=function n(s,i,r){var a=g();return a.onreadystatechange=function(o){if(4==a.readyState)if(201==a.status){var c=JSON.parse(a.responseText,_);a.responseText,t=s+"&sid="+c.ctrl.params.sid,(a=n(t)).send(null),e.onOpen&&e.onOpen(),i&&i()}else 200==a.status?(e.onMessage&&e.onMessage(a.responseText),(a=n(t)).send(null)):(r&&r(a.responseText),e.onMessage&&e.onMessage(a.responseText),e.onDisconnect&&e.onDisconnect(new Error(a.status+" "+a.responseText)))},a.open("GET",s,!0),a}(c,s,i)).send(null)}).catch(function(){}))},e.disconnect=function(){s&&(s.abort(),s=null),n&&(n.abort(),n=null),e.onDisconnect&&e.onDisconnect(null),t=null},e.sendText=function(e){var n,i;if(n=t,(i=g()).onreadystatechange=function(e){if(4==i.readyState&&i.status>=400)throw new Error("LP sender failed, "+i.status)},i.open("POST",n,!0),!(s=i)||1!=s.readyState)throw new Error("Long poller failed to connect");s.send(e)},e.isConnected=function(){return n&&!0}}"lp"===n?w(this):"ws"===n?b(this):"object"==typeof window&&window.WebSocket?b(this):w(this),this.onMessage=void 0,this.onDisconnect=void 0,this.onOpen=void 0,this.logger=void 0},w=function(e,t,n,s,i){this._appName=e||"Undefined",this._apiKey=n,this._browser="",this._platform="undefined",this._humanLanguage="xx","undefined"!=typeof navigator&&(this._browser=function(e){var t,n=(e=(e||"").replace(" (KHTML, like Gecko)","")).match(/(AppleWebKit\/[.\d]+)/i);if(n){for(var s=["chrome","safari","mobile","version"],i=e.substr(n.index+n[0].length).split(" "),r=[],a=0;a<i.length;a++){var o=/([\w.]+)[\/]([\.\d]+)/.exec(i[a]);o&&r.push([o[1],o[2],s.findIndex(function(e){return e==o[1].toLowerCase()})])}r.sort(function(e,t){var n=e[2]-t[2];return 0!=n?n:t[0].length-e[0].length}),t=r.length>0?r[0][0]+"/"+r[0][1]:n[1]}else t=/trident/i.test(e)?(n=/(?:\brv[ :]+([.\d]+))|(?:\bMSIE ([.\d]+))/g.exec(e))?"MSIE/"+(n[1]||n[2]):"MSIE/?":/firefox/i.test(e)?(n=/Firefox\/([.\d]+)/g.exec(e))?"Firefox/"+n[1]:"Firefox/?":/presto/i.test(e)?(n=/Opera\/([.\d]+)/g.exec(e))?"Opera/"+n[1]:"Opera/?":(n=/([\w.]+)\/([.\d]+)/.exec(e))?n[1]+"/"+n[2]:(n=e.split(" "))[0];if((n=t.split("/")).length>1){var c=n[1].split(".");t=n[0]+"/"+c[0]+(c[1]?"."+c[1]:"")}return t}(navigator.userAgent),this._platform=navigator.platform,this._humanLanguage=navigator.language||"en-US"),this._loggingEnabled=!1,this._trimLongStrings=!1,this._myUID=null,this._authenticated=!1,this._login=null,this._authToken=null,this._inPacketCount=0,this._messageId=Math.floor(65535*Math.random()+65535),this._serverInfo=null,this._deviceToken=null,this._pendingPromises={},this._connection=new b(t,n,s,i,!0),this.logger=(e=>{if(this._loggingEnabled){var t=new Date,n=("0"+t.getUTCHours()).slice(-2)+":"+("0"+t.getUTCMinutes()).slice(-2)+":"+("0"+t.getUTCSeconds()).slice(-2)+":"+("0"+t.getUTCMilliseconds()).slice(-3);console.log("["+n+"] "+e)}}),this._connection.logger=this.logger,this._cache={};let r=this.cachePut=((e,t,n)=>{this._cache[e+":"+t]=n}),a=this.cacheGet=((e,t)=>this._cache[e+":"+t]),o=this.cacheDel=((e,t)=>{delete this._cache[e+":"+t]}),c=this.cacheMap=((e,t)=>{for(var n in this._cache)if(e(this._cache[n],n,t))break});this.attachCacheToTopic=(e=>{e._tinode=this,e._cacheGetUser=(e=>{var t=a("user",e);if(t)return{user:e,public:f({},t)}}),e._cachePutUser=((e,t)=>r("user",e,f({},t.public))),e._cacheDelUser=(e=>o("user",e)),e._cachePutSelf=(()=>r("topic",e.name,e)),e._cacheDelSelf=(()=>o("topic",e.name))});let u=(e,t,n,s)=>{var i=this._pendingPromises[e];i&&(delete this._pendingPromises[e],t>=200&&t<400?i.resolve&&i.resolve(n):i.reject&&i.reject(new Error("Error: "+s+" ("+t+")")))},d=e=>{var t=null;return e&&(t=new Promise((t,n)=>{this._pendingPromises[e]={resolve:t,reject:n}})),t},p=this.getNextUniqueId=(()=>0!=this._messageId?""+this._messageId++:void 0),g=()=>this._appName+" ("+(this._browser?this._browser+"; ":"")+this._platform+"); "+l;this.initPacket=((e,t)=>{switch(e){case"hi":return{hi:{id:p(),ver:h,ua:g(),dev:this._deviceToken,lang:this._humanLanguage}};case"acc":return{acc:{id:p(),user:null,scheme:null,secret:null,login:!1,tags:null,desc:{},cred:{}}};case"login":return{login:{id:p(),scheme:null,secret:null}};case"sub":return{sub:{id:p(),topic:t,set:{},get:{}}};case"leave":return{leave:{id:p(),topic:t,unsub:!1}};case"pub":return{pub:{id:p(),topic:t,noecho:!1,head:null,content:{}}};case"get":return{get:{id:p(),topic:t,what:null,desc:{},sub:{},data:{}}};case"set":return{set:{id:p(),topic:t,desc:{},sub:{},tags:[]}};case"del":return{del:{id:p(),topic:t,what:null,delseq:null,user:null,hard:!1}};case"note":return{note:{topic:t,what:null,seq:void 0}};default:throw new Error("Unknown packet type requested: "+e)}}),this.send=((e,t)=>{let n;t&&(n=d(t)),e=function e(t){return Object.keys(t).forEach(function(n){"_"==n[0]?delete t[n]:t[n]?Array.isArray(t[n])&&0==t[n].length?delete t[n]:t[n]?"object"!=typeof t[n]||t[n]instanceof Date||(e(t[n]),0==Object.getOwnPropertyNames(t[n]).length&&delete t[n]):delete t[n]:delete t[n]}),t}(e);var s=JSON.stringify(e);this.logger("out: "+(this._trimLongStrings?JSON.stringify(e,m):s));try{this._connection.sendText(s)}catch(e){if(!t)throw e;u(t,503,null,e.message)}return n}),this.loginSuccessful=(e=>{e.params&&e.params.user&&(this._myUID=e.params.user,this._authenticated=e&&e.code>=200&&e.code<300,e.params&&e.params.token&&e.params.expires?this._authToken={token:e.params.token,expires:new Date(e.params.expires)}:this._authToken=null,this.onLogin&&this.onLogin(e.code,e.text))}),this._connection.onMessage=(e=>{if(e){this._inPacketCount++,this.onRawMessage&&this.onRawMessage(e);var t=JSON.parse(e,_);if(t)if(this.logger("in: "+(this._trimLongStrings?JSON.stringify(t,m):e)),this.onMessage&&this.onMessage(t),t.ctrl)this.onCtrlMessage&&this.onCtrlMessage(t.ctrl),t.ctrl.id&&u(t.ctrl.id,t.ctrl.code,t.ctrl,t.ctrl.text),t.ctrl.params&&"data"==t.ctrl.params.what&&(n=a("topic",t.ctrl.topic))&&n._allMessagesReceived(t.ctrl.params.count);else if(t.meta)(n=a("topic",t.meta.topic))&&n._routeMeta(t.meta),this.onMetaMessage&&this.onMetaMessage(t.meta);else if(t.data)(n=a("topic",t.data.topic))&&n._routeData(t.data),this.onDataMessage&&this.onDataMessage(t.data);else if(t.pres)(n=a("topic",t.pres.topic))&&n._routePres(t.pres),this.onPresMessage&&this.onPresMessage(t.pres);else if(t.info){var n;(n=a("topic",t.info.topic))&&n._routeInfo(t.info),this.onInfoMessage&&this.onInfoMessage(t.info)}else this.logger("ERROR: Unknown packet received.");else this.logger("in: "+e),this.logger("ERROR: failed to parse data")}}),this._connection.onOpen=(()=>{this.hello()}),this._connection.onDisconnect=(e=>{this._inPacketCount=0,this._serverInfo=null,this._authenticated=!1,c((e,t)=>{0===t.lastIndexOf("topic:",0)&&e._resetSub()}),this.onDisconnect&&this.onDisconnect(e)})};w.credential=function(e,t,n,s){return"object"==typeof e&&({val:t,params:n,resp:s,meth:e}=e),e&&(t||s)?[{meth:e,val:t,resp:s,params:n}]:null},w.topicType=function(e){return{me:"me",fnd:"fnd",grp:"grp",new:"grp",usr:"p2p"}["string"==typeof e?e.substring(0,3):"xxx"]},w.isNewGroupTopicName=function(e){return"string"==typeof e&&"new"==e.substring(0,3)},w.getVersion=function(){return h},w.getLibrary=function(){return l},w.MESSAGE_STATUS_NONE=0,w.MESSAGE_STATUS_QUEUED=1,w.MESSAGE_STATUS_SENDING=2,w.MESSAGE_STATUS_SENT=3,w.MESSAGE_STATUS_RECEIVED=4,w.MESSAGE_STATUS_READ=5,w.MESSAGE_STATUS_TO_ME=6,w.DEL_CHAR="\u2421",w.prototype={connect:function(e){return this._connection.connect(e)},disconnect:function(){this._connection&&this._connection.disconnect()},isConnected:function(){return this._connection&&this._connection.isConnected()},isAuthenticated:function(){return this._authenticated},account:function(e,t,n,s,i){var r=this.initPacket("acc");return r.acc.user=e,r.acc.scheme=t,r.acc.secret=n,r.acc.login=s,i&&(r.acc.desc.defacs=i.defacs,r.acc.desc.public=i.public,r.acc.desc.private=i.private,r.acc.tags=i.tags,r.acc.cred=i.cred,r.acc.token=i.token),this.send(r,r.acc.id)},createAccount:function(e,t,n,s){var i=this.account("new",e,t,n,s);return n&&(i=i.then(e=>(this.loginSuccessful(e),e))),i},createAccountBasic:function(e,t,n){return e=e||"",t=t||"",this.createAccount("basic",d(e+":"+t),!0,n)},updateAccountBasic:function(e,t,n,s){return t=t||"",n=n||"",this.account(e,"basic",d(t+":"+n),!1,s)},hello:function(){var e=this.initPacket("hi");return this.send(e,e.hi.id).then(e=>(e.params&&(this._serverInfo=e.params),this.onConnect&&this.onConnect(),e)).catch(e=>{this.onDisconnect&&this.onDisconnect(e)})},setDeviceToken:function(e,t){let n=!1;return e&&e!=this._deviceToken&&(this._deviceToken=e,t&&this.isConnected()&&this.isAuthenticated()&&(this.send({hi:{dev:e}}),n=!0)),n},login:function(e,t,n){var s=this.initPacket("login");return s.login.scheme=e,s.login.secret=t,s.login.cred=n,this.send(s,s.login.id).then(e=>(this.loginSuccessful(e),e))},loginBasic:function(e,t,n){return this.login("basic",d(e+":"+t),n).then(t=>(this._login=e,t))},loginToken:function(e,t){return this.login("token",e,t)},requestResetAuthSecret:function(e,t,n){return this.login("reset",d(e+":"+t+":"+n))},getAuthToken:function(){return this._authToken&&this._authToken.expires.getTime()>Date.now()?this._authToken:(this._authToken=null,null)},setAuthToken:function(e){this._authToken=e},subscribe:function(e,t,n){var s=this.initPacket("sub",e);return e||(e="new"),s.sub.get=t,n&&(n.sub&&(s.sub.set.sub=n.sub),w.isNewGroupTopicName(e)&&n.desc&&(s.sub.set.desc=n.desc),n.tags&&(s.sub.set.tags=n.tags)),this.send(s,s.sub.id)},leave:function(e,t){var n=this.initPacket("leave",e);return n.leave.unsub=t,this.send(n,n.leave.id)},createMessage:function(t,n,s){let i=this.initPacket("pub",t),r="string"==typeof n?e.parse(n):n;return r&&!e.isPlainText(r)&&(i.pub.head={mime:e.getContentType()},n=r),i.pub.noecho=s,i.pub.content=n,i.pub},publish:function(e,t,n){return this.publishMessage(this.createMessage(e,t,n))},publishMessage:function(e){return(e=Object.assign({},e)).seq=void 0,e.from=void 0,e.ts=void 0,this.send({pub:e},e.id)},getMeta:function(e,t){var n=this.initPacket("get",e);return n.get=f(n.get,t),this.send(n,n.get.id)},setMeta:function(e,t){var n=this.initPacket("set",e),s=[];return t&&["desc","sub","tags"].map(function(e){t.hasOwnProperty(e)&&(s.push(e),n.set[e]=t[e])}),0==s.length?Promise.reject(new Error("Invalid {set} parameters")):this.send(n,n.set.id)},delMessages:function(e,t,n){var s=this.initPacket("del",e);return s.del.what="msg",s.del.delseq=t,s.del.hard=n,this.send(s,s.del.id)},delTopic:function(e){var t=this.initPacket("del",e);return t.del.what="topic",this.send(t,t.del.id).then(t=>(this.cacheDel("topic",e),this.ctrl))},delSubscription:function(e,t){var n=this.initPacket("del",e);return n.del.what="sub",n.del.user=t,this.send(n,n.del.id)},note:function(e,t,n){if(n<=0||n>=268435455)throw new Error("Invalid message id "+n);var s=this.initPacket("note",e);s.note.what=t,s.note.seq=n,this.send(s)},noteKeyPress:function(e){var t=this.initPacket("note",e);t.note.what="kp",this.send(t)},getTopic:function(e){var t=this.cacheGet("topic",e);return!t&&e&&(t="me"==e?new y:"fnd"==e?new D:new T(e),this.cachePut("topic",e,t),this.attachCacheToTopic(t)),t},newTopic:function(e){var t=new T("new",e);return this.attachCacheToTopic(t),t},newGroupTopicName:function(){return"new"+this.getNextUniqueId()},newTopicWith:function(e,t){var n=new T(e,t);return this.attachCacheToTopic(n),n},getMeTopic:function(){return this.getTopic("me")},getFndTopic:function(){return this.getTopic("fnd")},getLargeFileHelper:function(){return new E(this)},getCurrentUserID:function(){return this._myUID},getCurrentLogin:function(){return this._login},getServerInfo:function(){return this._serverInfo},enableLogging:function(e,t){this._loggingEnabled=e,this._trimLongStrings=t},isTopicOnline:function(e){var t=this.getMeTopic(),n=t&&t.getContact(e);return n&&n.online},wantAkn:function(e){this._messageId=e?Math.floor(16777215*Math.random()+16777215):0},onWebsocketOpen:void 0,onConnect:void 0,onDisconnect:void 0,onLogin:void 0,onCtrlMessage:void 0,onDataMessage:void 0,onPresMessage:void 0,onMessage:void 0,onRawMessage:void 0};var M=function(e){this.topic=e;var t=e._tinode.getMeTopic();this.contact=t&&t.getContact(e.name),this.what={}};M.prototype={_get_ims:function(){let e=this.contact&&this.contact.updated,t=this.topic._lastDescUpdate||0;return e>t?e:t},withData:function(e,t,n){return this.what.data={since:e,before:t,limit:n},this},withLaterData:function(e){return this.withData(this.topic._maxSeq>0?this.topic._maxSeq+1:void 0,void 0,e)},withEarlierData:function(e){return this.withData(void 0,this.topic._minSeq>0?this.topic._minSeq:void 0,e)},withDesc:function(e){return this.what.desc={ims:e},this},withLaterDesc:function(){return this.withDesc(this._get_ims())},withSub:function(e,t,n){var s={ims:e,limit:t};return"me"==this.topic.getType()?s.topic=n:s.user=n,this.what.sub=s,this},withOneSub:function(e,t){return this.withSub(e,void 0,t)},withLaterOneSub:function(e){return this.withOneSub(this.topic._lastSubsUpdate,e)},withLaterSub:function(e){return this.withSub("p2p"==this.topic.getType()?this._get_ims():this.topic._lastSubsUpdate,e)},withTags:function(){return this.what.tags=!0,this},withDel:function(e,t){return(e||t)&&(this.what.del={since:e,limit:t}),this},withLaterDel:function(e){return this.withDel(this.topic._maxSeq>0?this.topic._maxDel+1:void 0,e)},build:function(){var e={},t=[],n=this;return["data","sub","desc","tags","del"].map(function(s){n.what.hasOwnProperty(s)&&(t.push(s),Object.getOwnPropertyNames(n.what[s]).length>0&&(e[s]=n.what[s]))}),t.length>0?e.what=t.join(" "):e=void 0,e}};var S=function(e){e&&(this.given="number"==typeof e.given?e.given:S.decode(e.given),this.want="number"==typeof e.want?e.want:S.decode(e.want),this.mode=e.mode?"number"==typeof e.mode?e.mode:S.decode(e.mode):this.given&this.want)};S._NONE=0,S._JOIN=1,S._READ=2,S._WRITE=4,S._PRES=8,S._APPROVE=16,S._SHARE=32,S._DELETE=64,S._OWNER=128,S._BITMASK=S._JOIN|S._READ|S._WRITE|S._PRES|S._APPROVE|S._SHARE|S._DELETE|S._OWNER,S._INVALID=1048576,S.decode=function(e){if(!e)return null;if("number"==typeof e)return e&S._BITMASK;if("N"===e||"n"===e)return S._NONE;for(var t={J:S._JOIN,R:S._READ,W:S._WRITE,P:S._PRES,A:S._APPROVE,S:S._SHARE,D:S._DELETE,O:S._OWNER},n=S._NONE,s=0;s<e.length;s++){var i=t[e.charAt(s).toUpperCase()];i&&(n|=i)}return n},S.encode=function(e){if(null===e||e===S._INVALID)return null;if(e===S._NONE)return"N";for(var t=["J","R","W","P","A","S","D","O"],n="",s=0;s<t.length;s++)0!=(e&1<<s)&&(n+=t[s]);return n},S.update=function(e,t){if(!t||"string"!=typeof t)return e;var n=t.charAt(0);if("+"==n||"-"==n){for(var s=e,i=t.split(/([-+])/),r=1;r<i.length-1;r+=2){n=i[r];var a=S.decode(i[r+1]);if(a==S._INVALID)return e;null!=a&&("+"===n?s|=a:"-"===n&&(s&=~a))}e=s}else(s=S.decode(t))!=S._INVALID&&(e=s);return e},S.prototype={setMode:function(e){return this.mode=S.decode(e),this},updateMode:function(e){return this.mode=S.update(this.mode,e),this},getMode:function(){return S.encode(this.mode)},setGiven:function(e){return this.given=S.decode(e),this},updateGiven:function(e){return this.given=S.update(this.given,e),this},getGiven:function(){return S.encode(this.given)},setWant:function(e){return this.want=S.decode(e),this},updateWant:function(e){return this.want=S.update(this.want,e),this},getWant:function(){return S.encode(this.want)},updateAll:function(e){return e&&(this.updateGiven(e.given),this.updateWant(e.want),this.mode=this.given&this.want),this},isOwner:function(){return 0!=(this.mode&S._OWNER)},isMuted:function(){return 0==(this.mode&S._PRES)},isPresencer:function(){return 0!=(this.mode&S._PRES)},isJoiner:function(){return 0!=(this.mode&S._JOIN)},isReader:function(){return 0!=(this.mode&S._READ)},isWriter:function(){return 0!=(this.mode&S._WRITE)},isApprover:function(){return 0!=(this.mode&S._APPROVE)},isAdmin:function(){return this.isOwner()||this.isApprover()},isSharer:function(){return 0!=(this.mode&S._SHARE)},isDeleter:function(){return 0!=(this.mode&S._DELETE)}};var T=function(e,t){this._tinode=null,this.name=e,this.created=null,this.updated=null,this.touched=null,this.acs=new S(null),this.private=null,this.public=null,this._users={},this._queuedSeqId=268435455,this._maxSeq=0,this._minSeq=0,this._noEarlierMsgs=!1,this._maxDel=0,this._tags=[],this._messages=function(e){var t=[];function n(t,n,s){for(var i=0,r=n.length-1,a=0,o=0,c=!1;i<=r;)if((o=e(n[a=(i+r)/2|0],t))<0)i=a+1;else{if(!(o>0)){c=!0;break}r=a-1}return c?a:s?-1:o<0?a+1:a}function s(e,t){var s=n(e,t,!1);return t.splice(s,0,e),t}return e=e||function(e,t){return e===t?0:e<t?-1:1},{getAt:function(e){return t[e]},put:function(){var e;for(var n in e=1==arguments.length&&Array.isArray(arguments[0])?arguments[0]:arguments)s(e[n],t)},delAt:function(e){var n=t.splice(e,1);if(n&&n.length>0)return n[0]},delRange:function(e,n){return t.splice(e,n-e)},size:function(){return t.length},reset:function(e){t=[]},forEach:function(e,n,s,i){n|=0,s=s||t.length;for(var r=n;r<s;r++)e.call(i,t[r],r)},find:function(e,s){return n(e,t,!s)}}}(function(e,t){return e.seq-t.seq}),this._subscribed=!1,this._lastDescUpdate=null,this._lastSubsUpdate=null,this._new=!0,t&&(this.onData=t.onData,this.onMeta=t.onMeta,this.onPres=t.onPres,this.onInfo=t.onInfo,this.onMetaDesc=t.onMetaDesc,this.onMetaSub=t.onMetaSub,this.onSubsUpdated=t.onSubsUpdated,this.onTagsUpdated=t.onTagsUpdated,this.onDeleteTopic=t.onDeleteTopic,this.onAllMessagesReceived=t.onAllMessagesReceived)};T.prototype={isSubscribed:function(){return this._subscribed},subscribe:function(e,t){if(this._subscribed)return Promise.resolve(this);var n=this.name;return this._tinode.subscribe(n||"new",e,t).then(e=>{if(e.code>=300)return e;if(this._subscribed=!0,this.acs=e.params&&e.params.acs?e.params.acs:this.acs,this._new){this._new=!1,this.name=e.topic,this.created=e.ts,this.updated=e.ts,this.touched=e.ts,this._cachePutSelf();var n=this._tinode.getMeTopic();n&&n._processMetaSub([{_generated:!0,topic:this.name,created:e.ts,updated:e.ts,touched:e.ts,acs:this.acs}]),t&&t.desc&&(t.desc._generated=!0,this._processMetaDesc(t.desc))}return e})},publish:function(e,t){return this.publishMessage(this.createMessage(e,t))},createMessage:function(e,t){return this._tinode.createMessage(this.name,e,t)},publishMessage:function(t){if(!this._subscribed)return Promise.reject(new Error("Cannot publish on inactive topic"));if(e.hasAttachments(t.content)){let n=[];e.attachments(t.content,e=>{n.push(e.ref)}),t.head.attachments=n}return t._sending=!0,this._tinode.publishMessage(t)},publishDraft:function(e,t){return t||this._subscribed?(e.seq=this._getQueuedSeqId(),e._generated=!0,e.ts=new Date,e.from=this._tinode.getCurrentUserID(),e.noecho=!0,this._messages.put(e),this.onData&&this.onData(e),(t||Promise.resolve()).then(()=>e._cancelled?{code:300,text:"cancelled"}:this.publishMessage(e).then(t=>(e._sending=!1,e.seq=t.params.seq,e.ts=t.ts,this._routeData(e),t)),t=>{e._sending=!1,this._messages.delAt(this._messages.find(e)),this.onData&&this.onData()})):Promise.reject(new Error("Cannot publish on inactive topic"))},leave:function(e){return this._subscribed||e?this._tinode.leave(this.name,e).then(t=>(this._resetSub(),e&&this._gone(),t)):Promise.reject(new Error("Cannot leave inactive topic"))},getMeta:function(e){return this._subscribed?this._tinode.getMeta(this.name,e):Promise.reject(new Error("Cannot query inactive topic"))},getMessagesPage:function(e,t){var n=this.startMetaQuery();t?n.withLaterData(e):n.withEarlierData(e);var s=this.getMeta(n.build());return t||(s=s.then(e=>{e&&e.params&&!e.params.count&&(this._noEarlierMsgs=!0)})),s},setMeta:function(e){return this._subscribed?(e.tags&&(e.tags=function(e){var t=[];if(Array.isArray(e)){for(var n=0,s=e.length;n<s;n++){var i=e[n];i&&(i=i.trim().toLowerCase()).length>1&&t.push(i)}t.sort().filter(function(e,t,n){return!t||e!=n[t-1]})}return 0==t.length&&t.push(w.DEL_CHAR),t}(e.tags)),this._tinode.setMeta(this.name,e).then(t=>t&&t.code>=300?t:(e.sub&&(t.params&&t.params.acs&&(e.sub.acs=t.params.acs,e.sub.updated=t.ts),e.sub.user||(e.sub.user=this._tinode.getCurrentUserID(),e.desc||(e.desc={})),e.sub._generated=!0,this._processMetaSub([e.sub])),e.desc&&(t.params&&t.params.acs&&(e.desc.acs=t.params.acs,e.desc.updated=t.ts),this._processMetaDesc(e.desc)),e.tags&&this._processMetaTags(e.tags),t))):Promise.reject(new Error("Cannot update inactive topic"))},invite:function(e,t){return this.setMeta({sub:{user:e,mode:t}})},delMessages:function(e,t){if(!this._subscribed)return Promise.reject(new Error("Cannot delete messages in inactive topic"));e.sort(function(e,t){return e.low<t.low||e.low==t.low&&(!t.hi||e.hi>=t.hi)});let n,s=e.reduce((e,t)=>(t.low<268435455&&(!t.hi||t.hi<268435455?e.push(t):e.push({low:t.low,hi:this._maxSeq+1})),e),[]);return(n=e.length>0?this._tinode.delMessages(this.name,s,t):Promise.resolve({params:{del:0}})).then(t=>(t.params.del>this._maxDel&&(this._maxDel=t.params.del),e.map(e=>{e.hi?this.flushMessageRange(e.low,e.hi):this.flushMessage(e.low)}),this.onData&&this.onData(),t))},delMessagesAll:function(e){return this.delMessages([{low:1,hi:this._maxSeq+1,_all:!0}],e)},delMessagesList:function(e,t){e.sort((e,t)=>e-t);var n=e.reduce((e,t)=>{if(0==e.length)e.push({low:t});else{let n=e[e.length-1];!n.hi&&t!=n.low+1||t>n.hi?e.push({low:t}):n.hi=n.hi?Math.max(n.hi,t+1):t+1}return e},[]);return this.delMessages(n,t)},delTopic:function(){var e=this;return this._tinode.delTopic(this.name).then(function(t){return e._resetSub(),e._gone(),t})},delSubscription:function(e){return this._subscribed?this._tinode.delSubscription(this.name,e).then(t=>(delete this._users[e],this.onSubsUpdated&&this.onSubsUpdated(Object.keys(this._users)),t)):Promise.reject(new Error("Cannot delete subscription in inactive topic"))},note:function(e,t){var n=this._users[this._tinode.getCurrentUserID()];n?((!n[e]||n[e]<t)&&(this._subscribed?this._tinode.note(this.name,e,t):this._tinode.logger("Not sending {note} on inactive topic")),n[e]=t):this._tinode.logger("note(): user not found "+this._tinode.getCurrentUserID());var s=this._tinode.getMeTopic();s&&s.setMsgReadRecv(this.name,e,t)},noteRecv:function(e){this.note("recv",e)},noteRead:function(e){this.note("read",e)},noteKeyPress:function(){this._subscribed?this._tinode.noteKeyPress(this.name):this._tinode.logger("Cannot send notification in inactive topic")},userDesc:function(e){var t=this._cacheGetUser(e);if(t)return t},subscribers:function(e,t){var n=e||this.onMetaSub;if(n)for(var s in this._users)n.call(t,this._users[s],s,this._users)},tags:function(){return this._tags.slice(0)},subscriber:function(e){return this._users[e]},messages:function(e,t,n,s){var i=e||this.onData;if(i){let e="number"==typeof t?this._messages.find({seq:t}):void 0,r="number"==typeof n?this._messages.find({seq:n},!0):void 0;-1!=e&&-1!=r&&this._messages.forEach(i,e,r,s)}},msgReceiptCount:function(e,t){var n=0,s=this._tinode.getCurrentUserID();if(t>0)for(var i in this._users){var r=this._users[i];r.user!==s&&r[e]>=t&&n++}return n},msgReadCount:function(e){return this.msgReceiptCount("read",e)},msgRecvCount:function(e){return this.msgReceiptCount("recv",e)},msgHasMoreMessages:function(e){return e?this.seq>this._maxSeq:this._minSeq>1&&!this._noEarlierMsgs},isNewMessage:function(e){return this._maxSeq<=e},flushMessage:function(e){let t=this._messages.find({seq:e});return t>=0?this._messages.delAt(t):void 0},flushMessageRange:function(e,t){let n=this._messages.find({seq:e});return n>=0?this._messages.delRange(n,this._messages.find({seq:t},!0)):[]},cancelSend:function(e){let t=this._messages.find({seq:e});if(t>=0){let e=this._messages.getAt(t);if(1==this.msgStatus(e))return e._cancelled=!0,this._messages.delAt(t),!0}return!1},getType:function(){return w.topicType(this.name)},getAccessMode:function(){return this.acs},getDefaultAccess:function(){return this.defacs},startMetaQuery:function(){return new M(this)},msgStatus:function(e){var t=0;return e.from==this._tinode.getCurrentUserID()?e._sending?t=2:e.seq>=268435455?t=1:this.msgReadCount(e.seq)>0?t=5:this.msgRecvCount(e.seq)>0?t=4:e.seq>0&&(t=3):t=6,t},_routeData:function(e){e.content&&((!this.touched||this.touched<e.ts)&&(this.touched=e.ts),e._generated||this._messages.put(e)),e.seq>this._maxSeq&&(this._maxSeq=e.seq),(e.seq<this._minSeq||0==this._minSeq)&&(this._minSeq=e.seq),this.onData&&this.onData(e);var t=this._tinode.getMeTopic();t&&t.setMsgReadRecv(this.name,"msg",e.seq,e.ts)},_routeMeta:function(e){e.desc&&(this._lastDescUpdate=e.ts,this._processMetaDesc(e.desc)),e.sub&&e.sub.length>0&&(this._lastSubsUpdate=e.ts,this._processMetaSub(e.sub)),e.del&&this._processDelMessages(e.del.clear,e.del.delseq),e.tags&&this._processMetaTags(e.tags),this.onMeta&&this.onMeta(e)},_routePres:function(e){var t;switch(e.what){case"del":this._processDelMessages(e.clear,e.delseq);break;case"on":case"off":(t=this._users[e.src])?t.online="on"==e.what:this._tinode.logger("Presence update for an unknown user",this.name,e.src);break;case"acs":let s="me"==e.src?this._tinode.getCurrentUserID():e.src;if(t=this._users[s])t.acs.updateAll(e.dacs),s==this._tinode.getCurrentUserID()&&this.acs.updateAll(e.dacs),t.acs&&t.acs.mode!=S._NONE||("p2p"==this.getType()&&this.leave(),this._processMetaSub([{user:s,deleted:new Date,_generated:!0}]));else{var n=(new S).updateAll(e.dacs);n&&n.mode!=S._NONE&&((t=this._cacheGetUser(s))?t.acs=n:(t={user:s,acs:n},this.getMeta(this.startMetaQuery().withOneSub(void 0,s).build())),t._generated=!0,t.updated=new Date,this._processMetaSub([t]))}break;default:this._tinode.logger("Ignored presence update",e.what)}this.onPres&&this.onPres(e)},_routeInfo:function(e){if("kp"!==e.what){var t=this._users[e.from];t&&(t[e.what]=e.seq)}this.onInfo&&this.onInfo(e)},_processMetaDesc:function(e,t){if(f(this,e),"string"==typeof this.created&&(this.created=new Date(this.created)),"string"==typeof this.updated&&(this.updated=new Date(this.updated)),"string"==typeof this.touched&&(this.touched=new Date(this.touched)),"me"!==this.name&&!t&&!e._generated){var n=this._tinode.getMeTopic();n&&n._processMetaSub([{_generated:!0,topic:this.name,updated:this.updated,touched:this.touched,acs:this.acs,public:this.public,private:this.private}])}this.onMetaDesc&&this.onMetaDesc(this)},_processMetaSub:function(e){var t=void 0;for(var n in e){var s=e[n];if(s.user){s.updated=new Date(s.updated),s.deleted=s.deleted?new Date(s.deleted):null;var i=null;s.deleted?(delete this._users[s.user],i=s):((i=this._users[s.user])||(i=this._cacheGetUser(s.user)),i=this._updateCachedUser(s.user,s,s._generated)),this.onMetaSub&&this.onMetaSub(i)}else s._generated||(t=s)}t&&this.onMetaDesc&&this.onMetaDesc(t),this.onSubsUpdated&&this.onSubsUpdated(Object.keys(this._users))},_processMetaTags:function(e){1==e.length&&e[0]==w.DEL_CHAR&&(e=[]),this._tags=e,this.onTagsUpdated&&this.onTagsUpdated(e)},_processDelMessages:function(e,t){this._maxDel=Math.max(e,this._maxDel),this.clear=Math.max(e,this.clear);var n=this,s=0;Array.isArray(t)&&t.map(function(e){if(e.hi)for(var t=e.low;t<e.hi;t++)s++,n.flushMessage(t);else s++,n.flushMessage(e.low)}),s>0&&this.onData&&this.onData()},_allMessagesReceived:function(e){this.onAllMessagesReceived&&this.onAllMessagesReceived(e)},_resetSub:function(){this._subscribed=!1},_gone:function(){this._messages.reset(),this._users={},this.acs=new S(null),this.private=null,this.public=null,this._maxSeq=0,this._minSeq=0,this._subscribed=!1;var e=this._tinode.getMeTopic();e&&e._routePres({_generated:!0,what:"gone",topic:"me",src:this.name}),this.onDeleteTopic&&this.onDeleteTopic()},_updateCachedUser:function(e,t,n){var s=this._cacheGetUser(e);return s?s=f(s,t):(n&&this.getMeta(this.startMetaQuery().withLaterOneSub(e).build()),s=f({},t)),this._cachePutUser(e,s),p(this._users,e,s)},_getQueuedSeqId:function(){return this._queuedSeqId++}};var y=function(e){T.call(this,"me",e),this._contacts={},e&&(this.onContactUpdate=e.onContactUpdate)};y.prototype=Object.create(T.prototype,{_processMetaSub:{value:function(e){var t=0;for(var n in e){var s=e[n],i=s.topic;if("fnd"!=i&&"me"!=i){s.updated=new Date(s.updated),s.touched=s.touched?new Date(s.touched):null,s.deleted=s.deleted?new Date(s.deleted):null,s.seq=0|s.seq,s.recv=0|s.recv,s.read=0|s.read,s.unread=s.seq-s.read;var r=null;if(s.deleted)r=s,delete this._contacts[i];else if(s.seen&&s.seen.when&&(s.seen.when=new Date(s.seen.when)),r=p(this._contacts,i,s),"p2p"==w.topicType(i)&&this._cachePutUser(i,r),!s._generated){var a=this._tinode.getTopic(i);a&&a._processMetaDesc(s,!0)}t++,this.onMetaSub&&this.onMetaSub(r)}}t>0&&this.onSubsUpdated&&this.onSubsUpdated(Object.keys(this._contacts))},enumerable:!0,configurable:!0,writable:!1},_routePres:{value:function(e){var t=this._contacts[e.src];if(t){switch(e.what){case"on":t.online=!0;break;case"off":t.online&&(t.online=!1,t.seen?t.seen.when=new Date:t.seen={when:new Date});break;case"msg":t.touched=new Date,t.seq=0|e.seq,t.unread=t.seq-t.read;break;case"upd":this.getMeta(this.startMetaQuery().withLaterOneSub(e.src).build());break;case"acs":t.acs?t.acs.updateAll(e.dacs):t.acs=(new S).updateAll(e.dacs);break;case"ua":t.seen={when:new Date,ua:e.ua};break;case"recv":t.recv=t.recv?Math.max(t.recv,e.seq):0|e.seq;break;case"read":t.read=t.read?Math.max(t.read,e.seq):0|e.seq,t.unread=t.seq-t.read;break;case"gone":delete this._contacts[e.src]}this.onContactUpdate&&this.onContactUpdate(e.what,t)}else if("acs"==e.what){var n=new S(e.dacs);if(!n||n.mode==S._INVALID)return void this._tinode.logger("Invalid access mode update",e.src,e.dacs);if(n.mode==S._NONE)return void this._tinode.logger("Removing non-existent subscription",e.src,e.dacs);this.getMeta(this.startMetaQuery().withOneSub(void 0,e.src).build()),this._contacts[e.src]={topic:e.src,online:!1,acs:n}}this.onPres&&this.onPres(e)},enumerable:!0,configurable:!0,writable:!1},publish:{value:function(){return Promise.reject(new Error("Publishing to 'me' is not supported"))},enumerable:!0,configurable:!0,writable:!1},contacts:{value:function(e,t){var n=e||this.onMetaSub;if(n)for(var s in this._contacts)n.call(t,this._contacts[s],s,this._contacts)},enumerable:!0,configurable:!0,writable:!0},setMsgReadRecv:{value:function(e,t,n,s){var i,r=this._contacts[e],a=!1;r&&(n|=0,"recv"===t?(i=r.recv,r.recv=r.recv?Math.max(r.recv,n):n,a=i!=r.recv):"read"===t?(i=r.read,r.read=r.read?Math.max(r.read,n):n,r.unread=r.seq-r.read,a=i!=r.read,r.recv<r.read&&(r.recv=r.read,a=!0)):"msg"===t&&(i=r.seq,r.seq=r.seq?Math.max(r.seq,n):n,r.unread=r.seq-r.read,(!r.touched||r.touched<s)&&(r.touched=s),a=i!=r.seq),!a||r.acs&&r.acs.isMuted()||!this.onContactUpdate||this.onContactUpdate(t,r))},enumerable:!0,configurable:!0,writable:!0},getContact:{value:function(e){return this._contacts[e]},enumerable:!0,configurable:!0,writable:!0},getAccessMode:{value:function(e){var t=this._contacts[e];return t?t.acs:null},enumerable:!0,configurable:!0,writable:!0}}),y.prototype.constructor=y;var D=function(e){T.call(this,"fnd",e),this._contacts={}};D.prototype=Object.create(T.prototype,{_processMetaSub:{value:function(e){var t=Object.getOwnPropertyNames(this._contacts).length;for(var n in this._contacts={},e){var s=e[n],i=s.topic?s.topic:s.user;s.updated=new Date(s.updated),s.seen&&s.seen.when&&(s.seen.when=new Date(s.seen.when)),s=p(this._contacts,i,s),t++,this.onMetaSub&&this.onMetaSub(s)}t>0&&this.onSubsUpdated&&this.onSubsUpdated(Object.keys(this._contacts))},enumerable:!0,configurable:!0,writable:!1},publish:{value:function(){return Promise.reject(new Error("Publishing to 'fnd' is not supported"))},enumerable:!0,configurable:!0,writable:!1},setMeta:{value:function(e){var t=this;return Object.getPrototypeOf(D.prototype).setMeta.call(this,e).then(function(){Object.keys(t._contacts).length>0&&(t._contacts={},t.onSubsUpdated&&t.onSubsUpdated([]))})},enumerable:!0,configurable:!0,writable:!1},contacts:{value:function(e,t){var n=e||this.onMetaSub;if(n)for(var s in this._contacts)n.call(t,this._contacts[s],s,this._contacts)},enumerable:!0,configurable:!0,writable:!0}}),D.prototype.constructor=D;var E=function(e){this._tinode=e,this._apiKey=e._apiKey,this._authToken=e.getAuthToken(),this._msgId=e.getNextUniqueId(),this.xhr=g(),this.toResolve=null,this.toReject=null,this.onProgress=null,this.onSuccess=null,this.onFailure=null};E.prototype={upload:function(e,t,n,s){if(!this._authToken)throw new Error("Must authenticate first");var i=this;this.xhr.open("POST","/v"+u+"/file/u/",!0),this.xhr.setRequestHeader("X-Tinode-APIKey",this._apiKey),this.xhr.setRequestHeader("X-Tinode-Auth","Token "+this._authToken.token);var r=new Promise((e,t)=>{this.toResolve=e,this.toReject=t});this.onProgress=t,this.onSuccess=n,this.onFailure=s,this.xhr.upload.onprogress=function(e){e.lengthComputable&&i.onProgress&&i.onProgress(e.loaded/e.total)},this.xhr.onload=function(){var e;try{e=JSON.parse(this.response,_)}catch(e){i._tinode.logger("Invalid server response in LargeFileHelper",this.response)}this.status>=200&&this.status<300?(i.toResolve&&i.toResolve(e.ctrl.params.url),i.onSuccess&&i.onSuccess(e.ctrl)):this.status>=400?(i.toReject&&i.toReject(new Error(e.ctrl.text+" ("+e.ctrl.code+")")),i.onFailure&&i.onFailure(e.ctrl)):i._tinode.logger("Unexpected server response status",this.status,this.response)},this.xhr.onerror=function(e){i.toReject&&i.toReject(new Error("failed")),i.onFailure&&i.onFailure(null)},this.xhr.onabort=function(e){i.toReject&&i.toReject(new Error("upload cancelled by user")),i.onFailure&&i.onFailure(null)};try{var a=new FormData;a.append("file",e),a.set("id",this._msgId),this.xhr.send(a)}catch(e){this.toReject&&this.toReject(e),this.onFailure&&this.onFailure(null)}return r},download:function(e,t,n,s){if(/^(?:(?:[a-z]+:)?\/\/)/i.test(e))throw new Error("The URL '"+e+"' must be relative, not absolute");if(!this._authToken)throw new Error("Must authenticate first");var i=this;this.xhr.open("GET",e,!0),this.xhr.setRequestHeader("X-Tinode-APIKey",this._apiKey),this.xhr.setRequestHeader("X-Tinode-Auth","Token "+this._authToken.token),this.xhr.responseType="blob",this.onProgress=s,this.xhr.onprogress=function(e){i.onProgress&&i.onProgress(e.loaded)};var r=new Promise((e,t)=>{this.toResolve=e,this.toReject=t});this.xhr.onload=function(){if(200==this.status){var e=document.createElement("a");e.href=window.URL.createObjectURL(new Blob([this.response],{type:n})),e.style.display="none",e.setAttribute("download",t),document.body.appendChild(e),e.click(),document.body.removeChild(e),window.URL.revokeObjectURL(e.href),i.toResolve&&i.toResolve()}else if(this.status>=400&&i.toReject){var s=new FileReader;s.onload=function(){try{var e=JSON.parse(this.result,_);i.toReject(new Error(e.ctrl.text+" ("+e.ctrl.code+")"))}catch(e){i._tinode.logger("Invalid server response in LargeFileHelper",this.result),i.toReject(e)}},s.readAsText(this.response)}},this.xhr.onerror=function(e){i.toReject&&i.toReject(new Error("failed"))},this.xhr.onabort=function(){i.toReject&&i.toReject(null)};try{this.xhr.send()}catch(e){this.toReject&&this.toReject(e)}return r},cancel:function(){this.xhr&&this.xhr.readyState<4&&this.xhr.abort()},getId:function(){return this._msgId}};var x=function(e,t){this.status=x.STATUS_NONE,this.topic=e,this.content=t};return x.STATUS_NONE=0,x.STATUS_QUEUED=1,x.STATUS_SENDING=2,x.STATUS_SENT=3,x.STATUS_RECEIVED=4,x.STATUS_READ=5,x.STATUS_TO_ME=6,x.prototype={toJSON:function(){},fromJSON:function(e){}},x.prototype.constructor=x,(o=w).Drafty=e,o});
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],24:[function(require,module,exports){
 (function (global){
@@ -28222,6 +28222,21 @@ function base64EncodedLen(n) {
 // pbject in bytes.
 function base64DecodedLen(n) {
   return Math.floor(n / 4) * 3;
+}
+
+// Re-encode string to standard base64 encoding with padding.
+// The string may be base64-URL encoded without the padding.
+function base64ReEncode(str) {
+  if (str) {
+    str = str.replace("-", "+").replace("_", "/");
+    try {
+      str = btoa(atob(str));
+    } catch (err) {
+      console.log("failed to base64 re-decode string");
+      str = null;
+    }
+  }
+  return str;
 }
 
 // Convert uploaded image into a base64-encoded string possibly scaling
@@ -28797,37 +28812,38 @@ class InPlaceEdit extends React.Component {
     super(props);
 
     this.state = {
-      active: props.state,
-      initialText: props.text || "",
-      text: props.text || ""
+      active: props.active,
+      initialValue: props.value || "",
+      value: props.value || ""
     };
 
     this.handeTextChange = this.handeTextChange.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleStartEditing = this.handleStartEditing.bind(this);
     this.handleEditingFinished = this.handleEditingFinished.bind(this);
+    this.handlePasswordFinished = this.handlePasswordFinished.bind(this);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     // If text has changed while in read mode, update text and discard changes.
     // Ignore update if in edit mode.
-    if (prevState.initialText != nextProps.text && !prevState.active) {
+    if (prevState.initialValue != nextProps.value && !prevState.active) {
       return {
-        initialText: nextProps.text || "",
-        text: nextProps.text || ""
+        initialValue: nextProps.value || "",
+        value: nextProps.value || ""
       };
     }
     return null;
   }
 
   handeTextChange(e) {
-    this.setState({ text: e.target.value });
+    this.setState({ value: e.target.value });
   }
 
   handleKeyDown(e) {
     if (e.keyCode === 27) {
       // Escape pressed
-      this.setState({ text: this.props.text, active: false });
+      this.setState({ value: this.props.value, active: false });
     } else if (e.keyCode === 13) {
       // Enter pressed
       this.handleEditingFinished();
@@ -28843,29 +28859,48 @@ class InPlaceEdit extends React.Component {
 
   handleEditingFinished() {
     this.setState({ active: false });
-    var text = this.state.text.trim();
-    if ((text || this.props.text) && text !== this.props.text) {
-      this.props.onFinished(text);
+    let value = this.state.value.trim();
+    if ((value || this.props.value) && value !== this.props.value) {
+      this.props.onFinished(value);
+    }
+  }
+
+  handlePasswordFinished(value) {
+    this.setState({ active: false });
+    if (value && value !== this.props.value) {
+      this.props.onFinished(value);
     }
   }
 
   render() {
-    var spanText = this.props.type === "password" ? "••••••••" : this.state.text;
-    var spanClass = "in-place-edit" + (this.props.readOnly ? " disabled" : "");
-    if (!spanText) {
-      spanText = this.props.placeholder;
-      spanClass += " placeholder";
+    if (this.state.active) {
+      var fieldType = this.props.type || "text";
+    } else {
+      var spanText = this.props.type == "password" ? "••••••••" : this.state.value;
+      var spanClass = "in-place-edit" + (this.props.readOnly ? " disabled" : "");
+      if (!spanText) {
+        spanText = this.props.placeholder;
+        spanClass += " placeholder";
+      }
+      if (spanText.length > 20) {
+        spanText = spanText.substring(0, 19) + "...";
+      }
     }
-    if (spanText.length > 20) {
-      spanText = spanText.substring(0, 19) + "...";
-    }
-    return this.state.active ? React.createElement('input', { type: this.props.type || "text",
-      value: this.state.text,
+    return this.state.active ? fieldType == "password" ? React.createElement(VisiblePassword, {
+      value: this.state.value,
       placeholder: this.props.placeholder,
+      required: this.props.required ? 'required' : '',
+      autoComplete: this.props.autoComplete,
+      autoFocus: true,
+      onFinished: this.handlePasswordFinished }) : React.createElement('input', { type: fieldType,
+      value: this.state.value,
+      placeholder: this.props.placeholder,
+      required: this.props.required ? 'required' : '',
+      autoComplete: this.props.autoComplete,
+      autoFocus: true,
       onChange: this.handeTextChange,
       onKeyDown: this.handleKeyDown,
-      onBlur: this.handleEditingFinished,
-      autoFocus: true }) : React.createElement(
+      onBlur: this.handleEditingFinished }) : React.createElement(
       'span',
       { className: spanClass, onClick: this.handleStartEditing },
       React.createElement(
@@ -28876,6 +28911,89 @@ class InPlaceEdit extends React.Component {
     );
   }
 };
+
+class VisiblePassword extends React.PureComponent {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      value: this.props.value,
+      visible: false
+    };
+
+    this.handleVisibility = this.handleVisibility.bind(this);
+    this.handeTextChange = this.handeTextChange.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.handleEditingFinished = this.handleEditingFinished.bind(this);
+  }
+
+  handeTextChange(e) {
+    this.setState({ value: e.target.value });
+    if (this.props.onChange) {
+      this.props.onChange(e);
+    }
+  }
+
+  handleVisibility(e) {
+    e.preventDefault();
+    this.setState({ visible: !this.state.visible });
+  }
+
+  handleKeyDown(e) {
+    if (e.keyCode == 27) {
+      // Escape pressed
+      this.setState({ value: this.props.value, visible: false });
+      if (this.props.onFinished) {
+        this.props.onFinished();
+      }
+    } else if (e.keyCode == 13) {
+      // Enter pressed
+      this.handleEditingFinished();
+    }
+  }
+
+  handleEditingFinished(e) {
+    if (e) {
+      let currentTarget = e.currentTarget;
+      setTimeout(() => {
+        if (!currentTarget.contains(document.activeElement)) {
+          if (this.props.onFinished) {
+            this.props.onFinished(this.state.value);
+          }
+        }
+      }, 0);
+    } else if (this.props.onFinished) {
+      this.props.onFinished(this.state.value.trim());
+    }
+  }
+
+  render() {
+    return React.createElement(
+      'div',
+      { tabIndex: '-1', className: 'group-focus',
+        onBlur: this.handleEditingFinished },
+      React.createElement('input', { className: 'with-visibility',
+        type: this.state.visible ? "text" : "password",
+        value: this.state.value,
+        placeholder: this.props.placeholder,
+        required: this.props.required ? 'required' : '',
+        autoFocus: this.props.autoFocus ? 'autoFocus' : '',
+        autoComplete: this.props.autoComplete,
+        onChange: this.handeTextChange,
+        onKeyDown: this.handleKeyDown }),
+      React.createElement(
+        'span',
+        { onClick: this.handleVisibility },
+        React.createElement(
+          'i',
+          { className: 'material-icons clickable light-gray' },
+          this.state.visible ? 'visibility' : 'visibility_off'
+        )
+      )
+    );
+  }
+}
+
 /* END InPlaceEdit */
 
 /* BEGIN Combobox for selecting host name */
@@ -29368,7 +29486,7 @@ class LoginView extends React.Component {
         value: this.state.login,
         onChange: this.handleLoginChange,
         required: true, autoFocus: true }),
-      React.createElement('input', { type: 'password', id: 'inputPassword',
+      React.createElement(VisiblePassword, { type: 'password', id: 'inputPassword',
         placeholder: 'Password',
         autoComplete: 'current-password',
         value: this.state.password,
@@ -29382,7 +29500,12 @@ class LoginView extends React.Component {
         React.createElement(
           'label',
           { htmlFor: 'save-token' },
-          '\xA0Keep me logged in'
+          '\xA0Stay logged in'
+        ),
+        React.createElement(
+          'a',
+          { href: '#reset' },
+          'Forgot password?'
         )
       ),
       React.createElement(
@@ -29407,7 +29530,6 @@ class CreateAccountView extends React.PureComponent {
     this.state = {
       login: '',
       password: '',
-      password2: '',
       email: '',
       fn: '', // full/formatted name
       imageDataUrl: null,
@@ -29417,7 +29539,6 @@ class CreateAccountView extends React.PureComponent {
 
     this.handleLoginChange = this.handleLoginChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
-    this.handlePassword2Change = this.handlePassword2Change.bind(this);
     this.handleEmailChange = this.handleEmailChange.bind(this);
     this.handleFnChange = this.handleFnChange.bind(this);
     this.handleImageChanged = this.handleImageChanged.bind(this);
@@ -29429,12 +29550,8 @@ class CreateAccountView extends React.PureComponent {
     this.setState({ login: e.target.value });
   }
 
-  handlePasswordChange(e) {
-    this.setState({ password: e.target.value });
-  }
-
-  handlePassword2Change(e) {
-    this.setState({ password2: e.target.value });
+  handlePasswordChange(password) {
+    this.setState({ password: password });
   }
 
   handleEmailChange(e) {
@@ -29456,13 +29573,9 @@ class CreateAccountView extends React.PureComponent {
 
   handleSubmit(e) {
     e.preventDefault();
-    if (this.state.password.trim() != this.state.password2.trim()) {
-      this.props.onError("Passwords don't match", "warn");
-    } else {
-      // TODO: check email for validity
-      this.setState({ errorCleared: false });
-      this.props.onCreateAccount(this.state.login.trim(), this.state.password.trim(), vcard(this.state.fn, this.state.imageDataUrl), { "meth": "email", "val": this.state.email });
-    }
+    // TODO: check email for validity
+    this.setState({ errorCleared: false });
+    this.props.onCreateAccount(this.state.login.trim(), this.state.password.trim(), vcard(this.state.fn, this.state.imageDataUrl), { "meth": "email", "val": this.state.email });
   }
 
   render() {
@@ -29481,20 +29594,13 @@ class CreateAccountView extends React.PureComponent {
           { className: 'panel-form-column' },
           React.createElement('input', { type: 'text', placeholder: 'Login', autoComplete: 'user-name',
             value: this.state.login, onChange: this.handleLoginChange, required: true, autoFocus: true }),
-          React.createElement('input', { type: 'password', placeholder: 'Password', autoComplete: 'new-password',
-            value: this.state.password, onChange: this.handlePasswordChange, required: true }),
-          React.createElement('input', { type: 'password', placeholder: 'Repeat password', autoComplete: 'new-password',
-            value: this.state.password2, onChange: this.handlePassword2Change, required: true })
+          React.createElement(VisiblePassword, { placeholder: 'Password', autoComplete: 'new-password',
+            value: this.state.password, onFinished: this.handlePasswordChange,
+            required: true })
         ),
         React.createElement(AvatarUpload, {
           onImageChanged: this.handleImageChanged,
           onError: this.props.onError })
-      ),
-      React.createElement(
-        'div',
-        { className: 'panel-form-row' },
-        React.createElement('input', { type: 'email', placeholder: 'Email, e.g john.doe@example.com',
-          autoComplete: 'email', value: this.state.email, onChange: this.handleEmailChange, required: true })
       ),
       React.createElement(
         'div',
@@ -29505,12 +29611,18 @@ class CreateAccountView extends React.PureComponent {
       React.createElement(
         'div',
         { className: 'panel-form-row' },
+        React.createElement('input', { type: 'email', placeholder: 'Email, e.g john.doe@example.com',
+          autoComplete: 'email', value: this.state.email, onChange: this.handleEmailChange, required: true })
+      ),
+      React.createElement(
+        'div',
+        { className: 'panel-form-row' },
         React.createElement(CheckBox, { id: 'save-token', name: 'save-token', checked: this.state.saveToken,
           onChange: this.handleToggleSaveToken }),
         React.createElement(
           'label',
           { htmlFor: 'save-token' },
-          '\xA0Keep me logged in'
+          '\xA0Stay logged in'
         )
       ),
       React.createElement(
@@ -29596,6 +29708,82 @@ class AvatarUpload extends React.Component {
   }
 };
 /* END Account registration */
+
+/* BEGIN PasswordResetView: a password reset form */
+class PasswordResetView extends React.PureComponent {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      email: '',
+      password: ''
+    };
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleEmailChange = this.handleEmailChange.bind(this);
+    this.handlePasswordChange = this.handlePasswordChange.bind(this);
+  }
+
+  componentDidMount() {
+    let parsed = parseUrlHash(window.location.hash);
+    this.setState({ token: parsed.params.token, scheme: parsed.params.scheme });
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    if (this.state.token) {
+      this.props.onReset(this.state.scheme, this.state.password.trim(), this.state.token);
+    } else {
+      this.props.onRequest("email", this.state.email.trim());
+    }
+  }
+
+  handleEmailChange(e) {
+    this.setState({ email: e.target.value });
+  }
+
+  handlePasswordChange(e) {
+    this.setState({ password: e.target.value });
+  }
+
+  render() {
+    let reset = this.state.token && this.state.scheme;
+    return React.createElement(
+      'form',
+      { id: 'password-reset-form', onSubmit: this.handleSubmit },
+      reset ? React.createElement(VisiblePassword, {
+        placeholder: 'Enter new password',
+        autoComplete: 'new-password',
+        value: this.state.password,
+        required: true, autoFocus: true,
+        onChange: this.handlePasswordChange }) : React.createElement(
+        React.Fragment,
+        null,
+        React.createElement(
+          'label',
+          { htmlFor: 'inputEmail' },
+          'Send a password reset email:'
+        ),
+        React.createElement('input', { type: 'email', id: 'inputEmail',
+          placeholder: 'Your registration email',
+          autoComplete: 'email',
+          value: this.state.email,
+          onChange: this.handleEmailChange,
+          required: true, autoFocus: true })
+      ),
+      React.createElement(
+        'div',
+        { className: 'dialog-buttons' },
+        React.createElement(
+          'button',
+          { className: 'blue', type: 'submit' },
+          reset ? "Reset" : "Send request"
+        )
+      )
+    );
+  }
+}
+/* END PasswordResetView */
 
 /* BEGIN Tinode config panel */
 class SettingsView extends React.PureComponent {
@@ -29820,6 +30008,10 @@ class SidepanelView extends React.Component {
         title = "Confirm Credentials";
         onCancel = this.props.onCancel;
         break;
+      case 'reset':
+        title = "Reset Password";
+        onCancel = this.props.onCancel;
+        break;
       default:
         ;
     };
@@ -29879,7 +30071,9 @@ class SidepanelView extends React.Component {
         credMethod: this.props.credMethod,
         onSubmit: this.props.onValidateCredentials,
         onCancel: this.props.onCancel,
-        onError: this.props.onError }) : null
+        onError: this.props.onError }) : view === 'reset' ? React.createElement(PasswordResetView, {
+        onRequest: this.props.onPasswordResetRequest,
+        onReset: this.props.onResetPassword }) : null
     );
   }
 };
@@ -29945,8 +30139,8 @@ class EditAccountView extends React.Component {
     this.state = {
       fullName: me.public ? me.public.fn : undefined,
       avatar: makeImageUrl(me.public ? me.public.photo : null),
-      auth: defacs.auth,
-      anon: defacs.anon,
+      auth: defacs ? defacs.auth : null,
+      anon: defacs ? defacs.anon : null,
       tags: fnd.tags(),
       previousOnTags: fnd.onTagsUpdated
     };
@@ -30048,7 +30242,7 @@ class EditAccountView extends React.Component {
             null,
             React.createElement(InPlaceEdit, {
               placeholder: 'Full name, e.g. John Doe',
-              text: this.state.fullName,
+              value: this.state.fullName,
               onFinished: this.handleFullNameUpdate })
           ),
           React.createElement(
@@ -31621,7 +31815,7 @@ class InfoView extends React.Component {
               React.createElement(InPlaceEdit, {
                 placeholder: 'Group name',
                 readOnly: !this.state.owner,
-                text: this.state.fullName,
+                value: this.state.fullName,
                 onFinished: this.handleFullNameUpdate })
             ),
             React.createElement(
@@ -31638,7 +31832,7 @@ class InfoView extends React.Component {
               null,
               React.createElement(InPlaceEdit, {
                 placeholder: 'Visible to you only',
-                text: this.state.private,
+                value: this.state.private,
                 onFinished: this.handlePrivateUpdate })
             )
           ),
@@ -33124,6 +33318,8 @@ class TinodeWeb extends React.Component {
     this.handleHideInfoView = this.handleHideInfoView.bind(this);
     this.handleMemberUpdateRequest = this.handleMemberUpdateRequest.bind(this);
     this.handleValidateCredentialsRequest = this.handleValidateCredentialsRequest.bind(this);
+    this.handlePasswordResetRequest = this.handlePasswordResetRequest.bind(this);
+    this.handleResetPassword = this.handleResetPassword.bind(this);
   }
 
   getBlankState() {
@@ -33223,11 +33419,10 @@ class TinodeWeb extends React.Component {
     this.tinode.enableLogging(true, true);
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
-    let token, firebasePushToken;
-    if (localStorage.getObject("keep-logged-in")) {
-      token = localStorage.getObject("auth-token");
-    }
 
+    let token = localStorage.getObject("keep-logged-in") ? localStorage.getObject("auth-token") : undefined;
+
+    let parsedNav = parseUrlHash(window.location.hash);
     if (token) {
       // When reading from storage, date is returned as string.
       token.expires = new Date(token.expires);
@@ -33236,12 +33431,11 @@ class TinodeWeb extends React.Component {
         // Socket error
         this.handleError(err.message, "err");
       });
-      var parsed = parseUrlHash(window.location.hash);
-      delete parsed.params.info;
-      delete parsed.params.tab;
-      parsed.path[0] = '';
-      navigateTo(composeUrlHash(parsed.path, parsed.params));
-    } else {
+      delete parsedNav.params.info;
+      delete parsedNav.params.tab;
+      parsedNav.path[0] = '';
+      navigateTo(composeUrlHash(parsedNav.path, parsedNav.params));
+    } else if (!parsedNav.params.token) {
       navigateTo("");
     }
 
@@ -33275,7 +33469,7 @@ class TinodeWeb extends React.Component {
     var hash = parseUrlHash(window.location.hash);
     if (hash.path && hash.path.length > 0) {
       // Left-side panel selector.
-      if (['register', 'settings', 'edit', 'cred', 'newtpk', 'contacts', ''].includes(hash.path[0])) {
+      if (['register', 'settings', 'edit', 'cred', 'reset', 'newtpk', 'contacts', ''].includes(hash.path[0])) {
         this.setState({ sidePanelSelected: hash.path[0] });
       } else {
         console.log("Unknown sidepanel view", hash.path[0]);
@@ -34003,6 +34197,30 @@ class TinodeWeb extends React.Component {
     this.doLogin(null, null, { meth: cred, resp: code });
   }
 
+  handlePasswordResetRequest(method, value) {
+    // If already connected, connnect() will return a resolved promise.
+    this.tinode.connect().then(() => {
+      return this.tinode.requestResetAuthSecret("basic", method, value);
+    }).catch(err => {
+      // Socket error
+      this.handleError(err.message, "err");
+    });
+  }
+
+  handleResetPassword(scheme, newPassword, token) {
+    token = base64ReEncode(token);
+    if (!token) {
+      this.handleError("Invalid security token", "err");
+    } else {
+      this.tinode.connect().then(() => {
+        return this.tinode.updateAccountBasic(null, null, newPassword, { token: token });
+      }).catch(err => {
+        // Socket error
+        this.handleError(err.message, "err");
+      });
+    }
+  }
+
   render() {
     return React.createElement(
       'div',
@@ -34056,6 +34274,8 @@ class TinodeWeb extends React.Component {
         onCancel: this.handleSidepanelCancel,
         onError: this.handleError,
         onValidateCredentials: this.handleValidateCredentialsRequest,
+        onPasswordResetRequest: this.handlePasswordResetRequest,
+        onResetPassword: this.handleResetPassword,
 
         onInitFind: this.tnInitFind,
         searchResults: this.state.searchResults,
@@ -34114,7 +34334,7 @@ class TinodeWeb extends React.Component {
 module.exports = TinodeWeb;
 
 },{"../version.json":27,"firebase/app":6,"firebase/messaging":7,"react":16,"react-dom":13,"tinode-sdk":23}],27:[function(require,module,exports){
-module.exports={"version": "0.15.7-rc2"}
+module.exports={"version": "0.15.7-rc3"}
 
 },{}],28:[function(require,module,exports){
 // shim for using process in browser
