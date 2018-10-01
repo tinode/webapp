@@ -193,6 +193,21 @@ function base64DecodedLen(n) {
   return Math.floor(n / 4) * 3;
 }
 
+// Re-encode string to standard base64 encoding with padding.
+// The string may be base64-URL encoded without the padding.
+function base64ReEncode(str) {
+  if (str) {
+    str = str.replace("-", "+").replace("_", "/");
+    try {
+      str = btoa(atob(str));
+    } catch(err) {
+      console.log("failed to base64 re-decode string");
+      str = null;
+    }
+  }
+  return str;
+}
+
 // Convert uploaded image into a base64-encoded string possibly scaling
 // linear dimensions or constraining to a square.
 function imageFileScaledToBase64(file, width, height, forceSquare, onSuccess, onError) {
@@ -752,6 +767,7 @@ class InPlaceEdit extends React.Component {
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleStartEditing = this.handleStartEditing.bind(this);
     this.handleEditingFinished = this.handleEditingFinished.bind(this);
+    this.handlePasswordFinished = this.handlePasswordFinished.bind(this);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -795,8 +811,17 @@ class InPlaceEdit extends React.Component {
     }
   }
 
+  handlePasswordFinished(value) {
+    this.setState({active: false});
+    if (value && (value !== this.props.value)) {
+      this.props.onFinished(value);
+    }
+  }
+
   render() {
-    if (!this.state.active) {
+    if (this.state.active) {
+      var fieldType = this.props.type || "text";
+    } else {
       var spanText = this.props.type == "password" ? "••••••••" : this.state.value;
       var spanClass = "in-place-edit" +
         (this.props.readOnly ? " disabled" : "");
@@ -810,15 +835,25 @@ class InPlaceEdit extends React.Component {
     }
     return (
       this.state.active ?
-        <input type={this.props.type || "text"}
-          value={this.state.value}
-          placeholder={this.props.placeholder}
-          required={this.props.required ? 'required' : ''}
-          autoComplete={this.props.autoComplete}
-          autoFocus
-          onChange={this.handeTextChange}
-          onKeyDown={this.handleKeyDown}
-          onBlur={this.handleEditingFinished} />
+        (fieldType == "password" ?
+          <VisiblePassword
+            value={this.state.value}
+            placeholder={this.props.placeholder}
+            required={this.props.required ? 'required' : ''}
+            autoComplete={this.props.autoComplete}
+            autoFocus={true}
+            onFinished={this.handlePasswordFinished}/>
+          :
+          <input type={fieldType}
+            value={this.state.value}
+            placeholder={this.props.placeholder}
+            required={this.props.required ? 'required' : ''}
+            autoComplete={this.props.autoComplete}
+            autoFocus
+            onChange={this.handeTextChange}
+            onKeyDown={this.handleKeyDown}
+            onBlur={this.handleEditingFinished} />
+        )
         :
         <span className={spanClass} onClick={this.handleStartEditing}>
           <span className="content">{spanText}</span>
@@ -855,24 +890,37 @@ class VisiblePassword extends React.PureComponent {
   }
 
   handleKeyDown(e) {
-    if (e.keyCode === 27) {
+    if (e.keyCode == 27) {
       // Escape pressed
-      this.setState({value: this.props.value, active: false});
-    } else if (e.keyCode === 13) {
+      this.setState({value: this.props.value, visible: false});
+      if (this.props.onFinished) {
+        this.props.onFinished();
+      }
+    } else if (e.keyCode == 13) {
       // Enter pressed
       this.handleEditingFinished();
     }
   }
 
-  handleEditingFinished() {
-    if (this.props.onFinished) {
-      this.props.onFinished(this.state.value);
+  handleEditingFinished(e) {
+    if (e) {
+      let currentTarget = e.currentTarget;
+      setTimeout(() => {
+        if (!currentTarget.contains(document.activeElement)) {
+          if (this.props.onFinished) {
+            this.props.onFinished(this.state.value);
+          }
+        }
+      }, 0);
+    } else if (this.props.onFinished) {
+      this.props.onFinished(this.state.value.trim());
     }
   }
 
   render() {
     return (
-      <div>
+      <div tabIndex="-1" className="group-focus"
+        onBlur={this.handleEditingFinished}>
         <input className="with-visibility"
           type={this.state.visible ? "text" : "password"}
           value={this.state.value}
@@ -881,8 +929,7 @@ class VisiblePassword extends React.PureComponent {
           autoFocus={this.props.autoFocus ? 'autoFocus' : ''}
           autoComplete={this.props.autoComplete}
           onChange={this.handeTextChange}
-          onKeyDown={this.handleKeyDown}
-          onBlur={this.handleEditingFinished} />
+          onKeyDown={this.handleKeyDown} />
         <span onClick={this.handleVisibility}>
           <i className="material-icons clickable light-gray">
             {this.state.visible ? 'visibility' : 'visibility_off'}
@@ -1531,14 +1578,20 @@ class PasswordResetView extends React.PureComponent {
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleEmailChange = this.handleEmailChange.bind(this);
+    this.handlePasswordChange = this.handlePasswordChange.bind(this);
+  }
+
+  componentDidMount() {
+    let parsed = parseUrlHash(window.location.hash);
+    this.setState({token: parsed.params.token, scheme: parsed.params.scheme});
   }
 
   handleSubmit(e) {
     e.preventDefault();
-    if (this.props.token) {
-      this.props.onSubmit(null, this.state.password.trim());
+    if (this.state.token) {
+      this.props.onReset(this.state.scheme, this.state.password.trim(), this.state.token);
     } else {
-      this.props.onSubmit("email", this.state.email.trim());
+      this.props.onRequest("email", this.state.email.trim());
     }
   }
 
@@ -1551,10 +1604,17 @@ class PasswordResetView extends React.PureComponent {
   }
 
   render() {
-    let buttonText = this.props.token ?  "Reset" : "Send request";
+    let reset = (this.state.token && this.state.scheme);
     return (
       <form id="password-reset-form" onSubmit={this.handleSubmit}>
-        {!this.props.token ?
+        {reset ?
+          <VisiblePassword
+            placeholder="Enter new password"
+            autoComplete="new-password"
+            value={this.state.password}
+            required={true} autoFocus={true}
+            onChange={this.handlePasswordChange} />
+          :
           <React.Fragment>
             <label htmlFor="inputEmail">Send a password reset email:</label>
             <input type="email" id="inputEmail"
@@ -1564,16 +1624,9 @@ class PasswordResetView extends React.PureComponent {
               onChange={this.handleEmailChange}
               required autoFocus />
           </React.Fragment>
-          :
-          <VisiblePassword
-            placeholder="Enter new password"
-            autoComplete="new-password"
-            value={this.state.password}
-            required={true} autoFocus={true}
-            onChange={this.handlePasswordChange} />
         }
         <div className="dialog-buttons">
-          <button className="blue" type="submit">{buttonText}</button>
+          <button className="blue" type="submit">{reset ? "Reset" : "Send request"}</button>
         </div>
       </form>
     );
@@ -1832,7 +1885,8 @@ class SidepanelView extends React.Component {
 
           view === 'reset' ?
           <PasswordResetView
-            onSubmit={this.props.onPasswordReset} /> :
+            onRequest={this.props.onPasswordResetRequest}
+            onReset={this.props.onResetPassword} /> :
           null}
       </div>
     );
@@ -1890,8 +1944,8 @@ class EditAccountView extends React.Component {
     this.state = {
       fullName: me.public ? me.public.fn : undefined,
       avatar: makeImageUrl(me.public ? me.public.photo : null),
-      auth: defacs.auth,
-      anon: defacs.anon,
+      auth: defacs ? defacs.auth : null,
+      anon: defacs ? defacs.anon : null,
       tags: fnd.tags(),
       previousOnTags: fnd.onTagsUpdated
     };
@@ -4474,6 +4528,7 @@ class TinodeWeb extends React.Component {
     this.handleMemberUpdateRequest = this.handleMemberUpdateRequest.bind(this);
     this.handleValidateCredentialsRequest = this.handleValidateCredentialsRequest.bind(this);
     this.handlePasswordResetRequest = this.handlePasswordResetRequest.bind(this);
+    this.handleResetPassword = this.handleResetPassword.bind(this);
   }
 
   getBlankState() {
@@ -4571,11 +4626,11 @@ class TinodeWeb extends React.Component {
     this.tinode.enableLogging(true, true);
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
-    let token, firebasePushToken;
-    if (localStorage.getObject("keep-logged-in")) {
-      token = localStorage.getObject("auth-token");
-    }
 
+    let token = localStorage.getObject("keep-logged-in") ?
+      localStorage.getObject("auth-token") : undefined;
+
+    let parsedNav = parseUrlHash(window.location.hash);
     if (token) {
       // When reading from storage, date is returned as string.
       token.expires = new Date(token.expires);
@@ -4584,12 +4639,11 @@ class TinodeWeb extends React.Component {
         // Socket error
         this.handleError(err.message, "err");
       });
-      var parsed = parseUrlHash(window.location.hash);
-      delete parsed.params.info;
-      delete parsed.params.tab;
-      parsed.path[0] = '';
-      navigateTo(composeUrlHash(parsed.path, parsed.params));
-    } else {
+      delete parsedNav.params.info;
+      delete parsedNav.params.tab;
+      parsedNav.path[0] = '';
+      navigateTo(composeUrlHash(parsedNav.path, parsedNav.params));
+    } else if (!parsedNav.params.token) {
       navigateTo("");
     }
 
@@ -5365,12 +5419,28 @@ class TinodeWeb extends React.Component {
     // If already connected, connnect() will return a resolved promise.
     this.tinode.connect()
       .then(() => {
-        this.tinode.requestResetAuthSecret("basic", method, value)
+        return this.tinode.requestResetAuthSecret("basic", method, value)
       })
       .catch((err) => {
         // Socket error
         this.handleError(err.message, "err");
       });
+  }
+
+  handleResetPassword(scheme, newPassword, token) {
+    token = base64ReEncode(token);
+    if (!token)  {
+      this.handleError("Invalid security token", "err");
+    } else {
+      this.tinode.connect()
+        .then(() => {
+          return this.tinode.updateAccountBasic(null, null, newPassword, {token: token});
+        })
+        .catch((err) => {
+          // Socket error
+          this.handleError(err.message, "err");
+        });
+    }
   }
 
   render() {
@@ -5430,7 +5500,8 @@ class TinodeWeb extends React.Component {
           onCancel={this.handleSidepanelCancel}
           onError={this.handleError}
           onValidateCredentials={this.handleValidateCredentialsRequest}
-          onPasswordReset={this.handlePasswordResetRequest}
+          onPasswordResetRequest={this.handlePasswordResetRequest}
+          onResetPassword={this.handleResetPassword}
 
           onInitFind={this.tnInitFind}
           searchResults={this.state.searchResults}
