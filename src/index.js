@@ -3,7 +3,7 @@
 
 var React = require('react');
 var ReactDOM = require('react-dom');
-var TinodeWeb = require('./webapp.js');
+var TinodeWeb = require('./webapp.es5.js');
 
 ReactDOM.render(
   React.createElement(TinodeWeb, null),

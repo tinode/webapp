@@ -27774,7 +27774,7 @@ if (process.env.NODE_ENV === 'production') {
 }).call(this,require('_process'))
 },{"./cjs/schedule-tracing.development.js":17,"./cjs/schedule-tracing.production.min.js":18,"_process":28}],23:[function(require,module,exports){
 (function (global){
-!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{("undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:this).Tinode=e()}}(function(){var e={};const t=[{name:"ST",start:/(?:^|\W)(\*)[^\s*]/,end:/[^\s*](\*)(?=$|\W)/},{name:"EM",start:/(?:^|[\W_])(_)[^\s_]/,end:/[^\s_](_)(?=$|[\W_])/},{name:"DL",start:/(?:^|\W)(~)[^\s~]/,end:/[^\s~](~)(?=$|\W)/},{name:"CO",start:/(?:^|\W)(`)[^`]/,end:/[^`](`)(?=$|\W)/}],n=[{name:"LN",dataName:"url",pack:function(e){return/^[a-z]+:\/\//i.test(e)||(e="http://"+e),{url:e}},re:/(https?:\/\/)?(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b(?:[-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)/g},{name:"MN",dataName:"val",pack:function(e){return{val:e.slice(1)}},re:/\B@(\w\w+)/g},{name:"HT",dataName:"val",pack:function(e){return{val:e.slice(1)}},re:/\B#(\w\w+)/g}],s={ST:{name:"b",isVoid:!1},EM:{name:"i",isVoid:!1},DL:{name:"del",isVoid:!1},CO:{name:"tt",isVoid:!1},BR:{name:"br",isVoid:!0},LN:{name:"a",isVoid:!1},MN:{name:"a",isVoid:!1},HT:{name:"a",isVoid:!1},IM:{name:"img",isVoid:!0}};function i(e,t){var n;try{n=atob(e)}catch(e){console.log("Drafty: failed to decode base64-encoded object",e.message),n=atob("")}for(var s=n.length,i=new ArrayBuffer(s),r=new Uint8Array(i),a=0;a<s;a++)r[a]=n.charCodeAt(a);return URL.createObjectURL(new Blob([i],{type:t}))}var r={ST:{open:function(){return"<b>"},close:function(){return"</b>"}},EM:{open:function(){return"<i>"},close:function(){return"</i>"}},DL:{open:function(){return"<del>"},close:function(){return"</del>"}},CO:{open:function(){return"<tt>"},close:function(){return"</tt>"}},BR:{open:function(){return""},close:function(){return"<br/>"}},LN:{open:function(e){return'<a href="'+e.url+'">'},close:function(e){return"</a>"},props:function(e){return{href:e.url,target:"_blank"}}},MN:{open:function(e){return'<a href="#'+e.val+'">'},close:function(e){return"</a>"},props:function(e){return{name:e.val}}},HT:{open:function(e){return'<a href="#'+e.val+'">'},close:function(e){return"</a>"},props:function(e){return{name:e.val}}},IM:{open:function(e){var t=i(e.val,e.mime),n=e.ref?e.ref:t,s=(e.name?'<a href="'+n+'" download="'+e.name+'">':"")+'<img src="'+t+'"'+(e.width?' width="'+e.width+'"':"")+(e.height?' height="'+e.height+'"':"")+' border="0" />';return console.log("open: "+s),s},close:function(e){return e.name?"</a>":""},props:function(e){return{src:i(e.val,e.mime),title:e.name,"data-width":e.width,"data-height":e.height,"data-name":e.name,"data-size":.75*e.val.length|0,"data-mime":e.mime}}}},a=function(){};a.parse=function(e){if("string"!=typeof e)return null;var s=e.split(/\r?\n/),i=[],r={},a=[];s.map(function(e){var s,o,c=[];if(t.map(function(t){c=c.concat(function(e,t,n,s){for(var i=[],r=0,a=e.slice(0);a.length>0;){var o=t.exec(a);if(null==o)break;var c=o.index+o[0].lastIndexOf(o[1]);a=a.slice(c+1),r=(c+=r)+1;var u=n?n.exec(a):null;if(null==u)break;var h=u.index+u[0].indexOf(u[1]);a=a.slice(h+1),r=(h+=r)+1,i.push({text:e.slice(c+1,h),children:[],start:c,end:h,type:s})}return i}(e,t.start,t.end,t.name))}),0==c.length)o={txt:e};else{c.sort(function(e,t){return e.start-t.start}),c=function e(t){if(0==t.length)return[];for(var n=[t[0]],s=t[0],i=1;i<t.length;i++)t[i].start>s.end?(n.push(t[i]),s=t[i]):t[i].end<s.end&&s.children.push(t[i]);for(var i in n)n[i].children=e(n[i].children);return n}(c);var u=function e(t,n){var s="",i=[];for(var r in t){var a=t[r];if(!a.text){var o=e(a.children,s.length+n);a.text=o.txt,i=i.concat(o.fmt)}a.type&&i.push({at:s.length+n,len:a.text.length,tp:a.type}),s+=a.text}return{txt:s,fmt:i}}(function e(t,n,s,i){var r=[];if(0==i.length)return[];for(var a in i){var o=i[a];o.start>n&&r.push({text:t.slice(n,o.start)});var c={type:o.type},u=e(t,o.start+1,o.end-1,o.children);u.length>0?c.children=u:c.text=o.text,r.push(c),n=o.end+1}return n<s&&r.push({text:t.slice(n,s)}),r}(e,0,e.length,c),0);o={txt:u.txt,fmt:u.fmt}}if((s=function(e){var t,s=[];if(n.map(function(n){for(;null!==(t=n.re.exec(e));)s.push({offset:t.index,len:t[0].length,unique:t[0],data:n.pack(t[0]),type:n.name})}),0==s.length)return s;s.sort(function(e,t){return e.offset-t.offset});var i=-1;return s=s.filter(function(e){var t=e.offset>i;return i=e.offset+e.len,t})}(o.txt)).length>0){var h=[];for(var l in s){var d=s[l],f=r[d.unique];f||(f=i.length,r[d.unique]=f,i.push({tp:d.type,data:d.data})),h.push({at:d.offset,len:d.len,key:f})}o.ent=h}a.push(o)});var o={txt:""};if(a.length>0){o.txt=a[0].txt,o.fmt=(a[0].fmt||[]).concat(a[0].ent||[]);for(var c=1;c<a.length;c++){var u=a[c],h=o.txt.length+1;o.fmt.push({tp:"BR",len:1,at:h-1}),o.txt+=" "+u.txt,u.fmt&&(o.fmt=o.fmt.concat(u.fmt.map(function(e){return e.at+=h,e}))),u.ent&&(o.fmt=o.fmt.concat(u.ent.map(function(e){return e.at+=h,e})))}0==o.fmt.length&&delete o.fmt,i.length>0&&(o.ent=i)}return o},a.insertImage=function(e,t,n,s,i,r,a,o,c){return(e=e||{txt:" "}).ent=e.ent||[],e.fmt=e.fmt||[],e.fmt.push({at:t,len:1,key:e.ent.length}),e.ent.push({tp:"IM",data:{mime:n,val:s,width:i,height:r,name:a,ref:c,size:0|o}}),e},a.attachFile=function(e,t,n,s,i,r){(e=e||{txt:""}).ent=e.ent||[],e.fmt=e.fmt||[],e.fmt.push({at:-1,len:0,key:e.ent.length});let a={tp:"EX",data:{mime:t,val:n,name:s,ref:r,size:0|i}};return r instanceof Promise&&(a.data.ref=r.then(e=>{a.data.ref=e},e=>{})),e.ent.push(a),e},a.UNSAFE_toHTML=function(e){var t,n,s,{txt:i,fmt:a,ent:o}=e,c=[];if(a)for(var u in a){var h,l=a[u],d=l.tp;if(!d){var f=o[l.key];f&&(d=f.tp,h=f.data)}r[d]&&(c.push({idx:l.at+l.len,what:r[d].close(h)}),c.push({idx:l.at,what:r[d].open(h)}))}for(var u in c.sort(function(e,t){return t.idx-e.idx}),c)c[u].what&&(t=i,n=c[u].idx,s=c[u].what,i=t.slice(0,n)+s+t.slice(n));return i},a.format=function(e,t,n){var{txt:i,fmt:r,ent:a}=e;if(i=i||"",!r)return[i];var o=[].concat(r);return o.map(function(e){e.at=e.at||0,e.len=e.len||0}),o.sort(function(e,t){return e.at-t.at==0?t.len-e.len:e.at-t.at}),o=o.map(function(e){var t,n=e.tp;return n||(e.key=e.key||0,t=a[e.key].data,n=a[e.key].tp),{tp:n,data:t,at:e.at,len:e.len}}),function e(t,n,i,r,a,o){for(var c=[],u=0;u<r.length;u++){var h=r[u];n<h.at&&(c.push(a.call(o,null,void 0,t.slice(n,h.at))),n=h.at);for(var l=[],d=u+1;d<r.length&&r[d].at<h.at+h.len;d++)l.push(r[d]),u=d;var f=s[h.tp]||{};c.push(a.call(o,h.tp,h.data,f.isVoid?null:e(t,n,h.at+h.len,l,a,o))),n=h.at+h.len}return n<i&&c.push(a.call(o,null,void 0,t.slice(n,i))),c}(i,0,i.length,o,t,n)},a.toPlainText=function(e){return"string"==typeof e?e:e.txt},a.isPlainText=function(e){return"string"==typeof e||!(e.fmt||e.ent)},a.hasAttachments=function(e){if(e.ent&&e.ent.length>0)for(var t in e.ent)if("EX"==e.ent[t].tp)return!0;return!1},a.attachments=function(e,t,n){if(e.ent&&e.ent.length>0)for(var s in e.ent)"EX"==e.ent[s].tp&&t.call(n,e.ent[s].data,s)},a.getDownloadUrl=function(e){let t=null;return e.val?t=i(e.val,e.mime):"string"==typeof e.ref&&(t=e.ref),t},a.isUploading=function(e){return e.ref instanceof Promise},a.getPreviewUrl=function(e){return e.val?i(e.val,e.mime):null},a.getEntitySize=function(e){return e.size?e.size:e.val?.75*e.val.length|0:0},a.getEntityMimeType=function(e){return e.mime||"text/plain"},a.tagName=function(e){return s[e]?s[e].name:void 0},a.attrValue=function(e,t){if(t&&r[e])return r[e].props(t)},a.getContentType=function(){return"text/x-drafty"},e=a;var o={};if("function"==typeof require)var c="0.15.7-rc3";const u="0",h=c||"0.15",l="tinodejs/"+h;function d(e){return btoa(encodeURIComponent(e).replace(/%([0-9A-F]{2})/g,function(e,t){return String.fromCharCode("0x"+t)}))}function f(e,t,n){if(null==t)return e;if("object"!=typeof t)return t||e;if(t instanceof Date)return t;if(t instanceof S)return new S(t);if(t instanceof Array)return t.length>0?t:e;for(var s in e||(e=t.constructor()),t)!t.hasOwnProperty(s)||!t[s]&&!1!==t[s]||n&&n[s]||"_generated"==s||(e[s]=f(e[s],t[s]));return e}function p(e,t,n,s){return e[t]=f(e[t],n,s),e[t]}function g(){var e=null;if("withCredentials"in new XMLHttpRequest)e=new XMLHttpRequest;else{if("undefined"==typeof XDomainRequest)throw new Error("browser not supported");e=new XDomainRequest}return e}function _(e,t){if("ts"===e&&"string"==typeof t&&t.length>=20&&t.length<=24){var n=new Date(t);if(n)return n}else if("acs"===e&&"object"==typeof t)return new S(t);return t}function m(e,t){return"string"==typeof t&&t.length>128?"<"+t.length+", bytes: "+t.substring(0,12)+"..."+t.substring(t.length-12)+">":function(e,t){if(t instanceof Date)t=function(e){if(e&&0!=e.getTime()){var t=e.getUTCMilliseconds();return e.getUTCFullYear()+"-"+n(e.getUTCMonth()+1)+"-"+n(e.getUTCDate())+"T"+n(e.getUTCHours())+":"+n(e.getUTCMinutes())+":"+n(e.getUTCSeconds())+(t?"."+n(t,3):"")+"Z"}function n(e,t){return"0".repeat((t=t||2)-(""+e).length)+e}}(t);else if(null==t||!1===t||Array.isArray(t)&&0==t.length||"object"==typeof t&&0===Object.keys(t).length)return;return t}(0,t)}function v(e,t,n){var s=null;return"http"!==t&&"https"!==t&&"ws"!==t&&"wss"!==t||(s=t+"://","/"!==(s+=e).charAt(s.length-1)&&(s+="/"),s+="v"+u+"/channels","http"!==t&&"https"!==t||(s+="/lp"),s+="?apikey="+n),s}var b=function(e,t,n,s,i){let r=e,a=s,o=t;var c=i;const u=2e3,h=10,l=.3;let d=null,f=0,p=!1,m=e=>{this.logger&&this.logger(e)};function b(e){var t=null;e.connect=function(n){return t&&1===t.readyState?Promise.resolve():(n&&(r=n),new Promise(function(n,s){var i=v(r,a?"wss":"ws",o);m("Connecting to: "+i);var g=new WebSocket(i);g.onopen=function(t){p=!1,e.onOpen&&e.onOpen(),n(),c&&(window.clearTimeout(d),d=null,f=0)},g.onclose=function(n){t=null,e.onDisconnect&&e.onDisconnect(null),!p&&c&&function(){clearTimeout(d);var e=u*(Math.pow(2,f)*(1+l*Math.random()));f=f>=h?f:f+1,d=setTimeout(()=>{m("Reconnecting, iter="+f+", timeout="+e),p||this.connect().catch(function(){})},e)}.call(e)},g.onerror=function(e){s(e)},g.onmessage=function(t){e.onMessage&&e.onMessage(t.data)},t=g}))},e.disconnect=function(){t&&(p=!0,t.close()),t=null},e.sendText=function(e){if(!t||t.readyState!=t.OPEN)throw new Error("Websocket is not connected");t.send(e)},e.isConnected=function(){return t&&1===t.readyState}}function w(e){var t=null,n=null,s=null;e.connect=function(s){return n?Promise.resolve():(s&&(r=s),new Promise(function(s,i){var c=v(r,a?"https":"http",o);m("Connecting to: "+c),(n=function n(s,i,r){var a=g();return a.onreadystatechange=function(o){if(4==a.readyState)if(201==a.status){var c=JSON.parse(a.responseText,_);a.responseText,t=s+"&sid="+c.ctrl.params.sid,(a=n(t)).send(null),e.onOpen&&e.onOpen(),i&&i()}else 200==a.status?(e.onMessage&&e.onMessage(a.responseText),(a=n(t)).send(null)):(r&&r(a.responseText),e.onMessage&&e.onMessage(a.responseText),e.onDisconnect&&e.onDisconnect(new Error(a.status+" "+a.responseText)))},a.open("GET",s,!0),a}(c,s,i)).send(null)}).catch(function(){}))},e.disconnect=function(){s&&(s.abort(),s=null),n&&(n.abort(),n=null),e.onDisconnect&&e.onDisconnect(null),t=null},e.sendText=function(e){var n,i;if(n=t,(i=g()).onreadystatechange=function(e){if(4==i.readyState&&i.status>=400)throw new Error("LP sender failed, "+i.status)},i.open("POST",n,!0),!(s=i)||1!=s.readyState)throw new Error("Long poller failed to connect");s.send(e)},e.isConnected=function(){return n&&!0}}"lp"===n?w(this):"ws"===n?b(this):"object"==typeof window&&window.WebSocket?b(this):w(this),this.onMessage=void 0,this.onDisconnect=void 0,this.onOpen=void 0,this.logger=void 0},w=function(e,t,n,s,i){this._appName=e||"Undefined",this._apiKey=n,this._browser="",this._platform="undefined",this._humanLanguage="xx","undefined"!=typeof navigator&&(this._browser=function(e){var t,n=(e=(e||"").replace(" (KHTML, like Gecko)","")).match(/(AppleWebKit\/[.\d]+)/i);if(n){for(var s=["chrome","safari","mobile","version"],i=e.substr(n.index+n[0].length).split(" "),r=[],a=0;a<i.length;a++){var o=/([\w.]+)[\/]([\.\d]+)/.exec(i[a]);o&&r.push([o[1],o[2],s.findIndex(function(e){return e==o[1].toLowerCase()})])}r.sort(function(e,t){var n=e[2]-t[2];return 0!=n?n:t[0].length-e[0].length}),t=r.length>0?r[0][0]+"/"+r[0][1]:n[1]}else t=/trident/i.test(e)?(n=/(?:\brv[ :]+([.\d]+))|(?:\bMSIE ([.\d]+))/g.exec(e))?"MSIE/"+(n[1]||n[2]):"MSIE/?":/firefox/i.test(e)?(n=/Firefox\/([.\d]+)/g.exec(e))?"Firefox/"+n[1]:"Firefox/?":/presto/i.test(e)?(n=/Opera\/([.\d]+)/g.exec(e))?"Opera/"+n[1]:"Opera/?":(n=/([\w.]+)\/([.\d]+)/.exec(e))?n[1]+"/"+n[2]:(n=e.split(" "))[0];if((n=t.split("/")).length>1){var c=n[1].split(".");t=n[0]+"/"+c[0]+(c[1]?"."+c[1]:"")}return t}(navigator.userAgent),this._platform=navigator.platform,this._humanLanguage=navigator.language||"en-US"),this._loggingEnabled=!1,this._trimLongStrings=!1,this._myUID=null,this._authenticated=!1,this._login=null,this._authToken=null,this._inPacketCount=0,this._messageId=Math.floor(65535*Math.random()+65535),this._serverInfo=null,this._deviceToken=null,this._pendingPromises={},this._connection=new b(t,n,s,i,!0),this.logger=(e=>{if(this._loggingEnabled){var t=new Date,n=("0"+t.getUTCHours()).slice(-2)+":"+("0"+t.getUTCMinutes()).slice(-2)+":"+("0"+t.getUTCSeconds()).slice(-2)+":"+("0"+t.getUTCMilliseconds()).slice(-3);console.log("["+n+"] "+e)}}),this._connection.logger=this.logger,this._cache={};let r=this.cachePut=((e,t,n)=>{this._cache[e+":"+t]=n}),a=this.cacheGet=((e,t)=>this._cache[e+":"+t]),o=this.cacheDel=((e,t)=>{delete this._cache[e+":"+t]}),c=this.cacheMap=((e,t)=>{for(var n in this._cache)if(e(this._cache[n],n,t))break});this.attachCacheToTopic=(e=>{e._tinode=this,e._cacheGetUser=(e=>{var t=a("user",e);if(t)return{user:e,public:f({},t)}}),e._cachePutUser=((e,t)=>r("user",e,f({},t.public))),e._cacheDelUser=(e=>o("user",e)),e._cachePutSelf=(()=>r("topic",e.name,e)),e._cacheDelSelf=(()=>o("topic",e.name))});let u=(e,t,n,s)=>{var i=this._pendingPromises[e];i&&(delete this._pendingPromises[e],t>=200&&t<400?i.resolve&&i.resolve(n):i.reject&&i.reject(new Error("Error: "+s+" ("+t+")")))},d=e=>{var t=null;return e&&(t=new Promise((t,n)=>{this._pendingPromises[e]={resolve:t,reject:n}})),t},p=this.getNextUniqueId=(()=>0!=this._messageId?""+this._messageId++:void 0),g=()=>this._appName+" ("+(this._browser?this._browser+"; ":"")+this._platform+"); "+l;this.initPacket=((e,t)=>{switch(e){case"hi":return{hi:{id:p(),ver:h,ua:g(),dev:this._deviceToken,lang:this._humanLanguage}};case"acc":return{acc:{id:p(),user:null,scheme:null,secret:null,login:!1,tags:null,desc:{},cred:{}}};case"login":return{login:{id:p(),scheme:null,secret:null}};case"sub":return{sub:{id:p(),topic:t,set:{},get:{}}};case"leave":return{leave:{id:p(),topic:t,unsub:!1}};case"pub":return{pub:{id:p(),topic:t,noecho:!1,head:null,content:{}}};case"get":return{get:{id:p(),topic:t,what:null,desc:{},sub:{},data:{}}};case"set":return{set:{id:p(),topic:t,desc:{},sub:{},tags:[]}};case"del":return{del:{id:p(),topic:t,what:null,delseq:null,user:null,hard:!1}};case"note":return{note:{topic:t,what:null,seq:void 0}};default:throw new Error("Unknown packet type requested: "+e)}}),this.send=((e,t)=>{let n;t&&(n=d(t)),e=function e(t){return Object.keys(t).forEach(function(n){"_"==n[0]?delete t[n]:t[n]?Array.isArray(t[n])&&0==t[n].length?delete t[n]:t[n]?"object"!=typeof t[n]||t[n]instanceof Date||(e(t[n]),0==Object.getOwnPropertyNames(t[n]).length&&delete t[n]):delete t[n]:delete t[n]}),t}(e);var s=JSON.stringify(e);this.logger("out: "+(this._trimLongStrings?JSON.stringify(e,m):s));try{this._connection.sendText(s)}catch(e){if(!t)throw e;u(t,503,null,e.message)}return n}),this.loginSuccessful=(e=>{e.params&&e.params.user&&(this._myUID=e.params.user,this._authenticated=e&&e.code>=200&&e.code<300,e.params&&e.params.token&&e.params.expires?this._authToken={token:e.params.token,expires:new Date(e.params.expires)}:this._authToken=null,this.onLogin&&this.onLogin(e.code,e.text))}),this._connection.onMessage=(e=>{if(e){this._inPacketCount++,this.onRawMessage&&this.onRawMessage(e);var t=JSON.parse(e,_);if(t)if(this.logger("in: "+(this._trimLongStrings?JSON.stringify(t,m):e)),this.onMessage&&this.onMessage(t),t.ctrl)this.onCtrlMessage&&this.onCtrlMessage(t.ctrl),t.ctrl.id&&u(t.ctrl.id,t.ctrl.code,t.ctrl,t.ctrl.text),t.ctrl.params&&"data"==t.ctrl.params.what&&(n=a("topic",t.ctrl.topic))&&n._allMessagesReceived(t.ctrl.params.count);else if(t.meta)(n=a("topic",t.meta.topic))&&n._routeMeta(t.meta),this.onMetaMessage&&this.onMetaMessage(t.meta);else if(t.data)(n=a("topic",t.data.topic))&&n._routeData(t.data),this.onDataMessage&&this.onDataMessage(t.data);else if(t.pres)(n=a("topic",t.pres.topic))&&n._routePres(t.pres),this.onPresMessage&&this.onPresMessage(t.pres);else if(t.info){var n;(n=a("topic",t.info.topic))&&n._routeInfo(t.info),this.onInfoMessage&&this.onInfoMessage(t.info)}else this.logger("ERROR: Unknown packet received.");else this.logger("in: "+e),this.logger("ERROR: failed to parse data")}}),this._connection.onOpen=(()=>{this.hello()}),this._connection.onDisconnect=(e=>{this._inPacketCount=0,this._serverInfo=null,this._authenticated=!1,c((e,t)=>{0===t.lastIndexOf("topic:",0)&&e._resetSub()}),this.onDisconnect&&this.onDisconnect(e)})};w.credential=function(e,t,n,s){return"object"==typeof e&&({val:t,params:n,resp:s,meth:e}=e),e&&(t||s)?[{meth:e,val:t,resp:s,params:n}]:null},w.topicType=function(e){return{me:"me",fnd:"fnd",grp:"grp",new:"grp",usr:"p2p"}["string"==typeof e?e.substring(0,3):"xxx"]},w.isNewGroupTopicName=function(e){return"string"==typeof e&&"new"==e.substring(0,3)},w.getVersion=function(){return h},w.getLibrary=function(){return l},w.MESSAGE_STATUS_NONE=0,w.MESSAGE_STATUS_QUEUED=1,w.MESSAGE_STATUS_SENDING=2,w.MESSAGE_STATUS_SENT=3,w.MESSAGE_STATUS_RECEIVED=4,w.MESSAGE_STATUS_READ=5,w.MESSAGE_STATUS_TO_ME=6,w.DEL_CHAR="\u2421",w.prototype={connect:function(e){return this._connection.connect(e)},disconnect:function(){this._connection&&this._connection.disconnect()},isConnected:function(){return this._connection&&this._connection.isConnected()},isAuthenticated:function(){return this._authenticated},account:function(e,t,n,s,i){var r=this.initPacket("acc");return r.acc.user=e,r.acc.scheme=t,r.acc.secret=n,r.acc.login=s,i&&(r.acc.desc.defacs=i.defacs,r.acc.desc.public=i.public,r.acc.desc.private=i.private,r.acc.tags=i.tags,r.acc.cred=i.cred,r.acc.token=i.token),this.send(r,r.acc.id)},createAccount:function(e,t,n,s){var i=this.account("new",e,t,n,s);return n&&(i=i.then(e=>(this.loginSuccessful(e),e))),i},createAccountBasic:function(e,t,n){return e=e||"",t=t||"",this.createAccount("basic",d(e+":"+t),!0,n)},updateAccountBasic:function(e,t,n,s){return t=t||"",n=n||"",this.account(e,"basic",d(t+":"+n),!1,s)},hello:function(){var e=this.initPacket("hi");return this.send(e,e.hi.id).then(e=>(e.params&&(this._serverInfo=e.params),this.onConnect&&this.onConnect(),e)).catch(e=>{this.onDisconnect&&this.onDisconnect(e)})},setDeviceToken:function(e,t){let n=!1;return e&&e!=this._deviceToken&&(this._deviceToken=e,t&&this.isConnected()&&this.isAuthenticated()&&(this.send({hi:{dev:e}}),n=!0)),n},login:function(e,t,n){var s=this.initPacket("login");return s.login.scheme=e,s.login.secret=t,s.login.cred=n,this.send(s,s.login.id).then(e=>(this.loginSuccessful(e),e))},loginBasic:function(e,t,n){return this.login("basic",d(e+":"+t),n).then(t=>(this._login=e,t))},loginToken:function(e,t){return this.login("token",e,t)},requestResetAuthSecret:function(e,t,n){return this.login("reset",d(e+":"+t+":"+n))},getAuthToken:function(){return this._authToken&&this._authToken.expires.getTime()>Date.now()?this._authToken:(this._authToken=null,null)},setAuthToken:function(e){this._authToken=e},subscribe:function(e,t,n){var s=this.initPacket("sub",e);return e||(e="new"),s.sub.get=t,n&&(n.sub&&(s.sub.set.sub=n.sub),w.isNewGroupTopicName(e)&&n.desc&&(s.sub.set.desc=n.desc),n.tags&&(s.sub.set.tags=n.tags)),this.send(s,s.sub.id)},leave:function(e,t){var n=this.initPacket("leave",e);return n.leave.unsub=t,this.send(n,n.leave.id)},createMessage:function(t,n,s){let i=this.initPacket("pub",t),r="string"==typeof n?e.parse(n):n;return r&&!e.isPlainText(r)&&(i.pub.head={mime:e.getContentType()},n=r),i.pub.noecho=s,i.pub.content=n,i.pub},publish:function(e,t,n){return this.publishMessage(this.createMessage(e,t,n))},publishMessage:function(e){return(e=Object.assign({},e)).seq=void 0,e.from=void 0,e.ts=void 0,this.send({pub:e},e.id)},getMeta:function(e,t){var n=this.initPacket("get",e);return n.get=f(n.get,t),this.send(n,n.get.id)},setMeta:function(e,t){var n=this.initPacket("set",e),s=[];return t&&["desc","sub","tags"].map(function(e){t.hasOwnProperty(e)&&(s.push(e),n.set[e]=t[e])}),0==s.length?Promise.reject(new Error("Invalid {set} parameters")):this.send(n,n.set.id)},delMessages:function(e,t,n){var s=this.initPacket("del",e);return s.del.what="msg",s.del.delseq=t,s.del.hard=n,this.send(s,s.del.id)},delTopic:function(e){var t=this.initPacket("del",e);return t.del.what="topic",this.send(t,t.del.id).then(t=>(this.cacheDel("topic",e),this.ctrl))},delSubscription:function(e,t){var n=this.initPacket("del",e);return n.del.what="sub",n.del.user=t,this.send(n,n.del.id)},note:function(e,t,n){if(n<=0||n>=268435455)throw new Error("Invalid message id "+n);var s=this.initPacket("note",e);s.note.what=t,s.note.seq=n,this.send(s)},noteKeyPress:function(e){var t=this.initPacket("note",e);t.note.what="kp",this.send(t)},getTopic:function(e){var t=this.cacheGet("topic",e);return!t&&e&&(t="me"==e?new y:"fnd"==e?new D:new T(e),this.cachePut("topic",e,t),this.attachCacheToTopic(t)),t},newTopic:function(e){var t=new T("new",e);return this.attachCacheToTopic(t),t},newGroupTopicName:function(){return"new"+this.getNextUniqueId()},newTopicWith:function(e,t){var n=new T(e,t);return this.attachCacheToTopic(n),n},getMeTopic:function(){return this.getTopic("me")},getFndTopic:function(){return this.getTopic("fnd")},getLargeFileHelper:function(){return new E(this)},getCurrentUserID:function(){return this._myUID},getCurrentLogin:function(){return this._login},getServerInfo:function(){return this._serverInfo},enableLogging:function(e,t){this._loggingEnabled=e,this._trimLongStrings=t},isTopicOnline:function(e){var t=this.getMeTopic(),n=t&&t.getContact(e);return n&&n.online},wantAkn:function(e){this._messageId=e?Math.floor(16777215*Math.random()+16777215):0},onWebsocketOpen:void 0,onConnect:void 0,onDisconnect:void 0,onLogin:void 0,onCtrlMessage:void 0,onDataMessage:void 0,onPresMessage:void 0,onMessage:void 0,onRawMessage:void 0};var M=function(e){this.topic=e;var t=e._tinode.getMeTopic();this.contact=t&&t.getContact(e.name),this.what={}};M.prototype={_get_ims:function(){let e=this.contact&&this.contact.updated,t=this.topic._lastDescUpdate||0;return e>t?e:t},withData:function(e,t,n){return this.what.data={since:e,before:t,limit:n},this},withLaterData:function(e){return this.withData(this.topic._maxSeq>0?this.topic._maxSeq+1:void 0,void 0,e)},withEarlierData:function(e){return this.withData(void 0,this.topic._minSeq>0?this.topic._minSeq:void 0,e)},withDesc:function(e){return this.what.desc={ims:e},this},withLaterDesc:function(){return this.withDesc(this._get_ims())},withSub:function(e,t,n){var s={ims:e,limit:t};return"me"==this.topic.getType()?s.topic=n:s.user=n,this.what.sub=s,this},withOneSub:function(e,t){return this.withSub(e,void 0,t)},withLaterOneSub:function(e){return this.withOneSub(this.topic._lastSubsUpdate,e)},withLaterSub:function(e){return this.withSub("p2p"==this.topic.getType()?this._get_ims():this.topic._lastSubsUpdate,e)},withTags:function(){return this.what.tags=!0,this},withDel:function(e,t){return(e||t)&&(this.what.del={since:e,limit:t}),this},withLaterDel:function(e){return this.withDel(this.topic._maxSeq>0?this.topic._maxDel+1:void 0,e)},build:function(){var e={},t=[],n=this;return["data","sub","desc","tags","del"].map(function(s){n.what.hasOwnProperty(s)&&(t.push(s),Object.getOwnPropertyNames(n.what[s]).length>0&&(e[s]=n.what[s]))}),t.length>0?e.what=t.join(" "):e=void 0,e}};var S=function(e){e&&(this.given="number"==typeof e.given?e.given:S.decode(e.given),this.want="number"==typeof e.want?e.want:S.decode(e.want),this.mode=e.mode?"number"==typeof e.mode?e.mode:S.decode(e.mode):this.given&this.want)};S._NONE=0,S._JOIN=1,S._READ=2,S._WRITE=4,S._PRES=8,S._APPROVE=16,S._SHARE=32,S._DELETE=64,S._OWNER=128,S._BITMASK=S._JOIN|S._READ|S._WRITE|S._PRES|S._APPROVE|S._SHARE|S._DELETE|S._OWNER,S._INVALID=1048576,S.decode=function(e){if(!e)return null;if("number"==typeof e)return e&S._BITMASK;if("N"===e||"n"===e)return S._NONE;for(var t={J:S._JOIN,R:S._READ,W:S._WRITE,P:S._PRES,A:S._APPROVE,S:S._SHARE,D:S._DELETE,O:S._OWNER},n=S._NONE,s=0;s<e.length;s++){var i=t[e.charAt(s).toUpperCase()];i&&(n|=i)}return n},S.encode=function(e){if(null===e||e===S._INVALID)return null;if(e===S._NONE)return"N";for(var t=["J","R","W","P","A","S","D","O"],n="",s=0;s<t.length;s++)0!=(e&1<<s)&&(n+=t[s]);return n},S.update=function(e,t){if(!t||"string"!=typeof t)return e;var n=t.charAt(0);if("+"==n||"-"==n){for(var s=e,i=t.split(/([-+])/),r=1;r<i.length-1;r+=2){n=i[r];var a=S.decode(i[r+1]);if(a==S._INVALID)return e;null!=a&&("+"===n?s|=a:"-"===n&&(s&=~a))}e=s}else(s=S.decode(t))!=S._INVALID&&(e=s);return e},S.prototype={setMode:function(e){return this.mode=S.decode(e),this},updateMode:function(e){return this.mode=S.update(this.mode,e),this},getMode:function(){return S.encode(this.mode)},setGiven:function(e){return this.given=S.decode(e),this},updateGiven:function(e){return this.given=S.update(this.given,e),this},getGiven:function(){return S.encode(this.given)},setWant:function(e){return this.want=S.decode(e),this},updateWant:function(e){return this.want=S.update(this.want,e),this},getWant:function(){return S.encode(this.want)},updateAll:function(e){return e&&(this.updateGiven(e.given),this.updateWant(e.want),this.mode=this.given&this.want),this},isOwner:function(){return 0!=(this.mode&S._OWNER)},isMuted:function(){return 0==(this.mode&S._PRES)},isPresencer:function(){return 0!=(this.mode&S._PRES)},isJoiner:function(){return 0!=(this.mode&S._JOIN)},isReader:function(){return 0!=(this.mode&S._READ)},isWriter:function(){return 0!=(this.mode&S._WRITE)},isApprover:function(){return 0!=(this.mode&S._APPROVE)},isAdmin:function(){return this.isOwner()||this.isApprover()},isSharer:function(){return 0!=(this.mode&S._SHARE)},isDeleter:function(){return 0!=(this.mode&S._DELETE)}};var T=function(e,t){this._tinode=null,this.name=e,this.created=null,this.updated=null,this.touched=null,this.acs=new S(null),this.private=null,this.public=null,this._users={},this._queuedSeqId=268435455,this._maxSeq=0,this._minSeq=0,this._noEarlierMsgs=!1,this._maxDel=0,this._tags=[],this._messages=function(e){var t=[];function n(t,n,s){for(var i=0,r=n.length-1,a=0,o=0,c=!1;i<=r;)if((o=e(n[a=(i+r)/2|0],t))<0)i=a+1;else{if(!(o>0)){c=!0;break}r=a-1}return c?a:s?-1:o<0?a+1:a}function s(e,t){var s=n(e,t,!1);return t.splice(s,0,e),t}return e=e||function(e,t){return e===t?0:e<t?-1:1},{getAt:function(e){return t[e]},put:function(){var e;for(var n in e=1==arguments.length&&Array.isArray(arguments[0])?arguments[0]:arguments)s(e[n],t)},delAt:function(e){var n=t.splice(e,1);if(n&&n.length>0)return n[0]},delRange:function(e,n){return t.splice(e,n-e)},size:function(){return t.length},reset:function(e){t=[]},forEach:function(e,n,s,i){n|=0,s=s||t.length;for(var r=n;r<s;r++)e.call(i,t[r],r)},find:function(e,s){return n(e,t,!s)}}}(function(e,t){return e.seq-t.seq}),this._subscribed=!1,this._lastDescUpdate=null,this._lastSubsUpdate=null,this._new=!0,t&&(this.onData=t.onData,this.onMeta=t.onMeta,this.onPres=t.onPres,this.onInfo=t.onInfo,this.onMetaDesc=t.onMetaDesc,this.onMetaSub=t.onMetaSub,this.onSubsUpdated=t.onSubsUpdated,this.onTagsUpdated=t.onTagsUpdated,this.onDeleteTopic=t.onDeleteTopic,this.onAllMessagesReceived=t.onAllMessagesReceived)};T.prototype={isSubscribed:function(){return this._subscribed},subscribe:function(e,t){if(this._subscribed)return Promise.resolve(this);var n=this.name;return this._tinode.subscribe(n||"new",e,t).then(e=>{if(e.code>=300)return e;if(this._subscribed=!0,this.acs=e.params&&e.params.acs?e.params.acs:this.acs,this._new){this._new=!1,this.name=e.topic,this.created=e.ts,this.updated=e.ts,this.touched=e.ts,this._cachePutSelf();var n=this._tinode.getMeTopic();n&&n._processMetaSub([{_generated:!0,topic:this.name,created:e.ts,updated:e.ts,touched:e.ts,acs:this.acs}]),t&&t.desc&&(t.desc._generated=!0,this._processMetaDesc(t.desc))}return e})},publish:function(e,t){return this.publishMessage(this.createMessage(e,t))},createMessage:function(e,t){return this._tinode.createMessage(this.name,e,t)},publishMessage:function(t){if(!this._subscribed)return Promise.reject(new Error("Cannot publish on inactive topic"));if(e.hasAttachments(t.content)){let n=[];e.attachments(t.content,e=>{n.push(e.ref)}),t.head.attachments=n}return t._sending=!0,this._tinode.publishMessage(t)},publishDraft:function(e,t){return t||this._subscribed?(e.seq=this._getQueuedSeqId(),e._generated=!0,e.ts=new Date,e.from=this._tinode.getCurrentUserID(),e.noecho=!0,this._messages.put(e),this.onData&&this.onData(e),(t||Promise.resolve()).then(()=>e._cancelled?{code:300,text:"cancelled"}:this.publishMessage(e).then(t=>(e._sending=!1,e.seq=t.params.seq,e.ts=t.ts,this._routeData(e),t)),t=>{e._sending=!1,this._messages.delAt(this._messages.find(e)),this.onData&&this.onData()})):Promise.reject(new Error("Cannot publish on inactive topic"))},leave:function(e){return this._subscribed||e?this._tinode.leave(this.name,e).then(t=>(this._resetSub(),e&&this._gone(),t)):Promise.reject(new Error("Cannot leave inactive topic"))},getMeta:function(e){return this._subscribed?this._tinode.getMeta(this.name,e):Promise.reject(new Error("Cannot query inactive topic"))},getMessagesPage:function(e,t){var n=this.startMetaQuery();t?n.withLaterData(e):n.withEarlierData(e);var s=this.getMeta(n.build());return t||(s=s.then(e=>{e&&e.params&&!e.params.count&&(this._noEarlierMsgs=!0)})),s},setMeta:function(e){return this._subscribed?(e.tags&&(e.tags=function(e){var t=[];if(Array.isArray(e)){for(var n=0,s=e.length;n<s;n++){var i=e[n];i&&(i=i.trim().toLowerCase()).length>1&&t.push(i)}t.sort().filter(function(e,t,n){return!t||e!=n[t-1]})}return 0==t.length&&t.push(w.DEL_CHAR),t}(e.tags)),this._tinode.setMeta(this.name,e).then(t=>t&&t.code>=300?t:(e.sub&&(t.params&&t.params.acs&&(e.sub.acs=t.params.acs,e.sub.updated=t.ts),e.sub.user||(e.sub.user=this._tinode.getCurrentUserID(),e.desc||(e.desc={})),e.sub._generated=!0,this._processMetaSub([e.sub])),e.desc&&(t.params&&t.params.acs&&(e.desc.acs=t.params.acs,e.desc.updated=t.ts),this._processMetaDesc(e.desc)),e.tags&&this._processMetaTags(e.tags),t))):Promise.reject(new Error("Cannot update inactive topic"))},invite:function(e,t){return this.setMeta({sub:{user:e,mode:t}})},delMessages:function(e,t){if(!this._subscribed)return Promise.reject(new Error("Cannot delete messages in inactive topic"));e.sort(function(e,t){return e.low<t.low||e.low==t.low&&(!t.hi||e.hi>=t.hi)});let n,s=e.reduce((e,t)=>(t.low<268435455&&(!t.hi||t.hi<268435455?e.push(t):e.push({low:t.low,hi:this._maxSeq+1})),e),[]);return(n=e.length>0?this._tinode.delMessages(this.name,s,t):Promise.resolve({params:{del:0}})).then(t=>(t.params.del>this._maxDel&&(this._maxDel=t.params.del),e.map(e=>{e.hi?this.flushMessageRange(e.low,e.hi):this.flushMessage(e.low)}),this.onData&&this.onData(),t))},delMessagesAll:function(e){return this.delMessages([{low:1,hi:this._maxSeq+1,_all:!0}],e)},delMessagesList:function(e,t){e.sort((e,t)=>e-t);var n=e.reduce((e,t)=>{if(0==e.length)e.push({low:t});else{let n=e[e.length-1];!n.hi&&t!=n.low+1||t>n.hi?e.push({low:t}):n.hi=n.hi?Math.max(n.hi,t+1):t+1}return e},[]);return this.delMessages(n,t)},delTopic:function(){var e=this;return this._tinode.delTopic(this.name).then(function(t){return e._resetSub(),e._gone(),t})},delSubscription:function(e){return this._subscribed?this._tinode.delSubscription(this.name,e).then(t=>(delete this._users[e],this.onSubsUpdated&&this.onSubsUpdated(Object.keys(this._users)),t)):Promise.reject(new Error("Cannot delete subscription in inactive topic"))},note:function(e,t){var n=this._users[this._tinode.getCurrentUserID()];n?((!n[e]||n[e]<t)&&(this._subscribed?this._tinode.note(this.name,e,t):this._tinode.logger("Not sending {note} on inactive topic")),n[e]=t):this._tinode.logger("note(): user not found "+this._tinode.getCurrentUserID());var s=this._tinode.getMeTopic();s&&s.setMsgReadRecv(this.name,e,t)},noteRecv:function(e){this.note("recv",e)},noteRead:function(e){this.note("read",e)},noteKeyPress:function(){this._subscribed?this._tinode.noteKeyPress(this.name):this._tinode.logger("Cannot send notification in inactive topic")},userDesc:function(e){var t=this._cacheGetUser(e);if(t)return t},subscribers:function(e,t){var n=e||this.onMetaSub;if(n)for(var s in this._users)n.call(t,this._users[s],s,this._users)},tags:function(){return this._tags.slice(0)},subscriber:function(e){return this._users[e]},messages:function(e,t,n,s){var i=e||this.onData;if(i){let e="number"==typeof t?this._messages.find({seq:t}):void 0,r="number"==typeof n?this._messages.find({seq:n},!0):void 0;-1!=e&&-1!=r&&this._messages.forEach(i,e,r,s)}},msgReceiptCount:function(e,t){var n=0,s=this._tinode.getCurrentUserID();if(t>0)for(var i in this._users){var r=this._users[i];r.user!==s&&r[e]>=t&&n++}return n},msgReadCount:function(e){return this.msgReceiptCount("read",e)},msgRecvCount:function(e){return this.msgReceiptCount("recv",e)},msgHasMoreMessages:function(e){return e?this.seq>this._maxSeq:this._minSeq>1&&!this._noEarlierMsgs},isNewMessage:function(e){return this._maxSeq<=e},flushMessage:function(e){let t=this._messages.find({seq:e});return t>=0?this._messages.delAt(t):void 0},flushMessageRange:function(e,t){let n=this._messages.find({seq:e});return n>=0?this._messages.delRange(n,this._messages.find({seq:t},!0)):[]},cancelSend:function(e){let t=this._messages.find({seq:e});if(t>=0){let e=this._messages.getAt(t);if(1==this.msgStatus(e))return e._cancelled=!0,this._messages.delAt(t),!0}return!1},getType:function(){return w.topicType(this.name)},getAccessMode:function(){return this.acs},getDefaultAccess:function(){return this.defacs},startMetaQuery:function(){return new M(this)},msgStatus:function(e){var t=0;return e.from==this._tinode.getCurrentUserID()?e._sending?t=2:e.seq>=268435455?t=1:this.msgReadCount(e.seq)>0?t=5:this.msgRecvCount(e.seq)>0?t=4:e.seq>0&&(t=3):t=6,t},_routeData:function(e){e.content&&((!this.touched||this.touched<e.ts)&&(this.touched=e.ts),e._generated||this._messages.put(e)),e.seq>this._maxSeq&&(this._maxSeq=e.seq),(e.seq<this._minSeq||0==this._minSeq)&&(this._minSeq=e.seq),this.onData&&this.onData(e);var t=this._tinode.getMeTopic();t&&t.setMsgReadRecv(this.name,"msg",e.seq,e.ts)},_routeMeta:function(e){e.desc&&(this._lastDescUpdate=e.ts,this._processMetaDesc(e.desc)),e.sub&&e.sub.length>0&&(this._lastSubsUpdate=e.ts,this._processMetaSub(e.sub)),e.del&&this._processDelMessages(e.del.clear,e.del.delseq),e.tags&&this._processMetaTags(e.tags),this.onMeta&&this.onMeta(e)},_routePres:function(e){var t;switch(e.what){case"del":this._processDelMessages(e.clear,e.delseq);break;case"on":case"off":(t=this._users[e.src])?t.online="on"==e.what:this._tinode.logger("Presence update for an unknown user",this.name,e.src);break;case"acs":let s="me"==e.src?this._tinode.getCurrentUserID():e.src;if(t=this._users[s])t.acs.updateAll(e.dacs),s==this._tinode.getCurrentUserID()&&this.acs.updateAll(e.dacs),t.acs&&t.acs.mode!=S._NONE||("p2p"==this.getType()&&this.leave(),this._processMetaSub([{user:s,deleted:new Date,_generated:!0}]));else{var n=(new S).updateAll(e.dacs);n&&n.mode!=S._NONE&&((t=this._cacheGetUser(s))?t.acs=n:(t={user:s,acs:n},this.getMeta(this.startMetaQuery().withOneSub(void 0,s).build())),t._generated=!0,t.updated=new Date,this._processMetaSub([t]))}break;default:this._tinode.logger("Ignored presence update",e.what)}this.onPres&&this.onPres(e)},_routeInfo:function(e){if("kp"!==e.what){var t=this._users[e.from];t&&(t[e.what]=e.seq)}this.onInfo&&this.onInfo(e)},_processMetaDesc:function(e,t){if(f(this,e),"string"==typeof this.created&&(this.created=new Date(this.created)),"string"==typeof this.updated&&(this.updated=new Date(this.updated)),"string"==typeof this.touched&&(this.touched=new Date(this.touched)),"me"!==this.name&&!t&&!e._generated){var n=this._tinode.getMeTopic();n&&n._processMetaSub([{_generated:!0,topic:this.name,updated:this.updated,touched:this.touched,acs:this.acs,public:this.public,private:this.private}])}this.onMetaDesc&&this.onMetaDesc(this)},_processMetaSub:function(e){var t=void 0;for(var n in e){var s=e[n];if(s.user){s.updated=new Date(s.updated),s.deleted=s.deleted?new Date(s.deleted):null;var i=null;s.deleted?(delete this._users[s.user],i=s):((i=this._users[s.user])||(i=this._cacheGetUser(s.user)),i=this._updateCachedUser(s.user,s,s._generated)),this.onMetaSub&&this.onMetaSub(i)}else s._generated||(t=s)}t&&this.onMetaDesc&&this.onMetaDesc(t),this.onSubsUpdated&&this.onSubsUpdated(Object.keys(this._users))},_processMetaTags:function(e){1==e.length&&e[0]==w.DEL_CHAR&&(e=[]),this._tags=e,this.onTagsUpdated&&this.onTagsUpdated(e)},_processDelMessages:function(e,t){this._maxDel=Math.max(e,this._maxDel),this.clear=Math.max(e,this.clear);var n=this,s=0;Array.isArray(t)&&t.map(function(e){if(e.hi)for(var t=e.low;t<e.hi;t++)s++,n.flushMessage(t);else s++,n.flushMessage(e.low)}),s>0&&this.onData&&this.onData()},_allMessagesReceived:function(e){this.onAllMessagesReceived&&this.onAllMessagesReceived(e)},_resetSub:function(){this._subscribed=!1},_gone:function(){this._messages.reset(),this._users={},this.acs=new S(null),this.private=null,this.public=null,this._maxSeq=0,this._minSeq=0,this._subscribed=!1;var e=this._tinode.getMeTopic();e&&e._routePres({_generated:!0,what:"gone",topic:"me",src:this.name}),this.onDeleteTopic&&this.onDeleteTopic()},_updateCachedUser:function(e,t,n){var s=this._cacheGetUser(e);return s?s=f(s,t):(n&&this.getMeta(this.startMetaQuery().withLaterOneSub(e).build()),s=f({},t)),this._cachePutUser(e,s),p(this._users,e,s)},_getQueuedSeqId:function(){return this._queuedSeqId++}};var y=function(e){T.call(this,"me",e),this._contacts={},e&&(this.onContactUpdate=e.onContactUpdate)};y.prototype=Object.create(T.prototype,{_processMetaSub:{value:function(e){var t=0;for(var n in e){var s=e[n],i=s.topic;if("fnd"!=i&&"me"!=i){s.updated=new Date(s.updated),s.touched=s.touched?new Date(s.touched):null,s.deleted=s.deleted?new Date(s.deleted):null,s.seq=0|s.seq,s.recv=0|s.recv,s.read=0|s.read,s.unread=s.seq-s.read;var r=null;if(s.deleted)r=s,delete this._contacts[i];else if(s.seen&&s.seen.when&&(s.seen.when=new Date(s.seen.when)),r=p(this._contacts,i,s),"p2p"==w.topicType(i)&&this._cachePutUser(i,r),!s._generated){var a=this._tinode.getTopic(i);a&&a._processMetaDesc(s,!0)}t++,this.onMetaSub&&this.onMetaSub(r)}}t>0&&this.onSubsUpdated&&this.onSubsUpdated(Object.keys(this._contacts))},enumerable:!0,configurable:!0,writable:!1},_routePres:{value:function(e){var t=this._contacts[e.src];if(t){switch(e.what){case"on":t.online=!0;break;case"off":t.online&&(t.online=!1,t.seen?t.seen.when=new Date:t.seen={when:new Date});break;case"msg":t.touched=new Date,t.seq=0|e.seq,t.unread=t.seq-t.read;break;case"upd":this.getMeta(this.startMetaQuery().withLaterOneSub(e.src).build());break;case"acs":t.acs?t.acs.updateAll(e.dacs):t.acs=(new S).updateAll(e.dacs);break;case"ua":t.seen={when:new Date,ua:e.ua};break;case"recv":t.recv=t.recv?Math.max(t.recv,e.seq):0|e.seq;break;case"read":t.read=t.read?Math.max(t.read,e.seq):0|e.seq,t.unread=t.seq-t.read;break;case"gone":delete this._contacts[e.src]}this.onContactUpdate&&this.onContactUpdate(e.what,t)}else if("acs"==e.what){var n=new S(e.dacs);if(!n||n.mode==S._INVALID)return void this._tinode.logger("Invalid access mode update",e.src,e.dacs);if(n.mode==S._NONE)return void this._tinode.logger("Removing non-existent subscription",e.src,e.dacs);this.getMeta(this.startMetaQuery().withOneSub(void 0,e.src).build()),this._contacts[e.src]={topic:e.src,online:!1,acs:n}}this.onPres&&this.onPres(e)},enumerable:!0,configurable:!0,writable:!1},publish:{value:function(){return Promise.reject(new Error("Publishing to 'me' is not supported"))},enumerable:!0,configurable:!0,writable:!1},contacts:{value:function(e,t){var n=e||this.onMetaSub;if(n)for(var s in this._contacts)n.call(t,this._contacts[s],s,this._contacts)},enumerable:!0,configurable:!0,writable:!0},setMsgReadRecv:{value:function(e,t,n,s){var i,r=this._contacts[e],a=!1;r&&(n|=0,"recv"===t?(i=r.recv,r.recv=r.recv?Math.max(r.recv,n):n,a=i!=r.recv):"read"===t?(i=r.read,r.read=r.read?Math.max(r.read,n):n,r.unread=r.seq-r.read,a=i!=r.read,r.recv<r.read&&(r.recv=r.read,a=!0)):"msg"===t&&(i=r.seq,r.seq=r.seq?Math.max(r.seq,n):n,r.unread=r.seq-r.read,(!r.touched||r.touched<s)&&(r.touched=s),a=i!=r.seq),!a||r.acs&&r.acs.isMuted()||!this.onContactUpdate||this.onContactUpdate(t,r))},enumerable:!0,configurable:!0,writable:!0},getContact:{value:function(e){return this._contacts[e]},enumerable:!0,configurable:!0,writable:!0},getAccessMode:{value:function(e){var t=this._contacts[e];return t?t.acs:null},enumerable:!0,configurable:!0,writable:!0}}),y.prototype.constructor=y;var D=function(e){T.call(this,"fnd",e),this._contacts={}};D.prototype=Object.create(T.prototype,{_processMetaSub:{value:function(e){var t=Object.getOwnPropertyNames(this._contacts).length;for(var n in this._contacts={},e){var s=e[n],i=s.topic?s.topic:s.user;s.updated=new Date(s.updated),s.seen&&s.seen.when&&(s.seen.when=new Date(s.seen.when)),s=p(this._contacts,i,s),t++,this.onMetaSub&&this.onMetaSub(s)}t>0&&this.onSubsUpdated&&this.onSubsUpdated(Object.keys(this._contacts))},enumerable:!0,configurable:!0,writable:!1},publish:{value:function(){return Promise.reject(new Error("Publishing to 'fnd' is not supported"))},enumerable:!0,configurable:!0,writable:!1},setMeta:{value:function(e){var t=this;return Object.getPrototypeOf(D.prototype).setMeta.call(this,e).then(function(){Object.keys(t._contacts).length>0&&(t._contacts={},t.onSubsUpdated&&t.onSubsUpdated([]))})},enumerable:!0,configurable:!0,writable:!1},contacts:{value:function(e,t){var n=e||this.onMetaSub;if(n)for(var s in this._contacts)n.call(t,this._contacts[s],s,this._contacts)},enumerable:!0,configurable:!0,writable:!0}}),D.prototype.constructor=D;var E=function(e){this._tinode=e,this._apiKey=e._apiKey,this._authToken=e.getAuthToken(),this._msgId=e.getNextUniqueId(),this.xhr=g(),this.toResolve=null,this.toReject=null,this.onProgress=null,this.onSuccess=null,this.onFailure=null};E.prototype={upload:function(e,t,n,s){if(!this._authToken)throw new Error("Must authenticate first");var i=this;this.xhr.open("POST","/v"+u+"/file/u/",!0),this.xhr.setRequestHeader("X-Tinode-APIKey",this._apiKey),this.xhr.setRequestHeader("X-Tinode-Auth","Token "+this._authToken.token);var r=new Promise((e,t)=>{this.toResolve=e,this.toReject=t});this.onProgress=t,this.onSuccess=n,this.onFailure=s,this.xhr.upload.onprogress=function(e){e.lengthComputable&&i.onProgress&&i.onProgress(e.loaded/e.total)},this.xhr.onload=function(){var e;try{e=JSON.parse(this.response,_)}catch(e){i._tinode.logger("Invalid server response in LargeFileHelper",this.response)}this.status>=200&&this.status<300?(i.toResolve&&i.toResolve(e.ctrl.params.url),i.onSuccess&&i.onSuccess(e.ctrl)):this.status>=400?(i.toReject&&i.toReject(new Error(e.ctrl.text+" ("+e.ctrl.code+")")),i.onFailure&&i.onFailure(e.ctrl)):i._tinode.logger("Unexpected server response status",this.status,this.response)},this.xhr.onerror=function(e){i.toReject&&i.toReject(new Error("failed")),i.onFailure&&i.onFailure(null)},this.xhr.onabort=function(e){i.toReject&&i.toReject(new Error("upload cancelled by user")),i.onFailure&&i.onFailure(null)};try{var a=new FormData;a.append("file",e),a.set("id",this._msgId),this.xhr.send(a)}catch(e){this.toReject&&this.toReject(e),this.onFailure&&this.onFailure(null)}return r},download:function(e,t,n,s){if(/^(?:(?:[a-z]+:)?\/\/)/i.test(e))throw new Error("The URL '"+e+"' must be relative, not absolute");if(!this._authToken)throw new Error("Must authenticate first");var i=this;this.xhr.open("GET",e,!0),this.xhr.setRequestHeader("X-Tinode-APIKey",this._apiKey),this.xhr.setRequestHeader("X-Tinode-Auth","Token "+this._authToken.token),this.xhr.responseType="blob",this.onProgress=s,this.xhr.onprogress=function(e){i.onProgress&&i.onProgress(e.loaded)};var r=new Promise((e,t)=>{this.toResolve=e,this.toReject=t});this.xhr.onload=function(){if(200==this.status){var e=document.createElement("a");e.href=window.URL.createObjectURL(new Blob([this.response],{type:n})),e.style.display="none",e.setAttribute("download",t),document.body.appendChild(e),e.click(),document.body.removeChild(e),window.URL.revokeObjectURL(e.href),i.toResolve&&i.toResolve()}else if(this.status>=400&&i.toReject){var s=new FileReader;s.onload=function(){try{var e=JSON.parse(this.result,_);i.toReject(new Error(e.ctrl.text+" ("+e.ctrl.code+")"))}catch(e){i._tinode.logger("Invalid server response in LargeFileHelper",this.result),i.toReject(e)}},s.readAsText(this.response)}},this.xhr.onerror=function(e){i.toReject&&i.toReject(new Error("failed"))},this.xhr.onabort=function(){i.toReject&&i.toReject(null)};try{this.xhr.send()}catch(e){this.toReject&&this.toReject(e)}return r},cancel:function(){this.xhr&&this.xhr.readyState<4&&this.xhr.abort()},getId:function(){return this._msgId}};var x=function(e,t){this.status=x.STATUS_NONE,this.topic=e,this.content=t};return x.STATUS_NONE=0,x.STATUS_QUEUED=1,x.STATUS_SENDING=2,x.STATUS_SENT=3,x.STATUS_RECEIVED=4,x.STATUS_READ=5,x.STATUS_TO_ME=6,x.prototype={toJSON:function(){},fromJSON:function(e){}},x.prototype.constructor=x,(o=w).Drafty=e,o});
+!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{("undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:this).Tinode=e()}}(function(){var e={},t=[{name:"ST",start:/(?:^|\W)(\*)[^\s*]/,end:/[^\s*](\*)(?=$|\W)/},{name:"EM",start:/(?:^|[\W_])(_)[^\s_]/,end:/[^\s_](_)(?=$|[\W_])/},{name:"DL",start:/(?:^|\W)(~)[^\s~]/,end:/[^\s~](~)(?=$|\W)/},{name:"CO",start:/(?:^|\W)(`)[^`]/,end:/[^`](`)(?=$|\W)/}],n=[{name:"LN",dataName:"url",pack:function(e){return/^[a-z]+:\/\//i.test(e)||(e="http://"+e),{url:e}},re:/(https?:\/\/)?(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b(?:[-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)/g},{name:"MN",dataName:"val",pack:function(e){return{val:e.slice(1)}},re:/\B@(\w\w+)/g},{name:"HT",dataName:"val",pack:function(e){return{val:e.slice(1)}},re:/\B#(\w\w+)/g}],s={ST:{name:"b",isVoid:!1},EM:{name:"i",isVoid:!1},DL:{name:"del",isVoid:!1},CO:{name:"tt",isVoid:!1},BR:{name:"br",isVoid:!0},LN:{name:"a",isVoid:!1},MN:{name:"a",isVoid:!1},HT:{name:"a",isVoid:!1},IM:{name:"img",isVoid:!0}};function i(e,t){var n;try{n=atob(e)}catch(e){console.log("Drafty: failed to decode base64-encoded object",e.message),n=atob("")}for(var s=n.length,i=new ArrayBuffer(s),r=new Uint8Array(i),o=0;o<s;o++)r[o]=n.charCodeAt(o);return URL.createObjectURL(new Blob([i],{type:t}))}var r={ST:{open:function(){return"<b>"},close:function(){return"</b>"}},EM:{open:function(){return"<i>"},close:function(){return"</i>"}},DL:{open:function(){return"<del>"},close:function(){return"</del>"}},CO:{open:function(){return"<tt>"},close:function(){return"</tt>"}},BR:{open:function(){return""},close:function(){return"<br/>"}},LN:{open:function(e){return'<a href="'+e.url+'">'},close:function(e){return"</a>"},props:function(e){return{href:e.url,target:"_blank"}}},MN:{open:function(e){return'<a href="#'+e.val+'">'},close:function(e){return"</a>"},props:function(e){return{name:e.val}}},HT:{open:function(e){return'<a href="#'+e.val+'">'},close:function(e){return"</a>"},props:function(e){return{name:e.val}}},IM:{open:function(e){var t=i(e.val,e.mime),n=e.ref?e.ref:t,s=(e.name?'<a href="'+n+'" download="'+e.name+'">':"")+'<img src="'+t+'"'+(e.width?' width="'+e.width+'"':"")+(e.height?' height="'+e.height+'"':"")+' border="0" />';return console.log("open: "+s),s},close:function(e){return e.name?"</a>":""},props:function(e){return{src:i(e.val,e.mime),title:e.name,"data-width":e.width,"data-height":e.height,"data-name":e.name,"data-size":.75*e.val.length|0,"data-mime":e.mime}}}},o=function(){};o.parse=function(e){if("string"!=typeof e)return null;var s=e.split(/\r?\n/),i=[],r={},o=[];s.map(function(e){var s,a,c=[];if(t.map(function(t){c=c.concat(function(e,t,n,s){for(var i=[],r=0,o=e.slice(0);o.length>0;){var a=t.exec(o);if(null==a)break;var c=a.index+a[0].lastIndexOf(a[1]);o=o.slice(c+1),r=(c+=r)+1;var u=n?n.exec(o):null;if(null==u)break;var h=u.index+u[0].indexOf(u[1]);o=o.slice(h+1),r=(h+=r)+1,i.push({text:e.slice(c+1,h),children:[],start:c,end:h,type:s})}return i}(e,t.start,t.end,t.name))}),0==c.length)a={txt:e};else{c.sort(function(e,t){return e.start-t.start}),c=function e(t){if(0==t.length)return[];for(var n=[t[0]],s=t[0],i=1;i<t.length;i++)t[i].start>s.end?(n.push(t[i]),s=t[i]):t[i].end<s.end&&s.children.push(t[i]);for(var i in n)n[i].children=e(n[i].children);return n}(c);var u=function e(t,n){var s="",i=[];for(var r in t){var o=t[r];if(!o.text){var a=e(o.children,s.length+n);o.text=a.txt,i=i.concat(a.fmt)}o.type&&i.push({at:s.length+n,len:o.text.length,tp:o.type}),s+=o.text}return{txt:s,fmt:i}}(function e(t,n,s,i){var r=[];if(0==i.length)return[];for(var o in i){var a=i[o];a.start>n&&r.push({text:t.slice(n,a.start)});var c={type:a.type},u=e(t,a.start+1,a.end-1,a.children);u.length>0?c.children=u:c.text=a.text,r.push(c),n=a.end+1}return n<s&&r.push({text:t.slice(n,s)}),r}(e,0,e.length,c),0);a={txt:u.txt,fmt:u.fmt}}if((s=function(e){var t,s=[];if(n.map(function(n){for(;null!==(t=n.re.exec(e));)s.push({offset:t.index,len:t[0].length,unique:t[0],data:n.pack(t[0]),type:n.name})}),0==s.length)return s;s.sort(function(e,t){return e.offset-t.offset});var i=-1;return s=s.filter(function(e){var t=e.offset>i;return i=e.offset+e.len,t})}(a.txt)).length>0){var h=[];for(var l in s){var d=s[l],f=r[d.unique];f||(f=i.length,r[d.unique]=f,i.push({tp:d.type,data:d.data})),h.push({at:d.offset,len:d.len,key:f})}a.ent=h}o.push(a)});var a={txt:""};if(o.length>0){a.txt=o[0].txt,a.fmt=(o[0].fmt||[]).concat(o[0].ent||[]);for(var c=1;c<o.length;c++){var u=o[c],h=a.txt.length+1;a.fmt.push({tp:"BR",len:1,at:h-1}),a.txt+=" "+u.txt,u.fmt&&(a.fmt=a.fmt.concat(u.fmt.map(function(e){return e.at+=h,e}))),u.ent&&(a.fmt=a.fmt.concat(u.ent.map(function(e){return e.at+=h,e})))}0==a.fmt.length&&delete a.fmt,i.length>0&&(a.ent=i)}return a},o.insertImage=function(e,t,n,s,i,r,o,a,c){return(e=e||{txt:" "}).ent=e.ent||[],e.fmt=e.fmt||[],e.fmt.push({at:t,len:1,key:e.ent.length}),e.ent.push({tp:"IM",data:{mime:n,val:s,width:i,height:r,name:o,ref:c,size:0|a}}),e},o.attachFile=function(e,t,n,s,i,r){(e=e||{txt:""}).ent=e.ent||[],e.fmt=e.fmt||[],e.fmt.push({at:-1,len:0,key:e.ent.length});var o={tp:"EX",data:{mime:t,val:n,name:s,ref:r,size:0|i}};return r instanceof Promise&&(o.data.ref=r.then(function(e){o.data.ref=e},function(e){})),e.ent.push(o),e},o.UNSAFE_toHTML=function(e){var t,n,s,i=e.txt,o=e.fmt,a=e.ent,c=[];if(o)for(var u in o){var h,l=o[u],d=l.tp;if(!d){var f=a[l.key];f&&(d=f.tp,h=f.data)}r[d]&&(c.push({idx:l.at+l.len,what:r[d].close(h)}),c.push({idx:l.at,what:r[d].open(h)}))}for(var u in c.sort(function(e,t){return t.idx-e.idx}),c)c[u].what&&(t=i,n=c[u].idx,s=c[u].what,i=t.slice(0,n)+s+t.slice(n));return i},o.format=function(e,t,n){var i=e.txt,r=e.fmt,o=e.ent;if(i=i||"",!r)return[i];var a=[].concat(r);return a.map(function(e){e.at=e.at||0,e.len=e.len||0}),a.sort(function(e,t){return e.at-t.at==0?t.len-e.len:e.at-t.at}),a=a.map(function(e){var t,n=e.tp;return n||(e.key=e.key||0,t=o[e.key].data,n=o[e.key].tp),{tp:n,data:t,at:e.at,len:e.len}}),function e(t,n,i,r,o,a){for(var c=[],u=0;u<r.length;u++){var h=r[u];n<h.at&&(c.push(o.call(a,null,void 0,t.slice(n,h.at))),n=h.at);for(var l=[],d=u+1;d<r.length&&r[d].at<h.at+h.len;d++)l.push(r[d]),u=d;var f=s[h.tp]||{};c.push(o.call(a,h.tp,h.data,f.isVoid?null:e(t,n,h.at+h.len,l,o,a))),n=h.at+h.len}return n<i&&c.push(o.call(a,null,void 0,t.slice(n,i))),c}(i,0,i.length,a,t,n)},o.toPlainText=function(e){return"string"==typeof e?e:e.txt},o.isPlainText=function(e){return"string"==typeof e||!(e.fmt||e.ent)},o.hasAttachments=function(e){if(e.ent&&e.ent.length>0)for(var t in e.ent)if("EX"==e.ent[t].tp)return!0;return!1},o.attachments=function(e,t,n){if(e.ent&&e.ent.length>0)for(var s in e.ent)"EX"==e.ent[s].tp&&t.call(n,e.ent[s].data,s)},o.getDownloadUrl=function(e){var t=null;return e.val?t=i(e.val,e.mime):"string"==typeof e.ref&&(t=e.ref),t},o.isUploading=function(e){return e.ref instanceof Promise},o.getPreviewUrl=function(e){return e.val?i(e.val,e.mime):null},o.getEntitySize=function(e){return e.size?e.size:e.val?.75*e.val.length|0:0},o.getEntityMimeType=function(e){return e.mime||"text/plain"},o.tagName=function(e){return s[e]?s[e].name:void 0},o.attrValue=function(e,t){if(t&&r[e])return r[e].props(t)},o.getContentType=function(){return"text/x-drafty"},e=o;var a={};function c(e){return(c="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e})(e)}if("function"==typeof require)var u="0.15.7-rc4";var h="0",l=u||"0.15",d="tinodejs/"+l;function f(e){return btoa(encodeURIComponent(e).replace(/%([0-9A-F]{2})/g,function(e,t){return String.fromCharCode("0x"+t)}))}function p(e,t,n){if(null==t)return e;if("object"!==c(t))return t||e;if(t instanceof Date)return t;if(t instanceof T)return new T(t);if(t instanceof Array)return t.length>0?t:e;for(var s in e||(e=t.constructor()),t)!t.hasOwnProperty(s)||!t[s]&&!1!==t[s]||n&&n[s]||"_generated"==s||(e[s]=p(e[s],t[s]));return e}function g(e,t,n,s){return e[t]=p(e[t],n,s),e[t]}function _(){var e=null;if("withCredentials"in new XMLHttpRequest)e=new XMLHttpRequest;else{if("undefined"==typeof XDomainRequest)throw new Error("browser not supported");e=new XDomainRequest}return e}function v(e,t){if("ts"===e&&"string"==typeof t&&t.length>=20&&t.length<=24){var n=new Date(t);if(n)return n}else if("acs"===e&&"object"===c(t))return new T(t);return t}function m(e,t){return"string"==typeof t&&t.length>128?"<"+t.length+", bytes: "+t.substring(0,12)+"..."+t.substring(t.length-12)+">":function(e,t){if(t instanceof Date)t=function(e){if(e&&0!=e.getTime()){var t=e.getUTCMilliseconds();return e.getUTCFullYear()+"-"+n(e.getUTCMonth()+1)+"-"+n(e.getUTCDate())+"T"+n(e.getUTCHours())+":"+n(e.getUTCMinutes())+":"+n(e.getUTCSeconds())+(t?"."+n(t,3):"")+"Z"}function n(e,t){return"0".repeat((t=t||2)-(""+e).length)+e}}(t);else if(null==t||!1===t||Array.isArray(t)&&0==t.length||"object"===c(t)&&0===Object.keys(t).length)return;return t}(0,t)}function b(e,t,n){var s=null;return"http"!==t&&"https"!==t&&"ws"!==t&&"wss"!==t||(s=t+"://","/"!==(s+=e).charAt(s.length-1)&&(s+="/"),s+="v"+h+"/channels","http"!==t&&"https"!==t||(s+="/lp"),s+="?apikey="+n),s}var w=function(e,t,n,s,i){var r=this,o=e,a=s,u=t,h=i,l=2e3,d=10,f=.3,p=null,g=0,m=!1,w=function(e){r.logger&&r.logger(e)};function M(e){var t=null;e.connect=function(n){return t&&1===t.readyState?Promise.resolve():(n&&(o=n),new Promise(function(n,s){var i=b(o,a?"wss":"ws",u);w("Connecting to: "+i);var r=new WebSocket(i);r.onopen=function(t){m=!1,e.onOpen&&e.onOpen(),n(),h&&(window.clearTimeout(p),p=null,g=0)},r.onclose=function(n){t=null,e.onDisconnect&&e.onDisconnect(null),!m&&h&&function(){var e=this;clearTimeout(p);var t=l*(Math.pow(2,g)*(1+f*Math.random()));g=g>=d?g:g+1,p=setTimeout(function(){w("Reconnecting, iter="+g+", timeout="+t),m||e.connect().catch(function(){})},t)}.call(e)},r.onerror=function(e){s(e)},r.onmessage=function(t){e.onMessage&&e.onMessage(t.data)},t=r}))},e.disconnect=function(){t&&(m=!0,t.close()),t=null},e.sendText=function(e){if(!t||t.readyState!=t.OPEN)throw new Error("Websocket is not connected");t.send(e)},e.isConnected=function(){return t&&1===t.readyState}}function S(e){var t=null,n=null,s=null;e.connect=function(s){return n?Promise.resolve():(s&&(o=s),new Promise(function(s,i){var r=b(o,a?"https":"http",u);w("Connecting to: "+r),(n=function n(s,i,r){var o=_();return o.onreadystatechange=function(a){if(4==o.readyState)if(201==o.status){var c=JSON.parse(o.responseText,v);o.responseText,t=s+"&sid="+c.ctrl.params.sid,(o=n(t)).send(null),e.onOpen&&e.onOpen(),i&&i()}else 200==o.status?(e.onMessage&&e.onMessage(o.responseText),(o=n(t)).send(null)):(r&&r(o.responseText),e.onMessage&&e.onMessage(o.responseText),e.onDisconnect&&e.onDisconnect(new Error(o.status+" "+o.responseText)))},o.open("GET",s,!0),o}(r,s,i)).send(null)}).catch(function(){}))},e.disconnect=function(){s&&(s.abort(),s=null),n&&(n.abort(),n=null),e.onDisconnect&&e.onDisconnect(null),t=null},e.sendText=function(e){var n,i;if(n=t,(i=_()).onreadystatechange=function(e){if(4==i.readyState&&i.status>=400)throw new Error("LP sender failed, "+i.status)},i.open("POST",n,!0),!(s=i)||1!=s.readyState)throw new Error("Long poller failed to connect");s.send(e)},e.isConnected=function(){return n&&!0}}"lp"===n?S(this):"ws"===n?M(this):"object"==("undefined"==typeof window?"undefined":c(window))&&window.WebSocket?M(this):S(this),this.onMessage=void 0,this.onDisconnect=void 0,this.onOpen=void 0,this.logger=void 0},M=function(e,t,n,s,i){var r=this;this._appName=e||"Undefined",this._apiKey=n,this._browser="",this._platform="undefined",this._humanLanguage="xx","undefined"!=typeof navigator&&(this._browser=function(e){var t,n=(e=(e||"").replace(" (KHTML, like Gecko)","")).match(/(AppleWebKit\/[.\d]+)/i);if(n){for(var s=["chrome","safari","mobile","version"],i=e.substr(n.index+n[0].length).split(" "),r=[],o=0;o<i.length;o++){var a=/([\w.]+)[\/]([\.\d]+)/.exec(i[o]);a&&r.push([a[1],a[2],s.findIndex(function(e){return e==a[1].toLowerCase()})])}r.sort(function(e,t){var n=e[2]-t[2];return 0!=n?n:t[0].length-e[0].length}),t=r.length>0?r[0][0]+"/"+r[0][1]:n[1]}else t=/trident/i.test(e)?(n=/(?:\brv[ :]+([.\d]+))|(?:\bMSIE ([.\d]+))/g.exec(e))?"MSIE/"+(n[1]||n[2]):"MSIE/?":/firefox/i.test(e)?(n=/Firefox\/([.\d]+)/g.exec(e))?"Firefox/"+n[1]:"Firefox/?":/presto/i.test(e)?(n=/Opera\/([.\d]+)/g.exec(e))?"Opera/"+n[1]:"Opera/?":(n=/([\w.]+)\/([.\d]+)/.exec(e))?n[1]+"/"+n[2]:(n=e.split(" "))[0];if((n=t.split("/")).length>1){var c=n[1].split(".");t=n[0]+"/"+c[0]+(c[1]?"."+c[1]:"")}return t}(navigator.userAgent),this._platform=navigator.platform,this._humanLanguage=navigator.language||"en-US"),this._loggingEnabled=!1,this._trimLongStrings=!1,this._myUID=null,this._authenticated=!1,this._login=null,this._authToken=null,this._inPacketCount=0,this._messageId=Math.floor(65535*Math.random()+65535),this._serverInfo=null,this._deviceToken=null,this._pendingPromises={},this._connection=new w(t,n,s,i,!0),this.logger=function(e){if(r._loggingEnabled){var t=new Date,n=("0"+t.getUTCHours()).slice(-2)+":"+("0"+t.getUTCMinutes()).slice(-2)+":"+("0"+t.getUTCSeconds()).slice(-2)+":"+("0"+t.getUTCMilliseconds()).slice(-3);console.log("["+n+"] "+e)}},this._connection.logger=this.logger,this._cache={};var o=this.cachePut=function(e,t,n){r._cache[e+":"+t]=n},a=this.cacheGet=function(e,t){return r._cache[e+":"+t]},u=this.cacheDel=function(e,t){delete r._cache[e+":"+t]},h=this.cacheMap=function(e,t){for(var n in r._cache)if(e(r._cache[n],n,t))break};this.attachCacheToTopic=function(e){e._tinode=r,e._cacheGetUser=function(e){var t=a("user",e);if(t)return{user:e,public:p({},t)}},e._cachePutUser=function(e,t){return o("user",e,p({},t.public))},e._cacheDelUser=function(e){return u("user",e)},e._cachePutSelf=function(){return o("topic",e.name,e)},e._cacheDelSelf=function(){return u("topic",e.name)}};var f=function(e,t,n,s){var i=r._pendingPromises[e];i&&(delete r._pendingPromises[e],t>=200&&t<400?i.resolve&&i.resolve(n):i.reject&&i.reject(new Error("Error: "+s+" ("+t+")")))},g=this.getNextUniqueId=function(){return 0!=r._messageId?""+r._messageId++:void 0};this.initPacket=function(e,t){switch(e){case"hi":return{hi:{id:g(),ver:l,ua:r._appName+" ("+(r._browser?r._browser+"; ":"")+r._platform+"); "+d,dev:r._deviceToken,lang:r._humanLanguage}};case"acc":return{acc:{id:g(),user:null,scheme:null,secret:null,login:!1,tags:null,desc:{},cred:{}}};case"login":return{login:{id:g(),scheme:null,secret:null}};case"sub":return{sub:{id:g(),topic:t,set:{},get:{}}};case"leave":return{leave:{id:g(),topic:t,unsub:!1}};case"pub":return{pub:{id:g(),topic:t,noecho:!1,head:null,content:{}}};case"get":return{get:{id:g(),topic:t,what:null,desc:{},sub:{},data:{}}};case"set":return{set:{id:g(),topic:t,desc:{},sub:{},tags:[]}};case"del":return{del:{id:g(),topic:t,what:null,delseq:null,user:null,hard:!1}};case"note":return{note:{topic:t,what:null,seq:void 0}};default:throw new Error("Unknown packet type requested: "+e)}},this.send=function(e,t){var n;t&&(n=function(e){var t=null;return e&&(t=new Promise(function(t,n){r._pendingPromises[e]={resolve:t,reject:n}})),t}(t)),e=function e(t){return Object.keys(t).forEach(function(n){"_"==n[0]?delete t[n]:t[n]?Array.isArray(t[n])&&0==t[n].length?delete t[n]:t[n]?"object"!=c(t[n])||t[n]instanceof Date||(e(t[n]),0==Object.getOwnPropertyNames(t[n]).length&&delete t[n]):delete t[n]:delete t[n]}),t}(e);var s=JSON.stringify(e);r.logger("out: "+(r._trimLongStrings?JSON.stringify(e,m):s));try{r._connection.sendText(s)}catch(e){if(!t)throw e;f(t,503,null,e.message)}return n},this.loginSuccessful=function(e){e.params&&e.params.user&&(r._myUID=e.params.user,r._authenticated=e&&e.code>=200&&e.code<300,e.params&&e.params.token&&e.params.expires?r._authToken={token:e.params.token,expires:new Date(e.params.expires)}:r._authToken=null,r.onLogin&&r.onLogin(e.code,e.text))},this._connection.onMessage=function(e){if(e){r._inPacketCount++,r.onRawMessage&&r.onRawMessage(e);var t=JSON.parse(e,v);if(t)if(r.logger("in: "+(r._trimLongStrings?JSON.stringify(t,m):e)),r.onMessage&&r.onMessage(t),t.ctrl)r.onCtrlMessage&&r.onCtrlMessage(t.ctrl),t.ctrl.id&&f(t.ctrl.id,t.ctrl.code,t.ctrl,t.ctrl.text),t.ctrl.params&&"data"==t.ctrl.params.what&&(n=a("topic",t.ctrl.topic))&&n._allMessagesReceived(t.ctrl.params.count);else if(t.meta)(n=a("topic",t.meta.topic))&&n._routeMeta(t.meta),r.onMetaMessage&&r.onMetaMessage(t.meta);else if(t.data)(n=a("topic",t.data.topic))&&n._routeData(t.data),r.onDataMessage&&r.onDataMessage(t.data);else if(t.pres)(n=a("topic",t.pres.topic))&&n._routePres(t.pres),r.onPresMessage&&r.onPresMessage(t.pres);else if(t.info){var n;(n=a("topic",t.info.topic))&&n._routeInfo(t.info),r.onInfoMessage&&r.onInfoMessage(t.info)}else r.logger("ERROR: Unknown packet received.");else r.logger("in: "+e),r.logger("ERROR: failed to parse data")}},this._connection.onOpen=function(){r.hello()},this._connection.onDisconnect=function(e){r._inPacketCount=0,r._serverInfo=null,r._authenticated=!1,h(function(e,t){0===t.lastIndexOf("topic:",0)&&e._resetSub()}),r.onDisconnect&&r.onDisconnect(e)}};M.credential=function(e,t,n,s){if("object"==c(e)){var i=e;t=i.val,n=i.params,s=i.resp,e=i.meth}return e&&(t||s)?[{meth:e,val:t,resp:s,params:n}]:null},M.topicType=function(e){return{me:"me",fnd:"fnd",grp:"grp",new:"grp",usr:"p2p"}["string"==typeof e?e.substring(0,3):"xxx"]},M.isNewGroupTopicName=function(e){return"string"==typeof e&&"new"==e.substring(0,3)},M.getVersion=function(){return l},M.getLibrary=function(){return d},M.MESSAGE_STATUS_NONE=0,M.MESSAGE_STATUS_QUEUED=1,M.MESSAGE_STATUS_SENDING=2,M.MESSAGE_STATUS_SENT=3,M.MESSAGE_STATUS_RECEIVED=4,M.MESSAGE_STATUS_READ=5,M.MESSAGE_STATUS_TO_ME=6,M.DEL_CHAR="\u2421",M.prototype={connect:function(e){return this._connection.connect(e)},disconnect:function(){this._connection&&this._connection.disconnect()},isConnected:function(){return this._connection&&this._connection.isConnected()},isAuthenticated:function(){return this._authenticated},account:function(e,t,n,s,i){var r=this.initPacket("acc");return r.acc.user=e,r.acc.scheme=t,r.acc.secret=n,r.acc.login=s,i&&(r.acc.desc.defacs=i.defacs,r.acc.desc.public=i.public,r.acc.desc.private=i.private,r.acc.tags=i.tags,r.acc.cred=i.cred,r.acc.token=i.token),this.send(r,r.acc.id)},createAccount:function(e,t,n,s){var i=this,r=this.account("new",e,t,n,s);return n&&(r=r.then(function(e){return i.loginSuccessful(e),e})),r},createAccountBasic:function(e,t,n){return e=e||"",t=t||"",this.createAccount("basic",f(e+":"+t),!0,n)},updateAccountBasic:function(e,t,n,s){return t=t||"",n=n||"",this.account(e,"basic",f(t+":"+n),!1,s)},hello:function(){var e=this,t=this.initPacket("hi");return this.send(t,t.hi.id).then(function(t){return t.params&&(e._serverInfo=t.params),e.onConnect&&e.onConnect(),t}).catch(function(t){e.onDisconnect&&e.onDisconnect(t)})},setDeviceToken:function(e,t){var n=!1;return e&&e!=this._deviceToken&&(this._deviceToken=e,t&&this.isConnected()&&this.isAuthenticated()&&(this.send({hi:{dev:e}}),n=!0)),n},login:function(e,t,n){var s=this,i=this.initPacket("login");return i.login.scheme=e,i.login.secret=t,i.login.cred=n,this.send(i,i.login.id).then(function(e){return s.loginSuccessful(e),e})},loginBasic:function(e,t,n){var s=this;return this.login("basic",f(e+":"+t),n).then(function(t){return s._login=e,t})},loginToken:function(e,t){return this.login("token",e,t)},requestResetAuthSecret:function(e,t,n){return this.login("reset",f(e+":"+t+":"+n))},getAuthToken:function(){return this._authToken&&this._authToken.expires.getTime()>Date.now()?this._authToken:(this._authToken=null,null)},setAuthToken:function(e){this._authToken=e},subscribe:function(e,t,n){var s=this.initPacket("sub",e);return e||(e="new"),s.sub.get=t,n&&(n.sub&&(s.sub.set.sub=n.sub),M.isNewGroupTopicName(e)&&n.desc&&(s.sub.set.desc=n.desc),n.tags&&(s.sub.set.tags=n.tags)),this.send(s,s.sub.id)},leave:function(e,t){var n=this.initPacket("leave",e);return n.leave.unsub=t,this.send(n,n.leave.id)},createMessage:function(t,n,s){var i=this.initPacket("pub",t),r="string"==typeof n?e.parse(n):n;return r&&!e.isPlainText(r)&&(i.pub.head={mime:e.getContentType()},n=r),i.pub.noecho=s,i.pub.content=n,i.pub},publish:function(e,t,n){return this.publishMessage(this.createMessage(e,t,n))},publishMessage:function(e){return(e=Object.assign({},e)).seq=void 0,e.from=void 0,e.ts=void 0,this.send({pub:e},e.id)},getMeta:function(e,t){var n=this.initPacket("get",e);return n.get=p(n.get,t),this.send(n,n.get.id)},setMeta:function(e,t){var n=this.initPacket("set",e),s=[];return t&&["desc","sub","tags"].map(function(e){t.hasOwnProperty(e)&&(s.push(e),n.set[e]=t[e])}),0==s.length?Promise.reject(new Error("Invalid {set} parameters")):this.send(n,n.set.id)},delMessages:function(e,t,n){var s=this.initPacket("del",e);return s.del.what="msg",s.del.delseq=t,s.del.hard=n,this.send(s,s.del.id)},delTopic:function(e){var t=this,n=this.initPacket("del",e);return n.del.what="topic",this.send(n,n.del.id).then(function(n){return t.cacheDel("topic",e),t.ctrl})},delSubscription:function(e,t){var n=this.initPacket("del",e);return n.del.what="sub",n.del.user=t,this.send(n,n.del.id)},note:function(e,t,n){if(n<=0||n>=268435455)throw new Error("Invalid message id "+n);var s=this.initPacket("note",e);s.note.what=t,s.note.seq=n,this.send(s)},noteKeyPress:function(e){var t=this.initPacket("note",e);t.note.what="kp",this.send(t)},getTopic:function(e){var t=this.cacheGet("topic",e);return!t&&e&&(t="me"==e?new D:"fnd"==e?new E:new y(e),this.cachePut("topic",e,t),this.attachCacheToTopic(t)),t},newTopic:function(e){var t=new y("new",e);return this.attachCacheToTopic(t),t},newGroupTopicName:function(){return"new"+this.getNextUniqueId()},newTopicWith:function(e,t){var n=new y(e,t);return this.attachCacheToTopic(n),n},getMeTopic:function(){return this.getTopic("me")},getFndTopic:function(){return this.getTopic("fnd")},getLargeFileHelper:function(){return new x(this)},getCurrentUserID:function(){return this._myUID},getCurrentLogin:function(){return this._login},getServerInfo:function(){return this._serverInfo},enableLogging:function(e,t){this._loggingEnabled=e,this._trimLongStrings=t},isTopicOnline:function(e){var t=this.getMeTopic(),n=t&&t.getContact(e);return n&&n.online},wantAkn:function(e){this._messageId=e?Math.floor(16777215*Math.random()+16777215):0},onWebsocketOpen:void 0,onConnect:void 0,onDisconnect:void 0,onLogin:void 0,onCtrlMessage:void 0,onDataMessage:void 0,onPresMessage:void 0,onMessage:void 0,onRawMessage:void 0};var S=function(e){this.topic=e;var t=e._tinode.getMeTopic();this.contact=t&&t.getContact(e.name),this.what={}};S.prototype={_get_ims:function(){var e=this.contact&&this.contact.updated,t=this.topic._lastDescUpdate||0;return e>t?e:t},withData:function(e,t,n){return this.what.data={since:e,before:t,limit:n},this},withLaterData:function(e){return this.withData(this.topic._maxSeq>0?this.topic._maxSeq+1:void 0,void 0,e)},withEarlierData:function(e){return this.withData(void 0,this.topic._minSeq>0?this.topic._minSeq:void 0,e)},withDesc:function(e){return this.what.desc={ims:e},this},withLaterDesc:function(){return this.withDesc(this._get_ims())},withSub:function(e,t,n){var s={ims:e,limit:t};return"me"==this.topic.getType()?s.topic=n:s.user=n,this.what.sub=s,this},withOneSub:function(e,t){return this.withSub(e,void 0,t)},withLaterOneSub:function(e){return this.withOneSub(this.topic._lastSubsUpdate,e)},withLaterSub:function(e){return this.withSub("p2p"==this.topic.getType()?this._get_ims():this.topic._lastSubsUpdate,e)},withTags:function(){return this.what.tags=!0,this},withDel:function(e,t){return(e||t)&&(this.what.del={since:e,limit:t}),this},withLaterDel:function(e){return this.withDel(this.topic._maxSeq>0?this.topic._maxDel+1:void 0,e)},build:function(){var e={},t=[],n=this;return["data","sub","desc","tags","del"].map(function(s){n.what.hasOwnProperty(s)&&(t.push(s),Object.getOwnPropertyNames(n.what[s]).length>0&&(e[s]=n.what[s]))}),t.length>0?e.what=t.join(" "):e=void 0,e}};var T=function e(t){t&&(this.given="number"==typeof t.given?t.given:e.decode(t.given),this.want="number"==typeof t.want?t.want:e.decode(t.want),this.mode=t.mode?"number"==typeof t.mode?t.mode:e.decode(t.mode):this.given&this.want)};T._NONE=0,T._JOIN=1,T._READ=2,T._WRITE=4,T._PRES=8,T._APPROVE=16,T._SHARE=32,T._DELETE=64,T._OWNER=128,T._BITMASK=T._JOIN|T._READ|T._WRITE|T._PRES|T._APPROVE|T._SHARE|T._DELETE|T._OWNER,T._INVALID=1048576,T.decode=function(e){if(!e)return null;if("number"==typeof e)return e&T._BITMASK;if("N"===e||"n"===e)return T._NONE;for(var t={J:T._JOIN,R:T._READ,W:T._WRITE,P:T._PRES,A:T._APPROVE,S:T._SHARE,D:T._DELETE,O:T._OWNER},n=T._NONE,s=0;s<e.length;s++){var i=t[e.charAt(s).toUpperCase()];i&&(n|=i)}return n},T.encode=function(e){if(null===e||e===T._INVALID)return null;if(e===T._NONE)return"N";for(var t=["J","R","W","P","A","S","D","O"],n="",s=0;s<t.length;s++)0!=(e&1<<s)&&(n+=t[s]);return n},T.update=function(e,t){if(!t||"string"!=typeof t)return e;var n=t.charAt(0);if("+"==n||"-"==n){for(var s=e,i=t.split(/([-+])/),r=1;r<i.length-1;r+=2){n=i[r];var o=T.decode(i[r+1]);if(o==T._INVALID)return e;null!=o&&("+"===n?s|=o:"-"===n&&(s&=~o))}e=s}else(s=T.decode(t))!=T._INVALID&&(e=s);return e},T.prototype={setMode:function(e){return this.mode=T.decode(e),this},updateMode:function(e){return this.mode=T.update(this.mode,e),this},getMode:function(){return T.encode(this.mode)},setGiven:function(e){return this.given=T.decode(e),this},updateGiven:function(e){return this.given=T.update(this.given,e),this},getGiven:function(){return T.encode(this.given)},setWant:function(e){return this.want=T.decode(e),this},updateWant:function(e){return this.want=T.update(this.want,e),this},getWant:function(){return T.encode(this.want)},updateAll:function(e){return e&&(this.updateGiven(e.given),this.updateWant(e.want),this.mode=this.given&this.want),this},isOwner:function(){return 0!=(this.mode&T._OWNER)},isMuted:function(){return 0==(this.mode&T._PRES)},isPresencer:function(){return 0!=(this.mode&T._PRES)},isJoiner:function(){return 0!=(this.mode&T._JOIN)},isReader:function(){return 0!=(this.mode&T._READ)},isWriter:function(){return 0!=(this.mode&T._WRITE)},isApprover:function(){return 0!=(this.mode&T._APPROVE)},isAdmin:function(){return this.isOwner()||this.isApprover()},isSharer:function(){return 0!=(this.mode&T._SHARE)},isDeleter:function(){return 0!=(this.mode&T._DELETE)}};var y=function(e,t){this._tinode=null,this.name=e,this.created=null,this.updated=null,this.touched=null,this.acs=new T(null),this.private=null,this.public=null,this._users={},this._queuedSeqId=268435455,this._maxSeq=0,this._minSeq=0,this._noEarlierMsgs=!1,this._maxDel=0,this._tags=[],this._messages=function(e){var t=[];function n(t,n,s){for(var i=0,r=n.length-1,o=0,a=0,c=!1;i<=r;)if((a=e(n[o=(i+r)/2|0],t))<0)i=o+1;else{if(!(a>0)){c=!0;break}r=o-1}return c?o:s?-1:a<0?o+1:o}function s(e,t){var s=n(e,t,!1);return t.splice(s,0,e),t}return e=e||function(e,t){return e===t?0:e<t?-1:1},{getAt:function(e){return t[e]},put:function(){var e;for(var n in e=1==arguments.length&&Array.isArray(arguments[0])?arguments[0]:arguments)s(e[n],t)},delAt:function(e){var n=t.splice(e,1);if(n&&n.length>0)return n[0]},delRange:function(e,n){return t.splice(e,n-e)},size:function(){return t.length},reset:function(e){t=[]},forEach:function(e,n,s,i){n|=0,s=s||t.length;for(var r=n;r<s;r++)e.call(i,t[r],r)},find:function(e,s){return n(e,t,!s)}}}(function(e,t){return e.seq-t.seq}),this._subscribed=!1,this._lastDescUpdate=null,this._lastSubsUpdate=null,this._new=!0,t&&(this.onData=t.onData,this.onMeta=t.onMeta,this.onPres=t.onPres,this.onInfo=t.onInfo,this.onMetaDesc=t.onMetaDesc,this.onMetaSub=t.onMetaSub,this.onSubsUpdated=t.onSubsUpdated,this.onTagsUpdated=t.onTagsUpdated,this.onDeleteTopic=t.onDeleteTopic,this.onAllMessagesReceived=t.onAllMessagesReceived)};y.prototype={isSubscribed:function(){return this._subscribed},subscribe:function(e,t){var n=this;if(this._subscribed)return Promise.resolve(this);var s=this.name;return this._tinode.subscribe(s||"new",e,t).then(function(e){if(e.code>=300)return e;if(n._subscribed=!0,n.acs=e.params&&e.params.acs?e.params.acs:n.acs,n._new){n._new=!1,n.name=e.topic,n.created=e.ts,n.updated=e.ts,n.touched=e.ts,n._cachePutSelf();var s=n._tinode.getMeTopic();s&&s._processMetaSub([{_generated:!0,topic:n.name,created:e.ts,updated:e.ts,touched:e.ts,acs:n.acs}]),t&&t.desc&&(t.desc._generated=!0,n._processMetaDesc(t.desc))}return e})},publish:function(e,t){return this.publishMessage(this.createMessage(e,t))},createMessage:function(e,t){return this._tinode.createMessage(this.name,e,t)},publishMessage:function(t){if(!this._subscribed)return Promise.reject(new Error("Cannot publish on inactive topic"));if(e.hasAttachments(t.content)){var n=[];e.attachments(t.content,function(e){n.push(e.ref)}),t.head.attachments=n}return t._sending=!0,this._tinode.publishMessage(t)},publishDraft:function(e,t){var n=this;return t||this._subscribed?(e.seq=this._getQueuedSeqId(),e._generated=!0,e.ts=new Date,e.from=this._tinode.getCurrentUserID(),e.noecho=!0,this._messages.put(e),this.onData&&this.onData(e),(t||Promise.resolve()).then(function(){return e._cancelled?{code:300,text:"cancelled"}:n.publishMessage(e).then(function(t){return e._sending=!1,e.seq=t.params.seq,e.ts=t.ts,n._routeData(e),t})},function(t){e._sending=!1,n._messages.delAt(n._messages.find(e)),n.onData&&n.onData()})):Promise.reject(new Error("Cannot publish on inactive topic"))},leave:function(e){var t=this;return this._subscribed||e?this._tinode.leave(this.name,e).then(function(n){return t._resetSub(),e&&t._gone(),n}):Promise.reject(new Error("Cannot leave inactive topic"))},getMeta:function(e){return this._subscribed?this._tinode.getMeta(this.name,e):Promise.reject(new Error("Cannot query inactive topic"))},getMessagesPage:function(e,t){var n=this,s=this.startMetaQuery();t?s.withLaterData(e):s.withEarlierData(e);var i=this.getMeta(s.build());return t||(i=i.then(function(e){e&&e.params&&!e.params.count&&(n._noEarlierMsgs=!0)})),i},setMeta:function(e){var t=this;return this._subscribed?(e.tags&&(e.tags=function(e){var t=[];if(Array.isArray(e)){for(var n=0,s=e.length;n<s;n++){var i=e[n];i&&(i=i.trim().toLowerCase()).length>1&&t.push(i)}t.sort().filter(function(e,t,n){return!t||e!=n[t-1]})}return 0==t.length&&t.push(M.DEL_CHAR),t}(e.tags)),this._tinode.setMeta(this.name,e).then(function(n){return n&&n.code>=300?n:(e.sub&&(n.params&&n.params.acs&&(e.sub.acs=n.params.acs,e.sub.updated=n.ts),e.sub.user||(e.sub.user=t._tinode.getCurrentUserID(),e.desc||(e.desc={})),e.sub._generated=!0,t._processMetaSub([e.sub])),e.desc&&(n.params&&n.params.acs&&(e.desc.acs=n.params.acs,e.desc.updated=n.ts),t._processMetaDesc(e.desc)),e.tags&&t._processMetaTags(e.tags),n)})):Promise.reject(new Error("Cannot update inactive topic"))},invite:function(e,t){return this.setMeta({sub:{user:e,mode:t}})},delMessages:function(e,t){var n=this;if(!this._subscribed)return Promise.reject(new Error("Cannot delete messages in inactive topic"));e.sort(function(e,t){return e.low<t.low||e.low==t.low&&(!t.hi||e.hi>=t.hi)});var s=e.reduce(function(e,t){return t.low<268435455&&(!t.hi||t.hi<268435455?e.push(t):e.push({low:t.low,hi:n._maxSeq+1})),e},[]);return(e.length>0?this._tinode.delMessages(this.name,s,t):Promise.resolve({params:{del:0}})).then(function(t){return t.params.del>n._maxDel&&(n._maxDel=t.params.del),e.map(function(e){e.hi?n.flushMessageRange(e.low,e.hi):n.flushMessage(e.low)}),n.onData&&n.onData(),t})},delMessagesAll:function(e){return this.delMessages([{low:1,hi:this._maxSeq+1,_all:!0}],e)},delMessagesList:function(e,t){e.sort(function(e,t){return e-t});var n=e.reduce(function(e,t){if(0==e.length)e.push({low:t});else{var n=e[e.length-1];!n.hi&&t!=n.low+1||t>n.hi?e.push({low:t}):n.hi=n.hi?Math.max(n.hi,t+1):t+1}return e},[]);return this.delMessages(n,t)},delTopic:function(){var e=this;return this._tinode.delTopic(this.name).then(function(t){return e._resetSub(),e._gone(),t})},delSubscription:function(e){var t=this;return this._subscribed?this._tinode.delSubscription(this.name,e).then(function(n){return delete t._users[e],t.onSubsUpdated&&t.onSubsUpdated(Object.keys(t._users)),n}):Promise.reject(new Error("Cannot delete subscription in inactive topic"))},note:function(e,t){var n=this._users[this._tinode.getCurrentUserID()];n?((!n[e]||n[e]<t)&&(this._subscribed?this._tinode.note(this.name,e,t):this._tinode.logger("Not sending {note} on inactive topic")),n[e]=t):this._tinode.logger("note(): user not found "+this._tinode.getCurrentUserID());var s=this._tinode.getMeTopic();s&&s.setMsgReadRecv(this.name,e,t)},noteRecv:function(e){this.note("recv",e)},noteRead:function(e){this.note("read",e)},noteKeyPress:function(){this._subscribed?this._tinode.noteKeyPress(this.name):this._tinode.logger("Cannot send notification in inactive topic")},userDesc:function(e){var t=this._cacheGetUser(e);if(t)return t},subscribers:function(e,t){var n=e||this.onMetaSub;if(n)for(var s in this._users)n.call(t,this._users[s],s,this._users)},tags:function(){return this._tags.slice(0)},subscriber:function(e){return this._users[e]},messages:function(e,t,n,s){var i=e||this.onData;if(i){var r="number"==typeof t?this._messages.find({seq:t}):void 0,o="number"==typeof n?this._messages.find({seq:n},!0):void 0;-1!=r&&-1!=o&&this._messages.forEach(i,r,o,s)}},msgReceiptCount:function(e,t){var n=0,s=this._tinode.getCurrentUserID();if(t>0)for(var i in this._users){var r=this._users[i];r.user!==s&&r[e]>=t&&n++}return n},msgReadCount:function(e){return this.msgReceiptCount("read",e)},msgRecvCount:function(e){return this.msgReceiptCount("recv",e)},msgHasMoreMessages:function(e){return e?this.seq>this._maxSeq:this._minSeq>1&&!this._noEarlierMsgs},isNewMessage:function(e){return this._maxSeq<=e},flushMessage:function(e){var t=this._messages.find({seq:e});return t>=0?this._messages.delAt(t):void 0},flushMessageRange:function(e,t){var n=this._messages.find({seq:e});return n>=0?this._messages.delRange(n,this._messages.find({seq:t},!0)):[]},cancelSend:function(e){var t=this._messages.find({seq:e});if(t>=0){var n=this._messages.getAt(t);if(1==this.msgStatus(n))return n._cancelled=!0,this._messages.delAt(t),!0}return!1},getType:function(){return M.topicType(this.name)},getAccessMode:function(){return this.acs},getDefaultAccess:function(){return this.defacs},startMetaQuery:function(){return new S(this)},msgStatus:function(e){var t=0;return e.from==this._tinode.getCurrentUserID()?e._sending?t=2:e.seq>=268435455?t=1:this.msgReadCount(e.seq)>0?t=5:this.msgRecvCount(e.seq)>0?t=4:e.seq>0&&(t=3):t=6,t},_routeData:function(e){e.content&&((!this.touched||this.touched<e.ts)&&(this.touched=e.ts),e._generated||this._messages.put(e)),e.seq>this._maxSeq&&(this._maxSeq=e.seq),(e.seq<this._minSeq||0==this._minSeq)&&(this._minSeq=e.seq),this.onData&&this.onData(e);var t=this._tinode.getMeTopic();t&&t.setMsgReadRecv(this.name,"msg",e.seq,e.ts)},_routeMeta:function(e){e.desc&&(this._lastDescUpdate=e.ts,this._processMetaDesc(e.desc)),e.sub&&e.sub.length>0&&(this._lastSubsUpdate=e.ts,this._processMetaSub(e.sub)),e.del&&this._processDelMessages(e.del.clear,e.del.delseq),e.tags&&this._processMetaTags(e.tags),this.onMeta&&this.onMeta(e)},_routePres:function(e){var t;switch(e.what){case"del":this._processDelMessages(e.clear,e.delseq);break;case"on":case"off":(t=this._users[e.src])?t.online="on"==e.what:this._tinode.logger("Presence update for an unknown user",this.name,e.src);break;case"acs":var n="me"==e.src?this._tinode.getCurrentUserID():e.src;if(t=this._users[n])t.acs.updateAll(e.dacs),n==this._tinode.getCurrentUserID()&&this.acs.updateAll(e.dacs),t.acs&&t.acs.mode!=T._NONE||("p2p"==this.getType()&&this.leave(),this._processMetaSub([{user:n,deleted:new Date,_generated:!0}]));else{var s=(new T).updateAll(e.dacs);s&&s.mode!=T._NONE&&((t=this._cacheGetUser(n))?t.acs=s:(t={user:n,acs:s},this.getMeta(this.startMetaQuery().withOneSub(void 0,n).build())),t._generated=!0,t.updated=new Date,this._processMetaSub([t]))}break;default:this._tinode.logger("Ignored presence update",e.what)}this.onPres&&this.onPres(e)},_routeInfo:function(e){if("kp"!==e.what){var t=this._users[e.from];t&&(t[e.what]=e.seq)}this.onInfo&&this.onInfo(e)},_processMetaDesc:function(e,t){if(p(this,e),"string"==typeof this.created&&(this.created=new Date(this.created)),"string"==typeof this.updated&&(this.updated=new Date(this.updated)),"string"==typeof this.touched&&(this.touched=new Date(this.touched)),"me"!==this.name&&!t&&!e._generated){var n=this._tinode.getMeTopic();n&&n._processMetaSub([{_generated:!0,topic:this.name,updated:this.updated,touched:this.touched,acs:this.acs,public:this.public,private:this.private}])}this.onMetaDesc&&this.onMetaDesc(this)},_processMetaSub:function(e){var t=void 0;for(var n in e){var s=e[n];if(s.user){s.updated=new Date(s.updated),s.deleted=s.deleted?new Date(s.deleted):null;var i=null;s.deleted?(delete this._users[s.user],i=s):((i=this._users[s.user])||(i=this._cacheGetUser(s.user)),i=this._updateCachedUser(s.user,s,s._generated)),this.onMetaSub&&this.onMetaSub(i)}else s._generated||(t=s)}t&&this.onMetaDesc&&this.onMetaDesc(t),this.onSubsUpdated&&this.onSubsUpdated(Object.keys(this._users))},_processMetaTags:function(e){1==e.length&&e[0]==M.DEL_CHAR&&(e=[]),this._tags=e,this.onTagsUpdated&&this.onTagsUpdated(e)},_processDelMessages:function(e,t){this._maxDel=Math.max(e,this._maxDel),this.clear=Math.max(e,this.clear);var n=this,s=0;Array.isArray(t)&&t.map(function(e){if(e.hi)for(var t=e.low;t<e.hi;t++)s++,n.flushMessage(t);else s++,n.flushMessage(e.low)}),s>0&&this.onData&&this.onData()},_allMessagesReceived:function(e){this.onAllMessagesReceived&&this.onAllMessagesReceived(e)},_resetSub:function(){this._subscribed=!1},_gone:function(){this._messages.reset(),this._users={},this.acs=new T(null),this.private=null,this.public=null,this._maxSeq=0,this._minSeq=0,this._subscribed=!1;var e=this._tinode.getMeTopic();e&&e._routePres({_generated:!0,what:"gone",topic:"me",src:this.name}),this.onDeleteTopic&&this.onDeleteTopic()},_updateCachedUser:function(e,t,n){var s=this._cacheGetUser(e);return s?s=p(s,t):(n&&this.getMeta(this.startMetaQuery().withLaterOneSub(e).build()),s=p({},t)),this._cachePutUser(e,s),g(this._users,e,s)},_getQueuedSeqId:function(){return this._queuedSeqId++}};var D=function(e){y.call(this,"me",e),this._contacts={},e&&(this.onContactUpdate=e.onContactUpdate)};D.prototype=Object.create(y.prototype,{_processMetaSub:{value:function(e){var t=0;for(var n in e){var s=e[n],i=s.topic;if("fnd"!=i&&"me"!=i){s.updated=new Date(s.updated),s.touched=s.touched?new Date(s.touched):null,s.deleted=s.deleted?new Date(s.deleted):null,s.seq=0|s.seq,s.recv=0|s.recv,s.read=0|s.read,s.unread=s.seq-s.read;var r=null;if(s.deleted)r=s,delete this._contacts[i];else if(s.seen&&s.seen.when&&(s.seen.when=new Date(s.seen.when)),r=g(this._contacts,i,s),"p2p"==M.topicType(i)&&this._cachePutUser(i,r),!s._generated){var o=this._tinode.getTopic(i);o&&o._processMetaDesc(s,!0)}t++,this.onMetaSub&&this.onMetaSub(r)}}t>0&&this.onSubsUpdated&&this.onSubsUpdated(Object.keys(this._contacts))},enumerable:!0,configurable:!0,writable:!1},_routePres:{value:function(e){var t=this._contacts[e.src];if(t){switch(e.what){case"on":t.online=!0;break;case"off":t.online&&(t.online=!1,t.seen?t.seen.when=new Date:t.seen={when:new Date});break;case"msg":t.touched=new Date,t.seq=0|e.seq,t.unread=t.seq-t.read;break;case"upd":this.getMeta(this.startMetaQuery().withLaterOneSub(e.src).build());break;case"acs":t.acs?t.acs.updateAll(e.dacs):t.acs=(new T).updateAll(e.dacs);break;case"ua":t.seen={when:new Date,ua:e.ua};break;case"recv":t.recv=t.recv?Math.max(t.recv,e.seq):0|e.seq;break;case"read":t.read=t.read?Math.max(t.read,e.seq):0|e.seq,t.unread=t.seq-t.read;break;case"gone":delete this._contacts[e.src]}this.onContactUpdate&&this.onContactUpdate(e.what,t)}else if("acs"==e.what){var n=new T(e.dacs);if(!n||n.mode==T._INVALID)return void this._tinode.logger("Invalid access mode update",e.src,e.dacs);if(n.mode==T._NONE)return void this._tinode.logger("Removing non-existent subscription",e.src,e.dacs);this.getMeta(this.startMetaQuery().withOneSub(void 0,e.src).build()),this._contacts[e.src]={topic:e.src,online:!1,acs:n}}this.onPres&&this.onPres(e)},enumerable:!0,configurable:!0,writable:!1},publish:{value:function(){return Promise.reject(new Error("Publishing to 'me' is not supported"))},enumerable:!0,configurable:!0,writable:!1},contacts:{value:function(e,t){var n=e||this.onMetaSub;if(n)for(var s in this._contacts)n.call(t,this._contacts[s],s,this._contacts)},enumerable:!0,configurable:!0,writable:!0},setMsgReadRecv:{value:function(e,t,n,s){var i,r=this._contacts[e],o=!1;r&&(n|=0,"recv"===t?(i=r.recv,r.recv=r.recv?Math.max(r.recv,n):n,o=i!=r.recv):"read"===t?(i=r.read,r.read=r.read?Math.max(r.read,n):n,r.unread=r.seq-r.read,o=i!=r.read,r.recv<r.read&&(r.recv=r.read,o=!0)):"msg"===t&&(i=r.seq,r.seq=r.seq?Math.max(r.seq,n):n,r.unread=r.seq-r.read,(!r.touched||r.touched<s)&&(r.touched=s),o=i!=r.seq),!o||r.acs&&r.acs.isMuted()||!this.onContactUpdate||this.onContactUpdate(t,r))},enumerable:!0,configurable:!0,writable:!0},getContact:{value:function(e){return this._contacts[e]},enumerable:!0,configurable:!0,writable:!0},getAccessMode:{value:function(e){var t=this._contacts[e];return t?t.acs:null},enumerable:!0,configurable:!0,writable:!0}}),D.prototype.constructor=D;var E=function(e){y.call(this,"fnd",e),this._contacts={}};E.prototype=Object.create(y.prototype,{_processMetaSub:{value:function(e){var t=Object.getOwnPropertyNames(this._contacts).length;for(var n in this._contacts={},e){var s=e[n],i=s.topic?s.topic:s.user;s.updated=new Date(s.updated),s.seen&&s.seen.when&&(s.seen.when=new Date(s.seen.when)),s=g(this._contacts,i,s),t++,this.onMetaSub&&this.onMetaSub(s)}t>0&&this.onSubsUpdated&&this.onSubsUpdated(Object.keys(this._contacts))},enumerable:!0,configurable:!0,writable:!1},publish:{value:function(){return Promise.reject(new Error("Publishing to 'fnd' is not supported"))},enumerable:!0,configurable:!0,writable:!1},setMeta:{value:function(e){var t=this;return Object.getPrototypeOf(E.prototype).setMeta.call(this,e).then(function(){Object.keys(t._contacts).length>0&&(t._contacts={},t.onSubsUpdated&&t.onSubsUpdated([]))})},enumerable:!0,configurable:!0,writable:!1},contacts:{value:function(e,t){var n=e||this.onMetaSub;if(n)for(var s in this._contacts)n.call(t,this._contacts[s],s,this._contacts)},enumerable:!0,configurable:!0,writable:!0}}),E.prototype.constructor=E;var x=function(e){this._tinode=e,this._apiKey=e._apiKey,this._authToken=e.getAuthToken(),this._msgId=e.getNextUniqueId(),this.xhr=_(),this.toResolve=null,this.toReject=null,this.onProgress=null,this.onSuccess=null,this.onFailure=null};x.prototype={upload:function(e,t,n,s){var i=this;if(!this._authToken)throw new Error("Must authenticate first");var r=this;this.xhr.open("POST","/v"+h+"/file/u/",!0),this.xhr.setRequestHeader("X-Tinode-APIKey",this._apiKey),this.xhr.setRequestHeader("X-Tinode-Auth","Token "+this._authToken.token);var o=new Promise(function(e,t){i.toResolve=e,i.toReject=t});this.onProgress=t,this.onSuccess=n,this.onFailure=s,this.xhr.upload.onprogress=function(e){e.lengthComputable&&r.onProgress&&r.onProgress(e.loaded/e.total)},this.xhr.onload=function(){var e;try{e=JSON.parse(this.response,v)}catch(e){r._tinode.logger("Invalid server response in LargeFileHelper",this.response)}this.status>=200&&this.status<300?(r.toResolve&&r.toResolve(e.ctrl.params.url),r.onSuccess&&r.onSuccess(e.ctrl)):this.status>=400?(r.toReject&&r.toReject(new Error(e.ctrl.text+" ("+e.ctrl.code+")")),r.onFailure&&r.onFailure(e.ctrl)):r._tinode.logger("Unexpected server response status",this.status,this.response)},this.xhr.onerror=function(e){r.toReject&&r.toReject(new Error("failed")),r.onFailure&&r.onFailure(null)},this.xhr.onabort=function(e){r.toReject&&r.toReject(new Error("upload cancelled by user")),r.onFailure&&r.onFailure(null)};try{var a=new FormData;a.append("file",e),a.set("id",this._msgId),this.xhr.send(a)}catch(e){this.toReject&&this.toReject(e),this.onFailure&&this.onFailure(null)}return o},download:function(e,t,n,s){var i=this;if(/^(?:(?:[a-z]+:)?\/\/)/i.test(e))throw new Error("The URL '"+e+"' must be relative, not absolute");if(!this._authToken)throw new Error("Must authenticate first");var r=this;this.xhr.open("GET",e,!0),this.xhr.setRequestHeader("X-Tinode-APIKey",this._apiKey),this.xhr.setRequestHeader("X-Tinode-Auth","Token "+this._authToken.token),this.xhr.responseType="blob",this.onProgress=s,this.xhr.onprogress=function(e){r.onProgress&&r.onProgress(e.loaded)};var o=new Promise(function(e,t){i.toResolve=e,i.toReject=t});this.xhr.onload=function(){if(200==this.status){var e=document.createElement("a");e.href=window.URL.createObjectURL(new Blob([this.response],{type:n})),e.style.display="none",e.setAttribute("download",t),document.body.appendChild(e),e.click(),document.body.removeChild(e),window.URL.revokeObjectURL(e.href),r.toResolve&&r.toResolve()}else if(this.status>=400&&r.toReject){var s=new FileReader;s.onload=function(){try{var e=JSON.parse(this.result,v);r.toReject(new Error(e.ctrl.text+" ("+e.ctrl.code+")"))}catch(e){r._tinode.logger("Invalid server response in LargeFileHelper",this.result),r.toReject(e)}},s.readAsText(this.response)}},this.xhr.onerror=function(e){r.toReject&&r.toReject(new Error("failed"))},this.xhr.onabort=function(){r.toReject&&r.toReject(null)};try{this.xhr.send()}catch(e){this.toReject&&this.toReject(e)}return o},cancel:function(){this.xhr&&this.xhr.readyState<4&&this.xhr.abort()},getId:function(){return this._msgId}};var R=function e(t,n){this.status=e.STATUS_NONE,this.topic=t,this.content=n};return R.STATUS_NONE=0,R.STATUS_QUEUED=1,R.STATUS_SENDING=2,R.STATUS_SENT=3,R.STATUS_RECEIVED=4,R.STATUS_READ=5,R.STATUS_TO_ME=6,(R.prototype={toJSON:function(){},fromJSON:function(e){}}).constructor=R,(a=M).Drafty=e,a});
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],24:[function(require,module,exports){
 (function (global){
@@ -28027,17 +28027,29 @@ var __importDefault;
 
 var React = require('react');
 var ReactDOM = require('react-dom');
-var TinodeWeb = require('./webapp.js');
+var TinodeWeb = require('./webapp.es5.js');
 
 ReactDOM.render(
   React.createElement(TinodeWeb, null),
   document.getElementById('mountPoint')
 );
 
-},{"./webapp.js":26,"react":16,"react-dom":13}],26:[function(require,module,exports){
+},{"./webapp.es5.js":26,"react":16,"react-dom":13}],26:[function(require,module,exports){
 // Babel JSX
 
 'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 if (typeof require == 'function') {
   if (typeof React == 'undefined') {
@@ -28056,40 +28068,40 @@ if (typeof require == 'function') {
 }
 
 // Name of this application, used in the User-Agent.
-const APP_NAME = "TinodeWeb/" + (package_version || "0.15");
+var APP_NAME = "TinodeWeb/" + (package_version || "0.15");
 
-const KNOWN_HOSTS = { hosted: "api.tinode.co", local: "localhost:6060" };
+var KNOWN_HOSTS = { hosted: "api.tinode.co", local: "localhost:6060" };
 // Default host name and port to connect to.
-const DEFAULT_HOST = KNOWN_HOSTS.hosted;
+var DEFAULT_HOST = KNOWN_HOSTS.hosted;
 // var DEFAULT_HOST = KNOWN_HOSTS.local;
 
 // Sound to play on message received.
-const POP_SOUND = new Audio('audio/msg.mp3');
+var POP_SOUND = new Audio('audio/msg.mp3');
 
 // API key. Use https://github.com/tinode/chat/tree/master/keygen to generate your own
-const API_KEY = "AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K";
+var API_KEY = "AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K";
 
 // Minimum time between two keypress notifications, milliseconds.
-const KEYPRESS_DELAY = 3 * 1000;
+var KEYPRESS_DELAY = 3 * 1000;
 // Delay before sending a {note} for reciving a message, milliseconds.
-const RECEIVED_DELAY = 500;
+var RECEIVED_DELAY = 500;
 // Delay before sending a read notification, milliseconds.
-const READ_DELAY = 1000;
+var READ_DELAY = 1000;
 
 // The shortest allowed tag length. Matches one on the server.
-const MIN_TAG_LENGTH = 4;
+var MIN_TAG_LENGTH = 4;
 
 // Mediaquery breakpoint between desktop and mobile, in px. Should match the value
 // in @meadia (max-size: 640px) in base.css
-const MEDIA_BREAKPOINT = 640;
+var MEDIA_BREAKPOINT = 640;
 // Size of css 'rem' unit in pixels. Default 1rem = 10pt = 13px.
-const REM_SIZE = 13;
+var REM_SIZE = 13;
 
 // Size of the avatar image
-const AVATAR_SIZE = 128;
+var AVATAR_SIZE = 128;
 
 // Number of chat messages to fetch in one call.
-const MESSAGES_PAGE = 24;
+var MESSAGES_PAGE = 24;
 
 // Maximum in-band (included directly into the message) attachment size which fits into
 // a message of 256K in size, assuming base64 encoding and 1024 bytes of overhead.
@@ -28097,19 +28109,19 @@ const MESSAGES_PAGE = 24;
 // Increase this limit to a greater value in production, if desired. Also increase
 // max_message_size in server config.
 //  MAX_INBAND_ATTACHMENT_SIZE = base64DecodedLen(max_message_size - overhead);
-const MAX_INBAND_ATTACHMENT_SIZE = 195840;
+var MAX_INBAND_ATTACHMENT_SIZE = 195840;
 
 // Absolute maximum attachment size to be used with the server = 8MB. Increase to
 // something like 100MB in production.
-const MAX_EXTERN_ATTACHMENT_SIZE = 1 << 23;
+var MAX_EXTERN_ATTACHMENT_SIZE = 1 << 23;
 
 // Maximum allowed linear dimension of an inline image in pixels. You may want
 // to adjust it to 1600 or 2400 for production.
-const MAX_IMAGE_DIM = 768;
+var MAX_IMAGE_DIM = 768;
 
 // Supported image MIME types and corresponding file extensions.
-const SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
-const MIME_EXTENSIONS = ['jpg', 'gif', 'png', 'svg', 'svg'];
+var SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
+var MIME_EXTENSIONS = ['jpg', 'gif', 'png', 'svg', 'svg'];
 
 // Helper functions for storing values in localStorage.
 // By default localStorage can store only strings, not objects or other types.
@@ -28120,12 +28132,12 @@ Storage.prototype.setObject = function (key, value) {
 };
 // Get stored object.
 Storage.prototype.getObject = function (key) {
-  let value = this.getItem(key);
+  var value = this.getItem(key);
   return value && JSON.parse(value);
 };
 // Partially or wholly update stored object.
 Storage.prototype.updateObject = function (key, value) {
-  let oldVal = this.getObject(key);
+  var oldVal = this.getObject(key);
   this.setObject(key, Object.assign(oldVal || {}, value));
 };
 
@@ -28173,9 +28185,9 @@ function fitImageSize(width, height, maxWidth, maxHeight, forceSquare) {
     maxWidth = maxHeight = Math.min(maxWidth, maxHeight);
   }
 
-  let scale = Math.min(Math.min(width, maxWidth) / width, Math.min(height, maxHeight) / height);
+  var scale = Math.min(Math.min(width, maxWidth) / width, Math.min(height, maxHeight) / height);
 
-  let size = {
+  var size = {
     dstWidth: width * scale | 0,
     dstHeight: height * scale | 0
   };
@@ -28389,15 +28401,15 @@ function stringHash(value) {
 // path and arguments.
 function parseUrlHash(hash) {
   // Split path from args, path -> parts[0], args->path[1]
-  let parts = hash.split('?', 2);
-  let params = {};
-  let path = [];
+  var parts = hash.split('?', 2);
+  var params = {};
+  var path = [];
   if (parts[0]) {
     path = parts[0].substr(1).split("/");
   }
   if (parts[1]) {
     parts[1].split("&").forEach(function (part) {
-      let item = part.split("=");
+      var item = part.split("=");
       if (item[0]) {
         params[decodeURIComponent(item[0])] = decodeURIComponent(item[1]);
       }
@@ -28452,8 +28464,8 @@ function setUrlTopic(hash, topic) {
 
 // Detect server address from the URL
 function detectServerAddress() {
-  let host = DEFAULT_HOST;
-  if (typeof window.location == 'object') {
+  var host = DEFAULT_HOST;
+  if (_typeof(window.location) == 'object') {
     if (window.location.protocol == 'file:' || window.location.hostname == 'localhost') {
       host = KNOWN_HOSTS.local;
     } else if (window.location.hostname) {
@@ -28465,14 +28477,14 @@ function detectServerAddress() {
 
 // Detect if the page is served over HTTPS.
 function isSecureConnection() {
-  if (typeof window.location == 'object') {
+  if (_typeof(window.location) == 'object') {
     return window.location.protocol == 'https:';
   }
   return false;
 }
 
 function isLocalHost() {
-  if (typeof window.location == 'object') {
+  if (_typeof(window.location) == 'object') {
     return window.location.hostname == 'localhost';
   }
   return false;
@@ -28517,41 +28529,45 @@ function arrayEqual(a, b) {
 
 /* BEGIN Context Menu: popup/dropdown menu */
 
-class ContextMenu extends React.Component {
-  constructor(props) {
-    super(props);
+var ContextMenu = function (_React$Component) {
+  _inherits(ContextMenu, _React$Component);
 
-    this.handlePageClick = this.handlePageClick.bind(this);
-    this.handleEscapeKey = this.handleEscapeKey.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+  function ContextMenu(props) {
+    _classCallCheck(this, ContextMenu);
+
+    var _this = _possibleConstructorReturn(this, (ContextMenu.__proto__ || Object.getPrototypeOf(ContextMenu)).call(this, props));
+
+    _this.handlePageClick = _this.handlePageClick.bind(_this);
+    _this.handleEscapeKey = _this.handleEscapeKey.bind(_this);
+    _this.handleClick = _this.handleClick.bind(_this);
 
     // Preconfigured menu items.
-    this.MenuItems = {
+    _this.MenuItems = {
       "topic_info": { title: "Info", handler: null },
 
-      "messages_clear": { title: "Clear messages", handler: (params, errorHandler) => {
-          this.deleteMessages(true, false, params, errorHandler);
+      "messages_clear": { title: "Clear messages", handler: function handler(params, errorHandler) {
+          _this.deleteMessages(true, false, params, errorHandler);
         } },
-      "messages_clear_hard": { title: "Clear for All", handler: (params, errorHandler) => {
-          this.deleteMessages(true, true, params, errorHandler);
+      "messages_clear_hard": { title: "Clear for All", handler: function handler(params, errorHandler) {
+          _this.deleteMessages(true, true, params, errorHandler);
         } },
-      "message_delete": { title: "Delete", handler: (params, errorHandler) => {
-          this.deleteMessages(false, false, params, errorHandler);
+      "message_delete": { title: "Delete", handler: function handler(params, errorHandler) {
+          _this.deleteMessages(false, false, params, errorHandler);
         } },
-      "message_delete_hard": { title: "Delete for All", handler: (params, errorHandler) => {
-          this.deleteMessages(false, true, params, errorHandler);
+      "message_delete_hard": { title: "Delete for All", handler: function handler(params, errorHandler) {
+          _this.deleteMessages(false, true, params, errorHandler);
         } },
-      "topic_unmute": { title: "Unmute", handler: this.topicPermissionSetter.bind(this, "+P") },
-      "topic_mute": { title: "Mute", handler: this.topicPermissionSetter.bind(this, "-P") },
-      "topic_unblock": { title: "Unblock", handler: this.topicPermissionSetter.bind(this, "+J") },
-      "topic_block": { title: "Block", handler: this.topicPermissionSetter.bind(this, "-J") },
-      "topic_delete": { title: "Delete", handler: (params, errorHandler) => {
-          let topic = this.props.tinode.getTopic(params.topicName);
+      "topic_unmute": { title: "Unmute", handler: _this.topicPermissionSetter.bind(_this, "+P") },
+      "topic_mute": { title: "Mute", handler: _this.topicPermissionSetter.bind(_this, "-P") },
+      "topic_unblock": { title: "Unblock", handler: _this.topicPermissionSetter.bind(_this, "+J") },
+      "topic_block": { title: "Block", handler: _this.topicPermissionSetter.bind(_this, "-J") },
+      "topic_delete": { title: "Delete", handler: function handler(params, errorHandler) {
+          var topic = _this.props.tinode.getTopic(params.topicName);
           if (!topic) {
             console.log("Topic not found: ", params.topicName);
             return;
           }
-          topic.delTopic().catch(err => {
+          topic.delTopic().catch(function (err) {
             if (errorHandler) {
               errorHandler(err.message, "err");
             }
@@ -28559,679 +28575,834 @@ class ContextMenu extends React.Component {
         } },
 
       "permissions": { title: "Edit permissions", handler: null },
-      "member_delete": { title: "Remove", handler: (params, errorHandler) => {
-          let topic = this.props.tinode.getTopic(params.topicName);
+      "member_delete": { title: "Remove", handler: function handler(params, errorHandler) {
+          var topic = _this.props.tinode.getTopic(params.topicName);
           if (!topic || !params.user) {
             console.log("Topic or user not found: '" + params.topicName + "', '" + params.user + "'");
             return;
           }
-          topic.delSubscription(params.user).catch(err => {
+          topic.delSubscription(params.user).catch(function (err) {
             if (errorHandler) {
               errorHandler(err.message, "err");
             }
           });
         } },
-      "member_mute": { title: "Mute", handler: this.topicPermissionSetter.bind(this, "-P") },
-      "member_unmute": { title: "Unmute", handler: this.topicPermissionSetter.bind(this, "+P") },
-      "member_block": { title: "Block", handler: this.topicPermissionSetter.bind(this, "-J") },
-      "member_unblock": { title: "Unblock", handler: this.topicPermissionSetter.bind(this, "+J") }
+      "member_mute": { title: "Mute", handler: _this.topicPermissionSetter.bind(_this, "-P") },
+      "member_unmute": { title: "Unmute", handler: _this.topicPermissionSetter.bind(_this, "+P") },
+      "member_block": { title: "Block", handler: _this.topicPermissionSetter.bind(_this, "-J") },
+      "member_unblock": { title: "Unblock", handler: _this.topicPermissionSetter.bind(_this, "+J") }
     };
+    return _this;
   }
 
-  componentDidMount() {
-    document.addEventListener('mousedown', this.handlePageClick, false);
-    document.addEventListener('keyup', this.handleEscapeKey, false);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('mousedown', this.handlePageClick, false);
-    document.removeEventListener('keyup', this.handleEscapeKey, false);
-  }
-
-  handlePageClick(e) {
-    if (ReactDOM.findDOMNode(this).contains(e.target)) {
-      return;
+  _createClass(ContextMenu, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      document.addEventListener('mousedown', this.handlePageClick, false);
+      document.addEventListener('keyup', this.handleEscapeKey, false);
     }
-    e.preventDefault();
-    e.stopPropagation();
-    this.props.hide();
-  }
-
-  handleEscapeKey(e) {
-    if (e.keyCode === 27) {
-      this.props.hide();
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      document.removeEventListener('mousedown', this.handlePageClick, false);
+      document.removeEventListener('keyup', this.handleEscapeKey, false);
     }
-  }
-
-  handleClick(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.props.hide();
-    let item = this.props.items[e.currentTarget.dataset.id];
-    if (typeof item == 'string') {
-      item = this.MenuItems[item];
-    }
-    item.handler(this.props.params, this.props.onError);
-  }
-
-  // Menu Actions
-
-  deleteMessages(all, hard, params, errorHandler) {
-    var topic = this.props.tinode.getTopic(params.topicName);
-    if (!topic) {
-      console.log("Topic not found: ", params.topicName);
-      return;
-    }
-    // We don't know if the message is still pending (e.g. attachment is being uploaded),
-    // so try cancelling first. No harm if we can't cancel.
-    if (topic.cancelSend(params.seq)) {
-      return new Promise.resolve();
-    }
-    // Can't cancel. Delete instead.
-    var promise = all ? topic.delMessagesAll(hard) : topic.delMessagesList([params.seq], hard);
-    promise.catch(err => {
-      if (errorHandler) {
-        errorHandler(err.message, "err");
-      }
-    });
-  }
-
-  // Function is used by context menu to set permissions.
-  topicPermissionSetter(mode, params, errorHandler) {
-    var topic = this.props.tinode.getTopic(params.topicName);
-    if (!topic) {
-      console.log("Topic not found", params.topicName);
-      return;
-    }
-
-    var am, user;
-    if (params.user) {
-      user = topic.subscriber(params.user);
-      if (!user) {
-        console.log("Subscriber not found", params.topicName + "[" + params.user + "]");
+  }, {
+    key: 'handlePageClick',
+    value: function handlePageClick(e) {
+      if (ReactDOM.findDOMNode(this).contains(e.target)) {
         return;
       }
-      am = user.acs.updateGiven(mode).getGiven();
-    } else {
-      am = topic.getAccessMode().updateWant(mode).getWant();
+      e.preventDefault();
+      e.stopPropagation();
+      this.props.hide();
     }
-
-    topic.setMeta({ sub: { user: params.user, mode: am } }).catch(err => {
-      if (errorHandler) {
-        errorHandler(err.message, "err");
+  }, {
+    key: 'handleEscapeKey',
+    value: function handleEscapeKey(e) {
+      if (e.keyCode === 27) {
+        this.props.hide();
       }
-    });
-  }
-
-  render() {
-    let count = 0;
-    let menu = [];
-    this.props.items.map(item => {
+    }
+  }, {
+    key: 'handleClick',
+    value: function handleClick(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.props.hide();
+      var item = this.props.items[e.currentTarget.dataset.id];
       if (typeof item == 'string') {
         item = this.MenuItems[item];
       }
-      if (item && item.title) {
-        menu.push(item.title == "-" ? React.createElement('li', { className: 'separator', key: count }) : React.createElement(
-          'li',
-          { onClick: this.handleClick, 'data-id': count, key: count },
-          item.title
-        ));
+      item.handler(this.props.params, this.props.onError);
+    }
+
+    // Menu Actions
+
+  }, {
+    key: 'deleteMessages',
+    value: function deleteMessages(all, hard, params, errorHandler) {
+      var topic = this.props.tinode.getTopic(params.topicName);
+      if (!topic) {
+        console.log("Topic not found: ", params.topicName);
+        return;
       }
-      count++;
-    });
+      // We don't know if the message is still pending (e.g. attachment is being uploaded),
+      // so try cancelling first. No harm if we can't cancel.
+      if (topic.cancelSend(params.seq)) {
+        return new Promise.resolve();
+      }
+      // Can't cancel. Delete instead.
+      var promise = all ? topic.delMessagesAll(hard) : topic.delMessagesList([params.seq], hard);
+      promise.catch(function (err) {
+        if (errorHandler) {
+          errorHandler(err.message, "err");
+        }
+      });
+    }
 
-    // Ensure that menu is inside the app-container.
-    var hSize = 12 * REM_SIZE;
-    var vSize = REM_SIZE * (0.7 + menu.length * 2.5);
-    var left = this.props.bounds.right - this.props.clickAt.x < hSize ? this.props.clickAt.x - this.props.bounds.left - hSize : this.props.clickAt.x - this.props.bounds.left;
-    var top = this.props.bounds.bottom - this.props.clickAt.y < vSize ? this.props.clickAt.y - this.props.bounds.top - vSize : this.props.clickAt.y - this.props.bounds.top;
+    // Function is used by context menu to set permissions.
 
-    var position = {
-      left: left + "px",
-      top: top + "px"
-    };
+  }, {
+    key: 'topicPermissionSetter',
+    value: function topicPermissionSetter(mode, params, errorHandler) {
+      var topic = this.props.tinode.getTopic(params.topicName);
+      if (!topic) {
+        console.log("Topic not found", params.topicName);
+        return;
+      }
 
-    return React.createElement(
-      'ul',
-      { className: 'menu', style: position },
-      menu
-    );
-  }
-}
+      var am, user;
+      if (params.user) {
+        user = topic.subscriber(params.user);
+        if (!user) {
+          console.log("Subscriber not found", params.topicName + "[" + params.user + "]");
+          return;
+        }
+        am = user.acs.updateGiven(mode).getGiven();
+      } else {
+        am = topic.getAccessMode().updateWant(mode).getWant();
+      }
+
+      topic.setMeta({ sub: { user: params.user, mode: am } }).catch(function (err) {
+        if (errorHandler) {
+          errorHandler(err.message, "err");
+        }
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this2 = this;
+
+      var count = 0;
+      var menu = [];
+      this.props.items.map(function (item) {
+        if (typeof item == 'string') {
+          item = _this2.MenuItems[item];
+        }
+        if (item && item.title) {
+          menu.push(item.title == "-" ? React.createElement('li', { className: 'separator', key: count }) : React.createElement(
+            'li',
+            { onClick: _this2.handleClick, 'data-id': count, key: count },
+            item.title
+          ));
+        }
+        count++;
+      });
+
+      // Ensure that menu is inside the app-container.
+      var hSize = 12 * REM_SIZE;
+      var vSize = REM_SIZE * (0.7 + menu.length * 2.5);
+      var left = this.props.bounds.right - this.props.clickAt.x < hSize ? this.props.clickAt.x - this.props.bounds.left - hSize : this.props.clickAt.x - this.props.bounds.left;
+      var top = this.props.bounds.bottom - this.props.clickAt.y < vSize ? this.props.clickAt.y - this.props.bounds.top - vSize : this.props.clickAt.y - this.props.bounds.top;
+
+      var position = {
+        left: left + "px",
+        top: top + "px"
+      };
+
+      return React.createElement(
+        'ul',
+        { className: 'menu', style: position },
+        menu
+      );
+    }
+  }]);
+
+  return ContextMenu;
+}(React.Component);
 /* END Popup/dropdown menu */
 
 /* The X menu to be displayed in title bars */
-class MenuCancel extends React.PureComponent {
-  constructor(props) {
-    super(props);
+
+
+var MenuCancel = function (_React$PureComponent) {
+  _inherits(MenuCancel, _React$PureComponent);
+
+  function MenuCancel(props) {
+    _classCallCheck(this, MenuCancel);
+
+    return _possibleConstructorReturn(this, (MenuCancel.__proto__ || Object.getPrototypeOf(MenuCancel)).call(this, props));
   }
 
-  render() {
-    return React.createElement(
-      'a',
-      { href: 'javascript:;', onClick: this.props.onCancel },
-      React.createElement(
-        'i',
-        { className: 'material-icons' },
-        'close'
-      )
-    );
-  }
-}
-
-class LoadSpinner extends React.PureComponent {
-  render() {
-    return this.props.show ? React.createElement(
-      'div',
-      { className: 'load-spinner-box' },
-      React.createElement('div', { className: 'loader-spinner' })
-    ) : null;
-  }
-}
-
-// Toggle [Title text >] -> [Title text v]
-class MoreButton extends React.PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      open: props.open
-    };
-    this.handleToggle = this.handleToggle.bind(this);
-  }
-
-  handleToggle() {
-    let open = !this.state.open;
-    this.setState({ open: open });
-    if (this.props.onToggle) {
-      this.props.onToggle(open);
-    }
-  }
-
-  render() {
-    return React.createElement(
-      'label',
-      { className: 'small', onClick: this.handleToggle },
-      this.props.title,
-      '...',
-      this.state.open ? React.createElement(
-        'i',
-        { className: 'material-icons' },
-        'expand_more'
-      ) : React.createElement(
-        'i',
-        { className: 'material-icons' },
-        'chevron_right'
-      )
-    );
-  }
-}
-
-/* BEGIN Lettertile: Avatar box: either a bitmap or a letter tile or a stock icon. */
-class LetterTile extends React.PureComponent {
-  render() {
-    let avatar;
-    if (this.props.avatar === true) {
-      if (this.props.topic && this.props.title && this.props.title.trim()) {
-        let letter = this.props.title.trim().charAt(0);
-        let color = "lettertile dark-color" + Math.abs(stringHash(this.props.topic)) % 16;
-        avatar = React.createElement(
-          'div',
-          { className: color },
-          React.createElement(
-            'div',
-            null,
-            letter
-          )
-        );
-      } else {
-        avatar = Tinode.topicType(this.props.topic) == "grp" ? React.createElement(
+  _createClass(MenuCancel, [{
+    key: 'render',
+    value: function render() {
+      return React.createElement(
+        'a',
+        { href: 'javascript:;', onClick: this.props.onCancel },
+        React.createElement(
           'i',
           { className: 'material-icons' },
-          'group'
+          'close'
+        )
+      );
+    }
+  }]);
+
+  return MenuCancel;
+}(React.PureComponent);
+
+var LoadSpinner = function (_React$PureComponent2) {
+  _inherits(LoadSpinner, _React$PureComponent2);
+
+  function LoadSpinner() {
+    _classCallCheck(this, LoadSpinner);
+
+    return _possibleConstructorReturn(this, (LoadSpinner.__proto__ || Object.getPrototypeOf(LoadSpinner)).apply(this, arguments));
+  }
+
+  _createClass(LoadSpinner, [{
+    key: 'render',
+    value: function render() {
+      return this.props.show ? React.createElement(
+        'div',
+        { className: 'load-spinner-box' },
+        React.createElement('div', { className: 'loader-spinner' })
+      ) : null;
+    }
+  }]);
+
+  return LoadSpinner;
+}(React.PureComponent);
+
+// Toggle [Title text >] -> [Title text v]
+
+
+var MoreButton = function (_React$PureComponent3) {
+  _inherits(MoreButton, _React$PureComponent3);
+
+  function MoreButton(props) {
+    _classCallCheck(this, MoreButton);
+
+    var _this5 = _possibleConstructorReturn(this, (MoreButton.__proto__ || Object.getPrototypeOf(MoreButton)).call(this, props));
+
+    _this5.state = {
+      open: props.open
+    };
+    _this5.handleToggle = _this5.handleToggle.bind(_this5);
+    return _this5;
+  }
+
+  _createClass(MoreButton, [{
+    key: 'handleToggle',
+    value: function handleToggle() {
+      var open = !this.state.open;
+      this.setState({ open: open });
+      if (this.props.onToggle) {
+        this.props.onToggle(open);
+      }
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return React.createElement(
+        'label',
+        { className: 'small', onClick: this.handleToggle },
+        this.props.title,
+        '...',
+        this.state.open ? React.createElement(
+          'i',
+          { className: 'material-icons' },
+          'expand_more'
         ) : React.createElement(
           'i',
           { className: 'material-icons' },
-          'person'
-        );
-      }
-    } else if (this.props.avatar) {
-      avatar = React.createElement('img', { className: 'avatar', alt: 'avatar', src: this.props.avatar });
-    } else {
-      avatar = null;
+          'chevron_right'
+        )
+      );
     }
-    return avatar;
+  }]);
+
+  return MoreButton;
+}(React.PureComponent);
+
+/* BEGIN Lettertile: Avatar box: either a bitmap or a letter tile or a stock icon. */
+
+
+var LetterTile = function (_React$PureComponent4) {
+  _inherits(LetterTile, _React$PureComponent4);
+
+  function LetterTile() {
+    _classCallCheck(this, LetterTile);
+
+    return _possibleConstructorReturn(this, (LetterTile.__proto__ || Object.getPrototypeOf(LetterTile)).apply(this, arguments));
   }
-}
+
+  _createClass(LetterTile, [{
+    key: 'render',
+    value: function render() {
+      var avatar = void 0;
+      if (this.props.avatar === true) {
+        if (this.props.topic && this.props.title && this.props.title.trim()) {
+          var letter = this.props.title.trim().charAt(0);
+          var color = "lettertile dark-color" + Math.abs(stringHash(this.props.topic)) % 16;
+          avatar = React.createElement(
+            'div',
+            { className: color },
+            React.createElement(
+              'div',
+              null,
+              letter
+            )
+          );
+        } else {
+          avatar = Tinode.topicType(this.props.topic) == "grp" ? React.createElement(
+            'i',
+            { className: 'material-icons' },
+            'group'
+          ) : React.createElement(
+            'i',
+            { className: 'material-icons' },
+            'person'
+          );
+        }
+      } else if (this.props.avatar) {
+        avatar = React.createElement('img', { className: 'avatar', alt: 'avatar', src: this.props.avatar });
+      } else {
+        avatar = null;
+      }
+      return avatar;
+    }
+  }]);
+
+  return LetterTile;
+}(React.PureComponent);
 /* END Lettertile */
 
 /* BEGIN In-place text editor. Shows text with an icon
  * which toggles it into an input field */
-class InPlaceEdit extends React.Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
+
+var InPlaceEdit = function (_React$Component2) {
+  _inherits(InPlaceEdit, _React$Component2);
+
+  function InPlaceEdit(props) {
+    _classCallCheck(this, InPlaceEdit);
+
+    var _this7 = _possibleConstructorReturn(this, (InPlaceEdit.__proto__ || Object.getPrototypeOf(InPlaceEdit)).call(this, props));
+
+    _this7.state = {
       active: props.active,
       initialValue: props.value || "",
       value: props.value || ""
     };
 
-    this.handeTextChange = this.handeTextChange.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
-    this.handleStartEditing = this.handleStartEditing.bind(this);
-    this.handleEditingFinished = this.handleEditingFinished.bind(this);
-    this.handlePasswordFinished = this.handlePasswordFinished.bind(this);
+    _this7.handeTextChange = _this7.handeTextChange.bind(_this7);
+    _this7.handleKeyDown = _this7.handleKeyDown.bind(_this7);
+    _this7.handleStartEditing = _this7.handleStartEditing.bind(_this7);
+    _this7.handleEditingFinished = _this7.handleEditingFinished.bind(_this7);
+    _this7.handlePasswordFinished = _this7.handlePasswordFinished.bind(_this7);
+    return _this7;
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    // If text has changed while in read mode, update text and discard changes.
-    // Ignore update if in edit mode.
-    if (prevState.initialValue != nextProps.value && !prevState.active) {
-      return {
-        initialValue: nextProps.value || "",
-        value: nextProps.value || ""
-      };
+  _createClass(InPlaceEdit, [{
+    key: 'handeTextChange',
+    value: function handeTextChange(e) {
+      this.setState({ value: e.target.value });
     }
-    return null;
-  }
-
-  handeTextChange(e) {
-    this.setState({ value: e.target.value });
-  }
-
-  handleKeyDown(e) {
-    if (e.keyCode === 27) {
-      // Escape pressed
-      this.setState({ value: this.props.value, active: false });
-    } else if (e.keyCode === 13) {
-      // Enter pressed
-      this.handleEditingFinished();
-    }
-  }
-
-  handleStartEditing() {
-    if (!this.props.readOnly) {
-      ReactDOM.findDOMNode(this).focus();
-      this.setState({ active: true });
-    }
-  }
-
-  handleEditingFinished() {
-    this.setState({ active: false });
-    let value = this.state.value.trim();
-    if ((value || this.props.value) && value !== this.props.value) {
-      this.props.onFinished(value);
-    }
-  }
-
-  handlePasswordFinished(value) {
-    this.setState({ active: false });
-    if (value && value !== this.props.value) {
-      this.props.onFinished(value);
-    }
-  }
-
-  render() {
-    if (this.state.active) {
-      var fieldType = this.props.type || "text";
-    } else {
-      var spanText = this.props.type == "password" ? "••••••••" : this.state.value;
-      var spanClass = "in-place-edit" + (this.props.readOnly ? " disabled" : "");
-      if (!spanText) {
-        spanText = this.props.placeholder;
-        spanClass += " placeholder";
-      }
-      if (spanText.length > 20) {
-        spanText = spanText.substring(0, 19) + "...";
+  }, {
+    key: 'handleKeyDown',
+    value: function handleKeyDown(e) {
+      if (e.keyCode === 27) {
+        // Escape pressed
+        this.setState({ value: this.props.value, active: false });
+      } else if (e.keyCode === 13) {
+        // Enter pressed
+        this.handleEditingFinished();
       }
     }
-    return this.state.active ? fieldType == "password" ? React.createElement(VisiblePassword, {
-      value: this.state.value,
-      placeholder: this.props.placeholder,
-      required: this.props.required ? 'required' : '',
-      autoComplete: this.props.autoComplete,
-      autoFocus: true,
-      onFinished: this.handlePasswordFinished }) : React.createElement('input', { type: fieldType,
-      value: this.state.value,
-      placeholder: this.props.placeholder,
-      required: this.props.required ? 'required' : '',
-      autoComplete: this.props.autoComplete,
-      autoFocus: true,
-      onChange: this.handeTextChange,
-      onKeyDown: this.handleKeyDown,
-      onBlur: this.handleEditingFinished }) : React.createElement(
-      'span',
-      { className: spanClass, onClick: this.handleStartEditing },
-      React.createElement(
-        'span',
-        { className: 'content' },
-        spanText
-      )
-    );
-  }
-};
-
-class VisiblePassword extends React.PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      value: this.props.value,
-      visible: false
-    };
-
-    this.handleVisibility = this.handleVisibility.bind(this);
-    this.handeTextChange = this.handeTextChange.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
-    this.handleEditingFinished = this.handleEditingFinished.bind(this);
-  }
-
-  handeTextChange(e) {
-    this.setState({ value: e.target.value });
-    if (this.props.onChange) {
-      this.props.onChange(e);
-    }
-  }
-
-  handleVisibility(e) {
-    e.preventDefault();
-    this.setState({ visible: !this.state.visible });
-  }
-
-  handleKeyDown(e) {
-    if (e.keyCode == 27) {
-      // Escape pressed
-      this.setState({ value: this.props.value, visible: false });
-      if (this.props.onFinished) {
-        this.props.onFinished();
+  }, {
+    key: 'handleStartEditing',
+    value: function handleStartEditing() {
+      if (!this.props.readOnly) {
+        ReactDOM.findDOMNode(this).focus();
+        this.setState({ active: true });
       }
-    } else if (e.keyCode == 13) {
-      // Enter pressed
-      this.handleEditingFinished();
     }
-  }
-
-  handleEditingFinished(e) {
-    if (e) {
-      let currentTarget = e.currentTarget;
-      setTimeout(() => {
-        if (!currentTarget.contains(document.activeElement)) {
-          if (this.props.onFinished) {
-            this.props.onFinished(this.state.value);
-          }
+  }, {
+    key: 'handleEditingFinished',
+    value: function handleEditingFinished() {
+      this.setState({ active: false });
+      var value = this.state.value.trim();
+      if ((value || this.props.value) && value !== this.props.value) {
+        this.props.onFinished(value);
+      }
+    }
+  }, {
+    key: 'handlePasswordFinished',
+    value: function handlePasswordFinished(value) {
+      this.setState({ active: false });
+      if (value && value !== this.props.value) {
+        this.props.onFinished(value);
+      }
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      if (this.state.active) {
+        var fieldType = this.props.type || "text";
+      } else {
+        var spanText = this.props.type == "password" ? "••••••••" : this.state.value;
+        var spanClass = "in-place-edit" + (this.props.readOnly ? " disabled" : "");
+        if (!spanText) {
+          spanText = this.props.placeholder;
+          spanClass += " placeholder";
         }
-      }, 0);
-    } else if (this.props.onFinished) {
-      this.props.onFinished(this.state.value.trim());
-    }
-  }
-
-  render() {
-    return React.createElement(
-      'div',
-      { tabIndex: '-1', className: 'group-focus',
-        onBlur: this.handleEditingFinished },
-      React.createElement('input', { className: 'with-visibility',
-        type: this.state.visible ? "text" : "password",
+        if (spanText.length > 20) {
+          spanText = spanText.substring(0, 19) + "...";
+        }
+      }
+      return this.state.active ? fieldType == "password" ? React.createElement(VisiblePassword, {
         value: this.state.value,
         placeholder: this.props.placeholder,
         required: this.props.required ? 'required' : '',
-        autoFocus: this.props.autoFocus ? 'autoFocus' : '',
         autoComplete: this.props.autoComplete,
+        autoFocus: true,
+        onFinished: this.handlePasswordFinished }) : React.createElement('input', { type: fieldType,
+        value: this.state.value,
+        placeholder: this.props.placeholder,
+        required: this.props.required ? 'required' : '',
+        autoComplete: this.props.autoComplete,
+        autoFocus: true,
         onChange: this.handeTextChange,
-        onKeyDown: this.handleKeyDown }),
-      React.createElement(
+        onKeyDown: this.handleKeyDown,
+        onBlur: this.handleEditingFinished }) : React.createElement(
         'span',
-        { onClick: this.handleVisibility },
+        { className: spanClass, onClick: this.handleStartEditing },
         React.createElement(
-          'i',
-          { className: 'material-icons clickable light-gray' },
-          this.state.visible ? 'visibility' : 'visibility_off'
+          'span',
+          { className: 'content' },
+          spanText
         )
-      )
-    );
+      );
+    }
+  }], [{
+    key: 'getDerivedStateFromProps',
+    value: function getDerivedStateFromProps(nextProps, prevState) {
+      // If text has changed while in read mode, update text and discard changes.
+      // Ignore update if in edit mode.
+      if (prevState.initialValue != nextProps.value && !prevState.active) {
+        return {
+          initialValue: nextProps.value || "",
+          value: nextProps.value || ""
+        };
+      }
+      return null;
+    }
+  }]);
+
+  return InPlaceEdit;
+}(React.Component);
+
+;
+
+var VisiblePassword = function (_React$PureComponent5) {
+  _inherits(VisiblePassword, _React$PureComponent5);
+
+  function VisiblePassword(props) {
+    _classCallCheck(this, VisiblePassword);
+
+    var _this8 = _possibleConstructorReturn(this, (VisiblePassword.__proto__ || Object.getPrototypeOf(VisiblePassword)).call(this, props));
+
+    _this8.state = {
+      value: _this8.props.value,
+      visible: false
+    };
+
+    _this8.handleVisibility = _this8.handleVisibility.bind(_this8);
+    _this8.handeTextChange = _this8.handeTextChange.bind(_this8);
+    _this8.handleKeyDown = _this8.handleKeyDown.bind(_this8);
+    _this8.handleEditingFinished = _this8.handleEditingFinished.bind(_this8);
+    return _this8;
   }
-}
+
+  _createClass(VisiblePassword, [{
+    key: 'handeTextChange',
+    value: function handeTextChange(e) {
+      this.setState({ value: e.target.value });
+      if (this.props.onChange) {
+        this.props.onChange(e);
+      }
+    }
+  }, {
+    key: 'handleVisibility',
+    value: function handleVisibility(e) {
+      e.preventDefault();
+      this.setState({ visible: !this.state.visible });
+    }
+  }, {
+    key: 'handleKeyDown',
+    value: function handleKeyDown(e) {
+      if (e.keyCode == 27) {
+        // Escape pressed
+        this.setState({ value: this.props.value, visible: false });
+        if (this.props.onFinished) {
+          this.props.onFinished();
+        }
+      } else if (e.keyCode == 13) {
+        // Enter pressed
+        this.handleEditingFinished();
+      }
+    }
+  }, {
+    key: 'handleEditingFinished',
+    value: function handleEditingFinished(e) {
+      var _this9 = this;
+
+      if (e) {
+        var currentTarget = e.currentTarget;
+        setTimeout(function () {
+          if (!currentTarget.contains(document.activeElement)) {
+            if (_this9.props.onFinished) {
+              _this9.props.onFinished(_this9.state.value);
+            }
+          }
+        }, 0);
+      } else if (this.props.onFinished) {
+        this.props.onFinished(this.state.value.trim());
+      }
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return React.createElement(
+        'div',
+        { tabIndex: '-1', className: 'group-focus',
+          onBlur: this.handleEditingFinished },
+        React.createElement('input', { className: 'with-visibility',
+          type: this.state.visible ? "text" : "password",
+          value: this.state.value,
+          placeholder: this.props.placeholder,
+          required: this.props.required ? 'required' : '',
+          autoFocus: this.props.autoFocus ? 'autoFocus' : '',
+          autoComplete: this.props.autoComplete,
+          onChange: this.handeTextChange,
+          onKeyDown: this.handleKeyDown }),
+        React.createElement(
+          'span',
+          { onClick: this.handleVisibility },
+          React.createElement(
+            'i',
+            { className: 'material-icons clickable light-gray' },
+            this.state.visible ? 'visibility' : 'visibility_off'
+          )
+        )
+      );
+    }
+  }]);
+
+  return VisiblePassword;
+}(React.PureComponent);
 
 /* END InPlaceEdit */
 
 /* BEGIN Combobox for selecting host name */
-class HostSelector extends React.PureComponent {
-  constructor(props) {
-    super(props);
 
-    this.state = {
+
+var HostSelector = function (_React$PureComponent6) {
+  _inherits(HostSelector, _React$PureComponent6);
+
+  function HostSelector(props) {
+    _classCallCheck(this, HostSelector);
+
+    var _this10 = _possibleConstructorReturn(this, (HostSelector.__proto__ || Object.getPrototypeOf(HostSelector)).call(this, props));
+
+    _this10.state = {
       hostName: props.serverAddress,
       changed: false
     };
 
-    this.handleHostNameChange = this.handleHostNameChange.bind(this);
-    this.handleEditingFinished = this.handleEditingFinished.bind(this);
+    _this10.handleHostNameChange = _this10.handleHostNameChange.bind(_this10);
+    _this10.handleEditingFinished = _this10.handleEditingFinished.bind(_this10);
+    return _this10;
   }
 
-  handleHostNameChange(e) {
-    this.setState({ hostName: e.target.value, changed: true });
-  }
-
-  handleEditingFinished() {
-    if (this.state.changed) {
-      this.setState({ changed: false });
-      this.props.onServerAddressChange(this.state.hostName.trim());
+  _createClass(HostSelector, [{
+    key: 'handleHostNameChange',
+    value: function handleHostNameChange(e) {
+      this.setState({ hostName: e.target.value, changed: true });
     }
-  }
-
-  render() {
-    var hostOptions = [];
-    for (var key in KNOWN_HOSTS) {
-      var item = KNOWN_HOSTS[key];
-      hostOptions.push(React.createElement('option', { key: item, value: item }));
+  }, {
+    key: 'handleEditingFinished',
+    value: function handleEditingFinished() {
+      if (this.state.changed) {
+        this.setState({ changed: false });
+        this.props.onServerAddressChange(this.state.hostName.trim());
+      }
     }
-    return React.createElement(
-      'div',
-      { className: 'panel-form-row' },
-      React.createElement('input', { type: 'search', id: 'host-name', placeholder: this.props.hostName, list: 'known-hosts',
-        className: 'quoted', value: this.state.hostName, onChange: this.handleHostNameChange,
-        onBlur: this.handleEditingFinished, required: true }),
-      React.createElement(
-        'datalist',
-        { id: 'known-hosts' },
-        hostOptions
-      )
-    );
-  }
-}
+  }, {
+    key: 'render',
+    value: function render() {
+      var hostOptions = [];
+      for (var key in KNOWN_HOSTS) {
+        var item = KNOWN_HOSTS[key];
+        hostOptions.push(React.createElement('option', { key: item, value: item }));
+      }
+      return React.createElement(
+        'div',
+        { className: 'panel-form-row' },
+        React.createElement('input', { type: 'search', id: 'host-name', placeholder: this.props.hostName, list: 'known-hosts',
+          className: 'quoted', value: this.state.hostName, onChange: this.handleHostNameChange,
+          onBlur: this.handleEditingFinished, required: true }),
+        React.createElement(
+          'datalist',
+          { id: 'known-hosts' },
+          hostOptions
+        )
+      );
+    }
+  }]);
+
+  return HostSelector;
+}(React.PureComponent);
 /* END Combobox for selecting host name */
 
 /* BEGIN CheckBox: styled checkbox */
-class CheckBox extends React.PureComponent {
-  constructor(props) {
-    super(props);
 
-    this.handleChange = this.handleChange.bind(this);
+
+var CheckBox = function (_React$PureComponent7) {
+  _inherits(CheckBox, _React$PureComponent7);
+
+  function CheckBox(props) {
+    _classCallCheck(this, CheckBox);
+
+    var _this11 = _possibleConstructorReturn(this, (CheckBox.__proto__ || Object.getPrototypeOf(CheckBox)).call(this, props));
+
+    _this11.handleChange = _this11.handleChange.bind(_this11);
+    return _this11;
   }
 
-  handleChange() {
-    this.props.onChange(this.props.name, !this.props.checked);
-  }
+  _createClass(CheckBox, [{
+    key: 'handleChange',
+    value: function handleChange() {
+      this.props.onChange(this.props.name, !this.props.checked);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return this.props.onChange ? this.props.checked ? React.createElement(
+        'i',
+        { className: 'material-icons blue clickable', onClick: this.handleChange },
+        'check_box'
+      ) : React.createElement(
+        'i',
+        { className: 'material-icons blue clickable', onClick: this.handleChange },
+        'check_box_outline_blank'
+      ) : this.props.checked ? React.createElement(
+        'i',
+        { className: 'material-icons' },
+        'check_box'
+      ) : React.createElement(
+        'i',
+        { className: 'material-icons' },
+        'check_box_outline_blank'
+      );
+    }
+  }]);
 
-  render() {
-    return this.props.onChange ? this.props.checked ? React.createElement(
-      'i',
-      { className: 'material-icons blue clickable', onClick: this.handleChange },
-      'check_box'
-    ) : React.createElement(
-      'i',
-      { className: 'material-icons blue clickable', onClick: this.handleChange },
-      'check_box_outline_blank'
-    ) : this.props.checked ? React.createElement(
-      'i',
-      { className: 'material-icons' },
-      'check_box'
-    ) : React.createElement(
-      'i',
-      { className: 'material-icons' },
-      'check_box_outline_blank'
-    );
-  }
-}
+  return CheckBox;
+}(React.PureComponent);
 /* END CheckBox */
 
 /* BEGIN PermissionsEditor: Component for editing permissions */
 // <PermissionsEditor mode="JWROD" skip="O" onChange={this.handleCheckboxTest} />
-class PermissionsEditor extends React.Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
+
+var PermissionsEditor = function (_React$Component3) {
+  _inherits(PermissionsEditor, _React$Component3);
+
+  function PermissionsEditor(props) {
+    _classCallCheck(this, PermissionsEditor);
+
+    var _this12 = _possibleConstructorReturn(this, (PermissionsEditor.__proto__ || Object.getPrototypeOf(PermissionsEditor)).call(this, props));
+
+    _this12.state = {
       mode: (props.mode || "").replace("N", "")
     };
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleCancel = this.handleCancel.bind(this);
+    _this12.handleChange = _this12.handleChange.bind(_this12);
+    _this12.handleSubmit = _this12.handleSubmit.bind(_this12);
+    _this12.handleCancel = _this12.handleCancel.bind(_this12);
+    return _this12;
   }
 
-  handleChange(val) {
-    let mode = this.state.mode;
-    let idx = mode.indexOf(val);
-    if (idx == -1) {
-      mode += val;
-    } else {
-      mode = mode.replace(val, "");
+  _createClass(PermissionsEditor, [{
+    key: 'handleChange',
+    value: function handleChange(val) {
+      var mode = this.state.mode;
+      var idx = mode.indexOf(val);
+      if (idx == -1) {
+        mode += val;
+      } else {
+        mode = mode.replace(val, "");
+      }
+      this.setState({ mode: mode });
     }
-    this.setState({ mode: mode });
-  }
-
-  handleSubmit() {
-    // Normalize string, otherwise cannot check if mode has changed.
-    var mode = (this.state.mode || "N").split('').sort().join('');
-    var before = (this.props.mode || "N").split('').sort().join('');
-    if (mode !== before) {
-      this.props.onSubmit(mode);
-    } else {
+  }, {
+    key: 'handleSubmit',
+    value: function handleSubmit() {
+      // Normalize string, otherwise cannot check if mode has changed.
+      var mode = (this.state.mode || "N").split('').sort().join('');
+      var before = (this.props.mode || "N").split('').sort().join('');
+      if (mode !== before) {
+        this.props.onSubmit(mode);
+      } else {
+        this.props.onCancel();
+      }
+    }
+  }, {
+    key: 'handleCancel',
+    value: function handleCancel() {
       this.props.onCancel();
     }
-  }
+  }, {
+    key: 'render',
+    value: function render() {
+      var all = 'JRWPASDO';
+      var names = {
+        'J': 'Join (J)',
+        'R': 'Read (R)',
+        'W': 'Write (W)',
+        'P': 'Get notified (P)',
+        'A': 'Approve (A)',
+        'S': 'Share (S)',
+        'D': 'Delete (D)',
+        'O': 'Owner (O)'
+      };
 
-  handleCancel() {
-    this.props.onCancel();
-  }
-
-  render() {
-    const all = 'JRWPASDO';
-    const names = {
-      'J': 'Join (J)',
-      'R': 'Read (R)',
-      'W': 'Write (W)',
-      'P': 'Get notified (P)',
-      'A': 'Approve (A)',
-      'S': 'Share (S)',
-      'D': 'Delete (D)',
-      'O': 'Owner (O)'
-    };
-
-    let skip = this.props.skip || "";
-    let mode = this.state.mode;
-    let compare = (this.props.compare || "").replace("N", "");
-    let items = [];
-    for (let i = 0; i < all.length; i++) {
-      let c = all.charAt(i);
-      if (skip.indexOf(c) >= 0 && mode.indexOf(c) < 0) {
-        // Permission is marked as inactive: hide unchecked permissions, disable checked permissions
-        continue;
-      }
-      items.push(React.createElement(
-        'tr',
-        { key: c },
-        React.createElement(
-          'td',
-          null,
-          names[c]
-        ),
-        React.createElement(
-          'td',
-          { className: 'checkbox' },
-          skip.indexOf(c) < 0 ? React.createElement(CheckBox, { name: c, checked: mode.indexOf(c) >= 0, onChange: this.handleChange }) : React.createElement(CheckBox, { name: c, checked: mode.indexOf(c) >= 0 })
-        ),
-        this.props.compare ? React.createElement(
-          'td',
-          { className: 'checkbox' },
-          React.createElement(CheckBox, { name: c, checked: compare.indexOf(c) >= 0 })
-        ) : null
-      ));
-    }
-
-    return React.createElement(
-      'div',
-      { className: 'panel-form-column' },
-      this.props.userTitle ? React.createElement(
-        'ul',
-        { className: 'contact-box' },
-        React.createElement(Contact, {
-          item: this.props.item,
-          title: this.props.userTitle,
-          avatar: makeImageUrl(this.props.userAvatar ? this.props.userAvatar : null) })
-      ) : null,
-      React.createElement(
-        'label',
-        { className: 'small' },
-        'Permissions'
-      ),
-      React.createElement(
-        'table',
-        { className: 'permission-editor' },
-        this.props.compare ? React.createElement(
-          'thead',
-          null,
+      var skip = this.props.skip || "";
+      var mode = this.state.mode;
+      var compare = (this.props.compare || "").replace("N", "");
+      var items = [];
+      for (var i = 0; i < all.length; i++) {
+        var c = all.charAt(i);
+        if (skip.indexOf(c) >= 0 && mode.indexOf(c) < 0) {
+          // Permission is marked as inactive: hide unchecked permissions, disable checked permissions
+          continue;
+        }
+        items.push(React.createElement(
+          'tr',
+          { key: c },
           React.createElement(
-            'tr',
+            'td',
             null,
-            React.createElement('th', null),
-            React.createElement(
-              'th',
-              null,
-              this.props.modeTitle
-            ),
-            React.createElement(
-              'th',
-              null,
-              this.props.compareTitle
-            )
-          )
+            names[c]
+          ),
+          React.createElement(
+            'td',
+            { className: 'checkbox' },
+            skip.indexOf(c) < 0 ? React.createElement(CheckBox, { name: c, checked: mode.indexOf(c) >= 0, onChange: this.handleChange }) : React.createElement(CheckBox, { name: c, checked: mode.indexOf(c) >= 0 })
+          ),
+          this.props.compare ? React.createElement(
+            'td',
+            { className: 'checkbox' },
+            React.createElement(CheckBox, { name: c, checked: compare.indexOf(c) >= 0 })
+          ) : null
+        ));
+      }
+
+      return React.createElement(
+        'div',
+        { className: 'panel-form-column' },
+        this.props.userTitle ? React.createElement(
+          'ul',
+          { className: 'contact-box' },
+          React.createElement(Contact, {
+            item: this.props.item,
+            title: this.props.userTitle,
+            avatar: makeImageUrl(this.props.userAvatar ? this.props.userAvatar : null) })
         ) : null,
         React.createElement(
-          'tbody',
-          null,
-          items
-        )
-      ),
-      React.createElement('br', null),
-      React.createElement(
-        'div',
-        { className: 'dialog-buttons' },
-        React.createElement(
-          'button',
-          { className: 'blue', onClick: this.handleSubmit },
-          'Ok'
+          'label',
+          { className: 'small' },
+          'Permissions'
         ),
         React.createElement(
-          'button',
-          { className: 'white', onClick: this.handleCancel },
-          'Cancel'
+          'table',
+          { className: 'permission-editor' },
+          this.props.compare ? React.createElement(
+            'thead',
+            null,
+            React.createElement(
+              'tr',
+              null,
+              React.createElement('th', null),
+              React.createElement(
+                'th',
+                null,
+                this.props.modeTitle
+              ),
+              React.createElement(
+                'th',
+                null,
+                this.props.compareTitle
+              )
+            )
+          ) : null,
+          React.createElement(
+            'tbody',
+            null,
+            items
+          )
+        ),
+        React.createElement('br', null),
+        React.createElement(
+          'div',
+          { className: 'dialog-buttons' },
+          React.createElement(
+            'button',
+            { className: 'blue', onClick: this.handleSubmit },
+            'Ok'
+          ),
+          React.createElement(
+            'button',
+            { className: 'white', onClick: this.handleCancel },
+            'Cancel'
+          )
         )
-      )
-    );
-  }
-};
+      );
+    }
+  }]);
+
+  return PermissionsEditor;
+}(React.Component);
+
+;
 /* END PermissionsEditor */
 
 /* BEGIN ChipInput: group membership widget */
-class ChipInput extends React.Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
+var ChipInput = function (_React$Component4) {
+  _inherits(ChipInput, _React$Component4);
+
+  function ChipInput(props) {
+    _classCallCheck(this, ChipInput);
+
+    var _this13 = _possibleConstructorReturn(this, (ChipInput.__proto__ || Object.getPrototypeOf(ChipInput)).call(this, props));
+
+    _this13.state = {
       placeholder: props.chips ? "" : props.prompt,
       sortedChips: ChipInput.sortChips(props.chips, props.required),
       chipIndex: ChipInput.indexChips(props.chips),
@@ -29239,295 +29410,367 @@ class ChipInput extends React.Component {
       focused: false
     };
 
-    this.handleTextInput = this.handleTextInput.bind(this);
-    this.removeChipAt = this.removeChipAt.bind(this);
-    this.handleChipCancel = this.handleChipCancel.bind(this);
-    this.handleFocusGained = this.handleFocusGained.bind(this);
-    this.handleFocusLost = this.handleFocusLost.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
+    _this13.handleTextInput = _this13.handleTextInput.bind(_this13);
+    _this13.removeChipAt = _this13.removeChipAt.bind(_this13);
+    _this13.handleChipCancel = _this13.handleChipCancel.bind(_this13);
+    _this13.handleFocusGained = _this13.handleFocusGained.bind(_this13);
+    _this13.handleFocusLost = _this13.handleFocusLost.bind(_this13);
+    _this13.handleKeyDown = _this13.handleKeyDown.bind(_this13);
+    return _this13;
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    this.setState({
-      sortedChips: ChipInput.sortChips(nextProps.chips, nextProps.required),
-      chipIndex: ChipInput.indexChips(nextProps.chips)
-    });
-    if (nextProps.chips.length > this.props.chips.length) {
-      // Chip added: clear input.
-      this.setState({ input: '' });
-    }
-  }
-
-  // Map chip index to user name
-  static indexChips(chips) {
-    var index = {};
-    var count = 0;
-    chips.map(function (item) {
-      index[item.user] = count;
-      count++;
-    });
-    return index;
-  }
-
-  // Have non-removable chips appear before all other chips.
-  static sortChips(chips, keep) {
-    var required = [];
-    var normal = [];
-    chips.map(function (item) {
-      if (item.user === keep) {
-        required.push(item);
-      } else {
-        normal.push(item);
+  _createClass(ChipInput, [{
+    key: 'UNSAFE_componentWillReceiveProps',
+    value: function UNSAFE_componentWillReceiveProps(nextProps) {
+      this.setState({
+        sortedChips: ChipInput.sortChips(nextProps.chips, nextProps.required),
+        chipIndex: ChipInput.indexChips(nextProps.chips)
+      });
+      if (nextProps.chips.length > this.props.chips.length) {
+        // Chip added: clear input.
+        this.setState({ input: '' });
       }
-    });
-    return required.concat(normal);
-  }
-
-  handleTextInput(e) {
-    this.setState({ input: e.target.value });
-    if (this.props.filterFunc) {
-      this.props.filterFunc(e.target.value);
     }
-  }
 
-  removeChipAt(idx) {
-    var removed = this.state.sortedChips[idx];
-    this.props.onChipRemoved(removed.user, this.state.chipIndex[removed.user]);
-  }
+    // Map chip index to user name
 
-  handleChipCancel(item, idx) {
-    this.removeChipAt(idx);
-  }
-
-  handleFocusGained() {
-    this.setState({ focused: true });
-  }
-
-  handleFocusLost() {
-    this.setState({ focused: false });
-    if (this.props.onFocusLost) {
-      this.props.onFocusLost(this.state.input);
+  }, {
+    key: 'handleTextInput',
+    value: function handleTextInput(e) {
+      this.setState({ input: e.target.value });
+      if (this.props.filterFunc) {
+        this.props.filterFunc(e.target.value);
+      }
     }
-  }
-
-  handleKeyDown(e) {
-    if (e.key === 'Backspace') {
-      if (this.state.input.length == 0 && this.state.sortedChips.length > 0) {
-        var at = this.state.sortedChips.length - 1;
-        if (this.state.sortedChips[at].user !== this.props.required) {
-          this.removeChipAt(at);
+  }, {
+    key: 'removeChipAt',
+    value: function removeChipAt(idx) {
+      var removed = this.state.sortedChips[idx];
+      this.props.onChipRemoved(removed.user, this.state.chipIndex[removed.user]);
+    }
+  }, {
+    key: 'handleChipCancel',
+    value: function handleChipCancel(item, idx) {
+      this.removeChipAt(idx);
+    }
+  }, {
+    key: 'handleFocusGained',
+    value: function handleFocusGained() {
+      this.setState({ focused: true });
+    }
+  }, {
+    key: 'handleFocusLost',
+    value: function handleFocusLost() {
+      this.setState({ focused: false });
+      if (this.props.onFocusLost) {
+        this.props.onFocusLost(this.state.input);
+      }
+    }
+  }, {
+    key: 'handleKeyDown',
+    value: function handleKeyDown(e) {
+      if (e.key === 'Backspace') {
+        if (this.state.input.length == 0 && this.state.sortedChips.length > 0) {
+          var at = this.state.sortedChips.length - 1;
+          if (this.state.sortedChips[at].user !== this.props.required) {
+            this.removeChipAt(at);
+          }
+        }
+      } else if (e.key === 'Enter') {
+        if (this.props.onEnter) {
+          this.props.onEnter(this.state.input);
+        }
+      } else if (e.key === 'Escape') {
+        if (this.props.onCancel) {
+          this.props.onCancel();
         }
       }
-    } else if (e.key === 'Enter') {
-      if (this.props.onEnter) {
-        this.props.onEnter(this.state.input);
-      }
-    } else if (e.key === 'Escape') {
-      if (this.props.onCancel) {
-        this.props.onCancel();
-      }
     }
-  }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this14 = this;
 
-  render() {
-    var chips = [];
-    var count = 0;
-    this.state.sortedChips.map(item => {
-      chips.push(React.createElement(Chip, {
-        onCancel: this.handleChipCancel,
-        avatar: makeImageUrl(item.public ? item.public.photo : null),
-        title: item.public ? item.public.fn : undefined,
-        noAvatar: this.props.avatarDisabled,
-        topic: item.user,
-        required: item.user === this.props.required,
-        index: count,
-        key: item.user }));
-      count++;
-    });
-    var className = "chip-input" + (this.state.focused ? " focused" : "");
-    return React.createElement(
-      'div',
-      { className: className },
-      chips,
-      React.createElement('input', { type: 'text',
-        placeholder: this.state.placeholder,
-        onChange: this.handleTextInput,
-        onFocus: this.handleFocusGained,
-        onBlur: this.handleFocusLost,
-        onKeyDown: this.handleKeyDown,
-        value: this.state.input,
-        autoFocus: true })
-    );
-  }
-};
-
-class Chip extends React.PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.handleCancel = this.handleCancel.bind(this);
-  }
-
-  handleCancel() {
-    this.props.onCancel(this.props.topic, this.props.index);
-  }
-
-  render() {
-    var title = this.props.title || this.props.topic;
-    return React.createElement(
-      'div',
-      { className: 'chip' },
-      this.props.noAvatar ? React.createElement('span', { className: 'spacer' }) : React.createElement(
+      var chips = [];
+      var count = 0;
+      this.state.sortedChips.map(function (item) {
+        chips.push(React.createElement(Chip, {
+          onCancel: _this14.handleChipCancel,
+          avatar: makeImageUrl(item.public ? item.public.photo : null),
+          title: item.public ? item.public.fn : undefined,
+          noAvatar: _this14.props.avatarDisabled,
+          topic: item.user,
+          required: item.user === _this14.props.required,
+          index: count,
+          key: item.user }));
+        count++;
+      });
+      var className = "chip-input" + (this.state.focused ? " focused" : "");
+      return React.createElement(
         'div',
-        { className: 'avatar-box' },
-        React.createElement(LetterTile, {
-          avatar: this.props.avatar || true,
-          topic: this.props.topic,
-          title: this.props.title })
-      ),
-      React.createElement(
-        'span',
-        null,
-        title
-      ),
-      this.props.onCancel && !this.props.required ? React.createElement(
-        'a',
-        { href: 'javascript:;', onClick: this.handleCancel },
-        '\xD7'
-      ) : React.createElement('span', { className: 'spacer' })
-    );
+        { className: className },
+        chips,
+        React.createElement('input', { type: 'text',
+          placeholder: this.state.placeholder,
+          onChange: this.handleTextInput,
+          onFocus: this.handleFocusGained,
+          onBlur: this.handleFocusLost,
+          onKeyDown: this.handleKeyDown,
+          value: this.state.input,
+          autoFocus: true })
+      );
+    }
+  }], [{
+    key: 'indexChips',
+    value: function indexChips(chips) {
+      var index = {};
+      var count = 0;
+      chips.map(function (item) {
+        index[item.user] = count;
+        count++;
+      });
+      return index;
+    }
+
+    // Have non-removable chips appear before all other chips.
+
+  }, {
+    key: 'sortChips',
+    value: function sortChips(chips, keep) {
+      var required = [];
+      var normal = [];
+      chips.map(function (item) {
+        if (item.user === keep) {
+          required.push(item);
+        } else {
+          normal.push(item);
+        }
+      });
+      return required.concat(normal);
+    }
+  }]);
+
+  return ChipInput;
+}(React.Component);
+
+;
+
+var Chip = function (_React$PureComponent8) {
+  _inherits(Chip, _React$PureComponent8);
+
+  function Chip(props) {
+    _classCallCheck(this, Chip);
+
+    var _this15 = _possibleConstructorReturn(this, (Chip.__proto__ || Object.getPrototypeOf(Chip)).call(this, props));
+
+    _this15.handleCancel = _this15.handleCancel.bind(_this15);
+    return _this15;
   }
-};
+
+  _createClass(Chip, [{
+    key: 'handleCancel',
+    value: function handleCancel() {
+      this.props.onCancel(this.props.topic, this.props.index);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var title = this.props.title || this.props.topic;
+      return React.createElement(
+        'div',
+        { className: 'chip' },
+        this.props.noAvatar ? React.createElement('span', { className: 'spacer' }) : React.createElement(
+          'div',
+          { className: 'avatar-box' },
+          React.createElement(LetterTile, {
+            avatar: this.props.avatar || true,
+            topic: this.props.topic,
+            title: this.props.title })
+        ),
+        React.createElement(
+          'span',
+          null,
+          title
+        ),
+        this.props.onCancel && !this.props.required ? React.createElement(
+          'a',
+          { href: 'javascript:;', onClick: this.handleCancel },
+          '\xD7'
+        ) : React.createElement('span', { className: 'spacer' })
+      );
+    }
+  }]);
+
+  return Chip;
+}(React.PureComponent);
+
+;
 /* END ChipInput */
 
 /* BEGIN GroupSubs: a list of group subscribers currently online */
-class GroupSubs extends React.Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
+var GroupSubs = function (_React$Component5) {
+  _inherits(GroupSubs, _React$Component5);
+
+  function GroupSubs(props) {
+    _classCallCheck(this, GroupSubs);
+
+    var _this16 = _possibleConstructorReturn(this, (GroupSubs.__proto__ || Object.getPrototypeOf(GroupSubs)).call(this, props));
+
+    _this16.state = {
       onlineSubs: props.subscribers || []
     };
+    return _this16;
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    return {
-      onlineSubs: nextProps.subscribers ? nextProps.subscribers : []
-    };
-  }
-
-  render() {
-    var usersOnline = [];
-    this.state.onlineSubs.map(sub => {
-      usersOnline.push(React.createElement(
+  _createClass(GroupSubs, [{
+    key: 'render',
+    value: function render() {
+      var usersOnline = [];
+      this.state.onlineSubs.map(function (sub) {
+        usersOnline.push(React.createElement(
+          'div',
+          { className: 'avatar-box', key: sub.user },
+          React.createElement(LetterTile, {
+            topic: sub.user,
+            avatar: makeImageUrl(sub.public ? sub.public.photo : null) || true,
+            title: sub.public ? sub.public.fn : null })
+        ));
+      });
+      return React.createElement(
         'div',
-        { className: 'avatar-box', key: sub.user },
-        React.createElement(LetterTile, {
-          topic: sub.user,
-          avatar: makeImageUrl(sub.public ? sub.public.photo : null) || true,
-          title: sub.public ? sub.public.fn : null })
-      ));
-    });
-    return React.createElement(
-      'div',
-      { id: 'topic-users' },
-      usersOnline
-    );
-  }
-};
+        { id: 'topic-users' },
+        usersOnline
+      );
+    }
+  }], [{
+    key: 'getDerivedStateFromProps',
+    value: function getDerivedStateFromProps(nextProps, prevState) {
+      return {
+        onlineSubs: nextProps.subscribers ? nextProps.subscribers : []
+      };
+    }
+  }]);
+
+  return GroupSubs;
+}(React.Component);
+
+;
 /* END GroupSubs */
 
 /* BEGIN Login: a login form */
-class LoginView extends React.Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
+var LoginView = function (_React$Component6) {
+  _inherits(LoginView, _React$Component6);
+
+  function LoginView(props) {
+    _classCallCheck(this, LoginView);
+
+    var _this17 = _possibleConstructorReturn(this, (LoginView.__proto__ || Object.getPrototypeOf(LoginView)).call(this, props));
+
+    _this17.state = {
       login: props.login,
       password: '',
       hostName: props.serverAddress,
       saveToken: localStorage.getObject("keep-logged-in")
     };
-    this.handleLoginChange = this.handleLoginChange.bind(this);
-    this.handlePasswordChange = this.handlePasswordChange.bind(this);
-    this.handleToggleSaveToken = this.handleToggleSaveToken.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    _this17.handleLoginChange = _this17.handleLoginChange.bind(_this17);
+    _this17.handlePasswordChange = _this17.handlePasswordChange.bind(_this17);
+    _this17.handleToggleSaveToken = _this17.handleToggleSaveToken.bind(_this17);
+    _this17.handleSubmit = _this17.handleSubmit.bind(_this17);
+    return _this17;
   }
 
-  handleLoginChange(e) {
-    this.setState({ login: e.target.value });
-  }
-
-  handlePasswordChange(e) {
-    this.setState({ password: e.target.value });
-  }
-
-  handleToggleSaveToken() {
-    localStorage.setObject("keep-logged-in", !this.state.saveToken);
-    this.setState({ saveToken: !this.state.saveToken });
-  }
-
-  handleSubmit(e) {
-    e.preventDefault();
-    this.props.onLogin(this.state.login.trim(), this.state.password.trim());
-  }
-
-  render() {
-    var submitClasses = "blue";
-    if (this.props.disabled) {
-      submitClasses += " disabled";
+  _createClass(LoginView, [{
+    key: 'handleLoginChange',
+    value: function handleLoginChange(e) {
+      this.setState({ login: e.target.value });
     }
-    return React.createElement(
-      'form',
-      { id: 'login-form', onSubmit: this.handleSubmit },
-      React.createElement('input', { type: 'text', id: 'inputLogin',
-        placeholder: 'Login',
-        autoComplete: 'username',
-        value: this.state.login,
-        onChange: this.handleLoginChange,
-        required: true, autoFocus: true }),
-      React.createElement(VisiblePassword, { type: 'password', id: 'inputPassword',
-        placeholder: 'Password',
-        autoComplete: 'current-password',
-        value: this.state.password,
-        onChange: this.handlePasswordChange,
-        required: true }),
-      React.createElement(
-        'div',
-        { className: 'panel-form-row' },
-        React.createElement(CheckBox, { id: 'save-token', name: 'save-token', checked: this.state.saveToken,
-          onChange: this.handleToggleSaveToken }),
+  }, {
+    key: 'handlePasswordChange',
+    value: function handlePasswordChange(e) {
+      this.setState({ password: e.target.value });
+    }
+  }, {
+    key: 'handleToggleSaveToken',
+    value: function handleToggleSaveToken() {
+      localStorage.setObject("keep-logged-in", !this.state.saveToken);
+      this.setState({ saveToken: !this.state.saveToken });
+    }
+  }, {
+    key: 'handleSubmit',
+    value: function handleSubmit(e) {
+      e.preventDefault();
+      this.props.onLogin(this.state.login.trim(), this.state.password.trim());
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var submitClasses = "blue";
+      if (this.props.disabled) {
+        submitClasses += " disabled";
+      }
+      return React.createElement(
+        'form',
+        { id: 'login-form', onSubmit: this.handleSubmit },
+        React.createElement('input', { type: 'text', id: 'inputLogin',
+          placeholder: 'Login',
+          autoComplete: 'username',
+          value: this.state.login,
+          onChange: this.handleLoginChange,
+          required: true, autoFocus: true }),
+        React.createElement(VisiblePassword, { type: 'password', id: 'inputPassword',
+          placeholder: 'Password',
+          autoComplete: 'current-password',
+          value: this.state.password,
+          onChange: this.handlePasswordChange,
+          required: true }),
         React.createElement(
-          'label',
-          { htmlFor: 'save-token' },
-          '\xA0Stay logged in'
+          'div',
+          { className: 'panel-form-row' },
+          React.createElement(CheckBox, { id: 'save-token', name: 'save-token', checked: this.state.saveToken,
+            onChange: this.handleToggleSaveToken }),
+          React.createElement(
+            'label',
+            { htmlFor: 'save-token' },
+            '\xA0Stay logged in'
+          ),
+          React.createElement(
+            'a',
+            { href: '#reset' },
+            'Forgot password?'
+          )
         ),
         React.createElement(
-          'a',
-          { href: '#reset' },
-          'Forgot password?'
+          'div',
+          { className: 'dialog-buttons' },
+          React.createElement(
+            'button',
+            { className: submitClasses, type: 'submit' },
+            'Sign in'
+          )
         )
-      ),
-      React.createElement(
-        'div',
-        { className: 'dialog-buttons' },
-        React.createElement(
-          'button',
-          { className: submitClasses, type: 'submit' },
-          'Sign in'
-        )
-      )
-    );
-  }
-};
+      );
+    }
+  }]);
+
+  return LoginView;
+}(React.Component);
+
+;
 /* END Login */
 
 /* BEGIN Account registration */
-class CreateAccountView extends React.PureComponent {
-  constructor(props) {
-    super(props);
 
-    this.state = {
+var CreateAccountView = function (_React$PureComponent9) {
+  _inherits(CreateAccountView, _React$PureComponent9);
+
+  function CreateAccountView(props) {
+    _classCallCheck(this, CreateAccountView);
+
+    var _this18 = _possibleConstructorReturn(this, (CreateAccountView.__proto__ || Object.getPrototypeOf(CreateAccountView)).call(this, props));
+
+    _this18.state = {
       login: '',
       password: '',
       email: '',
@@ -29537,606 +29780,747 @@ class CreateAccountView extends React.PureComponent {
       saveToken: localStorage.getObject("keep-logged-in")
     };
 
-    this.handleLoginChange = this.handleLoginChange.bind(this);
-    this.handlePasswordChange = this.handlePasswordChange.bind(this);
-    this.handleEmailChange = this.handleEmailChange.bind(this);
-    this.handleFnChange = this.handleFnChange.bind(this);
-    this.handleImageChanged = this.handleImageChanged.bind(this);
-    this.handleToggleSaveToken = this.handleToggleSaveToken.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    _this18.handleLoginChange = _this18.handleLoginChange.bind(_this18);
+    _this18.handlePasswordChange = _this18.handlePasswordChange.bind(_this18);
+    _this18.handleEmailChange = _this18.handleEmailChange.bind(_this18);
+    _this18.handleFnChange = _this18.handleFnChange.bind(_this18);
+    _this18.handleImageChanged = _this18.handleImageChanged.bind(_this18);
+    _this18.handleToggleSaveToken = _this18.handleToggleSaveToken.bind(_this18);
+    _this18.handleSubmit = _this18.handleSubmit.bind(_this18);
+    return _this18;
   }
 
-  handleLoginChange(e) {
-    this.setState({ login: e.target.value });
-  }
-
-  handlePasswordChange(password) {
-    this.setState({ password: password });
-  }
-
-  handleEmailChange(e) {
-    this.setState({ email: e.target.value });
-  }
-
-  handleFnChange(e) {
-    this.setState({ fn: e.target.value });
-  }
-
-  handleImageChanged(img) {
-    this.setState({ imageDataUrl: img });
-  }
-
-  handleToggleSaveToken() {
-    localStorage.setObject("keep-logged-in", !this.state.saveToken);
-    this.setState({ saveToken: !this.state.saveToken });
-  }
-
-  handleSubmit(e) {
-    e.preventDefault();
-    // TODO: check email for validity
-    this.setState({ errorCleared: false });
-    this.props.onCreateAccount(this.state.login.trim(), this.state.password.trim(), vcard(this.state.fn, this.state.imageDataUrl), { "meth": "email", "val": this.state.email });
-  }
-
-  render() {
-    var submitClasses = "blue";
-    if (this.props.disabled) {
-      submitClasses += " disabled";
+  _createClass(CreateAccountView, [{
+    key: 'handleLoginChange',
+    value: function handleLoginChange(e) {
+      this.setState({ login: e.target.value });
     }
-    return React.createElement(
-      'form',
-      { className: 'panel-form-column', onSubmit: this.handleSubmit },
-      React.createElement(
-        'div',
-        { className: 'panel-form-row' },
+  }, {
+    key: 'handlePasswordChange',
+    value: function handlePasswordChange(password) {
+      this.setState({ password: password });
+    }
+  }, {
+    key: 'handleEmailChange',
+    value: function handleEmailChange(e) {
+      this.setState({ email: e.target.value });
+    }
+  }, {
+    key: 'handleFnChange',
+    value: function handleFnChange(e) {
+      this.setState({ fn: e.target.value });
+    }
+  }, {
+    key: 'handleImageChanged',
+    value: function handleImageChanged(img) {
+      this.setState({ imageDataUrl: img });
+    }
+  }, {
+    key: 'handleToggleSaveToken',
+    value: function handleToggleSaveToken() {
+      localStorage.setObject("keep-logged-in", !this.state.saveToken);
+      this.setState({ saveToken: !this.state.saveToken });
+    }
+  }, {
+    key: 'handleSubmit',
+    value: function handleSubmit(e) {
+      e.preventDefault();
+      // TODO: check email for validity
+      this.setState({ errorCleared: false });
+      this.props.onCreateAccount(this.state.login.trim(), this.state.password.trim(), vcard(this.state.fn, this.state.imageDataUrl), { "meth": "email", "val": this.state.email });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var submitClasses = "blue";
+      if (this.props.disabled) {
+        submitClasses += " disabled";
+      }
+      return React.createElement(
+        'form',
+        { className: 'panel-form-column', onSubmit: this.handleSubmit },
         React.createElement(
           'div',
-          { className: 'panel-form-column' },
-          React.createElement('input', { type: 'text', placeholder: 'Login', autoComplete: 'user-name',
-            value: this.state.login, onChange: this.handleLoginChange, required: true, autoFocus: true }),
-          React.createElement(VisiblePassword, { placeholder: 'Password', autoComplete: 'new-password',
-            value: this.state.password, onFinished: this.handlePasswordChange,
-            required: true })
+          { className: 'panel-form-row' },
+          React.createElement(
+            'div',
+            { className: 'panel-form-column' },
+            React.createElement('input', { type: 'text', placeholder: 'Login', autoComplete: 'user-name',
+              value: this.state.login, onChange: this.handleLoginChange, required: true, autoFocus: true }),
+            React.createElement(VisiblePassword, { placeholder: 'Password', autoComplete: 'new-password',
+              value: this.state.password, onFinished: this.handlePasswordChange,
+              required: true })
+          ),
+          React.createElement(AvatarUpload, {
+            onImageChanged: this.handleImageChanged,
+            onError: this.props.onError })
         ),
-        React.createElement(AvatarUpload, {
-          onImageChanged: this.handleImageChanged,
-          onError: this.props.onError })
-      ),
-      React.createElement(
-        'div',
-        { className: 'panel-form-row' },
-        React.createElement('input', { type: 'text', placeholder: 'Full name, e.g. John Doe', autoComplete: 'name',
-          value: this.state.fn, onChange: this.handleFnChange, required: true })
-      ),
-      React.createElement(
-        'div',
-        { className: 'panel-form-row' },
-        React.createElement('input', { type: 'email', placeholder: 'Email, e.g john.doe@example.com',
-          autoComplete: 'email', value: this.state.email, onChange: this.handleEmailChange, required: true })
-      ),
-      React.createElement(
-        'div',
-        { className: 'panel-form-row' },
-        React.createElement(CheckBox, { id: 'save-token', name: 'save-token', checked: this.state.saveToken,
-          onChange: this.handleToggleSaveToken }),
         React.createElement(
-          'label',
-          { htmlFor: 'save-token' },
-          '\xA0Stay logged in'
-        )
-      ),
-      React.createElement(
-        'div',
-        { className: 'dialog-buttons' },
+          'div',
+          { className: 'panel-form-row' },
+          React.createElement('input', { type: 'text', placeholder: 'Full name, e.g. John Doe', autoComplete: 'name',
+            value: this.state.fn, onChange: this.handleFnChange, required: true })
+        ),
         React.createElement(
-          'button',
-          { className: submitClasses, type: 'submit' },
-          'Sign up'
+          'div',
+          { className: 'panel-form-row' },
+          React.createElement('input', { type: 'email', placeholder: 'Email, e.g john.doe@example.com',
+            autoComplete: 'email', value: this.state.email, onChange: this.handleEmailChange, required: true })
+        ),
+        React.createElement(
+          'div',
+          { className: 'panel-form-row' },
+          React.createElement(CheckBox, { id: 'save-token', name: 'save-token', checked: this.state.saveToken,
+            onChange: this.handleToggleSaveToken }),
+          React.createElement(
+            'label',
+            { htmlFor: 'save-token' },
+            '\xA0Stay logged in'
+          )
+        ),
+        React.createElement(
+          'div',
+          { className: 'dialog-buttons' },
+          React.createElement(
+            'button',
+            { className: submitClasses, type: 'submit' },
+            'Sign up'
+          )
         )
-      )
-    );
-  }
-};
+      );
+    }
+  }]);
 
-class AvatarUpload extends React.Component {
-  constructor(props) {
-    super(props);
+  return CreateAccountView;
+}(React.PureComponent);
 
-    this.state = {
+;
+
+var AvatarUpload = function (_React$Component7) {
+  _inherits(AvatarUpload, _React$Component7);
+
+  function AvatarUpload(props) {
+    _classCallCheck(this, AvatarUpload);
+
+    var _this19 = _possibleConstructorReturn(this, (AvatarUpload.__proto__ || Object.getPrototypeOf(AvatarUpload)).call(this, props));
+
+    _this19.state = {
       dataUrl: props.avatar
     };
 
-    this.handleFileUpload = this.handleFileUpload.bind(this);
+    _this19.handleFileUpload = _this19.handleFileUpload.bind(_this19);
+    return _this19;
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (prevState.dataUrl != nextProps.avatar) {
-      return {
-        dataUrl: nextProps.avatar
-      };
+  _createClass(AvatarUpload, [{
+    key: 'handleFileUpload',
+    value: function handleFileUpload(e) {
+      var _this20 = this;
+
+      imageFileScaledToBase64(e.target.files[0], AVATAR_SIZE, AVATAR_SIZE, true,
+      // Success
+      function (base64bits, mime) {
+        var du = makeImageUrl({ data: base64bits, type: mime });
+        _this20.setState({ dataUrl: du });
+        _this20.props.onImageChanged(du);
+      },
+      // Failure
+      function (err) {
+        _this20.props.onError(err, "err");
+      });
+      // Clear the value so the same file can be uploaded again.
+      e.target.value = '';
     }
-    return null;
-  }
-
-  handleFileUpload(e) {
-    imageFileScaledToBase64(e.target.files[0], AVATAR_SIZE, AVATAR_SIZE, true,
-    // Success
-    (base64bits, mime) => {
-      var du = makeImageUrl({ data: base64bits, type: mime });
-      this.setState({ dataUrl: du });
-      this.props.onImageChanged(du);
-    },
-    // Failure
-    err => {
-      this.props.onError(err, "err");
-    });
-    // Clear the value so the same file can be uploaded again.
-    e.target.value = '';
-  }
-
-  render() {
-    // Randomize id value in case more than one AvatarUpload is shown
-    // at the same time.
-    var randId = "file-input-avatar-" + (Math.random() + '').substr(2);
-    return React.createElement(
-      'div',
-      { className: 'avatar-upload' },
-      this.state.dataUrl ? React.createElement('img', { src: this.state.dataUrl, className: 'preview' }) : this.props.readOnly && this.props.uid ? React.createElement(
+  }, {
+    key: 'render',
+    value: function render() {
+      // Randomize id value in case more than one AvatarUpload is shown
+      // at the same time.
+      var randId = "file-input-avatar-" + (Math.random() + '').substr(2);
+      return React.createElement(
         'div',
-        { className: 'avatar-box' },
-        React.createElement(LetterTile, {
-          avatar: true,
-          topic: this.props.uid,
-          title: this.props.title })
-      ) : React.createElement(
-        'div',
-        { className: 'blank' },
-        '128\xD7128'
-      ),
-      this.props.readOnly ? null : React.createElement('input', { type: 'file', id: randId, className: 'inputfile hidden',
-        accept: 'image/*', onChange: this.handleFileUpload }),
-      this.props.readOnly ? null : React.createElement(
-        'label',
-        { htmlFor: randId, className: 'round' },
-        React.createElement(
-          'i',
-          { className: 'material-icons' },
-          'file_upload'
+        { className: 'avatar-upload' },
+        this.state.dataUrl ? React.createElement('img', { src: this.state.dataUrl, className: 'preview' }) : this.props.readOnly && this.props.uid ? React.createElement(
+          'div',
+          { className: 'avatar-box' },
+          React.createElement(LetterTile, {
+            avatar: true,
+            topic: this.props.uid,
+            title: this.props.title })
+        ) : React.createElement(
+          'div',
+          { className: 'blank' },
+          '128\xD7128'
+        ),
+        this.props.readOnly ? null : React.createElement('input', { type: 'file', id: randId, className: 'inputfile hidden',
+          accept: 'image/*', onChange: this.handleFileUpload }),
+        this.props.readOnly ? null : React.createElement(
+          'label',
+          { htmlFor: randId, className: 'round' },
+          React.createElement(
+            'i',
+            { className: 'material-icons' },
+            'file_upload'
+          )
         )
-      )
-    );
-  }
-};
+      );
+    }
+  }], [{
+    key: 'getDerivedStateFromProps',
+    value: function getDerivedStateFromProps(nextProps, prevState) {
+      if (prevState.dataUrl != nextProps.avatar) {
+        return {
+          dataUrl: nextProps.avatar
+        };
+      }
+      return null;
+    }
+  }]);
+
+  return AvatarUpload;
+}(React.Component);
+
+;
 /* END Account registration */
 
 /* BEGIN PasswordResetView: a password reset form */
-class PasswordResetView extends React.PureComponent {
-  constructor(props) {
-    super(props);
 
-    this.state = {
+var PasswordResetView = function (_React$PureComponent10) {
+  _inherits(PasswordResetView, _React$PureComponent10);
+
+  function PasswordResetView(props) {
+    _classCallCheck(this, PasswordResetView);
+
+    var _this21 = _possibleConstructorReturn(this, (PasswordResetView.__proto__ || Object.getPrototypeOf(PasswordResetView)).call(this, props));
+
+    _this21.state = {
       email: '',
       password: ''
     };
 
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleEmailChange = this.handleEmailChange.bind(this);
-    this.handlePasswordChange = this.handlePasswordChange.bind(this);
+    _this21.handleSubmit = _this21.handleSubmit.bind(_this21);
+    _this21.handleEmailChange = _this21.handleEmailChange.bind(_this21);
+    _this21.handlePasswordChange = _this21.handlePasswordChange.bind(_this21);
+    return _this21;
   }
 
-  componentDidMount() {
-    let parsed = parseUrlHash(window.location.hash);
-    this.setState({ token: parsed.params.token, scheme: parsed.params.scheme });
-  }
-
-  handleSubmit(e) {
-    e.preventDefault();
-    if (this.state.token) {
-      this.props.onReset(this.state.scheme, this.state.password.trim(), this.state.token);
-    } else {
-      this.props.onRequest("email", this.state.email.trim());
+  _createClass(PasswordResetView, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var parsed = parseUrlHash(window.location.hash);
+      this.setState({ token: parsed.params.token, scheme: parsed.params.scheme });
     }
-  }
-
-  handleEmailChange(e) {
-    this.setState({ email: e.target.value });
-  }
-
-  handlePasswordChange(e) {
-    this.setState({ password: e.target.value });
-  }
-
-  render() {
-    let reset = this.state.token && this.state.scheme;
-    return React.createElement(
-      'form',
-      { id: 'password-reset-form', onSubmit: this.handleSubmit },
-      reset ? React.createElement(VisiblePassword, {
-        placeholder: 'Enter new password',
-        autoComplete: 'new-password',
-        value: this.state.password,
-        required: true, autoFocus: true,
-        onChange: this.handlePasswordChange }) : React.createElement(
-        React.Fragment,
-        null,
-        React.createElement(
-          'label',
-          { htmlFor: 'inputEmail' },
-          'Send a password reset email:'
+  }, {
+    key: 'handleSubmit',
+    value: function handleSubmit(e) {
+      e.preventDefault();
+      if (this.state.token) {
+        this.props.onReset(this.state.scheme, this.state.password.trim(), this.state.token);
+      } else {
+        this.props.onRequest("email", this.state.email.trim());
+      }
+    }
+  }, {
+    key: 'handleEmailChange',
+    value: function handleEmailChange(e) {
+      this.setState({ email: e.target.value });
+    }
+  }, {
+    key: 'handlePasswordChange',
+    value: function handlePasswordChange(e) {
+      this.setState({ password: e.target.value });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var reset = this.state.token && this.state.scheme;
+      return React.createElement(
+        'form',
+        { id: 'password-reset-form', onSubmit: this.handleSubmit },
+        reset ? React.createElement(VisiblePassword, {
+          placeholder: 'Enter new password',
+          autoComplete: 'new-password',
+          value: this.state.password,
+          required: true, autoFocus: true,
+          onChange: this.handlePasswordChange }) : React.createElement(
+          React.Fragment,
+          null,
+          React.createElement(
+            'label',
+            { htmlFor: 'inputEmail' },
+            'Send a password reset email:'
+          ),
+          React.createElement('input', { type: 'email', id: 'inputEmail',
+            placeholder: 'Your registration email',
+            autoComplete: 'email',
+            value: this.state.email,
+            onChange: this.handleEmailChange,
+            required: true, autoFocus: true })
         ),
-        React.createElement('input', { type: 'email', id: 'inputEmail',
-          placeholder: 'Your registration email',
-          autoComplete: 'email',
-          value: this.state.email,
-          onChange: this.handleEmailChange,
-          required: true, autoFocus: true })
-      ),
-      React.createElement(
-        'div',
-        { className: 'dialog-buttons' },
         React.createElement(
-          'button',
-          { className: 'blue', type: 'submit' },
-          reset ? "Reset" : "Send request"
+          'div',
+          { className: 'dialog-buttons' },
+          React.createElement(
+            'button',
+            { className: 'blue', type: 'submit' },
+            reset ? "Reset" : "Send request"
+          )
         )
-      )
-    );
-  }
-}
+      );
+    }
+  }]);
+
+  return PasswordResetView;
+}(React.PureComponent);
 /* END PasswordResetView */
 
 /* BEGIN Tinode config panel */
-class SettingsView extends React.PureComponent {
-  constructor(props) {
-    super(props);
 
-    this.state = {
+
+var SettingsView = function (_React$PureComponent11) {
+  _inherits(SettingsView, _React$PureComponent11);
+
+  function SettingsView(props) {
+    _classCallCheck(this, SettingsView);
+
+    var _this22 = _possibleConstructorReturn(this, (SettingsView.__proto__ || Object.getPrototypeOf(SettingsView)).call(this, props));
+
+    _this22.state = {
       transport: props.transport || "def",
       serverAddress: props.serverAddress
     };
 
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleTransportSelected = this.handleTransportSelected.bind(this);
-    this.handleServerAddressChange = this.handleServerAddressChange.bind(this);
+    _this22.handleSubmit = _this22.handleSubmit.bind(_this22);
+    _this22.handleTransportSelected = _this22.handleTransportSelected.bind(_this22);
+    _this22.handleServerAddressChange = _this22.handleServerAddressChange.bind(_this22);
+    return _this22;
   }
 
-  handleSubmit(e) {
-    e.preventDefault();
-    this.props.onUpdate({
-      transport: this.state.transport,
-      serverAddress: this.state.serverAddress
-    });
-  }
+  _createClass(SettingsView, [{
+    key: 'handleSubmit',
+    value: function handleSubmit(e) {
+      e.preventDefault();
+      this.props.onUpdate({
+        transport: this.state.transport,
+        serverAddress: this.state.serverAddress
+      });
+    }
+  }, {
+    key: 'handleTransportSelected',
+    value: function handleTransportSelected(e) {
+      this.setState({ transport: e.currentTarget.value });
+    }
+  }, {
+    key: 'handleServerAddressChange',
+    value: function handleServerAddressChange(name) {
+      this.setState({ serverAddress: name });
+      this.props.onServerAddressChange(name);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var names = { def: "default", ws: "websocket", lp: "long polling" };
+      var transportOptions = [];
+      var instance = this;
+      ["def", "ws", "lp"].map(function (item) {
+        var id = "transport-" + item;
+        var name = names[item];
+        transportOptions.push(React.createElement(
+          'li',
+          { key: item },
+          React.createElement('input', { type: 'radio', id: id, name: 'transport-select', value: item,
+            checked: instance.state.transport === item,
+            onChange: instance.handleTransportSelected }),
+          React.createElement(
+            'label',
+            { htmlFor: id },
+            name
+          )
+        ));
+      });
+      return React.createElement(
+        'form',
+        { id: 'settings-form', className: 'panel-form', onSubmit: this.handleSubmit },
+        React.createElement(
+          'div',
+          { className: 'panel-form-row' },
+          React.createElement(
+            'label',
+            { className: 'small' },
+            'Server to use:'
+          )
+        ),
+        React.createElement(HostSelector, { serverAddress: this.state.serverAddress,
+          onServerAddressChange: this.handleServerAddressChange }),
+        React.createElement(
+          'div',
+          { className: 'panel-form-row' },
+          React.createElement(
+            'label',
+            { className: 'small' },
+            'Wire transport:'
+          )
+        ),
+        React.createElement(
+          'div',
+          { className: 'panel-form-row' },
+          React.createElement(
+            'ul',
+            { className: 'quoted' },
+            transportOptions
+          )
+        ),
+        React.createElement(
+          'div',
+          { className: 'dialog-buttons' },
+          React.createElement(
+            'button',
+            { type: 'submit', className: 'blue' },
+            'Update'
+          )
+        )
+      );
+    }
+  }]);
 
-  handleTransportSelected(e) {
-    this.setState({ transport: e.currentTarget.value });
-  }
+  return SettingsView;
+}(React.PureComponent);
 
-  handleServerAddressChange(name) {
-    this.setState({ serverAddress: name });
-    this.props.onServerAddressChange(name);
-  }
-
-  render() {
-    var names = { def: "default", ws: "websocket", lp: "long polling" };
-    var transportOptions = [];
-    var instance = this;
-    ["def", "ws", "lp"].map(function (item) {
-      var id = "transport-" + item;
-      var name = names[item];
-      transportOptions.push(React.createElement(
-        'li',
-        { key: item },
-        React.createElement('input', { type: 'radio', id: id, name: 'transport-select', value: item,
-          checked: instance.state.transport === item,
-          onChange: instance.handleTransportSelected }),
-        React.createElement(
-          'label',
-          { htmlFor: id },
-          name
-        )
-      ));
-    });
-    return React.createElement(
-      'form',
-      { id: 'settings-form', className: 'panel-form', onSubmit: this.handleSubmit },
-      React.createElement(
-        'div',
-        { className: 'panel-form-row' },
-        React.createElement(
-          'label',
-          { className: 'small' },
-          'Server to use:'
-        )
-      ),
-      React.createElement(HostSelector, { serverAddress: this.state.serverAddress,
-        onServerAddressChange: this.handleServerAddressChange }),
-      React.createElement(
-        'div',
-        { className: 'panel-form-row' },
-        React.createElement(
-          'label',
-          { className: 'small' },
-          'Wire transport:'
-        )
-      ),
-      React.createElement(
-        'div',
-        { className: 'panel-form-row' },
-        React.createElement(
-          'ul',
-          { className: 'quoted' },
-          transportOptions
-        )
-      ),
-      React.createElement(
-        'div',
-        { className: 'dialog-buttons' },
-        React.createElement(
-          'button',
-          { type: 'submit', className: 'blue' },
-          'Update'
-        )
-      )
-    );
-  }
-};
+;
 /* END Tinode config panel */
 
 /* BEGIN Manage side panel - handle Login, Account Registration, Contacts, NewTopic views */
-class SideNavbar extends React.PureComponent {
-  render() {
-    return React.createElement(
-      'div',
-      { id: 'side-caption-panel', className: 'caption-panel' },
-      React.createElement(
+
+var SideNavbar = function (_React$PureComponent12) {
+  _inherits(SideNavbar, _React$PureComponent12);
+
+  function SideNavbar() {
+    _classCallCheck(this, SideNavbar);
+
+    return _possibleConstructorReturn(this, (SideNavbar.__proto__ || Object.getPrototypeOf(SideNavbar)).apply(this, arguments));
+  }
+
+  _createClass(SideNavbar, [{
+    key: 'render',
+    value: function render() {
+      return React.createElement(
         'div',
-        { id: 'self-avatar', className: 'avatar-box' },
-        React.createElement(LetterTile, {
-          avatar: this.props.avatar,
-          topic: this.props.myUserId,
-          title: this.props.title })
-      ),
-      React.createElement(
+        { id: 'side-caption-panel', className: 'caption-panel' },
+        React.createElement(
+          'div',
+          { id: 'self-avatar', className: 'avatar-box' },
+          React.createElement(LetterTile, {
+            avatar: this.props.avatar,
+            topic: this.props.myUserId,
+            title: this.props.title })
+        ),
+        React.createElement(
+          'div',
+          { id: 'sidepanel-title', className: 'panel-title' },
+          this.props.title
+        ),
+        this.props.state === 'login' ? React.createElement(MenuStart, { onSignUp: this.props.onSignUp, onSettings: this.props.onSettings }) : this.props.state === 'contacts' ? React.createElement(MenuContacts, { onNewTopic: this.props.onNewTopic, onSettings: this.props.onSettings }) : null,
+        this.props.onCancel ? React.createElement(MenuCancel, { onCancel: this.props.onCancel }) : null
+      );
+    }
+  }]);
+
+  return SideNavbar;
+}(React.PureComponent);
+
+;
+
+var MenuStart = function (_React$PureComponent13) {
+  _inherits(MenuStart, _React$PureComponent13);
+
+  function MenuStart() {
+    _classCallCheck(this, MenuStart);
+
+    return _possibleConstructorReturn(this, (MenuStart.__proto__ || Object.getPrototypeOf(MenuStart)).apply(this, arguments));
+  }
+
+  _createClass(MenuStart, [{
+    key: 'render',
+    value: function render() {
+      return React.createElement(
         'div',
-        { id: 'sidepanel-title', className: 'panel-title' },
-        this.props.title
-      ),
-      this.props.state === 'login' ? React.createElement(MenuStart, { onSignUp: this.props.onSignUp, onSettings: this.props.onSettings }) : this.props.state === 'contacts' ? React.createElement(MenuContacts, { onNewTopic: this.props.onNewTopic, onSettings: this.props.onSettings }) : null,
-      this.props.onCancel ? React.createElement(MenuCancel, { onCancel: this.props.onCancel }) : null
-    );
-  }
-};
-
-class MenuStart extends React.PureComponent {
-  render() {
-    return React.createElement(
-      'div',
-      null,
-      React.createElement(
-        'a',
-        { href: 'javascript:;', onClick: this.props.onSignUp },
+        null,
         React.createElement(
-          'i',
-          { className: 'material-icons' },
-          'person_add'
-        )
-      ),
-      '\xA0',
-      React.createElement(
-        'a',
-        { href: 'javascript:;', onClick: this.props.onSettings },
+          'a',
+          { href: 'javascript:;', onClick: this.props.onSignUp },
+          React.createElement(
+            'i',
+            { className: 'material-icons' },
+            'person_add'
+          )
+        ),
+        '\xA0',
         React.createElement(
-          'i',
-          { className: 'material-icons' },
-          'settings'
+          'a',
+          { href: 'javascript:;', onClick: this.props.onSettings },
+          React.createElement(
+            'i',
+            { className: 'material-icons' },
+            'settings'
+          )
         )
-      )
-    );
-  }
-};
+      );
+    }
+  }]);
 
-class MenuContacts extends React.PureComponent {
-  render() {
-    return React.createElement(
-      'div',
-      null,
-      React.createElement(
-        'a',
-        { href: 'javascript:;', onClick: this.props.onNewTopic },
+  return MenuStart;
+}(React.PureComponent);
+
+;
+
+var MenuContacts = function (_React$PureComponent14) {
+  _inherits(MenuContacts, _React$PureComponent14);
+
+  function MenuContacts() {
+    _classCallCheck(this, MenuContacts);
+
+    return _possibleConstructorReturn(this, (MenuContacts.__proto__ || Object.getPrototypeOf(MenuContacts)).apply(this, arguments));
+  }
+
+  _createClass(MenuContacts, [{
+    key: 'render',
+    value: function render() {
+      return React.createElement(
+        'div',
+        null,
         React.createElement(
-          'i',
-          { className: 'material-icons' },
-          'chat'
-        )
-      ),
-      '\xA0',
-      React.createElement(
-        'a',
-        { href: 'javascript:;', onClick: this.props.onSettings },
+          'a',
+          { href: 'javascript:;', onClick: this.props.onNewTopic },
+          React.createElement(
+            'i',
+            { className: 'material-icons' },
+            'chat'
+          )
+        ),
+        '\xA0',
         React.createElement(
-          'i',
-          { className: 'material-icons' },
-          'settings'
+          'a',
+          { href: 'javascript:;', onClick: this.props.onSettings },
+          React.createElement(
+            'i',
+            { className: 'material-icons' },
+            'settings'
+          )
         )
-      )
-    );
+      );
+    }
+  }]);
+
+  return MenuContacts;
+}(React.PureComponent);
+
+;
+
+var SidepanelView = function (_React$Component8) {
+  _inherits(SidepanelView, _React$Component8);
+
+  function SidepanelView(props) {
+    _classCallCheck(this, SidepanelView);
+
+    var _this26 = _possibleConstructorReturn(this, (SidepanelView.__proto__ || Object.getPrototypeOf(SidepanelView)).call(this, props));
+
+    _this26.handleLoginRequested = _this26.handleLoginRequested.bind(_this26);
+    return _this26;
   }
-};
 
-class SidepanelView extends React.Component {
-  constructor(props) {
-    super(props);
+  _createClass(SidepanelView, [{
+    key: 'handleLoginRequested',
+    value: function handleLoginRequested(login, password) {
+      this.props.onLoginRequest(login, password);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var title = null;
+      var avatar = false;
+      var onCancel = undefined;
+      var view = this.props.state || (this.props.myUserId ? 'contacts' : 'login');
+      switch (view) {
+        case 'login':
+          title = "Sign In";
+          break;
+        case 'register':
+          title = "Create Account";
+          onCancel = this.props.onCancel;
+          break;
+        case 'settings':
+          title = "Settings";
+          onCancel = this.props.onCancel;
+          break;
+        case 'edit':
+          title = "Edit Account";
+          onCancel = this.props.onCancel;
+          break;
+        case 'contacts':
+          title = this.props.title;
+          avatar = this.props.avatar ? this.props.avatar : true;
+          break;
+        case 'newtpk':
+          title = "Start New Chat";
+          onCancel = this.props.onCancel;
+          break;
+        case 'cred':
+          title = "Confirm Credentials";
+          onCancel = this.props.onCancel;
+          break;
+        case 'reset':
+          title = "Reset Password";
+          onCancel = this.props.onCancel;
+          break;
+        default:
+          ;
+      };
+      return React.createElement(
+        'div',
+        { id: 'sidepanel', className: this.props.hideSelf ? 'nodisplay' : null },
+        React.createElement(SideNavbar, {
+          state: view,
+          title: title,
+          avatar: avatar,
+          myUserId: this.props.myUserId,
+          onSignUp: this.props.onSignUp,
+          onSettings: this.props.onSettings,
+          onNewTopic: this.props.onNewTopic,
+          onCancel: onCancel }),
+        React.createElement(ErrorPanel, {
+          level: this.props.errorLevel,
+          text: this.props.errorText,
+          onClearError: this.props.onError }),
+        view === 'login' ? React.createElement(LoginView, {
+          login: this.props.login,
+          disabled: this.props.loginDisabled,
+          onLogin: this.handleLoginRequested }) : view === 'register' ? React.createElement(CreateAccountView, {
+          onCreateAccount: this.props.onCreateAccount,
+          onCancel: this.props.onCancel,
+          onError: this.props.onError }) : view === 'settings' ? React.createElement(SettingsView, {
+          transport: this.props.transport,
+          serverAddress: this.props.serverAddress,
+          onServerAddressChange: this.props.onGlobalSettings,
+          onCancel: this.props.onCancel,
+          onUpdate: this.props.onGlobalSettings }) : view === 'edit' ? React.createElement(EditAccountView, {
+          tinode: this.props.tinode,
+          myUserId: this.props.myUserId,
+          messageSounds: this.props.messageSounds,
+          desktopAlerts: this.props.desktopAlerts,
+          desktopAlertsEnabled: this.props.desktopAlertsEnabled,
+          onSubmit: this.props.onUpdateAccount,
+          onUpdateTags: this.props.onUpdateAccountTags,
+          onTogglePushNotifications: this.props.onTogglePushNotifications,
+          onToggleMessageSounds: this.props.onToggleMessageSounds,
+          onLogout: this.props.onLogout,
+          onCancel: this.props.onCancel,
+          onError: this.props.onError }) : view === 'contacts' ? React.createElement(ContactsView, {
+          tinode: this.props.tinode,
+          myUserId: this.props.myUserId,
+          connected: this.props.connected,
+          topicSelected: this.props.topicSelected,
+          chatList: this.props.chatList,
+          showContextMenu: this.props.showContextMenu,
+          onTopicSelected: this.props.onTopicSelected }) : view === 'newtpk' ? React.createElement(NewTopicView, {
+          searchResults: this.props.searchResults,
+          onInitFind: this.props.onInitFind,
+          onSearchContacts: this.props.onSearchContacts,
+          onCreateTopic: this.props.onCreateTopic,
+          onError: this.props.onError }) : view === 'cred' ? React.createElement(ValidationView, {
+          credCode: this.props.credCode,
+          credMethod: this.props.credMethod,
+          onSubmit: this.props.onValidateCredentials,
+          onCancel: this.props.onCancel,
+          onError: this.props.onError }) : view === 'reset' ? React.createElement(PasswordResetView, {
+          onRequest: this.props.onPasswordResetRequest,
+          onReset: this.props.onResetPassword }) : null
+      );
+    }
+  }]);
 
-    this.handleLoginRequested = this.handleLoginRequested.bind(this);
-  }
+  return SidepanelView;
+}(React.Component);
 
-  handleLoginRequested(login, password) {
-    this.props.onLoginRequest(login, password);
-  }
+;
 
-  render() {
-    var title = null;
-    var avatar = false;
-    var onCancel = undefined;
-    var view = this.props.state || (this.props.myUserId ? 'contacts' : 'login');
-    switch (view) {
-      case 'login':
-        title = "Sign In";
-        break;
-      case 'register':
-        title = "Create Account";
-        onCancel = this.props.onCancel;
-        break;
-      case 'settings':
-        title = "Settings";
-        onCancel = this.props.onCancel;
-        break;
-      case 'edit':
-        title = "Edit Account";
-        onCancel = this.props.onCancel;
-        break;
-      case 'contacts':
-        title = this.props.title;
-        avatar = this.props.avatar ? this.props.avatar : true;
-        break;
-      case 'newtpk':
-        title = "Start New Chat";
-        onCancel = this.props.onCancel;
-        break;
-      case 'cred':
-        title = "Confirm Credentials";
-        onCancel = this.props.onCancel;
-        break;
-      case 'reset':
-        title = "Reset Password";
-        onCancel = this.props.onCancel;
-        break;
-      default:
-        ;
-    };
-    return React.createElement(
-      'div',
-      { id: 'sidepanel', className: this.props.hideSelf ? 'nodisplay' : null },
-      React.createElement(SideNavbar, {
-        state: view,
-        title: title,
-        avatar: avatar,
-        myUserId: this.props.myUserId,
-        onSignUp: this.props.onSignUp,
-        onSettings: this.props.onSettings,
-        onNewTopic: this.props.onNewTopic,
-        onCancel: onCancel }),
-      React.createElement(ErrorPanel, {
-        level: this.props.errorLevel,
-        text: this.props.errorText,
-        onClearError: this.props.onError }),
-      view === 'login' ? React.createElement(LoginView, {
-        login: this.props.login,
-        disabled: this.props.loginDisabled,
-        onLogin: this.handleLoginRequested }) : view === 'register' ? React.createElement(CreateAccountView, {
-        onCreateAccount: this.props.onCreateAccount,
-        onCancel: this.props.onCancel,
-        onError: this.props.onError }) : view === 'settings' ? React.createElement(SettingsView, {
-        transport: this.props.transport,
-        serverAddress: this.props.serverAddress,
-        onServerAddressChange: this.props.onGlobalSettings,
-        onCancel: this.props.onCancel,
-        onUpdate: this.props.onGlobalSettings }) : view === 'edit' ? React.createElement(EditAccountView, {
-        tinode: this.props.tinode,
-        myUserId: this.props.myUserId,
-        messageSounds: this.props.messageSounds,
-        desktopAlerts: this.props.desktopAlerts,
-        desktopAlertsEnabled: this.props.desktopAlertsEnabled,
-        onSubmit: this.props.onUpdateAccount,
-        onUpdateTags: this.props.onUpdateAccountTags,
-        onTogglePushNotifications: this.props.onTogglePushNotifications,
-        onToggleMessageSounds: this.props.onToggleMessageSounds,
-        onLogout: this.props.onLogout,
-        onCancel: this.props.onCancel,
-        onError: this.props.onError }) : view === 'contacts' ? React.createElement(ContactsView, {
-        tinode: this.props.tinode,
-        myUserId: this.props.myUserId,
-        connected: this.props.connected,
-        topicSelected: this.props.topicSelected,
-        chatList: this.props.chatList,
-        showContextMenu: this.props.showContextMenu,
-        onTopicSelected: this.props.onTopicSelected }) : view === 'newtpk' ? React.createElement(NewTopicView, {
-        searchResults: this.props.searchResults,
-        onInitFind: this.props.onInitFind,
-        onSearchContacts: this.props.onSearchContacts,
-        onCreateTopic: this.props.onCreateTopic,
-        onError: this.props.onError }) : view === 'cred' ? React.createElement(ValidationView, {
-        credCode: this.props.credCode,
-        credMethod: this.props.credMethod,
-        onSubmit: this.props.onValidateCredentials,
-        onCancel: this.props.onCancel,
-        onError: this.props.onError }) : view === 'reset' ? React.createElement(PasswordResetView, {
-        onRequest: this.props.onPasswordResetRequest,
-        onReset: this.props.onResetPassword }) : null
-    );
-  }
-};
+var ErrorPanel = function (_React$PureComponent15) {
+  _inherits(ErrorPanel, _React$PureComponent15);
 
-class ErrorPanel extends React.PureComponent {
-  constructor(props) {
-    super(props);
+  function ErrorPanel(props) {
+    _classCallCheck(this, ErrorPanel);
 
-    this.state = {
+    var _this27 = _possibleConstructorReturn(this, (ErrorPanel.__proto__ || Object.getPrototypeOf(ErrorPanel)).call(this, props));
+
+    _this27.state = {
       show: false
     };
 
-    this.hide = this.hide.bind(this);
+    _this27.hide = _this27.hide.bind(_this27);
+    return _this27;
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    return {
-      show: !!nextProps.level
-    };
-  }
-
-  hide() {
-    this.setState({ show: false });
-    if (this.props.onClearError) {
-      this.props.onClearError();
+  _createClass(ErrorPanel, [{
+    key: 'hide',
+    value: function hide() {
+      this.setState({ show: false });
+      if (this.props.onClearError) {
+        this.props.onClearError();
+      }
     }
-  }
-
-  render() {
-    var icon = this.props.level == "err" ? "error" : "warning";
-    return React.createElement(
-      'div',
-      { className: this.state.show ? this.props.level == "err" ? "alert-box error" : "alert-box warning" : "alert-box" },
-      React.createElement(
+  }, {
+    key: 'render',
+    value: function render() {
+      var icon = this.props.level == "err" ? "error" : "warning";
+      return React.createElement(
         'div',
-        { className: 'icon' },
+        { className: this.state.show ? this.props.level == "err" ? "alert-box error" : "alert-box warning" : "alert-box" },
         React.createElement(
-          'i',
-          { className: 'material-icons' },
-          icon
+          'div',
+          { className: 'icon' },
+          React.createElement(
+            'i',
+            { className: 'material-icons' },
+            icon
+          )
+        ),
+        this.props.text,
+        React.createElement(
+          'div',
+          { className: 'cancel' },
+          React.createElement(MenuCancel, { onCancel: this.hide })
         )
-      ),
-      this.props.text,
-      React.createElement(
-        'div',
-        { className: 'cancel' },
-        React.createElement(MenuCancel, { onCancel: this.hide })
-      )
-    );
-  }
-};
+      );
+    }
+  }], [{
+    key: 'getDerivedStateFromProps',
+    value: function getDerivedStateFromProps(nextProps, prevState) {
+      return {
+        show: !!nextProps.level
+      };
+    }
+  }]);
+
+  return ErrorPanel;
+}(React.PureComponent);
+
+;
 
 /* END Side panel */
 
 /* EditAccount parameters */
-class EditAccountView extends React.Component {
-  constructor(props) {
-    super(props);
 
-    let me = this.props.tinode.getMeTopic();
-    let defacs = me.getDefaultAccess();
-    let fnd = this.props.tinode.getFndTopic();
-    this.state = {
+var EditAccountView = function (_React$Component9) {
+  _inherits(EditAccountView, _React$Component9);
+
+  function EditAccountView(props) {
+    _classCallCheck(this, EditAccountView);
+
+    var _this28 = _possibleConstructorReturn(this, (EditAccountView.__proto__ || Object.getPrototypeOf(EditAccountView)).call(this, props));
+
+    var me = _this28.props.tinode.getMeTopic();
+    var defacs = me.getDefaultAccess();
+    var fnd = _this28.props.tinode.getFndTopic();
+    _this28.state = {
       fullName: me.public ? me.public.fn : undefined,
       avatar: makeImageUrl(me.public ? me.public.photo : null),
       auth: defacs ? defacs.auth : null,
@@ -30145,329 +30529,79 @@ class EditAccountView extends React.Component {
       previousOnTags: fnd.onTagsUpdated
     };
 
-    this.tnNewTags = this.tnNewTags.bind(this);
-    this.handleFullNameUpdate = this.handleFullNameUpdate.bind(this);
-    this.handlePasswordUpdate = this.handlePasswordUpdate.bind(this);
-    this.handleImageChanged = this.handleImageChanged.bind(this);
-    this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
-    this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
+    _this28.tnNewTags = _this28.tnNewTags.bind(_this28);
+    _this28.handleFullNameUpdate = _this28.handleFullNameUpdate.bind(_this28);
+    _this28.handlePasswordUpdate = _this28.handlePasswordUpdate.bind(_this28);
+    _this28.handleImageChanged = _this28.handleImageChanged.bind(_this28);
+    _this28.handleCheckboxClick = _this28.handleCheckboxClick.bind(_this28);
+    _this28.handleTagsUpdated = _this28.handleTagsUpdated.bind(_this28);
+    return _this28;
   }
 
-  componentDidMount() {
-    let fnd = this.props.tinode.getFndTopic();
-    fnd.onTagsUpdated = this.tnNewTags;
-    if (!fnd.isSubscribed()) {
-      fnd.subscribe(fnd.startMetaQuery().withLaterDesc().withTags().build()).catch(err => {
-        this.props.onError(err.message, "err");
-      });
-    }
-  }
+  _createClass(EditAccountView, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var _this29 = this;
 
-  componentWillUnmount() {
-    var fnd = this.props.tinode.getFndTopic();
-    fnd.onTagsUpdated = this.state.previousOnTags;
-  }
-
-  tnNewTags(tags) {
-    this.setState({ tags: tags });
-  }
-
-  handleFullNameUpdate(fn) {
-    this.setState({ fullName: fn });
-    this.props.onSubmit(null, vcard(fn, this.state.avatar));
-  }
-
-  handlePasswordUpdate(pwd) {
-    this.setState({ password: pwd });
-    this.props.onSubmit(pwd, null);
-  }
-
-  handleImageChanged(img) {
-    this.setState({ avatar: img });
-    this.props.onSubmit(null, vcard(this.state.fullName, img));
-  }
-
-  handleCheckboxClick(what, checked) {
-    if (what == "sound") {
-      this.props.onToggleMessageSounds(checked);
-    } else if (what == "alert") {
-      this.props.onTogglePushNotifications(checked);
-    }
-  }
-
-  handleTagsUpdated(tags) {
-    // Check if tags have actually changed.
-    if (arrayEqual(this.state.tags.slice(0), tags.slice(0))) {
-      return;
-    }
-    this.props.onUpdateTags(tags);
-  }
-
-  render() {
-    var tags = [];
-    this.state.tags.map(function (tag) {
-      tags.push(React.createElement(
-        'span',
-        { className: 'badge', key: tags.length },
-        tag
-      ));
-    });
-    if (tags.length == 0) {
-      tags = React.createElement(
-        'i',
-        null,
-        'No tags defined. Add some.'
-      );
-    }
-    return React.createElement(
-      'div',
-      { id: 'edit-account', className: 'scrollable-panel' },
-      React.createElement(
-        'div',
-        { className: 'panel-form-row' },
-        React.createElement(
-          'div',
-          { className: 'panel-form-column' },
-          React.createElement(
-            'div',
-            null,
-            React.createElement(
-              'label',
-              { className: 'small' },
-              'Your name'
-            )
-          ),
-          React.createElement(
-            'div',
-            null,
-            React.createElement(InPlaceEdit, {
-              placeholder: 'Full name, e.g. John Doe',
-              value: this.state.fullName,
-              onFinished: this.handleFullNameUpdate })
-          ),
-          React.createElement(
-            'div',
-            null,
-            React.createElement(
-              'label',
-              { className: 'small' },
-              'Password'
-            )
-          ),
-          React.createElement(
-            'div',
-            null,
-            React.createElement(InPlaceEdit, {
-              placeholder: 'Unchanged',
-              type: 'password',
-              onFinished: this.handlePasswordUpdate })
-          )
-        ),
-        React.createElement(AvatarUpload, {
-          avatar: this.state.avatar,
-          uid: this.props.myUserId,
-          title: this.state.fullName,
-          onImageChanged: this.handleImageChanged,
-          onError: this.props.onError })
-      ),
-      React.createElement('div', { className: 'hr' }),
-      React.createElement(
-        'div',
-        { className: 'panel-form-column' },
-        React.createElement(
-          'div',
-          { className: 'panel-form-row' },
-          React.createElement(
-            'label',
-            null,
-            'Address:'
-          ),
-          React.createElement(
-            'tt',
-            null,
-            this.props.myUserId
-          )
-        ),
-        React.createElement(
-          'div',
-          null,
-          React.createElement(
-            'label',
-            { className: 'small' },
-            'Default access mode:'
-          )
-        ),
-        React.createElement(
-          'div',
-          { className: 'quoted' },
-          React.createElement(
-            'div',
-            null,
-            'Auth: ',
-            React.createElement(
-              'tt',
-              null,
-              this.state.auth
-            )
-          ),
-          React.createElement(
-            'div',
-            null,
-            'Anon: ',
-            React.createElement(
-              'tt',
-              null,
-              this.state.anon
-            )
-          )
-        )
-      ),
-      React.createElement('div', { className: 'hr' }),
-      React.createElement(
-        'div',
-        { className: 'panel-form-row' },
-        React.createElement(
-          'label',
-          { htmlFor: 'message-sound' },
-          'Message sound:'
-        ),
-        React.createElement(CheckBox, { name: 'sound', id: 'message-sound',
-          checked: this.props.messageSounds,
-          onChange: this.handleCheckboxClick })
-      ),
-      React.createElement(
-        'div',
-        { className: 'panel-form-row' },
-        React.createElement(
-          'label',
-          { htmlFor: 'desktop-alerts' },
-          'Notification alerts',
-          !this.props.desktopAlertsEnabled ? ' (requires HTTPS)' : null,
-          ':'
-        ),
-        React.createElement(CheckBox, { name: 'alert', id: 'desktop-alerts',
-          checked: this.props.desktopAlerts,
-          onChange: this.props.desktopAlertsEnabled ? this.handleCheckboxClick : null })
-      ),
-      React.createElement('div', { className: 'hr' }),
-      React.createElement(TagManager, {
-        title: 'Tags (user discovery)',
-        activated: false,
-        tags: this.state.tags,
-        onSubmit: this.handleTagsUpdated }),
-      React.createElement('div', { className: 'hr' }),
-      React.createElement(
-        'div',
-        { className: 'panel-form-column' },
-        React.createElement(
-          'a',
-          { href: 'javascript:;', className: 'red flat-button', onClick: this.props.onLogout },
-          React.createElement(
-            'i',
-            { className: 'material-icons' },
-            'exit_to_app'
-          ),
-          ' Logout'
-        )
-      )
-    );
-  }
-};
-/* END EditAccount */
-
-/* BEGIN TagManager: edit topic or user tags */
-class TagManager extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      tags: this.props.tags,
-      tagInput: '',
-      activated: this.props.activated,
-      noTagsMessage: 'Add some tags'
-    };
-
-    this.handleShowTagManager = this.handleShowTagManager.bind(this);
-    this.handleTagInput = this.handleTagInput.bind(this);
-    this.handleAddTag = this.handleAddTag.bind(this);
-    this.handleRemoveTag = this.handleRemoveTag.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleCancel = this.handleCancel.bind(this);
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (!arrayEqual(nextProps.tags, prevState.tags) && !prevState.activated) {
-      return { tags: nextProps.tags };
-    }
-    return null;
-  }
-
-  handleShowTagManager() {
-    this.setState({ activated: true });
-  }
-
-  handleTagInput(text) {
-    this.setState({ tagInput: text });
-    // Check if user entered ',', ' ' or ';'
-    if (text.length > 0) {
-      var last = text[text.length - 1];
-      if (last == ',' || last == ' ' || last == ';') {
-        var tag = text.substr(0, text.length - 1).trim();
-        if (tag.length >= MIN_TAG_LENGTH) {
-          this.handleAddTag(tag);
-        }
+      var fnd = this.props.tinode.getFndTopic();
+      fnd.onTagsUpdated = this.tnNewTags;
+      if (!fnd.isSubscribed()) {
+        fnd.subscribe(fnd.startMetaQuery().withLaterDesc().withTags().build()).catch(function (err) {
+          _this29.props.onError(err.message, "err");
+        });
       }
     }
-  }
-
-  handleAddTag(tag) {
-    tag = tag.trim();
-    if (tag.length > 0) {
-      let tags = this.state.tags.slice(0);
-      tags.push(tag);
-      this.setState({ tags: tags, tagInput: '' });
-      if (this.props.onTagsChanged) {
-        this.props.onTagsChanged(tags);
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      var fnd = this.props.tinode.getFndTopic();
+      fnd.onTagsUpdated = this.state.previousOnTags;
+    }
+  }, {
+    key: 'tnNewTags',
+    value: function tnNewTags(tags) {
+      this.setState({ tags: tags });
+    }
+  }, {
+    key: 'handleFullNameUpdate',
+    value: function handleFullNameUpdate(fn) {
+      this.setState({ fullName: fn });
+      this.props.onSubmit(null, vcard(fn, this.state.avatar));
+    }
+  }, {
+    key: 'handlePasswordUpdate',
+    value: function handlePasswordUpdate(pwd) {
+      this.setState({ password: pwd });
+      this.props.onSubmit(pwd, null);
+    }
+  }, {
+    key: 'handleImageChanged',
+    value: function handleImageChanged(img) {
+      this.setState({ avatar: img });
+      this.props.onSubmit(null, vcard(this.state.fullName, img));
+    }
+  }, {
+    key: 'handleCheckboxClick',
+    value: function handleCheckboxClick(what, checked) {
+      if (what == "sound") {
+        this.props.onToggleMessageSounds(checked);
+      } else if (what == "alert") {
+        this.props.onTogglePushNotifications(checked);
       }
     }
-  }
-
-  handleRemoveTag(tag, index) {
-    var tags = this.state.tags.slice(0);
-    tags.splice(index, 1);
-    this.setState({ tags: tags });
-    if (this.props.onTagsChanged) {
-      this.props.onTagsChanged(tags);
-    }
-  }
-
-  handleSubmit() {
-    let tags = this.state.tags.slice(0);
-    let inp = this.state.tagInput.trim();
-    if (inp.length > 0) {
-      tags.push(inp);
-      if (this.props.onTagsChanged) {
-        this.props.onTagsChanged(tags);
+  }, {
+    key: 'handleTagsUpdated',
+    value: function handleTagsUpdated(tags) {
+      // Check if tags have actually changed.
+      if (arrayEqual(this.state.tags.slice(0), tags.slice(0))) {
+        return;
       }
+      this.props.onUpdateTags(tags);
     }
-    this.props.onSubmit(tags);
-    this.setState({ activated: false, tagInput: '', tags: this.props.tags });
-  }
-
-  handleCancel() {
-    this.setState({ activated: false, tagInput: '', tags: this.props.tags });
-    if (this.props.onCancel) {
-      this.props.onCancel();
-    }
-  }
-
-  render() {
-    var tags = [];
-    if (this.state.activated) {
-      this.state.tags.map(function (tag) {
-        tags.push({ user: tag });
-      });
-    } else {
+  }, {
+    key: 'render',
+    value: function render() {
+      var tags = [];
       this.state.tags.map(function (tag) {
         tags.push(React.createElement(
           'span',
@@ -30482,34 +30616,860 @@ class TagManager extends React.Component {
           'No tags defined. Add some.'
         );
       }
-    }
-    return React.createElement(
-      'div',
-      { className: 'panel-form-column' },
-      React.createElement(
+      return React.createElement(
         'div',
-        { className: 'panel-form-row' },
+        { id: 'edit-account', className: 'scrollable-panel' },
         React.createElement(
-          'label',
-          { className: 'small' },
-          this.props.title
-        )
-      ),
-      this.state.activated ? React.createElement(
-        'div',
-        null,
-        React.createElement(ChipInput, {
-          chips: tags,
-          avatarDisabled: true,
-          prompt: this.state.noTagsMessage,
-          onEnter: this.handleAddTag,
-          onFocusLost: this.handleAddTag,
-          onCancel: this.handleCancel,
-          onChipRemoved: this.handleRemoveTag,
-          filterFunc: this.handleTagInput }),
-        this.props.onSubmit || this.props.onCancel ? React.createElement(
           'div',
-          { id: 'tag-manager-buttons', className: 'panel-form-row' },
+          { className: 'panel-form-row' },
+          React.createElement(
+            'div',
+            { className: 'panel-form-column' },
+            React.createElement(
+              'div',
+              null,
+              React.createElement(
+                'label',
+                { className: 'small' },
+                'Your name'
+              )
+            ),
+            React.createElement(
+              'div',
+              null,
+              React.createElement(InPlaceEdit, {
+                placeholder: 'Full name, e.g. John Doe',
+                value: this.state.fullName,
+                onFinished: this.handleFullNameUpdate })
+            ),
+            React.createElement(
+              'div',
+              null,
+              React.createElement(
+                'label',
+                { className: 'small' },
+                'Password'
+              )
+            ),
+            React.createElement(
+              'div',
+              null,
+              React.createElement(InPlaceEdit, {
+                placeholder: 'Unchanged',
+                type: 'password',
+                onFinished: this.handlePasswordUpdate })
+            )
+          ),
+          React.createElement(AvatarUpload, {
+            avatar: this.state.avatar,
+            uid: this.props.myUserId,
+            title: this.state.fullName,
+            onImageChanged: this.handleImageChanged,
+            onError: this.props.onError })
+        ),
+        React.createElement('div', { className: 'hr' }),
+        React.createElement(
+          'div',
+          { className: 'panel-form-column' },
+          React.createElement(
+            'div',
+            { className: 'panel-form-row' },
+            React.createElement(
+              'label',
+              null,
+              'Address:'
+            ),
+            React.createElement(
+              'tt',
+              null,
+              this.props.myUserId
+            )
+          ),
+          React.createElement(
+            'div',
+            null,
+            React.createElement(
+              'label',
+              { className: 'small' },
+              'Default access mode:'
+            )
+          ),
+          React.createElement(
+            'div',
+            { className: 'quoted' },
+            React.createElement(
+              'div',
+              null,
+              'Auth: ',
+              React.createElement(
+                'tt',
+                null,
+                this.state.auth
+              )
+            ),
+            React.createElement(
+              'div',
+              null,
+              'Anon: ',
+              React.createElement(
+                'tt',
+                null,
+                this.state.anon
+              )
+            )
+          )
+        ),
+        React.createElement('div', { className: 'hr' }),
+        React.createElement(
+          'div',
+          { className: 'panel-form-row' },
+          React.createElement(
+            'label',
+            { htmlFor: 'message-sound' },
+            'Message sound:'
+          ),
+          React.createElement(CheckBox, { name: 'sound', id: 'message-sound',
+            checked: this.props.messageSounds,
+            onChange: this.handleCheckboxClick })
+        ),
+        React.createElement(
+          'div',
+          { className: 'panel-form-row' },
+          React.createElement(
+            'label',
+            { htmlFor: 'desktop-alerts' },
+            'Notification alerts',
+            !this.props.desktopAlertsEnabled ? ' (requires HTTPS)' : null,
+            ':'
+          ),
+          React.createElement(CheckBox, { name: 'alert', id: 'desktop-alerts',
+            checked: this.props.desktopAlerts,
+            onChange: this.props.desktopAlertsEnabled ? this.handleCheckboxClick : null })
+        ),
+        React.createElement('div', { className: 'hr' }),
+        React.createElement(TagManager, {
+          title: 'Tags (user discovery)',
+          activated: false,
+          tags: this.state.tags,
+          onSubmit: this.handleTagsUpdated }),
+        React.createElement('div', { className: 'hr' }),
+        React.createElement(
+          'div',
+          { className: 'panel-form-column' },
+          React.createElement(
+            'a',
+            { href: 'javascript:;', className: 'red flat-button', onClick: this.props.onLogout },
+            React.createElement(
+              'i',
+              { className: 'material-icons' },
+              'exit_to_app'
+            ),
+            ' Logout'
+          )
+        )
+      );
+    }
+  }]);
+
+  return EditAccountView;
+}(React.Component);
+
+;
+/* END EditAccount */
+
+/* BEGIN TagManager: edit topic or user tags */
+
+var TagManager = function (_React$Component10) {
+  _inherits(TagManager, _React$Component10);
+
+  function TagManager(props) {
+    _classCallCheck(this, TagManager);
+
+    var _this30 = _possibleConstructorReturn(this, (TagManager.__proto__ || Object.getPrototypeOf(TagManager)).call(this, props));
+
+    _this30.state = {
+      tags: _this30.props.tags,
+      tagInput: '',
+      activated: _this30.props.activated,
+      noTagsMessage: 'Add some tags'
+    };
+
+    _this30.handleShowTagManager = _this30.handleShowTagManager.bind(_this30);
+    _this30.handleTagInput = _this30.handleTagInput.bind(_this30);
+    _this30.handleAddTag = _this30.handleAddTag.bind(_this30);
+    _this30.handleRemoveTag = _this30.handleRemoveTag.bind(_this30);
+    _this30.handleSubmit = _this30.handleSubmit.bind(_this30);
+    _this30.handleCancel = _this30.handleCancel.bind(_this30);
+    return _this30;
+  }
+
+  _createClass(TagManager, [{
+    key: 'handleShowTagManager',
+    value: function handleShowTagManager() {
+      this.setState({ activated: true });
+    }
+  }, {
+    key: 'handleTagInput',
+    value: function handleTagInput(text) {
+      this.setState({ tagInput: text });
+      // Check if user entered ',', ' ' or ';'
+      if (text.length > 0) {
+        var last = text[text.length - 1];
+        if (last == ',' || last == ' ' || last == ';') {
+          var tag = text.substr(0, text.length - 1).trim();
+          if (tag.length >= MIN_TAG_LENGTH) {
+            this.handleAddTag(tag);
+          }
+        }
+      }
+    }
+  }, {
+    key: 'handleAddTag',
+    value: function handleAddTag(tag) {
+      tag = tag.trim();
+      if (tag.length > 0) {
+        var tags = this.state.tags.slice(0);
+        tags.push(tag);
+        this.setState({ tags: tags, tagInput: '' });
+        if (this.props.onTagsChanged) {
+          this.props.onTagsChanged(tags);
+        }
+      }
+    }
+  }, {
+    key: 'handleRemoveTag',
+    value: function handleRemoveTag(tag, index) {
+      var tags = this.state.tags.slice(0);
+      tags.splice(index, 1);
+      this.setState({ tags: tags });
+      if (this.props.onTagsChanged) {
+        this.props.onTagsChanged(tags);
+      }
+    }
+  }, {
+    key: 'handleSubmit',
+    value: function handleSubmit() {
+      var tags = this.state.tags.slice(0);
+      var inp = this.state.tagInput.trim();
+      if (inp.length > 0) {
+        tags.push(inp);
+        if (this.props.onTagsChanged) {
+          this.props.onTagsChanged(tags);
+        }
+      }
+      this.props.onSubmit(tags);
+      this.setState({ activated: false, tagInput: '', tags: this.props.tags });
+    }
+  }, {
+    key: 'handleCancel',
+    value: function handleCancel() {
+      this.setState({ activated: false, tagInput: '', tags: this.props.tags });
+      if (this.props.onCancel) {
+        this.props.onCancel();
+      }
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var tags = [];
+      if (this.state.activated) {
+        this.state.tags.map(function (tag) {
+          tags.push({ user: tag });
+        });
+      } else {
+        this.state.tags.map(function (tag) {
+          tags.push(React.createElement(
+            'span',
+            { className: 'badge', key: tags.length },
+            tag
+          ));
+        });
+        if (tags.length == 0) {
+          tags = React.createElement(
+            'i',
+            null,
+            'No tags defined. Add some.'
+          );
+        }
+      }
+      return React.createElement(
+        'div',
+        { className: 'panel-form-column' },
+        React.createElement(
+          'div',
+          { className: 'panel-form-row' },
+          React.createElement(
+            'label',
+            { className: 'small' },
+            this.props.title
+          )
+        ),
+        this.state.activated ? React.createElement(
+          'div',
+          null,
+          React.createElement(ChipInput, {
+            chips: tags,
+            avatarDisabled: true,
+            prompt: this.state.noTagsMessage,
+            onEnter: this.handleAddTag,
+            onFocusLost: this.handleAddTag,
+            onCancel: this.handleCancel,
+            onChipRemoved: this.handleRemoveTag,
+            filterFunc: this.handleTagInput }),
+          this.props.onSubmit || this.props.onCancel ? React.createElement(
+            'div',
+            { id: 'tag-manager-buttons', className: 'panel-form-row' },
+            React.createElement(
+              'button',
+              { className: 'blue', onClick: this.handleSubmit },
+              'OK'
+            ),
+            React.createElement(
+              'button',
+              { className: 'white', onClick: this.handleCancel },
+              'Cancel'
+            )
+          ) : null
+        ) : React.createElement(
+          'div',
+          null,
+          React.createElement(
+            'a',
+            { href: 'javascript:;', className: 'flat-button', onClick: this.handleShowTagManager },
+            React.createElement(
+              'i',
+              { className: 'material-icons' },
+              'edit'
+            ),
+            ' Manage tags'
+          ),
+          React.createElement(
+            'span',
+            null,
+            tags
+          )
+        )
+      );
+    }
+  }], [{
+    key: 'getDerivedStateFromProps',
+    value: function getDerivedStateFromProps(nextProps, prevState) {
+      if (!arrayEqual(nextProps.tags, prevState.tags) && !prevState.activated) {
+        return { tags: nextProps.tags };
+      }
+      return null;
+    }
+  }]);
+
+  return TagManager;
+}(React.Component);
+
+;
+/* END TagManager */
+
+/* BEGIN Contact list (list of topics) */
+/* A single topic */;
+
+var Contact = function (_React$Component11) {
+  _inherits(Contact, _React$Component11);
+
+  function Contact(props) {
+    _classCallCheck(this, Contact);
+
+    var _this31 = _possibleConstructorReturn(this, (Contact.__proto__ || Object.getPrototypeOf(Contact)).call(this, props));
+
+    _this31.handleClick = _this31.handleClick.bind(_this31);
+    _this31.handleContextClick = _this31.handleContextClick.bind(_this31);
+    return _this31;
+  }
+
+  _createClass(Contact, [{
+    key: 'handleClick',
+    value: function handleClick(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (this.props.onSelected) {
+        this.props.onSelected(this.props.item, this.props.index, this.props.now, this.props.acs);
+      }
+    }
+  }, {
+    key: 'handleContextClick',
+    value: function handleContextClick(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.props.showContextMenu({ topicName: this.props.item, y: e.pageY, x: e.pageX });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var title = this.props.title;
+      if (!title) {
+        title = React.createElement(
+          'i',
+          null,
+          'unknown'
+        );
+      } else if (title.length > 30) {
+        title = title.substring(0, 28) + "...";
+      }
+      var online = this.props.now ? "online" : "offline";
+      var avatar = this.props.avatar ? this.props.avatar : true;
+      var badges = [];
+      if (this.props.badges && this.props.badges.length > 0) {
+        var count = 0;
+        this.props.badges.map(function (b) {
+          var style = "badge" + (b.color ? " " + b.color : "");
+          badges.push(React.createElement(
+            'span',
+            { className: style, key: count },
+            b.name
+          ));
+          count++;
+        });
+      }
+      if (this.props.showMode && this.props.acs) {
+        badges.push(React.createElement(
+          'span',
+          { className: 'badge', key: 'mode' },
+          this.props.acs.getMode()
+        ));
+      }
+
+      return React.createElement(
+        'li',
+        { className: !this.props.showCheckmark && this.props.selected ? "selected" : null,
+          onClick: this.handleClick },
+        React.createElement(
+          'div',
+          { className: 'avatar-box' },
+          React.createElement(LetterTile, {
+            avatar: avatar,
+            title: this.props.title,
+            topic: this.props.item }),
+          this.props.showOnline ? React.createElement('span', { className: online }) : this.props.showCheckmark && this.props.selected ? React.createElement(
+            'i',
+            { className: 'checkmark material-icons' },
+            'check_circle'
+          ) : null
+        ),
+        React.createElement(
+          'div',
+          { className: 'text-box' },
+          React.createElement(
+            'div',
+            null,
+            React.createElement(
+              'span',
+              { className: 'contact-title' },
+              title
+            ),
+            this.props.unread > 0 ? React.createElement(UnreadBadge, { count: this.props.unread }) : null
+          ),
+          this.props.comment ? React.createElement(
+            'div',
+            { className: 'contact-comment' },
+            this.props.comment
+          ) : null,
+          React.createElement(
+            'span',
+            null,
+            badges
+          )
+        ),
+        this.props.showContextMenu ? React.createElement(
+          'span',
+          { className: 'menuTrigger' },
+          React.createElement(
+            'a',
+            { href: 'javascript:;', onClick: this.handleContextClick },
+            React.createElement(
+              'i',
+              { className: 'material-icons' },
+              'expand_more'
+            )
+          )
+        ) : null
+      );
+    }
+  }]);
+
+  return Contact;
+}(React.Component);
+
+;
+
+/* The counter of unread messages in the topic */
+
+var UnreadBadge = function (_React$PureComponent16) {
+  _inherits(UnreadBadge, _React$PureComponent16);
+
+  function UnreadBadge() {
+    _classCallCheck(this, UnreadBadge);
+
+    return _possibleConstructorReturn(this, (UnreadBadge.__proto__ || Object.getPrototypeOf(UnreadBadge)).apply(this, arguments));
+  }
+
+  _createClass(UnreadBadge, [{
+    key: 'render',
+    value: function render() {
+      var showUnreadBadge = null;
+      if (this.props.count > 0) {
+        var count = this.props.count > 9 ? "9+" : this.props.count;
+        showUnreadBadge = React.createElement(
+          'span',
+          { className: 'unread' },
+          count
+        );
+      }
+      return showUnreadBadge;
+    }
+  }]);
+
+  return UnreadBadge;
+}(React.PureComponent);
+
+;
+
+/* Contact's labels: [you], [muted], [blocked], etc */
+// FIXME: this class is unused.
+
+var ContactBadges_UNUSED_REMOVE = function (_React$PureComponent17) {
+  _inherits(ContactBadges_UNUSED_REMOVE, _React$PureComponent17);
+
+  function ContactBadges_UNUSED_REMOVE() {
+    _classCallCheck(this, ContactBadges_UNUSED_REMOVE);
+
+    return _possibleConstructorReturn(this, (ContactBadges_UNUSED_REMOVE.__proto__ || Object.getPrototypeOf(ContactBadges_UNUSED_REMOVE)).apply(this, arguments));
+  }
+
+  _createClass(ContactBadges_UNUSED_REMOVE, [{
+    key: 'render',
+    value: function render() {
+      var badges = null;
+      if (this.props.badges && this.props.badges.length > 0) {
+        badges = [];
+        this.props.badges.map(function (b) {
+          var style = "badge" + (b.color ? " " + b.color : "");
+          // Badge names are expected to be unique, so using the name as the key.
+          badges.push(React.createElement(
+            'span',
+            { className: style, key: b.name },
+            b.name
+          ));
+        });
+      }
+      return badges;
+    }
+  }]);
+
+  return ContactBadges_UNUSED_REMOVE;
+}(React.PureComponent);
+
+;
+
+/* ContactsView holds all contacts-related stuff */
+
+var ContactsView = function (_React$Component12) {
+  _inherits(ContactsView, _React$Component12);
+
+  function ContactsView(props) {
+    _classCallCheck(this, ContactsView);
+
+    var _this34 = _possibleConstructorReturn(this, (ContactsView.__proto__ || Object.getPrototypeOf(ContactsView)).call(this, props));
+
+    _this34.state = ContactsView.getDerivedStateFromProps(props, {});
+    return _this34;
+  }
+
+  _createClass(ContactsView, [{
+    key: 'render',
+    value: function render() {
+      return React.createElement(ContactList, {
+        connected: this.props.connected,
+        contacts: this.state.contactList,
+        emptyListMessage: React.createElement(
+          'span',
+          null,
+          'You have no chats',
+          React.createElement('br', null),
+          '\xAF\\_(\u30C4)_/\xAF'
+        ),
+        topicSelected: this.props.topicSelected,
+        myUserId: this.props.myUserId,
+        showOnline: true,
+        showUnread: true,
+        onTopicSelected: this.props.onTopicSelected,
+        showContextMenu: this.props.showContextMenu });
+    }
+  }], [{
+    key: 'getDerivedStateFromProps',
+    value: function getDerivedStateFromProps(nextProps, prevState) {
+      var contacts = [];
+      var unreadThreads = 0;
+      nextProps.chatList.map(function (c) {
+        unreadThreads += c.unread > 0 ? 1 : 0;
+        contacts.push(c);
+      });
+
+      contacts.sort(function (a, b) {
+        return b.touched - a.touched;
+      });
+
+      updateFavicon(unreadThreads);
+
+      return { contactList: contacts };
+    }
+  }]);
+
+  return ContactsView;
+}(React.Component);
+
+;
+/* END Contact list */
+
+/* BEGIN ContactList: component for showing a list of contacts,
+ * such as a list of group members in a group chat */
+
+var ContactList = function (_React$Component13) {
+  _inherits(ContactList, _React$Component13);
+
+  function ContactList() {
+    _classCallCheck(this, ContactList);
+
+    return _possibleConstructorReturn(this, (ContactList.__proto__ || Object.getPrototypeOf(ContactList)).apply(this, arguments));
+  }
+
+  _createClass(ContactList, [{
+    key: 'render',
+    value: function render() {
+      var _this36 = this;
+
+      var contactNodes = [];
+      var showCheckmark = Array.isArray(this.props.topicSelected);
+      if (this.props.contacts && this.props.contacts.length > 0) {
+        this.props.contacts.map(function (c) {
+          var key = c.topic ? c.topic : c.user;
+          // If filter function is provided, filter out the items
+          // which don't satisfy the condition.
+          if (_this36.props.filterFunc && _this36.props.filter) {
+            var content = [key];
+            if (c.private && c.private.comment) {
+              content.push(("" + c.private.comment).toLowerCase());
+            }
+            if (c.public && c.public.fn) {
+              content.push(("" + c.public.fn).toLowerCase());
+            }
+            if (!_this36.props.filterFunc(_this36.props.filter, content)) {
+              return;
+            }
+          }
+
+          var selected = showCheckmark ? _this36.props.topicSelected.indexOf(key) > -1 : _this36.props.topicSelected === key;
+          var badges = [];
+          if (_this36.props.showMode) {
+            if (key === _this36.props.myUserId) {
+              badges.push({ name: 'you', color: 'green' });
+            }
+            if (c.acs && c.acs.isOwner()) {
+              badges.push({ name: 'owner' });
+            }
+          }
+          var comment = Array.isArray(c.private) ? c.private.join(", ") : c.private ? c.private.comment : null;
+
+          contactNodes.push(React.createElement(Contact, {
+            title: c.public ? c.public.fn : null,
+            avatar: makeImageUrl(c.public ? c.public.photo : null),
+            comment: comment,
+            unread: _this36.props.showUnread ? c.unread : 0,
+            now: c.online && _this36.props.connected,
+            acs: c.acs,
+            showMode: _this36.props.showMode,
+            badges: badges,
+            showCheckmark: showCheckmark,
+            selected: selected,
+            showOnline: _this36.props.showOnline,
+            onSelected: _this36.props.onTopicSelected,
+            showContextMenu: _this36.props.showContextMenu,
+            item: key,
+            index: contactNodes.length,
+            key: key }));
+        }, this);
+      }
+
+      return React.createElement(
+        'div',
+        { className: this.props.noScroll ? null : "scrollable-panel" },
+        contactNodes.length > 0 ? React.createElement(
+          'ul',
+          { className: 'contact-box' },
+          contactNodes
+        ) : React.createElement(
+          'div',
+          { className: 'center-medium-text' },
+          this.props.emptyListMessage
+        )
+      );
+    }
+  }]);
+
+  return ContactList;
+}(React.Component);
+
+;
+/* END ContactList */
+
+/* BEGIN GroupMembers: control for managing a list of group members */
+
+var GroupManager = function (_React$Component14) {
+  _inherits(GroupManager, _React$Component14);
+
+  function GroupManager(props) {
+    _classCallCheck(this, GroupManager);
+
+    var _this37 = _possibleConstructorReturn(this, (GroupManager.__proto__ || Object.getPrototypeOf(GroupManager)).call(this, props));
+
+    _this37.state = {
+      members: props.members,
+      index: GroupManager.indexMembers(props.members),
+      contactFilter: '',
+      noContactsMessage: 'You have no contacts :-(',
+      selectedContacts: GroupManager.selectedContacts(props.members)
+    };
+
+    _this37.handleContactSelected = _this37.handleContactSelected.bind(_this37);
+    _this37.handleMemberRemoved = _this37.handleMemberRemoved.bind(_this37);
+    _this37.handleContactFilter = _this37.handleContactFilter.bind(_this37);
+    _this37.handleSubmit = _this37.handleSubmit.bind(_this37);
+    _this37.handleCancel = _this37.handleCancel.bind(_this37);
+    return _this37;
+  }
+
+  _createClass(GroupManager, [{
+    key: 'handleContactSelected',
+    value: function handleContactSelected(userId, index) {
+      var status = this.state.index[userId];
+      if (status) {
+        if (status.present) {
+          // Prevent duplicate members
+          return;
+        }
+        status.delta += 1;
+        status.present = true;
+      } else {
+        status = { delta: 1, present: true };
+      }
+
+      var m = this.state.members.slice();
+      m.push(this.props.contacts[index]);
+
+      var sel = GroupManager.selectedContacts(m);
+
+      var i = this.state.index;
+      i[userId] = status;
+
+      this.setState({ members: m, index: i, selectedContacts: sel });
+    }
+  }, {
+    key: 'handleMemberRemoved',
+    value: function handleMemberRemoved(userId, index) {
+      var status = this.state.index[userId];
+      if (!status || !status.present) {
+        return;
+      }
+      status.present = false;
+      status.delta -= 1;
+
+      var m = this.state.members.slice();
+      m.splice(index, 1);
+
+      var sel = GroupManager.selectedContacts(m);
+
+      var i = this.state.index;
+      i[userId] = status;
+
+      this.setState({ members: m, index: i, selectedContacts: sel });
+    }
+  }, {
+    key: 'handleContactFilter',
+    value: function handleContactFilter(val) {
+      var msg = !val ? "You have no contacts :-(" : "No contacts match '" + val + "'";
+
+      this.setState({ contactFilter: val, noContactsMessage: msg });
+    }
+  }, {
+    key: 'handleSubmit',
+    value: function handleSubmit() {
+      var instance = this;
+      var members = [];
+      var added = [];
+      var removed = [];
+
+      var keys = Object.keys(this.state.index);
+      keys.map(function (k) {
+        if (instance.state.index[k].present) {
+          members.push(k);
+        }
+
+        if (instance.state.index[k].delta > 0) {
+          added.push(k);
+        } else if (instance.state.index[k].delta < 0) {
+          removed.push(k);
+        }
+      });
+      this.props.onSubmit(members, added, removed);
+    }
+  }, {
+    key: 'handleCancel',
+    value: function handleCancel() {
+      this.props.onCancel();
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return React.createElement(
+        'div',
+        { id: 'group-manager' },
+        React.createElement(
+          'div',
+          { className: 'panel-form-row' },
+          React.createElement(
+            'label',
+            { className: 'small' },
+            'Group members'
+          )
+        ),
+        React.createElement(
+          'div',
+          { className: 'panel-form-row' },
+          React.createElement(ChipInput, {
+            chips: this.state.members,
+            required: this.props.requiredMember,
+            prompt: 'add members',
+            filterFunc: this.handleContactFilter,
+            onChipRemoved: this.handleMemberRemoved })
+        ),
+        React.createElement(
+          'div',
+          { className: 'panel-form-row' },
+          React.createElement(
+            'label',
+            { className: 'small' },
+            'All contacts'
+          )
+        ),
+        React.createElement(ContactList, {
+          contacts: this.props.contacts,
+          myUserId: this.props.myUserId,
+          topicSelected: this.state.selectedContacts,
+          filter: this.state.contactFilter,
+          filterFunc: GroupManager.doContactFiltering,
+          emptyListMessage: this.state.noContactsMessage,
+          showOnline: false,
+          showUnread: false,
+          onTopicSelected: this.handleContactSelected }),
+        React.createElement(
+          'div',
+          { id: 'group-manager-buttons', className: 'panel-form-row' },
           React.createElement(
             'button',
             { className: 'blue', onClick: this.handleSubmit },
@@ -30520,898 +31480,549 @@ class TagManager extends React.Component {
             { className: 'white', onClick: this.handleCancel },
             'Cancel'
           )
-        ) : null
-      ) : React.createElement(
-        'div',
-        null,
-        React.createElement(
-          'a',
-          { href: 'javascript:;', className: 'flat-button', onClick: this.handleShowTagManager },
-          React.createElement(
-            'i',
-            { className: 'material-icons' },
-            'edit'
-          ),
-          ' Manage tags'
-        ),
-        React.createElement(
-          'span',
-          null,
-          tags
         )
-      )
-    );
-  }
-};
-/* END TagManager */
-
-/* BEGIN Contact list (list of topics) */
-/* A single topic */;
-class Contact extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.handleClick = this.handleClick.bind(this);
-    this.handleContextClick = this.handleContextClick.bind(this);
-  }
-
-  handleClick(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    if (this.props.onSelected) {
-      this.props.onSelected(this.props.item, this.props.index, this.props.now, this.props.acs);
-    }
-  }
-
-  handleContextClick(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.props.showContextMenu({ topicName: this.props.item, y: e.pageY, x: e.pageX });
-  }
-
-  render() {
-    var title = this.props.title;
-    if (!title) {
-      title = React.createElement(
-        'i',
-        null,
-        'unknown'
-      );
-    } else if (title.length > 30) {
-      title = title.substring(0, 28) + "...";
-    }
-    var online = this.props.now ? "online" : "offline";
-    var avatar = this.props.avatar ? this.props.avatar : true;
-    var badges = [];
-    if (this.props.badges && this.props.badges.length > 0) {
-      var count = 0;
-      this.props.badges.map(function (b) {
-        var style = "badge" + (b.color ? " " + b.color : "");
-        badges.push(React.createElement(
-          'span',
-          { className: style, key: count },
-          b.name
-        ));
-        count++;
-      });
-    }
-    if (this.props.showMode && this.props.acs) {
-      badges.push(React.createElement(
-        'span',
-        { className: 'badge', key: 'mode' },
-        this.props.acs.getMode()
-      ));
-    }
-
-    return React.createElement(
-      'li',
-      { className: !this.props.showCheckmark && this.props.selected ? "selected" : null,
-        onClick: this.handleClick },
-      React.createElement(
-        'div',
-        { className: 'avatar-box' },
-        React.createElement(LetterTile, {
-          avatar: avatar,
-          title: this.props.title,
-          topic: this.props.item }),
-        this.props.showOnline ? React.createElement('span', { className: online }) : this.props.showCheckmark && this.props.selected ? React.createElement(
-          'i',
-          { className: 'checkmark material-icons' },
-          'check_circle'
-        ) : null
-      ),
-      React.createElement(
-        'div',
-        { className: 'text-box' },
-        React.createElement(
-          'div',
-          null,
-          React.createElement(
-            'span',
-            { className: 'contact-title' },
-            title
-          ),
-          this.props.unread > 0 ? React.createElement(UnreadBadge, { count: this.props.unread }) : null
-        ),
-        this.props.comment ? React.createElement(
-          'div',
-          { className: 'contact-comment' },
-          this.props.comment
-        ) : null,
-        React.createElement(
-          'span',
-          null,
-          badges
-        )
-      ),
-      this.props.showContextMenu ? React.createElement(
-        'span',
-        { className: 'menuTrigger' },
-        React.createElement(
-          'a',
-          { href: 'javascript:;', onClick: this.handleContextClick },
-          React.createElement(
-            'i',
-            { className: 'material-icons' },
-            'expand_more'
-          )
-        )
-      ) : null
-    );
-  }
-};
-
-/* The counter of unread messages in the topic */
-class UnreadBadge extends React.PureComponent {
-  render() {
-    var showUnreadBadge = null;
-    if (this.props.count > 0) {
-      var count = this.props.count > 9 ? "9+" : this.props.count;
-      showUnreadBadge = React.createElement(
-        'span',
-        { className: 'unread' },
-        count
       );
     }
-    return showUnreadBadge;
-  }
-};
-
-/* Contact's labels: [you], [muted], [blocked], etc */
-// FIXME: this class is unused.
-class ContactBadges_UNUSED_REMOVE extends React.PureComponent {
-  render() {
-    let badges = null;
-    if (this.props.badges && this.props.badges.length > 0) {
-      badges = [];
-      this.props.badges.map(function (b) {
-        var style = "badge" + (b.color ? " " + b.color : "");
-        // Badge names are expected to be unique, so using the name as the key.
-        badges.push(React.createElement(
-          'span',
-          { className: style, key: b.name },
-          b.name
-        ));
+  }], [{
+    key: 'indexMembers',
+    value: function indexMembers(members) {
+      var index = {};
+      members.map(function (m) {
+        index[m.user] = { delta: 0, present: true }; // Delta: 0 unchanged, +1 added, -1 removed
       });
+      return index;
     }
-    return badges;
-  }
-};
-
-/* ContactsView holds all contacts-related stuff */
-class ContactsView extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = ContactsView.getDerivedStateFromProps(props, {});
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    let contacts = [];
-    let unreadThreads = 0;
-    nextProps.chatList.map(c => {
-      unreadThreads += c.unread > 0 ? 1 : 0;
-      contacts.push(c);
-    });
-
-    contacts.sort(function (a, b) {
-      return b.touched - a.touched;
-    });
-
-    updateFavicon(unreadThreads);
-
-    return { contactList: contacts };
-  }
-
-  render() {
-    return React.createElement(ContactList, {
-      connected: this.props.connected,
-      contacts: this.state.contactList,
-      emptyListMessage: React.createElement(
-        'span',
-        null,
-        'You have no chats',
-        React.createElement('br', null),
-        '\xAF\\_(\u30C4)_/\xAF'
-      ),
-      topicSelected: this.props.topicSelected,
-      myUserId: this.props.myUserId,
-      showOnline: true,
-      showUnread: true,
-      onTopicSelected: this.props.onTopicSelected,
-      showContextMenu: this.props.showContextMenu });
-  }
-};
-/* END Contact list */
-
-/* BEGIN ContactList: component for showing a list of contacts,
- * such as a list of group members in a group chat */
-class ContactList extends React.Component {
-  render() {
-    var contactNodes = [];
-    var showCheckmark = Array.isArray(this.props.topicSelected);
-    if (this.props.contacts && this.props.contacts.length > 0) {
-      this.props.contacts.map(c => {
-        var key = c.topic ? c.topic : c.user;
-        // If filter function is provided, filter out the items
-        // which don't satisfy the condition.
-        if (this.props.filterFunc && this.props.filter) {
-          var content = [key];
-          if (c.private && c.private.comment) {
-            content.push(("" + c.private.comment).toLowerCase());
-          }
-          if (c.public && c.public.fn) {
-            content.push(("" + c.public.fn).toLowerCase());
-          }
-          if (!this.props.filterFunc(this.props.filter, content)) {
-            return;
+  }, {
+    key: 'selectedContacts',
+    value: function selectedContacts(members) {
+      var sel = [];
+      members.map(function (m) {
+        sel.push(m.user);
+      });
+      return sel;
+    }
+  }, {
+    key: 'doContactFiltering',
+    value: function doContactFiltering(filter, values) {
+      if (filter) {
+        for (var i = 0; i < values.length; i++) {
+          if (values[i].indexOf(filter) >= 0) {
+            return true;
           }
         }
-
-        var selected = showCheckmark ? this.props.topicSelected.indexOf(key) > -1 : this.props.topicSelected === key;
-        var badges = [];
-        if (this.props.showMode) {
-          if (key === this.props.myUserId) {
-            badges.push({ name: 'you', color: 'green' });
-          }
-          if (c.acs && c.acs.isOwner()) {
-            badges.push({ name: 'owner' });
-          }
-        }
-        var comment = Array.isArray(c.private) ? c.private.join(", ") : c.private ? c.private.comment : null;
-
-        contactNodes.push(React.createElement(Contact, {
-          title: c.public ? c.public.fn : null,
-          avatar: makeImageUrl(c.public ? c.public.photo : null),
-          comment: comment,
-          unread: this.props.showUnread ? c.unread : 0,
-          now: c.online && this.props.connected,
-          acs: c.acs,
-          showMode: this.props.showMode,
-          badges: badges,
-          showCheckmark: showCheckmark,
-          selected: selected,
-          showOnline: this.props.showOnline,
-          onSelected: this.props.onTopicSelected,
-          showContextMenu: this.props.showContextMenu,
-          item: key,
-          index: contactNodes.length,
-          key: key }));
-      }, this);
-    }
-
-    return React.createElement(
-      'div',
-      { className: this.props.noScroll ? null : "scrollable-panel" },
-      contactNodes.length > 0 ? React.createElement(
-        'ul',
-        { className: 'contact-box' },
-        contactNodes
-      ) : React.createElement(
-        'div',
-        { className: 'center-medium-text' },
-        this.props.emptyListMessage
-      )
-    );
-  }
-};
-/* END ContactList */
-
-/* BEGIN GroupMembers: control for managing a list of group members */
-class GroupManager extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      members: props.members,
-      index: GroupManager.indexMembers(props.members),
-      contactFilter: '',
-      noContactsMessage: 'You have no contacts :-(',
-      selectedContacts: GroupManager.selectedContacts(props.members)
-    };
-
-    this.handleContactSelected = this.handleContactSelected.bind(this);
-    this.handleMemberRemoved = this.handleMemberRemoved.bind(this);
-    this.handleContactFilter = this.handleContactFilter.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleCancel = this.handleCancel.bind(this);
-  }
-
-  static indexMembers(members) {
-    var index = {};
-    members.map(function (m) {
-      index[m.user] = { delta: 0, present: true }; // Delta: 0 unchanged, +1 added, -1 removed
-    });
-    return index;
-  }
-
-  static selectedContacts(members) {
-    var sel = [];
-    members.map(function (m) {
-      sel.push(m.user);
-    });
-    return sel;
-  }
-
-  handleContactSelected(userId, index) {
-    var status = this.state.index[userId];
-    if (status) {
-      if (status.present) {
-        // Prevent duplicate members
-        return;
+        return false;
       }
-      status.delta += 1;
-      status.present = true;
-    } else {
-      status = { delta: 1, present: true };
+      return true;
     }
+  }]);
 
-    var m = this.state.members.slice();
-    m.push(this.props.contacts[index]);
+  return GroupManager;
+}(React.Component);
 
-    var sel = GroupManager.selectedContacts(m);
-
-    var i = this.state.index;
-    i[userId] = status;
-
-    this.setState({ members: m, index: i, selectedContacts: sel });
-  }
-
-  handleMemberRemoved(userId, index) {
-    var status = this.state.index[userId];
-    if (!status || !status.present) {
-      return;
-    }
-    status.present = false;
-    status.delta -= 1;
-
-    var m = this.state.members.slice();
-    m.splice(index, 1);
-
-    var sel = GroupManager.selectedContacts(m);
-
-    var i = this.state.index;
-    i[userId] = status;
-
-    this.setState({ members: m, index: i, selectedContacts: sel });
-  }
-
-  handleContactFilter(val) {
-    var msg = !val ? "You have no contacts :-(" : "No contacts match '" + val + "'";
-
-    this.setState({ contactFilter: val, noContactsMessage: msg });
-  }
-
-  static doContactFiltering(filter, values) {
-    if (filter) {
-      for (var i = 0; i < values.length; i++) {
-        if (values[i].indexOf(filter) >= 0) {
-          return true;
-        }
-      }
-      return false;
-    }
-    return true;
-  }
-
-  handleSubmit() {
-    var instance = this;
-    var members = [];
-    var added = [];
-    var removed = [];
-
-    var keys = Object.keys(this.state.index);
-    keys.map(function (k) {
-      if (instance.state.index[k].present) {
-        members.push(k);
-      }
-
-      if (instance.state.index[k].delta > 0) {
-        added.push(k);
-      } else if (instance.state.index[k].delta < 0) {
-        removed.push(k);
-      }
-    });
-    this.props.onSubmit(members, added, removed);
-  }
-
-  handleCancel() {
-    this.props.onCancel();
-  }
-
-  render() {
-    return React.createElement(
-      'div',
-      { id: 'group-manager' },
-      React.createElement(
-        'div',
-        { className: 'panel-form-row' },
-        React.createElement(
-          'label',
-          { className: 'small' },
-          'Group members'
-        )
-      ),
-      React.createElement(
-        'div',
-        { className: 'panel-form-row' },
-        React.createElement(ChipInput, {
-          chips: this.state.members,
-          required: this.props.requiredMember,
-          prompt: 'add members',
-          filterFunc: this.handleContactFilter,
-          onChipRemoved: this.handleMemberRemoved })
-      ),
-      React.createElement(
-        'div',
-        { className: 'panel-form-row' },
-        React.createElement(
-          'label',
-          { className: 'small' },
-          'All contacts'
-        )
-      ),
-      React.createElement(ContactList, {
-        contacts: this.props.contacts,
-        myUserId: this.props.myUserId,
-        topicSelected: this.state.selectedContacts,
-        filter: this.state.contactFilter,
-        filterFunc: GroupManager.doContactFiltering,
-        emptyListMessage: this.state.noContactsMessage,
-        showOnline: false,
-        showUnread: false,
-        onTopicSelected: this.handleContactSelected }),
-      React.createElement(
-        'div',
-        { id: 'group-manager-buttons', className: 'panel-form-row' },
-        React.createElement(
-          'button',
-          { className: 'blue', onClick: this.handleSubmit },
-          'OK'
-        ),
-        React.createElement(
-          'button',
-          { className: 'white', onClick: this.handleCancel },
-          'Cancel'
-        )
-      )
-    );
-  }
-};
+;
 /* END GroupManager */
 
 /* BEGIN Create new topic and invite users or send an invite */
-class NewTopicView extends React.Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
+var NewTopicView = function (_React$Component15) {
+  _inherits(NewTopicView, _React$Component15);
+
+  function NewTopicView(props) {
+    _classCallCheck(this, NewTopicView);
+
+    var _this38 = _possibleConstructorReturn(this, (NewTopicView.__proto__ || Object.getPrototypeOf(NewTopicView)).call(this, props));
+
+    _this38.state = {
       tabSelected: "p2p",
       contactList: props.searchResults
     };
 
-    this.handleTabClick = this.handleTabClick.bind(this);
-    this.handleContactSelected = this.handleContactSelected.bind(this);
-    this.handleNewGroupSubmit = this.handleNewGroupSubmit.bind(this);
-    this.handleGroupByID = this.handleGroupByID.bind(this);
+    _this38.handleTabClick = _this38.handleTabClick.bind(_this38);
+    _this38.handleContactSelected = _this38.handleContactSelected.bind(_this38);
+    _this38.handleNewGroupSubmit = _this38.handleNewGroupSubmit.bind(_this38);
+    _this38.handleGroupByID = _this38.handleGroupByID.bind(_this38);
+    return _this38;
   }
 
-  componentDidMount() {
-    this.props.onInitFind();
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    return {
-      contactList: nextProps.searchResults
-    };
-  }
-
-  handleTabClick(e) {
-    e.preventDefault();
-    navigateTo(addUrlParam(window.location.hash, 'tab', e.currentTarget.dataset.id));
-    this.setState({ tabSelected: e.currentTarget.dataset.id });
-  }
-
-  handleContactSelected(sel) {
-    if (this.state.tabSelected === "p2p") {
-      navigateTo(removeUrlParam(window.location.hash, 'tab'));
-      this.props.onCreateTopic(sel, undefined);
+  _createClass(NewTopicView, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.props.onInitFind();
     }
-  }
-
-  handleNewGroupSubmit(name, dataUrl, priv, tags) {
-    navigateTo(removeUrlParam(window.location.hash, 'tab'));
-    this.props.onCreateTopic(undefined, vcard(name, dataUrl), priv, tags);
-  }
-
-  handleGroupByID(topicName) {
-    navigateTo(removeUrlParam(window.location.hash, 'tab'));
-    this.props.onCreateTopic(topicName);
-  }
-
-  render() {
-    return React.createElement(
-      'div',
-      { className: 'flex-column' },
-      React.createElement(
-        'ul',
-        { className: 'tabbar' },
-        React.createElement(
-          'li',
-          { className: this.state.tabSelected === "p2p" ? "active" : null },
-          React.createElement(
-            'a',
-            { href: 'javascript:;', 'data-id': 'p2p', onClick: this.handleTabClick },
-            'find'
-          )
-        ),
-        React.createElement(
-          'li',
-          { className: this.state.tabSelected === "grp" ? "active" : null },
-          React.createElement(
-            'a',
-            { href: 'javascript:;', 'data-id': 'grp', onClick: this.handleTabClick },
-            'new group'
-          )
-        ),
-        React.createElement(
-          'li',
-          { className: this.state.tabSelected === "byid" ? "active" : null },
-          React.createElement(
-            'a',
-            { href: 'javascript:;', 'data-id': 'byid', onClick: this.handleTabClick },
-            'by id'
-          )
-        )
-      ),
-      this.state.tabSelected === "grp" ? React.createElement(NewTopicGroup, { onSubmit: this.handleNewGroupSubmit }) : this.state.tabSelected === "byid" ? React.createElement(NewTopicById, {
-        onSubmit: this.handleGroupByID,
-        onError: this.props.onError }) : React.createElement(
+  }, {
+    key: 'handleTabClick',
+    value: function handleTabClick(e) {
+      e.preventDefault();
+      navigateTo(addUrlParam(window.location.hash, 'tab', e.currentTarget.dataset.id));
+      this.setState({ tabSelected: e.currentTarget.dataset.id });
+    }
+  }, {
+    key: 'handleContactSelected',
+    value: function handleContactSelected(sel) {
+      if (this.state.tabSelected === "p2p") {
+        navigateTo(removeUrlParam(window.location.hash, 'tab'));
+        this.props.onCreateTopic(sel, undefined);
+      }
+    }
+  }, {
+    key: 'handleNewGroupSubmit',
+    value: function handleNewGroupSubmit(name, dataUrl, priv, tags) {
+      navigateTo(removeUrlParam(window.location.hash, 'tab'));
+      this.props.onCreateTopic(undefined, vcard(name, dataUrl), priv, tags);
+    }
+  }, {
+    key: 'handleGroupByID',
+    value: function handleGroupByID(topicName) {
+      navigateTo(removeUrlParam(window.location.hash, 'tab'));
+      this.props.onCreateTopic(topicName);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return React.createElement(
         'div',
         { className: 'flex-column' },
-        React.createElement(SearchContacts, { type: 'p2p',
-          onSearchContacts: this.props.onSearchContacts }),
-        React.createElement(ContactList, {
-          contacts: this.state.contactList,
-          myUserId: this.props.myUserId,
-          emptyListMessage: 'Use search to find contacts',
-          topicSelected: this.state.selectedContact,
-          showOnline: false,
-          showUnread: false,
-          showContextMenu: false,
-          onTopicSelected: this.handleContactSelected })
-      )
-    );
-  }
-};
+        React.createElement(
+          'ul',
+          { className: 'tabbar' },
+          React.createElement(
+            'li',
+            { className: this.state.tabSelected === "p2p" ? "active" : null },
+            React.createElement(
+              'a',
+              { href: 'javascript:;', 'data-id': 'p2p', onClick: this.handleTabClick },
+              'find'
+            )
+          ),
+          React.createElement(
+            'li',
+            { className: this.state.tabSelected === "grp" ? "active" : null },
+            React.createElement(
+              'a',
+              { href: 'javascript:;', 'data-id': 'grp', onClick: this.handleTabClick },
+              'new group'
+            )
+          ),
+          React.createElement(
+            'li',
+            { className: this.state.tabSelected === "byid" ? "active" : null },
+            React.createElement(
+              'a',
+              { href: 'javascript:;', 'data-id': 'byid', onClick: this.handleTabClick },
+              'by id'
+            )
+          )
+        ),
+        this.state.tabSelected === "grp" ? React.createElement(NewTopicGroup, { onSubmit: this.handleNewGroupSubmit }) : this.state.tabSelected === "byid" ? React.createElement(NewTopicById, {
+          onSubmit: this.handleGroupByID,
+          onError: this.props.onError }) : React.createElement(
+          'div',
+          { className: 'flex-column' },
+          React.createElement(SearchContacts, { type: 'p2p',
+            onSearchContacts: this.props.onSearchContacts }),
+          React.createElement(ContactList, {
+            contacts: this.state.contactList,
+            myUserId: this.props.myUserId,
+            emptyListMessage: 'Use search to find contacts',
+            topicSelected: this.state.selectedContact,
+            showOnline: false,
+            showUnread: false,
+            showContextMenu: false,
+            onTopicSelected: this.handleContactSelected })
+        )
+      );
+    }
+  }], [{
+    key: 'getDerivedStateFromProps',
+    value: function getDerivedStateFromProps(nextProps, prevState) {
+      return {
+        contactList: nextProps.searchResults
+      };
+    }
+  }]);
 
-class NewTopicGroup extends React.PureComponent {
-  constructor(props) {
-    super(props);
+  return NewTopicView;
+}(React.Component);
 
-    this.state = {
+;
+
+var NewTopicGroup = function (_React$PureComponent18) {
+  _inherits(NewTopicGroup, _React$PureComponent18);
+
+  function NewTopicGroup(props) {
+    _classCallCheck(this, NewTopicGroup);
+
+    var _this39 = _possibleConstructorReturn(this, (NewTopicGroup.__proto__ || Object.getPrototypeOf(NewTopicGroup)).call(this, props));
+
+    _this39.state = {
       fn: '', // full/formatted name
       private: '',
       imageDataUrl: null,
       tags: []
     };
 
-    this.handleFnChange = this.handleFnChange.bind(this);
-    this.handlePrivateChange = this.handlePrivateChange.bind(this);
-    this.handleImageChanged = this.handleImageChanged.bind(this);
-    this.handleTagsChanged = this.handleTagsChanged.bind(this);
-    this.handleTagsChanged = this.handleTagsChanged.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    _this39.handleFnChange = _this39.handleFnChange.bind(_this39);
+    _this39.handlePrivateChange = _this39.handlePrivateChange.bind(_this39);
+    _this39.handleImageChanged = _this39.handleImageChanged.bind(_this39);
+    _this39.handleTagsChanged = _this39.handleTagsChanged.bind(_this39);
+    _this39.handleTagsChanged = _this39.handleTagsChanged.bind(_this39);
+    _this39.handleSubmit = _this39.handleSubmit.bind(_this39);
+    return _this39;
   }
 
-  handleFnChange(e) {
-    this.setState({ fn: e.target.value });
-  }
-
-  handlePrivateChange(e) {
-    this.setState({ private: e.target.value });
-  }
-
-  handleImageChanged(img) {
-    this.setState({ imageDataUrl: img });
-  }
-
-  handleTagsChanged(tags) {
-    this.setState({ tags: tags });
-  }
-
-  handleSubmit(e) {
-    e.preventDefault();
-    if (this.state.fn && this.state.fn.trim()) {
-      this.props.onSubmit(this.state.fn.trim(), this.state.imageDataUrl, this.state.private.trim(), this.state.tags);
+  _createClass(NewTopicGroup, [{
+    key: 'handleFnChange',
+    value: function handleFnChange(e) {
+      this.setState({ fn: e.target.value });
     }
-  }
-
-  render() {
-    var submitClasses = "blue";
-    if (this.props.disabled) {
-      submitClasses += " disabled";
+  }, {
+    key: 'handlePrivateChange',
+    value: function handlePrivateChange(e) {
+      this.setState({ private: e.target.value });
     }
-    return React.createElement(
-      'form',
-      { className: 'panel-form', onSubmit: this.handleSubmit },
-      React.createElement(
-        'div',
-        { className: 'panel-form-row' },
+  }, {
+    key: 'handleImageChanged',
+    value: function handleImageChanged(img) {
+      this.setState({ imageDataUrl: img });
+    }
+  }, {
+    key: 'handleTagsChanged',
+    value: function handleTagsChanged(tags) {
+      this.setState({ tags: tags });
+    }
+  }, {
+    key: 'handleSubmit',
+    value: function handleSubmit(e) {
+      e.preventDefault();
+      if (this.state.fn && this.state.fn.trim()) {
+        this.props.onSubmit(this.state.fn.trim(), this.state.imageDataUrl, this.state.private.trim(), this.state.tags);
+      }
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var submitClasses = "blue";
+      if (this.props.disabled) {
+        submitClasses += " disabled";
+      }
+      return React.createElement(
+        'form',
+        { className: 'panel-form', onSubmit: this.handleSubmit },
         React.createElement(
           'div',
-          { className: 'panel-form-column' },
+          { className: 'panel-form-row' },
           React.createElement(
-            'label',
-            { className: 'small', htmlFor: 'new-topic-fn' },
-            'Group name'
+            'div',
+            { className: 'panel-form-column' },
+            React.createElement(
+              'label',
+              { className: 'small', htmlFor: 'new-topic-fn' },
+              'Group name'
+            ),
+            React.createElement('input', { type: 'text', id: 'new-topic-fn', placeholder: 'Freeform name of the group',
+              value: this.state.fn, onChange: this.handleFnChange, autoFocus: true, required: true }),
+            React.createElement('br', null),
+            React.createElement(
+              'label',
+              { className: 'small', htmlFor: 'new-topic-priv' },
+              'Private comment'
+            ),
+            React.createElement('input', { type: 'text', id: 'new-topic-priv', placeholder: 'Visible to you only',
+              value: this.state.private, onChange: this.handlePrivateChange })
           ),
-          React.createElement('input', { type: 'text', id: 'new-topic-fn', placeholder: 'Freeform name of the group',
-            value: this.state.fn, onChange: this.handleFnChange, autoFocus: true, required: true }),
-          React.createElement('br', null),
-          React.createElement(
-            'label',
-            { className: 'small', htmlFor: 'new-topic-priv' },
-            'Private comment'
-          ),
-          React.createElement('input', { type: 'text', id: 'new-topic-priv', placeholder: 'Visible to you only',
-            value: this.state.private, onChange: this.handlePrivateChange })
+          React.createElement(AvatarUpload, {
+            onError: this.props.onError,
+            onImageChanged: this.handleImageChanged })
         ),
-        React.createElement(AvatarUpload, {
-          onError: this.props.onError,
-          onImageChanged: this.handleImageChanged })
-      ),
-      React.createElement(TagManager, {
-        tags: this.state.tags,
-        activated: true,
-        onTagsChanged: this.handleTagsChanged,
-        title: 'Optional tags (search and discovery)' }),
-      React.createElement(
-        'div',
-        { className: 'dialog-buttons' },
+        React.createElement(TagManager, {
+          tags: this.state.tags,
+          activated: true,
+          onTagsChanged: this.handleTagsChanged,
+          title: 'Optional tags (search and discovery)' }),
         React.createElement(
-          'button',
-          { className: submitClasses },
-          'Create'
+          'div',
+          { className: 'dialog-buttons' },
+          React.createElement(
+            'button',
+            { className: submitClasses },
+            'Create'
+          )
         )
-      )
-    );
-  }
-};
+      );
+    }
+  }]);
 
-class SearchContacts extends React.PureComponent {
-  constructor(props) {
-    super(props);
+  return NewTopicGroup;
+}(React.PureComponent);
 
-    this.state = {
+;
+
+var SearchContacts = function (_React$PureComponent19) {
+  _inherits(SearchContacts, _React$PureComponent19);
+
+  function SearchContacts(props) {
+    _classCallCheck(this, SearchContacts);
+
+    var _this40 = _possibleConstructorReturn(this, (SearchContacts.__proto__ || Object.getPrototypeOf(SearchContacts)).call(this, props));
+
+    _this40.state = {
       edited: false,
       search: ''
     };
 
-    this.handleSearchChange = this.handleSearchChange.bind(this);
-    this.handleSearch = this.handleSearch.bind(this);
-    this.handleClear = this.handleClear.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
+    _this40.handleSearchChange = _this40.handleSearchChange.bind(_this40);
+    _this40.handleSearch = _this40.handleSearch.bind(_this40);
+    _this40.handleClear = _this40.handleClear.bind(_this40);
+    _this40.handleKeyDown = _this40.handleKeyDown.bind(_this40);
+    return _this40;
   }
 
-  componentWillUnmount() {
-    if (this.state.edited) {
+  _createClass(SearchContacts, [{
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      if (this.state.edited) {
+        this.setState({ search: '', edited: false });
+        this.props.onSearchContacts(Tinode.DEL_CHAR);
+      }
+    }
+  }, {
+    key: 'handleSearchChange',
+    value: function handleSearchChange(e) {
+      this.setState({ search: e.target.value });
+    }
+  }, {
+    key: 'handleSearch',
+    value: function handleSearch(e) {
+      e.preventDefault();
+      var query = this.state.search.trim();
+      this.setState({ edited: query.length > 0 });
+      this.props.onSearchContacts(query.length > 0 ? query : Tinode.DEL_CHAR);
+    }
+  }, {
+    key: 'handleClear',
+    value: function handleClear() {
+      if (this.state.edited) {
+        this.props.onSearchContacts(Tinode.DEL_CHAR);
+      }
       this.setState({ search: '', edited: false });
-      this.props.onSearchContacts(Tinode.DEL_CHAR);
     }
-  }
-
-  handleSearchChange(e) {
-    this.setState({ search: e.target.value });
-  }
-
-  handleSearch(e) {
-    e.preventDefault();
-    var query = this.state.search.trim();
-    this.setState({ edited: query.length > 0 });
-    this.props.onSearchContacts(query.length > 0 ? query : Tinode.DEL_CHAR);
-  }
-
-  handleClear() {
-    if (this.state.edited) {
-      this.props.onSearchContacts(Tinode.DEL_CHAR);
+  }, {
+    key: 'handleKeyDown',
+    value: function handleKeyDown(e) {
+      if (e.key === 'Enter') {
+        this.handleSearch(e);
+      } else if (e.key === 'Escape') {
+        this.handleClear();
+      }
     }
-    this.setState({ search: '', edited: false });
-  }
-
-  handleKeyDown(e) {
-    if (e.key === 'Enter') {
-      this.handleSearch(e);
-    } else if (e.key === 'Escape') {
-      this.handleClear();
-    }
-  }
-
-  render() {
-    return React.createElement(
-      'div',
-      { className: 'panel-form' },
-      React.createElement(
+  }, {
+    key: 'render',
+    value: function render() {
+      return React.createElement(
         'div',
-        { className: 'panel-form-row' },
+        { className: 'panel-form' },
         React.createElement(
-          'i',
-          { className: 'material-icons search' },
-          'search'
-        ),
-        React.createElement('input', { className: 'search', type: 'text',
-          placeholder: 'List like email:alice@example.com, tel:17025550003...',
-          value: this.state.search, onChange: this.handleSearchChange,
-          onKeyDown: this.handleKeyDown, required: true, autoFocus: true }),
-        React.createElement(
-          'a',
-          { href: 'javascript:;', onClick: this.handleClear },
+          'div',
+          { className: 'panel-form-row' },
           React.createElement(
             'i',
-            { className: 'material-icons' },
-            'close'
+            { className: 'material-icons search' },
+            'search'
+          ),
+          React.createElement('input', { className: 'search', type: 'text',
+            placeholder: 'List like email:alice@example.com, tel:17025550003...',
+            value: this.state.search, onChange: this.handleSearchChange,
+            onKeyDown: this.handleKeyDown, required: true, autoFocus: true }),
+          React.createElement(
+            'a',
+            { href: 'javascript:;', onClick: this.handleClear },
+            React.createElement(
+              'i',
+              { className: 'material-icons' },
+              'close'
+            )
           )
         )
-      )
-    );
-  }
-};
+      );
+    }
+  }]);
 
-class NewTopicById extends React.PureComponent {
-  constructor(props) {
-    super(props);
+  return SearchContacts;
+}(React.PureComponent);
 
-    this.state = {
+;
+
+var NewTopicById = function (_React$PureComponent20) {
+  _inherits(NewTopicById, _React$PureComponent20);
+
+  function NewTopicById(props) {
+    _classCallCheck(this, NewTopicById);
+
+    var _this41 = _possibleConstructorReturn(this, (NewTopicById.__proto__ || Object.getPrototypeOf(NewTopicById)).call(this, props));
+
+    _this41.state = {
       groupId: ''
     };
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleKeyPress = this.handleKeyPress.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    _this41.handleChange = _this41.handleChange.bind(_this41);
+    _this41.handleKeyPress = _this41.handleKeyPress.bind(_this41);
+    _this41.handleSubmit = _this41.handleSubmit.bind(_this41);
+    return _this41;
   }
 
-  handleChange(e) {
-    this.setState({ groupId: e.target.value });
-  }
-
-  handleKeyPress(e) {
-    if (e.key === 'Enter') {
-      this.handleSubmit(e);
+  _createClass(NewTopicById, [{
+    key: 'handleChange',
+    value: function handleChange(e) {
+      this.setState({ groupId: e.target.value });
     }
-  }
-
-  handleSubmit(e) {
-    e.preventDefault();
-    if (this.state.groupId) {
-      var name = this.state.groupId.trim();
-      if (name.length > 3 && (name.substr(0, 3) == 'usr' || name.substr(0, 3) == 'grp')) {
-        this.props.onSubmit(name);
-      } else {
-        this.props.onError("Invalid ID", "err");
+  }, {
+    key: 'handleKeyPress',
+    value: function handleKeyPress(e) {
+      if (e.key === 'Enter') {
+        this.handleSubmit(e);
       }
     }
-  }
-
-  render() {
-    return React.createElement(
-      'div',
-      { className: 'panel-form' },
-      React.createElement(
+  }, {
+    key: 'handleSubmit',
+    value: function handleSubmit(e) {
+      e.preventDefault();
+      if (this.state.groupId) {
+        var name = this.state.groupId.trim();
+        if (name.length > 3 && (name.substr(0, 3) == 'usr' || name.substr(0, 3) == 'grp')) {
+          this.props.onSubmit(name);
+        } else {
+          this.props.onError("Invalid ID", "err");
+        }
+      }
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return React.createElement(
         'div',
-        { className: 'panel-form-row' },
-        React.createElement('input', { type: 'text', placeholder: 'Group or User ID',
-          value: this.state.groupId, onChange: this.handleChange,
-          onKeyPress: this.handleKeyPress, required: true })
-      ),
-      React.createElement(
-        'div',
-        { className: 'dialog-buttons' },
+        { className: 'panel-form' },
         React.createElement(
-          'button',
-          { className: 'blue', onClick: this.handleSubmit },
-          'Subscribe'
+          'div',
+          { className: 'panel-form-row' },
+          React.createElement('input', { type: 'text', placeholder: 'Group or User ID',
+            value: this.state.groupId, onChange: this.handleChange,
+            onKeyPress: this.handleKeyPress, required: true })
+        ),
+        React.createElement(
+          'div',
+          { className: 'dialog-buttons' },
+          React.createElement(
+            'button',
+            { className: 'blue', onClick: this.handleSubmit },
+            'Subscribe'
+          )
         )
-      )
-    );
-  }
-};
+      );
+    }
+  }]);
+
+  return NewTopicById;
+}(React.PureComponent);
+
+;
 /* END Create new topic and invite users or send an invite */
 
 /* BEGIN ValidationView: panel for confirming credentials, like email or phone */
-class ValidationView extends React.PureComponent {
-  constructor(props) {
-    super(props);
 
-    this.state = {
+var ValidationView = function (_React$PureComponent21) {
+  _inherits(ValidationView, _React$PureComponent21);
+
+  function ValidationView(props) {
+    _classCallCheck(this, ValidationView);
+
+    var _this42 = _possibleConstructorReturn(this, (ValidationView.__proto__ || Object.getPrototypeOf(ValidationView)).call(this, props));
+
+    _this42.state = {
       code: props.credCode || ''
     };
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleKeyPress = this.handleKeyPress.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    _this42.handleChange = _this42.handleChange.bind(_this42);
+    _this42.handleKeyPress = _this42.handleKeyPress.bind(_this42);
+    _this42.handleSubmit = _this42.handleSubmit.bind(_this42);
+    return _this42;
   }
 
-  handleChange(e) {
-    this.setState({ code: e.target.value });
-  }
-
-  handleKeyPress(e) {
-    if (e.key === 'Enter') {
-      this.handleSubmit(e);
+  _createClass(ValidationView, [{
+    key: 'handleChange',
+    value: function handleChange(e) {
+      this.setState({ code: e.target.value });
     }
-  }
-
-  handleSubmit(e) {
-    e.preventDefault();
-    if (this.state.code && this.state.code.trim()) {
-      this.props.onSubmit(this.props.credMethod, this.state.code.trim());
+  }, {
+    key: 'handleKeyPress',
+    value: function handleKeyPress(e) {
+      if (e.key === 'Enter') {
+        this.handleSubmit(e);
+      }
     }
-  }
+  }, {
+    key: 'handleSubmit',
+    value: function handleSubmit(e) {
+      e.preventDefault();
+      if (this.state.code && this.state.code.trim()) {
+        this.props.onSubmit(this.props.credMethod, this.state.code.trim());
+      }
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var methods = { 'email': 'email', 'tel': 'phone' };
+      var method = methods[this.props.credMethod] || this.props.credMethod;
+      return React.createElement(
+        'div',
+        { className: 'panel-form' },
+        React.createElement(
+          'div',
+          { className: 'panel-form-row' },
+          React.createElement(
+            'label',
+            { className: 'small', htmlFor: 'enter-confirmation-code' },
+            'Enter confirmation code sent to you by ',
+            method,
+            ':'
+          )
+        ),
+        React.createElement(
+          'div',
+          { className: 'panel-form-row' },
+          React.createElement('input', { type: 'text', id: 'enter-confirmation-code', placeholder: 'Numbers only',
+            value: this.state.code, onChange: this.handleChange,
+            onKeyPress: this.handleKeyPress, required: true })
+        ),
+        React.createElement(
+          'div',
+          { className: 'dialog-buttons' },
+          React.createElement(
+            'button',
+            { className: 'blue', onClick: this.handleSubmit },
+            'Confirm'
+          )
+        )
+      );
+    }
+  }]);
 
-  render() {
-    var methods = { 'email': 'email', 'tel': 'phone' };
-    var method = methods[this.props.credMethod] || this.props.credMethod;
-    return React.createElement(
-      'div',
-      { className: 'panel-form' },
-      React.createElement(
-        'div',
-        { className: 'panel-form-row' },
-        React.createElement(
-          'label',
-          { className: 'small', htmlFor: 'enter-confirmation-code' },
-          'Enter confirmation code sent to you by ',
-          method,
-          ':'
-        )
-      ),
-      React.createElement(
-        'div',
-        { className: 'panel-form-row' },
-        React.createElement('input', { type: 'text', id: 'enter-confirmation-code', placeholder: 'Numbers only',
-          value: this.state.code, onChange: this.handleChange,
-          onKeyPress: this.handleKeyPress, required: true })
-      ),
-      React.createElement(
-        'div',
-        { className: 'dialog-buttons' },
-        React.createElement(
-          'button',
-          { className: 'blue', onClick: this.handleSubmit },
-          'Confirm'
-        )
-      )
-    );
-  }
-};
+  return ValidationView;
+}(React.PureComponent);
+
+;
 /* END ValidationView */
 
 /* BEGIN InfoView: panel with topic/user info */
-class InfoView extends React.Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
+var InfoView = function (_React$Component16) {
+  _inherits(InfoView, _React$Component16);
+
+  function InfoView(props) {
+    _classCallCheck(this, InfoView);
+
+    var _this43 = _possibleConstructorReturn(this, (InfoView.__proto__ || Object.getPrototypeOf(InfoView)).call(this, props));
+
+    _this43.state = {
       topic: null,
       owner: false,
       admin: false,
@@ -31440,430 +32051,438 @@ class InfoView extends React.Component {
       previousTagsUpdated: undefined
     };
 
-    this.resetSubs = this.resetSubs.bind(this);
-    this.resetDesc = this.resetDesc.bind(this);
-    this.onMetaDesc = this.onMetaDesc.bind(this);
-    this.onSubsUpdated = this.onSubsUpdated.bind(this);
-    this.onTagsUpdated = this.onTagsUpdated.bind(this);
-    this.handleFullNameUpdate = this.handleFullNameUpdate.bind(this);
-    this.handlePrivateUpdate = this.handlePrivateUpdate.bind(this);
-    this.handleImageChanged = this.handleImageChanged.bind(this);
-    this.handleMuted = this.handleMuted.bind(this);
-    this.handlePermissionsChanged = this.handlePermissionsChanged.bind(this);
-    this.handleLaunchPermissionsEditor = this.handleLaunchPermissionsEditor.bind(this);
-    this.handleHidePermissionsEditor = this.handleHidePermissionsEditor.bind(this);
-    this.handleShowAddMembers = this.handleShowAddMembers.bind(this);
-    this.handleHideAddMembers = this.handleHideAddMembers.bind(this);
-    this.handleMemberUpdateRequest = this.handleMemberUpdateRequest.bind(this);
-    this.handleLeave = this.handleLeave.bind(this);
-    this.handleMemberSelected = this.handleMemberSelected.bind(this);
-    this.handleMoreInfo = this.handleMoreInfo.bind(this);
-    this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
-    this.handleContextMenu = this.handleContextMenu.bind(this);
+    _this43.resetSubs = _this43.resetSubs.bind(_this43);
+    _this43.resetDesc = _this43.resetDesc.bind(_this43);
+    _this43.onMetaDesc = _this43.onMetaDesc.bind(_this43);
+    _this43.onSubsUpdated = _this43.onSubsUpdated.bind(_this43);
+    _this43.onTagsUpdated = _this43.onTagsUpdated.bind(_this43);
+    _this43.handleFullNameUpdate = _this43.handleFullNameUpdate.bind(_this43);
+    _this43.handlePrivateUpdate = _this43.handlePrivateUpdate.bind(_this43);
+    _this43.handleImageChanged = _this43.handleImageChanged.bind(_this43);
+    _this43.handleMuted = _this43.handleMuted.bind(_this43);
+    _this43.handlePermissionsChanged = _this43.handlePermissionsChanged.bind(_this43);
+    _this43.handleLaunchPermissionsEditor = _this43.handleLaunchPermissionsEditor.bind(_this43);
+    _this43.handleHidePermissionsEditor = _this43.handleHidePermissionsEditor.bind(_this43);
+    _this43.handleShowAddMembers = _this43.handleShowAddMembers.bind(_this43);
+    _this43.handleHideAddMembers = _this43.handleHideAddMembers.bind(_this43);
+    _this43.handleMemberUpdateRequest = _this43.handleMemberUpdateRequest.bind(_this43);
+    _this43.handleLeave = _this43.handleLeave.bind(_this43);
+    _this43.handleMemberSelected = _this43.handleMemberSelected.bind(_this43);
+    _this43.handleMoreInfo = _this43.handleMoreInfo.bind(_this43);
+    _this43.handleTagsUpdated = _this43.handleTagsUpdated.bind(_this43);
+    _this43.handleContextMenu = _this43.handleContextMenu.bind(_this43);
+    return _this43;
   }
 
   // No need to separately handle component mount.
-  UNSAFE_componentWillReceiveProps(props) {
-    var topic = this.props.tinode.getTopic(props.topic);
-    if (!topic) {
-      return;
+
+
+  _createClass(InfoView, [{
+    key: 'UNSAFE_componentWillReceiveProps',
+    value: function UNSAFE_componentWillReceiveProps(props) {
+      var topic = this.props.tinode.getTopic(props.topic);
+      if (!topic) {
+        return;
+      }
+
+      if (this.onMetaDesc != topic.onMetaDesc) {
+        this.previousMetaDesc = topic.onMetaDesc;
+        topic.onMetaDesc = this.onMetaDesc;
+
+        this.previousSubsUpdated = topic.onSubsUpdated;
+        topic.onSubsUpdated = this.onSubsUpdated;
+
+        if (topic.getType() == "grp") {
+          this.previousTagsUpdated = topic.onTagsUpdated;
+          topic.onTagsUpdated = this.onTagsUpdated;
+        } else {
+          this.previousTagsUpdated = undefined;
+        }
+      }
+
+      if (this.state.topic != props.topic) {
+        this.setState({ topic: props.topic });
+        this.resetDesc(topic, props);
+        this.resetSubs(topic, props);
+      }
     }
-
-    if (this.onMetaDesc != topic.onMetaDesc) {
-      this.previousMetaDesc = topic.onMetaDesc;
-      topic.onMetaDesc = this.onMetaDesc;
-
-      this.previousSubsUpdated = topic.onSubsUpdated;
-      topic.onSubsUpdated = this.onSubsUpdated;
-
-      if (topic.getType() == "grp") {
-        this.previousTagsUpdated = topic.onTagsUpdated;
-        topic.onTagsUpdated = this.onTagsUpdated;
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      var topic = this.props.tinode.getTopic(this.props.topic);
+      if (!topic) {
+        return;
+      }
+      this.setState({ topic: null });
+      topic.onMetaDesc = this.previousMetaDesc;
+      topic.onSubsUpdated = this.previousSubsUpdated;
+      topic.onTagsUpdated = this.previousTagsUpdated;
+    }
+  }, {
+    key: 'resetSubs',
+    value: function resetSubs(topic, props) {
+      var newState = { contactList: [] };
+      if (topic.getType() == "p2p") {
+        // Fetch the other party in the p2p conversation.
+        // Topic may not be ready yet, so check if user is found.
+        var user2 = topic.subscriber(props.topic);
+        if (user2) {
+          newState.modeGiven2 = user2.acs.getGiven();
+          newState.modeWant2 = user2.acs.getWant();
+        }
       } else {
-        this.previousTagsUpdated = undefined;
+        topic.subscribers(function (sub) {
+          newState.contactList.push(sub);
+        }, this);
+      }
+
+      this.setState(newState);
+    }
+  }, {
+    key: 'resetDesc',
+    value: function resetDesc(topic, props) {
+      var defacs = topic.getDefaultAccess() || {};
+      var acs = topic.getAccessMode();
+      this.setState({
+        owner: acs && acs.isOwner(),
+        admin: acs && acs.isAdmin(),
+        sharer: acs && (acs.isAdmin() || acs.isSharer()),
+        muted: acs && acs.isMuted(),
+
+        fullName: topic.public ? topic.public.fn : undefined,
+        avatar: makeImageUrl(topic.public ? topic.public.photo : null),
+        private: topic.private ? topic.private.comment : null,
+        address: topic.name,
+        groupTopic: topic.getType() == "grp",
+        showMemberPanel: false,
+        access: acs ? acs.getMode() : undefined,
+        modeGiven: acs ? acs.getGiven() : undefined,
+        modeWant: acs ? acs.getWant() : undefined,
+        auth: defacs.auth,
+        anon: defacs.anon
+      });
+
+      if (topic.getType() === "grp" && acs && acs.isOwner()) {
+        // Requesting tags: owner is editing the topic.
+        topic.getMeta(topic.startMetaQuery().withTags().build());
       }
     }
-
-    if (this.state.topic != props.topic) {
-      this.setState({ topic: props.topic });
-      this.resetDesc(topic, props);
-      this.resetSubs(topic, props);
-    }
-  }
-
-  componentWillUnmount() {
-    var topic = this.props.tinode.getTopic(this.props.topic);
-    if (!topic) {
-      return;
-    }
-    this.setState({ topic: null });
-    topic.onMetaDesc = this.previousMetaDesc;
-    topic.onSubsUpdated = this.previousSubsUpdated;
-    topic.onTagsUpdated = this.previousTagsUpdated;
-  }
-
-  resetSubs(topic, props) {
-    var newState = { contactList: [] };
-    if (topic.getType() == "p2p") {
-      // Fetch the other party in the p2p conversation.
-      // Topic may not be ready yet, so check if user is found.
-      var user2 = topic.subscriber(props.topic);
-      if (user2) {
-        newState.modeGiven2 = user2.acs.getGiven();
-        newState.modeWant2 = user2.acs.getWant();
+  }, {
+    key: 'onMetaDesc',
+    value: function onMetaDesc(desc) {
+      var topic = this.props.tinode.getTopic(this.props.topic);
+      if (!topic) {
+        return;
       }
-    } else {
-      topic.subscribers(function (sub) {
-        newState.contactList.push(sub);
-      }, this);
+      this.resetDesc(topic, this.props);
+
+      if (this.previousMetaDesc && this.previousMetaDesc != this.onMetaDesc) {
+        this.previousMetaDesc(desc);
+      }
     }
+  }, {
+    key: 'onSubsUpdated',
+    value: function onSubsUpdated() {
+      var topic = this.props.tinode.getTopic(this.props.topic);
+      if (!topic) {
+        return;
+      }
+      this.resetSubs(topic, this.props);
 
-    this.setState(newState);
-  }
-
-  resetDesc(topic, props) {
-    var defacs = topic.getDefaultAccess() || {};
-    var acs = topic.getAccessMode();
-    this.setState({
-      owner: acs && acs.isOwner(),
-      admin: acs && acs.isAdmin(),
-      sharer: acs && (acs.isAdmin() || acs.isSharer()),
-      muted: acs && acs.isMuted(),
-
-      fullName: topic.public ? topic.public.fn : undefined,
-      avatar: makeImageUrl(topic.public ? topic.public.photo : null),
-      private: topic.private ? topic.private.comment : null,
-      address: topic.name,
-      groupTopic: topic.getType() == "grp",
-      showMemberPanel: false,
-      access: acs ? acs.getMode() : undefined,
-      modeGiven: acs ? acs.getGiven() : undefined,
-      modeWant: acs ? acs.getWant() : undefined,
-      auth: defacs.auth,
-      anon: defacs.anon
-    });
-
-    if (topic.getType() === "grp" && acs && acs.isOwner()) {
-      // Requesting tags: owner is editing the topic.
-      topic.getMeta(topic.startMetaQuery().withTags().build());
+      if (this.previousSubsUpdated && this.previousSubsUpdated != this.onSubsUpdated) {
+        this.previousSubsUpdated();
+      }
     }
-  }
+  }, {
+    key: 'onTagsUpdated',
+    value: function onTagsUpdated(tags) {
+      this.setState({ tags: tags });
 
-  onMetaDesc(desc) {
-    var topic = this.props.tinode.getTopic(this.props.topic);
-    if (!topic) {
-      return;
+      if (this.previousTagsUpdated && this.previousTagsUpdated != this.onTagsUpdated) {
+        this.previousTagsUpdated();
+      }
     }
-    this.resetDesc(topic, this.props);
-
-    if (this.previousMetaDesc && this.previousMetaDesc != this.onMetaDesc) {
-      this.previousMetaDesc(desc);
+  }, {
+    key: 'handleFullNameUpdate',
+    value: function handleFullNameUpdate(fn) {
+      if (this.state.fullName !== fn) {
+        this.setState({ fullName: fn });
+        this.props.onTopicDescUpdate(this.props.topic, vcard(fn, this.state.avatar), null);
+      }
     }
-  }
-
-  onSubsUpdated() {
-    var topic = this.props.tinode.getTopic(this.props.topic);
-    if (!topic) {
-      return;
+  }, {
+    key: 'handlePrivateUpdate',
+    value: function handlePrivateUpdate(priv) {
+      if (this.state.priv !== priv) {
+        this.setState({ private: priv });
+        this.props.onTopicDescUpdate(this.props.topic, null, priv);
+      }
     }
-    this.resetSubs(topic, this.props);
-
-    if (this.previousSubsUpdated && this.previousSubsUpdated != this.onSubsUpdated) {
-      this.previousSubsUpdated();
+  }, {
+    key: 'handleImageChanged',
+    value: function handleImageChanged(img) {
+      this.setState({ avatar: img });
+      this.props.onTopicDescUpdate(this.props.topic, vcard(this.state.fullName, img), null);
     }
-  }
-
-  onTagsUpdated(tags) {
-    this.setState({ tags: tags });
-
-    if (this.previousTagsUpdated && this.previousTagsUpdated != this.onTagsUpdated) {
-      this.previousTagsUpdated();
+  }, {
+    key: 'handleMuted',
+    value: function handleMuted(ignored, checked) {
+      this.setState({ muted: checked });
+      this.props.onChangePermissions(this.props.topic, checked ? "-P" : "+P");
     }
-  }
+  }, {
+    key: 'handlePermissionsChanged',
+    value: function handlePermissionsChanged(perm) {
+      switch (this.state.showPermissionEditorFor) {
+        case 'auth':
+          this.props.onTopicDescUpdate(this.props.topic, null, null, { auth: perm });
+          break;
+        case 'anon':
+          this.props.onTopicDescUpdate(this.props.topic, null, null, { anon: perm });
+          break;
+        case 'mode':
+        case 'want':
+          this.props.onChangePermissions(this.props.topic, perm);
+          break;
+        case 'given':
+          this.props.onChangePermissions(this.props.topic, perm, this.props.topic);
+          break;
+        case 'user':
+          this.props.onChangePermissions(this.props.topic, perm, this.state.userPermissionsEdited);
+          break;
+      }
 
-  handleFullNameUpdate(fn) {
-    if (this.state.fullName !== fn) {
-      this.setState({ fullName: fn });
-      this.props.onTopicDescUpdate(this.props.topic, vcard(fn, this.state.avatar), null);
+      this.setState({ showPermissionEditorFor: undefined });
     }
-  }
-
-  handlePrivateUpdate(priv) {
-    if (this.state.priv !== priv) {
-      this.setState({ private: priv });
-      this.props.onTopicDescUpdate(this.props.topic, null, priv);
-    }
-  }
-
-  handleImageChanged(img) {
-    this.setState({ avatar: img });
-    this.props.onTopicDescUpdate(this.props.topic, vcard(this.state.fullName, img), null);
-  }
-
-  handleMuted(ignored, checked) {
-    this.setState({ muted: checked });
-    this.props.onChangePermissions(this.props.topic, checked ? "-P" : "+P");
-  }
-
-  handlePermissionsChanged(perm) {
-    switch (this.state.showPermissionEditorFor) {
-      case 'auth':
-        this.props.onTopicDescUpdate(this.props.topic, null, null, { auth: perm });
-        break;
-      case 'anon':
-        this.props.onTopicDescUpdate(this.props.topic, null, null, { anon: perm });
-        break;
-      case 'mode':
-      case 'want':
-        this.props.onChangePermissions(this.props.topic, perm);
-        break;
-      case 'given':
-        this.props.onChangePermissions(this.props.topic, perm, this.props.topic);
-        break;
-      case 'user':
-        this.props.onChangePermissions(this.props.topic, perm, this.state.userPermissionsEdited);
-        break;
-    }
-
-    this.setState({ showPermissionEditorFor: undefined });
-  }
-
-  handleLaunchPermissionsEditor(which, uid) {
-    var toEdit, toCompare, toSkip, titleEdit, titleCompare, userTitle, userAvatar;
-    switch (which) {
-      case 'mode':
-        toEdit = this.state.access;
-        break;
-      case 'want':
-        toEdit = this.state.modeWant;
-        toCompare = this.state.modeGiven;
-        toSkip = this.state.groupTopic ? 'O' : 'ASDO';
-        titleEdit = 'Requested';
-        titleCompare = 'Granted';
-        break;
-      case 'given':
-        toEdit = this.state.modeGiven2;
-        toCompare = this.state.modeWant2;
-        toSkip = this.state.groupTopic ? this.state.owner ? '' : 'O' : 'ASDO';
-        titleEdit = 'Granted';
-        titleCompare = 'Requested';
-        break;
-      case 'auth':
-        toEdit = this.state.auth;
-        toSkip = 'O';
-        break;
-      case 'anon':
-        toEdit = this.state.anon;
-        toSkip = 'O';
-        break;
-      case 'user':
-        {
-          var topic = this.props.tinode.getTopic(this.props.topic);
-          if (!topic) {
-            return;
-          }
-          var user = topic.subscriber(uid);
-          if (!user || !user.acs) {
-            return;
-          }
-          toEdit = user.acs.getGiven();
-          toCompare = user.acs.getWant();
-          toSkip = this.state.owner ? '' : 'O';
+  }, {
+    key: 'handleLaunchPermissionsEditor',
+    value: function handleLaunchPermissionsEditor(which, uid) {
+      var toEdit, toCompare, toSkip, titleEdit, titleCompare, userTitle, userAvatar;
+      switch (which) {
+        case 'mode':
+          toEdit = this.state.access;
+          break;
+        case 'want':
+          toEdit = this.state.modeWant;
+          toCompare = this.state.modeGiven;
+          toSkip = this.state.groupTopic ? 'O' : 'ASDO';
+          titleEdit = 'Requested';
+          titleCompare = 'Granted';
+          break;
+        case 'given':
+          toEdit = this.state.modeGiven2;
+          toCompare = this.state.modeWant2;
+          toSkip = this.state.groupTopic ? this.state.owner ? '' : 'O' : 'ASDO';
           titleEdit = 'Granted';
           titleCompare = 'Requested';
-          if (user.public) {
-            userTitle = user.public.fn;
-            userAvatar = user.public.photo;
-          }
           break;
-        }
-      default:
-        console.log("Unknown permission editing mode '" + which + "'");
-        break;
+        case 'auth':
+          toEdit = this.state.auth;
+          toSkip = 'O';
+          break;
+        case 'anon':
+          toEdit = this.state.anon;
+          toSkip = 'O';
+          break;
+        case 'user':
+          {
+            var topic = this.props.tinode.getTopic(this.props.topic);
+            if (!topic) {
+              return;
+            }
+            var user = topic.subscriber(uid);
+            if (!user || !user.acs) {
+              return;
+            }
+            toEdit = user.acs.getGiven();
+            toCompare = user.acs.getWant();
+            toSkip = this.state.owner ? '' : 'O';
+            titleEdit = 'Granted';
+            titleCompare = 'Requested';
+            if (user.public) {
+              userTitle = user.public.fn;
+              userAvatar = user.public.photo;
+            }
+            break;
+          }
+        default:
+          console.log("Unknown permission editing mode '" + which + "'");
+          break;
+      }
+      this.setState({
+        showPermissionEditorFor: which,
+        userPermissionsEdited: uid,
+        userPermissionsTitle: userTitle,
+        userPermissionsAvatar: userAvatar,
+        editedPermissions: toEdit,
+        immutablePermissions: toCompare,
+        editedPermissionsTitle: titleEdit,
+        immutablePermissionsTitle: titleCompare,
+        editedPermissionsSkipped: toSkip
+      });
     }
-    this.setState({
-      showPermissionEditorFor: which,
-      userPermissionsEdited: uid,
-      userPermissionsTitle: userTitle,
-      userPermissionsAvatar: userAvatar,
-      editedPermissions: toEdit,
-      immutablePermissions: toCompare,
-      editedPermissionsTitle: titleEdit,
-      immutablePermissionsTitle: titleCompare,
-      editedPermissionsSkipped: toSkip
-    });
-  }
-
-  handleHidePermissionsEditor() {
-    this.setState({ showPermissionEditorFor: undefined });
-  }
-
-  handleShowAddMembers() {
-    this.props.onInitFind();
-    this.setState({ showMemberPanel: true });
-  }
-
-  handleHideAddMembers() {
-    this.setState({ showMemberPanel: false });
-  }
-
-  handleMemberUpdateRequest(members, added, removed) {
-    this.props.onMemberUpdateRequest(this.props.topic, added, removed);
-    this.setState({ showMemberPanel: false });
-  }
-
-  handleLeave() {
-    this.props.onLeaveTopic(this.props.topic);
-  }
-
-  handleMemberSelected(uid) {
-    this.setState({ selectedContact: uid });
-  }
-
-  handleMoreInfo(open) {
-    this.setState({ moreInfoExpanded: open });
-  }
-
-  handleTagsUpdated(tags) {
-    if (!arrayEqual(this.state.tags.slice(0), tags.slice(0))) {
-      this.props.onTopicTagsUpdate(this.props.topic, tags);
+  }, {
+    key: 'handleHidePermissionsEditor',
+    value: function handleHidePermissionsEditor() {
+      this.setState({ showPermissionEditorFor: undefined });
     }
-  }
-
-  handleContextMenu(params) {
-    var instance = this;
-    var topic = this.props.tinode.getTopic(this.props.topic);
-    if (!topic) {
-      return;
+  }, {
+    key: 'handleShowAddMembers',
+    value: function handleShowAddMembers() {
+      this.props.onInitFind();
+      this.setState({ showMemberPanel: true });
     }
-    var user = topic.subscriber(params.topicName);
-    if (!user || !user.acs) {
-      return;
+  }, {
+    key: 'handleHideAddMembers',
+    value: function handleHideAddMembers() {
+      this.setState({ showMemberPanel: false });
     }
+  }, {
+    key: 'handleMemberUpdateRequest',
+    value: function handleMemberUpdateRequest(members, added, removed) {
+      this.props.onMemberUpdateRequest(this.props.topic, added, removed);
+      this.setState({ showMemberPanel: false });
+    }
+  }, {
+    key: 'handleLeave',
+    value: function handleLeave() {
+      this.props.onLeaveTopic(this.props.topic);
+    }
+  }, {
+    key: 'handleMemberSelected',
+    value: function handleMemberSelected(uid) {
+      this.setState({ selectedContact: uid });
+    }
+  }, {
+    key: 'handleMoreInfo',
+    value: function handleMoreInfo(open) {
+      this.setState({ moreInfoExpanded: open });
+    }
+  }, {
+    key: 'handleTagsUpdated',
+    value: function handleTagsUpdated(tags) {
+      if (!arrayEqual(this.state.tags.slice(0), tags.slice(0))) {
+        this.props.onTopicTagsUpdate(this.props.topic, tags);
+      }
+    }
+  }, {
+    key: 'handleContextMenu',
+    value: function handleContextMenu(params) {
+      var instance = this;
+      var topic = this.props.tinode.getTopic(this.props.topic);
+      if (!topic) {
+        return;
+      }
+      var user = topic.subscriber(params.topicName);
+      if (!user || !user.acs) {
+        return;
+      }
 
-    var menuItems = [{ title: "Edit permissions", handler: function () {
-        instance.handleLaunchPermissionsEditor("user", params.topicName);
-      } }, "member_delete", user.acs.isMuted() ? "member_unmute" : "member_mute", user.acs.isJoiner() ? "member_block" : "member_unblock"];
-    this.props.showContextMenu({
-      topicName: this.props.topic,
-      x: params.x,
-      y: params.y,
-      user: params.topicName }, menuItems);
-  }
+      var menuItems = [{ title: "Edit permissions", handler: function handler() {
+          instance.handleLaunchPermissionsEditor("user", params.topicName);
+        } }, "member_delete", user.acs.isMuted() ? "member_unmute" : "member_mute", user.acs.isJoiner() ? "member_block" : "member_unblock"];
+      this.props.showContextMenu({
+        topicName: this.props.topic,
+        x: params.x,
+        y: params.y,
+        user: params.topicName }, menuItems);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _React$createElement;
 
-  render() {
-    return React.createElement(
-      'div',
-      { id: 'info-view' },
-      React.createElement(
+      return React.createElement(
         'div',
-        { className: 'caption-panel', id: 'info-caption-panel' },
+        { id: 'info-view' },
         React.createElement(
           'div',
-          { className: 'panel-title', id: 'info-title' },
-          'Info'
-        ),
-        React.createElement(
-          'div',
-          null,
-          React.createElement(MenuCancel, { onCancel: this.props.onCancel })
-        )
-      ),
-      this.props.displayMobile ? React.createElement(ErrorPanel, {
-        level: this.props.errorLevel,
-        text: this.props.errorText,
-        onClearError: this.props.onError }) : null,
-      this.state.showMemberPanel ? React.createElement(GroupManager, {
-        members: this.state.contactList,
-        requiredMember: this.props.myUserId,
-        myUserId: this.props.myUserId,
-        contacts: this.props.searchableContacts,
-        onCancel: this.handleHideAddMembers,
-        onSubmit: this.handleMemberUpdateRequest }) : this.state.showPermissionEditorFor ? React.createElement(PermissionsEditor, {
-        mode: this.state.editedPermissions,
-        compare: this.state.immutablePermissions,
-        skip: this.state.editedPermissionsSkipped,
-        modeTitle: this.state.editedPermissionsTitle,
-        compareTitle: this.state.immutablePermissionsTitle,
-        userTitle: this.state.userPermissionsTitle,
-        item: this.state.userPermissionsEdited,
-        userAvatar: this.state.userPermissionsAvatar,
-        skip: this.state.editedPermissionsSkipped,
-        onSubmit: this.handlePermissionsChanged,
-        onCancel: this.handleHidePermissionsEditor
-      }) : React.createElement(
-        'div',
-        { id: 'info-view-content', className: 'scrollable-panel' },
-        React.createElement(
-          'div',
-          { className: 'panel-form-row' },
+          { className: 'caption-panel', id: 'info-caption-panel' },
           React.createElement(
             'div',
-            { className: 'panel-form-column' },
-            React.createElement(
-              'div',
-              null,
-              React.createElement(
-                'label',
-                { className: 'small' },
-                'Name'
-              )
-            ),
-            React.createElement(
-              'div',
-              null,
-              React.createElement(InPlaceEdit, {
-                placeholder: 'Group name',
-                readOnly: !this.state.owner,
-                value: this.state.fullName,
-                onFinished: this.handleFullNameUpdate })
-            ),
-            React.createElement(
-              'div',
-              null,
-              React.createElement(
-                'label',
-                { className: 'small' },
-                'Private comment'
-              )
-            ),
-            React.createElement(
-              'div',
-              null,
-              React.createElement(InPlaceEdit, {
-                placeholder: 'Visible to you only',
-                value: this.state.private,
-                onFinished: this.handlePrivateUpdate })
-            )
+            { className: 'panel-title', id: 'info-title' },
+            'Info'
           ),
-          React.createElement(AvatarUpload, {
-            avatar: this.state.avatar,
-            readOnly: !this.state.owner,
-            uid: this.props.topic,
-            title: this.state.fullName,
-            onImageChanged: this.handleImageChanged,
-            onError: this.props.onError })
+          React.createElement(
+            'div',
+            null,
+            React.createElement(MenuCancel, { onCancel: this.props.onCancel })
+          )
         ),
-        React.createElement('div', { className: 'hr' }),
-        React.createElement(
+        this.props.displayMobile ? React.createElement(ErrorPanel, {
+          level: this.props.errorLevel,
+          text: this.props.errorText,
+          onClearError: this.props.onError }) : null,
+        this.state.showMemberPanel ? React.createElement(GroupManager, {
+          members: this.state.contactList,
+          requiredMember: this.props.myUserId,
+          myUserId: this.props.myUserId,
+          contacts: this.props.searchableContacts,
+          onCancel: this.handleHideAddMembers,
+          onSubmit: this.handleMemberUpdateRequest }) : this.state.showPermissionEditorFor ? React.createElement(PermissionsEditor, (_React$createElement = {
+          mode: this.state.editedPermissions,
+          compare: this.state.immutablePermissions,
+          skip: this.state.editedPermissionsSkipped,
+          modeTitle: this.state.editedPermissionsTitle,
+          compareTitle: this.state.immutablePermissionsTitle,
+          userTitle: this.state.userPermissionsTitle,
+          item: this.state.userPermissionsEdited,
+          userAvatar: this.state.userPermissionsAvatar
+        }, _defineProperty(_React$createElement, 'skip', this.state.editedPermissionsSkipped), _defineProperty(_React$createElement, 'onSubmit', this.handlePermissionsChanged), _defineProperty(_React$createElement, 'onCancel', this.handleHidePermissionsEditor), _React$createElement)) : React.createElement(
           'div',
-          { className: 'panel-form-column' },
+          { id: 'info-view-content', className: 'scrollable-panel' },
           React.createElement(
             'div',
             { className: 'panel-form-row' },
             React.createElement(
-              'label',
-              null,
-              'Muted:'
+              'div',
+              { className: 'panel-form-column' },
+              React.createElement(
+                'div',
+                null,
+                React.createElement(
+                  'label',
+                  { className: 'small' },
+                  'Name'
+                )
+              ),
+              React.createElement(
+                'div',
+                null,
+                React.createElement(InPlaceEdit, {
+                  placeholder: 'Group name',
+                  readOnly: !this.state.owner,
+                  value: this.state.fullName,
+                  onFinished: this.handleFullNameUpdate })
+              ),
+              React.createElement(
+                'div',
+                null,
+                React.createElement(
+                  'label',
+                  { className: 'small' },
+                  'Private comment'
+                )
+              ),
+              React.createElement(
+                'div',
+                null,
+                React.createElement(InPlaceEdit, {
+                  placeholder: 'Visible to you only',
+                  value: this.state.private,
+                  onFinished: this.handlePrivateUpdate })
+              )
             ),
-            React.createElement(CheckBox, { name: 'P', checked: this.state.muted,
-              onChange: this.handleMuted })
+            React.createElement(AvatarUpload, {
+              avatar: this.state.avatar,
+              readOnly: !this.state.owner,
+              uid: this.props.topic,
+              title: this.state.fullName,
+              onImageChanged: this.handleImageChanged,
+              onError: this.props.onError })
           ),
-          React.createElement(MoreButton, {
-            title: 'More',
-            open: this.state.moreInfoExpanded,
-            onToggle: this.handleMoreInfo }),
-          this.state.moreInfoExpanded ? React.createElement(
+          React.createElement('div', { className: 'hr' }),
+          React.createElement(
             'div',
             { className: 'panel-form-column' },
             React.createElement(
@@ -31872,150 +32491,194 @@ class InfoView extends React.Component {
               React.createElement(
                 'label',
                 null,
-                'Address:'
+                'Muted:'
               ),
-              React.createElement(
-                'tt',
-                null,
-                this.state.address
-              )
+              React.createElement(CheckBox, { name: 'P', checked: this.state.muted,
+                onChange: this.handleMuted })
             ),
-            this.state.groupTopic ? React.createElement(
+            React.createElement(MoreButton, {
+              title: 'More',
+              open: this.state.moreInfoExpanded,
+              onToggle: this.handleMoreInfo }),
+            this.state.moreInfoExpanded ? React.createElement(
               'div',
-              { className: 'panel-form-row' },
-              React.createElement(
-                'label',
-                null,
-                'Your permissions:'
-              ),
-              React.createElement(
-                'tt',
-                { className: 'clickable',
-                  onClick: this.handleLaunchPermissionsEditor.bind(this, 'want') },
-                this.state.access
-              )
-            ) : React.createElement(
-              'div',
-              null,
+              { className: 'panel-form-column' },
               React.createElement(
                 'div',
-                null,
+                { className: 'panel-form-row' },
                 React.createElement(
                   'label',
-                  { className: 'small' },
-                  'Permissions:'
+                  null,
+                  'Address:'
+                ),
+                React.createElement(
+                  'tt',
+                  null,
+                  this.state.address
                 )
               ),
-              React.createElement(
+              this.state.groupTopic ? React.createElement(
                 'div',
-                { className: 'quoted' },
+                { className: 'panel-form-row' },
+                React.createElement(
+                  'label',
+                  null,
+                  'Your permissions:'
+                ),
+                React.createElement(
+                  'tt',
+                  { className: 'clickable',
+                    onClick: this.handleLaunchPermissionsEditor.bind(this, 'want') },
+                  this.state.access
+                )
+              ) : React.createElement(
+                'div',
+                null,
                 React.createElement(
                   'div',
                   null,
-                  'Yours: \xA0',
                   React.createElement(
-                    'tt',
-                    { className: 'clickable',
-                      onClick: this.handleLaunchPermissionsEditor.bind(this, 'want') },
-                    this.state.access
+                    'label',
+                    { className: 'small' },
+                    'Permissions:'
                   )
                 ),
                 React.createElement(
                   'div',
-                  null,
-                  this.state.fullName,
-                  '\u2032s: \xA0',
+                  { className: 'quoted' },
                   React.createElement(
-                    'tt',
-                    { className: 'clickable',
-                      onClick: this.handleLaunchPermissionsEditor.bind(this, 'given') },
-                    this.state.modeGiven2
+                    'div',
+                    null,
+                    'Yours: \xA0',
+                    React.createElement(
+                      'tt',
+                      { className: 'clickable',
+                        onClick: this.handleLaunchPermissionsEditor.bind(this, 'want') },
+                      this.state.access
+                    )
+                  ),
+                  React.createElement(
+                    'div',
+                    null,
+                    this.state.fullName,
+                    '\u2032s: \xA0',
+                    React.createElement(
+                      'tt',
+                      { className: 'clickable',
+                        onClick: this.handleLaunchPermissionsEditor.bind(this, 'given') },
+                      this.state.modeGiven2
+                    )
                   )
                 )
-              )
-            ),
-            this.state.sharer && (this.state.auth || this.state.anon) ? React.createElement(
-              'div',
-              null,
-              React.createElement(
+              ),
+              this.state.sharer && (this.state.auth || this.state.anon) ? React.createElement(
                 'div',
                 null,
                 React.createElement(
-                  'label',
-                  { className: 'small' },
-                  'Default access mode:'
-                )
-              ),
-              React.createElement(
-                'div',
-                { className: 'quoted' },
-                React.createElement(
                   'div',
                   null,
-                  'Auth: ',
-                  this.state.admin ? React.createElement(
-                    'tt',
-                    { className: 'clickable',
-                      onClick: this.handleLaunchPermissionsEditor.bind(this, 'auth') },
-                    this.state.auth
-                  ) : React.createElement(
-                    'tt',
-                    null,
-                    this.state.auth
+                  React.createElement(
+                    'label',
+                    { className: 'small' },
+                    'Default access mode:'
                   )
                 ),
                 React.createElement(
                   'div',
-                  null,
-                  'Anon: ',
-                  this.state.admin ? React.createElement(
-                    'tt',
-                    { className: 'clickable',
-                      onClick: this.handleLaunchPermissionsEditor.bind(this, 'anon') },
-                    this.state.anon
-                  ) : React.createElement(
-                    'tt',
+                  { className: 'quoted' },
+                  React.createElement(
+                    'div',
                     null,
-                    this.state.anon
+                    'Auth: ',
+                    this.state.admin ? React.createElement(
+                      'tt',
+                      { className: 'clickable',
+                        onClick: this.handleLaunchPermissionsEditor.bind(this, 'auth') },
+                      this.state.auth
+                    ) : React.createElement(
+                      'tt',
+                      null,
+                      this.state.auth
+                    )
+                  ),
+                  React.createElement(
+                    'div',
+                    null,
+                    'Anon: ',
+                    this.state.admin ? React.createElement(
+                      'tt',
+                      { className: 'clickable',
+                        onClick: this.handleLaunchPermissionsEditor.bind(this, 'anon') },
+                      this.state.anon
+                    ) : React.createElement(
+                      'tt',
+                      null,
+                      this.state.anon
+                    )
                   )
                 )
-              )
+              ) : null
             ) : null
-          ) : null
-        ),
-        React.createElement('div', { className: 'hr' }),
-        this.state.owner ? React.createElement(TagManager, {
-          title: 'Tags',
-          tags: this.state.tags,
-          activated: false,
-          onSubmit: this.handleTagsUpdated }) : null,
-        this.state.owner ? React.createElement('div', { className: 'hr' }) : null,
-        this.state.groupTopic ? React.createElement(
-          'div',
-          { className: 'panel-form-column' },
-          React.createElement(
+          ),
+          React.createElement('div', { className: 'hr' }),
+          this.state.owner ? React.createElement(TagManager, {
+            title: 'Tags',
+            tags: this.state.tags,
+            activated: false,
+            onSubmit: this.handleTagsUpdated }) : null,
+          this.state.owner ? React.createElement('div', { className: 'hr' }) : null,
+          this.state.groupTopic ? React.createElement(
+            'div',
+            { className: 'panel-form-column' },
+            React.createElement(
+              'div',
+              { className: 'panel-form-row' },
+              React.createElement(
+                'label',
+                { className: 'small' },
+                'Group members:'
+              )
+            ),
+            React.createElement(
+              'div',
+              { className: 'panel-form-row' },
+              this.state.sharer ? React.createElement(
+                'a',
+                { href: 'javascript:;', className: 'flat-button', onClick: this.handleShowAddMembers },
+                React.createElement(
+                  'i',
+                  { className: 'material-icons' },
+                  'person_add'
+                ),
+                ' Add members'
+              ) : null,
+              !this.state.owner ? React.createElement(
+                'a',
+                { href: 'javascript:;', className: 'red flat-button', onClick: this.handleLeave },
+                React.createElement(
+                  'i',
+                  { className: 'material-icons' },
+                  'exit_to_app'
+                ),
+                ' Leave'
+              ) : null
+            ),
+            React.createElement(ContactList, {
+              contacts: this.state.contactList,
+              myUserId: this.props.myUserId,
+              emptyListMessage: 'No members',
+              topicSelected: this.state.selectedContact,
+              showOnline: false,
+              showUnread: false,
+              showMode: true,
+              noScroll: true,
+              onTopicSelected: this.handleMemberSelected,
+              showContextMenu: this.state.admin ? this.handleContextMenu : false
+            })
+          ) : React.createElement(
             'div',
             { className: 'panel-form-row' },
             React.createElement(
-              'label',
-              { className: 'small' },
-              'Group members:'
-            )
-          ),
-          React.createElement(
-            'div',
-            { className: 'panel-form-row' },
-            this.state.sharer ? React.createElement(
-              'a',
-              { href: 'javascript:;', className: 'flat-button', onClick: this.handleShowAddMembers },
-              React.createElement(
-                'i',
-                { className: 'material-icons' },
-                'person_add'
-              ),
-              ' Add members'
-            ) : null,
-            !this.state.owner ? React.createElement(
               'a',
               { href: 'javascript:;', className: 'red flat-button', onClick: this.handleLeave },
               React.createElement(
@@ -32024,376 +32687,425 @@ class InfoView extends React.Component {
                 'exit_to_app'
               ),
               ' Leave'
-            ) : null
-          ),
-          React.createElement(ContactList, {
-            contacts: this.state.contactList,
-            myUserId: this.props.myUserId,
-            emptyListMessage: 'No members',
-            topicSelected: this.state.selectedContact,
-            showOnline: false,
-            showUnread: false,
-            showMode: true,
-            noScroll: true,
-            onTopicSelected: this.handleMemberSelected,
-            showContextMenu: this.state.admin ? this.handleContextMenu : false
-          })
-        ) : React.createElement(
-          'div',
-          { className: 'panel-form-row' },
-          React.createElement(
-            'a',
-            { href: 'javascript:;', className: 'red flat-button', onClick: this.handleLeave },
-            React.createElement(
-              'i',
-              { className: 'material-icons' },
-              'exit_to_app'
-            ),
-            ' Leave'
+            )
           )
         )
-      )
-    );
-  }
-};
+      );
+    }
+  }]);
+
+  return InfoView;
+}(React.Component);
+
+;
 /* END InfoView */
 
 /* BEGIN Conversation panel */
-class ChatMessage extends React.Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
+var ChatMessage = function (_React$Component17) {
+  _inherits(ChatMessage, _React$Component17);
+
+  function ChatMessage(props) {
+    _classCallCheck(this, ChatMessage);
+
+    var _this44 = _possibleConstructorReturn(this, (ChatMessage.__proto__ || Object.getPrototypeOf(ChatMessage)).call(this, props));
+
+    _this44.state = {
       progress: 0
     };
 
     if (props.uploader) {
-      props.uploader.onProgress = this.handleProgress.bind(this);
+      props.uploader.onProgress = _this44.handleProgress.bind(_this44);
     }
 
-    this.handlePreviewImage = this.handlePreviewImage.bind(this);
-    this.handleContextClick = this.handleContextClick.bind(this);
-    this.handleCancelUpload = this.handleCancelUpload.bind(this);
+    _this44.handlePreviewImage = _this44.handlePreviewImage.bind(_this44);
+    _this44.handleContextClick = _this44.handleContextClick.bind(_this44);
+    _this44.handleCancelUpload = _this44.handleCancelUpload.bind(_this44);
+    return _this44;
   }
 
-  handlePreviewImage(e) {
-    e.preventDefault();
-    this.props.onImagePreview({
-      url: e.target.src,
-      filename: e.target.title,
-      width: e.target.dataset.width,
-      height: e.target.dataset.height,
-      size: e.target.dataset.size,
-      type: e.target.dataset.mime
-    });
-  }
+  _createClass(ChatMessage, [{
+    key: 'handlePreviewImage',
+    value: function handlePreviewImage(e) {
+      e.preventDefault();
+      this.props.onImagePreview({
+        url: e.target.src,
+        filename: e.target.title,
+        width: e.target.dataset.width,
+        height: e.target.dataset.height,
+        size: e.target.dataset.size,
+        type: e.target.dataset.mime
+      });
+    }
+  }, {
+    key: 'handleContextClick',
+    value: function handleContextClick(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.props.showContextMenu({ seq: this.props.seq, y: e.pageY, x: e.pageX });
+    }
+  }, {
+    key: 'handleProgress',
+    value: function handleProgress(ratio) {
+      this.setState({ progress: ratio });
+    }
+  }, {
+    key: 'handleCancelUpload',
+    value: function handleCancelUpload() {
+      this.props.uploader.cancel();
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var elementKey = 0;
 
-  handleContextClick(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.props.showContextMenu({ seq: this.props.seq, y: e.pageY, x: e.pageX });
-  }
-
-  handleProgress(ratio) {
-    this.setState({ progress: ratio });
-  }
-
-  handleCancelUpload() {
-    this.props.uploader.cancel();
-  }
-
-  render() {
-    var elementKey = 0;
-
-    var formatter = function (style, data, values) {
-      elementKey += 1;
-      var el = Drafty.tagName(style);
-      if (el) {
-        var attr = Drafty.attrValue(style, data) || {};
-        attr.key = elementKey;
-        if (style == "IM") {
-          // Additional processing for images
-          var dim = fitImageSize(data.width, data.height, Math.min(this.props.viewportWidth - REM_SIZE * 4, REM_SIZE * 36), REM_SIZE * 24, false);
-          attr.className = "inline-image";
-          attr.style = dim ? { width: dim.dstWidth + "px", height: dim.dstHeight + "px" } : null;
-          attr.onClick = this.handlePreviewImage;
+      var formatter = function formatter(style, data, values) {
+        elementKey += 1;
+        var el = Drafty.tagName(style);
+        if (el) {
+          var attr = Drafty.attrValue(style, data) || {};
+          attr.key = elementKey;
+          if (style == "IM") {
+            // Additional processing for images
+            var dim = fitImageSize(data.width, data.height, Math.min(this.props.viewportWidth - REM_SIZE * 4, REM_SIZE * 36), REM_SIZE * 24, false);
+            attr.className = "inline-image";
+            attr.style = dim ? { width: dim.dstWidth + "px", height: dim.dstHeight + "px" } : null;
+            attr.onClick = this.handlePreviewImage;
+          }
+          return React.createElement(el, attr, values);
+        } else {
+          return values;
         }
-        return React.createElement(el, attr, values);
-      } else {
-        return values;
-      }
-    };
+      };
 
-    var sideClass = this.props.sequence + " " + (this.props.response ? "left" : "right");
-    var bubbleClass = this.props.sequence == "single" || this.props.sequence == "last" ? "bubble tip" : "bubble";
-    var avatar = this.props.userAvatar || true;
-    var fullDisplay = this.props.userFrom && this.props.response && (this.props.sequence == "single" || this.props.sequence == "last");
+      var sideClass = this.props.sequence + " " + (this.props.response ? "left" : "right");
+      var bubbleClass = this.props.sequence == "single" || this.props.sequence == "last" ? "bubble tip" : "bubble";
+      var avatar = this.props.userAvatar || true;
+      var fullDisplay = this.props.userFrom && this.props.response && (this.props.sequence == "single" || this.props.sequence == "last");
 
-    var content = this.props.content;
-    var attachments = [];
-    if (this.props.mimeType == Drafty.getContentType()) {
-      Drafty.attachments(content, function (att, i) {
-        attachments.push(React.createElement(Attachment, {
-          tinode: this.props.tinode,
-          downloadUrl: Drafty.getDownloadUrl(att),
-          filename: att.name, uploader: Drafty.isUploading(att),
-          mimetype: att.mime, size: Drafty.getEntitySize(att),
-          progress: this.state.progress,
-          onCancelUpload: this.handleCancelUpload,
-          onError: this.props.onError,
-          key: i }));
-      }, this);
-      content = React.createElement('span', null, Drafty.format(content, formatter, this));
-    } else if (typeof content != 'string') {
-      content = React.createElement(
-        'span',
-        null,
-        React.createElement(
-          'i',
-          { className: 'material-icons' },
-          'error_outline'
-        ),
-        ' ',
-        React.createElement(
-          'i',
+      var content = this.props.content;
+      var attachments = [];
+      if (this.props.mimeType == Drafty.getContentType()) {
+        Drafty.attachments(content, function (att, i) {
+          attachments.push(React.createElement(Attachment, {
+            tinode: this.props.tinode,
+            downloadUrl: Drafty.getDownloadUrl(att),
+            filename: att.name, uploader: Drafty.isUploading(att),
+            mimetype: att.mime, size: Drafty.getEntitySize(att),
+            progress: this.state.progress,
+            onCancelUpload: this.handleCancelUpload,
+            onError: this.props.onError,
+            key: i }));
+        }, this);
+        content = React.createElement('span', null, Drafty.format(content, formatter, this));
+      } else if (typeof content != 'string') {
+        content = React.createElement(
+          'span',
           null,
-          'invalid content'
+          React.createElement(
+            'i',
+            { className: 'material-icons' },
+            'error_outline'
+          ),
+          ' ',
+          React.createElement(
+            'i',
+            null,
+            'invalid content'
+          )
+        );
+      }
+
+      return React.createElement(
+        'li',
+        { className: sideClass },
+        this.props.userFrom && this.props.response ? React.createElement(
+          'div',
+          { className: 'avatar-box' },
+          fullDisplay ? React.createElement(LetterTile, {
+            topic: this.props.userFrom,
+            title: this.props.userName,
+            avatar: avatar }) : null
+        ) : null,
+        React.createElement(
+          'div',
+          null,
+          React.createElement(
+            'div',
+            { className: bubbleClass },
+            React.createElement(
+              'div',
+              { className: 'message-content' },
+              content,
+              attachments,
+              React.createElement(ReceivedMarker, {
+                timestamp: this.props.timestamp,
+                received: this.props.received })
+            ),
+            React.createElement(
+              'span',
+              { className: 'menuTrigger' },
+              React.createElement(
+                'a',
+                { href: 'javascript:;', onClick: this.handleContextClick },
+                React.createElement(
+                  'i',
+                  { className: 'material-icons' },
+                  'expand_more'
+                )
+              )
+            )
+          ),
+          fullDisplay ? React.createElement(
+            'div',
+            { className: 'author' },
+            this.props.userName
+          ) : null
         )
       );
     }
+  }]);
 
-    return React.createElement(
-      'li',
-      { className: sideClass },
-      this.props.userFrom && this.props.response ? React.createElement(
-        'div',
-        { className: 'avatar-box' },
-        fullDisplay ? React.createElement(LetterTile, {
-          topic: this.props.userFrom,
-          title: this.props.userName,
-          avatar: avatar }) : null
-      ) : null,
-      React.createElement(
-        'div',
-        null,
-        React.createElement(
-          'div',
-          { className: bubbleClass },
-          React.createElement(
-            'div',
-            { className: 'message-content' },
-            content,
-            attachments,
-            React.createElement(ReceivedMarker, {
-              timestamp: this.props.timestamp,
-              received: this.props.received })
-          ),
-          React.createElement(
-            'span',
-            { className: 'menuTrigger' },
-            React.createElement(
-              'a',
-              { href: 'javascript:;', onClick: this.handleContextClick },
-              React.createElement(
-                'i',
-                { className: 'material-icons' },
-                'expand_more'
-              )
-            )
-          )
-        ),
-        fullDisplay ? React.createElement(
-          'div',
-          { className: 'author' },
-          this.props.userName
-        ) : null
-      )
-    );
-  }
-};
+  return ChatMessage;
+}(React.Component);
+
+;
 
 /* Received/read indicator */
-class ReceivedMarker extends React.PureComponent {
-  render() {
-    var timestamp = this.props.received <= Tinode.MESSAGE_STATUS_SENDING ? "sending ..." : shortDateFormat(this.props.timestamp);
 
-    var marker = null;
-    if (this.props.received <= Tinode.MESSAGE_STATUS_SENDING) {
-      marker = React.createElement(
-        'i',
-        { className: 'material-icons small' },
-        'access_time'
-      ); // watch face
-    } else if (this.props.received == Tinode.MESSAGE_STATUS_SENT) {
-      marker = React.createElement(
-        'i',
-        { className: 'material-icons small' },
-        'done'
-      ); // checkmark
-    } else if (this.props.received == Tinode.MESSAGE_STATUS_RECEIVED) {
-      marker = React.createElement(
-        'i',
-        { className: 'material-icons small' },
-        'done_all'
-      ); // double checkmark
-    } else if (this.props.received == Tinode.MESSAGE_STATUS_READ) {
-      marker = React.createElement(
-        'i',
-        { className: 'material-icons small blue' },
-        'done_all'
-      ); // open eye
-    }
+var ReceivedMarker = function (_React$PureComponent22) {
+  _inherits(ReceivedMarker, _React$PureComponent22);
 
-    return React.createElement(
-      'span',
-      { className: 'timestamp' },
-      timestamp,
-      '\u00a0',
-      marker
-    );
+  function ReceivedMarker() {
+    _classCallCheck(this, ReceivedMarker);
+
+    return _possibleConstructorReturn(this, (ReceivedMarker.__proto__ || Object.getPrototypeOf(ReceivedMarker)).apply(this, arguments));
   }
-};
+
+  _createClass(ReceivedMarker, [{
+    key: 'render',
+    value: function render() {
+      var timestamp = this.props.received <= Tinode.MESSAGE_STATUS_SENDING ? "sending ..." : shortDateFormat(this.props.timestamp);
+
+      var marker = null;
+      if (this.props.received <= Tinode.MESSAGE_STATUS_SENDING) {
+        marker = React.createElement(
+          'i',
+          { className: 'material-icons small' },
+          'access_time'
+        ); // watch face
+      } else if (this.props.received == Tinode.MESSAGE_STATUS_SENT) {
+        marker = React.createElement(
+          'i',
+          { className: 'material-icons small' },
+          'done'
+        ); // checkmark
+      } else if (this.props.received == Tinode.MESSAGE_STATUS_RECEIVED) {
+        marker = React.createElement(
+          'i',
+          { className: 'material-icons small' },
+          'done_all'
+        ); // double checkmark
+      } else if (this.props.received == Tinode.MESSAGE_STATUS_READ) {
+        marker = React.createElement(
+          'i',
+          { className: 'material-icons small blue' },
+          'done_all'
+        ); // open eye
+      }
+
+      return React.createElement(
+        'span',
+        { className: 'timestamp' },
+        timestamp,
+        '\xA0',
+        marker
+      );
+    }
+  }]);
+
+  return ReceivedMarker;
+}(React.PureComponent);
+
+;
 
 /* File uload/download progress indicator with a cancel inside */
-class FileProgress extends React.PureComponent {
-  render() {
-    return React.createElement(
-      'div',
-      { className: 'uploader' },
-      React.createElement(
-        'div',
-        null,
-        React.createElement('span', { style: { width: this.props.progress * 100 + "%" } })
-      ),
-      this.props.progress < 0.999 ? React.createElement(
-        'a',
-        { href: 'javascript:;', onClick: this.props.onCancel },
-        React.createElement(
-          'i',
-          { className: 'material-icons' },
-          'close'
-        ),
-        ' cancel'
-      ) : React.createElement(
-        'span',
-        null,
-        'finishing...'
-      )
-    );
+
+var FileProgress = function (_React$PureComponent23) {
+  _inherits(FileProgress, _React$PureComponent23);
+
+  function FileProgress() {
+    _classCallCheck(this, FileProgress);
+
+    return _possibleConstructorReturn(this, (FileProgress.__proto__ || Object.getPrototypeOf(FileProgress)).apply(this, arguments));
   }
-}
 
-class Attachment extends React.Component {
-  constructor(props) {
-    super(props);
+  _createClass(FileProgress, [{
+    key: 'render',
+    value: function render() {
+      return React.createElement(
+        'div',
+        { className: 'uploader' },
+        React.createElement(
+          'div',
+          null,
+          React.createElement('span', { style: { width: this.props.progress * 100 + "%" } })
+        ),
+        this.props.progress < 0.999 ? React.createElement(
+          'a',
+          { href: 'javascript:;', onClick: this.props.onCancel },
+          React.createElement(
+            'i',
+            { className: 'material-icons' },
+            'close'
+          ),
+          ' cancel'
+        ) : React.createElement(
+          'span',
+          null,
+          'finishing...'
+        )
+      );
+    }
+  }]);
 
-    this.state = {
+  return FileProgress;
+}(React.PureComponent);
+
+var Attachment = function (_React$Component18) {
+  _inherits(Attachment, _React$Component18);
+
+  function Attachment(props) {
+    _classCallCheck(this, Attachment);
+
+    var _this47 = _possibleConstructorReturn(this, (Attachment.__proto__ || Object.getPrototypeOf(Attachment)).call(this, props));
+
+    _this47.state = {
       downloader: null,
       progress: 0
     };
 
-    this.downloadFile = this.downloadFile.bind(this);
-    this.handleCancel = this.handleCancel.bind(this);
+    _this47.downloadFile = _this47.downloadFile.bind(_this47);
+    _this47.handleCancel = _this47.handleCancel.bind(_this47);
+    return _this47;
   }
 
-  downloadFile(url, filename, mimetype) {
-    var downloader = this.props.tinode.getLargeFileHelper();
-    this.setState({ downloader: downloader });
-    downloader.download(url, filename, mimetype, loaded => {
-      this.setState({ progress: loaded / this.props.size });
-    }).then(() => {
-      this.setState({ downloader: null, progress: 0 });
-    }).catch(err => {
-      if (err) {
-        this.props.onError("Error downloading file: " + err.message, "err");
+  _createClass(Attachment, [{
+    key: 'downloadFile',
+    value: function downloadFile(url, filename, mimetype) {
+      var _this48 = this;
+
+      var downloader = this.props.tinode.getLargeFileHelper();
+      this.setState({ downloader: downloader });
+      downloader.download(url, filename, mimetype, function (loaded) {
+        _this48.setState({ progress: loaded / _this48.props.size });
+      }).then(function () {
+        _this48.setState({ downloader: null, progress: 0 });
+      }).catch(function (err) {
+        if (err) {
+          _this48.props.onError("Error downloading file: " + err.message, "err");
+        }
+        _this48.setState({ downloader: null, progress: 0 });
+      });
+    }
+  }, {
+    key: 'handleCancel',
+    value: function handleCancel() {
+      if (this.props.uploader) {
+        this.props.onCancelUpload();
+      } else if (this.state.downloader) {
+        this.state.downloader.cancel();
       }
-      this.setState({ downloader: null, progress: 0 });
-    });
-  }
-
-  handleCancel() {
-    if (this.props.uploader) {
-      this.props.onCancelUpload();
-    } else if (this.state.downloader) {
-      this.state.downloader.cancel();
     }
-  }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this49 = this;
 
-  render() {
-    let filename = this.props.filename || "file_attachment";
-    if (filename.length > 36) {
-      filename = filename.substr(0, 16) + "..." + filename.substr(-16);
-    }
-    let size = this.props.size > 0 ? React.createElement(
-      'span',
-      { className: 'small gray' },
-      '(',
-      bytesToHumanSize(this.props.size),
-      ')'
-    ) : null;
+      var filename = this.props.filename || "file_attachment";
+      if (filename.length > 36) {
+        filename = filename.substr(0, 16) + "..." + filename.substr(-16);
+      }
+      var size = this.props.size > 0 ? React.createElement(
+        'span',
+        { className: 'small gray' },
+        '(',
+        bytesToHumanSize(this.props.size),
+        ')'
+      ) : null;
 
-    // Detect if the download URL is relative or absolute.
-    // If the URL is relative use LargeFileHelper to attach authentication
-    // credentials to the request.
-    let url, helperFunc;
-    if (!this.props.uploader && !this.state.downloader && !/^(?:(?:[a-z]+:)?\/\/)/i.test(this.props.downloadUrl)) {
-      // Relative URL. Use download helper.
-      url = "javascript:;";
-      helperFunc = e => {
-        this.downloadFile(this.props.downloadUrl, this.props.filename, this.props.mimetype);
-      };
-    } else {
-      url = this.props.downloadUrl;
-      helperFunc = null;
-    }
-    return React.createElement(
-      'div',
-      { className: 'attachment' },
-      React.createElement(
+      // Detect if the download URL is relative or absolute.
+      // If the URL is relative use LargeFileHelper to attach authentication
+      // credentials to the request.
+      var url = void 0,
+          helperFunc = void 0;
+      if (!this.props.uploader && !this.state.downloader && !/^(?:(?:[a-z]+:)?\/\/)/i.test(this.props.downloadUrl)) {
+        // Relative URL. Use download helper.
+        url = "javascript:;";
+        helperFunc = function helperFunc(e) {
+          _this49.downloadFile(_this49.props.downloadUrl, _this49.props.filename, _this49.props.mimetype);
+        };
+      } else {
+        url = this.props.downloadUrl;
+        helperFunc = null;
+      }
+      return React.createElement(
         'div',
-        null,
+        { className: 'attachment' },
         React.createElement(
-          'i',
-          { className: 'material-icons big gray' },
-          'insert_drive_file'
-        )
-      ),
-      React.createElement(
-        'div',
-        { className: 'flex-column' },
-        React.createElement(
-          'div',
-          null,
-          filename,
-          ' ',
-          size
-        ),
-        this.props.uploader || this.state.downloader ? React.createElement(FileProgress, { progress: this.props.uploader ? this.props.progress : this.state.progress,
-          onCancel: this.handleCancel }) : React.createElement(
           'div',
           null,
           React.createElement(
-            'a',
-            { href: url, download: this.props.filename, onClick: helperFunc },
+            'i',
+            { className: 'material-icons big gray' },
+            'insert_drive_file'
+          )
+        ),
+        React.createElement(
+          'div',
+          { className: 'flex-column' },
+          React.createElement(
+            'div',
+            null,
+            filename,
+            ' ',
+            size
+          ),
+          this.props.uploader || this.state.downloader ? React.createElement(FileProgress, { progress: this.props.uploader ? this.props.progress : this.state.progress,
+            onCancel: this.handleCancel }) : React.createElement(
+            'div',
+            null,
             React.createElement(
-              'i',
-              { className: 'material-icons' },
-              'file_download'
-            ),
-            ' save'
+              'a',
+              { href: url, download: this.props.filename, onClick: helperFunc },
+              React.createElement(
+                'i',
+                { className: 'material-icons' },
+                'file_download'
+              ),
+              ' save'
+            )
           )
         )
-      )
-    );
-  }
-};
-const NOT_FOUND_TOPIC_TITLE = "Not found";
+      );
+    }
+  }]);
 
-class MessagesView extends React.Component {
-  constructor(props) {
-    super(props);
+  return Attachment;
+}(React.Component);
 
-    this.state = {
+;
+var NOT_FOUND_TOPIC_TITLE = "Not found";
+
+var MessagesView = function (_React$Component19) {
+  _inherits(MessagesView, _React$Component19);
+
+  function MessagesView(props) {
+    _classCallCheck(this, MessagesView);
+
+    var _this50 = _possibleConstructorReturn(this, (MessagesView.__proto__ || Object.getPrototypeOf(MessagesView)).call(this, props));
+
+    _this50.state = {
       messages: [],
       onlineSubs: [],
       topic: '',
@@ -32406,1935 +33118,2223 @@ class MessagesView extends React.Component {
       imagePreview: null
     };
 
-    this.propsChange = this.propsChange.bind(this);
-    this.leave = this.leave.bind(this);
-    this.handleScrollReference = this.handleScrollReference.bind(this);
-    this.fetchMoreMessages = this.fetchMoreMessages.bind(this);
-    this.handleDescChange = this.handleDescChange.bind(this);
-    this.handleSubsUpdated = this.handleSubsUpdated.bind(this);
-    this.handleNewMessage = this.handleNewMessage.bind(this);
-    this.handleAllMessagesReceived = this.handleAllMessagesReceived.bind(this);
-    this.handleInfoReceipt = this.handleInfoReceipt.bind(this);
-    this.handleImagePreview = this.handleImagePreview.bind(this);
-    this.handleCloseImagePreview = this.handleCloseImagePreview.bind(this);
-    this.handleContextClick = this.handleContextClick.bind(this);
-    this.handleShowContextMenuMessage = this.handleShowContextMenuMessage.bind(this);
-    this.handleBackNavigation = this.handleBackNavigation.bind(this);
+    _this50.propsChange = _this50.propsChange.bind(_this50);
+    _this50.leave = _this50.leave.bind(_this50);
+    _this50.handleScrollReference = _this50.handleScrollReference.bind(_this50);
+    _this50.fetchMoreMessages = _this50.fetchMoreMessages.bind(_this50);
+    _this50.handleDescChange = _this50.handleDescChange.bind(_this50);
+    _this50.handleSubsUpdated = _this50.handleSubsUpdated.bind(_this50);
+    _this50.handleNewMessage = _this50.handleNewMessage.bind(_this50);
+    _this50.handleAllMessagesReceived = _this50.handleAllMessagesReceived.bind(_this50);
+    _this50.handleInfoReceipt = _this50.handleInfoReceipt.bind(_this50);
+    _this50.handleImagePreview = _this50.handleImagePreview.bind(_this50);
+    _this50.handleCloseImagePreview = _this50.handleCloseImagePreview.bind(_this50);
+    _this50.handleContextClick = _this50.handleContextClick.bind(_this50);
+    _this50.handleShowContextMenuMessage = _this50.handleShowContextMenuMessage.bind(_this50);
+    _this50.handleBackNavigation = _this50.handleBackNavigation.bind(_this50);
+    return _this50;
   }
 
   // Scroll last message into view on component update e.g. on message received.
-  componentDidUpdate(prevProps, prevState) {
-    if (this.messagesScroller && (prevState.title != this.state.title || prevState.messages.length != this.state.messages.length)) {
-      this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition;
+
+
+  _createClass(MessagesView, [{
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate(prevProps, prevState) {
+      if (this.messagesScroller && (prevState.title != this.state.title || prevState.messages.length != this.state.messages.length)) {
+        this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition;
+      }
     }
-  }
-
-  componentDidMount() {
-    this.propsChange(this.props);
-    if (this.messagesScroller) {
-      this.messagesScroller.addEventListener('scroll', this.fetchMoreMessages);
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.propsChange(this.props);
+      if (this.messagesScroller) {
+        this.messagesScroller.addEventListener('scroll', this.fetchMoreMessages);
+      }
     }
-  }
-
-  componentWillUnmount() {
-    this.leave(this.state.topic);
-    if (this.messagesScroller) {
-      this.messagesScroller.removeEventListener('scroll', this.fetchMoreMessages);
-    }
-  }
-
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    this.propsChange(nextProps);
-  }
-
-  propsChange(props) {
-    if (!props || !props.topic) {
-      let oldTopic = this.state.topic;
-      this.setState({ messages: [], onlineSubs: [], topic: null }, this.leave(oldTopic));
-      return;
-    }
-
-    if (!props.connected) {
-      // connection lost, clear online subs
-      this.setState({ onlineSubs: [] });
-      return;
-    }
-
-    let topic = this.props.tinode.getTopic(props.topic);
-    if (!topic) {
-      return;
-    }
-
-    let newGroupTopic = Tinode.isNewGroupTopicName(props.topic);
-    let tryToResubscribe = !this.props.connected && props.connected;
-
-    if (props.topic != this.state.topic) {
-      let msgs = [];
-      let subs = [];
-
-      // Bind the new topic to component.
-      topic.onData = this.handleNewMessage;
-      topic.onAllMessagesReceived = this.handleAllMessagesReceived;
-      topic.onInfo = this.handleInfoReceipt;
-      topic.onMetaDesc = this.handleDescChange;
-      topic.onSubsUpdated = this.handleSubsUpdated;
-      topic.onPres = this.handleSubsUpdated;
-      // Unbind the previous topic from this component.
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
       this.leave(this.state.topic);
+      if (this.messagesScroller) {
+        this.messagesScroller.removeEventListener('scroll', this.fetchMoreMessages);
+      }
+    }
+  }, {
+    key: 'UNSAFE_componentWillReceiveProps',
+    value: function UNSAFE_componentWillReceiveProps(nextProps) {
+      this.propsChange(nextProps);
+    }
+  }, {
+    key: 'propsChange',
+    value: function propsChange(props) {
+      var _this51 = this;
 
-      this.handleDescChange(topic);
-      topic.subscribers(sub => {
-        if (sub.online && sub.user != this.props.myUserId) {
-          subs.push(sub);
-        }
-      });
+      if (!props || !props.topic) {
+        var oldTopic = this.state.topic;
+        this.setState({ messages: [], onlineSubs: [], topic: null }, this.leave(oldTopic));
+        return;
+      }
 
-      topic.messages(function (msg) {
-        if (!msg.deleted) {
-          msgs = msgs.concat(msg);
-        }
-      });
+      if (!props.connected) {
+        // connection lost, clear online subs
+        this.setState({ onlineSubs: [] });
+        return;
+      }
+
+      var topic = this.props.tinode.getTopic(props.topic);
+      if (!topic) {
+        return;
+      }
+
+      var newGroupTopic = Tinode.isNewGroupTopicName(props.topic);
+      var tryToResubscribe = !this.props.connected && props.connected;
+
+      if (props.topic != this.state.topic) {
+        var msgs = [];
+        var subs = [];
+
+        // Bind the new topic to component.
+        topic.onData = this.handleNewMessage;
+        topic.onAllMessagesReceived = this.handleAllMessagesReceived;
+        topic.onInfo = this.handleInfoReceipt;
+        topic.onMetaDesc = this.handleDescChange;
+        topic.onSubsUpdated = this.handleSubsUpdated;
+        topic.onPres = this.handleSubsUpdated;
+        // Unbind the previous topic from this component.
+        this.leave(this.state.topic);
+
+        this.handleDescChange(topic);
+        topic.subscribers(function (sub) {
+          if (sub.online && sub.user != _this51.props.myUserId) {
+            subs.push(sub);
+          }
+        });
+
+        topic.messages(function (msg) {
+          if (!msg.deleted) {
+            msgs = msgs.concat(msg);
+          }
+        });
+
+        this.setState({
+          messages: msgs,
+          onlineSubs: subs,
+          topic: props.topic,
+          imagePreview: null,
+          scrollPosition: 0
+        });
+        tryToResubscribe = true;
+
+        // The user switched to the new topic before the timer for
+        // the previous topic has triggered, kill it.
+        this.props.readTimerHandler(null);
+      }
 
       this.setState({
-        messages: msgs,
-        onlineSubs: subs,
-        topic: props.topic,
-        imagePreview: null,
-        scrollPosition: 0
+        readOnly: props.acs ? !props.acs.isWriter() : true,
+        writeOnly: props.acs ? !props.acs.isReader() : true
       });
-      tryToResubscribe = true;
 
-      // The user switched to the new topic before the timer for
-      // the previous topic has triggered, kill it.
-      this.props.readTimerHandler(null);
+      if (!topic.isSubscribed() && tryToResubscribe) {
+        var getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub().withLaterData(MESSAGES_PAGE).withLaterDel();
+        var setQuery = newGroupTopic ? props.newGroupTopicParams : undefined;
+        // Don't request the tags. They are useless unless the user
+        // is the owner and is editing the topic.
+        // getQuery = topic.getType() == 'grp' ? getQuery.withTags() : getQuery;
+        // Show "loading" spinner.
+        this.setState({ fetchingMessages: true });
+        topic.subscribe(getQuery.build(), setQuery).then(function (ctrl) {
+          _this51.setState({ topic: ctrl.topic });
+          _this51.props.onNewTopicCreated(props.topic, ctrl.topic);
+        }).catch(function (err) {
+          _this51.props.onError(err.message, "err");
+          _this51.setState({
+            title: NOT_FOUND_TOPIC_TITLE,
+            avatar: null,
+            readOnly: true,
+            writeOnly: true,
+            fetchingMessages: false
+          });
+        });
+      }
+    }
+  }, {
+    key: 'leave',
+    value: function leave(oldTopicName) {
+      var _this52 = this;
+
+      if (!oldTopicName) {
+        return;
+      }
+      var oldTopic = this.props.tinode.getTopic(oldTopicName);
+      if (oldTopic && oldTopic.isSubscribed()) {
+        oldTopic.leave(false).catch(function () {/* do nothing here */}).finally(function () {
+          // We don't care if the request succeeded or failed.
+          // The topic is dead regardless.
+          _this52.setState({ fetchingMessages: false });
+          oldTopic.onData = undefined;
+          oldTopic.onAllMessagesReceived = undefined;
+          oldTopic.onInfo = undefined;
+          oldTopic.onMetaDesc = undefined;
+          oldTopic.onSubsUpdated = undefined;
+          oldTopic.onPres = undefined;
+        });
+      }
+    }
+  }, {
+    key: 'handleScrollReference',
+    value: function handleScrollReference(node) {
+      if (node) {
+        node.addEventListener('scroll', this.fetchMoreMessages);
+        this.messagesScroller = node;
+      }
     }
 
-    this.setState({
-      readOnly: props.acs ? !props.acs.isWriter() : true,
-      writeOnly: props.acs ? !props.acs.isReader() : true
-    });
+    // Get older messages
 
-    if (!topic.isSubscribed() && tryToResubscribe) {
-      let getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub().withLaterData(MESSAGES_PAGE).withLaterDel();
-      let setQuery = newGroupTopic ? props.newGroupTopicParams : undefined;
-      // Don't request the tags. They are useless unless the user
-      // is the owner and is editing the topic.
-      // getQuery = topic.getType() == 'grp' ? getQuery.withTags() : getQuery;
-      // Show "loading" spinner.
-      this.setState({ fetchingMessages: true });
-      topic.subscribe(getQuery.build(), setQuery).then(ctrl => {
-        this.setState({ topic: ctrl.topic });
-        this.props.onNewTopicCreated(props.topic, ctrl.topic);
-      }).catch(err => {
-        this.props.onError(err.message, "err");
+  }, {
+    key: 'fetchMoreMessages',
+    value: function fetchMoreMessages(event) {
+      var _this53 = this;
+
+      if (event.target.scrollTop <= 0) {
+        var newState = { scrollPosition: event.target.scrollHeight - event.target.scrollTop };
+        this.setState(function (prevState, props) {
+          if (!prevState.fetchingMessages) {
+            var topic = _this53.props.tinode.getTopic(_this53.state.topic);
+            if (topic && topic.isSubscribed() && topic.msgHasMoreMessages()) {
+              newState.fetchingMessages = true;
+              topic.getMessagesPage(MESSAGES_PAGE).catch(function (err) {
+                _this53.setState({ fetchingMessages: false });
+                _this53.props.onError(err.message, "err");
+              });
+            }
+          }
+          return newState;
+        });
+      }
+    }
+  }, {
+    key: 'handleDescChange',
+    value: function handleDescChange(desc) {
+      if (desc.public) {
+        this.setState({
+          title: desc.public.fn,
+          avatar: makeImageUrl(desc.public.photo)
+        });
+      } else {
         this.setState({
           title: NOT_FOUND_TOPIC_TITLE,
-          avatar: null,
-          readOnly: true,
-          writeOnly: true,
-          fetchingMessages: false
+          avatar: null
         });
-      });
+      }
+      if (desc.acs) {
+        this.setState({
+          readOnly: !desc.acs.isWriter(),
+          writeOnly: !desc.acs.isReader()
+        });
+      }
     }
-  }
+  }, {
+    key: 'handleSubsUpdated',
+    value: function handleSubsUpdated() {
+      var _this54 = this;
 
-  leave(oldTopicName) {
-    if (!oldTopicName) {
-      return;
-    }
-    let oldTopic = this.props.tinode.getTopic(oldTopicName);
-    if (oldTopic && oldTopic.isSubscribed()) {
-      oldTopic.leave(false).catch(() => {/* do nothing here */}).finally(() => {
-        // We don't care if the request succeeded or failed.
-        // The topic is dead regardless.
-        this.setState({ fetchingMessages: false });
-        oldTopic.onData = undefined;
-        oldTopic.onAllMessagesReceived = undefined;
-        oldTopic.onInfo = undefined;
-        oldTopic.onMetaDesc = undefined;
-        oldTopic.onSubsUpdated = undefined;
-        oldTopic.onPres = undefined;
-      });
-    }
-  }
-
-  handleScrollReference(node) {
-    if (node) {
-      node.addEventListener('scroll', this.fetchMoreMessages);
-      this.messagesScroller = node;
-    }
-  }
-
-  // Get older messages
-  fetchMoreMessages(event) {
-    if (event.target.scrollTop <= 0) {
-      let newState = { scrollPosition: event.target.scrollHeight - event.target.scrollTop };
-      this.setState((prevState, props) => {
-        if (!prevState.fetchingMessages) {
-          var topic = this.props.tinode.getTopic(this.state.topic);
-          if (topic && topic.isSubscribed() && topic.msgHasMoreMessages()) {
-            newState.fetchingMessages = true;
-            topic.getMessagesPage(MESSAGES_PAGE).catch(err => {
-              this.setState({ fetchingMessages: false });
-              this.props.onError(err.message, "err");
-            });
+      if (this.state.topic) {
+        var subs = [];
+        var topic = this.props.tinode.getTopic(this.state.topic);
+        topic.subscribers(function (sub) {
+          if (sub.online && sub.user != _this54.props.myUserId) {
+            subs.push(sub);
           }
-        }
-        return newState;
-      });
+        });
+        this.setState({ onlineSubs: subs });
+      }
     }
-  }
-
-  handleDescChange(desc) {
-    if (desc.public) {
-      this.setState({
-        title: desc.public.fn,
-        avatar: makeImageUrl(desc.public.photo)
-      });
-    } else {
-      this.setState({
-        title: NOT_FOUND_TOPIC_TITLE,
-        avatar: null
-      });
-    }
-    if (desc.acs) {
-      this.setState({
-        readOnly: !desc.acs.isWriter(),
-        writeOnly: !desc.acs.isReader()
-      });
-    }
-  }
-
-  handleSubsUpdated() {
-    if (this.state.topic) {
-      var subs = [];
+  }, {
+    key: 'handleNewMessage',
+    value: function handleNewMessage(msg) {
+      // Regenerate messages list
       var topic = this.props.tinode.getTopic(this.state.topic);
-      topic.subscribers(sub => {
-        if (sub.online && sub.user != this.props.myUserId) {
-          subs.push(sub);
+      var newState = { messages: [] };
+      topic.messages(function (m) {
+        if (!m.deleted) {
+          newState.messages = newState.messages.concat(m);
         }
       });
-      this.setState({ onlineSubs: subs });
+
+      // msg could be null if one or more messages were deleted.
+      if (msg && !msg.deleted) {
+        // If the message is added to the end of the message list,
+        // scroll to the bottom.
+        if (topic.isNewMessage(msg.seq)) {
+          newState.scrollPosition = 0;
+        }
+
+        // Aknowledge all messages, including own messges.
+        var status = topic.msgStatus(msg);
+        if (status >= Tinode.MESSAGE_STATUS_SENT) {
+          this.props.readTimerHandler(function () {
+            topic.noteRead(msg.seq);
+          });
+        }
+        this.props.onData(msg);
+      }
+
+      this.setState(newState);
     }
-  }
-
-  handleNewMessage(msg) {
-    // Regenerate messages list
-    var topic = this.props.tinode.getTopic(this.state.topic);
-    var newState = { messages: [] };
-    topic.messages(function (m) {
-      if (!m.deleted) {
-        newState.messages = newState.messages.concat(m);
-      }
-    });
-
-    // msg could be null if one or more messages were deleted.
-    if (msg && !msg.deleted) {
-      // If the message is added to the end of the message list,
-      // scroll to the bottom.
-      if (topic.isNewMessage(msg.seq)) {
-        newState.scrollPosition = 0;
-      }
-
-      // Aknowledge all messages, including own messges.
-      let status = topic.msgStatus(msg);
-      if (status >= Tinode.MESSAGE_STATUS_SENT) {
-        this.props.readTimerHandler(() => {
-          topic.noteRead(msg.seq);
-        });
-      }
-      this.props.onData(msg);
+  }, {
+    key: 'handleAllMessagesReceived',
+    value: function handleAllMessagesReceived(count) {
+      this.setState({ fetchingMessages: false });
     }
-
-    this.setState(newState);
-  }
-
-  handleAllMessagesReceived(count) {
-    this.setState({ fetchingMessages: false });
-  }
-
-  handleInfoReceipt(info) {
-    switch (info.what) {
-      case "kp":
-        {
-          clearTimeout(this.keyPressTimer);
-          var instance = this;
-          this.keyPressTimer = setTimeout(function () {
-            instance.setState({ typingIndicator: false });
-          }, KEYPRESS_DELAY + 1000);
-          if (!this.state.typingIndicator) {
-            this.setState({ typingIndicator: true });
+  }, {
+    key: 'handleInfoReceipt',
+    value: function handleInfoReceipt(info) {
+      switch (info.what) {
+        case "kp":
+          {
+            clearTimeout(this.keyPressTimer);
+            var instance = this;
+            this.keyPressTimer = setTimeout(function () {
+              instance.setState({ typingIndicator: false });
+            }, KEYPRESS_DELAY + 1000);
+            if (!this.state.typingIndicator) {
+              this.setState({ typingIndicator: true });
+            }
+            break;
           }
+        case "read":
+        case "recv":
+          // Redraw due to changed recv/read status.
+          this.forceUpdate();
           break;
-        }
-      case "read":
-      case "recv":
-        // Redraw due to changed recv/read status.
-        this.forceUpdate();
-        break;
-      default:
-        console.log("Other change in topic: ", info.what);
-    }
-  }
-
-  handleImagePreview(content) {
-    this.setState({ imagePreview: content });
-  }
-
-  handleCloseImagePreview() {
-    this.setState({ imagePreview: null });
-  }
-
-  handleContextClick(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.props.showContextMenu({ topicName: this.state.topic, y: e.pageY, x: e.pageX });
-  }
-
-  handleShowContextMenuMessage(params) {
-    params.topicName = this.state.topic;
-    var menuItems = ["message_delete"];
-    var topic = this.props.tinode.getTopic(params.topicName);
-    if (topic) {
-      var acs = topic.getAccessMode();
-      if (acs && acs.isDeleter()) {
-        menuItems.push("message_delete_hard");
+        default:
+          console.log("Other change in topic: ", info.what);
       }
     }
-    this.props.showContextMenu(params, menuItems);
-  }
-
-  handleBackNavigation() {
-    this.props.onHideMessagesView();
-  }
-
-  render() {
-    var component = null;
-    if (this.state.topic) {
-      var messageNodes = [];
-      var topic = this.props.tinode.getTopic(this.state.topic);
-      var groupTopic = topic.getType() == "grp";
-      var previousFrom = null;
-      for (var i = 0; i < this.state.messages.length; i++) {
-        var msg = this.state.messages[i];
-        var nextFrom = null;
-
-        if (i + 1 < this.state.messages.length) {
-          nextFrom = this.state.messages[i + 1].from;
+  }, {
+    key: 'handleImagePreview',
+    value: function handleImagePreview(content) {
+      this.setState({ imagePreview: content });
+    }
+  }, {
+    key: 'handleCloseImagePreview',
+    value: function handleCloseImagePreview() {
+      this.setState({ imagePreview: null });
+    }
+  }, {
+    key: 'handleContextClick',
+    value: function handleContextClick(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.props.showContextMenu({ topicName: this.state.topic, y: e.pageY, x: e.pageX });
+    }
+  }, {
+    key: 'handleShowContextMenuMessage',
+    value: function handleShowContextMenuMessage(params) {
+      params.topicName = this.state.topic;
+      var menuItems = ["message_delete"];
+      var topic = this.props.tinode.getTopic(params.topicName);
+      if (topic) {
+        var acs = topic.getAccessMode();
+        if (acs && acs.isDeleter()) {
+          menuItems.push("message_delete_hard");
         }
+      }
+      this.props.showContextMenu(params, menuItems);
+    }
+  }, {
+    key: 'handleBackNavigation',
+    value: function handleBackNavigation() {
+      this.props.onHideMessagesView();
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var component = null;
+      if (this.state.topic) {
+        var messageNodes = [];
+        var topic = this.props.tinode.getTopic(this.state.topic);
+        var groupTopic = topic.getType() == "grp";
+        var previousFrom = null;
+        for (var i = 0; i < this.state.messages.length; i++) {
+          var msg = this.state.messages[i];
+          var nextFrom = null;
 
-        var sequence = "single";
-        if (msg.from == previousFrom) {
-          if (msg.from == nextFrom) {
-            sequence = "middle";
+          if (i + 1 < this.state.messages.length) {
+            nextFrom = this.state.messages[i + 1].from;
+          }
+
+          var sequence = "single";
+          if (msg.from == previousFrom) {
+            if (msg.from == nextFrom) {
+              sequence = "middle";
+            } else {
+              sequence = "last";
+            }
+          } else if (msg.from == nextFrom) {
+            sequence = "first";
+          }
+          previousFrom = msg.from;
+
+          var isReply = !(msg.from == this.props.myUserId);
+          var deliveryStatus = topic.msgStatus(msg);
+
+          var userName, userAvatar, userFrom, chatBoxClass;
+          if (groupTopic) {
+            var user = topic.userDesc(msg.from);
+            if (user && user.public) {
+              userName = user.public.fn;
+              userAvatar = makeImageUrl(user.public.photo);
+            }
+            userFrom = msg.from;
+            chatBoxClass = "chat-box group";
           } else {
-            sequence = "last";
+            chatBoxClass = "chat-box";
           }
-        } else if (msg.from == nextFrom) {
-          sequence = "first";
+
+          messageNodes.push(React.createElement(ChatMessage, {
+            tinode: this.props.tinode,
+            content: msg.content,
+            mimeType: msg.head ? msg.head.mime : null,
+            timestamp: msg.ts, response: isReply, seq: msg.seq,
+            userFrom: userFrom, userName: userName, userAvatar: userAvatar,
+            sequence: sequence, received: deliveryStatus, uploader: msg._uploader,
+            viewportWidth: this.props.viewportWidth,
+            showContextMenu: this.handleShowContextMenuMessage,
+            onImagePreview: this.handleImagePreview,
+            onError: this.props.onError,
+            key: msg.seq }));
         }
-        previousFrom = msg.from;
 
-        var isReply = !(msg.from == this.props.myUserId);
-        var deliveryStatus = topic.msgStatus(msg);
-
-        var userName, userAvatar, userFrom, chatBoxClass;
-        if (groupTopic) {
-          var user = topic.userDesc(msg.from);
-          if (user && user.public) {
-            userName = user.public.fn;
-            userAvatar = makeImageUrl(user.public.photo);
+        var lastSeen = null;
+        var cont = this.props.tinode.getMeTopic().getContact(this.state.topic);
+        if (cont && Tinode.topicType(cont.topic) == "p2p") {
+          if (cont.online) {
+            lastSeen = "online now";
+          } else if (cont.seen) {
+            lastSeen = "Last active: " + shortDateFormat(cont.seen.when);
+            // TODO(gene): also handle user agent in c.seen.ua
           }
-          userFrom = msg.from;
-          chatBoxClass = "chat-box group";
-        } else {
-          chatBoxClass = "chat-box";
         }
+        var avatar = this.state.avatar || true;
+        var online = this.props.online ? "online" + (this.state.typingIndicator ? " typing" : "") : "offline";
 
-        messageNodes.push(React.createElement(ChatMessage, {
-          tinode: this.props.tinode,
-          content: msg.content,
-          mimeType: msg.head ? msg.head.mime : null,
-          timestamp: msg.ts, response: isReply, seq: msg.seq,
-          userFrom: userFrom, userName: userName, userAvatar: userAvatar,
-          sequence: sequence, received: deliveryStatus, uploader: msg._uploader,
-          viewportWidth: this.props.viewportWidth,
-          showContextMenu: this.handleShowContextMenuMessage,
-          onImagePreview: this.handleImagePreview,
-          onError: this.props.onError,
-          key: msg.seq }));
-      }
-
-      let lastSeen = null;
-      let cont = this.props.tinode.getMeTopic().getContact(this.state.topic);
-      if (cont && Tinode.topicType(cont.topic) == "p2p") {
-        if (cont.online) {
-          lastSeen = "online now";
-        } else if (cont.seen) {
-          lastSeen = "Last active: " + shortDateFormat(cont.seen.when);
-          // TODO(gene): also handle user agent in c.seen.ua
-        }
-      }
-      var avatar = this.state.avatar || true;
-      var online = this.props.online ? "online" + (this.state.typingIndicator ? " typing" : "") : "offline";
-
-      component = React.createElement(
-        'div',
-        { id: 'topic-view', className: this.props.hideSelf ? 'nodisplay' : null },
-        React.createElement(
+        component = React.createElement(
           'div',
-          { id: 'topic-caption-panel', className: 'caption-panel' },
-          this.props.displayMobile ? React.createElement(
-            'a',
-            { href: 'javascript:;', id: 'hide-message-view', onClick: this.handleBackNavigation },
-            React.createElement(
-              'i',
-              { className: 'material-icons' },
-              'arrow_back'
-            )
-          ) : null,
+          { id: 'topic-view', className: this.props.hideSelf ? 'nodisplay' : null },
           React.createElement(
             'div',
-            { className: 'avatar-box' },
-            React.createElement(LetterTile, {
-              avatar: avatar,
-              topic: this.state.topic,
-              title: this.state.title }),
-            React.createElement('span', { className: online })
-          ),
-          React.createElement(
-            'div',
-            { id: 'topic-title-group' },
-            React.createElement(
-              'div',
-              { id: 'topic-title', className: 'panel-title' },
-              this.state.title
-            ),
-            React.createElement(
-              'div',
-              { id: 'topic-last-seen' },
-              lastSeen
-            )
-          ),
-          groupTopic ? React.createElement(GroupSubs, {
-            subscribers: this.state.onlineSubs }) : React.createElement('div', { id: 'topic-users' }),
-          React.createElement(
-            'div',
-            null,
-            React.createElement(
+            { id: 'topic-caption-panel', className: 'caption-panel' },
+            this.props.displayMobile ? React.createElement(
               'a',
-              { href: 'javascript:;', onClick: this.handleContextClick },
+              { href: 'javascript:;', id: 'hide-message-view', onClick: this.handleBackNavigation },
               React.createElement(
                 'i',
                 { className: 'material-icons' },
-                'more_vert'
+                'arrow_back'
               )
-            )
-          )
-        ),
-        this.props.displayMobile ? React.createElement(ErrorPanel, {
-          level: this.props.errorLevel,
-          text: this.props.errorText,
-          onClearError: this.props.onError }) : null,
-        React.createElement(LoadSpinner, { show: this.state.fetchingMessages }),
-        React.createElement(
-          'div',
-          { id: 'messages-container' },
-          React.createElement(
-            'div',
-            { id: 'messages-panel', ref: this.handleScrollReference },
-            React.createElement(
-              'ul',
-              { id: 'scroller', className: chatBoxClass },
-              messageNodes
-            )
-          ),
-          this.state.writeOnly ? React.createElement(
-            'div',
-            { id: 'write-only-background' },
+            ) : null,
             React.createElement(
               'div',
-              { id: 'write-only-note' },
-              'no access to messages'
+              { className: 'avatar-box' },
+              React.createElement(LetterTile, {
+                avatar: avatar,
+                topic: this.state.topic,
+                title: this.state.title }),
+              React.createElement('span', { className: online })
+            ),
+            React.createElement(
+              'div',
+              { id: 'topic-title-group' },
+              React.createElement(
+                'div',
+                { id: 'topic-title', className: 'panel-title' },
+                this.state.title
+              ),
+              React.createElement(
+                'div',
+                { id: 'topic-last-seen' },
+                lastSeen
+              )
+            ),
+            groupTopic ? React.createElement(GroupSubs, {
+              subscribers: this.state.onlineSubs }) : React.createElement('div', { id: 'topic-users' }),
+            React.createElement(
+              'div',
+              null,
+              React.createElement(
+                'a',
+                { href: 'javascript:;', onClick: this.handleContextClick },
+                React.createElement(
+                  'i',
+                  { className: 'material-icons' },
+                  'more_vert'
+                )
+              )
             )
-          ) : null
-        ),
-        React.createElement(SendMessage, {
-          tinode: this.props.tinode,
-          topic: this.props.topic,
-          disabled: this.state.readOnly,
-          sendMessage: this.props.sendMessage,
-          onError: this.props.onError }),
-        this.state.imagePreview ? React.createElement(ImagePreview, { content: this.state.imagePreview,
-          onClose: this.handleCloseImagePreview }) : null
-      );
-    } else {
-      component = React.createElement(LogoView, { hideSelf: this.props.hideSelf,
-        serverVersion: this.props.serverVersion,
-        serverAddress: this.props.serverAddress });
+          ),
+          this.props.displayMobile ? React.createElement(ErrorPanel, {
+            level: this.props.errorLevel,
+            text: this.props.errorText,
+            onClearError: this.props.onError }) : null,
+          React.createElement(LoadSpinner, { show: this.state.fetchingMessages }),
+          React.createElement(
+            'div',
+            { id: 'messages-container' },
+            React.createElement(
+              'div',
+              { id: 'messages-panel', ref: this.handleScrollReference },
+              React.createElement(
+                'ul',
+                { id: 'scroller', className: chatBoxClass },
+                messageNodes
+              )
+            ),
+            this.state.writeOnly ? React.createElement(
+              'div',
+              { id: 'write-only-background' },
+              React.createElement(
+                'div',
+                { id: 'write-only-note' },
+                'no access to messages'
+              )
+            ) : null
+          ),
+          React.createElement(SendMessage, {
+            tinode: this.props.tinode,
+            topic: this.props.topic,
+            disabled: this.state.readOnly,
+            sendMessage: this.props.sendMessage,
+            onError: this.props.onError }),
+          this.state.imagePreview ? React.createElement(ImagePreview, { content: this.state.imagePreview,
+            onClose: this.handleCloseImagePreview }) : null
+        );
+      } else {
+        component = React.createElement(LogoView, { hideSelf: this.props.hideSelf,
+          serverVersion: this.props.serverVersion,
+          serverAddress: this.props.serverAddress });
+      }
+      return component;
     }
-    return component;
-  }
-};
+  }]);
+
+  return MessagesView;
+}(React.Component);
+
+;
 
 /* Send message form */
-class SendMessage extends React.PureComponent {
-  constructor(props) {
-    super(props);
 
-    this.state = {
+var SendMessage = function (_React$PureComponent24) {
+  _inherits(SendMessage, _React$PureComponent24);
+
+  function SendMessage(props) {
+    _classCallCheck(this, SendMessage);
+
+    var _this55 = _possibleConstructorReturn(this, (SendMessage.__proto__ || Object.getPrototypeOf(SendMessage)).call(this, props));
+
+    _this55.state = {
       message: '',
       // Make initial keypress time as if it happened 5001 milliseconds in the past.
       keypressTimestamp: new Date().getTime() - KEYPRESS_DELAY - 1
     };
 
-    this.handlePasteEvent = this.handlePasteEvent.bind(this);
-    this.handleAttachImage = this.handleAttachImage.bind(this);
-    this.handleAttachFile = this.handleAttachFile.bind(this);
-    this.handleSend = this.handleSend.bind(this);
-    this.handleKeyPress = this.handleKeyPress.bind(this);
-    this.handleMessageTyping = this.handleMessageTyping.bind(this);
+    _this55.handlePasteEvent = _this55.handlePasteEvent.bind(_this55);
+    _this55.handleAttachImage = _this55.handleAttachImage.bind(_this55);
+    _this55.handleAttachFile = _this55.handleAttachFile.bind(_this55);
+    _this55.handleSend = _this55.handleSend.bind(_this55);
+    _this55.handleKeyPress = _this55.handleKeyPress.bind(_this55);
+    _this55.handleMessageTyping = _this55.handleMessageTyping.bind(_this55);
+    return _this55;
   }
 
-  componentDidMount() {
-    this.pasteFile.addEventListener('paste', this.handlePasteEvent, false);
-  }
-
-  componentWillUnmount() {
-    this.pasteFile.removeEventListener('paste', this.handlePasteEvent, false);
-  }
-
-  handlePasteEvent(e) {
-    if (this.props.disabled) {
-      return;
+  _createClass(SendMessage, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.pasteFile.addEventListener('paste', this.handlePasteEvent, false);
     }
-    // FIXME: handle large files too.
-    if (filePasted(e, (bits, mime, width, height, fname) => {
-      this.props.sendMessage(Drafty.insertImage(null, 0, mime, bits, width, height, fname));
-    }, (mime, bits, fname) => {
-      this.props.sendMessage(Drafty.attachFile(null, mime, bits, fname));
-    }, this.props.onError)) {
-
-      // If a file was pasted, don't paste base64 data into input field.
-      e.preventDefault();
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      this.pasteFile.removeEventListener('paste', this.handlePasteEvent, false);
     }
-  }
+  }, {
+    key: 'handlePasteEvent',
+    value: function handlePasteEvent(e) {
+      var _this56 = this;
 
-  handleAttachImage(e) {
-    if (e.target.files && e.target.files.length > 0) {
-      let file = e.target.files[0];
-      // Check if the uploaded file is indeed an image and if it isn't too large.
-      if (file.size > MAX_INBAND_ATTACHMENT_SIZE || SUPPORTED_IMAGE_FORMATS.indexOf(file.type) < 0) {
-        // Convert image for size or format.
-        imageFileScaledToBase64(file, MAX_IMAGE_DIM, MAX_IMAGE_DIM, false,
-        // Success
-        (bits, mime, width, height, fname) => {
-          this.props.sendMessage(Drafty.insertImage(null, 0, mime, bits, width, height, fname));
-        },
-        // Failure
-        err => {
-          this.props.onError(err, "err");
-        });
-      } else {
-        // Image can be uploaded as is. No conversion is needed.
-        imageFileToBase64(file,
-        // Success
-        (bits, mime, width, height, fname) => {
-          this.props.sendMessage(Drafty.insertImage(null, 0, mime, bits, width, height, fname));
-        },
-        // Failure
-        err => {
-          this.props.onError(err, "err");
-        });
+      if (this.props.disabled) {
+        return;
       }
-    }
-    // Clear the value so the same file can be uploaded again.
-    e.target.value = '';
-  }
+      // FIXME: handle large files too.
+      if (filePasted(e, function (bits, mime, width, height, fname) {
+        _this56.props.sendMessage(Drafty.insertImage(null, 0, mime, bits, width, height, fname));
+      }, function (mime, bits, fname) {
+        _this56.props.sendMessage(Drafty.attachFile(null, mime, bits, fname));
+      }, this.props.onError)) {
 
-  handleAttachFile(e) {
-    if (e.target.files && e.target.files.length > 0) {
-      var file = e.target.files[0];
-      if (file.size > MAX_EXTERN_ATTACHMENT_SIZE) {
-        // Too large.
-        this.props.onError("The file size " + bytesToHumanSize(file.size) + " exceeds the " + bytesToHumanSize(MAX_EXTERN_ATTACHMENT_SIZE) + " limit.", "err");
-      } else if (file.size > MAX_INBAND_ATTACHMENT_SIZE) {
-        // Too large to send inband - uploading out of band and sending as a link.
-        let uploader = this.props.tinode.getLargeFileHelper();
-        if (!uploader) {
-          this.props.onError("Cannot initiate file upload.");
-          return;
-        }
-        // Format data and initiate upload.
-        let uploadCompletionPromise = uploader.upload(file);
-        let msg = Drafty.attachFile(null, file.type, null, file.name, file.size, uploadCompletionPromise);
-        // Pass data and the uploader to the TinodeWeb.
-        this.props.sendMessage(msg, uploadCompletionPromise, uploader);
-      } else {
-        // Small enough to send inband.
-        fileToBase64(file, (mime, bits, fname) => {
-          this.props.sendMessage(Drafty.attachFile(null, mime, bits, fname));
-        }, this.props.onError);
-      }
-    }
-    // Clear the value so the same file can be uploaded again.
-    e.target.value = '';
-  }
-
-  handleSend() {
-    var message = this.state.message.trim();
-    if (message) {
-      this.props.sendMessage(this.state.message.trim());
-      this.setState({ message: '' });
-    }
-  }
-
-  /* Send on Enter key */
-  handleKeyPress(e) {
-    // Remove this if you don't want Enter to trigger send
-    if (e.key === 'Enter') {
-      // Have Shift-Enter insert a line break instead
-      if (!e.shiftKey) {
+        // If a file was pasted, don't paste base64 data into input field.
         e.preventDefault();
-        e.stopPropagation();
-
-        this.handleSend();
       }
     }
-  }
+  }, {
+    key: 'handleAttachImage',
+    value: function handleAttachImage(e) {
+      var _this57 = this;
 
-  handleMessageTyping(e) {
-    var newState = { message: e.target.value };
-    var now = new Date().getTime();
-    if (now - this.state.keypressTimestamp > KEYPRESS_DELAY) {
-      var topic = this.props.tinode.getTopic(this.props.topic);
-      if (topic.isSubscribed()) {
-        topic.noteKeyPress();
+      if (e.target.files && e.target.files.length > 0) {
+        var file = e.target.files[0];
+        // Check if the uploaded file is indeed an image and if it isn't too large.
+        if (file.size > MAX_INBAND_ATTACHMENT_SIZE || SUPPORTED_IMAGE_FORMATS.indexOf(file.type) < 0) {
+          // Convert image for size or format.
+          imageFileScaledToBase64(file, MAX_IMAGE_DIM, MAX_IMAGE_DIM, false,
+          // Success
+          function (bits, mime, width, height, fname) {
+            _this57.props.sendMessage(Drafty.insertImage(null, 0, mime, bits, width, height, fname));
+          },
+          // Failure
+          function (err) {
+            _this57.props.onError(err, "err");
+          });
+        } else {
+          // Image can be uploaded as is. No conversion is needed.
+          imageFileToBase64(file,
+          // Success
+          function (bits, mime, width, height, fname) {
+            _this57.props.sendMessage(Drafty.insertImage(null, 0, mime, bits, width, height, fname));
+          },
+          // Failure
+          function (err) {
+            _this57.props.onError(err, "err");
+          });
+        }
       }
-      newState.keypressTimestamp = now;
+      // Clear the value so the same file can be uploaded again.
+      e.target.value = '';
     }
-    this.setState(newState);
-  }
+  }, {
+    key: 'handleAttachFile',
+    value: function handleAttachFile(e) {
+      var _this58 = this;
 
-  render() {
-    var prompt = this.props.disabled ? "Messaging disabled" : "New message";
-    var instance = this;
-    return React.createElement(
-      'div',
-      { id: 'send-message-panel' },
-      this.props.disabled ? React.createElement(
-        'i',
-        { className: 'material-icons disabled' },
-        'photo'
-      ) : React.createElement(
-        'a',
-        { href: 'javascript:;', onClick: function (e) {
-            instance.attachImage.click();
-          }, title: 'Add image' },
-        React.createElement(
-          'i',
-          { className: 'material-icons secondary' },
-          'photo'
-        )
-      ),
-      this.props.disabled ? React.createElement(
-        'i',
-        { className: 'material-icons disabled' },
-        'attach_file'
-      ) : React.createElement(
-        'a',
-        { href: 'javascript:;', onClick: function (e) {
-            instance.attachFile.click();
-          }, title: 'Attach file' },
-        React.createElement(
-          'i',
-          { className: 'material-icons secondary' },
-          'attach_file'
-        )
-      ),
-      React.createElement('textarea', { id: 'sendMessage', placeholder: prompt,
-        disabled: this.props.disabled, value: this.state.message,
-        onChange: this.handleMessageTyping, onKeyPress: this.handleKeyPress,
-        ref: function (ref) {
-          instance.pasteFile = ref;
-        },
-        autoFocus: true }),
-      this.props.disabled ? React.createElement(
-        'i',
-        { className: 'material-icons disabled' },
-        'send'
-      ) : React.createElement(
-        'a',
-        { href: 'javascript:;', onClick: this.handleSend, title: 'Send' },
-        React.createElement(
-          'i',
-          { className: 'material-icons' },
-          'send'
-        )
-      ),
-      React.createElement('input', { type: 'file', ref: function (ref) {
-          instance.attachFile = ref;
-        },
-        onChange: this.handleAttachFile, style: { display: 'none' } }),
-      React.createElement('input', { type: 'file', ref: function (ref) {
-          instance.attachImage = ref;
-        }, accept: 'image/*',
-        onChange: this.handleAttachImage, style: { display: 'none' } })
-    );
-  }
-};
+      if (e.target.files && e.target.files.length > 0) {
+        var file = e.target.files[0];
+        if (file.size > MAX_EXTERN_ATTACHMENT_SIZE) {
+          // Too large.
+          this.props.onError("The file size " + bytesToHumanSize(file.size) + " exceeds the " + bytesToHumanSize(MAX_EXTERN_ATTACHMENT_SIZE) + " limit.", "err");
+        } else if (file.size > MAX_INBAND_ATTACHMENT_SIZE) {
+          // Too large to send inband - uploading out of band and sending as a link.
+          var uploader = this.props.tinode.getLargeFileHelper();
+          if (!uploader) {
+            this.props.onError("Cannot initiate file upload.");
+            return;
+          }
+          // Format data and initiate upload.
+          var uploadCompletionPromise = uploader.upload(file);
+          var msg = Drafty.attachFile(null, file.type, null, file.name, file.size, uploadCompletionPromise);
+          // Pass data and the uploader to the TinodeWeb.
+          this.props.sendMessage(msg, uploadCompletionPromise, uploader);
+        } else {
+          // Small enough to send inband.
+          fileToBase64(file, function (mime, bits, fname) {
+            _this58.props.sendMessage(Drafty.attachFile(null, mime, bits, fname));
+          }, this.props.onError);
+        }
+      }
+      // Clear the value so the same file can be uploaded again.
+      e.target.value = '';
+    }
+  }, {
+    key: 'handleSend',
+    value: function handleSend() {
+      var message = this.state.message.trim();
+      if (message) {
+        this.props.sendMessage(this.state.message.trim());
+        this.setState({ message: '' });
+      }
+    }
 
-/* This is just a static page to display when no conversation is selected. */
-class LogoView extends React.PureComponent {
-  render() {
-    var version = APP_NAME + " (" + Tinode.getLibrary() + ")";
-    return React.createElement(
-      'div',
-      { id: 'dummy-view', className: this.props.hideSelf ? 'nodisplay' : null },
-      React.createElement(
+    /* Send on Enter key */
+
+  }, {
+    key: 'handleKeyPress',
+    value: function handleKeyPress(e) {
+      // Remove this if you don't want Enter to trigger send
+      if (e.key === 'Enter') {
+        // Have Shift-Enter insert a line break instead
+        if (!e.shiftKey) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          this.handleSend();
+        }
+      }
+    }
+  }, {
+    key: 'handleMessageTyping',
+    value: function handleMessageTyping(e) {
+      var newState = { message: e.target.value };
+      var now = new Date().getTime();
+      if (now - this.state.keypressTimestamp > KEYPRESS_DELAY) {
+        var topic = this.props.tinode.getTopic(this.props.topic);
+        if (topic.isSubscribed()) {
+          topic.noteKeyPress();
+        }
+        newState.keypressTimestamp = now;
+      }
+      this.setState(newState);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var prompt = this.props.disabled ? "Messaging disabled" : "New message";
+      var instance = this;
+      return React.createElement(
         'div',
-        null,
-        React.createElement(
+        { id: 'send-message-panel' },
+        this.props.disabled ? React.createElement(
+          'i',
+          { className: 'material-icons disabled' },
+          'photo'
+        ) : React.createElement(
           'a',
-          { href: 'https://github.com/tinode/chat/' },
-          React.createElement('img', { id: 'logo', alt: 'logo', src: 'img/logo.svg' }),
+          { href: 'javascript:;', onClick: function onClick(e) {
+              instance.attachImage.click();
+            }, title: 'Add image' },
           React.createElement(
-            'h2',
-            null,
-            'Tinode Web'
+            'i',
+            { className: 'material-icons secondary' },
+            'photo'
           )
         ),
-        React.createElement(
-          'p',
-          null,
-          'Client: ',
-          version
-        ),
-        React.createElement(
-          'p',
-          null,
-          'Server: ',
-          this.props.serverVersion,
-          ' (',
-          this.props.serverAddress,
-          ')'
-        )
-      )
-    );
-  }
-};
-
-class ImagePreview extends React.PureComponent {
-  constructor(props) {
-    super(props);
-
-    this.state = {};
-  }
-
-  componentDidMount() {
-    this.setState({
-      width: this.container.clientWidth,
-      height: this.container.clientHeight
-    });
-  }
-
-  render() {
-    if (!this.props.content) {
-      return null;
-    }
-    var instance = this;
-    var dim = fitImageSize(this.props.content.width, this.props.content.height, this.state.width, this.state.height, false);
-    var size = dim ? { width: dim.dstWidth + "px", height: dim.dstHeight + "px" } : this.props.content.width > this.props.content.height ? { width: '100%' } : { height: '100%' };
-    size.maxWidth = "100%";
-    size.maxHeight = "100%";
-
-    var filename = this.props.content.filename;
-    var maxlength = this.props.content.width / REM_SIZE | 0;
-    if (filename.length > maxlength) {
-      filename = filename.slice(0, maxlength - 2) + "..." + filename.slice(2 - maxlength);
-    }
-    return React.createElement(
-      'div',
-      { id: 'image-preview', onClick: this.props.onClose },
-      React.createElement(
-        'div',
-        { id: 'image-preview-caption-panel' },
-        React.createElement(
+        this.props.disabled ? React.createElement(
+          'i',
+          { className: 'material-icons disabled' },
+          'attach_file'
+        ) : React.createElement(
           'a',
-          { href: 'javascript:;', download: this.props.content.filename },
+          { href: 'javascript:;', onClick: function onClick(e) {
+              instance.attachFile.click();
+            }, title: 'Attach file' },
+          React.createElement(
+            'i',
+            { className: 'material-icons secondary' },
+            'attach_file'
+          )
+        ),
+        React.createElement('textarea', { id: 'sendMessage', placeholder: prompt,
+          disabled: this.props.disabled, value: this.state.message,
+          onChange: this.handleMessageTyping, onKeyPress: this.handleKeyPress,
+          ref: function ref(_ref) {
+            instance.pasteFile = _ref;
+          },
+          autoFocus: true }),
+        this.props.disabled ? React.createElement(
+          'i',
+          { className: 'material-icons disabled' },
+          'send'
+        ) : React.createElement(
+          'a',
+          { href: 'javascript:;', onClick: this.handleSend, title: 'Send' },
           React.createElement(
             'i',
             { className: 'material-icons' },
-            'file_download'
-          ),
-          ' download'
-        ),
-        React.createElement(
-          'a',
-          { href: 'javascript:;', onClick: this.props.onClose },
-          React.createElement(
-            'i',
-            { className: 'material-icons gray' },
-            'close'
+            'send'
           )
-        )
-      ),
-      React.createElement(
+        ),
+        React.createElement('input', { type: 'file', ref: function ref(_ref2) {
+            instance.attachFile = _ref2;
+          },
+          onChange: this.handleAttachFile, style: { display: 'none' } }),
+        React.createElement('input', { type: 'file', ref: function ref(_ref3) {
+            instance.attachImage = _ref3;
+          }, accept: 'image/*',
+          onChange: this.handleAttachImage, style: { display: 'none' } })
+      );
+    }
+  }]);
+
+  return SendMessage;
+}(React.PureComponent);
+
+;
+
+/* This is just a static page to display when no conversation is selected. */
+
+var LogoView = function (_React$PureComponent25) {
+  _inherits(LogoView, _React$PureComponent25);
+
+  function LogoView() {
+    _classCallCheck(this, LogoView);
+
+    return _possibleConstructorReturn(this, (LogoView.__proto__ || Object.getPrototypeOf(LogoView)).apply(this, arguments));
+  }
+
+  _createClass(LogoView, [{
+    key: 'render',
+    value: function render() {
+      var version = APP_NAME + " (" + Tinode.getLibrary() + ")";
+      return React.createElement(
         'div',
-        { id: 'image-preview-container', ref: function (ref) {
-            instance.container = ref;
-          } },
-        React.createElement('img', { src: this.props.content.url, style: size })
-      ),
-      React.createElement(
-        'div',
-        { id: 'image-preview-footer' },
+        { id: 'dummy-view', className: this.props.hideSelf ? 'nodisplay' : null },
         React.createElement(
           'div',
           null,
           React.createElement(
-            'div',
-            null,
+            'a',
+            { href: 'https://github.com/tinode/chat/' },
+            React.createElement('img', { id: 'logo', alt: 'logo', src: 'img/logo.svg' }),
             React.createElement(
-              'b',
+              'h2',
               null,
-              'File name'
-            ),
-            ':'
+              'Tinode Web'
+            )
           ),
           React.createElement(
-            'div',
+            'p',
             null,
+            'Client: ',
+            version
+          ),
+          React.createElement(
+            'p',
+            null,
+            'Server: ',
+            this.props.serverVersion,
+            ' (',
+            this.props.serverAddress,
+            ')'
+          )
+        )
+      );
+    }
+  }]);
+
+  return LogoView;
+}(React.PureComponent);
+
+;
+
+var ImagePreview = function (_React$PureComponent26) {
+  _inherits(ImagePreview, _React$PureComponent26);
+
+  function ImagePreview(props) {
+    _classCallCheck(this, ImagePreview);
+
+    var _this60 = _possibleConstructorReturn(this, (ImagePreview.__proto__ || Object.getPrototypeOf(ImagePreview)).call(this, props));
+
+    _this60.state = {};
+    return _this60;
+  }
+
+  _createClass(ImagePreview, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this.setState({
+        width: this.container.clientWidth,
+        height: this.container.clientHeight
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      if (!this.props.content) {
+        return null;
+      }
+      var instance = this;
+      var dim = fitImageSize(this.props.content.width, this.props.content.height, this.state.width, this.state.height, false);
+      var size = dim ? { width: dim.dstWidth + "px", height: dim.dstHeight + "px" } : this.props.content.width > this.props.content.height ? { width: '100%' } : { height: '100%' };
+      size.maxWidth = "100%";
+      size.maxHeight = "100%";
+
+      var filename = this.props.content.filename;
+      var maxlength = this.props.content.width / REM_SIZE | 0;
+      if (filename.length > maxlength) {
+        filename = filename.slice(0, maxlength - 2) + "..." + filename.slice(2 - maxlength);
+      }
+      return React.createElement(
+        'div',
+        { id: 'image-preview', onClick: this.props.onClose },
+        React.createElement(
+          'div',
+          { id: 'image-preview-caption-panel' },
+          React.createElement(
+            'a',
+            { href: 'javascript:;', download: this.props.content.filename },
             React.createElement(
-              'span',
-              { title: this.props.content.filename },
-              filename
+              'i',
+              { className: 'material-icons' },
+              'file_download'
+            ),
+            ' download'
+          ),
+          React.createElement(
+            'a',
+            { href: 'javascript:;', onClick: this.props.onClose },
+            React.createElement(
+              'i',
+              { className: 'material-icons gray' },
+              'close'
             )
           )
         ),
         React.createElement(
           'div',
-          null,
-          React.createElement(
-            'div',
-            null,
-            React.createElement(
-              'b',
-              null,
-              'Content type'
-            ),
-            ':'
-          ),
-          React.createElement(
-            'div',
-            null,
-            this.props.content.type
-          )
+          { id: 'image-preview-container', ref: function ref(_ref4) {
+              instance.container = _ref4;
+            } },
+          React.createElement('img', { src: this.props.content.url, style: size })
         ),
         React.createElement(
           'div',
-          null,
+          { id: 'image-preview-footer' },
           React.createElement(
             'div',
             null,
             React.createElement(
-              'b',
+              'div',
               null,
-              'Size'
+              React.createElement(
+                'b',
+                null,
+                'File name'
+              ),
+              ':'
             ),
-            ':'
+            React.createElement(
+              'div',
+              null,
+              React.createElement(
+                'span',
+                { title: this.props.content.filename },
+                filename
+              )
+            )
           ),
           React.createElement(
             'div',
             null,
-            this.props.content.width,
-            ' \xD7 ',
-            this.props.content.height,
-            ' px; ',
-            bytesToHumanSize(this.props.content.size)
+            React.createElement(
+              'div',
+              null,
+              React.createElement(
+                'b',
+                null,
+                'Content type'
+              ),
+              ':'
+            ),
+            React.createElement(
+              'div',
+              null,
+              this.props.content.type
+            )
+          ),
+          React.createElement(
+            'div',
+            null,
+            React.createElement(
+              'div',
+              null,
+              React.createElement(
+                'b',
+                null,
+                'Size'
+              ),
+              ':'
+            ),
+            React.createElement(
+              'div',
+              null,
+              this.props.content.width,
+              ' \xD7 ',
+              this.props.content.height,
+              ' px; ',
+              bytesToHumanSize(this.props.content.size)
+            )
           )
         )
-      )
-    );
-  }
-};
+      );
+    }
+  }]);
+
+  return ImagePreview;
+}(React.PureComponent);
+
+;
 /* END Conversation panel */
 
 /* The top-level class to hold all fuinctionality together */
-class TinodeWeb extends React.Component {
-  constructor(props) {
-    super(props);
 
-    this.state = this.getBlankState();
+var TinodeWeb = function (_React$Component20) {
+  _inherits(TinodeWeb, _React$Component20);
 
-    this.handleResize = this.handleResize.bind(this);
-    this.handleHashRoute = this.handleHashRoute.bind(this);
-    this.handleOnline = this.handleOnline.bind(this);
-    this.handleAppVisibility = this.handleAppVisibility.bind(this);
-    this.handleReadTimer = this.handleReadTimer.bind(this);
-    this.handleVisibilityEvent = this.handleVisibilityEvent.bind(this);
-    this.handleError = this.handleError.bind(this);
-    this.handleLoginRequest = this.handleLoginRequest.bind(this);
-    this.handleConnected = this.handleConnected.bind(this);
-    this.doLogin = this.doLogin.bind(this);
-    this.handleCredentialsRequest = this.handleCredentialsRequest.bind(this);
-    this.handleLoginSuccessful = this.handleLoginSuccessful.bind(this);
-    this.handleDisconnect = this.handleDisconnect.bind(this);
-    this.tnMeMetaDesc = this.tnMeMetaDesc.bind(this);
-    this.tnMeContactUpdate = this.tnMeContactUpdate.bind(this);
-    this.tnMeSubsUpdated = this.tnMeSubsUpdated.bind(this);
-    this.resetContactList = this.resetContactList.bind(this);
-    this.tnData = this.tnData.bind(this);
-    this.tnInitFind = this.tnInitFind.bind(this);
-    this.tnFndSubsUpdated = this.tnFndSubsUpdated.bind(this);
-    this.handleSearchContacts = this.handleSearchContacts.bind(this);
-    this.handleTopicSelected = this.handleTopicSelected.bind(this);
-    this.handleHideMessagesView = this.handleHideMessagesView.bind(this);
-    this.handleSendMessage = this.handleSendMessage.bind(this);
-    this.handleNewAccount = this.handleNewAccount.bind(this);
-    this.handleNewAccountRequest = this.handleNewAccountRequest.bind(this);
-    this.handleUpdateAccountRequest = this.handleUpdateAccountRequest.bind(this);
-    this.handleUpdateAccountTagsRequest = this.handleUpdateAccountTagsRequest.bind(this);
-    this.handleSettings = this.handleSettings.bind(this);
-    this.handleGlobalSettings = this.handleGlobalSettings.bind(this);
-    this.handleToggleMessageSounds = this.handleToggleMessageSounds.bind(this);
-    this.initDesktopAlerts = this.initDesktopAlerts.bind(this);
-    this.togglePushToken = this.togglePushToken.bind(this);
-    this.requestPushToken = this.requestPushToken.bind(this);
-    this.handleSidepanelCancel = this.handleSidepanelCancel.bind(this);
-    this.handleNewTopic = this.handleNewTopic.bind(this);
-    this.handleNewTopicRequest = this.handleNewTopicRequest.bind(this);
-    this.handleNewTopicCreated = this.handleNewTopicCreated.bind(this);
-    this.handleTopicUpdateRequest = this.handleTopicUpdateRequest.bind(this);
-    this.handleChangePermissions = this.handleChangePermissions.bind(this);
-    this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
-    this.handleLogout = this.handleLogout.bind(this);
-    this.handleLeaveUnsubRequest = this.handleLeaveUnsubRequest.bind(this);
-    this.handleDialogCancel = this.handleDialogCancel.bind(this);
-    this.handleShowContextMenu = this.handleShowContextMenu.bind(this);
-    this.defaultTopicContextMenu = this.defaultTopicContextMenu.bind(this);
-    this.handleHideContextMenu = this.handleHideContextMenu.bind(this);
-    this.handleShowInfoView = this.handleShowInfoView.bind(this);
-    this.handleHideInfoView = this.handleHideInfoView.bind(this);
-    this.handleMemberUpdateRequest = this.handleMemberUpdateRequest.bind(this);
-    this.handleValidateCredentialsRequest = this.handleValidateCredentialsRequest.bind(this);
-    this.handlePasswordResetRequest = this.handlePasswordResetRequest.bind(this);
-    this.handleResetPassword = this.handleResetPassword.bind(this);
+  function TinodeWeb(props) {
+    _classCallCheck(this, TinodeWeb);
+
+    var _this61 = _possibleConstructorReturn(this, (TinodeWeb.__proto__ || Object.getPrototypeOf(TinodeWeb)).call(this, props));
+
+    _this61.state = _this61.getBlankState();
+
+    _this61.handleResize = _this61.handleResize.bind(_this61);
+    _this61.handleHashRoute = _this61.handleHashRoute.bind(_this61);
+    _this61.handleOnline = _this61.handleOnline.bind(_this61);
+    _this61.handleAppVisibility = _this61.handleAppVisibility.bind(_this61);
+    _this61.handleReadTimer = _this61.handleReadTimer.bind(_this61);
+    _this61.handleVisibilityEvent = _this61.handleVisibilityEvent.bind(_this61);
+    _this61.handleError = _this61.handleError.bind(_this61);
+    _this61.handleLoginRequest = _this61.handleLoginRequest.bind(_this61);
+    _this61.handleConnected = _this61.handleConnected.bind(_this61);
+    _this61.doLogin = _this61.doLogin.bind(_this61);
+    _this61.handleCredentialsRequest = _this61.handleCredentialsRequest.bind(_this61);
+    _this61.handleLoginSuccessful = _this61.handleLoginSuccessful.bind(_this61);
+    _this61.handleDisconnect = _this61.handleDisconnect.bind(_this61);
+    _this61.tnMeMetaDesc = _this61.tnMeMetaDesc.bind(_this61);
+    _this61.tnMeContactUpdate = _this61.tnMeContactUpdate.bind(_this61);
+    _this61.tnMeSubsUpdated = _this61.tnMeSubsUpdated.bind(_this61);
+    _this61.resetContactList = _this61.resetContactList.bind(_this61);
+    _this61.tnData = _this61.tnData.bind(_this61);
+    _this61.tnInitFind = _this61.tnInitFind.bind(_this61);
+    _this61.tnFndSubsUpdated = _this61.tnFndSubsUpdated.bind(_this61);
+    _this61.handleSearchContacts = _this61.handleSearchContacts.bind(_this61);
+    _this61.handleTopicSelected = _this61.handleTopicSelected.bind(_this61);
+    _this61.handleHideMessagesView = _this61.handleHideMessagesView.bind(_this61);
+    _this61.handleSendMessage = _this61.handleSendMessage.bind(_this61);
+    _this61.handleNewAccount = _this61.handleNewAccount.bind(_this61);
+    _this61.handleNewAccountRequest = _this61.handleNewAccountRequest.bind(_this61);
+    _this61.handleUpdateAccountRequest = _this61.handleUpdateAccountRequest.bind(_this61);
+    _this61.handleUpdateAccountTagsRequest = _this61.handleUpdateAccountTagsRequest.bind(_this61);
+    _this61.handleSettings = _this61.handleSettings.bind(_this61);
+    _this61.handleGlobalSettings = _this61.handleGlobalSettings.bind(_this61);
+    _this61.handleToggleMessageSounds = _this61.handleToggleMessageSounds.bind(_this61);
+    _this61.initDesktopAlerts = _this61.initDesktopAlerts.bind(_this61);
+    _this61.togglePushToken = _this61.togglePushToken.bind(_this61);
+    _this61.requestPushToken = _this61.requestPushToken.bind(_this61);
+    _this61.handleSidepanelCancel = _this61.handleSidepanelCancel.bind(_this61);
+    _this61.handleNewTopic = _this61.handleNewTopic.bind(_this61);
+    _this61.handleNewTopicRequest = _this61.handleNewTopicRequest.bind(_this61);
+    _this61.handleNewTopicCreated = _this61.handleNewTopicCreated.bind(_this61);
+    _this61.handleTopicUpdateRequest = _this61.handleTopicUpdateRequest.bind(_this61);
+    _this61.handleChangePermissions = _this61.handleChangePermissions.bind(_this61);
+    _this61.handleTagsUpdated = _this61.handleTagsUpdated.bind(_this61);
+    _this61.handleLogout = _this61.handleLogout.bind(_this61);
+    _this61.handleLeaveUnsubRequest = _this61.handleLeaveUnsubRequest.bind(_this61);
+    _this61.handleDialogCancel = _this61.handleDialogCancel.bind(_this61);
+    _this61.handleShowContextMenu = _this61.handleShowContextMenu.bind(_this61);
+    _this61.defaultTopicContextMenu = _this61.defaultTopicContextMenu.bind(_this61);
+    _this61.handleHideContextMenu = _this61.handleHideContextMenu.bind(_this61);
+    _this61.handleShowInfoView = _this61.handleShowInfoView.bind(_this61);
+    _this61.handleHideInfoView = _this61.handleHideInfoView.bind(_this61);
+    _this61.handleMemberUpdateRequest = _this61.handleMemberUpdateRequest.bind(_this61);
+    _this61.handleValidateCredentialsRequest = _this61.handleValidateCredentialsRequest.bind(_this61);
+    _this61.handlePasswordResetRequest = _this61.handlePasswordResetRequest.bind(_this61);
+    _this61.handleResetPassword = _this61.handleResetPassword.bind(_this61);
+    return _this61;
   }
 
-  getBlankState() {
-    let settings = localStorage.getObject("settings") || {};
+  _createClass(TinodeWeb, [{
+    key: 'getBlankState',
+    value: function getBlankState() {
+      var _ref5;
 
-    return {
-      connected: false,
-      transport: settings.transport || null,
-      serverAddress: settings.serverAddress || detectServerAddress(),
-      serverVersion: 'no connection',
-      // "On" is the default, so saving the "off" state.
-      messageSounds: !settings.messageSoundsOff,
-      desktopAlerts: settings.desktopAlerts,
-      desktopAlertsEnabled: (isSecureConnection() || isLocalHost()) && typeof firebase != 'undefined' && typeof navigator != 'undefined' && typeof FIREBASE_INIT != 'undefined',
-      firebaseToken: localStorage.getObject("firebase-token"),
+      var settings = localStorage.getObject("settings") || {};
 
-      errorText: '',
-      errorLevel: null,
+      return _ref5 = {
+        connected: false,
+        transport: settings.transport || null,
+        serverAddress: settings.serverAddress || detectServerAddress(),
+        serverVersion: 'no connection',
+        // "On" is the default, so saving the "off" state.
+        messageSounds: !settings.messageSoundsOff,
+        desktopAlerts: settings.desktopAlerts,
+        desktopAlertsEnabled: (isSecureConnection() || isLocalHost()) && typeof firebase != 'undefined' && typeof navigator != 'undefined' && typeof FIREBASE_INIT != 'undefined',
+        firebaseToken: localStorage.getObject("firebase-token"),
 
-      sidePanelSelected: 'login',
-      sidePanelTitle: null,
-      sidePanelAvatar: null,
-      dialogSelected: null,
-      contextMenuVisible: false,
-      login: '',
-      password: '',
-      myUserId: null,
-      liveConnection: navigator.onLine,
-      topicSelected: '',
-      topicSelectedOnline: false,
-      topicSelectedAcs: null,
-      newGroupTopicParams: null,
-      loginDisabled: false,
-      displayMobile: window.innerWidth <= MEDIA_BREAKPOINT,
-      showInfoPanel: false,
-      mobilePanel: 'sidepanel',
-
-      contextMenuVisible: false,
-      contextMenuBounds: null,
-      contextMenuClickAt: null,
-      contextMenuParams: null,
-      contextMenuItems: [],
-
-      // Chats as shown in the ContactsView
-      chatList: [],
-      // Contacts returned by a search query.
-      searchResults: [],
-      // Merged results of a search query and p2p chats.
-      searchableContacts: [],
-      credMethod: undefined,
-      credCode: undefined
-    };
-  }
-
-  componentDidMount() {
-    window.addEventListener('resize', this.handleResize);
-    window.addEventListener('online', e => {
-      this.handleOnline(true);
-    });
-    window.addEventListener('offline', e => {
-      this.handleOnline(false);
-    });
-    window.addEventListener('hashchange', this.handleHashRoute);
-    // Window/tab visible or invisible for pausing timers.
-    document.addEventListener("visibilitychange", this.handleVisibilityEvent);
-
-    this.setState({ viewportWidth: document.documentElement.clientWidth });
-
-    this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport);
-
-    // Initialize desktop alerts.
-    if (this.state.desktopAlertsEnabled) {
-      try {
-        this.fbPush = firebase.initializeApp(FIREBASE_INIT, APP_NAME).messaging();
-        this.fbPush.usePublicVapidKey(FIREBASE_INIT.messagingVapidKey);
-        navigator.serviceWorker.register('/service-worker.js').then(reg => {
-          this.fbPush.useServiceWorker(reg);
-          this.initDesktopAlerts();
-          if (this.state.desktopAlerts) {
-            if (!this.state.firebaseToken) {
-              this.togglePushToken(true);
-            } else {
-              this.tinode.setDeviceToken(this.state.firebaseToken);
-            }
-          }
-        }).catch(err => {
-          // registration failed :(
-          console.log("Failed to register service worker:", err);
-        });
-      } catch (err) {
-        this.handleError("Failed to initialize push notifications", "err");
-        console.log("Failed to initialize push notifications", err);
-        this.setState({ desktopAlertsEnabled: false });
-      }
-    }
-
-    this.tinode.enableLogging(true, true);
-    this.tinode.onConnect = this.handleConnected;
-    this.tinode.onDisconnect = this.handleDisconnect;
-
-    let token = localStorage.getObject("keep-logged-in") ? localStorage.getObject("auth-token") : undefined;
-
-    let parsedNav = parseUrlHash(window.location.hash);
-    if (token) {
-      // When reading from storage, date is returned as string.
-      token.expires = new Date(token.expires);
-      this.tinode.setAuthToken(token);
-      this.tinode.connect().catch(err => {
-        // Socket error
-        this.handleError(err.message, "err");
-      });
-      delete parsedNav.params.info;
-      delete parsedNav.params.tab;
-      parsedNav.path[0] = '';
-      navigateTo(composeUrlHash(parsedNav.path, parsedNav.params));
-    } else if (!parsedNav.params.token) {
-      navigateTo("");
-    }
-
-    this.readTimer = null;
-    this.readTimerCallback = null;
-
-    this.handleHashRoute();
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.handleResize);
-    window.removeEventListener('hashchange', this.handleHashRoute);
-    document.removeEventListener("visibilitychange", this.handleVisibilityEvent);
-  }
-
-  // Setup transport (usually websocket) and server address. This will terminate connection with the server.
-  static tnSetup(serverAddress, transport) {
-    return new Tinode(APP_NAME, serverAddress, API_KEY, transport, isSecureConnection());
-  }
-
-  handleResize() {
-    var mobile = document.documentElement.clientWidth <= MEDIA_BREAKPOINT;
-    this.setState({ viewportWidth: document.documentElement.clientWidth });
-    if (this.state.displayMobile != mobile) {
-      this.setState({ displayMobile: mobile });
-    }
-  }
-
-  // Handle for hashchange event: display appropriate panels.
-  handleHashRoute() {
-    var hash = parseUrlHash(window.location.hash);
-    if (hash.path && hash.path.length > 0) {
-      // Left-side panel selector.
-      if (['register', 'settings', 'edit', 'cred', 'reset', 'newtpk', 'contacts', ''].includes(hash.path[0])) {
-        this.setState({ sidePanelSelected: hash.path[0] });
-      } else {
-        console.log("Unknown sidepanel view", hash.path[0]);
-      }
-
-      // Topic for MessagesView selector.
-      if (hash.path.length > 1 && hash.path[1] != this.state.topicSelected) {
-        this.setState({
-          topicSelected: Tinode.topicType(hash.path[1]) ? hash.path[1] : null
-        });
-      }
-    } else {
-      // Empty hashpath
-      this.setState({ sidePanelSelected: '' });
-    }
-
-    // Save validation credentials, if available.
-    if (hash.params.method) {
-      this.setState({ credMethod: hash.params.method });
-    }
-    if (hash.params.code) {
-      this.setState({ credCode: hash.params.code });
-    }
-
-    // Additional parameters of panels.
-    this.setState({
-      showInfoPanel: hash.params.info,
-      newTopicTabSelected: hash.params.tab
-    });
-  }
-
-  handleOnline(online) {
-    var newState = { liveConnection: online };
-    if (online) {
-      this.handleError("", null);
-    } else {
-      this.handleError("No connection", "warn");
-    }
-    this.setState({ liveConnection: online });
-  }
-
-  // Handling read notifications here to be able to pause
-  // them then the window/tab is not visible.
-  handleAppVisibility(visible, callback) {
-    clearTimeout(this.readTimer);
-    this.readTimerCallback = callback;
-    if (visible && callback) {
-      this.readTimer = setTimeout(callback, READ_DELAY);
-    } else {
-      this.readTimer = null;
-    }
-  }
-
-  handleReadTimer(callback) {
-    this.handleAppVisibility(!document.hidden, callback);
-  }
-
-  handleVisibilityEvent() {
-    this.handleAppVisibility(!document.hidden, this.readTimerCallback);
-  }
-
-  handleError(err, level) {
-    this.setState({ errorText: err, errorLevel: level });
-  }
-
-  // User clicked Login button in the side panel.
-  handleLoginRequest(login, password) {
-    this.setState({ loginDisabled: true, login: login, password: password });
-    this.handleError("", null);
-
-    if (this.tinode.isConnected()) {
-      this.doLogin(login, password, { meth: this.state.credMethod, resp: this.state.credCode });
-    } else {
-      this.tinode.connect().catch(err => {
-        // Socket error
-        this.setState({ loginDisabled: false });
-        this.handleError(err.message, "err");
-      });
-    }
-  }
-
-  // Connection succeeded.
-  handleConnected() {
-    var params = this.tinode.getServerInfo();
-    this.setState({
-      serverVersion: params.ver + " " + (params.build ? params.build : "none") + "; "
-    });
-    this.doLogin(this.state.login, this.state.password, { meth: this.state.credMethod, resp: this.state.credCode });
-  }
-
-  doLogin(login, password, cred) {
-    if (this.tinode.isAuthenticated()) {
-      // Already logged in. Go to default screen.
-      navigateTo("");
-      return;
-    }
-    // Sanitize and package credentail.
-    cred = Tinode.credential(cred);
-    // Try to login with login/password. If they are not available, try token. If no token, ask for login/password.
-    let promise = null;
-    let token = this.tinode.getAuthToken();
-    if (login && password) {
-      this.setState({ password: null });
-      promise = this.tinode.loginBasic(login, password, cred);
-    } else if (token) {
-      promise = this.tinode.loginToken(token.token, cred);
-    }
-
-    if (promise) {
-      promise.then(ctrl => {
-        if (ctrl.code >= 300 && ctrl.text === "validate credentials") {
-          if (cred) {
-            this.handleError("Code does not match", "warn");
-          }
-          this.handleCredentialsRequest(ctrl.params);
-        } else {
-          this.handleLoginSuccessful();
-        }
-      }).catch(err => {
-        // Login failed, report error.
-        this.setState({ loginDisabled: false, credMethod: undefined, credCode: undefined });
-        this.handleError(err.message, "err");
-        localStorage.removeItem("auth-token");
-        navigateTo("");
-      });
-    } else {
-      // No login credentials provided.
-      // Make sure we are on the login page.
-      navigateTo("");
-      this.setState({ loginDisabled: false });
-    }
-  }
-
-  handleCredentialsRequest(params) {
-    var parsed = parseUrlHash(window.location.hash);
-    parsed.path[0] = 'cred';
-    parsed.params['method'] = params.cred[0];
-    navigateTo(composeUrlHash(parsed.path, parsed.params));
-  }
-
-  handleLoginSuccessful() {
-    this.handleError("", null);
-
-    // Refresh authentication token.
-    if (localStorage.getObject("keep-logged-in")) {
-      localStorage.setObject("auth-token", this.tinode.getAuthToken());
-    }
-    // Logged in fine, subscribe to 'me' attaching callbacks from the contacts view.
-    var me = this.tinode.getMeTopic();
-    me.onMetaDesc = this.tnMeMetaDesc;
-    me.onContactUpdate = this.tnMeContactUpdate;
-    me.onSubsUpdated = this.tnMeSubsUpdated;
-    this.setState({
-      connected: true,
-      credMethod: undefined,
-      credCode: undefined,
-      myUserId: this.tinode.getCurrentUserID()
-    });
-    // Subscribe, fetch topic desc, the list of subscriptions. Messages are not fetched.
-    me.subscribe(me.startMetaQuery().withLaterSub().withDesc().build()).catch(err => {
-      localStorage.removeItem("auth-token");
-      this.handleError(err.message, "err");
-      navigateTo("");
-    });
-    navigateTo(setUrlSidePanel(window.location.hash, 'contacts'));
-  }
-
-  handleDisconnect(err) {
-    this.setState({
-      connected: false,
-      topicSelectedOnline: false,
-      dialogSelected: null,
-      errorText: err && err.message ? err.message : 'Disconnected',
-      errorLevel: err && err.message ? "err" : "warn",
-      loginDisabled: false,
-      contextMenuVisible: false,
-      serverVersion: 'no connection'
-    });
-  }
-
-  tnMeMetaDesc(desc) {
-    if (desc && desc.public) {
-      this.setState({
-        sidePanelTitle: desc.public.fn,
-        sidePanelAvatar: makeImageUrl(desc.public.photo)
-      });
-    }
-  }
-
-  // Reactions to updates to the contact list.
-  tnMeContactUpdate(what, cont) {
-    if (what == "on" || what == "off") {
-      this.resetContactList();
-      if (this.state.topicSelected == cont.topic) {
-        this.setState({ topicSelectedOnline: what === "on" });
-      }
-    } else if (what == "read") {
-      this.resetContactList();
-    } else if (what == "msg") {
-      // New message received
-      // Skip update if the topic is currently open, otherwise the badge will annoyingly flash.
-      if (this.state.topicSelected != cont.topic) {
-        if (this.state.messageSounds) {
-          POP_SOUND.play();
-        }
-        this.resetContactList();
-      } else if (document.hidden && this.state.messageSounds) {
-        POP_SOUND.play();
-      }
-    } else if (what == "recv") {
-      // Explicitly ignoring "recv" -- it causes no visible updates to contact list.
-    } else if (what == "gone" || what == "unsub") {
-      // Topic deleted or user unsubscribed. Remove topic from view.
-      // If the currently selected topic is gone, clear the selection.
-      if (this.state.topicSelected == cont.topic) {
-        this.handleTopicSelected(null);
-      }
-      // Redraw without the deleted topic.
-      this.resetContactList();
-    } else if (what == "acs") {
-      // Permissions changed. If it's for the currently selected topic,
-      // update the views.
-      if (this.state.topicSelected == cont.topic) {
-        this.setState({ topicSelectedAcs: cont.acs });
-      }
-    } else if (what == "del") {
-      // messages deleted (hard or soft) -- update pill counter.
-    } else {
-      // TODO(gene): handle other types of notifications:
-      // * ua -- user agent changes (maybe display a pictogram for mobile/desktop).
-      // * upd -- topic 'public' updated, issue getMeta().
-      console.log("Unsupported (yet) presence update:" + what + " in: " + cont.topic);
-    }
-  }
-
-  tnMeSubsUpdated(unused) {
-    this.resetContactList();
-  }
-
-  // Merge search results and contact list to create a single flat
-  // list of kown contacts for GroupManager to use.
-  static prepareSearchableContacts(chatList, foundContacts) {
-    let merged = {};
-
-    // For chatList topics merge only p2p topics and convert them to the
-    // same format as foundContacts.
-    for (const c of chatList) {
-      if (Tinode.topicType(c.topic) == "p2p") {
-        merged[c.topic] = {
-          user: c.topic,
-          updated: c.updated,
-          public: c.public,
-          private: c.private,
-          acs: c.acs
-        };
-      }
-    }
-
-    // Add all foundCountacts if they have not been added already.
-    for (const c of foundContacts) {
-      if (!merged[c.user]) {
-        merged[c.user] = c;
-      }
-    }
-
-    return Object.values(merged);
-  }
-
-  resetContactList() {
-    let newState = {
-      chatList: []
-    };
-    this.tinode.getMeTopic().contacts(c => {
-      newState.chatList.push(c);
-      if (this.state.topicSelected == c.topic) {
-        newState.topicSelectedOnline = c.online;
-        newState.topicSelectedAcs = c.acs;
-      }
-    });
-    // Merge search results and chat list.
-    newState.searchableContacts = TinodeWeb.prepareSearchableContacts(newState.chatList, this.state.searchResults);
-    this.setState(newState);
-  }
-
-  // Sending "received" notifications
-  tnData(data) {
-    let topic = this.tinode.getTopic(data.topic);
-    if (topic.msgStatus(data) > Tinode.MESSAGE_STATUS_SENDING) {
-      clearTimeout(this.receivedTimer);
-      this.receivedTimer = setTimeout(() => {
-        this.receivedTimer = undefined;
-        topic.noteRecv(data.seq);
-      }, RECEIVED_DELAY);
-    }
-  }
-
-  /* Fnd topic: find contacts by tokens */
-  tnInitFind() {
-    let fnd = this.tinode.getFndTopic();
-    if (fnd.isSubscribed()) {
-      this.tnFndSubsUpdated();
-    } else {
-      fnd.onSubsUpdated = this.tnFndSubsUpdated;
-      fnd.subscribe(fnd.startMetaQuery().withSub().withTags().build()).catch(err => {
-        this.handleError(err.message, "err");
-      });
-    }
-  }
-
-  tnFndSubsUpdated() {
-    let foundContacts = [];
-    // Don't attempt to create P2P topics which already exist. Server will reject the duplicates.
-    this.tinode.getFndTopic().contacts(s => {
-      foundContacts.push(s);
-    });
-    this.setState({
-      searchResults: foundContacts,
-      searchableContacts: TinodeWeb.prepareSearchableContacts(this.state.chatList, foundContacts)
-    });
-  }
-
-  /** Called when the user enters a contact into the contact search field in the NewAccount panel
-    @param query {Array} is an array of contacts to search for
-   */
-  handleSearchContacts(query) {
-    var fnd = this.tinode.getFndTopic();
-    fnd.setMeta({ desc: { public: query } }).then(ctrl => {
-      return fnd.getMeta(fnd.startMetaQuery().withSub().build());
-    }).catch(err => {
-      this.handleError(err.message, "err");
-    });
-  }
-
-  // User clicked on a contact in the side panel or deleted a contact.
-  handleTopicSelected(topicName, unused_index, online, acs) {
-    if (topicName) {
-      this.setState({
         errorText: '',
         errorLevel: null,
-        mobilePanel: 'topic-view',
-        showInfoPanel: false
-      });
-      // Different contact selected.
-      if (this.state.topicSelected != topicName) {
-        this.setState({
-          topicSelectedOnline: online,
-          topicSelectedAcs: acs
-        });
-        navigateTo(setUrlTopic("", topicName));
-      }
-    } else {
-      // Currently selected contact deleted
-      this.setState({
-        errorText: '',
-        errorLevel: null,
-        mobilePanel: 'sidepanel',
+
+        sidePanelSelected: 'login',
+        sidePanelTitle: null,
+        sidePanelAvatar: null,
+        dialogSelected: null,
+        contextMenuVisible: false,
+        login: '',
+        password: '',
+        myUserId: null,
+        liveConnection: navigator.onLine,
+        topicSelected: '',
         topicSelectedOnline: false,
         topicSelectedAcs: null,
-        showInfoPanel: false
+        newGroupTopicParams: null,
+        loginDisabled: false,
+        displayMobile: window.innerWidth <= MEDIA_BREAKPOINT,
+        showInfoPanel: false,
+        mobilePanel: 'sidepanel'
+
+      }, _defineProperty(_ref5, 'contextMenuVisible', false), _defineProperty(_ref5, 'contextMenuBounds', null), _defineProperty(_ref5, 'contextMenuClickAt', null), _defineProperty(_ref5, 'contextMenuParams', null), _defineProperty(_ref5, 'contextMenuItems', []), _defineProperty(_ref5, 'chatList', []), _defineProperty(_ref5, 'searchResults', []), _defineProperty(_ref5, 'searchableContacts', []), _defineProperty(_ref5, 'credMethod', undefined), _defineProperty(_ref5, 'credCode', undefined), _ref5;
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var _this62 = this;
+
+      window.addEventListener('resize', this.handleResize);
+      window.addEventListener('online', function (e) {
+        _this62.handleOnline(true);
       });
-      if (this.state.topicSelected) {
-        navigateTo(setUrlTopic("", null));
+      window.addEventListener('offline', function (e) {
+        _this62.handleOnline(false);
+      });
+      window.addEventListener('hashchange', this.handleHashRoute);
+      // Window/tab visible or invisible for pausing timers.
+      document.addEventListener("visibilitychange", this.handleVisibilityEvent);
+
+      this.setState({ viewportWidth: document.documentElement.clientWidth });
+
+      this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport);
+
+      // Initialize desktop alerts.
+      if (this.state.desktopAlertsEnabled) {
+        try {
+          this.fbPush = firebase.initializeApp(FIREBASE_INIT, APP_NAME).messaging();
+          this.fbPush.usePublicVapidKey(FIREBASE_INIT.messagingVapidKey);
+          navigator.serviceWorker.register('/service-worker.js').then(function (reg) {
+            _this62.fbPush.useServiceWorker(reg);
+            _this62.initDesktopAlerts();
+            if (_this62.state.desktopAlerts) {
+              if (!_this62.state.firebaseToken) {
+                _this62.togglePushToken(true);
+              } else {
+                _this62.tinode.setDeviceToken(_this62.state.firebaseToken);
+              }
+            }
+          }).catch(function (err) {
+            // registration failed :(
+            console.log("Failed to register service worker:", err);
+          });
+        } catch (err) {
+          this.handleError("Failed to initialize push notifications", "err");
+          console.log("Failed to initialize push notifications", err);
+          this.setState({ desktopAlertsEnabled: false });
+        }
+      }
+
+      this.tinode.enableLogging(true, true);
+      this.tinode.onConnect = this.handleConnected;
+      this.tinode.onDisconnect = this.handleDisconnect;
+
+      var token = localStorage.getObject("keep-logged-in") ? localStorage.getObject("auth-token") : undefined;
+
+      var parsedNav = parseUrlHash(window.location.hash);
+      if (token) {
+        // When reading from storage, date is returned as string.
+        token.expires = new Date(token.expires);
+        this.tinode.setAuthToken(token);
+        this.tinode.connect().catch(function (err) {
+          // Socket error
+          _this62.handleError(err.message, "err");
+        });
+        delete parsedNav.params.info;
+        delete parsedNav.params.tab;
+        parsedNav.path[0] = '';
+        navigateTo(composeUrlHash(parsedNav.path, parsedNav.params));
+      } else if (!parsedNav.params.token) {
+        navigateTo("");
+      }
+
+      this.readTimer = null;
+      this.readTimerCallback = null;
+
+      this.handleHashRoute();
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      window.removeEventListener('resize', this.handleResize);
+      window.removeEventListener('hashchange', this.handleHashRoute);
+      document.removeEventListener("visibilitychange", this.handleVisibilityEvent);
+    }
+
+    // Setup transport (usually websocket) and server address. This will terminate connection with the server.
+
+  }, {
+    key: 'handleResize',
+    value: function handleResize() {
+      var mobile = document.documentElement.clientWidth <= MEDIA_BREAKPOINT;
+      this.setState({ viewportWidth: document.documentElement.clientWidth });
+      if (this.state.displayMobile != mobile) {
+        this.setState({ displayMobile: mobile });
       }
     }
-  }
 
-  // In mobile view user requested to show sidepanel
-  handleHideMessagesView() {
-    this.setState({
-      mobilePanel: 'sidepanel'
-    });
-    navigateTo(setUrlTopic(window.location.hash, null));
-  }
+    // Handle for hashchange event: display appropriate panels.
 
-  // User is sending a message, either plain text or a drafty object, possibly
-  // with attachments.
-  handleSendMessage(msg, promise, uploader) {
-    let topic = this.tinode.getTopic(this.state.topicSelected);
+  }, {
+    key: 'handleHashRoute',
+    value: function handleHashRoute() {
+      var hash = parseUrlHash(window.location.hash);
+      if (hash.path && hash.path.length > 0) {
+        // Left-side panel selector.
+        if (['register', 'settings', 'edit', 'cred', 'reset', 'newtpk', 'contacts', ''].includes(hash.path[0])) {
+          this.setState({ sidePanelSelected: hash.path[0] });
+        } else {
+          console.log("Unknown sidepanel view", hash.path[0]);
+        }
 
-    msg = topic.createMessage(msg, false);
-    // The uploader is used to show progress.
-    msg._uploader = uploader;
-
-    if (!topic.isSubscribed()) {
-      if (!promise) {
-        promise = Promise.resolve();
-      }
-      promise = promise.then(() => {
-        return topic.subscribe();
-      });
-    }
-
-    if (promise) {
-      promise = promise.catch(err => {
-        this.handleError(err.message, "err");
-      });
-    }
-
-    topic.publishDraft(msg, promise).catch(err => {
-      this.handleError(err.message, "err");
-    });
-  }
-
-  // User chose a Sign Up menu item.
-  handleNewAccount() {
-    navigateTo(setUrlSidePanel(window.location.hash, 'register'));
-  }
-
-  // Actual registration of a new account.
-  handleNewAccountRequest(login_, password_, public_, cred_, tags_) {
-    this.tinode.connect(this.state.serverAddress).then(() => {
-      return this.tinode.createAccountBasic(login_, password_, { public: public_, tags: tags_, cred: Tinode.credential(cred_) });
-    }).then(ctrl => {
-      if (ctrl.code >= 300 && ctrl.text === "validate credentials") {
-        this.handleCredentialsRequest(ctrl.params);
+        // Topic for MessagesView selector.
+        if (hash.path.length > 1 && hash.path[1] != this.state.topicSelected) {
+          this.setState({
+            topicSelected: Tinode.topicType(hash.path[1]) ? hash.path[1] : null
+          });
+        }
       } else {
-        this.handleLoginSuccessful(this);
+        // Empty hashpath
+        this.setState({ sidePanelSelected: '' });
       }
-    }).catch(err => {
-      this.handleError(err.message, "err");
-    });
-  }
 
-  handleUpdateAccountRequest(password, pub, priv) {
-    if (pub || priv) {
-      this.tinode.getMeTopic().setMeta({ desc: { public: pub, private: priv } }).catch(err => {
-        this.handleError(err.message, "err");
+      // Save validation credentials, if available.
+      if (hash.params.method) {
+        this.setState({ credMethod: hash.params.method });
+      }
+      if (hash.params.code) {
+        this.setState({ credCode: hash.params.code });
+      }
+
+      // Additional parameters of panels.
+      this.setState({
+        showInfoPanel: hash.params.info,
+        newTopicTabSelected: hash.params.tab
       });
     }
-    if (password) {
-      this.tinode.updateAccountBasic(null, this.tinode.getCurrentLogin(), password).catch(err => {
-        this.handleError(err.message, "err");
+  }, {
+    key: 'handleOnline',
+    value: function handleOnline(online) {
+      var newState = { liveConnection: online };
+      if (online) {
+        this.handleError("", null);
+      } else {
+        this.handleError("No connection", "warn");
+      }
+      this.setState({ liveConnection: online });
+    }
+
+    // Handling read notifications here to be able to pause
+    // them then the window/tab is not visible.
+
+  }, {
+    key: 'handleAppVisibility',
+    value: function handleAppVisibility(visible, callback) {
+      clearTimeout(this.readTimer);
+      this.readTimerCallback = callback;
+      if (visible && callback) {
+        this.readTimer = setTimeout(callback, READ_DELAY);
+      } else {
+        this.readTimer = null;
+      }
+    }
+  }, {
+    key: 'handleReadTimer',
+    value: function handleReadTimer(callback) {
+      this.handleAppVisibility(!document.hidden, callback);
+    }
+  }, {
+    key: 'handleVisibilityEvent',
+    value: function handleVisibilityEvent() {
+      this.handleAppVisibility(!document.hidden, this.readTimerCallback);
+    }
+  }, {
+    key: 'handleError',
+    value: function handleError(err, level) {
+      this.setState({ errorText: err, errorLevel: level });
+    }
+
+    // User clicked Login button in the side panel.
+
+  }, {
+    key: 'handleLoginRequest',
+    value: function handleLoginRequest(login, password) {
+      var _this63 = this;
+
+      this.setState({ loginDisabled: true, login: login, password: password });
+      this.handleError("", null);
+
+      if (this.tinode.isConnected()) {
+        this.doLogin(login, password, { meth: this.state.credMethod, resp: this.state.credCode });
+      } else {
+        this.tinode.connect().catch(function (err) {
+          // Socket error
+          _this63.setState({ loginDisabled: false });
+          _this63.handleError(err.message, "err");
+        });
+      }
+    }
+
+    // Connection succeeded.
+
+  }, {
+    key: 'handleConnected',
+    value: function handleConnected() {
+      var params = this.tinode.getServerInfo();
+      this.setState({
+        serverVersion: params.ver + " " + (params.build ? params.build : "none") + "; "
+      });
+      this.doLogin(this.state.login, this.state.password, { meth: this.state.credMethod, resp: this.state.credCode });
+    }
+  }, {
+    key: 'doLogin',
+    value: function doLogin(login, password, cred) {
+      var _this64 = this;
+
+      if (this.tinode.isAuthenticated()) {
+        // Already logged in. Go to default screen.
+        navigateTo("");
+        return;
+      }
+      // Sanitize and package credentail.
+      cred = Tinode.credential(cred);
+      // Try to login with login/password. If they are not available, try token. If no token, ask for login/password.
+      var promise = null;
+      var token = this.tinode.getAuthToken();
+      if (login && password) {
+        this.setState({ password: null });
+        promise = this.tinode.loginBasic(login, password, cred);
+      } else if (token) {
+        promise = this.tinode.loginToken(token.token, cred);
+      }
+
+      if (promise) {
+        promise.then(function (ctrl) {
+          if (ctrl.code >= 300 && ctrl.text === "validate credentials") {
+            if (cred) {
+              _this64.handleError("Code does not match", "warn");
+            }
+            _this64.handleCredentialsRequest(ctrl.params);
+          } else {
+            _this64.handleLoginSuccessful();
+          }
+        }).catch(function (err) {
+          // Login failed, report error.
+          _this64.setState({ loginDisabled: false, credMethod: undefined, credCode: undefined });
+          _this64.handleError(err.message, "err");
+          localStorage.removeItem("auth-token");
+          navigateTo("");
+        });
+      } else {
+        // No login credentials provided.
+        // Make sure we are on the login page.
+        navigateTo("");
+        this.setState({ loginDisabled: false });
+      }
+    }
+  }, {
+    key: 'handleCredentialsRequest',
+    value: function handleCredentialsRequest(params) {
+      var parsed = parseUrlHash(window.location.hash);
+      parsed.path[0] = 'cred';
+      parsed.params['method'] = params.cred[0];
+      navigateTo(composeUrlHash(parsed.path, parsed.params));
+    }
+  }, {
+    key: 'handleLoginSuccessful',
+    value: function handleLoginSuccessful() {
+      var _this65 = this;
+
+      this.handleError("", null);
+
+      // Refresh authentication token.
+      if (localStorage.getObject("keep-logged-in")) {
+        localStorage.setObject("auth-token", this.tinode.getAuthToken());
+      }
+      // Logged in fine, subscribe to 'me' attaching callbacks from the contacts view.
+      var me = this.tinode.getMeTopic();
+      me.onMetaDesc = this.tnMeMetaDesc;
+      me.onContactUpdate = this.tnMeContactUpdate;
+      me.onSubsUpdated = this.tnMeSubsUpdated;
+      this.setState({
+        connected: true,
+        credMethod: undefined,
+        credCode: undefined,
+        myUserId: this.tinode.getCurrentUserID()
+      });
+      // Subscribe, fetch topic desc, the list of subscriptions. Messages are not fetched.
+      me.subscribe(me.startMetaQuery().withLaterSub().withDesc().build()).catch(function (err) {
+        localStorage.removeItem("auth-token");
+        _this65.handleError(err.message, "err");
+        navigateTo("");
+      });
+      navigateTo(setUrlSidePanel(window.location.hash, 'contacts'));
+    }
+  }, {
+    key: 'handleDisconnect',
+    value: function handleDisconnect(err) {
+      this.setState({
+        connected: false,
+        topicSelectedOnline: false,
+        dialogSelected: null,
+        errorText: err && err.message ? err.message : 'Disconnected',
+        errorLevel: err && err.message ? "err" : "warn",
+        loginDisabled: false,
+        contextMenuVisible: false,
+        serverVersion: 'no connection'
       });
     }
-  }
+  }, {
+    key: 'tnMeMetaDesc',
+    value: function tnMeMetaDesc(desc) {
+      if (desc && desc.public) {
+        this.setState({
+          sidePanelTitle: desc.public.fn,
+          sidePanelAvatar: makeImageUrl(desc.public.photo)
+        });
+      }
+    }
 
-  handleUpdateAccountTagsRequest(tags) {
-    this.tinode.getFndTopic().setMeta({ tags: tags }).catch(err => {
-      this.handleError(err.message, "err");
-    });
-  }
+    // Reactions to updates to the contact list.
 
-  // User chose Settings menu item.
-  handleSettings() {
-    navigateTo(setUrlSidePanel(window.location.hash, this.state.myUserId ? 'edit' : 'settings'));
-  }
+  }, {
+    key: 'tnMeContactUpdate',
+    value: function tnMeContactUpdate(what, cont) {
+      if (what == "on" || what == "off") {
+        this.resetContactList();
+        if (this.state.topicSelected == cont.topic) {
+          this.setState({ topicSelectedOnline: what === "on" });
+        }
+      } else if (what == "read") {
+        this.resetContactList();
+      } else if (what == "msg") {
+        // New message received
+        // Skip update if the topic is currently open, otherwise the badge will annoyingly flash.
+        if (this.state.topicSelected != cont.topic) {
+          if (this.state.messageSounds) {
+            POP_SOUND.play();
+          }
+          this.resetContactList();
+        } else if (document.hidden && this.state.messageSounds) {
+          POP_SOUND.play();
+        }
+      } else if (what == "recv") {
+        // Explicitly ignoring "recv" -- it causes no visible updates to contact list.
+      } else if (what == "gone" || what == "unsub") {
+        // Topic deleted or user unsubscribed. Remove topic from view.
+        // If the currently selected topic is gone, clear the selection.
+        if (this.state.topicSelected == cont.topic) {
+          this.handleTopicSelected(null);
+        }
+        // Redraw without the deleted topic.
+        this.resetContactList();
+      } else if (what == "acs") {
+        // Permissions changed. If it's for the currently selected topic,
+        // update the views.
+        if (this.state.topicSelected == cont.topic) {
+          this.setState({ topicSelectedAcs: cont.acs });
+        }
+      } else if (what == "del") {
+        // messages deleted (hard or soft) -- update pill counter.
+      } else {
+        // TODO(gene): handle other types of notifications:
+        // * ua -- user agent changes (maybe display a pictogram for mobile/desktop).
+        // * upd -- topic 'public' updated, issue getMeta().
+        console.log("Unsupported (yet) presence update:" + what + " in: " + cont.topic);
+      }
+    }
+  }, {
+    key: 'tnMeSubsUpdated',
+    value: function tnMeSubsUpdated(unused) {
+      this.resetContactList();
+    }
 
-  // User updated global parameters.
-  handleGlobalSettings(settings) {
-    let serverAddress = settings.serverAddress || this.state.serverAddress;
-    let transport = settings.transport || this.state.transport;
+    // Merge search results and contact list to create a single flat
+    // list of kown contacts for GroupManager to use.
 
-    this.setState({
-      serverAddress: serverAddress,
-      transport: transport,
-      tinode: TinodeWeb.tnSetup(serverAddress, transport)
-    });
-    localStorage.setObject("settings", {
-      serverAddress: serverAddress,
-      transport: transport
-    });
+  }, {
+    key: 'resetContactList',
+    value: function resetContactList() {
+      var _this66 = this;
 
-    navigateTo(setUrlSidePanel(window.location.hash, ''));
-  }
+      var newState = {
+        chatList: []
+      };
+      this.tinode.getMeTopic().contacts(function (c) {
+        newState.chatList.push(c);
+        if (_this66.state.topicSelected == c.topic) {
+          newState.topicSelectedOnline = c.online;
+          newState.topicSelectedAcs = c.acs;
+        }
+      });
+      // Merge search results and chat list.
+      newState.searchableContacts = TinodeWeb.prepareSearchableContacts(newState.chatList, this.state.searchResults);
+      this.setState(newState);
+    }
 
-  // Initialize desktop alerts = push notifications.
-  initDesktopAlerts() {
-    // Google could not be bothered to mention that
-    // onTokenRefresh is never called.
-    this.fbPush.onTokenRefresh(() => {
-      this.requestPushToken(true);
-    });
+    // Sending "received" notifications
 
-    this.fbPush.onMessage(payload => {
-      // No need to do anything about it.
-      // All the magic happends in the service worker.
-    });
-  }
+  }, {
+    key: 'tnData',
+    value: function tnData(data) {
+      var _this67 = this;
 
-  togglePushToken(enabled) {
-    if (enabled) {
-      if (!this.state.firebaseToken) {
-        this.fbPush.requestPermission().then(() => {
-          this.requestPushToken(true);
-        }).catch(err => {
-          this.handleError(err.message, "err");
-          this.setState({ desktopAlerts: false, firebaseToken: null });
+      var topic = this.tinode.getTopic(data.topic);
+      if (topic.msgStatus(data) > Tinode.MESSAGE_STATUS_SENDING) {
+        clearTimeout(this.receivedTimer);
+        this.receivedTimer = setTimeout(function () {
+          _this67.receivedTimer = undefined;
+          topic.noteRecv(data.seq);
+        }, RECEIVED_DELAY);
+      }
+    }
+
+    /* Fnd topic: find contacts by tokens */
+
+  }, {
+    key: 'tnInitFind',
+    value: function tnInitFind() {
+      var _this68 = this;
+
+      var fnd = this.tinode.getFndTopic();
+      if (fnd.isSubscribed()) {
+        this.tnFndSubsUpdated();
+      } else {
+        fnd.onSubsUpdated = this.tnFndSubsUpdated;
+        fnd.subscribe(fnd.startMetaQuery().withSub().withTags().build()).catch(function (err) {
+          _this68.handleError(err.message, "err");
+        });
+      }
+    }
+  }, {
+    key: 'tnFndSubsUpdated',
+    value: function tnFndSubsUpdated() {
+      var foundContacts = [];
+      // Don't attempt to create P2P topics which already exist. Server will reject the duplicates.
+      this.tinode.getFndTopic().contacts(function (s) {
+        foundContacts.push(s);
+      });
+      this.setState({
+        searchResults: foundContacts,
+        searchableContacts: TinodeWeb.prepareSearchableContacts(this.state.chatList, foundContacts)
+      });
+    }
+
+    /** Called when the user enters a contact into the contact search field in the NewAccount panel
+      @param query {Array} is an array of contacts to search for
+     */
+
+  }, {
+    key: 'handleSearchContacts',
+    value: function handleSearchContacts(query) {
+      var _this69 = this;
+
+      var fnd = this.tinode.getFndTopic();
+      fnd.setMeta({ desc: { public: query } }).then(function (ctrl) {
+        return fnd.getMeta(fnd.startMetaQuery().withSub().build());
+      }).catch(function (err) {
+        _this69.handleError(err.message, "err");
+      });
+    }
+
+    // User clicked on a contact in the side panel or deleted a contact.
+
+  }, {
+    key: 'handleTopicSelected',
+    value: function handleTopicSelected(topicName, unused_index, online, acs) {
+      if (topicName) {
+        this.setState({
+          errorText: '',
+          errorLevel: null,
+          mobilePanel: 'topic-view',
+          showInfoPanel: false
+        });
+        // Different contact selected.
+        if (this.state.topicSelected != topicName) {
+          this.setState({
+            topicSelectedOnline: online,
+            topicSelectedAcs: acs
+          });
+          navigateTo(setUrlTopic("", topicName));
+        }
+      } else {
+        // Currently selected contact deleted
+        this.setState({
+          errorText: '',
+          errorLevel: null,
+          mobilePanel: 'sidepanel',
+          topicSelectedOnline: false,
+          topicSelectedAcs: null,
+          showInfoPanel: false
+        });
+        if (this.state.topicSelected) {
+          navigateTo(setUrlTopic("", null));
+        }
+      }
+    }
+
+    // In mobile view user requested to show sidepanel
+
+  }, {
+    key: 'handleHideMessagesView',
+    value: function handleHideMessagesView() {
+      this.setState({
+        mobilePanel: 'sidepanel'
+      });
+      navigateTo(setUrlTopic(window.location.hash, null));
+    }
+
+    // User is sending a message, either plain text or a drafty object, possibly
+    // with attachments.
+
+  }, {
+    key: 'handleSendMessage',
+    value: function handleSendMessage(msg, promise, uploader) {
+      var _this70 = this;
+
+      var topic = this.tinode.getTopic(this.state.topicSelected);
+
+      msg = topic.createMessage(msg, false);
+      // The uploader is used to show progress.
+      msg._uploader = uploader;
+
+      if (!topic.isSubscribed()) {
+        if (!promise) {
+          promise = Promise.resolve();
+        }
+        promise = promise.then(function () {
+          return topic.subscribe();
+        });
+      }
+
+      if (promise) {
+        promise = promise.catch(function (err) {
+          _this70.handleError(err.message, "err");
+        });
+      }
+
+      topic.publishDraft(msg, promise).catch(function (err) {
+        _this70.handleError(err.message, "err");
+      });
+    }
+
+    // User chose a Sign Up menu item.
+
+  }, {
+    key: 'handleNewAccount',
+    value: function handleNewAccount() {
+      navigateTo(setUrlSidePanel(window.location.hash, 'register'));
+    }
+
+    // Actual registration of a new account.
+
+  }, {
+    key: 'handleNewAccountRequest',
+    value: function handleNewAccountRequest(login_, password_, public_, cred_, tags_) {
+      var _this71 = this;
+
+      this.tinode.connect(this.state.serverAddress).then(function () {
+        return _this71.tinode.createAccountBasic(login_, password_, { public: public_, tags: tags_, cred: Tinode.credential(cred_) });
+      }).then(function (ctrl) {
+        if (ctrl.code >= 300 && ctrl.text === "validate credentials") {
+          _this71.handleCredentialsRequest(ctrl.params);
+        } else {
+          _this71.handleLoginSuccessful(_this71);
+        }
+      }).catch(function (err) {
+        _this71.handleError(err.message, "err");
+      });
+    }
+  }, {
+    key: 'handleUpdateAccountRequest',
+    value: function handleUpdateAccountRequest(password, pub, priv) {
+      var _this72 = this;
+
+      if (pub || priv) {
+        this.tinode.getMeTopic().setMeta({ desc: { public: pub, private: priv } }).catch(function (err) {
+          _this72.handleError(err.message, "err");
+        });
+      }
+      if (password) {
+        this.tinode.updateAccountBasic(null, this.tinode.getCurrentLogin(), password).catch(function (err) {
+          _this72.handleError(err.message, "err");
+        });
+      }
+    }
+  }, {
+    key: 'handleUpdateAccountTagsRequest',
+    value: function handleUpdateAccountTagsRequest(tags) {
+      var _this73 = this;
+
+      this.tinode.getFndTopic().setMeta({ tags: tags }).catch(function (err) {
+        _this73.handleError(err.message, "err");
+      });
+    }
+
+    // User chose Settings menu item.
+
+  }, {
+    key: 'handleSettings',
+    value: function handleSettings() {
+      navigateTo(setUrlSidePanel(window.location.hash, this.state.myUserId ? 'edit' : 'settings'));
+    }
+
+    // User updated global parameters.
+
+  }, {
+    key: 'handleGlobalSettings',
+    value: function handleGlobalSettings(settings) {
+      var serverAddress = settings.serverAddress || this.state.serverAddress;
+      var transport = settings.transport || this.state.transport;
+
+      this.setState({
+        serverAddress: serverAddress,
+        transport: transport,
+        tinode: TinodeWeb.tnSetup(serverAddress, transport)
+      });
+      localStorage.setObject("settings", {
+        serverAddress: serverAddress,
+        transport: transport
+      });
+
+      navigateTo(setUrlSidePanel(window.location.hash, ''));
+    }
+
+    // Initialize desktop alerts = push notifications.
+
+  }, {
+    key: 'initDesktopAlerts',
+    value: function initDesktopAlerts() {
+      var _this74 = this;
+
+      // Google could not be bothered to mention that
+      // onTokenRefresh is never called.
+      this.fbPush.onTokenRefresh(function () {
+        _this74.requestPushToken(true);
+      });
+
+      this.fbPush.onMessage(function (payload) {
+        // No need to do anything about it.
+        // All the magic happends in the service worker.
+      });
+    }
+  }, {
+    key: 'togglePushToken',
+    value: function togglePushToken(enabled) {
+      var _this75 = this;
+
+      if (enabled) {
+        if (!this.state.firebaseToken) {
+          this.fbPush.requestPermission().then(function () {
+            _this75.requestPushToken(true);
+          }).catch(function (err) {
+            _this75.handleError(err.message, "err");
+            _this75.setState({ desktopAlerts: false, firebaseToken: null });
+            localStorage.updateObject("settings", { desktopAlerts: false });
+            console.log("Failed to get permission to notify.", err);
+          });
+        } else {
+          this.setState({ desktopAlerts: true });
+          localStorage.updateObject("settings", { desktopAlerts: true });
+        }
+      } else if (this.state.firebaseToken) {
+        this.fbPush.deleteToken(this.state.firebaseToken).catch(function (err) {
+          console.log("Unable to delete token.", err);
+        }).finally(function () {
           localStorage.updateObject("settings", { desktopAlerts: false });
-          console.log("Failed to get permission to notify.", err);
+          localStorage.removeItem("firebase-token");
+          _this75.setState({ desktopAlerts: false, firebaseToken: null });
         });
       } else {
-        this.setState({ desktopAlerts: true });
-        localStorage.updateObject("settings", { desktopAlerts: true });
-      }
-    } else if (this.state.firebaseToken) {
-      this.fbPush.deleteToken(this.state.firebaseToken).catch(err => {
-        console.log("Unable to delete token.", err);
-      }).finally(() => {
-        localStorage.updateObject("settings", { desktopAlerts: false });
-        localStorage.removeItem("firebase-token");
         this.setState({ desktopAlerts: false, firebaseToken: null });
-      });
-    } else {
-      this.setState({ desktopAlerts: false, firebaseToken: null });
-      localStorage.updateObject("settings", { desktopAlerts: false });
-    }
-  }
-
-  requestPushToken(sendToServer) {
-    this.fbPush.getToken().then(refreshedToken => {
-      if (refreshedToken != this.state.firebaseToken) {
-        this.tinode.setDeviceToken(refreshedToken, sendToServer);
-        localStorage.setObject("firebase-token", refreshedToken);
+        localStorage.updateObject("settings", { desktopAlerts: false });
       }
-      this.setState({ firebaseToken: refreshedToken, desktopAlerts: true });
-      localStorage.updateObject("settings", { desktopAlerts: true });
-    }).catch(err => {
-      this.handleError(err.message, "err");
-      console.log("Failed to retrieve firebase token", err);
-    });
-  }
-
-  handleToggleMessageSounds(enabled) {
-    this.setState({ messageSounds: enabled });
-    localStorage.updateObject("settings", {
-      messageSoundsOff: !enabled
-    });
-  }
-
-  // User clicked Cancel button in Setting or Sign Up panel.
-  handleSidepanelCancel() {
-    var parsed = parseUrlHash(window.location.hash);
-    parsed.path[0] = this.state.myUserId ? 'contacts' : '';
-    if (parsed.params) {
-      delete parsed.params.code;
-      delete parsed.params.method;
-      delete parsed.params.tab;
     }
-    navigateTo(composeUrlHash(parsed.path, parsed.params));
-    this.setState({ errorText: '', errorLevel: null });
-  }
+  }, {
+    key: 'requestPushToken',
+    value: function requestPushToken(sendToServer) {
+      var _this76 = this;
 
-  // User clicked a (+) menu item.
-  handleNewTopic() {
-    navigateTo(setUrlSidePanel(window.location.hash, 'newtpk'));
-  }
-
-  // Request to start a new topic. New P2P topic requires peer's name.
-  handleNewTopicRequest(peerName, pub, priv, tags) {
-    var topicName = peerName || this.tinode.newGroupTopicName();
-    if (!peerName) {
-      this.setState({ newGroupTopicParams: { desc: { public: pub, private: { comment: priv } }, tags: tags } }, () => {
-        this.handleTopicSelected(topicName);
-      });
-    } else {
-      this.handleTopicSelected(topicName);
-    }
-  }
-
-  // New topic was creted, here is the new topic name.
-  handleNewTopicCreated(oldName, newName) {
-    if (this.state.topicSelected == oldName && oldName != newName) {
-      // If the current URl contains the old topic name, replace it with new.
-      // Update the name of the selected topic first so the navigator doen't clear
-      // the state.
-      this.setState({ topicSelected: newName }, () => {
-        navigateTo(setUrlTopic("", newName));
+      this.fbPush.getToken().then(function (refreshedToken) {
+        if (refreshedToken != _this76.state.firebaseToken) {
+          _this76.tinode.setDeviceToken(refreshedToken, sendToServer);
+          localStorage.setObject("firebase-token", refreshedToken);
+        }
+        _this76.setState({ firebaseToken: refreshedToken, desktopAlerts: true });
+        localStorage.updateObject("settings", { desktopAlerts: true });
+      }).catch(function (err) {
+        _this76.handleError(err.message, "err");
+        console.log("Failed to retrieve firebase token", err);
       });
     }
-  }
-
-  handleTopicUpdateRequest(topicName, pub, priv, permissions) {
-    var topic = this.tinode.getTopic(topicName);
-    if (topic) {
-      var params = {};
-      if (pub) {
-        params.public = pub;
-      }
-      if (priv) {
-        params.private = { comment: priv };
-      }
-      if (permissions) {
-        params.defacs = permissions;
-      }
-      topic.setMeta({ desc: params }).catch(err => {
-        this.handleError(err.message, "err");
+  }, {
+    key: 'handleToggleMessageSounds',
+    value: function handleToggleMessageSounds(enabled) {
+      this.setState({ messageSounds: enabled });
+      localStorage.updateObject("settings", {
+        messageSoundsOff: !enabled
       });
     }
-  }
 
-  handleChangePermissions(topicName, mode, uid) {
-    var topic = this.tinode.getTopic(topicName);
-    if (topic) {
-      var am = topic.getAccessMode();
-      if (uid) {
-        am.updateGiven(mode);
-        mode = am.getGiven();
+    // User clicked Cancel button in Setting or Sign Up panel.
+
+  }, {
+    key: 'handleSidepanelCancel',
+    value: function handleSidepanelCancel() {
+      var parsed = parseUrlHash(window.location.hash);
+      parsed.path[0] = this.state.myUserId ? 'contacts' : '';
+      if (parsed.params) {
+        delete parsed.params.code;
+        delete parsed.params.method;
+        delete parsed.params.tab;
+      }
+      navigateTo(composeUrlHash(parsed.path, parsed.params));
+      this.setState({ errorText: '', errorLevel: null });
+    }
+
+    // User clicked a (+) menu item.
+
+  }, {
+    key: 'handleNewTopic',
+    value: function handleNewTopic() {
+      navigateTo(setUrlSidePanel(window.location.hash, 'newtpk'));
+    }
+
+    // Request to start a new topic. New P2P topic requires peer's name.
+
+  }, {
+    key: 'handleNewTopicRequest',
+    value: function handleNewTopicRequest(peerName, pub, priv, tags) {
+      var _this77 = this;
+
+      var topicName = peerName || this.tinode.newGroupTopicName();
+      if (!peerName) {
+        this.setState({ newGroupTopicParams: { desc: { public: pub, private: { comment: priv } }, tags: tags } }, function () {
+          _this77.handleTopicSelected(topicName);
+        });
       } else {
-        am.updateWant(mode);
-        mode = am.getWant();
-      }
-      topic.setMeta({ sub: { user: uid, mode: mode } }).catch(err => {
-        this.handleError(err.message, "err");
-      });
-    }
-  }
-
-  handleTagsUpdated(topicName, tags) {
-    var topic = this.tinode.getTopic(topicName);
-    if (topic) {
-      var instance = this;
-      topic.setMeta({ tags: tags }).catch(err => {
-        this.handleError(err.message, "err");
-      });
-    }
-  }
-
-  handleLogout() {
-    updateFavicon(0);
-    localStorage.removeItem("auth-token");
-    if (this.tinode) {
-      this.tinode.onDisconnect = undefined;
-      this.tinode.disconnect();
-    }
-    this.setState(this.getBlankState());
-    this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport);
-    navigateTo("");
-  }
-
-  handleLeaveUnsubRequest(topicName) {
-    var topic = this.tinode.getTopic(topicName);
-    if (!topic) {
-      return;
-    }
-
-    topic.leave(true).then(ctrl => {
-      // Hide MessagesView and InfoView panels.
-      navigateTo(setUrlTopic(window.location.hash, ''));
-    }).catch(err => {
-      this.handleError(err.message, "err");
-    });
-  }
-
-  handleDialogCancel() {
-    this.setState({ dialogSelected: null });
-  }
-
-  handleShowContextMenu(params, menuItems) {
-    this.setState({
-      contextMenuVisible: true,
-      contextMenuClickAt: { x: params.x, y: params.y },
-      contextMenuParams: params,
-      contextMenuItems: menuItems || this.defaultTopicContextMenu(params.topicName),
-      contextMenuBounds: ReactDOM.findDOMNode(this).getBoundingClientRect()
-    });
-  }
-
-  defaultTopicContextMenu(topicName) {
-    var muted = false,
-        blocked = false,
-        subscribed = false,
-        deleter = false;
-    var topic = this.tinode.getTopic(topicName);
-    if (topic) {
-      if (topic.isSubscribed()) {
-        subscribed = true;
-        var acs = topic.getAccessMode();
-        muted = acs && acs.isMuted();
-        blocked = acs && !acs.isJoiner();
-        deleter = acs && acs.isDeleter();
+        this.handleTopicSelected(topicName);
       }
     }
 
-    return [subscribed ? { title: "Info", handler: this.handleShowInfoView } : null, subscribed ? "messages_clear" : null, subscribed && deleter ? "messages_clear_hard" : null, subscribed ? muted ? "topic_unmute" : "topic_mute" : null, subscribed ? blocked ? "topic_unblock" : "topic_block" : null, "topic_delete"];
-  }
+    // New topic was creted, here is the new topic name.
 
-  handleHideContextMenu() {
-    this.setState({
-      contextMenuVisible: false,
-      contextMenuClickAt: null,
-      contextMenuParams: null,
-      contextMenuBounds: null
-    });
-  }
-
-  handleShowInfoView() {
-    navigateTo(addUrlParam(window.location.hash, 'info', true));
-    this.setState({ showInfoPanel: true });
-  }
-
-  handleHideInfoView() {
-    navigateTo(removeUrlParam(window.location.hash, 'info'));
-    this.setState({ showInfoPanel: false });
-  }
-
-  handleMemberUpdateRequest(topicName, added, removed) {
-    if (!topicName) {
-      return;
-    }
-
-    var topic = this.tinode.getTopic(topicName);
-    if (!topic) {
-      return;
-    }
-
-    if (added && added.length > 0) {
-      added.map(uid => {
-        topic.invite(uid, null).catch(err => {
-          this.handleError(err.message, "err");
+  }, {
+    key: 'handleNewTopicCreated',
+    value: function handleNewTopicCreated(oldName, newName) {
+      if (this.state.topicSelected == oldName && oldName != newName) {
+        // If the current URl contains the old topic name, replace it with new.
+        // Update the name of the selected topic first so the navigator doen't clear
+        // the state.
+        this.setState({ topicSelected: newName }, function () {
+          navigateTo(setUrlTopic("", newName));
         });
+      }
+    }
+  }, {
+    key: 'handleTopicUpdateRequest',
+    value: function handleTopicUpdateRequest(topicName, pub, priv, permissions) {
+      var _this78 = this;
+
+      var topic = this.tinode.getTopic(topicName);
+      if (topic) {
+        var params = {};
+        if (pub) {
+          params.public = pub;
+        }
+        if (priv) {
+          params.private = { comment: priv };
+        }
+        if (permissions) {
+          params.defacs = permissions;
+        }
+        topic.setMeta({ desc: params }).catch(function (err) {
+          _this78.handleError(err.message, "err");
+        });
+      }
+    }
+  }, {
+    key: 'handleChangePermissions',
+    value: function handleChangePermissions(topicName, mode, uid) {
+      var _this79 = this;
+
+      var topic = this.tinode.getTopic(topicName);
+      if (topic) {
+        var am = topic.getAccessMode();
+        if (uid) {
+          am.updateGiven(mode);
+          mode = am.getGiven();
+        } else {
+          am.updateWant(mode);
+          mode = am.getWant();
+        }
+        topic.setMeta({ sub: { user: uid, mode: mode } }).catch(function (err) {
+          _this79.handleError(err.message, "err");
+        });
+      }
+    }
+  }, {
+    key: 'handleTagsUpdated',
+    value: function handleTagsUpdated(topicName, tags) {
+      var _this80 = this;
+
+      var topic = this.tinode.getTopic(topicName);
+      if (topic) {
+        var instance = this;
+        topic.setMeta({ tags: tags }).catch(function (err) {
+          _this80.handleError(err.message, "err");
+        });
+      }
+    }
+  }, {
+    key: 'handleLogout',
+    value: function handleLogout() {
+      updateFavicon(0);
+      localStorage.removeItem("auth-token");
+      if (this.tinode) {
+        this.tinode.onDisconnect = undefined;
+        this.tinode.disconnect();
+      }
+      this.setState(this.getBlankState());
+      this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport);
+      navigateTo("");
+    }
+  }, {
+    key: 'handleLeaveUnsubRequest',
+    value: function handleLeaveUnsubRequest(topicName) {
+      var _this81 = this;
+
+      var topic = this.tinode.getTopic(topicName);
+      if (!topic) {
+        return;
+      }
+
+      topic.leave(true).then(function (ctrl) {
+        // Hide MessagesView and InfoView panels.
+        navigateTo(setUrlTopic(window.location.hash, ''));
+      }).catch(function (err) {
+        _this81.handleError(err.message, "err");
       });
     }
-
-    if (removed && removed.length > 0) {
-      removed.map(uid => {
-        topic.delSubscription(uid).catch(err => {
-          this.handleError(err.message, "err");
-        });
+  }, {
+    key: 'handleDialogCancel',
+    value: function handleDialogCancel() {
+      this.setState({ dialogSelected: null });
+    }
+  }, {
+    key: 'handleShowContextMenu',
+    value: function handleShowContextMenu(params, menuItems) {
+      this.setState({
+        contextMenuVisible: true,
+        contextMenuClickAt: { x: params.x, y: params.y },
+        contextMenuParams: params,
+        contextMenuItems: menuItems || this.defaultTopicContextMenu(params.topicName),
+        contextMenuBounds: ReactDOM.findDOMNode(this).getBoundingClientRect()
       });
     }
-  }
+  }, {
+    key: 'defaultTopicContextMenu',
+    value: function defaultTopicContextMenu(topicName) {
+      var muted = false,
+          blocked = false,
+          subscribed = false,
+          deleter = false;
+      var topic = this.tinode.getTopic(topicName);
+      if (topic) {
+        if (topic.isSubscribed()) {
+          subscribed = true;
+          var acs = topic.getAccessMode();
+          muted = acs && acs.isMuted();
+          blocked = acs && !acs.isJoiner();
+          deleter = acs && acs.isDeleter();
+        }
+      }
 
-  handleValidateCredentialsRequest(cred, code) {
-    this.setState({ credMethod: cred, credCode: code });
-    this.doLogin(null, null, { meth: cred, resp: code });
-  }
+      return [subscribed ? { title: "Info", handler: this.handleShowInfoView } : null, subscribed ? "messages_clear" : null, subscribed && deleter ? "messages_clear_hard" : null, subscribed ? muted ? "topic_unmute" : "topic_mute" : null, subscribed ? blocked ? "topic_unblock" : "topic_block" : null, "topic_delete"];
+    }
+  }, {
+    key: 'handleHideContextMenu',
+    value: function handleHideContextMenu() {
+      this.setState({
+        contextMenuVisible: false,
+        contextMenuClickAt: null,
+        contextMenuParams: null,
+        contextMenuBounds: null
+      });
+    }
+  }, {
+    key: 'handleShowInfoView',
+    value: function handleShowInfoView() {
+      navigateTo(addUrlParam(window.location.hash, 'info', true));
+      this.setState({ showInfoPanel: true });
+    }
+  }, {
+    key: 'handleHideInfoView',
+    value: function handleHideInfoView() {
+      navigateTo(removeUrlParam(window.location.hash, 'info'));
+      this.setState({ showInfoPanel: false });
+    }
+  }, {
+    key: 'handleMemberUpdateRequest',
+    value: function handleMemberUpdateRequest(topicName, added, removed) {
+      var _this82 = this;
 
-  handlePasswordResetRequest(method, value) {
-    // If already connected, connnect() will return a resolved promise.
-    this.tinode.connect().then(() => {
-      return this.tinode.requestResetAuthSecret("basic", method, value);
-    }).catch(err => {
-      // Socket error
-      this.handleError(err.message, "err");
-    });
-  }
+      if (!topicName) {
+        return;
+      }
 
-  handleResetPassword(scheme, newPassword, token) {
-    token = base64ReEncode(token);
-    if (!token) {
-      this.handleError("Invalid security token", "err");
-    } else {
-      this.tinode.connect().then(() => {
-        return this.tinode.updateAccountBasic(null, null, newPassword, { token: token });
-      }).catch(err => {
+      var topic = this.tinode.getTopic(topicName);
+      if (!topic) {
+        return;
+      }
+
+      if (added && added.length > 0) {
+        added.map(function (uid) {
+          topic.invite(uid, null).catch(function (err) {
+            _this82.handleError(err.message, "err");
+          });
+        });
+      }
+
+      if (removed && removed.length > 0) {
+        removed.map(function (uid) {
+          topic.delSubscription(uid).catch(function (err) {
+            _this82.handleError(err.message, "err");
+          });
+        });
+      }
+    }
+  }, {
+    key: 'handleValidateCredentialsRequest',
+    value: function handleValidateCredentialsRequest(cred, code) {
+      this.setState({ credMethod: cred, credCode: code });
+      this.doLogin(null, null, { meth: cred, resp: code });
+    }
+  }, {
+    key: 'handlePasswordResetRequest',
+    value: function handlePasswordResetRequest(method, value) {
+      var _this83 = this;
+
+      // If already connected, connnect() will return a resolved promise.
+      this.tinode.connect().then(function () {
+        return _this83.tinode.requestResetAuthSecret("basic", method, value);
+      }).catch(function (err) {
         // Socket error
-        this.handleError(err.message, "err");
+        _this83.handleError(err.message, "err");
       });
     }
-  }
+  }, {
+    key: 'handleResetPassword',
+    value: function handleResetPassword(scheme, newPassword, token) {
+      var _this84 = this;
 
-  render() {
-    return React.createElement(
-      'div',
-      { id: 'app-container' },
-      this.state.contextMenuVisible ? React.createElement(ContextMenu, {
-        tinode: this.tinode,
-        bounds: this.state.contextMenuBounds,
-        clickAt: this.state.contextMenuClickAt,
-        params: this.state.contextMenuParams,
-        items: this.state.contextMenuItems,
-        hide: this.handleHideContextMenu,
-        onAction: this.handleContextMenuAction,
-        onError: this.handleError }) : null,
-      React.createElement(SidepanelView, {
-        tinode: this.tinode,
-        connected: this.state.connected,
-        displayMobile: this.state.displayMobile,
-        hideSelf: this.state.displayMobile && this.state.mobilePanel !== 'sidepanel',
-        state: this.state.sidePanelSelected,
-        title: this.state.sidePanelTitle,
-        avatar: this.state.sidePanelAvatar,
-        login: this.state.login,
-        myUserId: this.state.myUserId,
-        loginDisabled: this.state.loginDisabled,
-        errorText: this.state.errorText,
-        errorLevel: this.state.errorLevel,
-        topicSelected: this.state.topicSelected,
-        chatList: this.state.chatList,
-        credMethod: this.state.credMethod,
-        credCode: this.state.credCode,
+      token = base64ReEncode(token);
+      if (!token) {
+        this.handleError("Invalid security token", "err");
+      } else {
+        this.tinode.connect().then(function () {
+          return _this84.tinode.updateAccountBasic(null, null, newPassword, { token: token });
+        }).catch(function (err) {
+          // Socket error
+          _this84.handleError(err.message, "err");
+        });
+      }
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return React.createElement(
+        'div',
+        { id: 'app-container' },
+        this.state.contextMenuVisible ? React.createElement(ContextMenu, {
+          tinode: this.tinode,
+          bounds: this.state.contextMenuBounds,
+          clickAt: this.state.contextMenuClickAt,
+          params: this.state.contextMenuParams,
+          items: this.state.contextMenuItems,
+          hide: this.handleHideContextMenu,
+          onAction: this.handleContextMenuAction,
+          onError: this.handleError }) : null,
+        React.createElement(SidepanelView, {
+          tinode: this.tinode,
+          connected: this.state.connected,
+          displayMobile: this.state.displayMobile,
+          hideSelf: this.state.displayMobile && this.state.mobilePanel !== 'sidepanel',
+          state: this.state.sidePanelSelected,
+          title: this.state.sidePanelTitle,
+          avatar: this.state.sidePanelAvatar,
+          login: this.state.login,
+          myUserId: this.state.myUserId,
+          loginDisabled: this.state.loginDisabled,
+          errorText: this.state.errorText,
+          errorLevel: this.state.errorLevel,
+          topicSelected: this.state.topicSelected,
+          chatList: this.state.chatList,
+          credMethod: this.state.credMethod,
+          credCode: this.state.credCode,
 
-        transport: this.state.transport,
-        messageSounds: this.state.messageSounds,
-        desktopAlerts: this.state.desktopAlerts,
-        desktopAlertsEnabled: this.state.desktopAlertsEnabled,
-        serverAddress: this.state.serverAddress,
-        onGlobalSettings: this.handleGlobalSettings,
+          transport: this.state.transport,
+          messageSounds: this.state.messageSounds,
+          desktopAlerts: this.state.desktopAlerts,
+          desktopAlertsEnabled: this.state.desktopAlertsEnabled,
+          serverAddress: this.state.serverAddress,
+          onGlobalSettings: this.handleGlobalSettings,
 
-        onSignUp: this.handleNewAccount,
-        onSettings: this.handleSettings,
-        onLoginRequest: this.handleLoginRequest,
-        onCreateAccount: this.handleNewAccountRequest,
-        onUpdateAccount: this.handleUpdateAccountRequest,
-        onUpdateAccountTags: this.handleUpdateAccountTagsRequest,
-        onTogglePushNotifications: this.togglePushToken,
-        onToggleMessageSounds: this.handleToggleMessageSounds,
-        onTopicSelected: this.handleTopicSelected,
-        onCreateTopic: this.handleNewTopicRequest,
-        onNewTopic: this.handleNewTopic,
-        onLogout: this.handleLogout,
-        onCancel: this.handleSidepanelCancel,
-        onError: this.handleError,
-        onValidateCredentials: this.handleValidateCredentialsRequest,
-        onPasswordResetRequest: this.handlePasswordResetRequest,
-        onResetPassword: this.handleResetPassword,
+          onSignUp: this.handleNewAccount,
+          onSettings: this.handleSettings,
+          onLoginRequest: this.handleLoginRequest,
+          onCreateAccount: this.handleNewAccountRequest,
+          onUpdateAccount: this.handleUpdateAccountRequest,
+          onUpdateAccountTags: this.handleUpdateAccountTagsRequest,
+          onTogglePushNotifications: this.togglePushToken,
+          onToggleMessageSounds: this.handleToggleMessageSounds,
+          onTopicSelected: this.handleTopicSelected,
+          onCreateTopic: this.handleNewTopicRequest,
+          onNewTopic: this.handleNewTopic,
+          onLogout: this.handleLogout,
+          onCancel: this.handleSidepanelCancel,
+          onError: this.handleError,
+          onValidateCredentials: this.handleValidateCredentialsRequest,
+          onPasswordResetRequest: this.handlePasswordResetRequest,
+          onResetPassword: this.handleResetPassword,
 
-        onInitFind: this.tnInitFind,
-        searchResults: this.state.searchResults,
-        onSearchContacts: this.handleSearchContacts,
+          onInitFind: this.tnInitFind,
+          searchResults: this.state.searchResults,
+          onSearchContacts: this.handleSearchContacts,
 
-        showContextMenu: this.handleShowContextMenu }),
-      React.createElement(MessagesView, {
-        tinode: this.tinode,
-        connected: this.state.connected,
-        online: this.state.topicSelectedOnline,
-        acs: this.state.topicSelectedAcs,
-        displayMobile: this.state.displayMobile,
-        viewportWidth: this.state.viewportWidth,
-        hideSelf: this.state.displayMobile && (this.state.mobilePanel !== 'topic-view' || this.state.showInfoPanel),
-        topic: this.state.topicSelected,
-        myUserId: this.state.myUserId,
-        serverVersion: this.state.serverVersion,
-        serverAddress: this.state.serverAddress,
-        errorText: this.state.errorText,
-        errorLevel: this.state.errorLevel,
-        newGroupTopicParams: this.state.newGroupTopicParams,
+          showContextMenu: this.handleShowContextMenu }),
+        React.createElement(MessagesView, {
+          tinode: this.tinode,
+          connected: this.state.connected,
+          online: this.state.topicSelectedOnline,
+          acs: this.state.topicSelectedAcs,
+          displayMobile: this.state.displayMobile,
+          viewportWidth: this.state.viewportWidth,
+          hideSelf: this.state.displayMobile && (this.state.mobilePanel !== 'topic-view' || this.state.showInfoPanel),
+          topic: this.state.topicSelected,
+          myUserId: this.state.myUserId,
+          serverVersion: this.state.serverVersion,
+          serverAddress: this.state.serverAddress,
+          errorText: this.state.errorText,
+          errorLevel: this.state.errorLevel,
+          newGroupTopicParams: this.state.newGroupTopicParams,
 
-        onHideMessagesView: this.handleHideMessagesView,
-        onData: this.tnData,
-        onError: this.handleError,
-        onNewTopicCreated: this.handleNewTopicCreated,
-        readTimerHandler: this.handleReadTimer,
-        showContextMenu: this.handleShowContextMenu,
-        sendMessage: this.handleSendMessage }),
-      this.state.showInfoPanel ? React.createElement(InfoView, {
-        tinode: this.tinode,
-        connected: this.state.connected,
-        displayMobile: this.state.displayMobile,
-        topic: this.state.topicSelected,
-        searchableContacts: this.state.searchableContacts,
-        myUserId: this.state.myUserId,
-        errorText: this.state.errorText,
-        errorLevel: this.state.errorLevel,
+          onHideMessagesView: this.handleHideMessagesView,
+          onData: this.tnData,
+          onError: this.handleError,
+          onNewTopicCreated: this.handleNewTopicCreated,
+          readTimerHandler: this.handleReadTimer,
+          showContextMenu: this.handleShowContextMenu,
+          sendMessage: this.handleSendMessage }),
+        this.state.showInfoPanel ? React.createElement(InfoView, {
+          tinode: this.tinode,
+          connected: this.state.connected,
+          displayMobile: this.state.displayMobile,
+          topic: this.state.topicSelected,
+          searchableContacts: this.state.searchableContacts,
+          myUserId: this.state.myUserId,
+          errorText: this.state.errorText,
+          errorLevel: this.state.errorLevel,
 
-        onTopicDescUpdate: this.handleTopicUpdateRequest,
-        onCancel: this.handleHideInfoView,
-        onChangePermissions: this.handleChangePermissions,
-        onMemberUpdateRequest: this.handleMemberUpdateRequest,
-        onLeaveTopic: this.handleLeaveUnsubRequest,
-        onAddMember: this.handleManageGroupMembers,
-        onTopicTagsUpdate: this.handleTagsUpdated,
-        onInitFind: this.tnInitFind,
-        onError: this.handleError,
+          onTopicDescUpdate: this.handleTopicUpdateRequest,
+          onCancel: this.handleHideInfoView,
+          onChangePermissions: this.handleChangePermissions,
+          onMemberUpdateRequest: this.handleMemberUpdateRequest,
+          onLeaveTopic: this.handleLeaveUnsubRequest,
+          onAddMember: this.handleManageGroupMembers,
+          onTopicTagsUpdate: this.handleTagsUpdated,
+          onInitFind: this.tnInitFind,
+          onError: this.handleError,
 
-        showContextMenu: this.handleShowContextMenu
-      }) : null
-    );
-  }
-};
+          showContextMenu: this.handleShowContextMenu
+        }) : null
+      );
+    }
+  }], [{
+    key: 'tnSetup',
+    value: function tnSetup(serverAddress, transport) {
+      return new Tinode(APP_NAME, serverAddress, API_KEY, transport, isSecureConnection());
+    }
+  }, {
+    key: 'prepareSearchableContacts',
+    value: function prepareSearchableContacts(chatList, foundContacts) {
+      var merged = {};
+
+      // For chatList topics merge only p2p topics and convert them to the
+      // same format as foundContacts.
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = chatList[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var c = _step.value;
+
+          if (Tinode.topicType(c.topic) == "p2p") {
+            merged[c.topic] = {
+              user: c.topic,
+              updated: c.updated,
+              public: c.public,
+              private: c.private,
+              acs: c.acs
+            };
+          }
+        }
+
+        // Add all foundCountacts if they have not been added already.
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
+
+      try {
+        for (var _iterator2 = foundContacts[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var _c = _step2.value;
+
+          if (!merged[_c.user]) {
+            merged[_c.user] = _c;
+          }
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
+        }
+      }
+
+      return Object.values(merged);
+    }
+  }]);
+
+  return TinodeWeb;
+}(React.Component);
+
+;
 
 module.exports = TinodeWeb;
 
 },{"../version.json":27,"firebase/app":6,"firebase/messaging":7,"react":16,"react-dom":13,"tinode-sdk":23}],27:[function(require,module,exports){
-module.exports={"version": "0.15.7-rc3"}
+module.exports={"version": "0.15.7-rc4"}
 
 },{}],28:[function(require,module,exports){
 // shim for using process in browser

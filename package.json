@@ -1,7 +1,7 @@
 {
   "name": "tinode-webapp",
   "description": "Tinode messenger for the web",
-  "version": "0.15.7-rc3",
+  "version": "0.15.7-rc4",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
@@ -17,7 +17,7 @@
     "build": "npm run vers && npm run build:babel && npm run build:prod && npm run build:dev && npm run build:css",
     "build:prod": "browserify ./src/index.js --standalone Webapp | uglifyjs --compress --mangle > ./umd/index.prod.js",
     "build:dev": "browserify ./src/index.js --standalone Webapp > ./umd/index.dev.js",
-    "build:babel": "babel ./src/webapp.jsx --presets react --out-file ./src/webapp.js",
+    "build:babel": "babel ./src/webapp.jsx --presets react,env --out-file ./src/webapp.es5.js",
     "build:css": "postcss css/base.css > css/base.min.css",
     "vers": "echo \"{\\\"version\\\": \\\"`node -p -e \"require('./package.json').version\"`\\\"}\" > version.json"
   },
@@ -68,6 +68,6 @@
     "firebase": "^5.5.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
-    "tinode-sdk": "^0.15.7-rc3"
+    "tinode-sdk": "^0.15.7-rc4"
   }
 }
