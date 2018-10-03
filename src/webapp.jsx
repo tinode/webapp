@@ -4596,6 +4596,8 @@ class TinodeWeb extends React.Component {
     this.setState({viewportWidth: document.documentElement.clientWidth});
 
     this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport);
+    this.tinode.onConnect = this.handleConnected;
+    this.tinode.onDisconnect = this.handleDisconnect;
 
     // Initialize desktop alerts.
     if (this.state.desktopAlertsEnabled) {
@@ -4622,10 +4624,6 @@ class TinodeWeb extends React.Component {
         this.setState({desktopAlertsEnabled: false});
       }
     }
-
-    this.tinode.enableLogging(true, true);
-    this.tinode.onConnect = this.handleConnected;
-    this.tinode.onDisconnect = this.handleDisconnect;
 
     let token = localStorage.getObject("keep-logged-in") ?
       localStorage.getObject("auth-token") : undefined;
@@ -4661,7 +4659,9 @@ class TinodeWeb extends React.Component {
 
   // Setup transport (usually websocket) and server address. This will terminate connection with the server.
   static tnSetup(serverAddress, transport) {
-    return new Tinode(APP_NAME, serverAddress, API_KEY, transport, isSecureConnection());
+    let tinode = new Tinode(APP_NAME, serverAddress, API_KEY, transport, isSecureConnection());
+    tinode.enableLogging(true, true);
+    return tinode;
   }
 
   handleResize() {
@@ -5136,11 +5136,18 @@ class TinodeWeb extends React.Component {
   handleGlobalSettings(settings) {
     let serverAddress = settings.serverAddress || this.state.serverAddress;
     let transport = settings.transport || this.state.transport;
+    if (this.tinode) {
+      this.tinode.onDisconnect = undefined;
+      this.tinode.disconnect();
+    }
+    let tinode = TinodeWeb.tnSetup(serverAddress, transport);
+    tinode.onConnect = this.handleConnected;
+    tinode.onDisconnect = this.handleDisconnect;
 
     this.setState({
       serverAddress: serverAddress,
       transport: transport,
-      tinode: TinodeWeb.tnSetup(serverAddress, transport),
+      tinode: tinode
     });
     localStorage.setObject("settings", {
       serverAddress: serverAddress,
@@ -5310,6 +5317,8 @@ class TinodeWeb extends React.Component {
     }
     this.setState(this.getBlankState());
     this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport);
+    this.tinode.onConnect = this.handleConnected;
+    this.tinode.onDisconnect = this.handleDisconnect;
     navigateTo("");
   }
 
