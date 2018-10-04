@@ -201,7 +201,7 @@ function base64ReEncode(str) {
     try {
       str = btoa(atob(str));
     } catch(err) {
-      console.log("failed to base64 re-decode string");
+      console.log("Failed to base64 re-decode string");
       str = null;
     }
   }
@@ -5140,18 +5140,17 @@ class TinodeWeb extends React.Component {
       this.tinode.onDisconnect = undefined;
       this.tinode.disconnect();
     }
-    let tinode = TinodeWeb.tnSetup(serverAddress, transport);
-    tinode.onConnect = this.handleConnected;
-    tinode.onDisconnect = this.handleDisconnect;
+    this.tinode = TinodeWeb.tnSetup(serverAddress, transport);
+    this.tinode.onConnect = this.handleConnected;
+    this.tinode.onDisconnect = this.handleDisconnect;
 
     this.setState({
       serverAddress: serverAddress,
-      transport: transport,
-      tinode: tinode
+      transport: transport
     });
     localStorage.setObject("settings", {
       serverAddress: serverAddress,
-      transport: transport,
+      transport: transport
     });
 
     navigateTo(setUrlSidePanel(window.location.hash, ''));
