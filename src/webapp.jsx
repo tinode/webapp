@@ -3882,7 +3882,7 @@ class MessagesView extends React.Component {
           this.props.onNewTopicCreated(props.topic, ctrl.topic);
           // If there are unsent messages, try sending them now.
           topic.queuedMessages((pub) => {
-            if (!pub._sending) {
+            if (!pub._sending && topic.isSubscribed()) {
               topic.publishMessage(pub);
             }
           });
