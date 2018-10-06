@@ -598,7 +598,7 @@ class ContextMenu extends React.Component {
     // We don't know if the message is still pending (e.g. attachment is being uploaded),
     // so try cancelling first. No harm if we can't cancel.
     if (topic.cancelSend(params.seq)) {
-      return new Promise.resolve();
+      return Promise.resolve();
     }
     // Can't cancel. Delete instead.
     var promise = all ?
