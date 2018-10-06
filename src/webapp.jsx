@@ -3866,21 +3866,26 @@ class MessagesView extends React.Component {
     });
 
     if (!topic.isSubscribed() && tryToResubscribe) {
+      // Don't request the tags. They are useless unless the user
+      // is the owner and is editing the topic.
       let getQuery = topic.startMetaQuery()
         .withLaterDesc()
         .withLaterSub()
         .withLaterData(MESSAGES_PAGE)
         .withLaterDel();
       let setQuery = newGroupTopic ? props.newGroupTopicParams : undefined;
-      // Don't request the tags. They are useless unless the user
-      // is the owner and is editing the topic.
-      // getQuery = topic.getType() == 'grp' ? getQuery.withTags() : getQuery;
       // Show "loading" spinner.
       this.setState({ fetchingMessages: true });
       topic.subscribe(getQuery.build(), setQuery)
         .then((ctrl) => {
           this.setState({topic: ctrl.topic});
           this.props.onNewTopicCreated(props.topic, ctrl.topic);
+          // If there are unsent messages, try sending them now.
+          topic.queuedMessages((pub) => {
+            if (!pub._sending) {
+              topic.publishMessage(pub);
+            }
+          });
         })
         .catch((err) => {
           this.props.onError(err.message, "err");
@@ -3889,7 +3894,11 @@ class MessagesView extends React.Component {
             avatar: null,
             readOnly: true,
             writeOnly: true,
-            fetchingMessages: false
+            fetchingMessages: false,
+            messages: [],
+            onlineSubs: [],
+            typingIndicator: false,
+            imagePreview: null
           });
         });
     }
