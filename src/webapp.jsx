@@ -2342,9 +2342,8 @@ class ContactsView extends React.Component {
       unreadThreads += c.unread > 0 ? 1 : 0;
       contacts.push(c);
     });
-
     contacts.sort(function(a, b){
-      return b.touched - a.touched;
+      return (b.touched || 0) - (a.touched || 0);
     });
 
     updateFavicon(unreadThreads);
