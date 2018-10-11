@@ -1,7 +1,7 @@
 {
   "name": "tinode-webapp",
   "description": "Tinode messenger for the web",
-  "version": "0.15.7-rc5",
+  "version": "0.15.7-rc6",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
@@ -68,6 +68,6 @@
     "firebase": "^5.5.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
-    "tinode-sdk": "^0.15.7-rc5"
+    "tinode-sdk": "^0.15.7-rc6"
   }
 }
