@@ -1,6 +1,6 @@
 // Must be located at the root.
-importScripts("https://unpkg.com/firebase@5.5.2/firebase-app.js");
-importScripts("https://unpkg.com/firebase@5.5.2/firebase-messaging.js");
+importScripts("https://unpkg.com/firebase@5.5.4/firebase-app.js");
+importScripts("https://unpkg.com/firebase@5.5.4/firebase-messaging.js");
 importScripts("/firebase-init.js")
 
 firebase.initializeApp(FIREBASE_INIT);
@@ -24,8 +24,6 @@ firebase.messaging().setBackgroundMessageHandler(function(payload) {
 // This code handles a click on notification: takes
 // the user to the browser tab with the chat or opens a new tab.
 self.addEventListener('notificationclick', function(event) {
-  console.log('On notification click: ', event.notification);
-
   const notification = event.notification;
   notification.close();
 
@@ -39,7 +37,6 @@ self.addEventListener('notificationclick', function(event) {
     let anyClient = null;
     for (let i = 0; i < windowClients.length; i++) {
       const url = new URL(windowClients[i].url);
-      console.log('found client with URL', url);
       if (url.hash.includes(notification.data.topic)) {
         matchingClient = windowClients[i];
         break;
