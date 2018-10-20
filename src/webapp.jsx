@@ -4462,7 +4462,7 @@ class ImagePreview extends React.PureComponent {
     return (
       <div id="image-preview" onClick={this.props.onClose}>
         <div id="image-preview-caption-panel">
-          <a href="javascript:;" download={this.props.content.filename}>
+          <a href={this.props.content.url} download={this.props.content.filename}>
             <i className="material-icons">file_download</i> download
           </a>
           <a href="javascript:;" onClick={this.props.onClose}><i className="material-icons gray">close</i></a>
