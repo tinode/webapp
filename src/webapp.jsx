@@ -1849,7 +1849,7 @@ class SidepanelView extends React.Component {
             messageSounds={this.props.messageSounds}
             desktopAlerts={this.props.desktopAlerts}
             desktopAlertsEnabled={this.props.desktopAlertsEnabled}
-            onSubmit={this.props.onUpdateAccount}
+            onUpdateAccount={this.props.onUpdateAccount}
             onUpdateTags={this.props.onUpdateAccountTags}
             onTogglePushNotifications={this.props.onTogglePushNotifications}
             onToggleMessageSounds={this.props.onToggleMessageSounds}
@@ -1947,6 +1947,7 @@ class EditAccountView extends React.Component {
       auth: defacs ? defacs.auth : null,
       anon: defacs ? defacs.anon : null,
       tags: fnd.tags(),
+      showPermissionEditorFor: undefined,
       previousOnTags: fnd.onTagsUpdated
     };
 
@@ -1955,6 +1956,9 @@ class EditAccountView extends React.Component {
     this.handlePasswordUpdate = this.handlePasswordUpdate.bind(this);
     this.handleImageChanged = this.handleImageChanged.bind(this);
     this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
+    this.handleLaunchPermissionsEditor = this.handleLaunchPermissionsEditor.bind(this);
+    this.handleHidePermissionsEditor = this.handleHidePermissionsEditor.bind(this);
+    this.handlePermissionsChanged = this.handlePermissionsChanged.bind(this);
     this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
   }
 
@@ -1979,17 +1983,17 @@ class EditAccountView extends React.Component {
 
   handleFullNameUpdate(fn) {
     this.setState({fullName: fn});
-    this.props.onSubmit(null, vcard(fn, this.state.avatar));
+    this.props.onUpdateAccount(undefined, vcard(fn, this.state.avatar));
   }
 
   handlePasswordUpdate(pwd) {
     this.setState({password: pwd});
-    this.props.onSubmit(pwd, null);
+    this.props.onUpdateAccount(pwd);
   }
 
   handleImageChanged(img) {
     this.setState({avatar: img});
-    this.props.onSubmit(null, vcard(this.state.fullName, img));
+    this.props.onUpdateAccount(undefined, vcard(this.state.fullName, img));
   }
 
   handleCheckboxClick(what, checked) {
@@ -1998,6 +2002,27 @@ class EditAccountView extends React.Component {
     } else if (what == "alert") {
       this.props.onTogglePushNotifications(checked);
     }
+  }
+
+  handleLaunchPermissionsEditor(which) {
+    this.setState({
+      showPermissionEditorFor: which,
+      editedPermissions: this.state[which]
+    });
+  }
+
+  handleHidePermissionsEditor() {
+    this.setState({showPermissionEditorFor: undefined});
+  }
+
+  handlePermissionsChanged(perm) {
+    let defacs = {};
+    defacs[this.state.showPermissionEditorFor] = perm;
+    this.props.onUpdateAccount(undefined, undefined, defacs);
+    
+    let newState = {showPermissionEditorFor: undefined};
+    newState[this.state.showPermissionEditorFor] = perm;
+    this.setState(newState);
   }
 
   handleTagsUpdated(tags) {
@@ -2017,68 +2042,78 @@ class EditAccountView extends React.Component {
       tags = <i>No tags defined. Add some.</i>;
     }
     return (
-      <div id="edit-account" className="scrollable-panel">
-        <div className="panel-form-row">
-          <div className="panel-form-column">
-            <div><label className="small">Your name</label></div>
-            <div><InPlaceEdit
-                placeholder="Full name, e.g. John Doe"
-                value={this.state.fullName}
-                onFinished={this.handleFullNameUpdate} /></div>
-            <div><label className="small">Password</label></div>
-            <div><InPlaceEdit
-                placeholder="Unchanged"
-                type="password"
-                onFinished={this.handlePasswordUpdate} /></div>
-          </div>
-          <AvatarUpload
-            avatar={this.state.avatar}
-            uid={this.props.myUserId}
-            title={this.state.fullName}
-            onImageChanged={this.handleImageChanged}
-            onError={this.props.onError} />
-        </div>
-        <div className="hr" />
-        <div className="panel-form-column">
+      <React.Fragment>{this.state.showPermissionEditorFor ?
+        <PermissionsEditor
+          mode={this.state.editedPermissions}
+          skip="O"
+          onSubmit={this.handlePermissionsChanged}
+          onCancel={this.handleHidePermissionsEditor} />
+        :
+        <div id="edit-account" className="scrollable-panel">
           <div className="panel-form-row">
-            <label>Address:</label>
-            <tt>{this.props.myUserId}</tt>
+            <div className="panel-form-column">
+              <div><label className="small">Your name</label></div>
+              <div><InPlaceEdit
+                  placeholder="Full name, e.g. John Doe"
+                  value={this.state.fullName}
+                  onFinished={this.handleFullNameUpdate} /></div>
+              <div><label className="small">Password</label></div>
+              <div><InPlaceEdit
+                  placeholder="Unchanged"
+                  type="password"
+                  onFinished={this.handlePasswordUpdate} /></div>
+            </div>
+            <AvatarUpload
+              avatar={this.state.avatar}
+              uid={this.props.myUserId}
+              title={this.state.fullName}
+              onImageChanged={this.handleImageChanged}
+              onError={this.props.onError} />
           </div>
-          <div>
-            <label className="small">Default access mode:</label>
+          <div className="hr" />
+          <div className="panel-form-column">
+            <div className="panel-form-row">
+              <label>Address:</label>
+              <tt>{this.props.myUserId}</tt>
+            </div>
+            <div>
+              <label className="small">Default access mode:</label>
+            </div>
+            <div className="quoted">
+              <div>Auth: <tt className="clickable"
+                onClick={this.handleLaunchPermissionsEditor.bind(this, 'auth')}>{this.state.auth}</tt></div>
+              <div>Anon: <tt className="clickable"
+                onClick={this.handleLaunchPermissionsEditor.bind(this, 'anon')}>{this.state.anon}</tt></div>
+            </div>
           </div>
-          <div className="quoted">
-            <div>Auth: <tt>{this.state.auth}</tt></div>
-            <div>Anon: <tt>{this.state.anon}</tt></div>
+          <div className="hr" />
+          <div className="panel-form-row">
+            <label htmlFor="message-sound">Message sound:</label>
+            <CheckBox name="sound" id="message-sound"
+              checked={this.props.messageSounds}
+              onChange={this.handleCheckboxClick} />
+          </div>
+          <div className="panel-form-row">
+            <label htmlFor="desktop-alerts">Notification
+              alerts{!this.props.desktopAlertsEnabled ? ' (requires HTTPS)' : null}:</label>
+            <CheckBox name="alert" id="desktop-alerts"
+              checked={this.props.desktopAlerts}
+              onChange={this.props.desktopAlertsEnabled ? this.handleCheckboxClick : null} />
+          </div>
+          <div className="hr" />
+          <TagManager
+            title="Tags (user discovery)"
+            activated={false}
+            tags={this.state.tags}
+            onSubmit={this.handleTagsUpdated} />
+          <div className="hr" />
+          <div className="panel-form-column">
+            <a href="javascript:;" className="red flat-button" onClick={this.props.onLogout}>
+              <i className="material-icons">exit_to_app</i> Logout
+            </a>
           </div>
         </div>
-        <div className="hr" />
-        <div className="panel-form-row">
-          <label htmlFor="message-sound">Message sound:</label>
-          <CheckBox name="sound" id="message-sound"
-            checked={this.props.messageSounds}
-            onChange={this.handleCheckboxClick} />
-        </div>
-        <div className="panel-form-row">
-          <label htmlFor="desktop-alerts">Notification
-            alerts{!this.props.desktopAlertsEnabled ? ' (requires HTTPS)' : null}:</label>
-          <CheckBox name="alert" id="desktop-alerts"
-            checked={this.props.desktopAlerts}
-            onChange={this.props.desktopAlertsEnabled ? this.handleCheckboxClick : null} />
-        </div>
-        <div className="hr" />
-        <TagManager
-          title="Tags (user discovery)"
-          activated={false}
-          tags={this.state.tags}
-          onSubmit={this.handleTagsUpdated} />
-        <div className="hr" />
-        <div className="panel-form-column">
-          <a href="javascript:;" className="red flat-button" onClick={this.props.onLogout}>
-            <i className="material-icons">exit_to_app</i> Logout
-          </a>
-        </div>
-      </div>
+      }</React.Fragment>
     );
   }
 };
@@ -3173,7 +3208,7 @@ class InfoView extends React.Component {
   }
 
   handleLaunchPermissionsEditor(which, uid) {
-    var toEdit, toCompare, toSkip, titleEdit, titleCompare, userTitle, userAvatar
+    let toEdit, toCompare, toSkip, titleEdit, titleCompare, userTitle, userAvatar;
     switch (which) {
       case 'mode':
         toEdit = this.state.access;
@@ -3201,7 +3236,7 @@ class InfoView extends React.Component {
         toSkip = 'O';
         break;
       case 'user': {
-        var topic = this.props.tinode.getTopic(this.props.topic);
+        let topic = this.props.tinode.getTopic(this.props.topic);
         if (!topic) {
           return;
         }
@@ -3332,7 +3367,6 @@ class InfoView extends React.Component {
             userTitle={this.state.userPermissionsTitle}
             item={this.state.userPermissionsEdited}
             userAvatar={this.state.userPermissionsAvatar}
-            skip={this.state.editedPermissionsSkipped}
             onSubmit={this.handlePermissionsChanged}
             onCancel={this.handleHidePermissionsEditor}
             />
@@ -3342,7 +3376,7 @@ class InfoView extends React.Component {
               <div className="panel-form-column">
                 <div><label className="small">Name</label></div>
                 <div><InPlaceEdit
-                    placeholder="Group name"
+                    placeholder={this.state.groupTopic ? "Group name" : <i>Unknown</i>}
                     readOnly={!this.state.owner}
                     value={this.state.fullName}
                     onFinished={this.handleFullNameUpdate} /></div>
@@ -3393,10 +3427,11 @@ class InfoView extends React.Component {
                         onClick={this.handleLaunchPermissionsEditor.bind(this, 'want')}>
                         {this.state.access}
                       </tt></div>
-                      <div>{this.state.fullName}&prime;s: &nbsp;<tt className="clickable"
-                        onClick={this.handleLaunchPermissionsEditor.bind(this, 'given')}>
+                      <div>{this.state.fullName ? this.state.fullName : "Other"}&prime;s:
+                        &nbsp;<tt className="clickable" onClick={this.handleLaunchPermissionsEditor.bind(this, 'given')}>
                         {this.state.modeGiven2}
-                      </tt></div>
+                        </tt>
+                      </div>
                     </div>
                   </div>
                 }
@@ -3742,6 +3777,7 @@ class Attachment extends React.Component {
     );
   }
 };
+
 const NOT_FOUND_TOPIC_TITLE = "Not found";
 
 class MessagesView extends React.Component {
@@ -3967,7 +4003,7 @@ class MessagesView extends React.Component {
       });
     } else {
       this.setState({
-        title: NOT_FOUND_TOPIC_TITLE,
+        title: '',
         avatar: null
       });
     }
@@ -4170,7 +4206,7 @@ class MessagesView extends React.Component {
               <span className={online} />
             </div>
             <div id="topic-title-group">
-              <div id="topic-title" className="panel-title">{this.state.title}</div>
+              <div id="topic-title" className="panel-title">{this.state.title || <i>Unknown</i>}</div>
               <div id="topic-last-seen">{lastSeen}</div>
             </div>
             {groupTopic ?
@@ -5122,9 +5158,9 @@ class TinodeWeb extends React.Component {
       });
   }
 
-  handleUpdateAccountRequest(password, pub, priv) {
-    if (pub || priv) {
-      this.tinode.getMeTopic().setMeta({desc: {public: pub, private: priv}}).catch((err) => {
+  handleUpdateAccountRequest(password, pub, defacs) {
+    if (pub || defacs) {
+      this.tinode.getMeTopic().setMeta({desc: {public: pub, defacs: defacs}}).catch((err) => {
         this.handleError(err.message, "err");
       });
     }

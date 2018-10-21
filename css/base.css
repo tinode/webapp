@@ -821,6 +821,15 @@ i.search {
   height: 7rem;
 }
 
+.avatar-upload .avatar-box > .material-icons {
+  position: relative;
+  width: 7rem;
+  height: 7rem;
+  font-size: 4rem;
+  line-height: 7rem;
+  vertical-align: middle;
+}
+
 /* Clearfix */
 .avatar-upload:after {
   content: ".";
@@ -1588,6 +1597,9 @@ ul.tabbar li.active > a:after {
 
 #self-avatar.material-icons, .avatar-box .material-icons {
   font-size: 2.4rem;
+  width: 3rem;
+  height: 3rem;
+  line-height: 3rem;
 }
 .avatar-box .material-icons {
   color: rgba(250, 250, 250, 0.8); /* #fafafa, gray 50 */
