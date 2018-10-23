@@ -5626,4 +5626,6 @@ class TinodeWeb extends React.Component {
   }
 };
 
-module.exports = TinodeWeb;
+if (typeof module != 'undefined') {
+  module.exports = TinodeWeb;
+}

@@ -22,7 +22,7 @@
     <link rel="apple-touch-icon" sizes="192x192" href="img/logo192.png" type="image/png" />
     <link rel="canonical" href="https://api.tinode.co/" />
     <!-- Google's Roboto font -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400italic,500,700&subset=latin,cyrillic"
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400italic,500,700"
       rel="stylesheet" type="text/css" />
     <!-- Google's material design icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
@@ -32,6 +32,9 @@
     <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
     <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Localization support -->
+    <script crossorigin src="https://unpkg.com/prop-types@15/prop-types.js"></script>
+    <script crossorigin src="https://unpkg.com/react-intl@2/dist/react-intl.js"></script>
     <!-- Firebase push notifications. -->
     <script crossorigin src="https://unpkg.com/firebase@5.5.5/firebase-app.js"></script>
     <script crossorigin src="https://unpkg.com/firebase@5.5.5/firebase-messaging.js"></script>
@@ -39,10 +42,6 @@
 
   <body>
     <div id="mountPoint"></div>
-    <script>
-    // Shim to imitate modules.
-    var module = {};
-    </script>
     <!-- core tinode libraries -->
     <script src="src/drafty.js"></script>
     <script src="src/tinode.js"></script>
@@ -51,7 +50,9 @@
     <script type="text/babel" src="src/webapp.jsx"></script>
     <script type="text/babel">
       ReactDOM.render(
-        <TinodeWeb />,
+        <ReactIntl.IntlProvider locale={navigator.language}>
+          <TinodeWeb />
+        </ReactIntl.IntlProvider>,
         document.getElementById('mountPoint')
       );
     </script>
