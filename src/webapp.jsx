@@ -19,9 +19,9 @@ if (typeof require == 'function') {
 }
 
 // Name of this application, used in the User-Agent.
-const APP_NAME = "TinodeWeb/" + (package_version || "0.15");
+const APP_NAME = 'TinodeWeb/' + (package_version || '0.15');
 
-const KNOWN_HOSTS = {hosted: "api.tinode.co", local: "localhost:6060"};
+const KNOWN_HOSTS = {hosted: 'api.tinode.co', local: 'localhost:6060'};
 // Default host name and port to connect to.
 const DEFAULT_HOST = KNOWN_HOSTS.hosted;
 // var DEFAULT_HOST = KNOWN_HOSTS.local;
@@ -30,7 +30,7 @@ const DEFAULT_HOST = KNOWN_HOSTS.hosted;
 const POP_SOUND = new Audio('audio/msg.mp3');
 
 // API key. Use https://github.com/tinode/chat/tree/master/keygen to generate your own
-const API_KEY = "AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K";
+const API_KEY = 'AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K';
 
 // Minimum time between two keypress notifications, milliseconds.
 const KEYPRESS_DELAY = 3*1000;
@@ -197,7 +197,7 @@ function base64DecodedLen(n) {
 // The string may be base64-URL encoded without the padding.
 function base64ReEncode(str) {
   if (str) {
-    str = str.replace("-", "+").replace("_", "/");
+    str = str.replace('-', '+').replace('_', '/');
     try {
       str = btoa(atob(str));
     } catch(err) {
@@ -222,7 +222,7 @@ function imageFileScaledToBase64(file, width, height, forceSquare, onSuccess, on
       onError("Invalid image");
       return;
     }
-    var canvas = document.createElement("canvas");
+    var canvas = document.createElement('canvas');
     canvas.width = dim.dstWidth;
     canvas.height = dim.dstHeight;
     var ctx = canvas.getContext('2d');
@@ -232,7 +232,7 @@ function imageFileScaledToBase64(file, width, height, forceSquare, onSuccess, on
 
     var mime = (this.width != dim.dstWidth ||
       this.height != dim.dstHeight ||
-      SUPPORTED_IMAGE_FORMATS.indexOf(file.type) < 0) ? "image/jpeg" : file.type;
+      SUPPORTED_IMAGE_FORMATS.indexOf(file.type) < 0) ? 'image/jpeg' : file.type;
     var imageBits = canvas.toDataURL(mime);
     var parts = imageBits.split(',');
     // Get actual image type: 'data:image/png;base64,'
@@ -244,9 +244,9 @@ function imageFileScaledToBase64(file, width, height, forceSquare, onSuccess, on
     // Ensure the image is not too large
     var quality = 0.78;
     if (base64DecodedLen(imageBits.length) > MAX_INBAND_ATTACHMENT_SIZE) {
-      mime = "image/jpeg";
+      mime = 'image/jpeg';
     }
-    if (mime == "image/jpeg") {
+    if (mime == 'image/jpeg') {
       // Reduce size of the jpeg by reducing image quality
       while (base64DecodedLen(imageBits.length) > MAX_INBAND_ATTACHMENT_SIZE && quality > 0.45) {
         imageBits = canvas.toDataURL(mime, quality);
@@ -267,7 +267,7 @@ function imageFileScaledToBase64(file, width, height, forceSquare, onSuccess, on
 // Convert uploaded image file to base64-encoded string without scaling/converting the image
 function imageFileToBase64(file, onSuccess, onError) {
   var reader = new FileReader();
-  reader.addEventListener("load", function() {
+  reader.addEventListener('load', function() {
     var parts = reader.result.split(',');
     var mime = getMimeType(parts[0]);
     if (!mime) {
@@ -291,7 +291,7 @@ function imageFileToBase64(file, onSuccess, onError) {
 
 function fileToBase64(file, onSuccess, onError) {
   var reader = new FileReader();
-  reader.addEventListener("load", function() {
+  reader.addEventListener('load', function() {
     onSuccess(file.type, reader.result.split(',')[1], file.name);
   });
   reader.readAsDataURL(file);
@@ -303,13 +303,13 @@ function filePasted(event, onImageSuccess, onAttachmentSuccess, onError) {
   var items = (event.clipboardData || event.originalEvent.clipboardData || {}).items;
   for (var i in items) {
     var item = items[i];
-    if (item.kind === "file") {
+    if (item.kind === 'file') {
       var file = item.getAsFile();
       if (!file) {
         console.log("Failed to get file object from pasted file item", item.kind, item.type);
         continue;
       }
-      if (file.type && file.type.split("/")[0] == "image") {
+      if (file.type && file.type.split('/')[0] == 'image') {
         // Handle inline image
         if (file.size > MAX_INBAND_ATTACHMENT_SIZE || SUPPORTED_IMAGE_FORMATS.indexOf(file.type) < 0) {
           imageFileScaledToBase64(file, MAX_IMAGE_DIM, MAX_IMAGE_DIM, false, onImageSuccess, onError);
@@ -330,27 +330,27 @@ function filePasted(event, onImageSuccess, onAttachmentSuccess, onError) {
 
 // Make shortcut icon appear with a green dot + show unread count in title.
 function updateFavicon(count) {
-  var oldIcon = document.getElementById("shortcut-icon");
+  var oldIcon = document.getElementById('shortcut-icon');
   if (oldIcon) {
     var head = document.head || document.getElementsByTagName('head')[0];
     var newIcon = document.createElement('link');
-    newIcon.type = "image/png";
-    newIcon.id = "shortcut-icon";
-    newIcon.rel = "shortcut icon";
-    newIcon.href = "img/logo32x32" + (count > 0 ? 'a' : '') + ".png";
+    newIcon.type = 'image/png';
+    newIcon.id = 'shortcut-icon';
+    newIcon.rel = 'shortcut icon';
+    newIcon.href = 'img/logo32x32' + (count > 0 ? 'a' : '') + '.png';
     head.removeChild(oldIcon);
     head.appendChild(newIcon);
   }
-  document.title = (count > 0 ? '('+count+') ' : '') + "Tinode";
+  document.title = (count > 0 ? '('+count+') ' : '') + 'Tinode';
 }
 
 // Get 32 bit integer hash value for a string. Ideally it should produce the same value
 // as Java's String#hash().
 function stringHash(value) {
   var hash = 0;
-  value = "" + value;
+  value = '' + value;
   for (var i = 0; i < value.length; i++) {
-    hash = ((hash<<5)-hash) + value.charCodeAt(i);
+    hash = ((hash << 5) - hash) + value.charCodeAt(i);
     hash = hash & hash; // Convert to 32bit integer
   }
   return hash;
@@ -366,11 +366,11 @@ function parseUrlHash(hash) {
   let params = {};
   let path = [];
   if (parts[0]) {
-    path = parts[0].substr(1).split("/");
+    path = parts[0].substr(1).split('/');
   }
   if (parts[1]) {
-    parts[1].split("&").forEach(function(part) {
-      let item = part.split("=");
+    parts[1].split('&').forEach(function(part) {
+      let item = part.split('=');
       if (item[0]) {
         params[decodeURIComponent(item[0])] = decodeURIComponent(item[1]);
       }
@@ -384,15 +384,15 @@ function navigateTo(url) {
 }
 
 function composeUrlHash(path, params) {
-  var url = path.join("/");
+  var url = path.join('/');
   var args = [];
   for (var key in params) {
     if (params.hasOwnProperty(key)) {
-      args.push(key + "=" + params[key]);
+      args.push(key + '=' + params[key]);
     }
   }
   if (args.length > 0) {
-    url += "?" + args.join("&");
+    url += '?' + args.join('&');
   }
   return url;
 }
@@ -461,10 +461,10 @@ function vcard(fn, imageDataUrl) {
       card.fn = fn.trim();
     }
     if (imageDataUrl) {
-      var dataStart = imageDataUrl.indexOf(",");
+      var dataStart = imageDataUrl.indexOf(',');
       card.photo = {
         data: imageDataUrl.substring(dataStart+1),
-        type: "jpg"
+        type: 'jpg'
       };
     }
   }
@@ -500,25 +500,25 @@ class ContextMenu extends React.Component {
 
     // Preconfigured menu items.
     this.MenuItems = {
-      "topic_info":     {title: "Info", handler: null},
+      'topic_info':     {title: "Info", handler: null},
 
-      "messages_clear": {title: "Clear messages", handler: (params, errorHandler) => {
+      'messages_clear': {title: "Clear messages", handler: (params, errorHandler) => {
         this.deleteMessages(true, false, params, errorHandler);
       }},
-      "messages_clear_hard": {title: "Clear for All", handler: (params, errorHandler) => {
+      'messages_clear_hard': {title: "Clear for All", handler: (params, errorHandler) => {
         this.deleteMessages(true, true, params, errorHandler);
       }},
-      "message_delete": {title: "Delete", handler: (params, errorHandler) => {
+      'message_delete': {title: "Delete", handler: (params, errorHandler) => {
         this.deleteMessages(false, false, params, errorHandler);
       }},
-      "message_delete_hard": {title: "Delete for All", handler: (params, errorHandler) => {
+      'message_delete_hard': {title: "Delete for All", handler: (params, errorHandler) => {
         this.deleteMessages(false, true, params, errorHandler);
       }},
-      "topic_unmute":   {title: "Unmute", handler: this.topicPermissionSetter.bind(this, "+P")},
-      "topic_mute":     {title: "Mute", handler: this.topicPermissionSetter.bind(this, "-P")},
-      "topic_unblock":  {title: "Unblock", handler: this.topicPermissionSetter.bind(this, "+J")},
-      "topic_block":    {title: "Block", handler: this.topicPermissionSetter.bind(this, "-J")},
-      "topic_delete":   {title: "Delete", handler: (params, errorHandler) => {
+      'topic_unmute':   {title: "Unmute", handler: this.topicPermissionSetter.bind(this, '+P')},
+      'topic_mute':     {title: "Mute", handler: this.topicPermissionSetter.bind(this, '-P')},
+      'topic_unblock':  {title: "Unblock", handler: this.topicPermissionSetter.bind(this, '+J')},
+      'topic_block':    {title: "Block", handler: this.topicPermissionSetter.bind(this, '-J')},
+      'topic_delete':   {title: "Delete", handler: (params, errorHandler) => {
         let topic = this.props.tinode.getTopic(params.topicName);
         if (!topic) {
           console.log("Topic not found: ", params.topicName);
@@ -526,13 +526,13 @@ class ContextMenu extends React.Component {
         }
         topic.delTopic().catch((err) => {
           if (errorHandler) {
-            errorHandler(err.message, "err");
+            errorHandler(err.message, 'err');
           }
         });
       }},
 
-      "permissions":    {title: "Edit permissions", handler: null},
-      "member_delete":  {title: "Remove", handler: (params, errorHandler) => {
+      'permissions':    {title: "Edit permissions", handler: null},
+      'member_delete':  {title: "Remove", handler: (params, errorHandler) => {
         let topic = this.props.tinode.getTopic(params.topicName);
         if (!topic || !params.user) {
           console.log("Topic or user not found: '" + params.topicName + "', '" + params.user + "'");
@@ -540,14 +540,14 @@ class ContextMenu extends React.Component {
         }
         topic.delSubscription(params.user).catch((err) => {
           if (errorHandler) {
-            errorHandler(err.message, "err");
+            errorHandler(err.message, 'err');
           }
         });
       }},
-      "member_mute":    {title: "Mute", handler: this.topicPermissionSetter.bind(this, "-P")},
-      "member_unmute":  {title: "Unmute", handler: this.topicPermissionSetter.bind(this, "+P")},
-      "member_block":   {title: "Block", handler: this.topicPermissionSetter.bind(this, "-J")},
-      "member_unblock": {title: "Unblock", handler: this.topicPermissionSetter.bind(this, "+J")},
+      'member_mute':    {title: "Mute", handler: this.topicPermissionSetter.bind(this, '-P')},
+      'member_unmute':  {title: "Unmute", handler: this.topicPermissionSetter.bind(this, '+P')},
+      'member_block':   {title: "Block", handler: this.topicPermissionSetter.bind(this, '-J')},
+      'member_unblock': {title: "Unblock", handler: this.topicPermissionSetter.bind(this, '+J')},
     };
   }
 
@@ -606,7 +606,7 @@ class ContextMenu extends React.Component {
       topic.delMessagesList([params.seq], hard);
     promise.catch((err) => {
       if (errorHandler) {
-        errorHandler(err.message, "err");
+        errorHandler(err.message, 'err');
       }
     });
   }
@@ -633,7 +633,7 @@ class ContextMenu extends React.Component {
 
     topic.setMeta({sub: {user: params.user, mode: am}}).catch((err) => {
       if (errorHandler) {
-        errorHandler(err.message, "err");
+        errorHandler(err.message, 'err');
       }
     });
   }
@@ -647,7 +647,7 @@ class ContextMenu extends React.Component {
       }
       if (item && item.title) {
         menu.push(
-          item.title == "-" ?
+          item.title == '-' ?
             <li className="separator" key={count} />
             :
             <li onClick={this.handleClick} data-id={count} key={count}>{item.title}</li>
@@ -667,8 +667,8 @@ class ContextMenu extends React.Component {
         (this.props.clickAt.y - this.props.bounds.top);
 
     var position = {
-      left: left + "px",
-      top: top + "px"
+      left: left + 'px',
+      top: top + 'px'
     };
 
     return (
@@ -737,7 +737,7 @@ class LetterTile extends React.PureComponent {
         let color = "lettertile dark-color" + (Math.abs(stringHash(this.props.topic)) % 16);
         avatar = (<div className={color}><div>{letter}</div></div>)
       } else {
-        avatar = (Tinode.topicType(this.props.topic) == "grp") ?
+        avatar = (Tinode.topicType(this.props.topic) == 'grp') ?
           <i className="material-icons">group</i> :
           <i className="material-icons">person</i>;
       }
@@ -759,8 +759,8 @@ class InPlaceEdit extends React.Component {
 
     this.state = {
       active: props.active,
-      initialValue: props.value || "",
-      value: props.value || ""
+      initialValue: props.value || '',
+      value: props.value || ''
     };
 
     this.handeTextChange = this.handeTextChange.bind(this);
@@ -775,8 +775,8 @@ class InPlaceEdit extends React.Component {
     // Ignore update if in edit mode.
     if (prevState.initialValue != nextProps.value && !prevState.active) {
       return {
-        initialValue: nextProps.value || "",
-        value: nextProps.value || ""
+        initialValue: nextProps.value || '',
+        value: nextProps.value || ''
       };
     }
     return null;
@@ -820,22 +820,23 @@ class InPlaceEdit extends React.Component {
 
   render() {
     if (this.state.active) {
-      var fieldType = this.props.type || "text";
+      var fieldType = this.props.type || 'text';
     } else {
-      var spanText = this.props.type == "password" ? "••••••••" : this.state.value;
-      var spanClass = "in-place-edit" +
-        (this.props.readOnly ? " disabled" : "");
+      var spanText = this.props.type == 'password' ? '••••••••' : this.state.value;
+      var spanClass = 'in-place-edit' +
+        (this.props.readOnly ? ' disabled' : '');
       if (!spanText) {
         spanText = this.props.placeholder;
-        spanClass += " placeholder";
+        spanClass += ' placeholder';
       }
       if (spanText.length > 20) {
-        spanText = spanText.substring(0, 19) + "...";
+        // FIXME: this is wrong for RTL languages.
+        spanText = spanText.substring(0, 19) + '...';
       }
     }
     return (
       this.state.active ?
-        (fieldType == "password" ?
+        (fieldType == 'password' ?
           <VisiblePassword
             value={this.state.value}
             placeholder={this.props.placeholder}
@@ -1024,7 +1025,7 @@ class PermissionsEditor extends React.Component {
     super(props);
 
     this.state = {
-      mode: (props.mode || "").replace("N", "")
+      mode: (props.mode || '').replace('N', '')
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -1038,15 +1039,15 @@ class PermissionsEditor extends React.Component {
     if (idx == -1) {
       mode += val;
     } else {
-      mode = mode.replace(val, "");
+      mode = mode.replace(val, '');
     }
     this.setState({mode: mode});
   }
 
   handleSubmit() {
     // Normalize string, otherwise cannot check if mode has changed.
-    var mode = (this.state.mode || "N").split('').sort().join('');
-    var before = (this.props.mode || "N").split('').sort().join('')
+    var mode = (this.state.mode || 'N').split('').sort().join('');
+    var before = (this.props.mode || 'N').split('').sort().join('')
     if (mode !== before) {
       this.props.onSubmit(mode);
     } else {
@@ -1071,9 +1072,9 @@ class PermissionsEditor extends React.Component {
       'O': 'Owner (O)'
     };
 
-    let skip = this.props.skip || "";
+    let skip = this.props.skip || '';
     let mode = this.state.mode;
-    let compare = (this.props.compare || "").replace("N", "");
+    let compare = (this.props.compare || '').replace('N', '');
     let items = [];
     for (let i=0; i<all.length; i++) {
       let c = all.charAt(i);
@@ -1130,7 +1131,7 @@ class ChipInput extends React.Component {
     super(props);
 
     this.state = {
-      placeholder: props.chips ? "" : props.prompt,
+      placeholder: props.chips ? '' : props.prompt,
       sortedChips: ChipInput.sortChips(props.chips, props.required),
       chipIndex: ChipInput.indexChips(props.chips),
       input: '',
@@ -1244,7 +1245,7 @@ class ChipInput extends React.Component {
       );
       count++;
     });
-    var className = "chip-input" + (this.state.focused ? " focused" : "");
+    var className = "chip-input" + (this.state.focused ? ' focused' : '');
     return (
       <div className={className}>
         {chips}
@@ -1339,7 +1340,7 @@ class LoginView extends React.Component {
       login: props.login,
       password: '',
       hostName: props.serverAddress,
-      saveToken: localStorage.getObject("keep-logged-in")
+      saveToken: localStorage.getObject('keep-logged-in')
     };
     this.handleLoginChange = this.handleLoginChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
@@ -1356,7 +1357,7 @@ class LoginView extends React.Component {
   }
 
   handleToggleSaveToken() {
-    localStorage.setObject("keep-logged-in", !this.state.saveToken);
+    localStorage.setObject('keep-logged-in', !this.state.saveToken);
     this.setState({saveToken: !this.state.saveToken});
   }
 
@@ -1366,9 +1367,9 @@ class LoginView extends React.Component {
   }
 
   render() {
-    var submitClasses = "blue";
+    var submitClasses = 'blue';
     if (this.props.disabled) {
-      submitClasses += " disabled";
+      submitClasses += ' disabled';
     }
     return (
       <form id="login-form" onSubmit={this.handleSubmit}>
@@ -1411,7 +1412,7 @@ class CreateAccountView extends React.PureComponent {
       fn: '', // full/formatted name
       imageDataUrl: null,
       errorCleared: false,
-      saveToken: localStorage.getObject("keep-logged-in")
+      saveToken: localStorage.getObject('keep-logged-in')
     };
 
     this.handleLoginChange = this.handleLoginChange.bind(this);
@@ -1444,7 +1445,7 @@ class CreateAccountView extends React.PureComponent {
   }
 
   handleToggleSaveToken() {
-    localStorage.setObject("keep-logged-in", !this.state.saveToken);
+    localStorage.setObject('keep-logged-in', !this.state.saveToken);
     this.setState({saveToken: !this.state.saveToken});
   }
 
@@ -1456,13 +1457,13 @@ class CreateAccountView extends React.PureComponent {
       this.state.login.trim(),
       this.state.password.trim(),
       vcard(this.state.fn, this.state.imageDataUrl),
-      {"meth": "email", "val": this.state.email});
+      {'meth': 'email', 'val': this.state.email});
   }
 
   render() {
-    var submitClasses = "blue";
+    var submitClasses = 'blue';
     if (this.props.disabled) {
-      submitClasses += " disabled";
+      submitClasses += ' disabled';
     }
     return (
       <form className="panel-form-column" onSubmit={this.handleSubmit}>
@@ -1529,7 +1530,7 @@ class AvatarUpload extends React.Component {
       },
       // Failure
       (err) => {
-        this.props.onError(err, "err");
+        this.props.onError(err, 'err');
       });
     // Clear the value so the same file can be uploaded again.
     e.target.value = '';
@@ -1641,7 +1642,7 @@ class SettingsView extends React.PureComponent {
     super(props);
 
     this.state = {
-      transport: props.transport || "def",
+      transport: props.transport || 'def',
       serverAddress: props.serverAddress,
     };
 
@@ -1671,8 +1672,8 @@ class SettingsView extends React.PureComponent {
     var names = {def: "default", ws: "websocket", lp: "long polling"};
     var transportOptions = [];
     var instance = this;
-    ["def", "ws", "lp"].map(function(item){
-      var id = "transport-" + item;
+    ['def', 'ws', 'lp'].map(function(item){
+      var id = 'transport-' + item;
       var name = names[item];
       transportOptions.push(
         <li key={item}>
@@ -1918,10 +1919,10 @@ class ErrorPanel extends React.PureComponent {
   }
 
   render() {
-    var icon = this.props.level == "err" ? "error": "warning";
+    var icon = this.props.level == 'err' ? 'error': 'warning';
     return (
       <div className={this.state.show ?
-        (this.props.level == "err" ? "alert-box error" : "alert-box warning") :
+        (this.props.level == 'err' ? 'alert-box error' : 'alert-box warning') :
         "alert-box"}>
         <div className="icon"><i className="material-icons">{icon}</i></div>
         {this.props.text}
@@ -1967,7 +1968,7 @@ class EditAccountView extends React.Component {
     fnd.onTagsUpdated = this.tnNewTags;
     if (!fnd.isSubscribed()) {
       fnd.subscribe(fnd.startMetaQuery().withLaterDesc().withTags().build()).catch((err) => {
-        this.props.onError(err.message, "err");
+        this.props.onError(err.message, 'err');
       });
     }
   }
@@ -1997,9 +1998,9 @@ class EditAccountView extends React.Component {
   }
 
   handleCheckboxClick(what, checked) {
-    if (what == "sound") {
+    if (what == 'sound') {
       this.props.onToggleMessageSounds(checked);
-    } else if (what == "alert") {
+    } else if (what == 'alert') {
       this.props.onTogglePushNotifications(checked);
     }
   }
@@ -2019,7 +2020,7 @@ class EditAccountView extends React.Component {
     let defacs = {};
     defacs[this.state.showPermissionEditorFor] = perm;
     this.props.onUpdateAccount(undefined, undefined, defacs);
-    
+
     let newState = {showPermissionEditorFor: undefined};
     newState[this.state.showPermissionEditorFor] = perm;
     this.setState(newState);
@@ -2128,7 +2129,7 @@ class TagManager extends React.Component {
       tags: this.props.tags,
       tagInput: '',
       activated: this.props.activated,
-      noTagsMessage: 'Add some tags'
+      noTagsMessage: "Add some tags"
     };
 
     this.handleShowTagManager = this.handleShowTagManager.bind(this);
@@ -2285,15 +2286,16 @@ class Contact extends React.Component {
     if (!title) {
       title = <i>unknown</i>;
     } else if (title.length > 30) {
-      title = title.substring(0, 28) + "...";
+      // FIXME: this is wrong for RTL languages.
+      title = title.substring(0, 28) + '...';
     }
-    var online = this.props.now ? "online" : "offline";
+    var online = this.props.now ? 'online' : 'offline';
     var avatar = this.props.avatar ? this.props.avatar : true;
     var badges = [];
     if (this.props.badges && this.props.badges.length > 0) {
       var count = 0;
       this.props.badges.map(function(b) {
-        var style = "badge" + (b.color ? " " + b.color : "");
+        var style = 'badge' + (b.color ? ' ' + b.color : '');
         badges.push(<span className={style} key={count}>{b.name}</span>);
         count ++;
       });
@@ -2353,7 +2355,7 @@ class ContactBadges_UNUSED_REMOVE extends React.PureComponent {
       if (this.props.badges && this.props.badges.length > 0) {
         badges = [];
         this.props.badges.map(function(b) {
-          var style = "badge" + (b.color ? " " + b.color : "");
+          var style = 'badge' + (b.color ? ' ' + b.color : '');
           // Badge names are expected to be unique, so using the name as the key.
           badges.push(<span className={style} key={b.name}>{b.name}</span>);
         });
@@ -2417,10 +2419,10 @@ class ContactList extends React.Component {
         if (this.props.filterFunc && this.props.filter) {
           var content = [key];
           if (c.private && c.private.comment) {
-            content.push(("" + c.private.comment).toLowerCase());
+            content.push(('' + c.private.comment).toLowerCase());
           }
           if (c.public && c.public.fn) {
-            content.push(("" + c.public.fn).toLowerCase());
+            content.push(('' + c.public.fn).toLowerCase());
           }
           if (!this.props.filterFunc(this.props.filter, content)) {
             return;
@@ -2433,14 +2435,14 @@ class ContactList extends React.Component {
         var badges = [];
         if (this.props.showMode) {
           if (key === this.props.myUserId) {
-            badges.push({name: 'you', color: 'green'});
+            badges.push({name: "you", color: 'green'});
           }
           if (c.acs && c.acs.isOwner()) {
-            badges.push({name: 'owner'});
+            badges.push({name: "owner"});
           }
         }
         var comment = Array.isArray(c.private) ?
-          c.private.join(", ") : (c.private ? c.private.comment : null);
+          c.private.join(', ') : (c.private ? c.private.comment : null);
 
         contactNodes.push(
           <Contact
@@ -2489,7 +2491,7 @@ class GroupManager extends React.Component {
       members: props.members,
       index: GroupManager.indexMembers(props.members),
       contactFilter: '',
-      noContactsMessage: 'You have no contacts :-(',
+      noContactsMessage: "You have no contacts :-(",
       selectedContacts: GroupManager.selectedContacts(props.members)
     };
 
@@ -2647,7 +2649,7 @@ class NewTopicView extends React.Component {
     super(props);
 
     this.state = {
-      tabSelected: "p2p",
+      tabSelected: 'p2p',
       contactList: props.searchResults
     };
 
@@ -2674,7 +2676,7 @@ class NewTopicView extends React.Component {
   }
 
   handleContactSelected(sel) {
-    if (this.state.tabSelected === "p2p") {
+    if (this.state.tabSelected === 'p2p') {
       navigateTo(removeUrlParam(window.location.hash, 'tab'));
       this.props.onCreateTopic(sel, undefined);
     }
@@ -2704,9 +2706,9 @@ class NewTopicView extends React.Component {
             <a href="javascript:;" data-id="byid" onClick={this.handleTabClick}>by id</a>
           </li>
         </ul>
-        {this.state.tabSelected === "grp" ?
+        {this.state.tabSelected === 'grp' ?
           <NewTopicGroup onSubmit={this.handleNewGroupSubmit} /> :
-          this.state.tabSelected === "byid" ?
+          this.state.tabSelected === 'byid' ?
           <NewTopicById
             onSubmit={this.handleGroupByID}
             onError={this.props.onError} /> :
@@ -2773,9 +2775,9 @@ class NewTopicGroup extends React.PureComponent {
   }
 
   render() {
-    var submitClasses = "blue";
+    var submitClasses = 'blue';
     if (this.props.disabled) {
-      submitClasses += " disabled";
+      submitClasses += ' disabled';
     }
     return (
       <form className="panel-form" onSubmit={this.handleSubmit}>
@@ -2902,7 +2904,7 @@ class NewTopicById extends React.PureComponent {
       if (name.length > 3 && (name.substr(0, 3) == 'usr' || name.substr(0, 3) == 'grp')) {
         this.props.onSubmit(name);
       } else {
-        this.props.onError("Invalid ID", "err");
+        this.props.onError("Invalid ID", 'err');
       }
     }
   }
@@ -3049,7 +3051,7 @@ class InfoView extends React.Component {
       this.previousSubsUpdated = topic.onSubsUpdated;
       topic.onSubsUpdated = this.onSubsUpdated;
 
-      if (topic.getType() == "grp") {
+      if (topic.getType() == 'grp') {
         this.previousTagsUpdated = topic.onTagsUpdated;
         topic.onTagsUpdated = this.onTagsUpdated;
       } else {
@@ -3077,7 +3079,7 @@ class InfoView extends React.Component {
 
   resetSubs(topic, props) {
     var newState = {contactList: []};
-    if (topic.getType() == "p2p") {
+    if (topic.getType() == 'p2p') {
       // Fetch the other party in the p2p conversation.
       // Topic may not be ready yet, so check if user is found.
       var user2 = topic.subscriber(props.topic);
@@ -3107,7 +3109,7 @@ class InfoView extends React.Component {
       avatar: makeImageUrl(topic.public ? topic.public.photo : null),
       private: topic.private ? topic.private.comment : null,
       address: topic.name,
-      groupTopic: (topic.getType() == "grp"),
+      groupTopic: (topic.getType() == 'grp'),
       showMemberPanel: false,
       access: acs ? acs.getMode() : undefined,
       modeGiven: acs ? acs.getGiven() : undefined,
@@ -3116,7 +3118,7 @@ class InfoView extends React.Component {
       anon: defacs.anon
     });
 
-    if (topic.getType() === "grp" && acs && acs.isOwner()) {
+    if (topic.getType() == 'grp' && acs && acs.isOwner()) {
       // Requesting tags: owner is editing the topic.
       topic.getMeta(topic.startMetaQuery().withTags().build());
     }
@@ -3181,7 +3183,7 @@ class InfoView extends React.Component {
 
   handleMuted(ignored, checked) {
     this.setState({muted: checked});
-    this.props.onChangePermissions(this.props.topic, checked ? "-P" : "+P");
+    this.props.onChangePermissions(this.props.topic, checked ? '-P' : '+P');
   }
 
   handlePermissionsChanged(perm) {
@@ -3217,15 +3219,15 @@ class InfoView extends React.Component {
         toEdit = this.state.modeWant;
         toCompare = this.state.modeGiven;
         toSkip = this.state.groupTopic ? 'O' : 'ASDO';
-        titleEdit = 'Requested';
-        titleCompare = 'Granted';
+        titleEdit = "Requested";
+        titleCompare = "Granted";
         break;
       case 'given':
         toEdit = this.state.modeGiven2;
         toCompare = this.state.modeWant2;
         toSkip = this.state.groupTopic ? (this.state.owner ? '' : 'O') : 'ASDO';
-        titleEdit = 'Granted';
-        titleCompare = 'Requested';
+        titleEdit = "Granted";
+        titleCompare = "Requested";
         break;
       case 'auth':
         toEdit = this.state.auth;
@@ -3247,8 +3249,8 @@ class InfoView extends React.Component {
         toEdit = user.acs.getGiven();
         toCompare = user.acs.getWant();
         toSkip = this.state.owner ? '' : 'O';
-        titleEdit = 'Granted';
-        titleCompare = 'Requested';
+        titleEdit = "Granted";
+        titleCompare = "Requested";
         if (user.public) {
           userTitle = user.public.fn;
           userAvatar = user.public.photo;
@@ -3321,11 +3323,11 @@ class InfoView extends React.Component {
 
     var menuItems = [
       {title: "Edit permissions", handler: function() {
-        instance.handleLaunchPermissionsEditor("user", params.topicName);
+        instance.handleLaunchPermissionsEditor('user', params.topicName);
       }},
-      "member_delete",
-      user.acs.isMuted() ? "member_unmute" : "member_mute",
-      user.acs.isJoiner() ? "member_block" : "member_unblock"
+      'member_delete',
+      user.acs.isMuted() ? 'member_unmute' : 'member_mute',
+      user.acs.isJoiner() ? 'member_block' : 'member_unblock'
     ];
     this.props.showContextMenu({
       topicName: this.props.topic,
@@ -3576,12 +3578,12 @@ class ChatMessage extends React.Component {
       if (el) {
         var attr = Drafty.attrValue(style, data) || {};
         attr.key = elementKey;
-        if (style == "IM") {
+        if (style == 'IM') {
           // Additional processing for images
           var dim = fitImageSize(data.width, data.height,
             Math.min(this.props.viewportWidth - REM_SIZE * 4, REM_SIZE * 36), REM_SIZE * 24, false);
-          attr.className = "inline-image";
-          attr.style = dim ? { width: dim.dstWidth + "px", height: dim.dstHeight + "px" } : null;
+          attr.className = 'inline-image';
+          attr.style = dim ? { width: dim.dstWidth + 'px', height: dim.dstHeight + 'px' } : null;
           attr.onClick = this.handlePreviewImage;
         }
         return React.createElement(el, attr, values);
@@ -3590,12 +3592,12 @@ class ChatMessage extends React.Component {
       }
     };
 
-    var sideClass = this.props.sequence + " " + (this.props.response ? "left" : "right");
-    var bubbleClass = (this.props.sequence == "single" || this.props.sequence == "last") ?
-      "bubble tip" : "bubble";
+    var sideClass = this.props.sequence + ' ' + (this.props.response ? 'left' : 'right');
+    var bubbleClass = (this.props.sequence == 'single' || this.props.sequence == 'last') ?
+      'bubble tip' : 'bubble';
     var avatar = this.props.userAvatar || true;
     var fullDisplay = (this.props.userFrom && this.props.response &&
-      (this.props.sequence == "single" || this.props.sequence == "last"));
+      (this.props.sequence == 'single' || this.props.sequence == 'last'));
 
     var content = this.props.content;
     var attachments = [];
@@ -3721,7 +3723,7 @@ class Attachment extends React.Component {
       this.setState({downloader: null, progress: 0});
     }).catch((err) => {
       if (err) {
-        this.props.onError("Error downloading file: " + err.message, "err");
+        this.props.onError("Error downloading file: " + err.message, 'err');
       }
       this.setState({downloader: null, progress: 0});
     });
@@ -3736,9 +3738,9 @@ class Attachment extends React.Component {
   }
 
   render() {
-    let filename = this.props.filename || "file_attachment";
+    let filename = this.props.filename || 'file_attachment';
     if (filename.length > 36) {
-      filename = filename.substr(0, 16) + "..." + filename.substr(-16);
+      filename = filename.substr(0, 16) + '...' + filename.substr(-16);
     }
     let size = this.props.size > 0 ?
       <span className="small gray">({bytesToHumanSize(this.props.size)})</span> :
@@ -3930,7 +3932,7 @@ class MessagesView extends React.Component {
           });
         })
         .catch((err) => {
-          this.props.onError(err.message, "err");
+          this.props.onError(err.message, 'err');
           this.setState({
             title: NOT_FOUND_TOPIC_TITLE,
             avatar: null,
@@ -3986,7 +3988,7 @@ class MessagesView extends React.Component {
             newState.fetchingMessages = true;
             topic.getMessagesPage(MESSAGES_PAGE).catch((err) => {
               this.setState({fetchingMessages: false});
-              this.props.onError(err.message, "err");
+              this.props.onError(err.message, 'err');
             });
           }
         }
@@ -4065,7 +4067,7 @@ class MessagesView extends React.Component {
 
   handleInfoReceipt(info) {
     switch (info.what) {
-      case "kp": {
+      case 'kp': {
         clearTimeout(this.keyPressTimer);
         var instance = this;
         this.keyPressTimer = setTimeout(function() {
@@ -4076,8 +4078,8 @@ class MessagesView extends React.Component {
         }
         break;
       }
-      case "read":
-      case "recv":
+      case 'read':
+      case 'recv':
         // Redraw due to changed recv/read status.
         this.forceUpdate();
         break;
@@ -4102,12 +4104,12 @@ class MessagesView extends React.Component {
 
   handleShowContextMenuMessage(params) {
     params.topicName = this.state.topic;
-    var menuItems = ["message_delete"];
+    var menuItems = ['message_delete'];
     var topic = this.props.tinode.getTopic(params.topicName);
     if (topic) {
       var acs = topic.getAccessMode();
       if (acs && acs.isDeleter()) {
-        menuItems.push("message_delete_hard");
+        menuItems.push('message_delete_hard');
       }
     }
     this.props.showContextMenu(params, menuItems);
@@ -4122,7 +4124,7 @@ class MessagesView extends React.Component {
     if (this.state.topic) {
       var messageNodes = [];
       var topic = this.props.tinode.getTopic(this.state.topic);
-      var groupTopic = topic.getType() == "grp";
+      var groupTopic = topic.getType() == 'grp';
       var previousFrom = null;
       for (var i=0; i<this.state.messages.length; i++) {
         var msg = this.state.messages[i];
@@ -4132,15 +4134,15 @@ class MessagesView extends React.Component {
           nextFrom = this.state.messages[i+1].from
         }
 
-        var sequence = "single";
+        var sequence = 'single';
         if (msg.from == previousFrom) {
           if (msg.from == nextFrom) {
-            sequence = "middle";
+            sequence = 'middle';
           } else {
-            sequence = "last";
+            sequence = 'last';
           }
         } else if (msg.from == nextFrom) {
-          sequence = "first";
+          sequence = 'first';
         }
         previousFrom = msg.from;
 
@@ -4155,9 +4157,9 @@ class MessagesView extends React.Component {
             userAvatar = makeImageUrl(user.public.photo);
           }
           userFrom = msg.from;
-          chatBoxClass="chat-box group";
+          chatBoxClass='chat-box group';
         } else {
-          chatBoxClass="chat-box";
+          chatBoxClass='chat-box';
         }
 
         messageNodes.push(
@@ -4178,7 +4180,7 @@ class MessagesView extends React.Component {
 
       let lastSeen = null;
       let cont = this.props.tinode.getMeTopic().getContact(this.state.topic);
-      if (cont && Tinode.topicType(cont.topic) == "p2p") {
+      if (cont && Tinode.topicType(cont.topic) == 'p2p') {
         if (cont.online) {
           lastSeen = "online now";
         } else if (cont.seen) {
@@ -4187,7 +4189,7 @@ class MessagesView extends React.Component {
         }
       }
       var avatar = this.state.avatar || true;
-      var online = this.props.online ? "online" + (this.state.typingIndicator ? " typing" : "") : "offline";
+      var online = this.props.online ? 'online' + (this.state.typingIndicator ? ' typing' : '') : 'offline';
 
       component = (
         <div id="topic-view" className={this.props.hideSelf ? 'nodisplay' : null}>
@@ -4324,7 +4326,7 @@ class SendMessage extends React.PureComponent {
           },
           // Failure
           (err) => {
-            this.props.onError(err, "err");
+            this.props.onError(err, 'err');
           });
       } else {
         // Image can be uploaded as is. No conversion is needed.
@@ -4336,7 +4338,7 @@ class SendMessage extends React.PureComponent {
           },
           // Failure
           (err) => {
-            this.props.onError(err, "err");
+            this.props.onError(err, 'err');
           }
         );
       }
@@ -4351,7 +4353,7 @@ class SendMessage extends React.PureComponent {
       if (file.size > MAX_EXTERN_ATTACHMENT_SIZE) {
         // Too large.
         this.props.onError("The file size " + bytesToHumanSize(file.size) +
-          " exceeds the "  + bytesToHumanSize(MAX_EXTERN_ATTACHMENT_SIZE) + " limit.", "err");
+          " exceeds the "  + bytesToHumanSize(MAX_EXTERN_ATTACHMENT_SIZE) + " limit.", 'err');
       } else if (file.size > MAX_INBAND_ATTACHMENT_SIZE) {
         // Too large to send inband - uploading out of band and sending as a link.
         let uploader = this.props.tinode.getLargeFileHelper();
@@ -4448,7 +4450,7 @@ class SendMessage extends React.PureComponent {
 /* This is just a static page to display when no conversation is selected. */
 class LogoView extends React.PureComponent {
   render() {
-    var version = APP_NAME + " (" + Tinode.getLibrary() + ")";
+    var version = APP_NAME + ' (' + Tinode.getLibrary() + ')';
     return (
       <div id="dummy-view" className={this.props.hideSelf ? 'nodisplay' : null}>
         <div>
@@ -4485,15 +4487,15 @@ class ImagePreview extends React.PureComponent {
     var instance = this;
     var dim = fitImageSize(this.props.content.width, this.props.content.height,
       this.state.width, this.state.height, false);
-    var size = dim ? { width: dim.dstWidth + "px", height: dim.dstHeight + "px" } :
+    var size = dim ? { width: dim.dstWidth + 'px', height: dim.dstHeight + 'px' } :
       ((this.props.content.width > this.props.content.height) ? {width: '100%'} : {height: '100%'});
-    size.maxWidth = "100%";
-    size.maxHeight = "100%";
+    size.maxWidth = '100%';
+    size.maxHeight = '100%';
 
     var filename = this.props.content.filename;
     var maxlength = (this.props.content.width / REM_SIZE) | 0;
     if (filename.length > maxlength) {
-      filename = filename.slice(0, maxlength-2) + "..." + filename.slice(2-maxlength);
+      filename = filename.slice(0, maxlength-2) + '...' + filename.slice(2-maxlength);
     }
     return (
       <div id="image-preview" onClick={this.props.onClose}>
@@ -4589,7 +4591,7 @@ class TinodeWeb extends React.Component {
       connected: false,
       transport: settings.transport || null,
       serverAddress: settings.serverAddress || detectServerAddress(),
-      serverVersion: 'no connection',
+      serverVersion: "no connection",
       // "On" is the default, so saving the "off" state.
       messageSounds: !settings.messageSoundsOff,
       desktopAlerts: settings.desktopAlerts,
@@ -4642,7 +4644,7 @@ class TinodeWeb extends React.Component {
     window.addEventListener('offline', (e) => { this.handleOnline(false); });
     window.addEventListener('hashchange', this.handleHashRoute);
     // Window/tab visible or invisible for pausing timers.
-    document.addEventListener("visibilitychange", this.handleVisibilityEvent);
+    document.addEventListener('visibilitychange', this.handleVisibilityEvent);
 
     this.setState({viewportWidth: document.documentElement.clientWidth});
 
@@ -4670,14 +4672,14 @@ class TinodeWeb extends React.Component {
           console.log("Failed to register service worker:", err);
         });
       } catch (err) {
-        this.handleError("Failed to initialize push notifications", "err");
+        this.handleError("Failed to initialize push notifications", 'err');
         console.log("Failed to initialize push notifications", err);
         this.setState({desktopAlertsEnabled: false});
       }
     }
 
-    let token = localStorage.getObject("keep-logged-in") ?
-      localStorage.getObject("auth-token") : undefined;
+    let token = localStorage.getObject('keep-logged-in') ?
+      localStorage.getObject('auth-token') : undefined;
 
     let parsedNav = parseUrlHash(window.location.hash);
     if (token) {
@@ -4686,14 +4688,14 @@ class TinodeWeb extends React.Component {
       this.tinode.setAuthToken(token);
       this.tinode.connect().catch((err) => {
         // Socket error
-        this.handleError(err.message, "err");
+        this.handleError(err.message, 'err');
       });
       delete parsedNav.params.info;
       delete parsedNav.params.tab;
       parsedNav.path[0] = '';
       navigateTo(composeUrlHash(parsedNav.path, parsedNav.params));
     } else if (!parsedNav.params.token) {
-      navigateTo("");
+      navigateTo('');
     }
 
     this.readTimer = null;
@@ -4705,7 +4707,7 @@ class TinodeWeb extends React.Component {
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize);
     window.removeEventListener('hashchange', this.handleHashRoute);
-    document.removeEventListener("visibilitychange", this.handleVisibilityEvent);
+    document.removeEventListener('visibilitychange', this.handleVisibilityEvent);
   }
 
   // Setup transport (usually websocket) and server address. This will terminate connection with the server.
@@ -4763,9 +4765,9 @@ class TinodeWeb extends React.Component {
   handleOnline(online) {
     var newState = {liveConnection: online};
     if (online) {
-      this.handleError("", null);
+      this.handleError('', null);
     } else {
-      this.handleError("No connection", "warn");
+      this.handleError("No connection", 'warn');
     }
     this.setState({liveConnection: online});
   }
@@ -4797,7 +4799,7 @@ class TinodeWeb extends React.Component {
   // User clicked Login button in the side panel.
   handleLoginRequest(login, password) {
     this.setState({loginDisabled: true, login: login, password: password});
-    this.handleError("", null);
+    this.handleError('', null);
 
     if (this.tinode.isConnected()) {
       this.doLogin(login, password, {meth: this.state.credMethod, resp: this.state.credCode});
@@ -4805,7 +4807,7 @@ class TinodeWeb extends React.Component {
       this.tinode.connect().catch((err) => {
         // Socket error
         this.setState({loginDisabled: false});
-        this.handleError(err.message, "err");
+        this.handleError(err.message, 'err');
       });
     }
   }
@@ -4814,7 +4816,7 @@ class TinodeWeb extends React.Component {
   handleConnected() {
     var params = this.tinode.getServerInfo();
     this.setState({
-      serverVersion: params.ver + " " + (params.build ? params.build : "none") + "; "
+      serverVersion: params.ver + ' ' + (params.build ? params.build : 'none') + '; '
     });
     this.doLogin(this.state.login, this.state.password, {meth: this.state.credMethod, resp: this.state.credCode});
   }
@@ -4839,9 +4841,9 @@ class TinodeWeb extends React.Component {
 
     if (promise) {
       promise.then((ctrl) => {
-        if (ctrl.code >= 300 && ctrl.text === "validate credentials") {
+        if (ctrl.code >= 300 && ctrl.text === 'validate credentials') {
           if (cred) {
-            this.handleError("Code does not match", "warn");
+            this.handleError("Code does not match", 'warn');
           }
           this.handleCredentialsRequest(ctrl.params);
         } else {
@@ -4850,14 +4852,14 @@ class TinodeWeb extends React.Component {
       }).catch((err) => {
         // Login failed, report error.
         this.setState({loginDisabled: false, credMethod: undefined, credCode: undefined});
-        this.handleError(err.message, "err");
-        localStorage.removeItem("auth-token");
-        navigateTo("");
+        this.handleError(err.message, 'err');
+        localStorage.removeItem('auth-token');
+        navigateTo('');
       });
     } else {
       // No login credentials provided.
       // Make sure we are on the login page.
-      navigateTo("");
+      navigateTo('');
       this.setState({loginDisabled: false});
     }
   }
@@ -4870,11 +4872,11 @@ class TinodeWeb extends React.Component {
   }
 
   handleLoginSuccessful() {
-    this.handleError("", null);
+    this.handleError('', null);
 
     // Refresh authentication token.
-    if (localStorage.getObject("keep-logged-in")) {
-      localStorage.setObject("auth-token", this.tinode.getAuthToken());
+    if (localStorage.getObject('keep-logged-in')) {
+      localStorage.setObject('auth-token', this.tinode.getAuthToken());
     }
     // Logged in fine, subscribe to 'me' attaching callbacks from the contacts view.
     var me = this.tinode.getMeTopic();
@@ -4894,9 +4896,9 @@ class TinodeWeb extends React.Component {
         withDesc().
         build()
       ).catch((err) => {
-        localStorage.removeItem("auth-token");
-        this.handleError(err.message, "err");
-        navigateTo("");
+        localStorage.removeItem('auth-token');
+        this.handleError(err.message, 'err');
+        navigateTo('');
       });
     navigateTo(setUrlSidePanel(window.location.hash, 'contacts'));
   }
@@ -4906,11 +4908,11 @@ class TinodeWeb extends React.Component {
       connected: false,
       topicSelectedOnline: false,
       dialogSelected: null,
-      errorText: err && err.message ? err.message : 'Disconnected',
-      errorLevel: err && err.message ? "err" : "warn",
+      errorText: err && err.message ? err.message : "Disconnected",
+      errorLevel: err && err.message ? 'err' : 'warn',
       loginDisabled: false,
       contextMenuVisible: false,
-      serverVersion: 'no connection'
+      serverVersion: "no connection"
     });
   }
 
@@ -4925,14 +4927,14 @@ class TinodeWeb extends React.Component {
 
   // Reactions to updates to the contact list.
   tnMeContactUpdate(what, cont) {
-    if (what == "on" || what == "off") {
+    if (what == 'on' || what == 'off') {
       this.resetContactList();
       if (this.state.topicSelected == cont.topic) {
-        this.setState({topicSelectedOnline: (what === "on")});
+        this.setState({topicSelectedOnline: (what == 'on')});
       }
-    } else if (what == "read") {
+    } else if (what == 'read') {
       this.resetContactList();
-    } else if (what == "msg") {
+    } else if (what == 'msg') {
       // New message received
       // Skip update if the topic is currently open, otherwise the badge will annoyingly flash.
       if (this.state.topicSelected != cont.topic) {
@@ -4943,9 +4945,9 @@ class TinodeWeb extends React.Component {
       } else if (document.hidden && this.state.messageSounds) {
         POP_SOUND.play();
       }
-    } else if (what == "recv") {
+    } else if (what == 'recv') {
       // Explicitly ignoring "recv" -- it causes no visible updates to contact list.
-    } else if (what == "gone" || what == "unsub") {
+    } else if (what == 'gone' || what == 'unsub') {
       // Topic deleted or user unsubscribed. Remove topic from view.
       // If the currently selected topic is gone, clear the selection.
       if (this.state.topicSelected == cont.topic) {
@@ -4953,13 +4955,13 @@ class TinodeWeb extends React.Component {
       }
       // Redraw without the deleted topic.
       this.resetContactList();
-    } else if (what == "acs") {
+    } else if (what == 'acs') {
       // Permissions changed. If it's for the currently selected topic,
       // update the views.
       if (this.state.topicSelected == cont.topic) {
         this.setState({topicSelectedAcs: cont.acs});
       }
-    } else if (what == "del") {
+    } else if (what == 'del') {
       // messages deleted (hard or soft) -- update pill counter.
     } else {
       // TODO(gene): handle other types of notifications:
@@ -4981,7 +4983,7 @@ class TinodeWeb extends React.Component {
     // For chatList topics merge only p2p topics and convert them to the
     // same format as foundContacts.
     for (const c of chatList) {
-      if (Tinode.topicType(c.topic) == "p2p") {
+      if (Tinode.topicType(c.topic) == 'p2p') {
           merged[c.topic] = {
             user: c.topic,
             updated: c.updated,
@@ -5038,7 +5040,7 @@ class TinodeWeb extends React.Component {
     } else {
       fnd.onSubsUpdated = this.tnFndSubsUpdated;
       fnd.subscribe(fnd.startMetaQuery().withSub().withTags().build()).catch((err) => {
-        this.handleError(err.message, "err");
+        this.handleError(err.message, 'err');
       });
     }
   }
@@ -5063,7 +5065,7 @@ class TinodeWeb extends React.Component {
     fnd.setMeta({desc: {public: query}}).then((ctrl) => {
       return fnd.getMeta(fnd.startMetaQuery().withSub().build());
     }).catch((err) => {
-      this.handleError(err.message, "err");
+      this.handleError(err.message, 'err');
     });
   }
 
@@ -5082,7 +5084,7 @@ class TinodeWeb extends React.Component {
           topicSelectedOnline: online,
           topicSelectedAcs: acs
         });
-        navigateTo(setUrlTopic("", topicName));
+        navigateTo(setUrlTopic('', topicName));
       }
     } else {
       // Currently selected contact deleted
@@ -5095,7 +5097,7 @@ class TinodeWeb extends React.Component {
         showInfoPanel: false
       });
       if (this.state.topicSelected) {
-        navigateTo(setUrlTopic("", null));
+        navigateTo(setUrlTopic('', null));
       }
     }
   }
@@ -5126,13 +5128,13 @@ class TinodeWeb extends React.Component {
 
     if (promise) {
       promise = promise.catch((err) => {
-        this.handleError(err.message, "err");
+        this.handleError(err.message, 'err');
       });
     }
 
     topic.publishDraft(msg, promise)
       .catch((err) => {
-        this.handleError(err.message, "err");
+        this.handleError(err.message, 'err');
       });
   }
 
@@ -5148,25 +5150,25 @@ class TinodeWeb extends React.Component {
         return this.tinode.createAccountBasic(login_, password_,
           {public: public_, tags: tags_, cred: Tinode.credential(cred_)});
       }).then((ctrl) => {
-        if (ctrl.code >= 300 && ctrl.text === "validate credentials") {
+        if (ctrl.code >= 300 && ctrl.text == 'validate credentials') {
           this.handleCredentialsRequest(ctrl.params);
         } else {
           this.handleLoginSuccessful(this);
         }
       }).catch((err) => {
-        this.handleError(err.message, "err");
+        this.handleError(err.message, 'err');
       });
   }
 
   handleUpdateAccountRequest(password, pub, defacs) {
     if (pub || defacs) {
       this.tinode.getMeTopic().setMeta({desc: {public: pub, defacs: defacs}}).catch((err) => {
-        this.handleError(err.message, "err");
+        this.handleError(err.message, 'err');
       });
     }
     if (password) {
       this.tinode.updateAccountBasic(null, this.tinode.getCurrentLogin(), password).catch((err) => {
-        this.handleError(err.message, "err");
+        this.handleError(err.message, 'err');
       });
     }
   }
@@ -5174,7 +5176,7 @@ class TinodeWeb extends React.Component {
   handleUpdateAccountTagsRequest(tags) {
     this.tinode.getFndTopic().setMeta({tags: tags})
       .catch((err) => {
-        this.handleError(err.message, "err");
+        this.handleError(err.message, 'err');
       });
   }
 
@@ -5199,7 +5201,7 @@ class TinodeWeb extends React.Component {
       serverAddress: serverAddress,
       transport: transport
     });
-    localStorage.setObject("settings", {
+    localStorage.setObject('settings', {
       serverAddress: serverAddress,
       transport: transport
     });
@@ -5227,26 +5229,26 @@ class TinodeWeb extends React.Component {
         this.fbPush.requestPermission().then(() => {
           this.requestPushToken(true);
         }).catch((err) => {
-          this.handleError(err.message, "err");
+          this.handleError(err.message, 'err');
           this.setState({desktopAlerts: false, firebaseToken: null});
-          localStorage.updateObject("settings", {desktopAlerts: false});
+          localStorage.updateObject('settings', {desktopAlerts: false});
           console.log("Failed to get permission to notify.", err);
         });
       } else {
         this.setState({desktopAlerts: true});
-        localStorage.updateObject("settings", {desktopAlerts: true});
+        localStorage.updateObject('settings', {desktopAlerts: true});
       }
     } else if (this.state.firebaseToken) {
       this.fbPush.deleteToken(this.state.firebaseToken).catch((err) => {
         console.log("Unable to delete token.", err);
       }).finally(() => {
-        localStorage.updateObject("settings", {desktopAlerts: false});
-        localStorage.removeItem("firebase-token");
+        localStorage.updateObject('settings', {desktopAlerts: false});
+        localStorage.removeItem('firebase-token');
         this.setState({desktopAlerts: false, firebaseToken: null});
       });
     } else {
       this.setState({desktopAlerts: false, firebaseToken: null});
-      localStorage.updateObject("settings", {desktopAlerts: false});
+      localStorage.updateObject('settings', {desktopAlerts: false});
     }
   }
 
@@ -5254,19 +5256,19 @@ class TinodeWeb extends React.Component {
     this.fbPush.getToken().then((refreshedToken) => {
       if (refreshedToken != this.state.firebaseToken) {
         this.tinode.setDeviceToken(refreshedToken, sendToServer);
-        localStorage.setObject("firebase-token", refreshedToken);
+        localStorage.setObject('firebase-token', refreshedToken);
       }
       this.setState({firebaseToken: refreshedToken, desktopAlerts: true});
-      localStorage.updateObject("settings", {desktopAlerts: true});
+      localStorage.updateObject('settings', {desktopAlerts: true});
     }).catch((err) => {
-      this.handleError(err.message, "err");
+      this.handleError(err.message, 'err');
       console.log("Failed to retrieve firebase token", err);
     });
   }
 
   handleToggleMessageSounds(enabled) {
     this.setState({messageSounds: enabled});
-    localStorage.updateObject("settings", {
+    localStorage.updateObject('settings', {
       messageSoundsOff: !enabled
     });
   }
@@ -5308,7 +5310,7 @@ class TinodeWeb extends React.Component {
       // If the current URl contains the old topic name, replace it with new.
       // Update the name of the selected topic first so the navigator doen't clear
       // the state.
-      this.setState({topicSelected: newName}, () => { navigateTo(setUrlTopic("", newName)); });
+      this.setState({topicSelected: newName}, () => { navigateTo(setUrlTopic('', newName)); });
     }
   }
 
@@ -5326,7 +5328,7 @@ class TinodeWeb extends React.Component {
         params.defacs = permissions;
       }
       topic.setMeta({desc: params}).catch((err) => {
-        this.handleError(err.message, "err");
+        this.handleError(err.message, 'err');
       });
     }
   }
@@ -5343,7 +5345,7 @@ class TinodeWeb extends React.Component {
         mode = am.getWant();
       }
       topic.setMeta({sub: {user: uid, mode: mode}}).catch((err) => {
-        this.handleError(err.message, "err");
+        this.handleError(err.message, 'err');
       });
     }
   }
@@ -5353,14 +5355,14 @@ class TinodeWeb extends React.Component {
     if (topic) {
       var instance = this;
       topic.setMeta({tags: tags}).catch((err) => {
-        this.handleError(err.message, "err");
+        this.handleError(err.message, 'err');
       });
     }
   }
 
   handleLogout() {
     updateFavicon(0);
-    localStorage.removeItem("auth-token");
+    localStorage.removeItem('auth-token');
     if (this.tinode) {
       this.tinode.onDisconnect = undefined;
       this.tinode.disconnect();
@@ -5369,7 +5371,7 @@ class TinodeWeb extends React.Component {
     this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport);
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
-    navigateTo("");
+    navigateTo('');
   }
 
   handleLeaveUnsubRequest(topicName) {
@@ -5382,7 +5384,7 @@ class TinodeWeb extends React.Component {
       // Hide MessagesView and InfoView panels.
       navigateTo(setUrlTopic(window.location.hash, ''));
     }).catch((err) => {
-      this.handleError(err.message, "err");
+      this.handleError(err.message, 'err');
     });
   }
 
@@ -5415,11 +5417,11 @@ class TinodeWeb extends React.Component {
 
     return [
       subscribed ? {title: "Info", handler: this.handleShowInfoView} : null,
-      subscribed ? "messages_clear" : null,
-      subscribed && deleter ? "messages_clear_hard" : null,
-      subscribed ? (muted ? "topic_unmute" : "topic_mute") : null,
-      subscribed ? (blocked ? "topic_unblock" : "topic_block") : null,
-      "topic_delete"
+      subscribed ? 'messages_clear' : null,
+      subscribed && deleter ? 'messages_clear_hard' : null,
+      subscribed ? (muted ? 'topic_unmute' : 'topic_mute') : null,
+      subscribed ? (blocked ? 'topic_unblock' : 'topic_block') : null,
+      'topic_delete'
     ];
   }
 
@@ -5455,7 +5457,7 @@ class TinodeWeb extends React.Component {
     if (added && added.length > 0) {
       added.map((uid) => {
         topic.invite(uid, null).catch((err) => {
-          this.handleError(err.message, "err");
+          this.handleError(err.message, 'err');
         });
       });
     }
@@ -5463,7 +5465,7 @@ class TinodeWeb extends React.Component {
     if (removed && removed.length > 0) {
       removed.map((uid) => {
         topic.delSubscription(uid).catch((err) => {
-          this.handleError(err.message, "err");
+          this.handleError(err.message, 'err');
         });
       });
     }
@@ -5478,18 +5480,18 @@ class TinodeWeb extends React.Component {
     // If already connected, connnect() will return a resolved promise.
     this.tinode.connect()
       .then(() => {
-        return this.tinode.requestResetAuthSecret("basic", method, value)
+        return this.tinode.requestResetAuthSecret('basic', method, value)
       })
       .catch((err) => {
         // Socket error
-        this.handleError(err.message, "err");
+        this.handleError(err.message, 'err');
       });
   }
 
   handleResetPassword(scheme, newPassword, token) {
     token = base64ReEncode(token);
     if (!token)  {
-      this.handleError("Invalid security token", "err");
+      this.handleError("Invalid security token", 'err');
     } else {
       this.tinode.connect()
         .then(() => {
@@ -5497,7 +5499,7 @@ class TinodeWeb extends React.Component {
         })
         .catch((err) => {
           // Socket error
-          this.handleError(err.message, "err");
+          this.handleError(err.message, 'err');
         });
     }
   }
