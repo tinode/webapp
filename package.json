@@ -4,6 +4,7 @@
   "version": "0.15.8-rc1",
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-plugin-react-intl": "^3.0.1",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "cssnano": "^4.0.5",
@@ -17,7 +18,7 @@
     "build": "npm run vers && npm run build:babel && npm run build:prod && npm run build:dev && npm run build:css",
     "build:prod": "browserify ./src/index.js --standalone Webapp | uglifyjs --compress --mangle > ./umd/index.prod.js",
     "build:dev": "browserify ./src/index.js --standalone Webapp > ./umd/index.dev.js",
-    "build:babel": "babel ./src/webapp.jsx --presets react,env --out-file ./src/webapp.es5.js",
+    "build:babel": "babel ./src/webapp.jsx --out-file ./src/webapp.es5.js",
     "build:css": "postcss css/base.css > css/base.min.css",
     "vers": "echo \"{\\\"version\\\": \\\"`node -p -e \"require('./package.json').version\"`\\\"}\" > version.json"
   },
@@ -69,6 +70,7 @@
     "firebase": "^5.5.5",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
+    "react-intl": "^2.7.1",
     "tinode-sdk": "^0.15.8-rc1"
   }
 }

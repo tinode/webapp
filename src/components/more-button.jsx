@@ -1,0 +1,28 @@
+import React from 'react';
+
+// Toggle [Title text >] -> [Title text v]
+export default class MoreButton extends React.PureComponent {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      open: props.open
+    };
+    this.handleToggle = this.handleToggle.bind(this);
+  }
+
+  handleToggle() {
+    let open = !this.state.open;
+    this.setState({open: open});
+    if (this.props.onToggle) {
+      this.props.onToggle(open);
+    }
+  }
+
+  render() {
+    return (<label className="small" onClick={this.handleToggle}>{this.props.title}...
+      {this.state.open ? <i className="material-icons">expand_more</i> :
+        <i className="material-icons">chevron_right</i>}
+      </label>);
+  }
+}
