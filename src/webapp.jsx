@@ -1371,28 +1371,43 @@ class LoginView extends React.Component {
     if (this.props.disabled) {
       submitClasses += ' disabled';
     }
+
     return (
       <form id="login-form" onSubmit={this.handleSubmit}>
-        <input type="text" id="inputLogin"
-          placeholder="Login"
-          autoComplete="username"
-          value={this.state.login}
-          onChange={this.handleLoginChange}
-          required autoFocus />
-        <VisiblePassword type="password" id="inputPassword"
-          placeholder="Password"
-          autoComplete="current-password"
-          value={this.state.password}
-          onChange={this.handlePasswordChange}
-          required={true} />
+        <FormattedMessage id="login.login_prompt" defaultMessage="Login">
+        {
+          (login_prompt) => <input type="text" id="inputLogin"
+            placeholder={login_prompt}
+            autoComplete="username"
+            value={this.state.login}
+            onChange={this.handleLoginChange}
+            required autoFocus />
+        }
+        </FormattedMessage>
+        <FormattedMessage id="login.password_prompt" defaultMessage="Password">
+        {
+          (password_prompt) => <VisiblePassword type="password" id="inputPassword"
+            placeholder={password_prompt}
+            autoComplete="current-password"
+            value={this.state.password}
+            onChange={this.handlePasswordChange}
+            required={true} />
+        }
+        </FormattedMessage>
         <div className="panel-form-row">
           <CheckBox id="save-token" name="save-token" checked={this.state.saveToken}
             onChange={this.handleToggleSaveToken} />
-          <label htmlFor="save-token">&nbsp;Stay logged in</label>
-          <a href="#reset">Forgot password?</a>
+          <label htmlFor="save-token">&nbsp;
+            <FormattedMessage id="login.stay_logged_in" defaultMessage="Stay logged in" />
+          </label>
+          <a href="#reset">
+            <FormattedMessage id="login.forgot_password_link" defaultMessage="Forgot password?" />
+          </a>
         </div>
         <div className="dialog-buttons">
-          <button className={submitClasses} type="submit">Sign in</button>
+          <button className={submitClasses} type="submit">
+            <FormattedMessage id="login.sign_in_button" defaultMessage="Sign in" />
+          </button>
         </div>
       </form>
     );
@@ -4522,7 +4537,7 @@ class ImagePreview extends React.PureComponent {
 };
 /* END Conversation panel */
 
-/* The top-level class to hold all fuinctionality together */
+/* The top-level class to hold all functionality together */
 class TinodeWeb extends React.Component {
   constructor(props) {
     super(props);
