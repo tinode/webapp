@@ -1,5 +1,8 @@
 import React from 'react';
 
+import AvatarUpload from './avatar-upload.jsx';
+import TagManager from './tag-manager.jsx';
+
 export default class NewTopicGroup extends React.PureComponent {
   constructor(props) {
     super(props);

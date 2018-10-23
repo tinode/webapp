@@ -1,7 +1,10 @@
+// PermissionsEditor: Component for editing permissions
+// <PermissionsEditor mode="JWROD" skip="O" onChange={this.handleCheckboxTest} />
+
 import React from 'react';
 
-/* BEGIN PermissionsEditor: Component for editing permissions */
-// <PermissionsEditor mode="JWROD" skip="O" onChange={this.handleCheckboxTest} />
+import CheckBox from './checkbox.jsx';
+
 export default class PermissionsEditor extends React.Component {
   constructor(props) {
     super(props);
@@ -105,4 +108,3 @@ export default class PermissionsEditor extends React.Component {
     );
   }
 };
-/* END PermissionsEditor */

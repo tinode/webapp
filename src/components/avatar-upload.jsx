@@ -1,4 +1,5 @@
 import React from 'react';
+
 import LetterTile from './letter-tile.jsx';
 
 export default class AvatarUpload extends React.Component {

@@ -1,5 +1,14 @@
 import React from 'react';
 
+import ChatMessage from './chat-message.jsx';
+import ErrorPanel from './error-panel.jsx';
+import GroupSubs from './group-subs.jsx';
+import ImagePreview from './image-preview.jsx';
+import LetterTile from './letter-tile.jsx';
+import LoadSpinner from './load-spinner.jsx';
+import LogoView from './logo-view.jsx';
+import SendMessage from './send-message.jsx';
+
 const NOT_FOUND_TOPIC_TITLE = "Not found";
 
 export default class MessagesView extends React.Component {

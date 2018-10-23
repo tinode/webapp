@@ -1,6 +1,8 @@
+// Tinode config panel.
 import React from 'react';
 
-/* Tinode config panel */
+import HostSelector from './host-selector.jsx';
+
 export default class SettingsView extends React.PureComponent {
   constructor(props) {
     super(props);

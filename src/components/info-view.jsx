@@ -1,6 +1,17 @@
+/* InfoView: panel with topic/user info */
+
 import React from 'react';
 
-/* InfoView: panel with topic/user info */
+import AvatarUpload from './avatar-upload.jsx';
+import ContactList from './contact-list.jsx';
+import GroupManager from './group-manager.jsx';
+import InPlaceEdit from './in-place-edit.jsx';
+import MenuCancel from './menu-cancel.jsx';
+import MoreButton from './more-button.jsx';
+import PermissionsEditor from './permissions-editor.jsx';
+import TagManager from './tag-manager.jsx';
+
+
 export default class InfoView extends React.Component {
   constructor(props) {
     super(props);

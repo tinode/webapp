@@ -1,5 +1,7 @@
 import React from 'react';
 
+import LetterTile from './letter-tile.jsx';
+
 export default class Chip extends React.PureComponent {
   constructor(props) {
     super(props);

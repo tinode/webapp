@@ -1,6 +1,7 @@
+/* Context Menu: popup/dropdown menu */
+
 import React from 'react';
 
-/* Context Menu: popup/dropdown menu */
 
 export default class ContextMenu extends React.Component {
   constructor(props) {

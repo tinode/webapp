@@ -1,7 +1,8 @@
 import React from 'react';
 import {Drafty} from 'tinode-sdk'
 
-import LetterTile from './letter-tile.jsx'
+import Attachment from './attachment.jsx';
+import LetterTile from './letter-tile.jsx';
 import ReceivedMarker from './received-marker.jsx'
 
 /* Single message, sent or received. */

@@ -1,6 +1,10 @@
+/* GroupMembers: control for managing a list of group members */
+
 import React from 'react';
 
-/* GroupMembers: control for managing a list of group members */
+import ChipInput from './chip-input.jsx';
+import ContactList from './contact-list.jsx';
+
 export default class GroupManager extends React.Component {
   constructor(props) {
     super(props);

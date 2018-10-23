@@ -1,6 +1,11 @@
+/* Create new topic and invite users or send an invite */
+
 import React from 'react';
 
-/* Create new topic and invite users or send an invite */
+import ContactList from './contact-list.jsx';
+import NewTopicById from './new-topic-by-id.jsx';
+import NewTopicGroup from './new-topic-group.jsx';
+import SearchContacts from './search-contacts.jsx';
 
 export default class NewTopicView extends React.Component {
   constructor(props) {

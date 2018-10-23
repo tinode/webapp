@@ -1,6 +1,6 @@
+// ValidationView: panel for confirming credentials, like email or phone.
 import React from 'react';
 
-/* ValidationView: panel for confirming credentials, like email or phone */
 export default class ValidationView extends React.PureComponent {
   constructor(props) {
     super(props);

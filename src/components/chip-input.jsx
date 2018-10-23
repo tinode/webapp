@@ -1,5 +1,7 @@
 import React from 'react';
 
+import Chip from './chip.jsx';
+
 /* BEGIN ChipInput: group membership widget */
 export default class ChipInput extends React.Component {
   constructor(props) {

@@ -1,7 +1,10 @@
+/* In-place text editor. Shows text with an icon
+ * which toggles it into an input field */
+
 import React from 'react';
 
-/* BEGIN In-place text editor. Shows text with an icon
- * which toggles it into an input field */
+import VisiblePassword from './visible-password.jsx';
+
 export default class InPlaceEdit extends React.Component {
   constructor(props) {
     super(props);

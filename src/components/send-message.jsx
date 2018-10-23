@@ -1,6 +1,7 @@
+// Send message form.
+
 import React from 'react';
 
-/* Send message form */
 export default class SendMessage extends React.PureComponent {
   constructor(props) {
     super(props);

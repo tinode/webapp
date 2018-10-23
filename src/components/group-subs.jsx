@@ -1,6 +1,9 @@
+/* GroupSubs: a list of group subscribers currently online */
+
 import React from 'react';
 
-/* GroupSubs: a list of group subscribers currently online */
+import LetterTile from './letter-tile.jsx';
+
 export default class GroupSubs extends React.Component {
   constructor(props) {
     super(props);

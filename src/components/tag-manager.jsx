@@ -1,7 +1,8 @@
+// TagManager: edit topic or user tags.
 import React from 'react';
 
+import ChipInput from './chip-input.jsx';
 
-/* TagManager: edit topic or user tags */
 export default class TagManager extends React.Component {
   constructor(props) {
     super(props);

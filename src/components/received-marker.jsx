@@ -1,6 +1,9 @@
+// Received/read indicator.
+
 import React from 'react';
 
-/* Received/read indicator */
+import Tinode from 'tinode-sdk';
+
 export default class ReceivedMarker extends React.PureComponent {
   render() {
     let timestamp;

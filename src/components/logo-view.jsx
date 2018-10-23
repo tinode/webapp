@@ -1,6 +1,7 @@
+/* This is just a static page to display when no conversation is selected. */
+
 import React from 'react';
 
-/* This is just a static page to display when no conversation is selected. */
 export default class LogoView extends React.PureComponent {
   render() {
     var version = APP_NAME + ' (' + Tinode.getLibrary() + ')';

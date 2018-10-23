@@ -1,6 +1,11 @@
+// The top-level class to hold all functionality together.
 import React from 'react';
 
-/* The top-level class to hold all functionality together */
+import ContextMenu from './context-menu.jsx';
+import InfoView from './info-view.jsx';
+import MessagesView from './messages-view.jsx';
+import SidepanelView from './sidepanel-view.jsx';
+
 export default class TinodeWeb extends React.Component {
   constructor(props) {
     super(props);

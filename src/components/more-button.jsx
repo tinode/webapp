@@ -1,6 +1,7 @@
+// Toggle [Title text >] -> [Title text v]
+
 import React from 'react';
 
-// Toggle [Title text >] -> [Title text v]
 export default class MoreButton extends React.PureComponent {
   constructor(props) {
     super(props);

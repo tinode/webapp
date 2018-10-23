@@ -1,6 +1,11 @@
-import React from 'react';
+// Login form
 
-/* BEGIN Login: a login form */
+import React from 'react';
+import {FormattedMessage} from 'react-intl';
+
+import CheckBox from './checkbox.jsx';
+import VisiblePassword from './visible-password.jsx';
+
 export default class LoginView extends React.Component {
   constructor(props) {
     super(props);

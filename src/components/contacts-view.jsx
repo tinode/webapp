@@ -1,6 +1,8 @@
+/* ContactsView holds all contacts-related stuff */
+
 import React from 'react';
 
-/* ContactsView holds all contacts-related stuff */
+import ContactList from './contact-list.jsx';
 
 export default class ContactsView extends React.Component {
   constructor(props) {

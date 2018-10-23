@@ -1,5 +1,9 @@
 import React from 'react';
 
+import LetterTile from './letter-tile.jsx';
+import MenuCancel from './menu-cancel.jsx';
+import MenuContacts from './menu-contacts.jsx';
+import MenuStart from './menu-start.jsx';
 
 export default class SideNavbar extends React.PureComponent {
   render() {

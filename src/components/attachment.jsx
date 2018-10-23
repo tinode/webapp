@@ -1,4 +1,5 @@
 import React from 'react';
+
 import FileProgress from './file-progress.jsx';
 
 export default class Attachment extends React.Component {
