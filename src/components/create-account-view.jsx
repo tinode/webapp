@@ -3,8 +3,8 @@
 import React from 'react';
 
 import AvatarUpload from './avatar-upload.jsx';
-import CheckBox './checkbox.jsx';
-import VisiblePassword './visible-password.jsx';
+import CheckBox from './checkbox.jsx';
+import VisiblePassword from './visible-password.jsx';
 
 export default class CreateAccountView extends React.PureComponent {
   constructor(props) {
