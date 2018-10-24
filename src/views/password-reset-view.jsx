@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import VisiblePassword from './visible-password.jsx';
+import VisiblePassword from '../widgets/visible-password.jsx';
 
 export default class PasswordResetView extends React.PureComponent {
   constructor(props) {

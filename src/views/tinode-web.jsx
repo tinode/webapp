@@ -1,7 +1,11 @@
 // The top-level class to hold all functionality together.
 import React from 'react';
 
-import ContextMenu from './context-menu.jsx';
+import 'firebase/app';
+import 'firebase/messaging';
+
+import ContextMenu from '../widgets/context-menu.jsx';
+
 import InfoView from './info-view.jsx';
 import MessagesView from './messages-view.jsx';
 import SidepanelView from './sidepanel-view.jsx';

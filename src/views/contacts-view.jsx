@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import ContactList from './contact-list.jsx';
+import ContactList from '../widgets/contact-list.jsx';
 
 export default class ContactsView extends React.Component {
   constructor(props) {

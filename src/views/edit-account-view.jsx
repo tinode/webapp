@@ -1,9 +1,9 @@
 import React from 'react';
 
-import AvatarUpload from './avatar-upload.jsx';
-import CheckBox from './checkbox.jsx';
-import PermissionsEditor from './permissions-editor.jsx';
-import TagManager from './tag-manager.jsx';
+import AvatarUpload from '../widgets/avatar-upload.jsx';
+import CheckBox from '../widgets/checkbox.jsx';
+import PermissionsEditor from '../widgets/permissions-editor.jsx';
+import TagManager from '../widgets/tag-manager.jsx';
 
 /* Edit account parameters */
 

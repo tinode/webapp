@@ -2,10 +2,10 @@
 
 import React from 'react';
 
-import ContactList from './contact-list.jsx';
-import NewTopicById from './new-topic-by-id.jsx';
-import NewTopicGroup from './new-topic-group.jsx';
-import SearchContacts from './search-contacts.jsx';
+import ContactList from '../widgets/contact-list.jsx';
+import NewTopicById from '../widgets/new-topic-by-id.jsx';
+import NewTopicGroup from '../widgets/new-topic-group.jsx';
+import SearchContacts from '../widgets/search-contacts.jsx';
 
 export default class NewTopicView extends React.Component {
   constructor(props) {

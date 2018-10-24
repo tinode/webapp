@@ -2,15 +2,14 @@
 
 import React from 'react';
 
-import AvatarUpload from './avatar-upload.jsx';
-import ContactList from './contact-list.jsx';
-import GroupManager from './group-manager.jsx';
-import InPlaceEdit from './in-place-edit.jsx';
-import MenuCancel from './menu-cancel.jsx';
-import MoreButton from './more-button.jsx';
-import PermissionsEditor from './permissions-editor.jsx';
-import TagManager from './tag-manager.jsx';
-
+import AvatarUpload from '../widgets/avatar-upload.jsx';
+import ContactList from '../widgets/contact-list.jsx';
+import GroupManager from '../widgets/group-manager.jsx';
+import InPlaceEdit from '../widgets/in-place-edit.jsx';
+import MenuCancel from '../widgets/menu-cancel.jsx';
+import MoreButton from '../widgets/more-button.jsx';
+import PermissionsEditor from '../widgets/permissions-editor.jsx';
+import TagManager from '../widgets/tag-manager.jsx';
 
 export default class InfoView extends React.Component {
   constructor(props) {

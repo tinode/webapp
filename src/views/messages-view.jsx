@@ -1,13 +1,13 @@
 import React from 'react';
 
-import ChatMessage from './chat-message.jsx';
-import ErrorPanel from './error-panel.jsx';
-import GroupSubs from './group-subs.jsx';
-import ImagePreview from './image-preview.jsx';
-import LetterTile from './letter-tile.jsx';
-import LoadSpinner from './load-spinner.jsx';
+import ChatMessage from '../widgets/chat-message.jsx';
+import ErrorPanel from '../widgets/error-panel.jsx';
+import GroupSubs from '../widgets/group-subs.jsx';
+import ImagePreview from '../widgets/image-preview.jsx';
+import LetterTile from '../widgets/letter-tile.jsx';
+import LoadSpinner from '../widgets/load-spinner.jsx';
 import LogoView from './logo-view.jsx';
-import SendMessage from './send-message.jsx';
+import SendMessage from '../widgets/send-message.jsx';
 
 const NOT_FOUND_TOPIC_TITLE = "Not found";
 

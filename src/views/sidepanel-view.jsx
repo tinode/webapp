@@ -1,14 +1,15 @@
 import React from 'react';
 
+import SideNavbar from '../widgets/side-navbar.jsx';
+import ErrorPanel from '../widgets/error-panel.jsx';
+
 import ContactsView from './contacts-view.jsx';
 import CreateAccountView from './create-account-view.jsx';
 import EditAccountView from './edit-account-view.jsx';
-import ErrorPanel from './error-panel.jsx';
 import LoginView from './login-view.jsx';
 import NewTopicView from './new-topic-view.jsx';
 import PasswordResetView from './password-reset-view.jsx';
 import SettingsView from './settings-view.jsx';
-import SideNavbar from './side-navbar.jsx';
 import ValidationView from './validation-view.jsx';
 
 export default class SidepanelView extends React.Component {
