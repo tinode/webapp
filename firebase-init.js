@@ -1,5 +1,5 @@
 // Get these values for your project from the https://console.firebase.google.com/
-const FIREBASE_INIT = {
+export const FIREBASE_INIT = {
   // Project Settings -> Cloud Messaging, "Sender ID".
   messagingSenderId: "114126160546",
   // Project Settings -> Cloud Messaging -> Web configuration -> Web Push certificates.

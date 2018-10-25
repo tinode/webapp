@@ -21,9 +21,9 @@
     "build": "npm run vers && npm run build:babel && npm run build:prod && npm run build:dev && npm run build:css",
     "build:prod": "browserify ./src/index.js --standalone Webapp | uglifyjs --compress --mangle > ./umd/index.prod.js",
     "build:dev": "browserify ./src/index.js --standalone Webapp > ./umd/index.dev.js",
-    "build:babel": "babel ./src/webapp.jsx --out-file ./src/webapp.es5.js",
     "build:css": "postcss css/base.css > css/base.min.css",
-    "wpbuild": "webpack --config webpack.config.js",
+    "wp-build:dev": "webpack --mode development --output ./umd/index.dev.js",
+    "wp-build:prod": "webpack --mode production --output ./umd/index.prod.js",
     "vers": "echo \"{\\\"version\\\": \\\"`node -p -e \"require('./package.json').version\"`\\\"}\" > version.json"
   },
   "files": [

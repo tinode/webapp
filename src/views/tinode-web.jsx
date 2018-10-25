@@ -3,12 +3,16 @@ import React from 'react';
 
 import 'firebase/app';
 import 'firebase/messaging';
+import { FIREBASE_INIT } from '../../firebase-init.js'
 
 import ContextMenu from '../widgets/context-menu.jsx';
 
 import InfoView from './info-view.jsx';
 import MessagesView from './messages-view.jsx';
 import SidepanelView from './sidepanel-view.jsx';
+
+// Sound to play on message received.
+export const POP_SOUND = new Audio('audio/msg.mp3');
 
 export default class TinodeWeb extends React.Component {
   constructor(props) {

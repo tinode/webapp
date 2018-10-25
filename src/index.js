@@ -3,7 +3,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import TinodeWeb from './components/tinode-web.jsx';
+import TinodeWeb from './views/tinode-web.jsx';
 
 ReactDOM.render(
   React.createElement(TinodeWeb, null),
