@@ -1,7 +1,7 @@
-import {KNOWN_HOSTS, DEFAULT_HOST} from '../config.js';
+import { KNOWN_HOSTS, DEFAULT_HOST } from '../config.js';
 
 // Detect server address from the URL
-function detectServerAddress() {
+export function detectServerAddress() {
   let host = DEFAULT_HOST;
   if (typeof window.location == 'object') {
     if (window.location.protocol == 'file:' || window.location.hostname == 'localhost') {
@@ -14,14 +14,14 @@ function detectServerAddress() {
 }
 
 // Detect if the page is served over HTTPS.
-function isSecureConnection() {
+export function isSecureConnection() {
   if (typeof window.location == 'object') {
     return window.location.protocol == 'https:';
   }
   return false;
 }
 
-function isLocalHost() {
+export function isLocalHost() {
   if (typeof window.location == 'object') {
     return window.location.hostname == 'localhost';
   }

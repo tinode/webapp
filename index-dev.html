@@ -28,38 +28,11 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     <!-- Styles for local elements -->
     <link rel="stylesheet" href="css/base.css" />
-    <!-- ReactJs scripts -->
-    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
-    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <!-- Localization support -->
-    <script crossorigin src="https://unpkg.com/prop-types@15/prop-types.js"></script>
-    <script crossorigin src="https://unpkg.com/react-intl@2/dist/react-intl.js"></script>
-    <script>
-    // Extract react-intl objects
-    var {IntlProvider, FormattedMessage} = ReactIntl;
-    </script>
-    <!-- Firebase push notifications. -->
-    <script crossorigin src="https://unpkg.com/firebase@5.5.5/firebase-app.js"></script>
-    <script crossorigin src="https://unpkg.com/firebase@5.5.5/firebase-messaging.js"></script>
   </head>
 
   <body>
     <div id="mountPoint"></div>
-    <!-- core tinode libraries -->
-    <script src="src/drafty.js"></script>
-    <script src="src/tinode.js"></script>
     <!-- the application -->
-    <script src="/firebase-init.js"></script>
-    <script type="text/babel" src="src/index.js"></script>
-    <!--script type="text/babel">
-      ReactDOM.render(
-        <IntlProvider
-          locale={navigator.language}>
-          <TinodeWeb />
-        </IntlProvider>,
-        document.getElementById('mountPoint')
-      );
-    </script-->
+    <script src="umd/index.dev.js"></script>
   </body>
 </html>

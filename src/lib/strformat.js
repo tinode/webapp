@@ -1,5 +1,5 @@
 // Short representation of time in the past.
-function shortDateFormat(then) {
+export function shortDateFormat(then) {
   var locale = window.navigator.userLanguage || window.navigator.language;
   var now = new Date();
   if (then.getFullYear() == now.getFullYear()) {
@@ -15,7 +15,7 @@ function shortDateFormat(then) {
 }
 
 // Convert a number of bytes to human-readable format.
-function bytesToHumanSize(bytes) {
+export function bytesToHumanSize(bytes) {
   if (!bytes || bytes == 0) {
     return '0 Bytes';
   }
@@ -29,7 +29,7 @@ function bytesToHumanSize(bytes) {
 
 // Get 32 bit integer hash value for a string. Ideally it should produce the same value
 // as Java's String#hash().
-function stringHash(value) {
+export function stringHash(value) {
   var hash = 0;
   value = '' + value;
   for (var i = 0; i < value.length; i++) {

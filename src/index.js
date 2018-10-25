@@ -3,9 +3,14 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { IntlProvider } from 'react-intl';
+
 import TinodeWeb from './views/tinode-web.jsx';
 
 ReactDOM.render(
-  React.createElement(TinodeWeb, null),
+  <IntlProvider
+    locale={navigator.language}>
+    <TinodeWeb />
+  </IntlProvider>,
   document.getElementById('mountPoint')
 );

@@ -1,10 +1,12 @@
 // Login form
 
 import React from 'react';
-import {FormattedMessage} from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 
 import CheckBox from '../widgets/checkbox.jsx';
 import VisiblePassword from '../widgets/visible-password.jsx';
+
+import LocalStorageUtil from '../lib/local-storage.js';
 
 export default class LoginView extends React.Component {
   constructor(props) {
@@ -14,7 +16,7 @@ export default class LoginView extends React.Component {
       login: props.login,
       password: '',
       hostName: props.serverAddress,
-      saveToken: localStorage.getObject('keep-logged-in')
+      saveToken: LocalStorageUtil.getObject('keep-logged-in')
     };
     this.handleLoginChange = this.handleLoginChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
@@ -31,7 +33,7 @@ export default class LoginView extends React.Component {
   }
 
   handleToggleSaveToken() {
-    localStorage.setObject('keep-logged-in', !this.state.saveToken);
+    LocalStorageUtil.setObject('keep-logged-in', !this.state.saveToken);
     this.setState({saveToken: !this.state.saveToken});
   }
 

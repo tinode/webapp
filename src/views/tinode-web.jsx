@@ -3,13 +3,20 @@ import React from 'react';
 
 import 'firebase/app';
 import 'firebase/messaging';
-import { FIREBASE_INIT } from '../../firebase-init.js'
+import { FIREBASE_INIT } from '../firebase-init.js'
+
+import Tinode from 'tinode-sdk';
 
 import ContextMenu from '../widgets/context-menu.jsx';
 
 import InfoView from './info-view.jsx';
 import MessagesView from './messages-view.jsx';
 import SidepanelView from './sidepanel-view.jsx';
+
+import { API_KEY, APP_NAME, MEDIA_BREAKPOINT, RECEIVED_DELAY } from '../config.js';
+import { isLocalHost, isSecureConnection } from '../lib/host-name.js';
+import LocalStorageUtil from '../lib/local-storage.js';
+import HashNavigation from '../lib/navigation.js';
 
 // Sound to play on message received.
 export const POP_SOUND = new Audio('audio/msg.mp3');
@@ -76,7 +83,7 @@ export default class TinodeWeb extends React.Component {
   }
 
   getBlankState() {
-    let settings = localStorage.getObject("settings") || {};
+    let settings = LocalStorageUtil.getObject("settings") || {};
 
     return {
       connected: false,
@@ -89,7 +96,7 @@ export default class TinodeWeb extends React.Component {
       desktopAlertsEnabled: (isSecureConnection() || isLocalHost()) &&
         (typeof firebase != 'undefined') && (typeof navigator != 'undefined') &&
         (typeof FIREBASE_INIT != 'undefined'),
-      firebaseToken: localStorage.getObject("firebase-token"),
+      firebaseToken: LocalStorageUtil.getObject("firebase-token"),
 
       errorText: '',
       errorLevel: null,
@@ -169,10 +176,10 @@ export default class TinodeWeb extends React.Component {
       }
     }
 
-    let token = localStorage.getObject('keep-logged-in') ?
-      localStorage.getObject('auth-token') : undefined;
+    let token = LocalStorageUtil.getObject('keep-logged-in') ?
+      LocalStorageUtil.getObject('auth-token') : undefined;
 
-    let parsedNav = parseUrlHash(window.location.hash);
+    let parsedNav = HashNavigation.parseUrlHash(window.location.hash);
     if (token) {
       // When reading from storage, date is returned as string.
       token.expires = new Date(token.expires);
@@ -184,9 +191,9 @@ export default class TinodeWeb extends React.Component {
       delete parsedNav.params.info;
       delete parsedNav.params.tab;
       parsedNav.path[0] = '';
-      navigateTo(composeUrlHash(parsedNav.path, parsedNav.params));
+      HashNavigation.navigateTo(HashNavigation.composeUrlHash(parsedNav.path, parsedNav.params));
     } else if (!parsedNav.params.token) {
-      navigateTo('');
+      HashNavigation.navigateTo('');
     }
 
     this.readTimer = null;
@@ -218,7 +225,7 @@ export default class TinodeWeb extends React.Component {
 
   // Handle for hashchange event: display appropriate panels.
   handleHashRoute() {
-    var hash = parseUrlHash(window.location.hash);
+    var hash = HashNavigation.parseUrlHash(window.location.hash);
     if (hash.path && hash.path.length > 0) {
       // Left-side panel selector.
       if (['register','settings','edit','cred','reset','newtpk','contacts',''].includes(hash.path[0])) {
@@ -315,7 +322,7 @@ export default class TinodeWeb extends React.Component {
   doLogin(login, password, cred) {
     if (this.tinode.isAuthenticated()) {
       // Already logged in. Go to default screen.
-      navigateTo("");
+      HashNavigation.navigateTo('');
       return;
     }
     // Sanitize and package credentail.
@@ -344,30 +351,30 @@ export default class TinodeWeb extends React.Component {
         // Login failed, report error.
         this.setState({loginDisabled: false, credMethod: undefined, credCode: undefined});
         this.handleError(err.message, 'err');
-        localStorage.removeItem('auth-token');
-        navigateTo('');
+        LocalStorageUtil.removeItem('auth-token');
+        HashNavigation.navigateTo('');
       });
     } else {
       // No login credentials provided.
       // Make sure we are on the login page.
-      navigateTo('');
+      HashNavigation.navigateTo('');
       this.setState({loginDisabled: false});
     }
   }
 
   handleCredentialsRequest(params) {
-    var parsed = parseUrlHash(window.location.hash);
+    var parsed = HashNavigation.parseUrlHash(window.location.hash);
     parsed.path[0] = 'cred';
     parsed.params['method'] = params.cred[0];
-    navigateTo(composeUrlHash(parsed.path, parsed.params));
+    HashNavigation.navigateTo(HashNavigation.composeUrlHash(parsed.path, parsed.params));
   }
 
   handleLoginSuccessful() {
     this.handleError('', null);
 
     // Refresh authentication token.
-    if (localStorage.getObject('keep-logged-in')) {
-      localStorage.setObject('auth-token', this.tinode.getAuthToken());
+    if (LocalStorageUtil.getObject('keep-logged-in')) {
+      LocalStorageUtil.setObject('auth-token', this.tinode.getAuthToken());
     }
     // Logged in fine, subscribe to 'me' attaching callbacks from the contacts view.
     var me = this.tinode.getMeTopic();
@@ -387,11 +394,11 @@ export default class TinodeWeb extends React.Component {
         withDesc().
         build()
       ).catch((err) => {
-        localStorage.removeItem('auth-token');
+        LocalStorageUtil.removeItem('auth-token');
         this.handleError(err.message, 'err');
-        navigateTo('');
+        HashNavigation.navigateTo('');
       });
-    navigateTo(setUrlSidePanel(window.location.hash, 'contacts'));
+    HashNavigation.navigateTo(HashNavigation.setUrlSidePanel(window.location.hash, 'contacts'));
   }
 
   handleDisconnect(err) {
@@ -575,7 +582,7 @@ export default class TinodeWeb extends React.Component {
           topicSelectedOnline: online,
           topicSelectedAcs: acs
         });
-        navigateTo(setUrlTopic('', topicName));
+        HashNavigation.navigateTo(HashNavigation.setUrlTopic('', topicName));
       }
     } else {
       // Currently selected contact deleted
@@ -588,7 +595,7 @@ export default class TinodeWeb extends React.Component {
         showInfoPanel: false
       });
       if (this.state.topicSelected) {
-        navigateTo(setUrlTopic('', null));
+        HashNavigation.navigateTo(HashNavigation.setUrlTopic('', null));
       }
     }
   }
@@ -598,7 +605,7 @@ export default class TinodeWeb extends React.Component {
     this.setState({
       mobilePanel: 'sidepanel'
     });
-    navigateTo(setUrlTopic(window.location.hash, null));
+    HashNavigation.navigateTo(HashNavigation.setUrlTopic(window.location.hash, null));
   }
 
   // User is sending a message, either plain text or a drafty object, possibly
@@ -631,7 +638,7 @@ export default class TinodeWeb extends React.Component {
 
   // User chose a Sign Up menu item.
   handleNewAccount() {
-    navigateTo(setUrlSidePanel(window.location.hash, 'register'));
+    HashNavigation.navigateTo(HashNavigation.setUrlSidePanel(window.location.hash, 'register'));
   }
 
   // Actual registration of a new account.
@@ -673,7 +680,8 @@ export default class TinodeWeb extends React.Component {
 
   // User chose Settings menu item.
   handleSettings() {
-    navigateTo(setUrlSidePanel(window.location.hash, this.state.myUserId ? 'edit' : 'settings'));
+    HashNavigation.navigateTo(HashNavigation.setUrlSidePanel(window.location.hash,
+      this.state.myUserId ? 'edit' : 'settings'));
   }
 
   // User updated global parameters.
@@ -692,12 +700,12 @@ export default class TinodeWeb extends React.Component {
       serverAddress: serverAddress,
       transport: transport
     });
-    localStorage.setObject('settings', {
+    LocalStorageUtil.setObject('settings', {
       serverAddress: serverAddress,
       transport: transport
     });
 
-    navigateTo(setUrlSidePanel(window.location.hash, ''));
+    HashNavigation.navigateTo(HashNavigation.setUrlSidePanel(window.location.hash, ''));
   }
 
   // Initialize desktop alerts = push notifications.
@@ -722,24 +730,24 @@ export default class TinodeWeb extends React.Component {
         }).catch((err) => {
           this.handleError(err.message, 'err');
           this.setState({desktopAlerts: false, firebaseToken: null});
-          localStorage.updateObject('settings', {desktopAlerts: false});
+          LocalStorageUtil.updateObject('settings', {desktopAlerts: false});
           console.log("Failed to get permission to notify.", err);
         });
       } else {
         this.setState({desktopAlerts: true});
-        localStorage.updateObject('settings', {desktopAlerts: true});
+        LocalStorageUtil.updateObject('settings', {desktopAlerts: true});
       }
     } else if (this.state.firebaseToken) {
       this.fbPush.deleteToken(this.state.firebaseToken).catch((err) => {
         console.log("Unable to delete token.", err);
       }).finally(() => {
-        localStorage.updateObject('settings', {desktopAlerts: false});
-        localStorage.removeItem('firebase-token');
+        LocalStorageUtil.updateObject('settings', {desktopAlerts: false});
+        LocalStorageUtil.removeItem('firebase-token');
         this.setState({desktopAlerts: false, firebaseToken: null});
       });
     } else {
       this.setState({desktopAlerts: false, firebaseToken: null});
-      localStorage.updateObject('settings', {desktopAlerts: false});
+      LocalStorageUtil.updateObject('settings', {desktopAlerts: false});
     }
   }
 
@@ -747,10 +755,10 @@ export default class TinodeWeb extends React.Component {
     this.fbPush.getToken().then((refreshedToken) => {
       if (refreshedToken != this.state.firebaseToken) {
         this.tinode.setDeviceToken(refreshedToken, sendToServer);
-        localStorage.setObject('firebase-token', refreshedToken);
+        LocalStorageUtil.setObject('firebase-token', refreshedToken);
       }
       this.setState({firebaseToken: refreshedToken, desktopAlerts: true});
-      localStorage.updateObject('settings', {desktopAlerts: true});
+      LocalStorageUtil.updateObject('settings', {desktopAlerts: true});
     }).catch((err) => {
       this.handleError(err.message, 'err');
       console.log("Failed to retrieve firebase token", err);
@@ -759,27 +767,27 @@ export default class TinodeWeb extends React.Component {
 
   handleToggleMessageSounds(enabled) {
     this.setState({messageSounds: enabled});
-    localStorage.updateObject('settings', {
+    LocalStorageUtil.updateObject('settings', {
       messageSoundsOff: !enabled
     });
   }
 
   // User clicked Cancel button in Setting or Sign Up panel.
   handleSidepanelCancel() {
-    var parsed = parseUrlHash(window.location.hash);
+    var parsed = HashNavigation.parseUrlHash(window.location.hash);
     parsed.path[0] = this.state.myUserId ? 'contacts' : '';
     if (parsed.params) {
       delete parsed.params.code;
       delete parsed.params.method;
       delete parsed.params.tab;
     }
-    navigateTo(composeUrlHash(parsed.path, parsed.params));
+    HashNavigation.navigateTo(HashNavigation.composeUrlHash(parsed.path, parsed.params));
     this.setState({errorText: '', errorLevel: null});
   }
 
   // User clicked a (+) menu item.
   handleNewTopic() {
-    navigateTo(setUrlSidePanel(window.location.hash, 'newtpk'));
+    HashNavigation.navigateTo(HashNavigation.setUrlSidePanel(window.location.hash, 'newtpk'));
   }
 
   // Request to start a new topic. New P2P topic requires peer's name.
@@ -801,7 +809,9 @@ export default class TinodeWeb extends React.Component {
       // If the current URl contains the old topic name, replace it with new.
       // Update the name of the selected topic first so the navigator doen't clear
       // the state.
-      this.setState({topicSelected: newName}, () => { navigateTo(setUrlTopic('', newName)); });
+      this.setState({topicSelected: newName}, () => {
+        HashNavigation.navigateTo(HashNavigation.setUrlTopic('', newName));
+      });
     }
   }
 
@@ -853,7 +863,7 @@ export default class TinodeWeb extends React.Component {
 
   handleLogout() {
     updateFavicon(0);
-    localStorage.removeItem('auth-token');
+    LocalStorageUtil.removeItem('auth-token');
     if (this.tinode) {
       this.tinode.onDisconnect = undefined;
       this.tinode.disconnect();
@@ -862,7 +872,7 @@ export default class TinodeWeb extends React.Component {
     this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport);
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
-    navigateTo('');
+    HashNavigation.navigateTo('');
   }
 
   handleLeaveUnsubRequest(topicName) {
@@ -873,7 +883,7 @@ export default class TinodeWeb extends React.Component {
 
     topic.leave(true).then((ctrl) => {
       // Hide MessagesView and InfoView panels.
-      navigateTo(setUrlTopic(window.location.hash, ''));
+      HashNavigation.navigateTo(HashNavigation.setUrlTopic(window.location.hash, ''));
     }).catch((err) => {
       this.handleError(err.message, 'err');
     });
@@ -926,12 +936,12 @@ export default class TinodeWeb extends React.Component {
   }
 
   handleShowInfoView() {
-    navigateTo(addUrlParam(window.location.hash, 'info', true));
+    HashNavigation.navigateTo(HashNavigation.addUrlParam(window.location.hash, 'info', true));
     this.setState({showInfoPanel: true});
   }
 
   handleHideInfoView() {
-    navigateTo(removeUrlParam(window.location.hash, 'info'));
+    HashNavigation.navigateTo(HashNavigation.removeUrlParam(window.location.hash, 'info'));
     this.setState({showInfoPanel: false});
   }
 

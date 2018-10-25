@@ -22,9 +22,9 @@
     "build:prod": "browserify ./src/index.js --standalone Webapp | uglifyjs --compress --mangle > ./umd/index.prod.js",
     "build:dev": "browserify ./src/index.js --standalone Webapp > ./umd/index.dev.js",
     "build:css": "postcss css/base.css > css/base.min.css",
-    "wp-build:dev": "webpack --mode development --output ./umd/index.dev.js",
-    "wp-build:prod": "webpack --mode production --output ./umd/index.prod.js",
-    "vers": "echo \"{\\\"version\\\": \\\"`node -p -e \"require('./package.json').version\"`\\\"}\" > version.json"
+    "wp-build:dev": "webpack --mode development --output-library-target umd --output ./umd/index.dev.js",
+    "wp-build:prod": "webpack --mode production --output-library-target umd --output ./umd/index.prod.js",
+    "vers": "echo \"export const PACKAGE_VERSION = \\\"`node -p -e \"require('./package.json').version\"`\\\";\" > src/version.js"
   },
   "files": [
     "src/index.js",
