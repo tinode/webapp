@@ -3,7 +3,7 @@ import React from 'react';
 
 import 'firebase/app';
 import 'firebase/messaging';
-import { FIREBASE_INIT } from '../firebase-init.js'
+import { FIREBASE_INIT } from '../firebase-init.json';
 
 import Tinode from 'tinode-sdk';
 
@@ -20,6 +20,8 @@ import HashNavigation from '../lib/navigation.js';
 
 // Sound to play on message received.
 export const POP_SOUND = new Audio('audio/msg.mp3');
+
+console.log(FIREBASE_INIT);
 
 export default class TinodeWeb extends React.Component {
   constructor(props) {

@@ -41,28 +41,28 @@ export default class HashNavigation {
   }
 
   static addUrlParam(hash, key, value) {
-    var parsed = parseUrlHash(hash);
+    var parsed = this.parseUrlHash(hash);
     parsed.params[key] = value;
-    return composeUrlHash(parsed.path, parsed.params);
+    return this.composeUrlHash(parsed.path, parsed.params);
   }
 
   static removeUrlParam(hash, key) {
-    var parsed = parseUrlHash(hash);
+    var parsed = this.parseUrlHash(hash);
     delete parsed.params[key];
-    return composeUrlHash(parsed.path, parsed.params);
+    return this.composeUrlHash(parsed.path, parsed.params);
   }
 
   static setUrlSidePanel(hash, sidepanel) {
-    var parsed = parseUrlHash(hash);
+    var parsed = this.parseUrlHash(hash);
     parsed.path[0] = sidepanel;
-    return composeUrlHash(parsed.path, parsed.params);
+    return this.composeUrlHash(parsed.path, parsed.params);
   }
 
   static setUrlTopic(hash, topic) {
-    var parsed = parseUrlHash(hash);
+    var parsed = this.parseUrlHash(hash);
     parsed.path[1] = topic;
     // Close InfoView on topic change.
     delete parsed.params.info;
-    return composeUrlHash(parsed.path, parsed.params);
+    return this.composeUrlHash(parsed.path, parsed.params);
   }
 }

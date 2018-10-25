@@ -1,5 +1,4 @@
-// Login form
-
+// Login form.
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
@@ -50,7 +49,7 @@ export default class LoginView extends React.Component {
 
     return (
       <form id="login-form" onSubmit={this.handleSubmit}>
-        <FormattedMessage id="login.login_prompt" defaultMessage="Login">
+        <FormattedMessage id="login_prompt" defaultMessage="Login">
         {
           (login_prompt) => <input type="text" id="inputLogin"
             placeholder={login_prompt}
@@ -60,7 +59,7 @@ export default class LoginView extends React.Component {
             required autoFocus />
         }
         </FormattedMessage>
-        <FormattedMessage id="login.password_prompt" defaultMessage="Password">
+        <FormattedMessage id="password_prompt" defaultMessage="Password">
         {
           (password_prompt) => <VisiblePassword type="password" id="inputPassword"
             placeholder={password_prompt}
@@ -74,15 +73,15 @@ export default class LoginView extends React.Component {
           <CheckBox id="save-token" name="save-token" checked={this.state.saveToken}
             onChange={this.handleToggleSaveToken} />
           <label htmlFor="save-token">&nbsp;
-            <FormattedMessage id="login.stay_logged_in" defaultMessage="Stay logged in" />
+            <FormattedMessage id="stay_logged_in" defaultMessage="Stay logged in" />
           </label>
           <a href="#reset">
-            <FormattedMessage id="login.forgot_password_link" defaultMessage="Forgot password?" />
+            <FormattedMessage id="forgot_password_link" defaultMessage="Forgot password?" />
           </a>
         </div>
         <div className="dialog-buttons">
           <button className={submitClasses} type="submit">
-            <FormattedMessage id="login.sign_in_button" defaultMessage="Sign in" />
+            <FormattedMessage id="sign_in_button" defaultMessage="Sign in" />
           </button>
         </div>
       </form>

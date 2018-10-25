@@ -1,0 +1,9 @@
+{
+  "login_prompt": "Login",
+  "password_prompt": "Password",
+  "stay_logged_in": "Stay logged in",
+  "forgot_password_link": "Forgot password?",
+  "sign_in_button": "Sign in",
+  "label_client": "Client:",
+  "label_server": "Server:"
+}

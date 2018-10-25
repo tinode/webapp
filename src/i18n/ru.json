@@ -1,0 +1,9 @@
+{
+  "login_prompt": "Логин",
+  "password_prompt": "Пароль",
+  "stay_logged_in": "Запомнить",
+  "forgot_password_link": "Напомнить пароль",
+  "sign_in_button": "Войти",
+  "label_client": "Клиент:",
+  "label_server": "Сервер:"
+}
