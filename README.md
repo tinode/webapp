@@ -23,7 +23,7 @@ Background pattern from http://subtlepatterns.com/, commercial and non-commercia
 
 ## Translations
 
-The app is fully internationalized using [Ract-Intl](https://github.com/yahoo/react-intl). You can add a translation for your favorite language by sending a pull request with a json file with translated strings. As an example, take a look at [English]() and [Russian]().
+The app is fully internationalized using [Ract-Intl](https://github.com/yahoo/react-intl). You can add a translation for your favorite language by sending a pull request with a json file with translated strings. As an example, take a look at [English](/src/i18n/en.json) and [Russian](/src/i18n/ru.json) translations.
 
 ## Missing functionality
 
