@@ -9,7 +9,7 @@ The app is about 200KB minified and gzipped. That includes all dependencies (Rea
 
 Although the app is generally usable, keep in mind that this is work in progress. Some bugs probably exist. The app was tested in the latest Chrome & Firefox only. NPM package is available at https://www.npmjs.com/package/tinode-webapp.
 
-Try possibly newer or older version live at https://api.tinode.co/. For login and other instructions [see here](https://github.com/tinode/chat/#demo).
+Try possibly newer or older version live at https://api.tinode.co/. For passwords for demo accounts and other instructions [see here](https://github.com/tinode/chat/#demo).
 
 Demo avatar photos are from https://www.pexels.com/ under [CC0 license](https://www.pexels.com/photo-license/).
 
@@ -21,11 +21,14 @@ Background pattern from http://subtlepatterns.com/, commercial and non-commercia
 * For support, general questions, discussions post to [https://groups.google.com/d/forum/tinode](https://groups.google.com/d/forum/tinode).
 * For bugs and feature requests [open an issue](https://github.com/tinode/webchat/issues/new).
 
+## Translations
+
+The app is fully internationalized using [Ract-Intl](https://github.com/yahoo/react-intl). You can add a translation for your favorite language by sending a pull request with a json file with translated strings. As an example, take a look at [English]() and [Russian]().
+
 ## Missing functionality
 
 * Previews not generated for videos, audio, links or docs.
 * No end-to-end encryption.
-* Editing chat permissions is incomplete.
 * Emoji support is weak.
 
 ## Responsive design
