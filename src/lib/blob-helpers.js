@@ -1,5 +1,9 @@
 // File and image helper functions.
 
+// Supported image MIME types and corresponding file extensions.
+export const SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
+export const MIME_EXTENSIONS         = ['jpg',        'gif',       'png',       'svg',       'svg'];
+
 // Make a data URL from public.photo
 export function makeImageUrl(photo) {
   return (photo && photo.type && photo.data) ?

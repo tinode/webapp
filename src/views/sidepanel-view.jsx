@@ -1,4 +1,5 @@
 import React from 'react';
+import { defineMessages } from 'react-intl';
 
 import SideNavbar from '../widgets/side-navbar.jsx';
 import ErrorPanel from '../widgets/error-panel.jsx';
@@ -12,6 +13,45 @@ import PasswordResetView from './password-reset-view.jsx';
 import SettingsView from './settings-view.jsx';
 import ValidationView from './validation-view.jsx';
 
+// Panel titles for translation.
+const messages = defineMessages({
+  'login': {
+    id: 'sidepanel_title_login',
+    description: 'Sidepanel title for LoginView.',
+    defaultMessage: 'Sign In'
+  },
+  'register': {
+    id: 'sidepanel_title_register',
+    description: 'Sidepanel title for CreateAccountView.',
+    defaultMessage: 'Create Account'
+  },
+  'settings': {
+    id: 'sidepanel_title_settings',
+    description: 'Sidepanel title for SettingsView.',
+    defaultMessage: 'Settings'
+  },
+  'edit': {
+    id: 'sidepanel_title_edit_account',
+    description: 'Sidepanel title for EditAccountView.',
+    defaultMessage: 'Edit Account'
+  },
+  'newtpk': {
+    id: 'sidepanel_title_newtpk',
+    description: 'Sidepanel title for NewTopicView.',
+    defaultMessage: 'Start New Chat'
+  },
+  'cred': {
+    id: 'sidepanel_title_cred',
+    description: 'Sidepanel title for ValidationView.',
+    defaultMessage: 'Confirm Credentials'
+  },
+  'reset': {
+    id: 'sidepanel_title_reset',
+    description: 'Sidepanel title for PasswordResetView.',
+    defaultMessage: 'Reset Password'
+  }
+});
+
 export default class SidepanelView extends React.Component {
   constructor(props) {
     super(props);
@@ -24,44 +64,23 @@ export default class SidepanelView extends React.Component {
   }
 
   render() {
-    var title = null;
-    var avatar = false;
-    var onCancel = undefined;
-    var view = this.props.state || (this.props.myUserId ? 'contacts' : 'login');
-    switch (view) {
-      case 'login':
-        title = "Sign In";
-        break;
-      case 'register':
-        title = "Create Account";
-        onCancel = this.props.onCancel;
-        break;
-      case 'settings':
-        title = "Settings";
-        onCancel = this.props.onCancel;
-        break;
-      case 'edit':
-        title = "Edit Account";
-        onCancel = this.props.onCancel;
-        break;
-      case 'contacts':
-        title = this.props.title;
-        avatar = this.props.avatar ? this.props.avatar : true;
-        break;
-      case 'newtpk':
-        title = "Start New Chat";
-        onCancel = this.props.onCancel;
-        break;
-      case 'cred':
-        title = "Confirm Credentials";
-        onCancel = this.props.onCancel;
-        break;
-      case 'reset':
-        title = "Reset Password";
-        onCancel = this.props.onCancel;
-        break;
-      default:;
-    };
+    const {formatMessage} = this.props.intl;
+    const view = this.props.state || (this.props.myUserId ? 'contacts' : 'login');
+
+    let title, avatar;
+    if (view == 'contacts') {
+      title = this.props.title;
+      avatar = this.props.avatar ? this.props.avatar : true;
+    } else {
+      title = formatMessage(messages[view]);
+      avatar = false;
+    }
+
+    let onCancel;
+    if (view != 'login') {
+      onCancel = this.props.onCancel;
+    }
+
     return (
       <div id="sidepanel" className={this.props.hideSelf ? 'nodisplay' : null}>
         <SideNavbar

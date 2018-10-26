@@ -1,5 +1,6 @@
 {
   "presets": ["@babel/preset-react", "@babel/preset-env"],
+  "comments": false,
   "plugins": [
     ["react-intl", {
         "messagesDir": "./src/i18n/"

@@ -8,8 +8,8 @@
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.4",
     "babel-plugin-react-intl": "^3.0.1",
+    "browserslist": "^4.3.3",
     "cssnano": "^4.0.5",
-    "uglify-es": "^3.3.9",
     "webpack": "^4.22.0",
     "webpack-cli": "^3.1.2"
   },
@@ -18,17 +18,20 @@
     "url": "https://github.com/tinode/example-react-js.git"
   },
   "scripts": {
-    "build": "npm run vers && npm run build:babel && npm run build:prod && npm run build:dev && npm run build:css",
-    "build:prod": "browserify ./src/index.js --standalone Webapp | uglifyjs --compress --mangle > ./umd/index.prod.js",
-    "build:dev": "browserify ./src/index.js --standalone Webapp > ./umd/index.dev.js",
+    "build": "npm run vers && npm run build:prod && npm run build:dev && npm run build:css && npm run build:i18n",
     "build:css": "postcss css/base.css > css/base.min.css",
-    "wp-build:dev": "webpack --mode development --output-library-target umd --output ./umd/index.dev.js",
-    "wp-build:prod": "webpack --mode production --output-library-target umd --output ./umd/index.prod.js",
+    "build:dev": "webpack --mode development --output-library-target umd --output ./umd/index.dev.js",
+    "build:prod": "webpack --mode production --output-library-target umd --output ./umd/index.prod.js",
+    "build:i18n": "node scripts/flatten-messages.js",
     "vers": "node scripts/gen-version.js"
   },
   "files": [
     "src/index.js",
-    "src/components/*.jsx",
+    "src/config.js",
+    "src/views/*.jsx",
+    "src/widgets/*.jsx",
+    "src/lib/*.js",
+    "src/i18n/*.json",
     "umd/index.prod.js",
     "umd/index.dev.js",
     "audio/msg.mp3",

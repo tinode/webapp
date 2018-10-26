@@ -1,8 +1,17 @@
 /* ContactsView holds all contacts-related stuff */
-
 import React from 'react';
+import { defineMessages } from 'react-intl';
 
 import ContactList from '../widgets/contact-list.jsx';
+
+// Panel titles for translation.
+const messages = defineMessages({
+  'contacts_not_found': {
+    id: 'contacts_not_found',
+    description: 'HTML message shown in ContactList when no contacts are found',
+    defaultMessage: 'You have no chats<br />¯\\\\_(ツ)_/¯'
+  }
+});
 
 export default class ContactsView extends React.Component {
   constructor(props) {
@@ -28,11 +37,12 @@ export default class ContactsView extends React.Component {
   }
 
   render() {
+    const {formatMessage} = this.props.intl;
     return (
       <ContactList
         connected={this.props.connected}
         contacts={this.state.contactList}
-        emptyListMessage={<span>You have no chats<br />¯\_(ツ)_/¯</span>}
+        emptyListMessage={<span>{formatHTMLMessage(messages.contacts_not_found)}</span>}
         topicSelected={this.props.topicSelected}
         myUserId={this.props.myUserId}
         showOnline={true}

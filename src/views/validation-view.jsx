@@ -32,7 +32,7 @@ export default class ValidationView extends React.PureComponent {
   }
 
   render() {
-    var methods = {'email': 'email', 'tel': 'phone'};
+    var methods = {'email': "email", 'tel': "phone"};
     var method = methods[this.props.credMethod] || this.props.credMethod;
     return (
       <div className="panel-form">

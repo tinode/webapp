@@ -1,10 +1,23 @@
-/* Account registration */
-
+// Account registration.
 import React from 'react';
+import { FormattedMessage, defineMessages } from 'react-intl';
 
 import AvatarUpload from '../widgets/avatar-upload.jsx';
 import CheckBox from '../widgets/checkbox.jsx';
 import VisiblePassword from '../widgets/visible-password.jsx';
+
+const messages = defineMessages({
+  'email_prompt': {
+    id: 'email_prompt',
+    description: 'Input placeholder for email entry',
+    defaultMessage: 'Email, e.g. jdoe@example.com'
+  },
+  'full_name_prompt': {
+    id: 'full_name_prompt',
+    description: 'Input placeholder for person\'s full name',
+    defaultMessage: 'Full name, e.g. John Doe'
+  }
+});
 
 export default class CreateAccountView extends React.PureComponent {
   constructor(props) {
@@ -66,17 +79,18 @@ export default class CreateAccountView extends React.PureComponent {
   }
 
   render() {
-    var submitClasses = 'blue';
+    let submitClasses = 'blue';
     if (this.props.disabled) {
       submitClasses += ' disabled';
     }
+    const {formatMessage} = this.props.intl;
     return (
       <form className="panel-form-column" onSubmit={this.handleSubmit}>
         <div className="panel-form-row">
           <div className="panel-form-column">
-            <input type="text" placeholder="Login" autoComplete="user-name"
+            <input type="text" placeholder="{formatMessage({id: 'login_prompt'})}" autoComplete="user-name"
               value={this.state.login} onChange={this.handleLoginChange} required autoFocus />
-            <VisiblePassword placeholder="Password" autoComplete="new-password"
+            <VisiblePassword placeholder="{formatMessage({id: 'password_prompt'})}" autoComplete="new-password"
               value={this.state.password} onFinished={this.handlePasswordChange}
               required={true} />
           </div>
@@ -85,20 +99,22 @@ export default class CreateAccountView extends React.PureComponent {
             onError={this.props.onError} />
         </div>
         <div  className="panel-form-row">
-          <input type="text" placeholder="Full name, e.g. John Doe" autoComplete="name"
+          <input type="text" placeholder="{formatMessage(messages.full_name_prompt)}" autoComplete="name"
             value={this.state.fn} onChange={this.handleFnChange} required/>
         </div>
         <div className="panel-form-row">
-          <input type="email" placeholder="Email, e.g john.doe@example.com"
+          <input type="email" placeholder="{formatMessage(messages.email_prompt)}"
             autoComplete="email" value={this.state.email} onChange={this.handleEmailChange} required/>
         </div>
         <div className="panel-form-row">
           <CheckBox id="save-token" name="save-token" checked={this.state.saveToken}
             onChange={this.handleToggleSaveToken} />
-          <label htmlFor="save-token">&nbsp;Stay logged in</label>
+          <label htmlFor="save-token">&nbsp;{formatMessage({id: 'stay_logged_in'})}</label>
         </div>
         <div className="dialog-buttons">
-          <button className={submitClasses} type="submit">Sign up</button>
+          <button className={submitClasses} type="submit">
+            <FormattedMessage id="sign_up_button" defaultMessage="Sign up" />
+          </button>
         </div>
       </form>
     );

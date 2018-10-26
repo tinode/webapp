@@ -1,9 +1,20 @@
 {
+  "contacts_not_found": "Чатов нет<br />¯\\\\_(ツ)_/¯",
+  "email_prompt": "Email, напр. ivan@example.com",
+  "full_name_prompt": "Полное имя, напр. Иван Петров",
+  "sign_up_button": "Создать счет",
   "login_prompt": "Логин",
   "password_prompt": "Пароль",
   "stay_logged_in": "Запомнить",
   "forgot_password_link": "Напомнить пароль",
   "sign_in_button": "Войти",
   "label_client": "Клиент:",
-  "label_server": "Сервер:"
+  "label_server": "Сервер:",
+  "sidepanel_title_login": "Авторизация",
+  "sidepanel_title_register": "Зарегистрироваться",
+  "sidepanel_title_settings": "Настройки",
+  "sidepanel_title_edit_account": "Редактировать счет",
+  "sidepanel_title_newtpk": "Новый чат",
+  "sidepanel_title_cred": "Подтвердить",
+  "sidepanel_title_reset": "Сменить пароль"
 }

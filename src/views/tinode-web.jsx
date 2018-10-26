@@ -3,7 +3,6 @@ import React from 'react';
 
 import 'firebase/app';
 import 'firebase/messaging';
-import { FIREBASE_INIT } from '../firebase-init.json';
 
 import Tinode from 'tinode-sdk';
 

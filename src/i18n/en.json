@@ -1,9 +1,20 @@
 {
+  "contacts_not_found": "You have no chats<br />¯\\\\_(ツ)_/¯",
+  "email_prompt": "Email, e.g. jdoe@example.com",
+  "full_name_prompt": "Full name, e.g. John Doe",
+  "sign_up_button": "Sign up",
   "login_prompt": "Login",
   "password_prompt": "Password",
   "stay_logged_in": "Stay logged in",
   "forgot_password_link": "Forgot password?",
   "sign_in_button": "Sign in",
   "label_client": "Client:",
-  "label_server": "Server:"
+  "label_server": "Server:",
+  "sidepanel_title_login": "Sign In",
+  "sidepanel_title_register": "Create Account",
+  "sidepanel_title_settings": "Settings",
+  "sidepanel_title_edit_account": "Edit Account",
+  "sidepanel_title_newtpk": "Start New Chat",
+  "sidepanel_title_cred": "Confirm Credentials",
+  "sidepanel_title_reset": "Reset Password"
 }
