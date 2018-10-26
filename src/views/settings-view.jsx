@@ -1,5 +1,6 @@
 // Tinode config panel.
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 
 import HostSelector from '../widgets/host-selector.jsx';
 
@@ -35,10 +36,10 @@ export default class SettingsView extends React.PureComponent {
   }
 
   render() {
-    var names = {def: "default", ws: "websocket", lp: "long polling"};
+    const names = {def: "default", ws: "websocket", lp: "long polling"};
     var transportOptions = [];
     var instance = this;
-    ['def', 'ws', 'lp'].map(function(item){
+    ['def', 'ws', 'lp'].map(function(item) {
       var id = 'transport-' + item;
       var name = names[item];
       transportOptions.push(
@@ -54,12 +55,18 @@ export default class SettingsView extends React.PureComponent {
     return (
       <form id="settings-form" className="panel-form" onSubmit={this.handleSubmit}>
         <div className="panel-form-row">
-          <label className="small">Server to use:</label>
+          <label className="small">
+            <FormattedMessage id="label_server_to_use" defaultMessage="Server to use:"
+              description="Label for server selector in SettingsView" />
+          </label>
         </div>
         <HostSelector serverAddress={this.state.serverAddress}
           onServerAddressChange={this.handleServerAddressChange} />
         <div className="panel-form-row">
-          <label className="small">Wire transport:</label>
+          <label className="small">
+            <FormattedMessage id="label_wire_transport" defaultMessage="Wire transport:"
+              description="Label for wire transport selection in SettingsView" />
+          </label>
         </div>
         <div className="panel-form-row">
           <ul className="quoted">
@@ -67,7 +74,10 @@ export default class SettingsView extends React.PureComponent {
           </ul>
         </div>
         <div className="dialog-buttons">
-          <button type="submit" className="blue">Update</button>
+          <button type="submit" className="blue">
+            <FormattedMessage id="button_update" defaultMessage="Update"
+              description="Button [Update]" />
+          </button>
         </div>
       </form>
     );

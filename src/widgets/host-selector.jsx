@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { KNOWN_HOSTS } from '../config.js';
+
 /* Combobox for selecting host name */
 
 export default class HostSelector extends React.PureComponent {
@@ -28,8 +30,8 @@ export default class HostSelector extends React.PureComponent {
 
   render() {
     var hostOptions = [];
-    for (var key in KNOWN_HOSTS) {
-      var item = KNOWN_HOSTS[key];
+    for (let key in KNOWN_HOSTS) {
+      let item = KNOWN_HOSTS[key];
       hostOptions.push(
         <option key={item} value={item} />
       );

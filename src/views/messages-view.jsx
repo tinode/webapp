@@ -1,4 +1,5 @@
 import React from 'react';
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
 import ChatMessage from '../widgets/chat-message.jsx';
 import ErrorPanel from '../widgets/error-panel.jsx';
@@ -9,9 +10,27 @@ import LoadSpinner from '../widgets/load-spinner.jsx';
 import LogoView from './logo-view.jsx';
 import SendMessage from '../widgets/send-message.jsx';
 
-const NOT_FOUND_TOPIC_TITLE = "Not found";
+import { shortDateFormat } from '../lib/strformat.js';
 
-export default class MessagesView extends React.Component {
+const messages = defineMessages({
+  online_now: {
+    id: 'online_now',
+    defaultMessage: 'online now',
+    description: 'Indicator that the user or topic is currently online',
+  },
+  last_seen: {
+    id: 'last_seen_timestamp',
+    defaultMessage: 'Last seen',
+    description: 'Label for the timestamp of when the user or topic was last online'
+  },
+  'not_found': {
+    id: 'title_not_found',
+    defaultMessage: 'Not found',
+    description: 'Title shown when topic is not found'
+  }
+});
+
+class MessagesView extends React.Component {
   constructor(props) {
     super(props);
 
@@ -162,8 +181,9 @@ export default class MessagesView extends React.Component {
         })
         .catch((err) => {
           this.props.onError(err.message, 'err');
+          const {formatMessage} = this.props.intl;
           this.setState({
-            title: NOT_FOUND_TOPIC_TITLE,
+            title: formatMessage(messages.not_found),
             avatar: null,
             readOnly: true,
             writeOnly: true,
@@ -349,21 +369,24 @@ export default class MessagesView extends React.Component {
   }
 
   render() {
-    var component = null;
+    const {formatMessage} = this.props.intl;
+
+    let component;
+
     if (this.state.topic) {
-      var messageNodes = [];
-      var topic = this.props.tinode.getTopic(this.state.topic);
-      var groupTopic = topic.getType() == 'grp';
-      var previousFrom = null;
-      for (var i=0; i<this.state.messages.length; i++) {
-        var msg = this.state.messages[i];
-        var nextFrom = null;
+      let messageNodes = [];
+      let topic = this.props.tinode.getTopic(this.state.topic);
+      let groupTopic = topic.getType() == 'grp';
+      let previousFrom = null;
+      for (let i=0; i<this.state.messages.length; i++) {
+        let msg = this.state.messages[i];
+        let nextFrom = null;
 
         if (i + 1 < this.state.messages.length) {
           nextFrom = this.state.messages[i+1].from
         }
 
-        var sequence = 'single';
+        let sequence = 'single';
         if (msg.from == previousFrom) {
           if (msg.from == nextFrom) {
             sequence = 'middle';
@@ -375,12 +398,12 @@ export default class MessagesView extends React.Component {
         }
         previousFrom = msg.from;
 
-        var isReply = !(msg.from == this.props.myUserId);
-        var deliveryStatus = topic.msgStatus(msg);
+        let isReply = !(msg.from == this.props.myUserId);
+        let deliveryStatus = topic.msgStatus(msg);
 
-        var userName, userAvatar, userFrom, chatBoxClass;
+        let userName, userAvatar, userFrom, chatBoxClass;
         if (groupTopic) {
-          var user = topic.userDesc(msg.from);
+          let user = topic.userDesc(msg.from);
           if (user && user.public) {
             userName = user.public.fn;
             userAvatar = makeImageUrl(user.public.photo);
@@ -411,14 +434,14 @@ export default class MessagesView extends React.Component {
       let cont = this.props.tinode.getMeTopic().getContact(this.state.topic);
       if (cont && Tinode.topicType(cont.topic) == 'p2p') {
         if (cont.online) {
-          lastSeen = "online now";
+          lastSeen = formatMessage(messages.online_now);
         } else if (cont.seen) {
-          lastSeen = "Last active: " + shortDateFormat(cont.seen.when);
-          // TODO(gene): also handle user agent in c.seen.ua
+          lastSeen = formatMessage(messages.last_seen) + ": " + shortDateFormat(cont.seen.when);
+          // TODO: also handle user agent in c.seen.ua
         }
       }
-      var avatar = this.state.avatar || true;
-      var online = this.props.online ? 'online' + (this.state.typingIndicator ? ' typing' : '') : 'offline';
+      let avatar = this.state.avatar || true;
+      let online = this.props.online ? 'online' + (this.state.typingIndicator ? ' typing' : '') : 'offline';
 
       component = (
         <div id="topic-view" className={this.props.hideSelf ? 'nodisplay' : null}>
@@ -437,7 +460,11 @@ export default class MessagesView extends React.Component {
               <span className={online} />
             </div>
             <div id="topic-title-group">
-              <div id="topic-title" className="panel-title">{this.state.title || <i>Unknown</i>}</div>
+              <div id="topic-title" className="panel-title">{
+                this.state.title ||
+                <i><FormattedMessage id="unnamed_topic" defaultMessage="Unnamed"
+                  description="Title shown when the topic has no name" /></i>
+              }</div>
               <div id="topic-last-seen">{lastSeen}</div>
             </div>
             {groupTopic ?
@@ -466,7 +493,10 @@ export default class MessagesView extends React.Component {
             </div>
           {this.state.writeOnly ?
             <div id="write-only-background">
-              <div id="write-only-note">no access to messages</div>
+              <div id="write-only-note">
+                <FormattedMessage id="messages_not_readable" defaultMessage="no access to messages"
+                  description="Message shown in topic without the read access" />
+              </div>
             </div>
             :
             null
@@ -493,3 +523,5 @@ export default class MessagesView extends React.Component {
     return component;
   }
 };
+
+export default injectIntl(MessagesView);

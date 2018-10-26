@@ -95,27 +95,28 @@ export default class CreateAccountView extends React.PureComponent {
         <div  className="panel-form-row">
           <FormattedMessage id="full_name_prompt" defaultMessage="Full name, e.g. John Doe"
             description="Input placeholder for person's full name">{
-            <input type="text" placeholder={full_name_prompt} autoComplete="name"
+            (full_name_prompt) => <input type="text" placeholder={full_name_prompt} autoComplete="name"
               value={this.state.fn} onChange={this.handleFnChange} required/>
           }</FormattedMessage>
         </div>
         <div className="panel-form-row">
           <FormattedMessage id="email_prompt" defaultMessage="Email, e.g. jdoe@example.com"
             description="Input placeholder for email entry">{
-            <input type="email" placeholder={email_prompt} autoComplete="email"
+            (email_prompt) => <input type="email" placeholder={email_prompt} autoComplete="email"
               value={this.state.email} onChange={this.handleEmailChange} required/>
           }</FormattedMessage>
         </div>
         <div className="panel-form-row">
           <CheckBox id="save-token" name="save-token" checked={this.state.saveToken}
             onChange={this.handleToggleSaveToken} />
-          <FormattedMessage id="stay_logged_in">
-            {(stay_logged_in) => <label htmlFor="save-token">&nbsp;{stay_logged_in}</label>}
-          </FormattedMessage>
+          <FormattedMessage id="stay_logged_in">{
+            (stay_logged_in) => <label htmlFor="save-token">&nbsp;{stay_logged_in}</label>
+          }</FormattedMessage>
         </div>
         <div className="dialog-buttons">
           <button className={submitClasses} type="submit">
-            <FormattedMessage id="sign_up_button" defaultMessage="Sign up" />
+            <FormattedMessage id="sign_up_button" defaultMessage="Sign up"
+              description="Create account button [Sign Up]" />
           </button>
         </div>
       </form>

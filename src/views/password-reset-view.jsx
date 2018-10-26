@@ -3,6 +3,8 @@ import React from 'react';
 
 import VisiblePassword from '../widgets/visible-password.jsx';
 
+import HashNavigation from '../lib/navigation.js';
+
 export default class PasswordResetView extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -18,7 +20,7 @@ export default class PasswordResetView extends React.PureComponent {
   }
 
   componentDidMount() {
-    let parsed = parseUrlHash(window.location.hash);
+    let parsed = HashNavigation.parseUrlHash(window.location.hash);
     this.setState({token: parsed.params.token, scheme: parsed.params.scheme});
   }
 
