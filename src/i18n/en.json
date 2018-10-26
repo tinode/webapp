@@ -1,7 +1,7 @@
 {
   "contacts_not_found": "You have no chats<br />¯\\\\_(ツ)_/¯",
-  "email_prompt": "Email, e.g. jdoe@example.com",
   "full_name_prompt": "Full name, e.g. John Doe",
+  "email_prompt": "Email, e.g. jdoe@example.com",
   "sign_up_button": "Sign up",
   "login_prompt": "Login",
   "password_prompt": "Password",

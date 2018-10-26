@@ -20,8 +20,6 @@ import HashNavigation from '../lib/navigation.js';
 // Sound to play on message received.
 export const POP_SOUND = new Audio('audio/msg.mp3');
 
-console.log(FIREBASE_INIT);
-
 export default class TinodeWeb extends React.Component {
   constructor(props) {
     super(props);

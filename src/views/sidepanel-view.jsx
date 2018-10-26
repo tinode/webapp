@@ -1,5 +1,5 @@
 import React from 'react';
-import { defineMessages } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 
 import SideNavbar from '../widgets/side-navbar.jsx';
 import ErrorPanel from '../widgets/error-panel.jsx';
@@ -52,7 +52,7 @@ const messages = defineMessages({
   }
 });
 
-export default class SidepanelView extends React.Component {
+class SidepanelView extends React.Component {
   constructor(props) {
     super(props);
 
@@ -168,3 +168,5 @@ export default class SidepanelView extends React.Component {
     );
   }
 };
+
+export default injectIntl(SidepanelView);

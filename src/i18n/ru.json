@@ -1,7 +1,7 @@
 {
   "contacts_not_found": "Чатов нет<br />¯\\\\_(ツ)_/¯",
-  "email_prompt": "Email, напр. ivan@example.com",
   "full_name_prompt": "Полное имя, напр. Иван Петров",
+  "email_prompt": "Email, напр. ivan@example.com",
   "sign_up_button": "Создать счет",
   "login_prompt": "Логин",
   "password_prompt": "Пароль",

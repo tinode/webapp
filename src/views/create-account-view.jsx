@@ -1,23 +1,13 @@
 // Account registration.
 import React from 'react';
-import { FormattedMessage, defineMessages } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 
 import AvatarUpload from '../widgets/avatar-upload.jsx';
 import CheckBox from '../widgets/checkbox.jsx';
 import VisiblePassword from '../widgets/visible-password.jsx';
 
-const messages = defineMessages({
-  'email_prompt': {
-    id: 'email_prompt',
-    description: 'Input placeholder for email entry',
-    defaultMessage: 'Email, e.g. jdoe@example.com'
-  },
-  'full_name_prompt': {
-    id: 'full_name_prompt',
-    description: 'Input placeholder for person\'s full name',
-    defaultMessage: 'Full name, e.g. John Doe'
-  }
-});
+import LocalStorageUtil from '../lib/local-storage.js';
+import vcard from '../lib/utils.js';
 
 export default class CreateAccountView extends React.PureComponent {
   constructor(props) {
@@ -30,7 +20,7 @@ export default class CreateAccountView extends React.PureComponent {
       fn: '', // full/formatted name
       imageDataUrl: null,
       errorCleared: false,
-      saveToken: localStorage.getObject('keep-logged-in')
+      saveToken: LocalStorageUtil.getObject('keep-logged-in')
     };
 
     this.handleLoginChange = this.handleLoginChange.bind(this);
@@ -63,7 +53,7 @@ export default class CreateAccountView extends React.PureComponent {
   }
 
   handleToggleSaveToken() {
-    localStorage.setObject('keep-logged-in', !this.state.saveToken);
+    LocalStorageUtil.setObject('keep-logged-in', !this.state.saveToken);
     this.setState({saveToken: !this.state.saveToken});
   }
 
@@ -83,33 +73,45 @@ export default class CreateAccountView extends React.PureComponent {
     if (this.props.disabled) {
       submitClasses += ' disabled';
     }
-    const {formatMessage} = this.props.intl;
+
     return (
       <form className="panel-form-column" onSubmit={this.handleSubmit}>
         <div className="panel-form-row">
           <div className="panel-form-column">
-            <input type="text" placeholder="{formatMessage({id: 'login_prompt'})}" autoComplete="user-name"
-              value={this.state.login} onChange={this.handleLoginChange} required autoFocus />
-            <VisiblePassword placeholder="{formatMessage({id: 'password_prompt'})}" autoComplete="new-password"
-              value={this.state.password} onFinished={this.handlePasswordChange}
-              required={true} />
+            <FormattedMessage id="login_prompt">{
+              (login_prompt) => <input type="text" placeholder={login_prompt} autoComplete="user-name"
+                value={this.state.login} onChange={this.handleLoginChange} required autoFocus />
+            }</FormattedMessage>
+            <FormattedMessage id="password_prompt">{
+              (password_prompt) => <VisiblePassword placeholder={password_prompt} autoComplete="new-password"
+                value={this.state.password} onFinished={this.handlePasswordChange}
+                required={true} />
+            }</FormattedMessage>
           </div>
           <AvatarUpload
             onImageChanged={this.handleImageChanged}
             onError={this.props.onError} />
         </div>
         <div  className="panel-form-row">
-          <input type="text" placeholder="{formatMessage(messages.full_name_prompt)}" autoComplete="name"
-            value={this.state.fn} onChange={this.handleFnChange} required/>
+          <FormattedMessage id="full_name_prompt" defaultMessage="Full name, e.g. John Doe"
+            description="Input placeholder for person's full name">{
+            <input type="text" placeholder={full_name_prompt} autoComplete="name"
+              value={this.state.fn} onChange={this.handleFnChange} required/>
+          }</FormattedMessage>
         </div>
         <div className="panel-form-row">
-          <input type="email" placeholder="{formatMessage(messages.email_prompt)}"
-            autoComplete="email" value={this.state.email} onChange={this.handleEmailChange} required/>
+          <FormattedMessage id="email_prompt" defaultMessage="Email, e.g. jdoe@example.com"
+            description="Input placeholder for email entry">{
+            <input type="email" placeholder={email_prompt} autoComplete="email"
+              value={this.state.email} onChange={this.handleEmailChange} required/>
+          }</FormattedMessage>
         </div>
         <div className="panel-form-row">
           <CheckBox id="save-token" name="save-token" checked={this.state.saveToken}
             onChange={this.handleToggleSaveToken} />
-          <label htmlFor="save-token">&nbsp;{formatMessage({id: 'stay_logged_in'})}</label>
+          <FormattedMessage id="stay_logged_in">
+            {(stay_logged_in) => <label htmlFor="save-token">&nbsp;{stay_logged_in}</label>}
+          </FormattedMessage>
         </div>
         <div className="dialog-buttons">
           <button className={submitClasses} type="submit">
