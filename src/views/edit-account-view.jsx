@@ -1,11 +1,14 @@
+// Edit account parameters.
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 
 import AvatarUpload from '../widgets/avatar-upload.jsx';
 import CheckBox from '../widgets/checkbox.jsx';
+import InPlaceEdit from '../widgets/in-place-edit.jsx';
 import PermissionsEditor from '../widgets/permissions-editor.jsx';
 import TagManager from '../widgets/tag-manager.jsx';
 
-/* Edit account parameters */
+import { makeImageUrl } from '../lib/blob-helpers.js';
 
 export default class EditAccountView extends React.Component {
   constructor(props) {
@@ -112,7 +115,7 @@ export default class EditAccountView extends React.Component {
       tags.push(<span className="badge" key={tags.length}>{tag}</span>);
     });
     if (tags.length == 0) {
-      tags = <i>No tags defined. Add some.</i>;
+      tags = <i><FormattedMessage id="tags_not_found" /></i>;
     }
     return (
       <React.Fragment>{this.state.showPermissionEditorFor ?
@@ -125,16 +128,29 @@ export default class EditAccountView extends React.Component {
         <div id="edit-account" className="scrollable-panel">
           <div className="panel-form-row">
             <div className="panel-form-column">
-              <div><label className="small">Your name</label></div>
-              <div><InPlaceEdit
-                  placeholder="Full name, e.g. John Doe"
+              <div><label className="small">
+                <FormattedMessage id="label_your_name" defaultMessage="Your name"
+                  description="Label for full name editing" />
+              </label></div>
+              <div><FormattedMessage id="full_name_prompt">{
+                (full_name_placeholder) => <InPlaceEdit
+                  placeholder={full_name_placeholder}
                   value={this.state.fullName}
-                  onFinished={this.handleFullNameUpdate} /></div>
-              <div><label className="small">Password</label></div>
-              <div><InPlaceEdit
-                  placeholder="Unchanged"
-                  type="password"
-                  onFinished={this.handlePasswordUpdate} /></div>
+                  onFinished={this.handleFullNameUpdate} />
+              }</FormattedMessage></div>
+              <div><label className="small">
+                <FormattedMessage id="label_password" defaultMessage="Password"
+                  description="Label for password editing" />
+              </label></div>
+              <div>
+                <FormattedMessage id="password_unchanged_prompt" defaultMessage="Unchanged"
+                  description="Message in editor while password is unchanged">{
+                  (password_unchanged) => <InPlaceEdit
+                    placeholder={password_unchanged}
+                    type="password"
+                    onFinished={this.handlePasswordUpdate} />
+                }</FormattedMessage>
+              </div>
             </div>
             <AvatarUpload
               avatar={this.state.avatar}
@@ -146,11 +162,15 @@ export default class EditAccountView extends React.Component {
           <div className="hr" />
           <div className="panel-form-column">
             <div className="panel-form-row">
-              <label>Address:</label>
+              <label><FormattedMessage id="label_user_id" defaultMessage="Address:"
+                description="Label for user address (ID)" /></label>
               <tt>{this.props.myUserId}</tt>
             </div>
             <div>
-              <label className="small">Default access mode:</label>
+              <label className="small">
+                <FormattedMessage id="label_default_access_mode" defaultMessage="Default access mode:"
+                description="Label for default access mode" />
+              </label>
             </div>
             <div className="quoted">
               <div>Auth: <tt className="clickable"
@@ -161,28 +181,43 @@ export default class EditAccountView extends React.Component {
           </div>
           <div className="hr" />
           <div className="panel-form-row">
-            <label htmlFor="message-sound">Message sound:</label>
+            <label htmlFor="message-sound">
+              <FormattedMessage id="label_message_sound" defaultMessage="Message sound:"
+                description="Label for message sounds toggle" />
+            </label>
             <CheckBox name="sound" id="message-sound"
               checked={this.props.messageSounds}
               onChange={this.handleCheckboxClick} />
           </div>
           <div className="panel-form-row">
-            <label htmlFor="desktop-alerts">Notification
-              alerts{!this.props.desktopAlertsEnabled ? ' (requires HTTPS)' : null}:</label>
+            <label htmlFor="desktop-alerts">
+            {this.props.desktopAlertsEnabled ?
+              <FormattedMessage id="label_push_notifications" defaultMessage="Notification alerts"
+                description="Label for push notifications switch" />
+              :
+              <FormattedMessage id="label_push_notifications_disabled"
+                defaultMessage="Notification alerts (requires HTTPS)"
+                description="Label for push notifications switch (disabled)" />
+            }
+            </label>
             <CheckBox name="alert" id="desktop-alerts"
               checked={this.props.desktopAlerts}
               onChange={this.props.desktopAlertsEnabled ? this.handleCheckboxClick : null} />
           </div>
           <div className="hr" />
-          <TagManager
-            title="Tags (user discovery)"
-            activated={false}
-            tags={this.state.tags}
-            onSubmit={this.handleTagsUpdated} />
+          <FormattedMessage id="title_tag_manager" defaultMessage="Tags (user discovery)"
+            description="Section title for TagManager">{
+            (title_tag_manager) => <TagManager
+              title={title_tag_manager}
+              activated={false}
+              tags={this.state.tags}
+              onSubmit={this.handleTagsUpdated} />
+          }</FormattedMessage>
           <div className="hr" />
           <div className="panel-form-column">
             <a href="javascript:;" className="red flat-button" onClick={this.props.onLogout}>
-              <i className="material-icons">exit_to_app</i> Logout
+              <i className="material-icons">exit_to_app</i> <FormattedMessage id="button_logout"
+                defaultMessage="Logout" description="Button [Logout]" />
             </a>
           </div>
         </div>

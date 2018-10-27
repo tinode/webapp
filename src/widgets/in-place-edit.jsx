@@ -1,7 +1,6 @@
-/* In-place text editor. Shows text with an icon
- * which toggles it into an input field */
-
+// In-place text editor. Shows text with an icon which toggles it into an input field.
 import React from 'react';
+import ReactDom from 'react-dom';
 
 import VisiblePassword from './visible-password.jsx';
 
