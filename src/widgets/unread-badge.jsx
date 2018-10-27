@@ -1,5 +1,4 @@
 // The counter of unread messages in the topic.
-
 import React from 'react';
 
 export default class UnreadBadge extends React.PureComponent {

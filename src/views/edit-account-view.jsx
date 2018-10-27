@@ -192,12 +192,12 @@ export default class EditAccountView extends React.Component {
           <div className="panel-form-row">
             <label htmlFor="desktop-alerts">
             {this.props.desktopAlertsEnabled ?
-              <FormattedMessage id="label_push_notifications" defaultMessage="Notification alerts"
+              <FormattedMessage id="label_push_notifications" defaultMessage="Notification alerts:"
                 description="Label for push notifications switch" />
               :
               <FormattedMessage id="label_push_notifications_disabled"
                 defaultMessage="Notification alerts (requires HTTPS)"
-                description="Label for push notifications switch (disabled)" />
+                description="Label for push notifications switch (disabled):" />
             }
             </label>
             <CheckBox name="alert" id="desktop-alerts"

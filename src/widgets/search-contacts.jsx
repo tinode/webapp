@@ -1,4 +1,7 @@
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
+
+import Tinode from 'tinode-sdk';
 
 export default class SearchContacts extends React.PureComponent {
   constructor(props) {
@@ -53,10 +56,13 @@ export default class SearchContacts extends React.PureComponent {
       <div className="panel-form">
         <div className="panel-form-row">
           <i className="material-icons search">search</i>
-          <input className="search" type="text"
-            placeholder="List like email:alice@example.com, tel:17025550003..."
-            value={this.state.search} onChange={this.handleSearchChange}
-            onKeyDown={this.handleKeyDown} required autoFocus />
+          <FormattedMessage id="search_placeholder" defaultMessage="List like email:alice@example.com, tel:17025550003..."
+            description="Placeholder in contacts search field">{
+            (search_placeholder) => <input className="search" type="text"
+              placeholder={search_placeholder}
+              value={this.state.search} onChange={this.handleSearchChange}
+              onKeyDown={this.handleKeyDown} required autoFocus />
+          }</FormattedMessage>
           <a href="javascript:;" onClick={this.handleClear}>
             <i className="material-icons">close</i>
           </a>

@@ -1,8 +1,23 @@
 // Send message form.
-
 import React from 'react';
+import { defineMessages, injectIntl } from 'react-intl';
 
-export default class SendMessage extends React.PureComponent {
+import { KEYPRESS_DELAY } from '../config.js';
+
+const messages = defineMessages({
+  'messaging_disabled': {
+    id: 'messaging_disabled_prompt',
+    defaultMessage: 'Messaging disabled',
+    description: 'Prompt in SendMessage in read-only topic'
+  },
+  'type_new_message': {
+    id: 'new_message_prompt',
+    defaultMessage: 'New message',
+    description: 'Prompt in SendMessage in read-only topic'
+  }
+});
+
+class SendMessage extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -152,8 +167,11 @@ export default class SendMessage extends React.PureComponent {
   }
 
   render() {
-    var prompt = this.props.disabled ? "Messaging disabled" : "New message";
-    var instance = this;
+    const {formatMessage} = this.props.intl;
+    const prompt = this.props.disabled ?
+      formatMessage(messages.messaging_disabled) :
+      formatMessage(messages.type_new_message);
+    let instance = this;
     return (
       <div id="send-message-panel">
         {this.props.disabled ?
@@ -173,7 +191,9 @@ export default class SendMessage extends React.PureComponent {
           autoFocus />
           {this.props.disabled ?
             <i className="material-icons disabled">send</i> :
-            <a href="javascript:;" onClick={this.handleSend} title="Send"><i className="material-icons">send</i></a>}
+            <a href="javascript:;" onClick={this.handleSend} title="Send">
+              <i className="material-icons">send</i>
+            </a>}
       <input type="file" ref={function(ref) {instance.attachFile = ref;}}
         onChange={this.handleAttachFile} style={{display: 'none'}} />
       <input type="file" ref={function(ref) {instance.attachImage = ref;}} accept="image/*"
@@ -182,3 +202,5 @@ export default class SendMessage extends React.PureComponent {
     );
   }
 };
+
+export default injectIntl(SendMessage);

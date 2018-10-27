@@ -1,5 +1,6 @@
 // The top-level class to hold all functionality together.
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 import 'firebase/app';
 import 'firebase/messaging';
@@ -12,14 +13,15 @@ import InfoView from './info-view.jsx';
 import MessagesView from './messages-view.jsx';
 import SidepanelView from './sidepanel-view.jsx';
 
-import { API_KEY, APP_NAME, MEDIA_BREAKPOINT, RECEIVED_DELAY } from '../config.js';
+import { API_KEY, APP_NAME, MEDIA_BREAKPOINT, READ_DELAY, RECEIVED_DELAY } from '../config.js';
 import { makeImageUrl } from '../lib/blob-helpers.js';
 import { isLocalHost, isSecureConnection } from '../lib/host-name.js';
 import LocalStorageUtil from '../lib/local-storage.js';
 import HashNavigation from '../lib/navigation.js';
+import { updateFavicon } from '../lib/utils.js';
 
 // Sound to play on message received.
-export const POP_SOUND = new Audio('audio/msg.mp3');
+const POP_SOUND = new Audio('audio/msg.mp3');
 
 export default class TinodeWeb extends React.Component {
   constructor(props) {

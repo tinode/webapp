@@ -1,7 +1,8 @@
-/* Context Menu: popup/dropdown menu */
-
+// Context Menu: popup/dropdown menu.
 import React from 'react';
+import ReactDom from 'react-dom';
 
+import { REM_SIZE } from '../config.js';
 
 export default class ContextMenu extends React.Component {
   constructor(props) {

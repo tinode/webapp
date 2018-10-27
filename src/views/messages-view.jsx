@@ -1,6 +1,8 @@
 import React from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
+import Tinode from 'tinode-sdk';
+
 import ChatMessage from '../widgets/chat-message.jsx';
 import ErrorPanel from '../widgets/error-panel.jsx';
 import GroupSubs from '../widgets/group-subs.jsx';
@@ -10,6 +12,8 @@ import LoadSpinner from '../widgets/load-spinner.jsx';
 import LogoView from './logo-view.jsx';
 import SendMessage from '../widgets/send-message.jsx';
 
+import { KEYPRESS_DELAY, MESSAGES_PAGE } from '../config.js';
+import { makeImageUrl } from '../lib/blob-helpers.js';
 import { shortDateFormat } from '../lib/strformat.js';
 
 const messages = defineMessages({
@@ -378,6 +382,7 @@ class MessagesView extends React.Component {
       let topic = this.props.tinode.getTopic(this.state.topic);
       let groupTopic = topic.getType() == 'grp';
       let previousFrom = null;
+      let chatBoxClass = null;
       for (let i=0; i<this.state.messages.length; i++) {
         let msg = this.state.messages[i];
         let nextFrom = null;
@@ -401,7 +406,7 @@ class MessagesView extends React.Component {
         let isReply = !(msg.from == this.props.myUserId);
         let deliveryStatus = topic.msgStatus(msg);
 
-        let userName, userAvatar, userFrom, chatBoxClass;
+        let userName, userAvatar, userFrom;
         if (groupTopic) {
           let user = topic.userDesc(msg.from);
           if (user && user.public) {
