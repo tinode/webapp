@@ -6,8 +6,7 @@ import ReactDOM from 'react-dom';
 import { IntlProvider, addLocaleData } from 'react-intl';
 import ruData from 'react-intl/locale-data/ru';
 addLocaleData(ruData);
-import en from './i18n/en.json';
-import ru from './i18n/ru.json';
+import allMessages from './messages.json';
 
 import TinodeWeb from './views/tinode-web.jsx';
 
@@ -19,8 +18,16 @@ const language = (params && params.hl) ||
   navigator.language ||
   navigator.userLanguage;
 
+const baseLanguage = language.toLowerCase().split(/[-_]+/)[0];
+
+// Try full locale, try locale without region code, fallback to 'en'
+const messages =
+  allMessages[language] ||
+  allMessages[baseLanguage] ||
+  allMessages.en;
+
 ReactDOM.render(
-  <IntlProvider locale={language} messages={en} >
+  <IntlProvider locale={language} messages={messages} >
     <TinodeWeb />
   </IntlProvider>,
   document.getElementById('mountPoint')

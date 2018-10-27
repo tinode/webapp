@@ -2,6 +2,8 @@ import React from 'react';
 
 import Contact from './contact.jsx';
 
+import { makeImageUrl } from '../lib/blob-helpers.js';
+
 /* ContactList: component for showing a list of contacts,
  * such as a list of group members in a group chat */
 export default class ContactList extends React.Component {

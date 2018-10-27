@@ -13,6 +13,7 @@ import MessagesView from './messages-view.jsx';
 import SidepanelView from './sidepanel-view.jsx';
 
 import { API_KEY, APP_NAME, MEDIA_BREAKPOINT, RECEIVED_DELAY } from '../config.js';
+import { makeImageUrl } from '../lib/blob-helpers.js';
 import { isLocalHost, isSecureConnection } from '../lib/host-name.js';
 import LocalStorageUtil from '../lib/local-storage.js';
 import HashNavigation from '../lib/navigation.js';

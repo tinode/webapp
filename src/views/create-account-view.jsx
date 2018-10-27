@@ -7,7 +7,7 @@ import CheckBox from '../widgets/checkbox.jsx';
 import VisiblePassword from '../widgets/visible-password.jsx';
 
 import LocalStorageUtil from '../lib/local-storage.js';
-import vcard from '../lib/utils.js';
+import { vcard } from '../lib/utils.js';
 
 export default class CreateAccountView extends React.PureComponent {
   constructor(props) {
@@ -115,7 +115,7 @@ export default class CreateAccountView extends React.PureComponent {
         </div>
         <div className="dialog-buttons">
           <button className={submitClasses} type="submit">
-            <FormattedMessage id="sign_up_button" defaultMessage="Sign up"
+            <FormattedMessage id="button_sign_up" defaultMessage="Sign up"
               description="Create account button [Sign Up]" />
           </button>
         </div>

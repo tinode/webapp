@@ -1,7 +1,10 @@
 // TagManager: edit topic or user tags.
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 
 import ChipInput from './chip-input.jsx';
+
+import { arrayEqual } from '../lib/utils.js';
 
 export default class TagManager extends React.Component {
   constructor(props) {
@@ -10,8 +13,7 @@ export default class TagManager extends React.Component {
     this.state = {
       tags: this.props.tags,
       tagInput: '',
-      activated: this.props.activated,
-      noTagsMessage: "Add some tags"
+      activated: this.props.activated
     };
 
     this.handleShowTagManager = this.handleShowTagManager.bind(this);
@@ -99,7 +101,9 @@ export default class TagManager extends React.Component {
         tags.push(<span className="badge" key={tags.length}>{tag}</span>);
       });
       if (tags.length == 0) {
-        tags = <i>No tags defined. Add some.</i>;
+        tags = (<i>
+              <FormattedMessage id="tags_not_found" defaultMessage="No tags defined. Add some." description="" />
+            </i>);
       }
     }
     return (
@@ -109,26 +113,34 @@ export default class TagManager extends React.Component {
         </div>
         {this.state.activated ?
         <div>
-          <ChipInput
-            chips={tags}
-            avatarDisabled={true}
-            prompt={this.state.noTagsMessage}
-            onEnter={this.handleAddTag}
-            onFocusLost={this.handleAddTag}
-            onCancel={this.handleCancel}
-            onChipRemoved={this.handleRemoveTag}
-            filterFunc={this.handleTagInput} />
+          <FormattedMessage id="tags_editor_no_tags" defaultMessage="Add some tags"
+            description="Tag editor prompt when no tags are found.">{
+            (add_tags_prompt) => <ChipInput
+              chips={tags}
+              avatarDisabled={true}
+              prompt={add_tags_prompt}
+              onEnter={this.handleAddTag}
+              onFocusLost={this.handleAddTag}
+              onCancel={this.handleCancel}
+              onChipRemoved={this.handleRemoveTag}
+              filterFunc={this.handleTagInput} />
+          }</FormattedMessage>
           {this.props.onSubmit || this.props.onCancel ?
             <div id="tag-manager-buttons" className="panel-form-row">
-              <button className="blue" onClick={this.handleSubmit}>OK</button>
-              <button className="white" onClick={this.handleCancel}>Cancel</button>
+              <button className="blue" onClick={this.handleSubmit}>
+                <FormattedMessage id="button_ok" defautMessage="OK" description="Confirmation button [OK]" />
+              </button>
+              <button className="white" onClick={this.handleCancel}>
+                <FormattedMessage id="button_cancel" defautMessage="Cancel" description="Rejection button [Cancel]" />
+              </button>
             </div>
           : null}
         </div>
         :
         <div>
           <a href="javascript:;" className="flat-button" onClick={this.handleShowTagManager}>
-            <i className="material-icons">edit</i> Manage tags
+            <i className="material-icons">edit</i> <FormattedMessage id="title_manage_tags" defautMessage="Manage tags"
+              description="Section title in TagManager" />
           </a>
           <span>{tags}</span>
         </div>

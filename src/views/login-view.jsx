@@ -85,7 +85,7 @@ export default class LoginView extends React.Component {
         </div>
         <div className="dialog-buttons">
           <button className={submitClasses} type="submit">
-            <FormattedMessage id="sign_in_button" defaultMessage="Sign in"
+            <FormattedMessage id="button_sign_in" defaultMessage="Sign in"
               description="Button [Sign In]" />
           </button>
         </div>

@@ -1,11 +1,14 @@
 /* Create new topic and invite users or send an invite */
 
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 
 import ContactList from '../widgets/contact-list.jsx';
 import NewTopicById from '../widgets/new-topic-by-id.jsx';
 import NewTopicGroup from '../widgets/new-topic-group.jsx';
 import SearchContacts from '../widgets/search-contacts.jsx';
+
+import HashNavigation from '../lib/navigation.js';
 
 export default class NewTopicView extends React.Component {
   constructor(props) {
@@ -34,24 +37,24 @@ export default class NewTopicView extends React.Component {
 
   handleTabClick(e) {
     e.preventDefault();
-    navigateTo(addUrlParam(window.location.hash, 'tab', e.currentTarget.dataset.id));
+    HashNavigation.navigateTo(HashNavigation.addUrlParam(window.location.hash, 'tab', e.currentTarget.dataset.id));
     this.setState({tabSelected: e.currentTarget.dataset.id});
   }
 
   handleContactSelected(sel) {
     if (this.state.tabSelected === 'p2p') {
-      navigateTo(removeUrlParam(window.location.hash, 'tab'));
+      HashNavigation.navigateTo(HashNavigation.removeUrlParam(window.location.hash, 'tab'));
       this.props.onCreateTopic(sel, undefined);
     }
   }
 
   handleNewGroupSubmit(name, dataUrl, priv, tags) {
-    navigateTo(removeUrlParam(window.location.hash, 'tab'));
+    HashNavigation.navigateTo(HashNavigation.removeUrlParam(window.location.hash, 'tab'));
     this.props.onCreateTopic(undefined, vcard(name, dataUrl), priv, tags);
   }
 
   handleGroupByID(topicName) {
-    navigateTo(removeUrlParam(window.location.hash, 'tab'));
+    HashNavigation.navigateTo(HashNavigation.removeUrlParam(window.location.hash, 'tab'));
     this.props.onCreateTopic(topicName);
   }
 
@@ -60,13 +63,22 @@ export default class NewTopicView extends React.Component {
       <div className="flex-column">
         <ul className="tabbar">
           <li className={this.state.tabSelected === "p2p" ? "active" : null}>
-            <a href="javascript:;" data-id="p2p" onClick={this.handleTabClick}>find</a>
+            <a href="javascript:;" data-id="p2p" onClick={this.handleTabClick}>
+              <FormattedMessage id="tabtitle_find_user" defaultMessage="find"
+                description="Tab title Find" />
+            </a>
           </li>
           <li className={this.state.tabSelected === "grp" ? "active" : null}>
-            <a href="javascript:;" data-id="grp" onClick={this.handleTabClick}>new group</a>
+            <a href="javascript:;" data-id="grp" onClick={this.handleTabClick}>
+              <FormattedMessage id="tabtitle_new_group" defaultMessage="new group"
+                description="Tab title New Group" />
+            </a>
           </li>
           <li className={this.state.tabSelected === "byid" ? "active" : null}>
-            <a href="javascript:;" data-id="byid" onClick={this.handleTabClick}>by id</a>
+            <a href="javascript:;" data-id="byid" onClick={this.handleTabClick}>
+              <FormattedMessage id="tabtitle_group_by_id" defaultMessage="by id"
+                description="Tab title Find topic by ID" />
+            </a>
           </li>
         </ul>
         {this.state.tabSelected === 'grp' ?

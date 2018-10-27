@@ -2,6 +2,8 @@ import React from 'react';
 
 import Tinode from 'tinode-sdk';
 
+import { stringHash } from '../lib/strformat.js';
+
 export default class LetterTile extends React.PureComponent {
   render() {
     let avatar;

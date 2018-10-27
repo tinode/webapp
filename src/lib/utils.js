@@ -1,5 +1,7 @@
+// Odds and ends
+
 // Make shortcut icon appear with a green dot + show unread count in title.
-function updateFavicon(count) {
+export function updateFavicon(count) {
   var oldIcon = document.getElementById('shortcut-icon');
   if (oldIcon) {
     var head = document.head || document.getElementsByTagName('head')[0];
@@ -15,7 +17,7 @@ function updateFavicon(count) {
 }
 
 // Create VCard which represents topic 'public' info
-function vcard(fn, imageDataUrl) {
+export function vcard(fn, imageDataUrl) {
   var card = null;
 
   if ((fn && fn.trim()) || imageDataUrl) {
@@ -35,7 +37,7 @@ function vcard(fn, imageDataUrl) {
 }
 
 // Deep-shallow compare two arrays: shallow compare each element.
-function arrayEqual(a, b) {
+export function arrayEqual(a, b) {
   // Compare lengths first.
   if (a.length != b.length) {
     return false;

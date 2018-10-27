@@ -2,12 +2,12 @@
   "contacts_not_found": "You have no chats<br />¯\\\\_(ツ)_/¯",
   "full_name_prompt": "Full name, e.g. John Doe",
   "email_prompt": "Email, e.g. jdoe@example.com",
-  "sign_up_button": "Sign up",
+  "button_sign_up": "Sign up",
   "login_prompt": "Login",
   "password_prompt": "Password",
   "stay_logged_in": "Stay logged in",
   "forgot_password_link": "Forgot password?",
-  "sign_in_button": "Sign in",
+  "button_sign_in": "Sign in",
   "label_client": "Client:",
   "label_server": "Server:",
   "online_now": "online now",
@@ -15,6 +15,9 @@
   "title_not_found": "Not found",
   "unnamed_topic": "Unnamed",
   "messages_not_readable": "no access to messages",
+  "tabtitle_find_user": "find",
+  "tabtitle_new_group": "new group",
+  "tabtitle_group_by_id": "by id",
   "label_server_to_use": "Server to use:",
   "label_wire_transport": "Wire transport:",
   "button_update": "Update",
@@ -24,5 +27,7 @@
   "sidepanel_title_edit_account": "Edit Account",
   "sidepanel_title_newtpk": "Start New Chat",
   "sidepanel_title_cred": "Confirm Credentials",
-  "sidepanel_title_reset": "Reset Password"
+  "sidepanel_title_reset": "Reset Password",
+  "tags_not_found": "No tags defined. Add some.",
+  "tags_editor_no_tags": "Add some tags"
 }

@@ -1,8 +1,10 @@
 /* ContactsView holds all contacts-related stuff */
 import React from 'react';
-import { defineMessages } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 
 import ContactList from '../widgets/contact-list.jsx';
+
+import { updateFavicon } from '../lib/utils.js';
 
 // Panel titles for translation.
 const messages = defineMessages({
@@ -13,7 +15,7 @@ const messages = defineMessages({
   }
 });
 
-export default class ContactsView extends React.Component {
+class ContactsView extends React.Component {
   constructor(props) {
     super(props);
 
@@ -37,7 +39,7 @@ export default class ContactsView extends React.Component {
   }
 
   render() {
-    const {formatMessage} = this.props.intl;
+    const {formatHTMLMessage} = this.props.intl;
     return (
       <ContactList
         connected={this.props.connected}
@@ -52,3 +54,5 @@ export default class ContactsView extends React.Component {
     );
   }
 };
+
+export default injectIntl(ContactsView);
