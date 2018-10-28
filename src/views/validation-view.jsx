@@ -4,14 +4,14 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
 const messages = defineMessages({
   phone: {
-    id: 'phone',
+    id: 'phone_dative',
     defaultMessage: 'phone',
-    description: "The word 'phone'",
+    description: "Dative case of 'phone', i.e. 'phone' in 'by phone'",
   },
   email: {
-    id: 'email',
+    id: 'email_dative',
     defaultMessage: 'email',
-    description: "The word 'email'",
+    description: "Dative case of 'email', i.e. 'email' in 'by email'",
   }
 });
 
@@ -55,7 +55,8 @@ class ValidationView extends React.PureComponent {
           <label className="small" htmlFor="enter-confirmation-code">
             <FormattedMessage id="enter_confirmation_code_prompt"
               defaultMessage="Enter confirmation code sent to you by {method}:"
-              description="Request to enter confirmation code" />
+              description="Request to enter confirmation code"
+              values={{method: method}} />
           </label>
         </div>
         <div className="panel-form-row">

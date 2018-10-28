@@ -48,10 +48,8 @@
   "new_message_prompt": "Новое сообщение",
   "file_attachment_too_large": "Размер файла {size} превышает {limit} лимит.",
   "cannot_initiate_file_upload": "Ошибка загрузки файла.",
-  "search_for_contacts": ":!![MISSING]!!:Use search to find contacts",
-  "phone": "телефон",
-  "email": "емейл",
-  "enter_confirmation_code_prompt": "Введите код подтверждения {method}:",
+  "search_for_contacts": "Поиск контактов",
+  "enter_confirmation_code_prompt": "Код подтверждения, полученный по {method}:",
   "numeric_confirmation_code_prompt": "Только цифры",
   "button_confirm": "Подтвердить",
   "button_ok": "OK",
@@ -59,5 +57,7 @@
   "invalid_content": "сообщение не читается",
   "label_file_name": "Имя файла:",
   "label_content_type": "Тип:",
-  "label_size": "Размер:"
+  "label_size": "Размер:",
+  "phone_dative": "телефону",
+  "email_dative": "емейлу"
 }
