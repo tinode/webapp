@@ -1,8 +1,8 @@
-/* InfoView: panel with topic/user info */
-
+// InfoView: panel with topic/user info.
 import React from 'react';
 
 import AvatarUpload from '../widgets/avatar-upload.jsx';
+import CheckBox from '../widgets/checkbox.jsx';
 import ContactList from '../widgets/contact-list.jsx';
 import GroupManager from '../widgets/group-manager.jsx';
 import InPlaceEdit from '../widgets/in-place-edit.jsx';
@@ -10,6 +10,8 @@ import MenuCancel from '../widgets/menu-cancel.jsx';
 import MoreButton from '../widgets/more-button.jsx';
 import PermissionsEditor from '../widgets/permissions-editor.jsx';
 import TagManager from '../widgets/tag-manager.jsx';
+
+import { makeImageUrl } from '../lib/blob-helpers.js';
 
 export default class InfoView extends React.Component {
   constructor(props) {

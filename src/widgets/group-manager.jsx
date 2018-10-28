@@ -1,6 +1,6 @@
-/* GroupMembers: control for managing a list of group members */
-
+// GroupMembers: control for managing a list of group members.
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 
 import ChipInput from './chip-input.jsx';
 import ContactList from './contact-list.jsx';
@@ -156,8 +156,12 @@ export default class GroupManager extends React.Component {
           showUnread={false}
           onTopicSelected={this.handleContactSelected} />
         <div id="group-manager-buttons" className="panel-form-row">
-          <button className="blue" onClick={this.handleSubmit}>OK</button>
-          <button className="white" onClick={this.handleCancel}>Cancel</button>
+          <button className="blue" onClick={this.handleSubmit}>
+            <FormattedMessage id="button_ok" defaultMessage="OK" description="Button [OK]" />
+          </button>
+          <button className="white" onClick={this.handleCancel}>
+            <FormattedMessage id="button_cancel" defaultMessage="Cancel" description="Button [Cancel]" />
+          </button>
         </div>
       </div>
     );

@@ -1,11 +1,15 @@
+// Single message, sent or received.
 import React from 'react';
-import {Drafty} from 'tinode-sdk'
+import { FormattedMessage } from 'react-intl';
+import { Drafty } from 'tinode-sdk'
 
 import Attachment from './attachment.jsx';
 import LetterTile from './letter-tile.jsx';
 import ReceivedMarker from './received-marker.jsx'
 
-/* Single message, sent or received. */
+import { REM_SIZE } from '../config.js';
+import { fitImageSize } from '../lib/blob-helpers.js';
+
 export default class ChatMessage extends React.Component {
   constructor(props) {
     super(props);
@@ -50,17 +54,16 @@ export default class ChatMessage extends React.Component {
   }
 
   render() {
-    var elementKey = 0;
-
-    var formatter = function(style, data, values) {
+    let elementKey = 0;
+    const formatter = function(style, data, values) {
       elementKey += 1;
-      var el = Drafty.tagName(style);
+      let el = Drafty.tagName(style);
       if (el) {
-        var attr = Drafty.attrValue(style, data) || {};
+        let attr = Drafty.attrValue(style, data) || {};
         attr.key = elementKey;
         if (style == 'IM') {
           // Additional processing for images
-          var dim = fitImageSize(data.width, data.height,
+          let dim = fitImageSize(data.width, data.height,
             Math.min(this.props.viewportWidth - REM_SIZE * 4, REM_SIZE * 36), REM_SIZE * 24, false);
           attr.className = 'inline-image';
           attr.style = dim ? { width: dim.dstWidth + 'px', height: dim.dstHeight + 'px' } : null;
@@ -95,7 +98,10 @@ export default class ChatMessage extends React.Component {
       }, this);
       content = React.createElement('span', null, Drafty.format(content, formatter, this));
     } else if (typeof content != 'string') {
-      content = <span><i className="material-icons">error_outline</i> <i>invalid content</i></span>
+      content = <span><i className="material-icons">error_outline</i> <i>
+        <FormattedMessage id="invalid_content"
+          defaultMessage="invalid content" description="Shown when message is unreadable" />
+      </i></span>
     }
 
     return (

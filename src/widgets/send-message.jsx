@@ -1,8 +1,11 @@
 // Send message form.
 import React from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
+import { Drafty } from 'tinode-sdk';
 
-import { KEYPRESS_DELAY } from '../config.js';
+import { KEYPRESS_DELAY, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE } from '../config.js';
+import { SUPPORTED_IMAGE_FORMATS, filePasted, imageFileToBase64, imageFileScaledToBase64 } from '../lib/blob-helpers.js';
+import { bytesToHumanSize } from '../lib/strformat.js';
 
 const messages = defineMessages({
   'messaging_disabled': {
@@ -14,7 +17,17 @@ const messages = defineMessages({
     id: 'new_message_prompt',
     defaultMessage: 'New message',
     description: 'Prompt in SendMessage in read-only topic'
-  }
+  },
+  'file_attachment_too_large': {
+    id: 'file_attachment_too_large',
+    defaultMessage: 'The file size {size} exceeds the {limit} limit.',
+    description: 'Error message when attachment is too large'
+  },
+  'cannot_initiate_upload': {
+    id: 'cannot_initiate_file_upload',
+    defaultMessage: 'Cannot initiate file upload.',
+    description: 'Generic error messagewhen attachment fails'
+  },
 });
 
 class SendMessage extends React.PureComponent {
@@ -99,17 +112,18 @@ class SendMessage extends React.PureComponent {
   }
 
   handleAttachFile(e) {
+    const {formatMessage} = this.props.intl;
     if (e.target.files && e.target.files.length > 0) {
       var file = e.target.files[0];
       if (file.size > MAX_EXTERN_ATTACHMENT_SIZE) {
         // Too large.
-        this.props.onError("The file size " + bytesToHumanSize(file.size) +
-          " exceeds the "  + bytesToHumanSize(MAX_EXTERN_ATTACHMENT_SIZE) + " limit.", 'err');
+        this.props.onError(formatMessage(messages.file_attachment_too_large,
+            {size: bytesToHumanSize(file.size), limit: bytesToHumanSize(MAX_EXTERN_ATTACHMENT_SIZE)}), 'err');
       } else if (file.size > MAX_INBAND_ATTACHMENT_SIZE) {
         // Too large to send inband - uploading out of band and sending as a link.
         let uploader = this.props.tinode.getLargeFileHelper();
         if (!uploader) {
-          this.props.onError("Cannot initiate file upload.");
+          this.props.onError(formatMessage(messages.cannot_initiate_upload));
           return;
         }
         // Format data and initiate upload.

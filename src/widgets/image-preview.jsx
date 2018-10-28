@@ -1,4 +1,9 @@
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
+
+import { REM_SIZE } from '../config.js';
+import { fitImageSize } from '../lib/blob-helpers.js';
+import { bytesToHumanSize } from '../lib/strformat.js';
 
 export default class ImagePreview extends React.PureComponent {
   constructor(props) {
@@ -43,10 +48,19 @@ export default class ImagePreview extends React.PureComponent {
           <img src={this.props.content.url} style={size} />
         </div>
         <div id="image-preview-footer">
-          <div><div><b>File name</b>:</div><div><span title={this.props.content.filename}>{filename}</span></div></div>
-          <div><div><b>Content type</b>:</div><div>{this.props.content.type}</div></div>
           <div>
-            <div><b>Size</b>:</div>
+            <div><b><FormattedMessage id="label_file_name" defaultMessage="File name:"
+              description="Label for a file name" /></b></div>
+            <div><span title={this.props.content.filename}>{filename}</span></div>
+          </div>
+          <div>
+            <div><b><FormattedMessage id="label_content_type" defaultMessage="Content type:"
+              description="Label for file content type (mime)" /></b></div>
+            <div>{this.props.content.type}</div>
+          </div>
+          <div>
+            <div><b><FormattedMessage id="label_size" defaultMessage="Size:"
+              description="Label for file size" /></b></div>
             <div>{this.props.content.width} &times; {this.props.content.height} px; {bytesToHumanSize(this.props.content.size)}</div>
           </div>
         </div>

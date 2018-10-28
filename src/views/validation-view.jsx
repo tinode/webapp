@@ -1,7 +1,21 @@
 // ValidationView: panel for confirming credentials, like email or phone.
 import React from 'react';
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
-export default class ValidationView extends React.PureComponent {
+const messages = defineMessages({
+  phone: {
+    id: 'phone',
+    defaultMessage: 'phone',
+    description: "The word 'phone'",
+  },
+  email: {
+    id: 'email',
+    defaultMessage: 'email',
+    description: "The word 'email'",
+  }
+});
+
+class ValidationView extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -32,24 +46,35 @@ export default class ValidationView extends React.PureComponent {
   }
 
   render() {
-    var methods = {'email': "email", 'tel': "phone"};
-    var method = methods[this.props.credMethod] || this.props.credMethod;
+    const { formatMessage } = this.props.intl;
+    const methods = {'email': formatMessage(messages.email), 'tel': formatMessage(messages.phone)};
+    let method = methods[this.props.credMethod] || this.props.credMethod;
     return (
       <div className="panel-form">
         <div className="panel-form-row">
           <label className="small" htmlFor="enter-confirmation-code">
-            Enter confirmation code sent to you by {method}:
+            <FormattedMessage id="enter_confirmation_code_prompt"
+              defaultMessage="Enter confirmation code sent to you by {method}:"
+              description="Request to enter confirmation code" />
           </label>
         </div>
         <div className="panel-form-row">
-        <input type="text" id="enter-confirmation-code" placeholder="Numbers only"
-          value={this.state.code} onChange={this.handleChange}
-          onKeyPress={this.handleKeyPress} required />
+        <FormattedMessage id="numeric_confirmation_code_prompt"
+          defaultMessage="Numbers only" description="Prompt for numeric conformation code">{
+          (numbers_only) => <input type="text" id="enter-confirmation-code"
+            placeholder={numbers_only}
+            value={this.state.code} onChange={this.handleChange}
+            onKeyPress={this.handleKeyPress} required />
+        }</FormattedMessage>
         </div>
         <div className="dialog-buttons">
-          <button className="blue" onClick={this.handleSubmit}>Confirm</button>
+          <button className="blue" onClick={this.handleSubmit}>
+            <FormattedMessage id="button_confirm" defaultMessage="Confirm" description="Button [Confirm]" />
+          </button>
         </div>
       </div>
     );
   }
 };
+
+export default injectIntl(ValidationView);

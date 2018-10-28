@@ -1,4 +1,4 @@
-/* A password reset form */
+// A password reset form.
 import React from 'react';
 
 import VisiblePassword from '../widgets/visible-password.jsx';

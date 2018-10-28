@@ -90,15 +90,18 @@ export default class NewTopicView extends React.Component {
           <div className="flex-column">
             <SearchContacts type="p2p"
               onSearchContacts={this.props.onSearchContacts} />
-            <ContactList
-              contacts={this.state.contactList}
-              myUserId={this.props.myUserId}
-              emptyListMessage="Use search to find contacts"
-              topicSelected={this.state.selectedContact}
-              showOnline={false}
-              showUnread={false}
-              showContextMenu={false}
-              onTopicSelected={this.handleContactSelected} />
+            <FormattedMessage id="search_for_contacts" defaultMessage="Use search to find contacts"
+              description="Prompt in search field.">{
+              (search_for_contacts) => <ContactList
+                contacts={this.state.contactList}
+                myUserId={this.props.myUserId}
+                emptyListMessage={search_for_contacts}
+                topicSelected={this.state.selectedContact}
+                showOnline={false}
+                showUnread={false}
+                showContextMenu={false}
+                onTopicSelected={this.handleContactSelected} />
+            }</FormattedMessage>
           </div>}
       </div>
     );

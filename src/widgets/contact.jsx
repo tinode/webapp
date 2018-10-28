@@ -1,9 +1,9 @@
+// A single topic or user.
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 
 import LetterTile from './letter-tile.jsx';
 import UnreadBadge from './unread-badge.jsx';
-
-/* A single topic or user */
 
 export default class Contact extends React.Component {
   constructor(props) {
@@ -28,20 +28,20 @@ export default class Contact extends React.Component {
   }
 
   render() {
-    var title = this.props.title;
+    let title = this.props.title;
     if (!title) {
-      title = <i>unknown</i>;
+      title = <i><FormattedMessage id="unnamed_topic" /></i>;
     } else if (title.length > 30) {
-      // FIXME: this is wrong for RTL languages.
+      // FIXME: this is probably wrong for RTL languages.
       title = title.substring(0, 28) + '...';
     }
-    var online = this.props.now ? 'online' : 'offline';
-    var avatar = this.props.avatar ? this.props.avatar : true;
-    var badges = [];
+    let online = this.props.now ? 'online' : 'offline';
+    let avatar = this.props.avatar ? this.props.avatar : true;
+    let badges = [];
     if (this.props.badges && this.props.badges.length > 0) {
-      var count = 0;
+      let count = 0;
       this.props.badges.map(function(b) {
-        var style = 'badge' + (b.color ? ' ' + b.color : '');
+        let style = 'badge' + (b.color ? ' ' + b.color : '');
         badges.push(<span className={style} key={count}>{b.name}</span>);
         count ++;
       });

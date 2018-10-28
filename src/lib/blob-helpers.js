@@ -1,4 +1,5 @@
 // File and image helper functions.
+import { MAX_INBAND_ATTACHMENT_SIZE, MAX_IMAGE_DIM } from '../config.js';
 
 // Supported image MIME types and corresponding file extensions.
 export const SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
@@ -204,7 +205,7 @@ export function base64ReEncode(str) {
     try {
       str = btoa(atob(str));
     } catch(err) {
-      console.log("Failed to base64 re-decode string");
+      console.log("Failed to base64 re-encode string");
       str = null;
     }
   }

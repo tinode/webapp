@@ -196,8 +196,8 @@ export default class EditAccountView extends React.Component {
                 description="Label for push notifications switch" />
               :
               <FormattedMessage id="label_push_notifications_disabled"
-                defaultMessage="Notification alerts (requires HTTPS)"
-                description="Label for push notifications switch (disabled):" />
+                defaultMessage="Notification alerts (requires HTTPS):"
+                description="Label for push notifications switch (disabled)" />
             }
             </label>
             <CheckBox name="alert" id="desktop-alerts"

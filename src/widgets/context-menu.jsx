@@ -1,6 +1,6 @@
 // Context Menu: popup/dropdown menu.
 import React from 'react';
-import ReactDom from 'react-dom';
+import ReactDOM from 'react-dom';
 
 import { REM_SIZE } from '../config.js';
 
