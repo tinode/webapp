@@ -41,7 +41,7 @@
   "tags_not_found": "Тагов нет. Добавьте",
   "tags_editor_no_tags": "Добавьте таги",
   "title_manage_tags": "Редактор тагов",
-  "message_sending": "шлём...",
+  "message_sending": "в пути...",
   "message_sending_failed": "ошибка",
   "search_placeholder": "Список, напр. email:alice@example.com, tel:17025550003...",
   "messaging_disabled_prompt": "Отправка недоступна",
@@ -59,5 +59,16 @@
   "label_content_type": "Тип:",
   "label_size": "Размер:",
   "phone_dative": "телефону",
-  "email_dative": "емейлу"
+  "email_dative": "емейлу",
+  "title_group_members": "Участники",
+  "download_action": "скачать",
+  "permission_join": "Присоединяться ({val})",
+  "permission_read": "Читать ({val})",
+  "permission_write": "Писать ({val})",
+  "permission_pres": "Получать уведомления ({val})",
+  "permission_admin": "Администрировать ({val})",
+  "permission_share": "Приглашать ({val})",
+  "permission_delete": "Удалять ({val})",
+  "permission_owner": "Владелец ({val})",
+  "title_permissions": "Права доступа"
 }

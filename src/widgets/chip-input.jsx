@@ -2,6 +2,8 @@ import React from 'react';
 
 import Chip from './chip.jsx';
 
+import { makeImageUrl } from '../lib/blob-helpers.js';
+
 /* BEGIN ChipInput: group membership widget */
 export default class ChipInput extends React.Component {
   constructor(props) {

@@ -40,7 +40,8 @@ export default class ImagePreview extends React.PureComponent {
       <div id="image-preview" onClick={this.props.onClose}>
         <div id="image-preview-caption-panel">
           <a href={this.props.content.url} download={this.props.content.filename}>
-            <i className="material-icons">file_download</i> download
+            <i className="material-icons">file_download</i> <FormattedMessage
+              id="download_action" defaultMessage="download" description="Call to action [download]" />
           </a>
           <a href="javascript:;" onClick={this.props.onClose}><i className="material-icons gray">close</i></a>
         </div>

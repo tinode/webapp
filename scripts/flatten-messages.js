@@ -68,8 +68,8 @@ globSync(LANG_PATTERN)
     }
   });
 
-// Combine all translations into a single json {"lang_1": {...}, "lang_2: {...}"};
-// Remove messages marked as missing or obsolete.
+// Combine all translations into a single json {"lang_1": {...}, "lang_2: {...}"}
+// while removing messages marked as missing or obsolete.
 
 // Read all translations.
 messages = globSync(LANG_PATTERN)

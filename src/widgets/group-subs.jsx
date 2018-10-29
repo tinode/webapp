@@ -3,6 +3,7 @@
 import React from 'react';
 
 import LetterTile from './letter-tile.jsx';
+import { makeImageUrl } from '../lib/blob-helpers.js';
 
 export default class GroupSubs extends React.Component {
   constructor(props) {

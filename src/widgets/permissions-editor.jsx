@@ -1,11 +1,58 @@
 // PermissionsEditor: Component for editing permissions
 // <PermissionsEditor mode="JWROD" skip="O" onChange={this.handleCheckboxTest} />
-
 import React from 'react';
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
 import CheckBox from './checkbox.jsx';
+import Contact from './contact.jsx';
 
-export default class PermissionsEditor extends React.Component {
+import { makeImageUrl } from '../lib/blob-helpers.js';
+
+// Translatable permission names.
+const messages = defineMessages({
+  'joiner': {
+    id: 'permission_join',
+    defaultMessage: "Join ({val})",
+    description: 'Name of J permission'
+  },
+  'reader': {
+    id: 'permission_read',
+    defaultMessage: "Read ({val})",
+    description: 'Name of R permission'
+  },
+  'writer': {
+    id: 'permission_write',
+    defaultMessage: "Write ({val})",
+    description: 'Name of W permission'
+  },
+  'preser': {
+    id: 'permission_pres',
+    defaultMessage: "Get notified ({val})",
+    description: 'Name of P permission'
+  },
+  'approver': {
+    id: 'permission_admin',
+    defaultMessage: "Approve ({val})",
+    description: 'Name of A permission'
+  },
+  'sharer': {
+    id: 'permission_share',
+    defaultMessage: "Share ({val})",
+    description: 'Name of S permission'
+  },
+  'deleter': {
+    id: 'permission_delete',
+    defaultMessage: "Delete ({val})",
+    description: 'Name of D permission'
+  },
+  'owner': {
+    id: 'permission_owner',
+    defaultMessage: "Owner ({val})",
+    description: 'Name of O permission'
+  }
+});
+
+class PermissionsEditor extends React.Component {
   constructor(props) {
     super(props);
 
@@ -45,16 +92,17 @@ export default class PermissionsEditor extends React.Component {
   }
 
   render() {
+    const {formatMessage} = this.props.intl;
     const all = 'JRWPASDO';
     const names = {
-      'J': 'Join (J)',
-      'R': 'Read (R)',
-      'W': 'Write (W)',
-      'P': 'Get notified (P)',
-      'A': 'Approve (A)',
-      'S': 'Share (S)',
-      'D': 'Delete (D)',
-      'O': 'Owner (O)'
+      'J': formatMessage(messages.joiner, {val: 'J'}),
+      'R': formatMessage(messages.reader, {val: 'R'}),
+      'W': formatMessage(messages.writer, {val: 'W'}),
+      'P': formatMessage(messages.preser, {val: 'P'}),
+      'A': formatMessage(messages.approver, {val: 'A'}),
+      'S': formatMessage(messages.sharer, {val: 'S'}),
+      'D': formatMessage(messages.deleter, {val: 'D'}),
+      'O': formatMessage(messages.owner, {val: 'O'})
     };
 
     let skip = this.props.skip || '';
@@ -88,7 +136,8 @@ export default class PermissionsEditor extends React.Component {
             item={this.props.item}
             title={this.props.userTitle}
             avatar={makeImageUrl(this.props.userAvatar ? this.props.userAvatar : null)} /></ul> : null}
-        <label className="small">Permissions</label>
+        <label className="small"><FormattedMessage id="title_permissions"
+          defaultMessage="Permissions" description="Section title"/></label>
         <table className="permission-editor">
         {this.props.compare ?
           <thead><tr>
@@ -101,10 +150,16 @@ export default class PermissionsEditor extends React.Component {
         </tbody></table>
         <br />
         <div className="dialog-buttons">
-          <button className="blue" onClick={this.handleSubmit}>Ok</button>
-          <button className="white" onClick={this.handleCancel}>Cancel</button>
+          <button className="blue" onClick={this.handleSubmit}>
+            <FormattedMessage id="button_ok" />
+          </button>
+          <button className="white" onClick={this.handleCancel}>
+            <FormattedMessage id="button_cancel" />
+          </button>
         </div>
       </div>
     );
   }
 };
+
+export default injectIntl(PermissionsEditor);

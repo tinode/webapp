@@ -1,11 +1,11 @@
 // GroupMembers: control for managing a list of group members.
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
 import ChipInput from './chip-input.jsx';
 import ContactList from './contact-list.jsx';
 
-export default class GroupManager extends React.Component {
+class GroupManager extends React.Component {
   constructor(props) {
     super(props);
 
@@ -25,7 +25,7 @@ export default class GroupManager extends React.Component {
   }
 
   static indexMembers(members) {
-    var index = {};
+    let index = {};
     members.map(function(m) {
       index[m.user] = {delta: 0, present: true}; // Delta: 0 unchanged, +1 added, -1 removed
     });
@@ -33,7 +33,7 @@ export default class GroupManager extends React.Component {
   }
 
   static selectedContacts(members) {
-    var sel = [];
+    let sel = [];
     members.map(function(m) {
       sel.push(m.user);
     });
@@ -41,7 +41,7 @@ export default class GroupManager extends React.Component {
   }
 
   handleContactSelected(userId, index) {
-    var status = this.state.index[userId];
+    let status = this.state.index[userId];
     if (status) {
       if (status.present) {
         // Prevent duplicate members
@@ -84,7 +84,8 @@ export default class GroupManager extends React.Component {
   }
 
   handleContactFilter(val) {
-    var msg = !val ?
+    const {formatMessage} = this.props.intl;
+    const msg = !val ?
       "You have no contacts :-(" :
       "No contacts match '" + val + "'";
 
@@ -129,10 +130,13 @@ export default class GroupManager extends React.Component {
   }
 
   render() {
+    const {formatMessage} = this.props.intl;
     return (
       <div id="group-manager">
         <div className="panel-form-row">
-          <label className="small">Group members</label>
+          <label className="small">
+            <FormattedMessage id="title_group_members" defaultMessage="Group members" description="Section title" />
+          </label>
         </div>
         <div className="panel-form-row">
           <ChipInput
@@ -167,3 +171,5 @@ export default class GroupManager extends React.Component {
     );
   }
 };
+
+export default injectIntl(GroupManager);

@@ -2,6 +2,9 @@ import React from 'react';
 
 import LetterTile from './letter-tile.jsx';
 
+import { AVATAR_SIZE } from '../config.js';
+import { imageFileScaledToBase64, makeImageUrl } from '../lib/blob-helpers.js';
+
 export default class AvatarUpload extends React.Component {
   constructor(props) {
     super(props);
@@ -54,7 +57,7 @@ export default class AvatarUpload extends React.Component {
                 title={this.props.title} />
             </div>
             :
-            <div className="blank">128&times;128</div>}
+            <div className="blank">{AVATAR_SIZE}&times;{AVATAR_SIZE}</div>}
         {this.props.readOnly ? null :
           <input type="file" id={randId} className="inputfile hidden"
             accept="image/*" onChange={this.handleFileUpload} />}
