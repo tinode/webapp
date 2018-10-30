@@ -22,8 +22,9 @@ const messages = defineMessages({
 
 class ContactList extends React.Component {
   render() {
-    var contactNodes = [];
-    var showCheckmark = Array.isArray(this.props.topicSelected);
+    const {formatMessage} = this.props.intl;
+    const showCheckmark = Array.isArray(this.props.topicSelected);
+    const contactNodes = [];
     if (this.props.contacts && this.props.contacts.length > 0) {
       this.props.contacts.map((c) => {
         var key = c.topic ? c.topic : c.user;

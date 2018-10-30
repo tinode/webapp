@@ -19,7 +19,7 @@ html, body {
 }
 
 tt {
-  font-family: Roboto Mono, monospace;
+  font-family: 'Roboto Mono', Courier, monospace;
 }
 
 a {
@@ -1422,7 +1422,7 @@ ul.tabbar li.active > a:after {
 
 /* Badge with a label, like [you], [muted], etc */
 .badge {
-  font-family: monospace;
+  font-family: 'Roboto Mono', Courier, monospace, sans-serif;
   font-size: 0.75rem;
   border: 1px solid #666;
   background-color: #eee;
