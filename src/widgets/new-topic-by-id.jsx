@@ -1,6 +1,15 @@
 import React from 'react';
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
-export default class NewTopicById extends React.PureComponent {
+const messages = defineMessages({
+  invalid_id: {
+    id: 'error_invalid_id',
+    defaultMessage: 'Invalid ID',
+    description: 'Error message'
+  }
+});
+
+class NewTopicById extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -30,7 +39,7 @@ export default class NewTopicById extends React.PureComponent {
       if (name.length > 3 && (name.substr(0, 3) == 'usr' || name.substr(0, 3) == 'grp')) {
         this.props.onSubmit(name);
       } else {
-        this.props.onError("Invalid ID", 'err');
+        this.props.onError(this.props.intl.formatMessage(messages.invalid_id), 'err');
       }
     }
   }
@@ -39,14 +48,22 @@ export default class NewTopicById extends React.PureComponent {
     return (
       <div className="panel-form">
         <div className="panel-form-row">
-        <input type="text" placeholder="Group or User ID"
-          value={this.state.groupId} onChange={this.handleChange}
-          onKeyPress={this.handleKeyPress} required />
+        <FormattedMessage id="group_user_id_prompt" defaultMessage="Group or User ID"
+          description="Prompt for entering user or group ID">{
+          (prompt) => <input type="text" placeholder={prompt}
+            value={this.state.groupId} onChange={this.handleChange}
+            onKeyPress={this.handleKeyPress} required />
+        }</FormattedMessage>
         </div>
         <div className="dialog-buttons">
-          <button className="blue" onClick={this.handleSubmit}>Subscribe</button>
+          <button className="blue" onClick={this.handleSubmit}>
+            <FormattedMessage id="button_subscribe" defaultMessage="Subscribe"
+              description="Button [Subscribe]" />
+          </button>
         </div>
       </div>
     );
   }
 };
+
+export default injectIntl(NewTopicById);

@@ -1,5 +1,4 @@
-/* Create new topic and invite users or send an invite */
-
+// Create new topic and invite users or send an invite.
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 

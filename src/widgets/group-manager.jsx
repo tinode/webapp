@@ -5,6 +5,19 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import ChipInput from './chip-input.jsx';
 import ContactList from './contact-list.jsx';
 
+const messages = defineMessages({
+  no_contacts: {
+    id: 'no_contacts',
+    defaultMessage: 'You have no contacts :-(',
+    description: 'Shown in ContactsView when the user has no contacts'
+  },
+  contacts_not_found: {
+    id: 'contacts_not_found_short',
+    defaultMessage: "No contacts match '{query}'",
+    description: 'Shown in ContactsView when search returned no results'
+  }
+});
+
 class GroupManager extends React.Component {
   constructor(props) {
     super(props);
@@ -13,7 +26,7 @@ class GroupManager extends React.Component {
       members: props.members,
       index: GroupManager.indexMembers(props.members),
       contactFilter: '',
-      noContactsMessage: "You have no contacts :-(",
+      noContactsMessage: props.intl.formatMessage(messages.no_contacts),
       selectedContacts: GroupManager.selectedContacts(props.members)
     };
 
@@ -86,8 +99,8 @@ class GroupManager extends React.Component {
   handleContactFilter(val) {
     const {formatMessage} = this.props.intl;
     const msg = !val ?
-      "You have no contacts :-(" :
-      "No contacts match '" + val + "'";
+      formatMessage(messages.no_contacts) :
+      formatMessage(messages.contacts_not_found, {query: val});
 
     this.setState({contactFilter: val, noContactsMessage: msg});
   }
@@ -135,7 +148,7 @@ class GroupManager extends React.Component {
       <div id="group-manager">
         <div className="panel-form-row">
           <label className="small">
-            <FormattedMessage id="title_group_members" defaultMessage="Group members" description="Section title" />
+            <FormattedMessage id="title_group_members" defaultMessage="Group Members" description="Section title" />
           </label>
         </div>
         <div className="panel-form-row">
@@ -147,7 +160,10 @@ class GroupManager extends React.Component {
             onChipRemoved={this.handleMemberRemoved} />
         </div>
         <div className="panel-form-row">
-          <label className="small">All contacts</label>
+          <label className="small">
+            <FormattedMessage id="title_all_contacts" defaultMessage="All Contacts"
+              description="Section title [All Contacts]" />
+          </label>
         </div>
         <ContactList
           contacts={this.props.contacts}

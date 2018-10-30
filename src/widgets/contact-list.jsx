@@ -1,12 +1,26 @@
+// ContactList: component for showing a list of contacts,
+// such as a list of group members in a group chat.
 import React from 'react';
+import { defineMessages, injectIntl } from 'react-intl';
 
 import Contact from './contact.jsx';
 
 import { makeImageUrl } from '../lib/blob-helpers.js';
 
-/* ContactList: component for showing a list of contacts,
- * such as a list of group members in a group chat */
-export default class ContactList extends React.Component {
+const messages = defineMessages({
+  badge_you: {
+    id: 'badge_you',
+    defaultMessage: 'you',
+    description: 'Badge for indicating the current user'
+  },
+  badge_owner: {
+    id: 'badge_owner',
+    defaultMessage: 'owner',
+    description: 'Badge for indicating the owner'
+  }
+});
+
+class ContactList extends React.Component {
   render() {
     var contactNodes = [];
     var showCheckmark = Array.isArray(this.props.topicSelected);
@@ -34,14 +48,14 @@ export default class ContactList extends React.Component {
         var badges = [];
         if (this.props.showMode) {
           if (key === this.props.myUserId) {
-            badges.push({name: "you", color: 'green'});
+            badges.push({name: formatMessage(messages.badge_you), color: 'green'});
           }
           if (c.acs && c.acs.isOwner()) {
-            badges.push({name: "owner"});
+            badges.push({name: formatMessage(messages.badge_owner), color: 'blue'});
           }
         }
         var comment = Array.isArray(c.private) ?
-          c.private.join(', ') : (c.private ? c.private.comment : null);
+          c.private.join(',') : (c.private ? c.private.comment : null);
 
         contactNodes.push(
           <Contact
@@ -79,4 +93,5 @@ export default class ContactList extends React.Component {
     );
   }
 };
-/* END ContactList */
+
+export default injectIntl(ContactList);

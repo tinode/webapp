@@ -36,7 +36,7 @@ let messages = globSync(MESSAGES_PATTERN)
 
 let filename = path.join(LANG_DIR, DEFAULT_TRANSLATION);
 mkdirpSync(path.dirname(filename));
-fs.writeFileSync(filename, JSON.stringify(messages, null, 2));
+fs.writeFileSync(filename, JSON.stringify(messages, null, 2)+"\n");
 
 // Find messages present in en.json but missing in translations and vice versa.
 // Mark missing or obsolete messages as such in translation files.
@@ -64,7 +64,7 @@ globSync(LANG_PATTERN)
           translated[ent[0]] = val;
         }
       });
-      fs.writeFileSync(filename, JSON.stringify(translated, null, 2));
+      fs.writeFileSync(filename, JSON.stringify(translated, null, 2)+"\n");
     }
   });
 
@@ -94,4 +94,4 @@ messages = globSync(LANG_PATTERN)
 
 // Write file with all translations combined.
 mkdirpSync(path.dirname(FINAL_FILE));
-fs.writeFileSync(FINAL_FILE, JSON.stringify(messages, null, 2));
+fs.writeFileSync(FINAL_FILE, JSON.stringify(messages, null, 2)+"\n");

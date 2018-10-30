@@ -2,6 +2,8 @@
 import React from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
+import Tinode from 'tinode-sdk';
+
 import AvatarUpload from '../widgets/avatar-upload.jsx';
 import CheckBox from '../widgets/checkbox.jsx';
 import ContactList from '../widgets/contact-list.jsx';
@@ -225,7 +227,7 @@ class InfoView extends React.Component {
       this.setState({private: priv});
       this.props.onTopicDescUpdate(this.props.topic,
         null,
-        priv);
+        priv || Tinode.DEL_CHAR);
     }
   }
 

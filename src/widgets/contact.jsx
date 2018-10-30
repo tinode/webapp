@@ -3,6 +3,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import LetterTile from './letter-tile.jsx';
+import ContactBadges from './contact-badges.jsx';
 import UnreadBadge from './unread-badge.jsx';
 
 export default class Contact extends React.Component {
@@ -37,17 +38,9 @@ export default class Contact extends React.Component {
     }
     let online = this.props.now ? 'online' : 'offline';
     let avatar = this.props.avatar ? this.props.avatar : true;
-    let badges = [];
-    if (this.props.badges && this.props.badges.length > 0) {
-      let count = 0;
-      this.props.badges.map(function(b) {
-        let style = 'badge' + (b.color ? ' ' + b.color : '');
-        badges.push(<span className={style} key={count}>{b.name}</span>);
-        count ++;
-      });
-    }
+    let badges = this.props.badges.slice();
     if (this.props.showMode && this.props.acs) {
-      badges.push(<span className="badge" key="mode">{this.props.acs.getMode()}</span>);
+      badges.push({name: this.props.acs.getMode(), key: 'mode'});
     }
 
     return (
@@ -68,7 +61,7 @@ export default class Contact extends React.Component {
           {this.props.unread > 0 ? <UnreadBadge count={this.props.unread} /> : null}
           </div>
           {this.props.comment ? <div className="contact-comment">{this.props.comment}</div> : null}
-          <span>{badges}</span>
+          <ContactBadges badges={badges} />
         </div>
         {this.props.showContextMenu ?
           <span className="menuTrigger">

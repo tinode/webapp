@@ -100,5 +100,22 @@
   "menu_item_unblock": "Разблокировать",
   "menu_item_block": "Заблокировать",
   "menu_item_member_delete": "Отписать",
-  "title_info": "Подробности"
+  "title_info": "Подробности",
+  "new_password_placeholder": "Введите новый пароль",
+  "label_reset_password": "Отправить емейл для смены пароля:",
+  "credential_email_prompt": "Регистрационный емейл",
+  "button_reset": "Изменить",
+  "button_send_request": "Отправить",
+  "action_cancel": "отменить",
+  "upload_finishing": "завершение...",
+  "no_contacts": "Ничего нет :-(",
+  "contacts_not_found_short": "Нет контактов для запроса '{query}'",
+  "title_all_contacts": "Все контакты",
+  "error_invalid_id": "Неверный ID",
+  "group_user_id_prompt": "ID чата или пользователя",
+  "button_subscribe": "Подписаться",
+  "topic_name_editing_placeholder": "Название чата",
+  "button_create": "Создать",
+  "badge_you": "вы",
+  "badge_owner": "влад."
 }

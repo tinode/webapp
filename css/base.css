@@ -1448,10 +1448,22 @@ ul.tabbar li.active > a:after {
   color: #660;
 }
 
+.badge.blue {
+  border-color: #339;
+  background-color: #eef;
+  color: #339;
+}
+
 .badge.red {
   border-color: #933;
   background-color: #fee;
   color: #933;
+}
+
+.badge.magenta {
+  border-color: #939;
+  background-color: #fef;
+  color: #939;
 }
 
 /* Letter tile base style, responsive square box */

@@ -1,4 +1,5 @@
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 
 import AvatarUpload from './avatar-upload.jsx';
 import TagManager from './tag-manager.jsx';
@@ -56,25 +57,39 @@ export default class NewTopicGroup extends React.PureComponent {
       <form className="panel-form" onSubmit={this.handleSubmit}>
         <div className="panel-form-row">
           <div className="panel-form-column">
-            <label className="small" htmlFor="new-topic-fn">Group name</label>
-            <input type="text" id="new-topic-fn" placeholder="Freeform name of the group"
-              value={this.state.fn} onChange={this.handleFnChange} autoFocus required />
+            <label className="small" htmlFor="new-topic-fn">
+              <FormattedMessage id="label_topic_name" />
+            </label>
+            <FormattedMessage id="topic_name_editing_placeholder" defaultMessage="Freeform name of the group"
+              description="Prompt for entering topic name">{
+              (placeholder) => <input type="text" id="new-topic-fn" placeholder={placeholder}
+                value={this.state.fn} onChange={this.handleFnChange} autoFocus required />
+            }</FormattedMessage>
             <br />
-            <label className="small" htmlFor="new-topic-priv">Private comment</label>
-            <input type="text" id="new-topic-priv" placeholder="Visible to you only"
-              value={this.state.private} onChange={this.handlePrivateChange} />
+            <label className="small" htmlFor="new-topic-priv">
+              <FormattedMessage id="label_private" />
+            </label>
+            <FormattedMessage id="private_editing_placeholder">{
+              (placeholder) => <input type="text" id="new-topic-priv" placeholder={placeholder}
+                value={this.state.private} onChange={this.handlePrivateChange} />
+            }</FormattedMessage>
           </div>
           <AvatarUpload
             onError={this.props.onError}
             onImageChanged={this.handleImageChanged} />
         </div>
-        <TagManager
-          tags={this.state.tags}
-          activated={true}
-          onTagsChanged={this.handleTagsChanged}
-          title="Optional tags (search and discovery)" />
+        <FormattedMessage id="title_tag_manager">{
+          (title) => <TagManager
+            tags={this.state.tags}
+            activated={true}
+            onTagsChanged={this.handleTagsChanged}
+            title={title} />
+        }</FormattedMessage>
         <div className="dialog-buttons">
-          <button className={submitClasses}>Create</button>
+          <button className={submitClasses}>
+            <FormattedMessage id="button_create" defaultMessage="Create"
+              description="Button [Create]" />
+          </button>
         </div>
       </form>
     );

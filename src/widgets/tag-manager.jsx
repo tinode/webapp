@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 
 import ChipInput from './chip-input.jsx';
 
+import { MIN_TAG_LENGTH } from '../config.js';
 import { arrayEqual } from '../lib/utils.js';
 
 export default class TagManager extends React.Component {

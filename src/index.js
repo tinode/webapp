@@ -27,7 +27,7 @@ const messages =
   allMessages.en;
 
 ReactDOM.render(
-  <IntlProvider locale={language} messages={messages} >
+  <IntlProvider locale={language} messages={messages} textComponent={React.Fragment}>
     <TinodeWeb />
   </IntlProvider>,
   document.getElementById('mountPoint')
