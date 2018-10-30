@@ -15,7 +15,12 @@ export default class LocalStorageUtil {
 
   // Partially or wholly update stored object.
   static updateObject(key, value) {
-    let oldVal = localStorage.getObject(key);
-    localStorage.setObject(key, Object.assign(oldVal || {}, value));
+    let oldVal = this.getObject(key);
+    this.setObject(key, Object.assign(oldVal || {}, value));
+  }
+
+  // Just a wrapper.
+  static removeItem(key) {
+    localStorage.removeItem(key);
   }
 }

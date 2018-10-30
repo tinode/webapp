@@ -1,8 +1,9 @@
 // The top-level class to hold all functionality together.
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { injectIntl } from 'react-intl';
 
-import 'firebase/app';
+import * as firebase from 'firebase/app';
 import 'firebase/messaging';
 
 import Tinode from 'tinode-sdk';
@@ -23,7 +24,10 @@ import { updateFavicon } from '../lib/utils.js';
 // Sound to play on message received.
 const POP_SOUND = new Audio('audio/msg.mp3');
 
-export default class TinodeWeb extends React.Component {
+console.log("desktop alerts: is secure, is localhost, firebase, navigator, fb_init",
+  isSecureConnection(), isLocalHost(), (typeof firebase), (typeof navigator), (typeof FIREBASE_INIT));
+
+class TinodeWeb extends React.Component {
   constructor(props) {
     super(props);
 
@@ -353,7 +357,7 @@ export default class TinodeWeb extends React.Component {
         // Login failed, report error.
         this.setState({loginDisabled: false, credMethod: undefined, credCode: undefined});
         this.handleError(err.message, 'err');
-        LocalStorageUtil.removeItem('auth-token');
+        localStorage.removeItem('auth-token');
         HashNavigation.navigateTo('');
       });
     } else {
@@ -396,7 +400,7 @@ export default class TinodeWeb extends React.Component {
         withDesc().
         build()
       ).catch((err) => {
-        LocalStorageUtil.removeItem('auth-token');
+        localStorage.removeItem('auth-token');
         this.handleError(err.message, 'err');
         HashNavigation.navigateTo('');
       });
@@ -744,7 +748,7 @@ export default class TinodeWeb extends React.Component {
         console.log("Unable to delete token.", err);
       }).finally(() => {
         LocalStorageUtil.updateObject('settings', {desktopAlerts: false});
-        LocalStorageUtil.removeItem('firebase-token');
+        localStorage.removeItem('firebase-token');
         this.setState({desktopAlerts: false, firebaseToken: null});
       });
     } else {
@@ -865,7 +869,7 @@ export default class TinodeWeb extends React.Component {
 
   handleLogout() {
     updateFavicon(0);
-    LocalStorageUtil.removeItem('auth-token');
+    localStorage.removeItem('auth-token');
     if (this.tinode) {
       this.tinode.onDisconnect = undefined;
       this.tinode.disconnect();
@@ -906,12 +910,15 @@ export default class TinodeWeb extends React.Component {
   }
 
   defaultTopicContextMenu(topicName) {
-    var muted = false, blocked = false, subscribed = false, deleter = false;
-    var topic = this.tinode.getTopic(topicName);
+    const topic = this.tinode.getTopic(topicName);
+    const {formatMessage} = this.props.intl;
+
+    let muted = false, blocked = false, subscribed = false, deleter = false;
     if (topic) {
       if (topic.isSubscribed()) {
         subscribed = true;
-        var acs = topic.getAccessMode();
+
+        let acs = topic.getAccessMode();
         muted = acs && acs.isMuted();
         blocked = acs && !acs.isJoiner();
         deleter = acs && acs.isDeleter();
@@ -919,7 +926,7 @@ export default class TinodeWeb extends React.Component {
     }
 
     return [
-      subscribed ? {title: "Info", handler: this.handleShowInfoView} : null,
+      subscribed ? {title: formatMessage({id: 'menu_item_info'}), handler: this.handleShowInfoView} : null,
       subscribed ? 'messages_clear' : null,
       subscribed && deleter ? 'messages_clear_hard' : null,
       subscribed ? (muted ? 'topic_unmute' : 'topic_mute') : null,
@@ -1128,3 +1135,5 @@ export default class TinodeWeb extends React.Component {
     );
   }
 };
+
+export default injectIntl(TinodeWeb);

@@ -1,5 +1,6 @@
 // InfoView: panel with topic/user info.
 import React from 'react';
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
 import AvatarUpload from '../widgets/avatar-upload.jsx';
 import CheckBox from '../widgets/checkbox.jsx';
@@ -13,7 +14,30 @@ import TagManager from '../widgets/tag-manager.jsx';
 
 import { makeImageUrl } from '../lib/blob-helpers.js';
 
-export default class InfoView extends React.Component {
+const messages = defineMessages({
+  requested: {
+    id: 'requested_permissions',
+    defaultMessage: 'Requested',
+    description: 'Title for permissions'
+  },
+  granted: {
+    id: 'granted_permissions',
+    defaultMessage: 'Granted',
+    description: 'Title for permissions'
+  },
+  edit_permissions: {
+    id: 'menu_item_edit_permissions',
+    defaultMessage: 'Edit permissions',
+    description: 'Menu item [Edit permissions]'
+  },
+  other_user: {
+    id: 'label_other_user',
+    defaultMessage: 'Other',
+    description: 'Label for the other user when the user is unnamed'
+  }
+});
+
+class InfoView extends React.Component {
   constructor(props) {
     super(props);
 
@@ -241,6 +265,7 @@ export default class InfoView extends React.Component {
   }
 
   handleLaunchPermissionsEditor(which, uid) {
+    const {formatMessage} = this.props.intl;
     let toEdit, toCompare, toSkip, titleEdit, titleCompare, userTitle, userAvatar;
     switch (which) {
       case 'mode':
@@ -250,15 +275,15 @@ export default class InfoView extends React.Component {
         toEdit = this.state.modeWant;
         toCompare = this.state.modeGiven;
         toSkip = this.state.groupTopic ? 'O' : 'ASDO';
-        titleEdit = "Requested";
-        titleCompare = "Granted";
+        titleEdit = formatMessage(messages.requested);
+        titleCompare = formatMessage(messages.granted);
         break;
       case 'given':
         toEdit = this.state.modeGiven2;
         toCompare = this.state.modeWant2;
         toSkip = this.state.groupTopic ? (this.state.owner ? '' : 'O') : 'ASDO';
-        titleEdit = "Granted";
-        titleCompare = "Requested";
+        titleEdit = formatMessage(messages.granted);
+        titleCompare = formatMessage(messages.requested);
         break;
       case 'auth':
         toEdit = this.state.auth;
@@ -280,8 +305,8 @@ export default class InfoView extends React.Component {
         toEdit = user.acs.getGiven();
         toCompare = user.acs.getWant();
         toSkip = this.state.owner ? '' : 'O';
-        titleEdit = "Granted";
-        titleCompare = "Requested";
+        titleEdit = formatMessage(messages.granted);
+        titleCompare = formatMessage(messages.requested);
         if (user.public) {
           userTitle = user.public.fn;
           userAvatar = user.public.photo;
@@ -342,18 +367,19 @@ export default class InfoView extends React.Component {
   }
 
   handleContextMenu(params) {
-    var instance = this;
-    var topic = this.props.tinode.getTopic(this.props.topic);
+    const {formatMessage} = this.props.intl;
+    const instance = this;
+    const topic = this.props.tinode.getTopic(this.props.topic);
     if (!topic) {
       return;
     }
-    var user = topic.subscriber(params.topicName);
+    const user = topic.subscriber(params.topicName);
     if (!user || !user.acs) {
       return;
     }
 
-    var menuItems = [
-      {title: "Edit permissions", handler: function() {
+    const menuItems = [
+      {title: formatMessage(messages.edit_permissions), handler: function() {
         instance.handleLaunchPermissionsEditor('user', params.topicName);
       }},
       'member_delete',
@@ -368,10 +394,14 @@ export default class InfoView extends React.Component {
   }
 
   render() {
+    const {formatMessage} = this.props.intl;
+
     return (
       <div id="info-view">
         <div className="caption-panel" id="info-caption-panel">
-          <div className="panel-title" id="info-title">Info</div>
+          <div className="panel-title" id="info-title">
+            <FormattedMessage id="title_info" defaultMessage="Info" description="Title for InfoView" />
+          </div>
           <div>
             <MenuCancel onCancel={this.props.onCancel} />
           </div>
@@ -407,17 +437,31 @@ export default class InfoView extends React.Component {
           <div id="info-view-content" className="scrollable-panel">
             <div className="panel-form-row">
               <div className="panel-form-column">
-                <div><label className="small">Name</label></div>
+                <div><label className="small">
+                  <FormattedMessage id="label_topic_name" defaultMessage="Name"
+                    description="Label for editing topic name" />
+                </label></div>
                 <div><InPlaceEdit
                     placeholder={this.state.groupTopic ? "Group name" : <i>Unknown</i>}
                     readOnly={!this.state.owner}
                     value={this.state.fullName}
                     onFinished={this.handleFullNameUpdate} /></div>
-                <div><label className="small">Private comment</label></div>
-                <div><InPlaceEdit
-                    placeholder="Visible to you only"
-                    value={this.state.private}
-                    onFinished={this.handlePrivateUpdate} /></div>
+                <div>
+                  <label className="small">
+                    <FormattedMessage id="label_private" defaultMessage="Private comment"
+                      description="Label for editing 'private'" />
+                  </label>
+                </div>
+                <div>
+                  <FormattedMessage id="private_editing_placeholder"
+                    defaultMessage="Visible to you only"
+                    description="Placeholder for editing 'private'">{
+                    (private_placeholder) => <InPlaceEdit
+                      placeholder={private_placeholder}
+                      value={this.state.private}
+                      onFinished={this.handlePrivateUpdate} />
+                  }</FormattedMessage>
+                </div>
               </div>
               <AvatarUpload
                 avatar={this.state.avatar}
@@ -430,23 +474,32 @@ export default class InfoView extends React.Component {
             <div className="hr" />
             <div className="panel-form-column">
               <div className="panel-form-row">
-                <label>Muted:</label>
+                <label>
+                  <FormattedMessage id="label_muting_topic" defaultMessage="Muted:"
+                    description="Label for Muting/unmuting the topic" />
+                </label>
                 <CheckBox name="P" checked={this.state.muted}
                   onChange={this.handleMuted} />
               </div>
-              <MoreButton
-                title="More"
-                open={this.state.moreInfoExpanded}
-                onToggle={this.handleMoreInfo} />
+              <FormattedMessage id="action_more" defaultMessage="More"
+                description="Action for showing more content">{
+                (more) => <MoreButton
+                  title={more}
+                  open={this.state.moreInfoExpanded}
+                  onToggle={this.handleMoreInfo} />
+              }</FormattedMessage>
               {this.state.moreInfoExpanded ?
                 <div className="panel-form-column">
                 <div className="panel-form-row">
-                  <label>Address:</label>
+                  <label><FormattedMessage id="label_user_id" /></label>
                   <tt>{this.state.address}</tt>
                 </div>
                 {this.state.groupTopic ?
                   <div className="panel-form-row">
-                    <label>Your permissions:</label>
+                    <label>
+                      <FormattedMessage id="label_your_permissions" defaultMessage="Your permissions:"
+                        description="Label for current user permissions" />
+                    </label>
                     <tt className="clickable"
                       onClick={this.handleLaunchPermissionsEditor.bind(this, 'want')}>
                       {this.state.access}
@@ -454,13 +507,20 @@ export default class InfoView extends React.Component {
                   </div>
                   :
                   <div>
-                    <div><label className="small">Permissions:</label></div>
+                    <div>
+                      <label className="small">
+                        <FormattedMessage id="label_permissions" defaultMessage="Permissions:"
+                          description="Section title" />
+                      </label>
+                    </div>
                     <div className="quoted">
-                      <div>Yours: &nbsp;<tt className="clickable"
+                      <div>
+                        <FormattedMessage id="label_you" defaultMessage="You:"
+                          description="Label for the current user" /> &nbsp;<tt className="clickable"
                         onClick={this.handleLaunchPermissionsEditor.bind(this, 'want')}>
                         {this.state.access}
                       </tt></div>
-                      <div>{this.state.fullName ? this.state.fullName : "Other"}&prime;s:
+                      <div>{this.state.fullName ? this.state.fullName : formatMessage(messages.other_user)}:
                         &nbsp;<tt className="clickable" onClick={this.handleLaunchPermissionsEditor.bind(this, 'given')}>
                         {this.state.modeGiven2}
                         </tt>
@@ -470,7 +530,12 @@ export default class InfoView extends React.Component {
                 }
                 {this.state.sharer && (this.state.auth || this.state.anon) ?
                   <div>
-                    <div><label className="small">Default access mode:</label></div>
+                    <div>
+                      <label className="small">
+                        <FormattedMessage id="label_default_access" defaultMessage="Default access mode:"
+                          description="Section title" />
+                      </label>
+                    </div>
                     <div className="quoted">
                       <div>Auth: {this.state.admin ?
                         <tt className="clickable"
@@ -502,11 +567,13 @@ export default class InfoView extends React.Component {
             </div>
             <div className="hr" />
             {this.state.owner ?
-              <TagManager
-                title="Tags"
-                tags={this.state.tags}
-                activated={false}
-                onSubmit={this.handleTagsUpdated} />
+              <FormattedMessage id="title_tag_manager">{
+                (tags) => <TagManager
+                  title={tags}
+                  tags={this.state.tags}
+                  activated={false}
+                  onSubmit={this.handleTagsUpdated} />
+              }</FormattedMessage>
               :
               null
             }
@@ -514,37 +581,46 @@ export default class InfoView extends React.Component {
             {this.state.groupTopic ?
               <div className="panel-form-column">
                 <div className="panel-form-row">
-                  <label className="small">Group members:</label>
+                  <label className="small">
+                    <FormattedMessage id="label_group_members" defaultMessage="Group members:"
+                      description="Section title or label" />
+                  </label>
                 </div>
                 <div className="panel-form-row">
                   {this.state.sharer ?
                     <a href="javascript:;" className="flat-button" onClick={this.handleShowAddMembers}>
-                      <i className="material-icons">person_add</i> Add members
+                      <i className="material-icons">person_add</i> <FormattedMessage id="button_add_members"
+                        defaultMessage="Add members" description="Flat button [Add members] (to topic)" />
                     </a>
                     : null}
                   {!this.state.owner ?
                     <a href="javascript:;" className="red flat-button" onClick={this.handleLeave}>
-                      <i className="material-icons">exit_to_app</i> Leave
+                      <i className="material-icons">exit_to_app</i> <FormattedMessage id="button_leave"
+                        defaultMessage="Leave" description="Flat button [Leave] (topic)" />
                     </a>
                     : null}
                 </div>
-                <ContactList
-                  contacts={this.state.contactList}
-                  myUserId={this.props.myUserId}
-                  emptyListMessage="No members"
-                  topicSelected={this.state.selectedContact}
-                  showOnline={false}
-                  showUnread={false}
-                  showMode={true}
-                  noScroll={true}
-                  onTopicSelected={this.handleMemberSelected}
-                  showContextMenu={this.state.admin ? this.handleContextMenu : false}
-                />
+                <FormattedMessage id="group_has_no_members" defaultMessage="No members"
+                  description="Shown in place of group members">{
+                  (no_members) => <ContactList
+                    contacts={this.state.contactList}
+                    myUserId={this.props.myUserId}
+                    emptyListMessage={no_members}
+                    topicSelected={this.state.selectedContact}
+                    showOnline={false}
+                    showUnread={false}
+                    showMode={true}
+                    noScroll={true}
+                    onTopicSelected={this.handleMemberSelected}
+                    showContextMenu={this.state.admin ? this.handleContextMenu : false}
+                  />
+                }</FormattedMessage>
               </div>
               :
               <div className="panel-form-row">
                 <a href="javascript:;" className="red flat-button" onClick={this.handleLeave}>
-                  <i className="material-icons">exit_to_app</i> Leave
+                  <i className="material-icons">exit_to_app</i> <FormattedMessage id="action_leave_chat"
+                    defaultMessage="Leave" description="Action [Leave] chat" />
                 </a>
               </div>
             }
@@ -554,3 +630,5 @@ export default class InfoView extends React.Component {
     );
   }
 };
+
+export default injectIntl(InfoView);
