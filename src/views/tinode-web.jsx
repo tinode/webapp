@@ -829,7 +829,8 @@ class TinodeWeb extends React.Component {
         params.public = pub;
       }
       if (priv) {
-        params.private = {comment: priv};
+        params.private = (priv === Tinode.DEL_CHAR) ?
+          Tinode.DEL_CHAR : {comment: priv};
       }
       if (permissions) {
         params.defacs = permissions;

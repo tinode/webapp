@@ -67,3 +67,19 @@ self.addEventListener('notificationclick', function(event) {
 
   event.waitUntil(promises);
 });
+
+// This is needed for 'Add to Home Screen'.
+self.addEventListener('fetch', function (event) {
+	event.respondWith(
+    //  Try to find response in cache.
+    caches.match(event.request)
+    .then((resp) => {
+      // If response is found in cache, return it. Otherwise fetch.
+      return resp || fetch(event.request);
+    })
+    .catch((err) {
+      // Something went wrong.
+      console.error("Service worker Fetch: ", err);
+    })
+  );
+});
