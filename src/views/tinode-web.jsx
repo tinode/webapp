@@ -16,16 +16,13 @@ import SidepanelView from './sidepanel-view.jsx';
 
 import { API_KEY, APP_NAME, MEDIA_BREAKPOINT, READ_DELAY, RECEIVED_DELAY } from '../config.js';
 import { makeImageUrl } from '../lib/blob-helpers.js';
-import { isLocalHost, isSecureConnection } from '../lib/host-name.js';
+import { detectServerAddress, isLocalHost, isSecureConnection } from '../lib/host-name.js';
 import LocalStorageUtil from '../lib/local-storage.js';
 import HashNavigation from '../lib/navigation.js';
 import { updateFavicon } from '../lib/utils.js';
 
 // Sound to play on message received.
 const POP_SOUND = new Audio('audio/msg.mp3');
-
-console.log("desktop alerts: is secure, is localhost, firebase, navigator, fb_init",
-  isSecureConnection(), isLocalHost(), (typeof firebase), (typeof navigator), (typeof FIREBASE_INIT));
 
 class TinodeWeb extends React.Component {
   constructor(props) {

@@ -340,6 +340,32 @@ li.right:hover .menuTrigger {
 }
 
 /* Top-level application layout style: sidepanel + main view */
+#noscript-alertbox {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-width: 30rem;
+  overflow: hidden;
+  margin-top: 5rem;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 0.25rem;
+  box-shadow: 1px 2px 0.3rem gray;
+  background-color: white;
+}
+
+#noscript-title {
+  padding: 1rem;
+  font-size: 120%;
+  font-weight: bolder;
+  background-color: #2196f3; /* blue 500 */
+  color: #bbdefb; /* light-blue 100 */
+}
+
+#noscript-content {
+  padding: 1rem;
+}
+
 #app-container {
   position: relative;
   display: flex;
