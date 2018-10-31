@@ -15,9 +15,6 @@ module.exports = config = {
       },
     ],
   },
-  output: {
-    libraryTarget: 'umd'
-  },
   optimization: {
     minimizer: [
       // we specify a custom UglifyJsPlugin here to get source maps in production.
@@ -37,6 +34,6 @@ module.exports = config = {
     'react-dom': 'ReactDOM',
     'react-intl': 'ReactIntl',
     'firebase/app': 'firebase',
-    'firebase/messaging': true
+    'firebase/messaging': ['firebase', 'messaging']
   },
 };

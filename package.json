@@ -20,8 +20,8 @@
   "scripts": {
     "build": "npm run vers && npm run build:prod && npm run build:dev && npm run build:css && npm run build:i18n",
     "build:css": "postcss css/base.css > css/base.min.css",
-    "build:dev": "webpack --mode development --output-library-target umd --output ./umd/index.dev.js",
-    "build:prod": "webpack --mode production --output-library-target umd --output ./umd/index.prod.js",
+    "build:dev": "webpack --mode development --output ./umd/index.dev.js",
+    "build:prod": "webpack --mode production --output ./umd/index.prod.js",
     "build:i18n": "node scripts/flatten-messages.js",
     "vers": "node scripts/gen-version.js"
   },

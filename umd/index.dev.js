@@ -1,14 +1,4 @@
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("React"), require("ReactDOM"), require("react-intl"), require("firebase"), require("firebase/messaging"));
-	else if(typeof define === 'function' && define.amd)
-		define(["React", "ReactDOM", "react-intl", "firebase", "firebase/messaging"], factory);
-	else {
-		var a = typeof exports === 'object' ? factory(require("React"), require("ReactDOM"), require("react-intl"), require("firebase"), require("firebase/messaging")) : factory(root["React"], root["ReactDOM"], root["react-intl"], root["firebase"], root["firebase/messaging"]);
-		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
-	}
-})(window, function(__WEBPACK_EXTERNAL_MODULE_react__, __WEBPACK_EXTERNAL_MODULE_react_dom__, __WEBPACK_EXTERNAL_MODULE_react_intl__, __WEBPACK_EXTERNAL_MODULE_firebase_app__, __WEBPACK_EXTERNAL_MODULE_firebase_messaging__) {
-return /******/ (function(modules) { // webpackBootstrap
+/******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -818,18 +808,18 @@ eval("module.exports = __webpack_require__(/*! ./src/index.js */\"./src/index.js
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("module.exports = __WEBPACK_EXTERNAL_MODULE_firebase_app__;\n\n//# sourceURL=webpack:///external_%22firebase%22?");
+eval("module.exports = firebase;\n\n//# sourceURL=webpack:///external_%22firebase%22?");
 
 /***/ }),
 
 /***/ "firebase/messaging":
-/*!*************************************!*\
-  !*** external "firebase/messaging" ***!
-  \*************************************/
+/*!*****************************************!*\
+  !*** external ["firebase","messaging"] ***!
+  \*****************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("module.exports = __WEBPACK_EXTERNAL_MODULE_firebase_messaging__;\n\n//# sourceURL=webpack:///external_%22firebase/messaging%22?");
+eval("module.exports = firebase[\"messaging\"];\n\n//# sourceURL=webpack:///external_%5B%22firebase%22,%22messaging%22%5D?");
 
 /***/ }),
 
@@ -840,7 +830,7 @@ eval("module.exports = __WEBPACK_EXTERNAL_MODULE_firebase_messaging__;\n\n//# so
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("module.exports = __WEBPACK_EXTERNAL_MODULE_react__;\n\n//# sourceURL=webpack:///external_%22React%22?");
+eval("module.exports = React;\n\n//# sourceURL=webpack:///external_%22React%22?");
 
 /***/ }),
 
@@ -851,20 +841,19 @@ eval("module.exports = __WEBPACK_EXTERNAL_MODULE_react__;\n\n//# sourceURL=webpa
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("module.exports = __WEBPACK_EXTERNAL_MODULE_react_dom__;\n\n//# sourceURL=webpack:///external_%22ReactDOM%22?");
+eval("module.exports = ReactDOM;\n\n//# sourceURL=webpack:///external_%22ReactDOM%22?");
 
 /***/ }),
 
 /***/ "react-intl":
-/*!*****************************!*\
-  !*** external "react-intl" ***!
-  \*****************************/
+/*!****************************!*\
+  !*** external "ReactIntl" ***!
+  \****************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("module.exports = __WEBPACK_EXTERNAL_MODULE_react_intl__;\n\n//# sourceURL=webpack:///external_%22react-intl%22?");
+eval("module.exports = ReactIntl;\n\n//# sourceURL=webpack:///external_%22ReactIntl%22?");
 
 /***/ })
 
 /******/ });
-});
