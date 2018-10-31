@@ -1,36 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>Tinode</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="application-name" content="TinodeWeb">
-    <meta name="description" content="Tinode instant messaging">
-    <meta name="application-url" content="https://api.tinode.co/">
-    <!-- Browser styling for Chrome, FF, Opera -->
-    <meta name="theme-color" content="#3949AB">
-    <!-- Ask Google not to offer page translation -->
-    <meta name="google" value="notranslate">
-
-    <link rel="manifest" href="manifest.json">
-    <link id="shortcut-icon" rel="shortcut icon" href="img/logo32x32.png" type="image/png" />
-    <link rel="apple-touch-icon" sizes="192x192" href="img/logo192.png" type="image/png" />
-    <link rel="canonical" href="https://api.tinode.co/" />
-    <!-- Google's Roboto font -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400italic,500,700"
-      rel="stylesheet" type="text/css" />
-    <!-- Google's material design icons -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-    <!-- Styles for local elements -->
-    <link rel="stylesheet" href="css/base.min.css" />
-  </head>
-  <body>
-    <noscript><div id="noscript-alertbox"><div id="noscript-title">Javascript support is required.</div>
-    <div id="noscript-content">It appears JavaScript is turned off or is not supported by your browser.
-    TinodeWeb does not work without JavaScript. Please enable JavaScript by changing your browser options,
-    then <a href="">try again</a>.</div></div></noscript>
-    <div id="mountPoint"></div>
-    <script src="firebase-init.js"></script>
-    <script src="umd/index.prod.js"></script>
-  </body>
+<html>
+<head>
+<title>Tinode</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="application-name" content="TinodeWeb">
+<meta name="description" content="Tinode instant messaging">
+<meta name="application-url" content="https://api.tinode.co/">
+<meta name="theme-color" content="#3949AB">
+<meta name="google" value="notranslate">
+<link rel="manifest" href="manifest.json" />
+<link rel="shortcut icon" id="shortcut-icon" href="img/logo32x32.png" type="image/png" />
+<link rel="apple-touch-icon" sizes="192x192" href="img/logo192.png" type="image/png" />
+<link rel="canonical" href="https://api.tinode.co/" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400italic,500,700" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link rel="stylesheet" href="css/base.min.css" />
+<script crossorigin="anonymous" src="https://unpkg.com/react@16.6.0/umd/react.production.min.js"></script>
+<script crossorigin="anonymous" src="https://unpkg.com/react-dom@16.6.0/umd/react-dom.production.min.js"></script>
+<script crossorigin="anonymous" src="https://unpkg.com/prop-types@15.6.2/prop-types.min.js"></script>
+<script crossorigin="anonymous" src="https://unpkg.com/react-intl@2.7.2/dist/react-intl.min.js"></script>
+<script crossorigin="anonymous" src="https://unpkg.com/firebase@5.5.6/firebase-app.js"></script>
+<script crossorigin="anonymous" src="https://unpkg.com/firebase@5.5.6/firebase-messaging.js"></script>
+</head>
+<body>
+<noscript><div id="noscript-alertbox"><div id="noscript-title">Javascript support is required.</div>
+<div id="noscript-content">It appears JavaScript is turned off or is not supported by your browser.
+TinodeWeb does not work without JavaScript. Please enable JavaScript by changing your browser options,
+then <a href="">try again</a>.</div></div></noscript>
+<div id="mountPoint"></div>
+<script src="firebase-init.js"></script>
+<script src="umd/index.prod.js"></script>
+</body>
 </html>
