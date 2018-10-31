@@ -25,7 +25,7 @@ Background pattern from http://subtlepatterns.com/, commercial and non-commercia
 
 The app is fully internationalized using [React-Intl](https://github.com/yahoo/react-intl). The UI language is selected automatically from the language specified by the browser. A specific language can be forced by adding `hl=XX` parameter to the URL, i.e. https://api.tinode.co/#?hl=ru.
 
-More translations are welcome. Send a pull request with a json file with translated strings. As an example, take a look at [English](/src/i18n/en.json) and [Russian](/src/i18n/ru.json) translations.
+More translations are welcome. Send a pull request with a json file with translated strings. Take a look at [English](/src/i18n/en.json) and [Russian](/src/i18n/ru.json) translations for guidance.
 
 
 ## Missing functionality
