@@ -1,29 +1,37 @@
 {
   "name": "tinode-webapp",
   "description": "Tinode messenger for the web",
-  "version": "0.15.8",
+  "version": "0.15.9-rc1",
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-react": "^6.24.1",
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.4",
+    "babel-plugin-react-intl": "^3.0.1",
+    "browserslist": "^4.3.3",
     "cssnano": "^4.0.5",
-    "uglify-es": "^3.3.9"
+    "webpack": "^4.23.1",
+    "webpack-cli": "^3.1.2"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/tinode/example-react-js.git"
   },
   "scripts": {
-    "build": "npm run vers && npm run build:babel && npm run build:prod && npm run build:dev && npm run build:css",
-    "build:prod": "browserify ./src/index.js --standalone Webapp | uglifyjs --compress --mangle > ./umd/index.prod.js",
-    "build:dev": "browserify ./src/index.js --standalone Webapp > ./umd/index.dev.js",
-    "build:babel": "babel ./src/webapp.jsx --presets react,env --out-file ./src/webapp.es5.js",
+    "build": "npm run vers && npm run build:prod && npm run build:dev && npm run build:css && npm run build:i18n",
     "build:css": "postcss css/base.css > css/base.min.css",
-    "vers": "echo \"{\\\"version\\\": \\\"`node -p -e \"require('./package.json').version\"`\\\"}\" > version.json"
+    "build:dev": "webpack --mode development --output ./umd/index.dev.js",
+    "build:prod": "webpack --mode production --output ./umd/index.prod.js",
+    "build:i18n": "node scripts/flatten-messages.js",
+    "vers": "node scripts/gen-version.js"
   },
   "files": [
     "src/index.js",
-    "src/webapp.jsx",
+    "src/config.js",
+    "src/views/*.jsx",
+    "src/widgets/*.jsx",
+    "src/lib/*.js",
+    "src/i18n/*.json",
     "umd/index.prod.js",
     "umd/index.dev.js",
     "audio/msg.mp3",
@@ -38,8 +46,6 @@
     "img/badge96.png",
     "index-dev.html",
     "index.html",
-    "index.js",
-    "index.min.js",
     "manifest.json",
     "service-worker.js",
     "firebase-init.js",
@@ -69,6 +75,7 @@
     "firebase": "^5.5.5",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
-    "tinode-sdk": "^0.15.8"
+    "react-intl": "^2.7.1",
+    "tinode-sdk": "^0.15.8-rc1"
   }
 }

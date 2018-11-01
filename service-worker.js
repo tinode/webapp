@@ -1,7 +1,7 @@
 // Must be located at the root.
-importScripts("https://unpkg.com/firebase@5.5.5/firebase-app.js");
-importScripts("https://unpkg.com/firebase@5.5.5/firebase-messaging.js");
-importScripts("/firebase-init.js")
+importScripts('https://unpkg.com/firebase@5.5.6/firebase-app.js');
+importScripts('https://unpkg.com/firebase@5.5.6/firebase-messaging.js');
+importScripts('firebase-init.js');
 
 firebase.initializeApp(FIREBASE_INIT);
 
@@ -66,4 +66,20 @@ self.addEventListener('notificationclick', function(event) {
   });
 
   event.waitUntil(promises);
+});
+
+// This is needed for 'Add to Home Screen'.
+self.addEventListener('fetch', function(event) {
+	event.respondWith(
+    //  Try to find response in cache.
+    caches.match(event.request)
+      .then((resp) => {
+        // If response is found in cache, return it. Otherwise fetch.
+        return resp || fetch(event.request);
+      })
+      .catch((err) => {
+        // Something went wrong.
+        console.log("Service worker Fetch: ", err);
+      })
+  );
 });
