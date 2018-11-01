@@ -168,7 +168,7 @@ class TinodeWeb extends React.Component {
         this.fbPush = firebase.initializeApp(FIREBASE_INIT, APP_NAME).messaging();
         this.fbPush.usePublicVapidKey(FIREBASE_INIT.messagingVapidKey);
         navigator.serviceWorker.register('/service-worker.js').then((reg) => {
-          this.checkForAppUpdate(reg, () => {});
+          this.checkForAppUpdate(reg);
           this.fbPush.useServiceWorker(reg);
           this.initDesktopAlerts();
           if (this.state.desktopAlerts) {
