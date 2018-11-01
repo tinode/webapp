@@ -117,5 +117,6 @@
   "topic_name_editing_placeholder": "Название чата",
   "button_create": "Создать",
   "badge_you": "вы",
-  "badge_owner": "влад."
+  "badge_owner": "влад.",
+  "update_available": "Есть новая версия приложения. <a href=\"\">Обновить</a>."
 }

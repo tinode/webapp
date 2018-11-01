@@ -1,7 +1,7 @@
 // The top-level class to hold all functionality together.
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { injectIntl } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 
 import * as firebase from 'firebase/app';
 import 'firebase/messaging';
@@ -24,6 +24,14 @@ import { updateFavicon } from '../lib/utils.js';
 // Sound to play on message received.
 const POP_SOUND = new Audio('audio/msg.mp3');
 
+const messages = defineMessages({
+  update_available: {
+    id: 'update_available',
+    defaultMessage: 'Update available. <a href="">Reload</a>.',
+    description: 'Message shown when an app update is available.'
+  }
+});
+
 class TinodeWeb extends React.Component {
   constructor(props) {
     super(props);
@@ -33,6 +41,7 @@ class TinodeWeb extends React.Component {
     this.handleResize = this.handleResize.bind(this);
     this.handleHashRoute = this.handleHashRoute.bind(this);
     this.handleOnline = this.handleOnline.bind(this);
+    this.checkForAppUpdate = this.checkForAppUpdate.bind(this);
     this.handleAppVisibility = this.handleAppVisibility.bind(this);
     this.handleReadTimer = this.handleReadTimer.bind(this);
     this.handleVisibilityEvent = this.handleVisibilityEvent.bind(this);
@@ -159,6 +168,7 @@ class TinodeWeb extends React.Component {
         this.fbPush = firebase.initializeApp(FIREBASE_INIT, APP_NAME).messaging();
         this.fbPush.usePublicVapidKey(FIREBASE_INIT.messagingVapidKey);
         navigator.serviceWorker.register('/service-worker.js').then((reg) => {
+          this.checkForAppUpdate(reg, () => {});
           this.fbPush.useServiceWorker(reg);
           this.initDesktopAlerts();
           if (this.state.desktopAlerts) {
@@ -223,6 +233,19 @@ class TinodeWeb extends React.Component {
     this.setState({viewportWidth: document.documentElement.clientWidth});
     if (this.state.displayMobile != mobile) {
       this.setState({displayMobile: mobile});
+    }
+  }
+
+  // Check if a newer version of TinodeWeb app is available at the server.
+  checkForAppUpdate(reg) {
+    const {formatHTMLMessage} = this.props.intl;
+    reg.onupdatefound = () => {
+      const installingWorker = reg.installing;
+      installingWorker.onstatechange = () => {
+        if (installingWorker.state == 'installed' && navigator.serviceWorker.controller) {
+          this.handleError(formatHTMLMessage(messages.update_available), 'info');
+        }
+      }
     }
   }
 

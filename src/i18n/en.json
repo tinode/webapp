@@ -63,6 +63,7 @@
   "sidepanel_title_newtpk": "Start New Chat",
   "sidepanel_title_cred": "Confirm Credentials",
   "sidepanel_title_reset": "Reset Password",
+  "update_available": "Update available. <a href=\"\">Reload</a>.",
   "phone_dative": "phone",
   "email_dative": "email",
   "enter_confirmation_code_prompt": "Enter confirmation code sent to you by {method}:",

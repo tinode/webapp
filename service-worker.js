@@ -20,7 +20,6 @@ firebase.messaging().setBackgroundMessageHandler(function(payload) {
   return self.registration.showNotification(title, options);
 });
 
-
 // This code handles a click on notification: takes
 // the user to the browser tab with the chat or opens a new tab.
 self.addEventListener('notificationclick', function(event) {

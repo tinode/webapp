@@ -625,16 +625,20 @@ i.search {
   display: flex;
   background-color: #fff9c4;
   border-bottom: 1px solid #fff59d;
-  color: #607d8b;
+  color: #6d4c41;
+}
+.alert-box.info {
+  display: flex;
+  background-color: #e1f5fe;
+  border-bottom: 1px solid #4fc3f7;
+  color: #0288d1;
 }
 .alert-box .cancel .material-icons {
   font-size: 1rem;
+  color: #757575;
 }
 .alert-box.error .cancel .material-icons {
   color: #b71c1c;
-}
-.alert-box.warning .cancel .material-icons {
-  color: #757575;
 }
 .alert-box .icon {
   display: block;
@@ -649,7 +653,9 @@ i.search {
 .alert-box.error .icon .material-icons {
   color: #ef5350;
 }
-
+.alert-box.info .icon .material-icons {
+  color: #0288d1;
+}
 /* List of contacts */
 .flex-column {
   display: flex;
