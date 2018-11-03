@@ -7,9 +7,6 @@ import Attachment from './attachment.jsx';
 import LetterTile from './letter-tile.jsx';
 import ReceivedMarker from './received-marker.jsx'
 
-import { REM_SIZE } from '../config.js';
-import { fitImageSize } from '../lib/blob-helpers.js';
-
 export default class ChatMessage extends React.Component {
   constructor(props) {
     super(props);
@@ -23,6 +20,7 @@ export default class ChatMessage extends React.Component {
     }
 
     this.handlePreviewImage = this.handlePreviewImage.bind(this);
+    this.handleFormButtonClick = this.handleFormButtonClick.bind(this);
     this.handleContextClick = this.handleContextClick.bind(this);
     this.handleCancelUpload = this.handleCancelUpload.bind(this);
   }
@@ -37,6 +35,11 @@ export default class ChatMessage extends React.Component {
       size: e.target.dataset.size,
       type: e.target.dataset.mime
     });
+  }
+
+  handleFormButtonClick(e) {
+    e.preventDefault();
+    console.log(e.target);
   }
 
   handleContextClick(e) {
@@ -54,36 +57,15 @@ export default class ChatMessage extends React.Component {
   }
 
   render() {
-    let elementKey = 0;
-    const formatter = function(style, data, values) {
-      elementKey += 1;
-      let el = Drafty.tagName(style);
-      if (el) {
-        let attr = Drafty.attrValue(style, data) || {};
-        attr.key = elementKey;
-        if (style == 'IM') {
-          // Additional processing for images
-          let dim = fitImageSize(data.width, data.height,
-            Math.min(this.props.viewportWidth - REM_SIZE * 4, REM_SIZE * 36), REM_SIZE * 24, false);
-          attr.className = 'inline-image';
-          attr.style = dim ? { width: dim.dstWidth + 'px', height: dim.dstHeight + 'px' } : null;
-          attr.onClick = this.handlePreviewImage;
-        }
-        return React.createElement(el, attr, values);
-      } else {
-        return values;
-      }
-    };
-
-    var sideClass = this.props.sequence + ' ' + (this.props.response ? 'left' : 'right');
-    var bubbleClass = (this.props.sequence == 'single' || this.props.sequence == 'last') ?
+    const sideClass = this.props.sequence + ' ' + (this.props.response ? 'left' : 'right');
+    const bubbleClass = (this.props.sequence == 'single' || this.props.sequence == 'last') ?
       'bubble tip' : 'bubble';
-    var avatar = this.props.userAvatar || true;
-    var fullDisplay = (this.props.userFrom && this.props.response &&
+    const avatar = this.props.userAvatar || true;
+    const fullDisplay = (this.props.userFrom && this.props.response &&
       (this.props.sequence == 'single' || this.props.sequence == 'last'));
 
-    var content = this.props.content;
-    var attachments = [];
+    let content = this.props.content;
+    const attachments = [];
     if (this.props.mimeType == Drafty.getContentType()) {
       Drafty.attachments(content, function(att, i) {
         attachments.push(<Attachment
@@ -96,7 +78,7 @@ export default class ChatMessage extends React.Component {
           onError={this.props.onError}
           key={i} />);
       }, this);
-      content = React.createElement('span', null, Drafty.format(content, formatter, this));
+      content = React.createElement('span', null, Drafty.format(content, draftyFormatter, this));
     } else if (typeof content != 'string') {
       content = <span><i className="material-icons">error_outline</i> <i>
         <FormattedMessage id="invalid_content"
@@ -135,5 +117,40 @@ export default class ChatMessage extends React.Component {
         </div>
       </li>
     );
+  }
+};
+
+// Convert Drafty object to a tree of React elements.
+import { REM_SIZE } from '../config.js';
+import { fitImageSize } from '../lib/blob-helpers.js';
+
+function draftyFormatter(style, data, values, key) {
+  let el = Drafty.tagName(style);
+  if (el) {
+    let attr = Drafty.attrValue(style, data) || {};
+    attr.key = key;
+    switch (style) {
+      case 'IM':
+        // Additional processing for images
+        if (data) {
+          attr.className = 'inline-image';
+          attr.onClick = this.handlePreviewImage;
+          let dim = fitImageSize(data.width, data.height,
+            Math.min(this.props.viewportWidth - REM_SIZE * 4, REM_SIZE * 36), REM_SIZE * 24, false);
+          attr.style = dim ? { width: dim.dstWidth + 'px', height: dim.dstHeight + 'px' } : null;
+        }
+        break;
+      case 'BN':
+        // Button
+        attr.onClick = this.handleFormButtonClick;
+        break;
+      case 'FM':
+        // Form
+        attr.className = 'bot-form' + ((data && data.layout) ? ' ' + data.layout : '');
+        break;
+    }
+    return React.createElement(el, attr, values);
+  } else {
+    return values;
   }
 };

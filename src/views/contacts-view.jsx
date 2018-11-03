@@ -1,21 +1,12 @@
 /* ContactsView holds all contacts-related stuff */
 import React from 'react';
-import { defineMessages, injectIntl } from 'react-intl';
+import { FormattedHTMLMessage } from 'react-intl';
 
 import ContactList from '../widgets/contact-list.jsx';
 
 import { updateFavicon } from '../lib/utils.js';
 
-// Panel titles for translation.
-const messages = defineMessages({
-  'contacts_not_found': {
-    id: 'contacts_not_found',
-    description: 'HTML message shown in ContactList when no contacts are found',
-    defaultMessage: 'You have no chats<br />¯\\\\_(ツ)_/¯'
-  }
-});
-
-class ContactsView extends React.Component {
+export default class ContactsView extends React.Component {
   constructor(props) {
     super(props);
 
@@ -39,20 +30,21 @@ class ContactsView extends React.Component {
   }
 
   render() {
-    const {formatHTMLMessage} = this.props.intl;
     return (
-      <ContactList
-        connected={this.props.connected}
-        contacts={this.state.contactList}
-        emptyListMessage={<span>{formatHTMLMessage(messages.contacts_not_found)}</span>}
-        topicSelected={this.props.topicSelected}
-        myUserId={this.props.myUserId}
-        showOnline={true}
-        showUnread={true}
-        onTopicSelected={this.props.onTopicSelected}
-        showContextMenu={this.props.showContextMenu} />
+      <FormattedHTMLMessage id="contacts_not_found"
+        defaultMesage="You have no chats<br />¯\\\\_(ツ)_/¯"
+        description="HTML message shown in ContactList when no contacts are found">{
+        (no_contacts) => <ContactList
+          connected={this.props.connected}
+          contacts={this.state.contactList}
+          emptyListMessage={no_contacts}
+          topicSelected={this.props.topicSelected}
+          myUserId={this.props.myUserId}
+          showOnline={true}
+          showUnread={true}
+          onTopicSelected={this.props.onTopicSelected}
+          showContextMenu={this.props.showContextMenu} />
+      }</FormattedHTMLMessage>
     );
   }
 };
-
-export default injectIntl(ContactsView);

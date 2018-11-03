@@ -548,6 +548,32 @@ table.permission-editor td.checkbox {
   flex-shrink: 0;
 }
 
+.bot-form, .bot-form.vlist {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #999;
+  border-radius: 0.25rem;
+  background-color: #eef;
+}
+
+.bot-form.hlist {
+  flex-direction: column;
+}
+
+.bot-form button {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #FFF;
+  color: #2196f3; /* blue 500 */
+}
+
+.bot-form  button:focus, button:hover, button:active {
+  outline: 0;
+  background-color: #e3f2fd;
+}
+
 #side-caption-panel {
   background-color: #2196f3; /* blue 500 */
   color: #bbdefb; /* light-blue 100 */
