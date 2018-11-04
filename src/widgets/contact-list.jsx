@@ -87,9 +87,8 @@ class ContactList extends React.Component {
             {contactNodes}
           </ul>
           :
-          <div className="center-medium-text">
-            {this.props.emptyListMessage}
-          </div>}
+          <div className="center-medium-text" dangerouslySetInnerHTML={{__html: this.props.emptyListMessage}} />
+        }
       </div>
     );
   }

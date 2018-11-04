@@ -1,6 +1,7 @@
 import React from 'react';
 
 import FileProgress from './file-progress.jsx';
+import { bytesToHumanSize } from '../lib/strformat.js';
 
 export default class Attachment extends React.Component {
   constructor(props) {

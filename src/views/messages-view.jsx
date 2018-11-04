@@ -2,6 +2,7 @@ import React from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
 import Tinode from 'tinode-sdk';
+const Drafty = Tinode.Drafty;
 
 import ChatMessage from '../widgets/chat-message.jsx';
 import ErrorPanel from '../widgets/error-panel.jsx';
@@ -62,6 +63,7 @@ class MessagesView extends React.Component {
     this.handleInfoReceipt = this.handleInfoReceipt.bind(this);
     this.handleImagePreview = this.handleImagePreview.bind(this);
     this.handleCloseImagePreview = this.handleCloseImagePreview.bind(this);
+    this.handleFormResponse = this.handleFormResponse.bind(this);
     this.handleContextClick = this.handleContextClick.bind(this);
     this.handleShowContextMenuMessage = this.handleShowContextMenuMessage.bind(this);
     this.handleBackNavigation = this.handleBackNavigation.bind(this);
@@ -349,6 +351,30 @@ class MessagesView extends React.Component {
     this.setState({ imagePreview: null });
   }
 
+  handleFormResponse(action, text, data) {
+    if (action == 'pub') {
+      this.props.sendMessage(Drafty.attachJSON(Drafty.parse(text), data));
+    } else if (action == 'url') {
+      const url = new URL(data.ref);
+      let params = url.searchParams;
+      for (let key in data.resp) {
+        if (data.resp.hasOwnProperty(key)) {
+          params.set(key, data.resp[key]);
+        }
+      }
+      ['name', 'seq'].map(function(key) {
+        if (data[key]) {
+          params.set(key, data[key]);
+        }
+      });
+      params.set('uid', this.props.myUserId);
+      url.search = params;
+      window.open(url, '_blank');
+    } else {
+      console.log("Unknown action in form", action);
+    }
+  }
+
   handleContextClick(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -376,11 +402,10 @@ class MessagesView extends React.Component {
     const {formatMessage} = this.props.intl;
 
     let component;
-
     if (this.state.topic) {
+      const topic = this.props.tinode.getTopic(this.state.topic);
+      const groupTopic = topic.getType() == 'grp';
       let messageNodes = [];
-      let topic = this.props.tinode.getTopic(this.state.topic);
-      let groupTopic = topic.getType() == 'grp';
       let previousFrom = null;
       let chatBoxClass = null;
       for (let i=0; i<this.state.messages.length; i++) {
@@ -403,12 +428,12 @@ class MessagesView extends React.Component {
         }
         previousFrom = msg.from;
 
-        let isReply = !(msg.from == this.props.myUserId);
-        let deliveryStatus = topic.msgStatus(msg);
+        const isReply = !(msg.from == this.props.myUserId);
+        const deliveryStatus = topic.msgStatus(msg);
 
         let userName, userAvatar, userFrom;
         if (groupTopic) {
-          let user = topic.userDesc(msg.from);
+          const user = topic.userDesc(msg.from);
           if (user && user.public) {
             userName = user.public.fn;
             userAvatar = makeImageUrl(user.public.photo);
@@ -430,6 +455,7 @@ class MessagesView extends React.Component {
             viewportWidth={this.props.viewportWidth}
             showContextMenu={this.handleShowContextMenuMessage}
             onImagePreview={this.handleImagePreview}
+            onFormResponse={this.handleFormResponse}
             onError={this.props.onError}
             key={msg.seq} />
         );

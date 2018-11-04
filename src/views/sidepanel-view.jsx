@@ -77,7 +77,7 @@ class SidepanelView extends React.Component {
     }
 
     let onCancel;
-    if (view != 'login') {
+    if (['login', 'contacts'].indexOf(view) == -1) {
       onCancel = this.props.onCancel;
     }
 

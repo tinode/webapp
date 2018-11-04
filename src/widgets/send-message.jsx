@@ -4,7 +4,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import { Drafty } from 'tinode-sdk';
 
 import { KEYPRESS_DELAY, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE } from '../config.js';
-import { SUPPORTED_IMAGE_FORMATS, filePasted, imageFileToBase64, imageFileScaledToBase64 } from '../lib/blob-helpers.js';
+import { SUPPORTED_IMAGE_FORMATS, filePasted, fileToBase64, imageFileToBase64, imageFileScaledToBase64 } from '../lib/blob-helpers.js';
 import { bytesToHumanSize } from '../lib/strformat.js';
 
 const messages = defineMessages({

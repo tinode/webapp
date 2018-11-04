@@ -7,6 +7,7 @@ import Tinode from 'tinode-sdk';
 import AvatarUpload from '../widgets/avatar-upload.jsx';
 import CheckBox from '../widgets/checkbox.jsx';
 import ContactList from '../widgets/contact-list.jsx';
+import ErrorPanel from '../widgets/error-panel.jsx';
 import GroupManager from '../widgets/group-manager.jsx';
 import InPlaceEdit from '../widgets/in-place-edit.jsx';
 import MenuCancel from '../widgets/menu-cancel.jsx';

@@ -39,7 +39,22 @@ export default class ChatMessage extends React.Component {
 
   handleFormButtonClick(e) {
     e.preventDefault();
-    console.log(e.target);
+    const data = {
+      seq: this.props.seq
+    };
+    data.resp = {};
+    if (e.target.dataset.name) {
+      data.resp[e.target.dataset.name] = e.target.dataset.val ? e.target.dataset.val :
+        e.target.dataset.val === undefined ? 1 : '' + e.target.dataset.val;
+    }
+    if (e.target.dataset.act == 'url') {
+      data.ref = '' + e.target.dataset.ref;
+    }
+    if (e.target.dataset.formname) {
+      data.name = '' + e.target.dataset.formname;
+    }
+    const text = e.target.dataset.title || 'unknown';
+    this.props.onFormResponse(e.target.dataset.act, text, data);
   }
 
   handleContextClick(e) {
@@ -68,6 +83,11 @@ export default class ChatMessage extends React.Component {
     const attachments = [];
     if (this.props.mimeType == Drafty.getContentType()) {
       Drafty.attachments(content, function(att, i) {
+        if (att.mime == 'application/json') {
+          // Don't show json objects as attachments.
+          // They are not meant for users.
+          return;
+        }
         attachments.push(<Attachment
           tinode={this.props.tinode}
           downloadUrl={Drafty.getDownloadUrl(att)}
@@ -147,6 +167,11 @@ function draftyFormatter(style, data, values, key) {
       case 'FM':
         // Form
         attr.className = 'bot-form' + ((data && data.layout) ? ' ' + data.layout : '');
+        // console.log(data, attr);
+        break;
+      case 'FE':
+        // Form element formatting is dependent on element content.
+        attr.className = data && data.dftp ? data.dftp : '';
         break;
     }
     return React.createElement(el, attr, values);

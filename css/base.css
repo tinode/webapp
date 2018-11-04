@@ -558,10 +558,23 @@ table.permission-editor td.checkbox {
   min-width: 8rem;
 }
 .bot-form.hlist {
-  flex-direction: column;
+  flex-direction: row;
+}
+.bot-form div {
+  min-height: 2rem;
+  vertical-align: middle;
+}
+/* Nested bot forms should have not border */
+.bot-form .bot-form {
+  border: none;
 }
 
-.bot-form div {
+/*
+Form element with non-interactive content
+needs padding.
+*/
+.bot-form div.dft {
+  padding: 0.25rem 1rem;
   min-height: 2rem;
   vertical-align: middle;
 }
@@ -664,7 +677,7 @@ i.search {
 .alert-box.info {
   display: flex;
   background-color: #e1f5fe;
-  border-bottom: 1px solid #4fc3f7;
+  border-bottom: 1px solid #b3e5fc;
   color: #0288d1;
 }
 .alert-box .cancel .material-icons {
@@ -1155,7 +1168,6 @@ i.search {
   margin: 0;
   padding: 0;
   align-items: flex-end;
-  overflow: hidden;
 }
 
 .chat-box .right {
@@ -1171,7 +1183,6 @@ i.search {
   padding: 0.75rem 0.5rem 0.75rem 1.25rem;
   margin: 0;
   text-align: left;
-
   border-radius: 0.5rem;
 }
 
