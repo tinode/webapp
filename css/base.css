@@ -548,38 +548,19 @@ table.permission-editor td.checkbox {
   flex-shrink: 0;
 }
 
-.bot-form, .bot-form.vlist {
+.bot-form {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid #ccc;
-  border-radius: 0.25rem;
-  background-color: #eee;
   min-width: 8rem;
-}
-.bot-form.hlist {
-  flex-direction: row;
+  line-height: 2rem;
 }
 .bot-form div {
   min-height: 2rem;
   vertical-align: middle;
 }
-/* Nested bot forms should have not border */
-.bot-form .bot-form {
-  border: none;
-}
-
-/*
-Form element with non-interactive content
-needs padding.
-*/
-.bot-form div.dft {
-  padding: 0.25rem 1rem;
-  min-height: 2rem;
-  vertical-align: middle;
-}
-
 .bot-form button {
+  display: inline-block;
   margin: 0;
   width: 100%;
   background-color: #eef;
@@ -589,7 +570,9 @@ needs padding.
   height: 2rem;
   line-height: 2rem;
 }
-
+.bot-form > div > button {
+  width: auto;
+}
 .bot-form button:focus, button:hover, button:active {
   outline: 0;
   background-color: #e3f2fd;

@@ -163,15 +163,16 @@ function draftyFormatter(style, data, values, key) {
       case 'BN':
         // Button
         attr.onClick = this.handleFormButtonClick;
+        // Get text which will be sent back when the button is clicked.
+        attr['data-title'] = (React.Children.map(values, (child) => {return child;}) || [attr.name]).join('');
         break;
       case 'FM':
         // Form
-        attr.className = 'bot-form' + ((data && data.layout) ? ' ' + data.layout : '');
+        attr.className = 'bot-form';
         // console.log(data, attr);
         break;
       case 'FE':
         // Form element formatting is dependent on element content.
-        attr.className = data && data.dftp ? data.dftp : '';
         break;
     }
     return React.createElement(el, attr, values);
