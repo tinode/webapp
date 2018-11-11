@@ -163,8 +163,14 @@ function draftyFormatter(style, data, values, key) {
       case 'BN':
         // Button
         attr.onClick = this.handleFormButtonClick;
+        let inner = React.Children.map(values, (child) => {
+          return typeof child == 'string' ? child : undefined;
+        }
+        if (!inner || inner.length == 0) {
+          inner = [attr.name]
+        }
         // Get text which will be sent back when the button is clicked.
-        attr['data-title'] = (React.Children.map(values, (child) => {return child;}) || [attr.name]).join('');
+        attr['data-title'] = inner.join('');
         break;
       case 'FM':
         // Form
