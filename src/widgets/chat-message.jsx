@@ -50,9 +50,6 @@ export default class ChatMessage extends React.Component {
     if (e.target.dataset.act == 'url') {
       data.ref = '' + e.target.dataset.ref;
     }
-    if (e.target.dataset.formname) {
-      data.name = '' + e.target.dataset.formname;
-    }
     const text = e.target.dataset.title || 'unknown';
     this.props.onFormResponse(e.target.dataset.act, text, data);
   }
