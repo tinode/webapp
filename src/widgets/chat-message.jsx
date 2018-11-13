@@ -162,7 +162,7 @@ function draftyFormatter(style, data, values, key) {
         attr.onClick = this.handleFormButtonClick;
         let inner = React.Children.map(values, (child) => {
           return typeof child == 'string' ? child : undefined;
-        }
+        });
         if (!inner || inner.length == 0) {
           inner = [attr.name]
         }
