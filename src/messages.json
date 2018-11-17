@@ -1,6 +1,6 @@
 {
   "en": {
-    "contacts_not_found": "You have no chats<br />¯\\\\_(ツ)_/¯",
+    "contacts_not_found": "You have no chats<br />¯∖_(ツ)_/¯",
     "full_name_prompt": "Full name, e.g. John Doe",
     "email_prompt": "Email, e.g. jdoe@example.com",
     "button_sign_up": "Sign up",
@@ -122,7 +122,7 @@
     "title_manage_tags": "Manage tags"
   },
   "ru": {
-    "contacts_not_found": "Чатов нет<br />¯\\\\_(ツ)_/¯",
+    "contacts_not_found": "Чатов нет<br />¯∖_(ツ)_/¯",
     "full_name_prompt": "Полное имя, напр. Иван Петров",
     "email_prompt": "Email, напр. ivan@example.com",
     "button_sign_up": "Создать счет",

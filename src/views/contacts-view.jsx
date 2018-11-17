@@ -32,7 +32,7 @@ export default class ContactsView extends React.Component {
   render() {
     return (
       <FormattedHTMLMessage id="contacts_not_found"
-        defaultMesage="You have no chats<br />¯\\\\_(ツ)_/¯"
+        defaultMesage="You have no chats<br />¯∖_(ツ)_/¯"
         description="HTML message shown in ContactList when no contacts are found">{
         (no_contacts) => <ContactList
           connected={this.props.connected}
