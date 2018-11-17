@@ -156,6 +156,10 @@ class MessagesView extends React.Component {
       // The user switched to the new topic before the timer for
       // the previous topic has triggered, kill it.
       this.props.readTimerHandler(null);
+    } else if (props.viewportHeight < this.props.viewportHeight) {
+      console.log("Viewport shrunk vertically by", -props.viewportHeight + this.props.viewportHeight);
+      let scrollPosition = Math.max(0, this.state.scrollPosition - props.viewportHeight + this.props.viewportHeight);
+      this.setState({scrollPosition: scrollPosition});
     }
 
     this.setState({

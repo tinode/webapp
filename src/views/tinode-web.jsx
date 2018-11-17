@@ -156,7 +156,10 @@ class TinodeWeb extends React.Component {
     // Window/tab visible or invisible for pausing timers.
     document.addEventListener('visibilitychange', this.handleVisibilityEvent);
 
-    this.setState({viewportWidth: document.documentElement.clientWidth});
+    this.setState({
+      viewportWidth: document.documentElement.clientWidth,
+      viewportHeight: document.documentElement.clientHeight
+    });
 
     this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport);
     this.tinode.onConnect = this.handleConnected;
@@ -230,7 +233,10 @@ class TinodeWeb extends React.Component {
 
   handleResize() {
     var mobile = document.documentElement.clientWidth <= MEDIA_BREAKPOINT;
-    this.setState({viewportWidth: document.documentElement.clientWidth});
+    this.setState({
+      viewportWidth: document.documentElement.clientWidth,
+      viewportHeight: document.documentElement.clientHeight
+    });
     if (this.state.displayMobile != mobile) {
       this.setState({displayMobile: mobile});
     }
@@ -1108,6 +1114,7 @@ class TinodeWeb extends React.Component {
           acs={this.state.topicSelectedAcs}
           displayMobile={this.state.displayMobile}
           viewportWidth={this.state.viewportWidth}
+          viewportHeight={this.state.viewportHeight}
           hideSelf={this.state.displayMobile &&
             (this.state.mobilePanel !== 'topic-view' || this.state.showInfoPanel)}
           topic={this.state.topicSelected}
