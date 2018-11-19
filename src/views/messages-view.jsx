@@ -55,7 +55,7 @@ class MessagesView extends React.Component {
     this.propsChange = this.propsChange.bind(this);
     this.leave = this.leave.bind(this);
     this.handleScrollReference = this.handleScrollReference.bind(this);
-    this.fetchMoreMessages = this.fetchMoreMessages.bind(this);
+    this.handleScrollEvent = this.handleScrollEvent.bind(this);
     this.handleDescChange = this.handleDescChange.bind(this);
     this.handleSubsUpdated = this.handleSubsUpdated.bind(this);
     this.handleNewMessage = this.handleNewMessage.bind(this);
@@ -69,26 +69,29 @@ class MessagesView extends React.Component {
     this.handleBackNavigation = this.handleBackNavigation.bind(this);
   }
 
-  // Scroll last message into view on component update e.g. on message received.
+  // Scroll last message into view on component update e.g. on message received
+  // or vertical shrinking.
   componentDidUpdate(prevProps, prevState) {
-    if (this.messagesScroller &&
-      (prevState.title != this.state.title ||
-        prevState.messages.length != this.state.messages.length)) {
-      this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition;
+    if (this.messagesScroller) {
+      if (prevState.title != this.state.title || prevState.messages.length != this.state.messages.length) {
+        this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition;
+      } else if (prevProps.viewportHeight > this.props.viewportHeight) {
+        this.messagesScroller.scrollTop += prevProps.viewportHeight - this.props.viewportHeight;
+      }
     }
   }
 
   componentDidMount() {
     this.propsChange(this.props);
     if (this.messagesScroller) {
-      this.messagesScroller.addEventListener('scroll', this.fetchMoreMessages);
+      this.messagesScroller.addEventListener('scroll', this.handleScrollEvent);
     }
   }
 
   componentWillUnmount() {
     this.leave(this.state.topic);
     if (this.messagesScroller) {
-      this.messagesScroller.removeEventListener('scroll', this.fetchMoreMessages);
+      this.messagesScroller.removeEventListener('scroll', this.handleScrollEvent);
     }
   }
 
@@ -156,10 +159,6 @@ class MessagesView extends React.Component {
       // The user switched to the new topic before the timer for
       // the previous topic has triggered, kill it.
       this.props.readTimerHandler(null);
-    } else if (props.viewportHeight < this.props.viewportHeight) {
-      console.log("Viewport shrunk vertically by", -props.viewportHeight + this.props.viewportHeight);
-      let scrollPosition = Math.max(0, this.state.scrollPosition - props.viewportHeight + this.props.viewportHeight);
-      this.setState({scrollPosition: scrollPosition});
     }
 
     this.setState({
@@ -231,18 +230,19 @@ class MessagesView extends React.Component {
 
   handleScrollReference(node) {
     if (node) {
-      node.addEventListener('scroll', this.fetchMoreMessages);
+      node.addEventListener('scroll', this.handleScrollEvent);
       this.messagesScroller = node;
     }
   }
 
   // Get older messages
-  fetchMoreMessages(event) {
+  handleScrollEvent(event) {
+    this.setState({scrollPosition: event.target.scrollHeight - event.target.scrollTop});
     if (event.target.scrollTop <= 0) {
-      let newState = {scrollPosition: event.target.scrollHeight - event.target.scrollTop};
       this.setState((prevState, props) => {
+        let newState = {};
         if (!prevState.fetchingMessages) {
-          var topic = this.props.tinode.getTopic(this.state.topic);
+          let topic = this.props.tinode.getTopic(this.state.topic);
           if (topic && topic.isSubscribed() && topic.msgHasMoreMessages()) {
             newState.fetchingMessages = true;
             topic.getMessagesPage(MESSAGES_PAGE).catch((err) => {

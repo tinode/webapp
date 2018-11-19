@@ -809,7 +809,7 @@ module.exports = {"en":{"contacts_not_found":"You have no chats<br />¯∖_(ツ)
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PACKAGE_VERSION", function() { return PACKAGE_VERSION; });
-var PACKAGE_VERSION = "0.15.9";
+var PACKAGE_VERSION = "0.15.10-rc1";
 
 /***/ }),
 
@@ -2563,7 +2563,7 @@ var MessagesView = function (_React$Component) {
     _this.propsChange = _this.propsChange.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.leave = _this.leave.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleScrollReference = _this.handleScrollReference.bind(_assertThisInitialized(_assertThisInitialized(_this)));
-    _this.fetchMoreMessages = _this.fetchMoreMessages.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.handleScrollEvent = _this.handleScrollEvent.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleDescChange = _this.handleDescChange.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleSubsUpdated = _this.handleSubsUpdated.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleNewMessage = _this.handleNewMessage.bind(_assertThisInitialized(_assertThisInitialized(_this)));
@@ -2581,8 +2581,12 @@ var MessagesView = function (_React$Component) {
   _createClass(MessagesView, [{
     key: "componentDidUpdate",
     value: function componentDidUpdate(prevProps, prevState) {
-      if (this.messagesScroller && (prevState.title != this.state.title || prevState.messages.length != this.state.messages.length)) {
-        this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition;
+      if (this.messagesScroller) {
+        if (prevState.title != this.state.title || prevState.messages.length != this.state.messages.length) {
+          this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition;
+        } else if (prevProps.viewportHeight > this.props.viewportHeight) {
+          this.messagesScroller.scrollTop += prevProps.viewportHeight - this.props.viewportHeight;
+        }
       }
     }
   }, {
@@ -2591,7 +2595,7 @@ var MessagesView = function (_React$Component) {
       this.propsChange(this.props);
 
       if (this.messagesScroller) {
-        this.messagesScroller.addEventListener('scroll', this.fetchMoreMessages);
+        this.messagesScroller.addEventListener('scroll', this.handleScrollEvent);
       }
     }
   }, {
@@ -2600,7 +2604,7 @@ var MessagesView = function (_React$Component) {
       this.leave(this.state.topic);
 
       if (this.messagesScroller) {
-        this.messagesScroller.removeEventListener('scroll', this.fetchMoreMessages);
+        this.messagesScroller.removeEventListener('scroll', this.handleScrollEvent);
       }
     }
   }, {
@@ -2743,20 +2747,23 @@ var MessagesView = function (_React$Component) {
     key: "handleScrollReference",
     value: function handleScrollReference(node) {
       if (node) {
-        node.addEventListener('scroll', this.fetchMoreMessages);
+        node.addEventListener('scroll', this.handleScrollEvent);
         this.messagesScroller = node;
       }
     }
   }, {
-    key: "fetchMoreMessages",
-    value: function fetchMoreMessages(event) {
+    key: "handleScrollEvent",
+    value: function handleScrollEvent(event) {
       var _this4 = this;
 
+      this.setState({
+        scrollPosition: event.target.scrollHeight - event.target.scrollTop
+      });
+
       if (event.target.scrollTop <= 0) {
-        var newState = {
-          scrollPosition: event.target.scrollHeight - event.target.scrollTop
-        };
         this.setState(function (prevState, props) {
+          var newState = {};
+
           if (!prevState.fetchingMessages) {
             var topic = _this4.props.tinode.getTopic(_this4.state.topic);
 
@@ -4016,7 +4023,8 @@ var TinodeWeb = function (_React$Component) {
       window.addEventListener('hashchange', this.handleHashRoute);
       document.addEventListener('visibilitychange', this.handleVisibilityEvent);
       this.setState({
-        viewportWidth: document.documentElement.clientWidth
+        viewportWidth: document.documentElement.clientWidth,
+        viewportHeight: document.documentElement.clientHeight
       });
       this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport);
       this.tinode.onConnect = this.handleConnected;
@@ -4085,7 +4093,8 @@ var TinodeWeb = function (_React$Component) {
     value: function handleResize() {
       var mobile = document.documentElement.clientWidth <= _config_js__WEBPACK_IMPORTED_MODULE_10__["MEDIA_BREAKPOINT"];
       this.setState({
-        viewportWidth: document.documentElement.clientWidth
+        viewportWidth: document.documentElement.clientWidth,
+        viewportHeight: document.documentElement.clientHeight
       });
 
       if (this.state.displayMobile != mobile) {
@@ -5114,6 +5123,7 @@ var TinodeWeb = function (_React$Component) {
         acs: this.state.topicSelectedAcs,
         displayMobile: this.state.displayMobile,
         viewportWidth: this.state.viewportWidth,
+        viewportHeight: this.state.viewportHeight,
         hideSelf: this.state.displayMobile && (this.state.mobilePanel !== 'topic-view' || this.state.showInfoPanel),
         topic: this.state.topicSelected,
         myUserId: this.state.myUserId,
