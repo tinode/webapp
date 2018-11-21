@@ -170,15 +170,19 @@ class ContextMenu extends React.Component {
       console.log("Topic not found: ", params.topicName);
       return;
     }
+
     // We don't know if the message is still pending (e.g. attachment is being uploaded),
     // so try cancelling first. No harm if we can't cancel.
-    if (topic.cancelSend(params.seq)) {
-      return Promise.resolve();
+    // The message can be cancelled if transmission to the server has not
+    // started yet or if the message send has failed.
+    if (!all && topic.cancelSend(params.seq)) {
+      return;
     }
     // Can't cancel. Delete instead.
-    var promise = all ?
+    let promise = all ?
       topic.delMessagesAll(hard) :
       topic.delMessagesList([params.seq], hard);
+
     promise.catch((err) => {
       if (errorHandler) {
         errorHandler(err.message, 'err');

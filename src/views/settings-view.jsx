@@ -32,7 +32,6 @@ export default class SettingsView extends React.PureComponent {
 
   handleServerAddressChange(name) {
     this.setState({serverAddress: name});
-    this.props.onServerAddressChange(name);
   }
 
   render() {
