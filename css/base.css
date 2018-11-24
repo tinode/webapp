@@ -1667,7 +1667,7 @@ ul.tabbar li.active > a:after {
   font-size: 2.4rem;
 }
 
-#self-avatar.material-icons, .avatar-box .material-icons {
+#self-avatar.material-icons {
   font-size: 2.4rem;
   width: 3rem;
   height: 3rem;
@@ -1677,6 +1677,8 @@ ul.tabbar li.active > a:after {
   color: rgba(250, 250, 250, 0.8); /* #fafafa, gray 50 */
   background-color: #c0c0c0;
   border-radius: 50%;
+  width: inherit;
+  height: inherit;
 }
 
 .chip-input {

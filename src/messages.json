@@ -71,6 +71,7 @@
     "numeric_confirmation_code_prompt": "Numbers only",
     "button_confirm": "Confirm",
     "invalid_content": "invalid content",
+    "user_not_found": "Not found",
     "badge_you": "you",
     "badge_owner": "owner",
     "menu_item_info": "Info",
@@ -241,6 +242,7 @@
     "button_create": "Создать",
     "badge_you": "вы",
     "badge_owner": "влад.",
-    "update_available": "Есть новая версия приложения. <a href=\"\">Обновить</a>."
+    "update_available": "Есть новая версия приложения. <a href=\"\">Обновить</a>.",
+    "user_not_found": "Не найден"
   }
 }

@@ -130,7 +130,15 @@ export default class ChatMessage extends React.Component {
               </a>
             </span>
           </div>
-          {fullDisplay ? <div className="author">{this.props.userName}</div> : null}
+          {fullDisplay ?
+            <div className="author">
+              <FormattedMessage id="user_not_found" defaultMessage="Not found"
+                description="In place of a user's full name when the user is not found.">{
+                    (notFound) => {return this.props.userName || <i>{notFound}</i>}
+              }</FormattedMessage>
+            </div>
+            : null
+          }
         </div>
       </li>
     );
