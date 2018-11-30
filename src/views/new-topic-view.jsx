@@ -8,6 +8,7 @@ import NewTopicGroup from '../widgets/new-topic-group.jsx';
 import SearchContacts from '../widgets/search-contacts.jsx';
 
 import HashNavigation from '../lib/navigation.js';
+import { vcard } from '../lib/utils.js';
 
 export default class NewTopicView extends React.Component {
   constructor(props) {

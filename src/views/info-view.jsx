@@ -16,6 +16,7 @@ import PermissionsEditor from '../widgets/permissions-editor.jsx';
 import TagManager from '../widgets/tag-manager.jsx';
 
 import { makeImageUrl } from '../lib/blob-helpers.js';
+import { vcard } from '../lib/utils.js';
 
 const messages = defineMessages({
   requested: {
