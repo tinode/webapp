@@ -216,6 +216,7 @@ class InfoView extends React.Component {
   }
 
   handleFullNameUpdate(fn) {
+    fn = fn.trim();
     if (this.state.fullName !== fn) {
       this.setState({fullName: fn});
       this.props.onTopicDescUpdate(this.props.topic,
@@ -449,6 +450,7 @@ class InfoView extends React.Component {
                     placeholder={this.state.groupTopic ? "Group name" : <i>Unknown</i>}
                     readOnly={!this.state.owner}
                     value={this.state.fullName}
+                    required={true}
                     onFinished={this.handleFullNameUpdate} /></div>
                 <div>
                   <label className="small">

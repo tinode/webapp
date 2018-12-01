@@ -762,8 +762,8 @@ i.search {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  width: 3rem;
-  height: 3rem;
+  width: inherit;
+  height: inherit;
 }
 .contact-box .text-box {
   display: flex;
