@@ -54,7 +54,12 @@ export default class InPlaceEdit extends React.Component {
     }
   }
 
-  handleEditingFinished() {
+  handleEditingFinished(event) {
+    if (this.props.required && !event.target.checkValidity()) {
+      // Empty input
+      this.setState({value: this.props.value, active: false});
+      return;
+    }
     this.setState({active: false});
     let value = this.state.value.trim();
     if ((value || this.props.value) && (value !== this.props.value)) {

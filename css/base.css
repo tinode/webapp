@@ -762,8 +762,8 @@ i.search {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  width: inherit;
-  height: inherit;
+  font-size: 2.4rem;
+  line-height: 3rem;
 }
 .contact-box .text-box {
   display: flex;
@@ -885,8 +885,6 @@ i.search {
 
 .avatar-upload .avatar-box > .material-icons {
   position: relative;
-  width: 7rem;
-  height: 7rem;
   font-size: 4rem;
   line-height: 7rem;
   vertical-align: middle;
@@ -984,6 +982,11 @@ i.search {
   height: 3rem;
   font-size: 1.8rem;
   margin-right: 0.35rem;
+}
+
+#topic-caption-panel .avatar-box > .material-icons {
+  font-size: 2.4rem;
+  line-height: 3rem;
 }
 
 #hide-message-view {
@@ -1667,10 +1670,8 @@ ul.tabbar li.active > a:after {
   font-size: 2.4rem;
 }
 
-#self-avatar.material-icons {
+#self-avatar .material-icons {
   font-size: 2.4rem;
-  width: 3rem;
-  height: 3rem;
   line-height: 3rem;
 }
 .avatar-box .material-icons {
@@ -1763,7 +1764,8 @@ ul.tabbar li.active > a:after {
 }
 
 .chip .avatar-box .material-icons {
-  font-size: 1.8rem;
+  font-size: 1.4rem;
+  line-height: 1.8rem;
 }
 
 .chip .spacer {

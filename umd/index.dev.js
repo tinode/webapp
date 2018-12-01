@@ -1760,6 +1760,8 @@ var InfoView = function (_React$Component) {
   }, {
     key: "handleFullNameUpdate",
     value: function handleFullNameUpdate(fn) {
+      fn = fn.trim();
+
       if (this.state.fullName !== fn) {
         this.setState({
           fullName: fn
@@ -2052,6 +2054,7 @@ var InfoView = function (_React$Component) {
         placeholder: this.state.groupTopic ? "Group name" : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", null, "Unknown"),
         readOnly: !this.state.owner,
         value: this.state.fullName,
+        required: true,
         onFinished: this.handleFullNameUpdate
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         className: "small"
@@ -7860,7 +7863,15 @@ var InPlaceEdit = function (_React$Component) {
     }
   }, {
     key: "handleEditingFinished",
-    value: function handleEditingFinished() {
+    value: function handleEditingFinished(event) {
+      if (this.props.required && !event.target.checkValidity()) {
+        this.setState({
+          value: this.props.value,
+          active: false
+        });
+        return;
+      }
+
       this.setState({
         active: false
       });
