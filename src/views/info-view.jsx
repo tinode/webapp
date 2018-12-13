@@ -159,8 +159,6 @@ class InfoView extends React.Component {
     const defacs = topic.getDefaultAccess() || {};
     const acs = topic.getAccessMode();
 
-    console.log("Desc:", defacs, acs);
-
     this.setState({
       owner: acs && acs.isOwner(),
       admin: acs && acs.isAdmin(),
