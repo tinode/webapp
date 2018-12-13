@@ -552,7 +552,7 @@ class TinodeWeb extends React.Component {
 
   // Sending "received" notifications
   tnData(data) {
-    let topic = this.tinode.getTopic(data.topic);
+    const topic = this.tinode.getTopic(data.topic);
     if (topic.msgStatus(data) >= Tinode.MESSAGE_STATUS_SENT) {
       clearTimeout(this.receivedTimer);
       this.receivedTimer = setTimeout(() => {
@@ -564,11 +564,11 @@ class TinodeWeb extends React.Component {
 
   /* Fnd topic: find contacts by tokens */
   tnInitFind() {
-    let fnd = this.tinode.getFndTopic();
+    const fnd = this.tinode.getFndTopic();
+    fnd.onSubsUpdated = this.tnFndSubsUpdated;
     if (fnd.isSubscribed()) {
       this.tnFndSubsUpdated();
     } else {
-      fnd.onSubsUpdated = this.tnFndSubsUpdated;
       fnd.subscribe(fnd.startMetaQuery().withSub().withTags().build()).catch((err) => {
         this.handleError(err.message, 'err');
       });
@@ -576,7 +576,7 @@ class TinodeWeb extends React.Component {
   }
 
   tnFndSubsUpdated() {
-    let foundContacts = [];
+    const foundContacts = [];
     // Don't attempt to create P2P topics which already exist. Server will reject the duplicates.
     this.tinode.getFndTopic().contacts((s) => {
       foundContacts.push(s);
@@ -591,7 +591,7 @@ class TinodeWeb extends React.Component {
     @param query {Array} is an array of contacts to search for
    */
   handleSearchContacts(query) {
-    var fnd = this.tinode.getFndTopic();
+    const fnd = this.tinode.getFndTopic();
     fnd.setMeta({desc: {public: query}}).then((ctrl) => {
       return fnd.getMeta(fnd.startMetaQuery().withSub().build());
     }).catch((err) => {
@@ -848,9 +848,9 @@ class TinodeWeb extends React.Component {
   }
 
   handleTopicUpdateRequest(topicName, pub, priv, permissions) {
-    var topic = this.tinode.getTopic(topicName);
+    const topic = this.tinode.getTopic(topicName);
     if (topic) {
-      var params = {};
+      const params = {};
       if (pub) {
         params.public = pub;
       }
@@ -868,9 +868,9 @@ class TinodeWeb extends React.Component {
   }
 
   handleChangePermissions(topicName, mode, uid) {
-    var topic = this.tinode.getTopic(topicName);
+    const topic = this.tinode.getTopic(topicName);
     if (topic) {
-      var am = topic.getAccessMode();
+      const am = topic.getAccessMode();
       if (uid) {
         am.updateGiven(mode);
         mode = am.getGiven();

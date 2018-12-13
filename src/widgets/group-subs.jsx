@@ -8,21 +8,11 @@ import { makeImageUrl } from '../lib/blob-helpers.js';
 export default class GroupSubs extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      onlineSubs: props.subscribers || []
-    };
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    return {
-      onlineSubs: nextProps.subscribers ? nextProps.subscribers : []
-    };
   }
 
   render() {
-    var usersOnline = [];
-    this.state.onlineSubs.map((sub) => {
+    const usersOnline = [];
+    (this.props.subscribers || []).map((sub) => {
       usersOnline.push(
         <div className="avatar-box" key={sub.user}>
           <LetterTile

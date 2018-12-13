@@ -97,8 +97,8 @@ class InfoView extends React.Component {
   }
 
   // No need to separately handle component mount.
-  UNSAFE_componentWillReceiveProps(props) {
-    var topic = this.props.tinode.getTopic(props.topic);
+  componentDidUpdate(props) {
+    let topic = this.props.tinode.getTopic(props.topic);
     if (!topic) {
       return;
     }
@@ -137,17 +137,17 @@ class InfoView extends React.Component {
   }
 
   resetSubs(topic, props) {
-    var newState = {contactList: []};
+    const newState = {contactList: []};
     if (topic.getType() == 'p2p') {
       // Fetch the other party in the p2p conversation.
       // Topic may not be ready yet, so check if user is found.
-      var user2 = topic.subscriber(props.topic);
+      const user2 = topic.subscriber(props.topic);
       if (user2) {
         newState.modeGiven2 = user2.acs.getGiven();
         newState.modeWant2 = user2.acs.getWant();
       }
     } else {
-      topic.subscribers(function(sub) {
+      topic.subscribers((sub) => {
         newState.contactList.push(sub);
       }, this);
     }
@@ -156,12 +156,15 @@ class InfoView extends React.Component {
   }
 
   resetDesc(topic, props) {
-    var defacs = topic.getDefaultAccess() || {};
-    var acs = topic.getAccessMode();
+    const defacs = topic.getDefaultAccess() || {};
+    const acs = topic.getAccessMode();
+
+    console.log("Desc:", defacs, acs);
+
     this.setState({
       owner: acs && acs.isOwner(),
       admin: acs && acs.isAdmin(),
-      sharer: acs && (acs.isAdmin() || acs.isSharer()),
+      sharer: acs && acs.isSharer(),
       muted: acs && acs.isMuted(),
 
       fullName: topic.public ? topic.public.fn : undefined,

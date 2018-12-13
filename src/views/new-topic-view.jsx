@@ -15,8 +15,7 @@ export default class NewTopicView extends React.Component {
     super(props);
 
     this.state = {
-      tabSelected: 'p2p',
-      contactList: props.searchResults
+      tabSelected: 'p2p'
     };
 
     this.handleTabClick = this.handleTabClick.bind(this);
@@ -27,12 +26,6 @@ export default class NewTopicView extends React.Component {
 
   componentDidMount() {
     this.props.onInitFind();
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    return {
-      contactList: nextProps.searchResults
-    };
   }
 
   handleTabClick(e) {
@@ -93,10 +86,9 @@ export default class NewTopicView extends React.Component {
             <FormattedMessage id="search_for_contacts" defaultMessage="Use search to find contacts"
               description="Prompt in search field.">{
               (search_for_contacts) => <ContactList
-                contacts={this.state.contactList}
+                contacts={this.props.searchResults}
                 myUserId={this.props.myUserId}
                 emptyListMessage={search_for_contacts}
-                topicSelected={this.state.selectedContact}
                 showOnline={false}
                 showUnread={false}
                 showContextMenu={false}

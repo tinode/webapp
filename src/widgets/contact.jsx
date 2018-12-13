@@ -36,9 +36,9 @@ export default class Contact extends React.Component {
       // FIXME: this is probably wrong for RTL languages.
       title = title.substring(0, 28) + '...';
     }
-    let online = this.props.now ? 'online' : 'offline';
-    let avatar = this.props.avatar ? this.props.avatar : true;
-    let badges = this.props.badges.slice();
+    const online = this.props.now ? 'online' : 'offline';
+    const avatar = this.props.avatar ? this.props.avatar : true;
+    const badges = this.props.badges ? this.props.badges.slice() : [];
     if (this.props.showMode && this.props.acs) {
       badges.push({name: this.props.acs.getMode(), key: 'mode'});
     }

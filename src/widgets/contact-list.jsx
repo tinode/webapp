@@ -27,11 +27,11 @@ class ContactList extends React.Component {
     const contactNodes = [];
     if (this.props.contacts && this.props.contacts.length > 0) {
       this.props.contacts.map((c) => {
-        var key = c.topic ? c.topic : c.user;
+        let key = c.topic ? c.topic : c.user;
         // If filter function is provided, filter out the items
         // which don't satisfy the condition.
         if (this.props.filterFunc && this.props.filter) {
-          var content = [key];
+          let content = [key];
           if (c.private && c.private.comment) {
             content.push(('' + c.private.comment).toLowerCase());
           }
@@ -43,10 +43,10 @@ class ContactList extends React.Component {
           }
         }
 
-        var selected = showCheckmark ?
+        let selected = showCheckmark ?
           (this.props.topicSelected.indexOf(key) > -1) :
           (this.props.topicSelected === key);
-        var badges = [];
+        let badges = [];
         if (this.props.showMode) {
           if (key === this.props.myUserId) {
             badges.push({name: formatMessage(messages.badge_you), color: 'green'});
@@ -55,7 +55,7 @@ class ContactList extends React.Component {
             badges.push({name: formatMessage(messages.badge_owner), color: 'blue'});
           }
         }
-        var comment = Array.isArray(c.private) ?
+        let comment = Array.isArray(c.private) ?
           c.private.join(',') : (c.private ? c.private.comment : null);
 
         contactNodes.push(
