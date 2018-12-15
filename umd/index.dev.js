@@ -1694,7 +1694,6 @@ var InfoView = function (_React$Component) {
     value: function resetDesc(topic, props) {
       var defacs = topic.getDefaultAccess() || {};
       var acs = topic.getAccessMode();
-      console.log("Desc:", defacs, acs);
       this.setState({
         owner: acs && acs.isOwner(),
         admin: acs && acs.isAdmin(),
@@ -9235,12 +9234,17 @@ var SendMessage = function (_React$PureComponent) {
   _createClass(SendMessage, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      this.pasteFile.addEventListener('paste', this.handlePasteEvent, false);
+      this.messageEditArea.addEventListener('paste', this.handlePasteEvent, false);
     }
   }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
-      this.pasteFile.removeEventListener('paste', this.handlePasteEvent, false);
+      this.messageEditArea.removeEventListener('paste', this.handlePasteEvent, false);
+    }
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate() {
+      this.messageEditArea.focus();
     }
   }, {
     key: "handlePasteEvent",
@@ -9365,6 +9369,8 @@ var SendMessage = function (_React$PureComponent) {
   }, {
     key: "render",
     value: function render() {
+      var _this5 = this;
+
       var formatMessage = this.props.intl.formatMessage;
       var prompt = this.props.disabled ? formatMessage(messages.messaging_disabled) : formatMessage(messages.type_new_message);
       var instance = this;
@@ -9398,7 +9404,7 @@ var SendMessage = function (_React$PureComponent) {
         onChange: this.handleMessageTyping,
         onKeyPress: this.handleKeyPress,
         ref: function ref(_ref) {
-          instance.pasteFile = _ref;
+          _this5.messageEditArea = _ref;
         },
         autoFocus: true
       }), this.props.disabled ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {

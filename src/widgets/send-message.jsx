@@ -49,11 +49,15 @@ class SendMessage extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.pasteFile.addEventListener('paste', this.handlePasteEvent, false);
+    this.messageEditArea.addEventListener('paste', this.handlePasteEvent, false);
   }
 
   componentWillUnmount() {
-    this.pasteFile.removeEventListener('paste', this.handlePasteEvent, false)
+    this.messageEditArea.removeEventListener('paste', this.handlePasteEvent, false);
+  }
+
+  componentDidUpdate() {
+    this.messageEditArea.focus();
   }
 
   handlePasteEvent(e) {
@@ -201,7 +205,7 @@ class SendMessage extends React.PureComponent {
         <textarea id="sendMessage" placeholder={prompt}
           disabled={this.props.disabled} value={this.state.message}
           onChange={this.handleMessageTyping} onKeyPress={this.handleKeyPress}
-          ref={function(ref) {instance.pasteFile = ref;}}
+          ref={(ref) => {this.messageEditArea = ref;}}
           autoFocus />
           {this.props.disabled ?
             <i className="material-icons disabled">send</i> :
