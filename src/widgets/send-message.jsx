@@ -82,7 +82,7 @@ class SendMessage extends React.PureComponent {
 
   handleAttachImage(e) {
     if (e.target.files && e.target.files.length > 0) {
-      let file = e.target.files[0];
+      const file = e.target.files[0];
       // Check if the uploaded file is indeed an image and if it isn't too large.
       if (file.size > MAX_INBAND_ATTACHMENT_SIZE || SUPPORTED_IMAGE_FORMATS.indexOf(file.type) < 0) {
         // Convert image for size or format.
@@ -118,21 +118,21 @@ class SendMessage extends React.PureComponent {
   handleAttachFile(e) {
     const {formatMessage} = this.props.intl;
     if (e.target.files && e.target.files.length > 0) {
-      var file = e.target.files[0];
+      const file = e.target.files[0];
       if (file.size > MAX_EXTERN_ATTACHMENT_SIZE) {
         // Too large.
         this.props.onError(formatMessage(messages.file_attachment_too_large,
             {size: bytesToHumanSize(file.size), limit: bytesToHumanSize(MAX_EXTERN_ATTACHMENT_SIZE)}), 'err');
       } else if (file.size > MAX_INBAND_ATTACHMENT_SIZE) {
         // Too large to send inband - uploading out of band and sending as a link.
-        let uploader = this.props.tinode.getLargeFileHelper();
+        const uploader = this.props.tinode.getLargeFileHelper();
         if (!uploader) {
           this.props.onError(formatMessage(messages.cannot_initiate_upload));
           return;
         }
         // Format data and initiate upload.
-        let uploadCompletionPromise = uploader.upload(file);
-        let msg = Drafty.attachFile(null, file.type, null, file.name, file.size, uploadCompletionPromise);
+        const uploadCompletionPromise = uploader.upload(file);
+        const msg = Drafty.attachFile(null, file.type, null, file.name, file.size, uploadCompletionPromise);
         // Pass data and the uploader to the TinodeWeb.
         this.props.sendMessage(msg, uploadCompletionPromise, uploader);
       } else {
@@ -150,7 +150,7 @@ class SendMessage extends React.PureComponent {
   }
 
   handleSend() {
-    var message = this.state.message.trim();
+    const message = this.state.message.trim();
     if (message) {
       this.props.sendMessage(this.state.message.trim());
       this.setState({message: ''});
@@ -172,10 +172,10 @@ class SendMessage extends React.PureComponent {
   }
 
   handleMessageTyping(e) {
-    var newState = {message: e.target.value};
-    var now = new Date().getTime();
+    const newState = {message: e.target.value};
+    const now = new Date().getTime();
     if (now - this.state.keypressTimestamp > KEYPRESS_DELAY) {
-      var topic = this.props.tinode.getTopic(this.props.topic);
+      const topic = this.props.tinode.getTopic(this.props.topic);
       if (topic.isSubscribed()) {
         topic.noteKeyPress();
       }
@@ -189,17 +189,16 @@ class SendMessage extends React.PureComponent {
     const prompt = this.props.disabled ?
       formatMessage(messages.messaging_disabled) :
       formatMessage(messages.type_new_message);
-    let instance = this;
     return (
       <div id="send-message-panel">
         {this.props.disabled ?
           <i className="material-icons disabled">photo</i> :
-          <a href="javascript:;" onClick={function(e) {instance.attachImage.click();}} title="Add image">
+          <a href="javascript:;" onClick={(e) => {this.attachImage.click();}} title="Add image">
             <i className="material-icons secondary">photo</i>
           </a>}
         {this.props.disabled ?
           <i className="material-icons disabled">attach_file</i> :
-          <a href="javascript:;" onClick={function(e) {instance.attachFile.click();}} title="Attach file">
+          <a href="javascript:;" onClick={(e) => {this.attachFile.click();}} title="Attach file">
             <i className="material-icons secondary">attach_file</i>
           </a>}
         <textarea id="sendMessage" placeholder={prompt}
@@ -212,9 +211,9 @@ class SendMessage extends React.PureComponent {
             <a href="javascript:;" onClick={this.handleSend} title="Send">
               <i className="material-icons">send</i>
             </a>}
-      <input type="file" ref={function(ref) {instance.attachFile = ref;}}
+      <input type="file" ref={(ref) => {this.attachFile = ref;}}
         onChange={this.handleAttachFile} style={{display: 'none'}} />
-      <input type="file" ref={function(ref) {instance.attachImage = ref;}} accept="image/*"
+      <input type="file" ref={(ref) => {this.attachImage = ref;}} accept="image/*"
         onChange={this.handleAttachImage} style={{display: 'none'}} />
       </div>
     );
