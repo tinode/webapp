@@ -9373,7 +9373,6 @@ var SendMessage = function (_React$PureComponent) {
 
       var formatMessage = this.props.intl.formatMessage;
       var prompt = this.props.disabled ? formatMessage(messages.messaging_disabled) : formatMessage(messages.type_new_message);
-      var instance = this;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "send-message-panel"
       }, this.props.disabled ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
@@ -9381,7 +9380,7 @@ var SendMessage = function (_React$PureComponent) {
       }, "photo") : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         href: "javascript:;",
         onClick: function onClick(e) {
-          instance.attachImage.click();
+          _this5.attachImage.click();
         },
         title: "Add image"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
@@ -9391,7 +9390,7 @@ var SendMessage = function (_React$PureComponent) {
       }, "attach_file") : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         href: "javascript:;",
         onClick: function onClick(e) {
-          instance.attachFile.click();
+          _this5.attachFile.click();
         },
         title: "Attach file"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
@@ -9418,7 +9417,7 @@ var SendMessage = function (_React$PureComponent) {
       }, "send")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "file",
         ref: function ref(_ref2) {
-          instance.attachFile = _ref2;
+          _this5.attachFile = _ref2;
         },
         onChange: this.handleAttachFile,
         style: {
@@ -9427,7 +9426,7 @@ var SendMessage = function (_React$PureComponent) {
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "file",
         ref: function ref(_ref3) {
-          instance.attachImage = _ref3;
+          _this5.attachImage = _ref3;
         },
         accept: "image/*",
         onChange: this.handleAttachImage,
