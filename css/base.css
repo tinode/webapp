@@ -868,6 +868,7 @@ i.search {
 /* Styling of avatar upload control */
 .avatar-upload {
   display: flex;
+  position: relative;
   flex-direction: column;
   flex-shrink: 0;
   width: 7rem;
@@ -875,6 +876,19 @@ i.search {
   margin-left: 0.5rem;
   font-size: 4.5rem;
   padding: 0;
+}
+
+.avatar-upload .clear-avatar {
+  position: absolute;
+  font-size: 1rem;
+  top: 0;
+  right: 0;
+  opacity: 0;
+  background-image: radial-gradient(#fff 40%, transparent 75%);
+}
+
+.avatar-upload:hover .clear-avatar {
+  opacity: 1;
 }
 
 .avatar-upload .avatar-box {
