@@ -29,6 +29,11 @@ const messages = defineMessages({
     id: 'update_available',
     defaultMessage: 'Update available. <a href="">Reload</a>.',
     description: 'Message shown when an app update is available.'
+  },
+  reconnect_countdown: {
+    id: 'reconnect_countdown',
+    defaultMessage: 'Disconnected. Connecting in {seconds}s&hellips; <a href="">Try now</a>',
+    description: 'Message shown when an app update is available.'
   }
 });
 
@@ -48,6 +53,7 @@ class TinodeWeb extends React.Component {
     this.handleError = this.handleError.bind(this);
     this.handleLoginRequest = this.handleLoginRequest.bind(this);
     this.handleConnected = this.handleConnected.bind(this);
+    this.handleAutoreconnectIteration = this.handleAutoreconnectIteration.bind(this);
     this.doLogin = this.doLogin.bind(this);
     this.handleCredentialsRequest = this.handleCredentialsRequest.bind(this);
     this.handleLoginSuccessful = this.handleLoginSuccessful.bind(this);
@@ -164,6 +170,7 @@ class TinodeWeb extends React.Component {
     this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport);
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
+    this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
 
     // Initialize desktop alerts.
     if (this.state.desktopAlertsEnabled) {
@@ -351,6 +358,25 @@ class TinodeWeb extends React.Component {
     this.doLogin(this.state.login, this.state.password, {meth: this.state.credMethod, resp: this.state.credCode});
   }
 
+  // Called for each auto-reconnect iteration.
+  handleAutoreconnectIteration(sec, prom) {
+    console.log("handleAutoreconnectIteration", seconds, reconnecting);
+  }
+
+  // Connection lost
+  handleDisconnect(err) {
+    this.setState({
+      connected: false,
+      topicSelectedOnline: false,
+      dialogSelected: null,
+      errorText: err && err.message ? err.message : "Disconnected",
+      errorLevel: err && err.message ? 'err' : 'warn',
+      loginDisabled: false,
+      contextMenuVisible: false,
+      serverVersion: "no connection"
+    });
+  }
+
   doLogin(login, password, cred) {
     if (this.tinode.isAuthenticated()) {
       // Already logged in. Go to default screen.
@@ -431,19 +457,6 @@ class TinodeWeb extends React.Component {
         HashNavigation.navigateTo('');
       });
     HashNavigation.navigateTo(HashNavigation.setUrlSidePanel(window.location.hash, 'contacts'));
-  }
-
-  handleDisconnect(err) {
-    this.setState({
-      connected: false,
-      topicSelectedOnline: false,
-      dialogSelected: null,
-      errorText: err && err.message ? err.message : "Disconnected",
-      errorLevel: err && err.message ? 'err' : 'warn',
-      loginDisabled: false,
-      contextMenuVisible: false,
-      serverVersion: "no connection"
-    });
   }
 
   tnMeMetaDesc(desc) {
