@@ -96,6 +96,8 @@ class SidepanelView extends React.Component {
         <ErrorPanel
           level={this.props.errorLevel}
           text={this.props.errorText}
+          action={this.props.errorAction}
+          actionText={this.props.errorActionText}
           onClearError={this.props.onError} />
 
         {view === 'login' ?

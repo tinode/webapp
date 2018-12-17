@@ -795,7 +795,7 @@ function arrayEqual(a, b) {
 /*! exports provided: en, ru, default */
 /***/ (function(module) {
 
-module.exports = {"en":{"contacts_not_found":"You have no chats<br />¯∖_(ツ)_/¯","full_name_prompt":"Full name, e.g. John Doe","email_prompt":"Email, e.g. jdoe@example.com","button_sign_up":"Sign up","label_your_name":"Your name","label_password":"Password","password_unchanged_prompt":"Unchanged","label_user_id":"Address:","label_default_access_mode":"Default access mode:","label_message_sound":"Message sound:","label_push_notifications":"Notification alerts:","label_push_notifications_disabled":"Notification alerts (requires HTTPS):","title_tag_manager":"Tags (user discovery)","button_logout":"Logout","requested_permissions":"Requested","granted_permissions":"Granted","menu_item_edit_permissions":"Edit permissions","label_other_user":"Other","title_info":"Info","label_topic_name":"Name","label_private":"Private comment","private_editing_placeholder":"Visible to you only","label_muting_topic":"Muted:","action_more":"More","label_your_permissions":"Your permissions:","label_permissions":"Permissions:","label_you":"You:","label_default_access":"Default access mode:","label_group_members":"Group members:","button_add_members":"Add members","button_leave":"Leave","group_has_no_members":"No members","action_leave_chat":"Leave","login_prompt":"Login","password_prompt":"Password","stay_logged_in":"Stay logged in","forgot_password_link":"Forgot password?","button_sign_in":"Sign in","label_client":"Client:","label_server":"Server:","online_now":"online now","last_seen_timestamp":"Last seen","title_not_found":"Not found","unnamed_topic":"Unnamed","messages_not_readable":"no access to messages","tabtitle_find_user":"find","tabtitle_new_group":"new group","tabtitle_group_by_id":"by id","search_for_contacts":"Use search to find contacts","new_password_placeholder":"Enter new password","label_reset_password":"Send a password reset email:","credential_email_prompt":"Your registration email","button_reset":"Reset","button_send_request":"Send request","label_server_to_use":"Server to use:","label_wire_transport":"Wire transport:","button_update":"Update","sidepanel_title_login":"Sign In","sidepanel_title_register":"Create Account","sidepanel_title_settings":"Settings","sidepanel_title_edit_account":"Edit Account","sidepanel_title_newtpk":"Start New Chat","sidepanel_title_cred":"Confirm Credentials","sidepanel_title_reset":"Reset Password","update_available":"Update available. <a href=\"\">Reload</a>.","phone_dative":"phone","email_dative":"email","enter_confirmation_code_prompt":"Enter confirmation code sent to you by {method}:","numeric_confirmation_code_prompt":"Numbers only","button_confirm":"Confirm","invalid_content":"invalid content","user_not_found":"Not found","badge_you":"you","badge_owner":"owner","menu_item_info":"Info","menu_item_clear_messages":"Clear messages","menu_item_clear_messages_for_all":"Clear for All","menu_item_delete":"Delete","menu_item_delete_for_all":"Delete for All","menu_item_mute":"Mute","menu_item_unmute":"Unmute","menu_item_delete_topic":"Delete","menu_item_unblock":"Unblock","menu_item_block":"Block","menu_item_member_delete":"Remove","action_cancel":"cancel","upload_finishing":"finishing...","no_contacts":"You have no contacts :-(","contacts_not_found_short":"No contacts match '{query}'","title_group_members":"Group Members","title_all_contacts":"All Contacts","button_ok":"OK","button_cancel":"Cancel","download_action":"download","label_file_name":"File name:","label_content_type":"Content type:","label_size":"Size:","error_invalid_id":"Invalid ID","group_user_id_prompt":"Group or User ID","button_subscribe":"Subscribe","topic_name_editing_placeholder":"Freeform name of the group","button_create":"Create","permission_join":"Join ({val})","permission_read":"Read ({val})","permission_write":"Write ({val})","permission_pres":"Get notified ({val})","permission_admin":"Approve ({val})","permission_share":"Share ({val})","permission_delete":"Delete ({val})","permission_owner":"Owner ({val})","title_permissions":"Permissions","message_sending":"sending...","message_sending_failed":"failed","search_placeholder":"List like email:alice@example.com, tel:17025550003...","messaging_disabled_prompt":"Messaging disabled","new_message_prompt":"New message","file_attachment_too_large":"The file size {size} exceeds the {limit} limit.","cannot_initiate_file_upload":"Cannot initiate file upload.","tags_not_found":"No tags defined. Add some.","tags_editor_no_tags":"Add some tags","title_manage_tags":"Manage tags"},"ru":{"contacts_not_found":"Чатов нет<br />¯∖_(ツ)_/¯","full_name_prompt":"Полное имя, напр. Иван Петров","email_prompt":"Email, напр. ivan@example.com","button_sign_up":"Создать счет","label_your_name":"Ваше имя","label_password":"Пароль","password_unchanged_prompt":"Не изменен","label_user_id":"Адрес:","label_default_access_mode":"Доступ по умолчанию:","label_message_sound":"Звук нового сообщения:","label_push_notifications":"Уведомления:","label_push_notifications_disabled":"Уведомления (требуют HTTPS):","title_tag_manager":"Таги для поиска","button_logout":"Выйти","login_prompt":"Логин","password_prompt":"Пароль","stay_logged_in":"Запомнить","forgot_password_link":"Напомнить пароль","button_sign_in":"Войти","label_client":"Клиент:","label_server":"Сервер:","online_now":"онлайн","last_seen_timestamp":"Был активен","title_not_found":"Не найден","unnamed_topic":"Без названия","messages_not_readable":"нет доступа к сообщениям","tabtitle_find_user":"найти","tabtitle_new_group":"создать","tabtitle_group_by_id":"по id","label_server_to_use":"Использовать сервер:","label_wire_transport":"Соединение:","button_update":"Применить","sidepanel_title_login":"Авторизация","sidepanel_title_register":"Зарегистрироваться","sidepanel_title_settings":"Настройки","sidepanel_title_edit_account":"Редактировать счет","sidepanel_title_newtpk":"Новый чат","sidepanel_title_cred":"Подтвердить","sidepanel_title_reset":"Сменить пароль","tags_not_found":"Тагов нет. Добавьте","tags_editor_no_tags":"Добавьте таги","title_manage_tags":"Редактор тагов","message_sending":"в пути...","message_sending_failed":"ошибка","search_placeholder":"Список, напр. email:alice@example.com, tel:17025550003...","messaging_disabled_prompt":"Отправка недоступна","new_message_prompt":"Новое сообщение","file_attachment_too_large":"Размер файла {size} превышает {limit} лимит.","cannot_initiate_file_upload":"Ошибка загрузки файла.","search_for_contacts":"Поиск контактов","enter_confirmation_code_prompt":"Код подтверждения, полученный по {method}:","numeric_confirmation_code_prompt":"Только цифры","button_confirm":"Подтвердить","button_ok":"OK","button_cancel":"Отменить","invalid_content":"сообщение не читается","label_file_name":"Имя файла:","label_content_type":"Тип:","label_size":"Размер:","phone_dative":"телефону","email_dative":"емейлу","title_group_members":"Участники","download_action":"скачать","permission_join":"Подписываться ({val})","permission_read":"Читать ({val})","permission_write":"Писать ({val})","permission_pres":"Уведомлять ({val})","permission_admin":"Подтверждать ({val})","permission_share":"Приглашать ({val})","permission_delete":"Удалять ({val})","permission_owner":"Владелец ({val})","title_permissions":"Права доступа","requested_permissions":"Требуются","granted_permissions":"Получены","menu_item_edit_permissions":"Права доступа","label_other_user":"Второй","label_topic_name":"Название","label_private":"Комментарий","private_editing_placeholder":"Виден только вам","label_muting_topic":"Без уведомлений","action_more":"Ещё","label_your_permissions":"Ваши права доступа:","label_permissions":"Права доступа:","label_you":"Вы:","label_default_access":"Права по умолчанию:","label_group_members":"Участники чата:","button_add_members":"Добавить","button_leave":"Отписаться","group_has_no_members":"Нет участников","action_leave_chat":"Уйти из чата","menu_item_info":"Информация","menu_item_clear_messages":"Удалить сообщения","menu_item_clear_messages_for_all":"Удалить для всех","menu_item_delete":"Удалить","menu_item_delete_for_all":"Удалить для всех","menu_item_mute":"Не уведомлять","menu_item_unmute":"Уведомлять","menu_item_delete_topic":"Удалить чат","menu_item_unblock":"Разблокировать","menu_item_block":"Заблокировать","menu_item_member_delete":"Отписать","title_info":"Подробности","new_password_placeholder":"Введите новый пароль","label_reset_password":"Отправить емейл для смены пароля:","credential_email_prompt":"Регистрационный емейл","button_reset":"Изменить","button_send_request":"Отправить","action_cancel":"отменить","upload_finishing":"завершение...","no_contacts":"Ничего нет :-(","contacts_not_found_short":"Нет контактов для запроса '{query}'","title_all_contacts":"Все контакты","error_invalid_id":"Неверный ID","group_user_id_prompt":"ID чата или пользователя","button_subscribe":"Подписаться","topic_name_editing_placeholder":"Название чата","button_create":"Создать","badge_you":"вы","badge_owner":"влад.","update_available":"Есть новая версия приложения. <a href=\"\">Обновить</a>.","user_not_found":"Не найден"}};
+module.exports = {"en":{"contacts_not_found":"You have no chats<br />¯∖_(ツ)_/¯","full_name_prompt":"Full name, e.g. John Doe","email_prompt":"Email, e.g. jdoe@example.com","button_sign_up":"Sign up","label_your_name":"Your name","label_password":"Password","password_unchanged_prompt":"Unchanged","label_user_id":"Address:","label_default_access_mode":"Default access mode:","label_message_sound":"Message sound:","label_push_notifications":"Notification alerts:","label_push_notifications_disabled":"Notification alerts (requires HTTPS):","title_tag_manager":"Tags (user discovery)","button_logout":"Logout","requested_permissions":"Requested","granted_permissions":"Granted","menu_item_edit_permissions":"Edit permissions","label_other_user":"Other","title_info":"Info","label_topic_name":"Name","label_private":"Private comment","private_editing_placeholder":"Visible to you only","label_muting_topic":"Muted:","action_more":"More","label_your_permissions":"Your permissions:","label_permissions":"Permissions:","label_you":"You:","label_default_access":"Default access mode:","label_group_members":"Group members:","button_add_members":"Add members","button_leave":"Leave","group_has_no_members":"No members","action_leave_chat":"Leave","login_prompt":"Login","password_prompt":"Password","stay_logged_in":"Stay logged in","forgot_password_link":"Forgot password?","button_sign_in":"Sign in","label_client":"Client:","label_server":"Server:","online_now":"online now","last_seen_timestamp":"Last seen","title_not_found":"Not found","unnamed_topic":"Unnamed","messages_not_readable":"no access to messages","tabtitle_find_user":"find","tabtitle_new_group":"new group","tabtitle_group_by_id":"by id","search_for_contacts":"Use search to find contacts","new_password_placeholder":"Enter new password","label_reset_password":"Send a password reset email:","credential_email_prompt":"Your registration email","button_reset":"Reset","button_send_request":"Send request","label_server_to_use":"Server to use:","label_wire_transport":"Wire transport:","button_update":"Update","sidepanel_title_login":"Sign In","sidepanel_title_register":"Create Account","sidepanel_title_settings":"Settings","sidepanel_title_edit_account":"Edit Account","sidepanel_title_newtpk":"Start New Chat","sidepanel_title_cred":"Confirm Credentials","sidepanel_title_reset":"Reset Password","update_available":"Update available. <a href=\"\">Reload</a>.","reconnect_countdown":"Disconnected. Reconnecting in {seconds}s…","reconnect_now":"Try now","phone_dative":"phone","email_dative":"email","enter_confirmation_code_prompt":"Enter confirmation code sent to you by {method}:","numeric_confirmation_code_prompt":"Numbers only","button_confirm":"Confirm","invalid_content":"invalid content","user_not_found":"Not found","badge_you":"you","badge_owner":"owner","menu_item_info":"Info","menu_item_clear_messages":"Clear messages","menu_item_clear_messages_for_all":"Clear for All","menu_item_delete":"Delete","menu_item_delete_for_all":"Delete for All","menu_item_mute":"Mute","menu_item_unmute":"Unmute","menu_item_delete_topic":"Delete","menu_item_unblock":"Unblock","menu_item_block":"Block","menu_item_member_delete":"Remove","action_cancel":"cancel","upload_finishing":"finishing...","no_contacts":"You have no contacts :-(","contacts_not_found_short":"No contacts match '{query}'","title_group_members":"Group Members","title_all_contacts":"All Contacts","button_ok":"OK","button_cancel":"Cancel","download_action":"download","label_file_name":"File name:","label_content_type":"Content type:","label_size":"Size:","error_invalid_id":"Invalid ID","group_user_id_prompt":"Group or User ID","button_subscribe":"Subscribe","topic_name_editing_placeholder":"Freeform name of the group","button_create":"Create","permission_join":"Join ({val})","permission_read":"Read ({val})","permission_write":"Write ({val})","permission_pres":"Get notified ({val})","permission_admin":"Approve ({val})","permission_share":"Share ({val})","permission_delete":"Delete ({val})","permission_owner":"Owner ({val})","title_permissions":"Permissions","message_sending":"sending...","message_sending_failed":"failed","search_placeholder":"List like email:alice@example.com, tel:17025550003...","messaging_disabled_prompt":"Messaging disabled","new_message_prompt":"New message","file_attachment_too_large":"The file size {size} exceeds the {limit} limit.","cannot_initiate_file_upload":"Cannot initiate file upload.","tags_not_found":"No tags defined. Add some.","tags_editor_no_tags":"Add some tags","title_manage_tags":"Manage tags"},"ru":{"contacts_not_found":"Чатов нет<br />¯∖_(ツ)_/¯","full_name_prompt":"Полное имя, напр. Иван Петров","email_prompt":"Email, напр. ivan@example.com","button_sign_up":"Создать счет","label_your_name":"Ваше имя","label_password":"Пароль","password_unchanged_prompt":"Не изменен","label_user_id":"Адрес:","label_default_access_mode":"Доступ по умолчанию:","label_message_sound":"Звук нового сообщения:","label_push_notifications":"Уведомления:","label_push_notifications_disabled":"Уведомления (требуют HTTPS):","title_tag_manager":"Таги для поиска","button_logout":"Выйти","login_prompt":"Логин","password_prompt":"Пароль","stay_logged_in":"Запомнить","forgot_password_link":"Напомнить пароль","button_sign_in":"Войти","label_client":"Клиент:","label_server":"Сервер:","online_now":"онлайн","last_seen_timestamp":"Был активен","title_not_found":"Не найден","unnamed_topic":"Без названия","messages_not_readable":"нет доступа к сообщениям","tabtitle_find_user":"найти","tabtitle_new_group":"создать","tabtitle_group_by_id":"по id","label_server_to_use":"Использовать сервер:","label_wire_transport":"Соединение:","button_update":"Применить","sidepanel_title_login":"Авторизация","sidepanel_title_register":"Зарегистрироваться","sidepanel_title_settings":"Настройки","sidepanel_title_edit_account":"Редактировать счет","sidepanel_title_newtpk":"Новый чат","sidepanel_title_cred":"Подтвердить","sidepanel_title_reset":"Сменить пароль","tags_not_found":"Тагов нет. Добавьте","tags_editor_no_tags":"Добавьте таги","title_manage_tags":"Редактор тагов","message_sending":"в пути...","message_sending_failed":"ошибка","search_placeholder":"Список, напр. email:alice@example.com, tel:17025550003...","messaging_disabled_prompt":"Отправка недоступна","new_message_prompt":"Новое сообщение","file_attachment_too_large":"Размер файла {size} превышает {limit} лимит.","cannot_initiate_file_upload":"Ошибка загрузки файла.","search_for_contacts":"Поиск контактов","enter_confirmation_code_prompt":"Код подтверждения, полученный по {method}:","numeric_confirmation_code_prompt":"Только цифры","button_confirm":"Подтвердить","button_ok":"OK","button_cancel":"Отменить","invalid_content":"сообщение не читается","label_file_name":"Имя файла:","label_content_type":"Тип:","label_size":"Размер:","phone_dative":"телефону","email_dative":"емейлу","title_group_members":"Участники","download_action":"скачать","permission_join":"Подписываться ({val})","permission_read":"Читать ({val})","permission_write":"Писать ({val})","permission_pres":"Уведомлять ({val})","permission_admin":"Подтверждать ({val})","permission_share":"Приглашать ({val})","permission_delete":"Удалять ({val})","permission_owner":"Владелец ({val})","title_permissions":"Права доступа","requested_permissions":"Требуются","granted_permissions":"Получены","menu_item_edit_permissions":"Права доступа","label_other_user":"Второй","label_topic_name":"Название","label_private":"Комментарий","private_editing_placeholder":"Виден только вам","label_muting_topic":"Без уведомлений","action_more":"Ещё","label_your_permissions":"Ваши права доступа:","label_permissions":"Права доступа:","label_you":"Вы:","label_default_access":"Права по умолчанию:","label_group_members":"Участники чата:","button_add_members":"Добавить","button_leave":"Отписаться","group_has_no_members":"Нет участников","action_leave_chat":"Уйти из чата","menu_item_info":"Информация","menu_item_clear_messages":"Удалить сообщения","menu_item_clear_messages_for_all":"Удалить для всех","menu_item_delete":"Удалить","menu_item_delete_for_all":"Удалить для всех","menu_item_mute":"Не уведомлять","menu_item_unmute":"Уведомлять","menu_item_delete_topic":"Удалить чат","menu_item_unblock":"Разблокировать","menu_item_block":"Заблокировать","menu_item_member_delete":"Отписать","title_info":"Подробности","new_password_placeholder":"Введите новый пароль","label_reset_password":"Отправить емейл для смены пароля:","credential_email_prompt":"Регистрационный емейл","button_reset":"Изменить","button_send_request":"Отправить","action_cancel":"отменить","upload_finishing":"завершение...","no_contacts":"Ничего нет :-(","contacts_not_found_short":"Нет контактов для запроса '{query}'","title_all_contacts":"Все контакты","error_invalid_id":"Неверный ID","group_user_id_prompt":"ID чата или пользователя","button_subscribe":"Подписаться","topic_name_editing_placeholder":"Название чата","button_create":"Создать","badge_you":"вы","badge_owner":"влад.","update_available":"Есть новая версия приложения. <a href=\"\">Обновить</a>.","user_not_found":"Не найден","reconnect_countdown":"Нет связи. Подключение через {seconds}с…","reconnect_now":"Подключить сейчас."}};
 
 /***/ }),
 
@@ -3766,6 +3766,8 @@ var SidepanelView = function (_React$Component) {
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
         level: this.props.errorLevel,
         text: this.props.errorText,
+        action: this.props.errorAction,
+        actionText: this.props.errorActionText,
         onClearError: this.props.onError
       }), view === 'login' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_login_view_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
         login: this.props.login,
@@ -3900,6 +3902,14 @@ var messages = Object(react_intl__WEBPACK_IMPORTED_MODULE_2__["defineMessages"])
   update_available: {
     "id": "update_available",
     "defaultMessage": "Update available. <a href=\"\">Reload</a>."
+  },
+  reconnect_countdown: {
+    "id": "reconnect_countdown",
+    "defaultMessage": "Disconnected. Reconnecting in {seconds}s\u2026"
+  },
+  reconnect_now: {
+    "id": "reconnect_now",
+    "defaultMessage": "Try now"
   }
 });
 
@@ -3923,6 +3933,7 @@ var TinodeWeb = function (_React$Component) {
     _this.handleError = _this.handleError.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleLoginRequest = _this.handleLoginRequest.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleConnected = _this.handleConnected.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.handleAutoreconnectIteration = _this.handleAutoreconnectIteration.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.doLogin = _this.doLogin.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleCredentialsRequest = _this.handleCredentialsRequest.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleLoginSuccessful = _this.handleLoginSuccessful.bind(_assertThisInitialized(_assertThisInitialized(_this)));
@@ -3987,6 +3998,8 @@ var TinodeWeb = function (_React$Component) {
         firebaseToken: _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_13__["default"].getObject("firebase-token"),
         errorText: '',
         errorLevel: null,
+        errorAction: undefined,
+        errorActionText: null,
         sidePanelSelected: 'login',
         sidePanelTitle: null,
         sidePanelAvatar: null,
@@ -4027,6 +4040,7 @@ var TinodeWeb = function (_React$Component) {
       this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport);
       this.tinode.onConnect = this.handleConnected;
       this.tinode.onDisconnect = this.handleDisconnect;
+      this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
 
       if (this.state.desktopAlertsEnabled) {
         try {
@@ -4201,10 +4215,12 @@ var TinodeWeb = function (_React$Component) {
     }
   }, {
     key: "handleError",
-    value: function handleError(err, level) {
+    value: function handleError(err, level, action, actionText) {
       this.setState({
         errorText: err,
-        errorLevel: level
+        errorLevel: level,
+        errorAction: action,
+        errorActionText: actionText
       });
     }
   }, {
@@ -4247,9 +4263,62 @@ var TinodeWeb = function (_React$Component) {
       });
     }
   }, {
+    key: "handleAutoreconnectIteration",
+    value: function handleAutoreconnectIteration(sec, prom) {
+      var _this5 = this;
+
+      if (this.reconnectCountdown) {
+        clearInterval(this.reconnectCountdown);
+        this.reconnectCountdown = null;
+      }
+
+      if (sec < 0) {
+        this.handleError();
+        return;
+      }
+
+      if (prom) {
+        prom.then(function () {
+          _this5.handleError();
+        }).catch(function (err) {
+          _this5.handleError(err.message, 'err');
+        });
+        return;
+      }
+
+      var formatHTMLMessage = this.props.intl.formatHTMLMessage;
+      var count = sec / 1000;
+      count = count | count;
+      this.reconnectCountdown = setInterval(function () {
+        _this5.handleError(formatHTMLMessage(messages.reconnect_countdown, {
+          seconds: count
+        }), 'warn', function () {
+          clearInterval(_this5.reconnectCountdown);
+
+          _this5.tinode.reconnect();
+        }, formatHTMLMessage(messages.reconnect_now));
+
+        count -= 1;
+      }, 1000);
+    }
+  }, {
+    key: "handleDisconnect",
+    value: function handleDisconnect(err) {
+      this.setState({
+        connected: false,
+        topicSelectedOnline: false,
+        dialogSelected: null,
+        errorText: err && err.message ? err.message : "Disconnected",
+        errorLevel: err && err.message ? 'err' : 'warn',
+        loginDisabled: false,
+        contextMenuVisible: false,
+        serverVersion: "no connection"
+      });
+    }
+  }, {
     key: "doLogin",
     value: function doLogin(login, password, cred) {
-      var _this5 = this;
+      var _this6 = this;
 
       if (this.tinode.isAuthenticated()) {
         _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].navigateTo('');
@@ -4273,21 +4342,21 @@ var TinodeWeb = function (_React$Component) {
         promise.then(function (ctrl) {
           if (ctrl.code >= 300 && ctrl.text === 'validate credentials') {
             if (cred) {
-              _this5.handleError("Code does not match", 'warn');
+              _this6.handleError("Code does not match", 'warn');
             }
 
-            _this5.handleCredentialsRequest(ctrl.params);
+            _this6.handleCredentialsRequest(ctrl.params);
           } else {
-            _this5.handleLoginSuccessful();
+            _this6.handleLoginSuccessful();
           }
         }).catch(function (err) {
-          _this5.setState({
+          _this6.setState({
             loginDisabled: false,
             credMethod: undefined,
             credCode: undefined
           });
 
-          _this5.handleError(err.message, 'err');
+          _this6.handleError(err.message, 'err');
 
           localStorage.removeItem('auth-token');
           _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].navigateTo('');
@@ -4310,7 +4379,7 @@ var TinodeWeb = function (_React$Component) {
   }, {
     key: "handleLoginSuccessful",
     value: function handleLoginSuccessful() {
-      var _this6 = this;
+      var _this7 = this;
 
       this.handleError('', null);
 
@@ -4331,25 +4400,11 @@ var TinodeWeb = function (_React$Component) {
       me.subscribe(me.startMetaQuery().withLaterSub().withDesc().build()).catch(function (err) {
         localStorage.removeItem('auth-token');
 
-        _this6.handleError(err.message, 'err');
+        _this7.handleError(err.message, 'err');
 
         _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].navigateTo('');
       });
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].setUrlSidePanel(window.location.hash, 'contacts'));
-    }
-  }, {
-    key: "handleDisconnect",
-    value: function handleDisconnect(err) {
-      this.setState({
-        connected: false,
-        topicSelectedOnline: false,
-        dialogSelected: null,
-        errorText: err && err.message ? err.message : "Disconnected",
-        errorLevel: err && err.message ? 'err' : 'warn',
-        loginDisabled: false,
-        contextMenuVisible: false,
-        serverVersion: "no connection"
-      });
     }
   }, {
     key: "tnMeMetaDesc",
@@ -4408,7 +4463,7 @@ var TinodeWeb = function (_React$Component) {
   }, {
     key: "resetContactList",
     value: function resetContactList() {
-      var _this7 = this;
+      var _this8 = this;
 
       var newState = {
         chatList: []
@@ -4416,7 +4471,7 @@ var TinodeWeb = function (_React$Component) {
       this.tinode.getMeTopic().contacts(function (c) {
         newState.chatList.push(c);
 
-        if (_this7.state.topicSelected == c.topic) {
+        if (_this8.state.topicSelected == c.topic) {
           newState.topicSelectedOnline = c.online;
           newState.topicSelectedAcs = c.acs;
         }
@@ -4427,14 +4482,14 @@ var TinodeWeb = function (_React$Component) {
   }, {
     key: "tnData",
     value: function tnData(data) {
-      var _this8 = this;
+      var _this9 = this;
 
       var topic = this.tinode.getTopic(data.topic);
 
       if (topic.msgStatus(data) >= tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default.a.MESSAGE_STATUS_SENT) {
         clearTimeout(this.receivedTimer);
         this.receivedTimer = setTimeout(function () {
-          _this8.receivedTimer = undefined;
+          _this9.receivedTimer = undefined;
           topic.noteRecv(data.seq);
         }, _config_js__WEBPACK_IMPORTED_MODULE_10__["RECEIVED_DELAY"]);
       }
@@ -4442,7 +4497,7 @@ var TinodeWeb = function (_React$Component) {
   }, {
     key: "tnInitFind",
     value: function tnInitFind() {
-      var _this9 = this;
+      var _this10 = this;
 
       var fnd = this.tinode.getFndTopic();
       fnd.onSubsUpdated = this.tnFndSubsUpdated;
@@ -4451,7 +4506,7 @@ var TinodeWeb = function (_React$Component) {
         this.tnFndSubsUpdated();
       } else {
         fnd.subscribe(fnd.startMetaQuery().withSub().withTags().build()).catch(function (err) {
-          _this9.handleError(err.message, 'err');
+          _this10.handleError(err.message, 'err');
         });
       }
     }
@@ -4470,7 +4525,7 @@ var TinodeWeb = function (_React$Component) {
   }, {
     key: "handleSearchContacts",
     value: function handleSearchContacts(query) {
-      var _this10 = this;
+      var _this11 = this;
 
       var fnd = this.tinode.getFndTopic();
       fnd.setMeta({
@@ -4480,7 +4535,7 @@ var TinodeWeb = function (_React$Component) {
       }).then(function (ctrl) {
         return fnd.getMeta(fnd.startMetaQuery().withSub().build());
       }).catch(function (err) {
-        _this10.handleError(err.message, 'err');
+        _this11.handleError(err.message, 'err');
       });
     }
   }, {
@@ -4527,7 +4582,7 @@ var TinodeWeb = function (_React$Component) {
   }, {
     key: "handleSendMessage",
     value: function handleSendMessage(msg, promise, uploader) {
-      var _this11 = this;
+      var _this12 = this;
 
       var topic = this.tinode.getTopic(this.state.topicSelected);
       msg = topic.createMessage(msg, false);
@@ -4545,12 +4600,12 @@ var TinodeWeb = function (_React$Component) {
 
       if (promise) {
         promise = promise.catch(function (err) {
-          _this11.handleError(err.message, 'err');
+          _this12.handleError(err.message, 'err');
         });
       }
 
       topic.publishDraft(msg, promise).catch(function (err) {
-        _this11.handleError(err.message, 'err');
+        _this12.handleError(err.message, 'err');
       });
     }
   }, {
@@ -4561,28 +4616,28 @@ var TinodeWeb = function (_React$Component) {
   }, {
     key: "handleNewAccountRequest",
     value: function handleNewAccountRequest(login_, password_, public_, cred_, tags_) {
-      var _this12 = this;
+      var _this13 = this;
 
       this.tinode.connect(this.state.serverAddress).then(function () {
-        return _this12.tinode.createAccountBasic(login_, password_, {
+        return _this13.tinode.createAccountBasic(login_, password_, {
           public: public_,
           tags: tags_,
           cred: tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default.a.credential(cred_)
         });
       }).then(function (ctrl) {
         if (ctrl.code >= 300 && ctrl.text == 'validate credentials') {
-          _this12.handleCredentialsRequest(ctrl.params);
+          _this13.handleCredentialsRequest(ctrl.params);
         } else {
-          _this12.handleLoginSuccessful(_this12);
+          _this13.handleLoginSuccessful(_this13);
         }
       }).catch(function (err) {
-        _this12.handleError(err.message, 'err');
+        _this13.handleError(err.message, 'err');
       });
     }
   }, {
     key: "handleUpdateAccountRequest",
     value: function handleUpdateAccountRequest(password, pub, defacs) {
-      var _this13 = this;
+      var _this14 = this;
 
       if (pub || defacs) {
         this.tinode.getMeTopic().setMeta({
@@ -4591,25 +4646,25 @@ var TinodeWeb = function (_React$Component) {
             defacs: defacs
           }
         }).catch(function (err) {
-          _this13.handleError(err.message, 'err');
+          _this14.handleError(err.message, 'err');
         });
       }
 
       if (password) {
         this.tinode.updateAccountBasic(null, this.tinode.getCurrentLogin(), password).catch(function (err) {
-          _this13.handleError(err.message, 'err');
+          _this14.handleError(err.message, 'err');
         });
       }
     }
   }, {
     key: "handleUpdateAccountTagsRequest",
     value: function handleUpdateAccountTagsRequest(tags) {
-      var _this14 = this;
+      var _this15 = this;
 
       this.tinode.getFndTopic().setMeta({
         tags: tags
       }).catch(function (err) {
-        _this14.handleError(err.message, 'err');
+        _this15.handleError(err.message, 'err');
       });
     }
   }, {
@@ -4644,26 +4699,26 @@ var TinodeWeb = function (_React$Component) {
   }, {
     key: "initDesktopAlerts",
     value: function initDesktopAlerts() {
-      var _this15 = this;
+      var _this16 = this;
 
       this.fbPush.onTokenRefresh(function () {
-        _this15.requestPushToken(true);
+        _this16.requestPushToken(true);
       });
       this.fbPush.onMessage(function (payload) {});
     }
   }, {
     key: "togglePushToken",
     value: function togglePushToken(enabled) {
-      var _this16 = this;
+      var _this17 = this;
 
       if (enabled) {
         if (!this.state.firebaseToken) {
           this.fbPush.requestPermission().then(function () {
-            _this16.requestPushToken(true);
+            _this17.requestPushToken(true);
           }).catch(function (err) {
-            _this16.handleError(err.message, 'err');
+            _this17.handleError(err.message, 'err');
 
-            _this16.setState({
+            _this17.setState({
               desktopAlerts: false,
               firebaseToken: null
             });
@@ -4690,7 +4745,7 @@ var TinodeWeb = function (_React$Component) {
           });
           localStorage.removeItem('firebase-token');
 
-          _this16.setState({
+          _this17.setState({
             desktopAlerts: false,
             firebaseToken: null
           });
@@ -4708,16 +4763,16 @@ var TinodeWeb = function (_React$Component) {
   }, {
     key: "requestPushToken",
     value: function requestPushToken(sendToServer) {
-      var _this17 = this;
+      var _this18 = this;
 
       this.fbPush.getToken().then(function (refreshedToken) {
-        if (refreshedToken != _this17.state.firebaseToken) {
-          _this17.tinode.setDeviceToken(refreshedToken, sendToServer);
+        if (refreshedToken != _this18.state.firebaseToken) {
+          _this18.tinode.setDeviceToken(refreshedToken, sendToServer);
 
           _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_13__["default"].setObject('firebase-token', refreshedToken);
         }
 
-        _this17.setState({
+        _this18.setState({
           firebaseToken: refreshedToken,
           desktopAlerts: true
         });
@@ -4726,7 +4781,7 @@ var TinodeWeb = function (_React$Component) {
           desktopAlerts: true
         });
       }).catch(function (err) {
-        _this17.handleError(err.message, 'err');
+        _this18.handleError(err.message, 'err');
 
         console.log("Failed to retrieve firebase token", err);
       });
@@ -4767,7 +4822,7 @@ var TinodeWeb = function (_React$Component) {
   }, {
     key: "handleNewTopicRequest",
     value: function handleNewTopicRequest(peerName, pub, priv, tags) {
-      var _this18 = this;
+      var _this19 = this;
 
       var topicName = peerName || this.tinode.newGroupTopicName();
 
@@ -4783,7 +4838,7 @@ var TinodeWeb = function (_React$Component) {
             tags: tags
           }
         }, function () {
-          _this18.handleTopicSelected(topicName);
+          _this19.handleTopicSelected(topicName);
         });
       } else {
         this.handleTopicSelected(topicName);
@@ -4803,7 +4858,7 @@ var TinodeWeb = function (_React$Component) {
   }, {
     key: "handleTopicUpdateRequest",
     value: function handleTopicUpdateRequest(topicName, pub, priv, permissions) {
-      var _this19 = this;
+      var _this20 = this;
 
       var topic = this.tinode.getTopic(topicName);
 
@@ -4827,14 +4882,14 @@ var TinodeWeb = function (_React$Component) {
         topic.setMeta({
           desc: params
         }).catch(function (err) {
-          _this19.handleError(err.message, 'err');
+          _this20.handleError(err.message, 'err');
         });
       }
     }
   }, {
     key: "handleChangePermissions",
     value: function handleChangePermissions(topicName, mode, uid) {
-      var _this20 = this;
+      var _this21 = this;
 
       var topic = this.tinode.getTopic(topicName);
 
@@ -4855,14 +4910,14 @@ var TinodeWeb = function (_React$Component) {
             mode: mode
           }
         }).catch(function (err) {
-          _this20.handleError(err.message, 'err');
+          _this21.handleError(err.message, 'err');
         });
       }
     }
   }, {
     key: "handleTagsUpdated",
     value: function handleTagsUpdated(topicName, tags) {
-      var _this21 = this;
+      var _this22 = this;
 
       var topic = this.tinode.getTopic(topicName);
 
@@ -4871,7 +4926,7 @@ var TinodeWeb = function (_React$Component) {
         topic.setMeta({
           tags: tags
         }).catch(function (err) {
-          _this21.handleError(err.message, 'err');
+          _this22.handleError(err.message, 'err');
         });
       }
     }
@@ -4895,7 +4950,7 @@ var TinodeWeb = function (_React$Component) {
   }, {
     key: "handleLeaveUnsubRequest",
     value: function handleLeaveUnsubRequest(topicName) {
-      var _this22 = this;
+      var _this23 = this;
 
       var topic = this.tinode.getTopic(topicName);
 
@@ -4906,7 +4961,7 @@ var TinodeWeb = function (_React$Component) {
       topic.leave(true).then(function (ctrl) {
         _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].setUrlTopic(window.location.hash, ''));
       }).catch(function (err) {
-        _this22.handleError(err.message, 'err');
+        _this23.handleError(err.message, 'err');
       });
     }
   }, {
@@ -4986,7 +5041,7 @@ var TinodeWeb = function (_React$Component) {
   }, {
     key: "handleMemberUpdateRequest",
     value: function handleMemberUpdateRequest(topicName, added, removed) {
-      var _this23 = this;
+      var _this24 = this;
 
       if (!topicName) {
         return;
@@ -5001,7 +5056,7 @@ var TinodeWeb = function (_React$Component) {
       if (added && added.length > 0) {
         added.map(function (uid) {
           topic.invite(uid, null).catch(function (err) {
-            _this23.handleError(err.message, 'err');
+            _this24.handleError(err.message, 'err');
           });
         });
       }
@@ -5009,7 +5064,7 @@ var TinodeWeb = function (_React$Component) {
       if (removed && removed.length > 0) {
         removed.map(function (uid) {
           topic.delSubscription(uid).catch(function (err) {
-            _this23.handleError(err.message, 'err');
+            _this24.handleError(err.message, 'err');
           });
         });
       }
@@ -5029,18 +5084,18 @@ var TinodeWeb = function (_React$Component) {
   }, {
     key: "handlePasswordResetRequest",
     value: function handlePasswordResetRequest(method, value) {
-      var _this24 = this;
+      var _this25 = this;
 
       this.tinode.connect().then(function () {
-        return _this24.tinode.requestResetAuthSecret('basic', method, value);
+        return _this25.tinode.requestResetAuthSecret('basic', method, value);
       }).catch(function (err) {
-        _this24.handleError(err.message, 'err');
+        _this25.handleError(err.message, 'err');
       });
     }
   }, {
     key: "handleResetPassword",
     value: function handleResetPassword(scheme, newPassword, token) {
-      var _this25 = this;
+      var _this26 = this;
 
       token = base64ReEncode(token);
 
@@ -5048,11 +5103,11 @@ var TinodeWeb = function (_React$Component) {
         this.handleError("Invalid security token", 'err');
       } else {
         this.tinode.connect().then(function () {
-          return _this25.tinode.updateAccountBasic(null, null, newPassword, {
+          return _this26.tinode.updateAccountBasic(null, null, newPassword, {
             token: token
           });
         }).catch(function (err) {
-          _this25.handleError(err.message, 'err');
+          _this26.handleError(err.message, 'err');
         });
       }
     }
@@ -5083,6 +5138,8 @@ var TinodeWeb = function (_React$Component) {
         loginDisabled: this.state.loginDisabled,
         errorText: this.state.errorText,
         errorLevel: this.state.errorLevel,
+        errorAction: this.state.errorAction,
+        errorActionText: this.state.errorActionText,
         topicSelected: this.state.topicSelected,
         chatList: this.state.chatList,
         credMethod: this.state.credMethod,
@@ -5129,6 +5186,8 @@ var TinodeWeb = function (_React$Component) {
         serverAddress: this.state.serverAddress,
         errorText: this.state.errorText,
         errorLevel: this.state.errorLevel,
+        errorAction: this.state.errorAction,
+        errorActionText: this.state.errorActionText,
         newGroupTopicParams: this.state.newGroupTopicParams,
         onHideMessagesView: this.handleHideMessagesView,
         onData: this.tnData,
@@ -5146,6 +5205,8 @@ var TinodeWeb = function (_React$Component) {
         myUserId: this.state.myUserId,
         errorText: this.state.errorText,
         errorLevel: this.state.errorLevel,
+        errorAction: this.state.errorAction,
+        errorActionText: this.state.errorActionText,
         onTopicDescUpdate: this.handleTopicUpdateRequest,
         onCancel: this.handleHideInfoView,
         onChangePermissions: this.handleChangePermissions,
@@ -7078,11 +7139,14 @@ var ErrorPanel = function (_React$PureComponent) {
         className: "icon"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons"
-      }, level)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      }, level)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         dangerouslySetInnerHTML: {
           __html: this.props.text
         }
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }), this.props.action ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+        href: "javascript:;",
+        onClick: this.props.action
+      }, this.props.actionText) : null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "cancel"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_menu_cancel_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
         onCancel: this.hide

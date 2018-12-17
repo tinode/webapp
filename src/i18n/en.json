@@ -64,6 +64,8 @@
   "sidepanel_title_cred": "Confirm Credentials",
   "sidepanel_title_reset": "Reset Password",
   "update_available": "Update available. <a href=\"\">Reload</a>.",
+  "reconnect_countdown": "Disconnected. Reconnecting in {seconds}s…",
+  "reconnect_now": "Try now",
   "phone_dative": "phone",
   "email_dative": "email",
   "enter_confirmation_code_prompt": "Enter confirmation code sent to you by {method}:",

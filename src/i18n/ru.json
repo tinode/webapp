@@ -119,5 +119,7 @@
   "badge_you": "вы",
   "badge_owner": "влад.",
   "update_available": "Есть новая версия приложения. <a href=\"\">Обновить</a>.",
-  "user_not_found": "Не найден"
+  "user_not_found": "Не найден",
+  "reconnect_countdown": "Нет связи. Подключение через {seconds}с…",
+  "reconnect_now": "Подключить сейчас."
 }

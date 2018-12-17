@@ -65,6 +65,8 @@
     "sidepanel_title_cred": "Confirm Credentials",
     "sidepanel_title_reset": "Reset Password",
     "update_available": "Update available. <a href=\"\">Reload</a>.",
+    "reconnect_countdown": "Disconnected. Reconnecting in {seconds}s…",
+    "reconnect_now": "Try now",
     "phone_dative": "phone",
     "email_dative": "email",
     "enter_confirmation_code_prompt": "Enter confirmation code sent to you by {method}:",
@@ -243,6 +245,8 @@
     "badge_you": "вы",
     "badge_owner": "влад.",
     "update_available": "Есть новая версия приложения. <a href=\"\">Обновить</a>.",
-    "user_not_found": "Не найден"
+    "user_not_found": "Не найден",
+    "reconnect_countdown": "Нет связи. Подключение через {seconds}с…",
+    "reconnect_now": "Подключить сейчас."
   }
 }

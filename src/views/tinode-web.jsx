@@ -32,8 +32,13 @@ const messages = defineMessages({
   },
   reconnect_countdown: {
     id: 'reconnect_countdown',
-    defaultMessage: 'Disconnected. Connecting in {seconds}s&hellips; <a href="">Try now</a>',
+    defaultMessage: 'Disconnected. Reconnecting in {seconds}s…',
     description: 'Message shown when an app update is available.'
+  },
+  reconnect_now: {
+    id: 'reconnect_now',
+    defaultMessage: 'Try now',
+    description: 'Prompt for reconnecting now'
   }
 });
 
@@ -118,6 +123,8 @@ class TinodeWeb extends React.Component {
 
       errorText: '',
       errorLevel: null,
+      errorAction: undefined,
+      errorActionText: null,
 
       sidePanelSelected: 'login',
       sidePanelTitle: null,
@@ -329,8 +336,8 @@ class TinodeWeb extends React.Component {
     this.handleAppVisibility(!document.hidden, this.readTimerCallback);
   }
 
-  handleError(err, level) {
-    this.setState({errorText: err, errorLevel: level});
+  handleError(err, level, action, actionText) {
+    this.setState({errorText: err, errorLevel: level, errorAction: action, errorActionText: actionText});
   }
 
   // User clicked Login button in the side panel.
@@ -360,7 +367,43 @@ class TinodeWeb extends React.Component {
 
   // Called for each auto-reconnect iteration.
   handleAutoreconnectIteration(sec, prom) {
-    console.log("handleAutoreconnectIteration", seconds, reconnecting);
+    if (this.reconnectCountdown) {
+      clearInterval(this.reconnectCountdown);
+      this.reconnectCountdown = null;
+    }
+
+    if (sec < 0) {
+      // Clear error
+      this.handleError();
+      return;
+    }
+
+    if (prom) {
+      // Reconnecting now
+      prom.then(() => {
+        // Reconnected: clear error
+        this.handleError();
+      }).catch((err) => {
+        this.handleError(err.message, 'err');
+      });
+      return;
+    }
+
+    const {formatHTMLMessage} = this.props.intl;
+    let count = sec / 1000;
+    count = count | count;
+    this.reconnectCountdown = setInterval(() => {
+      this.handleError(
+        formatHTMLMessage(messages.reconnect_countdown, {seconds: count}),
+        'warn',
+        () => {
+          clearInterval(this.reconnectCountdown);
+          this.tinode.reconnect();
+        },
+        formatHTMLMessage(messages.reconnect_now)
+      );
+      count -= 1;
+    }, 1000);
   }
 
   // Connection lost
@@ -1082,8 +1125,12 @@ class TinodeWeb extends React.Component {
           login={this.state.login}
           myUserId={this.state.myUserId}
           loginDisabled={this.state.loginDisabled}
+
           errorText={this.state.errorText}
           errorLevel={this.state.errorLevel}
+          errorAction={this.state.errorAction}
+          errorActionText={this.state.errorActionText}
+
           topicSelected={this.state.topicSelected}
           chatList={this.state.chatList}
           credMethod={this.state.credMethod}
@@ -1134,8 +1181,12 @@ class TinodeWeb extends React.Component {
           myUserId={this.state.myUserId}
           serverVersion={this.state.serverVersion}
           serverAddress={this.state.serverAddress}
+
           errorText={this.state.errorText}
           errorLevel={this.state.errorLevel}
+          errorAction={this.state.errorAction}
+          errorActionText={this.state.errorActionText}
+
           newGroupTopicParams={this.state.newGroupTopicParams}
 
           onHideMessagesView={this.handleHideMessagesView}
@@ -1154,8 +1205,11 @@ class TinodeWeb extends React.Component {
             topic={this.state.topicSelected}
             searchableContacts={this.state.searchableContacts}
             myUserId={this.state.myUserId}
+
             errorText={this.state.errorText}
             errorLevel={this.state.errorLevel}
+            errorAction={this.state.errorAction}
+            errorActionText={this.state.errorActionText}
 
             onTopicDescUpdate={this.handleTopicUpdateRequest}
             onCancel={this.handleHideInfoView}
