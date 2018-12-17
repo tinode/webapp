@@ -367,10 +367,7 @@ class TinodeWeb extends React.Component {
 
   // Called for each auto-reconnect iteration.
   handleAutoreconnectIteration(sec, prom) {
-    if (this.reconnectCountdown) {
-      clearInterval(this.reconnectCountdown);
-      this.reconnectCountdown = null;
-    }
+    clearInterval(this.reconnectCountdown);
 
     if (sec < 0) {
       // Clear error
