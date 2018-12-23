@@ -78,6 +78,6 @@
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-intl": "^2.7.1",
-    "tinode-sdk": "^0.15.8-rc1"
+    "tinode-sdk": "^0.15.11-rc2"
   }
 }
