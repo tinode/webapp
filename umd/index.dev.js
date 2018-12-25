@@ -7899,7 +7899,7 @@ var InPlaceEdit = function (_React$Component) {
           active: false
         });
       } else if (e.keyCode === 13) {
-        this.handleEditingFinished();
+        this.handleEditingFinished(e);
       }
     }
   }, {

@@ -43,7 +43,7 @@ export default class InPlaceEdit extends React.Component {
       this.setState({value: this.props.value, active: false});
     } else if (e.keyCode === 13) {
       // Enter pressed
-      this.handleEditingFinished();
+      this.handleEditingFinished(e);
     }
   }
 
