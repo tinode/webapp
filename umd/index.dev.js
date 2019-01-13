@@ -809,7 +809,7 @@ module.exports = {"en":{"contacts_not_found":"You have no chats<br />¯∖_(ツ)
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PACKAGE_VERSION", function() { return PACKAGE_VERSION; });
-var PACKAGE_VERSION = "0.15.11";
+var PACKAGE_VERSION = "0.15.12-rc1";
 
 /***/ }),
 
