@@ -18,7 +18,9 @@ export default class LetterTile extends React.PureComponent {
           <i className="material-icons">person</i>;
       }
     } else if (this.props.avatar) {
-      avatar = <img className="avatar" alt="avatar" src={this.props.avatar} />;
+      // If avatar image is invalid, show a placeholder.
+      avatar = <img className="avatar" alt="avatar" src={this.props.avatar}
+        onError={(e)=>{e.target.onerror = null; e.target.src="/img/broken_image.png"}} />;
     } else {
       avatar = null;
     }

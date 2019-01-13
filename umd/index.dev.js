@@ -8077,7 +8077,11 @@ var LetterTile = function (_React$PureComponent) {
         avatar = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
           className: "avatar",
           alt: "avatar",
-          src: this.props.avatar
+          src: this.props.avatar,
+          onError: function onError(e) {
+            e.target.onerror = null;
+            e.target.src = "/img/broken_image.png";
+          }
         });
       } else {
         avatar = null;
