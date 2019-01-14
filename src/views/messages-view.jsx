@@ -471,7 +471,8 @@ class MessagesView extends React.Component {
         if (cont.online) {
           lastSeen = formatMessage(messages.online_now);
         } else if (cont.seen) {
-          lastSeen = formatMessage(messages.last_seen) + ": " + shortDateFormat(cont.seen.when);
+          lastSeen = formatMessage(messages.last_seen) + ": " +
+            shortDateFormat(cont.seen.when, this.props.intl.locale);
           // TODO: also handle user agent in c.seen.ua
         }
       }

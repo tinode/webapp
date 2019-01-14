@@ -121,5 +121,6 @@
   "update_available": "Есть новая версия приложения. <a href=\"\">Обновить</a>.",
   "user_not_found": "Не найден",
   "reconnect_countdown": "Нет связи. Подключение через {seconds}с…",
-  "reconnect_now": "Подключить сейчас."
+  "reconnect_now": "Подключить сейчас.",
+  "save_attachment": "сохранить"
 }

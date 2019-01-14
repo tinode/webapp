@@ -28,7 +28,7 @@ class ReceivedMarker extends React.PureComponent {
     } else if (this.props.received == Tinode.MESSAGE_STATUS_FAILED) {
       timestamp = formatMessage(messages.failed);
     } else {
-      timestamp = shortDateFormat(this.props.timestamp);
+      timestamp = shortDateFormat(this.props.timestamp, this.props.intl.locale);
     }
 
     let marker = null;

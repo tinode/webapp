@@ -1,4 +1,5 @@
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 
 import FileProgress from './file-progress.jsx';
 import { bytesToHumanSize } from '../lib/strformat.js';
@@ -73,7 +74,8 @@ export default class Attachment extends React.Component {
               onCancel={this.handleCancel} />
             :
             <div><a href={url} download={this.props.filename} onClick={helperFunc} >
-              <i className="material-icons">file_download</i> save
+              <i className="material-icons">file_download</i> <FormattedMessage id="save_attachment"
+                defaultMessage="save" description="Call to save an attachment" />
             </a></div>
           }
         </div>
