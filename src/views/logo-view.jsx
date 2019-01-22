@@ -17,8 +17,7 @@ export default class LogoView extends React.PureComponent {
           <h2>Tinode Web</h2>
         </a>
         <p><FormattedMessage id="label_client" defaultMessage="Client:" /> {version}</p>
-        <p><FormattedMessage id="label_server" defaultMessage="Server:" /> {this.props.serverVersion}
-          ({this.props.serverAddress})</p>
+        <p><FormattedMessage id="label_server" defaultMessage="Server:" /> {this.props.serverVersion} ({this.props.serverAddress})</p>
         </div>
       </div>
     );
