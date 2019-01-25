@@ -182,7 +182,7 @@ var MIN_TAG_LENGTH = 4;
 var MEDIA_BREAKPOINT = 640;
 var REM_SIZE = 13;
 var AVATAR_SIZE = 128;
-var BROKEN_IMAGE_SIZE = 48;
+var BROKEN_IMAGE_SIZE = 32;
 var MESSAGES_PAGE = 24;
 var MAX_INBAND_ATTACHMENT_SIZE = 195840;
 var MAX_EXTERN_ATTACHMENT_SIZE = 1 << 23;
@@ -5959,7 +5959,6 @@ function draftyFormatter(style, data, values, key) {
       case 'IM':
         if (data) {
           attr.className = 'inline-image';
-          attr.onClick = this.handlePreviewImage;
           var dim = Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__["fitImageSize"])(data.width, data.height, Math.min(this.props.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_6__["REM_SIZE"] * 4, _config_js__WEBPACK_IMPORTED_MODULE_6__["REM_SIZE"] * 36), _config_js__WEBPACK_IMPORTED_MODULE_6__["REM_SIZE"] * 24, false);
           dim = dim || {
             dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_6__["BROKEN_IMAGE_SIZE"],
@@ -5969,7 +5968,13 @@ function draftyFormatter(style, data, values, key) {
             width: dim.dstWidth + 'px',
             height: dim.dstHeight + 'px'
           };
-          attr.src = attr.src || 'img/broken_image.png';
+
+          if (attr.src) {
+            attr.onClick = this.handlePreviewImage;
+            attr.className += ' image-clickable';
+          } else {
+            attr.src = 'img/broken_image.png';
+          }
         }
 
         break;

@@ -511,6 +511,10 @@ table.permission-editor td.checkbox {
   cursor: pointer;
 }
 
+.image-clickable {
+  cursor: pointer;
+}
+
 /* END of top-level layout */
 
 /* Sidepanel styles */
@@ -1306,8 +1310,8 @@ i.search {
  * (group chat only)
  */
 .chat-box .author {
-    font-size: 80%;
-    color:#777;
+  font-size: 80%;
+  color:#777;
 }
 
 /* Inline image styles */
@@ -1316,7 +1320,6 @@ i.search {
   max-height: 24rem;
   overflow: hidden;
   border-radius: 0.1rem;
-  cursor: pointer;
   display: block;
 }
 

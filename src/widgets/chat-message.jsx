@@ -159,12 +159,16 @@ function draftyFormatter(style, data, values, key) {
         // Additional processing for images
         if (data) {
           attr.className = 'inline-image';
-          attr.onClick = this.handlePreviewImage;
           let dim = fitImageSize(data.width, data.height,
             Math.min(this.props.viewportWidth - REM_SIZE * 4, REM_SIZE * 36), REM_SIZE * 24, false);
           dim = dim || {dstWidth: BROKEN_IMAGE_SIZE, dstHeight: BROKEN_IMAGE_SIZE};
           attr.style = { width: dim.dstWidth + 'px', height: dim.dstHeight + 'px' };
-          attr.src = attr.src || 'img/broken_image.png';
+          if (attr.src) {
+            attr.onClick = this.handlePreviewImage;
+            attr.className += ' image-clickable';
+          } else {
+            attr.src = 'img/broken_image.png';
+          }
         }
         break;
       case 'BN':
