@@ -15,7 +15,13 @@ export function makeImageUrl(photo) {
 // Returns an object which contains destination sizes, source sizes, and offsets
 // into source (when making square images).
 export function fitImageSize(width, height, maxWidth, maxHeight, forceSquare) {
-  if (!width || !height || !maxWidth || !maxHeight) {
+  // Sanitize input
+  width = width | 0;
+  height = height | 0;
+  maxWidth = maxWidth | 0;
+  maxHeight = maxHeight | 0;
+
+  if (width <= 0 || height <= 0 || maxWidth <= 0 || maxHeight <= 0) {
     return null;
   }
 
