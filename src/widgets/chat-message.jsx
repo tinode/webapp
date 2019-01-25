@@ -146,7 +146,7 @@ export default class ChatMessage extends React.Component {
 };
 
 // Convert Drafty object to a tree of React elements.
-import { REM_SIZE } from '../config.js';
+import { BROKEN_IMAGE_SIZE, REM_SIZE } from '../config.js';
 import { fitImageSize } from '../lib/blob-helpers.js';
 
 function draftyFormatter(style, data, values, key) {
@@ -162,7 +162,9 @@ function draftyFormatter(style, data, values, key) {
           attr.onClick = this.handlePreviewImage;
           let dim = fitImageSize(data.width, data.height,
             Math.min(this.props.viewportWidth - REM_SIZE * 4, REM_SIZE * 36), REM_SIZE * 24, false);
-          attr.style = dim ? { width: dim.dstWidth + 'px', height: dim.dstHeight + 'px' } : null;
+          dim = dim || {dstWidth: BROKEN_IMAGE_SIZE, dstHeight: BROKEN_IMAGE_SIZE};
+          attr.style = { width: dim.dstWidth + 'px', height: dim.dstHeight + 'px' };
+          attr.src = attr.src || 'img/broken_image.png';
         }
         break;
       case 'BN':

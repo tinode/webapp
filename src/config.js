@@ -32,6 +32,9 @@ export const REM_SIZE = 13;
 // a square of this size.
 export const AVATAR_SIZE = 128;
 
+// Size of the broken_image shown in MessagesView
+export const BROKEN_IMAGE_SIZE = 48;
+
 // Number of chat messages to fetch in one call.
 export const MESSAGES_PAGE = 24;
 

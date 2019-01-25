@@ -23,19 +23,21 @@ export default class ImagePreview extends React.PureComponent {
     if (!this.props.content) {
       return null;
     }
-    var instance = this;
-    var dim = fitImageSize(this.props.content.width, this.props.content.height,
+    const instance = this;
+    const dim = fitImageSize(this.props.content.width, this.props.content.height,
       this.state.width, this.state.height, false);
-    var size = dim ? { width: dim.dstWidth + 'px', height: dim.dstHeight + 'px' } :
+    const size = dim ? { width: dim.dstWidth + 'px', height: dim.dstHeight + 'px' } :
       ((this.props.content.width > this.props.content.height) ? {width: '100%'} : {height: '100%'});
     size.maxWidth = '100%';
     size.maxHeight = '100%';
 
-    var filename = this.props.content.filename;
-    var maxlength = (this.props.content.width / REM_SIZE) | 0;
+    let filename = this.props.content.filename;
+    const maxlength = (this.props.content.width / REM_SIZE) | 0;
     if (filename.length > maxlength) {
       filename = filename.slice(0, maxlength-2) + '...' + filename.slice(2-maxlength);
     }
+    const width = this.props.content.width || '-';
+    const height = this.props.content.height || '-';
     return (
       <div id="image-preview" onClick={this.props.onClose}>
         <div id="image-preview-caption-panel">
@@ -52,7 +54,7 @@ export default class ImagePreview extends React.PureComponent {
           <div>
             <div><b><FormattedMessage id="label_file_name" defaultMessage="File name:"
               description="Label for a file name" /></b></div>
-            <div><span title={this.props.content.filename}>{filename}</span></div>
+            <div><span title={this.props.content.filename}>{filename ? filename : '-'}</span></div>
           </div>
           <div>
             <div><b><FormattedMessage id="label_content_type" defaultMessage="Content type:"
@@ -62,7 +64,7 @@ export default class ImagePreview extends React.PureComponent {
           <div>
             <div><b><FormattedMessage id="label_size" defaultMessage="Size:"
               description="Label for file size" /></b></div>
-            <div>{this.props.content.width} &times; {this.props.content.height} px; {bytesToHumanSize(this.props.content.size)}</div>
+            <div>{width} &times; {height} px; {bytesToHumanSize(this.props.content.size)}</div>
           </div>
         </div>
       </div>
