@@ -993,7 +993,7 @@ class TinodeWeb extends React.Component {
     const topic = this.tinode.getTopic(topicName);
     const {formatMessage} = this.props.intl;
 
-    let muted = false, blocked = false, subscribed = false, deleter = false;
+    let muted = false, blocked = false, subscribed = false, deleter = false, archived = false;
     if (topic) {
       if (topic.isSubscribed()) {
         subscribed = true;
@@ -1003,6 +1003,7 @@ class TinodeWeb extends React.Component {
         blocked = acs && !acs.isJoiner();
         deleter = acs && acs.isDeleter();
       }
+      archived = topic.isArchived();
     }
 
     return [
@@ -1011,7 +1012,7 @@ class TinodeWeb extends React.Component {
       subscribed && deleter ? 'messages_clear_hard' : null,
       subscribed ? (muted ? 'topic_unmute' : 'topic_mute') : null,
       subscribed ? (blocked ? 'topic_unblock' : 'topic_block') : null,
-      subscribed && !topic.isArchived() ? 'topic_archive' : null,
+      subscribed && !archived ? 'topic_archive' : null,
       'topic_delete'
     ];
   }
