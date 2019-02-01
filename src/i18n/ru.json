@@ -122,5 +122,6 @@
   "user_not_found": "Не найден",
   "reconnect_countdown": "Нет связи. Подключение через {seconds}с…",
   "reconnect_now": "Подключить сейчас.",
-  "save_attachment": "сохранить"
+  "save_attachment": "сохранить",
+  "menu_item_archive_topic": "В архив"
 }
