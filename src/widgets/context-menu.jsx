@@ -60,6 +60,11 @@ const messages = defineMessages({
     id: 'menu_item_member_delete',
     defaultMessage: 'Remove',
     description: 'Remove user from topic'
+  },
+  archive: {
+    id: 'menu_item_archive_topic',
+    defaultMessage: 'Archive',
+    description: 'Move topic from the list of active chats to archive'
   }
 });
 
@@ -94,7 +99,7 @@ class ContextMenu extends React.Component {
       'topic_unblock':  {title: formatMessage(messages.unblock), handler: this.topicPermissionSetter.bind(this, '+J')},
       'topic_block':    {title: formatMessage(messages.block), handler: this.topicPermissionSetter.bind(this, '-J')},
       'topic_delete':   {title: formatMessage(messages.topic_delete), handler: (params, errorHandler) => {
-        let topic = this.props.tinode.getTopic(params.topicName);
+        const topic = this.props.tinode.getTopic(params.topicName);
         if (!topic) {
           console.log("Topic not found: ", params.topicName);
           return;
@@ -105,10 +110,22 @@ class ContextMenu extends React.Component {
           }
         });
       }},
+      'topic_archive':  {title: formatMessage(messages.archive), handler: (params, errorHandler) => {
+        const topic = this.props.tinode.getTopic(params.topicName);
+        if (!topic) {
+          console.log("Topic not found: ", params.topicName);
+          return;
+        }
+        topic.setMeta({desc: {private: {arch: true}}}).catch((err) => {
+          if (errorHandler) {
+            errorHandler(err.message, 'err');
+          }
+        });
+      }},
       // menu_item_edit_permissions is defined elsewhere.
       'permissions':    {title: formatMessage({id: 'menu_item_edit_permissions'}), handler: null},
       'member_delete':  {title: formatMessage(messages.member_delete), handler: (params, errorHandler) => {
-        let topic = this.props.tinode.getTopic(params.topicName);
+        const topic = this.props.tinode.getTopic(params.topicName);
         if (!topic || !params.user) {
           console.log("Topic or user not found: '" + params.topicName + "', '" + params.user + "'");
           return;

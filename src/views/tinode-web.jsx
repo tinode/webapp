@@ -1011,6 +1011,7 @@ class TinodeWeb extends React.Component {
       subscribed && deleter ? 'messages_clear_hard' : null,
       subscribed ? (muted ? 'topic_unmute' : 'topic_mute') : null,
       subscribed ? (blocked ? 'topic_unblock' : 'topic_block') : null,
+      subscribed && !topic.isArchived() ? 'topic_archive' : null,
       'topic_delete'
     ];
   }
