@@ -1,5 +1,5 @@
 {
-  "contacts_not_found": "Чатов нет<br />¯∖_(ツ)_/¯",
+  "contacts_not_found": ":!![OBSOLETE]!!:Чатов нет<br />¯∖_(ツ)_/¯",
   "full_name_prompt": "Полное имя, напр. Иван Петров",
   "email_prompt": "Email, напр. ivan@example.com",
   "button_sign_up": "Создать счет",
@@ -123,5 +123,7 @@
   "reconnect_countdown": "Нет связи. Подключение через {seconds}с…",
   "reconnect_now": "Подключить сейчас.",
   "save_attachment": "сохранить",
-  "menu_item_archive_topic": "В архив"
+  "menu_item_archive_topic": "В архив",
+  "archived_contacts": "Чаты в архиве ({count})",
+  "sidepanel_title_archive": "Архив"
 }

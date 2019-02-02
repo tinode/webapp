@@ -1,6 +1,6 @@
 {
   "en": {
-    "contacts_not_found": "You have no chats<br />¯∖_(ツ)_/¯",
+    "archived_contacts": "Archived contacts ({count})",
     "full_name_prompt": "Full name, e.g. John Doe",
     "email_prompt": "Email, e.g. jdoe@example.com",
     "button_sign_up": "Sign up",
@@ -64,6 +64,7 @@
     "sidepanel_title_newtpk": "Start New Chat",
     "sidepanel_title_cred": "Confirm Credentials",
     "sidepanel_title_reset": "Reset Password",
+    "sidepanel_title_archive": "Archived",
     "update_available": "Update available. <a href=\"\">Reload</a>.",
     "reconnect_countdown": "Disconnected. Reconnecting in {seconds}s…",
     "reconnect_now": "Try now",
@@ -127,7 +128,6 @@
     "title_manage_tags": "Manage tags"
   },
   "ru": {
-    "contacts_not_found": "Чатов нет<br />¯∖_(ツ)_/¯",
     "full_name_prompt": "Полное имя, напр. Иван Петров",
     "email_prompt": "Email, напр. ivan@example.com",
     "button_sign_up": "Создать счет",
@@ -251,6 +251,8 @@
     "reconnect_countdown": "Нет связи. Подключение через {seconds}с…",
     "reconnect_now": "Подключить сейчас.",
     "save_attachment": "сохранить",
-    "menu_item_archive_topic": "В архив"
+    "menu_item_archive_topic": "В архив",
+    "archived_contacts": "Чаты в архиве ({count})",
+    "sidepanel_title_archive": "Архив"
   }
 }

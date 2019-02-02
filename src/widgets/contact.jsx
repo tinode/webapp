@@ -69,7 +69,7 @@ export default class Contact extends React.Component {
               <i className="material-icons">expand_more</i>
             </a>
           </span> : null}
-        </li>
+      </li>
     );
   }
 };

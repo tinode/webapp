@@ -775,6 +775,13 @@ i.search {
   justify-content: space-around;
 }
 
+.contact-box .action-text {
+  text-align: center;
+  font-size: 1.05rem;
+  margin: 0.5rem auto 0.5rem auto;
+  cursor: pointer;
+}
+
 /* Online-offline indicator positioned inside avatar-box */
 .avatar-box .online, .offline {
   display: inline-block;

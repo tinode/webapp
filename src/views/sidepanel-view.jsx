@@ -49,6 +49,11 @@ const messages = defineMessages({
     id: 'sidepanel_title_reset',
     description: 'Sidepanel title for PasswordResetView.',
     defaultMessage: 'Reset Password'
+  },
+  'archive': {
+    id: 'sidepanel_title_archive',
+    description: 'Sidepanel title for ContactsView-Archive.',
+    defaultMessage: 'Archived'
   }
 });
 
@@ -134,12 +139,13 @@ class SidepanelView extends React.Component {
             onCancel={this.props.onCancel}
             onError={this.props.onError} /> :
 
-          view === 'contacts' ?
+          (view === 'contacts' || view == 'archive') ?
           <ContactsView
             tinode={this.props.tinode}
             myUserId={this.props.myUserId}
             connected={this.props.connected}
             topicSelected={this.props.topicSelected}
+            archive={view == 'archive'}
             chatList={this.props.chatList}
             showContextMenu={this.props.showContextMenu}
             onTopicSelected={this.props.onTopicSelected} /> :

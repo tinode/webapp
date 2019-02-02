@@ -274,7 +274,7 @@ class TinodeWeb extends React.Component {
     var hash = HashNavigation.parseUrlHash(window.location.hash);
     if (hash.path && hash.path.length > 0) {
       // Left-side panel selector.
-      if (['register','settings','edit','cred','reset','newtpk','contacts',''].includes(hash.path[0])) {
+      if (['register','settings','edit','cred','reset','newtpk','archive','contacts',''].includes(hash.path[0])) {
         this.setState({sidePanelSelected: hash.path[0]});
       } else {
         console.log("Unknown sidepanel view", hash.path[0]);
