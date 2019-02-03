@@ -777,8 +777,9 @@ i.search {
 
 .contact-box .action-text {
   text-align: center;
-  font-size: 1.05rem;
-  margin: 0.5rem auto 0.5rem auto;
+  font-size: 0.95rem;
+  line-height: 3.5rem;
+  margin: 0 auto 0 auto;
   cursor: pointer;
 }
 

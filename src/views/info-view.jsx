@@ -98,7 +98,7 @@ class InfoView extends React.Component {
 
   // No need to separately handle component mount.
   componentDidUpdate(props) {
-    let topic = this.props.tinode.getTopic(props.topic);
+    const topic = this.props.tinode.getTopic(props.topic);
     if (!topic) {
       return;
     }
@@ -126,7 +126,7 @@ class InfoView extends React.Component {
   }
 
   componentWillUnmount() {
-    var topic = this.props.tinode.getTopic(this.props.topic);
+    const topic = this.props.tinode.getTopic(this.props.topic);
     if (!topic) {
       return;
     }
@@ -185,7 +185,7 @@ class InfoView extends React.Component {
   }
 
   onMetaDesc(desc) {
-    var topic = this.props.tinode.getTopic(this.props.topic);
+    const topic = this.props.tinode.getTopic(this.props.topic);
     if (!topic) {
       return;
     }
@@ -197,7 +197,7 @@ class InfoView extends React.Component {
   }
 
   onSubsUpdated() {
-    var topic = this.props.tinode.getTopic(this.props.topic);
+    const topic = this.props.tinode.getTopic(this.props.topic);
     if (!topic) {
       return;
     }

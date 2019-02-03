@@ -31,7 +31,12 @@ class ContactList extends React.Component {
       this.props.contacts.map((c) => {
         if (c.action) {
           // Action item
-          contactNodes.push(<ContactAction title={c.title} action={c.action} />);
+          contactNodes.push(
+            <ContactAction
+              title={c.title} action={c.action} values={c.values}
+              key={c.action}
+              onAction={this.props.onAction}
+              />);
         } else {
           // Normal contact
           const key = c.topic ? c.topic : c.user;

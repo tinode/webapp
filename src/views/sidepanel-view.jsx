@@ -53,7 +53,7 @@ const messages = defineMessages({
   'archive': {
     id: 'sidepanel_title_archive',
     description: 'Sidepanel title for ContactsView-Archive.',
-    defaultMessage: 'Archived'
+    defaultMessage: 'Archived Chats'
   }
 });
 
@@ -148,7 +148,8 @@ class SidepanelView extends React.Component {
             archive={view == 'archive'}
             chatList={this.props.chatList}
             showContextMenu={this.props.showContextMenu}
-            onTopicSelected={this.props.onTopicSelected} /> :
+            onTopicSelected={this.props.onTopicSelected}
+            onShowArchive={this.props.onShowArchive} /> :
 
           view === 'newtpk' ?
           <NewTopicView

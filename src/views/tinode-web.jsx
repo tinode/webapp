@@ -80,6 +80,7 @@ class TinodeWeb extends React.Component {
     this.handleUpdateAccountTagsRequest = this.handleUpdateAccountTagsRequest.bind(this);
     this.handleSettings = this.handleSettings.bind(this);
     this.handleGlobalSettings = this.handleGlobalSettings.bind(this);
+    this.handleShowArchive = this.handleShowArchive.bind(this);
     this.handleToggleMessageSounds = this.handleToggleMessageSounds.bind(this);
     this.initDesktopAlerts = this.initDesktopAlerts.bind(this);
     this.togglePushToken = this.togglePushToken.bind(this);
@@ -106,7 +107,7 @@ class TinodeWeb extends React.Component {
   }
 
   getBlankState() {
-    let settings = LocalStorageUtil.getObject("settings") || {};
+    const settings = LocalStorageUtil.getObject("settings") || {};
 
     return {
       connected: false,
@@ -206,10 +207,10 @@ class TinodeWeb extends React.Component {
       }
     }
 
-    let token = LocalStorageUtil.getObject('keep-logged-in') ?
+    const token = LocalStorageUtil.getObject('keep-logged-in') ?
       LocalStorageUtil.getObject('auth-token') : undefined;
 
-    let parsedNav = HashNavigation.parseUrlHash(window.location.hash);
+    const parsedNav = HashNavigation.parseUrlHash(window.location.hash);
     if (token) {
       // When reading from storage, date is returned as string.
       token.expires = new Date(token.expires);
@@ -793,6 +794,12 @@ class TinodeWeb extends React.Component {
     HashNavigation.navigateTo(HashNavigation.setUrlSidePanel(window.location.hash, ''));
   }
 
+  // User chose 'Archived chats'.
+  handleShowArchive() {
+    HashNavigation.navigateTo(HashNavigation.setUrlSidePanel(window.location.hash,
+      this.state.myUserId ? 'archive' : ''));
+  }
+
   // Initialize desktop alerts = push notifications.
   initDesktopAlerts() {
     // Google could not be bothered to mention that
@@ -859,7 +866,7 @@ class TinodeWeb extends React.Component {
 
   // User clicked Cancel button in Setting or Sign Up panel.
   handleSidepanelCancel() {
-    var parsed = HashNavigation.parseUrlHash(window.location.hash);
+    const parsed = HashNavigation.parseUrlHash(window.location.hash);
     parsed.path[0] = this.state.myUserId ? 'contacts' : '';
     if (parsed.params) {
       delete parsed.params.code;
@@ -877,7 +884,7 @@ class TinodeWeb extends React.Component {
 
   // Request to start a new topic. New P2P topic requires peer's name.
   handleNewTopicRequest(peerName, pub, priv, tags) {
-    var topicName = peerName || this.tinode.newGroupTopicName();
+    const topicName = peerName || this.tinode.newGroupTopicName();
     if (!peerName) {
       this.setState(
         {newGroupTopicParams: {desc: {public: pub, private: {comment: priv}}, tags: tags}},
@@ -938,9 +945,8 @@ class TinodeWeb extends React.Component {
   }
 
   handleTagsUpdated(topicName, tags) {
-    var topic = this.tinode.getTopic(topicName);
+    const topic = this.tinode.getTopic(topicName);
     if (topic) {
-      var instance = this;
       topic.setMeta({tags: tags}).catch((err) => {
         this.handleError(err.message, 'err');
       });
@@ -962,7 +968,7 @@ class TinodeWeb extends React.Component {
   }
 
   handleLeaveUnsubRequest(topicName) {
-    var topic = this.tinode.getTopic(topicName);
+    const topic = this.tinode.getTopic(topicName);
     if (!topic) {
       return;
     }
@@ -998,7 +1004,7 @@ class TinodeWeb extends React.Component {
       if (topic.isSubscribed()) {
         subscribed = true;
 
-        let acs = topic.getAccessMode();
+        const acs = topic.getAccessMode();
         muted = acs && acs.isMuted();
         blocked = acs && !acs.isJoiner();
         deleter = acs && acs.isDeleter();
@@ -1041,7 +1047,7 @@ class TinodeWeb extends React.Component {
       return;
     }
 
-    var topic = this.tinode.getTopic(topicName);
+    const topic = this.tinode.getTopic(topicName);
     if (!topic) {
       return;
     }
@@ -1159,6 +1165,7 @@ class TinodeWeb extends React.Component {
           onValidateCredentials={this.handleValidateCredentialsRequest}
           onPasswordResetRequest={this.handlePasswordResetRequest}
           onResetPassword={this.handleResetPassword}
+          onShowArchive={this.handleShowArchive}
 
           onInitFind={this.tnInitFind}
           searchResults={this.state.searchResults}
