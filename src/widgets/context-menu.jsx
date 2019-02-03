@@ -116,7 +116,7 @@ class ContextMenu extends React.Component {
           console.log("Topic not found: ", params.topicName);
           return;
         }
-        topic.setMeta({desc: {private: {arch: true}}}).catch((err) => {
+        topic.archive(true).catch((err) => {
           if (errorHandler) {
             errorHandler(err.message, 'err');
           }

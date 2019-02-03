@@ -65,7 +65,7 @@
     "sidepanel_title_newtpk": "Start New Chat",
     "sidepanel_title_cred": "Confirm Credentials",
     "sidepanel_title_reset": "Reset Password",
-    "sidepanel_title_archive": "Archived",
+    "sidepanel_title_archive": "Archived Chats",
     "update_available": "Update available. <a href=\"\">Reload</a>.",
     "reconnect_countdown": "Disconnected. Reconnecting in {seconds}s…",
     "reconnect_now": "Try now",
@@ -255,6 +255,6 @@
     "save_attachment": "сохранить",
     "menu_item_archive_topic": "В архив",
     "archived_contacts": "Чаты в архиве ({count})",
-    "sidepanel_title_archive": "Архив"
+    "sidepanel_title_archive": "Архив чатов"
   }
 }

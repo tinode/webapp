@@ -107,7 +107,7 @@ class TinodeWeb extends React.Component {
   }
 
   getBlankState() {
-    const settings = LocalStorageUtil.getObject("settings") || {};
+    const settings = LocalStorageUtil.getObject('settings') || {};
 
     return {
       connected: false,
@@ -120,7 +120,7 @@ class TinodeWeb extends React.Component {
       desktopAlertsEnabled: (isSecureConnection() || isLocalHost()) &&
         (typeof firebase != 'undefined') && (typeof navigator != 'undefined') &&
         (typeof FIREBASE_INIT != 'undefined'),
-      firebaseToken: LocalStorageUtil.getObject("firebase-token"),
+      firebaseToken: LocalStorageUtil.getObject('firebase-token'),
 
       errorText: '',
       errorLevel: null,
@@ -697,7 +697,7 @@ class TinodeWeb extends React.Component {
   // User is sending a message, either plain text or a drafty object, possibly
   // with attachments.
   handleSendMessage(msg, promise, uploader) {
-    let topic = this.tinode.getTopic(this.state.topicSelected);
+    const topic = this.tinode.getTopic(this.state.topicSelected);
 
     msg = topic.createMessage(msg, false);
     // The uploader is used to show progress.
@@ -717,6 +717,11 @@ class TinodeWeb extends React.Component {
     }
 
     topic.publishDraft(msg, promise)
+      .then((ctrl) => {
+        if (topic.isArchived()) {
+          return topic.archive(false);
+        }
+      })
       .catch((err) => {
         this.handleError(err.message, 'err');
       });
@@ -955,7 +960,12 @@ class TinodeWeb extends React.Component {
 
   handleLogout() {
     updateFavicon(0);
+
+    // Remove stored data.
     localStorage.removeItem('auth-token');
+    localStorage.removeItem('firebase-token');
+    localStorage.removeItem('settings');
+
     if (this.tinode) {
       this.tinode.onDisconnect = undefined;
       this.tinode.disconnect();
