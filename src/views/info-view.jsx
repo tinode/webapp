@@ -220,26 +220,20 @@ class InfoView extends React.Component {
     fn = fn.trim();
     if (this.state.fullName !== fn) {
       this.setState({fullName: fn});
-      this.props.onTopicDescUpdate(this.props.topic,
-        vcard(fn, this.state.avatar),
-        null);
+      this.props.onTopicDescUpdate(this.props.topic, vcard(fn, null), null);
     }
   }
 
   handlePrivateUpdate(priv) {
     if (this.state.priv !== priv) {
       this.setState({private: priv});
-      this.props.onTopicDescUpdate(this.props.topic,
-        null,
-        priv || Tinode.DEL_CHAR);
+      this.props.onTopicDescUpdate(this.props.topic, null, priv || Tinode.DEL_CHAR);
     }
   }
 
   handleImageChanged(img) {
     this.setState({avatar: img});
-    this.props.onTopicDescUpdate(this.props.topic,
-      vcard(this.state.fullName, img),
-      null);
+    this.props.onTopicDescUpdate(this.props.topic, vcard(null, img), null);
   }
 
   handleMuted(ignored, checked) {

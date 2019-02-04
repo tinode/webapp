@@ -60,7 +60,7 @@ export default class EditAccountView extends React.Component {
 
   handleFullNameUpdate(fn) {
     this.setState({fullName: fn});
-    this.props.onUpdateAccount(undefined, vcard(fn, this.state.avatar));
+    this.props.onUpdateAccount(undefined, vcard(fn, null));
   }
 
   handlePasswordUpdate(pwd) {
@@ -70,7 +70,7 @@ export default class EditAccountView extends React.Component {
 
   handleImageChanged(img) {
     this.setState({avatar: img});
-    this.props.onUpdateAccount(undefined, vcard(this.state.fullName, img));
+    this.props.onUpdateAccount(undefined, vcard(null, img));
   }
 
   handleCheckboxClick(what, checked) {
