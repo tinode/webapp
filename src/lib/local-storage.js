@@ -9,13 +9,13 @@ export default class LocalStorageUtil {
 
   // Get stored object.
   static getObject(key) {
-    let value = localStorage.getItem(key);
+    const value = localStorage.getItem(key);
     return value && JSON.parse(value);
   }
 
   // Partially or wholly update stored object.
   static updateObject(key, value) {
-    let oldVal = this.getObject(key);
+    const oldVal = this.getObject(key);
     this.setObject(key, Object.assign(oldVal || {}, value));
   }
 

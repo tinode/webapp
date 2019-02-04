@@ -751,7 +751,14 @@ class TinodeWeb extends React.Component {
 
   handleUpdateAccountRequest(password, pub, defacs) {
     if (pub || defacs) {
-      this.tinode.getMeTopic().setMeta({desc: {public: pub, defacs: defacs}}).catch((err) => {
+      const params = {};
+      if (pub) {
+        params.public = pub;
+      }
+      if (defacs) {
+        params.defacs = defacs;
+      }
+      this.tinode.getMeTopic().setMeta({desc: params}).catch((err) => {
         this.handleError(err.message, 'err');
       });
     }
