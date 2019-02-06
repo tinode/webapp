@@ -24,7 +24,6 @@ export default class ChipInput extends React.Component {
       placeholder: nextProps.chips ? '' : nextProps.prompt,
       sortedChips: ChipInput.sortChips(nextProps.chips, nextProps.required),
       chipIndex: ChipInput.indexChips(nextProps.chips),
-      input: '',
       focused: prevState && prevState.focused
     };
 
@@ -38,8 +37,8 @@ export default class ChipInput extends React.Component {
 
   // Map chip index to user name
   static indexChips(chips) {
-    var index = {};
-    var count = 0;
+    const index = {};
+    let count = 0;
     chips.map(function(item) {
       index[item.user] = count;
       count ++;
@@ -49,8 +48,8 @@ export default class ChipInput extends React.Component {
 
   // Have non-removable chips appear before all other chips.
   static sortChips(chips, keep) {
-    var required = [];
-    var normal = [];
+    const required = [];
+    const normal = [];
     chips.map(function(item) {
       if (item.user === keep) {
         required.push(item);
@@ -69,7 +68,7 @@ export default class ChipInput extends React.Component {
   }
 
   removeChipAt(idx) {
-    var removed = this.state.sortedChips[idx];
+    const removed = this.state.sortedChips[idx];
     this.props.onChipRemoved(removed.user, this.state.chipIndex[removed.user]);
   }
 
@@ -108,8 +107,8 @@ export default class ChipInput extends React.Component {
   }
 
   render() {
-    var chips = [];
-    var count = 0;
+    const chips = [];
+    let count = 0;
     this.state.sortedChips.map((item) => {
       chips.push(
         <Chip
@@ -124,7 +123,7 @@ export default class ChipInput extends React.Component {
       );
       count++;
     });
-    var className = "chip-input" + (this.state.focused ? ' focused' : '');
+    const className = "chip-input" + (this.state.focused ? ' focused' : '');
     return (
       <div className={className}>
         {chips}

@@ -2638,7 +2638,7 @@ var MessagesView = function (_React$Component) {
   _createClass(MessagesView, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      this.propsChange(this.props);
+      this.propsChange(this.props, this.state);
 
       if (this.messagesScroller) {
         this.messagesScroller.addEventListener('scroll', this.handleScrollEvent);
@@ -6326,7 +6326,6 @@ var ChipInput = function (_React$Component) {
         placeholder: nextProps.chips ? '' : nextProps.prompt,
         sortedChips: ChipInput.sortChips(nextProps.chips, nextProps.required),
         chipIndex: ChipInput.indexChips(nextProps.chips),
-        input: '',
         focused: prevState && prevState.focused
       };
 

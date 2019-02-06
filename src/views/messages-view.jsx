@@ -70,7 +70,7 @@ class MessagesView extends React.Component {
   }
 
   componentDidMount() {
-    this.propsChange(this.props);
+    this.propsChange(this.props, this.state);
     if (this.messagesScroller) {
       this.messagesScroller.addEventListener('scroll', this.handleScrollEvent);
     }
