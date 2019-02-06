@@ -923,27 +923,16 @@ var ContactsView = function (_React$Component) {
       var contacts = [];
       var unreadThreads = 0;
       var archivedCount = 0;
-      var selectionVisible = false;
       nextProps.chatList.map(function (c) {
-        var key = c.topic ? c.topic : c.user;
-
         if (c.private && c.private.arch) {
           if (nextProps.archive) {
             contacts.push(c);
-
-            if (key == nextProps.topicSelected) {
-              selectionVisible = true;
-            }
           } else {
             archivedCount++;
           }
         } else if (!nextProps.archive) {
           contacts.push(c);
           unreadThreads += c.unread > 0 ? 1 : 0;
-
-          if (key == nextProps.topicSelected) {
-            selectionVisible = true;
-          }
         }
       });
       contacts.sort(function (a, b) {
@@ -963,8 +952,7 @@ var ContactsView = function (_React$Component) {
       Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__["updateFavicon"])(unreadThreads);
       return {
         contactList: contacts,
-        archivedCount: archivedCount,
-        selectionVisible: selectionVisible
+        archivedCount: archivedCount
       };
     }
   }]);
@@ -2648,17 +2636,6 @@ var MessagesView = function (_React$Component) {
   }
 
   _createClass(MessagesView, [{
-    key: "componentDidUpdate",
-    value: function componentDidUpdate(prevProps, prevState) {
-      if (this.messagesScroller) {
-        if (prevState.title != this.state.title || prevState.messages.length != this.state.messages.length) {
-          this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition;
-        } else if (prevProps.viewportHeight > this.props.viewportHeight) {
-          this.messagesScroller.scrollTop += prevProps.viewportHeight - this.props.viewportHeight;
-        }
-      }
-    }
-  }, {
     key: "componentDidMount",
     value: function componentDidMount() {
       this.propsChange(this.props);
@@ -2677,17 +2654,30 @@ var MessagesView = function (_React$Component) {
       }
     }
   }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps, prevState) {
+      if (this.messagesScroller) {
+        if (prevState.title != this.state.title || prevState.messages.length != this.state.messages.length) {
+          this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition;
+        } else if (prevProps.viewportHeight > this.props.viewportHeight) {
+          this.messagesScroller.scrollTop += prevProps.viewportHeight - this.props.viewportHeight;
+        }
+      }
+    }
+  }, {
     key: "UNSAFE_componentWillReceiveProps",
     value: function UNSAFE_componentWillReceiveProps(nextProps) {
-      this.propsChange(nextProps);
+      this.propsChange(nextProps, this.state);
     }
   }, {
     key: "propsChange",
-    value: function propsChange(props) {
+    value: function propsChange(props, state) {
       var _this2 = this;
 
+      var nextState = {};
+
       if (!props || !props.topic) {
-        var oldTopic = this.state.topic;
+        var oldTopic = state.topic;
         this.setState({
           messages: [],
           onlineSubs: [],
@@ -2703,16 +2693,16 @@ var MessagesView = function (_React$Component) {
         return;
       }
 
-      var topic = this.props.tinode.getTopic(props.topic);
+      var topic = props.tinode.getTopic(props.topic);
 
       if (!topic) {
         return;
       }
 
       var newGroupTopic = tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.isNewGroupTopicName(props.topic);
-      var tryToResubscribe = !this.props.connected && props.connected;
+      var tryToResubscribe = !props.connected && props.connected;
 
-      if (props.topic != this.state.topic) {
+      if (props.topic != state.topic) {
         var msgs = [];
         var subs = [];
         topic.onData = this.handleNewMessage;
@@ -2721,10 +2711,10 @@ var MessagesView = function (_React$Component) {
         topic.onMetaDesc = this.handleDescChange;
         topic.onSubsUpdated = this.handleSubsUpdated;
         topic.onPres = this.handleSubsUpdated;
-        this.leave(this.state.topic);
+        this.leave(state.topic);
         this.handleDescChange(topic);
         topic.subscribers(function (sub) {
-          if (sub.online && sub.user != _this2.props.myUserId) {
+          if (sub.online && sub.user != props.myUserId) {
             subs.push(sub);
           }
         });
@@ -2760,17 +2750,15 @@ var MessagesView = function (_React$Component) {
             topic: ctrl.topic
           });
 
-          _this2.props.onNewTopicCreated(props.topic, ctrl.topic);
-
+          props.onNewTopicCreated(props.topic, ctrl.topic);
           topic.queuedMessages(function (pub) {
             if (!pub._sending && topic.isSubscribed()) {
               topic.publishMessage(pub);
             }
           });
         }).catch(function (err) {
-          _this2.props.onError(err.message, 'err');
-
-          var formatMessage = _this2.props.intl.formatMessage;
+          props.onError(err.message, 'err');
+          var formatMessage = props.intl.formatMessage;
 
           _this2.setState({
             title: formatMessage(messages.not_found),
@@ -5114,16 +5102,9 @@ var TinodeWeb = function (_React$Component) {
     value: function handleContextMenuAction(action, promise, params) {
       var _this24 = this;
 
-      console.log("handleContextMenuAction", action, params, this.state.topicSelected);
-
       if (action == 'topic_archive') {
-        console.log("handleContextMenuAction - 2");
-
         if (promise && params.topicName && params.topicName == this.state.topicSelected) {
-          console.log("handleContextMenuAction - 3");
           promise.then(function () {
-            console.log("handleContextMenuAction - 4");
-
             _this24.handleTopicSelected(null);
           });
         }
@@ -6233,13 +6214,7 @@ var ChipInput = function (_React$Component) {
     _classCallCheck(this, ChipInput);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(ChipInput).call(this, props));
-    _this.state = {
-      placeholder: props.chips ? '' : props.prompt,
-      sortedChips: ChipInput.sortChips(props.chips, props.required),
-      chipIndex: ChipInput.indexChips(props.chips),
-      input: '',
-      focused: false
-    };
+    _this.state = ChipInput.getDerivedStateFromProps(props);
     _this.handleTextInput = _this.handleTextInput.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.removeChipAt = _this.removeChipAt.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleChipCancel = _this.handleChipCancel.bind(_assertThisInitialized(_assertThisInitialized(_this)));
@@ -6250,20 +6225,6 @@ var ChipInput = function (_React$Component) {
   }
 
   _createClass(ChipInput, [{
-    key: "UNSAFE_componentWillReceiveProps",
-    value: function UNSAFE_componentWillReceiveProps(nextProps) {
-      this.setState({
-        sortedChips: ChipInput.sortChips(nextProps.chips, nextProps.required),
-        chipIndex: ChipInput.indexChips(nextProps.chips)
-      });
-
-      if (nextProps.chips.length > this.props.chips.length) {
-        this.setState({
-          input: ''
-        });
-      }
-    }
-  }, {
     key: "handleTextInput",
     value: function handleTextInput(e) {
       this.setState({
@@ -6359,6 +6320,23 @@ var ChipInput = function (_React$Component) {
       }));
     }
   }], [{
+    key: "getDerivedStateFromProps",
+    value: function getDerivedStateFromProps(nextProps, prevState) {
+      var state = {
+        placeholder: nextProps.chips ? '' : nextProps.prompt,
+        sortedChips: ChipInput.sortChips(nextProps.chips, nextProps.required),
+        chipIndex: ChipInput.indexChips(nextProps.chips),
+        input: '',
+        focused: prevState && prevState.focused
+      };
+
+      if (!prevState || nextProps.chips.length > prevState.sortedChips.length) {
+        state.input = '';
+      }
+
+      return state;
+    }
+  }, {
     key: "indexChips",
     value: function indexChips(chips) {
       var index = {};
