@@ -727,6 +727,10 @@ i.search {
 .contact-box > li.selected {
   background-color: #cfd8dc; /* blue-gray 100 highlight */
 }
+.contact-box > li.action {
+  min-height: 2.5rem;
+  border-bottom: none;
+}
 
 .contact-box .text-box {
   overflow-x: hidden;
@@ -778,7 +782,7 @@ i.search {
 .contact-box .action-text {
   text-align: center;
   font-size: 0.95rem;
-  line-height: 3.5rem;
+  line-height: 2.5rem;
   margin: 0 auto 0 auto;
   cursor: pointer;
 }

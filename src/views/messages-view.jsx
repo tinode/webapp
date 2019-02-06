@@ -69,18 +69,6 @@ class MessagesView extends React.Component {
     this.handleBackNavigation = this.handleBackNavigation.bind(this);
   }
 
-  // Scroll last message into view on component update e.g. on message received
-  // or vertical shrinking.
-  componentDidUpdate(prevProps, prevState) {
-    if (this.messagesScroller) {
-      if (prevState.title != this.state.title || prevState.messages.length != this.state.messages.length) {
-        this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition;
-      } else if (prevProps.viewportHeight > this.props.viewportHeight) {
-        this.messagesScroller.scrollTop += prevProps.viewportHeight - this.props.viewportHeight;
-      }
-    }
-  }
-
   componentDidMount() {
     this.propsChange(this.props);
     if (this.messagesScroller) {
@@ -95,13 +83,31 @@ class MessagesView extends React.Component {
     }
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    this.propsChange(nextProps);
+  // Scroll last message into view on component update e.g. on message received
+  // or vertical shrinking.
+  componentDidUpdate(prevProps, prevState) {
+    if (this.messagesScroller) {
+      if (prevState.title != this.state.title || prevState.messages.length != this.state.messages.length) {
+        this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition;
+      } else if (prevProps.viewportHeight > this.props.viewportHeight) {
+        this.messagesScroller.scrollTop += prevProps.viewportHeight - this.props.viewportHeight;
+      }
+    }
   }
 
-  propsChange(props) {
+  //static getDerivedStateFromProps(nextProps, prevState) {
+  //
+  //}
+
+  // Deprecated!
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    this.propsChange(nextProps, this.state);
+  }
+
+  propsChange(props, state) {
+    const nextState = {};
     if (!props || !props.topic) {
-      let oldTopic = this.state.topic;
+      const oldTopic = state.topic;
       this.setState({messages: [], onlineSubs: [], topic: null}, this.leave(oldTopic));
       return;
     }
@@ -112,15 +118,15 @@ class MessagesView extends React.Component {
       return;
     }
 
-    let topic = this.props.tinode.getTopic(props.topic);
+    const topic = props.tinode.getTopic(props.topic);
     if (!topic) {
       return;
     }
 
     let newGroupTopic = Tinode.isNewGroupTopicName(props.topic);
-    let tryToResubscribe = !this.props.connected && props.connected;
+    let tryToResubscribe = !props.connected && props.connected;
 
-    if (props.topic != this.state.topic) {
+    if (props.topic != state.topic) {
       let msgs = [];
       let subs = [];
 
@@ -132,11 +138,11 @@ class MessagesView extends React.Component {
       topic.onSubsUpdated = this.handleSubsUpdated;
       topic.onPres = this.handleSubsUpdated;
       // Unbind the previous topic from this component.
-      this.leave(this.state.topic);
+      this.leave(state.topic);
 
       this.handleDescChange(topic);
       topic.subscribers((sub) => {
-        if (sub.online && sub.user != this.props.myUserId) {
+        if (sub.online && sub.user != props.myUserId) {
           subs.push(sub);
         }
       });
@@ -180,7 +186,7 @@ class MessagesView extends React.Component {
       topic.subscribe(getQuery.build(), setQuery)
         .then((ctrl) => {
           this.setState({topic: ctrl.topic});
-          this.props.onNewTopicCreated(props.topic, ctrl.topic);
+          props.onNewTopicCreated(props.topic, ctrl.topic);
           // If there are unsent messages, try sending them now.
           topic.queuedMessages((pub) => {
             if (!pub._sending && topic.isSubscribed()) {
@@ -189,8 +195,8 @@ class MessagesView extends React.Component {
           });
         })
         .catch((err) => {
-          this.props.onError(err.message, 'err');
-          const {formatMessage} = this.props.intl;
+          props.onError(err.message, 'err');
+          const {formatMessage} = props.intl;
           this.setState({
             title: formatMessage(messages.not_found),
             avatar: null,

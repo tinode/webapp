@@ -18,7 +18,7 @@ class ContactAction extends React.PureComponent {
   render() {
     const {formatMessage} = this.props.intl;
     return (
-      <li onClick={this.handleClick}>
+      <li onClick={this.handleClick} className="action">
         <div className="action-text">{formatMessage(this.props.title, this.props.values)}</div>
       </li>
     );

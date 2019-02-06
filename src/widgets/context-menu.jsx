@@ -80,66 +80,133 @@ class ContextMenu extends React.Component {
 
     // Preconfigured menu items.
     this.MenuItems = {
-      'topic_info':     {title: formatMessage(messages.info), handler: null},
-
-      'messages_clear': {title: formatMessage(messages.clear_messages), handler: (params, errorHandler) => {
-        this.deleteMessages(true, false, params, errorHandler);
-      }},
-      'messages_clear_hard': {title: formatMessage(messages.clear_for_all), handler: (params, errorHandler) => {
-        this.deleteMessages(true, true, params, errorHandler);
-      }},
-      'message_delete': {title: formatMessage(messages.delete), handler: (params, errorHandler) => {
-        this.deleteMessages(false, false, params, errorHandler);
-      }},
-      'message_delete_hard': {title: formatMessage(messages.delete_for_all), handler: (params, errorHandler) => {
-        this.deleteMessages(false, true, params, errorHandler);
-      }},
-      'topic_unmute':   {title: formatMessage(messages.unmute), handler: this.topicPermissionSetter.bind(this, '+P')},
-      'topic_mute':     {title: formatMessage(messages.mute), handler: this.topicPermissionSetter.bind(this, '-P')},
-      'topic_unblock':  {title: formatMessage(messages.unblock), handler: this.topicPermissionSetter.bind(this, '+J')},
-      'topic_block':    {title: formatMessage(messages.block), handler: this.topicPermissionSetter.bind(this, '-J')},
-      'topic_delete':   {title: formatMessage(messages.topic_delete), handler: (params, errorHandler) => {
-        const topic = this.props.tinode.getTopic(params.topicName);
-        if (!topic) {
-          console.log("Topic not found: ", params.topicName);
-          return;
+      'topic_info': {
+        id: 'topic_info',
+        title: formatMessage(messages.info),
+        handler: null
+      },
+      'messages_clear': {
+        id: 'messages_clear',
+        title: formatMessage(messages.clear_messages),
+        handler: (params, errorHandler) => {
+          return this.deleteMessages(true, false, params, errorHandler);
         }
-        topic.delTopic().catch((err) => {
-          if (errorHandler) {
-            errorHandler(err.message, 'err');
-          }
-        });
-      }},
-      'topic_archive':  {title: formatMessage(messages.archive), handler: (params, errorHandler) => {
-        const topic = this.props.tinode.getTopic(params.topicName);
-        if (!topic) {
-          console.log("Topic not found: ", params.topicName);
-          return;
+      },
+      'messages_clear_hard': {
+        id: 'messages_clear_hard',
+        title: formatMessage(messages.clear_for_all),
+        handler: (params, errorHandler) => {
+          return this.deleteMessages(true, true, params, errorHandler);
         }
-        topic.archive(true).catch((err) => {
-          if (errorHandler) {
-            errorHandler(err.message, 'err');
+      },
+      'message_delete': {
+        id: 'message_delete',
+        title: formatMessage(messages.delete),
+        handler: (params, errorHandler) => {
+          return this.deleteMessages(false, false, params, errorHandler);
+        }
+      },
+      'message_delete_hard': {
+        id: 'message_delete_hard',
+        title: formatMessage(messages.delete_for_all),
+        handler: (params, errorHandler) => {
+          return this.deleteMessages(false, true, params, errorHandler);
+        }
+      },
+      'topic_unmute': {
+        id: 'topic_unmute',
+        title: formatMessage(messages.unmute),
+        handler: this.topicPermissionSetter.bind(this, '+P')
+      },
+      'topic_mute': {
+        id: 'topic_mute',
+        title: formatMessage(messages.mute),
+        handler: this.topicPermissionSetter.bind(this, '-P')
+      },
+      'topic_unblock': {
+        id: 'topic_unblock',
+        title: formatMessage(messages.unblock),
+        handler: this.topicPermissionSetter.bind(this, '+J')
+      },
+      'topic_block': {
+        id: 'topic_block',
+        title: formatMessage(messages.block),
+        handler: this.topicPermissionSetter.bind(this, '-J')
+      },
+      'topic_delete': {
+        id: 'topic_delete',
+        title: formatMessage(messages.topic_delete),
+        handler: (params, errorHandler) => {
+          const topic = this.props.tinode.getTopic(params.topicName);
+          if (!topic) {
+            console.log("Topic not found: ", params.topicName);
+            return;
           }
-        });
-      }},
+          return topic.delTopic().catch((err) => {
+            if (errorHandler) {
+              errorHandler(err.message, 'err');
+            }
+          });
+        }
+      },
+      'topic_archive': {
+        id: 'topic_archive',
+        title: formatMessage(messages.archive),
+        handler: (params, errorHandler) => {
+          const topic = this.props.tinode.getTopic(params.topicName);
+          if (!topic) {
+            console.log("Topic not found: ", params.topicName);
+            return;
+          }
+          return topic.archive(true).catch((err) => {
+            if (errorHandler) {
+              errorHandler(err.message, 'err');
+            }
+          });
+        }
+      },
       // menu_item_edit_permissions is defined elsewhere.
-      'permissions':    {title: formatMessage({id: 'menu_item_edit_permissions'}), handler: null},
-      'member_delete':  {title: formatMessage(messages.member_delete), handler: (params, errorHandler) => {
-        const topic = this.props.tinode.getTopic(params.topicName);
-        if (!topic || !params.user) {
-          console.log("Topic or user not found: '" + params.topicName + "', '" + params.user + "'");
-          return;
-        }
-        topic.delSubscription(params.user).catch((err) => {
-          if (errorHandler) {
-            errorHandler(err.message, 'err');
+      'permissions': {
+        id: 'permissions',
+        title: formatMessage({id: 'menu_item_edit_permissions'}),
+        handler: null
+      },
+      'member_delete': {
+        id: 'member_delete',
+        title: formatMessage(messages.member_delete),
+        handler: (params, errorHandler) => {
+          const topic = this.props.tinode.getTopic(params.topicName);
+          if (!topic || !params.user) {
+            console.log("Topic or user not found: '" + params.topicName + "', '" + params.user + "'");
+            return;
           }
-        });
-      }},
-      'member_mute':    {title: formatMessage(messages.mute), handler: this.topicPermissionSetter.bind(this, '-P')},
-      'member_unmute':  {title: formatMessage(messages.unmute), handler: this.topicPermissionSetter.bind(this, '+P')},
-      'member_block':   {title: formatMessage(messages.block), handler: this.topicPermissionSetter.bind(this, '-J')},
-      'member_unblock': {title: formatMessage(messages.unblock), handler: this.topicPermissionSetter.bind(this, '+J')},
+          return topic.delSubscription(params.user).catch((err) => {
+            if (errorHandler) {
+              errorHandler(err.message, 'err');
+            }
+          });
+        }
+      },
+      'member_mute': {
+        id: 'member_mute',
+        title: formatMessage(messages.mute),
+        handler: this.topicPermissionSetter.bind(this, '-P')
+      },
+      'member_unmute': {
+        id: 'member_unmute',
+        title: formatMessage(messages.unmute),
+        handler: this.topicPermissionSetter.bind(this, '+P')
+      },
+      'member_block': {
+        id: 'member_block',
+        title: formatMessage(messages.block),
+        handler: this.topicPermissionSetter.bind(this, '-J')
+      },
+      'member_unblock': {
+        id: 'member_unblock',
+        title: formatMessage(messages.unblock),
+        handler: this.topicPermissionSetter.bind(this, '+J')
+      },
     };
   }
 
@@ -176,7 +243,15 @@ class ContextMenu extends React.Component {
     if (typeof item == 'string') {
       item = this.MenuItems[item];
     }
-    item.handler(this.props.params, this.props.onError);
+
+    if (!item) {
+      console.log("Invalid menu item ID", e.currentTarget.dataset.id);
+    } else {
+      this.props.onAction(
+        item.id,
+        item.handler(this.props.params, this.props.onError),
+        this.props.params);
+    }
   }
 
   // Menu Actions
@@ -200,7 +275,7 @@ class ContextMenu extends React.Component {
       topic.delMessagesAll(hard) :
       topic.delMessagesList([params.seq], hard);
 
-    promise.catch((err) => {
+    return promise.catch((err) => {
       if (errorHandler) {
         errorHandler(err.message, 'err');
       }
@@ -227,7 +302,7 @@ class ContextMenu extends React.Component {
       am = topic.getAccessMode().updateWant(mode).getWant();
     }
 
-    topic.setMeta({sub: {user: params.user, mode: am}}).catch((err) => {
+    return topic.setMeta({sub: {user: params.user, mode: am}}).catch((err) => {
       if (errorHandler) {
         errorHandler(err.message, 'err');
       }

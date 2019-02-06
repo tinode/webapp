@@ -104,6 +104,7 @@ class TinodeWeb extends React.Component {
     this.handleValidateCredentialsRequest = this.handleValidateCredentialsRequest.bind(this);
     this.handlePasswordResetRequest = this.handlePasswordResetRequest.bind(this);
     this.handleResetPassword = this.handleResetPassword.bind(this);
+    this.handleContextMenuAction = this.handleContextMenuAction.bind(this);
   }
 
   getBlankState() {
@@ -1047,6 +1048,16 @@ class TinodeWeb extends React.Component {
       contextMenuParams: null,
       contextMenuBounds: null
     });
+  }
+
+  handleContextMenuAction(action, promise, params) {
+    if (action == 'topic_archive') {
+      if (promise && params.topicName && params.topicName == this.state.topicSelected) {
+        promise.then(() => {
+          this.handleTopicSelected(null);
+        });
+      }
+    }
   }
 
   handleShowInfoView() {

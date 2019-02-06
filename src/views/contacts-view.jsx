@@ -53,10 +53,13 @@ export default class ContactsView extends React.Component {
 
     updateFavicon(unreadThreads);
 
-    return {contactList: contacts, archivedCount: archivedCount};
+    return {
+      contactList: contacts,
+      archivedCount: archivedCount
+    };
   }
 
-  handleAction(action) {
+  handleAction(action_ignored) {
     this.props.onShowArchive();
   }
 

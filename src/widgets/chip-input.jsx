@@ -9,13 +9,7 @@ export default class ChipInput extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      placeholder: props.chips ? '' : props.prompt,
-      sortedChips: ChipInput.sortChips(props.chips, props.required),
-      chipIndex: ChipInput.indexChips(props.chips),
-      input: '',
-      focused: false
-    };
+    this.state = ChipInput.getDerivedStateFromProps(props);
 
     this.handleTextInput = this.handleTextInput.bind(this);
     this.removeChipAt = this.removeChipAt.bind(this);
@@ -25,15 +19,21 @@ export default class ChipInput extends React.Component {
     this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    this.setState({
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const state = {
+      placeholder: nextProps.chips ? '' : nextProps.prompt,
       sortedChips: ChipInput.sortChips(nextProps.chips, nextProps.required),
-      chipIndex: ChipInput.indexChips(nextProps.chips)
-    });
-    if (nextProps.chips.length > this.props.chips.length) {
+      chipIndex: ChipInput.indexChips(nextProps.chips),
+      input: '',
+      focused: prevState && prevState.focused
+    };
+
+    if (!prevState || nextProps.chips.length > prevState.sortedChips.length) {
       // Chip added: clear input.
-      this.setState({input: ''});
+      state.input ='';
     }
+
+    return state;
   }
 
   // Map chip index to user name
