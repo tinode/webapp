@@ -184,17 +184,17 @@ class TinodeWeb extends React.Component {
     // Initialize desktop alerts.
     if (this.state.desktopAlertsEnabled) {
       try {
-        this.fbPush = firebase.initializeApp(FIREBASE_INIT, APP_NAME).messaging();
-        this.fbPush.usePublicVapidKey(FIREBASE_INIT.messagingVapidKey);
+        this.fbase = firebase.initializeApp(FIREBASE_INIT, APP_NAME).messaging();
+        this.fbase.usePublicVapidKey(FIREBASE_INIT.messagingVapidKey);
         navigator.serviceWorker.register('/service-worker.js').then((reg) => {
           this.checkForAppUpdate(reg);
-          this.fbPush.useServiceWorker(reg);
+          this.fbase.useServiceWorker(reg);
           this.initDesktopAlerts();
           if (this.state.desktopAlerts) {
             if (!this.state.firebaseToken) {
               this.togglePushToken(true);
             } else {
-              this.tinode.setDeviceToken(this.state.firebaseToken);
+              this.tinode.setDeviceToken(this.state.firebaseToken, true);
             }
           }
         }).catch((err) => {
@@ -817,11 +817,11 @@ class TinodeWeb extends React.Component {
   initDesktopAlerts() {
     // Google could not be bothered to mention that
     // onTokenRefresh is never called.
-    this.fbPush.onTokenRefresh(() => {
-      this.requestPushToken(true);
+    this.fbase.onTokenRefresh(() => {
+      this.requestPushToken();
     });
 
-    this.fbPush.onMessage((payload) => {
+    this.fbase.onMessage((payload) => {
       // No need to do anything about it.
       // All the magic happends in the service worker.
     });
@@ -830,8 +830,8 @@ class TinodeWeb extends React.Component {
   togglePushToken(enabled) {
     if (enabled) {
       if (!this.state.firebaseToken) {
-        this.fbPush.requestPermission().then(() => {
-          this.requestPushToken(true);
+        this.fbase.requestPermission().then(() => {
+          this.requestPushToken();
         }).catch((err) => {
           this.handleError(err.message, 'err');
           this.setState({desktopAlerts: false, firebaseToken: null});
@@ -843,7 +843,7 @@ class TinodeWeb extends React.Component {
         LocalStorageUtil.updateObject('settings', {desktopAlerts: true});
       }
     } else if (this.state.firebaseToken) {
-      this.fbPush.deleteToken(this.state.firebaseToken).catch((err) => {
+      this.fbase.deleteToken(this.state.firebaseToken).catch((err) => {
         console.log("Unable to delete token.", err);
       }).finally(() => {
         LocalStorageUtil.updateObject('settings', {desktopAlerts: false});
@@ -856,10 +856,10 @@ class TinodeWeb extends React.Component {
     }
   }
 
-  requestPushToken(sendToServer) {
-    this.fbPush.getToken().then((refreshedToken) => {
+  requestPushToken() {
+    this.fbase.getToken().then((refreshedToken) => {
       if (refreshedToken != this.state.firebaseToken) {
-        this.tinode.setDeviceToken(refreshedToken, sendToServer);
+        this.tinode.setDeviceToken(refreshedToken, true);
         LocalStorageUtil.setObject('firebase-token', refreshedToken);
       }
       this.setState({firebaseToken: refreshedToken, desktopAlerts: true});

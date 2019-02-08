@@ -186,7 +186,6 @@ function draftyFormatter(style, data, values, key) {
       case 'FM':
         // Form
         attr.className = 'bot-form';
-        // console.log(data, attr);
         break;
       case 'FE':
         // Form element formatting is dependent on element content.
