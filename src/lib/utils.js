@@ -19,7 +19,7 @@ export function updateFavicon(count) {
 
 // Create VCard which represents topic 'public' info
 export function vcard(fn, imageDataUrl) {
-  const card = null;
+  let card = null;
 
   if ((fn && fn.trim()) || imageDataUrl) {
     card = {};
