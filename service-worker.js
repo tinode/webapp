@@ -20,9 +20,15 @@ firebase.messaging().setBackgroundMessageHandler(function(payload) {
   return self.registration.showNotification(title, options);
 });
 
+// Update service worker immediately for both the current client
+// and all other active clients.
+self.addEventListener('install', event => {
+  self.skipWaiting();
+});
+
 // This code handles a click on notification: takes
 // the user to the browser tab with the chat or opens a new tab.
-self.addEventListener('notificationclick', function(event) {
+self.addEventListener('notificationclick', event => {
   const notification = event.notification;
   notification.close();
 
@@ -68,7 +74,7 @@ self.addEventListener('notificationclick', function(event) {
 });
 
 // This is needed for 'Add to Home Screen'.
-self.addEventListener('fetch', function(event) {
+self.addEventListener('fetch', event => {
   // Workaround for https://bugs.chromium.org/p/chromium/issues/detail?id=823392
   if (event.request.cache == 'only-if-cached' && event.request.mode != 'same-origin') {
     return;
