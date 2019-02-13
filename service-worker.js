@@ -5,6 +5,12 @@ importScripts('firebase-init.js');
 
 firebase.initializeApp(FIREBASE_INIT);
 
+// Skip waiting
+self.addEventListener('install', event => {
+    // don't wait
+    self.skipWaiting();
+});
+
 // This method shows the notifications.
 firebase.messaging().setBackgroundMessageHandler(function(payload) {
   let title = payload.data.title || "New message";
@@ -14,7 +20,8 @@ firebase.messaging().setBackgroundMessageHandler(function(payload) {
     badge: '/img/badge96.png',
     tag: payload.data.topic || undefined,
     data: {
-      topic: payload.data.topic
+      topic: payload.data.topic,
+      xfrom: payload.data.xfrom
     }
   };
   return self.registration.showNotification(title, options);
@@ -26,17 +33,18 @@ self.addEventListener('notificationclick', function(event) {
   const notification = event.notification;
   notification.close();
 
-  const urlHash = '#/' + notification.data.topic;
+  const urlHash = '#/' + notification.data.xfrom;
 
   const promises = self.clients.matchAll({
     type: 'window',
-    includeUncontrolled: true
+    //todo This will not work if the service-worker is out of date or overwritten.
+    //includeUncontrolled: true
   }).then((windowClients) => {
     let matchingClient = null;
     let anyClient = null;
     for (let i = 0; i < windowClients.length; i++) {
       const url = new URL(windowClients[i].url);
-      if (url.hash.includes(notification.data.topic)) {
+      if (url.hash.includes(notification.data.xfrom)) {
         matchingClient = windowClients[i];
         break;
       } else {
@@ -53,13 +61,13 @@ self.addEventListener('notificationclick', function(event) {
     // navigate to the right topic.
     if (anyClient) {
       const url = new URL(anyClient.url);
-      url.hash = '#/' + notification.data.topic;
+      url.hash = '#/' + notification.data.xfrom;
       return anyClient.navigate(url).then(() => { return anyClient.focus(); });
     }
 
     // Did not find a Tinode browser tab. Open one.
     const url = new URL(self.location.origin);
-    url.hash = '#/' + notification.data.topic;
+    url.hash = '#/' + notification.data.xfrom;
     return clients.openWindow(url);
 
   });
@@ -69,6 +77,10 @@ self.addEventListener('notificationclick', function(event) {
 
 // This is needed for 'Add to Home Screen'.
 self.addEventListener('fetch', function(event) {
+    // Workaround for https://bugs.chromium.org/p/chromium/issues/detail?id=823392
+    if (event.request.cache == 'only-if-cached' && event.request.mode != 'same-origin') {
+        return;
+    }
 	event.respondWith(
     //  Try to find response in cache.
     caches.match(event.request)
