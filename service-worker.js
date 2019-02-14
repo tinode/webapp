@@ -34,43 +34,37 @@ self.addEventListener('notificationclick', event => {
 
   const urlHash = '#/' + notification.data.topic;
 
-  const promises = self.clients.matchAll({
+  event.waitUntil(self.clients.matchAll({
     type: 'window',
     includeUncontrolled: true
   }).then((windowClients) => {
-    let matchingClient = null;
     let anyClient = null;
     for (let i = 0; i < windowClients.length; i++) {
       const url = new URL(windowClients[i].url);
       if (url.hash.includes(notification.data.topic)) {
-        matchingClient = windowClients[i];
-        break;
+        // Found the Tinode tab with the right topic open.
+        return windowClients[i].focus();
       } else {
+        // This will be the least recently used tab.
         anyClient = windowClients[i];
       }
     }
 
-    // Found browser tab with the topic already open.
-    if (matchingClient) {
-      return matchingClient.focus();
-    }
-
-    // Found browser tab with Tinode on a different topic,
+    // Found tab with Tinode on a different topic,
     // navigate to the right topic.
     if (anyClient) {
       const url = new URL(anyClient.url);
-      url.hash = '#/' + notification.data.topic;
-      return anyClient.navigate(url).then(() => { return anyClient.focus(); });
+      url.hash = urlHash;
+      return anyClient.focus().then(thisClient => {
+        return thisClient.navigate(url);
+      });
     }
 
     // Did not find a Tinode browser tab. Open one.
     const url = new URL(self.location.origin);
-    url.hash = '#/' + notification.data.topic;
+    url.hash = urlHash;
     return clients.openWindow(url);
-
-  });
-
-  event.waitUntil(promises);
+  }));
 });
 
 // This is needed for 'Add to Home Screen'.
