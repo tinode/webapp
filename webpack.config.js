@@ -30,6 +30,10 @@ module.exports = {
       })
     ]
   },
+  performance: {
+    maxEntrypointSize: 280000,
+    maxAssetSize: 280000
+  },
   externals: {
     'react': 'React',
     'react-dom': 'ReactDOM',
