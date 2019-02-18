@@ -810,7 +810,7 @@ function arrayEqual(a, b) {
 /*! exports provided: en, ru, default */
 /***/ (function(module) {
 
-module.exports = {"en":{"archived_contacts":"Archived contacts ({count})","contacts_not_found":"You have no chats<br />¯∖_(ツ)_/¯","full_name_prompt":"Full name, e.g. John Doe","email_prompt":"Email, e.g. jdoe@example.com","button_sign_up":"Sign up","label_your_name":"Your name","label_password":"Password","password_unchanged_prompt":"Unchanged","label_user_id":"Address:","label_default_access_mode":"Default access mode:","label_message_sound":"Message sound:","label_push_notifications":"Notification alerts:","label_push_notifications_disabled":"Notification alerts (requires HTTPS):","title_tag_manager":"Tags (user discovery)","button_logout":"Logout","requested_permissions":"Requested","granted_permissions":"Granted","menu_item_edit_permissions":"Edit permissions","label_other_user":"Other","title_info":"Info","label_topic_name":"Name","label_private":"Private comment","private_editing_placeholder":"Visible to you only","label_muting_topic":"Muted:","action_more":"More","label_your_permissions":"Your permissions:","label_permissions":"Permissions:","label_you":"You:","label_default_access":"Default access mode:","label_group_members":"Group members:","button_add_members":"Add members","button_leave":"Leave","group_has_no_members":"No members","action_leave_chat":"Leave","login_prompt":"Login","password_prompt":"Password","stay_logged_in":"Stay logged in","forgot_password_link":"Forgot password?","button_sign_in":"Sign in","label_client":"Client:","label_server":"Server:","online_now":"online now","last_seen_timestamp":"Last seen","title_not_found":"Not found","unnamed_topic":"Unnamed","messages_not_readable":"no access to messages","tabtitle_find_user":"find","tabtitle_new_group":"new group","tabtitle_group_by_id":"by id","search_for_contacts":"Use search to find contacts","new_password_placeholder":"Enter new password","label_reset_password":"Send a password reset email:","credential_email_prompt":"Your registration email","button_reset":"Reset","button_send_request":"Send request","label_server_to_use":"Server to use:","label_wire_transport":"Wire transport:","button_update":"Update","sidepanel_title_login":"Sign In","sidepanel_title_register":"Create Account","sidepanel_title_settings":"Settings","sidepanel_title_edit_account":"Edit Account","sidepanel_title_newtpk":"Start New Chat","sidepanel_title_cred":"Confirm Credentials","sidepanel_title_reset":"Reset Password","sidepanel_title_archive":"Archived Chats","update_available":"Update available. <a href=\"\">Reload</a>.","reconnect_countdown":"Disconnected. Reconnecting in {seconds}s…","reconnect_now":"Try now","phone_dative":"phone","email_dative":"email","enter_confirmation_code_prompt":"Enter confirmation code sent to you by {method}:","numeric_confirmation_code_prompt":"Numbers only","button_confirm":"Confirm","save_attachment":"save","invalid_content":"invalid content","user_not_found":"Not found","badge_you":"you","badge_owner":"owner","menu_item_info":"Info","menu_item_clear_messages":"Clear messages","menu_item_clear_messages_for_all":"Clear for All","menu_item_delete":"Delete","menu_item_delete_for_all":"Delete for All","menu_item_mute":"Mute","menu_item_unmute":"Unmute","menu_item_delete_topic":"Delete","menu_item_unblock":"Unblock","menu_item_block":"Block","menu_item_member_delete":"Remove","menu_item_archive_topic":"Archive","action_cancel":"cancel","upload_finishing":"finishing...","no_contacts":"You have no contacts :-(","contacts_not_found_short":"No contacts match '{query}'","title_group_members":"Group Members","title_all_contacts":"All Contacts","button_ok":"OK","button_cancel":"Cancel","download_action":"download","label_file_name":"File name:","label_content_type":"Content type:","label_size":"Size:","error_invalid_id":"Invalid ID","group_user_id_prompt":"Group or User ID","button_subscribe":"Subscribe","topic_name_editing_placeholder":"Freeform name of the group","button_create":"Create","permission_join":"Join ({val})","permission_read":"Read ({val})","permission_write":"Write ({val})","permission_pres":"Get notified ({val})","permission_admin":"Approve ({val})","permission_share":"Share ({val})","permission_delete":"Delete ({val})","permission_owner":"Owner ({val})","title_permissions":"Permissions","message_sending":"sending...","message_sending_failed":"failed","search_placeholder":"List like email:alice@example.com, tel:17025550003...","messaging_disabled_prompt":"Messaging disabled","new_message_prompt":"New message","file_attachment_too_large":"The file size {size} exceeds the {limit} limit.","cannot_initiate_file_upload":"Cannot initiate file upload.","tags_not_found":"No tags defined. Add some.","tags_editor_no_tags":"Add some tags","title_manage_tags":"Manage tags"},"ru":{"contacts_not_found":"Чатов нет<br />¯∖_(ツ)_/¯","full_name_prompt":"Полное имя, напр. Иван Петров","email_prompt":"Email, напр. ivan@example.com","button_sign_up":"Создать счет","label_your_name":"Ваше имя","label_password":"Пароль","password_unchanged_prompt":"Не изменен","label_user_id":"Адрес:","label_default_access_mode":"Доступ по умолчанию:","label_message_sound":"Звук нового сообщения:","label_push_notifications":"Уведомления:","label_push_notifications_disabled":"Уведомления (требуют HTTPS):","title_tag_manager":"Таги для поиска","button_logout":"Выйти","login_prompt":"Логин","password_prompt":"Пароль","stay_logged_in":"Запомнить","forgot_password_link":"Напомнить пароль","button_sign_in":"Войти","label_client":"Клиент:","label_server":"Сервер:","online_now":"онлайн","last_seen_timestamp":"Был активен","title_not_found":"Не найден","unnamed_topic":"Без названия","messages_not_readable":"нет доступа к сообщениям","tabtitle_find_user":"найти","tabtitle_new_group":"создать","tabtitle_group_by_id":"по id","label_server_to_use":"Использовать сервер:","label_wire_transport":"Соединение:","button_update":"Применить","sidepanel_title_login":"Авторизация","sidepanel_title_register":"Зарегистрироваться","sidepanel_title_settings":"Настройки","sidepanel_title_edit_account":"Редактировать счет","sidepanel_title_newtpk":"Новый чат","sidepanel_title_cred":"Подтвердить","sidepanel_title_reset":"Сменить пароль","tags_not_found":"Тагов нет. Добавьте","tags_editor_no_tags":"Добавьте таги","title_manage_tags":"Редактор тагов","message_sending":"в пути...","message_sending_failed":"ошибка","search_placeholder":"Список, напр. email:alice@example.com, tel:17025550003...","messaging_disabled_prompt":"Отправка недоступна","new_message_prompt":"Новое сообщение","file_attachment_too_large":"Размер файла {size} превышает {limit} лимит.","cannot_initiate_file_upload":"Ошибка загрузки файла.","search_for_contacts":"Поиск контактов","enter_confirmation_code_prompt":"Код подтверждения, полученный по {method}:","numeric_confirmation_code_prompt":"Только цифры","button_confirm":"Подтвердить","button_ok":"OK","button_cancel":"Отменить","invalid_content":"сообщение не читается","label_file_name":"Имя файла:","label_content_type":"Тип:","label_size":"Размер:","phone_dative":"телефону","email_dative":"емейлу","title_group_members":"Участники","download_action":"скачать","permission_join":"Подписываться ({val})","permission_read":"Читать ({val})","permission_write":"Писать ({val})","permission_pres":"Уведомлять ({val})","permission_admin":"Подтверждать ({val})","permission_share":"Приглашать ({val})","permission_delete":"Удалять ({val})","permission_owner":"Владелец ({val})","title_permissions":"Права доступа","requested_permissions":"Требуются","granted_permissions":"Получены","menu_item_edit_permissions":"Права доступа","label_other_user":"Второй","label_topic_name":"Название","label_private":"Комментарий","private_editing_placeholder":"Виден только вам","label_muting_topic":"Без уведомлений","action_more":"Ещё","label_your_permissions":"Ваши права доступа:","label_permissions":"Права доступа:","label_you":"Вы:","label_default_access":"Права по умолчанию:","label_group_members":"Участники чата:","button_add_members":"Добавить","button_leave":"Отписаться","group_has_no_members":"Нет участников","action_leave_chat":"Уйти из чата","menu_item_info":"Информация","menu_item_clear_messages":"Удалить сообщения","menu_item_clear_messages_for_all":"Удалить для всех","menu_item_delete":"Удалить","menu_item_delete_for_all":"Удалить для всех","menu_item_mute":"Не уведомлять","menu_item_unmute":"Уведомлять","menu_item_delete_topic":"Удалить чат","menu_item_unblock":"Разблокировать","menu_item_block":"Заблокировать","menu_item_member_delete":"Отписать","title_info":"Подробности","new_password_placeholder":"Введите новый пароль","label_reset_password":"Отправить емейл для смены пароля:","credential_email_prompt":"Регистрационный емейл","button_reset":"Изменить","button_send_request":"Отправить","action_cancel":"отменить","upload_finishing":"завершение...","no_contacts":"Ничего нет :-(","contacts_not_found_short":"Нет контактов для запроса '{query}'","title_all_contacts":"Все контакты","error_invalid_id":"Неверный ID","group_user_id_prompt":"ID чата или пользователя","button_subscribe":"Подписаться","topic_name_editing_placeholder":"Название чата","button_create":"Создать","badge_you":"вы","badge_owner":"влад.","update_available":"Есть новая версия приложения. <a href=\"\">Обновить</a>.","user_not_found":"Не найден","reconnect_countdown":"Нет связи. Подключение через {seconds}с…","reconnect_now":"Подключить сейчас.","save_attachment":"сохранить","menu_item_archive_topic":"В архив","archived_contacts":"Чаты в архиве ({count})","sidepanel_title_archive":"Архив чатов"}};
+module.exports = {"en":{"archived_contacts":"Archived contacts ({count})","contacts_not_found":"You have no chats<br />¯∖_(ツ)_/¯","full_name_prompt":"Full name, e.g. John Doe","email_prompt":"Email, e.g. jdoe@example.com","button_sign_up":"Sign up","label_your_name":"Your name","label_password":"Password","password_unchanged_prompt":"Unchanged","label_user_id":"Address:","label_default_access_mode":"Default access mode:","label_message_sound":"Message sound:","label_push_notifications":"Notification alerts:","label_push_notifications_disabled":"Notification alerts (requires HTTPS):","title_tag_manager":"Tags (user discovery)","button_logout":"Logout","requested_permissions":"Requested","granted_permissions":"Granted","menu_item_edit_permissions":"Edit permissions","label_other_user":"Other","title_info":"Info","label_topic_name":"Name","label_private":"Private comment","private_editing_placeholder":"Visible to you only","label_muting_topic":"Muted:","action_more":"More","label_your_permissions":"Your permissions:","label_permissions":"Permissions:","label_you":"You:","label_default_access":"Default access mode:","label_group_members":"Group members:","button_add_members":"Add members","button_leave":"Leave","group_has_no_members":"No members","action_leave_chat":"Leave","login_prompt":"Login","password_prompt":"Password","stay_logged_in":"Stay logged in","forgot_password_link":"Forgot password?","button_sign_in":"Sign in","label_client":"Client:","label_server":"Server:","online_now":"online now","last_seen_timestamp":"Last seen","title_not_found":"Not found","unnamed_topic":"Unnamed","messages_not_readable":"no access to messages","tabtitle_find_user":"find","tabtitle_new_group":"new group","tabtitle_group_by_id":"by id","search_for_contacts":"Use search to find contacts","new_password_placeholder":"Enter new password","label_reset_password":"Send a password reset email:","credential_email_prompt":"Your registration email","button_reset":"Reset","button_send_request":"Send request","label_server_to_use":"Server to use:","label_wire_transport":"Wire transport:","button_update":"Update","sidepanel_title_login":"Sign In","sidepanel_title_register":"Create Account","sidepanel_title_settings":"Settings","sidepanel_title_edit_account":"Edit Account","sidepanel_title_newtpk":"Start New Chat","sidepanel_title_cred":"Confirm Credentials","sidepanel_title_reset":"Reset Password","sidepanel_title_archive":"Archived Chats","update_available":"Update available. <a href=\"\">Reload</a>.","reconnect_countdown":"Disconnected. Reconnecting in {seconds}s…","reconnect_now":"Try now","phone_dative":"phone","email_dative":"email","enter_confirmation_code_prompt":"Enter confirmation code sent to you by {method}:","numeric_confirmation_code_prompt":"Numbers only","button_confirm":"Confirm","save_attachment":"save","invalid_content":"invalid content","user_not_found":"Not found","badge_you":"you","badge_owner":"owner","menu_item_info":"Info","menu_item_clear_messages":"Clear messages","menu_item_clear_messages_for_all":"Clear for All","menu_item_delete":"Delete","menu_item_delete_for_all":"Delete for All","menu_item_mute":"Mute","menu_item_unmute":"Unmute","menu_item_delete_topic":"Delete","menu_item_unblock":"Unblock","menu_item_block":"Block","menu_item_member_delete":"Remove","menu_item_archive_topic":"Archive","action_cancel":"cancel","upload_finishing":"finishing...","no_contacts":"You have no contacts :-(","contacts_not_found_short":"No contacts match '{query}'","title_group_members":"Group Members","title_all_contacts":"All Contacts","button_ok":"OK","button_cancel":"Cancel","download_action":"download","label_file_name":"File name:","label_content_type":"Content type:","label_size":"Size:","chat_invitation":"You are invited to start a new chat. What would you like to do?","chat_invitation_accept":"Accept","chat_invitation_ignore":"Ignore","chat_invitation_block":"Block","error_invalid_id":"Invalid ID","group_user_id_prompt":"Group or User ID","button_subscribe":"Subscribe","topic_name_editing_placeholder":"Freeform name of the group","button_create":"Create","permission_join":"Join ({val})","permission_read":"Read ({val})","permission_write":"Write ({val})","permission_pres":"Get notified ({val})","permission_admin":"Approve ({val})","permission_share":"Share ({val})","permission_delete":"Delete ({val})","permission_owner":"Owner ({val})","title_permissions":"Permissions","message_sending":"sending...","message_sending_failed":"failed","search_placeholder":"List like email:alice@example.com, tel:17025550003...","messaging_disabled_prompt":"Messaging disabled","new_message_prompt":"New message","file_attachment_too_large":"The file size {size} exceeds the {limit} limit.","cannot_initiate_file_upload":"Cannot initiate file upload.","tags_not_found":"No tags defined. Add some.","tags_editor_no_tags":"Add some tags","title_manage_tags":"Manage tags"},"ru":{"contacts_not_found":"Чатов нет<br />¯∖_(ツ)_/¯","full_name_prompt":"Полное имя, напр. Иван Петров","email_prompt":"Email, напр. ivan@example.com","button_sign_up":"Создать счет","label_your_name":"Ваше имя","label_password":"Пароль","password_unchanged_prompt":"Не изменен","label_user_id":"Адрес:","label_default_access_mode":"Доступ по умолчанию:","label_message_sound":"Звук нового сообщения:","label_push_notifications":"Уведомления:","label_push_notifications_disabled":"Уведомления (требуют HTTPS):","title_tag_manager":"Таги для поиска","button_logout":"Выйти","login_prompt":"Логин","password_prompt":"Пароль","stay_logged_in":"Запомнить","forgot_password_link":"Напомнить пароль","button_sign_in":"Войти","label_client":"Клиент:","label_server":"Сервер:","online_now":"онлайн","last_seen_timestamp":"Был активен","title_not_found":"Не найден","unnamed_topic":"Без названия","messages_not_readable":"нет доступа к сообщениям","tabtitle_find_user":"найти","tabtitle_new_group":"создать","tabtitle_group_by_id":"по id","label_server_to_use":"Использовать сервер:","label_wire_transport":"Соединение:","button_update":"Применить","sidepanel_title_login":"Авторизация","sidepanel_title_register":"Зарегистрироваться","sidepanel_title_settings":"Настройки","sidepanel_title_edit_account":"Редактировать счет","sidepanel_title_newtpk":"Новый чат","sidepanel_title_cred":"Подтвердить","sidepanel_title_reset":"Сменить пароль","tags_not_found":"Тагов нет. Добавьте","tags_editor_no_tags":"Добавьте таги","title_manage_tags":"Редактор тагов","message_sending":"в пути...","message_sending_failed":"ошибка","search_placeholder":"Список, напр. email:alice@example.com, tel:17025550003...","messaging_disabled_prompt":"Отправка недоступна","new_message_prompt":"Новое сообщение","file_attachment_too_large":"Размер файла {size} превышает {limit} лимит.","cannot_initiate_file_upload":"Ошибка загрузки файла.","search_for_contacts":"Поиск контактов","enter_confirmation_code_prompt":"Код подтверждения, полученный по {method}:","numeric_confirmation_code_prompt":"Только цифры","button_confirm":"Подтвердить","button_ok":"OK","button_cancel":"Отменить","invalid_content":"сообщение не читается","label_file_name":"Имя файла:","label_content_type":"Тип:","label_size":"Размер:","phone_dative":"телефону","email_dative":"емейлу","title_group_members":"Участники","download_action":"скачать","permission_join":"Подписываться ({val})","permission_read":"Читать ({val})","permission_write":"Писать ({val})","permission_pres":"Уведомлять ({val})","permission_admin":"Подтверждать ({val})","permission_share":"Приглашать ({val})","permission_delete":"Удалять ({val})","permission_owner":"Владелец ({val})","title_permissions":"Права доступа","requested_permissions":"Требуются","granted_permissions":"Получены","menu_item_edit_permissions":"Права доступа","label_other_user":"Второй","label_topic_name":"Название","label_private":"Комментарий","private_editing_placeholder":"Виден только вам","label_muting_topic":"Без уведомлений","action_more":"Ещё","label_your_permissions":"Ваши права доступа:","label_permissions":"Права доступа:","label_you":"Вы:","label_default_access":"Права по умолчанию:","label_group_members":"Участники чата:","button_add_members":"Добавить","button_leave":"Отписаться","group_has_no_members":"Нет участников","action_leave_chat":"Уйти из чата","menu_item_info":"Информация","menu_item_clear_messages":"Удалить сообщения","menu_item_clear_messages_for_all":"Удалить для всех","menu_item_delete":"Удалить","menu_item_delete_for_all":"Удалить для всех","menu_item_mute":"Не уведомлять","menu_item_unmute":"Уведомлять","menu_item_delete_topic":"Удалить чат","menu_item_unblock":"Разблокировать","menu_item_block":"Заблокировать","menu_item_member_delete":"Отписать","title_info":"Подробности","new_password_placeholder":"Введите новый пароль","label_reset_password":"Отправить емейл для смены пароля:","credential_email_prompt":"Регистрационный емейл","button_reset":"Изменить","button_send_request":"Отправить","action_cancel":"отменить","upload_finishing":"завершение...","no_contacts":"Ничего нет :-(","contacts_not_found_short":"Нет контактов для запроса '{query}'","title_all_contacts":"Все контакты","error_invalid_id":"Неверный ID","group_user_id_prompt":"ID чата или пользователя","button_subscribe":"Подписаться","topic_name_editing_placeholder":"Название чата","button_create":"Создать","badge_you":"вы","badge_owner":"влад.","update_available":"Есть новая версия приложения. <a href=\"\">Обновить</a>.","user_not_found":"Не найден","reconnect_countdown":"Нет связи. Подключение через {seconds}с…","reconnect_now":"Подключить сейчас.","save_attachment":"сохранить","menu_item_archive_topic":"В архив","archived_contacts":"Чаты в архиве ({count})","sidepanel_title_archive":"Архив чатов","chat_invitation":"Вас пригласили начать новый чат. Как вы хотите поступить?","chat_invitation_accept":"Принять","chat_invitation_ignore":"Игнорировать","chat_invitation_block":"Заблокировать"}};
 
 /***/ }),
 
@@ -2539,13 +2539,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/error-panel.jsx */ "./src/widgets/error-panel.jsx");
 /* harmony import */ var _widgets_group_subs_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/group-subs.jsx */ "./src/widgets/group-subs.jsx");
 /* harmony import */ var _widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/image-preview.jsx */ "./src/widgets/image-preview.jsx");
-/* harmony import */ var _widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../widgets/letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
-/* harmony import */ var _widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../widgets/load-spinner.jsx */ "./src/widgets/load-spinner.jsx");
-/* harmony import */ var _logo_view_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./logo-view.jsx */ "./src/views/logo-view.jsx");
-/* harmony import */ var _widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../widgets/send-message.jsx */ "./src/widgets/send-message.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _widgets_Invitation_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../widgets/Invitation.jsx */ "./src/widgets/Invitation.jsx");
+/* harmony import */ var _widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../widgets/letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
+/* harmony import */ var _widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../widgets/load-spinner.jsx */ "./src/widgets/load-spinner.jsx");
+/* harmony import */ var _logo_view_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./logo-view.jsx */ "./src/views/logo-view.jsx");
+/* harmony import */ var _widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../widgets/send-message.jsx */ "./src/widgets/send-message.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -2568,6 +2569,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 
 
 var Drafty = tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.Drafty;
+
 
 
 
@@ -2630,6 +2632,7 @@ var MessagesView = function (_React$Component) {
     _this.handleContextClick = _this.handleContextClick.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleShowContextMenuMessage = _this.handleShowContextMenuMessage.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     _this.handleBackNavigation = _this.handleBackNavigation.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    _this.handleNewChatAcceptance = _this.handleNewChatAcceptance.bind(_assertThisInitialized(_assertThisInitialized(_this)));
     return _this;
   }
 
@@ -2738,7 +2741,7 @@ var MessagesView = function (_React$Component) {
       });
 
       if (!topic.isSubscribed() && tryToResubscribe) {
-        var getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub().withLaterData(_config_js__WEBPACK_IMPORTED_MODULE_11__["MESSAGES_PAGE"]).withLaterDel();
+        var getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub().withLaterData(_config_js__WEBPACK_IMPORTED_MODULE_12__["MESSAGES_PAGE"]).withLaterDel();
         var setQuery = newGroupTopic ? props.newGroupTopicParams : undefined;
         this.setState({
           fetchingMessages: true
@@ -2824,7 +2827,7 @@ var MessagesView = function (_React$Component) {
 
             if (topic && topic.isSubscribed() && topic.msgHasMoreMessages()) {
               newState.fetchingMessages = true;
-              topic.getMessagesPage(_config_js__WEBPACK_IMPORTED_MODULE_11__["MESSAGES_PAGE"]).catch(function (err) {
+              topic.getMessagesPage(_config_js__WEBPACK_IMPORTED_MODULE_12__["MESSAGES_PAGE"]).catch(function (err) {
                 _this4.setState({
                   fetchingMessages: false
                 });
@@ -2844,7 +2847,7 @@ var MessagesView = function (_React$Component) {
       if (desc.public) {
         this.setState({
           title: desc.public.fn,
-          avatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_12__["makeImageUrl"])(desc.public.photo)
+          avatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__["makeImageUrl"])(desc.public.photo)
         });
       } else {
         this.setState({
@@ -2928,7 +2931,7 @@ var MessagesView = function (_React$Component) {
               instance.setState({
                 typingIndicator: false
               });
-            }, _config_js__WEBPACK_IMPORTED_MODULE_11__["KEYPRESS_DELAY"] + 1000);
+            }, _config_js__WEBPACK_IMPORTED_MODULE_12__["KEYPRESS_DELAY"] + 1000);
 
             if (!this.state.typingIndicator) {
               this.setState({
@@ -3023,6 +3026,11 @@ var MessagesView = function (_React$Component) {
       this.props.onHideMessagesView();
     }
   }, {
+    key: "handleNewChatAcceptance",
+    value: function handleNewChatAcceptance(action) {
+      console.log(action);
+    }
+  }, {
     key: "render",
     value: function render() {
       var formatMessage = this.props.intl.formatMessage;
@@ -3067,7 +3075,7 @@ var MessagesView = function (_React$Component) {
 
             if (user && user.public) {
               userName = user.public.fn;
-              userAvatar = Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_12__["makeImageUrl"])(user.public.photo);
+              userAvatar = Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__["makeImageUrl"])(user.public.photo);
             }
 
             userFrom = msg.from;
@@ -3105,7 +3113,7 @@ var MessagesView = function (_React$Component) {
           if (cont.online) {
             lastSeen = formatMessage(messages.online_now);
           } else if (cont.seen) {
-            lastSeen = formatMessage(messages.last_seen) + ": " + Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_13__["shortDateFormat"])(cont.seen.when, this.props.intl.locale);
+            lastSeen = formatMessage(messages.last_seen) + ": " + Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_14__["shortDateFormat"])(cont.seen.when, this.props.intl.locale);
           }
         }
 
@@ -3125,7 +3133,7 @@ var MessagesView = function (_React$Component) {
           className: "material-icons"
         }, "arrow_back")) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "avatar-box"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
           avatar: avatar,
           topic: this.state.topic,
           title: this.state.title
@@ -3154,7 +3162,7 @@ var MessagesView = function (_React$Component) {
           level: this.props.errorLevel,
           text: this.props.errorText,
           onClearError: this.props.onError
-        }) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
+        }) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
           show: this.state.fetchingMessages
         }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           id: "messages-container"
@@ -3164,25 +3172,27 @@ var MessagesView = function (_React$Component) {
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
           id: "scroller",
           className: chatBoxClass
-        }, messageNodes)), this.state.writeOnly ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        }, messageNodes), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Typing notifications here.")), this.state.writeOnly ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           id: "write-only-background"
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           id: "write-only-note"
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
           id: "messages_not_readable",
           defaultMessage: "no access to messages"
-        }))) : null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
+        }))) : null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
           tinode: this.props.tinode,
           topic: this.props.topic,
           disabled: this.state.readOnly,
           sendMessage: this.props.sendMessage,
           onError: this.props.onError
+        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_Invitation_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
+          onAction: this.handleNewChatAcceptance
         }), this.state.imagePreview ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
           content: this.state.imagePreview,
           onClose: this.handleCloseImagePreview
         }) : null);
       } else {
-        component = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_logo_view_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
+        component = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_logo_view_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
           hideSelf: this.props.hideSelf,
           serverVersion: this.props.serverVersion,
           serverAddress: this.props.serverAddress
@@ -5534,6 +5544,111 @@ var ValidationView = function (_React$PureComponent) {
 
 ;
 /* harmony default export */ __webpack_exports__["default"] = (Object(react_intl__WEBPACK_IMPORTED_MODULE_1__["injectIntl"])(ValidationView));
+
+/***/ }),
+
+/***/ "./src/widgets/Invitation.jsx":
+/*!************************************!*\
+  !*** ./src/widgets/Invitation.jsx ***!
+  \************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Invitation; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+
+
+
+var Invitation = function (_React$PureComponent) {
+  _inherits(Invitation, _React$PureComponent);
+
+  function Invitation(props) {
+    var _this;
+
+    _classCallCheck(this, Invitation);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Invitation).call(this, props));
+    _this.handleButtonAction = _this.handleButtonAction.bind(_assertThisInitialized(_assertThisInitialized(_this)));
+    return _this;
+  }
+
+  _createClass(Invitation, [{
+    key: "handleButtonAction",
+    value: function handleButtonAction(evt, data) {
+      evt.preventDefault();
+      console.log("button clicked", data);
+      this.props.onAction(data);
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "accept-invite-panel"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "title"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+        id: "chat_invitation",
+        defaultMessage: "You are invited to start a new chat. What would you like to do?"
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "footer"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "blue",
+        onClick: function onClick(event) {
+          _this2.handleButtonAction(event, "accept");
+        }
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+        id: "chat_invitation_accept",
+        defaultMessage: "Accept"
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "white",
+        onClick: function onClick(event) {
+          _this2.handleButtonAction(event, "delete");
+        }
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+        id: "chat_invitation_ignore",
+        defaultMessage: "Ignore"
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "white",
+        onClick: function onClick(event) {
+          _this2.handleButtonAction(event, "block");
+        }
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+        id: "chat_invitation_block",
+        defaultMessage: "Block"
+      }))));
+    }
+  }]);
+
+  return Invitation;
+}(react__WEBPACK_IMPORTED_MODULE_0___default.a.PureComponent);
+
+
+;
 
 /***/ }),
 

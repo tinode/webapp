@@ -125,5 +125,9 @@
   "save_attachment": "сохранить",
   "menu_item_archive_topic": "В архив",
   "archived_contacts": "Чаты в архиве ({count})",
-  "sidepanel_title_archive": "Архив чатов"
+  "sidepanel_title_archive": "Архив чатов",
+  "chat_invitation": "Вас пригласили начать новый чат. Как вы хотите поступить?",
+  "chat_invitation_accept": "Принять",
+  "chat_invitation_ignore": "Игнорировать",
+  "chat_invitation_block": "Заблокировать"
 }

@@ -103,6 +103,10 @@
     "label_file_name": "File name:",
     "label_content_type": "Content type:",
     "label_size": "Size:",
+    "chat_invitation": "You are invited to start a new chat. What would you like to do?",
+    "chat_invitation_accept": "Accept",
+    "chat_invitation_ignore": "Ignore",
+    "chat_invitation_block": "Block",
     "error_invalid_id": "Invalid ID",
     "group_user_id_prompt": "Group or User ID",
     "button_subscribe": "Subscribe",
@@ -255,6 +259,10 @@
     "save_attachment": "сохранить",
     "menu_item_archive_topic": "В архив",
     "archived_contacts": "Чаты в архиве ({count})",
-    "sidepanel_title_archive": "Архив чатов"
+    "sidepanel_title_archive": "Архив чатов",
+    "chat_invitation": "Вас пригласили начать новый чат. Как вы хотите поступить?",
+    "chat_invitation_accept": "Принять",
+    "chat_invitation_ignore": "Игнорировать",
+    "chat_invitation_block": "Заблокировать"
   }
 }

@@ -14,7 +14,7 @@ export default class Chip extends React.PureComponent {
   }
 
   render() {
-    var title = this.props.title || this.props.topic;
+    const title = this.props.title || this.props.topic;
     return (
       <div className="chip">
         {this.props.noAvatar ?

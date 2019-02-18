@@ -8,6 +8,7 @@ import ChatMessage from '../widgets/chat-message.jsx';
 import ErrorPanel from '../widgets/error-panel.jsx';
 import GroupSubs from '../widgets/group-subs.jsx';
 import ImagePreview from '../widgets/image-preview.jsx';
+import Invitation from '../widgets/Invitation.jsx';
 import LetterTile from '../widgets/letter-tile.jsx';
 import LoadSpinner from '../widgets/load-spinner.jsx';
 import LogoView from './logo-view.jsx';
@@ -67,6 +68,7 @@ class MessagesView extends React.Component {
     this.handleContextClick = this.handleContextClick.bind(this);
     this.handleShowContextMenuMessage = this.handleShowContextMenuMessage.bind(this);
     this.handleBackNavigation = this.handleBackNavigation.bind(this);
+    this.handleNewChatAcceptance = this.handleNewChatAcceptance.bind(this);
   }
 
   componentDidMount() {
@@ -408,6 +410,10 @@ class MessagesView extends React.Component {
     this.props.onHideMessagesView();
   }
 
+  handleNewChatAcceptance(action) {
+    console.log(action);
+  }
+
   render() {
     const {formatMessage} = this.props.intl;
 
@@ -532,8 +538,9 @@ class MessagesView extends React.Component {
               <ul id="scroller" className={chatBoxClass}>
                 {messageNodes}
               </ul>
+              <div>Typing notifications here.</div>
             </div>
-          {this.state.writeOnly ?
+            {this.state.writeOnly ?
             <div id="write-only-background">
               <div id="write-only-note">
                 <FormattedMessage id="messages_not_readable" defaultMessage="no access to messages"
@@ -542,7 +549,7 @@ class MessagesView extends React.Component {
             </div>
             :
             null
-          }
+            }
           </div>
           <SendMessage
             tinode={this.props.tinode}
@@ -550,6 +557,7 @@ class MessagesView extends React.Component {
             disabled={this.state.readOnly}
             sendMessage={this.props.sendMessage}
             onError={this.props.onError} />
+          <Invitation onAction={this.handleNewChatAcceptance} />
           {this.state.imagePreview ?
             <ImagePreview content={this.state.imagePreview}
               onClose={this.handleCloseImagePreview} /> : null}
