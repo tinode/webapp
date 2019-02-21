@@ -8,7 +8,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /src\/.*\.jsx?$/,
+        test: /src\/.*\.(js|jsx)?$/,
         loaders: [
           'babel-loader',
         ],

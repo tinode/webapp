@@ -1037,9 +1037,9 @@ class TinodeWeb extends React.Component {
       subscribed ? {title: formatMessage({id: 'menu_item_info'}), handler: this.handleShowInfoView} : null,
       subscribed ? 'messages_clear' : null,
       subscribed && deleter ? 'messages_clear_hard' : null,
-      subscribed ? (muted ? 'topic_unmute' : 'topic_mute') : null,
-      subscribed ? (blocked ? 'topic_unblock' : 'topic_block') : null,
-      subscribed && !archived ? 'topic_archive' : null,
+      muted ? 'topic_unmute' : 'topic_mute',
+      blocked ? 'topic_unblock' : 'topic_block',
+      !archived ? 'topic_archive' : null,
       'topic_delete'
     ];
   }

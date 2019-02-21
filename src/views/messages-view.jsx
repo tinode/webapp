@@ -36,9 +36,17 @@ const messages = defineMessages({
   }
 });
 
+// Checks if the access permissions are granted but not yet accepted.
+function isUnconfirmed(acs) {
+  const ex = acs ? acs.getExcessive() || '' : '';
+  return (ex.includes('R') || ex.includes('W'));
+}
+
 class MessagesView extends React.Component {
   constructor(props) {
     super(props);
+
+    console.log(props.acs);
 
     this.state = {
       messages: [],
@@ -49,6 +57,7 @@ class MessagesView extends React.Component {
       scrollPosition: 0,
       readOnly: props.acs ? !props.acs.isWriter() : true,
       writeOnly: props.acs ? !props.acs.isReader() : true,
+      unconfirmed: isUnconfirmed(props.acs),
       typingIndicator: false,
       imagePreview: null
     };
@@ -169,9 +178,11 @@ class MessagesView extends React.Component {
       this.props.readTimerHandler(null);
     }
 
+    console.log("propsChange", props.acs);
     this.setState({
       readOnly: props.acs ? !props.acs.isWriter() : true,
-      writeOnly: props.acs ? !props.acs.isReader() : true
+      writeOnly: props.acs ? !props.acs.isReader() : true,
+      unconfirmed: isUnconfirmed(props.acs)
     });
 
     if (!topic.isSubscribed() && tryToResubscribe) {
@@ -199,11 +210,14 @@ class MessagesView extends React.Component {
         .catch((err) => {
           props.onError(err.message, 'err');
           const {formatMessage} = props.intl;
+
+          console.log("subscribe failed", props.acs);
           this.setState({
             title: formatMessage(messages.not_found),
             avatar: null,
             readOnly: true,
             writeOnly: true,
+            unconfirmed: false,
             fetchingMessages: false,
             messages: [],
             onlineSubs: [],
@@ -276,10 +290,13 @@ class MessagesView extends React.Component {
         avatar: null
       });
     }
+
+    console.log("handleDescChange", desc.acs);
     if (desc.acs) {
       this.setState({
         readOnly: !desc.acs.isWriter(),
-        writeOnly: !desc.acs.isReader()
+        writeOnly: !desc.acs.isReader(),
+        unconfirmed: isUnconfirmed(desc.acs),
       });
     }
   }
@@ -551,13 +568,16 @@ class MessagesView extends React.Component {
             null
             }
           </div>
-          <SendMessage
-            tinode={this.props.tinode}
-            topic={this.props.topic}
-            disabled={this.state.readOnly}
-            sendMessage={this.props.sendMessage}
-            onError={this.props.onError} />
-          <Invitation onAction={this.handleNewChatAcceptance} />
+          {this.state.unconfirmed ?
+            <Invitation onAction={this.handleNewChatAcceptance} />
+            :
+            <SendMessage
+              tinode={this.props.tinode}
+              topic={this.props.topic}
+              disabled={this.state.readOnly}
+              sendMessage={this.props.sendMessage}
+              onError={this.props.onError} />
+          }
           {this.state.imagePreview ?
             <ImagePreview content={this.state.imagePreview}
               onClose={this.handleCloseImagePreview} /> : null}
