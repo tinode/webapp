@@ -115,33 +115,35 @@ class MessagesView extends React.Component {
     this.propsChange(nextProps, this.state);
   }
 
-  propsChange(props, state) {
+  propsChange(nextProps, prevState) {
     const nextState = {};
-    if (!props || !props.topic) {
-      const oldTopic = state.topic;
+    if (!nextProps || !nextProps.topic) {
+      const oldTopic = prevState.topic;
       this.setState({messages: [], onlineSubs: [], topic: null}, this.leave(oldTopic));
       return;
     }
 
-    if (!props.connected) {
+    if (!nextProps.connected) {
       // connection lost, clear online subs
       this.setState({onlineSubs: []});
       return;
     }
 
-    const topic = props.tinode.getTopic(props.topic);
+    const topic = nextProps.tinode.getTopic(nextProps.topic);
     if (!topic) {
       return;
     }
 
-    let newGroupTopic = Tinode.isNewGroupTopicName(props.topic);
-    let tryToResubscribe = !props.connected && props.connected;
+    let newGroupTopic = Tinode.isNewGroupTopicName(nextProps.topic);
+    let tryToResubscribe = !nextProps.connected && nextProps.connected;
 
-    if (props.topic != state.topic) {
-      let msgs = [];
-      let subs = [];
+    if (nextProps.topic != prevState.topic) {
+      const msgs = [];
+      const subs = [];
 
       // Bind the new topic to component.
+      // FIXME: getDerivedStateFromProps is static, "this" is unaccessible.
+      // Move to componentDidUpdate
       topic.onData = this.handleNewMessage;
       topic.onAllMessagesReceived = this.handleAllMessagesReceived;
       topic.onInfo = this.handleInfoReceipt;
@@ -149,25 +151,28 @@ class MessagesView extends React.Component {
       topic.onSubsUpdated = this.handleSubsUpdated;
       topic.onPres = this.handleSubsUpdated;
       // Unbind the previous topic from this component.
-      this.leave(state.topic);
+      // FIXME: getDerivedStateFromProps is static, "this" is unaccessible.
+      // Move to componentDidUpdate
+      this.leave(prevState.topic);
 
+      // FIXME: getDerivedStateFromProps is static, "this" is unaccessible.
       this.handleDescChange(topic);
       topic.subscribers((sub) => {
-        if (sub.online && sub.user != props.myUserId) {
+        if (sub.online && sub.user != nextProps.myUserId) {
           subs.push(sub);
         }
       });
 
       topic.messages(function(msg) {
         if (!msg.deleted) {
-          msgs = msgs.concat(msg);
+          msgs.push(msg);
         }
       });
 
       this.setState({
         messages: msgs,
         onlineSubs: subs,
-        topic: props.topic,
+        topic: nextProps.topic,
         imagePreview: null,
         scrollPosition: 0
       });
@@ -175,31 +180,32 @@ class MessagesView extends React.Component {
 
       // The user switched to the new topic before the timer for
       // the previous topic has triggered, kill it.
-      this.props.readTimerHandler(null);
+      nextProps.readTimerHandler(null);
     }
 
-    console.log("propsChange", props.acs);
     this.setState({
-      readOnly: props.acs ? !props.acs.isWriter() : true,
-      writeOnly: props.acs ? !props.acs.isReader() : true,
-      unconfirmed: isUnconfirmed(props.acs)
+      readOnly: nextProps.acs ? !nextProps.acs.isWriter() : true,
+      writeOnly: nextProps.acs ? !nextProps.acs.isReader() : true,
+      unconfirmed: isUnconfirmed(nextProps.acs)
     });
+
+    console.log("propsChange", nextProps.acs, isUnconfirmed(nextProps.acs));
 
     if (!topic.isSubscribed() && tryToResubscribe) {
       // Don't request the tags. They are useless unless the user
       // is the owner and is editing the topic.
-      let getQuery = topic.startMetaQuery()
+      const getQuery = topic.startMetaQuery()
         .withLaterDesc()
         .withLaterSub()
         .withLaterData(MESSAGES_PAGE)
         .withLaterDel();
-      let setQuery = newGroupTopic ? props.newGroupTopicParams : undefined;
+      const setQuery = newGroupTopic ? nextProps.newGroupTopicParams : undefined;
       // Show "loading" spinner.
       this.setState({ fetchingMessages: true });
       topic.subscribe(getQuery.build(), setQuery)
         .then((ctrl) => {
           this.setState({topic: ctrl.topic});
-          props.onNewTopicCreated(props.topic, ctrl.topic);
+          nextProps.onNewTopicCreated(nextProps.topic, ctrl.topic);
           // If there are unsent messages, try sending them now.
           topic.queuedMessages((pub) => {
             if (!pub._sending && topic.isSubscribed()) {
@@ -208,10 +214,13 @@ class MessagesView extends React.Component {
           });
         })
         .catch((err) => {
-          props.onError(err.message, 'err');
-          const {formatMessage} = props.intl;
+          nextProps.onError(err.message, 'err');
+          const {formatMessage} = nextProps.intl;
 
-          console.log("subscribe failed", props.acs);
+          console.log("subscribe failed", nextProps.acs);
+          // FIXME: getDerivedStateFromProps is static, "this" is unaccessible
+          // and returning newState is meaningless.
+          // Move to componentDidUpdate
           this.setState({
             title: formatMessage(messages.not_found),
             avatar: null,
@@ -412,10 +421,10 @@ class MessagesView extends React.Component {
 
   handleShowContextMenuMessage(params) {
     params.topicName = this.state.topic;
-    var menuItems = ['message_delete'];
-    var topic = this.props.tinode.getTopic(params.topicName);
+    const menuItems = ['message_delete'];
+    const topic = this.props.tinode.getTopic(params.topicName);
     if (topic) {
-      var acs = topic.getAccessMode();
+      const acs = topic.getAccessMode();
       if (acs && acs.isDeleter()) {
         menuItems.push('message_delete_hard');
       }
@@ -428,7 +437,7 @@ class MessagesView extends React.Component {
   }
 
   handleNewChatAcceptance(action) {
-    console.log(action);
+    this.props.onNewChat(this.state.topic, action);
   }
 
   render() {

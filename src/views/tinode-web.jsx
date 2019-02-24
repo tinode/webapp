@@ -74,6 +74,7 @@ class TinodeWeb extends React.Component {
     this.handleTopicSelected = this.handleTopicSelected.bind(this);
     this.handleHideMessagesView = this.handleHideMessagesView.bind(this);
     this.handleSendMessage = this.handleSendMessage.bind(this);
+    this.handleNewChatInvitation = this.handleNewChatInvitation.bind(this);
     this.handleNewAccount = this.handleNewAccount.bind(this);
     this.handleNewAccountRequest = this.handleNewAccountRequest.bind(this);
     this.handleUpdateAccountRequest = this.handleUpdateAccountRequest.bind(this);
@@ -728,6 +729,41 @@ class TinodeWeb extends React.Component {
       });
   }
 
+  handleNewChatInvitation(topicName, action) {
+    const topic = this.tinode.getTopic(topicName);
+    let response = null;
+    switch (action) {
+      case 'accept':
+        // Accept given permissions.
+        const mode = topic.getAccessMode().getGiven();
+        response = topic.setMeta({sub: {mode: mode}});
+        if (topic.getType() == 'p2p') {
+          // For P2P topics chage 'given' permission of the peer too.
+          // In p2p topics the other user has the same name as the topic.
+          response = response.then((ctrl) => {
+            topic.setMeta({sub: {user: topicName, mode: mode}});
+          });
+        }
+        break;
+      case 'delete':
+        // Ignore invitation by deleting it.
+        response = topic.delTopic();
+        break;
+      case 'block':
+        // Ban the topic making futher invites impossible.
+        response = topic.setMeta({sub: {mode: 'N'}});
+        break;
+      default:
+        console.log("Unknown invitation action", '"' + action + '""');
+    }
+
+    if (response != null) {
+      response.catch((err) => {
+        this.handleError(err.message, 'err');
+      });
+    }
+  }
+
   // User chose a Sign Up menu item.
   handleNewAccount() {
     HashNavigation.navigateTo(HashNavigation.setUrlSidePanel(window.location.hash, 'register'));
@@ -1232,6 +1268,7 @@ class TinodeWeb extends React.Component {
           onNewTopicCreated={this.handleNewTopicCreated}
           readTimerHandler={this.handleReadTimer}
           showContextMenu={this.handleShowContextMenu}
+          onNewChat={this.handleNewChatInvitation}
           sendMessage={this.handleSendMessage} />
 
         {this.state.showInfoPanel ?

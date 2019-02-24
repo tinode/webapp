@@ -11,7 +11,6 @@ export default class Invitation extends React.PureComponent {
 
   handleButtonAction(evt, data) {
     evt.preventDefault();
-    console.log("button clicked", data);
     this.props.onAction(data);
   }
 
