@@ -46,23 +46,9 @@ class MessagesView extends React.Component {
   constructor(props) {
     super(props);
 
-    console.log(props.acs);
+    this.state = MessagesView.getDerivedStateFromProps(props, {});
 
-    this.state = {
-      messages: [],
-      onlineSubs: [],
-      topic: '',
-      title: '',
-      avatar: null,
-      scrollPosition: 0,
-      readOnly: props.acs ? !props.acs.isWriter() : true,
-      writeOnly: props.acs ? !props.acs.isReader() : true,
-      unconfirmed: isUnconfirmed(props.acs),
-      typingIndicator: false,
-      imagePreview: null
-    };
-
-    this.propsChange = this.propsChange.bind(this);
+    // this.propsChange = this.propsChange.bind(this);
     this.leave = this.leave.bind(this);
     this.handleScrollReference = this.handleScrollReference.bind(this);
     this.handleScrollEvent = this.handleScrollEvent.bind(this);
@@ -81,7 +67,7 @@ class MessagesView extends React.Component {
   }
 
   componentDidMount() {
-    this.propsChange(this.props, this.state);
+    // this.propsChange(this.props, this.state);
     if (this.messagesScroller) {
       this.messagesScroller.addEventListener('scroll', this.handleScrollEvent);
     }
@@ -98,100 +84,32 @@ class MessagesView extends React.Component {
   // or vertical shrinking.
   componentDidUpdate(prevProps, prevState) {
     if (this.messagesScroller) {
-      if (prevState.title != this.state.title || prevState.messages.length != this.state.messages.length) {
+      if (prevState.topic != this.state.topic || prevState.messages.length != this.state.messages.length) {
         this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition;
       } else if (prevProps.viewportHeight > this.props.viewportHeight) {
         this.messagesScroller.scrollTop += prevProps.viewportHeight - this.props.viewportHeight;
       }
     }
-  }
 
-  //static getDerivedStateFromProps(nextProps, prevState) {
-  //
-  //}
+    const topic = this.props.tinode.getTopic(this.state.topic);
+    if (this.state.topic != prevState.topic) {
+      if (prevState.topic) {
+        this.leave(prevState.topic);
+        this.props.readTimerHandler(null);
+      }
 
-  // Deprecated!
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    this.propsChange(nextProps, this.state);
-  }
-
-  propsChange(nextProps, prevState) {
-    const nextState = {};
-    if (!nextProps || !nextProps.topic) {
-      const oldTopic = prevState.topic;
-      this.setState({messages: [], onlineSubs: [], topic: null}, this.leave(oldTopic));
-      return;
+      if (topic) {
+        topic.onData = this.handleNewMessage;
+        topic.onAllMessagesReceived = this.handleAllMessagesReceived;
+        topic.onInfo = this.handleInfoReceipt;
+        topic.onMetaDesc = this.handleDescChange;
+        topic.onSubsUpdated = this.handleSubsUpdated;
+        topic.onPres = this.handleSubsUpdated;
+      }
     }
 
-    if (!nextProps.connected) {
-      // connection lost, clear online subs
-      this.setState({onlineSubs: []});
-      return;
-    }
-
-    const topic = nextProps.tinode.getTopic(nextProps.topic);
-    if (!topic) {
-      return;
-    }
-
-    let newGroupTopic = Tinode.isNewGroupTopicName(nextProps.topic);
-    let tryToResubscribe = !nextProps.connected && nextProps.connected;
-
-    if (nextProps.topic != prevState.topic) {
-      const msgs = [];
-      const subs = [];
-
-      // Bind the new topic to component.
-      // FIXME: getDerivedStateFromProps is static, "this" is unaccessible.
-      // Move to componentDidUpdate
-      topic.onData = this.handleNewMessage;
-      topic.onAllMessagesReceived = this.handleAllMessagesReceived;
-      topic.onInfo = this.handleInfoReceipt;
-      topic.onMetaDesc = this.handleDescChange;
-      topic.onSubsUpdated = this.handleSubsUpdated;
-      topic.onPres = this.handleSubsUpdated;
-      // Unbind the previous topic from this component.
-      // FIXME: getDerivedStateFromProps is static, "this" is unaccessible.
-      // Move to componentDidUpdate
-      this.leave(prevState.topic);
-
-      // FIXME: getDerivedStateFromProps is static, "this" is unaccessible.
-      this.handleDescChange(topic);
-      topic.subscribers((sub) => {
-        if (sub.online && sub.user != nextProps.myUserId) {
-          subs.push(sub);
-        }
-      });
-
-      topic.messages(function(msg) {
-        if (!msg.deleted) {
-          msgs.push(msg);
-        }
-      });
-
-      this.setState({
-        messages: msgs,
-        onlineSubs: subs,
-        topic: nextProps.topic,
-        imagePreview: null,
-        scrollPosition: 0
-      });
-      tryToResubscribe = true;
-
-      // The user switched to the new topic before the timer for
-      // the previous topic has triggered, kill it.
-      nextProps.readTimerHandler(null);
-    }
-
-    this.setState({
-      readOnly: nextProps.acs ? !nextProps.acs.isWriter() : true,
-      writeOnly: nextProps.acs ? !nextProps.acs.isReader() : true,
-      unconfirmed: isUnconfirmed(nextProps.acs)
-    });
-
-    console.log("propsChange", nextProps.acs, isUnconfirmed(nextProps.acs));
-
-    if (!topic.isSubscribed() && tryToResubscribe) {
+    if (topic && !topic.isSubscribed() &&
+        ((!prevProps.connected && this.props.connected) || (this.state.topic != prevState.topic))) {
       // Don't request the tags. They are useless unless the user
       // is the owner and is editing the topic.
       const getQuery = topic.startMetaQuery()
@@ -199,13 +117,16 @@ class MessagesView extends React.Component {
         .withLaterSub()
         .withLaterData(MESSAGES_PAGE)
         .withLaterDel();
-      const setQuery = newGroupTopic ? nextProps.newGroupTopicParams : undefined;
+      const setQuery = Tinode.isNewGroupTopicName(this.props.topic) ?
+        this.props.newGroupTopicParams : undefined;
       // Show "loading" spinner.
       this.setState({ fetchingMessages: true });
       topic.subscribe(getQuery.build(), setQuery)
         .then((ctrl) => {
-          this.setState({topic: ctrl.topic});
-          nextProps.onNewTopicCreated(nextProps.topic, ctrl.topic);
+          if (this.state.topic != ctrl.topic) {
+            this.setState({topic: ctrl.topic});
+          }
+          this.props.onNewTopicCreated(this.props.topic, ctrl.topic);
           // If there are unsent messages, try sending them now.
           topic.queuedMessages((pub) => {
             if (!pub._sending && topic.isSubscribed()) {
@@ -214,27 +135,105 @@ class MessagesView extends React.Component {
           });
         })
         .catch((err) => {
-          nextProps.onError(err.message, 'err');
-          const {formatMessage} = nextProps.intl;
-
-          console.log("subscribe failed", nextProps.acs);
-          // FIXME: getDerivedStateFromProps is static, "this" is unaccessible
-          // and returning newState is meaningless.
-          // Move to componentDidUpdate
-          this.setState({
-            title: formatMessage(messages.not_found),
-            avatar: null,
-            readOnly: true,
-            writeOnly: true,
-            unconfirmed: false,
-            fetchingMessages: false,
-            messages: [],
-            onlineSubs: [],
-            typingIndicator: false,
-            imagePreview: null
-          });
+          console.log('Failed subscription to', this.state.topic);
+          this.props.onError(err.message, 'err');
+          const blankState = MessagesView.getDerivedStateFromProps({}, {});
+          blankState.title = this.props.intl.formatMessage(messages.not_found);
+          this.setState(blankState);
         });
     }
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    let nextState = {};
+    if (!nextProps.topic) {
+      // Default state: no topic.
+      nextState = {
+        messages: [],
+        onlineSubs: [],
+        topic: null,
+        title: '',
+        avatar: null,
+        imagePreview: null,
+        typingIndicator: false,
+        scrollPosition: 0,
+        fetchingMessages: false
+      };
+    } else if (nextProps.topic != prevState.topic) {
+      const topic = nextProps.tinode.getTopic(nextProps.topic);
+      nextState = {
+        topic: nextProps.topic,
+        imagePreview: null,
+        typingIndicator: false,
+        scrollPosition: 0,
+        fetchingMessages: false
+      };
+
+      if (topic) {
+        // Topic exists.
+        const msgs = [];
+        const subs = [];
+
+        if (nextProps.connected) {
+          topic.subscribers((sub) => {
+            if (sub.online && sub.user != nextProps.myUserId) {
+              subs.push(sub);
+            }
+          });
+        }
+
+        topic.messages(function(msg) {
+          if (!msg.deleted) {
+            msgs.push(msg);
+          }
+        });
+
+        nextState = Object.assign(nextState, {
+          messages: msgs,
+          onlineSubs: subs
+        });
+
+        if (topic.public) {
+          nextState = Object.assign(nextState, {
+            title: topic.public.fn,
+            avatar: makeImageUrl(topic.public.photo)
+          });
+        } else {
+          nextState = Object.assign(nextState, {
+            title: '',
+            avatar: null
+          });
+        }
+      } else {
+        // Invalid topic.
+        nextState = Object.assign(nextState, {
+          messages: [],
+          onlineSubs: [],
+          title: '',
+          avatar: null
+        });
+      }
+    }
+
+    let val = nextProps.acs ? !nextProps.acs.isWriter() : true;
+    if (val != prevState.readOnly) {
+      nextState.readOnly = val;
+    }
+    val = nextProps.acs ? !nextProps.acs.isReader() : true;
+    if (val != prevState.writeOnly) {
+      nextState.writeOnly = val;
+    }
+    val = isUnconfirmed(nextProps.acs);
+    if (val != prevState.unconformed) {
+      nextState.unconfirmed = val;
+    }
+
+    // Clear subscribers online when there is no connection.
+    if (!nextProps.connected && prevState.onlineSubs && prevState.onlineSubs.length > 0) {
+      nextState.onlineSubs = [];
+    }
+
+    return nextState;
   }
 
   leave(oldTopicName) {
@@ -300,7 +299,6 @@ class MessagesView extends React.Component {
       });
     }
 
-    console.log("handleDescChange", desc.acs);
     if (desc.acs) {
       this.setState({
         readOnly: !desc.acs.isWriter(),
@@ -311,6 +309,8 @@ class MessagesView extends React.Component {
   }
 
   handleSubsUpdated() {
+    console.log("handleSubsUpdated");
+
     if (this.state.topic) {
       var subs = [];
       var topic = this.props.tinode.getTopic(this.state.topic);
