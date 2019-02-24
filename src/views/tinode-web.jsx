@@ -1022,15 +1022,15 @@ class TinodeWeb extends React.Component {
 
     let muted = false, blocked = false, subscribed = false, deleter = false, archived = false;
     if (topic) {
-      if (topic.isSubscribed()) {
-        subscribed = true;
-
-        const acs = topic.getAccessMode();
-        muted = acs && acs.isMuted();
-        blocked = acs && !acs.isJoiner();
-        deleter = acs && acs.isDeleter();
-      }
+      subscribed = topic.isSubscribed();
       archived = topic.isArchived();
+
+      const acs = topic.getAccessMode();
+      if (acs) {
+        muted = acs.isMuted();
+        blocked = !acs.isJoiner();
+        deleter = acs.isDeleter();
+      }
     }
 
     return [
