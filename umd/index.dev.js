@@ -2676,7 +2676,7 @@ var MessagesView = function (_React$Component) {
         }
       }
 
-      if (topic && !topic.isSubscribed() && (!prevProps.connected && this.props.connected || this.state.topic != prevState.topic)) {
+      if (topic && !topic.isSubscribed() && this.props.tinode.isAuthenticated() && (!prevProps.connected && this.props.connected || this.state.topic != prevState.topic)) {
         var getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub().withLaterData(_config_js__WEBPACK_IMPORTED_MODULE_12__["MESSAGES_PAGE"]).withLaterDel();
         var setQuery = tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.isNewGroupTopicName(this.props.topic) ? this.props.newGroupTopicParams : undefined;
         this.setState({

@@ -108,7 +108,7 @@ class MessagesView extends React.Component {
       }
     }
 
-    if (topic && !topic.isSubscribed() &&
+    if (topic && !topic.isSubscribed() && this.props.tinode.isAuthenticated() &&
         ((!prevProps.connected && this.props.connected) || (this.state.topic != prevState.topic))) {
       // Don't request the tags. They are useless unless the user
       // is the owner and is editing the topic.
