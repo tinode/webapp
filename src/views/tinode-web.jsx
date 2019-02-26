@@ -591,7 +591,7 @@ class TinodeWeb extends React.Component {
   }
 
   resetContactList() {
-    let newState = {
+    const newState = {
       chatList: []
     };
     this.tinode.getMeTopic().contacts((c) => {
@@ -759,6 +759,9 @@ class TinodeWeb extends React.Component {
             topic.setMeta({sub: {user: topicName, mode: 'N'}});
           });
         }
+        response = response.then((ctrl) => {
+          this.handleTopicSelected(null);
+        });
         break;
       default:
         console.log("Unknown invitation action", '"' + action + '""');
@@ -1080,7 +1083,7 @@ class TinodeWeb extends React.Component {
       subscribed ? {title: formatMessage({id: 'menu_item_info'}), handler: this.handleShowInfoView} : null,
       subscribed ? 'messages_clear' : null,
       subscribed && deleter ? 'messages_clear_hard' : null,
-      muted ? 'topic_unmute' : 'topic_mute',
+      muted ? (blocked ? null : 'topic_unmute') : 'topic_mute'),
       blocked ? 'topic_unblock' : 'topic_block',
       !archived ? 'topic_archive' : null,
       'topic_delete'

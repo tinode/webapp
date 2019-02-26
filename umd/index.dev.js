@@ -2681,12 +2681,12 @@ var MessagesView = function (_React$Component) {
 
         if (this.state.isReader) {
           getQuery = getQuery.withLaterData(_config_js__WEBPACK_IMPORTED_MODULE_12__["MESSAGES_PAGE"]).withLaterDel();
+          this.setState({
+            fetchingMessages: true
+          });
         }
 
         var setQuery = tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.isNewGroupTopicName(this.props.topic) ? this.props.newGroupTopicParams : undefined;
-        this.setState({
-          fetchingMessages: true
-        });
         topic.subscribe(getQuery.build(), setQuery).then(function (ctrl) {
           if (_this2.state.topic != ctrl.topic) {
             _this2.setState({
