@@ -112,15 +112,14 @@ class MessagesView extends React.Component {
         ((!prevProps.connected && this.props.connected) || (this.state.topic != prevState.topic))) {
       // Don't request the tags. They are useless unless the user
       // is the owner and is editing the topic.
-      const getQuery = topic.startMetaQuery()
-        .withLaterDesc()
-        .withLaterSub()
-        .withLaterData(MESSAGES_PAGE)
-        .withLaterDel();
+      let getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub();
+      if (this.state.isReader) {
+        getQuery = getQuery.withLaterData(MESSAGES_PAGE).withLaterDel();
+        // Show "loading" spinner.
+        this.setState({ fetchingMessages: true });
+      }
       const setQuery = Tinode.isNewGroupTopicName(this.props.topic) ?
         this.props.newGroupTopicParams : undefined;
-      // Show "loading" spinner.
-      this.setState({ fetchingMessages: true });
       topic.subscribe(getQuery.build(), setQuery)
         .then((ctrl) => {
           if (this.state.topic != ctrl.topic) {
@@ -215,13 +214,13 @@ class MessagesView extends React.Component {
       }
     }
 
-    let val = nextProps.acs ? !nextProps.acs.isWriter() : true;
-    if (val != prevState.readOnly) {
-      nextState.readOnly = val;
+    let val = nextProps.acs ? nextProps.acs.isWriter() : true;
+    if (val != prevState.isWriter) {
+      nextState.isWriter = val;
     }
-    val = nextProps.acs ? !nextProps.acs.isReader() : true;
-    if (val != prevState.writeOnly) {
-      nextState.writeOnly = val;
+    val = nextProps.acs ? nextProps.acs.isReader() : true;
+    if (val != prevState.isReader) {
+      nextState.isReader = val;
     }
     val = isUnconfirmed(nextProps.acs);
     if (val != prevState.unconformed) {
@@ -301,16 +300,14 @@ class MessagesView extends React.Component {
 
     if (desc.acs) {
       this.setState({
-        readOnly: !desc.acs.isWriter(),
-        writeOnly: !desc.acs.isReader(),
+        isWriter: desc.acs.isWriter(),
+        isReader: desc.acs.isReader(),
         unconfirmed: isUnconfirmed(desc.acs),
       });
     }
   }
 
   handleSubsUpdated() {
-    console.log("handleSubsUpdated");
-
     if (this.state.topic) {
       var subs = [];
       var topic = this.props.tinode.getTopic(this.state.topic);
@@ -564,9 +561,8 @@ class MessagesView extends React.Component {
               <ul id="scroller" className={chatBoxClass}>
                 {messageNodes}
               </ul>
-              <div>Typing notifications here.</div>
             </div>
-            {this.state.writeOnly ?
+            {!this.state.isReader ?
             <div id="write-only-background">
               <div id="write-only-note">
                 <FormattedMessage id="messages_not_readable" defaultMessage="no access to messages"
@@ -583,7 +579,7 @@ class MessagesView extends React.Component {
             <SendMessage
               tinode={this.props.tinode}
               topic={this.props.topic}
-              disabled={this.state.readOnly}
+              disabled={!this.state.isWriter}
               sendMessage={this.props.sendMessage}
               onError={this.props.onError} />
           }

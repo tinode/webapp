@@ -738,7 +738,7 @@ class TinodeWeb extends React.Component {
         const mode = topic.getAccessMode().getGiven();
         response = topic.setMeta({sub: {mode: mode}});
         if (topic.getType() == 'p2p') {
-          // For P2P topics chage 'given' permission of the peer too.
+          // For P2P topics change 'given' permission of the peer too.
           // In p2p topics the other user has the same name as the topic.
           response = response.then((ctrl) => {
             topic.setMeta({sub: {user: topicName, mode: mode}});
@@ -752,6 +752,13 @@ class TinodeWeb extends React.Component {
       case 'block':
         // Ban the topic making futher invites impossible.
         response = topic.setMeta({sub: {mode: 'N'}});
+        if (topic.getType() == 'p2p') {
+          // For P2P topics change 'given' permission of the peer too.
+          // In p2p topics the other user has the same name as the topic.
+          response = response.then((ctrl) => {
+            topic.setMeta({sub: {user: topicName, mode: 'N'}});
+          });
+        }
         break;
       default:
         console.log("Unknown invitation action", '"' + action + '""');
