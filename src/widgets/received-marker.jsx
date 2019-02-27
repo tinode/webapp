@@ -35,7 +35,7 @@ class ReceivedMarker extends React.PureComponent {
     if (this.props.received <= Tinode.MESSAGE_STATUS_SENDING) {
       marker = (<i className="material-icons small">access_time</i>); // watch face
     } else if (this.props.received == Tinode.MESSAGE_STATUS_FAILED) {
-      marker = (<i className="material-icons small red">error_outline</i>); // icon (!)
+      marker = (<i className="material-icons small amber">warning</i>); // yellow icon /!\
     } else if (this.props.received == Tinode.MESSAGE_STATUS_SENT) {
       marker = (<i className="material-icons small">done</i>); // checkmark
     } else if (this.props.received == Tinode.MESSAGE_STATUS_RECEIVED) {

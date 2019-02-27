@@ -38,8 +38,11 @@ const messages = defineMessages({
 
 // Checks if the access permissions are granted but not yet accepted.
 function isUnconfirmed(acs) {
-  const ex = acs ? acs.getExcessive() || '' : '';
-  return (ex.includes('R') || ex.includes('W'));
+  if (acs) {
+    const ex = acs.getExcessive() || '';
+    return acs.isJoiner('given') && (ex.includes('R') || ex.includes('W'));
+  }
+  return false;
 }
 
 class MessagesView extends React.Component {
@@ -114,8 +117,9 @@ class MessagesView extends React.Component {
       // is the owner and is editing the topic.
       let getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub();
       if (this.state.isReader) {
+        // If reading is permitted, ask for messages.
         getQuery = getQuery.withLaterData(MESSAGES_PAGE).withLaterDel();
-        // Show "loading" spinner.
+        // And show "loading" spinner.
         this.setState({ fetchingMessages: true });
       }
       const setQuery = Tinode.isNewGroupTopicName(this.props.topic) ?
@@ -214,17 +218,30 @@ class MessagesView extends React.Component {
       }
     }
 
-    let val = nextProps.acs ? nextProps.acs.isWriter() : true;
-    if (val != prevState.isWriter) {
-      nextState.isWriter = val;
+    if (nextProps.acs) {
+      if (nextProps.acs.isWriter() != prevState.isWriter) {
+        nextState.isWriter = !prevState.isWriter;
+      }
+      if (nextProps.acs.isReader() != prevState.isReader) {
+        nextState.isReader = !prevState.isReader;
+      }
+      if (!nextProps.acs.isReader('given') != prevState.readingBlocked) {
+        nextState.readingBlocked = !prevState.readingBlocked;
+      }
+    } else {
+      if (prevState.isWriter) {
+        nextState.isWriter = false;
+      }
+      if (prevState.isReader) {
+        nextState.isReader = false;
+      }
+      if (!prevState.readingBlocked) {
+        prevState.readingBlocked = true;
+      }
     }
-    val = nextProps.acs ? nextProps.acs.isReader() : true;
-    if (val != prevState.isReader) {
-      nextState.isReader = val;
-    }
-    val = isUnconfirmed(nextProps.acs);
-    if (val != prevState.unconformed) {
-      nextState.unconfirmed = val;
+
+    if (isUnconfirmed(nextProps.acs) == !prevState.unconformed) {
+      nextState.unconfirmed = !prevState.unconformed;
     }
 
     // Clear subscribers online when there is no connection.
@@ -302,6 +319,7 @@ class MessagesView extends React.Component {
       this.setState({
         isWriter: desc.acs.isWriter(),
         isReader: desc.acs.isReader(),
+        readingBlocked: !desc.acs.isReader('given'),
         unconfirmed: isUnconfirmed(desc.acs),
       });
     }
@@ -564,14 +582,14 @@ class MessagesView extends React.Component {
             </div>
             {!this.state.isReader ?
             <div id="write-only-background">
+              {this.state.readingBlocked ?
               <div id="write-only-note">
                 <FormattedMessage id="messages_not_readable" defaultMessage="no access to messages"
                   description="Message shown in topic without the read access" />
               </div>
+              : null }
             </div>
-            :
-            null
-            }
+            : null }
           </div>
           {this.state.unconfirmed ?
             <Invitation onAction={this.handleNewChatAcceptance} />

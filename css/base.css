@@ -302,6 +302,10 @@ li.right:hover .menuTrigger {
   color: #D32F2F; /* red 700 */
 }
 
+.amber {
+  color: #FFC107; /* amber 500 */
+}
+
 .gray {
   color: #757575;
 }

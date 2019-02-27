@@ -682,9 +682,9 @@ class TinodeWeb extends React.Component {
         topicSelectedAcs: null,
         showInfoPanel: false
       });
-      if (this.state.topicSelected) {
-        HashNavigation.navigateTo(HashNavigation.setUrlTopic('', null));
-      }
+
+      console.log("handleTopicSelected: null navigation");
+      HashNavigation.navigateTo(HashNavigation.setUrlTopic('', null));
     }
   }
 
@@ -750,17 +750,12 @@ class TinodeWeb extends React.Component {
         response = topic.delTopic();
         break;
       case 'block':
+        console.log("Blocking...");
         // Ban the topic making futher invites impossible.
-        response = topic.setMeta({sub: {mode: 'N'}});
-        if (topic.getType() == 'p2p') {
-          // For P2P topics change 'given' permission of the peer too.
-          // In p2p topics the other user has the same name as the topic.
-          response = response.then((ctrl) => {
-            topic.setMeta({sub: {user: topicName, mode: 'N'}});
-          });
-        }
-        response = response.then((ctrl) => {
-          this.handleTopicSelected(null);
+        // Just self-ban.
+        const am = topic.getAccessMode().updateWant('-JP').getWant();
+        response = topic.setMeta({sub: {mode: am}}).then((ctrl) => {
+          return this.handleTopicSelected(null);
         });
         break;
       default:
@@ -1066,7 +1061,7 @@ class TinodeWeb extends React.Component {
     const topic = this.tinode.getTopic(topicName);
     const {formatMessage} = this.props.intl;
 
-    let muted = false, blocked = false, subscribed = false, deleter = false, archived = false;
+    let muted = false, blocked = false, self_blocked = false, subscribed = false, deleter = false, archived = false;
     if (topic) {
       subscribed = topic.isSubscribed();
       archived = topic.isArchived();
@@ -1075,6 +1070,7 @@ class TinodeWeb extends React.Component {
       if (acs) {
         muted = acs.isMuted();
         blocked = !acs.isJoiner();
+        self_blocked = !acs.isJoiner('want');
         deleter = acs.isDeleter();
       }
     }
@@ -1083,8 +1079,8 @@ class TinodeWeb extends React.Component {
       subscribed ? {title: formatMessage({id: 'menu_item_info'}), handler: this.handleShowInfoView} : null,
       subscribed ? 'messages_clear' : null,
       subscribed && deleter ? 'messages_clear_hard' : null,
-      muted ? (blocked ? null : 'topic_unmute') : 'topic_mute'),
-      blocked ? 'topic_unblock' : 'topic_block',
+      muted ? (blocked ? null : 'topic_unmute') : 'topic_mute',
+      self_blocked ? 'topic_unblock' : 'topic_block',
       !archived ? 'topic_archive' : null,
       'topic_delete'
     ];
@@ -1191,6 +1187,11 @@ class TinodeWeb extends React.Component {
             items={this.state.contextMenuItems}
             hide={this.handleHideContextMenu}
             onAction={this.handleContextMenuAction}
+            onTopicRemoved={(topicName) => {
+              if (topicName == this.state.topicSelected) {
+                this.handleTopicSelected(null);
+              }
+            }}
             onError={this.handleError} />
           :
           null

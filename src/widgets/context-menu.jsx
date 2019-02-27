@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import { injectIntl, defineMessages } from 'react-intl';
 
 import { REM_SIZE } from '../config.js';
+import HashNavigation from '../lib/navigation.js';
 
 const messages = defineMessages({
   info: {
@@ -126,12 +127,17 @@ class ContextMenu extends React.Component {
       'topic_unblock': {
         id: 'topic_unblock',
         title: formatMessage(messages.unblock),
-        handler: this.topicPermissionSetter.bind(this, '+J')
+        handler: this.topicPermissionSetter.bind(this, '+JP')
       },
       'topic_block': {
         id: 'topic_block',
         title: formatMessage(messages.block),
-        handler: this.topicPermissionSetter.bind(this, '-J')
+        handler: (params, errorHandler) => {
+          return this.topicPermissionSetter('-JP', params, errorHandler).then((ctrl) => {
+            this.props.onTopicRemoved(params.topicName);
+            return ctrl;
+          });
+        }
       },
       'topic_delete': {
         id: 'topic_delete',
@@ -302,11 +308,13 @@ class ContextMenu extends React.Component {
       am = topic.getAccessMode().updateWant(mode).getWant();
     }
 
-    return topic.setMeta({sub: {user: params.user, mode: am}}).catch((err) => {
-      if (errorHandler) {
+    let result = topic.setMeta({sub: {user: params.user, mode: am}});
+    if (errorHandler) {
+      result = result.catch((err) => {
         errorHandler(err.message, 'err');
-      }
-    });
+      });
+    }
+    return result;
   }
 
   render() {
