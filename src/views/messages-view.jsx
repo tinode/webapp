@@ -122,8 +122,8 @@ class MessagesView extends React.Component {
         // And show "loading" spinner.
         this.setState({ fetchingMessages: true });
       }
-      const setQuery = Tinode.isNewGroupTopicName(this.props.topic) ?
-        this.props.newGroupTopicParams : undefined;
+      const setQuery = (this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic) ?
+        this.props.newTopicParams : undefined;
       topic.subscribe(getQuery.build(), setQuery)
         .then((ctrl) => {
           if (this.state.topic != ctrl.topic) {

@@ -22,6 +22,9 @@ export const READ_DELAY = 1000;
 // The shortest allowed tag length. Matches the value on the server.
 export const MIN_TAG_LENGTH = 4;
 
+// Access mode for subscriptions initiated by the current user.
+export const DEFAULT_ACCESS_MODE = 'JRWPS';
+
 // Mediaquery breakpoint between desktop and mobile, in px. Should match the value
 // in @media (max-size: 640px) in base.css
 export const MEDIA_BREAKPOINT = 640;

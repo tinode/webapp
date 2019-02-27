@@ -14,7 +14,7 @@ import InfoView from './info-view.jsx';
 import MessagesView from './messages-view.jsx';
 import SidepanelView from './sidepanel-view.jsx';
 
-import { API_KEY, APP_NAME, MEDIA_BREAKPOINT, READ_DELAY, RECEIVED_DELAY } from '../config.js';
+import { API_KEY, APP_NAME, DEFAULT_ACCESS_MODE, MEDIA_BREAKPOINT, READ_DELAY, RECEIVED_DELAY } from '../config.js';
 import { makeImageUrl } from '../lib/blob-helpers.js';
 import { detectServerAddress, isLocalHost, isSecureConnection } from '../lib/host-name.js';
 import LocalStorageUtil from '../lib/local-storage.js';
@@ -141,7 +141,7 @@ class TinodeWeb extends React.Component {
       topicSelected: '',
       topicSelectedOnline: false,
       topicSelectedAcs: null,
-      newGroupTopicParams: null,
+      newTopicParams: null,
       loginDisabled: false,
       displayMobile: (window.innerWidth <= MEDIA_BREAKPOINT),
       showInfoPanel: false,
@@ -657,6 +657,13 @@ class TinodeWeb extends React.Component {
 
   // User clicked on a contact in the side panel or deleted a contact.
   handleTopicSelected(topicName, unused_index, online, acs) {
+    // Clear newTopicParams after use.
+    if (this.state.newTopicParams && this.state.newTopicParams._topicName != topicName) {
+      this.setState({
+        newTopicParams: null
+      });
+    }
+
     if (topicName) {
       this.setState({
         errorText: '',
@@ -939,14 +946,15 @@ class TinodeWeb extends React.Component {
   // Request to start a new topic. New P2P topic requires peer's name.
   handleNewTopicRequest(peerName, pub, priv, tags) {
     const topicName = peerName || this.tinode.newGroupTopicName();
+    const params = {
+      _topicName: topicName,
+      sub: {mode: DEFAULT_ACCESS_MODE}
+    };
     if (!peerName) {
-      this.setState(
-        {newGroupTopicParams: {desc: {public: pub, private: {comment: priv}}, tags: tags}},
-        () => {this.handleTopicSelected(topicName)}
-      );
-    } else {
-      this.handleTopicSelected(topicName);
+      params.desc = {public: pub, private: {comment: priv}};
+      params.tags = tags;
     }
+    this.setState({newTopicParams: params}, () => {this.handleTopicSelected(topicName)});
   }
 
   // New topic was creted, here is the new topic name.
@@ -1271,7 +1279,7 @@ class TinodeWeb extends React.Component {
           errorAction={this.state.errorAction}
           errorActionText={this.state.errorActionText}
 
-          newGroupTopicParams={this.state.newGroupTopicParams}
+          newTopicParams={this.state.newTopicParams}
 
           onHideMessagesView={this.handleHideMessagesView}
           onData={this.tnData}

@@ -2597,8 +2597,12 @@ var messages = Object(react_intl__WEBPACK_IMPORTED_MODULE_1__["defineMessages"])
 });
 
 function isUnconfirmed(acs) {
-  var ex = acs ? acs.getExcessive() || '' : '';
-  return ex.includes('R') || ex.includes('W');
+  if (acs) {
+    var ex = acs.getExcessive() || '';
+    return acs.isJoiner('given') && (ex.includes('R') || ex.includes('W'));
+  }
+
+  return false;
 }
 
 var MessagesView = function (_React$Component) {
@@ -4756,7 +4760,7 @@ var TinodeWeb = function (_React$Component) {
 
         case 'block':
           console.log("Blocking...");
-          var am = topic.getAccessMode().updateWant('-J').getWant();
+          var am = topic.getAccessMode().updateWant('-JP').getWant();
           response = topic.setMeta({
             sub: {
               mode: am
@@ -7279,13 +7283,13 @@ var ContextMenu = function (_React$Component) {
       'topic_unblock': {
         id: 'topic_unblock',
         title: formatMessage(messages.unblock),
-        handler: _this.topicPermissionSetter.bind(_assertThisInitialized(_assertThisInitialized(_this)), '+J')
+        handler: _this.topicPermissionSetter.bind(_assertThisInitialized(_assertThisInitialized(_this)), '+JP')
       },
       'topic_block': {
         id: 'topic_block',
         title: formatMessage(messages.block),
         handler: function handler(params, errorHandler) {
-          return _this.topicPermissionSetter('-J', params, errorHandler).then(function (ctrl) {
+          return _this.topicPermissionSetter('-JP', params, errorHandler).then(function (ctrl) {
             _this.props.onTopicRemoved(params.topicName);
 
             return ctrl;
@@ -9522,8 +9526,8 @@ var ReceivedMarker = function (_React$PureComponent) {
         }, "access_time");
       } else if (this.props.received == tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.MESSAGE_STATUS_FAILED) {
         marker = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-          className: "material-icons small red"
-        }, "error_outline");
+          className: "material-icons small amber"
+        }, "warning");
       } else if (this.props.received == tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.MESSAGE_STATUS_SENT) {
         marker = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
           className: "material-icons small"
