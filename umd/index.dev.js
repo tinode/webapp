@@ -2847,7 +2847,7 @@ var MessagesView = function (_React$Component) {
 
         var status = topic.msgStatus(msg);
 
-        if (status >= tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.MESSAGE_STATUS_SENT) {
+        if (status >= tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.MESSAGE_STATUS_SENT && msg.from != this.props.myUserId) {
           this.props.readTimerHandler(function () {
             topic.noteRead(msg.seq);
           });
@@ -4602,7 +4602,7 @@ var TinodeWeb = function (_React$Component) {
 
       var topic = this.tinode.getTopic(data.topic);
 
-      if (topic.msgStatus(data) >= tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default.a.MESSAGE_STATUS_SENT) {
+      if (topic.msgStatus(data) >= tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default.a.MESSAGE_STATUS_SENT && data.from != this.state.myUserId) {
         clearTimeout(this.receivedTimer);
         this.receivedTimer = setTimeout(function () {
           _this9.receivedTimer = undefined;
