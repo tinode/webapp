@@ -356,9 +356,9 @@ class MessagesView extends React.Component {
         newState.scrollPosition = 0;
       }
 
-      // Aknowledge all messages, including own messages.
-      let status = topic.msgStatus(msg);
-      if (status >= Tinode.MESSAGE_STATUS_SENT) {
+      // Aknowledge messages except own messages.
+      const status = topic.msgStatus(msg);
+      if (status >= Tinode.MESSAGE_STATUS_SENT && msg.from != this.props.myUserId) {
         this.props.readTimerHandler(() => {
           topic.noteRead(msg.seq);
         });

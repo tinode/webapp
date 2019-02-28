@@ -609,7 +609,7 @@ class TinodeWeb extends React.Component {
   // Sending "received" notifications
   tnData(data) {
     const topic = this.tinode.getTopic(data.topic);
-    if (topic.msgStatus(data) >= Tinode.MESSAGE_STATUS_SENT) {
+    if (topic.msgStatus(data) >= Tinode.MESSAGE_STATUS_SENT && data.from != this.state.myUserId) {
       clearTimeout(this.receivedTimer);
       this.receivedTimer = setTimeout(() => {
         this.receivedTimer = undefined;
@@ -690,7 +690,6 @@ class TinodeWeb extends React.Component {
         showInfoPanel: false
       });
 
-      console.log("handleTopicSelected: null navigation");
       HashNavigation.navigateTo(HashNavigation.setUrlTopic('', null));
     }
   }
@@ -948,9 +947,13 @@ class TinodeWeb extends React.Component {
     const topicName = peerName || this.tinode.newGroupTopicName();
     const params = {
       _topicName: topicName,
-      sub: {mode: DEFAULT_ACCESS_MODE}
     };
-    if (!peerName) {
+    if (peerName) {
+      // Because we are initialing the subscription, set 'want' to all permissions.
+      params.sub = {mode: DEFAULT_ACCESS_MODE};
+      // Give the other user all permissions too.
+      params.desc = {defacs: {auth: DEFAULT_ACCESS_MODE}};
+    } else {
       params.desc = {public: pub, private: {comment: priv}};
       params.tags = tags;
     }
