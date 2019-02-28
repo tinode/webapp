@@ -113,6 +113,8 @@ class TinodeWeb extends React.Component {
 
     return {
       connected: false,
+      // Connected and subscribed to 'me'
+      ready: false,
       transport: settings.transport || null,
       serverAddress: settings.serverAddress || detectServerAddress(),
       serverVersion: "no connection",
@@ -410,6 +412,7 @@ class TinodeWeb extends React.Component {
   handleDisconnect(err) {
     this.setState({
       connected: false,
+      ready: false,
       topicSelectedOnline: false,
       dialogSelected: null,
       errorText: err && err.message ? err.message : "Disconnected",
@@ -594,6 +597,11 @@ class TinodeWeb extends React.Component {
     const newState = {
       chatList: []
     };
+
+    if (!this.state.ready) {
+      newState.ready = true;
+    }
+
     this.tinode.getMeTopic().contacts((c) => {
       newState.chatList.push(c);
       if (this.state.topicSelected == c.topic) {
@@ -1265,6 +1273,7 @@ class TinodeWeb extends React.Component {
         <MessagesView
           tinode={this.tinode}
           connected={this.state.connected}
+          ready={this.state.ready}
           online={this.state.topicSelectedOnline}
           acs={this.state.topicSelectedAcs}
           displayMobile={this.state.displayMobile}

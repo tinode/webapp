@@ -111,8 +111,8 @@ class MessagesView extends React.Component {
       }
     }
 
-    if (topic && !topic.isSubscribed() && this.props.tinode.isAuthenticated() &&
-        ((!prevProps.connected && this.props.connected) || (this.state.topic != prevState.topic))) {
+    if (topic && !topic.isSubscribed() && this.props.ready &&
+        ((this.state.topic != prevState.topic) || !prevProps.ready)) {
       // Don't request the tags. They are useless unless the user
       // is the owner and is editing the topic.
       let getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub();
@@ -356,7 +356,8 @@ class MessagesView extends React.Component {
         newState.scrollPosition = 0;
       }
 
-      // Aknowledge messages except own messages.
+      // Aknowledge messages except own messages. They are
+      // automatically assumed to be read and recived.
       const status = topic.msgStatus(msg);
       if (status >= Tinode.MESSAGE_STATUS_SENT && msg.from != this.props.myUserId) {
         this.props.readTimerHandler(() => {
