@@ -1,3 +1,4 @@
+
 // Edit account parameters.
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
@@ -15,14 +16,15 @@ export default class EditAccountView extends React.Component {
   constructor(props) {
     super(props);
 
-    let me = this.props.tinode.getMeTopic();
-    let defacs = me.getDefaultAccess();
-    let fnd = this.props.tinode.getFndTopic();
+    const me = this.props.tinode.getMeTopic();
+    const defacs = me ? me.getDefaultAccess() : null;
+    const fnd = this.props.tinode.getFndTopic();
     this.state = {
       fullName: me.public ? me.public.fn : undefined,
       avatar: makeImageUrl(me.public ? me.public.photo : null),
       auth: defacs ? defacs.auth : null,
       anon: defacs ? defacs.anon : null,
+      fndSubscribed: false,
       tags: fnd.tags(),
       showPermissionEditorFor: undefined,
       previousOnTags: fnd.onTagsUpdated
@@ -40,18 +42,25 @@ export default class EditAccountView extends React.Component {
   }
 
   componentDidMount() {
-    let fnd = this.props.tinode.getFndTopic();
+    const fnd = this.props.tinode.getFndTopic();
     fnd.onTagsUpdated = this.tnNewTags;
     if (!fnd.isSubscribed()) {
-      fnd.subscribe(fnd.startMetaQuery().withLaterDesc().withTags().build()).catch((err) => {
-        this.props.onError(err.message, 'err');
-      });
+      fnd.subscribe(fnd.startMetaQuery().withTags().build())
+        .then((ctrl) => {
+          this.setState({fndSubscribed: true});
+        })
+        .catch((err) => {
+          this.props.onError(err.message, 'err');
+        });
     }
   }
 
   componentWillUnmount() {
-    var fnd = this.props.tinode.getFndTopic();
+    const fnd = this.props.tinode.getFndTopic();
     fnd.onTagsUpdated = this.state.previousOnTags;
+    if (fnd.isSubscribed() && this.state.fndSubscribed) {
+      fnd.leave();
+    }
   }
 
   tnNewTags(tags) {
