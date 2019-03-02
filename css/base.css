@@ -519,6 +519,11 @@ table.permission-editor td.checkbox {
   cursor: pointer;
 }
 
+.clean-clickable {
+  cursor: pointer;
+}
+
+
 /* END of top-level layout */
 
 /* Sidepanel styles */
@@ -1072,18 +1077,35 @@ i.search {
 
 #write-only-note {
   position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background-color: white;
   color: #666;
   height: auto;
   width: auto;
   line-height: 2rem;
   text-align: center;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 0.25rem 1.5rem;
-  box-shadow: 0.1rem 0.1rem 0.1rem rgba(0,0,0,0.2);
+  padding: 0.75rem 1.25rem 0.75rem 1.25rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.12);
 }
+
+#peer-messaging-disabled-note {
+  position: absolute;
+  left: 50%;
+  bottom: 4.3rem;
+  transform: translate(-50%);
+  background-color: white;
+  color: #666;
+  width: fit-content;
+  line-height: 2rem;
+  text-align: center;
+  padding: 0.75rem 1.25rem 0.75rem 1.25rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.12);
+}
+
 /* Footer-panel with the input for the new message */
 #send-message-panel {
   display: flex;

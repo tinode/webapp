@@ -45,6 +45,8 @@
   "title_not_found": "Not found",
   "unnamed_topic": "Unnamed",
   "messages_not_readable": "no access to messages",
+  "peers_messaging_disabled": "Peer's messaging is disabled.",
+  "enable_peers_messaging": "Enable",
   "tabtitle_find_user": "find",
   "tabtitle_new_group": "new group",
   "tabtitle_group_by_id": "by id",

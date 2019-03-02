@@ -46,6 +46,8 @@
     "title_not_found": "Not found",
     "unnamed_topic": "Unnamed",
     "messages_not_readable": "no access to messages",
+    "peers_messaging_disabled": "Peer's messaging is disabled.",
+    "enable_peers_messaging": "Enable",
     "tabtitle_find_user": "find",
     "tabtitle_new_group": "new group",
     "tabtitle_group_by_id": "by id",
@@ -263,6 +265,8 @@
     "chat_invitation": "Вас пригласили начать новый чат. Как вы хотите поступить?",
     "chat_invitation_accept": "Принять",
     "chat_invitation_ignore": "Игнорировать",
-    "chat_invitation_block": "Заблокировать"
+    "chat_invitation_block": "Заблокировать",
+    "peers_messaging_disabled": "Чат заблокирован у корреспондента.",
+    "enable_peers_messaging": "Разблокировать."
   }
 }

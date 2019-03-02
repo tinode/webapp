@@ -764,7 +764,6 @@ class TinodeWeb extends React.Component {
         response = topic.delTopic();
         break;
       case 'block':
-        console.log("Blocking...");
         // Ban the topic making futher invites impossible.
         // Just self-ban.
         const am = topic.getAccessMode().updateWant('-JP').getWant();
@@ -1299,6 +1298,7 @@ class TinodeWeb extends React.Component {
           onNewTopicCreated={this.handleNewTopicCreated}
           readTimerHandler={this.handleReadTimer}
           showContextMenu={this.handleShowContextMenu}
+          onChangePermissions={this.handleChangePermissions}
           onNewChat={this.handleNewChatInvitation}
           sendMessage={this.handleSendMessage} />
 

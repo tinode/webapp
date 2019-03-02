@@ -14,7 +14,7 @@ import LoadSpinner from '../widgets/load-spinner.jsx';
 import LogoView from './logo-view.jsx';
 import SendMessage from '../widgets/send-message.jsx';
 
-import { KEYPRESS_DELAY, MESSAGES_PAGE } from '../config.js';
+import { DEFAULT_ACCESS_MODE, KEYPRESS_DELAY, MESSAGES_PAGE } from '../config.js';
 import { makeImageUrl } from '../lib/blob-helpers.js';
 import { shortDateFormat } from '../lib/strformat.js';
 
@@ -67,6 +67,7 @@ class MessagesView extends React.Component {
     this.handleShowContextMenuMessage = this.handleShowContextMenuMessage.bind(this);
     this.handleBackNavigation = this.handleBackNavigation.bind(this);
     this.handleNewChatAcceptance = this.handleNewChatAcceptance.bind(this);
+    this.handleEnablePeer = this.handleEnablePeer.bind(this);
   }
 
   componentDidMount() {
@@ -138,7 +139,7 @@ class MessagesView extends React.Component {
           });
         })
         .catch((err) => {
-          console.log('Failed subscription to', this.state.topic);
+          console.log("Failed subscription to", this.state.topic);
           this.props.onError(err.message, 'err');
           const blankState = MessagesView.getDerivedStateFromProps({}, {});
           blankState.title = this.props.intl.formatMessage(messages.not_found);
@@ -160,7 +161,8 @@ class MessagesView extends React.Component {
         imagePreview: null,
         typingIndicator: false,
         scrollPosition: 0,
-        fetchingMessages: false
+        fetchingMessages: false,
+        peerMessagingDisabled: false
       };
     } else if (nextProps.topic != prevState.topic) {
       const topic = nextProps.tinode.getTopic(nextProps.topic);
@@ -191,29 +193,37 @@ class MessagesView extends React.Component {
           }
         });
 
-        nextState = Object.assign(nextState, {
+        Object.assign(nextState, {
           messages: msgs,
           onlineSubs: subs
         });
 
         if (topic.public) {
-          nextState = Object.assign(nextState, {
+          Object.assign(nextState, {
             title: topic.public.fn,
             avatar: makeImageUrl(topic.public.photo)
           });
         } else {
-          nextState = Object.assign(nextState, {
+          Object.assign(nextState, {
             title: '',
             avatar: null
           });
         }
+
+        const peer = topic.p2pPeerDesc();
+        if (peer && peer.acs) {
+          Object.assign(nextState, {
+            peerMessagingDisabled: !(peer.acs.isReader() && peer.acs.isWriter())
+          });
+        }
       } else {
         // Invalid topic.
-        nextState = Object.assign(nextState, {
+        Object.assign(nextState, {
           messages: [],
           onlineSubs: [],
           title: '',
-          avatar: null
+          avatar: null,
+          peerMessagingDisabled: false
         });
       }
     }
@@ -286,9 +296,9 @@ class MessagesView extends React.Component {
     this.setState({scrollPosition: event.target.scrollHeight - event.target.scrollTop});
     if (event.target.scrollTop <= 0) {
       this.setState((prevState, props) => {
-        let newState = {};
+        const newState = {};
         if (!prevState.fetchingMessages) {
-          let topic = this.props.tinode.getTopic(this.state.topic);
+          const topic = this.props.tinode.getTopic(this.state.topic);
           if (topic && topic.isSubscribed() && topic.msgHasMoreMessages()) {
             newState.fetchingMessages = true;
             topic.getMessagesPage(MESSAGES_PAGE).catch((err) => {
@@ -327,21 +337,28 @@ class MessagesView extends React.Component {
 
   handleSubsUpdated() {
     if (this.state.topic) {
-      var subs = [];
-      var topic = this.props.tinode.getTopic(this.state.topic);
+      const subs = [];
+      const topic = this.props.tinode.getTopic(this.state.topic);
       topic.subscribers((sub) => {
         if (sub.online && sub.user != this.props.myUserId) {
           subs.push(sub);
         }
       });
-      this.setState({onlineSubs: subs});
+      const newState = {onlineSubs: subs};
+      const peer = topic.p2pPeerDesc();
+      if (peer && peer.acs) {
+        Object.assign(newState, {
+          peerMessagingDisabled: !(peer.acs.isReader() && peer.acs.isWriter())
+        });
+      }
+      this.setState(newState);
     }
   }
 
   handleNewMessage(msg) {
     // Regenerate messages list
-    var topic = this.props.tinode.getTopic(this.state.topic);
-    var newState = {messages: []};
+    const topic = this.props.tinode.getTopic(this.state.topic);
+    const newState = {messages: []};
     topic.messages(function(m) {
       if (!m.deleted) {
         newState.messages = newState.messages.concat(m);
@@ -410,7 +427,7 @@ class MessagesView extends React.Component {
       this.props.sendMessage(Drafty.attachJSON(Drafty.parse(text), data));
     } else if (action == 'url') {
       const url = new URL(data.ref);
-      let params = url.searchParams;
+      const params = url.searchParams;
       for (let key in data.resp) {
         if (data.resp.hasOwnProperty(key)) {
           params.set(key, data.resp[key]);
@@ -454,6 +471,10 @@ class MessagesView extends React.Component {
 
   handleNewChatAcceptance(action) {
     this.props.onNewChat(this.state.topic, action);
+  }
+
+  handleEnablePeer() {
+    this.props.onChangePermissions(this.state.topic, DEFAULT_ACCESS_MODE, this.state.topic);
   }
 
   render() {
@@ -520,7 +541,7 @@ class MessagesView extends React.Component {
       }
 
       let lastSeen = null;
-      let cont = this.props.tinode.getMeTopic().getContact(this.state.topic);
+      const cont = this.props.tinode.getMeTopic().getContact(this.state.topic);
       if (cont && Tinode.topicType(cont.topic) == 'p2p') {
         if (cont.online) {
           lastSeen = formatMessage(messages.online_now);
@@ -530,8 +551,8 @@ class MessagesView extends React.Component {
           // TODO: also handle user agent in c.seen.ua
         }
       }
-      let avatar = this.state.avatar || true;
-      let online = this.props.online ? 'online' + (this.state.typingIndicator ? ' typing' : '') : 'offline';
+      const avatar = this.state.avatar || true;
+      const online = this.props.online ? 'online' + (this.state.typingIndicator ? ' typing' : '') : 'offline';
 
       component = (
         <div id="topic-view" className={this.props.hideSelf ? 'nodisplay' : null}>
@@ -592,6 +613,14 @@ class MessagesView extends React.Component {
             </div>
             : null }
           </div>
+          {this.state.peerMessagingDisabled && !this.state.unconfirmed ?
+            <div id="peer-messaging-disabled-note">
+              <i className="material-icons secondary">block</i> <FormattedMessage
+                id="peers_messaging_disabled" defaultMessage="Peer's messaging is disabled."
+                description="Shown when the p2p peer's messaging is disabled" /> <a href="javascript:;"
+                  onClick={this.handleEnablePeer}><FormattedMessage id="enable_peers_messaging"
+                  defaultMessage="Enable" description="Call to action to enable peer's messaging" /></a>.
+            </div> : null}
           {this.state.unconfirmed ?
             <Invitation onAction={this.handleNewChatAcceptance} />
             :
@@ -600,8 +629,7 @@ class MessagesView extends React.Component {
               topic={this.props.topic}
               disabled={!this.state.isWriter}
               sendMessage={this.props.sendMessage}
-              onError={this.props.onError} />
-          }
+              onError={this.props.onError} />}
           {this.state.imagePreview ?
             <ImagePreview content={this.state.imagePreview}
               onClose={this.handleCloseImagePreview} /> : null}

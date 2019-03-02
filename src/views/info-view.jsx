@@ -15,6 +15,8 @@ import MoreButton from '../widgets/more-button.jsx';
 import PermissionsEditor from '../widgets/permissions-editor.jsx';
 import TagManager from '../widgets/tag-manager.jsx';
 
+import { NO_ACCESS_MODE } from '../config.js';
+
 import { makeImageUrl } from '../lib/blob-helpers.js';
 import { vcard } from '../lib/utils.js';
 
@@ -145,6 +147,9 @@ class InfoView extends React.Component {
       if (user2) {
         newState.modeGiven2 = user2.acs.getGiven();
         newState.modeWant2 = user2.acs.getWant();
+      } else {
+        newState.modeGiven2 = NO_ACCESS_MODE;
+        newState.modeWant2 = NO_ACCESS_MODE;
       }
     } else {
       topic.subscribers((sub) => {
@@ -196,7 +201,7 @@ class InfoView extends React.Component {
     }
   }
 
-  onSubsUpdated() {
+  onSubsUpdated(subs) {
     const topic = this.props.tinode.getTopic(this.props.topic);
     if (!topic) {
       return;
@@ -204,7 +209,7 @@ class InfoView extends React.Component {
     this.resetSubs(topic, this.props);
 
     if (this.previousSubsUpdated && this.previousSubsUpdated != this.onSubsUpdated) {
-      this.previousSubsUpdated();
+      this.previousSubsUpdated(subs);
     }
   }
 

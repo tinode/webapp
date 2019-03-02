@@ -129,5 +129,7 @@
   "chat_invitation": "Вас пригласили начать новый чат. Как вы хотите поступить?",
   "chat_invitation_accept": "Принять",
   "chat_invitation_ignore": "Игнорировать",
-  "chat_invitation_block": "Заблокировать"
+  "chat_invitation_block": "Заблокировать",
+  "peers_messaging_disabled": "Чат заблокирован у корреспондента.",
+  "enable_peers_messaging": "Разблокировать."
 }
