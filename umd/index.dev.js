@@ -2623,6 +2623,15 @@ function isUnconfirmed(acs) {
   return false;
 }
 
+function isPeerRestricted(acs) {
+  if (acs) {
+    var ms = acs.getMissing() || '';
+    return acs.isJoiner('want') && (ms.includes('R') || ms.includes('W'));
+  }
+
+  return false;
+}
+
 var MessagesView = function (_React$Component) {
   _inherits(MessagesView, _React$Component);
 
@@ -2844,9 +2853,9 @@ var MessagesView = function (_React$Component) {
         };
         var peer = topic.p2pPeerDesc();
 
-        if (peer && peer.acs) {
+        if (peer) {
           Object.assign(newState, {
-            peerMessagingDisabled: !(peer.acs.isReader('given') && peer.acs.isWriter('given'))
+            peerMessagingDisabled: isPeerRestricted(peer.acs)
           });
         } else if (this.state.peerMessagingDisabled) {
           Object.assign(newState, {
@@ -3259,9 +3268,9 @@ var MessagesView = function (_React$Component) {
 
           var peer = topic.p2pPeerDesc();
 
-          if (peer && peer.acs) {
+          if (peer) {
             Object.assign(nextState, {
-              peerMessagingDisabled: !(peer.acs.isReader('given') && peer.acs.isWriter('given'))
+              peerMessagingDisabled: isPeerRestricted(peer.acs)
             });
           } else if (prevState.peerMessagingDisabled) {
             Object.assign(nextState, {
