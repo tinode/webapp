@@ -213,7 +213,11 @@ class MessagesView extends React.Component {
         const peer = topic.p2pPeerDesc();
         if (peer && peer.acs) {
           Object.assign(nextState, {
-            peerMessagingDisabled: !(peer.acs.isReader() && peer.acs.isWriter())
+            peerMessagingDisabled: !(peer.acs.isReader('given') && peer.acs.isWriter('given'))
+          });
+        } else if (prevState.peerMessagingDisabled) {
+          Object.assign(nextState, {
+            peerMessagingDisabled: false
           });
         }
       } else {
@@ -348,7 +352,11 @@ class MessagesView extends React.Component {
       const peer = topic.p2pPeerDesc();
       if (peer && peer.acs) {
         Object.assign(newState, {
-          peerMessagingDisabled: !(peer.acs.isReader() && peer.acs.isWriter())
+          peerMessagingDisabled: !(peer.acs.isReader('given') && peer.acs.isWriter('given'))
+        });
+      } else if (this.state.peerMessagingDisabled) {
+        Object.assign(newState, {
+          peerMessagingDisabled: false
         });
       }
       this.setState(newState);
