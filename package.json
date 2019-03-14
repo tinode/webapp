@@ -1,18 +1,18 @@
 {
   "name": "tinode-webapp",
   "description": "Tinode messenger for the web",
-  "version": "0.15.13-rc4",
+  "version": "0.15.13-rc5",
   "devDependencies": {
-    "@babel/core": "^7.2.2",
-    "@babel/preset-env": "^7.3.1",
+    "@babel/core": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.5",
     "babel-plugin-react-intl": "^3.0.1",
     "browserslist": "^4.4.1",
-    "cssnano": "^4.1.8",
+    "cssnano": "^4.1.10",
     "postcss": "^7.0.6",
-    "uglifyjs-webpack-plugin": "^2.1.1",
-    "webpack": "^4.29.3",
+    "uglifyjs-webpack-plugin": "^2.1.2",
+    "webpack": "^4.29.6",
     "webpack-cli": "^3.2.3"
   },
   "repository": {
@@ -81,6 +81,6 @@
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "react-intl": "^2.8.0",
-    "tinode-sdk": "^0.15.13-rc4"
+    "tinode-sdk": "^0.15.13-rc5"
   }
 }
