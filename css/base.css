@@ -731,6 +731,9 @@ i.search {
   border-collapse: collapse;
   overflow-x: hidden;
 }
+.contact-box > li:last-child {
+  border-bottom: none; /* remove border from the last contact */
+}
 .contact-box > li:hover {
   background-color: #eceff1; /* blue-gray 50 highlight */
 }
