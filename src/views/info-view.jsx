@@ -18,7 +18,7 @@ import TagManager from '../widgets/tag-manager.jsx';
 import { NO_ACCESS_MODE } from '../config.js';
 
 import { makeImageUrl } from '../lib/blob-helpers.js';
-import { vcard } from '../lib/utils.js';
+import { arrayEqual, vcard } from '../lib/utils.js';
 
 const messages = defineMessages({
   requested: {
