@@ -38,32 +38,36 @@ export default class TagManager extends React.Component {
 
   handleTagInput(text) {
     this.setState({tagInput: text});
-    // Check if user entered ',', ' ' or ';'
     if (text.length > 0) {
-      var last = text[text.length-1];
-      if (last == ',' || last == ' ' || last == ';') {
-        var tag = text.substr(0, text.length-1).trim();
-        if (tag.length >= MIN_TAG_LENGTH) {
-          this.handleAddTag(tag);
+      const last = text[text.length-1];
+      if (text[0] == '"') {
+        // This is a quoted string.
+        if (text.length > 1 && last == '"') {
+          this.handleAddTag(text.substring(1, text.length-1));
         }
+      } else if (last == ',' || last == ' ' || last == ';' || last == '"') {
+        // User entered ',', ' ' or ';'
+        this.handleAddTag(text.substring(0, text.length-1).trim());
       }
     }
   }
 
   handleAddTag(tag) {
-    tag = tag.trim();
     if (tag.length > 0) {
-      let tags = this.state.tags.slice(0);
+      const tags = this.state.tags.slice(0);
       tags.push(tag);
+
       this.setState({tags: tags, tagInput: ''});
       if (this.props.onTagsChanged) {
         this.props.onTagsChanged(tags);
       }
+      return tags;
     }
+    return this.state.tags;
   }
 
   handleRemoveTag(tag, index) {
-    var tags = this.state.tags.slice(0);
+    const tags = this.state.tags.slice(0);
     tags.splice(index, 1);
     this.setState({tags: tags});
     if (this.props.onTagsChanged) {
@@ -72,16 +76,9 @@ export default class TagManager extends React.Component {
   }
 
   handleSubmit() {
-    let tags = this.state.tags.slice(0);
-    let inp = this.state.tagInput.trim();
-    if (inp.length > 0) {
-      tags.push(inp);
-      if (this.props.onTagsChanged) {
-        this.props.onTagsChanged(tags);
-      }
-    }
-    this.props.onSubmit(tags);
-    this.setState({activated: false, tagInput: '', tags: this.props.tags});
+    // Add unprocessed input to tags, submit the list.
+    this.props.onSubmit(this.handleAddTag(this.state.tagInput.trim()));
+    this.setState({activated: false, tags: this.props.tags});
   }
 
   handleCancel() {
@@ -92,19 +89,21 @@ export default class TagManager extends React.Component {
   }
 
   render() {
-    var tags = [];
+    let tags = [];
     if (this.state.activated) {
-      this.state.tags.map(function(tag) {
-        tags.push({user: tag});
+      this.state.tags.map((tag) => {
+        tags.push({user: tag, invalid: (tag.length < MIN_TAG_LENGTH)});
       });
     } else {
-      this.state.tags.map(function(tag) {
+      this.state.tags.map((tag) => {
         tags.push(<span className="badge" key={tags.length}>{tag}</span>);
       });
       if (tags.length == 0) {
-        tags = (<i>
-              <FormattedMessage id="tags_not_found" defaultMessage="No tags defined. Add some." description="" />
-            </i>);
+        tags = (
+          <i>
+            <FormattedMessage id="tags_not_found" defaultMessage="No tags defined. Add some." description="" />
+          </i>
+        );
       }
     }
     return (

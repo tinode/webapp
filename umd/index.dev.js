@@ -2029,7 +2029,7 @@ var InfoView = function (_React$Component) {
   }, {
     key: "handleTagsUpdated",
     value: function handleTagsUpdated(tags) {
-      if (!arrayEqual(this.state.tags.slice(0), tags.slice(0))) {
+      if (!Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_15__["arrayEqual"])(this.state.tags.slice(0), tags.slice(0))) {
         this.props.onTopicTagsUpdate(this.props.topic, tags);
       }
     }
@@ -6627,6 +6627,7 @@ var ChipInput = function (_React$Component) {
           noAvatar: _this2.props.avatarDisabled,
           topic: item.user,
           required: item.user === _this2.props.required,
+          invalid: item.invalid,
           index: count,
           key: item.user
         }));
@@ -6753,8 +6754,9 @@ var Chip = function (_React$PureComponent) {
     key: "render",
     value: function render() {
       var title = this.props.title || this.props.topic;
+      var className = this.props.invalid ? 'chip invalid' : 'chip';
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "chip"
+        className: className
       }, this.props.noAvatar ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "spacer"
       }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -10264,20 +10266,18 @@ var TagManager = function (_React$Component) {
       if (text.length > 0) {
         var last = text[text.length - 1];
 
-        if (last == ',' || last == ' ' || last == ';') {
-          var tag = text.substr(0, text.length - 1).trim();
-
-          if (tag.length >= _config_js__WEBPACK_IMPORTED_MODULE_3__["MIN_TAG_LENGTH"]) {
-            this.handleAddTag(tag);
+        if (text[0] == '"') {
+          if (text.length > 1 && last == '"') {
+            this.handleAddTag(text.substring(1, text.length - 1));
           }
+        } else if (last == ',' || last == ' ' || last == ';' || last == '"') {
+          this.handleAddTag(text.substring(0, text.length - 1).trim());
         }
       }
     }
   }, {
     key: "handleAddTag",
     value: function handleAddTag(tag) {
-      tag = tag.trim();
-
       if (tag.length > 0) {
         var tags = this.state.tags.slice(0);
         tags.push(tag);
@@ -10289,7 +10289,11 @@ var TagManager = function (_React$Component) {
         if (this.props.onTagsChanged) {
           this.props.onTagsChanged(tags);
         }
+
+        return tags;
       }
+
+      return this.state.tags;
     }
   }, {
     key: "handleRemoveTag",
@@ -10307,21 +10311,9 @@ var TagManager = function (_React$Component) {
   }, {
     key: "handleSubmit",
     value: function handleSubmit() {
-      var tags = this.state.tags.slice(0);
-      var inp = this.state.tagInput.trim();
-
-      if (inp.length > 0) {
-        tags.push(inp);
-
-        if (this.props.onTagsChanged) {
-          this.props.onTagsChanged(tags);
-        }
-      }
-
-      this.props.onSubmit(tags);
+      this.props.onSubmit(this.handleAddTag(this.state.tagInput.trim()));
       this.setState({
         activated: false,
-        tagInput: '',
         tags: this.props.tags
       });
     }
@@ -10348,7 +10340,8 @@ var TagManager = function (_React$Component) {
       if (this.state.activated) {
         this.state.tags.map(function (tag) {
           tags.push({
-            user: tag
+            user: tag,
+            invalid: tag.length < _config_js__WEBPACK_IMPORTED_MODULE_3__["MIN_TAG_LENGTH"]
           });
         });
       } else {

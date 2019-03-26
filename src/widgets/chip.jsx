@@ -15,8 +15,9 @@ export default class Chip extends React.PureComponent {
 
   render() {
     const title = this.props.title || this.props.topic;
+    const className = this.props.invalid ? 'chip invalid' : 'chip';
     return (
-      <div className="chip">
+      <div className={className}>
         {this.props.noAvatar ?
           <span className="spacer" /> :
           <div className="avatar-box">

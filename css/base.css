@@ -1779,6 +1779,11 @@ ul.tabbar li.active > a:after {
   font-size: 90%;
 }
 
+.chip.invalid {
+  color: #c66;
+  background-color: #fee;
+}
+
 .chip > a {
   display: inline-block;
   color: #ccc;

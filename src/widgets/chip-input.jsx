@@ -118,6 +118,7 @@ export default class ChipInput extends React.Component {
           noAvatar={this.props.avatarDisabled}
           topic={item.user}
           required={item.user === this.props.required}
+          invalid={item.invalid}
           index={count}
           key={item.user} />
       );
