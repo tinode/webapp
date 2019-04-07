@@ -68,7 +68,7 @@
   "sidepanel_title_reset": "Reset Password",
   "sidepanel_title_archive": "Archived Chats",
   "update_available": "Update available. <a href=\"\">Reload</a>.",
-  "reconnect_countdown": "Disconnected. Reconnecting in {seconds}s…",
+  "reconnect_countdown": "Disconnected. Reconnecting in {seconds}…",
   "reconnect_now": "Try now",
   "phone_dative": "phone",
   "email_dative": "email",

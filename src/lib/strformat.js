@@ -14,6 +14,14 @@ export function shortDateFormat(then, locale) {
     {hour12: false, year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'});
 }
 
+// Convert seconds to minutes:seconds, i.e. 156 sec -> 2:36.
+export function secondsToTime(seconds) {
+  const min = Math.floor(seconds % 3600 / 60);
+  let sec = seconds % 60;
+  sec = sec < 10 ? `0${sec}` : sec;
+  return `${min}:${sec}`;
+}
+
 // Convert a number of bytes to human-readable format.
 export function bytesToHumanSize(bytes) {
   if (!bytes || bytes == 0) {

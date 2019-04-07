@@ -120,7 +120,7 @@
   "badge_owner": "влад.",
   "update_available": "Есть новая версия приложения. <a href=\"\">Обновить</a>.",
   "user_not_found": "Не найден",
-  "reconnect_countdown": "Нет связи. Подключение через {seconds}с…",
+  "reconnect_countdown": "Нет связи. Подключение через {seconds}…",
   "reconnect_now": "Подключить сейчас.",
   "save_attachment": "сохранить",
   "menu_item_archive_topic": "В архив",

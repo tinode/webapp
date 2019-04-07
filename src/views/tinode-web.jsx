@@ -19,6 +19,7 @@ import { base64ReEncode, makeImageUrl } from '../lib/blob-helpers.js';
 import { detectServerAddress, isLocalHost, isSecureConnection } from '../lib/host-name.js';
 import LocalStorageUtil from '../lib/local-storage.js';
 import HashNavigation from '../lib/navigation.js';
+import { secondsToTime } from '../lib/strformat.js'
 import { updateFavicon } from '../lib/utils.js';
 
 // Sound to play on message received.
@@ -32,7 +33,7 @@ const messages = defineMessages({
   },
   reconnect_countdown: {
     id: 'reconnect_countdown',
-    defaultMessage: 'Disconnected. Reconnecting in {seconds}s…',
+    defaultMessage: 'Disconnected. Reconnecting in {seconds}…',
     description: 'Message shown when an app update is available.'
   },
   reconnect_now: {
@@ -395,8 +396,9 @@ class TinodeWeb extends React.Component {
     let count = sec / 1000;
     count = count | count;
     this.reconnectCountdown = setInterval(() => {
+      const timeLeft = (count > 99) ? secondsToTime(count) : count;
       this.handleError(
-        formatHTMLMessage(messages.reconnect_countdown, {seconds: count}),
+        formatHTMLMessage(messages.reconnect_countdown, {seconds: timeLeft}),
         'warn',
         () => {
           clearInterval(this.reconnectCountdown);
