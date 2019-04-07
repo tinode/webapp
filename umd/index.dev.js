@@ -6888,6 +6888,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 
+var icon_mapping = {
+  'muted': 'notifications_off',
+  'banned': 'block'
+};
 
 var ContactBadges = function (_React$PureComponent) {
   _inherits(ContactBadges, _React$PureComponent);
@@ -6906,15 +6910,23 @@ var ContactBadges = function (_React$PureComponent) {
       if (this.props.badges && this.props.badges.length > 0) {
         badges = [];
         this.props.badges.map(function (b) {
-          var style = 'badge' + (b.color ? ' ' + b.color : '');
-          badges.push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-            className: style,
-            key: b.key || b.name
-          }, b.name));
+          if (b.icon) {
+            badges.push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+              className: "material-icons as-badge",
+              key: b.key || b.icon
+            }, icon_mapping[b.icon]));
+          } else {
+            var style = 'badge' + (b.color ? ' ' + b.color : '');
+            badges.push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+              className: style,
+              key: b.key || b.name
+            }, b.name));
+          }
         });
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, badges);
       }
 
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, badges);
+      return null;
     }
   }]);
 
@@ -7180,12 +7192,27 @@ var Contact = function (_React$Component) {
       var online = this.props.now ? 'online' : 'offline';
       var avatar = this.props.avatar ? this.props.avatar : true;
       var badges = this.props.badges ? this.props.badges.slice() : [];
+      var icon_badges = [];
 
-      if (this.props.showMode && this.props.acs) {
-        badges.push({
-          name: this.props.acs.getMode(),
-          key: 'mode'
-        });
+      if (this.props.acs) {
+        if (this.props.showMode) {
+          badges.push({
+            name: this.props.acs.getMode(),
+            key: 'mode'
+          });
+        }
+
+        if (this.props.acs.isMuted()) {
+          icon_badges.push({
+            icon: 'muted'
+          });
+        }
+
+        if (!this.props.acs.isJoiner()) {
+          icon_badges.push({
+            icon: 'banned'
+          });
+        }
       }
 
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
@@ -7205,13 +7232,15 @@ var Contact = function (_React$Component) {
         className: "text-box"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "contact-title"
-      }, title), this.props.unread > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_unread_badge_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      }, title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_unread_badge_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
         count: this.props.unread
-      }) : null), this.props.comment ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        badges: icon_badges
+      })), this.props.comment ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "contact-comment"
-      }, this.props.comment) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      }, this.props.comment) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
         badges: badges
-      })), this.props.showContextMenu ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      }))), this.props.showContextMenu ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "menuTrigger"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         href: "javascript:;",

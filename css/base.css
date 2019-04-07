@@ -1528,6 +1528,12 @@ ul.tabbar li.active > a:after {
   vertical-align: middle;
 }
 
+.material-icons.as-badge {
+  padding-left: 0.2rem;
+  font-size: 1.25rem;
+  color: #bbb;
+}
+
 /* Badge with a label, like [you], [muted], etc */
 .badge {
   font-family: 'Roboto Mono', Courier, monospace, sans-serif;

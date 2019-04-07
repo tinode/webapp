@@ -39,8 +39,17 @@ export default class Contact extends React.Component {
     const online = this.props.now ? 'online' : 'offline';
     const avatar = this.props.avatar ? this.props.avatar : true;
     const badges = this.props.badges ? this.props.badges.slice() : [];
-    if (this.props.showMode && this.props.acs) {
-      badges.push({name: this.props.acs.getMode(), key: 'mode'});
+    const icon_badges = [];
+    if (this.props.acs) {
+      if (this.props.showMode) {
+        badges.push({name: this.props.acs.getMode(), key: 'mode'});
+      }
+      if (this.props.acs.isMuted()) {
+        icon_badges.push({icon: 'muted'});
+      }
+      if (!this.props.acs.isJoiner()) {
+        icon_badges.push({icon: 'banned'});
+      }
     }
 
     return (
@@ -58,10 +67,10 @@ export default class Contact extends React.Component {
         </div>
         <div className="text-box">
           <div><span className="contact-title">{title}</span>
-          {this.props.unread > 0 ? <UnreadBadge count={this.props.unread} /> : null}
+            <UnreadBadge count={this.props.unread} /><ContactBadges badges={icon_badges} />
           </div>
           {this.props.comment ? <div className="contact-comment">{this.props.comment}</div> : null}
-          <ContactBadges badges={badges} />
+          <span><ContactBadges badges={badges} /></span>
         </div>
         {this.props.showContextMenu ?
           <span className="menuTrigger">
