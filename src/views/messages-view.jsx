@@ -122,17 +122,22 @@ class MessagesView extends React.Component {
 
     if (topic && !topic.isSubscribed() && this.props.ready &&
         ((this.state.topic != prevState.topic) || !prevProps.ready)) {
+      // Is this a new topic?
+      const newTopic = (this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic);
+
       // Don't request the tags. They are useless unless the user
       // is the owner and is editing the topic.
       let getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub();
-      if (this.state.isReader) {
-        // If reading is permitted, ask for messages.
-        getQuery = getQuery.withLaterData(MESSAGES_PAGE).withLaterDel();
+      if (this.state.isReader || newTopic) {
+        // If reading is either permitted or we don't know because it's a new topic. Ask for messages.
+        getQuery = getQuery.withLaterData(MESSAGES_PAGE);
+        if (this.state.isReader) {
+          getQuery = getQuery.withLaterDel();
+        }
         // And show "loading" spinner.
         this.setState({ fetchingMessages: true });
       }
-      const setQuery = (this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic) ?
-        this.props.newTopicParams : undefined;
+      const setQuery = newTopic ? this.props.newTopicParams : undefined;
       topic.subscribe(getQuery.build(), setQuery)
         .then((ctrl) => {
           if (this.state.topic != ctrl.topic) {

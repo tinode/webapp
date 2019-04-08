@@ -2716,16 +2716,22 @@ var MessagesView = function (_React$Component) {
       }
 
       if (topic && !topic.isSubscribed() && this.props.ready && (this.state.topic != prevState.topic || !prevProps.ready)) {
+        var newTopic = this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic;
         var getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub();
 
-        if (this.state.isReader) {
-          getQuery = getQuery.withLaterData(_config_js__WEBPACK_IMPORTED_MODULE_12__["MESSAGES_PAGE"]).withLaterDel();
+        if (this.state.isReader || newTopic) {
+          getQuery = getQuery.withLaterData(_config_js__WEBPACK_IMPORTED_MODULE_12__["MESSAGES_PAGE"]);
+
+          if (this.state.isReader) {
+            getQuery = getQuery.withLaterDel();
+          }
+
           this.setState({
             fetchingMessages: true
           });
         }
 
-        var setQuery = this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic ? this.props.newTopicParams : undefined;
+        var setQuery = newTopic ? this.props.newTopicParams : undefined;
         topic.subscribe(getQuery.build(), setQuery).then(function (ctrl) {
           if (_this2.state.topic != ctrl.topic) {
             _this2.setState({
