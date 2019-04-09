@@ -835,7 +835,7 @@ module.exports = {"en":{"archived_contacts":"Archived contacts ({count})","conta
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PACKAGE_VERSION", function() { return PACKAGE_VERSION; });
-var PACKAGE_VERSION = "0.15.14-rc2";
+var PACKAGE_VERSION = "0.15.14-rc3";
 
 /***/ }),
 
