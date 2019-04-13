@@ -8,12 +8,15 @@ export default class LetterTile extends React.PureComponent {
   render() {
     let avatar;
     if (this.props.avatar === true) {
+      const isGroup = (Tinode.topicType(this.props.topic) == 'grp');
       if (this.props.topic && this.props.title && this.props.title.trim()) {
-        let letter = this.props.title.trim().charAt(0);
-        let color = "lettertile dark-color" + (Math.abs(stringHash(this.props.topic)) % 16);
+        const letter = this.props.title.trim().charAt(0);
+        const color = 'lettertile '
+          + (isGroup ? 'color' : 'dark-color')
+          + (Math.abs(stringHash(this.props.topic)) % 16);
         avatar = (<div className={color}><div>{letter}</div></div>)
       } else {
-        avatar = (Tinode.topicType(this.props.topic) == 'grp') ?
+        avatar = isGroup ?
           <i className="material-icons">group</i> :
           <i className="material-icons">person</i>;
       }
