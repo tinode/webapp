@@ -11,10 +11,6 @@ Although the app is generally usable, keep in mind that this is work in progress
 
 Try possibly newer or older version live at https://api.tinode.co/. For passwords for demo accounts and other instructions [see here](https://github.com/tinode/chat/#demo).
 
-Demo avatar photos are from https://www.pexels.com/ under [CC0 license](https://www.pexels.com/photo-license/).
-
-Background pattern from http://subtlepatterns.com/, commercial and non-commercial use allowed with attribution.
-
 ## Getting support
 
 * Read [client-side](http://tinode.github.io/js-api/) and [server-side](https://github.com/tinode/chat/blob/master/docs/API.md) API documentation.
@@ -33,6 +29,13 @@ As of the time of this writing there are only two translations. More translation
 * Previews not generated for videos, audio, links or docs.
 * No end-to-end encryption.
 * Emoji support is weak.
+
+## Other
+
+Demo avatars and some other graphics are from https://www.pexels.com/ under [CC0 license](https://www.pexels.com/photo-license/).
+
+Background patterns from http://subtlepatterns.com/, commercial and non-commercial use allowed with attribution.
+
 
 ## Responsive design
 
