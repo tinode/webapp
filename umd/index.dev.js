@@ -1391,7 +1391,7 @@ var EditAccountView = function (_React$Component) {
   }, {
     key: "handleTagsUpdated",
     value: function handleTagsUpdated(tags) {
-      if (arrayEqual(this.state.tags.slice(0), tags.slice(0))) {
+      if (Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__["arrayEqual"])(this.state.tags.slice(0), tags.slice(0))) {
         return;
       }
 
