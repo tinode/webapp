@@ -101,6 +101,7 @@
     "title_all_contacts": "All Contacts",
     "button_ok": "OK",
     "button_cancel": "Cancel",
+    "more_online_members": "+{overflow} more",
     "download_action": "download",
     "label_file_name": "File name:",
     "label_content_type": "Content type:",
@@ -267,6 +268,7 @@
     "chat_invitation_ignore": "Игнорировать",
     "chat_invitation_block": "Заблокировать",
     "peers_messaging_disabled": "Чат заблокирован у корреспондента.",
-    "enable_peers_messaging": "Разблокировать."
+    "enable_peers_messaging": "Разблокировать.",
+    "more_online_members": "+еще {overflow}"
   }
 }

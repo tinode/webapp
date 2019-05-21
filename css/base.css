@@ -1052,6 +1052,17 @@ i.search {
   margin-right: 0.2rem;
 }
 
+#topic-users .avatar-box > .material-icons {
+  font-size: 1.4rem;
+  line-height: 1.8rem;
+}
+
+/* Overflow span "+18 more" */
+#topic-users > span {
+  line-height: 2rem;
+  vertical-align: top;
+}
+
 /* Scrollable panel where the messages are shown */
 #messages-panel {
   position: relative;

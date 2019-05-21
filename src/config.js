@@ -59,3 +59,7 @@ export const MAX_EXTERN_ATTACHMENT_SIZE = 1 << 23;
 // Maximum allowed linear dimension of an inline image in pixels. You may want
 // to adjust it to 1600 or 2400 for production.
 export const MAX_IMAGE_DIM = 768;
+
+// Maximum number of online users to be shown in a topic title bar. Others will be
+// hidden under "+X more"
+export const MAX_ONLINE_IN_TOPIC = 4;
