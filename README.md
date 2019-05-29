@@ -21,7 +21,7 @@ Try possibly newer or older version live at https://api.tinode.co/. For password
 
 The app is fully internationalized using [React-Intl](https://github.com/yahoo/react-intl). The UI language is selected automatically from the language specified by the browser. A specific language can be forced by adding `hl=XX` parameter to the URL, i.e. https://api.tinode.co/#?hl=ru.
 
-As of the time of this writing there are only two translations. More translations are welcome. Send a pull request with a json file with translated strings. Take a look at [English](/src/i18n/en.json) and [Russian](/src/i18n/ru.json) translations for guidance.
+As of the time of this writing the following translations exist: English, Russian, Simplified Chinese. More translations are welcome. Send a pull request with a json file with translated strings. Take a look at [English](/src/i18n/en.json), [Russian](/src/i18n/ru.json), or [Simplified Chinese](/src/i18n/zh-CN.json) translations for guidance.
 
 
 ## Missing functionality

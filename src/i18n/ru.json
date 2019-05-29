@@ -43,7 +43,7 @@
   "title_manage_tags": "Редактор тагов",
   "message_sending": "в пути...",
   "message_sending_failed": "ошибка",
-  "search_placeholder": "Список, напр. email:alice@example.com, tel:17025550003...",
+  "search_placeholder": "Список, напр. email:alice@example.com, tel:+17025550003...",
   "messaging_disabled_prompt": "Отправка недоступна",
   "new_message_prompt": "Новое сообщение",
   "file_attachment_too_large": "Размер файла {size} превышает {limit} лимит.",
