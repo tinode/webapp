@@ -199,12 +199,22 @@ input[type="search"]:focus {
   box-shadow: 0 1px 0 rgba(33, 150, 243, 0.25);
 }
 
+textarea.invalid,
+input[type="text"].invalid,
+input[type="email"].invalid,
+input[type="password"].invalid,
+input[type="search"].invalid {
+  border-bottom: 1px solid #e57373;
+  box-shadow: 0 1px 0 rgba(229, 115, 115, 0.25);
+}
+
 input[type="text"]::placeholder,
 input[type="email"]::placeholder,
 input[type="password"]::placeholder,
 input[type="search"]::placeholder,
 textarea::placeholder {
   color: #bbb;
+  font-weight: lighter;
 }
 
 input[type="text"].with-visibility,
@@ -321,7 +331,7 @@ li.right:hover .menuTrigger {
 .hr {
   display: block;
   width: 100%;
-  height: 0.6rem;
+  height: 0.45rem;
   min-height: 0.3rem;
   background-color: #f0f0f0;
   box-shadow: inset 0 0.25rem 0.25rem -0.25rem rgba(0,0,0,0.15),

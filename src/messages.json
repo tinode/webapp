@@ -8,12 +8,13 @@
     "label_your_name": "Your name",
     "label_password": "Password",
     "password_unchanged_prompt": "Unchanged",
-    "label_user_id": "Address:",
-    "label_default_access_mode": "Default access mode:",
     "label_message_sound": "Message sound:",
     "label_push_notifications": "Notification alerts:",
     "label_push_notifications_disabled": "Notification alerts (requires HTTPS):",
     "title_tag_manager": "Tags (user discovery)",
+    "label_user_contacts": "Contacts:",
+    "label_user_id": "Address:",
+    "label_default_access_mode": "Default access mode:",
     "button_logout": "Logout",
     "requested_permissions": "Requested",
     "granted_permissions": "Granted",
@@ -269,7 +270,8 @@
     "chat_invitation_block": "Заблокировать",
     "peers_messaging_disabled": "Чат заблокирован у корреспондента.",
     "enable_peers_messaging": "Разблокировать.",
-    "more_online_members": "+еще {overflow}"
+    "more_online_members": "+еще {overflow}",
+    "label_user_contacts": "Конакты"
   },
   "zh-CN": {
     "archived_contacts": "已归档联系人 ({count})",

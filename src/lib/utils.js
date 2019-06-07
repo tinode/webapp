@@ -61,3 +61,22 @@ export function arrayEqual(a, b) {
   }
   return true;
 }
+
+// Checks (loosely) if the given string is a phone. If so, returns the phone number in a format
+// as close to E.164 as possible.
+export function asPhone(val) {
+  val = val.trim();
+  if (/^\s*(?:\+?(\d{1,3}))?[- (.]*(\d{3})[- ).]*(\d{3})[- .]*(\d{2})[- .]*(\d{2})?\s*$/.test(val)) {
+    return val.replace(/[- ().]*/, '');
+  }
+  return null;
+}
+
+// Checks (loosely) if the given string is an email. If so returns the email.
+export function asEmail(val) {
+  val = val.trim();
+  if (/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(val)) {
+    return val;
+  }
+  return null;
+}

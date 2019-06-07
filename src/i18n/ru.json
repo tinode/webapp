@@ -132,5 +132,6 @@
   "chat_invitation_block": "Заблокировать",
   "peers_messaging_disabled": "Чат заблокирован у корреспондента.",
   "enable_peers_messaging": "Разблокировать.",
-  "more_online_members": "+еще {overflow}"
+  "more_online_members": "+еще {overflow}",
+  "label_user_contacts": "Конакты"
 }

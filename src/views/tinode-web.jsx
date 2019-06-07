@@ -84,6 +84,9 @@ class TinodeWeb extends React.Component {
     this.handleGlobalSettings = this.handleGlobalSettings.bind(this);
     this.handleShowArchive = this.handleShowArchive.bind(this);
     this.handleToggleMessageSounds = this.handleToggleMessageSounds.bind(this);
+    this.handleCredAdd = this.handleCredAdd.bind(this);
+    this.handleCredDelete = this.handleCredDelete.bind(this);
+    this.handleCredConfirm = this.handleCredConfirm.bind(this);
     this.initDesktopAlerts = this.initDesktopAlerts.bind(this);
     this.togglePushToken = this.togglePushToken.bind(this);
     this.requestPushToken = this.requestPushToken.bind(this);
@@ -493,11 +496,14 @@ class TinodeWeb extends React.Component {
       credCode: undefined,
       myUserId: this.tinode.getCurrentUserID()
     });
+    console.log("handleLoginSuccessful");
     // Subscribe, fetch topic desc, the list of subscriptions. Messages are not fetched.
     me.subscribe(
       me.startMetaQuery().
         withLaterSub().
         withDesc().
+        withTags().
+        withCreds().
         build()
       ).catch((err) => {
         localStorage.removeItem('auth-token');
@@ -635,7 +641,7 @@ class TinodeWeb extends React.Component {
     if (fnd.isSubscribed()) {
       this.tnFndSubsUpdated();
     } else {
-      fnd.subscribe(fnd.startMetaQuery().withSub().withTags().build()).catch((err) => {
+      fnd.subscribe(fnd.startMetaQuery().withSub().build()).catch((err) => {
         this.handleError(err.message, 'err');
       });
     }
@@ -827,7 +833,7 @@ class TinodeWeb extends React.Component {
   }
 
   handleUpdateAccountTagsRequest(tags) {
-    this.tinode.getFndTopic().setMeta({tags: tags})
+    this.tinode.getMeTopic().setMeta({tags: tags})
       .catch((err) => {
         this.handleError(err.message, 'err');
       });
@@ -931,6 +937,24 @@ class TinodeWeb extends React.Component {
     LocalStorageUtil.updateObject('settings', {
       messageSoundsOff: !enabled
     });
+  }
+
+  handleCredAdd(method, value) {
+    // TODO: implement
+    console.log("add credential", method, value);
+  }
+
+  handleCredDelete(method, value) {
+    console.log("delete credential", method, value);
+    const me = this.tinode.getMeTopic();
+    me.delCredential(method, value).catch((err) => {
+      this.handleError(err.message, 'err');
+    });
+  }
+
+  handleCredConfirm(method, response) {
+    // TODO: implement
+    console.log("confirm credential", method, response);
   }
 
   // User clicked Cancel button in Setting or Sign Up panel.
@@ -1254,6 +1278,9 @@ class TinodeWeb extends React.Component {
           onUpdateAccountTags={this.handleUpdateAccountTagsRequest}
           onTogglePushNotifications={this.togglePushToken}
           onToggleMessageSounds={this.handleToggleMessageSounds}
+          onCredAdd={this.handleCredAdd}
+          onCredDelete={this.handleCredDelete}
+          onCredConfirm={this.handleCredConfirm}
           onTopicSelected={this.handleTopicSelected}
           onCreateTopic={this.handleNewTopicRequest}
           onNewTopic={this.handleNewTopic}

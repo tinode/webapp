@@ -135,6 +135,9 @@ class SidepanelView extends React.Component {
             onUpdateTags={this.props.onUpdateAccountTags}
             onTogglePushNotifications={this.props.onTogglePushNotifications}
             onToggleMessageSounds={this.props.onToggleMessageSounds}
+            onCredAdd={this.props.onCredAdd}
+            onCredDelete={this.props.onCredDelete}
+            onCredConfirm={this.props.onCredConfirm}
             onLogout={this.props.onLogout}
             onCancel={this.props.onCancel}
             onError={this.props.onError} /> :
