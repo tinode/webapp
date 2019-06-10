@@ -271,7 +271,7 @@
     "peers_messaging_disabled": "Чат заблокирован у корреспондента.",
     "enable_peers_messaging": "Разблокировать.",
     "more_online_members": "+еще {overflow}",
-    "label_user_contacts": "Конакты"
+    "label_user_contacts": "Конакты:"
   },
   "zh-CN": {
     "archived_contacts": "已归档联系人 ({count})",
@@ -408,6 +408,6 @@
     "tags_editor_no_tags": "添加一些标签",
     "title_manage_tags": "管理标签",
     "more_online_members": "还有{overflow}个",
-    "label_user_contacts": "往来"
+    "label_user_contacts": "往来："
   }
 }

@@ -65,7 +65,6 @@ export default class EditAccountView extends React.Component {
   }
 
   tnCredsUpdated(creds) {
-    console.log("tnCredsUpdated", creds, new Error());
     this.setState({credentials: creds || []});
   }
 
@@ -177,11 +176,11 @@ export default class EditAccountView extends React.Component {
     let credentials = [];
     this.state.credentials.map((cred) => {
       credentials.push(<div key={cred.meth + ":" + cred.val}>{cred.meth}: <tt>{cred.val}</tt>
-        {!cred.done ?
+        <span > {!cred.done ?
           <a href="javascript:;"
             onClick={this.props.onCredConfirm.bind(this, cred.meth, cred.val)}>confirm</a>
           : null} <a href="javascript:;" onClick={this.props.onCredDelete.bind(this, cred.meth, cred.val)}><i
-            className="material-icons gray">delete_outline</i></a></div>);
+            className="material-icons gray">delete_outline</i></a></span></div>);
     });
 
     return (

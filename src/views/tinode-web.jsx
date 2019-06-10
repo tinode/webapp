@@ -503,7 +503,7 @@ class TinodeWeb extends React.Component {
         withLaterSub().
         withDesc().
         withTags().
-        withCreds().
+        withCred().
         build()
       ).catch((err) => {
         localStorage.removeItem('auth-token');
@@ -940,12 +940,13 @@ class TinodeWeb extends React.Component {
   }
 
   handleCredAdd(method, value) {
-    // TODO: implement
-    console.log("add credential", method, value);
+    const me = this.tinode.getMeTopic();
+    me.setMeta({cred: {meth: method, val: value}}).catch((err) => {
+      this.handleError(err.message, 'err');
+    });
   }
 
   handleCredDelete(method, value) {
-    console.log("delete credential", method, value);
     const me = this.tinode.getMeTopic();
     me.delCredential(method, value).catch((err) => {
       this.handleError(err.message, 'err');
