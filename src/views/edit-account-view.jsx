@@ -168,7 +168,7 @@ export default class EditAccountView extends React.Component {
     this.state.credentials.map((cred) => {
       credentials.push(<div key={cred.meth + ":" + cred.val}>{cred.meth}: <tt>{cred.val}</tt>
         <span > {!cred.done ?
-          <a href="javascript:;" className="clickable"
+          <a href="javascript:;"
             onClick={this.props.onCredConfirm.bind(this, cred.meth, cred.val)}>
               <FormattedMessage id="validate_credential_action" defaultMessage="confirm"
                 description="Validate credentail call to action" />

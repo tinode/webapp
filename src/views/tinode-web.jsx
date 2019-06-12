@@ -954,7 +954,7 @@ class TinodeWeb extends React.Component {
   }
 
   handleCredConfirm(method, response) {
-    handleCredentialsRequest({cred: [method]});
+    this.handleCredentialsRequest({cred: [method]});
   }
 
   // User clicked Cancel button in Setting or Sign Up panel.
@@ -1187,15 +1187,26 @@ class TinodeWeb extends React.Component {
   }
 
   handleValidateCredentialsRequest(cred, code) {
-    this.setState({credMethod: cred, credCode: code});
-    this.doLogin(null, null, {meth: cred, resp: code});
+    if (this.tinode.isAuthenticated()) {
+      const me = this.tinode.getMeTopic();
+      me.setMeta({cred: {meth: cred, resp: code}})
+        .then(() => {
+          HashNavigation.navigateTo('');
+        })
+        .catch((err) => {
+          this.handleError(err.message, 'err');
+        });
+    } else {
+      this.setState({credMethod: cred, credCode: code});
+      this.doLogin(null, null, {meth: cred, resp: code});
+    }
   }
 
   handlePasswordResetRequest(method, value) {
     // If already connected, connnect() will return a resolved promise.
     this.tinode.connect()
       .then(() => {
-        return this.tinode.requestResetAuthSecret('basic', method, value)
+        return this.tinode.requestResetAuthSecret('basic', method, value);
       })
       .catch((err) => {
         // Socket error
