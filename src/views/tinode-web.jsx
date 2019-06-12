@@ -954,8 +954,7 @@ class TinodeWeb extends React.Component {
   }
 
   handleCredConfirm(method, response) {
-    // TODO: implement
-    console.log("confirm credential", method, response);
+    handleCredentialsRequest({cred: [method]});
   }
 
   // User clicked Cancel button in Setting or Sign Up panel.

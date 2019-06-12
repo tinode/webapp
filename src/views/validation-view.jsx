@@ -26,6 +26,7 @@ class ValidationView extends React.PureComponent {
     this.handleChange = this.handleChange.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleCancel = this.handleCancel.bind(this);
   }
 
   handleChange(e) {
@@ -35,6 +36,8 @@ class ValidationView extends React.PureComponent {
   handleKeyPress(e) {
     if (e.key === 'Enter') {
       this.handleSubmit(e);
+    } else if (e.key == 'Escape') {
+      this.handleCancel(e);
     }
   }
 
@@ -44,6 +47,12 @@ class ValidationView extends React.PureComponent {
       this.props.onSubmit(this.props.credMethod, this.state.code.trim());
     }
   }
+
+  handleCancel(e) {
+    e.preventDefault();
+    this.props.onCancel();
+  }
+
 
   render() {
     const { formatMessage } = this.props.intl;
@@ -71,6 +80,9 @@ class ValidationView extends React.PureComponent {
         <div className="dialog-buttons">
           <button className="blue" onClick={this.handleSubmit}>
             <FormattedMessage id="button_confirm" defaultMessage="Confirm" description="Button [Confirm]" />
+          </button>
+          <button className="white" onClick={this.handleCancel}>
+            <FormattedMessage id="button_cancel" />
           </button>
         </div>
       </div>

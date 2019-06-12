@@ -164,21 +164,15 @@ export default class EditAccountView extends React.Component {
   }
 
   render() {
-    /*
-    let tags = [];
-    this.state.tags.map((tag) => {
-      tags.push(<span className="badge" key={tags.length}>{tag}</span>);
-    });
-    if (tags.length == 0) {
-      tags = <i><FormattedMessage id="tags_not_found" /></i>;
-    }
-    */
     let credentials = [];
     this.state.credentials.map((cred) => {
       credentials.push(<div key={cred.meth + ":" + cred.val}>{cred.meth}: <tt>{cred.val}</tt>
         <span > {!cred.done ?
-          <a href="javascript:;"
-            onClick={this.props.onCredConfirm.bind(this, cred.meth, cred.val)}>confirm</a>
+          <a href="javascript:;" className="clickable"
+            onClick={this.props.onCredConfirm.bind(this, cred.meth, cred.val)}>
+              <FormattedMessage id="validate_credential_action" defaultMessage="confirm"
+                description="Validate credentail call to action" />
+            </a>
           : null} <a href="javascript:;" onClick={this.props.onCredDelete.bind(this, cred.meth, cred.val)}><i
             className="material-icons gray">delete_outline</i></a></span></div>);
     });

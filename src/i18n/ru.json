@@ -133,5 +133,6 @@
   "peers_messaging_disabled": "Чат заблокирован у корреспондента.",
   "enable_peers_messaging": "Разблокировать.",
   "more_online_members": "+еще {overflow}",
-  "label_user_contacts": "Конакты:"
+  "label_user_contacts": "Конакты:",
+  "validate_credential_action": ":!![MISSING]!!:confirm"
 }
