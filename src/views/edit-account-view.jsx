@@ -166,7 +166,7 @@ export default class EditAccountView extends React.Component {
   render() {
     let credentials = [];
     this.state.credentials.map((cred) => {
-      credentials.push(<div key={cred.meth + ":" + cred.val}>{cred.meth}: <tt>{cred.val}</tt>
+      credentials.push(<div key={cred.meth + ":" + cred.val + ":" + cred.done}>{cred.meth}: <tt>{cred.val}</tt>
         <span > {!cred.done ?
           <a href="javascript:;"
             onClick={this.props.onCredConfirm.bind(this, cred.meth, cred.val)}>
