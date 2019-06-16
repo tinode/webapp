@@ -134,5 +134,5 @@
   "title_manage_tags": "管理标签",
   "more_online_members": "还有{overflow}个",
   "label_user_contacts": "往来：",
-  "validate_credential_action": ":!![MISSING]!!:confirm"
+  "validate_credential_action": "确认"
 }

@@ -134,5 +134,5 @@
   "enable_peers_messaging": "Разблокировать.",
   "more_online_members": "+еще {overflow}",
   "label_user_contacts": "Конакты:",
-  "validate_credential_action": ":!![MISSING]!!:confirm"
+  "validate_credential_action": "подтвердить"
 }
