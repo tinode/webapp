@@ -10653,7 +10653,7 @@ var TagManager = function (_React$Component) {
         className: "material-icons"
       }, "edit"), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "title_manage_tags",
-        defaultMessage: "Manage tags"
+        defaultMessage: "Manage"
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, tags)));
     }
   }], [{
