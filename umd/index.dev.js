@@ -857,7 +857,7 @@ module.exports = JSON.parse("{\"en\":{\"archived_contacts\":\"Archived contacts 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PACKAGE_VERSION", function() { return PACKAGE_VERSION; });
-var PACKAGE_VERSION = "0.16.0-rc3";
+var PACKAGE_VERSION = "0.16.0-rc4";
 
 /***/ }),
 
@@ -4757,14 +4757,21 @@ var TinodeWeb = function (_React$Component) {
       } else if (what == 'read') {
         this.resetContactList();
       } else if (what == 'msg') {
-        if (this.state.topicSelected != cont.topic) {
-          if (this.state.messageSounds) {
+        var topic = this.tinode.getTopic(cont.topic);
+        var archived = topic && topic.isArchived();
+
+        if (document.hidden) {
+          if (this.state.messageSounds && !isArchived) {
             POP_SOUND.play();
           }
 
           this.resetContactList();
-        } else if (document.hidden && this.state.messageSounds) {
-          POP_SOUND.play();
+        } else if (this.state.topicSelected != cont.topic) {
+          if (this.state.messageSounds && !isArchived) {
+            POP_SOUND.play();
+          }
+
+          this.resetContactList();
         }
       } else if (what == 'recv') {} else if (what == 'gone' || what == 'unsub') {
         if (this.state.topicSelected == cont.topic) {

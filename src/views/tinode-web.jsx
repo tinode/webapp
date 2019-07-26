@@ -545,7 +545,7 @@ class TinodeWeb extends React.Component {
 
       // Skip update if the topic is currently open, otherwise the badge will annoyingly flash.
       } else if (this.state.topicSelected != cont.topic) {
-        if (this.state.messageSounds !isArchived) {
+        if (this.state.messageSounds && !isArchived) {
           POP_SOUND.play();
         }
         this.resetContactList();
