@@ -1,7 +1,8 @@
-
 // Edit account parameters.
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
+
+import Tinode from 'tinode-sdk';
 
 import AvatarUpload from '../widgets/avatar-upload.jsx';
 import CheckBox from '../widgets/checkbox.jsx';
@@ -80,7 +81,7 @@ export default class EditAccountView extends React.Component {
 
   handleImageChanged(img) {
     this.setState({avatar: img});
-    this.props.onUpdateAccount(undefined, vcard(null, img));
+    this.props.onUpdateAccount(undefined, vcard(null, img || Tinode.DEL_CHAR));
   }
 
   handleCheckboxClick(what, checked) {

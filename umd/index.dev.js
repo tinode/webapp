@@ -1242,13 +1242,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/avatar-upload.jsx */ "./src/widgets/avatar-upload.jsx");
-/* harmony import */ var _widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/checkbox.jsx */ "./src/widgets/checkbox.jsx");
-/* harmony import */ var _widgets_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/in-place-edit.jsx */ "./src/widgets/in-place-edit.jsx");
-/* harmony import */ var _widgets_permissions_editor_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/permissions-editor.jsx */ "./src/widgets/permissions-editor.jsx");
-/* harmony import */ var _widgets_tag_manager_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/tag-manager.jsx */ "./src/widgets/tag-manager.jsx");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "../tinode-js/umd/tinode.prod.js");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/avatar-upload.jsx */ "./src/widgets/avatar-upload.jsx");
+/* harmony import */ var _widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/checkbox.jsx */ "./src/widgets/checkbox.jsx");
+/* harmony import */ var _widgets_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/in-place-edit.jsx */ "./src/widgets/in-place-edit.jsx");
+/* harmony import */ var _widgets_permissions_editor_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/permissions-editor.jsx */ "./src/widgets/permissions-editor.jsx");
+/* harmony import */ var _widgets_tag_manager_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../widgets/tag-manager.jsx */ "./src/widgets/tag-manager.jsx");
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1277,6 +1279,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
 var EditAccountView = function (_React$Component) {
   _inherits(EditAccountView, _React$Component);
 
@@ -1292,7 +1295,7 @@ var EditAccountView = function (_React$Component) {
     var defacs = me.getDefaultAccess();
     _this.state = {
       fullName: me["public"] ? me["public"].fn : undefined,
-      avatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__["makeImageUrl"])(me["public"] ? me["public"].photo : null),
+      avatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__["makeImageUrl"])(me["public"] ? me["public"].photo : null),
       auth: defacs ? defacs.auth : null,
       anon: defacs ? defacs.anon : null,
       tags: me.tags(),
@@ -1354,7 +1357,7 @@ var EditAccountView = function (_React$Component) {
       this.setState({
         fullName: fn
       });
-      this.props.onUpdateAccount(undefined, Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__["vcard"])(fn, null));
+      this.props.onUpdateAccount(undefined, Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__["vcard"])(fn, null));
     }
   }, {
     key: "handlePasswordUpdate",
@@ -1370,7 +1373,7 @@ var EditAccountView = function (_React$Component) {
       this.setState({
         avatar: img
       });
-      this.props.onUpdateAccount(undefined, Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__["vcard"])(null, img));
+      this.props.onUpdateAccount(undefined, Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__["vcard"])(null, img || tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.DEL_CHAR));
     }
   }, {
     key: "handleCheckboxClick",
@@ -1421,13 +1424,13 @@ var EditAccountView = function (_React$Component) {
         return;
       }
 
-      var val = Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__["asPhone"])(value);
+      var val = Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__["asPhone"])(value);
       var method;
 
       if (val) {
         method = 'tel';
       } else {
-        val = Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__["asEmail"])(value);
+        val = Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__["asEmail"])(value);
 
         if (val) {
           method = 'email';
@@ -1476,7 +1479,7 @@ var EditAccountView = function (_React$Component) {
   }, {
     key: "handleTagsUpdated",
     value: function handleTagsUpdated(tags) {
-      if (Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__["arrayEqual"])(this.state.tags.slice(0), tags.slice(0))) {
+      if (Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__["arrayEqual"])(this.state.tags.slice(0), tags.slice(0))) {
         return;
       }
 
@@ -1504,7 +1507,7 @@ var EditAccountView = function (_React$Component) {
           className: "material-icons gray"
         }, "delete_outline")))));
       });
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, this.state.showPermissionEditorFor ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_permissions_editor_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, this.state.showPermissionEditorFor ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_permissions_editor_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
         mode: this.state.editedPermissions,
         skip: "O",
         onSubmit: this.handlePermissionsChanged,
@@ -1524,7 +1527,7 @@ var EditAccountView = function (_React$Component) {
       }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "full_name_prompt"
       }, function (full_name_placeholder) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
           placeholder: full_name_placeholder,
           value: _this2.state.fullName,
           onFinished: _this2.handleFullNameUpdate
@@ -1538,12 +1541,12 @@ var EditAccountView = function (_React$Component) {
         id: "password_unchanged_prompt",
         defaultMessage: "Unchanged"
       }, function (password_unchanged) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
           placeholder: password_unchanged,
           type: "password",
           onFinished: _this2.handlePasswordUpdate
         });
-      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
         avatar: this.state.avatar,
         uid: this.props.myUserId,
         title: this.state.fullName,
@@ -1558,7 +1561,7 @@ var EditAccountView = function (_React$Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "label_message_sound",
         defaultMessage: "Message sound:"
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
         name: "sound",
         id: "message-sound",
         checked: this.props.messageSounds,
@@ -1573,7 +1576,7 @@ var EditAccountView = function (_React$Component) {
       }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "label_push_notifications_disabled",
         defaultMessage: "Notification alerts (requires HTTPS):"
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
         name: "alert",
         id: "desktop-alerts",
         checked: this.props.desktopAlerts,
@@ -1584,7 +1587,7 @@ var EditAccountView = function (_React$Component) {
         id: "title_tag_manager",
         defaultMessage: "Tags (user discovery)"
       }, function (title_tag_manager) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_tag_manager_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_tag_manager_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
           title: title_tag_manager,
           activated: false,
           tags: _this2.state.tags,
