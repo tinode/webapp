@@ -238,7 +238,7 @@ class InfoView extends React.Component {
 
   handleImageChanged(img) {
     this.setState({avatar: img});
-    this.props.onTopicDescUpdate(this.props.topic, vcard(null, img), null);
+    this.props.onTopicDescUpdate(this.props.topic, vcard(null, img || Tinode.DEL_CHAR), null);
   }
 
   handleMuted(ignored, checked) {

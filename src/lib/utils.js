@@ -28,10 +28,10 @@ export function vcard(fn, imageDataUrl) {
     }
     if (imageDataUrl) {
       const dataStart = imageDataUrl.indexOf(',');
-      card.photo = {
+      card.photo = dataStart >= 0 ? {
         data: imageDataUrl.substring(dataStart+1),
         type: 'jpg'
-      };
+      } : imageDataUrl;
     }
   }
   return card;

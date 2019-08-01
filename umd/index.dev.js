@@ -782,10 +782,10 @@ function vcard(fn, imageDataUrl) {
 
     if (imageDataUrl) {
       var dataStart = imageDataUrl.indexOf(',');
-      card.photo = {
+      card.photo = dataStart >= 0 ? {
         data: imageDataUrl.substring(dataStart + 1),
         type: 'jpg'
-      };
+      } : imageDataUrl;
     }
   }
 
@@ -1972,7 +1972,7 @@ var InfoView = function (_React$Component) {
       this.setState({
         avatar: img
       });
-      this.props.onTopicDescUpdate(this.props.topic, Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_15__["vcard"])(null, img), null);
+      this.props.onTopicDescUpdate(this.props.topic, Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_15__["vcard"])(null, img || tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.DEL_CHAR), null);
     }
   }, {
     key: "handleMuted",
