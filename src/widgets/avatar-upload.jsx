@@ -17,13 +17,10 @@ export default class AvatarUpload extends React.Component {
     this.handleClear = this.handleClear.bind(this);
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (prevState.dataUrl != nextProps.avatar) {
-      return {
-        dataUrl: nextProps.avatar
-      };
+  componentDidUpdate(prevProps) {
+    if (this.props.avatar != prevProps.avatar) {
+      this.setState({dataUrl: this.props.avatar})
     }
-    return null;
   }
 
   handleFileUpload(e) {

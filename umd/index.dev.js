@@ -6283,6 +6283,16 @@ var AvatarUpload = function (_React$Component) {
   }
 
   _createClass(AvatarUpload, [{
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps) {
+      if (this.props.avatar != prevProps.avatar) {
+        console.log("parent changed the avatar", prevProps.avatar, this.props.avatar);
+        this.setState({
+          dataUrl: this.props.avatar
+        });
+      }
+    }
+  }, {
     key: "handleFileUpload",
     value: function handleFileUpload(e) {
       var _this2 = this;
@@ -6343,17 +6353,6 @@ var AvatarUpload = function (_React$Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons"
       }, "file_upload")));
-    }
-  }], [{
-    key: "getDerivedStateFromProps",
-    value: function getDerivedStateFromProps(nextProps, prevState) {
-      if (prevState.dataUrl != nextProps.avatar) {
-        return {
-          dataUrl: nextProps.avatar
-        };
-      }
-
-      return null;
     }
   }]);
 
