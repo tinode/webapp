@@ -6286,7 +6286,6 @@ var AvatarUpload = function (_React$Component) {
     key: "componentDidUpdate",
     value: function componentDidUpdate(prevProps) {
       if (this.props.avatar != prevProps.avatar) {
-        console.log("parent changed the avatar", prevProps.avatar, this.props.avatar);
         this.setState({
           dataUrl: this.props.avatar
         });
@@ -7927,6 +7926,15 @@ var ErrorPanel = function (_React$PureComponent) {
   }
 
   _createClass(ErrorPanel, [{
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps) {
+      if (prevProps.level !== this.props.level) {
+        this.setState({
+          show: !!this.props.level
+        });
+      }
+    }
+  }, {
     key: "hide",
     value: function hide() {
       this.setState({
@@ -7965,13 +7973,6 @@ var ErrorPanel = function (_React$PureComponent) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_menu_cancel_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
         onCancel: this.hide
       })));
-    }
-  }], [{
-    key: "getDerivedStateFromProps",
-    value: function getDerivedStateFromProps(nextProps, prevState) {
-      return {
-        show: !!nextProps.level
-      };
     }
   }]);
 

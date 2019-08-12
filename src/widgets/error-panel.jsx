@@ -13,10 +13,12 @@ export default class ErrorPanel extends React.PureComponent {
     this.hide = this.hide.bind(this);
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    return {
-      show: !(!nextProps.level)
-    };
+  componentDidUpdate(prevProps) {
+    if (prevProps.level !== this.props.level) {
+      this.setState({
+        show: !(!this.props.level)
+      });
+    }
   }
 
   hide() {
