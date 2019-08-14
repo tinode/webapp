@@ -916,11 +916,23 @@ var ContactsView = function (_React$Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(ContactsView).call(this, props));
     _this.handleAction = _this.handleAction.bind(_assertThisInitialized(_this));
-    _this.state = ContactsView.getDerivedStateFromProps(props, {});
+    _this.state = ContactsView.deriveStateFromProps(props);
     return _this;
   }
 
   _createClass(ContactsView, [{
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps, prevState) {
+      if (prevProps.chatList != this.props.chatList) {
+        var newState = ContactsView.deriveStateFromProps(this.props);
+        this.setState(newState);
+
+        if (newState.unreadThreads != prevState.unreadThreads) {
+          Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__["updateFavicon"])(newState.unreadThreads);
+        }
+      }
+    }
+  }, {
     key: "handleAction",
     value: function handleAction(action_ignored) {
       this.props.onShowArchive();
@@ -949,19 +961,19 @@ var ContactsView = function (_React$Component) {
       });
     }
   }], [{
-    key: "getDerivedStateFromProps",
-    value: function getDerivedStateFromProps(nextProps, prevState) {
+    key: "deriveStateFromProps",
+    value: function deriveStateFromProps(props) {
       var contacts = [];
       var unreadThreads = 0;
       var archivedCount = 0;
-      nextProps.chatList.map(function (c) {
+      props.chatList.map(function (c) {
         if (c["private"] && c["private"].arch) {
-          if (nextProps.archive) {
+          if (props.archive) {
             contacts.push(c);
           } else {
             archivedCount++;
           }
-        } else if (!nextProps.archive) {
+        } else if (!props.archive) {
           contacts.push(c);
           unreadThreads += c.unread > 0 ? 1 : 0;
         }
@@ -980,10 +992,9 @@ var ContactsView = function (_React$Component) {
         });
       }
 
-      Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__["updateFavicon"])(unreadThreads);
       return {
         contactList: contacts,
-        archivedCount: archivedCount
+        unreadThreads: unreadThreads
       };
     }
   }]);
@@ -4764,13 +4775,13 @@ var TinodeWeb = function (_React$Component) {
         var archived = topic && topic.isArchived();
 
         if (document.hidden) {
-          if (this.state.messageSounds && !isArchived) {
+          if (this.state.messageSounds && !archived) {
             POP_SOUND.play();
           }
 
           this.resetContactList();
         } else if (this.state.topicSelected != cont.topic) {
-          if (this.state.messageSounds && !isArchived) {
+          if (this.state.messageSounds && !archived) {
             POP_SOUND.play();
           }
 
@@ -6752,7 +6763,9 @@ var ChipInput = function (_React$Component) {
     _classCallCheck(this, ChipInput);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(ChipInput).call(this, props));
-    _this.state = ChipInput.getDerivedStateFromProps(props);
+    _this.state = ChipInput.deriveStateFromProps(props);
+    _this.state.input = '';
+    _this.state.focused = false;
     _this.handleTextInput = _this.handleTextInput.bind(_assertThisInitialized(_this));
     _this.removeChipAt = _this.removeChipAt.bind(_assertThisInitialized(_this));
     _this.handleChipCancel = _this.handleChipCancel.bind(_assertThisInitialized(_this));
@@ -6763,6 +6776,19 @@ var ChipInput = function (_React$Component) {
   }
 
   _createClass(ChipInput, [{
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps, prevState) {
+      if (prevProps.chips != this.props.chips || prevProps.required != this.props.required || prevProps.prompt != this.props.prompt) {
+        this.setState(ChipInput.deriveStateFromProps(this.props));
+      }
+
+      if (!prevState || this.props.chips.length > prevState.sortedChips.length) {
+        this.setState({
+          input: ''
+        });
+      }
+    }
+  }, {
     key: "handleTextInput",
     value: function handleTextInput(e) {
       this.setState({
@@ -6859,20 +6885,13 @@ var ChipInput = function (_React$Component) {
       }));
     }
   }], [{
-    key: "getDerivedStateFromProps",
-    value: function getDerivedStateFromProps(nextProps, prevState) {
-      var state = {
-        placeholder: nextProps.chips ? '' : nextProps.prompt,
-        sortedChips: ChipInput.sortChips(nextProps.chips, nextProps.required),
-        chipIndex: ChipInput.indexChips(nextProps.chips),
-        focused: prevState && prevState.focused
+    key: "deriveStateFromProps",
+    value: function deriveStateFromProps(props) {
+      return {
+        placeholder: props.chips ? '' : props.prompt,
+        sortedChips: ChipInput.sortChips(props.chips, props.required),
+        chipIndex: ChipInput.indexChips(props.chips)
       };
-
-      if (!prevState || nextProps.chips.length > prevState.sortedChips.length) {
-        state.input = '';
-      }
-
-      return state;
     }
   }, {
     key: "indexChips",

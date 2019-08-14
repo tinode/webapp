@@ -538,14 +538,14 @@ class TinodeWeb extends React.Component {
 
       // New message received
       if (document.hidden) {
-        if (this.state.messageSounds && !isArchived) {
+        if (this.state.messageSounds && !archived) {
           POP_SOUND.play();
         }
         this.resetContactList();
 
       // Skip update if the topic is currently open, otherwise the badge will annoyingly flash.
       } else if (this.state.topicSelected != cont.topic) {
-        if (this.state.messageSounds && !isArchived) {
+        if (this.state.messageSounds && !archived) {
           POP_SOUND.play();
         }
         this.resetContactList();

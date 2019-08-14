@@ -20,21 +20,21 @@ export default class ContactsView extends React.Component {
 
     this.handleAction = this.handleAction.bind(this);
 
-    this.state = ContactsView.getDerivedStateFromProps(props, {});
+    this.state = ContactsView.deriveStateFromProps(props);
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
+  static deriveStateFromProps(props) {
     const contacts = [];
     let unreadThreads = 0;
     let archivedCount = 0;
-    nextProps.chatList.map((c) => {
+    props.chatList.map((c) => {
       if (c.private && c.private.arch) {
-        if (nextProps.archive) {
+        if (props.archive) {
           contacts.push(c);
         } else {
           archivedCount ++;
         }
-      } else if (!nextProps.archive) {
+      } else if (!props.archive) {
         contacts.push(c);
         unreadThreads += c.unread > 0 ? 1 : 0;
       }
@@ -51,12 +51,20 @@ export default class ContactsView extends React.Component {
       });
     }
 
-    updateFavicon(unreadThreads);
-
     return {
       contactList: contacts,
-      archivedCount: archivedCount
+      unreadThreads: unreadThreads
     };
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.chatList != this.props.chatList) {
+      const newState = ContactsView.deriveStateFromProps(this.props);
+      this.setState(newState);
+      if (newState.unreadThreads != prevState.unreadThreads) {
+        updateFavicon(newState.unreadThreads);
+      }
+    }
   }
 
   handleAction(action_ignored) {

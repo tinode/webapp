@@ -9,7 +9,9 @@ export default class ChipInput extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = ChipInput.getDerivedStateFromProps(props);
+    this.state = ChipInput.deriveStateFromProps(props);
+    this.state.input = '';
+    this.state.focused = false;
 
     this.handleTextInput = this.handleTextInput.bind(this);
     this.removeChipAt = this.removeChipAt.bind(this);
@@ -19,6 +21,25 @@ export default class ChipInput extends React.Component {
     this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
+  static deriveStateFromProps(props) {
+    return {
+      placeholder: props.chips ? '' : props.prompt,
+      sortedChips: ChipInput.sortChips(props.chips, props.required),
+      chipIndex: ChipInput.indexChips(props.chips)
+    };
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.chips != this.props.chips ||
+      prevProps.required != this.props.required ||
+      prevProps.prompt != this.props.prompt) {
+      this.setState(ChipInput.deriveStateFromProps(this.props));
+    }
+    if (!prevState || this.props.chips.length > prevState.sortedChips.length) {
+      this.setState({input: ''});
+    }
+  }
+  /*
   static getDerivedStateFromProps(nextProps, prevState) {
     const state = {
       placeholder: nextProps.chips ? '' : nextProps.prompt,
@@ -29,12 +50,12 @@ export default class ChipInput extends React.Component {
 
     if (!prevState || nextProps.chips.length > prevState.sortedChips.length) {
       // Chip added: clear input.
-      state.input ='';
+      state.input = '';
     }
 
     return state;
   }
-
+  */
   // Map chip index to user name
   static indexChips(chips) {
     const index = {};
