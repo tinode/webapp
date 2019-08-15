@@ -36,7 +36,8 @@ export default class SearchContacts extends React.PureComponent {
     this.props.onSearchContacts(query.length > 0 ? query : Tinode.DEL_CHAR);
   }
 
-  handleClear() {
+  handleClear(e) {
+    e.preventDefault();
     if (this.state.edited) {
       this.props.onSearchContacts(Tinode.DEL_CHAR);
     }
@@ -63,7 +64,7 @@ export default class SearchContacts extends React.PureComponent {
               value={this.state.search} onChange={this.handleSearchChange}
               onKeyDown={this.handleKeyDown} required autoFocus />
           }</FormattedMessage>
-          <a href="javascript:;" onClick={this.handleClear}>
+          <a href="#" onClick={this.handleClear}>
             <i className="material-icons">close</i>
           </a>
         </div>

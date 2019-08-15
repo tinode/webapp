@@ -56,8 +56,9 @@ export default class Attachment extends React.Component {
     if (!this.props.uploader && !this.state.downloader &&
         !(/^(?:(?:[a-z]+:)?\/\/)/i.test(this.props.downloadUrl))) {
       // Relative URL. Use download helper.
-      url = "javascript:;";
+      url = '#';
       helperFunc = (e) => {
+        e.preventDefault();
         this.downloadFile(this.props.downloadUrl, this.props.filename, this.props.mimetype);
       };
     } else {

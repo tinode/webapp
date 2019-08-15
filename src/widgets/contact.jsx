@@ -74,7 +74,7 @@ export default class Contact extends React.Component {
         </div>
         {this.props.showContextMenu ?
           <span className="menuTrigger">
-            <a href="javascript:;" onClick={this.handleContextClick}>
+            <a href="#" onClick={this.handleContextClick}>
               <i className="material-icons">expand_more</i>
             </a>
           </span> : null}

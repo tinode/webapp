@@ -14,7 +14,6 @@ export default class AvatarUpload extends React.Component {
     };
 
     this.handleFileUpload = this.handleFileUpload.bind(this);
-    this.handleClear = this.handleClear.bind(this);
   }
 
   componentDidUpdate(prevProps) {
@@ -39,10 +38,6 @@ export default class AvatarUpload extends React.Component {
     e.target.value = '';
   }
 
-  handleClear() {
-    this.props.onImageChanged(null);
-  }
-
   render() {
     // Randomize id value in case more than one AvatarUpload is shown
     // at the same time.
@@ -51,7 +46,7 @@ export default class AvatarUpload extends React.Component {
       <div className="avatar-upload">
         {this.props.readOnly || !this.state.dataUrl ?
           null :
-          <a href="javascript:;" className="clear-avatar" onClick={this.handleClear}>
+          <a href="#" className="clear-avatar" onClick={(e) => {e.preventDefault(); this.props.onImageChanged(null);}}>
             <i className="material-icons">clear</i>
           </a>}
         {this.state.dataUrl ?

@@ -73,7 +73,6 @@ class MessagesView extends React.Component {
     this.handleFormResponse = this.handleFormResponse.bind(this);
     this.handleContextClick = this.handleContextClick.bind(this);
     this.handleShowContextMenuMessage = this.handleShowContextMenuMessage.bind(this);
-    this.handleBackNavigation = this.handleBackNavigation.bind(this);
     this.handleNewChatAcceptance = this.handleNewChatAcceptance.bind(this);
     this.handleEnablePeer = this.handleEnablePeer.bind(this);
   }
@@ -486,15 +485,12 @@ class MessagesView extends React.Component {
     this.props.showContextMenu(params, menuItems);
   }
 
-  handleBackNavigation() {
-    this.props.onHideMessagesView();
-  }
-
   handleNewChatAcceptance(action) {
     this.props.onNewChat(this.state.topic, action);
   }
 
-  handleEnablePeer() {
+  handleEnablePeer(e) {
+    e.preventDefault();
     this.props.onChangePermissions(this.state.topic, DEFAULT_ACCESS_MODE, this.state.topic);
   }
 
@@ -579,7 +575,7 @@ class MessagesView extends React.Component {
         <div id="topic-view" className={this.props.hideSelf ? 'nodisplay' : null}>
           <div id="topic-caption-panel" className="caption-panel">
             {this.props.displayMobile ?
-              <a href="javascript:;" id="hide-message-view" onClick={this.handleBackNavigation}>
+              <a href="#" id="hide-message-view" onClick={(e) => {e.preventDefault(); this.props.onHideMessagesView();}}>
                 <i className="material-icons">arrow_back</i>
               </a>
               :
@@ -605,7 +601,7 @@ class MessagesView extends React.Component {
               <div id="topic-users" />
             }
             <div>
-              <a href="javascript:;" onClick={this.handleContextClick}>
+              <a href="#" onClick={this.handleContextClick}>
                 <i className="material-icons">more_vert</i>
               </a>
             </div>
@@ -638,7 +634,7 @@ class MessagesView extends React.Component {
             <div id="peer-messaging-disabled-note">
               <i className="material-icons secondary">block</i> <FormattedMessage
                 id="peers_messaging_disabled" defaultMessage="Peer's messaging is disabled."
-                description="Shown when the p2p peer's messaging is disabled" /> <a href="javascript:;"
+                description="Shown when the p2p peer's messaging is disabled" /> <a href="#"
                   onClick={this.handleEnablePeer}><FormattedMessage id="enable_peers_messaging"
                   defaultMessage="Enable" description="Call to action to enable peer's messaging" /></a>.
             </div> : null}

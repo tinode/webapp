@@ -17,7 +17,6 @@ export default class TagManager extends React.Component {
       activated: this.props.activated
     };
 
-    this.handleShowTagManager = this.handleShowTagManager.bind(this);
     this.handleTagInput = this.handleTagInput.bind(this);
     this.handleAddTag = this.handleAddTag.bind(this);
     this.handleRemoveTag = this.handleRemoveTag.bind(this);
@@ -30,10 +29,6 @@ export default class TagManager extends React.Component {
       return {tags: nextProps.tags};
     }
     return null;
-  }
-
-  handleShowTagManager() {
-    this.setState({activated: true});
   }
 
   handleTagInput(text) {
@@ -138,7 +133,7 @@ export default class TagManager extends React.Component {
         </div>
         :
         <div>
-          <a href="javascript:;" className="flat-button" onClick={this.handleShowTagManager}>
+          <a href="#" className="flat-button" onClick={(e) => {e.preventDefault(); this.setState({activated: true});}}>
             <i className="material-icons">edit</i> <FormattedMessage id="title_manage_tags" defaultMessage="Manage"
               description="Section title for the list of tags" />
           </a>

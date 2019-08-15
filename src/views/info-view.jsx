@@ -339,7 +339,8 @@ class InfoView extends React.Component {
     this.setState({showPermissionEditorFor: undefined});
   }
 
-  handleShowAddMembers() {
+  handleShowAddMembers(e) {
+    e.preventDefault();
     this.props.onInitFind();
     this.setState({showMemberPanel: true});
   }
@@ -354,6 +355,7 @@ class InfoView extends React.Component {
   }
 
   handleLeave() {
+    e.preventDefault();
     this.props.onLeaveTopic(this.props.topic);
   }
 
@@ -594,13 +596,13 @@ class InfoView extends React.Component {
                 </div>
                 <div className="panel-form-row">
                   {this.state.sharer ?
-                    <a href="javascript:;" className="flat-button" onClick={this.handleShowAddMembers}>
+                    <a href="#" className="flat-button" onClick={this.handleShowAddMembers}>
                       <i className="material-icons">person_add</i> <FormattedMessage id="button_add_members"
                         defaultMessage="Add members" description="Flat button [Add members] (to topic)" />
                     </a>
                     : null}
                   {!this.state.owner ?
-                    <a href="javascript:;" className="red flat-button" onClick={this.handleLeave}>
+                    <a href="#" className="red flat-button" onClick={this.handleLeave}>
                       <i className="material-icons">exit_to_app</i> <FormattedMessage id="button_leave"
                         defaultMessage="Leave" description="Flat button [Leave] (topic)" />
                     </a>
@@ -624,7 +626,7 @@ class InfoView extends React.Component {
               </div>
               :
               <div className="panel-form-row">
-                <a href="javascript:;" className="red flat-button" onClick={this.handleLeave}>
+                <a href="#" className="red flat-button" onClick={this.handleLeave}>
                   <i className="material-icons">exit_to_app</i> <FormattedMessage id="action_leave_chat"
                     defaultMessage="Leave" description="Action [Leave] chat" />
                 </a>

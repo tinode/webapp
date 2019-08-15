@@ -39,7 +39,6 @@ export default class EditAccountView extends React.Component {
     this.handlePasswordUpdate = this.handlePasswordUpdate.bind(this);
     this.handleImageChanged = this.handleImageChanged.bind(this);
     this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
-    this.handleStartAddCred = this.handleStartAddCred.bind(this);
     this.handleCredChange = this.handleCredChange.bind(this);
     this.handleCredKeyDown = this.handleCredKeyDown.bind(this);
     this.handleCredEntered = this.handleCredEntered.bind(this);
@@ -90,10 +89,6 @@ export default class EditAccountView extends React.Component {
     } else if (what == 'alert') {
       this.props.onTogglePushNotifications(checked);
     }
-  }
-
-  handleStartAddCred() {
-    this.setState({addCredActive: true});
   }
 
   handleCredChange(e) {
@@ -169,12 +164,11 @@ export default class EditAccountView extends React.Component {
     this.state.credentials.map((cred) => {
       credentials.push(<div key={cred.meth + ":" + cred.val + ":" + cred.done}>{cred.meth}: <tt>{cred.val}</tt>
         <span > {!cred.done ?
-          <a href="javascript:;"
-            onClick={this.props.onCredConfirm.bind(this, cred.meth, cred.val)}>
+          <a href="#" onClick={(e) => {e.preventDefault(); this.props.onCredConfirm(cred.meth, cred.val);}}>
               <FormattedMessage id="validate_credential_action" defaultMessage="confirm"
                 description="Validate credentail call to action" />
             </a>
-          : null} <a href="javascript:;" onClick={this.props.onCredDelete.bind(this, cred.meth, cred.val)}><i
+          : null} <a href="#" onClick={(e) => {e.preventDefault(); this.props.onCredDelete(cred.meth, cred.val);}}><i
             className="material-icons gray">delete_outline</i></a></span></div>);
     });
 
@@ -270,7 +264,7 @@ export default class EditAccountView extends React.Component {
                   placeholder="Phone number or email" required="required" autoFocus
                   onChange={this.handleCredChange} onKeyDown={this.handleCredKeyDown} onBlur={this.handleCredEntered} />
                 : null}
-              <div><a href="javascript:;" onClick={this.handleStartAddCred}>+ Add another</a></div>
+              <div><a href="#" onClick={(e) => {e.preventDefault(); this.setState({addCredActive: true});}}>+ Add another</a></div>
             </div>
           </div>
           <div className="hr" />
@@ -295,7 +289,7 @@ export default class EditAccountView extends React.Component {
           </div>
           <div className="hr" />
           <div className="panel-form-column">
-            <a href="javascript:;" className="red flat-button" onClick={this.props.onLogout}>
+            <a href="#" className="red flat-button" onClick={(e) => {e.preventDefault(); this.props.onLogout();}}>
               <i className="material-icons">exit_to_app</i> <FormattedMessage id="button_logout"
                 defaultMessage="Logout" description="Button [Logout]" />
             </a>

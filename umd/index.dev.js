@@ -1323,7 +1323,6 @@ var EditAccountView = function (_React$Component) {
     _this.handlePasswordUpdate = _this.handlePasswordUpdate.bind(_assertThisInitialized(_this));
     _this.handleImageChanged = _this.handleImageChanged.bind(_assertThisInitialized(_this));
     _this.handleCheckboxClick = _this.handleCheckboxClick.bind(_assertThisInitialized(_this));
-    _this.handleStartAddCred = _this.handleStartAddCred.bind(_assertThisInitialized(_this));
     _this.handleCredChange = _this.handleCredChange.bind(_assertThisInitialized(_this));
     _this.handleCredKeyDown = _this.handleCredKeyDown.bind(_assertThisInitialized(_this));
     _this.handleCredEntered = _this.handleCredEntered.bind(_assertThisInitialized(_this));
@@ -1394,13 +1393,6 @@ var EditAccountView = function (_React$Component) {
       } else if (what == 'alert') {
         this.props.onTogglePushNotifications(checked);
       }
-    }
-  }, {
-    key: "handleStartAddCred",
-    value: function handleStartAddCred() {
-      this.setState({
-        addCredActive: true
-      });
     }
   }, {
     key: "handleCredChange",
@@ -1506,14 +1498,22 @@ var EditAccountView = function (_React$Component) {
         credentials.push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           key: cred.meth + ":" + cred.val + ":" + cred.done
         }, cred.meth, ": ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tt", null, cred.val), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, " ", !cred.done ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-          href: "javascript:;",
-          onClick: _this2.props.onCredConfirm.bind(_this2, cred.meth, cred.val)
+          href: "#",
+          onClick: function onClick(e) {
+            e.preventDefault();
+
+            _this2.props.onCredConfirm(cred.meth, cred.val);
+          }
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
           id: "validate_credential_action",
           defaultMessage: "confirm"
         })) : null, " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-          href: "javascript:;",
-          onClick: _this2.props.onCredDelete.bind(_this2, cred.meth, cred.val)
+          href: "#",
+          onClick: function onClick(e) {
+            e.preventDefault();
+
+            _this2.props.onCredDelete(cred.meth, cred.val);
+          }
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
           className: "material-icons gray"
         }, "delete_outline")))));
@@ -1626,8 +1626,14 @@ var EditAccountView = function (_React$Component) {
         onKeyDown: this.handleCredKeyDown,
         onBlur: this.handleCredEntered
       }) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "javascript:;",
-        onClick: this.handleStartAddCred
+        href: "#",
+        onClick: function onClick(e) {
+          e.preventDefault();
+
+          _this2.setState({
+            addCredActive: true
+          });
+        }
       }, "+ Add another")))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "hr"
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -1657,9 +1663,13 @@ var EditAccountView = function (_React$Component) {
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "panel-form-column"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "javascript:;",
+        href: "#",
         className: "red flat-button",
-        onClick: this.props.onLogout
+        onClick: function onClick(e) {
+          e.preventDefault();
+
+          _this2.props.onLogout();
+        }
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons"
       }, "exit_to_app"), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
@@ -2121,7 +2131,8 @@ var InfoView = function (_React$Component) {
     }
   }, {
     key: "handleShowAddMembers",
-    value: function handleShowAddMembers() {
+    value: function handleShowAddMembers(e) {
+      e.preventDefault();
       this.props.onInitFind();
       this.setState({
         showMemberPanel: true
@@ -2145,6 +2156,7 @@ var InfoView = function (_React$Component) {
   }, {
     key: "handleLeave",
     value: function handleLeave() {
+      e.preventDefault();
       this.props.onLeaveTopic(this.props.topic);
     }
   }, {
@@ -2368,7 +2380,7 @@ var InfoView = function (_React$Component) {
       }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "panel-form-row"
       }, this.state.sharer ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "javascript:;",
+        href: "#",
         className: "flat-button",
         onClick: this.handleShowAddMembers
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
@@ -2377,7 +2389,7 @@ var InfoView = function (_React$Component) {
         id: "button_add_members",
         defaultMessage: "Add members"
       })) : null, !this.state.owner ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "javascript:;",
+        href: "#",
         className: "red flat-button",
         onClick: this.handleLeave
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
@@ -2404,7 +2416,7 @@ var InfoView = function (_React$Component) {
       })) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "panel-form-row"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "javascript:;",
+        href: "#",
         className: "red flat-button",
         onClick: this.handleLeave
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
@@ -2790,7 +2802,6 @@ var MessagesView = function (_React$Component) {
     _this.handleFormResponse = _this.handleFormResponse.bind(_assertThisInitialized(_this));
     _this.handleContextClick = _this.handleContextClick.bind(_assertThisInitialized(_this));
     _this.handleShowContextMenuMessage = _this.handleShowContextMenuMessage.bind(_assertThisInitialized(_this));
-    _this.handleBackNavigation = _this.handleBackNavigation.bind(_assertThisInitialized(_this));
     _this.handleNewChatAcceptance = _this.handleNewChatAcceptance.bind(_assertThisInitialized(_this));
     _this.handleEnablePeer = _this.handleEnablePeer.bind(_assertThisInitialized(_this));
     return _this;
@@ -3147,23 +3158,21 @@ var MessagesView = function (_React$Component) {
       this.props.showContextMenu(params, menuItems);
     }
   }, {
-    key: "handleBackNavigation",
-    value: function handleBackNavigation() {
-      this.props.onHideMessagesView();
-    }
-  }, {
     key: "handleNewChatAcceptance",
     value: function handleNewChatAcceptance(action) {
       this.props.onNewChat(this.state.topic, action);
     }
   }, {
     key: "handleEnablePeer",
-    value: function handleEnablePeer() {
+    value: function handleEnablePeer(e) {
+      e.preventDefault();
       this.props.onChangePermissions(this.state.topic, _config_js__WEBPACK_IMPORTED_MODULE_12__["DEFAULT_ACCESS_MODE"], this.state.topic);
     }
   }, {
     key: "render",
     value: function render() {
+      var _this6 = this;
+
       var formatMessage = this.props.intl.formatMessage;
       var component;
 
@@ -3257,9 +3266,13 @@ var MessagesView = function (_React$Component) {
           id: "topic-caption-panel",
           className: "caption-panel"
         }, this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-          href: "javascript:;",
+          href: "#",
           id: "hide-message-view",
-          onClick: this.handleBackNavigation
+          onClick: function onClick(e) {
+            e.preventDefault();
+
+            _this6.props.onHideMessagesView();
+          }
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
           className: "material-icons"
         }, "arrow_back")) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -3285,7 +3298,7 @@ var MessagesView = function (_React$Component) {
         }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           id: "topic-users"
         }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-          href: "javascript:;",
+          href: "#",
           onClick: this.handleContextClick
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
           className: "material-icons"
@@ -3318,7 +3331,7 @@ var MessagesView = function (_React$Component) {
           id: "peers_messaging_disabled",
           defaultMessage: "Peer's messaging is disabled."
         }), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-          href: "javascript:;",
+          href: "#",
           onClick: this.handleEnablePeer
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
           id: "enable_peers_messaging",
@@ -3587,7 +3600,7 @@ var NewTopicView = function (_React$Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
         className: this.state.tabSelected === "p2p" ? "active" : null
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "javascript:;",
+        href: "#",
         "data-id": "p2p",
         onClick: this.handleTabClick
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
@@ -3596,7 +3609,7 @@ var NewTopicView = function (_React$Component) {
       }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
         className: this.state.tabSelected === "grp" ? "active" : null
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "javascript:;",
+        href: "#",
         "data-id": "grp",
         onClick: this.handleTabClick
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
@@ -3605,7 +3618,7 @@ var NewTopicView = function (_React$Component) {
       }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
         className: this.state.tabSelected === "byid" ? "active" : null
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "javascript:;",
+        href: "#",
         "data-id": "byid",
         onClick: this.handleTabClick
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
@@ -6198,9 +6211,11 @@ var Attachment = function (_React$Component) {
       var url, helperFunc;
 
       if (!this.props.uploader && !this.state.downloader && !/^(?:(?:[a-z]+:)?\/\/)/i.test(this.props.downloadUrl)) {
-        url = "javascript:;";
+        url = '#';
 
         helperFunc = function helperFunc(e) {
+          e.preventDefault();
+
           _this3.downloadFile(_this3.props.downloadUrl, _this3.props.filename, _this3.props.mimetype);
         };
       } else {
@@ -6289,7 +6304,6 @@ var AvatarUpload = function (_React$Component) {
       dataUrl: props.avatar
     };
     _this.handleFileUpload = _this.handleFileUpload.bind(_assertThisInitialized(_this));
-    _this.handleClear = _this.handleClear.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -6324,20 +6338,21 @@ var AvatarUpload = function (_React$Component) {
       e.target.value = '';
     }
   }, {
-    key: "handleClear",
-    value: function handleClear() {
-      this.props.onImageChanged(null);
-    }
-  }, {
     key: "render",
     value: function render() {
+      var _this3 = this;
+
       var randId = "file-input-avatar-" + (Math.random() + '').substr(2);
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "avatar-upload"
       }, this.props.readOnly || !this.state.dataUrl ? null : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "javascript:;",
+        href: "#",
         className: "clear-avatar",
-        onClick: this.handleClear
+        onClick: function onClick(e) {
+          e.preventDefault();
+
+          _this3.props.onImageChanged(null);
+        }
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons"
       }, "clear")), this.state.dataUrl ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
@@ -6559,7 +6574,7 @@ var ChatMessage = function (_React$Component) {
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "menuTrigger"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "javascript:;",
+        href: "#",
         onClick: this.handleContextClick
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons"
@@ -6977,7 +6992,8 @@ var Chip = function (_React$PureComponent) {
 
   _createClass(Chip, [{
     key: "handleCancel",
-    value: function handleCancel() {
+    value: function handleCancel(e) {
+      e.preventDefault();
       this.props.onCancel(this.props.topic, this.props.index);
     }
   }, {
@@ -6996,7 +7012,7 @@ var Chip = function (_React$PureComponent) {
         topic: this.props.topic,
         title: this.props.title
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, title), this.props.onCancel && !this.props.required ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "javascript:;",
+        href: "#",
         onClick: this.handleCancel
       }, "\xD7") : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "spacer"
@@ -7473,7 +7489,7 @@ var Contact = function (_React$Component) {
       }))), this.props.showContextMenu ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "menuTrigger"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "javascript:;",
+        href: "#",
         onClick: this.handleContextClick
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons"
@@ -7967,6 +7983,8 @@ var ErrorPanel = function (_React$PureComponent) {
   }, {
     key: "render",
     value: function render() {
+      var _this2 = this;
+
       var icons = {
         err: 'error',
         warn: 'warning',
@@ -7985,8 +8003,12 @@ var ErrorPanel = function (_React$PureComponent) {
           __html: this.props.text
         }
       }), this.props.action ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "javascript:;",
-        onClick: this.props.action
+        href: "#",
+        onClick: function onClick(e) {
+          e.preventDefault();
+
+          _this2.props.action();
+        }
       }, this.props.actionText) : null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "cancel"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_menu_cancel_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
@@ -8050,6 +8072,8 @@ var FileProgress = function (_React$PureComponent) {
   _createClass(FileProgress, [{
     key: "render",
     value: function render() {
+      var _this = this;
+
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "uploader"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
@@ -8057,8 +8081,12 @@ var FileProgress = function (_React$PureComponent) {
           width: this.props.progress * 100 + "%"
         }
       })), this.props.progress < 0.999 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "javascript:;",
-        onClick: this.props.onCancel
+        href: "#",
+        onClick: function onClick(e) {
+          e.preventDefault();
+
+          _this.props.onCancel();
+        }
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons"
       }, "close"), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
@@ -8601,6 +8629,8 @@ var ImagePreview = function (_React$PureComponent) {
   }, {
     key: "render",
     value: function render() {
+      var _this2 = this;
+
       if (!this.props.content) {
         return null;
       }
@@ -8640,8 +8670,12 @@ var ImagePreview = function (_React$PureComponent) {
         id: "download_action",
         defaultMessage: "download"
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "javascript:;",
-        onClick: this.props.onClose
+        href: "#",
+        onClick: function onClick(e) {
+          e.preventDefault();
+
+          _this2.props.onClose();
+        }
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons gray"
       }, "close"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -9047,18 +9081,24 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 var MenuCancel = function (_React$PureComponent) {
   _inherits(MenuCancel, _React$PureComponent);
 
-  function MenuCancel(props) {
+  function MenuCancel() {
     _classCallCheck(this, MenuCancel);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(MenuCancel).call(this, props));
+    return _possibleConstructorReturn(this, _getPrototypeOf(MenuCancel).apply(this, arguments));
   }
 
   _createClass(MenuCancel, [{
     key: "render",
     value: function render() {
+      var _this = this;
+
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "javascript:;",
-        onClick: this.props.onCancel
+        href: "#",
+        onClick: function onClick(e) {
+          e.preventDefault();
+
+          _this.props.onCancel();
+        }
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons"
       }, "close"));
@@ -9116,14 +9156,24 @@ var MenuContacts = function (_React$PureComponent) {
   _createClass(MenuContacts, [{
     key: "render",
     value: function render() {
+      var _this = this;
+
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "javascript:;",
-        onClick: this.props.onNewTopic
+        href: "#",
+        onClick: function onClick(e) {
+          e.preventDefault();
+
+          _this.props.onNewTopic();
+        }
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons"
       }, "chat")), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "javascript:;",
-        onClick: this.props.onSettings
+        href: "#",
+        onClick: function onClick(e) {
+          e.preventDefault();
+
+          _this.props.onSettings();
+        }
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons"
       }, "settings")));
@@ -9182,14 +9232,24 @@ var MenuStart = function (_React$PureComponent) {
   _createClass(MenuStart, [{
     key: "render",
     value: function render() {
+      var _this = this;
+
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "javascript:;",
-        onClick: this.props.onSignUp
+        href: "#",
+        onClick: function onClick(e) {
+          e.preventDefault();
+
+          _this.props.onSignUp();
+        }
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons"
       }, "person_add")), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "javascript:;",
-        onClick: this.props.onSettings
+        href: "#",
+        onClick: function onClick(e) {
+          e.preventDefault();
+
+          _this.props.onSettings();
+        }
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons"
       }, "settings")));
@@ -10019,7 +10079,9 @@ var SearchContacts = function (_React$PureComponent) {
     }
   }, {
     key: "handleClear",
-    value: function handleClear() {
+    value: function handleClear(e) {
+      e.preventDefault();
+
       if (this.state.edited) {
         this.props.onSearchContacts(tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.DEL_CHAR);
       }
@@ -10064,7 +10126,7 @@ var SearchContacts = function (_React$PureComponent) {
           autoFocus: true
         });
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "javascript:;",
+        href: "#",
         onClick: this.handleClear
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons"
@@ -10257,7 +10319,8 @@ var SendMessage = function (_React$PureComponent) {
     }
   }, {
     key: "handleSend",
-    value: function handleSend() {
+    value: function handleSend(e) {
+      e.preventDefault();
       var message = this.state.message.trim();
 
       if (message) {
@@ -10310,8 +10373,10 @@ var SendMessage = function (_React$PureComponent) {
       }, this.props.disabled ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons disabled"
       }, "photo") : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "javascript:;",
+        href: "#",
         onClick: function onClick(e) {
+          e.preventDefault();
+
           _this5.attachImage.click();
         },
         title: "Add image"
@@ -10320,8 +10385,10 @@ var SendMessage = function (_React$PureComponent) {
       }, "photo")), this.props.disabled ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons disabled"
       }, "attach_file") : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "javascript:;",
+        href: "#",
         onClick: function onClick(e) {
+          e.preventDefault();
+
           _this5.attachFile.click();
         },
         title: "Attach file"
@@ -10341,7 +10408,7 @@ var SendMessage = function (_React$PureComponent) {
       }), this.props.disabled ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons disabled"
       }, "send") : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "javascript:;",
+        href: "#",
         onClick: this.handleSend,
         title: "Send"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
@@ -10517,7 +10584,6 @@ var TagManager = function (_React$Component) {
       tagInput: '',
       activated: _this.props.activated
     };
-    _this.handleShowTagManager = _this.handleShowTagManager.bind(_assertThisInitialized(_this));
     _this.handleTagInput = _this.handleTagInput.bind(_assertThisInitialized(_this));
     _this.handleAddTag = _this.handleAddTag.bind(_assertThisInitialized(_this));
     _this.handleRemoveTag = _this.handleRemoveTag.bind(_assertThisInitialized(_this));
@@ -10527,13 +10593,6 @@ var TagManager = function (_React$Component) {
   }
 
   _createClass(TagManager, [{
-    key: "handleShowTagManager",
-    value: function handleShowTagManager() {
-      this.setState({
-        activated: true
-      });
-    }
-  }, {
     key: "handleTagInput",
     value: function handleTagInput(text) {
       this.setState({
@@ -10675,9 +10734,15 @@ var TagManager = function (_React$Component) {
         defautMessage: "Cancel",
         description: "Rejection button [Cancel]"
       }))) : null) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "javascript:;",
+        href: "#",
         className: "flat-button",
-        onClick: this.handleShowTagManager
+        onClick: function onClick(e) {
+          e.preventDefault();
+
+          _this2.setState({
+            activated: true
+          });
+        }
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons"
       }, "edit"), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {

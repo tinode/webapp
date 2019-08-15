@@ -2,13 +2,9 @@
 import React from 'react';
 
 export default class MenuCancel extends React.PureComponent {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
-      <a href="javascript:;" onClick={this.props.onCancel}><i className="material-icons">close</i></a>
+      <a href="#" onClick={(e) => {e.preventDefault(); this.props.onCancel();}}><i className="material-icons">close</i></a>
     );
   }
 }

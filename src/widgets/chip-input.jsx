@@ -39,23 +39,7 @@ export default class ChipInput extends React.Component {
       this.setState({input: ''});
     }
   }
-  /*
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const state = {
-      placeholder: nextProps.chips ? '' : nextProps.prompt,
-      sortedChips: ChipInput.sortChips(nextProps.chips, nextProps.required),
-      chipIndex: ChipInput.indexChips(nextProps.chips),
-      focused: prevState && prevState.focused
-    };
 
-    if (!prevState || nextProps.chips.length > prevState.sortedChips.length) {
-      // Chip added: clear input.
-      state.input = '';
-    }
-
-    return state;
-  }
-  */
   // Map chip index to user name
   static indexChips(chips) {
     const index = {};

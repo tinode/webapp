@@ -56,19 +56,19 @@ export default class NewTopicView extends React.Component {
       <div className="flex-column">
         <ul className="tabbar">
           <li className={this.state.tabSelected === "p2p" ? "active" : null}>
-            <a href="javascript:;" data-id="p2p" onClick={this.handleTabClick}>
+            <a href="#" data-id="p2p" onClick={this.handleTabClick}>
               <FormattedMessage id="tabtitle_find_user" defaultMessage="find"
                 description="Tab title Find" />
             </a>
           </li>
           <li className={this.state.tabSelected === "grp" ? "active" : null}>
-            <a href="javascript:;" data-id="grp" onClick={this.handleTabClick}>
+            <a href="#" data-id="grp" onClick={this.handleTabClick}>
               <FormattedMessage id="tabtitle_new_group" defaultMessage="new group"
                 description="Tab title New Group" />
             </a>
           </li>
           <li className={this.state.tabSelected === "byid" ? "active" : null}>
-            <a href="javascript:;" data-id="byid" onClick={this.handleTabClick}>
+            <a href="#" data-id="byid" onClick={this.handleTabClick}>
               <FormattedMessage id="tabtitle_group_by_id" defaultMessage="by id"
                 description="Tab title Find topic by ID" />
             </a>

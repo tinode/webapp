@@ -9,7 +9,8 @@ export default class Chip extends React.PureComponent {
     this.handleCancel = this.handleCancel.bind(this);
   }
 
-  handleCancel() {
+  handleCancel(e) {
+    e.preventDefault();
     this.props.onCancel(this.props.topic, this.props.index);
   }
 
@@ -29,7 +30,7 @@ export default class Chip extends React.PureComponent {
         }
         <span>{title}</span>
         {this.props.onCancel && !this.props.required ?
-          <a href="javascript:;" onClick={this.handleCancel} >&times;</a>
+          <a href="#" onClick={this.handleCancel} >&times;</a>
           : <span className="spacer" />}
       </div>
     );

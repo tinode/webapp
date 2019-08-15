@@ -125,7 +125,7 @@ export default class ChatMessage extends React.Component {
                 received={this.props.received} />
             </div>
             <span className="menuTrigger">
-              <a href="javascript:;" onClick={this.handleContextClick}>
+              <a href="#" onClick={this.handleContextClick}>
                 <i className="material-icons">expand_more</i>
               </a>
             </span>

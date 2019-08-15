@@ -38,7 +38,7 @@ export default class ErrorPanel extends React.PureComponent {
         <span>
           <span dangerouslySetInnerHTML={{__html: this.props.text}} />
           {this.props.action ?
-            <a href="javascript:;" onClick={this.props.action}>
+            <a href="#" onClick={(e) => {e.preventDefault(); this.props.action();}}>
               {this.props.actionText}
             </a>
           : null}

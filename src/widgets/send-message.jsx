@@ -149,7 +149,8 @@ class SendMessage extends React.PureComponent {
     e.target.value = '';
   }
 
-  handleSend() {
+  handleSend(e) {
+    e.preventDefault();
     const message = this.state.message.trim();
     if (message) {
       this.props.sendMessage(this.state.message.trim());
@@ -193,12 +194,12 @@ class SendMessage extends React.PureComponent {
       <div id="send-message-panel">
         {this.props.disabled ?
           <i className="material-icons disabled">photo</i> :
-          <a href="javascript:;" onClick={(e) => {this.attachImage.click();}} title="Add image">
+          <a href="#" onClick={(e) => {e.preventDefault(); this.attachImage.click();}} title="Add image">
             <i className="material-icons secondary">photo</i>
           </a>}
         {this.props.disabled ?
           <i className="material-icons disabled">attach_file</i> :
-          <a href="javascript:;" onClick={(e) => {this.attachFile.click();}} title="Attach file">
+          <a href="#" onClick={(e) => {e.preventDefault(); this.attachFile.click();}} title="Attach file">
             <i className="material-icons secondary">attach_file</i>
           </a>}
         <textarea id="sendMessage" placeholder={prompt}
@@ -208,7 +209,7 @@ class SendMessage extends React.PureComponent {
           autoFocus />
           {this.props.disabled ?
             <i className="material-icons disabled">send</i> :
-            <a href="javascript:;" onClick={this.handleSend} title="Send">
+            <a href="#" onClick={this.handleSend} title="Send">
               <i className="material-icons">send</i>
             </a>}
       <input type="file" ref={(ref) => {this.attachFile = ref;}}
