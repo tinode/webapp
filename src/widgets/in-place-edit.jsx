@@ -21,16 +21,16 @@ export default class InPlaceEdit extends React.Component {
     this.handlePasswordFinished = this.handlePasswordFinished.bind(this);
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
+  componentDidUpdate(prevProps, prevState) {
     // If text has changed while in read mode, update text and discard changes.
     // Ignore update if in edit mode.
-    if (prevState.initialValue != nextProps.value && !prevState.active) {
-      return {
-        initialValue: nextProps.value || '',
-        value: nextProps.value || ''
-      };
+    const newValue = this.props.value || '';
+    if (prevState.initialValue != newValue && !prevState.active) {
+      this.setState({
+        initialValue: newValue,
+        value: newValue
+      });
     }
-    return null;
   }
 
   handeTextChange(e) {
