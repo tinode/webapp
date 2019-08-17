@@ -6,6 +6,7 @@ import { Drafty } from 'tinode-sdk'
 import Attachment from './attachment.jsx';
 import LetterTile from './letter-tile.jsx';
 import ReceivedMarker from './received-marker.jsx'
+import { sanitizeUrl } from '../lib/utils.js';
 
 export default class ChatMessage extends React.Component {
   constructor(props) {
@@ -48,7 +49,7 @@ export default class ChatMessage extends React.Component {
         e.target.dataset.val === undefined ? 1 : '' + e.target.dataset.val;
     }
     if (e.target.dataset.act == 'url') {
-      data.ref = '' + e.target.dataset.ref;
+      data.ref = sanitizeUrl(e.target.dataset.ref) || 'about:blank';
     }
     const text = e.target.dataset.title || 'unknown';
     this.props.onFormResponse(e.target.dataset.act, text, data);
@@ -163,6 +164,7 @@ function draftyFormatter(style, data, values, key) {
             Math.min(this.props.viewportWidth - REM_SIZE * 4, REM_SIZE * 36), REM_SIZE * 24, false);
           dim = dim || {dstWidth: BROKEN_IMAGE_SIZE, dstHeight: BROKEN_IMAGE_SIZE};
           attr.style = { width: dim.dstWidth + 'px', height: dim.dstHeight + 'px' };
+          attr.src = sanitizeUrl(attr.src);
           if (attr.src) {
             attr.onClick = this.handlePreviewImage;
             attr.className += ' image-clickable';

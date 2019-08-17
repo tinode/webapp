@@ -66,7 +66,7 @@ export function arrayEqual(a, b) {
 // as close to E.164 as possible.
 export function asPhone(val) {
   val = val.trim();
-  if (/^\s*(?:\+?(\d{1,3}))?[- (.]*(\d{3})[- ).]*(\d{3})[- .]*(\d{2})[- .]*(\d{2})?\s*$/.test(val)) {
+  if (/^(?:\+?(\d{1,3}))?[- (.]*(\d{3})[- ).]*(\d{3})[- .]*(\d{2})[- .]*(\d{2})?$/.test(val)) {
     return val.replace(/[- ().]*/, '');
   }
   return null;
@@ -79,4 +79,39 @@ export function asEmail(val) {
     return val;
   }
   return null;
+}
+
+// Checks if URL is a relative url, i.e. has no 'scheme://', including the case of missing scheme '//'.
+// The scheme is expected to be RFC-compliant, e.g. [a-z][a-z0-9+.-]*
+// example.html - ok
+// https:example.com - not ok.
+// http:/example.com - not ok.
+// ' ↲ https://example.com' - not ok. (↲ means carriage return)
+export function isUrlRelative(url) {
+  return !/^\s*([a-z][a-z0-9+.-]*:|\/\/)/im.test(url);
+}
+
+// Ensure URL is valid and does not present an XSS risk. Optional allowedSchemes may contain an array of
+// strings with permitted URL schemes, such as ['ftp', 'ftps']; otherwise accept http and https only.
+export function sanitizeUrl(url, allowedSchemes) {
+  if (!url) {
+    return null;
+  }
+
+  // Strip control characters and whitespace. They are not valid URL characters anyway.
+  url = url.replace(/[^\x20-\x7E]/gmi, '').trim();
+
+  // Relative URLs are safe.
+  if (!/^([a-z][a-z0-9+.-]*:|\/\/)/i.test(url)) {
+    return url;
+  }
+
+  // Absolute URL. Accept only safe schemes, or no scheme.
+  const schemes = Array.isArray(allowedSchemes) ? allowedSchemes.join('|') : 'http|https';
+  const re = new RegExp('^((' + schemes + '):|//)', 'i');
+  if (!re.test(url)) {
+    return null;
+  }
+
+  return url;
 }
