@@ -9,21 +9,27 @@ export default class ImagePreview extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      width: 0,
+      height: 0
+    };
   }
 
-  componentDidMount() {
-    this.setState({
-      width: this.container.clientWidth,
-      height: this.container.clientHeight
-    });
+  assignWidth(node) {
+    if (node && !this.state.width) {
+      const bounds = node.getBoundingClientRect();
+      this.setState({
+        width: bounds.width | 0,
+        height: bounds.height | 0
+      });
+    }
   }
 
   render() {
     if (!this.props.content) {
       return null;
     }
-    const instance = this;
+
     const dim = fitImageSize(this.props.content.width, this.props.content.height,
       this.state.width, this.state.height, false);
     const size = dim ? { width: dim.dstWidth + 'px', height: dim.dstHeight + 'px' } :
@@ -32,9 +38,10 @@ export default class ImagePreview extends React.PureComponent {
     size.maxHeight = '100%';
 
     let filename = this.props.content.filename;
-    const maxlength = (this.props.content.width / REM_SIZE) | 0;
+    // Averate font aspect ratio is ~0.5; File name takes 1/3 of the viewport width.
+    const maxlength = Math.max(((this.state.width / REM_SIZE / 1.5) | 0) - 2, 12);
     if (filename.length > maxlength) {
-      filename = filename.slice(0, maxlength-2) + '...' + filename.slice(2-maxlength);
+      filename = filename.slice(0, maxlength/2 - 1) + '...' + filename.slice(1 - maxlength/2);
     }
     const width = this.props.content.width || '-';
     const height = this.props.content.height || '-';
@@ -47,7 +54,7 @@ export default class ImagePreview extends React.PureComponent {
           </a>
           <a href="#" onClick={(e) => {e.preventDefault(); this.props.onClose();}}><i className="material-icons gray">close</i></a>
         </div>
-        <div id="image-preview-container" ref={function(ref) {instance.container = ref;}}>
+        <div id="image-preview-container" ref={(node) => this.assignWidth(node)}>
           <img src={this.props.content.url} style={size} />
         </div>
         <div id="image-preview-footer">

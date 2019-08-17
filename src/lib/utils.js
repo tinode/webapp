@@ -91,7 +91,7 @@ export function isUrlRelative(url) {
   return !/^\s*([a-z][a-z0-9+.-]*:|\/\/)/im.test(url);
 }
 
-// Ensure URL is valid and does not present an XSS risk. Optional allowedSchemes may contain an array of
+// Ensure URL does not present an XSS risk. Optional allowedSchemes may contain an array of
 // strings with permitted URL schemes, such as ['ftp', 'ftps']; otherwise accept http and https only.
 export function sanitizeUrl(url, allowedSchemes) {
   if (!url) {
@@ -105,6 +105,10 @@ export function sanitizeUrl(url, allowedSchemes) {
   if (!/^([a-z][a-z0-9+.-]*:|\/\/)/i.test(url)) {
     return url;
   }
+  // Blob URLs are safe.
+  if (/^blob:http/.test(url)) {
+    return url;
+  }
 
   // Absolute URL. Accept only safe schemes, or no scheme.
   const schemes = Array.isArray(allowedSchemes) ? allowedSchemes.join('|') : 'http|https';
@@ -114,4 +118,25 @@ export function sanitizeUrl(url, allowedSchemes) {
   }
 
   return url;
+}
+
+// Ensure URL is suitable for <img src="url"> field: the URL must be a relative URL or
+// have http:, https:, or data: scheme. In case of data: scheme, the URL must start with
+// a 'data:image/XXXX;base64,'.
+export function sanitizeImageUrl(url) {
+  if (!url) {
+    return null;
+  }
+
+  const sanitizedUrl = sanitizeUrl(url);
+  if (sanitizedUrl) {
+    return sanitizedUrl;
+  }
+
+  // Is this a data: URL of an image?
+  if (/data:image\/[a-z0-9.-]+;base64,/i.test(url.trim())) {
+    return url;
+  }
+
+  return null;
 }

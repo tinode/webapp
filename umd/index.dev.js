@@ -744,7 +744,7 @@ function stringHash(value) {
 /*!**************************!*\
   !*** ./src/lib/utils.js ***!
   \**************************/
-/*! exports provided: updateFavicon, vcard, arrayEqual, asPhone, asEmail, isUrlRelative, sanitizeUrl */
+/*! exports provided: updateFavicon, vcard, arrayEqual, asPhone, asEmail, isUrlRelative, sanitizeUrl, sanitizeImageUrl */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -756,6 +756,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "asEmail", function() { return asEmail; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isUrlRelative", function() { return isUrlRelative; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sanitizeUrl", function() { return sanitizeUrl; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sanitizeImageUrl", function() { return sanitizeImageUrl; });
 function updateFavicon(count) {
   var oldIcon = document.getElementById('shortcut-icon');
   var head = document.head || document.getElementsByTagName('head')[0];
@@ -849,6 +850,10 @@ function sanitizeUrl(url, allowedSchemes) {
     return url;
   }
 
+  if (/^blob:http/.test(url)) {
+    return url;
+  }
+
   var schemes = Array.isArray(allowedSchemes) ? allowedSchemes.join('|') : 'http|https';
   var re = new RegExp('^((' + schemes + '):|//)', 'i');
 
@@ -857,6 +862,23 @@ function sanitizeUrl(url, allowedSchemes) {
   }
 
   return url;
+}
+function sanitizeImageUrl(url) {
+  if (!url) {
+    return null;
+  }
+
+  var sanitizedUrl = sanitizeUrl(url);
+
+  if (sanitizedUrl) {
+    return sanitizedUrl;
+  }
+
+  if (/data:image\/[a-z0-9.-]+;base64,/i.test(url.trim())) {
+    return url;
+  }
+
+  return null;
 }
 
 /***/ }),
@@ -4775,7 +4797,6 @@ var TinodeWeb = function (_React$Component) {
         credCode: undefined,
         myUserId: this.tinode.getCurrentUserID()
       });
-      console.log("handleLoginSuccessful");
       me.subscribe(me.startMetaQuery().withLaterSub().withDesc().withTags().withCred().build())["catch"](function (err) {
         localStorage.removeItem('auth-token');
 
@@ -6646,7 +6667,7 @@ function draftyFormatter(style, data, values, key) {
             width: dim.dstWidth + 'px',
             height: dim.dstHeight + 'px'
           };
-          attr.src = Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__["sanitizeUrl"])(attr.src);
+          attr.src = Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__["sanitizeImageUrl"])(attr.src);
 
           if (attr.src) {
             attr.onClick = this.handlePreviewImage;
@@ -8644,17 +8665,23 @@ var ImagePreview = function (_React$PureComponent) {
     _classCallCheck(this, ImagePreview);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(ImagePreview).call(this, props));
-    _this.state = {};
+    _this.state = {
+      width: 0,
+      height: 0
+    };
     return _this;
   }
 
   _createClass(ImagePreview, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      this.setState({
-        width: this.container.clientWidth,
-        height: this.container.clientHeight
-      });
+    key: "assignWidth",
+    value: function assignWidth(node) {
+      if (node && !this.state.width) {
+        var bounds = node.getBoundingClientRect();
+        this.setState({
+          width: bounds.width | 0,
+          height: bounds.height | 0
+        });
+      }
     }
   }, {
     key: "render",
@@ -8665,7 +8692,6 @@ var ImagePreview = function (_React$PureComponent) {
         return null;
       }
 
-      var instance = this;
       var dim = Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__["fitImageSize"])(this.props.content.width, this.props.content.height, this.state.width, this.state.height, false);
       var size = dim ? {
         width: dim.dstWidth + 'px',
@@ -8678,10 +8704,10 @@ var ImagePreview = function (_React$PureComponent) {
       size.maxWidth = '100%';
       size.maxHeight = '100%';
       var filename = this.props.content.filename;
-      var maxlength = this.props.content.width / _config_js__WEBPACK_IMPORTED_MODULE_2__["REM_SIZE"] | 0;
+      var maxlength = Math.max((this.state.width / _config_js__WEBPACK_IMPORTED_MODULE_2__["REM_SIZE"] / 1.5 | 0) - 2, 12);
 
       if (filename.length > maxlength) {
-        filename = filename.slice(0, maxlength - 2) + '...' + filename.slice(2 - maxlength);
+        filename = filename.slice(0, maxlength / 2 - 1) + '...' + filename.slice(1 - maxlength / 2);
       }
 
       var width = this.props.content.width || '-';
@@ -8710,8 +8736,8 @@ var ImagePreview = function (_React$PureComponent) {
         className: "material-icons gray"
       }, "close"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "image-preview-container",
-        ref: function ref(_ref) {
-          instance.container = _ref;
+        ref: function ref(node) {
+          return _this2.assignWidth(node);
         }
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
         src: this.props.content.url,

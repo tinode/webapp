@@ -496,7 +496,6 @@ class TinodeWeb extends React.Component {
       credCode: undefined,
       myUserId: this.tinode.getCurrentUserID()
     });
-    console.log("handleLoginSuccessful");
     // Subscribe, fetch topic desc, the list of subscriptions. Messages are not fetched.
     me.subscribe(
       me.startMetaQuery().

@@ -1238,8 +1238,12 @@ i.search {
 }
 
 #image-preview-container {
-  margin: auto;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
   overflow: hidden;
+  width: 100%;
+  height: 100%;
 }
 
 #image-preview-footer {
