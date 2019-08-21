@@ -1331,30 +1331,26 @@ i.search {
   border: 0.62rem solid #c5e1a5;
   color: #c5e1a5;
   border-top-color: transparent;
-  border-right-color: inherit;
-  border-bottom-color: inherit;
   border-left-color: transparent;
   box-shadow: 0 1.6px 0.5px -0.8px rgba(0, 0, 0, 0.12);
 }
 
 /* Right triangle placed bottom right flush. */
 .chat-box .right .tip::before {
-	content: '';
-	position: absolute;
+  content: '';
+  position: absolute;
   display: flex;
   justify-content: space-between;
-	width: 0;
-	height: 0;
+  width: 0;
+  height: 0;
   left: auto;
-	right: -.8rem;
+  right: -.8rem;
   top: auto;
-	bottom: 0;
-	border: 0.62rem solid #fafafa;
+  bottom: 0;
+  border: 0.62rem solid #fafafa;
   color: #fafafa;
   border-top-color: transparent;
   border-right-color: transparent;
-  border-bottom-color: inherit;
-  border-left-color: inherit;
   box-shadow: 0 1.6px 0.5px -0.8px rgba(0, 0, 0, 0.12);
 }
 
