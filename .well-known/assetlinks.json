@@ -11,7 +11,7 @@
   "relation": ["delegate_permission/common.get_login_creds"],
   "target": {
     "namespace": "web",
-    "site": "https://api.tinode.co"
+    "site": "https://web.tinode.co"
   }
 },
 {
