@@ -171,10 +171,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MAX_ONLINE_IN_TOPIC", function() { return MAX_ONLINE_IN_TOPIC; });
 /* harmony import */ var _version_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./version.js */ "./src/version.js");
 
-var APP_NAME = 'TinodeWeb/' + (_version_js__WEBPACK_IMPORTED_MODULE_0__["PACKAGE_VERSION"] || '0.15');
+var APP_NAME = 'TinodeWeb/' + (_version_js__WEBPACK_IMPORTED_MODULE_0__["PACKAGE_VERSION"] || '0.16');
 var API_KEY = 'AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K';
 var KNOWN_HOSTS = {
-  hosted: 'api.tinode.co',
+  hosted: 'web.tinode.co',
   local: 'localhost:6060'
 };
 var DEFAULT_HOST = KNOWN_HOSTS.hosted;
@@ -904,7 +904,7 @@ module.exports = JSON.parse("{\"en\":{\"archived_contacts\":\"Archived contacts 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PACKAGE_VERSION", function() { return PACKAGE_VERSION; });
-var PACKAGE_VERSION = "0.16.0";
+var PACKAGE_VERSION = "0.16.1-rc1";
 
 /***/ }),
 
