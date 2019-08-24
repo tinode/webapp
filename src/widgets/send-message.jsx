@@ -167,7 +167,7 @@ class SendMessage extends React.PureComponent {
         e.preventDefault();
         e.stopPropagation();
 
-        this.handleSend();
+        this.handleSend(e);
       }
     }
   }
