@@ -55,6 +55,8 @@ export default class LoginView extends React.Component {
           (login_prompt) => <input type="text" id="inputLogin"
             placeholder={login_prompt}
             autoComplete="username"
+            autocorrect="off"
+            autocapitalize="none"
             value={this.state.login}
             onChange={this.handleLoginChange}
             required autoFocus />
