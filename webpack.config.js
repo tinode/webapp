@@ -1,14 +1,15 @@
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const path = require('path');
 
 module.exports = {
   entry: [
-    './src/index.js',
+    path.resolve(__dirname, 'src/index.js'),
   ],
   devtool: 'source-map',
   module: {
     rules: [
       {
-        test: /src\/.*\.(js|jsx)?$/,
+        test: /\.jsx?$/,
         loaders: [
           'babel-loader',
         ],
