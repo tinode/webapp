@@ -2355,7 +2355,7 @@
                 s = r.seq, r.seq = Math.max(r.seq, n), (!r.touched || r.touched < i) && (r.touched = i), o = s != r.seq;
             }
 
-            r.recv < r.read && (r.recv = r.read, o = !0), r.seq < r.recv && (r.seq = r.recv, o = !0), r.unread = r.seq - r.read, !o || r.acs && r.acs.isMuted() || !this.onContactUpdate || this.onContactUpdate(t, r);
+            r.recv < r.read && (r.recv = r.read, o = !0), r.seq < r.recv && (r.seq = r.recv, (!r.touched || r.touched < i) && (r.touched = i), o = !0), r.unread = r.seq - r.read, !o || r.acs && r.acs.isMuted() || !this.onContactUpdate || this.onContactUpdate(t, r);
           }
         },
         enumerable: !0,
@@ -5062,8 +5062,8 @@ var LoginView = function (_React$Component) {
           id: "inputLogin",
           placeholder: login_prompt,
           autoComplete: "username",
-          autocorrect: "off",
-          autocapitalize: "none",
+          autoCorrect: "off",
+          autoCapitalize: "none",
           value: _this2.state.login,
           onChange: _this2.handleLoginChange,
           required: true,
