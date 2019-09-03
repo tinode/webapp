@@ -107,7 +107,7 @@
   },
       t = e(function (e, t) {
     e.exports = {
-      version: "0.16.1-rc1"
+      version: "0.16.1-rc2"
     };
   }),
       n = e(function (e, t) {
@@ -3369,7 +3369,7 @@ module.exports = JSON.parse("{\"en\":{\"archived_contacts\":\"Archived contacts 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PACKAGE_VERSION", function() { return PACKAGE_VERSION; });
-var PACKAGE_VERSION = "0.16.1-rc1";
+var PACKAGE_VERSION = "0.16.1-rc2";
 
 /***/ }),
 
