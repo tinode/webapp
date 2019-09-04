@@ -354,7 +354,7 @@ class InfoView extends React.Component {
     this.setState({showMemberPanel: false});
   }
 
-  handleLeave() {
+  handleLeave(e) {
     e.preventDefault();
     this.props.onLeaveTopic(this.props.topic);
   }
