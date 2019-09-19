@@ -10,6 +10,7 @@ import InPlaceEdit from '../widgets/in-place-edit.jsx';
 import PermissionsEditor from '../widgets/permissions-editor.jsx';
 import TagManager from '../widgets/tag-manager.jsx';
 
+import { LINK_CONTACT_US, LINK_PRIVACY_POLICY, LINK_TERMS_OF_SERVICE } from '../config.js';
 import { makeImageUrl } from '../lib/blob-helpers.js';
 import { arrayEqual, asEmail, asPhone, vcard } from '../lib/utils.js';
 
@@ -293,6 +294,33 @@ export default class EditAccountView extends React.Component {
               <i className="material-icons">exit_to_app</i> <FormattedMessage id="button_logout"
                 defaultMessage="Logout" description="Button [Logout]" />
             </a>
+          </div>
+          <div className="hr" />
+          <div className="panel-form-column">
+            <div>
+              <label className="small">
+                <FormattedMessage id="label_legal" defaultMessage="Legal"
+                description="Section label" />
+              </label>
+            </div>
+            <div>
+              <a href={LINK_CONTACT_US} className="flat-button" target="_blank">
+                <i className="material-icons">email</i> <FormattedMessage id="link_contact_us"
+                  defaultMessage="Contact Us" description="Ancor text for contacting us by email" />
+              </a>
+            </div>
+            <div>
+              <a href={LINK_TERMS_OF_SERVICE} className="flat-button" target="_blank">
+                <i className="material-icons">description</i> <FormattedMessage id="link_terms_of_service"
+                  defaultMessage="Terms of Service" description="Ancor text for terms of service link" />
+              </a>
+            </div>
+            <div>
+              <a href={LINK_PRIVACY_POLICY} className="flat-button" target="_blank">
+                <i className="material-icons">policy</i> <FormattedMessage id="link_privacy_policy"
+                  defaultMessage="Privacy Policy" description="Ancor text for privacy policy link" />
+              </a>
+            </div>
           </div>
         </div>
       }</React.Fragment>

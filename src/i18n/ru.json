@@ -134,5 +134,9 @@
   "enable_peers_messaging": "Разблокировать.",
   "more_online_members": "+еще {overflow}",
   "label_user_contacts": "Конакты:",
-  "validate_credential_action": "подтвердить"
+  "validate_credential_action": "подтвердить",
+  "label_legal": ":!![MISSING]!!:Legal",
+  "link_contact_us": ":!![MISSING]!!:Contact Us",
+  "link_terms_of_service": ":!![MISSING]!!:Terms of Service",
+  "link_privacy_policy": ":!![MISSING]!!:Privacy Policy"
 }

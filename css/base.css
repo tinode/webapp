@@ -597,7 +597,9 @@ table.permission-editor td.checkbox {
 .bot-form > div > button {
   width: auto;
 }
-.bot-form button:focus, button:hover, button:active {
+.bot-form button:focus,
+.bot-form button:hover,
+.bot-form button:active {
   outline: 0;
   background-color: #e3f2fd;
 }

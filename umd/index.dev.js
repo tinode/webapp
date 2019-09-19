@@ -2610,7 +2610,7 @@ module.exports = g;
 /*!***********************!*\
   !*** ./src/config.js ***!
   \***********************/
-/*! exports provided: APP_NAME, API_KEY, KNOWN_HOSTS, DEFAULT_HOST, KEYPRESS_DELAY, RECEIVED_DELAY, READ_DELAY, MIN_TAG_LENGTH, DEFAULT_ACCESS_MODE, NO_ACCESS_MODE, MEDIA_BREAKPOINT, REM_SIZE, AVATAR_SIZE, BROKEN_IMAGE_SIZE, MESSAGES_PAGE, MAX_INBAND_ATTACHMENT_SIZE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_ONLINE_IN_TOPIC */
+/*! exports provided: APP_NAME, API_KEY, KNOWN_HOSTS, DEFAULT_HOST, KEYPRESS_DELAY, RECEIVED_DELAY, READ_DELAY, MIN_TAG_LENGTH, DEFAULT_ACCESS_MODE, NO_ACCESS_MODE, MEDIA_BREAKPOINT, REM_SIZE, AVATAR_SIZE, BROKEN_IMAGE_SIZE, MESSAGES_PAGE, MAX_INBAND_ATTACHMENT_SIZE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_ONLINE_IN_TOPIC, LINK_CONTACT_US, LINK_PRIVACY_POLICY, LINK_TERMS_OF_SERVICE */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2634,6 +2634,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MAX_EXTERN_ATTACHMENT_SIZE", function() { return MAX_EXTERN_ATTACHMENT_SIZE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MAX_IMAGE_DIM", function() { return MAX_IMAGE_DIM; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MAX_ONLINE_IN_TOPIC", function() { return MAX_ONLINE_IN_TOPIC; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LINK_CONTACT_US", function() { return LINK_CONTACT_US; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LINK_PRIVACY_POLICY", function() { return LINK_PRIVACY_POLICY; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LINK_TERMS_OF_SERVICE", function() { return LINK_TERMS_OF_SERVICE; });
 /* harmony import */ var _version_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./version.js */ "./src/version.js");
 
 var APP_NAME = 'TinodeWeb/' + (_version_js__WEBPACK_IMPORTED_MODULE_0__["PACKAGE_VERSION"] || '0.16');
@@ -2658,6 +2661,9 @@ var MAX_INBAND_ATTACHMENT_SIZE = 195840;
 var MAX_EXTERN_ATTACHMENT_SIZE = 1 << 23;
 var MAX_IMAGE_DIM = 768;
 var MAX_ONLINE_IN_TOPIC = 4;
+var LINK_CONTACT_US = 'email:info@tinode.co';
+var LINK_PRIVACY_POLICY = 'https://tinode.co/privacy.htnl';
+var LINK_TERMS_OF_SERVICE = 'https://tinode.co/terms.html';
 
 /***/ }),
 
@@ -3772,8 +3778,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _widgets_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/in-place-edit.jsx */ "./src/widgets/in-place-edit.jsx");
 /* harmony import */ var _widgets_permissions_editor_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/permissions-editor.jsx */ "./src/widgets/permissions-editor.jsx");
 /* harmony import */ var _widgets_tag_manager_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../widgets/tag-manager.jsx */ "./src/widgets/tag-manager.jsx");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -3803,6 +3810,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
 var EditAccountView = function (_React$Component) {
   _inherits(EditAccountView, _React$Component);
 
@@ -3818,7 +3826,7 @@ var EditAccountView = function (_React$Component) {
     var defacs = me.getDefaultAccess();
     _this.state = {
       fullName: me["public"] ? me["public"].fn : undefined,
-      avatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__["makeImageUrl"])(me["public"] ? me["public"].photo : null),
+      avatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__["makeImageUrl"])(me["public"] ? me["public"].photo : null),
       auth: defacs ? defacs.auth : null,
       anon: defacs ? defacs.anon : null,
       tags: me.tags(),
@@ -3879,7 +3887,7 @@ var EditAccountView = function (_React$Component) {
       this.setState({
         fullName: fn
       });
-      this.props.onUpdateAccount(undefined, Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__["vcard"])(fn, null));
+      this.props.onUpdateAccount(undefined, Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_10__["vcard"])(fn, null));
     }
   }, {
     key: "handlePasswordUpdate",
@@ -3895,7 +3903,7 @@ var EditAccountView = function (_React$Component) {
       this.setState({
         avatar: img
       });
-      this.props.onUpdateAccount(undefined, Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__["vcard"])(null, img || tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.DEL_CHAR));
+      this.props.onUpdateAccount(undefined, Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_10__["vcard"])(null, img || tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.DEL_CHAR));
     }
   }, {
     key: "handleCheckboxClick",
@@ -3939,13 +3947,13 @@ var EditAccountView = function (_React$Component) {
         return;
       }
 
-      var val = Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__["asPhone"])(value);
+      var val = Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_10__["asPhone"])(value);
       var method;
 
       if (val) {
         method = 'tel';
       } else {
-        val = Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__["asEmail"])(value);
+        val = Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_10__["asEmail"])(value);
 
         if (val) {
           method = 'email';
@@ -3994,7 +4002,7 @@ var EditAccountView = function (_React$Component) {
   }, {
     key: "handleTagsUpdated",
     value: function handleTagsUpdated(tags) {
-      if (Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__["arrayEqual"])(this.state.tags.slice(0), tags.slice(0))) {
+      if (Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_10__["arrayEqual"])(this.state.tags.slice(0), tags.slice(0))) {
         return;
       }
 
@@ -4187,7 +4195,43 @@ var EditAccountView = function (_React$Component) {
       }, "exit_to_app"), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "button_logout",
         defaultMessage: "Logout"
-      })))));
+      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "hr"
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "panel-form-column"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        className: "small"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+        id: "label_legal",
+        defaultMessage: "Legal"
+      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+        href: _config_js__WEBPACK_IMPORTED_MODULE_8__["LINK_CONTACT_US"],
+        className: "flat-button",
+        target: "_blank"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+        className: "material-icons"
+      }, "email"), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+        id: "link_contact_us",
+        defaultMessage: "Contact Us"
+      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+        href: _config_js__WEBPACK_IMPORTED_MODULE_8__["LINK_TERMS_OF_SERVICE"],
+        className: "flat-button",
+        target: "_blank"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+        className: "material-icons"
+      }, "description"), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+        id: "link_terms_of_service",
+        defaultMessage: "Terms of Service"
+      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+        href: _config_js__WEBPACK_IMPORTED_MODULE_8__["LINK_PRIVACY_POLICY"],
+        className: "flat-button",
+        target: "_blank"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+        className: "material-icons"
+      }, "policy"), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+        id: "link_privacy_policy",
+        defaultMessage: "Privacy Policy"
+      }))))));
     }
   }]);
 
@@ -4667,7 +4711,7 @@ var InfoView = function (_React$Component) {
     }
   }, {
     key: "handleLeave",
-    value: function handleLeave() {
+    value: function handleLeave(e) {
       e.preventDefault();
       this.props.onLeaveTopic(this.props.topic);
     }

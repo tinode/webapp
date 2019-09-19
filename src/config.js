@@ -63,3 +63,12 @@ export const MAX_IMAGE_DIM = 768;
 // Maximum number of online users to be shown in a topic title bar. Others will be
 // hidden under "+X more"
 export const MAX_ONLINE_IN_TOPIC = 4;
+
+// Link for "Contact Us".
+export const LINK_CONTACT_US = 'email:info@tinode.co';
+
+// Link to Privacy Policy.
+export const LINK_PRIVACY_POLICY = 'https://tinode.co/privacy.htnl';
+
+// Link to Terms of Service.
+export const LINK_TERMS_OF_SERVICE = 'https://tinode.co/terms.html';
