@@ -135,8 +135,8 @@
   "more_online_members": "还有{overflow}个",
   "label_user_contacts": "往来：",
   "validate_credential_action": "确认",
-  "label_legal": ":!![MISSING]!!:Legal",
-  "link_contact_us": ":!![MISSING]!!:Contact Us",
-  "link_terms_of_service": ":!![MISSING]!!:Terms of Service",
-  "link_privacy_policy": ":!![MISSING]!!:Privacy Policy"
+  "label_legal": "法律东西",
+  "link_contact_us": "联系我们",
+  "link_terms_of_service": "条款和条件",
+  "link_privacy_policy": "隐私政策"
 }

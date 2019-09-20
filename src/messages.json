@@ -277,7 +277,11 @@
     "enable_peers_messaging": "Разблокировать.",
     "more_online_members": "+еще {overflow}",
     "label_user_contacts": "Конакты:",
-    "validate_credential_action": "подтвердить"
+    "validate_credential_action": "подтвердить",
+    "label_legal": "Прочее",
+    "link_contact_us": "Связаться с нами",
+    "link_terms_of_service": "Условия сервиса",
+    "link_privacy_policy": "Политика конфиденциальности"
   },
   "zh-CN": {
     "archived_contacts": "已归档联系人 ({count})",
@@ -415,6 +419,10 @@
     "title_manage_tags": "管理标签",
     "more_online_members": "还有{overflow}个",
     "label_user_contacts": "往来：",
-    "validate_credential_action": "确认"
+    "validate_credential_action": "确认",
+    "label_legal": "法律东西",
+    "link_contact_us": "联系我们",
+    "link_terms_of_service": "条款和条件",
+    "link_privacy_policy": "隐私政策"
   }
 }

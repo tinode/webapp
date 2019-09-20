@@ -132,9 +132,9 @@ export default class TagManager extends React.Component {
           : null}
         </div>
         :
-        <div>
+        <div className="quoted">
           <a href="#" className="flat-button" onClick={(e) => {e.preventDefault(); this.setState({activated: true});}}>
-            <i className="material-icons">edit</i> <FormattedMessage id="title_manage_tags" defaultMessage="Manage"
+            <i className="material-icons">edit</i> &nbsp;<FormattedMessage id="title_manage_tags" defaultMessage="Manage"
               description="Section title for the list of tags" />
           </a>
           <span>{tags}</span>

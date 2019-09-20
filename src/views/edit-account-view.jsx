@@ -303,21 +303,21 @@ export default class EditAccountView extends React.Component {
                 description="Section label" />
               </label>
             </div>
-            <div>
+            <div className="quoted">
               <a href={LINK_CONTACT_US} className="flat-button" target="_blank">
-                <i className="material-icons">email</i> <FormattedMessage id="link_contact_us"
+                <i className="material-icons">email</i> &nbsp;<FormattedMessage id="link_contact_us"
                   defaultMessage="Contact Us" description="Ancor text for contacting us by email" />
               </a>
             </div>
-            <div>
+            <div className="quoted">
               <a href={LINK_TERMS_OF_SERVICE} className="flat-button" target="_blank">
-                <i className="material-icons">description</i> <FormattedMessage id="link_terms_of_service"
+                <i className="material-icons">description</i> &nbsp;<FormattedMessage id="link_terms_of_service"
                   defaultMessage="Terms of Service" description="Ancor text for terms of service link" />
               </a>
             </div>
-            <div>
+            <div className="quoted">
               <a href={LINK_PRIVACY_POLICY} className="flat-button" target="_blank">
-                <i className="material-icons">policy</i> <FormattedMessage id="link_privacy_policy"
+                <i className="material-icons">policy</i> &nbsp;<FormattedMessage id="link_privacy_policy"
                   defaultMessage="Privacy Policy" description="Ancor text for privacy policy link" />
               </a>
             </div>
