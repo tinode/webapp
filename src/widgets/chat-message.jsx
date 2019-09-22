@@ -98,10 +98,10 @@ export default class ChatMessage extends React.Component {
       }, this);
       content = React.createElement('span', null, Drafty.format(content, draftyFormatter, this));
     } else if (typeof content != 'string') {
-      content = <span><i className="material-icons">error_outline</i> <i>
+      content = <><i className="material-icons">error_outline</i> <i>
         <FormattedMessage id="invalid_content"
           defaultMessage="invalid content" description="Shown when message is unreadable" />
-      </i></span>
+      </i></>
     }
 
     return (

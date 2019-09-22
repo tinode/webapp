@@ -16,7 +16,7 @@ export default class ContactBadges extends React.PureComponent {
             badges.push(<span className={style} key={b.key || b.name}>{b.name}</span>);
           }
         });
-        return <React.Fragment>{badges}</React.Fragment>;
+        return <>{badges}</>;
       }
       return null;
     }

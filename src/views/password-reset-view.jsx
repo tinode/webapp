@@ -57,7 +57,7 @@ export default class PasswordResetView extends React.PureComponent {
               onChange={this.handlePasswordChange} />
           }</FormattedMessage>
           :
-          <React.Fragment>
+          <>
             <label htmlFor="inputEmail">
               <FormattedMessage id="label_reset_password"
                 defaultMessage="Send a password reset email:"
@@ -72,7 +72,7 @@ export default class PasswordResetView extends React.PureComponent {
                 onChange={this.handleEmailChange}
                 required autoFocus />
             }</FormattedMessage>
-          </React.Fragment>
+          </>
         }
         <div className="dialog-buttons">
           <button className="blue" type="submit">{reset ?

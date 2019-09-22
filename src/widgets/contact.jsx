@@ -70,7 +70,7 @@ export default class Contact extends React.Component {
             <UnreadBadge count={this.props.unread} /><ContactBadges badges={icon_badges} />
           </div>
           {this.props.comment ? <div className="contact-comment">{this.props.comment}</div> : null}
-          <span><ContactBadges badges={badges} /></span>
+          <><ContactBadges badges={badges} /></>
         </div>
         {this.props.showContextMenu ?
           <span className="menuTrigger">

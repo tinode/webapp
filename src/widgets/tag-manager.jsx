@@ -137,7 +137,7 @@ export default class TagManager extends React.Component {
             <i className="material-icons">edit</i> &nbsp;<FormattedMessage id="title_manage_tags" defaultMessage="Manage"
               description="Section title for the list of tags" />
           </a>
-          <span>{tags}</span>
+          <>{tags}</>
         </div>
       }
       </div>
