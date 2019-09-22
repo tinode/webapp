@@ -289,7 +289,7 @@
     "action_report_contact": "Сообщить о нарушении",
     "action_report_group": "Сообщить о нарушении"
   },
-  "zh-CN": {
+  "zh": {
     "archived_contacts": "已归档联系人 ({count})",
     "contacts_not_found": "你尚无会话<br />¯∖_(ツ)_/¯",
     "full_name_prompt": "全名，例如张伟",
