@@ -86,7 +86,6 @@
   "label_default_access": "Права по умолчанию:",
   "label_group_members": "Участники чата:",
   "button_add_members": "Добавить",
-  "button_leave": "Отписаться",
   "group_has_no_members": "Нет участников",
   "action_leave_chat": "Уйти из чата",
   "menu_item_info": "Информация",
@@ -138,5 +137,9 @@
   "label_legal": "Прочее",
   "link_contact_us": "Связаться с нами",
   "link_terms_of_service": "Условия сервиса",
-  "link_privacy_policy": "Политика конфиденциальности"
+  "link_privacy_policy": "Политика конфиденциальности",
+  "action_delete_messages": "Удалить сообщения",
+  "action_block_contact": "Заблокировать контакт",
+  "action_report_contact": "Сообщить о нарушении",
+  "action_report_group": "Сообщить о нарушении"
 }

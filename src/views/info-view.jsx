@@ -422,6 +422,7 @@ class InfoView extends React.Component {
           <GroupManager
             members={this.state.contactList}
             requiredMember={this.props.myUserId}
+            keepInitialMembers={!this.state.admin && !this.state.owner}
             myUserId={this.props.myUserId}
             contacts={this.props.searchableContacts}
             onCancel={this.handleHideAddMembers}
@@ -498,45 +499,45 @@ class InfoView extends React.Component {
               }</FormattedMessage>
               {this.state.moreInfoExpanded ?
                 <div className="panel-form-column">
-                <div className="panel-form-row">
-                  <label><FormattedMessage id="label_user_id" /></label>
-                  <tt>{this.state.address}</tt>
-                </div>
-                {this.state.groupTopic ?
                   <div className="panel-form-row">
-                    <label>
-                      <FormattedMessage id="label_your_permissions" defaultMessage="Your permissions:"
-                        description="Label for current user permissions" />
-                    </label>
-                    <tt className="clickable"
-                      onClick={this.handleLaunchPermissionsEditor.bind(this, 'want')}>
-                      {this.state.access}
-                    </tt>
+                    <label><FormattedMessage id="label_user_id" /></label>
+                    <tt>{this.state.address}</tt>
                   </div>
-                  :
-                  <div>
-                    <div>
-                      <label className="small">
-                        <FormattedMessage id="label_permissions" defaultMessage="Permissions:"
-                          description="Section title" />
+                  {this.state.groupTopic ?
+                    <div className="panel-form-row">
+                      <label>
+                        <FormattedMessage id="label_your_permissions" defaultMessage="Your permissions:"
+                          description="Label for current user permissions" />
                       </label>
-                    </div>
-                    <div className="quoted">
-                      <div>
-                        <FormattedMessage id="label_you" defaultMessage="You:"
-                          description="Label for the current user" /> &nbsp;<tt className="clickable"
+                      <tt className="clickable"
                         onClick={this.handleLaunchPermissionsEditor.bind(this, 'want')}>
                         {this.state.access}
-                      </tt></div>
-                      <div>{this.state.fullName ? this.state.fullName : formatMessage(messages.other_user)}:
-                        &nbsp;<tt className="clickable" onClick={this.handleLaunchPermissionsEditor.bind(this, 'given')}>
-                        {this.state.modeGiven2}
-                        </tt>
+                      </tt>
+                    </div>
+                    :
+                    <div>
+                      <div>
+                        <label className="small">
+                          <FormattedMessage id="label_permissions" defaultMessage="Permissions:"
+                            description="Section title" />
+                        </label>
+                      </div>
+                      <div className="quoted">
+                        <div>
+                          <FormattedMessage id="label_you" defaultMessage="You:"
+                            description="Label for the current user" /> &nbsp;<tt className="clickable"
+                          onClick={this.handleLaunchPermissionsEditor.bind(this, 'want')}>
+                          {this.state.access}
+                        </tt></div>
+                        <div>{this.state.fullName ? this.state.fullName : formatMessage(messages.other_user)}:
+                          &nbsp;<tt className="clickable" onClick={this.handleLaunchPermissionsEditor.bind(this, 'given')}>
+                          {this.state.modeGiven2}
+                          </tt>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                }
-                {this.state.sharer && (this.state.auth || this.state.anon) ?
+                  }
+                  {this.state.sharer && (this.state.auth || this.state.anon) ?
                   <div>
                     <div>
                       <label className="small">
@@ -575,62 +576,83 @@ class InfoView extends React.Component {
             </div>
             <div className="hr" />
             {this.state.owner ?
-              <FormattedMessage id="title_tag_manager">{
-                (tags) => <TagManager
-                  title={tags}
-                  tags={this.state.tags}
-                  activated={false}
-                  onSubmit={this.handleTagsUpdated} />
-              }</FormattedMessage>
+              <>
+                <FormattedMessage id="title_tag_manager">{
+                  (tags) => <TagManager
+                    title={tags}
+                    tags={this.state.tags}
+                    activated={false}
+                    onSubmit={this.handleTagsUpdated} />
+                }</FormattedMessage>
+                <div className="hr" />
+              </>
               :
               null
             }
-            {this.state.owner ? <div className="hr" /> : null }
-            {this.state.groupTopic ?
-              <div className="panel-form-column">
-                <div className="panel-form-row">
-                  <label className="small">
-                    <FormattedMessage id="label_group_members" defaultMessage="Group members:"
-                      description="Section title or label" />
-                  </label>
-                </div>
-                <div className="panel-form-row">
-                  {this.state.sharer ?
-                    <a href="#" className="flat-button" onClick={this.handleShowAddMembers}>
-                      <i className="material-icons">person_add</i> <FormattedMessage id="button_add_members"
-                        defaultMessage="Add members" description="Flat button [Add members] (to topic)" />
-                    </a>
-                    : null}
-                  {!this.state.owner ?
-                    <a href="#" className="red flat-button" onClick={this.handleLeave}>
-                      <i className="material-icons">exit_to_app</i> <FormattedMessage id="button_leave"
-                        defaultMessage="Leave" description="Flat button [Leave] (topic)" />
-                    </a>
-                    : null}
-                </div>
-                <FormattedMessage id="group_has_no_members" defaultMessage="No members"
-                  description="Shown in place of group members">{
-                  (no_members) => <ContactList
-                    contacts={this.state.contactList}
-                    myUserId={this.props.myUserId}
-                    emptyListMessage={no_members}
-                    topicSelected={this.state.selectedContact}
-                    showOnline={false}
-                    showUnread={false}
-                    showMode={true}
-                    noScroll={true}
-                    onTopicSelected={this.handleMemberSelected}
-                    showContextMenu={this.state.admin ? this.handleContextMenu : false}
-                  />
-                }</FormattedMessage>
-              </div>
-              :
-              <div className="panel-form-row">
-                <a href="#" className="red flat-button" onClick={this.handleLeave}>
-                  <i className="material-icons">exit_to_app</i> <FormattedMessage id="action_leave_chat"
-                    defaultMessage="Leave" description="Action [Leave] chat" />
+            <div className="panel-form-column">
+              <a href="#" className="flat-button" onClick={this.handleDeleteMessages}>
+                <i className="material-icons">delete_outline</i> &npbs;<FormattedMessage id="action_delete_messages"
+                  defaultMessage="Delete Messages" description="Flat button [Delete Messages]" />
+              </a>
+              <a href="#" className="red flat-button" onClick={this.handleLeave}>
+                <i className="material-icons">exit_to_app</i> &npbs;<FormattedMessage id="action_leave_chat"
+                  defaultMessage="Leave Conversation" description="Flat button [Leave Conversation]" />
+              </a>
+              {this.state.groupTopic ?
+                <a href="#" className="red flat-button" onClick={this.handleReport}>
+                  <i className="material-icons">report</i> &npbs;<FormattedMessage id="action_report_group"
+                    defaultMessage="Report Group" description="Flat button [Report Group]" />
                 </a>
-              </div>
+              :
+                <>
+                  <a href="#" className="red flat-button" onClick={this.handleBlock}>
+                    <i className="material-icons">block</i> &npbs;<FormattedMessage id="action_block_contact"
+                      defaultMessage="Block Contact" description="Flat button [Block Contact]" />
+                  </a>
+                  <a href="#" className="red flat-button" onClick={this.handleReport}>
+                    <i className="material-icons">report</i> &npbs;<FormattedMessage id="action_report_contact"
+                      defaultMessage="Report Contact" description="Flat button [Report Contact]" />
+                  </a>
+                </>
+              }
+            </div>
+            {this.state.groupTopic ?
+              <>
+                <div className="hr" />
+                <div className="panel-form-column">
+                  <div className="panel-form-row">
+                    <label className="small">
+                      <FormattedMessage id="label_group_members" defaultMessage="Group members:"
+                        description="Section title or label" />
+                    </label>
+                  </div>
+                  <div className="panel-form-row">
+                    {this.state.sharer ?
+                      <a href="#" className="flat-button" onClick={this.handleShowAddMembers}>
+                        <i className="material-icons">person_add</i> <FormattedMessage id="button_add_members"
+                          defaultMessage="Add members" description="Flat button [Add members] (to topic)" />
+                      </a>
+                      : null}
+                  </div>
+                  <FormattedMessage id="group_has_no_members" defaultMessage="No members"
+                    description="Shown in place of group members">{
+                    (no_members) => <ContactList
+                      contacts={this.state.contactList}
+                      myUserId={this.props.myUserId}
+                      emptyListMessage={no_members}
+                      topicSelected={this.state.selectedContact}
+                      showOnline={false}
+                      showUnread={false}
+                      showMode={true}
+                      noScroll={true}
+                      onTopicSelected={this.handleMemberSelected}
+                      showContextMenu={this.state.admin ? this.handleContextMenu : false}
+                    />
+                  }</FormattedMessage>
+                </div>
+              </>
+              :
+              null
             }
           </div>
         }

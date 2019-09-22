@@ -30,7 +30,7 @@
   "label_default_access": "默认权限模式：",
   "label_group_members": "群组成员：",
   "button_add_members": "添加成员",
-  "button_leave": "离开",
+  "button_leave": ":!![OBSOLETE]!!:离开",
   "group_has_no_members": "无成员",
   "action_leave_chat": "离开",
   "login_prompt": "登录",
@@ -138,5 +138,9 @@
   "label_legal": "法律东西",
   "link_contact_us": "联系我们",
   "link_terms_of_service": "条款和条件",
-  "link_privacy_policy": "隐私政策"
+  "link_privacy_policy": "隐私政策",
+  "action_delete_messages": "删除所有帖子",
+  "action_block_contact": "屏蔽联系人",
+  "action_report_contact": "检举垃圾邮件",
+  "action_report_group": "检举垃圾邮件"
 }

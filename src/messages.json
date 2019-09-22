@@ -35,11 +35,14 @@
     "label_permissions": "Permissions:",
     "label_you": "You:",
     "label_default_access": "Default access mode:",
+    "action_delete_messages": "Delete Messages",
+    "action_leave_chat": "Leave Conversation",
+    "action_report_group": "Report Group",
+    "action_block_contact": "Block Contact",
+    "action_report_contact": "Report Contact",
     "label_group_members": "Group members:",
     "button_add_members": "Add members",
-    "button_leave": "Leave",
     "group_has_no_members": "No members",
-    "action_leave_chat": "Leave",
     "login_prompt": "Login",
     "password_prompt": "Password",
     "stay_logged_in": "Stay logged in",
@@ -229,7 +232,6 @@
     "label_default_access": "Права по умолчанию:",
     "label_group_members": "Участники чата:",
     "button_add_members": "Добавить",
-    "button_leave": "Отписаться",
     "group_has_no_members": "Нет участников",
     "action_leave_chat": "Уйти из чата",
     "menu_item_info": "Информация",
@@ -281,7 +283,11 @@
     "label_legal": "Прочее",
     "link_contact_us": "Связаться с нами",
     "link_terms_of_service": "Условия сервиса",
-    "link_privacy_policy": "Политика конфиденциальности"
+    "link_privacy_policy": "Политика конфиденциальности",
+    "action_delete_messages": "Удалить сообщения",
+    "action_block_contact": "Заблокировать контакт",
+    "action_report_contact": "Сообщить о нарушении",
+    "action_report_group": "Сообщить о нарушении"
   },
   "zh-CN": {
     "archived_contacts": "已归档联系人 ({count})",
@@ -315,7 +321,6 @@
     "label_default_access": "默认权限模式：",
     "label_group_members": "群组成员：",
     "button_add_members": "添加成员",
-    "button_leave": "离开",
     "group_has_no_members": "无成员",
     "action_leave_chat": "离开",
     "login_prompt": "登录",
@@ -423,6 +428,10 @@
     "label_legal": "法律东西",
     "link_contact_us": "联系我们",
     "link_terms_of_service": "条款和条件",
-    "link_privacy_policy": "隐私政策"
+    "link_privacy_policy": "隐私政策",
+    "action_delete_messages": "删除所有帖子",
+    "action_block_contact": "屏蔽联系人",
+    "action_report_contact": "检举垃圾邮件",
+    "action_report_group": "检举垃圾邮件"
   }
 }
