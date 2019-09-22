@@ -24,14 +24,14 @@ export default class ChipInput extends React.Component {
   static deriveStateFromProps(props) {
     return {
       placeholder: props.chips ? '' : props.prompt,
-      sortedChips: ChipInput.sortChips(props.chips, props.required),
+      sortedChips: ChipInput.sortChips(props.chips, props.staticMembers),
       chipIndex: ChipInput.indexChips(props.chips)
     };
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.chips != this.props.chips ||
-      prevProps.required != this.props.required ||
+      prevProps.staticMembers != this.props.staticMembers ||
       prevProps.prompt != this.props.prompt) {
       this.setState(ChipInput.deriveStateFromProps(this.props));
     }
@@ -56,7 +56,7 @@ export default class ChipInput extends React.Component {
     const required = [];
     const normal = [];
     chips.map(function(item) {
-      if (item.user === keep) {
+      if (keep.includes(item.user)) {
         required.push(item);
       } else {
         normal.push(item);
@@ -95,8 +95,8 @@ export default class ChipInput extends React.Component {
   handleKeyDown(e) {
     if (e.key === 'Backspace') {
       if (this.state.input.length == 0 && this.state.sortedChips.length > 0) {
-        var at = this.state.sortedChips.length - 1;
-        if (this.state.sortedChips[at].user !== this.props.required) {
+        const at = this.state.sortedChips.length - 1;
+        if (this.state.sortedChips[at].user !== this.props.staticMembers) {
           this.removeChipAt(at);
         }
       }
@@ -122,7 +122,7 @@ export default class ChipInput extends React.Component {
           title={item.public ? item.public.fn : undefined}
           noAvatar={this.props.avatarDisabled}
           topic={item.user}
-          required={item.user === this.props.required}
+          required={this.props.staticMembers.includes(item.user)}
           invalid={item.invalid}
           index={count}
           key={item.user} />

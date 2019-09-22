@@ -23,8 +23,10 @@ class GroupManager extends React.Component {
     super(props);
 
     this.state = {
+      // Array of topic members
       members: props.members,
       index: GroupManager.indexMembers(props.members),
+      staticMembers: GroupManager.staticMembers(props.members, props.keepInitialMembers, props.requiredMember),
       contactFilter: '',
       noContactsMessage: props.intl.formatMessage(messages.no_contacts),
       selectedContacts: GroupManager.selectedContacts(props.members)
@@ -39,15 +41,25 @@ class GroupManager extends React.Component {
 
   static indexMembers(members) {
     let index = {};
-    members.map(function(m) {
+    members.map((m) => {
       index[m.user] = {delta: 0, present: true}; // Delta: 0 unchanged, +1 added, -1 removed
     });
     return index;
   }
 
+  static staticMembers(members, keepInitial, requiredMember) {
+    let stat = [];
+    members.map((m) => {
+      if (keepInitial || m.user == requiredMember) {
+        stat.push(m.user);
+      }
+    });
+    return stat;
+  }
+
   static selectedContacts(members) {
     let sel = [];
-    members.map(function(m) {
+    members.map((m) => {
       sel.push(m.user);
     });
     return sel;
@@ -66,31 +78,31 @@ class GroupManager extends React.Component {
       status = {delta: 1, present: true};
     }
 
-    var m = this.state.members.slice();
+    let m = this.state.members.slice();
     m.push(this.props.contacts[index]);
 
-    var sel = GroupManager.selectedContacts(m);
+    const sel = GroupManager.selectedContacts(m);
 
-    var i = this.state.index;
+    const i = this.state.index;
     i[userId] = status;
 
     this.setState({members: m, index: i, selectedContacts: sel});
   }
 
   handleMemberRemoved(userId, index) {
-    var status = this.state.index[userId];
+    const status = this.state.index[userId];
     if (!status || !status.present) {
       return;
     }
     status.present = false;
     status.delta -= 1;
 
-    var m = this.state.members.slice();
+    let m = this.state.members.slice();
     m.splice(index, 1);
 
-    var sel = GroupManager.selectedContacts(m);
+    const sel = GroupManager.selectedContacts(m);
 
-    var i = this.state.index;
+    const i = this.state.index;
     i[userId] = status;
 
     this.setState({members: m, index: i, selectedContacts: sel});
@@ -107,7 +119,7 @@ class GroupManager extends React.Component {
 
   static doContactFiltering(filter, values) {
     if (filter) {
-      for (var i=0; i<values.length; i++) {
+      for (let i=0; i<values.length; i++) {
         if (values[i].indexOf(filter) >= 0) {
           return true;
         }
@@ -154,7 +166,7 @@ class GroupManager extends React.Component {
         <div className="panel-form-row">
           <ChipInput
             chips={this.state.members}
-            required={this.props.requiredMember}
+            staticMembers={this.state.staticMembers}
             prompt="add members"
             filterFunc={this.handleContactFilter}
             onChipRemoved={this.handleMemberRemoved} />
