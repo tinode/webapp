@@ -58,7 +58,7 @@ export default class ContactsView extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.chatList != this.props.chatList) {
+    if (prevProps.chatList != this.props.chatList || prevProps.archive != this.props.archive) {
       const newState = ContactsView.deriveStateFromProps(this.props);
       this.setState(newState);
       if (newState.unreadThreads != prevState.unreadThreads) {
