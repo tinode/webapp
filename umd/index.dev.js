@@ -779,7 +779,7 @@
       }
     });
     var c = "0",
-        u = a || "0.15",
+        u = a || "0.16",
         h = "tinodejs/" + u,
         l = 503,
         d = "Connection failed",
@@ -1837,6 +1837,18 @@
           return 0 == t.length && t.push(y.DEL_CHAR), t;
         }(e.tags)), this._tinode.setMeta(this.name, e).then(function (n) {
           return n && n.code >= 300 ? n : (e.sub && (n.params && n.params.acs && (e.sub.acs = n.params.acs, e.sub.updated = n.ts), e.sub.user || (e.sub.user = t._tinode.getCurrentUserID(), e.desc || (e.desc = {})), e.sub._noForwarding = !0, t._processMetaSub([e.sub])), e.desc && (n.params && n.params.acs && (e.desc.acs = n.params.acs, e.desc.updated = n.ts), t._processMetaDesc(e.desc)), e.tags && t._processMetaTags(e.tags), e.cred && t._processMetaCreds([e.cred], !0), n);
+        });
+      },
+      updateMode: function (e, t) {
+        var n,
+            i = e ? (function (e) {
+          throw new Error('"user" is read-only');
+        }(), i = this.subscriber(e)) : null;
+        return n = i ? i.acs.updateGiven(t).getGiven() : topic.getAccessMode().updateWant(t).getWant(), topic.setMeta({
+          sub: {
+            user: e,
+            mode: n
+          }
         });
       },
       invite: function (e, t) {
@@ -3345,7 +3357,7 @@ function sanitizeImageUrl(url) {
 /*! exports provided: en, ru, zh, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"en\":{\"archived_contacts\":\"Archived contacts ({count})\",\"contacts_not_found\":\"You have no chats<br />¯∖_(ツ)_/¯\",\"full_name_prompt\":\"Full name, e.g. John Doe\",\"email_prompt\":\"Email, e.g. jdoe@example.com\",\"button_sign_up\":\"Sign up\",\"validate_credential_action\":\"confirm\",\"label_your_name\":\"Your name\",\"label_password\":\"Password\",\"password_unchanged_prompt\":\"Unchanged\",\"label_message_sound\":\"Message sound:\",\"label_push_notifications\":\"Notification alerts:\",\"label_push_notifications_disabled\":\"Notification alerts (requires HTTPS):\",\"title_tag_manager\":\"Tags (user discovery)\",\"label_user_contacts\":\"Contacts:\",\"label_user_id\":\"Address:\",\"label_default_access_mode\":\"Default access mode:\",\"button_logout\":\"Logout\",\"label_legal\":\"Legal\",\"link_contact_us\":\"Contact Us\",\"link_terms_of_service\":\"Terms of Service\",\"link_privacy_policy\":\"Privacy Policy\",\"requested_permissions\":\"Requested\",\"granted_permissions\":\"Granted\",\"menu_item_edit_permissions\":\"Edit permissions\",\"label_other_user\":\"Other\",\"title_info\":\"Info\",\"label_topic_name\":\"Name\",\"label_private\":\"Private comment\",\"private_editing_placeholder\":\"Visible to you only\",\"label_muting_topic\":\"Muted:\",\"action_more\":\"More\",\"label_your_permissions\":\"Your permissions:\",\"label_permissions\":\"Permissions:\",\"label_you\":\"You:\",\"label_default_access\":\"Default access mode:\",\"action_delete_messages\":\"Delete Messages\",\"action_leave_chat\":\"Leave Conversation\",\"action_report_group\":\"Report Group\",\"action_block_contact\":\"Block Contact\",\"action_report_contact\":\"Report Contact\",\"label_group_members\":\"Group members:\",\"button_add_members\":\"Add members\",\"group_has_no_members\":\"No members\",\"login_prompt\":\"Login\",\"password_prompt\":\"Password\",\"stay_logged_in\":\"Stay logged in\",\"forgot_password_link\":\"Forgot password?\",\"button_sign_in\":\"Sign in\",\"label_client\":\"Client:\",\"label_server\":\"Server:\",\"online_now\":\"online now\",\"last_seen_timestamp\":\"Last seen\",\"title_not_found\":\"Not found\",\"unnamed_topic\":\"Unnamed\",\"messages_not_readable\":\"no access to messages\",\"peers_messaging_disabled\":\"Peer's messaging is disabled.\",\"enable_peers_messaging\":\"Enable\",\"tabtitle_find_user\":\"find\",\"tabtitle_new_group\":\"new group\",\"tabtitle_group_by_id\":\"by id\",\"search_for_contacts\":\"Use search to find contacts\",\"new_password_placeholder\":\"Enter new password\",\"label_reset_password\":\"Send a password reset email:\",\"credential_email_prompt\":\"Your registration email\",\"button_reset\":\"Reset\",\"button_send_request\":\"Send request\",\"label_server_to_use\":\"Server to use:\",\"label_wire_transport\":\"Wire transport:\",\"button_update\":\"Update\",\"sidepanel_title_login\":\"Sign In\",\"sidepanel_title_register\":\"Create Account\",\"sidepanel_title_settings\":\"Settings\",\"sidepanel_title_edit_account\":\"Edit Account\",\"sidepanel_title_newtpk\":\"Start New Chat\",\"sidepanel_title_cred\":\"Confirm Credentials\",\"sidepanel_title_reset\":\"Reset Password\",\"sidepanel_title_archive\":\"Archived Chats\",\"update_available\":\"Update available. <a href=\\\"\\\">Reload</a>.\",\"reconnect_countdown\":\"Disconnected. Reconnecting in {seconds}…\",\"reconnect_now\":\"Try now\",\"phone_dative\":\"phone\",\"email_dative\":\"email\",\"enter_confirmation_code_prompt\":\"Enter confirmation code sent to you by {method}:\",\"numeric_confirmation_code_prompt\":\"Numbers only\",\"button_confirm\":\"Confirm\",\"save_attachment\":\"save\",\"invalid_content\":\"invalid content\",\"user_not_found\":\"Not found\",\"badge_you\":\"you\",\"badge_owner\":\"owner\",\"menu_item_info\":\"Info\",\"menu_item_clear_messages\":\"Clear messages\",\"menu_item_clear_messages_for_all\":\"Clear for All\",\"menu_item_delete\":\"Delete\",\"menu_item_delete_for_all\":\"Delete for All\",\"menu_item_mute\":\"Mute\",\"menu_item_unmute\":\"Unmute\",\"menu_item_delete_topic\":\"Delete\",\"menu_item_unblock\":\"Unblock\",\"menu_item_block\":\"Block\",\"menu_item_member_delete\":\"Remove\",\"menu_item_archive_topic\":\"Archive\",\"action_cancel\":\"cancel\",\"upload_finishing\":\"finishing...\",\"no_contacts\":\"You have no contacts :-(\",\"contacts_not_found_short\":\"No contacts match '{query}'\",\"title_group_members\":\"Group Members\",\"title_all_contacts\":\"All Contacts\",\"button_ok\":\"OK\",\"button_cancel\":\"Cancel\",\"more_online_members\":\"+{overflow} more\",\"download_action\":\"download\",\"label_file_name\":\"File name:\",\"label_content_type\":\"Content type:\",\"label_size\":\"Size:\",\"chat_invitation\":\"You are invited to start a new chat. What would you like to do?\",\"chat_invitation_accept\":\"Accept\",\"chat_invitation_ignore\":\"Ignore\",\"chat_invitation_block\":\"Block\",\"error_invalid_id\":\"Invalid ID\",\"group_user_id_prompt\":\"Group or User ID\",\"button_subscribe\":\"Subscribe\",\"topic_name_editing_placeholder\":\"Freeform name of the group\",\"button_create\":\"Create\",\"permission_join\":\"Join ({val})\",\"permission_read\":\"Read ({val})\",\"permission_write\":\"Write ({val})\",\"permission_pres\":\"Get notified ({val})\",\"permission_admin\":\"Approve ({val})\",\"permission_share\":\"Share ({val})\",\"permission_delete\":\"Delete ({val})\",\"permission_owner\":\"Owner ({val})\",\"title_permissions\":\"Permissions\",\"message_sending\":\"sending...\",\"message_sending_failed\":\"failed\",\"search_placeholder\":\"List like email:alice@example.com, tel:17025550003...\",\"messaging_disabled_prompt\":\"Messaging disabled\",\"new_message_prompt\":\"New message\",\"file_attachment_too_large\":\"The file size {size} exceeds the {limit} limit.\",\"cannot_initiate_file_upload\":\"Cannot initiate file upload.\",\"tags_not_found\":\"No tags defined. Add some.\",\"tags_editor_no_tags\":\"Add some tags\",\"title_manage_tags\":\"Manage\"},\"ru\":{\"contacts_not_found\":\"Чатов нет<br />¯∖_(ツ)_/¯\",\"full_name_prompt\":\"Полное имя, напр. Иван Петров\",\"email_prompt\":\"Email, напр. ivan@example.com\",\"button_sign_up\":\"Создать счет\",\"label_your_name\":\"Ваше имя\",\"label_password\":\"Пароль\",\"password_unchanged_prompt\":\"Не изменен\",\"label_user_id\":\"Адрес:\",\"label_default_access_mode\":\"Доступ по умолчанию:\",\"label_message_sound\":\"Звук нового сообщения:\",\"label_push_notifications\":\"Уведомления:\",\"label_push_notifications_disabled\":\"Уведомления (требуют HTTPS):\",\"title_tag_manager\":\"Таги для поиска\",\"button_logout\":\"Выйти\",\"login_prompt\":\"Логин\",\"password_prompt\":\"Пароль\",\"stay_logged_in\":\"Запомнить\",\"forgot_password_link\":\"Напомнить пароль\",\"button_sign_in\":\"Войти\",\"label_client\":\"Клиент:\",\"label_server\":\"Сервер:\",\"online_now\":\"онлайн\",\"last_seen_timestamp\":\"Был активен\",\"title_not_found\":\"Не найден\",\"unnamed_topic\":\"Без названия\",\"messages_not_readable\":\"нет доступа к сообщениям\",\"tabtitle_find_user\":\"найти\",\"tabtitle_new_group\":\"создать\",\"tabtitle_group_by_id\":\"по id\",\"label_server_to_use\":\"Использовать сервер:\",\"label_wire_transport\":\"Соединение:\",\"button_update\":\"Применить\",\"sidepanel_title_login\":\"Авторизация\",\"sidepanel_title_register\":\"Зарегистрироваться\",\"sidepanel_title_settings\":\"Настройки\",\"sidepanel_title_edit_account\":\"Редактировать счет\",\"sidepanel_title_newtpk\":\"Новый чат\",\"sidepanel_title_cred\":\"Подтвердить\",\"sidepanel_title_reset\":\"Сменить пароль\",\"tags_not_found\":\"Тагов нет. Добавьте\",\"tags_editor_no_tags\":\"Добавьте таги\",\"title_manage_tags\":\"Редактировать\",\"message_sending\":\"в пути...\",\"message_sending_failed\":\"ошибка\",\"search_placeholder\":\"Список, напр. email:alice@example.com, tel:+17025550003...\",\"messaging_disabled_prompt\":\"Отправка недоступна\",\"new_message_prompt\":\"Новое сообщение\",\"file_attachment_too_large\":\"Размер файла {size} превышает {limit} лимит.\",\"cannot_initiate_file_upload\":\"Ошибка загрузки файла.\",\"search_for_contacts\":\"Поиск контактов\",\"enter_confirmation_code_prompt\":\"Код подтверждения, полученный по {method}:\",\"numeric_confirmation_code_prompt\":\"Только цифры\",\"button_confirm\":\"Подтвердить\",\"button_ok\":\"OK\",\"button_cancel\":\"Отменить\",\"invalid_content\":\"сообщение не читается\",\"label_file_name\":\"Имя файла:\",\"label_content_type\":\"Тип:\",\"label_size\":\"Размер:\",\"phone_dative\":\"телефону\",\"email_dative\":\"емейлу\",\"title_group_members\":\"Участники\",\"download_action\":\"скачать\",\"permission_join\":\"Подписываться ({val})\",\"permission_read\":\"Читать ({val})\",\"permission_write\":\"Писать ({val})\",\"permission_pres\":\"Уведомлять ({val})\",\"permission_admin\":\"Подтверждать ({val})\",\"permission_share\":\"Приглашать ({val})\",\"permission_delete\":\"Удалять ({val})\",\"permission_owner\":\"Владелец ({val})\",\"title_permissions\":\"Права доступа\",\"requested_permissions\":\"Требуются\",\"granted_permissions\":\"Получены\",\"menu_item_edit_permissions\":\"Права доступа\",\"label_other_user\":\"Второй\",\"label_topic_name\":\"Название\",\"label_private\":\"Комментарий\",\"private_editing_placeholder\":\"Виден только вам\",\"label_muting_topic\":\"Без уведомлений\",\"action_more\":\"Ещё\",\"label_your_permissions\":\"Ваши права доступа:\",\"label_permissions\":\"Права доступа:\",\"label_you\":\"Вы:\",\"label_default_access\":\"Права по умолчанию:\",\"label_group_members\":\"Участники чата:\",\"button_add_members\":\"Добавить\",\"group_has_no_members\":\"Нет участников\",\"action_leave_chat\":\"Уйти из чата\",\"menu_item_info\":\"Информация\",\"menu_item_clear_messages\":\"Удалить сообщения\",\"menu_item_clear_messages_for_all\":\"Удалить для всех\",\"menu_item_delete\":\"Удалить\",\"menu_item_delete_for_all\":\"Удалить для всех\",\"menu_item_mute\":\"Не уведомлять\",\"menu_item_unmute\":\"Уведомлять\",\"menu_item_delete_topic\":\"Удалить чат\",\"menu_item_unblock\":\"Разблокировать\",\"menu_item_block\":\"Заблокировать\",\"menu_item_member_delete\":\"Отписать\",\"title_info\":\"Подробности\",\"new_password_placeholder\":\"Введите новый пароль\",\"label_reset_password\":\"Отправить емейл для смены пароля:\",\"credential_email_prompt\":\"Регистрационный емейл\",\"button_reset\":\"Изменить\",\"button_send_request\":\"Отправить\",\"action_cancel\":\"отменить\",\"upload_finishing\":\"завершение...\",\"no_contacts\":\"Ничего нет :-(\",\"contacts_not_found_short\":\"Нет контактов для запроса '{query}'\",\"title_all_contacts\":\"Все контакты\",\"error_invalid_id\":\"Неверный ID\",\"group_user_id_prompt\":\"ID чата или пользователя\",\"button_subscribe\":\"Подписаться\",\"topic_name_editing_placeholder\":\"Название чата\",\"button_create\":\"Создать\",\"badge_you\":\"вы\",\"badge_owner\":\"влад.\",\"update_available\":\"Есть новая версия приложения. <a href=\\\"\\\">Обновить</a>.\",\"user_not_found\":\"Не найден\",\"reconnect_countdown\":\"Нет связи. Подключение через {seconds}…\",\"reconnect_now\":\"Подключить сейчас.\",\"save_attachment\":\"сохранить\",\"menu_item_archive_topic\":\"В архив\",\"archived_contacts\":\"Чаты в архиве ({count})\",\"sidepanel_title_archive\":\"Архив чатов\",\"chat_invitation\":\"Вас пригласили начать новый чат. Как вы хотите поступить?\",\"chat_invitation_accept\":\"Принять\",\"chat_invitation_ignore\":\"Игнорировать\",\"chat_invitation_block\":\"Заблокировать\",\"peers_messaging_disabled\":\"Чат заблокирован у корреспондента.\",\"enable_peers_messaging\":\"Разблокировать.\",\"more_online_members\":\"+еще {overflow}\",\"label_user_contacts\":\"Конакты:\",\"validate_credential_action\":\"подтвердить\",\"label_legal\":\"Прочее\",\"link_contact_us\":\"Связаться с нами\",\"link_terms_of_service\":\"Условия сервиса\",\"link_privacy_policy\":\"Политика конфиденциальности\",\"action_delete_messages\":\"Удалить сообщения\",\"action_block_contact\":\"Заблокировать контакт\",\"action_report_contact\":\"Сообщить о нарушении\",\"action_report_group\":\"Сообщить о нарушении\"},\"zh\":{\"archived_contacts\":\"已归档联系人 ({count})\",\"contacts_not_found\":\"你尚无会话<br />¯∖_(ツ)_/¯\",\"full_name_prompt\":\"全名，例如张伟\",\"email_prompt\":\"电子邮件，例如 zhang@example.com\",\"button_sign_up\":\"注册\",\"label_your_name\":\"你的姓名\",\"label_password\":\"密码\",\"password_unchanged_prompt\":\"未改变\",\"label_user_id\":\"地址：\",\"label_default_access_mode\":\"蓦然访问模式：\",\"label_message_sound\":\"消息提示音：\",\"label_push_notifications\":\"通知提醒：\",\"label_push_notifications_disabled\":\"通知提醒（需要 HTTPS）：\",\"title_tag_manager\":\"标签（用户发现）\",\"button_logout\":\"登出\",\"requested_permissions\":\"已请求\",\"granted_permissions\":\"已授予\",\"menu_item_edit_permissions\":\"编辑权限\",\"label_other_user\":\"其他\",\"title_info\":\"信息\",\"label_topic_name\":\"名称\",\"label_private\":\"私人评论\",\"private_editing_placeholder\":\"仅自己可见\",\"label_muting_topic\":\"已静音：\",\"action_more\":\"更多\",\"label_your_permissions\":\"你的权限：\",\"label_permissions\":\"权限：\",\"label_you\":\"你：\",\"label_default_access\":\"默认权限模式：\",\"label_group_members\":\"群组成员：\",\"button_add_members\":\"添加成员\",\"group_has_no_members\":\"无成员\",\"action_leave_chat\":\"离开\",\"login_prompt\":\"登录\",\"password_prompt\":\"密码\",\"stay_logged_in\":\"保持登录\",\"forgot_password_link\":\"忘记密码？\",\"button_sign_in\":\"登录\",\"label_client\":\"客户端：\",\"label_server\":\"服务器：\",\"online_now\":\"在线\",\"last_seen_timestamp\":\"最后可见\",\"title_not_found\":\"无法找到\",\"unnamed_topic\":\"未命名\",\"messages_not_readable\":\"无消息访问权限\",\"peers_messaging_disabled\":\"成员间消息已禁用。\",\"enable_peers_messaging\":\"启用\",\"tabtitle_find_user\":\"搜索\",\"tabtitle_new_group\":\"新群组\",\"tabtitle_group_by_id\":\"通过 id\",\"search_for_contacts\":\"使用搜索寻找联系人\",\"new_password_placeholder\":\"输入新密码\",\"label_reset_password\":\"发送密码重置邮件：\",\"credential_email_prompt\":\"你的注册邮箱\",\"button_reset\":\"重置\",\"button_send_request\":\"发送请求\",\"label_server_to_use\":\"使用的服务器：\",\"label_wire_transport\":\"线路传输：\",\"button_update\":\"更新\",\"sidepanel_title_login\":\"登录\",\"sidepanel_title_register\":\"创建账户\",\"sidepanel_title_settings\":\"设置\",\"sidepanel_title_edit_account\":\"编辑账户\",\"sidepanel_title_newtpk\":\"开始新会话\",\"sidepanel_title_cred\":\"确认凭据\",\"sidepanel_title_reset\":\"重置密码\",\"sidepanel_title_archive\":\"已存档会话\",\"update_available\":\"更新可用。<a href=\\\"\\\">重新载入</a>.\",\"reconnect_countdown\":\"连接已断开。{seconds} 秒后重新连接…\",\"reconnect_now\":\"立即尝试\",\"phone_dative\":\"电话\",\"email_dative\":\"电子邮件\",\"enter_confirmation_code_prompt\":\"输入通过{method}发送的验证码：\",\"numeric_confirmation_code_prompt\":\"仅数字\",\"button_confirm\":\"确认\",\"save_attachment\":\"保存\",\"invalid_content\":\"无效内容\",\"user_not_found\":\"未找到\",\"badge_you\":\"你\",\"badge_owner\":\"所有者\",\"menu_item_info\":\"信息\",\"menu_item_clear_messages\":\"清空消息\",\"menu_item_clear_messages_for_all\":\"全部清除\",\"menu_item_delete\":\"删除\",\"menu_item_delete_for_all\":\"全部删除\",\"menu_item_mute\":\"静音\",\"menu_item_unmute\":\"取消静音\",\"menu_item_delete_topic\":\"删除\",\"menu_item_unblock\":\"取消屏蔽\",\"menu_item_block\":\"屏蔽\",\"menu_item_member_delete\":\"移除\",\"menu_item_archive_topic\":\"归档\",\"action_cancel\":\"取消\",\"upload_finishing\":\"正在结束...\",\"no_contacts\":\"你尚无联系人 ：-(\",\"contacts_not_found_short\":\"无联系人匹配 '{query}'\",\"title_group_members\":\"群组成员\",\"title_all_contacts\":\"全部联系人\",\"button_ok\":\"好\",\"button_cancel\":\"取消\",\"download_action\":\"下载\",\"label_file_name\":\"文件名：\",\"label_content_type\":\"内容类型：\",\"label_size\":\"大小：\",\"chat_invitation\":\"你受邀开始新会话。你想怎么做？\",\"chat_invitation_accept\":\"接受\",\"chat_invitation_ignore\":\"忽略\",\"chat_invitation_block\":\"屏蔽\",\"error_invalid_id\":\"无效 ID\",\"group_user_id_prompt\":\"群组或用户 ID\",\"button_subscribe\":\"订阅\",\"topic_name_editing_placeholder\":\"群组自由格式名称\",\"button_create\":\"创建\",\"permission_join\":\"加入 ({val})\",\"permission_read\":\"读取 ({val})\",\"permission_write\":\"写入 ({val})\",\"permission_pres\":\"获取通知 ({val})\",\"permission_admin\":\"批准 ({val})\",\"permission_share\":\"分享 ({val})\",\"permission_delete\":\"删除 ({val})\",\"permission_owner\":\"所有者 ({val})\",\"title_permissions\":\"权限\",\"message_sending\":\"正在发送...\",\"message_sending_failed\":\"发送失败\",\"search_placeholder\":\"列表如 email:alice@example.com, tel:+17025550003...\",\"messaging_disabled_prompt\":\"消息已禁用\",\"new_message_prompt\":\"新消息\",\"file_attachment_too_large\":\"文件大小 {size} 超过 {limit} 限制。\",\"cannot_initiate_file_upload\":\"无法初始化文件上传。\",\"tags_not_found\":\"尚未定义标签。添加一些。\",\"tags_editor_no_tags\":\"添加一些标签\",\"title_manage_tags\":\"管理标签\",\"more_online_members\":\"还有{overflow}个\",\"label_user_contacts\":\"往来：\",\"validate_credential_action\":\"确认\",\"label_legal\":\"法律东西\",\"link_contact_us\":\"联系我们\",\"link_terms_of_service\":\"条款和条件\",\"link_privacy_policy\":\"隐私政策\",\"action_delete_messages\":\"删除所有帖子\",\"action_block_contact\":\"屏蔽联系人\",\"action_report_contact\":\"检举垃圾邮件\",\"action_report_group\":\"检举垃圾邮件\"}}");
+module.exports = JSON.parse("{\"en\":{\"archived_contacts\":\"Archived contacts ({count})\",\"contacts_not_found\":\"You have no chats<br />¯∖_(ツ)_/¯\",\"full_name_prompt\":\"Full name, e.g. John Doe\",\"email_prompt\":\"Email, e.g. jdoe@example.com\",\"button_sign_up\":\"Sign up\",\"validate_credential_action\":\"confirm\",\"label_your_name\":\"Your name\",\"label_password\":\"Password\",\"password_unchanged_prompt\":\"Unchanged\",\"label_message_sound\":\"Message sound:\",\"label_push_notifications\":\"Notification alerts:\",\"label_push_notifications_disabled\":\"Notification alerts (requires HTTPS):\",\"title_tag_manager\":\"Tags (user discovery)\",\"label_user_contacts\":\"Contacts:\",\"label_user_id\":\"Address:\",\"label_default_access_mode\":\"Default access mode:\",\"button_logout\":\"Logout\",\"label_legal\":\"Legal\",\"link_contact_us\":\"Contact Us\",\"link_terms_of_service\":\"Terms of Service\",\"link_privacy_policy\":\"Privacy Policy\",\"requested_permissions\":\"Requested\",\"granted_permissions\":\"Granted\",\"menu_item_edit_permissions\":\"Edit permissions\",\"label_other_user\":\"Other\",\"action_delete_messages\":\"Delete Messages\",\"delete_messages_warning\":\"Are you sure you want to delete all mesages? It cannot be undone.\",\"action_leave_chat\":\"Leave Conversation\",\"leave_chat_warning\":\"Are you sure you want to leave this conversation.\",\"action_block_contact\":\"Block Contact\",\"block_contact_warning\":\"Are you sure you want to block this contact?\",\"action_report_chat\":\"Report Conversation\",\"report_chat_warning\":\"Are you sure you want to block and report this conversation?\",\"title_info\":\"Info\",\"label_topic_name\":\"Name\",\"label_private\":\"Private comment\",\"private_editing_placeholder\":\"Visible to you only\",\"label_muting_topic\":\"Muted:\",\"action_more\":\"More\",\"label_your_permissions\":\"Your permissions:\",\"label_permissions\":\"Permissions:\",\"label_you\":\"You:\",\"label_default_access\":\"Default access mode:\",\"label_group_members\":\"Group members:\",\"button_add_members\":\"Add members\",\"group_has_no_members\":\"No members\",\"login_prompt\":\"Login\",\"password_prompt\":\"Password\",\"stay_logged_in\":\"Stay logged in\",\"forgot_password_link\":\"Forgot password?\",\"button_sign_in\":\"Sign in\",\"label_client\":\"Client:\",\"label_server\":\"Server:\",\"online_now\":\"online now\",\"last_seen_timestamp\":\"Last seen\",\"title_not_found\":\"Not found\",\"unnamed_topic\":\"Unnamed\",\"messages_not_readable\":\"no access to messages\",\"peers_messaging_disabled\":\"Peer's messaging is disabled.\",\"enable_peers_messaging\":\"Enable\",\"tabtitle_find_user\":\"find\",\"tabtitle_new_group\":\"new group\",\"tabtitle_group_by_id\":\"by id\",\"search_for_contacts\":\"Use search to find contacts\",\"new_password_placeholder\":\"Enter new password\",\"label_reset_password\":\"Send a password reset email:\",\"credential_email_prompt\":\"Your registration email\",\"button_reset\":\"Reset\",\"button_send_request\":\"Send request\",\"label_server_to_use\":\"Server to use:\",\"label_wire_transport\":\"Wire transport:\",\"button_update\":\"Update\",\"sidepanel_title_login\":\"Sign In\",\"sidepanel_title_register\":\"Create Account\",\"sidepanel_title_settings\":\"Settings\",\"sidepanel_title_edit_account\":\"Edit Account\",\"sidepanel_title_newtpk\":\"Start New Chat\",\"sidepanel_title_cred\":\"Confirm Credentials\",\"sidepanel_title_reset\":\"Reset Password\",\"sidepanel_title_archive\":\"Archived Chats\",\"update_available\":\"Update available. <a href=\\\"\\\">Reload</a>.\",\"reconnect_countdown\":\"Disconnected. Reconnecting in {seconds}…\",\"reconnect_now\":\"Try now\",\"phone_dative\":\"phone\",\"email_dative\":\"email\",\"enter_confirmation_code_prompt\":\"Enter confirmation code sent to you by {method}:\",\"numeric_confirmation_code_prompt\":\"Numbers only\",\"button_confirm\":\"Confirm\",\"save_attachment\":\"save\",\"invalid_content\":\"invalid content\",\"user_not_found\":\"Not found\",\"badge_you\":\"you\",\"badge_owner\":\"owner\",\"menu_item_info\":\"Info\",\"menu_item_clear_messages\":\"Clear messages\",\"menu_item_clear_messages_for_all\":\"Clear for All\",\"menu_item_delete\":\"Delete\",\"menu_item_delete_for_all\":\"Delete for All\",\"menu_item_mute\":\"Mute\",\"menu_item_unmute\":\"Unmute\",\"menu_item_delete_topic\":\"Delete\",\"menu_item_unblock\":\"Unblock\",\"menu_item_block\":\"Block\",\"menu_item_member_delete\":\"Remove\",\"menu_item_archive_topic\":\"Archive\",\"action_cancel\":\"cancel\",\"upload_finishing\":\"finishing...\",\"no_contacts\":\"You have no contacts :-(\",\"contacts_not_found_short\":\"No contacts match '{query}'\",\"title_group_members\":\"Group Members\",\"title_all_contacts\":\"All Contacts\",\"button_ok\":\"OK\",\"button_cancel\":\"Cancel\",\"more_online_members\":\"+{overflow} more\",\"download_action\":\"download\",\"label_file_name\":\"File name:\",\"label_content_type\":\"Content type:\",\"label_size\":\"Size:\",\"chat_invitation\":\"You are invited to start a new chat. What would you like to do?\",\"chat_invitation_accept\":\"Accept\",\"chat_invitation_ignore\":\"Ignore\",\"chat_invitation_block\":\"Block\",\"error_invalid_id\":\"Invalid ID\",\"group_user_id_prompt\":\"Group or User ID\",\"button_subscribe\":\"Subscribe\",\"topic_name_editing_placeholder\":\"Freeform name of the group\",\"button_create\":\"Create\",\"permission_join\":\"Join ({val})\",\"permission_read\":\"Read ({val})\",\"permission_write\":\"Write ({val})\",\"permission_pres\":\"Get notified ({val})\",\"permission_admin\":\"Approve ({val})\",\"permission_share\":\"Share ({val})\",\"permission_delete\":\"Delete ({val})\",\"permission_owner\":\"Owner ({val})\",\"title_permissions\":\"Permissions\",\"message_sending\":\"sending...\",\"message_sending_failed\":\"failed\",\"search_placeholder\":\"List like email:alice@example.com, tel:17025550003...\",\"messaging_disabled_prompt\":\"Messaging disabled\",\"new_message_prompt\":\"New message\",\"file_attachment_too_large\":\"The file size {size} exceeds the {limit} limit.\",\"cannot_initiate_file_upload\":\"Cannot initiate file upload.\",\"tags_not_found\":\"No tags defined. Add some.\",\"tags_editor_no_tags\":\"Add some tags\",\"title_manage_tags\":\"Manage\"},\"ru\":{\"contacts_not_found\":\"Чатов нет<br />¯∖_(ツ)_/¯\",\"full_name_prompt\":\"Полное имя, напр. Иван Петров\",\"email_prompt\":\"Email, напр. ivan@example.com\",\"button_sign_up\":\"Создать счет\",\"label_your_name\":\"Ваше имя\",\"label_password\":\"Пароль\",\"password_unchanged_prompt\":\"Не изменен\",\"label_user_id\":\"Адрес:\",\"label_default_access_mode\":\"Доступ по умолчанию:\",\"label_message_sound\":\"Звук нового сообщения:\",\"label_push_notifications\":\"Уведомления:\",\"label_push_notifications_disabled\":\"Уведомления (требуют HTTPS):\",\"title_tag_manager\":\"Таги для поиска\",\"button_logout\":\"Выйти\",\"login_prompt\":\"Логин\",\"password_prompt\":\"Пароль\",\"stay_logged_in\":\"Запомнить\",\"forgot_password_link\":\"Напомнить пароль\",\"button_sign_in\":\"Войти\",\"label_client\":\"Клиент:\",\"label_server\":\"Сервер:\",\"online_now\":\"онлайн\",\"last_seen_timestamp\":\"Был активен\",\"title_not_found\":\"Не найден\",\"unnamed_topic\":\"Без названия\",\"messages_not_readable\":\"нет доступа к сообщениям\",\"tabtitle_find_user\":\"найти\",\"tabtitle_new_group\":\"создать\",\"tabtitle_group_by_id\":\"по id\",\"label_server_to_use\":\"Использовать сервер:\",\"label_wire_transport\":\"Соединение:\",\"button_update\":\"Применить\",\"sidepanel_title_login\":\"Авторизация\",\"sidepanel_title_register\":\"Зарегистрироваться\",\"sidepanel_title_settings\":\"Настройки\",\"sidepanel_title_edit_account\":\"Редактировать счет\",\"sidepanel_title_newtpk\":\"Новый чат\",\"sidepanel_title_cred\":\"Подтвердить\",\"sidepanel_title_reset\":\"Сменить пароль\",\"tags_not_found\":\"Тагов нет. Добавьте\",\"tags_editor_no_tags\":\"Добавьте таги\",\"title_manage_tags\":\"Редактировать\",\"message_sending\":\"в пути...\",\"message_sending_failed\":\"ошибка\",\"search_placeholder\":\"Список, напр. email:alice@example.com, tel:+17025550003...\",\"messaging_disabled_prompt\":\"Отправка недоступна\",\"new_message_prompt\":\"Новое сообщение\",\"file_attachment_too_large\":\"Размер файла {size} превышает {limit} лимит.\",\"cannot_initiate_file_upload\":\"Ошибка загрузки файла.\",\"search_for_contacts\":\"Поиск контактов\",\"enter_confirmation_code_prompt\":\"Код подтверждения, полученный по {method}:\",\"numeric_confirmation_code_prompt\":\"Только цифры\",\"button_confirm\":\"Подтвердить\",\"button_ok\":\"OK\",\"button_cancel\":\"Отменить\",\"invalid_content\":\"сообщение не читается\",\"label_file_name\":\"Имя файла:\",\"label_content_type\":\"Тип:\",\"label_size\":\"Размер:\",\"phone_dative\":\"телефону\",\"email_dative\":\"емейлу\",\"title_group_members\":\"Участники\",\"download_action\":\"скачать\",\"permission_join\":\"Подписываться ({val})\",\"permission_read\":\"Читать ({val})\",\"permission_write\":\"Писать ({val})\",\"permission_pres\":\"Уведомлять ({val})\",\"permission_admin\":\"Подтверждать ({val})\",\"permission_share\":\"Приглашать ({val})\",\"permission_delete\":\"Удалять ({val})\",\"permission_owner\":\"Владелец ({val})\",\"title_permissions\":\"Права доступа\",\"requested_permissions\":\"Требуются\",\"granted_permissions\":\"Получены\",\"menu_item_edit_permissions\":\"Права доступа\",\"label_other_user\":\"Второй\",\"label_topic_name\":\"Название\",\"label_private\":\"Комментарий\",\"private_editing_placeholder\":\"Виден только вам\",\"label_muting_topic\":\"Без уведомлений\",\"action_more\":\"Ещё\",\"label_your_permissions\":\"Ваши права доступа:\",\"label_permissions\":\"Права доступа:\",\"label_you\":\"Вы:\",\"label_default_access\":\"Права по умолчанию:\",\"label_group_members\":\"Участники чата:\",\"button_add_members\":\"Добавить\",\"group_has_no_members\":\"Нет участников\",\"action_leave_chat\":\"Уйти из чата\",\"menu_item_info\":\"Информация\",\"menu_item_clear_messages\":\"Удалить сообщения\",\"menu_item_clear_messages_for_all\":\"Удалить для всех\",\"menu_item_delete\":\"Удалить\",\"menu_item_delete_for_all\":\"Удалить для всех\",\"menu_item_mute\":\"Не уведомлять\",\"menu_item_unmute\":\"Уведомлять\",\"menu_item_delete_topic\":\"Удалить чат\",\"menu_item_unblock\":\"Разблокировать\",\"menu_item_block\":\"Заблокировать\",\"menu_item_member_delete\":\"Отписать\",\"title_info\":\"Подробности\",\"new_password_placeholder\":\"Введите новый пароль\",\"label_reset_password\":\"Отправить емейл для смены пароля:\",\"credential_email_prompt\":\"Регистрационный емейл\",\"button_reset\":\"Изменить\",\"button_send_request\":\"Отправить\",\"action_cancel\":\"отменить\",\"upload_finishing\":\"завершение...\",\"no_contacts\":\"Ничего нет :-(\",\"contacts_not_found_short\":\"Нет контактов для запроса '{query}'\",\"title_all_contacts\":\"Все контакты\",\"error_invalid_id\":\"Неверный ID\",\"group_user_id_prompt\":\"ID чата или пользователя\",\"button_subscribe\":\"Подписаться\",\"topic_name_editing_placeholder\":\"Название чата\",\"button_create\":\"Создать\",\"badge_you\":\"вы\",\"badge_owner\":\"влад.\",\"update_available\":\"Есть новая версия приложения. <a href=\\\"\\\">Обновить</a>.\",\"user_not_found\":\"Не найден\",\"reconnect_countdown\":\"Нет связи. Подключение через {seconds}…\",\"reconnect_now\":\"Подключить сейчас.\",\"save_attachment\":\"сохранить\",\"menu_item_archive_topic\":\"В архив\",\"archived_contacts\":\"Чаты в архиве ({count})\",\"sidepanel_title_archive\":\"Архив чатов\",\"chat_invitation\":\"Вас пригласили начать новый чат. Как вы хотите поступить?\",\"chat_invitation_accept\":\"Принять\",\"chat_invitation_ignore\":\"Игнорировать\",\"chat_invitation_block\":\"Заблокировать\",\"peers_messaging_disabled\":\"Чат заблокирован у корреспондента.\",\"enable_peers_messaging\":\"Разблокировать.\",\"more_online_members\":\"+еще {overflow}\",\"label_user_contacts\":\"Конакты:\",\"validate_credential_action\":\"подтвердить\",\"label_legal\":\"Прочее\",\"link_contact_us\":\"Связаться с нами\",\"link_terms_of_service\":\"Условия сервиса\",\"link_privacy_policy\":\"Политика конфиденциальности\",\"action_delete_messages\":\"Удалить сообщения\",\"action_block_contact\":\"Заблокировать контакт\"},\"zh\":{\"archived_contacts\":\"已归档联系人 ({count})\",\"contacts_not_found\":\"你尚无会话<br />¯∖_(ツ)_/¯\",\"full_name_prompt\":\"全名，例如张伟\",\"email_prompt\":\"电子邮件，例如 zhang@example.com\",\"button_sign_up\":\"注册\",\"label_your_name\":\"你的姓名\",\"label_password\":\"密码\",\"password_unchanged_prompt\":\"未改变\",\"label_user_id\":\"地址：\",\"label_default_access_mode\":\"蓦然访问模式：\",\"label_message_sound\":\"消息提示音：\",\"label_push_notifications\":\"通知提醒：\",\"label_push_notifications_disabled\":\"通知提醒（需要 HTTPS）：\",\"title_tag_manager\":\"标签（用户发现）\",\"button_logout\":\"登出\",\"requested_permissions\":\"已请求\",\"granted_permissions\":\"已授予\",\"menu_item_edit_permissions\":\"编辑权限\",\"label_other_user\":\"其他\",\"title_info\":\"信息\",\"label_topic_name\":\"名称\",\"label_private\":\"私人评论\",\"private_editing_placeholder\":\"仅自己可见\",\"label_muting_topic\":\"已静音：\",\"action_more\":\"更多\",\"label_your_permissions\":\"你的权限：\",\"label_permissions\":\"权限：\",\"label_you\":\"你：\",\"label_default_access\":\"默认权限模式：\",\"label_group_members\":\"群组成员：\",\"button_add_members\":\"添加成员\",\"group_has_no_members\":\"无成员\",\"action_leave_chat\":\"离开\",\"login_prompt\":\"登录\",\"password_prompt\":\"密码\",\"stay_logged_in\":\"保持登录\",\"forgot_password_link\":\"忘记密码？\",\"button_sign_in\":\"登录\",\"label_client\":\"客户端：\",\"label_server\":\"服务器：\",\"online_now\":\"在线\",\"last_seen_timestamp\":\"最后可见\",\"title_not_found\":\"无法找到\",\"unnamed_topic\":\"未命名\",\"messages_not_readable\":\"无消息访问权限\",\"peers_messaging_disabled\":\"成员间消息已禁用。\",\"enable_peers_messaging\":\"启用\",\"tabtitle_find_user\":\"搜索\",\"tabtitle_new_group\":\"新群组\",\"tabtitle_group_by_id\":\"通过 id\",\"search_for_contacts\":\"使用搜索寻找联系人\",\"new_password_placeholder\":\"输入新密码\",\"label_reset_password\":\"发送密码重置邮件：\",\"credential_email_prompt\":\"你的注册邮箱\",\"button_reset\":\"重置\",\"button_send_request\":\"发送请求\",\"label_server_to_use\":\"使用的服务器：\",\"label_wire_transport\":\"线路传输：\",\"button_update\":\"更新\",\"sidepanel_title_login\":\"登录\",\"sidepanel_title_register\":\"创建账户\",\"sidepanel_title_settings\":\"设置\",\"sidepanel_title_edit_account\":\"编辑账户\",\"sidepanel_title_newtpk\":\"开始新会话\",\"sidepanel_title_cred\":\"确认凭据\",\"sidepanel_title_reset\":\"重置密码\",\"sidepanel_title_archive\":\"已存档会话\",\"update_available\":\"更新可用。<a href=\\\"\\\">重新载入</a>.\",\"reconnect_countdown\":\"连接已断开。{seconds} 秒后重新连接…\",\"reconnect_now\":\"立即尝试\",\"phone_dative\":\"电话\",\"email_dative\":\"电子邮件\",\"enter_confirmation_code_prompt\":\"输入通过{method}发送的验证码：\",\"numeric_confirmation_code_prompt\":\"仅数字\",\"button_confirm\":\"确认\",\"save_attachment\":\"保存\",\"invalid_content\":\"无效内容\",\"user_not_found\":\"未找到\",\"badge_you\":\"你\",\"badge_owner\":\"所有者\",\"menu_item_info\":\"信息\",\"menu_item_clear_messages\":\"清空消息\",\"menu_item_clear_messages_for_all\":\"全部清除\",\"menu_item_delete\":\"删除\",\"menu_item_delete_for_all\":\"全部删除\",\"menu_item_mute\":\"静音\",\"menu_item_unmute\":\"取消静音\",\"menu_item_delete_topic\":\"删除\",\"menu_item_unblock\":\"取消屏蔽\",\"menu_item_block\":\"屏蔽\",\"menu_item_member_delete\":\"移除\",\"menu_item_archive_topic\":\"归档\",\"action_cancel\":\"取消\",\"upload_finishing\":\"正在结束...\",\"no_contacts\":\"你尚无联系人 ：-(\",\"contacts_not_found_short\":\"无联系人匹配 '{query}'\",\"title_group_members\":\"群组成员\",\"title_all_contacts\":\"全部联系人\",\"button_ok\":\"好\",\"button_cancel\":\"取消\",\"download_action\":\"下载\",\"label_file_name\":\"文件名：\",\"label_content_type\":\"内容类型：\",\"label_size\":\"大小：\",\"chat_invitation\":\"你受邀开始新会话。你想怎么做？\",\"chat_invitation_accept\":\"接受\",\"chat_invitation_ignore\":\"忽略\",\"chat_invitation_block\":\"屏蔽\",\"error_invalid_id\":\"无效 ID\",\"group_user_id_prompt\":\"群组或用户 ID\",\"button_subscribe\":\"订阅\",\"topic_name_editing_placeholder\":\"群组自由格式名称\",\"button_create\":\"创建\",\"permission_join\":\"加入 ({val})\",\"permission_read\":\"读取 ({val})\",\"permission_write\":\"写入 ({val})\",\"permission_pres\":\"获取通知 ({val})\",\"permission_admin\":\"批准 ({val})\",\"permission_share\":\"分享 ({val})\",\"permission_delete\":\"删除 ({val})\",\"permission_owner\":\"所有者 ({val})\",\"title_permissions\":\"权限\",\"message_sending\":\"正在发送...\",\"message_sending_failed\":\"发送失败\",\"search_placeholder\":\"列表如 email:alice@example.com, tel:+17025550003...\",\"messaging_disabled_prompt\":\"消息已禁用\",\"new_message_prompt\":\"新消息\",\"file_attachment_too_large\":\"文件大小 {size} 超过 {limit} 限制。\",\"cannot_initiate_file_upload\":\"无法初始化文件上传。\",\"tags_not_found\":\"尚未定义标签。添加一些。\",\"tags_editor_no_tags\":\"添加一些标签\",\"title_manage_tags\":\"管理标签\",\"more_online_members\":\"还有{overflow}个\",\"label_user_contacts\":\"往来：\",\"validate_credential_action\":\"确认\",\"label_legal\":\"法律东西\",\"link_contact_us\":\"联系我们\",\"link_terms_of_service\":\"条款和条件\",\"link_privacy_policy\":\"隐私政策\",\"action_delete_messages\":\"删除所有帖子\",\"action_block_contact\":\"屏蔽联系人\"}}");
 
 /***/ }),
 
@@ -4176,7 +4188,7 @@ var EditAccountView = function (_React$Component) {
         }
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons"
-      }, "exit_to_app"), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      }, "exit_to_app"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "button_logout",
         defaultMessage: "Logout"
       }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -4311,6 +4323,38 @@ var messages = Object(react_intl__WEBPACK_IMPORTED_MODULE_1__["defineMessages"])
   other_user: {
     "id": "label_other_user",
     "defaultMessage": "Other"
+  },
+  delete_messages: {
+    "id": "action_delete_messages",
+    "defaultMessage": "Delete Messages"
+  },
+  delete_messages_warning: {
+    "id": "delete_messages_warning",
+    "defaultMessage": "Are you sure you want to delete all mesages? It cannot be undone."
+  },
+  leave_chat: {
+    "id": "action_leave_chat",
+    "defaultMessage": "Leave Conversation"
+  },
+  leave_chat_warning: {
+    "id": "leave_chat_warning",
+    "defaultMessage": "Are you sure you want to leave this conversation?"
+  },
+  block_contact: {
+    "id": "action_block_contact",
+    "defaultMessage": "Block Contact"
+  },
+  block_contact_warning: {
+    "id": "block_contact_warning",
+    "defaultMessage": "Are you sure you want to block this contact?"
+  },
+  report_chat: {
+    "id": "action_report_chat",
+    "defaultMessage": "Report Conversation"
+  },
+  report_chat_warning: {
+    "id": "report_chat_warning",
+    "defaultMessage": "Are you sure you want to block and report this conversation?"
   }
 });
 
@@ -4366,7 +4410,10 @@ var InfoView = function (_React$Component) {
     _this.handleShowAddMembers = _this.handleShowAddMembers.bind(_assertThisInitialized(_this));
     _this.handleHideAddMembers = _this.handleHideAddMembers.bind(_assertThisInitialized(_this));
     _this.handleMemberUpdateRequest = _this.handleMemberUpdateRequest.bind(_assertThisInitialized(_this));
+    _this.handleDeleteMessages = _this.handleDeleteMessages.bind(_assertThisInitialized(_this));
     _this.handleLeave = _this.handleLeave.bind(_assertThisInitialized(_this));
+    _this.handleBlock = _this.handleBlock.bind(_assertThisInitialized(_this));
+    _this.handleReport = _this.handleReport.bind(_assertThisInitialized(_this));
     _this.handleMemberSelected = _this.handleMemberSelected.bind(_assertThisInitialized(_this));
     _this.handleMoreInfo = _this.handleMoreInfo.bind(_assertThisInitialized(_this));
     _this.handleTagsUpdated = _this.handleTagsUpdated.bind(_assertThisInitialized(_this));
@@ -4700,10 +4747,48 @@ var InfoView = function (_React$Component) {
       });
     }
   }, {
+    key: "handleDeleteMessages",
+    value: function handleDeleteMessages(e) {
+      var _this2 = this;
+
+      e.preventDefault();
+      var formatMessage = this.props.intl.formatMessage;
+      this.props.onShowAlert(formatMessage(messages.delete_messages), formatMessage(messages.delete_messages_warning), function () {
+        _this2.props.onDeleteMessages(_this2.props.topic);
+      }, null, true, null);
+    }
+  }, {
     key: "handleLeave",
     value: function handleLeave(e) {
+      var _this3 = this;
+
       e.preventDefault();
-      this.props.onLeaveTopic(this.props.topic);
+      var formatMessage = this.props.intl.formatMessage;
+      this.props.onShowAlert(formatMessage(messages.leave_chat), formatMessage(messages.leave_chat_warning), function () {
+        _this3.props.onLeaveTopic(_this3.props.topic);
+      }, null, true, null);
+    }
+  }, {
+    key: "handleBlock",
+    value: function handleBlock(e) {
+      var _this4 = this;
+
+      e.preventDefault();
+      var formatMessage = this.props.intl.formatMessage;
+      this.props.onShowAlert(formatMessage(messages.block_contact), formatMessage(messages.block_contact_warning), function () {
+        _this4.props.onBlockTopic(_this4.props.topic);
+      }, null, true, null);
+    }
+  }, {
+    key: "handleReport",
+    value: function handleReport(e) {
+      var _this5 = this;
+
+      e.preventDefault();
+      var formatMessage = this.props.intl.formatMessage;
+      this.props.onShowAlert(formatMessage(messages.report_chat), formatMessage(messages.report_chat_warning), function () {
+        _this5.props.onReportTopic(_this5.props.topic);
+      }, null, true, null);
     }
   }, {
     key: "handleMemberSelected",
@@ -4759,7 +4844,7 @@ var InfoView = function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
+      var _this6 = this;
 
       var formatMessage = this.props.intl.formatMessage;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -4827,8 +4912,8 @@ var InfoView = function (_React$Component) {
       }, function (private_placeholder) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
           placeholder: private_placeholder,
-          value: _this2.state["private"],
-          onFinished: _this2.handlePrivateUpdate
+          value: _this6.state["private"],
+          onFinished: _this6.handlePrivateUpdate
         });
       }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
         avatar: this.state.avatar,
@@ -4856,8 +4941,8 @@ var InfoView = function (_React$Component) {
       }, function (more) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_more_button_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
           title: more,
-          open: _this2.state.moreInfoExpanded,
-          onToggle: _this2.handleMoreInfo
+          open: _this6.state.moreInfoExpanded,
+          onToggle: _this6.handleMoreInfo
         });
       }), this.state.moreInfoExpanded ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "panel-form-column"
@@ -4909,9 +4994,9 @@ var InfoView = function (_React$Component) {
       }, function (tags) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_tag_manager_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
           title: tags,
-          tags: _this2.state.tags,
+          tags: _this6.state.tags,
           activated: false,
-          onSubmit: _this2.handleTagsUpdated
+          onSubmit: _this6.handleTagsUpdated
         });
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "hr"
@@ -4923,46 +5008,25 @@ var InfoView = function (_React$Component) {
         onClick: this.handleDeleteMessages
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons"
-      }, "delete_outline"), " &npbs;", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-        id: "action_delete_messages",
-        defaultMessage: "Delete Messages"
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+      }, "delete_outline"), " \xA0", formatMessage(messages.delete_messages)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         href: "#",
         className: "red flat-button",
         onClick: this.handleLeave
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons"
-      }, "exit_to_app"), " &npbs;", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-        id: "action_leave_chat",
-        defaultMessage: "Leave Conversation"
-      })), this.state.groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "#",
-        className: "red flat-button",
-        onClick: this.handleReport
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-        className: "material-icons"
-      }, "report"), " &npbs;", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-        id: "action_report_group",
-        defaultMessage: "Report Group"
-      })) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+      }, "exit_to_app"), " \xA0", formatMessage(messages.leave_chat)), !this.state.groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         href: "#",
         className: "red flat-button",
         onClick: this.handleBlock
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons"
-      }, "block"), " &npbs;", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-        id: "action_block_contact",
-        defaultMessage: "Block Contact"
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+      }, "block"), " \xA0", formatMessage(messages.block_contact)) : null, !this.state.owner ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         href: "#",
         className: "red flat-button",
         onClick: this.handleReport
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons"
-      }, "report"), " &npbs;", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-        id: "action_report_contact",
-        defaultMessage: "Report Contact"
-      })))), this.state.groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, "report"), " \xA0", formatMessage(messages.report_chat)) : null), this.state.groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "hr"
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "panel-form-column"
@@ -4989,16 +5053,16 @@ var InfoView = function (_React$Component) {
         defaultMessage: "No members"
       }, function (no_members) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_contact_list_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
-          contacts: _this2.state.contactList,
-          myUserId: _this2.props.myUserId,
+          contacts: _this6.state.contactList,
+          myUserId: _this6.props.myUserId,
           emptyListMessage: no_members,
-          topicSelected: _this2.state.selectedContact,
+          topicSelected: _this6.state.selectedContact,
           showOnline: false,
           showUnread: false,
           showMode: true,
           noScroll: true,
-          onTopicSelected: _this2.handleMemberSelected,
-          showContextMenu: _this2.state.admin ? _this2.handleContextMenu : false
+          onTopicSelected: _this6.handleMemberSelected,
+          showContextMenu: _this6.state.admin ? _this6.handleContextMenu : false
         });
       }))) : null));
     }
@@ -6773,20 +6837,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var firebase_messaging__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(firebase_messaging__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! tinode-sdk */ "../tinode-js/umd/tinode.prod.js");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _widgets_context_menu_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/context-menu.jsx */ "./src/widgets/context-menu.jsx");
-/* harmony import */ var _info_view_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./info-view.jsx */ "./src/views/info-view.jsx");
-/* harmony import */ var _messages_view_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./messages-view.jsx */ "./src/views/messages-view.jsx");
-/* harmony import */ var _sidepanel_view_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./sidepanel-view.jsx */ "./src/views/sidepanel-view.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_host_name_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../lib/host-name.js */ "./src/lib/host-name.js");
-/* harmony import */ var _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../lib/local-storage.js */ "./src/lib/local-storage.js");
-/* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
-/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var _widgets_alert_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/alert.jsx */ "./src/widgets/alert.jsx");
+/* harmony import */ var _widgets_context_menu_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../widgets/context-menu.jsx */ "./src/widgets/context-menu.jsx");
+/* harmony import */ var _info_view_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./info-view.jsx */ "./src/views/info-view.jsx");
+/* harmony import */ var _messages_view_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./messages-view.jsx */ "./src/views/messages-view.jsx");
+/* harmony import */ var _sidepanel_view_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./sidepanel-view.jsx */ "./src/views/sidepanel-view.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _lib_host_name_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../lib/host-name.js */ "./src/lib/host-name.js");
+/* harmony import */ var _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../lib/local-storage.js */ "./src/lib/local-storage.js");
+/* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
+/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -6803,6 +6866,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
 
 
 
@@ -6896,11 +6960,14 @@ var TinodeWeb = function (_React$Component) {
     _this.handleChangePermissions = _this.handleChangePermissions.bind(_assertThisInitialized(_this));
     _this.handleTagsUpdated = _this.handleTagsUpdated.bind(_assertThisInitialized(_this));
     _this.handleLogout = _this.handleLogout.bind(_assertThisInitialized(_this));
+    _this.handleDeleteMessagesRequest = _this.handleDeleteMessagesRequest.bind(_assertThisInitialized(_this));
     _this.handleLeaveUnsubRequest = _this.handleLeaveUnsubRequest.bind(_assertThisInitialized(_this));
-    _this.handleDialogCancel = _this.handleDialogCancel.bind(_assertThisInitialized(_this));
+    _this.handleBlockTopicRequest = _this.handleBlockTopicRequest.bind(_assertThisInitialized(_this));
+    _this.handleReportTopic = _this.handleReportTopic.bind(_assertThisInitialized(_this));
     _this.handleShowContextMenu = _this.handleShowContextMenu.bind(_assertThisInitialized(_this));
     _this.defaultTopicContextMenu = _this.defaultTopicContextMenu.bind(_assertThisInitialized(_this));
     _this.handleHideContextMenu = _this.handleHideContextMenu.bind(_assertThisInitialized(_this));
+    _this.handleShowAlert = _this.handleShowAlert.bind(_assertThisInitialized(_this));
     _this.handleShowInfoView = _this.handleShowInfoView.bind(_assertThisInitialized(_this));
     _this.handleHideInfoView = _this.handleHideInfoView.bind(_assertThisInitialized(_this));
     _this.handleMemberUpdateRequest = _this.handleMemberUpdateRequest.bind(_assertThisInitialized(_this));
@@ -6914,19 +6981,17 @@ var TinodeWeb = function (_React$Component) {
   _createClass(TinodeWeb, [{
     key: "getBlankState",
     value: function getBlankState() {
-      var _ref;
-
-      var settings = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_13__["default"].getObject('settings') || {};
-      return _ref = {
+      var settings = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__["default"].getObject('settings') || {};
+      return {
         connected: false,
         ready: false,
         transport: settings.transport || null,
-        serverAddress: settings.serverAddress || Object(_lib_host_name_js__WEBPACK_IMPORTED_MODULE_12__["detectServerAddress"])(),
+        serverAddress: settings.serverAddress || Object(_lib_host_name_js__WEBPACK_IMPORTED_MODULE_13__["detectServerAddress"])(),
         serverVersion: "no connection",
         messageSounds: !settings.messageSoundsOff,
         desktopAlerts: settings.desktopAlerts,
-        desktopAlertsEnabled: (Object(_lib_host_name_js__WEBPACK_IMPORTED_MODULE_12__["isSecureConnection"])() || Object(_lib_host_name_js__WEBPACK_IMPORTED_MODULE_12__["isLocalHost"])()) && typeof firebase_app__WEBPACK_IMPORTED_MODULE_3__ != 'undefined' && typeof navigator != 'undefined' && typeof FIREBASE_INIT != 'undefined',
-        firebaseToken: _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_13__["default"].getObject('firebase-token'),
+        desktopAlertsEnabled: (Object(_lib_host_name_js__WEBPACK_IMPORTED_MODULE_13__["isSecureConnection"])() || Object(_lib_host_name_js__WEBPACK_IMPORTED_MODULE_13__["isLocalHost"])()) && typeof firebase_app__WEBPACK_IMPORTED_MODULE_3__ != 'undefined' && typeof navigator != 'undefined' && typeof FIREBASE_INIT != 'undefined',
+        firebaseToken: _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__["default"].getObject('firebase-token'),
         errorText: '',
         errorLevel: null,
         errorAction: undefined,
@@ -6934,8 +6999,6 @@ var TinodeWeb = function (_React$Component) {
         sidePanelSelected: 'login',
         sidePanelTitle: null,
         sidePanelAvatar: null,
-        dialogSelected: null,
-        contextMenuVisible: false,
         login: '',
         password: '',
         myUserId: null,
@@ -6945,10 +7008,22 @@ var TinodeWeb = function (_React$Component) {
         topicSelectedAcs: null,
         newTopicParams: null,
         loginDisabled: false,
-        displayMobile: window.innerWidth <= _config_js__WEBPACK_IMPORTED_MODULE_10__["MEDIA_BREAKPOINT"],
+        displayMobile: window.innerWidth <= _config_js__WEBPACK_IMPORTED_MODULE_11__["MEDIA_BREAKPOINT"],
         showInfoPanel: false,
-        mobilePanel: 'sidepanel'
-      }, _defineProperty(_ref, "contextMenuVisible", false), _defineProperty(_ref, "contextMenuBounds", null), _defineProperty(_ref, "contextMenuClickAt", null), _defineProperty(_ref, "contextMenuParams", null), _defineProperty(_ref, "contextMenuItems", []), _defineProperty(_ref, "chatList", []), _defineProperty(_ref, "searchResults", []), _defineProperty(_ref, "searchableContacts", []), _defineProperty(_ref, "credMethod", undefined), _defineProperty(_ref, "credCode", undefined), _ref;
+        mobilePanel: 'sidepanel',
+        contextMenuVisible: false,
+        contextMenuBounds: null,
+        contextMenuClickAt: null,
+        contextMenuParams: null,
+        contextMenuItems: [],
+        alertVisible: false,
+        alertParams: {},
+        chatList: [],
+        searchResults: [],
+        searchableContacts: [],
+        credMethod: undefined,
+        credCode: undefined
+      };
     }
   }, {
     key: "componentDidMount",
@@ -6975,7 +7050,7 @@ var TinodeWeb = function (_React$Component) {
 
       if (this.state.desktopAlertsEnabled) {
         try {
-          this.fbPush = firebase_app__WEBPACK_IMPORTED_MODULE_3__["initializeApp"](FIREBASE_INIT, _config_js__WEBPACK_IMPORTED_MODULE_10__["APP_NAME"]).messaging();
+          this.fbPush = firebase_app__WEBPACK_IMPORTED_MODULE_3__["initializeApp"](FIREBASE_INIT, _config_js__WEBPACK_IMPORTED_MODULE_11__["APP_NAME"]).messaging();
           this.fbPush.usePublicVapidKey(FIREBASE_INIT.messagingVapidKey);
           navigator.serviceWorker.register('/service-worker.js').then(function (reg) {
             _this2.checkForAppUpdate(reg);
@@ -7003,8 +7078,8 @@ var TinodeWeb = function (_React$Component) {
         }
       }
 
-      var token = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_13__["default"].getObject('keep-logged-in') ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_13__["default"].getObject('auth-token') : undefined;
-      var parsedNav = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].parseUrlHash(window.location.hash);
+      var token = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__["default"].getObject('keep-logged-in') ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__["default"].getObject('auth-token') : undefined;
+      var parsedNav = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].parseUrlHash(window.location.hash);
 
       if (token) {
         token.expires = new Date(token.expires);
@@ -7015,9 +7090,9 @@ var TinodeWeb = function (_React$Component) {
         delete parsedNav.params.info;
         delete parsedNav.params.tab;
         parsedNav.path[0] = '';
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].composeUrlHash(parsedNav.path, parsedNav.params));
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].composeUrlHash(parsedNav.path, parsedNav.params));
       } else if (!parsedNav.params.token) {
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].navigateTo('');
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo('');
       }
 
       this.readTimer = null;
@@ -7034,7 +7109,7 @@ var TinodeWeb = function (_React$Component) {
   }, {
     key: "handleResize",
     value: function handleResize() {
-      var mobile = document.documentElement.clientWidth <= _config_js__WEBPACK_IMPORTED_MODULE_10__["MEDIA_BREAKPOINT"];
+      var mobile = document.documentElement.clientWidth <= _config_js__WEBPACK_IMPORTED_MODULE_11__["MEDIA_BREAKPOINT"];
       this.setState({
         viewportWidth: document.documentElement.clientWidth,
         viewportHeight: document.documentElement.clientHeight
@@ -7066,7 +7141,7 @@ var TinodeWeb = function (_React$Component) {
   }, {
     key: "handleHashRoute",
     value: function handleHashRoute() {
-      var hash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].parseUrlHash(window.location.hash);
+      var hash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].parseUrlHash(window.location.hash);
 
       if (hash.path && hash.path.length > 0) {
         if (['register', 'settings', 'edit', 'cred', 'reset', 'newtpk', 'archive', 'contacts', ''].includes(hash.path[0])) {
@@ -7129,7 +7204,7 @@ var TinodeWeb = function (_React$Component) {
       this.readTimerCallback = callback;
 
       if (visible && callback) {
-        this.readTimer = setTimeout(callback, _config_js__WEBPACK_IMPORTED_MODULE_10__["READ_DELAY"]);
+        this.readTimer = setTimeout(callback, _config_js__WEBPACK_IMPORTED_MODULE_11__["READ_DELAY"]);
       } else {
         this.readTimer = null;
       }
@@ -7218,7 +7293,7 @@ var TinodeWeb = function (_React$Component) {
       var count = sec / 1000;
       count = count | count;
       this.reconnectCountdown = setInterval(function () {
-        var timeLeft = count > 99 ? Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_15__["secondsToTime"])(count) : count;
+        var timeLeft = count > 99 ? Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_16__["secondsToTime"])(count) : count;
 
         _this5.handleError(formatHTMLMessage(messages.reconnect_countdown, {
           seconds: timeLeft
@@ -7238,7 +7313,6 @@ var TinodeWeb = function (_React$Component) {
         connected: false,
         ready: false,
         topicSelectedOnline: false,
-        dialogSelected: null,
         errorText: err && err.message ? err.message : "Disconnected",
         errorLevel: err && err.message ? 'err' : 'warn',
         loginDisabled: false,
@@ -7252,7 +7326,7 @@ var TinodeWeb = function (_React$Component) {
       var _this6 = this;
 
       if (this.tinode.isAuthenticated()) {
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].navigateTo('');
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo('');
         return;
       }
 
@@ -7290,10 +7364,10 @@ var TinodeWeb = function (_React$Component) {
           _this6.handleError(err.message, 'err');
 
           localStorage.removeItem('auth-token');
-          _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].navigateTo('');
+          _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo('');
         });
       } else {
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].navigateTo('');
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo('');
         this.setState({
           loginDisabled: false
         });
@@ -7302,10 +7376,10 @@ var TinodeWeb = function (_React$Component) {
   }, {
     key: "handleCredentialsRequest",
     value: function handleCredentialsRequest(params) {
-      var parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].parseUrlHash(window.location.hash);
+      var parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].parseUrlHash(window.location.hash);
       parsed.path[0] = 'cred';
       parsed.params['method'] = params.cred[0];
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].composeUrlHash(parsed.path, parsed.params));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].composeUrlHash(parsed.path, parsed.params));
     }
   }, {
     key: "handleLoginSuccessful",
@@ -7314,8 +7388,8 @@ var TinodeWeb = function (_React$Component) {
 
       this.handleError('', null);
 
-      if (_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_13__["default"].getObject('keep-logged-in')) {
-        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_13__["default"].setObject('auth-token', this.tinode.getAuthToken());
+      if (_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__["default"].getObject('keep-logged-in')) {
+        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__["default"].setObject('auth-token', this.tinode.getAuthToken());
       }
 
       var me = this.tinode.getMeTopic();
@@ -7333,9 +7407,9 @@ var TinodeWeb = function (_React$Component) {
 
         _this7.handleError(err.message, 'err');
 
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].navigateTo('');
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo('');
       });
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].setUrlSidePanel(window.location.hash, 'contacts'));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].setUrlSidePanel(window.location.hash, 'contacts'));
     }
   }, {
     key: "tnMeMetaDesc",
@@ -7343,7 +7417,7 @@ var TinodeWeb = function (_React$Component) {
       if (desc && desc["public"]) {
         this.setState({
           sidePanelTitle: desc["public"].fn,
-          sidePanelAvatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_11__["makeImageUrl"])(desc["public"].photo)
+          sidePanelAvatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_12__["makeImageUrl"])(desc["public"].photo)
         });
       }
     }
@@ -7434,7 +7508,7 @@ var TinodeWeb = function (_React$Component) {
         this.receivedTimer = setTimeout(function () {
           _this9.receivedTimer = undefined;
           topic.noteRecv(data.seq);
-        }, _config_js__WEBPACK_IMPORTED_MODULE_10__["RECEIVED_DELAY"]);
+        }, _config_js__WEBPACK_IMPORTED_MODULE_11__["RECEIVED_DELAY"]);
       }
     }
   }, {
@@ -7503,7 +7577,7 @@ var TinodeWeb = function (_React$Component) {
             topicSelectedOnline: online,
             topicSelectedAcs: acs
           });
-          _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].setUrlTopic('', topicName));
+          _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].setUrlTopic('', topicName));
         }
       } else {
         this.setState({
@@ -7514,7 +7588,7 @@ var TinodeWeb = function (_React$Component) {
           topicSelectedAcs: null,
           showInfoPanel: false
         });
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].setUrlTopic('', null));
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].setUrlTopic('', null));
       }
     }
   }, {
@@ -7523,7 +7597,7 @@ var TinodeWeb = function (_React$Component) {
       this.setState({
         mobilePanel: 'sidepanel'
       });
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].setUrlTopic(window.location.hash, null));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].setUrlTopic(window.location.hash, null));
     }
   }, {
     key: "handleSendMessage",
@@ -7616,7 +7690,7 @@ var TinodeWeb = function (_React$Component) {
   }, {
     key: "handleNewAccount",
     value: function handleNewAccount() {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].setUrlSidePanel(window.location.hash, 'register'));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].setUrlSidePanel(window.location.hash, 'register'));
     }
   }, {
     key: "handleNewAccountRequest",
@@ -7682,7 +7756,7 @@ var TinodeWeb = function (_React$Component) {
   }, {
     key: "handleSettings",
     value: function handleSettings() {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].setUrlSidePanel(window.location.hash, this.state.myUserId ? 'edit' : 'settings'));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].setUrlSidePanel(window.location.hash, this.state.myUserId ? 'edit' : 'settings'));
     }
   }, {
     key: "handleGlobalSettings",
@@ -7702,16 +7776,16 @@ var TinodeWeb = function (_React$Component) {
         serverAddress: serverAddress,
         transport: transport
       });
-      _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_13__["default"].setObject('settings', {
+      _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__["default"].setObject('settings', {
         serverAddress: serverAddress,
         transport: transport
       });
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].setUrlSidePanel(window.location.hash, ''));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].setUrlSidePanel(window.location.hash, ''));
     }
   }, {
     key: "handleShowArchive",
     value: function handleShowArchive() {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].setUrlSidePanel(window.location.hash, this.state.myUserId ? 'archive' : ''));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].setUrlSidePanel(window.location.hash, this.state.myUserId ? 'archive' : ''));
     }
   }, {
     key: "initDesktopAlerts",
@@ -7740,7 +7814,7 @@ var TinodeWeb = function (_React$Component) {
               firebaseToken: null
             });
 
-            _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_13__["default"].updateObject('settings', {
+            _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__["default"].updateObject('settings', {
               desktopAlerts: false
             });
             console.log("Failed to get permission to notify.", err);
@@ -7749,7 +7823,7 @@ var TinodeWeb = function (_React$Component) {
           this.setState({
             desktopAlerts: true
           });
-          _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_13__["default"].updateObject('settings', {
+          _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__["default"].updateObject('settings', {
             desktopAlerts: true
           });
         }
@@ -7757,7 +7831,7 @@ var TinodeWeb = function (_React$Component) {
         this.fbPush.deleteToken(this.state.firebaseToken)["catch"](function (err) {
           console.log("Unable to delete token.", err);
         })["finally"](function () {
-          _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_13__["default"].updateObject('settings', {
+          _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__["default"].updateObject('settings', {
             desktopAlerts: false
           });
           localStorage.removeItem('firebase-token');
@@ -7772,7 +7846,7 @@ var TinodeWeb = function (_React$Component) {
           desktopAlerts: false,
           firebaseToken: null
         });
-        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_13__["default"].updateObject('settings', {
+        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__["default"].updateObject('settings', {
           desktopAlerts: false
         });
       }
@@ -7786,7 +7860,7 @@ var TinodeWeb = function (_React$Component) {
         if (refreshedToken != _this19.state.firebaseToken) {
           _this19.tinode.setDeviceToken(refreshedToken, true);
 
-          _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_13__["default"].setObject('firebase-token', refreshedToken);
+          _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__["default"].setObject('firebase-token', refreshedToken);
         }
 
         _this19.setState({
@@ -7794,7 +7868,7 @@ var TinodeWeb = function (_React$Component) {
           desktopAlerts: true
         });
 
-        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_13__["default"].updateObject('settings', {
+        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__["default"].updateObject('settings', {
           desktopAlerts: true
         });
       })["catch"](function (err) {
@@ -7809,7 +7883,7 @@ var TinodeWeb = function (_React$Component) {
       this.setState({
         messageSounds: enabled
       });
-      _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_13__["default"].updateObject('settings', {
+      _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__["default"].updateObject('settings', {
         messageSoundsOff: !enabled
       });
     }
@@ -7848,7 +7922,7 @@ var TinodeWeb = function (_React$Component) {
   }, {
     key: "handleSidepanelCancel",
     value: function handleSidepanelCancel() {
-      var parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].parseUrlHash(window.location.hash);
+      var parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].parseUrlHash(window.location.hash);
       parsed.path[0] = this.state.myUserId ? 'contacts' : '';
 
       if (parsed.params) {
@@ -7857,7 +7931,7 @@ var TinodeWeb = function (_React$Component) {
         delete parsed.params.tab;
       }
 
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].composeUrlHash(parsed.path, parsed.params));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].composeUrlHash(parsed.path, parsed.params));
       this.setState({
         errorText: '',
         errorLevel: null
@@ -7866,7 +7940,7 @@ var TinodeWeb = function (_React$Component) {
   }, {
     key: "handleNewTopic",
     value: function handleNewTopic() {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].setUrlSidePanel(window.location.hash, 'newtpk'));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].setUrlSidePanel(window.location.hash, 'newtpk'));
     }
   }, {
     key: "handleNewTopicRequest",
@@ -7880,11 +7954,11 @@ var TinodeWeb = function (_React$Component) {
 
       if (peerName) {
         params.sub = {
-          mode: _config_js__WEBPACK_IMPORTED_MODULE_10__["DEFAULT_ACCESS_MODE"]
+          mode: _config_js__WEBPACK_IMPORTED_MODULE_11__["DEFAULT_ACCESS_MODE"]
         };
         params.desc = {
           defacs: {
-            auth: _config_js__WEBPACK_IMPORTED_MODULE_10__["DEFAULT_ACCESS_MODE"]
+            auth: _config_js__WEBPACK_IMPORTED_MODULE_11__["DEFAULT_ACCESS_MODE"]
           }
         };
       } else {
@@ -7910,7 +7984,7 @@ var TinodeWeb = function (_React$Component) {
         this.setState({
           topicSelected: newName
         }, function () {
-          _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].setUrlTopic('', newName));
+          _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].setUrlTopic('', newName));
         });
       }
     }
@@ -7991,7 +8065,7 @@ var TinodeWeb = function (_React$Component) {
   }, {
     key: "handleLogout",
     value: function handleLogout() {
-      Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_16__["updateFavicon"])(0);
+      Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_17__["updateFavicon"])(0);
       localStorage.removeItem('auth-token');
       localStorage.removeItem('firebase-token');
       localStorage.removeItem('settings');
@@ -8009,11 +8083,11 @@ var TinodeWeb = function (_React$Component) {
       this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport);
       this.tinode.onConnect = this.handleConnected;
       this.tinode.onDisconnect = this.handleDisconnect;
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].navigateTo('');
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo('');
     }
   }, {
-    key: "handleLeaveUnsubRequest",
-    value: function handleLeaveUnsubRequest(topicName) {
+    key: "handleDeleteMessagesRequest",
+    value: function handleDeleteMessagesRequest(topicName) {
       var _this26 = this;
 
       var topic = this.tinode.getTopic(topicName);
@@ -8022,17 +8096,63 @@ var TinodeWeb = function (_React$Component) {
         return;
       }
 
-      topic.leave(true).then(function (ctrl) {
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].setUrlTopic(window.location.hash, ''));
-      })["catch"](function (err) {
+      topic.delMessagesAll(true)["catch"](function (err) {
         _this26.handleError(err.message, 'err');
       });
     }
   }, {
-    key: "handleDialogCancel",
-    value: function handleDialogCancel() {
-      this.setState({
-        dialogSelected: null
+    key: "handleLeaveUnsubRequest",
+    value: function handleLeaveUnsubRequest(topicName) {
+      var _this27 = this;
+
+      var topic = this.tinode.getTopic(topicName);
+
+      if (!topic) {
+        return;
+      }
+
+      topic.leave(true).then(function (ctrl) {
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].setUrlTopic(window.location.hash, ''));
+      })["catch"](function (err) {
+        _this27.handleError(err.message, 'err');
+      });
+    }
+  }, {
+    key: "handleBlockTopicRequest",
+    value: function handleBlockTopicRequest(topicName) {
+      var _this28 = this;
+
+      var topic = this.tinode.getTopic(topicName);
+
+      if (!topic) {
+        return;
+      }
+
+      topic.updateMode(null, '-JP').then(function (ctrl) {
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].setUrlTopic(window.location.hash, ''));
+      })["catch"](function (err) {
+        _this28.handleError(err.message, 'err');
+      });
+    }
+  }, {
+    key: "handleReportTopic",
+    value: function handleReportTopic(topicName) {
+      var _this29 = this;
+
+      var topic = this.tinode.getTopic(topicName);
+
+      if (!topic) {
+        return;
+      }
+
+      this.tinode.publish(tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default.a.TOPIC_SYS, tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default.a.Drafty.attachJSON(null, {
+        'action': 'report',
+        'target': topicName
+      }));
+      topic.updateMode(null, '-JP').then(function (ctrl) {
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].setUrlTopic(window.location.hash, ''));
+      })["catch"](function (err) {
+        _this29.handleError(err.message, 'err');
       });
     }
   }, {
@@ -8094,20 +8214,35 @@ var TinodeWeb = function (_React$Component) {
   }, {
     key: "handleContextMenuAction",
     value: function handleContextMenuAction(action, promise, params) {
-      var _this27 = this;
+      var _this30 = this;
 
       if (action == 'topic_archive') {
         if (promise && params.topicName && params.topicName == this.state.topicSelected) {
           promise.then(function () {
-            _this27.handleTopicSelected(null);
+            _this30.handleTopicSelected(null);
           });
         }
       }
     }
   }, {
+    key: "handleShowAlert",
+    value: function handleShowAlert(title, content, onConfirm, confirm, onReject, reject) {
+      this.setState({
+        alertVisible: true,
+        alertParams: {
+          title: title,
+          content: content,
+          onConfirm: onConfirm,
+          confirm: confirm,
+          onReject: onReject,
+          reject: reject
+        }
+      });
+    }
+  }, {
     key: "handleShowInfoView",
     value: function handleShowInfoView() {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].addUrlParam(window.location.hash, 'info', true));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].addUrlParam(window.location.hash, 'info', true));
       this.setState({
         showInfoPanel: true
       });
@@ -8115,7 +8250,7 @@ var TinodeWeb = function (_React$Component) {
   }, {
     key: "handleHideInfoView",
     value: function handleHideInfoView() {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].removeUrlParam(window.location.hash, 'info'));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].removeUrlParam(window.location.hash, 'info'));
       this.setState({
         showInfoPanel: false
       });
@@ -8123,7 +8258,7 @@ var TinodeWeb = function (_React$Component) {
   }, {
     key: "handleMemberUpdateRequest",
     value: function handleMemberUpdateRequest(topicName, added, removed) {
-      var _this28 = this;
+      var _this31 = this;
 
       if (!topicName) {
         return;
@@ -8138,7 +8273,7 @@ var TinodeWeb = function (_React$Component) {
       if (added && added.length > 0) {
         added.map(function (uid) {
           topic.invite(uid, null)["catch"](function (err) {
-            _this28.handleError(err.message, 'err');
+            _this31.handleError(err.message, 'err');
           });
         });
       }
@@ -8146,7 +8281,7 @@ var TinodeWeb = function (_React$Component) {
       if (removed && removed.length > 0) {
         removed.map(function (uid) {
           topic.delSubscription(uid)["catch"](function (err) {
-            _this28.handleError(err.message, 'err');
+            _this31.handleError(err.message, 'err');
           });
         });
       }
@@ -8154,7 +8289,7 @@ var TinodeWeb = function (_React$Component) {
   }, {
     key: "handleValidateCredentialsRequest",
     value: function handleValidateCredentialsRequest(cred, code) {
-      var _this29 = this;
+      var _this32 = this;
 
       if (this.tinode.isAuthenticated()) {
         var me = this.tinode.getMeTopic();
@@ -8164,9 +8299,9 @@ var TinodeWeb = function (_React$Component) {
             resp: code
           }
         }).then(function () {
-          _lib_navigation_js__WEBPACK_IMPORTED_MODULE_14__["default"].navigateTo('');
+          _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo('');
         })["catch"](function (err) {
-          _this29.handleError(err.message, 'err');
+          _this32.handleError(err.message, 'err');
         });
       } else {
         this.setState({
@@ -8182,41 +8317,41 @@ var TinodeWeb = function (_React$Component) {
   }, {
     key: "handlePasswordResetRequest",
     value: function handlePasswordResetRequest(method, value) {
-      var _this30 = this;
+      var _this33 = this;
 
       this.tinode.connect().then(function () {
-        return _this30.tinode.requestResetAuthSecret('basic', method, value);
+        return _this33.tinode.requestResetAuthSecret('basic', method, value);
       })["catch"](function (err) {
-        _this30.handleError(err.message, 'err');
+        _this33.handleError(err.message, 'err');
       });
     }
   }, {
     key: "handleResetPassword",
     value: function handleResetPassword(scheme, newPassword, token) {
-      var _this31 = this;
+      var _this34 = this;
 
-      token = Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_11__["base64ReEncode"])(token);
+      token = Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_12__["base64ReEncode"])(token);
 
       if (!token) {
         this.handleError("Invalid security token", 'err');
       } else {
         this.tinode.connect().then(function () {
-          return _this31.tinode.updateAccountBasic(null, null, newPassword, {
+          return _this34.tinode.updateAccountBasic(null, null, newPassword, {
             token: token
           });
         })["catch"](function (err) {
-          _this31.handleError(err.message, 'err');
+          _this34.handleError(err.message, 'err');
         });
       }
     }
   }, {
     key: "render",
     value: function render() {
-      var _this32 = this;
+      var _this35 = this;
 
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "app-container"
-      }, this.state.contextMenuVisible ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_context_menu_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
+      }, this.state.contextMenuVisible ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_context_menu_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
         tinode: this.tinode,
         bounds: this.state.contextMenuBounds,
         clickAt: this.state.contextMenuClickAt,
@@ -8225,12 +8360,30 @@ var TinodeWeb = function (_React$Component) {
         hide: this.handleHideContextMenu,
         onAction: this.handleContextMenuAction,
         onTopicRemoved: function onTopicRemoved(topicName) {
-          if (topicName == _this32.state.topicSelected) {
-            _this32.handleTopicSelected(null);
+          if (topicName == _this35.state.topicSelected) {
+            _this35.handleTopicSelected(null);
           }
         },
         onError: this.handleError
-      }) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_sidepanel_view_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
+      }) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_alert_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
+        visible: this.state.alertVisible,
+        title: this.state.alertParams.title,
+        content: this.state.alertParams.content,
+        onReject: this.state.alertParams.onReject ? function () {
+          _this35.setState({
+            alertVisible: false
+          });
+        } : null,
+        reject: this.state.alertParams.reject,
+        onConfirm: function onConfirm() {
+          _this35.setState({
+            alertVisible: false
+          });
+
+          _this35.state.alertParams.onConfirm();
+        },
+        confirm: this.state.alertParams.confirm
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_sidepanel_view_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
         tinode: this.tinode,
         connected: this.state.connected,
         displayMobile: this.state.displayMobile,
@@ -8280,7 +8433,7 @@ var TinodeWeb = function (_React$Component) {
         searchResults: this.state.searchResults,
         onSearchContacts: this.handleSearchContacts,
         showContextMenu: this.handleShowContextMenu
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_messages_view_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_messages_view_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
         tinode: this.tinode,
         connected: this.state.connected,
         ready: this.state.ready,
@@ -8308,7 +8461,7 @@ var TinodeWeb = function (_React$Component) {
         onChangePermissions: this.handleChangePermissions,
         onNewChat: this.handleNewChatInvitation,
         sendMessage: this.handleSendMessage
-      }), this.state.showInfoPanel ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_info_view_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
+      }), this.state.showInfoPanel ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_info_view_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
         tinode: this.tinode,
         connected: this.state.connected,
         displayMobile: this.state.displayMobile,
@@ -8321,9 +8474,13 @@ var TinodeWeb = function (_React$Component) {
         errorActionText: this.state.errorActionText,
         onTopicDescUpdate: this.handleTopicUpdateRequest,
         onCancel: this.handleHideInfoView,
+        onShowAlert: this.handleShowAlert,
         onChangePermissions: this.handleChangePermissions,
         onMemberUpdateRequest: this.handleMemberUpdateRequest,
+        onDeleteMessages: this.handleDeleteMessagesRequest,
         onLeaveTopic: this.handleLeaveUnsubRequest,
+        onBlockTopic: this.handleBlockTopicRequest,
+        onReportTopic: this.handleReportTopic,
         onAddMember: this.handleManageGroupMembers,
         onTopicTagsUpdate: this.handleTagsUpdated,
         onInitFind: this.tnInitFind,
@@ -8334,7 +8491,7 @@ var TinodeWeb = function (_React$Component) {
   }], [{
     key: "tnSetup",
     value: function tnSetup(serverAddress, transport) {
-      var tinode = new tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default.a(_config_js__WEBPACK_IMPORTED_MODULE_10__["APP_NAME"], serverAddress, _config_js__WEBPACK_IMPORTED_MODULE_10__["API_KEY"], transport, Object(_lib_host_name_js__WEBPACK_IMPORTED_MODULE_12__["isSecureConnection"])());
+      var tinode = new tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default.a(_config_js__WEBPACK_IMPORTED_MODULE_11__["APP_NAME"], serverAddress, _config_js__WEBPACK_IMPORTED_MODULE_11__["API_KEY"], transport, Object(_lib_host_name_js__WEBPACK_IMPORTED_MODULE_13__["isSecureConnection"])());
       tinode.enableLogging(true, true);
       return tinode;
     }
@@ -8669,6 +8826,85 @@ var Invitation = function (_React$PureComponent) {
   }]);
 
   return Invitation;
+}(react__WEBPACK_IMPORTED_MODULE_0___default.a.PureComponent);
+
+
+;
+
+/***/ }),
+
+/***/ "./src/widgets/alert.jsx":
+/*!*******************************!*\
+  !*** ./src/widgets/alert.jsx ***!
+  \*******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Alert; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+
+var Alert = function (_React$PureComponent) {
+  _inherits(Alert, _React$PureComponent);
+
+  function Alert() {
+    _classCallCheck(this, Alert);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(Alert).apply(this, arguments));
+  }
+
+  _createClass(Alert, [{
+    key: "render",
+    value: function render() {
+      return this.props.visible ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "alert-container"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "alert"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "title"
+      }, this.props.title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "content"
+      }, this.props.content), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "dialog-buttons"
+      }, this.props.onReject ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "outline",
+        onClick: this.props.onReject
+      }, this.props.reject || react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+        id: "button_cancel"
+      })) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "blue",
+        onClick: this.props.onConfirm
+      }, this.props.confirm || react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+        id: "button_ok"
+      }))))) : null;
+    }
+  }]);
+
+  return Alert;
 }(react__WEBPACK_IMPORTED_MODULE_0___default.a.PureComponent);
 
 
@@ -9453,6 +9689,7 @@ var ChipInput = function (_React$Component) {
 
       var chips = [];
       var count = 0;
+      var staticMembers = this.props.staticMembers || [];
       this.state.sortedChips.map(function (item) {
         chips.push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chip_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
           onCancel: _this2.handleChipCancel,
@@ -9460,7 +9697,7 @@ var ChipInput = function (_React$Component) {
           title: item["public"] ? item["public"].fn : undefined,
           noAvatar: _this2.props.avatarDisabled,
           topic: item.user,
-          required: _this2.props.staticMembers.includes(item.user),
+          required: staticMembers.includes(item.user),
           invalid: item.invalid,
           index: count,
           key: item.user
@@ -9507,7 +9744,7 @@ var ChipInput = function (_React$Component) {
       var required = [];
       var normal = [];
       chips.map(function (item) {
-        if (keep.includes(item.user)) {
+        if (keep && keep.includes(item.user)) {
           required.push(item);
         } else {
           normal.push(item);
@@ -10415,27 +10652,7 @@ var ContextMenu = function (_React$Component) {
         return;
       }
 
-      var am, user;
-
-      if (params.user) {
-        user = topic.subscriber(params.user);
-
-        if (!user) {
-          console.log("Subscriber not found", params.topicName + "[" + params.user + "]");
-          return;
-        }
-
-        am = user.acs.updateGiven(mode).getGiven();
-      } else {
-        am = topic.getAccessMode().updateWant(mode).getWant();
-      }
-
-      var result = topic.setMeta({
-        sub: {
-          user: params.user,
-          mode: am
-        }
-      });
+      var result = topic.updateMode(params.user, mode);
 
       if (errorHandler) {
         result = result["catch"](function (err) {
@@ -10573,7 +10790,7 @@ var ErrorPanel = function (_React$PureComponent) {
         info: 'info'
       };
       var level = icons[this.props.level] || '';
-      var className = 'alert-box ' + level;
+      var className = 'info-box ' + level;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: className
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -12459,15 +12676,15 @@ var PermissionsEditor = function (_React$Component) {
       }, this.props.compare ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, this.props.modeTitle), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, this.props.compareTitle))) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, items)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "dialog-buttons"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "outline",
+        onClick: this.handleCancel
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+        id: "button_cancel"
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         className: "blue",
         onClick: this.handleSubmit
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "button_ok"
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "white",
-        onClick: this.handleCancel
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-        id: "button_cancel"
       }))));
     }
   }]);
@@ -13317,21 +13534,21 @@ var TagManager = function (_React$Component) {
         });
       }), this.props.onSubmit || this.props.onCancel ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "tag-manager-buttons",
-        className: "panel-form-row"
+        className: "dialog-buttons panel-form-row"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        className: "outline",
+        onClick: this.handleCancel
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+        id: "button_cancel",
+        defautMessage: "Cancel",
+        description: "Rejection button [Cancel]"
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         className: "blue",
         onClick: this.handleSubmit
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "button_ok",
         defautMessage: "OK",
         description: "Confirmation button [OK]"
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        className: "white",
-        onClick: this.handleCancel
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-        id: "button_cancel",
-        defautMessage: "Cancel",
-        description: "Rejection button [Cancel]"
       }))) : null) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "quoted"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {

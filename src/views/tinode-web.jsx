@@ -8,6 +8,7 @@ import 'firebase/messaging';
 
 import Tinode from 'tinode-sdk';
 
+import Alert from '../widgets/alert.jsx';
 import ContextMenu from '../widgets/context-menu.jsx';
 
 import InfoView from './info-view.jsx';
@@ -98,11 +99,14 @@ class TinodeWeb extends React.Component {
     this.handleChangePermissions = this.handleChangePermissions.bind(this);
     this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
+    this.handleDeleteMessagesRequest = this.handleDeleteMessagesRequest.bind(this);
     this.handleLeaveUnsubRequest = this.handleLeaveUnsubRequest.bind(this);
-    this.handleDialogCancel = this.handleDialogCancel.bind(this);
+    this.handleBlockTopicRequest = this.handleBlockTopicRequest.bind(this);
+    this.handleReportTopic = this.handleReportTopic.bind(this);
     this.handleShowContextMenu = this.handleShowContextMenu.bind(this);
     this.defaultTopicContextMenu = this.defaultTopicContextMenu.bind(this);
     this.handleHideContextMenu = this.handleHideContextMenu.bind(this);
+    this.handleShowAlert = this.handleShowAlert.bind(this);
     this.handleShowInfoView = this.handleShowInfoView.bind(this);
     this.handleHideInfoView = this.handleHideInfoView.bind(this);
     this.handleMemberUpdateRequest = this.handleMemberUpdateRequest.bind(this);
@@ -138,8 +142,7 @@ class TinodeWeb extends React.Component {
       sidePanelSelected: 'login',
       sidePanelTitle: null,
       sidePanelAvatar: null,
-      dialogSelected: null,
-      contextMenuVisible: false,
+
       login: '',
       password: '',
       myUserId: null,
@@ -158,6 +161,10 @@ class TinodeWeb extends React.Component {
       contextMenuClickAt: null,
       contextMenuParams: null,
       contextMenuItems: [],
+
+      // Modal alert dialog.
+      alertVisible: false,
+      alertParams: {},
 
       // Chats as shown in the ContactsView
       chatList: [],
@@ -419,7 +426,6 @@ class TinodeWeb extends React.Component {
       connected: false,
       ready: false,
       topicSelectedOnline: false,
-      dialogSelected: null,
       errorText: err && err.message ? err.message : "Disconnected",
       errorLevel: err && err.message ? 'err' : 'warn',
       loginDisabled: false,
@@ -1080,6 +1086,18 @@ class TinodeWeb extends React.Component {
     HashNavigation.navigateTo('');
   }
 
+  handleDeleteMessagesRequest(topicName) {
+    const topic = this.tinode.getTopic(topicName);
+    if (!topic) {
+      return;
+    }
+
+    // Request hard-delete all messages.
+    topic.delMessagesAll(true).catch((err) => {
+      this.handleError(err.message, 'err');
+    });
+  }
+
   handleLeaveUnsubRequest(topicName) {
     const topic = this.tinode.getTopic(topicName);
     if (!topic) {
@@ -1094,8 +1112,39 @@ class TinodeWeb extends React.Component {
     });
   }
 
-  handleDialogCancel() {
-    this.setState({dialogSelected: null});
+  handleBlockTopicRequest(topicName) {
+    const topic = this.tinode.getTopic(topicName);
+    if (!topic) {
+      return;
+    }
+
+    topic.updateMode(null, '-JP').then((ctrl) => {
+      // Hide MessagesView and InfoView panels.
+      HashNavigation.navigateTo(HashNavigation.setUrlTopic(window.location.hash, ''));
+    }).catch((err) => {
+      this.handleError(err.message, 'err');
+    });
+  }
+
+  handleReportTopic(topicName) {
+    const topic = this.tinode.getTopic(topicName);
+    if (!topic) {
+      return;
+    }
+
+    // Publish spam report.
+    this.tinode.publish(Tinode.TOPIC_SYS, Tinode.Drafty.attachJSON(null, {
+      'action': 'report',
+      'target': topicName
+    }));
+
+    // Remove J and P permissions.
+    topic.updateMode(null, '-JP').then((ctrl) => {
+      // Hide MessagesView and InfoView panels.
+      HashNavigation.navigateTo(HashNavigation.setUrlTopic(window.location.hash, ''));
+    }).catch((err) => {
+      this.handleError(err.message, 'err');
+    });
   }
 
   handleShowContextMenu(params, menuItems) {
@@ -1154,6 +1203,20 @@ class TinodeWeb extends React.Component {
         });
       }
     }
+  }
+
+  handleShowAlert(title, content, onConfirm, confirm, onReject, reject) {
+    this.setState({
+      alertVisible: true,
+      alertParams: {
+        title: title,
+        content: content,
+        onConfirm: onConfirm,
+        confirm: confirm,
+        onReject: onReject,
+        reject: reject
+      }
+    });
   }
 
   handleShowInfoView() {
@@ -1258,7 +1321,15 @@ class TinodeWeb extends React.Component {
           :
           null
         }
-
+        <Alert
+          visible={this.state.alertVisible}
+          title={this.state.alertParams.title}
+          content={this.state.alertParams.content}
+          onReject={this.state.alertParams.onReject ? (() => { this.setState({alertVisible: false}); }) : null}
+          reject={this.state.alertParams.reject}
+          onConfirm={() => { this.setState({alertVisible: false}); this.state.alertParams.onConfirm(); }}
+          confirm={this.state.alertParams.confirm}
+          />
         <SidepanelView
           tinode={this.tinode}
           connected={this.state.connected}
@@ -1365,9 +1436,13 @@ class TinodeWeb extends React.Component {
 
             onTopicDescUpdate={this.handleTopicUpdateRequest}
             onCancel={this.handleHideInfoView}
+            onShowAlert={this.handleShowAlert}
             onChangePermissions={this.handleChangePermissions}
             onMemberUpdateRequest={this.handleMemberUpdateRequest}
+            onDeleteMessages={this.handleDeleteMessagesRequest}
             onLeaveTopic={this.handleLeaveUnsubRequest}
+            onBlockTopic={this.handleBlockTopicRequest}
+            onReportTopic={this.handleReportTopic}
             onAddMember={this.handleManageGroupMembers}
             onTopicTagsUpdate={this.handleTagsUpdated}
             onInitFind={this.tnInitFind}

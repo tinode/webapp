@@ -140,6 +140,9 @@
   "link_privacy_policy": "隐私政策",
   "action_delete_messages": "删除所有帖子",
   "action_block_contact": "屏蔽联系人",
-  "action_report_contact": "检举垃圾邮件",
-  "action_report_group": "检举垃圾邮件"
+  "delete_messages_warning": ":!![MISSING]!!:Are you sure you want to delete all mesages? It cannot be undone.",
+  "leave_chat_warning": ":!![MISSING]!!:Are you sure you want to leave this conversation.",
+  "block_contact_warning": ":!![MISSING]!!:Are you sure you want to block this contact?",
+  "action_report_chat": "检举垃圾邮件",
+  "report_chat_warning": ":!![MISSING]!!:Are you sure you want to block and report this conversation?"
 }

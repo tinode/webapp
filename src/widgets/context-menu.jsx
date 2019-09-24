@@ -277,7 +277,7 @@ class ContextMenu extends React.Component {
       return;
     }
     // Can't cancel. Delete instead.
-    let promise = all ?
+    const promise = all ?
       topic.delMessagesAll(hard) :
       topic.delMessagesList([params.seq], hard);
 
@@ -296,19 +296,7 @@ class ContextMenu extends React.Component {
       return;
     }
 
-    let am, user;
-    if (params.user) {
-      user = topic.subscriber(params.user);
-      if (!user) {
-        console.log("Subscriber not found", params.topicName + "[" + params.user + "]");
-        return;
-      }
-      am = user.acs.updateGiven(mode).getGiven();
-    } else {
-      am = topic.getAccessMode().updateWant(mode).getWant();
-    }
-
-    let result = topic.setMeta({sub: {user: params.user, mode: am}});
+    let result = topic.updateMode(params.user, mode);
     if (errorHandler) {
       result = result.catch((err) => {
         errorHandler(err.message, 'err');

@@ -40,7 +40,47 @@ const messages = defineMessages({
     id: 'label_other_user',
     defaultMessage: 'Other',
     description: 'Label for the other user when the user is unnamed'
-  }
+  },
+  delete_messages: {
+    id: "action_delete_messages",
+    defaultMessage: "Delete Messages",
+    description: "Flat button [Delete Messages]"
+  },
+  delete_messages_warning: {
+    id: "delete_messages_warning",
+    defaultMessage: "Are you sure you want to delete all mesages? It cannot be undone.",
+    description: "Alert dialog warning when deleting all messages."
+  },
+  leave_chat: {
+    id: "action_leave_chat",
+    defaultMessage: "Leave Conversation",
+    description: "Flat button [Leave Conversation]"
+  },
+  leave_chat_warning: {
+    id: "leave_chat_warning",
+    defaultMessage: "Are you sure you want to leave this conversation?",
+    description: "Alert dialog warning when unsubscribing from a chat."
+  },
+  block_contact: {
+    id: "action_block_contact",
+    defaultMessage: "Block Contact",
+    description: "Flat button [Block Contact]"
+  },
+  block_contact_warning: {
+    id: "block_contact_warning",
+    defaultMessage: "Are you sure you want to block this contact?",
+    description: "Alert dialog warning when blocking a contact."
+  },
+  report_chat: {
+    id: "action_report_chat",
+    defaultMessage: "Report Conversation",
+    description: "Flat button [Report Group]"
+  },
+  report_chat_warning: {
+    id: "report_chat_warning",
+    defaultMessage: "Are you sure you want to block and report this conversation?",
+    description: "Alert dialog warning when reporting a conversation for abuse"
+  },
 });
 
 class InfoView extends React.Component {
@@ -91,7 +131,10 @@ class InfoView extends React.Component {
     this.handleShowAddMembers = this.handleShowAddMembers.bind(this);
     this.handleHideAddMembers = this.handleHideAddMembers.bind(this);
     this.handleMemberUpdateRequest = this.handleMemberUpdateRequest.bind(this);
+    this.handleDeleteMessages = this.handleDeleteMessages.bind(this);
     this.handleLeave = this.handleLeave.bind(this);
+    this.handleBlock = this.handleBlock.bind(this);
+    this.handleReport = this.handleReport.bind(this);
     this.handleMemberSelected = this.handleMemberSelected.bind(this);
     this.handleMoreInfo = this.handleMoreInfo.bind(this);
     this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
@@ -354,9 +397,56 @@ class InfoView extends React.Component {
     this.setState({showMemberPanel: false});
   }
 
+  handleDeleteMessages(e) {
+    e.preventDefault();
+    const {formatMessage} = this.props.intl;
+    this.props.onShowAlert(
+      formatMessage(messages.delete_messages), // title
+      formatMessage(messages.delete_messages_warning), // content
+      (() => { this.props.onDeleteMessages(this.props.topic); }), // onConfirm
+      null, // "OK"
+      true, // Show Reject button
+      null  // "Cancel"
+    );
+  }
+
   handleLeave(e) {
     e.preventDefault();
-    this.props.onLeaveTopic(this.props.topic);
+    const {formatMessage} = this.props.intl;
+    this.props.onShowAlert(
+      formatMessage(messages.leave_chat), // title
+      formatMessage(messages.leave_chat_warning), // content
+      (() => { this.props.onLeaveTopic(this.props.topic); }), // onConfirm
+      null, // "OK"
+      true, // Show Reject button
+      null  // "Cancel"
+    );
+  }
+
+  handleBlock(e) {
+    e.preventDefault();
+    const {formatMessage} = this.props.intl;
+    this.props.onShowAlert(
+      formatMessage(messages.block_contact), // title
+      formatMessage(messages.block_contact_warning), // content
+      (() => { this.props.onBlockTopic(this.props.topic); }), // onConfirm
+      null, // "OK"
+      true, // Show Reject button
+      null  // "Cancel"
+    );
+  }
+
+  handleReport(e) {
+    e.preventDefault();
+    const {formatMessage} = this.props.intl;
+    this.props.onShowAlert(
+      formatMessage(messages.report_chat), // title
+      formatMessage(messages.report_chat_warning), // content
+      (() => { this.props.onReportTopic(this.props.topic); }), // onConfirm
+      null, // "OK"
+      true, // Show Reject button
+      null  // "Cancel"
+    );
   }
 
   handleMemberSelected(uid) {
@@ -591,29 +681,24 @@ class InfoView extends React.Component {
             }
             <div className="panel-form-column">
               <a href="#" className="flat-button" onClick={this.handleDeleteMessages}>
-                <i className="material-icons">delete_outline</i> &npbs;<FormattedMessage id="action_delete_messages"
-                  defaultMessage="Delete Messages" description="Flat button [Delete Messages]" />
+                <i className="material-icons">delete_outline</i> &nbsp;{formatMessage(messages.delete_messages)}
               </a>
               <a href="#" className="red flat-button" onClick={this.handleLeave}>
-                <i className="material-icons">exit_to_app</i> &npbs;<FormattedMessage id="action_leave_chat"
-                  defaultMessage="Leave Conversation" description="Flat button [Leave Conversation]" />
+                <i className="material-icons">exit_to_app</i> &nbsp;{formatMessage(messages.leave_chat)}
               </a>
-              {this.state.groupTopic ?
-                <a href="#" className="red flat-button" onClick={this.handleReport}>
-                  <i className="material-icons">report</i> &npbs;<FormattedMessage id="action_report_group"
-                    defaultMessage="Report Group" description="Flat button [Report Group]" />
+              {!this.state.groupTopic ?
+                <a href="#" className="red flat-button" onClick={this.handleBlock}>
+                  <i className="material-icons">block</i> &nbsp;{formatMessage(messages.block_contact)}
                 </a>
-              :
-                <>
-                  <a href="#" className="red flat-button" onClick={this.handleBlock}>
-                    <i className="material-icons">block</i> &npbs;<FormattedMessage id="action_block_contact"
-                      defaultMessage="Block Contact" description="Flat button [Block Contact]" />
-                  </a>
-                  <a href="#" className="red flat-button" onClick={this.handleReport}>
-                    <i className="material-icons">report</i> &npbs;<FormattedMessage id="action_report_contact"
-                      defaultMessage="Report Contact" description="Flat button [Report Contact]" />
-                  </a>
-                </>
+                :
+                null
+              }
+              {!this.state.owner ?
+                <a href="#" className="red flat-button" onClick={this.handleReport}>
+                  <i className="material-icons">report</i> &nbsp;{formatMessage(messages.report_chat)}
+                </a>
+                :
+                null
               }
             </div>
             {this.state.groupTopic ?

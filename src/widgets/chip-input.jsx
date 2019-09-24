@@ -44,7 +44,7 @@ export default class ChipInput extends React.Component {
   static indexChips(chips) {
     const index = {};
     let count = 0;
-    chips.map(function(item) {
+    chips.map((item) => {
       index[item.user] = count;
       count ++;
     });
@@ -55,8 +55,8 @@ export default class ChipInput extends React.Component {
   static sortChips(chips, keep) {
     const required = [];
     const normal = [];
-    chips.map(function(item) {
-      if (keep.includes(item.user)) {
+    chips.map((item) => {
+      if (keep && keep.includes(item.user)) {
         required.push(item);
       } else {
         normal.push(item);
@@ -114,6 +114,7 @@ export default class ChipInput extends React.Component {
   render() {
     const chips = [];
     let count = 0;
+    const staticMembers = this.props.staticMembers || [];
     this.state.sortedChips.map((item) => {
       chips.push(
         <Chip
@@ -122,7 +123,7 @@ export default class ChipInput extends React.Component {
           title={item.public ? item.public.fn : undefined}
           noAvatar={this.props.avatarDisabled}
           topic={item.user}
-          required={this.props.staticMembers.includes(item.user)}
+          required={staticMembers.includes(item.user)}
           invalid={item.invalid}
           index={count}
           key={item.user} />

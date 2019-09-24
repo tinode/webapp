@@ -31,7 +31,7 @@ export default class ErrorPanel extends React.PureComponent {
   render() {
     const icons = {err: 'error', warn: 'warning', info: 'info'}
     const level = icons[this.props.level] || '';
-    const className = 'alert-box ' + level;
+    const className = 'info-box ' + level;
     return (
       <div className={className}>
         <div className="icon"><i className="material-icons">{level}</i></div>

@@ -25,6 +25,14 @@
     "granted_permissions": "Granted",
     "menu_item_edit_permissions": "Edit permissions",
     "label_other_user": "Other",
+    "action_delete_messages": "Delete Messages",
+    "delete_messages_warning": "Are you sure you want to delete all mesages? It cannot be undone.",
+    "action_leave_chat": "Leave Conversation",
+    "leave_chat_warning": "Are you sure you want to leave this conversation?",
+    "action_block_contact": "Block Contact",
+    "block_contact_warning": "Are you sure you want to block this contact?",
+    "action_report_chat": "Report Conversation",
+    "report_chat_warning": "Are you sure you want to block and report this conversation?",
     "title_info": "Info",
     "label_topic_name": "Name",
     "label_private": "Private comment",
@@ -35,11 +43,6 @@
     "label_permissions": "Permissions:",
     "label_you": "You:",
     "label_default_access": "Default access mode:",
-    "action_delete_messages": "Delete Messages",
-    "action_leave_chat": "Leave Conversation",
-    "action_report_group": "Report Group",
-    "action_block_contact": "Block Contact",
-    "action_report_contact": "Report Contact",
     "label_group_members": "Group members:",
     "button_add_members": "Add members",
     "group_has_no_members": "No members",
@@ -286,8 +289,11 @@
     "link_privacy_policy": "Политика конфиденциальности",
     "action_delete_messages": "Удалить сообщения",
     "action_block_contact": "Заблокировать контакт",
-    "action_report_contact": "Сообщить о нарушении",
-    "action_report_group": "Сообщить о нарушении"
+    "action_report_chat": "Сообщить о нарушении",
+    "delete_messages_warning": "Вы действительно хотите удалить все сообщения?",
+    "leave_chat_warning": "Вы действительно хотите покинуть этот чат?",
+    "block_contact_warning": "Вы действительно заблокировать этот контакт?",
+    "report_chat_warning": "Вы действительно хотите сообщить о нарушении и заблокировать этот чат?"
   },
   "zh": {
     "archived_contacts": "已归档联系人 ({count})",
@@ -431,7 +437,6 @@
     "link_privacy_policy": "隐私政策",
     "action_delete_messages": "删除所有帖子",
     "action_block_contact": "屏蔽联系人",
-    "action_report_contact": "检举垃圾邮件",
-    "action_report_group": "检举垃圾邮件"
+    "action_report_chat": "检举垃圾邮件"
   }
 }

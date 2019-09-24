@@ -140,6 +140,9 @@
   "link_privacy_policy": "Политика конфиденциальности",
   "action_delete_messages": "Удалить сообщения",
   "action_block_contact": "Заблокировать контакт",
-  "action_report_contact": "Сообщить о нарушении",
-  "action_report_group": "Сообщить о нарушении"
+  "action_report_chat": "Сообщить о нарушении",
+  "delete_messages_warning": "Вы действительно хотите удалить все сообщения?",
+  "leave_chat_warning": "Вы действительно хотите покинуть этот чат?",
+  "block_contact_warning": "Вы действительно заблокировать этот контакт?",
+  "report_chat_warning": "Вы действительно хотите сообщить о нарушении и заблокировать этот чат?"
 }

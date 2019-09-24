@@ -121,12 +121,12 @@ export default class TagManager extends React.Component {
               filterFunc={this.handleTagInput} />
           }</FormattedMessage>
           {this.props.onSubmit || this.props.onCancel ?
-            <div id="tag-manager-buttons" className="panel-form-row">
+            <div id="tag-manager-buttons" className="dialog-buttons panel-form-row">
+              <button className="outline" onClick={this.handleCancel}>
+                <FormattedMessage id="button_cancel" defautMessage="Cancel" description="Rejection button [Cancel]" />
+              </button>
               <button className="blue" onClick={this.handleSubmit}>
                 <FormattedMessage id="button_ok" defautMessage="OK" description="Confirmation button [OK]" />
-              </button>
-              <button className="white" onClick={this.handleCancel}>
-                <FormattedMessage id="button_cancel" defautMessage="Cancel" description="Rejection button [Cancel]" />
               </button>
             </div>
           : null}

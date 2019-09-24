@@ -39,8 +39,8 @@ module.exports = (env, argv) => {
       ]
     },
     performance: {
-      maxEntrypointSize: 250000,
-      maxAssetSize: 250000
+      maxEntrypointSize: 262144,
+      maxAssetSize: 262144
     },
     externals: {
       'react': 'React',
