@@ -234,8 +234,11 @@ input[type="password"].with-visibility {
   margin-right:-2rem;
   padding-right:2rem;
 }
+/* END of input and buttons */
 
-/* Scrollbar styling for Chrome. Firefox does not support scrollbar styling.  */
+/* BEGIN scrollbar styling.  */
+
+/* Chrome & other webkit browsers */
 ::-webkit-scrollbar {
 	width: 0.6rem;
 }
@@ -249,7 +252,12 @@ input[type="password"].with-visibility {
 	background-color: rgba(0,0,0,0.3);
 }
 
-/* END of input and buttons */
+/* Firefox only */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: silver;
+}
+/* END of Scrollbar styling.  */
 
 /* BEGIN Popup/dropdown menu */
 
