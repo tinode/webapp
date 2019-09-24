@@ -379,9 +379,9 @@ class MessagesView extends React.Component {
     // Regenerate messages list
     const topic = this.props.tinode.getTopic(this.state.topic);
     const newState = {messages: []};
-    topic.messages(function(m) {
+    topic.messages((m) => {
       if (!m.deleted) {
-        newState.messages = newState.messages.concat(m);
+        newState.messages.push(m);
       }
     });
 
@@ -403,7 +403,6 @@ class MessagesView extends React.Component {
       }
       this.props.onData(msg);
     }
-
     this.setState(newState);
   }
 

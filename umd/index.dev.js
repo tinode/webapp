@@ -2015,7 +2015,7 @@
       flushMessageRange: function (e, t) {
         var n = this._messages.find({
           seq: e
-        });
+        }, !0);
 
         return n >= 0 ? this._messages.delRange(n, this._messages.find({
           seq: t
@@ -5669,7 +5669,7 @@ var MessagesView = function (_React$Component) {
       };
       topic.messages(function (m) {
         if (!m.deleted) {
-          newState.messages = newState.messages.concat(m);
+          newState.messages.push(m);
         }
       });
 
