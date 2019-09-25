@@ -10303,7 +10303,7 @@ var Contact = function (_React$Component) {
         badges: icon_badges
       })), this.props.comment ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "contact-comment"
-      }, this.props.comment) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      }, this.props.comment) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
         badges: badges
       }))), this.props.showContextMenu ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "menuTrigger"

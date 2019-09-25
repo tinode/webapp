@@ -1624,31 +1624,31 @@ ul.tabbar li.active > a:after {
 }
 
 .badge.green {
-  border-color: #383;
+  border-color: #9c9;
   background-color: #efe;
   color: #383;
 }
 
 .badge.yellow {
-  border-color: #660;
+  border-color: #cc9;
   background-color: #ffe;
   color: #660;
 }
 
 .badge.blue {
-  border-color: #339;
+  border-color: #99c;
   background-color: #eef;
   color: #339;
 }
 
 .badge.red {
-  border-color: #933;
+  border-color: #c99;
   background-color: #fee;
   color: #933;
 }
 
 .badge.magenta {
-  border-color: #939;
+  border-color: #c9c;
   background-color: #fef;
   color: #939;
 }
