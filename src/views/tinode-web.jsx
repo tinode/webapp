@@ -15,7 +15,7 @@ import InfoView from './info-view.jsx';
 import MessagesView from './messages-view.jsx';
 import SidepanelView from './sidepanel-view.jsx';
 
-import { API_KEY, APP_NAME, DEFAULT_ACCESS_MODE, MEDIA_BREAKPOINT, READ_DELAY, RECEIVED_DELAY } from '../config.js';
+import { API_KEY, APP_NAME, DEFAULT_P2P_ACCESS_MODE, MEDIA_BREAKPOINT, READ_DELAY, RECEIVED_DELAY } from '../config.js';
 import { base64ReEncode, makeImageUrl } from '../lib/blob-helpers.js';
 import { detectServerAddress, isLocalHost, isSecureConnection } from '../lib/host-name.js';
 import LocalStorageUtil from '../lib/local-storage.js';
@@ -990,15 +990,16 @@ class TinodeWeb extends React.Component {
 
   // Request to start a new topic. New P2P topic requires peer's name.
   handleNewTopicRequest(peerName, pub, priv, tags) {
+
     const topicName = peerName || this.tinode.newGroupTopicName();
     const params = {
       _topicName: topicName,
     };
     if (peerName) {
       // Because we are initialing the subscription, set 'want' to all permissions.
-      params.sub = {mode: DEFAULT_ACCESS_MODE};
+      params.sub = {mode: DEFAULT_P2P_ACCESS_MODE};
       // Give the other user all permissions too.
-      params.desc = {defacs: {auth: DEFAULT_ACCESS_MODE}};
+      params.desc = {defacs: {auth: DEFAULT_P2P_ACCESS_MODE}};
     } else {
       params.desc = {public: pub, private: {comment: priv}};
       params.tags = tags;

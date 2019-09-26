@@ -22,8 +22,10 @@ export const READ_DELAY = 1000;
 // The shortest allowed tag length. Matches the value on the server.
 export const MIN_TAG_LENGTH = 4;
 
-// Access mode for subscriptions initiated by the current user.
-export const DEFAULT_ACCESS_MODE = 'JRWPS';
+// Access mode for P2P subscriptions initiated by the current user.
+export const DEFAULT_P2P_ACCESS_MODE = 'JRWPS';
+// Access mode for new group topics created by the current user.
+export const NEW_GRP_ACCESS_MODE = 'JRWPSAO';
 
 // Access mode for no access.
 export const NO_ACCESS_MODE = 'N';

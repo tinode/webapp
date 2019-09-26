@@ -841,7 +841,7 @@
           function n(e, t) {
             return "0".repeat((t = t || 2) - ("" + e).length) + e;
           }
-        }(t);else if (null == t || !1 === t || Array.isArray(t) && 0 == t.length || "object" == s(t) && 0 == Object.keys(t).length) return;
+        }(t);else if (t instanceof D) t = t.jsonHelper();else if (null == t || !1 === t || Array.isArray(t) && 0 == t.length || "object" == s(t) && 0 == Object.keys(t).length) return;
         return t;
       }(0, t);
     }
@@ -1609,7 +1609,14 @@
       return e;
     }, D.prototype = {
       toString: function () {
-        return '{mode: "' + D.encode(this.mode) + '", given: "' + D.encode(this.given) + '", want: "' + D.encode(this.want) + '"}';
+        return '{"mode": "' + D.encode(this.mode) + '", "given": "' + D.encode(this.given) + '", "want": "' + D.encode(this.want) + '"}';
+      },
+      jsonHelper: function () {
+        return {
+          mode: D.encode(this.mode),
+          given: D.encode(this.given),
+          want: D.encode(this.want)
+        };
       },
       setMode: function (e) {
         return this.mode = D.decode(e), this;
@@ -2610,7 +2617,7 @@ module.exports = g;
 /*!***********************!*\
   !*** ./src/config.js ***!
   \***********************/
-/*! exports provided: APP_NAME, API_KEY, KNOWN_HOSTS, DEFAULT_HOST, KEYPRESS_DELAY, RECEIVED_DELAY, READ_DELAY, MIN_TAG_LENGTH, DEFAULT_ACCESS_MODE, NO_ACCESS_MODE, MEDIA_BREAKPOINT, REM_SIZE, AVATAR_SIZE, BROKEN_IMAGE_SIZE, MESSAGES_PAGE, MAX_INBAND_ATTACHMENT_SIZE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_ONLINE_IN_TOPIC, LINK_CONTACT_US, LINK_PRIVACY_POLICY, LINK_TERMS_OF_SERVICE */
+/*! exports provided: APP_NAME, API_KEY, KNOWN_HOSTS, DEFAULT_HOST, KEYPRESS_DELAY, RECEIVED_DELAY, READ_DELAY, MIN_TAG_LENGTH, DEFAULT_P2P_ACCESS_MODE, NEW_GRP_ACCESS_MODE, NO_ACCESS_MODE, MEDIA_BREAKPOINT, REM_SIZE, AVATAR_SIZE, BROKEN_IMAGE_SIZE, MESSAGES_PAGE, MAX_INBAND_ATTACHMENT_SIZE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_ONLINE_IN_TOPIC, LINK_CONTACT_US, LINK_PRIVACY_POLICY, LINK_TERMS_OF_SERVICE */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2623,7 +2630,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVED_DELAY", function() { return RECEIVED_DELAY; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "READ_DELAY", function() { return READ_DELAY; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MIN_TAG_LENGTH", function() { return MIN_TAG_LENGTH; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DEFAULT_ACCESS_MODE", function() { return DEFAULT_ACCESS_MODE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DEFAULT_P2P_ACCESS_MODE", function() { return DEFAULT_P2P_ACCESS_MODE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NEW_GRP_ACCESS_MODE", function() { return NEW_GRP_ACCESS_MODE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NO_ACCESS_MODE", function() { return NO_ACCESS_MODE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MEDIA_BREAKPOINT", function() { return MEDIA_BREAKPOINT; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "REM_SIZE", function() { return REM_SIZE; });
@@ -2650,7 +2658,8 @@ var KEYPRESS_DELAY = 3 * 1000;
 var RECEIVED_DELAY = 500;
 var READ_DELAY = 1000;
 var MIN_TAG_LENGTH = 4;
-var DEFAULT_ACCESS_MODE = 'JRWPS';
+var DEFAULT_P2P_ACCESS_MODE = 'JRWPS';
+var NEW_GRP_ACCESS_MODE = 'JRWPSAO';
 var NO_ACCESS_MODE = 'N';
 var MEDIA_BREAKPOINT = 640;
 var REM_SIZE = 13;
@@ -5459,8 +5468,6 @@ var MessagesView = function (_React$Component) {
   }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
-      this.leave(this.state.topic);
-
       if (this.messagesScroller) {
         this.messagesScroller.removeEventListener('scroll', this.handleScrollEvent);
       }
@@ -5481,7 +5488,7 @@ var MessagesView = function (_React$Component) {
       var topic = this.props.tinode.getTopic(this.state.topic);
 
       if (this.state.topic != prevState.topic) {
-        if (prevState.topic) {
+        if (prevState.topic && !tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.isNewGroupTopicName(prevState.topic)) {
           this.leave(prevState.topic);
           this.props.readTimerHandler(null);
         }
@@ -5808,7 +5815,7 @@ var MessagesView = function (_React$Component) {
     key: "handleEnablePeer",
     value: function handleEnablePeer(e) {
       e.preventDefault();
-      this.props.onChangePermissions(this.state.topic, _config_js__WEBPACK_IMPORTED_MODULE_12__["DEFAULT_ACCESS_MODE"], this.state.topic);
+      this.props.onChangePermissions(this.state.topic, _config_js__WEBPACK_IMPORTED_MODULE_12__["DEFAULT_P2P_ACCESS_MODE"], this.state.topic);
     }
   }, {
     key: "render",
@@ -7954,11 +7961,11 @@ var TinodeWeb = function (_React$Component) {
 
       if (peerName) {
         params.sub = {
-          mode: _config_js__WEBPACK_IMPORTED_MODULE_11__["DEFAULT_ACCESS_MODE"]
+          mode: _config_js__WEBPACK_IMPORTED_MODULE_11__["DEFAULT_P2P_ACCESS_MODE"]
         };
         params.desc = {
           defacs: {
-            auth: _config_js__WEBPACK_IMPORTED_MODULE_11__["DEFAULT_ACCESS_MODE"]
+            auth: _config_js__WEBPACK_IMPORTED_MODULE_11__["DEFAULT_P2P_ACCESS_MODE"]
           }
         };
       } else {
