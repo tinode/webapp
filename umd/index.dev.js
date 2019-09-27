@@ -800,7 +800,7 @@
 
       if (null === t) return t;
       if (t instanceof Date) return e && e instanceof Date && !(e < t) ? e : t;
-      if (t instanceof D) return new D(t);
+      if (t instanceof x) return new x(t);
       if (t instanceof Array) return t;
 
       for (var i in e && e !== y.DEL_CHAR || (e = t.constructor()), t) !t.hasOwnProperty(i) || n && n[i] || "_noForwarding" == i || (e[i] = v(e[i], t[i]));
@@ -825,7 +825,7 @@
       if ("ts" === e && "string" == typeof t && t.length >= 20 && t.length <= 24) {
         var n = new Date(t);
         if (n) return n;
-      } else if ("acs" === e && "object" === s(t)) return new D(t);
+      } else if ("acs" === e && "object" === s(t)) return new x(t);
 
       return t;
     }
@@ -841,7 +841,7 @@
           function n(e, t) {
             return "0".repeat((t = t || 2) - ("" + e).length) + e;
           }
-        }(t);else if (t instanceof D) t = t.jsonHelper();else if (null == t || !1 === t || Array.isArray(t) && 0 == t.length || "object" == s(t) && 0 == Object.keys(t).length) return;
+        }(t);else if (t instanceof x) t = t.jsonHelper();else if (null == t || !1 === t || Array.isArray(t) && 0 == t.length || "object" == s(t) && 0 == Object.keys(t).length) return;
         return t;
       }(0, t);
     }
@@ -863,16 +863,16 @@
           S = null,
           y = 0,
           T = !1,
-          D = function (e) {
+          x = function (e) {
         a.logger && a.logger(e);
       };
 
-      function x() {
+      function D() {
         var e = this;
         clearTimeout(S);
         var t = v * (Math.pow(2, y) * (1 + w * Math.random()));
         y = y >= _ ? y : y + 1, this.onAutoreconnectIteration && this.onAutoreconnectIteration(t), S = setTimeout(function () {
-          if (D("Reconnecting, iter=" + y + ", timeout=" + t), T) e.onAutoreconnectIteration && e.onAutoreconnectIteration(-1);else {
+          if (x("Reconnecting, iter=" + y + ", timeout=" + t), T) e.onAutoreconnectIteration && e.onAutoreconnectIteration(-1);else {
             var n = e.connect();
             e.onAutoreconnectIteration ? e.onAutoreconnectIteration(0, n) : n.catch(function () {});
           }
@@ -888,7 +888,7 @@
         e.connect = function (n) {
           return T = !1, t && t.readyState == t.OPEN ? Promise.resolve() : (n && (c = n), new Promise(function (n, i) {
             var s = M(c, u ? "wss" : "ws", h);
-            D("Connecting to: " + s);
+            x("Connecting to: " + s);
             var r = new o(s);
             r.onopen = function (t) {
               e.onOpen && e.onOpen(), n(), g && E();
@@ -898,7 +898,7 @@
                 e.onDisconnect(new Error(T ? p : d + " (" + i + ")"), i);
               }
 
-              !T && g && x.call(e);
+              !T && g && D.call(e);
             }, r.onerror = function (e) {
               i(e);
             }, r.onmessage = function (t) {
@@ -928,7 +928,7 @@
         e.connect = function (i) {
           return T = !1, n ? Promise.resolve() : (i && (c = i), new Promise(function (i, s) {
             var r = M(c, u ? "https" : "http", h);
-            D("Connecting to: " + r), (n = function n(i, s, r) {
+            x("Connecting to: " + r), (n = function n(i, s, r) {
               var o = m(),
                   a = !1;
               return o.onreadystatechange = function (c) {
@@ -942,7 +942,7 @@
                     e.onDisconnect(new Error(v + " (" + h + ")"), h);
                   }
 
-                  o = null, !T && g && x.call(e);
+                  o = null, !T && g && D.call(e);
                 }
               }, o.open("GET", i, !0), o;
             }(r, i, s)).send(null);
@@ -1420,17 +1420,17 @@
       },
       getTopic: function (e) {
         var t = this.cacheGet("topic", e);
-        return !t && e && (t = "me" == e ? new E() : "fnd" == e ? new A() : new x(e), this.cachePut("topic", e, t), this.attachCacheToTopic(t)), t;
+        return !t && e && (t = "me" == e ? new E() : "fnd" == e ? new A() : new D(e), this.cachePut("topic", e, t), this.attachCacheToTopic(t)), t;
       },
       newTopic: function (e) {
-        var t = new x("new", e);
+        var t = new D("new", e);
         return this.attachCacheToTopic(t), t;
       },
       newGroupTopicName: function () {
         return "new" + this.getNextUniqueId();
       },
       newTopicWith: function (e, t) {
-        var n = new x(e, t);
+        var n = new D(e, t);
         return this.attachCacheToTopic(n), n;
       },
       getMeTopic: function () {
@@ -1554,140 +1554,140 @@
       }
     };
 
-    var D = function e(t) {
+    var x = function e(t) {
       t && (this.given = "number" == typeof t.given ? t.given : e.decode(t.given), this.want = "number" == typeof t.want ? t.want : e.decode(t.want), this.mode = t.mode ? "number" == typeof t.mode ? t.mode : e.decode(t.mode) : this.given & this.want);
     };
 
-    D._NONE = 0, D._JOIN = 1, D._READ = 2, D._WRITE = 4, D._PRES = 8, D._APPROVE = 16, D._SHARE = 32, D._DELETE = 64, D._OWNER = 128, D._BITMASK = D._JOIN | D._READ | D._WRITE | D._PRES | D._APPROVE | D._SHARE | D._DELETE | D._OWNER, D._INVALID = 1048576, D._checkFlag = function (e, t, n) {
+    x._NONE = 0, x._JOIN = 1, x._READ = 2, x._WRITE = 4, x._PRES = 8, x._APPROVE = 16, x._SHARE = 32, x._DELETE = 64, x._OWNER = 128, x._BITMASK = x._JOIN | x._READ | x._WRITE | x._PRES | x._APPROVE | x._SHARE | x._DELETE | x._OWNER, x._INVALID = 1048576, x._checkFlag = function (e, t, n) {
       if (["given", "want", "mode"].includes(t = t || "mode")) return 0 != (e[t] & n);
       throw new Error("Invalid AccessMode component '" + t + "'");
-    }, D.decode = function (e) {
+    }, x.decode = function (e) {
       if (!e) return null;
-      if ("number" == typeof e) return e & D._BITMASK;
-      if ("N" === e || "n" === e) return D._NONE;
+      if ("number" == typeof e) return e & x._BITMASK;
+      if ("N" === e || "n" === e) return x._NONE;
 
       for (var t = {
-        J: D._JOIN,
-        R: D._READ,
-        W: D._WRITE,
-        P: D._PRES,
-        A: D._APPROVE,
-        S: D._SHARE,
-        D: D._DELETE,
-        O: D._OWNER
-      }, n = D._NONE, i = 0; i < e.length; i++) {
+        J: x._JOIN,
+        R: x._READ,
+        W: x._WRITE,
+        P: x._PRES,
+        A: x._APPROVE,
+        S: x._SHARE,
+        D: x._DELETE,
+        O: x._OWNER
+      }, n = x._NONE, i = 0; i < e.length; i++) {
         var s = t[e.charAt(i).toUpperCase()];
         s && (n |= s);
       }
 
       return n;
-    }, D.encode = function (e) {
-      if (null === e || e === D._INVALID) return null;
-      if (e === D._NONE) return "N";
+    }, x.encode = function (e) {
+      if (null === e || e === x._INVALID) return null;
+      if (e === x._NONE) return "N";
 
       for (var t = ["J", "R", "W", "P", "A", "S", "D", "O"], n = "", i = 0; i < t.length; i++) 0 != (e & 1 << i) && (n += t[i]);
 
       return n;
-    }, D.update = function (e, t) {
+    }, x.update = function (e, t) {
       if (!t || "string" != typeof t) return e;
       var n = t.charAt(0);
 
       if ("+" == n || "-" == n) {
         for (var i = e, s = t.split(/([-+])/), r = 1; r < s.length - 1; r += 2) {
           n = s[r];
-          var o = D.decode(s[r + 1]);
-          if (o == D._INVALID) return e;
+          var o = x.decode(s[r + 1]);
+          if (o == x._INVALID) return e;
           null != o && ("+" === n ? i |= o : "-" === n && (i &= ~o));
         }
 
         e = i;
       } else {
-        var a = D.decode(t);
-        a != D._INVALID && (e = a);
+        var a = x.decode(t);
+        a != x._INVALID && (e = a);
       }
 
       return e;
-    }, D.prototype = {
+    }, x.prototype = {
       toString: function () {
-        return '{"mode": "' + D.encode(this.mode) + '", "given": "' + D.encode(this.given) + '", "want": "' + D.encode(this.want) + '"}';
+        return '{"mode": "' + x.encode(this.mode) + '", "given": "' + x.encode(this.given) + '", "want": "' + x.encode(this.want) + '"}';
       },
       jsonHelper: function () {
         return {
-          mode: D.encode(this.mode),
-          given: D.encode(this.given),
-          want: D.encode(this.want)
+          mode: x.encode(this.mode),
+          given: x.encode(this.given),
+          want: x.encode(this.want)
         };
       },
       setMode: function (e) {
-        return this.mode = D.decode(e), this;
+        return this.mode = x.decode(e), this;
       },
       updateMode: function (e) {
-        return this.mode = D.update(this.mode, e), this;
+        return this.mode = x.update(this.mode, e), this;
       },
       getMode: function () {
-        return D.encode(this.mode);
+        return x.encode(this.mode);
       },
       setGiven: function (e) {
-        return this.given = D.decode(e), this;
+        return this.given = x.decode(e), this;
       },
       updateGiven: function (e) {
-        return this.given = D.update(this.given, e), this;
+        return this.given = x.update(this.given, e), this;
       },
       getGiven: function () {
-        return D.encode(this.given);
+        return x.encode(this.given);
       },
       setWant: function (e) {
-        return this.want = D.decode(e), this;
+        return this.want = x.decode(e), this;
       },
       updateWant: function (e) {
-        return this.want = D.update(this.want, e), this;
+        return this.want = x.update(this.want, e), this;
       },
       getWant: function () {
-        return D.encode(this.want);
+        return x.encode(this.want);
       },
       getMissing: function () {
-        return D.encode(this.want & ~this.given);
+        return x.encode(this.want & ~this.given);
       },
       getExcessive: function () {
-        return D.encode(this.given & ~this.want);
+        return x.encode(this.given & ~this.want);
       },
       updateAll: function (e) {
         return e && (this.updateGiven(e.given), this.updateWant(e.want), this.mode = this.given & this.want), this;
       },
       isOwner: function (e) {
-        return D._checkFlag(this, e, D._OWNER);
+        return x._checkFlag(this, e, x._OWNER);
       },
       isPresencer: function (e) {
-        return D._checkFlag(this, e, D._PRES);
+        return x._checkFlag(this, e, x._PRES);
       },
       isMuted: function (e) {
         return !this.isPresencer(e);
       },
       isJoiner: function (e) {
-        return D._checkFlag(this, e, D._JOIN);
+        return x._checkFlag(this, e, x._JOIN);
       },
       isReader: function (e) {
-        return D._checkFlag(this, e, D._READ);
+        return x._checkFlag(this, e, x._READ);
       },
       isWriter: function (e) {
-        return D._checkFlag(this, e, D._WRITE);
+        return x._checkFlag(this, e, x._WRITE);
       },
       isApprover: function (e) {
-        return D._checkFlag(this, e, D._APPROVE);
+        return x._checkFlag(this, e, x._APPROVE);
       },
       isAdmin: function (e) {
         return this.isOwner(e) || this.isApprover(e);
       },
       isSharer: function (e) {
-        return this.isAdmin(e) || D._checkFlag(this, e, D._SHARE);
+        return this.isAdmin(e) || x._checkFlag(this, e, x._SHARE);
       },
       isDeleter: function (e) {
-        return D._checkFlag(this, e, D._DELETE);
+        return x._checkFlag(this, e, x._DELETE);
       }
     };
 
-    var x = function (e, t) {
-      this._tinode = null, this.name = e, this.created = null, this.updated = null, this.touched = null, this.acs = new D(null), this.private = null, this.public = null, this._users = {}, this._queuedSeqId = 268435455, this._maxSeq = 0, this._minSeq = 0, this._noEarlierMsgs = !1, this._maxDel = 0, this._tags = [], this._credentials = [], this._messages = function (e) {
+    var D = function (e, t) {
+      this._tinode = null, this.name = e, this.created = null, this.updated = null, this.touched = null, this.acs = new x(null), this.private = null, this.public = null, this._users = {}, this._queuedSeqId = 268435455, this._maxSeq = 0, this._minSeq = 0, this._noEarlierMsgs = !1, this._maxDel = 0, this._tags = [], this._credentials = [], this._messages = function (e) {
         var t = [];
 
         function n(t, n, i) {
@@ -1741,7 +1741,7 @@
       }), this._subscribed = !1, this._lastDescUpdate = null, this._lastSubsUpdate = null, this._new = !0, t && (this.onData = t.onData, this.onMeta = t.onMeta, this.onPres = t.onPres, this.onInfo = t.onInfo, this.onMetaDesc = t.onMetaDesc, this.onMetaSub = t.onMetaSub, this.onSubsUpdated = t.onSubsUpdated, this.onTagsUpdated = t.onTagsUpdated, this.onCredsUpdated = callbacls.onCredsUpdated, this.onDeleteTopic = t.onDeleteTopic, this.onAllMessagesReceived = t.onAllMessagesReceived);
     };
 
-    x.prototype = {
+    D.prototype = {
       isSubscribed: function () {
         return this._subscribed;
       },
@@ -1898,7 +1898,7 @@
         });
       },
       delMessagesAll: function (e) {
-        return this.delMessages([{
+        return !this._maxSeq || this._maxSeq <= 0 ? Promise.resolve() : this.delMessages([{
           low: 1,
           hi: this._maxSeq + 1,
           _all: !0
@@ -2091,8 +2091,8 @@
               updated: new Date(),
               acs: t.acs
             }]);else {
-              var n = new D().updateAll(e.dacs);
-              n && n.mode != D._NONE && ((t = this._cacheGetUser(e.src)) ? t.acs = n : (t = {
+              var n = new x().updateAll(e.dacs);
+              n && n.mode != x._NONE && ((t = this._cacheGetUser(e.src)) ? t.acs = n : (t = {
                 user: e.src,
                 acs: n
               }, this.getMeta(this.startMetaQuery().withOneSub(void 0, e.src).build())), t.updated = new Date(), this._processMetaSub([t]));
@@ -2172,7 +2172,7 @@
         this._subscribed = !1;
       },
       _gone: function () {
-        this._messages.reset(), this._users = {}, this.acs = new D(null), this.private = null, this.public = null, this._maxSeq = 0, this._minSeq = 0, this._subscribed = !1;
+        this._messages.reset(), this._users = {}, this.acs = new x(null), this.private = null, this.public = null, this._maxSeq = 0, this._minSeq = 0, this._subscribed = !1;
 
         var e = this._tinode.getMeTopic();
 
@@ -2194,10 +2194,10 @@
     };
 
     var E = function (e) {
-      x.call(this, "me", e), this._contacts = {}, e && (this.onContactUpdate = e.onContactUpdate);
+      D.call(this, "me", e), this._contacts = {}, e && (this.onContactUpdate = e.onContactUpdate);
     };
 
-    E.prototype = Object.create(x.prototype, {
+    E.prototype = Object.create(D.prototype, {
       _processMetaSub: {
         value: function (e) {
           var t = 0;
@@ -2274,7 +2274,7 @@
                 break;
 
               case "acs":
-                t.acs ? t.acs.updateAll(e.dacs) : t.acs = new D().updateAll(e.dacs), t.touched = new Date();
+                t.acs ? t.acs.updateAll(e.dacs) : t.acs = new x().updateAll(e.dacs), t.touched = new Date();
                 break;
 
               case "ua":
@@ -2305,9 +2305,9 @@
 
             this.onContactUpdate && this.onContactUpdate(e.what, t);
           } else if ("acs" == e.what) {
-            var n = new D(e.dacs);
-            if (!n || n.mode == D._INVALID) return void this._tinode.logger("Invalid access mode update", e.src, e.dacs);
-            if (n.mode == D._NONE) return void this._tinode.logger("Removing non-existent subscription", e.src, e.dacs);
+            var n = new x(e.dacs);
+            if (!n || n.mode == x._INVALID) return void this._tinode.logger("Invalid access mode update", e.src, e.dacs);
+            if (n.mode == x._NONE) return void this._tinode.logger("Removing non-existent subscription", e.src, e.dacs);
             this.getMeta(this.startMetaQuery().withOneSub(void 0, e.src).build()), this._contacts[e.src] = {
               touched: new Date(),
               topic: e.src,
@@ -2418,10 +2418,10 @@
     }), E.prototype.constructor = E;
 
     var A = function (e) {
-      x.call(this, "fnd", e), this._contacts = {};
+      D.call(this, "fnd", e), this._contacts = {};
     };
 
-    A.prototype = Object.create(x.prototype, {
+    A.prototype = Object.create(D.prototype, {
       _processMetaSub: {
         value: function (e) {
           var t = Object.getOwnPropertyNames(this._contacts).length;
@@ -3366,7 +3366,7 @@ function sanitizeImageUrl(url) {
 /*! exports provided: en, ru, zh, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"en\":{\"archived_contacts\":\"Archived contacts ({count})\",\"contacts_not_found\":\"You have no chats<br />¯∖_(ツ)_/¯\",\"full_name_prompt\":\"Full name, e.g. John Doe\",\"email_prompt\":\"Email, e.g. jdoe@example.com\",\"button_sign_up\":\"Sign up\",\"validate_credential_action\":\"confirm\",\"label_your_name\":\"Your name\",\"label_password\":\"Password\",\"password_unchanged_prompt\":\"Unchanged\",\"label_message_sound\":\"Message sound:\",\"label_push_notifications\":\"Notification alerts:\",\"label_push_notifications_disabled\":\"Notification alerts (requires HTTPS):\",\"title_tag_manager\":\"Tags (user discovery)\",\"label_user_contacts\":\"Contacts:\",\"label_user_id\":\"Address:\",\"label_default_access_mode\":\"Default access mode:\",\"button_logout\":\"Logout\",\"label_legal\":\"Legal\",\"link_contact_us\":\"Contact Us\",\"link_terms_of_service\":\"Terms of Service\",\"link_privacy_policy\":\"Privacy Policy\",\"requested_permissions\":\"Requested\",\"granted_permissions\":\"Granted\",\"menu_item_edit_permissions\":\"Edit permissions\",\"label_other_user\":\"Other\",\"action_delete_messages\":\"Delete Messages\",\"delete_messages_warning\":\"Are you sure you want to delete all mesages? It cannot be undone.\",\"action_leave_chat\":\"Leave Conversation\",\"leave_chat_warning\":\"Are you sure you want to leave this conversation?\",\"action_block_contact\":\"Block Contact\",\"block_contact_warning\":\"Are you sure you want to block this contact?\",\"action_report_chat\":\"Report Conversation\",\"report_chat_warning\":\"Are you sure you want to block and report this conversation?\",\"title_info\":\"Info\",\"label_topic_name\":\"Name\",\"label_private\":\"Private comment\",\"private_editing_placeholder\":\"Visible to you only\",\"label_muting_topic\":\"Muted:\",\"action_more\":\"More\",\"label_your_permissions\":\"Your permissions:\",\"label_permissions\":\"Permissions:\",\"label_you\":\"You:\",\"label_default_access\":\"Default access mode:\",\"label_group_members\":\"Group members:\",\"button_add_members\":\"Add members\",\"group_has_no_members\":\"No members\",\"login_prompt\":\"Login\",\"password_prompt\":\"Password\",\"stay_logged_in\":\"Stay logged in\",\"forgot_password_link\":\"Forgot password?\",\"button_sign_in\":\"Sign in\",\"label_client\":\"Client:\",\"label_server\":\"Server:\",\"online_now\":\"online now\",\"last_seen_timestamp\":\"Last seen\",\"title_not_found\":\"Not found\",\"unnamed_topic\":\"Unnamed\",\"messages_not_readable\":\"no access to messages\",\"peers_messaging_disabled\":\"Peer's messaging is disabled.\",\"enable_peers_messaging\":\"Enable\",\"tabtitle_find_user\":\"find\",\"tabtitle_new_group\":\"new group\",\"tabtitle_group_by_id\":\"by id\",\"search_for_contacts\":\"Use search to find contacts\",\"new_password_placeholder\":\"Enter new password\",\"label_reset_password\":\"Send a password reset email:\",\"credential_email_prompt\":\"Your registration email\",\"button_reset\":\"Reset\",\"button_send_request\":\"Send request\",\"label_server_to_use\":\"Server to use:\",\"label_wire_transport\":\"Wire transport:\",\"button_update\":\"Update\",\"sidepanel_title_login\":\"Sign In\",\"sidepanel_title_register\":\"Create Account\",\"sidepanel_title_settings\":\"Settings\",\"sidepanel_title_edit_account\":\"Edit Account\",\"sidepanel_title_newtpk\":\"Start New Chat\",\"sidepanel_title_cred\":\"Confirm Credentials\",\"sidepanel_title_reset\":\"Reset Password\",\"sidepanel_title_archive\":\"Archived Chats\",\"update_available\":\"Update available. <a href=\\\"\\\">Reload</a>.\",\"reconnect_countdown\":\"Disconnected. Reconnecting in {seconds}…\",\"reconnect_now\":\"Try now\",\"phone_dative\":\"phone\",\"email_dative\":\"email\",\"enter_confirmation_code_prompt\":\"Enter confirmation code sent to you by {method}:\",\"numeric_confirmation_code_prompt\":\"Numbers only\",\"button_confirm\":\"Confirm\",\"save_attachment\":\"save\",\"invalid_content\":\"invalid content\",\"user_not_found\":\"Not found\",\"badge_you\":\"you\",\"badge_owner\":\"owner\",\"menu_item_info\":\"Info\",\"menu_item_clear_messages\":\"Clear messages\",\"menu_item_clear_messages_for_all\":\"Clear for All\",\"menu_item_delete\":\"Delete\",\"menu_item_delete_for_all\":\"Delete for All\",\"menu_item_mute\":\"Mute\",\"menu_item_unmute\":\"Unmute\",\"menu_item_delete_topic\":\"Delete\",\"menu_item_unblock\":\"Unblock\",\"menu_item_block\":\"Block\",\"menu_item_member_delete\":\"Remove\",\"menu_item_archive_topic\":\"Archive\",\"action_cancel\":\"cancel\",\"upload_finishing\":\"finishing...\",\"no_contacts\":\"You have no contacts :-(\",\"contacts_not_found_short\":\"No contacts match '{query}'\",\"title_group_members\":\"Group Members\",\"title_all_contacts\":\"All Contacts\",\"button_ok\":\"OK\",\"button_cancel\":\"Cancel\",\"more_online_members\":\"+{overflow} more\",\"download_action\":\"download\",\"label_file_name\":\"File name:\",\"label_content_type\":\"Content type:\",\"label_size\":\"Size:\",\"chat_invitation\":\"You are invited to start a new chat. What would you like to do?\",\"chat_invitation_accept\":\"Accept\",\"chat_invitation_ignore\":\"Ignore\",\"chat_invitation_block\":\"Block\",\"error_invalid_id\":\"Invalid ID\",\"group_user_id_prompt\":\"Group or User ID\",\"button_subscribe\":\"Subscribe\",\"topic_name_editing_placeholder\":\"Freeform name of the group\",\"button_create\":\"Create\",\"permission_join\":\"Join ({val})\",\"permission_read\":\"Read ({val})\",\"permission_write\":\"Write ({val})\",\"permission_pres\":\"Get notified ({val})\",\"permission_admin\":\"Approve ({val})\",\"permission_share\":\"Share ({val})\",\"permission_delete\":\"Delete ({val})\",\"permission_owner\":\"Owner ({val})\",\"title_permissions\":\"Permissions\",\"message_sending\":\"sending...\",\"message_sending_failed\":\"failed\",\"search_placeholder\":\"List like email:alice@example.com, tel:17025550003...\",\"messaging_disabled_prompt\":\"Messaging disabled\",\"new_message_prompt\":\"New message\",\"file_attachment_too_large\":\"The file size {size} exceeds the {limit} limit.\",\"cannot_initiate_file_upload\":\"Cannot initiate file upload.\",\"tags_not_found\":\"No tags defined. Add some.\",\"tags_editor_no_tags\":\"Add some tags\",\"title_manage_tags\":\"Manage\"},\"ru\":{\"contacts_not_found\":\"Чатов нет<br />¯∖_(ツ)_/¯\",\"full_name_prompt\":\"Полное имя, напр. Иван Петров\",\"email_prompt\":\"Email, напр. ivan@example.com\",\"button_sign_up\":\"Создать счет\",\"label_your_name\":\"Ваше имя\",\"label_password\":\"Пароль\",\"password_unchanged_prompt\":\"Не изменен\",\"label_user_id\":\"Адрес:\",\"label_default_access_mode\":\"Доступ по умолчанию:\",\"label_message_sound\":\"Звук нового сообщения:\",\"label_push_notifications\":\"Уведомления:\",\"label_push_notifications_disabled\":\"Уведомления (требуют HTTPS):\",\"title_tag_manager\":\"Таги для поиска\",\"button_logout\":\"Выйти\",\"login_prompt\":\"Логин\",\"password_prompt\":\"Пароль\",\"stay_logged_in\":\"Запомнить\",\"forgot_password_link\":\"Напомнить пароль\",\"button_sign_in\":\"Войти\",\"label_client\":\"Клиент:\",\"label_server\":\"Сервер:\",\"online_now\":\"онлайн\",\"last_seen_timestamp\":\"Был активен\",\"title_not_found\":\"Не найден\",\"unnamed_topic\":\"Без названия\",\"messages_not_readable\":\"нет доступа к сообщениям\",\"tabtitle_find_user\":\"найти\",\"tabtitle_new_group\":\"создать\",\"tabtitle_group_by_id\":\"по id\",\"label_server_to_use\":\"Использовать сервер:\",\"label_wire_transport\":\"Соединение:\",\"button_update\":\"Применить\",\"sidepanel_title_login\":\"Авторизация\",\"sidepanel_title_register\":\"Зарегистрироваться\",\"sidepanel_title_settings\":\"Настройки\",\"sidepanel_title_edit_account\":\"Редактировать счет\",\"sidepanel_title_newtpk\":\"Новый чат\",\"sidepanel_title_cred\":\"Подтвердить\",\"sidepanel_title_reset\":\"Сменить пароль\",\"tags_not_found\":\"Тагов нет. Добавьте\",\"tags_editor_no_tags\":\"Добавьте таги\",\"title_manage_tags\":\"Редактировать\",\"message_sending\":\"в пути...\",\"message_sending_failed\":\"ошибка\",\"search_placeholder\":\"Список, напр. email:alice@example.com, tel:+17025550003...\",\"messaging_disabled_prompt\":\"Отправка недоступна\",\"new_message_prompt\":\"Новое сообщение\",\"file_attachment_too_large\":\"Размер файла {size} превышает {limit} лимит.\",\"cannot_initiate_file_upload\":\"Ошибка загрузки файла.\",\"search_for_contacts\":\"Поиск контактов\",\"enter_confirmation_code_prompt\":\"Код подтверждения, полученный по {method}:\",\"numeric_confirmation_code_prompt\":\"Только цифры\",\"button_confirm\":\"Подтвердить\",\"button_ok\":\"OK\",\"button_cancel\":\"Отменить\",\"invalid_content\":\"сообщение не читается\",\"label_file_name\":\"Имя файла:\",\"label_content_type\":\"Тип:\",\"label_size\":\"Размер:\",\"phone_dative\":\"телефону\",\"email_dative\":\"емейлу\",\"title_group_members\":\"Участники\",\"download_action\":\"скачать\",\"permission_join\":\"Подписываться ({val})\",\"permission_read\":\"Читать ({val})\",\"permission_write\":\"Писать ({val})\",\"permission_pres\":\"Уведомлять ({val})\",\"permission_admin\":\"Подтверждать ({val})\",\"permission_share\":\"Приглашать ({val})\",\"permission_delete\":\"Удалять ({val})\",\"permission_owner\":\"Владелец ({val})\",\"title_permissions\":\"Права доступа\",\"requested_permissions\":\"Требуются\",\"granted_permissions\":\"Получены\",\"menu_item_edit_permissions\":\"Права доступа\",\"label_other_user\":\"Второй\",\"label_topic_name\":\"Название\",\"label_private\":\"Комментарий\",\"private_editing_placeholder\":\"Виден только вам\",\"label_muting_topic\":\"Без уведомлений\",\"action_more\":\"Ещё\",\"label_your_permissions\":\"Ваши права доступа:\",\"label_permissions\":\"Права доступа:\",\"label_you\":\"Вы:\",\"label_default_access\":\"Права по умолчанию:\",\"label_group_members\":\"Участники чата:\",\"button_add_members\":\"Добавить\",\"group_has_no_members\":\"Нет участников\",\"action_leave_chat\":\"Уйти из чата\",\"menu_item_info\":\"Информация\",\"menu_item_clear_messages\":\"Удалить сообщения\",\"menu_item_clear_messages_for_all\":\"Удалить для всех\",\"menu_item_delete\":\"Удалить\",\"menu_item_delete_for_all\":\"Удалить для всех\",\"menu_item_mute\":\"Не уведомлять\",\"menu_item_unmute\":\"Уведомлять\",\"menu_item_delete_topic\":\"Удалить чат\",\"menu_item_unblock\":\"Разблокировать\",\"menu_item_block\":\"Заблокировать\",\"menu_item_member_delete\":\"Отписать\",\"title_info\":\"Подробности\",\"new_password_placeholder\":\"Введите новый пароль\",\"label_reset_password\":\"Отправить емейл для смены пароля:\",\"credential_email_prompt\":\"Регистрационный емейл\",\"button_reset\":\"Изменить\",\"button_send_request\":\"Отправить\",\"action_cancel\":\"отменить\",\"upload_finishing\":\"завершение...\",\"no_contacts\":\"Ничего нет :-(\",\"contacts_not_found_short\":\"Нет контактов для запроса '{query}'\",\"title_all_contacts\":\"Все контакты\",\"error_invalid_id\":\"Неверный ID\",\"group_user_id_prompt\":\"ID чата или пользователя\",\"button_subscribe\":\"Подписаться\",\"topic_name_editing_placeholder\":\"Название чата\",\"button_create\":\"Создать\",\"badge_you\":\"вы\",\"badge_owner\":\"влад.\",\"update_available\":\"Есть новая версия приложения. <a href=\\\"\\\">Обновить</a>.\",\"user_not_found\":\"Не найден\",\"reconnect_countdown\":\"Нет связи. Подключение через {seconds}…\",\"reconnect_now\":\"Подключить сейчас.\",\"save_attachment\":\"сохранить\",\"menu_item_archive_topic\":\"В архив\",\"archived_contacts\":\"Чаты в архиве ({count})\",\"sidepanel_title_archive\":\"Архив чатов\",\"chat_invitation\":\"Вас пригласили начать новый чат. Как вы хотите поступить?\",\"chat_invitation_accept\":\"Принять\",\"chat_invitation_ignore\":\"Игнорировать\",\"chat_invitation_block\":\"Заблокировать\",\"peers_messaging_disabled\":\"Чат заблокирован у корреспондента.\",\"enable_peers_messaging\":\"Разблокировать.\",\"more_online_members\":\"+еще {overflow}\",\"label_user_contacts\":\"Конакты:\",\"validate_credential_action\":\"подтвердить\",\"label_legal\":\"Прочее\",\"link_contact_us\":\"Связаться с нами\",\"link_terms_of_service\":\"Условия сервиса\",\"link_privacy_policy\":\"Политика конфиденциальности\",\"action_delete_messages\":\"Удалить сообщения\",\"action_block_contact\":\"Заблокировать контакт\",\"action_report_chat\":\"Сообщить о нарушении\",\"delete_messages_warning\":\"Вы действительно хотите удалить все сообщения?\",\"leave_chat_warning\":\"Вы действительно хотите покинуть этот чат?\",\"block_contact_warning\":\"Вы действительно заблокировать этот контакт?\",\"report_chat_warning\":\"Вы действительно хотите сообщить о нарушении и заблокировать этот чат?\"},\"zh\":{\"archived_contacts\":\"已归档联系人 ({count})\",\"contacts_not_found\":\"你尚无会话<br />¯∖_(ツ)_/¯\",\"full_name_prompt\":\"全名，例如张伟\",\"email_prompt\":\"电子邮件，例如 zhang@example.com\",\"button_sign_up\":\"注册\",\"label_your_name\":\"你的姓名\",\"label_password\":\"密码\",\"password_unchanged_prompt\":\"未改变\",\"label_user_id\":\"地址：\",\"label_default_access_mode\":\"蓦然访问模式：\",\"label_message_sound\":\"消息提示音：\",\"label_push_notifications\":\"通知提醒：\",\"label_push_notifications_disabled\":\"通知提醒（需要 HTTPS）：\",\"title_tag_manager\":\"标签（用户发现）\",\"button_logout\":\"登出\",\"requested_permissions\":\"已请求\",\"granted_permissions\":\"已授予\",\"menu_item_edit_permissions\":\"编辑权限\",\"label_other_user\":\"其他\",\"title_info\":\"信息\",\"label_topic_name\":\"名称\",\"label_private\":\"私人评论\",\"private_editing_placeholder\":\"仅自己可见\",\"label_muting_topic\":\"已静音：\",\"action_more\":\"更多\",\"label_your_permissions\":\"你的权限：\",\"label_permissions\":\"权限：\",\"label_you\":\"你：\",\"label_default_access\":\"默认权限模式：\",\"label_group_members\":\"群组成员：\",\"button_add_members\":\"添加成员\",\"group_has_no_members\":\"无成员\",\"action_leave_chat\":\"离开\",\"login_prompt\":\"登录\",\"password_prompt\":\"密码\",\"stay_logged_in\":\"保持登录\",\"forgot_password_link\":\"忘记密码？\",\"button_sign_in\":\"登录\",\"label_client\":\"客户端：\",\"label_server\":\"服务器：\",\"online_now\":\"在线\",\"last_seen_timestamp\":\"最后可见\",\"title_not_found\":\"无法找到\",\"unnamed_topic\":\"未命名\",\"messages_not_readable\":\"无消息访问权限\",\"peers_messaging_disabled\":\"成员间消息已禁用。\",\"enable_peers_messaging\":\"启用\",\"tabtitle_find_user\":\"搜索\",\"tabtitle_new_group\":\"新群组\",\"tabtitle_group_by_id\":\"通过 id\",\"search_for_contacts\":\"使用搜索寻找联系人\",\"new_password_placeholder\":\"输入新密码\",\"label_reset_password\":\"发送密码重置邮件：\",\"credential_email_prompt\":\"你的注册邮箱\",\"button_reset\":\"重置\",\"button_send_request\":\"发送请求\",\"label_server_to_use\":\"使用的服务器：\",\"label_wire_transport\":\"线路传输：\",\"button_update\":\"更新\",\"sidepanel_title_login\":\"登录\",\"sidepanel_title_register\":\"创建账户\",\"sidepanel_title_settings\":\"设置\",\"sidepanel_title_edit_account\":\"编辑账户\",\"sidepanel_title_newtpk\":\"开始新会话\",\"sidepanel_title_cred\":\"确认凭据\",\"sidepanel_title_reset\":\"重置密码\",\"sidepanel_title_archive\":\"已存档会话\",\"update_available\":\"更新可用。<a href=\\\"\\\">重新载入</a>.\",\"reconnect_countdown\":\"连接已断开。{seconds} 秒后重新连接…\",\"reconnect_now\":\"立即尝试\",\"phone_dative\":\"电话\",\"email_dative\":\"电子邮件\",\"enter_confirmation_code_prompt\":\"输入通过{method}发送的验证码：\",\"numeric_confirmation_code_prompt\":\"仅数字\",\"button_confirm\":\"确认\",\"save_attachment\":\"保存\",\"invalid_content\":\"无效内容\",\"user_not_found\":\"未找到\",\"badge_you\":\"你\",\"badge_owner\":\"所有者\",\"menu_item_info\":\"信息\",\"menu_item_clear_messages\":\"清空消息\",\"menu_item_clear_messages_for_all\":\"全部清除\",\"menu_item_delete\":\"删除\",\"menu_item_delete_for_all\":\"全部删除\",\"menu_item_mute\":\"静音\",\"menu_item_unmute\":\"取消静音\",\"menu_item_delete_topic\":\"删除\",\"menu_item_unblock\":\"取消屏蔽\",\"menu_item_block\":\"屏蔽\",\"menu_item_member_delete\":\"移除\",\"menu_item_archive_topic\":\"归档\",\"action_cancel\":\"取消\",\"upload_finishing\":\"正在结束...\",\"no_contacts\":\"你尚无联系人 ：-(\",\"contacts_not_found_short\":\"无联系人匹配 '{query}'\",\"title_group_members\":\"群组成员\",\"title_all_contacts\":\"全部联系人\",\"button_ok\":\"好\",\"button_cancel\":\"取消\",\"download_action\":\"下载\",\"label_file_name\":\"文件名：\",\"label_content_type\":\"内容类型：\",\"label_size\":\"大小：\",\"chat_invitation\":\"你受邀开始新会话。你想怎么做？\",\"chat_invitation_accept\":\"接受\",\"chat_invitation_ignore\":\"忽略\",\"chat_invitation_block\":\"屏蔽\",\"error_invalid_id\":\"无效 ID\",\"group_user_id_prompt\":\"群组或用户 ID\",\"button_subscribe\":\"订阅\",\"topic_name_editing_placeholder\":\"群组自由格式名称\",\"button_create\":\"创建\",\"permission_join\":\"加入 ({val})\",\"permission_read\":\"读取 ({val})\",\"permission_write\":\"写入 ({val})\",\"permission_pres\":\"获取通知 ({val})\",\"permission_admin\":\"批准 ({val})\",\"permission_share\":\"分享 ({val})\",\"permission_delete\":\"删除 ({val})\",\"permission_owner\":\"所有者 ({val})\",\"title_permissions\":\"权限\",\"message_sending\":\"正在发送...\",\"message_sending_failed\":\"发送失败\",\"search_placeholder\":\"列表如 email:alice@example.com, tel:+17025550003...\",\"messaging_disabled_prompt\":\"消息已禁用\",\"new_message_prompt\":\"新消息\",\"file_attachment_too_large\":\"文件大小 {size} 超过 {limit} 限制。\",\"cannot_initiate_file_upload\":\"无法初始化文件上传。\",\"tags_not_found\":\"尚未定义标签。添加一些。\",\"tags_editor_no_tags\":\"添加一些标签\",\"title_manage_tags\":\"管理标签\",\"more_online_members\":\"还有{overflow}个\",\"label_user_contacts\":\"往来：\",\"validate_credential_action\":\"确认\",\"label_legal\":\"法律东西\",\"link_contact_us\":\"联系我们\",\"link_terms_of_service\":\"条款和条件\",\"link_privacy_policy\":\"隐私政策\",\"action_delete_messages\":\"删除所有帖子\",\"action_block_contact\":\"屏蔽联系人\",\"action_report_chat\":\"检举垃圾邮件\"}}");
+module.exports = JSON.parse("{\"en\":{\"archived_contacts\":\"Archived contacts ({count})\",\"contacts_not_found\":\"You have no chats<br />¯∖_(ツ)_/¯\",\"full_name_prompt\":\"Full name, e.g. John Doe\",\"email_prompt\":\"Email, e.g. jdoe@example.com\",\"button_sign_up\":\"Sign up\",\"validate_credential_action\":\"confirm\",\"label_your_name\":\"Your name\",\"label_password\":\"Password\",\"password_unchanged_prompt\":\"Unchanged\",\"label_message_sound\":\"Message sound:\",\"label_push_notifications\":\"Notification alerts:\",\"label_push_notifications_disabled\":\"Notification alerts (requires HTTPS):\",\"title_tag_manager\":\"Tags (user discovery)\",\"label_user_contacts\":\"Contacts:\",\"label_user_id\":\"Address:\",\"label_default_access_mode\":\"Default access mode:\",\"button_logout\":\"Logout\",\"label_legal\":\"Legal\",\"link_contact_us\":\"Contact Us\",\"link_terms_of_service\":\"Terms of Service\",\"link_privacy_policy\":\"Privacy Policy\",\"requested_permissions\":\"Requested\",\"granted_permissions\":\"Granted\",\"menu_item_edit_permissions\":\"Edit permissions\",\"label_other_user\":\"Other\",\"action_clear_messages\":\"Clear Messages\",\"clear_messages_warning\":\"Are you sure you want to clear all messages? It cannot be undone.\",\"action_delete_messages\":\"Clear Messages for All\",\"delete_messages_warning\":\"Are you sure you want to delete all messages for everyone? It cannot be undone.\",\"action_leave_chat\":\"Leave Conversation\",\"leave_chat_warning\":\"Are you sure you want to leave this conversation?\",\"action_block_contact\":\"Block Contact\",\"block_contact_warning\":\"Are you sure you want to block this contact?\",\"action_report_chat\":\"Report Conversation\",\"report_chat_warning\":\"Are you sure you want to block and report this conversation?\",\"title_info\":\"Info\",\"label_topic_name\":\"Name\",\"label_private\":\"Private comment\",\"private_editing_placeholder\":\"Visible to you only\",\"label_muting_topic\":\"Muted:\",\"action_more\":\"More\",\"label_your_permissions\":\"Your permissions:\",\"label_permissions\":\"Permissions:\",\"label_you\":\"You:\",\"label_default_access\":\"Default access mode:\",\"label_group_members\":\"Group members:\",\"button_add_members\":\"Add members\",\"group_has_no_members\":\"No members\",\"login_prompt\":\"Login\",\"password_prompt\":\"Password\",\"stay_logged_in\":\"Stay logged in\",\"forgot_password_link\":\"Forgot password?\",\"button_sign_in\":\"Sign in\",\"label_client\":\"Client:\",\"label_server\":\"Server:\",\"online_now\":\"online now\",\"last_seen_timestamp\":\"Last seen\",\"title_not_found\":\"Not found\",\"unnamed_topic\":\"Unnamed\",\"messages_not_readable\":\"no access to messages\",\"peers_messaging_disabled\":\"Peer's messaging is disabled.\",\"enable_peers_messaging\":\"Enable\",\"tabtitle_find_user\":\"find\",\"tabtitle_new_group\":\"new group\",\"tabtitle_group_by_id\":\"by id\",\"search_for_contacts\":\"Use search to find contacts\",\"new_password_placeholder\":\"Enter new password\",\"label_reset_password\":\"Send a password reset email:\",\"credential_email_prompt\":\"Your registration email\",\"button_reset\":\"Reset\",\"button_send_request\":\"Send request\",\"label_server_to_use\":\"Server to use:\",\"label_wire_transport\":\"Wire transport:\",\"button_update\":\"Update\",\"sidepanel_title_login\":\"Sign In\",\"sidepanel_title_register\":\"Create Account\",\"sidepanel_title_settings\":\"Settings\",\"sidepanel_title_edit_account\":\"Edit Account\",\"sidepanel_title_newtpk\":\"Start New Chat\",\"sidepanel_title_cred\":\"Confirm Credentials\",\"sidepanel_title_reset\":\"Reset Password\",\"sidepanel_title_archive\":\"Archived Chats\",\"update_available\":\"Update available. <a href=\\\"\\\">Reload</a>.\",\"reconnect_countdown\":\"Disconnected. Reconnecting in {seconds}…\",\"reconnect_now\":\"Try now\",\"phone_dative\":\"phone\",\"email_dative\":\"email\",\"enter_confirmation_code_prompt\":\"Enter confirmation code sent to you by {method}:\",\"numeric_confirmation_code_prompt\":\"Numbers only\",\"button_confirm\":\"Confirm\",\"save_attachment\":\"save\",\"invalid_content\":\"invalid content\",\"user_not_found\":\"Not found\",\"badge_you\":\"you\",\"badge_owner\":\"owner\",\"menu_item_info\":\"Info\",\"menu_item_clear_messages\":\"Clear messages\",\"menu_item_clear_messages_for_all\":\"Clear for All\",\"menu_item_delete\":\"Delete\",\"menu_item_delete_for_all\":\"Delete for All\",\"menu_item_mute\":\"Mute\",\"menu_item_unmute\":\"Unmute\",\"menu_item_delete_topic\":\"Delete\",\"topic_delete_warning\":\"Are you sure you want to delete this conversation?\",\"menu_item_unblock\":\"Unblock\",\"menu_item_block\":\"Block\",\"topic_block_warning\":\"Are you sure you want to block this conversation?\",\"menu_item_member_delete\":\"Remove\",\"menu_item_archive_topic\":\"Archive\",\"action_cancel\":\"cancel\",\"upload_finishing\":\"finishing...\",\"no_contacts\":\"You have no contacts :-(\",\"contacts_not_found_short\":\"No contacts match '{query}'\",\"title_group_members\":\"Group Members\",\"title_all_contacts\":\"All Contacts\",\"button_ok\":\"OK\",\"button_cancel\":\"Cancel\",\"more_online_members\":\"+{overflow} more\",\"download_action\":\"download\",\"label_file_name\":\"File name:\",\"label_content_type\":\"Content type:\",\"label_size\":\"Size:\",\"chat_invitation\":\"You are invited to start a new chat. What would you like to do?\",\"chat_invitation_accept\":\"Accept\",\"chat_invitation_ignore\":\"Ignore\",\"chat_invitation_block\":\"Block\",\"error_invalid_id\":\"Invalid ID\",\"group_user_id_prompt\":\"Group or User ID\",\"button_subscribe\":\"Subscribe\",\"topic_name_editing_placeholder\":\"Freeform name of the group\",\"button_create\":\"Create\",\"permission_join\":\"Join ({val})\",\"permission_read\":\"Read ({val})\",\"permission_write\":\"Write ({val})\",\"permission_pres\":\"Get notified ({val})\",\"permission_admin\":\"Approve ({val})\",\"permission_share\":\"Share ({val})\",\"permission_delete\":\"Delete ({val})\",\"permission_owner\":\"Owner ({val})\",\"title_permissions\":\"Permissions\",\"message_sending\":\"sending...\",\"message_sending_failed\":\"failed\",\"search_placeholder\":\"List like email:alice@example.com, tel:17025550003...\",\"messaging_disabled_prompt\":\"Messaging disabled\",\"new_message_prompt\":\"New message\",\"file_attachment_too_large\":\"The file size {size} exceeds the {limit} limit.\",\"cannot_initiate_file_upload\":\"Cannot initiate file upload.\",\"tags_not_found\":\"No tags defined. Add some.\",\"tags_editor_no_tags\":\"Add some tags\",\"title_manage_tags\":\"Manage\"},\"ru\":{\"contacts_not_found\":\"Чатов нет<br />¯∖_(ツ)_/¯\",\"full_name_prompt\":\"Полное имя, напр. Иван Петров\",\"email_prompt\":\"Email, напр. ivan@example.com\",\"button_sign_up\":\"Создать счет\",\"label_your_name\":\"Ваше имя\",\"label_password\":\"Пароль\",\"password_unchanged_prompt\":\"Не изменен\",\"label_user_id\":\"Адрес:\",\"label_default_access_mode\":\"Доступ по умолчанию:\",\"label_message_sound\":\"Звук нового сообщения:\",\"label_push_notifications\":\"Уведомления:\",\"label_push_notifications_disabled\":\"Уведомления (требуют HTTPS):\",\"title_tag_manager\":\"Таги для поиска\",\"button_logout\":\"Выйти\",\"login_prompt\":\"Логин\",\"password_prompt\":\"Пароль\",\"stay_logged_in\":\"Запомнить\",\"forgot_password_link\":\"Напомнить пароль\",\"button_sign_in\":\"Войти\",\"label_client\":\"Клиент:\",\"label_server\":\"Сервер:\",\"online_now\":\"онлайн\",\"last_seen_timestamp\":\"Был активен\",\"title_not_found\":\"Не найден\",\"unnamed_topic\":\"Без названия\",\"messages_not_readable\":\"нет доступа к сообщениям\",\"tabtitle_find_user\":\"найти\",\"tabtitle_new_group\":\"создать\",\"tabtitle_group_by_id\":\"по id\",\"label_server_to_use\":\"Использовать сервер:\",\"label_wire_transport\":\"Соединение:\",\"button_update\":\"Применить\",\"sidepanel_title_login\":\"Авторизация\",\"sidepanel_title_register\":\"Зарегистрироваться\",\"sidepanel_title_settings\":\"Настройки\",\"sidepanel_title_edit_account\":\"Редактировать счет\",\"sidepanel_title_newtpk\":\"Новый чат\",\"sidepanel_title_cred\":\"Подтвердить\",\"sidepanel_title_reset\":\"Сменить пароль\",\"tags_not_found\":\"Тагов нет. Добавьте\",\"tags_editor_no_tags\":\"Добавьте таги\",\"title_manage_tags\":\"Редактировать\",\"message_sending\":\"в пути...\",\"message_sending_failed\":\"ошибка\",\"search_placeholder\":\"Список, напр. email:alice@example.com, tel:+17025550003...\",\"messaging_disabled_prompt\":\"Отправка недоступна\",\"new_message_prompt\":\"Новое сообщение\",\"file_attachment_too_large\":\"Размер файла {size} превышает {limit} лимит.\",\"cannot_initiate_file_upload\":\"Ошибка загрузки файла.\",\"search_for_contacts\":\"Поиск контактов\",\"enter_confirmation_code_prompt\":\"Код подтверждения, полученный по {method}:\",\"numeric_confirmation_code_prompt\":\"Только цифры\",\"button_confirm\":\"Подтвердить\",\"button_ok\":\"OK\",\"button_cancel\":\"Отменить\",\"invalid_content\":\"сообщение не читается\",\"label_file_name\":\"Имя файла:\",\"label_content_type\":\"Тип:\",\"label_size\":\"Размер:\",\"phone_dative\":\"телефону\",\"email_dative\":\"емейлу\",\"title_group_members\":\"Участники\",\"download_action\":\"скачать\",\"permission_join\":\"Подписываться ({val})\",\"permission_read\":\"Читать ({val})\",\"permission_write\":\"Писать ({val})\",\"permission_pres\":\"Уведомлять ({val})\",\"permission_admin\":\"Подтверждать ({val})\",\"permission_share\":\"Приглашать ({val})\",\"permission_delete\":\"Удалять ({val})\",\"permission_owner\":\"Владелец ({val})\",\"title_permissions\":\"Права доступа\",\"requested_permissions\":\"Требуются\",\"granted_permissions\":\"Получены\",\"menu_item_edit_permissions\":\"Права доступа\",\"label_other_user\":\"Второй\",\"label_topic_name\":\"Название\",\"label_private\":\"Комментарий\",\"private_editing_placeholder\":\"Виден только вам\",\"label_muting_topic\":\"Без уведомлений\",\"action_more\":\"Ещё\",\"label_your_permissions\":\"Ваши права доступа:\",\"label_permissions\":\"Права доступа:\",\"label_you\":\"Вы:\",\"label_default_access\":\"Права по умолчанию:\",\"label_group_members\":\"Участники чата:\",\"button_add_members\":\"Добавить\",\"group_has_no_members\":\"Нет участников\",\"action_leave_chat\":\"Уйти из чата\",\"menu_item_info\":\"Информация\",\"menu_item_clear_messages\":\"Удалить сообщения\",\"menu_item_clear_messages_for_all\":\"Удалить для всех\",\"menu_item_delete\":\"Удалить\",\"menu_item_delete_for_all\":\"Удалить для всех\",\"menu_item_mute\":\"Не уведомлять\",\"menu_item_unmute\":\"Уведомлять\",\"menu_item_delete_topic\":\"Удалить чат\",\"menu_item_unblock\":\"Разблокировать\",\"menu_item_block\":\"Заблокировать\",\"menu_item_member_delete\":\"Отписать\",\"title_info\":\"Подробности\",\"new_password_placeholder\":\"Введите новый пароль\",\"label_reset_password\":\"Отправить емейл для смены пароля:\",\"credential_email_prompt\":\"Регистрационный емейл\",\"button_reset\":\"Изменить\",\"button_send_request\":\"Отправить\",\"action_cancel\":\"отменить\",\"upload_finishing\":\"завершение...\",\"no_contacts\":\"Ничего нет :-(\",\"contacts_not_found_short\":\"Нет контактов для запроса '{query}'\",\"title_all_contacts\":\"Все контакты\",\"error_invalid_id\":\"Неверный ID\",\"group_user_id_prompt\":\"ID чата или пользователя\",\"button_subscribe\":\"Подписаться\",\"topic_name_editing_placeholder\":\"Название чата\",\"button_create\":\"Создать\",\"badge_you\":\"вы\",\"badge_owner\":\"влад.\",\"update_available\":\"Есть новая версия приложения. <a href=\\\"\\\">Обновить</a>.\",\"user_not_found\":\"Не найден\",\"reconnect_countdown\":\"Нет связи. Подключение через {seconds}…\",\"reconnect_now\":\"Подключить сейчас.\",\"save_attachment\":\"сохранить\",\"menu_item_archive_topic\":\"В архив\",\"archived_contacts\":\"Чаты в архиве ({count})\",\"sidepanel_title_archive\":\"Архив чатов\",\"chat_invitation\":\"Вас пригласили начать новый чат. Как вы хотите поступить?\",\"chat_invitation_accept\":\"Принять\",\"chat_invitation_ignore\":\"Игнорировать\",\"chat_invitation_block\":\"Заблокировать\",\"peers_messaging_disabled\":\"Чат заблокирован у корреспондента.\",\"enable_peers_messaging\":\"Разблокировать.\",\"more_online_members\":\"+еще {overflow}\",\"label_user_contacts\":\"Конакты:\",\"validate_credential_action\":\"подтвердить\",\"label_legal\":\"Прочее\",\"link_contact_us\":\"Связаться с нами\",\"link_terms_of_service\":\"Условия сервиса\",\"link_privacy_policy\":\"Политика конфиденциальности\",\"action_delete_messages\":\"Удалить сообщения\",\"action_block_contact\":\"Заблокировать контакт\",\"action_report_chat\":\"Сообщить о нарушении\",\"delete_messages_warning\":\"Вы действительно хотите удалить все сообщения?\",\"leave_chat_warning\":\"Вы действительно хотите покинуть этот чат?\",\"block_contact_warning\":\"Вы действительно заблокировать этот контакт?\",\"report_chat_warning\":\"Вы действительно хотите сообщить о нарушении и заблокировать этот чат?\",\"action_clear_messages\":\"Удалить сообщения\",\"clear_messages_warning\":\"Вы действительно хотите удалить все сообщения в чате? Их будет невозможно восстановить.\"},\"zh\":{\"archived_contacts\":\"已归档联系人 ({count})\",\"contacts_not_found\":\"你尚无会话<br />¯∖_(ツ)_/¯\",\"full_name_prompt\":\"全名，例如张伟\",\"email_prompt\":\"电子邮件，例如 zhang@example.com\",\"button_sign_up\":\"注册\",\"label_your_name\":\"你的姓名\",\"label_password\":\"密码\",\"password_unchanged_prompt\":\"未改变\",\"label_user_id\":\"地址：\",\"label_default_access_mode\":\"蓦然访问模式：\",\"label_message_sound\":\"消息提示音：\",\"label_push_notifications\":\"通知提醒：\",\"label_push_notifications_disabled\":\"通知提醒（需要 HTTPS）：\",\"title_tag_manager\":\"标签（用户发现）\",\"button_logout\":\"登出\",\"requested_permissions\":\"已请求\",\"granted_permissions\":\"已授予\",\"menu_item_edit_permissions\":\"编辑权限\",\"label_other_user\":\"其他\",\"title_info\":\"信息\",\"label_topic_name\":\"名称\",\"label_private\":\"私人评论\",\"private_editing_placeholder\":\"仅自己可见\",\"label_muting_topic\":\"已静音：\",\"action_more\":\"更多\",\"label_your_permissions\":\"你的权限：\",\"label_permissions\":\"权限：\",\"label_you\":\"你：\",\"label_default_access\":\"默认权限模式：\",\"label_group_members\":\"群组成员：\",\"button_add_members\":\"添加成员\",\"group_has_no_members\":\"无成员\",\"action_leave_chat\":\"离开\",\"login_prompt\":\"登录\",\"password_prompt\":\"密码\",\"stay_logged_in\":\"保持登录\",\"forgot_password_link\":\"忘记密码？\",\"button_sign_in\":\"登录\",\"label_client\":\"客户端：\",\"label_server\":\"服务器：\",\"online_now\":\"在线\",\"last_seen_timestamp\":\"最后可见\",\"title_not_found\":\"无法找到\",\"unnamed_topic\":\"未命名\",\"messages_not_readable\":\"无消息访问权限\",\"peers_messaging_disabled\":\"成员间消息已禁用。\",\"enable_peers_messaging\":\"启用\",\"tabtitle_find_user\":\"搜索\",\"tabtitle_new_group\":\"新群组\",\"tabtitle_group_by_id\":\"通过 id\",\"search_for_contacts\":\"使用搜索寻找联系人\",\"new_password_placeholder\":\"输入新密码\",\"label_reset_password\":\"发送密码重置邮件：\",\"credential_email_prompt\":\"你的注册邮箱\",\"button_reset\":\"重置\",\"button_send_request\":\"发送请求\",\"label_server_to_use\":\"使用的服务器：\",\"label_wire_transport\":\"线路传输：\",\"button_update\":\"更新\",\"sidepanel_title_login\":\"登录\",\"sidepanel_title_register\":\"创建账户\",\"sidepanel_title_settings\":\"设置\",\"sidepanel_title_edit_account\":\"编辑账户\",\"sidepanel_title_newtpk\":\"开始新会话\",\"sidepanel_title_cred\":\"确认凭据\",\"sidepanel_title_reset\":\"重置密码\",\"sidepanel_title_archive\":\"已存档会话\",\"update_available\":\"更新可用。<a href=\\\"\\\">重新载入</a>.\",\"reconnect_countdown\":\"连接已断开。{seconds} 秒后重新连接…\",\"reconnect_now\":\"立即尝试\",\"phone_dative\":\"电话\",\"email_dative\":\"电子邮件\",\"enter_confirmation_code_prompt\":\"输入通过{method}发送的验证码：\",\"numeric_confirmation_code_prompt\":\"仅数字\",\"button_confirm\":\"确认\",\"save_attachment\":\"保存\",\"invalid_content\":\"无效内容\",\"user_not_found\":\"未找到\",\"badge_you\":\"你\",\"badge_owner\":\"所有者\",\"menu_item_info\":\"信息\",\"menu_item_clear_messages\":\"清空消息\",\"menu_item_clear_messages_for_all\":\"全部清除\",\"menu_item_delete\":\"删除\",\"menu_item_delete_for_all\":\"全部删除\",\"menu_item_mute\":\"静音\",\"menu_item_unmute\":\"取消静音\",\"menu_item_delete_topic\":\"删除\",\"menu_item_unblock\":\"取消屏蔽\",\"menu_item_block\":\"屏蔽\",\"menu_item_member_delete\":\"移除\",\"menu_item_archive_topic\":\"归档\",\"action_cancel\":\"取消\",\"upload_finishing\":\"正在结束...\",\"no_contacts\":\"你尚无联系人 ：-(\",\"contacts_not_found_short\":\"无联系人匹配 '{query}'\",\"title_group_members\":\"群组成员\",\"title_all_contacts\":\"全部联系人\",\"button_ok\":\"好\",\"button_cancel\":\"取消\",\"download_action\":\"下载\",\"label_file_name\":\"文件名：\",\"label_content_type\":\"内容类型：\",\"label_size\":\"大小：\",\"chat_invitation\":\"你受邀开始新会话。你想怎么做？\",\"chat_invitation_accept\":\"接受\",\"chat_invitation_ignore\":\"忽略\",\"chat_invitation_block\":\"屏蔽\",\"error_invalid_id\":\"无效 ID\",\"group_user_id_prompt\":\"群组或用户 ID\",\"button_subscribe\":\"订阅\",\"topic_name_editing_placeholder\":\"群组自由格式名称\",\"button_create\":\"创建\",\"permission_join\":\"加入 ({val})\",\"permission_read\":\"读取 ({val})\",\"permission_write\":\"写入 ({val})\",\"permission_pres\":\"获取通知 ({val})\",\"permission_admin\":\"批准 ({val})\",\"permission_share\":\"分享 ({val})\",\"permission_delete\":\"删除 ({val})\",\"permission_owner\":\"所有者 ({val})\",\"title_permissions\":\"权限\",\"message_sending\":\"正在发送...\",\"message_sending_failed\":\"发送失败\",\"search_placeholder\":\"列表如 email:alice@example.com, tel:+17025550003...\",\"messaging_disabled_prompt\":\"消息已禁用\",\"new_message_prompt\":\"新消息\",\"file_attachment_too_large\":\"文件大小 {size} 超过 {limit} 限制。\",\"cannot_initiate_file_upload\":\"无法初始化文件上传。\",\"tags_not_found\":\"尚未定义标签。添加一些。\",\"tags_editor_no_tags\":\"添加一些标签\",\"title_manage_tags\":\"管理标签\",\"more_online_members\":\"还有{overflow}个\",\"label_user_contacts\":\"往来：\",\"validate_credential_action\":\"确认\",\"label_legal\":\"法律东西\",\"link_contact_us\":\"联系我们\",\"link_terms_of_service\":\"条款和条件\",\"link_privacy_policy\":\"隐私政策\",\"action_delete_messages\":\"删除所有帖子\",\"action_block_contact\":\"屏蔽联系人\",\"action_report_chat\":\"检举垃圾邮件\"}}");
 
 /***/ }),
 
@@ -4333,13 +4333,21 @@ var messages = Object(react_intl__WEBPACK_IMPORTED_MODULE_1__["defineMessages"])
     "id": "label_other_user",
     "defaultMessage": "Other"
   },
+  clear_messages: {
+    "id": "action_clear_messages",
+    "defaultMessage": "Clear Messages"
+  },
+  clear_messages_warning: {
+    "id": "clear_messages_warning",
+    "defaultMessage": "Are you sure you want to clear all messages? It cannot be undone."
+  },
   delete_messages: {
     "id": "action_delete_messages",
-    "defaultMessage": "Delete Messages"
+    "defaultMessage": "Clear Messages for All"
   },
   delete_messages_warning: {
     "id": "delete_messages_warning",
-    "defaultMessage": "Are you sure you want to delete all mesages? It cannot be undone."
+    "defaultMessage": "Are you sure you want to delete all messages for everyone? It cannot be undone."
   },
   leave_chat: {
     "id": "action_leave_chat",
@@ -4381,6 +4389,7 @@ var InfoView = function (_React$Component) {
       owner: false,
       admin: false,
       sharer: false,
+      deleter: false,
       muted: false,
       address: null,
       groupTopic: undefined,
@@ -4511,6 +4520,7 @@ var InfoView = function (_React$Component) {
         owner: acs && acs.isOwner(),
         admin: acs && acs.isAdmin(),
         sharer: acs && acs.isSharer(),
+        deleter: acs && acs.isDeleter(),
         muted: acs && acs.isMuted(),
         fullName: topic["public"] ? topic["public"].fn : undefined,
         avatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__["makeImageUrl"])(topic["public"] ? topic["public"].photo : null),
@@ -4762,7 +4772,7 @@ var InfoView = function (_React$Component) {
 
       e.preventDefault();
       var formatMessage = this.props.intl.formatMessage;
-      this.props.onShowAlert(formatMessage(messages.delete_messages), formatMessage(messages.delete_messages_warning), function () {
+      this.props.onShowAlert(formatMessage(this.state.deleter ? messages.delete_messages : messages.clear_messages), formatMessage(this.state.deleter ? messages.delete_messages_warning : messages.clear_messages_warning), function () {
         _this2.props.onDeleteMessages(_this2.props.topic);
       }, null, true, null);
     }
@@ -5017,7 +5027,7 @@ var InfoView = function (_React$Component) {
         onClick: this.handleDeleteMessages
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons"
-      }, "delete_outline"), " \xA0", formatMessage(messages.delete_messages)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+      }, "delete_outline"), " \xA0", formatMessage(this.state.deleter ? messages.delete_messages : messages.clear_messages)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         href: "#",
         className: "red flat-button",
         onClick: this.handleLeave
@@ -5054,7 +5064,7 @@ var InfoView = function (_React$Component) {
         onClick: this.handleShowAddMembers
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons"
-      }, "person_add"), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      }, "person_add"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "button_add_members",
         defaultMessage: "Add members"
       })) : null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
@@ -8365,6 +8375,7 @@ var TinodeWeb = function (_React$Component) {
         params: this.state.contextMenuParams,
         items: this.state.contextMenuItems,
         hide: this.handleHideContextMenu,
+        onShowAlert: this.handleShowAlert,
         onAction: this.handleContextMenuAction,
         onTopicRemoved: function onTopicRemoved(topicName) {
           if (topicName == _this35.state.topicSelected) {
@@ -10404,6 +10415,10 @@ var messages = Object(react_intl__WEBPACK_IMPORTED_MODULE_2__["defineMessages"])
     "id": "menu_item_delete_topic",
     "defaultMessage": "Delete"
   },
+  topic_delete_warning: {
+    "id": "topic_delete_warning",
+    "defaultMessage": "Are you sure you want to delete this conversation?"
+  },
   unblock: {
     "id": "menu_item_unblock",
     "defaultMessage": "Unblock"
@@ -10411,6 +10426,10 @@ var messages = Object(react_intl__WEBPACK_IMPORTED_MODULE_2__["defineMessages"])
   block: {
     "id": "menu_item_block",
     "defaultMessage": "Block"
+  },
+  topic_block_warning: {
+    "id": "topic_block_warning",
+    "defaultMessage": "Are you sure you want to block this conversation?"
   },
   member_delete: {
     "id": "menu_item_member_delete",
@@ -10445,14 +10464,26 @@ var ContextMenu = function (_React$Component) {
         id: 'messages_clear',
         title: formatMessage(messages.clear_messages),
         handler: function handler(params, errorHandler) {
-          return _this.deleteMessages(true, false, params, errorHandler);
+          return props.onShowAlert(formatMessage({
+            id: 'menu_item_clear_messages'
+          }), formatMessage({
+            id: 'clear_messages_warning'
+          }), function () {
+            _this.deleteMessages(true, false, params, errorHandler);
+          }, null, true, null);
         }
       },
       'messages_clear_hard': {
         id: 'messages_clear_hard',
         title: formatMessage(messages.clear_for_all),
         handler: function handler(params, errorHandler) {
-          return _this.deleteMessages(true, true, params, errorHandler);
+          return props.onShowAlert(formatMessage({
+            id: 'menu_item_clear_messages_for_all'
+          }), formatMessage({
+            id: 'delete_messages_warning'
+          }), function () {
+            return _this.deleteMessages(true, true, params, errorHandler);
+          }, null, true, null);
         }
       },
       'message_delete': {
@@ -10488,29 +10519,37 @@ var ContextMenu = function (_React$Component) {
         id: 'topic_block',
         title: formatMessage(messages.block),
         handler: function handler(params, errorHandler) {
-          return _this.topicPermissionSetter('-JP', params, errorHandler).then(function (ctrl) {
-            _this.props.onTopicRemoved(params.topicName);
+          return props.onShowAlert(formatMessage({
+            id: 'menu_item_block'
+          }), formatMessage(messages.topic_block_warning), function () {
+            return _this.topicPermissionSetter('-JP', params, errorHandler).then(function (ctrl) {
+              _this.props.onTopicRemoved(params.topicName);
 
-            return ctrl;
-          });
+              return ctrl;
+            });
+          }, null, true, null);
         }
       },
       'topic_delete': {
         id: 'topic_delete',
         title: formatMessage(messages.topic_delete),
         handler: function handler(params, errorHandler) {
-          var topic = _this.props.tinode.getTopic(params.topicName);
+          return props.onShowAlert(formatMessage({
+            id: 'menu_item_delete_topic'
+          }), formatMessage(messages.topic_delete_warning), function () {
+            var topic = _this.props.tinode.getTopic(params.topicName);
 
-          if (!topic) {
-            console.log("Topic not found: ", params.topicName);
-            return;
-          }
-
-          return topic.delTopic()["catch"](function (err) {
-            if (errorHandler) {
-              errorHandler(err.message, 'err');
+            if (!topic) {
+              console.log("Topic not found: ", params.topicName);
+              return;
             }
-          });
+
+            return topic.delTopic()["catch"](function (err) {
+              if (errorHandler) {
+                errorHandler(err.message, 'err');
+              }
+            });
+          }, null, true, null);
         }
       },
       'topic_archive': {

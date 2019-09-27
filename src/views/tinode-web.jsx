@@ -1312,6 +1312,7 @@ class TinodeWeb extends React.Component {
             params={this.state.contextMenuParams}
             items={this.state.contextMenuItems}
             hide={this.handleHideContextMenu}
+            onShowAlert={this.handleShowAlert}
             onAction={this.handleContextMenuAction}
             onTopicRemoved={(topicName) => {
               if (topicName == this.state.topicSelected) {

@@ -47,15 +47,26 @@ const messages = defineMessages({
     defaultMessage: 'Delete',
     description: 'Delete entire topic'
   },
+  topic_delete_warning: {
+    id: 'topic_delete_warning',
+    defaultMessage: 'Are you sure you want to delete this conversation?',
+    description: 'Alert warning when deleting entire topic'
+  },
   unblock: {
     id: 'menu_item_unblock',
     defaultMessage: 'Unblock',
-    description: 'Unblock user'
+    description: 'Unblock topic or user'
   },
+  // Generic string suitable for either topic or user.
   block: {
     id: 'menu_item_block',
     defaultMessage: 'Block',
-    description: 'Block user'
+    description: 'Block topic or user'
+  },
+  topic_block_warning: {
+    id: 'topic_block_warning',
+    defaultMessage: 'Are you sure you want to block this conversation?',
+    description: 'Alert warning when blocking a topic.'
   },
   member_delete: {
     id: 'menu_item_member_delete',
@@ -90,14 +101,28 @@ class ContextMenu extends React.Component {
         id: 'messages_clear',
         title: formatMessage(messages.clear_messages),
         handler: (params, errorHandler) => {
-          return this.deleteMessages(true, false, params, errorHandler);
+          return props.onShowAlert(
+            formatMessage({id: 'menu_item_clear_messages'}), // title
+            formatMessage({id: 'clear_messages_warning'}), // content
+            (() => { this.deleteMessages(true, false, params, errorHandler); }), // onConfirm
+            null, // "OK"
+            true, // Show Reject button
+            null  // "Cancel"
+          );
         }
       },
       'messages_clear_hard': {
         id: 'messages_clear_hard',
         title: formatMessage(messages.clear_for_all),
         handler: (params, errorHandler) => {
-          return this.deleteMessages(true, true, params, errorHandler);
+          return props.onShowAlert(
+            formatMessage({id: 'menu_item_clear_messages_for_all'}), // title
+            formatMessage({id: 'delete_messages_warning'}), // content
+            (() => { return this.deleteMessages(true, true, params, errorHandler); }),
+            null, // "OK"
+            true, // Show Reject button
+            null  // "Cancel"
+          );
         }
       },
       'message_delete': {
@@ -133,26 +158,44 @@ class ContextMenu extends React.Component {
         id: 'topic_block',
         title: formatMessage(messages.block),
         handler: (params, errorHandler) => {
-          return this.topicPermissionSetter('-JP', params, errorHandler).then((ctrl) => {
-            this.props.onTopicRemoved(params.topicName);
-            return ctrl;
-          });
+          return props.onShowAlert(
+            formatMessage({id: 'menu_item_block'}), // title
+            formatMessage(messages.topic_block_warning), // content
+            (() => {
+              return this.topicPermissionSetter('-JP', params, errorHandler).then((ctrl) => {
+                this.props.onTopicRemoved(params.topicName);
+                return ctrl;
+              });
+            }),
+            null, // "OK"
+            true, // Show Reject button
+            null  // "Cancel"
+          );
         }
       },
       'topic_delete': {
         id: 'topic_delete',
         title: formatMessage(messages.topic_delete),
         handler: (params, errorHandler) => {
-          const topic = this.props.tinode.getTopic(params.topicName);
-          if (!topic) {
-            console.log("Topic not found: ", params.topicName);
-            return;
-          }
-          return topic.delTopic().catch((err) => {
-            if (errorHandler) {
-              errorHandler(err.message, 'err');
-            }
-          });
+          return props.onShowAlert(
+            formatMessage({id: 'menu_item_delete_topic'}), // title
+            formatMessage(messages.topic_delete_warning), // content
+            (() => {
+              const topic = this.props.tinode.getTopic(params.topicName);
+              if (!topic) {
+                console.log("Topic not found: ", params.topicName);
+                return;
+              }
+              return topic.delTopic().catch((err) => {
+                if (errorHandler) {
+                  errorHandler(err.message, 'err');
+                }
+              });
+            }),
+            null, // "OK"
+            true, // Show Reject button
+            null  // "Cancel"
+          );
         }
       },
       'topic_archive': {

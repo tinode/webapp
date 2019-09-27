@@ -41,45 +41,55 @@ const messages = defineMessages({
     defaultMessage: 'Other',
     description: 'Label for the other user when the user is unnamed'
   },
+  clear_messages: {
+    id: 'action_clear_messages',
+    defaultMessage: 'Clear Messages',
+    description: 'Flat button [Clear Messages] (soft-delete messages)'
+  },
+  clear_messages_warning: {
+    id: 'clear_messages_warning',
+    defaultMessage: 'Are you sure you want to clear all messages? It cannot be undone.',
+    description: 'Alert dialog warning when deleting all messages.'
+  },
   delete_messages: {
-    id: "action_delete_messages",
-    defaultMessage: "Delete Messages",
-    description: "Flat button [Delete Messages]"
+    id: 'action_delete_messages',
+    defaultMessage: 'Clear Messages for All',
+    description: 'Flat button [Clear for All] (hard-delete all messages)'
   },
   delete_messages_warning: {
-    id: "delete_messages_warning",
-    defaultMessage: "Are you sure you want to delete all mesages? It cannot be undone.",
-    description: "Alert dialog warning when deleting all messages."
+    id: 'delete_messages_warning',
+    defaultMessage: 'Are you sure you want to delete all messages for everyone? It cannot be undone.',
+    description: 'Alert dialog warning when hard-deleting all messages.'
   },
   leave_chat: {
-    id: "action_leave_chat",
-    defaultMessage: "Leave Conversation",
-    description: "Flat button [Leave Conversation]"
+    id: 'action_leave_chat',
+    defaultMessage: 'Leave Conversation',
+    description: 'Flat button [Leave Conversation]'
   },
   leave_chat_warning: {
-    id: "leave_chat_warning",
-    defaultMessage: "Are you sure you want to leave this conversation?",
-    description: "Alert dialog warning when unsubscribing from a chat."
+    id: 'leave_chat_warning',
+    defaultMessage: 'Are you sure you want to leave this conversation?',
+    description: 'Alert dialog warning when unsubscribing from a chat.'
   },
   block_contact: {
-    id: "action_block_contact",
+    id: 'action_block_contact',
     defaultMessage: "Block Contact",
     description: "Flat button [Block Contact]"
   },
   block_contact_warning: {
-    id: "block_contact_warning",
-    defaultMessage: "Are you sure you want to block this contact?",
-    description: "Alert dialog warning when blocking a contact."
+    id: 'block_contact_warning',
+    defaultMessage: 'Are you sure you want to block this contact?',
+    description: 'Alert dialog warning when blocking a contact.'
   },
   report_chat: {
-    id: "action_report_chat",
-    defaultMessage: "Report Conversation",
-    description: "Flat button [Report Group]"
+    id: 'action_report_chat',
+    defaultMessage: 'Report Conversation',
+    description: 'Flat button [Report Group]'
   },
   report_chat_warning: {
-    id: "report_chat_warning",
-    defaultMessage: "Are you sure you want to block and report this conversation?",
-    description: "Alert dialog warning when reporting a conversation for abuse"
+    id: 'report_chat_warning',
+    defaultMessage: 'Are you sure you want to block and report this conversation?',
+    description: 'Alert dialog warning when reporting a conversation for abuse'
   },
 });
 
@@ -92,6 +102,7 @@ class InfoView extends React.Component {
       owner: false,
       admin: false,
       sharer: false,
+      deleter: false,
       muted: false,
       address: null,
       groupTopic: undefined,
@@ -211,6 +222,7 @@ class InfoView extends React.Component {
       owner: acs && acs.isOwner(),
       admin: acs && acs.isAdmin(),
       sharer: acs && acs.isSharer(),
+      deleter: acs && acs.isDeleter(),
       muted: acs && acs.isMuted(),
 
       fullName: topic.public ? topic.public.fn : undefined,
@@ -401,8 +413,8 @@ class InfoView extends React.Component {
     e.preventDefault();
     const {formatMessage} = this.props.intl;
     this.props.onShowAlert(
-      formatMessage(messages.delete_messages), // title
-      formatMessage(messages.delete_messages_warning), // content
+      formatMessage(this.state.deleter ? messages.delete_messages : messages.clear_messages), // title
+      formatMessage(this.state.deleter ? messages.delete_messages_warning : messages.clear_messages_warning), // content
       (() => { this.props.onDeleteMessages(this.props.topic); }), // onConfirm
       null, // "OK"
       true, // Show Reject button
@@ -681,7 +693,9 @@ class InfoView extends React.Component {
             }
             <div className="panel-form-column">
               <a href="#" className="flat-button" onClick={this.handleDeleteMessages}>
-                <i className="material-icons">delete_outline</i> &nbsp;{formatMessage(messages.delete_messages)}
+                <i className="material-icons">delete_outline</i> &nbsp;{
+                  formatMessage(this.state.deleter ? messages.delete_messages : messages.clear_messages)
+                }
               </a>
               <a href="#" className="red flat-button" onClick={this.handleLeave}>
                 <i className="material-icons">exit_to_app</i> &nbsp;{formatMessage(messages.leave_chat)}
@@ -714,7 +728,7 @@ class InfoView extends React.Component {
                   <div className="panel-form-row">
                     {this.state.sharer ?
                       <a href="#" className="flat-button" onClick={this.handleShowAddMembers}>
-                        <i className="material-icons">person_add</i> <FormattedMessage id="button_add_members"
+                        <i className="material-icons">person_add</i> &nbsp;<FormattedMessage id="button_add_members"
                           defaultMessage="Add members" description="Flat button [Add members] (to topic)" />
                       </a>
                       : null}

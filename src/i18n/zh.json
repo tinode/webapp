@@ -144,5 +144,9 @@
   "leave_chat_warning": ":!![MISSING]!!:Are you sure you want to leave this conversation.",
   "block_contact_warning": ":!![MISSING]!!:Are you sure you want to block this contact?",
   "action_report_chat": "检举垃圾邮件",
-  "report_chat_warning": ":!![MISSING]!!:Are you sure you want to block and report this conversation?"
+  "report_chat_warning": ":!![MISSING]!!:Are you sure you want to block and report this conversation?",
+  "action_clear_messages": ":!![MISSING]!!:Clear Messages",
+  "clear_messages_warning": ":!![MISSING]!!:Are you sure you want to clear all messages? It cannot be undone.",
+  "topic_delete_warning": ":!![MISSING]!!:Are you sure you want to delete this conversation?",
+  "topic_block_warning": ":!![MISSING]!!:Are you sure you want to block this conversation?"
 }

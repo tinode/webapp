@@ -144,5 +144,9 @@
   "delete_messages_warning": "Вы действительно хотите удалить все сообщения?",
   "leave_chat_warning": "Вы действительно хотите покинуть этот чат?",
   "block_contact_warning": "Вы действительно заблокировать этот контакт?",
-  "report_chat_warning": "Вы действительно хотите сообщить о нарушении и заблокировать этот чат?"
+  "report_chat_warning": "Вы действительно хотите сообщить о нарушении и заблокировать этот чат?",
+  "action_clear_messages": "Удалить сообщения",
+  "clear_messages_warning": "Вы действительно хотите удалить все сообщения в чате? Их будет невозможно восстановить.",
+  "topic_delete_warning": ":!![MISSING]!!:Are you sure you want to delete this conversation?",
+  "topic_block_warning": ":!![MISSING]!!:Are you sure you want to block this conversation?"
 }
