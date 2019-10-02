@@ -107,7 +107,7 @@
   },
       t = e(function (e, t) {
     e.exports = {
-      version: "0.16.1"
+      version: "0.16.2-rc1"
     };
   }),
       n = e(function (e, t) {
@@ -3380,7 +3380,7 @@ module.exports = JSON.parse("{\"en\":{\"archived_contacts\":\"Archived contacts 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PACKAGE_VERSION", function() { return PACKAGE_VERSION; });
-var PACKAGE_VERSION = "0.16.1";
+var PACKAGE_VERSION = "0.16.2-rc1";
 
 /***/ }),
 
@@ -10843,18 +10843,21 @@ var ErrorPanel = function (_React$PureComponent) {
         className: "icon"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons"
-      }, level)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      }, level)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         dangerouslySetInnerHTML: {
           __html: this.props.text
         }
-      }), this.props.action ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+      }), this.props.action ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         href: "#",
+        style: {
+          whiteSpace: 'nowrap'
+        },
         onClick: function onClick(e) {
           e.preventDefault();
 
           _this2.props.action();
         }
-      }, this.props.actionText) : null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, this.props.actionText)) : null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "cancel"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_menu_cancel_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
         onCancel: this.hide

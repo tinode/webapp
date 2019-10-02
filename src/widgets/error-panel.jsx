@@ -35,14 +35,18 @@ export default class ErrorPanel extends React.PureComponent {
     return (
       <div className={className}>
         <div className="icon"><i className="material-icons">{level}</i></div>
-        <>
+        <span>
           <span dangerouslySetInnerHTML={{__html: this.props.text}} />
           {this.props.action ?
-            <a href="#" onClick={(e) => {e.preventDefault(); this.props.action();}}>
-              {this.props.actionText}
-            </a>
+            <>
+              &#32;<a href="#"
+                style={{ whiteSpace: 'nowrap' }}
+                onClick={(e) => {e.preventDefault(); this.props.action();}}>
+                {this.props.actionText}
+              </a>
+            </>
           : null}
-        </>
+        </span>
         <div className="cancel"><MenuCancel onCancel={this.hide} /></div>
       </div>
     );
