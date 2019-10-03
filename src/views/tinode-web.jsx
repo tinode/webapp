@@ -15,7 +15,8 @@ import InfoView from './info-view.jsx';
 import MessagesView from './messages-view.jsx';
 import SidepanelView from './sidepanel-view.jsx';
 
-import { API_KEY, APP_NAME, DEFAULT_P2P_ACCESS_MODE, MEDIA_BREAKPOINT, READ_DELAY, RECEIVED_DELAY } from '../config.js';
+import { API_KEY, APP_NAME, DEFAULT_P2P_ACCESS_MODE, LOGGING_ENABLED, MEDIA_BREAKPOINT,
+  READ_DELAY, RECEIVED_DELAY } from '../config.js';
 import { base64ReEncode, makeImageUrl } from '../lib/blob-helpers.js';
 import { detectServerAddress, isLocalHost, isSecureConnection } from '../lib/host-name.js';
 import LocalStorageUtil from '../lib/local-storage.js';
@@ -142,6 +143,7 @@ class TinodeWeb extends React.Component {
       sidePanelSelected: 'login',
       sidePanelTitle: null,
       sidePanelAvatar: null,
+      loadSpinnerVisible: false,
 
       login: '',
       password: '',
@@ -257,7 +259,7 @@ class TinodeWeb extends React.Component {
   // Setup transport (usually websocket) and server address. This will terminate connection with the server.
   static tnSetup(serverAddress, transport) {
     let tinode = new Tinode(APP_NAME, serverAddress, API_KEY, transport, isSecureConnection());
-    tinode.enableLogging(true, true);
+    tinode.enableLogging(LOGGING_ENABLED, true);
     return tinode;
   }
 
@@ -358,7 +360,12 @@ class TinodeWeb extends React.Component {
 
   // User clicked Login button in the side panel.
   handleLoginRequest(login, password) {
-    this.setState({loginDisabled: true, login: login, password: password});
+    this.setState({
+      loginDisabled: true,
+      login: login,
+      password: password,
+      loadSpinnerVisible: true
+    });
     this.handleError('', null);
 
     if (this.tinode.isConnected()) {
@@ -455,6 +462,7 @@ class TinodeWeb extends React.Component {
     if (promise) {
       promise.then((ctrl) => {
         if (ctrl.code >= 300 && ctrl.text === 'validate credentials') {
+          this.setState({loadSpinnerVisible: false});
           if (cred) {
             this.handleError("Code does not match", 'warn');
           }
@@ -464,7 +472,12 @@ class TinodeWeb extends React.Component {
         }
       }).catch((err) => {
         // Login failed, report error.
-        this.setState({loginDisabled: false, credMethod: undefined, credCode: undefined});
+        this.setState({
+          loginDisabled: false,
+          credMethod: undefined,
+          credCode: undefined,
+          loadSpinnerVisible: false
+        });
         this.handleError(err.message, 'err');
         localStorage.removeItem('auth-token');
         HashNavigation.navigateTo('');
@@ -514,6 +527,8 @@ class TinodeWeb extends React.Component {
         localStorage.removeItem('auth-token');
         this.handleError(err.message, 'err');
         HashNavigation.navigateTo('');
+      }).finally(() => {
+        this.setState({loadSpinnerVisible: false});
       });
     HashNavigation.navigateTo(HashNavigation.setUrlSidePanel(window.location.hash, 'contacts'));
   }
@@ -1343,6 +1358,7 @@ class TinodeWeb extends React.Component {
           login={this.state.login}
           myUserId={this.state.myUserId}
           loginDisabled={this.state.loginDisabled}
+          loadSpinnerVisible={this.state.loadSpinnerVisible}
 
           errorText={this.state.errorText}
           errorLevel={this.state.errorLevel}

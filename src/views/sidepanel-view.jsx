@@ -1,8 +1,9 @@
 import React from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 
-import SideNavbar from '../widgets/side-navbar.jsx';
 import ErrorPanel from '../widgets/error-panel.jsx';
+import LoadSpinner from '../widgets/load-spinner.jsx';
+import SideNavbar from '../widgets/side-navbar.jsx';
 
 import ContactsView from './contacts-view.jsx';
 import CreateAccountView from './create-account-view.jsx';
@@ -104,6 +105,8 @@ class SidepanelView extends React.Component {
           action={this.props.errorAction}
           actionText={this.props.errorActionText}
           onClearError={this.props.onError} />
+
+        <LoadSpinner show={this.props.loadSpinnerVisible} />
 
         {view === 'login' ?
           <LoginView

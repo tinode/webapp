@@ -744,18 +744,10 @@
   return function (e) {
     "use strict";
 
-    function s(e) {
-      return (s = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (e) {
-        return typeof e;
-      } : function (e) {
-        return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e;
-      })(e);
-    }
-
-    if (void 0 === r) var r = n({});
-    var o,
-        a = t({}).version;
-    "undefined" != typeof WebSocket && (o = WebSocket), "undefined" == typeof btoa && (e.btoa = function () {
+    if (void 0 === s) var s = n({});
+    var r,
+        o = t({}).version;
+    "undefined" != typeof WebSocket && (r = WebSocket), "undefined" == typeof btoa && (e.btoa = function () {
       for (var e, t = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : "", n = "", i = 0, s = 0, r = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="; t.charAt(0 | s) || (r = "=", s % 1); n += r.charAt(63 & i >> 8 - s % 1 * 8)) {
         if ((e = t.charCodeAt(s += .75)) > 255) throw new Error("'btoa' failed: The string to be encoded contains characters outside of the Latin1 range.");
         i = i << 8 | e;
@@ -771,48 +763,48 @@
 
       return t;
     }), "undefined" == typeof window && (e.window = {
-      WebSocket: o,
+      WebSocket: r,
       URL: {
         createObjectURL: function () {
           throw new Error("Unable to use window.URL in a non browser application");
         }
       }
     });
-    var c = "0",
-        u = a || "0.16",
-        h = "tinodejs/" + u,
-        l = 503,
-        d = "Connection failed",
-        f = 418,
-        p = "Disconnected by client";
+    var a = "0",
+        c = o || "0.16",
+        u = "tinodejs/" + c,
+        h = 503,
+        l = "Connection failed",
+        d = 418,
+        f = "Disconnected by client";
 
-    function g(e) {
+    function p(e) {
       return btoa(encodeURIComponent(e).replace(/%([0-9A-F]{2})/g, function (e, t) {
         return String.fromCharCode("0x" + t);
       }));
     }
 
-    function v(e, t, n) {
-      if ("object" != s(t)) {
-        if (t === y.DEL_CHAR) return;
+    function g(e, t, n) {
+      if ("object" != typeof t) {
+        if (t === S.DEL_CHAR) return;
         return void 0 === t ? e : t;
       }
 
       if (null === t) return t;
       if (t instanceof Date) return e && e instanceof Date && !(e < t) ? e : t;
-      if (t instanceof x) return new x(t);
+      if (t instanceof y) return new y(t);
       if (t instanceof Array) return t;
 
-      for (var i in e && e !== y.DEL_CHAR || (e = t.constructor()), t) !t.hasOwnProperty(i) || n && n[i] || "_noForwarding" == i || (e[i] = v(e[i], t[i]));
+      for (var i in e && e !== S.DEL_CHAR || (e = t.constructor()), t) !t.hasOwnProperty(i) || n && n[i] || "_noForwarding" == i || (e[i] = g(e[i], t[i]));
 
       return e;
     }
 
-    function _(e, t, n, i) {
-      return e[t] = v(e[t], n, i), e[t];
+    function v(e, t, n, i) {
+      return e[t] = g(e[t], n, i), e[t];
     }
 
-    function m() {
+    function _() {
       var e = null;
       if ("withCredentials" in new XMLHttpRequest()) e = new XMLHttpRequest();else {
         if ("undefined" == typeof XDomainRequest) throw new Error("Browser not supported");
@@ -821,16 +813,16 @@
       return e;
     }
 
-    function b(e, t) {
+    function m(e, t) {
       if ("ts" === e && "string" == typeof t && t.length >= 20 && t.length <= 24) {
         var n = new Date(t);
         if (n) return n;
-      } else if ("acs" === e && "object" === s(t)) return new x(t);
+      } else if ("acs" === e && "object" == typeof t) return new y(t);
 
       return t;
     }
 
-    function w(e, t) {
+    function b(e, t) {
       return "string" == typeof t && t.length > 128 ? "<" + t.length + ", bytes: " + t.substring(0, 12) + "..." + t.substring(t.length - 12) + ">" : function (e, t) {
         if (t instanceof Date) t = function (e) {
           if (e && 0 != e.getTime()) {
@@ -841,74 +833,78 @@
           function n(e, t) {
             return "0".repeat((t = t || 2) - ("" + e).length) + e;
           }
-        }(t);else if (t instanceof x) t = t.jsonHelper();else if (null == t || !1 === t || Array.isArray(t) && 0 == t.length || "object" == s(t) && 0 == Object.keys(t).length) return;
+        }(t);else if (t instanceof y) t = t.jsonHelper();else if (null == t || !1 === t || Array.isArray(t) && 0 == t.length || "object" == typeof t && 0 == Object.keys(t).length) return;
         return t;
       }(0, t);
     }
 
-    function M(e, t, n) {
+    function w(e, t, n) {
       var i = null;
-      return "http" !== t && "https" !== t && "ws" !== t && "wss" !== t || (i = t + "://", "/" !== (i += e).charAt(i.length - 1) && (i += "/"), i += "v" + c + "/channels", "http" !== t && "https" !== t || (i += "/lp"), i += "?apikey=" + n), i;
+      return "http" !== t && "https" !== t && "ws" !== t && "wss" !== t || (i = t + "://", "/" !== (i += e).charAt(i.length - 1) && (i += "/"), i += "v" + a + "/channels", "http" !== t && "https" !== t || (i += "/lp"), i += "?apikey=" + n), i;
     }
 
-    var S = function (e, t, n, i, r) {
-      var a = this,
-          c = e,
-          u = i,
-          h = t,
-          g = r,
-          v = 2e3,
-          _ = 10,
-          w = .3,
-          S = null,
-          y = 0,
+    var M = function (e, t, n, i, s) {
+      var o = this,
+          a = e,
+          c = i,
+          u = t,
+          p = s,
+          g = 2e3,
+          v = 10,
+          b = .3,
+          M = null,
+          S = 0,
           T = !1,
-          x = function (e) {
-        a.logger && a.logger(e);
+          y = function (e) {
+        if (o.logger) {
+          for (var t = arguments.length, n = new Array(t > 1 ? t - 1 : 0), i = 1; i < t; i++) n[i - 1] = arguments[i];
+
+          o.logger.apply(o, [e].concat(n));
+        }
       };
 
-      function D() {
+      function x() {
         var e = this;
-        clearTimeout(S);
-        var t = v * (Math.pow(2, y) * (1 + w * Math.random()));
-        y = y >= _ ? y : y + 1, this.onAutoreconnectIteration && this.onAutoreconnectIteration(t), S = setTimeout(function () {
-          if (x("Reconnecting, iter=" + y + ", timeout=" + t), T) e.onAutoreconnectIteration && e.onAutoreconnectIteration(-1);else {
+        clearTimeout(M);
+        var t = g * (Math.pow(2, S) * (1 + b * Math.random()));
+        S = S >= v ? S : S + 1, this.onAutoreconnectIteration && this.onAutoreconnectIteration(t), M = setTimeout(function () {
+          if (y("Reconnecting, iter=" + S + ", timeout=" + t), T) e.onAutoreconnectIteration && e.onAutoreconnectIteration(-1);else {
             var n = e.connect();
             e.onAutoreconnectIteration ? e.onAutoreconnectIteration(0, n) : n.catch(function () {});
           }
         }, t);
       }
 
-      function E() {
-        clearTimeout(S), S = null, y = 0;
+      function D() {
+        clearTimeout(M), M = null, S = 0;
       }
 
-      function A(e) {
+      function E(e) {
         var t = null;
         e.connect = function (n) {
-          return T = !1, t && t.readyState == t.OPEN ? Promise.resolve() : (n && (c = n), new Promise(function (n, i) {
-            var s = M(c, u ? "wss" : "ws", h);
-            x("Connecting to: " + s);
-            var r = new o(s);
-            r.onopen = function (t) {
-              e.onOpen && e.onOpen(), n(), g && E();
-            }, r.onclose = function (n) {
+          return T = !1, t && t.readyState == t.OPEN ? Promise.resolve() : (n && (a = n), new Promise(function (n, i) {
+            var s = w(a, c ? "wss" : "ws", u);
+            y("Connecting to: ", s);
+            var o = new r(s);
+            o.onopen = function (t) {
+              p && D(), e.onOpen && e.onOpen(), n();
+            }, o.onclose = function (n) {
               if (t = null, e.onDisconnect) {
-                var i = T ? f : l;
-                e.onDisconnect(new Error(T ? p : d + " (" + i + ")"), i);
+                var i = T ? d : h;
+                e.onDisconnect(new Error(T ? f : l + " (" + i + ")"), i);
               }
 
-              !T && g && D.call(e);
-            }, r.onerror = function (e) {
+              !T && p && x.call(e);
+            }, o.onerror = function (e) {
               i(e);
-            }, r.onmessage = function (t) {
+            }, o.onmessage = function (t) {
               e.onMessage && e.onMessage(t.data);
-            }, t = r;
+            }, t = o;
           }));
         }, e.reconnect = function () {
-          E(), e.connect();
+          D(), e.connect();
         }, e.disconnect = function () {
-          T = !0, t && (E(), t.close(), t = null);
+          T = !0, t && (D(), t.close(), t = null);
         }, e.sendText = function (e) {
           if (!t || t.readyState != t.OPEN) throw new Error("Websocket is not connected");
           t.send(e);
@@ -921,39 +917,40 @@
         };
       }
 
-      function R(e) {
+      function A(e) {
         var t = null,
             n = null,
             i = null;
         e.connect = function (i) {
-          return T = !1, n ? Promise.resolve() : (i && (c = i), new Promise(function (i, s) {
-            var r = M(c, u ? "https" : "http", h);
-            x("Connecting to: " + r), (n = function n(i, s, r) {
-              var o = m(),
+          return T = !1, n ? Promise.resolve() : (i && (a = i), new Promise(function (i, s) {
+            var r = w(a, c ? "https" : "http", u);
+            y("Connecting to: ", r), (n = function n(i, s, r) {
+              var o = _(),
                   a = !1;
+
               return o.onreadystatechange = function (c) {
                 if (4 == o.readyState) if (201 == o.status) {
-                  var u = JSON.parse(o.responseText, b);
-                  t = i + "&sid=" + u.ctrl.params.sid, (o = n(t)).send(null), e.onOpen && e.onOpen(), s && (a = !0, s()), g && E();
+                  var u = JSON.parse(o.responseText, m);
+                  t = i + "&sid=" + u.ctrl.params.sid, (o = n(t)).send(null), e.onOpen && e.onOpen(), s && (a = !0, s()), p && D();
                 } else if (o.status < 400) e.onMessage && e.onMessage(o.responseText), (o = n(t)).send(null);else {
                   if (r && !a && (a = !0, r(o.responseText)), e.onMessage && o.responseText && e.onMessage(o.responseText), e.onDisconnect) {
-                    var h = o.status || (T ? f : l),
-                        v = o.responseText || (T ? p : d);
-                    e.onDisconnect(new Error(v + " (" + h + ")"), h);
+                    var g = o.status || (T ? d : h),
+                        v = o.responseText || (T ? f : l);
+                    e.onDisconnect(new Error(v + " (" + g + ")"), g);
                   }
 
-                  o = null, !T && g && D.call(e);
+                  o = null, !T && p && x.call(e);
                 }
               }, o.open("GET", i, !0), o;
             }(r, i, s)).send(null);
           }).catch(function () {}));
         }, e.reconnect = function () {
-          E(), e.connect();
+          D(), e.connect();
         }, e.disconnect = function () {
-          T = !0, E(), i && (i.onreadystatechange = void 0, i.abort(), i = null), n && (n.onreadystatechange = void 0, n.abort(), n = null), e.onDisconnect && e.onDisconnect(new Error(p + " (" + f + ")"), f), t = null;
+          T = !0, D(), i && (i.onreadystatechange = void 0, i.abort(), i = null), n && (n.onreadystatechange = void 0, n.abort(), n = null), e.onDisconnect && e.onDisconnect(new Error(f + " (" + d + ")"), d), t = null;
         }, e.sendText = function (e) {
           var n, s;
-          if (n = t, (s = m()).onreadystatechange = function (e) {
+          if (n = t, (s = _()).onreadystatechange = function (e) {
             if (4 == s.readyState && s.status >= 400) throw new Error("LP sender failed, " + s.status);
           }, s.open("POST", n, !0), !(i = s) || 1 != i.readyState) throw new Error("Long poller failed to connect");
           i.send(e);
@@ -966,11 +963,11 @@
         };
       }
 
-      "lp" === n ? R(this) : "ws" === n ? A(this) : "object" == ("undefined" == typeof window ? "undefined" : s(window)) && window.WebSocket ? A(this) : R(this), this.onMessage = void 0, this.onDisconnect = void 0, this.onOpen = void 0, this.onAutoreconnectIteration = void 0, this.logger = void 0;
+      "lp" === n ? A(this) : "ws" === n ? E(this) : "object" == typeof window && window.WebSocket ? E(this) : A(this), this.onMessage = void 0, this.onDisconnect = void 0, this.onOpen = void 0, this.onAutoreconnectIteration = void 0, this.logger = void 0;
     },
-        y = function (e, t, n, i, r, o) {
-      var a = this;
-      this._appName = e || "Undefined", this._apiKey = n, this._browser = "", this._platform = o, this._hwos = "undefined", this._humanLanguage = "xx", "undefined" != typeof navigator && (this._browser = function (e, t) {
+        S = function (e, t, n, i, s, r) {
+      var o = this;
+      this._appName = e || "Undefined", this._apiKey = n, this._browser = "", this._platform = r, this._hwos = "undefined", this._humanLanguage = "xx", "undefined" != typeof navigator && (this._browser = function (e, t) {
         e = e || "";
         var n = "";
         /reactnative/i.test(t) && (n = "ReactNative; ");
@@ -997,59 +994,59 @@
         }
 
         return n + i;
-      }(navigator.userAgent, navigator.product), this._hwos = navigator.platform, this._humanLanguage = navigator.language || "en-US"), this._loggingEnabled = !1, this._trimLongStrings = !1, this._myUID = null, this._authenticated = !1, this._login = null, this._authToken = null, this._inPacketCount = 0, this._messageId = Math.floor(65535 * Math.random() + 65535), this._serverInfo = null, this._deviceToken = null, this._pendingPromises = {}, this._connection = new S(t, n, i, r, !0), this.logger = function (e) {
-        if (a._loggingEnabled) {
-          var t = new Date(),
-              n = ("0" + t.getUTCHours()).slice(-2) + ":" + ("0" + t.getUTCMinutes()).slice(-2) + ":" + ("0" + t.getUTCSeconds()).slice(-2) + ":" + ("0" + t.getUTCMilliseconds()).slice(-3);
-          console.log("[" + n + "] " + e);
+      }(navigator.userAgent, navigator.product), this._hwos = navigator.platform, this._humanLanguage = navigator.language || "en-US"), this._loggingEnabled = !1, this._trimLongStrings = !1, this._myUID = null, this._authenticated = !1, this._login = null, this._authToken = null, this._inPacketCount = 0, this._messageId = Math.floor(65535 * Math.random() + 65535), this._serverInfo = null, this._deviceToken = null, this._pendingPromises = {}, this._connection = new M(t, n, i, s, !0), this.logger = function (e) {
+        if (o._loggingEnabled) {
+          for (var t = new Date(), n = ("0" + t.getUTCHours()).slice(-2) + ":" + ("0" + t.getUTCMinutes()).slice(-2) + ":" + ("0" + t.getUTCSeconds()).slice(-2) + ":" + ("0" + t.getUTCMilliseconds()).slice(-3), i = arguments.length, s = new Array(i > 1 ? i - 1 : 0), r = 1; r < i; r++) s[r - 1] = arguments[r];
+
+          console.log("[" + n + "]", e, s.join(" "));
         }
       }, this._connection.logger = this.logger, this._cache = {};
 
-      var c = this.cachePut = function (e, t, n) {
-        a._cache[e + ":" + t] = n;
+      var a = this.cachePut = function (e, t, n) {
+        o._cache[e + ":" + t] = n;
       },
-          d = this.cacheGet = function (e, t) {
-        return a._cache[e + ":" + t];
+          l = this.cacheGet = function (e, t) {
+        return o._cache[e + ":" + t];
       },
-          f = this.cacheDel = function (e, t) {
-        delete a._cache[e + ":" + t];
+          d = this.cacheDel = function (e, t) {
+        delete o._cache[e + ":" + t];
       },
-          p = this.cacheMap = function (e, t) {
-        for (var n in a._cache) if (e(a._cache[n], n, t)) break;
+          f = this.cacheMap = function (e, t) {
+        for (var n in o._cache) if (e(o._cache[n], n, t)) break;
       };
 
       this.attachCacheToTopic = function (e) {
-        e._tinode = a, e._cacheGetUser = function (e) {
-          var t = d("user", e);
+        e._tinode = o, e._cacheGetUser = function (e) {
+          var t = l("user", e);
           if (t) return {
             user: e,
-            public: v({}, t)
+            public: g({}, t)
           };
         }, e._cachePutUser = function (e, t) {
-          return c("user", e, v({}, t.public));
+          return a("user", e, g({}, t.public));
         }, e._cacheDelUser = function (e) {
-          return f("user", e);
+          return d("user", e);
         }, e._cachePutSelf = function () {
-          return c("topic", e.name, e);
+          return a("topic", e.name, e);
         }, e._cacheDelSelf = function () {
-          return f("topic", e.name);
+          return d("topic", e.name);
         };
       };
 
-      var g = function (e, t, n, i) {
-        var s = a._pendingPromises[e];
-        s && (delete a._pendingPromises[e], t >= 200 && t < 400 ? s.resolve && s.resolve(n) : s.reject && s.reject(new Error(i + " (" + t + ")")));
+      var p = function (e, t, n, i) {
+        var s = o._pendingPromises[e];
+        s && (delete o._pendingPromises[e], t >= 200 && t < 400 ? s.resolve && s.resolve(n) : s.reject && s.reject(new Error(i + " (" + t + ")")));
       },
-          _ = (setInterval(function () {
+          v = (setInterval(function () {
         var e = new Error("Timeout (504)"),
             t = new Date(new Date().getTime() - 5e3);
 
-        for (var n in a._pendingPromises) {
-          var i = a._pendingPromises[n];
-          i && i.ts < t && (console.log("expiring promise", n), delete a._pendingPromises[n], i.reject && i.reject(e));
+        for (var n in o._pendingPromises) {
+          var i = o._pendingPromises[n];
+          i && i.ts < t && (log("Promise expired", n), delete o._pendingPromises[n], i.reject && i.reject(e));
         }
       }, 1e3), this.getNextUniqueId = function () {
-        return 0 != a._messageId ? "" + a._messageId++ : void 0;
+        return 0 != o._messageId ? "" + o._messageId++ : void 0;
       });
 
       this.initPacket = function (e, t) {
@@ -1057,19 +1054,19 @@
           case "hi":
             return {
               hi: {
-                id: _(),
-                ver: u,
-                ua: a._appName + " (" + (a._browser ? a._browser + "; " : "") + a._hwos + "); " + h,
-                dev: a._deviceToken,
-                lang: a._humanLanguage,
-                platf: a._platform
+                id: v(),
+                ver: c,
+                ua: o._appName + " (" + (o._browser ? o._browser + "; " : "") + o._hwos + "); " + u,
+                dev: o._deviceToken,
+                lang: o._humanLanguage,
+                platf: o._platform
               }
             };
 
           case "acc":
             return {
               acc: {
-                id: _(),
+                id: v(),
                 user: null,
                 scheme: null,
                 secret: null,
@@ -1083,7 +1080,7 @@
           case "login":
             return {
               login: {
-                id: _(),
+                id: v(),
                 scheme: null,
                 secret: null
               }
@@ -1092,7 +1089,7 @@
           case "sub":
             return {
               sub: {
-                id: _(),
+                id: v(),
                 topic: t,
                 set: {},
                 get: {}
@@ -1102,7 +1099,7 @@
           case "leave":
             return {
               leave: {
-                id: _(),
+                id: v(),
                 topic: t,
                 unsub: !1
               }
@@ -1111,7 +1108,7 @@
           case "pub":
             return {
               pub: {
-                id: _(),
+                id: v(),
                 topic: t,
                 noecho: !1,
                 head: null,
@@ -1122,7 +1119,7 @@
           case "get":
             return {
               get: {
-                id: _(),
+                id: v(),
                 topic: t,
                 what: null,
                 desc: {},
@@ -1134,7 +1131,7 @@
           case "set":
             return {
               set: {
-                id: _(),
+                id: v(),
                 topic: t,
                 desc: {},
                 sub: {},
@@ -1145,7 +1142,7 @@
           case "del":
             return {
               del: {
-                id: _(),
+                id: v(),
                 topic: t,
                 what: null,
                 delseq: null,
@@ -1171,7 +1168,7 @@
         t && (n = function (e) {
           var t = null;
           return e && (t = new Promise(function (t, n) {
-            a._pendingPromises[e] = {
+            o._pendingPromises[e] = {
               resolve: t,
               reject: n,
               ts: new Date()
@@ -1179,75 +1176,75 @@
           })), t;
         }(t)), e = function e(t) {
           return Object.keys(t).forEach(function (n) {
-            "_" == n[0] ? delete t[n] : t[n] ? Array.isArray(t[n]) && 0 == t[n].length ? delete t[n] : t[n] ? "object" != s(t[n]) || t[n] instanceof Date || (e(t[n]), 0 == Object.getOwnPropertyNames(t[n]).length && delete t[n]) : delete t[n] : delete t[n];
+            "_" == n[0] ? delete t[n] : t[n] ? Array.isArray(t[n]) && 0 == t[n].length ? delete t[n] : t[n] ? "object" != typeof t[n] || t[n] instanceof Date || (e(t[n]), 0 == Object.getOwnPropertyNames(t[n]).length && delete t[n]) : delete t[n] : delete t[n];
           }), t;
         }(e);
         var i = JSON.stringify(e);
-        a.logger("out: " + (a._trimLongStrings ? JSON.stringify(e, w) : i));
+        o.logger("out: " + (o._trimLongStrings ? JSON.stringify(e, b) : i));
 
         try {
-          a._connection.sendText(i);
-        } catch (r) {
-          if (!t) throw r;
-          g(t, l, null, r.message);
+          o._connection.sendText(i);
+        } catch (s) {
+          if (!t) throw s;
+          p(t, h, null, s.message);
         }
 
         return n;
       }, this.loginSuccessful = function (e) {
-        e.params && e.params.user && (a._myUID = e.params.user, a._authenticated = e && e.code >= 200 && e.code < 300, e.params && e.params.token && e.params.expires ? a._authToken = {
+        e.params && e.params.user && (o._myUID = e.params.user, o._authenticated = e && e.code >= 200 && e.code < 300, e.params && e.params.token && e.params.expires ? o._authToken = {
           token: e.params.token,
           expires: new Date(e.params.expires)
-        } : a._authToken = null, a.onLogin && a.onLogin(e.code, e.text));
+        } : o._authToken = null, o.onLogin && o.onLogin(e.code, e.text));
       }, this._connection.onMessage = function (e) {
-        if (e) if (a._inPacketCount++, a.onRawMessage && a.onRawMessage(e), "0" !== e) {
-          var t = JSON.parse(e, b);
-          t ? (a.logger("in: " + (a._trimLongStrings ? JSON.stringify(t, w) : e)), a.onMessage && a.onMessage(t), t.ctrl ? (a.onCtrlMessage && a.onCtrlMessage(t.ctrl), t.ctrl.id && g(t.ctrl.id, t.ctrl.code, t.ctrl, t.ctrl.text), setTimeout(function () {
+        if (e) if (o._inPacketCount++, o.onRawMessage && o.onRawMessage(e), "0" !== e) {
+          var t = JSON.parse(e, m);
+          t ? (o.logger("in: " + (o._trimLongStrings ? JSON.stringify(t, b) : e)), o.onMessage && o.onMessage(t), t.ctrl ? (o.onCtrlMessage && o.onCtrlMessage(t.ctrl), t.ctrl.id && p(t.ctrl.id, t.ctrl.code, t.ctrl, t.ctrl.text), setTimeout(function () {
             if (205 == t.ctrl.code && "evicted" == t.ctrl.text) {
-              var e = d("topic", t.ctrl.topic);
+              var e = l("topic", t.ctrl.topic);
               e && e._resetSub();
             } else if (t.ctrl.params && "data" == t.ctrl.params.what) {
-              var n = d("topic", t.ctrl.topic);
+              var n = l("topic", t.ctrl.topic);
               n && n._allMessagesReceived(t.ctrl.params.count);
             } else if (t.ctrl.params && "sub" == t.ctrl.params.what) {
-              var i = d("topic", t.ctrl.topic);
+              var i = l("topic", t.ctrl.topic);
               i && i._processMetaSub([]);
             }
           }, 0)) : setTimeout(function () {
             if (t.meta) {
-              var e = d("topic", t.meta.topic);
-              e && e._routeMeta(t.meta), t.meta.id && g(t.meta.id, 200, t.meta, "META"), a.onMetaMessage && a.onMetaMessage(t.meta);
+              var e = l("topic", t.meta.topic);
+              e && e._routeMeta(t.meta), t.meta.id && p(t.meta.id, 200, t.meta, "META"), o.onMetaMessage && o.onMetaMessage(t.meta);
             } else if (t.data) {
-              var n = d("topic", t.data.topic);
-              n && n._routeData(t.data), a.onDataMessage && a.onDataMessage(t.data);
+              var n = l("topic", t.data.topic);
+              n && n._routeData(t.data), o.onDataMessage && o.onDataMessage(t.data);
             } else if (t.pres) {
-              var i = d("topic", t.pres.topic);
-              i && i._routePres(t.pres), a.onPresMessage && a.onPresMessage(t.pres);
+              var i = l("topic", t.pres.topic);
+              i && i._routePres(t.pres), o.onPresMessage && o.onPresMessage(t.pres);
             } else if (t.info) {
-              var s = d("topic", t.info.topic);
-              s && s._routeInfo(t.info), a.onInfoMessage && a.onInfoMessage(t.info);
-            } else a.logger("ERROR: Unknown packet received.");
-          }, 0)) : (a.logger("in: " + e), a.logger("ERROR: failed to parse data"));
-        } else a.onNetworkProbe && a.onNetworkProbe();
+              var s = l("topic", t.info.topic);
+              s && s._routeInfo(t.info), o.onInfoMessage && o.onInfoMessage(t.info);
+            } else o.logger("ERROR: Unknown packet received.");
+          }, 0)) : (o.logger("in: " + e), o.logger("ERROR: failed to parse data"));
+        } else o.onNetworkProbe && o.onNetworkProbe();
       }, this._connection.onOpen = function () {
-        a.hello();
+        o.hello();
       }, this._connection.onAutoreconnectIteration = function (e, t) {
-        a.onAutoreconnectIteration && a.onAutoreconnectIteration(e, t);
+        o.onAutoreconnectIteration && o.onAutoreconnectIteration(e, t);
       }, this._connection.onDisconnect = function (e, t) {
-        for (var n in a._inPacketCount = 0, a._serverInfo = null, a._authenticated = !1, p(function (e, t) {
+        for (var n in o._inPacketCount = 0, o._serverInfo = null, o._authenticated = !1, f(function (e, t) {
           0 === t.lastIndexOf("topic:", 0) && e._resetSub();
-        }), a._pendingPromises) {
-          var i = a._pendingPromises[n];
+        }), o._pendingPromises) {
+          var i = o._pendingPromises[n];
           i && i.reject && i.reject(e);
         }
 
-        a._pendingPromises = {}, a.onDisconnect && a.onDisconnect(e);
+        o._pendingPromises = {}, o.onDisconnect && o.onDisconnect(e);
       };
     };
 
-    y.credential = function (e, t, n, i) {
-      if ("object" == s(e)) {
-        var r = e;
-        t = r.val, n = r.params, i = r.resp, e = r.meth;
+    S.credential = function (e, t, n, i) {
+      if ("object" == typeof e) {
+        var s = e;
+        t = s.val, n = s.params, i = s.resp, e = s.meth;
       }
 
       return e && (t || i) ? [{
@@ -1256,23 +1253,24 @@
         resp: i,
         params: n
       }] : null;
-    }, y.topicType = function (e) {
+    }, S.topicType = function (e) {
       return {
         me: "me",
         fnd: "fnd",
         grp: "grp",
         new: "grp",
-        usr: "p2p"
+        usr: "p2p",
+        sys: "sys"
       }["string" == typeof e ? e.substring(0, 3) : "xxx"];
-    }, y.isNewGroupTopicName = function (e) {
+    }, S.isNewGroupTopicName = function (e) {
       return "string" == typeof e && "new" == e.substring(0, 3);
-    }, y.getVersion = function () {
+    }, S.getVersion = function () {
+      return c;
+    }, S.setWebSocketProvider = function (e) {
+      r = e;
+    }, S.getLibrary = function () {
       return u;
-    }, y.setWebSocketProvider = function (e) {
-      o = e;
-    }, y.getLibrary = function () {
-      return h;
-    }, y.MESSAGE_STATUS_NONE = 0, y.MESSAGE_STATUS_QUEUED = 1, y.MESSAGE_STATUS_SENDING = 2, y.MESSAGE_STATUS_FAILED = 3, y.MESSAGE_STATUS_SENT = 4, y.MESSAGE_STATUS_RECEIVED = 5, y.MESSAGE_STATUS_READ = 6, y.MESSAGE_STATUS_TO_ME = 7, y.DEL_CHAR = "\u2421", y.prototype = {
+    }, S.MESSAGE_STATUS_NONE = 0, S.MESSAGE_STATUS_QUEUED = 1, S.MESSAGE_STATUS_SENDING = 2, S.MESSAGE_STATUS_FAILED = 3, S.MESSAGE_STATUS_SENT = 4, S.MESSAGE_STATUS_RECEIVED = 5, S.MESSAGE_STATUS_READ = 6, S.MESSAGE_STATUS_TO_ME = 7, S.DEL_CHAR = "\u2421", S.prototype = {
       connect: function (e) {
         return this._connection.connect(e);
       },
@@ -1303,10 +1301,10 @@
         })), r;
       },
       createAccountBasic: function (e, t, n) {
-        return e = e || "", t = t || "", this.createAccount("basic", g(e + ":" + t), !0, n);
+        return e = e || "", t = t || "", this.createAccount("basic", p(e + ":" + t), !0, n);
       },
       updateAccountBasic: function (e, t, n, i) {
-        return t = t || "", n = n || "", this.account(e, "basic", g(t + ":" + n), !1, i);
+        return t = t || "", n = n || "", this.account(e, "basic", p(t + ":" + n), !1, i);
       },
       hello: function () {
         var e = this,
@@ -1334,7 +1332,7 @@
       },
       loginBasic: function (e, t, n) {
         var i = this;
-        return this.login("basic", g(e + ":" + t), n).then(function (t) {
+        return this.login("basic", p(e + ":" + t), n).then(function (t) {
           return i._login = e, t;
         });
       },
@@ -1342,7 +1340,7 @@
         return this.login("token", e, t);
       },
       requestResetAuthSecret: function (e, t, n) {
-        return this.login("reset", g(e + ":" + t + ":" + n));
+        return this.login("reset", p(e + ":" + t + ":" + n));
       },
       getAuthToken: function () {
         return this._authToken && this._authToken.expires.getTime() > Date.now() ? this._authToken : (this._authToken = null, null);
@@ -1352,7 +1350,7 @@
       },
       subscribe: function (e, t, n) {
         var i = this.initPacket("sub", e);
-        return e || (e = "new"), i.sub.get = t, n && (n.sub && (i.sub.set.sub = n.sub), n.desc && (y.isNewGroupTopicName(e) ? i.sub.set.desc = n.desc : "p2p" == y.topicType(e) && n.desc.defacs && (i.sub.set.desc = {
+        return e || (e = "new"), i.sub.get = t, n && (n.sub && (i.sub.set.sub = n.sub), n.desc && (S.isNewGroupTopicName(e) ? i.sub.set.desc = n.desc : "p2p" == S.topicType(e) && n.desc.defacs && (i.sub.set.desc = {
           defacs: n.desc.defacs
         })), n.tags && (i.sub.set.tags = n.tags)), this.send(i, i.sub.id);
       },
@@ -1362,10 +1360,10 @@
       },
       createMessage: function (e, t, n) {
         var i = this.initPacket("pub", e),
-            s = "string" == typeof t ? r.parse(t) : t;
-        return s && !r.isPlainText(s) && (i.pub.head = {
-          mime: r.getContentType()
-        }, t = s), i.pub.noecho = n, i.pub.content = t, i.pub;
+            r = "string" == typeof t ? s.parse(t) : t;
+        return r && !s.isPlainText(r) && (i.pub.head = {
+          mime: s.getContentType()
+        }, t = r), i.pub.noecho = n, i.pub.content = t, i.pub;
       },
       publish: function (e, t, n) {
         return this.publishMessage(this.createMessage(e, t, n));
@@ -1377,7 +1375,7 @@
       },
       getMeta: function (e, t) {
         var n = this.initPacket("get", e);
-        return n.get = v(n.get, t), this.send(n, n.get.id);
+        return n.get = g(n.get, t), this.send(n, n.get.id);
       },
       setMeta: function (e, t) {
         var n = this.initPacket("set", e),
@@ -1420,17 +1418,17 @@
       },
       getTopic: function (e) {
         var t = this.cacheGet("topic", e);
-        return !t && e && (t = "me" == e ? new E() : "fnd" == e ? new A() : new D(e), this.cachePut("topic", e, t), this.attachCacheToTopic(t)), t;
+        return !t && e && (t = "me" == e ? new D() : "fnd" == e ? new E() : new x(e), this.cachePut("topic", e, t), this.attachCacheToTopic(t)), t;
       },
       newTopic: function (e) {
-        var t = new D("new", e);
+        var t = new x("new", e);
         return this.attachCacheToTopic(t), t;
       },
       newGroupTopicName: function () {
         return "new" + this.getNextUniqueId();
       },
       newTopicWith: function (e, t) {
-        var n = new D(e, t);
+        var n = new x(e, t);
         return this.attachCacheToTopic(n), n;
       },
       getMeTopic: function () {
@@ -1440,7 +1438,7 @@
         return this.getTopic("fnd");
       },
       getLargeFileHelper: function () {
-        return new R(this);
+        return new A(this);
       },
       getCurrentUserID: function () {
         return this._myUID;
@@ -1533,7 +1531,7 @@
         return this.what.tags = !0, this;
       },
       withCred: function () {
-        return "me" == this.topic.getType() ? this.what.cred = !0 : console.log("Invalid topic type for MetaGetBuilder:withCreds", this.topic.getType()), this;
+        return "me" == this.topic.getType() ? this.what.cred = !0 : log("Invalid topic type for MetaGetBuilder:withCreds", this.topic.getType()), this;
       },
       withDel: function (e, t) {
         return (e || t) && (this.what.del = {
@@ -1554,140 +1552,140 @@
       }
     };
 
-    var x = function e(t) {
+    var y = function e(t) {
       t && (this.given = "number" == typeof t.given ? t.given : e.decode(t.given), this.want = "number" == typeof t.want ? t.want : e.decode(t.want), this.mode = t.mode ? "number" == typeof t.mode ? t.mode : e.decode(t.mode) : this.given & this.want);
     };
 
-    x._NONE = 0, x._JOIN = 1, x._READ = 2, x._WRITE = 4, x._PRES = 8, x._APPROVE = 16, x._SHARE = 32, x._DELETE = 64, x._OWNER = 128, x._BITMASK = x._JOIN | x._READ | x._WRITE | x._PRES | x._APPROVE | x._SHARE | x._DELETE | x._OWNER, x._INVALID = 1048576, x._checkFlag = function (e, t, n) {
+    y._NONE = 0, y._JOIN = 1, y._READ = 2, y._WRITE = 4, y._PRES = 8, y._APPROVE = 16, y._SHARE = 32, y._DELETE = 64, y._OWNER = 128, y._BITMASK = y._JOIN | y._READ | y._WRITE | y._PRES | y._APPROVE | y._SHARE | y._DELETE | y._OWNER, y._INVALID = 1048576, y._checkFlag = function (e, t, n) {
       if (["given", "want", "mode"].includes(t = t || "mode")) return 0 != (e[t] & n);
       throw new Error("Invalid AccessMode component '" + t + "'");
-    }, x.decode = function (e) {
+    }, y.decode = function (e) {
       if (!e) return null;
-      if ("number" == typeof e) return e & x._BITMASK;
-      if ("N" === e || "n" === e) return x._NONE;
+      if ("number" == typeof e) return e & y._BITMASK;
+      if ("N" === e || "n" === e) return y._NONE;
 
       for (var t = {
-        J: x._JOIN,
-        R: x._READ,
-        W: x._WRITE,
-        P: x._PRES,
-        A: x._APPROVE,
-        S: x._SHARE,
-        D: x._DELETE,
-        O: x._OWNER
-      }, n = x._NONE, i = 0; i < e.length; i++) {
+        J: y._JOIN,
+        R: y._READ,
+        W: y._WRITE,
+        P: y._PRES,
+        A: y._APPROVE,
+        S: y._SHARE,
+        D: y._DELETE,
+        O: y._OWNER
+      }, n = y._NONE, i = 0; i < e.length; i++) {
         var s = t[e.charAt(i).toUpperCase()];
         s && (n |= s);
       }
 
       return n;
-    }, x.encode = function (e) {
-      if (null === e || e === x._INVALID) return null;
-      if (e === x._NONE) return "N";
+    }, y.encode = function (e) {
+      if (null === e || e === y._INVALID) return null;
+      if (e === y._NONE) return "N";
 
       for (var t = ["J", "R", "W", "P", "A", "S", "D", "O"], n = "", i = 0; i < t.length; i++) 0 != (e & 1 << i) && (n += t[i]);
 
       return n;
-    }, x.update = function (e, t) {
+    }, y.update = function (e, t) {
       if (!t || "string" != typeof t) return e;
       var n = t.charAt(0);
 
       if ("+" == n || "-" == n) {
         for (var i = e, s = t.split(/([-+])/), r = 1; r < s.length - 1; r += 2) {
           n = s[r];
-          var o = x.decode(s[r + 1]);
-          if (o == x._INVALID) return e;
+          var o = y.decode(s[r + 1]);
+          if (o == y._INVALID) return e;
           null != o && ("+" === n ? i |= o : "-" === n && (i &= ~o));
         }
 
         e = i;
       } else {
-        var a = x.decode(t);
-        a != x._INVALID && (e = a);
+        var a = y.decode(t);
+        a != y._INVALID && (e = a);
       }
 
       return e;
-    }, x.prototype = {
+    }, y.prototype = {
       toString: function () {
-        return '{"mode": "' + x.encode(this.mode) + '", "given": "' + x.encode(this.given) + '", "want": "' + x.encode(this.want) + '"}';
+        return '{"mode": "' + y.encode(this.mode) + '", "given": "' + y.encode(this.given) + '", "want": "' + y.encode(this.want) + '"}';
       },
       jsonHelper: function () {
         return {
-          mode: x.encode(this.mode),
-          given: x.encode(this.given),
-          want: x.encode(this.want)
+          mode: y.encode(this.mode),
+          given: y.encode(this.given),
+          want: y.encode(this.want)
         };
       },
       setMode: function (e) {
-        return this.mode = x.decode(e), this;
+        return this.mode = y.decode(e), this;
       },
       updateMode: function (e) {
-        return this.mode = x.update(this.mode, e), this;
+        return this.mode = y.update(this.mode, e), this;
       },
       getMode: function () {
-        return x.encode(this.mode);
+        return y.encode(this.mode);
       },
       setGiven: function (e) {
-        return this.given = x.decode(e), this;
+        return this.given = y.decode(e), this;
       },
       updateGiven: function (e) {
-        return this.given = x.update(this.given, e), this;
+        return this.given = y.update(this.given, e), this;
       },
       getGiven: function () {
-        return x.encode(this.given);
+        return y.encode(this.given);
       },
       setWant: function (e) {
-        return this.want = x.decode(e), this;
+        return this.want = y.decode(e), this;
       },
       updateWant: function (e) {
-        return this.want = x.update(this.want, e), this;
+        return this.want = y.update(this.want, e), this;
       },
       getWant: function () {
-        return x.encode(this.want);
+        return y.encode(this.want);
       },
       getMissing: function () {
-        return x.encode(this.want & ~this.given);
+        return y.encode(this.want & ~this.given);
       },
       getExcessive: function () {
-        return x.encode(this.given & ~this.want);
+        return y.encode(this.given & ~this.want);
       },
       updateAll: function (e) {
         return e && (this.updateGiven(e.given), this.updateWant(e.want), this.mode = this.given & this.want), this;
       },
       isOwner: function (e) {
-        return x._checkFlag(this, e, x._OWNER);
+        return y._checkFlag(this, e, y._OWNER);
       },
       isPresencer: function (e) {
-        return x._checkFlag(this, e, x._PRES);
+        return y._checkFlag(this, e, y._PRES);
       },
       isMuted: function (e) {
         return !this.isPresencer(e);
       },
       isJoiner: function (e) {
-        return x._checkFlag(this, e, x._JOIN);
+        return y._checkFlag(this, e, y._JOIN);
       },
       isReader: function (e) {
-        return x._checkFlag(this, e, x._READ);
+        return y._checkFlag(this, e, y._READ);
       },
       isWriter: function (e) {
-        return x._checkFlag(this, e, x._WRITE);
+        return y._checkFlag(this, e, y._WRITE);
       },
       isApprover: function (e) {
-        return x._checkFlag(this, e, x._APPROVE);
+        return y._checkFlag(this, e, y._APPROVE);
       },
       isAdmin: function (e) {
         return this.isOwner(e) || this.isApprover(e);
       },
       isSharer: function (e) {
-        return this.isAdmin(e) || x._checkFlag(this, e, x._SHARE);
+        return this.isAdmin(e) || y._checkFlag(this, e, y._SHARE);
       },
       isDeleter: function (e) {
-        return x._checkFlag(this, e, x._DELETE);
+        return y._checkFlag(this, e, y._DELETE);
       }
     };
 
-    var D = function (e, t) {
-      this._tinode = null, this.name = e, this.created = null, this.updated = null, this.touched = null, this.acs = new x(null), this.private = null, this.public = null, this._users = {}, this._queuedSeqId = 268435455, this._maxSeq = 0, this._minSeq = 0, this._noEarlierMsgs = !1, this._maxDel = 0, this._tags = [], this._credentials = [], this._messages = function (e) {
+    var x = function (e, t) {
+      this._tinode = null, this.name = e, this.created = null, this.updated = null, this.touched = null, this.acs = new y(null), this.private = null, this.public = null, this._users = {}, this._queuedSeqId = 268435455, this._maxSeq = 0, this._minSeq = 0, this._noEarlierMsgs = !1, this._maxDel = 0, this._tags = [], this._credentials = [], this._messages = function (e) {
         var t = [];
 
         function n(t, n, i) {
@@ -1741,7 +1739,7 @@
       }), this._subscribed = !1, this._lastDescUpdate = null, this._lastSubsUpdate = null, this._new = !0, t && (this.onData = t.onData, this.onMeta = t.onMeta, this.onPres = t.onPres, this.onInfo = t.onInfo, this.onMetaDesc = t.onMetaDesc, this.onMetaSub = t.onMetaSub, this.onSubsUpdated = t.onSubsUpdated, this.onTagsUpdated = t.onTagsUpdated, this.onCredsUpdated = callbacls.onCredsUpdated, this.onDeleteTopic = t.onDeleteTopic, this.onAllMessagesReceived = t.onAllMessagesReceived);
     };
 
-    D.prototype = {
+    x.prototype = {
       isSubscribed: function () {
         return this._subscribed;
       },
@@ -1779,9 +1777,9 @@
         var t = this;
         if (!this._subscribed) return Promise.reject(new Error("Cannot publish on inactive topic"));
 
-        if (r.hasAttachments(e.content) && !e.head.attachments) {
+        if (s.hasAttachments(e.content) && !e.head.attachments) {
           var n = [];
-          r.attachments(e.content, function (e) {
+          s.attachments(e.content, function (e) {
             n.push(e.ref);
           }), e.head.attachments = n;
         }
@@ -1789,7 +1787,7 @@
         return e._sending = !0, e._failed = !1, this._tinode.publishMessage(e).then(function (n) {
           return e._sending = !1, e.seq = n.params.seq, e.ts = n.ts, t._routeData(e), n;
         }).catch(function (n) {
-          console.log("Message rejected by the server", n), e._sending = !1, e._failed = !0, t.onData && t.onData();
+          log("Message rejected by the server", n), e._sending = !1, e._failed = !0, t.onData && t.onData();
         });
       },
       publishDraft: function (e, t) {
@@ -1804,7 +1802,7 @@
             text: "cancelled"
           } : n.publishMessage(e);
         }, function (t) {
-          console.log("Message draft rejected by the server", t), e._sending = !1, e._failed = !0, n._messages.delAt(n._messages.find(e)), n.onData && n.onData();
+          log("Message draft rejected by the server", t), e._sending = !1, e._failed = !0, n._messages.delAt(n._messages.find(e)), n.onData && n.onData();
         });
       },
       leave: function (e) {
@@ -1841,7 +1839,7 @@
             });
           }
 
-          return 0 == t.length && t.push(y.DEL_CHAR), t;
+          return 0 == t.length && t.push(S.DEL_CHAR), t;
         }(e.tags)), this._tinode.setMeta(this.name, e).then(function (n) {
           return n && n.code >= 300 ? n : (e.sub && (n.params && n.params.acs && (e.sub.acs = n.params.acs, e.sub.updated = n.ts), e.sub.user || (e.sub.user = t._tinode.getCurrentUserID(), e.desc || (e.desc = {})), e.sub._noForwarding = !0, t._processMetaSub([e.sub])), e.desc && (n.params && n.params.acs && (e.desc.acs = n.params.acs, e.desc.updated = n.ts), t._processMetaDesc(e.desc)), e.tags && t._processMetaTags(e.tags), e.cred && t._processMetaCreds([e.cred], !0), n);
         });
@@ -1870,7 +1868,7 @@
         return this.private && this.private.arch == e ? Promise.resolve(e) : this.setMeta({
           desc: {
             private: {
-              arch: !!e || y.DEL_CHAR
+              arch: !!e || S.DEL_CHAR
             }
           }
         });
@@ -2043,7 +2041,7 @@
         return !1;
       },
       getType: function () {
-        return y.topicType(this.name);
+        return S.topicType(this.name);
       },
       getAccessMode: function () {
         return this.acs;
@@ -2091,8 +2089,8 @@
               updated: new Date(),
               acs: t.acs
             }]);else {
-              var n = new x().updateAll(e.dacs);
-              n && n.mode != x._NONE && ((t = this._cacheGetUser(e.src)) ? t.acs = n : (t = {
+              var n = new y().updateAll(e.dacs);
+              n && n.mode != y._NONE && ((t = this._cacheGetUser(e.src)) ? t.acs = n : (t = {
                 user: e.src,
                 acs: n
               }, this.getMeta(this.startMetaQuery().withOneSub(void 0, e.src).build())), t.updated = new Date(), this._processMetaSub([t]));
@@ -2120,7 +2118,7 @@
         this.onInfo && this.onInfo(e);
       },
       _processMetaDesc: function (e) {
-        if ("p2p" == this.getType() && delete e.defacs, v(this, e), "string" == typeof this.created && (this.created = new Date(this.created)), "string" == typeof this.updated && (this.updated = new Date(this.updated)), "string" == typeof this.touched && (this.touched = new Date(this.touched)), "me" !== this.name && !e._noForwarding) {
+        if ("p2p" == this.getType() && delete e.defacs, g(this, e), "string" == typeof this.created && (this.created = new Date(this.created)), "string" == typeof this.updated && (this.updated = new Date(this.updated)), "string" == typeof this.touched && (this.touched = new Date(this.touched)), "me" !== this.name && !e._noForwarding) {
           var t = this._tinode.getMeTopic();
 
           t && t._processMetaSub([{
@@ -2154,7 +2152,7 @@
         this.onSubsUpdated && this.onSubsUpdated(Object.keys(this._users));
       },
       _processMetaTags: function (e) {
-        1 == e.length && e[0] == y.DEL_CHAR && (e = []), this._tags = e, this.onTagsUpdated && this.onTagsUpdated(e);
+        1 == e.length && e[0] == S.DEL_CHAR && (e = []), this._tags = e, this.onTagsUpdated && this.onTagsUpdated(e);
       },
       _processMetaCreds: function (e) {},
       _processDelMessages: function (e, t) {
@@ -2172,7 +2170,7 @@
         this._subscribed = !1;
       },
       _gone: function () {
-        this._messages.reset(), this._users = {}, this.acs = new x(null), this.private = null, this.public = null, this._maxSeq = 0, this._minSeq = 0, this._subscribed = !1;
+        this._messages.reset(), this._users = {}, this.acs = new y(null), this.private = null, this.public = null, this._maxSeq = 0, this._minSeq = 0, this._subscribed = !1;
 
         var e = this._tinode.getMeTopic();
 
@@ -2186,18 +2184,18 @@
       _updateCachedUser: function (e, t) {
         var n = this._cacheGetUser(e);
 
-        return n = v(n || {}, t), this._cachePutUser(e, n), _(this._users, e, n);
+        return n = g(n || {}, t), this._cachePutUser(e, n), v(this._users, e, n);
       },
       _getQueuedSeqId: function () {
         return this._queuedSeqId++;
       }
     };
 
-    var E = function (e) {
-      D.call(this, "me", e), this._contacts = {}, e && (this.onContactUpdate = e.onContactUpdate);
+    var D = function (e) {
+      x.call(this, "me", e), this._contacts = {}, e && (this.onContactUpdate = e.onContactUpdate);
     };
 
-    E.prototype = Object.create(D.prototype, {
+    D.prototype = Object.create(x.prototype, {
       _processMetaSub: {
         value: function (e) {
           var t = 0;
@@ -2209,7 +2207,7 @@
             if ("fnd" != s && "me" != s) {
               i.updated = new Date(i.updated), i.touched = i.touched ? new Date(i.touched) : void 0, i.deleted = i.deleted ? new Date(i.deleted) : null;
               var r = null;
-              if (i.deleted) r = i, delete this._contacts[s];else if (i.acs && !i.acs.isJoiner()) (r = i).deleted = new Date(), delete this._contacts[s];else if (void 0 !== i.seq && (i.seq = 0 | i.seq, i.recv = 0 | i.recv, i.read = 0 | i.read, i.unread = i.seq - i.read), i.seen && i.seen.when && (i.seen.when = new Date(i.seen.when)), r = _(this._contacts, s, i), "p2p" == y.topicType(s) && this._cachePutUser(s, r), !i._noForwarding) {
+              if (i.deleted) r = i, delete this._contacts[s];else if (i.acs && !i.acs.isJoiner()) (r = i).deleted = new Date(), delete this._contacts[s];else if (void 0 !== i.seq && (i.seq = 0 | i.seq, i.recv = 0 | i.recv, i.read = 0 | i.read, i.unread = i.seq - i.read), i.seen && i.seen.when && (i.seen.when = new Date(i.seen.when)), r = v(this._contacts, s, i), "p2p" == S.topicType(s) && this._cachePutUser(s, r), !i._noForwarding) {
                 var o = this._tinode.getTopic(s);
 
                 o && (i._noForwarding = !0, o._processMetaDesc(i));
@@ -2227,7 +2225,7 @@
       _processMetaCreds: {
         value: function (e, t) {
           var n = this;
-          1 == e.length && e[0] == y.DEL_CHAR && (e = []), t ? e.map(function (e) {
+          1 == e.length && e[0] == S.DEL_CHAR && (e = []), t ? e.map(function (e) {
             if (e.val) {
               var t = n._credentials.findIndex(function (t) {
                 return t.meth == e.meth && t.val == e.val;
@@ -2274,7 +2272,7 @@
                 break;
 
               case "acs":
-                t.acs ? t.acs.updateAll(e.dacs) : t.acs = new x().updateAll(e.dacs), t.touched = new Date();
+                t.acs ? t.acs.updateAll(e.dacs) : t.acs = new y().updateAll(e.dacs), t.touched = new Date();
                 break;
 
               case "ua":
@@ -2300,14 +2298,14 @@
                 break;
 
               default:
-                console.log("Unsupported presence update in 'me'", e.what);
+                log("Unsupported presence update in 'me'", e.what);
             }
 
             this.onContactUpdate && this.onContactUpdate(e.what, t);
           } else if ("acs" == e.what) {
-            var n = new x(e.dacs);
-            if (!n || n.mode == x._INVALID) return void this._tinode.logger("Invalid access mode update", e.src, e.dacs);
-            if (n.mode == x._NONE) return void this._tinode.logger("Removing non-existent subscription", e.src, e.dacs);
+            var n = new y(e.dacs);
+            if (!n || n.mode == y._INVALID) return void this._tinode.logger("Invalid access mode update", e.src, e.dacs);
+            if (n.mode == y._NONE) return void this._tinode.logger("Removing non-existent subscription", e.src, e.dacs);
             this.getMeta(this.startMetaQuery().withOneSub(void 0, e.src).build()), this._contacts[e.src] = {
               touched: new Date(),
               topic: e.src,
@@ -2415,13 +2413,13 @@
         configurable: !0,
         writable: !0
       }
-    }), E.prototype.constructor = E;
+    }), D.prototype.constructor = D;
 
-    var A = function (e) {
-      D.call(this, "fnd", e), this._contacts = {};
+    var E = function (e) {
+      x.call(this, "fnd", e), this._contacts = {};
     };
 
-    A.prototype = Object.create(D.prototype, {
+    E.prototype = Object.create(x.prototype, {
       _processMetaSub: {
         value: function (e) {
           var t = Object.getOwnPropertyNames(this._contacts).length;
@@ -2429,7 +2427,7 @@
           for (var n in this._contacts = {}, e) {
             var i = e[n],
                 s = i.topic ? i.topic : i.user;
-            i.updated = new Date(i.updated), i.seen && i.seen.when && (i.seen.when = new Date(i.seen.when)), i = _(this._contacts, s, i), t++, this.onMetaSub && this.onMetaSub(i);
+            i.updated = new Date(i.updated), i.seen && i.seen.when && (i.seen.when = new Date(i.seen.when)), i = v(this._contacts, s, i), t++, this.onMetaSub && this.onMetaSub(i);
           }
 
           t > 0 && this.onSubsUpdated && this.onSubsUpdated(Object.keys(this._contacts));
@@ -2449,7 +2447,7 @@
       setMeta: {
         value: function (e) {
           var t = this;
-          return Object.getPrototypeOf(A.prototype).setMeta.call(this, e).then(function () {
+          return Object.getPrototypeOf(E.prototype).setMeta.call(this, e).then(function () {
             Object.keys(t._contacts).length > 0 && (t._contacts = {}, t.onSubsUpdated && t.onSubsUpdated([]));
           });
         },
@@ -2466,25 +2464,25 @@
         configurable: !0,
         writable: !0
       }
-    }), A.prototype.constructor = A;
+    }), E.prototype.constructor = E;
 
-    var R = function (e) {
-      this._tinode = e, this._apiKey = e._apiKey, this._authToken = e.getAuthToken(), this._msgId = e.getNextUniqueId(), this.xhr = m(), this.toResolve = null, this.toReject = null, this.onProgress = null, this.onSuccess = null, this.onFailure = null;
+    var A = function (e) {
+      this._tinode = e, this._apiKey = e._apiKey, this._authToken = e.getAuthToken(), this._msgId = e.getNextUniqueId(), this.xhr = _(), this.toResolve = null, this.toReject = null, this.onProgress = null, this.onSuccess = null, this.onFailure = null;
     };
 
-    R.prototype = {
+    A.prototype = {
       uploadWithBaseUrl: function (e, t, n, i, s) {
         var r = this;
         if (!this._authToken) throw new Error("Must authenticate first");
         var o = this,
-            a = "/v" + c + "/file/u/";
+            c = "/v" + a + "/file/u/";
 
         if (e) {
           if (0 != e.indexOf("http://") && 0 != e.indexOf("https://")) throw new Error("Invalid base URL '" + e + "'");
-          a = e + a;
+          c = e + c;
         }
 
-        this.xhr.open("POST", a, !0), this.xhr.setRequestHeader("X-Tinode-APIKey", this._apiKey), this.xhr.setRequestHeader("X-Tinode-Auth", "Token " + this._authToken.token);
+        this.xhr.open("POST", c, !0), this.xhr.setRequestHeader("X-Tinode-APIKey", this._apiKey), this.xhr.setRequestHeader("X-Tinode-Auth", "Token " + this._authToken.token);
         var u = new Promise(function (e, t) {
           r.toResolve = e, r.toReject = t;
         });
@@ -2494,7 +2492,7 @@
           var e;
 
           try {
-            e = JSON.parse(this.response, b);
+            e = JSON.parse(this.response, m);
           } catch (t) {
             o._tinode.logger("Invalid server response in LargeFileHelper", this.response);
           }
@@ -2539,7 +2537,7 @@
             var i = new FileReader();
             i.onload = function () {
               try {
-                var e = JSON.parse(this.result, b);
+                var e = JSON.parse(this.result, m);
                 r.toReject(new Error(e.ctrl.text + " (" + e.ctrl.code + ")"));
               } catch (t) {
                 r._tinode.logger("Invalid server response in LargeFileHelper", this.result), r.toReject(t);
@@ -2568,14 +2566,14 @@
       }
     };
 
-    var k = function e(t, n) {
+    var R = function e(t, n) {
       this.status = e.STATUS_NONE, this.topic = t, this.content = n;
     };
 
-    k.STATUS_NONE = 0, k.STATUS_QUEUED = 1, k.STATUS_SENDING = 2, k.STATUS_FAILED = 3, k.STATUS_SENT = 4, k.STATUS_RECEIVED = 5, k.STATUS_READ = 6, k.STATUS_TO_ME = 7, (k.prototype = {
+    R.STATUS_NONE = 0, R.STATUS_QUEUED = 1, R.STATUS_SENDING = 2, R.STATUS_FAILED = 3, R.STATUS_SENT = 4, R.STATUS_RECEIVED = 5, R.STATUS_READ = 6, R.STATUS_TO_ME = 7, (R.prototype = {
       toJSON: function () {},
       fromJSON: function (e) {}
-    }).constructor = k, i.exports = y, i.exports.Drafty = r;
+    }).constructor = R, i.exports = S, i.exports.Drafty = s;
   }.call(this, "undefined" != typeof global ? global : "undefined" != typeof self ? self : "undefined" != typeof window ? window : {}), i = i.exports;
 });
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../webapp/node_modules/webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
@@ -2617,7 +2615,7 @@ module.exports = g;
 /*!***********************!*\
   !*** ./src/config.js ***!
   \***********************/
-/*! exports provided: APP_NAME, API_KEY, KNOWN_HOSTS, DEFAULT_HOST, KEYPRESS_DELAY, RECEIVED_DELAY, READ_DELAY, MIN_TAG_LENGTH, DEFAULT_P2P_ACCESS_MODE, NEW_GRP_ACCESS_MODE, NO_ACCESS_MODE, MEDIA_BREAKPOINT, REM_SIZE, AVATAR_SIZE, BROKEN_IMAGE_SIZE, MESSAGES_PAGE, MAX_INBAND_ATTACHMENT_SIZE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_ONLINE_IN_TOPIC, LINK_CONTACT_US, LINK_PRIVACY_POLICY, LINK_TERMS_OF_SERVICE */
+/*! exports provided: APP_NAME, API_KEY, KNOWN_HOSTS, DEFAULT_HOST, LOGGING_ENABLED, KEYPRESS_DELAY, RECEIVED_DELAY, READ_DELAY, MIN_TAG_LENGTH, DEFAULT_P2P_ACCESS_MODE, NEW_GRP_ACCESS_MODE, NO_ACCESS_MODE, MEDIA_BREAKPOINT, REM_SIZE, AVATAR_SIZE, BROKEN_IMAGE_SIZE, MESSAGES_PAGE, MAX_INBAND_ATTACHMENT_SIZE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_ONLINE_IN_TOPIC, LINK_CONTACT_US, LINK_PRIVACY_POLICY, LINK_TERMS_OF_SERVICE */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2626,6 +2624,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "API_KEY", function() { return API_KEY; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "KNOWN_HOSTS", function() { return KNOWN_HOSTS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DEFAULT_HOST", function() { return DEFAULT_HOST; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LOGGING_ENABLED", function() { return LOGGING_ENABLED; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "KEYPRESS_DELAY", function() { return KEYPRESS_DELAY; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVED_DELAY", function() { return RECEIVED_DELAY; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "READ_DELAY", function() { return READ_DELAY; });
@@ -2654,6 +2653,7 @@ var KNOWN_HOSTS = {
   local: 'localhost:6060'
 };
 var DEFAULT_HOST = KNOWN_HOSTS.hosted;
+var LOGGING_ENABLED = true;
 var KEYPRESS_DELAY = 3 * 1000;
 var RECEIVED_DELAY = 500;
 var READ_DELAY = 1000;
@@ -2948,13 +2948,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isSecureConnection", function() { return isSecureConnection; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isLocalHost", function() { return isLocalHost; });
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 
 function detectServerAddress() {
   var host = _config_js__WEBPACK_IMPORTED_MODULE_0__["DEFAULT_HOST"];
 
-  if (_typeof(window.location) == 'object') {
+  if (typeof window.location == 'object') {
     if (window.location.protocol == 'file:' || window.location.hostname == 'localhost') {
       host = _config_js__WEBPACK_IMPORTED_MODULE_0__["KNOWN_HOSTS"].local;
     } else if (window.location.hostname) {
@@ -2965,14 +2963,14 @@ function detectServerAddress() {
   return host;
 }
 function isSecureConnection() {
-  if (_typeof(window.location) == 'object') {
+  if (typeof window.location == 'object') {
     return window.location.protocol == 'https:';
   }
 
   return false;
 }
 function isLocalHost() {
-  if (_typeof(window.location) == 'object') {
+  if (typeof window.location == 'object') {
     return window.location.hostname == 'localhost';
   }
 
@@ -3400,15 +3398,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _widgets_contact_list_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/contact-list.jsx */ "./src/widgets/contact-list.jsx");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -3490,7 +3486,7 @@ var ContactsView = function (_React$Component) {
       var unreadThreads = 0;
       var archivedCount = 0;
       props.chatList.map(function (c) {
-        if (c["private"] && c["private"].arch) {
+        if (c.private && c.private.arch) {
           if (props.archive) {
             contacts.push(c);
           } else {
@@ -3549,15 +3545,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _widgets_visible_password_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/visible-password.jsx */ "./src/widgets/visible-password.jsx");
 /* harmony import */ var _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/local-storage.js */ "./src/lib/local-storage.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -3786,15 +3780,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -3830,8 +3822,8 @@ var EditAccountView = function (_React$Component) {
 
     var defacs = me.getDefaultAccess();
     _this.state = {
-      fullName: me["public"] ? me["public"].fn : undefined,
-      avatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__["makeImageUrl"])(me["public"] ? me["public"].photo : null),
+      fullName: me.public ? me.public.fn : undefined,
+      avatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__["makeImageUrl"])(me.public ? me.public.photo : null),
       auth: defacs ? defacs.auth : null,
       anon: defacs ? defacs.anon : null,
       tags: me.tags(),
@@ -4282,15 +4274,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -4395,7 +4385,7 @@ var InfoView = function (_React$Component) {
       groupTopic: undefined,
       fullName: undefined,
       avatar: null,
-      "private": null,
+      private: null,
       selectedContact: null,
       access: null,
       modeGiven: null,
@@ -4522,9 +4512,9 @@ var InfoView = function (_React$Component) {
         sharer: acs && acs.isSharer(),
         deleter: acs && acs.isDeleter(),
         muted: acs && acs.isMuted(),
-        fullName: topic["public"] ? topic["public"].fn : undefined,
-        avatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__["makeImageUrl"])(topic["public"] ? topic["public"].photo : null),
-        "private": topic["private"] ? topic["private"].comment : null,
+        fullName: topic.public ? topic.public.fn : undefined,
+        avatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__["makeImageUrl"])(topic.public ? topic.public.photo : null),
+        private: topic.private ? topic.private.comment : null,
         address: topic.name,
         groupTopic: topic.getType() == 'grp',
         showMemberPanel: false,
@@ -4597,7 +4587,7 @@ var InfoView = function (_React$Component) {
     value: function handlePrivateUpdate(priv) {
       if (this.state.priv !== priv) {
         this.setState({
-          "private": priv
+          private: priv
         });
         this.props.onTopicDescUpdate(this.props.topic, null, priv || tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.DEL_CHAR);
       }
@@ -4709,9 +4699,9 @@ var InfoView = function (_React$Component) {
             titleEdit = formatMessage(messages.granted);
             titleCompare = formatMessage(messages.requested);
 
-            if (user["public"]) {
-              userTitle = user["public"].fn;
-              userAvatar = user["public"].photo;
+            if (user.public) {
+              userTitle = user.public.fn;
+              userAvatar = user.public.photo;
             }
 
             break;
@@ -4931,7 +4921,7 @@ var InfoView = function (_React$Component) {
       }, function (private_placeholder) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
           placeholder: private_placeholder,
-          value: _this6.state["private"],
+          value: _this6.state.private,
           onFinished: _this6.handlePrivateUpdate
         });
       }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
@@ -5112,15 +5102,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/checkbox.jsx */ "./src/widgets/checkbox.jsx");
 /* harmony import */ var _widgets_visible_password_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/visible-password.jsx */ "./src/widgets/visible-password.jsx");
 /* harmony import */ var _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/local-storage.js */ "./src/lib/local-storage.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -5283,15 +5271,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "../tinode-js/umd/tinode.prod.js");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -5373,15 +5359,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -5544,7 +5528,7 @@ var MessagesView = function (_React$Component) {
               topic.publishMessage(pub);
             }
           });
-        })["catch"](function (err) {
+        }).catch(function (err) {
           console.log("Failed subscription to", _this2.state.topic);
 
           _this2.props.onError(err.message, 'err');
@@ -5568,7 +5552,7 @@ var MessagesView = function (_React$Component) {
       var oldTopic = this.props.tinode.getTopic(oldTopicName);
 
       if (oldTopic && oldTopic.isSubscribed()) {
-        oldTopic.leave(false)["catch"](function () {})["finally"](function () {
+        oldTopic.leave(false).catch(function () {}).finally(function () {
           _this3.setState({
             fetchingMessages: false
           });
@@ -5608,7 +5592,7 @@ var MessagesView = function (_React$Component) {
 
             if (topic && topic.isSubscribed() && topic.msgHasMoreMessages()) {
               newState.fetchingMessages = true;
-              topic.getMessagesPage(_config_js__WEBPACK_IMPORTED_MODULE_12__["MESSAGES_PAGE"])["catch"](function (err) {
+              topic.getMessagesPage(_config_js__WEBPACK_IMPORTED_MODULE_12__["MESSAGES_PAGE"]).catch(function (err) {
                 _this4.setState({
                   fetchingMessages: false
                 });
@@ -5625,10 +5609,10 @@ var MessagesView = function (_React$Component) {
   }, {
     key: "handleDescChange",
     value: function handleDescChange(desc) {
-      if (desc["public"]) {
+      if (desc.public) {
         this.setState({
-          title: desc["public"].fn,
-          avatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__["makeImageUrl"])(desc["public"].photo)
+          title: desc.public.fn,
+          avatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__["makeImageUrl"])(desc.public.photo)
         });
       } else {
         this.setState({
@@ -5872,9 +5856,9 @@ var MessagesView = function (_React$Component) {
           if (groupTopic) {
             var user = topic.userDesc(msg.from);
 
-            if (user && user["public"]) {
-              userName = user["public"].fn;
-              userAvatar = Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__["makeImageUrl"])(user["public"].photo);
+            if (user && user.public) {
+              userName = user.public.fn;
+              userAvatar = Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__["makeImageUrl"])(user.public.photo);
             }
 
             userFrom = msg.from;
@@ -6067,10 +6051,10 @@ var MessagesView = function (_React$Component) {
             onlineSubs: subs
           });
 
-          if (topic["public"]) {
+          if (topic.public) {
             Object.assign(nextState, {
-              title: topic["public"].fn,
-              avatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__["makeImageUrl"])(topic["public"].photo)
+              title: topic.public.fn,
+              avatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__["makeImageUrl"])(topic.public.photo)
             });
           } else {
             Object.assign(nextState, {
@@ -6167,15 +6151,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _widgets_search_contacts_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/search-contacts.jsx */ "./src/widgets/search-contacts.jsx");
 /* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -6334,15 +6316,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _widgets_visible_password_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/visible-password.jsx */ "./src/widgets/visible-password.jsx");
 /* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -6487,15 +6467,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _widgets_host_selector_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/host-selector.jsx */ "./src/widgets/host-selector.jsx");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -6635,25 +6613,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _widgets_side_navbar_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/side-navbar.jsx */ "./src/widgets/side-navbar.jsx");
-/* harmony import */ var _widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/error-panel.jsx */ "./src/widgets/error-panel.jsx");
-/* harmony import */ var _contacts_view_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./contacts-view.jsx */ "./src/views/contacts-view.jsx");
-/* harmony import */ var _create_account_view_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./create-account-view.jsx */ "./src/views/create-account-view.jsx");
-/* harmony import */ var _edit_account_view_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./edit-account-view.jsx */ "./src/views/edit-account-view.jsx");
-/* harmony import */ var _login_view_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./login-view.jsx */ "./src/views/login-view.jsx");
-/* harmony import */ var _new_topic_view_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./new-topic-view.jsx */ "./src/views/new-topic-view.jsx");
-/* harmony import */ var _password_reset_view_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./password-reset-view.jsx */ "./src/views/password-reset-view.jsx");
-/* harmony import */ var _settings_view_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./settings-view.jsx */ "./src/views/settings-view.jsx");
-/* harmony import */ var _validation_view_jsx__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./validation-view.jsx */ "./src/views/validation-view.jsx");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
+/* harmony import */ var _widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/error-panel.jsx */ "./src/widgets/error-panel.jsx");
+/* harmony import */ var _widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/load-spinner.jsx */ "./src/widgets/load-spinner.jsx");
+/* harmony import */ var _widgets_side_navbar_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/side-navbar.jsx */ "./src/widgets/side-navbar.jsx");
+/* harmony import */ var _contacts_view_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./contacts-view.jsx */ "./src/views/contacts-view.jsx");
+/* harmony import */ var _create_account_view_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./create-account-view.jsx */ "./src/views/create-account-view.jsx");
+/* harmony import */ var _edit_account_view_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./edit-account-view.jsx */ "./src/views/edit-account-view.jsx");
+/* harmony import */ var _login_view_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./login-view.jsx */ "./src/views/login-view.jsx");
+/* harmony import */ var _new_topic_view_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./new-topic-view.jsx */ "./src/views/new-topic-view.jsx");
+/* harmony import */ var _password_reset_view_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./password-reset-view.jsx */ "./src/views/password-reset-view.jsx");
+/* harmony import */ var _settings_view_jsx__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./settings-view.jsx */ "./src/views/settings-view.jsx");
+/* harmony import */ var _validation_view_jsx__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./validation-view.jsx */ "./src/views/validation-view.jsx");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -6662,6 +6639,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
 
 
 
@@ -6752,7 +6730,7 @@ var SidepanelView = function (_React$Component) {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "sidepanel",
         className: this.props.hideSelf ? 'nodisplay' : null
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_side_navbar_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_side_navbar_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
         state: view,
         title: title,
         avatar: avatar,
@@ -6761,26 +6739,28 @@ var SidepanelView = function (_React$Component) {
         onSettings: this.props.onSettings,
         onNewTopic: this.props.onNewTopic,
         onCancel: onCancel
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
         level: this.props.errorLevel,
         text: this.props.errorText,
         action: this.props.errorAction,
         actionText: this.props.errorActionText,
         onClearError: this.props.onError
-      }), view === 'login' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_login_view_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        show: this.props.loadSpinnerVisible
+      }), view === 'login' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_login_view_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
         login: this.props.login,
         disabled: this.props.loginDisabled,
         onLogin: this.handleLoginRequested
-      }) : view === 'register' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_create_account_view_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      }) : view === 'register' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_create_account_view_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
         onCreateAccount: this.props.onCreateAccount,
         onCancel: this.props.onCancel,
         onError: this.props.onError
-      }) : view === 'settings' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_settings_view_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
+      }) : view === 'settings' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_settings_view_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
         transport: this.props.transport,
         serverAddress: this.props.serverAddress,
         onCancel: this.props.onCancel,
         onUpdate: this.props.onGlobalSettings
-      }) : view === 'edit' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_edit_account_view_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
+      }) : view === 'edit' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_edit_account_view_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
         tinode: this.props.tinode,
         myUserId: this.props.myUserId,
         messageSounds: this.props.messageSounds,
@@ -6796,7 +6776,7 @@ var SidepanelView = function (_React$Component) {
         onLogout: this.props.onLogout,
         onCancel: this.props.onCancel,
         onError: this.props.onError
-      }) : view === 'contacts' || view == 'archive' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_contacts_view_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      }) : view === 'contacts' || view == 'archive' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_contacts_view_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
         tinode: this.props.tinode,
         myUserId: this.props.myUserId,
         connected: this.props.connected,
@@ -6806,19 +6786,19 @@ var SidepanelView = function (_React$Component) {
         showContextMenu: this.props.showContextMenu,
         onTopicSelected: this.props.onTopicSelected,
         onShowArchive: this.props.onShowArchive
-      }) : view === 'newtpk' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_new_topic_view_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
+      }) : view === 'newtpk' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_new_topic_view_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
         searchResults: this.props.searchResults,
         onInitFind: this.props.onInitFind,
         onSearchContacts: this.props.onSearchContacts,
         onCreateTopic: this.props.onCreateTopic,
         onError: this.props.onError
-      }) : view === 'cred' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_validation_view_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
+      }) : view === 'cred' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_validation_view_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
         credCode: this.props.credCode,
         credMethod: this.props.credMethod,
         onSubmit: this.props.onValidateCredentials,
         onCancel: this.props.onCancel,
         onError: this.props.onError
-      }) : view === 'reset' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_password_reset_view_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
+      }) : view === 'reset' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_password_reset_view_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
         onRequest: this.props.onPasswordResetRequest,
         onReset: this.props.onResetPassword
       }) : null);
@@ -6866,15 +6846,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -7016,6 +6994,7 @@ var TinodeWeb = function (_React$Component) {
         sidePanelSelected: 'login',
         sidePanelTitle: null,
         sidePanelAvatar: null,
+        loadSpinnerVisible: false,
         login: '',
         password: '',
         myUserId: null,
@@ -7083,7 +7062,7 @@ var TinodeWeb = function (_React$Component) {
                 _this2.tinode.setDeviceToken(_this2.state.firebaseToken, true);
               }
             }
-          })["catch"](function (err) {
+          }).catch(function (err) {
             console.log("Failed to register service worker:", err);
           });
         } catch (err) {
@@ -7101,7 +7080,7 @@ var TinodeWeb = function (_React$Component) {
       if (token) {
         token.expires = new Date(token.expires);
         this.tinode.setAuthToken(token);
-        this.tinode.connect()["catch"](function (err) {
+        this.tinode.connect().catch(function (err) {
           _this2.handleError(err.message, 'err');
         });
         delete parsedNav.params.info;
@@ -7254,7 +7233,8 @@ var TinodeWeb = function (_React$Component) {
       this.setState({
         loginDisabled: true,
         login: login,
-        password: password
+        password: password,
+        loadSpinnerVisible: true
       });
       this.handleError('', null);
 
@@ -7264,7 +7244,7 @@ var TinodeWeb = function (_React$Component) {
           resp: this.state.credCode
         });
       } else {
-        this.tinode.connect()["catch"](function (err) {
+        this.tinode.connect().catch(function (err) {
           _this4.setState({
             loginDisabled: false
           });
@@ -7300,7 +7280,7 @@ var TinodeWeb = function (_React$Component) {
       if (prom) {
         prom.then(function () {
           _this5.handleError();
-        })["catch"](function (err) {
+        }).catch(function (err) {
           _this5.handleError(err.message, 'err');
         });
         return;
@@ -7363,6 +7343,10 @@ var TinodeWeb = function (_React$Component) {
       if (promise) {
         promise.then(function (ctrl) {
           if (ctrl.code >= 300 && ctrl.text === 'validate credentials') {
+            _this6.setState({
+              loadSpinnerVisible: false
+            });
+
             if (cred) {
               _this6.handleError("Code does not match", 'warn');
             }
@@ -7371,11 +7355,12 @@ var TinodeWeb = function (_React$Component) {
           } else {
             _this6.handleLoginSuccessful();
           }
-        })["catch"](function (err) {
+        }).catch(function (err) {
           _this6.setState({
             loginDisabled: false,
             credMethod: undefined,
-            credCode: undefined
+            credCode: undefined,
+            loadSpinnerVisible: false
           });
 
           _this6.handleError(err.message, 'err');
@@ -7419,22 +7404,26 @@ var TinodeWeb = function (_React$Component) {
         credCode: undefined,
         myUserId: this.tinode.getCurrentUserID()
       });
-      me.subscribe(me.startMetaQuery().withLaterSub().withDesc().withTags().withCred().build())["catch"](function (err) {
+      me.subscribe(me.startMetaQuery().withLaterSub().withDesc().withTags().withCred().build()).catch(function (err) {
         localStorage.removeItem('auth-token');
 
         _this7.handleError(err.message, 'err');
 
         _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo('');
+      }).finally(function () {
+        _this7.setState({
+          loadSpinnerVisible: false
+        });
       });
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].setUrlSidePanel(window.location.hash, 'contacts'));
     }
   }, {
     key: "tnMeMetaDesc",
     value: function tnMeMetaDesc(desc) {
-      if (desc && desc["public"]) {
+      if (desc && desc.public) {
         this.setState({
-          sidePanelTitle: desc["public"].fn,
-          sidePanelAvatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_12__["makeImageUrl"])(desc["public"].photo)
+          sidePanelTitle: desc.public.fn,
+          sidePanelAvatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_12__["makeImageUrl"])(desc.public.photo)
         });
       }
     }
@@ -7539,7 +7528,7 @@ var TinodeWeb = function (_React$Component) {
       if (fnd.isSubscribed()) {
         this.tnFndSubsUpdated();
       } else {
-        fnd.subscribe(fnd.startMetaQuery().withSub().build())["catch"](function (err) {
+        fnd.subscribe(fnd.startMetaQuery().withSub().build()).catch(function (err) {
           _this10.handleError(err.message, 'err');
         });
       }
@@ -7564,11 +7553,11 @@ var TinodeWeb = function (_React$Component) {
       var fnd = this.tinode.getFndTopic();
       fnd.setMeta({
         desc: {
-          "public": query
+          public: query
         }
       }).then(function (ctrl) {
         return fnd.getMeta(fnd.startMetaQuery().withSub().build());
-      })["catch"](function (err) {
+      }).catch(function (err) {
         _this11.handleError(err.message, 'err');
       });
     }
@@ -7636,7 +7625,7 @@ var TinodeWeb = function (_React$Component) {
       }
 
       if (promise) {
-        promise = promise["catch"](function (err) {
+        promise = promise.catch(function (err) {
           _this12.handleError(err.message, 'err');
         });
       }
@@ -7645,7 +7634,7 @@ var TinodeWeb = function (_React$Component) {
         if (topic.isArchived()) {
           return topic.archive(false);
         }
-      })["catch"](function (err) {
+      }).catch(function (err) {
         _this12.handleError(err.message, 'err');
       });
     }
@@ -7699,7 +7688,7 @@ var TinodeWeb = function (_React$Component) {
       }
 
       if (response != null) {
-        response["catch"](function (err) {
+        response.catch(function (err) {
           _this13.handleError(err.message, 'err');
         });
       }
@@ -7716,7 +7705,7 @@ var TinodeWeb = function (_React$Component) {
 
       this.tinode.connect(this.state.serverAddress).then(function () {
         return _this14.tinode.createAccountBasic(login_, password_, {
-          "public": public_,
+          public: public_,
           tags: tags_,
           cred: tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default.a.credential(cred_)
         });
@@ -7726,7 +7715,7 @@ var TinodeWeb = function (_React$Component) {
         } else {
           _this14.handleLoginSuccessful(_this14);
         }
-      })["catch"](function (err) {
+      }).catch(function (err) {
         _this14.handleError(err.message, 'err');
       });
     }
@@ -7739,7 +7728,7 @@ var TinodeWeb = function (_React$Component) {
         var params = {};
 
         if (pub) {
-          params["public"] = pub;
+          params.public = pub;
         }
 
         if (defacs) {
@@ -7748,13 +7737,13 @@ var TinodeWeb = function (_React$Component) {
 
         this.tinode.getMeTopic().setMeta({
           desc: params
-        })["catch"](function (err) {
+        }).catch(function (err) {
           _this15.handleError(err.message, 'err');
         });
       }
 
       if (password) {
-        this.tinode.updateAccountBasic(null, this.tinode.getCurrentLogin(), password)["catch"](function (err) {
+        this.tinode.updateAccountBasic(null, this.tinode.getCurrentLogin(), password).catch(function (err) {
           _this15.handleError(err.message, 'err');
         });
       }
@@ -7766,7 +7755,7 @@ var TinodeWeb = function (_React$Component) {
 
       this.tinode.getMeTopic().setMeta({
         tags: tags
-      })["catch"](function (err) {
+      }).catch(function (err) {
         _this16.handleError(err.message, 'err');
       });
     }
@@ -7823,7 +7812,7 @@ var TinodeWeb = function (_React$Component) {
         if (!this.state.firebaseToken) {
           this.fbPush.requestPermission().then(function () {
             _this18.requestPushToken();
-          })["catch"](function (err) {
+          }).catch(function (err) {
             _this18.handleError(err.message, 'err');
 
             _this18.setState({
@@ -7845,9 +7834,9 @@ var TinodeWeb = function (_React$Component) {
           });
         }
       } else if (this.state.firebaseToken) {
-        this.fbPush.deleteToken(this.state.firebaseToken)["catch"](function (err) {
+        this.fbPush.deleteToken(this.state.firebaseToken).catch(function (err) {
           console.log("Unable to delete token.", err);
-        })["finally"](function () {
+        }).finally(function () {
           _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__["default"].updateObject('settings', {
             desktopAlerts: false
           });
@@ -7888,7 +7877,7 @@ var TinodeWeb = function (_React$Component) {
         _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__["default"].updateObject('settings', {
           desktopAlerts: true
         });
-      })["catch"](function (err) {
+      }).catch(function (err) {
         _this19.handleError(err.message, 'err');
 
         console.log("Failed to retrieve firebase token", err);
@@ -7915,7 +7904,7 @@ var TinodeWeb = function (_React$Component) {
           meth: method,
           val: value
         }
-      })["catch"](function (err) {
+      }).catch(function (err) {
         _this20.handleError(err.message, 'err');
       });
     }
@@ -7925,7 +7914,7 @@ var TinodeWeb = function (_React$Component) {
       var _this21 = this;
 
       var me = this.tinode.getMeTopic();
-      me.delCredential(method, value)["catch"](function (err) {
+      me.delCredential(method, value).catch(function (err) {
         _this21.handleError(err.message, 'err');
       });
     }
@@ -7980,8 +7969,8 @@ var TinodeWeb = function (_React$Component) {
         };
       } else {
         params.desc = {
-          "public": pub,
-          "private": {
+          public: pub,
+          private: {
             comment: priv
           }
         };
@@ -8016,11 +8005,11 @@ var TinodeWeb = function (_React$Component) {
         var params = {};
 
         if (pub) {
-          params["public"] = pub;
+          params.public = pub;
         }
 
         if (priv) {
-          params["private"] = priv === tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default.a.DEL_CHAR ? tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default.a.DEL_CHAR : {
+          params.private = priv === tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default.a.DEL_CHAR ? tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default.a.DEL_CHAR : {
             comment: priv
           };
         }
@@ -8031,7 +8020,7 @@ var TinodeWeb = function (_React$Component) {
 
         topic.setMeta({
           desc: params
-        })["catch"](function (err) {
+        }).catch(function (err) {
           _this23.handleError(err.message, 'err');
         });
       }
@@ -8059,7 +8048,7 @@ var TinodeWeb = function (_React$Component) {
             user: uid,
             mode: mode
           }
-        })["catch"](function (err) {
+        }).catch(function (err) {
           _this24.handleError(err.message, 'err');
         });
       }
@@ -8074,7 +8063,7 @@ var TinodeWeb = function (_React$Component) {
       if (topic) {
         topic.setMeta({
           tags: tags
-        })["catch"](function (err) {
+        }).catch(function (err) {
           _this25.handleError(err.message, 'err');
         });
       }
@@ -8113,7 +8102,7 @@ var TinodeWeb = function (_React$Component) {
         return;
       }
 
-      topic.delMessagesAll(true)["catch"](function (err) {
+      topic.delMessagesAll(true).catch(function (err) {
         _this26.handleError(err.message, 'err');
       });
     }
@@ -8130,7 +8119,7 @@ var TinodeWeb = function (_React$Component) {
 
       topic.leave(true).then(function (ctrl) {
         _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].setUrlTopic(window.location.hash, ''));
-      })["catch"](function (err) {
+      }).catch(function (err) {
         _this27.handleError(err.message, 'err');
       });
     }
@@ -8147,7 +8136,7 @@ var TinodeWeb = function (_React$Component) {
 
       topic.updateMode(null, '-JP').then(function (ctrl) {
         _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].setUrlTopic(window.location.hash, ''));
-      })["catch"](function (err) {
+      }).catch(function (err) {
         _this28.handleError(err.message, 'err');
       });
     }
@@ -8168,7 +8157,7 @@ var TinodeWeb = function (_React$Component) {
       }));
       topic.updateMode(null, '-JP').then(function (ctrl) {
         _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].setUrlTopic(window.location.hash, ''));
-      })["catch"](function (err) {
+      }).catch(function (err) {
         _this29.handleError(err.message, 'err');
       });
     }
@@ -8289,7 +8278,7 @@ var TinodeWeb = function (_React$Component) {
 
       if (added && added.length > 0) {
         added.map(function (uid) {
-          topic.invite(uid, null)["catch"](function (err) {
+          topic.invite(uid, null).catch(function (err) {
             _this31.handleError(err.message, 'err');
           });
         });
@@ -8297,7 +8286,7 @@ var TinodeWeb = function (_React$Component) {
 
       if (removed && removed.length > 0) {
         removed.map(function (uid) {
-          topic.delSubscription(uid)["catch"](function (err) {
+          topic.delSubscription(uid).catch(function (err) {
             _this31.handleError(err.message, 'err');
           });
         });
@@ -8317,7 +8306,7 @@ var TinodeWeb = function (_React$Component) {
           }
         }).then(function () {
           _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo('');
-        })["catch"](function (err) {
+        }).catch(function (err) {
           _this32.handleError(err.message, 'err');
         });
       } else {
@@ -8338,7 +8327,7 @@ var TinodeWeb = function (_React$Component) {
 
       this.tinode.connect().then(function () {
         return _this33.tinode.requestResetAuthSecret('basic', method, value);
-      })["catch"](function (err) {
+      }).catch(function (err) {
         _this33.handleError(err.message, 'err');
       });
     }
@@ -8356,7 +8345,7 @@ var TinodeWeb = function (_React$Component) {
           return _this34.tinode.updateAccountBasic(null, null, newPassword, {
             token: token
           });
-        })["catch"](function (err) {
+        }).catch(function (err) {
           _this34.handleError(err.message, 'err');
         });
       }
@@ -8412,6 +8401,7 @@ var TinodeWeb = function (_React$Component) {
         login: this.state.login,
         myUserId: this.state.myUserId,
         loginDisabled: this.state.loginDisabled,
+        loadSpinnerVisible: this.state.loadSpinnerVisible,
         errorText: this.state.errorText,
         errorLevel: this.state.errorLevel,
         errorAction: this.state.errorAction,
@@ -8510,7 +8500,7 @@ var TinodeWeb = function (_React$Component) {
     key: "tnSetup",
     value: function tnSetup(serverAddress, transport) {
       var tinode = new tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default.a(_config_js__WEBPACK_IMPORTED_MODULE_11__["APP_NAME"], serverAddress, _config_js__WEBPACK_IMPORTED_MODULE_11__["API_KEY"], transport, Object(_lib_host_name_js__WEBPACK_IMPORTED_MODULE_13__["isSecureConnection"])());
-      tinode.enableLogging(true, true);
+      tinode.enableLogging(_config_js__WEBPACK_IMPORTED_MODULE_11__["LOGGING_ENABLED"], true);
       return tinode;
     }
   }, {
@@ -8529,8 +8519,8 @@ var TinodeWeb = function (_React$Component) {
             merged[c.topic] = {
               user: c.topic,
               updated: c.updated,
-              "public": c["public"],
-              "private": c["private"],
+              public: c.public,
+              private: c.private,
               acs: c.acs
             };
           }
@@ -8540,8 +8530,8 @@ var TinodeWeb = function (_React$Component) {
         _iteratorError = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion && _iterator["return"] != null) {
-            _iterator["return"]();
+          if (!_iteratorNormalCompletion && _iterator.return != null) {
+            _iterator.return();
           }
         } finally {
           if (_didIteratorError) {
@@ -8567,8 +8557,8 @@ var TinodeWeb = function (_React$Component) {
         _iteratorError2 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
-            _iterator2["return"]();
+          if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
+            _iterator2.return();
           }
         } finally {
           if (_didIteratorError2) {
@@ -8602,15 +8592,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -8761,15 +8749,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -8865,15 +8851,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -8947,15 +8931,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _file_progress_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./file-progress.jsx */ "./src/widgets/file-progress.jsx");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -9007,7 +8989,7 @@ var Attachment = function (_React$Component) {
           downloader: null,
           progress: 0
         });
-      })["catch"](function (err) {
+      }).catch(function (err) {
         if (err) {
           _this2.props.onError("Error downloading file: " + err.message, 'err');
         }
@@ -9101,15 +9083,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -9244,15 +9224,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -9507,15 +9485,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return CheckBox; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -9583,15 +9559,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _chip_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./chip.jsx */ "./src/widgets/chip.jsx");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -9711,8 +9685,8 @@ var ChipInput = function (_React$Component) {
       this.state.sortedChips.map(function (item) {
         chips.push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_chip_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
           onCancel: _this2.handleChipCancel,
-          avatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_2__["makeImageUrl"])(item["public"] ? item["public"].photo : null),
-          title: item["public"] ? item["public"].fn : undefined,
+          avatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_2__["makeImageUrl"])(item.public ? item.public.photo : null),
+          title: item.public ? item.public.fn : undefined,
           noAvatar: _this2.props.avatarDisabled,
           topic: item.user,
           required: staticMembers.includes(item.user),
@@ -9793,15 +9767,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -9878,15 +9850,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -9952,15 +9922,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ContactBadges; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -10037,15 +10005,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _contact_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./contact.jsx */ "./src/widgets/contact.jsx");
 /* harmony import */ var _contact_action_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./contact-action.jsx */ "./src/widgets/contact-action.jsx");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -10106,12 +10072,12 @@ var ContactList = function (_React$Component) {
             if (_this.props.filterFunc && _this.props.filter) {
               var content = [key];
 
-              if (c["private"] && c["private"].comment) {
-                content.push(('' + c["private"].comment).toLowerCase());
+              if (c.private && c.private.comment) {
+                content.push(('' + c.private.comment).toLowerCase());
               }
 
-              if (c["public"] && c["public"].fn) {
-                content.push(('' + c["public"].fn).toLowerCase());
+              if (c.public && c.public.fn) {
+                content.push(('' + c.public.fn).toLowerCase());
               }
 
               if (!_this.props.filterFunc(_this.props.filter, content)) {
@@ -10138,10 +10104,10 @@ var ContactList = function (_React$Component) {
               }
             }
 
-            var comment = Array.isArray(c["private"]) ? c["private"].join(',') : c["private"] ? c["private"].comment : null;
+            var comment = Array.isArray(c.private) ? c.private.join(',') : c.private ? c.private.comment : null;
             contactNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_contact_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-              title: c["public"] ? c["public"].fn : null,
-              avatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__["makeImageUrl"])(c["public"] ? c["public"].photo : null),
+              title: c.public ? c.public.fn : null,
+              avatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__["makeImageUrl"])(c.public ? c.public.photo : null),
               comment: comment,
               unread: _this.props.showUnread ? c.unread : 0,
               now: c.online && _this.props.connected,
@@ -10200,15 +10166,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
 /* harmony import */ var _contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./contact-badges.jsx */ "./src/widgets/contact-badges.jsx");
 /* harmony import */ var _unread_badge_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./unread-badge.jsx */ "./src/widgets/unread-badge.jsx");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -10359,15 +10323,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -10488,7 +10450,7 @@ var ContextMenu = function (_React$Component) {
       },
       'message_delete': {
         id: 'message_delete',
-        title: formatMessage(messages["delete"]),
+        title: formatMessage(messages.delete),
         handler: function handler(params, errorHandler) {
           return _this.deleteMessages(false, false, params, errorHandler);
         }
@@ -10544,7 +10506,7 @@ var ContextMenu = function (_React$Component) {
               return;
             }
 
-            return topic.delTopic()["catch"](function (err) {
+            return topic.delTopic().catch(function (err) {
               if (errorHandler) {
                 errorHandler(err.message, 'err');
               }
@@ -10563,7 +10525,7 @@ var ContextMenu = function (_React$Component) {
             return;
           }
 
-          return topic.archive(true)["catch"](function (err) {
+          return topic.archive(true).catch(function (err) {
             if (errorHandler) {
               errorHandler(err.message, 'err');
             }
@@ -10588,7 +10550,7 @@ var ContextMenu = function (_React$Component) {
             return;
           }
 
-          return topic.delSubscription(params.user)["catch"](function (err) {
+          return topic.delSubscription(params.user).catch(function (err) {
             if (errorHandler) {
               errorHandler(err.message, 'err');
             }
@@ -10682,7 +10644,7 @@ var ContextMenu = function (_React$Component) {
       }
 
       var promise = all ? topic.delMessagesAll(hard) : topic.delMessagesList([params.seq], hard);
-      return promise["catch"](function (err) {
+      return promise.catch(function (err) {
         if (errorHandler) {
           errorHandler(err.message, 'err');
         }
@@ -10701,7 +10663,7 @@ var ContextMenu = function (_React$Component) {
       var result = topic.updateMode(params.user, mode);
 
       if (errorHandler) {
-        result = result["catch"](function (err) {
+        result = result.catch(function (err) {
           errorHandler(err.message, 'err');
         });
       }
@@ -10768,15 +10730,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _menu_cancel_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./menu-cancel.jsx */ "./src/widgets/menu-cancel.jsx");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -10887,15 +10847,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -10969,15 +10927,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _chip_input_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./chip-input.jsx */ "./src/widgets/chip-input.jsx");
 /* harmony import */ var _contact_list_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./contact-list.jsx */ "./src/widgets/contact-list.jsx");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -11246,15 +11202,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -11291,8 +11245,8 @@ var GroupSubs = function (_React$Component) {
           key: sub.user
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
           topic: sub.user,
-          avatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__["makeImageUrl"])(sub["public"] ? sub["public"].photo : null) || true,
-          title: sub["public"] ? sub["public"].fn : null
+          avatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__["makeImageUrl"])(sub.public ? sub.public.photo : null) || true,
+          title: sub.public ? sub.public.fn : null
         })));
         return usersOnline.length == countToShow;
       });
@@ -11329,15 +11283,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -11441,15 +11393,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -11591,15 +11541,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "react-dom");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _visible_password_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./visible-password.jsx */ "./src/widgets/visible-password.jsx");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -11775,15 +11723,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! tinode-sdk */ "../tinode-js/umd/tinode.prod.js");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -11864,15 +11810,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return LoadSpinner; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -11923,15 +11867,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return MenuCancel; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -11989,15 +11931,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return MenuContacts; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -12065,15 +12005,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return MenuStart; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -12141,15 +12079,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return MoreButton; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -12223,15 +12159,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -12354,15 +12288,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./avatar-upload.jsx */ "./src/widgets/avatar-upload.jsx");
 /* harmony import */ var _tag_manager_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./tag-manager.jsx */ "./src/widgets/tag-manager.jsx");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -12388,7 +12320,7 @@ var NewTopicGroup = function (_React$PureComponent) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(NewTopicGroup).call(this, props));
     _this.state = {
       fn: '',
-      "private": '',
+      private: '',
       imageDataUrl: null,
       tags: []
     };
@@ -12412,7 +12344,7 @@ var NewTopicGroup = function (_React$PureComponent) {
     key: "handlePrivateChange",
     value: function handlePrivateChange(e) {
       this.setState({
-        "private": e.target.value
+        private: e.target.value
       });
     }
   }, {
@@ -12435,7 +12367,7 @@ var NewTopicGroup = function (_React$PureComponent) {
       e.preventDefault();
 
       if (this.state.fn && this.state.fn.trim()) {
-        this.props.onSubmit(this.state.fn.trim(), this.state.imageDataUrl, this.state["private"].trim(), this.state.tags);
+        this.props.onSubmit(this.state.fn.trim(), this.state.imageDataUrl, this.state.private.trim(), this.state.tags);
       }
     }
   }, {
@@ -12486,7 +12418,7 @@ var NewTopicGroup = function (_React$PureComponent) {
           type: "text",
           id: "new-topic-priv",
           placeholder: placeholder,
-          value: _this2.state["private"],
+          value: _this2.state.private,
           onChange: _this2.handlePrivateChange
         });
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
@@ -12536,15 +12468,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./checkbox.jsx */ "./src/widgets/checkbox.jsx");
 /* harmony import */ var _contact_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./contact.jsx */ "./src/widgets/contact.jsx");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -12762,15 +12692,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "../tinode-js/umd/tinode.prod.js");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -12844,7 +12772,7 @@ var ReceivedMarker = function (_React$PureComponent) {
 
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "timestamp"
-      }, timestamp, "\xA0", marker);
+      }, timestamp, '\u00a0', marker);
     }
   }]);
 
@@ -12872,15 +12800,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "../tinode-js/umd/tinode.prod.js");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -13025,15 +12951,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -13325,15 +13249,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _menu_cancel_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./menu-cancel.jsx */ "./src/widgets/menu-cancel.jsx");
 /* harmony import */ var _menu_contacts_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./menu-contacts.jsx */ "./src/widgets/menu-contacts.jsx");
 /* harmony import */ var _menu_start_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./menu-start.jsx */ "./src/widgets/menu-start.jsx");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -13411,15 +13333,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _chip_input_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./chip-input.jsx */ "./src/widgets/chip-input.jsx");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
@@ -13650,15 +13570,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return UnreadBadge; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -13708,15 +13626,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return VisiblePassword; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (typeof call === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 

@@ -12,6 +12,9 @@ export const KNOWN_HOSTS = {hosted: 'web.tinode.co', local: 'localhost:6060'};
 // Default host name and port to connect to.
 export const DEFAULT_HOST = KNOWN_HOSTS.hosted;
 
+// Enable console logging.
+export const LOGGING_ENABLED = true;
+
 // Minimum time between two keypress notifications, milliseconds.
 export const KEYPRESS_DELAY = 3*1000;
 // Delay before sending a {note} for reciving a message, milliseconds.
