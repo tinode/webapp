@@ -1,4 +1,5 @@
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path');
 
 module.exports = (env, argv) => {
@@ -42,12 +43,18 @@ module.exports = (env, argv) => {
       maxEntrypointSize: 262144,
       maxAssetSize: 262144
     },
+    plugins: [
+      new CopyPlugin([
+        { from: `node_modules/tinode-sdk/umd/tinode.${mode}.js`, to: `tinode.${mode}.js` },
+      ]),
+    ],
     externals: {
       'react': 'React',
       'react-dom': 'ReactDOM',
       'react-intl': 'ReactIntl',
       'firebase/app': 'firebase',
-      'firebase/messaging': ['firebase', 'messaging']
+      'firebase/messaging': ['firebase', 'messaging'],
+      'tinode-sdk': 'Tinode',
     },
   };
 }
