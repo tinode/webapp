@@ -853,7 +853,7 @@ module.exports = JSON.parse("{\"en\":{\"archived_contacts\":\"Archived contacts 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PACKAGE_VERSION", function() { return PACKAGE_VERSION; });
-var PACKAGE_VERSION = "0.16.2-rc1";
+var PACKAGE_VERSION = "0.16.2-rc2";
 
 /***/ }),
 
@@ -4880,6 +4880,8 @@ var TinodeWeb = function (_React$Component) {
         myUserId: this.tinode.getCurrentUserID()
       });
       me.subscribe(me.startMetaQuery().withLaterSub().withDesc().withTags().withCred().build()).catch(function (err) {
+        _this7.tinode.disconnect();
+
         localStorage.removeItem('auth-token');
 
         _this7.handleError(err.message, 'err');

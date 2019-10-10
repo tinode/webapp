@@ -524,6 +524,7 @@ class TinodeWeb extends React.Component {
         withCred().
         build()
       ).catch((err) => {
+        this.tinode.disconnect();
         localStorage.removeItem('auth-token');
         this.handleError(err.message, 'err');
         HashNavigation.navigateTo('');
