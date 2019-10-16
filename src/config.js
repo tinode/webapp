@@ -73,7 +73,7 @@ export const MAX_ONLINE_IN_TOPIC = 4;
 export const LINK_CONTACT_US = 'email:info@tinode.co';
 
 // Link to Privacy Policy.
-export const LINK_PRIVACY_POLICY = 'https://tinode.co/privacy.htnl';
+export const LINK_PRIVACY_POLICY = 'https://tinode.co/privacy.html';
 
 // Link to Terms of Service.
 export const LINK_TERMS_OF_SERVICE = 'https://tinode.co/terms.html';
