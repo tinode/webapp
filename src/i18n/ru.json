@@ -11,7 +11,7 @@
   "label_message_sound": "Звук нового сообщения:",
   "label_push_notifications": "Уведомления:",
   "label_push_notifications_disabled": "Уведомления (требуют HTTPS):",
-  "title_tag_manager": "Таги для поиска",
+  "title_tag_manager": "Теги для поиска",
   "button_logout": "Выйти",
   "login_prompt": "Логин",
   "password_prompt": "Пароль",
