@@ -588,11 +588,12 @@ class TinodeWeb extends React.Component {
         this.setState({topicSelectedAcs: cont.acs});
       }
     } else if (what == 'del') {
-      // messages deleted (hard or soft) -- update pill counter.
+      // TODO: messages deleted (hard or soft) -- update pill counter.
+    } else if (what == 'upd') {
+      // upd - handled by the SDK. Explicitly ignoring here.
     } else {
       // TODO(gene): handle other types of notifications:
       // * ua -- user agent changes (maybe display a pictogram for mobile/desktop).
-      // * upd -- topic 'public' updated, issue getMeta().
       console.log("Unsupported (yet) presence update:" + what + " in: " + cont.topic);
     }
   }
