@@ -24,11 +24,13 @@ The app is fully internationalized using [React-Intl](https://github.com/formatj
 As of the time of this writing the following translations exist: English, Russian, Simplified Chinese. More translations are welcome. Send a pull request with a json file with translated strings. Take a look at [English](/src/i18n/en.json), [Russian](/src/i18n/ru.json), or [Simplified Chinese](/src/i18n/zh-CN.json) translations for guidance.
 
 
-## Missing functionality
+## Not done yet
 
-* Previews not generated for videos, audio, links or docs.
-* No end-to-end encryption.
+* End-to-End encryption.
 * Emoji support is weak.
+* Mentions, hashtags.
+* Replying or forwarding messages.
+* Previews not generated for videos, audio, links or docs.
 
 ## Other
 
