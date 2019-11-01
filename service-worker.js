@@ -1,6 +1,6 @@
 // Must be located at the root.
-importScripts('https://unpkg.com/firebase@6.4.2/firebase-app.js');
-importScripts('https://unpkg.com/firebase@6.4.2/firebase-messaging.js');
+importScripts('https://cdn.jsdelivr.net/npm/firebase@6.6.2/firebase-app.js');
+importScripts('https://cdn.jsdelivr.net/npm/firebase@6.6.2/firebase-messaging.js');
 importScripts('firebase-init.js');
 
 firebase.initializeApp(FIREBASE_INIT);
