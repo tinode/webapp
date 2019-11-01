@@ -2,9 +2,9 @@
   "relation": ["delegate_permission/common.handle_all_urls"],
   "target": {
     "namespace": "android_app",
-    "package_name": "co.tinode.tindroid",
+    "package_name": "co.tinode.tindroidx",
     "sha256_cert_fingerprints":
-    ["AA:0A:FF:C4:F3:1F:58:83:F3:8E:69:03:2E:B9:AA:1A:C4:62:65:F1:1E:50:F9:7E:AD:35:56:55:32:B7:1A:C6"]
+    ["5B:BE:6A:C4:A7:66:A8:BB:4B:C1:52:66:E5:A4:BD:66:3C:33:50:04:11:CB:17:44:45:89:5E:3C:8D:55:77:7A"]
   }
 },
 {
@@ -18,8 +18,8 @@
   "relation": ["delegate_permission/common.get_login_creds"],
   "target": {
     "namespace": "android_app",
-    "package_name": "co.tinode.tindroid",
+    "package_name": "co.tinode.tindroidx",
     "sha256_cert_fingerprints":
-    ["AA:0A:FF:C4:F3:1F:58:83:F3:8E:69:03:2E:B9:AA:1A:C4:62:65:F1:1E:50:F9:7E:AD:35:56:55:32:B7:1A:C6"]
+    ["5B:BE:6A:C4:A7:66:A8:BB:4B:C1:52:66:E5:A4:BD:66:3C:33:50:04:11:CB:17:44:45:89:5E:3C:8D:55:77:7A"]
   }
 }]
