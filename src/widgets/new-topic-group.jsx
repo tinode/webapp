@@ -4,6 +4,8 @@ import { FormattedMessage } from 'react-intl';
 import AvatarUpload from './avatar-upload.jsx';
 import TagManager from './tag-manager.jsx';
 
+import { MAX_TITLE_LENGTH } from '../config.js';
+
 export default class NewTopicGroup extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -41,10 +43,11 @@ export default class NewTopicGroup extends React.PureComponent {
 
   handleSubmit(e) {
     e.preventDefault();
-    if (this.state.fn && this.state.fn.trim()) {
-      this.props.onSubmit(this.state.fn.trim(),
-        this.state.imageDataUrl, this.state.private.trim(),
-        this.state.tags);
+
+    const fn = this.state.fn.trim().substring(0, MAX_TITLE_LENGTH);
+    const comment = this.state.private.trim().substring(0, MAX_TITLE_LENGTH);
+    if (fn) {
+      this.props.onSubmit(fn, this.state.imageDataUrl, comment, this.state.tags);
     }
   }
 

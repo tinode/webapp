@@ -15,7 +15,7 @@ import MoreButton from '../widgets/more-button.jsx';
 import PermissionsEditor from '../widgets/permissions-editor.jsx';
 import TagManager from '../widgets/tag-manager.jsx';
 
-import { NO_ACCESS_MODE } from '../config.js';
+import { MAX_TITLE_LENGTH, NO_ACCESS_MODE } from '../config.js';
 
 import { makeImageUrl } from '../lib/blob-helpers.js';
 import { arrayEqual, vcard } from '../lib/utils.js';
@@ -277,17 +277,18 @@ class InfoView extends React.Component {
   }
 
   handleFullNameUpdate(fn) {
-    fn = fn.trim();
+    fn = fn.trim().substring(0, MAX_TITLE_LENGTH);
     if (this.state.fullName !== fn) {
       this.setState({fullName: fn});
       this.props.onTopicDescUpdate(this.props.topic, vcard(fn, null), null);
     }
   }
 
-  handlePrivateUpdate(priv) {
-    if (this.state.priv !== priv) {
-      this.setState({private: priv});
-      this.props.onTopicDescUpdate(this.props.topic, null, priv || Tinode.DEL_CHAR);
+  handlePrivateUpdate(comment) {
+    comment = comment.trim().substring(0, MAX_TITLE_LENGTH);
+    if (this.state.private !== comment) {
+      this.setState({private: comment});
+      this.props.onTopicDescUpdate(this.props.topic, null, comment || Tinode.DEL_CHAR);
     }
   }
 

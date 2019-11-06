@@ -69,6 +69,9 @@ export const MAX_IMAGE_DIM = 768;
 // hidden under "+X more"
 export const MAX_ONLINE_IN_TOPIC = 4;
 
+// Maximum length of topic title (and Private comment) or user name.
+export const MAX_TITLE_LENGTH = 40;
+
 // Link for "Contact Us".
 export const LINK_CONTACT_US = 'email:info@tinode.co';
 
