@@ -10,7 +10,7 @@ import InPlaceEdit from '../widgets/in-place-edit.jsx';
 import PermissionsEditor from '../widgets/permissions-editor.jsx';
 import TagManager from '../widgets/tag-manager.jsx';
 
-import { LINK_CONTACT_US, LINK_PRIVACY_POLICY, LINK_TERMS_OF_SERVICE } from '../config.js';
+import { LINK_CONTACT_US, LINK_PRIVACY_POLICY, LINK_TERMS_OF_SERVICE, MAX_TITLE_LENGTH } from '../config.js';
 import { makeImageUrl } from '../lib/blob-helpers.js';
 import { arrayEqual, asEmail, asPhone, vcard } from '../lib/utils.js';
 
@@ -70,8 +70,11 @@ export default class EditAccountView extends React.Component {
   }
 
   handleFullNameUpdate(fn) {
-    this.setState({fullName: fn});
-    this.props.onUpdateAccount(undefined, vcard(fn, null));
+    fn = fn.trim().substring(0, MAX_TITLE_LENGTH);
+    if (fn) {
+      this.setState({fullName: fn});
+      this.props.onUpdateAccount(undefined, vcard(fn, null));
+    }
   }
 
   handlePasswordUpdate(pwd) {
