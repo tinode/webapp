@@ -62,10 +62,11 @@
     "messages_not_readable": "no access to messages",
     "peers_messaging_disabled": "Peer's messaging is disabled.",
     "enable_peers_messaging": "Enable",
+    "search_for_contacts": "Use search to find contacts",
+    "search_no_results": "Search returned no results",
     "tabtitle_find_user": "find",
     "tabtitle_new_group": "new group",
     "tabtitle_group_by_id": "by id",
-    "search_for_contacts": "Use search to find contacts",
     "new_password_placeholder": "Enter new password",
     "label_reset_password": "Send a password reset email:",
     "credential_email_prompt": "Your registration email",
@@ -299,7 +300,10 @@
     "block_contact_warning": "Вы действительно заблокировать этот контакт?",
     "report_chat_warning": "Вы действительно хотите сообщить о нарушении и заблокировать этот чат?",
     "action_clear_messages": "Удалить сообщения",
-    "clear_messages_warning": "Вы действительно хотите удалить все сообщения в чате? Их будет невозможно восстановить."
+    "clear_messages_warning": "Вы действительно хотите удалить все сообщения в чате? Их будет невозможно восстановить.",
+    "topic_delete_warning": "Вы действительно хотите удалить этот чат?",
+    "topic_block_warning": "Вы действительно хотите заблокировать этот чат?",
+    "search_no_results": "Ничего не найдено"
   },
   "zh": {
     "archived_contacts": "已归档联系人 ({count})",

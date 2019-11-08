@@ -1,6 +1,8 @@
 // Create new topic and invite users or send an invite.
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
+
+import Tinode from 'tinode-sdk';
 
 import ContactList from '../widgets/contact-list.jsx';
 import NewTopicById from '../widgets/new-topic-by-id.jsx';
@@ -10,15 +12,30 @@ import SearchContacts from '../widgets/search-contacts.jsx';
 import HashNavigation from '../lib/navigation.js';
 import { vcard } from '../lib/utils.js';
 
-export default class NewTopicView extends React.Component {
+const messages = defineMessages({
+  search_for_contacts: {
+    id: "search_for_contacts",
+    defaultMessage: "Use search to find contacts",
+    description: "Text shown in contacts view when user entered no search query."
+  },
+  search_no_results: {
+    id: "search_no_results",
+    defaultMessage: "Search returned no results",
+    description: "Text shown in contacts view when query returned no results."
+  }
+});
+
+class NewTopicView extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      tabSelected: 'p2p'
+      tabSelected: 'p2p',
+      searchQuery: null
     };
 
     this.handleTabClick = this.handleTabClick.bind(this);
+    this.handleSearchContacts = this.handleSearchContacts.bind(this);
     this.handleContactSelected = this.handleContactSelected.bind(this);
     this.handleNewGroupSubmit = this.handleNewGroupSubmit.bind(this);
     this.handleGroupByID = this.handleGroupByID.bind(this);
@@ -32,6 +49,11 @@ export default class NewTopicView extends React.Component {
     e.preventDefault();
     HashNavigation.navigateTo(HashNavigation.addUrlParam(window.location.hash, 'tab', e.currentTarget.dataset.id));
     this.setState({tabSelected: e.currentTarget.dataset.id});
+  }
+
+  handleSearchContacts(query) {
+    this.props.onSearchContacts(query);
+    this.setState({searchQuery: Tinode.isNullValue(query) ? null : query});
   }
 
   handleContactSelected(sel) {
@@ -52,6 +74,9 @@ export default class NewTopicView extends React.Component {
   }
 
   render() {
+    const {formatMessage} = this.props.intl;
+    const no_contacts_placeholder = formatMessage(this.state.searchQuery ?
+      messages.search_no_results : messages.search_for_contacts);
     return (
       <div className="flex-column">
         <ul className="tabbar">
@@ -81,21 +106,21 @@ export default class NewTopicView extends React.Component {
             onSubmit={this.handleGroupByID}
             onError={this.props.onError} /> :
           <div className="flex-column">
-            <SearchContacts type="p2p"
-              onSearchContacts={this.props.onSearchContacts} />
-            <FormattedMessage id="search_for_contacts" defaultMessage="Use search to find contacts"
-              description="Prompt in search field.">{
-              (search_for_contacts) => <ContactList
-                contacts={this.props.searchResults}
-                myUserId={this.props.myUserId}
-                emptyListMessage={search_for_contacts}
-                showOnline={false}
-                showUnread={false}
-                showContextMenu={false}
-                onTopicSelected={this.handleContactSelected} />
-            }</FormattedMessage>
+            <SearchContacts
+              type="p2p"
+              onSearchContacts={this.handleSearchContacts} />
+            <ContactList
+              contacts={this.props.searchResults}
+              myUserId={this.props.myUserId}
+              emptyListMessage={no_contacts_placeholder}
+              showOnline={false}
+              showUnread={false}
+              showContextMenu={false}
+              onTopicSelected={this.handleContactSelected} />
           </div>}
       </div>
     );
   }
 };
+
+export default injectIntl(NewTopicView);
