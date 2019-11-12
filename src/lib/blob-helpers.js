@@ -207,11 +207,11 @@ export function base64DecodedLen(n) {
 // The string may be base64-URL encoded without the padding.
 export function base64ReEncode(str) {
   if (str) {
-    str = str.replace('-', '+').replace('_', '/');
+    str = str.replace(/-/g, '+').replace(/_/g, '/');
     try {
       str = btoa(atob(str));
     } catch(err) {
-      console.log("Failed to base64 re-encode string");
+      console.log("Failed to base64 re-encode string.", err);
       str = null;
     }
   }
