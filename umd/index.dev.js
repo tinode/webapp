@@ -397,12 +397,14 @@ function base64DecodedLen(n) {
 }
 function base64ReEncode(str) {
   if (str) {
-    str = str.replace('-', '+').replace('_', '/');
+    console.log("Base64 re-encoding string", str);
+    str = str.replace(/-/g, '+').replace(/_/g, '/');
+    console.log("Pre-processed:", str);
 
     try {
       str = btoa(atob(str));
     } catch (err) {
-      console.log("Failed to base64 re-encode string");
+      console.log("Failed to base64 re-encode string.", err);
       str = null;
     }
   }
@@ -855,7 +857,7 @@ module.exports = JSON.parse("{\"en\":{\"archived_contacts\":\"Archived contacts 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PACKAGE_VERSION", function() { return PACKAGE_VERSION; });
-var PACKAGE_VERSION = "0.16.2-rc4";
+var PACKAGE_VERSION = "0.16.2-rc5";
 
 /***/ }),
 
@@ -3741,7 +3743,6 @@ var NewTopicView = function (_React$Component) {
     value: function render() {
       var formatMessage = this.props.intl.formatMessage;
       var no_contacts_placeholder = formatMessage(this.state.searchQuery ? messages.search_no_results : messages.search_for_contacts);
-      console.log("Query:", "'" + this.state.searchQuery + "'", no_contacts_placeholder);
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "flex-column"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
