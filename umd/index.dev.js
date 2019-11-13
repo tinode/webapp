@@ -397,9 +397,7 @@ function base64DecodedLen(n) {
 }
 function base64ReEncode(str) {
   if (str) {
-    console.log("Base64 re-encoding string", str);
     str = str.replace(/-/g, '+').replace(/_/g, '/');
-    console.log("Pre-processed:", str);
 
     try {
       str = btoa(atob(str));
@@ -9265,18 +9263,21 @@ var LetterTile = function (_React$PureComponent) {
 
       if (this.props.avatar === true) {
         var isGroup = tinode_sdk__WEBPACK_IMPORTED_MODULE_1___default.a.topicType(this.props.topic) == 'grp';
+        var iconColor = (isGroup ? 'light-color' : 'dark-color') + Math.abs(Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__["stringHash"])(this.props.topic)) % 16;
 
         if (this.props.topic && this.props.title && this.props.title.trim()) {
           var letter = this.props.title.trim().charAt(0);
-          var color = 'lettertile ' + (isGroup ? 'color' : 'dark-color') + Math.abs(Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__["stringHash"])(this.props.topic)) % 16;
+          var className = 'lettertile ' + iconColor;
           avatar = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-            className: color
+            className: className
           }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, letter));
         } else {
+          var _className = 'material-icons ' + iconColor;
+
           avatar = isGroup ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-            className: "material-icons"
+            className: _className
           }, "group") : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-            className: "material-icons"
+            className: _className
           }, "person");
         }
       } else if (this.props.avatar) {

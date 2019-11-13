@@ -1684,102 +1684,102 @@ ul.tabbar li.active > a:after {
 }
 
 /* Colors of letter tiles */
-.lettertile.color0 {
+.light-color0 {
   background-color: #ef9a9a;
 }
-.lettertile.color1 {
+.light-color1 {
   background-color: #90caf9;
 }
-.lettertile.color2 {
+.light-color2 {
   background-color: #b0bec5;
 }
-.lettertile.color3 {
+.light-color3 {
   background-color: #b39ddb;
 }
-.lettertile.color4 {
+.light-color4 {
   background-color: #ffab91;
 }
-.lettertile.color5 {
+.light-color5 {
   background-color: #a5d6a7;
 }
-.lettertile.color6 {
+.light-color6 {
   background-color: #eeeeee;
 }
-.lettertile.color7 {
+.light-color7 {
   background-color: #e6ee9c;
 }
-.lettertile.color8 {
+.light-color8 {
   background-color: #c5e1a5;
 }
-.lettertile.color9 {
+.light-color9 {
   background-color: #f0e57d;
 }
-.lettertile.color10 {
+.light-color10 {
   background-color: #f48fb1;
 }
-.lettertile.color11 {
+.light-color11 {
   background-color: #9fa8da;
 }
-.lettertile.color12 {
+.light-color12 {
   background-color: #ffe082;
 }
-.lettertile.color13 {
+.light-color13 {
   background-color: #bcaaa4;
 }
-.lettertile.color14 {
+.light-color14 {
   background-color: #80deea;
 }
-.lettertile.color15 {
+.light-color15 {
   background-color: #ce93d8;
 }
 
 /* Darker version of letter tile colors */
-.lettertile.dark-color0 {
+.dark-color0 {
   background-color: #C62828;
 }
-.lettertile.dark-color1 {
+.dark-color1 {
   background-color: #AD1457;
 }
-.lettertile.dark-color2 {
+.dark-color2 {
   background-color: #6A1B9A;
 }
-.lettertile.dark-color3 {
+.dark-color3 {
   background-color: #4527A0;
 }
-.lettertile.dark-color4 {
+.dark-color4 {
   background-color: #283593;
 }
-.lettertile.dark-color5 {
+.dark-color5 {
   background-color: #1565C0;
 }
-.lettertile.dark-color6 {
+.dark-color6 {
   background-color: #0277BD;
 }
-.lettertile.dark-color7 {
+.dark-color7 {
   background-color: #00838F;
 }
-.lettertile.dark-color8 {
+.dark-color8 {
   background-color: #00695C;
 }
-.lettertile.dark-color9 {
+.dark-color9 {
   background-color: #2E7D32;
 }
-.lettertile.dark-color10 {
+.dark-color10 {
   background-color: #558B2F;
 }
-.lettertile.dark-color11 {
+.dark-color11 {
   background-color: #9E9D24;
 }
-.lettertile.dark-color12 {
+.dark-color12 {
   background-color: #F9A825;
 }
-.lettertile.dark-color13 {
+.dark-color13 {
   background-color: #FF8F00;
 }
-.lettertile.dark-color14 {
+.dark-color14 {
   background-color: #EF6C00;
 }
-.lettertile.dark-color15 {
+.dark-color15 {
   background-color: #D84315;
 }
 
@@ -1803,7 +1803,6 @@ ul.tabbar li.active > a:after {
 }
 .avatar-box .material-icons {
   color: rgba(250, 250, 250, 0.8); /* #fafafa, gray 50 */
-  background-color: #c0c0c0;
   border-radius: 50%;
   width: inherit;
   height: inherit;

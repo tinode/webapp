@@ -9,16 +9,16 @@ export default class LetterTile extends React.PureComponent {
     let avatar;
     if (this.props.avatar === true) {
       const isGroup = (Tinode.topicType(this.props.topic) == 'grp');
+      const iconColor = (isGroup ? 'light-color' : 'dark-color')
+        + (Math.abs(stringHash(this.props.topic)) % 16);
       if (this.props.topic && this.props.title && this.props.title.trim()) {
         const letter = this.props.title.trim().charAt(0);
-        const color = 'lettertile '
-          + (isGroup ? 'color' : 'dark-color')
-          + (Math.abs(stringHash(this.props.topic)) % 16);
-        avatar = (<div className={color}><div>{letter}</div></div>)
+        const className = 'lettertile ' + iconColor;
+        avatar = (<div className={className}><div>{letter}</div></div>)
       } else {
+        const className = 'material-icons ' + iconColor;
         avatar = isGroup ?
-          <i className="material-icons">group</i> :
-          <i className="material-icons">person</i>;
+          <i className={className}>group</i> : <i className={className}>person</i>;
       }
     } else if (this.props.avatar) {
       // If avatar image is invalid, show a placeholder.
