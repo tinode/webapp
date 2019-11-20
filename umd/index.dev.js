@@ -4948,18 +4948,20 @@ var TinodeWeb = function (_React$Component) {
         var topic = this.tinode.getTopic(cont.topic);
         var archived = topic && topic.isArchived();
 
-        if (document.hidden) {
-          if (this.state.messageSounds && !archived) {
-            POP_SOUND.play();
-          }
+        if (cont.unread > 0) {
+          if (document.hidden) {
+            if (this.state.messageSounds && !archived) {
+              POP_SOUND.play();
+            }
 
-          this.resetContactList();
-        } else if (this.state.topicSelected != cont.topic) {
-          if (this.state.messageSounds && !archived) {
-            POP_SOUND.play();
-          }
+            this.resetContactList();
+          } else if (this.state.topicSelected != cont.topic) {
+            if (this.state.messageSounds && !archived) {
+              POP_SOUND.play();
+            }
 
-          this.resetContactList();
+            this.resetContactList();
+          }
         }
       } else if (what == 'recv') {} else if (what == 'gone' || what == 'unsub') {
         if (this.state.topicSelected == cont.topic) {

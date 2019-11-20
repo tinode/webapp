@@ -557,19 +557,21 @@ class TinodeWeb extends React.Component {
       const topic = this.tinode.getTopic(cont.topic);
       const archived = topic && topic.isArchived();
 
-      // New message received
-      if (document.hidden) {
-        if (this.state.messageSounds && !archived) {
-          POP_SOUND.play();
-        }
-        this.resetContactList();
+      // New message received. Maybe the message is from the current user, then unread is 0.
+      if (cont.unread > 0) {
+        if (document.hidden) {
+          if (this.state.messageSounds && !archived) {
+            POP_SOUND.play();
+          }
+          this.resetContactList();
 
-      // Skip update if the topic is currently open, otherwise the badge will annoyingly flash.
-      } else if (this.state.topicSelected != cont.topic) {
-        if (this.state.messageSounds && !archived) {
-          POP_SOUND.play();
+        // Skip update if the topic is currently open, otherwise the badge will annoyingly flash.
+        } else if (this.state.topicSelected != cont.topic) {
+          if (this.state.messageSounds && !archived) {
+            POP_SOUND.play();
+          }
+          this.resetContactList();
         }
-        this.resetContactList();
       }
     } else if (what == 'recv') {
       // Explicitly ignoring "recv" -- it causes no visible updates to contact list.
