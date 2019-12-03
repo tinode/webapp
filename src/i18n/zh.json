@@ -149,5 +149,6 @@
   "clear_messages_warning": ":!![MISSING]!!:Are you sure you want to clear all messages? It cannot be undone.",
   "topic_delete_warning": ":!![MISSING]!!:Are you sure you want to delete this conversation?",
   "topic_block_warning": ":!![MISSING]!!:Are you sure you want to block this conversation?",
-  "search_no_results": ":!![MISSING]!!:Search returned no results"
+  "search_no_results": ":!![MISSING]!!:Search returned no results",
+  "deleted_content": "内容已删除"
 }

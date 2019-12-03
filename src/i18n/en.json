@@ -91,6 +91,7 @@
   "numeric_confirmation_code_prompt": "Numbers only",
   "button_confirm": "Confirm",
   "save_attachment": "save",
+  "deleted_content": "content deleted",
   "invalid_content": "invalid content",
   "user_not_found": "Not found",
   "badge_you": "you",

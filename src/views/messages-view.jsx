@@ -541,7 +541,7 @@ class MessagesView extends React.Component {
         messageNodes.push(
           <ChatMessage
             tinode={this.props.tinode}
-            content={msg.content}
+            content={msg.content} delRange={msg.delRange}
             mimeType={msg.head ? msg.head.mime : null}
             timestamp={msg.ts} response={isReply} seq={msg.seq}
             userFrom={userFrom} userName={userName} userAvatar={userAvatar}

@@ -97,8 +97,14 @@ export default class ChatMessage extends React.Component {
           key={i} />);
       }, this);
       content = React.createElement('span', null, Drafty.format(content, draftyFormatter, this));
+    } else if (this.props.delRange) {
+      // Message represents a range of deleted messages.
+      content = <><i className="material-icons">block</i> <i className="gray">
+        <FormattedMessage id="deleted_content"
+          defaultMessage="content deleted" description="Shown when messages are deleted" />
+      </i></>
     } else if (typeof content != 'string') {
-      content = <><i className="material-icons">error_outline</i> <i>
+      content = <><i className="material-icons">error_outline</i> <i className="gray">
         <FormattedMessage id="invalid_content"
           defaultMessage="invalid content" description="Shown when message is unreadable" />
       </i></>
@@ -121,9 +127,11 @@ export default class ChatMessage extends React.Component {
             <div className="message-content">
               {content}
               {attachments}
-              <ReceivedMarker
-                timestamp={this.props.timestamp}
-                received={this.props.received} />
+              {this.props.timestamp ?
+                <ReceivedMarker
+                  timestamp={this.props.timestamp}
+                  received={this.props.received} />
+                : null}
             </div>
             <span className="menuTrigger">
               <a href="#" onClick={this.handleContextClick}>
