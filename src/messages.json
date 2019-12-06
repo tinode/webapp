@@ -304,7 +304,8 @@
     "clear_messages_warning": "Вы действительно хотите удалить все сообщения в чате? Их будет невозможно восстановить.",
     "topic_delete_warning": "Вы действительно хотите удалить этот чат?",
     "topic_block_warning": "Вы действительно хотите заблокировать этот чат?",
-    "search_no_results": "Ничего не найдено"
+    "search_no_results": "Ничего не найдено",
+    "deleted_content": "удалено"
   },
   "zh": {
     "archived_contacts": "已归档联系人 ({count})",
@@ -448,6 +449,7 @@
     "link_privacy_policy": "隐私政策",
     "action_delete_messages": "删除所有帖子",
     "action_block_contact": "屏蔽联系人",
-    "action_report_chat": "检举垃圾邮件"
+    "action_report_chat": "检举垃圾邮件",
+    "deleted_content": "内容已删除"
   }
 }

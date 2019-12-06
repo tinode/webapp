@@ -70,10 +70,10 @@ export default class ChatMessage extends React.Component {
   }
 
   render() {
-    const sideClass = this.props.sequence + ' ' + (this.props.response ? 'left' : 'right');
-    const bubbleClass = (this.props.sequence == 'single' || this.props.sequence == 'last') ?
-      'bubble tip' : 'bubble';
-    const avatar = this.props.userAvatar || true;
+    const sideClass = this.props.delRange ? 'center' :
+      (this.props.sequence + ' ' + (this.props.response ? 'left' : 'right'));
+    const bubbleClass = (this.props.sequence == 'single' || this.props.sequence == 'last') ? 'bubble tip' : 'bubble';
+    const avatar = this.props.delRange ? null : (this.props.userAvatar || true);
     const fullDisplay = (this.props.userFrom && this.props.response &&
       (this.props.sequence == 'single' || this.props.sequence == 'last'));
 
@@ -99,12 +99,12 @@ export default class ChatMessage extends React.Component {
       content = React.createElement('span', null, Drafty.format(content, draftyFormatter, this));
     } else if (this.props.delRange) {
       // Message represents a range of deleted messages.
-      content = <><i className="material-icons">block</i> <i className="gray">
+      content = <><i className="material-icons gray">block</i> <i className="gray">
         <FormattedMessage id="deleted_content"
           defaultMessage="content deleted" description="Shown when messages are deleted" />
       </i></>
     } else if (typeof content != 'string') {
-      content = <><i className="material-icons">error_outline</i> <i className="gray">
+      content = <><i className="material-icons gray">error_outline</i> <i className="gray">
         <FormattedMessage id="invalid_content"
           defaultMessage="invalid content" description="Shown when message is unreadable" />
       </i></>
@@ -133,11 +133,14 @@ export default class ChatMessage extends React.Component {
                   received={this.props.received} />
                 : null}
             </div>
-            <span className="menuTrigger">
-              <a href="#" onClick={this.handleContextClick}>
-                <i className="material-icons">expand_more</i>
-              </a>
-            </span>
+            {this.props.delRange ?
+              null :
+              <span className="menuTrigger">
+                <a href="#" onClick={this.handleContextClick}>
+                  <i className="material-icons">expand_more</i>
+                </a>
+              </span>
+            }
           </div>
           {fullDisplay ?
             <div className="author">

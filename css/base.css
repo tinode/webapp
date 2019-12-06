@@ -1334,6 +1334,12 @@ i.search {
   justify-content: flex-end;
 }
 
+.chat-box .center {
+  justify-content: center;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
 .chat-box .bubble {
   display: flex;
   position: relative;
@@ -1373,6 +1379,11 @@ i.search {
 
 .chat-box .right .bubble {
   background-color: #fafafa;
+}
+
+.chat-box .center .bubble {
+  background-color: #eaeafa;
+  padding: 0.75rem 0.75rem 0.5rem 0.75rem;
 }
 
 /* Left triangle placed bottom left flush. */
