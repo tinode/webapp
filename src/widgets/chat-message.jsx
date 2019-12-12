@@ -70,11 +70,11 @@ export default class ChatMessage extends React.Component {
   }
 
   render() {
-    const sideClass = this.props.delRange ? 'center' :
+    const sideClass = this.props.deleted ? 'center' :
       (this.props.sequence + ' ' + (this.props.response ? 'left' : 'right'));
     const bubbleClass = (this.props.sequence == 'single' || this.props.sequence == 'last') ? 'bubble tip' : 'bubble';
     const avatar = this.props.delRange ? null : (this.props.userAvatar || true);
-    const fullDisplay = (this.props.userFrom && this.props.response &&
+    const fullDisplay = (!this.props.deleted && this.props.response &&
       (this.props.sequence == 'single' || this.props.sequence == 'last'));
 
     let content = this.props.content;
@@ -97,7 +97,7 @@ export default class ChatMessage extends React.Component {
           key={i} />);
       }, this);
       content = React.createElement('span', null, Drafty.format(content, draftyFormatter, this));
-    } else if (this.props.delRange) {
+    } else if (this.props.deleted) {
       // Message represents a range of deleted messages.
       content = <><i className="material-icons gray">block</i> <i className="gray">
         <FormattedMessage id="deleted_content"
@@ -133,7 +133,7 @@ export default class ChatMessage extends React.Component {
                   received={this.props.received} />
                 : null}
             </div>
-            {this.props.delRange ?
+            {this.props.deleted ?
               null :
               <span className="menuTrigger">
                 <a href="#" onClick={this.handleContextClick}>

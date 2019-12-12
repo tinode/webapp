@@ -3355,7 +3355,7 @@ var MessagesView = function (_React$Component) {
           messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_chat_message_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
             tinode: this.props.tinode,
             content: msg.content,
-            delRange: msg.delRange,
+            deleted: msg.hi,
             mimeType: msg.head ? msg.head.mime : null,
             timestamp: msg.ts,
             response: isReply,
@@ -6832,10 +6832,10 @@ var ChatMessage = function (_React$Component) {
     value: function render() {
       var _this2 = this;
 
-      var sideClass = this.props.delRange ? 'center' : this.props.sequence + ' ' + (this.props.response ? 'left' : 'right');
+      var sideClass = this.props.deleted ? 'center' : this.props.sequence + ' ' + (this.props.response ? 'left' : 'right');
       var bubbleClass = this.props.sequence == 'single' || this.props.sequence == 'last' ? 'bubble tip' : 'bubble';
       var avatar = this.props.delRange ? null : this.props.userAvatar || true;
-      var fullDisplay = this.props.userFrom && this.props.response && (this.props.sequence == 'single' || this.props.sequence == 'last');
+      var fullDisplay = !this.props.deleted && this.props.response && (this.props.sequence == 'single' || this.props.sequence == 'last');
       var content = this.props.content;
       var attachments = [];
 
@@ -6859,7 +6859,7 @@ var ChatMessage = function (_React$Component) {
           }));
         }, this);
         content = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement('span', null, tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].format(content, draftyFormatter, this));
-      } else if (this.props.delRange) {
+      } else if (this.props.deleted) {
         content = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
           className: "material-icons gray"
         }, "block"), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
@@ -6894,7 +6894,7 @@ var ChatMessage = function (_React$Component) {
       }, content, attachments, this.props.timestamp ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_received_marker_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
         timestamp: this.props.timestamp,
         received: this.props.received
-      }) : null), this.props.delRange ? null : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      }) : null), this.props.deleted ? null : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "menuTrigger"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         href: "#",
