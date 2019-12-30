@@ -42,8 +42,9 @@ As of the time of this writing the following translations exist: English, Russia
 If you want to use the app with your own server and want web push notification to work you have to set them up:
 
 * Register at https://firebase.google.com/, set up the project if you have not done so already.
-* Open https://console.firebase.google.com/, navigate to your project the to `Cloud Messaging`.
-* Locate `firebase-init.js` in the root folder of your copy of this web app. Get Sender ID and Web Push certificate from https://console.firebase.google.com/: copy `Sender ID` (Project Settings -> Cloud Messaging, "Sender ID") to `messagingSenderId` field, copy `Web Push certificate` (Project Settings -> Cloud Messaging -> Web configuration -> Web Push certificates) to `messagingVapidKey` field.
+* Follow instructions to create a web application https://support.google.com/firebase/answer/9326094 in your project.
+* Follow instructions at https://support.google.com/firebase/answer/7015592 to get a Firebase configuration object.
+* Locate `firebase-init.js` in the root folder of your copy of TinodeWeb app. Copy-paste configuration object to `firebase-init.js`. Copy `Web Push certificate` (Project Settings -> Cloud Messaging -> Web configuration -> Web Push certificates) to `messagingVapidKey` field.
 * Copy Google-provided server key to `tinode.conf`, see details [here](https://github.com/tinode/chat/blob/master/docs/faq.md#q-how-to-setup-fcm-push-notifications).
 
 ## Responsive design
