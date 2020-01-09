@@ -71,7 +71,7 @@
     "firebase": "^7.6.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "react-intl": "^3.9.2",
+    "react-intl": "^3.11.0",
     "tinode-sdk": "^0.16.3-rc4"
   },
   "devDependencies": {
@@ -79,13 +79,13 @@
     "@babel/preset-env": "^7.7.7",
     "@babel/preset-react": "^7.7.4",
     "babel-loader": "^8.0.6",
-    "babel-plugin-react-intl": "^5.1.11",
-    "browserslist": "^4.7.3",
+    "babel-plugin-react-intl": "^5.1.16",
+    "browserslist": "^4.8.3",
     "copy-webpack-plugin": "^5.1.1",
     "cssnano": "^4.1.10",
-    "postcss": "^7.0.23",
+    "postcss": "^7.0.26",
     "uglifyjs-webpack-plugin": "^2.2.0",
-    "webpack": "^4.41.4",
+    "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10"
   }
 }
