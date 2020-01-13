@@ -1,5 +1,6 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
+import SendMessage from '../widgets/send-message.jsx';
 
 import { REM_SIZE } from '../config.js';
 import { fitImageSize } from '../lib/blob-helpers.js';
@@ -60,23 +61,30 @@ export default class ImagePreview extends React.PureComponent {
         <div id="image-preview-container" ref={(node) => this.assignWidth(node)}>
           <img src={this.props.content.url} style={size} />
         </div>
-        <div id="image-preview-footer">
-          <div>
-            <div><b><FormattedMessage id="label_file_name" defaultMessage="File name:"
-              description="Label for a file name" /></b></div>
-            <div><span title={this.props.content.filename}>{filename ? filename : '-'}</span></div>
-          </div>
-          <div>
-            <div><b><FormattedMessage id="label_content_type" defaultMessage="Content type:"
-              description="Label for file content type (mime)" /></b></div>
-            <div>{this.props.content.type}</div>
-          </div>
-          <div>
-            <div><b><FormattedMessage id="label_size" defaultMessage="Size:"
-              description="Label for file size" /></b></div>
-            <div>{width} &times; {height} px; {bytesToHumanSize(this.props.content.size)}</div>
-          </div>
-        </div>
+        {this.props.onSendMessage ?
+          <SendMessage
+            tinode={this.props.tinode}
+            topic={this.props.topic}
+            onSendMessage={this.props.onSendMessage}
+            onError={this.props.onError} />
+          :
+          <div id="image-preview-footer">
+            <div>
+              <div><b><FormattedMessage id="label_file_name" defaultMessage="File name:"
+                description="Label for a file name" /></b></div>
+              <div><span title={this.props.content.filename}>{filename ? filename : '-'}</span></div>
+            </div>
+            <div>
+              <div><b><FormattedMessage id="label_content_type" defaultMessage="Content type:"
+                description="Label for file content type (mime)" /></b></div>
+              <div>{this.props.content.type}</div>
+            </div>
+            <div>
+              <div><b><FormattedMessage id="label_size" defaultMessage="Size:"
+                description="Label for file size" /></b></div>
+              <div>{width} &times; {height} px; {bytesToHumanSize(this.props.content.size)}</div>
+            </div>
+          </div>}
       </div>
     );
   }

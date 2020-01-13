@@ -2952,6 +2952,7 @@ var MessagesView = function (_React$Component) {
     _this.handleEnablePeer = _this.handleEnablePeer.bind(_assertThisInitialized(_this));
     _this.handleAttachFile = _this.handleAttachFile.bind(_assertThisInitialized(_this));
     _this.handleAttachImage = _this.handleAttachImage.bind(_assertThisInitialized(_this));
+    _this.handleNewImagePreview = _this.handleNewImagePreview.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -3325,200 +3326,245 @@ var MessagesView = function (_React$Component) {
       }
     }
   }, {
+    key: "handleNewImagePreview",
+    value: function handleNewImagePreview(content) {
+      this.setState({
+        imagePreview: content
+      });
+    }
+  }, {
     key: "handleAttachImage",
-    value: function handleAttachImage(mime, bits, width, height, fname) {
-      this.props.sendMessage(Drafty.insertImage(null, 0, mime, bits, width, height, fname));
+    value: function handleAttachImage(file) {
+      var _this6 = this;
+
+      if (file.size > _config_js__WEBPACK_IMPORTED_MODULE_12__["MAX_INBAND_ATTACHMENT_SIZE"] || _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__["SUPPORTED_IMAGE_FORMATS"].indexOf(file.type) < 0) {
+        Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__["imageFileScaledToBase64"])(file, _config_js__WEBPACK_IMPORTED_MODULE_12__["MAX_IMAGE_DIM"], _config_js__WEBPACK_IMPORTED_MODULE_12__["MAX_IMAGE_DIM"], false, function (bits, mime, width, height, fname) {
+          _this6.handleNewImagePreview({
+            url: URL.createObjectURL(file),
+            filename: fname,
+            width: width,
+            height: height,
+            size: bits.length,
+            type: mime
+          });
+        }, function (err) {
+          _this6.props.onError(err, 'err');
+        });
+      } else {
+        Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__["imageFileToBase64"])(file, function (bits, mime, width, height, fname) {
+          _this6.handleNewImagePreview({
+            url: URL.createObjectURL(file),
+            filename: fname,
+            width: width,
+            height: height,
+            size: bits.length,
+            type: mime
+          });
+        }, function (err) {
+          _this6.props.onError(err, 'err');
+        });
+      }
     }
   }, {
     key: "render",
     value: function render() {
-      var _this6 = this;
+      var _this7 = this;
 
       var formatMessage = this.props.intl.formatMessage;
       var component;
 
-      if (this.state.topic) {
-        var topic = this.props.tinode.getTopic(this.state.topic);
-        var groupTopic = topic.getType() == 'grp';
-        var messageNodes = [];
-        var previousFrom = null;
-        var chatBoxClass = null;
-
-        for (var i = 0; i < this.state.messages.length; i++) {
-          var msg = this.state.messages[i];
-          var nextFrom = null;
-
-          if (i + 1 < this.state.messages.length) {
-            nextFrom = this.state.messages[i + 1].from;
-          }
-
-          var sequence = 'single';
-
-          if (msg.from == previousFrom) {
-            if (msg.from == nextFrom) {
-              sequence = 'middle';
-            } else {
-              sequence = 'last';
-            }
-          } else if (msg.from == nextFrom) {
-            sequence = 'first';
-          }
-
-          previousFrom = msg.from;
-          var isReply = !(msg.from == this.props.myUserId);
-          var deliveryStatus = topic.msgStatus(msg);
-          var userName = void 0,
-              userAvatar = void 0,
-              userFrom = void 0;
-
-          if (groupTopic) {
-            var user = topic.userDesc(msg.from);
-
-            if (user && user.public) {
-              userName = user.public.fn;
-              userAvatar = Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__["makeImageUrl"])(user.public.photo);
-            }
-
-            userFrom = msg.from;
-            chatBoxClass = 'chat-box group';
-          } else {
-            chatBoxClass = 'chat-box';
-          }
-
-          messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_chat_message_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-            tinode: this.props.tinode,
-            content: msg.content,
-            deleted: msg.hi,
-            mimeType: msg.head ? msg.head.mime : null,
-            timestamp: msg.ts,
-            response: isReply,
-            seq: msg.seq,
-            userFrom: userFrom,
-            userName: userName,
-            userAvatar: userAvatar,
-            sequence: sequence,
-            received: deliveryStatus,
-            uploader: msg._uploader,
-            viewportWidth: this.props.viewportWidth,
-            showContextMenu: this.handleShowContextMenuMessage,
-            onImagePreview: this.handleImagePreview,
-            onFormResponse: this.handleFormResponse,
-            onError: this.props.onError,
-            key: msg.seq
-          }));
-        }
-
-        var lastSeen = null;
-        var cont = this.props.tinode.getMeTopic().getContact(this.state.topic);
-
-        if (cont && tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.topicType(cont.topic) == 'p2p') {
-          if (cont.online) {
-            lastSeen = formatMessage(messages.online_now);
-          } else if (cont.seen) {
-            lastSeen = formatMessage(messages.last_seen) + ": " + Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_14__["shortDateFormat"])(cont.seen.when, this.props.intl.locale);
-          }
-        }
-
-        var avatar = this.state.avatar || true;
-        var online = this.props.online ? 'online' + (this.state.typingIndicator ? ' typing' : '') : 'offline';
-        component = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          id: "topic-view",
-          className: this.props.hideSelf ? 'nodisplay' : null
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          id: "topic-caption-panel",
-          className: "caption-panel"
-        }, this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-          href: "#",
-          id: "hide-message-view",
-          onClick: function onClick(e) {
-            e.preventDefault();
-
-            _this6.props.onHideMessagesView();
-          }
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-          className: "material-icons"
-        }, "arrow_back")) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          className: "avatar-box"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
-          avatar: avatar,
-          topic: this.state.topic,
-          title: this.state.title
-        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-          className: online
-        })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          id: "topic-title-group"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          id: "topic-title",
-          className: "panel-title"
-        }, this.state.title || react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-          id: "unnamed_topic",
-          defaultMessage: "Unnamed"
-        }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          id: "topic-last-seen"
-        }, lastSeen)), groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_group_subs_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
-          subscribers: this.state.onlineSubs
-        }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          id: "topic-users"
-        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-          href: "#",
-          onClick: this.handleContextClick
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-          className: "material-icons"
-        }, "more_vert")))), this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
-          level: this.props.errorLevel,
-          text: this.props.errorText,
-          onClearError: this.props.onError
-        }) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
-          show: this.state.fetchingMessages
-        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          id: "messages-container"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          id: "messages-panel",
-          ref: this.handleScrollReference
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
-          id: "scroller",
-          className: chatBoxClass
-        }, messageNodes)), !this.state.isReader ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          id: "write-only-background"
-        }, this.state.readingBlocked ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          id: "write-only-note"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-          id: "messages_not_readable",
-          defaultMessage: "no access to messages"
-        })) : null) : null), this.state.peerMessagingDisabled && !this.state.unconfirmed ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          id: "peer-messaging-disabled-note"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-          className: "material-icons secondary"
-        }, "block"), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-          id: "peers_messaging_disabled",
-          defaultMessage: "Peer's messaging is disabled."
-        }), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-          href: "#",
-          onClick: this.handleEnablePeer
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-          id: "enable_peers_messaging",
-          defaultMessage: "Enable"
-        })), ".") : null, this.state.unconfirmed ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_Invitation_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
-          onAction: this.handleNewChatAcceptance
-        }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
-          tinode: this.props.tinode,
-          topic: this.props.topic,
-          disabled: !this.state.isWriter,
-          onSendMessage: this.props.sendMessage,
-          onAttachFile: this.handleAttachFile,
-          onAttachImage: this.handleAttachImage,
-          onError: this.props.onError
-        }), this.state.imagePreview ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
-          content: this.state.imagePreview,
-          downloadable: true,
-          onClose: this.handleCloseImagePreview
-        }) : null);
-      } else {
+      if (this.props.hideSelf) {
+        component = null;
+      } else if (!this.state.topic) {
         component = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_logo_view_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
           hideSelf: this.props.hideSelf,
           serverVersion: this.props.serverVersion,
           serverAddress: this.props.serverAddress
         });
+      } else {
+        var component2;
+
+        if (this.state.imagePreview) {
+          component2 = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
+            content: this.state.imagePreview,
+            downloadable: true,
+            onClose: this.handleCloseImagePreview,
+            onSendMessage: this.props.sendMessage
+          });
+        } else {
+          var topic = this.props.tinode.getTopic(this.state.topic);
+          var groupTopic = topic.getType() == 'grp';
+          var messageNodes = [];
+          var previousFrom = null;
+          var chatBoxClass = null;
+
+          for (var i = 0; i < this.state.messages.length; i++) {
+            var msg = this.state.messages[i];
+            var nextFrom = null;
+
+            if (i + 1 < this.state.messages.length) {
+              nextFrom = this.state.messages[i + 1].from;
+            }
+
+            var sequence = 'single';
+
+            if (msg.from == previousFrom) {
+              if (msg.from == nextFrom) {
+                sequence = 'middle';
+              } else {
+                sequence = 'last';
+              }
+            } else if (msg.from == nextFrom) {
+              sequence = 'first';
+            }
+
+            previousFrom = msg.from;
+            var isReply = !(msg.from == this.props.myUserId);
+            var deliveryStatus = topic.msgStatus(msg);
+            var userName = void 0,
+                userAvatar = void 0,
+                userFrom = void 0;
+
+            if (groupTopic) {
+              var user = topic.userDesc(msg.from);
+
+              if (user && user.public) {
+                userName = user.public.fn;
+                userAvatar = Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__["makeImageUrl"])(user.public.photo);
+              }
+
+              userFrom = msg.from;
+              chatBoxClass = 'chat-box group';
+            } else {
+              chatBoxClass = 'chat-box';
+            }
+
+            messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_chat_message_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+              tinode: this.props.tinode,
+              content: msg.content,
+              deleted: msg.hi,
+              mimeType: msg.head ? msg.head.mime : null,
+              timestamp: msg.ts,
+              response: isReply,
+              seq: msg.seq,
+              userFrom: userFrom,
+              userName: userName,
+              userAvatar: userAvatar,
+              sequence: sequence,
+              received: deliveryStatus,
+              uploader: msg._uploader,
+              viewportWidth: this.props.viewportWidth,
+              showContextMenu: this.handleShowContextMenuMessage,
+              onImagePreview: this.handleImagePreview,
+              onFormResponse: this.handleFormResponse,
+              onError: this.props.onError,
+              key: msg.seq
+            }));
+          }
+
+          var lastSeen = null;
+          var cont = this.props.tinode.getMeTopic().getContact(this.state.topic);
+
+          if (cont && tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.topicType(cont.topic) == 'p2p') {
+            if (cont.online) {
+              lastSeen = formatMessage(messages.online_now);
+            } else if (cont.seen) {
+              lastSeen = formatMessage(messages.last_seen) + ": " + Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_14__["shortDateFormat"])(cont.seen.when, this.props.intl.locale);
+            }
+          }
+
+          var avatar = this.state.avatar || true;
+          var online = this.props.online ? 'online' + (this.state.typingIndicator ? ' typing' : '') : 'offline';
+          component2 = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            id: "topic-caption-panel",
+            className: "caption-panel"
+          }, this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+            href: "#",
+            id: "hide-message-view",
+            onClick: function onClick(e) {
+              e.preventDefault();
+
+              _this7.props.onHideMessagesView();
+            }
+          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+            className: "material-icons"
+          }, "arrow_back")) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            className: "avatar-box"
+          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
+            avatar: avatar,
+            topic: this.state.topic,
+            title: this.state.title
+          }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+            className: online
+          })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            id: "topic-title-group"
+          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            id: "topic-title",
+            className: "panel-title"
+          }, this.state.title || react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+            id: "unnamed_topic",
+            defaultMessage: "Unnamed"
+          }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            id: "topic-last-seen"
+          }, lastSeen)), groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_group_subs_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+            subscribers: this.state.onlineSubs
+          }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            id: "topic-users"
+          }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+            href: "#",
+            onClick: this.handleContextClick
+          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+            className: "material-icons"
+          }, "more_vert")))), this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+            level: this.props.errorLevel,
+            text: this.props.errorText,
+            onClearError: this.props.onError
+          }) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
+            show: this.state.fetchingMessages
+          }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            id: "messages-container"
+          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            id: "messages-panel",
+            ref: this.handleScrollReference
+          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
+            id: "scroller",
+            className: chatBoxClass
+          }, messageNodes)), !this.state.isReader ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            id: "write-only-background"
+          }, this.state.readingBlocked ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            id: "write-only-note"
+          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+            id: "messages_not_readable",
+            defaultMessage: "no access to messages"
+          })) : null) : null), this.state.peerMessagingDisabled && !this.state.unconfirmed ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            id: "peer-messaging-disabled-note"
+          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+            className: "material-icons secondary"
+          }, "block"), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+            id: "peers_messaging_disabled",
+            defaultMessage: "Peer's messaging is disabled."
+          }), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+            href: "#",
+            onClick: this.handleEnablePeer
+          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+            id: "enable_peers_messaging",
+            defaultMessage: "Enable"
+          })), ".") : null, this.state.unconfirmed ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_Invitation_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
+            onAction: this.handleNewChatAcceptance
+          }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
+            tinode: this.props.tinode,
+            topic: this.props.topic,
+            disabled: !this.state.isWriter,
+            onSendMessage: this.props.sendMessage,
+            onAttachFile: this.handleAttachFile,
+            onAttachImage: this.handleAttachImage,
+            onError: this.props.onError
+          }));
+        }
+
+        component = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          id: "topic-view"
+        }, component2);
       }
 
       return component;
@@ -6822,7 +6868,7 @@ var ChatMessage = function (_React$Component) {
       props.uploader.onProgress = _this.handleProgress.bind(_assertThisInitialized(_this));
     }
 
-    _this.handlePreviewImage = _this.handlePreviewImage.bind(_assertThisInitialized(_this));
+    _this.handleImagePreview = _this.handleImagePreview.bind(_assertThisInitialized(_this));
     _this.handleFormButtonClick = _this.handleFormButtonClick.bind(_assertThisInitialized(_this));
     _this.handleContextClick = _this.handleContextClick.bind(_assertThisInitialized(_this));
     _this.handleCancelUpload = _this.handleCancelUpload.bind(_assertThisInitialized(_this));
@@ -6830,8 +6876,8 @@ var ChatMessage = function (_React$Component) {
   }
 
   _createClass(ChatMessage, [{
-    key: "handlePreviewImage",
-    value: function handlePreviewImage(e) {
+    key: "handleImagePreview",
+    value: function handleImagePreview(e) {
       e.preventDefault();
       this.props.onImagePreview({
         url: e.target.src,
@@ -7001,7 +7047,7 @@ function draftyFormatter(style, data, values, key) {
           attr.src = Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__["sanitizeImageUrl"])(attr.src);
 
           if (attr.src) {
-            attr.onClick = this.handlePreviewImage;
+            attr.onClick = this.handleImagePreview;
             attr.className += ' image-clickable';
           } else {
             attr.src = 'img/broken_image.png';
@@ -8984,9 +9030,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/send-message.jsx */ "./src/widgets/send-message.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -9004,6 +9051,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
 
 
 
@@ -9047,7 +9095,7 @@ var ImagePreview = function (_React$PureComponent) {
         return null;
       }
 
-      var dim = Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__["fitImageSize"])(this.props.content.width, this.props.content.height, this.state.width, this.state.height, false);
+      var dim = Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__["fitImageSize"])(this.props.content.width, this.props.content.height, this.state.width, this.state.height, false);
       var size = dim ? {
         width: dim.dstWidth + 'px',
         height: dim.dstHeight + 'px'
@@ -9059,7 +9107,7 @@ var ImagePreview = function (_React$PureComponent) {
       size.maxWidth = '100%';
       size.maxHeight = '100%';
       var filename = this.props.content.filename;
-      var maxlength = Math.max((this.state.width / _config_js__WEBPACK_IMPORTED_MODULE_2__["REM_SIZE"] / 1.5 | 0) - 2, 12);
+      var maxlength = Math.max((this.state.width / _config_js__WEBPACK_IMPORTED_MODULE_3__["REM_SIZE"] / 1.5 | 0) - 2, 12);
 
       if (filename.length > maxlength) {
         filename = filename.slice(0, maxlength / 2 - 1) + '...' + filename.slice(1 - maxlength / 2);
@@ -9097,7 +9145,12 @@ var ImagePreview = function (_React$PureComponent) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
         src: this.props.content.url,
         style: size
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      })), this.props.onSendMessage ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        tinode: this.props.tinode,
+        topic: this.props.topic,
+        onSendMessage: this.props.onSendMessage,
+        onError: this.props.onError
+      }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "image-preview-footer"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "label_file_name",
@@ -9110,7 +9163,7 @@ var ImagePreview = function (_React$PureComponent) {
       }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, this.props.content.type)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "label_size",
         defaultMessage: "Size:"
-      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, width, " \xD7 ", height, " px; ", Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_4__["bytesToHumanSize"])(this.props.content.size)))));
+      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, width, " \xD7 ", height, " px; ", Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__["bytesToHumanSize"])(this.props.content.size)))));
     }
   }]);
 
@@ -10678,24 +10731,8 @@ var SendMessage = function (_React$PureComponent) {
   }, {
     key: "handleAttachImage",
     value: function handleAttachImage(e) {
-      var _this3 = this;
-
       if (e.target.files && e.target.files.length > 0) {
-        var file = e.target.files[0];
-
-        if (file.size > _config_js__WEBPACK_IMPORTED_MODULE_3__["MAX_INBAND_ATTACHMENT_SIZE"] || _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__["SUPPORTED_IMAGE_FORMATS"].indexOf(file.type) < 0) {
-          Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__["imageFileScaledToBase64"])(file, _config_js__WEBPACK_IMPORTED_MODULE_3__["MAX_IMAGE_DIM"], _config_js__WEBPACK_IMPORTED_MODULE_3__["MAX_IMAGE_DIM"], false, function (bits, mime, width, height, fname) {
-            _this3.props.onAttachImage(mime, bits, width, height, fname);
-          }, function (err) {
-            _this3.props.onError(err, 'err');
-          });
-        } else {
-          Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__["imageFileToBase64"])(file, function (bits, mime, width, height, fname) {
-            _this3.props.onAttachImage(mime, bits, width, height, fname);
-          }, function (err) {
-            _this3.props.onError(err, 'err');
-          });
-        }
+        this.props.onAttachImage(e.target.files[0]);
       }
 
       e.target.value = '';
@@ -10703,7 +10740,7 @@ var SendMessage = function (_React$PureComponent) {
   }, {
     key: "handleAttachFile",
     value: function handleAttachFile(e) {
-      var _this4 = this;
+      var _this3 = this;
 
       var formatMessage = this.props.intl.formatMessage;
 
@@ -10726,7 +10763,7 @@ var SendMessage = function (_React$PureComponent) {
           this.props.onAttachFile(file.type, null, file.name, file.size, uploadCompletionPromise, uploader);
         } else {
           Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__["fileToBase64"])(file, function (mime, bits, fname) {
-            _this4.props.onAttachFile(mime, bits, fname);
+            _this3.props.onAttachFile(mime, bits, fname);
           }, this.props.onError);
         }
       }
@@ -10780,37 +10817,37 @@ var SendMessage = function (_React$PureComponent) {
   }, {
     key: "render",
     value: function render() {
-      var _this5 = this;
+      var _this4 = this;
 
       var formatMessage = this.props.intl.formatMessage;
       var prompt = this.props.disabled ? formatMessage(messages.messaging_disabled) : formatMessage(messages.type_new_message);
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "send-message-panel"
-      }, this.props.disabled ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      }, this.props.onAttachFile ? this.props.disabled ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons disabled"
-      }, "photo") : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+      }, "photo"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+        className: "material-icons disabled"
+      }, "attach_file")) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         href: "#",
         onClick: function onClick(e) {
           e.preventDefault();
 
-          _this5.attachImage.click();
+          _this4.attachImage.click();
         },
         title: "Add image"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons secondary"
-      }, "photo")), this.props.disabled ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-        className: "material-icons disabled"
-      }, "attach_file") : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+      }, "photo")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         href: "#",
         onClick: function onClick(e) {
           e.preventDefault();
 
-          _this5.attachFile.click();
+          _this4.attachFile.click();
         },
         title: "Attach file"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons secondary"
-      }, "attach_file")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("textarea", {
+      }, "attach_file"))) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("textarea", {
         id: "sendMessage",
         placeholder: prompt,
         disabled: this.props.disabled,
@@ -10818,7 +10855,7 @@ var SendMessage = function (_React$PureComponent) {
         onChange: this.handleMessageTyping,
         onKeyPress: this.handleKeyPress,
         ref: function ref(_ref) {
-          _this5.messageEditArea = _ref;
+          _this4.messageEditArea = _ref;
         },
         autoFocus: true
       }), this.props.disabled ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
@@ -10832,7 +10869,7 @@ var SendMessage = function (_React$PureComponent) {
       }, "send")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "file",
         ref: function ref(_ref2) {
-          _this5.attachFile = _ref2;
+          _this4.attachFile = _ref2;
         },
         onChange: this.handleAttachFile,
         style: {
@@ -10841,7 +10878,7 @@ var SendMessage = function (_React$PureComponent) {
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "file",
         ref: function ref(_ref3) {
-          _this5.attachImage = _ref3;
+          _this4.attachImage = _ref3;
         },
         accept: "image/*",
         onChange: this.handleAttachImage,

@@ -3,8 +3,8 @@ import React from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Drafty } from 'tinode-sdk';
 
-import { KEYPRESS_DELAY, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE } from '../config.js';
-import { SUPPORTED_IMAGE_FORMATS, filePasted, fileToBase64, imageFileToBase64, imageFileScaledToBase64 } from '../lib/blob-helpers.js';
+import { KEYPRESS_DELAY, MAX_EXTERN_ATTACHMENT_SIZE, MAX_INBAND_ATTACHMENT_SIZE } from '../config.js';
+import { filePasted, fileToBase64 } from '../lib/blob-helpers.js';
 import { bytesToHumanSize } from '../lib/strformat.js';
 
 const messages = defineMessages({
@@ -81,32 +81,7 @@ class SendMessage extends React.PureComponent {
 
   handleAttachImage(e) {
     if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      // Check if the uploaded file is indeed an image and if it isn't too large.
-      if (file.size > MAX_INBAND_ATTACHMENT_SIZE || SUPPORTED_IMAGE_FORMATS.indexOf(file.type) < 0) {
-        // Convert image for size or format.
-        imageFileScaledToBase64(file, MAX_IMAGE_DIM, MAX_IMAGE_DIM, false,
-          // Success
-          (bits, mime, width, height, fname) => {
-            this.props.onAttachImage(mime, bits, width, height, fname);
-          },
-          // Failure
-          (err) => {
-            this.props.onError(err, 'err');
-          });
-      } else {
-        // Image can be uploaded as is. No conversion is needed.
-        imageFileToBase64(file,
-          // Success
-          (bits, mime, width, height, fname) => {
-            this.props.onAttachImage(mime, bits, width, height, fname);
-          },
-          // Failure
-          (err) => {
-            this.props.onError(err, 'err');
-          }
-        );
-      }
+      this.props.onAttachImage(e.target.files[0]);
     }
     // Clear the value so the same file can be uploaded again.
     e.target.value = '';
@@ -186,16 +161,23 @@ class SendMessage extends React.PureComponent {
       formatMessage(messages.type_new_message);
     return (
       <div id="send-message-panel">
-        {this.props.disabled ?
-          <i className="material-icons disabled">photo</i> :
-          <a href="#" onClick={(e) => {e.preventDefault(); this.attachImage.click();}} title="Add image">
-            <i className="material-icons secondary">photo</i>
-          </a>}
-        {this.props.disabled ?
-          <i className="material-icons disabled">attach_file</i> :
-          <a href="#" onClick={(e) => {e.preventDefault(); this.attachFile.click();}} title="Attach file">
-            <i className="material-icons secondary">attach_file</i>
-          </a>}
+        {this.props.onAttachFile ?
+          (this.props.disabled ?
+            <>
+              <i className="material-icons disabled">photo</i>
+              <i className="material-icons disabled">attach_file</i>
+            </>
+            :
+            <>
+              <a href="#" onClick={(e) => {e.preventDefault(); this.attachImage.click();}} title="Add image">
+                <i className="material-icons secondary">photo</i>
+              </a>
+              <a href="#" onClick={(e) => {e.preventDefault(); this.attachFile.click();}} title="Attach file">
+                <i className="material-icons secondary">attach_file</i>
+              </a>
+            </>)
+          :
+          null}
         <textarea id="sendMessage" placeholder={prompt}
           disabled={this.props.disabled} value={this.state.message}
           onChange={this.handleMessageTyping} onKeyPress={this.handleKeyPress}

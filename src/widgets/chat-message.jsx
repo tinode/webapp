@@ -20,13 +20,13 @@ export default class ChatMessage extends React.Component {
       props.uploader.onProgress = this.handleProgress.bind(this);
     }
 
-    this.handlePreviewImage = this.handlePreviewImage.bind(this);
+    this.handleImagePreview = this.handleImagePreview.bind(this);
     this.handleFormButtonClick = this.handleFormButtonClick.bind(this);
     this.handleContextClick = this.handleContextClick.bind(this);
     this.handleCancelUpload = this.handleCancelUpload.bind(this);
   }
 
-  handlePreviewImage(e) {
+  handleImagePreview(e) {
     e.preventDefault();
     this.props.onImagePreview({
       url: e.target.src,
@@ -177,7 +177,7 @@ function draftyFormatter(style, data, values, key) {
           attr.style = { width: dim.dstWidth + 'px', height: dim.dstHeight + 'px' };
           attr.src = sanitizeImageUrl(attr.src);
           if (attr.src) {
-            attr.onClick = this.handlePreviewImage;
+            attr.onClick = this.handleImagePreview;
             attr.className += ' image-clickable';
           } else {
             attr.src = 'img/broken_image.png';
