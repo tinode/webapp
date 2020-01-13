@@ -2950,6 +2950,8 @@ var MessagesView = function (_React$Component) {
     _this.handleShowContextMenuMessage = _this.handleShowContextMenuMessage.bind(_assertThisInitialized(_this));
     _this.handleNewChatAcceptance = _this.handleNewChatAcceptance.bind(_assertThisInitialized(_this));
     _this.handleEnablePeer = _this.handleEnablePeer.bind(_assertThisInitialized(_this));
+    _this.handleAttachFile = _this.handleAttachFile.bind(_assertThisInitialized(_this));
+    _this.handleAttachImage = _this.handleAttachImage.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -3313,6 +3315,21 @@ var MessagesView = function (_React$Component) {
       this.props.onChangePermissions(this.state.topic, _config_js__WEBPACK_IMPORTED_MODULE_12__["DEFAULT_P2P_ACCESS_MODE"], this.state.topic);
     }
   }, {
+    key: "handleAttachFile",
+    value: function handleAttachFile(mime, bits, fname, size, uploadCompletionPromise, uploader) {
+      if (uploadCompletionPromise) {
+        var msg = Drafty.attachFile(null, mime, null, fname, size, uploadCompletionPromise);
+        this.props.sendMessage(msg, uploadCompletionPromise, uploader);
+      } else {
+        this.props.sendMessage(Drafty.attachFile(null, mime, bits, fname));
+      }
+    }
+  }, {
+    key: "handleAttachImage",
+    value: function handleAttachImage(mime, bits, width, height, fname) {
+      this.props.sendMessage(Drafty.insertImage(null, 0, mime, bits, width, height, fname));
+    }
+  }, {
     key: "render",
     value: function render() {
       var _this6 = this;
@@ -3487,10 +3504,13 @@ var MessagesView = function (_React$Component) {
           tinode: this.props.tinode,
           topic: this.props.topic,
           disabled: !this.state.isWriter,
-          sendMessage: this.props.sendMessage,
+          onSendMessage: this.props.sendMessage,
+          onAttachFile: this.handleAttachFile,
+          onAttachImage: this.handleAttachImage,
           onError: this.props.onError
         }), this.state.imagePreview ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
           content: this.state.imagePreview,
+          downloadable: true,
           onClose: this.handleCloseImagePreview
         }) : null);
       } else {
@@ -9052,7 +9072,7 @@ var ImagePreview = function (_React$PureComponent) {
         onClick: this.props.onClose
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "image-preview-caption-panel"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+      }, this.props.downloadable ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         href: this.props.content.url,
         download: this.props.content.filename
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
@@ -9060,7 +9080,7 @@ var ImagePreview = function (_React$PureComponent) {
       }, "file_download"), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "download_action",
         defaultMessage: "download"
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+      })) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         href: "#",
         onClick: function onClick(e) {
           e.preventDefault();
@@ -10648,9 +10668,9 @@ var SendMessage = function (_React$PureComponent) {
       }
 
       if (Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__["filePasted"])(e, function (bits, mime, width, height, fname) {
-        _this2.props.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].insertImage(null, 0, mime, bits, width, height, fname));
+        _this2.props.onAttachImage(mime, bits, width, height, fname);
       }, function (mime, bits, fname) {
-        _this2.props.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].attachFile(null, mime, bits, fname));
+        _this2.props.onAttachFile(mime, bits, fname);
       }, this.props.onError)) {
         e.preventDefault();
       }
@@ -10665,13 +10685,13 @@ var SendMessage = function (_React$PureComponent) {
 
         if (file.size > _config_js__WEBPACK_IMPORTED_MODULE_3__["MAX_INBAND_ATTACHMENT_SIZE"] || _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__["SUPPORTED_IMAGE_FORMATS"].indexOf(file.type) < 0) {
           Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__["imageFileScaledToBase64"])(file, _config_js__WEBPACK_IMPORTED_MODULE_3__["MAX_IMAGE_DIM"], _config_js__WEBPACK_IMPORTED_MODULE_3__["MAX_IMAGE_DIM"], false, function (bits, mime, width, height, fname) {
-            _this3.props.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].insertImage(null, 0, mime, bits, width, height, fname));
+            _this3.props.onAttachImage(mime, bits, width, height, fname);
           }, function (err) {
             _this3.props.onError(err, 'err');
           });
         } else {
           Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__["imageFileToBase64"])(file, function (bits, mime, width, height, fname) {
-            _this3.props.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].insertImage(null, 0, mime, bits, width, height, fname));
+            _this3.props.onAttachImage(mime, bits, width, height, fname);
           }, function (err) {
             _this3.props.onError(err, 'err');
           });
@@ -10703,12 +10723,10 @@ var SendMessage = function (_React$PureComponent) {
             return;
           }
 
-          var uploadCompletionPromise = uploader.upload(file);
-          var msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].attachFile(null, file.type, null, file.name, file.size, uploadCompletionPromise);
-          this.props.sendMessage(msg, uploadCompletionPromise, uploader);
+          this.props.onAttachFile(file.type, null, file.name, file.size, uploadCompletionPromise, uploader);
         } else {
           Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__["fileToBase64"])(file, function (mime, bits, fname) {
-            _this4.props.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].attachFile(null, mime, bits, fname));
+            _this4.props.onAttachFile(mime, bits, fname);
           }, this.props.onError);
         }
       }
@@ -10722,7 +10740,7 @@ var SendMessage = function (_React$PureComponent) {
       var message = this.state.message.trim();
 
       if (message) {
-        this.props.sendMessage(this.state.message.trim());
+        this.props.onSendMessage(this.state.message.trim());
         this.setState({
           message: ''
         });

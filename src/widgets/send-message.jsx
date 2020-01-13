@@ -67,11 +67,10 @@ class SendMessage extends React.PureComponent {
     // FIXME: handle large files too.
     if (filePasted(e,
       (bits, mime, width, height, fname) => {
-        this.props.sendMessage(Drafty.insertImage(null,
-          0, mime, bits, width, height, fname));
+        this.props.onAttachImage(mime, bits, width, height, fname);
       },
       (mime, bits, fname) => {
-        this.props.sendMessage(Drafty.attachFile(null, mime, bits, fname));
+        this.props.onAttachFile(mime, bits, fname);
       },
       this.props.onError)) {
 
@@ -89,8 +88,7 @@ class SendMessage extends React.PureComponent {
         imageFileScaledToBase64(file, MAX_IMAGE_DIM, MAX_IMAGE_DIM, false,
           // Success
           (bits, mime, width, height, fname) => {
-            this.props.sendMessage(Drafty.insertImage(null,
-              0, mime, bits, width, height, fname));
+            this.props.onAttachImage(mime, bits, width, height, fname);
           },
           // Failure
           (err) => {
@@ -101,8 +99,7 @@ class SendMessage extends React.PureComponent {
         imageFileToBase64(file,
           // Success
           (bits, mime, width, height, fname) => {
-            this.props.sendMessage(Drafty.insertImage(null,
-              0, mime, bits, width, height, fname));
+            this.props.onAttachImage(mime, bits, width, height, fname);
           },
           // Failure
           (err) => {
@@ -130,16 +127,13 @@ class SendMessage extends React.PureComponent {
           this.props.onError(formatMessage(messages.cannot_initiate_upload));
           return;
         }
-        // Format data and initiate upload.
-        const uploadCompletionPromise = uploader.upload(file);
-        const msg = Drafty.attachFile(null, file.type, null, file.name, file.size, uploadCompletionPromise);
         // Pass data and the uploader to the TinodeWeb.
-        this.props.sendMessage(msg, uploadCompletionPromise, uploader);
+        this.props.onAttachFile(file.type, null, file.name, file.size, uploadCompletionPromise, uploader);
       } else {
         // Small enough to send inband.
         fileToBase64(file,
           (mime, bits, fname) => {
-            this.props.sendMessage(Drafty.attachFile(null, mime, bits, fname));
+            this.props.onAttachFile(mime, bits, fname);
           },
           this.props.onError
         );
@@ -153,7 +147,7 @@ class SendMessage extends React.PureComponent {
     e.preventDefault();
     const message = this.state.message.trim();
     if (message) {
-      this.props.sendMessage(this.state.message.trim());
+      this.props.onSendMessage(this.state.message.trim());
       this.setState({message: ''});
     }
   }

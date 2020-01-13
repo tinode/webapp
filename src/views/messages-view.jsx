@@ -75,6 +75,8 @@ class MessagesView extends React.Component {
     this.handleShowContextMenuMessage = this.handleShowContextMenuMessage.bind(this);
     this.handleNewChatAcceptance = this.handleNewChatAcceptance.bind(this);
     this.handleEnablePeer = this.handleEnablePeer.bind(this);
+    this.handleAttachFile = this.handleAttachFile.bind(this);
+    this.handleAttachImage = this.handleAttachImage.bind(this);
   }
 
   componentDidMount() {
@@ -492,6 +494,21 @@ class MessagesView extends React.Component {
     this.props.onChangePermissions(this.state.topic, DEFAULT_P2P_ACCESS_MODE, this.state.topic);
   }
 
+  handleAttachFile(mime, bits, fname, size, uploadCompletionPromise, uploader) {
+    if (uploadCompletionPromise) {
+      // Format data and initiate upload.
+      const msg = Drafty.attachFile(null, mime, null, fname, size, uploadCompletionPromise);
+      // Pass data and the uploader to the TinodeWeb.
+      this.props.sendMessage(msg, uploadCompletionPromise, uploader);
+    } else {
+      this.props.sendMessage(Drafty.attachFile(null, mime, bits, fname));
+    }
+  }
+
+  handleAttachImage(mime, bits, width, height, fname) {
+    this.props.sendMessage(Drafty.insertImage(null, 0, mime, bits, width, height, fname));
+  }
+
   render() {
     const {formatMessage} = this.props.intl;
 
@@ -643,10 +660,13 @@ class MessagesView extends React.Component {
               tinode={this.props.tinode}
               topic={this.props.topic}
               disabled={!this.state.isWriter}
-              sendMessage={this.props.sendMessage}
+              onSendMessage={this.props.sendMessage}
+              onAttachFile={this.handleAttachFile}
+              onAttachImage={this.handleAttachImage}
               onError={this.props.onError} />}
           {this.state.imagePreview ?
             <ImagePreview content={this.state.imagePreview}
+              downloadable={true}
               onClose={this.handleCloseImagePreview} /> : null}
         </div>
       );
