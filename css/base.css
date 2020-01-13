@@ -181,9 +181,7 @@ textarea, input {
   outline: none;
   color: #666;
 }
-textarea {
-  resize: none;
-}
+
 input[type="text"],
 input[type="email"],
 input[type="password"],
@@ -233,6 +231,11 @@ input[type="text"].with-visibility,
 input[type="password"].with-visibility {
   margin-right:-2rem;
   padding-right:2rem;
+}
+
+textarea {
+  resize: none;
+  padding-top: 0.45rem;
 }
 /* END of input and buttons */
 
