@@ -14,6 +14,8 @@ export default class ImagePreview extends React.PureComponent {
       width: 0,
       height: 0
     };
+
+    this.handleSendImage = this.handleSendImage.bind(this);
   }
 
   assignWidth(node) {
@@ -24,6 +26,12 @@ export default class ImagePreview extends React.PureComponent {
         height: bounds.height | 0
       });
     }
+  }
+
+  handleSendImage(caption) {
+    this.props.onClose();
+    this.props.onSendMessage(caption, this.props.content.type, this.props.content.bits,
+      this.props.content.width, this.props.content.height, this.props.content.filename);
   }
 
   render() {
@@ -47,15 +55,16 @@ export default class ImagePreview extends React.PureComponent {
     const width = this.props.content.width || '-';
     const height = this.props.content.height || '-';
     return (
-      <div id="image-preview" onClick={this.props.onClose}>
+      <div id="image-preview">
         <div id="image-preview-caption-panel">
-          {this.props.downloadable ?
+          {!this.props.onSendMessage ?
             <a href={this.props.content.url} download={this.props.content.filename}>
               <i className="material-icons">file_download</i> <FormattedMessage
                 id="download_action" defaultMessage="download" description="Call to action [download]" />
             </a>
             :
-            null}
+            <span>{this.props.content.filename}</span>
+          }
           <a href="#" onClick={(e) => {e.preventDefault(); this.props.onClose();}}><i className="material-icons gray">close</i></a>
         </div>
         <div id="image-preview-container" ref={(node) => this.assignWidth(node)}>
@@ -65,7 +74,9 @@ export default class ImagePreview extends React.PureComponent {
           <SendMessage
             tinode={this.props.tinode}
             topic={this.props.topic}
-            onSendMessage={this.props.onSendMessage}
+            messagePrompt="add_image_caption"
+            acceptBlank={true}
+            onSendMessage={this.handleSendImage}
             onError={this.props.onError} />
           :
           <div id="image-preview-footer">

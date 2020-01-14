@@ -14,9 +14,11 @@ import LoadSpinner from '../widgets/load-spinner.jsx';
 import LogoView from './logo-view.jsx';
 import SendMessage from '../widgets/send-message.jsx';
 
-import { DEFAULT_P2P_ACCESS_MODE, KEYPRESS_DELAY, MESSAGES_PAGE, MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE } from '../config.js';
-import { SUPPORTED_IMAGE_FORMATS, filePasted, fileToBase64, imageFileToBase64, imageFileScaledToBase64, makeImageUrl } from '../lib/blob-helpers.js';
-import { shortDateFormat } from '../lib/strformat.js';
+import { DEFAULT_P2P_ACCESS_MODE, KEYPRESS_DELAY, MESSAGES_PAGE, MAX_EXTERN_ATTACHMENT_SIZE,
+  MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE } from '../config.js';
+import { SUPPORTED_IMAGE_FORMATS, filePasted, fileToBase64, imageFileToBase64,
+  imageFileScaledToBase64, makeImageUrl } from '../lib/blob-helpers.js';
+import { bytesToHumanSize, shortDateFormat } from '../lib/strformat.js';
 
 const messages = defineMessages({
   online_now: {
@@ -61,6 +63,9 @@ class MessagesView extends React.Component {
 
     // this.propsChange = this.propsChange.bind(this);
     this.leave = this.leave.bind(this);
+    this.sendImageAttachment = this.sendImageAttachment.bind(this);
+    this.sendFileAttachment = this.sendFileAttachment.bind(this);
+    this.sendKeyPress = this.sendKeyPress.bind(this);
     this.handleScrollReference = this.handleScrollReference.bind(this);
     this.handleScrollEvent = this.handleScrollEvent.bind(this);
     this.handleDescChange = this.handleDescChange.bind(this);
@@ -68,7 +73,8 @@ class MessagesView extends React.Component {
     this.handleNewMessage = this.handleNewMessage.bind(this);
     this.handleAllMessagesReceived = this.handleAllMessagesReceived.bind(this);
     this.handleInfoReceipt = this.handleInfoReceipt.bind(this);
-    this.handleImagePreview = this.handleImagePreview.bind(this);
+    this.handlePreImagePreview = this.handlePreImagePreview.bind(this);
+    this.handlePostImagePreview = this.handlePostImagePreview.bind(this);
     this.handleCloseImagePreview = this.handleCloseImagePreview.bind(this);
     this.handleFormResponse = this.handleFormResponse.bind(this);
     this.handleContextClick = this.handleContextClick.bind(this);
@@ -77,7 +83,6 @@ class MessagesView extends React.Component {
     this.handleEnablePeer = this.handleEnablePeer.bind(this);
     this.handleAttachFile = this.handleAttachFile.bind(this);
     this.handleAttachImage = this.handleAttachImage.bind(this);
-    this.handleNewImagePreview = this.handleNewImagePreview.bind(this);
   }
 
   componentDidMount() {
@@ -172,7 +177,8 @@ class MessagesView extends React.Component {
         topic: null,
         title: '',
         avatar: null,
-        imagePreview: null,
+        imagePrePreview: null,
+        imagePostPreview: null,
         typingIndicator: false,
         scrollPosition: 0,
         fetchingMessages: false,
@@ -182,7 +188,8 @@ class MessagesView extends React.Component {
       const topic = nextProps.tinode.getTopic(nextProps.topic);
       nextState = {
         topic: nextProps.topic,
-        imagePreview: null,
+        imagePrePreview: null,
+        imagePostPreview: null,
         typingIndicator: false,
         scrollPosition: 0,
         fetchingMessages: false
@@ -435,12 +442,12 @@ class MessagesView extends React.Component {
     }
   }
 
-  handleImagePreview(content) {
-    this.setState({ imagePreview: content });
+  handlePostImagePreview(content) {
+    this.setState({ imagePostPreview: content });
   }
 
   handleCloseImagePreview() {
-    this.setState({ imagePreview: null });
+    this.setState({ imagePostPreview: null, imagePrePreview: null });
   }
 
   handleFormResponse(action, text, data) {
@@ -495,7 +502,14 @@ class MessagesView extends React.Component {
     this.props.onChangePermissions(this.state.topic, DEFAULT_P2P_ACCESS_MODE, this.state.topic);
   }
 
-  handleAttachFile(mime, bits, fname, size, uploadCompletionPromise, uploader) {
+  sendKeyPress() {
+    const topic = this.props.tinode.getTopic(this.state.topic);
+    if (topic.isSubscribed()) {
+      topic.noteKeyPress();
+    }
+  }
+
+  sendFileAttachment(mime, bits, fname, size, uploadCompletionPromise, uploader) {
     if (uploadCompletionPromise) {
       // Format data and initiate upload.
       const msg = Drafty.attachFile(null, mime, null, fname, size, uploadCompletionPromise);
@@ -506,9 +520,42 @@ class MessagesView extends React.Component {
     }
   }
 
-  handleNewImagePreview(content) {
-    this.setState({ imagePreview: content });
-    // this.props.sendMessage(Drafty.insertImage(null, 0, mime, bits, width, height, fname));
+  handleAttachFile(file) {
+    if (file.size > MAX_EXTERN_ATTACHMENT_SIZE) {
+      // Too large.
+      this.props.onError(formatMessage(messages.file_attachment_too_large,
+          {size: bytesToHumanSize(file.size), limit: bytesToHumanSize(MAX_EXTERN_ATTACHMENT_SIZE)}), 'err');
+    } else if (file.size > MAX_INBAND_ATTACHMENT_SIZE) {
+      // Too large to send inband - uploading out of band and sending as a link.
+      const uploader = this.props.tinode.getLargeFileHelper();
+      if (!uploader) {
+        this.props.onError(formatMessage(messages.cannot_initiate_upload));
+        return;
+      }
+      // Pass data and the uploader to the TinodeWeb.
+      this.sendFileAttachment(file.type, null, file.name, file.size, uploadCompletionPromise, uploader);
+    } else {
+      // Small enough to send inband.
+      fileToBase64(file,
+        (mime, bits, fname) => {
+          this.sendFileAttachment(mime, bits, fname);
+        },
+        this.props.onError
+      );
+    }
+  }
+
+  sendImageAttachment(caption, mime, bits, width, height, fname) {
+    let msg = Drafty.insertImage(null, 0, mime, bits, width, height, fname);
+    if (caption) {
+      msg = Drafty.appendLineBreak(msg);
+      msg = Drafty.append(msg, Drafty.init(caption));
+    }
+    this.props.sendMessage(msg);
+  }
+
+  handlePreImagePreview(content) {
+    this.setState({ imagePrePreview: content });
   }
 
   handleAttachImage(file) {
@@ -518,8 +565,9 @@ class MessagesView extends React.Component {
       imageFileScaledToBase64(file, MAX_IMAGE_DIM, MAX_IMAGE_DIM, false,
         // Success
         (bits, mime, width, height, fname) => {
-          this.handleNewImagePreview({
+          this.handlePreImagePreview({
             url: URL.createObjectURL(file),
+            bits: bits,
             filename: fname,
             width: width,
             height: height,
@@ -536,8 +584,9 @@ class MessagesView extends React.Component {
       imageFileToBase64(file,
         // Success
         (bits, mime, width, height, fname) => {
-          this.handleNewImagePreview({
+          this.handlePreImagePreview({
             url: URL.createObjectURL(file),
+            bits: bits,
             filename: fname,
             width: width,
             height: height,
@@ -567,13 +616,20 @@ class MessagesView extends React.Component {
       );
     } else {
       let component2;
-      if (this.state.imagePreview) {
+      if (this.state.imagePrePreview) {
+        // Preview image before sending.
         component2 = (
           <ImagePreview
-            content={this.state.imagePreview}
-            downloadable={true}
+            content={this.state.imagePrePreview}
             onClose={this.handleCloseImagePreview}
-            onSendMessage={this.props.sendMessage} />
+            onSendMessage={this.sendImageAttachment} />
+        );
+      } else if (this.state.imagePostPreview) {
+        // Expand received image.
+        component2 = (
+          <ImagePreview
+            content={this.state.imagePostPreview}
+            onClose={this.handleCloseImagePreview} />
         );
       } else {
         const topic = this.props.tinode.getTopic(this.state.topic);
@@ -627,7 +683,7 @@ class MessagesView extends React.Component {
               sequence={sequence} received={deliveryStatus} uploader={msg._uploader}
               viewportWidth={this.props.viewportWidth}
               showContextMenu={this.handleShowContextMenuMessage}
-              onImagePreview={this.handleImagePreview}
+              onImagePreview={this.handlePostImagePreview}
               onFormResponse={this.handleFormResponse}
               onError={this.props.onError}
               key={msg.seq} />
@@ -723,6 +779,7 @@ class MessagesView extends React.Component {
                 topic={this.props.topic}
                 disabled={!this.state.isWriter}
                 onSendMessage={this.props.sendMessage}
+                onKeyPress={this.sendKeyPress}
                 onAttachFile={this.handleAttachFile}
                 onAttachImage={this.handleAttachImage}
                 onError={this.props.onError} />}

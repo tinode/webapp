@@ -3,9 +3,8 @@ import React from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Drafty } from 'tinode-sdk';
 
-import { KEYPRESS_DELAY, MAX_EXTERN_ATTACHMENT_SIZE, MAX_INBAND_ATTACHMENT_SIZE } from '../config.js';
-import { filePasted, fileToBase64 } from '../lib/blob-helpers.js';
-import { bytesToHumanSize } from '../lib/strformat.js';
+import { KEYPRESS_DELAY } from '../config.js';
+import { filePasted } from '../lib/blob-helpers.js';
 
 const messages = defineMessages({
   'messaging_disabled': {
@@ -16,7 +15,12 @@ const messages = defineMessages({
   'type_new_message': {
     id: 'new_message_prompt',
     defaultMessage: 'New message',
-    description: 'Prompt in SendMessage in read-only topic'
+    description: 'Prompt in send message field'
+  },
+  'add_image_caption': {
+    id: 'image_caption_prompt',
+    defaultMessage: 'Image caption',
+    description: 'Prompt in SendMessage for attached image'
   },
   'file_attachment_too_large': {
     id: 'file_attachment_too_large',
@@ -90,29 +94,7 @@ class SendMessage extends React.PureComponent {
   handleAttachFile(e) {
     const {formatMessage} = this.props.intl;
     if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      if (file.size > MAX_EXTERN_ATTACHMENT_SIZE) {
-        // Too large.
-        this.props.onError(formatMessage(messages.file_attachment_too_large,
-            {size: bytesToHumanSize(file.size), limit: bytesToHumanSize(MAX_EXTERN_ATTACHMENT_SIZE)}), 'err');
-      } else if (file.size > MAX_INBAND_ATTACHMENT_SIZE) {
-        // Too large to send inband - uploading out of band and sending as a link.
-        const uploader = this.props.tinode.getLargeFileHelper();
-        if (!uploader) {
-          this.props.onError(formatMessage(messages.cannot_initiate_upload));
-          return;
-        }
-        // Pass data and the uploader to the TinodeWeb.
-        this.props.onAttachFile(file.type, null, file.name, file.size, uploadCompletionPromise, uploader);
-      } else {
-        // Small enough to send inband.
-        fileToBase64(file,
-          (mime, bits, fname) => {
-            this.props.onAttachFile(mime, bits, fname);
-          },
-          this.props.onError
-        );
-      }
+      this.props.onAttachFile(e.target.files[0]);
     }
     // Clear the value so the same file can be uploaded again.
     e.target.value = '';
@@ -121,8 +103,8 @@ class SendMessage extends React.PureComponent {
   handleSend(e) {
     e.preventDefault();
     const message = this.state.message.trim();
-    if (message) {
-      this.props.onSendMessage(this.state.message.trim());
+    if (message || this.props.acceptBlank) {
+      this.props.onSendMessage(message);
       this.setState({message: ''});
     }
   }
@@ -143,13 +125,12 @@ class SendMessage extends React.PureComponent {
 
   handleMessageTyping(e) {
     const newState = {message: e.target.value};
-    const now = new Date().getTime();
-    if (now - this.state.keypressTimestamp > KEYPRESS_DELAY) {
-      const topic = this.props.tinode.getTopic(this.props.topic);
-      if (topic.isSubscribed()) {
-        topic.noteKeyPress();
+    if (this.props.onKeyPress) {
+      const now = new Date().getTime();
+      if (now - this.state.keypressTimestamp > KEYPRESS_DELAY) {
+        this.props.onKeyPress();
+        newState.keypressTimestamp = now;
       }
-      newState.keypressTimestamp = now;
     }
     this.setState(newState);
   }
@@ -158,7 +139,9 @@ class SendMessage extends React.PureComponent {
     const {formatMessage} = this.props.intl;
     const prompt = this.props.disabled ?
       formatMessage(messages.messaging_disabled) :
-      formatMessage(messages.type_new_message);
+      (this.props.messagePrompt ?
+        formatMessage(messages[this.props.messagePrompt]) :
+        formatMessage(messages.type_new_message));
     return (
       <div id="send-message-panel">
         {this.props.onAttachFile ?
