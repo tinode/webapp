@@ -50,7 +50,7 @@ export default class ImagePreview extends React.PureComponent {
     // Averate font aspect ratio is ~0.5; File name takes 1/3 of the viewport width.
     const maxlength = Math.max(((this.state.width / REM_SIZE / 1.5) | 0) - 2, 12);
     if (filename.length > maxlength) {
-      filename = filename.slice(0, maxlength/2 - 1) + '...' + filename.slice(1 - maxlength/2);
+      filename = filename.slice(0, maxlength/2 - 1) + '…' + filename.slice(1 - maxlength/2);
     }
     const width = this.props.content.width || '-';
     const height = this.props.content.height || '-';

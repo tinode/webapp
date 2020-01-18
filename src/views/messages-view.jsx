@@ -5,6 +5,7 @@ import Tinode from 'tinode-sdk';
 const Drafty = Tinode.Drafty;
 
 import ChatMessage from '../widgets/chat-message.jsx';
+import DocPreview from '../widgets/doc-preview.jsx';
 import ErrorPanel from '../widgets/error-panel.jsx';
 import GroupSubs from '../widgets/group-subs.jsx';
 import ImagePreview from '../widgets/image-preview.jsx';
@@ -73,9 +74,10 @@ class MessagesView extends React.Component {
     this.handleNewMessage = this.handleNewMessage.bind(this);
     this.handleAllMessagesReceived = this.handleAllMessagesReceived.bind(this);
     this.handleInfoReceipt = this.handleInfoReceipt.bind(this);
-    this.handlePreImagePreview = this.handlePreImagePreview.bind(this);
-    this.handlePostImagePreview = this.handlePostImagePreview.bind(this);
-    this.handleCloseImagePreview = this.handleCloseImagePreview.bind(this);
+    this.handleDocPreview = this.handleDocPreview.bind(this);
+    this.handleImagePreview = this.handleImagePreview.bind(this);
+    this.handleImagePostview = this.handleImagePostview.bind(this);
+    this.handleClosePreview = this.handleClosePreview.bind(this);
     this.handleFormResponse = this.handleFormResponse.bind(this);
     this.handleContextClick = this.handleContextClick.bind(this);
     this.handleShowContextMenuMessage = this.handleShowContextMenuMessage.bind(this);
@@ -177,8 +179,9 @@ class MessagesView extends React.Component {
         topic: null,
         title: '',
         avatar: null,
-        imagePrePreview: null,
-        imagePostPreview: null,
+        docPreview: null,
+        imagePreview: null,
+        imagePostview: null,
         typingIndicator: false,
         scrollPosition: 0,
         fetchingMessages: false,
@@ -188,8 +191,9 @@ class MessagesView extends React.Component {
       const topic = nextProps.tinode.getTopic(nextProps.topic);
       nextState = {
         topic: nextProps.topic,
-        imagePrePreview: null,
-        imagePostPreview: null,
+        docPreview: null,
+        imagePreview: null,
+        imagePostview: null,
         typingIndicator: false,
         scrollPosition: 0,
         fetchingMessages: false
@@ -442,12 +446,12 @@ class MessagesView extends React.Component {
     }
   }
 
-  handlePostImagePreview(content) {
-    this.setState({ imagePostPreview: content });
+  handleImagePostview(content) {
+    this.setState({ imagePostview: content });
   }
 
-  handleCloseImagePreview() {
-    this.setState({ imagePostPreview: null, imagePrePreview: null });
+  handleClosePreview() {
+    this.setState({ imagePostview: null, imagePreview: null, docPreview: null });
   }
 
   handleFormResponse(action, text, data) {
@@ -520,6 +524,10 @@ class MessagesView extends React.Component {
     }
   }
 
+  handleDocPreview(content) {
+    this.setState({ docPreview: content });
+  }
+
   handleAttachFile(file) {
     if (file.size > MAX_EXTERN_ATTACHMENT_SIZE) {
       // Too large.
@@ -554,8 +562,8 @@ class MessagesView extends React.Component {
     this.props.sendMessage(msg);
   }
 
-  handlePreImagePreview(content) {
-    this.setState({ imagePrePreview: content });
+  handleImagePreview(content) {
+    this.setState({ imagePreview: content });
   }
 
   handleAttachImage(file) {
@@ -565,7 +573,7 @@ class MessagesView extends React.Component {
       imageFileScaledToBase64(file, MAX_IMAGE_DIM, MAX_IMAGE_DIM, false,
         // Success
         (bits, mime, width, height, fname) => {
-          this.handlePreImagePreview({
+          this.handleImagePreview({
             url: URL.createObjectURL(file),
             bits: bits,
             filename: fname,
@@ -584,7 +592,7 @@ class MessagesView extends React.Component {
       imageFileToBase64(file,
         // Success
         (bits, mime, width, height, fname) => {
-          this.handlePreImagePreview({
+          this.handleImagePreview({
             url: URL.createObjectURL(file),
             bits: bits,
             filename: fname,
@@ -616,20 +624,28 @@ class MessagesView extends React.Component {
       );
     } else {
       let component2;
-      if (this.state.imagePrePreview) {
+      if (this.state.imagePreview) {
         // Preview image before sending.
         component2 = (
           <ImagePreview
-            content={this.state.imagePrePreview}
-            onClose={this.handleCloseImagePreview}
+            content={this.state.imagePreview}
+            onClose={this.handleClosePreview}
             onSendMessage={this.sendImageAttachment} />
         );
-      } else if (this.state.imagePostPreview) {
+      } else if (this.state.imagePostview) {
         // Expand received image.
         component2 = (
           <ImagePreview
-            content={this.state.imagePostPreview}
-            onClose={this.handleCloseImagePreview} />
+            content={this.state.imagePostview}
+            onClose={this.handleClosePreview} />
+        );
+      } else if (this.state.docPreview) {
+        // Preview attachment before sending.
+        component2 = (
+          <DocPreview
+            content={this.state.docPreview}
+            onClose={this.handleClosePreview}
+            onSendMessage={this.sendFileAttachment} />
         );
       } else {
         const topic = this.props.tinode.getTopic(this.state.topic);
@@ -683,7 +699,7 @@ class MessagesView extends React.Component {
               sequence={sequence} received={deliveryStatus} uploader={msg._uploader}
               viewportWidth={this.props.viewportWidth}
               showContextMenu={this.handleShowContextMenuMessage}
-              onImagePreview={this.handlePostImagePreview}
+              onImagePreview={this.handleImagePostview}
               onFormResponse={this.handleFormResponse}
               onError={this.props.onError}
               key={msg.seq} />
