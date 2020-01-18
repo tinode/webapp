@@ -74,8 +74,6 @@ class MessagesView extends React.Component {
     this.handleNewMessage = this.handleNewMessage.bind(this);
     this.handleAllMessagesReceived = this.handleAllMessagesReceived.bind(this);
     this.handleInfoReceipt = this.handleInfoReceipt.bind(this);
-    this.handleDocPreview = this.handleDocPreview.bind(this);
-    this.handleImagePreview = this.handleImagePreview.bind(this);
     this.handleImagePostview = this.handleImagePostview.bind(this);
     this.handleClosePreview = this.handleClosePreview.bind(this);
     this.handleFormResponse = this.handleFormResponse.bind(this);
@@ -513,19 +511,27 @@ class MessagesView extends React.Component {
     }
   }
 
-  sendFileAttachment(mime, bits, fname, size, uploadCompletionPromise, uploader) {
-    if (uploadCompletionPromise) {
-      // Format data and initiate upload.
-      const msg = Drafty.attachFile(null, mime, null, fname, size, uploadCompletionPromise);
+  sendFileAttachment(file) {
+    if (file.size > MAX_INBAND_ATTACHMENT_SIZE) {
+      // Too large to send inband - uploading out of band and sending as a link.
+      const uploader = this.props.tinode.getLargeFileHelper();
+      if (!uploader) {
+        this.props.onError(formatMessage(messages.cannot_initiate_upload));
+        return;
+      }
+      const uploadCompletionPromise = uploader.upload(file);
+      const msg = Drafty.attachFile(null, file.type, null, file.name, file.size, uploadCompletionPromise);
       // Pass data and the uploader to the TinodeWeb.
       this.props.sendMessage(msg, uploadCompletionPromise, uploader);
     } else {
-      this.props.sendMessage(Drafty.attachFile(null, mime, bits, fname));
+      // Small enough to send inband.
+      fileToBase64(file,
+        (mime, bits, fname) => {
+          this.props.sendMessage(Drafty.attachFile(null, mime, bits, fname));
+        },
+        this.props.onError
+      );
     }
-  }
-
-  handleDocPreview(content) {
-    this.setState({ docPreview: content });
   }
 
   handleAttachFile(file) {
@@ -533,23 +539,13 @@ class MessagesView extends React.Component {
       // Too large.
       this.props.onError(formatMessage(messages.file_attachment_too_large,
           {size: bytesToHumanSize(file.size), limit: bytesToHumanSize(MAX_EXTERN_ATTACHMENT_SIZE)}), 'err');
-    } else if (file.size > MAX_INBAND_ATTACHMENT_SIZE) {
-      // Too large to send inband - uploading out of band and sending as a link.
-      const uploader = this.props.tinode.getLargeFileHelper();
-      if (!uploader) {
-        this.props.onError(formatMessage(messages.cannot_initiate_upload));
-        return;
-      }
-      // Pass data and the uploader to the TinodeWeb.
-      this.sendFileAttachment(file.type, null, file.name, file.size, uploadCompletionPromise, uploader);
     } else {
-      // Small enough to send inband.
-      fileToBase64(file,
-        (mime, bits, fname) => {
-          this.sendFileAttachment(mime, bits, fname);
-        },
-        this.props.onError
-      );
+      this.setState({ docPreview: {
+        file: file,
+        filename: file.name,
+        size: file.size,
+        type: file.type
+      }});
     }
   }
 
@@ -562,10 +558,6 @@ class MessagesView extends React.Component {
     this.props.sendMessage(msg);
   }
 
-  handleImagePreview(content) {
-    this.setState({ imagePreview: content });
-  }
-
   handleAttachImage(file) {
     // Check if the uploaded file is indeed an image and if it isn't too large.
     if (file.size > MAX_INBAND_ATTACHMENT_SIZE || SUPPORTED_IMAGE_FORMATS.indexOf(file.type) < 0) {
@@ -573,7 +565,7 @@ class MessagesView extends React.Component {
       imageFileScaledToBase64(file, MAX_IMAGE_DIM, MAX_IMAGE_DIM, false,
         // Success
         (bits, mime, width, height, fname) => {
-          this.handleImagePreview({
+          this.setState({imagePreview: {
             url: URL.createObjectURL(file),
             bits: bits,
             filename: fname,
@@ -581,7 +573,7 @@ class MessagesView extends React.Component {
             height: height,
             size: bits.length,
             type: mime
-          });
+          }});
         },
         // Failure
         (err) => {
@@ -592,7 +584,7 @@ class MessagesView extends React.Component {
       imageFileToBase64(file,
         // Success
         (bits, mime, width, height, fname) => {
-          this.handleImagePreview({
+          this.setState({imagePreview: {
             url: URL.createObjectURL(file),
             bits: bits,
             filename: fname,
@@ -600,7 +592,7 @@ class MessagesView extends React.Component {
             height: height,
             size: bits.length,
             type: mime
-          });
+          }});
         },
         // Failure
         (err) => {

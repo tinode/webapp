@@ -29,9 +29,8 @@ export default class DocPreview extends React.PureComponent {
     if (!this.props.content) {
       return null;
     }
-
+    const doc = iconFromMime(this.props.content.type);
     return (
-      const doc = iconFromMime(this.props.content.type);
       <div id="image-preview">
         <div id="image-preview-caption-panel">
           <span>{this.props.content.filename}</span>
@@ -42,13 +41,11 @@ export default class DocPreview extends React.PureComponent {
         </div>
         <div id="image-preview-footer">
           <div>
-            <div><b><FormattedMessage id="label_content_type" defaultMessage="Content type:"
-              description="Label for file content type (mime)" /></b></div>
+            <div><b><FormattedMessage id="label_content_type" /></b></div>
             <div>{this.props.content.type}</div>
           </div>
           <div>
-            <div><b><FormattedMessage id="label_size" defaultMessage="Size:"
-              description="Label for file size" /></b></div>
+            <div><b><FormattedMessage id="label_size" /></b></div>
             <div>{bytesToHumanSize(this.props.content.size)}</div>
           </div>
         </div>
