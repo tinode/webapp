@@ -783,8 +783,6 @@ class MessagesView extends React.Component {
               <Invitation onAction={this.handleNewChatAcceptance} />
               :
               <SendMessage
-                tinode={this.props.tinode}
-                topic={this.props.topic}
                 disabled={!this.state.isWriter}
                 onSendMessage={this.props.sendMessage}
                 onKeyPress={this.sendKeyPress}

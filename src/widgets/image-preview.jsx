@@ -72,8 +72,6 @@ export default class ImagePreview extends React.PureComponent {
         </div>
         {this.props.onSendMessage ?
           <SendMessage
-            tinode={this.props.tinode}
-            topic={this.props.topic}
             messagePrompt="add_image_caption"
             acceptBlank={true}
             onSendMessage={this.handleSendImage}

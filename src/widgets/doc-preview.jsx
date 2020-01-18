@@ -21,15 +21,13 @@ export default class DocPreview extends React.PureComponent {
 
   handleSendDoc(caption) {
     this.props.onClose();
-    this.props.onSendMessage(caption, this.props.content.type, this.props.content.bits,
-      this.props.content.width, this.props.content.height, this.props.content.filename);
+    this.props.onSendMessage(this.props.content.file);
   }
 
   render() {
     if (!this.props.content) {
       return null;
     }
-    const doc = iconFromMime(this.props.content.type);
     return (
       <div id="image-preview">
         <div id="image-preview-caption-panel">
@@ -37,24 +35,15 @@ export default class DocPreview extends React.PureComponent {
           <a href="#" onClick={(e) => {e.preventDefault(); this.props.onClose();}}><i className="material-icons gray">close</i></a>
         </div>
         <div id="image-preview-container">
-          <i className="material-icons gray">{doc}</i>
-        </div>
-        <div id="image-preview-footer">
-          <div>
-            <div><b><FormattedMessage id="label_content_type" /></b></div>
-            <div>{this.props.content.type}</div>
-          </div>
-          <div>
-            <div><b><FormattedMessage id="label_size" /></b></div>
-            <div>{bytesToHumanSize(this.props.content.size)}</div>
+          <div className="flex-column narrow">
+            <i className="material-icons gray">{iconFromMime(this.props.content.type)}</i>
+            <div><b><FormattedMessage id="label_content_type" /></b> {this.props.content.type || 'application/octet-stream'}</div>
+            <div><b><FormattedMessage id="label_size" /></b> {bytesToHumanSize(this.props.content.size)}</div>
           </div>
         </div>
         <SendMessage
-          tinode={this.props.tinode}
-          topic={this.props.topic}
-          messagePrompt="add_image_caption"
-          acceptBlank={true}
-          onSendMessage={this.handleSendImage}
+          noInput={true}
+          onSendMessage={this.handleSendDoc}
           onError={this.props.onError} />
       </div>
     );

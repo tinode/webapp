@@ -3619,8 +3619,6 @@ var MessagesView = function (_React$Component) {
           })), ".") : null, this.state.unconfirmed ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_Invitation_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
             onAction: this.handleNewChatAcceptance
           }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
-            tinode: this.props.tinode,
-            topic: this.props.topic,
             disabled: !this.state.isWriter,
             onSendMessage: this.props.sendMessage,
             onKeyPress: this.sendKeyPress,
@@ -8485,7 +8483,7 @@ var DocPreview = function (_React$PureComponent) {
     key: "handleSendDoc",
     value: function handleSendDoc(caption) {
       this.props.onClose();
-      this.props.onSendMessage(caption, this.props.content.type, this.props.content.bits, this.props.content.width, this.props.content.height, this.props.content.filename);
+      this.props.onSendMessage(this.props.content.file);
     }
   }, {
     key: "render",
@@ -8496,7 +8494,6 @@ var DocPreview = function (_React$PureComponent) {
         return null;
       }
 
-      var doc = iconFromMime(this.props.content.type);
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "image-preview"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -8512,20 +8509,17 @@ var DocPreview = function (_React$PureComponent) {
         className: "material-icons gray"
       }, "close"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "image-preview-container"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "flex-column narrow"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons gray"
-      }, doc)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        id: "image-preview-footer"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      }, iconFromMime(this.props.content.type)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "label_content_type"
-      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, this.props.content.type)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      })), " ", this.props.content.type || 'application/octet-stream'), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
         id: "label_size"
-      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__["bytesToHumanSize"])(this.props.content.size)))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-        tinode: this.props.tinode,
-        topic: this.props.topic,
-        messagePrompt: "add_image_caption",
-        acceptBlank: true,
-        onSendMessage: this.handleSendImage,
+      })), " ", Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__["bytesToHumanSize"])(this.props.content.size)))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        noInput: true,
+        onSendMessage: this.handleSendDoc,
         onError: this.props.onError
       }));
     }
@@ -9344,8 +9338,6 @@ var ImagePreview = function (_React$PureComponent) {
         src: this.props.content.url,
         style: size
       })), this.props.onSendMessage ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-        tinode: this.props.tinode,
-        topic: this.props.topic,
         messagePrompt: "add_image_caption",
         acceptBlank: true,
         onSendMessage: this.handleSendImage,
@@ -10901,17 +10893,23 @@ var SendMessage = function (_React$PureComponent) {
   _createClass(SendMessage, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      this.messageEditArea.addEventListener('paste', this.handlePasteEvent, false);
+      if (this.messageEditArea) {
+        this.messageEditArea.addEventListener('paste', this.handlePasteEvent, false);
+      }
     }
   }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
-      this.messageEditArea.removeEventListener('paste', this.handlePasteEvent, false);
+      if (this.messageEditArea) {
+        this.messageEditArea.removeEventListener('paste', this.handlePasteEvent, false);
+      }
     }
   }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate() {
-      this.messageEditArea.focus();
+      if (this.messageEditArea) {
+        this.messageEditArea.focus();
+      }
     }
   }, {
     key: "handlePasteEvent",
@@ -10956,7 +10954,7 @@ var SendMessage = function (_React$PureComponent) {
       e.preventDefault();
       var message = this.state.message.trim();
 
-      if (message || this.props.acceptBlank) {
+      if (message || this.props.acceptBlank || this.props.noInput) {
         this.props.onSendMessage(message);
         this.setState({
           message: ''
@@ -11025,7 +11023,9 @@ var SendMessage = function (_React$PureComponent) {
         title: "Attach file"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons secondary"
-      }, "attach_file"))) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("textarea", {
+      }, "attach_file"))) : null, this.props.noInput ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "hr thin"
+      }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("textarea", {
         id: "sendMessage",
         placeholder: prompt,
         disabled: this.props.disabled,
