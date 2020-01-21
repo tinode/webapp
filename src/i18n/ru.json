@@ -150,5 +150,6 @@
   "topic_delete_warning": "Вы действительно хотите удалить этот чат?",
   "topic_block_warning": "Вы действительно хотите заблокировать этот чат?",
   "search_no_results": "Ничего не найдено",
-  "deleted_content": "удалено"
+  "deleted_content": "удалено",
+  "image_caption_prompt": "Подпись к фото"
 }

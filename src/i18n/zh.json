@@ -150,5 +150,6 @@
   "topic_delete_warning": ":!![MISSING]!!:Are you sure you want to delete this conversation?",
   "topic_block_warning": ":!![MISSING]!!:Are you sure you want to block this conversation?",
   "search_no_results": ":!![MISSING]!!:Search returned no results",
-  "deleted_content": "内容已删除"
+  "deleted_content": "内容已删除",
+  "image_caption_prompt": "图片标题"
 }

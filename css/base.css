@@ -181,9 +181,7 @@ textarea, input {
   outline: none;
   color: #666;
 }
-textarea {
-  resize: none;
-}
+
 input[type="text"],
 input[type="email"],
 input[type="password"],
@@ -233,6 +231,11 @@ input[type="text"].with-visibility,
 input[type="password"].with-visibility {
   margin-right:-2rem;
   padding-right:2rem;
+}
+
+textarea {
+  resize: none;
+  padding-top: 0.45rem;
 }
 /* END of input and buttons */
 
@@ -390,6 +393,10 @@ div.alert .content {
   background-color: #f0f0f0;
   box-shadow: inset 0 0.25rem 0.25rem -0.25rem rgba(0,0,0,0.15),
     inset 0 -0.25rem 0.25rem -0.25rem rgba(0,0,0,0.15);
+}
+
+.hr.thin {
+  height: 0.015rem;
 }
 
 /* Element which can take focus but shows no outline */
@@ -775,6 +782,10 @@ i.search {
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+}
+
+.flex-column.narrow {
+  height: auto;
 }
 
 .scrollable-panel {
@@ -1279,10 +1290,12 @@ i.search {
 #image-preview-caption-panel {
   display: flex;
   justify-content: space-between;
-  background-color: transparent;
+  background-color: #eceff1;
+  box-shadow: 0 1px 2px silver; /* Faint shadow under the panel */
   line-height: 2.5rem;
-  height: 3.5rem;
+  height: 4.6rem;
   padding: 1rem 0.75rem 0 0.75rem;
+  z-index: 3;
 }
 
 #image-preview-caption-panel a {
@@ -1308,7 +1321,12 @@ i.search {
   justify-content: space-around;
   height: 3.2rem;
   line-height: 1.5rem;
-  background-color: transparent;
+  background-color: #eceff1;
+  box-shadow: 0px -2px 3px -1px rgba(0,0,0,0.1); /* Faint shadow above panel */
+}
+
+#image-preview-container .material-icons {
+  font-size: 6rem;
 }
 
 /* Talk bubbles */

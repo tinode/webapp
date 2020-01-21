@@ -3,9 +3,8 @@ import React from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Drafty } from 'tinode-sdk';
 
-import { KEYPRESS_DELAY, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE } from '../config.js';
-import { SUPPORTED_IMAGE_FORMATS, filePasted, fileToBase64, imageFileToBase64, imageFileScaledToBase64 } from '../lib/blob-helpers.js';
-import { bytesToHumanSize } from '../lib/strformat.js';
+import { KEYPRESS_DELAY } from '../config.js';
+import { filePasted } from '../lib/blob-helpers.js';
 
 const messages = defineMessages({
   'messaging_disabled': {
@@ -16,7 +15,12 @@ const messages = defineMessages({
   'type_new_message': {
     id: 'new_message_prompt',
     defaultMessage: 'New message',
-    description: 'Prompt in SendMessage in read-only topic'
+    description: 'Prompt in send message field'
+  },
+  'add_image_caption': {
+    id: 'image_caption_prompt',
+    defaultMessage: 'Image caption',
+    description: 'Prompt in SendMessage for attached image'
   },
   'file_attachment_too_large': {
     id: 'file_attachment_too_large',
@@ -49,15 +53,21 @@ class SendMessage extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.messageEditArea.addEventListener('paste', this.handlePasteEvent, false);
+    if (this.messageEditArea) {
+      this.messageEditArea.addEventListener('paste', this.handlePasteEvent, false);
+    }
   }
 
   componentWillUnmount() {
-    this.messageEditArea.removeEventListener('paste', this.handlePasteEvent, false);
+    if (this.messageEditArea) {
+      this.messageEditArea.removeEventListener('paste', this.handlePasteEvent, false);
+    }
   }
 
   componentDidUpdate() {
-    this.messageEditArea.focus();
+    if (this.messageEditArea) {
+      this.messageEditArea.focus();
+    }
   }
 
   handlePasteEvent(e) {
@@ -67,11 +77,10 @@ class SendMessage extends React.PureComponent {
     // FIXME: handle large files too.
     if (filePasted(e,
       (bits, mime, width, height, fname) => {
-        this.props.sendMessage(Drafty.insertImage(null,
-          0, mime, bits, width, height, fname));
+        this.props.onAttachImage(mime, bits, width, height, fname);
       },
       (mime, bits, fname) => {
-        this.props.sendMessage(Drafty.attachFile(null, mime, bits, fname));
+        this.props.onAttachFile(mime, bits, fname);
       },
       this.props.onError)) {
 
@@ -82,34 +91,7 @@ class SendMessage extends React.PureComponent {
 
   handleAttachImage(e) {
     if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      // Check if the uploaded file is indeed an image and if it isn't too large.
-      if (file.size > MAX_INBAND_ATTACHMENT_SIZE || SUPPORTED_IMAGE_FORMATS.indexOf(file.type) < 0) {
-        // Convert image for size or format.
-        imageFileScaledToBase64(file, MAX_IMAGE_DIM, MAX_IMAGE_DIM, false,
-          // Success
-          (bits, mime, width, height, fname) => {
-            this.props.sendMessage(Drafty.insertImage(null,
-              0, mime, bits, width, height, fname));
-          },
-          // Failure
-          (err) => {
-            this.props.onError(err, 'err');
-          });
-      } else {
-        // Image can be uploaded as is. No conversion is needed.
-        imageFileToBase64(file,
-          // Success
-          (bits, mime, width, height, fname) => {
-            this.props.sendMessage(Drafty.insertImage(null,
-              0, mime, bits, width, height, fname));
-          },
-          // Failure
-          (err) => {
-            this.props.onError(err, 'err');
-          }
-        );
-      }
+      this.props.onAttachImage(e.target.files[0]);
     }
     // Clear the value so the same file can be uploaded again.
     e.target.value = '';
@@ -118,32 +100,7 @@ class SendMessage extends React.PureComponent {
   handleAttachFile(e) {
     const {formatMessage} = this.props.intl;
     if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      if (file.size > MAX_EXTERN_ATTACHMENT_SIZE) {
-        // Too large.
-        this.props.onError(formatMessage(messages.file_attachment_too_large,
-            {size: bytesToHumanSize(file.size), limit: bytesToHumanSize(MAX_EXTERN_ATTACHMENT_SIZE)}), 'err');
-      } else if (file.size > MAX_INBAND_ATTACHMENT_SIZE) {
-        // Too large to send inband - uploading out of band and sending as a link.
-        const uploader = this.props.tinode.getLargeFileHelper();
-        if (!uploader) {
-          this.props.onError(formatMessage(messages.cannot_initiate_upload));
-          return;
-        }
-        // Format data and initiate upload.
-        const uploadCompletionPromise = uploader.upload(file);
-        const msg = Drafty.attachFile(null, file.type, null, file.name, file.size, uploadCompletionPromise);
-        // Pass data and the uploader to the TinodeWeb.
-        this.props.sendMessage(msg, uploadCompletionPromise, uploader);
-      } else {
-        // Small enough to send inband.
-        fileToBase64(file,
-          (mime, bits, fname) => {
-            this.props.sendMessage(Drafty.attachFile(null, mime, bits, fname));
-          },
-          this.props.onError
-        );
-      }
+      this.props.onAttachFile(e.target.files[0]);
     }
     // Clear the value so the same file can be uploaded again.
     e.target.value = '';
@@ -152,8 +109,8 @@ class SendMessage extends React.PureComponent {
   handleSend(e) {
     e.preventDefault();
     const message = this.state.message.trim();
-    if (message) {
-      this.props.sendMessage(this.state.message.trim());
+    if (message || this.props.acceptBlank || this.props.noInput) {
+      this.props.onSendMessage(message);
       this.setState({message: ''});
     }
   }
@@ -174,13 +131,12 @@ class SendMessage extends React.PureComponent {
 
   handleMessageTyping(e) {
     const newState = {message: e.target.value};
-    const now = new Date().getTime();
-    if (now - this.state.keypressTimestamp > KEYPRESS_DELAY) {
-      const topic = this.props.tinode.getTopic(this.props.topic);
-      if (topic.isSubscribed()) {
-        topic.noteKeyPress();
+    if (this.props.onKeyPress) {
+      const now = new Date().getTime();
+      if (now - this.state.keypressTimestamp > KEYPRESS_DELAY) {
+        this.props.onKeyPress();
+        newState.keypressTimestamp = now;
       }
-      newState.keypressTimestamp = now;
     }
     this.setState(newState);
   }
@@ -189,33 +145,44 @@ class SendMessage extends React.PureComponent {
     const {formatMessage} = this.props.intl;
     const prompt = this.props.disabled ?
       formatMessage(messages.messaging_disabled) :
-      formatMessage(messages.type_new_message);
+      (this.props.messagePrompt ?
+        formatMessage(messages[this.props.messagePrompt]) :
+        formatMessage(messages.type_new_message));
     return (
       <div id="send-message-panel">
+        {this.props.onAttachFile ?
+          (this.props.disabled ?
+            <>
+              <i className="material-icons disabled">photo</i>
+              <i className="material-icons disabled">attach_file</i>
+            </>
+            :
+            <>
+              <a href="#" onClick={(e) => {e.preventDefault(); this.attachImage.click();}} title="Add image">
+                <i className="material-icons secondary">photo</i>
+              </a>
+              <a href="#" onClick={(e) => {e.preventDefault(); this.attachFile.click();}} title="Attach file">
+                <i className="material-icons secondary">attach_file</i>
+              </a>
+            </>)
+          :
+          null}
+        {this.props.noInput ?
+          <div className="hr thin" /> :
+          <textarea id="sendMessage" placeholder={prompt}
+            disabled={this.props.disabled} value={this.state.message}
+            onChange={this.handleMessageTyping} onKeyPress={this.handleKeyPress}
+            ref={(ref) => {this.messageEditArea = ref;}}
+            autoFocus />}
         {this.props.disabled ?
-          <i className="material-icons disabled">photo</i> :
-          <a href="#" onClick={(e) => {e.preventDefault(); this.attachImage.click();}} title="Add image">
-            <i className="material-icons secondary">photo</i>
+          <i className="material-icons disabled">send</i> :
+          <a href="#" onClick={this.handleSend} title="Send">
+            <i className="material-icons">send</i>
           </a>}
-        {this.props.disabled ?
-          <i className="material-icons disabled">attach_file</i> :
-          <a href="#" onClick={(e) => {e.preventDefault(); this.attachFile.click();}} title="Attach file">
-            <i className="material-icons secondary">attach_file</i>
-          </a>}
-        <textarea id="sendMessage" placeholder={prompt}
-          disabled={this.props.disabled} value={this.state.message}
-          onChange={this.handleMessageTyping} onKeyPress={this.handleKeyPress}
-          ref={(ref) => {this.messageEditArea = ref;}}
-          autoFocus />
-          {this.props.disabled ?
-            <i className="material-icons disabled">send</i> :
-            <a href="#" onClick={this.handleSend} title="Send">
-              <i className="material-icons">send</i>
-            </a>}
-      <input type="file" ref={(ref) => {this.attachFile = ref;}}
-        onChange={this.handleAttachFile} style={{display: 'none'}} />
-      <input type="file" ref={(ref) => {this.attachImage = ref;}} accept="image/*"
-        onChange={this.handleAttachImage} style={{display: 'none'}} />
+        <input type="file" ref={(ref) => {this.attachFile = ref;}}
+          onChange={this.handleAttachFile} style={{display: 'none'}} />
+        <input type="file" ref={(ref) => {this.attachImage = ref;}} accept="image/*"
+          onChange={this.handleAttachImage} style={{display: 'none'}} />
       </div>
     );
   }

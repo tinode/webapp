@@ -5,6 +5,7 @@ import Tinode from 'tinode-sdk';
 const Drafty = Tinode.Drafty;
 
 import ChatMessage from '../widgets/chat-message.jsx';
+import DocPreview from '../widgets/doc-preview.jsx';
 import ErrorPanel from '../widgets/error-panel.jsx';
 import GroupSubs from '../widgets/group-subs.jsx';
 import ImagePreview from '../widgets/image-preview.jsx';
@@ -14,9 +15,11 @@ import LoadSpinner from '../widgets/load-spinner.jsx';
 import LogoView from './logo-view.jsx';
 import SendMessage from '../widgets/send-message.jsx';
 
-import { DEFAULT_P2P_ACCESS_MODE, KEYPRESS_DELAY, MESSAGES_PAGE } from '../config.js';
-import { makeImageUrl } from '../lib/blob-helpers.js';
-import { shortDateFormat } from '../lib/strformat.js';
+import { DEFAULT_P2P_ACCESS_MODE, KEYPRESS_DELAY, MESSAGES_PAGE, MAX_EXTERN_ATTACHMENT_SIZE,
+  MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE } from '../config.js';
+import { SUPPORTED_IMAGE_FORMATS, filePasted, fileToBase64, imageFileToBase64,
+  imageFileScaledToBase64, makeImageUrl } from '../lib/blob-helpers.js';
+import { bytesToHumanSize, shortDateFormat } from '../lib/strformat.js';
 
 const messages = defineMessages({
   online_now: {
@@ -61,6 +64,9 @@ class MessagesView extends React.Component {
 
     // this.propsChange = this.propsChange.bind(this);
     this.leave = this.leave.bind(this);
+    this.sendImageAttachment = this.sendImageAttachment.bind(this);
+    this.sendFileAttachment = this.sendFileAttachment.bind(this);
+    this.sendKeyPress = this.sendKeyPress.bind(this);
     this.handleScrollReference = this.handleScrollReference.bind(this);
     this.handleScrollEvent = this.handleScrollEvent.bind(this);
     this.handleDescChange = this.handleDescChange.bind(this);
@@ -68,13 +74,15 @@ class MessagesView extends React.Component {
     this.handleNewMessage = this.handleNewMessage.bind(this);
     this.handleAllMessagesReceived = this.handleAllMessagesReceived.bind(this);
     this.handleInfoReceipt = this.handleInfoReceipt.bind(this);
-    this.handleImagePreview = this.handleImagePreview.bind(this);
-    this.handleCloseImagePreview = this.handleCloseImagePreview.bind(this);
+    this.handleImagePostview = this.handleImagePostview.bind(this);
+    this.handleClosePreview = this.handleClosePreview.bind(this);
     this.handleFormResponse = this.handleFormResponse.bind(this);
     this.handleContextClick = this.handleContextClick.bind(this);
     this.handleShowContextMenuMessage = this.handleShowContextMenuMessage.bind(this);
     this.handleNewChatAcceptance = this.handleNewChatAcceptance.bind(this);
     this.handleEnablePeer = this.handleEnablePeer.bind(this);
+    this.handleAttachFile = this.handleAttachFile.bind(this);
+    this.handleAttachImage = this.handleAttachImage.bind(this);
   }
 
   componentDidMount() {
@@ -169,7 +177,9 @@ class MessagesView extends React.Component {
         topic: null,
         title: '',
         avatar: null,
+        docPreview: null,
         imagePreview: null,
+        imagePostview: null,
         typingIndicator: false,
         scrollPosition: 0,
         fetchingMessages: false,
@@ -179,7 +189,9 @@ class MessagesView extends React.Component {
       const topic = nextProps.tinode.getTopic(nextProps.topic);
       nextState = {
         topic: nextProps.topic,
+        docPreview: null,
         imagePreview: null,
+        imagePostview: null,
         typingIndicator: false,
         scrollPosition: 0,
         fetchingMessages: false
@@ -432,12 +444,12 @@ class MessagesView extends React.Component {
     }
   }
 
-  handleImagePreview(content) {
-    this.setState({ imagePreview: content });
+  handleImagePostview(content) {
+    this.setState({ imagePostview: content });
   }
 
-  handleCloseImagePreview() {
-    this.setState({ imagePreview: null });
+  handleClosePreview() {
+    this.setState({ imagePostview: null, imagePreview: null, docPreview: null });
   }
 
   handleFormResponse(action, text, data) {
@@ -492,170 +504,296 @@ class MessagesView extends React.Component {
     this.props.onChangePermissions(this.state.topic, DEFAULT_P2P_ACCESS_MODE, this.state.topic);
   }
 
+  sendKeyPress() {
+    const topic = this.props.tinode.getTopic(this.state.topic);
+    if (topic.isSubscribed()) {
+      topic.noteKeyPress();
+    }
+  }
+
+  sendFileAttachment(file) {
+    if (file.size > MAX_INBAND_ATTACHMENT_SIZE) {
+      // Too large to send inband - uploading out of band and sending as a link.
+      const uploader = this.props.tinode.getLargeFileHelper();
+      if (!uploader) {
+        this.props.onError(formatMessage(messages.cannot_initiate_upload));
+        return;
+      }
+      const uploadCompletionPromise = uploader.upload(file);
+      const msg = Drafty.attachFile(null, file.type, null, file.name, file.size, uploadCompletionPromise);
+      // Pass data and the uploader to the TinodeWeb.
+      this.props.sendMessage(msg, uploadCompletionPromise, uploader);
+    } else {
+      // Small enough to send inband.
+      fileToBase64(file,
+        (mime, bits, fname) => {
+          this.props.sendMessage(Drafty.attachFile(null, mime, bits, fname));
+        },
+        this.props.onError
+      );
+    }
+  }
+
+  handleAttachFile(file) {
+    if (file.size > MAX_EXTERN_ATTACHMENT_SIZE) {
+      // Too large.
+      this.props.onError(formatMessage(messages.file_attachment_too_large,
+          {size: bytesToHumanSize(file.size), limit: bytesToHumanSize(MAX_EXTERN_ATTACHMENT_SIZE)}), 'err');
+    } else {
+      this.setState({ docPreview: {
+        file: file,
+        filename: file.name,
+        size: file.size,
+        type: file.type
+      }});
+    }
+  }
+
+  sendImageAttachment(caption, mime, bits, width, height, fname) {
+    let msg = Drafty.insertImage(null, 0, mime, bits, width, height, fname);
+    if (caption) {
+      msg = Drafty.appendLineBreak(msg);
+      msg = Drafty.append(msg, Drafty.init(caption));
+    }
+    this.props.sendMessage(msg);
+  }
+
+  handleAttachImage(file) {
+    // Check if the uploaded file is indeed an image and if it isn't too large.
+    if (file.size > MAX_INBAND_ATTACHMENT_SIZE || SUPPORTED_IMAGE_FORMATS.indexOf(file.type) < 0) {
+      // Convert image for size or format.
+      imageFileScaledToBase64(file, MAX_IMAGE_DIM, MAX_IMAGE_DIM, false,
+        // Success
+        (bits, mime, width, height, fname) => {
+          this.setState({imagePreview: {
+            url: URL.createObjectURL(file),
+            bits: bits,
+            filename: fname,
+            width: width,
+            height: height,
+            size: bits.length,
+            type: mime
+          }});
+        },
+        // Failure
+        (err) => {
+          this.props.onError(err, 'err');
+        });
+    } else {
+      // Image can be uploaded as is. No conversion is needed.
+      imageFileToBase64(file,
+        // Success
+        (bits, mime, width, height, fname) => {
+          this.setState({imagePreview: {
+            url: URL.createObjectURL(file),
+            bits: bits,
+            filename: fname,
+            width: width,
+            height: height,
+            size: bits.length,
+            type: mime
+          }});
+        },
+        // Failure
+        (err) => {
+          this.props.onError(err, 'err');
+        }
+      );
+    }
+  }
+
   render() {
     const {formatMessage} = this.props.intl;
 
     let component;
-    if (this.state.topic) {
-      const topic = this.props.tinode.getTopic(this.state.topic);
-      const groupTopic = topic.getType() == 'grp';
-      let messageNodes = [];
-      let previousFrom = null;
-      let chatBoxClass = null;
-      for (let i=0; i<this.state.messages.length; i++) {
-        let msg = this.state.messages[i];
-        let nextFrom = null;
-
-        if (i + 1 < this.state.messages.length) {
-          nextFrom = this.state.messages[i+1].from
-        }
-
-        let sequence = 'single';
-        if (msg.from == previousFrom) {
-          if (msg.from == nextFrom) {
-            sequence = 'middle';
-          } else {
-            sequence = 'last';
-          }
-        } else if (msg.from == nextFrom) {
-          sequence = 'first';
-        }
-        previousFrom = msg.from;
-
-        const isReply = !(msg.from == this.props.myUserId);
-        const deliveryStatus = topic.msgStatus(msg);
-
-        let userName, userAvatar, userFrom;
-        if (groupTopic) {
-          const user = topic.userDesc(msg.from);
-          if (user && user.public) {
-            userName = user.public.fn;
-            userAvatar = makeImageUrl(user.public.photo);
-          }
-          userFrom = msg.from;
-          chatBoxClass='chat-box group';
-        } else {
-          chatBoxClass='chat-box';
-        }
-
-        messageNodes.push(
-          <ChatMessage
-            tinode={this.props.tinode}
-            content={msg.content} deleted={msg.hi}
-            mimeType={msg.head ? msg.head.mime : null}
-            timestamp={msg.ts} response={isReply} seq={msg.seq}
-            userFrom={userFrom} userName={userName} userAvatar={userAvatar}
-            sequence={sequence} received={deliveryStatus} uploader={msg._uploader}
-            viewportWidth={this.props.viewportWidth}
-            showContextMenu={this.handleShowContextMenuMessage}
-            onImagePreview={this.handleImagePreview}
-            onFormResponse={this.handleFormResponse}
-            onError={this.props.onError}
-            key={msg.seq} />
-        );
-      }
-
-      let lastSeen = null;
-      const cont = this.props.tinode.getMeTopic().getContact(this.state.topic);
-      if (cont && Tinode.topicType(cont.topic) == 'p2p') {
-        if (cont.online) {
-          lastSeen = formatMessage(messages.online_now);
-        } else if (cont.seen) {
-          lastSeen = formatMessage(messages.last_seen) + ": " +
-            shortDateFormat(cont.seen.when, this.props.intl.locale);
-          // TODO: also handle user agent in c.seen.ua
-        }
-      }
-      const avatar = this.state.avatar || true;
-      const online = this.props.online ? 'online' + (this.state.typingIndicator ? ' typing' : '') : 'offline';
-
-      component = (
-        <div id="topic-view" className={this.props.hideSelf ? 'nodisplay' : null}>
-          <div id="topic-caption-panel" className="caption-panel">
-            {this.props.displayMobile ?
-              <a href="#" id="hide-message-view" onClick={(e) => {e.preventDefault(); this.props.onHideMessagesView();}}>
-                <i className="material-icons">arrow_back</i>
-              </a>
-              :
-              null}
-            <div className="avatar-box">
-              <LetterTile
-                avatar={avatar}
-                topic={this.state.topic}
-                title={this.state.title} />
-              <span className={online} />
-            </div>
-            <div id="topic-title-group">
-              <div id="topic-title" className="panel-title">{
-                this.state.title ||
-                <i><FormattedMessage id="unnamed_topic" defaultMessage="Unnamed"
-                  description="Title shown when the topic has no name" /></i>
-              }</div>
-              <div id="topic-last-seen">{lastSeen}</div>
-            </div>
-            {groupTopic ?
-              <GroupSubs
-                subscribers={this.state.onlineSubs} /> :
-              <div id="topic-users" />
-            }
-            <div>
-              <a href="#" onClick={this.handleContextClick}>
-                <i className="material-icons">more_vert</i>
-              </a>
-            </div>
-          </div>
-          {this.props.displayMobile ?
-            <ErrorPanel
-              level={this.props.errorLevel}
-              text={this.props.errorText}
-              onClearError={this.props.onError} />
-            : null}
-          <LoadSpinner show={this.state.fetchingMessages} />
-          <div id="messages-container">
-            <div id="messages-panel" ref={this.handleScrollReference}>
-              <ul id="scroller" className={chatBoxClass}>
-                {messageNodes}
-              </ul>
-            </div>
-            {!this.state.isReader ?
-            <div id="write-only-background">
-              {this.state.readingBlocked ?
-              <div id="write-only-note">
-                <FormattedMessage id="messages_not_readable" defaultMessage="no access to messages"
-                  description="Message shown in topic without the read access" />
-              </div>
-              : null }
-            </div>
-            : null }
-          </div>
-          {this.state.peerMessagingDisabled && !this.state.unconfirmed ?
-            <div id="peer-messaging-disabled-note">
-              <i className="material-icons secondary">block</i> <FormattedMessage
-                id="peers_messaging_disabled" defaultMessage="Peer's messaging is disabled."
-                description="Shown when the p2p peer's messaging is disabled" /> <a href="#"
-                  onClick={this.handleEnablePeer}><FormattedMessage id="enable_peers_messaging"
-                  defaultMessage="Enable" description="Call to action to enable peer's messaging" /></a>.
-            </div> : null}
-          {this.state.unconfirmed ?
-            <Invitation onAction={this.handleNewChatAcceptance} />
-            :
-            <SendMessage
-              tinode={this.props.tinode}
-              topic={this.props.topic}
-              disabled={!this.state.isWriter}
-              sendMessage={this.props.sendMessage}
-              onError={this.props.onError} />}
-          {this.state.imagePreview ?
-            <ImagePreview content={this.state.imagePreview}
-              onClose={this.handleCloseImagePreview} /> : null}
-        </div>
-      );
-    } else {
+    if (this.props.hideSelf) {
+      component = null;
+    } else if (!this.state.topic) {
       component = (
         <LogoView hideSelf={this.props.hideSelf}
           serverVersion={this.props.serverVersion}
           serverAddress={this.props.serverAddress} />
       );
+    } else {
+      let component2;
+      if (this.state.imagePreview) {
+        // Preview image before sending.
+        component2 = (
+          <ImagePreview
+            content={this.state.imagePreview}
+            onClose={this.handleClosePreview}
+            onSendMessage={this.sendImageAttachment} />
+        );
+      } else if (this.state.imagePostview) {
+        // Expand received image.
+        component2 = (
+          <ImagePreview
+            content={this.state.imagePostview}
+            onClose={this.handleClosePreview} />
+        );
+      } else if (this.state.docPreview) {
+        // Preview attachment before sending.
+        component2 = (
+          <DocPreview
+            content={this.state.docPreview}
+            onClose={this.handleClosePreview}
+            onSendMessage={this.sendFileAttachment} />
+        );
+      } else {
+        const topic = this.props.tinode.getTopic(this.state.topic);
+        const groupTopic = topic.getType() == 'grp';
+        let messageNodes = [];
+        let previousFrom = null;
+        let chatBoxClass = null;
+        for (let i=0; i<this.state.messages.length; i++) {
+          let msg = this.state.messages[i];
+          let nextFrom = null;
+
+          if (i + 1 < this.state.messages.length) {
+            nextFrom = this.state.messages[i+1].from
+          }
+
+          let sequence = 'single';
+          if (msg.from == previousFrom) {
+            if (msg.from == nextFrom) {
+              sequence = 'middle';
+            } else {
+              sequence = 'last';
+            }
+          } else if (msg.from == nextFrom) {
+            sequence = 'first';
+          }
+          previousFrom = msg.from;
+
+          const isReply = !(msg.from == this.props.myUserId);
+          const deliveryStatus = topic.msgStatus(msg);
+
+          let userName, userAvatar, userFrom;
+          if (groupTopic) {
+            const user = topic.userDesc(msg.from);
+            if (user && user.public) {
+              userName = user.public.fn;
+              userAvatar = makeImageUrl(user.public.photo);
+            }
+            userFrom = msg.from;
+            chatBoxClass='chat-box group';
+          } else {
+            chatBoxClass='chat-box';
+          }
+
+          messageNodes.push(
+            <ChatMessage
+              tinode={this.props.tinode}
+              content={msg.content} deleted={msg.hi}
+              mimeType={msg.head ? msg.head.mime : null}
+              timestamp={msg.ts} response={isReply} seq={msg.seq}
+              userFrom={userFrom} userName={userName} userAvatar={userAvatar}
+              sequence={sequence} received={deliveryStatus} uploader={msg._uploader}
+              viewportWidth={this.props.viewportWidth}
+              showContextMenu={this.handleShowContextMenuMessage}
+              onImagePreview={this.handleImagePostview}
+              onFormResponse={this.handleFormResponse}
+              onError={this.props.onError}
+              key={msg.seq} />
+          );
+        }
+
+        let lastSeen = null;
+        const cont = this.props.tinode.getMeTopic().getContact(this.state.topic);
+        if (cont && Tinode.topicType(cont.topic) == 'p2p') {
+          if (cont.online) {
+            lastSeen = formatMessage(messages.online_now);
+          } else if (cont.seen) {
+            lastSeen = formatMessage(messages.last_seen) + ": " +
+              shortDateFormat(cont.seen.when, this.props.intl.locale);
+            // TODO: also handle user agent in c.seen.ua
+          }
+        }
+        const avatar = this.state.avatar || true;
+        const online = this.props.online ? 'online' + (this.state.typingIndicator ? ' typing' : '') : 'offline';
+
+        component2 = (
+          <>
+            <div id="topic-caption-panel" className="caption-panel">
+              {this.props.displayMobile ?
+                <a href="#" id="hide-message-view" onClick={(e) => {e.preventDefault(); this.props.onHideMessagesView();}}>
+                  <i className="material-icons">arrow_back</i>
+                </a>
+                :
+                null}
+              <div className="avatar-box">
+                <LetterTile
+                  avatar={avatar}
+                  topic={this.state.topic}
+                  title={this.state.title} />
+                <span className={online} />
+              </div>
+              <div id="topic-title-group">
+                <div id="topic-title" className="panel-title">{
+                  this.state.title ||
+                  <i><FormattedMessage id="unnamed_topic" defaultMessage="Unnamed"
+                    description="Title shown when the topic has no name" /></i>
+                }</div>
+                <div id="topic-last-seen">{lastSeen}</div>
+              </div>
+              {groupTopic ?
+                <GroupSubs
+                  subscribers={this.state.onlineSubs} /> :
+                <div id="topic-users" />
+              }
+              <div>
+                <a href="#" onClick={this.handleContextClick}>
+                  <i className="material-icons">more_vert</i>
+                </a>
+              </div>
+            </div>
+            {this.props.displayMobile ?
+              <ErrorPanel
+                level={this.props.errorLevel}
+                text={this.props.errorText}
+                onClearError={this.props.onError} />
+              : null}
+            <LoadSpinner show={this.state.fetchingMessages} />
+            <div id="messages-container">
+              <div id="messages-panel" ref={this.handleScrollReference}>
+                <ul id="scroller" className={chatBoxClass}>
+                  {messageNodes}
+                </ul>
+              </div>
+              {!this.state.isReader ?
+              <div id="write-only-background">
+                {this.state.readingBlocked ?
+                <div id="write-only-note">
+                  <FormattedMessage id="messages_not_readable" defaultMessage="no access to messages"
+                    description="Message shown in topic without the read access" />
+                </div>
+                : null }
+              </div>
+              : null }
+            </div>
+            {this.state.peerMessagingDisabled && !this.state.unconfirmed ?
+              <div id="peer-messaging-disabled-note">
+                <i className="material-icons secondary">block</i> <FormattedMessage
+                  id="peers_messaging_disabled" defaultMessage="Peer's messaging is disabled."
+                  description="Shown when the p2p peer's messaging is disabled" /> <a href="#"
+                    onClick={this.handleEnablePeer}><FormattedMessage id="enable_peers_messaging"
+                    defaultMessage="Enable" description="Call to action to enable peer's messaging" /></a>.
+              </div> : null}
+            {this.state.unconfirmed ?
+              <Invitation onAction={this.handleNewChatAcceptance} />
+              :
+              <SendMessage
+                disabled={!this.state.isWriter}
+                onSendMessage={this.props.sendMessage}
+                onKeyPress={this.sendKeyPress}
+                onAttachFile={this.handleAttachFile}
+                onAttachImage={this.handleAttachImage}
+                onError={this.props.onError} />}
+          </>
+        );
+      }
+
+      component = <div id="topic-view">{component2}</div>
     }
     return component;
   }

@@ -146,6 +146,7 @@
   "search_placeholder": "List like email:alice@example.com, tel:17025550003...",
   "messaging_disabled_prompt": "Messaging disabled",
   "new_message_prompt": "New message",
+  "image_caption_prompt": "Image caption",
   "file_attachment_too_large": "The file size {size} exceeds the {limit} limit.",
   "cannot_initiate_file_upload": "Cannot initiate file upload.",
   "tags_not_found": "No tags defined. Add some.",
