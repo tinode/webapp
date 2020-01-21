@@ -482,9 +482,10 @@ class MessagesView extends React.Component {
     this.props.showContextMenu({ topicName: this.state.topic, y: e.pageY, x: e.pageX });
   }
 
-  handleShowContextMenuMessage(params) {
+  handleShowContextMenuMessage(params, messageSpecificMenuItems) {
     params.topicName = this.state.topic;
-    const menuItems = ['message_delete'];
+    const menuItems = messageSpecificMenuItems || [];
+    menuItems.push('message_delete');
     const topic = this.props.tinode.getTopic(params.topicName);
     if (topic) {
       const acs = topic.getAccessMode();
@@ -516,7 +517,7 @@ class MessagesView extends React.Component {
       // Too large to send inband - uploading out of band and sending as a link.
       const uploader = this.props.tinode.getLargeFileHelper();
       if (!uploader) {
-        this.props.onError(formatMessage(messages.cannot_initiate_upload));
+        this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
         return;
       }
       const uploadCompletionPromise = uploader.upload(file);
@@ -537,7 +538,7 @@ class MessagesView extends React.Component {
   handleAttachFile(file) {
     if (file.size > MAX_EXTERN_ATTACHMENT_SIZE) {
       // Too large.
-      this.props.onError(formatMessage(messages.file_attachment_too_large,
+      this.props.onError(this.props.intl.formatMessage(messages.file_attachment_too_large,
           {size: bytesToHumanSize(file.size), limit: bytesToHumanSize(MAX_EXTERN_ATTACHMENT_SIZE)}), 'err');
     } else {
       this.setState({ docPreview: {

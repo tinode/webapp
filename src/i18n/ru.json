@@ -93,6 +93,7 @@
   "menu_item_clear_messages_for_all": "Удалить для всех",
   "menu_item_delete": "Удалить",
   "menu_item_delete_for_all": "Удалить для всех",
+  "menu_item_send_retry": "Отправить заново",
   "menu_item_mute": "Не уведомлять",
   "menu_item_unmute": "Уведомлять",
   "menu_item_delete_topic": "Удалить чат",
