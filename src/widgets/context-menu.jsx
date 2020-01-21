@@ -347,7 +347,7 @@ class ContextMenu extends React.Component {
   retryMessage(params, errorHandler) {
     const topic = this.props.tinode.getTopic(params.topicName);
     // Remove the existing message entry.
-    if (topic == null || !topic.flushMessage(params.seq)) {
+    if (!topic || !topic.flushMessage(params.seq)) {
       return;
     }
     const msg = topic.createMessage(params.content, false);
