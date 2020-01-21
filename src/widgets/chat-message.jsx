@@ -58,7 +58,9 @@ export default class ChatMessage extends React.Component {
   handleContextClick(e) {
     e.preventDefault();
     e.stopPropagation();
-    this.props.showContextMenu({ seq: this.props.seq, y: e.pageY, x: e.pageX });
+    const menuItems = this.props.received == Tinode.MESSAGE_STATUS_FAILED ? ['menu_item_send_retry'] : [];
+    this.props.showContextMenu({ seq: this.props.seq, content: this.props.content,
+                                 y: e.pageY, x: e.pageX }, menuItems);
   }
 
   handleProgress(ratio) {

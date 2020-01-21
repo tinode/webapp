@@ -32,6 +32,11 @@ const messages = defineMessages({
     defaultMessage: 'Delete for All',
     description: 'Delete selected message(s) for all members'
   },
+  send_retry: {
+    id: 'menu_item_send_retry',
+    defaultMessage: 'Retry',
+    description: 'Retry sending message'
+  },
   mute: {
     id: 'menu_item_mute',
     defaultMessage: 'Mute',
@@ -137,6 +142,13 @@ class ContextMenu extends React.Component {
         title: formatMessage(messages.delete_for_all),
         handler: (params, errorHandler) => {
           return this.deleteMessages(false, true, params, errorHandler);
+        }
+      },
+      'menu_item_send_retry': {
+        id: 'menu_item_send_retry',
+        title: formatMessage(messages.send_retry),
+        handler: (params, errorHandler) => {
+          return this.retryMessage(params, errorHandler);
         }
       },
       'topic_unmute': {
@@ -325,6 +337,21 @@ class ContextMenu extends React.Component {
       topic.delMessagesList([params.seq], hard);
 
     return promise.catch((err) => {
+      if (errorHandler) {
+        errorHandler(err.message, 'err');
+      }
+    });
+  }
+
+  // Retries sending failed message.
+  retryMessage(params, errorHandler) {
+    const topic = this.props.tinode.getTopic(params.topicName);
+    // Remove the existing message entry.
+    if (topic == null || !topic.flushMessage(params.seq)) {
+      return;
+    }
+    const msg = topic.createMessage(params.content, false);
+    return topic.publishDraft(msg).catch((err) => {
       if (errorHandler) {
         errorHandler(err.message, 'err');
       }
