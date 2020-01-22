@@ -15,8 +15,8 @@ import InfoView from './info-view.jsx';
 import MessagesView from './messages-view.jsx';
 import SidepanelView from './sidepanel-view.jsx';
 
-import { API_KEY, APP_NAME, DEFAULT_P2P_ACCESS_MODE, LOGGING_ENABLED, MEDIA_BREAKPOINT,
-  READ_DELAY, RECEIVED_DELAY } from '../config.js';
+import { API_KEY, APP_NAME, DEFAULT_P2P_ACCESS_MODE, LOGGING_ENABLED,
+  MEDIA_BREAKPOINT, RECEIVED_DELAY } from '../config.js';
 import { base64ReEncode, makeImageUrl } from '../lib/blob-helpers.js';
 import { detectServerAddress, isLocalHost, isSecureConnection } from '../lib/host-name.js';
 import LocalStorageUtil from '../lib/local-storage.js';
@@ -55,8 +55,6 @@ class TinodeWeb extends React.Component {
     this.handleHashRoute = this.handleHashRoute.bind(this);
     this.handleOnline = this.handleOnline.bind(this);
     this.checkForAppUpdate = this.checkForAppUpdate.bind(this);
-    this.handleAppVisibility = this.handleAppVisibility.bind(this);
-    this.handleReadTimer = this.handleReadTimer.bind(this);
     this.handleVisibilityEvent = this.handleVisibilityEvent.bind(this);
     this.handleError = this.handleError.bind(this);
     this.handleLoginRequest = this.handleLoginRequest.bind(this);
@@ -134,6 +132,8 @@ class TinodeWeb extends React.Component {
         (typeof firebase != 'undefined') && (typeof navigator != 'undefined') &&
         (typeof FIREBASE_INIT != 'undefined'),
       firebaseToken: LocalStorageUtil.getObject('firebase-token'),
+
+      applicationVisible: !document.hidden,
 
       errorText: '',
       errorLevel: null,
@@ -334,24 +334,8 @@ class TinodeWeb extends React.Component {
     this.setState({liveConnection: online});
   }
 
-  // Handling read notifications here to be able to pause
-  // them then the window/tab is not visible.
-  handleAppVisibility(visible, callback) {
-    clearTimeout(this.readTimer);
-    this.readTimerCallback = callback;
-    if (visible && callback) {
-      this.readTimer = setTimeout(callback, READ_DELAY);
-    } else {
-      this.readTimer = null;
-    }
-  }
-
-  handleReadTimer(callback) {
-    this.handleAppVisibility(!document.hidden, callback);
-  }
-
   handleVisibilityEvent() {
-    this.handleAppVisibility(!document.hidden, this.readTimerCallback);
+    this.setState({applicationVisible: !document.hidden});
   }
 
   handleError(err, level, action, actionText) {
@@ -1417,6 +1401,7 @@ class TinodeWeb extends React.Component {
           myUserId={this.state.myUserId}
           serverVersion={this.state.serverVersion}
           serverAddress={this.state.serverAddress}
+          applicationVisible={this.state.applicationVisible}
 
           errorText={this.state.errorText}
           errorLevel={this.state.errorLevel}
@@ -1429,7 +1414,6 @@ class TinodeWeb extends React.Component {
           onData={this.tnData}
           onError={this.handleError}
           onNewTopicCreated={this.handleNewTopicCreated}
-          readTimerHandler={this.handleReadTimer}
           showContextMenu={this.handleShowContextMenu}
           onChangePermissions={this.handleChangePermissions}
           onNewChat={this.handleNewChatInvitation}

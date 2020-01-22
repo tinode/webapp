@@ -2894,6 +2894,7 @@ var Drafty = tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.Drafty;
 
 
 
+var NOTIFICATION_EXEC_INTERVAL = 300;
 var messages = Object(react_intl__WEBPACK_IMPORTED_MODULE_1__["defineMessages"])({
   online_now: {
     "id": "online_now",
@@ -2957,6 +2958,10 @@ var MessagesView = function (_React$Component) {
     _this.handleEnablePeer = _this.handleEnablePeer.bind(_assertThisInitialized(_this));
     _this.handleAttachFile = _this.handleAttachFile.bind(_assertThisInitialized(_this));
     _this.handleAttachImage = _this.handleAttachImage.bind(_assertThisInitialized(_this));
+    _this.postReadNotification = _this.postReadNotification.bind(_assertThisInitialized(_this));
+    _this.clearNotificationQueue = _this.clearNotificationQueue.bind(_assertThisInitialized(_this));
+    _this.readNotificationQueue = [];
+    _this.readNotificationTimer = null;
     return _this;
   }
 
@@ -2973,6 +2978,8 @@ var MessagesView = function (_React$Component) {
       if (this.messagesScroller) {
         this.messagesScroller.removeEventListener('scroll', this.handleScrollEvent);
       }
+
+      this.clearNotificationQueue();
     }
   }, {
     key: "componentDidUpdate",
@@ -2992,7 +2999,6 @@ var MessagesView = function (_React$Component) {
       if (this.state.topic != prevState.topic) {
         if (prevState.topic && !tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.isNewGroupTopicName(prevState.topic)) {
           this.leave(prevState.topic);
-          this.props.readTimerHandler(null);
         }
 
         if (topic) {
@@ -3003,6 +3009,12 @@ var MessagesView = function (_React$Component) {
           topic.onSubsUpdated = this.handleSubsUpdated;
           topic.onPres = this.handleSubsUpdated;
         }
+      }
+
+      if (!this.props.applicationVisible) {
+        this.clearNotificationQueue();
+      } else {
+        this.postReadNotification(0);
       }
 
       if (topic && !topic.isSubscribed() && this.props.ready && (this.state.topic != prevState.topic || !prevProps.ready)) {
@@ -3139,15 +3151,81 @@ var MessagesView = function (_React$Component) {
       }
     }
   }, {
+    key: "postReadNotification",
+    value: function postReadNotification(seq) {
+      var _this5 = this;
+
+      if (!this.props.applicationVisible) {
+        return;
+      }
+
+      if (!this.readNotificationTimer) {
+        this.readNotificationTimer = setInterval(function () {
+          if (_this5.readNotificationQueue.length == 0) {
+            clearInterval(_this5.readNotificationTimer);
+            _this5.readNotificationTimer = null;
+            return;
+          }
+
+          var seq = -1;
+
+          while (_this5.readNotificationQueue.length > 0) {
+            var n = _this5.readNotificationQueue[0];
+
+            if (n.topicName != _this5.state.topic) {
+              _this5.readNotificationQueue.shift();
+
+              continue;
+            }
+
+            var _now = new Date();
+
+            if (n.sendAt <= _now) {
+              _this5.readNotificationQueue.shift();
+
+              seq = Math.max(seq, n.seq);
+            } else {
+              break;
+            }
+          }
+
+          if (seq >= 0) {
+            var topic = _this5.props.tinode.getTopic(_this5.state.topic);
+
+            if (topic) {
+              topic.noteRead(seq);
+            }
+          }
+        }, NOTIFICATION_EXEC_INTERVAL);
+      }
+
+      var now = new Date();
+      this.readNotificationQueue.push({
+        topicName: this.state.topic,
+        seq: seq,
+        sendAt: now.setMilliseconds(now.getMilliseconds() + _config_js__WEBPACK_IMPORTED_MODULE_13__["READ_DELAY"])
+      });
+    }
+  }, {
+    key: "clearNotificationQueue",
+    value: function clearNotificationQueue() {
+      this.readNotificationQueue = [];
+
+      if (this.readNotificationTimer) {
+        clearInterval(this.readNotificationTimer);
+        this.readNotificationTimer = null;
+      }
+    }
+  }, {
     key: "handleSubsUpdated",
     value: function handleSubsUpdated() {
-      var _this5 = this;
+      var _this6 = this;
 
       if (this.state.topic) {
         var subs = [];
         var topic = this.props.tinode.getTopic(this.state.topic);
         topic.subscribers(function (sub) {
-          if (sub.online && sub.user != _this5.props.myUserId) {
+          if (sub.online && sub.user != _this6.props.myUserId) {
             subs.push(sub);
           }
         });
@@ -3190,9 +3268,7 @@ var MessagesView = function (_React$Component) {
         var status = topic.msgStatus(msg);
 
         if (status >= tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.MESSAGE_STATUS_SENT && msg.from != this.props.myUserId) {
-          this.props.readTimerHandler(function () {
-            topic.noteRead(msg.seq);
-          });
+          this.postReadNotification(msg.seq);
         }
 
         this.props.onData(msg);
@@ -3206,6 +3282,7 @@ var MessagesView = function (_React$Component) {
       this.setState({
         fetchingMessages: false
       });
+      this.postReadNotification(0);
     }
   }, {
     key: "handleInfoReceipt",
@@ -3334,7 +3411,7 @@ var MessagesView = function (_React$Component) {
   }, {
     key: "sendFileAttachment",
     value: function sendFileAttachment(file) {
-      var _this6 = this;
+      var _this7 = this;
 
       if (file.size > _config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_INBAND_ATTACHMENT_SIZE"]) {
         var uploader = this.props.tinode.getLargeFileHelper();
@@ -3349,7 +3426,7 @@ var MessagesView = function (_React$Component) {
         this.props.sendMessage(msg, uploadCompletionPromise, uploader);
       } else {
         Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__["fileToBase64"])(file, function (mime, bits, fname) {
-          _this6.props.sendMessage(Drafty.attachFile(null, mime, bits, fname));
+          _this7.props.sendMessage(Drafty.attachFile(null, mime, bits, fname));
         }, this.props.onError);
       }
     }
@@ -3387,11 +3464,11 @@ var MessagesView = function (_React$Component) {
   }, {
     key: "handleAttachImage",
     value: function handleAttachImage(file) {
-      var _this7 = this;
+      var _this8 = this;
 
       if (file.size > _config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_INBAND_ATTACHMENT_SIZE"] || _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__["SUPPORTED_IMAGE_FORMATS"].indexOf(file.type) < 0) {
         Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__["imageFileScaledToBase64"])(file, _config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_IMAGE_DIM"], _config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_IMAGE_DIM"], false, function (bits, mime, width, height, fname) {
-          _this7.setState({
+          _this8.setState({
             imagePreview: {
               url: URL.createObjectURL(file),
               bits: bits,
@@ -3403,11 +3480,11 @@ var MessagesView = function (_React$Component) {
             }
           });
         }, function (err) {
-          _this7.props.onError(err, 'err');
+          _this8.props.onError(err, 'err');
         });
       } else {
         Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__["imageFileToBase64"])(file, function (bits, mime, width, height, fname) {
-          _this7.setState({
+          _this8.setState({
             imagePreview: {
               url: URL.createObjectURL(file),
               bits: bits,
@@ -3419,14 +3496,14 @@ var MessagesView = function (_React$Component) {
             }
           });
         }, function (err) {
-          _this7.props.onError(err, 'err');
+          _this8.props.onError(err, 'err');
         });
       }
     }
   }, {
     key: "render",
     value: function render() {
-      var _this8 = this;
+      var _this9 = this;
 
       var formatMessage = this.props.intl.formatMessage;
       var component;
@@ -3552,7 +3629,7 @@ var MessagesView = function (_React$Component) {
             onClick: function onClick(e) {
               e.preventDefault();
 
-              _this8.props.onHideMessagesView();
+              _this9.props.onHideMessagesView();
             }
           }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
             className: "material-icons"
@@ -4576,8 +4653,6 @@ var TinodeWeb = function (_React$Component) {
     _this.handleHashRoute = _this.handleHashRoute.bind(_assertThisInitialized(_this));
     _this.handleOnline = _this.handleOnline.bind(_assertThisInitialized(_this));
     _this.checkForAppUpdate = _this.checkForAppUpdate.bind(_assertThisInitialized(_this));
-    _this.handleAppVisibility = _this.handleAppVisibility.bind(_assertThisInitialized(_this));
-    _this.handleReadTimer = _this.handleReadTimer.bind(_assertThisInitialized(_this));
     _this.handleVisibilityEvent = _this.handleVisibilityEvent.bind(_assertThisInitialized(_this));
     _this.handleError = _this.handleError.bind(_assertThisInitialized(_this));
     _this.handleLoginRequest = _this.handleLoginRequest.bind(_assertThisInitialized(_this));
@@ -4653,6 +4728,7 @@ var TinodeWeb = function (_React$Component) {
         desktopAlerts: settings.desktopAlerts,
         desktopAlertsEnabled: (Object(_lib_host_name_js__WEBPACK_IMPORTED_MODULE_13__["isSecureConnection"])() || Object(_lib_host_name_js__WEBPACK_IMPORTED_MODULE_13__["isLocalHost"])()) && typeof firebase_app__WEBPACK_IMPORTED_MODULE_3__ != 'undefined' && typeof navigator != 'undefined' && typeof FIREBASE_INIT != 'undefined',
         firebaseToken: _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__["default"].getObject('firebase-token'),
+        applicationVisible: !document.hidden,
         errorText: '',
         errorLevel: null,
         errorAction: undefined,
@@ -4860,26 +4936,11 @@ var TinodeWeb = function (_React$Component) {
       });
     }
   }, {
-    key: "handleAppVisibility",
-    value: function handleAppVisibility(visible, callback) {
-      clearTimeout(this.readTimer);
-      this.readTimerCallback = callback;
-
-      if (visible && callback) {
-        this.readTimer = setTimeout(callback, _config_js__WEBPACK_IMPORTED_MODULE_11__["READ_DELAY"]);
-      } else {
-        this.readTimer = null;
-      }
-    }
-  }, {
-    key: "handleReadTimer",
-    value: function handleReadTimer(callback) {
-      this.handleAppVisibility(!document.hidden, callback);
-    }
-  }, {
     key: "handleVisibilityEvent",
     value: function handleVisibilityEvent() {
-      this.handleAppVisibility(!document.hidden, this.readTimerCallback);
+      this.setState({
+        applicationVisible: !document.hidden
+      });
     }
   }, {
     key: "handleError",
@@ -6117,6 +6178,7 @@ var TinodeWeb = function (_React$Component) {
         myUserId: this.state.myUserId,
         serverVersion: this.state.serverVersion,
         serverAddress: this.state.serverAddress,
+        applicationVisible: this.state.applicationVisible,
         errorText: this.state.errorText,
         errorLevel: this.state.errorLevel,
         errorAction: this.state.errorAction,
@@ -6126,7 +6188,6 @@ var TinodeWeb = function (_React$Component) {
         onData: this.tnData,
         onError: this.handleError,
         onNewTopicCreated: this.handleNewTopicCreated,
-        readTimerHandler: this.handleReadTimer,
         showContextMenu: this.handleShowContextMenu,
         onChangePermissions: this.handleChangePermissions,
         onNewChat: this.handleNewChatInvitation,

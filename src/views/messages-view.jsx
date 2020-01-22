@@ -16,10 +16,13 @@ import LogoView from './logo-view.jsx';
 import SendMessage from '../widgets/send-message.jsx';
 
 import { DEFAULT_P2P_ACCESS_MODE, KEYPRESS_DELAY, MESSAGES_PAGE, MAX_EXTERN_ATTACHMENT_SIZE,
-  MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE } from '../config.js';
+  MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE, READ_DELAY } from '../config.js';
 import { SUPPORTED_IMAGE_FORMATS, filePasted, fileToBase64, imageFileToBase64,
   imageFileScaledToBase64, makeImageUrl } from '../lib/blob-helpers.js';
 import { bytesToHumanSize, shortDateFormat } from '../lib/strformat.js';
+
+// Run timer with this frequency (ms) for checking notification queue.
+const NOTIFICATION_EXEC_INTERVAL = 300;
 
 const messages = defineMessages({
   online_now: {
@@ -62,7 +65,6 @@ class MessagesView extends React.Component {
 
     this.state = MessagesView.getDerivedStateFromProps(props, {});
 
-    // this.propsChange = this.propsChange.bind(this);
     this.leave = this.leave.bind(this);
     this.sendImageAttachment = this.sendImageAttachment.bind(this);
     this.sendFileAttachment = this.sendFileAttachment.bind(this);
@@ -83,6 +85,11 @@ class MessagesView extends React.Component {
     this.handleEnablePeer = this.handleEnablePeer.bind(this);
     this.handleAttachFile = this.handleAttachFile.bind(this);
     this.handleAttachImage = this.handleAttachImage.bind(this);
+    this.postReadNotification = this.postReadNotification.bind(this);
+    this.clearNotificationQueue = this.clearNotificationQueue.bind(this);
+
+    this.readNotificationQueue = [];
+    this.readNotificationTimer = null;
   }
 
   componentDidMount() {
@@ -96,6 +103,9 @@ class MessagesView extends React.Component {
     if (this.messagesScroller) {
       this.messagesScroller.removeEventListener('scroll', this.handleScrollEvent);
     }
+
+    // Flush all notifications.
+    this.clearNotificationQueue();
   }
 
   // Scroll last message into view on component update e.g. on message received
@@ -113,7 +123,6 @@ class MessagesView extends React.Component {
     if (this.state.topic != prevState.topic) {
       if (prevState.topic && !Tinode.isNewGroupTopicName(prevState.topic)) {
         this.leave(prevState.topic);
-        this.props.readTimerHandler(null);
       }
 
       if (topic) {
@@ -124,6 +133,14 @@ class MessagesView extends React.Component {
         topic.onSubsUpdated = this.handleSubsUpdated;
         topic.onPres = this.handleSubsUpdated;
       }
+    }
+
+    if (!this.props.applicationVisible) {
+      // If application is not visible, flush all unsent 'read' notifications.
+      this.clearNotificationQueue();
+    } else {
+      // Otherwise assume there are unread messages.
+      this.postReadNotification(0);
     }
 
     if (topic && !topic.isSubscribed() && this.props.ready &&
@@ -362,6 +379,68 @@ class MessagesView extends React.Component {
     }
   }
 
+  postReadNotification(seq) {
+    // Ignore notifications if the app is invisible.
+    if (!this.props.applicationVisible) {
+      return;
+    }
+
+    // Set up the timer if it's not running already.
+    if (!this.readNotificationTimer) {
+      this.readNotificationTimer = setInterval(() => {
+        if (this.readNotificationQueue.length == 0) {
+          // Shut down the timer if the queue is empty.
+          clearInterval(this.readNotificationTimer);
+          this.readNotificationTimer = null;
+          return;
+        }
+
+        let seq = -1;
+        while (this.readNotificationQueue.length > 0) {
+          const n = this.readNotificationQueue[0];
+          if (n.topicName != this.state.topic) {
+            // Topic has changed. Drop the notification.
+            this.readNotificationQueue.shift();
+            continue;
+          }
+
+          const now = new Date();
+          if (n.sendAt <= now) {
+            // Remove expired notification from queue.
+            this.readNotificationQueue.shift();
+            seq = Math.max(seq, n.seq);
+          } else {
+            break;
+          }
+        }
+
+        // Send only one notification for the whole batch of messages.
+        if (seq >= 0) {
+          const topic = this.props.tinode.getTopic(this.state.topic);
+          if (topic) {
+            topic.noteRead(seq);
+          }
+        }
+      }, NOTIFICATION_EXEC_INTERVAL);
+    }
+
+    const now = new Date();
+    this.readNotificationQueue.push({
+      topicName: this.state.topic,
+      seq: seq,
+      sendAt: now.setMilliseconds(now.getMilliseconds() + READ_DELAY)
+    });
+  }
+
+  // Clear notification queue and timer.
+  clearNotificationQueue() {
+    this.readNotificationQueue = [];
+    if (this.readNotificationTimer) {
+      clearInterval(this.readNotificationTimer);
+      this.readNotificationTimer = null;
+    }
+  }
+
   handleSubsUpdated() {
     if (this.state.topic) {
       const subs = [];
@@ -408,9 +487,7 @@ class MessagesView extends React.Component {
       // automatically assumed to be read and recived.
       const status = topic.msgStatus(msg);
       if (status >= Tinode.MESSAGE_STATUS_SENT && msg.from != this.props.myUserId) {
-        this.props.readTimerHandler(() => {
-          topic.noteRead(msg.seq);
-        });
+        this.postReadNotification(msg.seq);
       }
       this.props.onData(msg);
     }
@@ -419,6 +496,8 @@ class MessagesView extends React.Component {
 
   handleAllMessagesReceived(count) {
     this.setState({fetchingMessages: false});
+    // 0 means "latest".
+    this.postReadNotification(0);
   }
 
   handleInfoReceipt(info) {
