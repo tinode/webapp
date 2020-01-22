@@ -1,15 +1,18 @@
 # Single-page chat with Tinode
 
-Single-page web chat application built with [Tinode](https://github.com/tinode/chat/). The app uses
-[React](https://facebook.github.io/react/), Google's material design [fonts](https://www.google.com/fonts/)
-and [icons](https://google.github.io/material-design-icons/#icon-font-for-the-web). The [Tinode javascript SDK](https://github.com/tinode/tinode-js/) has no external dependencies.
+Single-page web chat application for [Tinode](https://github.com/tinode/chat/). The app is built on
+[React](https://reactjs.org/). The [Tinode javascript SDK](https://github.com/tinode/tinode-js/) has no external dependencies.
 Overall it's a lot like open source WhatsApp or Telegram web apps.
 
-The app is about 200KB minified and gzipped. That includes all dependencies (React, ReactDOM), fonts, graphics, css etc.
+Although the app is generally usable, keep in mind that this is work in progress. Some bugs probably exist, some features are missing. The app was tested in the latest Chrome & Firefox only. NPM package is [available](https://www.npmjs.com/package/tinode-webapp).
 
-Although the app is generally usable, keep in mind that this is work in progress. Some bugs probably exist. The app was tested in the latest Chrome & Firefox only. NPM package is available at https://www.npmjs.com/package/tinode-webapp.
+<a href="https://web.tinode.co/"><img src="docs/web-app.svg" height=36></a> Try possibly newer or older version live at https://web.tinode.co/.
 
-Try possibly newer or older version live at https://web.tinode.co/. For passwords for demo accounts and other instructions [see here](https://github.com/tinode/chat/#demo).
+For demo access and other instructions [see here](https://github.com/tinode/chat/#demosandbox).
+
+## Installing and running
+
+This is NOT a standalone app, this is just a frontend, a client. It requires a [backend](https://github.com/tinode/chat/). See [installation instructions](https://github.com/tinode/chat/blob/master/INSTALL.md).
 
 ## Getting support
 
@@ -19,9 +22,14 @@ Try possibly newer or older version live at https://web.tinode.co/. For password
 
 ## Internationalization
 
-The app is fully internationalized using [React-Intl](https://github.com/formatjs/react-intl). The UI language is selected automatically from the language specified by the browser. A specific language can be forced by adding `#?hl=XX` parameter to the URL, i.e. https://web.tinode.co/#?hl=ru.
+The app is fully internationalized using [React-Intl](https://github.com/formatjs/react-intl). The UI language is selected automatically from the language specified by the browser. A specific language can be forced by adding `#?hl=XX` parameter to the URL when starting the app, e.g. https://web.tinode.co/#?hl=ru.
 
-As of the time of this writing the following translations exist: English, Russian, Simplified Chinese. More translations are welcome. Send a pull request with a json file with translated strings. Take a look at [English](/src/i18n/en.json), [Russian](/src/i18n/ru.json), or [Simplified Chinese](/src/i18n/zh-CN.json) translations for guidance.
+As of the time of this writing the following translations exist:
+ * English
+ * Russian
+ * Simplified Chinese
+
+More translations are welcome. Send a pull request with a json file with translated strings. Take a look at [English](/src/i18n/en.json), [Russian](/src/i18n/ru.json), or [Simplified Chinese](/src/i18n/zh.json) translations for guidance.
 
 
 ## Not done yet
@@ -36,6 +44,8 @@ As of the time of this writing the following translations exist: English, Russia
 
 * Demo avatars and some other graphics are from https://www.pexels.com/ under [CC0 license](https://www.pexels.com/photo-license/).
 * Background patterns from http://subtlepatterns.com/, commercial and non-commercial use allowed with attribution.
+* [Fonts](https://fonts.google.com/) and [icons](https://google.github.io/material-design-icons/#icon-font-for-the-web) from Google under [license](https://developers.google.com/terms) which permits commercial and non-commercial use.
+* Push notifications built with https://firebase.google.com/.
 
 ## Push notifications
 
