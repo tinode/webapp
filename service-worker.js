@@ -7,8 +7,12 @@ firebase.initializeApp(FIREBASE_INIT);
 
 // This method shows the notifications.
 firebase.messaging().setBackgroundMessageHandler(function(payload) {
-  let title = payload.data.title || "New message";
-  let options = {
+  if (payload.data.silent === 'true') {
+    return;
+  }
+  const pushType = payload.data.what || 'msg';
+  const title = payload.data.title || (pushType == 'msg' ? "New message" : "New chat");
+  const options = {
     body: payload.data.content || "",
     icon: '/img/logo96.png',
     badge: '/img/badge96.png',
