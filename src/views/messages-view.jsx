@@ -496,8 +496,10 @@ class MessagesView extends React.Component {
 
   handleAllMessagesReceived(count) {
     this.setState({fetchingMessages: false});
-    // 0 means "latest".
-    this.postReadNotification(0);
+    if (count > 0) {
+      // 0 means "latest".
+      this.postReadNotification(0);
+    }
   }
 
   handleInfoReceipt(info) {
