@@ -6,7 +6,7 @@ Overall it's a lot like open source WhatsApp or Telegram web apps.
 
 Although the app is generally usable, keep in mind that this is work in progress. Some bugs probably exist, some features are missing. The app was tested in the latest Chrome & Firefox only. NPM package is [available](https://www.npmjs.com/package/tinode-webapp).
 
-<a href="https://web.tinode.co/"><img src="docs/web-app.svg" height=36></a> Try possibly newer or older version live at https://web.tinode.co/.
+<a href="https://web.tinode.co/"><img src="web-app.svg" height=36></a> Try possibly newer or older version live at https://web.tinode.co/.
 
 For demo access and other instructions [see here](https://github.com/tinode/chat/#demosandbox).
 
