@@ -232,6 +232,8 @@ class TinodeWeb extends React.Component {
 
     const parsedNav = HashNavigation.parseUrlHash(window.location.hash);
     if (token) {
+      this.setState({autoLogin: true});
+
       // When reading from storage, date is returned as string.
       token.expires = new Date(token.expires);
       this.tinode.setAuthToken(token);

@@ -1210,6 +1210,12 @@ i.search {
   height: 4rem;
 }
 
+#send-message-panel #writing-disabled {
+  width: 100%;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
 #sendMessage {
   overflow: hidden;
   overflow-wrap: break-word;

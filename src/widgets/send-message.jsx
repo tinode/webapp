@@ -150,39 +150,37 @@ class SendMessage extends React.PureComponent {
         formatMessage(messages.type_new_message));
     return (
       <div id="send-message-panel">
-        {this.props.onAttachFile ?
-          (this.props.disabled ?
-            <>
-              <i className="material-icons disabled">photo</i>
-              <i className="material-icons disabled">attach_file</i>
-            </>
-            :
-            <>
-              <a href="#" onClick={(e) => {e.preventDefault(); this.attachImage.click();}} title="Add image">
-                <i className="material-icons secondary">photo</i>
-              </a>
-              <a href="#" onClick={(e) => {e.preventDefault(); this.attachFile.click();}} title="Attach file">
-                <i className="material-icons secondary">attach_file</i>
-              </a>
-            </>)
+        {!this.props.disabled ?
+          <>
+            {this.props.onAttachFile ?
+              <>
+                <a href="#" onClick={(e) => {e.preventDefault(); this.attachImage.click();}} title="Add image">
+                  <i className="material-icons secondary">photo</i>
+                </a>
+                <a href="#" onClick={(e) => {e.preventDefault(); this.attachFile.click();}} title="Attach file">
+                  <i className="material-icons secondary">attach_file</i>
+                </a>
+              </>
+              :
+              null}
+            {this.props.noInput ?
+              <div className="hr thin" /> :
+              <textarea id="sendMessage" placeholder={prompt}
+                value={this.state.message} onChange={this.handleMessageTyping}
+                onKeyPress={this.handleKeyPress}
+                ref={(ref) => {this.messageEditArea = ref;}}
+                autoFocus />}
+            <a href="#" onClick={this.handleSend} title="Send">
+              <i className="material-icons">send</i>
+            </a>
+            <input type="file" ref={(ref) => {this.attachFile = ref;}}
+              onChange={this.handleAttachFile} style={{display: 'none'}} />
+            <input type="file" ref={(ref) => {this.attachImage = ref;}} accept="image/*"
+              onChange={this.handleAttachImage} style={{display: 'none'}} />
+          </>
           :
-          null}
-        {this.props.noInput ?
-          <div className="hr thin" /> :
-          <textarea id="sendMessage" placeholder={prompt}
-            disabled={this.props.disabled} value={this.state.message}
-            onChange={this.handleMessageTyping} onKeyPress={this.handleKeyPress}
-            ref={(ref) => {this.messageEditArea = ref;}}
-            autoFocus />}
-        {this.props.disabled ?
-          <i className="material-icons disabled">send</i> :
-          <a href="#" onClick={this.handleSend} title="Send">
-            <i className="material-icons">send</i>
-          </a>}
-        <input type="file" ref={(ref) => {this.attachFile = ref;}}
-          onChange={this.handleAttachFile} style={{display: 'none'}} />
-        <input type="file" ref={(ref) => {this.attachImage = ref;}} accept="image/*"
-          onChange={this.handleAttachImage} style={{display: 'none'}} />
+          <div id="writing-disabled">{prompt}</div>
+        }
       </div>
     );
   }

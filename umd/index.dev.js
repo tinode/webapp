@@ -4825,6 +4825,9 @@ var TinodeWeb = function (_React$Component) {
       var parsedNav = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].parseUrlHash(window.location.hash);
 
       if (token) {
+        this.setState({
+          autoLogin: true
+        });
         token.expires = new Date(token.expires);
         this.tinode.setAuthToken(token);
         this.tinode.connect().catch(function (err) {
@@ -11103,11 +11106,7 @@ var SendMessage = function (_React$PureComponent) {
       var prompt = this.props.disabled ? formatMessage(messages.messaging_disabled) : this.props.messagePrompt ? formatMessage(messages[this.props.messagePrompt]) : formatMessage(messages.type_new_message);
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "send-message-panel"
-      }, this.props.onAttachFile ? this.props.disabled ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-        className: "material-icons disabled"
-      }, "photo"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-        className: "material-icons disabled"
-      }, "attach_file")) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+      }, !this.props.disabled ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, this.props.onAttachFile ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         href: "#",
         onClick: function onClick(e) {
           e.preventDefault();
@@ -11132,7 +11131,6 @@ var SendMessage = function (_React$PureComponent) {
       }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("textarea", {
         id: "sendMessage",
         placeholder: prompt,
-        disabled: this.props.disabled,
         value: this.state.message,
         onChange: this.handleMessageTyping,
         onKeyPress: this.handleKeyPress,
@@ -11140,9 +11138,7 @@ var SendMessage = function (_React$PureComponent) {
           _this3.messageEditArea = _ref;
         },
         autoFocus: true
-      }), this.props.disabled ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-        className: "material-icons disabled"
-      }, "send") : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
         href: "#",
         onClick: this.handleSend,
         title: "Send"
@@ -11167,7 +11163,9 @@ var SendMessage = function (_React$PureComponent) {
         style: {
           display: 'none'
         }
-      }));
+      })) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        id: "writing-disabled"
+      }, prompt));
     }
   }]);
 
