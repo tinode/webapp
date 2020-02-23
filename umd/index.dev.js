@@ -7093,7 +7093,7 @@ var ChatMessage = function (_React$Component) {
       var content = this.props.content;
       var attachments = [];
 
-      if (this.props.mimeType == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].getContentType()) {
+      if (this.props.mimeType == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].getContentType() && tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].isValid(content)) {
         tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].attachments(content, function (att, i) {
           if (att.mime == 'application/json') {
             return;

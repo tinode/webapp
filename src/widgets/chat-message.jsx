@@ -81,7 +81,7 @@ export default class ChatMessage extends React.Component {
 
     let content = this.props.content;
     const attachments = [];
-    if (this.props.mimeType == Drafty.getContentType()) {
+    if (this.props.mimeType == Drafty.getContentType() && Drafty.isValid(content)) {
       Drafty.attachments(content, function(att, i) {
         if (att.mime == 'application/json') {
           // Don't show json objects as attachments.
@@ -106,10 +106,11 @@ export default class ChatMessage extends React.Component {
           defaultMessage="content deleted" description="Shown when messages are deleted" />
       </i></>
     } else if (typeof content != 'string') {
-      content = <><i className="material-icons gray">error_outline</i> <i className="gray">
-        <FormattedMessage id="invalid_content"
-          defaultMessage="invalid content" description="Shown when message is unreadable" />
-      </i></>
+      content = <>
+          <i className="material-icons gray">error_outline</i> <i className="gray">
+            <FormattedMessage id="invalid_content"
+              defaultMessage="invalid content" description="Shown when message is unreadable" /></i>
+        </>
     }
 
     return (
