@@ -122,6 +122,8 @@ class TinodeWeb extends React.Component {
       connected: false,
       // Connected and subscribed to 'me'
       ready: false,
+      // Try to re-login on new connection.
+      autoLogin: false,
       transport: settings.transport || null,
       serverAddress: settings.serverAddress || detectServerAddress(),
       serverVersion: "no connection",
@@ -266,7 +268,7 @@ class TinodeWeb extends React.Component {
   }
 
   handleResize() {
-    var mobile = document.documentElement.clientWidth <= MEDIA_BREAKPOINT;
+    const mobile = document.documentElement.clientWidth <= MEDIA_BREAKPOINT;
     this.setState({
       viewportWidth: document.documentElement.clientWidth,
       viewportHeight: document.documentElement.clientHeight
@@ -291,7 +293,7 @@ class TinodeWeb extends React.Component {
 
   // Handle for hashchange event: display appropriate panels.
   handleHashRoute() {
-    var hash = HashNavigation.parseUrlHash(window.location.hash);
+    const hash = HashNavigation.parseUrlHash(window.location.hash);
     if (hash.path && hash.path.length > 0) {
       // Left-side panel selector.
       if (['register','settings','edit','cred','reset','newtpk','archive','contacts',''].includes(hash.path[0])) {
@@ -327,9 +329,8 @@ class TinodeWeb extends React.Component {
   }
 
   handleOnline(online) {
-    var newState = {liveConnection: online};
     if (online) {
-      this.handleError('', null);
+      this.handleError();
     } else {
       this.handleError("No connection", 'warn');
     }
@@ -367,11 +368,14 @@ class TinodeWeb extends React.Component {
 
   // Connection succeeded.
   handleConnected() {
-    var params = this.tinode.getServerInfo();
+    const params = this.tinode.getServerInfo();
     this.setState({
       serverVersion: params.ver + ' ' + (params.build ? params.build : 'none') + '; '
     });
-    this.doLogin(this.state.login, this.state.password, {meth: this.state.credMethod, resp: this.state.credCode});
+
+    if (this.state.autoLogin) {
+      this.doLogin(this.state.login, this.state.password, {meth: this.state.credMethod, resp: this.state.credCode});
+    }
   }
 
   // Called for each auto-reconnect iteration.
@@ -477,21 +481,21 @@ class TinodeWeb extends React.Component {
   }
 
   handleCredentialsRequest(params) {
-    var parsed = HashNavigation.parseUrlHash(window.location.hash);
+    const parsed = HashNavigation.parseUrlHash(window.location.hash);
     parsed.path[0] = 'cred';
     parsed.params['method'] = params.cred[0];
     HashNavigation.navigateTo(HashNavigation.composeUrlHash(parsed.path, parsed.params));
   }
 
   handleLoginSuccessful() {
-    this.handleError('', null);
+    this.handleError();
 
     // Refresh authentication token.
     if (LocalStorageUtil.getObject('keep-logged-in')) {
       LocalStorageUtil.setObject('auth-token', this.tinode.getAuthToken());
     }
     // Logged in fine, subscribe to 'me' attaching callbacks from the contacts view.
-    var me = this.tinode.getMeTopic();
+    const me = this.tinode.getMeTopic();
     me.onMetaDesc = this.tnMeMetaDesc;
     me.onContactUpdate = this.tnMeContactUpdate;
     me.onSubsUpdated = this.tnMeSubsUpdated;
@@ -499,7 +503,8 @@ class TinodeWeb extends React.Component {
       connected: true,
       credMethod: undefined,
       credCode: undefined,
-      myUserId: this.tinode.getCurrentUserID()
+      myUserId: this.tinode.getCurrentUserID(),
+      autoLogin: true,
     });
     // Subscribe, fetch topic desc, the list of subscriptions. Messages are not fetched.
     me.subscribe(
@@ -803,11 +808,16 @@ class TinodeWeb extends React.Component {
 
   // User chose a Sign Up menu item.
   handleNewAccount() {
+    this.handleError();
+
     HashNavigation.navigateTo(HashNavigation.setUrlSidePanel(window.location.hash, 'register'));
   }
 
   // Actual registration of a new account.
   handleNewAccountRequest(login_, password_, public_, cred_, tags_) {
+    // Clear old error, if any.
+    this.handleError();
+
     this.tinode.connect(this.state.serverAddress)
       .then(() => {
         return this.tinode.createAccountBasic(login_, password_,
@@ -824,6 +834,8 @@ class TinodeWeb extends React.Component {
   }
 
   handleUpdateAccountRequest(password, pub, defacs) {
+    this.handleError();
+
     if (pub || defacs) {
       const params = {};
       if (pub) {
@@ -852,6 +864,8 @@ class TinodeWeb extends React.Component {
 
   // User chose Settings menu item.
   handleSettings() {
+    this.handleError();
+
     HashNavigation.navigateTo(HashNavigation.setUrlSidePanel(window.location.hash,
       this.state.myUserId ? 'edit' : 'settings'));
   }

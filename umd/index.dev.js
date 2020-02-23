@@ -4724,6 +4724,7 @@ var TinodeWeb = function (_React$Component) {
       return {
         connected: false,
         ready: false,
+        autoLogin: false,
         transport: settings.transport || null,
         serverAddress: settings.serverAddress || Object(_lib_host_name_js__WEBPACK_IMPORTED_MODULE_13__["detectServerAddress"])(),
         serverVersion: "no connection",
@@ -4925,12 +4926,8 @@ var TinodeWeb = function (_React$Component) {
   }, {
     key: "handleOnline",
     value: function handleOnline(online) {
-      var newState = {
-        liveConnection: online
-      };
-
       if (online) {
-        this.handleError('', null);
+        this.handleError();
       } else {
         this.handleError("No connection", 'warn');
       }
@@ -4991,10 +4988,13 @@ var TinodeWeb = function (_React$Component) {
       this.setState({
         serverVersion: params.ver + ' ' + (params.build ? params.build : 'none') + '; '
       });
-      this.doLogin(this.state.login, this.state.password, {
-        meth: this.state.credMethod,
-        resp: this.state.credCode
-      });
+
+      if (this.state.autoLogin) {
+        this.doLogin(this.state.login, this.state.password, {
+          meth: this.state.credMethod,
+          resp: this.state.credCode
+        });
+      }
     }
   }, {
     key: "handleAutoreconnectIteration",
@@ -5119,7 +5119,7 @@ var TinodeWeb = function (_React$Component) {
     value: function handleLoginSuccessful() {
       var _this7 = this;
 
-      this.handleError('', null);
+      this.handleError();
 
       if (_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__["default"].getObject('keep-logged-in')) {
         _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__["default"].setObject('auth-token', this.tinode.getAuthToken());
@@ -5133,7 +5133,8 @@ var TinodeWeb = function (_React$Component) {
         connected: true,
         credMethod: undefined,
         credCode: undefined,
-        myUserId: this.tinode.getCurrentUserID()
+        myUserId: this.tinode.getCurrentUserID(),
+        autoLogin: true
       });
       me.subscribe(me.startMetaQuery().withLaterSub().withDesc().withTags().withCred().build()).catch(function (err) {
         _this7.tinode.disconnect();
@@ -5423,6 +5424,7 @@ var TinodeWeb = function (_React$Component) {
   }, {
     key: "handleNewAccount",
     value: function handleNewAccount() {
+      this.handleError();
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].setUrlSidePanel(window.location.hash, 'register'));
     }
   }, {
@@ -5430,6 +5432,7 @@ var TinodeWeb = function (_React$Component) {
     value: function handleNewAccountRequest(login_, password_, public_, cred_, tags_) {
       var _this14 = this;
 
+      this.handleError();
       this.tinode.connect(this.state.serverAddress).then(function () {
         return _this14.tinode.createAccountBasic(login_, password_, {
           public: public_,
@@ -5450,6 +5453,8 @@ var TinodeWeb = function (_React$Component) {
     key: "handleUpdateAccountRequest",
     value: function handleUpdateAccountRequest(password, pub, defacs) {
       var _this15 = this;
+
+      this.handleError();
 
       if (pub || defacs) {
         var params = {};
@@ -5489,6 +5494,7 @@ var TinodeWeb = function (_React$Component) {
   }, {
     key: "handleSettings",
     value: function handleSettings() {
+      this.handleError();
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].setUrlSidePanel(window.location.hash, this.state.myUserId ? 'edit' : 'settings'));
     }
   }, {
