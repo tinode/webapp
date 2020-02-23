@@ -4784,7 +4784,8 @@ var TinodeWeb = function (_React$Component) {
         viewportWidth: document.documentElement.clientWidth,
         viewportHeight: document.documentElement.clientHeight
       });
-      this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport);
+      var locale = this.props.intl.locale;
+      this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport, locale);
       this.tinode.onConnect = this.handleConnected;
       this.tinode.onDisconnect = this.handleDisconnect;
       this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
@@ -5501,7 +5502,8 @@ var TinodeWeb = function (_React$Component) {
         this.tinode.disconnect();
       }
 
-      this.tinode = TinodeWeb.tnSetup(serverAddress, transport);
+      var locale = this.props.intl.locale;
+      this.tinode = TinodeWeb.tnSetup(serverAddress, transport, locale);
       this.tinode.onConnect = this.handleConnected;
       this.tinode.onDisconnect = this.handleDisconnect;
       this.setState({
@@ -5812,7 +5814,8 @@ var TinodeWeb = function (_React$Component) {
       }
 
       this.setState(this.getBlankState());
-      this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport);
+      var locale = this.props.intl.locale;
+      this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport, locale);
       this.tinode.onConnect = this.handleConnected;
       this.tinode.onDisconnect = this.handleDisconnect;
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo('');
@@ -6224,8 +6227,9 @@ var TinodeWeb = function (_React$Component) {
     }
   }], [{
     key: "tnSetup",
-    value: function tnSetup(serverAddress, transport) {
+    value: function tnSetup(serverAddress, transport, locale) {
       var tinode = new tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default.a(_config_js__WEBPACK_IMPORTED_MODULE_11__["APP_NAME"], serverAddress, _config_js__WEBPACK_IMPORTED_MODULE_11__["API_KEY"], transport, Object(_lib_host_name_js__WEBPACK_IMPORTED_MODULE_13__["isSecureConnection"])());
+      tinode.setHumanLanguage(locale);
       tinode.enableLogging(_config_js__WEBPACK_IMPORTED_MODULE_11__["LOGGING_ENABLED"], true);
       return tinode;
     }

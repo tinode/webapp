@@ -192,7 +192,8 @@ class TinodeWeb extends React.Component {
       viewportHeight: document.documentElement.clientHeight
     });
 
-    this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport);
+    const {locale} = this.props.intl;
+    this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport, locale);
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
     this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
@@ -257,8 +258,9 @@ class TinodeWeb extends React.Component {
   }
 
   // Setup transport (usually websocket) and server address. This will terminate connection with the server.
-  static tnSetup(serverAddress, transport) {
-    let tinode = new Tinode(APP_NAME, serverAddress, API_KEY, transport, isSecureConnection());
+  static tnSetup(serverAddress, transport, locale) {
+    const tinode = new Tinode(APP_NAME, serverAddress, API_KEY, transport, isSecureConnection());
+    tinode.setHumanLanguage(locale);
     tinode.enableLogging(LOGGING_ENABLED, true);
     return tinode;
   }
@@ -856,13 +858,14 @@ class TinodeWeb extends React.Component {
 
   // User updated global parameters.
   handleGlobalSettings(settings) {
-    let serverAddress = settings.serverAddress || this.state.serverAddress;
-    let transport = settings.transport || this.state.transport;
+    const serverAddress = settings.serverAddress || this.state.serverAddress;
+    const transport = settings.transport || this.state.transport;
     if (this.tinode) {
       this.tinode.onDisconnect = undefined;
       this.tinode.disconnect();
     }
-    this.tinode = TinodeWeb.tnSetup(serverAddress, transport);
+    const {locale} = this.props.intl;
+    this.tinode = TinodeWeb.tnSetup(serverAddress, transport, locale);
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
 
@@ -1077,7 +1080,8 @@ class TinodeWeb extends React.Component {
       this.tinode.disconnect();
     }
     this.setState(this.getBlankState());
-    this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport);
+    const {locale} = this.props.intl;
+    this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport, locale);
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
     HashNavigation.navigateTo('');
