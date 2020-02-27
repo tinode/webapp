@@ -4965,7 +4965,8 @@ var TinodeWeb = function (_React$Component) {
         loginDisabled: true,
         login: login,
         password: password,
-        loadSpinnerVisible: true
+        loadSpinnerVisible: true,
+        autoLogin: true
       });
       this.handleError('', null);
 
@@ -4977,7 +4978,8 @@ var TinodeWeb = function (_React$Component) {
       } else {
         this.tinode.connect().catch(function (err) {
           _this4.setState({
-            loginDisabled: false
+            loginDisabled: false,
+            autoLogin: false
           });
 
           _this4.handleError(err.message, 'err');
@@ -5094,7 +5096,8 @@ var TinodeWeb = function (_React$Component) {
             loginDisabled: false,
             credMethod: undefined,
             credCode: undefined,
-            loadSpinnerVisible: false
+            loadSpinnerVisible: false,
+            autoLogin: false
           });
 
           _this6.handleError(err.message, 'err');

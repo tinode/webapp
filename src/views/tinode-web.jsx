@@ -353,7 +353,8 @@ class TinodeWeb extends React.Component {
       loginDisabled: true,
       login: login,
       password: password,
-      loadSpinnerVisible: true
+      loadSpinnerVisible: true,
+      autoLogin: true
     });
     this.handleError('', null);
 
@@ -362,7 +363,7 @@ class TinodeWeb extends React.Component {
     } else {
       this.tinode.connect().catch((err) => {
         // Socket error
-        this.setState({loginDisabled: false});
+        this.setState({loginDisabled: false, autoLogin: false});
         this.handleError(err.message, 'err');
       });
     }
@@ -443,7 +444,7 @@ class TinodeWeb extends React.Component {
     cred = Tinode.credential(cred);
     // Try to login with login/password. If they are not available, try token. If no token, ask for login/password.
     let promise = null;
-    let token = this.tinode.getAuthToken();
+    const token = this.tinode.getAuthToken();
     if (login && password) {
       this.setState({password: null});
       promise = this.tinode.loginBasic(login, password, cred);
@@ -468,7 +469,8 @@ class TinodeWeb extends React.Component {
           loginDisabled: false,
           credMethod: undefined,
           credCode: undefined,
-          loadSpinnerVisible: false
+          loadSpinnerVisible: false,
+          autoLogin: false
         });
         this.handleError(err.message, 'err');
         localStorage.removeItem('auth-token');
@@ -593,7 +595,7 @@ class TinodeWeb extends React.Component {
   // Merge search results and contact list to create a single flat
   // list of kown contacts for GroupManager to use.
   static prepareSearchableContacts(chatList, foundContacts) {
-    let merged = {};
+    const merged = {};
 
     // For chatList topics merge only p2p topics and convert them to the
     // same format as foundContacts.
