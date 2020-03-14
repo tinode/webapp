@@ -1,7 +1,7 @@
 {
   "name": "tinode-webapp",
   "description": "Tinode messenger for the web",
-  "version": "0.16.4-rc4",
+  "version": "0.16.4",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinode/example-react-js.git"
@@ -84,7 +84,7 @@
     "copy-webpack-plugin": "^5.1.1",
     "cssnano": "^4.1.10",
     "postcss": "^7.0.27",
-    "uglifyjs-webpack-plugin": "^2.2.0",
+    "terser-webpack-plugin": "^2.3.5",
     "webpack": "^4.42.0",
     "webpack-cli": "^3.3.11"
   }
