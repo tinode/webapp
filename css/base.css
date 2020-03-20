@@ -1148,7 +1148,7 @@ i.search {
   overflow-y: scroll;
   background-color: #eceff1;
   height: 100%;
-  background-image: url("../img/ignasi_pattern_s.png");
+  background-image: url("../img/bg_messages.png");
 }
 
 #messages-container {
