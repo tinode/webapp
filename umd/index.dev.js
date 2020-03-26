@@ -2523,7 +2523,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/error-panel.jsx */ "./src/widgets/error-panel.jsx");
 /* harmony import */ var _widgets_group_subs_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/group-subs.jsx */ "./src/widgets/group-subs.jsx");
 /* harmony import */ var _widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../widgets/image-preview.jsx */ "./src/widgets/image-preview.jsx");
-/* harmony import */ var _widgets_Invitation_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../widgets/Invitation.jsx */ "./src/widgets/Invitation.jsx");
+/* harmony import */ var _widgets_invitation_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../widgets/invitation.jsx */ "./src/widgets/invitation.jsx");
 /* harmony import */ var _widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../widgets/letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
 /* harmony import */ var _widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../widgets/load-spinner.jsx */ "./src/widgets/load-spinner.jsx");
 /* harmony import */ var _logo_view_jsx__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./logo-view.jsx */ "./src/views/logo-view.jsx");
@@ -3415,7 +3415,7 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
           id: "enable_peers_messaging",
           defaultMessage: "Enable"
-        })), ".") : null, this.state.unconfirmed ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_Invitation_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
+        })), ".") : null, this.state.unconfirmed ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_invitation_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
           onAction: this.handleNewChatAcceptance
         }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
           disabled: !this.state.isWriter,
@@ -5684,75 +5684,6 @@ class ValidationView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.PureCo
 
 ;
 /* harmony default export */ __webpack_exports__["default"] = (Object(react_intl__WEBPACK_IMPORTED_MODULE_1__["injectIntl"])(ValidationView));
-
-/***/ }),
-
-/***/ "./src/widgets/Invitation.jsx":
-/*!************************************!*\
-  !*** ./src/widgets/Invitation.jsx ***!
-  \************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Invitation; });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-
-
-class Invitation extends react__WEBPACK_IMPORTED_MODULE_0___default.a.PureComponent {
-  constructor(props) {
-    super(props);
-    this.handleButtonAction = this.handleButtonAction.bind(this);
-  }
-
-  handleButtonAction(evt, data) {
-    evt.preventDefault();
-    this.props.onAction(data);
-  }
-
-  render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "accept-invite-panel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "title"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-      id: "chat_invitation",
-      defaultMessage: "You are invited to start a new chat. What would you like to do?"
-    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "footer"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-      className: "blue",
-      onClick: event => {
-        this.handleButtonAction(event, "accept");
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-      id: "chat_invitation_accept",
-      defaultMessage: "Accept"
-    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-      className: "white",
-      onClick: event => {
-        this.handleButtonAction(event, "delete");
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-      id: "chat_invitation_ignore",
-      defaultMessage: "Ignore"
-    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-      className: "white",
-      onClick: event => {
-        this.handleButtonAction(event, "block");
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-      id: "chat_invitation_block",
-      defaultMessage: "Block"
-    }))));
-  }
-
-}
-;
 
 /***/ }),
 
@@ -8120,6 +8051,75 @@ class InPlaceEdit extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
       className: "content"
     }, spanText));
+  }
+
+}
+;
+
+/***/ }),
+
+/***/ "./src/widgets/invitation.jsx":
+/*!************************************!*\
+  !*** ./src/widgets/invitation.jsx ***!
+  \************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Invitation; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+
+
+class Invitation extends react__WEBPACK_IMPORTED_MODULE_0___default.a.PureComponent {
+  constructor(props) {
+    super(props);
+    this.handleButtonAction = this.handleButtonAction.bind(this);
+  }
+
+  handleButtonAction(evt, data) {
+    evt.preventDefault();
+    this.props.onAction(data);
+  }
+
+  render() {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "accept-invite-panel"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "title"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      id: "chat_invitation",
+      defaultMessage: "You are invited to start a new chat. What would you like to do?"
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "footer"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      className: "blue",
+      onClick: event => {
+        this.handleButtonAction(event, "accept");
+      }
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      id: "chat_invitation_accept",
+      defaultMessage: "Accept"
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      className: "white",
+      onClick: event => {
+        this.handleButtonAction(event, "delete");
+      }
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      id: "chat_invitation_ignore",
+      defaultMessage: "Ignore"
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      className: "white",
+      onClick: event => {
+        this.handleButtonAction(event, "block");
+      }
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      id: "chat_invitation_block",
+      defaultMessage: "Block"
+    }))));
   }
 
 }
