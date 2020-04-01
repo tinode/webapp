@@ -152,5 +152,6 @@
   "topic_block_warning": "Вы действительно хотите заблокировать этот чат?",
   "search_no_results": "Ничего не найдено",
   "deleted_content": "удалено",
-  "image_caption_prompt": "Подпись к фото"
+  "image_caption_prompt": "Подпись к фото",
+  "label_incognito_mode": "Режим инкогнито:"
 }

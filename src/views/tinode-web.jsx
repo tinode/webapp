@@ -80,6 +80,7 @@ class TinodeWeb extends React.Component {
     this.handleNewAccountRequest = this.handleNewAccountRequest.bind(this);
     this.handleUpdateAccountRequest = this.handleUpdateAccountRequest.bind(this);
     this.handleUpdateAccountTagsRequest = this.handleUpdateAccountTagsRequest.bind(this);
+    this.handleToggleIncognitoMode = this.handleToggleIncognitoMode.bind(this);
     this.handleSettings = this.handleSettings.bind(this);
     this.handleGlobalSettings = this.handleGlobalSettings.bind(this);
     this.handleShowArchive = this.handleShowArchive.bind(this);
@@ -129,6 +130,7 @@ class TinodeWeb extends React.Component {
       serverVersion: "no connection",
       // "On" is the default, so saving the "off" state.
       messageSounds: !settings.messageSoundsOff,
+      incognitoMode: false,
       desktopAlerts: settings.desktopAlerts,
       desktopAlertsEnabled: (isSecureConnection() || isLocalHost()) &&
         (typeof firebase != 'undefined') && (typeof navigator != 'undefined') &&
@@ -530,11 +532,18 @@ class TinodeWeb extends React.Component {
   }
 
   tnMeMetaDesc(desc) {
-    if (desc && desc.public) {
-      this.setState({
-        sidePanelTitle: desc.public.fn,
-        sidePanelAvatar: makeImageUrl(desc.public.photo)
-      });
+    if (desc) {
+      if (desc.public) {
+        this.setState({
+          sidePanelTitle: desc.public.fn,
+          sidePanelAvatar: makeImageUrl(desc.public.photo)
+        });
+      }
+      if (desc.acs) {
+        this.setState({
+          incognitoMode: !desc.acs.isPresencer()
+        });
+      }
     }
   }
 
@@ -857,6 +866,14 @@ class TinodeWeb extends React.Component {
         this.handleError(err.message, 'err');
       });
     }
+  }
+
+  handleToggleIncognitoMode(on) {
+    const me = this.tinode.getMeTopic();
+    const am = me.getAccessMode().updateWant(on ? '-P' : '+P').getWant();
+    me.setMeta({sub: {mode: am}}).catch((err) => {
+      this.handleError(err.message, 'err');
+    });
   }
 
   handleUpdateAccountTagsRequest(tags) {
@@ -1377,6 +1394,7 @@ class TinodeWeb extends React.Component {
           messageSounds={this.state.messageSounds}
           desktopAlerts={this.state.desktopAlerts}
           desktopAlertsEnabled={this.state.desktopAlertsEnabled}
+          incognitoMode={this.state.incognitoMode}
           serverAddress={this.state.serverAddress}
           onGlobalSettings={this.handleGlobalSettings}
 
@@ -1388,6 +1406,7 @@ class TinodeWeb extends React.Component {
           onUpdateAccountTags={this.handleUpdateAccountTagsRequest}
           onTogglePushNotifications={this.togglePushToken}
           onToggleMessageSounds={this.handleToggleMessageSounds}
+          onToggleIncognitoMode={this.handleToggleIncognitoMode}
           onCredAdd={this.handleCredAdd}
           onCredDelete={this.handleCredDelete}
           onCredConfirm={this.handleCredConfirm}

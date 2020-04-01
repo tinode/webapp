@@ -92,6 +92,8 @@ export default class EditAccountView extends React.Component {
       this.props.onToggleMessageSounds(checked);
     } else if (what == 'alert') {
       this.props.onTogglePushNotifications(checked);
+    } else if (what == 'incognito') {
+      this.props.onToggleIncognitoMode(checked);
     }
   }
 
@@ -225,8 +227,7 @@ export default class EditAccountView extends React.Component {
                 description="Label for message sounds toggle" />
             </label>
             <CheckBox name="sound" id="message-sound"
-              checked={this.props.messageSounds}
-              onChange={this.handleCheckboxClick} />
+              checked={this.props.messageSounds} onChange={this.handleCheckboxClick} />
           </div>
           <div className="panel-form-row">
             <label htmlFor="desktop-alerts">
@@ -242,6 +243,14 @@ export default class EditAccountView extends React.Component {
             <CheckBox name="alert" id="desktop-alerts"
               checked={this.props.desktopAlerts}
               onChange={this.props.desktopAlertsEnabled ? this.handleCheckboxClick : null} />
+          </div>
+          <div className="panel-form-row">
+            <label htmlFor="incognito-mode">
+              <FormattedMessage id="label_incognito_mode" defaultMessage="Incognito mode:"
+                description="Label for incognito mode toggle" />
+            </label>
+            <CheckBox name="incognito" id="incognito-mode"
+              checked={this.props.incognitoMode} onChange={this.handleCheckboxClick} />
           </div>
           <div className="hr" />
           <FormattedMessage id="title_tag_manager" defaultMessage="Tags (user discovery)"

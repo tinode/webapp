@@ -134,10 +134,12 @@ class SidepanelView extends React.Component {
             messageSounds={this.props.messageSounds}
             desktopAlerts={this.props.desktopAlerts}
             desktopAlertsEnabled={this.props.desktopAlertsEnabled}
+            incognitoMode={this.props.incognitoMode}
             onUpdateAccount={this.props.onUpdateAccount}
             onUpdateTags={this.props.onUpdateAccountTags}
             onTogglePushNotifications={this.props.onTogglePushNotifications}
             onToggleMessageSounds={this.props.onToggleMessageSounds}
+            onToggleIncognitoMode={this.props.onToggleIncognitoMode}
             onCredAdd={this.props.onCredAdd}
             onCredDelete={this.props.onCredDelete}
             onCredConfirm={this.props.onCredConfirm}

@@ -11,6 +11,7 @@
   "label_message_sound": "Message sound:",
   "label_push_notifications": "Notification alerts:",
   "label_push_notifications_disabled": "Notification alerts (requires HTTPS):",
+  "label_incognito_mode": "Incognito mode:",
   "title_tag_manager": "Tags (user discovery)",
   "label_user_contacts": "Contacts:",
   "label_user_id": "Address:",

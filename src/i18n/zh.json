@@ -152,5 +152,6 @@
   "search_no_results": "搜索返回任何结果",
   "deleted_content": "内容已删除",
   "image_caption_prompt": "图片标题",
-  "menu_item_send_retry": "重试"
+  "menu_item_send_retry": "重试",
+  "label_incognito_mode": "无痕模式："
 }
