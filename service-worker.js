@@ -73,10 +73,6 @@ self.addEventListener('notificationclick', event => {
 
 // This is needed for 'Add to Home Screen'.
 self.addEventListener('fetch', event => {
-  // Workaround for https://bugs.chromium.org/p/chromium/issues/detail?id=823392
-  if (event.request.cache == 'only-if-cached' && event.request.mode != 'same-origin') {
-    return;
-  }
   event.respondWith(
     //  Try to find response in cache.
     caches.match(event.request)

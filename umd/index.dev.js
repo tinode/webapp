@@ -4588,7 +4588,6 @@ class TinodeWeb extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       }
 
       if (desc.acs) {
-        console.log("tnMeMetaDesc", desc.acs, desc.acs.isPresencer());
         this.setState({
           incognitoMode: !desc.acs.isPresencer()
         });
