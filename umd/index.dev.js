@@ -813,7 +813,7 @@ module.exports = JSON.parse("{\"en\":{\"archived_contacts\":\"Archived contacts 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PACKAGE_VERSION", function() { return PACKAGE_VERSION; });
-const PACKAGE_VERSION = "0.16.5-beta5";
+const PACKAGE_VERSION = "0.16.5-beta7";
 
 /***/ }),
 
