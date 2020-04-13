@@ -8,9 +8,9 @@ import { APP_NAME } from '../config.js';
 
 export default class LogoView extends React.PureComponent {
   render() {
-    var version = APP_NAME + ' (' + Tinode.getLibrary() + ')';
+    const version = APP_NAME + ' (' + Tinode.getLibrary() + ')';
     return (
-      <div id="dummy-view" className={this.props.hideSelf ? 'nodisplay' : null}>
+      <div id="dummy-view">
         <div>
           <a href="https://github.com/tinode/chat/">
             <img id="logo" alt="logo" src="img/logo.svg" />

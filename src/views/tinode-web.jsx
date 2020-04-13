@@ -92,13 +92,13 @@ class TinodeWeb extends React.Component {
     this.togglePushToken = this.togglePushToken.bind(this);
     this.requestPushToken = this.requestPushToken.bind(this);
     this.handleSidepanelCancel = this.handleSidepanelCancel.bind(this);
-    this.handleNewTopic = this.handleNewTopic.bind(this);
     this.handleNewTopicRequest = this.handleNewTopicRequest.bind(this);
     this.handleNewTopicCreated = this.handleNewTopicCreated.bind(this);
     this.handleTopicUpdateRequest = this.handleTopicUpdateRequest.bind(this);
     this.handleChangePermissions = this.handleChangePermissions.bind(this);
     this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
+    this.handleDeleteAccount = this.handleDeleteAccount.bind(this);
     this.handleDeleteMessagesRequest = this.handleDeleteMessagesRequest.bind(this);
     this.handleLeaveUnsubRequest = this.handleLeaveUnsubRequest.bind(this);
     this.handleBlockTopicRequest = this.handleBlockTopicRequest.bind(this);
@@ -300,7 +300,8 @@ class TinodeWeb extends React.Component {
     const hash = HashNavigation.parseUrlHash(window.location.hash);
     if (hash.path && hash.path.length > 0) {
       // Left-side panel selector.
-      if (['register','settings','edit','cred','reset','newtpk','archive','contacts',''].includes(hash.path[0])) {
+      if (['register','settings','edit','notif','security','support','general',
+          'cred','reset','newtpk','archive','contacts',''].includes(hash.path[0])) {
         this.setState({sidePanelSelected: hash.path[0]});
       } else {
         console.log("Unknown sidepanel view", hash.path[0]);
@@ -1007,7 +1008,13 @@ class TinodeWeb extends React.Component {
   // User clicked Cancel button in Setting or Sign Up panel.
   handleSidepanelCancel() {
     const parsed = HashNavigation.parseUrlHash(window.location.hash);
-    parsed.path[0] = this.state.myUserId ? 'contacts' : '';
+    let path = '';
+    if (['security','support','general','notif'].includes(parsed.path[0])) {
+      path = 'edit';
+    } else if (this.state.myUserId) {
+      path = 'contacts';
+    }
+    parsed.path[0] = path;
     if (parsed.params) {
       delete parsed.params.code;
       delete parsed.params.method;
@@ -1017,9 +1024,9 @@ class TinodeWeb extends React.Component {
     this.setState({errorText: '', errorLevel: null});
   }
 
-  // User clicked a (+) menu item.
-  handleNewTopic() {
-    HashNavigation.navigateTo(HashNavigation.setUrlSidePanel(window.location.hash, 'newtpk'));
+  // Basic nagigator by hash value. No need to bind to this.
+  basicNavigator(hash) {
+    HashNavigation.navigateTo(HashNavigation.setUrlSidePanel(window.location.hash, hash));
   }
 
   // Request to start a new topic. New P2P topic requires peer's name.
@@ -1120,6 +1127,12 @@ class TinodeWeb extends React.Component {
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
     HashNavigation.navigateTo('');
+  }
+
+  handleDeleteAccount() {
+    this.tinode.delCurrentUser().then((ctrl) => {
+      this.handleLogout();
+    });
   }
 
   handleDeleteMessagesRequest(topicName) {
@@ -1396,10 +1409,12 @@ class TinodeWeb extends React.Component {
           desktopAlertsEnabled={this.state.desktopAlertsEnabled}
           incognitoMode={this.state.incognitoMode}
           serverAddress={this.state.serverAddress}
-          onGlobalSettings={this.handleGlobalSettings}
+          serverVersion={this.state.serverVersion}
 
+          onGlobalSettings={this.handleGlobalSettings}
           onSignUp={this.handleNewAccount}
           onSettings={this.handleSettings}
+          onBasicNavigate={this.basicNavigator}
           onLoginRequest={this.handleLoginRequest}
           onCreateAccount={this.handleNewAccountRequest}
           onUpdateAccount={this.handleUpdateAccountRequest}
@@ -1412,8 +1427,9 @@ class TinodeWeb extends React.Component {
           onCredConfirm={this.handleCredConfirm}
           onTopicSelected={this.handleTopicSelected}
           onCreateTopic={this.handleNewTopicRequest}
-          onNewTopic={this.handleNewTopic}
           onLogout={this.handleLogout}
+          onDeleteAccount={this.handleDeleteAccount}
+          onShowAlert={this.handleShowAlert}
           onCancel={this.handleSidepanelCancel}
           onError={this.handleError}
           onValidateCredentials={this.handleValidateCredentialsRequest}

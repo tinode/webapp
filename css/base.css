@@ -381,8 +381,17 @@ div.alert .content {
   color: #bbb;
 }
 
+.large {
+  font-size: 120%;
+}
+
 .small {
   font-size: 90%;
+}
+
+.float-right {
+  margin-left: auto;
+  float: right;
 }
 
 .hr {
@@ -983,6 +992,10 @@ i.search {
   margin-left: 0.5rem;
   font-size: 4.5rem;
   padding: 0;
+}
+
+.avatar-upload.read-only {
+  height: auto;
 }
 
 .avatar-upload .clear-avatar {

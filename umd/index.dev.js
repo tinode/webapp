@@ -799,7 +799,7 @@ function sanitizeImageUrl(url) {
 /*! exports provided: en, ru, zh, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"en\":{\"archived_contacts\":\"Archived contacts ({count})\",\"contacts_not_found\":\"You have no chats<br />¯∖_(ツ)_/¯\",\"full_name_prompt\":\"Full name, e.g. John Doe\",\"email_prompt\":\"Email, e.g. jdoe@example.com\",\"button_sign_up\":\"Sign up\",\"validate_credential_action\":\"confirm\",\"label_your_name\":\"Your name\",\"label_password\":\"Password\",\"password_unchanged_prompt\":\"Unchanged\",\"label_message_sound\":\"Message sound:\",\"label_push_notifications\":\"Notification alerts:\",\"label_push_notifications_disabled\":\"Notification alerts (requires HTTPS):\",\"label_incognito_mode\":\"Incognito mode:\",\"title_tag_manager\":\"Tags (user discovery)\",\"label_user_contacts\":\"Contacts:\",\"label_user_id\":\"Address:\",\"label_default_access_mode\":\"Default access mode:\",\"button_logout\":\"Logout\",\"label_legal\":\"Legal\",\"link_contact_us\":\"Contact Us\",\"link_terms_of_service\":\"Terms of Service\",\"link_privacy_policy\":\"Privacy Policy\",\"requested_permissions\":\"Requested\",\"granted_permissions\":\"Granted\",\"menu_item_edit_permissions\":\"Edit permissions\",\"label_other_user\":\"Other\",\"action_clear_messages\":\"Clear Messages\",\"clear_messages_warning\":\"Are you sure you want to clear all messages? It cannot be undone.\",\"action_delete_messages\":\"Clear Messages for All\",\"delete_messages_warning\":\"Are you sure you want to delete all messages for everyone? It cannot be undone.\",\"action_leave_chat\":\"Leave Conversation\",\"leave_chat_warning\":\"Are you sure you want to leave this conversation?\",\"action_block_contact\":\"Block Contact\",\"block_contact_warning\":\"Are you sure you want to block this contact?\",\"action_report_chat\":\"Report Conversation\",\"report_chat_warning\":\"Are you sure you want to block and report this conversation?\",\"title_info\":\"Info\",\"label_topic_name\":\"Name\",\"label_private\":\"Private comment\",\"private_editing_placeholder\":\"Visible to you only\",\"label_muting_topic\":\"Muted:\",\"action_more\":\"More\",\"label_your_permissions\":\"Your permissions:\",\"label_permissions\":\"Permissions:\",\"label_you\":\"You:\",\"label_default_access\":\"Default access mode:\",\"label_group_members\":\"Group members:\",\"button_add_members\":\"Add members\",\"group_has_no_members\":\"No members\",\"login_prompt\":\"Login\",\"password_prompt\":\"Password\",\"stay_logged_in\":\"Stay logged in\",\"forgot_password_link\":\"Forgot password?\",\"button_sign_in\":\"Sign in\",\"label_client\":\"Client:\",\"label_server\":\"Server:\",\"online_now\":\"online now\",\"last_seen_timestamp\":\"Last seen\",\"title_not_found\":\"Not found\",\"unnamed_topic\":\"Unnamed\",\"messages_not_readable\":\"no access to messages\",\"peers_messaging_disabled\":\"Peer's messaging is disabled.\",\"enable_peers_messaging\":\"Enable\",\"search_for_contacts\":\"Use search to find contacts\",\"search_no_results\":\"Search returned no results\",\"tabtitle_find_user\":\"find\",\"tabtitle_new_group\":\"new group\",\"tabtitle_group_by_id\":\"by id\",\"new_password_placeholder\":\"Enter new password\",\"label_reset_password\":\"Send a password reset email:\",\"credential_email_prompt\":\"Your registration email\",\"button_reset\":\"Reset\",\"button_send_request\":\"Send request\",\"label_server_to_use\":\"Server to use:\",\"label_wire_transport\":\"Wire transport:\",\"button_update\":\"Update\",\"sidepanel_title_login\":\"Sign In\",\"sidepanel_title_register\":\"Create Account\",\"sidepanel_title_settings\":\"Settings\",\"sidepanel_title_edit_account\":\"Edit Account\",\"sidepanel_title_newtpk\":\"Start New Chat\",\"sidepanel_title_cred\":\"Confirm Credentials\",\"sidepanel_title_reset\":\"Reset Password\",\"sidepanel_title_archive\":\"Archived Chats\",\"update_available\":\"Update available. <a href=\\\"\\\">Reload</a>.\",\"reconnect_countdown\":\"Disconnected. Reconnecting in {seconds}…\",\"reconnect_now\":\"Try now\",\"phone_dative\":\"phone\",\"email_dative\":\"email\",\"enter_confirmation_code_prompt\":\"Enter confirmation code sent to you by {method}:\",\"numeric_confirmation_code_prompt\":\"Numbers only\",\"button_confirm\":\"Confirm\",\"save_attachment\":\"save\",\"deleted_content\":\"content deleted\",\"invalid_content\":\"invalid content\",\"user_not_found\":\"Not found\",\"badge_you\":\"you\",\"badge_owner\":\"owner\",\"menu_item_info\":\"Info\",\"menu_item_clear_messages\":\"Clear messages\",\"menu_item_clear_messages_for_all\":\"Clear for All\",\"menu_item_delete\":\"Delete\",\"menu_item_delete_for_all\":\"Delete for All\",\"menu_item_send_retry\":\"Retry\",\"menu_item_mute\":\"Mute\",\"menu_item_unmute\":\"Unmute\",\"menu_item_delete_topic\":\"Delete\",\"topic_delete_warning\":\"Are you sure you want to delete this conversation?\",\"menu_item_unblock\":\"Unblock\",\"menu_item_block\":\"Block\",\"topic_block_warning\":\"Are you sure you want to block this conversation?\",\"menu_item_member_delete\":\"Remove\",\"menu_item_archive_topic\":\"Archive\",\"action_cancel\":\"cancel\",\"upload_finishing\":\"finishing...\",\"no_contacts\":\"You have no contacts :-(\",\"contacts_not_found_short\":\"No contacts match '{query}'\",\"title_group_members\":\"Group Members\",\"title_all_contacts\":\"All Contacts\",\"button_ok\":\"OK\",\"button_cancel\":\"Cancel\",\"more_online_members\":\"+{overflow} more\",\"download_action\":\"download\",\"label_file_name\":\"File name:\",\"label_content_type\":\"Content type:\",\"label_size\":\"Size:\",\"chat_invitation\":\"You are invited to start a new chat. What would you like to do?\",\"chat_invitation_accept\":\"Accept\",\"chat_invitation_ignore\":\"Ignore\",\"chat_invitation_block\":\"Block\",\"error_invalid_id\":\"Invalid ID\",\"group_user_id_prompt\":\"Group or User ID\",\"button_subscribe\":\"Subscribe\",\"topic_name_editing_placeholder\":\"Freeform name of the group\",\"button_create\":\"Create\",\"permission_join\":\"Join ({val})\",\"permission_read\":\"Read ({val})\",\"permission_write\":\"Write ({val})\",\"permission_pres\":\"Get notified ({val})\",\"permission_admin\":\"Approve ({val})\",\"permission_share\":\"Share ({val})\",\"permission_delete\":\"Delete ({val})\",\"permission_owner\":\"Owner ({val})\",\"title_permissions\":\"Permissions\",\"message_sending\":\"sending...\",\"message_sending_failed\":\"failed\",\"search_placeholder\":\"List like email:alice@example.com, tel:17025550003...\",\"messaging_disabled_prompt\":\"Messaging disabled\",\"new_message_prompt\":\"New message\",\"image_caption_prompt\":\"Image caption\",\"file_attachment_too_large\":\"The file size {size} exceeds the {limit} limit.\",\"cannot_initiate_file_upload\":\"Cannot initiate file upload.\",\"tags_not_found\":\"No tags defined. Add some.\",\"tags_editor_no_tags\":\"Add some tags\",\"title_manage_tags\":\"Manage\"},\"ru\":{\"contacts_not_found\":\"Чатов нет<br />¯∖_(ツ)_/¯\",\"full_name_prompt\":\"Полное имя, напр. Иван Петров\",\"email_prompt\":\"Email, напр. ivan@example.com\",\"button_sign_up\":\"Создать аккаунт\",\"label_your_name\":\"Ваше имя\",\"label_password\":\"Пароль\",\"password_unchanged_prompt\":\"Не изменен\",\"label_user_id\":\"Адрес:\",\"label_default_access_mode\":\"Доступ по умолчанию:\",\"label_message_sound\":\"Звук нового сообщения:\",\"label_push_notifications\":\"Уведомления:\",\"label_push_notifications_disabled\":\"Уведомления (требуют HTTPS):\",\"title_tag_manager\":\"Теги для поиска\",\"button_logout\":\"Выйти\",\"login_prompt\":\"Логин\",\"password_prompt\":\"Пароль\",\"stay_logged_in\":\"Запомнить\",\"forgot_password_link\":\"Напомнить пароль\",\"button_sign_in\":\"Войти\",\"label_client\":\"Клиент:\",\"label_server\":\"Сервер:\",\"online_now\":\"онлайн\",\"last_seen_timestamp\":\"Был активен\",\"title_not_found\":\"Не найден\",\"unnamed_topic\":\"Без названия\",\"messages_not_readable\":\"нет доступа к сообщениям\",\"tabtitle_find_user\":\"найти\",\"tabtitle_new_group\":\"создать\",\"tabtitle_group_by_id\":\"по id\",\"label_server_to_use\":\"Использовать сервер:\",\"label_wire_transport\":\"Соединение:\",\"button_update\":\"Применить\",\"sidepanel_title_login\":\"Авторизация\",\"sidepanel_title_register\":\"Зарегистрироваться\",\"sidepanel_title_settings\":\"Настройки\",\"sidepanel_title_edit_account\":\"Редактировать аккаунт\",\"sidepanel_title_newtpk\":\"Новый чат\",\"sidepanel_title_cred\":\"Подтвердить\",\"sidepanel_title_reset\":\"Сменить пароль\",\"tags_not_found\":\"Тегов нет. Добавьте\",\"tags_editor_no_tags\":\"Добавьте теги\",\"title_manage_tags\":\"Редактировать\",\"message_sending\":\"в пути...\",\"message_sending_failed\":\"ошибка\",\"search_placeholder\":\"Список, напр. email:alice@example.com, tel:+17025550003...\",\"messaging_disabled_prompt\":\"Отправка недоступна\",\"new_message_prompt\":\"Новое сообщение\",\"file_attachment_too_large\":\"Размер файла {size} превышает {limit} лимит.\",\"cannot_initiate_file_upload\":\"Ошибка загрузки файла.\",\"search_for_contacts\":\"Поиск контактов\",\"enter_confirmation_code_prompt\":\"Код подтверждения, полученный по {method}:\",\"numeric_confirmation_code_prompt\":\"Только цифры\",\"button_confirm\":\"Подтвердить\",\"button_ok\":\"OK\",\"button_cancel\":\"Отменить\",\"invalid_content\":\"сообщение не читается\",\"label_file_name\":\"Имя файла:\",\"label_content_type\":\"Тип:\",\"label_size\":\"Размер:\",\"phone_dative\":\"телефону\",\"email_dative\":\"емейлу\",\"title_group_members\":\"Участники\",\"download_action\":\"скачать\",\"permission_join\":\"Подписываться ({val})\",\"permission_read\":\"Читать ({val})\",\"permission_write\":\"Писать ({val})\",\"permission_pres\":\"Уведомлять ({val})\",\"permission_admin\":\"Подтверждать ({val})\",\"permission_share\":\"Приглашать ({val})\",\"permission_delete\":\"Удалять ({val})\",\"permission_owner\":\"Владелец ({val})\",\"title_permissions\":\"Права доступа\",\"requested_permissions\":\"Требуются\",\"granted_permissions\":\"Получены\",\"menu_item_edit_permissions\":\"Права доступа\",\"label_other_user\":\"Второй\",\"label_topic_name\":\"Название\",\"label_private\":\"Комментарий\",\"private_editing_placeholder\":\"Виден только вам\",\"label_muting_topic\":\"Без уведомлений\",\"action_more\":\"Ещё\",\"label_your_permissions\":\"Ваши права доступа:\",\"label_permissions\":\"Права доступа:\",\"label_you\":\"Вы:\",\"label_default_access\":\"Права по умолчанию:\",\"label_group_members\":\"Участники чата:\",\"button_add_members\":\"Добавить\",\"group_has_no_members\":\"Нет участников\",\"action_leave_chat\":\"Уйти из чата\",\"menu_item_info\":\"Информация\",\"menu_item_clear_messages\":\"Удалить сообщения\",\"menu_item_clear_messages_for_all\":\"Удалить для всех\",\"menu_item_delete\":\"Удалить\",\"menu_item_delete_for_all\":\"Удалить для всех\",\"menu_item_send_retry\":\"Отправить заново\",\"menu_item_mute\":\"Не уведомлять\",\"menu_item_unmute\":\"Уведомлять\",\"menu_item_delete_topic\":\"Удалить чат\",\"menu_item_unblock\":\"Разблокировать\",\"menu_item_block\":\"Заблокировать\",\"menu_item_member_delete\":\"Отписать\",\"title_info\":\"Подробности\",\"new_password_placeholder\":\"Введите новый пароль\",\"label_reset_password\":\"Отправить емейл для смены пароля:\",\"credential_email_prompt\":\"Регистрационный емейл\",\"button_reset\":\"Изменить\",\"button_send_request\":\"Отправить\",\"action_cancel\":\"отменить\",\"upload_finishing\":\"завершение...\",\"no_contacts\":\"Ничего нет :-(\",\"contacts_not_found_short\":\"Нет контактов для запроса '{query}'\",\"title_all_contacts\":\"Все контакты\",\"error_invalid_id\":\"Неверный ID\",\"group_user_id_prompt\":\"ID чата или пользователя\",\"button_subscribe\":\"Подписаться\",\"topic_name_editing_placeholder\":\"Название чата\",\"button_create\":\"Создать\",\"badge_you\":\"вы\",\"badge_owner\":\"влад.\",\"update_available\":\"Есть новая версия приложения. <a href=\\\"\\\">Обновить</a>.\",\"user_not_found\":\"Не найден\",\"reconnect_countdown\":\"Нет связи. Подключение через {seconds}…\",\"reconnect_now\":\"Подключить сейчас.\",\"save_attachment\":\"сохранить\",\"menu_item_archive_topic\":\"В архив\",\"archived_contacts\":\"Чаты в архиве ({count})\",\"sidepanel_title_archive\":\"Архив чатов\",\"chat_invitation\":\"Вас пригласили начать новый чат. Как вы хотите поступить?\",\"chat_invitation_accept\":\"Принять\",\"chat_invitation_ignore\":\"Игнорировать\",\"chat_invitation_block\":\"Заблокировать\",\"peers_messaging_disabled\":\"Чат заблокирован у корреспондента.\",\"enable_peers_messaging\":\"Разблокировать.\",\"more_online_members\":\"+еще {overflow}\",\"label_user_contacts\":\"Конакты:\",\"validate_credential_action\":\"подтвердить\",\"label_legal\":\"Прочее\",\"link_contact_us\":\"Связаться с нами\",\"link_terms_of_service\":\"Условия сервиса\",\"link_privacy_policy\":\"Политика конфиденциальности\",\"action_delete_messages\":\"Удалить сообщения\",\"action_block_contact\":\"Заблокировать контакт\",\"action_report_chat\":\"Сообщить о нарушении\",\"delete_messages_warning\":\"Вы действительно хотите удалить все сообщения?\",\"leave_chat_warning\":\"Вы действительно хотите покинуть этот чат?\",\"block_contact_warning\":\"Вы действительно заблокировать этот контакт?\",\"report_chat_warning\":\"Вы действительно хотите сообщить о нарушении и заблокировать этот чат?\",\"action_clear_messages\":\"Удалить сообщения\",\"clear_messages_warning\":\"Вы действительно хотите удалить все сообщения в чате? Их будет невозможно восстановить.\",\"topic_delete_warning\":\"Вы действительно хотите удалить этот чат?\",\"topic_block_warning\":\"Вы действительно хотите заблокировать этот чат?\",\"search_no_results\":\"Ничего не найдено\",\"deleted_content\":\"удалено\",\"image_caption_prompt\":\"Подпись к фото\",\"label_incognito_mode\":\"Режим инкогнито:\"},\"zh\":{\"archived_contacts\":\"已归档联系人 ({count})\",\"contacts_not_found\":\"你尚无会话<br />¯∖_(ツ)_/¯\",\"full_name_prompt\":\"全名，例如张伟\",\"email_prompt\":\"电子邮件，例如 zhang@example.com\",\"button_sign_up\":\"注册\",\"label_your_name\":\"你的姓名\",\"label_password\":\"密码\",\"password_unchanged_prompt\":\"未改变\",\"label_user_id\":\"地址：\",\"label_default_access_mode\":\"蓦然访问模式：\",\"label_message_sound\":\"消息提示音：\",\"label_push_notifications\":\"通知提醒：\",\"label_push_notifications_disabled\":\"通知提醒（需要 HTTPS）：\",\"title_tag_manager\":\"标签（用户发现）\",\"button_logout\":\"登出\",\"requested_permissions\":\"已请求\",\"granted_permissions\":\"已授予\",\"menu_item_edit_permissions\":\"编辑权限\",\"label_other_user\":\"其他\",\"title_info\":\"信息\",\"label_topic_name\":\"名称\",\"label_private\":\"私人评论\",\"private_editing_placeholder\":\"仅自己可见\",\"label_muting_topic\":\"已静音：\",\"action_more\":\"更多\",\"label_your_permissions\":\"你的权限：\",\"label_permissions\":\"权限：\",\"label_you\":\"你：\",\"label_default_access\":\"默认权限模式：\",\"label_group_members\":\"群组成员：\",\"button_add_members\":\"添加成员\",\"group_has_no_members\":\"无成员\",\"action_leave_chat\":\"离开\",\"login_prompt\":\"登录\",\"password_prompt\":\"密码\",\"stay_logged_in\":\"保持登录\",\"forgot_password_link\":\"忘记密码？\",\"button_sign_in\":\"登录\",\"label_client\":\"客户端：\",\"label_server\":\"服务器：\",\"online_now\":\"在线\",\"last_seen_timestamp\":\"最后可见\",\"title_not_found\":\"无法找到\",\"unnamed_topic\":\"未命名\",\"messages_not_readable\":\"无消息访问权限\",\"peers_messaging_disabled\":\"成员间消息已禁用。\",\"enable_peers_messaging\":\"启用\",\"tabtitle_find_user\":\"搜索\",\"tabtitle_new_group\":\"新群组\",\"tabtitle_group_by_id\":\"通过 id\",\"search_for_contacts\":\"使用搜索寻找联系人\",\"new_password_placeholder\":\"输入新密码\",\"label_reset_password\":\"发送密码重置邮件：\",\"credential_email_prompt\":\"你的注册邮箱\",\"button_reset\":\"重置\",\"button_send_request\":\"发送请求\",\"label_server_to_use\":\"使用的服务器：\",\"label_wire_transport\":\"线路传输：\",\"button_update\":\"更新\",\"sidepanel_title_login\":\"登录\",\"sidepanel_title_register\":\"创建账户\",\"sidepanel_title_settings\":\"设置\",\"sidepanel_title_edit_account\":\"编辑账户\",\"sidepanel_title_newtpk\":\"开始新会话\",\"sidepanel_title_cred\":\"确认凭据\",\"sidepanel_title_reset\":\"重置密码\",\"sidepanel_title_archive\":\"已存档会话\",\"update_available\":\"更新可用。<a href=\\\"\\\">重新载入</a>.\",\"reconnect_countdown\":\"连接已断开。{seconds} 秒后重新连接…\",\"reconnect_now\":\"立即尝试\",\"phone_dative\":\"电话\",\"email_dative\":\"电子邮件\",\"enter_confirmation_code_prompt\":\"输入通过{method}发送的验证码：\",\"numeric_confirmation_code_prompt\":\"仅数字\",\"button_confirm\":\"确认\",\"save_attachment\":\"保存\",\"invalid_content\":\"无效内容\",\"user_not_found\":\"未找到\",\"badge_you\":\"你\",\"badge_owner\":\"所有者\",\"menu_item_info\":\"信息\",\"menu_item_clear_messages\":\"清空消息\",\"menu_item_clear_messages_for_all\":\"全部清除\",\"menu_item_delete\":\"删除\",\"menu_item_delete_for_all\":\"全部删除\",\"menu_item_mute\":\"静音\",\"menu_item_unmute\":\"取消静音\",\"menu_item_delete_topic\":\"删除\",\"menu_item_unblock\":\"取消屏蔽\",\"menu_item_block\":\"屏蔽\",\"menu_item_member_delete\":\"移除\",\"menu_item_archive_topic\":\"归档\",\"action_cancel\":\"取消\",\"upload_finishing\":\"正在结束...\",\"no_contacts\":\"你尚无联系人 ：-(\",\"contacts_not_found_short\":\"无联系人匹配 '{query}'\",\"title_group_members\":\"群组成员\",\"title_all_contacts\":\"全部联系人\",\"button_ok\":\"好\",\"button_cancel\":\"取消\",\"download_action\":\"下载\",\"label_file_name\":\"文件名：\",\"label_content_type\":\"内容类型：\",\"label_size\":\"大小：\",\"chat_invitation\":\"你受邀开始新会话。你想怎么做？\",\"chat_invitation_accept\":\"接受\",\"chat_invitation_ignore\":\"忽略\",\"chat_invitation_block\":\"屏蔽\",\"error_invalid_id\":\"无效 ID\",\"group_user_id_prompt\":\"群组或用户 ID\",\"button_subscribe\":\"订阅\",\"topic_name_editing_placeholder\":\"群组自由格式名称\",\"button_create\":\"创建\",\"permission_join\":\"加入 ({val})\",\"permission_read\":\"读取 ({val})\",\"permission_write\":\"写入 ({val})\",\"permission_pres\":\"获取通知 ({val})\",\"permission_admin\":\"批准 ({val})\",\"permission_share\":\"分享 ({val})\",\"permission_delete\":\"删除 ({val})\",\"permission_owner\":\"所有者 ({val})\",\"title_permissions\":\"权限\",\"message_sending\":\"正在发送...\",\"message_sending_failed\":\"发送失败\",\"search_placeholder\":\"列表如 email:alice@example.com, tel:+17025550003...\",\"messaging_disabled_prompt\":\"消息已禁用\",\"new_message_prompt\":\"新消息\",\"file_attachment_too_large\":\"文件大小 {size} 超过 {limit} 限制。\",\"cannot_initiate_file_upload\":\"无法初始化文件上传。\",\"tags_not_found\":\"尚未定义标签。添加一些。\",\"tags_editor_no_tags\":\"添加一些标签\",\"title_manage_tags\":\"管理标签\",\"more_online_members\":\"还有{overflow}个\",\"label_user_contacts\":\"往来：\",\"validate_credential_action\":\"确认\",\"label_legal\":\"法律东西\",\"link_contact_us\":\"联系我们\",\"link_terms_of_service\":\"条款和条件\",\"link_privacy_policy\":\"隐私政策\",\"action_delete_messages\":\"删除所有帖子\",\"action_block_contact\":\"屏蔽联系人\",\"delete_messages_warning\":\"您确定要删除所有消息吗？无法撤消。\",\"leave_chat_warning\":\"您确定要退出此对话吗？\",\"block_contact_warning\":\"您确定要阻止此联系人吗？\",\"action_report_chat\":\"检举垃圾邮件\",\"report_chat_warning\":\"您确定要停止并报告此对话吗？\",\"action_clear_messages\":\"删除讯息\",\"clear_messages_warning\":\"您确定要清除所有消息吗？无法撤消。\",\"topic_delete_warning\":\"您确定要删除此对话吗？\",\"topic_block_warning\":\"您确定要阻止此对话吗？\",\"search_no_results\":\"搜索返回任何结果\",\"deleted_content\":\"内容已删除\",\"image_caption_prompt\":\"图片标题\",\"menu_item_send_retry\":\"重试\",\"label_incognito_mode\":\"无痕模式：\"}}");
+module.exports = JSON.parse("{\"en\":{\"validate_credential_action\":\"confirm\",\"title_tag_manager\":\"Tags (user discovery)\",\"label_user_contacts\":\"Contacts:\",\"button_add_another\":\"Add another\",\"label_message_sound\":\"Message sound:\",\"label_push_notifications\":\"Notification alerts:\",\"label_push_notifications_disabled\":\"Notification alerts (requires HTTPS):\",\"label_incognito_mode\":\"Incognito mode:\",\"delete_account\":\"Delete account\",\"delete_account_arning\":\"Are you sure you want to delete your account? It cannot be undone.\",\"label_password\":\"Password\",\"password_unchanged_prompt\":\"Unchanged\",\"button_logout\":\"Logout\",\"button_delete_account\":\"Delete account\",\"label_default_access_mode\":\"Default access mode:\",\"link_contact_us\":\"Contact Us\",\"link_terms_of_service\":\"Terms of Service\",\"link_privacy_policy\":\"Privacy Policy\",\"label_sdk\":\"SDK:\",\"label_server_address\":\"Server address:\",\"archived_contacts\":\"Archived contacts ({count})\",\"contacts_not_found\":\"You have no chats<br />¯∖_(ツ)_/¯\",\"full_name_prompt\":\"Full name, e.g. John Doe\",\"email_prompt\":\"Email, e.g. jdoe@example.com\",\"button_sign_up\":\"Sign up\",\"label_your_name\":\"Your name\",\"label_user_id\":\"ID:\",\"button_edit\":\"Edit\",\"requested_permissions\":\"Requested\",\"granted_permissions\":\"Granted\",\"menu_item_edit_permissions\":\"Edit permissions\",\"label_other_user\":\"Other\",\"action_clear_messages\":\"Clear Messages\",\"clear_messages_warning\":\"Are you sure you want to clear all messages? It cannot be undone.\",\"action_delete_messages\":\"Clear Messages for All\",\"delete_messages_warning\":\"Are you sure you want to delete all messages for everyone? It cannot be undone.\",\"action_leave_chat\":\"Leave Conversation\",\"leave_chat_warning\":\"Are you sure you want to leave this conversation?\",\"action_block_contact\":\"Block Contact\",\"block_contact_warning\":\"Are you sure you want to block this contact?\",\"action_report_chat\":\"Report Conversation\",\"report_chat_warning\":\"Are you sure you want to block and report this conversation?\",\"title_info\":\"Info\",\"label_topic_name\":\"Name\",\"label_private\":\"Private comment\",\"private_editing_placeholder\":\"Visible to you only\",\"label_muting_topic\":\"Muted:\",\"action_more\":\"More\",\"label_your_permissions\":\"Your permissions:\",\"label_permissions\":\"Permissions:\",\"label_you\":\"You:\",\"label_default_access\":\"Default access mode:\",\"label_group_members\":\"Group members:\",\"button_add_members\":\"Add members\",\"group_has_no_members\":\"No members\",\"login_prompt\":\"Login\",\"password_prompt\":\"Password\",\"stay_logged_in\":\"Stay logged in\",\"forgot_password_link\":\"Forgot password?\",\"button_sign_in\":\"Sign in\",\"label_client\":\"Client:\",\"label_server\":\"Server:\",\"online_now\":\"online now\",\"last_seen_timestamp\":\"Last seen\",\"title_not_found\":\"Not found\",\"unnamed_topic\":\"Unnamed\",\"messages_not_readable\":\"no access to messages\",\"peers_messaging_disabled\":\"Peer's messaging is disabled.\",\"enable_peers_messaging\":\"Enable\",\"search_for_contacts\":\"Use search to find contacts\",\"search_no_results\":\"Search returned no results\",\"tabtitle_find_user\":\"find\",\"tabtitle_new_group\":\"new group\",\"tabtitle_group_by_id\":\"by id\",\"new_password_placeholder\":\"Enter new password\",\"label_reset_password\":\"Send a password reset email:\",\"credential_email_prompt\":\"Your registration email\",\"button_reset\":\"Reset\",\"button_send_request\":\"Send request\",\"label_server_to_use\":\"Server to use:\",\"label_wire_transport\":\"Wire transport:\",\"button_update\":\"Update\",\"sidepanel_title_login\":\"Sign In\",\"sidepanel_title_register\":\"Create Account\",\"sidepanel_title_settings\":\"Settings\",\"sidepanel_title_account_settings\":\"Account Settings\",\"sidepanel_title_acc_general\":\"General\",\"sidepanel_title_acc_security\":\"Security\",\"sidepanel_title_acc_notifications\":\"Notifications\",\"sidepanel_title_acc_support\":\"Support\",\"sidepanel_title_newtpk\":\"Start New Chat\",\"sidepanel_title_cred\":\"Confirm Credentials\",\"sidepanel_title_reset\":\"Reset Password\",\"sidepanel_title_archive\":\"Archived Chats\",\"update_available\":\"Update available. <a href=\\\"\\\">Reload</a>.\",\"reconnect_countdown\":\"Disconnected. Reconnecting in {seconds}…\",\"reconnect_now\":\"Try now\",\"phone_dative\":\"phone\",\"email_dative\":\"email\",\"enter_confirmation_code_prompt\":\"Enter confirmation code sent to you by {method}:\",\"numeric_confirmation_code_prompt\":\"Numbers only\",\"button_confirm\":\"Confirm\",\"save_attachment\":\"save\",\"deleted_content\":\"content deleted\",\"invalid_content\":\"invalid content\",\"user_not_found\":\"Not found\",\"badge_you\":\"you\",\"badge_owner\":\"owner\",\"menu_item_info\":\"Info\",\"menu_item_clear_messages\":\"Clear messages\",\"menu_item_clear_messages_for_all\":\"Clear for All\",\"menu_item_delete\":\"Delete\",\"menu_item_delete_for_all\":\"Delete for All\",\"menu_item_send_retry\":\"Retry\",\"menu_item_mute\":\"Mute\",\"menu_item_unmute\":\"Unmute\",\"menu_item_delete_topic\":\"Delete\",\"topic_delete_warning\":\"Are you sure you want to delete this conversation?\",\"menu_item_unblock\":\"Unblock\",\"menu_item_block\":\"Block\",\"topic_block_warning\":\"Are you sure you want to block this conversation?\",\"menu_item_member_delete\":\"Remove\",\"menu_item_archive_topic\":\"Archive\",\"action_cancel\":\"cancel\",\"upload_finishing\":\"finishing...\",\"no_contacts\":\"You have no contacts :-(\",\"contacts_not_found_short\":\"No contacts match '{query}'\",\"title_group_members\":\"Group Members\",\"title_all_contacts\":\"All Contacts\",\"button_ok\":\"OK\",\"button_cancel\":\"Cancel\",\"more_online_members\":\"+{overflow} more\",\"download_action\":\"download\",\"label_file_name\":\"File name:\",\"label_content_type\":\"Content type:\",\"label_size\":\"Size:\",\"chat_invitation\":\"You are invited to start a new chat. What would you like to do?\",\"chat_invitation_accept\":\"Accept\",\"chat_invitation_ignore\":\"Ignore\",\"chat_invitation_block\":\"Block\",\"error_invalid_id\":\"Invalid ID\",\"group_user_id_prompt\":\"Group or User ID\",\"button_subscribe\":\"Subscribe\",\"topic_name_editing_placeholder\":\"Freeform name of the group\",\"button_create\":\"Create\",\"permission_join\":\"Join ({val})\",\"permission_read\":\"Read ({val})\",\"permission_write\":\"Write ({val})\",\"permission_pres\":\"Get notified ({val})\",\"permission_admin\":\"Approve ({val})\",\"permission_share\":\"Share ({val})\",\"permission_delete\":\"Delete ({val})\",\"permission_owner\":\"Owner ({val})\",\"title_permissions\":\"Permissions\",\"message_sending\":\"sending...\",\"message_sending_failed\":\"failed\",\"search_placeholder\":\"List like email:alice@example.com, tel:17025550003...\",\"messaging_disabled_prompt\":\"Messaging disabled\",\"new_message_prompt\":\"New message\",\"image_caption_prompt\":\"Image caption\",\"file_attachment_too_large\":\"The file size {size} exceeds the {limit} limit.\",\"cannot_initiate_file_upload\":\"Cannot initiate file upload.\",\"tags_not_found\":\"No tags defined. Add some.\",\"tags_editor_no_tags\":\"Add some tags\",\"title_manage_tags\":\"Manage\"},\"ru\":{\"contacts_not_found\":\"Чатов нет<br />¯∖_(ツ)_/¯\",\"full_name_prompt\":\"Полное имя, напр. Иван Петров\",\"email_prompt\":\"Email, напр. ivan@example.com\",\"button_sign_up\":\"Создать аккаунт\",\"label_your_name\":\"Ваше имя\",\"label_password\":\"Пароль\",\"password_unchanged_prompt\":\"Не изменен\",\"label_user_id\":\"ID:\",\"label_default_access_mode\":\"Доступ по умолчанию:\",\"label_message_sound\":\"Звук нового сообщения:\",\"label_push_notifications\":\"Уведомления:\",\"label_push_notifications_disabled\":\"Уведомления (требуют HTTPS):\",\"button_logout\":\"Выйти\",\"login_prompt\":\"Логин\",\"password_prompt\":\"Пароль\",\"stay_logged_in\":\"Запомнить\",\"forgot_password_link\":\"Напомнить пароль\",\"button_sign_in\":\"Войти\",\"label_client\":\"Клиент:\",\"label_server\":\"Сервер:\",\"online_now\":\"онлайн\",\"last_seen_timestamp\":\"Был активен\",\"title_not_found\":\"Не найден\",\"unnamed_topic\":\"Без названия\",\"messages_not_readable\":\"нет доступа к сообщениям\",\"tabtitle_find_user\":\"найти\",\"tabtitle_new_group\":\"создать\",\"tabtitle_group_by_id\":\"по id\",\"label_server_to_use\":\"Использовать сервер:\",\"label_wire_transport\":\"Соединение:\",\"button_update\":\"Применить\",\"sidepanel_title_login\":\"Авторизация\",\"sidepanel_title_register\":\"Зарегистрироваться\",\"sidepanel_title_settings\":\"Настройки\",\"sidepanel_title_account_settings\":\"Настройки аккаунта\",\"sidepanel_title_newtpk\":\"Новый чат\",\"sidepanel_title_cred\":\"Подтвердить\",\"sidepanel_title_reset\":\"Сменить пароль\",\"tags_not_found\":\"Тегов нет. Добавьте\",\"tags_editor_no_tags\":\"Добавьте теги\",\"title_manage_tags\":\"Редактировать\",\"message_sending\":\"в пути...\",\"message_sending_failed\":\"ошибка\",\"search_placeholder\":\"Список, напр. email:alice@example.com, tel:+17025550003...\",\"messaging_disabled_prompt\":\"Отправка недоступна\",\"new_message_prompt\":\"Новое сообщение\",\"file_attachment_too_large\":\"Размер файла {size} превышает {limit} лимит.\",\"cannot_initiate_file_upload\":\"Ошибка загрузки файла.\",\"search_for_contacts\":\"Поиск контактов\",\"enter_confirmation_code_prompt\":\"Код подтверждения, полученный по {method}:\",\"numeric_confirmation_code_prompt\":\"Только цифры\",\"button_confirm\":\"Подтвердить\",\"button_ok\":\"OK\",\"button_cancel\":\"Отменить\",\"invalid_content\":\"сообщение не читается\",\"label_file_name\":\"Имя файла:\",\"label_content_type\":\"Тип:\",\"label_size\":\"Размер:\",\"phone_dative\":\"телефону\",\"email_dative\":\"емейлу\",\"title_group_members\":\"Участники\",\"download_action\":\"скачать\",\"permission_join\":\"Подписываться ({val})\",\"permission_read\":\"Читать ({val})\",\"permission_write\":\"Писать ({val})\",\"permission_pres\":\"Уведомлять ({val})\",\"permission_admin\":\"Подтверждать ({val})\",\"permission_share\":\"Приглашать ({val})\",\"permission_delete\":\"Удалять ({val})\",\"permission_owner\":\"Владелец ({val})\",\"title_permissions\":\"Права доступа\",\"requested_permissions\":\"Требуются\",\"granted_permissions\":\"Получены\",\"menu_item_edit_permissions\":\"Права доступа\",\"label_other_user\":\"Второй\",\"label_topic_name\":\"Название\",\"label_private\":\"Комментарий\",\"private_editing_placeholder\":\"Виден только вам\",\"label_muting_topic\":\"Без уведомлений\",\"action_more\":\"Ещё\",\"label_your_permissions\":\"Ваши права доступа:\",\"label_permissions\":\"Права доступа:\",\"label_you\":\"Вы:\",\"label_default_access\":\"Права по умолчанию:\",\"label_group_members\":\"Участники чата:\",\"button_add_members\":\"Добавить\",\"group_has_no_members\":\"Нет участников\",\"action_leave_chat\":\"Уйти из чата\",\"menu_item_info\":\"Информация\",\"menu_item_clear_messages\":\"Удалить сообщения\",\"menu_item_clear_messages_for_all\":\"Удалить для всех\",\"menu_item_delete\":\"Удалить\",\"menu_item_delete_for_all\":\"Удалить для всех\",\"menu_item_send_retry\":\"Отправить заново\",\"menu_item_mute\":\"Не уведомлять\",\"menu_item_unmute\":\"Уведомлять\",\"menu_item_delete_topic\":\"Удалить чат\",\"menu_item_unblock\":\"Разблокировать\",\"menu_item_block\":\"Заблокировать\",\"menu_item_member_delete\":\"Отписать\",\"title_info\":\"Подробности\",\"new_password_placeholder\":\"Введите новый пароль\",\"label_reset_password\":\"Отправить емейл для смены пароля:\",\"credential_email_prompt\":\"Регистрационный емейл\",\"button_reset\":\"Изменить\",\"button_send_request\":\"Отправить\",\"action_cancel\":\"отменить\",\"upload_finishing\":\"завершение...\",\"no_contacts\":\"Ничего нет :-(\",\"contacts_not_found_short\":\"Нет контактов для запроса '{query}'\",\"title_all_contacts\":\"Все контакты\",\"error_invalid_id\":\"Неверный ID\",\"group_user_id_prompt\":\"ID чата или пользователя\",\"button_subscribe\":\"Подписаться\",\"topic_name_editing_placeholder\":\"Название чата\",\"button_create\":\"Создать\",\"badge_you\":\"вы\",\"badge_owner\":\"влад.\",\"update_available\":\"Есть новая версия приложения. <a href=\\\"\\\">Обновить</a>.\",\"user_not_found\":\"Не найден\",\"reconnect_countdown\":\"Нет связи. Подключение через {seconds}…\",\"reconnect_now\":\"Подключить сейчас.\",\"save_attachment\":\"сохранить\",\"menu_item_archive_topic\":\"В архив\",\"archived_contacts\":\"Чаты в архиве ({count})\",\"sidepanel_title_archive\":\"Архив чатов\",\"chat_invitation\":\"Вас пригласили начать новый чат. Как вы хотите поступить?\",\"chat_invitation_accept\":\"Принять\",\"chat_invitation_ignore\":\"Игнорировать\",\"chat_invitation_block\":\"Заблокировать\",\"peers_messaging_disabled\":\"Чат заблокирован у корреспондента.\",\"enable_peers_messaging\":\"Разблокировать.\",\"more_online_members\":\"+еще {overflow}\",\"link_contact_us\":\"Связаться с нами\",\"link_terms_of_service\":\"Условия сервиса\",\"link_privacy_policy\":\"Политика конфиденциальности\",\"action_delete_messages\":\"Удалить сообщения\",\"action_block_contact\":\"Заблокировать контакт\",\"action_report_chat\":\"Сообщить о нарушении\",\"delete_messages_warning\":\"Вы действительно хотите удалить все сообщения?\",\"leave_chat_warning\":\"Вы действительно хотите покинуть этот чат?\",\"block_contact_warning\":\"Вы действительно заблокировать этот контакт?\",\"report_chat_warning\":\"Вы действительно хотите сообщить о нарушении и заблокировать этот чат?\",\"action_clear_messages\":\"Удалить сообщения\",\"clear_messages_warning\":\"Вы действительно хотите удалить все сообщения в чате? Их будет невозможно восстановить.\",\"topic_delete_warning\":\"Вы действительно хотите удалить этот чат?\",\"topic_block_warning\":\"Вы действительно хотите заблокировать этот чат?\",\"search_no_results\":\"Ничего не найдено\",\"deleted_content\":\"удалено\",\"image_caption_prompt\":\"Подпись к фото\",\"label_incognito_mode\":\"Режим инкогнито:\",\"delete_account\":\"Удалить аккаунт\",\"delete_account_arning\":\"Вы уверены, что ходите удалить свой аккаунт? Его невозможно будет восстановить.\",\"button_delete_account\":\"Удалить аккаунт\",\"sidepanel_title_acc_security\":\"Безопасность\",\"sidepanel_title_acc_notifications\":\"Уведомления\",\"sidepanel_title_acc_support\":\"Поддержка\",\"label_sdk\":\"SDK:\",\"label_server_address\":\"Адрес сервера:\"},\"zh\":{\"archived_contacts\":\"已归档联系人 ({count})\",\"contacts_not_found\":\"你尚无会话<br />¯∖_(ツ)_/¯\",\"full_name_prompt\":\"全名，例如张伟\",\"email_prompt\":\"电子邮件，例如 zhang@example.com\",\"button_sign_up\":\"注册\",\"label_your_name\":\"你的姓名\",\"label_password\":\"密码\",\"password_unchanged_prompt\":\"未改变\",\"label_user_id\":\"地址：\",\"label_default_access_mode\":\"蓦然访问模式：\",\"label_message_sound\":\"消息提示音：\",\"label_push_notifications\":\"通知提醒：\",\"label_push_notifications_disabled\":\"通知提醒（需要 HTTPS）：\",\"button_logout\":\"登出\",\"requested_permissions\":\"已请求\",\"granted_permissions\":\"已授予\",\"menu_item_edit_permissions\":\"编辑权限\",\"label_other_user\":\"其他\",\"title_info\":\"信息\",\"label_topic_name\":\"名称\",\"label_private\":\"私人评论\",\"private_editing_placeholder\":\"仅自己可见\",\"label_muting_topic\":\"已静音：\",\"action_more\":\"更多\",\"label_your_permissions\":\"你的权限：\",\"label_permissions\":\"权限：\",\"label_you\":\"你：\",\"label_default_access\":\"默认权限模式：\",\"label_group_members\":\"群组成员：\",\"button_add_members\":\"添加成员\",\"group_has_no_members\":\"无成员\",\"action_leave_chat\":\"离开\",\"login_prompt\":\"登录\",\"password_prompt\":\"密码\",\"stay_logged_in\":\"保持登录\",\"forgot_password_link\":\"忘记密码？\",\"button_sign_in\":\"登录\",\"label_client\":\"客户端：\",\"label_server\":\"服务器：\",\"online_now\":\"在线\",\"last_seen_timestamp\":\"最后可见\",\"title_not_found\":\"无法找到\",\"unnamed_topic\":\"未命名\",\"messages_not_readable\":\"无消息访问权限\",\"peers_messaging_disabled\":\"成员间消息已禁用。\",\"enable_peers_messaging\":\"启用\",\"tabtitle_find_user\":\"搜索\",\"tabtitle_new_group\":\"新群组\",\"tabtitle_group_by_id\":\"通过 id\",\"search_for_contacts\":\"使用搜索寻找联系人\",\"new_password_placeholder\":\"输入新密码\",\"label_reset_password\":\"发送密码重置邮件：\",\"credential_email_prompt\":\"你的注册邮箱\",\"button_reset\":\"重置\",\"button_send_request\":\"发送请求\",\"label_server_to_use\":\"使用的服务器：\",\"label_wire_transport\":\"线路传输：\",\"button_update\":\"更新\",\"sidepanel_title_login\":\"登录\",\"sidepanel_title_register\":\"创建账户\",\"sidepanel_title_settings\":\"设置\",\"sidepanel_title_account_settings\":\"帐号设定\",\"sidepanel_title_newtpk\":\"开始新会话\",\"sidepanel_title_cred\":\"确认凭据\",\"sidepanel_title_reset\":\"重置密码\",\"sidepanel_title_archive\":\"已存档会话\",\"update_available\":\"更新可用。<a href=\\\"\\\">重新载入</a>.\",\"reconnect_countdown\":\"连接已断开。{seconds} 秒后重新连接…\",\"reconnect_now\":\"立即尝试\",\"phone_dative\":\"电话\",\"email_dative\":\"电子邮件\",\"enter_confirmation_code_prompt\":\"输入通过{method}发送的验证码：\",\"numeric_confirmation_code_prompt\":\"仅数字\",\"button_confirm\":\"确认\",\"save_attachment\":\"保存\",\"invalid_content\":\"无效内容\",\"user_not_found\":\"未找到\",\"badge_you\":\"你\",\"badge_owner\":\"所有者\",\"menu_item_info\":\"信息\",\"menu_item_clear_messages\":\"清空消息\",\"menu_item_clear_messages_for_all\":\"全部清除\",\"menu_item_delete\":\"删除\",\"menu_item_delete_for_all\":\"全部删除\",\"menu_item_mute\":\"静音\",\"menu_item_unmute\":\"取消静音\",\"menu_item_delete_topic\":\"删除\",\"menu_item_unblock\":\"取消屏蔽\",\"menu_item_block\":\"屏蔽\",\"menu_item_member_delete\":\"移除\",\"menu_item_archive_topic\":\"归档\",\"action_cancel\":\"取消\",\"upload_finishing\":\"正在结束...\",\"no_contacts\":\"你尚无联系人 ：-(\",\"contacts_not_found_short\":\"无联系人匹配 '{query}'\",\"title_group_members\":\"群组成员\",\"title_all_contacts\":\"全部联系人\",\"button_ok\":\"好\",\"button_cancel\":\"取消\",\"download_action\":\"下载\",\"label_file_name\":\"文件名：\",\"label_content_type\":\"内容类型：\",\"label_size\":\"大小：\",\"chat_invitation\":\"你受邀开始新会话。你想怎么做？\",\"chat_invitation_accept\":\"接受\",\"chat_invitation_ignore\":\"忽略\",\"chat_invitation_block\":\"屏蔽\",\"error_invalid_id\":\"无效 ID\",\"group_user_id_prompt\":\"群组或用户 ID\",\"button_subscribe\":\"订阅\",\"topic_name_editing_placeholder\":\"群组自由格式名称\",\"button_create\":\"创建\",\"permission_join\":\"加入 ({val})\",\"permission_read\":\"读取 ({val})\",\"permission_write\":\"写入 ({val})\",\"permission_pres\":\"获取通知 ({val})\",\"permission_admin\":\"批准 ({val})\",\"permission_share\":\"分享 ({val})\",\"permission_delete\":\"删除 ({val})\",\"permission_owner\":\"所有者 ({val})\",\"title_permissions\":\"权限\",\"message_sending\":\"正在发送...\",\"message_sending_failed\":\"发送失败\",\"search_placeholder\":\"列表如 email:alice@example.com, tel:+17025550003...\",\"messaging_disabled_prompt\":\"消息已禁用\",\"new_message_prompt\":\"新消息\",\"file_attachment_too_large\":\"文件大小 {size} 超过 {limit} 限制。\",\"cannot_initiate_file_upload\":\"无法初始化文件上传。\",\"tags_not_found\":\"尚未定义标签。添加一些。\",\"tags_editor_no_tags\":\"添加一些标签\",\"title_manage_tags\":\"管理标签\",\"more_online_members\":\"还有{overflow}个\",\"link_contact_us\":\"联系我们\",\"link_terms_of_service\":\"条款和条件\",\"link_privacy_policy\":\"隐私政策\",\"action_delete_messages\":\"删除所有帖子\",\"action_block_contact\":\"屏蔽联系人\",\"delete_messages_warning\":\"您确定要删除所有消息吗？无法撤消。\",\"leave_chat_warning\":\"您确定要退出此对话吗？\",\"block_contact_warning\":\"您确定要阻止此联系人吗？\",\"action_report_chat\":\"检举垃圾邮件\",\"report_chat_warning\":\"您确定要停止并报告此对话吗？\",\"action_clear_messages\":\"删除讯息\",\"clear_messages_warning\":\"您确定要清除所有消息吗？无法撤消。\",\"topic_delete_warning\":\"您确定要删除此对话吗？\",\"topic_block_warning\":\"您确定要阻止此对话吗？\",\"search_no_results\":\"搜索返回任何结果\",\"deleted_content\":\"内容已删除\",\"image_caption_prompt\":\"图片标题\",\"menu_item_send_retry\":\"重试\",\"label_incognito_mode\":\"无痕模式：\",\"delete_account\":\"删除帐户\",\"delete_account_arning\":\"您确定要删除您的帐户吗？无法撤消。\",\"button_delete_account\":\"删除帐户\",\"sidepanel_title_acc_security\":\"安全\",\"sidepanel_title_acc_notifications\":\"通知\",\"sidepanel_title_acc_support\":\"支持\",\"label_sdk\":\"开发包：\",\"label_server_address\":\"服务器地址：\"}}");
 
 /***/ }),
 
@@ -814,6 +814,602 @@ module.exports = JSON.parse("{\"en\":{\"archived_contacts\":\"Archived contacts 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PACKAGE_VERSION", function() { return PACKAGE_VERSION; });
 const PACKAGE_VERSION = "0.16.5-beta7";
+
+/***/ }),
+
+/***/ "./src/views/acc-general-view.jsx":
+/*!****************************************!*\
+  !*** ./src/views/acc-general-view.jsx ***!
+  \****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return AccGeneralView; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/avatar-upload.jsx */ "./src/widgets/avatar-upload.jsx");
+/* harmony import */ var _widgets_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/in-place-edit.jsx */ "./src/widgets/in-place-edit.jsx");
+/* harmony import */ var _widgets_tag_manager_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/tag-manager.jsx */ "./src/widgets/tag-manager.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+
+
+
+
+
+
+
+
+
+class AccGeneralView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+  constructor(props) {
+    super(props);
+    const me = this.props.tinode.getMeTopic();
+    this.state = {
+      fullName: me.public ? me.public.fn : undefined,
+      avatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__["makeImageUrl"])(me.public ? me.public.photo : null),
+      tags: me.tags(),
+      credentials: me.getCredentials() || [],
+      addCredActive: false,
+      addCredInvalid: false,
+      newCred: '',
+      previousOnTags: me.onTagsUpdated
+    };
+    this.tnNewTags = this.tnNewTags.bind(this);
+    this.tnCredsUpdated = this.tnCredsUpdated.bind(this);
+    this.handleFullNameUpdate = this.handleFullNameUpdate.bind(this);
+    this.handleImageChanged = this.handleImageChanged.bind(this);
+    this.handleCredChange = this.handleCredChange.bind(this);
+    this.handleCredKeyDown = this.handleCredKeyDown.bind(this);
+    this.handleCredEntered = this.handleCredEntered.bind(this);
+    this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
+  }
+
+  componentDidMount() {
+    const me = this.props.tinode.getMeTopic();
+    me.onCredsUpdated = this.tnCredsUpdated;
+    me.onTagsUpdated = this.tnNewTags;
+  }
+
+  componentWillUnmount() {
+    const me = this.props.tinode.getMeTopic();
+    me.onTagsUpdated = this.state.previousOnTags;
+    me.onCredsUpdated = undefined;
+  }
+
+  tnNewTags(tags) {
+    this.setState({
+      tags: tags
+    });
+  }
+
+  tnCredsUpdated(creds) {
+    this.setState({
+      credentials: creds || []
+    });
+  }
+
+  handleFullNameUpdate(fn) {
+    fn = fn.trim().substring(0, _config_js__WEBPACK_IMPORTED_MODULE_6__["MAX_TITLE_LENGTH"]);
+
+    if (fn) {
+      this.setState({
+        fullName: fn
+      });
+      this.props.onUpdateAccount(undefined, Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__["vcard"])(fn, null));
+    }
+  }
+
+  handleImageChanged(img) {
+    this.setState({
+      avatar: img
+    });
+    this.props.onUpdateAccount(undefined, Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__["vcard"])(null, img || tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.DEL_CHAR));
+  }
+
+  handleCredChange(e) {
+    this.setState({
+      newCred: e.target.value,
+      addCredInvalid: false
+    });
+  }
+
+  handleCredKeyDown(e) {
+    if (e.keyCode === 27) {
+      this.setState({
+        newCred: '',
+        addCredActive: false
+      });
+    } else if (e.keyCode === 13) {
+      this.handleCredEntered(e);
+    }
+  }
+
+  handleCredEntered(e) {
+    let value = this.state.newCred.trim();
+
+    if (!value) {
+      this.setState({
+        addCredActive: false,
+        addCredInvalid: false
+      });
+      return;
+    }
+
+    let val = Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__["asPhone"])(value);
+    let method;
+
+    if (val) {
+      method = 'tel';
+    } else {
+      val = Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__["asEmail"])(value);
+
+      if (val) {
+        method = 'email';
+      }
+    }
+
+    if (method) {
+      this.props.onCredAdd(method, val);
+      this.setState({
+        addCredActive: false,
+        newCred: ''
+      });
+    } else {
+      this.setState({
+        addCredInvalid: true
+      });
+    }
+  }
+
+  handleTagsUpdated(tags) {
+    if (Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__["arrayEqual"])(this.state.tags.slice(0), tags.slice(0))) {
+      return;
+    }
+
+    this.props.onUpdateTags(tags);
+  }
+
+  render() {
+    const credentials = [];
+    this.state.credentials.map(cred => {
+      credentials.push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        key: cred.meth + ":" + cred.val + ":" + cred.done
+      }, cred.meth, ": ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tt", null, cred.val), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, " ", !cred.done ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+        href: "#",
+        onClick: e => {
+          e.preventDefault();
+          this.props.onCredConfirm(cred.meth, cred.val);
+        }
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+        id: "validate_credential_action",
+        defaultMessage: "confirm"
+      })) : null, " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+        href: "#",
+        onClick: e => {
+          e.preventDefault();
+          this.props.onCredDelete(cred.meth, cred.val);
+        }
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+        className: "material-icons gray"
+      }, "delete_outline")))));
+    });
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "scrollable-panel"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "panel-form-row"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "panel-form-column"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+      className: "small"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      id: "label_your_name"
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      id: "full_name_prompt"
+    }, full_name_placeholder => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      placeholder: full_name_placeholder,
+      value: this.state.fullName,
+      onFinished: this.handleFullNameUpdate
+    })))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      avatar: this.state.avatar,
+      uid: this.props.myUserId,
+      title: this.state.fullName,
+      onImageChanged: this.handleImageChanged,
+      onError: this.props.onError
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "hr"
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      id: "title_tag_manager",
+      defaultMessage: "Tags (user discovery)"
+    }, title_tag_manager => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_tag_manager_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      title: title_tag_manager,
+      activated: false,
+      tags: this.state.tags,
+      onSubmit: this.handleTagsUpdated
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "hr"
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "panel-form-column"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+      className: "small"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      id: "label_user_contacts",
+      defaultMessage: "Contacts:"
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "quoted"
+    }, credentials, this.state.addCredActive ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      type: "text",
+      value: this.state.value,
+      className: this.state.addCredInvalid ? 'invalid' : null,
+      placeholder: "Phone number or email",
+      required: "required",
+      autoFocus: true,
+      onChange: this.handleCredChange,
+      onKeyDown: this.handleCredKeyDown,
+      onBlur: this.handleCredEntered
+    }) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+      href: "#",
+      onClick: e => {
+        e.preventDefault();
+        this.setState({
+          addCredActive: true
+        });
+      }
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      className: "material-icons"
+    }, "add"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      id: "button_add_another",
+      defaultMessage: "Add another"
+    }))))));
+  }
+
+}
+;
+
+/***/ }),
+
+/***/ "./src/views/acc-notifications-view.jsx":
+/*!**********************************************!*\
+  !*** ./src/views/acc-notifications-view.jsx ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return EditAccountView; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/checkbox.jsx */ "./src/widgets/checkbox.jsx");
+
+
+
+class EditAccountView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.PureComponent {
+  constructor(props) {
+    super(props);
+    this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
+  }
+
+  handleCheckboxClick(what, checked) {
+    if (what == 'sound') {
+      this.props.onToggleMessageSounds(checked);
+    } else if (what == 'alert') {
+      this.props.onTogglePushNotifications(checked);
+    } else if (what == 'incognito') {
+      this.props.onToggleIncognitoMode(checked);
+    }
+  }
+
+  render() {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "scrollable-panel"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "panel-form-row"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+      htmlFor: "message-sound"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      id: "label_message_sound",
+      defaultMessage: "Message sound:"
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      name: "sound",
+      id: "message-sound",
+      checked: this.props.messageSounds,
+      onChange: this.handleCheckboxClick
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "panel-form-row"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+      htmlFor: "desktop-alerts"
+    }, this.props.desktopAlertsEnabled ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      id: "label_push_notifications",
+      defaultMessage: "Notification alerts:"
+    }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      id: "label_push_notifications_disabled",
+      defaultMessage: "Notification alerts (requires HTTPS):"
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      name: "alert",
+      id: "desktop-alerts",
+      checked: this.props.desktopAlerts,
+      onChange: this.props.desktopAlertsEnabled ? this.handleCheckboxClick : null
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "panel-form-row"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+      htmlFor: "incognito-mode"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      id: "label_incognito_mode",
+      defaultMessage: "Incognito mode:"
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      name: "incognito",
+      id: "incognito-mode",
+      checked: this.props.incognitoMode,
+      onChange: this.handleCheckboxClick
+    })));
+  }
+
+}
+;
+
+/***/ }),
+
+/***/ "./src/views/acc-security-view.jsx":
+/*!*****************************************!*\
+  !*** ./src/views/acc-security-view.jsx ***!
+  \*****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return AccSecurityView; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _widgets_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/in-place-edit.jsx */ "./src/widgets/in-place-edit.jsx");
+/* harmony import */ var _widgets_permissions_editor_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/permissions-editor.jsx */ "./src/widgets/permissions-editor.jsx");
+
+
+
+
+const messages = Object(react_intl__WEBPACK_IMPORTED_MODULE_1__["defineMessages"])({
+  delete_account: {
+    "id": "delete_account",
+    "defaultMessage": "Delete account"
+  },
+  delete_account_warning: {
+    "id": "delete_account_arning",
+    "defaultMessage": "Are you sure you want to delete your account? It cannot be undone."
+  }
+});
+class AccSecurityView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
+  constructor(props) {
+    super(props);
+    const me = this.props.tinode.getMeTopic();
+    const defacs = me.getDefaultAccess();
+    this.state = {
+      auth: defacs ? defacs.auth : null,
+      anon: defacs ? defacs.anon : null,
+      showPermissionEditorFor: undefined
+    };
+    this.handlePasswordUpdate = this.handlePasswordUpdate.bind(this);
+    this.handleLaunchPermissionsEditor = this.handleLaunchPermissionsEditor.bind(this);
+    this.handleHidePermissionsEditor = this.handleHidePermissionsEditor.bind(this);
+    this.handlePermissionsChanged = this.handlePermissionsChanged.bind(this);
+    this.handleDeleteAccount = this.handleDeleteAccount.bind(this);
+  }
+
+  handlePasswordUpdate(pwd) {
+    this.setState({
+      password: pwd
+    });
+    this.props.onUpdateAccount(pwd);
+  }
+
+  handleLaunchPermissionsEditor(which) {
+    this.setState({
+      showPermissionEditorFor: which,
+      editedPermissions: this.state[which]
+    });
+  }
+
+  handleHidePermissionsEditor() {
+    this.setState({
+      showPermissionEditorFor: undefined
+    });
+  }
+
+  handlePermissionsChanged(perm) {
+    let defacs = {};
+    defacs[this.state.showPermissionEditorFor] = perm;
+    this.props.onUpdateAccount(undefined, undefined, defacs);
+    let newState = {
+      showPermissionEditorFor: undefined
+    };
+    newState[this.state.showPermissionEditorFor] = perm;
+    this.setState(newState);
+  }
+
+  handleDeleteAccount(e) {
+    e.preventDefault();
+    const {
+      formatMessage
+    } = this.props.intl;
+    this.props.onShowAlert(formatMessage(messages.delete_account), formatMessage(messages.delete_account_warning), () => {
+      this.props.onDeleteAccount();
+    }, null, null, true);
+  }
+
+  render() {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, this.state.showPermissionEditorFor ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_permissions_editor_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      mode: this.state.editedPermissions,
+      skip: "O",
+      onSubmit: this.handlePermissionsChanged,
+      onCancel: this.handleHidePermissionsEditor
+    }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "scrollable-panel"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "panel-form-column"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+      className: "small"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      id: "label_password",
+      defaultMessage: "Password"
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      id: "password_unchanged_prompt",
+      defaultMessage: "Unchanged"
+    }, password_unchanged => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      placeholder: password_unchanged,
+      type: "password",
+      onFinished: this.handlePasswordUpdate
+    })))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "hr"
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "panel-form-column"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+      href: "#",
+      className: "red flat-button",
+      onClick: e => {
+        e.preventDefault();
+        this.props.onLogout();
+      }
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      className: "material-icons"
+    }, "exit_to_app"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      id: "button_logout",
+      defaultMessage: "Logout"
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+      href: "#",
+      className: "red flat-button",
+      onClick: e => {
+        this.handleDeleteAccount(e);
+      }
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      className: "material-icons"
+    }, "delete"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      id: "button_delete_account",
+      defaultMessage: "Delete account"
+    }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "hr"
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "panel-form-column"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+      className: "small"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      id: "label_default_access_mode",
+      defaultMessage: "Default access mode:"
+    }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "quoted"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Auth: ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tt", {
+      className: "clickable",
+      onClick: this.handleLaunchPermissionsEditor.bind(this, 'auth')
+    }, this.state.auth)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Anon: ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tt", {
+      className: "clickable",
+      onClick: this.handleLaunchPermissionsEditor.bind(this, 'anon')
+    }, this.state.anon))))));
+  }
+
+}
+;
+
+/***/ }),
+
+/***/ "./src/views/acc-support-view.jsx":
+/*!****************************************!*\
+  !*** ./src/views/acc-support-view.jsx ***!
+  \****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return AccSupportView; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+
+
+
+
+class AccSupportView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.PureComponent {
+  render() {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "scrollable-panel"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "panel-form-column"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+      href: _config_js__WEBPACK_IMPORTED_MODULE_3__["LINK_CONTACT_US"],
+      className: "flat-button",
+      target: "_blank"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      className: "material-icons"
+    }, "email"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      id: "link_contact_us",
+      defaultMessage: "Contact Us"
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+      href: _config_js__WEBPACK_IMPORTED_MODULE_3__["LINK_TERMS_OF_SERVICE"],
+      className: "flat-button",
+      target: "_blank"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      className: "material-icons"
+    }, "description"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      id: "link_terms_of_service",
+      defaultMessage: "Terms of Service"
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+      href: _config_js__WEBPACK_IMPORTED_MODULE_3__["LINK_PRIVACY_POLICY"],
+      className: "flat-button",
+      target: "_blank"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      className: "material-icons"
+    }, "policy"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      id: "link_privacy_policy",
+      defaultMessage: "Privacy Policy"
+    }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "hr"
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "panel-form-column"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "panel-form-row"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+      className: "small"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      id: "label_client"
+    })), _config_js__WEBPACK_IMPORTED_MODULE_3__["APP_NAME"]), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "panel-form-row"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+      className: "small"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      id: "label_sdk",
+      defaultMessage: "SDK:"
+    })), tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.getLibrary()), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "panel-form-row"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+      className: "small"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      id: "label_server"
+    })), this.props.serverVersion), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "panel-form-row"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+      className: "small"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      id: "label_server_address",
+      defaultMessage: "Server address:"
+    })), this.props.serverAddress)));
+  }
+
+}
+;
 
 /***/ }),
 
@@ -1121,23 +1717,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/avatar-upload.jsx */ "./src/widgets/avatar-upload.jsx");
-/* harmony import */ var _widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/checkbox.jsx */ "./src/widgets/checkbox.jsx");
-/* harmony import */ var _widgets_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/in-place-edit.jsx */ "./src/widgets/in-place-edit.jsx");
-/* harmony import */ var _widgets_permissions_editor_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/permissions-editor.jsx */ "./src/widgets/permissions-editor.jsx");
-/* harmony import */ var _widgets_tag_manager_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../widgets/tag-manager.jsx */ "./src/widgets/tag-manager.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-
-
-
-
-
-
-
+/* harmony import */ var _widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/avatar-upload.jsx */ "./src/widgets/avatar-upload.jsx");
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 
 
 
@@ -1146,409 +1727,88 @@ class EditAccountView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compo
   constructor(props) {
     super(props);
     const me = this.props.tinode.getMeTopic();
-    const defacs = me.getDefaultAccess();
     this.state = {
       fullName: me.public ? me.public.fn : undefined,
-      avatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__["makeImageUrl"])(me.public ? me.public.photo : null),
-      auth: defacs ? defacs.auth : null,
-      anon: defacs ? defacs.anon : null,
-      tags: me.tags(),
-      credentials: me.getCredentials() || [],
-      addCredActive: false,
-      addCredInvalid: false,
-      newCred: '',
-      showPermissionEditorFor: undefined,
-      previousOnTags: me.onTagsUpdated
+      avatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__["makeImageUrl"])(me.public ? me.public.photo : null)
     };
-    this.tnNewTags = this.tnNewTags.bind(this);
-    this.tnCredsUpdated = this.tnCredsUpdated.bind(this);
-    this.handleFullNameUpdate = this.handleFullNameUpdate.bind(this);
-    this.handlePasswordUpdate = this.handlePasswordUpdate.bind(this);
-    this.handleImageChanged = this.handleImageChanged.bind(this);
-    this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
-    this.handleCredChange = this.handleCredChange.bind(this);
-    this.handleCredKeyDown = this.handleCredKeyDown.bind(this);
-    this.handleCredEntered = this.handleCredEntered.bind(this);
-    this.handleLaunchPermissionsEditor = this.handleLaunchPermissionsEditor.bind(this);
-    this.handleHidePermissionsEditor = this.handleHidePermissionsEditor.bind(this);
-    this.handlePermissionsChanged = this.handlePermissionsChanged.bind(this);
-    this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
-  }
-
-  componentDidMount() {
-    const me = this.props.tinode.getMeTopic();
-    me.onCredsUpdated = this.tnCredsUpdated;
-    me.onTagsUpdated = this.tnNewTags;
-  }
-
-  componentWillUnmount() {
-    const me = this.props.tinode.getMeTopic();
-    me.onTagsUpdated = this.state.previousOnTags;
-    me.onCredsUpdated = undefined;
-  }
-
-  tnNewTags(tags) {
-    this.setState({
-      tags: tags
-    });
-  }
-
-  tnCredsUpdated(creds) {
-    this.setState({
-      credentials: creds || []
-    });
-  }
-
-  handleFullNameUpdate(fn) {
-    fn = fn.trim().substring(0, _config_js__WEBPACK_IMPORTED_MODULE_8__["MAX_TITLE_LENGTH"]);
-
-    if (fn) {
-      this.setState({
-        fullName: fn
-      });
-      this.props.onUpdateAccount(undefined, Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_10__["vcard"])(fn, null));
-    }
-  }
-
-  handlePasswordUpdate(pwd) {
-    this.setState({
-      password: pwd
-    });
-    this.props.onUpdateAccount(pwd);
-  }
-
-  handleImageChanged(img) {
-    this.setState({
-      avatar: img
-    });
-    this.props.onUpdateAccount(undefined, Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_10__["vcard"])(null, img || tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.DEL_CHAR));
-  }
-
-  handleCheckboxClick(what, checked) {
-    if (what == 'sound') {
-      this.props.onToggleMessageSounds(checked);
-    } else if (what == 'alert') {
-      this.props.onTogglePushNotifications(checked);
-    } else if (what == 'incognito') {
-      this.props.onToggleIncognitoMode(checked);
-    }
-  }
-
-  handleCredChange(e) {
-    this.setState({
-      newCred: e.target.value,
-      addCredInvalid: false
-    });
-  }
-
-  handleCredKeyDown(e) {
-    if (e.keyCode === 27) {
-      this.setState({
-        newCred: '',
-        addCredActive: false
-      });
-    } else if (e.keyCode === 13) {
-      this.handleCredEntered(e);
-    }
-  }
-
-  handleCredEntered(e) {
-    let value = this.state.newCred.trim();
-
-    if (!value) {
-      this.setState({
-        addCredActive: false,
-        addCredInvalid: false
-      });
-      return;
-    }
-
-    let val = Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_10__["asPhone"])(value);
-    let method;
-
-    if (val) {
-      method = 'tel';
-    } else {
-      val = Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_10__["asEmail"])(value);
-
-      if (val) {
-        method = 'email';
-      }
-    }
-
-    if (method) {
-      this.props.onCredAdd(method, val);
-      this.setState({
-        addCredActive: false,
-        newCred: ''
-      });
-    } else {
-      this.setState({
-        addCredInvalid: true
-      });
-    }
-  }
-
-  handleLaunchPermissionsEditor(which) {
-    this.setState({
-      showPermissionEditorFor: which,
-      editedPermissions: this.state[which]
-    });
-  }
-
-  handleHidePermissionsEditor() {
-    this.setState({
-      showPermissionEditorFor: undefined
-    });
-  }
-
-  handlePermissionsChanged(perm) {
-    let defacs = {};
-    defacs[this.state.showPermissionEditorFor] = perm;
-    this.props.onUpdateAccount(undefined, undefined, defacs);
-    let newState = {
-      showPermissionEditorFor: undefined
-    };
-    newState[this.state.showPermissionEditorFor] = perm;
-    this.setState(newState);
-  }
-
-  handleTagsUpdated(tags) {
-    if (Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_10__["arrayEqual"])(this.state.tags.slice(0), tags.slice(0))) {
-      return;
-    }
-
-    this.props.onUpdateTags(tags);
   }
 
   render() {
-    let credentials = [];
-    this.state.credentials.map(cred => {
-      credentials.push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        key: cred.meth + ":" + cred.val + ":" + cred.done
-      }, cred.meth, ": ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tt", null, cred.val), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, " ", !cred.done ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "#",
-        onClick: e => {
-          e.preventDefault();
-          this.props.onCredConfirm(cred.meth, cred.val);
-        }
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-        id: "validate_credential_action",
-        defaultMessage: "confirm"
-      })) : null, " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "#",
-        onClick: e => {
-          e.preventDefault();
-          this.props.onCredDelete(cred.meth, cred.val);
-        }
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-        className: "material-icons gray"
-      }, "delete_outline")))));
-    });
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, this.state.showPermissionEditorFor ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_permissions_editor_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
-      mode: this.state.editedPermissions,
-      skip: "O",
-      onSubmit: this.handlePermissionsChanged,
-      onCancel: this.handleHidePermissionsEditor
-    }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      id: "edit-account",
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "scrollable-panel"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
       className: "small"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
       id: "label_your_name",
       defaultMessage: "Your name"
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-      id: "full_name_prompt"
-    }, full_name_placeholder => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      placeholder: full_name_placeholder,
-      value: this.state.fullName,
-      onFinished: this.handleFullNameUpdate
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-      id: "label_password",
-      defaultMessage: "Password"
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-      id: "password_unchanged_prompt",
-      defaultMessage: "Unchanged"
-    }, password_unchanged => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      placeholder: password_unchanged,
-      type: "password",
-      onFinished: this.handlePasswordUpdate
-    })))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      avatar: this.state.avatar,
-      uid: this.props.myUserId,
-      title: this.state.fullName,
-      onImageChanged: this.handleImageChanged,
-      onError: this.props.onError
     })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "hr"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-      htmlFor: "message-sound"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-      id: "label_message_sound",
-      defaultMessage: "Message sound:"
-    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      name: "sound",
-      id: "message-sound",
-      checked: this.props.messageSounds,
-      onChange: this.handleCheckboxClick
-    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-      htmlFor: "desktop-alerts"
-    }, this.props.desktopAlertsEnabled ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-      id: "label_push_notifications",
-      defaultMessage: "Notification alerts:"
-    }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-      id: "label_push_notifications_disabled",
-      defaultMessage: "Notification alerts (requires HTTPS):"
-    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      name: "alert",
-      id: "desktop-alerts",
-      checked: this.props.desktopAlerts,
-      onChange: this.props.desktopAlertsEnabled ? this.handleCheckboxClick : null
-    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-      htmlFor: "incognito-mode"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-      id: "label_incognito_mode",
-      defaultMessage: "Incognito mode:"
-    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      name: "incognito",
-      id: "incognito-mode",
-      checked: this.props.incognitoMode,
-      onChange: this.handleCheckboxClick
-    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "hr"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-      id: "title_tag_manager",
-      defaultMessage: "Tags (user discovery)"
-    }, title_tag_manager => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_tag_manager_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
-      title: title_tag_manager,
-      activated: false,
-      tags: this.state.tags,
-      onSubmit: this.handleTagsUpdated
-    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "hr"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-      id: "label_user_contacts",
-      defaultMessage: "Contacts:"
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "quoted"
-    }, credentials, this.state.addCredActive ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-      type: "text",
-      value: this.state.value,
-      className: this.state.addCredInvalid ? "invalid" : null,
-      placeholder: "Phone number or email",
-      required: "required",
-      autoFocus: true,
-      onChange: this.handleCredChange,
-      onKeyDown: this.handleCredKeyDown,
-      onBlur: this.handleCredEntered
-    }) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-      href: "#",
-      onClick: e => {
-        e.preventDefault();
-        this.setState({
-          addCredActive: true
-        });
-      }
-    }, "+ Add another")))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "hr"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+      className: "large"
+    }, this.state.fullName), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
       className: "small"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
       id: "label_user_id",
-      defaultMessage: "Address:"
-    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tt", null, this.props.myUserId)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-      id: "label_default_access_mode",
-      defaultMessage: "Default access mode:"
+      defaultMessage: "ID:"
+    })), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tt", null, this.props.myUserId))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      avatar: this.state.avatar,
+      readOnly: !this.state.owner,
+      uid: this.props.myUserId,
+      title: this.state.fullName
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "panel-form-row"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+      href: "#",
+      className: "flat-button",
+      onClick: e => {
+        e.preventDefault();
+        this.props.onBasicNavigate('general');
+      }
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      className: "material-icons"
+    }, "edit"), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      id: "button_edit",
+      defaultMessage: "Edit"
     }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "quoted"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Auth: ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tt", {
-      className: "clickable",
-      onClick: this.handleLaunchPermissionsEditor.bind(this, 'auth')
-    }, this.state.auth)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Anon: ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tt", {
-      className: "clickable",
-      onClick: this.handleLaunchPermissionsEditor.bind(this, 'anon')
-    }, this.state.anon)))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "hr"
     }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "panel-form-column"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
       href: "#",
-      className: "red flat-button",
+      className: "flat-button",
       onClick: e => {
         e.preventDefault();
-        this.props.onLogout();
+        this.props.onBasicNavigate('notif');
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
       className: "material-icons"
-    }, "exit_to_app"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-      id: "button_logout",
-      defaultMessage: "Logout"
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "hr"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-      id: "label_legal",
-      defaultMessage: "Legal"
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "quoted"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-      href: _config_js__WEBPACK_IMPORTED_MODULE_8__["LINK_CONTACT_US"],
+    }, "notifications"), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      id: "sidepanel_title_acc_notifications"
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+      href: "#",
       className: "flat-button",
-      target: "_blank"
+      onClick: e => {
+        e.preventDefault();
+        this.props.onBasicNavigate('security');
+      }
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
       className: "material-icons"
-    }, "email"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-      id: "link_contact_us",
-      defaultMessage: "Contact Us"
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "quoted"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-      href: _config_js__WEBPACK_IMPORTED_MODULE_8__["LINK_TERMS_OF_SERVICE"],
+    }, "security"), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      id: "sidepanel_title_acc_security"
+    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+      href: "#",
       className: "flat-button",
-      target: "_blank"
+      onClick: e => {
+        e.preventDefault();
+        this.props.onBasicNavigate('support');
+      }
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
       className: "material-icons"
-    }, "description"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-      id: "link_terms_of_service",
-      defaultMessage: "Terms of Service"
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "quoted"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-      href: _config_js__WEBPACK_IMPORTED_MODULE_8__["LINK_PRIVACY_POLICY"],
-      className: "flat-button",
-      target: "_blank"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-      className: "material-icons"
-    }, "policy"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-      id: "link_privacy_policy",
-      defaultMessage: "Privacy Policy"
-    }))))));
+    }, "contact_support"), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      id: "sidepanel_title_acc_support"
+    }))));
   }
 
 }
@@ -2493,10 +2753,9 @@ __webpack_require__.r(__webpack_exports__);
 
 class LogoView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.PureComponent {
   render() {
-    var version = _config_js__WEBPACK_IMPORTED_MODULE_3__["APP_NAME"] + ' (' + tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.getLibrary() + ')';
+    const version = _config_js__WEBPACK_IMPORTED_MODULE_3__["APP_NAME"] + ' (' + tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.getLibrary() + ')';
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      id: "dummy-view",
-      className: this.props.hideSelf ? 'nodisplay' : null
+      id: "dummy-view"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
       href: "https://github.com/tinode/chat/"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
@@ -3250,7 +3509,6 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
       component = null;
     } else if (!this.state.topic) {
       component = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_logo_view_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
-        hideSelf: this.props.hideSelf,
         serverVersion: this.props.serverVersion,
         serverAddress: this.props.serverAddress
       });
@@ -3857,11 +4115,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _contacts_view_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./contacts-view.jsx */ "./src/views/contacts-view.jsx");
 /* harmony import */ var _create_account_view_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./create-account-view.jsx */ "./src/views/create-account-view.jsx");
 /* harmony import */ var _edit_account_view_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./edit-account-view.jsx */ "./src/views/edit-account-view.jsx");
-/* harmony import */ var _login_view_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./login-view.jsx */ "./src/views/login-view.jsx");
-/* harmony import */ var _new_topic_view_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./new-topic-view.jsx */ "./src/views/new-topic-view.jsx");
-/* harmony import */ var _password_reset_view_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./password-reset-view.jsx */ "./src/views/password-reset-view.jsx");
-/* harmony import */ var _settings_view_jsx__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./settings-view.jsx */ "./src/views/settings-view.jsx");
-/* harmony import */ var _validation_view_jsx__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./validation-view.jsx */ "./src/views/validation-view.jsx");
+/* harmony import */ var _acc_general_view_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./acc-general-view.jsx */ "./src/views/acc-general-view.jsx");
+/* harmony import */ var _acc_notifications_view_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./acc-notifications-view.jsx */ "./src/views/acc-notifications-view.jsx");
+/* harmony import */ var _acc_security_view_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./acc-security-view.jsx */ "./src/views/acc-security-view.jsx");
+/* harmony import */ var _acc_support_view_jsx__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./acc-support-view.jsx */ "./src/views/acc-support-view.jsx");
+/* harmony import */ var _login_view_jsx__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./login-view.jsx */ "./src/views/login-view.jsx");
+/* harmony import */ var _new_topic_view_jsx__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./new-topic-view.jsx */ "./src/views/new-topic-view.jsx");
+/* harmony import */ var _password_reset_view_jsx__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./password-reset-view.jsx */ "./src/views/password-reset-view.jsx");
+/* harmony import */ var _settings_view_jsx__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./settings-view.jsx */ "./src/views/settings-view.jsx");
+/* harmony import */ var _validation_view_jsx__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./validation-view.jsx */ "./src/views/validation-view.jsx");
+
+
+
+
 
 
 
@@ -3889,8 +4155,24 @@ const messages = Object(react_intl__WEBPACK_IMPORTED_MODULE_1__["defineMessages"
     "defaultMessage": "Settings"
   },
   'edit': {
-    "id": "sidepanel_title_edit_account",
-    "defaultMessage": "Edit Account"
+    "id": "sidepanel_title_account_settings",
+    "defaultMessage": "Account Settings"
+  },
+  'general': {
+    "id": "sidepanel_title_acc_general",
+    "defaultMessage": "General"
+  },
+  'security': {
+    "id": "sidepanel_title_acc_security",
+    "defaultMessage": "Security"
+  },
+  'notif': {
+    "id": "sidepanel_title_acc_notifications",
+    "defaultMessage": "Notifications"
+  },
+  'support': {
+    "id": "sidepanel_title_acc_support",
+    "defaultMessage": "Support"
   },
   'newtpk': {
     "id": "sidepanel_title_newtpk",
@@ -3914,10 +4196,15 @@ class SidepanelView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
   constructor(props) {
     super(props);
     this.handleLoginRequested = this.handleLoginRequested.bind(this);
+    this.handleNewTopic = this.handleNewTopic.bind(this);
   }
 
   handleLoginRequested(login, password) {
     this.props.onLoginRequest(login, password);
+  }
+
+  handleNewTopic() {
+    this.props.onBasicNavigate('newtpk');
   }
 
   render() {
@@ -3951,7 +4238,7 @@ class SidepanelView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
       myUserId: this.props.myUserId,
       onSignUp: this.props.onSignUp,
       onSettings: this.props.onSettings,
-      onNewTopic: this.props.onNewTopic,
+      onNewTopic: this.handleNewTopic,
       onCancel: onCancel
     }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       level: this.props.errorLevel,
@@ -3961,7 +4248,7 @@ class SidepanelView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
       onClearError: this.props.onError
     }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       show: this.props.loadSpinnerVisible
-    }), view === 'login' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_login_view_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
+    }), view === 'login' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_login_view_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
       login: this.props.login,
       disabled: this.props.loginDisabled,
       onLogin: this.handleLoginRequested
@@ -3969,7 +4256,7 @@ class SidepanelView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
       onCreateAccount: this.props.onCreateAccount,
       onCancel: this.props.onCancel,
       onError: this.props.onError
-    }) : view === 'settings' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_settings_view_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
+    }) : view === 'settings' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_settings_view_jsx__WEBPACK_IMPORTED_MODULE_15__["default"], {
       transport: this.props.transport,
       serverAddress: this.props.serverAddress,
       onCancel: this.props.onCancel,
@@ -3977,21 +4264,35 @@ class SidepanelView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
     }) : view === 'edit' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_edit_account_view_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
       tinode: this.props.tinode,
       myUserId: this.props.myUserId,
+      onBasicNavigate: this.props.onBasicNavigate
+    }) : view === 'general' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_acc_general_view_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
+      tinode: this.props.tinode,
+      myUserId: this.props.myUserId,
+      onUpdateAccount: this.props.onUpdateAccount,
+      onUpdateTags: this.props.onUpdateAccountTags,
+      onCredAdd: this.props.onCredAdd,
+      onCredDelete: this.props.onCredDelete,
+      onCredConfirm: this.props.onCredConfirm,
+      onBasicNavigate: this.props.onBasicNavigate,
+      onCancel: this.props.onCancel,
+      onError: this.props.onError
+    }) : view === 'notif' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_acc_notifications_view_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
       messageSounds: this.props.messageSounds,
       desktopAlerts: this.props.desktopAlerts,
       desktopAlertsEnabled: this.props.desktopAlertsEnabled,
       incognitoMode: this.props.incognitoMode,
-      onUpdateAccount: this.props.onUpdateAccount,
-      onUpdateTags: this.props.onUpdateAccountTags,
       onTogglePushNotifications: this.props.onTogglePushNotifications,
       onToggleMessageSounds: this.props.onToggleMessageSounds,
-      onToggleIncognitoMode: this.props.onToggleIncognitoMode,
-      onCredAdd: this.props.onCredAdd,
-      onCredDelete: this.props.onCredDelete,
-      onCredConfirm: this.props.onCredConfirm,
+      onToggleIncognitoMode: this.props.onToggleIncognitoMode
+    }) : view === 'security' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_acc_security_view_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
+      tinode: this.props.tinode,
+      onUpdateAccount: this.props.onUpdateAccount,
       onLogout: this.props.onLogout,
-      onCancel: this.props.onCancel,
-      onError: this.props.onError
+      onDeleteAccount: this.props.onDeleteAccount,
+      onShowAlert: this.props.onShowAlert
+    }) : view === 'support' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_acc_support_view_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
+      serverAddress: this.props.serverAddress,
+      serverVersion: this.props.serverVersion
     }) : view === 'contacts' || view == 'archive' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_contacts_view_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
       tinode: this.props.tinode,
       myUserId: this.props.myUserId,
@@ -4002,19 +4303,19 @@ class SidepanelView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
       showContextMenu: this.props.showContextMenu,
       onTopicSelected: this.props.onTopicSelected,
       onShowArchive: this.props.onShowArchive
-    }) : view === 'newtpk' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_new_topic_view_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
+    }) : view === 'newtpk' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_new_topic_view_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
       searchResults: this.props.searchResults,
       onInitFind: this.props.onInitFind,
       onSearchContacts: this.props.onSearchContacts,
       onCreateTopic: this.props.onCreateTopic,
       onError: this.props.onError
-    }) : view === 'cred' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_validation_view_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
+    }) : view === 'cred' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_validation_view_jsx__WEBPACK_IMPORTED_MODULE_16__["default"], {
       credCode: this.props.credCode,
       credMethod: this.props.credMethod,
       onSubmit: this.props.onValidateCredentials,
       onCancel: this.props.onCancel,
       onError: this.props.onError
-    }) : view === 'reset' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_password_reset_view_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
+    }) : view === 'reset' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_password_reset_view_jsx__WEBPACK_IMPORTED_MODULE_14__["default"], {
       onRequest: this.props.onPasswordResetRequest,
       onReset: this.props.onResetPassword
     }) : null);
@@ -4139,13 +4440,13 @@ class TinodeWeb extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     this.togglePushToken = this.togglePushToken.bind(this);
     this.requestPushToken = this.requestPushToken.bind(this);
     this.handleSidepanelCancel = this.handleSidepanelCancel.bind(this);
-    this.handleNewTopic = this.handleNewTopic.bind(this);
     this.handleNewTopicRequest = this.handleNewTopicRequest.bind(this);
     this.handleNewTopicCreated = this.handleNewTopicCreated.bind(this);
     this.handleTopicUpdateRequest = this.handleTopicUpdateRequest.bind(this);
     this.handleChangePermissions = this.handleChangePermissions.bind(this);
     this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
+    this.handleDeleteAccount = this.handleDeleteAccount.bind(this);
     this.handleDeleteMessagesRequest = this.handleDeleteMessagesRequest.bind(this);
     this.handleLeaveUnsubRequest = this.handleLeaveUnsubRequest.bind(this);
     this.handleBlockTopicRequest = this.handleBlockTopicRequest.bind(this);
@@ -4335,7 +4636,7 @@ class TinodeWeb extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     const hash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].parseUrlHash(window.location.hash);
 
     if (hash.path && hash.path.length > 0) {
-      if (['register', 'settings', 'edit', 'cred', 'reset', 'newtpk', 'archive', 'contacts', ''].includes(hash.path[0])) {
+      if (['register', 'settings', 'edit', 'notif', 'security', 'support', 'general', 'cred', 'reset', 'newtpk', 'archive', 'contacts', ''].includes(hash.path[0])) {
         this.setState({
           sidePanelSelected: hash.path[0]
         });
@@ -5074,7 +5375,15 @@ class TinodeWeb extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
 
   handleSidepanelCancel() {
     const parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].parseUrlHash(window.location.hash);
-    parsed.path[0] = this.state.myUserId ? 'contacts' : '';
+    let path = '';
+
+    if (['security', 'support', 'general', 'notif'].includes(parsed.path[0])) {
+      path = 'edit';
+    } else if (this.state.myUserId) {
+      path = 'contacts';
+    }
+
+    parsed.path[0] = path;
 
     if (parsed.params) {
       delete parsed.params.code;
@@ -5089,8 +5398,8 @@ class TinodeWeb extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     });
   }
 
-  handleNewTopic() {
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].setUrlSidePanel(window.location.hash, 'newtpk'));
+  basicNavigator(hash) {
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].setUrlSidePanel(window.location.hash, hash));
   }
 
   handleNewTopicRequest(peerName, pub, priv, tags) {
@@ -5223,6 +5532,12 @@ class TinodeWeb extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
     _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo('');
+  }
+
+  handleDeleteAccount() {
+    this.tinode.delCurrentUser().then(ctrl => {
+      this.handleLogout();
+    });
   }
 
   handleDeleteMessagesRequest(topicName) {
@@ -5514,9 +5829,11 @@ class TinodeWeb extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       desktopAlertsEnabled: this.state.desktopAlertsEnabled,
       incognitoMode: this.state.incognitoMode,
       serverAddress: this.state.serverAddress,
+      serverVersion: this.state.serverVersion,
       onGlobalSettings: this.handleGlobalSettings,
       onSignUp: this.handleNewAccount,
       onSettings: this.handleSettings,
+      onBasicNavigate: this.basicNavigator,
       onLoginRequest: this.handleLoginRequest,
       onCreateAccount: this.handleNewAccountRequest,
       onUpdateAccount: this.handleUpdateAccountRequest,
@@ -5529,8 +5846,9 @@ class TinodeWeb extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       onCredConfirm: this.handleCredConfirm,
       onTopicSelected: this.handleTopicSelected,
       onCreateTopic: this.handleNewTopicRequest,
-      onNewTopic: this.handleNewTopic,
       onLogout: this.handleLogout,
+      onDeleteAccount: this.handleDeleteAccount,
+      onShowAlert: this.handleShowAlert,
       onCancel: this.handleSidepanelCancel,
       onError: this.handleError,
       onValidateCredentials: this.handleValidateCredentialsRequest,
@@ -5943,9 +6261,10 @@ class AvatarUpload extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
   }
 
   render() {
-    var randId = "file-input-avatar-" + (Math.random() + '').substr(2);
+    const randId = 'file-input-avatar-' + (Math.random() + '').substr(2);
+    const className = 'avatar-upload' + (this.props.readOnly ? ' read-only' : '');
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      className: "avatar-upload"
+      className: className
     }, this.props.readOnly || !this.state.dataUrl ? null : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
       href: "#",
       className: "clear-avatar",
@@ -5982,6 +6301,36 @@ class AvatarUpload extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
 
 }
 ;
+
+/***/ }),
+
+/***/ "./src/widgets/button-back.jsx":
+/*!*************************************!*\
+  !*** ./src/widgets/button-back.jsx ***!
+  \*************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ButtonBack; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+class ButtonBack extends react__WEBPACK_IMPORTED_MODULE_0___default.a.PureComponent {
+  render() {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+      href: "#",
+      onClick: e => {
+        e.preventDefault();
+        this.props.onBack();
+      }
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      className: "material-icons"
+    }, "arrow_back"));
+  }
+
+}
 
 /***/ }),
 
@@ -9269,7 +9618,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
-/* harmony import */ var _menu_cancel_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./menu-cancel.jsx */ "./src/widgets/menu-cancel.jsx");
+/* harmony import */ var _button_back_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./button-back.jsx */ "./src/widgets/button-back.jsx");
 /* harmony import */ var _menu_contacts_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./menu-contacts.jsx */ "./src/widgets/menu-contacts.jsx");
 /* harmony import */ var _menu_start_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./menu-start.jsx */ "./src/widgets/menu-start.jsx");
 
@@ -9282,14 +9631,16 @@ class SideNavbar extends react__WEBPACK_IMPORTED_MODULE_0___default.a.PureCompon
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       id: "side-caption-panel",
       className: "caption-panel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }, this.props.onCancel ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_button_back_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      onBack: this.props.onCancel
+    }) : null, this.props.avatar ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       id: "self-avatar",
       className: "avatar-box"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
       avatar: this.props.avatar,
       topic: this.props.myUserId,
       title: this.props.title
-    })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    })) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       id: "sidepanel-title",
       className: "panel-title"
     }, this.props.title), this.props.state === 'login' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_menu_start_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
@@ -9298,8 +9649,6 @@ class SideNavbar extends react__WEBPACK_IMPORTED_MODULE_0___default.a.PureCompon
     }) : this.props.state === 'contacts' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_menu_contacts_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       onNewTopic: this.props.onNewTopic,
       onSettings: this.props.onSettings
-    }) : null, this.props.onCancel ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_menu_cancel_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      onCancel: this.props.onCancel
     }) : null);
   }
 

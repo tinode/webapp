@@ -8,6 +8,10 @@ import SideNavbar from '../widgets/side-navbar.jsx';
 import ContactsView from './contacts-view.jsx';
 import CreateAccountView from './create-account-view.jsx';
 import EditAccountView from './edit-account-view.jsx';
+import AccGeneralView from './acc-general-view.jsx';
+import AccNotificationsView from './acc-notifications-view.jsx';
+import AccSecurityView from './acc-security-view.jsx';
+import AccSupportView from './acc-support-view.jsx';
 import LoginView from './login-view.jsx';
 import NewTopicView from './new-topic-view.jsx';
 import PasswordResetView from './password-reset-view.jsx';
@@ -32,9 +36,29 @@ const messages = defineMessages({
     defaultMessage: 'Settings'
   },
   'edit': {
-    id: 'sidepanel_title_edit_account',
+    id: 'sidepanel_title_account_settings',
     description: 'Sidepanel title for EditAccountView.',
-    defaultMessage: 'Edit Account'
+    defaultMessage: 'Account Settings'
+  },
+  'general': {
+    id: 'sidepanel_title_acc_general',
+    description: 'Sidepanel title for AccGeneralView.',
+    defaultMessage: 'General'
+  },
+  'security': {
+    id: 'sidepanel_title_acc_security',
+    description: 'Sidepanel title for AccSecurityView.',
+    defaultMessage: 'Security'
+  },
+  'notif': {
+    id: 'sidepanel_title_acc_notifications',
+    description: 'Sidepanel title for AccNotificationsView.',
+    defaultMessage: 'Notifications'
+  },
+  'support': {
+    id: 'sidepanel_title_acc_support',
+    description: 'Sidepanel title for AccSupportView.',
+    defaultMessage: 'Support'
   },
   'newtpk': {
     id: 'sidepanel_title_newtpk',
@@ -63,10 +87,15 @@ class SidepanelView extends React.Component {
     super(props);
 
     this.handleLoginRequested = this.handleLoginRequested.bind(this);
+    this.handleNewTopic = this.handleNewTopic.bind(this);
   }
 
   handleLoginRequested(login, password) {
     this.props.onLoginRequest(login, password);
+  }
+
+  handleNewTopic() {
+    this.props.onBasicNavigate('newtpk');
   }
 
   render() {
@@ -96,7 +125,7 @@ class SidepanelView extends React.Component {
           myUserId={this.props.myUserId}
           onSignUp={this.props.onSignUp}
           onSettings={this.props.onSettings}
-          onNewTopic={this.props.onNewTopic}
+          onNewTopic={this.handleNewTopic}
           onCancel={onCancel} />
 
         <ErrorPanel
@@ -131,21 +160,43 @@ class SidepanelView extends React.Component {
           <EditAccountView
             tinode={this.props.tinode}
             myUserId={this.props.myUserId}
+            onBasicNavigate={this.props.onBasicNavigate} /> :
+
+          view === 'general' ?
+          <AccGeneralView
+            tinode={this.props.tinode}
+            myUserId={this.props.myUserId}
+            onUpdateAccount={this.props.onUpdateAccount}
+            onUpdateTags={this.props.onUpdateAccountTags}
+            onCredAdd={this.props.onCredAdd}
+            onCredDelete={this.props.onCredDelete}
+            onCredConfirm={this.props.onCredConfirm}
+            onBasicNavigate={this.props.onBasicNavigate}
+            onCancel={this.props.onCancel}
+            onError={this.props.onError} /> :
+
+          view === 'notif' ?
+          <AccNotificationsView
             messageSounds={this.props.messageSounds}
             desktopAlerts={this.props.desktopAlerts}
             desktopAlertsEnabled={this.props.desktopAlertsEnabled}
             incognitoMode={this.props.incognitoMode}
-            onUpdateAccount={this.props.onUpdateAccount}
-            onUpdateTags={this.props.onUpdateAccountTags}
             onTogglePushNotifications={this.props.onTogglePushNotifications}
             onToggleMessageSounds={this.props.onToggleMessageSounds}
-            onToggleIncognitoMode={this.props.onToggleIncognitoMode}
-            onCredAdd={this.props.onCredAdd}
-            onCredDelete={this.props.onCredDelete}
-            onCredConfirm={this.props.onCredConfirm}
+            onToggleIncognitoMode={this.props.onToggleIncognitoMode} /> :
+
+          view === 'security' ?
+          <AccSecurityView
+            tinode={this.props.tinode}
+            onUpdateAccount={this.props.onUpdateAccount}
             onLogout={this.props.onLogout}
-            onCancel={this.props.onCancel}
-            onError={this.props.onError} /> :
+            onDeleteAccount={this.props.onDeleteAccount}
+            onShowAlert={this.props.onShowAlert} /> :
+
+          view === 'support' ?
+          <AccSupportView
+            serverAddress={this.props.serverAddress}
+            serverVersion={this.props.serverVersion} /> :
 
           (view === 'contacts' || view == 'archive') ?
           <ContactsView

@@ -692,7 +692,7 @@ class MessagesView extends React.Component {
       component = null;
     } else if (!this.state.topic) {
       component = (
-        <LogoView hideSelf={this.props.hideSelf}
+        <LogoView
           serverVersion={this.props.serverVersion}
           serverAddress={this.props.serverAddress} />
       );
