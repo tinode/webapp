@@ -1254,16 +1254,16 @@ class TinodeWeb extends React.Component {
     }
   }
 
-  handleShowAlert(title, content, onConfirm, confirm, onReject, reject) {
+  handleShowAlert(title, content, onConfirm, confirmText, onReject, rejectText) {
     this.setState({
       alertVisible: true,
       alertParams: {
         title: title,
         content: content,
         onConfirm: onConfirm,
-        confirm: confirm,
+        confirm: confirmText,
         onReject: onReject,
-        reject: reject
+        reject: rejectText
       }
     });
   }

@@ -1168,7 +1168,6 @@ class EditAccountView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.PureC
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return AccSecurityView; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
@@ -1189,6 +1188,7 @@ const messages = Object(react_intl__WEBPACK_IMPORTED_MODULE_1__["defineMessages"
     "defaultMessage": "Are you sure you want to delete your account? It cannot be undone."
   }
 });
+
 class AccSecurityView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   constructor(props) {
     super(props);
@@ -1244,7 +1244,7 @@ class AccSecurityView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compo
     } = this.props.intl;
     this.props.onShowAlert(formatMessage(messages.delete_account), formatMessage(messages.delete_account_warning), () => {
       this.props.onDeleteAccount();
-    }, null, null, true);
+    }, null, true, null);
   }
 
   render() {
@@ -1317,7 +1317,9 @@ class AccSecurityView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compo
   }
 
 }
+
 ;
+/* harmony default export */ __webpack_exports__["default"] = (Object(react_intl__WEBPACK_IMPORTED_MODULE_1__["injectIntl"])(AccSecurityView));
 
 /***/ }),
 
@@ -5663,16 +5665,16 @@ class TinodeWeb extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     }
   }
 
-  handleShowAlert(title, content, onConfirm, confirm, onReject, reject) {
+  handleShowAlert(title, content, onConfirm, confirmText, onReject, rejectText) {
     this.setState({
       alertVisible: true,
       alertParams: {
         title: title,
         content: content,
         onConfirm: onConfirm,
-        confirm: confirm,
+        confirm: confirmText,
         onReject: onReject,
-        reject: reject
+        reject: rejectText
       }
     });
   }

@@ -1,6 +1,6 @@
 // Edit account parameters.
 import React from 'react';
-import { FormattedMessage, defineMessages } from 'react-intl';
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
 import InPlaceEdit from '../widgets/in-place-edit.jsx';
 import PermissionsEditor from '../widgets/permissions-editor.jsx';
@@ -18,7 +18,7 @@ const messages = defineMessages({
   }
 });
 
-export default class AccSecurityView extends React.Component {
+class AccSecurityView extends React.Component {
   constructor(props) {
     super(props);
 
@@ -70,9 +70,9 @@ export default class AccSecurityView extends React.Component {
       formatMessage(messages.delete_account), // title
       formatMessage(messages.delete_account_warning), // content
       (() => { this.props.onDeleteAccount(); }), // onConfirm
-      null, // "OK"
-      null, // Show Reject button
-      true  // "Cancel"
+      null, // use default text "OK"
+      true, // Show Reject button
+      null  // use default text "Cancel"
     );
   }
 
@@ -132,3 +132,5 @@ export default class AccSecurityView extends React.Component {
     );
   }
 };
+
+export default injectIntl(AccSecurityView);
