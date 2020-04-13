@@ -186,7 +186,7 @@ export default class EditAccountView extends React.Component {
           onSubmit={this.handlePermissionsChanged}
           onCancel={this.handleHidePermissionsEditor} />
         :
-        <div id="edit-account" className="scrollable-panel">
+        <div className="scrollable-panel">
           <div className="panel-form-row">
             <div className="panel-form-column">
               <div><label className="small">
