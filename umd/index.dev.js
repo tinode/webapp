@@ -2198,7 +2198,6 @@ class InfoView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
         toSkip = this.state.owner ? 'O' : tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.AccessMode.encode(tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.AccessMode.diff('ASDO', this.state.modeGiven));
         titleEdit = formatMessage(messages.requested);
         titleCompare = formatMessage(messages.granted);
-        console.log("To skip", this.state.modeGiven, 'ASDO', tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.AccessMode.encode(tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.AccessMode.diff('ASDO', this.state.modeGiven)));
         break;
 
       case 'given':
@@ -6990,7 +6989,7 @@ class ContactList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component
             onAction: this.props.onAction
           }));
         } else {
-          const key = c.topic ? c.topic : c.user;
+          const key = this.props.showMode ? c.user : c.topic || c.user;
 
           if (this.props.filterFunc && this.props.filter) {
             let content = [key];
@@ -7012,7 +7011,7 @@ class ContactList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component
           const badges = [];
 
           if (this.props.showMode) {
-            if (key === this.props.myUserId) {
+            if (key == this.props.myUserId) {
               badges.push({
                 name: formatMessage(messages.badge_you),
                 color: 'green'

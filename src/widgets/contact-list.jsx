@@ -39,7 +39,7 @@ class ContactList extends React.Component {
               />);
         } else {
           // Normal contact
-          const key = c.topic ? c.topic : c.user;
+          const key = this.props.showMode ? c.user : (c.topic || c.user);
           // If filter function is provided, filter out the items
           // which don't satisfy the condition.
           if (this.props.filterFunc && this.props.filter) {
@@ -60,7 +60,7 @@ class ContactList extends React.Component {
             (this.props.topicSelected === key);
           const badges = [];
           if (this.props.showMode) {
-            if (key === this.props.myUserId) {
+            if (key == this.props.myUserId) {
               badges.push({name: formatMessage(messages.badge_you), color: 'green'});
             }
             if (c.acs && c.acs.isOwner()) {
