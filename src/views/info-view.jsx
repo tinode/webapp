@@ -335,7 +335,9 @@ class InfoView extends React.Component {
       case 'want':
         toEdit = this.state.modeWant;
         toCompare = this.state.modeGiven;
-        toSkip = this.state.groupTopic ? 'O' : 'ASDO';
+        toSkip = this.state.owner ? 'O' :  // Don't allow owner to unset 'O' permission.
+          // Allow accepting any of 'ASDO' permissions but don't allow asking for them.
+          Tinode.AccessMode.encode(Tinode.AccessMode.diff('ASDO', this.state.modeGiven));
         titleEdit = formatMessage(messages.requested);
         titleCompare = formatMessage(messages.granted);
         break;
