@@ -2195,9 +2195,10 @@ class InfoView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       case 'want':
         toEdit = this.state.modeWant;
         toCompare = this.state.modeGiven;
-        toSkip = this.state.groupTopic ? 'O' : 'ASDO';
+        toSkip = this.state.owner ? 'O' : tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.AccessMode.encode(tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.AccessMode.diff('ASDO', this.state.modeGiven));
         titleEdit = formatMessage(messages.requested);
         titleCompare = formatMessage(messages.granted);
+        console.log("To skip", this.state.modeGiven, 'ASDO', tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.AccessMode.encode(tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.AccessMode.diff('ASDO', this.state.modeGiven)));
         break;
 
       case 'given':
@@ -4276,7 +4277,6 @@ class SidepanelView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
       onCredDelete: this.props.onCredDelete,
       onCredConfirm: this.props.onCredConfirm,
       onBasicNavigate: this.props.onBasicNavigate,
-      onCancel: this.props.onCancel,
       onError: this.props.onError
     }) : view === 'notif' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_acc_notifications_view_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
       messageSounds: this.props.messageSounds,
@@ -5134,7 +5134,7 @@ class TinodeWeb extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
         break;
 
       case 'delete':
-        response = topic.delTopic();
+        response = topic.delTopic(true);
         break;
 
       case 'block':
@@ -5537,7 +5537,7 @@ class TinodeWeb extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   }
 
   handleDeleteAccount() {
-    this.tinode.delCurrentUser().then(ctrl => {
+    this.tinode.delCurrentUser(true).then(ctrl => {
       this.handleLogout();
     });
   }
@@ -7385,7 +7385,7 @@ class ContextMenu extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component
               return;
             }
 
-            return topic.delTopic().catch(err => {
+            return topic.delTopic(true).catch(err => {
               if (errorHandler) {
                 errorHandler(err.message, 'err');
               }

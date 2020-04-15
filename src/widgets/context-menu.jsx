@@ -198,7 +198,7 @@ class ContextMenu extends React.Component {
                 console.log("Topic not found: ", params.topicName);
                 return;
               }
-              return topic.delTopic().catch((err) => {
+              return topic.delTopic(true).catch((err) => {
                 if (errorHandler) {
                   errorHandler(err.message, 'err');
                 }

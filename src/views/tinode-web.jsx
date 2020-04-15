@@ -799,7 +799,7 @@ class TinodeWeb extends React.Component {
         break;
       case 'delete':
         // Ignore invitation by deleting it.
-        response = topic.delTopic();
+        response = topic.delTopic(true);
         break;
       case 'block':
         // Ban the topic making futher invites impossible.
@@ -1130,7 +1130,7 @@ class TinodeWeb extends React.Component {
   }
 
   handleDeleteAccount() {
-    this.tinode.delCurrentUser().then((ctrl) => {
+    this.tinode.delCurrentUser(true).then((ctrl) => {
       this.handleLogout();
     });
   }

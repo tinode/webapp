@@ -172,7 +172,6 @@ class SidepanelView extends React.Component {
             onCredDelete={this.props.onCredDelete}
             onCredConfirm={this.props.onCredConfirm}
             onBasicNavigate={this.props.onBasicNavigate}
-            onCancel={this.props.onCancel}
             onError={this.props.onError} /> :
 
           view === 'notif' ?
