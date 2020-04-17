@@ -79,6 +79,11 @@ const messages = defineMessages({
     id: 'sidepanel_title_archive',
     description: 'Sidepanel title for ContactsView-Archive.',
     defaultMessage: 'Archived Chats'
+  },
+  'blocked': {
+    id: 'sidepanel_title_blocked',
+    description: 'Sidepanel title for ContactsView-Blocked.',
+    defaultMessage: 'Blocked Chats'
   }
 });
 
@@ -190,20 +195,22 @@ class SidepanelView extends React.Component {
             onUpdateAccount={this.props.onUpdateAccount}
             onLogout={this.props.onLogout}
             onDeleteAccount={this.props.onDeleteAccount}
-            onShowAlert={this.props.onShowAlert} /> :
+            onShowAlert={this.props.onShowAlert}
+            onShowBlocked={this.props.onShowBlocked} /> :
 
           view === 'support' ?
           <AccSupportView
             serverAddress={this.props.serverAddress}
             serverVersion={this.props.serverVersion} /> :
 
-          (view === 'contacts' || view == 'archive') ?
+          (view === 'contacts' || view == 'archive' || view == 'blocked') ?
           <ContactsView
             tinode={this.props.tinode}
             myUserId={this.props.myUserId}
             connected={this.props.connected}
             topicSelected={this.props.topicSelected}
             archive={view == 'archive'}
+            blocked={view == 'blocked'}
             chatList={this.props.chatList}
             showContextMenu={this.props.showContextMenu}
             onTopicSelected={this.props.onTopicSelected}

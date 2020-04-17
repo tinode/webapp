@@ -28,6 +28,15 @@ export default class ContactsView extends React.Component {
     let unreadThreads = 0;
     let archivedCount = 0;
     props.chatList.map((c) => {
+      const blocked = c.acs && !c.acs.isJoiner();
+      // Show only blocked contacts only when props.blocked == true.
+      if (blocked && props.blocked) {
+        contacts.push(c);
+      }
+      if (blocked || props.blocked) {
+        return;
+      }
+
       if (c.private && c.private.arch) {
         if (props.archive) {
           contacts.push(c);
@@ -39,7 +48,8 @@ export default class ContactsView extends React.Component {
         unreadThreads += c.unread > 0 ? 1 : 0;
       }
     });
-    contacts.sort(function(a, b) {
+
+    contacts.sort((a, b) => {
       return (b.touched || 0) - (a.touched || 0);
     });
 
@@ -58,7 +68,9 @@ export default class ContactsView extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.chatList != this.props.chatList || prevProps.archive != this.props.archive) {
+    if (prevProps.chatList != this.props.chatList ||
+        prevProps.archive != this.props.archive ||
+        prevProps.blocked != this.props.blocked) {
       const newState = ContactsView.deriveStateFromProps(this.props);
       this.setState(newState);
       if (newState.unreadThreads != prevState.unreadThreads) {

@@ -23,11 +23,18 @@ class AccSecurityView extends React.Component {
     super(props);
 
     const me = this.props.tinode.getMeTopic();
+    let blockedCount = 0;
+    me.contacts((c) => {
+      if (c.acs && !c.acs.isJoiner()) {
+        blockedCount ++;
+      }
+    });
     const defacs = me.getDefaultAccess();
     this.state = {
       auth: defacs ? defacs.auth : null,
       anon: defacs ? defacs.anon : null,
       showPermissionEditorFor: undefined,
+      blockedCount: blockedCount,
     };
 
     this.handlePasswordUpdate = this.handlePasswordUpdate.bind(this);
@@ -127,6 +134,18 @@ class AccSecurityView extends React.Component {
                 onClick={this.handleLaunchPermissionsEditor.bind(this, 'anon')}>{this.state.anon}</tt></div>
             </div>
           </div>
+          {this.state.blockedCount > 0 ?
+            <>
+              <div className="hr" />
+              <div className="panel-form-row">
+                <i className="material-icons">block</i>&nbsp;
+                <a href="#" className="gray" onClick={(e) => {e.preventDefault(); this.props.onShowBlocked();}}>
+                  <FormattedMessage id="blocked_contacts_link" defaultMessage="Blocked contacts ({count})"
+                    values={{ count: this.state.blockedCount }} description="Blocked contacts link" />
+                </a>
+              </div>
+            </>
+            : null }
         </div>
       }</React.Fragment>
     );

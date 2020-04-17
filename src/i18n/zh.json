@@ -163,5 +163,7 @@
   "label_server_address": "服务器地址：",
   "button_edit": "编辑",
   "button_add_another": "加上另一个",
-  "sidepanel_title_acc_general": "常用设定"
+  "sidepanel_title_acc_general": "常用设定",
+  "blocked_contacts_link": "封锁的联络人 ({count})",
+  "sidepanel_title_blocked": "被阻止的聊天"
 }

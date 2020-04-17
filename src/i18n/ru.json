@@ -163,5 +163,7 @@
   "label_server_address": "Адрес сервера:",
   "button_edit": "Редактировать",
   "button_add_another": "Добавить",
-  "sidepanel_title_acc_general": "Общие настройки"
+  "sidepanel_title_acc_general": "Общие настройки",
+  "blocked_contacts_link": "Заблокированные ({count})",
+  "sidepanel_title_blocked": ":!![MISSING]!!:Blocked Chats"
 }

@@ -15,6 +15,7 @@
     "button_logout": "Logout",
     "button_delete_account": "Delete account",
     "label_default_access_mode": "Default access mode:",
+    "blocked_contacts_link": "Blocked contacts ({count})",
     "link_contact_us": "Contact Us",
     "link_terms_of_service": "Terms of Service",
     "link_privacy_policy": "Privacy Policy",
@@ -94,6 +95,7 @@
     "sidepanel_title_cred": "Confirm Credentials",
     "sidepanel_title_reset": "Reset Password",
     "sidepanel_title_archive": "Archived Chats",
+    "sidepanel_title_blocked": "Blocked Chats",
     "update_available": "Update available. <a href=\"\">Reload</a>.",
     "reconnect_countdown": "Disconnected. Reconnecting in {seconds}…",
     "reconnect_now": "Try now",
@@ -331,7 +333,8 @@
     "label_server_address": "Адрес сервера:",
     "button_edit": "Редактировать",
     "button_add_another": "Добавить",
-    "sidepanel_title_acc_general": "Общие настройки"
+    "sidepanel_title_acc_general": "Общие настройки",
+    "blocked_contacts_link": "Заблокированные ({count})"
   },
   "zh": {
     "archived_contacts": "已归档联系人 ({count})",
@@ -498,6 +501,8 @@
     "label_server_address": "服务器地址：",
     "button_edit": "编辑",
     "button_add_another": "加上另一个",
-    "sidepanel_title_acc_general": "常用设定"
+    "sidepanel_title_acc_general": "常用设定",
+    "blocked_contacts_link": "封锁的联络人 ({count})",
+    "sidepanel_title_blocked": "被阻止的聊天"
   }
 }

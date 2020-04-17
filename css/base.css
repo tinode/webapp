@@ -37,6 +37,11 @@ a.red:focus {
   color: #F44336;
 }
 
+a.gray:hover,
+a.gray:focus {
+  color: #999;
+}
+
 a.flat-button {
   display: flex;
   align-items: center;

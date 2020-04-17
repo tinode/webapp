@@ -84,6 +84,7 @@ class TinodeWeb extends React.Component {
     this.handleSettings = this.handleSettings.bind(this);
     this.handleGlobalSettings = this.handleGlobalSettings.bind(this);
     this.handleShowArchive = this.handleShowArchive.bind(this);
+    this.handleShowBlocked = this.handleShowBlocked.bind(this);
     this.handleToggleMessageSounds = this.handleToggleMessageSounds.bind(this);
     this.handleCredAdd = this.handleCredAdd.bind(this);
     this.handleCredDelete = this.handleCredDelete.bind(this);
@@ -301,7 +302,7 @@ class TinodeWeb extends React.Component {
     if (hash.path && hash.path.length > 0) {
       // Left-side panel selector.
       if (['register','settings','edit','notif','security','support','general',
-          'cred','reset','newtpk','archive','contacts',''].includes(hash.path[0])) {
+          'cred','reset','newtpk','archive','blocked','contacts',''].includes(hash.path[0])) {
         this.setState({sidePanelSelected: hash.path[0]});
       } else {
         console.log("Unknown sidepanel view", hash.path[0]);
@@ -376,7 +377,7 @@ class TinodeWeb extends React.Component {
   handleConnected() {
     const params = this.tinode.getServerInfo();
     this.setState({
-      serverVersion: params.ver + ' ' + (params.build ? params.build : 'none') + '; '
+      serverVersion: params.ver + ' ' + (params.build ? params.build : 'none')
     });
 
     if (this.state.autoLogin) {
@@ -923,6 +924,12 @@ class TinodeWeb extends React.Component {
       this.state.myUserId ? 'archive' : ''));
   }
 
+  // User viewes 'Blocked chats'.
+  handleShowBlocked() {
+    HashNavigation.navigateTo(HashNavigation.setUrlSidePanel(window.location.hash,
+      this.state.myUserId ? 'blocked' : ''));
+  }
+
   // Initialize desktop alerts = push notifications.
   initDesktopAlerts() {
     // Google could not be bothered to mention that
@@ -1011,6 +1018,8 @@ class TinodeWeb extends React.Component {
     let path = '';
     if (['security','support','general','notif'].includes(parsed.path[0])) {
       path = 'edit';
+    } else if ('blocked' == parsed.path[0]) {
+      path = 'security';
     } else if (this.state.myUserId) {
       path = 'contacts';
     }
@@ -1436,6 +1445,7 @@ class TinodeWeb extends React.Component {
           onPasswordResetRequest={this.handlePasswordResetRequest}
           onResetPassword={this.handleResetPassword}
           onShowArchive={this.handleShowArchive}
+          onShowBlocked={this.handleShowBlocked}
 
           onInitFind={this.tnInitFind}
           searchResults={this.state.searchResults}
