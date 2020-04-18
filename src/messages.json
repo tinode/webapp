@@ -99,6 +99,10 @@
     "update_available": "Update available. <a href=\"\">Reload</a>.",
     "reconnect_countdown": "Disconnected. Reconnecting in {seconds}…",
     "reconnect_now": "Try now",
+    "push_init_failed": "Failed to initialize push notifications",
+    "invalid_security_token": "Invalid security token",
+    "no_connection": "No connection",
+    "code_doesnot_match": "Code does not match",
     "phone_dative": "phone",
     "email_dative": "email",
     "enter_confirmation_code_prompt": "Enter confirmation code sent to you by {method}:",
@@ -334,7 +338,12 @@
     "button_edit": "Редактировать",
     "button_add_another": "Добавить",
     "sidepanel_title_acc_general": "Общие настройки",
-    "blocked_contacts_link": "Заблокированные ({count})"
+    "blocked_contacts_link": "Заблокированные ({count})",
+    "sidepanel_title_blocked": "Заблокированные чаты",
+    "push_init_failed": "Ошибка инициализации пуш уведомлений",
+    "invalid_security_token": "Токен некорректен",
+    "no_connection": "Нет связи",
+    "code_doesnot_match": "Код не совпадает"
   },
   "zh": {
     "archived_contacts": "已归档联系人 ({count})",
@@ -503,6 +512,10 @@
     "button_add_another": "加上另一个",
     "sidepanel_title_acc_general": "常用设定",
     "blocked_contacts_link": "封锁的联络人 ({count})",
-    "sidepanel_title_blocked": "被阻止的聊天"
+    "sidepanel_title_blocked": "被阻止的聊天",
+    "push_init_failed": "初始化推送通知失败",
+    "invalid_security_token": "无效的安全令牌",
+    "no_connection": "无连接",
+    "code_doesnot_match": "代码不匹配"
   }
 }

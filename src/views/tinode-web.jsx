@@ -42,6 +42,26 @@ const messages = defineMessages({
     id: 'reconnect_now',
     defaultMessage: 'Try now',
     description: 'Prompt for reconnecting now'
+  },
+  push_init_failed: {
+    id: 'push_init_failed',
+    defaultMessage: 'Failed to initialize push notifications',
+    description: 'Error message when push notifications have failed to initialize.'
+  },
+  invalid_security_token: {
+    id: 'invalid_security_token',
+    defaultMessage: 'Invalid security token',
+    description: 'Error message when resetting password.'
+  },
+  no_connection: {
+    id: 'no_connection',
+    defaultMessage: 'No connection',
+    description: 'Warning that the user is offline.'
+  },
+  code_doesnot_match: {
+    id: 'code_doesnot_match',
+    defaultMessage: 'Code does not match',
+    description: 'Error message when the credential validation code is incorrect.'
   }
 });
 
@@ -197,7 +217,7 @@ class TinodeWeb extends React.Component {
       viewportHeight: document.documentElement.clientHeight
     });
 
-    const {locale} = this.props.intl;
+    const {formatMessage, locale} = this.props.intl;
     this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport, locale);
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
@@ -211,6 +231,7 @@ class TinodeWeb extends React.Component {
         navigator.serviceWorker.register('/service-worker.js').then((reg) => {
           this.checkForAppUpdate(reg);
           this.fbPush.useServiceWorker(reg);
+          reg.active.postMessage(JSON.stringify({locale: locale}));
           this.initDesktopAlerts();
           if (this.state.desktopAlerts) {
             if (!this.state.firebaseToken) {
@@ -224,7 +245,7 @@ class TinodeWeb extends React.Component {
           console.log("Failed to register service worker:", err);
         });
       } catch (err) {
-        this.handleError("Failed to initialize push notifications", 'err');
+        this.handleError(formatMessage({id: 'push_init_failed'}), 'err');
         console.log("Failed to initialize push notifications", err);
         this.setState({desktopAlertsEnabled: false});
       }
@@ -338,7 +359,7 @@ class TinodeWeb extends React.Component {
     if (online) {
       this.handleError();
     } else {
-      this.handleError("No connection", 'warn');
+      this.handleError(this.props.intl.formatMessage({id: 'no_connection'}), 'warn');
     }
     this.setState({liveConnection: online});
   }
@@ -461,7 +482,7 @@ class TinodeWeb extends React.Component {
         if (ctrl.code >= 300 && ctrl.text === 'validate credentials') {
           this.setState({loadSpinnerVisible: false});
           if (cred) {
-            this.handleError("Code does not match", 'warn');
+            this.handleError(this.props.intl.formatMessage({id: 'code_doesnot_match'}), 'warn');
           }
           this.handleCredentialsRequest(ctrl.params);
         } else {
@@ -901,8 +922,7 @@ class TinodeWeb extends React.Component {
       this.tinode.onDisconnect = undefined;
       this.tinode.disconnect();
     }
-    const {locale} = this.props.intl;
-    this.tinode = TinodeWeb.tnSetup(serverAddress, transport, locale);
+    this.tinode = TinodeWeb.tnSetup(serverAddress, transport, this.props.intl.locale);
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
 
@@ -1131,8 +1151,7 @@ class TinodeWeb extends React.Component {
       this.tinode.disconnect();
     }
     this.setState(this.getBlankState());
-    const {locale} = this.props.intl;
-    this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport, locale);
+    this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport, this.props.intl.locale);
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
     HashNavigation.navigateTo('');
@@ -1217,7 +1236,6 @@ class TinodeWeb extends React.Component {
 
   defaultTopicContextMenu(topicName) {
     const topic = this.tinode.getTopic(topicName);
-    const {formatMessage} = this.props.intl;
 
     let muted = false, blocked = false, self_blocked = false, subscribed = false, deleter = false, archived = false;
     if (topic) {
@@ -1234,7 +1252,10 @@ class TinodeWeb extends React.Component {
     }
 
     return [
-      subscribed ? {title: formatMessage({id: 'menu_item_info'}), handler: this.handleShowInfoView} : null,
+      subscribed ? {
+        title: this.props.intl.formatMessage({id: 'menu_item_info'}),
+        handler: this.handleShowInfoView
+      } : null,
       subscribed ? 'messages_clear' : null,
       subscribed && deleter ? 'messages_clear_hard' : null,
       muted ? (blocked ? null : 'topic_unmute') : 'topic_mute',
@@ -1344,8 +1365,8 @@ class TinodeWeb extends React.Component {
 
   handleResetPassword(scheme, newPassword, token) {
     token = base64ReEncode(token);
-    if (!token)  {
-      this.handleError("Invalid security token", 'err');
+    if (!token) {
+      this.handleError(this.props.intl.formatMessage({id: 'invalid_security_token'}), 'err');
     } else {
       this.tinode.connect()
         .then(() => {

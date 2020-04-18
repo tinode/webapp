@@ -165,5 +165,9 @@
   "button_add_another": "加上另一个",
   "sidepanel_title_acc_general": "常用设定",
   "blocked_contacts_link": "封锁的联络人 ({count})",
-  "sidepanel_title_blocked": "被阻止的聊天"
+  "sidepanel_title_blocked": "被阻止的聊天",
+  "push_init_failed": "初始化推送通知失败",
+  "invalid_security_token": "无效的安全令牌",
+  "no_connection": "无连接",
+  "code_doesnot_match": "代码不匹配"
 }

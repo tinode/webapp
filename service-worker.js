@@ -5,15 +5,37 @@ importScripts('firebase-init.js');
 
 firebase.initializeApp(FIREBASE_INIT);
 
-// This method shows the notifications.
-firebase.messaging().setBackgroundMessageHandler(function(payload) {
+// Basic internationalization.
+const i18n = {
+  'en': {
+    'new_message': "New message",
+    'new_chat': "New chat",
+  },
+  'ru': {
+    'new_message': "Новое сообщение",
+    'new_chat': "Новый чат",
+  },
+  'zh': {
+    'new_message': "新讯息",
+    'new_chat': "新聊天",
+  }
+};
+self.i18nMessage = function(id) {
+  // Choose translations: given something like 'de-CH', try 'de-CH' then 'de' then 'en'.
+  const lang = i18n[self.locale] || i18n[self.baseLocale] || i18n['en'];
+  // Try id in the specified language, if missing try English, otherwise use id as the last resort.
+  return lang[id] || i18n['en'][id] || id;
+}
+
+// This method shows the push notifications.
+firebase.messaging().setBackgroundMessageHandler((payload) => {
   if (payload.data.silent === 'true') {
     return;
   }
   const pushType = payload.data.what || 'msg';
-  const title = payload.data.title || (pushType == 'msg' ? "New message" : "New chat");
+  const title = payload.data.title || self.i18nMessage(pushType == 'msg' ? 'new_message' : 'new_chat');
   const options = {
-    body: payload.data.content || "",
+    body: payload.data.content || '',
     icon: '/img/logo96.png',
     badge: '/img/badge96.png',
     tag: payload.data.topic || undefined,
@@ -82,7 +104,14 @@ self.addEventListener('fetch', event => {
       })
       .catch((err) => {
         // Something went wrong.
-        console.log("Service worker Fetch: ", err);
+        console.log("Service worker Fetch:", err);
       })
   );
+});
+
+// This code get the human language from the webapp for localization of strings.
+self.addEventListener('message', event => {
+  const data = JSON.parse(event.data);
+  self.locale = data.locale || '';
+  self.baseLocale = self.locale.toLowerCase().split(/[-_]/)[0];
 });
