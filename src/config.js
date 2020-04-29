@@ -54,8 +54,8 @@ export const MESSAGES_PAGE = 24;
 // This is size of an object *before* base64 encoding is applied.
 // Increase this limit to a greater value in production, if desired. Also increase
 // max_message_size in server config.
-//  MAX_INBAND_ATTACHMENT_SIZE = base64DecodedLen(max_message_size - overhead);
-export const MAX_INBAND_ATTACHMENT_SIZE = 195840;
+//  MAX_INBAND_ATTACHMENT_SIZE = base64DecodedLen(max_message_size) - 1024;
+export const MAX_INBAND_ATTACHMENT_SIZE = 195584;
 
 // Absolute maximum attachment size to be used with the server = 8MB. Increase to
 // something like 100MB in production.
