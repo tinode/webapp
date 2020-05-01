@@ -24,6 +24,8 @@ export const READ_DELAY = 1000;
 
 // The shortest allowed tag length. Matches the value on the server.
 export const MIN_TAG_LENGTH = 4;
+// The maximum number of tags allowed. Matches the value on the server.
+export const MAX_TAG_COUNT = 16;
 
 // Access mode for P2P subscriptions initiated by the current user.
 export const DEFAULT_P2P_ACCESS_MODE = 'JRWPS';

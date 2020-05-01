@@ -29,9 +29,10 @@ self.i18nMessage = function(id) {
 
 // This method shows the push notifications.
 firebase.messaging().setBackgroundMessageHandler((payload) => {
-  if (payload.data.silent === 'true') {
+  if (payload.data.silent == 'true') {
     return;
   }
+
   const pushType = payload.data.what || 'msg';
   const title = payload.data.title || self.i18nMessage(pushType == 'msg' ? 'new_message' : 'new_chat');
   const options = {

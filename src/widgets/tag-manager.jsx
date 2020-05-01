@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 
 import ChipInput from './chip-input.jsx';
 
-import { MIN_TAG_LENGTH } from '../config.js';
+import { MAX_TAG_COUNT, MIN_TAG_LENGTH } from '../config.js';
 import { arrayEqual } from '../lib/utils.js';
 
 export default class TagManager extends React.Component {
@@ -48,7 +48,7 @@ export default class TagManager extends React.Component {
   }
 
   handleAddTag(tag) {
-    if (tag.length > 0) {
+    if (tag.length > 0 && this.state.tags.length < MAX_TAG_COUNT) {
       const tags = this.state.tags.slice(0);
       tags.push(tag);
 
