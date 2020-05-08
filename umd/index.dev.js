@@ -90,7 +90,7 @@
 /*!***********************!*\
   !*** ./src/config.js ***!
   \***********************/
-/*! exports provided: APP_NAME, API_KEY, KNOWN_HOSTS, DEFAULT_HOST, LOGGING_ENABLED, KEYPRESS_DELAY, RECEIVED_DELAY, READ_DELAY, MIN_TAG_LENGTH, DEFAULT_P2P_ACCESS_MODE, NEW_GRP_ACCESS_MODE, NO_ACCESS_MODE, MEDIA_BREAKPOINT, REM_SIZE, AVATAR_SIZE, BROKEN_IMAGE_SIZE, MESSAGES_PAGE, MAX_INBAND_ATTACHMENT_SIZE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_ONLINE_IN_TOPIC, MAX_TITLE_LENGTH, LINK_CONTACT_US, LINK_PRIVACY_POLICY, LINK_TERMS_OF_SERVICE */
+/*! exports provided: APP_NAME, API_KEY, KNOWN_HOSTS, DEFAULT_HOST, LOGGING_ENABLED, KEYPRESS_DELAY, RECEIVED_DELAY, READ_DELAY, MIN_TAG_LENGTH, MAX_TAG_COUNT, DEFAULT_P2P_ACCESS_MODE, NEW_GRP_ACCESS_MODE, NO_ACCESS_MODE, MEDIA_BREAKPOINT, REM_SIZE, AVATAR_SIZE, BROKEN_IMAGE_SIZE, MESSAGES_PAGE, MAX_INBAND_ATTACHMENT_SIZE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_ONLINE_IN_TOPIC, MAX_TITLE_LENGTH, LINK_CONTACT_US, LINK_PRIVACY_POLICY, LINK_TERMS_OF_SERVICE */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -104,6 +104,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVED_DELAY", function() { return RECEIVED_DELAY; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "READ_DELAY", function() { return READ_DELAY; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MIN_TAG_LENGTH", function() { return MIN_TAG_LENGTH; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MAX_TAG_COUNT", function() { return MAX_TAG_COUNT; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DEFAULT_P2P_ACCESS_MODE", function() { return DEFAULT_P2P_ACCESS_MODE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NEW_GRP_ACCESS_MODE", function() { return NEW_GRP_ACCESS_MODE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NO_ACCESS_MODE", function() { return NO_ACCESS_MODE; });
@@ -134,6 +135,7 @@ const KEYPRESS_DELAY = 3 * 1000;
 const RECEIVED_DELAY = 500;
 const READ_DELAY = 1000;
 const MIN_TAG_LENGTH = 4;
+const MAX_TAG_COUNT = 16;
 const DEFAULT_P2P_ACCESS_MODE = 'JRWPS';
 const NEW_GRP_ACCESS_MODE = 'JRWPSAO';
 const NO_ACCESS_MODE = 'N';
@@ -142,7 +144,7 @@ const REM_SIZE = 13;
 const AVATAR_SIZE = 128;
 const BROKEN_IMAGE_SIZE = 32;
 const MESSAGES_PAGE = 24;
-const MAX_INBAND_ATTACHMENT_SIZE = 195840;
+const MAX_INBAND_ATTACHMENT_SIZE = 195584;
 const MAX_EXTERN_ATTACHMENT_SIZE = 1 << 23;
 const MAX_IMAGE_DIM = 768;
 const MAX_ONLINE_IN_TOPIC = 4;
@@ -9793,7 +9795,7 @@ class TagManager extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component 
   }
 
   handleAddTag(tag) {
-    if (tag.length > 0) {
+    if (tag.length > 0 && this.state.tags.length < _config_js__WEBPACK_IMPORTED_MODULE_3__["MAX_TAG_COUNT"]) {
       const tags = this.state.tags.slice(0);
       tags.push(tag);
       this.setState({

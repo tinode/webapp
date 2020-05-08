@@ -261,12 +261,12 @@ class ContextMenu extends React.Component {
       'member_block': {
         id: 'member_block',
         title: formatMessage(messages.block),
-        handler: this.topicPermissionSetter.bind(this, '-J')
+        handler: this.topicPermissionSetter.bind(this, '-JP')
       },
       'member_unblock': {
         id: 'member_unblock',
         title: formatMessage(messages.unblock),
-        handler: this.topicPermissionSetter.bind(this, '+J')
+        handler: this.topicPermissionSetter.bind(this, '+JP')
       },
     };
   }
