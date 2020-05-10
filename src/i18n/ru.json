@@ -109,7 +109,7 @@
   "action_cancel": "отменить",
   "upload_finishing": "завершение...",
   "no_contacts": "Ничего нет :-(",
-  "contacts_not_found_short": "Нет контактов для запроса '{query}'",
+  "contacts_not_found_short": "Нет контактов для запроса ''{query}''",
   "title_all_contacts": "Все контакты",
   "error_invalid_id": "Неверный ID",
   "group_user_id_prompt": "ID чата или пользователя",

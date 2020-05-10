@@ -11,9 +11,9 @@ const messages = defineMessages({
     defaultMessage: 'You have no contacts :-(',
     description: 'Shown in ContactsView when the user has no contacts'
   },
-  contacts_not_found: {
+  contacts_not_found_short: {
     id: 'contacts_not_found_short',
-    defaultMessage: "No contacts match '{query}'",
+    defaultMessage: "No contacts match ''{query}''",
     description: 'Shown in ContactsView when search returned no results'
   }
 });
@@ -112,7 +112,7 @@ class GroupManager extends React.Component {
     const {formatMessage} = this.props.intl;
     const msg = !val ?
       formatMessage(messages.no_contacts) :
-      formatMessage(messages.contacts_not_found, {query: val});
+      formatMessage(messages.contacts_not_found_short, {query: val});
 
     this.setState({contactFilter: val, noContactsMessage: msg});
   }

@@ -131,7 +131,7 @@
   "action_cancel": "cancel",
   "upload_finishing": "finishing...",
   "no_contacts": "You have no contacts :-(",
-  "contacts_not_found_short": "No contacts match '{query}'",
+  "contacts_not_found_short": "No contacts match ''{query}''",
   "title_group_members": "Group Members",
   "title_all_contacts": "All Contacts",
   "button_ok": "OK",
