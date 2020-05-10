@@ -2898,6 +2898,7 @@ function isPeerRestricted(acs) {
 class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   constructor(props) {
     super(props);
+    console.log("Constructor call");
     this.state = MessagesView.getDerivedStateFromProps(props, {});
     this.leave = this.leave.bind(this);
     this.sendImageAttachment = this.sendImageAttachment.bind(this);
@@ -2927,12 +2928,14 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
 
   componentDidMount() {
     if (this.messagesScroller) {
+      console.log("componentDidMount addEventListener scroll");
       this.messagesScroller.addEventListener('scroll', this.handleScrollEvent);
     }
   }
 
   componentWillUnmount() {
     if (this.messagesScroller) {
+      console.log("componentDidMount removeEventListener scroll");
       this.messagesScroller.removeEventListener('scroll', this.handleScrollEvent);
     }
 
@@ -3160,6 +3163,7 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
     if (node) {
       node.addEventListener('scroll', this.handleScrollEvent);
       this.messagesScroller = node;
+      this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition;
     }
   }
 

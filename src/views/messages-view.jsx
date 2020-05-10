@@ -113,8 +113,10 @@ class MessagesView extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.messagesScroller) {
       if (prevState.topic != this.state.topic || prevState.messages.length != this.state.messages.length) {
+        // New message
         this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition;
       } else if (prevProps.viewportHeight > this.props.viewportHeight) {
+        // Componet changed height.
         this.messagesScroller.scrollTop += prevProps.viewportHeight - this.props.viewportHeight;
       }
     }
@@ -332,6 +334,7 @@ class MessagesView extends React.Component {
     if (node) {
       node.addEventListener('scroll', this.handleScrollEvent);
       this.messagesScroller = node;
+      this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition;
     }
   }
 
