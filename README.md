@@ -31,6 +31,7 @@ As of the time of this writing the following translations exist:
  * Chinese (simplified)
  * Korean
  * Russian
+ * Spanish
 
 More translations are welcome. Send a pull request with a json file with translated strings. Take a look at [English](/src/i18n/en.json), [Russian](/src/i18n/ru.json), or [Simplified Chinese](/src/i18n/zh.json) translations for guidance.
 
