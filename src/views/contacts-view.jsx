@@ -1,6 +1,6 @@
 /* ContactsView holds all contacts-related stuff */
 import React from 'react';
-import { FormattedHTMLMessage, defineMessages } from 'react-intl';
+import { FormattedMessage, defineMessages } from 'react-intl';
 
 import ContactList from '../widgets/contact-list.jsx';
 
@@ -85,7 +85,7 @@ export default class ContactsView extends React.Component {
 
   render() {
     return (
-      <FormattedHTMLMessage id="contacts_not_found"
+      <FormattedMessage id="contacts_not_found"
         defaultMessage="You have no chats<br />¯∖_(ツ)_/¯"
         description="HTML message shown in ContactList when no contacts are found">{
         (no_contacts) => <ContactList
@@ -99,7 +99,7 @@ export default class ContactsView extends React.Component {
           onTopicSelected={this.props.onTopicSelected}
           showContextMenu={this.props.showContextMenu}
           onAction={this.handleAction} />
-      }</FormattedHTMLMessage>
+      }</FormattedMessage>
     );
   }
 };

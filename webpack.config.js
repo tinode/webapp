@@ -52,9 +52,11 @@ module.exports = (env, argv) => {
       maxAssetSize: 262144
     },
     plugins: [
-      new CopyPlugin([
-        { from: `node_modules/tinode-sdk/umd/tinode.${mode}.js`, to: `tinode.${mode}.js` },
-      ]),
+      new CopyPlugin({
+        patterns: [
+          { from: `node_modules/tinode-sdk/umd/tinode.${mode}.js`, to: `tinode.${mode}.js` },
+        ],
+      }),
     ],
     externals: {
       'react': 'React',

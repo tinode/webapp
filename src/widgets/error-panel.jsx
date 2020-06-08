@@ -36,7 +36,7 @@ export default class ErrorPanel extends React.PureComponent {
       <div className={className}>
         <div className="icon"><i className="material-icons">{level}</i></div>
         <span>
-          <span dangerouslySetInnerHTML={{__html: this.props.text}} />
+          {this.props.text}
           {this.props.action ?
             <>
               &#32;<a href="#"

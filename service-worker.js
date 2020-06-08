@@ -1,6 +1,6 @@
 // Must be located at the root.
-importScripts('https://cdn.jsdelivr.net/npm/firebase@7.14.0/firebase-app.js');
-importScripts('https://cdn.jsdelivr.net/npm/firebase@7.14.0/firebase-messaging.js');
+importScripts('https://cdn.jsdelivr.net/npm/firebase@7.14.6/firebase-app.js');
+importScripts('https://cdn.jsdelivr.net/npm/firebase@7.14.6/firebase-messaging.js');
 importScripts('firebase-init.js');
 
 firebase.initializeApp(FIREBASE_INIT);
@@ -10,6 +10,14 @@ const i18n = {
   'en': {
     'new_message': "New message",
     'new_chat': "New chat",
+  },
+  'es': {
+    'new_message': "Nuevo mensaje",
+    'new_chat': "Nueva conversación",
+  },
+  'ko': {
+    'new_message': "새로운 메시지",
+    'new_chat': "새로운 채팅",
   },
   'ru': {
     'new_message': "Новое сообщение",

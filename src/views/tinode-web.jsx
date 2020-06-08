@@ -1,7 +1,7 @@
 // The top-level class to hold all functionality together.
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { defineMessages, injectIntl } from 'react-intl';
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
 import * as firebase from 'firebase/app';
 import 'firebase/messaging';
@@ -28,11 +28,6 @@ import { updateFavicon } from '../lib/utils.js';
 const POP_SOUND = new Audio('audio/msg.mp3');
 
 const messages = defineMessages({
-  update_available: {
-    id: 'update_available',
-    defaultMessage: 'Update available. <a href="">Reload</a>.',
-    description: 'Message shown when an app update is available.'
-  },
   reconnect_countdown: {
     id: 'reconnect_countdown',
     defaultMessage: 'Disconnected. Reconnecting in {seconds}…',
@@ -306,12 +301,19 @@ class TinodeWeb extends React.Component {
 
   // Check if a newer version of TinodeWeb app is available at the server.
   checkForAppUpdate(reg) {
-    const {formatHTMLMessage} = this.props.intl;
     reg.onupdatefound = () => {
       const installingWorker = reg.installing;
       installingWorker.onstatechange = () => {
         if (installingWorker.state == 'installed' && navigator.serviceWorker.controller) {
-          this.handleError(formatHTMLMessage(messages.update_available), 'info');
+          const msg = <>
+            <FormattedMessage id="update_available"
+              defaultMessage="Update available."
+              description="Message shown when an app update is available." /> <a href="">
+              <FormattedMessage id="reload_update"
+                defaultMessage="Reload"
+                description="Call to action to reload application when update is available." />
+            </a>.</>;
+          this.handleError(msg, 'info');
         }
       }
     }
@@ -427,19 +429,19 @@ class TinodeWeb extends React.Component {
       return;
     }
 
-    const {formatHTMLMessage} = this.props.intl;
+    const {formatMessage} = this.props.intl;
     let count = sec / 1000;
     count = count | count;
     this.reconnectCountdown = setInterval(() => {
       const timeLeft = (count > 99) ? secondsToTime(count) : count;
       this.handleError(
-        formatHTMLMessage(messages.reconnect_countdown, {seconds: timeLeft}),
+        formatMessage(messages.reconnect_countdown, {seconds: timeLeft}),
         'warn',
         () => {
           clearInterval(this.reconnectCountdown);
           this.tinode.reconnect();
         },
-        formatHTMLMessage(messages.reconnect_now)
+        formatMessage(messages.reconnect_now)
       );
       count -= 1;
     }, 1000);
