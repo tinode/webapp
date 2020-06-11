@@ -55,7 +55,7 @@
   "label_group_members": "Miembros del grupo:",
   "button_add_members": "Añadir miembros",
   "group_has_no_members": "No hay miembros",
-  "login_prompt": "Entrar",
+  "login_prompt": "Nombre de usuario",
   "password_prompt": "Contraseña",
   "stay_logged_in": "Permanecer conectado",
   "forgot_password_link": "¿Olvidaste tu contraseña?",

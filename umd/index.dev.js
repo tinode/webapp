@@ -6534,7 +6534,7 @@ class ChatMessage extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component
           key: i
         }));
       }, this);
-      content = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement('span', null, tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].format(content, draftyFormatter, this));
+      content = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].format(content, draftyFormatter, this));
     } else if (this.props.deleted) {
       content = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
         className: "material-icons gray"

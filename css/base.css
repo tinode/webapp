@@ -655,7 +655,6 @@ table.permission-editor td.checkbox {
   overflow: hidden;
   min-width: 8rem;
   line-height: 2rem;
-  padding: 0.35rem;
 }
 .bot-form div {
   min-height: 2rem;
@@ -664,7 +663,6 @@ table.permission-editor td.checkbox {
 .bot-form button {
   display: inline-block;
   margin: 0.15rem;
-  width: 100%;
   background-color: #eef;
   color: #2196f3; /* blue 500 */
   font-size: inherit;

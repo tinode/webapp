@@ -98,7 +98,7 @@ export default class ChatMessage extends React.Component {
           onError={this.props.onError}
           key={i} />);
       }, this);
-      content = React.createElement('span', null, Drafty.format(content, draftyFormatter, this));
+      content = React.createElement(React.Fragment, null, Drafty.format(content, draftyFormatter, this));
     } else if (this.props.deleted) {
       // Message represents a range of deleted messages.
       content = <><i className="material-icons gray">block</i> <i className="gray">
