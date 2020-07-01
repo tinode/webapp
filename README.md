@@ -29,6 +29,7 @@ The app is fully internationalized using [React-Intl](https://github.com/formatj
 As of the time of this writing the following translations exist:
  * English
  * Chinese (simplified)
+ * German
  * Korean
  * Russian
  * Spanish
