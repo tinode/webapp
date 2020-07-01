@@ -68,11 +68,11 @@ If you want to use the app with your own server and want web push notification t
 ### Desktop screenshot
 
 <p align="center">
-  <img src="web-desktop-2.png" alt="Desktop web: full app" width=866 />
+  <img src="web-desktop-2.png" alt="Desktop web: full app" width=810 />
 </p>
 
 ### Mobile screenshots
 
 <p align="center">
-  <kbd><img src="web-mob-contacts-1.png" alt="Mobile web: contacts" width=323 /></kbd> <kbd><img src="web-mob-chat-1.png" alt="Mobile web: chat" width=323 /></kbd> <kbd><img src="web-mob-info-1.png" alt="Mobile web: topic info" width=323 /></kbd> <kbd><img src="web-mob-new-chat-1.png" alt="Mobile web: start new chat" width=323 /></kbd>
+  <img src="web-mob-contacts-1.png" alt="Mobile web: contacts" width=250 /> <img src="web-mob-chat-1.png" alt="Mobile web: chat" width=250 /> <img src="web-mob-info-1.png" alt="Mobile web: topic info" width=250 /> <img src="web-mob-new-chat-1.png" alt="Mobile web: start new chat" width=250 /> <img src="web-mob-acc-settings.png" alt="Mobile web: account settings" width=250 />
 </p>
