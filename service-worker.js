@@ -7,6 +7,10 @@ firebase.initializeApp(FIREBASE_INIT);
 
 // Basic internationalization.
 const i18n = {
+  'de': {
+    'new_message': "Neue Nachricht",
+    'new_chat': "Neuer Chat",
+  },
   'en': {
     'new_message': "New message",
     'new_chat': "New chat",
