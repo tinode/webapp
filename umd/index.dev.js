@@ -815,7 +815,7 @@ module.exports = JSON.parse("{\"de\":{\"validate_credential_action\":\"bestätig
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PACKAGE_VERSION", function() { return PACKAGE_VERSION; });
-const PACKAGE_VERSION = "0.16.7-rc1";
+const PACKAGE_VERSION = "0.16.7-rc2";
 
 /***/ }),
 
