@@ -390,7 +390,7 @@ class TinodeWeb extends React.Component {
     } else {
       this.tinode.connect().catch((err) => {
         // Socket error
-        this.setState({loginDisabled: false, autoLogin: false});
+        this.setState({loginDisabled: false, autoLogin: false, loadSpinnerVisible: false});
         this.handleError(err.message, 'err');
       });
     }
