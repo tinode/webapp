@@ -4789,7 +4789,6 @@ class TinodeWeb extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       });
     } else {
       this.tinode.connect().catch(err => {
-        console.log("Set loadSpinnerVisible to false");
         this.setState({
           loginDisabled: false,
           autoLogin: false,
@@ -8664,7 +8663,6 @@ __webpack_require__.r(__webpack_exports__);
 
 class LoadSpinner extends react__WEBPACK_IMPORTED_MODULE_0___default.a.PureComponent {
   render() {
-    console.log("Load spinner visible:", this.props.show);
     return this.props.show ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "load-spinner-box"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
