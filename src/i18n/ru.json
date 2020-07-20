@@ -170,5 +170,6 @@
   "push_init_failed": "Ошибка инициализации пуш уведомлений",
   "invalid_security_token": "Токен некорректен",
   "no_connection": "Нет связи",
-  "code_doesnot_match": "Код не совпадает"
+  "code_doesnot_match": "Код не совпадает",
+  "channel_prompt": "Создать канал"
 }

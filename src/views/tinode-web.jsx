@@ -1061,9 +1061,9 @@ class TinodeWeb extends React.Component {
   }
 
   // Request to start a new topic. New P2P topic requires peer's name.
-  handleNewTopicRequest(peerName, pub, priv, tags) {
+  handleNewTopicRequest(peerName, pub, priv, tags, isChannel) {
 
-    const topicName = peerName || this.tinode.newGroupTopicName();
+    const topicName = peerName || this.tinode.newGroupTopicName(isChannel);
     const params = {
       _topicName: topicName,
     };

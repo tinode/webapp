@@ -150,6 +150,7 @@
   "group_user_id_prompt": "Group or User ID",
   "button_subscribe": "Subscribe",
   "topic_name_editing_placeholder": "Freeform name of the group",
+  "channel_prompt": "This is a channel",
   "button_create": "Create",
   "permission_join": "Join ({val})",
   "permission_read": "Read ({val})",

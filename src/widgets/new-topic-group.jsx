@@ -2,6 +2,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import AvatarUpload from './avatar-upload.jsx';
+import CheckBox from './checkbox.jsx';
 import TagManager from './tag-manager.jsx';
 
 import { MAX_TITLE_LENGTH } from '../config.js';
@@ -14,14 +15,15 @@ export default class NewTopicGroup extends React.PureComponent {
       fn: '', // full/formatted name
       private: '',
       imageDataUrl: null,
-      tags: []
+      tags: [],
+      isChannel: false
     };
 
     this.handleFnChange = this.handleFnChange.bind(this);
     this.handlePrivateChange = this.handlePrivateChange.bind(this);
     this.handleImageChanged = this.handleImageChanged.bind(this);
     this.handleTagsChanged = this.handleTagsChanged.bind(this);
-    this.handleTagsChanged = this.handleTagsChanged.bind(this);
+    this.handleChannelToggle = this.handleChannelToggle.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -41,13 +43,17 @@ export default class NewTopicGroup extends React.PureComponent {
     this.setState({tags: tags});
   }
 
+  handleChannelToggle() {
+    this.setState({isChannel: !this.state.isChannel});
+  }
+
   handleSubmit(e) {
     e.preventDefault();
 
     const fn = this.state.fn.trim().substring(0, MAX_TITLE_LENGTH);
     const comment = this.state.private.trim().substring(0, MAX_TITLE_LENGTH);
     if (fn) {
-      this.props.onSubmit(fn, this.state.imageDataUrl, comment, this.state.tags);
+      this.props.onSubmit(fn, this.state.imageDataUrl, comment, this.state.tags, this.state.isChannel);
     }
   }
 
@@ -80,6 +86,12 @@ export default class NewTopicGroup extends React.PureComponent {
           <AvatarUpload
             onError={this.props.onError}
             onImageChanged={this.handleImageChanged} />
+        </div>
+        <div className="panel-form-row">
+          <CheckBox checked={this.state.isChannel} onChange={this.handleChannelToggle}/>&nbsp;
+          <label onClick={this.handleChannelToggle}><FormattedMessage id="channel_prompt"
+            defaultMessage="This is a channel"
+            description="Checkbox label when creating a channel" /></label>
         </div>
         <FormattedMessage id="title_tag_manager">{
           (title) => <TagManager

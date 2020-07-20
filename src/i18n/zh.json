@@ -170,5 +170,6 @@
   "push_init_failed": "初始化推送通知失败",
   "invalid_security_token": "无效的安全令牌",
   "no_connection": "无连接",
-  "code_doesnot_match": "代码不匹配"
+  "code_doesnot_match": "代码不匹配",
+  "channel_prompt": "这是一个频道"
 }

@@ -170,5 +170,6 @@
   "cannot_initiate_file_upload": "No se pudo iniciar la carga del archivo.",
   "tags_not_found": "No hay etiquetas definidas. Añade unas.",
   "tags_editor_no_tags": "Añadir etiquetas",
-  "title_manage_tags": "Gestionar"
+  "title_manage_tags": "Gestionar",
+  "channel_prompt": "Este es un canal"
 }

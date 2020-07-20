@@ -21,7 +21,7 @@
   "label_sdk": "SDK:",
   "label_server_address": "Server Adresse:",
   "archived_contacts": "Archivierte Kontakte ({count})",
-  "contacts_not_found": "Sie haben keine Unterhaltungen\n\n¯\\_(ツ)_/¯",
+  "contacts_not_found": "Sie haben keine Unterhaltungen<br />¯∖_(ツ)_/¯",
   "full_name_prompt": "Vollständiger Name, z.B. Lisa Musterfrau",
   "email_prompt": "E-Mail, z.B. jdoe@beispiel.de",
   "button_sign_up": "Anmelden",
@@ -170,5 +170,6 @@
   "cannot_initiate_file_upload": "Datei kann nicht hochgeladen werden.",
   "tags_not_found": "Keine Schlagworte definiert. Erstellen Sie welche.",
   "tags_editor_no_tags": "Schlagworte hinzufügen",
-  "title_manage_tags": "Verwalten"
+  "title_manage_tags": "Verwalten",
+  "channel_prompt": "Dies ist ein Kanal"
 }
