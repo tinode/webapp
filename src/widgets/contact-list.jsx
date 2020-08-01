@@ -3,6 +3,8 @@
 import React from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 
+import Tinode from 'tinode-sdk';
+
 import Contact from './contact.jsx';
 import ContactAction from './contact-action.jsx';
 
@@ -55,6 +57,7 @@ class ContactList extends React.Component {
             }
           }
 
+          const isChannel = Tinode.isChannelTopicName(key);
           const selected = showCheckmark ?
             (this.props.topicSelected.indexOf(key) > -1) :
             (this.props.topicSelected === key);
@@ -82,7 +85,7 @@ class ContactList extends React.Component {
               badges={badges}
               showCheckmark={showCheckmark}
               selected={selected}
-              showOnline={this.props.showOnline}
+              showOnline={this.props.showOnline && !isChannel}
               onSelected={this.props.onTopicSelected}
               showContextMenu={this.props.showContextMenu}
               item={key}

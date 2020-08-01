@@ -152,9 +152,13 @@ class MessagesView extends React.Component {
 
       // Don't request the tags. They are useless unless the user
       // is the owner and is editing the topic.
-      let getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub();
+      let getQuery = topic.startMetaQuery().withLaterDesc();
+      if (this.state.isSharer || (newTopic && !topic.isChannel())) {
+        // Request subscriptions only if one of S,O,A is given or it's a new non-channel topic.
+        getQuery = getQuery.withLaterSub();
+      }
       if (this.state.isReader || newTopic) {
-        // If reading is either permitted or we don't know because it's a new topic. Ask for messages.
+        // Reading is either permitted or we don't know because it's a new topic. Ask for messages.
         getQuery = getQuery.withLaterData(MESSAGES_PAGE);
         if (this.state.isReader) {
           getQuery = getQuery.withLaterDel();
@@ -284,6 +288,9 @@ class MessagesView extends React.Component {
       if (!nextProps.acs.isReader('given') != prevState.readingBlocked) {
         nextState.readingBlocked = !prevState.readingBlocked;
       }
+      if (nextProps.acs.isSharer() != prevState.isSharer) {
+        nextState.isSharer = !prevState.isSharer;
+      }
     } else {
       if (prevState.isWriter) {
         nextState.isWriter = false;
@@ -293,6 +300,9 @@ class MessagesView extends React.Component {
       }
       if (!prevState.readingBlocked) {
         prevState.readingBlocked = true;
+      }
+      if (prevState.isSharer) {
+        nextState.isSharer = false;
       }
     }
 
@@ -726,7 +736,8 @@ class MessagesView extends React.Component {
         );
       } else {
         const topic = this.props.tinode.getTopic(this.state.topic);
-        const groupTopic = topic.getType() == 'grp';
+        const isChannel = topic.isChannel();
+        const groupTopic = topic.getType() == 'grp' && !isChannel;
         let messageNodes = [];
         let previousFrom = null;
         let chatBoxClass = null;
@@ -735,32 +746,33 @@ class MessagesView extends React.Component {
           let nextFrom = null;
 
           if (i + 1 < this.state.messages.length) {
-            nextFrom = this.state.messages[i+1].from
+            nextFrom = this.state.messages[i+1].from || 'chan';
           }
 
           let sequence = 'single';
-          if (msg.from == previousFrom) {
-            if (msg.from == nextFrom) {
+          let thisFrom = msg.from || 'chan';
+          if (thisFrom == previousFrom) {
+            if (thisFrom == nextFrom) {
               sequence = 'middle';
             } else {
               sequence = 'last';
             }
-          } else if (msg.from == nextFrom) {
+          } else if (thisFrom == nextFrom) {
             sequence = 'first';
           }
-          previousFrom = msg.from;
+          previousFrom = thisFrom;
 
-          const isReply = !(msg.from == this.props.myUserId);
+          const isReply = !(thisFrom == this.props.myUserId);
           const deliveryStatus = topic.msgStatus(msg);
 
           let userName, userAvatar, userFrom;
           if (groupTopic) {
-            const user = topic.userDesc(msg.from);
+            const user = topic.userDesc(thisFrom);
             if (user && user.public) {
               userName = user.public.fn;
               userAvatar = makeImageUrl(user.public.photo);
             }
-            userFrom = msg.from;
+            userFrom = thisFrom;
             chatBoxClass='chat-box group';
           } else {
             chatBoxClass='chat-box';
@@ -811,7 +823,7 @@ class MessagesView extends React.Component {
                   avatar={avatar}
                   topic={this.state.topic}
                   title={this.state.title} />
-                <span className={online} />
+                {!isChannel ? <span className={online} /> : null}
               </div>
               <div id="topic-title-group">
                 <div id="topic-title" className="panel-title">{

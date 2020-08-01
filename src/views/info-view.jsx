@@ -718,7 +718,7 @@ class InfoView extends React.Component {
                 null
               }
             </div>
-            {this.state.groupTopic ?
+            {this.state.groupTopic && this.state.sharer ?
               <>
                 <div className="hr" />
                 <div className="panel-form-column">
@@ -729,12 +729,10 @@ class InfoView extends React.Component {
                     </label>
                   </div>
                   <div className="panel-form-row">
-                    {this.state.sharer ?
-                      <a href="#" className="flat-button" onClick={this.handleShowAddMembers}>
-                        <i className="material-icons">person_add</i> &nbsp;<FormattedMessage id="button_add_members"
-                          defaultMessage="Add members" description="Flat button [Add members] (to topic)" />
-                      </a>
-                      : null}
+                    <a href="#" className="flat-button" onClick={this.handleShowAddMembers}>
+                      <i className="material-icons">person_add</i> &nbsp;<FormattedMessage id="button_add_members"
+                        defaultMessage="Add members" description="Flat button [Add members] (to topic)" />
+                    </a>
                   </div>
                   <FormattedMessage id="group_has_no_members" defaultMessage="No members"
                     description="Shown in place of group members">{

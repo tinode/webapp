@@ -90,7 +90,7 @@
 /*!***********************!*\
   !*** ./src/config.js ***!
   \***********************/
-/*! exports provided: APP_NAME, API_KEY, KNOWN_HOSTS, DEFAULT_HOST, LOGGING_ENABLED, KEYPRESS_DELAY, RECEIVED_DELAY, READ_DELAY, MIN_TAG_LENGTH, MAX_TAG_COUNT, DEFAULT_P2P_ACCESS_MODE, NEW_GRP_ACCESS_MODE, NO_ACCESS_MODE, MEDIA_BREAKPOINT, REM_SIZE, AVATAR_SIZE, BROKEN_IMAGE_SIZE, MESSAGES_PAGE, MAX_INBAND_ATTACHMENT_SIZE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_ONLINE_IN_TOPIC, MAX_TITLE_LENGTH, LINK_CONTACT_US, LINK_PRIVACY_POLICY, LINK_TERMS_OF_SERVICE */
+/*! exports provided: APP_NAME, API_KEY, KNOWN_HOSTS, DEFAULT_HOST, LOGGING_ENABLED, KEYPRESS_DELAY, RECEIVED_DELAY, READ_DELAY, MIN_TAG_LENGTH, MAX_TAG_COUNT, DEFAULT_P2P_ACCESS_MODE, NEW_GRP_ACCESS_MODE, CHANNEL_ACCESS_MODE, NO_ACCESS_MODE, MEDIA_BREAKPOINT, REM_SIZE, AVATAR_SIZE, BROKEN_IMAGE_SIZE, MESSAGES_PAGE, MAX_INBAND_ATTACHMENT_SIZE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_ONLINE_IN_TOPIC, MAX_TITLE_LENGTH, LINK_CONTACT_US, LINK_PRIVACY_POLICY, LINK_TERMS_OF_SERVICE */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -107,6 +107,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MAX_TAG_COUNT", function() { return MAX_TAG_COUNT; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DEFAULT_P2P_ACCESS_MODE", function() { return DEFAULT_P2P_ACCESS_MODE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NEW_GRP_ACCESS_MODE", function() { return NEW_GRP_ACCESS_MODE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CHANNEL_ACCESS_MODE", function() { return CHANNEL_ACCESS_MODE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NO_ACCESS_MODE", function() { return NO_ACCESS_MODE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MEDIA_BREAKPOINT", function() { return MEDIA_BREAKPOINT; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "REM_SIZE", function() { return REM_SIZE; });
@@ -138,6 +139,7 @@ const MIN_TAG_LENGTH = 4;
 const MAX_TAG_COUNT = 16;
 const DEFAULT_P2P_ACCESS_MODE = 'JRWPS';
 const NEW_GRP_ACCESS_MODE = 'JRWPSAO';
+const CHANNEL_ACCESS_MODE = 'JR';
 const NO_ACCESS_MODE = 'N';
 const MEDIA_BREAKPOINT = 640;
 const REM_SIZE = 13;
@@ -2595,7 +2597,7 @@ class InfoView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       onClick: this.handleReport
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
       className: "material-icons"
-    }, "report"), " \xA0", formatMessage(messages.report_chat)) : null), this.state.groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    }, "report"), " \xA0", formatMessage(messages.report_chat)) : null), this.state.groupTopic && this.state.sharer ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "hr"
     }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "panel-form-column"
@@ -2608,7 +2610,7 @@ class InfoView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       defaultMessage: "Group members:"
     }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "panel-form-row"
-    }, this.state.sharer ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
       href: "#",
       className: "flat-button",
       onClick: this.handleShowAddMembers
@@ -2617,7 +2619,7 @@ class InfoView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     }, "person_add"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
       id: "button_add_members",
       defaultMessage: "Add members"
-    })) : null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+    }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
       id: "group_has_no_members",
       defaultMessage: "No members"
     }, no_members => react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_contact_list_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
@@ -2973,7 +2975,12 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
 
     if (topic && !topic.isSubscribed() && this.props.ready && (this.state.topic != prevState.topic || !prevProps.ready)) {
       const newTopic = this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic;
-      let getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub();
+      let getQuery = topic.startMetaQuery().withLaterDesc();
+      console.log("subscribing:", this.state.isSharer, newTopic, topic.isChannel());
+
+      if (this.state.isSharer || newTopic && !topic.isChannel()) {
+        getQuery = getQuery.withLaterSub();
+      }
 
       if (this.state.isReader || newTopic) {
         getQuery = getQuery.withLaterData(_config_js__WEBPACK_IMPORTED_MODULE_13__["MESSAGES_PAGE"]);
@@ -3109,6 +3116,10 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
       if (!nextProps.acs.isReader('given') != prevState.readingBlocked) {
         nextState.readingBlocked = !prevState.readingBlocked;
       }
+
+      if (nextProps.acs.isSharer() != prevState.isSharer) {
+        nextState.isSharer = !prevState.isSharer;
+      }
     } else {
       if (prevState.isWriter) {
         nextState.isWriter = false;
@@ -3120,6 +3131,10 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
 
       if (!prevState.readingBlocked) {
         prevState.readingBlocked = true;
+      }
+
+      if (prevState.isSharer) {
+        nextState.isSharer = false;
       }
     }
 
@@ -3575,7 +3590,7 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
         });
       } else {
         const topic = this.props.tinode.getTopic(this.state.topic);
-        const groupTopic = topic.getType() == 'grp';
+        const groupTopic = topic.getType() == 'grp' && !topic.isChannel();
         let messageNodes = [];
         let previousFrom = null;
         let chatBoxClass = null;
@@ -7024,9 +7039,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _contact_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./contact.jsx */ "./src/widgets/contact.jsx");
-/* harmony import */ var _contact_action_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./contact-action.jsx */ "./src/widgets/contact-action.jsx");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _contact_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./contact.jsx */ "./src/widgets/contact.jsx");
+/* harmony import */ var _contact_action_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./contact-action.jsx */ "./src/widgets/contact-action.jsx");
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+
 
 
 
@@ -7055,7 +7073,7 @@ class ContactList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component
     if (this.props.contacts && this.props.contacts.length > 0) {
       this.props.contacts.map(c => {
         if (c.action) {
-          contactNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_contact_action_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+          contactNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_contact_action_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
             title: c.title,
             action: c.action,
             values: c.values,
@@ -7081,6 +7099,7 @@ class ContactList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component
             }
           }
 
+          const isChannel = tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.isChannelTopicName(key);
           const selected = showCheckmark ? this.props.topicSelected.indexOf(key) > -1 : this.props.topicSelected === key;
           const badges = [];
 
@@ -7101,9 +7120,9 @@ class ContactList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component
           }
 
           const comment = Array.isArray(c.private) ? c.private.join(',') : c.private ? c.private.comment : null;
-          contactNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_contact_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+          contactNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_contact_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
             title: c.public ? c.public.fn : null,
-            avatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__["makeImageUrl"])(c.public ? c.public.photo : null),
+            avatar: Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__["makeImageUrl"])(c.public ? c.public.photo : null),
             comment: comment,
             unread: this.props.showUnread ? c.unread : 0,
             now: c.online && this.props.connected,
@@ -7112,7 +7131,7 @@ class ContactList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component
             badges: badges,
             showCheckmark: showCheckmark,
             selected: selected,
-            showOnline: this.props.showOnline,
+            showOnline: this.props.showOnline && !isChannel,
             onSelected: this.props.onTopicSelected,
             showContextMenu: this.props.showContextMenu,
             item: key,

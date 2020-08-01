@@ -72,7 +72,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-intl": "^4.7.6",
-    "tinode-sdk": "^0.16.7"
+    "tinode-sdk": "^0.16.8-beta1"
   },
   "devDependencies": {
     "@babel/core": "^7.10.5",
