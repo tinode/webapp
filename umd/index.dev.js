@@ -2976,7 +2976,6 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
     if (topic && !topic.isSubscribed() && this.props.ready && (this.state.topic != prevState.topic || !prevProps.ready)) {
       const newTopic = this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic;
       let getQuery = topic.startMetaQuery().withLaterDesc();
-      console.log("subscribing:", this.state.isSharer, newTopic, topic.isChannel());
 
       if (this.state.isSharer || newTopic && !topic.isChannel()) {
         getQuery = getQuery.withLaterSub();
@@ -3590,7 +3589,8 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
         });
       } else {
         const topic = this.props.tinode.getTopic(this.state.topic);
-        const groupTopic = topic.getType() == 'grp' && !topic.isChannel();
+        const isChannel = topic.isChannel();
+        const groupTopic = topic.getType() == 'grp' && !isChannel;
         let messageNodes = [];
         let previousFrom = null;
         let chatBoxClass = null;
@@ -3600,35 +3600,36 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
           let nextFrom = null;
 
           if (i + 1 < this.state.messages.length) {
-            nextFrom = this.state.messages[i + 1].from;
+            nextFrom = this.state.messages[i + 1].from || 'chan';
           }
 
           let sequence = 'single';
+          let thisFrom = msg.from || 'chan';
 
-          if (msg.from == previousFrom) {
-            if (msg.from == nextFrom) {
+          if (thisFrom == previousFrom) {
+            if (thisFrom == nextFrom) {
               sequence = 'middle';
             } else {
               sequence = 'last';
             }
-          } else if (msg.from == nextFrom) {
+          } else if (thisFrom == nextFrom) {
             sequence = 'first';
           }
 
-          previousFrom = msg.from;
-          const isReply = !(msg.from == this.props.myUserId);
+          previousFrom = thisFrom;
+          const isReply = !(thisFrom == this.props.myUserId);
           const deliveryStatus = topic.msgStatus(msg);
           let userName, userAvatar, userFrom;
 
           if (groupTopic) {
-            const user = topic.userDesc(msg.from);
+            const user = topic.userDesc(thisFrom);
 
             if (user && user.public) {
               userName = user.public.fn;
               userAvatar = Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__["makeImageUrl"])(user.public.photo);
             }
 
-            userFrom = msg.from;
+            userFrom = thisFrom;
             chatBoxClass = 'chat-box group';
           } else {
             chatBoxClass = 'chat-box';
@@ -3688,9 +3689,9 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
           avatar: avatar,
           topic: this.state.topic,
           title: this.state.title
-        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        }), !isChannel ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
           className: online
-        })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        }) : null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           id: "topic-title-group"
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           id: "topic-title",
