@@ -1,5 +1,6 @@
 // File and image helper functions.
 import { MAX_INBAND_ATTACHMENT_SIZE, MAX_IMAGE_DIM } from '../config.js';
+import { bytesToHumanSize } from './strformat.js'
 
 // Supported image MIME types and corresponding file extensions.
 export const SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];

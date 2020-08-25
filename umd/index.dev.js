@@ -219,6 +219,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "base64DecodedLen", function() { return base64DecodedLen; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "base64ReEncode", function() { return base64ReEncode; });
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _strformat_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./strformat.js */ "./src/lib/strformat.js");
+
 
 const SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
 const MIME_EXTENSIONS = ['jpg', 'gif', 'png', 'svg', 'svg'];
@@ -315,7 +317,7 @@ function imageFileScaledToBase64(file, width, height, forceSquare, onSuccess, on
     }
 
     if (base64DecodedLen(imageBits.length) > _config_js__WEBPACK_IMPORTED_MODULE_0__["MAX_INBAND_ATTACHMENT_SIZE"]) {
-      onError("The image size " + bytesToHumanSize(base64DecodedLen(imageBits.length)) + " exceeds the " + bytesToHumanSize(_config_js__WEBPACK_IMPORTED_MODULE_0__["MAX_INBAND_ATTACHMENT_SIZE"]) + " limit.", "err");
+      onError("The image size " + Object(_strformat_js__WEBPACK_IMPORTED_MODULE_1__["bytesToHumanSize"])(base64DecodedLen(imageBits.length)) + " exceeds the " + Object(_strformat_js__WEBPACK_IMPORTED_MODULE_1__["bytesToHumanSize"])(_config_js__WEBPACK_IMPORTED_MODULE_0__["MAX_INBAND_ATTACHMENT_SIZE"]) + " limit.", "err");
       return;
     }
 
