@@ -136,7 +136,7 @@ export default class ChatMessage extends React.Component {
                   received={this.props.received} />
                 : null}
             </div>
-            {this.props.deleted ?
+            {this.props.deleted || !this.props.showContextMenu ?
               null :
               <span className="menuTrigger">
                 <a href="#" onClick={this.handleContextClick}>

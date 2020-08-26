@@ -1975,6 +1975,7 @@ class InfoView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       muted: false,
       address: null,
       groupTopic: undefined,
+      channel: undefined,
       fullName: undefined,
       avatar: null,
       private: null,
@@ -2103,6 +2104,7 @@ class InfoView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       private: topic.private ? topic.private.comment : null,
       address: topic.name,
       groupTopic: topic.getType() == 'grp',
+      channel: topic.isChannel(),
       showMemberPanel: false,
       access: acs ? acs.getMode() : undefined,
       modeGiven: acs ? acs.getGiven() : undefined,
@@ -2237,7 +2239,17 @@ class InfoView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       case 'want':
         toEdit = this.state.modeWant;
         toCompare = this.state.modeGiven;
-        toSkip = this.state.owner ? 'O' : tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.AccessMode.encode(tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.AccessMode.diff('ASDO', this.state.modeGiven));
+
+        if (this.state.owner) {
+          toSkip = 'O';
+        } else {
+          toSkip = tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.AccessMode.encode(tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.AccessMode.diff('ASDO', this.state.modeGiven));
+
+          if (this.state.channel) {
+            toSkip += 'W';
+          }
+        }
+
         titleEdit = formatMessage(messages.requested);
         titleCompare = formatMessage(messages.granted);
         break;
@@ -2262,13 +2274,13 @@ class InfoView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
 
       case 'user':
         {
-          let topic = this.props.tinode.getTopic(this.props.topic);
+          const topic = this.props.tinode.getTopic(this.props.topic);
 
           if (!topic) {
             return;
           }
 
-          var user = topic.subscriber(uid);
+          const user = topic.subscriber(uid);
 
           if (!user || !user.acs) {
             return;
@@ -2575,13 +2587,13 @@ class InfoView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       className: "hr"
     })) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+    }, !this.state.channel ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
       href: "#",
       className: "flat-button",
       onClick: this.handleDeleteMessages
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
       className: "material-icons"
-    }, "delete_outline"), " \xA0", formatMessage(this.state.deleter ? messages.delete_messages : messages.clear_messages)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+    }, "delete_outline"), " \xA0", formatMessage(this.state.deleter ? messages.delete_messages : messages.clear_messages)) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
       href: "#",
       className: "red flat-button",
       onClick: this.handleLeave
@@ -3035,7 +3047,8 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
         typingIndicator: false,
         scrollPosition: 0,
         fetchingMessages: false,
-        peerMessagingDisabled: false
+        peerMessagingDisabled: false,
+        channel: false
       };
     } else if (nextProps.topic != prevState.topic) {
       const topic = nextProps.tinode.getTopic(nextProps.topic);
@@ -3094,13 +3107,18 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
             peerMessagingDisabled: false
           });
         }
+
+        Object.assign(nextState, {
+          channel: topic.isChannel()
+        });
       } else {
         Object.assign(nextState, {
           messages: [],
           onlineSubs: [],
           title: '',
           avatar: null,
-          peerMessagingDisabled: false
+          peerMessagingDisabled: false,
+          channel: false
         });
       }
     }
@@ -3441,10 +3459,13 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
   handleShowContextMenuMessage(params, messageSpecificMenuItems) {
     params.topicName = this.state.topic;
     const menuItems = messageSpecificMenuItems || [];
-    menuItems.push('message_delete');
     const topic = this.props.tinode.getTopic(params.topicName);
 
     if (topic) {
+      if (!topic.isChannel()) {
+        menuItems.push('message_delete');
+      }
+
       const acs = topic.getAccessMode();
 
       if (acs && acs.isDeleter()) {
@@ -3652,7 +3673,7 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
             received: deliveryStatus,
             uploader: msg._uploader,
             viewportWidth: this.props.viewportWidth,
-            showContextMenu: this.handleShowContextMenuMessage,
+            showContextMenu: this.state.channel ? false : this.handleShowContextMenuMessage,
             onImagePreview: this.handleImagePostview,
             onFormResponse: this.handleFormResponse,
             onError: this.props.onError,
@@ -6589,7 +6610,7 @@ class ChatMessage extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component
     }, content, attachments, this.props.timestamp ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_received_marker_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
       timestamp: this.props.timestamp,
       received: this.props.received
-    }) : null), this.props.deleted ? null : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    }) : null), this.props.deleted || !this.props.showContextMenu ? null : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
       className: "menuTrigger"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
       href: "#",

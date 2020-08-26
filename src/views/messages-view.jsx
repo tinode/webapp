@@ -206,7 +206,8 @@ class MessagesView extends React.Component {
         typingIndicator: false,
         scrollPosition: 0,
         fetchingMessages: false,
-        peerMessagingDisabled: false
+        peerMessagingDisabled: false,
+        channel: false
       };
     } else if (nextProps.topic != prevState.topic) {
       const topic = nextProps.tinode.getTopic(nextProps.topic);
@@ -266,6 +267,9 @@ class MessagesView extends React.Component {
             peerMessagingDisabled: false
           });
         }
+        Object.assign(nextState, {
+          channel: topic.isChannel()
+        });
       } else {
         // Invalid topic.
         Object.assign(nextState, {
@@ -273,7 +277,8 @@ class MessagesView extends React.Component {
           onlineSubs: [],
           title: '',
           avatar: null,
-          peerMessagingDisabled: false
+          peerMessagingDisabled: false,
+          channel: false
         });
       }
     }
@@ -579,9 +584,11 @@ class MessagesView extends React.Component {
   handleShowContextMenuMessage(params, messageSpecificMenuItems) {
     params.topicName = this.state.topic;
     const menuItems = messageSpecificMenuItems || [];
-    menuItems.push('message_delete');
     const topic = this.props.tinode.getTopic(params.topicName);
     if (topic) {
+      if (!topic.isChannel()) {
+        menuItems.push('message_delete');
+      }
       const acs = topic.getAccessMode();
       if (acs && acs.isDeleter()) {
         menuItems.push('message_delete_hard');
@@ -781,13 +788,20 @@ class MessagesView extends React.Component {
           messageNodes.push(
             <ChatMessage
               tinode={this.props.tinode}
-              content={msg.content} deleted={msg.hi}
+              content={msg.content}
+              deleted={msg.hi}
               mimeType={msg.head ? msg.head.mime : null}
-              timestamp={msg.ts} response={isReply} seq={msg.seq}
-              userFrom={userFrom} userName={userName} userAvatar={userAvatar}
-              sequence={sequence} received={deliveryStatus} uploader={msg._uploader}
+              timestamp={msg.ts}
+              response={isReply}
+              seq={msg.seq}
+              userFrom={userFrom}
+              userName={userName}
+              userAvatar={userAvatar}
+              sequence={sequence}
+              received={deliveryStatus}
+              uploader={msg._uploader}
               viewportWidth={this.props.viewportWidth}
-              showContextMenu={this.handleShowContextMenuMessage}
+              showContextMenu={this.state.channel? false : this.handleShowContextMenuMessage}
               onImagePreview={this.handleImagePostview}
               onFormResponse={this.handleFormResponse}
               onError={this.props.onError}

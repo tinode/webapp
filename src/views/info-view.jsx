@@ -106,6 +106,7 @@ class InfoView extends React.Component {
       muted: false,
       address: null,
       groupTopic: undefined,
+      channel: undefined,
       fullName: undefined,
       avatar: null,
       private: null,
@@ -230,6 +231,7 @@ class InfoView extends React.Component {
       private: topic.private ? topic.private.comment : null,
       address: topic.name,
       groupTopic: (topic.getType() == 'grp'),
+      channel: topic.isChannel(),
       showMemberPanel: false,
       access: acs ? acs.getMode() : undefined,
       modeGiven: acs ? acs.getGiven() : undefined,
@@ -335,9 +337,17 @@ class InfoView extends React.Component {
       case 'want':
         toEdit = this.state.modeWant;
         toCompare = this.state.modeGiven;
-        toSkip = this.state.owner ? 'O' :  // Don't allow owner to unset 'O' permission.
+        if (this.state.owner) {
+          // Don't allow owner to unset 'O' permission. All other permissions are OK.
+          toSkip = 'O';
+        } else {
           // Allow accepting any of 'ASDO' permissions but don't allow asking for them.
-          Tinode.AccessMode.encode(Tinode.AccessMode.diff('ASDO', this.state.modeGiven));
+          toSkip = Tinode.AccessMode.encode(Tinode.AccessMode.diff('ASDO', this.state.modeGiven));
+          if (this.state.channel) {
+            // Channels are read-only.
+            toSkip += 'W';
+          }
+        }
         titleEdit = formatMessage(messages.requested);
         titleCompare = formatMessage(messages.granted);
         break;
@@ -357,11 +367,11 @@ class InfoView extends React.Component {
         toSkip = 'O';
         break;
       case 'user': {
-        let topic = this.props.tinode.getTopic(this.props.topic);
+        const topic = this.props.tinode.getTopic(this.props.topic);
         if (!topic) {
           return;
         }
-        var user = topic.subscriber(uid);
+        const user = topic.subscriber(uid);
         if (!user || !user.acs) {
           return;
         }
@@ -695,11 +705,15 @@ class InfoView extends React.Component {
               null
             }
             <div className="panel-form-column">
-              <a href="#" className="flat-button" onClick={this.handleDeleteMessages}>
-                <i className="material-icons">delete_outline</i> &nbsp;{
-                  formatMessage(this.state.deleter ? messages.delete_messages : messages.clear_messages)
-                }
-              </a>
+              {!this.state.channel ?
+                <a href="#" className="flat-button" onClick={this.handleDeleteMessages}>
+                  <i className="material-icons">delete_outline</i> &nbsp;{
+                    formatMessage(this.state.deleter ? messages.delete_messages : messages.clear_messages)
+                  }
+                </a>
+                :
+                null
+              }
               <a href="#" className="red flat-button" onClick={this.handleLeave}>
                 <i className="material-icons">exit_to_app</i> &nbsp;{formatMessage(messages.leave_chat)}
               </a>
