@@ -19,6 +19,7 @@ import { DEFAULT_P2P_ACCESS_MODE, KEYPRESS_DELAY, MESSAGES_PAGE, MAX_EXTERN_ATTA
   MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE, READ_DELAY } from '../config.js';
 import { SUPPORTED_IMAGE_FORMATS, filePasted, fileToBase64, imageFileToBase64,
   imageFileScaledToBase64, makeImageUrl } from '../lib/blob-helpers.js';
+import HashNavigation from '../lib/navigation.js';
 import { bytesToHumanSize, shortDateFormat } from '../lib/strformat.js';
 
 // Run timer with this frequency (ms) for checking notification queue.
@@ -169,6 +170,11 @@ class MessagesView extends React.Component {
       const setQuery = newTopic ? this.props.newTopicParams : undefined;
       topic.subscribe(getQuery.build(), setQuery)
         .then((ctrl) => {
+          if (ctrl.code == 303) {
+            // Redirect to another topic requested.
+            HashNavigation.navigateTo(HashNavigation.setUrlTopic('', ctrl.params.topic));
+            return;
+          }
           if (this.state.topic != ctrl.topic) {
             this.setState({topic: ctrl.topic});
           }

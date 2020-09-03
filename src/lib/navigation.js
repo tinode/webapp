@@ -5,8 +5,8 @@
 export default class HashNavigation {
   static parseUrlHash(hash) {
     // Split path from args, path -> parts[0], args->path[1]
-    let parts = hash.split('?', 2);
-    let params = {};
+    const parts = hash.split('?', 2);
+    const params = {};
     let path = [];
     if (parts[0]) {
       path = parts[0].substr(1).split('/');
@@ -27,9 +27,9 @@ export default class HashNavigation {
   }
 
   static composeUrlHash(path, params) {
-    var url = path.join('/');
-    var args = [];
-    for (var key in params) {
+    let url = path.join('/');
+    const args = [];
+    for (const key in params) {
       if (params.hasOwnProperty(key)) {
         args.push(key + '=' + params[key]);
       }
@@ -41,25 +41,25 @@ export default class HashNavigation {
   }
 
   static addUrlParam(hash, key, value) {
-    var parsed = this.parseUrlHash(hash);
+    const parsed = this.parseUrlHash(hash);
     parsed.params[key] = value;
     return this.composeUrlHash(parsed.path, parsed.params);
   }
 
   static removeUrlParam(hash, key) {
-    var parsed = this.parseUrlHash(hash);
+    const parsed = this.parseUrlHash(hash);
     delete parsed.params[key];
     return this.composeUrlHash(parsed.path, parsed.params);
   }
 
   static setUrlSidePanel(hash, sidepanel) {
-    var parsed = this.parseUrlHash(hash);
+    const parsed = this.parseUrlHash(hash);
     parsed.path[0] = sidepanel;
     return this.composeUrlHash(parsed.path, parsed.params);
   }
 
   static setUrlTopic(hash, topic) {
-    var parsed = this.parseUrlHash(hash);
+    const parsed = this.parseUrlHash(hash);
     parsed.path[1] = topic;
     // Close InfoView on topic change.
     delete parsed.params.info;

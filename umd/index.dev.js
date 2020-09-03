@@ -506,8 +506,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return HashNavigation; });
 class HashNavigation {
   static parseUrlHash(hash) {
-    let parts = hash.split('?', 2);
-    let params = {};
+    const parts = hash.split('?', 2);
+    const params = {};
     let path = [];
 
     if (parts[0]) {
@@ -535,10 +535,10 @@ class HashNavigation {
   }
 
   static composeUrlHash(path, params) {
-    var url = path.join('/');
-    var args = [];
+    let url = path.join('/');
+    const args = [];
 
-    for (var key in params) {
+    for (const key in params) {
       if (params.hasOwnProperty(key)) {
         args.push(key + '=' + params[key]);
       }
@@ -552,25 +552,25 @@ class HashNavigation {
   }
 
   static addUrlParam(hash, key, value) {
-    var parsed = this.parseUrlHash(hash);
+    const parsed = this.parseUrlHash(hash);
     parsed.params[key] = value;
     return this.composeUrlHash(parsed.path, parsed.params);
   }
 
   static removeUrlParam(hash, key) {
-    var parsed = this.parseUrlHash(hash);
+    const parsed = this.parseUrlHash(hash);
     delete parsed.params[key];
     return this.composeUrlHash(parsed.path, parsed.params);
   }
 
   static setUrlSidePanel(hash, sidepanel) {
-    var parsed = this.parseUrlHash(hash);
+    const parsed = this.parseUrlHash(hash);
     parsed.path[0] = sidepanel;
     return this.composeUrlHash(parsed.path, parsed.params);
   }
 
   static setUrlTopic(hash, topic) {
-    var parsed = this.parseUrlHash(hash);
+    const parsed = this.parseUrlHash(hash);
     parsed.path[1] = topic;
     delete parsed.params.info;
     return this.composeUrlHash(parsed.path, parsed.params);
@@ -2859,11 +2859,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../widgets/send-message.jsx */ "./src/widgets/send-message.jsx");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
+/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
 
 
 
 const Drafty = tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default.a.Drafty;
+
 
 
 
@@ -3009,6 +3011,12 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
 
       const setQuery = newTopic ? this.props.newTopicParams : undefined;
       topic.subscribe(getQuery.build(), setQuery).then(ctrl => {
+        if (ctrl.code == 303) {
+          console.log("Redirecting to", ctrl.params.topic);
+          _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].setUrlTopic('', ctrl.params.topic));
+          return;
+        }
+
         if (this.state.topic != ctrl.topic) {
           this.setState({
             topic: ctrl.topic
@@ -3515,8 +3523,8 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
   handleAttachFile(file) {
     if (file.size > _config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_EXTERN_ATTACHMENT_SIZE"]) {
       this.props.onError(this.props.intl.formatMessage(messages.file_attachment_too_large, {
-        size: Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_15__["bytesToHumanSize"])(file.size),
-        limit: Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_15__["bytesToHumanSize"])(_config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_EXTERN_ATTACHMENT_SIZE"])
+        size: Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_16__["bytesToHumanSize"])(file.size),
+        limit: Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_16__["bytesToHumanSize"])(_config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_EXTERN_ATTACHMENT_SIZE"])
       }), 'err');
     } else {
       this.setState({
@@ -3688,7 +3696,7 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
           if (cont.online) {
             lastSeen = formatMessage(messages.online_now);
           } else if (cont.seen) {
-            lastSeen = formatMessage(messages.last_seen) + ": " + Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_15__["shortDateFormat"])(cont.seen.when, this.props.intl.locale);
+            lastSeen = formatMessage(messages.last_seen) + ": " + Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_16__["shortDateFormat"])(cont.seen.when, this.props.intl.locale);
           }
         }
 

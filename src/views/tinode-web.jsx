@@ -108,7 +108,7 @@ class TinodeWeb extends React.Component {
     this.togglePushToken = this.togglePushToken.bind(this);
     this.requestPushToken = this.requestPushToken.bind(this);
     this.handleSidepanelCancel = this.handleSidepanelCancel.bind(this);
-    this.handleNewTopicRequest = this.handleNewTopicRequest.bind(this);
+    this.handleStartTopicRequest = this.handleStartTopicRequest.bind(this);
     this.handleNewTopicCreated = this.handleNewTopicCreated.bind(this);
     this.handleTopicUpdateRequest = this.handleTopicUpdateRequest.bind(this);
     this.handleChangePermissions = this.handleChangePermissions.bind(this);
@@ -634,7 +634,7 @@ class TinodeWeb extends React.Component {
     // For chatList topics merge only p2p topics and convert them to the
     // same format as foundContacts.
     for (const c of chatList) {
-      if (Tinode.topicType(c.topic) == 'p2p') {
+      if (Tinode.isP2PTopicName(c.topic)) {
           merged[c.topic] = {
             user: c.topic,
             updated: c.updated,
@@ -813,7 +813,7 @@ class TinodeWeb extends React.Component {
         // Accept given permissions.
         const mode = topic.getAccessMode().getGiven();
         response = topic.setMeta({sub: {mode: mode}});
-        if (topic.getType() == 'p2p') {
+        if (topic.isP2P()) {
           // For P2P topics change 'given' permission of the peer too.
           // In p2p topics the other user has the same name as the topic.
           response = response.then((ctrl) => {
@@ -1060,22 +1060,26 @@ class TinodeWeb extends React.Component {
     HashNavigation.navigateTo(HashNavigation.setUrlSidePanel(window.location.hash, hash));
   }
 
-  // Request to start a new topic. New P2P topic requires peer's name.
-  handleNewTopicRequest(peerName, pub, priv, tags, isChannel) {
+  // Request to start a topic, new or selected from search results.
+  handleStartTopicRequest(topicName, pub, priv, tags, isChannel) {
+    // Check if topic is indeed new. If not, launch it.
+    if (topicName && this.tinode.getTopic(topicName)) {
+      this.handleTopicSelected(topicName);
+      return;
+    }
 
-    const topicName = peerName || this.tinode.newGroupTopicName(isChannel);
-    const params = {
-      _topicName: topicName,
-    };
-    if (peerName) {
+    const params = {};
+    if (Tinode.isP2PTopicName(topicName)) {
       // Because we are initialing the subscription, set 'want' to all permissions.
       params.sub = {mode: DEFAULT_P2P_ACCESS_MODE};
       // Give the other user all permissions too.
       params.desc = {defacs: {auth: DEFAULT_P2P_ACCESS_MODE}};
     } else {
+      topicName = topicName || this.tinode.newGroupTopicName(isChannel);
       params.desc = {public: pub, private: {comment: priv}};
       params.tags = tags;
     }
+    params._topicName = topicName;
     this.setState({newTopicParams: params}, () => {this.handleTopicSelected(topicName)});
   }
 
@@ -1458,7 +1462,7 @@ class TinodeWeb extends React.Component {
           onCredDelete={this.handleCredDelete}
           onCredConfirm={this.handleCredConfirm}
           onTopicSelected={this.handleTopicSelected}
-          onCreateTopic={this.handleNewTopicRequest}
+          onCreateTopic={this.handleStartTopicRequest}
           onLogout={this.handleLogout}
           onDeleteAccount={this.handleDeleteAccount}
           onShowAlert={this.handleShowAlert}
