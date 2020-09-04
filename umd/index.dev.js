@@ -3012,7 +3012,6 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
       const setQuery = newTopic ? this.props.newTopicParams : undefined;
       topic.subscribe(getQuery.build(), setQuery).then(ctrl => {
         if (ctrl.code == 303) {
-          console.log("Redirecting to", ctrl.params.topic);
           _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].setUrlTopic('', ctrl.params.topic));
           return;
         }
@@ -3879,7 +3878,7 @@ class NewTopicView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
   handleContactSelected(sel) {
     if (this.state.tabSelected === 'p2p') {
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].removeUrlParam(window.location.hash, 'tab'));
-      this.props.onCreateTopic(sel, undefined);
+      this.props.onCreateTopic(sel);
     }
   }
 
@@ -4546,7 +4545,7 @@ class TinodeWeb extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     this.togglePushToken = this.togglePushToken.bind(this);
     this.requestPushToken = this.requestPushToken.bind(this);
     this.handleSidepanelCancel = this.handleSidepanelCancel.bind(this);
-    this.handleNewTopicRequest = this.handleNewTopicRequest.bind(this);
+    this.handleStartTopicRequest = this.handleStartTopicRequest.bind(this);
     this.handleNewTopicCreated = this.handleNewTopicCreated.bind(this);
     this.handleTopicUpdateRequest = this.handleTopicUpdateRequest.bind(this);
     this.handleChangePermissions = this.handleChangePermissions.bind(this);
@@ -5065,7 +5064,7 @@ class TinodeWeb extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     const merged = {};
 
     for (const c of chatList) {
-      if (tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default.a.topicType(c.topic) == 'p2p') {
+      if (tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default.a.isP2PTopicName(c.topic)) {
         merged[c.topic] = {
           user: c.topic,
           updated: c.updated,
@@ -5155,7 +5154,9 @@ class TinodeWeb extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     });
   }
 
-  handleTopicSelected(topicName, unused_index, online, acs) {
+  handleTopicSelected(topicName) {
+    console.log("handleTopicSelected", topicName, new Error("stacktrace"));
+
     if (this.state.newTopicParams && this.state.newTopicParams._topicName != topicName) {
       this.setState({
         newTopicParams: null
@@ -5172,8 +5173,8 @@ class TinodeWeb extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
 
       if (this.state.topicSelected != topicName) {
         this.setState({
-          topicSelectedOnline: online,
-          topicSelectedAcs: acs
+          topicSelectedOnline: this.tinode.isTopicOnline(topicName),
+          topicSelectedAcs: this.tinode.getTopicAccessMode(topicName)
         });
         _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].setUrlTopic('', topicName));
       }
@@ -5240,7 +5241,7 @@ class TinodeWeb extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
           }
         });
 
-        if (topic.getType() == 'p2p') {
+        if (topic.isP2P()) {
           response = response.then(ctrl => {
             topic.setMeta({
               sub: {
@@ -5527,13 +5528,18 @@ class TinodeWeb extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__["default"].setUrlSidePanel(window.location.hash, hash));
   }
 
-  handleNewTopicRequest(peerName, pub, priv, tags, isChannel) {
-    const topicName = peerName || this.tinode.newGroupTopicName(isChannel);
-    const params = {
-      _topicName: topicName
-    };
+  handleStartTopicRequest(topicName, pub, priv, tags, isChannel) {
+    console.log("handleStartTopicRequest", topicName);
 
-    if (peerName) {
+    if (topicName && this.tinode.getTopic(topicName)) {
+      this.handleTopicSelected(topicName);
+      return;
+    }
+
+    const params = {};
+
+    if (tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default.a.isP2PTopicName(topicName)) {
+      console.log("P2P topic", topicName);
       params.sub = {
         mode: _config_js__WEBPACK_IMPORTED_MODULE_11__["DEFAULT_P2P_ACCESS_MODE"]
       };
@@ -5543,6 +5549,7 @@ class TinodeWeb extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
         }
       };
     } else {
+      topicName = topicName || this.tinode.newGroupTopicName(isChannel);
       params.desc = {
         public: pub,
         private: {
@@ -5550,8 +5557,10 @@ class TinodeWeb extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
         }
       };
       params.tags = tags;
+      console.log("Grp topic", topicName);
     }
 
+    params._topicName = topicName;
     this.setState({
       newTopicParams: params
     }, () => {
@@ -5966,7 +5975,7 @@ class TinodeWeb extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       onCredDelete: this.handleCredDelete,
       onCredConfirm: this.handleCredConfirm,
       onTopicSelected: this.handleTopicSelected,
-      onCreateTopic: this.handleNewTopicRequest,
+      onCreateTopic: this.handleStartTopicRequest,
       onLogout: this.handleLogout,
       onDeleteAccount: this.handleDeleteAccount,
       onShowAlert: this.handleShowAlert,
@@ -7228,7 +7237,7 @@ class Contact extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
     e.stopPropagation();
 
     if (this.props.onSelected) {
-      this.props.onSelected(this.props.item, this.props.index, this.props.now, this.props.acs);
+      this.props.onSelected(this.props.item, this.props.index);
     }
   }
 

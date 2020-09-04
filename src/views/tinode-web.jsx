@@ -726,7 +726,7 @@ class TinodeWeb extends React.Component {
   }
 
   // User clicked on a contact in the side panel or deleted a contact.
-  handleTopicSelected(topicName, unused_index, online, acs) {
+  handleTopicSelected(topicName) {
     // Clear newTopicParams after use.
     if (this.state.newTopicParams && this.state.newTopicParams._topicName != topicName) {
       this.setState({
@@ -744,8 +744,8 @@ class TinodeWeb extends React.Component {
       // Different contact selected.
       if (this.state.topicSelected != topicName) {
         this.setState({
-          topicSelectedOnline: online,
-          topicSelectedAcs: acs
+          topicSelectedOnline: this.tinode.isTopicOnline(topicName),
+          topicSelectedAcs: this.tinode.getTopicAccessMode(topicName)
         });
         HashNavigation.navigateTo(HashNavigation.setUrlTopic('', topicName));
       }
