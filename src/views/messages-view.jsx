@@ -26,12 +26,12 @@ import { bytesToHumanSize, shortDateFormat } from '../lib/strformat.js';
 const NOTIFICATION_EXEC_INTERVAL = 300;
 
 const messages = defineMessages({
-  online_now: {
+  'online_now': {
     id: 'online_now',
     defaultMessage: 'online now',
     description: 'Indicator that the user or topic is currently online',
   },
-  last_seen: {
+  'last_seen': {
     id: 'last_seen_timestamp',
     defaultMessage: 'Last seen',
     description: 'Label for the timestamp of when the user or topic was last online'
@@ -40,6 +40,11 @@ const messages = defineMessages({
     id: 'title_not_found',
     defaultMessage: 'Not found',
     description: 'Title shown when topic is not found'
+  },
+  'channel': {
+    id: 'channel',
+    defaultMessage: 'channel',
+    description: 'Subtitle shown for channels in MessagesView instead of last seen'
   }
 });
 
@@ -816,14 +821,18 @@ class MessagesView extends React.Component {
         }
 
         let lastSeen = null;
-        const cont = this.props.tinode.getMeTopic().getContact(this.state.topic);
-        if (cont && Tinode.topicType(cont.topic) == 'p2p') {
-          if (cont.online) {
-            lastSeen = formatMessage(messages.online_now);
-          } else if (cont.seen) {
-            lastSeen = formatMessage(messages.last_seen) + ": " +
-              shortDateFormat(cont.seen.when, this.props.intl.locale);
-            // TODO: also handle user agent in c.seen.ua
+        if (isChannel) {
+          lastSeen = formatMessage(messages.channel);
+        } else {
+          const cont = this.props.tinode.getMeTopic().getContact(this.state.topic);
+          if (cont && Tinode.isP2PTopicName(cont.topic)) {
+            if (cont.online) {
+              lastSeen = formatMessage(messages.online_now);
+            } else if (cont.seen) {
+              lastSeen = formatMessage(messages.last_seen) + ": " +
+                shortDateFormat(cont.seen.when, this.props.intl.locale);
+              // TODO: also handle user agent in c.seen.ua
+            }
           }
         }
         const avatar = this.state.avatar || true;

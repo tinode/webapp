@@ -65,6 +65,7 @@
   "online_now": "online now",
   "last_seen_timestamp": "Last seen",
   "title_not_found": "Not found",
+  "channel": "channel",
   "unnamed_topic": "Unnamed",
   "messages_not_readable": "no access to messages",
   "peers_messaging_disabled": "Peer's messaging is disabled.",
