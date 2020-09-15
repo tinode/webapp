@@ -2422,7 +2422,7 @@ class InfoView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
 
     const menuItems = [{
       title: formatMessage(messages.edit_permissions),
-      handler: function handler() {
+      handler: function () {
         instance.handleLaunchPermissionsEditor('user', params.topicName);
       }
     }, 'member_delete', user.acs.isMuted() ? 'member_unmute' : 'member_mute', user.acs.isJoiner() ? 'member_block' : 'member_unblock'];
@@ -9717,8 +9717,8 @@ class SendMessage extends react__WEBPACK_IMPORTED_MODULE_0___default.a.PureCompo
       value: this.state.message,
       onChange: this.handleMessageTyping,
       onKeyPress: this.handleKeyPress,
-      ref: _ref => {
-        this.messageEditArea = _ref;
+      ref: ref => {
+        this.messageEditArea = ref;
       },
       autoFocus: true
     }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
@@ -9729,8 +9729,8 @@ class SendMessage extends react__WEBPACK_IMPORTED_MODULE_0___default.a.PureCompo
       className: "material-icons"
     }, "send")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
       type: "file",
-      ref: _ref2 => {
-        this.attachFile = _ref2;
+      ref: ref => {
+        this.attachFile = ref;
       },
       onChange: this.handleAttachFile,
       style: {
@@ -9738,8 +9738,8 @@ class SendMessage extends react__WEBPACK_IMPORTED_MODULE_0___default.a.PureCompo
       }
     }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
       type: "file",
-      ref: _ref3 => {
-        this.attachImage = _ref3;
+      ref: ref => {
+        this.attachImage = ref;
       },
       accept: "image/*",
       onChange: this.handleAttachImage,
