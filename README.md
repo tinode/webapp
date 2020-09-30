@@ -1,8 +1,10 @@
-# Single-page chat with Tinode
+# Tinode Web
+
+## Briefing
 
 Single-page web chat application for [Tinode](https://github.com/tinode/chat/). The app is built on
 [React](https://reactjs.org/). The [Tinode javascript SDK](https://github.com/tinode/tinode-js/) has no external dependencies.
-Overall it's a lot like open source WhatsApp or Telegram web apps.
+Overall, it's a lot like open source WhatsApp or Telegram web apps.
 
 Although the app is generally usable, keep in mind that this is work in progress. Some bugs probably exist, some features are missing. The app was tested in the latest Chrome & Firefox only. NPM package is [available](https://www.npmjs.com/package/tinode-webapp).
 
