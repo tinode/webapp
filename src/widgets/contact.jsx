@@ -18,7 +18,8 @@ export default class Contact extends React.Component {
     e.preventDefault();
     e.stopPropagation();
     if (this.props.onSelected) {
-      this.props.onSelected(this.props.item, this.props.index, this.props.now, this.props.acs);
+      // Index this.props.index is used by GroupManager.
+      this.props.onSelected(this.props.item, this.props.index);
     }
   }
 

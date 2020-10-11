@@ -59,7 +59,7 @@ class NewTopicView extends React.Component {
   handleContactSelected(sel) {
     if (this.state.tabSelected === 'p2p') {
       HashNavigation.navigateTo(HashNavigation.removeUrlParam(window.location.hash, 'tab'));
-      this.props.onCreateTopic(sel, undefined);
+      this.props.onCreateTopic(sel);
     }
   }
 

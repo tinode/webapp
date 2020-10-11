@@ -174,5 +174,6 @@
   "granted_permissions": "승낙하다",
   "messages_not_readable": "메시지에 액세스 할 수 없습니다",
   "deleted_content": "내용이 삭제되었습니다",
-  "channel_prompt": "이 채널입니다"
+  "channel_prompt": "이 채널입니다",
+  "channel": "채널"
 }

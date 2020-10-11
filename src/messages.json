@@ -172,7 +172,8 @@
     "tags_not_found": "Keine Schlagworte definiert. Erstellen Sie welche.",
     "tags_editor_no_tags": "Schlagworte hinzufügen",
     "title_manage_tags": "Verwalten",
-    "channel_prompt": "Dies ist ein Kanal"
+    "channel_prompt": "Dies ist ein Sender",
+    "channel": "Sender"
   },
   "en": {
     "validate_credential_action": "confirm",
@@ -241,6 +242,7 @@
     "online_now": "online now",
     "last_seen_timestamp": "Last seen",
     "title_not_found": "Not found",
+    "channel": "channel",
     "unnamed_topic": "Unnamed",
     "messages_not_readable": "no access to messages",
     "peers_messaging_disabled": "Peer's messaging is disabled.",
@@ -522,7 +524,8 @@
     "tags_not_found": "No hay etiquetas definidas. Añade unas.",
     "tags_editor_no_tags": "Añadir etiquetas",
     "title_manage_tags": "Gestionar",
-    "channel_prompt": "Este es un canal"
+    "channel_prompt": "Este es un canal",
+    "channel": "canal"
   },
   "ko": {
     "validate_credential_action": "확인",
@@ -697,7 +700,8 @@
     "granted_permissions": "승낙하다",
     "messages_not_readable": "메시지에 액세스 할 수 없습니다",
     "deleted_content": "내용이 삭제되었습니다",
-    "channel_prompt": "이 채널입니다"
+    "channel_prompt": "이 채널입니다",
+    "channel": "채널"
   },
   "ru": {
     "contacts_not_found": "Чатов нет<br />¯∖_(ツ)_/¯",
@@ -872,7 +876,8 @@
     "invalid_security_token": "Токен некорректен",
     "no_connection": "Нет связи",
     "code_doesnot_match": "Код не совпадает",
-    "channel_prompt": "Создать канал"
+    "channel_prompt": "Создать канал",
+    "channel": "канал"
   },
   "zh": {
     "archived_contacts": "已归档联系人 ({count})",
@@ -1047,6 +1052,7 @@
     "invalid_security_token": "无效的安全令牌",
     "no_connection": "无连接",
     "code_doesnot_match": "代码不匹配",
-    "channel_prompt": "这是一个频道"
+    "channel_prompt": "这是一个频道",
+    "channel": "频道"
   }
 }

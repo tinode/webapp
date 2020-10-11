@@ -31,6 +31,8 @@ export const MAX_TAG_COUNT = 16;
 export const DEFAULT_P2P_ACCESS_MODE = 'JRWPS';
 // Access mode for new group topics created by the current user.
 export const NEW_GRP_ACCESS_MODE = 'JRWPSAO';
+// Access mode for a channel.
+export const CHANNEL_ACCESS_MODE = 'JR';
 
 // Access mode for no access.
 export const NO_ACCESS_MODE = 'N';

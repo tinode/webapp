@@ -171,5 +171,6 @@
   "invalid_security_token": "Токен некорректен",
   "no_connection": "Нет связи",
   "code_doesnot_match": "Код не совпадает",
-  "channel_prompt": "Создать канал"
+  "channel_prompt": "Создать канал",
+  "channel": "канал"
 }

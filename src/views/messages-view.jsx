@@ -19,18 +19,19 @@ import { DEFAULT_P2P_ACCESS_MODE, KEYPRESS_DELAY, MESSAGES_PAGE, MAX_EXTERN_ATTA
   MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE, READ_DELAY } from '../config.js';
 import { SUPPORTED_IMAGE_FORMATS, filePasted, fileToBase64, imageFileToBase64,
   imageFileScaledToBase64, makeImageUrl } from '../lib/blob-helpers.js';
+import HashNavigation from '../lib/navigation.js';
 import { bytesToHumanSize, shortDateFormat } from '../lib/strformat.js';
 
 // Run timer with this frequency (ms) for checking notification queue.
 const NOTIFICATION_EXEC_INTERVAL = 300;
 
 const messages = defineMessages({
-  online_now: {
+  'online_now': {
     id: 'online_now',
     defaultMessage: 'online now',
     description: 'Indicator that the user or topic is currently online',
   },
-  last_seen: {
+  'last_seen': {
     id: 'last_seen_timestamp',
     defaultMessage: 'Last seen',
     description: 'Label for the timestamp of when the user or topic was last online'
@@ -39,6 +40,11 @@ const messages = defineMessages({
     id: 'title_not_found',
     defaultMessage: 'Not found',
     description: 'Title shown when topic is not found'
+  },
+  'channel': {
+    id: 'channel',
+    defaultMessage: 'channel',
+    description: 'Subtitle shown for channels in MessagesView instead of last seen'
   }
 });
 
@@ -152,9 +158,13 @@ class MessagesView extends React.Component {
 
       // Don't request the tags. They are useless unless the user
       // is the owner and is editing the topic.
-      let getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub();
+      let getQuery = topic.startMetaQuery().withLaterDesc();
+      if (this.state.isSharer || (newTopic && !topic.isChannel())) {
+        // Request subscriptions only if one of S,O,A is given or it's a new non-channel topic.
+        getQuery = getQuery.withLaterSub();
+      }
       if (this.state.isReader || newTopic) {
-        // If reading is either permitted or we don't know because it's a new topic. Ask for messages.
+        // Reading is either permitted or we don't know because it's a new topic. Ask for messages.
         getQuery = getQuery.withLaterData(MESSAGES_PAGE);
         if (this.state.isReader) {
           getQuery = getQuery.withLaterDel();
@@ -165,6 +175,11 @@ class MessagesView extends React.Component {
       const setQuery = newTopic ? this.props.newTopicParams : undefined;
       topic.subscribe(getQuery.build(), setQuery)
         .then((ctrl) => {
+          if (ctrl.code == 303) {
+            // Redirect to another topic requested.
+            HashNavigation.navigateTo(HashNavigation.setUrlTopic('', ctrl.params.topic));
+            return;
+          }
           if (this.state.topic != ctrl.topic) {
             this.setState({topic: ctrl.topic});
           }
@@ -202,7 +217,8 @@ class MessagesView extends React.Component {
         typingIndicator: false,
         scrollPosition: 0,
         fetchingMessages: false,
-        peerMessagingDisabled: false
+        peerMessagingDisabled: false,
+        channel: false
       };
     } else if (nextProps.topic != prevState.topic) {
       const topic = nextProps.tinode.getTopic(nextProps.topic);
@@ -262,6 +278,9 @@ class MessagesView extends React.Component {
             peerMessagingDisabled: false
           });
         }
+        Object.assign(nextState, {
+          channel: topic.isChannel()
+        });
       } else {
         // Invalid topic.
         Object.assign(nextState, {
@@ -269,7 +288,8 @@ class MessagesView extends React.Component {
           onlineSubs: [],
           title: '',
           avatar: null,
-          peerMessagingDisabled: false
+          peerMessagingDisabled: false,
+          channel: false
         });
       }
     }
@@ -284,6 +304,9 @@ class MessagesView extends React.Component {
       if (!nextProps.acs.isReader('given') != prevState.readingBlocked) {
         nextState.readingBlocked = !prevState.readingBlocked;
       }
+      if (nextProps.acs.isSharer() != prevState.isSharer) {
+        nextState.isSharer = !prevState.isSharer;
+      }
     } else {
       if (prevState.isWriter) {
         nextState.isWriter = false;
@@ -293,6 +316,9 @@ class MessagesView extends React.Component {
       }
       if (!prevState.readingBlocked) {
         prevState.readingBlocked = true;
+      }
+      if (prevState.isSharer) {
+        nextState.isSharer = false;
       }
     }
 
@@ -569,9 +595,11 @@ class MessagesView extends React.Component {
   handleShowContextMenuMessage(params, messageSpecificMenuItems) {
     params.topicName = this.state.topic;
     const menuItems = messageSpecificMenuItems || [];
-    menuItems.push('message_delete');
     const topic = this.props.tinode.getTopic(params.topicName);
     if (topic) {
+      if (!topic.isChannel()) {
+        menuItems.push('message_delete');
+      }
       const acs = topic.getAccessMode();
       if (acs && acs.isDeleter()) {
         menuItems.push('message_delete_hard');
@@ -726,7 +754,8 @@ class MessagesView extends React.Component {
         );
       } else {
         const topic = this.props.tinode.getTopic(this.state.topic);
-        const groupTopic = topic.getType() == 'grp';
+        const isChannel = topic.isChannel();
+        const groupTopic = topic.getType() == 'grp' && !isChannel;
         let messageNodes = [];
         let previousFrom = null;
         let chatBoxClass = null;
@@ -735,32 +764,33 @@ class MessagesView extends React.Component {
           let nextFrom = null;
 
           if (i + 1 < this.state.messages.length) {
-            nextFrom = this.state.messages[i+1].from
+            nextFrom = this.state.messages[i+1].from || 'chan';
           }
 
           let sequence = 'single';
-          if (msg.from == previousFrom) {
-            if (msg.from == nextFrom) {
+          let thisFrom = msg.from || 'chan';
+          if (thisFrom == previousFrom) {
+            if (thisFrom == nextFrom) {
               sequence = 'middle';
             } else {
               sequence = 'last';
             }
-          } else if (msg.from == nextFrom) {
+          } else if (thisFrom == nextFrom) {
             sequence = 'first';
           }
-          previousFrom = msg.from;
+          previousFrom = thisFrom;
 
-          const isReply = !(msg.from == this.props.myUserId);
+          const isReply = !(thisFrom == this.props.myUserId);
           const deliveryStatus = topic.msgStatus(msg);
 
           let userName, userAvatar, userFrom;
           if (groupTopic) {
-            const user = topic.userDesc(msg.from);
+            const user = topic.userDesc(thisFrom);
             if (user && user.public) {
               userName = user.public.fn;
               userAvatar = makeImageUrl(user.public.photo);
             }
-            userFrom = msg.from;
+            userFrom = thisFrom;
             chatBoxClass='chat-box group';
           } else {
             chatBoxClass='chat-box';
@@ -769,13 +799,20 @@ class MessagesView extends React.Component {
           messageNodes.push(
             <ChatMessage
               tinode={this.props.tinode}
-              content={msg.content} deleted={msg.hi}
+              content={msg.content}
+              deleted={msg.hi}
               mimeType={msg.head ? msg.head.mime : null}
-              timestamp={msg.ts} response={isReply} seq={msg.seq}
-              userFrom={userFrom} userName={userName} userAvatar={userAvatar}
-              sequence={sequence} received={deliveryStatus} uploader={msg._uploader}
+              timestamp={msg.ts}
+              response={isReply}
+              seq={msg.seq}
+              userFrom={userFrom}
+              userName={userName}
+              userAvatar={userAvatar}
+              sequence={sequence}
+              received={deliveryStatus}
+              uploader={msg._uploader}
               viewportWidth={this.props.viewportWidth}
-              showContextMenu={this.handleShowContextMenuMessage}
+              showContextMenu={this.state.channel? false : this.handleShowContextMenuMessage}
               onImagePreview={this.handleImagePostview}
               onFormResponse={this.handleFormResponse}
               onError={this.props.onError}
@@ -784,14 +821,18 @@ class MessagesView extends React.Component {
         }
 
         let lastSeen = null;
-        const cont = this.props.tinode.getMeTopic().getContact(this.state.topic);
-        if (cont && Tinode.topicType(cont.topic) == 'p2p') {
-          if (cont.online) {
-            lastSeen = formatMessage(messages.online_now);
-          } else if (cont.seen) {
-            lastSeen = formatMessage(messages.last_seen) + ": " +
-              shortDateFormat(cont.seen.when, this.props.intl.locale);
-            // TODO: also handle user agent in c.seen.ua
+        if (isChannel) {
+          lastSeen = formatMessage(messages.channel);
+        } else {
+          const cont = this.props.tinode.getMeTopic().getContact(this.state.topic);
+          if (cont && Tinode.isP2PTopicName(cont.topic)) {
+            if (cont.online) {
+              lastSeen = formatMessage(messages.online_now);
+            } else if (cont.seen) {
+              lastSeen = formatMessage(messages.last_seen) + ": " +
+                shortDateFormat(cont.seen.when, this.props.intl.locale);
+              // TODO: also handle user agent in c.seen.ua
+            }
           }
         }
         const avatar = this.state.avatar || true;
@@ -811,7 +852,7 @@ class MessagesView extends React.Component {
                   avatar={avatar}
                   topic={this.state.topic}
                   title={this.state.title} />
-                <span className={online} />
+                {!isChannel ? <span className={online} /> : null}
               </div>
               <div id="topic-title-group">
                 <div id="topic-title" className="panel-title">{
