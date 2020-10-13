@@ -624,6 +624,9 @@ class MessagesView extends React.Component {
     }
   }
 
+  // Send attachment as Drafty message:
+  // - if file is too large, upload it and send a s link.
+  // - if file is small enough, just send it in-band.
   sendFileAttachment(file) {
     if (file.size > MAX_INBAND_ATTACHMENT_SIZE) {
       // Too large to send inband - uploading out of band and sending as a link.
@@ -647,6 +650,7 @@ class MessagesView extends React.Component {
     }
   }
 
+  // handleAttachFile method is called when [Attach file] button is clicked.
   handleAttachFile(file) {
     if (file.size > MAX_EXTERN_ATTACHMENT_SIZE) {
       // Too large.
@@ -662,16 +666,9 @@ class MessagesView extends React.Component {
     }
   }
 
-  sendImageAttachment(caption, mime, bits, width, height, fname) {
-    let msg = Drafty.insertImage(null, 0, mime, bits, width, height, fname);
-    if (caption) {
-      msg = Drafty.appendLineBreak(msg);
-      msg = Drafty.append(msg, Drafty.init(caption));
-    }
-    this.props.sendMessage(msg);
-  }
-
-  handleAttachImage(file) {
+  // sendImageAttachment sends the image bits inband as Drafty message.
+  sendImageAttachment(objectUrl, caption, mime, width, height, fname) {
+    // Upload or scale the image.
     // Check if the uploaded file is indeed an image and if it isn't too large.
     if (file.size > MAX_INBAND_ATTACHMENT_SIZE || SUPPORTED_IMAGE_FORMATS.indexOf(file.type) < 0) {
       // Convert image for size or format.
@@ -680,7 +677,6 @@ class MessagesView extends React.Component {
         (bits, mime, width, height, fname) => {
           this.setState({imagePreview: {
             url: URL.createObjectURL(file),
-            bits: bits,
             filename: fname,
             width: width,
             height: height,
@@ -713,6 +709,31 @@ class MessagesView extends React.Component {
         }
       );
     }
+
+    let msg = Drafty.insertImage(null, 0, mime, bits, width, height, fname);
+    if (caption) {
+      msg = Drafty.appendLineBreak(msg);
+      msg = Drafty.append(msg, Drafty.init(caption));
+    }
+    this.props.sendMessage(msg);
+  }
+
+  // handleAttachImage method is called when [Attach image] button is clicked.
+  handleAttachImage(file) {
+    let size = file.size;
+    // If image is too big scale it down before previewing.
+    if (size > MAX_EXTERN_ATTACHMENT_SIZE) {
+    }
+
+    // Launch image preview screen.
+    this.setState({imagePreview: {
+      url: URL.createObjectURL(file),
+      filename: fname,
+      width: width, // FIXME: width is not defined.
+      height: height, // FIXME: height is not defined.
+      size: size,
+      type: mime // FIXME: mime type is not defined.
+    }});
   }
 
   render() {

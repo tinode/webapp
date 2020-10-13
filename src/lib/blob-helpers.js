@@ -66,10 +66,58 @@ export function fileNameForMime(fname, mime) {
   return fname + '.' + ext;
 }
 
+// Scale uploaded image to fit under certain dimensions or byte size, optionally constraining to a square.
+export function imageFileScaled(file, maxWidth, maxHeight, maxSize, forceSquare, onSuccess, onError) {
+  const img = new Image();
+  img.crossOrigin = 'Anonymous';
+  img.onerror = function(err) {
+    onError("Image format unrecognized");
+  }
+  img.onload = function() {
+    // Once the image is loaded, the URL is no longer needed.
+    URL.revokeObjectURL(img.src);
+
+    // Calculate the desired image dimensions.
+    const dim = fitImageSize(this.width, this.height, maxWidth, maxHeight, forceSquare);
+    if (!dim) {
+      onError("Invalid image");
+      return;
+    }
+    let canvas = document.createElement('canvas');
+    canvas.width = dim.dstWidth;
+    canvas.height = dim.dstHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(this, dim.xoffset, dim.yoffset, dim.srcWidth, dim.srcHeight,
+      0, 0, dim.dstWidth, dim.dstHeight);
+
+    let mime = SUPPORTED_IMAGE_FORMATS.indexOf(file.type) < 0 ? 'image/jpeg' : file.type;
+    let imageBits = canvas.toDataURL(mime);
+    const parts = imageBits.split(',');
+    // Get actual image type: 'data:image/png;base64,'
+    mime = getMimeType(parts[0]);
+    if (!mime) {
+      onError("Unsupported image format");
+      return;
+    }
+    // Ensure the image is not too large. Shrink the image keeping the aspect ratio.
+    while (base64DecodedLen(imageBits.length) > maxSize && quality > 0.45) {
+      imageBits = canvas.toDataURL(mime, quality);
+    }
+
+    canvas.toBlob((blob) => {
+        onSuccess(blob, mime, dim.dstWidth, dim.dstHeight, fileNameForMime(file.name, mime));
+      }
+    );
+    canvas = null;
+  };
+  img.src = URL.createObjectURL(file);
+}
+
 // Convert uploaded image into a base64-encoded string possibly scaling
 // linear dimensions or constraining to a square.
 export function imageFileScaledToBase64(file, width, height, forceSquare, onSuccess, onError) {
-  var img = new Image();
+  const img = new Image();
   img.crossOrigin = 'Anonymous';
   img.onerror = function(err) {
     onError("Image format unrecognized");
@@ -100,7 +148,7 @@ export function imageFileScaledToBase64(file, width, height, forceSquare, onSucc
       return;
     }
     // Ensure the image is not too large
-    var quality = 0.78;
+    let quality = 0.78;
     if (base64DecodedLen(imageBits.length) > MAX_INBAND_ATTACHMENT_SIZE) {
       mime = 'image/jpeg';
     }

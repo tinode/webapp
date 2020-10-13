@@ -30,7 +30,7 @@ export default class ImagePreview extends React.PureComponent {
 
   handleSendImage(caption) {
     this.props.onClose();
-    this.props.onSendMessage(caption, this.props.content.type, this.props.content.bits,
+    this.props.onSendMessage(caption, this.props.content.type,
       this.props.content.width, this.props.content.height, this.props.content.filename);
   }
 
@@ -47,7 +47,7 @@ export default class ImagePreview extends React.PureComponent {
     size.maxHeight = '100%';
 
     let filename = this.props.content.filename;
-    // Averate font aspect ratio is ~0.5; File name takes 1/3 of the viewport width.
+    // Average font aspect ratio is ~0.5; File name takes 1/3 of the viewport width.
     const maxlength = Math.max(((this.state.width / REM_SIZE / 1.5) | 0) - 2, 12);
     if (filename.length > maxlength) {
       filename = filename.slice(0, maxlength/2 - 1) + '…' + filename.slice(1 - maxlength/2);
