@@ -66,8 +66,9 @@ export function fileNameForMime(fname, mime) {
   return fname + '.' + ext;
 }
 
-// Scale uploaded image to fit under certain dimensions or byte size, optionally constraining to a square.
-export function imageFileScaled(file, maxWidth, maxHeight, maxSize, forceSquare, onSuccess, onError) {
+// Scale uploaded image to fit under certain dimensions and byte size, optionally constraining to a square.
+// On success calls onSuccess callback with the scaled image as Blob.
+export function imageScaled(file, maxWidth, maxHeight, maxSize, forceSquare, onSuccess, onError) {
   const img = new Image();
   img.crossOrigin = 'Anonymous';
   img.onerror = function(err) {
@@ -91,25 +92,25 @@ export function imageFileScaled(file, maxWidth, maxHeight, maxSize, forceSquare,
     ctx.drawImage(this, dim.xoffset, dim.yoffset, dim.srcWidth, dim.srcHeight,
       0, 0, dim.dstWidth, dim.dstHeight);
 
-    let mime = SUPPORTED_IMAGE_FORMATS.indexOf(file.type) < 0 ? 'image/jpeg' : file.type;
-    let imageBits = canvas.toDataURL(mime);
-    const parts = imageBits.split(',');
-    // Get actual image type: 'data:image/png;base64,'
-    mime = getMimeType(parts[0]);
-    if (!mime) {
+    const mime = SUPPORTED_IMAGE_FORMATS.indexOf(file.type) < 0 ? 'image/jpeg' : file.type;
+    // Generate blob to check size of the image.
+    let blob = await new Promise(resolve => canvas.toBlob(resolve, mime));
+    if (!blob) {
       onError("Unsupported image format");
       return;
     }
+
     // Ensure the image is not too large. Shrink the image keeping the aspect ratio.
-    while (base64DecodedLen(imageBits.length) > maxSize && quality > 0.45) {
-      imageBits = canvas.toDataURL(mime, quality);
+    while (blob.length > maxSize) {
+      dim.dstWidth = (dim.dstWidth * 0.70710678118) | 0;
+      dim.dstHeight = (dim.dstHeight * 0.70710678118) | 0;
+      canvas.width = dim.dstWidth;
+      canvas.height = dim.dstHeight;
+      blob = await new Promise(resolve => canvas.toBlob(resolve, mime));
     }
 
-    canvas.toBlob((blob) => {
-        onSuccess(blob, mime, dim.dstWidth, dim.dstHeight, fileNameForMime(file.name, mime));
-      }
-    );
     canvas = null;
+    onSuccess(blob, mime, dim.dstWidth, dim.dstHeight, fileNameForMime(file.name, mime));
   };
   img.src = URL.createObjectURL(file);
 }
