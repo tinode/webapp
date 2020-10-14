@@ -74,7 +74,7 @@ export function imageScaled(file, maxWidth, maxHeight, maxSize, forceSquare, onS
   img.onerror = function(err) {
     onError("Image format unrecognized");
   }
-  img.onload = function() {
+  img.onload = async function() {
     // Once the image is loaded, the URL is no longer needed.
     URL.revokeObjectURL(img.src);
 
@@ -87,7 +87,7 @@ export function imageScaled(file, maxWidth, maxHeight, maxSize, forceSquare, onS
     let canvas = document.createElement('canvas');
     canvas.width = dim.dstWidth;
     canvas.height = dim.dstHeight;
-    const ctx = canvas.getContext('2d');
+    let ctx = canvas.getContext('2d');
     ctx.imageSmoothingEnabled = true;
     ctx.drawImage(this, dim.xoffset, dim.yoffset, dim.srcWidth, dim.srcHeight,
       0, 0, dim.dstWidth, dim.dstHeight);
@@ -106,6 +106,10 @@ export function imageScaled(file, maxWidth, maxHeight, maxSize, forceSquare, onS
       dim.dstHeight = (dim.dstHeight * 0.70710678118) | 0;
       canvas.width = dim.dstWidth;
       canvas.height = dim.dstHeight;
+      ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(this, dim.xoffset, dim.yoffset, dim.srcWidth, dim.srcHeight,
+        0, 0, dim.dstWidth, dim.dstHeight);
       blob = await new Promise(resolve => canvas.toBlob(resolve, mime));
     }
 
@@ -196,12 +200,22 @@ export function imageFileToBase64(file, onSuccess, onError) {
   reader.readAsDataURL(file);
 }
 
-export function fileToBase64(file, onSuccess, onError) {
-  var reader = new FileReader();
+// Convert File to base64 string.
+export function fileToBase64(file, onSuccess) {
+  const reader = new FileReader();
   reader.addEventListener('load', function() {
     onSuccess(file.type, reader.result.split(',')[1], file.name);
   });
   reader.readAsDataURL(file);
+}
+
+// Convert Blob to base64 string.
+export function blobToBase64(blob, onSuccess) {
+  const reader = new FileReader();
+  reader.addEventListener('load', function() {
+    onSuccess(blob.type, reader.result.split(',')[1]);
+  });
+  reader.readAsDataURL(blob);
 }
 
 // File pasted from the clipboard. It's either an inline image or a file attachment.

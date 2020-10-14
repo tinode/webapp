@@ -774,6 +774,9 @@ class TinodeWeb extends React.Component {
 
   // User is sending a message, either plain text or a drafty object, possibly
   // with attachments.
+  //  - msg - Drafty message with content
+  //  - promise - Promise to be resolved when the upload is completed
+  //  - uploader - for tracking progress
   handleSendMessage(msg, promise, uploader) {
     const topic = this.tinode.getTopic(this.state.topicSelected);
 

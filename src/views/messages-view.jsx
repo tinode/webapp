@@ -17,8 +17,8 @@ import SendMessage from '../widgets/send-message.jsx';
 
 import { DEFAULT_P2P_ACCESS_MODE, KEYPRESS_DELAY, MESSAGES_PAGE, MAX_EXTERN_ATTACHMENT_SIZE,
   MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE, READ_DELAY } from '../config.js';
-import { SUPPORTED_IMAGE_FORMATS, filePasted, fileToBase64, imageFileToBase64,
-  imageFileScaledToBase64, makeImageUrl } from '../lib/blob-helpers.js';
+import { SUPPORTED_IMAGE_FORMATS, blobToBase64, filePasted, fileToBase64, imageFileToBase64,
+  imageScaled, makeImageUrl } from '../lib/blob-helpers.js';
 import HashNavigation from '../lib/navigation.js';
 import { bytesToHumanSize, shortDateFormat } from '../lib/strformat.js';
 
@@ -559,6 +559,7 @@ class MessagesView extends React.Component {
   }
 
   handleClosePreview() {
+    URL.revokeObjectURL(this.state.imagePreview.url);
     this.setState({ imagePostview: null, imagePreview: null, docPreview: null });
   }
 
@@ -667,73 +668,62 @@ class MessagesView extends React.Component {
   }
 
   // sendImageAttachment sends the image bits inband as Drafty message.
-  sendImageAttachment(objectUrl, caption, mime, width, height, fname) {
-    // Upload or scale the image.
-    // Check if the uploaded file is indeed an image and if it isn't too large.
-    if (file.size > MAX_INBAND_ATTACHMENT_SIZE || SUPPORTED_IMAGE_FORMATS.indexOf(file.type) < 0) {
-      // Convert image for size or format.
-      imageFileScaledToBase64(file, MAX_IMAGE_DIM, MAX_IMAGE_DIM, false,
-        // Success
-        (bits, mime, width, height, fname) => {
-          this.setState({imagePreview: {
-            url: URL.createObjectURL(file),
-            filename: fname,
-            width: width,
-            height: height,
-            size: bits.length,
-            type: mime
-          }});
-        },
-        // Failure
-        (err) => {
-          this.props.onError(err, 'err');
-        });
-    } else {
-      // Image can be uploaded as is. No conversion is needed.
-      imageFileToBase64(file,
-        // Success
-        (bits, mime, width, height, fname) => {
-          this.setState({imagePreview: {
-            url: URL.createObjectURL(file),
-            bits: bits,
-            filename: fname,
-            width: width,
-            height: height,
-            size: bits.length,
-            type: mime
-          }});
-        },
-        // Failure
-        (err) => {
-          this.props.onError(err, 'err');
-        }
-      );
+  sendImageAttachment(caption, blob) {
+    const mime = this.state.imagePreview.type;
+    const width = this.state.imagePreview.width;
+    const height = this.state.imagePreview.height;
+    const fname = this.state.imagePreview.filename;
+
+    // Upload the image if it's too big to be send inband.
+    if (blob.size > MAX_INBAND_ATTACHMENT_SIZE) {
+      // Too large to send inband - uploading out of band and sending as a link.
+      const uploader = this.props.tinode.getLargeFileHelper();
+      if (!uploader) {
+        this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
+        return;
+      }
+      const uploadCompletionPromise = uploader.upload(blob);
+      let msg = Drafty.insertImage(null, 0, mime, null, width, height, fname, blob.size, uploadCompletionPromise);
+      if (caption) {
+        msg = Drafty.appendLineBreak(msg);
+        msg = Drafty.append(msg, Drafty.init(caption));
+      }
+      // Pass data and the uploader to the TinodeWeb.
+      this.props.sendMessage(msg, uploadCompletionPromise, uploader);
+      return;
     }
 
-    let msg = Drafty.insertImage(null, 0, mime, bits, width, height, fname);
-    if (caption) {
-      msg = Drafty.appendLineBreak(msg);
-      msg = Drafty.append(msg, Drafty.init(caption));
-    }
-    this.props.sendMessage(msg);
+    blobToBase64(blob, (bits) => {
+      let msg = Drafty.insertImage(null, 0, mime, bits, width, height, fname, blob.size);
+      if (caption) {
+        msg = Drafty.appendLineBreak(msg);
+        msg = Drafty.append(msg, Drafty.init(caption));
+      }
+      this.props.sendMessage(msg);
+    });
   }
 
   // handleAttachImage method is called when [Attach image] button is clicked.
   handleAttachImage(file) {
-    let size = file.size;
-    // If image is too big scale it down before previewing.
-    if (size > MAX_EXTERN_ATTACHMENT_SIZE) {
-    }
-
-    // Launch image preview screen.
-    this.setState({imagePreview: {
-      url: URL.createObjectURL(file),
-      filename: fname,
-      width: width, // FIXME: width is not defined.
-      height: height, // FIXME: height is not defined.
-      size: size,
-      type: mime // FIXME: mime type is not defined.
-    }});
+    // Get image dimensions and size, optionally scale it down.
+    imageScaled(file, MAX_IMAGE_DIM, MAX_IMAGE_DIM, MAX_EXTERN_ATTACHMENT_SIZE, false,
+      // Success
+      (blob, mime, width, height, fname) => {
+        this.setState({imagePreview: {
+          url: URL.createObjectURL(blob),
+          blob: blob,
+          filename: fname,
+          width: width,
+          height: height,
+          size: blob.length,
+          type: mime
+        }});
+      },
+      // Failure
+      (err) => {
+        this.props.onError(err, 'err');
+      }
+    );
   }
 
   render() {

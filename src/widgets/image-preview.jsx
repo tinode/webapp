@@ -30,8 +30,7 @@ export default class ImagePreview extends React.PureComponent {
 
   handleSendImage(caption) {
     this.props.onClose();
-    this.props.onSendMessage(caption, this.props.content.type,
-      this.props.content.width, this.props.content.height, this.props.content.filename);
+    this.props.onSendMessage(caption, this.props.content.blob);
   }
 
   render() {

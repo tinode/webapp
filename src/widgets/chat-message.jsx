@@ -6,6 +6,7 @@ import { Drafty } from 'tinode-sdk'
 import Attachment from './attachment.jsx';
 import LetterTile from './letter-tile.jsx';
 import ReceivedMarker from './received-marker.jsx'
+import UploadingImage from './uploading-image.jsx'
 import { sanitizeImageUrl, sanitizeUrl } from '../lib/utils.js';
 
 export default class ChatMessage extends React.Component {
@@ -167,12 +168,16 @@ import { fitImageSize } from '../lib/blob-helpers.js';
 function draftyFormatter(style, data, values, key) {
   let el = Drafty.tagName(style);
   if (el) {
-    let attr = Drafty.attrValue(style, data) || {};
+    const attr = Drafty.attrValue(style, data) || {};
     attr.key = key;
     switch (style) {
       case 'IM':
         // Additional processing for images
         if (data) {
+          if (Drafty.isUploading(data)) {
+            // Use custom element instead of <img>.
+            el = 'UploadingImage';
+          }
           attr.className = 'inline-image';
           let dim = fitImageSize(data.width, data.height,
             Math.min(this.props.viewportWidth - REM_SIZE * 4, REM_SIZE * 36), REM_SIZE * 24, false);

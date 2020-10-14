@@ -200,7 +200,7 @@ react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_
 /*!*********************************!*\
   !*** ./src/lib/blob-helpers.js ***!
   \*********************************/
-/*! exports provided: SUPPORTED_IMAGE_FORMATS, MIME_EXTENSIONS, makeImageUrl, fitImageSize, fileNameForMime, imageFileScaledToBase64, imageFileToBase64, fileToBase64, filePasted, getMimeType, base64EncodedLen, base64DecodedLen, base64ReEncode */
+/*! exports provided: SUPPORTED_IMAGE_FORMATS, MIME_EXTENSIONS, makeImageUrl, fitImageSize, fileNameForMime, imageScaled, imageFileScaledToBase64, imageFileToBase64, fileToBase64, blobToBase64, filePasted, getMimeType, base64EncodedLen, base64DecodedLen, base64ReEncode */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -210,9 +210,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "makeImageUrl", function() { return makeImageUrl; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fitImageSize", function() { return fitImageSize; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fileNameForMime", function() { return fileNameForMime; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "imageScaled", function() { return imageScaled; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "imageFileScaledToBase64", function() { return imageFileScaledToBase64; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "imageFileToBase64", function() { return imageFileToBase64; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fileToBase64", function() { return fileToBase64; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "blobToBase64", function() { return blobToBase64; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "filePasted", function() { return filePasted; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getMimeType", function() { return getMimeType; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "base64EncodedLen", function() { return base64EncodedLen; });
@@ -271,8 +273,56 @@ function fileNameForMime(fname, mime) {
 
   return fname + '.' + ext;
 }
+function imageScaled(file, maxWidth, maxHeight, maxSize, forceSquare, onSuccess, onError) {
+  const img = new Image();
+  img.crossOrigin = 'Anonymous';
+
+  img.onerror = function (err) {
+    onError("Image format unrecognized");
+  };
+
+  img.onload = async function () {
+    URL.revokeObjectURL(img.src);
+    const dim = fitImageSize(this.width, this.height, maxWidth, maxHeight, forceSquare);
+
+    if (!dim) {
+      onError("Invalid image");
+      return;
+    }
+
+    let canvas = document.createElement('canvas');
+    canvas.width = dim.dstWidth;
+    canvas.height = dim.dstHeight;
+    let ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(this, dim.xoffset, dim.yoffset, dim.srcWidth, dim.srcHeight, 0, 0, dim.dstWidth, dim.dstHeight);
+    const mime = SUPPORTED_IMAGE_FORMATS.indexOf(file.type) < 0 ? 'image/jpeg' : file.type;
+    let blob = await new Promise(resolve => canvas.toBlob(resolve, mime));
+
+    if (!blob) {
+      onError("Unsupported image format");
+      return;
+    }
+
+    while (blob.length > maxSize) {
+      dim.dstWidth = dim.dstWidth * 0.70710678118 | 0;
+      dim.dstHeight = dim.dstHeight * 0.70710678118 | 0;
+      canvas.width = dim.dstWidth;
+      canvas.height = dim.dstHeight;
+      ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(this, dim.xoffset, dim.yoffset, dim.srcWidth, dim.srcHeight, 0, 0, dim.dstWidth, dim.dstHeight);
+      blob = await new Promise(resolve => canvas.toBlob(resolve, mime));
+    }
+
+    canvas = null;
+    onSuccess(blob, mime, dim.dstWidth, dim.dstHeight, fileNameForMime(file.name, mime));
+  };
+
+  img.src = URL.createObjectURL(file);
+}
 function imageFileScaledToBase64(file, width, height, forceSquare, onSuccess, onError) {
-  var img = new Image();
+  const img = new Image();
   img.crossOrigin = 'Anonymous';
 
   img.onerror = function (err) {
@@ -303,7 +353,7 @@ function imageFileScaledToBase64(file, width, height, forceSquare, onSuccess, on
       return;
     }
 
-    var quality = 0.78;
+    let quality = 0.78;
 
     if (base64DecodedLen(imageBits.length) > _config_js__WEBPACK_IMPORTED_MODULE_0__["MAX_INBAND_ATTACHMENT_SIZE"]) {
       mime = 'image/jpeg';
@@ -353,12 +403,19 @@ function imageFileToBase64(file, onSuccess, onError) {
   }, false);
   reader.readAsDataURL(file);
 }
-function fileToBase64(file, onSuccess, onError) {
-  var reader = new FileReader();
+function fileToBase64(file, onSuccess) {
+  const reader = new FileReader();
   reader.addEventListener('load', function () {
     onSuccess(file.type, reader.result.split(',')[1], file.name);
   });
   reader.readAsDataURL(file);
+}
+function blobToBase64(blob, onSuccess) {
+  const reader = new FileReader();
+  reader.addEventListener('load', function () {
+    onSuccess(blob.type, reader.result.split(',')[1]);
+  });
+  reader.readAsDataURL(blob);
 }
 function filePasted(event, onImageSuccess, onAttachmentSuccess, onError) {
   var items = (event.clipboardData || event.originalEvent.clipboardData || {}).items;
@@ -819,7 +876,7 @@ module.exports = JSON.parse("{\"de\":{\"validate_credential_action\":\"bestätig
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PACKAGE_VERSION", function() { return PACKAGE_VERSION; });
-const PACKAGE_VERSION = "0.16.8";
+const PACKAGE_VERSION = "0.16.9-beta1";
 
 /***/ }),
 
@@ -3424,6 +3481,7 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
   }
 
   handleClosePreview() {
+    URL.revokeObjectURL(this.state.imagePreview.url);
     this.setState({
       imagePostview: null,
       imagePreview: null,
@@ -3541,51 +3599,60 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
     }
   }
 
-  sendImageAttachment(caption, mime, bits, width, height, fname) {
-    let msg = Drafty.insertImage(null, 0, mime, bits, width, height, fname);
+  sendImageAttachment(caption, blob) {
+    const mime = this.state.imagePreview.type;
+    const width = this.state.imagePreview.width;
+    const height = this.state.imagePreview.height;
+    const fname = this.state.imagePreview.filename;
 
-    if (caption) {
-      msg = Drafty.appendLineBreak(msg);
-      msg = Drafty.append(msg, Drafty.init(caption));
+    if (blob.size > _config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_INBAND_ATTACHMENT_SIZE"]) {
+      const uploader = this.props.tinode.getLargeFileHelper();
+
+      if (!uploader) {
+        this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
+        return;
+      }
+
+      const uploadCompletionPromise = uploader.upload(blob);
+      let msg = Drafty.insertImage(null, 0, mime, null, width, height, fname, blob.size, uploadCompletionPromise);
+
+      if (caption) {
+        msg = Drafty.appendLineBreak(msg);
+        msg = Drafty.append(msg, Drafty.init(caption));
+      }
+
+      this.props.sendMessage(msg, uploadCompletionPromise, uploader);
+      return;
     }
 
-    this.props.sendMessage(msg);
+    Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__["blobToBase64"])(blob, bits => {
+      let msg = Drafty.insertImage(null, 0, mime, bits, width, height, fname, blob.size);
+
+      if (caption) {
+        msg = Drafty.appendLineBreak(msg);
+        msg = Drafty.append(msg, Drafty.init(caption));
+      }
+
+      this.props.sendMessage(msg);
+    });
   }
 
   handleAttachImage(file) {
-    if (file.size > _config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_INBAND_ATTACHMENT_SIZE"] || _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__["SUPPORTED_IMAGE_FORMATS"].indexOf(file.type) < 0) {
-      Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__["imageFileScaledToBase64"])(file, _config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_IMAGE_DIM"], _config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_IMAGE_DIM"], false, (bits, mime, width, height, fname) => {
-        this.setState({
-          imagePreview: {
-            url: URL.createObjectURL(file),
-            bits: bits,
-            filename: fname,
-            width: width,
-            height: height,
-            size: bits.length,
-            type: mime
-          }
-        });
-      }, err => {
-        this.props.onError(err, 'err');
+    Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__["imageScaled"])(file, _config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_IMAGE_DIM"], _config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_IMAGE_DIM"], _config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_EXTERN_ATTACHMENT_SIZE"], false, (blob, mime, width, height, fname) => {
+      this.setState({
+        imagePreview: {
+          url: URL.createObjectURL(blob),
+          blob: blob,
+          filename: fname,
+          width: width,
+          height: height,
+          size: blob.length,
+          type: mime
+        }
       });
-    } else {
-      Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__["imageFileToBase64"])(file, (bits, mime, width, height, fname) => {
-        this.setState({
-          imagePreview: {
-            url: URL.createObjectURL(file),
-            bits: bits,
-            filename: fname,
-            width: width,
-            height: height,
-            size: bits.length,
-            type: mime
-          }
-        });
-      }, err => {
-        this.props.onError(err, 'err');
-      });
-    }
+    }, err => {
+      this.props.onError(err, 'err');
+    });
   }
 
   render() {
@@ -6379,15 +6446,17 @@ class AvatarUpload extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
   }
 
   handleFileUpload(e) {
-    Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__["imageFileScaledToBase64"])(e.target.files[0], _config_js__WEBPACK_IMPORTED_MODULE_2__["AVATAR_SIZE"], _config_js__WEBPACK_IMPORTED_MODULE_2__["AVATAR_SIZE"], true, (base64bits, mime) => {
-      var du = Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__["makeImageUrl"])({
-        data: base64bits,
-        type: mime
+    Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__["imageScaled"])(e.target.files[0], _config_js__WEBPACK_IMPORTED_MODULE_2__["AVATAR_SIZE"], _config_js__WEBPACK_IMPORTED_MODULE_2__["AVATAR_SIZE"], _config_js__WEBPACK_IMPORTED_MODULE_2__["MAX_EXTERN_ATTACHMENT_SIZE"], true, (mime, blob) => {
+      Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__["blobToBase64"])(blob, (unused, base64bits) => {
+        const du = Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__["makeImageUrl"])({
+          data: base64bits,
+          type: mime
+        });
+        this.setState({
+          dataUrl: du
+        });
+        this.props.onImageChanged(du);
       });
-      this.setState({
-        dataUrl: du
-      });
-      this.props.onImageChanged(du);
     }, err => {
       this.props.onError(err, 'err');
     });
@@ -6487,9 +6556,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _attachment_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./attachment.jsx */ "./src/widgets/attachment.jsx");
 /* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
 /* harmony import */ var _received_marker_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./received-marker.jsx */ "./src/widgets/received-marker.jsx");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _uploading_image_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./uploading-image.jsx */ "./src/widgets/uploading-image.jsx");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+
 
 
 
@@ -6538,7 +6609,7 @@ class ChatMessage extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component
     }
 
     if (e.target.dataset.act == 'url') {
-      data.ref = Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__["sanitizeUrl"])(e.target.dataset.ref) || 'about:blank';
+      data.ref = Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_7__["sanitizeUrl"])(e.target.dataset.ref) || 'about:blank';
     }
 
     const text = e.target.dataset.title || 'unknown';
@@ -6656,23 +6727,27 @@ function draftyFormatter(style, data, values, key) {
   let el = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].tagName(style);
 
   if (el) {
-    let attr = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].attrValue(style, data) || {};
+    const attr = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].attrValue(style, data) || {};
     attr.key = key;
 
     switch (style) {
       case 'IM':
         if (data) {
+          if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].isUploading(data)) {
+            el = 'UploadingImage';
+          }
+
           attr.className = 'inline-image';
-          let dim = Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__["fitImageSize"])(data.width, data.height, Math.min(this.props.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_7__["REM_SIZE"] * 4, _config_js__WEBPACK_IMPORTED_MODULE_7__["REM_SIZE"] * 36), _config_js__WEBPACK_IMPORTED_MODULE_7__["REM_SIZE"] * 24, false);
+          let dim = Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__["fitImageSize"])(data.width, data.height, Math.min(this.props.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_8__["REM_SIZE"] * 4, _config_js__WEBPACK_IMPORTED_MODULE_8__["REM_SIZE"] * 36), _config_js__WEBPACK_IMPORTED_MODULE_8__["REM_SIZE"] * 24, false);
           dim = dim || {
-            dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_7__["BROKEN_IMAGE_SIZE"],
-            dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_7__["BROKEN_IMAGE_SIZE"]
+            dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_8__["BROKEN_IMAGE_SIZE"],
+            dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_8__["BROKEN_IMAGE_SIZE"]
           };
           attr.style = {
             width: dim.dstWidth + 'px',
             height: dim.dstHeight + 'px'
           };
-          attr.src = Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__["sanitizeImageUrl"])(attr.src);
+          attr.src = Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_7__["sanitizeImageUrl"])(attr.src);
 
           if (attr.src) {
             attr.onClick = this.handleImagePreview;
@@ -8355,7 +8430,7 @@ class ImagePreview extends react__WEBPACK_IMPORTED_MODULE_0___default.a.PureComp
 
   handleSendImage(caption) {
     this.props.onClose();
-    this.props.onSendMessage(caption, this.props.content.type, this.props.content.bits, this.props.content.width, this.props.content.height, this.props.content.filename);
+    this.props.onSendMessage(caption, this.props.content.blob);
   }
 
   render() {
@@ -10027,6 +10102,45 @@ class UnreadBadge extends react__WEBPACK_IMPORTED_MODULE_0___default.a.PureCompo
     return this.props.count > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
       className: "unread"
     }, this.props.count > 9 ? "9+" : this.props.count) : null;
+  }
+
+}
+;
+
+/***/ }),
+
+/***/ "./src/widgets/uploading-image.jsx":
+/*!*****************************************!*\
+  !*** ./src/widgets/uploading-image.jsx ***!
+  \*****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return UploadingImage; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _file_progress_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./file-progress.jsx */ "./src/widgets/file-progress.jsx");
+
+
+
+class UploadingImage extends react__WEBPACK_IMPORTED_MODULE_0___default.a.PureComponent {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "inline-image"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+      src: this.props.src
+    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_file_progress_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      progress: this.props.progress,
+      onCancel: this.props.onCancelUpload
+    }));
   }
 
 }
