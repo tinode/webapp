@@ -174,7 +174,8 @@ function draftyFormatter(style, data, values, key) {
       case 'IM':
         // Additional processing for images
         if (data) {
-          if (Drafty.isUploading(data)) {
+          const uploading = Drafty.isUploading(data);
+          if (uploading) {
             // Use custom element instead of <img>.
             el = 'UploadingImage';
           }
@@ -183,12 +184,14 @@ function draftyFormatter(style, data, values, key) {
             Math.min(this.props.viewportWidth - REM_SIZE * 4, REM_SIZE * 36), REM_SIZE * 24, false);
           dim = dim || {dstWidth: BROKEN_IMAGE_SIZE, dstHeight: BROKEN_IMAGE_SIZE};
           attr.style = { width: dim.dstWidth + 'px', height: dim.dstHeight + 'px' };
-          attr.src = sanitizeImageUrl(attr.src);
-          if (attr.src) {
-            attr.onClick = this.handleImagePreview;
-            attr.className += ' image-clickable';
-          } else {
-            attr.src = 'img/broken_image.png';
+          if (!uploading) {
+            attr.src = sanitizeImageUrl(attr.src);
+            if (attr.src) {
+              attr.onClick = this.handleImagePreview;
+              attr.className += ' image-clickable';
+            } else {
+              attr.src = 'img/broken_image.png';
+            }
           }
         }
         break;

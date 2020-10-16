@@ -6733,7 +6733,9 @@ function draftyFormatter(style, data, values, key) {
     switch (style) {
       case 'IM':
         if (data) {
-          if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].isUploading(data)) {
+          const uploading = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].isUploading(data);
+
+          if (uploading) {
             el = 'UploadingImage';
           }
 
@@ -6747,13 +6749,16 @@ function draftyFormatter(style, data, values, key) {
             width: dim.dstWidth + 'px',
             height: dim.dstHeight + 'px'
           };
-          attr.src = Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_7__["sanitizeImageUrl"])(attr.src);
 
-          if (attr.src) {
-            attr.onClick = this.handleImagePreview;
-            attr.className += ' image-clickable';
-          } else {
-            attr.src = 'img/broken_image.png';
+          if (!uploading) {
+            attr.src = Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_7__["sanitizeImageUrl"])(attr.src);
+
+            if (attr.src) {
+              attr.onClick = this.handleImagePreview;
+              attr.className += ' image-clickable';
+            } else {
+              attr.src = 'img/broken_image.png';
+            }
           }
         }
 

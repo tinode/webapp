@@ -93,7 +93,8 @@ export function isUrlRelative(url) {
 
 // Ensure URL does not present an XSS risk. Optional allowedSchemes may contain an array of
 // strings with permitted URL schemes, such as ['ftp', 'ftps']; otherwise accept http and https only.
-export function sanitizeUrl(url, allowedSchemes) {
+// If apikey is defined, it's appended to relative URL.
+export function sanitizeUrl(url, apikey) {
   if (!url) {
     return null;
   }
@@ -102,6 +103,7 @@ export function sanitizeUrl(url, allowedSchemes) {
   url = url.replace(/[^\x20-\x7E]/gmi, '').trim();
 
   // Relative URLs are safe.
+  // Relative URL does not start with ':', abcd123: or '//'.
   if (!/^([a-z][a-z0-9+.-]*:|\/\/)/i.test(url)) {
     return url;
   }
@@ -121,14 +123,15 @@ export function sanitizeUrl(url, allowedSchemes) {
 }
 
 // Ensure URL is suitable for <img src="url"> field: the URL must be a relative URL or
-// have http:, https:, or data: scheme. In case of data: scheme, the URL must start with
-// a 'data:image/XXXX;base64,'.
-export function sanitizeImageUrl(url) {
+// have http:, https:, or data: scheme.
+// The relative URL is appended with the API key.
+// In case of data: scheme, the URL must start with a 'data:image/XXXX;base64,'.
+export function sanitizeImageUrl(url, apikey) {
   if (!url) {
     return null;
   }
 
-  const sanitizedUrl = sanitizeUrl(url);
+  const sanitizedUrl = sanitizeUrl(url, apikey);
   if (sanitizedUrl) {
     return sanitizedUrl;
   }
