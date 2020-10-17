@@ -200,7 +200,7 @@ react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_
 /*!*********************************!*\
   !*** ./src/lib/blob-helpers.js ***!
   \*********************************/
-/*! exports provided: SUPPORTED_IMAGE_FORMATS, MIME_EXTENSIONS, makeImageUrl, fitImageSize, fileNameForMime, imageScaled, imageFileScaledToBase64, imageFileToBase64, fileToBase64, blobToBase64, filePasted, getMimeType, base64EncodedLen, base64DecodedLen, base64ReEncode */
+/*! exports provided: SUPPORTED_IMAGE_FORMATS, MIME_EXTENSIONS, makeImageUrl, fitImageSize, fileNameForMime, imageScaled, fileToBase64, blobToBase64, filePasted, getMimeType, base64EncodedLen, base64DecodedLen, base64ReEncode */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -211,8 +211,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fitImageSize", function() { return fitImageSize; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fileNameForMime", function() { return fileNameForMime; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "imageScaled", function() { return imageScaled; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "imageFileScaledToBase64", function() { return imageFileScaledToBase64; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "imageFileToBase64", function() { return imageFileToBase64; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fileToBase64", function() { return fileToBase64; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "blobToBase64", function() { return blobToBase64; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "filePasted", function() { return filePasted; });
@@ -320,88 +318,6 @@ function imageScaled(file, maxWidth, maxHeight, maxSize, forceSquare, onSuccess,
   };
 
   img.src = URL.createObjectURL(file);
-}
-function imageFileScaledToBase64(file, width, height, forceSquare, onSuccess, onError) {
-  const img = new Image();
-  img.crossOrigin = 'Anonymous';
-
-  img.onerror = function (err) {
-    onError("Image format unrecognized");
-  };
-
-  img.onload = function () {
-    var dim = fitImageSize(this.width, this.height, width, height, forceSquare);
-
-    if (!dim) {
-      onError("Invalid image");
-      return;
-    }
-
-    var canvas = document.createElement('canvas');
-    canvas.width = dim.dstWidth;
-    canvas.height = dim.dstHeight;
-    var ctx = canvas.getContext('2d');
-    ctx.imageSmoothingEnabled = true;
-    ctx.drawImage(this, dim.xoffset, dim.yoffset, dim.srcWidth, dim.srcHeight, 0, 0, dim.dstWidth, dim.dstHeight);
-    var mime = this.width != dim.dstWidth || this.height != dim.dstHeight || SUPPORTED_IMAGE_FORMATS.indexOf(file.type) < 0 ? 'image/jpeg' : file.type;
-    var imageBits = canvas.toDataURL(mime);
-    var parts = imageBits.split(',');
-    mime = getMimeType(parts[0]);
-
-    if (!mime) {
-      onError("Unsupported image format");
-      return;
-    }
-
-    let quality = 0.78;
-
-    if (base64DecodedLen(imageBits.length) > _config_js__WEBPACK_IMPORTED_MODULE_0__["MAX_INBAND_ATTACHMENT_SIZE"]) {
-      mime = 'image/jpeg';
-    }
-
-    if (mime == 'image/jpeg') {
-      while (base64DecodedLen(imageBits.length) > _config_js__WEBPACK_IMPORTED_MODULE_0__["MAX_INBAND_ATTACHMENT_SIZE"] && quality > 0.45) {
-        imageBits = canvas.toDataURL(mime, quality);
-        quality *= 0.84;
-      }
-    }
-
-    if (base64DecodedLen(imageBits.length) > _config_js__WEBPACK_IMPORTED_MODULE_0__["MAX_INBAND_ATTACHMENT_SIZE"]) {
-      onError("The image size " + Object(_strformat_js__WEBPACK_IMPORTED_MODULE_1__["bytesToHumanSize"])(base64DecodedLen(imageBits.length)) + " exceeds the " + Object(_strformat_js__WEBPACK_IMPORTED_MODULE_1__["bytesToHumanSize"])(_config_js__WEBPACK_IMPORTED_MODULE_0__["MAX_INBAND_ATTACHMENT_SIZE"]) + " limit.", "err");
-      return;
-    }
-
-    canvas = null;
-    onSuccess(imageBits.split(',')[1], mime, dim.dstWidth, dim.dstHeight, fileNameForMime(file.name, mime));
-  };
-
-  img.src = URL.createObjectURL(file);
-}
-function imageFileToBase64(file, onSuccess, onError) {
-  var reader = new FileReader();
-  reader.addEventListener('load', function () {
-    var parts = reader.result.split(',');
-    var mime = getMimeType(parts[0]);
-
-    if (!mime) {
-      onError("Failed to process image file");
-      return;
-    }
-
-    var img = new Image();
-    img.crossOrigin = 'Anonymous';
-
-    img.onload = function () {
-      onSuccess(parts[1], mime, this.width, this.height, fileNameForMime(file.name, mime));
-    };
-
-    img.onerror = function (err) {
-      onError("Image format not recognized");
-    };
-
-    img.src = URL.createObjectURL(file);
-  }, false);
-  reader.readAsDataURL(file);
 }
 function fileToBase64(file, onSuccess) {
   const reader = new FileReader();
@@ -811,7 +727,7 @@ function asEmail(val) {
 function isUrlRelative(url) {
   return !/^\s*([a-z][a-z0-9+.-]*:|\/\/)/im.test(url);
 }
-function sanitizeUrl(url, allowedSchemes) {
+function sanitizeUrl(url) {
   if (!url) {
     return null;
   }
@@ -3481,7 +3397,10 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
   }
 
   handleClosePreview() {
-    URL.revokeObjectURL(this.state.imagePreview.url);
+    if (this.state.imagePreview && this.state.imagePreview.url) {
+      URL.revokeObjectURL(this.state.imagePreview.url);
+    }
+
     this.setState({
       imagePostview: null,
       imagePreview: null,
@@ -6751,7 +6670,7 @@ function draftyFormatter(style, data, values, key) {
           };
 
           if (!uploading) {
-            attr.src = Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_7__["sanitizeImageUrl"])(attr.src);
+            attr.src = this.props.tinode.authorizeURL(Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_7__["sanitizeImageUrl"])(attr.src));
 
             if (attr.src) {
               attr.onClick = this.handleImagePreview;

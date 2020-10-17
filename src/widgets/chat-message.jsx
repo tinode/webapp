@@ -185,7 +185,7 @@ function draftyFormatter(style, data, values, key) {
           dim = dim || {dstWidth: BROKEN_IMAGE_SIZE, dstHeight: BROKEN_IMAGE_SIZE};
           attr.style = { width: dim.dstWidth + 'px', height: dim.dstHeight + 'px' };
           if (!uploading) {
-            attr.src = sanitizeImageUrl(attr.src);
+            attr.src = this.props.tinode.authorizeURL(sanitizeImageUrl(attr.src));
             if (attr.src) {
               attr.onClick = this.handleImagePreview;
               attr.className += ' image-clickable';

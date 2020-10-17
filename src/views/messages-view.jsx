@@ -17,7 +17,7 @@ import SendMessage from '../widgets/send-message.jsx';
 
 import { DEFAULT_P2P_ACCESS_MODE, KEYPRESS_DELAY, MESSAGES_PAGE, MAX_EXTERN_ATTACHMENT_SIZE,
   MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE, READ_DELAY } from '../config.js';
-import { SUPPORTED_IMAGE_FORMATS, blobToBase64, filePasted, fileToBase64, imageFileToBase64,
+import { SUPPORTED_IMAGE_FORMATS, blobToBase64, filePasted, fileToBase64,
   imageScaled, makeImageUrl } from '../lib/blob-helpers.js';
 import HashNavigation from '../lib/navigation.js';
 import { bytesToHumanSize, shortDateFormat } from '../lib/strformat.js';
@@ -559,7 +559,9 @@ class MessagesView extends React.Component {
   }
 
   handleClosePreview() {
-    URL.revokeObjectURL(this.state.imagePreview.url);
+    if (this.state.imagePreview && this.state.imagePreview.url) {
+      URL.revokeObjectURL(this.state.imagePreview.url);
+    }
     this.setState({ imagePostview: null, imagePreview: null, docPreview: null });
   }
 
