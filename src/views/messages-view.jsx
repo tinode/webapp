@@ -695,8 +695,8 @@ class MessagesView extends React.Component {
       return;
     }
 
-    blobToBase64(blob, (bits) => {
-      let msg = Drafty.insertImage(null, 0, mime, bits, width, height, fname, blob.size);
+    blobToBase64(blob, (blobMime, bits64) => {
+      let msg = Drafty.insertImage(null, 0, blobMime, bits64, width, height, fname, blob.size);
       if (caption) {
         msg = Drafty.appendLineBreak(msg);
         msg = Drafty.append(msg, Drafty.init(caption));
@@ -717,7 +717,7 @@ class MessagesView extends React.Component {
           filename: fname,
           width: width,
           height: height,
-          size: blob.length,
+          size: blob.size,
           type: mime
         }});
       },

@@ -3544,8 +3544,8 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
       return;
     }
 
-    Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__["blobToBase64"])(blob, bits => {
-      let msg = Drafty.insertImage(null, 0, mime, bits, width, height, fname, blob.size);
+    Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__["blobToBase64"])(blob, (blobMime, bits64) => {
+      let msg = Drafty.insertImage(null, 0, blobMime, bits64, width, height, fname, blob.size);
 
       if (caption) {
         msg = Drafty.appendLineBreak(msg);
@@ -3565,7 +3565,7 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
           filename: fname,
           width: width,
           height: height,
-          size: blob.length,
+          size: blob.size,
           type: mime
         }
       });
