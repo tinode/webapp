@@ -69,6 +69,9 @@ export const MAX_EXTERN_ATTACHMENT_SIZE = 1 << 23;
 // to adjust it to 1600 or 2400 for production.
 export const MAX_IMAGE_DIM = 768;
 
+// Linear dimensions of image preview: shrink image under this size for previews.
+export const IMAGE_PREVIEW_DIM = 64;
+
 // Maximum number of online users to be shown in a topic title bar. Others will be
 // hidden under "+X more"
 export const MAX_ONLINE_IN_TOPIC = 4;

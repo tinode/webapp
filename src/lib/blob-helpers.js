@@ -56,10 +56,14 @@ export function fitImageSize(width, height, maxWidth, maxHeight, forceSquare) {
 
 // Ensure file's extension matches mime content type
 export function fileNameForMime(fname, mime) {
-  var idx = SUPPORTED_IMAGE_FORMATS.indexOf(mime);
-  var ext = MIME_EXTENSIONS[idx];
+  const idx = SUPPORTED_IMAGE_FORMATS.indexOf(mime);
+  if (idx < 0 || !fname) {
+    // Unknown mime or empty name.
+    return fname;
+  }
+  const ext = MIME_EXTENSIONS[idx];
 
-  var at = fname.lastIndexOf('.');
+  const at = fname.lastIndexOf('.');
   if (at >= 0) {
     fname = fname.substring(0, at);
   }
@@ -68,7 +72,7 @@ export function fileNameForMime(fname, mime) {
 
 // Scale uploaded image to fit under certain dimensions and byte size, optionally constraining to a square.
 // On success calls onSuccess callback with the scaled image as Blob.
-export function imageScaled(file, maxWidth, maxHeight, maxSize, forceSquare, onSuccess, onError) {
+export function imageScaled(fileOrBlob, maxWidth, maxHeight, maxSize, forceSquare, onSuccess, onError) {
   const img = new Image();
   img.crossOrigin = 'Anonymous';
   img.onerror = function(err) {
@@ -92,7 +96,7 @@ export function imageScaled(file, maxWidth, maxHeight, maxSize, forceSquare, onS
     ctx.drawImage(this, dim.xoffset, dim.yoffset, dim.srcWidth, dim.srcHeight,
       0, 0, dim.dstWidth, dim.dstHeight);
 
-    const mime = SUPPORTED_IMAGE_FORMATS.indexOf(file.type) < 0 ? 'image/jpeg' : file.type;
+    const mime = SUPPORTED_IMAGE_FORMATS.indexOf(fileOrBlob.type) < 0 ? 'image/jpeg' : fileOrBlob.type;
     // Generate blob to check size of the image.
     let blob = await new Promise(resolve => canvas.toBlob(resolve, mime));
     if (!blob) {
@@ -101,7 +105,8 @@ export function imageScaled(file, maxWidth, maxHeight, maxSize, forceSquare, onS
     }
 
     // Ensure the image is not too large. Shrink the image keeping the aspect ratio.
-    while (blob.length > maxSize) {
+    // Do nothing if maxsize is <= 0.
+    while (maxSize > 0 && blob.length > maxSize) {
       dim.dstWidth = (dim.dstWidth * 0.70710678118) | 0;
       dim.dstHeight = (dim.dstHeight * 0.70710678118) | 0;
       canvas.width = dim.dstWidth;
@@ -114,9 +119,9 @@ export function imageScaled(file, maxWidth, maxHeight, maxSize, forceSquare, onS
     }
 
     canvas = null;
-    onSuccess(blob, mime, dim.dstWidth, dim.dstHeight, fileNameForMime(file.name, mime));
+    onSuccess(blob, mime, dim.dstWidth, dim.dstHeight, fileNameForMime(fileOrBlob.name, mime));
   };
-  img.src = URL.createObjectURL(file);
+  img.src = URL.createObjectURL(fileOrBlob);
 }
 
 // Convert File to base64 string.

@@ -90,7 +90,7 @@
 /*!***********************!*\
   !*** ./src/config.js ***!
   \***********************/
-/*! exports provided: APP_NAME, API_KEY, KNOWN_HOSTS, DEFAULT_HOST, LOGGING_ENABLED, KEYPRESS_DELAY, RECEIVED_DELAY, READ_DELAY, MIN_TAG_LENGTH, MAX_TAG_COUNT, DEFAULT_P2P_ACCESS_MODE, NEW_GRP_ACCESS_MODE, CHANNEL_ACCESS_MODE, NO_ACCESS_MODE, MEDIA_BREAKPOINT, REM_SIZE, AVATAR_SIZE, BROKEN_IMAGE_SIZE, MESSAGES_PAGE, MAX_INBAND_ATTACHMENT_SIZE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_ONLINE_IN_TOPIC, MAX_TITLE_LENGTH, LINK_CONTACT_US, LINK_PRIVACY_POLICY, LINK_TERMS_OF_SERVICE */
+/*! exports provided: APP_NAME, API_KEY, KNOWN_HOSTS, DEFAULT_HOST, LOGGING_ENABLED, KEYPRESS_DELAY, RECEIVED_DELAY, READ_DELAY, MIN_TAG_LENGTH, MAX_TAG_COUNT, DEFAULT_P2P_ACCESS_MODE, NEW_GRP_ACCESS_MODE, CHANNEL_ACCESS_MODE, NO_ACCESS_MODE, MEDIA_BREAKPOINT, REM_SIZE, AVATAR_SIZE, BROKEN_IMAGE_SIZE, MESSAGES_PAGE, MAX_INBAND_ATTACHMENT_SIZE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, IMAGE_PREVIEW_DIM, MAX_ONLINE_IN_TOPIC, MAX_TITLE_LENGTH, LINK_CONTACT_US, LINK_PRIVACY_POLICY, LINK_TERMS_OF_SERVICE */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -117,6 +117,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MAX_INBAND_ATTACHMENT_SIZE", function() { return MAX_INBAND_ATTACHMENT_SIZE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MAX_EXTERN_ATTACHMENT_SIZE", function() { return MAX_EXTERN_ATTACHMENT_SIZE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MAX_IMAGE_DIM", function() { return MAX_IMAGE_DIM; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "IMAGE_PREVIEW_DIM", function() { return IMAGE_PREVIEW_DIM; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MAX_ONLINE_IN_TOPIC", function() { return MAX_ONLINE_IN_TOPIC; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MAX_TITLE_LENGTH", function() { return MAX_TITLE_LENGTH; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LINK_CONTACT_US", function() { return LINK_CONTACT_US; });
@@ -149,6 +150,7 @@ const MESSAGES_PAGE = 24;
 const MAX_INBAND_ATTACHMENT_SIZE = 195584;
 const MAX_EXTERN_ATTACHMENT_SIZE = 1 << 23;
 const MAX_IMAGE_DIM = 768;
+const IMAGE_PREVIEW_DIM = 64;
 const MAX_ONLINE_IN_TOPIC = 4;
 const MAX_TITLE_LENGTH = 60;
 const LINK_CONTACT_US = 'email:info@tinode.co';
@@ -261,9 +263,14 @@ function fitImageSize(width, height, maxWidth, maxHeight, forceSquare) {
   return size;
 }
 function fileNameForMime(fname, mime) {
-  var idx = SUPPORTED_IMAGE_FORMATS.indexOf(mime);
-  var ext = MIME_EXTENSIONS[idx];
-  var at = fname.lastIndexOf('.');
+  const idx = SUPPORTED_IMAGE_FORMATS.indexOf(mime);
+
+  if (idx < 0 || !fname) {
+    return fname;
+  }
+
+  const ext = MIME_EXTENSIONS[idx];
+  const at = fname.lastIndexOf('.');
 
   if (at >= 0) {
     fname = fname.substring(0, at);
@@ -271,7 +278,7 @@ function fileNameForMime(fname, mime) {
 
   return fname + '.' + ext;
 }
-function imageScaled(file, maxWidth, maxHeight, maxSize, forceSquare, onSuccess, onError) {
+function imageScaled(fileOrBlob, maxWidth, maxHeight, maxSize, forceSquare, onSuccess, onError) {
   const img = new Image();
   img.crossOrigin = 'Anonymous';
 
@@ -294,7 +301,7 @@ function imageScaled(file, maxWidth, maxHeight, maxSize, forceSquare, onSuccess,
     let ctx = canvas.getContext('2d');
     ctx.imageSmoothingEnabled = true;
     ctx.drawImage(this, dim.xoffset, dim.yoffset, dim.srcWidth, dim.srcHeight, 0, 0, dim.dstWidth, dim.dstHeight);
-    const mime = SUPPORTED_IMAGE_FORMATS.indexOf(file.type) < 0 ? 'image/jpeg' : file.type;
+    const mime = SUPPORTED_IMAGE_FORMATS.indexOf(fileOrBlob.type) < 0 ? 'image/jpeg' : fileOrBlob.type;
     let blob = await new Promise(resolve => canvas.toBlob(resolve, mime));
 
     if (!blob) {
@@ -302,7 +309,7 @@ function imageScaled(file, maxWidth, maxHeight, maxSize, forceSquare, onSuccess,
       return;
     }
 
-    while (blob.length > maxSize) {
+    while (maxSize > 0 && blob.length > maxSize) {
       dim.dstWidth = dim.dstWidth * 0.70710678118 | 0;
       dim.dstHeight = dim.dstHeight * 0.70710678118 | 0;
       canvas.width = dim.dstWidth;
@@ -314,10 +321,10 @@ function imageScaled(file, maxWidth, maxHeight, maxSize, forceSquare, onSuccess,
     }
 
     canvas = null;
-    onSuccess(blob, mime, dim.dstWidth, dim.dstHeight, fileNameForMime(file.name, mime));
+    onSuccess(blob, mime, dim.dstWidth, dim.dstHeight, fileNameForMime(fileOrBlob.name, mime));
   };
 
-  img.src = URL.createObjectURL(file);
+  img.src = URL.createObjectURL(fileOrBlob);
 }
 function fileToBase64(file, onSuccess) {
   const reader = new FileReader();
@@ -3491,11 +3498,20 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
       }
 
       const uploadCompletionPromise = uploader.upload(file);
-      const msg = Drafty.attachFile(null, file.type, null, file.name, file.size, uploadCompletionPromise);
+      const msg = Drafty.attachFile(null, {
+        mime: file.type,
+        filename: file.name,
+        size: file.size,
+        urlPromise: uploadCompletionPromise
+      });
       this.props.sendMessage(msg, uploadCompletionPromise, uploader);
     } else {
       Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__["fileToBase64"])(file, (mime, bits, fname) => {
-        this.props.sendMessage(Drafty.attachFile(null, mime, bits, fname));
+        this.props.sendMessage(Drafty.attachFile(null, {
+          mime: mime,
+          data: bits,
+          filename: fname
+        }));
       }, this.props.onError);
     }
   }
@@ -3533,19 +3549,40 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
       }
 
       const uploadCompletionPromise = uploader.upload(blob);
-      let msg = Drafty.insertImage(null, 0, mime, null, width, height, fname, blob.size, uploadCompletionPromise);
+      Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__["imageScaled"])(blob, _config_js__WEBPACK_IMPORTED_MODULE_13__["IMAGE_PREVIEW_DIM"], _config_js__WEBPACK_IMPORTED_MODULE_13__["IMAGE_PREVIEW_DIM"], -1, false, tinyBlob => {
+        Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__["blobToBase64"])(tinyBlob, (blobMime, tinyBits64) => {
+          let msg = Drafty.insertImage(null, 0, {
+            mime: mime,
+            _tempPreview: tinyBits64,
+            width: width,
+            height: height,
+            filename: fname,
+            size: blob.size,
+            urlPromise: uploadCompletionPromise
+          });
 
-      if (caption) {
-        msg = Drafty.appendLineBreak(msg);
-        msg = Drafty.append(msg, Drafty.init(caption));
-      }
+          if (caption) {
+            msg = Drafty.appendLineBreak(msg);
+            msg = Drafty.append(msg, Drafty.init(caption));
+          }
 
-      this.props.sendMessage(msg, uploadCompletionPromise, uploader);
+          this.props.sendMessage(msg, uploadCompletionPromise, uploader);
+        });
+      }, err => {
+        this.props.onError(err, 'err');
+      });
       return;
     }
 
     Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__["blobToBase64"])(blob, (blobMime, bits64) => {
-      let msg = Drafty.insertImage(null, 0, blobMime, bits64, width, height, fname, blob.size);
+      let msg = Drafty.insertImage(null, 0, {
+        mime: blobMime,
+        preview: bits64,
+        width: width,
+        height: height,
+        filename: fname,
+        size: blob.size
+      });
 
       if (caption) {
         msg = Drafty.appendLineBreak(msg);
@@ -6575,7 +6612,7 @@ class ChatMessage extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component
           tinode: this.props.tinode,
           downloadUrl: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].getDownloadUrl(att),
           filename: att.name,
-          uploader: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].isUploading(att),
+          uploader: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].isProcessing(att),
           mimetype: att.mime,
           size: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].getEntitySize(att),
           progress: this.state.progress,
@@ -6652,10 +6689,10 @@ function draftyFormatter(style, data, values, key) {
     switch (style) {
       case 'IM':
         if (data) {
-          const uploading = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].isUploading(data);
+          const uploading = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].isProcessing(data);
 
           if (uploading) {
-            el = 'UploadingImage';
+            el = _uploading_image_jsx__WEBPACK_IMPORTED_MODULE_6__["default"];
           }
 
           attr.className = 'inline-image';

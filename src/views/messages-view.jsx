@@ -15,8 +15,8 @@ import LoadSpinner from '../widgets/load-spinner.jsx';
 import LogoView from './logo-view.jsx';
 import SendMessage from '../widgets/send-message.jsx';
 
-import { DEFAULT_P2P_ACCESS_MODE, KEYPRESS_DELAY, MESSAGES_PAGE, MAX_EXTERN_ATTACHMENT_SIZE,
-  MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE, READ_DELAY } from '../config.js';
+import { DEFAULT_P2P_ACCESS_MODE, IMAGE_PREVIEW_DIM, KEYPRESS_DELAY, MESSAGES_PAGE,
+  MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE, READ_DELAY } from '../config.js';
 import { SUPPORTED_IMAGE_FORMATS, blobToBase64, filePasted, fileToBase64,
   imageScaled, makeImageUrl } from '../lib/blob-helpers.js';
 import HashNavigation from '../lib/navigation.js';
@@ -639,14 +639,19 @@ class MessagesView extends React.Component {
         return;
       }
       const uploadCompletionPromise = uploader.upload(file);
-      const msg = Drafty.attachFile(null, file.type, null, file.name, file.size, uploadCompletionPromise);
+      const msg = Drafty.attachFile(null, {
+        mime: file.type,
+        filename: file.name,
+        size: file.size,
+        urlPromise: uploadCompletionPromise
+      });
       // Pass data and the uploader to the TinodeWeb.
       this.props.sendMessage(msg, uploadCompletionPromise, uploader);
     } else {
       // Small enough to send inband.
       fileToBase64(file,
         (mime, bits, fname) => {
-          this.props.sendMessage(Drafty.attachFile(null, mime, bits, fname));
+          this.props.sendMessage(Drafty.attachFile(null, {mime: mime, data: bits, filename: fname}));
         },
         this.props.onError
       );
@@ -685,18 +690,47 @@ class MessagesView extends React.Component {
         return;
       }
       const uploadCompletionPromise = uploader.upload(blob);
-      let msg = Drafty.insertImage(null, 0, mime, null, width, height, fname, blob.size, uploadCompletionPromise);
-      if (caption) {
-        msg = Drafty.appendLineBreak(msg);
-        msg = Drafty.append(msg, Drafty.init(caption));
-      }
-      // Pass data and the uploader to the TinodeWeb.
-      this.props.sendMessage(msg, uploadCompletionPromise, uploader);
+
+      // Make small preview to show while uploading.
+      imageScaled(blob, IMAGE_PREVIEW_DIM, IMAGE_PREVIEW_DIM, -1, false,
+        (tinyBlob) => {
+          // COnvert tiny image into base64 for serialization and previewing.
+          blobToBase64(tinyBlob, (blobMime, tinyBits64) => {
+            // content, insert_at, mime, base64bits, width, height, fname, size, refurl
+            let msg = Drafty.insertImage(null, 0, {
+              mime: mime,
+              _tempPreview: tinyBits64, // This preview will not be serialized.
+              width: width,
+              height: height,
+              filename: fname,
+              size: blob.size,
+              urlPromise: uploadCompletionPromise
+            });
+            if (caption) {
+              msg = Drafty.appendLineBreak(msg);
+              msg = Drafty.append(msg, Drafty.init(caption));
+            }
+            // Pass data and the uploader to the TinodeWeb.
+            this.props.sendMessage(msg, uploadCompletionPromise, uploader);
+          }
+        )},
+        // Failure
+        (err) => {
+          this.props.onError(err, 'err');
+        }
+      );
       return;
     }
 
     blobToBase64(blob, (blobMime, bits64) => {
-      let msg = Drafty.insertImage(null, 0, blobMime, bits64, width, height, fname, blob.size);
+      let msg = Drafty.insertImage(null, 0, {
+        mime: blobMime,
+        preview: bits64, // Serializable preview
+        width: width,
+        height: height,
+        filename: fname,
+        size: blob.size
+      });
       if (caption) {
         msg = Drafty.appendLineBreak(msg);
         msg = Drafty.append(msg, Drafty.init(caption));

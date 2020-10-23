@@ -92,7 +92,7 @@ export default class ChatMessage extends React.Component {
         attachments.push(<Attachment
           tinode={this.props.tinode}
           downloadUrl={Drafty.getDownloadUrl(att)}
-          filename={att.name} uploader={Drafty.isUploading(att)}
+          filename={att.name} uploader={Drafty.isProcessing(att)}
           mimetype={att.mime} size={Drafty.getEntitySize(att)}
           progress={this.state.progress}
           onCancelUpload={this.handleCancelUpload}
@@ -174,10 +174,10 @@ function draftyFormatter(style, data, values, key) {
       case 'IM':
         // Additional processing for images
         if (data) {
-          const uploading = Drafty.isUploading(data);
+          const uploading = Drafty.isProcessing(data);
           if (uploading) {
             // Use custom element instead of <img>.
-            el = 'UploadingImage';
+            el = UploadingImage;
           }
           attr.className = 'inline-image';
           let dim = fitImageSize(data.width, data.height,
