@@ -12,8 +12,10 @@ export default class UploadingImage extends React.PureComponent {
   render() {
     return (
       <div className="inline-image">
-        <img src={this.props.src} />
-        <FileProgress progress={this.props.progress} onCancel={this.props.onCancelUpload} />
+        {React.createElement('img', this.props)}
+        <div className="rounded-container">
+          <FileProgress progress={this.props.progress} onCancel={this.props.onCancelUpload} />
+        </div>
       </div>
     );
   }

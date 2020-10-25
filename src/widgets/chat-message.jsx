@@ -174,17 +174,12 @@ function draftyFormatter(style, data, values, key) {
       case 'IM':
         // Additional processing for images
         if (data) {
-          const uploading = Drafty.isProcessing(data);
-          if (uploading) {
-            // Use custom element instead of <img>.
-            el = UploadingImage;
-          }
           attr.className = 'inline-image';
-          let dim = fitImageSize(data.width, data.height,
-            Math.min(this.props.viewportWidth - REM_SIZE * 4, REM_SIZE * 36), REM_SIZE * 24, false);
-          dim = dim || {dstWidth: BROKEN_IMAGE_SIZE, dstHeight: BROKEN_IMAGE_SIZE};
+          const dim = fitImageSize(data.width, data.height,
+            Math.min(this.props.viewportWidth - REM_SIZE * 4, REM_SIZE * 36), REM_SIZE * 24, false) ||
+            {dstWidth: BROKEN_IMAGE_SIZE, dstHeight: BROKEN_IMAGE_SIZE};
           attr.style = { width: dim.dstWidth + 'px', height: dim.dstHeight + 'px' };
-          if (!uploading) {
+          if (!Drafty.isProcessing(data)) {
             attr.src = this.props.tinode.authorizeURL(sanitizeImageUrl(attr.src));
             if (attr.src) {
               attr.onClick = this.handleImagePreview;
@@ -192,6 +187,9 @@ function draftyFormatter(style, data, values, key) {
             } else {
               attr.src = 'img/broken_image.png';
             }
+          } else {
+            // Use custom element instead of <img>.
+            el = UploadingImage;
           }
         }
         break;

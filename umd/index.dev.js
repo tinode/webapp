@@ -734,7 +734,7 @@ function asEmail(val) {
 function isUrlRelative(url) {
   return !/^\s*([a-z][a-z0-9+.-]*:|\/\/)/im.test(url);
 }
-function sanitizeUrl(url) {
+function sanitizeUrl(url, allowedSchemes) {
   if (!url) {
     return null;
   }
@@ -6689,15 +6689,8 @@ function draftyFormatter(style, data, values, key) {
     switch (style) {
       case 'IM':
         if (data) {
-          const uploading = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].isProcessing(data);
-
-          if (uploading) {
-            el = _uploading_image_jsx__WEBPACK_IMPORTED_MODULE_6__["default"];
-          }
-
           attr.className = 'inline-image';
-          let dim = Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__["fitImageSize"])(data.width, data.height, Math.min(this.props.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_8__["REM_SIZE"] * 4, _config_js__WEBPACK_IMPORTED_MODULE_8__["REM_SIZE"] * 36), _config_js__WEBPACK_IMPORTED_MODULE_8__["REM_SIZE"] * 24, false);
-          dim = dim || {
+          const dim = Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__["fitImageSize"])(data.width, data.height, Math.min(this.props.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_8__["REM_SIZE"] * 4, _config_js__WEBPACK_IMPORTED_MODULE_8__["REM_SIZE"] * 36), _config_js__WEBPACK_IMPORTED_MODULE_8__["REM_SIZE"] * 24, false) || {
             dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_8__["BROKEN_IMAGE_SIZE"],
             dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_8__["BROKEN_IMAGE_SIZE"]
           };
@@ -6706,7 +6699,7 @@ function draftyFormatter(style, data, values, key) {
             height: dim.dstHeight + 'px'
           };
 
-          if (!uploading) {
+          if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].isProcessing(data)) {
             attr.src = this.props.tinode.authorizeURL(Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_7__["sanitizeImageUrl"])(attr.src));
 
             if (attr.src) {
@@ -6715,6 +6708,8 @@ function draftyFormatter(style, data, values, key) {
             } else {
               attr.src = 'img/broken_image.png';
             }
+          } else {
+            el = _uploading_image_jsx__WEBPACK_IMPORTED_MODULE_6__["default"];
           }
         }
 
@@ -10096,12 +10091,12 @@ class UploadingImage extends react__WEBPACK_IMPORTED_MODULE_0___default.a.PureCo
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "inline-image"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
-      src: this.props.src
-    }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_file_progress_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement('img', this.props), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "rounded-container"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_file_progress_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       progress: this.props.progress,
       onCancel: this.props.onCancelUpload
-    }));
+    })));
   }
 
 }

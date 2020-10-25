@@ -541,6 +541,15 @@ div.alert .content {
   margin-left: 1rem;
 }
 
+/* Container with whitish background and rounded corners */
+.rounded-container {
+  position: relative;
+  background-color: #fafafa;
+  border-radius: 0.1rem;
+  padding: 0.25rem;
+  margin: 0.25rem;
+}
+
 /* BEGIN InPlaceEdit styles */
 .in-place-edit {
   display: inline-block;
@@ -1520,13 +1529,24 @@ i.search {
   color:#777;
 }
 
-/* Inline image styles */
+/* Inline image style */
 .inline-image {
+  position: relative;
   max-width: 36rem;
   max-height: 24rem;
   overflow: hidden;
   border-radius: 0.1rem;
   display: block;
+}
+
+/* Container with upload progress */
+.inline-image > .rounded-container {
+  position: relative;
+  margin: 0.25rem auto;
+  bottom: 2rem;
+  /* Imitating minimum margins on the left and right */
+  border-left: 0.25rem solid transparent;
+  border-right: 0.25rem solid transparent;
 }
 
 /* Attachment styles */

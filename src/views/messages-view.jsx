@@ -694,9 +694,8 @@ class MessagesView extends React.Component {
       // Make small preview to show while uploading.
       imageScaled(blob, IMAGE_PREVIEW_DIM, IMAGE_PREVIEW_DIM, -1, false,
         (tinyBlob) => {
-          // COnvert tiny image into base64 for serialization and previewing.
+          // Convert tiny image into base64 for serialization and previewing.
           blobToBase64(tinyBlob, (blobMime, tinyBits64) => {
-            // content, insert_at, mime, base64bits, width, height, fname, size, refurl
             let msg = Drafty.insertImage(null, 0, {
               mime: mime,
               _tempPreview: tinyBits64, // This preview will not be serialized.

@@ -94,7 +94,7 @@ export function isUrlRelative(url) {
 // Ensure URL does not present an XSS risk. Optional allowedSchemes may contain an array of
 // strings with permitted URL schemes, such as ['ftp', 'ftps']; otherwise accept http and https only.
 // If apikey and/or token is defined, it's appended to relative URL.
-export function sanitizeUrl(url) {
+export function sanitizeUrl(url, allowedSchemes) {
   if (!url) {
     return null;
   }
