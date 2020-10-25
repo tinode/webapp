@@ -91,6 +91,7 @@ class MessagesView extends React.Component {
     this.handleEnablePeer = this.handleEnablePeer.bind(this);
     this.handleAttachFile = this.handleAttachFile.bind(this);
     this.handleAttachImage = this.handleAttachImage.bind(this);
+    this.handleCancelUpload = this.handleCancelUpload.bind(this);
     this.postReadNotification = this.postReadNotification.bind(this);
     this.clearNotificationQueue = this.clearNotificationQueue.bind(this);
 
@@ -761,6 +762,14 @@ class MessagesView extends React.Component {
     );
   }
 
+  handleCancelUpload(seq, uploader) {
+    const found = this.state.messages.find(msg => msg.seq == seq);
+    if (found) {
+      found._cancelled = true;
+    }
+    uploader.cancel();
+  }
+
   render() {
     const {formatMessage} = this.props.intl;
 
@@ -862,6 +871,7 @@ class MessagesView extends React.Component {
               onImagePreview={this.handleImagePostview}
               onFormResponse={this.handleFormResponse}
               onError={this.props.onError}
+              onCancelUpload={this.handleCancelUpload}
               key={msg.seq} />
           );
         }

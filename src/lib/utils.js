@@ -88,7 +88,7 @@ export function asEmail(val) {
 // http:/example.com - not ok.
 // ' ↲ https://example.com' - not ok. (↲ means carriage return)
 export function isUrlRelative(url) {
-  return !/^\s*([a-z][a-z0-9+.-]*:|\/\/)/im.test(url);
+  return url && !/^\s*([a-z][a-z0-9+.-]*:|\/\/)/im.test(url);
 }
 
 // Ensure URL does not present an XSS risk. Optional allowedSchemes may contain an array of

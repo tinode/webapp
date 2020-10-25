@@ -19,11 +19,21 @@ export default class Attachment extends React.Component {
   }
 
   downloadFile(url, filename, mimetype) {
-    var downloader = this.props.tinode.getLargeFileHelper();
+    if (!url) {
+      this.props.onError("Invalid download URL '" + url + "'");
+      return;
+    }
+
+    const downloader = this.props.tinode.getLargeFileHelper();
     this.setState({downloader: downloader});
-    downloader.download(url, filename, mimetype, (loaded) => {
-      this.setState({progress: loaded / this.props.size});
-    }).then(() => {
+    downloader.download(url, filename, mimetype,
+      (loaded) => {
+        this.setState({progress: loaded / this.props.size});
+      },
+      (err) => {
+        this.props.onError(err, 'err');
+      }
+    ).then(() => {
       this.setState({downloader: null, progress: 0});
     }).catch((err) => {
       if (err) {
@@ -34,7 +44,7 @@ export default class Attachment extends React.Component {
   }
 
   handleCancel() {
-    if (this.props.uploader) {
+    if (this.props.uploading) {
       this.props.onCancelUpload();
     } else if (this.state.downloader) {
       this.state.downloader.cancel();
@@ -54,7 +64,7 @@ export default class Attachment extends React.Component {
     // If the URL is relative use LargeFileHelper to attach authentication
     // credentials to the request.
     let url, helperFunc;
-    if (!this.props.uploader && !this.state.downloader && isUrlRelative(this.props.downloadUrl)) {
+    if (!this.props.uploading && !this.state.downloader && isUrlRelative(this.props.downloadUrl)) {
       // Relative URL. Use download helper.
       url = '#';
       helperFunc = (e) => {
@@ -62,22 +72,25 @@ export default class Attachment extends React.Component {
         this.downloadFile(this.props.downloadUrl, this.props.filename, this.props.mimetype);
       };
     } else {
-      url = sanitizeUrl(this.props.downloadUrl) || 'about:blank';
+      url = sanitizeUrl(this.props.downloadUrl);
       helperFunc = null;
     }
+    const downloadWidget = <><i className="material-icons">file_download</i> <FormattedMessage id="save_attachment"
+      defaultMessage="save" description="Call to save an attachment" /></>;
     return (
       <div className="attachment">
         <div><i className="material-icons big gray">insert_drive_file</i></div>
         <div className="flex-column">
           <div>{filename} {size}</div>
-          {this.props.uploader || this.state.downloader ?
-            <FileProgress progress={this.props.uploader ? this.props.progress : this.state.progress}
+          {this.props.uploading || this.state.downloader ?
+            <FileProgress progress={this.props.uploading ? this.props.progress : this.state.progress}
               onCancel={this.handleCancel} />
             :
-            <div><a href={url} download={this.props.filename} onClick={helperFunc} >
-              <i className="material-icons">file_download</i> <FormattedMessage id="save_attachment"
-                defaultMessage="save" description="Call to save an attachment" />
-            </a></div>
+            <div>{url ?
+              <a href={url} download={this.props.filename} onClick={helperFunc}>{downloadWidget}</a>
+              :
+              <span className="light-gray">{downloadWidget}</span>
+            }</div>
           }
         </div>
       </div>

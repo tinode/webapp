@@ -732,7 +732,7 @@ function asEmail(val) {
   return null;
 }
 function isUrlRelative(url) {
-  return !/^\s*([a-z][a-z0-9+.-]*:|\/\/)/im.test(url);
+  return url && !/^\s*([a-z][a-z0-9+.-]*:|\/\/)/im.test(url);
 }
 function sanitizeUrl(url, allowedSchemes) {
   if (!url) {
@@ -2921,6 +2921,7 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
     this.handleEnablePeer = this.handleEnablePeer.bind(this);
     this.handleAttachFile = this.handleAttachFile.bind(this);
     this.handleAttachImage = this.handleAttachImage.bind(this);
+    this.handleCancelUpload = this.handleCancelUpload.bind(this);
     this.postReadNotification = this.postReadNotification.bind(this);
     this.clearNotificationQueue = this.clearNotificationQueue.bind(this);
     this.readNotificationQueue = [];
@@ -3611,6 +3612,16 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
     });
   }
 
+  handleCancelUpload(seq, uploader) {
+    const found = this.state.messages.find(msg => msg.seq == seq);
+
+    if (found) {
+      found._cancelled = true;
+    }
+
+    uploader.cancel();
+  }
+
   render() {
     const {
       formatMessage
@@ -3711,6 +3722,7 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
             onImagePreview: this.handleImagePostview,
             onFormResponse: this.handleFormResponse,
             onError: this.props.onError,
+            onCancelUpload: this.handleCancelUpload,
             key: msg.seq
           }));
         }
@@ -6282,7 +6294,12 @@ class Attachment extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component 
   }
 
   downloadFile(url, filename, mimetype) {
-    var downloader = this.props.tinode.getLargeFileHelper();
+    if (!url) {
+      this.props.onError("Invalid download URL '" + url + "'");
+      return;
+    }
+
+    const downloader = this.props.tinode.getLargeFileHelper();
     this.setState({
       downloader: downloader
     });
@@ -6290,6 +6307,8 @@ class Attachment extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component 
       this.setState({
         progress: loaded / this.props.size
       });
+    }, err => {
+      this.props.onError(err, 'err');
     }).then(() => {
       this.setState({
         downloader: null,
@@ -6308,7 +6327,7 @@ class Attachment extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component 
   }
 
   handleCancel() {
-    if (this.props.uploader) {
+    if (this.props.uploading) {
       this.props.onCancelUpload();
     } else if (this.state.downloader) {
       this.state.downloader.cancel();
@@ -6327,7 +6346,7 @@ class Attachment extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component 
     }, "(", Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__["bytesToHumanSize"])(this.props.size), ")") : null;
     let url, helperFunc;
 
-    if (!this.props.uploader && !this.state.downloader && Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_4__["isUrlRelative"])(this.props.downloadUrl)) {
+    if (!this.props.uploading && !this.state.downloader && Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_4__["isUrlRelative"])(this.props.downloadUrl)) {
       url = '#';
 
       helperFunc = e => {
@@ -6335,29 +6354,32 @@ class Attachment extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component 
         this.downloadFile(this.props.downloadUrl, this.props.filename, this.props.mimetype);
       };
     } else {
-      url = Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_4__["sanitizeUrl"])(this.props.downloadUrl) || 'about:blank';
+      url = Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_4__["sanitizeUrl"])(this.props.downloadUrl);
       helperFunc = null;
     }
 
+    const downloadWidget = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+      className: "material-icons"
+    }, "file_download"), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
+      id: "save_attachment",
+      defaultMessage: "save"
+    }));
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "attachment"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
       className: "material-icons big gray"
     }, "insert_drive_file")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "flex-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, filename, " ", size), this.props.uploader || this.state.downloader ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_file_progress_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      progress: this.props.uploader ? this.props.progress : this.state.progress,
+    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, filename, " ", size), this.props.uploading || this.state.downloader ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_file_progress_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      progress: this.props.uploading ? this.props.progress : this.state.progress,
       onCancel: this.handleCancel
-    }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+    }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, url ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
       href: url,
       download: this.props.filename,
       onClick: helperFunc
-    }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-      className: "material-icons"
-    }, "file_download"), " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__["FormattedMessage"], {
-      id: "save_attachment",
-      defaultMessage: "save"
-    })))));
+    }, downloadWidget) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+      className: "light-gray"
+    }, downloadWidget))));
   }
 
 }
@@ -6591,7 +6613,7 @@ class ChatMessage extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component
   }
 
   handleCancelUpload() {
-    this.props.uploader.cancel();
+    this.props.onCancelUpload(this.props.seq, this.props.uploader);
   }
 
   render() {
@@ -6612,7 +6634,7 @@ class ChatMessage extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component
           tinode: this.props.tinode,
           downloadUrl: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].getDownloadUrl(att),
           filename: att.name,
-          uploader: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].isProcessing(att),
+          uploading: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].isProcessing(att),
           mimetype: att.mime,
           size: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].getEntitySize(att),
           progress: this.state.progress,

@@ -69,7 +69,7 @@ export default class ChatMessage extends React.Component {
   }
 
   handleCancelUpload() {
-    this.props.uploader.cancel();
+    this.props.onCancelUpload(this.props.seq, this.props.uploader);
   }
 
   render() {
@@ -92,7 +92,7 @@ export default class ChatMessage extends React.Component {
         attachments.push(<Attachment
           tinode={this.props.tinode}
           downloadUrl={Drafty.getDownloadUrl(att)}
-          filename={att.name} uploader={Drafty.isProcessing(att)}
+          filename={att.name} uploading={Drafty.isProcessing(att)}
           mimetype={att.mime} size={Drafty.getEntitySize(att)}
           progress={this.state.progress}
           onCancelUpload={this.handleCancelUpload}
