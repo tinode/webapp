@@ -2976,6 +2976,7 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
 
     if (topic && !topic.isSubscribed() && this.props.ready && (this.state.topic != prevState.topic || !prevProps.ready)) {
       const newTopic = this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic;
+      console.log("new topic", newTopic, this.props.newTopicParams ? this.props.newTopicParams._topicName : '[null newTopicParams]', this.props.topic);
       let getQuery = topic.startMetaQuery().withLaterDesc();
 
       if (this.state.isSharer || newTopic && !topic.isChannel()) {
@@ -5199,6 +5200,8 @@ class TinodeWeb extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   }
 
   handleTopicSelected(topicName) {
+    console.log("handleTopicSelected", topicName, this.state.newTopicParams);
+
     if (this.state.newTopicParams && this.state.newTopicParams._topicName != topicName) {
       this.setState({
         newTopicParams: null
@@ -5571,7 +5574,7 @@ class TinodeWeb extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
   }
 
   handleStartTopicRequest(topicName, pub, priv, tags, isChannel) {
-    if (topicName && this.tinode.getTopic(topicName)) {
+    if (topicName && this.tinode.isTopicCached(topicName)) {
       this.handleTopicSelected(topicName);
       return;
     }
@@ -9019,7 +9022,8 @@ class NewTopicById extends react__WEBPACK_IMPORTED_MODULE_0___default.a.PureComp
       value: this.state.groupId,
       onChange: this.handleChange,
       onKeyPress: this.handleKeyPress,
-      required: true
+      required: true,
+      autoFocus: true
     }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "dialog-buttons"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {

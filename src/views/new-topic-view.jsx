@@ -102,22 +102,22 @@ class NewTopicView extends React.Component {
         {this.state.tabSelected === 'grp' ?
           <NewTopicGroup onSubmit={this.handleNewGroupSubmit} /> :
           this.state.tabSelected === 'byid' ?
-          <NewTopicById
-            onSubmit={this.handleGroupByID}
-            onError={this.props.onError} /> :
-          <div className="flex-column">
-            <SearchContacts
-              type="p2p"
-              onSearchContacts={this.handleSearchContacts} />
-            <ContactList
-              contacts={this.props.searchResults}
-              myUserId={this.props.myUserId}
-              emptyListMessage={no_contacts_placeholder}
-              showOnline={false}
-              showUnread={false}
-              showContextMenu={false}
-              onTopicSelected={this.handleContactSelected} />
-          </div>}
+            <NewTopicById
+              onSubmit={this.handleGroupByID}
+              onError={this.props.onError} /> :
+            <div className="flex-column">
+              <SearchContacts
+                type="p2p"
+                onSearchContacts={this.handleSearchContacts} />
+              <ContactList
+                contacts={this.props.searchResults}
+                myUserId={this.props.myUserId}
+                emptyListMessage={no_contacts_placeholder}
+                showOnline={false}
+                showUnread={false}
+                showContextMenu={false}
+                onTopicSelected={this.handleContactSelected} />
+            </div>}
       </div>
     );
   }

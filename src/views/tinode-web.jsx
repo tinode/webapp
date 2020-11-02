@@ -1063,10 +1063,10 @@ class TinodeWeb extends React.Component {
     HashNavigation.navigateTo(HashNavigation.setUrlSidePanel(window.location.hash, hash));
   }
 
-  // Request to start a topic, new or selected from search results.
+  // Request to start a topic, new or selected from search results, or "by ID".
   handleStartTopicRequest(topicName, pub, priv, tags, isChannel) {
     // Check if topic is indeed new. If not, launch it.
-    if (topicName && this.tinode.getTopic(topicName)) {
+    if (topicName && this.tinode.isTopicCached(topicName)) {
       this.handleTopicSelected(topicName);
       return;
     }

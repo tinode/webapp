@@ -52,7 +52,7 @@ class NewTopicById extends React.PureComponent {
           description="Prompt for entering user or group ID">{
           (prompt) => <input type="text" placeholder={prompt}
             value={this.state.groupId} onChange={this.handleChange}
-            onKeyPress={this.handleKeyPress} required />
+            onKeyPress={this.handleKeyPress} required autoFocus />
         }</FormattedMessage>
         </div>
         <div className="dialog-buttons">
