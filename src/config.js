@@ -57,7 +57,7 @@ export const MESSAGES_PAGE = 24;
 // a message of 256K in size, assuming base64 encoding and 1024 bytes of overhead.
 // This is size of an object *before* base64 encoding is applied.
 // Increase this limit to a greater value in production, if desired. Also increase
-// max_message_size in server config.
+// max_message_size in the server config.
 //  MAX_INBAND_ATTACHMENT_SIZE = base64DecodedLen(max_message_size) - 1024;
 export const MAX_INBAND_ATTACHMENT_SIZE = 195584;
 
@@ -65,9 +65,10 @@ export const MAX_INBAND_ATTACHMENT_SIZE = 195584;
 // something like 100MB in production.
 export const MAX_EXTERN_ATTACHMENT_SIZE = 1 << 23;
 
-// Maximum allowed linear dimension of an inline image in pixels. You may want
-// to adjust it to 1600 or 2400 for production.
-export const MAX_IMAGE_DIM = 768;
+// Maximum allowed linear dimension of an inline image in pixels. Larer images will be shrunk
+// to make the larger dimension fit under this size. You may want to adjust it to 1600 or
+// 2400 for production.
+export const MAX_IMAGE_DIM = 1024;
 
 // Linear dimensions of image preview: shrink image under this size for previews.
 export const IMAGE_PREVIEW_DIM = 64;

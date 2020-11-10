@@ -682,7 +682,6 @@ class MessagesView extends React.Component {
     const height = this.state.imagePreview.height;
     const fname = this.state.imagePreview.filename;
 
-    // Upload the image if it's too big to be send inband.
     if (blob.size > MAX_INBAND_ATTACHMENT_SIZE) {
       // Too large to send inband - uploading out of band and sending as a link.
       const uploader = this.props.tinode.getLargeFileHelper();
@@ -722,6 +721,7 @@ class MessagesView extends React.Component {
       return;
     }
 
+    // Upload the image if it's too big to be send inband.
     blobToBase64(blob, (blobMime, bits64) => {
       let msg = Drafty.insertImage(null, 0, {
         mime: blobMime,
