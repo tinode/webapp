@@ -67,7 +67,7 @@ export default class ImagePreview extends React.PureComponent {
           <a href="#" onClick={(e) => {e.preventDefault(); this.props.onClose();}}><i className="material-icons gray">close</i></a>
         </div>
         <div id="image-preview-container" ref={(node) => this.assignWidth(node)}>
-          <img src={this.props.content.url} style={size} />
+          <img src={this.props.content.url} style={size} className="image-preview" alt={this.props.content.filename} />
         </div>
         {this.props.onSendMessage ?
           <SendMessage

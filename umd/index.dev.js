@@ -6723,6 +6723,7 @@ function draftyFormatter(style, data, values, key) {
 
           if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_2__["Drafty"].isProcessing(data)) {
             attr.src = this.props.tinode.authorizeURL(Object(_lib_utils_js__WEBPACK_IMPORTED_MODULE_7__["sanitizeImageUrl"])(attr.src));
+            attr.alt = data.name;
 
             if (attr.src) {
               attr.onClick = this.handleImagePreview;
@@ -8461,7 +8462,9 @@ class ImagePreview extends react__WEBPACK_IMPORTED_MODULE_0___default.a.PureComp
       ref: node => this.assignWidth(node)
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
       src: this.props.content.url,
-      style: size
+      style: size,
+      className: "image-preview",
+      alt: this.props.content.filename
     })), this.props.onSendMessage ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       messagePrompt: "add_image_caption",
       acceptBlank: true,

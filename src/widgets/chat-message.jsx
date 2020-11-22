@@ -181,6 +181,7 @@ function draftyFormatter(style, data, values, key) {
           attr.style = { width: dim.dstWidth + 'px', height: dim.dstHeight + 'px' };
           if (!Drafty.isProcessing(data)) {
             attr.src = this.props.tinode.authorizeURL(sanitizeImageUrl(attr.src));
+            attr.alt = data.name;
             if (attr.src) {
               attr.onClick = this.handleImagePreview;
               attr.className += ' image-clickable';

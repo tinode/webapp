@@ -1529,14 +1529,17 @@ i.search {
   color:#777;
 }
 
-/* Inline image style */
-.inline-image {
+/* Inline and preview image styles */
+.inline-image, .image-preview {
   position: relative;
-  max-width: 36rem;
-  max-height: 24rem;
   overflow: hidden;
   border-radius: 0.1rem;
   display: block;
+}
+
+.inline-image {
+  max-width: 36rem;
+  max-height: 24rem;
 }
 
 /* Container with upload progress */
@@ -1547,6 +1550,31 @@ i.search {
   /* Imitating minimum margins on the left and right */
   border-left: 0.25rem solid transparent;
   border-right: 0.25rem solid transparent;
+}
+
+/* Broken image graphics which replaces the stock graphics. */
+img.inline-image::before, img.image-preview::before {
+  font-size: 0.9rem;
+  font-weight: lighter;
+  color: #666;
+  display:flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  background: center no-repeat #ccc url("../img/broken_image.png");
+}
+
+img.inline-image::before {
+  content: attr(alt);
+  background-size: 2rem 2rem;
+}
+
+img.image-preview::before {
+  content: " ";
+  background-size: 8rem 8rem;
 }
 
 /* Attachment styles */
