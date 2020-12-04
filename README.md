@@ -33,6 +33,7 @@ As of the time of this writing the following translations exist:
  * Chinese (simplified)
  * German
  * Korean
+ * Romanian
  * Russian
  * Spanish
 
