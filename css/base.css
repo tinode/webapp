@@ -828,12 +828,13 @@ i.search {
   min-height: 3.5rem;
   flex-grow: 0;
   flex-shrink: 0;
-  border-bottom: 1px solid #eee;
-  border-collapse: collapse;
+  /* partial bottom border */
+  background: linear-gradient(to right, transparent 3.5rem, #eee 1px, #eee 100%) 0 100% / 100% 1px no-repeat, #fff;
   overflow-x: hidden;
 }
 .contact-box > li:last-child {
-  border-bottom: none; /* remove border from the last contact */
+  /* remove border from the last contact */
+  background: #fff;
 }
 .contact-box > li:hover {
   background-color: #eceff1; /* blue-gray 50 highlight */
