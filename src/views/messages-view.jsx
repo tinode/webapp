@@ -663,7 +663,7 @@ class MessagesView extends React.Component {
   handleAttachFile(file) {
     if (file.size > MAX_EXTERN_ATTACHMENT_SIZE) {
       // Too large.
-      this.props.onError(this.props.intl.formatMessage('file_attachment_too_large',
+      this.props.onError(this.props.intl.formatMessage({id: 'file_attachment_too_large'},
           {size: bytesToHumanSize(file.size), limit: bytesToHumanSize(MAX_EXTERN_ATTACHMENT_SIZE)}), 'err');
     } else {
       this.setState({ docPreview: {

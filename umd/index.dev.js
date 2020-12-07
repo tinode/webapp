@@ -3519,7 +3519,9 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
 
   handleAttachFile(file) {
     if (file.size > _config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_EXTERN_ATTACHMENT_SIZE"]) {
-      this.props.onError(this.props.intl.formatMessage(messages.file_attachment_too_large, {
+      this.props.onError(this.props.intl.formatMessage({
+        id: 'file_attachment_too_large'
+      }, {
         size: Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_16__["bytesToHumanSize"])(file.size),
         limit: Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_16__["bytesToHumanSize"])(_config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_EXTERN_ATTACHMENT_SIZE"])
       }), 'err');
