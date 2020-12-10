@@ -23,6 +23,10 @@ const i18n = {
     'new_message': "새로운 메시지",
     'new_chat': "새로운 채팅",
   },
+  'ro': {
+    'new_message': "Mesaj nou",
+    'new_chat': "Chat nou",
+  },
   'ru': {
     'new_message': "Новое сообщение",
     'new_chat': "Новый чат",
