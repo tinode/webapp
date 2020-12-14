@@ -39,7 +39,8 @@ const i18n = {
 self.i18nMessage = function(id) {
   // Choose translations: given something like 'de-CH', try 'de-CH' then 'de' then 'en'.
   const lang = i18n[self.locale] || i18n[self.baseLocale] || i18n['en'];
-  // Try id in the specified language, if missing try English, otherwise use id as the last resort.
+  // Try finding string by id in the specified language, if missing try English, otherwise use the id itself
+  // as the last resort.
   return lang[id] || i18n['en'][id] || id;
 }
 
