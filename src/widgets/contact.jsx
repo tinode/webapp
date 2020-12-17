@@ -68,6 +68,7 @@ export default class Contact extends React.Component {
         </div>
         <div className="text-box">
           <div><span className="contact-title">{title}</span>
+            {this.props.isChannel ? <img src="/img/channel.png" className="channel" alt="channel" /> : null}
             <UnreadBadge count={this.props.unread} /><ContactBadges badges={icon_badges} />
           </div>
           {this.props.comment ? <div className="contact-comment">{this.props.comment}</div> : null}

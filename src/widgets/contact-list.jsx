@@ -86,6 +86,7 @@ class ContactList extends React.Component {
               showCheckmark={showCheckmark}
               selected={selected}
               showOnline={this.props.showOnline && !isChannel}
+              isChannel={isChannel}
               onSelected={this.props.onTopicSelected}
               showContextMenu={this.props.showContextMenu}
               item={key}

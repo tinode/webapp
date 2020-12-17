@@ -902,6 +902,13 @@ i.search {
   cursor: pointer;
 }
 
+.contact-box img.channel {
+  width: 1rem;
+  height: 1rem;
+  vertical-align: middle;
+  margin-left: 0.3rem;
+}
+
 /* Online-offline indicator positioned inside avatar-box */
 .avatar-box .online, .offline {
   display: inline-block;

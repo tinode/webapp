@@ -7232,6 +7232,7 @@ class ContactList extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component
             showCheckmark: showCheckmark,
             selected: selected,
             showOnline: this.props.showOnline && !isChannel,
+            isChannel: isChannel,
             onSelected: this.props.onTopicSelected,
             showContextMenu: this.props.showContextMenu,
             item: key,
@@ -7364,7 +7365,11 @@ class Contact extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       className: "text-box"
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
       className: "contact-title"
-    }, title), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_unread_badge_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    }, title), this.props.isChannel ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+      src: "/img/channel.png",
+      className: "channel",
+      alt: "channel"
+    }) : null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_unread_badge_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
       count: this.props.unread
     }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       badges: icon_badges
