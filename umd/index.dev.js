@@ -90,7 +90,7 @@
 /*!***********************!*\
   !*** ./src/config.js ***!
   \***********************/
-/*! exports provided: APP_NAME, API_KEY, KNOWN_HOSTS, DEFAULT_HOST, LOGGING_ENABLED, KEYPRESS_DELAY, RECEIVED_DELAY, READ_DELAY, MIN_TAG_LENGTH, MAX_TAG_COUNT, DEFAULT_P2P_ACCESS_MODE, NEW_GRP_ACCESS_MODE, CHANNEL_ACCESS_MODE, NO_ACCESS_MODE, MEDIA_BREAKPOINT, REM_SIZE, AVATAR_SIZE, BROKEN_IMAGE_SIZE, MESSAGES_PAGE, MAX_INBAND_ATTACHMENT_SIZE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, IMAGE_PREVIEW_DIM, MAX_ONLINE_IN_TOPIC, MAX_TITLE_LENGTH, LINK_CONTACT_US, LINK_PRIVACY_POLICY, LINK_TERMS_OF_SERVICE */
+/*! exports provided: APP_NAME, API_KEY, KNOWN_HOSTS, DEFAULT_HOST, LOGGING_ENABLED, KEYPRESS_DELAY, RECEIVED_DELAY, READ_DELAY, MIN_TAG_LENGTH, MAX_TAG_LENGTH, MAX_TAG_COUNT, DEFAULT_P2P_ACCESS_MODE, NEW_GRP_ACCESS_MODE, CHANNEL_ACCESS_MODE, NO_ACCESS_MODE, MEDIA_BREAKPOINT, REM_SIZE, AVATAR_SIZE, BROKEN_IMAGE_SIZE, MESSAGES_PAGE, MAX_INBAND_ATTACHMENT_SIZE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, IMAGE_PREVIEW_DIM, MAX_ONLINE_IN_TOPIC, MAX_TITLE_LENGTH, LINK_CONTACT_US, LINK_PRIVACY_POLICY, LINK_TERMS_OF_SERVICE */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -104,6 +104,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RECEIVED_DELAY", function() { return RECEIVED_DELAY; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "READ_DELAY", function() { return READ_DELAY; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MIN_TAG_LENGTH", function() { return MIN_TAG_LENGTH; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MAX_TAG_LENGTH", function() { return MAX_TAG_LENGTH; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MAX_TAG_COUNT", function() { return MAX_TAG_COUNT; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DEFAULT_P2P_ACCESS_MODE", function() { return DEFAULT_P2P_ACCESS_MODE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NEW_GRP_ACCESS_MODE", function() { return NEW_GRP_ACCESS_MODE; });
@@ -136,7 +137,8 @@ const LOGGING_ENABLED = true;
 const KEYPRESS_DELAY = 3 * 1000;
 const RECEIVED_DELAY = 500;
 const READ_DELAY = 1000;
-const MIN_TAG_LENGTH = 4;
+const MIN_TAG_LENGTH = 2;
+const MAX_TAG_LENGTH = 96;
 const MAX_TAG_COUNT = 16;
 const DEFAULT_P2P_ACCESS_MODE = 'JRWPS';
 const NEW_GRP_ACCESS_MODE = 'JRWPSAO';
@@ -147,7 +149,7 @@ const REM_SIZE = 13;
 const AVATAR_SIZE = 128;
 const BROKEN_IMAGE_SIZE = 32;
 const MESSAGES_PAGE = 24;
-const MAX_INBAND_ATTACHMENT_SIZE = 195584;
+const MAX_INBAND_ATTACHMENT_SIZE = 262144;
 const MAX_EXTERN_ATTACHMENT_SIZE = 1 << 23;
 const MAX_IMAGE_DIM = 1024;
 const IMAGE_PREVIEW_DIM = 64;
@@ -1018,6 +1020,7 @@ class AccGeneralView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compon
       title: title_tag_manager,
       activated: false,
       tags: this.state.tags,
+      tinode: this.props.tinode,
       onSubmit: this.handleTagsUpdated
     })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "hr"
@@ -2562,6 +2565,7 @@ class InfoView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component {
       title: tags,
       tags: this.state.tags,
       activated: false,
+      tinode: this.props.tinode,
       onSubmit: this.handleTagsUpdated
     })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "hr"
@@ -3490,7 +3494,9 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
   }
 
   sendFileAttachment(file) {
-    if (file.size > _config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_INBAND_ATTACHMENT_SIZE"]) {
+    const maxInbandAttachmentSize = this.props.tinode.getServerLimit('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_INBAND_ATTACHMENT_SIZE"]) * 0.75 - 1024 | 0;
+
+    if (file.size > maxInbandAttachmentSize) {
       const uploader = this.props.tinode.getLargeFileHelper();
 
       if (!uploader) {
@@ -3518,12 +3524,14 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
   }
 
   handleAttachFile(file) {
-    if (file.size > _config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_EXTERN_ATTACHMENT_SIZE"]) {
+    const maxExternAttachmentSize = this.props.tinode.getServerLimit('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_EXTERN_ATTACHMENT_SIZE"]);
+
+    if (file.size > maxExternAttachmentSize) {
       this.props.onError(this.props.intl.formatMessage({
         id: 'file_attachment_too_large'
       }, {
         size: Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_16__["bytesToHumanSize"])(file.size),
-        limit: Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_16__["bytesToHumanSize"])(_config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_EXTERN_ATTACHMENT_SIZE"])
+        limit: Object(_lib_strformat_js__WEBPACK_IMPORTED_MODULE_16__["bytesToHumanSize"])(maxExternAttachmentSize)
       }), 'err');
     } else {
       this.setState({
@@ -3542,8 +3550,9 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
     const width = this.state.imagePreview.width;
     const height = this.state.imagePreview.height;
     const fname = this.state.imagePreview.filename;
+    const maxInbandAttachmentSize = this.props.tinode.getServerLimit('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_INBAND_ATTACHMENT_SIZE"]) * 0.75 - 1024 | 0;
 
-    if (blob.size > _config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_INBAND_ATTACHMENT_SIZE"]) {
+    if (blob.size > maxInbandAttachmentSize) {
       const uploader = this.props.tinode.getLargeFileHelper();
 
       if (!uploader) {
@@ -3597,7 +3606,8 @@ class MessagesView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
   }
 
   handleAttachImage(file) {
-    Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__["imageScaled"])(file, _config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_IMAGE_DIM"], _config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_IMAGE_DIM"], _config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_EXTERN_ATTACHMENT_SIZE"], false, (blob, mime, width, height, fname) => {
+    const maxExternAttachmentSize = this.props.tinode.getServerLimit('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_EXTERN_ATTACHMENT_SIZE"]);
+    Object(_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__["imageScaled"])(file, _config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_IMAGE_DIM"], _config_js__WEBPACK_IMPORTED_MODULE_13__["MAX_IMAGE_DIM"], maxExternAttachmentSize, false, (blob, mime, width, height, fname) => {
       this.setState({
         imagePreview: {
           url: URL.createObjectURL(blob),
@@ -3975,6 +3985,7 @@ class NewTopicView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Componen
       id: "tabtitle_group_by_id",
       defaultMessage: "by id"
     })))), this.state.tabSelected === 'grp' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_new_topic_group_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      tinode: this.props.tinode,
       onSubmit: this.handleNewGroupSubmit
     }) : this.state.tabSelected === 'byid' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_widgets_new_topic_by_id_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
       onSubmit: this.handleGroupByID,
@@ -4442,6 +4453,7 @@ class SidepanelView extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Compone
       onTopicSelected: this.props.onTopicSelected,
       onShowArchive: this.props.onShowArchive
     }) : view === 'newtpk' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_new_topic_view_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
+      tinode: this.props.tinode,
       searchResults: this.props.searchResults,
       onInitFind: this.props.onInitFind,
       onSearchContacts: this.props.onSearchContacts,
@@ -9193,6 +9205,7 @@ class NewTopicGroup extends react__WEBPACK_IMPORTED_MODULE_0___default.a.PureCom
       tags: this.state.tags,
       activated: true,
       onTagsChanged: this.handleTagsChanged,
+      tinode: this.props.tinode,
       title: title
     })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
       className: "dialog-buttons"
@@ -9940,7 +9953,9 @@ class TagManager extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component 
   }
 
   handleAddTag(tag) {
-    if (tag.length > 0 && this.state.tags.length < _config_js__WEBPACK_IMPORTED_MODULE_3__["MAX_TAG_COUNT"]) {
+    const maxTagCount = this.props.tinode.getServerLimit('maxTagCount', _config_js__WEBPACK_IMPORTED_MODULE_3__["MAX_TAG_COUNT"]);
+
+    if (tag.length > 0 && this.state.tags.length < maxTagCount) {
       const tags = this.state.tags.slice(0);
       tags.push(tag);
       this.setState({
@@ -9991,13 +10006,15 @@ class TagManager extends react__WEBPACK_IMPORTED_MODULE_0___default.a.Component 
   }
 
   render() {
+    const minTagLength = this.props.tinode.getServerLimit('minTagLength', _config_js__WEBPACK_IMPORTED_MODULE_3__["MIN_TAG_LENGTH"]);
+    const maxTagLength = this.props.tinode.getServerLimit('maxTagLength', _config_js__WEBPACK_IMPORTED_MODULE_3__["MAX_TAG_LENGTH"]);
     let tags = [];
 
     if (this.state.activated) {
       this.state.tags.map(tag => {
         tags.push({
           user: tag,
-          invalid: tag.length < _config_js__WEBPACK_IMPORTED_MODULE_3__["MIN_TAG_LENGTH"]
+          invalid: tag.length < minTagLength || tag.length > maxTagLength
         });
       });
     } else {

@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 
 import ChipInput from './chip-input.jsx';
 
-import { MAX_TAG_COUNT, MIN_TAG_LENGTH } from '../config.js';
+import { MAX_TAG_COUNT, MAX_TAG_LENGTH, MIN_TAG_LENGTH } from '../config.js';
 import { arrayEqual } from '../lib/utils.js';
 
 export default class TagManager extends React.Component {
@@ -48,7 +48,9 @@ export default class TagManager extends React.Component {
   }
 
   handleAddTag(tag) {
-    if (tag.length > 0 && this.state.tags.length < MAX_TAG_COUNT) {
+    const maxTagCount = this.props.tinode.getServerLimit('maxTagCount', MAX_TAG_COUNT);
+
+    if (tag.length > 0 && this.state.tags.length < maxTagCount) {
       const tags = this.state.tags.slice(0);
       tags.push(tag);
 
@@ -84,10 +86,13 @@ export default class TagManager extends React.Component {
   }
 
   render() {
+    const minTagLength = this.props.tinode.getServerLimit('minTagLength', MIN_TAG_LENGTH);
+    const maxTagLength = this.props.tinode.getServerLimit('maxTagLength', MAX_TAG_LENGTH);
+
     let tags = [];
     if (this.state.activated) {
       this.state.tags.map((tag) => {
-        tags.push({user: tag, invalid: (tag.length < MIN_TAG_LENGTH)});
+        tags.push({user: tag, invalid: (tag.length < minTagLength || tag.length > maxTagLength)});
       });
     } else {
       this.state.tags.map((tag) => {

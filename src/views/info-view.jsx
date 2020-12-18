@@ -697,6 +697,7 @@ class InfoView extends React.Component {
                     title={tags}
                     tags={this.state.tags}
                     activated={false}
+                    tinode={this.props.tinode}
                     onSubmit={this.handleTagsUpdated} />
                 }</FormattedMessage>
                 <div className="hr" />

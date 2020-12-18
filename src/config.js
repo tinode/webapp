@@ -23,7 +23,9 @@ export const RECEIVED_DELAY = 500;
 export const READ_DELAY = 1000;
 
 // The shortest allowed tag length. Matches the value on the server.
-export const MIN_TAG_LENGTH = 4;
+export const MIN_TAG_LENGTH = 2;
+// The greatest allowed tag length. Matches the value on the server.
+export const MAX_TAG_LENGTH = 96;
 // The maximum number of tags allowed. Matches the value on the server.
 export const MAX_TAG_COUNT = 16;
 
@@ -53,13 +55,12 @@ export const BROKEN_IMAGE_SIZE = 32;
 // Number of chat messages to fetch in one call.
 export const MESSAGES_PAGE = 24;
 
-// Maximum in-band (included directly into the message) attachment size which fits into
-// a message of 256K in size, assuming base64 encoding and 1024 bytes of overhead.
-// This is size of an object *before* base64 encoding is applied.
+// Default maximum in-band (included directly into the message) attachment size which fits into
+// a message of 256K in size. The actual binary size of the attachment should be smaller due to
+// base64 encoding expansion and some overhead, for instance 1024 bytes.
 // Increase this limit to a greater value in production, if desired. Also increase
 // max_message_size in the server config.
-//  MAX_INBAND_ATTACHMENT_SIZE = base64DecodedLen(max_message_size) - 1024;
-export const MAX_INBAND_ATTACHMENT_SIZE = 195584;
+export const MAX_INBAND_ATTACHMENT_SIZE = 262144;
 
 // Absolute maximum attachment size to be used with the server = 8MB. Increase to
 // something like 100MB in production.

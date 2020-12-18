@@ -632,7 +632,11 @@ class MessagesView extends React.Component {
   // - if file is too large, upload it and send a s link.
   // - if file is small enough, just send it in-band.
   sendFileAttachment(file) {
-    if (file.size > MAX_INBAND_ATTACHMENT_SIZE) {
+    // Server-provided limit reduced for base64 encoding and overhead.
+    const maxInbandAttachmentSize = (this.props.tinode.getServerLimit('maxMessageSize',
+      MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024) | 0;
+
+    if (file.size > maxInbandAttachmentSize) {
       // Too large to send inband - uploading out of band and sending as a link.
       const uploader = this.props.tinode.getLargeFileHelper();
       if (!uploader) {
@@ -661,10 +665,12 @@ class MessagesView extends React.Component {
 
   // handleAttachFile method is called when [Attach file] button is clicked.
   handleAttachFile(file) {
-    if (file.size > MAX_EXTERN_ATTACHMENT_SIZE) {
+    const maxExternAttachmentSize = this.props.tinode.getServerLimit('maxFileUploadSize', MAX_EXTERN_ATTACHMENT_SIZE);
+
+    if (file.size > maxExternAttachmentSize) {
       // Too large.
       this.props.onError(this.props.intl.formatMessage({id: 'file_attachment_too_large'},
-          {size: bytesToHumanSize(file.size), limit: bytesToHumanSize(MAX_EXTERN_ATTACHMENT_SIZE)}), 'err');
+          {size: bytesToHumanSize(file.size), limit: bytesToHumanSize(maxExternAttachmentSize)}), 'err');
     } else {
       this.setState({ docPreview: {
         file: file,
@@ -682,7 +688,11 @@ class MessagesView extends React.Component {
     const height = this.state.imagePreview.height;
     const fname = this.state.imagePreview.filename;
 
-    if (blob.size > MAX_INBAND_ATTACHMENT_SIZE) {
+    // Server-provided limit reduced for base64 encoding and overhead.
+    const maxInbandAttachmentSize = (this.props.tinode.getServerLimit('maxMessageSize',
+      MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024) | 0;
+
+    if (blob.size > maxInbandAttachmentSize) {
       // Too large to send inband - uploading out of band and sending as a link.
       const uploader = this.props.tinode.getLargeFileHelper();
       if (!uploader) {
@@ -741,8 +751,10 @@ class MessagesView extends React.Component {
 
   // handleAttachImage method is called when [Attach image] button is clicked.
   handleAttachImage(file) {
+    const maxExternAttachmentSize = this.props.tinode.getServerLimit('maxFileUploadSize', MAX_EXTERN_ATTACHMENT_SIZE);
+
     // Get image dimensions and size, optionally scale it down.
-    imageScaled(file, MAX_IMAGE_DIM, MAX_IMAGE_DIM, MAX_EXTERN_ATTACHMENT_SIZE, false,
+    imageScaled(file, MAX_IMAGE_DIM, MAX_IMAGE_DIM, maxExternAttachmentSize, false,
       // Success
       (blob, mime, width, height, fname) => {
         this.setState({imagePreview: {

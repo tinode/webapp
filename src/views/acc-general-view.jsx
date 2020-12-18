@@ -157,6 +157,7 @@ export default class AccGeneralView extends React.Component {
             title={title_tag_manager}
             activated={false}
             tags={this.state.tags}
+            tinode={this.props.tinode}
             onSubmit={this.handleTagsUpdated} />
         }</FormattedMessage>
         <div className="hr" />

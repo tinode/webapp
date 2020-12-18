@@ -98,6 +98,7 @@ export default class NewTopicGroup extends React.PureComponent {
             tags={this.state.tags}
             activated={true}
             onTagsChanged={this.handleTagsChanged}
+            tinode={this.props.tinode}
             title={title} />
         }</FormattedMessage>
         <div className="dialog-buttons">

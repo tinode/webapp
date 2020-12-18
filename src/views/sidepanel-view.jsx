@@ -218,6 +218,7 @@ class SidepanelView extends React.Component {
 
           view === 'newtpk' ?
           <NewTopicView
+            tinode={this.props.tinode}
             searchResults={this.props.searchResults}
             onInitFind={this.props.onInitFind}
             onSearchContacts={this.props.onSearchContacts}

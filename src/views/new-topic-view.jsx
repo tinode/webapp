@@ -100,7 +100,9 @@ class NewTopicView extends React.Component {
           </li>
         </ul>
         {this.state.tabSelected === 'grp' ?
-          <NewTopicGroup onSubmit={this.handleNewGroupSubmit} /> :
+          <NewTopicGroup
+            tinode={this.props.tinode}
+            onSubmit={this.handleNewGroupSubmit} /> :
           this.state.tabSelected === 'byid' ?
             <NewTopicById
               onSubmit={this.handleGroupByID}
