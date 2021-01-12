@@ -13,7 +13,7 @@ module.exports = (env, argv) => {
       rules: [
         {
           test: /\.jsx?$/,
-          loaders: [
+          use: [
             'babel-loader',
           ],
           exclude: /node_modules/,
@@ -26,14 +26,17 @@ module.exports = (env, argv) => {
       publicPath: '/umd/'
     },
     optimization: {
+      minimize: true,
       minimizer: [
         new TerserPlugin({
-          sourceMap: true,
           terserOptions: {
             ecma: undefined,
             warnings: false,
             parse: {},
             compress: {},
+            format: {
+              comments: false,
+            },
             mangle: true, // Note `mangle.properties` is `false` by default.
             module: false,
             output: null,
@@ -44,6 +47,7 @@ module.exports = (env, argv) => {
             keep_fnames: false,
             safari10: false,
           },
+          extractComments: false,
         })
       ]
     },
