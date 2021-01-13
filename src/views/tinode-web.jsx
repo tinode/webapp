@@ -627,7 +627,7 @@ class TinodeWeb extends React.Component {
   }
 
   // Merge search results and contact list to create a single flat
-  // list of kown contacts for GroupManager to use.
+  // list of known contacts for GroupManager to use.
   static prepareSearchableContacts(chatList, foundContacts) {
     const merged = {};
 

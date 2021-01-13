@@ -42,7 +42,7 @@ a.gray:focus {
   color: #999;
 }
 
-a.flat-button {
+.flat-button {
   display: flex;
   align-items: center;
   margin: 0.15rem 0.35rem;
@@ -55,9 +55,19 @@ a.flat-button {
   white-space: nowrap;
   text-transform: uppercase;
 }
-a.flat-button:hover,
-a.flat-button:focus {
+.flat-button:hover,
+.flat-button:focus {
   text-decoration: none;
+}
+
+.flat-button .faux {
+  height: 1.5em;
+  line-height: 1.5em;
+  text-transform: none;
+  padding-left: .5rem;
+  padding-right: .5rem;
+  border: 1px solid gray;
+  border-radius: 3px;
 }
 
 form {
@@ -2065,4 +2075,15 @@ ul.tabbar li.active > a:after {
   height: 0.3rem;
   background-color: #1e88e5;
   border-radius: 0.08rem;
+}
+
+/* Highlighted text */
+.highlight {
+  color: teal;
+  font-weight: bolder;
+}
+
+.highlight .preview {
+  color: #5f9ea0;
+  font-weight: inherit;
 }

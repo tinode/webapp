@@ -1,7 +1,7 @@
 // Single message, sent or received.
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Drafty } from 'tinode-sdk'
+import { Drafty } from 'tinode-sdk';
 
 import Attachment from './attachment.jsx';
 import LetterTile from './letter-tile.jsx';
@@ -165,12 +165,23 @@ export default class ChatMessage extends React.Component {
 import { BROKEN_IMAGE_SIZE, REM_SIZE } from '../config.js';
 import { fitImageSize } from '../lib/blob-helpers.js';
 
+// Converts Drafty elements into React classes.
+// 'this' is set by the caller.
 function draftyFormatter(style, data, values, key) {
+  if (style == 'EX') {
+    // attachments are handled elsewhere.
+    return null;
+  }
+
   let el = Drafty.tagName(style);
   if (el) {
     const attr = Drafty.attrValue(style, data) || {};
     attr.key = key;
     switch (style) {
+      case 'HL':
+        // Highlighted text. Assign class name.
+        attr.className = 'highlight';
+        break;
       case 'IM':
         // Additional processing for images
         if (data) {
@@ -210,8 +221,15 @@ function draftyFormatter(style, data, values, key) {
         // Form
         attr.className = 'bot-form';
         break;
-      case 'FE':
+      case 'RW':
         // Form element formatting is dependent on element content.
+        break;
+      default:
+        if (el == '_UNKN') {
+          // Unknown element.
+          // TODO: make it prettier.
+          el = <><span className="material-icons">extension</span></>;
+        }
         break;
     }
     return React.createElement(el, attr, values);

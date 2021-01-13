@@ -26,7 +26,7 @@ module.exports = (env, argv) => {
       publicPath: '/umd/'
     },
     optimization: {
-      minimize: true,
+      minimize: (argv.mode === 'production'),
       minimizer: [
         new TerserPlugin({
           terserOptions: {
