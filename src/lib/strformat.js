@@ -3,15 +3,17 @@ export function shortDateFormat(then, locale) {
   locale = locale || window.navigator.userLanguage || window.navigator.language;
   const now = new Date();
   if (then.getFullYear() == now.getFullYear()) {
+    // Same year.
     if (then.getMonth() == now.getMonth() && then.getDate() == now.getDate()) {
-	    return then.toLocaleTimeString(locale, {hour12: false, hour: '2-digit', minute: '2-digit'});
-    } else {
-	    return then.toLocaleDateString(locale,
-        {hour12: false, month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'});
+      // Same month and day, show time only.
+      return then.toLocaleTimeString(locale, {hour12: false, hour: '2-digit', minute: '2-digit'});
     }
+    // Different month and/or day, show month day, time.
+    return then.toLocaleDateString(locale,
+      {hour12: false, month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'});
   }
-  return then.toLocaleDateString(locale,
-    {hour12: false, year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'});
+  // Different year: just show the date.
+  return then.toLocaleDateString(locale, {year: 'numeric', month: 'short', day: 'numeric'});
 }
 
 // Convert seconds to minutes:seconds, i.e. 156 sec -> 2:36.

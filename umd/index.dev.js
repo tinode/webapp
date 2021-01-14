@@ -499,24 +499,21 @@ function shortDateFormat(then, locale) {
         hour: '2-digit',
         minute: '2-digit'
       });
-    } else {
-      return then.toLocaleDateString(locale, {
-        hour12: false,
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
     }
+
+    return then.toLocaleDateString(locale, {
+      hour12: false,
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   }
 
   return then.toLocaleDateString(locale, {
-    hour12: false,
     year: 'numeric',
     month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
+    day: 'numeric'
   });
 }
 function secondsToTime(seconds) {
@@ -5204,6 +5201,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handleTopicSelected(topicName) {
+    console.log("handleTopicSelected", topicName);
+
     if (this.state.newTopicParams && this.state.newTopicParams._topicName != topicName) {
       this.setState({
         newTopicParams: null
