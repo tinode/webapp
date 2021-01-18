@@ -81,6 +81,9 @@ export const MAX_ONLINE_IN_TOPIC = 4;
 // Maximum length of user name, topic title, and private comment.
 export const MAX_TITLE_LENGTH = 60;
 
+// Length of message previews in chat list, in characters.
+export const MESSAGE_PREVIEW_LENGTH = 80;
+
 // Link for "Contact Us".
 export const LINK_CONTACT_US = 'email:info@tinode.co';
 

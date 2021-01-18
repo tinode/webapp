@@ -6,6 +6,8 @@ import LetterTile from './letter-tile.jsx';
 import ContactBadges from './contact-badges.jsx';
 import UnreadBadge from './unread-badge.jsx';
 
+import { Drafty } from 'tinode-sdk';
+
 export default class Contact extends React.Component {
   constructor(props) {
     super(props);
@@ -35,7 +37,7 @@ export default class Contact extends React.Component {
       title = <i><FormattedMessage id="unnamed_topic" /></i>;
     } else if (title.length > 30) {
       // FIXME: this is probably wrong for RTL languages.
-      title = title.substring(0, 28) + '...';
+      title = title.substring(0, 28) + '…';
     }
     const online = this.props.now ? 'online' : 'offline';
     const avatar = this.props.avatar ? this.props.avatar : true;
@@ -52,6 +54,11 @@ export default class Contact extends React.Component {
         icon_badges.push({icon: 'banned'});
       }
     }
+
+    const subtitle = this.props.preview ?
+      (typeof this.props.preview == 'string' ? this.props.preview :
+        React.createElement(React.Fragment, null, Drafty.format(this.props.preview, draftyFormatter, this))) :
+      this.props.comment;
 
     return (
       <li className={!this.props.showCheckmark && this.props.selected ? "selected" : null}
@@ -71,7 +78,7 @@ export default class Contact extends React.Component {
             {this.props.isChannel ? <img src="/img/channel.png" className="channel" alt="channel" /> : null}
             <UnreadBadge count={this.props.unread} /><ContactBadges badges={icon_badges} />
           </div>
-          {this.props.comment ? <div className="contact-comment">{this.props.comment}</div> : null}
+          {subtitle ? <div className="contact-comment">{subtitle}</div> : null}
           <span><ContactBadges badges={badges} /></span>
         </div>
         {this.props.showContextMenu ?
@@ -82,5 +89,53 @@ export default class Contact extends React.Component {
           </span> : null}
       </li>
     );
+  }
+};
+
+
+// Converts Drafty object into a one-line preview.
+function draftyFormatter(style, data, values, key) {
+  let el = Drafty.tagName(style);
+  const attr = { key: key };
+  if (el) {
+    switch (style) {
+      case 'HL':
+        // Make highlight less prominent in preview.
+        attr.className = 'highlight preview';
+        break;
+      case 'LN':
+        // Disable links in previews.
+        el = 'span';
+        break;
+      case 'IM':
+        // Replace image with '[icon] Image'.
+        el = React.Fragment;
+        values = [<i className="material-icons">photo</i>, 'Picture'];
+        break;
+      case 'BN':
+        el = 'span';
+        attr.className = 'flat-button faux';
+        break;
+      case 'FM':
+        el = React.Fragment;
+        values = [<i className="material-icons">dashboard</i>, 'Form:'];
+        break;
+      case 'RW':
+        el = React.Fragment;
+        break;
+      case 'EX':
+        el = React.Fragment;
+        values = [<i className="material-icons">attachment</i>, 'Attachment'];
+        break;
+      default:
+        if (el == '_UNKN') {
+          el = React.Fragment;
+          values = [<i className="material-icons">extension</i>];
+        }
+        break;
+    }
+    return React.createElement(el, attr, values);
+  } else {
+    return values;
   }
 };

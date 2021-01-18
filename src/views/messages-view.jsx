@@ -159,11 +159,7 @@ class MessagesView extends React.Component {
 
       // Don't request the tags. They are useless unless the user
       // is the owner and is editing the topic.
-      let getQuery = topic.startMetaQuery().withLaterDesc();
-      if (this.state.isSharer || (newTopic && !topic.isChannel())) {
-        // Request subscriptions only if one of S,O,A is given or it's a new non-channel topic.
-        getQuery = getQuery.withLaterSub();
-      }
+      let getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub();
       if (this.state.isReader || newTopic) {
         // Reading is either permitted or we don't know because it's a new topic. Ask for messages.
         getQuery = getQuery.withLaterData(MESSAGES_PAGE);

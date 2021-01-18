@@ -36,6 +36,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "IMAGE_PREVIEW_DIM": function() { return /* binding */ IMAGE_PREVIEW_DIM; },
 /* harmony export */   "MAX_ONLINE_IN_TOPIC": function() { return /* binding */ MAX_ONLINE_IN_TOPIC; },
 /* harmony export */   "MAX_TITLE_LENGTH": function() { return /* binding */ MAX_TITLE_LENGTH; },
+/* harmony export */   "MESSAGE_PREVIEW_LENGTH": function() { return /* binding */ MESSAGE_PREVIEW_LENGTH; },
 /* harmony export */   "LINK_CONTACT_US": function() { return /* binding */ LINK_CONTACT_US; },
 /* harmony export */   "LINK_PRIVACY_POLICY": function() { return /* binding */ LINK_PRIVACY_POLICY; },
 /* harmony export */   "LINK_TERMS_OF_SERVICE": function() { return /* binding */ LINK_TERMS_OF_SERVICE; }
@@ -71,6 +72,7 @@ const MAX_IMAGE_DIM = 1024;
 const IMAGE_PREVIEW_DIM = 64;
 const MAX_ONLINE_IN_TOPIC = 4;
 const MAX_TITLE_LENGTH = 60;
+const MESSAGE_PREVIEW_LENGTH = 80;
 const LINK_CONTACT_US = 'email:info@tinode.co';
 const LINK_PRIVACY_POLICY = 'https://tinode.co/privacy.html';
 const LINK_TERMS_OF_SERVICE = 'https://tinode.co/terms.html';
@@ -2936,11 +2938,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
     if (topic && !topic.isSubscribed() && this.props.ready && (this.state.topic != prevState.topic || !prevProps.ready)) {
       const newTopic = this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic;
-      let getQuery = topic.startMetaQuery().withLaterDesc();
-
-      if (this.state.isSharer || newTopic && !topic.isChannel()) {
-        getQuery = getQuery.withLaterSub();
-      }
+      let getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub();
 
       if (this.state.isReader || newTopic) {
         getQuery = getQuery.withLaterData(_config_js__WEBPACK_IMPORTED_MODULE_13__.MESSAGES_PAGE);
@@ -5201,8 +5199,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handleTopicSelected(topicName) {
-    console.log("handleTopicSelected", topicName);
-
     if (this.state.newTopicParams && this.state.newTopicParams._topicName != topicName) {
       this.setState({
         newTopicParams: null
@@ -7166,6 +7162,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _contact_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./contact.jsx */ "./src/widgets/contact.jsx");
 /* harmony import */ var _contact_action_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./contact-action.jsx */ "./src/widgets/contact-action.jsx");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 
 
 
@@ -7173,22 +7170,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const junk = {
-  "ent": [{
-    "data": {
-      "mime": "image/jpeg",
-      "name": "hello.jpg",
-      "val": "<38992, bytes: ...>",
-      "width": 100,
-      "height": 80
-    },
-    "tp": "EX"
-  }],
-  "fmt": [{
-    "at": -1,
-    "key": 0
-  }]
-};
+
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   badge_you: {
     id: 'badge_you',
@@ -7261,10 +7243,20 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
           }
 
           const comment = Array.isArray(c.private) ? c.private.join(',') : c.private ? c.private.comment : null;
+          let preview;
+
+          if (!this.props.showMode) {
+            const content = (c.latestMessage() || {
+              content: ''
+            }).content;
+            preview = typeof content == 'string' ? content.substr(0, _config_js__WEBPACK_IMPORTED_MODULE_6__.MESSAGE_PREVIEW_LENGTH) : tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.preview(content, _config_js__WEBPACK_IMPORTED_MODULE_6__.MESSAGE_PREVIEW_LENGTH);
+          }
+
           contactNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
             title: c.public ? c.public.fn : null,
             avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__.makeImageUrl)(c.public ? c.public.photo : null),
             comment: comment,
+            preview: preview,
             unread: this.props.showUnread ? c.unread : 0,
             now: c.online && this.props.connected,
             acs: c.acs,
@@ -7300,9 +7292,143 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
 }
 
 ;
+/* harmony default export */ __webpack_exports__["default"] = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(ContactList));
+
+/***/ }),
+
+/***/ "./src/widgets/contact.jsx":
+/*!*********************************!*\
+  !*** ./src/widgets/contact.jsx ***!
+  \*********************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": function() { return /* binding */ Contact; }
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
+/* harmony import */ var _contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./contact-badges.jsx */ "./src/widgets/contact-badges.jsx");
+/* harmony import */ var _unread_badge_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./unread-badge.jsx */ "./src/widgets/unread-badge.jsx");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_5__);
+
+
+
+
+
+
+class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+    this.handleContextClick = this.handleContextClick.bind(this);
+  }
+
+  handleClick(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (this.props.onSelected) {
+      this.props.onSelected(this.props.item, this.props.index);
+    }
+  }
+
+  handleContextClick(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.props.showContextMenu({
+      topicName: this.props.item,
+      y: e.pageY,
+      x: e.pageX
+    });
+  }
+
+  render() {
+    let title = this.props.title;
+
+    if (!title) {
+      title = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+        id: "unnamed_topic"
+      }));
+    } else if (title.length > 30) {
+      title = title.substring(0, 28) + '…';
+    }
+
+    const online = this.props.now ? 'online' : 'offline';
+    const avatar = this.props.avatar ? this.props.avatar : true;
+    const badges = this.props.badges ? this.props.badges.slice() : [];
+    const icon_badges = [];
+
+    if (this.props.acs) {
+      if (this.props.showMode) {
+        badges.push({
+          name: this.props.acs.getMode(),
+          key: 'mode'
+        });
+      }
+
+      if (this.props.acs.isMuted()) {
+        icon_badges.push({
+          icon: 'muted'
+        });
+      }
+
+      if (!this.props.acs.isJoiner()) {
+        icon_badges.push({
+          icon: 'banned'
+        });
+      }
+    }
+
+    const subtitle = this.props.preview ? typeof this.props.preview == 'string' ? this.props.preview : react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, tinode_sdk__WEBPACK_IMPORTED_MODULE_5__.Drafty.format(this.props.preview, draftyFormatter, this)) : this.props.comment;
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
+      className: !this.props.showCheckmark && this.props.selected ? "selected" : null,
+      onClick: this.handleClick
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "avatar-box"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+      avatar: avatar,
+      title: this.props.title,
+      topic: this.props.item
+    }), this.props.showOnline ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+      className: online
+    }) : this.props.showCheckmark && this.props.selected ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "checkmark material-icons"
+    }, "check_circle") : null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "text-box"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+      className: "contact-title"
+    }, title), this.props.isChannel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
+      src: "/img/channel.png",
+      className: "channel",
+      alt: "channel"
+    }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_unread_badge_jsx__WEBPACK_IMPORTED_MODULE_4__.default, {
+      count: this.props.unread
+    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+      badges: icon_badges
+    })), subtitle ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "contact-comment"
+    }, subtitle) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+      badges: badges
+    }))), this.props.showContextMenu ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+      className: "menuTrigger"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+      href: "#",
+      onClick: this.handleContextClick
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, "expand_more"))) : null);
+  }
+
+}
+;
 
 function draftyFormatter(style, data, values, key) {
-  let el = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.tagName(style);
+  let el = tinode_sdk__WEBPACK_IMPORTED_MODULE_5__.Drafty.tagName(style);
   const attr = {
     key: key
   };
@@ -7364,136 +7490,6 @@ function draftyFormatter(style, data, values, key) {
   }
 }
 
-;
-/* harmony default export */ __webpack_exports__["default"] = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(ContactList));
-
-/***/ }),
-
-/***/ "./src/widgets/contact.jsx":
-/*!*********************************!*\
-  !*** ./src/widgets/contact.jsx ***!
-  \*********************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": function() { return /* binding */ Contact; }
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
-/* harmony import */ var _contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./contact-badges.jsx */ "./src/widgets/contact-badges.jsx");
-/* harmony import */ var _unread_badge_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./unread-badge.jsx */ "./src/widgets/unread-badge.jsx");
-
-
-
-
-
-class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
-  constructor(props) {
-    super(props);
-    this.handleClick = this.handleClick.bind(this);
-    this.handleContextClick = this.handleContextClick.bind(this);
-  }
-
-  handleClick(e) {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (this.props.onSelected) {
-      this.props.onSelected(this.props.item, this.props.index);
-    }
-  }
-
-  handleContextClick(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.props.showContextMenu({
-      topicName: this.props.item,
-      y: e.pageY,
-      x: e.pageX
-    });
-  }
-
-  render() {
-    let title = this.props.title;
-
-    if (!title) {
-      title = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-        id: "unnamed_topic"
-      }));
-    } else if (title.length > 30) {
-      title = title.substring(0, 28) + '...';
-    }
-
-    const online = this.props.now ? 'online' : 'offline';
-    const avatar = this.props.avatar ? this.props.avatar : true;
-    const badges = this.props.badges ? this.props.badges.slice() : [];
-    const icon_badges = [];
-
-    if (this.props.acs) {
-      if (this.props.showMode) {
-        badges.push({
-          name: this.props.acs.getMode(),
-          key: 'mode'
-        });
-      }
-
-      if (this.props.acs.isMuted()) {
-        icon_badges.push({
-          icon: 'muted'
-        });
-      }
-
-      if (!this.props.acs.isJoiner()) {
-        icon_badges.push({
-          icon: 'banned'
-        });
-      }
-    }
-
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
-      className: !this.props.showCheckmark && this.props.selected ? "selected" : null,
-      onClick: this.handleClick
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "avatar-box"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
-      avatar: avatar,
-      title: this.props.title,
-      topic: this.props.item
-    }), this.props.showOnline ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      className: online
-    }) : this.props.showCheckmark && this.props.selected ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "checkmark material-icons"
-    }, "check_circle") : null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "text-box"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      className: "contact-title"
-    }, title), this.props.isChannel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
-      src: "/img/channel.png",
-      className: "channel",
-      alt: "channel"
-    }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_unread_badge_jsx__WEBPACK_IMPORTED_MODULE_4__.default, {
-      count: this.props.unread
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
-      badges: icon_badges
-    })), this.props.comment ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "contact-comment"
-    }, this.props.comment) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
-      badges: badges
-    }))), this.props.showContextMenu ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      className: "menuTrigger"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: this.handleContextClick
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, "expand_more"))) : null);
-  }
-
-}
 ;
 
 /***/ }),

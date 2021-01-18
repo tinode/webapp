@@ -11,10 +11,7 @@ import ContactAction from './contact-action.jsx';
 
 import { makeImageUrl } from '../lib/blob-helpers.js';
 
-const junk = {
-		"ent":[{"data":{"mime":"image/jpeg","name":"hello.jpg","val":"<38992, bytes: ...>","width":100, "height":80},"tp":"EX"}],
-		"fmt":[{"at":-1, "key":0}]
-	};
+import { MESSAGE_PREVIEW_LENGTH } from '../config.js';
 
 const messages = defineMessages({
   badge_you: {
@@ -76,15 +73,22 @@ class ContactList extends React.Component {
               badges.push({name: formatMessage(messages.badge_owner), color: 'blue'});
             }
           }
-          // const comment = React.createElement(React.Fragment, null, Drafty.format(junk, draftyFormatter, this));
+
           const comment = Array.isArray(c.private) ?
             c.private.join(',') : (c.private ? c.private.comment : null);
-
+          let preview;
+          if (!this.props.showMode) {
+            const content = (c.latestMessage() || { content: '' }).content;
+            preview = typeof content == 'string' ?
+              content.substr(0, MESSAGE_PREVIEW_LENGTH) :
+              Drafty.preview(content, MESSAGE_PREVIEW_LENGTH);
+          }
           contactNodes.push(
             <Contact
               title={c.public ? c.public.fn : null}
               avatar={makeImageUrl(c.public ? c.public.photo : null)}
               comment={comment}
+              preview={preview}
               unread={this.props.showUnread ? c.unread : 0}
               now={c.online && this.props.connected}
               acs={c.acs}
@@ -122,54 +126,6 @@ class ContactList extends React.Component {
         }
       </div>
     );
-  }
-};
-
-
-// Converts Drafty elements into a one-line preview.
-function draftyFormatter(style, data, values, key) {
-  let el = Drafty.tagName(style);
-  const attr = { key: key };
-  if (el) {
-    switch (style) {
-      case 'HL':
-        // Make highlight less prominent in preview.
-        attr.className = 'highlight preview';
-        break;
-      case 'LN':
-        // Disable links in previews.
-        el = 'span';
-        break;
-      case 'IM':
-        // Replace image with '[icon] Image'.
-        el = React.Fragment;
-        values = [<i className="material-icons">photo</i>, 'Picture'];
-        break;
-      case 'BN':
-        el = 'span';
-        attr.className = 'flat-button faux';
-        break;
-      case 'FM':
-        el = React.Fragment;
-        values = [<i className="material-icons">dashboard</i>, 'Form:'];
-        break;
-      case 'RW':
-        el = React.Fragment;
-        break;
-      case 'EX':
-        el = React.Fragment;
-        values = [<i className="material-icons">attachment</i>, 'Attachment'];
-        break;
-      default:
-        if (el == '_UNKN') {
-          el = React.Fragment;
-          values = [<i className="material-icons">extension</i>];
-        }
-        break;
-    }
-    return React.createElement(el, attr, values);
-  } else {
-    return values;
   }
 };
 
