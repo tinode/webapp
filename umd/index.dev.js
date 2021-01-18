@@ -7410,9 +7410,9 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       count: this.props.unread
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
       badges: icon_badges
-    })), subtitle ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "contact-comment"
-    }, subtitle) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+    }, subtitle || '\u00A0'), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
       badges: badges
     }))), this.props.showContextMenu ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       className: "menuTrigger"

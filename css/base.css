@@ -835,7 +835,7 @@ i.search {
   display: flex;
   position: relative;
   padding: 0.35rem 0.25rem 0.5rem 0.35rem;
-  min-height: 3.5rem;
+  min-height: 3.75rem;
   flex-grow: 0;
   flex-shrink: 0;
   /* partial bottom border */

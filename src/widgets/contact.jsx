@@ -61,8 +61,7 @@ export default class Contact extends React.Component {
       this.props.comment;
 
     return (
-      <li className={!this.props.showCheckmark && this.props.selected ? "selected" : null}
-        onClick={this.handleClick}>
+      <li className={!this.props.showCheckmark && this.props.selected ? "selected" : null} onClick={this.handleClick}>
         <div className="avatar-box">
           <LetterTile
             avatar={avatar}
@@ -78,7 +77,7 @@ export default class Contact extends React.Component {
             {this.props.isChannel ? <img src="/img/channel.png" className="channel" alt="channel" /> : null}
             <UnreadBadge count={this.props.unread} /><ContactBadges badges={icon_badges} />
           </div>
-          {subtitle ? <div className="contact-comment">{subtitle}</div> : null}
+          <div className="contact-comment">{subtitle || '\u00A0'}</div>
           <span><ContactBadges badges={badges} /></span>
         </div>
         {this.props.showContextMenu ?
