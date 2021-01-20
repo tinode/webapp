@@ -2,11 +2,14 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import LetterTile from './letter-tile.jsx';
 import ContactBadges from './contact-badges.jsx';
+import LetterTile from './letter-tile.jsx';
+import ReceivedMarker from './received-marker.jsx'
 import UnreadBadge from './unread-badge.jsx';
 
 import { Drafty } from 'tinode-sdk';
+
+import { deliveryMarker } from '../lib/utils.js';
 
 export default class Contact extends React.Component {
   constructor(props) {
@@ -60,8 +63,11 @@ export default class Contact extends React.Component {
         React.createElement(React.Fragment, null, Drafty.format(this.props.preview, draftyFormatter, this))) :
       this.props.comment;
 
+    const icon = deliveryMarker(this.props.received);
+    const marker = icon ? <i className={'material-icons small space-right ' + icon.color}>{icon.name}</i> : null;
+
     return (
-      <li className={!this.props.showCheckmark && this.props.selected ? "selected" : null} onClick={this.handleClick}>
+      <li className={!this.props.showCheckmark && this.props.selected ? 'selected' : null} onClick={this.handleClick}>
         <div className="avatar-box">
           <LetterTile
             avatar={avatar}
@@ -77,7 +83,7 @@ export default class Contact extends React.Component {
             {this.props.isChannel ? <img src="/img/channel.png" className="channel" alt="channel" /> : null}
             <UnreadBadge count={this.props.unread} /><ContactBadges badges={icon_badges} />
           </div>
-          <div className="contact-comment">{subtitle || '\u00A0'}</div>
+          <div className="contact-comment">{marker}{subtitle || '\u00A0'}</div>
           <span><ContactBadges badges={badges} /></span>
         </div>
         {this.props.showContextMenu ?

@@ -551,6 +551,11 @@ div.alert .content {
   margin-left: 1rem;
 }
 
+/* Extra spece on the right */
+.space-right {
+  margin-right: 0.25rem;
+}
+
 /* Container with whitish background and rounded corners */
 .rounded-container {
   position: relative;
@@ -1085,11 +1090,11 @@ i.search {
 }
 
 .avatar-upload .inputfile.hidden {
-	width: 0.1px;
-	height: 0.1px;
-	opacity: 0;
-	overflow: hidden;
-	position: absolute;
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
 }
 
 .avatar-upload .inputfile + label.round {

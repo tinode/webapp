@@ -564,8 +564,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "asEmail": function() { return /* binding */ asEmail; },
 /* harmony export */   "isUrlRelative": function() { return /* binding */ isUrlRelative; },
 /* harmony export */   "sanitizeUrl": function() { return /* binding */ sanitizeUrl; },
-/* harmony export */   "sanitizeImageUrl": function() { return /* binding */ sanitizeImageUrl; }
+/* harmony export */   "sanitizeImageUrl": function() { return /* binding */ sanitizeImageUrl; },
+/* harmony export */   "deliveryMarker": function() { return /* binding */ deliveryMarker; }
 /* harmony export */ });
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_0__);
+
 function updateFavicon(count) {
   const oldIcon = document.getElementById('shortcut-icon');
   const head = document.head || document.getElementsByTagName('head')[0];
@@ -685,6 +689,38 @@ function sanitizeImageUrl(url) {
 
   if (/data:image\/[a-z0-9.-]+;base64,/i.test(url.trim())) {
     return url;
+  }
+
+  return null;
+}
+function deliveryMarker(received) {
+  switch (received) {
+    case (tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default().MESSAGE_STATUS_SENDING):
+      return {
+        name: 'access_time'
+      };
+
+    case (tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default().MESSAGE_STATUS_FAILED):
+      return {
+        name: 'warning',
+        color: 'amber'
+      };
+
+    case (tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default().MESSAGE_STATUS_SENT):
+      return {
+        name: 'done'
+      };
+
+    case (tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default().MESSAGE_STATUS_RECEIVED):
+      return {
+        name: 'done_all'
+      };
+
+    case (tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default().MESSAGE_STATUS_READ):
+      return {
+        name: 'done_all',
+        color: 'blue'
+      };
   }
 
   return null;
@@ -7244,12 +7280,15 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
 
           const comment = Array.isArray(c.private) ? c.private.join(',') : c.private ? c.private.comment : null;
           let preview;
+          let deliveryStatus;
 
           if (!this.props.showMode) {
-            const content = (c.latestMessage() || {
-              content: ''
-            }).content;
-            preview = typeof content == 'string' ? content.substr(0, _config_js__WEBPACK_IMPORTED_MODULE_6__.MESSAGE_PREVIEW_LENGTH) : tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.preview(content, _config_js__WEBPACK_IMPORTED_MODULE_6__.MESSAGE_PREVIEW_LENGTH);
+            const msg = c.latestMessage();
+
+            if (msg) {
+              deliveryStatus = c.msgStatus(msg);
+              preview = typeof msg.content == 'string' ? msg.content.substr(0, _config_js__WEBPACK_IMPORTED_MODULE_6__.MESSAGE_PREVIEW_LENGTH) : tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.preview(msg.content, _config_js__WEBPACK_IMPORTED_MODULE_6__.MESSAGE_PREVIEW_LENGTH);
+            }
           }
 
           contactNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
@@ -7257,6 +7296,7 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
             avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__.makeImageUrl)(c.public ? c.public.photo : null),
             comment: comment,
             preview: preview,
+            received: deliveryStatus,
             unread: this.props.showUnread ? c.unread : 0,
             now: c.online && this.props.connected,
             acs: c.acs,
@@ -7310,11 +7350,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
-/* harmony import */ var _contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./contact-badges.jsx */ "./src/widgets/contact-badges.jsx");
-/* harmony import */ var _unread_badge_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./unread-badge.jsx */ "./src/widgets/unread-badge.jsx");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _contact_badges_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./contact-badges.jsx */ "./src/widgets/contact-badges.jsx");
+/* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
+/* harmony import */ var _received_marker_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./received-marker.jsx */ "./src/widgets/received-marker.jsx");
+/* harmony import */ var _unread_badge_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./unread-badge.jsx */ "./src/widgets/unread-badge.jsx");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+
+
 
 
 
@@ -7384,13 +7428,17 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       }
     }
 
-    const subtitle = this.props.preview ? typeof this.props.preview == 'string' ? this.props.preview : react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, tinode_sdk__WEBPACK_IMPORTED_MODULE_5__.Drafty.format(this.props.preview, draftyFormatter, this)) : this.props.comment;
+    const subtitle = this.props.preview ? typeof this.props.preview == 'string' ? this.props.preview : react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, tinode_sdk__WEBPACK_IMPORTED_MODULE_6__.Drafty.format(this.props.preview, draftyFormatter, this)) : this.props.comment;
+    const icon = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_7__.deliveryMarker)(this.props.received);
+    const marker = icon ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: 'material-icons small space-right ' + icon.color
+    }, icon.name) : null;
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
-      className: !this.props.showCheckmark && this.props.selected ? "selected" : null,
+      className: !this.props.showCheckmark && this.props.selected ? 'selected' : null,
       onClick: this.handleClick
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
       avatar: avatar,
       title: this.props.title,
       topic: this.props.item
@@ -7406,13 +7454,13 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       src: "/img/channel.png",
       className: "channel",
       alt: "channel"
-    }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_unread_badge_jsx__WEBPACK_IMPORTED_MODULE_4__.default, {
+    }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_unread_badge_jsx__WEBPACK_IMPORTED_MODULE_5__.default, {
       count: this.props.unread
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
       badges: icon_badges
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "contact-comment"
-    }, subtitle || '\u00A0'), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+    }, marker, subtitle || '\u00A0'), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
       badges: badges
     }))), this.props.showContextMenu ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       className: "menuTrigger"
@@ -7428,7 +7476,7 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
 ;
 
 function draftyFormatter(style, data, values, key) {
-  let el = tinode_sdk__WEBPACK_IMPORTED_MODULE_5__.Drafty.tagName(style);
+  let el = tinode_sdk__WEBPACK_IMPORTED_MODULE_6__.Drafty.tagName(style);
   const attr = {
     key: key
   };
@@ -9561,6 +9609,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+
 
 
 
@@ -9593,30 +9643,10 @@ class ReceivedMarker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       timestamp = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__.shortDateFormat)(this.props.timestamp, this.props.intl.locale);
     }
 
-    let marker = null;
-
-    if (this.props.received <= (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().MESSAGE_STATUS_SENDING)) {
-      marker = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        className: "material-icons small"
-      }, "access_time");
-    } else if (this.props.received == (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().MESSAGE_STATUS_FAILED)) {
-      marker = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        className: "material-icons small amber"
-      }, "warning");
-    } else if (this.props.received == (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().MESSAGE_STATUS_SENT)) {
-      marker = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        className: "material-icons small"
-      }, "done");
-    } else if (this.props.received == (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().MESSAGE_STATUS_RECEIVED)) {
-      marker = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        className: "material-icons small"
-      }, "done_all");
-    } else if (this.props.received == (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().MESSAGE_STATUS_READ)) {
-      marker = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        className: "material-icons small blue"
-      }, "done_all");
-    }
-
+    const icon = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_4__.deliveryMarker)(this.props.received);
+    const marker = icon ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: 'material-icons small ' + icon.color
+    }, icon.name) : null;
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       className: "timestamp"
     }, timestamp, '\u00a0', marker);

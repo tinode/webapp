@@ -5,6 +5,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import Tinode from 'tinode-sdk';
 
 import { shortDateFormat } from '../lib/strformat.js';
+import { deliveryMarker } from '../lib/utils.js';
 
 const messages = defineMessages({
   'sending': {
@@ -31,18 +32,8 @@ class ReceivedMarker extends React.PureComponent {
       timestamp = shortDateFormat(this.props.timestamp, this.props.intl.locale);
     }
 
-    let marker = null;
-    if (this.props.received <= Tinode.MESSAGE_STATUS_SENDING) {
-      marker = (<i className="material-icons small">access_time</i>); // watch face
-    } else if (this.props.received == Tinode.MESSAGE_STATUS_FAILED) {
-      marker = (<i className="material-icons small amber">warning</i>); // yellow icon /!\
-    } else if (this.props.received == Tinode.MESSAGE_STATUS_SENT) {
-      marker = (<i className="material-icons small">done</i>); // checkmark
-    } else if (this.props.received == Tinode.MESSAGE_STATUS_RECEIVED) {
-      marker = (<i className="material-icons small">done_all</i>); // double checkmark
-    } else if (this.props.received == Tinode.MESSAGE_STATUS_READ) {
-      marker = (<i className="material-icons small blue">done_all</i>); // blue double checkmark
-    }
+    const icon = deliveryMarker(this.props.received);
+    const marker = icon ? <i className={'material-icons small ' + icon.color}>{icon.name}</i> : null;
 
     return (
       <span className="timestamp">

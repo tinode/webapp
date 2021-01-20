@@ -1,5 +1,7 @@
 // Odds and ends
 
+import Tinode from 'tinode-sdk';
+
 // Make shortcut icon appear with a green dot + show unread count in title.
 export function updateFavicon(count) {
   const oldIcon = document.getElementById('shortcut-icon');
@@ -142,5 +144,22 @@ export function sanitizeImageUrl(url) {
     return url;
   }
 
+  return null;
+}
+
+// Given message's received status, return name and color of a delivery indicator icon.
+export function deliveryMarker(received) {
+  switch (received) {
+    case Tinode.MESSAGE_STATUS_SENDING:
+      return { name: 'access_time' }; // watch face
+    case Tinode.MESSAGE_STATUS_FAILED:
+      return { name: 'warning', color: 'amber' }; // yellow icon /!\
+    case Tinode.MESSAGE_STATUS_SENT:
+      return { name: 'done' }; // checkmark
+    case Tinode.MESSAGE_STATUS_RECEIVED:
+      return { name: 'done_all' }; // double checkmark
+    case Tinode.MESSAGE_STATUS_READ:
+      return { name: 'done_all', color: 'blue' }; // blue double checkmark
+  }
   return null;
 }
