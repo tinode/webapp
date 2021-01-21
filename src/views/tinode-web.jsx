@@ -212,8 +212,10 @@ class TinodeWeb extends React.Component {
       viewportHeight: document.documentElement.clientHeight
     });
 
+    const keepLoggedIn = LocalStorageUtil.getObject('keep-logged-in');
+
     const {formatMessage, locale} = this.props.intl;
-    this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport, locale);
+    this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport, locale, keepLoggedIn);
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
     this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
@@ -246,8 +248,7 @@ class TinodeWeb extends React.Component {
       }
     }
 
-    const token = LocalStorageUtil.getObject('keep-logged-in') ?
-      LocalStorageUtil.getObject('auth-token') : undefined;
+    const token = keepLoggedIn ? LocalStorageUtil.getObject('auth-token') : undefined;
 
     const parsedNav = HashNavigation.parseUrlHash(window.location.hash);
     if (token) {
@@ -281,8 +282,9 @@ class TinodeWeb extends React.Component {
   }
 
   // Setup transport (usually websocket) and server address. This will terminate connection with the server.
-  static tnSetup(serverAddress, transport, locale) {
-    const tinode = new Tinode(APP_NAME, serverAddress, API_KEY, transport, isSecureConnection());
+  static tnSetup(serverAddress, transport, locale, persist) {
+    const tinode = new Tinode({appName: APP_NAME, host: serverAddress, apiKey: API_KEY, transport: transport,
+      secure: isSecureConnection(), persist: persist});
     tinode.setHumanLanguage(locale);
     tinode.enableLogging(LOGGING_ENABLED, true);
     return tinode;
@@ -1156,11 +1158,14 @@ class TinodeWeb extends React.Component {
     }
 
     if (this.tinode) {
+      this.tinode.clearStorage();
       this.tinode.onDisconnect = undefined;
       this.tinode.disconnect();
     }
     this.setState(this.getBlankState());
-    this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport, this.props.intl.locale);
+
+    this.tinode = TinodeWeb.tnSetup(this.state.serverAddress,
+      this.state.transport, this.props.intl.locale, LocalStorageUtil.getObject('keep-logged-in'));
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
     HashNavigation.navigateTo('');
