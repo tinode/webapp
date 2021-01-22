@@ -483,6 +483,7 @@ class TinodeWeb extends React.Component {
 
     if (promise) {
       promise.then((ctrl) => {
+        console.log("doLogin->then", ctrl);
         if (ctrl.code >= 300 && ctrl.text === 'validate credentials') {
           this.setState({loadSpinnerVisible: false});
           if (cred) {

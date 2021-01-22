@@ -5015,6 +5015,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
     if (promise) {
       promise.then(ctrl => {
+        console.log("doLogin->then", ctrl);
+
         if (ctrl.code >= 300 && ctrl.text === 'validate credentials') {
           this.setState({
             loadSpinnerVisible: false
