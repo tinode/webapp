@@ -2060,8 +2060,8 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__.makeImageUrl)(topic.public ? topic.public.photo : null),
       private: topic.private ? topic.private.comment : null,
       address: topic.name,
-      groupTopic: topic.getType() == 'grp',
-      channel: topic.isChannel(),
+      groupTopic: topic.isGroupType(),
+      channel: topic.isChannelType(),
       showMemberPanel: false,
       access: acs ? acs.getMode() : undefined,
       modeGiven: acs ? acs.getGiven() : undefined,
@@ -3095,7 +3095,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         }
 
         Object.assign(nextState, {
-          channel: topic.isChannel()
+          channel: topic.isChannelType()
         });
       } else {
         Object.assign(nextState, {
@@ -3452,7 +3452,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     const topic = this.props.tinode.getTopic(params.topicName);
 
     if (topic) {
-      if (!topic.isChannel()) {
+      if (!topic.isChannelType()) {
         menuItems.push('message_delete');
       }
 
@@ -3659,8 +3659,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         });
       } else {
         const topic = this.props.tinode.getTopic(this.state.topic);
-        const isChannel = topic.isChannel();
-        const groupTopic = topic.getType() == 'grp' && !isChannel;
+        const isChannel = topic.isChannelType();
+        const groupTopic = topic.isGroupType() && !isChannel;
         let messageNodes = [];
         let previousFrom = null;
         let chatBoxClass = null;
@@ -4716,67 +4716,69 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       formatMessage,
       locale
     } = this.props.intl;
-    this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport, locale, keepLoggedIn);
-    this.tinode.onConnect = this.handleConnected;
-    this.tinode.onDisconnect = this.handleDisconnect;
-    this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
+    new Promise((resolve, reject) => {
+      this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport, locale, keepLoggedIn, resolve);
+      this.tinode.onConnect = this.handleConnected;
+      this.tinode.onDisconnect = this.handleDisconnect;
+      this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
+    }).then(() => {
+      if (this.state.desktopAlertsEnabled) {
+        try {
+          this.fbPush = firebase_app__WEBPACK_IMPORTED_MODULE_3__.initializeApp(FIREBASE_INIT, _config_js__WEBPACK_IMPORTED_MODULE_11__.APP_NAME).messaging();
+          this.fbPush.usePublicVapidKey(FIREBASE_INIT.messagingVapidKey);
+          navigator.serviceWorker.register('/service-worker.js').then(reg => {
+            this.checkForAppUpdate(reg);
+            this.fbPush.useServiceWorker(reg);
+            reg.active.postMessage(JSON.stringify({
+              locale: locale
+            }));
+            this.initDesktopAlerts();
 
-    if (this.state.desktopAlertsEnabled) {
-      try {
-        this.fbPush = firebase_app__WEBPACK_IMPORTED_MODULE_3__.initializeApp(FIREBASE_INIT, _config_js__WEBPACK_IMPORTED_MODULE_11__.APP_NAME).messaging();
-        this.fbPush.usePublicVapidKey(FIREBASE_INIT.messagingVapidKey);
-        navigator.serviceWorker.register('/service-worker.js').then(reg => {
-          this.checkForAppUpdate(reg);
-          this.fbPush.useServiceWorker(reg);
-          reg.active.postMessage(JSON.stringify({
-            locale: locale
-          }));
-          this.initDesktopAlerts();
-
-          if (this.state.desktopAlerts) {
-            if (!this.state.firebaseToken) {
-              this.togglePushToken(true);
-            } else {
-              this.tinode.setDeviceToken(this.state.firebaseToken, true);
+            if (this.state.desktopAlerts) {
+              if (!this.state.firebaseToken) {
+                this.togglePushToken(true);
+              } else {
+                this.tinode.setDeviceToken(this.state.firebaseToken, true);
+              }
             }
-          }
-        }).catch(err => {
-          console.log("Failed to register service worker:", err);
-        });
-      } catch (err) {
-        this.handleError(formatMessage({
-          id: 'push_init_failed'
-        }), 'err');
-        console.log("Failed to initialize push notifications", err);
-        this.setState({
-          desktopAlertsEnabled: false
-        });
+          }).catch(err => {
+            console.log("Failed to register service worker:", err);
+          });
+        } catch (err) {
+          this.handleError(formatMessage({
+            id: 'push_init_failed'
+          }), 'err');
+          console.log("Failed to initialize push notifications", err);
+          this.setState({
+            desktopAlertsEnabled: false
+          });
+        }
       }
-    }
 
-    const token = keepLoggedIn ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__.default.getObject('auth-token') : undefined;
-    const parsedNav = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.parseUrlHash(window.location.hash);
+      const token = keepLoggedIn ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__.default.getObject('auth-token') : undefined;
+      const parsedNav = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.parseUrlHash(window.location.hash);
 
-    if (token) {
-      this.setState({
-        autoLogin: true
-      });
-      token.expires = new Date(token.expires);
-      this.tinode.setAuthToken(token);
-      this.tinode.connect().catch(err => {
-        this.handleError(err.message, 'err');
-      });
-      delete parsedNav.params.info;
-      delete parsedNav.params.tab;
-      parsedNav.path[0] = '';
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.composeUrlHash(parsedNav.path, parsedNav.params));
-    } else if (!parsedNav.params.token) {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo('');
-    }
+      if (token) {
+        this.setState({
+          autoLogin: true
+        });
+        token.expires = new Date(token.expires);
+        this.tinode.setAuthToken(token);
+        this.tinode.connect().catch(err => {
+          this.handleError(err.message, 'err');
+        });
+        delete parsedNav.params.info;
+        delete parsedNav.params.tab;
+        parsedNav.path[0] = '';
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.composeUrlHash(parsedNav.path, parsedNav.params));
+      } else if (!parsedNav.params.token) {
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo('');
+      }
 
-    this.readTimer = null;
-    this.readTimerCallback = null;
-    this.handleHashRoute();
+      this.readTimer = null;
+      this.readTimerCallback = null;
+      this.handleHashRoute();
+    });
   }
 
   componentWillUnmount() {
@@ -4785,15 +4787,15 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     document.removeEventListener('visibilitychange', this.handleVisibilityEvent);
   }
 
-  static tnSetup(serverAddress, transport, locale, persist) {
+  static tnSetup(serverAddress, transport, locale, persistentCache, onSetupCompleted) {
     const tinode = new (tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default())({
       appName: _config_js__WEBPACK_IMPORTED_MODULE_11__.APP_NAME,
       host: serverAddress,
       apiKey: _config_js__WEBPACK_IMPORTED_MODULE_11__.API_KEY,
       transport: transport,
       secure: (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_13__.isSecureConnection)(),
-      persist: persist
-    });
+      persist: persistentCache
+    }, onSetupCompleted);
     tinode.setHumanLanguage(locale);
     tinode.enableLogging(_config_js__WEBPACK_IMPORTED_MODULE_11__.LOGGING_ENABLED, true);
     return tinode;
@@ -5015,8 +5017,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
     if (promise) {
       promise.then(ctrl => {
-        console.log("doLogin->then", ctrl);
-
         if (ctrl.code >= 300 && ctrl.text === 'validate credentials') {
           this.setState({
             loadSpinnerVisible: false
@@ -5329,7 +5329,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           }
         });
 
-        if (topic.isP2P()) {
+        if (topic.isP2PType()) {
           response = response.then(ctrl => {
             topic.setMeta({
               sub: {
@@ -5450,11 +5450,12 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     const transport = settings.transport || this.state.transport;
 
     if (this.tinode) {
+      this.tinode.clearStorage();
       this.tinode.onDisconnect = undefined;
       this.tinode.disconnect();
     }
 
-    this.tinode = TinodeWeb.tnSetup(serverAddress, transport, this.props.intl.locale);
+    this.tinode = TinodeWeb.tnSetup(serverAddress, transport, this.props.intl.locale, _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__.default.getObject('keep-logged-in'));
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
     this.setState({

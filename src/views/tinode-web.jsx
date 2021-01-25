@@ -215,64 +215,66 @@ class TinodeWeb extends React.Component {
     const keepLoggedIn = LocalStorageUtil.getObject('keep-logged-in');
 
     const {formatMessage, locale} = this.props.intl;
-    this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport, locale, keepLoggedIn);
-    this.tinode.onConnect = this.handleConnected;
-    this.tinode.onDisconnect = this.handleDisconnect;
-    this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
-
-    // Initialize desktop alerts.
-    if (this.state.desktopAlertsEnabled) {
-      try {
-        this.fbPush = firebase.initializeApp(FIREBASE_INIT, APP_NAME).messaging();
-        this.fbPush.usePublicVapidKey(FIREBASE_INIT.messagingVapidKey);
-        navigator.serviceWorker.register('/service-worker.js').then((reg) => {
-          this.checkForAppUpdate(reg);
-          this.fbPush.useServiceWorker(reg);
-          reg.active.postMessage(JSON.stringify({locale: locale}));
-          this.initDesktopAlerts();
-          if (this.state.desktopAlerts) {
-            if (!this.state.firebaseToken) {
-              this.togglePushToken(true);
-            } else {
-              this.tinode.setDeviceToken(this.state.firebaseToken, true);
+    new Promise((resolve, reject) => {
+      this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport, locale, keepLoggedIn, resolve);
+      this.tinode.onConnect = this.handleConnected;
+      this.tinode.onDisconnect = this.handleDisconnect;
+      this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
+    }).then(() => {
+      // Initialize desktop alerts.
+      if (this.state.desktopAlertsEnabled) {
+        try {
+          this.fbPush = firebase.initializeApp(FIREBASE_INIT, APP_NAME).messaging();
+          this.fbPush.usePublicVapidKey(FIREBASE_INIT.messagingVapidKey);
+          navigator.serviceWorker.register('/service-worker.js').then((reg) => {
+            this.checkForAppUpdate(reg);
+            this.fbPush.useServiceWorker(reg);
+            reg.active.postMessage(JSON.stringify({locale: locale}));
+            this.initDesktopAlerts();
+            if (this.state.desktopAlerts) {
+              if (!this.state.firebaseToken) {
+                this.togglePushToken(true);
+              } else {
+                this.tinode.setDeviceToken(this.state.firebaseToken, true);
+              }
             }
-          }
-        }).catch((err) => {
-          // registration failed :(
-          console.log("Failed to register service worker:", err);
-        });
-      } catch (err) {
-        this.handleError(formatMessage({id: 'push_init_failed'}), 'err');
-        console.log("Failed to initialize push notifications", err);
-        this.setState({desktopAlertsEnabled: false});
+          }).catch((err) => {
+            // registration failed :(
+            console.log("Failed to register service worker:", err);
+          });
+        } catch (err) {
+          this.handleError(formatMessage({id: 'push_init_failed'}), 'err');
+          console.log("Failed to initialize push notifications", err);
+          this.setState({desktopAlertsEnabled: false});
+        }
       }
-    }
 
-    const token = keepLoggedIn ? LocalStorageUtil.getObject('auth-token') : undefined;
+      const token = keepLoggedIn ? LocalStorageUtil.getObject('auth-token') : undefined;
 
-    const parsedNav = HashNavigation.parseUrlHash(window.location.hash);
-    if (token) {
-      this.setState({autoLogin: true});
+      const parsedNav = HashNavigation.parseUrlHash(window.location.hash);
+      if (token) {
+        this.setState({autoLogin: true});
 
-      // When reading from storage, date is returned as string.
-      token.expires = new Date(token.expires);
-      this.tinode.setAuthToken(token);
-      this.tinode.connect().catch((err) => {
-        // Socket error
-        this.handleError(err.message, 'err');
-      });
-      delete parsedNav.params.info;
-      delete parsedNav.params.tab;
-      parsedNav.path[0] = '';
-      HashNavigation.navigateTo(HashNavigation.composeUrlHash(parsedNav.path, parsedNav.params));
-    } else if (!parsedNav.params.token) {
-      HashNavigation.navigateTo('');
-    }
+        // When reading from storage, date is returned as string.
+        token.expires = new Date(token.expires);
+        this.tinode.setAuthToken(token);
+        this.tinode.connect().catch((err) => {
+          // Socket error
+          this.handleError(err.message, 'err');
+        });
+        delete parsedNav.params.info;
+        delete parsedNav.params.tab;
+        parsedNav.path[0] = '';
+        HashNavigation.navigateTo(HashNavigation.composeUrlHash(parsedNav.path, parsedNav.params));
+      } else if (!parsedNav.params.token) {
+        HashNavigation.navigateTo('');
+      }
 
-    this.readTimer = null;
-    this.readTimerCallback = null;
+      this.readTimer = null;
+      this.readTimerCallback = null;
 
-    this.handleHashRoute();
+      this.handleHashRoute();
+    });
   }
 
   componentWillUnmount() {
@@ -282,9 +284,9 @@ class TinodeWeb extends React.Component {
   }
 
   // Setup transport (usually websocket) and server address. This will terminate connection with the server.
-  static tnSetup(serverAddress, transport, locale, persist) {
+  static tnSetup(serverAddress, transport, locale, persistentCache, onSetupCompleted) {
     const tinode = new Tinode({appName: APP_NAME, host: serverAddress, apiKey: API_KEY, transport: transport,
-      secure: isSecureConnection(), persist: persist});
+      secure: isSecureConnection(), persist: persistentCache}, onSetupCompleted);
     tinode.setHumanLanguage(locale);
     tinode.enableLogging(LOGGING_ENABLED, true);
     return tinode;
@@ -483,7 +485,6 @@ class TinodeWeb extends React.Component {
 
     if (promise) {
       promise.then((ctrl) => {
-        console.log("doLogin->then", ctrl);
         if (ctrl.code >= 300 && ctrl.text === 'validate credentials') {
           this.setState({loadSpinnerVisible: false});
           if (cred) {
@@ -819,7 +820,7 @@ class TinodeWeb extends React.Component {
         // Accept given permissions.
         const mode = topic.getAccessMode().getGiven();
         response = topic.setMeta({sub: {mode: mode}});
-        if (topic.isP2P()) {
+        if (topic.isP2PType()) {
           // For P2P topics change 'given' permission of the peer too.
           // In p2p topics the other user has the same name as the topic.
           response = response.then((ctrl) => {
@@ -927,10 +928,12 @@ class TinodeWeb extends React.Component {
     const serverAddress = settings.serverAddress || this.state.serverAddress;
     const transport = settings.transport || this.state.transport;
     if (this.tinode) {
+      this.tinode.clearStorage();
       this.tinode.onDisconnect = undefined;
       this.tinode.disconnect();
     }
-    this.tinode = TinodeWeb.tnSetup(serverAddress, transport, this.props.intl.locale);
+    this.tinode = TinodeWeb.tnSetup(serverAddress, transport, this.props.intl.locale,
+      LocalStorageUtil.getObject('keep-logged-in'));
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
 

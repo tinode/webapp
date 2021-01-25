@@ -276,7 +276,7 @@ class MessagesView extends React.Component {
           });
         }
         Object.assign(nextState, {
-          channel: topic.isChannel()
+          channel: topic.isChannelType()
         });
       } else {
         // Invalid topic.
@@ -597,7 +597,7 @@ class MessagesView extends React.Component {
     const menuItems = messageSpecificMenuItems || [];
     const topic = this.props.tinode.getTopic(params.topicName);
     if (topic) {
-      if (!topic.isChannel()) {
+      if (!topic.isChannelType()) {
         menuItems.push('message_delete');
       }
       const acs = topic.getAccessMode();
@@ -817,8 +817,8 @@ class MessagesView extends React.Component {
         );
       } else {
         const topic = this.props.tinode.getTopic(this.state.topic);
-        const isChannel = topic.isChannel();
-        const groupTopic = topic.getType() == 'grp' && !isChannel;
+        const isChannel = topic.isChannelType();
+        const groupTopic = topic.isGroupType() && !isChannel;
         let messageNodes = [];
         let previousFrom = null;
         let chatBoxClass = null;
