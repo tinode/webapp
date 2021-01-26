@@ -915,8 +915,10 @@ class AccGeneralView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compo
         }
       }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
         id: "validate_credential_action",
-        defaultMessage: "confirm",
-        description: "Validate credentail call to action"
+        defaultMessage: [{
+          "type": 0,
+          "value": "confirm"
+        }]
       })) : null, " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
         href: "#",
         onClick: e => {
@@ -953,8 +955,10 @@ class AccGeneralView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compo
       className: "hr"
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "title_tag_manager",
-      defaultMessage: "Tags (user discovery)",
-      description: "Section title for TagManager"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Tags (user discovery)"
+      }]
     }, title_tag_manager => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_tag_manager_jsx__WEBPACK_IMPORTED_MODULE_5__.default, {
       title: title_tag_manager,
       activated: false,
@@ -969,8 +973,10 @@ class AccGeneralView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compo
       className: "small"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_user_contacts",
-      defaultMessage: "Contacts:",
-      description: "Label for user contacts"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Contacts:"
+      }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "quoted"
     }, credentials, this.state.addCredActive ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
@@ -995,8 +1001,10 @@ class AccGeneralView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compo
       className: "material-icons"
     }, "add"), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_add_another",
-      defaultMessage: "Add another",
-      description: "Call to action [+ add another]"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Add another"
+      }]
     }))))));
   }
 
@@ -1048,8 +1056,10 @@ class EditAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       htmlFor: "message-sound"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_message_sound",
-      defaultMessage: "Message sound:",
-      description: "Label for message sounds toggle"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Message sound:"
+      }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
       name: "sound",
       id: "message-sound",
@@ -1061,12 +1071,16 @@ class EditAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       htmlFor: "desktop-alerts"
     }, this.props.desktopAlertsEnabled ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_push_notifications",
-      defaultMessage: "Notification alerts:",
-      description: "Label for push notifications switch"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Notification alerts:"
+      }]
     }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_push_notifications_disabled",
-      defaultMessage: "Notification alerts (requires HTTPS):",
-      description: "Label for push notifications switch"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Notification alerts (requires HTTPS):"
+      }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
       name: "alert",
       id: "desktop-alerts",
@@ -1078,8 +1092,10 @@ class EditAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       htmlFor: "incognito-mode"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_incognito_mode",
-      defaultMessage: "Incognito mode:",
-      description: "Label for incognito mode toggle"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Incognito mode:"
+      }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
       name: "incognito",
       id: "incognito-mode",
@@ -1112,14 +1128,18 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   delete_account: {
-    id: 'delete_account',
-    defaultMessage: 'Delete account',
-    description: 'Title for delete account warning'
+    "id": "delete_account",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Delete account"
+    }]
   },
   delete_account_warning: {
-    id: 'delete_account_arning',
-    defaultMessage: 'Are you sure you want to delete your account? It cannot be undone.',
-    description: 'Warning message when deleting an account'
+    "id": "delete_account_arning",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Are you sure you want to delete your account? It cannot be undone."
+    }]
   }
 });
 
@@ -1202,12 +1222,16 @@ class AccSecurityView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Comp
       className: "small"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_password",
-      defaultMessage: "Password",
-      description: "Label for password editing"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Password"
+      }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "password_unchanged_prompt",
-      defaultMessage: "Unchanged",
-      description: "Message in editor while password is unchanged"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Unchanged"
+      }]
     }, password_unchanged => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
       placeholder: password_unchanged,
       type: "password",
@@ -1227,8 +1251,10 @@ class AccSecurityView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Comp
       className: "material-icons"
     }, "exit_to_app"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_logout",
-      defaultMessage: "Logout",
-      description: "Button [Logout]"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Logout"
+      }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       className: "red flat-button",
@@ -1239,8 +1265,10 @@ class AccSecurityView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Comp
       className: "material-icons"
     }, "delete"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_delete_account",
-      defaultMessage: "Delete account",
-      description: "Button [Delete account]"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Delete account"
+      }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "hr"
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -1249,8 +1277,10 @@ class AccSecurityView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Comp
       className: "small"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_default_access_mode",
-      defaultMessage: "Default access mode:",
-      description: "Label for default access mode"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Default access mode:"
+      }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "quoted"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Auth: ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", {
@@ -1274,11 +1304,19 @@ class AccSecurityView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Comp
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "blocked_contacts_link",
-      defaultMessage: "Blocked contacts ({count})",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Blocked contacts ("
+      }, {
+        "type": 1,
+        "value": "count"
+      }, {
+        "type": 0,
+        "value": ")"
+      }],
       values: {
         count: this.state.blockedCount
-      },
-      description: "Blocked contacts link"
+      }
     })))) : null));
   }
 
@@ -1324,8 +1362,10 @@ class AccSupportView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       className: "material-icons"
     }, "email"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "link_contact_us",
-      defaultMessage: "Contact Us",
-      description: "Ancor text for contacting us by email"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Contact Us"
+      }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: _config_js__WEBPACK_IMPORTED_MODULE_3__.LINK_TERMS_OF_SERVICE,
       className: "flat-button",
@@ -1334,8 +1374,10 @@ class AccSupportView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       className: "material-icons"
     }, "description"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "link_terms_of_service",
-      defaultMessage: "Terms of Service",
-      description: "Ancor text for terms of service link"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Terms of Service"
+      }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: _config_js__WEBPACK_IMPORTED_MODULE_3__.LINK_PRIVACY_POLICY,
       className: "flat-button",
@@ -1344,8 +1386,10 @@ class AccSupportView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       className: "material-icons"
     }, "policy"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "link_privacy_policy",
-      defaultMessage: "Privacy Policy",
-      description: "Ancor text for privacy policy link"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Privacy Policy"
+      }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "hr"
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -1362,7 +1406,10 @@ class AccSupportView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       className: "small"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_sdk",
-      defaultMessage: "SDK:"
+      defaultMessage: [{
+        "type": 0,
+        "value": "SDK:"
+      }]
     })), tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().getLibrary()), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
@@ -1375,7 +1422,10 @@ class AccSupportView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       className: "small"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_server_address",
-      defaultMessage: "Server address:"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Server address:"
+      }]
     })), this.props.serverAddress)));
   }
 
@@ -1406,9 +1456,17 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   archived_contacts_title: {
-    id: "archived_contacts",
-    defaultMessage: "Archived contacts ({count})",
-    description: "Label for archived chats"
+    "id": "archived_contacts",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Archived contacts ("
+    }, {
+      "type": 1,
+      "value": "count"
+    }, {
+      "type": 0,
+      "value": ")"
+    }]
   }
 });
 class ContactsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
@@ -1482,8 +1540,16 @@ class ContactsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "contacts_not_found",
-      defaultMessage: "You have no chats<br />\xAF\u2216_(\u30C4)_/\xAF",
-      description: "HTML message shown in ContactList when no contacts are found"
+      defaultMessage: [{
+        "type": 0,
+        "value": "You have no chats"
+      }, {
+        "type": 0,
+        "value": "<br />"
+      }, {
+        "type": 0,
+        "value": "¯∖_(ツ)_/¯"
+      }]
     }, no_contacts => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_contact_list_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
       connected: this.props.connected,
       contacts: this.state.contactList,
@@ -1639,8 +1705,10 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "full_name_prompt",
-      defaultMessage: "Full name, e.g. John Doe",
-      description: "Input placeholder for person's full name"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Full name, e.g. John Doe"
+      }]
     }, full_name_prompt => react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
       type: "text",
       placeholder: full_name_prompt,
@@ -1652,8 +1720,10 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "email_prompt",
-      defaultMessage: "Email, e.g. jdoe@example.com",
-      description: "Input placeholder for email entry"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Email, e.g. jdoe@example.com"
+      }]
     }, email_prompt => react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
       type: "email",
       placeholder: email_prompt,
@@ -1679,8 +1749,10 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       type: "submit"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_sign_up",
-      defaultMessage: "Sign up",
-      description: "Create account button [Sign Up]"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Sign up"
+      }]
     }))));
   }
 
@@ -1730,16 +1802,20 @@ class EditAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Comp
       className: "small"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_your_name",
-      defaultMessage: "Your name",
-      description: "Label for full name editing"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Your name"
+      }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "large"
     }, this.state.fullName), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "small"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_user_id",
-      defaultMessage: "ID:",
-      description: "Label for user address (ID)"
+      defaultMessage: [{
+        "type": 0,
+        "value": "ID:"
+      }]
     })), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", null, this.props.myUserId))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
       avatar: this.state.avatar,
       readOnly: !this.state.owner,
@@ -1758,8 +1834,10 @@ class EditAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Comp
       className: "material-icons"
     }, "edit"), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_edit",
-      defaultMessage: "Edit",
-      description: "Call to action [Edit]"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Edit"
+      }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "hr"
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -1849,74 +1927,102 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   requested: {
-    id: 'requested_permissions',
-    defaultMessage: 'Requested',
-    description: 'Title for permissions'
+    "id": "requested_permissions",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Requested"
+    }]
   },
   granted: {
-    id: 'granted_permissions',
-    defaultMessage: 'Granted',
-    description: 'Title for permissions'
+    "id": "granted_permissions",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Granted"
+    }]
   },
   edit_permissions: {
-    id: 'menu_item_edit_permissions',
-    defaultMessage: 'Edit permissions',
-    description: 'Menu item [Edit permissions]'
+    "id": "menu_item_edit_permissions",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Edit permissions"
+    }]
   },
   other_user: {
-    id: 'label_other_user',
-    defaultMessage: 'Other',
-    description: 'Label for the other user when the user is unnamed'
+    "id": "label_other_user",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Other"
+    }]
   },
   clear_messages: {
-    id: 'action_clear_messages',
-    defaultMessage: 'Clear Messages',
-    description: 'Flat button [Clear Messages] (soft-delete messages)'
+    "id": "action_clear_messages",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Clear Messages"
+    }]
   },
   clear_messages_warning: {
-    id: 'clear_messages_warning',
-    defaultMessage: 'Are you sure you want to clear all messages? It cannot be undone.',
-    description: 'Alert dialog warning when deleting all messages.'
+    "id": "clear_messages_warning",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Are you sure you want to clear all messages? It cannot be undone."
+    }]
   },
   delete_messages: {
-    id: 'action_delete_messages',
-    defaultMessage: 'Clear Messages for All',
-    description: 'Flat button [Clear for All] (hard-delete all messages)'
+    "id": "action_delete_messages",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Clear Messages for All"
+    }]
   },
   delete_messages_warning: {
-    id: 'delete_messages_warning',
-    defaultMessage: 'Are you sure you want to delete all messages for everyone? It cannot be undone.',
-    description: 'Alert dialog warning when hard-deleting all messages.'
+    "id": "delete_messages_warning",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Are you sure you want to delete all messages for everyone? It cannot be undone."
+    }]
   },
   leave_chat: {
-    id: 'action_leave_chat',
-    defaultMessage: 'Leave Conversation',
-    description: 'Flat button [Leave Conversation]'
+    "id": "action_leave_chat",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Leave Conversation"
+    }]
   },
   leave_chat_warning: {
-    id: 'leave_chat_warning',
-    defaultMessage: 'Are you sure you want to leave this conversation?',
-    description: 'Alert dialog warning when unsubscribing from a chat.'
+    "id": "leave_chat_warning",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Are you sure you want to leave this conversation?"
+    }]
   },
   block_contact: {
-    id: 'action_block_contact',
-    defaultMessage: "Block Contact",
-    description: "Flat button [Block Contact]"
+    "id": "action_block_contact",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Block Contact"
+    }]
   },
   block_contact_warning: {
-    id: 'block_contact_warning',
-    defaultMessage: 'Are you sure you want to block this contact?',
-    description: 'Alert dialog warning when blocking a contact.'
+    "id": "block_contact_warning",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Are you sure you want to block this contact?"
+    }]
   },
   report_chat: {
-    id: 'action_report_chat',
-    defaultMessage: 'Report Conversation',
-    description: 'Flat button [Report Group]'
+    "id": "action_report_chat",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Report Conversation"
+    }]
   },
   report_chat_warning: {
-    id: 'report_chat_warning',
-    defaultMessage: 'Are you sure you want to block and report this conversation?',
-    description: 'Alert dialog warning when reporting a conversation for abuse'
+    "id": "report_chat_warning",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Are you sure you want to block and report this conversation?"
+    }]
   }
 });
 
@@ -2405,8 +2511,10 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       id: "info-title"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "title_info",
-      defaultMessage: "Info",
-      description: "Title for InfoView"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Info"
+      }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_menu_cancel_jsx__WEBPACK_IMPORTED_MODULE_9__.default, {
       onCancel: this.props.onCancel
     }))), this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_6__.default, {
@@ -2443,8 +2551,10 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       className: "small"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_topic_name",
-      defaultMessage: "Name",
-      description: "Label for editing topic name"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Name"
+      }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_8__.default, {
       placeholder: this.state.groupTopic ? "Group name" : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", null, "Unknown"),
       readOnly: !this.state.owner,
@@ -2455,12 +2565,16 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       className: "small"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_private",
-      defaultMessage: "Private comment",
-      description: "Label for editing 'private'"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Private comment"
+      }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "private_editing_placeholder",
-      defaultMessage: "Visible to you only",
-      description: "Placeholder for editing 'private'"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Visible to you only"
+      }]
     }, private_placeholder => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_8__.default, {
       placeholder: private_placeholder,
       value: this.state.private,
@@ -2480,16 +2594,20 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_muting_topic",
-      defaultMessage: "Muted:",
-      description: "Label for Muting/unmuting the topic"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Muted:"
+      }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_4__.default, {
       name: "P",
       checked: this.state.muted,
       onChange: this.handleMuted
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "action_more",
-      defaultMessage: "More",
-      description: "Action for showing more content"
+      defaultMessage: [{
+        "type": 0,
+        "value": "More"
+      }]
     }, more => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_more_button_jsx__WEBPACK_IMPORTED_MODULE_10__.default, {
       title: more,
       open: this.state.moreInfoExpanded,
@@ -2504,8 +2622,10 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_your_permissions",
-      defaultMessage: "Your permissions:",
-      description: "Label for current user permissions"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Your permissions:"
+      }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", {
       className: "clickable",
       onClick: this.handleLaunchPermissionsEditor.bind(this, 'want')
@@ -2513,14 +2633,18 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       className: "small"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_permissions",
-      defaultMessage: "Permissions:",
-      description: "Section title"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Permissions:"
+      }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "quoted"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_you",
-      defaultMessage: "You:",
-      description: "Label for the current user"
+      defaultMessage: [{
+        "type": 0,
+        "value": "You:"
+      }]
     }), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", {
       className: "clickable",
       onClick: this.handleLaunchPermissionsEditor.bind(this, 'want')
@@ -2531,8 +2655,10 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       className: "small"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_default_access",
-      defaultMessage: "Default access mode:",
-      description: "Section title"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Default access mode:"
+      }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "quoted"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Auth: ", this.state.admin ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", {
@@ -2589,8 +2715,10 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       className: "small"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_group_members",
-      defaultMessage: "Group members:",
-      description: "Section title or label"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Group members:"
+      }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
@@ -2601,12 +2729,16 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       className: "material-icons"
     }, "person_add"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_add_members",
-      defaultMessage: "Add members",
-      description: "Flat button [Add members] (to topic)"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Add members"
+      }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "group_has_no_members",
-      defaultMessage: "No members",
-      description: "Shown in place of group members"
+      defaultMessage: [{
+        "type": 0,
+        "value": "No members"
+      }]
     }, no_members => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_contact_list_jsx__WEBPACK_IMPORTED_MODULE_5__.default, {
       contacts: this.state.contactList,
       myUserId: this.props.myUserId,
@@ -2701,8 +2833,10 @@ class LoginView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       onSubmit: this.handleSubmit
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "login_prompt",
-      defaultMessage: "Login",
-      description: "Login placeholder in LoginView"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Login"
+      }]
     }, login_prompt => react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
       type: "text",
       id: "inputLogin",
@@ -2716,8 +2850,10 @@ class LoginView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       autoFocus: true
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "password_prompt",
-      defaultMessage: "Password",
-      description: "Password placeholder in LoginView"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Password"
+      }]
     }, password_prompt => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_visible_password_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
       type: "password",
       id: "inputPassword",
@@ -2737,14 +2873,18 @@ class LoginView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       htmlFor: "save-token"
     }, "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "stay_logged_in",
-      defaultMessage: "Stay logged in",
-      description: "Label for a checkbox"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Stay logged in"
+      }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#reset"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "forgot_password_link",
-      defaultMessage: "Forgot password?",
-      description: "Link to Reset password form"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Forgot password?"
+      }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "dialog-buttons"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
@@ -2752,8 +2892,10 @@ class LoginView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       type: "submit"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_sign_in",
-      defaultMessage: "Sign in",
-      description: "Button [Sign In]"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Sign in"
+      }]
     }))));
   }
 
@@ -2796,10 +2938,16 @@ class LogoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompone
       src: "img/logo.svg"
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", null, "Tinode Web")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_client",
-      defaultMessage: "Client:"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Client:"
+      }]
     }), " ", version), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_server",
-      defaultMessage: "Server:"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Server:"
+      }]
     }), " ", this.props.serverVersion, " (", this.props.serverAddress, ")")));
   }
 
@@ -2856,24 +3004,32 @@ const Drafty = (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().Drafty);
 const NOTIFICATION_EXEC_INTERVAL = 300;
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   'online_now': {
-    id: 'online_now',
-    defaultMessage: 'online now',
-    description: 'Indicator that the user or topic is currently online'
+    "id": "online_now",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "online now"
+    }]
   },
   'last_seen': {
-    id: 'last_seen_timestamp',
-    defaultMessage: 'Last seen',
-    description: 'Label for the timestamp of when the user or topic was last online'
+    "id": "last_seen_timestamp",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Last seen"
+    }]
   },
   'not_found': {
-    id: 'title_not_found',
-    defaultMessage: 'Not found',
-    description: 'Title shown when topic is not found'
+    "id": "title_not_found",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Not found"
+    }]
   },
   'channel': {
-    id: 'channel',
-    defaultMessage: 'channel',
-    description: 'Subtitle shown for channels in MessagesView instead of last seen'
+    "id": "channel",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "channel"
+    }]
   }
 });
 
@@ -3518,7 +3674,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
     if (file.size > maxExternAttachmentSize) {
       this.props.onError(this.props.intl.formatMessage({
-        id: 'file_attachment_too_large'
+        "id": "file_attachment_too_large"
       }, {
         size: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_16__.bytesToHumanSize)(file.size),
         limit: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_16__.bytesToHumanSize)(maxExternAttachmentSize)
@@ -3774,8 +3930,10 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           className: "panel-title"
         }, this.state.title || react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
           id: "unnamed_topic",
-          defaultMessage: "Unnamed",
-          description: "Title shown when the topic has no name"
+          defaultMessage: [{
+            "type": 0,
+            "value": "Unnamed"
+          }]
         }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "topic-last-seen"
         }, lastSeen)), groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_group_subs_jsx__WEBPACK_IMPORTED_MODULE_6__.default, {
@@ -3807,23 +3965,29 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           id: "write-only-note"
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
           id: "messages_not_readable",
-          defaultMessage: "no access to messages",
-          description: "Message shown in topic without the read access"
+          defaultMessage: [{
+            "type": 0,
+            "value": "no access to messages"
+          }]
         })) : null) : null), this.state.peerMessagingDisabled && !this.state.unconfirmed ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "peer-messaging-disabled-note"
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
           className: "material-icons secondary"
         }, "block"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
           id: "peers_messaging_disabled",
-          defaultMessage: "Peer's messaging is disabled.",
-          description: "Shown when the p2p peer's messaging is disabled"
+          defaultMessage: [{
+            "type": 0,
+            "value": "Peer's messaging is disabled."
+          }]
         }), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
           href: "#",
           onClick: this.handleEnablePeer
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
           id: "enable_peers_messaging",
-          defaultMessage: "Enable",
-          description: "Call to action to enable peer's messaging"
+          defaultMessage: [{
+            "type": 0,
+            "value": "Enable"
+          }]
         })), ".") : null, this.state.unconfirmed ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_invitation_jsx__WEBPACK_IMPORTED_MODULE_8__.default, {
           onAction: this.handleNewChatAcceptance
         }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_12__.default, {
@@ -3881,14 +4045,18 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   search_for_contacts: {
-    id: "search_for_contacts",
-    defaultMessage: "Use search to find contacts",
-    description: "Text shown in contacts view when user entered no search query."
+    "id": "search_for_contacts",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Use search to find contacts"
+    }]
   },
   search_no_results: {
-    id: "search_no_results",
-    defaultMessage: "Search returned no results",
-    description: "Text shown in contacts view when query returned no results."
+    "id": "search_no_results",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Search returned no results"
+    }]
   }
 });
 
@@ -3959,8 +4127,10 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       onClick: this.handleTabClick
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "tabtitle_find_user",
-      defaultMessage: "find",
-      description: "Tab title Find"
+      defaultMessage: [{
+        "type": 0,
+        "value": "find"
+      }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
       className: this.state.tabSelected === "grp" ? "active" : null
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
@@ -3969,8 +4139,10 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       onClick: this.handleTabClick
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "tabtitle_new_group",
-      defaultMessage: "new group",
-      description: "Tab title New Group"
+      defaultMessage: [{
+        "type": 0,
+        "value": "new group"
+      }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
       className: this.state.tabSelected === "byid" ? "active" : null
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
@@ -3979,8 +4151,10 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       onClick: this.handleTabClick
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "tabtitle_group_by_id",
-      defaultMessage: "by id",
-      description: "Tab title Find topic by ID"
+      defaultMessage: [{
+        "type": 0,
+        "value": "by id"
+      }]
     })))), this.state.tabSelected === 'grp' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_new_topic_group_jsx__WEBPACK_IMPORTED_MODULE_5__.default, {
       tinode: this.props.tinode,
       onSubmit: this.handleNewGroupSubmit
@@ -4079,8 +4253,10 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       onSubmit: this.handleSubmit
     }, reset ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "new_password_placeholder",
-      defaultMessage: "Enter new password",
-      description: "Placeholder for entering new password"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Enter new password"
+      }]
     }, placeholder => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_visible_password_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
       placeholder: placeholder,
       autoComplete: "new-password",
@@ -4092,12 +4268,16 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       htmlFor: "inputEmail"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_reset_password",
-      defaultMessage: "Send a password reset email:",
-      description: "Label for password reset field"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Send a password reset email:"
+      }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "credential_email_prompt",
-      defaultMessage: "Your registration email",
-      description: "Placeholder for entering email"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Your registration email"
+      }]
     }, placeholder => react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
       type: "email",
       id: "inputEmail",
@@ -4114,12 +4294,16 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       type: "submit"
     }, reset ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_reset",
-      defaultMessage: "Reset",
-      description: "Button [Reset]"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Reset"
+      }]
     }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_send_request",
-      defaultMessage: "Send request",
-      description: "Button [Send request]"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Send request"
+      }]
     }))));
   }
 
@@ -4211,8 +4395,10 @@ class SettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       className: "small"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_server_to_use",
-      defaultMessage: "Server to use:",
-      description: "Label for server selector in SettingsView"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Server to use:"
+      }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_host_selector_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
       serverAddress: this.state.serverAddress,
       onServerAddressChange: this.handleServerAddressChange
@@ -4222,8 +4408,10 @@ class SettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       className: "small"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_wire_transport",
-      defaultMessage: "Wire transport:",
-      description: "Label for wire transport selection in SettingsView"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Wire transport:"
+      }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
@@ -4235,8 +4423,10 @@ class SettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       className: "blue"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_update",
-      defaultMessage: "Update",
-      description: "Button [Update]"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Update"
+      }]
     }))));
   }
 
@@ -4290,69 +4480,95 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   'login': {
-    id: 'sidepanel_title_login',
-    description: 'Sidepanel title for LoginView.',
-    defaultMessage: 'Sign In'
+    "id": "sidepanel_title_login",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Sign In"
+    }]
   },
   'register': {
-    id: 'sidepanel_title_register',
-    description: 'Sidepanel title for CreateAccountView.',
-    defaultMessage: 'Create Account'
+    "id": "sidepanel_title_register",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Create Account"
+    }]
   },
   'settings': {
-    id: 'sidepanel_title_settings',
-    description: 'Sidepanel title for SettingsView.',
-    defaultMessage: 'Settings'
+    "id": "sidepanel_title_settings",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Settings"
+    }]
   },
   'edit': {
-    id: 'sidepanel_title_account_settings',
-    description: 'Sidepanel title for EditAccountView.',
-    defaultMessage: 'Account Settings'
+    "id": "sidepanel_title_account_settings",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Account Settings"
+    }]
   },
   'general': {
-    id: 'sidepanel_title_acc_general',
-    description: 'Sidepanel title for AccGeneralView.',
-    defaultMessage: 'General'
+    "id": "sidepanel_title_acc_general",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "General"
+    }]
   },
   'security': {
-    id: 'sidepanel_title_acc_security',
-    description: 'Sidepanel title for AccSecurityView.',
-    defaultMessage: 'Security'
+    "id": "sidepanel_title_acc_security",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Security"
+    }]
   },
   'notif': {
-    id: 'sidepanel_title_acc_notifications',
-    description: 'Sidepanel title for AccNotificationsView.',
-    defaultMessage: 'Notifications'
+    "id": "sidepanel_title_acc_notifications",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Notifications"
+    }]
   },
   'support': {
-    id: 'sidepanel_title_acc_support',
-    description: 'Sidepanel title for AccSupportView.',
-    defaultMessage: 'Support'
+    "id": "sidepanel_title_acc_support",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Support"
+    }]
   },
   'newtpk': {
-    id: 'sidepanel_title_newtpk',
-    description: 'Sidepanel title for NewTopicView.',
-    defaultMessage: 'Start New Chat'
+    "id": "sidepanel_title_newtpk",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Start New Chat"
+    }]
   },
   'cred': {
-    id: 'sidepanel_title_cred',
-    description: 'Sidepanel title for ValidationView.',
-    defaultMessage: 'Confirm Credentials'
+    "id": "sidepanel_title_cred",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Confirm Credentials"
+    }]
   },
   'reset': {
-    id: 'sidepanel_title_reset',
-    description: 'Sidepanel title for PasswordResetView.',
-    defaultMessage: 'Reset Password'
+    "id": "sidepanel_title_reset",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Reset Password"
+    }]
   },
   'archive': {
-    id: 'sidepanel_title_archive',
-    description: 'Sidepanel title for ContactsView-Archive.',
-    defaultMessage: 'Archived Chats'
+    "id": "sidepanel_title_archive",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Archived Chats"
+    }]
   },
   'blocked': {
-    id: 'sidepanel_title_blocked',
-    description: 'Sidepanel title for ContactsView-Blocked.',
-    defaultMessage: 'Blocked Chats'
+    "id": "sidepanel_title_blocked",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Blocked Chats"
+    }]
   }
 });
 
@@ -4546,34 +4762,52 @@ __webpack_require__.r(__webpack_exports__);
 const POP_SOUND = new Audio('audio/msg.mp3');
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_2__.defineMessages)({
   reconnect_countdown: {
-    id: 'reconnect_countdown',
-    defaultMessage: 'Disconnected. Reconnecting in {seconds}…',
-    description: 'Message shown when an app update is available.'
+    "id": "reconnect_countdown",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Disconnected. Reconnecting in "
+    }, {
+      "type": 1,
+      "value": "seconds"
+    }, {
+      "type": 0,
+      "value": "…"
+    }]
   },
   reconnect_now: {
-    id: 'reconnect_now',
-    defaultMessage: 'Try now',
-    description: 'Prompt for reconnecting now'
+    "id": "reconnect_now",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Try now"
+    }]
   },
   push_init_failed: {
-    id: 'push_init_failed',
-    defaultMessage: 'Failed to initialize push notifications',
-    description: 'Error message when push notifications have failed to initialize.'
+    "id": "push_init_failed",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Failed to initialize push notifications"
+    }]
   },
   invalid_security_token: {
-    id: 'invalid_security_token',
-    defaultMessage: 'Invalid security token',
-    description: 'Error message when resetting password.'
+    "id": "invalid_security_token",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Invalid security token"
+    }]
   },
   no_connection: {
-    id: 'no_connection',
-    defaultMessage: 'No connection',
-    description: 'Warning that the user is offline.'
+    "id": "no_connection",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "No connection"
+    }]
   },
   code_doesnot_match: {
-    id: 'code_doesnot_match',
-    defaultMessage: 'Code does not match',
-    description: 'Error message when the credential validation code is incorrect.'
+    "id": "code_doesnot_match",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Code does not match"
+    }]
   }
 });
 
@@ -4745,9 +4979,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
             console.log("Failed to register service worker:", err);
           });
         } catch (err) {
-          this.handleError(formatMessage({
-            id: 'push_init_failed'
-          }), 'err');
+          this.handleError(formatMessage(messages.push_init_failed), 'err');
           console.log("Failed to initialize push notifications", err);
           this.setState({
             desktopAlertsEnabled: false
@@ -4823,14 +5055,18 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         if (installingWorker.state == 'installed' && navigator.serviceWorker.controller) {
           const msg = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_2__.FormattedMessage, {
             id: "update_available",
-            defaultMessage: "Update available.",
-            description: "Message shown when an app update is available."
+            defaultMessage: [{
+              "type": 0,
+              "value": "Update available."
+            }]
           }), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
             href: ""
           }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_2__.FormattedMessage, {
             id: "reload_update",
-            defaultMessage: "Reload",
-            description: "Call to action to reload application when update is available."
+            defaultMessage: [{
+              "type": 0,
+              "value": "Reload"
+            }]
           })), ".");
           this.handleError(msg, 'info');
         }
@@ -4883,9 +5119,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     if (online) {
       this.handleError();
     } else {
-      this.handleError(this.props.intl.formatMessage({
-        id: 'no_connection'
-      }), 'warn');
+      this.handleError(this.props.intl.formatMessage(messages.no_connection), 'warn');
     }
 
     this.setState({
@@ -5023,9 +5257,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           });
 
           if (cred) {
-            this.handleError(this.props.intl.formatMessage({
-              id: 'code_doesnot_match'
-            }), 'warn');
+            this.handleError(this.props.intl.formatMessage(messages.code_doesnot_match), 'warn');
           }
 
           this.handleCredentialsRequest(ctrl.params);
@@ -5852,7 +6084,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
     return [subscribed ? {
       title: this.props.intl.formatMessage({
-        id: 'menu_item_info'
+        "id": "menu_item_info"
       }),
       handler: this.handleShowInfoView
     } : null, subscribed ? 'messages_clear' : null, subscribed && deleter ? 'messages_clear_hard' : null, muted ? blocked ? null : 'topic_unmute' : 'topic_mute', self_blocked ? 'topic_unblock' : 'topic_block', !archived ? 'topic_archive' : null, 'topic_delete'];
@@ -5970,9 +6202,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     token = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_12__.base64ReEncode)(token);
 
     if (!token) {
-      this.handleError(this.props.intl.formatMessage({
-        id: 'invalid_security_token'
-      }), 'err');
+      this.handleError(this.props.intl.formatMessage(messages.invalid_security_token), 'err');
     } else {
       this.tinode.connect().then(() => {
         return this.tinode.updateAccountBasic(null, null, newPassword, {
@@ -6154,14 +6384,18 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   phone: {
-    id: 'phone_dative',
-    defaultMessage: 'phone',
-    description: "Dative case of 'phone', i.e. 'phone' in 'by phone'"
+    "id": "phone_dative",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "phone"
+    }]
   },
   email: {
-    id: 'email_dative',
-    defaultMessage: 'email',
-    description: "Dative case of 'email', i.e. 'email' in 'by email'"
+    "id": "email_dative",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "email"
+    }]
   }
 });
 
@@ -6222,8 +6456,16 @@ class ValidationView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       htmlFor: "enter-confirmation-code"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "enter_confirmation_code_prompt",
-      defaultMessage: "Enter confirmation code sent to you by {method}:",
-      description: "Request to enter confirmation code",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Enter confirmation code sent to you by "
+      }, {
+        "type": 1,
+        "value": "method"
+      }, {
+        "type": 0,
+        "value": ":"
+      }],
       values: {
         method: method
       }
@@ -6231,8 +6473,10 @@ class ValidationView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "numeric_confirmation_code_prompt",
-      defaultMessage: "Numbers only",
-      description: "Prompt for numeric conformation code"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Numbers only"
+      }]
     }, numbers_only => react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
       type: "text",
       id: "enter-confirmation-code",
@@ -6248,8 +6492,10 @@ class ValidationView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       onClick: this.handleSubmit
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_confirm",
-      defaultMessage: "Confirm",
-      description: "Button [Confirm]"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Confirm"
+      }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       className: "white",
       onClick: this.handleCancel
@@ -6413,8 +6659,10 @@ class Attachment extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
       className: "material-icons"
     }, "file_download"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "save_attachment",
-      defaultMessage: "save",
-      description: "Call to save an attachment"
+      defaultMessage: [{
+        "type": 0,
+        "value": "save"
+      }]
     }));
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "attachment"
@@ -6703,8 +6951,10 @@ class ChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         className: "gray"
       }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
         id: "deleted_content",
-        defaultMessage: "content deleted",
-        description: "Shown when messages are deleted"
+        defaultMessage: [{
+          "type": 0,
+          "value": "content deleted"
+        }]
       })));
     } else if (typeof content != 'string') {
       content = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
@@ -6713,8 +6963,10 @@ class ChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         className: "gray"
       }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
         id: "invalid_content",
-        defaultMessage: "invalid content",
-        description: "Shown when message is unreadable"
+        defaultMessage: [{
+          "type": 0,
+          "value": "invalid content"
+        }]
       })));
     }
 
@@ -6744,8 +6996,10 @@ class ChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       className: "author"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "user_not_found",
-      defaultMessage: "Not found",
-      description: "In place of a user's full name when the user is not found."
+      defaultMessage: [{
+        "type": 0,
+        "value": "Not found"
+      }]
     }, notFound => {
       return this.props.userName || react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", null, notFound);
     })) : null));
@@ -7221,14 +7475,18 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   badge_you: {
-    id: 'badge_you',
-    defaultMessage: 'you',
-    description: 'Badge for indicating the current user'
+    "id": "badge_you",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "you"
+    }]
   },
   badge_owner: {
-    id: 'badge_owner',
-    defaultMessage: 'owner',
-    description: 'Badge for indicating the owner'
+    "id": "badge_owner",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "owner"
+    }]
   }
 });
 
@@ -7576,79 +7834,109 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_2__.defineMessages)({
   info: {
-    id: 'menu_item_info',
-    defaultMessage: 'Info',
-    description: 'Show extended topic information'
+    "id": "menu_item_info",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Info"
+    }]
   },
   clear_messages: {
-    id: 'menu_item_clear_messages',
-    defaultMessage: 'Clear messages',
-    description: 'Delete all messages'
+    "id": "menu_item_clear_messages",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Clear messages"
+    }]
   },
   clear_for_all: {
-    id: 'menu_item_clear_messages_for_all',
-    defaultMessage: 'Clear for All',
-    description: 'Delete all message(s) for all members'
+    "id": "menu_item_clear_messages_for_all",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Clear for All"
+    }]
   },
   'delete': {
-    id: 'menu_item_delete',
-    defaultMessage: 'Delete',
-    description: 'Delete selected messages'
+    "id": "menu_item_delete",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Delete"
+    }]
   },
   delete_for_all: {
-    id: 'menu_item_delete_for_all',
-    defaultMessage: 'Delete for All',
-    description: 'Delete selected message(s) for all members'
+    "id": "menu_item_delete_for_all",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Delete for All"
+    }]
   },
   send_retry: {
-    id: 'menu_item_send_retry',
-    defaultMessage: 'Retry',
-    description: 'Retry sending message'
+    "id": "menu_item_send_retry",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Retry"
+    }]
   },
   mute: {
-    id: 'menu_item_mute',
-    defaultMessage: 'Mute',
-    description: 'Turn off notifications'
+    "id": "menu_item_mute",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Mute"
+    }]
   },
   unmute: {
-    id: 'menu_item_unmute',
-    defaultMessage: 'Unmute',
-    description: 'Turn notifications on'
+    "id": "menu_item_unmute",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Unmute"
+    }]
   },
   topic_delete: {
-    id: 'menu_item_delete_topic',
-    defaultMessage: 'Delete',
-    description: 'Delete entire topic'
+    "id": "menu_item_delete_topic",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Delete"
+    }]
   },
   topic_delete_warning: {
-    id: 'topic_delete_warning',
-    defaultMessage: 'Are you sure you want to delete this conversation?',
-    description: 'Alert warning when deleting entire topic'
+    "id": "topic_delete_warning",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Are you sure you want to delete this conversation?"
+    }]
   },
   unblock: {
-    id: 'menu_item_unblock',
-    defaultMessage: 'Unblock',
-    description: 'Unblock topic or user'
+    "id": "menu_item_unblock",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Unblock"
+    }]
   },
   block: {
-    id: 'menu_item_block',
-    defaultMessage: 'Block',
-    description: 'Block topic or user'
+    "id": "menu_item_block",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Block"
+    }]
   },
   topic_block_warning: {
-    id: 'topic_block_warning',
-    defaultMessage: 'Are you sure you want to block this conversation?',
-    description: 'Alert warning when blocking a topic.'
+    "id": "topic_block_warning",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Are you sure you want to block this conversation?"
+    }]
   },
   member_delete: {
-    id: 'menu_item_member_delete',
-    defaultMessage: 'Remove',
-    description: 'Remove user from topic'
+    "id": "menu_item_member_delete",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Remove"
+    }]
   },
   archive: {
-    id: 'menu_item_archive_topic',
-    defaultMessage: 'Archive',
-    description: 'Move topic from the list of active chats to archive'
+    "id": "menu_item_archive_topic",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Archive"
+    }]
   }
 });
 
@@ -7671,11 +7959,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         id: 'messages_clear',
         title: formatMessage(messages.clear_messages),
         handler: (params, errorHandler) => {
-          return props.onShowAlert(formatMessage({
-            id: 'menu_item_clear_messages'
-          }), formatMessage({
-            id: 'clear_messages_warning'
-          }), () => {
+          return props.onShowAlert(formatMessage(messages.menu_item_clear_messages), formatMessage(messages.clear_messages_warning), () => {
             this.deleteMessages(true, false, params, errorHandler);
           }, null, true, null);
         }
@@ -7684,11 +7968,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         id: 'messages_clear_hard',
         title: formatMessage(messages.clear_for_all),
         handler: (params, errorHandler) => {
-          return props.onShowAlert(formatMessage({
-            id: 'menu_item_clear_messages_for_all'
-          }), formatMessage({
-            id: 'delete_messages_warning'
-          }), () => {
+          return props.onShowAlert(formatMessage(messages.menu_item_clear_messages_for_all), formatMessage(messages.delete_messages_warning), () => {
             return this.deleteMessages(true, true, params, errorHandler);
           }, null, true, null);
         }
@@ -7733,9 +8013,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         id: 'topic_block',
         title: formatMessage(messages.block),
         handler: (params, errorHandler) => {
-          return props.onShowAlert(formatMessage({
-            id: 'menu_item_block'
-          }), formatMessage(messages.topic_block_warning), () => {
+          return props.onShowAlert(formatMessage(messages.menu_item_block), formatMessage(messages.topic_block_warning), () => {
             return this.topicPermissionSetter('-JP', params, errorHandler).then(ctrl => {
               this.props.onTopicRemoved(params.topicName);
               return ctrl;
@@ -7747,9 +8025,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         id: 'topic_delete',
         title: formatMessage(messages.topic_delete),
         handler: (params, errorHandler) => {
-          return props.onShowAlert(formatMessage({
-            id: 'menu_item_delete_topic'
-          }), formatMessage(messages.topic_delete_warning), () => {
+          return props.onShowAlert(formatMessage(messages.menu_item_delete_topic), formatMessage(messages.topic_delete_warning), () => {
             const topic = this.props.tinode.getTopic(params.topicName);
 
             if (!topic) {
@@ -7785,9 +8061,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       },
       'permissions': {
         id: 'permissions',
-        title: formatMessage({
-          id: 'menu_item_edit_permissions'
-        }),
+        title: formatMessage(messages.menu_item_edit_permissions),
         handler: null
       },
       'member_delete': {
@@ -8161,12 +8435,16 @@ class FileProgress extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       className: "material-icons"
     }, "close"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "action_cancel",
-      defaultMessage: "cancel",
-      description: "Call to action [cancel]"
+      defaultMessage: [{
+        "type": 0,
+        "value": "cancel"
+      }]
     })) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "upload_finishing",
-      defaultMessage: "finishing...",
-      description: "Notification that upload is finishing"
+      defaultMessage: [{
+        "type": 0,
+        "value": "finishing..."
+      }]
     }));
   }
 
@@ -8193,14 +8471,24 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   no_contacts: {
-    id: 'no_contacts',
-    defaultMessage: 'You have no contacts :-(',
-    description: 'Shown in ContactsView when the user has no contacts'
+    "id": "no_contacts",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "You have no contacts :-("
+    }]
   },
   contacts_not_found_short: {
-    id: 'contacts_not_found_short',
-    defaultMessage: "No contacts match ''{query}''",
-    description: 'Shown in ContactsView when search returned no results'
+    "id": "contacts_not_found_short",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "No contacts match '"
+    }, {
+      "type": 1,
+      "value": "query"
+    }, {
+      "type": 0,
+      "value": "'"
+    }]
   }
 });
 
@@ -8364,8 +8652,10 @@ class GroupManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       className: "small"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "title_group_members",
-      defaultMessage: "Group Members",
-      description: "Section title"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Group Members"
+      }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_chip_input_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
@@ -8380,8 +8670,10 @@ class GroupManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       className: "small"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "title_all_contacts",
-      defaultMessage: "All Contacts",
-      description: "Section title [All Contacts]"
+      defaultMessage: [{
+        "type": 0,
+        "value": "All Contacts"
+      }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_list_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
       contacts: this.props.contacts,
       myUserId: this.props.myUserId,
@@ -8400,15 +8692,19 @@ class GroupManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       onClick: this.handleSubmit
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_ok",
-      defaultMessage: "OK",
-      description: "Button [OK]"
+      defaultMessage: [{
+        "type": 0,
+        "value": "OK"
+      }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       className: "white",
       onClick: this.handleCancel
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_cancel",
-      defaultMessage: "Cancel",
-      description: "Button [Cancel]"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Cancel"
+      }]
     }))));
   }
 
@@ -8465,8 +8761,16 @@ class GroupSubs extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       id: "topic-users"
     }, usersOnline, " ", totalCount > countToShow ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "more_online_members",
-      defaultMessage: "+{overflow} more",
-      description: "Shown in MessagesView title bar when the number of online subscribers exceeds MAX_ONLINE_IN_TOPIC",
+      defaultMessage: [{
+        "type": 0,
+        "value": "+"
+      }, {
+        "type": 1,
+        "value": "overflow"
+      }, {
+        "type": 0,
+        "value": " more"
+      }],
       values: {
         overflow: totalCount - countToShow
       }
@@ -8637,8 +8941,10 @@ class ImagePreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       className: "material-icons"
     }, "file_download"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "download_action",
-      defaultMessage: "download",
-      description: "Call to action [download]"
+      defaultMessage: [{
+        "type": 0,
+        "value": "download"
+      }]
     })) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, this.props.content.filename), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: e => {
@@ -8664,18 +8970,24 @@ class ImagePreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       id: "image-preview-footer"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_file_name",
-      defaultMessage: "File name:",
-      description: "Label for a file name"
+      defaultMessage: [{
+        "type": 0,
+        "value": "File name:"
+      }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       title: this.props.content.filename
     }, filename ? filename : '-'))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_content_type",
-      defaultMessage: "Content type:",
-      description: "Label for file content type (mime)"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Content type:"
+      }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.props.content.type)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_size",
-      defaultMessage: "Size:",
-      description: "Label for file size"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Size:"
+      }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, width, " \xD7 ", height, " px; ", (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__.bytesToHumanSize)(this.props.content.size)))));
   }
 
@@ -8864,8 +9176,10 @@ class Invitation extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
       className: "title"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "chat_invitation",
-      defaultMessage: "You are invited to start a new chat. What would you like to do?",
-      description: "New chat invitation message: [Accept] [Ignore] [Block]."
+      defaultMessage: [{
+        "type": 0,
+        "value": "You are invited to start a new chat. What would you like to do?"
+      }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "footer"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
@@ -8875,8 +9189,10 @@ class Invitation extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "chat_invitation_accept",
-      defaultMessage: "Accept",
-      description: "Action [Accept] for chat invitation."
+      defaultMessage: [{
+        "type": 0,
+        "value": "Accept"
+      }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       className: "white",
       onClick: event => {
@@ -8884,8 +9200,10 @@ class Invitation extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "chat_invitation_ignore",
-      defaultMessage: "Ignore",
-      description: "Action [Ignore] for chat invitation."
+      defaultMessage: [{
+        "type": 0,
+        "value": "Ignore"
+      }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       className: "white",
       onClick: event => {
@@ -8893,8 +9211,10 @@ class Invitation extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "chat_invitation_block",
-      defaultMessage: "Block",
-      description: "Action [Block] for chat invitation."
+      defaultMessage: [{
+        "type": 0,
+        "value": "Block"
+      }]
     }))));
   }
 
@@ -9161,9 +9481,11 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   invalid_id: {
-    id: 'error_invalid_id',
-    defaultMessage: 'Invalid ID',
-    description: 'Error message'
+    "id": "error_invalid_id",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Invalid ID"
+    }]
   }
 });
 
@@ -9211,8 +9533,10 @@ class NewTopicById extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "group_user_id_prompt",
-      defaultMessage: "Group or User ID",
-      description: "Prompt for entering user or group ID"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Group or User ID"
+      }]
     }, prompt => react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
       type: "text",
       placeholder: prompt,
@@ -9228,8 +9552,10 @@ class NewTopicById extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       onClick: this.handleSubmit
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_subscribe",
-      defaultMessage: "Subscribe",
-      description: "Button [Subscribe]"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Subscribe"
+      }]
     }))));
   }
 
@@ -9343,8 +9669,10 @@ class NewTopicGroup extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       id: "label_topic_name"
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "topic_name_editing_placeholder",
-      defaultMessage: "Freeform name of the group",
-      description: "Prompt for entering topic name"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Freeform name of the group"
+      }]
     }, placeholder => react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
       type: "text",
       id: "new-topic-fn",
@@ -9378,8 +9706,10 @@ class NewTopicGroup extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       onClick: this.handleChannelToggle
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "channel_prompt",
-      defaultMessage: "This is a channel",
-      description: "Checkbox label when creating a channel"
+      defaultMessage: [{
+        "type": 0,
+        "value": "This is a channel"
+      }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "title_tag_manager"
     }, title => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_tag_manager_jsx__WEBPACK_IMPORTED_MODULE_4__.default, {
@@ -9394,8 +9724,10 @@ class NewTopicGroup extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       className: submitClasses
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_create",
-      defaultMessage: "Create",
-      description: "Button [Create]"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Create"
+      }]
     }))));
   }
 
@@ -9425,44 +9757,108 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   'joiner': {
-    id: 'permission_join',
-    defaultMessage: "Join ({val})",
-    description: 'Name of J permission'
+    "id": "permission_join",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Join ("
+    }, {
+      "type": 1,
+      "value": "val"
+    }, {
+      "type": 0,
+      "value": ")"
+    }]
   },
   'reader': {
-    id: 'permission_read',
-    defaultMessage: "Read ({val})",
-    description: 'Name of R permission'
+    "id": "permission_read",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Read ("
+    }, {
+      "type": 1,
+      "value": "val"
+    }, {
+      "type": 0,
+      "value": ")"
+    }]
   },
   'writer': {
-    id: 'permission_write',
-    defaultMessage: "Write ({val})",
-    description: 'Name of W permission'
+    "id": "permission_write",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Write ("
+    }, {
+      "type": 1,
+      "value": "val"
+    }, {
+      "type": 0,
+      "value": ")"
+    }]
   },
   'preser': {
-    id: 'permission_pres',
-    defaultMessage: "Get notified ({val})",
-    description: 'Name of P permission'
+    "id": "permission_pres",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Get notified ("
+    }, {
+      "type": 1,
+      "value": "val"
+    }, {
+      "type": 0,
+      "value": ")"
+    }]
   },
   'approver': {
-    id: 'permission_admin',
-    defaultMessage: "Approve ({val})",
-    description: 'Name of A permission'
+    "id": "permission_admin",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Approve ("
+    }, {
+      "type": 1,
+      "value": "val"
+    }, {
+      "type": 0,
+      "value": ")"
+    }]
   },
   'sharer': {
-    id: 'permission_share',
-    defaultMessage: "Share ({val})",
-    description: 'Name of S permission'
+    "id": "permission_share",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Share ("
+    }, {
+      "type": 1,
+      "value": "val"
+    }, {
+      "type": 0,
+      "value": ")"
+    }]
   },
   'deleter': {
-    id: 'permission_delete',
-    defaultMessage: "Delete ({val})",
-    description: 'Name of D permission'
+    "id": "permission_delete",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Delete ("
+    }, {
+      "type": 1,
+      "value": "val"
+    }, {
+      "type": 0,
+      "value": ")"
+    }]
   },
   'owner': {
-    id: 'permission_owner',
-    defaultMessage: "Owner ({val})",
-    description: 'Name of O permission'
+    "id": "permission_owner",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Owner ("
+    }, {
+      "type": 1,
+      "value": "val"
+    }, {
+      "type": 0,
+      "value": ")"
+    }]
   }
 });
 
@@ -9581,8 +9977,10 @@ class PermissionsEditor extends (react__WEBPACK_IMPORTED_MODULE_0___default().Co
       className: "small"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "title_permissions",
-      defaultMessage: "Permissions",
-      description: "Section title"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Permissions"
+      }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("table", {
       className: "permission-editor"
     }, this.props.compare ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("thead", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", null, this.props.modeTitle), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("th", null, this.props.compareTitle))) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tbody", null, items)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -9629,14 +10027,18 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   'sending': {
-    'id': 'message_sending',
-    'defaultMessage': 'sending...',
-    'description': 'Message being sent, in place of time stamp'
+    "id": "message_sending",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "sending..."
+    }]
   },
   'failed': {
-    'id': 'message_sending_failed',
-    'defaultMessage': 'failed',
-    'description': 'Failed to send message, in place of time stamp'
+    "id": "message_sending_failed",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "failed"
+    }]
   }
 });
 
@@ -9758,8 +10160,10 @@ class SearchContacts extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       className: "material-icons search"
     }, "search"), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "search_placeholder",
-      defaultMessage: "List like email:alice@example.com, tel:17025550003...",
-      description: "Placeholder in contacts search field"
+      defaultMessage: [{
+        "type": 0,
+        "value": "List like email:alice@example.com, tel:17025550003..."
+      }]
     }, search_placeholder => react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
       className: "search",
       type: "text",
@@ -9804,29 +10208,51 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   'messaging_disabled': {
-    id: 'messaging_disabled_prompt',
-    defaultMessage: 'Messaging disabled',
-    description: 'Prompt in SendMessage in read-only topic'
+    "id": "messaging_disabled_prompt",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Messaging disabled"
+    }]
   },
   'type_new_message': {
-    id: 'new_message_prompt',
-    defaultMessage: 'New message',
-    description: 'Prompt in send message field'
+    "id": "new_message_prompt",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "New message"
+    }]
   },
   'add_image_caption': {
-    id: 'image_caption_prompt',
-    defaultMessage: 'Image caption',
-    description: 'Prompt in SendMessage for attached image'
+    "id": "image_caption_prompt",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Image caption"
+    }]
   },
   'file_attachment_too_large': {
-    id: 'file_attachment_too_large',
-    defaultMessage: 'The file size {size} exceeds the {limit} limit.',
-    description: 'Error message when attachment is too large'
+    "id": "file_attachment_too_large",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "The file size "
+    }, {
+      "type": 1,
+      "value": "size"
+    }, {
+      "type": 0,
+      "value": " exceeds the "
+    }, {
+      "type": 1,
+      "value": "limit"
+    }, {
+      "type": 0,
+      "value": " limit."
+    }]
   },
   'cannot_initiate_upload': {
-    id: 'cannot_initiate_file_upload',
-    defaultMessage: 'Cannot initiate file upload.',
-    description: 'Generic error messagewhen attachment fails'
+    "id": "cannot_initiate_file_upload",
+    "defaultMessage": [{
+      "type": 0,
+      "value": "Cannot initiate file upload."
+    }]
   }
 });
 
@@ -10203,8 +10629,10 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
       if (tags.length == 0) {
         tags = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
           id: "tags_not_found",
-          defaultMessage: "No tags defined. Add some.",
-          description: ""
+          defaultMessage: [{
+            "type": 0,
+            "value": "No tags defined. Add some."
+          }]
         }));
       }
     }
@@ -10217,8 +10645,10 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
       className: "small"
     }, this.props.title)), this.state.activated ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "tags_editor_no_tags",
-      defaultMessage: "Add some tags",
-      description: "Tag editor prompt when no tags are found."
+      defaultMessage: [{
+        "type": 0,
+        "value": "Add some tags"
+      }]
     }, add_tags_prompt => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_chip_input_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
       chips: tags,
       avatarDisabled: true,
@@ -10236,15 +10666,13 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
       onClick: this.handleCancel
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_cancel",
-      defautMessage: "Cancel",
-      description: "Rejection button [Cancel]"
+      defautMessage: "Cancel"
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       className: "blue",
       onClick: this.handleSubmit
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_ok",
-      defautMessage: "OK",
-      description: "Confirmation button [OK]"
+      defautMessage: "OK"
     }))) : null) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "quoted"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
@@ -10260,8 +10688,10 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
       className: "material-icons"
     }, "edit"), " \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "title_manage_tags",
-      defaultMessage: "Manage",
-      description: "Section title for the list of tags"
+      defaultMessage: [{
+        "type": 0,
+        "value": "Manage"
+      }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, tags)));
   }
 

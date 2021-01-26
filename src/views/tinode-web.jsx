@@ -243,7 +243,7 @@ class TinodeWeb extends React.Component {
             console.log("Failed to register service worker:", err);
           });
         } catch (err) {
-          this.handleError(formatMessage({id: 'push_init_failed'}), 'err');
+          this.handleError(formatMessage(messages.push_init_failed), 'err');
           console.log("Failed to initialize push notifications", err);
           this.setState({desktopAlertsEnabled: false});
         }
@@ -365,7 +365,7 @@ class TinodeWeb extends React.Component {
     if (online) {
       this.handleError();
     } else {
-      this.handleError(this.props.intl.formatMessage({id: 'no_connection'}), 'warn');
+      this.handleError(this.props.intl.formatMessage(messages.no_connection), 'warn');
     }
     this.setState({liveConnection: online});
   }
@@ -488,7 +488,7 @@ class TinodeWeb extends React.Component {
         if (ctrl.code >= 300 && ctrl.text === 'validate credentials') {
           this.setState({loadSpinnerVisible: false});
           if (cred) {
-            this.handleError(this.props.intl.formatMessage({id: 'code_doesnot_match'}), 'warn');
+            this.handleError(this.props.intl.formatMessage(messages.code_doesnot_match), 'warn');
           }
           this.handleCredentialsRequest(ctrl.params);
         } else {
@@ -1384,7 +1384,7 @@ class TinodeWeb extends React.Component {
   handleResetPassword(scheme, newPassword, token) {
     token = base64ReEncode(token);
     if (!token) {
-      this.handleError(this.props.intl.formatMessage({id: 'invalid_security_token'}), 'err');
+      this.handleError(this.props.intl.formatMessage(messages.invalid_security_token), 'err');
     } else {
       this.tinode.connect()
         .then(() => {

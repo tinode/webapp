@@ -107,8 +107,8 @@ class ContextMenu extends React.Component {
         title: formatMessage(messages.clear_messages),
         handler: (params, errorHandler) => {
           return props.onShowAlert(
-            formatMessage({id: 'menu_item_clear_messages'}), // title
-            formatMessage({id: 'clear_messages_warning'}), // content
+            formatMessage(messages.menu_item_clear_messages), // title
+            formatMessage(messages.clear_messages_warning), // content
             (() => { this.deleteMessages(true, false, params, errorHandler); }), // onConfirm
             null, // "OK"
             true, // Show Reject button
@@ -121,8 +121,8 @@ class ContextMenu extends React.Component {
         title: formatMessage(messages.clear_for_all),
         handler: (params, errorHandler) => {
           return props.onShowAlert(
-            formatMessage({id: 'menu_item_clear_messages_for_all'}), // title
-            formatMessage({id: 'delete_messages_warning'}), // content
+            formatMessage(messages.menu_item_clear_messages_for_all), // title
+            formatMessage(messages.delete_messages_warning), // content
             (() => { return this.deleteMessages(true, true, params, errorHandler); }),
             null, // "OK"
             true, // Show Reject button
@@ -171,7 +171,7 @@ class ContextMenu extends React.Component {
         title: formatMessage(messages.block),
         handler: (params, errorHandler) => {
           return props.onShowAlert(
-            formatMessage({id: 'menu_item_block'}), // title
+            formatMessage(messages.menu_item_block), // title
             formatMessage(messages.topic_block_warning), // content
             (() => {
               return this.topicPermissionSetter('-JP', params, errorHandler).then((ctrl) => {
@@ -190,7 +190,7 @@ class ContextMenu extends React.Component {
         title: formatMessage(messages.topic_delete),
         handler: (params, errorHandler) => {
           return props.onShowAlert(
-            formatMessage({id: 'menu_item_delete_topic'}), // title
+            formatMessage(messages.menu_item_delete_topic), // title
             formatMessage(messages.topic_delete_warning), // content
             (() => {
               const topic = this.props.tinode.getTopic(params.topicName);
@@ -229,7 +229,7 @@ class ContextMenu extends React.Component {
       // menu_item_edit_permissions is defined elsewhere.
       'permissions': {
         id: 'permissions',
-        title: formatMessage({id: 'menu_item_edit_permissions'}),
+        title: formatMessage(messages.menu_item_edit_permissions),
         handler: null
       },
       'member_delete': {
