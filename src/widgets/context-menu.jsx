@@ -108,7 +108,7 @@ class ContextMenu extends React.Component {
         handler: (params, errorHandler) => {
           return props.onShowAlert(
             formatMessage(messages.menu_item_clear_messages), // title
-            formatMessage(messages.clear_messages_warning), // content
+            formatMessage({id: 'clear_messages_warning'}), // content
             (() => { this.deleteMessages(true, false, params, errorHandler); }), // onConfirm
             null, // "OK"
             true, // Show Reject button
@@ -122,7 +122,7 @@ class ContextMenu extends React.Component {
         handler: (params, errorHandler) => {
           return props.onShowAlert(
             formatMessage(messages.menu_item_clear_messages_for_all), // title
-            formatMessage(messages.delete_messages_warning), // content
+            formatMessage({id: 'delete_messages_warning'}), // content
             (() => { return this.deleteMessages(true, true, params, errorHandler); }),
             null, // "OK"
             true, // Show Reject button
@@ -229,7 +229,7 @@ class ContextMenu extends React.Component {
       // menu_item_edit_permissions is defined elsewhere.
       'permissions': {
         id: 'permissions',
-        title: formatMessage(messages.menu_item_edit_permissions),
+        title: formatMessage({id: 'menu_item_edit_permissions'}),
         handler: null
       },
       'member_delete': {

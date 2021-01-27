@@ -1,4 +1,13 @@
 {
   "presets": ["@babel/preset-react", "@babel/preset-env"],
   "comments": false,
+  "plugins": [
+    [
+      "formatjs",
+      {
+        "idInterpolationPattern": "[sha512:contenthash:base64:6]",
+        "ast": true
+      }
+    ]
+  ]
 }

@@ -7959,7 +7959,9 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         id: 'messages_clear',
         title: formatMessage(messages.clear_messages),
         handler: (params, errorHandler) => {
-          return props.onShowAlert(formatMessage(messages.menu_item_clear_messages), formatMessage(messages.clear_messages_warning), () => {
+          return props.onShowAlert(formatMessage(messages.menu_item_clear_messages), formatMessage({
+            "id": "clear_messages_warning"
+          }), () => {
             this.deleteMessages(true, false, params, errorHandler);
           }, null, true, null);
         }
@@ -7968,7 +7970,9 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         id: 'messages_clear_hard',
         title: formatMessage(messages.clear_for_all),
         handler: (params, errorHandler) => {
-          return props.onShowAlert(formatMessage(messages.menu_item_clear_messages_for_all), formatMessage(messages.delete_messages_warning), () => {
+          return props.onShowAlert(formatMessage(messages.menu_item_clear_messages_for_all), formatMessage({
+            "id": "delete_messages_warning"
+          }), () => {
             return this.deleteMessages(true, true, params, errorHandler);
           }, null, true, null);
         }
@@ -8061,7 +8065,9 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       },
       'permissions': {
         id: 'permissions',
-        title: formatMessage(messages.menu_item_edit_permissions),
+        title: formatMessage({
+          "id": "menu_item_edit_permissions"
+        }),
         handler: null
       },
       'member_delete': {
