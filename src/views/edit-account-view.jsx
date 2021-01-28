@@ -48,13 +48,16 @@ export default class EditAccountView extends React.Component {
         <div className="hr" />
         <div className="panel-form-column">
           <a href="#" className="flat-button" onClick={(e) => {e.preventDefault(); this.props.onBasicNavigate('notif');}}>
-            <i className="material-icons">notifications</i>&nbsp;<FormattedMessage id="sidepanel_title_acc_notifications" />
+            <i className="material-icons">notifications</i>&nbsp;<FormattedMessage id="sidepanel_title_acc_notifications"
+              defaultMessage="Notifications" description="Sidepanel title for AccNotificationsView." />
           </a>
           <a href="#" className="flat-button" onClick={(e) => {e.preventDefault(); this.props.onBasicNavigate('security');}}>
-            <i className="material-icons">security</i>&nbsp;<FormattedMessage id="sidepanel_title_acc_security" />
+            <i className="material-icons">security</i>&nbsp;<FormattedMessage id="sidepanel_title_acc_security"
+              defaultMessage="Security" description="Sidepanel title for AccSecurityView." />
           </a>
           <a href="#" className="flat-button" onClick={(e) => {e.preventDefault(); this.props.onBasicNavigate('support');}}>
-            <i className="material-icons">contact_support</i>&nbsp;<FormattedMessage id="sidepanel_title_acc_support" />
+            <i className="material-icons">contact_support</i>&nbsp;<FormattedMessage id="sidepanel_title_acc_support"
+              defaultMessage="Support" description="Sidepanel title for AccSupportView." />
           </a>
         </div>
       </div>

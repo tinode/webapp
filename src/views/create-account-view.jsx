@@ -79,11 +79,13 @@ export default class CreateAccountView extends React.PureComponent {
       <form className="panel-form-column" onSubmit={this.handleSubmit}>
         <div className="panel-form-row">
           <div className="panel-form-column">
-            <FormattedMessage id="login_prompt">{
+            <FormattedMessage id="login_prompt" defaultMessage="Login"
+              description="Placeholer for username/login">{
               (login_prompt) => <input type="text" placeholder={login_prompt} autoComplete="user-name"
                 value={this.state.login} onChange={this.handleLoginChange} required autoFocus />
             }</FormattedMessage>
-            <FormattedMessage id="password_prompt">{
+            <FormattedMessage id="password_prompt" defaultMessage="Password"
+              description="Placeholder/prompt for entering password">{
               (password_prompt) => <VisiblePassword placeholder={password_prompt} autoComplete="new-password"
                 value={this.state.password} onFinished={this.handlePasswordChange}
                 required={true} />
@@ -110,7 +112,8 @@ export default class CreateAccountView extends React.PureComponent {
         <div className="panel-form-row">
           <CheckBox id="save-token" name="save-token" checked={this.state.saveToken}
             onChange={this.handleToggleSaveToken} />
-          <FormattedMessage id="stay_logged_in">{
+          <FormattedMessage id="stay_logged_in" defaultMessage="Stay logged in"
+            description="Label for a checkbox">{
             (stay_logged_in) => <label htmlFor="save-token">&nbsp;{stay_logged_in}</label>
           }</FormattedMessage>
         </div>

@@ -45,6 +45,11 @@ const messages = defineMessages({
     id: 'channel',
     defaultMessage: 'channel',
     description: 'Subtitle shown for channels in MessagesView instead of last seen'
+  },
+  'file_attachment_too_large': {
+    id: 'file_attachment_too_large',
+    defaultMessage: 'The file size {size} exceeds the {limit} limit.',
+    description: 'Error message when attachment is too large'
   }
 });
 
@@ -669,8 +674,8 @@ class MessagesView extends React.Component {
 
     if (file.size > maxExternAttachmentSize) {
       // Too large.
-      this.props.onError(this.props.intl.formatMessage({id: 'file_attachment_too_large'},
-          {size: bytesToHumanSize(file.size), limit: bytesToHumanSize(maxExternAttachmentSize)}), 'err');
+      this.props.onError(this.props.intl.formatMessage(messages.file_attachment_too_large,
+        {size: bytesToHumanSize(file.size), limit: bytesToHumanSize(maxExternAttachmentSize)}), 'err');
     } else {
       this.setState({ docPreview: {
         file: file,

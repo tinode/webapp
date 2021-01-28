@@ -151,10 +151,10 @@ class PermissionsEditor extends React.Component {
         <br />
         <div className="dialog-buttons">
           <button className="outline" onClick={this.handleCancel}>
-            <FormattedMessage id="button_cancel" />
+            <FormattedMessage id="button_cancel" defaultMessage="Cancel" description="Button [Cancel]" />
           </button>
           <button className="blue" onClick={this.handleSubmit}>
-            <FormattedMessage id="button_ok" />
+            <FormattedMessage id="button_ok" defaultMessage="OK" description="Button [OK]" />
           </button>
         </div>
       </div>

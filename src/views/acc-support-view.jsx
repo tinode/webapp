@@ -27,7 +27,8 @@ export default class AccSupportView extends React.PureComponent {
         <div className="hr" />
         <div className="panel-form-column">
           <div className="panel-form-row">
-            <label className="small"><FormattedMessage id="label_client" /></label>
+            <label className="small"><FormattedMessage id="label_client" defaultMessage="Client:"
+              description="Label for a client version" /></label>
             {APP_NAME}
           </div>
           <div className="panel-form-row">
@@ -35,7 +36,8 @@ export default class AccSupportView extends React.PureComponent {
             {Tinode.getLibrary()}
           </div>
           <div className="panel-form-row">
-            <label className="small"><FormattedMessage id="label_server" /></label>
+            <label className="small"><FormattedMessage id="label_server" defaultMessage="Server:"
+              description="Label for a server version" /></label>
             {this.props.serverVersion}
           </div>
           <div className="panel-form-row">

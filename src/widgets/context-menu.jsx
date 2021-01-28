@@ -57,6 +57,11 @@ const messages = defineMessages({
     defaultMessage: 'Are you sure you want to delete this conversation?',
     description: 'Alert warning when deleting entire topic'
   },
+  delete_messages_warning: {
+    id: 'delete_messages_warning',
+    defaultMessage: 'Are you sure you want to delete all messages for everyone? It cannot be undone.',
+    description: 'Alert dialog warning when hard-deleting all messages.'
+  },
   unblock: {
     id: 'menu_item_unblock',
     defaultMessage: 'Unblock',
@@ -82,7 +87,17 @@ const messages = defineMessages({
     id: 'menu_item_archive_topic',
     defaultMessage: 'Archive',
     description: 'Move topic from the list of active chats to archive'
-  }
+  },
+  edit_permissions: {
+    id: 'menu_item_edit_permissions',
+    defaultMessage: 'Edit permissions',
+    description: 'Menu item [Edit permissions]'
+  },
+  clear_messages_warning: {
+    id: 'clear_messages_warning',
+    defaultMessage: 'Are you sure you want to clear all messages? It cannot be undone.',
+    description: 'Alert dialog warning when deleting all messages.'
+  },
 });
 
 class ContextMenu extends React.Component {
@@ -108,7 +123,7 @@ class ContextMenu extends React.Component {
         handler: (params, errorHandler) => {
           return props.onShowAlert(
             formatMessage(messages.menu_item_clear_messages), // title
-            formatMessage({id: 'clear_messages_warning'}), // content
+            formatMessage(messages.clear_messages_warning), // content
             (() => { this.deleteMessages(true, false, params, errorHandler); }), // onConfirm
             null, // "OK"
             true, // Show Reject button
@@ -122,7 +137,7 @@ class ContextMenu extends React.Component {
         handler: (params, errorHandler) => {
           return props.onShowAlert(
             formatMessage(messages.menu_item_clear_messages_for_all), // title
-            formatMessage({id: 'delete_messages_warning'}), // content
+            formatMessage(message.delete_messages_warning), // content
             (() => { return this.deleteMessages(true, true, params, errorHandler); }),
             null, // "OK"
             true, // Show Reject button
@@ -229,7 +244,7 @@ class ContextMenu extends React.Component {
       // menu_item_edit_permissions is defined elsewhere.
       'permissions': {
         id: 'permissions',
-        title: formatMessage({id: 'menu_item_edit_permissions'}),
+        title: formatMessage(messages.menu_item_edit_permissions),
         handler: null
       },
       'member_delete': {

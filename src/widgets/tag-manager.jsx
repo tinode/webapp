@@ -128,10 +128,10 @@ export default class TagManager extends React.Component {
           {this.props.onSubmit || this.props.onCancel ?
             <div id="tag-manager-buttons" className="dialog-buttons panel-form-row">
               <button className="outline" onClick={this.handleCancel}>
-                <FormattedMessage id="button_cancel" defautMessage="Cancel" description="Rejection button [Cancel]" />
+                <FormattedMessage id="button_cancel" defaultMessage="Cancel" description="Button [Cancel]" />
               </button>
               <button className="blue" onClick={this.handleSubmit}>
-                <FormattedMessage id="button_ok" defautMessage="OK" description="Confirmation button [OK]" />
+                <FormattedMessage id="button_ok" defaultMessage="OK" description="Button [OK]" />
               </button>
             </div>
           : null}

@@ -615,7 +615,8 @@ class InfoView extends React.Component {
               {this.state.moreInfoExpanded ?
                 <div className="panel-form-column">
                   <div className="panel-form-row">
-                    <label><FormattedMessage id="label_user_id" /></label>
+                    <label><FormattedMessage id="label_user_id" defaultMessage="ID:"
+                      description="Label for user address (ID)" /></label>
                     <tt>{this.state.address}</tt>
                   </div>
                   {this.state.groupTopic ?
@@ -692,7 +693,8 @@ class InfoView extends React.Component {
             <div className="hr" />
             {this.state.owner ?
               <>
-                <FormattedMessage id="title_tag_manager">{
+                <FormattedMessage id="title_tag_manager" defaultMessage="Tags (user discovery)"
+                  description="Section title for TagManager">{
                   (tags) => <TagManager
                     title={tags}
                     tags={this.state.tags}
