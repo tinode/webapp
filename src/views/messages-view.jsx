@@ -26,27 +26,27 @@ import { bytesToHumanSize, shortDateFormat } from '../lib/strformat.js';
 const NOTIFICATION_EXEC_INTERVAL = 300;
 
 const messages = defineMessages({
-  'online_now': {
+  online_now: {
     id: 'online_now',
     defaultMessage: 'online now',
     description: 'Indicator that the user or topic is currently online',
   },
-  'last_seen': {
+  last_seen: {
     id: 'last_seen_timestamp',
     defaultMessage: 'Last seen',
     description: 'Label for the timestamp of when the user or topic was last online'
   },
-  'not_found': {
+  not_found: {
     id: 'title_not_found',
     defaultMessage: 'Not found',
     description: 'Title shown when topic is not found'
   },
-  'channel': {
+  channel: {
     id: 'channel',
     defaultMessage: 'channel',
     description: 'Subtitle shown for channels in MessagesView instead of last seen'
   },
-  'file_attachment_too_large': {
+  file_attachment_too_large: {
     id: 'file_attachment_too_large',
     defaultMessage: 'The file size {size} exceeds the {limit} limit.',
     description: 'Error message when attachment is too large'

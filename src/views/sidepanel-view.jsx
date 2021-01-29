@@ -20,67 +20,67 @@ import ValidationView from './validation-view.jsx';
 
 // Panel titles for translation.
 const messages = defineMessages({
-  'login': {
+  login: {
     id: 'sidepanel_title_login',
     description: 'Sidepanel title for LoginView.',
     defaultMessage: 'Sign In'
   },
-  'register': {
+  register: {
     id: 'sidepanel_title_register',
     description: 'Sidepanel title for CreateAccountView.',
     defaultMessage: 'Create Account'
   },
-  'settings': {
+  settings: {
     id: 'sidepanel_title_settings',
     description: 'Sidepanel title for SettingsView.',
     defaultMessage: 'Settings'
   },
-  'edit': {
+  edit: {
     id: 'sidepanel_title_account_settings',
     description: 'Sidepanel title for EditAccountView.',
     defaultMessage: 'Account Settings'
   },
-  'general': {
+  general: {
     id: 'sidepanel_title_acc_general',
     description: 'Sidepanel title for AccGeneralView.',
     defaultMessage: 'General'
   },
-  'security': {
+  security: {
     id: 'sidepanel_title_acc_security',
     description: 'Sidepanel title for AccSecurityView.',
     defaultMessage: 'Security'
   },
-  'notif': {
+  notif: {
     id: 'sidepanel_title_acc_notifications',
     description: 'Sidepanel title for AccNotificationsView.',
     defaultMessage: 'Notifications'
   },
-  'support': {
+  support: {
     id: 'sidepanel_title_acc_support',
     description: 'Sidepanel title for AccSupportView.',
     defaultMessage: 'Support'
   },
-  'newtpk': {
+  newtpk: {
     id: 'sidepanel_title_newtpk',
     description: 'Sidepanel title for NewTopicView.',
     defaultMessage: 'Start New Chat'
   },
-  'cred': {
+  cred: {
     id: 'sidepanel_title_cred',
     description: 'Sidepanel title for ValidationView.',
     defaultMessage: 'Confirm Credentials'
   },
-  'reset': {
+  reset: {
     id: 'sidepanel_title_reset',
     description: 'Sidepanel title for PasswordResetView.',
     defaultMessage: 'Reset Password'
   },
-  'archive': {
+  archive: {
     id: 'sidepanel_title_archive',
     description: 'Sidepanel title for ContactsView-Archive.',
     defaultMessage: 'Archived Chats'
   },
-  'blocked': {
+  blocked: {
     id: 'sidepanel_title_blocked',
     description: 'Sidepanel title for ContactsView-Blocked.',
     defaultMessage: 'Blocked Chats'

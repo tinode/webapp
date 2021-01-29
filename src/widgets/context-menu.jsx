@@ -22,7 +22,7 @@ const messages = defineMessages({
     defaultMessage: 'Clear for All',
     description: 'Delete all message(s) for all members'
   },
-  'delete': {
+  delete: {
     id: 'menu_item_delete',
     defaultMessage: 'Delete',
     description: 'Delete selected messages'
