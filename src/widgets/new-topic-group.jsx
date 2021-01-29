@@ -67,7 +67,8 @@ export default class NewTopicGroup extends React.PureComponent {
         <div className="panel-form-row">
           <div className="panel-form-column">
             <label className="small" htmlFor="new-topic-fn">
-              <FormattedMessage id="label_topic_name" />
+              <FormattedMessage id="label_topic_name" defaultMessage="Name"
+                description="Label for editing topic name" />
             </label>
             <FormattedMessage id="topic_name_editing_placeholder" defaultMessage="Freeform name of the group"
               description="Prompt for entering topic name">{
@@ -76,9 +77,11 @@ export default class NewTopicGroup extends React.PureComponent {
             }</FormattedMessage>
             <br />
             <label className="small" htmlFor="new-topic-priv">
-              <FormattedMessage id="label_private" />
+              <FormattedMessage id="label_private" defaultMessage="Private comment"
+                description="Label for editing 'private'" />
             </label>
-            <FormattedMessage id="private_editing_placeholder">{
+            <FormattedMessage id="private_editing_placeholder" defaultMessage="Visible to you only"
+              description="Placeholder for editing 'private'">{
               (placeholder) => <input type="text" id="new-topic-priv" placeholder={placeholder}
                 value={this.state.private} onChange={this.handlePrivateChange} />
             }</FormattedMessage>
@@ -93,7 +96,8 @@ export default class NewTopicGroup extends React.PureComponent {
             defaultMessage="This is a channel"
             description="Checkbox label when creating a channel" /></label>
         </div>
-        <FormattedMessage id="title_tag_manager">{
+        <FormattedMessage id="title_tag_manager" defaultMessage="Tags (user discovery)"
+          description="Section title for TagManager">{
           (title) => <TagManager
             tags={this.state.tags}
             activated={true}

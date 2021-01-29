@@ -1,46 +1,37 @@
-// 1.Flattens messages extracted via the React Intl Babel plugin. An error will be
-// thrown if there are messages with the same `id`. The result is a file containing
+// 1. Takes file with messages extracted via the React Intl Babel plugin and converts it into a file containing
 // `id: message` pairs in "en" locale.
 //
 // 2. Takes all translations and groups them into a single file.
-var fs = require('fs');
-var path = require('path');
-var globSync = require('glob').sync;
-var mkdirpSync = require('mkdirp').sync;
+const fs = require('fs');
+const path = require('path');
+const globSync = require('glob').sync;
+const mkdirpSync = require('mkdirp').sync;
 
+const EXTRACTED_STRINGS = './src/i18n/ex/base-en.json';
 const DEFAULT_TRANSLATION = 'en.json';
-const MESSAGES_PATTERN = './src/i18n/src/**/*.json';
 const LANG_DIR         = './src/i18n/';
 const LANG_PATTERN     = './src/i18n/*.json';
 const FINAL_FILE       = './src/messages.json';
+const TRANSLATIONS     = './src/translations.js'
 
 const MISSING_MARKER = ':!![MISSING]!!:';
 const OBSOLETE_MARKER = ':!![OBSOLETE]!!:';
 
-// The react-intl-babel-plugin saves extracted messages
-// into files, one fine per component. Rewrite them into
-// a single file en.json.
-let messages = globSync(MESSAGES_PATTERN)
-  .map((filename) => fs.readFileSync(filename, 'utf8'))
-  .map((file) => JSON.parse(file))
-  .reduce((collection, descriptors) => {
-    descriptors.forEach(({id, defaultMessage}) => {
-      if (!defaultMessage) {
-        return;
-      }
-      if (collection.hasOwnProperty(id)) {
-        // Message is already defined.
-        throw new Error(`Duplicate message id: ${id}`);
-      }
-      collection[id] = defaultMessage;
-    });
+// The formatjs/cli saves extracted messages into a file {'message_id': {defaultMessage: 'default message text', description: '...'}, ...}.
+// Rewrite them into a single file en.json {'message_id': 'default message text', }.
 
-    return collection;
-  }, {});
+// Read master-set of messages in default language.
+const baseMessages = JSON.parse(fs.readFileSync(EXTRACTED_STRINGS, 'utf8'));
+// Convert.
+const en = {};
+for (const [id, msg] of Object.entries(baseMessages)) {
+  en[id] = msg.defaultMessage;
+}
 
+// Write extracted strings into default language file.
 let filename = path.join(LANG_DIR, DEFAULT_TRANSLATION);
 mkdirpSync(path.dirname(filename));
-fs.writeFileSync(filename, JSON.stringify(messages, null, 2)+"\n");
+fs.writeFileSync(filename, JSON.stringify(en, null, 2)+"\n");
 
 // Find messages present in en.json but missing in translations and vice versa.
 // Mark missing or obsolete messages as such in translation files.
@@ -50,19 +41,24 @@ globSync(LANG_PATTERN)
     if (parts[parts.length-1] != DEFAULT_TRANSLATION) {
       const translated = JSON.parse(fs.readFileSync(filename, 'utf8'));
       // Find missing messages.
-      Object.entries(messages).forEach((ent) => {
+      Object.entries(baseMessages).forEach((ent) => {
         if (!translated.hasOwnProperty(ent[0])) {
+          // Missing translation.
           translated[ent[0]] = MISSING_MARKER + ent[1];
+        } else if (translated[ent[0]].indexOf(OBSOLETE_MARKER) === 0) {
+          // No longer obsolete. Remove obsolete marker.
+          translated[ent[0]] = translated[ent[0]].substring(0, OBSOLETE_MARKER.length);
         }
       });
       // Find no longer needed messages.
       Object.entries(translated).forEach((ent) => {
-        if (!messages.hasOwnProperty(ent[0])) {
+        if (!baseMessages.hasOwnProperty(ent[0]) && translated.hasOwnProperty(ent[0])) {
           let val = translated[ent[0]];
-          if (val.indexOf(MISSING_MARKER) == 0) {
+          if (val.indexOf(MISSING_MARKER) === 0) {
+            // No longer missing.
             val = val.substring(0, MISSING_MARKER.length);
           }
-          if (val.indexOf(OBSOLETE_MARKER) != 0) {
+          if (val.indexOf(OBSOLETE_MARKER) !== 0) {
             val = OBSOLETE_MARKER + val;
           }
           translated[ent[0]] = val;
@@ -72,18 +68,21 @@ globSync(LANG_PATTERN)
     }
   });
 
+// List of all available translations.
+const languageList = {};
 // Combine all translations into a single json {"lang_1": {...}, "lang_2: {...}"}
 // while removing messages marked as missing or obsolete.
 
 // Read all translations.
-messages = globSync(LANG_PATTERN)
+const messages = globSync(LANG_PATTERN)
   .map((filename) => {
     const parts = filename.split('/');
     const locale = parts[parts.length - 1].split('.json')[0];
     const translated = JSON.parse(fs.readFileSync(filename, 'utf8'));
-
+    languageList[locale] = locale;
     // Strip messages prefixed with MISSING or OBSOLETE markers.
     for (let id in translated) {
+      // process.stdout.write("-- handling translation " + id + "; "+ String(translated[id]) + "; in " + String(filename) + "; --\n");
       if (translated[id].indexOf(OBSOLETE_MARKER) == 0 ||
           translated[id].indexOf(MISSING_MARKER) == 0) {
         delete translated[id];

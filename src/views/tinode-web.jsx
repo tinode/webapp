@@ -57,6 +57,11 @@ const messages = defineMessages({
     id: 'code_doesnot_match',
     defaultMessage: 'Code does not match',
     description: 'Error message when the credential validation code is incorrect.'
+  },
+  menu_item_info: {
+    id: 'menu_item_info',
+    defaultMessage: 'Info',
+    description: 'Show extended topic information'
   }
 });
 
@@ -1271,7 +1276,7 @@ class TinodeWeb extends React.Component {
 
     return [
       subscribed ? {
-        title: this.props.intl.formatMessage({id: 'menu_item_info'}),
+        title: this.props.intl.formatMessage(messages.menu_item_info),
         handler: this.handleShowInfoView
       } : null,
       subscribed ? 'messages_clear' : null,

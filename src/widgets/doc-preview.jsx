@@ -37,8 +37,10 @@ export default class DocPreview extends React.PureComponent {
         <div id="image-preview-container">
           <div className="flex-column narrow">
             <i className="material-icons gray">{iconFromMime(this.props.content.type)}</i>
-            <div><b><FormattedMessage id="label_content_type" /></b> {this.props.content.type || 'application/octet-stream'}</div>
-            <div><b><FormattedMessage id="label_size" /></b> {bytesToHumanSize(this.props.content.size)}</div>
+            <div><b><FormattedMessage id="label_content_type" defaultMessage="Content type:"
+              description="Label for file content type (mime)" /></b> {this.props.content.type || 'application/octet-stream'}</div>
+            <div><b><FormattedMessage id="label_size" defaultMessage="Size:"
+              description="Label for file size" /></b> {bytesToHumanSize(this.props.content.size)}</div>
           </div>
         </div>
         <SendMessage

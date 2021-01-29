@@ -23,7 +23,7 @@
   "archived_contacts": "Archivierte Kontakte ({count})",
   "contacts_not_found": "Sie haben keine Unterhaltungen<br />¯∖_(ツ)_/¯",
   "full_name_prompt": "Vollständiger Name, z.B. Lisa Musterfrau",
-  "email_prompt": "E-Mail, z.B. jdoe@beispiel.de",
+  "email_prompt": "E-Mail, z.B. lisam@beispiel.de",
   "button_sign_up": "Anmelden",
   "label_your_name": "Ihr Name",
   "label_user_id": "ID:",

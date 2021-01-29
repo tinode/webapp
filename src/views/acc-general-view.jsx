@@ -135,8 +135,10 @@ export default class AccGeneralView extends React.Component {
       <div className="scrollable-panel">
         <div className="panel-form-row">
           <div className="panel-form-column">
-            <label className="small"><FormattedMessage id="label_your_name" /></label>
-            <div><FormattedMessage id="full_name_prompt">{
+            <label className="small"><FormattedMessage id="label_your_name" defaultMessage="Your name"
+              description="Label for full name editing" /></label>
+            <div><FormattedMessage id="full_name_prompt" defaultMessage="Full name, e.g. John Doe"
+              description="Input placeholder for person's full name">{
               (full_name_placeholder) => <InPlaceEdit
                 placeholder={full_name_placeholder}
                 value={this.state.fullName}

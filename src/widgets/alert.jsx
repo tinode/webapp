@@ -11,13 +11,13 @@ export default class Alert extends React.PureComponent {
           <div className="dialog-buttons">
             {this.props.onReject ?
               <button className="outline" onClick={this.props.onReject}>
-                {this.props.reject || <FormattedMessage id="button_cancel" />}
+                {this.props.reject || <FormattedMessage id="button_cancel" defaultMessage="Cancel" description="Button [Cancel]" />}
               </button>
               :
               null
             }
             <button className="blue" onClick={this.props.onConfirm}>
-              {this.props.confirm || <FormattedMessage id="button_ok" />}
+              {this.props.confirm || <FormattedMessage id="button_ok" defaultMessage="OK" description="Button [OK]"  />}
             </button>
           </div>
         </div>

@@ -37,7 +37,7 @@ As of the time of this writing the following translations exist:
  * Russian
  * Spanish
 
-More translations are welcome. Send a pull request with a json file with translated strings. Take a look at [English](/src/i18n/en.json), [Russian](/src/i18n/ru.json), or [Simplified Chinese](/src/i18n/zh.json) translations for guidance.
+More translations are welcome. The source file with the original English strings and context explanations is located at [/src/i18n/ex/base-en.json](/src/i18n/ex/base-en.json). Only `defaultMessage` needs to be translated. Send a pull request with a json file with translated strings. Take a look at [Spanish](/src/i18n/es.json), [Russian](/src/i18n/ru.json), or [Simplified Chinese](/src/i18n/zh.json) translations for guidance.
 
 
 ## Not done yet

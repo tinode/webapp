@@ -50,7 +50,7 @@ export default class LoginView extends React.Component {
     return (
       <form id="login-form" onSubmit={this.handleSubmit}>
         <FormattedMessage id="login_prompt" defaultMessage="Login"
-          description="Login placeholder in LoginView">
+          description="Placeholer for username/login">
         {
           (login_prompt) => <input type="text" id="inputLogin"
             placeholder={login_prompt}
@@ -63,7 +63,7 @@ export default class LoginView extends React.Component {
         }
         </FormattedMessage>
         <FormattedMessage id="password_prompt" defaultMessage="Password"
-          description="Password placeholder in LoginView">
+          description="Placeholder/prompt for entering password">
         {
           (password_prompt) => <VisiblePassword type="password" id="inputPassword"
             placeholder={password_prompt}

@@ -7,27 +7,27 @@ import { KEYPRESS_DELAY } from '../config.js';
 import { filePasted } from '../lib/blob-helpers.js';
 
 const messages = defineMessages({
-  'messaging_disabled': {
+  messaging_disabled: {
     id: 'messaging_disabled_prompt',
     defaultMessage: 'Messaging disabled',
     description: 'Prompt in SendMessage in read-only topic'
   },
-  'type_new_message': {
+  type_new_message: {
     id: 'new_message_prompt',
     defaultMessage: 'New message',
     description: 'Prompt in send message field'
   },
-  'add_image_caption': {
+  add_image_caption: {
     id: 'image_caption_prompt',
     defaultMessage: 'Image caption',
     description: 'Prompt in SendMessage for attached image'
   },
-  'file_attachment_too_large': {
+  file_attachment_too_large: {
     id: 'file_attachment_too_large',
     defaultMessage: 'The file size {size} exceeds the {limit} limit.',
     description: 'Error message when attachment is too large'
   },
-  'cannot_initiate_upload': {
+  cannot_initiate_upload: {
     id: 'cannot_initiate_file_upload',
     defaultMessage: 'Cannot initiate file upload.',
     description: 'Generic error messagewhen attachment fails'

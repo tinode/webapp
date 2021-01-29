@@ -10,42 +10,42 @@ import { makeImageUrl } from '../lib/blob-helpers.js';
 
 // Translatable permission names.
 const messages = defineMessages({
-  'joiner': {
+  joiner: {
     id: 'permission_join',
     defaultMessage: "Join ({val})",
     description: 'Name of J permission'
   },
-  'reader': {
+  reader: {
     id: 'permission_read',
     defaultMessage: "Read ({val})",
     description: 'Name of R permission'
   },
-  'writer': {
+  writer: {
     id: 'permission_write',
     defaultMessage: "Write ({val})",
     description: 'Name of W permission'
   },
-  'preser': {
+  preser: {
     id: 'permission_pres',
     defaultMessage: "Get notified ({val})",
     description: 'Name of P permission'
   },
-  'approver': {
+  approver: {
     id: 'permission_admin',
     defaultMessage: "Approve ({val})",
     description: 'Name of A permission'
   },
-  'sharer': {
+  sharer: {
     id: 'permission_share',
     defaultMessage: "Share ({val})",
     description: 'Name of S permission'
   },
-  'deleter': {
+  deleter: {
     id: 'permission_delete',
     defaultMessage: "Delete ({val})",
     description: 'Name of D permission'
   },
-  'owner': {
+  owner: {
     id: 'permission_owner',
     defaultMessage: "Owner ({val})",
     description: 'Name of O permission'
@@ -151,10 +151,10 @@ class PermissionsEditor extends React.Component {
         <br />
         <div className="dialog-buttons">
           <button className="outline" onClick={this.handleCancel}>
-            <FormattedMessage id="button_cancel" />
+            <FormattedMessage id="button_cancel" defaultMessage="Cancel" description="Button [Cancel]" />
           </button>
           <button className="blue" onClick={this.handleSubmit}>
-            <FormattedMessage id="button_ok" />
+            <FormattedMessage id="button_ok" defaultMessage="OK" description="Button [OK]" />
           </button>
         </div>
       </div>

@@ -37,7 +37,8 @@ export default class Contact extends React.Component {
   render() {
     let title = this.props.title;
     if (!title) {
-      title = <i><FormattedMessage id="unnamed_topic" /></i>;
+      title = <i><FormattedMessage id="unnamed_topic" defaultMessage="Unnamed"
+        description="Title shown when the topic has no name" /></i>;
     } else if (title.length > 30) {
       // FIXME: this is probably wrong for RTL languages.
       title = title.substring(0, 28) + '…';
