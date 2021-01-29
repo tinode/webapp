@@ -186,7 +186,7 @@ class ContextMenu extends React.Component {
         title: formatMessage(messages.block),
         handler: (params, errorHandler) => {
           return props.onShowAlert(
-            formatMessage(messages.menu_item_block), // title
+            formatMessage(messages.block), // title
             formatMessage(messages.topic_block_warning), // content
             (() => {
               return this.topicPermissionSetter('-JP', params, errorHandler).then((ctrl) => {
@@ -244,7 +244,7 @@ class ContextMenu extends React.Component {
       // menu_item_edit_permissions is defined elsewhere.
       'permissions': {
         id: 'permissions',
-        title: formatMessage(messages.menu_item_edit_permissions),
+        title: formatMessage(messages.edit_permissions),
         handler: null
       },
       'member_delete': {

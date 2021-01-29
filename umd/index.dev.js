@@ -7966,7 +7966,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         id: 'topic_block',
         title: formatMessage(messages.block),
         handler: (params, errorHandler) => {
-          return props.onShowAlert(formatMessage(messages.menu_item_block), formatMessage(messages.topic_block_warning), () => {
+          return props.onShowAlert(formatMessage(messages.block), formatMessage(messages.topic_block_warning), () => {
             return this.topicPermissionSetter('-JP', params, errorHandler).then(ctrl => {
               this.props.onTopicRemoved(params.topicName);
               return ctrl;
@@ -8014,7 +8014,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       },
       'permissions': {
         id: 'permissions',
-        title: formatMessage(messages.menu_item_edit_permissions),
+        title: formatMessage(messages.edit_permissions),
         handler: null
       },
       'member_delete': {
