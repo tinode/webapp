@@ -7,12 +7,14 @@
     "url": "https://github.com/tinode/example-react-js.git"
   },
   "scripts": {
-    "build": "npm run vers && npm run build:prod && npm run build:dev && npm run build:css && npm run build:i18n",
+    "build": "npm run vers && npm run build:css && npm run extract && npm run build:i18n && npm run build:prod && npm run build:dev",
     "build:css": "postcss css/base.css > css/base.min.css",
     "build:dev": "webpack --mode development",
     "build:prod": "webpack --mode production",
-    "build:i18n": "node scripts/flatten-messages.js",
-    "vers": "node scripts/gen-version.js"
+    "build:i18n": "node scripts/pack-messages.js",
+    "vers": "node scripts/gen-version.js",
+    "extract": "formatjs extract 'src/**/*.jsx' --out-file src/i18n/ex/base-en.json --id-interpolation-pattern '[sha512:contenthash:base64:6]'",
+    "compile": "formatjs compile"
   },
   "browserslist": "> 0.5%, not IE 11",
   "files": [
@@ -48,6 +50,15 @@
     "react",
     "web"
   ],
+  "locales": [
+    "de",
+    "en",
+    "es",
+    "ko",
+    "ro",
+    "ru",
+    "zh"
+  ],
   "main": "umd/index.prod.js",
   "bugs": {
     "url": "https://github.com/tinode/example-react-js/issues"
@@ -67,8 +78,9 @@
     "@babel/core": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.10",
+    "@formatjs/cli": "^3.0.5",
     "babel-loader": "^8.2.2",
-    "babel-plugin-formatjs": "^9.0.2",
+    "babel-plugin-formatjs": "^9.0.4",
     "browserslist": "^4.16.1",
     "copy-webpack-plugin": "^6.4.1",
     "cssnano": "^4.1.10",
