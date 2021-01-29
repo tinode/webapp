@@ -7,15 +7,15 @@ import Tinode from 'tinode-sdk';
 import { shortDateFormat } from '../lib/strformat.js';
 
 const messages = defineMessages({
-  'sending': {
-    'id': 'message_sending',
-    'defaultMessage': 'sending...',
-    'description': 'Message being sent, in place of time stamp'
+  message_sending: {
+    id: 'message_sending',
+    defaultMessage: 'sending...',
+    description: 'Message being sent, in place of time stamp'
   },
-  'failed': {
-    'id': 'message_sending_failed',
-    'defaultMessage': 'failed',
-    'description': 'Failed to send message, in place of time stamp'
+  message_sending_failed: {
+    id: 'message_sending_failed',
+    defaultMessage: 'failed',
+    description: 'Failed to send message, in place of time stamp'
   }
 });
 
@@ -24,9 +24,9 @@ class ReceivedMarker extends React.PureComponent {
     const {formatMessage} = this.props.intl;
     let timestamp;
     if (this.props.received <= Tinode.MESSAGE_STATUS_SENDING) {
-      timestamp = formatMessage(messages.sending);
+      timestamp = formatMessage(messages.message_sending);
     } else if (this.props.received == Tinode.MESSAGE_STATUS_FAILED) {
-      timestamp = formatMessage(messages.failed);
+      timestamp = formatMessage(messages.message_sending_failed);
     } else {
       timestamp = shortDateFormat(this.props.timestamp, this.props.intl.locale);
     }
