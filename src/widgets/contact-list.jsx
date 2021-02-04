@@ -81,7 +81,7 @@ class ContactList extends React.Component {
           if (!this.props.showMode) {
             const msg = c.latestMessage();
             if (msg) {
-              deliveryStatus = c.msgStatus(msg);
+              deliveryStatus = msg._status || c.msgStatus(msg, true);
               preview = typeof msg.content == 'string' ?
                 msg.content.substr(0, MESSAGE_PREVIEW_LENGTH) :
                 Drafty.preview(msg.content, MESSAGE_PREVIEW_LENGTH);

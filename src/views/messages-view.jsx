@@ -516,7 +516,7 @@ class MessagesView extends React.Component {
 
       // Aknowledge messages except own messages. They are
       // automatically assumed to be read and recived.
-      const status = topic.msgStatus(msg);
+      const status = topic.msgStatus(msg, true);
       if (status >= Tinode.MESSAGE_STATUS_SENT && msg.from != this.props.myUserId) {
         this.postReadNotification(msg.seq);
       }
@@ -849,7 +849,7 @@ class MessagesView extends React.Component {
           previousFrom = thisFrom;
 
           const isReply = !(thisFrom == this.props.myUserId);
-          const deliveryStatus = topic.msgStatus(msg);
+          const deliveryStatus = topic.msgStatus(msg, true);
 
           let userName, userAvatar, userFrom;
           if (groupTopic) {

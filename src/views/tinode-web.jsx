@@ -688,7 +688,7 @@ class TinodeWeb extends React.Component {
   // Sending "received" notifications
   tnData(data) {
     const topic = this.tinode.getTopic(data.topic);
-    if (topic.msgStatus(data) >= Tinode.MESSAGE_STATUS_SENT && data.from != this.state.myUserId) {
+    if (topic.msgStatus(data, true) >= Tinode.MESSAGE_STATUS_SENT && data.from != this.state.myUserId) {
       clearTimeout(this.receivedTimer);
       this.receivedTimer = setTimeout(() => {
         this.receivedTimer = undefined;

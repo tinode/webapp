@@ -3562,7 +3562,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         newState.scrollPosition = 0;
       }
 
-      const status = topic.msgStatus(msg);
+      const status = topic.msgStatus(msg, true);
 
       if (status >= (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().MESSAGE_STATUS_SENT) && msg.from != this.props.myUserId) {
         this.postReadNotification(msg.seq);
@@ -3909,7 +3909,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
           previousFrom = thisFrom;
           const isReply = !(thisFrom == this.props.myUserId);
-          const deliveryStatus = topic.msgStatus(msg);
+          const deliveryStatus = topic.msgStatus(msg, true);
           let userName, userAvatar, userFrom;
 
           if (groupTopic) {
@@ -5502,7 +5502,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   tnData(data) {
     const topic = this.tinode.getTopic(data.topic);
 
-    if (topic.msgStatus(data) >= (tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default().MESSAGE_STATUS_SENT) && data.from != this.state.myUserId) {
+    if (topic.msgStatus(data, true) >= (tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default().MESSAGE_STATUS_SENT) && data.from != this.state.myUserId) {
       clearTimeout(this.receivedTimer);
       this.receivedTimer = setTimeout(() => {
         this.receivedTimer = undefined;
@@ -7638,7 +7638,7 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
             const msg = c.latestMessage();
 
             if (msg) {
-              deliveryStatus = c.msgStatus(msg);
+              deliveryStatus = msg._status || c.msgStatus(msg, true);
               preview = typeof msg.content == 'string' ? msg.content.substr(0, _config_js__WEBPACK_IMPORTED_MODULE_6__.MESSAGE_PREVIEW_LENGTH) : tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.preview(msg.content, _config_js__WEBPACK_IMPORTED_MODULE_6__.MESSAGE_PREVIEW_LENGTH);
             }
           }
