@@ -13,7 +13,7 @@
     "build:prod": "webpack --mode production",
     "build:i18n": "node scripts/pack-messages.js",
     "vers": "node scripts/gen-version.js",
-    "extract": "formatjs extract 'src/**/*.jsx' --out-file src/i18n/ex/base-en.json --id-interpolation-pattern '[sha512:contenthash:base64:6]'",
+    "extract": "formatjs extract src/**/*.jsx --out-file src/i18n/ex/base-en.json --id-interpolation-pattern '[sha512:contenthash:base64:6]'",
     "compile": "formatjs compile"
   },
   "browserslist": "> 0.5%, not IE 11",
