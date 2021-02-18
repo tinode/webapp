@@ -5050,6 +5050,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           }).catch(err => {
             console.log("Failed to register service worker:", err);
           });
+          this.fbPush.onMessage(payload => {
+            console.log("got fg push message", payload.data);
+          });
         } catch (err) {
           this.handleError(formatMessage(messages.push_init_failed), 'err');
           console.log("Failed to initialize push notifications", err);

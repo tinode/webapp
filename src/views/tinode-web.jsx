@@ -231,6 +231,7 @@ class TinodeWeb extends React.Component {
         try {
           this.fbPush = firebase.initializeApp(FIREBASE_INIT, APP_NAME).messaging();
           this.fbPush.usePublicVapidKey(FIREBASE_INIT.messagingVapidKey);
+
           navigator.serviceWorker.register('/service-worker.js').then((reg) => {
             this.checkForAppUpdate(reg);
             this.fbPush.useServiceWorker(reg);
@@ -974,9 +975,10 @@ class TinodeWeb extends React.Component {
       this.requestPushToken();
     });
 
+    // TODO: add handler for FCM topic pushes (pushes for channels).
+    // They have to be handled even when the app is in the foreground.
     this.fbPush.onMessage((payload) => {
-      // No need to do anything about it.
-      // All the magic happends in the service worker.
+      console.log("got fg push message", payload.data);
     });
   }
 
