@@ -3,8 +3,6 @@ importScripts('https://cdn.jsdelivr.net/npm/firebase@7.24.0/firebase-app.js');
 importScripts('https://cdn.jsdelivr.net/npm/firebase@7.24.0/firebase-messaging.js');
 importScripts('firebase-init.js');
 
-firebase.initializeApp(FIREBASE_INIT);
-
 // Basic internationalization.
 const i18n = {
   'de': {
@@ -44,8 +42,13 @@ self.i18nMessage = function(id) {
   return lang[id] || i18n['en'][id] || id;
 }
 
-// This method shows the push notifications.
-firebase.messaging().setBackgroundMessageHandler((payload) => {
+firebase.initializeApp(FIREBASE_INIT);
+const fbMessaging = firebase.messaging();
+
+// This method shows the push notifications while the window is in background.
+fbMessaging.onBackgroundMessage((payload) => {
+  console.log("sw got background message", payload.data);
+
   if (payload.data.silent == 'true') {
     return;
   }
