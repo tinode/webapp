@@ -241,7 +241,7 @@ class TinodeWeb extends React.Component {
               if (!this.state.firebaseToken) {
                 this.togglePushToken(true);
               } else {
-                this.tinode.setDeviceToken(this.state.firebaseToken, true);
+                this.tinode.setDeviceToken(this.state.firebaseToken);
               }
             }
           }).catch((err) => {
@@ -1004,6 +1004,8 @@ class TinodeWeb extends React.Component {
         LocalStorageUtil.updateObject('settings', {desktopAlerts: false});
         localStorage.removeItem('firebase-token');
         this.setState({desktopAlerts: false, firebaseToken: null});
+        // Inform the server that the token was deleted.
+        this.tinode.setDeviceToken(null);
       });
     } else {
       this.setState({desktopAlerts: false, firebaseToken: null});
@@ -1014,7 +1016,7 @@ class TinodeWeb extends React.Component {
   requestPushToken() {
     this.fbPush.getToken().then((refreshedToken) => {
       if (refreshedToken != this.state.firebaseToken) {
-        this.tinode.setDeviceToken(refreshedToken, true);
+        this.tinode.setDeviceToken(refreshedToken);
         LocalStorageUtil.setObject('firebase-token', refreshedToken);
       }
       this.setState({firebaseToken: refreshedToken, desktopAlerts: true});

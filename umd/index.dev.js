@@ -5044,14 +5044,11 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
               if (!this.state.firebaseToken) {
                 this.togglePushToken(true);
               } else {
-                this.tinode.setDeviceToken(this.state.firebaseToken, true);
+                this.tinode.setDeviceToken(this.state.firebaseToken);
               }
             }
           }).catch(err => {
             console.log("Failed to register service worker:", err);
-          });
-          this.fbPush.onMessage(payload => {
-            console.log("got fg push message", payload.data);
           });
         } catch (err) {
           this.handleError(formatMessage(messages.push_init_failed), 'err');
@@ -5788,7 +5785,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.fbPush.onTokenRefresh(() => {
       this.requestPushToken();
     });
-    this.fbPush.onMessage(payload => {});
+    this.fbPush.onMessage(payload => {
+      console.log("got fg push message", payload.data);
+    });
   }
 
   togglePushToken(enabled) {
@@ -5827,6 +5826,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           desktopAlerts: false,
           firebaseToken: null
         });
+        this.tinode.setDeviceToken(null);
       });
     } else {
       this.setState({
@@ -5842,7 +5842,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   requestPushToken() {
     this.fbPush.getToken().then(refreshedToken => {
       if (refreshedToken != this.state.firebaseToken) {
-        this.tinode.setDeviceToken(refreshedToken, true);
+        this.tinode.setDeviceToken(refreshedToken);
         _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__.default.setObject('firebase-token', refreshedToken);
       }
 
