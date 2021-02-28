@@ -105,6 +105,11 @@ function draftyFormatter(style, data, values, key) {
   const attr = { key: key };
   if (el) {
     switch (style) {
+      case 'BR':
+        // Replace new line with a space.
+        el = React.Fragment;
+        values = [' '];
+        break;
       case 'HL':
         // Make highlight less prominent in preview.
         attr.className = 'highlight preview';
@@ -124,7 +129,7 @@ function draftyFormatter(style, data, values, key) {
         break;
       case 'FM':
         el = React.Fragment;
-        values = [<i className="material-icons">dashboard</i>, 'Form:'];
+        values = [<i className="material-icons">dashboard</i>, 'Form: '].concat(values || []);
         break;
       case 'RW':
         el = React.Fragment;
