@@ -121,7 +121,7 @@ function draftyFormatter(style, data, values, key) {
       case 'IM':
         // Replace image with '[icon] Image'.
         el = React.Fragment;
-        values = [<i className="material-icons">photo</i>, 'Picture'];
+        values = [<i key="im" className="material-icons">photo</i>, 'Picture'];
         break;
       case 'BN':
         el = 'span';
@@ -129,19 +129,19 @@ function draftyFormatter(style, data, values, key) {
         break;
       case 'FM':
         el = React.Fragment;
-        values = [<i className="material-icons">dashboard</i>, 'Form: '].concat(values || []);
+        values = [<i key="fm" className="material-icons">dashboard</i>, 'Form: '].concat(values || []);
         break;
       case 'RW':
         el = React.Fragment;
         break;
       case 'EX':
         el = React.Fragment;
-        values = [<i className="material-icons">attachment</i>, 'Attachment'];
+        values = [<i key="ex" className="material-icons">attachment</i>, 'Attachment'];
         break;
       default:
         if (el == '_UNKN') {
           el = React.Fragment;
-          values = [<i className="material-icons">extension</i>];
+          values = [<i key="unkn" className="material-icons">extension</i>];
         }
         break;
     }

@@ -7551,7 +7551,6 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     if (this.props.contacts && this.props.contacts.length > 0) {
       this.props.contacts.map(c => {
         if (c.action) {
-          console.log("adding contact action", c.action);
           contactNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_action_jsx__WEBPACK_IMPORTED_MODULE_4__.default, {
             title: c.title,
             action: c.action,
@@ -7611,8 +7610,6 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
             }
           }
 
-          const key2 = key + "_" + Math.random();
-          console.log("adding contact with key", key2);
           contactNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
             title: c.public ? c.public.fn : null,
             avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__.makeImageUrl)(c.public ? c.public.photo : null),
@@ -7632,7 +7629,7 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
             showContextMenu: this.props.showContextMenu,
             item: key,
             index: contactNodes.length,
-            key: key2
+            key: key
           }));
           contactsCount++;
         }
@@ -7743,15 +7740,13 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
 
       if (this.props.acs.isMuted()) {
         icon_badges.push({
-          icon: 'muted',
-          key: 'muted'
+          icon: 'muted'
         });
       }
 
       if (!this.props.acs.isJoiner()) {
         icon_badges.push({
-          icon: 'banned',
-          key: 'banned'
+          icon: 'banned'
         });
       }
     }
@@ -7827,6 +7822,7 @@ function draftyFormatter(style, data, values, key) {
       case 'IM':
         el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
         values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+          key: "im",
           className: "material-icons"
         }, "photo"), 'Picture'];
         break;
@@ -7839,6 +7835,7 @@ function draftyFormatter(style, data, values, key) {
       case 'FM':
         el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
         values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+          key: "fm",
           className: "material-icons"
         }, "dashboard"), 'Form: '].concat(values || []);
         break;
@@ -7850,6 +7847,7 @@ function draftyFormatter(style, data, values, key) {
       case 'EX':
         el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
         values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+          key: "ex",
           className: "material-icons"
         }, "attachment"), 'Attachment'];
         break;
@@ -7858,6 +7856,7 @@ function draftyFormatter(style, data, values, key) {
         if (el == '_UNKN') {
           el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
           values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+            key: "unkn",
             className: "material-icons"
           }, "extension")];
         }
