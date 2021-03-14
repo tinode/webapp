@@ -702,7 +702,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "PACKAGE_VERSION": function() { return /* binding */ PACKAGE_VERSION; }
 /* harmony export */ });
-const PACKAGE_VERSION = "0.17.0-alpha1";
+const PACKAGE_VERSION = "0.17.0-alpha2";
 
 /***/ }),
 
@@ -8042,7 +8042,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         id: 'messages_clear',
         title: formatMessage(messages.clear_messages),
         handler: (params, errorHandler) => {
-          return props.onShowAlert(formatMessage(messages.menu_item_clear_messages), formatMessage(messages.clear_messages_warning), () => {
+          return props.onShowAlert(formatMessage(messages.clear_messages), formatMessage(messages.clear_messages_warning), () => {
             this.deleteMessages(true, false, params, errorHandler);
           }, null, true, null);
         }
@@ -8051,7 +8051,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         id: 'messages_clear_hard',
         title: formatMessage(messages.clear_for_all),
         handler: (params, errorHandler) => {
-          return props.onShowAlert(formatMessage(messages.menu_item_clear_messages_for_all), formatMessage(message.delete_messages_warning), () => {
+          return props.onShowAlert(formatMessage(messages.clear_for_all), formatMessage(message.delete_messages_warning), () => {
             return this.deleteMessages(true, true, params, errorHandler);
           }, null, true, null);
         }
@@ -8108,7 +8108,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         id: 'topic_delete',
         title: formatMessage(messages.topic_delete),
         handler: (params, errorHandler) => {
-          return props.onShowAlert(formatMessage(messages.menu_item_delete_topic), formatMessage(messages.topic_delete_warning), () => {
+          return props.onShowAlert(formatMessage(messages.topic_delete), formatMessage(messages.topic_delete_warning), () => {
             const topic = this.props.tinode.getTopic(params.topicName);
 
             if (!topic) {
