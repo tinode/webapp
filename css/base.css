@@ -885,6 +885,10 @@ i.search {
   font-weight: bolder;
 }
 
+.contact-box .contact-comment .material-icons {
+  margin-bottom: .2rem;
+}
+
 /* Avatar and online-offline indicator */
 .contact-box .avatar-box {
   margin-right: 0.35rem;

@@ -78,7 +78,7 @@ class ContactList extends React.Component {
             c.private.join(',') : (c.private ? c.private.comment : null);
           let preview;
           let deliveryStatus;
-          if (!this.props.showMode) {
+          if (!this.props.showMode && c.latestMessage) {
             const msg = c.latestMessage();
             if (msg) {
               deliveryStatus = msg._status || c.msgStatus(msg, true);

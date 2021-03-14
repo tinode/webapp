@@ -84,8 +84,9 @@ export default class Contact extends React.Component {
             {this.props.isChannel ? <img src="/img/channel.png" className="channel" alt="channel" /> : null}
             <UnreadBadge count={this.props.unread} /><ContactBadges badges={icon_badges} />
           </div>
-          <div className="contact-comment">{marker}{subtitle || '\u00A0'}</div>
-          <span><ContactBadges badges={badges} /></span>
+          {this.props.showMode ?
+            <span><ContactBadges badges={badges} /></span> :
+            <div className="contact-comment">{marker}{subtitle || '\u00A0'}</div>}
         </div>
         {this.props.showContextMenu ?
           <span className="menuTrigger">
