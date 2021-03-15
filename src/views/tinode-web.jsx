@@ -675,6 +675,10 @@ class TinodeWeb extends React.Component {
     }
 
     this.tinode.getMeTopic().contacts((c) => {
+      if (!c.topic && !c.user) {
+        // Contacts expect c.topic to be set.
+        c.topic = c.name;
+      }
       newState.chatList.push(c);
       if (this.state.topicSelected == c.topic) {
         newState.topicSelectedOnline = c.online;
