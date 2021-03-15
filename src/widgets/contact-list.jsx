@@ -48,14 +48,14 @@ class ContactList extends React.Component {
           // If filter function is provided, filter out the items
           // which don't satisfy the condition.
           if (this.props.filterFunc && this.props.filter) {
-            let content = [key];
+            const filterOn = [key];
             if (c.private && c.private.comment) {
-              content.push(('' + c.private.comment).toLowerCase());
+              filterOn.push(('' + c.private.comment).toLowerCase());
             }
             if (c.public && c.public.fn) {
-              content.push(('' + c.public.fn).toLowerCase());
+              filterOn.push(('' + c.public.fn).toLowerCase());
             }
-            if (!this.props.filterFunc(this.props.filter, content)) {
+            if (!this.props.filterFunc(this.props.filter, filterOn)) {
               return;
             }
           }
