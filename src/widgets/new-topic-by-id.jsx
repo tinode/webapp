@@ -35,8 +35,9 @@ class NewTopicById extends React.PureComponent {
   handleSubmit(e) {
     e.preventDefault();
     if (this.state.groupId) {
-      var name = this.state.groupId.trim();
-      if (name.length > 3 && (name.substr(0, 3) == 'usr' || name.substr(0, 3) == 'grp')) {
+      const name = this.state.groupId.trim();
+      const prefix = name.substr(0, 3);
+      if (name.length > 3 && ['usr', 'grp', 'chn'].includes(prefix)) {
         this.props.onSubmit(name);
       } else {
         this.props.onError(this.props.intl.formatMessage(messages.invalid_id), 'err');

@@ -5452,6 +5452,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
 
     this.tinode.getMeTopic().contacts(c => {
+      if (!c.topic && !c.user) {
+        c.topic = c.name;
+      }
+
       newState.chatList.push(c);
 
       if (this.state.topicSelected == c.topic) {
@@ -7562,17 +7566,17 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
           const key = this.props.showMode ? c.user : c.topic || c.user;
 
           if (this.props.filterFunc && this.props.filter) {
-            let content = [key];
+            const filterOn = [key];
 
             if (c.private && c.private.comment) {
-              content.push(('' + c.private.comment).toLowerCase());
+              filterOn.push(('' + c.private.comment).toLowerCase());
             }
 
             if (c.public && c.public.fn) {
-              content.push(('' + c.public.fn).toLowerCase());
+              filterOn.push(('' + c.public.fn).toLowerCase());
             }
 
-            if (!this.props.filterFunc(this.props.filter, content)) {
+            if (!this.props.filterFunc(this.props.filter, filterOn)) {
               return;
             }
           }
