@@ -485,8 +485,8 @@ function shortDateFormat(then, locale) {
 function secondsToTime(seconds) {
   const min = Math.floor(seconds / 60);
   let sec = seconds % 60;
-  sec = sec < 10 ? "0".concat(sec) : sec;
-  return "".concat(min, ":").concat(sec);
+  sec = sec < 10 ? `0${sec}` : sec;
+  return `${min}:${sec}`;
 }
 function bytesToHumanSize(bytes) {
   if (!bytes || bytes == 0) {
@@ -702,7 +702,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "PACKAGE_VERSION": function() { return /* binding */ PACKAGE_VERSION; }
 /* harmony export */ });
-const PACKAGE_VERSION = "0.17.0-alpha2";
+const PACKAGE_VERSION = "0.17.0-alpha3";
 
 /***/ }),
 
@@ -1100,15 +1100,15 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   delete_account: {
-    "id": "delete_account",
-    "defaultMessage": [{
+    id: "delete_account",
+    defaultMessage: [{
       "type": 0,
       "value": "Delete account"
     }]
   },
   delete_account_warning: {
-    "id": "delete_account_arning",
-    "defaultMessage": [{
+    id: "delete_account_arning",
+    defaultMessage: [{
       "type": 0,
       "value": "Are you sure you want to delete your account? It cannot be undone."
     }]
@@ -1436,8 +1436,8 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   archived_contacts_title: {
-    "id": "archived_contacts",
-    "defaultMessage": [{
+    id: "archived_contacts",
+    defaultMessage: [{
       "type": 0,
       "value": "Archived contacts ("
     }, {
@@ -1931,99 +1931,99 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   requested: {
-    "id": "requested_permissions",
-    "defaultMessage": [{
+    id: "requested_permissions",
+    defaultMessage: [{
       "type": 0,
       "value": "Requested"
     }]
   },
   granted: {
-    "id": "granted_permissions",
-    "defaultMessage": [{
+    id: "granted_permissions",
+    defaultMessage: [{
       "type": 0,
       "value": "Granted"
     }]
   },
   edit_permissions: {
-    "id": "menu_item_edit_permissions",
-    "defaultMessage": [{
+    id: "menu_item_edit_permissions",
+    defaultMessage: [{
       "type": 0,
       "value": "Edit permissions"
     }]
   },
   other_user: {
-    "id": "label_other_user",
-    "defaultMessage": [{
+    id: "label_other_user",
+    defaultMessage: [{
       "type": 0,
       "value": "Other"
     }]
   },
   clear_messages: {
-    "id": "action_clear_messages",
-    "defaultMessage": [{
+    id: "action_clear_messages",
+    defaultMessage: [{
       "type": 0,
       "value": "Clear Messages"
     }]
   },
   clear_messages_warning: {
-    "id": "clear_messages_warning",
-    "defaultMessage": [{
+    id: "clear_messages_warning",
+    defaultMessage: [{
       "type": 0,
       "value": "Are you sure you want to clear all messages? It cannot be undone."
     }]
   },
   delete_messages: {
-    "id": "action_delete_messages",
-    "defaultMessage": [{
+    id: "action_delete_messages",
+    defaultMessage: [{
       "type": 0,
       "value": "Clear Messages for All"
     }]
   },
   delete_messages_warning: {
-    "id": "delete_messages_warning",
-    "defaultMessage": [{
+    id: "delete_messages_warning",
+    defaultMessage: [{
       "type": 0,
       "value": "Are you sure you want to delete all messages for everyone? It cannot be undone."
     }]
   },
   leave_chat: {
-    "id": "action_leave_chat",
-    "defaultMessage": [{
+    id: "action_leave_chat",
+    defaultMessage: [{
       "type": 0,
       "value": "Leave Conversation"
     }]
   },
   leave_chat_warning: {
-    "id": "leave_chat_warning",
-    "defaultMessage": [{
+    id: "leave_chat_warning",
+    defaultMessage: [{
       "type": 0,
       "value": "Are you sure you want to leave this conversation?"
     }]
   },
   block_contact: {
-    "id": "action_block_contact",
-    "defaultMessage": [{
+    id: "action_block_contact",
+    defaultMessage: [{
       "type": 0,
       "value": "Block Contact"
     }]
   },
   block_contact_warning: {
-    "id": "block_contact_warning",
-    "defaultMessage": [{
+    id: "block_contact_warning",
+    defaultMessage: [{
       "type": 0,
       "value": "Are you sure you want to block this contact?"
     }]
   },
   report_chat: {
-    "id": "action_report_chat",
-    "defaultMessage": [{
+    id: "action_report_chat",
+    defaultMessage: [{
       "type": 0,
       "value": "Report Conversation"
     }]
   },
   report_chat_warning: {
-    "id": "report_chat_warning",
-    "defaultMessage": [{
+    id: "report_chat_warning",
+    defaultMessage: [{
       "type": 0,
       "value": "Are you sure you want to block and report this conversation?"
     }]
@@ -3016,36 +3016,36 @@ const Drafty = (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().Drafty);
 const NOTIFICATION_EXEC_INTERVAL = 300;
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   online_now: {
-    "id": "online_now",
-    "defaultMessage": [{
+    id: "online_now",
+    defaultMessage: [{
       "type": 0,
       "value": "online now"
     }]
   },
   last_seen: {
-    "id": "last_seen_timestamp",
-    "defaultMessage": [{
+    id: "last_seen_timestamp",
+    defaultMessage: [{
       "type": 0,
       "value": "Last seen"
     }]
   },
   not_found: {
-    "id": "title_not_found",
-    "defaultMessage": [{
+    id: "title_not_found",
+    defaultMessage: [{
       "type": 0,
       "value": "Not found"
     }]
   },
   channel: {
-    "id": "channel",
-    "defaultMessage": [{
+    id: "channel",
+    defaultMessage: [{
       "type": 0,
       "value": "channel"
     }]
   },
   file_attachment_too_large: {
-    "id": "file_attachment_too_large",
-    "defaultMessage": [{
+    id: "file_attachment_too_large",
+    defaultMessage: [{
       "type": 0,
       "value": "The file size "
     }, {
@@ -4074,15 +4074,15 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   search_for_contacts: {
-    "id": "search_for_contacts",
-    "defaultMessage": [{
+    id: "search_for_contacts",
+    defaultMessage: [{
       "type": 0,
       "value": "Use search to find contacts"
     }]
   },
   search_no_results: {
-    "id": "search_no_results",
-    "defaultMessage": [{
+    id: "search_no_results",
+    defaultMessage: [{
       "type": 0,
       "value": "Search returned no results"
     }]
@@ -4509,92 +4509,92 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   login: {
-    "id": "sidepanel_title_login",
-    "defaultMessage": [{
+    id: "sidepanel_title_login",
+    defaultMessage: [{
       "type": 0,
       "value": "Sign In"
     }]
   },
   register: {
-    "id": "sidepanel_title_register",
-    "defaultMessage": [{
+    id: "sidepanel_title_register",
+    defaultMessage: [{
       "type": 0,
       "value": "Create Account"
     }]
   },
   settings: {
-    "id": "sidepanel_title_settings",
-    "defaultMessage": [{
+    id: "sidepanel_title_settings",
+    defaultMessage: [{
       "type": 0,
       "value": "Settings"
     }]
   },
   edit: {
-    "id": "sidepanel_title_account_settings",
-    "defaultMessage": [{
+    id: "sidepanel_title_account_settings",
+    defaultMessage: [{
       "type": 0,
       "value": "Account Settings"
     }]
   },
   general: {
-    "id": "sidepanel_title_acc_general",
-    "defaultMessage": [{
+    id: "sidepanel_title_acc_general",
+    defaultMessage: [{
       "type": 0,
       "value": "General"
     }]
   },
   security: {
-    "id": "sidepanel_title_acc_security",
-    "defaultMessage": [{
+    id: "sidepanel_title_acc_security",
+    defaultMessage: [{
       "type": 0,
       "value": "Security"
     }]
   },
   notif: {
-    "id": "sidepanel_title_acc_notifications",
-    "defaultMessage": [{
+    id: "sidepanel_title_acc_notifications",
+    defaultMessage: [{
       "type": 0,
       "value": "Notifications"
     }]
   },
   support: {
-    "id": "sidepanel_title_acc_support",
-    "defaultMessage": [{
+    id: "sidepanel_title_acc_support",
+    defaultMessage: [{
       "type": 0,
       "value": "Support"
     }]
   },
   newtpk: {
-    "id": "sidepanel_title_newtpk",
-    "defaultMessage": [{
+    id: "sidepanel_title_newtpk",
+    defaultMessage: [{
       "type": 0,
       "value": "Start New Chat"
     }]
   },
   cred: {
-    "id": "sidepanel_title_cred",
-    "defaultMessage": [{
+    id: "sidepanel_title_cred",
+    defaultMessage: [{
       "type": 0,
       "value": "Confirm Credentials"
     }]
   },
   reset: {
-    "id": "sidepanel_title_reset",
-    "defaultMessage": [{
+    id: "sidepanel_title_reset",
+    defaultMessage: [{
       "type": 0,
       "value": "Reset Password"
     }]
   },
   archive: {
-    "id": "sidepanel_title_archive",
-    "defaultMessage": [{
+    id: "sidepanel_title_archive",
+    defaultMessage: [{
       "type": 0,
       "value": "Archived Chats"
     }]
   },
   blocked: {
-    "id": "sidepanel_title_blocked",
-    "defaultMessage": [{
+    id: "sidepanel_title_blocked",
+    defaultMessage: [{
       "type": 0,
       "value": "Blocked Chats"
     }]
@@ -4791,8 +4791,8 @@ __webpack_require__.r(__webpack_exports__);
 const POP_SOUND = new Audio('audio/msg.mp3');
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_2__.defineMessages)({
   reconnect_countdown: {
-    "id": "reconnect_countdown",
-    "defaultMessage": [{
+    id: "reconnect_countdown",
+    defaultMessage: [{
       "type": 0,
       "value": "Disconnected. Reconnecting in "
     }, {
@@ -4804,43 +4804,43 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_2__.defineMessages)({
     }]
   },
   reconnect_now: {
-    "id": "reconnect_now",
-    "defaultMessage": [{
+    id: "reconnect_now",
+    defaultMessage: [{
       "type": 0,
       "value": "Try now"
     }]
   },
   push_init_failed: {
-    "id": "push_init_failed",
-    "defaultMessage": [{
+    id: "push_init_failed",
+    defaultMessage: [{
       "type": 0,
       "value": "Failed to initialize push notifications"
     }]
   },
   invalid_security_token: {
-    "id": "invalid_security_token",
-    "defaultMessage": [{
+    id: "invalid_security_token",
+    defaultMessage: [{
       "type": 0,
       "value": "Invalid security token"
     }]
   },
   no_connection: {
-    "id": "no_connection",
-    "defaultMessage": [{
+    id: "no_connection",
+    defaultMessage: [{
       "type": 0,
       "value": "No connection"
     }]
   },
   code_doesnot_match: {
-    "id": "code_doesnot_match",
-    "defaultMessage": [{
+    id: "code_doesnot_match",
+    defaultMessage: [{
       "type": 0,
       "value": "Code does not match"
     }]
   },
   menu_item_info: {
-    "id": "menu_item_info",
-    "defaultMessage": [{
+    id: "menu_item_info",
+    defaultMessage: [{
       "type": 0,
       "value": "Info"
     }]
@@ -6425,15 +6425,15 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   phone: {
-    "id": "phone_dative",
-    "defaultMessage": [{
+    id: "phone_dative",
+    defaultMessage: [{
       "type": 0,
       "value": "phone"
     }]
   },
   email: {
-    "id": "email_dative",
-    "defaultMessage": [{
+    id: "email_dative",
+    defaultMessage: [{
       "type": 0,
       "value": "email"
     }]
@@ -7528,15 +7528,15 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   badge_you: {
-    "id": "badge_you",
-    "defaultMessage": [{
+    id: "badge_you",
+    defaultMessage: [{
       "type": 0,
       "value": "you"
     }]
   },
   badge_owner: {
-    "id": "badge_owner",
-    "defaultMessage": [{
+    id: "badge_owner",
+    defaultMessage: [{
       "type": 0,
       "value": "owner"
     }]
@@ -7900,127 +7900,127 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_2__.defineMessages)({
   info: {
-    "id": "menu_item_info",
-    "defaultMessage": [{
+    id: "menu_item_info",
+    defaultMessage: [{
       "type": 0,
       "value": "Info"
     }]
   },
   clear_messages: {
-    "id": "menu_item_clear_messages",
-    "defaultMessage": [{
+    id: "menu_item_clear_messages",
+    defaultMessage: [{
       "type": 0,
       "value": "Clear messages"
     }]
   },
   clear_for_all: {
-    "id": "menu_item_clear_messages_for_all",
-    "defaultMessage": [{
+    id: "menu_item_clear_messages_for_all",
+    defaultMessage: [{
       "type": 0,
       "value": "Clear for All"
     }]
   },
   delete: {
-    "id": "menu_item_delete",
-    "defaultMessage": [{
+    id: "menu_item_delete",
+    defaultMessage: [{
       "type": 0,
       "value": "Delete"
     }]
   },
   delete_for_all: {
-    "id": "menu_item_delete_for_all",
-    "defaultMessage": [{
+    id: "menu_item_delete_for_all",
+    defaultMessage: [{
       "type": 0,
       "value": "Delete for All"
     }]
   },
   send_retry: {
-    "id": "menu_item_send_retry",
-    "defaultMessage": [{
+    id: "menu_item_send_retry",
+    defaultMessage: [{
       "type": 0,
       "value": "Retry"
     }]
   },
   mute: {
-    "id": "menu_item_mute",
-    "defaultMessage": [{
+    id: "menu_item_mute",
+    defaultMessage: [{
       "type": 0,
       "value": "Mute"
     }]
   },
   unmute: {
-    "id": "menu_item_unmute",
-    "defaultMessage": [{
+    id: "menu_item_unmute",
+    defaultMessage: [{
       "type": 0,
       "value": "Unmute"
     }]
   },
   topic_delete: {
-    "id": "menu_item_delete_topic",
-    "defaultMessage": [{
+    id: "menu_item_delete_topic",
+    defaultMessage: [{
       "type": 0,
       "value": "Delete"
     }]
   },
   topic_delete_warning: {
-    "id": "topic_delete_warning",
-    "defaultMessage": [{
+    id: "topic_delete_warning",
+    defaultMessage: [{
       "type": 0,
       "value": "Are you sure you want to delete this conversation?"
     }]
   },
   delete_messages_warning: {
-    "id": "delete_messages_warning",
-    "defaultMessage": [{
+    id: "delete_messages_warning",
+    defaultMessage: [{
       "type": 0,
       "value": "Are you sure you want to delete all messages for everyone? It cannot be undone."
     }]
   },
   unblock: {
-    "id": "menu_item_unblock",
-    "defaultMessage": [{
+    id: "menu_item_unblock",
+    defaultMessage: [{
       "type": 0,
       "value": "Unblock"
     }]
   },
   block: {
-    "id": "menu_item_block",
-    "defaultMessage": [{
+    id: "menu_item_block",
+    defaultMessage: [{
       "type": 0,
       "value": "Block"
     }]
   },
   topic_block_warning: {
-    "id": "topic_block_warning",
-    "defaultMessage": [{
+    id: "topic_block_warning",
+    defaultMessage: [{
       "type": 0,
       "value": "Are you sure you want to block this conversation?"
     }]
   },
   member_delete: {
-    "id": "menu_item_member_delete",
-    "defaultMessage": [{
+    id: "menu_item_member_delete",
+    defaultMessage: [{
       "type": 0,
       "value": "Remove"
     }]
   },
   archive: {
-    "id": "menu_item_archive_topic",
-    "defaultMessage": [{
+    id: "menu_item_archive_topic",
+    defaultMessage: [{
       "type": 0,
       "value": "Archive"
     }]
   },
   edit_permissions: {
-    "id": "menu_item_edit_permissions",
-    "defaultMessage": [{
+    id: "menu_item_edit_permissions",
+    defaultMessage: [{
       "type": 0,
       "value": "Edit permissions"
     }]
   },
   clear_messages_warning: {
-    "id": "clear_messages_warning",
-    "defaultMessage": [{
+    id: "clear_messages_warning",
+    defaultMessage: [{
       "type": 0,
       "value": "Are you sure you want to clear all messages? It cannot be undone."
     }]
@@ -8566,15 +8566,15 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   no_contacts: {
-    "id": "no_contacts",
-    "defaultMessage": [{
+    id: "no_contacts",
+    defaultMessage: [{
       "type": 0,
       "value": "You have no contacts :-("
     }]
   },
   contacts_not_found_short: {
-    "id": "contacts_not_found_short",
-    "defaultMessage": [{
+    id: "contacts_not_found_short",
+    defaultMessage: [{
       "type": 0,
       "value": "No contacts match '"
     }, {
@@ -9576,8 +9576,8 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   invalid_id: {
-    "id": "error_invalid_id",
-    "defaultMessage": [{
+    id: "error_invalid_id",
+    defaultMessage: [{
       "type": 0,
       "value": "Invalid ID"
     }]
@@ -9869,8 +9869,8 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   joiner: {
-    "id": "permission_join",
-    "defaultMessage": [{
+    id: "permission_join",
+    defaultMessage: [{
       "type": 0,
       "value": "Join ("
     }, {
@@ -9882,8 +9882,8 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   },
   reader: {
-    "id": "permission_read",
-    "defaultMessage": [{
+    id: "permission_read",
+    defaultMessage: [{
       "type": 0,
       "value": "Read ("
     }, {
@@ -9895,8 +9895,8 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   },
   writer: {
-    "id": "permission_write",
-    "defaultMessage": [{
+    id: "permission_write",
+    defaultMessage: [{
       "type": 0,
       "value": "Write ("
     }, {
@@ -9908,8 +9908,8 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   },
   preser: {
-    "id": "permission_pres",
-    "defaultMessage": [{
+    id: "permission_pres",
+    defaultMessage: [{
       "type": 0,
       "value": "Get notified ("
     }, {
@@ -9921,8 +9921,8 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   },
   approver: {
-    "id": "permission_admin",
-    "defaultMessage": [{
+    id: "permission_admin",
+    defaultMessage: [{
       "type": 0,
       "value": "Approve ("
     }, {
@@ -9934,8 +9934,8 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   },
   sharer: {
-    "id": "permission_share",
-    "defaultMessage": [{
+    id: "permission_share",
+    defaultMessage: [{
       "type": 0,
       "value": "Share ("
     }, {
@@ -9947,8 +9947,8 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   },
   deleter: {
-    "id": "permission_delete",
-    "defaultMessage": [{
+    id: "permission_delete",
+    defaultMessage: [{
       "type": 0,
       "value": "Delete ("
     }, {
@@ -9960,8 +9960,8 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   },
   owner: {
-    "id": "permission_owner",
-    "defaultMessage": [{
+    id: "permission_owner",
+    defaultMessage: [{
       "type": 0,
       "value": "Owner ("
     }, {
@@ -10147,15 +10147,15 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   message_sending: {
-    "id": "message_sending",
-    "defaultMessage": [{
+    id: "message_sending",
+    defaultMessage: [{
       "type": 0,
       "value": "sending..."
     }]
   },
   message_sending_failed: {
-    "id": "message_sending_failed",
-    "defaultMessage": [{
+    id: "message_sending_failed",
+    defaultMessage: [{
       "type": 0,
       "value": "failed"
     }]
@@ -10328,29 +10328,29 @@ __webpack_require__.r(__webpack_exports__);
 
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   messaging_disabled: {
-    "id": "messaging_disabled_prompt",
-    "defaultMessage": [{
+    id: "messaging_disabled_prompt",
+    defaultMessage: [{
       "type": 0,
       "value": "Messaging disabled"
     }]
   },
   type_new_message: {
-    "id": "new_message_prompt",
-    "defaultMessage": [{
+    id: "new_message_prompt",
+    defaultMessage: [{
       "type": 0,
       "value": "New message"
     }]
   },
   add_image_caption: {
-    "id": "image_caption_prompt",
-    "defaultMessage": [{
+    id: "image_caption_prompt",
+    defaultMessage: [{
       "type": 0,
       "value": "Image caption"
     }]
   },
   file_attachment_too_large: {
-    "id": "file_attachment_too_large",
-    "defaultMessage": [{
+    id: "file_attachment_too_large",
+    defaultMessage: [{
       "type": 0,
       "value": "The file size "
     }, {
@@ -10368,8 +10368,8 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   },
   cannot_initiate_upload: {
-    "id": "cannot_initiate_file_upload",
-    "defaultMessage": [{
+    id: "cannot_initiate_file_upload",
+    defaultMessage: [{
       "type": 0,
       "value": "Cannot initiate file upload."
     }]
@@ -11067,8 +11067,9 @@ module.exports = firebase.messaging;
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		if(__webpack_module_cache__[moduleId]) {
-/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
