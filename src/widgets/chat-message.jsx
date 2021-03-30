@@ -77,7 +77,7 @@ export default class ChatMessage extends React.Component {
       (this.props.sequence + ' ' + (this.props.response ? 'left' : 'right'));
     const bubbleClass = (this.props.sequence == 'single' || this.props.sequence == 'last') ? 'bubble tip' : 'bubble';
     const avatar = this.props.deleted ? null : (this.props.userAvatar || true);
-    const fullDisplay = (this.props.userFrom && this.props.response &&
+    const fullDisplay = (this.props.userFrom && this.props.response && !this.props.deleted &&
       (this.props.sequence == 'single' || this.props.sequence == 'last'));
 
     let content = this.props.content;
