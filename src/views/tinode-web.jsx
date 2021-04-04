@@ -370,6 +370,8 @@ class TinodeWeb extends React.Component {
   handleOnline(online) {
     if (online) {
       this.handleError();
+      clearInterval(this.reconnectCountdown);
+      this.tinode.reconnect();
     } else {
       this.handleError(this.props.intl.formatMessage(messages.no_connection), 'warn');
     }
