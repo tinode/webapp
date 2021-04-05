@@ -57,7 +57,7 @@ class NewTopicById extends React.PureComponent {
         }</FormattedMessage>
         </div>
         <div className="dialog-buttons">
-          <button className="blue" onClick={this.handleSubmit}>
+          <button className="primary" onClick={this.handleSubmit}>
             <FormattedMessage id="button_subscribe" defaultMessage="Subscribe"
               description="Button [Subscribe]" />
           </button>

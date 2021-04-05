@@ -73,7 +73,7 @@ export default class SettingsView extends React.PureComponent {
           </ul>
         </div>
         <div className="dialog-buttons">
-          <button type="submit" className="blue">
+          <button type="submit" className="primary">
             <FormattedMessage id="button_update" defaultMessage="Update"
               description="Button [Update]" />
           </button>

@@ -70,7 +70,7 @@ export default class CreateAccountView extends React.PureComponent {
   }
 
   render() {
-    let submitClasses = 'blue';
+    let submitClasses = 'primary';
     if (this.props.disabled) {
       submitClasses += ' disabled';
     }
