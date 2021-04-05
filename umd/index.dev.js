@@ -1647,7 +1647,7 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
   }
 
   render() {
-    let submitClasses = 'blue';
+    let submitClasses = 'primary';
 
     if (this.props.disabled) {
       submitClasses += ' disabled';
@@ -2834,7 +2834,7 @@ class LoginView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   render() {
-    var submitClasses = 'blue';
+    let submitClasses = 'primary';
 
     if (this.props.disabled) {
       submitClasses += ' disabled';
@@ -4319,7 +4319,7 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "dialog-buttons"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "blue",
+      className: "primary",
       type: "submit"
     }, reset ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_reset",
@@ -4449,7 +4449,7 @@ class SettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       className: "dialog-buttons"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       type: "submit",
-      className: "blue"
+      className: "primary"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_update",
       defaultMessage: [{
@@ -6531,7 +6531,7 @@ class ValidationView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "dialog-buttons"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "blue",
+      className: "primary",
       onClick: this.handleSubmit
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_confirm",
@@ -6540,7 +6540,7 @@ class ValidationView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
         "value": "Confirm"
       }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "white",
+      className: "secondary",
       onClick: this.handleCancel
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_cancel",
@@ -6596,7 +6596,7 @@ class Alert extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent)
         "value": "Cancel"
       }]
     })) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "blue",
+      className: "primary",
       onClick: this.props.onConfirm
     }, this.props.confirm || react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_ok",
@@ -8785,7 +8785,7 @@ class GroupManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       id: "group-manager-buttons",
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "blue",
+      className: "primary",
       onClick: this.handleSubmit
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_ok",
@@ -8794,7 +8794,7 @@ class GroupManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         "value": "OK"
       }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "white",
+      className: "secondary",
       onClick: this.handleCancel
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_cancel",
@@ -9280,7 +9280,7 @@ class Invitation extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "footer"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "blue",
+      className: "primary",
       onClick: event => {
         this.handleButtonAction(event, "accept");
       }
@@ -9291,7 +9291,7 @@ class Invitation extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
         "value": "Accept"
       }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "white",
+      className: "secondary",
       onClick: event => {
         this.handleButtonAction(event, "delete");
       }
@@ -9302,7 +9302,7 @@ class Invitation extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
         "value": "Ignore"
       }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "white",
+      className: "secondary",
       onClick: event => {
         this.handleButtonAction(event, "block");
       }
@@ -9646,7 +9646,7 @@ class NewTopicById extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "dialog-buttons"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "blue",
+      className: "primary",
       onClick: this.handleSubmit
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_subscribe",
@@ -9747,7 +9747,7 @@ class NewTopicGroup extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
   }
 
   render() {
-    var submitClasses = 'blue';
+    let submitClasses = 'primary';
 
     if (this.props.disabled) {
       submitClasses += ' disabled';
@@ -10109,7 +10109,7 @@ class PermissionsEditor extends (react__WEBPACK_IMPORTED_MODULE_0___default().Co
         "value": "Cancel"
       }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "blue",
+      className: "primary",
       onClick: this.handleSubmit
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_ok",
@@ -10793,7 +10793,7 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
         "value": "Cancel"
       }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "blue",
+      className: "primary",
       onClick: this.handleSubmit
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_ok",
