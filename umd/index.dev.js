@@ -1525,7 +1525,7 @@ class ContactsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         "value": "You have no chats"
       }, {
         "type": 0,
-        "value": "<br />"
+        "value": "<br/>"
       }, {
         "type": 0,
         "value": "¯∖_(ツ)_/¯"
