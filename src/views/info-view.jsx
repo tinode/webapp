@@ -717,18 +717,18 @@ class InfoView extends React.Component {
                 :
                 null
               }
-              <a href="#" className="red flat-button" onClick={this.handleLeave}>
+              <a href="#" className="danger flat-button" onClick={this.handleLeave}>
                 <i className="material-icons">exit_to_app</i> &nbsp;{formatMessage(messages.leave_chat)}
               </a>
               {!this.state.groupTopic ?
-                <a href="#" className="red flat-button" onClick={this.handleBlock}>
+                <a href="#" className="danger flat-button" onClick={this.handleBlock}>
                   <i className="material-icons">block</i> &nbsp;{formatMessage(messages.block_contact)}
                 </a>
                 :
                 null
               }
               {!this.state.owner ?
-                <a href="#" className="red flat-button" onClick={this.handleReport}>
+                <a href="#" className="danger flat-button" onClick={this.handleReport}>
                   <i className="material-icons">report</i> &nbsp;{formatMessage(messages.report_chat)}
                 </a>
                 :

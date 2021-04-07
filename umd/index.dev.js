@@ -1214,7 +1214,7 @@ class AccSecurityView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Comp
       className: "panel-form-column"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
-      className: "red flat-button",
+      className: "danger flat-button",
       onClick: e => {
         e.preventDefault();
         this.props.onLogout();
@@ -1229,7 +1229,7 @@ class AccSecurityView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Comp
       }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
-      className: "red flat-button",
+      className: "danger flat-button",
       onClick: e => {
         this.handleDeleteAccount(e);
       }
@@ -2701,19 +2701,19 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       className: "material-icons"
     }, "delete_outline"), " \xA0", formatMessage(this.state.deleter ? messages.delete_messages : messages.clear_messages)) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
-      className: "red flat-button",
+      className: "danger flat-button",
       onClick: this.handleLeave
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, "exit_to_app"), " \xA0", formatMessage(messages.leave_chat)), !this.state.groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
-      className: "red flat-button",
+      className: "danger flat-button",
       onClick: this.handleBlock
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, "block"), " \xA0", formatMessage(messages.block_contact)) : null, !this.state.owner ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
-      className: "red flat-button",
+      className: "danger flat-button",
       onClick: this.handleReport
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"

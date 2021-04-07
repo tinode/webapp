@@ -32,8 +32,11 @@ a:focus {
   text-decoration: underline;
 }
 
-a.red:hover,
-a.red:focus {
+a.danger {
+  color: #D32F2F;
+}
+a.danger:hover,
+a.danger:focus {
   color: #F44336;
 }
 
@@ -324,11 +327,9 @@ li:hover .menuTrigger a {
 }
 
 li.left:hover .menuTrigger {
-  -text-shadow: #c5e1a5 0 0 15px, #c5e1a5 0 0 5px;
   background-image: radial-gradient(#c5e1a5 40%, transparent 75%);
 }
 li.right:hover .menuTrigger {
-  -text-shadow: #fafafa 0 0 15px, #fafafa 0 0 5px;
   background-image: radial-gradient(#fafafa 40%, transparent 75%);
 }
 
@@ -336,13 +337,12 @@ li.right:hover .menuTrigger {
 
 /* Begin Alert: modal window with message and buttons. */
 div.alert-container {
+  position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 100%;
-  position: absolute;
-  -x-backdrop-filter: blur(4px);
   background: rgba(0,0,0,0.33);
   z-index: 3;
 }
@@ -484,8 +484,8 @@ div.alert .content {
 
 #topic-view {
   position: relative;
-  overflow-x: hidden;
   display: flex;
+  overflow-x: hidden;
   flex-direction: column;
   width: 100%;
   height: 100%;
@@ -830,8 +830,8 @@ i.search {
 }
 
 .contact-box > li {
-  display: flex;
   position: relative;
+  display: flex;
   padding: 0.35rem 0.25rem 0.5rem 0.35rem;
   min-height: 3.75rem;
   flex-grow: 0;
@@ -882,8 +882,8 @@ i.search {
 
 /* Avatar and online-offline indicator */
 .contact-box .avatar-box {
-  margin-right: 0.35rem;
   position: relative;
+  margin-right: 0.35rem;
   width: 3rem;
   min-width: 3rem;
   height: 3rem;
@@ -927,14 +927,13 @@ i.search {
 
 /* Online-offline indicator positioned inside avatar-box */
 .avatar-box .online, .offline {
-  display: inline-block;
+  position: absolute;
   width: 0.75rem;
   min-width: 0.75rem;
   height: 0.75rem;
   min-height: 0.75rem;
   flex-shrink: 0;
   border-radius: 50%;
-  position: absolute;
   right: 0;
   bottom: 0.1rem;
 }
@@ -959,7 +958,6 @@ i.search {
 }
 
 .contact-box .checkmark.material-icons {
-  display: inline-block;
   width: 1.5rem;
   height: 1.5rem;
   font-size: 1.5rem;
@@ -1019,8 +1017,8 @@ i.search {
 
 /* Styling of avatar upload control */
 .avatar-upload {
-  display: flex;
   position: relative;
+  display: flex;
   flex-direction: column;
   flex-shrink: 0;
   width: 7rem;
@@ -1414,8 +1412,8 @@ i.search {
 }
 
 .chat-box .bubble {
-  display: flex;
   position: relative;
+  display: flex;
 	max-width: 40rem;
   min-width: 9rem;
 	height: auto;
@@ -1523,7 +1521,6 @@ i.search {
 }
 
 .chat-box .timestamp {
-  display: inline-block;
   position: relative;
   font-size: 80%;
   color: #777;
@@ -1558,7 +1555,6 @@ i.search {
   position: relative;
   overflow: hidden;
   border-radius: 0.1rem;
-  display: block;
 }
 
 .inline-image {
@@ -1578,11 +1574,11 @@ i.search {
 
 /* Broken image graphics which replaces the stock graphics. */
 img.inline-image::before, img.image-preview::before {
+  position: absolute;
+  display: flex;
   font-size: 0.9rem;
   font-weight: lighter;
   color: #666;
-  display:flex;
-  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -1673,7 +1669,6 @@ ul.tabbar > li > a {
   padding-top: 0.75rem;
   padding-left: 1rem;
   padding-right: 1rem;
-  display: block;
   text-align: center;
   line-height: 2rem;
   font-weight: 400;
@@ -1690,11 +1685,10 @@ ul.tabbar li.active > a {
 }
 
 ul.tabbar li.active > a:after {
-  height:0.15rem;
-  display:block;
-  content:"";
-  bottom:0;
-  left:0;
+  height: 0.15rem;
+  content: "";
+  bottom: 0;
+  left: 0;
   position: absolute;
   background: #2196f3;
   animation: tabbar-border-expand 0.2s cubic-bezier(0.4, 0.0, 0.4, 1) 0s alternate forwards;
@@ -1702,12 +1696,12 @@ ul.tabbar li.active > a:after {
 
 @keyframes tabbar-border-expand {
   0% {
-    opacity:0;
-    width:0;
+    opacity: 0;
+    width: 0;
   }
   100% {
-    opacity:1;
-    width:100%;
+    opacity: 1;
+    width: 100%;
   }
 }
 /* END Tabs */
@@ -1789,10 +1783,10 @@ ul.tabbar li.active > a:after {
 
 /* Div with letter tile content */
 .lettertile > div {
+  position: absolute;
   display: flex;
   flex-shrink: 0;
   flex-grow: 0;
-  position: absolute;
   top: 0; bottom: 0; left: 0; right: 0;
   text-transform: uppercase;
   align-items: center;

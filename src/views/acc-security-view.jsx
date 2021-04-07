@@ -110,11 +110,11 @@ class AccSecurityView extends React.Component {
           </div>
           <div className="hr" />
           <div className="panel-form-column">
-            <a href="#" className="red flat-button" onClick={(e) => {e.preventDefault(); this.props.onLogout();}}>
+            <a href="#" className="danger flat-button" onClick={(e) => {e.preventDefault(); this.props.onLogout();}}>
               <i className="material-icons">exit_to_app</i> &nbsp;<FormattedMessage id="button_logout"
                 defaultMessage="Logout" description="Button [Logout]" />
             </a>
-            <a href="#" className="red flat-button" onClick={(e) => {this.handleDeleteAccount(e);}}>
+            <a href="#" className="danger flat-button" onClick={(e) => {this.handleDeleteAccount(e);}}>
               <i className="material-icons">delete</i> &nbsp;<FormattedMessage id="button_delete_account"
                 defaultMessage="Delete account" description="Button [Delete account]" />
             </a>
