@@ -3136,7 +3136,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       }
     }
 
-    const topic = this.props.tinode.getTopic(this.state.topic);
+    const topic = this.props.tinode ? this.props.tinode.getTopic(this.state.topic) : undefined;
 
     if (this.state.topic != prevState.topic) {
       if (prevState.topic && !tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().isNewGroupTopicName(prevState.topic)) {
@@ -4889,7 +4889,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.handleCredAdd = this.handleCredAdd.bind(this);
     this.handleCredDelete = this.handleCredDelete.bind(this);
     this.handleCredConfirm = this.handleCredConfirm.bind(this);
-    this.initDesktopAlerts = this.initDesktopAlerts.bind(this);
+    this.initFCMessaging = this.initFCMessaging.bind(this);
     this.togglePushToken = this.togglePushToken.bind(this);
     this.requestPushToken = this.requestPushToken.bind(this);
     this.handleSidepanelCancel = this.handleSidepanelCancel.bind(this);
@@ -4982,45 +4982,22 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       viewportHeight: document.documentElement.clientHeight
     });
     const keepLoggedIn = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__.default.getObject('keep-logged-in');
-    const {
-      formatMessage,
-      locale
-    } = this.props.intl;
     new Promise((resolve, reject) => {
-      this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport, locale, keepLoggedIn, resolve);
+      this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport, this.props.intl.locale, keepLoggedIn, resolve);
       this.tinode.onConnect = this.handleConnected;
       this.tinode.onDisconnect = this.handleDisconnect;
       this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
     }).then(() => {
       if (this.state.desktopAlertsEnabled) {
-        try {
-          this.fbPush = firebase_app__WEBPACK_IMPORTED_MODULE_3__.initializeApp(FIREBASE_INIT, _config_js__WEBPACK_IMPORTED_MODULE_11__.APP_NAME).messaging();
-          this.fbPush.usePublicVapidKey(FIREBASE_INIT.messagingVapidKey);
-          navigator.serviceWorker.register('/service-worker.js').then(reg => {
-            this.checkForAppUpdate(reg);
-            this.fbPush.useServiceWorker(reg);
-            reg.active.postMessage(JSON.stringify({
-              locale: locale
-            }));
-            this.initDesktopAlerts();
-
-            if (this.state.desktopAlerts) {
-              if (!this.state.firebaseToken) {
-                this.togglePushToken(true);
-              } else {
-                this.tinode.setDeviceToken(this.state.firebaseToken);
-              }
+        initFCMessaging().then(() => {
+          if (this.state.desktopAlerts) {
+            if (!this.state.firebaseToken) {
+              this.togglePushToken(true);
+            } else {
+              this.tinode.setDeviceToken(this.state.firebaseToken);
             }
-          }).catch(err => {
-            console.log("Failed to register service worker:", err);
-          });
-        } catch (err) {
-          this.handleError(formatMessage(messages.push_init_failed), 'err');
-          console.log("Failed to initialize push notifications", err);
-          this.setState({
-            desktopAlertsEnabled: false
-          });
-        }
+          }
+        }).catch(() => {});
       }
 
       const token = keepLoggedIn ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__.default.getObject('auth-token') : undefined;
@@ -5067,6 +5044,46 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     tinode.setHumanLanguage(locale);
     tinode.enableLogging(_config_js__WEBPACK_IMPORTED_MODULE_11__.LOGGING_ENABLED, true);
     return tinode;
+  }
+
+  initFCMessaging() {
+    const {
+      formatMessage,
+      locale
+    } = this.props.intl;
+
+    const onError = (msg, err) => {
+      console.log(msg, err);
+      this.handleError(formatMessage(messages.push_init_failed), 'err');
+      this.setState({
+        desktopAlertsEnabled: false
+      });
+    };
+
+    try {
+      this.fbPush = firebase_app__WEBPACK_IMPORTED_MODULE_3__.initializeApp(FIREBASE_INIT, _config_js__WEBPACK_IMPORTED_MODULE_11__.APP_NAME).messaging();
+      this.fbPush.usePublicVapidKey(FIREBASE_INIT.messagingVapidKey);
+      return navigator.serviceWorker.register('/service-worker.js').then(reg => {
+        this.checkForAppUpdate(reg);
+        this.fbPush.useServiceWorker(reg);
+        reg.active.postMessage(JSON.stringify({
+          locale: locale
+        }));
+        this.fbPush.onTokenRefresh(() => {
+          this.requestPushToken();
+        });
+        this.fbPush.onMessage(payload => {
+          console.log("got fg push message", payload.data);
+        });
+        return reg;
+      }).catch(err => {
+        onError("Failed to register service worker:", err);
+        return new Promise.reject(err);
+      });
+    } catch (err) {
+      onError("Failed to initialize push notifications", err);
+      return new Promise.reject(err);
+    }
   }
 
   handleResize() {
@@ -5751,21 +5768,16 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.setUrlSidePanel(window.location.hash, this.state.myUserId ? 'blocked' : ''));
   }
 
-  initDesktopAlerts() {
-    this.fbPush.onTokenRefresh(() => {
-      this.requestPushToken();
-    });
-    this.fbPush.onMessage(payload => {
-      console.log("got fg push message", payload.data);
-    });
-  }
-
   togglePushToken(enabled) {
     if (enabled) {
       if (!this.state.firebaseToken) {
-        this.fbPush.requestPermission().then(() => {
+        const fcm = this.fbPush ? new Promise().resolve() : this.initFCMessaging();
+        fcm.then(() => {
+          return this.fbPush.requestPermission();
+        }).then(() => {
           this.requestPushToken();
         }).catch(err => {
+          console.log("Failed to get notification permission.", err);
           this.handleError(err.message, 'err');
           this.setState({
             desktopAlerts: false,
@@ -5774,7 +5786,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__.default.updateObject('settings', {
             desktopAlerts: false
           });
-          console.log("Failed to get permission to notify.", err);
         });
       } else {
         this.setState({
@@ -5784,7 +5795,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           desktopAlerts: true
         });
       }
-    } else if (this.state.firebaseToken) {
+    } else if (this.state.firebaseToken && this.fbPush) {
       this.fbPush.deleteToken(this.state.firebaseToken).catch(err => {
         console.log("Unable to delete token.", err);
       }).finally(() => {

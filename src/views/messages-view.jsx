@@ -133,7 +133,7 @@ class MessagesView extends React.Component {
       }
     }
 
-    const topic = this.props.tinode.getTopic(this.state.topic);
+    const topic = this.props.tinode ? this.props.tinode.getTopic(this.state.topic) : undefined;
     if (this.state.topic != prevState.topic) {
       if (prevState.topic && !Tinode.isNewGroupTopicName(prevState.topic)) {
         this.leave(prevState.topic);
