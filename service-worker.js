@@ -3,6 +3,9 @@ importScripts('https://cdn.jsdelivr.net/npm/firebase@8.2.9/firebase-app.js');
 importScripts('https://cdn.jsdelivr.net/npm/firebase@8.2.9/firebase-messaging.js');
 importScripts('firebase-init.js');
 
+// Channel to notify the webapp.
+const webAppChannel = new BroadcastChannel('tinode-sw');
+
 // Basic internationalization.
 const i18n = {
   'de': {
@@ -47,11 +50,12 @@ const fbMessaging = firebase.messaging();
 
 // This method shows the push notifications while the window is in background.
 fbMessaging.onBackgroundMessage((payload) => {
-  console.log("sw got background message", payload.data);
-
   if (payload.data.silent == 'true') {
     return;
   }
+
+  // Notify webapp that a message was received.
+  webAppChannel.postMessage(payload);
 
   const pushType = payload.data.what || 'msg';
   const title = payload.data.title || self.i18nMessage(pushType == 'msg' ? 'new_message' : 'new_chat');
@@ -116,23 +120,30 @@ self.addEventListener('notificationclick', event => {
 
 // This is needed for 'Add to Home Screen'.
 self.addEventListener('fetch', event => {
-  event.respondWith(
+  event.respondWith((async () => {
     //  Try to find response in cache.
-    caches.match(event.request)
-      .then((resp) => {
-        // If response is found in cache, return it. Otherwise fetch.
-        return resp || fetch(event.request);
-      })
-      .catch((err) => {
-        // Something went wrong.
-        console.log("Service worker Fetch:", err);
-      })
-  );
+    const cachedResponse = await caches.match(event.request);
+    if (cachedResponse) {
+      return cachedResponse;
+    }
+    // Not found in cache.
+    const response = await fetch(event.request);
+    if (!response || response.status != 200 || response.type != 'basic') {
+      return response;
+    }
+    if (event.request.url && (event.request.url.startsWith('http://') || event.request.url.startsWith('https://'))) {
+      const cache = await caches.open(self.version);
+      await cache.put(event.request, response.clone());
+    }
+    return response;
+  })());
 });
 
-// This code get the human language from the webapp for localization of strings.
+// This code get the human language & app version from the webapp.
+// Locale is used for localization of strings, version for naming the cache.
 self.addEventListener('message', event => {
   const data = JSON.parse(event.data);
   self.locale = data.locale || '';
   self.baseLocale = self.locale.toLowerCase().split(/[-_]/)[0];
+  self.version = data.version || 'default';
 });

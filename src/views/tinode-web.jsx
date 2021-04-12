@@ -17,6 +17,7 @@ import SidepanelView from './sidepanel-view.jsx';
 
 import { API_KEY, APP_NAME, DEFAULT_P2P_ACCESS_MODE, LOGGING_ENABLED,
   MEDIA_BREAKPOINT, RECEIVED_DELAY } from '../config.js';
+import { PACKAGE_VERSION } from '../version.js';
 import { base64ReEncode, makeImageUrl } from '../lib/blob-helpers.js';
 import { detectServerAddress, isLocalHost, isSecureConnection } from '../lib/host-name.js';
 import LocalStorageUtil from '../lib/local-storage.js';
@@ -112,6 +113,7 @@ class TinodeWeb extends React.Component {
     this.initFCMessaging = this.initFCMessaging.bind(this);
     this.togglePushToken = this.togglePushToken.bind(this);
     this.requestPushToken = this.requestPushToken.bind(this);
+    this.handlePushMessage = this.handlePushMessage.bind(this);
     this.handleSidepanelCancel = this.handleSidepanelCancel.bind(this);
     this.handleStartTopicRequest = this.handleStartTopicRequest.bind(this);
     this.handleNewTopicCreated = this.handleNewTopicCreated.bind(this);
@@ -139,6 +141,7 @@ class TinodeWeb extends React.Component {
 
   getBlankState() {
     const settings = LocalStorageUtil.getObject('settings') || {};
+    const persist = !!LocalStorageUtil.getObject('keep-logged-in');
 
     return {
       connected: false,
@@ -152,11 +155,11 @@ class TinodeWeb extends React.Component {
       // "On" is the default, so saving the "off" state.
       messageSounds: !settings.messageSoundsOff,
       incognitoMode: false,
-      desktopAlerts: settings.desktopAlerts,
+      desktopAlerts: persist && settings.desktopAlerts,
       desktopAlertsEnabled: (isSecureConnection() || isLocalHost()) &&
         (typeof firebase != 'undefined') && (typeof navigator != 'undefined') &&
         (typeof FIREBASE_INIT != 'undefined'),
-      firebaseToken: LocalStorageUtil.getObject('firebase-token'),
+      firebaseToken: persist ? LocalStorageUtil.getObject('firebase-token') : null,
 
       applicationVisible: !document.hidden,
 
@@ -209,6 +212,10 @@ class TinodeWeb extends React.Component {
     window.addEventListener('online', (e) => { this.handleOnline(true); });
     window.addEventListener('offline', (e) => { this.handleOnline(false); });
     window.addEventListener('hashchange', this.handleHashRoute);
+    // Process background notifications from the service worker.
+    const serviceWorkerChannel = new BroadcastChannel('tinode-sw');
+    serviceWorkerChannel.addEventListener('message', this.handlePushMessage);
+
     // Window/tab visible or invisible for pausing timers.
     document.addEventListener('visibilitychange', this.handleVisibilityEvent);
 
@@ -285,6 +292,14 @@ class TinodeWeb extends React.Component {
     return tinode;
   }
 
+  // Notifiy Tinode that a push message was received from the server.
+  handlePushMessage(payload) {
+    if (payload.data.what == 'msg' && Tinode.isChannelTopicName(payload.data.topic)) {
+      // The last argument is a fake user Id: otherwise the update is seen as one from the current user.
+      this.tinode.oobNotification(payload.data.topic, payload.data.seq, 'fake-uid');
+    }
+  }
+
   initFCMessaging() {
     const {formatMessage, locale} = this.props.intl;
     const onError = (msg, err) => {
@@ -300,18 +315,16 @@ class TinodeWeb extends React.Component {
       return navigator.serviceWorker.register('/service-worker.js').then((reg) => {
         this.checkForAppUpdate(reg);
         this.fbPush.useServiceWorker(reg);
-        reg.active.postMessage(JSON.stringify({locale: locale}));
+        reg.active.postMessage(JSON.stringify({locale: locale, version: PACKAGE_VERSION}));
         // Google could not be bothered to mention that
         // onTokenRefresh is never called.
         this.fbPush.onTokenRefresh(() => {
           this.requestPushToken();
         });
 
-        // TODO: add handler for FCM topic pushes (pushes for channels).
-        // They have to be handled even when the app is in the foreground.
-        this.fbPush.onMessage((payload) => {
-          console.log("got fg push message", payload.data);
-        });
+        // FCM pushes for channels have to be handled even when the app is in the foreground.
+        this.fbPush.onMessage(this.handlePushMessage);
+
         return reg;
       }).catch((err) => {
         // registration failed :(
@@ -1017,7 +1030,9 @@ class TinodeWeb extends React.Component {
         });
       } else {
         this.setState({desktopAlerts: true});
-        LocalStorageUtil.updateObject('settings', {desktopAlerts: true});
+        if (LocalStorageUtil.getObject('keep-logged-in')) {
+          LocalStorageUtil.updateObject('settings', {desktopAlerts: true});
+        }
       }
     } else if (this.state.firebaseToken && this.fbPush) {
       this.fbPush.deleteToken(this.state.firebaseToken).catch((err) => {
@@ -1037,12 +1052,17 @@ class TinodeWeb extends React.Component {
 
   requestPushToken() {
     this.fbPush.getToken().then((refreshedToken) => {
+      const persist = LocalStorageUtil.getObject('keep-logged-in');
       if (refreshedToken != this.state.firebaseToken) {
         this.tinode.setDeviceToken(refreshedToken);
-        LocalStorageUtil.setObject('firebase-token', refreshedToken);
+        if (persist) {
+          LocalStorageUtil.setObject('firebase-token', refreshedToken);
+        }
       }
       this.setState({firebaseToken: refreshedToken, desktopAlerts: true});
-      LocalStorageUtil.updateObject('settings', {desktopAlerts: true});
+      if (persist) {
+        LocalStorageUtil.updateObject('settings', {desktopAlerts: true});
+      }
     }).catch((err) => {
       this.handleError(err.message, 'err');
       console.log("Failed to retrieve firebase token", err);
