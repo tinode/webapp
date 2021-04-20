@@ -1,3 +1,3 @@
 // This is a generated file. Don't edit.
 
-export const PACKAGE_VERSION = "0.17.0-beta2";
+export const PACKAGE_VERSION = "0.17.0-rc1";
