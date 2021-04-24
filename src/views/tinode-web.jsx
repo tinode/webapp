@@ -203,7 +203,9 @@ class TinodeWeb extends React.Component {
       // Merged results of a search query and p2p chats.
       searchableContacts: [],
       credMethod: undefined,
-      credCode: undefined
+      credCode: undefined,
+      // Topic to go to after login.
+      requestedTopic: undefined
     };
   }
 
@@ -235,7 +237,7 @@ class TinodeWeb extends React.Component {
     }).then(() => {
       // Initialize desktop alerts.
       if (this.state.desktopAlertsEnabled) {
-        initFCMessaging().then(() => {
+        this.initFCMessaging().then(() => {
           if (this.state.desktopAlerts) {
             if (!this.state.firebaseToken) {
               this.togglePushToken(true);
@@ -267,6 +269,8 @@ class TinodeWeb extends React.Component {
         parsedNav.path[0] = '';
         HashNavigation.navigateTo(HashNavigation.composeUrlHash(parsedNav.path, parsedNav.params));
       } else if (!parsedNav.params.token) {
+        // No token, save possible topic name and navigating to blank state.
+        this.setState({requestedTopic: parsedNav.path[1]});
         HashNavigation.navigateTo('');
       }
 
@@ -576,6 +580,8 @@ class TinodeWeb extends React.Component {
     if (LocalStorageUtil.getObject('keep-logged-in')) {
       LocalStorageUtil.setObject('auth-token', this.tinode.getAuthToken());
     }
+
+    const goToTopic = this.state.requestedTopic;
     // Logged in fine, subscribe to 'me' attaching callbacks from the contacts view.
     const me = this.tinode.getMeTopic();
     me.onMetaDesc = this.tnMeMetaDesc;
@@ -587,6 +593,7 @@ class TinodeWeb extends React.Component {
       credCode: undefined,
       myUserId: this.tinode.getCurrentUserID(),
       autoLogin: true,
+      requestedTopic: undefined,
     });
     // Subscribe, fetch topic desc, the list of subscriptions. Messages are not fetched.
     me.subscribe(
@@ -604,7 +611,11 @@ class TinodeWeb extends React.Component {
       }).finally(() => {
         this.setState({loadSpinnerVisible: false});
       });
-    HashNavigation.navigateTo(HashNavigation.setUrlSidePanel(window.location.hash, 'contacts'));
+    let urlHash = HashNavigation.setUrlSidePanel(window.location.hash, 'contacts');
+    if (goToTopic) {
+      urlHash = HashNavigation.setUrlTopic(urlHash, goToTopic);
+    }
+    HashNavigation.navigateTo(urlHash);
   }
 
   tnMeMetaDesc(desc) {

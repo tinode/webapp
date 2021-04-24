@@ -4967,7 +4967,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       searchResults: [],
       searchableContacts: [],
       credMethod: undefined,
-      credCode: undefined
+      credCode: undefined,
+      requestedTopic: undefined
     };
   }
 
@@ -4995,7 +4996,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
     }).then(() => {
       if (this.state.desktopAlertsEnabled) {
-        initFCMessaging().then(() => {
+        this.initFCMessaging().then(() => {
           if (this.state.desktopAlerts) {
             if (!this.state.firebaseToken) {
               this.togglePushToken(true);
@@ -5023,6 +5024,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         parsedNav.path[0] = '';
         _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.composeUrlHash(parsedNav.path, parsedNav.params));
       } else if (!parsedNav.params.token) {
+        this.setState({
+          requestedTopic: parsedNav.path[1]
+        });
         _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo('');
       }
 
@@ -5364,6 +5368,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.setObject('auth-token', this.tinode.getAuthToken());
     }
 
+    const goToTopic = this.state.requestedTopic;
     const me = this.tinode.getMeTopic();
     me.onMetaDesc = this.tnMeMetaDesc;
     me.onContactUpdate = this.tnMeContactUpdate;
@@ -5373,7 +5378,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       credMethod: undefined,
       credCode: undefined,
       myUserId: this.tinode.getCurrentUserID(),
-      autoLogin: true
+      autoLogin: true,
+      requestedTopic: undefined
     });
     me.subscribe(me.startMetaQuery().withLaterSub().withDesc().withTags().withCred().build()).catch(err => {
       this.tinode.disconnect();
@@ -5385,7 +5391,13 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         loadSpinnerVisible: false
       });
     });
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlSidePanel(window.location.hash, 'contacts'));
+    let urlHash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlSidePanel(window.location.hash, 'contacts');
+
+    if (goToTopic) {
+      urlHash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlTopic(urlHash, goToTopic);
+    }
+
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(urlHash);
   }
 
   tnMeMetaDesc(desc) {
