@@ -128,7 +128,7 @@ self.addEventListener('fetch', event => {
     }
     // Not found in cache.
     const response = await fetch(event.request);
-    if (!response || response.status != 200 || response.type != 'basic') {
+    if (!response || response.status != 200 || response.type != 'basic' || event.request.method != 'GET') {
       return response;
     }
     if (event.request.url && (event.request.url.startsWith('http://') || event.request.url.startsWith('https://'))) {
