@@ -72,7 +72,7 @@ If you want to use the app with your own server and want web push notification t
 ### Desktop screenshot
 
 <p align="center">
-  <img src="web-desktop.jpeg" alt="Desktop web: full app" width=810 />
+  <img src="web-desktop.jpg" alt="Desktop web: full app" width=810 />
 </p>
 
 ### Mobile screenshots
