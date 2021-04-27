@@ -192,7 +192,7 @@ function draftyFormatter(style, data, values, key) {
           attr.style = {
             width: dim.dstWidth + 'px',
             height: dim.dstHeight + 'px',
-            // Looks like a Chrome bug.
+            // Looks like a Chrome bug: broken image does not respect 'width' and 'height'.
             minWidth: dim.dstWidth + 'px',
             minHeight: dim.dstHeight + 'px'
           };
