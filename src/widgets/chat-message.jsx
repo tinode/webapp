@@ -189,7 +189,13 @@ function draftyFormatter(style, data, values, key) {
           const dim = fitImageSize(data.width, data.height,
             Math.min(this.props.viewportWidth - REM_SIZE * 4, REM_SIZE * 36), REM_SIZE * 24, false) ||
             {dstWidth: BROKEN_IMAGE_SIZE, dstHeight: BROKEN_IMAGE_SIZE};
-          attr.style = { width: dim.dstWidth + 'px', height: dim.dstHeight + 'px' };
+          attr.style = {
+            width: dim.dstWidth + 'px',
+            height: dim.dstHeight + 'px',
+            // Looks like a Chrome bug.
+            minWidth: dim.dstWidth + 'px',
+            minHeight: dim.dstHeight + 'px'
+          };
           if (!Drafty.isProcessing(data)) {
             attr.src = this.props.tinode.authorizeURL(sanitizeImageUrl(attr.src));
             attr.alt = data.name;

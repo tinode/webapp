@@ -7135,7 +7135,9 @@ function draftyFormatter(style, data, values, key) {
           };
           attr.style = {
             width: dim.dstWidth + 'px',
-            height: dim.dstHeight + 'px'
+            height: dim.dstHeight + 'px',
+            minWidth: dim.dstWidth + 'px',
+            minHeight: dim.dstHeight + 'px'
           };
 
           if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isProcessing(data)) {
