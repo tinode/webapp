@@ -1505,11 +1505,13 @@ i.search {
 }
 
 .chat-box .bubble div.message-content {
+  position: relative;
   color: #212121;
   margin: 0;
   max-width: 36rem;
   overflow-wrap: break-word;
 }
+
 /* The timestamp is a floating element. Need to ensure div.message-content is expanded
  * to accomodate it. It's usually called clearfix. */
 .chat-box .bubble div.message-content:after {
@@ -1520,26 +1522,19 @@ i.search {
   visibility: hidden;
 }
 
+.chat-box .timestamp-padding {
+  display: inline-block;
+  width: 4rem;
+  height: 0;
+}
+
 .chat-box .timestamp {
   position: relative;
   font-size: 80%;
   color: #777;
-  padding-left: 1rem;
-  top: 0.5rem;
+  top: 0.35rem;
   float: right;
   white-space: nowrap;
-}
-
-/* Typing notification bubble */
-.chat-box .typing {
-  display: inline-block;
-  border-radius: 0.5rem;
-  width: 2rem;
-  padding: 0.25rem 0.35rem;
-  vertical-align: middle;
-  text-align: center;
-  color: #aaa;
-  margin-top: 0.75rem;
 }
 
 /* The name of the person who sent the message

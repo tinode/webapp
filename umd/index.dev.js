@@ -7082,7 +7082,9 @@ class ChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       className: bubbleClass
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "message-content"
-    }, content, attachments, this.props.timestamp ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_received_marker_jsx__WEBPACK_IMPORTED_MODULE_5__.default, {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, content, attachments, this.props.timestamp ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+      className: "timestamp-padding"
+    }) : null), this.props.timestamp ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_received_marker_jsx__WEBPACK_IMPORTED_MODULE_5__.default, {
       timestamp: this.props.timestamp,
       received: this.props.received
     }) : null), this.props.deleted || !this.props.showContextMenu ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {

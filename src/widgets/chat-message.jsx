@@ -129,8 +129,13 @@ export default class ChatMessage extends React.Component {
         <div>
           <div className={bubbleClass}>
             <div className="message-content">
-              {content}
-              {attachments}
+              <div>
+                {content}
+                {attachments}
+                {this.props.timestamp ?
+                  <span className="timestamp-padding"></span>
+                  : null}
+              </div>
               {this.props.timestamp ?
                 <ReceivedMarker
                   timestamp={this.props.timestamp}
