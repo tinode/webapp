@@ -1,6 +1,6 @@
 // A single topic or user.
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
 import ContactBadges from './contact-badges.jsx';
 import LetterTile from './letter-tile.jsx';
@@ -11,7 +11,25 @@ import { Drafty } from 'tinode-sdk';
 
 import { deliveryMarker } from '../lib/utils.js';
 
-export default class Contact extends React.Component {
+const messages = defineMessages({
+  drafty_image: {
+    id: 'drafty_image',
+    defaultMessage: 'Picture',
+    description: 'Comment for embedded images in drafty preview'
+  },
+  drafty_form: {
+    id: 'drafty_form',
+    defaultMessage: 'Form: ',
+    description: 'Comment for form in drafty preview'
+  },
+  drafty_attachment: {
+    id: 'drafty_attachment',
+    defaultMessage: 'Attachment',
+    description: 'Comment for attachment in drafty preview'
+  },
+});
+
+class Contact extends React.Component {
   constructor(props) {
     super(props);
 
@@ -105,6 +123,7 @@ function draftyFormatter(style, data, values, key) {
   let el = Drafty.tagName(style);
   const attr = { key: key };
   if (el) {
+    const { formatMessage } = this.props.intl;
     switch (style) {
       case 'BR':
         // Replace new line with a space.
@@ -122,7 +141,7 @@ function draftyFormatter(style, data, values, key) {
       case 'IM':
         // Replace image with '[icon] Image'.
         el = React.Fragment;
-        values = [<i key="im" className="material-icons">photo</i>, 'Picture'];
+        values = [<i key="im" className="material-icons">photo</i>, formatMessage(messages.drafty_image)];
         break;
       case 'BN':
         el = 'span';
@@ -130,14 +149,15 @@ function draftyFormatter(style, data, values, key) {
         break;
       case 'FM':
         el = React.Fragment;
-        values = [<i key="fm" className="material-icons">dashboard</i>, 'Form: '].concat(values || []);
+        values = [<i key="fm" className="material-icons">dashboard</i>,
+          formatMessage(messages.drafty_form)].concat(values || []);
         break;
       case 'RW':
         el = React.Fragment;
         break;
       case 'EX':
         el = React.Fragment;
-        values = [<i key="ex" className="material-icons">attachment</i>, 'Attachment'];
+        values = [<i key="ex" className="material-icons">attachment</i>, formatMessage(messages.drafty_attachment)];
         break;
       default:
         if (el == '_UNKN') {
@@ -151,3 +171,5 @@ function draftyFormatter(style, data, values, key) {
     return values;
   }
 };
+
+export default injectIntl(Contact);

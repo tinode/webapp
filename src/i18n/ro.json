@@ -172,5 +172,8 @@
   "cannot_initiate_file_upload": "Nu se poate face încărcarea.",
   "tags_not_found": "Niciun tag definit. Adaugă.",
   "tags_editor_no_tags": "Adaugă tag-uri",
-  "title_manage_tags": "Administrează"
+  "title_manage_tags": "Administrează",
+  "drafty_attachment": "Atasament",
+  "drafty_form": "Formă:",
+  "drafty_image": "Imagine"
 }

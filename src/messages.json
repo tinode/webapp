@@ -173,7 +173,10 @@
     "tags_editor_no_tags": "Schlagworte hinzufügen",
     "title_manage_tags": "Verwalten",
     "channel_prompt": "Dies ist ein Sender",
-    "channel": "Sender"
+    "channel": "Sender",
+    "drafty_attachment": "Dateianhang",
+    "drafty_form": "Formular:",
+    "drafty_image": "Bild"
   },
   "en": {
     "action_block_contact": "Block Contact",
@@ -220,6 +223,9 @@
     "delete_messages_warning": "Are you sure you want to delete all messages for everyone? It cannot be undone.",
     "deleted_content": "content deleted",
     "download_action": "download",
+    "drafty_attachment": "Attachment",
+    "drafty_form": "Form:",
+    "drafty_image": "Picture",
     "email_dative": "email",
     "email_prompt": "Email, e.g. jdoe@example.com",
     "enable_peers_messaging": "Enable",
@@ -525,7 +531,10 @@
     "tags_editor_no_tags": "Añadir etiquetas",
     "title_manage_tags": "Gestionar",
     "channel_prompt": "Este es un canal",
-    "channel": "canal"
+    "channel": "canal",
+    "drafty_attachment": "Archivo",
+    "drafty_form": "Formulario:",
+    "drafty_image": "Imagen"
   },
   "ko": {
     "validate_credential_action": "확인",
@@ -701,7 +710,10 @@
     "messages_not_readable": "메시지에 액세스 할 수 없습니다",
     "deleted_content": "내용이 삭제되었습니다",
     "channel_prompt": "이 채널입니다",
-    "channel": "채널"
+    "channel": "채널",
+    "drafty_attachment": "부착",
+    "drafty_form": "형태:",
+    "drafty_image": "이미지"
   },
   "ro": {
     "validate_credential_action": "confirmă",
@@ -877,7 +889,10 @@
     "cannot_initiate_file_upload": "Nu se poate face încărcarea.",
     "tags_not_found": "Niciun tag definit. Adaugă.",
     "tags_editor_no_tags": "Adaugă tag-uri",
-    "title_manage_tags": "Administrează"
+    "title_manage_tags": "Administrează",
+    "drafty_attachment": "Atasament",
+    "drafty_form": "Formă:",
+    "drafty_image": "Imagine"
   },
   "ru": {
     "contacts_not_found": "Чатов нет<br />¯∖_(ツ)_/¯",
@@ -1053,7 +1068,10 @@
     "no_connection": "Нет связи",
     "code_doesnot_match": "Код не совпадает",
     "channel_prompt": "Создать канал",
-    "channel": "канал"
+    "channel": "канал",
+    "drafty_attachment": "Аттачмент",
+    "drafty_form": "Форма:",
+    "drafty_image": "Картинка"
   },
   "zh": {
     "archived_contacts": "已归档联系人 ({count})",
@@ -1229,6 +1247,9 @@
     "no_connection": "无连接",
     "code_doesnot_match": "代码不匹配",
     "channel_prompt": "这是一个频道",
-    "channel": "频道"
+    "channel": "频道",
+    "drafty_attachment": "附件",
+    "drafty_form": "形式：",
+    "drafty_image": "图像"
   }
 }
