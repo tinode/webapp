@@ -5040,7 +5040,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     window.removeEventListener('resize', this.handleResize);
     window.removeEventListener('hashchange', this.handleHashRoute);
     document.removeEventListener('visibilitychange', this.handleVisibilityEvent);
-    clearInterval(this.reconnectCountdown);
   }
 
   static tnSetup(serverAddress, transport, locale, persistentCache, onSetupCompleted) {
@@ -7084,10 +7083,10 @@ class ChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     }) : null) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: bubbleClass
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "content-meta"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "message-content"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, content, attachments, this.props.timestamp ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      className: "timestamp-padding"
-    }) : null), this.props.timestamp ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_received_marker_jsx__WEBPACK_IMPORTED_MODULE_5__.default, {
+    }, content, attachments), this.props.timestamp ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_received_marker_jsx__WEBPACK_IMPORTED_MODULE_5__.default, {
       timestamp: this.props.timestamp,
       received: this.props.received
     }) : null), this.props.deleted || !this.props.showContextMenu ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {

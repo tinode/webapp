@@ -1414,10 +1414,10 @@ i.search {
 .chat-box .bubble {
   position: relative;
   display: flex;
-	max-width: 40rem;
+  max-width: 40rem;
   min-width: 9rem;
-	height: auto;
-  padding: 0.75rem 0.5rem 0.75rem 1.25rem;
+  height: auto;
+  padding: 0.75rem 0.5rem 0.75rem 0.5rem;
   margin: 0;
   text-align: left;
   border-radius: 0.5rem;
@@ -1504,12 +1504,19 @@ i.search {
   margin-right: 0.8rem;
 }
 
+/* Message text + timestamp and delivery marker */
+.chat-box .bubble div.content-meta {
+  width: 100%;
+}
+
 .chat-box .bubble div.message-content {
   position: relative;
   color: #212121;
   margin: 0;
+  width: 100%;
   max-width: 36rem;
   overflow-wrap: break-word;
+  padding: 0 0.75rem 0 0.75rem;
 }
 
 /* The timestamp is a floating element. Need to ensure div.message-content is expanded
