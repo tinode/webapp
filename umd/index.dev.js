@@ -5040,6 +5040,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     window.removeEventListener('resize', this.handleResize);
     window.removeEventListener('hashchange', this.handleHashRoute);
     document.removeEventListener('visibilitychange', this.handleVisibilityEvent);
+    clearInterval(this.reconnectCountdown);
   }
 
   static tnSetup(serverAddress, transport, locale, persistentCache, onSetupCompleted) {
@@ -5240,6 +5241,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handleConnected() {
+    clearInterval(this.reconnectCountdown);
+    this.handleError();
     const params = this.tinode.getServerInfo();
     this.setState({
       serverVersion: params.ver + ' ' + (params.build ? params.build : 'none')

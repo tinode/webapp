@@ -285,6 +285,7 @@ class TinodeWeb extends React.Component {
     window.removeEventListener('resize', this.handleResize);
     window.removeEventListener('hashchange', this.handleHashRoute);
     document.removeEventListener('visibilitychange', this.handleVisibilityEvent);
+    clearInterval(this.reconnectCountdown);
   }
 
   // Setup transport (usually websocket) and server address. This will terminate connection with the server.
@@ -453,6 +454,10 @@ class TinodeWeb extends React.Component {
 
   // Connection succeeded.
   handleConnected() {
+    // Just to be sure.
+    clearInterval(this.reconnectCountdown);
+    this.handleError();
+
     const params = this.tinode.getServerInfo();
     this.setState({
       serverVersion: params.ver + ' ' + (params.build ? params.build : 'none')
