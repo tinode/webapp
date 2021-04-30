@@ -189,7 +189,7 @@ function draftyFormatter(style, data, values, key) {
         if (data) {
           attr.className = 'inline-image';
           const dim = fitImageSize(data.width, data.height,
-            Math.min(this.props.viewportWidth - REM_SIZE * 4, REM_SIZE * 36), REM_SIZE * 24, false) ||
+            Math.min(this.props.viewportWidth - REM_SIZE * 4, REM_SIZE * 34.5), REM_SIZE * 24, false) ||
             {dstWidth: BROKEN_IMAGE_SIZE, dstHeight: BROKEN_IMAGE_SIZE};
           attr.style = {
             width: dim.dstWidth + 'px',
