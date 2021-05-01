@@ -5093,11 +5093,11 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         return reg;
       }).catch(err => {
         onError("Failed to register service worker:", err);
-        return new Promise.reject(err);
+        return Promise.reject(err);
       });
     } catch (err) {
       onError("Failed to initialize push notifications", err);
-      return new Promise.reject(err);
+      return Promise.reject(err);
     }
   }
 
@@ -5796,7 +5796,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   togglePushToken(enabled) {
     if (enabled) {
       if (!this.state.firebaseToken) {
-        const fcm = this.fbPush ? new Promise().resolve() : this.initFCMessaging();
+        const fcm = this.fbPush ? Promise.resolve() : this.initFCMessaging();
         fcm.then(() => {
           return this.fbPush.requestPermission();
         }).then(() => {

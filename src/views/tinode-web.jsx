@@ -333,11 +333,11 @@ class TinodeWeb extends React.Component {
       }).catch((err) => {
         // registration failed :(
         onError("Failed to register service worker:", err);
-        return new Promise.reject(err);
+        return Promise.reject(err);
       });
     } catch (err) {
       onError("Failed to initialize push notifications", err);
-      return new Promise.reject(err);
+      return Promise.reject(err);
     }
   }
 
@@ -1031,7 +1031,7 @@ class TinodeWeb extends React.Component {
     if (enabled) {
       if (!this.state.firebaseToken) {
         const fcm = this.fbPush ?
-          new Promise().resolve() :
+          Promise.resolve() :
           this.initFCMessaging();
         fcm.then(() => {
           return this.fbPush.requestPermission();
