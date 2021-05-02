@@ -1446,10 +1446,12 @@ i.search {
 
 .chat-box .left .bubble {
   background-color: #c5e1a5;
+  margin-right: 0.5rem;
 }
 
 .chat-box .right .bubble {
   background-color: #fafafa;
+  margin-left: 1.75rem;
 }
 
 .chat-box .center .bubble {

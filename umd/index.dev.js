@@ -7143,7 +7143,7 @@ function draftyFormatter(style, data, values, key) {
       case 'IM':
         if (data) {
           attr.className = 'inline-image';
-          const dim = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__.fitImageSize)(data.width, data.height, Math.min(this.props.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 4, _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 34.5), _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 24, false) || {
+          const dim = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__.fitImageSize)(data.width, data.height, Math.min(this.props.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 34.5), _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 24, false) || {
             dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_8__.BROKEN_IMAGE_SIZE,
             dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_8__.BROKEN_IMAGE_SIZE
           };
