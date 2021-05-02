@@ -251,9 +251,13 @@ class TinodeWeb extends React.Component {
         });
       }
 
-      const token = keepLoggedIn ? LocalStorageUtil.getObject('auth-token') : undefined;
-
+      // Parse and save the hash navigation params.
       const parsedNav = HashNavigation.parseUrlHash(window.location.hash);
+
+      // Read contacts from cache.
+      this.resetContactList();
+
+      const token = keepLoggedIn ? LocalStorageUtil.getObject('auth-token') : undefined;
       if (token) {
         this.setState({autoLogin: true});
 
@@ -385,10 +389,16 @@ class TinodeWeb extends React.Component {
       }
 
       // Topic for MessagesView selector.
-      if (hash.path.length > 1 && hash.path[1] != this.state.topicSelected) {
-        this.setState({
-          topicSelected: Tinode.topicType(hash.path[1]) ? hash.path[1] : null
-        });
+      const topicName = hash.path[1];
+      if (Tinode.topicType(topicName) && topicName != this.state.topicSelected) {
+          const newState = {
+            topicSelected: topicName
+          };
+          const acs = this.tinode.getTopicAccessMode(topicName);
+          if (acs) {
+            newState.topicSelectedAcs = acs;
+          }
+          this.setState(newState);
       }
     } else {
       // Empty hashpath

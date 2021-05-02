@@ -5007,8 +5007,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         }).catch(() => {});
       }
 
-      const token = keepLoggedIn ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.getObject('auth-token') : undefined;
       const parsedNav = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.parseUrlHash(window.location.hash);
+      this.resetContactList();
+      const token = keepLoggedIn ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.getObject('auth-token') : undefined;
 
       if (token) {
         this.setState({
@@ -5154,10 +5155,19 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         console.log("Unknown sidepanel view", hash.path[0]);
       }
 
-      if (hash.path.length > 1 && hash.path[1] != this.state.topicSelected) {
-        this.setState({
-          topicSelected: tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default().topicType(hash.path[1]) ? hash.path[1] : null
-        });
+      const topicName = hash.path[1];
+
+      if (tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default().topicType(topicName) && topicName != this.state.topicSelected) {
+        const newState = {
+          topicSelected: topicName
+        };
+        const acs = this.tinode.getTopicAccessMode(topicName);
+
+        if (acs) {
+          newState.topicSelectedAcs = acs;
+        }
+
+        this.setState(newState);
       }
     } else {
       this.setState({
