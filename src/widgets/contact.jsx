@@ -83,7 +83,8 @@ class Contact extends React.Component {
       this.props.comment;
 
     const icon = deliveryMarker(this.props.received);
-    const marker = icon ? <i className={'material-icons small space-right ' + icon.color}>{icon.name}</i> : null;
+    const marker = icon ? <i className={'material-icons small space-right' +
+      (icon.color ? ' ' + icon.color : '')}>{icon.name}</i> : null;
 
     return (
       <li className={!this.props.showCheckmark && this.props.selected ? 'selected' : null} onClick={this.handleClick}>
