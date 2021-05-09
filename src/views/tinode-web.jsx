@@ -301,10 +301,10 @@ class TinodeWeb extends React.Component {
   }
 
   // Notifiy Tinode that a push message was received from the server.
-  handlePushMessage(payload) {
-    if (payload.data.what == 'msg' && Tinode.isChannelTopicName(payload.data.topic)) {
+  handlePushMessage(data) {
+    if (data.what == 'msg' && Tinode.isChannelTopicName(data.topic)) {
       // The last argument is a fake user Id: otherwise the update is seen as one from the current user.
-      this.tinode.oobNotification(payload.data.topic, payload.data.seq, 'fake-uid');
+      this.tinode.oobNotification(data.topic, data.seq, 'fake-uid');
     }
   }
 
@@ -330,8 +330,10 @@ class TinodeWeb extends React.Component {
           this.requestPushToken();
         });
 
-        // FCM pushes for channels have to be handled even when the app is in the foreground.
-        this.fbPush.onMessage(this.handlePushMessage);
+        // Handhe FCM pushes
+        // (a) for channels always,
+        // (b) pushes when the app is in foreground but has not focus.
+        this.fbPush.onMessage(payload => { this.handlePushMessage(payload.data); });
 
         return reg;
       }).catch((err) => {
@@ -421,6 +423,8 @@ class TinodeWeb extends React.Component {
   }
 
   handleOnline(online) {
+    console.log("handleOnline", online);
+
     if (online) {
       this.handleError();
       clearInterval(this.reconnectCountdown);

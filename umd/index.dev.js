@@ -5056,9 +5056,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     return tinode;
   }
 
-  handlePushMessage(payload) {
-    if (payload.data.what == 'msg' && tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default().isChannelTopicName(payload.data.topic)) {
-      this.tinode.oobNotification(payload.data.topic, payload.data.seq, 'fake-uid');
+  handlePushMessage(data) {
+    if (data.what == 'msg' && tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default().isChannelTopicName(data.topic)) {
+      this.tinode.oobNotification(data.topic, data.seq, 'fake-uid');
     }
   }
 
@@ -5193,6 +5193,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handleOnline(online) {
+    console.log("handleOnline", online);
+
     if (online) {
       this.handleError();
       clearInterval(this.reconnectCountdown);
