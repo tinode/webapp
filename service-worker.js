@@ -56,7 +56,7 @@ fbMessaging.onBackgroundMessage((payload) => {
   }
 
   // Notify webapp that a message was received.
-  webAppChannel.postMessage(payload);
+  webAppChannel.postMessage(payload.data);
 
   const pushType = payload.data.what || 'msg';
   const title = payload.data.title || self.i18nMessage(pushType == 'msg' ? 'new_message' : 'new_chat');
@@ -121,29 +121,34 @@ self.addEventListener('notificationclick', event => {
 
 // This is needed for 'Add to Home Screen'.
 self.addEventListener('fetch', event => {
+  if (event.request.method != 'GET') {
+    return;
+  }
+
   event.respondWith((async () => {
-    //  Try to find response in cache.
-    const cachedResponse = await caches.match(event.request);
+    //  Try to find the response in the cache.
+    const cache = await caches.open(PACKAGE_VERSION);
+    const cachedResponse = await cache.match(event.request);
     if (cachedResponse) {
       return cachedResponse;
     }
     // Not found in cache.
     const response = await fetch(event.request);
-    if (!response || response.status != 200 || response.type != 'basic' || event.request.method != 'GET') {
+    if (!response || response.status != 200 || response.type != 'basic') {
       return response;
     }
     if (event.request.url && (event.request.url.startsWith('http://') || event.request.url.startsWith('https://'))) {
-      const cache = await caches.open(PACKAGE_VERSION);
       await cache.put(event.request, response.clone());
     }
     return response;
   })());
 });
 
-// This code get the human language from the webapp.
-// Locale is used for localization of strings.
+// This code gets the human language from the webapp.
 self.addEventListener('message', event => {
   const data = JSON.parse(event.data);
+
+  // The locale is used for selecting strings in an appropriate language.
   self.locale = data.locale || '';
   self.baseLocale = self.locale.toLowerCase().split(/[-_]/)[0];
 });
