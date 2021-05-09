@@ -2,6 +2,7 @@
 importScripts('https://cdn.jsdelivr.net/npm/firebase@8.2.9/firebase-app.js');
 importScripts('https://cdn.jsdelivr.net/npm/firebase@8.2.9/firebase-messaging.js');
 importScripts('firebase-init.js');
+importScripts('version.js');
 
 // Channel to notify the webapp.
 const webAppChannel = new BroadcastChannel('tinode-sw');
@@ -132,18 +133,17 @@ self.addEventListener('fetch', event => {
       return response;
     }
     if (event.request.url && (event.request.url.startsWith('http://') || event.request.url.startsWith('https://'))) {
-      const cache = await caches.open(self.version);
+      const cache = await caches.open(PACKAGE_VERSION);
       await cache.put(event.request, response.clone());
     }
     return response;
   })());
 });
 
-// This code get the human language & app version from the webapp.
-// Locale is used for localization of strings, version for naming the cache.
+// This code get the human language from the webapp.
+// Locale is used for localization of strings.
 self.addEventListener('message', event => {
   const data = JSON.parse(event.data);
   self.locale = data.locale || '';
   self.baseLocale = self.locale.toLowerCase().split(/[-_]/)[0];
-  self.version = data.version || 'default';
 });

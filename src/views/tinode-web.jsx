@@ -324,8 +324,8 @@ class TinodeWeb extends React.Component {
         this.checkForAppUpdate(reg);
         this.fbPush.useServiceWorker(reg);
         reg.active.postMessage(JSON.stringify({locale: locale, version: PACKAGE_VERSION}));
-        // Google could not be bothered to mention that
-        // onTokenRefresh is never called.
+
+        // Google could not be bothered to mention that onTokenRefresh is never called.
         this.fbPush.onTokenRefresh(() => {
           this.requestPushToken();
         });

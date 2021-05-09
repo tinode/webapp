@@ -43,7 +43,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _version_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./version.js */ "./src/version.js");
 
-const APP_NAME = 'TinodeWeb/' + (_version_js__WEBPACK_IMPORTED_MODULE_0__.PACKAGE_VERSION || '0.16');
+const APP_NAME = 'TinodeWeb/' + (_version_js__WEBPACK_IMPORTED_MODULE_0__.PACKAGE_VERSION || '0.17');
 const API_KEY = 'AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K';
 const KNOWN_HOSTS = {
   hosted: 'web.tinode.co',
@@ -73,7 +73,7 @@ const IMAGE_PREVIEW_DIM = 64;
 const MAX_ONLINE_IN_TOPIC = 4;
 const MAX_TITLE_LENGTH = 60;
 const MESSAGE_PREVIEW_LENGTH = 80;
-const LINK_CONTACT_US = 'email:info@tinode.co';
+const LINK_CONTACT_US = 'email:support@tinode.co';
 const LINK_PRIVACY_POLICY = 'https://tinode.co/privacy.html';
 const LINK_TERMS_OF_SERVICE = 'https://tinode.co/terms.html';
 
@@ -702,7 +702,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "PACKAGE_VERSION": function() { return /* binding */ PACKAGE_VERSION; }
 /* harmony export */ });
-const PACKAGE_VERSION = "0.17.0";
+const PACKAGE_VERSION = "0.17.1-alpha1";
 
 /***/ }),
 
@@ -4396,11 +4396,10 @@ class SettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       ws: "websocket",
       lp: "long polling"
     };
-    var transportOptions = [];
-    var instance = this;
-    ['def', 'ws', 'lp'].map(function (item) {
-      var id = 'transport-' + item;
-      var name = names[item];
+    const transportOptions = [];
+    ['def', 'ws', 'lp'].map(item => {
+      const id = 'transport-' + item;
+      const name = names[item];
       transportOptions.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
         key: item
       }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
@@ -4408,8 +4407,8 @@ class SettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
         id: id,
         name: "transport-select",
         value: item,
-        checked: instance.state.transport === item,
-        onChange: instance.handleTransportSelected
+        checked: this.state.transport === item,
+        onChange: this.handleTransportSelected
       }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
         htmlFor: id
       }, name)));
@@ -7938,6 +7937,10 @@ function draftyFormatter(style, data, values, key) {
         break;
 
       case 'EX':
+        if (data && data.mime == 'application/json') {
+          return null;
+        }
+
         el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
         values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
           key: "ex",

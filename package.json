@@ -1,7 +1,7 @@
 {
   "name": "tinode-webapp",
   "description": "Tinode messenger for the web",
-  "version": "0.17.0",
+  "version": "0.17.1-alpha1",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinode/example-react-js.git"
@@ -18,12 +18,6 @@
   },
   "browserslist": "> 0.5%, not IE 11",
   "files": [
-    "src/index.js",
-    "src/config.js",
-    "src/views/*.jsx",
-    "src/widgets/*.jsx",
-    "src/lib/*.js",
-    "src/i18n/*.json",
     "umd/index.prod.js",
     "umd/index.prod.js.map",
     "umd/index.dev.js",
@@ -40,7 +34,8 @@
     "index.html",
     "manifest.json",
     "service-worker.js",
-    "firebase-init.js"
+    "firebase-init.js",
+    "version.js"
   ],
   "keywords": [
     "chat",
@@ -72,7 +67,7 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-intl": "^5.12.5",
-    "tinode-sdk": "^0.17.0"
+    "tinode-sdk": "^0.17.1-alpha1"
   },
   "devDependencies": {
     "@babel/core": "^7.13.8",

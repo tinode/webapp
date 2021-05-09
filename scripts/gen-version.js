@@ -1,13 +1,18 @@
-var fs = require('fs');
-var version = require('../package.json').version;
+const fs = require('fs');
+const version = require('../package.json').version;
 
-fs.writeFile('./src/version.js',
-  '// This is a generated file. Don\'t edit.\n\n'+
-  'export const PACKAGE_VERSION = "'+version+'";\n',
-  { flag: 'w' },
-  function(err) {
-    if (err) {
-        return console.log(err);
+function writeVersion(fileName, useExport) {
+  fs.writeFile(fileName,
+    '// This is a generated file. Don\'t edit.\n\n'+
+    `${useExport ? 'export ' : ''}const PACKAGE_VERSION = "${version}";\n`,
+    { flag: 'w' },
+    (err) => {
+      if (err) {
+          return console.log(err);
+      }
     }
-  }
-);
+  );
+}
+
+writeVersion('./src/version.js', true);
+writeVersion('./version.js', false);

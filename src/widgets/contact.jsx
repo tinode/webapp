@@ -157,6 +157,10 @@ function draftyFormatter(style, data, values, key) {
         el = React.Fragment;
         break;
       case 'EX':
+        if (data && data.mime == 'application/json') {
+          // Ignore JSON attachments: they are form response payloads.
+          return null;
+        }
         el = React.Fragment;
         values = [<i key="ex" className="material-icons">attachment</i>, formatMessage(messages.drafty_attachment)];
         break;
