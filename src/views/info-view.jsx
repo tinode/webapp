@@ -18,7 +18,7 @@ import TagManager from '../widgets/tag-manager.jsx';
 import { MAX_TITLE_LENGTH, NO_ACCESS_MODE } from '../config.js';
 
 import { makeImageUrl } from '../lib/blob-helpers.js';
-import { arrayEqual, vcard } from '../lib/utils.js';
+import { arrayEqual, theCard } from '../lib/utils.js';
 
 const messages = defineMessages({
   requested: {
@@ -282,7 +282,7 @@ class InfoView extends React.Component {
     fn = fn.trim().substring(0, MAX_TITLE_LENGTH);
     if (this.state.fullName !== fn) {
       this.setState({fullName: fn});
-      this.props.onTopicDescUpdate(this.props.topic, vcard(fn, null), null);
+      this.props.onTopicDescUpdate(this.props.topic, theCard(fn, null), null);
     }
   }
 
@@ -296,7 +296,7 @@ class InfoView extends React.Component {
 
   handleImageChanged(img) {
     this.setState({avatar: img});
-    this.props.onTopicDescUpdate(this.props.topic, vcard(null, img || Tinode.DEL_CHAR), null);
+    this.props.onTopicDescUpdate(this.props.topic, theCard(null, img || Tinode.DEL_CHAR), null);
   }
 
   handleMuted(ignored, checked) {

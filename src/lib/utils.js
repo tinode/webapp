@@ -19,8 +19,8 @@ export function updateFavicon(count) {
   document.title = (count > 0 ? '('+count+') ' : '') + 'Tinode';
 }
 
-// Create VCard which represents topic 'public' info
-export function vcard(fn, imageDataUrl) {
+// Create theCard which represents topic 'public' info.
+export function theCard(fn, imageDataUrl) {
   let card = null;
 
   if ((fn && fn.trim()) || imageDataUrl) {
