@@ -578,12 +578,13 @@ class MessagesView extends React.Component {
           params.set(key, data.resp[key]);
         }
       }
-      ['name', 'seq'].map(function(key) {
+      ['name', 'seq'].map((key) => {
         if (data[key]) {
           params.set(key, data[key]);
         }
       });
       params.set('uid', this.props.myUserId);
+      params.set('topic', this.state.topic);
       url.search = params;
       window.open(url, '_blank');
     } else {

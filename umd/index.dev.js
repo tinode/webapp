@@ -3628,12 +3628,13 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         }
       }
 
-      ['name', 'seq'].map(function (key) {
+      ['name', 'seq'].map(key => {
         if (data[key]) {
           params.set(key, data[key]);
         }
       });
       params.set('uid', this.props.myUserId);
+      params.set('topic', this.state.topic);
       url.search = params;
       window.open(url, '_blank');
     } else {
