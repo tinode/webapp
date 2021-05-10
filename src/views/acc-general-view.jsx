@@ -9,7 +9,7 @@ import InPlaceEdit from '../widgets/in-place-edit.jsx';
 import TagManager from '../widgets/tag-manager.jsx';
 
 import { MAX_TITLE_LENGTH } from '../config.js';
-import { makeImageUrl } from '../lib/blob-helpers.js';
+import { makeImageDataUrl } from '../lib/blob-helpers.js';
 import { arrayEqual, asEmail, asPhone, theCard } from '../lib/utils.js';
 
 export default class AccGeneralView extends React.Component {
@@ -19,7 +19,7 @@ export default class AccGeneralView extends React.Component {
     const me = this.props.tinode.getMeTopic();
     this.state = {
       fullName: me.public ? me.public.fn : undefined,
-      avatar: makeImageUrl(me.public ? me.public.photo : null),
+      avatar: makeImageDataUrl(me.public ? me.public.photo : null),
       tags: me.tags(),
       credentials: me.getCredentials() || [],
       addCredActive: false,

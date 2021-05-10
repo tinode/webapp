@@ -6,7 +6,7 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import CheckBox from './checkbox.jsx';
 import Contact from './contact.jsx';
 
-import { makeImageUrl } from '../lib/blob-helpers.js';
+import { makeImageDataUrl } from '../lib/blob-helpers.js';
 
 // Translatable permission names.
 const messages = defineMessages({
@@ -135,7 +135,7 @@ class PermissionsEditor extends React.Component {
           <ul className="contact-box"><Contact
             item={this.props.item}
             title={this.props.userTitle}
-            avatar={makeImageUrl(this.props.userAvatar ? this.props.userAvatar : null)} /></ul> : null}
+            avatar={makeImageDataUrl(this.props.userAvatar ? this.props.userAvatar : null)} /></ul> : null}
         <label className="small"><FormattedMessage id="title_permissions"
           defaultMessage="Permissions" description="Section title"/></label>
         <table className="permission-editor">

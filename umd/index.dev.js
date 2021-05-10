@@ -89,7 +89,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "SUPPORTED_IMAGE_FORMATS": function() { return /* binding */ SUPPORTED_IMAGE_FORMATS; },
 /* harmony export */   "MIME_EXTENSIONS": function() { return /* binding */ MIME_EXTENSIONS; },
-/* harmony export */   "makeImageUrl": function() { return /* binding */ makeImageUrl; },
+/* harmony export */   "makeImageDataUrl": function() { return /* binding */ makeImageDataUrl; },
 /* harmony export */   "fitImageSize": function() { return /* binding */ fitImageSize; },
 /* harmony export */   "fileNameForMime": function() { return /* binding */ fileNameForMime; },
 /* harmony export */   "imageScaled": function() { return /* binding */ imageScaled; },
@@ -107,8 +107,16 @@ __webpack_require__.r(__webpack_exports__);
 
 const SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
 const MIME_EXTENSIONS = ['jpg', 'gif', 'png', 'svg', 'svg'];
-function makeImageUrl(photo) {
-  return photo && photo.type && photo.data ? 'data:image/' + photo.type + ';base64,' + photo.data : null;
+function makeImageDataUrl(photo) {
+  if (photo) {
+    if (photo.data && photo.type) {
+      return 'data:image/' + photo.type + ';base64,' + photo.data;
+    }
+
+    return photo.ref;
+  }
+
+  return null;
 }
 function fitImageSize(width, height, maxWidth, maxHeight, forceSquare) {
   width = width | 0;
@@ -522,7 +530,7 @@ function stringHash(value) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "updateFavicon": function() { return /* binding */ updateFavicon; },
-/* harmony export */   "vcard": function() { return /* binding */ vcard; },
+/* harmony export */   "theCard": function() { return /* binding */ theCard; },
 /* harmony export */   "arrayEqual": function() { return /* binding */ arrayEqual; },
 /* harmony export */   "asPhone": function() { return /* binding */ asPhone; },
 /* harmony export */   "asEmail": function() { return /* binding */ asEmail; },
@@ -550,23 +558,33 @@ function updateFavicon(count) {
   head.appendChild(newIcon);
   document.title = (count > 0 ? '(' + count + ') ' : '') + 'Tinode';
 }
-function vcard(fn, imageDataUrl) {
+function theCard(fn, imageUrl, imageMimeType) {
   let card = null;
+  fn = fn && fn.trim();
 
-  if (fn && fn.trim() || imageDataUrl) {
-    card = {};
+  if (fn) {
+    card = {
+      fn: fn
+    };
+  }
 
-    if (fn) {
-      card.fn = fn.trim();
+  if (imageUrl) {
+    card = card || {};
+    let mimeType = imageMimeType;
+    const matches = /^data:(image\/[-a-z0-9+.]+)(;base64)?,/i.exec(imageUrl);
+
+    if (matches) {
+      mimeType = matches[1];
+      card.photo = {
+        data: imageUrl.substring(imageUrl.indexOf(',') + 1)
+      };
+    } else {
+      card.photo = {
+        ref: imageUrl
+      };
     }
 
-    if (imageDataUrl) {
-      const dataStart = imageDataUrl.indexOf(',');
-      card.photo = dataStart >= 0 ? {
-        data: imageDataUrl.substring(dataStart + 1),
-        type: 'jpg'
-      } : imageDataUrl;
-    }
+    card.photo.type = (mimeType || 'image/jpeg').substring('image/'.length);
   }
 
   return card;
@@ -743,7 +761,7 @@ class AccGeneralView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compo
     const me = this.props.tinode.getMeTopic();
     this.state = {
       fullName: me.public ? me.public.fn : undefined,
-      avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__.makeImageUrl)(me.public ? me.public.photo : null),
+      avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__.makeImageDataUrl)(me.public ? me.public.photo : null),
       tags: me.tags(),
       credentials: me.getCredentials() || [],
       addCredActive: false,
@@ -792,7 +810,7 @@ class AccGeneralView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compo
       this.setState({
         fullName: fn
       });
-      this.props.onUpdateAccount(undefined, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.vcard)(fn, null));
+      this.props.onUpdateAccount(undefined, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.theCard)(fn, null));
     }
   }
 
@@ -800,7 +818,7 @@ class AccGeneralView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compo
     this.setState({
       avatar: img
     });
-    this.props.onUpdateAccount(undefined, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.vcard)(null, img || (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().DEL_CHAR)));
+    this.props.onUpdateAccount(undefined, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.theCard)(null, img || (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().DEL_CHAR)));
   }
 
   handleCredChange(e) {
@@ -1640,7 +1658,7 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
     this.setState({
       errorCleared: false
     });
-    this.props.onCreateAccount(this.state.login.trim(), this.state.password.trim(), (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__.vcard)(this.state.fn.trim().substring(0, _config_js__WEBPACK_IMPORTED_MODULE_7__.MAX_TITLE_LENGTH), this.state.imageDataUrl), {
+    this.props.onCreateAccount(this.state.login.trim(), this.state.password.trim(), (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__.theCard)(this.state.fn.trim().substring(0, _config_js__WEBPACK_IMPORTED_MODULE_7__.MAX_TITLE_LENGTH), this.state.imageDataUrl), {
       'meth': 'email',
       'val': this.state.email
     });
@@ -1779,7 +1797,7 @@ class EditAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Comp
     const me = this.props.tinode.getMeTopic();
     this.state = {
       fullName: me.public ? me.public.fn : undefined,
-      avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__.makeImageUrl)(me.public ? me.public.photo : null)
+      avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__.makeImageDataUrl)(me.public ? me.public.photo : null)
     };
   }
 
@@ -2167,7 +2185,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       deleter: acs && acs.isDeleter(),
       muted: acs && acs.isMuted(),
       fullName: topic.public ? topic.public.fn : undefined,
-      avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__.makeImageUrl)(topic.public ? topic.public.photo : null),
+      avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__.makeImageDataUrl)(topic.public ? topic.public.photo : null),
       private: topic.private ? topic.private.comment : null,
       address: topic.name,
       groupTopic: topic.isGroupType(),
@@ -2230,7 +2248,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       this.setState({
         fullName: fn
       });
-      this.props.onTopicDescUpdate(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_15__.vcard)(fn, null), null);
+      this.props.onTopicDescUpdate(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_15__.theCard)(fn, null), null);
     }
   }
 
@@ -2249,7 +2267,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
     this.setState({
       avatar: img
     });
-    this.props.onTopicDescUpdate(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_15__.vcard)(null, img || (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().DEL_CHAR)), null);
+    this.props.onTopicDescUpdate(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_15__.theCard)(null, img || (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().DEL_CHAR)), null);
   }
 
   handleMuted(ignored, checked) {
@@ -3260,7 +3278,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         if (topic.public) {
           Object.assign(nextState, {
             title: topic.public.fn,
-            avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__.makeImageUrl)(topic.public.photo)
+            avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__.makeImageDataUrl)(topic.public.photo)
           });
         } else {
           Object.assign(nextState, {
@@ -3403,7 +3421,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     if (desc.public) {
       this.setState({
         title: desc.public.fn,
-        avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__.makeImageUrl)(desc.public.photo)
+        avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__.makeImageDataUrl)(desc.public.photo)
       });
     } else {
       this.setState({
@@ -3881,7 +3899,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
             if (user && user.public) {
               userName = user.public.fn;
-              userAvatar = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__.makeImageUrl)(user.public.photo);
+              userAvatar = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__.makeImageDataUrl)(user.public.photo);
             }
 
             userFrom = thisFrom;
@@ -4131,7 +4149,7 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
   handleNewGroupSubmit(name, dataUrl, priv, tags, isChannel) {
     _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__.default.removeUrlParam(window.location.hash, 'tab'));
-    this.props.onCreateTopic(undefined, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.vcard)(name, dataUrl), priv, tags, isChannel);
+    this.props.onCreateTopic(undefined, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.theCard)(name, dataUrl), priv, tags, isChannel);
   }
 
   handleGroupByID(topicName) {
@@ -5089,7 +5107,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         this.fbPush.onTokenRefresh(() => {
           this.requestPushToken();
         });
-        this.fbPush.onMessage(this.handlePushMessage);
+        this.fbPush.onMessage(payload => {
+          this.handlePushMessage(payload.data);
+        });
         return reg;
       }).catch(err => {
         onError("Failed to register service worker:", err);
@@ -5418,7 +5438,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       if (desc.public) {
         this.setState({
           sidePanelTitle: desc.public.fn,
-          sidePanelAvatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__.makeImageUrl)(desc.public.photo)
+          sidePanelAvatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__.makeImageDataUrl)(desc.public.photo)
         });
       }
 
@@ -6839,7 +6859,7 @@ class AvatarUpload extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   handleFileUpload(e) {
     (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__.imageScaled)(e.target.files[0], _config_js__WEBPACK_IMPORTED_MODULE_2__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_2__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_2__.MAX_EXTERN_ATTACHMENT_SIZE, true, (mime, blob) => {
       (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__.blobToBase64)(blob, (unused, base64bits) => {
-        const du = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__.makeImageUrl)({
+        const du = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__.makeImageDataUrl)({
           data: base64bits,
           type: mime
         });
@@ -7389,7 +7409,7 @@ class ChipInput extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.state.sortedChips.map(item => {
       chips.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_chip_jsx__WEBPACK_IMPORTED_MODULE_1__.default, {
         onCancel: this.handleChipCancel,
-        avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_2__.makeImageUrl)(item.public ? item.public.photo : null),
+        avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_2__.makeImageDataUrl)(item.public ? item.public.photo : null),
         title: item.public ? item.public.fn : undefined,
         noAvatar: this.props.avatarDisabled,
         topic: item.user,
@@ -7680,7 +7700,7 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
 
           contactNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
             title: c.public ? c.public.fn : null,
-            avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__.makeImageUrl)(c.public ? c.public.photo : null),
+            avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__.makeImageDataUrl)(c.public ? c.public.photo : null),
             comment: comment,
             preview: preview,
             received: deliveryStatus,
@@ -8942,7 +8962,7 @@ class GroupSubs extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         key: sub.user
       }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
         topic: sub.user,
-        avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.makeImageUrl)(sub.public ? sub.public.photo : null) || true,
+        avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.makeImageDataUrl)(sub.public ? sub.public.photo : null) || true,
         title: sub.public ? sub.public.fn : null
       })));
       return usersOnline.length == countToShow;
@@ -10179,7 +10199,7 @@ class PermissionsEditor extends (react__WEBPACK_IMPORTED_MODULE_0___default().Co
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
       item: this.props.item,
       title: this.props.userTitle,
-      avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.makeImageUrl)(this.props.userAvatar ? this.props.userAvatar : null)
+      avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.makeImageDataUrl)(this.props.userAvatar ? this.props.userAvatar : null)
     })) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "small"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {

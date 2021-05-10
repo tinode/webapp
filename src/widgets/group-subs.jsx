@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import { MAX_ONLINE_IN_TOPIC } from '../config.js'
 
 import LetterTile from './letter-tile.jsx';
-import { makeImageUrl } from '../lib/blob-helpers.js';
+import { makeImageDataUrl } from '../lib/blob-helpers.js';
 
 export default class GroupSubs extends React.Component {
   constructor(props) {
@@ -23,7 +23,7 @@ export default class GroupSubs extends React.Component {
         <div className="avatar-box" key={sub.user}>
           <LetterTile
             topic={sub.user}
-            avatar={makeImageUrl(sub.public ? sub.public.photo : null) || true}
+            avatar={makeImageDataUrl(sub.public ? sub.public.photo : null) || true}
             title={sub.public ? sub.public.fn : null} />
         </div>
       );

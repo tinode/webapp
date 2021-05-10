@@ -18,7 +18,7 @@ import SendMessage from '../widgets/send-message.jsx';
 import { DEFAULT_P2P_ACCESS_MODE, IMAGE_PREVIEW_DIM, KEYPRESS_DELAY, MESSAGES_PAGE,
   MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE, READ_DELAY } from '../config.js';
 import { SUPPORTED_IMAGE_FORMATS, blobToBase64, filePasted, fileToBase64,
-  imageScaled, makeImageUrl } from '../lib/blob-helpers.js';
+  imageScaled, makeImageDataUrl } from '../lib/blob-helpers.js';
 import HashNavigation from '../lib/navigation.js';
 import { bytesToHumanSize, shortDateFormat } from '../lib/strformat.js';
 
@@ -261,7 +261,7 @@ class MessagesView extends React.Component {
         if (topic.public) {
           Object.assign(nextState, {
             title: topic.public.fn,
-            avatar: makeImageUrl(topic.public.photo)
+            avatar: makeImageDataUrl(topic.public.photo)
           });
         } else {
           Object.assign(nextState, {
@@ -391,7 +391,7 @@ class MessagesView extends React.Component {
     if (desc.public) {
       this.setState({
         title: desc.public.fn,
-        avatar: makeImageUrl(desc.public.photo)
+        avatar: makeImageDataUrl(desc.public.photo)
       });
     } else {
       this.setState({
@@ -856,7 +856,7 @@ class MessagesView extends React.Component {
             const user = topic.userDesc(thisFrom);
             if (user && user.public) {
               userName = user.public.fn;
-              userAvatar = makeImageUrl(user.public.photo);
+              userAvatar = makeImageDataUrl(user.public.photo);
             }
             userFrom = thisFrom;
             chatBoxClass='chat-box group';

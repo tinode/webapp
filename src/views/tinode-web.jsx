@@ -18,7 +18,7 @@ import SidepanelView from './sidepanel-view.jsx';
 import { API_KEY, APP_NAME, DEFAULT_P2P_ACCESS_MODE, LOGGING_ENABLED,
   MEDIA_BREAKPOINT, RECEIVED_DELAY } from '../config.js';
 import { PACKAGE_VERSION } from '../version.js';
-import { base64ReEncode, makeImageUrl } from '../lib/blob-helpers.js';
+import { base64ReEncode, makeImageDataUrl } from '../lib/blob-helpers.js';
 import { detectServerAddress, isLocalHost, isSecureConnection } from '../lib/host-name.js';
 import LocalStorageUtil from '../lib/local-storage.js';
 import HashNavigation from '../lib/navigation.js';
@@ -641,7 +641,7 @@ class TinodeWeb extends React.Component {
       if (desc.public) {
         this.setState({
           sidePanelTitle: desc.public.fn,
-          sidePanelAvatar: makeImageUrl(desc.public.photo)
+          sidePanelAvatar: makeImageDataUrl(desc.public.photo)
         });
       }
       if (desc.acs) {
