@@ -254,16 +254,16 @@ textarea {
 
 /* Chrome & other webkit browsers */
 ::-webkit-scrollbar {
-	width: 0.6rem;
+  width: 0.6rem;
 }
 
 ::-webkit-scrollbar-track {
-	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2);
-	background-color: rgba(255,255,255,0.1);
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2);
+  background-color: rgba(255,255,255,0.1);
 }
 
 ::-webkit-scrollbar-thumb {
-	background-color: rgba(0,0,0,0.3);
+  background-color: rgba(0,0,0,0.3);
 }
 
 /* Firefox only */
@@ -544,7 +544,7 @@ div.alert .content {
   margin-left: 1rem;
 }
 
-/* Extra spece on the right */
+/* Extra space on the right */
 .space-right {
   margin-right: 0.25rem;
 }
@@ -1114,7 +1114,7 @@ i.search {
 }
 
 .avatar-upload .inputfile:focus + label.round {
-	outline: none;
+  outline: none;
 }
 
 .avatar-upload .inputfile:focus + label,
