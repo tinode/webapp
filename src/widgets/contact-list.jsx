@@ -9,7 +9,7 @@ import Tinode from 'tinode-sdk';
 import Contact from './contact.jsx';
 import ContactAction from './contact-action.jsx';
 
-import { makeImageUrl } from '../lib/blob-helpers.js';
+import { makeImageDataUrl } from '../lib/blob-helpers.js';
 
 import { MESSAGE_PREVIEW_LENGTH } from '../config.js';
 
@@ -48,14 +48,14 @@ class ContactList extends React.Component {
           // If filter function is provided, filter out the items
           // which don't satisfy the condition.
           if (this.props.filterFunc && this.props.filter) {
-            let content = [key];
+            const filterOn = [key];
             if (c.private && c.private.comment) {
-              content.push(('' + c.private.comment).toLowerCase());
+              filterOn.push(('' + c.private.comment).toLowerCase());
             }
             if (c.public && c.public.fn) {
-              content.push(('' + c.public.fn).toLowerCase());
+              filterOn.push(('' + c.public.fn).toLowerCase());
             }
-            if (!this.props.filterFunc(this.props.filter, content)) {
+            if (!this.props.filterFunc(this.props.filter, filterOn)) {
               return;
             }
           }
@@ -78,7 +78,7 @@ class ContactList extends React.Component {
             c.private.join(',') : (c.private ? c.private.comment : null);
           let preview;
           let deliveryStatus;
-          if (!this.props.showMode) {
+          if (!this.props.showMode && c.latestMessage) {
             const msg = c.latestMessage();
             if (msg) {
               deliveryStatus = msg._status || c.msgStatus(msg, true);
@@ -90,7 +90,7 @@ class ContactList extends React.Component {
           contactNodes.push(
             <Contact
               title={c.public ? c.public.fn : null}
-              avatar={makeImageUrl(c.public ? c.public.photo : null)}
+              avatar={makeImageDataUrl(c.public ? c.public.photo : null)}
               comment={comment}
               preview={preview}
               received={deliveryStatus}

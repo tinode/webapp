@@ -172,5 +172,8 @@
   "tags_editor_no_tags": "Schlagworte hinzufügen",
   "title_manage_tags": "Verwalten",
   "channel_prompt": "Dies ist ein Sender",
-  "channel": "Sender"
+  "channel": "Sender",
+  "drafty_attachment": "Dateianhang",
+  "drafty_form": "Formular:",
+  "drafty_image": "Bild"
 }

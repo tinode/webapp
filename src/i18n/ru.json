@@ -172,5 +172,8 @@
   "no_connection": "Нет связи",
   "code_doesnot_match": "Код не совпадает",
   "channel_prompt": "Создать канал",
-  "channel": "канал"
+  "channel": "канал",
+  "drafty_attachment": "Аттачмент",
+  "drafty_form": "Форма:",
+  "drafty_image": "Картинка"
 }

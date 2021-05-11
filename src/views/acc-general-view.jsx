@@ -9,8 +9,8 @@ import InPlaceEdit from '../widgets/in-place-edit.jsx';
 import TagManager from '../widgets/tag-manager.jsx';
 
 import { MAX_TITLE_LENGTH } from '../config.js';
-import { makeImageUrl } from '../lib/blob-helpers.js';
-import { arrayEqual, asEmail, asPhone, vcard } from '../lib/utils.js';
+import { makeImageDataUrl } from '../lib/blob-helpers.js';
+import { arrayEqual, asEmail, asPhone, theCard } from '../lib/utils.js';
 
 export default class AccGeneralView extends React.Component {
   constructor(props) {
@@ -19,7 +19,7 @@ export default class AccGeneralView extends React.Component {
     const me = this.props.tinode.getMeTopic();
     this.state = {
       fullName: me.public ? me.public.fn : undefined,
-      avatar: makeImageUrl(me.public ? me.public.photo : null),
+      avatar: makeImageDataUrl(me.public ? me.public.photo : null),
       tags: me.tags(),
       credentials: me.getCredentials() || [],
       addCredActive: false,
@@ -62,13 +62,13 @@ export default class AccGeneralView extends React.Component {
     fn = fn.trim().substring(0, MAX_TITLE_LENGTH);
     if (fn) {
       this.setState({fullName: fn});
-      this.props.onUpdateAccount(undefined, vcard(fn, null));
+      this.props.onUpdateAccount(undefined, theCard(fn, null));
     }
   }
 
   handleImageChanged(img) {
     this.setState({avatar: img});
-    this.props.onUpdateAccount(undefined, vcard(null, img || Tinode.DEL_CHAR));
+    this.props.onUpdateAccount(undefined, theCard(null, img || Tinode.DEL_CHAR));
   }
 
   handleCredChange(e) {

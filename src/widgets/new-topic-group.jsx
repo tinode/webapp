@@ -58,7 +58,7 @@ export default class NewTopicGroup extends React.PureComponent {
   }
 
   render() {
-    var submitClasses = 'blue';
+    let submitClasses = 'primary';
     if (this.props.disabled) {
       submitClasses += ' disabled';
     }

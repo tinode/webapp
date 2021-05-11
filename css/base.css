@@ -32,8 +32,11 @@ a:focus {
   text-decoration: underline;
 }
 
-a.red:hover,
-a.red:focus {
+a.danger {
+  color: #D32F2F;
+}
+a.danger:hover,
+a.danger:focus {
   color: #F44336;
 }
 
@@ -60,14 +63,16 @@ a.gray:focus {
   text-decoration: none;
 }
 
-.flat-button .faux {
-  height: 1.5em;
-  line-height: 1.5em;
+.flat-button.faux {
+  display: inline-block;
+  height: 1.4em;
+  line-height: 1.4em;
   text-transform: none;
-  padding-left: .5rem;
-  padding-right: .5rem;
-  border: 1px solid gray;
+  padding-left: .35rem;
+  padding-right: .35rem;
+  border: 1px solid #999;
   border-radius: 3px;
+  background-color: #eee;
 }
 
 form {
@@ -110,7 +115,7 @@ button {
   padding-left: 1.2rem;
   padding-right: 1.2rem;
   border-radius: 4px;
-  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.25);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.25);
   text-transform: uppercase;
   min-width: 5rem;
   margin: 0 0.35rem 0 0.35rem;
@@ -141,7 +146,6 @@ button.round.small {
   line-height: 2rem;
   box-shadow: 0 2px 0.35rem 0 rgba(0, 0, 0, 0.25);
 }
-
 button:focus, button:hover, button:active {
   color: #fff;
 }
@@ -152,27 +156,19 @@ button:active.round.small {
   box-shadow: inset 0 2px 0.35rem rgba(0, 0, 0, 0.125);
 }
 
-button.blue {
+button.primary {
   background-color: #1e88e5; /* blue 600 */
   color: white;
 }
-button.blue:focus, button.blue:hover, button.blue:active {
-  background-color: #1976d2;
-}
-
-button.blue {
-  background-color: #1e88e5; /* blue 600 */
-  color: white;
-}
-button.blue:focus, button.blue:hover, button.blue:active {
+button.primary:focus, button.primary:hover, button.primary:active {
   background-color: #2962ff;
 }
 
-button.white {
+button.secondary {
   background-color: #FFF;
   color: #2196f3; /* blue 500 */
 }
-button.white:focus, button.white:hover, button.blue:active {
+button.secondary:focus, button.secondary:hover, button.secondary:active {
   background-color: #e3f2fd;
 }
 
@@ -258,16 +254,16 @@ textarea {
 
 /* Chrome & other webkit browsers */
 ::-webkit-scrollbar {
-	width: 0.6rem;
+  width: 0.6rem;
 }
 
 ::-webkit-scrollbar-track {
-	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2);
-	background-color: rgba(255,255,255,0.1);
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2);
+  background-color: rgba(255,255,255,0.1);
 }
 
 ::-webkit-scrollbar-thumb {
-	background-color: rgba(0,0,0,0.3);
+  background-color: rgba(0,0,0,0.3);
 }
 
 /* Firefox only */
@@ -331,11 +327,9 @@ li:hover .menuTrigger a {
 }
 
 li.left:hover .menuTrigger {
-  -text-shadow: #c5e1a5 0 0 15px, #c5e1a5 0 0 5px;
   background-image: radial-gradient(#c5e1a5 40%, transparent 75%);
 }
 li.right:hover .menuTrigger {
-  -text-shadow: #fafafa 0 0 15px, #fafafa 0 0 5px;
   background-image: radial-gradient(#fafafa 40%, transparent 75%);
 }
 
@@ -343,13 +337,12 @@ li.right:hover .menuTrigger {
 
 /* Begin Alert: modal window with message and buttons. */
 div.alert-container {
+  position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 100%;
-  position: absolute;
-  -x-backdrop-filter: blur(4px);
   background: rgba(0,0,0,0.33);
   z-index: 3;
 }
@@ -491,8 +484,8 @@ div.alert .content {
 
 #topic-view {
   position: relative;
-  overflow-x: hidden;
   display: flex;
+  overflow-x: hidden;
   flex-direction: column;
   width: 100%;
   height: 100%;
@@ -551,7 +544,7 @@ div.alert .content {
   margin-left: 1rem;
 }
 
-/* Extra spece on the right */
+/* Extra space on the right */
 .space-right {
   margin-right: 0.25rem;
 }
@@ -837,8 +830,8 @@ i.search {
 }
 
 .contact-box > li {
-  display: flex;
   position: relative;
+  display: flex;
   padding: 0.35rem 0.25rem 0.5rem 0.35rem;
   min-height: 3.75rem;
   flex-grow: 0;
@@ -879,10 +872,18 @@ i.search {
   font-weight: lighter;
 }
 
+.contact-box .contact-comment b {
+  font-weight: bolder;
+}
+
+.contact-box .contact-comment .material-icons {
+  margin-bottom: .2rem;
+}
+
 /* Avatar and online-offline indicator */
 .contact-box .avatar-box {
-  margin-right: 0.35rem;
   position: relative;
+  margin-right: 0.35rem;
   width: 3rem;
   min-width: 3rem;
   height: 3rem;
@@ -926,14 +927,13 @@ i.search {
 
 /* Online-offline indicator positioned inside avatar-box */
 .avatar-box .online, .offline {
-  display: inline-block;
+  position: absolute;
   width: 0.75rem;
   min-width: 0.75rem;
   height: 0.75rem;
   min-height: 0.75rem;
   flex-shrink: 0;
   border-radius: 50%;
-  position: absolute;
   right: 0;
   bottom: 0.1rem;
 }
@@ -958,7 +958,6 @@ i.search {
 }
 
 .contact-box .checkmark.material-icons {
-  display: inline-block;
   width: 1.5rem;
   height: 1.5rem;
   font-size: 1.5rem;
@@ -1018,8 +1017,8 @@ i.search {
 
 /* Styling of avatar upload control */
 .avatar-upload {
-  display: flex;
   position: relative;
+  display: flex;
   flex-direction: column;
   flex-shrink: 0;
   width: 7rem;
@@ -1115,7 +1114,7 @@ i.search {
 }
 
 .avatar-upload .inputfile:focus + label.round {
-	outline: none;
+  outline: none;
 }
 
 .avatar-upload .inputfile:focus + label,
@@ -1413,12 +1412,12 @@ i.search {
 }
 
 .chat-box .bubble {
-  display: flex;
   position: relative;
-	max-width: 40rem;
+  display: flex;
+  max-width: 40rem;
   min-width: 9rem;
-	height: auto;
-  padding: 0.75rem 0.5rem 0.75rem 1.25rem;
+  height: auto;
+  padding: 0.75rem 0.5rem 0.75rem 0.5rem;
   margin: 0;
   text-align: left;
   border-radius: 0.5rem;
@@ -1447,10 +1446,12 @@ i.search {
 
 .chat-box .left .bubble {
   background-color: #c5e1a5;
+  margin-right: 0.5rem;
 }
 
 .chat-box .right .bubble {
   background-color: #fafafa;
+  margin-left: 1.75rem;
 }
 
 .chat-box .center .bubble {
@@ -1505,12 +1506,21 @@ i.search {
   margin-right: 0.8rem;
 }
 
+/* Message text + timestamp and delivery marker */
+.chat-box .bubble div.content-meta {
+  width: 100%;
+}
+
 .chat-box .bubble div.message-content {
+  position: relative;
   color: #212121;
   margin: 0;
+  width: 100%;
   max-width: 36rem;
   overflow-wrap: break-word;
+  padding: 0 0.75rem 0 0.75rem;
 }
+
 /* The timestamp is a floating element. Need to ensure div.message-content is expanded
  * to accomodate it. It's usually called clearfix. */
 .chat-box .bubble div.message-content:after {
@@ -1521,27 +1531,19 @@ i.search {
   visibility: hidden;
 }
 
-.chat-box .timestamp {
+.chat-box .timestamp-padding {
   display: inline-block;
+  width: 4rem;
+  height: 0;
+}
+
+.chat-box .timestamp {
   position: relative;
   font-size: 80%;
   color: #777;
-  padding-left: 1rem;
-  top: 0.5rem;
+  top: 0.35rem;
   float: right;
   white-space: nowrap;
-}
-
-/* Typing notification bubble */
-.chat-box .typing {
-  display: inline-block;
-  border-radius: 0.5rem;
-  width: 2rem;
-  padding: 0.25rem 0.35rem;
-  vertical-align: middle;
-  text-align: center;
-  color: #aaa;
-  margin-top: 0.75rem;
 }
 
 /* The name of the person who sent the message
@@ -1557,7 +1559,6 @@ i.search {
   position: relative;
   overflow: hidden;
   border-radius: 0.1rem;
-  display: block;
 }
 
 .inline-image {
@@ -1577,11 +1578,11 @@ i.search {
 
 /* Broken image graphics which replaces the stock graphics. */
 img.inline-image::before, img.image-preview::before {
+  position: absolute;
+  display: flex;
   font-size: 0.9rem;
   font-weight: lighter;
   color: #666;
-  display:flex;
-  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -1672,7 +1673,6 @@ ul.tabbar > li > a {
   padding-top: 0.75rem;
   padding-left: 1rem;
   padding-right: 1rem;
-  display: block;
   text-align: center;
   line-height: 2rem;
   font-weight: 400;
@@ -1689,11 +1689,10 @@ ul.tabbar li.active > a {
 }
 
 ul.tabbar li.active > a:after {
-  height:0.15rem;
-  display:block;
-  content:"";
-  bottom:0;
-  left:0;
+  height: 0.15rem;
+  content: "";
+  bottom: 0;
+  left: 0;
   position: absolute;
   background: #2196f3;
   animation: tabbar-border-expand 0.2s cubic-bezier(0.4, 0.0, 0.4, 1) 0s alternate forwards;
@@ -1701,12 +1700,12 @@ ul.tabbar li.active > a:after {
 
 @keyframes tabbar-border-expand {
   0% {
-    opacity:0;
-    width:0;
+    opacity: 0;
+    width: 0;
   }
   100% {
-    opacity:1;
-    width:100%;
+    opacity: 1;
+    width: 100%;
   }
 }
 /* END Tabs */
@@ -1788,10 +1787,10 @@ ul.tabbar li.active > a:after {
 
 /* Div with letter tile content */
 .lettertile > div {
+  position: absolute;
   display: flex;
   flex-shrink: 0;
   flex-grow: 0;
-  position: absolute;
   top: 0; bottom: 0; left: 0; right: 0;
   text-transform: uppercase;
   align-items: center;

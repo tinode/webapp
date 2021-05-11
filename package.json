@@ -1,7 +1,7 @@
 {
   "name": "tinode-webapp",
   "description": "Tinode messenger for the web",
-  "version": "0.17.0",
+  "version": "0.17.1-alpha1",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinode/example-react-js.git"
@@ -13,17 +13,11 @@
     "build:prod": "webpack --mode production",
     "build:i18n": "node scripts/pack-messages.js",
     "vers": "node scripts/gen-version.js",
-    "extract": "formatjs extract 'src/**/*.jsx' --out-file src/i18n/ex/base-en.json --id-interpolation-pattern '[sha512:contenthash:base64:6]'",
+    "extract": "formatjs extract src/**/*.jsx --out-file src/i18n/ex/base-en.json --id-interpolation-pattern '[sha512:contenthash:base64:6]'",
     "compile": "formatjs compile"
   },
   "browserslist": "> 0.5%, not IE 11",
   "files": [
-    "src/index.js",
-    "src/config.js",
-    "src/views/*.jsx",
-    "src/widgets/*.jsx",
-    "src/lib/*.js",
-    "src/i18n/*.json",
     "umd/index.prod.js",
     "umd/index.prod.js.map",
     "umd/index.dev.js",
@@ -40,7 +34,8 @@
     "index.html",
     "manifest.json",
     "service-worker.js",
-    "firebase-init.js"
+    "firebase-init.js",
+    "version.js"
   ],
   "keywords": [
     "chat",
@@ -68,25 +63,27 @@
   "author": "Tinode Authors <info@tinode.co>",
   "license": "Apache-2.0",
   "dependencies": {
-    "firebase": "^7.24.0",
+    "firebase": "^8.2.9",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-intl": "^5.10.14",
-    "tinode-sdk": "^0.16.10"
+    "react-intl": "^5.12.5",
+    "tinode-sdk": "^0.17.1-alpha1"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.10",
-    "@babel/preset-env": "^7.12.11",
-    "@babel/preset-react": "^7.12.10",
-    "@formatjs/cli": "^3.0.5",
+    "@babel/core": "^7.13.8",
+    "@babel/preset-env": "^7.13.8",
+    "@babel/preset-react": "^7.12.13",
+    "@formatjs/cli": "^4.2.6",
     "babel-loader": "^8.2.2",
-    "babel-plugin-formatjs": "^9.0.4",
-    "browserslist": "^4.16.1",
-    "copy-webpack-plugin": "^6.4.1",
-    "cssnano": "^4.1.10",
-    "postcss": "^8.2.4",
+    "babel-plugin-formatjs": "^10.2.6",
+    "browserslist": "^4.16.3",
+    "copy-webpack-plugin": "^8.1.0",
+    "cssnano": "^5.0.1",
+    "glob": "^7.1.6",
+    "mkdirp": "^1.0.4",
+    "postcss": "^8.2.6",
     "postcss-cli": "^8.3.1",
-    "webpack": "^5.13.0",
-    "webpack-cli": "^4.3.1"
+    "webpack": "^5.24.2",
+    "webpack-cli": "^4.5.0"
   }
 }

@@ -77,7 +77,7 @@ export default class ChatMessage extends React.Component {
       (this.props.sequence + ' ' + (this.props.response ? 'left' : 'right'));
     const bubbleClass = (this.props.sequence == 'single' || this.props.sequence == 'last') ? 'bubble tip' : 'bubble';
     const avatar = this.props.deleted ? null : (this.props.userAvatar || true);
-    const fullDisplay = (this.props.userFrom && this.props.response &&
+    const fullDisplay = (this.props.userFrom && this.props.response && !this.props.deleted &&
       (this.props.sequence == 'single' || this.props.sequence == 'last'));
 
     let content = this.props.content;
@@ -128,9 +128,11 @@ export default class ChatMessage extends React.Component {
           null}
         <div>
           <div className={bubbleClass}>
-            <div className="message-content">
-              {content}
-              {attachments}
+            <div className="content-meta">
+              <div className="message-content">
+                {content}
+                {attachments}
+              </div>
               {this.props.timestamp ?
                 <ReceivedMarker
                   timestamp={this.props.timestamp}
@@ -187,9 +189,15 @@ function draftyFormatter(style, data, values, key) {
         if (data) {
           attr.className = 'inline-image';
           const dim = fitImageSize(data.width, data.height,
-            Math.min(this.props.viewportWidth - REM_SIZE * 4, REM_SIZE * 36), REM_SIZE * 24, false) ||
+            Math.min(this.props.viewportWidth - REM_SIZE * 6.5, REM_SIZE * 34.5), REM_SIZE * 24, false) ||
             {dstWidth: BROKEN_IMAGE_SIZE, dstHeight: BROKEN_IMAGE_SIZE};
-          attr.style = { width: dim.dstWidth + 'px', height: dim.dstHeight + 'px' };
+          attr.style = {
+            width: dim.dstWidth + 'px',
+            height: dim.dstHeight + 'px',
+            // Looks like a Chrome bug: broken image does not respect 'width' and 'height'.
+            minWidth: dim.dstWidth + 'px',
+            minHeight: dim.dstHeight + 'px'
+          };
           if (!Drafty.isProcessing(data)) {
             attr.src = this.props.tinode.authorizeURL(sanitizeImageUrl(attr.src));
             attr.alt = data.name;

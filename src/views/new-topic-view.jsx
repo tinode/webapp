@@ -10,7 +10,7 @@ import NewTopicGroup from '../widgets/new-topic-group.jsx';
 import SearchContacts from '../widgets/search-contacts.jsx';
 
 import HashNavigation from '../lib/navigation.js';
-import { vcard } from '../lib/utils.js';
+import { theCard } from '../lib/utils.js';
 
 const messages = defineMessages({
   search_for_contacts: {
@@ -65,7 +65,7 @@ class NewTopicView extends React.Component {
 
   handleNewGroupSubmit(name, dataUrl, priv, tags, isChannel) {
     HashNavigation.navigateTo(HashNavigation.removeUrlParam(window.location.hash, 'tab'));
-    this.props.onCreateTopic(undefined, vcard(name, dataUrl), priv, tags, isChannel);
+    this.props.onCreateTopic(undefined, theCard(name, dataUrl), priv, tags, isChannel);
   }
 
   handleGroupByID(topicName) {

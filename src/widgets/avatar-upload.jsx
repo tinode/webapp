@@ -3,7 +3,7 @@ import React from 'react';
 import LetterTile from './letter-tile.jsx';
 
 import { AVATAR_SIZE, MAX_EXTERN_ATTACHMENT_SIZE } from '../config.js';
-import { imageScaled, blobToBase64, makeImageUrl } from '../lib/blob-helpers.js';
+import { imageScaled, blobToBase64, makeImageDataUrl } from '../lib/blob-helpers.js';
 
 export default class AvatarUpload extends React.Component {
   constructor(props) {
@@ -28,7 +28,7 @@ export default class AvatarUpload extends React.Component {
       (mime, blob) => {
         // Convert blob to base64-encoded bits.
         blobToBase64(blob, (unused, base64bits) => {
-          const du = makeImageUrl({data: base64bits, type: mime});
+          const du = makeImageDataUrl({data: base64bits, type: mime});
           this.setState({dataUrl: du});
           this.props.onImageChanged(du);
         });

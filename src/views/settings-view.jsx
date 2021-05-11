@@ -36,16 +36,15 @@ export default class SettingsView extends React.PureComponent {
 
   render() {
     const names = {def: "default", ws: "websocket", lp: "long polling"};
-    var transportOptions = [];
-    var instance = this;
-    ['def', 'ws', 'lp'].map(function(item) {
-      var id = 'transport-' + item;
-      var name = names[item];
+    const transportOptions = [];
+    ['def', 'ws', 'lp'].map((item) => {
+      const id = 'transport-' + item;
+      const name = names[item];
       transportOptions.push(
         <li key={item}>
           <input type="radio" id={id} name="transport-select" value={item}
-            checked={instance.state.transport === item}
-            onChange={instance.handleTransportSelected} />
+            checked={this.state.transport === item}
+            onChange={this.handleTransportSelected} />
           <label htmlFor={id}>{name}</label>
         </li>
       );
@@ -73,7 +72,7 @@ export default class SettingsView extends React.PureComponent {
           </ul>
         </div>
         <div className="dialog-buttons">
-          <button type="submit" className="blue">
+          <button type="submit" className="primary">
             <FormattedMessage id="button_update" defaultMessage="Update"
               description="Button [Update]" />
           </button>

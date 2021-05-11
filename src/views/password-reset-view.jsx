@@ -75,7 +75,7 @@ export default class PasswordResetView extends React.PureComponent {
           </>
         }
         <div className="dialog-buttons">
-          <button className="blue" type="submit">{reset ?
+          <button className="primary" type="submit">{reset ?
             <FormattedMessage id="button_reset" defaultMessage="Reset" description="Button [Reset]" /> :
             <FormattedMessage id="button_send_request" defaultMessage="Send request"
               description="Button [Send request]" />

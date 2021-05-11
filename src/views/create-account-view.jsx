@@ -7,7 +7,7 @@ import CheckBox from '../widgets/checkbox.jsx';
 import VisiblePassword from '../widgets/visible-password.jsx';
 
 import LocalStorageUtil from '../lib/local-storage.js';
-import { vcard } from '../lib/utils.js';
+import { theCard } from '../lib/utils.js';
 
 import { MAX_TITLE_LENGTH } from '../config.js';
 
@@ -65,12 +65,12 @@ export default class CreateAccountView extends React.PureComponent {
     this.props.onCreateAccount(
       this.state.login.trim(),
       this.state.password.trim(),
-      vcard(this.state.fn.trim().substring(0, MAX_TITLE_LENGTH), this.state.imageDataUrl),
+      theCard(this.state.fn.trim().substring(0, MAX_TITLE_LENGTH), this.state.imageDataUrl),
       {'meth': 'email', 'val': this.state.email});
   }
 
   render() {
-    let submitClasses = 'blue';
+    let submitClasses = 'primary';
     if (this.props.disabled) {
       submitClasses += ' disabled';
     }

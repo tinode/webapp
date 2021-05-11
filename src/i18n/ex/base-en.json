@@ -175,6 +175,18 @@
     "defaultMessage": "download",
     "description": "Call to action [download]"
   },
+  "drafty_attachment": {
+    "defaultMessage": "Attachment",
+    "description": "Comment for attachment in drafty preview"
+  },
+  "drafty_form": {
+    "defaultMessage": "Form:",
+    "description": "Comment for form in drafty preview"
+  },
+  "drafty_image": {
+    "defaultMessage": "Picture",
+    "description": "Comment for embedded images in drafty preview"
+  },
   "email_dative": {
     "defaultMessage": "email",
     "description": "Dative case of 'email', i.e. 'email' in 'by email'"

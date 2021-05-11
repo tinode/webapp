@@ -6,10 +6,15 @@ import { bytesToHumanSize } from './strformat.js'
 export const SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
 export const MIME_EXTENSIONS         = ['jpg',        'gif',       'png',       'svg',       'svg'];
 
-// Make a data URL from public.photo
-export function makeImageUrl(photo) {
-  return (photo && photo.type && photo.data) ?
-    'data:image/' + photo.type + ';base64,' + photo.data : null;
+// Make a data: URL from public.photo
+export function makeImageDataUrl(photo) {
+  if (photo) {
+    if (photo.data && photo.type) {
+      return 'data:image/' + photo.type + ';base64,' + photo.data;
+    }
+    return photo.ref;
+  }
+  return null;
 }
 
 // Calculate linear dimensions for scaling image down to fit under a certain size.

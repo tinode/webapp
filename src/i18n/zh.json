@@ -172,5 +172,8 @@
   "no_connection": "无连接",
   "code_doesnot_match": "代码不匹配",
   "channel_prompt": "这是一个频道",
-  "channel": "频道"
+  "channel": "频道",
+  "drafty_attachment": "附件",
+  "drafty_form": "形式：",
+  "drafty_image": "图像"
 }
