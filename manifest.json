@@ -1,6 +1,8 @@
 {
-  "short_name": "Tinode chat",
-  "name": "Tinode Web chat",
+  "name": "Tinode",
+  "short_name": "Tinode",
+  "description": "Tinode Web App.\nSee more at https://tinode.co/",
+  "categories": ["chat", "communication", "productivity"],
   "icons": [
     {
       "src":"img/logo96.png",
@@ -22,5 +24,17 @@
   "background_color": "silver",
   "theme_color": "#3949AB",
   "display": "standalone",
-  "gcm_sender_id": "103953800507"
+  "gcm_sender_id": "103953800507",
+  "prefer_related_applications": true,
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://play.google.com/store/apps/details?id=co.tinode.tindroidx",
+      "id": "co.tinode.tindroidx"
+    },
+    {
+      "platform": "itunes",
+      "url": "https://apps.apple.com/us/app/tinode/id1483763538"
+    }
+  ]
 }
