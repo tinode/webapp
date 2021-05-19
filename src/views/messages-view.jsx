@@ -337,10 +337,10 @@ class MessagesView extends React.Component {
   }
 
   leave(oldTopicName) {
-    if (!oldTopicName) {
+    if (!oldTopicName || !this.props.tinode.isTopicCached(oldTopicName)) {
       return;
     }
-    let oldTopic = this.props.tinode.getTopic(oldTopicName);
+    const oldTopic = this.props.tinode.getTopic(oldTopicName);
     if (oldTopic && oldTopic.isSubscribed()) {
       oldTopic.leave(false)
         .catch(() => { /* do nothing here */ })
