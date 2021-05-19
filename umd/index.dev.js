@@ -3360,11 +3360,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
 
   leave(oldTopicName) {
-    if (!oldTopicName) {
+    if (!oldTopicName || !this.props.tinode.isTopicCached(oldTopicName)) {
       return;
     }
 
-    let oldTopic = this.props.tinode.getTopic(oldTopicName);
+    const oldTopic = this.props.tinode.getTopic(oldTopicName);
 
     if (oldTopic && oldTopic.isSubscribed()) {
       oldTopic.leave(false).catch(() => {}).finally(() => {
@@ -7690,7 +7690,7 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
           let deliveryStatus;
 
           if (!this.props.showMode && c.latestMessage) {
-            const msg = c.latestMessage();
+            const msg = c.latestMessage(true);
 
             if (msg) {
               deliveryStatus = msg._status || c.msgStatus(msg, true);

@@ -79,7 +79,7 @@ class ContactList extends React.Component {
           let preview;
           let deliveryStatus;
           if (!this.props.showMode && c.latestMessage) {
-            const msg = c.latestMessage();
+            const msg = c.latestMessage(true);
             if (msg) {
               deliveryStatus = msg._status || c.msgStatus(msg, true);
               preview = typeof msg.content == 'string' ?
