@@ -16,7 +16,7 @@
     "extract": "formatjs extract src/**/*.jsx --out-file src/i18n/ex/base-en.json --id-interpolation-pattern '[sha512:contenthash:base64:6]'",
     "compile": "formatjs compile"
   },
-  "browserslist": "> 0.5%, not IE 11",
+  "browserslist": "> 0.5%, not IE 11, not op_mini all, not and_uc >0",
   "files": [
     "umd/index.prod.js",
     "umd/index.prod.js.map",
