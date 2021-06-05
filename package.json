@@ -1,7 +1,7 @@
 {
   "name": "tinode-webapp",
   "description": "Tinode messenger for the web",
-  "version": "0.17.1-alpha1",
+  "version": "0.17.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinode/example-react-js.git"
@@ -16,7 +16,7 @@
     "extract": "formatjs extract src/**/*.jsx --out-file src/i18n/ex/base-en.json --id-interpolation-pattern '[sha512:contenthash:base64:6]'",
     "compile": "formatjs compile"
   },
-  "browserslist": "> 0.5%, not IE 11",
+  "browserslist": "> 0.5%, not IE 11, not op_mini all, not and_uc >0",
   "files": [
     "umd/index.prod.js",
     "umd/index.prod.js.map",
@@ -63,27 +63,27 @@
   "author": "Tinode Authors <info@tinode.co>",
   "license": "Apache-2.0",
   "dependencies": {
-    "firebase": "^8.2.9",
+    "firebase": "^8.6.4",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-intl": "^5.12.5",
-    "tinode-sdk": "^0.17.1-alpha1"
+    "react-intl": "^5.18.3",
+    "tinode-sdk": "^0.17.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.13.8",
-    "@babel/preset-env": "^7.13.8",
+    "@babel/core": "^7.14.3",
+    "@babel/preset-env": "^7.14.4",
     "@babel/preset-react": "^7.12.13",
-    "@formatjs/cli": "^4.2.6",
+    "@formatjs/cli": "^4.2.17",
     "babel-loader": "^8.2.2",
-    "babel-plugin-formatjs": "^10.2.6",
-    "browserslist": "^4.16.3",
+    "babel-plugin-formatjs": "^10.2.16",
+    "browserslist": "^4.16.5",
     "copy-webpack-plugin": "^8.1.0",
-    "cssnano": "^5.0.1",
-    "glob": "^7.1.6",
+    "cssnano": "^5.0.5",
+    "glob": "^7.1.7",
     "mkdirp": "^1.0.4",
-    "postcss": "^8.2.6",
+    "postcss": "^8.3.0",
     "postcss-cli": "^8.3.1",
-    "webpack": "^5.24.2",
-    "webpack-cli": "^4.5.0"
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.7.0"
   }
 }
