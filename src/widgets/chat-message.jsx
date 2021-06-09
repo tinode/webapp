@@ -204,6 +204,7 @@ function draftyFormatter(style, data, values, key) {
             if (attr.src) {
               attr.onClick = this.handleImagePreview;
               attr.className += ' image-clickable';
+              attr.loading = 'lazy';
             } else {
               attr.src = 'img/broken_image.png';
             }

@@ -124,7 +124,7 @@ export function imageScaled(fileOrBlob, maxWidth, maxHeight, maxSize, forceSquar
     }
 
     canvas = null;
-    onSuccess(blob, mime, dim.dstWidth, dim.dstHeight, fileNameForMime(fileOrBlob.name, mime));
+    onSuccess(mime, blob, dim.dstWidth, dim.dstHeight, fileNameForMime(fileOrBlob.name, mime));
   };
   img.src = URL.createObjectURL(fileOrBlob);
 }

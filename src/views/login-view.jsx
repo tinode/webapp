@@ -15,7 +15,7 @@ export default class LoginView extends React.Component {
       login: props.login,
       password: '',
       hostName: props.serverAddress,
-      saveToken: LocalStorageUtil.getObject('keep-logged-in')
+      saveToken: props.persist
     };
     this.handleLoginChange = this.handleLoginChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
@@ -32,7 +32,7 @@ export default class LoginView extends React.Component {
   }
 
   handleToggleSaveToken() {
-    LocalStorageUtil.setObject('keep-logged-in', !this.state.saveToken);
+    this.props.onPersistenceChange(!this.state.saveToken);
     this.setState({saveToken: !this.state.saveToken});
   }
 

@@ -210,7 +210,8 @@ function imageScaled(fileOrBlob, maxWidth, maxHeight, maxSize, forceSquare, onSu
     }
 
     canvas = null;
-    onSuccess(blob, mime, dim.dstWidth, dim.dstHeight, fileNameForMime(fileOrBlob.name, mime));
+    console.log("imageScaled", blob);
+    onSuccess(mime, blob, dim.dstWidth, dim.dstHeight, fileNameForMime(fileOrBlob.name, mime));
   };
 
   img.src = URL.createObjectURL(fileOrBlob);
@@ -220,6 +221,7 @@ function fileToBase64(file, onSuccess) {
   reader.addEventListener('load', function () {
     onSuccess(file.type, reader.result.split(',')[1], file.name);
   });
+  console.log("fileToBase64", file);
   reader.readAsDataURL(file);
 }
 function blobToBase64(blob, onSuccess) {
@@ -720,7 +722,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "PACKAGE_VERSION": () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.17.1";
+const PACKAGE_VERSION = "0.17.2-alpha1";
 
 /***/ }),
 
@@ -2825,7 +2827,7 @@ class LoginView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       login: props.login,
       password: '',
       hostName: props.serverAddress,
-      saveToken: _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_4__.default.getObject('keep-logged-in')
+      saveToken: props.persist
     };
     this.handleLoginChange = this.handleLoginChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
@@ -2846,7 +2848,7 @@ class LoginView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handleToggleSaveToken() {
-    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_4__.default.setObject('keep-logged-in', !this.state.saveToken);
+    this.props.onPersistenceChange(!this.state.saveToken);
     this.setState({
       saveToken: !this.state.saveToken
     });
@@ -4637,12 +4639,7 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
 class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
-    this.handleLoginRequested = this.handleLoginRequested.bind(this);
     this.handleNewTopic = this.handleNewTopic.bind(this);
-  }
-
-  handleLoginRequested(login, password) {
-    this.props.onLoginRequest(login, password);
   }
 
   handleNewTopic() {
@@ -4693,7 +4690,9 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
     }), view === 'login' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_login_view_jsx__WEBPACK_IMPORTED_MODULE_12__.default, {
       login: this.props.login,
       disabled: this.props.loginDisabled,
-      onLogin: this.handleLoginRequested
+      persist: this.props.persist,
+      onLogin: this.props.onLoginRequest,
+      onPersistenceChange: this.props.onPersistenceChange
     }) : view === 'register' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_create_account_view_jsx__WEBPACK_IMPORTED_MODULE_6__.default, {
       onCreateAccount: this.props.onCreateAccount,
       onCancel: this.props.onCancel,
@@ -4896,6 +4895,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.handleVisibilityEvent = this.handleVisibilityEvent.bind(this);
     this.handleError = this.handleError.bind(this);
     this.handleLoginRequest = this.handleLoginRequest.bind(this);
+    this.handlePersistenceChange = this.handlePersistenceChange.bind(this);
     this.handleConnected = this.handleConnected.bind(this);
     this.handleAutoreconnectIteration = this.handleAutoreconnectIteration.bind(this);
     this.doLogin = this.doLogin.bind(this);
@@ -4982,6 +4982,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       loadSpinnerVisible: false,
       login: '',
       password: '',
+      persist: persist,
       myUserId: null,
       liveConnection: navigator.onLine,
       topicSelected: '',
@@ -5024,9 +5025,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       viewportWidth: document.documentElement.clientWidth,
       viewportHeight: document.documentElement.clientHeight
     });
-    const keepLoggedIn = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.getObject('keep-logged-in');
     new Promise((resolve, reject) => {
-      this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport, this.props.intl.locale, keepLoggedIn, resolve);
+      this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport, this.props.intl.locale, this.state.persist, resolve);
       this.tinode.onConnect = this.handleConnected;
       this.tinode.onDisconnect = this.handleDisconnect;
       this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
@@ -5045,7 +5045,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
       const parsedNav = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.parseUrlHash(window.location.hash);
       this.resetContactList();
-      const token = keepLoggedIn ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.getObject('auth-token') : undefined;
+      const token = this.state.persist ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.getObject('auth-token') : undefined;
 
       if (token) {
         this.setState({
@@ -5285,6 +5285,26 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           loadSpinnerVisible: false
         });
         this.handleError(err.message, 'err');
+      });
+    }
+  }
+
+  handlePersistenceChange(persist) {
+    if (persist) {
+      this.tinode.initStorage().then(() => {
+        console.log("storage initialized");
+        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.setObject('keep-logged-in', true);
+        this.setState({
+          persist: true
+        });
+      });
+    } else {
+      this.tinode.clearStorage().then(() => {
+        console.log("storage cleared");
+        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.setObject('keep-logged-in', false);
+        this.setState({
+          persist: false
+        });
       });
     }
   }
@@ -5824,6 +5844,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.tinode = TinodeWeb.tnSetup(serverAddress, transport, this.props.intl.locale, _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.getObject('keep-logged-in'));
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
+    this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
     this.setState({
       serverAddress: serverAddress,
       transport: transport
@@ -6122,6 +6143,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport, this.props.intl.locale, _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.getObject('keep-logged-in'));
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
+    this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
     _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo('');
   }
 
@@ -6398,6 +6420,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       title: this.state.sidePanelTitle,
       avatar: this.state.sidePanelAvatar,
       login: this.state.login,
+      persist: this.state.persist,
       myUserId: this.state.myUserId,
       loginDisabled: this.state.loginDisabled,
       loadSpinnerVisible: this.state.loadSpinnerVisible,
@@ -6421,6 +6444,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       onSettings: this.handleSettings,
       onBasicNavigate: this.basicNavigator,
       onLoginRequest: this.handleLoginRequest,
+      onPersistenceChange: this.handlePersistenceChange,
       onCreateAccount: this.handleNewAccountRequest,
       onUpdateAccount: this.handleUpdateAccountRequest,
       onUpdateAccountTags: this.handleUpdateAccountTagsRequest,
@@ -7204,6 +7228,7 @@ function draftyFormatter(style, data, values, key) {
             if (attr.src) {
               attr.onClick = this.handleImagePreview;
               attr.className += ' image-clickable';
+              attr.loading = 'lazy';
             } else {
               attr.src = 'img/broken_image.png';
             }

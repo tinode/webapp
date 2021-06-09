@@ -822,6 +822,7 @@ i.search {
   margin-top: 0.25rem;
   margin-bottom: auto;
   height: 100%;
+  scroll-behavior: smooth;
 }
 
 .contact-box {
@@ -1387,6 +1388,7 @@ i.search {
   list-style: none;
   padding: 0 0 3.5rem 0;
   margin: 0 0.5rem;
+  scroll-behavior: smooth;
 }
 
 /* Group chats have avatars on the left. Make left margin smaller */

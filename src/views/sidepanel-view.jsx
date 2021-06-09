@@ -91,12 +91,7 @@ class SidepanelView extends React.Component {
   constructor(props) {
     super(props);
 
-    this.handleLoginRequested = this.handleLoginRequested.bind(this);
     this.handleNewTopic = this.handleNewTopic.bind(this);
-  }
-
-  handleLoginRequested(login, password) {
-    this.props.onLoginRequest(login, password);
   }
 
   handleNewTopic() {
@@ -146,7 +141,9 @@ class SidepanelView extends React.Component {
           <LoginView
             login={this.props.login}
             disabled={this.props.loginDisabled}
-            onLogin={this.handleLoginRequested} /> :
+            persist={this.props.persist}
+            onLogin={this.props.onLoginRequest}
+            onPersistenceChange={this.props.onPersistenceChange} /> :
 
           view === 'register' ?
           <CreateAccountView

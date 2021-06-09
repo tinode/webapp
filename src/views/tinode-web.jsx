@@ -79,6 +79,7 @@ class TinodeWeb extends React.Component {
     this.handleVisibilityEvent = this.handleVisibilityEvent.bind(this);
     this.handleError = this.handleError.bind(this);
     this.handleLoginRequest = this.handleLoginRequest.bind(this);
+    this.handlePersistenceChange = this.handlePersistenceChange.bind(this);
     this.handleConnected = this.handleConnected.bind(this);
     this.handleAutoreconnectIteration = this.handleAutoreconnectIteration.bind(this);
     this.doLogin = this.doLogin.bind(this);
@@ -175,6 +176,7 @@ class TinodeWeb extends React.Component {
 
       login: '',
       password: '',
+      persist: persist,
       myUserId: null,
       liveConnection: navigator.onLine,
       topicSelected: '',
@@ -226,11 +228,9 @@ class TinodeWeb extends React.Component {
       viewportHeight: document.documentElement.clientHeight
     });
 
-    const keepLoggedIn = LocalStorageUtil.getObject('keep-logged-in');
-
     new Promise((resolve, reject) => {
       this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport,
-        this.props.intl.locale, keepLoggedIn, resolve);
+        this.props.intl.locale, this.state.persist, resolve);
       this.tinode.onConnect = this.handleConnected;
       this.tinode.onDisconnect = this.handleDisconnect;
       this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
@@ -257,7 +257,7 @@ class TinodeWeb extends React.Component {
       // Read contacts from cache.
       this.resetContactList();
 
-      const token = keepLoggedIn ? LocalStorageUtil.getObject('auth-token') : undefined;
+      const token = this.state.persist ? LocalStorageUtil.getObject('auth-token') : undefined;
       if (token) {
         this.setState({autoLogin: true});
 
@@ -461,6 +461,23 @@ class TinodeWeb extends React.Component {
         // Socket error
         this.setState({loginDisabled: false, autoLogin: false, loadSpinnerVisible: false});
         this.handleError(err.message, 'err');
+      });
+    }
+  }
+
+  // Enable or disable saving the password and IndexedDB.
+  handlePersistenceChange(persist) {
+    if (persist) {
+      this.tinode.initStorage().then(() => {
+        console.log("storage initialized");
+        LocalStorageUtil.setObject('keep-logged-in', true);
+        this.setState({persist: true});
+      });
+    } else {
+      this.tinode.clearStorage().then(() => {
+        console.log("storage cleared");
+        LocalStorageUtil.setObject('keep-logged-in', false);
+        this.setState({persist: false});
       });
     }
   }
@@ -1016,6 +1033,7 @@ class TinodeWeb extends React.Component {
       LocalStorageUtil.getObject('keep-logged-in'));
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
+    this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
 
     this.setState({
       serverAddress: serverAddress,
@@ -1252,6 +1270,7 @@ class TinodeWeb extends React.Component {
       this.state.transport, this.props.intl.locale, LocalStorageUtil.getObject('keep-logged-in'));
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
+    this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
     HashNavigation.navigateTo('');
   }
 
@@ -1517,6 +1536,7 @@ class TinodeWeb extends React.Component {
           title={this.state.sidePanelTitle}
           avatar={this.state.sidePanelAvatar}
           login={this.state.login}
+          persist={this.state.persist}
           myUserId={this.state.myUserId}
           loginDisabled={this.state.loginDisabled}
           loadSpinnerVisible={this.state.loadSpinnerVisible}
@@ -1544,6 +1564,7 @@ class TinodeWeb extends React.Component {
           onSettings={this.handleSettings}
           onBasicNavigate={this.basicNavigator}
           onLoginRequest={this.handleLoginRequest}
+          onPersistenceChange={this.handlePersistenceChange}
           onCreateAccount={this.handleNewAccountRequest}
           onUpdateAccount={this.handleUpdateAccountRequest}
           onUpdateAccountTags={this.handleUpdateAccountTagsRequest}
