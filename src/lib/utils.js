@@ -34,7 +34,7 @@ export function theCard(fn, imageUrl, imageMimeType) {
     card = card || {};
     let mimeType = imageMimeType;
     // Is this a data URL "data:[<mediatype>][;base64],<data>"?
-    const matches = /^data:(image\/[-a-z0-9+.]+)(;base64)?,/i.exec(imageUrl);
+    const matches = /^data:(image\/[-a-z0-9+.]+)?(;base64)?,/i.exec(imageUrl);
     if (matches) {
       mimeType = matches[1];
       card.photo = {

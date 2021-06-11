@@ -110,7 +110,8 @@ const MIME_EXTENSIONS = ['jpg', 'gif', 'png', 'svg', 'svg'];
 function makeImageDataUrl(photo) {
   if (photo) {
     if (photo.data && photo.type) {
-      return 'data:image/' + photo.type + ';base64,' + photo.data;
+      const mime = photo.type.startsWith('image/') ? photo.type : 'image/' + photo.type;
+      return 'data:' + mime + ';base64,' + photo.data;
     }
 
     return photo.ref;
@@ -132,8 +133,8 @@ function fitImageSize(width, height, maxWidth, maxHeight, forceSquare) {
     maxWidth = maxHeight = Math.min(maxWidth, maxHeight);
   }
 
-  let scale = Math.min(Math.min(width, maxWidth) / width, Math.min(height, maxHeight) / height);
-  let size = {
+  const scale = Math.min(Math.min(width, maxWidth) / width, Math.min(height, maxHeight) / height);
+  const size = {
     dstWidth: width * scale | 0,
     dstHeight: height * scale | 0
   };
@@ -190,7 +191,7 @@ function imageScaled(fileOrBlob, maxWidth, maxHeight, maxSize, forceSquare, onSu
     let ctx = canvas.getContext('2d');
     ctx.imageSmoothingEnabled = true;
     ctx.drawImage(this, dim.xoffset, dim.yoffset, dim.srcWidth, dim.srcHeight, 0, 0, dim.dstWidth, dim.dstHeight);
-    const mime = SUPPORTED_IMAGE_FORMATS.indexOf(fileOrBlob.type) < 0 ? 'image/jpeg' : fileOrBlob.type;
+    const mime = SUPPORTED_IMAGE_FORMATS.includes(fileOrBlob.type) ? fileOrBlob.type : 'image/jpeg';
     let blob = await new Promise(resolve => canvas.toBlob(resolve, mime));
 
     if (!blob) {
@@ -210,7 +211,6 @@ function imageScaled(fileOrBlob, maxWidth, maxHeight, maxSize, forceSquare, onSu
     }
 
     canvas = null;
-    console.log("imageScaled", blob);
     onSuccess(mime, blob, dim.dstWidth, dim.dstHeight, fileNameForMime(fileOrBlob.name, mime));
   };
 
@@ -221,7 +221,6 @@ function fileToBase64(file, onSuccess) {
   reader.addEventListener('load', function () {
     onSuccess(file.type, reader.result.split(',')[1], file.name);
   });
-  console.log("fileToBase64", file);
   reader.readAsDataURL(file);
 }
 function blobToBase64(blob, onSuccess) {
@@ -573,7 +572,7 @@ function theCard(fn, imageUrl, imageMimeType) {
   if (imageUrl) {
     card = card || {};
     let mimeType = imageMimeType;
-    const matches = /^data:(image\/[-a-z0-9+.]+)(;base64)?,/i.exec(imageUrl);
+    const matches = /^data:(image\/[-a-z0-9+.]+)?(;base64)?,/i.exec(imageUrl);
 
     if (matches) {
       mimeType = matches[1];
@@ -581,6 +580,7 @@ function theCard(fn, imageUrl, imageMimeType) {
         data: imageUrl.substring(imageUrl.indexOf(',') + 1)
       };
     } else {
+      console.log("theCard no match", imageUrl.substring(0, 60), new Error("stacktrace"));
       card.photo = {
         ref: imageUrl
       };
@@ -5232,8 +5232,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handleOnline(online) {
-    console.log("handleOnline", online);
-
     if (online) {
       this.handleError();
       clearInterval(this.reconnectCountdown);

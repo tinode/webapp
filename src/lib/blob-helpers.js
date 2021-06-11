@@ -10,7 +10,8 @@ export const MIME_EXTENSIONS         = ['jpg',        'gif',       'png',       
 export function makeImageDataUrl(photo) {
   if (photo) {
     if (photo.data && photo.type) {
-      return 'data:image/' + photo.type + ';base64,' + photo.data;
+      const mime = photo.type.startsWith('image/') ? photo.type : ('image/' + photo.type);
+      return 'data:' + mime + ';base64,' + photo.data;
     }
     return photo.ref;
   }
@@ -35,12 +36,12 @@ export function fitImageSize(width, height, maxWidth, maxHeight, forceSquare) {
     maxWidth = maxHeight = Math.min(maxWidth, maxHeight);
   }
 
-  let scale = Math.min(
+  const scale = Math.min(
     Math.min(width, maxWidth) / width,
     Math.min(height, maxHeight) / height
   );
 
-  let size = {
+  const size = {
     dstWidth: (width * scale) | 0,
     dstHeight: (height * scale) | 0,
   };
@@ -101,7 +102,7 @@ export function imageScaled(fileOrBlob, maxWidth, maxHeight, maxSize, forceSquar
     ctx.drawImage(this, dim.xoffset, dim.yoffset, dim.srcWidth, dim.srcHeight,
       0, 0, dim.dstWidth, dim.dstHeight);
 
-    const mime = SUPPORTED_IMAGE_FORMATS.indexOf(fileOrBlob.type) < 0 ? 'image/jpeg' : fileOrBlob.type;
+    const mime = SUPPORTED_IMAGE_FORMATS.includes(fileOrBlob.type) ? fileOrBlob.type : 'image/jpeg';
     // Generate blob to check size of the image.
     let blob = await new Promise(resolve => canvas.toBlob(resolve, mime));
     if (!blob) {
