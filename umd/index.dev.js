@@ -580,7 +580,6 @@ function theCard(fn, imageUrl, imageMimeType) {
         data: imageUrl.substring(imageUrl.indexOf(',') + 1)
       };
     } else {
-      console.log("theCard no match", imageUrl.substring(0, 60), new Error("stacktrace"));
       card.photo = {
         ref: imageUrl
       };
