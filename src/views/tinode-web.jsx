@@ -268,15 +268,11 @@ class TinodeWeb extends React.Component {
           // Socket error
           this.handleError(err.message, 'err');
         });
-        delete parsedNav.params.info;
-        delete parsedNav.params.tab;
-        parsedNav.path[0] = '';
-        HashNavigation.navigateTo(HashNavigation.composeUrlHash(parsedNav.path, parsedNav.params));
-      } else if (!parsedNav.params.token) {
-        // No token, save possible topic name and navigating to blank state.
-        this.setState({requestedTopic: parsedNav.path[1]});
-        HashNavigation.navigateTo('');
       }
+
+      // Save possible topic name and navigate to blank state.
+      this.setState({requestedTopic: parsedNav.path[1]});
+      HashNavigation.navigateTo('');
 
       this.readTimer = null;
       this.readTimerCallback = null;

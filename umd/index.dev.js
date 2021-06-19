@@ -5055,17 +5055,12 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         this.tinode.connect().catch(err => {
           this.handleError(err.message, 'err');
         });
-        delete parsedNav.params.info;
-        delete parsedNav.params.tab;
-        parsedNav.path[0] = '';
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.composeUrlHash(parsedNav.path, parsedNav.params));
-      } else if (!parsedNav.params.token) {
-        this.setState({
-          requestedTopic: parsedNav.path[1]
-        });
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo('');
       }
 
+      this.setState({
+        requestedTopic: parsedNav.path[1]
+      });
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo('');
       this.readTimer = null;
       this.readTimerCallback = null;
       this.handleHashRoute();
