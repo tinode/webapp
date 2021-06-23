@@ -721,7 +721,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "PACKAGE_VERSION": () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.17.2";
+const PACKAGE_VERSION = "0.17.4";
 
 /***/ }),
 
@@ -3765,7 +3765,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       }
 
       const uploadCompletionPromise = uploader.upload(blob);
-      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_13__.IMAGE_PREVIEW_DIM, _config_js__WEBPACK_IMPORTED_MODULE_13__.IMAGE_PREVIEW_DIM, -1, false, tinyBlob => {
+      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_13__.IMAGE_PREVIEW_DIM, _config_js__WEBPACK_IMPORTED_MODULE_13__.IMAGE_PREVIEW_DIM, -1, false, (tinyMine, tinyBlob) => {
         (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__.blobToBase64)(tinyBlob, (blobMime, tinyBits64) => {
           let msg = Drafty.insertImage(null, 0, {
             mime: mime,
@@ -3811,7 +3811,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
   handleAttachImage(file) {
     const maxExternAttachmentSize = this.props.tinode.getServerLimit('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_13__.MAX_EXTERN_ATTACHMENT_SIZE);
-    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__.imageScaled)(file, _config_js__WEBPACK_IMPORTED_MODULE_13__.MAX_IMAGE_DIM, _config_js__WEBPACK_IMPORTED_MODULE_13__.MAX_IMAGE_DIM, maxExternAttachmentSize, false, (blob, mime, width, height, fname) => {
+    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__.imageScaled)(file, _config_js__WEBPACK_IMPORTED_MODULE_13__.MAX_IMAGE_DIM, _config_js__WEBPACK_IMPORTED_MODULE_13__.MAX_IMAGE_DIM, maxExternAttachmentSize, false, (mime, blob, width, height, fname) => {
       this.setState({
         imagePreview: {
           url: URL.createObjectURL(blob),

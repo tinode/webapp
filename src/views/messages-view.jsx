@@ -705,7 +705,7 @@ class MessagesView extends React.Component {
 
       // Make small preview to show while uploading.
       imageScaled(blob, IMAGE_PREVIEW_DIM, IMAGE_PREVIEW_DIM, -1, false,
-        (tinyBlob) => {
+        (tinyMine, tinyBlob) => {
           // Convert tiny image into base64 for serialization and previewing.
           blobToBase64(tinyBlob, (blobMime, tinyBits64) => {
             let msg = Drafty.insertImage(null, 0, {
@@ -758,7 +758,7 @@ class MessagesView extends React.Component {
     // Get image dimensions and size, optionally scale it down.
     imageScaled(file, MAX_IMAGE_DIM, MAX_IMAGE_DIM, maxExternAttachmentSize, false,
       // Success
-      (blob, mime, width, height, fname) => {
+      (mime, blob, width, height, fname) => {
         this.setState({imagePreview: {
           url: URL.createObjectURL(blob),
           blob: blob,
