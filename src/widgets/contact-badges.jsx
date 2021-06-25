@@ -1,6 +1,7 @@
 import React from 'react';
 
-const icon_mapping = {'muted': 'notifications_off', 'banned': 'block'};
+const icon_mapping = {'muted': 'notifications_off', 'banned': 'block',
+  'verified': 'verified', 'staff': 'verified_user', 'dangerous': 'dangerous'};
 
 /* Contact's labels: [you], or icons [muted], [blocked] */
 export default class ContactBadges extends React.PureComponent {
@@ -10,7 +11,7 @@ export default class ContactBadges extends React.PureComponent {
         badges = [];
         this.props.badges.map(function(b) {
           if (b.icon) {
-            badges.push(<i className="material-icons as-badge" key={b.key || b.icon}>{icon_mapping[b.icon]}</i>);
+            badges.push(<i className="material-icons as-badge" key={b.key || b.icon}>{icon_mapping[b.icon] || b.icon}</i>);
           } else {
             const style = 'badge' + (b.color ? ' ' + b.color : '');
             badges.push(<span className={style} key={b.key || b.name}>{b.name}</span>);

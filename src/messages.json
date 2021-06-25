@@ -285,6 +285,7 @@
     "menu_item_info": "Info",
     "menu_item_member_delete": "Remove",
     "menu_item_mute": "Mute",
+    "menu_item_restore_topic": "Restore",
     "menu_item_send_retry": "Retry",
     "menu_item_unblock": "Unblock",
     "menu_item_unmute": "Unmute",

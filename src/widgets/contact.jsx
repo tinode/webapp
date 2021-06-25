@@ -65,6 +65,15 @@ class Contact extends React.Component {
     const avatar = this.props.avatar ? this.props.avatar : true;
     const badges = this.props.badges ? this.props.badges.slice() : [];
     const icon_badges = [];
+    if (this.props.isVerified) {
+      icon_badges.push({icon: 'verified'});
+    }
+    if (this.props.isStaff) {
+      icon_badges.push({icon: 'staff'});
+    }
+    if (this.props.isDangerous) {
+      icon_badges.push({icon: 'dangerous'});
+    }
     if (this.props.acs) {
       if (this.props.showMode) {
         badges.push({name: this.props.acs.getMode(), key: 'mode'});
@@ -101,7 +110,7 @@ class Contact extends React.Component {
         <div className="text-box">
           <div><span className="contact-title">{title}</span>
             {this.props.isChannel ? <img src="/img/channel.png" className="channel" alt="channel" /> : null}
-            <UnreadBadge count={this.props.unread} /><ContactBadges badges={icon_badges} />
+            <ContactBadges badges={icon_badges} /><UnreadBadge count={this.props.unread} />
           </div>
           {this.props.showMode ?
             <span><ContactBadges badges={badges} /></span> :

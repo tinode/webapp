@@ -760,6 +760,7 @@ class TinodeWeb extends React.Component {
         // Contacts expect c.topic to be set.
         c.topic = c.name;
       }
+
       newState.chatList.push(c);
       if (this.state.topicSelected == c.topic) {
         newState.topicSelectedOnline = c.online;
@@ -1373,7 +1374,7 @@ class TinodeWeb extends React.Component {
       subscribed && deleter ? 'messages_clear_hard' : null,
       muted ? (blocked ? null : 'topic_unmute') : 'topic_mute',
       self_blocked ? 'topic_unblock' : 'topic_block',
-      !archived ? 'topic_archive' : null,
+      !archived ? 'topic_restore' : 'topic_archive',
       'topic_delete'
     ];
   }
