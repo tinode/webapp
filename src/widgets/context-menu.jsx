@@ -88,6 +88,11 @@ const messages = defineMessages({
     defaultMessage: 'Archive',
     description: 'Move topic from the list of active chats to archive'
   },
+  unarchive: {
+    id: 'menu_item_restore_topic',
+    defaultMessage: 'Restore',
+    description: 'Restore topic from archive'
+  },
   edit_permissions: {
     id: 'menu_item_edit_permissions',
     defaultMessage: 'Edit permissions',
@@ -235,6 +240,22 @@ class ContextMenu extends React.Component {
             return;
           }
           return topic.archive(true).catch((err) => {
+            if (errorHandler) {
+              errorHandler(err.message, 'err');
+            }
+          });
+        }
+      },
+      'topic_restore': {
+        id: 'topic_restore',
+        title: formatMessage(messages.unarchive),
+        handler: (params, errorHandler) => {
+          const topic = this.props.tinode.getTopic(params.topicName);
+          if (!topic) {
+            console.log("Topic not found: ", params.topicName);
+            return;
+          }
+          return topic.archive(false).catch((err) => {
             if (errorHandler) {
               errorHandler(err.message, 'err');
             }
