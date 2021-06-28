@@ -10,9 +10,11 @@ import MenuStart from './menu-start.jsx';
 export default class SideNavbar extends React.PureComponent {
   render() {
     const icon_badges = [];
-    this.props.trustedBadges.map((b) => {
-      icon_badges.push({icon: b, color: 'badge-inv'});
-    });
+    if (this.props.trustedBadges) {
+      this.props.trustedBadges.map((b) => {
+        icon_badges.push({icon: b, color: 'badge-inv'});
+      });
+    }
     return (
         <div id="side-caption-panel" className="caption-panel">
           {this.props.onCancel ? <ButtonBack onBack={this.props.onCancel} /> : null}

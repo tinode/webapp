@@ -728,7 +728,8 @@
     "drafty_image": "이미지",
     "menu_item_restore_topic": "복원",
     "badge_danger": "의심 많은",
-    "badge_staff": "직원 관리하에"
+    "badge_staff": "직원 관리하에",
+    "badge_verified": "확인 됨"
   },
   "ro": {
     "validate_credential_action": "confirmă",

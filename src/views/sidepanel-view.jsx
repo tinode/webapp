@@ -102,13 +102,15 @@ class SidepanelView extends React.Component {
     const {formatMessage} = this.props.intl;
     const view = this.props.state || (this.props.myUserId ? 'contacts' : 'login');
 
-    let title, avatar;
+    let title, avatar, badges;
     if (view == 'contacts') {
       title = this.props.title;
       avatar = this.props.avatar ? this.props.avatar : true;
+      badges = this.props.trustedBadges;
     } else {
       title = formatMessage(messages[view]);
       avatar = false;
+      badges = null;
     }
 
     let onCancel;
@@ -122,7 +124,7 @@ class SidepanelView extends React.Component {
           state={view}
           title={title}
           avatar={avatar}
-          trustedBadges={this.props.trustedBadges}
+          trustedBadges={badges}
           myUserId={this.props.myUserId}
           onSignUp={this.props.onSignUp}
           onSettings={this.props.onSettings}
