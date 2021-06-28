@@ -176,7 +176,11 @@
     "channel": "Sender",
     "drafty_attachment": "Dateianhang",
     "drafty_form": "Formular:",
-    "drafty_image": "Bild"
+    "drafty_image": "Bild",
+    "menu_item_restore_topic": "Wiederherstellen",
+    "badge_danger": "Verdächtig",
+    "badge_staff": "Verwaltung",
+    "badge_verified": "Verifiziert"
   },
   "en": {
     "action_block_contact": "Block Contact",
@@ -187,7 +191,10 @@
     "action_more": "More",
     "action_report_chat": "Report Conversation",
     "archived_contacts": "Archived contacts ({count})",
+    "badge_danger": "Untrustworthy",
     "badge_owner": "owner",
+    "badge_staff": "Staff-managed",
+    "badge_verified": "Verified/official",
     "badge_you": "you",
     "block_contact_warning": "Are you sure you want to block this contact?",
     "blocked_contacts_link": "Blocked contacts ({count})",
@@ -535,7 +542,11 @@
     "channel": "canal",
     "drafty_attachment": "Archivo",
     "drafty_form": "Formulario:",
-    "drafty_image": "Imagen"
+    "drafty_image": "Imagen",
+    "menu_item_restore_topic": "Restaurar",
+    "badge_danger": "Suspicaz",
+    "badge_staff": "Administración",
+    "badge_verified": "Verificado"
   },
   "ko": {
     "validate_credential_action": "확인",
@@ -714,7 +725,10 @@
     "channel": "채널",
     "drafty_attachment": "부착",
     "drafty_form": "형태:",
-    "drafty_image": "이미지"
+    "drafty_image": "이미지",
+    "menu_item_restore_topic": "복원",
+    "badge_danger": "의심 많은",
+    "badge_staff": "직원 관리하에"
   },
   "ro": {
     "validate_credential_action": "confirmă",
@@ -893,7 +907,11 @@
     "title_manage_tags": "Administrează",
     "drafty_attachment": "Atasament",
     "drafty_form": "Formă:",
-    "drafty_image": "Imagine"
+    "drafty_image": "Imagine",
+    "menu_item_restore_topic": "Restabili",
+    "badge_danger": "Suspicios",
+    "badge_staff": "Administrare",
+    "badge_verified": "Verificat"
   },
   "ru": {
     "contacts_not_found": "Чатов нет<br />¯∖_(ツ)_/¯",
@@ -1072,7 +1090,11 @@
     "channel": "канал",
     "drafty_attachment": "Аттачмент",
     "drafty_form": "Форма:",
-    "drafty_image": "Картинка"
+    "drafty_image": "Картинка",
+    "menu_item_restore_topic": "Разархивировать",
+    "badge_danger": "Подозрительный",
+    "badge_staff": "Администрация",
+    "badge_verified": "Верифицированный"
   },
   "zh": {
     "archived_contacts": "已归档联系人 ({count})",
@@ -1251,6 +1273,10 @@
     "channel": "频道",
     "drafty_attachment": "附件",
     "drafty_form": "形式：",
-    "drafty_image": "图像"
+    "drafty_image": "图像",
+    "menu_item_restore_topic": "从存档中恢复",
+    "badge_danger": "可疑的",
+    "badge_staff": "在员工管理下",
+    "badge_verified": "值得信赖"
   }
 }

@@ -165,7 +165,7 @@ export function deliveryMarker(received) {
     case Tinode.MESSAGE_STATUS_SENDING:
       return { name: 'access_time' }; // watch face
     case Tinode.MESSAGE_STATUS_FAILED:
-      return { name: 'warning', color: 'amber' }; // yellow icon /!\
+      return { name: 'warning', color: 'danger-color' }; // yellow icon /!\
     case Tinode.MESSAGE_STATUS_SENT:
       return { name: 'done' }; // checkmark
     case Tinode.MESSAGE_STATUS_RECEIVED:

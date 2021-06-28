@@ -5,6 +5,7 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import Tinode from 'tinode-sdk';
 
 import AvatarUpload from '../widgets/avatar-upload.jsx';
+import BadgeList from '../widgets/badge-list.jsx';
 import CheckBox from '../widgets/checkbox.jsx';
 import ContactList from '../widgets/contact-list.jsx';
 import ErrorPanel from '../widgets/error-panel.jsx';
@@ -120,6 +121,7 @@ class InfoView extends React.Component {
       anon: null,
       contactList: [],
       tags: [],
+      trustedBadges: [],
       showMemberPanel: false,
       showPermissionEditorFor: undefined,
       moreInfoExpanded: false,
@@ -219,6 +221,14 @@ class InfoView extends React.Component {
     const defacs = topic.getDefaultAccess() || {};
     const acs = topic.getAccessMode();
 
+    const badges = [];
+    if (topic.trusted) {
+      for (const [key, val] of Object.entries(topic.trusted)) {
+        if (val) {
+          badges.push(key);
+        }
+      }
+    }
     this.setState({
       owner: acs && acs.isOwner(),
       admin: acs && acs.isAdmin(),
@@ -228,6 +238,7 @@ class InfoView extends React.Component {
 
       fullName: topic.public ? topic.public.fn : undefined,
       avatar: makeImageDataUrl(topic.public ? topic.public.photo : null),
+      trustedBadges: badges,
       private: topic.private ? topic.private.comment : null,
       address: topic.name,
       groupTopic: topic.isGroupType(),
@@ -586,6 +597,7 @@ class InfoView extends React.Component {
                       onFinished={this.handlePrivateUpdate} />
                   }</FormattedMessage>
                 </div>
+                <BadgeList trustedBadges={this.state.trustedBadges} />
               </div>
               <AvatarUpload
                 avatar={this.state.avatar}

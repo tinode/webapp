@@ -368,25 +368,44 @@ div.alert .content {
 }
 /* END Alert */
 
+/* BEGIN trusted badges with legend */
+div.trusted-badge {
+  margin: 0.25rem 0;
+}
+/* END trusted badges */
+
 /* Generic text colors */
 .blue {
-  color: #2196f3; /* blue 500 */
+  color: #2196f3!important; /* blue 500 */
+}
+
+.verified-color {
+  color: #03A9F4!important; /* lt-blue 500 */
+}
+
+.staff-color {
+  color: #689f38!important; /* light green 700 */
+}
+
+.danger-color {
+  color: #FFC107!important; /* amber 500 */
 }
 
 .red {
-  color: #D32F2F; /* red 700 */
+  color: #D32F2F!important; /* red 700 */
 }
 
-.amber {
-  color: #FFC107; /* amber 500 */
+/* Color of an inverted icon badges */
+.badge-inv {
+  color: #fffd!important;
 }
 
 .gray {
-  color: #757575;
+  color: #757575!important;
 }
 
 .light-gray {
-  color: #bbb;
+  color: #bbb!important;
 }
 
 .large {
@@ -565,7 +584,7 @@ div.alert .content {
   font-size: 1.1rem;
   height: 2.5rem;
   line-height: 2.25;
-  margin: 0.25rem 0.125rem;
+  margin: 0.25rem 0.125rem 0 0.125rem;
   width: 100%;
   vertical-align: baseline;
   border-bottom: 1px dashed #ddd;

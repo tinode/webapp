@@ -31,9 +31,21 @@
     "defaultMessage": "Archived contacts ({count})",
     "description": "Label for archived chats"
   },
+  "badge_danger": {
+    "defaultMessage": "Untrustworthy",
+    "description": "Suspicious or untrustworthy account or topic badge"
+  },
   "badge_owner": {
     "defaultMessage": "owner",
     "description": "Badge for indicating the owner"
+  },
+  "badge_staff": {
+    "defaultMessage": "Staff-managed",
+    "description": "Explanation of a staff-managed account or topic badge"
+  },
+  "badge_verified": {
+    "defaultMessage": "Verified/official",
+    "description": "Explanation of a verified account or topic badge"
   },
   "badge_you": {
     "defaultMessage": "you",

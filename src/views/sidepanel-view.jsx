@@ -122,6 +122,7 @@ class SidepanelView extends React.Component {
           state={view}
           title={title}
           avatar={avatar}
+          trustedBadges={this.props.trustedBadges}
           myUserId={this.props.myUserId}
           onSignUp={this.props.onSignUp}
           onSettings={this.props.onSettings}
@@ -162,6 +163,7 @@ class SidepanelView extends React.Component {
           <EditAccountView
             tinode={this.props.tinode}
             myUserId={this.props.myUserId}
+            trustedBadges={this.props.trustedBadges}
             onBasicNavigate={this.props.onBasicNavigate} /> :
 
           view === 'general' ?

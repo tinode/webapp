@@ -3,6 +3,7 @@ import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import AvatarUpload from '../widgets/avatar-upload.jsx';
+import BadgeList from '../widgets/badge-list.jsx';
 
 import { makeImageDataUrl } from '../lib/blob-helpers.js';
 
@@ -32,6 +33,7 @@ export default class EditAccountView extends React.Component {
                 description="Label for user address (ID)" /></label>&nbsp;
               <tt>{this.props.myUserId}</tt>
             </div>
+            <BadgeList trustedBadges={this.props.trustedBadges} />
           </div>
           <AvatarUpload
             avatar={this.state.avatar}

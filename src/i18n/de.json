@@ -176,5 +176,8 @@
   "drafty_attachment": "Dateianhang",
   "drafty_form": "Formular:",
   "drafty_image": "Bild",
-  "menu_item_restore_topic": ":!![MISSING]!!:[object Object]"
+  "menu_item_restore_topic": "Wiederherstellen",
+  "badge_danger": "Verdächtig",
+  "badge_staff": "Verwaltung",
+  "badge_verified": "Verifiziert"
 }

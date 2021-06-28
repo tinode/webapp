@@ -109,7 +109,6 @@
   "numeric_confirmation_code_prompt": "숫자만",
   "button_confirm": "확인",
   "save_attachment": "저장",
-  "delete_content": ":!![OBSOLETE]!!:컨텐츠삭제",
   "invalid_content": "잘못된내용",
   "user_not_found": "찾을수없음",
   "badge_you": "당신",
@@ -179,5 +178,8 @@
   "drafty_attachment": "부착",
   "drafty_form": "형태:",
   "drafty_image": "이미지",
-  "menu_item_restore_topic": ":!![MISSING]!!:[object Object]"
+  "menu_item_restore_topic": "복원",
+  "badge_danger": "의심 많은",
+  "badge_staff": "직원 관리하에",
+  "badge_verified": ":!![MISSING]!!:[object Object]"
 }

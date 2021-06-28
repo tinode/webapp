@@ -5,6 +5,7 @@ import Tinode from 'tinode-sdk';
 const Drafty = Tinode.Drafty;
 
 import ChatMessage from '../widgets/chat-message.jsx';
+import ContactBadges from '../widgets/contact-badges.jsx';
 import DocPreview from '../widgets/doc-preview.jsx';
 import ErrorPanel from '../widgets/error-panel.jsx';
 import GroupSubs from '../widgets/group-subs.jsx';
@@ -213,6 +214,9 @@ class MessagesView extends React.Component {
         topic: null,
         title: '',
         avatar: null,
+        isVerified: false,
+        isStaff: false,
+        isDangerous: false,
         docPreview: null,
         imagePreview: null,
         imagePostview: null,
@@ -825,6 +829,18 @@ class MessagesView extends React.Component {
         const topic = this.props.tinode.getTopic(this.state.topic);
         const isChannel = topic.isChannelType();
         const groupTopic = topic.isGroupType() && !isChannel;
+        const icon_badges = [];
+        if (topic.trusted) {
+          if (topic.trusted.verified) {
+            icon_badges.push({icon: 'verified', color: 'badge-inv'});
+          }
+          if (topic.trusted.staff) {
+            icon_badges.push({icon: 'staff', color: 'badge-inv'});
+          }
+          if (topic.trusted.danger) {
+            icon_badges.push({icon: 'dangerous', color: 'badge-inv'});
+          }
+        }
         let messageNodes = [];
         let previousFrom = null;
         let chatBoxClass = null;
@@ -929,7 +945,7 @@ class MessagesView extends React.Component {
                   this.state.title ||
                   <i><FormattedMessage id="unnamed_topic" defaultMessage="Unnamed"
                     description="Title shown when the topic has no name" /></i>
-                }</div>
+                }<ContactBadges badges={icon_badges} /></div>
                 <div id="topic-last-seen">{lastSeen}</div>
               </div>
               {groupTopic ?

@@ -176,5 +176,8 @@
   "drafty_attachment": "附件",
   "drafty_form": "形式：",
   "drafty_image": "图像",
-  "menu_item_restore_topic": ":!![MISSING]!!:[object Object]"
+  "menu_item_restore_topic": "从存档中恢复",
+  "badge_danger": "可疑的",
+  "badge_staff": "在员工管理下",
+  "badge_verified": "值得信赖"
 }

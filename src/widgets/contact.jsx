@@ -66,13 +66,13 @@ class Contact extends React.Component {
     const badges = this.props.badges ? this.props.badges.slice() : [];
     const icon_badges = [];
     if (this.props.isVerified) {
-      icon_badges.push({icon: 'verified'});
+      icon_badges.push({icon: 'verified', color: 'verified-color'});
     }
     if (this.props.isStaff) {
-      icon_badges.push({icon: 'staff'});
+      icon_badges.push({icon: 'staff', color: 'staff-color'});
     }
     if (this.props.isDangerous) {
-      icon_badges.push({icon: 'dangerous'});
+      icon_badges.push({icon: 'dangerous', color: 'danger-color'});
     }
     if (this.props.acs) {
       if (this.props.showMode) {

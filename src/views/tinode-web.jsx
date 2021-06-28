@@ -172,6 +172,7 @@ class TinodeWeb extends React.Component {
       sidePanelSelected: 'login',
       sidePanelTitle: null,
       sidePanelAvatar: null,
+      myTrustedBadges: [],
       loadSpinnerVisible: false,
 
       login: '',
@@ -653,6 +654,17 @@ class TinodeWeb extends React.Component {
         this.setState({
           sidePanelTitle: desc.public.fn,
           sidePanelAvatar: makeImageDataUrl(desc.public.photo)
+        });
+      }
+      if (desc.trusted) {
+        const badges = [];
+        for (const [key, val] of Object.entries(desc.trusted)) {
+          if (val) {
+            badges.push(key);
+          }
+        }
+        this.setState({
+          myTrustedBadges: badges,
         });
       }
       if (desc.acs) {
@@ -1532,6 +1544,7 @@ class TinodeWeb extends React.Component {
           state={this.state.sidePanelSelected}
           title={this.state.sidePanelTitle}
           avatar={this.state.sidePanelAvatar}
+          trustedBadges={this.state.myTrustedBadges}
           login={this.state.login}
           persist={this.state.persist}
           myUserId={this.state.myUserId}
