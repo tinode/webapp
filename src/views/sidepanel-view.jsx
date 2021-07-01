@@ -150,6 +150,7 @@ class SidepanelView extends React.Component {
 
           view === 'register' ?
           <CreateAccountView
+            tinode={this.props.tinode}
             onCreateAccount={this.props.onCreateAccount}
             onCancel={this.props.onCancel}
             onError={this.props.onError} /> :

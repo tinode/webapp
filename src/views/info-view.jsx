@@ -600,6 +600,7 @@ class InfoView extends React.Component {
                 <BadgeList trustedBadges={this.state.trustedBadges} />
               </div>
               <AvatarUpload
+                tinode={this.props.tinode}
                 avatar={this.state.avatar}
                 readOnly={!this.state.owner}
                 uid={this.props.topic}

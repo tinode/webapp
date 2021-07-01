@@ -92,6 +92,7 @@ export default class CreateAccountView extends React.PureComponent {
             }</FormattedMessage>
           </div>
           <AvatarUpload
+            tinode={this.props.tinode}
             onImageChanged={this.handleImageChanged}
             onError={this.props.onError} />
         </div>

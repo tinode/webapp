@@ -87,6 +87,7 @@ export default class NewTopicGroup extends React.PureComponent {
             }</FormattedMessage>
           </div>
           <AvatarUpload
+            tinode={this.props.tinode}
             onError={this.props.onError}
             onImageChanged={this.handleImageChanged} />
         </div>

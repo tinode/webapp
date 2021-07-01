@@ -36,6 +36,7 @@ export default class EditAccountView extends React.Component {
             <BadgeList trustedBadges={this.props.trustedBadges} />
           </div>
           <AvatarUpload
+            tinode={this.props.tinode}
             avatar={this.state.avatar}
             readOnly={!this.state.owner}
             uid={this.props.myUserId}

@@ -146,6 +146,7 @@ export default class AccGeneralView extends React.Component {
             }</FormattedMessage></div>
           </div>
           <AvatarUpload
+            tinode={this.props.tinode}
             avatar={this.state.avatar}
             uid={this.props.myUserId}
             title={this.state.fullName}

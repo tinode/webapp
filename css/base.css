@@ -2066,12 +2066,14 @@ ul.tabbar li.active > a {
 }
 
 .load-spinner-box {
+  --size-small: 2.5rem;
+  --size-large: 4rem;
   position: absolute;
   box-shadow: 0.1rem 0.1rem 0.15rem 1px rgba(0,0,0,0.25);
   border-radius: 50%;
   padding: 0.25rem;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: var(--size-small);
+  height: var(--size-small);
   left: 0;
   right: 0;
   top: 5rem;
@@ -2081,6 +2083,25 @@ ul.tabbar li.active > a {
   z-index: 2;
 }
 
+.load-spinner-box.large {
+  width: var(--size-large);
+  height: var(--size-large);
+}
+
+.load-spinner-box.clear {
+  -x-box-shadow: none;
+  box-shadow: 0.1rem 0.1rem 0.15rem 1px rgba(0,0,0,0.12);
+  background-color: #fff8;
+}
+
+.load-spinner-box.centered {
+  top: calc(var(--size-small)/2 - 0.25rem);
+}
+
+.load-spinner-box.large.centered {
+  top: calc(var(--size-large)/2 - 0.25rem);
+}
+
 .loader-spinner {
   border: 0.35rem solid #f3f3f3;
   border-radius: 50%;
@@ -2088,6 +2109,11 @@ ul.tabbar li.active > a {
   width: 2rem;
   height: 2rem;
   animation: spin 1.5s linear infinite;
+}
+
+.load-spinner-box.large .loader-spinner {
+  width: 3.5rem;
+  height: 3.5rem;
 }
 
 @keyframes spin {
