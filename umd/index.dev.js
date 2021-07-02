@@ -721,7 +721,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "PACKAGE_VERSION": () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.17.5";
+const PACKAGE_VERSION = "0.17.6";
 
 /***/ }),
 
@@ -6124,6 +6124,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     if (this.state.firebaseToken) {
       this.fbPush.deleteToken(this.state.firebaseToken);
     }
+
+    clearInterval(this.reconnectCountdown);
 
     if (this.tinode) {
       this.tinode.clearStorage();
