@@ -36,7 +36,9 @@ export default class AvatarUpload extends React.Component {
       }
 
       uploader.upload(image)
-        .then(() => {})
+        .then((url) => {
+          this.props.onImageChanged(url);
+        })
         .catch((err) => {
           this.props.onError(err, 'err');
         })
