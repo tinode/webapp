@@ -28,6 +28,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "MEDIA_BREAKPOINT": () => (/* binding */ MEDIA_BREAKPOINT),
 /* harmony export */   "REM_SIZE": () => (/* binding */ REM_SIZE),
 /* harmony export */   "AVATAR_SIZE": () => (/* binding */ AVATAR_SIZE),
+/* harmony export */   "MAX_AVATAR_BYTES": () => (/* binding */ MAX_AVATAR_BYTES),
 /* harmony export */   "BROKEN_IMAGE_SIZE": () => (/* binding */ BROKEN_IMAGE_SIZE),
 /* harmony export */   "MESSAGES_PAGE": () => (/* binding */ MESSAGES_PAGE),
 /* harmony export */   "MAX_INBAND_ATTACHMENT_SIZE": () => (/* binding */ MAX_INBAND_ATTACHMENT_SIZE),
@@ -63,7 +64,8 @@ const CHANNEL_ACCESS_MODE = 'JR';
 const NO_ACCESS_MODE = 'N';
 const MEDIA_BREAKPOINT = 640;
 const REM_SIZE = 13;
-const AVATAR_SIZE = 128;
+const AVATAR_SIZE = 384;
+const MAX_AVATAR_BYTES = 8192;
 const BROKEN_IMAGE_SIZE = 32;
 const MESSAGES_PAGE = 24;
 const MAX_INBAND_ATTACHMENT_SIZE = 262144;
@@ -937,6 +939,7 @@ class AccGeneralView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compo
       value: this.state.fullName,
       onFinished: this.handleFullNameUpdate
     })))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+      tinode: this.props.tinode,
       avatar: this.state.avatar,
       uid: this.props.myUserId,
       title: this.state.fullName,
@@ -1709,6 +1712,7 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       onFinished: this.handlePasswordChange,
       required: true
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+      tinode: this.props.tinode,
       onImageChanged: this.handleImageChanged,
       onError: this.props.onError
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -1835,6 +1839,7 @@ class EditAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Comp
     })), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", null, this.props.myUserId)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_badge_list_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
       trustedBadges: this.props.trustedBadges
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+      tinode: this.props.tinode,
       avatar: this.state.avatar,
       readOnly: !this.state.owner,
       uid: this.props.myUserId,
@@ -2629,6 +2634,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_badge_list_jsx__WEBPACK_IMPORTED_MODULE_4__.default, {
       trustedBadges: this.state.trustedBadges
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+      tinode: this.props.tinode,
       avatar: this.state.avatar,
       readOnly: !this.state.owner,
       uid: this.props.topic,
@@ -4748,6 +4754,7 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       onLogin: this.props.onLoginRequest,
       onPersistenceChange: this.props.onPersistenceChange
     }) : view === 'register' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_create_account_view_jsx__WEBPACK_IMPORTED_MODULE_6__.default, {
+      tinode: this.props.tinode,
       onCreateAccount: this.props.onCreateAccount,
       onCancel: this.props.onCancel,
       onError: this.props.onError
@@ -6957,7 +6964,8 @@ class AvatarUpload extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   constructor(props) {
     super(props);
     this.state = {
-      dataUrl: props.avatar
+      dataUrl: props.avatar,
+      uploading: false
     };
     this.handleFileUpload = this.handleFileUpload.bind(this);
   }
@@ -6971,20 +6979,42 @@ class AvatarUpload extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
 
   handleFileUpload(e) {
-    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.imageScaled)(e.target.files[0], _config_js__WEBPACK_IMPORTED_MODULE_3__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_3__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_EXTERN_ATTACHMENT_SIZE, true, (mime, blob) => {
-      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.blobToBase64)(blob, (unused, base64bits) => {
-        const du = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.makeImageDataUrl)({
-          data: base64bits,
-          type: mime
-        });
+    const image = e.target.files[0];
+
+    if (image.size > _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_AVATAR_BYTES) {
+      const uploader = this.props.tinode.getLargeFileHelper();
+
+      if (!uploader) {
+        this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
+        return;
+      }
+
+      uploader.upload(image).then(url => {
+        this.props.onImageChanged(url);
+      }).catch(err => {
+        this.props.onError(err, 'err');
+      }).finally(() => {
         this.setState({
-          dataUrl: du
+          uploading: false
         });
-        this.props.onImageChanged(du);
       });
-    }, err => {
-      this.props.onError(err, 'err');
-    });
+    } else {
+      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.imageScaled)(image, _config_js__WEBPACK_IMPORTED_MODULE_3__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_3__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_EXTERN_ATTACHMENT_SIZE, true, (mime, blob) => {
+        (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.blobToBase64)(blob, (unused, base64bits) => {
+          const du = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.makeImageDataUrl)({
+            data: base64bits,
+            type: mime
+          });
+          this.setState({
+            dataUrl: du
+          });
+          this.props.onImageChanged(du);
+        });
+      }, err => {
+        this.props.onError(err, 'err');
+      });
+    }
+
     e.target.value = '';
   }
 
@@ -7025,7 +7055,7 @@ class AvatarUpload extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, "file_upload")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
-      show: true,
+      show: this.state.uploading,
       large: true,
       clear: true,
       centered: true
@@ -10183,6 +10213,7 @@ class NewTopicGroup extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       value: this.state.private,
       onChange: this.handlePrivateChange
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+      tinode: this.props.tinode,
       onError: this.props.onError,
       onImageChanged: this.handleImageChanged
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -11559,11 +11590,11 @@ const {
 const language = params && params.hl || navigator.languages && navigator.languages[0] || navigator.language || navigator.userLanguage || 'en';
 const baseLanguage = language.toLowerCase().split(/[-_]/)[0];
 const messages = _messages_json__WEBPACK_IMPORTED_MODULE_3__[language] || _messages_json__WEBPACK_IMPORTED_MODULE_3__[baseLanguage] || _messages_json__WEBPACK_IMPORTED_MODULE_3__.en;
-react_dom__WEBPACK_IMPORTED_MODULE_1___default().render(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_2__.IntlProvider, {
+react_dom__WEBPACK_IMPORTED_MODULE_1___default().render(react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().StrictMode), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_2__.IntlProvider, {
   locale: language,
   messages: messages,
   textComponent: (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment)
-}, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_views_tinode_web_jsx__WEBPACK_IMPORTED_MODULE_4__.default, null)), document.getElementById('mountPoint'));
+}, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_views_tinode_web_jsx__WEBPACK_IMPORTED_MODULE_4__.default, null))), document.getElementById('mountPoint'));
 })();
 
 /******/ })()
