@@ -179,5 +179,6 @@
   "menu_item_restore_topic": "从存档中恢复",
   "badge_danger": "可疑的",
   "badge_staff": "在员工管理下",
-  "badge_verified": "值得信赖"
+  "badge_verified": "值得信赖",
+  "sidepanel_title_crop": "拖动调整"
 }

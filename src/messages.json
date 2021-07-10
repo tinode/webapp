@@ -96,6 +96,7 @@
     "sidepanel_title_reset": "Passwort zurücksetzen",
     "sidepanel_title_archive": "Archivierte Unterhaltungen",
     "sidepanel_title_blocked": "Blockierte Unterhaltungen",
+    "sidepanel_title_crop": "Zum Anpassen ziehen",
     "reconnect_countdown": "Getrennt. Wiederverbinden in {seconds}…",
     "reconnect_now": "Jetzt probieren",
     "push_init_failed": "Initialisierung von Push-Benachrichtigungen fehlgeschlagen",
@@ -338,6 +339,7 @@
     "sidepanel_title_archive": "Archived Chats",
     "sidepanel_title_blocked": "Blocked Chats",
     "sidepanel_title_cred": "Confirm Credentials",
+    "sidepanel_title_crop": "Drag to Adjust",
     "sidepanel_title_login": "Sign In",
     "sidepanel_title_newtpk": "Start New Chat",
     "sidepanel_title_register": "Create Account",
@@ -546,7 +548,8 @@
     "menu_item_restore_topic": "Restaurar",
     "badge_danger": "Suspicaz",
     "badge_staff": "Administración",
-    "badge_verified": "Verificado"
+    "badge_verified": "Verificado",
+    "sidepanel_title_crop": "Arrastra para ajustar"
   },
   "ko": {
     "validate_credential_action": "확인",
@@ -729,7 +732,8 @@
     "menu_item_restore_topic": "복원",
     "badge_danger": "의심 많은",
     "badge_staff": "직원 관리하에",
-    "badge_verified": "확인 됨"
+    "badge_verified": "확인 됨",
+    "sidepanel_title_crop": "드래그하여 조정"
   },
   "ro": {
     "validate_credential_action": "confirmă",
@@ -912,7 +916,8 @@
     "menu_item_restore_topic": "Restabili",
     "badge_danger": "Suspicios",
     "badge_staff": "Administrare",
-    "badge_verified": "Verificat"
+    "badge_verified": "Verificat",
+    "sidepanel_title_crop": "Trageți pentru a ajusta"
   },
   "ru": {
     "contacts_not_found": "Чатов нет<br />¯∖_(ツ)_/¯",
@@ -1095,7 +1100,8 @@
     "menu_item_restore_topic": "Разархивировать",
     "badge_danger": "Подозрительный",
     "badge_staff": "Администрация",
-    "badge_verified": "Верифицированный"
+    "badge_verified": "Верифицированный",
+    "sidepanel_title_crop": "Обрезать картинку"
   },
   "zh": {
     "archived_contacts": "已归档联系人 ({count})",
@@ -1278,6 +1284,7 @@
     "menu_item_restore_topic": "从存档中恢复",
     "badge_danger": "可疑的",
     "badge_staff": "在员工管理下",
-    "badge_verified": "值得信赖"
+    "badge_verified": "值得信赖",
+    "sidepanel_title_crop": "拖动调整"
   }
 }

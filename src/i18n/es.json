@@ -179,5 +179,6 @@
   "menu_item_restore_topic": "Restaurar",
   "badge_danger": "Suspicaz",
   "badge_staff": "Administración",
-  "badge_verified": "Verificado"
+  "badge_verified": "Verificado",
+  "sidepanel_title_crop": "Arrastra para ajustar"
 }

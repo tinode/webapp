@@ -617,6 +617,10 @@
     "defaultMessage": "Confirm Credentials",
     "description": "Sidepanel title for ValidationView."
   },
+  "sidepanel_title_crop": {
+    "defaultMessage": "Drag to Adjust",
+    "description": "Sidepanel title for AvatarCropView."
+  },
   "sidepanel_title_login": {
     "defaultMessage": "Sign In",
     "description": "Sidepanel title for LoginView."

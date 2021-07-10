@@ -179,5 +179,6 @@
   "menu_item_restore_topic": "Разархивировать",
   "badge_danger": "Подозрительный",
   "badge_staff": "Администрация",
-  "badge_verified": "Верифицированный"
+  "badge_verified": "Верифицированный",
+  "sidepanel_title_crop": "Обрезать картинку"
 }

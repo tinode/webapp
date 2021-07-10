@@ -166,8 +166,6 @@ export default class Cropper extends React.Component {
       this.mouseY = e.pageY;
     }
 
-    // this.cutoutRect = this.cutout.current.getBoundingClientRect();
-
     window.addEventListener('mousemove', this.mouseMove, { passive: false });
     window.addEventListener('touchmove', this.mouseTouch, { passive: false });
     window.addEventListener('mouseup', this.mouseUp, { passive: true });

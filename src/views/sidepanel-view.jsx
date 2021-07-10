@@ -5,6 +5,7 @@ import ErrorPanel from '../widgets/error-panel.jsx';
 import LoadSpinner from '../widgets/load-spinner.jsx';
 import SideNavbar from '../widgets/side-navbar.jsx';
 
+import AvatarCropView from './avatar-crop-view.jsx';
 import ContactsView from './contacts-view.jsx';
 import CreateAccountView from './create-account-view.jsx';
 import EditAccountView from './edit-account-view.jsx';
@@ -69,6 +70,11 @@ const messages = defineMessages({
     id: 'sidepanel_title_cred',
     description: 'Sidepanel title for ValidationView.',
     defaultMessage: 'Confirm Credentials'
+  },
+  crop: {
+    id: 'sidepanel_title_crop',
+    description: 'Sidepanel title for AvatarCropView.',
+    defaultMessage: 'Drag to Adjust'
   },
   reset: {
     id: 'sidepanel_title_reset',
@@ -239,6 +245,12 @@ class SidepanelView extends React.Component {
           <PasswordResetView
             onRequest={this.props.onPasswordResetRequest}
             onReset={this.props.onResetPassword} /> :
+
+          view === 'crop' ?
+          <AvatarCropView
+            onSubmit={this.props.onAvatarCropped}
+            onCancel={this.props.onCancel} /> :
+
           null}
       </div>
     );

@@ -95,6 +95,7 @@
   "sidepanel_title_reset": "Passwort zurücksetzen",
   "sidepanel_title_archive": "Archivierte Unterhaltungen",
   "sidepanel_title_blocked": "Blockierte Unterhaltungen",
+  "sidepanel_title_crop": "Zum Anpassen ziehen",
   "reconnect_countdown": "Getrennt. Wiederverbinden in {seconds}…",
   "reconnect_now": "Jetzt probieren",
   "push_init_failed": "Initialisierung von Push-Benachrichtigungen fehlgeschlagen",

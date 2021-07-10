@@ -381,7 +381,7 @@ class TinodeWeb extends React.Component {
     if (hash.path && hash.path.length > 0) {
       // Left-side panel selector.
       if (['register','settings','edit','notif','security','support','general',
-          'cred','reset','newtpk','archive','blocked','contacts',''].includes(hash.path[0])) {
+          'cred','crop','reset','newtpk','archive','blocked','contacts',''].includes(hash.path[0])) {
         this.setState({sidePanelSelected: hash.path[0]});
       } else {
         console.log("Unknown sidepanel view", hash.path[0]);
@@ -1156,6 +1156,8 @@ class TinodeWeb extends React.Component {
       path = 'edit';
     } else if ('blocked' == parsed.path[0]) {
       path = 'security';
+    } else if ('crop' == parsed.path[0]) {
+      path = 'general';
     } else if (this.state.myUserId) {
       path = 'contacts';
     }

@@ -2154,3 +2154,74 @@ ul.tabbar li.active > a {
   color: #5f9ea0;
   font-weight: inherit;
 }
+
+/* Image cropping widget */
+
+.cropper {
+  position: relative;
+  width: 16rem;
+  height: 18rem;
+  margin: auto;
+  align-self: center;
+  transform: translateZ(0);
+  border-radius: 0.25rem;
+}
+
+.cropper .bounding-box {
+  position: relative;
+  width: 16rem;
+  height: 16rem;
+  overflow: hidden;
+  z-index: 1;
+  border-radius: 0.25rem;
+  border: solid 2px #1e88e5;
+}
+
+.cropper .preview {
+  position: absolute;
+  max-height: none;
+  max-width: none;
+  z-index: -1;
+}
+
+.cropper .cutout {
+  position: absolute;
+  width: 15rem;
+  height: 15rem;
+  border: 1px dashed #999;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  box-shadow: 0 0 150rem 150rem rgb(230 246 255 / 66%);
+  z-index: 0;
+}
+
+.cropper .cutout.circle {
+  border-radius: 50%;
+}
+
+.cropper .overlay {
+  position: absolute;
+  cursor: move;
+  touch-action: none;
+  z-index: 1;
+}
+
+.cropper .zoom-wrapper {
+  height: 2rem;
+  width: 80%;
+  margin: 1rem auto;
+  text-align: center;
+}
+
+.cropper .zoom {
+  box-shadow: none;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.cropper .zoom:focus {
+  outline: none;
+}
