@@ -184,7 +184,7 @@ class SidepanelView extends React.Component {
             onCredAdd={this.props.onCredAdd}
             onCredDelete={this.props.onCredDelete}
             onCredConfirm={this.props.onCredConfirm}
-            onBasicNavigate={this.props.onBasicNavigate}
+            onImageReceived={this.props.onImageReceived}
             onError={this.props.onError} /> :
 
           view === 'notif' ?
@@ -248,6 +248,7 @@ class SidepanelView extends React.Component {
 
           view === 'crop' ?
           <AvatarCropView
+            avatar={this.props.newAvatar}
             onSubmit={this.props.onAvatarCropped}
             onCancel={this.props.onCancel} /> :
 

@@ -21,7 +21,7 @@ export default class AvatarCropView extends React.PureComponent {
     return (
       <div className="panel-form">
         <div className="panel-form-row">
-          <Cropper source="/img/logo192.png" />
+          <Cropper source={this.props.avatar} />
         </div>
         <div className="dialog-buttons">
           <button className="primary" onClick={this.handleSubmit}>

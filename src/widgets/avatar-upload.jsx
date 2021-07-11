@@ -27,6 +27,11 @@ export default class AvatarUpload extends React.Component {
 
   handleFileUpload(e) {
     const image = e.target.files[0];
+    if (this.props.onImageReceived) {
+      this.props.onFileReceived(URL.createObjectURL(image));
+      return;
+    }
+
     if (image.size > MAX_AVATAR_BYTES) {
       // Too large to send inband - uploading out of band and sending as a link.
       const uploader = this.props.tinode.getLargeFileHelper();
