@@ -1253,6 +1253,8 @@ class TinodeWeb extends React.Component {
       this.fbPush.deleteToken(this.state.firebaseToken)
     }
 
+    clearInterval(this.reconnectCountdown);
+
     if (this.tinode) {
       this.tinode.clearStorage();
       this.tinode.onDisconnect = undefined;

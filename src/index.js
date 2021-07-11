@@ -29,8 +29,10 @@ const messages =
   allMessages.en;
 
 ReactDOM.render(
-  <IntlProvider locale={language} messages={messages} textComponent={React.Fragment}>
-    <TinodeWeb />
-  </IntlProvider>,
+  <React.StrictMode>
+    <IntlProvider locale={language} messages={messages} textComponent={React.Fragment}>
+      <TinodeWeb />
+    </IntlProvider>
+  </React.StrictMode>,
   document.getElementById('mountPoint')
 );
