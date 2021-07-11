@@ -2159,9 +2159,10 @@ ul.tabbar li.active > a {
 
 .cropper {
   position: relative;
-  width: 16rem;
-  height: 18rem;
+  width: 18rem;
+  height: 21rem;
   margin: auto;
+  margin-top: 1rem;
   align-self: center;
   transform: translateZ(0);
   border-radius: 0.25rem;
@@ -2169,12 +2170,13 @@ ul.tabbar li.active > a {
 
 .cropper .bounding-box {
   position: relative;
-  width: 16rem;
-  height: 16rem;
+  width: 18rem;
+  height: 18rem;
   overflow: hidden;
   z-index: 1;
   border-radius: 0.25rem;
   border: solid 2px #1e88e5;
+  box-shadow: 1px 1px 3px grey;
 }
 
 .cropper .preview {
@@ -2186,8 +2188,8 @@ ul.tabbar li.active > a {
 
 .cropper .cutout {
   position: absolute;
-  width: 15rem;
-  height: 15rem;
+  width: 17rem;
+  height: 17rem;
   border: 1px dashed #999;
   margin: auto;
   top: 0;

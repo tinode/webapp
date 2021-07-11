@@ -28,7 +28,7 @@ export default class AvatarUpload extends React.Component {
   handleFileUpload(e) {
     const image = e.target.files[0];
     if (this.props.onImageReceived) {
-      this.props.onFileReceived(URL.createObjectURL(image));
+      this.props.onImageReceived(URL.createObjectURL(image));
       return;
     }
 
