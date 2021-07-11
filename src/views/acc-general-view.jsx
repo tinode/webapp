@@ -68,7 +68,8 @@ export default class AccGeneralView extends React.Component {
 
   handleImageChanged(img) {
     this.setState({avatar: img});
-    this.props.onUpdateAccount(undefined, theCard(null, img || Tinode.DEL_CHAR));
+    this.props.onBasicNavigate('crop');
+    // this.props.onUpdateAccount(undefined, theCard(null, img || Tinode.DEL_CHAR));
   }
 
   handleCredChange(e) {

@@ -821,7 +821,7 @@ class AccGeneralView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compo
     this.setState({
       avatar: img
     });
-    this.props.onUpdateAccount(undefined, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.theCard)(null, img || (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().DEL_CHAR)));
+    this.props.onBasicNavigate('crop');
   }
 
   handleCredChange(e) {
