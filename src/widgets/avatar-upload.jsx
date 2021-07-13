@@ -12,7 +12,7 @@ export default class AvatarUpload extends React.Component {
     super(props);
 
     this.state = {
-      dataUrl: props.avatar,
+      source: props.avatar,
       uploading: false
     };
 
@@ -21,14 +21,14 @@ export default class AvatarUpload extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.avatar != prevProps.avatar) {
-      this.setState({dataUrl: this.props.avatar});
+      this.setState({source: this.props.avatar});
     }
   }
 
   handleFileUpload(e) {
     const image = e.target.files[0];
     if (this.props.onImageReceived) {
-      this.props.onImageReceived(URL.createObjectURL(image));
+      this.props.onImageReceived(image.type, URL.createObjectURL(image));
       return;
     }
 
@@ -57,7 +57,7 @@ export default class AvatarUpload extends React.Component {
           // Convert blob to base64-encoded bits.
           blobToBase64(blob, (unused, base64bits) => {
             const du = makeImageDataUrl({data: base64bits, type: mime});
-            this.setState({dataUrl: du});
+            this.setState({source: du});
             this.props.onImageChanged(du);
           });
         },
@@ -77,13 +77,13 @@ export default class AvatarUpload extends React.Component {
     const className = 'avatar-upload' + (this.props.readOnly ? ' read-only' : '');
     return (
       <div className={className}>
-        {this.props.readOnly || !this.state.dataUrl ?
+        {this.props.readOnly || !this.state.source ?
           null :
           <a href="#" className="clear-avatar" onClick={(e) => {e.preventDefault(); this.props.onImageChanged(null);}}>
             <i className="material-icons">clear</i>
           </a>}
-        {this.state.dataUrl ?
-          <img src={this.state.dataUrl} className="preview" /> :
+        {this.state.source ?
+          <img src={this.state.source} className="preview" /> :
           this.props.readOnly && this.props.uid ?
             <div className="avatar-box">
               <LetterTile

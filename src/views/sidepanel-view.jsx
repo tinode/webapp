@@ -5,7 +5,6 @@ import ErrorPanel from '../widgets/error-panel.jsx';
 import LoadSpinner from '../widgets/load-spinner.jsx';
 import SideNavbar from '../widgets/side-navbar.jsx';
 
-import AvatarCropView from './avatar-crop-view.jsx';
 import ContactsView from './contacts-view.jsx';
 import CreateAccountView from './create-account-view.jsx';
 import EditAccountView from './edit-account-view.jsx';
@@ -51,6 +50,11 @@ const messages = defineMessages({
     description: 'Sidepanel title for AccSecurityView.',
     defaultMessage: 'Security'
   },
+  crop: {
+    id: 'sidepanel_title_crop',
+    description: 'Sidepanel title for AvatarCropView.',
+    defaultMessage: 'Drag to Adjust'
+  },
   notif: {
     id: 'sidepanel_title_acc_notifications',
     description: 'Sidepanel title for AccNotificationsView.',
@@ -70,11 +74,6 @@ const messages = defineMessages({
     id: 'sidepanel_title_cred',
     description: 'Sidepanel title for ValidationView.',
     defaultMessage: 'Confirm Credentials'
-  },
-  crop: {
-    id: 'sidepanel_title_crop',
-    description: 'Sidepanel title for AvatarCropView.',
-    defaultMessage: 'Drag to Adjust'
   },
   reset: {
     id: 'sidepanel_title_reset',
@@ -175,16 +174,16 @@ class SidepanelView extends React.Component {
             trustedBadges={this.props.trustedBadges}
             onBasicNavigate={this.props.onBasicNavigate} /> :
 
-          view === 'general' ?
+          (view === 'general' || view === 'crop') ?
           <AccGeneralView
             tinode={this.props.tinode}
             myUserId={this.props.myUserId}
+            onBasicNavigate={this.props.onBasicNavigate}
             onUpdateAccount={this.props.onUpdateAccount}
             onUpdateTags={this.props.onUpdateAccountTags}
             onCredAdd={this.props.onCredAdd}
             onCredDelete={this.props.onCredDelete}
             onCredConfirm={this.props.onCredConfirm}
-            onImageReceived={this.props.onImageReceived}
             onError={this.props.onError} /> :
 
           view === 'notif' ?
@@ -245,12 +244,6 @@ class SidepanelView extends React.Component {
           <PasswordResetView
             onRequest={this.props.onPasswordResetRequest}
             onReset={this.props.onResetPassword} /> :
-
-          view === 'crop' ?
-          <AvatarCropView
-            avatar={this.props.newAvatar}
-            onSubmit={this.props.onAvatarCropped}
-            onCancel={this.props.onCancel} /> :
 
           null}
       </div>

@@ -4,6 +4,8 @@ import { FormattedMessage } from 'react-intl';
 
 import Tinode from 'tinode-sdk';
 
+import AvatarCropView from './avatar-crop-view.jsx';
+
 import AvatarUpload from '../widgets/avatar-upload.jsx';
 import InPlaceEdit from '../widgets/in-place-edit.jsx';
 import TagManager from '../widgets/tag-manager.jsx';
@@ -25,13 +27,17 @@ export default class AccGeneralView extends React.Component {
       addCredActive: false,
       addCredInvalid: false,
       newCred: '',
+      newAvatar: null,
+      newAvatarMime: null,
       previousOnTags: me.onTagsUpdated
     };
 
     this.tnNewTags = this.tnNewTags.bind(this);
     this.tnCredsUpdated = this.tnCredsUpdated.bind(this);
     this.handleFullNameUpdate = this.handleFullNameUpdate.bind(this);
-    this.handleImageChanged = this.handleImageChanged.bind(this);
+    this.handleImageUploaded = this.handleImageUploaded.bind(this);
+    this.handleAvatarCropped = this.handleAvatarCropped.bind(this);
+    this.handleCancel = this.handleCancel.bind(this);
     this.handleCredChange = this.handleCredChange.bind(this);
     this.handleCredKeyDown = this.handleCredKeyDown.bind(this);
     this.handleCredEntered = this.handleCredEntered.bind(this);
@@ -66,9 +72,18 @@ export default class AccGeneralView extends React.Component {
     }
   }
 
-  handleImageChanged(img) {
-    this.setState({avatar: img});
+  handleImageUploaded(mime, img) {
+    this.setState({newAvatar: img, newAvatarMime: mime});
+  }
+
+  handleAvatarCropped(mime, blob, width, height) {
+    const url = blob ? URL.createObjectURL(blob) : null;
+    this.setState({avatar: url, newAvatar: null, newAvatarMime: null});
     // this.props.onUpdateAccount(undefined, theCard(null, img || Tinode.DEL_CHAR));
+  }
+
+  handleCancel(img) {
+    this.setState({newAvatar: null, newAvatarMime: null});
   }
 
   handleCredChange(e) {
@@ -119,6 +134,17 @@ export default class AccGeneralView extends React.Component {
   }
 
   render() {
+    if (this.state.newAvatar) {
+      return (
+        <AvatarCropView
+          avatar={this.state.newAvatar}
+          mime={this.state.newAvatarMime}
+          onSubmit={this.handleAvatarCropped}
+          onCancel={this.handleCancel}
+          onError={this.props.onError} />
+      );
+    }
+
     const credentials = [];
     this.state.credentials.map((cred) => {
       credentials.push(<div key={cred.meth + ":" + cred.val + ":" + cred.done}>{cred.meth}: <tt>{cred.val}</tt>
@@ -150,7 +176,7 @@ export default class AccGeneralView extends React.Component {
             avatar={this.state.avatar}
             uid={this.props.myUserId}
             title={this.state.fullName}
-            onImageReceived={this.props.onImageReceived}
+            onImageReceived={this.handleImageUploaded}
             onImageChanged={this.handleImageChanged}
             onError={this.props.onError} />
         </div>

@@ -50,6 +50,7 @@ export default class Cropper extends React.Component {
     this.originY = 0;
 
     this.initScaling = this.initScaling.bind(this);
+    this.onZoom = this.onZoom.bind(this);
     this.handleZoom = this.handleZoom.bind(this);
     this.mouseDown = this.mouseDown.bind(this);
     this.mouseUp = this.mouseUp.bind(this);
@@ -126,9 +127,11 @@ export default class Cropper extends React.Component {
     this.positionAll(panX, panY, zoom);
   }
 
-  handleZoom(e) {
-    let zoom = e.target.value;
+  onZoom(e) {
+    this.handleZoom(e.target.value);
+  }
 
+  handleZoom(zoom) {
     let panX = this.state.panX;
     let panY = this.state.panY;
 
@@ -217,8 +220,8 @@ export default class Cropper extends React.Component {
         this.prevDistance = distance / this.state.zoom;
     }
 
-    let scale = (distance / this.prevDistance).toFixed(3);
-    this.setState({zoom: Math.max(this.minZoom, Math.min(this.maxZoom, scale))});
+    let scale = (distance / this.prevDistance);
+    this.handleZoom(Math.max(this.minZoom, Math.min(this.maxZoom, scale)));
   }
 
   mouseUp(e) {
@@ -230,6 +233,13 @@ export default class Cropper extends React.Component {
     document.body.style['userSelect'] = '';
 
     this.positionAll(this.state.panX, this.state.panY, this.state.zoom);
+    // Pass cut out coordinates to caller.
+    this.props.onChange(
+      -this.state.panX + this.cutoutRect.left - this.bBoxRect.left,
+      -this.state.panY + this.cutoutRect.top - this.bBoxRect.top,
+      this.cutoutRect.width / this.state.zoom,
+      this.cutoutRect.height / this.state.zoom,
+      this.state.zoom);
   }
 
   render() {
@@ -256,7 +266,7 @@ export default class Cropper extends React.Component {
         </div>
         <div className="zoom-wrapper">
           <input type="range" className="zoomer"
-            step="0.001" min={this.state.minZoom} max={this.state.maxZoom} value={this.state.zoom} onChange={this.handleZoom} />
+            step="0.001" min={this.state.minZoom} max={this.state.maxZoom} value={this.state.zoom} onChange={this.onZoom} />
         </div>
       </div>
     );
