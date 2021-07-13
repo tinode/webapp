@@ -130,6 +130,40 @@ export function imageScaled(fileOrBlob, maxWidth, maxHeight, maxSize, forceSquar
   img.src = URL.createObjectURL(fileOrBlob);
 }
 
+// Scale and crop image according to specified dimensions.
+// The coordinates are in unscaled image pixels, i.e. cut the rectangle first then scale it.
+export function imageCrop(mime, objURL, left, top, width, height, scale, onSuccess, onError) {
+  const img = new Image();
+  img.crossOrigin = 'Anonymous';
+  img.onerror = function(err) {
+    onError("Image format unrecognized");
+  }
+  img.onload = async function() {
+    // Once the image is loaded, the URL is no longer needed.
+    URL.revokeObjectURL(img.src);
+
+    let canvas = document.createElement('canvas');
+    canvas.width = width * scale;
+    canvas.height = height * scale;
+    let ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = true;
+    console.log("drawImage from", left, top, width, height, "to", canvas.width, canvas.height);
+    ctx.drawImage(this, left, top, width, height, 0, 0, canvas.width, canvas.height);
+
+    mime = SUPPORTED_IMAGE_FORMATS.includes(mime) ? mime : 'image/jpeg';
+    // Generate blob to check size of the image.
+    let blob = await new Promise(resolve => canvas.toBlob(resolve, mime));
+    if (!blob) {
+      onError("Unsupported image format");
+      return;
+    }
+    // Allow GC.
+    canvas = null;
+    onSuccess(mime, blob, width, height);
+  };
+  img.src = objURL;
+}
+
 // Convert File to base64 string.
 export function fileToBase64(file, onSuccess) {
   const reader = new FileReader();
