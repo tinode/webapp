@@ -111,7 +111,6 @@ class TinodeWeb extends React.Component {
     this.handleCredAdd = this.handleCredAdd.bind(this);
     this.handleCredDelete = this.handleCredDelete.bind(this);
     this.handleCredConfirm = this.handleCredConfirm.bind(this);
-    this.handleImageReceived = this.handleImageReceived.bind(this);
     this.initFCMessaging = this.initFCMessaging.bind(this);
     this.togglePushToken = this.togglePushToken.bind(this);
     this.requestPushToken = this.requestPushToken.bind(this);
@@ -381,8 +380,8 @@ class TinodeWeb extends React.Component {
     const hash = HashNavigation.parseUrlHash(window.location.hash);
     if (hash.path && hash.path.length > 0) {
       // Left-side panel selector.
-      if (['register','settings','edit','notif','security','support','general',
-          'cred','crop','reset','newtpk','archive','blocked','contacts',''].includes(hash.path[0])) {
+      if (['register','settings','edit','notif','security','support','general','crop',
+          'cred','reset','newtpk','archive','blocked','contacts',''].includes(hash.path[0])) {
         this.setState({sidePanelSelected: hash.path[0]});
       } else {
         console.log("Unknown sidepanel view", hash.path[0]);
@@ -1149,23 +1148,16 @@ class TinodeWeb extends React.Component {
     this.handleCredentialsRequest({cred: [method]});
   }
 
-  handleImageReceived(url) {
-    this.setState({newAvatar: url});
-    if (url) {
-      this.basicNavigator('crop');
-    }
-  }
-
   // User clicked Cancel button in Setting or Sign Up panel.
   handleSidepanelCancel() {
     const parsed = HashNavigation.parseUrlHash(window.location.hash);
     let path = '';
     if (['security','support','general','notif'].includes(parsed.path[0])) {
       path = 'edit';
+    } else if ('crop') {
+      path = 'general';
     } else if ('blocked' == parsed.path[0]) {
       path = 'security';
-    } else if ('crop' == parsed.path[0]) {
-      path = 'general';
     } else if (this.state.myUserId) {
       path = 'contacts';
     }
@@ -1560,7 +1552,6 @@ class TinodeWeb extends React.Component {
           myUserId={this.state.myUserId}
           loginDisabled={this.state.loginDisabled}
           loadSpinnerVisible={this.state.loadSpinnerVisible}
-          newAvatar={this.state.newAvatar}
 
           errorText={this.state.errorText}
           errorLevel={this.state.errorLevel}
@@ -1595,7 +1586,6 @@ class TinodeWeb extends React.Component {
           onCredAdd={this.handleCredAdd}
           onCredDelete={this.handleCredDelete}
           onCredConfirm={this.handleCredConfirm}
-          onImageReceived={this.handleImageReceived}
           onTopicSelected={this.handleTopicSelected}
           onCreateTopic={this.handleStartTopicRequest}
           onLogout={this.handleLogout}
