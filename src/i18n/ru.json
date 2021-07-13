@@ -155,7 +155,7 @@
   "image_caption_prompt": "Подпись к фото",
   "label_incognito_mode": "Режим инкогнито:",
   "delete_account": "Удалить аккаунт",
-  "delete_account_arning": "Вы уверены, что ходите удалить свой аккаунт? Его невозможно будет восстановить.",
+  "delete_account_warning": "Вы уверены, что ходите удалить свой аккаунт? Его невозможно будет восстановить.",
   "button_delete_account": "Удалить аккаунт",
   "sidepanel_title_acc_security": "Безопасность",
   "sidepanel_title_acc_notifications": "Уведомления",

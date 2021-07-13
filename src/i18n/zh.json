@@ -155,7 +155,7 @@
   "menu_item_send_retry": "重试",
   "label_incognito_mode": "无痕模式：",
   "delete_account": "删除帐户",
-  "delete_account_arning": "您确定要删除您的帐户吗？无法撤消。",
+  "delete_account_warning": "您确定要删除您的帐户吗？无法撤消。",
   "button_delete_account": "删除帐户",
   "sidepanel_title_acc_security": "安全",
   "sidepanel_title_acc_notifications": "通知",

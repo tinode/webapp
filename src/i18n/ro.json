@@ -8,7 +8,7 @@
   "label_push_notifications_disabled": "Alerte de notificare (necesită HTTPS):",
   "label_incognito_mode": "Mod incognito:",
   "delete_account": "Șterge contul",
-  "delete_account_arning": "Ești sigur că dorești să ștergi contul? Acesta nu va putea fi recuperat.",
+  "delete_account_warning": "Ești sigur că dorești să ștergi contul? Acesta nu va putea fi recuperat.",
   "label_password": "Parola",
   "password_unchanged_prompt": "Neschimbată",
   "button_logout": "Deconectare",

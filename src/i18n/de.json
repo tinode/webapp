@@ -8,7 +8,7 @@
   "label_push_notifications_disabled": "Benachrichtigungsmeldungen (erfordert HTTPS):",
   "label_incognito_mode": "inkognito-Modus:",
   "delete_account": "Konto löschen",
-  "delete_account_arning": "Möchten Sie das Konto wirklich löschen? Das kann nicht rückgängig gemacht werden",
+  "delete_account_warning": "Möchten Sie das Konto wirklich löschen? Das kann nicht rückgängig gemacht werden",
   "label_password": "Passwort",
   "password_unchanged_prompt": "unverändert",
   "button_logout": "Abmelden",

@@ -8,7 +8,7 @@
   "label_push_notifications_disabled": "통지경보(HTTPS필요): ",
   "label_incognito_mode": "시크릿모드: ",
   "delete_account": "계정삭제",
-  "delete_account_arning": "계정을삭제하시겠습니까?실행취소할수없습니다.",
+  "delete_account_warning": "계정을삭제하시겠습니까?실행취소할수없습니다.",
   "label_password": "비밀번호",
   "password_unchanged_prompt": "변경되지않음",
   "button_logout": "로그아웃",

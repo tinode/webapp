@@ -12,7 +12,7 @@ const messages = defineMessages({
     description: 'Title for delete account warning'
   },
   delete_account_warning: {
-    id: 'delete_account_arning',
+    id: 'delete_account_warning',
     defaultMessage: 'Are you sure you want to delete your account? It cannot be undone.',
     description: 'Warning message when deleting an account'
   }

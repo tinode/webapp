@@ -8,7 +8,7 @@
   "label_push_notifications_disabled": "Alertas de notificaciones (requiere HTTPS):",
   "label_incognito_mode": "Modo incógnito:",
   "delete_account": "Eliminar cuenta",
-  "delete_account_arning": "¿Estás seguro de que deseas eliminar permanentemente tu cuenta? Esta acción es irreversible.",
+  "delete_account_warning": "¿Estás seguro de que deseas eliminar permanentemente tu cuenta? Esta acción es irreversible.",
   "label_password": "Contraseña",
   "password_unchanged_prompt": "Sin cambios",
   "button_logout": "Cerrar sesión",
