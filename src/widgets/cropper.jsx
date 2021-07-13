@@ -89,6 +89,16 @@ export default class Cropper extends React.Component {
       originX: this.originX - panX,
       originY: this.originY - panY,
     });
+
+    // Pass cut out coordinates to caller.
+    const left = (this.originX - panX) * zoom - this.originX;
+    const top = (this.originY - panY) * zoom - this.originY;
+    this.props.onChange(
+      (left + this.cutoutRect.left - this.bBoxRect.left) / zoom,
+      (top + this.cutoutRect.top - this.bBoxRect.top) / zoom,
+      this.cutoutRect.width / zoom,
+      this.cutoutRect.height / zoom,
+      zoom);
   }
 
   // Check if new location is within the limits.
@@ -233,13 +243,6 @@ export default class Cropper extends React.Component {
     document.body.style['userSelect'] = '';
 
     this.positionAll(this.state.panX, this.state.panY, this.state.zoom);
-    // Pass cut out coordinates to caller.
-    this.props.onChange(
-      -this.state.panX + this.cutoutRect.left - this.bBoxRect.left,
-      -this.state.panY + this.cutoutRect.top - this.bBoxRect.top,
-      this.cutoutRect.width / this.state.zoom,
-      this.cutoutRect.height / this.state.zoom,
-      this.state.zoom);
   }
 
   render() {

@@ -5,14 +5,6 @@ import { FormattedMessage } from 'react-intl';
 import Cropper from '../widgets/cropper.jsx';
 import { imageCrop } from '../lib/blob-helpers.js';
 
-/*
-crop: {
-  id: 'sidepanel_title_crop',
-  description: 'Sidepanel title for AvatarCropView.',
-  defaultMessage: 'Drag to Adjust'
-},
-*/
-
 export default class AvatarCropView extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -30,10 +22,10 @@ export default class AvatarCropView extends React.PureComponent {
   }
 
   // Cut out in image coordinates and desired scale factor.
-  handleChange(top, left, width, height, scale) {
+  handleChange(left, top, width, height, scale) {
     this.setState({
-      top: top,
       left: left,
+      top: top,
       width: width,
       height: height,
       scale: scale
@@ -41,9 +33,10 @@ export default class AvatarCropView extends React.PureComponent {
   }
 
   handleSubmit() {
-    console.log(this.state);
-    imageCrop(this.props.mime, this.props.avatar, this.state.top,
-      this.state.left, this.state.width, this.state.height, this.state.scale,
+    imageCrop(this.props.mime, this.props.avatar,
+      this.state.left, this.state.top,
+      this.state.width, this.state.height,
+      this.state.scale,
       (mime, blob, width, height) => {
         this.props.onSubmit(mime, blob, width, height);
       },

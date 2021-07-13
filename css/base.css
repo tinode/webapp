@@ -1041,8 +1041,8 @@ i.search {
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  width: 7rem;
-  height: 9rem;
+  width: 8rem;
+  height: 10rem;
   margin-left: 0.5rem;
   font-size: 4.5rem;
   padding: 0;
@@ -1067,14 +1067,14 @@ i.search {
 
 .avatar-upload .avatar-box {
   position: relative;
-  width: 7rem;
-  height: 7rem;
+  width: 8rem;
+  height: 8rem;
 }
 
 .avatar-upload .avatar-box > .material-icons {
   position: relative;
   font-size: 4rem;
-  line-height: 7rem;
+  line-height: 8rem;
   vertical-align: middle;
 }
 
@@ -1093,17 +1093,17 @@ i.search {
   border: 1px dashed #999;
   font-size: 1rem;
   flex-shrink: 0;
-  width: 7rem;
-  height: 7rem;
+  width: 8rem;
+  height: 8rem;
   overflow: hidden;
   color: #999;
-  line-height: 7rem;
+  line-height: 8rem;
   border-radius: 50%;
 }
 
 .avatar-upload .preview {
-  width: 7rem;
-  height: 7rem;
+  width: 8rem;
+  height: 8rem;
   overflow: hidden;
   border-radius: 50%;
 }
