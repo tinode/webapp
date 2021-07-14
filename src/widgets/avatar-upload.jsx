@@ -3,20 +3,17 @@ import React from 'react';
 import LetterTile from './letter-tile.jsx';
 import LoadSpinner from './load-spinner.jsx';
 
-import { AVATAR_SIZE, IMAGE_PREVIEW_DIM, MAX_AVATAR_BYTES, MAX_EXTERN_ATTACHMENT_SIZE,
-  MAX_INBAND_ATTACHMENT_SIZE } from '../config.js';
-import { imageScaled, blobToBase64, makeImageDataUrl } from '../lib/blob-helpers.js';
+import { AVATAR_SIZE } from '../config.js';
 
 export default class AvatarUpload extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      source: props.avatar,
-      uploading: false
+      source: props.avatar
     };
 
-    this.handleFileUpload = this.handleFileUpload.bind(this);
+    this.handleFileReceived = this.handleFileReceived.bind(this);
   }
 
   componentDidUpdate(prevProps) {
@@ -25,47 +22,9 @@ export default class AvatarUpload extends React.Component {
     }
   }
 
-  handleFileUpload(e) {
+  handleFileReceived(e) {
     const image = e.target.files[0];
-    if (this.props.onImageReceived) {
-      this.props.onImageReceived(image.type, URL.createObjectURL(image));
-      return;
-    }
-
-    if (image.size > MAX_AVATAR_BYTES) {
-      // Too large to send inband - uploading out of band and sending as a link.
-      const uploader = this.props.tinode.getLargeFileHelper();
-      if (!uploader) {
-        this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
-        return;
-      }
-
-      uploader.upload(image)
-        .then((url) => {
-          this.props.onImageChanged(url);
-        })
-        .catch((err) => {
-          this.props.onError(err, 'err');
-        })
-        .finally(() => {
-          this.setState({uploading: false});
-        });
-    } else {
-      imageScaled(image, AVATAR_SIZE, AVATAR_SIZE, MAX_EXTERN_ATTACHMENT_SIZE, true,
-        // Image successfully scaled and converted.
-        (mime, blob) => {
-          // Convert blob to base64-encoded bits.
-          blobToBase64(blob, (unused, base64bits) => {
-            const du = makeImageDataUrl({data: base64bits, type: mime});
-            this.setState({source: du});
-            this.props.onImageChanged(du);
-          });
-        },
-        // Failure
-        (err) => {
-          this.props.onError(err, 'err');
-        });
-    }
+    this.props.onImageUpdated(image.type, URL.createObjectURL(image), image.name);
     // Clear the value so the same file can be uploaded again.
     e.target.value = '';
   }
@@ -79,7 +38,7 @@ export default class AvatarUpload extends React.Component {
       <div className={className}>
         {this.props.readOnly || !this.state.source ?
           null :
-          <a href="#" className="clear-avatar" onClick={(e) => {e.preventDefault(); this.props.onImageChanged(null);}}>
+          <a href="#" className="clear-avatar" onClick={(e) => {e.preventDefault(); this.props.onImageUpdated();}}>
             <i className="material-icons">clear</i>
           </a>}
         {this.state.source ?
@@ -95,12 +54,12 @@ export default class AvatarUpload extends React.Component {
             <div className="blank">{AVATAR_SIZE}&times;{AVATAR_SIZE}</div>}
         {this.props.readOnly ? null :
           <input type="file" id={randId} className="inputfile hidden"
-            accept="image/*" onChange={this.handleFileUpload} />}
+            accept="image/*" onChange={this.handleFileReceived} />}
         {this.props.readOnly ? null :
         <label htmlFor={randId} className="round">
           <i className="material-icons">file_upload</i>
         </label>}
-        <LoadSpinner show={this.state.uploading} large={true} clear={true} centered={true} />
+        <LoadSpinner show={this.props.uploading} large={true} clear={true} centered={true} />
       </div>
     );
   }

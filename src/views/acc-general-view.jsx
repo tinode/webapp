@@ -10,8 +10,9 @@ import AvatarUpload from '../widgets/avatar-upload.jsx';
 import InPlaceEdit from '../widgets/in-place-edit.jsx';
 import TagManager from '../widgets/tag-manager.jsx';
 
-import { MAX_TITLE_LENGTH } from '../config.js';
-import { makeImageDataUrl } from '../lib/blob-helpers.js';
+import { AVATAR_SIZE, MAX_AVATAR_BYTES, MAX_EXTERN_ATTACHMENT_SIZE,
+  MAX_INBAND_ATTACHMENT_SIZE, MAX_TITLE_LENGTH } from '../config.js';
+import { imageScaled, blobToBase64, makeImageDataUrl } from '../lib/blob-helpers.js';
 import { arrayEqual, asEmail, asPhone, theCard } from '../lib/utils.js';
 
 export default class AccGeneralView extends React.Component {
@@ -35,9 +36,10 @@ export default class AccGeneralView extends React.Component {
     this.tnNewTags = this.tnNewTags.bind(this);
     this.tnCredsUpdated = this.tnCredsUpdated.bind(this);
     this.handleFullNameUpdate = this.handleFullNameUpdate.bind(this);
-    this.handleImageUploaded = this.handleImageUploaded.bind(this);
+    this.handleImageUpdated = this.handleImageUpdated.bind(this);
     this.handleAvatarCropped = this.handleAvatarCropped.bind(this);
-    this.handleCancel = this.handleCancel.bind(this);
+    this.uploadAvatar = this.uploadAvatar.bind(this);
+    this.handleAvatarCropCancel = this.handleAvatarCropCancel.bind(this);
     this.handleCredChange = this.handleCredChange.bind(this);
     this.handleCredKeyDown = this.handleCredKeyDown.bind(this);
     this.handleCredEntered = this.handleCredEntered.bind(this);
@@ -72,17 +74,71 @@ export default class AccGeneralView extends React.Component {
     }
   }
 
-  handleImageUploaded(mime, img) {
+  // AvatarUpload widget has changed the avatar: received a new file or deleted the avatar.
+  handleImageUpdated(mime, img) {
+    // This will show the AvatarCropView is img is not null.
     this.setState({newAvatar: img, newAvatarMime: mime});
+    if (!img) {
+      // Deleting the avatar.
+      this.props.onUpdateAccount(undefined, theCard(null, Tinode.DEL_CHAR));
+    }
   }
 
+  // AvatarCropView calls this method when the user has cropped the image.
   handleAvatarCropped(mime, blob, width, height) {
     const url = blob ? URL.createObjectURL(blob) : null;
     this.setState({avatar: url, newAvatar: null, newAvatarMime: null});
-    // this.props.onUpdateAccount(undefined, theCard(null, img || Tinode.DEL_CHAR));
+    if (blob) {
+      this.uploadAvatar(mime, blob, width, height);
+    }
   }
 
-  handleCancel(img) {
+  // Utility method for converting cropped avatar blob to bytes for sending inband or
+  // for uploading it to the server out of band.
+  uploadAvatar(mime, blob, width, height) {
+    const readyToUpload = (mime, blob, width, height) => {
+      if (blob.size > MAX_AVATAR_BYTES) {
+        // Too large to send inband - uploading out of band and sending as a link.
+        const uploader = this.props.tinode.getLargeFileHelper();
+        if (!uploader) {
+          this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
+          return;
+        }
+
+        this.setState({uploading: true});
+        uploader.upload(blob)
+          .then((url) => {
+            this.props.onUpdateAccount(undefined, theCard(null, url));
+          })
+          .catch((err) => {
+            this.props.onError(err, 'err');
+          })
+          .finally(() => {
+            this.setState({uploading: false});
+          });
+      } else {
+        // Convert blob to base64-encoded bits.
+        blobToBase64(blob, (unused, base64bits) => {
+          const du = makeImageDataUrl({data: base64bits, type: mime});
+          this.setState({source: du});
+          this.props.onUpdateAccount(undefined, theCard(null, du));
+        });
+      }
+    };
+
+    if (width > AVATAR_SIZE || height > AVATAR_SIZE) {
+      // Avatar is too large even after scaling. Shring it and make square.
+      imageScaled(blob, AVATAR_SIZE, AVATAR_SIZE, MAX_EXTERN_ATTACHMENT_SIZE, true,
+        readyToUpload,
+        (err) => {
+          this.props.onError(err, 'err');
+        });
+    } else {
+      readyToUpload(mime, blob, width, height);
+    }
+  }
+
+  handleAvatarCropCancel(img) {
     this.setState({newAvatar: null, newAvatarMime: null});
   }
 
@@ -140,7 +196,7 @@ export default class AccGeneralView extends React.Component {
           avatar={this.state.newAvatar}
           mime={this.state.newAvatarMime}
           onSubmit={this.handleAvatarCropped}
-          onCancel={this.handleCancel}
+          onCancel={this.handleAvatarCropCancel}
           onError={this.props.onError} />
       );
     }
@@ -176,8 +232,7 @@ export default class AccGeneralView extends React.Component {
             avatar={this.state.avatar}
             uid={this.props.myUserId}
             title={this.state.fullName}
-            onImageReceived={this.handleImageUploaded}
-            onImageChanged={this.handleImageChanged}
+            onImageUpdated={this.handleImageUpdated}
             onError={this.props.onError} />
         </div>
         <div className="hr" />

@@ -605,7 +605,7 @@ class InfoView extends React.Component {
                 readOnly={!this.state.owner}
                 uid={this.props.topic}
                 title={this.state.fullName}
-                onImageChanged={this.handleImageChanged}
+                onImageUpdated={this.handleImageChanged}
                 onError={this.props.onError} />
             </div>
             <div className="hr" />
