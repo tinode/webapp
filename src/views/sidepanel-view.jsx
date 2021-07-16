@@ -8,7 +8,7 @@ import SideNavbar from '../widgets/side-navbar.jsx';
 import ContactsView from './contacts-view.jsx';
 import CreateAccountView from './create-account-view.jsx';
 import EditAccountView from './edit-account-view.jsx';
-import AccGeneralView from './acc-general-view.jsx';
+import TopicCommonView from './topic-common-view.jsx';
 import AccNotificationsView from './acc-notifications-view.jsx';
 import AccSecurityView from './acc-security-view.jsx';
 import AccSupportView from './acc-support-view.jsx';
@@ -42,7 +42,7 @@ const messages = defineMessages({
   },
   general: {
     id: 'sidepanel_title_acc_general',
-    description: 'Sidepanel title for AccGeneralView.',
+    description: 'Sidepanel title for TopicCommonView.',
     defaultMessage: 'General'
   },
   security: {
@@ -176,7 +176,8 @@ class SidepanelView extends React.Component {
             onBasicNavigate={this.props.onBasicNavigate} /> :
 
           (view === 'general' || view === 'crop') ?
-          <AccGeneralView
+          <TopicCommonView
+            topic="me"
             tinode={this.props.tinode}
             myUserId={this.props.myUserId}
             onBasicNavigate={this.props.onBasicNavigate}

@@ -987,6 +987,9 @@ class TinodeWeb extends React.Component {
       const params = {};
       if (pub) {
         params.public = pub;
+        if (pub.photo && pub.photo.ref) {
+          params.attachments = [pub.photo.ref];
+        }
       }
       if (defacs) {
         params.defacs = defacs;

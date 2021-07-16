@@ -760,372 +760,6 @@ const PACKAGE_VERSION = "0.18.0-alpha1";
 
 /***/ }),
 
-/***/ "./src/views/acc-general-view.jsx":
-/*!****************************************!*\
-  !*** ./src/views/acc-general-view.jsx ***!
-  \****************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ AccGeneralView)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _avatar_crop_view_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./avatar-crop-view.jsx */ "./src/views/avatar-crop-view.jsx");
-/* harmony import */ var _widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/avatar-upload.jsx */ "./src/widgets/avatar-upload.jsx");
-/* harmony import */ var _widgets_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/in-place-edit.jsx */ "./src/widgets/in-place-edit.jsx");
-/* harmony import */ var _widgets_tag_manager_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/tag-manager.jsx */ "./src/widgets/tag-manager.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-
-
-
-
-
-
-
-
-
-
-class AccGeneralView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
-  constructor(props) {
-    super(props);
-    const me = this.props.tinode.getMeTopic();
-    this.state = {
-      fullName: me.public ? me.public.fn : undefined,
-      avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__.makeImageUrl)(me.public ? me.public.photo : null),
-      tags: me.tags(),
-      credentials: me.getCredentials() || [],
-      addCredActive: false,
-      addCredInvalid: false,
-      newCred: '',
-      newAvatar: null,
-      newAvatarMime: null,
-      previousOnTags: me.onTagsUpdated
-    };
-    this.tnNewTags = this.tnNewTags.bind(this);
-    this.tnCredsUpdated = this.tnCredsUpdated.bind(this);
-    this.handleFullNameUpdate = this.handleFullNameUpdate.bind(this);
-    this.handleImageUpdated = this.handleImageUpdated.bind(this);
-    this.handleAvatarCropped = this.handleAvatarCropped.bind(this);
-    this.uploadAvatar = this.uploadAvatar.bind(this);
-    this.handleAvatarCropCancel = this.handleAvatarCropCancel.bind(this);
-    this.handleCredChange = this.handleCredChange.bind(this);
-    this.handleCredKeyDown = this.handleCredKeyDown.bind(this);
-    this.handleCredEntered = this.handleCredEntered.bind(this);
-    this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
-  }
-
-  componentDidMount() {
-    const me = this.props.tinode.getMeTopic();
-    me.onCredsUpdated = this.tnCredsUpdated;
-    me.onTagsUpdated = this.tnNewTags;
-  }
-
-  componentWillUnmount() {
-    const me = this.props.tinode.getMeTopic();
-    me.onTagsUpdated = this.state.previousOnTags;
-    me.onCredsUpdated = undefined;
-  }
-
-  tnNewTags(tags) {
-    this.setState({
-      tags: tags
-    });
-  }
-
-  tnCredsUpdated(creds) {
-    this.setState({
-      credentials: creds || []
-    });
-  }
-
-  handleFullNameUpdate(fn) {
-    fn = fn.trim().substring(0, _config_js__WEBPACK_IMPORTED_MODULE_7__.MAX_TITLE_LENGTH);
-
-    if (fn) {
-      this.setState({
-        fullName: fn
-      });
-      this.props.onUpdateAccount(undefined, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(fn, null));
-    }
-  }
-
-  handleImageUpdated(mime, img) {
-    this.setState({
-      newAvatar: img,
-      newAvatarMime: mime
-    });
-
-    if (!img) {
-      this.props.onUpdateAccount(undefined, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(null, (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().DEL_CHAR)));
-    }
-  }
-
-  handleAvatarCropped(mime, blob, width, height) {
-    const url = blob ? URL.createObjectURL(blob) : null;
-    this.setState({
-      avatar: url,
-      newAvatar: null,
-      newAvatarMime: null
-    });
-
-    if (blob) {
-      this.uploadAvatar(mime, blob, width, height);
-    }
-  }
-
-  uploadAvatar(mime, blob, width, height) {
-    const readyToUpload = (mime, blob, width, height) => {
-      if (blob.size > _config_js__WEBPACK_IMPORTED_MODULE_7__.MAX_AVATAR_BYTES) {
-        const uploader = this.props.tinode.getLargeFileHelper();
-        this.setState({
-          uploading: true
-        });
-        uploader.upload(blob).then(url => {
-          this.props.onUpdateAccount(undefined, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(null, url));
-        }).catch(err => {
-          this.props.onError(err, 'err');
-        }).finally(() => {
-          this.setState({
-            uploading: false
-          });
-        });
-      } else {
-        this.setState({
-          uploading: true
-        });
-        (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__.blobToBase64)(blob, (unused, base64bits) => {
-          const du = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__.makeImageUrl)({
-            data: base64bits,
-            type: mime
-          });
-          this.setState({
-            source: du
-          });
-          this.props.onUpdateAccount(undefined, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(null, du));
-          this.setState({
-            uploading: false
-          });
-        });
-      }
-    };
-
-    if (width > _config_js__WEBPACK_IMPORTED_MODULE_7__.AVATAR_SIZE || height > _config_js__WEBPACK_IMPORTED_MODULE_7__.AVATAR_SIZE || width != height) {
-      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_7__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_7__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_7__.MAX_EXTERN_ATTACHMENT_SIZE, true, readyToUpload, err => {
-        this.props.onError(err, 'err');
-      });
-    } else {
-      readyToUpload(mime, blob, width, height);
-    }
-  }
-
-  handleAvatarCropCancel(img) {
-    this.setState({
-      newAvatar: null,
-      newAvatarMime: null
-    });
-  }
-
-  handleCredChange(e) {
-    this.setState({
-      newCred: e.target.value,
-      addCredInvalid: false
-    });
-  }
-
-  handleCredKeyDown(e) {
-    if (e.keyCode === 27) {
-      this.setState({
-        newCred: '',
-        addCredActive: false
-      });
-    } else if (e.keyCode === 13) {
-      this.handleCredEntered(e);
-    }
-  }
-
-  handleCredEntered(e) {
-    let value = this.state.newCred.trim();
-
-    if (!value) {
-      this.setState({
-        addCredActive: false,
-        addCredInvalid: false
-      });
-      return;
-    }
-
-    let val = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.asPhone)(value);
-    let method;
-
-    if (val) {
-      method = 'tel';
-    } else {
-      val = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.asEmail)(value);
-
-      if (val) {
-        method = 'email';
-      }
-    }
-
-    if (method) {
-      this.props.onCredAdd(method, val);
-      this.setState({
-        addCredActive: false,
-        newCred: ''
-      });
-    } else {
-      this.setState({
-        addCredInvalid: true
-      });
-    }
-  }
-
-  handleTagsUpdated(tags) {
-    if ((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.arrayEqual)(this.state.tags.slice(0), tags.slice(0))) {
-      return;
-    }
-
-    this.props.onUpdateTags(tags);
-  }
-
-  render() {
-    if (this.state.newAvatar) {
-      return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_avatar_crop_view_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
-        avatar: this.state.newAvatar,
-        mime: this.state.newAvatarMime,
-        onSubmit: this.handleAvatarCropped,
-        onCancel: this.handleAvatarCropCancel,
-        onError: this.props.onError
-      });
-    }
-
-    const credentials = [];
-    this.state.credentials.map(cred => {
-      credentials.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        key: cred.meth + ":" + cred.val + ":" + cred.done
-      }, cred.meth, ": ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", null, cred.val), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, " ", !cred.done ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-        href: "#",
-        onClick: e => {
-          e.preventDefault();
-          this.props.onCredConfirm(cred.meth, cred.val);
-        }
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-        id: "validate_credential_action",
-        defaultMessage: [{
-          "type": 0,
-          "value": "confirm"
-        }]
-      })) : null, " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-        href: "#",
-        onClick: e => {
-          e.preventDefault();
-          this.props.onCredDelete(cred.meth, cred.val);
-        }
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        className: "material-icons gray"
-      }, "delete_outline")))));
-    });
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "scrollable-panel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_your_name",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Your name"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "full_name_prompt",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Full name, e.g. John Doe"
-      }]
-    }, full_name_placeholder => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__.default, {
-      placeholder: full_name_placeholder,
-      value: this.state.fullName,
-      onFinished: this.handleFullNameUpdate
-    })))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_4__.default, {
-      tinode: this.props.tinode,
-      avatar: this.state.avatar,
-      uid: this.props.myUserId,
-      title: this.state.fullName,
-      onImageUpdated: this.handleImageUpdated,
-      onError: this.props.onError
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "hr"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "title_tag_manager",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Tags (user discovery)"
-      }]
-    }, title_tag_manager => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_tag_manager_jsx__WEBPACK_IMPORTED_MODULE_6__.default, {
-      title: title_tag_manager,
-      activated: false,
-      tags: this.state.tags,
-      tinode: this.props.tinode,
-      onSubmit: this.handleTagsUpdated
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "hr"
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "label_user_contacts",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Contacts:"
-      }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "quoted"
-    }, credentials, this.state.addCredActive ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
-      type: "text",
-      value: this.state.value,
-      className: this.state.addCredInvalid ? 'invalid' : null,
-      placeholder: "Phone number or email",
-      required: "required",
-      autoFocus: true,
-      onChange: this.handleCredChange,
-      onKeyDown: this.handleCredKeyDown,
-      onBlur: this.handleCredEntered
-    }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: e => {
-        e.preventDefault();
-        this.setState({
-          addCredActive: true
-        });
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, "add"), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "button_add_another",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Add another"
-      }]
-    }))))));
-  }
-
-}
-;
-
-/***/ }),
-
 /***/ "./src/views/acc-notifications-view.jsx":
 /*!**********************************************!*\
   !*** ./src/views/acc-notifications-view.jsx ***!
@@ -4774,7 +4408,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _contacts_view_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./contacts-view.jsx */ "./src/views/contacts-view.jsx");
 /* harmony import */ var _create_account_view_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./create-account-view.jsx */ "./src/views/create-account-view.jsx");
 /* harmony import */ var _edit_account_view_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./edit-account-view.jsx */ "./src/views/edit-account-view.jsx");
-/* harmony import */ var _acc_general_view_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./acc-general-view.jsx */ "./src/views/acc-general-view.jsx");
+/* harmony import */ var _topic_common_view_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./topic-common-view.jsx */ "./src/views/topic-common-view.jsx");
 /* harmony import */ var _acc_notifications_view_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./acc-notifications-view.jsx */ "./src/views/acc-notifications-view.jsx");
 /* harmony import */ var _acc_security_view_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./acc-security-view.jsx */ "./src/views/acc-security-view.jsx");
 /* harmony import */ var _acc_support_view_jsx__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./acc-support-view.jsx */ "./src/views/acc-support-view.jsx");
@@ -4977,7 +4611,8 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       myUserId: this.props.myUserId,
       trustedBadges: this.props.trustedBadges,
       onBasicNavigate: this.props.onBasicNavigate
-    }) : view === 'general' || view === 'crop' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_acc_general_view_jsx__WEBPACK_IMPORTED_MODULE_8__.default, {
+    }) : view === 'general' || view === 'crop' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_topic_common_view_jsx__WEBPACK_IMPORTED_MODULE_8__.default, {
+      topic: "me",
       tinode: this.props.tinode,
       myUserId: this.props.myUserId,
       onBasicNavigate: this.props.onBasicNavigate,
@@ -6063,6 +5698,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
       if (pub) {
         params.public = pub;
+
+        if (pub.photo && pub.photo.ref) {
+          params.attachments = [pub.photo.ref];
+        }
       }
 
       if (defacs) {
@@ -6812,6 +6451,372 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
 ;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_2__.injectIntl)(TinodeWeb));
+
+/***/ }),
+
+/***/ "./src/views/topic-common-view.jsx":
+/*!*****************************************!*\
+  !*** ./src/views/topic-common-view.jsx ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ TopicCommonView)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _avatar_crop_view_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./avatar-crop-view.jsx */ "./src/views/avatar-crop-view.jsx");
+/* harmony import */ var _widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/avatar-upload.jsx */ "./src/widgets/avatar-upload.jsx");
+/* harmony import */ var _widgets_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/in-place-edit.jsx */ "./src/widgets/in-place-edit.jsx");
+/* harmony import */ var _widgets_tag_manager_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/tag-manager.jsx */ "./src/widgets/tag-manager.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+
+
+
+
+
+
+
+
+
+
+class TopicCommonView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
+  constructor(props) {
+    super(props);
+    const topic = this.props.tinode.getTopic(this.props.topic);
+    this.state = {
+      fullName: topic.public ? topic.public.fn : undefined,
+      avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__.makeImageUrl)(topic.public ? topic.public.photo : null),
+      tags: topic.tags(),
+      credentials: topic.getCredentials() || [],
+      addCredActive: false,
+      addCredInvalid: false,
+      newCred: '',
+      newAvatar: null,
+      newAvatarMime: null,
+      previousOnTags: topic.onTagsUpdated
+    };
+    this.tnNewTags = this.tnNewTags.bind(this);
+    this.tnCredsUpdated = this.tnCredsUpdated.bind(this);
+    this.handleFullNameUpdate = this.handleFullNameUpdate.bind(this);
+    this.handleImageUpdated = this.handleImageUpdated.bind(this);
+    this.handleAvatarCropped = this.handleAvatarCropped.bind(this);
+    this.uploadAvatar = this.uploadAvatar.bind(this);
+    this.handleAvatarCropCancel = this.handleAvatarCropCancel.bind(this);
+    this.handleCredChange = this.handleCredChange.bind(this);
+    this.handleCredKeyDown = this.handleCredKeyDown.bind(this);
+    this.handleCredEntered = this.handleCredEntered.bind(this);
+    this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
+  }
+
+  componentDidMount() {
+    const topic = this.props.tinode.getTopic(this.props.topic);
+    topic.onCredsUpdated = this.tnCredsUpdated;
+    topic.onTagsUpdated = this.tnNewTags;
+  }
+
+  componentWillUnmount() {
+    const topic = this.props.tinode.getTopic(this.props.topic);
+    topic.onTagsUpdated = this.state.previousOnTags;
+    topic.onCredsUpdated = undefined;
+  }
+
+  tnNewTags(tags) {
+    this.setState({
+      tags: tags
+    });
+  }
+
+  tnCredsUpdated(creds) {
+    this.setState({
+      credentials: creds || []
+    });
+  }
+
+  handleFullNameUpdate(fn) {
+    fn = fn.trim().substring(0, _config_js__WEBPACK_IMPORTED_MODULE_7__.MAX_TITLE_LENGTH);
+
+    if (fn) {
+      this.setState({
+        fullName: fn
+      });
+      this.props.onUpdateAccount(undefined, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(fn, null));
+    }
+  }
+
+  handleImageUpdated(mime, img) {
+    this.setState({
+      newAvatar: img,
+      newAvatarMime: mime
+    });
+
+    if (!img) {
+      this.props.onUpdateAccount(undefined, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(null, (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().DEL_CHAR)));
+    }
+  }
+
+  handleAvatarCropped(mime, blob, width, height) {
+    const url = blob ? URL.createObjectURL(blob) : null;
+    this.setState({
+      avatar: url,
+      newAvatar: null,
+      newAvatarMime: null
+    });
+
+    if (blob) {
+      this.uploadAvatar(mime, blob, width, height);
+    }
+  }
+
+  uploadAvatar(mime, blob, width, height) {
+    const readyToUpload = (mime, blob, width, height) => {
+      if (blob.size > _config_js__WEBPACK_IMPORTED_MODULE_7__.MAX_AVATAR_BYTES) {
+        const uploader = this.props.tinode.getLargeFileHelper();
+        this.setState({
+          uploading: true
+        });
+        uploader.upload(blob).then(url => {
+          this.props.onUpdateAccount(undefined, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(null, url));
+        }).catch(err => {
+          this.props.onError(err, 'err');
+        }).finally(() => {
+          this.setState({
+            uploading: false
+          });
+        });
+      } else {
+        this.setState({
+          uploading: true
+        });
+        (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__.blobToBase64)(blob, (unused, base64bits) => {
+          const du = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__.makeImageUrl)({
+            data: base64bits,
+            type: mime
+          });
+          this.setState({
+            source: du
+          });
+          this.props.onUpdateAccount(undefined, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(null, du));
+          this.setState({
+            uploading: false
+          });
+        });
+      }
+    };
+
+    if (width > _config_js__WEBPACK_IMPORTED_MODULE_7__.AVATAR_SIZE || height > _config_js__WEBPACK_IMPORTED_MODULE_7__.AVATAR_SIZE || width != height) {
+      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_7__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_7__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_7__.MAX_EXTERN_ATTACHMENT_SIZE, true, readyToUpload, err => {
+        this.props.onError(err, 'err');
+      });
+    } else {
+      readyToUpload(mime, blob, width, height);
+    }
+  }
+
+  handleAvatarCropCancel(img) {
+    this.setState({
+      newAvatar: null,
+      newAvatarMime: null
+    });
+  }
+
+  handleCredChange(e) {
+    this.setState({
+      newCred: e.target.value,
+      addCredInvalid: false
+    });
+  }
+
+  handleCredKeyDown(e) {
+    if (e.keyCode === 27) {
+      this.setState({
+        newCred: '',
+        addCredActive: false
+      });
+    } else if (e.keyCode === 13) {
+      this.handleCredEntered(e);
+    }
+  }
+
+  handleCredEntered(e) {
+    let value = this.state.newCred.trim();
+
+    if (!value) {
+      this.setState({
+        addCredActive: false,
+        addCredInvalid: false
+      });
+      return;
+    }
+
+    let val = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.asPhone)(value);
+    let method;
+
+    if (val) {
+      method = 'tel';
+    } else {
+      val = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.asEmail)(value);
+
+      if (val) {
+        method = 'email';
+      }
+    }
+
+    if (method) {
+      this.props.onCredAdd(method, val);
+      this.setState({
+        addCredActive: false,
+        newCred: ''
+      });
+    } else {
+      this.setState({
+        addCredInvalid: true
+      });
+    }
+  }
+
+  handleTagsUpdated(tags) {
+    if ((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.arrayEqual)(this.state.tags.slice(0), tags.slice(0))) {
+      return;
+    }
+
+    this.props.onUpdateTags(tags);
+  }
+
+  render() {
+    if (this.state.newAvatar) {
+      return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_avatar_crop_view_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+        avatar: this.state.newAvatar,
+        mime: this.state.newAvatarMime,
+        onSubmit: this.handleAvatarCropped,
+        onCancel: this.handleAvatarCropCancel,
+        onError: this.props.onError
+      });
+    }
+
+    const credentials = [];
+    this.state.credentials.map(cred => {
+      credentials.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        key: cred.meth + ":" + cred.val + ":" + cred.done
+      }, cred.meth, ": ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", null, cred.val), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, " ", !cred.done ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+        href: "#",
+        onClick: e => {
+          e.preventDefault();
+          this.props.onCredConfirm(cred.meth, cred.val);
+        }
+      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+        id: "validate_credential_action",
+        defaultMessage: [{
+          "type": 0,
+          "value": "confirm"
+        }]
+      })) : null, " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+        href: "#",
+        onClick: e => {
+          e.preventDefault();
+          this.props.onCredDelete(cred.meth, cred.val);
+        }
+      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+        className: "material-icons gray"
+      }, "delete_outline")))));
+    });
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "scrollable-panel"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "panel-form-row"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "panel-form-column"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+      className: "small"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "label_your_name",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Your name"
+      }]
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "full_name_prompt",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Full name, e.g. John Doe"
+      }]
+    }, full_name_placeholder => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__.default, {
+      placeholder: full_name_placeholder,
+      value: this.state.fullName,
+      onFinished: this.handleFullNameUpdate
+    })))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_4__.default, {
+      tinode: this.props.tinode,
+      avatar: this.state.avatar,
+      uid: this.props.myUserId,
+      title: this.state.fullName,
+      onImageUpdated: this.handleImageUpdated,
+      onError: this.props.onError
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "hr"
+    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "title_tag_manager",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Tags (user discovery)"
+      }]
+    }, title_tag_manager => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_tag_manager_jsx__WEBPACK_IMPORTED_MODULE_6__.default, {
+      title: title_tag_manager,
+      activated: false,
+      tags: this.state.tags,
+      tinode: this.props.tinode,
+      onSubmit: this.handleTagsUpdated
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "hr"
+    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "panel-form-column"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+      className: "small"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "label_user_contacts",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Contacts:"
+      }]
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "quoted"
+    }, credentials, this.state.addCredActive ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+      type: "text",
+      value: this.state.value,
+      className: this.state.addCredInvalid ? 'invalid' : null,
+      placeholder: "Phone number or email",
+      required: "required",
+      autoFocus: true,
+      onChange: this.handleCredChange,
+      onKeyDown: this.handleCredKeyDown,
+      onBlur: this.handleCredEntered
+    }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+      href: "#",
+      onClick: e => {
+        e.preventDefault();
+        this.setState({
+          addCredActive: true
+        });
+      }
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, "add"), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "button_add_another",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Add another"
+      }]
+    }))))));
+  }
+
+}
+;
 
 /***/ }),
 

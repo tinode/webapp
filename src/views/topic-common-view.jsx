@@ -1,4 +1,5 @@
-// Edit account parameters.
+// View for editing topic (including 'me' topic) parameters.
+
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
@@ -15,22 +16,22 @@ import { AVATAR_SIZE, MAX_AVATAR_BYTES, MAX_EXTERN_ATTACHMENT_SIZE,
 import { imageScaled, blobToBase64, makeImageUrl } from '../lib/blob-helpers.js';
 import { arrayEqual, asEmail, asPhone, theCard } from '../lib/utils.js';
 
-export default class AccGeneralView extends React.Component {
+export default class TopicCommonView extends React.Component {
   constructor(props) {
     super(props);
 
-    const me = this.props.tinode.getMeTopic();
+    const topic = this.props.tinode.getTopic(this.props.topic);
     this.state = {
-      fullName: me.public ? me.public.fn : undefined,
-      avatar: makeImageUrl(me.public ? me.public.photo : null),
-      tags: me.tags(),
-      credentials: me.getCredentials() || [],
+      fullName: topic.public ? topic.public.fn : undefined,
+      avatar: makeImageUrl(topic.public ? topic.public.photo : null),
+      tags: topic.tags(),
+      credentials: topic.getCredentials() || [],
       addCredActive: false,
       addCredInvalid: false,
       newCred: '',
       newAvatar: null,
       newAvatarMime: null,
-      previousOnTags: me.onTagsUpdated
+      previousOnTags: topic.onTagsUpdated
     };
 
     this.tnNewTags = this.tnNewTags.bind(this);
@@ -47,15 +48,15 @@ export default class AccGeneralView extends React.Component {
   }
 
   componentDidMount() {
-    const me = this.props.tinode.getMeTopic();
-    me.onCredsUpdated = this.tnCredsUpdated;
-    me.onTagsUpdated = this.tnNewTags;
+    const topic = this.props.tinode.getTopic(this.props.topic);
+    topic.onCredsUpdated = this.tnCredsUpdated;
+    topic.onTagsUpdated = this.tnNewTags;
   }
 
   componentWillUnmount() {
-    const me = this.props.tinode.getMeTopic();
-    me.onTagsUpdated = this.state.previousOnTags;
-    me.onCredsUpdated = undefined;
+    const topic = this.props.tinode.getTopic(this.props.topic);
+    topic.onTagsUpdated = this.state.previousOnTags;
+    topic.onCredsUpdated = undefined;
   }
 
   tnNewTags(tags) {

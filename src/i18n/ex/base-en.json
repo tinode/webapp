@@ -587,7 +587,7 @@
   },
   "sidepanel_title_acc_general": {
     "defaultMessage": "General",
-    "description": "Sidepanel title for AccGeneralView."
+    "description": "Sidepanel title for TopicCommonView."
   },
   "sidepanel_title_acc_notifications": {
     "defaultMessage": "Notifications",
