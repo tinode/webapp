@@ -1350,7 +1350,7 @@ class TinodeWeb extends React.Component {
       contextMenuClickAt: {x: params.x, y: params.y},
       contextMenuParams: params,
       contextMenuItems: menuItems || this.defaultTopicContextMenu(params.topicName),
-      contextMenuBounds: this.selfRef.getBoundingClientRect()
+      contextMenuBounds: this.selfRef.current.getBoundingClientRect()
     });
   }
 

@@ -319,7 +319,7 @@ class ContextMenu extends React.Component {
   }
 
   handlePageClick(e) {
-    if (this.selfRef.contains(e.target)) {
+    if (this.selfRef.current.contains(e.target)) {
       return;
     }
     e.preventDefault();

@@ -4690,30 +4690,27 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "react-dom");
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-intl */ "react-intl");
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var firebase_app__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! firebase/app */ "firebase/app");
-/* harmony import */ var firebase_app__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(firebase_app__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var firebase_messaging__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! firebase/messaging */ "firebase/messaging");
-/* harmony import */ var firebase_messaging__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(firebase_messaging__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _widgets_alert_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/alert.jsx */ "./src/widgets/alert.jsx");
-/* harmony import */ var _widgets_context_menu_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../widgets/context-menu.jsx */ "./src/widgets/context-menu.jsx");
-/* harmony import */ var _info_view_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./info-view.jsx */ "./src/views/info-view.jsx");
-/* harmony import */ var _messages_view_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./messages-view.jsx */ "./src/views/messages-view.jsx");
-/* harmony import */ var _sidepanel_view_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./sidepanel-view.jsx */ "./src/views/sidepanel-view.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _version_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../version.js */ "./src/version.js");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_host_name_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../lib/host-name.js */ "./src/lib/host-name.js");
-/* harmony import */ var _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../lib/local-storage.js */ "./src/lib/local-storage.js");
-/* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
-/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var firebase_app__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! firebase/app */ "firebase/app");
+/* harmony import */ var firebase_app__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(firebase_app__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var firebase_messaging__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! firebase/messaging */ "firebase/messaging");
+/* harmony import */ var firebase_messaging__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(firebase_messaging__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _widgets_alert_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/alert.jsx */ "./src/widgets/alert.jsx");
+/* harmony import */ var _widgets_context_menu_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/context-menu.jsx */ "./src/widgets/context-menu.jsx");
+/* harmony import */ var _info_view_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./info-view.jsx */ "./src/views/info-view.jsx");
+/* harmony import */ var _messages_view_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./messages-view.jsx */ "./src/views/messages-view.jsx");
+/* harmony import */ var _sidepanel_view_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./sidepanel-view.jsx */ "./src/views/sidepanel-view.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _version_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../version.js */ "./src/version.js");
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _lib_host_name_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../lib/host-name.js */ "./src/lib/host-name.js");
+/* harmony import */ var _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../lib/local-storage.js */ "./src/lib/local-storage.js");
+/* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
+/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 
 
 
@@ -4733,7 +4730,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const POP_SOUND = new Audio('audio/msg.mp3');
-const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_2__.defineMessages)({
+const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   reconnect_countdown: {
     id: "reconnect_countdown",
     defaultMessage: [{
@@ -4794,6 +4791,7 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_2__.defineMessages)({
 class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
+    this.selfRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
     this.state = this.getBlankState();
     this.handleResize = this.handleResize.bind(this);
     this.handleHashRoute = this.handleHashRoute.bind(this);
@@ -4864,20 +4862,20 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   getBlankState() {
-    const settings = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.getObject('settings') || {};
-    const persist = !!_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.getObject('keep-logged-in');
+    const settings = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__.default.getObject('settings') || {};
+    const persist = !!_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__.default.getObject('keep-logged-in');
     return {
       connected: false,
       ready: false,
       autoLogin: false,
       transport: settings.transport || null,
-      serverAddress: settings.serverAddress || (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_14__.detectServerAddress)(),
+      serverAddress: settings.serverAddress || (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_13__.detectServerAddress)(),
       serverVersion: "no connection",
       messageSounds: !settings.messageSoundsOff,
       incognitoMode: false,
       desktopAlerts: persist && settings.desktopAlerts,
-      desktopAlertsEnabled: ((0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_14__.isSecureConnection)() || (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_14__.isLocalHost)()) && typeof firebase_app__WEBPACK_IMPORTED_MODULE_3__ != 'undefined' && typeof navigator != 'undefined' && typeof FIREBASE_INIT != 'undefined',
-      firebaseToken: persist ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.getObject('firebase-token') : null,
+      desktopAlertsEnabled: ((0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_13__.isSecureConnection)() || (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_13__.isLocalHost)()) && typeof firebase_app__WEBPACK_IMPORTED_MODULE_2__ != 'undefined' && typeof navigator != 'undefined' && typeof FIREBASE_INIT != 'undefined',
+      firebaseToken: persist ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__.default.getObject('firebase-token') : null,
       applicationVisible: !document.hidden,
       errorText: '',
       errorLevel: null,
@@ -4898,7 +4896,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       topicSelectedAcs: null,
       newTopicParams: null,
       loginDisabled: false,
-      displayMobile: window.innerWidth <= _config_js__WEBPACK_IMPORTED_MODULE_11__.MEDIA_BREAKPOINT,
+      displayMobile: window.innerWidth <= _config_js__WEBPACK_IMPORTED_MODULE_10__.MEDIA_BREAKPOINT,
       showInfoPanel: false,
       mobilePanel: 'sidepanel',
       contextMenuVisible: false,
@@ -4951,9 +4949,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         }).catch(() => {});
       }
 
-      const parsedNav = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.parseUrlHash(window.location.hash);
+      const parsedNav = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.parseUrlHash(window.location.hash);
       this.resetContactList();
-      const token = this.state.persist ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.getObject('auth-token') : undefined;
+      const token = this.state.persist ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__.default.getObject('auth-token') : undefined;
 
       if (token) {
         this.setState({
@@ -4969,7 +4967,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.setState({
         requestedTopic: parsedNav.path[1]
       });
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo('');
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo('');
       this.readTimer = null;
       this.readTimerCallback = null;
       this.handleHashRoute();
@@ -4983,21 +4981,21 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   static tnSetup(serverAddress, transport, locale, persistentCache, onSetupCompleted) {
-    const tinode = new (tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default())({
-      appName: _config_js__WEBPACK_IMPORTED_MODULE_11__.APP_NAME,
+    const tinode = new (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default())({
+      appName: _config_js__WEBPACK_IMPORTED_MODULE_10__.APP_NAME,
       host: serverAddress,
-      apiKey: _config_js__WEBPACK_IMPORTED_MODULE_11__.API_KEY,
+      apiKey: _config_js__WEBPACK_IMPORTED_MODULE_10__.API_KEY,
       transport: transport,
-      secure: (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_14__.isSecureConnection)(),
+      secure: (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_13__.isSecureConnection)(),
       persist: persistentCache
     }, onSetupCompleted);
     tinode.setHumanLanguage(locale);
-    tinode.enableLogging(_config_js__WEBPACK_IMPORTED_MODULE_11__.LOGGING_ENABLED, true);
+    tinode.enableLogging(_config_js__WEBPACK_IMPORTED_MODULE_10__.LOGGING_ENABLED, true);
     return tinode;
   }
 
   handlePushMessage(data) {
-    if (data.what == 'msg' && tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default().isChannelTopicName(data.topic)) {
+    if (data.what == 'msg' && tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().isChannelTopicName(data.topic)) {
       this.tinode.oobNotification(data.topic, data.seq, 'fake-uid');
     }
   }
@@ -5017,14 +5015,14 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     };
 
     try {
-      this.fbPush = firebase_app__WEBPACK_IMPORTED_MODULE_3__.initializeApp(FIREBASE_INIT, _config_js__WEBPACK_IMPORTED_MODULE_11__.APP_NAME).messaging();
+      this.fbPush = firebase_app__WEBPACK_IMPORTED_MODULE_2__.initializeApp(FIREBASE_INIT, _config_js__WEBPACK_IMPORTED_MODULE_10__.APP_NAME).messaging();
       this.fbPush.usePublicVapidKey(FIREBASE_INIT.messagingVapidKey);
       return navigator.serviceWorker.register('/service-worker.js').then(reg => {
         this.checkForAppUpdate(reg);
         this.fbPush.useServiceWorker(reg);
         reg.active.postMessage(JSON.stringify({
           locale: locale,
-          version: _version_js__WEBPACK_IMPORTED_MODULE_12__.PACKAGE_VERSION
+          version: _version_js__WEBPACK_IMPORTED_MODULE_11__.PACKAGE_VERSION
         }));
         this.fbPush.onTokenRefresh(() => {
           this.requestPushToken();
@@ -5044,7 +5042,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handleResize() {
-    const mobile = document.documentElement.clientWidth <= _config_js__WEBPACK_IMPORTED_MODULE_11__.MEDIA_BREAKPOINT;
+    const mobile = document.documentElement.clientWidth <= _config_js__WEBPACK_IMPORTED_MODULE_10__.MEDIA_BREAKPOINT;
     this.setState({
       viewportWidth: document.documentElement.clientWidth,
       viewportHeight: document.documentElement.clientHeight
@@ -5063,7 +5061,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
       installingWorker.onstatechange = () => {
         if (installingWorker.state == 'installed' && navigator.serviceWorker.controller) {
-          const msg = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_2__.FormattedMessage, {
+          const msg = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
             id: "update_available",
             defaultMessage: [{
               "type": 0,
@@ -5071,7 +5069,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
             }]
           }), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
             href: ""
-          }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_2__.FormattedMessage, {
+          }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
             id: "reload_update",
             defaultMessage: [{
               "type": 0,
@@ -5085,7 +5083,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handleHashRoute() {
-    const hash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.parseUrlHash(window.location.hash);
+    const hash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.parseUrlHash(window.location.hash);
 
     if (hash.path && hash.path.length > 0) {
       if (['register', 'settings', 'edit', 'notif', 'security', 'support', 'general', 'crop', 'cred', 'reset', 'newtpk', 'archive', 'blocked', 'contacts', ''].includes(hash.path[0])) {
@@ -5098,7 +5096,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
       const topicName = hash.path[1];
 
-      if (tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default().topicType(topicName) && topicName != this.state.topicSelected) {
+      if (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().topicType(topicName) && topicName != this.state.topicSelected) {
         const newState = {
           topicSelected: topicName
         };
@@ -5193,14 +5191,14 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   handlePersistenceChange(persist) {
     if (persist) {
       this.tinode.initStorage().then(() => {
-        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.setObject('keep-logged-in', true);
+        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__.default.setObject('keep-logged-in', true);
         this.setState({
           persist: true
         });
       });
     } else {
       this.tinode.clearStorage().then(() => {
-        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.setObject('keep-logged-in', false);
+        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__.default.setObject('keep-logged-in', false);
         this.setState({
           persist: false
         });
@@ -5247,7 +5245,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     let count = sec / 1000;
     count = count | count;
     this.reconnectCountdown = setInterval(() => {
-      const timeLeft = count > 99 ? (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_17__.secondsToTime)(count) : count;
+      const timeLeft = count > 99 ? (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_16__.secondsToTime)(count) : count;
       this.handleError(formatMessage(messages.reconnect_countdown, {
         seconds: timeLeft
       }), 'warn', () => {
@@ -5273,11 +5271,11 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
   doLogin(login, password, cred) {
     if (this.tinode.isAuthenticated()) {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo('');
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo('');
       return;
     }
 
-    cred = tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default().credential(cred);
+    cred = tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().credential(cred);
     let promise = null;
     const token = this.tinode.getAuthToken();
 
@@ -5315,10 +5313,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         });
         this.handleError(err.message, 'err');
         localStorage.removeItem('auth-token');
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo('');
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo('');
       });
     } else {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo('');
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo('');
       this.setState({
         loginDisabled: false
       });
@@ -5326,17 +5324,17 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handleCredentialsRequest(params) {
-    const parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.parseUrlHash(window.location.hash);
+    const parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.parseUrlHash(window.location.hash);
     parsed.path[0] = 'cred';
     parsed.params['method'] = params.cred[0];
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.composeUrlHash(parsed.path, parsed.params));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.composeUrlHash(parsed.path, parsed.params));
   }
 
   handleLoginSuccessful() {
     this.handleError();
 
-    if (_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.getObject('keep-logged-in')) {
-      _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.setObject('auth-token', this.tinode.getAuthToken());
+    if (_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__.default.getObject('keep-logged-in')) {
+      _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__.default.setObject('auth-token', this.tinode.getAuthToken());
     }
 
     const goToTopic = this.state.requestedTopic;
@@ -5356,19 +5354,19 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.tinode.disconnect();
       localStorage.removeItem('auth-token');
       this.handleError(err.message, 'err');
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo('');
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo('');
     }).finally(() => {
       this.setState({
         loadSpinnerVisible: false
       });
     });
-    let urlHash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlSidePanel(window.location.hash, 'contacts');
+    let urlHash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.setUrlSidePanel(window.location.hash, 'contacts');
 
     if (goToTopic) {
-      urlHash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlTopic(urlHash, goToTopic);
+      urlHash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.setUrlTopic(urlHash, goToTopic);
     }
 
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(urlHash);
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo(urlHash);
   }
 
   tnMeMetaDesc(desc) {
@@ -5376,7 +5374,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       if (desc.public) {
         this.setState({
           sidePanelTitle: desc.public.fn,
-          sidePanelAvatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__.makeImageUrl)(desc.public.photo)
+          sidePanelAvatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_12__.makeImageUrl)(desc.public.photo)
         });
       }
 
@@ -5449,7 +5447,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     const merged = {};
 
     for (const c of chatList) {
-      if (tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default().isP2PTopicName(c.topic)) {
+      if (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().isP2PTopicName(c.topic)) {
         merged[c.topic] = {
           user: c.topic,
           updated: c.updated,
@@ -5497,12 +5495,12 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   tnData(data) {
     const topic = this.tinode.getTopic(data.topic);
 
-    if (topic.msgStatus(data, true) >= (tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default().MESSAGE_STATUS_SENT) && data.from != this.state.myUserId) {
+    if (topic.msgStatus(data, true) >= (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().MESSAGE_STATUS_SENT) && data.from != this.state.myUserId) {
       clearTimeout(this.receivedTimer);
       this.receivedTimer = setTimeout(() => {
         this.receivedTimer = undefined;
         topic.noteRecv(data.seq);
-      }, _config_js__WEBPACK_IMPORTED_MODULE_11__.RECEIVED_DELAY);
+      }, _config_js__WEBPACK_IMPORTED_MODULE_10__.RECEIVED_DELAY);
     }
   }
 
@@ -5563,7 +5561,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           topicSelectedOnline: this.tinode.isTopicOnline(topicName),
           topicSelectedAcs: this.tinode.getTopicAccessMode(topicName)
         });
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlTopic('', topicName));
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.setUrlTopic('', topicName));
       }
     } else {
       this.setState({
@@ -5574,7 +5572,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         topicSelectedAcs: null,
         showInfoPanel: false
       });
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlTopic('', null));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.setUrlTopic('', null));
     }
   }
 
@@ -5582,7 +5580,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.setState({
       mobilePanel: 'sidepanel'
     });
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlTopic(window.location.hash, null));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.setUrlTopic(window.location.hash, null));
   }
 
   handleSendMessage(msg, promise, uploader) {
@@ -5669,7 +5667,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
   handleNewAccount() {
     this.handleError();
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlSidePanel(window.location.hash, 'register'));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.setUrlSidePanel(window.location.hash, 'register'));
   }
 
   handleNewAccountRequest(login_, password_, public_, cred_, tags_) {
@@ -5678,7 +5676,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       return this.tinode.createAccountBasic(login_, password_, {
         public: public_,
         tags: tags_,
-        cred: tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default().credential(cred_)
+        cred: tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().credential(cred_)
       });
     }).then(ctrl => {
       if (ctrl.code >= 300 && ctrl.text == 'validate credentials') {
@@ -5713,7 +5711,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
   handleSettings() {
     this.handleError();
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlSidePanel(window.location.hash, this.state.myUserId ? 'edit' : 'settings'));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.setUrlSidePanel(window.location.hash, this.state.myUserId ? 'edit' : 'settings'));
   }
 
   handleGlobalSettings(settings) {
@@ -5726,7 +5724,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.tinode.disconnect();
     }
 
-    this.tinode = TinodeWeb.tnSetup(serverAddress, transport, this.props.intl.locale, _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.getObject('keep-logged-in'));
+    this.tinode = TinodeWeb.tnSetup(serverAddress, transport, this.props.intl.locale, _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__.default.getObject('keep-logged-in'));
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
     this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
@@ -5734,19 +5732,19 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       serverAddress: serverAddress,
       transport: transport
     });
-    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.setObject('settings', {
+    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__.default.setObject('settings', {
       serverAddress: serverAddress,
       transport: transport
     });
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlSidePanel(window.location.hash, ''));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.setUrlSidePanel(window.location.hash, ''));
   }
 
   handleShowArchive() {
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlSidePanel(window.location.hash, this.state.myUserId ? 'archive' : ''));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.setUrlSidePanel(window.location.hash, this.state.myUserId ? 'archive' : ''));
   }
 
   handleShowBlocked() {
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlSidePanel(window.location.hash, this.state.myUserId ? 'blocked' : ''));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.setUrlSidePanel(window.location.hash, this.state.myUserId ? 'blocked' : ''));
   }
 
   togglePushToken(enabled) {
@@ -5764,7 +5762,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
             desktopAlerts: false,
             firebaseToken: null
           });
-          _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.updateObject('settings', {
+          _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__.default.updateObject('settings', {
             desktopAlerts: false
           });
         });
@@ -5773,8 +5771,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           desktopAlerts: true
         });
 
-        if (_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.getObject('keep-logged-in')) {
-          _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.updateObject('settings', {
+        if (_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__.default.getObject('keep-logged-in')) {
+          _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__.default.updateObject('settings', {
             desktopAlerts: true
           });
         }
@@ -5783,7 +5781,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.fbPush.deleteToken(this.state.firebaseToken).catch(err => {
         console.error("Unable to delete token.", err);
       }).finally(() => {
-        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.updateObject('settings', {
+        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__.default.updateObject('settings', {
           desktopAlerts: false
         });
         localStorage.removeItem('firebase-token');
@@ -5798,7 +5796,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         desktopAlerts: false,
         firebaseToken: null
       });
-      _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.updateObject('settings', {
+      _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__.default.updateObject('settings', {
         desktopAlerts: false
       });
     }
@@ -5806,13 +5804,13 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
   requestPushToken() {
     this.fbPush.getToken().then(refreshedToken => {
-      const persist = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.getObject('keep-logged-in');
+      const persist = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__.default.getObject('keep-logged-in');
 
       if (refreshedToken != this.state.firebaseToken) {
         this.tinode.setDeviceToken(refreshedToken);
 
         if (persist) {
-          _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.setObject('firebase-token', refreshedToken);
+          _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__.default.setObject('firebase-token', refreshedToken);
         }
       }
 
@@ -5822,7 +5820,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       });
 
       if (persist) {
-        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.updateObject('settings', {
+        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__.default.updateObject('settings', {
           desktopAlerts: true
         });
       }
@@ -5836,7 +5834,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.setState({
       messageSounds: enabled
     });
-    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.updateObject('settings', {
+    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__.default.updateObject('settings', {
       messageSoundsOff: !enabled
     });
   }
@@ -5867,7 +5865,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handleSidepanelCancel() {
-    const parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.parseUrlHash(window.location.hash);
+    const parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.parseUrlHash(window.location.hash);
     let path = '';
 
     if (['security', 'support', 'general', 'notif'].includes(parsed.path[0])) {
@@ -5888,7 +5886,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       delete parsed.params.tab;
     }
 
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.composeUrlHash(parsed.path, parsed.params));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.composeUrlHash(parsed.path, parsed.params));
     this.setState({
       errorText: '',
       errorLevel: null
@@ -5896,7 +5894,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   basicNavigator(hash) {
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlSidePanel(window.location.hash, hash));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.setUrlSidePanel(window.location.hash, hash));
   }
 
   handleStartTopicRequest(topicName, pub, priv, tags, isChannel) {
@@ -5907,13 +5905,13 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
     const params = {};
 
-    if (tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default().isP2PTopicName(topicName)) {
+    if (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().isP2PTopicName(topicName)) {
       params.sub = {
-        mode: _config_js__WEBPACK_IMPORTED_MODULE_11__.DEFAULT_P2P_ACCESS_MODE
+        mode: _config_js__WEBPACK_IMPORTED_MODULE_10__.DEFAULT_P2P_ACCESS_MODE
       };
       params.desc = {
         defacs: {
-          auth: _config_js__WEBPACK_IMPORTED_MODULE_11__.DEFAULT_P2P_ACCESS_MODE
+          auth: _config_js__WEBPACK_IMPORTED_MODULE_10__.DEFAULT_P2P_ACCESS_MODE
         }
       };
     } else {
@@ -5940,7 +5938,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.setState({
         topicSelected: newName
       }, () => {
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlTopic('', newName));
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.setUrlTopic('', newName));
       });
     }
   }
@@ -5961,7 +5959,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       }
 
       if (priv) {
-        params.private = priv === (tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default().DEL_CHAR) ? (tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default().DEL_CHAR) : {
+        params.private = priv === (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().DEL_CHAR) ? (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().DEL_CHAR) : {
           comment: priv
         };
       }
@@ -6026,7 +6024,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handleLogout() {
-    (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_18__.updateFavicon)(0);
+    (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_17__.updateFavicon)(0);
     localStorage.removeItem('auth-token');
     localStorage.removeItem('firebase-token');
     localStorage.removeItem('settings');
@@ -6044,11 +6042,11 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
 
     this.setState(this.getBlankState());
-    this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport, this.props.intl.locale, _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.getObject('keep-logged-in'));
+    this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport, this.props.intl.locale, _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__.default.getObject('keep-logged-in'));
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
     this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo('');
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo('');
   }
 
   handleDeleteAccount() {
@@ -6077,7 +6075,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
 
     topic.leave(true).then(ctrl => {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlTopic(window.location.hash, ''));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.setUrlTopic(window.location.hash, ''));
     }).catch(err => {
       this.handleError(err.message, 'err');
     });
@@ -6091,7 +6089,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
 
     topic.updateMode(null, '-JP').then(ctrl => {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlTopic(window.location.hash, ''));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.setUrlTopic(window.location.hash, ''));
     }).catch(err => {
       this.handleError(err.message, 'err');
     });
@@ -6104,12 +6102,12 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       return;
     }
 
-    this.tinode.publish((tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default().TOPIC_SYS), tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default().Drafty.attachJSON(null, {
+    this.tinode.publish((tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().TOPIC_SYS), tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.attachJSON(null, {
       'action': 'report',
       'target': topicName
     }));
     topic.updateMode(null, '-JP').then(ctrl => {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlTopic(window.location.hash, ''));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.setUrlTopic(window.location.hash, ''));
     }).catch(err => {
       this.handleError(err.message, 'err');
     });
@@ -6124,7 +6122,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       },
       contextMenuParams: params,
       contextMenuItems: menuItems || this.defaultTopicContextMenu(params.topicName),
-      contextMenuBounds: react_dom__WEBPACK_IMPORTED_MODULE_1___default().findDOMNode(this).getBoundingClientRect()
+      contextMenuBounds: this.selfRef.current.getBoundingClientRect()
     });
   }
 
@@ -6190,14 +6188,14 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handleShowInfoView() {
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.addUrlParam(window.location.hash, 'info', true));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.addUrlParam(window.location.hash, 'info', true));
     this.setState({
       showInfoPanel: true
     });
   }
 
   handleHideInfoView() {
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.removeUrlParam(window.location.hash, 'info'));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.removeUrlParam(window.location.hash, 'info'));
     this.setState({
       showInfoPanel: false
     });
@@ -6240,7 +6238,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           resp: code
         }
       }).then(() => {
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo('');
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo('');
       }).catch(err => {
         this.handleError(err.message, 'err');
       });
@@ -6265,7 +6263,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handleResetPassword(scheme, newPassword, token) {
-    token = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__.base64ReEncode)(token);
+    token = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_12__.base64ReEncode)(token);
 
     if (!token) {
       this.handleError(this.props.intl.formatMessage(messages.invalid_security_token), 'err');
@@ -6282,8 +6280,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "app-container"
-    }, this.state.contextMenuVisible ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_context_menu_jsx__WEBPACK_IMPORTED_MODULE_7__.default, {
+      id: "app-container",
+      ref: this.selfRef
+    }, this.state.contextMenuVisible ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_context_menu_jsx__WEBPACK_IMPORTED_MODULE_6__.default, {
       tinode: this.tinode,
       bounds: this.state.contextMenuBounds,
       clickAt: this.state.contextMenuClickAt,
@@ -6298,7 +6297,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         }
       },
       onError: this.handleError
-    }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_alert_jsx__WEBPACK_IMPORTED_MODULE_6__.default, {
+    }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_alert_jsx__WEBPACK_IMPORTED_MODULE_5__.default, {
       visible: this.state.alertVisible,
       title: this.state.alertParams.title,
       content: this.state.alertParams.content,
@@ -6315,7 +6314,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         this.state.alertParams.onConfirm();
       },
       confirm: this.state.alertParams.confirm
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_sidepanel_view_jsx__WEBPACK_IMPORTED_MODULE_10__.default, {
+    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_sidepanel_view_jsx__WEBPACK_IMPORTED_MODULE_9__.default, {
       tinode: this.tinode,
       connected: this.state.connected,
       displayMobile: this.state.displayMobile,
@@ -6376,7 +6375,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       searchResults: this.state.searchResults,
       onSearchContacts: this.handleSearchContacts,
       showContextMenu: this.handleShowContextMenu
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_messages_view_jsx__WEBPACK_IMPORTED_MODULE_9__.default, {
+    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_messages_view_jsx__WEBPACK_IMPORTED_MODULE_8__.default, {
       tinode: this.tinode,
       connected: this.state.connected,
       ready: this.state.ready,
@@ -6404,7 +6403,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       onChangePermissions: this.handleChangePermissions,
       onNewChat: this.handleNewChatInvitation,
       sendMessage: this.handleSendMessage
-    }), this.state.showInfoPanel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_info_view_jsx__WEBPACK_IMPORTED_MODULE_8__.default, {
+    }), this.state.showInfoPanel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_info_view_jsx__WEBPACK_IMPORTED_MODULE_7__.default, {
       tinode: this.tinode,
       connected: this.state.connected,
       displayMobile: this.state.displayMobile,
@@ -6435,7 +6434,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 }
 
 ;
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_2__.injectIntl)(TinodeWeb));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(TinodeWeb));
 
 /***/ }),
 
@@ -8429,18 +8428,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "react-dom");
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-intl */ "react-intl");
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
 
 
 
 
-
-const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_2__.defineMessages)({
+const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   info: {
     id: "menu_item_info",
     defaultMessage: [{
@@ -8579,6 +8575,7 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_2__.defineMessages)({
 class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
+    this.selfRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
     const {
       formatMessage
     } = props.intl;
@@ -8770,7 +8767,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
   }
 
   handlePageClick(e) {
-    if (react_dom__WEBPACK_IMPORTED_MODULE_1___default().findDOMNode(this).contains(e.target)) {
+    if (this.selfRef.current.contains(e.target)) {
       return;
     }
 
@@ -8877,8 +8874,8 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
 
       count++;
     });
-    const hSize = 12 * _config_js__WEBPACK_IMPORTED_MODULE_3__.REM_SIZE;
-    const vSize = _config_js__WEBPACK_IMPORTED_MODULE_3__.REM_SIZE * (0.7 + menu.length * 2.5);
+    const hSize = 12 * _config_js__WEBPACK_IMPORTED_MODULE_2__.REM_SIZE;
+    const vSize = _config_js__WEBPACK_IMPORTED_MODULE_2__.REM_SIZE * (0.7 + menu.length * 2.5);
     const left = this.props.bounds.right - this.props.clickAt.x < hSize ? this.props.clickAt.x - this.props.bounds.left - hSize : this.props.clickAt.x - this.props.bounds.left;
     const top = this.props.bounds.bottom - this.props.clickAt.y < vSize ? this.props.clickAt.y - this.props.bounds.top - vSize : this.props.clickAt.y - this.props.bounds.top;
     const position = {
@@ -8887,13 +8884,14 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     };
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
       className: "menu",
-      style: position
+      style: position,
+      ref: this.selfRef
     }, menu);
   }
 
 }
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_2__.injectIntl)(ContextMenu));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(ContextMenu));
 
 /***/ }),
 
