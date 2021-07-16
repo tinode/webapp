@@ -1,6 +1,5 @@
 // Context Menu: popup/dropdown menu.
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { injectIntl, defineMessages } from 'react-intl';
 
 import { REM_SIZE } from '../config.js';
@@ -108,6 +107,8 @@ const messages = defineMessages({
 class ContextMenu extends React.Component {
   constructor(props) {
     super(props);
+
+    this.selfRef = React.createRef();
 
     const {formatMessage} = props.intl;
 
@@ -318,7 +319,7 @@ class ContextMenu extends React.Component {
   }
 
   handlePageClick(e) {
-    if (ReactDOM.findDOMNode(this).contains(e.target)) {
+    if (this.selfRef.contains(e.target)) {
       return;
     }
     e.preventDefault();
@@ -445,7 +446,7 @@ class ContextMenu extends React.Component {
     };
 
     return (
-      <ul className="menu" style={position}>
+      <ul className="menu" style={position} ref={this.selfRef}>
         {menu}
       </ul>
     );
