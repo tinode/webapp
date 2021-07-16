@@ -234,7 +234,6 @@ function imageCrop(mime, objURL, left, top, width, height, scale, onSuccess, onE
     canvas.height = height * scale;
     let ctx = canvas.getContext('2d');
     ctx.imageSmoothingEnabled = true;
-    console.log("drawImage from", left, top, width, height, "to", canvas.width, canvas.height);
     ctx.drawImage(this, left, top, width, height, 0, 0, canvas.width, canvas.height);
     mime = SUPPORTED_IMAGE_FORMATS.includes(mime) ? mime : 'image/jpeg';
     let blob = await new Promise(resolve => canvas.toBlob(resolve, mime));
@@ -274,7 +273,7 @@ function filePasted(event, onImageSuccess, onAttachmentSuccess, onError) {
       var file = item.getAsFile();
 
       if (!file) {
-        console.log("Failed to get file object from pasted file item", item.kind, item.type);
+        console.error("Failed to get file object from pasted file item", item.kind, item.type);
         continue;
       }
 
@@ -311,7 +310,7 @@ function base64ReEncode(str) {
     try {
       str = btoa(atob(str));
     } catch (err) {
-      console.log("Failed to base64 re-encode string.", err);
+      console.error("Failed to base64 re-encode string.", err);
       str = null;
     }
   }
@@ -4929,7 +4928,6 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       badges = null;
     }
 
-    console.log("avatar URL=", avatar);
     let onCancel;
 
     if (['login', 'contacts'].indexOf(view) == -1) {

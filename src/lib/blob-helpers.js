@@ -147,7 +147,6 @@ export function imageCrop(mime, objURL, left, top, width, height, scale, onSucce
     canvas.height = height * scale;
     let ctx = canvas.getContext('2d');
     ctx.imageSmoothingEnabled = true;
-    console.log("drawImage from", left, top, width, height, "to", canvas.width, canvas.height);
     ctx.drawImage(this, left, top, width, height, 0, 0, canvas.width, canvas.height);
 
     mime = SUPPORTED_IMAGE_FORMATS.includes(mime) ? mime : 'image/jpeg';
@@ -191,7 +190,7 @@ export function filePasted(event, onImageSuccess, onAttachmentSuccess, onError) 
     if (item.kind === 'file') {
       var file = item.getAsFile();
       if (!file) {
-        console.log("Failed to get file object from pasted file item", item.kind, item.type);
+        console.error("Failed to get file object from pasted file item", item.kind, item.type);
         continue;
       }
       if (file.type && file.type.split('/')[0] == 'image') {
@@ -239,7 +238,7 @@ export function base64ReEncode(str) {
     try {
       str = btoa(atob(str));
     } catch(err) {
-      console.log("Failed to base64 re-encode string.", err);
+      console.error("Failed to base64 re-encode string.", err);
       str = null;
     }
   }
