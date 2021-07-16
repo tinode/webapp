@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import AvatarUpload from '../widgets/avatar-upload.jsx';
 import BadgeList from '../widgets/badge-list.jsx';
 
-import { makeImageDataUrl } from '../lib/blob-helpers.js';
+import { makeImageUrl } from '../lib/blob-helpers.js';
 
 export default class EditAccountView extends React.Component {
   constructor(props) {
@@ -14,7 +14,7 @@ export default class EditAccountView extends React.Component {
     const me = this.props.tinode.getMeTopic();
     this.state = {
       fullName: me.public ? me.public.fn : undefined,
-      avatar: makeImageDataUrl(me.public ? me.public.photo : null)
+      avatar: makeImageUrl(me.public ? me.public.photo : null)
     };
   }
 

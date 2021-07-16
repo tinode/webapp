@@ -3,6 +3,8 @@ import React from 'react';
 import LetterTile from './letter-tile.jsx';
 import LoadSpinner from './load-spinner.jsx';
 
+import { sanitizeImageUrl } from '../lib/utils.js';
+
 import { AVATAR_SIZE } from '../config.js';
 
 export default class AvatarUpload extends React.Component {
@@ -42,7 +44,7 @@ export default class AvatarUpload extends React.Component {
             <i className="material-icons">clear</i>
           </a>}
         {this.state.source ?
-          <img src={this.state.source} className="preview" /> :
+          <img src={this.props.tinode.authorizeURL(sanitizeImageUrl(this.state.source))} className="preview" /> :
           this.props.readOnly && this.props.uid ?
             <div className="avatar-box">
               <LetterTile

@@ -2,7 +2,7 @@ import React from 'react';
 
 import Chip from './chip.jsx';
 
-import { makeImageDataUrl } from '../lib/blob-helpers.js';
+import { makeImageUrl } from '../lib/blob-helpers.js';
 
 /* BEGIN ChipInput: group membership widget */
 export default class ChipInput extends React.Component {
@@ -119,7 +119,7 @@ export default class ChipInput extends React.Component {
       chips.push(
         <Chip
           onCancel={this.handleChipCancel}
-          avatar={makeImageDataUrl(item.public ? item.public.photo : null)}
+          avatar={makeImageUrl(item.public ? item.public.photo : null)}
           title={item.public ? item.public.fn : undefined}
           noAvatar={this.props.avatarDisabled}
           topic={item.user}

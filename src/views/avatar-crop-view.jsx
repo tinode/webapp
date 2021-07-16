@@ -55,9 +55,13 @@ export default class AvatarCropView extends React.PureComponent {
             onChange={this.handleChange} />
         </div>
         <div className="dialog-buttons">
+          {this.props.onCancel ?
+            <button className="secondary" onClick={this.props.onCancel}>
+              <FormattedMessage id="button_cancel" defaultMessage="Cancel" description="Button [Cancel]" />
+            </button>
+            : null}
           <button className="primary" onClick={this.handleSubmit}>
-            <FormattedMessage id="button_ok"
-              defaultMessage="OK" description="Button [OK]" />
+            <FormattedMessage id="button_ok" defaultMessage="OK" description="Button [OK]" />
           </button>
         </div>
       </div>

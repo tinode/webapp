@@ -1,11 +1,12 @@
 import React from 'react';
 
-
 import LetterTile from './letter-tile.jsx';
 import ButtonBack from './button-back.jsx';
 import ContactBadges from './contact-badges.jsx';
 import MenuContacts from './menu-contacts.jsx';
 import MenuStart from './menu-start.jsx';
+
+import { sanitizeImageUrl } from '../lib/utils.js';
 
 export default class SideNavbar extends React.PureComponent {
   render() {
@@ -15,13 +16,17 @@ export default class SideNavbar extends React.PureComponent {
         icon_badges.push({icon: b, color: 'badge-inv'});
       });
     }
+    let avatar = null;
+    if (this.props.tinode) {
+      avatar = this.props.tinode.authorizeURL(sanitizeImageUrl(this.props.avatar));
+    }
     return (
         <div id="side-caption-panel" className="caption-panel">
           {this.props.onCancel ? <ButtonBack onBack={this.props.onCancel} /> : null}
-          {this.props.avatar ?
+          {avatar ?
             <div id="self-avatar" className="avatar-box">
               <LetterTile
-                avatar={this.props.avatar}
+                avatar={avatar}
                 topic={this.props.myUserId}
                 title={this.props.title} />
             </div>

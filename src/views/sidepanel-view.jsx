@@ -118,6 +118,8 @@ class SidepanelView extends React.Component {
       badges = null;
     }
 
+    console.log("avatar URL=", avatar);
+
     let onCancel;
     if (['login', 'contacts'].indexOf(view) == -1) {
       onCancel = this.props.onCancel;
@@ -129,6 +131,7 @@ class SidepanelView extends React.Component {
           state={view}
           title={title}
           avatar={avatar}
+          tinode={this.props.tinode}
           trustedBadges={badges}
           myUserId={this.props.myUserId}
           onSignUp={this.props.onSignUp}

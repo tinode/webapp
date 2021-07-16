@@ -18,7 +18,7 @@ import TagManager from '../widgets/tag-manager.jsx';
 
 import { MAX_TITLE_LENGTH, NO_ACCESS_MODE } from '../config.js';
 
-import { makeImageDataUrl } from '../lib/blob-helpers.js';
+import { makeImageUrl } from '../lib/blob-helpers.js';
 import { arrayEqual, theCard } from '../lib/utils.js';
 
 const messages = defineMessages({
@@ -237,7 +237,7 @@ class InfoView extends React.Component {
       muted: acs && acs.isMuted(),
 
       fullName: topic.public ? topic.public.fn : undefined,
-      avatar: makeImageDataUrl(topic.public ? topic.public.photo : null),
+      avatar: makeImageUrl(topic.public ? topic.public.photo : null),
       trustedBadges: badges,
       private: topic.private ? topic.private.comment : null,
       address: topic.name,

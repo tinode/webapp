@@ -12,7 +12,7 @@ import TagManager from '../widgets/tag-manager.jsx';
 
 import { AVATAR_SIZE, MAX_AVATAR_BYTES, MAX_EXTERN_ATTACHMENT_SIZE,
   MAX_INBAND_ATTACHMENT_SIZE, MAX_TITLE_LENGTH } from '../config.js';
-import { imageScaled, blobToBase64, makeImageDataUrl } from '../lib/blob-helpers.js';
+import { imageScaled, blobToBase64, makeImageUrl } from '../lib/blob-helpers.js';
 import { arrayEqual, asEmail, asPhone, theCard } from '../lib/utils.js';
 
 export default class AccGeneralView extends React.Component {
@@ -22,7 +22,7 @@ export default class AccGeneralView extends React.Component {
     const me = this.props.tinode.getMeTopic();
     this.state = {
       fullName: me.public ? me.public.fn : undefined,
-      avatar: makeImageDataUrl(me.public ? me.public.photo : null),
+      avatar: makeImageUrl(me.public ? me.public.photo : null),
       tags: me.tags(),
       credentials: me.getCredentials() || [],
       addCredActive: false,
@@ -100,10 +100,6 @@ export default class AccGeneralView extends React.Component {
       if (blob.size > MAX_AVATAR_BYTES) {
         // Too large to send inband - uploading out of band and sending as a link.
         const uploader = this.props.tinode.getLargeFileHelper();
-        if (!uploader) {
-          this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
-          return;
-        }
 
         this.setState({uploading: true});
         uploader.upload(blob)
@@ -117,17 +113,19 @@ export default class AccGeneralView extends React.Component {
             this.setState({uploading: false});
           });
       } else {
+        this.setState({uploading: true});
         // Convert blob to base64-encoded bits.
         blobToBase64(blob, (unused, base64bits) => {
-          const du = makeImageDataUrl({data: base64bits, type: mime});
+          const du = makeImageUrl({data: base64bits, type: mime});
           this.setState({source: du});
           this.props.onUpdateAccount(undefined, theCard(null, du));
+          this.setState({uploading: false});
         });
       }
     };
 
-    if (width > AVATAR_SIZE || height > AVATAR_SIZE) {
-      // Avatar is too large even after scaling. Shring it and make square.
+    if (width > AVATAR_SIZE || height > AVATAR_SIZE || width != height) {
+      // Avatar is not square or too large even after cropping. Shrink it and make square.
       imageScaled(blob, AVATAR_SIZE, AVATAR_SIZE, MAX_EXTERN_ATTACHMENT_SIZE, true,
         readyToUpload,
         (err) => {

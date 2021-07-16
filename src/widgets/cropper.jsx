@@ -129,10 +129,12 @@ export default class Cropper extends React.Component {
     });
 
     // Initial zoom level fills the bounding box at the smallest image dimension and overflows the largest, i.e. "fill" not "fit".
-    let zoom = Math.max((this.bBoxRect.width / imgRect.width), (this.bBoxRect.height / imgRect.height));
+    const zoom = Math.max(this.bBoxRect.width / imgRect.width, this.bBoxRect.height / imgRect.height);
     // Converting from viewport coordinates to container, then panning.
-    let panX = (this.cutoutRect.left - this.bBoxRect.left) - ((imgRect.width - this.cutoutRect.width) / 2);
-    let panY = (this.cutoutRect.top - this.bBoxRect.top) - ((imgRect.height - this.cutoutRect.height) / 2);
+    const panX = this.cutoutRect.left - this.bBoxRect.left -
+      (imgRect.width - this.cutoutRect.width) / 2;
+    const panY = this.cutoutRect.top - this.bBoxRect.top -
+      (imgRect.height - this.cutoutRect.height) / 2;
 
     this.positionAll(panX, panY, zoom);
   }

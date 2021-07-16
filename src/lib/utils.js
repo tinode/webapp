@@ -38,10 +38,12 @@ export function theCard(fn, imageUrl, imageMimeType) {
     if (matches) {
       mimeType = matches[1];
       card.photo = {
-        data: imageUrl.substring(imageUrl.indexOf(',') + 1)
+        data: imageUrl.substring(imageUrl.indexOf(',') + 1),
+        ref: Tinode.DEL_CHAR
       };
     } else {
       card.photo = {
+        data: Tinode.DEL_CHAR,
         ref: imageUrl
       };
     }
@@ -107,10 +109,9 @@ export function isUrlRelative(url) {
 
 // Ensure URL does not present an XSS risk. Optional allowedSchemes may contain an array of
 // strings with permitted URL schemes, such as ['ftp', 'ftps']; otherwise accept http and https only.
-// If apikey and/or token is defined, it's appended to relative URL.
 export function sanitizeUrl(url, allowedSchemes) {
-  if (!url) {
-    return null;
+  if (typeof url != 'string') {
+    return url;
   }
 
   // Strip control characters and whitespace. They are not valid URL characters anyway.
@@ -139,7 +140,6 @@ export function sanitizeUrl(url, allowedSchemes) {
 
 // Ensure URL is suitable for <img src="url"> field: the URL must be a relative URL or
 // have http:, https:, blob: or data: scheme.
-// The relative URL is appended with the API key and/or auth token.
 // In case of data: scheme, the URL must start with a 'data:image/XXXX;base64,'.
 export function sanitizeImageUrl(url) {
   if (!url) {

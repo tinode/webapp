@@ -1101,10 +1101,26 @@ i.search {
   border-radius: 50%;
 }
 
-.avatar-upload .preview {
+.avatar-upload img.preview {
   width: 8rem;
   height: 8rem;
   overflow: hidden;
+  border-radius: 50%;
+}
+
+.avatar-upload img.preview::before {
+  position: absolute;
+  content: " ";
+  display: flex;
+  font-size: 0.9rem;
+  font-weight: lighter;
+  color: #666;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  background: center no-repeat url("../img/broken_image.png");
   border-radius: 50%;
 }
 
@@ -2177,6 +2193,7 @@ ul.tabbar li.active > a {
   border-radius: 0.25rem;
   border: solid 2px #1e88e5;
   box-shadow: 1px 1px 3px grey;
+  background-color: #999;
 }
 
 .cropper .preview {

@@ -6,8 +6,8 @@ import { bytesToHumanSize } from './strformat.js'
 export const SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
 export const MIME_EXTENSIONS         = ['jpg',        'gif',       'png',       'svg',       'svg'];
 
-// Make a data: URL from public.photo
-export function makeImageDataUrl(photo) {
+// Get an URL from a theCard photo: either create a data: URL or return reference URL.
+export function makeImageUrl(photo) {
   if (photo) {
     if (photo.data && photo.type) {
       const mime = photo.type.startsWith('image/') ? photo.type : ('image/' + photo.type);

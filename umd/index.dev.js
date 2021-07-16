@@ -65,7 +65,7 @@ const NO_ACCESS_MODE = 'N';
 const MEDIA_BREAKPOINT = 640;
 const REM_SIZE = 13;
 const AVATAR_SIZE = 384;
-const MAX_AVATAR_BYTES = 8192;
+const MAX_AVATAR_BYTES = 4096;
 const BROKEN_IMAGE_SIZE = 32;
 const MESSAGES_PAGE = 24;
 const MAX_INBAND_ATTACHMENT_SIZE = 262144;
@@ -91,7 +91,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "SUPPORTED_IMAGE_FORMATS": () => (/* binding */ SUPPORTED_IMAGE_FORMATS),
 /* harmony export */   "MIME_EXTENSIONS": () => (/* binding */ MIME_EXTENSIONS),
-/* harmony export */   "makeImageDataUrl": () => (/* binding */ makeImageDataUrl),
+/* harmony export */   "makeImageUrl": () => (/* binding */ makeImageUrl),
 /* harmony export */   "fitImageSize": () => (/* binding */ fitImageSize),
 /* harmony export */   "fileNameForMime": () => (/* binding */ fileNameForMime),
 /* harmony export */   "imageScaled": () => (/* binding */ imageScaled),
@@ -110,7 +110,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
 const MIME_EXTENSIONS = ['jpg', 'gif', 'png', 'svg', 'svg'];
-function makeImageDataUrl(photo) {
+function makeImageUrl(photo) {
   if (photo) {
     if (photo.data && photo.type) {
       const mime = photo.type.startsWith('image/') ? photo.type : 'image/' + photo.type;
@@ -611,10 +611,12 @@ function theCard(fn, imageUrl, imageMimeType) {
     if (matches) {
       mimeType = matches[1];
       card.photo = {
-        data: imageUrl.substring(imageUrl.indexOf(',') + 1)
+        data: imageUrl.substring(imageUrl.indexOf(',') + 1),
+        ref: (tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default().DEL_CHAR)
       };
     } else {
       card.photo = {
+        data: (tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default().DEL_CHAR),
         ref: imageUrl
       };
     }
@@ -670,8 +672,8 @@ function isUrlRelative(url) {
   return url && !/^\s*([a-z][a-z0-9+.-]*:|\/\/)/im.test(url);
 }
 function sanitizeUrl(url, allowedSchemes) {
-  if (!url) {
-    return null;
+  if (typeof url != 'string') {
+    return url;
   }
 
   url = url.replace(/[^\x20-\x7E]/gmi, '').trim();
@@ -798,7 +800,7 @@ class AccGeneralView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compo
     const me = this.props.tinode.getMeTopic();
     this.state = {
       fullName: me.public ? me.public.fn : undefined,
-      avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__.makeImageDataUrl)(me.public ? me.public.photo : null),
+      avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__.makeImageUrl)(me.public ? me.public.photo : null),
       tags: me.tags(),
       credentials: me.getCredentials() || [],
       addCredActive: false,
@@ -811,9 +813,10 @@ class AccGeneralView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compo
     this.tnNewTags = this.tnNewTags.bind(this);
     this.tnCredsUpdated = this.tnCredsUpdated.bind(this);
     this.handleFullNameUpdate = this.handleFullNameUpdate.bind(this);
-    this.handleImageUploaded = this.handleImageUploaded.bind(this);
+    this.handleImageUpdated = this.handleImageUpdated.bind(this);
     this.handleAvatarCropped = this.handleAvatarCropped.bind(this);
-    this.handleCancel = this.handleCancel.bind(this);
+    this.uploadAvatar = this.uploadAvatar.bind(this);
+    this.handleAvatarCropCancel = this.handleAvatarCropCancel.bind(this);
     this.handleCredChange = this.handleCredChange.bind(this);
     this.handleCredKeyDown = this.handleCredKeyDown.bind(this);
     this.handleCredEntered = this.handleCredEntered.bind(this);
@@ -855,11 +858,15 @@ class AccGeneralView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compo
     }
   }
 
-  handleImageUploaded(mime, img) {
+  handleImageUpdated(mime, img) {
     this.setState({
       newAvatar: img,
       newAvatarMime: mime
     });
+
+    if (!img) {
+      this.props.onUpdateAccount(undefined, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(null, (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().DEL_CHAR)));
+    }
   }
 
   handleAvatarCropped(mime, blob, width, height) {
@@ -869,9 +876,58 @@ class AccGeneralView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compo
       newAvatar: null,
       newAvatarMime: null
     });
+
+    if (blob) {
+      this.uploadAvatar(mime, blob, width, height);
+    }
   }
 
-  handleCancel(img) {
+  uploadAvatar(mime, blob, width, height) {
+    const readyToUpload = (mime, blob, width, height) => {
+      if (blob.size > _config_js__WEBPACK_IMPORTED_MODULE_7__.MAX_AVATAR_BYTES) {
+        const uploader = this.props.tinode.getLargeFileHelper();
+        this.setState({
+          uploading: true
+        });
+        uploader.upload(blob).then(url => {
+          this.props.onUpdateAccount(undefined, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(null, url));
+        }).catch(err => {
+          this.props.onError(err, 'err');
+        }).finally(() => {
+          this.setState({
+            uploading: false
+          });
+        });
+      } else {
+        this.setState({
+          uploading: true
+        });
+        (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__.blobToBase64)(blob, (unused, base64bits) => {
+          const du = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__.makeImageUrl)({
+            data: base64bits,
+            type: mime
+          });
+          this.setState({
+            source: du
+          });
+          this.props.onUpdateAccount(undefined, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(null, du));
+          this.setState({
+            uploading: false
+          });
+        });
+      }
+    };
+
+    if (width > _config_js__WEBPACK_IMPORTED_MODULE_7__.AVATAR_SIZE || height > _config_js__WEBPACK_IMPORTED_MODULE_7__.AVATAR_SIZE || width != height) {
+      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_7__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_7__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_7__.MAX_EXTERN_ATTACHMENT_SIZE, true, readyToUpload, err => {
+        this.props.onError(err, 'err');
+      });
+    } else {
+      readyToUpload(mime, blob, width, height);
+    }
+  }
+
+  handleAvatarCropCancel(img) {
     this.setState({
       newAvatar: null,
       newAvatarMime: null
@@ -947,7 +1003,7 @@ class AccGeneralView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compo
         avatar: this.state.newAvatar,
         mime: this.state.newAvatarMime,
         onSubmit: this.handleAvatarCropped,
-        onCancel: this.handleCancel,
+        onCancel: this.handleAvatarCropCancel,
         onError: this.props.onError
       });
     }
@@ -1007,8 +1063,7 @@ class AccGeneralView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compo
       avatar: this.state.avatar,
       uid: this.props.myUserId,
       title: this.state.fullName,
-      onImageReceived: this.handleImageUploaded,
-      onImageChanged: this.handleImageChanged,
+      onImageUpdated: this.handleImageUpdated,
       onError: this.props.onError
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "hr"
@@ -1566,7 +1621,16 @@ class AvatarCropView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       onChange: this.handleChange
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "dialog-buttons"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+    }, this.props.onCancel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+      className: "secondary",
+      onClick: this.props.onCancel
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "button_cancel",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Cancel"
+      }]
+    })) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       className: "primary",
       onClick: this.handleSubmit
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
@@ -1951,7 +2015,7 @@ class EditAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Comp
     const me = this.props.tinode.getMeTopic();
     this.state = {
       fullName: me.public ? me.public.fn : undefined,
-      avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.makeImageDataUrl)(me.public ? me.public.photo : null)
+      avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.makeImageUrl)(me.public ? me.public.photo : null)
     };
   }
 
@@ -2358,7 +2422,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       deleter: acs && acs.isDeleter(),
       muted: acs && acs.isMuted(),
       fullName: topic.public ? topic.public.fn : undefined,
-      avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.makeImageDataUrl)(topic.public ? topic.public.photo : null),
+      avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.makeImageUrl)(topic.public ? topic.public.photo : null),
       trustedBadges: badges,
       private: topic.private ? topic.private.comment : null,
       address: topic.name,
@@ -2783,7 +2847,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       readOnly: !this.state.owner,
       uid: this.props.topic,
       title: this.state.fullName,
-      onImageChanged: this.handleImageChanged,
+      onImageUpdated: this.handleImageChanged,
       onError: this.props.onError
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "hr"
@@ -3463,7 +3527,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         if (topic.public) {
           Object.assign(nextState, {
             title: topic.public.fn,
-            avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.makeImageDataUrl)(topic.public.photo)
+            avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.makeImageUrl)(topic.public.photo)
           });
         } else {
           Object.assign(nextState, {
@@ -3606,7 +3670,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     if (desc.public) {
       this.setState({
         title: desc.public.fn,
-        avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.makeImageDataUrl)(desc.public.photo)
+        avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.makeImageUrl)(desc.public.photo)
       });
     } else {
       this.setState({
@@ -3879,12 +3943,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
     if (file.size > maxInbandAttachmentSize) {
       const uploader = this.props.tinode.getLargeFileHelper();
-
-      if (!uploader) {
-        this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
-        return;
-      }
-
       const uploadCompletionPromise = uploader.upload(file);
       const msg = Drafty.attachFile(null, {
         mime: file.type,
@@ -4110,7 +4168,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
             if (user && user.public) {
               userName = user.public.fn;
-              userAvatar = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.makeImageDataUrl)(user.public.photo);
+              userAvatar = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.makeImageUrl)(user.public.photo);
             }
 
             userFrom = thisFrom;
@@ -4871,6 +4929,7 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       badges = null;
     }
 
+    console.log("avatar URL=", avatar);
     let onCancel;
 
     if (['login', 'contacts'].indexOf(view) == -1) {
@@ -4884,6 +4943,7 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       state: view,
       title: title,
       avatar: avatar,
+      tinode: this.props.tinode,
       trustedBadges: badges,
       myUserId: this.props.myUserId,
       onSignUp: this.props.onSignUp,
@@ -5315,7 +5375,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     } = this.props.intl;
 
     const onError = (msg, err) => {
-      console.log(msg, err);
+      console.error(msg, err);
       this.handleError(formatMessage(messages.push_init_failed), 'err');
       this.setState({
         desktopAlertsEnabled: false
@@ -5399,7 +5459,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           sidePanelSelected: hash.path[0]
         });
       } else {
-        console.log("Unknown sidepanel view", hash.path[0]);
+        console.info("Unknown sidepanel view", hash.path[0]);
       }
 
       const topicName = hash.path[1];
@@ -5499,7 +5559,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   handlePersistenceChange(persist) {
     if (persist) {
       this.tinode.initStorage().then(() => {
-        console.log("storage initialized");
         _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.setObject('keep-logged-in', true);
         this.setState({
           persist: true
@@ -5507,7 +5566,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       });
     } else {
       this.tinode.clearStorage().then(() => {
-        console.log("storage cleared");
         _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.setObject('keep-logged-in', false);
         this.setState({
           persist: false
@@ -5684,7 +5742,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       if (desc.public) {
         this.setState({
           sidePanelTitle: desc.public.fn,
-          sidePanelAvatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__.makeImageDataUrl)(desc.public.photo)
+          sidePanelAvatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__.makeImageUrl)(desc.public.photo)
         });
       }
 
@@ -5745,7 +5803,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         });
       }
     } else if (what == 'del') {} else if (what == 'upd') {} else {
-      console.log("Unsupported (yet) presence update:" + what + " in: " + cont.topic);
+      console.info("Unsupported (yet) presence update:" + what + " in: " + cont.topic);
     }
   }
 
@@ -5965,7 +6023,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         break;
 
       default:
-        console.log("Unknown invitation action", '"' + action + '""');
+        console.info("Unknown invitation action", '"' + action + '""');
     }
 
     if (response != null) {
@@ -6094,7 +6152,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         }).then(() => {
           this.requestPushToken();
         }).catch(err => {
-          console.log("Failed to get notification permission.", err);
+          console.error("Failed to get notification permission.", err);
           this.handleError(err.message, 'err');
           this.setState({
             desktopAlerts: false,
@@ -6117,7 +6175,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       }
     } else if (this.state.firebaseToken && this.fbPush) {
       this.fbPush.deleteToken(this.state.firebaseToken).catch(err => {
-        console.log("Unable to delete token.", err);
+        console.error("Unable to delete token.", err);
       }).finally(() => {
         _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.updateObject('settings', {
           desktopAlerts: false
@@ -6164,7 +6222,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       }
     }).catch(err => {
       this.handleError(err.message, 'err');
-      console.log("Failed to retrieve firebase token", err);
+      console.error("Failed to retrieve firebase token", err);
     });
   }
 
@@ -6208,9 +6266,13 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
     if (['security', 'support', 'general', 'notif'].includes(parsed.path[0])) {
       path = 'edit';
-    } else if (true) {
+    } else if ('crop' == parsed.path[0]) {
       path = 'general';
-    } else {}
+    } else if ('blocked' == parsed.path[0]) {
+      path = 'security';
+    } else if (this.state.myUserId) {
+      path = 'contacts';
+    }
 
     parsed.path[0] = path;
 
@@ -7102,8 +7164,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
 /* harmony import */ var _load_spinner_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./load-spinner.jsx */ "./src/widgets/load-spinner.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 
 
 
@@ -7113,10 +7175,9 @@ class AvatarUpload extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   constructor(props) {
     super(props);
     this.state = {
-      source: props.avatar,
-      uploading: false
+      source: props.avatar
     };
-    this.handleFileUpload = this.handleFileUpload.bind(this);
+    this.handleFileReceived = this.handleFileReceived.bind(this);
   }
 
   componentDidUpdate(prevProps) {
@@ -7127,48 +7188,9 @@ class AvatarUpload extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
   }
 
-  handleFileUpload(e) {
+  handleFileReceived(e) {
     const image = e.target.files[0];
-
-    if (this.props.onImageReceived) {
-      this.props.onImageReceived(image.type, URL.createObjectURL(image));
-      return;
-    }
-
-    if (image.size > _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_AVATAR_BYTES) {
-      const uploader = this.props.tinode.getLargeFileHelper();
-
-      if (!uploader) {
-        this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
-        return;
-      }
-
-      uploader.upload(image).then(url => {
-        this.props.onImageChanged(url);
-      }).catch(err => {
-        this.props.onError(err, 'err');
-      }).finally(() => {
-        this.setState({
-          uploading: false
-        });
-      });
-    } else {
-      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.imageScaled)(image, _config_js__WEBPACK_IMPORTED_MODULE_3__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_3__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_EXTERN_ATTACHMENT_SIZE, true, (mime, blob) => {
-        (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.blobToBase64)(blob, (unused, base64bits) => {
-          const du = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.makeImageDataUrl)({
-            data: base64bits,
-            type: mime
-          });
-          this.setState({
-            source: du
-          });
-          this.props.onImageChanged(du);
-        });
-      }, err => {
-        this.props.onError(err, 'err');
-      });
-    }
-
+    this.props.onImageUpdated(image.type, URL.createObjectURL(image), image.name);
     e.target.value = '';
   }
 
@@ -7182,12 +7204,12 @@ class AvatarUpload extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       className: "clear-avatar",
       onClick: e => {
         e.preventDefault();
-        this.props.onImageChanged(null);
+        this.props.onImageUpdated();
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, "clear")), this.state.source ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
-      src: this.state.source,
+      src: this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__.sanitizeImageUrl)(this.state.source)),
       className: "preview"
     }) : this.props.readOnly && this.props.uid ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
@@ -7197,19 +7219,19 @@ class AvatarUpload extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       title: this.props.title
     })) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "blank"
-    }, _config_js__WEBPACK_IMPORTED_MODULE_3__.AVATAR_SIZE, "\xD7", _config_js__WEBPACK_IMPORTED_MODULE_3__.AVATAR_SIZE), this.props.readOnly ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+    }, _config_js__WEBPACK_IMPORTED_MODULE_4__.AVATAR_SIZE, "\xD7", _config_js__WEBPACK_IMPORTED_MODULE_4__.AVATAR_SIZE), this.props.readOnly ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
       type: "file",
       id: randId,
       className: "inputfile hidden",
       accept: "image/*",
-      onChange: this.handleFileUpload
+      onChange: this.handleFileReceived
     }), this.props.readOnly ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       htmlFor: randId,
       className: "round"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, "file_upload")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
-      show: this.state.uploading,
+      show: this.props.uploading,
       large: true,
       clear: true,
       centered: true
@@ -7788,7 +7810,7 @@ class ChipInput extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.state.sortedChips.map(item => {
       chips.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_chip_jsx__WEBPACK_IMPORTED_MODULE_1__.default, {
         onCancel: this.handleChipCancel,
-        avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_2__.makeImageDataUrl)(item.public ? item.public.photo : null),
+        avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_2__.makeImageUrl)(item.public ? item.public.photo : null),
         title: item.public ? item.public.fn : undefined,
         noAvatar: this.props.avatarDisabled,
         topic: item.user,
@@ -8087,7 +8109,7 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
 
           contactNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
             title: c.public ? c.public.fn : null,
-            avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__.makeImageDataUrl)(c.public ? c.public.photo : null),
+            avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__.makeImageUrl)(c.public ? c.public.photo : null),
             comment: comment,
             preview: preview,
             received: deliveryStatus,
@@ -8989,9 +9011,9 @@ class Cropper extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       minZoom: minZoom,
       maxZoom: Math.max(DEFAULT_MAX_ZOOM, minZoom + 1)
     });
-    let zoom = Math.max(this.bBoxRect.width / imgRect.width, this.bBoxRect.height / imgRect.height);
-    let panX = this.cutoutRect.left - this.bBoxRect.left - (imgRect.width - this.cutoutRect.width) / 2;
-    let panY = this.cutoutRect.top - this.bBoxRect.top - (imgRect.height - this.cutoutRect.height) / 2;
+    const zoom = Math.max(this.bBoxRect.width / imgRect.width, this.bBoxRect.height / imgRect.height);
+    const panX = this.cutoutRect.left - this.bBoxRect.left - (imgRect.width - this.cutoutRect.width) / 2;
+    const panY = this.cutoutRect.top - this.bBoxRect.top - (imgRect.height - this.cutoutRect.height) / 2;
     this.positionAll(panX, panY, zoom);
   }
 
@@ -9663,7 +9685,7 @@ class GroupSubs extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         key: sub.user
       }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
         topic: sub.user,
-        avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.makeImageDataUrl)(sub.public ? sub.public.photo : null) || true,
+        avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.makeImageUrl)(sub.public ? sub.public.photo : null) || true,
         title: sub.public ? sub.public.fn : null
       })));
       return usersOnline.length == countToShow;
@@ -10181,7 +10203,7 @@ class LetterTile extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
         src: this.props.avatar,
         onError: e => {
           e.target.onerror = null;
-          e.target.src = "/img/broken_image.png";
+          e.target.src = "../img/broken_image.png";
         }
       });
     } else {
@@ -10908,7 +10930,7 @@ class PermissionsEditor extends (react__WEBPACK_IMPORTED_MODULE_0___default().Co
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
       item: this.props.item,
       title: this.props.userTitle,
-      avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.makeImageDataUrl)(this.props.userAvatar ? this.props.userAvatar : null)
+      avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.makeImageUrl)(this.props.userAvatar ? this.props.userAvatar : null)
     })) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "small"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
@@ -11403,6 +11425,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./contact-badges.jsx */ "./src/widgets/contact-badges.jsx");
 /* harmony import */ var _menu_contacts_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./menu-contacts.jsx */ "./src/widgets/menu-contacts.jsx");
 /* harmony import */ var _menu_start_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./menu-start.jsx */ "./src/widgets/menu-start.jsx");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+
 
 
 
@@ -11422,16 +11446,22 @@ class SideNavbar extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
       });
     }
 
+    let avatar = null;
+
+    if (this.props.tinode) {
+      avatar = this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__.sanitizeImageUrl)(this.props.avatar));
+    }
+
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "side-caption-panel",
       className: "caption-panel"
     }, this.props.onCancel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_button_back_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
       onBack: this.props.onCancel
-    }) : null, this.props.avatar ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }) : null, avatar ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "self-avatar",
       className: "avatar-box"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__.default, {
-      avatar: this.props.avatar,
+      avatar: avatar,
       topic: this.props.myUserId,
       title: this.props.title
     })) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
