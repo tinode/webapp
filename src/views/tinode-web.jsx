@@ -1,6 +1,5 @@
 // The top-level class to hold all functionality together.
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
 import * as firebase from 'firebase/app';
@@ -70,6 +69,8 @@ class TinodeWeb extends React.Component {
   constructor(props) {
     super(props);
 
+    this.selfRef = React.createRef();
+
     this.state = this.getBlankState();
 
     this.handleResize = this.handleResize.bind(this);
@@ -100,7 +101,7 @@ class TinodeWeb extends React.Component {
     this.handleNewChatInvitation = this.handleNewChatInvitation.bind(this);
     this.handleNewAccount = this.handleNewAccount.bind(this);
     this.handleNewAccountRequest = this.handleNewAccountRequest.bind(this);
-    this.handleUpdateAccountRequest = this.handleUpdateAccountRequest.bind(this);
+    this.handleUpdatePasswordRequest = this.handleUpdatePasswordRequest.bind(this);
     this.handleUpdateAccountTagsRequest = this.handleUpdateAccountTagsRequest.bind(this);
     this.handleToggleIncognitoMode = this.handleToggleIncognitoMode.bind(this);
     this.handleSettings = this.handleSettings.bind(this);
@@ -980,31 +981,6 @@ class TinodeWeb extends React.Component {
       });
   }
 
-  handleUpdateAccountRequest(password, pub, defacs) {
-    this.handleError();
-
-    if (pub || defacs) {
-      const params = {};
-      if (pub) {
-        params.public = pub;
-        if (pub.photo && pub.photo.ref) {
-          params.attachments = [pub.photo.ref];
-        }
-      }
-      if (defacs) {
-        params.defacs = defacs;
-      }
-      this.tinode.getMeTopic().setMeta({desc: params}).catch((err) => {
-        this.handleError(err.message, 'err');
-      });
-    }
-    if (password) {
-      this.tinode.updateAccountBasic(null, this.tinode.getCurrentLogin(), password).catch((err) => {
-        this.handleError(err.message, 'err');
-      });
-    }
-  }
-
   handleToggleIncognitoMode(on) {
     const me = this.tinode.getMeTopic();
     const am = me.getAccessMode().updateWant(on ? '-P' : '+P').getWant();
@@ -1212,21 +1188,36 @@ class TinodeWeb extends React.Component {
     }
   }
 
-  handleTopicUpdateRequest(topicName, pub, priv, permissions) {
+  handleTopicUpdateRequest(topicName, pub, priv, defacs) {
+    this.handleError();
+
     const topic = this.tinode.getTopic(topicName);
     if (topic) {
       const params = {};
       if (pub) {
         params.public = pub;
+        if (pub.photo && pub.photo.ref) {
+          params.attachments = [pub.photo.ref];
+        }
       }
       if (priv) {
         params.private = (priv === Tinode.DEL_CHAR) ?
           Tinode.DEL_CHAR : {comment: priv};
       }
-      if (permissions) {
-        params.defacs = permissions;
+      if (defacs) {
+        params.defacs = defacs;
       }
       topic.setMeta({desc: params}).catch((err) => {
+        this.handleError(err.message, 'err');
+      });
+    }
+  }
+
+  handleUpdatePasswordRequest(password)  {
+    this.handleError();
+
+    if (password) {
+      this.tinode.updateAccountBasic(null, this.tinode.getCurrentLogin(), password).catch((err) => {
         this.handleError(err.message, 'err');
       });
     }
@@ -1359,7 +1350,7 @@ class TinodeWeb extends React.Component {
       contextMenuClickAt: {x: params.x, y: params.y},
       contextMenuParams: params,
       contextMenuItems: menuItems || this.defaultTopicContextMenu(params.topicName),
-      contextMenuBounds: ReactDOM.findDOMNode(this).getBoundingClientRect()
+      contextMenuBounds: this.selfRef.getBoundingClientRect()
     });
   }
 
@@ -1510,7 +1501,7 @@ class TinodeWeb extends React.Component {
 
   render() {
     return (
-      <div id="app-container">
+      <div id="app-container" ref={this.selfRef}>
         {this.state.contextMenuVisible ?
           <ContextMenu
             tinode={this.tinode}
@@ -1579,7 +1570,8 @@ class TinodeWeb extends React.Component {
           onLoginRequest={this.handleLoginRequest}
           onPersistenceChange={this.handlePersistenceChange}
           onCreateAccount={this.handleNewAccountRequest}
-          onUpdateAccount={this.handleUpdateAccountRequest}
+          onUpdateAccountDesc={this.handleTopicUpdateRequest}
+          onUpdatePassword={this.handleUpdatePasswordRequest}
           onUpdateAccountTags={this.handleUpdateAccountTagsRequest}
           onTogglePushNotifications={this.togglePushToken}
           onToggleMessageSounds={this.handleToggleMessageSounds}

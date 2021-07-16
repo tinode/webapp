@@ -71,7 +71,7 @@ export default class TopicCommonView extends React.Component {
     fn = fn.trim().substring(0, MAX_TITLE_LENGTH);
     if (fn) {
       this.setState({fullName: fn});
-      this.props.onUpdateAccount(undefined, theCard(fn, null));
+      this.props.onUpdateTopicDesc(this.props.topic, theCard(fn, null));
     }
   }
 
@@ -81,7 +81,7 @@ export default class TopicCommonView extends React.Component {
     this.setState({newAvatar: img, newAvatarMime: mime});
     if (!img) {
       // Deleting the avatar.
-      this.props.onUpdateAccount(undefined, theCard(null, Tinode.DEL_CHAR));
+      this.props.onUpdateTopicDesc(this.props.topic, theCard(null, Tinode.DEL_CHAR));
     }
   }
 
@@ -105,7 +105,7 @@ export default class TopicCommonView extends React.Component {
         this.setState({uploading: true});
         uploader.upload(blob)
           .then((url) => {
-            this.props.onUpdateAccount(undefined, theCard(null, url));
+            this.props.onUpdateTopicDesc(this.props.topic, theCard(null, url));
           })
           .catch((err) => {
             this.props.onError(err, 'err');
@@ -119,7 +119,7 @@ export default class TopicCommonView extends React.Component {
         blobToBase64(blob, (unused, base64bits) => {
           const du = makeImageUrl({data: base64bits, type: mime});
           this.setState({source: du});
-          this.props.onUpdateAccount(undefined, theCard(null, du));
+          this.props.onUpdateTopicDesc(this.props.topic, theCard(null, du));
           this.setState({uploading: false});
         });
       }

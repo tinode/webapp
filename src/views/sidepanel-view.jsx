@@ -181,7 +181,7 @@ class SidepanelView extends React.Component {
             tinode={this.props.tinode}
             myUserId={this.props.myUserId}
             onBasicNavigate={this.props.onBasicNavigate}
-            onUpdateAccount={this.props.onUpdateAccount}
+            onUpdateTopicDesc={this.props.onUpdateAccountDesc}
             onUpdateTags={this.props.onUpdateAccountTags}
             onCredAdd={this.props.onCredAdd}
             onCredDelete={this.props.onCredDelete}
@@ -201,7 +201,8 @@ class SidepanelView extends React.Component {
           view === 'security' ?
           <AccSecurityView
             tinode={this.props.tinode}
-            onUpdateAccount={this.props.onUpdateAccount}
+            onUpdateAccountDesc={this.props.onUpdateAccountDesc}
+            onUpdatePassword={this.props.onUpdatePassword}
             onLogout={this.props.onLogout}
             onDeleteAccount={this.props.onDeleteAccount}
             onShowAlert={this.props.onShowAlert}

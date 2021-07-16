@@ -921,7 +921,7 @@ class AccSecurityView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Comp
     this.setState({
       password: pwd
     });
-    this.props.onUpdateAccount(pwd);
+    this.props.onUpdatePassword(pwd);
   }
 
   handleLaunchPermissionsEditor(which) {
@@ -940,7 +940,7 @@ class AccSecurityView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Comp
   handlePermissionsChanged(perm) {
     let defacs = {};
     defacs[this.state.showPermissionEditorFor] = perm;
-    this.props.onUpdateAccount(undefined, undefined, defacs);
+    this.props.onUpdateAccountDesc('me', undefined, undefined, defacs);
     let newState = {
       showPermissionEditorFor: undefined
     };
@@ -4616,7 +4616,7 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       tinode: this.props.tinode,
       myUserId: this.props.myUserId,
       onBasicNavigate: this.props.onBasicNavigate,
-      onUpdateAccount: this.props.onUpdateAccount,
+      onUpdateTopicDesc: this.props.onUpdateAccountDesc,
       onUpdateTags: this.props.onUpdateAccountTags,
       onCredAdd: this.props.onCredAdd,
       onCredDelete: this.props.onCredDelete,
@@ -4632,7 +4632,8 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       onToggleIncognitoMode: this.props.onToggleIncognitoMode
     }) : view === 'security' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_acc_security_view_jsx__WEBPACK_IMPORTED_MODULE_10__.default, {
       tinode: this.props.tinode,
-      onUpdateAccount: this.props.onUpdateAccount,
+      onUpdateAccountDesc: this.props.onUpdateAccountDesc,
+      onUpdatePassword: this.props.onUpdatePassword,
       onLogout: this.props.onLogout,
       onDeleteAccount: this.props.onDeleteAccount,
       onShowAlert: this.props.onShowAlert,
@@ -4822,7 +4823,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.handleNewChatInvitation = this.handleNewChatInvitation.bind(this);
     this.handleNewAccount = this.handleNewAccount.bind(this);
     this.handleNewAccountRequest = this.handleNewAccountRequest.bind(this);
-    this.handleUpdateAccountRequest = this.handleUpdateAccountRequest.bind(this);
+    this.handleUpdatePasswordRequest = this.handleUpdatePasswordRequest.bind(this);
     this.handleUpdateAccountTagsRequest = this.handleUpdateAccountTagsRequest.bind(this);
     this.handleToggleIncognitoMode = this.handleToggleIncognitoMode.bind(this);
     this.handleSettings = this.handleSettings.bind(this);
@@ -5690,38 +5691,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     });
   }
 
-  handleUpdateAccountRequest(password, pub, defacs) {
-    this.handleError();
-
-    if (pub || defacs) {
-      const params = {};
-
-      if (pub) {
-        params.public = pub;
-
-        if (pub.photo && pub.photo.ref) {
-          params.attachments = [pub.photo.ref];
-        }
-      }
-
-      if (defacs) {
-        params.defacs = defacs;
-      }
-
-      this.tinode.getMeTopic().setMeta({
-        desc: params
-      }).catch(err => {
-        this.handleError(err.message, 'err');
-      });
-    }
-
-    if (password) {
-      this.tinode.updateAccountBasic(null, this.tinode.getCurrentLogin(), password).catch(err => {
-        this.handleError(err.message, 'err');
-      });
-    }
-  }
-
   handleToggleIncognitoMode(on) {
     const me = this.tinode.getMeTopic();
     const am = me.getAccessMode().updateWant(on ? '-P' : '+P').getWant();
@@ -5976,7 +5945,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
   }
 
-  handleTopicUpdateRequest(topicName, pub, priv, permissions) {
+  handleTopicUpdateRequest(topicName, pub, priv, defacs) {
+    this.handleError();
     const topic = this.tinode.getTopic(topicName);
 
     if (topic) {
@@ -5984,6 +5954,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
       if (pub) {
         params.public = pub;
+
+        if (pub.photo && pub.photo.ref) {
+          params.attachments = [pub.photo.ref];
+        }
       }
 
       if (priv) {
@@ -5992,13 +5966,23 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         };
       }
 
-      if (permissions) {
-        params.defacs = permissions;
+      if (defacs) {
+        params.defacs = defacs;
       }
 
       topic.setMeta({
         desc: params
       }).catch(err => {
+        this.handleError(err.message, 'err');
+      });
+    }
+  }
+
+  handleUpdatePasswordRequest(password) {
+    this.handleError();
+
+    if (password) {
+      this.tinode.updateAccountBasic(null, this.tinode.getCurrentLogin(), password).catch(err => {
         this.handleError(err.message, 'err');
       });
     }
@@ -6367,7 +6351,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       onLoginRequest: this.handleLoginRequest,
       onPersistenceChange: this.handlePersistenceChange,
       onCreateAccount: this.handleNewAccountRequest,
-      onUpdateAccount: this.handleUpdateAccountRequest,
+      onUpdateAccountDesc: this.handleTopicUpdateRequest,
+      onUpdatePassword: this.handleUpdatePasswordRequest,
       onUpdateAccountTags: this.handleUpdateAccountTagsRequest,
       onTogglePushNotifications: this.togglePushToken,
       onToggleMessageSounds: this.handleToggleMessageSounds,
@@ -6547,7 +6532,7 @@ class TopicCommonView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Comp
       this.setState({
         fullName: fn
       });
-      this.props.onUpdateAccount(undefined, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(fn, null));
+      this.props.onUpdateTopicDesc(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(fn, null));
     }
   }
 
@@ -6558,7 +6543,7 @@ class TopicCommonView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Comp
     });
 
     if (!img) {
-      this.props.onUpdateAccount(undefined, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(null, (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().DEL_CHAR)));
+      this.props.onUpdateTopicDesc(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(null, (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().DEL_CHAR)));
     }
   }
 
@@ -6583,7 +6568,7 @@ class TopicCommonView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Comp
           uploading: true
         });
         uploader.upload(blob).then(url => {
-          this.props.onUpdateAccount(undefined, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(null, url));
+          this.props.onUpdateTopicDesc(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(null, url));
         }).catch(err => {
           this.props.onError(err, 'err');
         }).finally(() => {
@@ -6603,7 +6588,7 @@ class TopicCommonView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Comp
           this.setState({
             source: du
           });
-          this.props.onUpdateAccount(undefined, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(null, du));
+          this.props.onUpdateTopicDesc(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(null, du));
           this.setState({
             uploading: false
           });

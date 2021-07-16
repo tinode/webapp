@@ -46,7 +46,7 @@ class AccSecurityView extends React.Component {
 
   handlePasswordUpdate(pwd) {
     this.setState({password: pwd});
-    this.props.onUpdateAccount(pwd);
+    this.props.onUpdatePassword(pwd);
   }
 
   handleLaunchPermissionsEditor(which) {
@@ -63,7 +63,7 @@ class AccSecurityView extends React.Component {
   handlePermissionsChanged(perm) {
     let defacs = {};
     defacs[this.state.showPermissionEditorFor] = perm;
-    this.props.onUpdateAccount(undefined, undefined, defacs);
+    this.props.onUpdateAccountDesc('me', undefined, undefined, defacs);
 
     let newState = {showPermissionEditorFor: undefined};
     newState[this.state.showPermissionEditorFor] = perm;
