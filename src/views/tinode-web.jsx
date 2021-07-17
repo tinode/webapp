@@ -216,9 +216,15 @@ class TinodeWeb extends React.Component {
     window.addEventListener('online', (e) => { this.handleOnline(true); });
     window.addEventListener('offline', (e) => { this.handleOnline(false); });
     window.addEventListener('hashchange', this.handleHashRoute);
+
     // Process background notifications from the service worker.
-    const serviceWorkerChannel = new BroadcastChannel('tinode-sw');
-    serviceWorkerChannel.addEventListener('message', this.handlePushMessage);
+    if (typeof BroadcastChannel == 'function') {
+      const serviceWorkerChannel = new BroadcastChannel('tinode-sw');
+      serviceWorkerChannel.addEventListener('message', this.handlePushMessage);
+    } else {
+      // Safari is broken by design.
+      console.warn('Your browser does not support BroadcastChannel. Some features will not be available');
+    }
 
     // Window/tab visible or invisible for pausing timers.
     document.addEventListener('visibilitychange', this.handleVisibilityEvent);
