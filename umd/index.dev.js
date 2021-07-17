@@ -4924,8 +4924,14 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.handleOnline(false);
     });
     window.addEventListener('hashchange', this.handleHashRoute);
-    const serviceWorkerChannel = new BroadcastChannel('tinode-sw');
-    serviceWorkerChannel.addEventListener('message', this.handlePushMessage);
+
+    if (typeof BroadcastChannel == 'function') {
+      const serviceWorkerChannel = new BroadcastChannel('tinode-sw');
+      serviceWorkerChannel.addEventListener('message', this.handlePushMessage);
+    } else {
+      console.warn('Your browser does not support BroadcastChannel. Some features will not be available');
+    }
+
     document.addEventListener('visibilitychange', this.handleVisibilityEvent);
     this.setState({
       viewportWidth: document.documentElement.clientWidth,
