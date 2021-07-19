@@ -603,7 +603,7 @@
   },
   "sidepanel_title_account_settings": {
     "defaultMessage": "Account Settings",
-    "description": "Sidepanel title for EditAccountView."
+    "description": "Sidepanel title for AccountSettingsView."
   },
   "sidepanel_title_archive": {
     "defaultMessage": "Archived Chats",

@@ -11,7 +11,9 @@
     "build:css": "postcss css/base.css > css/base.min.css",
     "build:dev": "webpack --mode development",
     "build:prod": "webpack --mode production",
-    "build:i18n": "node scripts/pack-messages.js",
+    "build:i18n": "node scripts/i18n.js",
+    "i18n:missing": "node scripts/i18n.js missing",
+    "i18n:obsolete": "node scripts/i18n.js obsolete",
     "vers": "node scripts/gen-version.js",
     "extract": "formatjs extract src/**/*.jsx --out-file src/i18n/ex/base-en.json --id-interpolation-pattern '[sha512:contenthash:base64:6]'",
     "compile": "formatjs compile"

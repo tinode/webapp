@@ -1272,12 +1272,12 @@
     "obsolete": false
   },
   "grant_permissions": {
-    "translation": ":!![OBSOLETE]!!:승인",
+    "translation": "승인",
     "missing": false,
     "obsolete": true
   },
   "message_not_readable": {
-    "translation": ":!![OBSOLETE]!!:메시지에접근할수없음",
+    "translation": "메시지에접근할수없음",
     "missing": false,
     "obsolete": true
   }
