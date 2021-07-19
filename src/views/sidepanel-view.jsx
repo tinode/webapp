@@ -5,9 +5,9 @@ import ErrorPanel from '../widgets/error-panel.jsx';
 import LoadSpinner from '../widgets/load-spinner.jsx';
 import SideNavbar from '../widgets/side-navbar.jsx';
 
+import AccountSettingsView from './account-settings-view.jsx';
 import ContactsView from './contacts-view.jsx';
 import CreateAccountView from './create-account-view.jsx';
-import EditAccountView from './edit-account-view.jsx';
 import TopicCommonView from './topic-common-view.jsx';
 import AccNotificationsView from './acc-notifications-view.jsx';
 import AccSecurityView from './acc-security-view.jsx';
@@ -37,7 +37,7 @@ const messages = defineMessages({
   },
   edit: {
     id: 'sidepanel_title_account_settings',
-    description: 'Sidepanel title for EditAccountView.',
+    description: 'Sidepanel title for AccountSettingsView.',
     defaultMessage: 'Account Settings'
   },
   general: {
@@ -169,7 +169,7 @@ class SidepanelView extends React.Component {
             onUpdate={this.props.onGlobalSettings} /> :
 
           view === 'edit' ?
-          <EditAccountView
+          <AccountSettingsView
             tinode={this.props.tinode}
             myUserId={this.props.myUserId}
             trustedBadges={this.props.trustedBadges}

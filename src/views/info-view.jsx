@@ -575,38 +575,36 @@ class InfoView extends React.Component {
                   <FormattedMessage id="label_topic_name" defaultMessage="Name"
                     description="Label for editing topic name" />
                 </label></div>
-                <div><InPlaceEdit
-                    placeholder={this.state.groupTopic ? "Group name" : <i>Unknown</i>}
-                    readOnly={!this.state.owner}
-                    value={this.state.fullName}
-                    required={true}
-                    onFinished={this.handleFullNameUpdate} /></div>
+                <div className="large">{this.state.fullName}</div>
+                {this.state.private ?
+                  <>
+                    <div><label className="small">
+                      <FormattedMessage id="label_private" defaultMessage="Private comment"
+                        description="Label for editing 'private'" />
+                    </label></div>
+                    <div className="large">{this.state.private}</div>
+                  </>
+                : null
+                }
                 <div>
-                  <label className="small">
-                    <FormattedMessage id="label_private" defaultMessage="Private comment"
-                      description="Label for editing 'private'" />
-                  </label>
-                </div>
-                <div>
-                  <FormattedMessage id="private_editing_placeholder"
-                    defaultMessage="Visible to you only"
-                    description="Placeholder for editing 'private'">{
-                    (private_placeholder) => <InPlaceEdit
-                      placeholder={private_placeholder}
-                      value={this.state.private}
-                      onFinished={this.handlePrivateUpdate} />
-                  }</FormattedMessage>
+                  <label className="small"><FormattedMessage id="label_user_id" defaultMessage="ID:"
+                    description="Label for user address (ID)" /></label>&nbsp;
+                  <tt>{this.props.myUserId}</tt>
                 </div>
                 <BadgeList trustedBadges={this.state.trustedBadges} />
               </div>
               <AvatarUpload
                 tinode={this.props.tinode}
                 avatar={this.state.avatar}
-                readOnly={!this.state.owner}
+                readOnly={true}
                 uid={this.props.topic}
-                title={this.state.fullName}
-                onImageUpdated={this.handleImageChanged}
-                onError={this.props.onError} />
+                title={this.state.fullName} />
+            </div>
+            <div className="panel-form-row">
+              <a href="#" className="flat-button" onClick={(e) => {e.preventDefault(); this.props.onBasicNavigate('general');}}>
+                <i className="material-icons">edit</i>&nbsp;
+                <FormattedMessage id="button_edit" defaultMessage="Edit" description="Call to action [Edit]" />
+              </a>
             </div>
             <div className="hr" />
             <div className="panel-form-column">
@@ -627,11 +625,6 @@ class InfoView extends React.Component {
               }</FormattedMessage>
               {this.state.moreInfoExpanded ?
                 <div className="panel-form-column">
-                  <div className="panel-form-row">
-                    <label><FormattedMessage id="label_user_id" defaultMessage="ID:"
-                      description="Label for user address (ID)" /></label>
-                    <tt>{this.state.address}</tt>
-                  </div>
                   {this.state.groupTopic ?
                     <div className="panel-form-row">
                       <label>

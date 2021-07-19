@@ -7,7 +7,7 @@ import BadgeList from '../widgets/badge-list.jsx';
 
 import { makeImageUrl } from '../lib/blob-helpers.js';
 
-export default class EditAccountView extends React.Component {
+export default class AccountSettingsView extends React.Component {
   constructor(props) {
     super(props);
 
@@ -38,7 +38,7 @@ export default class EditAccountView extends React.Component {
           <AvatarUpload
             tinode={this.props.tinode}
             avatar={this.state.avatar}
-            readOnly={!this.state.owner}
+            readOnly={true}
             uid={this.props.myUserId}
             title={this.state.fullName} />
         </div>

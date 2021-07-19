@@ -2,10 +2,10 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import Cropper from '../widgets/cropper.jsx';
+import Cropper from './cropper.jsx';
 import { imageCrop } from '../lib/blob-helpers.js';
 
-export default class AvatarCropView extends React.PureComponent {
+export default class AvatarCrop extends React.PureComponent {
   constructor(props) {
     super(props);
 
