@@ -1,184 +1,1274 @@
 {
-  "archived_contacts": "已归档联系人 ({count})",
-  "contacts_not_found": "你尚无会话<br />¯∖_(ツ)_/¯",
-  "full_name_prompt": "全名，例如张伟",
-  "email_prompt": "电子邮件，例如 zhang@example.com",
-  "button_sign_up": "注册",
-  "label_your_name": "你的姓名",
-  "label_password": "密码",
-  "password_unchanged_prompt": "未改变",
-  "label_user_id": "地址：",
-  "label_default_access_mode": "蓦然访问模式：",
-  "label_message_sound": "消息提示音：",
-  "label_push_notifications": "通知提醒：",
-  "label_push_notifications_disabled": "通知提醒（需要 HTTPS）：",
-  "title_tag_manager": "标签（用户发现）",
-  "button_logout": "登出",
-  "requested_permissions": "已请求",
-  "granted_permissions": "已授予",
-  "menu_item_edit_permissions": "编辑权限",
-  "label_other_user": "其他",
-  "title_info": "信息",
-  "label_topic_name": "名称",
-  "label_private": "私人评论",
-  "private_editing_placeholder": "仅自己可见",
-  "label_muting_topic": "已静音：",
-  "action_more": "更多",
-  "label_your_permissions": "你的权限：",
-  "label_permissions": "权限：",
-  "label_you": "你：",
-  "label_default_access": "默认权限模式：",
-  "label_group_members": "群组成员：",
-  "button_add_members": "添加成员",
-  "group_has_no_members": "无成员",
-  "action_leave_chat": "离开",
-  "login_prompt": "登录",
-  "password_prompt": "密码",
-  "stay_logged_in": "保持登录",
-  "forgot_password_link": "忘记密码？",
-  "button_sign_in": "登录",
-  "label_client": "客户端：",
-  "label_server": "服务器：",
-  "online_now": "在线",
-  "last_seen_timestamp": "最后可见",
-  "title_not_found": "无法找到",
-  "unnamed_topic": "未命名",
-  "messages_not_readable": "无消息访问权限",
-  "peers_messaging_disabled": "成员间消息已禁用。",
-  "enable_peers_messaging": "启用",
-  "tabtitle_find_user": "搜索",
-  "tabtitle_new_group": "新群组",
-  "tabtitle_group_by_id": "通过 id",
-  "search_for_contacts": "使用搜索寻找联系人",
-  "new_password_placeholder": "输入新密码",
-  "label_reset_password": "发送密码重置邮件：",
-  "credential_email_prompt": "你的注册邮箱",
-  "button_reset": "重置",
-  "button_send_request": "发送请求",
-  "label_server_to_use": "使用的服务器：",
-  "label_wire_transport": "线路传输：",
-  "button_update": "更新",
-  "sidepanel_title_login": "登录",
-  "sidepanel_title_register": "创建账户",
-  "sidepanel_title_settings": "设置",
-  "sidepanel_title_account_settings": "帐号设定",
-  "sidepanel_title_newtpk": "开始新会话",
-  "sidepanel_title_cred": "确认凭据",
-  "sidepanel_title_reset": "重置密码",
-  "sidepanel_title_archive": "已存档会话",
-  "update_available": "更新可用。",
-  "reload_update": "重新载入",
-  "reconnect_countdown": "连接已断开。{seconds} 秒后重新连接…",
-  "reconnect_now": "立即尝试",
-  "phone_dative": "电话",
-  "email_dative": "电子邮件",
-  "enter_confirmation_code_prompt": "输入通过{method}发送的验证码：",
-  "numeric_confirmation_code_prompt": "仅数字",
-  "button_confirm": "确认",
-  "save_attachment": "保存",
-  "invalid_content": "无效内容",
-  "user_not_found": "未找到",
-  "badge_you": "你",
-  "badge_owner": "所有者",
-  "menu_item_info": "信息",
-  "menu_item_clear_messages": "清空消息",
-  "menu_item_clear_messages_for_all": "全部清除",
-  "menu_item_delete": "删除",
-  "menu_item_delete_for_all": "全部删除",
-  "menu_item_mute": "静音",
-  "menu_item_unmute": "取消静音",
-  "menu_item_delete_topic": "删除",
-  "menu_item_unblock": "取消屏蔽",
-  "menu_item_block": "屏蔽",
-  "menu_item_member_delete": "移除",
-  "menu_item_archive_topic": "归档",
-  "action_cancel": "取消",
-  "upload_finishing": "正在结束...",
-  "no_contacts": "你尚无联系人 (._.)",
-  "contacts_not_found_short": "无联系人匹配''{query}''",
-  "title_group_members": "群组成员",
-  "title_all_contacts": "全部联系人",
-  "button_ok": "好",
-  "button_cancel": "取消",
-  "download_action": "下载",
-  "label_file_name": "文件名：",
-  "label_content_type": "内容类型：",
-  "label_size": "大小：",
-  "chat_invitation": "你受邀开始新会话。你想怎么做？",
-  "chat_invitation_accept": "接受",
-  "chat_invitation_ignore": "忽略",
-  "chat_invitation_block": "屏蔽",
-  "error_invalid_id": "无效 ID",
-  "group_user_id_prompt": "群组或用户 ID",
-  "button_subscribe": "订阅",
-  "topic_name_editing_placeholder": "群组自由格式名称",
-  "button_create": "创建",
-  "permission_join": "加入 ({val})",
-  "permission_read": "读取 ({val})",
-  "permission_write": "写入 ({val})",
-  "permission_pres": "获取通知 ({val})",
-  "permission_admin": "批准 ({val})",
-  "permission_share": "分享 ({val})",
-  "permission_delete": "删除 ({val})",
-  "permission_owner": "所有者 ({val})",
-  "title_permissions": "权限",
-  "message_sending": "正在发送...",
-  "message_sending_failed": "发送失败",
-  "search_placeholder": "列表如 email:alice@example.com, tel:+17025550003...",
-  "messaging_disabled_prompt": "消息已禁用",
-  "new_message_prompt": "新消息",
-  "file_attachment_too_large": "文件大小 {size} 超过 {limit} 限制。",
-  "cannot_initiate_file_upload": "无法初始化文件上传。",
-  "tags_not_found": "尚未定义标签。添加一些。",
-  "tags_editor_no_tags": "添加一些标签",
-  "title_manage_tags": "管理标签",
-  "more_online_members": "还有{overflow}个",
-  "label_user_contacts": "往来：",
-  "validate_credential_action": "确认",
-  "link_contact_us": "联系我们",
-  "link_terms_of_service": "条款和条件",
-  "link_privacy_policy": "隐私政策",
-  "action_delete_messages": "删除所有帖子",
-  "action_block_contact": "屏蔽联系人",
-  "delete_messages_warning": "您确定要删除所有消息吗？无法撤消。",
-  "leave_chat_warning": "您确定要退出此对话吗？",
-  "block_contact_warning": "您确定要阻止此联系人吗？",
-  "action_report_chat": "检举垃圾邮件",
-  "report_chat_warning": "您确定要停止并报告此对话吗？",
-  "action_clear_messages": "删除讯息",
-  "clear_messages_warning": "您确定要清除所有消息吗？无法撤消。",
-  "topic_delete_warning": "您确定要删除此对话吗？",
-  "topic_block_warning": "您确定要阻止此对话吗？",
-  "search_no_results": "搜索返回任何结果",
-  "deleted_content": "内容已删除",
-  "image_caption_prompt": "图片标题",
-  "menu_item_send_retry": "重试",
-  "label_incognito_mode": "无痕模式：",
-  "delete_account": "删除帐户",
-  "delete_account_warning": "您确定要删除您的帐户吗？无法撤消。",
-  "button_delete_account": "删除帐户",
-  "sidepanel_title_acc_security": "安全",
-  "sidepanel_title_acc_notifications": "通知",
-  "sidepanel_title_acc_support": "支持",
-  "label_sdk": "开发包：",
-  "label_server_address": "服务器地址：",
-  "button_edit": "编辑",
-  "button_add_another": "加上另一个",
-  "sidepanel_title_acc_general": "常用设定",
-  "blocked_contacts_link": "封锁的联络人 ({count})",
-  "sidepanel_title_blocked": "被阻止的聊天",
-  "push_init_failed": "初始化推送通知失败",
-  "invalid_security_token": "无效的安全令牌",
-  "no_connection": "无连接",
-  "code_doesnot_match": "代码不匹配",
-  "channel_prompt": "这是一个频道",
-  "channel": "频道",
-  "drafty_attachment": "附件",
-  "drafty_form": "形式：",
-  "drafty_image": "图像",
-  "menu_item_restore_topic": "从存档中恢复",
-  "badge_danger": "可疑的",
-  "badge_staff": "在员工管理下",
-  "badge_verified": "值得信赖",
-  "sidepanel_title_crop": "拖动调整"
+  "action_block_contact": {
+    "translation": "屏蔽联系人",
+    "defaultMessage": "Block Contact",
+    "description": "Flat button [Block Contact]",
+    "missing": false,
+    "obsolete": false
+  },
+  "action_cancel": {
+    "translation": "取消",
+    "defaultMessage": "cancel",
+    "description": "Call to action [cancel]",
+    "missing": false,
+    "obsolete": false
+  },
+  "action_clear_messages": {
+    "translation": "删除讯息",
+    "defaultMessage": "Clear Messages",
+    "description": "Flat button [Clear Messages] (soft-delete messages)",
+    "missing": false,
+    "obsolete": false
+  },
+  "action_delete_messages": {
+    "translation": "删除所有帖子",
+    "defaultMessage": "Clear Messages for All",
+    "description": "Flat button [Clear for All] (hard-delete all messages)",
+    "missing": false,
+    "obsolete": false
+  },
+  "action_leave_chat": {
+    "translation": "离开",
+    "defaultMessage": "Leave Conversation",
+    "description": "Flat button [Leave Conversation]",
+    "missing": false,
+    "obsolete": false
+  },
+  "action_more": {
+    "translation": "更多",
+    "defaultMessage": "More",
+    "description": "Action for showing more content",
+    "missing": false,
+    "obsolete": false
+  },
+  "action_report_chat": {
+    "translation": "检举垃圾邮件",
+    "defaultMessage": "Report Conversation",
+    "description": "Flat button [Report Group]",
+    "missing": false,
+    "obsolete": false
+  },
+  "archived_contacts": {
+    "translation": "已归档联系人 ({count})",
+    "defaultMessage": "Archived contacts ({count})",
+    "description": "Label for archived chats",
+    "missing": false,
+    "obsolete": false
+  },
+  "badge_danger": {
+    "translation": "可疑的",
+    "defaultMessage": "Untrustworthy",
+    "description": "Suspicious or untrustworthy account or topic badge",
+    "missing": false,
+    "obsolete": false
+  },
+  "badge_owner": {
+    "translation": "所有者",
+    "defaultMessage": "owner",
+    "description": "Badge for indicating the owner",
+    "missing": false,
+    "obsolete": false
+  },
+  "badge_staff": {
+    "translation": "在员工管理下",
+    "defaultMessage": "Staff-managed",
+    "description": "Explanation of a staff-managed account or topic badge",
+    "missing": false,
+    "obsolete": false
+  },
+  "badge_verified": {
+    "translation": "值得信赖",
+    "defaultMessage": "Verified/official",
+    "description": "Explanation of a verified account or topic badge",
+    "missing": false,
+    "obsolete": false
+  },
+  "badge_you": {
+    "translation": "你",
+    "defaultMessage": "you",
+    "description": "Badge for indicating the current user",
+    "missing": false,
+    "obsolete": false
+  },
+  "block_contact_warning": {
+    "translation": "您确定要阻止此联系人吗？",
+    "defaultMessage": "Are you sure you want to block this contact?",
+    "description": "Alert dialog warning when blocking a contact.",
+    "missing": false,
+    "obsolete": false
+  },
+  "blocked_contacts_link": {
+    "translation": "封锁的联络人 ({count})",
+    "defaultMessage": "Blocked contacts ({count})",
+    "description": "Blocked contacts link",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_add_another": {
+    "translation": "加上另一个",
+    "defaultMessage": "Add another",
+    "description": "Call to action [+ add another]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_add_members": {
+    "translation": "添加成员",
+    "defaultMessage": "Add members",
+    "description": "Flat button [Add members] (to topic)",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_cancel": {
+    "translation": "取消",
+    "defaultMessage": "Cancel",
+    "description": "Button [Cancel]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_confirm": {
+    "translation": "确认",
+    "defaultMessage": "Confirm",
+    "description": "Button [Confirm]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_create": {
+    "translation": "创建",
+    "defaultMessage": "Create",
+    "description": "Button [Create]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_delete_account": {
+    "translation": "删除帐户",
+    "defaultMessage": "Delete account",
+    "description": "Button [Delete account]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_edit": {
+    "translation": "编辑",
+    "defaultMessage": "Edit",
+    "description": "Call to action [Edit]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_logout": {
+    "translation": "登出",
+    "defaultMessage": "Logout",
+    "description": "Button [Logout]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_ok": {
+    "translation": "好",
+    "defaultMessage": "OK",
+    "description": "Button [OK]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_reset": {
+    "translation": "重置",
+    "defaultMessage": "Reset",
+    "description": "Button [Reset]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_send_request": {
+    "translation": "发送请求",
+    "defaultMessage": "Send request",
+    "description": "Button [Send request]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_sign_in": {
+    "translation": "登录",
+    "defaultMessage": "Sign in",
+    "description": "Button [Sign In]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_sign_up": {
+    "translation": "注册",
+    "defaultMessage": "Sign up",
+    "description": "Create account button [Sign Up]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_subscribe": {
+    "translation": "订阅",
+    "defaultMessage": "Subscribe",
+    "description": "Button [Subscribe]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_update": {
+    "translation": "更新",
+    "defaultMessage": "Update",
+    "description": "Button [Update]",
+    "missing": false,
+    "obsolete": false
+  },
+  "cannot_initiate_file_upload": {
+    "translation": "无法初始化文件上传。",
+    "defaultMessage": "Cannot initiate file upload.",
+    "description": "Generic error messagewhen attachment fails",
+    "missing": false,
+    "obsolete": false
+  },
+  "channel": {
+    "translation": "频道",
+    "defaultMessage": "channel",
+    "description": "Subtitle shown for channels in MessagesView instead of last seen",
+    "missing": false,
+    "obsolete": false
+  },
+  "channel_prompt": {
+    "translation": "这是一个频道",
+    "defaultMessage": "This is a channel",
+    "description": "Checkbox label when creating a channel",
+    "missing": false,
+    "obsolete": false
+  },
+  "chat_invitation": {
+    "translation": "你受邀开始新会话。你想怎么做？",
+    "defaultMessage": "You are invited to start a new chat. What would you like to do?",
+    "description": "New chat invitation message: [Accept] [Ignore] [Block].",
+    "missing": false,
+    "obsolete": false
+  },
+  "chat_invitation_accept": {
+    "translation": "接受",
+    "defaultMessage": "Accept",
+    "description": "Action [Accept] for chat invitation.",
+    "missing": false,
+    "obsolete": false
+  },
+  "chat_invitation_block": {
+    "translation": "屏蔽",
+    "defaultMessage": "Block",
+    "description": "Action [Block] for chat invitation.",
+    "missing": false,
+    "obsolete": false
+  },
+  "chat_invitation_ignore": {
+    "translation": "忽略",
+    "defaultMessage": "Ignore",
+    "description": "Action [Ignore] for chat invitation.",
+    "missing": false,
+    "obsolete": false
+  },
+  "clear_messages_warning": {
+    "translation": "您确定要清除所有消息吗？无法撤消。",
+    "defaultMessage": "Are you sure you want to clear all messages? It cannot be undone.",
+    "description": "Alert dialog warning when deleting all messages.",
+    "missing": false,
+    "obsolete": false
+  },
+  "code_doesnot_match": {
+    "translation": "代码不匹配",
+    "defaultMessage": "Code does not match",
+    "description": "Error message when the credential validation code is incorrect.",
+    "missing": false,
+    "obsolete": false
+  },
+  "contacts_not_found": {
+    "translation": "你尚无会话<br />¯∖_(ツ)_/¯",
+    "defaultMessage": "You have no chats<br />¯∖_(ツ)_/¯",
+    "description": "HTML message shown in ContactList when no contacts are found",
+    "missing": false,
+    "obsolete": false
+  },
+  "contacts_not_found_short": {
+    "translation": "无联系人匹配''{query}''",
+    "defaultMessage": "No contacts match ''{query}''",
+    "description": "Shown in ContactsView when search returned no results",
+    "missing": false,
+    "obsolete": false
+  },
+  "credential_email_prompt": {
+    "translation": "你的注册邮箱",
+    "defaultMessage": "Your registration email",
+    "description": "Placeholder for entering email",
+    "missing": false,
+    "obsolete": false
+  },
+  "delete_account": {
+    "translation": "删除帐户",
+    "defaultMessage": "Delete account",
+    "description": "Title for delete account warning",
+    "missing": false,
+    "obsolete": false
+  },
+  "delete_account_warning": {
+    "translation": "您确定要删除您的帐户吗？无法撤消。",
+    "defaultMessage": "Are you sure you want to delete your account? It cannot be undone.",
+    "description": "Warning message when deleting an account",
+    "missing": false,
+    "obsolete": false
+  },
+  "delete_messages_warning": {
+    "translation": "您确定要删除所有消息吗？无法撤消。",
+    "defaultMessage": "Are you sure you want to delete all messages for everyone? It cannot be undone.",
+    "description": "Alert dialog warning when hard-deleting all messages.",
+    "missing": false,
+    "obsolete": false
+  },
+  "deleted_content": {
+    "translation": "内容已删除",
+    "defaultMessage": "content deleted",
+    "description": "Shown when messages are deleted",
+    "missing": false,
+    "obsolete": false
+  },
+  "download_action": {
+    "translation": "下载",
+    "defaultMessage": "download",
+    "description": "Call to action [download]",
+    "missing": false,
+    "obsolete": false
+  },
+  "drafty_attachment": {
+    "translation": "附件",
+    "defaultMessage": "Attachment",
+    "description": "Comment for attachment in drafty preview",
+    "missing": false,
+    "obsolete": false
+  },
+  "drafty_form": {
+    "translation": "形式：",
+    "defaultMessage": "Form:",
+    "description": "Comment for form in drafty preview",
+    "missing": false,
+    "obsolete": false
+  },
+  "drafty_image": {
+    "translation": "图像",
+    "defaultMessage": "Picture",
+    "description": "Comment for embedded images in drafty preview",
+    "missing": false,
+    "obsolete": false
+  },
+  "email_dative": {
+    "translation": "电子邮件",
+    "defaultMessage": "email",
+    "description": "Dative case of 'email', i.e. 'email' in 'by email'",
+    "missing": false,
+    "obsolete": false
+  },
+  "email_prompt": {
+    "translation": "电子邮件，例如 zhang@example.com",
+    "defaultMessage": "Email, e.g. jdoe@example.com",
+    "description": "Input placeholder for email entry",
+    "missing": false,
+    "obsolete": false
+  },
+  "enable_peers_messaging": {
+    "translation": "启用",
+    "defaultMessage": "Enable",
+    "description": "Call to action to enable peer's messaging",
+    "missing": false,
+    "obsolete": false
+  },
+  "enter_confirmation_code_prompt": {
+    "translation": "输入通过{method}发送的验证码：",
+    "defaultMessage": "Enter confirmation code sent to you by {method}:",
+    "description": "Request to enter confirmation code",
+    "missing": false,
+    "obsolete": false
+  },
+  "error_invalid_id": {
+    "translation": "无效 ID",
+    "defaultMessage": "Invalid ID",
+    "description": "Error message",
+    "missing": false,
+    "obsolete": false
+  },
+  "file_attachment_too_large": {
+    "translation": "文件大小 {size} 超过 {limit} 限制。",
+    "defaultMessage": "The file size {size} exceeds the {limit} limit.",
+    "description": "Error message when attachment is too large",
+    "missing": false,
+    "obsolete": false
+  },
+  "forgot_password_link": {
+    "translation": "忘记密码？",
+    "defaultMessage": "Forgot password?",
+    "description": "Link to Reset password form",
+    "missing": false,
+    "obsolete": false
+  },
+  "full_name_prompt": {
+    "translation": "全名，例如张伟",
+    "defaultMessage": "Full name, e.g. John Doe",
+    "description": "Input placeholder for person's full name",
+    "missing": false,
+    "obsolete": false
+  },
+  "granted_permissions": {
+    "translation": "已授予",
+    "defaultMessage": "Granted",
+    "description": "Title for permissions",
+    "missing": false,
+    "obsolete": false
+  },
+  "group_has_no_members": {
+    "translation": "无成员",
+    "defaultMessage": "No members",
+    "description": "Shown in place of group members",
+    "missing": false,
+    "obsolete": false
+  },
+  "group_user_id_prompt": {
+    "translation": "群组或用户 ID",
+    "defaultMessage": "Group or User ID",
+    "description": "Prompt for entering user or group ID",
+    "missing": false,
+    "obsolete": false
+  },
+  "image_caption_prompt": {
+    "translation": "图片标题",
+    "defaultMessage": "Image caption",
+    "description": "Prompt in SendMessage for attached image",
+    "missing": false,
+    "obsolete": false
+  },
+  "invalid_content": {
+    "translation": "无效内容",
+    "defaultMessage": "invalid content",
+    "description": "Shown when message is unreadable",
+    "missing": false,
+    "obsolete": false
+  },
+  "invalid_security_token": {
+    "translation": "无效的安全令牌",
+    "defaultMessage": "Invalid security token",
+    "description": "Error message when resetting password.",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_client": {
+    "translation": "客户端：",
+    "defaultMessage": "Client:",
+    "description": "Label for a client version",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_content_type": {
+    "translation": "内容类型：",
+    "defaultMessage": "Content type:",
+    "description": "Label for file content type (mime)",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_default_access": {
+    "translation": "默认权限模式：",
+    "defaultMessage": "Default access mode:",
+    "description": "Section title",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_default_access_mode": {
+    "translation": "蓦然访问模式：",
+    "defaultMessage": "Default access mode:",
+    "description": "Label for default access mode",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_file_name": {
+    "translation": "文件名：",
+    "defaultMessage": "File name:",
+    "description": "Label for a file name",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_group_members": {
+    "translation": "群组成员：",
+    "defaultMessage": "Group members:",
+    "description": "Section title or label",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_incognito_mode": {
+    "translation": "无痕模式：",
+    "defaultMessage": "Incognito mode:",
+    "description": "Label for incognito mode toggle",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_message_sound": {
+    "translation": "消息提示音：",
+    "defaultMessage": "Message sound:",
+    "description": "Label for message sounds toggle",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_muting_topic": {
+    "translation": "已静音：",
+    "defaultMessage": "Muted:",
+    "description": "Label for Muting/unmuting the topic",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_other_user": {
+    "translation": "其他",
+    "defaultMessage": "Other",
+    "description": "Label for the other user when the user is unnamed",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_password": {
+    "translation": "密码",
+    "defaultMessage": "Password",
+    "description": "Label for password editing",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_permissions": {
+    "translation": "权限：",
+    "defaultMessage": "Permissions:",
+    "description": "Section title",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_private": {
+    "translation": "私人评论",
+    "defaultMessage": "Private comment",
+    "description": "Label for editing 'private'",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_push_notifications": {
+    "translation": "通知提醒：",
+    "defaultMessage": "Notification alerts:",
+    "description": "Label for push notifications switch",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_push_notifications_disabled": {
+    "translation": "通知提醒（需要 HTTPS）：",
+    "defaultMessage": "Notification alerts (requires HTTPS):",
+    "description": "Label for push notifications switch",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_reset_password": {
+    "translation": "发送密码重置邮件：",
+    "defaultMessage": "Send a password reset email:",
+    "description": "Label for password reset field",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_sdk": {
+    "translation": "开发包：",
+    "defaultMessage": "SDK:",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_server": {
+    "translation": "服务器：",
+    "defaultMessage": "Server:",
+    "description": "Label for a server version",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_server_address": {
+    "translation": "服务器地址：",
+    "defaultMessage": "Server address:",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_server_to_use": {
+    "translation": "使用的服务器：",
+    "defaultMessage": "Server to use:",
+    "description": "Label for server selector in SettingsView",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_size": {
+    "translation": "大小：",
+    "defaultMessage": "Size:",
+    "description": "Label for file size",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_topic_name": {
+    "translation": "名称",
+    "defaultMessage": "Name",
+    "description": "Label for editing topic name",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_user_contacts": {
+    "translation": "往来：",
+    "defaultMessage": "Contacts:",
+    "description": "Label for user contacts",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_user_id": {
+    "translation": "地址：",
+    "defaultMessage": "ID:",
+    "description": "Label for user address (ID)",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_wire_transport": {
+    "translation": "线路传输：",
+    "defaultMessage": "Wire transport:",
+    "description": "Label for wire transport selection in SettingsView",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_you": {
+    "translation": "你：",
+    "defaultMessage": "You:",
+    "description": "Label for the current user",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_your_name": {
+    "translation": "你的姓名",
+    "defaultMessage": "Your name",
+    "description": "Label for full name editing",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_your_permissions": {
+    "translation": "你的权限：",
+    "defaultMessage": "Your permissions:",
+    "description": "Label for current user permissions",
+    "missing": false,
+    "obsolete": false
+  },
+  "last_seen_timestamp": {
+    "translation": "最后可见",
+    "defaultMessage": "Last seen",
+    "description": "Label for the timestamp of when the user or topic was last online",
+    "missing": false,
+    "obsolete": false
+  },
+  "leave_chat_warning": {
+    "translation": "您确定要退出此对话吗？",
+    "defaultMessage": "Are you sure you want to leave this conversation?",
+    "description": "Alert dialog warning when unsubscribing from a chat.",
+    "missing": false,
+    "obsolete": false
+  },
+  "link_contact_us": {
+    "translation": "联系我们",
+    "defaultMessage": "Contact Us",
+    "description": "Ancor text for contacting us by email",
+    "missing": false,
+    "obsolete": false
+  },
+  "link_privacy_policy": {
+    "translation": "隐私政策",
+    "defaultMessage": "Privacy Policy",
+    "description": "Ancor text for privacy policy link",
+    "missing": false,
+    "obsolete": false
+  },
+  "link_terms_of_service": {
+    "translation": "条款和条件",
+    "defaultMessage": "Terms of Service",
+    "description": "Ancor text for terms of service link",
+    "missing": false,
+    "obsolete": false
+  },
+  "login_prompt": {
+    "translation": "登录",
+    "defaultMessage": "Login",
+    "description": "Placeholer for username/login",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_archive_topic": {
+    "translation": "归档",
+    "defaultMessage": "Archive",
+    "description": "Move topic from the list of active chats to archive",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_block": {
+    "translation": "屏蔽",
+    "defaultMessage": "Block",
+    "description": "Block topic or user",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_clear_messages": {
+    "translation": "清空消息",
+    "defaultMessage": "Clear messages",
+    "description": "Delete all messages",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_clear_messages_for_all": {
+    "translation": "全部清除",
+    "defaultMessage": "Clear for All",
+    "description": "Delete all message(s) for all members",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_delete": {
+    "translation": "删除",
+    "defaultMessage": "Delete",
+    "description": "Delete selected messages",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_delete_for_all": {
+    "translation": "全部删除",
+    "defaultMessage": "Delete for All",
+    "description": "Delete selected message(s) for all members",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_delete_topic": {
+    "translation": "删除",
+    "defaultMessage": "Delete",
+    "description": "Delete entire topic",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_edit_permissions": {
+    "translation": "编辑权限",
+    "defaultMessage": "Edit permissions",
+    "description": "Menu item [Edit permissions]",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_info": {
+    "translation": "信息",
+    "defaultMessage": "Info",
+    "description": "Show extended topic information",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_member_delete": {
+    "translation": "移除",
+    "defaultMessage": "Remove",
+    "description": "Remove user from topic",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_mute": {
+    "translation": "静音",
+    "defaultMessage": "Mute",
+    "description": "Turn off notifications",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_restore_topic": {
+    "translation": "从存档中恢复",
+    "defaultMessage": "Restore",
+    "description": "Restore topic from archive",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_send_retry": {
+    "translation": "重试",
+    "defaultMessage": "Retry",
+    "description": "Retry sending message",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_unblock": {
+    "translation": "取消屏蔽",
+    "defaultMessage": "Unblock",
+    "description": "Unblock topic or user",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_unmute": {
+    "translation": "取消静音",
+    "defaultMessage": "Unmute",
+    "description": "Turn notifications on",
+    "missing": false,
+    "obsolete": false
+  },
+  "message_sending": {
+    "translation": "正在发送...",
+    "defaultMessage": "sending...",
+    "description": "Message being sent, in place of time stamp",
+    "missing": false,
+    "obsolete": false
+  },
+  "message_sending_failed": {
+    "translation": "发送失败",
+    "defaultMessage": "failed",
+    "description": "Failed to send message, in place of time stamp",
+    "missing": false,
+    "obsolete": false
+  },
+  "messages_not_readable": {
+    "translation": "无消息访问权限",
+    "defaultMessage": "no access to messages",
+    "description": "Message shown in topic without the read access",
+    "missing": false,
+    "obsolete": false
+  },
+  "messaging_disabled_prompt": {
+    "translation": "消息已禁用",
+    "defaultMessage": "Messaging disabled",
+    "description": "Prompt in SendMessage in read-only topic",
+    "missing": false,
+    "obsolete": false
+  },
+  "more_online_members": {
+    "translation": "还有{overflow}个",
+    "defaultMessage": "+{overflow} more",
+    "description": "Shown in MessagesView title bar when the number of online subscribers exceeds MAX_ONLINE_IN_TOPIC",
+    "missing": false,
+    "obsolete": false
+  },
+  "new_message_prompt": {
+    "translation": "新消息",
+    "defaultMessage": "New message",
+    "description": "Prompt in send message field",
+    "missing": false,
+    "obsolete": false
+  },
+  "new_password_placeholder": {
+    "translation": "输入新密码",
+    "defaultMessage": "Enter new password",
+    "description": "Placeholder for entering new password",
+    "missing": false,
+    "obsolete": false
+  },
+  "no_connection": {
+    "translation": "无连接",
+    "defaultMessage": "No connection",
+    "description": "Warning that the user is offline.",
+    "missing": false,
+    "obsolete": false
+  },
+  "no_contacts": {
+    "translation": "你尚无联系人 (._.)",
+    "defaultMessage": "You have no contacts :-(",
+    "description": "Shown in ContactsView when the user has no contacts",
+    "missing": false,
+    "obsolete": false
+  },
+  "numeric_confirmation_code_prompt": {
+    "translation": "仅数字",
+    "defaultMessage": "Numbers only",
+    "description": "Prompt for numeric conformation code",
+    "missing": false,
+    "obsolete": false
+  },
+  "online_now": {
+    "translation": "在线",
+    "defaultMessage": "online now",
+    "description": "Indicator that the user or topic is currently online",
+    "missing": false,
+    "obsolete": false
+  },
+  "password_prompt": {
+    "translation": "密码",
+    "defaultMessage": "Password",
+    "description": "Placeholder/prompt for entering password",
+    "missing": false,
+    "obsolete": false
+  },
+  "password_unchanged_prompt": {
+    "translation": "未改变",
+    "defaultMessage": "Unchanged",
+    "description": "Message in editor while password is unchanged",
+    "missing": false,
+    "obsolete": false
+  },
+  "peers_messaging_disabled": {
+    "translation": "成员间消息已禁用。",
+    "defaultMessage": "Peer's messaging is disabled.",
+    "description": "Shown when the p2p peer's messaging is disabled",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_admin": {
+    "translation": "批准 ({val})",
+    "defaultMessage": "Approve ({val})",
+    "description": "Name of A permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_delete": {
+    "translation": "删除 ({val})",
+    "defaultMessage": "Delete ({val})",
+    "description": "Name of D permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_join": {
+    "translation": "加入 ({val})",
+    "defaultMessage": "Join ({val})",
+    "description": "Name of J permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_owner": {
+    "translation": "所有者 ({val})",
+    "defaultMessage": "Owner ({val})",
+    "description": "Name of O permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_pres": {
+    "translation": "获取通知 ({val})",
+    "defaultMessage": "Get notified ({val})",
+    "description": "Name of P permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_read": {
+    "translation": "读取 ({val})",
+    "defaultMessage": "Read ({val})",
+    "description": "Name of R permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_share": {
+    "translation": "分享 ({val})",
+    "defaultMessage": "Share ({val})",
+    "description": "Name of S permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_write": {
+    "translation": "写入 ({val})",
+    "defaultMessage": "Write ({val})",
+    "description": "Name of W permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "phone_dative": {
+    "translation": "电话",
+    "defaultMessage": "phone",
+    "description": "Dative case of 'phone', i.e. 'phone' in 'by phone'",
+    "missing": false,
+    "obsolete": false
+  },
+  "private_editing_placeholder": {
+    "translation": "仅自己可见",
+    "defaultMessage": "Visible to you only",
+    "description": "Placeholder for editing 'private'",
+    "missing": false,
+    "obsolete": false
+  },
+  "push_init_failed": {
+    "translation": "初始化推送通知失败",
+    "defaultMessage": "Failed to initialize push notifications",
+    "description": "Error message when push notifications have failed to initialize.",
+    "missing": false,
+    "obsolete": false
+  },
+  "reconnect_countdown": {
+    "translation": "连接已断开。{seconds} 秒后重新连接…",
+    "defaultMessage": "Disconnected. Reconnecting in {seconds}…",
+    "description": "Message shown when an app update is available.",
+    "missing": false,
+    "obsolete": false
+  },
+  "reconnect_now": {
+    "translation": "立即尝试",
+    "defaultMessage": "Try now",
+    "description": "Prompt for reconnecting now",
+    "missing": false,
+    "obsolete": false
+  },
+  "reload_update": {
+    "translation": "重新载入",
+    "defaultMessage": "Reload",
+    "description": "Call to action to reload application when update is available.",
+    "missing": false,
+    "obsolete": false
+  },
+  "report_chat_warning": {
+    "translation": "您确定要停止并报告此对话吗？",
+    "defaultMessage": "Are you sure you want to block and report this conversation?",
+    "description": "Alert dialog warning when reporting a conversation for abuse",
+    "missing": false,
+    "obsolete": false
+  },
+  "requested_permissions": {
+    "translation": "已请求",
+    "defaultMessage": "Requested",
+    "description": "Title for permissions",
+    "missing": false,
+    "obsolete": false
+  },
+  "save_attachment": {
+    "translation": "保存",
+    "defaultMessage": "save",
+    "description": "Call to save an attachment",
+    "missing": false,
+    "obsolete": false
+  },
+  "search_for_contacts": {
+    "translation": "使用搜索寻找联系人",
+    "defaultMessage": "Use search to find contacts",
+    "description": "Text shown in contacts view when user entered no search query.",
+    "missing": false,
+    "obsolete": false
+  },
+  "search_no_results": {
+    "translation": "搜索返回任何结果",
+    "defaultMessage": "Search returned no results",
+    "description": "Text shown in contacts view when query returned no results.",
+    "missing": false,
+    "obsolete": false
+  },
+  "search_placeholder": {
+    "translation": "列表如 email:alice@example.com, tel:+17025550003...",
+    "defaultMessage": "List like email:alice@example.com, tel:17025550003...",
+    "description": "Placeholder in contacts search field",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_acc_general": {
+    "translation": "常用设定",
+    "defaultMessage": "General",
+    "description": "Sidepanel title for TopicCommonView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_acc_notifications": {
+    "translation": "通知",
+    "defaultMessage": "Notifications",
+    "description": "Sidepanel title for AccNotificationsView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_acc_security": {
+    "translation": "安全",
+    "defaultMessage": "Security",
+    "description": "Sidepanel title for AccSecurityView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_acc_support": {
+    "translation": "支持",
+    "defaultMessage": "Support",
+    "description": "Sidepanel title for AccSupportView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_account_settings": {
+    "translation": "帐号设定",
+    "defaultMessage": "Account Settings",
+    "description": "Sidepanel title for AccountSettingsView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_archive": {
+    "translation": "已存档会话",
+    "defaultMessage": "Archived Chats",
+    "description": "Sidepanel title for ContactsView-Archive.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_blocked": {
+    "translation": "被阻止的聊天",
+    "defaultMessage": "Blocked Chats",
+    "description": "Sidepanel title for ContactsView-Blocked.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_cred": {
+    "translation": "确认凭据",
+    "defaultMessage": "Confirm Credentials",
+    "description": "Sidepanel title for ValidationView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_crop": {
+    "translation": "拖动调整",
+    "defaultMessage": "Drag to Adjust",
+    "description": "Sidepanel title for AvatarCropView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_login": {
+    "translation": "登录",
+    "defaultMessage": "Sign In",
+    "description": "Sidepanel title for LoginView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_newtpk": {
+    "translation": "开始新会话",
+    "defaultMessage": "Start New Chat",
+    "description": "Sidepanel title for NewTopicView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_register": {
+    "translation": "创建账户",
+    "defaultMessage": "Create Account",
+    "description": "Sidepanel title for CreateAccountView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_reset": {
+    "translation": "重置密码",
+    "defaultMessage": "Reset Password",
+    "description": "Sidepanel title for PasswordResetView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_settings": {
+    "translation": "设置",
+    "defaultMessage": "Settings",
+    "description": "Sidepanel title for SettingsView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "stay_logged_in": {
+    "translation": "保持登录",
+    "defaultMessage": "Stay logged in",
+    "description": "Label for a checkbox",
+    "missing": false,
+    "obsolete": false
+  },
+  "tabtitle_find_user": {
+    "translation": "搜索",
+    "defaultMessage": "find",
+    "description": "Tab title Find",
+    "missing": false,
+    "obsolete": false
+  },
+  "tabtitle_group_by_id": {
+    "translation": "通过 id",
+    "defaultMessage": "by id",
+    "description": "Tab title Find topic by ID",
+    "missing": false,
+    "obsolete": false
+  },
+  "tabtitle_new_group": {
+    "translation": "新群组",
+    "defaultMessage": "new group",
+    "description": "Tab title New Group",
+    "missing": false,
+    "obsolete": false
+  },
+  "tags_editor_no_tags": {
+    "translation": "添加一些标签",
+    "defaultMessage": "Add some tags",
+    "description": "Tag editor prompt when no tags are found.",
+    "missing": false,
+    "obsolete": false
+  },
+  "tags_not_found": {
+    "translation": "尚未定义标签。添加一些。",
+    "defaultMessage": "No tags defined. Add some.",
+    "description": "",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_all_contacts": {
+    "translation": "全部联系人",
+    "defaultMessage": "All Contacts",
+    "description": "Section title [All Contacts]",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_group_members": {
+    "translation": "群组成员",
+    "defaultMessage": "Group Members",
+    "description": "Section title",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_info": {
+    "translation": "信息",
+    "defaultMessage": "Info",
+    "description": "Title for InfoView",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_manage_tags": {
+    "translation": "管理标签",
+    "defaultMessage": "Manage",
+    "description": "Section title for the list of tags",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_not_found": {
+    "translation": "无法找到",
+    "defaultMessage": "Not found",
+    "description": "Title shown when topic is not found",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_permissions": {
+    "translation": "权限",
+    "defaultMessage": "Permissions",
+    "description": "Section title",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_tag_manager": {
+    "translation": "标签（用户发现）",
+    "defaultMessage": "Tags (user discovery)",
+    "description": "Section title for TagManager",
+    "missing": false,
+    "obsolete": false
+  },
+  "topic_block_warning": {
+    "translation": "您确定要阻止此对话吗？",
+    "defaultMessage": "Are you sure you want to block this conversation?",
+    "description": "Alert warning when blocking a topic.",
+    "missing": false,
+    "obsolete": false
+  },
+  "topic_delete_warning": {
+    "translation": "您确定要删除此对话吗？",
+    "defaultMessage": "Are you sure you want to delete this conversation?",
+    "description": "Alert warning when deleting entire topic",
+    "missing": false,
+    "obsolete": false
+  },
+  "topic_name_editing_placeholder": {
+    "translation": "群组自由格式名称",
+    "defaultMessage": "Freeform name of the group",
+    "description": "Prompt for entering topic name",
+    "missing": false,
+    "obsolete": false
+  },
+  "unnamed_topic": {
+    "translation": "未命名",
+    "defaultMessage": "Unnamed",
+    "description": "Title shown when the topic has no name",
+    "missing": false,
+    "obsolete": false
+  },
+  "update_available": {
+    "translation": "更新可用。",
+    "defaultMessage": "Update available.",
+    "description": "Message shown when an app update is available.",
+    "missing": false,
+    "obsolete": false
+  },
+  "upload_finishing": {
+    "translation": "正在结束...",
+    "defaultMessage": "finishing...",
+    "description": "Notification that upload is finishing",
+    "missing": false,
+    "obsolete": false
+  },
+  "user_not_found": {
+    "translation": "未找到",
+    "defaultMessage": "Not found",
+    "description": "In place of a user's full name when the user is not found.",
+    "missing": false,
+    "obsolete": false
+  },
+  "validate_credential_action": {
+    "translation": "确认",
+    "defaultMessage": "confirm",
+    "description": "Validate credentail call to action",
+    "missing": false,
+    "obsolete": false
+  }
 }

@@ -1,186 +1,1284 @@
 {
-  "validate_credential_action": "확인",
-  "title_tag_manager": "태그(사용자검색)",
-  "label_user_contacts": "연락처: ",
-  "button_add_another": "다른항목추가",
-  "label_message_sound": "메시지소리: ",
-  "label_push_notifications": "통지경보: ",
-  "label_push_notifications_disabled": "통지경보(HTTPS필요): ",
-  "label_incognito_mode": "시크릿모드: ",
-  "delete_account": "계정삭제",
-  "delete_account_warning": "계정을삭제하시겠습니까?실행취소할수없습니다.",
-  "label_password": "비밀번호",
-  "password_unchanged_prompt": "변경되지않음",
-  "button_logout": "로그아웃",
-  "button_delete_account": "계정삭제",
-  "label_default_access_mode": "기본액세스모드: ",
-  "blocked_contacts_link": "차단된연락처({수})",
-  "link_contact_us": "문의처",
-  "link_terms_of_service": "서비스약관",
-  "link_privacy_policy": "개인정보보호정책",
-  "label_sdk": "SDK:",
-  "label_server_address": "서버주소: ",
-  "archived_contacts": "보관된연락처({수})",
-  "contacts_not_found": "채팅이없습니다<br/>¯∖_(ツ)_/¯",
-  "full_name_prompt": "전체이름(예:홍길동)",
-  "email_prompt": "이메일(예:hong@example.com)",
-  "button_sign_up": "가입",
-  "label_your_name": "이름",
-  "label_user_id": "ID:",
-  "button_edit": "편집",
-  "requested_permissions": "요청",
-  "grant_permissions": ":!![OBSOLETE]!!:승인",
-  "menu_item_edit_permissions": "편집권한",
-  "label_other_user": "기타",
-  "action_clear_messages": "메시지지우기",
-  "clear_messages_warning": "모든메시지를지우시겠습니까?실행취소할수없습니다.",
-  "action_delete_messages": "모든메시지지우기",
-  "delete_messages_warning": "모든사람의모든메시지를삭제하시겠습니까?실행취소할수없습니다.",
-  "action_leave_chat": "대화나누기",
-  "leave_chat_warning": "이대화를나가시겠습니까?",
-  "action_block_contact": "연락차단",
-  "block_contact_warning": "이연락처를차단하시겠습니까?",
-  "action_report_chat": "대화기록",
-  "report_chat_warning": "이대화를차단하고기록하시겠습니까?",
-  "title_info": "정보",
-  "label_topic_name": "이름",
-  "label_private": "개인코멘트",
-  "private_editing_placeholder": "나만볼수있습니다",
-  "label_muting_topic": "음소거: ",
-  "action_more": "더보기",
-  "label_your_permissions": "권한: ",
-  "label_permissions": "권한: ",
-  "label_you": "당신: ",
-  "label_default_access": "기본액세스모드: ",
-  "label_group_members": "그룹회원: ",
-  "button_add_members": "회원추가",
-  "group_has_no_members": "회원없음",
-  "login_prompt": "로그인",
-  "password_prompt": "비밀번호",
-  "stay_logged_in": "로그인상태유지",
-  "forgot_password_link": "비밀번호를잊으셨습니까?",
-  "button_sign_in": "로그인",
-  "label_client": "클라이언트: ",
-  "label_server": "서버: ",
-  "online_now": "현재접속중",
-  "last_seen_timestamp": "마지막으로본",
-  "title_not_found": "찾을수없음",
-  "unnamed_topic": "이름없는",
-  "message_not_readable": ":!![OBSOLETE]!!:메시지에접근할수없음",
-  "peers_messaging_disabled": "동료의메시지가비활성화되었습니다.",
-  "enable_peers_messaging": "활성화",
-  "search_for_contacts": "검색을사용하여연락처찾기",
-  "search_no_results": "검색결과가없습니다",
-  "tabtitle_find_user": "찾기",
-  "tabtitle_new_group": "새그룹",
-  "tabtitle_group_by_id": "id로",
-  "new_password_placeholder": "새비밀번호입력",
-  "label_reset_password": "비밀번호재설정이메일보내기: ",
-  "credential_email_prompt": "등록이메일",
-  "button_reset": "재설정",
-  "button_send_request": "요청보내기",
-  "label_server_to_use": "사용할서버:",
-  "label_wire_transport": "와이어수송:",
-  "button_update": "업데이트",
-  "sidepanel_title_login": "로그인",
-  "sidepanel_title_register": "계정만들기",
-  "sidepanel_title_settings": "설정",
-  "sidepanel_title_account_settings": "계정설정",
-  "sidepanel_title_acc_general": "일반",
-  "sidepanel_title_acc_security": "보안",
-  "sidepanel_title_acc_notifications": "알림",
-  "sidepanel_title_acc_support": "지원",
-  "sidepanel_title_newtpk": "새채팅시작",
-  "sidepanel_title_cred": "자격증명확인",
-  "sidepanel_title_reset": "비밀번호재설정",
-  "sidepanel_title_archive": "보관된채팅",
-  "sidepanel_title_blocked": "차단된채팅",
-  "update_available": "업데이트가능.",
-  "reload_update": "재로드",
-  "reconnect_countdown": "연결이끊어졌습니다.다시연결하는중{초}…",
-  "reconnect_now": "지금시도",
-  "push_init_failed": "푸시알림을초기화하지못했습니다",
-  "invalid_security_token": "유효하지않은보안토큰",
-  "no_connection": "연결없음",
-  "code_doesnot_match": "코드가일치하지않습니다",
-  "phone_dative": "전화",
-  "email_dative": "이메일",
-  "enter_confirmation_code_prompt": "{방법}으로보낸확인코드를입력하십시오:",
-  "numeric_confirmation_code_prompt": "숫자만",
-  "button_confirm": "확인",
-  "save_attachment": "저장",
-  "invalid_content": "잘못된내용",
-  "user_not_found": "찾을수없음",
-  "badge_you": "당신",
-  "badge_owner": "소유자",
-  "menu_item_info": "정보",
-  "menu_item_clear_messages": "메시지지우기",
-  "menu_item_clear_messages_for_all": "모두지우기",
-  "menu_item_delete": "삭제",
-  "menu_item_delete_for_all": "모두삭제",
-  "menu_item_send_retry": "다시시도",
-  "menu_item_mute": "음소거",
-  "menu_item_unmute": "음소거해제",
-  "menu_item_delete_topic": "삭제",
-  "topic_delete_warning": "이대화를삭제하시겠습니까?",
-  "menu_item_unblock": "차단해제",
-  "menu_item_block": "차단",
-  "topic_block_warning": "이대화를차단하시겠습니까?",
-  "menu_item_member_delete": "제거",
-  "menu_item_archive_topic": "보관",
-  "action_cancel": "취소",
-  "upload_finishing": "마무리...",
-  "no_contacts": "연락처가없습니다 (._.)",
-  "contacts_not_found_short": "'{문의}'와일치하는연락처가없습니다.",
-  "title_group_members": "그룹구성원",
-  "title_all_contacts": "모든연락처",
-  "button_ok": "OK",
-  "button_cancel": "취소",
-  "more_online_members": "+{넘침}더보기",
-  "download_action": "다운로드",
-  "label_file_name": "파일이름: ",
-  "label_content_type": "컨텐츠유형: ",
-  "label_size": "크기: ",
-  "chat_invitation": "새로운대화를시작하도록초대되었습니다.무엇을하시겠습니까?",
-  "chat_invitation_accept": "수락",
-  "chat_invitation_ignore": "무시",
-  "chat_invitation_block": "차단",
-  "error_invalid_id": "잘못된ID",
-  "group_user_id_prompt": "그룹또는사용자ID",
-  "button_subscribe": "구독",
-  "topic_name_editing_placeholder": "그룹의자유형이름",
-  "button_create": "작성",
-  "permission_join": "참여({val})",
-  "permission_read": "읽기({val})",
-  "permission_write": "쓰기({val})",
-  "permission_pres": "알림받기({val})",
-  "permission_admin": "승인({val})",
-  "permission_share": "공유({val})",
-  "permission_delete": "삭제({val})",
-  "permission_owner": "소유자({val})",
-  "title_permissions": "권한",
-  "message_sending": "보내기...",
-  "message_sending_failed": "실패",
-  "search_placeholder": "email:alice@example.com,tel:17025550003...와같은목록",
-  "messaging_disabled_prompt": "메시지비활성화",
-  "new_message_prompt": "새메시지",
-  "image_caption_prompt": "이미지설명",
-  "file_attachment_too_large": "파일크기{크기}이(가){제한}제한을초과합니다.",
-  "cannot_initiate_file_upload": "파일업로드를시작할수없습니다.",
-  "tags_not_found": "태그가정의되지않았습니다.일부를추가하십시오.",
-  "tags_editor_no_tags": "일부태그추가",
-  "title_manage_tags": "관리",
-  "granted_permissions": "승낙하다",
-  "messages_not_readable": "메시지에 액세스 할 수 없습니다",
-  "deleted_content": "내용이 삭제되었습니다",
-  "channel_prompt": "이 채널입니다",
-  "channel": "채널",
-  "drafty_attachment": "부착",
-  "drafty_form": "형태:",
-  "drafty_image": "이미지",
-  "menu_item_restore_topic": "복원",
-  "badge_danger": "의심 많은",
-  "badge_staff": "직원 관리하에",
-  "badge_verified": "확인 됨",
-  "sidepanel_title_crop": "드래그하여 조정"
+  "action_block_contact": {
+    "translation": "연락차단",
+    "defaultMessage": "Block Contact",
+    "description": "Flat button [Block Contact]",
+    "missing": false,
+    "obsolete": false
+  },
+  "action_cancel": {
+    "translation": "취소",
+    "defaultMessage": "cancel",
+    "description": "Call to action [cancel]",
+    "missing": false,
+    "obsolete": false
+  },
+  "action_clear_messages": {
+    "translation": "메시지지우기",
+    "defaultMessage": "Clear Messages",
+    "description": "Flat button [Clear Messages] (soft-delete messages)",
+    "missing": false,
+    "obsolete": false
+  },
+  "action_delete_messages": {
+    "translation": "모든메시지지우기",
+    "defaultMessage": "Clear Messages for All",
+    "description": "Flat button [Clear for All] (hard-delete all messages)",
+    "missing": false,
+    "obsolete": false
+  },
+  "action_leave_chat": {
+    "translation": "대화나누기",
+    "defaultMessage": "Leave Conversation",
+    "description": "Flat button [Leave Conversation]",
+    "missing": false,
+    "obsolete": false
+  },
+  "action_more": {
+    "translation": "더보기",
+    "defaultMessage": "More",
+    "description": "Action for showing more content",
+    "missing": false,
+    "obsolete": false
+  },
+  "action_report_chat": {
+    "translation": "대화기록",
+    "defaultMessage": "Report Conversation",
+    "description": "Flat button [Report Group]",
+    "missing": false,
+    "obsolete": false
+  },
+  "archived_contacts": {
+    "translation": "보관된연락처({수})",
+    "defaultMessage": "Archived contacts ({count})",
+    "description": "Label for archived chats",
+    "missing": false,
+    "obsolete": false
+  },
+  "badge_danger": {
+    "translation": "의심 많은",
+    "defaultMessage": "Untrustworthy",
+    "description": "Suspicious or untrustworthy account or topic badge",
+    "missing": false,
+    "obsolete": false
+  },
+  "badge_owner": {
+    "translation": "소유자",
+    "defaultMessage": "owner",
+    "description": "Badge for indicating the owner",
+    "missing": false,
+    "obsolete": false
+  },
+  "badge_staff": {
+    "translation": "직원 관리하에",
+    "defaultMessage": "Staff-managed",
+    "description": "Explanation of a staff-managed account or topic badge",
+    "missing": false,
+    "obsolete": false
+  },
+  "badge_verified": {
+    "translation": "확인 됨",
+    "defaultMessage": "Verified/official",
+    "description": "Explanation of a verified account or topic badge",
+    "missing": false,
+    "obsolete": false
+  },
+  "badge_you": {
+    "translation": "당신",
+    "defaultMessage": "you",
+    "description": "Badge for indicating the current user",
+    "missing": false,
+    "obsolete": false
+  },
+  "block_contact_warning": {
+    "translation": "이연락처를차단하시겠습니까?",
+    "defaultMessage": "Are you sure you want to block this contact?",
+    "description": "Alert dialog warning when blocking a contact.",
+    "missing": false,
+    "obsolete": false
+  },
+  "blocked_contacts_link": {
+    "translation": "차단된연락처({수})",
+    "defaultMessage": "Blocked contacts ({count})",
+    "description": "Blocked contacts link",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_add_another": {
+    "translation": "다른항목추가",
+    "defaultMessage": "Add another",
+    "description": "Call to action [+ add another]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_add_members": {
+    "translation": "회원추가",
+    "defaultMessage": "Add members",
+    "description": "Flat button [Add members] (to topic)",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_cancel": {
+    "translation": "취소",
+    "defaultMessage": "Cancel",
+    "description": "Button [Cancel]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_confirm": {
+    "translation": "확인",
+    "defaultMessage": "Confirm",
+    "description": "Button [Confirm]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_create": {
+    "translation": "작성",
+    "defaultMessage": "Create",
+    "description": "Button [Create]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_delete_account": {
+    "translation": "계정삭제",
+    "defaultMessage": "Delete account",
+    "description": "Button [Delete account]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_edit": {
+    "translation": "편집",
+    "defaultMessage": "Edit",
+    "description": "Call to action [Edit]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_logout": {
+    "translation": "로그아웃",
+    "defaultMessage": "Logout",
+    "description": "Button [Logout]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_ok": {
+    "translation": "OK",
+    "defaultMessage": "OK",
+    "description": "Button [OK]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_reset": {
+    "translation": "재설정",
+    "defaultMessage": "Reset",
+    "description": "Button [Reset]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_send_request": {
+    "translation": "요청보내기",
+    "defaultMessage": "Send request",
+    "description": "Button [Send request]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_sign_in": {
+    "translation": "로그인",
+    "defaultMessage": "Sign in",
+    "description": "Button [Sign In]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_sign_up": {
+    "translation": "가입",
+    "defaultMessage": "Sign up",
+    "description": "Create account button [Sign Up]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_subscribe": {
+    "translation": "구독",
+    "defaultMessage": "Subscribe",
+    "description": "Button [Subscribe]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_update": {
+    "translation": "업데이트",
+    "defaultMessage": "Update",
+    "description": "Button [Update]",
+    "missing": false,
+    "obsolete": false
+  },
+  "cannot_initiate_file_upload": {
+    "translation": "파일업로드를시작할수없습니다.",
+    "defaultMessage": "Cannot initiate file upload.",
+    "description": "Generic error messagewhen attachment fails",
+    "missing": false,
+    "obsolete": false
+  },
+  "channel": {
+    "translation": "채널",
+    "defaultMessage": "channel",
+    "description": "Subtitle shown for channels in MessagesView instead of last seen",
+    "missing": false,
+    "obsolete": false
+  },
+  "channel_prompt": {
+    "translation": "이 채널입니다",
+    "defaultMessage": "This is a channel",
+    "description": "Checkbox label when creating a channel",
+    "missing": false,
+    "obsolete": false
+  },
+  "chat_invitation": {
+    "translation": "새로운대화를시작하도록초대되었습니다.무엇을하시겠습니까?",
+    "defaultMessage": "You are invited to start a new chat. What would you like to do?",
+    "description": "New chat invitation message: [Accept] [Ignore] [Block].",
+    "missing": false,
+    "obsolete": false
+  },
+  "chat_invitation_accept": {
+    "translation": "수락",
+    "defaultMessage": "Accept",
+    "description": "Action [Accept] for chat invitation.",
+    "missing": false,
+    "obsolete": false
+  },
+  "chat_invitation_block": {
+    "translation": "차단",
+    "defaultMessage": "Block",
+    "description": "Action [Block] for chat invitation.",
+    "missing": false,
+    "obsolete": false
+  },
+  "chat_invitation_ignore": {
+    "translation": "무시",
+    "defaultMessage": "Ignore",
+    "description": "Action [Ignore] for chat invitation.",
+    "missing": false,
+    "obsolete": false
+  },
+  "clear_messages_warning": {
+    "translation": "모든메시지를지우시겠습니까?실행취소할수없습니다.",
+    "defaultMessage": "Are you sure you want to clear all messages? It cannot be undone.",
+    "description": "Alert dialog warning when deleting all messages.",
+    "missing": false,
+    "obsolete": false
+  },
+  "code_doesnot_match": {
+    "translation": "코드가일치하지않습니다",
+    "defaultMessage": "Code does not match",
+    "description": "Error message when the credential validation code is incorrect.",
+    "missing": false,
+    "obsolete": false
+  },
+  "contacts_not_found": {
+    "translation": "채팅이없습니다<br/>¯∖_(ツ)_/¯",
+    "defaultMessage": "You have no chats<br />¯∖_(ツ)_/¯",
+    "description": "HTML message shown in ContactList when no contacts are found",
+    "missing": false,
+    "obsolete": false
+  },
+  "contacts_not_found_short": {
+    "translation": "'{문의}'와일치하는연락처가없습니다.",
+    "defaultMessage": "No contacts match ''{query}''",
+    "description": "Shown in ContactsView when search returned no results",
+    "missing": false,
+    "obsolete": false
+  },
+  "credential_email_prompt": {
+    "translation": "등록이메일",
+    "defaultMessage": "Your registration email",
+    "description": "Placeholder for entering email",
+    "missing": false,
+    "obsolete": false
+  },
+  "delete_account": {
+    "translation": "계정삭제",
+    "defaultMessage": "Delete account",
+    "description": "Title for delete account warning",
+    "missing": false,
+    "obsolete": false
+  },
+  "delete_account_warning": {
+    "translation": "계정을삭제하시겠습니까?실행취소할수없습니다.",
+    "defaultMessage": "Are you sure you want to delete your account? It cannot be undone.",
+    "description": "Warning message when deleting an account",
+    "missing": false,
+    "obsolete": false
+  },
+  "delete_messages_warning": {
+    "translation": "모든사람의모든메시지를삭제하시겠습니까?실행취소할수없습니다.",
+    "defaultMessage": "Are you sure you want to delete all messages for everyone? It cannot be undone.",
+    "description": "Alert dialog warning when hard-deleting all messages.",
+    "missing": false,
+    "obsolete": false
+  },
+  "deleted_content": {
+    "translation": "내용이 삭제되었습니다",
+    "defaultMessage": "content deleted",
+    "description": "Shown when messages are deleted",
+    "missing": false,
+    "obsolete": false
+  },
+  "download_action": {
+    "translation": "다운로드",
+    "defaultMessage": "download",
+    "description": "Call to action [download]",
+    "missing": false,
+    "obsolete": false
+  },
+  "drafty_attachment": {
+    "translation": "부착",
+    "defaultMessage": "Attachment",
+    "description": "Comment for attachment in drafty preview",
+    "missing": false,
+    "obsolete": false
+  },
+  "drafty_form": {
+    "translation": "형태:",
+    "defaultMessage": "Form:",
+    "description": "Comment for form in drafty preview",
+    "missing": false,
+    "obsolete": false
+  },
+  "drafty_image": {
+    "translation": "이미지",
+    "defaultMessage": "Picture",
+    "description": "Comment for embedded images in drafty preview",
+    "missing": false,
+    "obsolete": false
+  },
+  "email_dative": {
+    "translation": "이메일",
+    "defaultMessage": "email",
+    "description": "Dative case of 'email', i.e. 'email' in 'by email'",
+    "missing": false,
+    "obsolete": false
+  },
+  "email_prompt": {
+    "translation": "이메일(예:hong@example.com)",
+    "defaultMessage": "Email, e.g. jdoe@example.com",
+    "description": "Input placeholder for email entry",
+    "missing": false,
+    "obsolete": false
+  },
+  "enable_peers_messaging": {
+    "translation": "활성화",
+    "defaultMessage": "Enable",
+    "description": "Call to action to enable peer's messaging",
+    "missing": false,
+    "obsolete": false
+  },
+  "enter_confirmation_code_prompt": {
+    "translation": "{방법}으로보낸확인코드를입력하십시오:",
+    "defaultMessage": "Enter confirmation code sent to you by {method}:",
+    "description": "Request to enter confirmation code",
+    "missing": false,
+    "obsolete": false
+  },
+  "error_invalid_id": {
+    "translation": "잘못된ID",
+    "defaultMessage": "Invalid ID",
+    "description": "Error message",
+    "missing": false,
+    "obsolete": false
+  },
+  "file_attachment_too_large": {
+    "translation": "파일크기{크기}이(가){제한}제한을초과합니다.",
+    "defaultMessage": "The file size {size} exceeds the {limit} limit.",
+    "description": "Error message when attachment is too large",
+    "missing": false,
+    "obsolete": false
+  },
+  "forgot_password_link": {
+    "translation": "비밀번호를잊으셨습니까?",
+    "defaultMessage": "Forgot password?",
+    "description": "Link to Reset password form",
+    "missing": false,
+    "obsolete": false
+  },
+  "full_name_prompt": {
+    "translation": "전체이름(예:홍길동)",
+    "defaultMessage": "Full name, e.g. John Doe",
+    "description": "Input placeholder for person's full name",
+    "missing": false,
+    "obsolete": false
+  },
+  "granted_permissions": {
+    "translation": "승낙하다",
+    "defaultMessage": "Granted",
+    "description": "Title for permissions",
+    "missing": false,
+    "obsolete": false
+  },
+  "group_has_no_members": {
+    "translation": "회원없음",
+    "defaultMessage": "No members",
+    "description": "Shown in place of group members",
+    "missing": false,
+    "obsolete": false
+  },
+  "group_user_id_prompt": {
+    "translation": "그룹또는사용자ID",
+    "defaultMessage": "Group or User ID",
+    "description": "Prompt for entering user or group ID",
+    "missing": false,
+    "obsolete": false
+  },
+  "image_caption_prompt": {
+    "translation": "이미지설명",
+    "defaultMessage": "Image caption",
+    "description": "Prompt in SendMessage for attached image",
+    "missing": false,
+    "obsolete": false
+  },
+  "invalid_content": {
+    "translation": "잘못된내용",
+    "defaultMessage": "invalid content",
+    "description": "Shown when message is unreadable",
+    "missing": false,
+    "obsolete": false
+  },
+  "invalid_security_token": {
+    "translation": "유효하지않은보안토큰",
+    "defaultMessage": "Invalid security token",
+    "description": "Error message when resetting password.",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_client": {
+    "translation": "클라이언트: ",
+    "defaultMessage": "Client:",
+    "description": "Label for a client version",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_content_type": {
+    "translation": "컨텐츠유형: ",
+    "defaultMessage": "Content type:",
+    "description": "Label for file content type (mime)",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_default_access": {
+    "translation": "기본액세스모드: ",
+    "defaultMessage": "Default access mode:",
+    "description": "Section title",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_default_access_mode": {
+    "translation": "기본액세스모드: ",
+    "defaultMessage": "Default access mode:",
+    "description": "Label for default access mode",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_file_name": {
+    "translation": "파일이름: ",
+    "defaultMessage": "File name:",
+    "description": "Label for a file name",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_group_members": {
+    "translation": "그룹회원: ",
+    "defaultMessage": "Group members:",
+    "description": "Section title or label",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_incognito_mode": {
+    "translation": "시크릿모드: ",
+    "defaultMessage": "Incognito mode:",
+    "description": "Label for incognito mode toggle",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_message_sound": {
+    "translation": "메시지소리: ",
+    "defaultMessage": "Message sound:",
+    "description": "Label for message sounds toggle",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_muting_topic": {
+    "translation": "음소거: ",
+    "defaultMessage": "Muted:",
+    "description": "Label for Muting/unmuting the topic",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_other_user": {
+    "translation": "기타",
+    "defaultMessage": "Other",
+    "description": "Label for the other user when the user is unnamed",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_password": {
+    "translation": "비밀번호",
+    "defaultMessage": "Password",
+    "description": "Label for password editing",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_permissions": {
+    "translation": "권한: ",
+    "defaultMessage": "Permissions:",
+    "description": "Section title",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_private": {
+    "translation": "개인코멘트",
+    "defaultMessage": "Private comment",
+    "description": "Label for editing 'private'",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_push_notifications": {
+    "translation": "통지경보: ",
+    "defaultMessage": "Notification alerts:",
+    "description": "Label for push notifications switch",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_push_notifications_disabled": {
+    "translation": "통지경보(HTTPS필요): ",
+    "defaultMessage": "Notification alerts (requires HTTPS):",
+    "description": "Label for push notifications switch",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_reset_password": {
+    "translation": "비밀번호재설정이메일보내기: ",
+    "defaultMessage": "Send a password reset email:",
+    "description": "Label for password reset field",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_sdk": {
+    "translation": "SDK:",
+    "defaultMessage": "SDK:",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_server": {
+    "translation": "서버: ",
+    "defaultMessage": "Server:",
+    "description": "Label for a server version",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_server_address": {
+    "translation": "서버주소: ",
+    "defaultMessage": "Server address:",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_server_to_use": {
+    "translation": "사용할서버:",
+    "defaultMessage": "Server to use:",
+    "description": "Label for server selector in SettingsView",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_size": {
+    "translation": "크기: ",
+    "defaultMessage": "Size:",
+    "description": "Label for file size",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_topic_name": {
+    "translation": "이름",
+    "defaultMessage": "Name",
+    "description": "Label for editing topic name",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_user_contacts": {
+    "translation": "연락처: ",
+    "defaultMessage": "Contacts:",
+    "description": "Label for user contacts",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_user_id": {
+    "translation": "ID:",
+    "defaultMessage": "ID:",
+    "description": "Label for user address (ID)",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_wire_transport": {
+    "translation": "와이어수송:",
+    "defaultMessage": "Wire transport:",
+    "description": "Label for wire transport selection in SettingsView",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_you": {
+    "translation": "당신: ",
+    "defaultMessage": "You:",
+    "description": "Label for the current user",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_your_name": {
+    "translation": "이름",
+    "defaultMessage": "Your name",
+    "description": "Label for full name editing",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_your_permissions": {
+    "translation": "권한: ",
+    "defaultMessage": "Your permissions:",
+    "description": "Label for current user permissions",
+    "missing": false,
+    "obsolete": false
+  },
+  "last_seen_timestamp": {
+    "translation": "마지막으로본",
+    "defaultMessage": "Last seen",
+    "description": "Label for the timestamp of when the user or topic was last online",
+    "missing": false,
+    "obsolete": false
+  },
+  "leave_chat_warning": {
+    "translation": "이대화를나가시겠습니까?",
+    "defaultMessage": "Are you sure you want to leave this conversation?",
+    "description": "Alert dialog warning when unsubscribing from a chat.",
+    "missing": false,
+    "obsolete": false
+  },
+  "link_contact_us": {
+    "translation": "문의처",
+    "defaultMessage": "Contact Us",
+    "description": "Ancor text for contacting us by email",
+    "missing": false,
+    "obsolete": false
+  },
+  "link_privacy_policy": {
+    "translation": "개인정보보호정책",
+    "defaultMessage": "Privacy Policy",
+    "description": "Ancor text for privacy policy link",
+    "missing": false,
+    "obsolete": false
+  },
+  "link_terms_of_service": {
+    "translation": "서비스약관",
+    "defaultMessage": "Terms of Service",
+    "description": "Ancor text for terms of service link",
+    "missing": false,
+    "obsolete": false
+  },
+  "login_prompt": {
+    "translation": "로그인",
+    "defaultMessage": "Login",
+    "description": "Placeholer for username/login",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_archive_topic": {
+    "translation": "보관",
+    "defaultMessage": "Archive",
+    "description": "Move topic from the list of active chats to archive",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_block": {
+    "translation": "차단",
+    "defaultMessage": "Block",
+    "description": "Block topic or user",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_clear_messages": {
+    "translation": "메시지지우기",
+    "defaultMessage": "Clear messages",
+    "description": "Delete all messages",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_clear_messages_for_all": {
+    "translation": "모두지우기",
+    "defaultMessage": "Clear for All",
+    "description": "Delete all message(s) for all members",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_delete": {
+    "translation": "삭제",
+    "defaultMessage": "Delete",
+    "description": "Delete selected messages",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_delete_for_all": {
+    "translation": "모두삭제",
+    "defaultMessage": "Delete for All",
+    "description": "Delete selected message(s) for all members",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_delete_topic": {
+    "translation": "삭제",
+    "defaultMessage": "Delete",
+    "description": "Delete entire topic",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_edit_permissions": {
+    "translation": "편집권한",
+    "defaultMessage": "Edit permissions",
+    "description": "Menu item [Edit permissions]",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_info": {
+    "translation": "정보",
+    "defaultMessage": "Info",
+    "description": "Show extended topic information",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_member_delete": {
+    "translation": "제거",
+    "defaultMessage": "Remove",
+    "description": "Remove user from topic",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_mute": {
+    "translation": "음소거",
+    "defaultMessage": "Mute",
+    "description": "Turn off notifications",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_restore_topic": {
+    "translation": "복원",
+    "defaultMessage": "Restore",
+    "description": "Restore topic from archive",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_send_retry": {
+    "translation": "다시시도",
+    "defaultMessage": "Retry",
+    "description": "Retry sending message",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_unblock": {
+    "translation": "차단해제",
+    "defaultMessage": "Unblock",
+    "description": "Unblock topic or user",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_unmute": {
+    "translation": "음소거해제",
+    "defaultMessage": "Unmute",
+    "description": "Turn notifications on",
+    "missing": false,
+    "obsolete": false
+  },
+  "message_sending": {
+    "translation": "보내기...",
+    "defaultMessage": "sending...",
+    "description": "Message being sent, in place of time stamp",
+    "missing": false,
+    "obsolete": false
+  },
+  "message_sending_failed": {
+    "translation": "실패",
+    "defaultMessage": "failed",
+    "description": "Failed to send message, in place of time stamp",
+    "missing": false,
+    "obsolete": false
+  },
+  "messages_not_readable": {
+    "translation": "메시지에 액세스 할 수 없습니다",
+    "defaultMessage": "no access to messages",
+    "description": "Message shown in topic without the read access",
+    "missing": false,
+    "obsolete": false
+  },
+  "messaging_disabled_prompt": {
+    "translation": "메시지비활성화",
+    "defaultMessage": "Messaging disabled",
+    "description": "Prompt in SendMessage in read-only topic",
+    "missing": false,
+    "obsolete": false
+  },
+  "more_online_members": {
+    "translation": "+{넘침}더보기",
+    "defaultMessage": "+{overflow} more",
+    "description": "Shown in MessagesView title bar when the number of online subscribers exceeds MAX_ONLINE_IN_TOPIC",
+    "missing": false,
+    "obsolete": false
+  },
+  "new_message_prompt": {
+    "translation": "새메시지",
+    "defaultMessage": "New message",
+    "description": "Prompt in send message field",
+    "missing": false,
+    "obsolete": false
+  },
+  "new_password_placeholder": {
+    "translation": "새비밀번호입력",
+    "defaultMessage": "Enter new password",
+    "description": "Placeholder for entering new password",
+    "missing": false,
+    "obsolete": false
+  },
+  "no_connection": {
+    "translation": "연결없음",
+    "defaultMessage": "No connection",
+    "description": "Warning that the user is offline.",
+    "missing": false,
+    "obsolete": false
+  },
+  "no_contacts": {
+    "translation": "연락처가없습니다 (._.)",
+    "defaultMessage": "You have no contacts :-(",
+    "description": "Shown in ContactsView when the user has no contacts",
+    "missing": false,
+    "obsolete": false
+  },
+  "numeric_confirmation_code_prompt": {
+    "translation": "숫자만",
+    "defaultMessage": "Numbers only",
+    "description": "Prompt for numeric conformation code",
+    "missing": false,
+    "obsolete": false
+  },
+  "online_now": {
+    "translation": "현재접속중",
+    "defaultMessage": "online now",
+    "description": "Indicator that the user or topic is currently online",
+    "missing": false,
+    "obsolete": false
+  },
+  "password_prompt": {
+    "translation": "비밀번호",
+    "defaultMessage": "Password",
+    "description": "Placeholder/prompt for entering password",
+    "missing": false,
+    "obsolete": false
+  },
+  "password_unchanged_prompt": {
+    "translation": "변경되지않음",
+    "defaultMessage": "Unchanged",
+    "description": "Message in editor while password is unchanged",
+    "missing": false,
+    "obsolete": false
+  },
+  "peers_messaging_disabled": {
+    "translation": "동료의메시지가비활성화되었습니다.",
+    "defaultMessage": "Peer's messaging is disabled.",
+    "description": "Shown when the p2p peer's messaging is disabled",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_admin": {
+    "translation": "승인({val})",
+    "defaultMessage": "Approve ({val})",
+    "description": "Name of A permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_delete": {
+    "translation": "삭제({val})",
+    "defaultMessage": "Delete ({val})",
+    "description": "Name of D permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_join": {
+    "translation": "참여({val})",
+    "defaultMessage": "Join ({val})",
+    "description": "Name of J permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_owner": {
+    "translation": "소유자({val})",
+    "defaultMessage": "Owner ({val})",
+    "description": "Name of O permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_pres": {
+    "translation": "알림받기({val})",
+    "defaultMessage": "Get notified ({val})",
+    "description": "Name of P permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_read": {
+    "translation": "읽기({val})",
+    "defaultMessage": "Read ({val})",
+    "description": "Name of R permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_share": {
+    "translation": "공유({val})",
+    "defaultMessage": "Share ({val})",
+    "description": "Name of S permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_write": {
+    "translation": "쓰기({val})",
+    "defaultMessage": "Write ({val})",
+    "description": "Name of W permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "phone_dative": {
+    "translation": "전화",
+    "defaultMessage": "phone",
+    "description": "Dative case of 'phone', i.e. 'phone' in 'by phone'",
+    "missing": false,
+    "obsolete": false
+  },
+  "private_editing_placeholder": {
+    "translation": "나만볼수있습니다",
+    "defaultMessage": "Visible to you only",
+    "description": "Placeholder for editing 'private'",
+    "missing": false,
+    "obsolete": false
+  },
+  "push_init_failed": {
+    "translation": "푸시알림을초기화하지못했습니다",
+    "defaultMessage": "Failed to initialize push notifications",
+    "description": "Error message when push notifications have failed to initialize.",
+    "missing": false,
+    "obsolete": false
+  },
+  "reconnect_countdown": {
+    "translation": "연결이끊어졌습니다.다시연결하는중{초}…",
+    "defaultMessage": "Disconnected. Reconnecting in {seconds}…",
+    "description": "Message shown when an app update is available.",
+    "missing": false,
+    "obsolete": false
+  },
+  "reconnect_now": {
+    "translation": "지금시도",
+    "defaultMessage": "Try now",
+    "description": "Prompt for reconnecting now",
+    "missing": false,
+    "obsolete": false
+  },
+  "reload_update": {
+    "translation": "재로드",
+    "defaultMessage": "Reload",
+    "description": "Call to action to reload application when update is available.",
+    "missing": false,
+    "obsolete": false
+  },
+  "report_chat_warning": {
+    "translation": "이대화를차단하고기록하시겠습니까?",
+    "defaultMessage": "Are you sure you want to block and report this conversation?",
+    "description": "Alert dialog warning when reporting a conversation for abuse",
+    "missing": false,
+    "obsolete": false
+  },
+  "requested_permissions": {
+    "translation": "요청",
+    "defaultMessage": "Requested",
+    "description": "Title for permissions",
+    "missing": false,
+    "obsolete": false
+  },
+  "save_attachment": {
+    "translation": "저장",
+    "defaultMessage": "save",
+    "description": "Call to save an attachment",
+    "missing": false,
+    "obsolete": false
+  },
+  "search_for_contacts": {
+    "translation": "검색을사용하여연락처찾기",
+    "defaultMessage": "Use search to find contacts",
+    "description": "Text shown in contacts view when user entered no search query.",
+    "missing": false,
+    "obsolete": false
+  },
+  "search_no_results": {
+    "translation": "검색결과가없습니다",
+    "defaultMessage": "Search returned no results",
+    "description": "Text shown in contacts view when query returned no results.",
+    "missing": false,
+    "obsolete": false
+  },
+  "search_placeholder": {
+    "translation": "email:alice@example.com,tel:17025550003...와같은목록",
+    "defaultMessage": "List like email:alice@example.com, tel:17025550003...",
+    "description": "Placeholder in contacts search field",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_acc_general": {
+    "translation": "일반",
+    "defaultMessage": "General",
+    "description": "Sidepanel title for TopicCommonView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_acc_notifications": {
+    "translation": "알림",
+    "defaultMessage": "Notifications",
+    "description": "Sidepanel title for AccNotificationsView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_acc_security": {
+    "translation": "보안",
+    "defaultMessage": "Security",
+    "description": "Sidepanel title for AccSecurityView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_acc_support": {
+    "translation": "지원",
+    "defaultMessage": "Support",
+    "description": "Sidepanel title for AccSupportView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_account_settings": {
+    "translation": "계정설정",
+    "defaultMessage": "Account Settings",
+    "description": "Sidepanel title for AccountSettingsView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_archive": {
+    "translation": "보관된채팅",
+    "defaultMessage": "Archived Chats",
+    "description": "Sidepanel title for ContactsView-Archive.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_blocked": {
+    "translation": "차단된채팅",
+    "defaultMessage": "Blocked Chats",
+    "description": "Sidepanel title for ContactsView-Blocked.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_cred": {
+    "translation": "자격증명확인",
+    "defaultMessage": "Confirm Credentials",
+    "description": "Sidepanel title for ValidationView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_crop": {
+    "translation": "드래그하여 조정",
+    "defaultMessage": "Drag to Adjust",
+    "description": "Sidepanel title for AvatarCropView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_login": {
+    "translation": "로그인",
+    "defaultMessage": "Sign In",
+    "description": "Sidepanel title for LoginView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_newtpk": {
+    "translation": "새채팅시작",
+    "defaultMessage": "Start New Chat",
+    "description": "Sidepanel title for NewTopicView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_register": {
+    "translation": "계정만들기",
+    "defaultMessage": "Create Account",
+    "description": "Sidepanel title for CreateAccountView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_reset": {
+    "translation": "비밀번호재설정",
+    "defaultMessage": "Reset Password",
+    "description": "Sidepanel title for PasswordResetView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_settings": {
+    "translation": "설정",
+    "defaultMessage": "Settings",
+    "description": "Sidepanel title for SettingsView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "stay_logged_in": {
+    "translation": "로그인상태유지",
+    "defaultMessage": "Stay logged in",
+    "description": "Label for a checkbox",
+    "missing": false,
+    "obsolete": false
+  },
+  "tabtitle_find_user": {
+    "translation": "찾기",
+    "defaultMessage": "find",
+    "description": "Tab title Find",
+    "missing": false,
+    "obsolete": false
+  },
+  "tabtitle_group_by_id": {
+    "translation": "id로",
+    "defaultMessage": "by id",
+    "description": "Tab title Find topic by ID",
+    "missing": false,
+    "obsolete": false
+  },
+  "tabtitle_new_group": {
+    "translation": "새그룹",
+    "defaultMessage": "new group",
+    "description": "Tab title New Group",
+    "missing": false,
+    "obsolete": false
+  },
+  "tags_editor_no_tags": {
+    "translation": "일부태그추가",
+    "defaultMessage": "Add some tags",
+    "description": "Tag editor prompt when no tags are found.",
+    "missing": false,
+    "obsolete": false
+  },
+  "tags_not_found": {
+    "translation": "태그가정의되지않았습니다.일부를추가하십시오.",
+    "defaultMessage": "No tags defined. Add some.",
+    "description": "",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_all_contacts": {
+    "translation": "모든연락처",
+    "defaultMessage": "All Contacts",
+    "description": "Section title [All Contacts]",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_group_members": {
+    "translation": "그룹구성원",
+    "defaultMessage": "Group Members",
+    "description": "Section title",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_info": {
+    "translation": "정보",
+    "defaultMessage": "Info",
+    "description": "Title for InfoView",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_manage_tags": {
+    "translation": "관리",
+    "defaultMessage": "Manage",
+    "description": "Section title for the list of tags",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_not_found": {
+    "translation": "찾을수없음",
+    "defaultMessage": "Not found",
+    "description": "Title shown when topic is not found",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_permissions": {
+    "translation": "권한",
+    "defaultMessage": "Permissions",
+    "description": "Section title",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_tag_manager": {
+    "translation": "태그(사용자검색)",
+    "defaultMessage": "Tags (user discovery)",
+    "description": "Section title for TagManager",
+    "missing": false,
+    "obsolete": false
+  },
+  "topic_block_warning": {
+    "translation": "이대화를차단하시겠습니까?",
+    "defaultMessage": "Are you sure you want to block this conversation?",
+    "description": "Alert warning when blocking a topic.",
+    "missing": false,
+    "obsolete": false
+  },
+  "topic_delete_warning": {
+    "translation": "이대화를삭제하시겠습니까?",
+    "defaultMessage": "Are you sure you want to delete this conversation?",
+    "description": "Alert warning when deleting entire topic",
+    "missing": false,
+    "obsolete": false
+  },
+  "topic_name_editing_placeholder": {
+    "translation": "그룹의자유형이름",
+    "defaultMessage": "Freeform name of the group",
+    "description": "Prompt for entering topic name",
+    "missing": false,
+    "obsolete": false
+  },
+  "unnamed_topic": {
+    "translation": "이름없는",
+    "defaultMessage": "Unnamed",
+    "description": "Title shown when the topic has no name",
+    "missing": false,
+    "obsolete": false
+  },
+  "update_available": {
+    "translation": "업데이트가능.",
+    "defaultMessage": "Update available.",
+    "description": "Message shown when an app update is available.",
+    "missing": false,
+    "obsolete": false
+  },
+  "upload_finishing": {
+    "translation": "마무리...",
+    "defaultMessage": "finishing...",
+    "description": "Notification that upload is finishing",
+    "missing": false,
+    "obsolete": false
+  },
+  "user_not_found": {
+    "translation": "찾을수없음",
+    "defaultMessage": "Not found",
+    "description": "In place of a user's full name when the user is not found.",
+    "missing": false,
+    "obsolete": false
+  },
+  "validate_credential_action": {
+    "translation": "확인",
+    "defaultMessage": "confirm",
+    "description": "Validate credentail call to action",
+    "missing": false,
+    "obsolete": false
+  },
+  "grant_permissions": {
+    "translation": ":!![OBSOLETE]!!:승인",
+    "missing": false,
+    "obsolete": true
+  },
+  "message_not_readable": {
+    "translation": ":!![OBSOLETE]!!:메시지에접근할수없음",
+    "missing": false,
+    "obsolete": true
+  }
 }

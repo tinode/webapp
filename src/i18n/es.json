@@ -1,184 +1,1274 @@
 {
-  "validate_credential_action": "confirmar",
-  "title_tag_manager": "Etiquetas (descubrimiento de usuarios)",
-  "label_user_contacts": "Contactos:",
-  "button_add_another": "Añadir contacto",
-  "label_message_sound": "Sonido de mensaje:",
-  "label_push_notifications": "Alertas de notificaciones:",
-  "label_push_notifications_disabled": "Alertas de notificaciones (requiere HTTPS):",
-  "label_incognito_mode": "Modo incógnito:",
-  "delete_account": "Eliminar cuenta",
-  "delete_account_warning": "¿Estás seguro de que deseas eliminar permanentemente tu cuenta? Esta acción es irreversible.",
-  "label_password": "Contraseña",
-  "password_unchanged_prompt": "Sin cambios",
-  "button_logout": "Cerrar sesión",
-  "button_delete_account": "Eliminar cuenta",
-  "label_default_access_mode": "Modo de acceso predeterminado:",
-  "blocked_contacts_link": "Contactos bloqueados ({count})",
-  "link_contact_us": "Contáctanos",
-  "link_terms_of_service": "Términos de uso",
-  "link_privacy_policy": "Política de privacidad",
-  "label_sdk": "SDK:",
-  "label_server_address": "Dirección del servidor:",
-  "archived_contacts": "Contactos archivados ({count})",
-  "contacts_not_found": "No tienes chats<br />¯∖_(ツ)_/¯",
-  "full_name_prompt": "Nombre completo, p.ej. Juan González Hernández",
-  "email_prompt": "Correo electrónico, p.ej. juan@example.com",
-  "button_sign_up": "Regístrate",
-  "label_your_name": "Tu nombre",
-  "label_user_id": "ID:",
-  "button_edit": "Editar",
-  "requested_permissions": "Solicitados",
-  "granted_permissions": "Otorgados",
-  "menu_item_edit_permissions": "Editar permisos",
-  "label_other_user": "Otros",
-  "action_clear_messages": "Borrar mensajes",
-  "clear_messages_warning": "¿Estás seguro de que quieres eliminar todos los mensajes? Esta acción es irreversible.",
-  "action_delete_messages": "Borrar mensajes para todos",
-  "delete_messages_warning": "¿Estás seguro de que quieres eliminar todos los mensajes para todos? Esta acción es irreversible.",
-  "action_leave_chat": "Dejar conversación",
-  "leave_chat_warning": "¿Estás seguro de que quieres dejar esta conversación?",
-  "action_block_contact": "Bloquear contacto",
-  "block_contact_warning": "¿Estás seguro de que quieres bloquear a este contacto?",
-  "action_report_chat": "Reportar conversación",
-  "report_chat_warning": "¿Estás seguro de que quieres bloquear y reportar a esta conversación?",
-  "title_info": "Información",
-  "label_topic_name": "Nombre del tema",
-  "label_private": "Comentario privado",
-  "private_editing_placeholder": "Sólo visible para tí",
-  "label_muting_topic": "Silenciado:",
-  "action_more": "Más",
-  "label_your_permissions": "Tus permisos:",
-  "label_permissions": "Permisos:",
-  "label_you": "Tú:",
-  "label_default_access": "Modo de acceso predeterminado:",
-  "label_group_members": "Miembros del grupo:",
-  "button_add_members": "Añadir miembros",
-  "group_has_no_members": "No hay miembros",
-  "login_prompt": "Nombre de usuario",
-  "password_prompt": "Contraseña",
-  "stay_logged_in": "Permanecer conectado",
-  "forgot_password_link": "¿Olvidaste tu contraseña?",
-  "button_sign_in": "Entrar",
-  "label_client": "Cliente:",
-  "label_server": "Servidor:",
-  "online_now": "en línea",
-  "last_seen_timestamp": "Últ. vez",
-  "title_not_found": "No encontrado",
-  "unnamed_topic": "Sin nombre",
-  "messages_not_readable": "sin acceso a mensajes",
-  "peers_messaging_disabled": "La mensajería Peer está deshabilitada.",
-  "enable_peers_messaging": "Habilitar",
-  "search_for_contacts": "Usa la búsqueda para encontrar contactos",
-  "search_no_results": "La búsqueda no arrojó resultados",
-  "tabtitle_find_user": "encontrar",
-  "tabtitle_new_group": "nuevo grupo",
-  "tabtitle_group_by_id": "por ID",
-  "new_password_placeholder": "Introduzca una nueva contraseña",
-  "label_reset_password": "Enviar un correo electrónico de restablecimiento de contraseña:",
-  "credential_email_prompt": "Tu correo electrónico de registro",
-  "button_reset": "Restablecer",
-  "button_send_request": "Enviar petición",
-  "label_server_to_use": "Servidor para usar:",
-  "label_wire_transport": "Transporte de alambre:",
-  "button_update": "Actualizar",
-  "sidepanel_title_login": "Iniciar sesión",
-  "sidepanel_title_register": "Crear cuenta",
-  "sidepanel_title_settings": "Ajustes",
-  "sidepanel_title_account_settings": "Ajustes de la cuenta",
-  "sidepanel_title_acc_general": "General",
-  "sidepanel_title_acc_security": "Seguridad",
-  "sidepanel_title_acc_notifications": "Notificaciones",
-  "sidepanel_title_acc_support": "Soporte",
-  "sidepanel_title_newtpk": "Iniciar un nuevo chat",
-  "sidepanel_title_cred": "Confirmar credenciales",
-  "sidepanel_title_reset": "Restablecer contraseña",
-  "sidepanel_title_archive": "Chats archivados",
-  "sidepanel_title_blocked": "Chats bloqueados",
-  "update_available": "Actualización disponible.",
-  "reload_update": "Recargar",
-  "reconnect_countdown": "Desconectado. Reconectando en {seconds}…",
-  "reconnect_now": "Reintentar",
-  "push_init_failed": "Error al inicializar las notificaciones push",
-  "invalid_security_token": "Token de seguridad inválido",
-  "no_connection": "Sin conexión",
-  "code_doesnot_match": "El código no coincide",
-  "phone_dative": "teléfono",
-  "email_dative": "correo electrónico",
-  "enter_confirmation_code_prompt": "Introduzca el código de confirmación enviado a tu {method}:",
-  "numeric_confirmation_code_prompt": "Sólo números",
-  "button_confirm": "Confirmar",
-  "save_attachment": "guardar",
-  "deleted_content": "este mensaje fue eliminado",
-  "invalid_content": "contenido inválido",
-  "user_not_found": "Usuario no encontrado",
-  "badge_you": "tú",
-  "badge_owner": "propietario",
-  "menu_item_info": "Información",
-  "menu_item_clear_messages": "Borrar mensajes",
-  "menu_item_clear_messages_for_all": "Borrar para todos",
-  "menu_item_delete": "Eliminar",
-  "menu_item_delete_for_all": "Eliminar para todos",
-  "menu_item_send_retry": "Inténtalo de nuevo",
-  "menu_item_mute": "Silenciar",
-  "menu_item_unmute": "Anular el silencio",
-  "menu_item_delete_topic": "Eliminar",
-  "topic_delete_warning": "¿Estás seguro de que quieres eliminar esta conversación?",
-  "menu_item_unblock": "Desbloquear",
-  "menu_item_block": "Bloquear",
-  "topic_block_warning": "¿Estás seguro de que quieres bloquear esta conversación",
-  "menu_item_member_delete": "Eliminar",
-  "menu_item_archive_topic": "Archivar",
-  "action_cancel": "cancelar",
-  "upload_finishing": "terminando...",
-  "no_contacts": "No tienes contactos :-(",
-  "contacts_not_found_short": "Ningún contacto coincide con ''{query}''",
-  "title_group_members": "Miembros del grupo",
-  "title_all_contacts": "Todos los contactos",
-  "button_ok": "OK",
-  "button_cancel": "Cancelar",
-  "more_online_members": "+{overflow} más",
-  "download_action": "descargar",
-  "label_file_name": "Nombre del archivo:",
-  "label_content_type": "Tipo de contenido:",
-  "label_size": "Tamaño:",
-  "chat_invitation": "Estás invitado a participar en un nuevo chat. ¿Qué te gustaría hacer?",
-  "chat_invitation_accept": "Aceptar",
-  "chat_invitation_ignore": "Ignorar",
-  "chat_invitation_block": "Bloquear",
-  "error_invalid_id": "ID inválido",
-  "group_user_id_prompt": "ID del grupo o usuario",
-  "button_subscribe": "Suscribirse",
-  "topic_name_editing_placeholder": "Nombre del grupo",
-  "button_create": "Crear",
-  "permission_join": "Unirse ({val})",
-  "permission_read": "Leer ({val})",
-  "permission_write": "Escribir ({val})",
-  "permission_pres": "Ser notificado ({val})",
-  "permission_admin": "Approbar ({val})",
-  "permission_share": "Compartir ({val})",
-  "permission_delete": "Eliminar ({val})",
-  "permission_owner": "Propietario ({val})",
-  "title_permissions": "Permisos",
-  "message_sending": "enviando...",
-  "message_sending_failed": "no se pudo enviar el mensaje",
-  "search_placeholder": "Ej. email:alice@example.com, tel:17025550003...",
-  "messaging_disabled_prompt": "El envío de mensajes está deshabilitado",
-  "new_message_prompt": "Nuevo mensaje",
-  "image_caption_prompt": "Añade un comentario",
-  "file_attachment_too_large": "El tamaño del archivo {size} excede el límite de {limit}.",
-  "cannot_initiate_file_upload": "No se pudo iniciar la carga del archivo.",
-  "tags_not_found": "No hay etiquetas definidas. Añade unas.",
-  "tags_editor_no_tags": "Añadir etiquetas",
-  "title_manage_tags": "Gestionar",
-  "channel_prompt": "Este es un canal",
-  "channel": "canal",
-  "drafty_attachment": "Archivo",
-  "drafty_form": "Formulario:",
-  "drafty_image": "Imagen",
-  "menu_item_restore_topic": "Restaurar",
-  "badge_danger": "Suspicaz",
-  "badge_staff": "Administración",
-  "badge_verified": "Verificado",
-  "sidepanel_title_crop": "Arrastra para ajustar"
+  "action_block_contact": {
+    "translation": "Bloquear contacto",
+    "defaultMessage": "Block Contact",
+    "description": "Flat button [Block Contact]",
+    "missing": false,
+    "obsolete": false
+  },
+  "action_cancel": {
+    "translation": "cancelar",
+    "defaultMessage": "cancel",
+    "description": "Call to action [cancel]",
+    "missing": false,
+    "obsolete": false
+  },
+  "action_clear_messages": {
+    "translation": "Borrar mensajes",
+    "defaultMessage": "Clear Messages",
+    "description": "Flat button [Clear Messages] (soft-delete messages)",
+    "missing": false,
+    "obsolete": false
+  },
+  "action_delete_messages": {
+    "translation": "Borrar mensajes para todos",
+    "defaultMessage": "Clear Messages for All",
+    "description": "Flat button [Clear for All] (hard-delete all messages)",
+    "missing": false,
+    "obsolete": false
+  },
+  "action_leave_chat": {
+    "translation": "Dejar conversación",
+    "defaultMessage": "Leave Conversation",
+    "description": "Flat button [Leave Conversation]",
+    "missing": false,
+    "obsolete": false
+  },
+  "action_more": {
+    "translation": "Más",
+    "defaultMessage": "More",
+    "description": "Action for showing more content",
+    "missing": false,
+    "obsolete": false
+  },
+  "action_report_chat": {
+    "translation": "Reportar conversación",
+    "defaultMessage": "Report Conversation",
+    "description": "Flat button [Report Group]",
+    "missing": false,
+    "obsolete": false
+  },
+  "archived_contacts": {
+    "translation": "Contactos archivados ({count})",
+    "defaultMessage": "Archived contacts ({count})",
+    "description": "Label for archived chats",
+    "missing": false,
+    "obsolete": false
+  },
+  "badge_danger": {
+    "translation": "Suspicaz",
+    "defaultMessage": "Untrustworthy",
+    "description": "Suspicious or untrustworthy account or topic badge",
+    "missing": false,
+    "obsolete": false
+  },
+  "badge_owner": {
+    "translation": "propietario",
+    "defaultMessage": "owner",
+    "description": "Badge for indicating the owner",
+    "missing": false,
+    "obsolete": false
+  },
+  "badge_staff": {
+    "translation": "Administración",
+    "defaultMessage": "Staff-managed",
+    "description": "Explanation of a staff-managed account or topic badge",
+    "missing": false,
+    "obsolete": false
+  },
+  "badge_verified": {
+    "translation": "Verificado",
+    "defaultMessage": "Verified/official",
+    "description": "Explanation of a verified account or topic badge",
+    "missing": false,
+    "obsolete": false
+  },
+  "badge_you": {
+    "translation": "tú",
+    "defaultMessage": "you",
+    "description": "Badge for indicating the current user",
+    "missing": false,
+    "obsolete": false
+  },
+  "block_contact_warning": {
+    "translation": "¿Estás seguro de que quieres bloquear a este contacto?",
+    "defaultMessage": "Are you sure you want to block this contact?",
+    "description": "Alert dialog warning when blocking a contact.",
+    "missing": false,
+    "obsolete": false
+  },
+  "blocked_contacts_link": {
+    "translation": "Contactos bloqueados ({count})",
+    "defaultMessage": "Blocked contacts ({count})",
+    "description": "Blocked contacts link",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_add_another": {
+    "translation": "Añadir contacto",
+    "defaultMessage": "Add another",
+    "description": "Call to action [+ add another]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_add_members": {
+    "translation": "Añadir miembros",
+    "defaultMessage": "Add members",
+    "description": "Flat button [Add members] (to topic)",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_cancel": {
+    "translation": "Cancelar",
+    "defaultMessage": "Cancel",
+    "description": "Button [Cancel]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_confirm": {
+    "translation": "Confirmar",
+    "defaultMessage": "Confirm",
+    "description": "Button [Confirm]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_create": {
+    "translation": "Crear",
+    "defaultMessage": "Create",
+    "description": "Button [Create]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_delete_account": {
+    "translation": "Eliminar cuenta",
+    "defaultMessage": "Delete account",
+    "description": "Button [Delete account]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_edit": {
+    "translation": "Editar",
+    "defaultMessage": "Edit",
+    "description": "Call to action [Edit]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_logout": {
+    "translation": "Cerrar sesión",
+    "defaultMessage": "Logout",
+    "description": "Button [Logout]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_ok": {
+    "translation": "OK",
+    "defaultMessage": "OK",
+    "description": "Button [OK]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_reset": {
+    "translation": "Restablecer",
+    "defaultMessage": "Reset",
+    "description": "Button [Reset]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_send_request": {
+    "translation": "Enviar petición",
+    "defaultMessage": "Send request",
+    "description": "Button [Send request]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_sign_in": {
+    "translation": "Entrar",
+    "defaultMessage": "Sign in",
+    "description": "Button [Sign In]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_sign_up": {
+    "translation": "Regístrate",
+    "defaultMessage": "Sign up",
+    "description": "Create account button [Sign Up]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_subscribe": {
+    "translation": "Suscribirse",
+    "defaultMessage": "Subscribe",
+    "description": "Button [Subscribe]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_update": {
+    "translation": "Actualizar",
+    "defaultMessage": "Update",
+    "description": "Button [Update]",
+    "missing": false,
+    "obsolete": false
+  },
+  "cannot_initiate_file_upload": {
+    "translation": "No se pudo iniciar la carga del archivo.",
+    "defaultMessage": "Cannot initiate file upload.",
+    "description": "Generic error messagewhen attachment fails",
+    "missing": false,
+    "obsolete": false
+  },
+  "channel": {
+    "translation": "canal",
+    "defaultMessage": "channel",
+    "description": "Subtitle shown for channels in MessagesView instead of last seen",
+    "missing": false,
+    "obsolete": false
+  },
+  "channel_prompt": {
+    "translation": "Este es un canal",
+    "defaultMessage": "This is a channel",
+    "description": "Checkbox label when creating a channel",
+    "missing": false,
+    "obsolete": false
+  },
+  "chat_invitation": {
+    "translation": "Estás invitado a participar en un nuevo chat. ¿Qué te gustaría hacer?",
+    "defaultMessage": "You are invited to start a new chat. What would you like to do?",
+    "description": "New chat invitation message: [Accept] [Ignore] [Block].",
+    "missing": false,
+    "obsolete": false
+  },
+  "chat_invitation_accept": {
+    "translation": "Aceptar",
+    "defaultMessage": "Accept",
+    "description": "Action [Accept] for chat invitation.",
+    "missing": false,
+    "obsolete": false
+  },
+  "chat_invitation_block": {
+    "translation": "Bloquear",
+    "defaultMessage": "Block",
+    "description": "Action [Block] for chat invitation.",
+    "missing": false,
+    "obsolete": false
+  },
+  "chat_invitation_ignore": {
+    "translation": "Ignorar",
+    "defaultMessage": "Ignore",
+    "description": "Action [Ignore] for chat invitation.",
+    "missing": false,
+    "obsolete": false
+  },
+  "clear_messages_warning": {
+    "translation": "¿Estás seguro de que quieres eliminar todos los mensajes? Esta acción es irreversible.",
+    "defaultMessage": "Are you sure you want to clear all messages? It cannot be undone.",
+    "description": "Alert dialog warning when deleting all messages.",
+    "missing": false,
+    "obsolete": false
+  },
+  "code_doesnot_match": {
+    "translation": "El código no coincide",
+    "defaultMessage": "Code does not match",
+    "description": "Error message when the credential validation code is incorrect.",
+    "missing": false,
+    "obsolete": false
+  },
+  "contacts_not_found": {
+    "translation": "No tienes chats<br />¯∖_(ツ)_/¯",
+    "defaultMessage": "You have no chats<br />¯∖_(ツ)_/¯",
+    "description": "HTML message shown in ContactList when no contacts are found",
+    "missing": false,
+    "obsolete": false
+  },
+  "contacts_not_found_short": {
+    "translation": "Ningún contacto coincide con ''{query}''",
+    "defaultMessage": "No contacts match ''{query}''",
+    "description": "Shown in ContactsView when search returned no results",
+    "missing": false,
+    "obsolete": false
+  },
+  "credential_email_prompt": {
+    "translation": "Tu correo electrónico de registro",
+    "defaultMessage": "Your registration email",
+    "description": "Placeholder for entering email",
+    "missing": false,
+    "obsolete": false
+  },
+  "delete_account": {
+    "translation": "Eliminar cuenta",
+    "defaultMessage": "Delete account",
+    "description": "Title for delete account warning",
+    "missing": false,
+    "obsolete": false
+  },
+  "delete_account_warning": {
+    "translation": "¿Estás seguro de que deseas eliminar permanentemente tu cuenta? Esta acción es irreversible.",
+    "defaultMessage": "Are you sure you want to delete your account? It cannot be undone.",
+    "description": "Warning message when deleting an account",
+    "missing": false,
+    "obsolete": false
+  },
+  "delete_messages_warning": {
+    "translation": "¿Estás seguro de que quieres eliminar todos los mensajes para todos? Esta acción es irreversible.",
+    "defaultMessage": "Are you sure you want to delete all messages for everyone? It cannot be undone.",
+    "description": "Alert dialog warning when hard-deleting all messages.",
+    "missing": false,
+    "obsolete": false
+  },
+  "deleted_content": {
+    "translation": "este mensaje fue eliminado",
+    "defaultMessage": "content deleted",
+    "description": "Shown when messages are deleted",
+    "missing": false,
+    "obsolete": false
+  },
+  "download_action": {
+    "translation": "descargar",
+    "defaultMessage": "download",
+    "description": "Call to action [download]",
+    "missing": false,
+    "obsolete": false
+  },
+  "drafty_attachment": {
+    "translation": "Archivo",
+    "defaultMessage": "Attachment",
+    "description": "Comment for attachment in drafty preview",
+    "missing": false,
+    "obsolete": false
+  },
+  "drafty_form": {
+    "translation": "Formulario:",
+    "defaultMessage": "Form:",
+    "description": "Comment for form in drafty preview",
+    "missing": false,
+    "obsolete": false
+  },
+  "drafty_image": {
+    "translation": "Imagen",
+    "defaultMessage": "Picture",
+    "description": "Comment for embedded images in drafty preview",
+    "missing": false,
+    "obsolete": false
+  },
+  "email_dative": {
+    "translation": "correo electrónico",
+    "defaultMessage": "email",
+    "description": "Dative case of 'email', i.e. 'email' in 'by email'",
+    "missing": false,
+    "obsolete": false
+  },
+  "email_prompt": {
+    "translation": "Correo electrónico, p.ej. juan@example.com",
+    "defaultMessage": "Email, e.g. jdoe@example.com",
+    "description": "Input placeholder for email entry",
+    "missing": false,
+    "obsolete": false
+  },
+  "enable_peers_messaging": {
+    "translation": "Habilitar",
+    "defaultMessage": "Enable",
+    "description": "Call to action to enable peer's messaging",
+    "missing": false,
+    "obsolete": false
+  },
+  "enter_confirmation_code_prompt": {
+    "translation": "Introduzca el código de confirmación enviado a tu {method}:",
+    "defaultMessage": "Enter confirmation code sent to you by {method}:",
+    "description": "Request to enter confirmation code",
+    "missing": false,
+    "obsolete": false
+  },
+  "error_invalid_id": {
+    "translation": "ID inválido",
+    "defaultMessage": "Invalid ID",
+    "description": "Error message",
+    "missing": false,
+    "obsolete": false
+  },
+  "file_attachment_too_large": {
+    "translation": "El tamaño del archivo {size} excede el límite de {limit}.",
+    "defaultMessage": "The file size {size} exceeds the {limit} limit.",
+    "description": "Error message when attachment is too large",
+    "missing": false,
+    "obsolete": false
+  },
+  "forgot_password_link": {
+    "translation": "¿Olvidaste tu contraseña?",
+    "defaultMessage": "Forgot password?",
+    "description": "Link to Reset password form",
+    "missing": false,
+    "obsolete": false
+  },
+  "full_name_prompt": {
+    "translation": "Nombre completo, p.ej. Juan González Hernández",
+    "defaultMessage": "Full name, e.g. John Doe",
+    "description": "Input placeholder for person's full name",
+    "missing": false,
+    "obsolete": false
+  },
+  "granted_permissions": {
+    "translation": "Otorgados",
+    "defaultMessage": "Granted",
+    "description": "Title for permissions",
+    "missing": false,
+    "obsolete": false
+  },
+  "group_has_no_members": {
+    "translation": "No hay miembros",
+    "defaultMessage": "No members",
+    "description": "Shown in place of group members",
+    "missing": false,
+    "obsolete": false
+  },
+  "group_user_id_prompt": {
+    "translation": "ID del grupo o usuario",
+    "defaultMessage": "Group or User ID",
+    "description": "Prompt for entering user or group ID",
+    "missing": false,
+    "obsolete": false
+  },
+  "image_caption_prompt": {
+    "translation": "Añade un comentario",
+    "defaultMessage": "Image caption",
+    "description": "Prompt in SendMessage for attached image",
+    "missing": false,
+    "obsolete": false
+  },
+  "invalid_content": {
+    "translation": "contenido inválido",
+    "defaultMessage": "invalid content",
+    "description": "Shown when message is unreadable",
+    "missing": false,
+    "obsolete": false
+  },
+  "invalid_security_token": {
+    "translation": "Token de seguridad inválido",
+    "defaultMessage": "Invalid security token",
+    "description": "Error message when resetting password.",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_client": {
+    "translation": "Cliente:",
+    "defaultMessage": "Client:",
+    "description": "Label for a client version",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_content_type": {
+    "translation": "Tipo de contenido:",
+    "defaultMessage": "Content type:",
+    "description": "Label for file content type (mime)",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_default_access": {
+    "translation": "Modo de acceso predeterminado:",
+    "defaultMessage": "Default access mode:",
+    "description": "Section title",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_default_access_mode": {
+    "translation": "Modo de acceso predeterminado:",
+    "defaultMessage": "Default access mode:",
+    "description": "Label for default access mode",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_file_name": {
+    "translation": "Nombre del archivo:",
+    "defaultMessage": "File name:",
+    "description": "Label for a file name",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_group_members": {
+    "translation": "Miembros del grupo:",
+    "defaultMessage": "Group members:",
+    "description": "Section title or label",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_incognito_mode": {
+    "translation": "Modo incógnito:",
+    "defaultMessage": "Incognito mode:",
+    "description": "Label for incognito mode toggle",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_message_sound": {
+    "translation": "Sonido de mensaje:",
+    "defaultMessage": "Message sound:",
+    "description": "Label for message sounds toggle",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_muting_topic": {
+    "translation": "Silenciado:",
+    "defaultMessage": "Muted:",
+    "description": "Label for Muting/unmuting the topic",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_other_user": {
+    "translation": "Otros",
+    "defaultMessage": "Other",
+    "description": "Label for the other user when the user is unnamed",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_password": {
+    "translation": "Contraseña",
+    "defaultMessage": "Password",
+    "description": "Label for password editing",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_permissions": {
+    "translation": "Permisos:",
+    "defaultMessage": "Permissions:",
+    "description": "Section title",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_private": {
+    "translation": "Comentario privado",
+    "defaultMessage": "Private comment",
+    "description": "Label for editing 'private'",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_push_notifications": {
+    "translation": "Alertas de notificaciones:",
+    "defaultMessage": "Notification alerts:",
+    "description": "Label for push notifications switch",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_push_notifications_disabled": {
+    "translation": "Alertas de notificaciones (requiere HTTPS):",
+    "defaultMessage": "Notification alerts (requires HTTPS):",
+    "description": "Label for push notifications switch",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_reset_password": {
+    "translation": "Enviar un correo electrónico de restablecimiento de contraseña:",
+    "defaultMessage": "Send a password reset email:",
+    "description": "Label for password reset field",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_sdk": {
+    "translation": "SDK:",
+    "defaultMessage": "SDK:",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_server": {
+    "translation": "Servidor:",
+    "defaultMessage": "Server:",
+    "description": "Label for a server version",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_server_address": {
+    "translation": "Dirección del servidor:",
+    "defaultMessage": "Server address:",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_server_to_use": {
+    "translation": "Servidor para usar:",
+    "defaultMessage": "Server to use:",
+    "description": "Label for server selector in SettingsView",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_size": {
+    "translation": "Tamaño:",
+    "defaultMessage": "Size:",
+    "description": "Label for file size",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_topic_name": {
+    "translation": "Nombre del tema",
+    "defaultMessage": "Name",
+    "description": "Label for editing topic name",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_user_contacts": {
+    "translation": "Contactos:",
+    "defaultMessage": "Contacts:",
+    "description": "Label for user contacts",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_user_id": {
+    "translation": "ID:",
+    "defaultMessage": "ID:",
+    "description": "Label for user address (ID)",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_wire_transport": {
+    "translation": "Transporte de alambre:",
+    "defaultMessage": "Wire transport:",
+    "description": "Label for wire transport selection in SettingsView",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_you": {
+    "translation": "Tú:",
+    "defaultMessage": "You:",
+    "description": "Label for the current user",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_your_name": {
+    "translation": "Tu nombre",
+    "defaultMessage": "Your name",
+    "description": "Label for full name editing",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_your_permissions": {
+    "translation": "Tus permisos:",
+    "defaultMessage": "Your permissions:",
+    "description": "Label for current user permissions",
+    "missing": false,
+    "obsolete": false
+  },
+  "last_seen_timestamp": {
+    "translation": "Últ. vez",
+    "defaultMessage": "Last seen",
+    "description": "Label for the timestamp of when the user or topic was last online",
+    "missing": false,
+    "obsolete": false
+  },
+  "leave_chat_warning": {
+    "translation": "¿Estás seguro de que quieres dejar esta conversación?",
+    "defaultMessage": "Are you sure you want to leave this conversation?",
+    "description": "Alert dialog warning when unsubscribing from a chat.",
+    "missing": false,
+    "obsolete": false
+  },
+  "link_contact_us": {
+    "translation": "Contáctanos",
+    "defaultMessage": "Contact Us",
+    "description": "Ancor text for contacting us by email",
+    "missing": false,
+    "obsolete": false
+  },
+  "link_privacy_policy": {
+    "translation": "Política de privacidad",
+    "defaultMessage": "Privacy Policy",
+    "description": "Ancor text for privacy policy link",
+    "missing": false,
+    "obsolete": false
+  },
+  "link_terms_of_service": {
+    "translation": "Términos de uso",
+    "defaultMessage": "Terms of Service",
+    "description": "Ancor text for terms of service link",
+    "missing": false,
+    "obsolete": false
+  },
+  "login_prompt": {
+    "translation": "Nombre de usuario",
+    "defaultMessage": "Login",
+    "description": "Placeholer for username/login",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_archive_topic": {
+    "translation": "Archivar",
+    "defaultMessage": "Archive",
+    "description": "Move topic from the list of active chats to archive",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_block": {
+    "translation": "Bloquear",
+    "defaultMessage": "Block",
+    "description": "Block topic or user",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_clear_messages": {
+    "translation": "Borrar mensajes",
+    "defaultMessage": "Clear messages",
+    "description": "Delete all messages",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_clear_messages_for_all": {
+    "translation": "Borrar para todos",
+    "defaultMessage": "Clear for All",
+    "description": "Delete all message(s) for all members",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_delete": {
+    "translation": "Eliminar",
+    "defaultMessage": "Delete",
+    "description": "Delete selected messages",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_delete_for_all": {
+    "translation": "Eliminar para todos",
+    "defaultMessage": "Delete for All",
+    "description": "Delete selected message(s) for all members",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_delete_topic": {
+    "translation": "Eliminar",
+    "defaultMessage": "Delete",
+    "description": "Delete entire topic",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_edit_permissions": {
+    "translation": "Editar permisos",
+    "defaultMessage": "Edit permissions",
+    "description": "Menu item [Edit permissions]",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_info": {
+    "translation": "Información",
+    "defaultMessage": "Info",
+    "description": "Show extended topic information",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_member_delete": {
+    "translation": "Eliminar",
+    "defaultMessage": "Remove",
+    "description": "Remove user from topic",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_mute": {
+    "translation": "Silenciar",
+    "defaultMessage": "Mute",
+    "description": "Turn off notifications",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_restore_topic": {
+    "translation": "Restaurar",
+    "defaultMessage": "Restore",
+    "description": "Restore topic from archive",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_send_retry": {
+    "translation": "Inténtalo de nuevo",
+    "defaultMessage": "Retry",
+    "description": "Retry sending message",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_unblock": {
+    "translation": "Desbloquear",
+    "defaultMessage": "Unblock",
+    "description": "Unblock topic or user",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_unmute": {
+    "translation": "Anular el silencio",
+    "defaultMessage": "Unmute",
+    "description": "Turn notifications on",
+    "missing": false,
+    "obsolete": false
+  },
+  "message_sending": {
+    "translation": "enviando...",
+    "defaultMessage": "sending...",
+    "description": "Message being sent, in place of time stamp",
+    "missing": false,
+    "obsolete": false
+  },
+  "message_sending_failed": {
+    "translation": "no se pudo enviar el mensaje",
+    "defaultMessage": "failed",
+    "description": "Failed to send message, in place of time stamp",
+    "missing": false,
+    "obsolete": false
+  },
+  "messages_not_readable": {
+    "translation": "sin acceso a mensajes",
+    "defaultMessage": "no access to messages",
+    "description": "Message shown in topic without the read access",
+    "missing": false,
+    "obsolete": false
+  },
+  "messaging_disabled_prompt": {
+    "translation": "El envío de mensajes está deshabilitado",
+    "defaultMessage": "Messaging disabled",
+    "description": "Prompt in SendMessage in read-only topic",
+    "missing": false,
+    "obsolete": false
+  },
+  "more_online_members": {
+    "translation": "+{overflow} más",
+    "defaultMessage": "+{overflow} more",
+    "description": "Shown in MessagesView title bar when the number of online subscribers exceeds MAX_ONLINE_IN_TOPIC",
+    "missing": false,
+    "obsolete": false
+  },
+  "new_message_prompt": {
+    "translation": "Nuevo mensaje",
+    "defaultMessage": "New message",
+    "description": "Prompt in send message field",
+    "missing": false,
+    "obsolete": false
+  },
+  "new_password_placeholder": {
+    "translation": "Introduzca una nueva contraseña",
+    "defaultMessage": "Enter new password",
+    "description": "Placeholder for entering new password",
+    "missing": false,
+    "obsolete": false
+  },
+  "no_connection": {
+    "translation": "Sin conexión",
+    "defaultMessage": "No connection",
+    "description": "Warning that the user is offline.",
+    "missing": false,
+    "obsolete": false
+  },
+  "no_contacts": {
+    "translation": "No tienes contactos :-(",
+    "defaultMessage": "You have no contacts :-(",
+    "description": "Shown in ContactsView when the user has no contacts",
+    "missing": false,
+    "obsolete": false
+  },
+  "numeric_confirmation_code_prompt": {
+    "translation": "Sólo números",
+    "defaultMessage": "Numbers only",
+    "description": "Prompt for numeric conformation code",
+    "missing": false,
+    "obsolete": false
+  },
+  "online_now": {
+    "translation": "en línea",
+    "defaultMessage": "online now",
+    "description": "Indicator that the user or topic is currently online",
+    "missing": false,
+    "obsolete": false
+  },
+  "password_prompt": {
+    "translation": "Contraseña",
+    "defaultMessage": "Password",
+    "description": "Placeholder/prompt for entering password",
+    "missing": false,
+    "obsolete": false
+  },
+  "password_unchanged_prompt": {
+    "translation": "Sin cambios",
+    "defaultMessage": "Unchanged",
+    "description": "Message in editor while password is unchanged",
+    "missing": false,
+    "obsolete": false
+  },
+  "peers_messaging_disabled": {
+    "translation": "La mensajería Peer está deshabilitada.",
+    "defaultMessage": "Peer's messaging is disabled.",
+    "description": "Shown when the p2p peer's messaging is disabled",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_admin": {
+    "translation": "Approbar ({val})",
+    "defaultMessage": "Approve ({val})",
+    "description": "Name of A permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_delete": {
+    "translation": "Eliminar ({val})",
+    "defaultMessage": "Delete ({val})",
+    "description": "Name of D permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_join": {
+    "translation": "Unirse ({val})",
+    "defaultMessage": "Join ({val})",
+    "description": "Name of J permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_owner": {
+    "translation": "Propietario ({val})",
+    "defaultMessage": "Owner ({val})",
+    "description": "Name of O permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_pres": {
+    "translation": "Ser notificado ({val})",
+    "defaultMessage": "Get notified ({val})",
+    "description": "Name of P permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_read": {
+    "translation": "Leer ({val})",
+    "defaultMessage": "Read ({val})",
+    "description": "Name of R permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_share": {
+    "translation": "Compartir ({val})",
+    "defaultMessage": "Share ({val})",
+    "description": "Name of S permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_write": {
+    "translation": "Escribir ({val})",
+    "defaultMessage": "Write ({val})",
+    "description": "Name of W permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "phone_dative": {
+    "translation": "teléfono",
+    "defaultMessage": "phone",
+    "description": "Dative case of 'phone', i.e. 'phone' in 'by phone'",
+    "missing": false,
+    "obsolete": false
+  },
+  "private_editing_placeholder": {
+    "translation": "Sólo visible para tí",
+    "defaultMessage": "Visible to you only",
+    "description": "Placeholder for editing 'private'",
+    "missing": false,
+    "obsolete": false
+  },
+  "push_init_failed": {
+    "translation": "Error al inicializar las notificaciones push",
+    "defaultMessage": "Failed to initialize push notifications",
+    "description": "Error message when push notifications have failed to initialize.",
+    "missing": false,
+    "obsolete": false
+  },
+  "reconnect_countdown": {
+    "translation": "Desconectado. Reconectando en {seconds}…",
+    "defaultMessage": "Disconnected. Reconnecting in {seconds}…",
+    "description": "Message shown when an app update is available.",
+    "missing": false,
+    "obsolete": false
+  },
+  "reconnect_now": {
+    "translation": "Reintentar",
+    "defaultMessage": "Try now",
+    "description": "Prompt for reconnecting now",
+    "missing": false,
+    "obsolete": false
+  },
+  "reload_update": {
+    "translation": "Recargar",
+    "defaultMessage": "Reload",
+    "description": "Call to action to reload application when update is available.",
+    "missing": false,
+    "obsolete": false
+  },
+  "report_chat_warning": {
+    "translation": "¿Estás seguro de que quieres bloquear y reportar a esta conversación?",
+    "defaultMessage": "Are you sure you want to block and report this conversation?",
+    "description": "Alert dialog warning when reporting a conversation for abuse",
+    "missing": false,
+    "obsolete": false
+  },
+  "requested_permissions": {
+    "translation": "Solicitados",
+    "defaultMessage": "Requested",
+    "description": "Title for permissions",
+    "missing": false,
+    "obsolete": false
+  },
+  "save_attachment": {
+    "translation": "guardar",
+    "defaultMessage": "save",
+    "description": "Call to save an attachment",
+    "missing": false,
+    "obsolete": false
+  },
+  "search_for_contacts": {
+    "translation": "Usa la búsqueda para encontrar contactos",
+    "defaultMessage": "Use search to find contacts",
+    "description": "Text shown in contacts view when user entered no search query.",
+    "missing": false,
+    "obsolete": false
+  },
+  "search_no_results": {
+    "translation": "La búsqueda no arrojó resultados",
+    "defaultMessage": "Search returned no results",
+    "description": "Text shown in contacts view when query returned no results.",
+    "missing": false,
+    "obsolete": false
+  },
+  "search_placeholder": {
+    "translation": "Ej. email:alice@example.com, tel:17025550003...",
+    "defaultMessage": "List like email:alice@example.com, tel:17025550003...",
+    "description": "Placeholder in contacts search field",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_acc_general": {
+    "translation": "General",
+    "defaultMessage": "General",
+    "description": "Sidepanel title for TopicCommonView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_acc_notifications": {
+    "translation": "Notificaciones",
+    "defaultMessage": "Notifications",
+    "description": "Sidepanel title for AccNotificationsView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_acc_security": {
+    "translation": "Seguridad",
+    "defaultMessage": "Security",
+    "description": "Sidepanel title for AccSecurityView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_acc_support": {
+    "translation": "Soporte",
+    "defaultMessage": "Support",
+    "description": "Sidepanel title for AccSupportView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_account_settings": {
+    "translation": "Ajustes de la cuenta",
+    "defaultMessage": "Account Settings",
+    "description": "Sidepanel title for AccountSettingsView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_archive": {
+    "translation": "Chats archivados",
+    "defaultMessage": "Archived Chats",
+    "description": "Sidepanel title for ContactsView-Archive.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_blocked": {
+    "translation": "Chats bloqueados",
+    "defaultMessage": "Blocked Chats",
+    "description": "Sidepanel title for ContactsView-Blocked.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_cred": {
+    "translation": "Confirmar credenciales",
+    "defaultMessage": "Confirm Credentials",
+    "description": "Sidepanel title for ValidationView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_crop": {
+    "translation": "Arrastra para ajustar",
+    "defaultMessage": "Drag to Adjust",
+    "description": "Sidepanel title for AvatarCropView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_login": {
+    "translation": "Iniciar sesión",
+    "defaultMessage": "Sign In",
+    "description": "Sidepanel title for LoginView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_newtpk": {
+    "translation": "Iniciar un nuevo chat",
+    "defaultMessage": "Start New Chat",
+    "description": "Sidepanel title for NewTopicView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_register": {
+    "translation": "Crear cuenta",
+    "defaultMessage": "Create Account",
+    "description": "Sidepanel title for CreateAccountView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_reset": {
+    "translation": "Restablecer contraseña",
+    "defaultMessage": "Reset Password",
+    "description": "Sidepanel title for PasswordResetView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_settings": {
+    "translation": "Ajustes",
+    "defaultMessage": "Settings",
+    "description": "Sidepanel title for SettingsView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "stay_logged_in": {
+    "translation": "Permanecer conectado",
+    "defaultMessage": "Stay logged in",
+    "description": "Label for a checkbox",
+    "missing": false,
+    "obsolete": false
+  },
+  "tabtitle_find_user": {
+    "translation": "encontrar",
+    "defaultMessage": "find",
+    "description": "Tab title Find",
+    "missing": false,
+    "obsolete": false
+  },
+  "tabtitle_group_by_id": {
+    "translation": "por ID",
+    "defaultMessage": "by id",
+    "description": "Tab title Find topic by ID",
+    "missing": false,
+    "obsolete": false
+  },
+  "tabtitle_new_group": {
+    "translation": "nuevo grupo",
+    "defaultMessage": "new group",
+    "description": "Tab title New Group",
+    "missing": false,
+    "obsolete": false
+  },
+  "tags_editor_no_tags": {
+    "translation": "Añadir etiquetas",
+    "defaultMessage": "Add some tags",
+    "description": "Tag editor prompt when no tags are found.",
+    "missing": false,
+    "obsolete": false
+  },
+  "tags_not_found": {
+    "translation": "No hay etiquetas definidas. Añade unas.",
+    "defaultMessage": "No tags defined. Add some.",
+    "description": "",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_all_contacts": {
+    "translation": "Todos los contactos",
+    "defaultMessage": "All Contacts",
+    "description": "Section title [All Contacts]",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_group_members": {
+    "translation": "Miembros del grupo",
+    "defaultMessage": "Group Members",
+    "description": "Section title",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_info": {
+    "translation": "Información",
+    "defaultMessage": "Info",
+    "description": "Title for InfoView",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_manage_tags": {
+    "translation": "Gestionar",
+    "defaultMessage": "Manage",
+    "description": "Section title for the list of tags",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_not_found": {
+    "translation": "No encontrado",
+    "defaultMessage": "Not found",
+    "description": "Title shown when topic is not found",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_permissions": {
+    "translation": "Permisos",
+    "defaultMessage": "Permissions",
+    "description": "Section title",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_tag_manager": {
+    "translation": "Etiquetas (descubrimiento de usuarios)",
+    "defaultMessage": "Tags (user discovery)",
+    "description": "Section title for TagManager",
+    "missing": false,
+    "obsolete": false
+  },
+  "topic_block_warning": {
+    "translation": "¿Estás seguro de que quieres bloquear esta conversación",
+    "defaultMessage": "Are you sure you want to block this conversation?",
+    "description": "Alert warning when blocking a topic.",
+    "missing": false,
+    "obsolete": false
+  },
+  "topic_delete_warning": {
+    "translation": "¿Estás seguro de que quieres eliminar esta conversación?",
+    "defaultMessage": "Are you sure you want to delete this conversation?",
+    "description": "Alert warning when deleting entire topic",
+    "missing": false,
+    "obsolete": false
+  },
+  "topic_name_editing_placeholder": {
+    "translation": "Nombre del grupo",
+    "defaultMessage": "Freeform name of the group",
+    "description": "Prompt for entering topic name",
+    "missing": false,
+    "obsolete": false
+  },
+  "unnamed_topic": {
+    "translation": "Sin nombre",
+    "defaultMessage": "Unnamed",
+    "description": "Title shown when the topic has no name",
+    "missing": false,
+    "obsolete": false
+  },
+  "update_available": {
+    "translation": "Actualización disponible.",
+    "defaultMessage": "Update available.",
+    "description": "Message shown when an app update is available.",
+    "missing": false,
+    "obsolete": false
+  },
+  "upload_finishing": {
+    "translation": "terminando...",
+    "defaultMessage": "finishing...",
+    "description": "Notification that upload is finishing",
+    "missing": false,
+    "obsolete": false
+  },
+  "user_not_found": {
+    "translation": "Usuario no encontrado",
+    "defaultMessage": "Not found",
+    "description": "In place of a user's full name when the user is not found.",
+    "missing": false,
+    "obsolete": false
+  },
+  "validate_credential_action": {
+    "translation": "confirmar",
+    "defaultMessage": "confirm",
+    "description": "Validate credentail call to action",
+    "missing": false,
+    "obsolete": false
+  }
 }
