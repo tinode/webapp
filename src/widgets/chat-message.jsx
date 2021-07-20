@@ -60,6 +60,10 @@ export default class ChatMessage extends React.Component {
     e.preventDefault();
     e.stopPropagation();
     const menuItems = this.props.received == Tinode.MESSAGE_STATUS_FAILED ? ['menu_item_send_retry'] : [];
+    if (this.props.received >= Tinode.MESSAGE_STATUS_FAILED &&
+        this.props.received < Tinode.MESSAGE_STATUS_DEL_RANGE) {
+      menuItems.push('menu_item_reply');
+    }
     this.props.showContextMenu({ seq: this.props.seq, content: this.props.content,
                                  y: e.pageY, x: e.pageX }, menuItems);
   }

@@ -47,6 +47,11 @@ const messages = defineMessages({
     defaultMessage: 'Unmute',
     description: 'Turn notifications on'
   },
+  reply: {
+    id: 'menu_item_reply',
+    defaultMessage: 'Reply',
+    description: 'Reply to message'
+  },
   topic_delete: {
     id: 'menu_item_delete_topic',
     defaultMessage: 'Delete',
@@ -164,6 +169,13 @@ class ContextMenu extends React.Component {
         title: formatMessage(messages.send_retry),
         handler: (params, errorHandler) => {
           return this.retryMessage(params, errorHandler);
+        }
+      },
+      'menu_item_reply': {
+        id: 'menu_item_reply',
+        title: formatMessage(messages.reply),
+        handler: (params, errorHandler) => {
+          return this.replyToMessage(params, errorHandler);
         }
       },
       'topic_unmute': {
@@ -371,6 +383,10 @@ class ContextMenu extends React.Component {
         errorHandler(err.message, 'err');
       }
     });
+  }
+
+  replyToMessage(params, errorHandler) {
+    console.log("Reply to message", params);
   }
 
   // Function is used by context menu to set permissions.
