@@ -1,7 +1,7 @@
-// 1. Takes file with messages extracted via the React Intl Babel plugin and converts it into a file containing
-// `id: message` pairs in "en" locale.
-//
+// 1. Updates translations files with new messages, mark no longer needed translations as obsolete.
 // 2. Takes all translations and groups them into a single file.
+// 3. When called with parameters 'missing' or 'obsolete' writes missing and obsolete translations to console.
+
 const fs = require('fs');
 const path = require('path');
 const globSync = require('glob').sync;
