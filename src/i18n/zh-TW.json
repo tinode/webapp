@@ -56,7 +56,7 @@
     "obsolete": false
   },
   "badge_danger": {
-    "defaultMessage": "Untrustworthy",
+    "defaultMessage": "可疑",
     "description": "Suspicious or untrustworthy account or topic badge",
     "missing": true,
     "obsolete": false
@@ -69,13 +69,13 @@
     "obsolete": false
   },
   "badge_staff": {
-    "defaultMessage": "Staff-managed",
+    "defaultMessage": "工作人員管理",
     "description": "Explanation of a staff-managed account or topic badge",
     "missing": true,
     "obsolete": false
   },
   "badge_verified": {
-    "defaultMessage": "Verified/official",
+    "defaultMessage": "已驗證/官方",
     "description": "Explanation of a verified account or topic badge",
     "missing": true,
     "obsolete": false
@@ -298,7 +298,7 @@
     "obsolete": false
   },
   "delete_account_warning": {
-    "defaultMessage": "Are you sure you want to delete your account? It cannot be undone.",
+    "defaultMessage": "您確定要刪除您的帳號嗎？此操作無法復原。",
     "description": "Warning message when deleting an account",
     "missing": true,
     "obsolete": false
@@ -757,7 +757,7 @@
     "obsolete": false
   },
   "menu_item_restore_topic": {
-    "defaultMessage": "Restore",
+    "defaultMessage": "復原",
     "description": "Restore topic from archive",
     "missing": true,
     "obsolete": false
@@ -1078,7 +1078,7 @@
     "obsolete": false
   },
   "sidepanel_title_crop": {
-    "defaultMessage": "Drag to Adjust",
+    "defaultMessage": "拖曳以調整",
     "description": "Sidepanel title for AvatarCropView.",
     "missing": true,
     "obsolete": false
