@@ -5578,6 +5578,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         newState.topicSelectedAcs = c.acs;
       }
     });
+    const past = new Date(0);
+    newState.chatList.sort((a, b) => {
+      return (a.touched || past).getTime() - (b.touched || past).getTime();
+    });
     newState.searchableContacts = TinodeWeb.prepareSearchableContacts(newState.chatList, this.state.searchResults);
     this.setState(newState);
   }

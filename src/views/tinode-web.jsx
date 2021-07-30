@@ -774,6 +774,12 @@ class TinodeWeb extends React.Component {
         newState.topicSelectedAcs = c.acs;
       }
     });
+
+    const past = new Date(0);
+    newState.chatList.sort((a, b) => {
+      return (a.touched || past).getTime() - (b.touched || past).getTime();
+    });
+
     // Merge search results and chat list.
     newState.searchableContacts = TinodeWeb.prepareSearchableContacts(newState.chatList, this.state.searchResults);
     this.setState(newState);
