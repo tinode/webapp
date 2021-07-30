@@ -313,7 +313,7 @@ class TinodeWeb extends React.Component {
   initFCMessaging() {
     const {formatMessage, locale} = this.props.intl;
     const onError = (msg, err) => {
-      console.log(msg, err);
+      console.error(msg, err);
       this.handleError(formatMessage(messages.push_init_failed), 'err');
       this.setState({desktopAlertsEnabled: false});
     }
@@ -389,24 +389,28 @@ class TinodeWeb extends React.Component {
           'cred','reset','newtpk','archive','blocked','contacts',''].includes(hash.path[0])) {
         this.setState({sidePanelSelected: hash.path[0]});
       } else {
-        console.log("Unknown sidepanel view", hash.path[0]);
+        console.warn("Unknown sidepanel view", hash.path[0]);
       }
 
       // Topic for MessagesView selector.
-      const topicName = hash.path[1];
-      if (Tinode.topicType(topicName) && topicName != this.state.topicSelected) {
-          const newState = {
-            topicSelected: topicName
-          };
-          const acs = this.tinode.getTopicAccessMode(topicName);
-          if (acs) {
-            newState.topicSelectedAcs = acs;
-          }
-          this.setState(newState);
+      let topicName = hash.path[1] || null;
+      if (topicName != this.state.topicSelected) {
+        if (!Tinode.topicType(topicName)) {
+          // Clear invalid topic name.
+          topicName = null;
+        }
+        const newState = {
+          topicSelected: topicName
+        };
+        const acs = this.tinode.getTopicAccessMode(topicName);
+        if (acs) {
+          newState.topicSelectedAcs = acs;
+        }
+        this.setState(newState);
       }
     } else {
       // Empty hashpath
-      this.setState({sidePanelSelected: ''});
+      this.setState({sidePanelSelected: '', topicSelected: null});
     }
 
     // Save validation credentials, if available.
@@ -469,13 +473,11 @@ class TinodeWeb extends React.Component {
   handlePersistenceChange(persist) {
     if (persist) {
       this.tinode.initStorage().then(() => {
-        console.log("storage initialized");
         LocalStorageUtil.setObject('keep-logged-in', true);
         this.setState({persist: true});
       });
     } else {
       this.tinode.clearStorage().then(() => {
-        console.log("storage cleared");
         LocalStorageUtil.setObject('keep-logged-in', false);
         this.setState({persist: false});
       });
@@ -715,7 +717,7 @@ class TinodeWeb extends React.Component {
     } else {
       // TODO(gene): handle other types of notifications:
       // * ua -- user agent changes (maybe display a pictogram for mobile/desktop).
-      console.log("Unsupported (yet) presence update:" + what + " in: " + cont.topic);
+      console.info("Unsupported (yet) presence update:" + what + " in: " + cont.topic);
     }
   }
 
@@ -938,7 +940,7 @@ class TinodeWeb extends React.Component {
         });
         break;
       default:
-        console.log("Unknown invitation action", '"' + action + '""');
+        console.warn("Unknown invitation action", '"' + action + '""');
     }
 
     if (response != null) {
@@ -1070,7 +1072,7 @@ class TinodeWeb extends React.Component {
         }).then(() => {
           this.requestPushToken();
         }).catch((err) => {
-          console.log("Failed to get notification permission.", err);
+          console.warn("Failed to get notification permission.", err);
           this.handleError(err.message, 'err');
           this.setState({desktopAlerts: false, firebaseToken: null});
           LocalStorageUtil.updateObject('settings', {desktopAlerts: false});
@@ -1083,7 +1085,7 @@ class TinodeWeb extends React.Component {
       }
     } else if (this.state.firebaseToken && this.fbPush) {
       this.fbPush.deleteToken(this.state.firebaseToken).catch((err) => {
-        console.log("Unable to delete token.", err);
+        console.warn("Unable to delete token.", err);
       }).finally(() => {
         LocalStorageUtil.updateObject('settings', {desktopAlerts: false});
         localStorage.removeItem('firebase-token');
@@ -1112,7 +1114,7 @@ class TinodeWeb extends React.Component {
       }
     }).catch((err) => {
       this.handleError(err.message, 'err');
-      console.log("Failed to retrieve firebase token", err);
+      console.warn("Failed to retrieve firebase token", err);
     });
   }
 
