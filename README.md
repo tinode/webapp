@@ -28,16 +28,17 @@ This is NOT a standalone app, this is just a frontend, a client. It requires a [
 
 The app is fully internationalized using [React-Intl](https://github.com/formatjs/react-intl). The UI language is selected automatically from the language specified by the browser. A specific language can be forced by adding `#?hl=XX` parameter to the URL when starting the app, e.g. https://web.tinode.co/#?hl=ru.
 
-As of the time of this writing the following translations exist:
+The app is currently available in the following languages:
  * English
  * Chinese (simplified)
+ * Chinese (traditional)
  * German
  * Korean
  * Romanian
  * Russian
  * Spanish
 
-More translations are welcome. The source file with the original English strings and context explanations is located at [/src/i18n/ex/base-en.json](/src/i18n/ex/base-en.json). Only `defaultMessage` needs to be translated. Send a pull request with a json file with translated strings. Take a look at [Spanish](/src/i18n/es.json), [Russian](/src/i18n/ru.json), or [Simplified Chinese](/src/i18n/zh.json) translations for guidance.
+More translations are welcome. See [instructions](https://github.com/tinode/chat/blob/devel/docs/translations.md#webapp).
 
 
 ## Not done yet
