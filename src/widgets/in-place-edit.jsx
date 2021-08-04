@@ -1,12 +1,13 @@
 // In-place text editor. Shows text with an icon which toggles it into an input field.
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 import VisiblePassword from './visible-password.jsx';
 
 export default class InPlaceEdit extends React.Component {
   constructor(props) {
     super(props);
+
+    this.selfRef = React.createRef();
 
     this.state = {
       active: props.active,
@@ -47,10 +48,13 @@ export default class InPlaceEdit extends React.Component {
     }
   }
 
-  handleStartEditing() {
+   handleStartEditing() {
     if (!this.props.readOnly) {
-      ReactDOM.findDOMNode(this).focus();
-      this.setState({active: true});
+      this.setState({active: true}, () => {
+        if (this.selfRef.current) {
+          this.selfRef.current.focus();
+        }
+      });
     }
   }
 
@@ -75,12 +79,9 @@ export default class InPlaceEdit extends React.Component {
   }
 
   render() {
-    if (this.state.active) {
-      var fieldType = this.props.type || 'text';
-    } else {
-      var spanText = this.props.type == 'password' ? '••••••••' : this.state.value;
-      var spanClass = 'in-place-edit' +
-        (this.props.readOnly ? ' disabled' : '');
+    if (!this.state.active) {
+      let spanText = this.props.type == 'password' ? '••••••••' : this.state.value;
+      let spanClass = 'in-place-edit' + (this.props.readOnly ? ' disabled' : '');
       if (!spanText) {
         spanText = this.props.placeholder;
         spanClass += ' placeholder';
@@ -89,32 +90,35 @@ export default class InPlaceEdit extends React.Component {
         // FIXME: this is wrong for RTL languages.
         spanText = spanText.substring(0, 19) + '...';
       }
+      return (<span className={spanClass} onClick={this.handleStartEditing}>
+        <span className="content">{spanText}</span>
+      </span>);
     }
-    return (
-      this.state.active ?
-        (fieldType == 'password' ?
-          <VisiblePassword
-            value={this.state.value}
-            placeholder={this.props.placeholder}
-            required={this.props.required ? 'required' : ''}
-            autoComplete={this.props.autoComplete}
-            autoFocus={true}
-            onFinished={this.handlePasswordFinished}/>
-          :
-          <input type={fieldType}
-            value={this.state.value}
-            placeholder={this.props.placeholder}
-            required={this.props.required ? 'required' : ''}
-            autoComplete={this.props.autoComplete}
-            autoFocus
-            onChange={this.handeTextChange}
-            onKeyDown={this.handleKeyDown}
-            onBlur={this.handleEditingFinished} />
-        )
-        :
-        <span className={spanClass} onClick={this.handleStartEditing}>
-          <span className="content">{spanText}</span>
-        </span>
-    );
+
+    let element;
+    let attr = {};
+    if (this.props.type == 'password') {
+      element = VisiblePassword;
+      attr.onFinished = this.handlePasswordFinished;
+    } else {
+      if (this.props.multiline > 1) {
+        element = 'textarea';
+        attr.rows = this.props.multiline;
+        attr.className = 'inplace-edit';
+      } else {
+        element = 'input';
+        attr.type = this.props.type || 'text';
+      }
+      attr.onChange = this.handeTextChange;
+      attr.onKeyDown = this.handleKeyDown;
+      attr.onBlur = this.handleEditingFinished;
+    }
+    attr.placeholder = this.props.placeholder;
+    attr.required = this.props.required ? 'required' : '';
+    attr.autoComplete = this.props.autoComplete;
+    attr.autoFocus = true;
+    attr.ref = this.selfRef;
+
+    return React.createElement(element, attr, null);
   }
 };

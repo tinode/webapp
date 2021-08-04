@@ -1280,5 +1280,19 @@
     "translation": "메시지에접근할수없음",
     "missing": false,
     "obsolete": true
+  },
+  "description_editing_placeholder": {
+    "translation": "",
+    "defaultMessage": "Optional description",
+    "description": "Placeholder for editing topic description",
+    "missing": true,
+    "obsolete": false
+  },
+  "label_description": {
+    "translation": "",
+    "defaultMessage": "Description",
+    "description": "Label for editing topic description",
+    "missing": true,
+    "obsolete": false
   }
 }

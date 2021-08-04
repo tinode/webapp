@@ -248,6 +248,11 @@ textarea {
   resize: none;
   padding-top: 0.45rem;
 }
+
+textarea.inplace-edit {
+  height: unset;
+}
+
 /* END of input and buttons */
 
 /* BEGIN scrollbar styling.  */
@@ -1042,7 +1047,7 @@ i.search {
   flex-direction: column;
   flex-shrink: 0;
   width: 8rem;
-  height: 10rem;
+  height: 8.5rem;
   margin-left: 0.5rem;
   font-size: 4.5rem;
   padding: 0;
@@ -1134,6 +1139,7 @@ i.search {
 
 .avatar-upload .inputfile + label.round {
   display: flex;
+  position: absolute;
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -1142,10 +1148,8 @@ i.search {
   line-height: 3rem;
   border-radius: 50%;
   box-shadow: 0 1px 4px rgba(0,0,0,0.4);
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: -1rem;
   bottom: 0;
+  right: 0;
   background-color: #fafafa;
   z-index: 1;
 }

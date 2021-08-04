@@ -183,6 +183,10 @@
     "defaultMessage": "content deleted",
     "description": "Shown when messages are deleted"
   },
+  "description_editing_placeholder": {
+    "defaultMessage": "Optional description",
+    "description": "Placeholder for editing topic description"
+  },
   "download_action": {
     "defaultMessage": "download",
     "description": "Call to action [download]"
@@ -270,6 +274,10 @@
   "label_default_access_mode": {
     "defaultMessage": "Default access mode:",
     "description": "Label for default access mode"
+  },
+  "label_description": {
+    "defaultMessage": "Description",
+    "description": "Label for editing topic description"
   },
   "label_file_name": {
     "defaultMessage": "File name:",

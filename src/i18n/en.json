@@ -1270,5 +1270,19 @@
     "description": "Validate credentail call to action",
     "missing": false,
     "obsolete": false
+  },
+  "description_editing_placeholder": {
+    "translation": "Optional description",
+    "defaultMessage": "Optional description",
+    "description": "Placeholder for editing topic description",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_description": {
+    "translation": "Description",
+    "defaultMessage": "Description",
+    "description": "Label for editing topic description",
+    "missing": false,
+    "obsolete": false
   }
 }

@@ -22,7 +22,7 @@ export default class TopicDescEdit extends React.Component {
     const topic = this.props.tinode.getTopic(this.props.topic);
     const acs = topic.getAccessMode();
     this.state = {
-      isMe: this.props.tinode.isMe(this.props.topic),
+      isMe: Tinode.isMeTopicName(this.props.topic),
       owner: acs && acs.isOwner(),
       fullName: topic.public ? topic.public.fn : undefined,
       avatar: makeImageUrl(topic.public ? topic.public.photo : null),
@@ -155,7 +155,7 @@ export default class TopicDescEdit extends React.Component {
       <>
         <div className="panel-form-row">
           <div className="panel-form-column">
-          {this.state.me ? <>
+          {this.state.isMe ? <>
             <label className="small">
               <FormattedMessage id="label_your_name" defaultMessage="Your name"
               description="Label for full name editing" />
@@ -204,6 +204,24 @@ export default class TopicDescEdit extends React.Component {
             title={this.state.fullName}
             onImageUpdated={this.handleImageUpdated}
             onError={this.props.onError} />
+        </div>
+        <div className="panel-form-column">
+          <div><label className="small">
+            <FormattedMessage id="label_description" defaultMessage="Description"
+              description="Label for editing topic description" />
+          </label></div>
+          <div>
+            <FormattedMessage id="description_editing_placeholder"
+              defaultMessage="Optional description"
+              description="Placeholder for editing topic description">{
+              (private_placeholder) => <InPlaceEdit
+                placeholder={private_placeholder}
+                readOnly={!editable}
+                value={this.state.description}
+                multiline={2}
+                onFinished={this.handleDescriptionUpdate} />
+            }</FormattedMessage>
+          </div>
         </div>
         {editable ?
           <>
