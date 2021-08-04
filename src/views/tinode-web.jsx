@@ -391,24 +391,28 @@ class TinodeWeb extends React.Component {
           'cred','reset','newtpk','archive','blocked','contacts',''].includes(hash.path[0])) {
         this.setState({sidePanelSelected: hash.path[0]});
       } else {
-        console.info("Unknown sidepanel view", hash.path[0]);
+        console.warn("Unknown sidepanel view", hash.path[0]);
       }
 
       // Topic for MessagesView selector.
-      const topicName = hash.path[1];
-      if (Tinode.topicType(topicName) && topicName != this.state.topicSelected) {
-          const newState = {
-            topicSelected: topicName
-          };
-          const acs = this.tinode.getTopicAccessMode(topicName);
-          if (acs) {
-            newState.topicSelectedAcs = acs;
-          }
-          this.setState(newState);
+      let topicName = hash.path[1] || null;
+      if (topicName != this.state.topicSelected) {
+        if (!Tinode.topicType(topicName)) {
+          // Clear invalid topic name.
+          topicName = null;
+        }
+        const newState = {
+          topicSelected: topicName
+        };
+        const acs = this.tinode.getTopicAccessMode(topicName);
+        if (acs) {
+          newState.topicSelectedAcs = acs;
+        }
+        this.setState(newState);
       }
     } else {
       // Empty hashpath
-      this.setState({sidePanelSelected: ''});
+      this.setState({sidePanelSelected: '', topicSelected: null});
     }
 
     // Save validation credentials, if available.
@@ -784,6 +788,12 @@ class TinodeWeb extends React.Component {
         newState.topicSelectedAcs = c.acs;
       }
     });
+
+    const past = new Date(0);
+    newState.chatList.sort((a, b) => {
+      return (a.touched || past).getTime() - (b.touched || past).getTime();
+    });
+
     // Merge search results and chat list.
     newState.searchableContacts = TinodeWeb.prepareSearchableContacts(newState.chatList, this.state.searchResults);
     this.setState(newState);
@@ -950,7 +960,7 @@ class TinodeWeb extends React.Component {
         });
         break;
       default:
-        console.info("Unknown invitation action", '"' + action + '""');
+        console.warn("Unknown invitation action", '"' + action + '""');
     }
 
     if (response != null) {

@@ -4,8 +4,9 @@ importScripts('https://cdn.jsdelivr.net/npm/firebase@8.7.1/firebase-messaging.js
 importScripts('firebase-init.js');
 importScripts('version.js');
 
-// Channel to notify the webapp.
-const webAppChannel = new BroadcastChannel('tinode-sw');
+// Channel to notify the webapp. There is no BroadcastChannel in Safari.
+const webAppChannel = (typeof BroadcastChannel == 'function') ?
+  new BroadcastChannel('tinode-sw') : null;
 
 // Basic internationalization.
 const i18n = {
@@ -36,6 +37,10 @@ const i18n = {
   'zh': {
     'new_message': "新讯息",
     'new_chat': "新聊天",
+  },
+  'zh-TW': {
+    'new_message': "新訊息",
+    'new_chat': "新聊天",
   }
 };
 self.i18nMessage = function(id) {
@@ -56,7 +61,9 @@ fbMessaging.onBackgroundMessage((payload) => {
   }
 
   // Notify webapp that a message was received.
-  webAppChannel.postMessage(payload.data);
+  if (webAppChannel) {
+    webAppChannel.postMessage(payload.data);
+  }
 
   const pushType = payload.data.what || 'msg';
   const title = payload.data.title || self.i18nMessage(pushType == 'msg' ? 'new_message' : 'new_chat');

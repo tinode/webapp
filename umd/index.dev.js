@@ -5012,12 +5012,16 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           sidePanelSelected: hash.path[0]
         });
       } else {
-        console.info("Unknown sidepanel view", hash.path[0]);
+        console.warn("Unknown sidepanel view", hash.path[0]);
       }
 
-      const topicName = hash.path[1];
+      let topicName = hash.path[1] || null;
 
-      if (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().topicType(topicName) && topicName != this.state.topicSelected) {
+      if (topicName != this.state.topicSelected) {
+        if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().topicType(topicName)) {
+          topicName = null;
+        }
+
         const newState = {
           topicSelected: topicName
         };
@@ -5031,7 +5035,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       }
     } else {
       this.setState({
-        sidePanelSelected: ''
+        sidePanelSelected: '',
+        topicSelected: null
       });
     }
 
@@ -5409,6 +5414,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         newState.topicSelectedAcs = c.acs;
       }
     });
+    const past = new Date(0);
+    newState.chatList.sort((a, b) => {
+      return (a.touched || past).getTime() - (b.touched || past).getTime();
+    });
     newState.searchableContacts = TinodeWeb.prepareSearchableContacts(newState.chatList, this.state.searchResults);
     this.setState(newState);
   }
@@ -5576,7 +5585,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         break;
 
       default:
-        console.info("Unknown invitation action", '"' + action + '""');
+        console.warn("Unknown invitation action", '"' + action + '""');
     }
 
     if (response != null) {
