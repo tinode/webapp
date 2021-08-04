@@ -8,6 +8,7 @@ const globSync = require('glob').sync;
 const mkdirpSync = require('mkdirp').sync;
 
 const EXTRACTED_STRINGS = './src/i18n/ex/base-en.json';
+const BASE_LANG        = 'en';
 const LANG_DIR         = './src/i18n/';
 const LANG_PATTERN     = './src/i18n/*.json';
 const FINAL_FILE       = './src/messages.json';
@@ -58,15 +59,21 @@ const baseMessages = JSON.parse(fs.readFileSync(EXTRACTED_STRINGS, 'utf8'));
 globSync(LANG_PATTERN)
   .map((filename) => {
     const translated = JSON.parse(fs.readFileSync(filename, 'utf8'));
+    const locale = getLocaleFromFileName(filename);
 
     // Refresh existing entries with possible new descriptions and default messages, add missing.
     Object.entries(baseMessages).forEach((ent) => {
       const [key, value] = ent;
+      let translation = translated[key] ? translated[key].translation : "";
+      if (!translation && locale == BASE_LANG) {
+        translation = value.defaultMessage;
+      }
+
       translated[key] = {
-        translation: translated[key] ? translated[key].translation : "",
+        translation: translation,
         defaultMessage: value.defaultMessage,
         description: value.description,
-        missing: !translated[key],
+        missing: !translation,
         obsolete: false
       };
     });
