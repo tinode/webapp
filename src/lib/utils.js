@@ -20,14 +20,20 @@ export function updateFavicon(count) {
 }
 
 // Create theCard which represents user's or topic's "public" info.
-export function theCard(fn, imageUrl, imageMimeType) {
+export function theCard(fn, imageUrl, imageMimeType, note) {
   let card = null;
   fn = fn && fn.trim();
+  note = note && note.trim();
 
   if (fn) {
     card = {
       fn: fn
     };
+  }
+
+  if (typeof note == 'string') {
+    card = card || {};
+    card.note = note ? note : Tinode.DEL_CHAR;
   }
 
   if (imageUrl) {

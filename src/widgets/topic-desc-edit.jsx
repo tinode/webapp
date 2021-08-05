@@ -11,7 +11,7 @@ import InPlaceEdit from './in-place-edit.jsx';
 import TagManager from './tag-manager.jsx';
 
 import { AVATAR_SIZE, MAX_AVATAR_BYTES, MAX_EXTERN_ATTACHMENT_SIZE,
-  MAX_INBAND_ATTACHMENT_SIZE, MAX_TITLE_LENGTH } from '../config.js';
+  MAX_INBAND_ATTACHMENT_SIZE, MAX_TITLE_LENGTH, MAX_TOPIC_DESCRIPTION_LENGTH } from '../config.js';
 import { imageScaled, blobToBase64, makeImageUrl } from '../lib/blob-helpers.js';
 import { arrayEqual, theCard } from '../lib/utils.js';
 
@@ -25,6 +25,8 @@ export default class TopicDescEdit extends React.Component {
       isMe: Tinode.isMeTopicName(this.props.topic),
       owner: acs && acs.isOwner(),
       fullName: topic.public ? topic.public.fn : undefined,
+      private: topic.private ? topic.private.comment : null,
+      description: topic.public ? topic.public.note : undefined,
       avatar: makeImageUrl(topic.public ? topic.public.photo : null),
       tags: topic.tags(),
       newAvatar: null,
@@ -36,6 +38,8 @@ export default class TopicDescEdit extends React.Component {
     this.handleFullNameUpdate = this.handleFullNameUpdate.bind(this);
     this.handleImageUpdated = this.handleImageUpdated.bind(this);
     this.handleAvatarCropped = this.handleAvatarCropped.bind(this);
+    this.handlePrivateUpdate = this.handlePrivateUpdate.bind(this);
+    this.handleDescriptionUpdate = this.handleDescriptionUpdate.bind(this);
     this.uploadAvatar = this.uploadAvatar.bind(this);
     this.handleAvatarCropCancel = this.handleAvatarCropCancel.bind(this);
     this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
@@ -57,9 +61,25 @@ export default class TopicDescEdit extends React.Component {
 
   handleFullNameUpdate(fn) {
     fn = fn.trim().substring(0, MAX_TITLE_LENGTH);
-    if (fn) {
+    if (fn && this.state.fullName !== fn) {
       this.setState({fullName: fn});
       this.props.onUpdateTopicDesc(this.props.topic, theCard(fn, null));
+    }
+  }
+
+  handlePrivateUpdate(comment) {
+    comment = comment.trim().substring(0, MAX_TITLE_LENGTH);
+    if (this.state.private !== comment) {
+      this.setState({private: comment});
+      this.props.onTopicDescUpdate(this.props.topic, null, comment || Tinode.DEL_CHAR);
+    }
+  }
+
+  handleDescriptionUpdate(desc) {
+    desc = desc.trim().substring(0, MAX_TOPIC_DESCRIPTION_LENGTH);
+    if (desc) {
+      this.setState({description: desc});
+      this.props.onUpdateTopicDesc(this.props.topic, theCard(null, null, null, desc));
     }
   }
 
@@ -153,59 +173,59 @@ export default class TopicDescEdit extends React.Component {
 
     return (
       <>
-        <div className="panel-form-row">
-          <div className="panel-form-column">
-          {this.state.isMe ? <>
-            <label className="small">
-              <FormattedMessage id="label_your_name" defaultMessage="Your name"
-              description="Label for full name editing" />
-            </label>
-            <div><FormattedMessage id="full_name_prompt" defaultMessage="Full name, e.g. John Doe"
-              description="Input placeholder for person's full name">{
-              (full_name_placeholder) => <InPlaceEdit
-                placeholder={full_name_placeholder}
-                value={this.state.fullName}
-                required={true}
-                onFinished={this.handleFullNameUpdate} />
-            }</FormattedMessage></div>
-          </> : <>
-            <div><label className="small">
-              <FormattedMessage id="label_topic_name" defaultMessage="Name"
-                description="Label for editing topic name" />
-            </label></div>
-            <div><InPlaceEdit
-                placeholder={this.state.groupTopic ? "Group name" : <i>Unknown</i>}
-                readOnly={!this.state.owner}
-                value={this.state.fullName}
-                required={true}
-                onFinished={this.handleFullNameUpdate} /></div>
-            <div><label className="small">
-              <FormattedMessage id="label_private" defaultMessage="Private comment"
-                description="Label for editing 'private'" />
-            </label></div>
-            <div>
-              <FormattedMessage id="private_editing_placeholder"
-                defaultMessage="Visible to you only"
-                description="Placeholder for editing 'private'">{
-                (private_placeholder) => <InPlaceEdit
-                  placeholder={private_placeholder}
-                  value={this.state.private}
-                  onFinished={this.handlePrivateUpdate} />
-              }</FormattedMessage>
-            </div>
-          </>
-          }
-          </div>
-          <AvatarUpload
-            tinode={this.props.tinode}
-            avatar={this.state.avatar}
-            readOnly={!editable}
-            uid={this.props.topic}
-            title={this.state.fullName}
-            onImageUpdated={this.handleImageUpdated}
-            onError={this.props.onError} />
-        </div>
         <div className="panel-form-column">
+          <div className="panel-form-row">
+            <div className="panel-form-column">
+            {this.state.isMe ? <>
+              <label className="small">
+                <FormattedMessage id="label_your_name" defaultMessage="Your name"
+                description="Label for full name editing" />
+              </label>
+              <div><FormattedMessage id="full_name_prompt" defaultMessage="Full name, e.g. John Doe"
+                description="Input placeholder for person's full name">{
+                (full_name_placeholder) => <InPlaceEdit
+                  placeholder={full_name_placeholder}
+                  value={this.state.fullName}
+                  required={true}
+                  onFinished={this.handleFullNameUpdate} />
+              }</FormattedMessage></div>
+            </> : <>
+              <div><label className="small">
+                <FormattedMessage id="label_topic_name" defaultMessage="Name"
+                  description="Label for editing topic name" />
+              </label></div>
+              <div><InPlaceEdit
+                  placeholder={this.state.groupTopic ? "Group name" : <i>Unknown</i>}
+                  readOnly={!this.state.owner}
+                  value={this.state.fullName}
+                  required={true}
+                  onFinished={this.handleFullNameUpdate} /></div>
+              <div><label className="small">
+                <FormattedMessage id="label_private" defaultMessage="Private comment"
+                  description="Label for editing 'private'" />
+              </label></div>
+              <div>
+                <FormattedMessage id="private_editing_placeholder"
+                  defaultMessage="Visible to you only"
+                  description="Placeholder for editing 'private'">{
+                  (private_placeholder) => <InPlaceEdit
+                    placeholder={private_placeholder}
+                    value={this.state.private}
+                    onFinished={this.handlePrivateUpdate} />
+                }</FormattedMessage>
+              </div>
+            </>
+            }
+            </div>
+            <AvatarUpload
+              tinode={this.props.tinode}
+              avatar={this.state.avatar}
+              readOnly={!editable}
+              uid={this.props.topic}
+              title={this.state.fullName}
+              onImageUpdated={this.handleImageUpdated}
+              onError={this.props.onError} />
+          </div>
           <div><label className="small">
             <FormattedMessage id="label_description" defaultMessage="Description"
               description="Label for editing topic description" />

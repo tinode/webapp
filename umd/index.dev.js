@@ -37,6 +37,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "IMAGE_PREVIEW_DIM": () => (/* binding */ IMAGE_PREVIEW_DIM),
 /* harmony export */   "MAX_ONLINE_IN_TOPIC": () => (/* binding */ MAX_ONLINE_IN_TOPIC),
 /* harmony export */   "MAX_TITLE_LENGTH": () => (/* binding */ MAX_TITLE_LENGTH),
+/* harmony export */   "MAX_TOPIC_DESCRIPTION_LENGTH": () => (/* binding */ MAX_TOPIC_DESCRIPTION_LENGTH),
 /* harmony export */   "MESSAGE_PREVIEW_LENGTH": () => (/* binding */ MESSAGE_PREVIEW_LENGTH),
 /* harmony export */   "LINK_CONTACT_US": () => (/* binding */ LINK_CONTACT_US),
 /* harmony export */   "LINK_PRIVACY_POLICY": () => (/* binding */ LINK_PRIVACY_POLICY),
@@ -74,6 +75,7 @@ const MAX_IMAGE_DIM = 1024;
 const IMAGE_PREVIEW_DIM = 64;
 const MAX_ONLINE_IN_TOPIC = 4;
 const MAX_TITLE_LENGTH = 60;
+const MAX_TOPIC_DESCRIPTION_LENGTH = 360;
 const MESSAGE_PREVIEW_LENGTH = 80;
 const LINK_CONTACT_US = 'email:support@tinode.co';
 const LINK_PRIVACY_POLICY = 'https://tinode.co/privacy.html';
@@ -111,7 +113,7 @@ __webpack_require__.r(__webpack_exports__);
 const SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
 const MIME_EXTENSIONS = ['jpg', 'gif', 'png', 'svg', 'svg'];
 function makeImageUrl(photo) {
-  if (photo) {
+  if (typeof photo == 'object') {
     if (photo.data && photo.type) {
       const mime = photo.type.startsWith('image/') ? photo.type : 'image/' + photo.type;
       return 'data:' + mime + ';base64,' + photo.data;
@@ -592,14 +594,20 @@ function updateFavicon(count) {
   head.appendChild(newIcon);
   document.title = (count > 0 ? '(' + count + ') ' : '') + 'Tinode';
 }
-function theCard(fn, imageUrl, imageMimeType) {
+function theCard(fn, imageUrl, imageMimeType, note) {
   let card = null;
   fn = fn && fn.trim();
+  note = note && note.trim();
 
   if (fn) {
     card = {
       fn: fn
     };
+  }
+
+  if (typeof note == 'string') {
+    card = card || {};
+    card.note = note ? note : (tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default().DEL_CHAR);
   }
 
   if (imageUrl) {
@@ -1249,7 +1257,11 @@ class AccountSettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().
         "type": 0,
         "value": "ID:"
       }]
-    })), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", null, this.props.myUserId)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_badge_list_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+    })), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", {
+      style: {
+        whiteSpace: 'nowrap'
+      }
+    }, this.props.myUserId)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_badge_list_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
       trustedBadges: this.props.trustedBadges
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
       tinode: this.props.tinode,
@@ -9859,7 +9871,7 @@ class InPlaceEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     this.setState({
       active: false
     });
-    let value = this.state.value.trim();
+    const value = this.state.value.trim();
 
     if ((value || this.props.value) && value !== this.props.value) {
       this.props.onFinished(value);
@@ -9886,20 +9898,19 @@ class InPlaceEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         spanClass += ' placeholder';
       }
 
-      if (spanText.length > 20) {
-        spanText = spanText.substring(0, 19) + '...';
+      if (!this.props.multiline || this.props.multiline == 1) {
+        spanClass += ' short';
       }
 
       return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
         className: spanClass,
         onClick: this.handleStartEditing
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-        className: "content"
-      }, spanText));
+      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, spanText));
     }
 
     let element;
-    let attr = {};
+    const attr = {};
+    let value = null;
 
     if (this.props.type == 'password') {
       element = _visible_password_jsx__WEBPACK_IMPORTED_MODULE_1__.default;
@@ -9909,9 +9920,11 @@ class InPlaceEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         element = 'textarea';
         attr.rows = this.props.multiline;
         attr.className = 'inplace-edit';
+        value = this.state.value;
       } else {
         element = 'input';
         attr.type = this.props.type || 'text';
+        attr.value = this.state.value;
       }
 
       attr.onChange = this.handeTextChange;
@@ -9924,7 +9937,7 @@ class InPlaceEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     attr.autoComplete = this.props.autoComplete;
     attr.autoFocus = true;
     attr.ref = this.selfRef;
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(element, attr, null);
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(element, attr, value);
   }
 
 }
@@ -11600,6 +11613,8 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       isMe: tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().isMeTopicName(this.props.topic),
       owner: acs && acs.isOwner(),
       fullName: topic.public ? topic.public.fn : undefined,
+      private: topic.private ? topic.private.comment : null,
+      description: topic.public ? topic.public.note : undefined,
       avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__.makeImageUrl)(topic.public ? topic.public.photo : null),
       tags: topic.tags(),
       newAvatar: null,
@@ -11610,6 +11625,8 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
     this.handleFullNameUpdate = this.handleFullNameUpdate.bind(this);
     this.handleImageUpdated = this.handleImageUpdated.bind(this);
     this.handleAvatarCropped = this.handleAvatarCropped.bind(this);
+    this.handlePrivateUpdate = this.handlePrivateUpdate.bind(this);
+    this.handleDescriptionUpdate = this.handleDescriptionUpdate.bind(this);
     this.uploadAvatar = this.uploadAvatar.bind(this);
     this.handleAvatarCropCancel = this.handleAvatarCropCancel.bind(this);
     this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
@@ -11634,11 +11651,33 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
   handleFullNameUpdate(fn) {
     fn = fn.trim().substring(0, _config_js__WEBPACK_IMPORTED_MODULE_7__.MAX_TITLE_LENGTH);
 
-    if (fn) {
+    if (fn && this.state.fullName !== fn) {
       this.setState({
         fullName: fn
       });
       this.props.onUpdateTopicDesc(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(fn, null));
+    }
+  }
+
+  handlePrivateUpdate(comment) {
+    comment = comment.trim().substring(0, _config_js__WEBPACK_IMPORTED_MODULE_7__.MAX_TITLE_LENGTH);
+
+    if (this.state.private !== comment) {
+      this.setState({
+        private: comment
+      });
+      this.props.onTopicDescUpdate(this.props.topic, null, comment || (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().DEL_CHAR));
+    }
+  }
+
+  handleDescriptionUpdate(desc) {
+    desc = desc.trim().substring(0, _config_js__WEBPACK_IMPORTED_MODULE_7__.MAX_TOPIC_DESCRIPTION_LENGTH);
+
+    if (desc) {
+      this.setState({
+        description: desc
+      });
+      this.props.onUpdateTopicDesc(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(null, null, null, desc));
     }
   }
 
@@ -11739,6 +11778,8 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
 
     const editable = this.state.isMe || this.state.owner;
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "panel-form-column"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-column"
@@ -11801,9 +11842,7 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       title: this.state.fullName,
       onImageUpdated: this.handleImageUpdated,
       onError: this.props.onError
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "small"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_description",

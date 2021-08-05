@@ -586,14 +586,18 @@ div.trusted-badge {
 .in-place-edit {
   display: inline-block;
   font-family: inherit;
-  font-size: 1.1rem;
-  height: 2.5rem;
-  line-height: 2.25;
+  font-size: 1rem;
   margin: 0.25rem 0.125rem 0 0.125rem;
   width: 100%;
   vertical-align: baseline;
   border-bottom: 1px dashed #ddd;
   cursor: pointer;
+}
+
+.in-place-edit.short {
+  font-size: 1.1rem;
+  height: 2.5rem;
+  line-height: 2.25;
 }
 
 .in-place-edit.disabled {
@@ -605,11 +609,15 @@ div.trusted-badge {
   color: #bbb;
 }
 
-.in-place-edit .content {
+.in-place-edit span {
+  display: inline-block;
+}
+
+.in-place-edit.short span {
   display: block;
   white-space: nowrap;
   text-overflow: ellipsis;
-  overflow: hidden
+  overflow: hidden;
 }
 /* END of InPlaceEdit styles */
 
@@ -842,6 +850,7 @@ i.search {
 }
 
 .scrollable-panel {
+  overflow-x: hidden;
   overflow-y: auto;
   margin-top: 0.25rem;
   margin-bottom: auto;
@@ -887,7 +896,8 @@ i.search {
 .contact-box .contact-title {
   font-size: 1.05rem;
   text-overflow: ellipsis;
-  overflow: hidden
+  overflow-x: hidden;
+  white-space: nowrap;
 }
 
 .contact-box .contact-comment {
@@ -933,6 +943,11 @@ i.search {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+}
+.contact-box .text-box > div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .contact-box .action-text {
@@ -1023,13 +1038,12 @@ i.search {
   display: flex;
   flex-direction: column;
   flex-grow: 0;
-  flex-shrink: 0;
   padding: 0.5rem 0.75rem;
   line-height: 1.5;
+  overflow-x: hidden;
 }
 
-/* Make sure padding is only applied at
-   the top level panel */
+/* Make sure padding is only applied at the top level panel */
 .panel-form-row > .panel-form-column,
 .panel-form-column > .panel-form-column {
   padding: 0!important;

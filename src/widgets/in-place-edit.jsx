@@ -65,7 +65,7 @@ export default class InPlaceEdit extends React.Component {
       return;
     }
     this.setState({active: false});
-    let value = this.state.value.trim();
+    const value = this.state.value.trim();
     if ((value || this.props.value) && (value !== this.props.value)) {
       this.props.onFinished(value);
     }
@@ -86,17 +86,18 @@ export default class InPlaceEdit extends React.Component {
         spanText = this.props.placeholder;
         spanClass += ' placeholder';
       }
-      if (spanText.length > 20) {
-        // FIXME: this is wrong for RTL languages.
-        spanText = spanText.substring(0, 19) + '...';
+      if (!this.props.multiline || this.props.multiline == 1) {
+        spanClass += ' short';
       }
+
       return (<span className={spanClass} onClick={this.handleStartEditing}>
-        <span className="content">{spanText}</span>
+        <span>{spanText}</span>
       </span>);
     }
 
     let element;
-    let attr = {};
+    const attr = {};
+    let value = null;
     if (this.props.type == 'password') {
       element = VisiblePassword;
       attr.onFinished = this.handlePasswordFinished;
@@ -105,9 +106,11 @@ export default class InPlaceEdit extends React.Component {
         element = 'textarea';
         attr.rows = this.props.multiline;
         attr.className = 'inplace-edit';
+        value = this.state.value;
       } else {
         element = 'input';
         attr.type = this.props.type || 'text';
+        attr.value = this.state.value;
       }
       attr.onChange = this.handeTextChange;
       attr.onKeyDown = this.handleKeyDown;
@@ -119,6 +122,6 @@ export default class InPlaceEdit extends React.Component {
     attr.autoFocus = true;
     attr.ref = this.selfRef;
 
-    return React.createElement(element, attr, null);
+    return React.createElement(element, attr, value);
   }
 };

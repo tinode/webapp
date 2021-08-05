@@ -31,7 +31,7 @@ export default class AccountSettingsView extends React.Component {
             <div>
               <label className="small"><FormattedMessage id="label_user_id" defaultMessage="ID:"
                 description="Label for user address (ID)" /></label>&nbsp;
-              <tt>{this.props.myUserId}</tt>
+              <tt style={{whiteSpace: 'nowrap'}}>{this.props.myUserId}</tt>
             </div>
             <BadgeList trustedBadges={this.props.trustedBadges} />
           </div>
