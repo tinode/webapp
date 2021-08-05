@@ -19,10 +19,6 @@
     "defaultMessage": "Leave Conversation",
     "description": "Flat button [Leave Conversation]"
   },
-  "action_more": {
-    "defaultMessage": "More",
-    "description": "Action for showing more content"
-  },
   "action_report_chat": {
     "defaultMessage": "Report Conversation",
     "description": "Flat button [Report Group]"
@@ -98,6 +94,10 @@
   "button_reset": {
     "defaultMessage": "Reset",
     "description": "Button [Reset]"
+  },
+  "button_security": {
+    "defaultMessage": "Security",
+    "description": "Navigaton button for security panel."
   },
   "button_send_request": {
     "defaultMessage": "Send request",

@@ -13,7 +13,7 @@ export default class HashNavigation {
     }
     if (parts[1]) {
       parts[1].split('&').forEach(function(part) {
-        let item = part.split('=');
+        const item = part.split('=');
         if (item[0]) {
           params[decodeURIComponent(item[0])] = decodeURIComponent(item[1]);
         }
@@ -55,6 +55,12 @@ export default class HashNavigation {
   static setUrlSidePanel(hash, sidepanel) {
     const parsed = this.parseUrlHash(hash);
     parsed.path[0] = sidepanel;
+    return this.composeUrlHash(parsed.path, parsed.params);
+  }
+
+  static setUrlInfoPanel(hash, infopanel) {
+    const parsed = this.parseUrlHash(hash);
+    parsed.params.info = infopanel;
     return this.composeUrlHash(parsed.path, parsed.params);
   }
 

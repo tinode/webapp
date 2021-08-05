@@ -64,7 +64,7 @@ export default class TopicCommonView extends React.Component {
   }
 
   handleCredEntered(e) {
-    let value = this.state.newCred.trim();
+    const value = this.state.newCred.trim();
     if (!value) {
       this.setState({addCredActive: false, addCredInvalid: false});
       return;
@@ -92,14 +92,17 @@ export default class TopicCommonView extends React.Component {
     const credentials = [];
     if (this.state.isMe) {
       this.state.credentials.map((cred) => {
-        credentials.push(<div key={cred.meth + ":" + cred.val + ":" + cred.done}>{cred.meth}: <tt>{cred.val}</tt>
-          <span > {!cred.done ?
-            <a href="#" onClick={(e) => {e.preventDefault(); this.props.onCredConfirm(cred.meth, cred.val);}}>
+        credentials.push(
+          <div key={cred.meth + ":" + cred.val + ":" + cred.done}>{cred.meth}: <tt>{cred.val}</tt>
+            <span> {!cred.done ?
+              <a href="#" onClick={(e) => {e.preventDefault(); this.props.onCredConfirm(cred.meth, cred.val);}}>
                 <FormattedMessage id="validate_credential_action" defaultMessage="confirm"
                   description="Validate credentail call to action" />
               </a>
             : null} <a href="#" onClick={(e) => {e.preventDefault(); this.props.onCredDelete(cred.meth, cred.val);}}><i
-              className="material-icons gray">delete_outline</i></a></span></div>);
+              className="material-icons gray">delete_outline</i></a></span>
+          </div>
+        );
       });
     }
 

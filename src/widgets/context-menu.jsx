@@ -3,7 +3,6 @@ import React from 'react';
 import { injectIntl, defineMessages } from 'react-intl';
 
 import { REM_SIZE } from '../config.js';
-import HashNavigation from '../lib/navigation.js';
 
 const messages = defineMessages({
   info: {

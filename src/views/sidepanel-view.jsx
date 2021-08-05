@@ -100,7 +100,7 @@ class SidepanelView extends React.Component {
   }
 
   handleNewTopic() {
-    this.props.onBasicNavigate('newtpk');
+    this.props.onNavigate('newtpk');
   }
 
   render() {
@@ -173,14 +173,13 @@ class SidepanelView extends React.Component {
             tinode={this.props.tinode}
             myUserId={this.props.myUserId}
             trustedBadges={this.props.trustedBadges}
-            onBasicNavigate={this.props.onBasicNavigate} /> :
+            onNavigate={this.props.onNavigate} /> :
 
           (view === 'general' || view === 'crop') ?
           <TopicCommonView
             topic="me"
             tinode={this.props.tinode}
             myUserId={this.props.myUserId}
-            onBasicNavigate={this.props.onBasicNavigate}
             onUpdateTopicDesc={this.props.onUpdateAccountDesc}
             onUpdateTags={this.props.onUpdateAccountTags}
             onCredAdd={this.props.onCredAdd}

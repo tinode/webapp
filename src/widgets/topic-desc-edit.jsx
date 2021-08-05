@@ -173,37 +173,57 @@ export default class TopicDescEdit extends React.Component {
 
     return (
       <>
-        <div className="panel-form-column">
-          <div className="panel-form-row">
-            <div className="panel-form-column">
-            {this.state.isMe ? <>
-              <label className="small">
-                <FormattedMessage id="label_your_name" defaultMessage="Your name"
-                description="Label for full name editing" />
-              </label>
-              <div><FormattedMessage id="full_name_prompt" defaultMessage="Full name, e.g. John Doe"
+      <div className="panel-form-column">
+        <center>
+          <AvatarUpload
+            tinode={this.props.tinode}
+            avatar={this.state.avatar}
+            readOnly={!editable}
+            uid={this.props.topic}
+            title={this.state.fullName}
+            onImageUpdated={this.handleImageUpdated}
+            onError={this.props.onError} />
+        </center>
+        {this.state.isMe ?
+          <div className="group">
+            <label className="small">
+              <FormattedMessage id="label_your_name" defaultMessage="Your name"
+              description="Label for full name editing" />
+            </label>
+            <div>
+              <FormattedMessage id="full_name_prompt" defaultMessage="Full name, e.g. John Doe"
                 description="Input placeholder for person's full name">{
-                (full_name_placeholder) => <InPlaceEdit
-                  placeholder={full_name_placeholder}
-                  value={this.state.fullName}
-                  required={true}
-                  onFinished={this.handleFullNameUpdate} />
-              }</FormattedMessage></div>
-            </> : <>
+              (full_name_placeholder) => <InPlaceEdit
+                placeholder={full_name_placeholder}
+                value={this.state.fullName}
+                required={true}
+                onFinished={this.handleFullNameUpdate} />
+              }</FormattedMessage>
+            </div>
+          </div>
+        :
+          <>
+            <div className="group">
               <div><label className="small">
                 <FormattedMessage id="label_topic_name" defaultMessage="Name"
                   description="Label for editing topic name" />
               </label></div>
-              <div><InPlaceEdit
+              <div>
+                <InPlaceEdit
                   placeholder={this.state.groupTopic ? "Group name" : <i>Unknown</i>}
                   readOnly={!this.state.owner}
                   value={this.state.fullName}
                   required={true}
-                  onFinished={this.handleFullNameUpdate} /></div>
-              <div><label className="small">
-                <FormattedMessage id="label_private" defaultMessage="Private comment"
-                  description="Label for editing 'private'" />
-              </label></div>
+                  onFinished={this.handleFullNameUpdate} />
+              </div>
+            </div>
+            <div className="group">
+              <div>
+                <label className="small">
+                  <FormattedMessage id="label_private" defaultMessage="Private comment"
+                    description="Label for editing 'private'" />
+                </label>
+              </div>
               <div>
                 <FormattedMessage id="private_editing_placeholder"
                   defaultMessage="Visible to you only"
@@ -214,18 +234,10 @@ export default class TopicDescEdit extends React.Component {
                     onFinished={this.handlePrivateUpdate} />
                 }</FormattedMessage>
               </div>
-            </>
-            }
             </div>
-            <AvatarUpload
-              tinode={this.props.tinode}
-              avatar={this.state.avatar}
-              readOnly={!editable}
-              uid={this.props.topic}
-              title={this.state.fullName}
-              onImageUpdated={this.handleImageUpdated}
-              onError={this.props.onError} />
-          </div>
+          </>
+        }
+        <div className="group">
           <div><label className="small">
             <FormattedMessage id="label_description" defaultMessage="Description"
               description="Label for editing topic description" />
@@ -243,21 +255,22 @@ export default class TopicDescEdit extends React.Component {
             }</FormattedMessage>
           </div>
         </div>
-        {editable ?
-          <>
-            <div className="hr" />
-            <FormattedMessage id="title_tag_manager" defaultMessage="Tags (user discovery)"
-              description="Section title for TagManager">{
+      </div>
+      {editable ?
+        <>
+          <div className="hr" />
+          <FormattedMessage id="title_tag_manager" defaultMessage="Tags (user discovery)"
+            description="Section title for TagManager">{
               (title_tag_manager) => <TagManager
                 title={title_tag_manager}
                 activated={false}
                 tags={this.state.tags}
                 tinode={this.props.tinode}
                 onSubmit={this.handleTagsUpdated} />
-            }</FormattedMessage>
-          </>
-          : null
-        }
+          }</FormattedMessage>
+        </>
+        : null
+      }
       </>
     );
   }

@@ -39,7 +39,7 @@
     "defaultMessage": "More",
     "description": "Action for showing more content",
     "missing": false,
-    "obsolete": false
+    "obsolete": true
   },
   "action_report_chat": {
     "translation": "Report Conversation",
@@ -1282,6 +1282,13 @@
     "translation": "Description",
     "defaultMessage": "Description",
     "description": "Label for editing topic description",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_security": {
+    "translation": "Security",
+    "defaultMessage": "Security",
+    "description": "Navigaton button for security panel.",
     "missing": false,
     "obsolete": false
   }

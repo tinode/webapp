@@ -4,6 +4,8 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
 import Tinode from 'tinode-sdk';
 
+import TopicSecurityView from './topic-security-view.jsx';
+
 import AvatarUpload from '../widgets/avatar-upload.jsx';
 import BadgeList from '../widgets/badge-list.jsx';
 import CheckBox from '../widgets/checkbox.jsx';
@@ -16,7 +18,7 @@ import MoreButton from '../widgets/more-button.jsx';
 import PermissionsEditor from '../widgets/permissions-editor.jsx';
 import TagManager from '../widgets/tag-manager.jsx';
 
-import { MAX_TITLE_LENGTH, NO_ACCESS_MODE } from '../config.js';
+import { MAX_TITLE_LENGTH, MAX_TOPIC_DESCRIPTION_LENGTH, NO_ACCESS_MODE } from '../config.js';
 
 import { makeImageUrl } from '../lib/blob-helpers.js';
 import { arrayEqual, theCard } from '../lib/utils.js';
@@ -42,57 +44,11 @@ const messages = defineMessages({
     defaultMessage: 'Other',
     description: 'Label for the other user when the user is unnamed'
   },
-  clear_messages: {
-    id: 'action_clear_messages',
-    defaultMessage: 'Clear Messages',
-    description: 'Flat button [Clear Messages] (soft-delete messages)'
-  },
-  clear_messages_warning: {
-    id: 'clear_messages_warning',
-    defaultMessage: 'Are you sure you want to clear all messages? It cannot be undone.',
-    description: 'Alert dialog warning when deleting all messages.'
-  },
-  delete_messages: {
-    id: 'action_delete_messages',
-    defaultMessage: 'Clear Messages for All',
-    description: 'Flat button [Clear for All] (hard-delete all messages)'
-  },
-  delete_messages_warning: {
-    id: 'delete_messages_warning',
-    defaultMessage: 'Are you sure you want to delete all messages for everyone? It cannot be undone.',
-    description: 'Alert dialog warning when hard-deleting all messages.'
-  },
-  leave_chat: {
-    id: 'action_leave_chat',
-    defaultMessage: 'Leave Conversation',
-    description: 'Flat button [Leave Conversation]'
-  },
-  leave_chat_warning: {
-    id: 'leave_chat_warning',
-    defaultMessage: 'Are you sure you want to leave this conversation?',
-    description: 'Alert dialog warning when unsubscribing from a chat.'
-  },
-  block_contact: {
-    id: 'action_block_contact',
-    defaultMessage: "Block Contact",
-    description: "Flat button [Block Contact]"
-  },
-  block_contact_warning: {
-    id: 'block_contact_warning',
-    defaultMessage: 'Are you sure you want to block this contact?',
-    description: 'Alert dialog warning when blocking a contact.'
-  },
-  report_chat: {
-    id: 'action_report_chat',
-    defaultMessage: 'Report Conversation',
-    description: 'Flat button [Report Group]'
-  },
-  report_chat_warning: {
-    id: 'report_chat_warning',
-    defaultMessage: 'Are you sure you want to block and report this conversation?',
-    description: 'Alert dialog warning when reporting a conversation for abuse'
-  },
 });
+
+function _clip(str, length) {
+  return str && str.substring(0, length);
+}
 
 class InfoView extends React.Component {
   constructor(props) {
@@ -109,6 +65,7 @@ class InfoView extends React.Component {
       groupTopic: undefined,
       channel: undefined,
       fullName: undefined,
+      description: undefined,
       avatar: null,
       private: null,
       selectedContact: null,
@@ -124,7 +81,6 @@ class InfoView extends React.Component {
       trustedBadges: [],
       showMemberPanel: false,
       showPermissionEditorFor: undefined,
-      moreInfoExpanded: false,
       previousMetaDesc: undefined,
       previousSubsUpdated: undefined,
       previousTagsUpdated: undefined
@@ -145,12 +101,7 @@ class InfoView extends React.Component {
     this.handleShowAddMembers = this.handleShowAddMembers.bind(this);
     this.handleHideAddMembers = this.handleHideAddMembers.bind(this);
     this.handleMemberUpdateRequest = this.handleMemberUpdateRequest.bind(this);
-    this.handleDeleteMessages = this.handleDeleteMessages.bind(this);
-    this.handleLeave = this.handleLeave.bind(this);
-    this.handleBlock = this.handleBlock.bind(this);
-    this.handleReport = this.handleReport.bind(this);
     this.handleMemberSelected = this.handleMemberSelected.bind(this);
-    this.handleMoreInfo = this.handleMoreInfo.bind(this);
     this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
     this.handleContextMenu = this.handleContextMenu.bind(this);
   }
@@ -236,10 +187,11 @@ class InfoView extends React.Component {
       deleter: acs && acs.isDeleter(),
       muted: acs && acs.isMuted(),
 
-      fullName: topic.public ? topic.public.fn : undefined,
+      fullName: _clip(topic.public ? topic.public.fn : undefined, MAX_TITLE_LENGTH),
+      description: _clip(topic.public ? topic.public.note : undefined, MAX_TOPIC_DESCRIPTION_LENGTH),
       avatar: makeImageUrl(topic.public ? topic.public.photo : null),
       trustedBadges: badges,
-      private: topic.private ? topic.private.comment : null,
+      private: _clip(topic.private ? topic.private.comment : null, MAX_TITLE_LENGTH),
       address: topic.name,
       groupTopic: topic.isGroupType(),
       channel: topic.isChannelType(),
@@ -433,64 +385,8 @@ class InfoView extends React.Component {
     this.setState({showMemberPanel: false});
   }
 
-  handleDeleteMessages(e) {
-    e.preventDefault();
-    const {formatMessage} = this.props.intl;
-    this.props.onShowAlert(
-      formatMessage(this.state.deleter ? messages.delete_messages : messages.clear_messages), // title
-      formatMessage(this.state.deleter ? messages.delete_messages_warning : messages.clear_messages_warning), // content
-      (() => { this.props.onDeleteMessages(this.props.topic); }), // onConfirm
-      null, // "OK"
-      true, // Show Reject button
-      null  // "Cancel"
-    );
-  }
-
-  handleLeave(e) {
-    e.preventDefault();
-    const {formatMessage} = this.props.intl;
-    this.props.onShowAlert(
-      formatMessage(messages.leave_chat), // title
-      formatMessage(messages.leave_chat_warning), // content
-      (() => { this.props.onLeaveTopic(this.props.topic); }), // onConfirm
-      null, // "OK"
-      true, // Show Reject button
-      null  // "Cancel"
-    );
-  }
-
-  handleBlock(e) {
-    e.preventDefault();
-    const {formatMessage} = this.props.intl;
-    this.props.onShowAlert(
-      formatMessage(messages.block_contact), // title
-      formatMessage(messages.block_contact_warning), // content
-      (() => { this.props.onBlockTopic(this.props.topic); }), // onConfirm
-      null, // "OK"
-      true, // Show Reject button
-      null  // "Cancel"
-    );
-  }
-
-  handleReport(e) {
-    e.preventDefault();
-    const {formatMessage} = this.props.intl;
-    this.props.onShowAlert(
-      formatMessage(messages.report_chat), // title
-      formatMessage(messages.report_chat_warning), // content
-      (() => { this.props.onReportTopic(this.props.topic); }), // onConfirm
-      null, // "OK"
-      true, // Show Reject button
-      null  // "Cancel"
-    );
-  }
-
   handleMemberSelected(uid) {
     this.setState({selectedContact: uid});
-  }
-
-  handleMoreInfo(open) {
-    this.setState({moreInfoExpanded: open});
   }
 
   handleTagsUpdated(tags) {
@@ -569,42 +465,52 @@ class InfoView extends React.Component {
             />
           :
           <div id="info-view-content" className="scrollable-panel">
-            <div className="panel-form-row">
-              <div className="panel-form-column">
+            <div className="panel-form-column">
+              <a href="#" className="flat-button float-right" onClick={(e) => {e.preventDefault(); this.props.onNavigate('general');}}>
+                <i className="material-icons">edit</i>&nbsp;
+                <FormattedMessage id="button_edit" defaultMessage="Edit" description="Call to action [Edit]" />
+              </a>
+              <center>
+                <AvatarUpload
+                  tinode={this.props.tinode}
+                  avatar={this.state.avatar}
+                  readOnly={true}
+                  uid={this.props.topic}
+                  title={this.state.fullName} />
+              </center>
+              <div className="group">
                 <div><label className="small">
                   <FormattedMessage id="label_topic_name" defaultMessage="Name"
                     description="Label for editing topic name" />
                 </label></div>
-                <div className="large">{this.state.fullName}</div>
-                {this.state.private ?
-                  <>
-                    <div><label className="small">
-                      <FormattedMessage id="label_private" defaultMessage="Private comment"
-                        description="Label for editing 'private'" />
-                    </label></div>
-                    <div className="large">{this.state.private}</div>
-                  </>
-                : null
-                }
-                <div>
-                  <label className="small"><FormattedMessage id="label_user_id" defaultMessage="ID:"
-                    description="Label for user address (ID)" /></label>&nbsp;
-                  <tt>{this.props.myUserId}</tt>
+                <div className="large ellipsized">{this.state.fullName}</div>
+              </div>
+              {this.state.private ?
+                <div className="group">
+                  <div><label className="small">
+                    <FormattedMessage id="label_private" defaultMessage="Private comment"
+                      description="Label for editing 'private'" />
+                  </label></div>
+                  <div className="large ellipsized">{this.state.private}</div>
                 </div>
+                : null
+              }
+              <div className="group">
+                <label className="small"><FormattedMessage id="label_user_id" defaultMessage="ID:"
+                  description="Label for user address (ID)" /></label>&nbsp;
+                <tt>{this.state.address}</tt>
+              </div>
+              <div className="group">
                 <BadgeList trustedBadges={this.state.trustedBadges} />
               </div>
-              <AvatarUpload
-                tinode={this.props.tinode}
-                avatar={this.state.avatar}
-                readOnly={true}
-                uid={this.props.topic}
-                title={this.state.fullName} />
-            </div>
-            <div className="panel-form-row">
-              <a href="#" className="flat-button" onClick={(e) => {e.preventDefault(); this.props.onBasicNavigate('general');}}>
-                <i className="material-icons">edit</i>&nbsp;
-                <FormattedMessage id="button_edit" defaultMessage="Edit" description="Call to action [Edit]" />
-              </a>
+              {this.state.description ?
+                <div className="group">
+                  <label className="small">
+                    <FormattedMessage id="label_description" defaultMessage="Description"
+                      description="Label for editing topic description" />
+                  </label>
+                  <div>{this.state.description}</div>
+                </div> : null}
             </div>
             <div className="hr" />
             <div className="panel-form-column">
@@ -613,16 +519,15 @@ class InfoView extends React.Component {
                   <FormattedMessage id="label_muting_topic" defaultMessage="Muted:"
                     description="Label for Muting/unmuting the topic" />
                 </label>
-                <CheckBox name="P" checked={this.state.muted}
-                  onChange={this.handleMuted} />
+                <CheckBox name="P" checked={this.state.muted} onChange={this.handleMuted} />
               </div>
-              <FormattedMessage id="action_more" defaultMessage="More"
-                description="Action for showing more content">{
-                (more) => <MoreButton
-                  title={more}
-                  open={this.state.moreInfoExpanded}
-                  onToggle={this.handleMoreInfo} />
-              }</FormattedMessage>
+            </div>
+            <div className="hr" />
+            <div className="panel-form-column">
+              <a href="#" className="flat-button" onClick={(e) => {e.preventDefault(); this.props.onNavigate('security');}}>
+                <i className="material-icons">security</i>&nbsp;<FormattedMessage id="button_security"
+                  defaultMessage="Security" description="Navigaton button for security panel." />
+              </a>
               {this.state.moreInfoExpanded ?
                 <div className="panel-form-column">
                   {this.state.groupTopic ?
@@ -713,34 +618,6 @@ class InfoView extends React.Component {
               :
               null
             }
-            <div className="panel-form-column">
-              {!this.state.channel ?
-                <a href="#" className="flat-button" onClick={this.handleDeleteMessages}>
-                  <i className="material-icons">delete_outline</i> &nbsp;{
-                    formatMessage(this.state.deleter ? messages.delete_messages : messages.clear_messages)
-                  }
-                </a>
-                :
-                null
-              }
-              <a href="#" className="danger flat-button" onClick={this.handleLeave}>
-                <i className="material-icons">exit_to_app</i> &nbsp;{formatMessage(messages.leave_chat)}
-              </a>
-              {!this.state.groupTopic ?
-                <a href="#" className="danger flat-button" onClick={this.handleBlock}>
-                  <i className="material-icons">block</i> &nbsp;{formatMessage(messages.block_contact)}
-                </a>
-                :
-                null
-              }
-              {!this.state.owner ?
-                <a href="#" className="danger flat-button" onClick={this.handleReport}>
-                  <i className="material-icons">report</i> &nbsp;{formatMessage(messages.report_chat)}
-                </a>
-                :
-                null
-              }
-            </div>
             {this.state.groupTopic && this.state.sharer ?
               <>
                 <div className="hr" />

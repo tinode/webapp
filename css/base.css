@@ -20,6 +20,7 @@ html, body {
 
 tt {
   font-family: 'Roboto Mono', Courier, monospace;
+  white-space: nowrap;
 }
 
 a {
@@ -422,8 +423,8 @@ div.trusted-badge {
 }
 
 .float-right {
-  margin-left: auto;
-  float: right;
+  position: absolute;
+  right: 0.5rem;
 }
 
 .hr {
@@ -438,6 +439,12 @@ div.trusted-badge {
 
 .hr.thin {
   height: 0.015rem;
+}
+
+.ellipsized {
+  overflow-x: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 /* Element which can take focus but shows no outline */
@@ -617,7 +624,7 @@ div.trusted-badge {
   display: block;
   white-space: nowrap;
   text-overflow: ellipsis;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 /* END of InPlaceEdit styles */
 
@@ -842,7 +849,7 @@ i.search {
   display: flex;
   flex-direction: column;
   height: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 .flex-column.narrow {
@@ -1021,12 +1028,14 @@ i.search {
 /* Various forms inside a panel (signup form, new topic form) */
 .panel-form {
   display: flex;
+  position: relative;
   flex-direction: column;
   padding: 0;
 }
 
 .panel-form-row {
   display: flex;
+  position: relative;
   align-items: center;
   padding: 0.5rem 0.75rem;
   line-height: 1.5;
@@ -1036,6 +1045,7 @@ i.search {
 
 .panel-form-column {
   display: flex;
+  position: relative;
   flex-direction: column;
   flex-grow: 0;
   padding: 0.5rem 0.75rem;
@@ -1054,15 +1064,19 @@ i.search {
   padding: 0!important;
 }
 
+.panel-form-column > .group {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
 /* Styling of avatar upload control */
 .avatar-upload {
   position: relative;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  width: 8rem;
-  height: 8.5rem;
-  margin-left: 0.5rem;
+  width: 10rem;
+  height: 10.5rem;
   font-size: 4.5rem;
   padding: 0;
 }
@@ -1086,14 +1100,14 @@ i.search {
 
 .avatar-upload .avatar-box {
   position: relative;
-  width: 8rem;
-  height: 8rem;
+  width: 10rem;
+  height: 10rem;
 }
 
 .avatar-upload .avatar-box > .material-icons {
   position: relative;
   font-size: 4rem;
-  line-height: 8rem;
+  line-height: 10rem;
   vertical-align: middle;
 }
 
@@ -1112,17 +1126,17 @@ i.search {
   border: 1px dashed #999;
   font-size: 1rem;
   flex-shrink: 0;
-  width: 8rem;
-  height: 8rem;
+  width: 10rem;
+  height: 10rem;
   overflow: hidden;
   color: #999;
-  line-height: 8rem;
+  line-height: 10rem;
   border-radius: 50%;
 }
 
 .avatar-upload img.preview {
-  width: 8rem;
-  height: 8rem;
+  width: 10rem;
+  height: 10rem;
   overflow: hidden;
   border-radius: 50%;
 }
@@ -1136,8 +1150,8 @@ i.search {
   color: #666;
   top: 0;
   left: 0;
-  width: 8rem;
-  height: 8rem;
+  width: 10rem;
+  height: 10rem;
   justify-content: center;
   background: center no-repeat url("../img/broken_image.png");
   border-radius: 50%;
@@ -1654,7 +1668,7 @@ img.inline-image::before {
 
 img.image-preview::before {
   content: " ";
-  background-size: 8rem 8rem;
+  background-size: 10rem 10rem;
 }
 
 /* Attachment styles */

@@ -187,7 +187,7 @@ class TinodeWeb extends React.Component {
       newTopicParams: null,
       loginDisabled: false,
       displayMobile: (window.innerWidth <= MEDIA_BREAKPOINT),
-      showInfoPanel: false,
+      infoPanel: undefined,
       mobilePanel: 'sidepanel',
 
       contextMenuVisible: false,
@@ -425,7 +425,7 @@ class TinodeWeb extends React.Component {
 
     // Additional parameters of panels.
     this.setState({
-      showInfoPanel: hash.params.info,
+      infoPanel: hash.params.info,
       newTopicTabSelected: hash.params.tab
     });
   }
@@ -862,7 +862,7 @@ class TinodeWeb extends React.Component {
         errorText: '',
         errorLevel: null,
         mobilePanel: 'topic-view',
-        showInfoPanel: false
+        infoPanel: undefined
       });
       // Different contact selected.
       if (this.state.topicSelected != topicName) {
@@ -880,7 +880,7 @@ class TinodeWeb extends React.Component {
         mobilePanel: 'sidepanel',
         topicSelectedOnline: false,
         topicSelectedAcs: null,
-        showInfoPanel: false
+        infoPanel: undefined
       });
 
       HashNavigation.navigateTo(HashNavigation.setUrlTopic('', null));
@@ -1164,9 +1164,14 @@ class TinodeWeb extends React.Component {
     this.setState({errorText: '', errorLevel: null});
   }
 
-  // Basic nagigator by hash value. No need to bind to this.
+  // Sidepanel navigator. No need to bind to 'this'.
   basicNavigator(hash) {
     HashNavigation.navigateTo(HashNavigation.setUrlSidePanel(window.location.hash, hash));
+  }
+
+  // Topic info navigator. No need to bind to 'this'.
+  infoNavigator(hash) {
+    HashNavigation.navigateTo(HashNavigation.setUrlInfoPanel(window.location.hash, hash));
   }
 
   // Request to start a topic, new or selected from search results, or "by ID".
@@ -1435,13 +1440,13 @@ class TinodeWeb extends React.Component {
   }
 
   handleShowInfoView() {
-    HashNavigation.navigateTo(HashNavigation.addUrlParam(window.location.hash, 'info', true));
-    this.setState({showInfoPanel: true});
+    HashNavigation.navigateTo(HashNavigation.addUrlParam(window.location.hash, 'info', 'info'));
+    this.setState({infoPanel: 'info'});
   }
 
   handleHideInfoView() {
     HashNavigation.navigateTo(HashNavigation.removeUrlParam(window.location.hash, 'info'));
-    this.setState({showInfoPanel: false});
+    this.setState({infoPanel: undefined});
   }
 
   handleMemberUpdateRequest(topicName, added, removed) {
@@ -1582,7 +1587,7 @@ class TinodeWeb extends React.Component {
           onGlobalSettings={this.handleGlobalSettings}
           onSignUp={this.handleNewAccount}
           onSettings={this.handleSettings}
-          onBasicNavigate={this.basicNavigator}
+          onNavigate={this.basicNavigator}
           onLoginRequest={this.handleLoginRequest}
           onPersistenceChange={this.handlePersistenceChange}
           onCreateAccount={this.handleNewAccountRequest}
@@ -1624,7 +1629,7 @@ class TinodeWeb extends React.Component {
           viewportWidth={this.state.viewportWidth}
           viewportHeight={this.state.viewportHeight}
           hideSelf={this.state.displayMobile &&
-            (this.state.mobilePanel !== 'topic-view' || this.state.showInfoPanel)}
+            (this.state.mobilePanel !== 'topic-view' || this.state.infoPanel)}
           topic={this.state.topicSelected}
           myUserId={this.state.myUserId}
           serverVersion={this.state.serverVersion}
@@ -1647,7 +1652,7 @@ class TinodeWeb extends React.Component {
           onNewChat={this.handleNewChatInvitation}
           sendMessage={this.handleSendMessage} />
 
-        {this.state.showInfoPanel ?
+        {this.state.infoPanel ?
           <InfoView
             tinode={this.tinode}
             connected={this.state.connected}
@@ -1655,12 +1660,14 @@ class TinodeWeb extends React.Component {
             topic={this.state.topicSelected}
             searchableContacts={this.state.searchableContacts}
             myUserId={this.state.myUserId}
+            panel={this.state.infoPanel}
 
             errorText={this.state.errorText}
             errorLevel={this.state.errorLevel}
             errorAction={this.state.errorAction}
             errorActionText={this.state.errorActionText}
 
+            onNavigate={this.infoNavigator}
             onTopicDescUpdate={this.handleTopicUpdateRequest}
             onCancel={this.handleHideInfoView}
             onShowAlert={this.handleShowAlert}
