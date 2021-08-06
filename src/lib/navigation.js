@@ -9,7 +9,7 @@ export default class HashNavigation {
     const params = {};
     let path = [];
     if (parts[0]) {
-      path = parts[0].substr(1).split('/');
+      path = parts[0].replace('#', '').split('/');
     }
     if (parts[1]) {
       parts[1].split('&').forEach(function(part) {
@@ -60,7 +60,11 @@ export default class HashNavigation {
 
   static setUrlInfoPanel(hash, infopanel) {
     const parsed = this.parseUrlHash(hash);
-    parsed.params.info = infopanel;
+    if (infopanel) {
+      parsed.params.info = infopanel;
+    } else {
+      delete parsed.params.info;
+    }
     return this.composeUrlHash(parsed.path, parsed.params);
   }
 

@@ -4,6 +4,7 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
 import Tinode from 'tinode-sdk';
 
+import TopicCommonView from './topic-common-view.jsx';
 import TopicSecurityView from './topic-security-view.jsx';
 
 import AvatarUpload from '../widgets/avatar-upload.jsx';
@@ -24,6 +25,26 @@ import { makeImageUrl } from '../lib/blob-helpers.js';
 import { arrayEqual, theCard } from '../lib/utils.js';
 
 const messages = defineMessages({
+  info: {
+    id: 'title_info',
+    description: 'Title for InfoView',
+    defaultMessage: 'Info'
+  },
+  general: {
+    id: 'panel_title_acc_general',
+    description: 'Title for TopicCommonView.',
+    defaultMessage: 'General'
+  },
+  security: {
+    id: 'panel_title_acc_security',
+    description: 'Title for TopicSecirityView and AccSecurityView.',
+    defaultMessage: 'Security'
+  },
+  crop: {
+    id: 'panel_title_crop',
+    description: 'Title for AvatarCropView.',
+    defaultMessage: 'Drag to Adjust'
+  },
   requested: {
     id: 'requested_permissions',
     defaultMessage: 'Requested',
@@ -38,11 +59,6 @@ const messages = defineMessages({
     id: 'menu_item_edit_permissions',
     defaultMessage: 'Edit permissions',
     description: 'Menu item [Edit permissions]'
-  },
-  other_user: {
-    id: 'label_other_user',
-    defaultMessage: 'Other',
-    description: 'Label for the other user when the user is unnamed'
   },
 });
 
@@ -77,20 +93,17 @@ class InfoView extends React.Component {
       auth: null,
       anon: null,
       contactList: [],
-      tags: [],
       trustedBadges: [],
       showMemberPanel: false,
       showPermissionEditorFor: undefined,
       previousMetaDesc: undefined,
       previousSubsUpdated: undefined,
-      previousTagsUpdated: undefined
     };
 
     this.resetSubs = this.resetSubs.bind(this);
     this.resetDesc = this.resetDesc.bind(this);
     this.onMetaDesc = this.onMetaDesc.bind(this);
     this.onSubsUpdated = this.onSubsUpdated.bind(this);
-    this.onTagsUpdated = this.onTagsUpdated.bind(this);
     this.handleFullNameUpdate = this.handleFullNameUpdate.bind(this);
     this.handlePrivateUpdate = this.handlePrivateUpdate.bind(this);
     this.handleImageChanged = this.handleImageChanged.bind(this);
@@ -102,8 +115,8 @@ class InfoView extends React.Component {
     this.handleHideAddMembers = this.handleHideAddMembers.bind(this);
     this.handleMemberUpdateRequest = this.handleMemberUpdateRequest.bind(this);
     this.handleMemberSelected = this.handleMemberSelected.bind(this);
-    this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
     this.handleContextMenu = this.handleContextMenu.bind(this);
+    this.handleBackNavigate = this.handleBackNavigate.bind(this);
   }
 
   // No need to separately handle component mount.
@@ -119,13 +132,6 @@ class InfoView extends React.Component {
 
       this.previousSubsUpdated = topic.onSubsUpdated;
       topic.onSubsUpdated = this.onSubsUpdated;
-
-      if (topic.getType() == 'grp') {
-        this.previousTagsUpdated = topic.onTagsUpdated;
-        topic.onTagsUpdated = this.onTagsUpdated;
-      } else {
-        this.previousTagsUpdated = undefined;
-      }
     }
 
     if (this.state.topic != props.topic) {
@@ -143,7 +149,6 @@ class InfoView extends React.Component {
     this.setState({topic: null});
     topic.onMetaDesc = this.previousMetaDesc;
     topic.onSubsUpdated = this.previousSubsUpdated;
-    topic.onTagsUpdated = this.previousTagsUpdated;
   }
 
   resetSubs(topic, props) {
@@ -230,14 +235,6 @@ class InfoView extends React.Component {
 
     if (this.previousSubsUpdated && this.previousSubsUpdated != this.onSubsUpdated) {
       this.previousSubsUpdated(subs);
-    }
-  }
-
-  onTagsUpdated(tags) {
-    this.setState({tags: tags});
-
-    if (this.previousTagsUpdated && this.previousTagsUpdated != this.onTagsUpdated) {
-      this.previousTagsUpdated();
     }
   }
 
@@ -389,9 +386,11 @@ class InfoView extends React.Component {
     this.setState({selectedContact: uid});
   }
 
-  handleTagsUpdated(tags) {
-    if (!arrayEqual(this.state.tags.slice(0), tags.slice(0))) {
-      this.props.onTopicTagsUpdate(this.props.topic, tags);
+  handleBackNavigate() {
+    if (this.props.panel == 'info') {
+      this.props.onNavigate(null);
+    } else {
+      this.props.onNavigate('info');
     }
   }
 
@@ -423,16 +422,16 @@ class InfoView extends React.Component {
   }
 
   render() {
+    const view = this.props.panel || 'info';
     const {formatMessage} = this.props.intl;
+    const panelTitle = formatMessage(messages[view] || messages['info']);
 
     return (
       <div id="info-view">
         <div className="caption-panel" id="info-caption-panel">
-          <div className="panel-title" id="info-title">
-            <FormattedMessage id="title_info" defaultMessage="Info" description="Title for InfoView" />
-          </div>
+          <div className="panel-title" id="info-title">{panelTitle}</div>
           <div>
-            <MenuCancel onCancel={this.props.onCancel} />
+            <MenuCancel onCancel={this.handleBackNavigate} />
           </div>
         </div>
         {this.props.displayMobile ?
@@ -462,6 +461,18 @@ class InfoView extends React.Component {
             userAvatar={this.state.userPermissionsAvatar}
             onSubmit={this.handlePermissionsChanged}
             onCancel={this.handleHidePermissionsEditor}
+            />
+          :
+        this.props.panel == 'general' ?
+          <TopicCommonView
+            tinode={this.props.tinode}
+            topic={this.props.topic}
+            />
+          :
+        this.props.panel == 'security' ?
+          <TopicSecurityView
+            tinode={this.props.tinode}
+            topic={this.props.topic}
             />
           :
           <div id="info-view-content" className="scrollable-panel">
@@ -528,96 +539,7 @@ class InfoView extends React.Component {
                 <i className="material-icons">security</i>&nbsp;<FormattedMessage id="button_security"
                   defaultMessage="Security" description="Navigaton button for security panel." />
               </a>
-              {this.state.moreInfoExpanded ?
-                <div className="panel-form-column">
-                  {this.state.groupTopic ?
-                    <div className="panel-form-row">
-                      <label>
-                        <FormattedMessage id="label_your_permissions" defaultMessage="Your permissions:"
-                          description="Label for current user permissions" />
-                      </label>
-                      <tt className="clickable"
-                        onClick={this.handleLaunchPermissionsEditor.bind(this, 'want')}>
-                        {this.state.access}
-                      </tt>
-                    </div>
-                    :
-                    <div>
-                      <div>
-                        <label className="small">
-                          <FormattedMessage id="label_permissions" defaultMessage="Permissions:"
-                            description="Section title" />
-                        </label>
-                      </div>
-                      <div className="quoted">
-                        <div>
-                          <FormattedMessage id="label_you" defaultMessage="You:"
-                            description="Label for the current user" /> &nbsp;<tt className="clickable"
-                          onClick={this.handleLaunchPermissionsEditor.bind(this, 'want')}>
-                          {this.state.access}
-                        </tt></div>
-                        <div>{this.state.fullName ? this.state.fullName : formatMessage(messages.other_user)}:
-                          &nbsp;<tt className="clickable" onClick={this.handleLaunchPermissionsEditor.bind(this, 'given')}>
-                          {this.state.modeGiven2}
-                          </tt>
-                        </div>
-                      </div>
-                    </div>
-                  }
-                  {this.state.sharer && (this.state.auth || this.state.anon) ?
-                  <div>
-                    <div>
-                      <label className="small">
-                        <FormattedMessage id="label_default_access" defaultMessage="Default access mode:"
-                          description="Section title" />
-                      </label>
-                    </div>
-                    <div className="quoted">
-                      <div>Auth: {this.state.admin ?
-                        <tt className="clickable"
-                          onClick={this.handleLaunchPermissionsEditor.bind(this, 'auth')}>
-                          {this.state.auth}
-                        </tt>
-                        :
-                        <tt>{this.state.auth}</tt>
-                      }
-                      </div>
-                      <div>Anon: {this.state.admin ?
-                        <tt className="clickable"
-                          onClick={this.handleLaunchPermissionsEditor.bind(this, 'anon')}>
-                          {this.state.anon}
-                        </tt>
-                        :
-                        <tt>{this.state.anon}</tt>
-                      }
-                      </div>
-                    </div>
-                  </div>
-                  :
-                  null
-                }
-                </div>
-              :
-              null
-              }
             </div>
-            <div className="hr" />
-            {this.state.owner ?
-              <>
-                <FormattedMessage id="title_tag_manager" defaultMessage="Tags (user discovery)"
-                  description="Section title for TagManager">{
-                  (tags) => <TagManager
-                    title={tags}
-                    tags={this.state.tags}
-                    activated={false}
-                    tinode={this.props.tinode}
-                    onSubmit={this.handleTagsUpdated} />
-                }</FormattedMessage>
-                <div className="hr" />
-              </>
-              :
-              null
-            }
             {this.state.groupTopic && this.state.sharer ?
               <>
                 <div className="hr" />

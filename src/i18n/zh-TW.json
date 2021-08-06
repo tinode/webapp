@@ -462,7 +462,7 @@
     "defaultMessage": "Default access mode:",
     "description": "Section title",
     "missing": false,
-    "obsolete": false
+    "obsolete": true
   },
   "label_default_access_mode": {
     "translation": "預設存取模式：",
@@ -1026,7 +1026,7 @@
     "defaultMessage": "General",
     "description": "Sidepanel title for TopicCommonView.",
     "missing": false,
-    "obsolete": false
+    "obsolete": true
   },
   "sidepanel_title_acc_notifications": {
     "translation": "通知",
@@ -1040,7 +1040,7 @@
     "defaultMessage": "Security",
     "description": "Sidepanel title for AccSecurityView.",
     "missing": false,
-    "obsolete": false
+    "obsolete": true
   },
   "sidepanel_title_acc_support": {
     "translation": "支援",
@@ -1080,8 +1080,8 @@
   "sidepanel_title_crop": {
     "defaultMessage": "Drag to Adjust",
     "description": "Sidepanel title for AvatarCropView.",
-    "missing": true,
-    "obsolete": false
+    "missing": false,
+    "obsolete": true
   },
   "sidepanel_title_login": {
     "translation": "登入",
@@ -1288,6 +1288,27 @@
     "translation": "",
     "defaultMessage": "Security",
     "description": "Navigaton button for security panel.",
+    "missing": true,
+    "obsolete": false
+  },
+  "panel_title_acc_general": {
+    "translation": "",
+    "defaultMessage": "General",
+    "description": "Title for TopicCommonView.",
+    "missing": true,
+    "obsolete": false
+  },
+  "panel_title_acc_security": {
+    "translation": "",
+    "defaultMessage": "Security",
+    "description": "Title for TopicSecirityView and AccSecurityView.",
+    "missing": true,
+    "obsolete": false
+  },
+  "panel_title_crop": {
+    "translation": "",
+    "defaultMessage": "Drag to Adjust",
+    "description": "Title for AvatarCropView.",
     "missing": true,
     "obsolete": false
   }

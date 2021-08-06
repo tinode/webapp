@@ -41,18 +41,18 @@ const messages = defineMessages({
     defaultMessage: 'Account Settings'
   },
   general: {
-    id: 'sidepanel_title_acc_general',
-    description: 'Sidepanel title for TopicCommonView.',
+    id: 'panel_title_acc_general',
+    description: 'Title for TopicCommonView.',
     defaultMessage: 'General'
   },
   security: {
-    id: 'sidepanel_title_acc_security',
-    description: 'Sidepanel title for AccSecurityView.',
+    id: 'panel_title_acc_security',
+    description: 'Title for TopicSecirityView and AccSecurityView.',
     defaultMessage: 'Security'
   },
   crop: {
-    id: 'sidepanel_title_crop',
-    description: 'Sidepanel title for AvatarCropView.',
+    id: 'panel_title_crop',
+    description: 'Title for AvatarCropView.',
     defaultMessage: 'Drag to Adjust'
   },
   notif: {

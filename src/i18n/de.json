@@ -466,7 +466,7 @@
     "defaultMessage": "Default access mode:",
     "description": "Section title",
     "missing": false,
-    "obsolete": false
+    "obsolete": true
   },
   "label_default_access_mode": {
     "translation": "Standard Zugriffsmodus:",
@@ -1031,7 +1031,7 @@
     "defaultMessage": "General",
     "description": "Sidepanel title for TopicCommonView.",
     "missing": false,
-    "obsolete": false
+    "obsolete": true
   },
   "sidepanel_title_acc_notifications": {
     "translation": "Benachrichtigungen",
@@ -1045,7 +1045,7 @@
     "defaultMessage": "Security",
     "description": "Sidepanel title for AccSecurityView.",
     "missing": false,
-    "obsolete": false
+    "obsolete": true
   },
   "sidepanel_title_acc_support": {
     "translation": "Unterstützung",
@@ -1087,7 +1087,7 @@
     "defaultMessage": "Drag to Adjust",
     "description": "Sidepanel title for AvatarCropView.",
     "missing": false,
-    "obsolete": false
+    "obsolete": true
   },
   "sidepanel_title_login": {
     "translation": "Anmelden",
@@ -1289,6 +1289,27 @@
     "translation": "Sicherheit",
     "defaultMessage": "Security",
     "description": "Navigaton button for security panel.",
+    "missing": false,
+    "obsolete": false
+  },
+  "panel_title_acc_general": {
+    "translation": "",
+    "defaultMessage": "General",
+    "description": "Title for TopicCommonView.",
+    "missing": true,
+    "obsolete": false
+  },
+  "panel_title_acc_security": {
+    "translation": "",
+    "defaultMessage": "Security",
+    "description": "Title for TopicSecirityView and AccSecurityView.",
+    "missing": true,
+    "obsolete": false
+  },
+  "panel_title_crop": {
+    "translation": "",
+    "defaultMessage": "Drag to Adjust",
+    "description": "Title for AvatarCropView.",
     "missing": true,
     "obsolete": false
   }

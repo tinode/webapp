@@ -267,10 +267,6 @@
     "defaultMessage": "Content type:",
     "description": "Label for file content type (mime)"
   },
-  "label_default_access": {
-    "defaultMessage": "Default access mode:",
-    "description": "Section title"
-  },
   "label_default_access_mode": {
     "defaultMessage": "Default access mode:",
     "description": "Label for default access mode"
@@ -501,6 +497,18 @@
     "defaultMessage": "online now",
     "description": "Indicator that the user or topic is currently online"
   },
+  "panel_title_acc_general": {
+    "defaultMessage": "General",
+    "description": "Title for TopicCommonView."
+  },
+  "panel_title_acc_security": {
+    "defaultMessage": "Security",
+    "description": "Title for TopicSecirityView and AccSecurityView."
+  },
+  "panel_title_crop": {
+    "defaultMessage": "Drag to Adjust",
+    "description": "Title for AvatarCropView."
+  },
   "password_prompt": {
     "defaultMessage": "Password",
     "description": "Placeholder/prompt for entering password"
@@ -593,17 +601,9 @@
     "defaultMessage": "List like email:alice@example.com, tel:17025550003...",
     "description": "Placeholder in contacts search field"
   },
-  "sidepanel_title_acc_general": {
-    "defaultMessage": "General",
-    "description": "Sidepanel title for TopicCommonView."
-  },
   "sidepanel_title_acc_notifications": {
     "defaultMessage": "Notifications",
     "description": "Sidepanel title for AccNotificationsView."
-  },
-  "sidepanel_title_acc_security": {
-    "defaultMessage": "Security",
-    "description": "Sidepanel title for AccSecurityView."
   },
   "sidepanel_title_acc_support": {
     "defaultMessage": "Support",
@@ -624,10 +624,6 @@
   "sidepanel_title_cred": {
     "defaultMessage": "Confirm Credentials",
     "description": "Sidepanel title for ValidationView."
-  },
-  "sidepanel_title_crop": {
-    "defaultMessage": "Drag to Adjust",
-    "description": "Sidepanel title for AvatarCropView."
   },
   "sidepanel_title_login": {
     "defaultMessage": "Sign In",

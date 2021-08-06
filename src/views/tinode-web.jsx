@@ -133,7 +133,6 @@ class TinodeWeb extends React.Component {
     this.handleHideContextMenu = this.handleHideContextMenu.bind(this);
     this.handleShowAlert = this.handleShowAlert.bind(this);
     this.handleShowInfoView = this.handleShowInfoView.bind(this);
-    this.handleHideInfoView = this.handleHideInfoView.bind(this);
     this.handleMemberUpdateRequest = this.handleMemberUpdateRequest.bind(this);
     this.handleValidateCredentialsRequest = this.handleValidateCredentialsRequest.bind(this);
     this.handlePasswordResetRequest = this.handlePasswordResetRequest.bind(this);
@@ -1444,11 +1443,6 @@ class TinodeWeb extends React.Component {
     this.setState({infoPanel: 'info'});
   }
 
-  handleHideInfoView() {
-    HashNavigation.navigateTo(HashNavigation.removeUrlParam(window.location.hash, 'info'));
-    this.setState({infoPanel: undefined});
-  }
-
   handleMemberUpdateRequest(topicName, added, removed) {
     if (!topicName) {
       return;
@@ -1669,7 +1663,6 @@ class TinodeWeb extends React.Component {
 
             onNavigate={this.infoNavigator}
             onTopicDescUpdate={this.handleTopicUpdateRequest}
-            onCancel={this.handleHideInfoView}
             onShowAlert={this.handleShowAlert}
             onChangePermissions={this.handleChangePermissions}
             onMemberUpdateRequest={this.handleMemberUpdateRequest}

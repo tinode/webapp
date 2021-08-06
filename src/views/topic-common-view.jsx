@@ -26,23 +26,46 @@ export default class TopicCommonView extends React.Component {
       owner: acs && acs.isOwner(),
       credentials: topic.getCredentials() || [],
       addCredActive: false,
-      addCredInvalid: false
+      addCredInvalid: false,
+      tags: [],
+      previousTagsUpdated: undefined
     };
 
+    this.onTagsUpdated = this.onTagsUpdated.bind(this);
+    this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
     this.tnCredsUpdated = this.tnCredsUpdated.bind(this);
     this.handleCredChange = this.handleCredChange.bind(this);
     this.handleCredKeyDown = this.handleCredKeyDown.bind(this);
     this.handleCredEntered = this.handleCredEntered.bind(this);
   }
 
-  componentDidMount() {
-    const topic = this.props.tinode.getTopic(this.props.topic);
+  // No need to separately handle component mount.
+  componentDidUpdate(props) {
+    const topic = this.props.tinode.getTopic(props.topic);
+    if (!topic) {
+      return;
+    }
+
     topic.onCredsUpdated = this.tnCredsUpdated;
+
+    if (topic.onTagsUpdated != this.onTagsUpdated) {
+      if (topic.getType() == 'grp') {
+        this.previousTagsUpdated = topic.onTagsUpdated;
+        topic.onTagsUpdated = this.onTagsUpdated;
+      } else {
+        this.previousTagsUpdated = undefined;
+      }
+    }
+
+    if (this.state.topic != props.topic) {
+      this.setState({topic: props.topic});
+    }
   }
 
   componentWillUnmount() {
     const topic = this.props.tinode.getTopic(this.props.topic);
     topic.onCredsUpdated = undefined;
+    topic.onTagsUpdated = this.previousTagsUpdated;
   }
 
   tnCredsUpdated(creds) {
@@ -85,6 +108,20 @@ export default class TopicCommonView extends React.Component {
       this.setState({addCredActive: false, newCred: ''});
     } else {
       this.setState({addCredInvalid: true});
+    }
+  }
+
+  onTagsUpdated(tags) {
+    this.setState({tags: tags});
+
+    if (this.previousTagsUpdated && this.previousTagsUpdated != this.onTagsUpdated) {
+      this.previousTagsUpdated();
+    }
+  }
+
+  handleTagsUpdated(tags) {
+    if (!arrayEqual(this.state.tags.slice(0), tags.slice(0))) {
+      this.props.onTopicTagsUpdate(this.props.topic, tags);
     }
   }
 
@@ -139,6 +176,22 @@ export default class TopicCommonView extends React.Component {
             </div>
           </>
         : null
+      }
+      {this.state.owner ?
+        <>
+          <div className="hr" />
+          <FormattedMessage id="title_tag_manager" defaultMessage="Tags (user discovery)"
+            description="Section title for TagManager">{
+            (tags) => <TagManager
+              title={tags}
+              tags={this.state.tags}
+              activated={false}
+              tinode={this.props.tinode}
+              onSubmit={this.handleTagsUpdated} />
+          }</FormattedMessage>
+        </>
+        :
+        null
       }
       </div>
     );
