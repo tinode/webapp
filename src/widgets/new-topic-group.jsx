@@ -5,34 +5,36 @@ import AvatarUpload from './avatar-upload.jsx';
 import CheckBox from './checkbox.jsx';
 import TagManager from './tag-manager.jsx';
 
-import { MAX_TITLE_LENGTH } from '../config.js';
+import { MAX_TITLE_LENGTH, MAX_TOPIC_DESCRIPTION_LENGTH } from '../config.js';
 
 export default class NewTopicGroup extends React.PureComponent {
   constructor(props) {
     super(props);
 
+    this.fullName = React.createRef();
+
     this.state = {
-      fn: '', // full/formatted name
+      fullName: '', // full/formatted name
       private: '',
+      description: '',
       imageDataUrl: null,
       tags: [],
       isChannel: false
     };
 
-    this.handleFnChange = this.handleFnChange.bind(this);
-    this.handlePrivateChange = this.handlePrivateChange.bind(this);
+    this.handleFieldEdit = this.handleFieldEdit.bind(this);
     this.handleImageChanged = this.handleImageChanged.bind(this);
     this.handleTagsChanged = this.handleTagsChanged.bind(this);
     this.handleChannelToggle = this.handleChannelToggle.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleFnChange(e) {
-    this.setState({fn: e.target.value});
+  componentDidMount() {
+    // this.fullName.current.focus();
   }
 
-  handlePrivateChange(e) {
-    this.setState({private: e.target.value});
+  handleFieldEdit(name, e) {
+    this.setState({[name]: e.target.value});
   }
 
   handleImageChanged(img) {
@@ -50,10 +52,11 @@ export default class NewTopicGroup extends React.PureComponent {
   handleSubmit(e) {
     e.preventDefault();
 
-    const fn = this.state.fn.trim().substring(0, MAX_TITLE_LENGTH);
+    const fn = this.state.fullName.trim().substring(0, MAX_TITLE_LENGTH);
     const comment = this.state.private.trim().substring(0, MAX_TITLE_LENGTH);
+    const description = this.state.description.trim().substring(0, MAX_TOPIC_DESCRIPTION_LENGTH);
     if (fn) {
-      this.props.onSubmit(fn, this.state.imageDataUrl, comment, this.state.tags, this.state.isChannel);
+      this.props.onSubmit(fn, description, this.state.imageDataUrl, comment, this.state.tags, this.state.isChannel);
     }
   }
 
@@ -64,8 +67,14 @@ export default class NewTopicGroup extends React.PureComponent {
     }
     return (
       <form className="panel-form" onSubmit={this.handleSubmit}>
-        <div className="panel-form-row">
-          <div className="panel-form-column">
+        <div className="panel-form-column">
+          <center>
+            <AvatarUpload
+              tinode={this.props.tinode}
+              onError={this.props.onError}
+              onImageChanged={this.handleImageChanged} />
+          </center>
+          <div className="group">
             <label className="small" htmlFor="new-topic-fn">
               <FormattedMessage id="label_topic_name" defaultMessage="Name"
                 description="Label for editing topic name" />
@@ -73,9 +82,11 @@ export default class NewTopicGroup extends React.PureComponent {
             <FormattedMessage id="topic_name_editing_placeholder" defaultMessage="Freeform name of the group"
               description="Prompt for entering topic name">{
               (placeholder) => <input type="text" id="new-topic-fn" placeholder={placeholder}
-                value={this.state.fn} onChange={this.handleFnChange} autoFocus required />
+                ref={this.fullName} value={this.state.fullName} onChange={this.handleFieldEdit.bind('fullName')}
+                autoFocus required tabIndex={0} />
             }</FormattedMessage>
-            <br />
+          </div>
+          <div className="group">
             <label className="small" htmlFor="new-topic-priv">
               <FormattedMessage id="label_private" defaultMessage="Private comment"
                 description="Label for editing 'private'" />
@@ -83,16 +94,23 @@ export default class NewTopicGroup extends React.PureComponent {
             <FormattedMessage id="private_editing_placeholder" defaultMessage="Visible to you only"
               description="Placeholder for editing 'private'">{
               (placeholder) => <input type="text" id="new-topic-priv" placeholder={placeholder}
-                value={this.state.private} onChange={this.handlePrivateChange} />
+                value={this.state.private} onChange={this.handleFieldEdit.bind('private')} tabIndex={1} />
             }</FormattedMessage>
           </div>
-          <AvatarUpload
-            tinode={this.props.tinode}
-            onError={this.props.onError}
-            onImageChanged={this.handleImageChanged} />
+          <div className="group">
+            <label className="small" htmlFor="new-topic-desc">
+              <FormattedMessage id="label_description" defaultMessage="Description"
+                description="Label for editing topic description" />
+            </label>
+            <FormattedMessage id="description_editing_placeholder" defaultMessage="Description (optional)"
+              description="Placeholder for editing topic description">{
+              (placeholder) => <input type="text" id="new-topic-desc" placeholder={placeholder}
+                value={this.state.description} onChange={this.handleFieldEdit.bind('description')} tabIndex={2} />
+            }</FormattedMessage>
+          </div>
         </div>
         <div className="panel-form-row">
-          <CheckBox checked={this.state.isChannel} onChange={this.handleChannelToggle}/>&nbsp;
+          <CheckBox checked={this.state.isChannel} tabIndex={3} onChange={this.handleChannelToggle} />&nbsp;
           <label onClick={this.handleChannelToggle}><FormattedMessage id="channel_prompt"
             defaultMessage="This is a channel"
             description="Checkbox label when creating a channel" /></label>
@@ -104,6 +122,7 @@ export default class NewTopicGroup extends React.PureComponent {
             activated={true}
             onTagsChanged={this.handleTagsChanged}
             tinode={this.props.tinode}
+            tabIndex={4}
             title={title} />
         }</FormattedMessage>
         <div className="dialog-buttons">

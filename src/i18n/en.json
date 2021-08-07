@@ -1185,7 +1185,7 @@
     "defaultMessage": "Info",
     "description": "Title for InfoView",
     "missing": false,
-    "obsolete": false
+    "obsolete": true
   },
   "title_manage_tags": {
     "translation": "Manage",
@@ -1273,7 +1273,7 @@
   },
   "description_editing_placeholder": {
     "translation": "Optional description",
-    "defaultMessage": "Optional description",
+    "defaultMessage": "Description (optional)",
     "description": "Placeholder for editing topic description",
     "missing": false,
     "obsolete": false
@@ -1297,19 +1297,47 @@
     "defaultMessage": "General",
     "description": "Title for TopicCommonView.",
     "missing": false,
-    "obsolete": false
+    "obsolete": true
   },
   "panel_title_acc_security": {
     "translation": "Security",
     "defaultMessage": "Security",
     "description": "Title for TopicSecirityView and AccSecurityView.",
     "missing": false,
-    "obsolete": false
+    "obsolete": true
   },
   "panel_title_crop": {
     "translation": "Drag to Adjust",
     "defaultMessage": "Drag to Adjust",
     "description": "Title for AvatarCropView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "panel_title_general": {
+    "translation": "General",
+    "defaultMessage": "General",
+    "description": "Title for TopicCommon.",
+    "missing": false,
+    "obsolete": false
+  },
+  "panel_title_members": {
+    "translation": "Members",
+    "defaultMessage": "Members",
+    "description": "Title for managing group members view.",
+    "missing": false,
+    "obsolete": false
+  },
+  "panel_title_security": {
+    "translation": "Security",
+    "defaultMessage": "Security",
+    "description": "Title for TopicSecirity and AccSecurity.",
+    "missing": false,
+    "obsolete": false
+  },
+  "panel_title_info": {
+    "translation": "Info",
+    "defaultMessage": "Info",
+    "description": "Title for InfoView",
     "missing": false,
     "obsolete": false
   }

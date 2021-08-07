@@ -4,11 +4,11 @@ import { defineMessages, injectIntl } from 'react-intl';
 import ErrorPanel from '../widgets/error-panel.jsx';
 import LoadSpinner from '../widgets/load-spinner.jsx';
 import SideNavbar from '../widgets/side-navbar.jsx';
+import TopicCommon from '../widgets/topic-common.jsx';
 
 import AccountSettingsView from './account-settings-view.jsx';
 import ContactsView from './contacts-view.jsx';
 import CreateAccountView from './create-account-view.jsx';
-import TopicCommonView from './topic-common-view.jsx';
 import AccNotificationsView from './acc-notifications-view.jsx';
 import AccSecurityView from './acc-security-view.jsx';
 import AccSupportView from './acc-support-view.jsx';
@@ -41,13 +41,13 @@ const messages = defineMessages({
     defaultMessage: 'Account Settings'
   },
   general: {
-    id: 'panel_title_acc_general',
-    description: 'Title for TopicCommonView.',
+    id: 'panel_title_general',
+    description: 'Title for TopicCommon.',
     defaultMessage: 'General'
   },
   security: {
-    id: 'panel_title_acc_security',
-    description: 'Title for TopicSecirityView and AccSecurityView.',
+    id: 'panel_title_security',
+    description: 'Title for TopicSecirity and AccSecurity.',
     defaultMessage: 'Security'
   },
   crop: {
@@ -176,7 +176,7 @@ class SidepanelView extends React.Component {
             onNavigate={this.props.onNavigate} /> :
 
           (view === 'general' || view === 'crop') ?
-          <TopicCommonView
+          <TopicCommon
             topic="me"
             tinode={this.props.tinode}
             myUserId={this.props.myUserId}

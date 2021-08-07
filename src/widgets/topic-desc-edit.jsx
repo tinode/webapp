@@ -211,7 +211,7 @@ export default class TopicDescEdit extends React.Component {
               <div>
                 <InPlaceEdit
                   placeholder={this.state.groupTopic ? "Group name" : <i>Unknown</i>}
-                  readOnly={!this.state.owner}
+                  readOnly={editable}
                   value={this.state.fullName}
                   required={true}
                   onFinished={this.handleFullNameUpdate} />
@@ -237,24 +237,27 @@ export default class TopicDescEdit extends React.Component {
             </div>
           </>
         }
-        <div className="group">
-          <div><label className="small">
-            <FormattedMessage id="label_description" defaultMessage="Description"
-              description="Label for editing topic description" />
-          </label></div>
-          <div>
-            <FormattedMessage id="description_editing_placeholder"
-              defaultMessage="Optional description"
-              description="Placeholder for editing topic description">{
-              (private_placeholder) => <InPlaceEdit
-                placeholder={private_placeholder}
-                readOnly={!editable}
-                value={this.state.description}
-                multiline={2}
-                onFinished={this.handleDescriptionUpdate} />
-            }</FormattedMessage>
+        {editable || this.state.description ?
+          <div className="group">
+            <div><label className="small">
+              <FormattedMessage id="label_description" defaultMessage="Description"
+                description="Label for editing topic description" />
+            </label></div>
+            <div>
+              <FormattedMessage id="description_editing_placeholder"
+                defaultMessage="Description (optional)"
+                description="Placeholder for editing topic description">{
+                (private_placeholder) => <InPlaceEdit
+                  placeholder={private_placeholder}
+                  readOnly={!editable}
+                  value={this.state.description}
+                  multiline={2}
+                  onFinished={this.handleDescriptionUpdate} />
+              }</FormattedMessage>
+            </div>
           </div>
-        </div>
+          : null
+        }
       </div>
       {editable ?
         <>

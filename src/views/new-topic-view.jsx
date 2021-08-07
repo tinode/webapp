@@ -63,9 +63,9 @@ class NewTopicView extends React.Component {
     }
   }
 
-  handleNewGroupSubmit(name, dataUrl, priv, tags, isChannel) {
+  handleNewGroupSubmit(name, description, dataUrl, priv, tags, isChannel) {
     HashNavigation.navigateTo(HashNavigation.removeUrlParam(window.location.hash, 'tab'));
-    this.props.onCreateTopic(undefined, theCard(name, dataUrl), priv, tags, isChannel);
+    this.props.onCreateTopic(undefined, theCard(name, dataUrl, null, description), priv, tags, isChannel);
   }
 
   handleGroupByID(topicName) {

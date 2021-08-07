@@ -4,9 +4,6 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
 import Tinode from 'tinode-sdk';
 
-import TopicCommonView from './topic-common-view.jsx';
-import TopicSecurityView from './topic-security-view.jsx';
-
 import AvatarUpload from '../widgets/avatar-upload.jsx';
 import BadgeList from '../widgets/badge-list.jsx';
 import CheckBox from '../widgets/checkbox.jsx';
@@ -18,6 +15,8 @@ import MenuCancel from '../widgets/menu-cancel.jsx';
 import MoreButton from '../widgets/more-button.jsx';
 import PermissionsEditor from '../widgets/permissions-editor.jsx';
 import TagManager from '../widgets/tag-manager.jsx';
+import TopicCommon from '../widgets/topic-common.jsx';
+import TopicSecurity from '../widgets/topic-security.jsx';
 
 import { MAX_TITLE_LENGTH, MAX_TOPIC_DESCRIPTION_LENGTH, NO_ACCESS_MODE } from '../config.js';
 
@@ -26,19 +25,24 @@ import { arrayEqual, theCard } from '../lib/utils.js';
 
 const messages = defineMessages({
   info: {
-    id: 'title_info',
+    id: 'panel_title_info',
     description: 'Title for InfoView',
     defaultMessage: 'Info'
   },
   general: {
-    id: 'panel_title_acc_general',
-    description: 'Title for TopicCommonView.',
+    id: 'panel_title_general',
+    description: 'Title for TopicCommon.',
     defaultMessage: 'General'
   },
   security: {
-    id: 'panel_title_acc_security',
-    description: 'Title for TopicSecirityView and AccSecurityView.',
+    id: 'panel_title_security',
+    description: 'Title for TopicSecirity and AccSecurity.',
     defaultMessage: 'Security'
+  },
+  members: {
+    id: 'panel_title_members',
+    description: 'Title for managing group members view.',
+    defaultMessage: 'Members'
   },
   crop: {
     id: 'panel_title_crop',
@@ -75,7 +79,6 @@ class InfoView extends React.Component {
       owner: false,
       admin: false,
       sharer: false,
-      deleter: false,
       muted: false,
       address: null,
       groupTopic: undefined,
@@ -94,7 +97,6 @@ class InfoView extends React.Component {
       anon: null,
       contactList: [],
       trustedBadges: [],
-      showMemberPanel: false,
       showPermissionEditorFor: undefined,
       previousMetaDesc: undefined,
       previousSubsUpdated: undefined,
@@ -112,7 +114,6 @@ class InfoView extends React.Component {
     this.handleLaunchPermissionsEditor = this.handleLaunchPermissionsEditor.bind(this);
     this.handleHidePermissionsEditor = this.handleHidePermissionsEditor.bind(this);
     this.handleShowAddMembers = this.handleShowAddMembers.bind(this);
-    this.handleHideAddMembers = this.handleHideAddMembers.bind(this);
     this.handleMemberUpdateRequest = this.handleMemberUpdateRequest.bind(this);
     this.handleMemberSelected = this.handleMemberSelected.bind(this);
     this.handleContextMenu = this.handleContextMenu.bind(this);
@@ -189,7 +190,6 @@ class InfoView extends React.Component {
       owner: acs && acs.isOwner(),
       admin: acs && acs.isAdmin(),
       sharer: acs && acs.isSharer(),
-      deleter: acs && acs.isDeleter(),
       muted: acs && acs.isMuted(),
 
       fullName: _clip(topic.public ? topic.public.fn : undefined, MAX_TITLE_LENGTH),
@@ -200,7 +200,6 @@ class InfoView extends React.Component {
       address: topic.name,
       groupTopic: topic.isGroupType(),
       channel: topic.isChannelType(),
-      showMemberPanel: false,
       access: acs ? acs.getMode() : undefined,
       modeGiven: acs ? acs.getGiven() : undefined,
       modeWant: acs ? acs.getWant() : undefined,
@@ -264,8 +263,8 @@ class InfoView extends React.Component {
     this.props.onChangePermissions(this.props.topic, checked ? '-P' : '+P');
   }
 
-  handlePermissionsChanged(perm) {
-    switch (this.state.showPermissionEditorFor) {
+  handlePermissionsChanged(which, perm) {
+    switch (which) {
       case 'auth':
         this.props.onTopicDescUpdate(this.props.topic, null, null, {auth: perm});
         break;
@@ -348,10 +347,9 @@ class InfoView extends React.Component {
       }
       default:
         console.log("Unknown permission editing mode '" + which + "'");
-        break;
+        return;
     }
     this.setState({
-      showPermissionEditorFor: which,
       userPermissionsEdited: uid,
       userPermissionsTitle: userTitle,
       userPermissionsAvatar: userAvatar,
@@ -361,25 +359,22 @@ class InfoView extends React.Component {
       immutablePermissionsTitle: titleCompare,
       editedPermissionsSkipped: toSkip,
     });
+    this.props.onNavigate(`perm/${which}`);
   }
 
   handleHidePermissionsEditor() {
-    this.setState({showPermissionEditorFor: undefined});
+    this.props.onNavigate('info');
   }
 
   handleShowAddMembers(e) {
     e.preventDefault();
     this.props.onInitFind();
-    this.setState({showMemberPanel: true});
-  }
-
-  handleHideAddMembers() {
-    this.setState({showMemberPanel: false});
+    this.props.onNavigate('members');
   }
 
   handleMemberUpdateRequest(members, added, removed) {
     this.props.onMemberUpdateRequest(this.props.topic, added, removed);
-    this.setState({showMemberPanel: false});
+    this.props.onNavigate('info');
   }
 
   handleMemberSelected(uid) {
@@ -389,6 +384,8 @@ class InfoView extends React.Component {
   handleBackNavigate() {
     if (this.props.panel == 'info') {
       this.props.onNavigate(null);
+    } else if ((this.props.panel || '').startsWith('perm/')) {
+      this.props.onNavigate('security');
     } else {
       this.props.onNavigate('info');
     }
@@ -422,7 +419,10 @@ class InfoView extends React.Component {
   }
 
   render() {
-    const view = this.props.panel || 'info';
+    const args = (this.props.panel || 'info').split('/');
+    const view = args[0];
+    args.shift();
+
     const {formatMessage} = this.props.intl;
     const panelTitle = formatMessage(messages[view] || messages['info']);
 
@@ -439,17 +439,17 @@ class InfoView extends React.Component {
             level={this.props.errorLevel}
             text={this.props.errorText}
             onClearError={this.props.onError} /> : null}
-        {this.state.showMemberPanel ?
+        {view == 'members' ?
           <GroupManager
             members={this.state.contactList}
             requiredMember={this.props.myUserId}
             keepInitialMembers={!this.state.admin && !this.state.owner}
             myUserId={this.props.myUserId}
             contacts={this.props.searchableContacts}
-            onCancel={this.handleHideAddMembers}
+            onCancel={this.handleBackNavigate}
             onSubmit={this.handleMemberUpdateRequest} />
           :
-        this.state.showPermissionEditorFor ?
+        view == 'perm' && args.length > 0 ?
           <PermissionsEditor
             mode={this.state.editedPermissions}
             compare={this.state.immutablePermissions}
@@ -459,21 +459,31 @@ class InfoView extends React.Component {
             userTitle={this.state.userPermissionsTitle}
             item={this.state.userPermissionsEdited}
             userAvatar={this.state.userPermissionsAvatar}
-            onSubmit={this.handlePermissionsChanged}
-            onCancel={this.handleHidePermissionsEditor}
-            />
+            onSubmit={this.handlePermissionsChanged.bind(...args)}
+            onCancel={this.handleHidePermissionsEditor} />
           :
-        this.props.panel == 'general' ?
-          <TopicCommonView
+        view == 'general' ?
+          <TopicCommon
             tinode={this.props.tinode}
             topic={this.props.topic}
-            />
+            onCredAdd={this.props.onCredAdd}
+            onTopicTagsUpdate={this.props.onTopicTagsUpdate}
+            onCredConfirm={this.props.onCredConfirm}
+            onCredDelete={this.props.onCredDelete}
+            onUpdateTopicDesc={this.props.onUpdateTopicDesc}
+            onUpdateTags={this.props.onUpdateTags}
+            onError={this.props.onError} />
           :
-        this.props.panel == 'security' ?
-          <TopicSecurityView
+        view == 'security' ?
+          <TopicSecurity
             tinode={this.props.tinode}
             topic={this.props.topic}
-            />
+            onShowAlert={this.props.onShowAlert}
+            onDeleteMessages={this.props.onDeleteMessages}
+            onLeaveTopic={this.props.onLeaveTopic}
+            onBlockTopic={this.props.onBlockTopic}
+            onReportTopic={this.props.onReportTopic}
+            onNavigate={this.props.onNavigate} />
           :
           <div id="info-view-content" className="scrollable-panel">
             <div className="panel-form-column">

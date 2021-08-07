@@ -8,7 +8,7 @@ export const MIME_EXTENSIONS         = ['jpg',        'gif',       'png',       
 
 // Get an URL from a theCard photo: either create a data: URL or return reference URL.
 export function makeImageUrl(photo) {
-  if (typeof photo == 'object') {
+  if (photo && typeof photo == 'object') {
     if (photo.data && photo.type) {
       const mime = photo.type.startsWith('image/') ? photo.type : ('image/' + photo.type);
       return 'data:' + mime + ';base64,' + photo.data;

@@ -15,18 +15,19 @@ import { AVATAR_SIZE, MAX_AVATAR_BYTES, MAX_EXTERN_ATTACHMENT_SIZE,
 import { imageScaled, blobToBase64, makeImageUrl } from '../lib/blob-helpers.js';
 import { arrayEqual, asEmail, asPhone, theCard } from '../lib/utils.js';
 
-export default class TopicCommonView extends React.Component {
+export default class TopicCommon extends React.Component {
   constructor(props) {
     super(props);
 
     const topic = this.props.tinode.getTopic(this.props.topic);
     const acs = topic.getAccessMode();
     this.state = {
-      isMe: this.props.tinode.isMe(this.props.topic),
+      isMe: this.props.topic == 'me',
       owner: acs && acs.isOwner(),
-      credentials: topic.getCredentials() || [],
+      credentials: (topic.getCredentials ? topic.getCredentials() : null) || [],
       addCredActive: false,
       addCredInvalid: false,
+      newCred: '',
       tags: [],
       previousTagsUpdated: undefined
     };

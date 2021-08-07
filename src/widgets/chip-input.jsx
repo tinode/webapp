@@ -131,6 +131,7 @@ export default class ChipInput extends React.Component {
       count++;
     });
     const className = "chip-input" + (this.state.focused ? ' focused' : '');
+    const autoFocus = !(this.props.tabIndex > 0);
     return (
       <div className={className}>
         {chips}
@@ -141,7 +142,8 @@ export default class ChipInput extends React.Component {
           onBlur={this.handleFocusLost}
           onKeyDown={this.handleKeyDown}
           value={this.state.input}
-          autoFocus />
+          tabIndex={this.props.tabIndex}
+          autoFocus={autoFocus} />
       </div>
     );
   }

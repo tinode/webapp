@@ -119,6 +119,7 @@ export default class TagManager extends React.Component {
               chips={tags}
               avatarDisabled={true}
               prompt={add_tags_prompt}
+              tabIndex={this.props.tabIndex}
               onEnter={this.handleAddTag}
               onFocusLost={this.handleAddTag}
               onCancel={this.handleCancel}

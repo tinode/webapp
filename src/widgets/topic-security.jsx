@@ -2,8 +2,7 @@
 import React from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
-import InPlaceEdit from '../widgets/in-place-edit.jsx';
-import PermissionsEditor from '../widgets/permissions-editor.jsx';
+import InPlaceEdit from './in-place-edit.jsx';
 
 const messages = defineMessages({
   clear_messages: {
@@ -63,7 +62,7 @@ const messages = defineMessages({
   },
 });
 
-class TopicSecurityView extends React.Component {
+class TopicSecurity extends React.Component {
   constructor(props) {
     super(props);
 
@@ -82,14 +81,16 @@ class TopicSecurityView extends React.Component {
       deleter: acs && acs.isDeleter(),
       muted: acs && acs.isMuted(),
 
+      groupTopic: topic.isGroupType(),
+      channel: topic.isChannelType(),
+      access: acs ? acs.getMode() : undefined,
+      modeGiven: acs ? acs.getGiven() : undefined,
+      modeWant: acs ? acs.getWant() : undefined,
       auth: defacs ? defacs.auth : null,
       anon: defacs ? defacs.anon : null,
-      showPermissionEditorFor: undefined
     };
 
     this.handleLaunchPermissionsEditor = this.handleLaunchPermissionsEditor.bind(this);
-    this.handleHidePermissionsEditor = this.handleHidePermissionsEditor.bind(this);
-    this.handlePermissionsChanged = this.handlePermissionsChanged.bind(this);
     this.handleDeleteMessages = this.handleDeleteMessages.bind(this);
     this.handleLeave = this.handleLeave.bind(this);
     this.handleBlock = this.handleBlock.bind(this);
@@ -97,25 +98,9 @@ class TopicSecurityView extends React.Component {
   }
 
   handleLaunchPermissionsEditor(which) {
-    this.setState({
-      showPermissionEditorFor: which,
-      editedPermissions: this.state[which]
-    });
+    this.props.onNavigate(`perm/${which}/${this.state[which] || ''}`);
   }
 
-  handleHidePermissionsEditor() {
-    this.setState({showPermissionEditorFor: undefined});
-  }
-
-  handlePermissionsChanged(perm) {
-    let defacs = {};
-    defacs[this.state.showPermissionEditorFor] = perm;
-    this.props.onUpdateAccountDesc('me', undefined, undefined, defacs);
-
-    let newState = {showPermissionEditorFor: undefined};
-    newState[this.state.showPermissionEditorFor] = perm;
-    this.setState(newState);
-  }
 
   handleDeleteMessages(e) {
     e.preventDefault();
@@ -172,96 +157,88 @@ class TopicSecurityView extends React.Component {
   render() {
     const {formatMessage} = this.props.intl;
     return (
-      this.state.showPermissionEditorFor ?
-        <PermissionsEditor
-          mode={this.state.editedPermissions}
-          skip="O"
-          onSubmit={this.handlePermissionsChanged}
-          onCancel={this.handleHidePermissionsEditor} />
-        :
-        <div className="scrollable-panel">
-          <div className="panel-form-column">
-            {!this.state.channel ?
-              <a href="#" className="flat-button" onClick={this.handleDeleteMessages}>
-                <i className="material-icons">delete_outline</i> &nbsp;{
-                  formatMessage(this.state.deleter ? messages.delete_messages : messages.clear_messages)
-                }
-              </a>
-              :
-              null
-            }
-            <a href="#" className="danger flat-button" onClick={this.handleLeave}>
-              <i className="material-icons">exit_to_app</i> &nbsp;{formatMessage(messages.leave_chat)}
+      <div className="scrollable-panel">
+        <div className="panel-form-column">
+          {!this.state.channel ?
+            <a href="#" className="flat-button" onClick={this.handleDeleteMessages}>
+              <i className="material-icons">delete_outline</i> &nbsp;{
+                formatMessage(this.state.deleter ? messages.delete_messages : messages.clear_messages)
+              }
             </a>
-            {!this.state.groupTopic ?
-              <a href="#" className="danger flat-button" onClick={this.handleBlock}>
-                <i className="material-icons">block</i> &nbsp;{formatMessage(messages.block_contact)}
-              </a>
-              :
-              null
-            }
-            {!this.state.owner ?
-              <a href="#" className="danger flat-button" onClick={this.handleReport}>
-                <i className="material-icons">report</i> &nbsp;{formatMessage(messages.report_chat)}
-              </a>
-              :
-              null
-            }
-          </div>
-          <div className="hr" />
-          <div className="panel-form-column">
-            {this.state.groupTopic ?
-              <div className="group">
-                <label>
-                  <FormattedMessage id="label_your_permissions" defaultMessage="Your permissions:"
-                    description="Label for current user permissions" />
-                </label>
-                <tt className="clickable"
-                  onClick={this.handleLaunchPermissionsEditor.bind(this, 'want')}>
-                  {this.state.access}
-                </tt>
-              </div>
-              :
-              <div className="group">
-                <div>
-                  <label className="small">
-                    <FormattedMessage id="label_permissions" defaultMessage="Permissions:"
-                      description="Section title" />
-                  </label>
-                </div>
-                <div className="quoted">
-                  <div>
-                    <FormattedMessage id="label_you" defaultMessage="You:"
-                      description="Label for the current user" /> &nbsp;<tt className="clickable"
-                    onClick={this.handleLaunchPermissionsEditor.bind(this, 'want')}>
-                    {this.state.access}
-                  </tt></div>
-                  <div>{this.state.fullName ? this.state.fullName : formatMessage(messages.other_user)}:
-                    &nbsp;<tt className="clickable" onClick={this.handleLaunchPermissionsEditor.bind(this, 'given')}>
-                    {this.state.modeGiven2}
-                    </tt>
-                  </div>
-                </div>
-              </div>
-            }
+            :
+            null
+          }
+          <a href="#" className="danger flat-button" onClick={this.handleLeave}>
+            <i className="material-icons">exit_to_app</i> &nbsp;{formatMessage(messages.leave_chat)}
+          </a>
+          {!this.state.groupTopic ?
+            <a href="#" className="danger flat-button" onClick={this.handleBlock}>
+              <i className="material-icons">block</i> &nbsp;{formatMessage(messages.block_contact)}
+            </a>
+            :
+            null
+          }
+          {!this.state.owner ?
+            <a href="#" className="danger flat-button" onClick={this.handleReport}>
+              <i className="material-icons">report</i> &nbsp;{formatMessage(messages.report_chat)}
+            </a>
+            :
+            null
+          }
+        </div>
+        <div className="hr" />
+        <div className="panel-form-column">
+          {this.state.groupTopic ?
+            <div className="group">
+              <label>
+                <FormattedMessage id="label_your_permissions" defaultMessage="Your permissions:"
+                  description="Label for current user permissions" />
+              </label> <tt className="clickable"
+                onClick={this.handleLaunchPermissionsEditor.bind(this, 'want')}>
+                {this.state.access}
+              </tt>
+            </div>
+            :
             <div className="group">
               <div>
                 <label className="small">
-                  <FormattedMessage id="label_default_access_mode" defaultMessage="Default access mode:"
-                  description="Label for default access mode" />
+                  <FormattedMessage id="label_permissions" defaultMessage="Permissions:"
+                    description="Section title" />
                 </label>
               </div>
               <div className="quoted">
-                <div>Auth: <tt className="clickable"
-                  onClick={this.handleLaunchPermissionsEditor.bind(this, 'auth')}>{this.state.auth}</tt></div>
-                <div>Anon: <tt className="clickable"
-                  onClick={this.handleLaunchPermissionsEditor.bind(this, 'anon')}>{this.state.anon}</tt></div>
+                <div>
+                  <FormattedMessage id="label_you" defaultMessage="You:"
+                    description="Label for the current user" /> <tt className="clickable"
+                  onClick={this.handleLaunchPermissionsEditor.bind(this, 'want')}>
+                  {this.state.access}
+                </tt></div>
+                <div>{this.state.fullName ? this.state.fullName : formatMessage(messages.other_user)}:
+                  &nbsp;<tt className="clickable" onClick={this.handleLaunchPermissionsEditor.bind(this, 'given')}>
+                  {this.state.modeGiven2}
+                  </tt>
+                </div>
               </div>
+            </div>
+          }
+          <div className="group">
+            <div>
+              <label className="small">
+                <FormattedMessage id="label_default_access_mode" defaultMessage="Default access mode:"
+                description="Label for default access mode" />
+              </label>
+            </div>
+            <div className="quoted">
+              <div>Auth: <tt className="clickable"
+                onClick={this.handleLaunchPermissionsEditor.bind(this, 'auth')}>{this.state.auth}</tt></div>
+              <div>Anon: <tt className="clickable"
+                onClick={this.handleLaunchPermissionsEditor.bind(this, 'anon')}>{this.state.anon}</tt></div>
             </div>
           </div>
         </div>
+      </div>
     );
   }
 };
 
-export default injectIntl(TopicSecurityView);
+export default injectIntl(TopicSecurity);

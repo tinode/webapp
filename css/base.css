@@ -909,7 +909,7 @@ i.search {
 
 .contact-box .contact-comment {
   text-overflow: ellipsis;
-  overflow: hidden;
+  overflow-x: hidden;
   white-space: nowrap;
   font-weight: lighter;
 }
@@ -2066,6 +2066,15 @@ ul.tabbar li.active > a {
   background-color: #eee;
   white-space: nowrap;
   font-size: 90%;
+  max-width: 12rem;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
+
+.chip > span {
+  white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
 }
 
 .chip.invalid {
@@ -2080,6 +2089,7 @@ ul.tabbar li.active > a {
   border-radius: 50%;
   margin: 0.3rem;
   width: 1.175rem;
+  min-width: 1.175rem;
   height: 1.175rem;
   line-height: 1.15;
   text-decoration: none;

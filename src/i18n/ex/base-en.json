@@ -184,7 +184,7 @@
     "description": "Shown when messages are deleted"
   },
   "description_editing_placeholder": {
-    "defaultMessage": "Optional description",
+    "defaultMessage": "Description (optional)",
     "description": "Placeholder for editing topic description"
   },
   "download_action": {
@@ -497,17 +497,25 @@
     "defaultMessage": "online now",
     "description": "Indicator that the user or topic is currently online"
   },
-  "panel_title_acc_general": {
-    "defaultMessage": "General",
-    "description": "Title for TopicCommonView."
-  },
-  "panel_title_acc_security": {
-    "defaultMessage": "Security",
-    "description": "Title for TopicSecirityView and AccSecurityView."
-  },
   "panel_title_crop": {
     "defaultMessage": "Drag to Adjust",
     "description": "Title for AvatarCropView."
+  },
+  "panel_title_general": {
+    "defaultMessage": "General",
+    "description": "Title for TopicCommon."
+  },
+  "panel_title_info": {
+    "defaultMessage": "Info",
+    "description": "Title for InfoView"
+  },
+  "panel_title_members": {
+    "defaultMessage": "Members",
+    "description": "Title for managing group members view."
+  },
+  "panel_title_security": {
+    "defaultMessage": "Security",
+    "description": "Title for TopicSecirity and AccSecurity."
   },
   "password_prompt": {
     "defaultMessage": "Password",
@@ -676,10 +684,6 @@
   "title_group_members": {
     "defaultMessage": "Group Members",
     "description": "Section title"
-  },
-  "title_info": {
-    "defaultMessage": "Info",
-    "description": "Title for InfoView"
   },
   "title_manage_tags": {
     "defaultMessage": "Manage",

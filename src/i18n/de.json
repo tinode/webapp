@@ -1180,7 +1180,7 @@
     "missing": false,
     "obsolete": false
   },
-  "title_info": {
+  "panel_title_info": {
     "translation": "Info",
     "defaultMessage": "Info",
     "description": "Title for InfoView",
@@ -1273,7 +1273,7 @@
   },
   "description_editing_placeholder": {
     "translation": "",
-    "defaultMessage": "Optional description",
+    "defaultMessage": "Description (optional)",
     "description": "Placeholder for editing topic description",
     "missing": true,
     "obsolete": false
@@ -1292,18 +1292,18 @@
     "missing": false,
     "obsolete": false
   },
-  "panel_title_acc_general": {
+  "panel_title_general": {
     "translation": "",
     "defaultMessage": "General",
-    "description": "Title for TopicCommonView.",
+    "description": "Title for TopicCommon.",
     "missing": true,
     "obsolete": false
   },
-  "panel_title_acc_security": {
-    "translation": "",
+  "panel_title_security": {
+    "translation": "Sicherheit",
     "defaultMessage": "Security",
-    "description": "Title for TopicSecirityView and AccSecurityView.",
-    "missing": true,
+    "description": "Title for TopicSecirity and AccSecurity.",
+    "missing": false,
     "obsolete": false
   },
   "panel_title_crop": {
@@ -1311,6 +1311,13 @@
     "defaultMessage": "Drag to Adjust",
     "description": "Title for AvatarCropView.",
     "missing": true,
+    "obsolete": false
+  },
+  "panel_title_members": {
+    "translation": "Mitglieder",
+    "defaultMessage": "Members",
+    "description": "Title for managing group members view.",
+    "missing": false,
     "obsolete": false
   }
 }
