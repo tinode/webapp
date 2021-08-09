@@ -135,7 +135,10 @@ self.addEventListener('fetch', event => {
   event.respondWith((async () => {
     //  Try to find the response in the cache.
     const cache = await caches.open(PACKAGE_VERSION);
-    const cachedResponse = await cache.match(event.request);
+
+    const reqUrl = new URL(event.request.url);
+    // Using ignoreSearch=true to read cached images and docs despite different auth signatures.
+    const cachedResponse = await cache.match(event.request, {ignoreSearch: (self.location.origin == reqUrl.origin)});
     if (cachedResponse) {
       return cachedResponse;
     }
@@ -144,7 +147,7 @@ self.addEventListener('fetch', event => {
     if (!response || response.status != 200 || response.type != 'basic') {
       return response;
     }
-    if (event.request.url && (event.request.url.startsWith('http://') || event.request.url.startsWith('https://'))) {
+    if (reqUrl.protocol == 'http:' || reqUrl.protocol == 'https:') {
       await cache.put(event.request, response.clone());
     }
     return response;
