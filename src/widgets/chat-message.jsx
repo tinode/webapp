@@ -120,6 +120,7 @@ export default class ChatMessage extends React.Component {
           <div className="avatar-box">
             {fullDisplay ?
               <LetterTile
+                tinode={this.props.tinode}
                 topic={this.props.userFrom}
                 title={this.props.userName}
                 avatar={avatar} /> :

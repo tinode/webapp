@@ -133,6 +133,7 @@ class PermissionsEditor extends React.Component {
       <div className="panel-form-column">
         {this.props.userTitle ?
           <ul className="contact-box small"><Contact
+            tinode={this.props.tinode}
             item={this.props.item}
             title={this.props.userTitle}
             small={true}

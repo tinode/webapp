@@ -48,6 +48,7 @@ export default class AvatarUpload extends React.Component {
           this.props.readOnly && this.props.uid ?
             <div className="avatar-box">
               <LetterTile
+                tinode={this.props.tinode}
                 avatar={true}
                 topic={this.props.uid}
                 title={this.props.title} />

@@ -429,6 +429,7 @@ class InfoView extends React.Component {
             onClearError={this.props.onError} /> : null}
         {view == 'members' ?
           <GroupManager
+            tinode={this.props.tinode}
             members={this.state.contactList}
             requiredMember={this.props.myUserId}
             keepInitialMembers={!this.state.admin && !this.state.owner}
@@ -439,6 +440,7 @@ class InfoView extends React.Component {
           :
         view == 'perm' && args.length > 0 ?
           <PermissionsEditor
+            tinode={this.props.tinode}
             mode={this.state.editedPermissions}
             compare={this.state.immutablePermissions}
             skip={this.state.editedPermissionsSkipped}
@@ -559,6 +561,7 @@ class InfoView extends React.Component {
                   <FormattedMessage id="group_has_no_members" defaultMessage="No members"
                     description="Shown in place of group members">{
                     (no_members) => <ContactList
+                      tinode={this.props.tinode}
                       contacts={this.state.contactList}
                       myUserId={this.props.myUserId}
                       emptyListMessage={no_members}

@@ -1002,12 +1002,14 @@ img.channel {
   height: 1rem;
   vertical-align: middle;
   margin-left: 0.3rem;
+  margin-bottom: 0.1rem;
 }
 
 .large img.channel {
   width: 1.35rem;
   height: 1.35rem;
   margin-left: 0.5rem;
+  margin-bottom: 0.15rem;
 }
 
 /* Online-offline indicator positioned inside avatar-box */

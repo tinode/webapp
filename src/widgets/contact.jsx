@@ -99,6 +99,7 @@ class Contact extends React.Component {
       <li className={!this.props.showCheckmark && this.props.selected ? 'selected' : null} onClick={this.handleClick}>
         <div className="avatar-box">
           <LetterTile
+            tinode={this.props.tinode}
             avatar={avatar}
             title={this.props.title}
             topic={this.props.item} />

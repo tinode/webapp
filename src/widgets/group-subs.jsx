@@ -22,6 +22,7 @@ export default class GroupSubs extends React.Component {
       usersOnline.push(
         <div className="avatar-box" key={sub.user}>
           <LetterTile
+            tinode={this.props.tinode}
             topic={sub.user}
             avatar={makeImageUrl(sub.public ? sub.public.photo : null) || true}
             title={sub.public ? sub.public.fn : null} />

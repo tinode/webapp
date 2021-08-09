@@ -165,6 +165,7 @@ class GroupManager extends React.Component {
         </div>
         <div className="panel-form-row">
           <ChipInput
+            tinode={this.props.tinode}
             chips={this.state.members}
             staticMembers={this.state.staticMembers}
             prompt="add members"
@@ -178,6 +179,7 @@ class GroupManager extends React.Component {
           </label>
         </div>
         <ContactList
+          tinode={this.props.tinode}
           contacts={this.props.contacts}
           myUserId={this.props.myUserId}
           topicSelected={this.state.selectedContacts}

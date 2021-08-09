@@ -265,10 +265,10 @@ export default class TopicDescEdit extends React.Component {
           <FormattedMessage id="title_tag_manager" defaultMessage="Tags (search & discovery)"
             description="Section title for TagManager">{
               (title_tag_manager) => <TagManager
+                tinode={this.props.tinode}
                 title={title_tag_manager}
                 activated={false}
                 tags={this.state.tags}
-                tinode={this.props.tinode}
                 onSubmit={this.handleTagsUpdated} />
           }</FormattedMessage>
         </>

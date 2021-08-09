@@ -89,6 +89,7 @@ class ContactList extends React.Component {
           }
           contactNodes.push(
             <Contact
+              tinode={this.props.tinode}
               title={c.public ? c.public.fn : null}
               avatar={makeImageUrl(c.public ? c.public.photo : null)}
               comment={comment}

@@ -1488,6 +1488,7 @@ class ContactsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         "value": "¯∖_(ツ)_/¯"
       }]
     }, no_contacts => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_contact_list_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+      tinode: this.props.tinode,
       connected: this.props.connected,
       contacts: this.state.contactList,
       emptyListMessage: no_contacts,
@@ -2227,6 +2228,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       text: this.props.errorText,
       onClearError: this.props.onError
     }) : null, view == 'members' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_group_manager_jsx__WEBPACK_IMPORTED_MODULE_8__.default, {
+      tinode: this.props.tinode,
       members: this.state.contactList,
       requiredMember: this.props.myUserId,
       keepInitialMembers: !this.state.admin && !this.state.owner,
@@ -2235,6 +2237,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       onCancel: this.handleBackNavigate,
       onSubmit: this.handleMemberUpdateRequest
     }) : view == 'perm' && args.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_permissions_editor_jsx__WEBPACK_IMPORTED_MODULE_10__.default, {
+      tinode: this.props.tinode,
       mode: this.state.editedPermissions,
       compare: this.state.immutablePermissions,
       skip: this.state.editedPermissionsSkipped,
@@ -2413,6 +2416,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
         "value": "No members"
       }]
     }, no_members => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_contact_list_jsx__WEBPACK_IMPORTED_MODULE_6__.default, {
+      tinode: this.props.tinode,
       contacts: this.state.contactList,
       myUserId: this.props.myUserId,
       emptyListMessage: no_members,
@@ -3636,6 +3640,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         }, "arrow_back")) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           className: "avatar-box"
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_10__.default, {
+          tinode: this.props.tinode,
           avatar: avatar,
           topic: this.state.topic,
           title: this.state.title
@@ -3657,6 +3662,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "topic-last-seen"
         }, lastSeen)), groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_group_subs_jsx__WEBPACK_IMPORTED_MODULE_7__.default, {
+          tinode: this.props.tinode,
           subscribers: this.state.onlineSubs
         }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "topic-users"
@@ -5735,12 +5741,13 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
     if (topic) {
       const params = {};
+      let attachments;
 
       if (pub) {
         params.public = pub;
 
         if (pub.photo && pub.photo.ref) {
-          params.attachments = [pub.photo.ref];
+          attachments = [pub.photo.ref];
         }
       }
 
@@ -5755,7 +5762,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       }
 
       topic.setMeta({
-        desc: params
+        desc: params,
+        attachments: attachments
       }).catch(err => {
         this.handleError(err.message, 'err');
       });
@@ -6703,6 +6711,7 @@ class AvatarUpload extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }) : this.props.readOnly && this.props.uid ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__.default, {
+      tinode: this.props.tinode,
       avatar: true,
       topic: this.props.uid,
       title: this.props.title
@@ -6997,6 +7006,7 @@ class ChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     }, this.props.userFrom && this.props.response ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
     }, fullDisplay ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_4__.default, {
+      tinode: this.props.tinode,
       topic: this.props.userFrom,
       title: this.props.userName,
       avatar: avatar
@@ -7298,6 +7308,7 @@ class ChipInput extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     const staticMembers = this.props.staticMembers || [];
     this.state.sortedChips.map(item => {
       chips.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_chip_jsx__WEBPACK_IMPORTED_MODULE_1__.default, {
+        tinode: this.props.tinode,
         onCancel: this.handleChipCancel,
         avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_2__.makeImageUrl)(item.public ? item.public.photo : null),
         title: item.public ? item.public.fn : undefined,
@@ -7368,6 +7379,7 @@ class Chip extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) 
     }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__.default, {
+      tinode: this.props.tinode,
       avatar: this.props.avatar || true,
       topic: this.props.topic,
       title: this.props.title
@@ -7599,6 +7611,7 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
           }
 
           contactNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+            tinode: this.props.tinode,
             title: c.public ? c.public.fn : null,
             avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__.makeImageUrl)(c.public ? c.public.photo : null),
             comment: comment,
@@ -7798,6 +7811,7 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+      tinode: this.props.tinode,
       avatar: avatar,
       title: this.props.title,
       topic: this.props.item
@@ -9080,6 +9094,7 @@ class GroupManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_chip_input_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+      tinode: this.props.tinode,
       chips: this.state.members,
       staticMembers: this.state.staticMembers,
       prompt: "add members",
@@ -9096,6 +9111,7 @@ class GroupManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         "value": "All Contacts"
       }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_list_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+      tinode: this.props.tinode,
       contacts: this.props.contacts,
       myUserId: this.props.myUserId,
       topicSelected: this.state.selectedContacts,
@@ -9172,6 +9188,7 @@ class GroupSubs extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         className: "avatar-box",
         key: sub.user
       }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+        tinode: this.props.tinode,
         topic: sub.user,
         avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.makeImageUrl)(sub.public ? sub.public.photo : null) || true,
         title: sub.public ? sub.public.fn : null
@@ -9668,6 +9685,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+
 
 
 
@@ -9694,10 +9713,11 @@ class LetterTile extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
         }, "person");
       }
     } else if (this.props.avatar) {
+      const url = this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__.sanitizeImageUrl)(this.props.avatar));
       avatar = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
         className: "avatar",
         alt: "avatar",
-        src: this.props.avatar,
+        src: url,
         onError: e => {
           e.target.onerror = null;
           e.target.src = "../img/broken_image.png";
@@ -10145,10 +10165,10 @@ class NewTopicGroup extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
         "value": "Tags (search & discovery)"
       }]
     }, title => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_tag_manager_jsx__WEBPACK_IMPORTED_MODULE_4__.default, {
+      tinode: this.props.tinode,
       tags: this.state.tags,
       activated: true,
       onTagsChanged: this.handleTagsChanged,
-      tinode: this.props.tinode,
       tabIndex: 4,
       title: title
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -10406,6 +10426,7 @@ class PermissionsEditor extends (react__WEBPACK_IMPORTED_MODULE_0___default().Co
     }, this.props.userTitle ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
       className: "contact-box small"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+      tinode: this.props.tinode,
       item: this.props.item,
       title: this.props.userTitle,
       small: true,
@@ -10940,6 +10961,7 @@ class SideNavbar extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
       id: "self-avatar",
       className: "avatar-box"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__.default, {
+      tinode: this.props.tinode,
       avatar: avatar,
       topic: this.props.myUserId,
       title: this.props.title
@@ -10988,7 +11010,7 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
   constructor(props) {
     super(props);
     this.state = {
-      tags: this.props.tags,
+      tags: this.props.tags || [],
       tagInput: '',
       activated: this.props.activated
     };
@@ -11000,9 +11022,11 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (!(0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_4__.arrayEqual)(nextProps.tags, prevState.tags) && !prevState.activated) {
+    const tags = nextProps.tags || [];
+
+    if (!(0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_4__.arrayEqual)(tags, prevState.tags) && !prevState.activated) {
       return {
-        tags: nextProps.tags
+        tags: tags
       };
     }
 
@@ -11064,7 +11088,7 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
     this.props.onSubmit(this.handleAddTag(this.state.tagInput.trim()));
     this.setState({
       activated: false,
-      tags: this.props.tags
+      tags: this.props.tags || []
     });
   }
 
@@ -11072,7 +11096,7 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
     this.setState({
       activated: false,
       tagInput: '',
-      tags: this.props.tags
+      tags: this.props.tags || []
     });
 
     if (this.props.onCancel) {
@@ -11124,6 +11148,7 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
         "value": "Add some tags"
       }]
     }, add_tags_prompt => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_chip_input_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+      tinode: this.props.tinode,
       chips: tags,
       avatarDisabled: true,
       prompt: add_tags_prompt,
@@ -11725,10 +11750,10 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
         "value": "Tags (search & discovery)"
       }]
     }, title_tag_manager => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_tag_manager_jsx__WEBPACK_IMPORTED_MODULE_6__.default, {
+      tinode: this.props.tinode,
       title: title_tag_manager,
       activated: false,
       tags: this.state.tags,
-      tinode: this.props.tinode,
       onSubmit: this.handleTagsUpdated
     }))) : null);
   }

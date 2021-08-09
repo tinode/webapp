@@ -118,10 +118,10 @@ export default class NewTopicGroup extends React.PureComponent {
         <FormattedMessage id="title_tag_manager" defaultMessage="Tags (search & discovery)"
           description="Section title for TagManager">{
           (title) => <TagManager
+            tinode={this.props.tinode}
             tags={this.state.tags}
             activated={true}
             onTagsChanged={this.handleTagsChanged}
-            tinode={this.props.tinode}
             tabIndex={4}
             title={title} />
         }</FormattedMessage>

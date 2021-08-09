@@ -118,6 +118,7 @@ export default class ChipInput extends React.Component {
     this.state.sortedChips.map((item) => {
       chips.push(
         <Chip
+          tinode={this.props.tinode}
           onCancel={this.handleChipCancel}
           avatar={makeImageUrl(item.public ? item.public.photo : null)}
           title={item.public ? item.public.fn : undefined}

@@ -1214,10 +1214,11 @@ class TinodeWeb extends React.Component {
     const topic = this.tinode.getTopic(topicName);
     if (topic) {
       const params = {};
+      let attachments;
       if (pub) {
         params.public = pub;
         if (pub.photo && pub.photo.ref) {
-          params.attachments = [pub.photo.ref];
+          attachments = [pub.photo.ref];
         }
       }
       if (priv) {
@@ -1227,7 +1228,7 @@ class TinodeWeb extends React.Component {
       if (defacs) {
         params.defacs = defacs;
       }
-      topic.setMeta({desc: params}).catch((err) => {
+      topic.setMeta({desc: params, attachments: attachments}).catch((err) => {
         this.handleError(err.message, 'err');
       });
     }

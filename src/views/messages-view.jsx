@@ -931,6 +931,7 @@ class MessagesView extends React.Component {
                 null}
               <div className="avatar-box">
                 <LetterTile
+                  tinode={this.props.tinode}
                   avatar={avatar}
                   topic={this.state.topic}
                   title={this.state.title} />
@@ -946,6 +947,7 @@ class MessagesView extends React.Component {
               </div>
               {groupTopic ?
                 <GroupSubs
+                  tinode={this.props.tinode}
                   subscribers={this.state.onlineSubs} /> :
                 <div id="topic-users" />
               }

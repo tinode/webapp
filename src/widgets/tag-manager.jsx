@@ -12,7 +12,7 @@ export default class TagManager extends React.Component {
     super(props);
 
     this.state = {
-      tags: this.props.tags,
+      tags: this.props.tags || [],
       tagInput: '',
       activated: this.props.activated
     };
@@ -25,8 +25,9 @@ export default class TagManager extends React.Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (!arrayEqual(nextProps.tags, prevState.tags) && !prevState.activated) {
-      return {tags: nextProps.tags};
+    const tags = nextProps.tags || [];
+    if (!arrayEqual(tags, prevState.tags) && !prevState.activated) {
+      return {tags: tags};
     }
     return null;
   }
@@ -75,11 +76,11 @@ export default class TagManager extends React.Component {
   handleSubmit() {
     // Add unprocessed input to tags, submit the list.
     this.props.onSubmit(this.handleAddTag(this.state.tagInput.trim()));
-    this.setState({activated: false, tags: this.props.tags});
+    this.setState({activated: false, tags: this.props.tags || []});
   }
 
   handleCancel() {
-    this.setState({activated: false, tagInput: '', tags: this.props.tags});
+    this.setState({activated: false, tagInput: '', tags: this.props.tags || []});
     if (this.props.onCancel) {
       this.props.onCancel();
     }
@@ -116,6 +117,7 @@ export default class TagManager extends React.Component {
           <FormattedMessage id="tags_editor_no_tags" defaultMessage="Add some tags"
             description="Tag editor prompt when no tags are found.">{
             (add_tags_prompt) => <ChipInput
+              tinode={this.props.tinode}
               chips={tags}
               avatarDisabled={true}
               prompt={add_tags_prompt}
