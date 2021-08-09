@@ -1873,7 +1873,7 @@ ul.tabbar li.active > a {
 }
 
 .badge.green {
-  border-color: #9c9;
+  border-color: #aca;
   background-color: #efe;
   color: #383;
 }
@@ -1885,7 +1885,7 @@ ul.tabbar li.active > a {
 }
 
 .badge.blue {
-  border-color: #99c;
+  border-color: #aad;
   background-color: #eef;
   color: #339;
 }
