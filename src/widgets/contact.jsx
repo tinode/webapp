@@ -114,7 +114,7 @@ class Contact extends React.Component {
           </div>
           {this.props.showMode ?
             <span><ContactBadges badges={badges} /></span> :
-            <div className="contact-comment">{marker}{subtitle || '\u00A0'}</div>}
+            this.props.small ? null : <div className="contact-comment">{marker}{subtitle || '\u00A0'}</div>}
         </div>
         {this.props.showContextMenu ?
           <span className="menuTrigger">

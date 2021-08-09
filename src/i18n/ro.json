@@ -1210,7 +1210,7 @@
   },
   "title_tag_manager": {
     "translation": "Tag-uri (user discovery)",
-    "defaultMessage": "Tags (user discovery)",
+    "defaultMessage": "Tags (search & discovery)",
     "description": "Section title for TagManager",
     "missing": false,
     "obsolete": false
@@ -1338,6 +1338,20 @@
     "translation": "",
     "defaultMessage": "Info",
     "description": "Title for InfoView",
+    "missing": true,
+    "obsolete": false
+  },
+  "permissions_anonymous": {
+    "translation": "",
+    "defaultMessage": "Anonymous",
+    "description": "Title for editing default anonymous permissions",
+    "missing": true,
+    "obsolete": false
+  },
+  "permissions_authenticated": {
+    "translation": "",
+    "defaultMessage": "Authenticated",
+    "description": "Title for editing default authenticated permissions",
     "missing": true,
     "obsolete": false
   }

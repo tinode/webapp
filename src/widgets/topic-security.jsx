@@ -4,6 +4,8 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
 import InPlaceEdit from './in-place-edit.jsx';
 
+import { NO_ACCESS_MODE } from '../config.js';
+
 const messages = defineMessages({
   clear_messages: {
     id: 'action_clear_messages',
@@ -74,6 +76,18 @@ class TopicSecurity extends React.Component {
     const defacs = topic.getDefaultAccess() || {};
     const acs = topic.getAccessMode();
 
+    let modeGiven2 = NO_ACCESS_MODE;
+    let modeWant2 = NO_ACCESS_MODE;
+    if (topic.getType() == 'p2p') {
+      // Fetch the other party in the p2p conversation.
+      // Topic may not be ready yet, so check if user is found.
+      const user2 = topic.subscriber(props.topic);
+      if (user2 && user2.acs) {
+        modeGiven2 = user2.acs.getGiven();
+        modeWant2 = user2.acs.getWant();
+      }
+    }
+
     this.state = {
       owner: acs && acs.isOwner(),
       admin: acs && acs.isAdmin(),
@@ -86,21 +100,17 @@ class TopicSecurity extends React.Component {
       access: acs ? acs.getMode() : undefined,
       modeGiven: acs ? acs.getGiven() : undefined,
       modeWant: acs ? acs.getWant() : undefined,
+      modeGiven2: modeGiven2, // P2P topic, the other user mode given
+      modeWant2: modeWant2,  // P2P topic, the other user mode want
       auth: defacs ? defacs.auth : null,
       anon: defacs ? defacs.anon : null,
     };
 
-    this.handleLaunchPermissionsEditor = this.handleLaunchPermissionsEditor.bind(this);
     this.handleDeleteMessages = this.handleDeleteMessages.bind(this);
     this.handleLeave = this.handleLeave.bind(this);
     this.handleBlock = this.handleBlock.bind(this);
     this.handleReport = this.handleReport.bind(this);
   }
-
-  handleLaunchPermissionsEditor(which) {
-    this.props.onNavigate(`perm/${which}/${this.state[which] || ''}`);
-  }
-
 
   handleDeleteMessages(e) {
     e.preventDefault();
@@ -189,15 +199,33 @@ class TopicSecurity extends React.Component {
         <div className="hr" />
         <div className="panel-form-column">
           {this.state.groupTopic ?
-            <div className="group">
-              <label>
-                <FormattedMessage id="label_your_permissions" defaultMessage="Your permissions:"
-                  description="Label for current user permissions" />
-              </label> <tt className="clickable"
-                onClick={this.handleLaunchPermissionsEditor.bind(this, 'want')}>
-                {this.state.access}
-              </tt>
-            </div>
+            <>
+              <div className="group">
+                <label>
+                  <FormattedMessage id="label_your_permissions" defaultMessage="Your permissions:"
+                    description="Label for current user permissions" />
+                </label> <tt className="clickable"
+                  onClick={(e) => {e.preventDefault(); this.props.onLaunchPermissionsEditor('want')}}>
+                  {this.state.access}
+                </tt>
+              </div>
+              <div className="group">
+                <div>
+                  <label className="small">
+                    <FormattedMessage id="label_default_access_mode" defaultMessage="Default access mode:"
+                    description="Label for default access mode" />
+                  </label>
+                </div>
+                <div className="quoted">
+                  <div>Auth: <tt className="clickable"
+                    onClick={(e) => {e.preventDefault(); this.props.onLaunchPermissionsEditor('auth')}}>{this.state.auth}</tt>
+                  </div>
+                  <div>Anon: <tt className="clickable"
+                    onClick={(e) => {e.preventDefault(); this.props.onLaunchPermissionsEditor('anon')}}>{this.state.anon}</tt>
+                  </div>
+                </div>
+              </div>
+            </>
             :
             <div className="group">
               <div>
@@ -210,31 +238,19 @@ class TopicSecurity extends React.Component {
                 <div>
                   <FormattedMessage id="label_you" defaultMessage="You:"
                     description="Label for the current user" /> <tt className="clickable"
-                  onClick={this.handleLaunchPermissionsEditor.bind(this, 'want')}>
-                  {this.state.access}
-                </tt></div>
+                    onClick={(e) => {e.preventDefault(); this.props.onLaunchPermissionsEditor('want')}}>
+                    {this.state.access}
+                  </tt>
+                </div>
                 <div>{this.state.fullName ? this.state.fullName : formatMessage(messages.other_user)}:
-                  &nbsp;<tt className="clickable" onClick={this.handleLaunchPermissionsEditor.bind(this, 'given')}>
-                  {this.state.modeGiven2}
+                  &nbsp;<tt className="clickable"
+                    onClick={(e) => {e.preventDefault(); this.props.onLaunchPermissionsEditor('given')}}>
+                    {this.state.modeGiven2}
                   </tt>
                 </div>
               </div>
             </div>
           }
-          <div className="group">
-            <div>
-              <label className="small">
-                <FormattedMessage id="label_default_access_mode" defaultMessage="Default access mode:"
-                description="Label for default access mode" />
-              </label>
-            </div>
-            <div className="quoted">
-              <div>Auth: <tt className="clickable"
-                onClick={this.handleLaunchPermissionsEditor.bind(this, 'auth')}>{this.state.auth}</tt></div>
-              <div>Anon: <tt className="clickable"
-                onClick={this.handleLaunchPermissionsEditor.bind(this, 'anon')}>{this.state.anon}</tt></div>
-            </div>
-          </div>
         </div>
       </div>
     );

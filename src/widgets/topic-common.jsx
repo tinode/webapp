@@ -3,17 +3,10 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import Tinode from 'tinode-sdk';
-
 import AvatarUpload from '../widgets/avatar-upload.jsx';
-import InPlaceEdit from '../widgets/in-place-edit.jsx';
-import TagManager from '../widgets/tag-manager.jsx';
 import TopicDescEdit from '../widgets/topic-desc-edit.jsx';
 
-import { AVATAR_SIZE, MAX_AVATAR_BYTES, MAX_EXTERN_ATTACHMENT_SIZE,
-  MAX_INBAND_ATTACHMENT_SIZE, MAX_TITLE_LENGTH } from '../config.js';
-import { imageScaled, blobToBase64, makeImageUrl } from '../lib/blob-helpers.js';
-import { arrayEqual, asEmail, asPhone, theCard } from '../lib/utils.js';
+import { arrayEqual, asEmail, asPhone } from '../lib/utils.js';
 
 export default class TopicCommon extends React.Component {
   constructor(props) {
@@ -177,22 +170,6 @@ export default class TopicCommon extends React.Component {
             </div>
           </>
         : null
-      }
-      {this.state.owner ?
-        <>
-          <div className="hr" />
-          <FormattedMessage id="title_tag_manager" defaultMessage="Tags (user discovery)"
-            description="Section title for TagManager">{
-            (tags) => <TagManager
-              title={tags}
-              tags={this.state.tags}
-              activated={false}
-              tinode={this.props.tinode}
-              onSubmit={this.handleTagsUpdated} />
-          }</FormattedMessage>
-        </>
-        :
-        null
       }
       </div>
     );

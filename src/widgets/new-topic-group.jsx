@@ -115,7 +115,7 @@ export default class NewTopicGroup extends React.PureComponent {
             defaultMessage="This is a channel"
             description="Checkbox label when creating a channel" /></label>
         </div>
-        <FormattedMessage id="title_tag_manager" defaultMessage="Tags (user discovery)"
+        <FormattedMessage id="title_tag_manager" defaultMessage="Tags (search & discovery)"
           description="Section title for TagManager">{
           (title) => <TagManager
             tags={this.state.tags}

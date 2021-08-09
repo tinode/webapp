@@ -1209,8 +1209,8 @@
     "obsolete": false
   },
   "title_tag_manager": {
-    "translation": "Tags (user discovery)",
-    "defaultMessage": "Tags (user discovery)",
+    "translation": "Tags (search & discovery)",
+    "defaultMessage": "Tags (search & discovery)",
     "description": "Section title for TagManager",
     "missing": false,
     "obsolete": false
@@ -1338,6 +1338,20 @@
     "translation": "Info",
     "defaultMessage": "Info",
     "description": "Title for InfoView",
+    "missing": false,
+    "obsolete": false
+  },
+  "permissions_anonymous": {
+    "translation": "Anonymous",
+    "defaultMessage": "Anonymous",
+    "description": "Title for editing default anonymous permissions",
+    "missing": false,
+    "obsolete": false
+  },
+  "permissions_authenticated": {
+    "translation": "Authenticated",
+    "defaultMessage": "Authenticated",
+    "description": "Title for editing default authenticated permissions",
     "missing": false,
     "obsolete": false
   }

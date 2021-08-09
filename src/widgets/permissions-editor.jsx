@@ -132,9 +132,10 @@ class PermissionsEditor extends React.Component {
     return (
       <div className="panel-form-column">
         {this.props.userTitle ?
-          <ul className="contact-box"><Contact
+          <ul className="contact-box small"><Contact
             item={this.props.item}
             title={this.props.userTitle}
+            small={true}
             avatar={makeImageUrl(this.props.userAvatar ? this.props.userAvatar : null)} /></ul> : null}
         <label className="small"><FormattedMessage id="title_permissions"
           defaultMessage="Permissions" description="Section title"/></label>

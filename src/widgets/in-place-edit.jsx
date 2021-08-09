@@ -97,7 +97,6 @@ export default class InPlaceEdit extends React.Component {
 
     let element;
     const attr = {};
-    let value = null;
     if (this.props.type == 'password') {
       element = VisiblePassword;
       attr.onFinished = this.handlePasswordFinished;
@@ -106,12 +105,11 @@ export default class InPlaceEdit extends React.Component {
         element = 'textarea';
         attr.rows = this.props.multiline;
         attr.className = 'inplace-edit';
-        value = this.state.value;
       } else {
         element = 'input';
         attr.type = this.props.type || 'text';
-        attr.value = this.state.value;
       }
+      attr.value = this.state.value;
       attr.onChange = this.handeTextChange;
       attr.onKeyDown = this.handleKeyDown;
       attr.onBlur = this.handleEditingFinished;
@@ -122,6 +120,6 @@ export default class InPlaceEdit extends React.Component {
     attr.autoFocus = true;
     attr.ref = this.selfRef;
 
-    return React.createElement(element, attr, value);
+    return React.createElement(element, attr, null);
   }
 };

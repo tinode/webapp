@@ -71,7 +71,7 @@ export default class TopicDescEdit extends React.Component {
     comment = comment.trim().substring(0, MAX_TITLE_LENGTH);
     if (this.state.private !== comment) {
       this.setState({private: comment});
-      this.props.onTopicDescUpdate(this.props.topic, null, comment || Tinode.DEL_CHAR);
+      this.props.onUpdateTopicDesc(this.props.topic, null, comment || Tinode.DEL_CHAR);
     }
   }
 
@@ -211,7 +211,7 @@ export default class TopicDescEdit extends React.Component {
               <div>
                 <InPlaceEdit
                   placeholder={this.state.groupTopic ? "Group name" : <i>Unknown</i>}
-                  readOnly={editable}
+                  readOnly={!editable}
                   value={this.state.fullName}
                   required={true}
                   onFinished={this.handleFullNameUpdate} />
@@ -262,7 +262,7 @@ export default class TopicDescEdit extends React.Component {
       {editable ?
         <>
           <div className="hr" />
-          <FormattedMessage id="title_tag_manager" defaultMessage="Tags (user discovery)"
+          <FormattedMessage id="title_tag_manager" defaultMessage="Tags (search & discovery)"
             description="Section title for TagManager">{
               (title_tag_manager) => <TagManager
                 title={title_tag_manager}

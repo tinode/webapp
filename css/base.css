@@ -332,11 +332,19 @@ li:hover .menuTrigger a {
   color: #757575;
 }
 
+ul.contact-box .menuTrigger {
+  background-image: radial-gradient(#eceff1 40%, transparent 75%);
+}
+
 li.left:hover .menuTrigger {
   background-image: radial-gradient(#c5e1a5 40%, transparent 75%);
 }
 li.right:hover .menuTrigger {
   background-image: radial-gradient(#fafafa 40%, transparent 75%);
+}
+
+li.selected .menuTrigger {
+  background-image: radial-gradient(#cfd8dc 40%, transparent 75%);
 }
 
 /* END popup/dropdown menu */
@@ -610,6 +618,7 @@ div.trusted-badge {
 .in-place-edit.disabled {
   border-bottom: none;
   cursor: default;
+  color: #888;
 }
 
 .in-place-edit.placeholder {
@@ -881,6 +890,12 @@ i.search {
   background: linear-gradient(to right, transparent 3.5rem, #eee 1px, #eee 100%) 0 100% / 100% 1px no-repeat, #fff;
   overflow-x: hidden;
 }
+
+.contact-box.small > li {
+  padding: 0.25rem 0.25rem 0.35rem 0.35rem;
+  min-height: 2.5rem;
+}
+
 .contact-box > li:last-child {
   /* remove border from the last contact */
   background: #fff;
@@ -939,12 +954,29 @@ i.search {
   height: 3rem;
   border-radius: 50%;
 }
+
+.contact-box.small .avatar-box {
+  width: 2rem;
+  min-width: 2rem;
+  height: 2rem;
+  min-height: 2rem;
+  font-size: 1.2rem;
+}
+.contact-box.small .avatar {
+  width: 2rem;
+  height: 2rem;
+}
+
 .contact-box .avatar-box > .material-icons {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   font-size: 2.4rem;
   line-height: 3rem;
+}
+.contact-box.small .avatar-box > .material-icons {
+  font-size: 1.6rem;
+  line-height: 2rem;
 }
 .contact-box .text-box {
   display: flex;
@@ -965,11 +997,17 @@ i.search {
   cursor: pointer;
 }
 
-.contact-box img.channel {
+img.channel {
   width: 1rem;
   height: 1rem;
   vertical-align: middle;
   margin-left: 0.3rem;
+}
+
+.large img.channel {
+  width: 1.35rem;
+  height: 1.35rem;
+  margin-left: 0.5rem;
 }
 
 /* Online-offline indicator positioned inside avatar-box */

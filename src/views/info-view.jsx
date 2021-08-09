@@ -10,11 +10,8 @@ import CheckBox from '../widgets/checkbox.jsx';
 import ContactList from '../widgets/contact-list.jsx';
 import ErrorPanel from '../widgets/error-panel.jsx';
 import GroupManager from '../widgets/group-manager.jsx';
-import InPlaceEdit from '../widgets/in-place-edit.jsx';
 import MenuCancel from '../widgets/menu-cancel.jsx';
-import MoreButton from '../widgets/more-button.jsx';
 import PermissionsEditor from '../widgets/permissions-editor.jsx';
-import TagManager from '../widgets/tag-manager.jsx';
 import TopicCommon from '../widgets/topic-common.jsx';
 import TopicSecurity from '../widgets/topic-security.jsx';
 
@@ -49,15 +46,25 @@ const messages = defineMessages({
     description: 'Title for AvatarCropView.',
     defaultMessage: 'Drag to Adjust'
   },
-  requested: {
+  perm_want: {
     id: 'requested_permissions',
     defaultMessage: 'Requested',
     description: 'Title for permissions'
   },
-  granted: {
+  perm_given: {
     id: 'granted_permissions',
     defaultMessage: 'Granted',
     description: 'Title for permissions'
+  },
+  perm_auth: {
+    id: 'permissions_authenticated',
+    defaultMessage: 'Authenticated',
+    description: 'Title for editing default authenticated permissions'
+  },
+  perm_anon: {
+    id: 'permissions_anonymous',
+    defaultMessage: 'Anonymous',
+    description: 'Title for editing default anonymous permissions'
   },
   edit_permissions: {
     id: 'menu_item_edit_permissions',
@@ -97,7 +104,6 @@ class InfoView extends React.Component {
       anon: null,
       contactList: [],
       trustedBadges: [],
-      showPermissionEditorFor: undefined,
       previousMetaDesc: undefined,
       previousSubsUpdated: undefined,
     };
@@ -106,13 +112,10 @@ class InfoView extends React.Component {
     this.resetDesc = this.resetDesc.bind(this);
     this.onMetaDesc = this.onMetaDesc.bind(this);
     this.onSubsUpdated = this.onSubsUpdated.bind(this);
-    this.handleFullNameUpdate = this.handleFullNameUpdate.bind(this);
-    this.handlePrivateUpdate = this.handlePrivateUpdate.bind(this);
     this.handleImageChanged = this.handleImageChanged.bind(this);
     this.handleMuted = this.handleMuted.bind(this);
     this.handlePermissionsChanged = this.handlePermissionsChanged.bind(this);
     this.handleLaunchPermissionsEditor = this.handleLaunchPermissionsEditor.bind(this);
-    this.handleHidePermissionsEditor = this.handleHidePermissionsEditor.bind(this);
     this.handleShowAddMembers = this.handleShowAddMembers.bind(this);
     this.handleMemberUpdateRequest = this.handleMemberUpdateRequest.bind(this);
     this.handleMemberSelected = this.handleMemberSelected.bind(this);
@@ -186,6 +189,7 @@ class InfoView extends React.Component {
         }
       }
     }
+
     this.setState({
       owner: acs && acs.isOwner(),
       admin: acs && acs.isAdmin(),
@@ -199,7 +203,7 @@ class InfoView extends React.Component {
       private: _clip(topic.private ? topic.private.comment : null, MAX_TITLE_LENGTH),
       address: topic.name,
       groupTopic: topic.isGroupType(),
-      channel: topic.isChannelType(),
+      channel: topic.isChannelType() || topic.chan,
       access: acs ? acs.getMode() : undefined,
       modeGiven: acs ? acs.getGiven() : undefined,
       modeWant: acs ? acs.getWant() : undefined,
@@ -237,22 +241,6 @@ class InfoView extends React.Component {
     }
   }
 
-  handleFullNameUpdate(fn) {
-    fn = fn.trim().substring(0, MAX_TITLE_LENGTH);
-    if (this.state.fullName !== fn) {
-      this.setState({fullName: fn});
-      this.props.onTopicDescUpdate(this.props.topic, theCard(fn, null), null);
-    }
-  }
-
-  handlePrivateUpdate(comment) {
-    comment = comment.trim().substring(0, MAX_TITLE_LENGTH);
-    if (this.state.private !== comment) {
-      this.setState({private: comment});
-      this.props.onTopicDescUpdate(this.props.topic, null, comment || Tinode.DEL_CHAR);
-    }
-  }
-
   handleImageChanged(img) {
     this.setState({avatar: img});
     this.props.onTopicDescUpdate(this.props.topic, theCard(null, img || Tinode.DEL_CHAR), null);
@@ -282,11 +270,10 @@ class InfoView extends React.Component {
         this.props.onChangePermissions(this.props.topic, perm, this.state.userPermissionsEdited);
         break;
     }
-
-    this.setState({showPermissionEditorFor: undefined});
   }
 
   handleLaunchPermissionsEditor(which, uid) {
+    console.log(which, uid);
     const {formatMessage} = this.props.intl;
     let toEdit, toCompare, toSkip, titleEdit, titleCompare, userTitle, userAvatar;
     switch (which) {
@@ -307,15 +294,15 @@ class InfoView extends React.Component {
             toSkip += 'W';
           }
         }
-        titleEdit = formatMessage(messages.requested);
-        titleCompare = formatMessage(messages.granted);
+        titleEdit = formatMessage(messages.perm_want);
+        titleCompare = formatMessage(messages.perm_given);
         break;
       case 'given':
         toEdit = this.state.modeGiven2;
         toCompare = this.state.modeWant2;
         toSkip = this.state.groupTopic ? (this.state.owner ? '' : 'O') : 'ASDO';
-        titleEdit = formatMessage(messages.granted);
-        titleCompare = formatMessage(messages.requested);
+        titleEdit = formatMessage(messages.perm_given);
+        titleCompare = formatMessage(messages.perm_want);
         break;
       case 'auth':
         toEdit = this.state.auth;
@@ -337,8 +324,8 @@ class InfoView extends React.Component {
         toEdit = user.acs.getGiven();
         toCompare = user.acs.getWant();
         toSkip = this.state.owner ? '' : 'O';
-        titleEdit = formatMessage(messages.granted);
-        titleCompare = formatMessage(messages.requested);
+        titleEdit = formatMessage(messages.perm_given);
+        titleCompare = formatMessage(messages.perm_want);
         if (user.public) {
           userTitle = user.public.fn;
           userAvatar = user.public.photo;
@@ -362,10 +349,6 @@ class InfoView extends React.Component {
     this.props.onNavigate(`perm/${which}`);
   }
 
-  handleHidePermissionsEditor() {
-    this.props.onNavigate('info');
-  }
-
   handleShowAddMembers(e) {
     e.preventDefault();
     this.props.onInitFind();
@@ -382,10 +365,15 @@ class InfoView extends React.Component {
   }
 
   handleBackNavigate() {
-    if (this.props.panel == 'info') {
+    const args = (this.props.panel || 'info').split('/');
+    if (args[0] == 'info') {
       this.props.onNavigate(null);
-    } else if ((this.props.panel || '').startsWith('perm/')) {
-      this.props.onNavigate('security');
+    } else if (args[0] == 'perm') {
+      if (args[1] == 'user') {
+        this.props.onNavigate('info');
+      } else {
+        this.props.onNavigate('security');
+      }
     } else {
       this.props.onNavigate('info');
     }
@@ -393,7 +381,6 @@ class InfoView extends React.Component {
 
   handleContextMenu(params) {
     const {formatMessage} = this.props.intl;
-    const instance = this;
     const topic = this.props.tinode.getTopic(this.props.topic);
     if (!topic) {
       return;
@@ -404,8 +391,8 @@ class InfoView extends React.Component {
     }
 
     const menuItems = [
-      {title: formatMessage(messages.edit_permissions), handler: function() {
-        instance.handleLaunchPermissionsEditor('user', params.topicName);
+      {title: formatMessage(messages.edit_permissions), handler: () => {
+        this.handleLaunchPermissionsEditor('user', params.topicName);
       }},
       'member_delete',
       user.acs.isMuted() ? 'member_unmute' : 'member_mute',
@@ -424,7 +411,8 @@ class InfoView extends React.Component {
     args.shift();
 
     const {formatMessage} = this.props.intl;
-    const panelTitle = formatMessage(messages[view] || messages['info']);
+    const panelTitle = formatMessage((view == 'perm' ? messages['perm_' + args[0]] : messages[view])
+      || messages['info']);
 
     return (
       <div id="info-view">
@@ -460,7 +448,7 @@ class InfoView extends React.Component {
             item={this.state.userPermissionsEdited}
             userAvatar={this.state.userPermissionsAvatar}
             onSubmit={this.handlePermissionsChanged.bind(...args)}
-            onCancel={this.handleHidePermissionsEditor} />
+            onCancel={this.handleBackNavigate} />
           :
         view == 'general' ?
           <TopicCommon
@@ -470,7 +458,7 @@ class InfoView extends React.Component {
             onTopicTagsUpdate={this.props.onTopicTagsUpdate}
             onCredConfirm={this.props.onCredConfirm}
             onCredDelete={this.props.onCredDelete}
-            onUpdateTopicDesc={this.props.onUpdateTopicDesc}
+            onUpdateTopicDesc={this.props.onTopicDescUpdate}
             onUpdateTags={this.props.onUpdateTags}
             onError={this.props.onError} />
           :
@@ -483,6 +471,7 @@ class InfoView extends React.Component {
             onLeaveTopic={this.props.onLeaveTopic}
             onBlockTopic={this.props.onBlockTopic}
             onReportTopic={this.props.onReportTopic}
+            onLaunchPermissionsEditor={this.handleLaunchPermissionsEditor}
             onNavigate={this.props.onNavigate} />
           :
           <div id="info-view-content" className="scrollable-panel">
@@ -504,7 +493,8 @@ class InfoView extends React.Component {
                   <FormattedMessage id="label_topic_name" defaultMessage="Name"
                     description="Label for editing topic name" />
                 </label></div>
-                <div className="large ellipsized">{this.state.fullName}</div>
+                <div className="large ellipsized">{this.state.fullName}
+                {this.state.channel ? <img src="/img/channel.png" className="channel" alt="channel" /> : null}</div>
               </div>
               {this.state.private ?
                 <div className="group">
