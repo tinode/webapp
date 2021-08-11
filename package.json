@@ -1,7 +1,7 @@
 {
   "name": "tinode-webapp",
   "description": "Tinode messenger for the web",
-  "version": "0.17.7",
+  "version": "0.17.8",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinode/example-react-js.git"
@@ -52,7 +52,8 @@
     "ko",
     "ro",
     "ru",
-    "zh"
+    "zh",
+    "zh-TW"
   ],
   "main": "umd/index.prod.js",
   "bugs": {
@@ -67,7 +68,7 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-intl": "^5.20.2",
-    "tinode-sdk": "^0.17.7"
+    "tinode-sdk": "^0.17.8"
   },
   "devDependencies": {
     "@babel/core": "^7.14.5",
