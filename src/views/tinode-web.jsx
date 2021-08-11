@@ -1216,10 +1216,14 @@ class TinodeWeb extends React.Component {
       const params = {};
       let attachments;
       if (pub) {
-        params.public = pub;
-        if (pub.photo && pub.photo.ref) {
-          attachments = [pub.photo.ref];
+        if (pub.photo) {
+          if (pub.photo.ref && pub.photo.ref != Tinode.DEL_CHAR) {
+            attachments = [pub.photo.ref];
+          } else if (!pub.photo.data || pub.photo.data == Tinode.DEL_CHAR) {
+            pub.photo = Tinode.DEL_CHAR;
+          }
         }
+        params.public = pub;
       }
       if (priv) {
         params.private = (priv === Tinode.DEL_CHAR) ?

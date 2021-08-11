@@ -5744,11 +5744,15 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       let attachments;
 
       if (pub) {
-        params.public = pub;
-
-        if (pub.photo && pub.photo.ref) {
-          attachments = [pub.photo.ref];
+        if (pub.photo) {
+          if (pub.photo.ref && pub.photo.ref != (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().DEL_CHAR)) {
+            attachments = [pub.photo.ref];
+          } else if (!pub.photo.data || pub.photo.data == (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().DEL_CHAR)) {
+            pub.photo = (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().DEL_CHAR);
+          }
         }
+
+        params.public = pub;
       }
 
       if (priv) {
