@@ -175,5 +175,6 @@
   "channel": "canal",
   "drafty_attachment": "Archivo",
   "drafty_form": "Formulario:",
-  "drafty_image": "Imagen"
+  "drafty_image": "Imagen",
+  "topic_delete": "Eliminar chat"
 }
