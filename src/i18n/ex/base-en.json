@@ -677,8 +677,12 @@
     "defaultMessage": "Are you sure you want to block this conversation?",
     "description": "Alert warning when blocking a topic."
   },
+  "topic_delete": {
+    "defaultMessage": "Delete Conversation",
+    "description": "Alert title when deleting the topic."
+  },
   "topic_delete_warning": {
-    "defaultMessage": "Are you sure you want to delete this conversation?",
+    "defaultMessage": "Are you sure you want to delete this conversation? It cannot be undone.",
     "description": "Alert warning when deleting entire topic"
   },
   "topic_name_editing_placeholder": {
