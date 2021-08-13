@@ -61,6 +61,16 @@ const messages = defineMessages({
     defaultMessage: 'Are you sure you want to delete all messages for everyone? It cannot be undone.',
     description: 'Alert dialog warning when hard-deleting all messages.'
   },
+  topic_delete: {
+    id: 'topic_delete',
+    defaultMessage: 'Delete Conversation',
+    description: 'Alert title when deleting the topic.'
+  },
+  topic_delete_warning: {
+    id: 'topic_delete_warning',
+    defaultMessage: 'Are you sure you want to delete this conversation? It cannot be undone.',
+    description: 'Alert warning when deleting entire topic'
+  },
   leave_chat: {
     id: 'action_leave_chat',
     defaultMessage: 'Leave Conversation',
@@ -143,6 +153,7 @@ class InfoView extends React.Component {
     this.handleShowAddMembers = this.handleShowAddMembers.bind(this);
     this.handleHideAddMembers = this.handleHideAddMembers.bind(this);
     this.handleMemberUpdateRequest = this.handleMemberUpdateRequest.bind(this);
+    this.handleDeleteTopic = this.handleDeleteTopic.bind(this);
     this.handleDeleteMessages = this.handleDeleteMessages.bind(this);
     this.handleLeave = this.handleLeave.bind(this);
     this.handleBlock = this.handleBlock.bind(this);
@@ -420,6 +431,19 @@ class InfoView extends React.Component {
   handleMemberUpdateRequest(members, added, removed) {
     this.props.onMemberUpdateRequest(this.props.topic, added, removed);
     this.setState({showMemberPanel: false});
+  }
+
+  handleDeleteTopic(e) {
+    e.preventDefault();
+    const {formatMessage} = this.props.intl;
+    this.props.onShowAlert(
+      formatMessage(messages.topic_delete), // title
+      formatMessage(messages.topic_delete_warning), // content
+      (() => { this.props.onDeleteTopic(this.props.topic); }), // onConfirm
+      null, // "OK"
+      true, // Show Reject button
+      null  // "Cancel"
+    );
   }
 
   handleDeleteMessages(e) {
@@ -717,9 +741,15 @@ class InfoView extends React.Component {
                 :
                 null
               }
-              <a href="#" className="danger flat-button" onClick={this.handleLeave}>
-                <i className="material-icons">exit_to_app</i> &nbsp;{formatMessage(messages.leave_chat)}
-              </a>
+              {this.state.owner ?
+                <a href="#" className="danger flat-button" onClick={this.handleDeleteTopic}>
+                  <i className="material-icons">delete</i> &nbsp;{formatMessage(messages.topic_delete)}
+                </a>
+                :
+                <a href="#" className="danger flat-button" onClick={this.handleLeave}>
+                  <i className="material-icons">exit_to_app</i> &nbsp;{formatMessage(messages.leave_chat)}
+                </a>
+              }
               {!this.state.groupTopic ?
                 <a href="#" className="danger flat-button" onClick={this.handleBlock}>
                   <i className="material-icons">block</i> &nbsp;{formatMessage(messages.block_contact)}
