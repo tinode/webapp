@@ -1231,7 +1231,7 @@
   },
   "topic_delete_warning": {
     "translation": "Are you sure you want to delete this conversation?",
-    "defaultMessage": "Are you sure you want to delete this conversation?",
+    "defaultMessage": "Are you sure you want to delete this conversation? It cannot be undone.",
     "description": "Alert warning when deleting entire topic",
     "missing": false,
     "obsolete": false
@@ -1359,6 +1359,20 @@
     "translation": "Authenticated",
     "defaultMessage": "Authenticated",
     "description": "Title for editing default authenticated permissions",
+    "missing": false,
+    "obsolete": false
+  },
+  "topic_delete": {
+    "translation": "Delete Conversation",
+    "defaultMessage": "Delete Conversation",
+    "description": "Alert title when deleting the topic.",
+    "missing": false,
+    "obsolete": false
+  },
+  "permissions_user": {
+    "translation": "User's Permissions",
+    "defaultMessage": "User's Permissions",
+    "description": "Title for editing user's permissions",
     "missing": false,
     "obsolete": false
   }

@@ -67,7 +67,7 @@ class PermissionsEditor extends React.Component {
 
   handleChange(val) {
     let mode = this.state.mode;
-    let idx = mode.indexOf(val);
+    const idx = mode.indexOf(val);
     if (idx == -1) {
       mode += val;
     } else {
@@ -78,8 +78,8 @@ class PermissionsEditor extends React.Component {
 
   handleSubmit() {
     // Normalize string, otherwise cannot check if mode has changed.
-    var mode = (this.state.mode || 'N').split('').sort().join('');
-    var before = (this.props.mode || 'N').split('').sort().join('')
+    const mode = (this.state.mode || 'N').split('').sort().join('');
+    const before = (this.props.mode || 'N').split('').sort().join('')
     if (mode !== before) {
       this.props.onSubmit(mode);
     } else {

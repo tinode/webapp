@@ -124,6 +124,7 @@ class TinodeWeb extends React.Component {
     this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.handleDeleteAccount = this.handleDeleteAccount.bind(this);
+    this.handleDeleteTopicRequest = this.handleDeleteTopicRequest.bind(this);
     this.handleDeleteMessagesRequest = this.handleDeleteMessagesRequest.bind(this);
     this.handleLeaveUnsubRequest = this.handleLeaveUnsubRequest.bind(this);
     this.handleBlockTopicRequest = this.handleBlockTopicRequest.bind(this);
@@ -1225,10 +1226,14 @@ class TinodeWeb extends React.Component {
       const params = {};
       let attachments;
       if (pub) {
-        params.public = pub;
-        if (pub.photo && pub.photo.ref) {
-          attachments = [pub.photo.ref];
+        if (pub.photo) {
+          if (pub.photo.ref && pub.photo.ref != Tinode.DEL_CHAR) {
+            attachments = [pub.photo.ref];
+          } else if (!pub.photo.data || pub.photo.data == Tinode.DEL_CHAR) {
+            pub.photo = Tinode.DEL_CHAR;
+          }
         }
+        params.public = pub;
       }
       if (priv) {
         params.private = (priv === Tinode.DEL_CHAR) ?
@@ -1310,6 +1315,21 @@ class TinodeWeb extends React.Component {
   handleDeleteAccount() {
     this.tinode.delCurrentUser(true).then((ctrl) => {
       this.handleLogout();
+    });
+  }
+
+  handleDeleteTopicRequest(topicName) {
+    const topic = this.tinode.getTopic(topicName);
+    if (!topic) {
+      return;
+    }
+
+    // Request to hard-delete topic.
+    topic.delTopic(true).then((ctrl) => {
+      // Hide MessagesView and InfoView panels.
+      HashNavigation.navigateTo(HashNavigation.setUrlTopic(window.location.hash, ''));
+    }).catch((err) => {
+      this.handleError(err.message, 'err');
     });
   }
 
@@ -1678,6 +1698,7 @@ class TinodeWeb extends React.Component {
             onShowAlert={this.handleShowAlert}
             onChangePermissions={this.handleChangePermissions}
             onMemberUpdateRequest={this.handleMemberUpdateRequest}
+            onDeleteTopic={this.handleDeleteTopicRequest}
             onDeleteMessages={this.handleDeleteMessagesRequest}
             onLeaveTopic={this.handleLeaveUnsubRequest}
             onBlockTopic={this.handleBlockTopicRequest}
