@@ -569,6 +569,10 @@
     "defaultMessage": "Authenticated",
     "description": "Title for editing default authenticated permissions"
   },
+  "permissions_user": {
+    "defaultMessage": "User's Permissions",
+    "description": "Title for editing user's permissions"
+  },
   "phone_dative": {
     "defaultMessage": "phone",
     "description": "Dative case of 'phone', i.e. 'phone' in 'by phone'"

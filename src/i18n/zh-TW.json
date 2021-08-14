@@ -1360,5 +1360,12 @@
     "description": "Alert title when deleting the topic.",
     "missing": false,
     "obsolete": false
+  },
+  "permissions_user": {
+    "translation": "",
+    "defaultMessage": "User's Permissions",
+    "description": "Title for editing user's permissions",
+    "missing": true,
+    "obsolete": false
   }
 }

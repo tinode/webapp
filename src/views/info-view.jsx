@@ -66,6 +66,11 @@ const messages = defineMessages({
     defaultMessage: 'Anonymous',
     description: 'Title for editing default anonymous permissions'
   },
+  perm_user: {
+    id: 'permissions_user',
+    defaultMessage: 'User\'s Permissions',
+    description: 'Title for editing user\'s permissions'
+  },
   edit_permissions: {
     id: 'menu_item_edit_permissions',
     defaultMessage: 'Edit permissions',
@@ -252,6 +257,7 @@ class InfoView extends React.Component {
   }
 
   handlePermissionsChanged(which, perm) {
+    console.log("handlePermissionsChanged", which, perm);
     switch (which) {
       case 'auth':
         this.props.onTopicDescUpdate(this.props.topic, null, null, {auth: perm});
@@ -407,6 +413,7 @@ class InfoView extends React.Component {
 
   render() {
     const args = (this.props.panel || 'info').split('/');
+    console.log("args:", args);
     const view = args[0];
     args.shift();
 
@@ -449,7 +456,7 @@ class InfoView extends React.Component {
             userTitle={this.state.userPermissionsTitle}
             item={this.state.userPermissionsEdited}
             userAvatar={this.state.userPermissionsAvatar}
-            onSubmit={this.handlePermissionsChanged.bind(...args)}
+            onSubmit={(mode) => this.handlePermissionsChanged(args[0], mode)}
             onCancel={this.handleBackNavigate} />
           :
         view == 'general' ?
