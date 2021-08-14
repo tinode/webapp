@@ -1,6 +1,6 @@
 // Single message, sent or received.
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { Drafty } from 'tinode-sdk';
 
 import Attachment from './attachment.jsx';
@@ -9,7 +9,7 @@ import ReceivedMarker from './received-marker.jsx'
 import UploadingImage from './uploading-image.jsx'
 import { sanitizeImageUrl, sanitizeUrl } from '../lib/utils.js';
 
-export default class ChatMessage extends React.Component {
+class ChatMessage extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -25,6 +25,8 @@ export default class ChatMessage extends React.Component {
     this.handleFormButtonClick = this.handleFormButtonClick.bind(this);
     this.handleContextClick = this.handleContextClick.bind(this);
     this.handleCancelUpload = this.handleCancelUpload.bind(this);
+
+    this.handleQuoteClick = this.handleQuoteClick.bind(this);
   }
 
   handleImagePreview(e) {
@@ -60,8 +62,12 @@ export default class ChatMessage extends React.Component {
     e.preventDefault();
     e.stopPropagation();
     const menuItems = this.props.received == Tinode.MESSAGE_STATUS_FAILED ? ['menu_item_send_retry'] : [];
+    if (this.props.received >= Tinode.MESSAGE_STATUS_FAILED &&
+        this.props.received < Tinode.MESSAGE_STATUS_DEL_RANGE) {
+      menuItems.push('menu_item_reply');
+    }
     this.props.showContextMenu({ seq: this.props.seq, content: this.props.content,
-                                 y: e.pageY, x: e.pageX }, menuItems);
+                                 y: e.pageY, x: e.pageX, pickReply: this.props.pickReply }, menuItems);
   }
 
   handleProgress(ratio) {
@@ -72,6 +78,13 @@ export default class ChatMessage extends React.Component {
     this.props.onCancelUpload(this.props.seq, this.props.uploader);
   }
 
+  handleQuoteClick(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const replyToSeq = this.props.replyToSeq;
+    this.props.onQuoteClick(replyToSeq);
+  }
+
   render() {
     const sideClass = this.props.deleted ? 'center' :
       (this.props.sequence + ' ' + (this.props.response ? 'left' : 'right'));
@@ -80,6 +93,7 @@ export default class ChatMessage extends React.Component {
     const fullDisplay = (this.props.userFrom && this.props.response && !this.props.deleted &&
       (this.props.sequence == 'single' || this.props.sequence == 'last'));
 
+    const msgId = 'msg-' + this.props.seq;
     let content = this.props.content;
     const attachments = [];
     if (this.props.mimeType == Drafty.getContentType() && Drafty.isValid(content)) {
@@ -99,7 +113,17 @@ export default class ChatMessage extends React.Component {
           onError={this.props.onError}
           key={i} />);
       }, this);
-      content = React.createElement(React.Fragment, null, Drafty.format(content, draftyFormatter, this));
+
+      let qte = [];
+      if (content.qte) {
+        qte = Drafty.format(content.qte, this.props.onFormatQuote, this);
+        // Append a line break.
+        const lf = Drafty.appendLineBreak(null);
+        qte = qte.concat(Drafty.format(lf, draftyFormatter, this, qte.length));
+      }
+      let tree = Drafty.format(content, draftyFormatter, this, qte.length);
+      tree = qte.concat(tree);
+      content = React.createElement(React.Fragment, null, tree);
     } else if (this.props.deleted) {
       // Message represents a range of deleted messages.
       content = <><i className="material-icons gray">block</i> <i className="gray">
@@ -115,7 +139,7 @@ export default class ChatMessage extends React.Component {
     }
 
     return (
-      <li className={sideClass}>
+      <li id={msgId} className={sideClass}>
         {this.props.userFrom && this.props.response ?
           <div className="avatar-box">
             {fullDisplay ?
@@ -234,6 +258,18 @@ function draftyFormatter(style, data, values, key) {
       case 'RW':
         // Form element formatting is dependent on element content.
         break;
+      case 'QQ':
+        // Quote/citation.
+        attr.className = 'reply-quote'
+        attr.onClick = this.handleQuoteClick;
+        break;
+      case 'QH':
+        // Quote header.
+        attr.className = 'reply-quote-header';
+        break;
+      case 'QB':
+        // Quote body.
+        break;
       default:
         if (el == '_UNKN') {
           // Unknown element.
@@ -247,3 +283,5 @@ function draftyFormatter(style, data, values, key) {
     return values;
   }
 };
+
+export default injectIntl(ChatMessage);

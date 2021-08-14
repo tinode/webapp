@@ -1361,7 +1361,7 @@ img.channel {
   flex: none;
   padding: 0.4rem 0.4rem 0.4rem 0.6rem;
   background-color: #eceff1;
-  box-shadow: 0px -2px 3px -1px rgba(0,0,0,0.1); /* Faint shadow above panel */
+  /* box-shadow: 0px -2px 3px -1px rgba(0,0,0,0.1); */ /* Faint shadow above panel */
   z-index: 2;
   height: 4rem;
 }
@@ -1370,6 +1370,12 @@ img.channel {
   width: 100%;
   text-align: center;
   font-size: 1.2rem;
+}
+
+#send-message-wrapper {
+  background-color: #eceff1;
+  box-shadow: 0px -2px 3px -1px rgba(0,0,0,0.1); /* Faint shadow above panel */
+  z-index: 2;
 }
 
 #sendMessage {
@@ -1509,6 +1515,7 @@ img.channel {
   margin: 0;
   padding: 0;
   align-items: flex-end;
+  transition: background-color 1s ease-out;
 }
 
 .chat-box .right {
@@ -2327,3 +2334,26 @@ ul.tabbar li.active > a {
 .cropper .zoom:focus {
   outline: none;
 }
+
+/* Blue quote bar left of the quoted (cited) text */
+.reply-quote {
+  position: relative;
+  cursor: pointer;
+  padding-left: 1em;
+  border-left: solid #039be5;
+  line-height: 1.5em;
+  font-weight: 100;
+  margin-left: 0.2em;
+  display: flex;
+  flex-direction: column;
+}
+
+.reply-quote-header {
+  color: #039be5;
+}
+
+.reply-quote-preview {
+  display: flex;
+  align-items: center;
+}
+

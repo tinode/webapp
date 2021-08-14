@@ -899,12 +899,21 @@ class TinodeWeb extends React.Component {
   //  - msg - Drafty message with content
   //  - promise - Promise to be resolved when the upload is completed
   //  - uploader - for tracking progress
-  handleSendMessage(msg, promise, uploader) {
+  handleSendMessage(msg, promise, uploader, head) {
     const topic = this.tinode.getTopic(this.state.topicSelected);
 
     msg = topic.createMessage(msg, false);
     // The uploader is used to show progress.
     msg._uploader = uploader;
+
+    if (head) {
+      if (!msg.hasOwnProperty('head')) {
+        msg.head = {};
+      }
+      for (const [key, value] of Object.entries(head)) {
+        msg.head[key] = value;
+      }
+    }
 
     if (!topic.isSubscribed()) {
       if (!promise) {
@@ -1627,6 +1636,8 @@ class TinodeWeb extends React.Component {
             (this.state.mobilePanel !== 'topic-view' || this.state.infoPanel)}
           topic={this.state.topicSelected}
           myUserId={this.state.myUserId}
+          // User public.fn.
+          myUserName={this.state.sidePanelTitle}
           serverVersion={this.state.serverVersion}
           serverAddress={this.state.serverAddress}
           applicationVisible={this.state.applicationVisible}

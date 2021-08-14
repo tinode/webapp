@@ -760,6 +760,13 @@
     "missing": false,
     "obsolete": false
   },
+  "menu_item_reply": {
+    "translation": "Reply",
+    "defaultMessage": "Reply",
+    "description": "Reply to message",
+    "missing": false,
+    "obsolete": false
+  },
   "menu_item_restore_topic": {
     "translation": "Restore",
     "defaultMessage": "Restore",
