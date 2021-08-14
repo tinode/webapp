@@ -1224,7 +1224,7 @@
   },
   "topic_delete_warning": {
     "translation": "이대화를삭제하시겠습니까?",
-    "defaultMessage": "Are you sure you want to delete this conversation?",
+    "defaultMessage": "Are you sure you want to delete this conversation? It cannot be undone.",
     "description": "Alert warning when deleting entire topic",
     "missing": false,
     "obsolete": false
@@ -1363,6 +1363,13 @@
     "defaultMessage": "Authenticated",
     "description": "Title for editing default authenticated permissions",
     "missing": true,
+    "obsolete": false
+  },
+  "topic_delete": {
+    "translation": "채팅 삭제",
+    "defaultMessage": "Delete Conversation",
+    "description": "Alert title when deleting the topic.",
+    "missing": false,
     "obsolete": false
   }
 }

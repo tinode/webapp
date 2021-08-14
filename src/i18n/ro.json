@@ -1224,7 +1224,7 @@
   },
   "topic_delete_warning": {
     "translation": "Ești sigur că dorești să șterge această conversație?",
-    "defaultMessage": "Are you sure you want to delete this conversation?",
+    "defaultMessage": "Are you sure you want to delete this conversation? It cannot be undone.",
     "description": "Alert warning when deleting entire topic",
     "missing": false,
     "obsolete": false
@@ -1353,6 +1353,13 @@
     "defaultMessage": "Authenticated",
     "description": "Title for editing default authenticated permissions",
     "missing": true,
+    "obsolete": false
+  },
+  "topic_delete": {
+    "translation": "Ștergeți Chat",
+    "defaultMessage": "Delete Conversation",
+    "description": "Alert title when deleting the topic.",
+    "missing": false,
     "obsolete": false
   }
 }

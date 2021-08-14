@@ -124,6 +124,7 @@ class TinodeWeb extends React.Component {
     this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.handleDeleteAccount = this.handleDeleteAccount.bind(this);
+    this.handleDeleteTopicRequest = this.handleDeleteTopicRequest.bind(this);
     this.handleDeleteMessagesRequest = this.handleDeleteMessagesRequest.bind(this);
     this.handleLeaveUnsubRequest = this.handleLeaveUnsubRequest.bind(this);
     this.handleBlockTopicRequest = this.handleBlockTopicRequest.bind(this);
@@ -1308,6 +1309,21 @@ class TinodeWeb extends React.Component {
     });
   }
 
+  handleDeleteTopicRequest(topicName) {
+    const topic = this.tinode.getTopic(topicName);
+    if (!topic) {
+      return;
+    }
+
+    // Request to hard-delete topic.
+    topic.delTopic(true).then((ctrl) => {
+      // Hide MessagesView and InfoView panels.
+      HashNavigation.navigateTo(HashNavigation.setUrlTopic(window.location.hash, ''));
+    }).catch((err) => {
+      this.handleError(err.message, 'err');
+    });
+  }
+
   handleDeleteMessagesRequest(topicName) {
     const topic = this.tinode.getTopic(topicName);
     if (!topic) {
@@ -1671,6 +1687,7 @@ class TinodeWeb extends React.Component {
             onShowAlert={this.handleShowAlert}
             onChangePermissions={this.handleChangePermissions}
             onMemberUpdateRequest={this.handleMemberUpdateRequest}
+            onDeleteTopic={this.handleDeleteTopicRequest}
             onDeleteMessages={this.handleDeleteMessagesRequest}
             onLeaveTopic={this.handleLeaveUnsubRequest}
             onBlockTopic={this.handleBlockTopicRequest}

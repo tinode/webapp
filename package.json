@@ -54,7 +54,8 @@
     "ko",
     "ro",
     "ru",
-    "zh"
+    "zh",
+    "zh-TW"
   ],
   "main": "umd/index.prod.js",
   "bugs": {
@@ -65,9 +66,9 @@
   "author": "Tinode Authors <info@tinode.co>",
   "license": "Apache-2.0",
   "dependencies": {
-    "firebase": "^8.7.1",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
+    "firebase": "^8.9.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "react-intl": "^5.20.2",
     "tinode-sdk": "^0.18.0-alpha1"
   },
