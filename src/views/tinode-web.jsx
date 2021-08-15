@@ -565,8 +565,9 @@ class TinodeWeb extends React.Component {
     cred = Tinode.credential(cred);
     // Try to login with login/password. If they are not available, try token. If no token, ask for login/password.
     let promise = null;
-    const token = this.tinode.getAuthToken();
+    let token = this.tinode.getAuthToken();
     if (login && password) {
+      token = null;
       this.setState({password: null});
       promise = this.tinode.loginBasic(login, password, cred);
     } else if (token) {
@@ -594,7 +595,9 @@ class TinodeWeb extends React.Component {
           autoLogin: false
         });
         this.handleError(err.message, 'err');
-        localStorage.removeItem('auth-token');
+        if (token) {
+          this.handleLogout();
+        }
         HashNavigation.navigateTo('');
       });
     } else {

@@ -5079,9 +5079,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
     cred = tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().credential(cred);
     let promise = null;
-    const token = this.tinode.getAuthToken();
+    let token = this.tinode.getAuthToken();
 
     if (login && password) {
+      token = null;
       this.setState({
         password: null
       });
@@ -5114,7 +5115,11 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           autoLogin: false
         });
         this.handleError(err.message, 'err');
-        localStorage.removeItem('auth-token');
+
+        if (token) {
+          this.handleLogout();
+        }
+
         _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo('');
       });
     } else {
