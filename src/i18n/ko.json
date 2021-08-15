@@ -1378,5 +1378,12 @@
     "description": "Title for editing user's permissions",
     "missing": true,
     "obsolete": false
+  },
+  "menu_item_reply": {
+    "translation": "",
+    "defaultMessage": "Reply",
+    "description": "Reply to message",
+    "missing": true,
+    "obsolete": false
   }
 }

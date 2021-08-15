@@ -437,6 +437,10 @@
     "defaultMessage": "Mute",
     "description": "Turn off notifications"
   },
+  "menu_item_reply": {
+    "defaultMessage": "Reply",
+    "description": "Reply to message"
+  },
   "menu_item_restore_topic": {
     "defaultMessage": "Restore",
     "description": "Restore topic from archive"
