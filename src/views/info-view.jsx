@@ -396,14 +396,19 @@ class InfoView extends React.Component {
       return;
     }
 
+    const isMe = this.props.tinode.isMe(params.topicName);
     const menuItems = [
       {title: formatMessage(messages.edit_permissions), handler: () => {
-        this.handleLaunchPermissionsEditor('user', params.topicName);
-      }},
-      'member_delete',
-      user.acs.isMuted() ? 'member_unmute' : 'member_mute',
-      user.acs.isJoiner() ? 'member_block' : 'member_unblock'
+        this.handleLaunchPermissionsEditor(isMe ? 'want' : 'user', params.topicName);
+      }}
     ];
+    if (!isMe) {
+      menuItems.push('member_delete');
+    }
+    menuItems.push(user.acs.isMuted() ? 'member_unmute' : 'member_mute');
+    if (!isMe) {
+      menuItems.push(user.acs.isJoiner() ? 'member_block' : 'member_unblock');
+    }
     this.props.showContextMenu({
       topicName: this.props.topic,
       x: params.x,
@@ -413,7 +418,6 @@ class InfoView extends React.Component {
 
   render() {
     const args = (this.props.panel || 'info').split('/');
-    console.log("args:", args);
     const view = args[0];
     args.shift();
 
@@ -533,17 +537,15 @@ class InfoView extends React.Component {
                 </div> : null}
             </div>
             <div className="hr" />
-            <div className="panel-form-column">
-              <div className="panel-form-row">
-                <label>
-                  <FormattedMessage id="label_muting_topic" defaultMessage="Muted:"
-                    description="Label for Muting/unmuting the topic" />
-                </label>
-                <CheckBox name="P" checked={this.state.muted} onChange={this.handleMuted} />
-              </div>
+            <div className="panel-form-row">
+              <label>
+                <FormattedMessage id="label_muting_topic" defaultMessage="Muted:"
+                  description="Label for Muting/unmuting the topic" />
+              </label>
+              <CheckBox name="P" checked={this.state.muted} onChange={this.handleMuted} />
             </div>
             <div className="hr" />
-            <div className="panel-form-column">
+            <div className="panel-form-row">
               <a href="#" className="flat-button" onClick={(e) => {e.preventDefault(); this.props.onNavigate('security');}}>
                 <i className="material-icons">security</i>&nbsp;<FormattedMessage id="button_security"
                   defaultMessage="Security" description="Navigaton button for security panel." />
@@ -552,36 +554,34 @@ class InfoView extends React.Component {
             {this.state.groupTopic && this.state.sharer ?
               <>
                 <div className="hr" />
-                <div className="panel-form-column">
-                  <div className="panel-form-row">
-                    <label className="small">
-                      <FormattedMessage id="label_group_members" defaultMessage="Group members:"
-                        description="Section title or label" />
-                    </label>
-                  </div>
-                  <div className="panel-form-row">
-                    <a href="#" className="flat-button" onClick={this.handleShowAddMembers}>
-                      <i className="material-icons">person_add</i> &nbsp;<FormattedMessage id="button_add_members"
-                        defaultMessage="Add members" description="Flat button [Add members] (to topic)" />
-                    </a>
-                  </div>
-                  <FormattedMessage id="group_has_no_members" defaultMessage="No members"
-                    description="Shown in place of group members">{
-                    (no_members) => <ContactList
-                      tinode={this.props.tinode}
-                      contacts={this.state.contactList}
-                      myUserId={this.props.myUserId}
-                      emptyListMessage={no_members}
-                      topicSelected={this.state.selectedContact}
-                      showOnline={false}
-                      showUnread={false}
-                      showMode={true}
-                      noScroll={true}
-                      onTopicSelected={this.handleMemberSelected}
-                      showContextMenu={this.state.admin ? this.handleContextMenu : false}
-                    />
-                  }</FormattedMessage>
+                <div className="panel-form-row">
+                  <label className="small">
+                    <FormattedMessage id="label_group_members" defaultMessage="Group members:"
+                      description="Section title or label" />
+                  </label>
                 </div>
+                <div className="panel-form-row">
+                  <a href="#" className="flat-button" onClick={this.handleShowAddMembers}>
+                    <i className="material-icons">person_add</i> &nbsp;<FormattedMessage id="button_add_members"
+                      defaultMessage="Add members" description="Flat button [Add members] (to topic)" />
+                  </a>
+                </div>
+                <FormattedMessage id="group_has_no_members" defaultMessage="No members"
+                  description="Shown in place of group members">{
+                  (no_members) => <ContactList
+                    tinode={this.props.tinode}
+                    contacts={this.state.contactList}
+                    myUserId={this.props.myUserId}
+                    emptyListMessage={no_members}
+                    topicSelected={this.state.selectedContact}
+                    showOnline={false}
+                    showUnread={false}
+                    showMode={true}
+                    noScroll={true}
+                    onTopicSelected={this.handleMemberSelected}
+                    showContextMenu={this.state.admin ? this.handleContextMenu : false}
+                  />
+                }</FormattedMessage>
               </>
               :
               null

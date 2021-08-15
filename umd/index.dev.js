@@ -2200,12 +2200,24 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       return;
     }
 
+    const isMe = this.props.tinode.isMe(params.topicName);
     const menuItems = [{
       title: formatMessage(messages.edit_permissions),
       handler: () => {
-        this.handleLaunchPermissionsEditor('user', params.topicName);
+        this.handleLaunchPermissionsEditor(isMe ? 'want' : 'user', params.topicName);
       }
-    }, 'member_delete', user.acs.isMuted() ? 'member_unmute' : 'member_mute', user.acs.isJoiner() ? 'member_block' : 'member_unblock'];
+    }];
+
+    if (!isMe) {
+      menuItems.push('member_delete');
+    }
+
+    menuItems.push(user.acs.isMuted() ? 'member_unmute' : 'member_mute');
+
+    if (!isMe) {
+      menuItems.push(user.acs.isJoiner() ? 'member_block' : 'member_unblock');
+    }
+
     this.props.showContextMenu({
       topicName: this.props.topic,
       x: params.x,
@@ -2216,7 +2228,6 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
 
   render() {
     const args = (this.props.panel || 'info').split('/');
-    console.log("args:", args);
     const view = args[0];
     args.shift();
     const {
@@ -2359,8 +2370,6 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.state.description)) : null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "hr"
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_muting_topic",
@@ -2372,10 +2381,10 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       name: "P",
       checked: this.state.muted,
       onChange: this.handleMuted
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "hr"
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-column"
+      className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       className: "flat-button",
@@ -2394,8 +2403,6 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
     }))), this.state.groupTopic && this.state.sharer ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "hr"
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "small"
@@ -2437,7 +2444,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       noScroll: true,
       onTopicSelected: this.handleMemberSelected,
       showContextMenu: this.state.admin ? this.handleContextMenu : false
-    })))) : null));
+    }))) : null));
   }
 
 }
@@ -5072,9 +5079,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
     cred = tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().credential(cred);
     let promise = null;
-    const token = this.tinode.getAuthToken();
+    let token = this.tinode.getAuthToken();
 
     if (login && password) {
+      token = null;
       this.setState({
         password: null
       });
@@ -5107,7 +5115,11 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           autoLogin: false
         });
         this.handleError(err.message, 'err');
-        localStorage.removeItem('auth-token');
+
+        if (token) {
+          this.handleLogout();
+        }
+
         _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo('');
       });
     } else {
@@ -10377,7 +10389,6 @@ class PermissionsEditor extends (react__WEBPACK_IMPORTED_MODULE_0___default().Co
   handleSubmit() {
     const mode = (this.state.mode || 'N').split('').sort().join('');
     const before = (this.props.mode || 'N').split('').sort().join('');
-    console.log("permissions editor", mode, before);
 
     if (mode !== before) {
       this.props.onSubmit(mode);
