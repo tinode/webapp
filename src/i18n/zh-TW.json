@@ -175,5 +175,6 @@
   "update_available": "有可用的更新。",
   "upload_finishing": "正在完成...",
   "user_not_found": "找不到",
-  "validate_credential_action": "確認"
+  "validate_credential_action": "確認",
+  "topic_delete": "刪除聊天"
 }

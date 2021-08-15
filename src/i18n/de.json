@@ -175,5 +175,6 @@
   "channel": "Sender",
   "drafty_attachment": "Dateianhang",
   "drafty_form": "Formular:",
-  "drafty_image": "Bild"
+  "drafty_image": "Bild",
+  "topic_delete": "Chat löschen"
 }

@@ -59,7 +59,7 @@ const messages = defineMessages({
   },
   topic_delete_warning: {
     id: 'topic_delete_warning',
-    defaultMessage: 'Are you sure you want to delete this conversation?',
+    defaultMessage: 'Are you sure you want to delete this conversation? It cannot be undone.',
     description: 'Alert warning when deleting entire topic'
   },
   delete_messages_warning: {
