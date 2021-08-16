@@ -92,8 +92,10 @@ export default class ChatMessage extends React.Component {
         attachments.push(<Attachment
           tinode={this.props.tinode}
           downloadUrl={Drafty.getDownloadUrl(att)}
-          filename={att.name} uploading={Drafty.isProcessing(att)}
-          mimetype={att.mime} size={Drafty.getEntitySize(att)}
+          filename={att.name}
+          uploading={Drafty.isProcessing(att)}
+          mimetype={att.mime}
+          size={Drafty.getEntitySize(att)}
           progress={this.state.progress}
           onCancelUpload={this.handleCancelUpload}
           onError={this.props.onError}

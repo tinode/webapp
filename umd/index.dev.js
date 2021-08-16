@@ -2781,7 +2781,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.handleScrollEvent = this.handleScrollEvent.bind(this);
     this.handleDescChange = this.handleDescChange.bind(this);
     this.handleSubsUpdated = this.handleSubsUpdated.bind(this);
-    this.handleNewMessage = this.handleNewMessage.bind(this);
+    this.handleMessageUpdate = this.handleMessageUpdate.bind(this);
     this.handleAllMessagesReceived = this.handleAllMessagesReceived.bind(this);
     this.handleInfoReceipt = this.handleInfoReceipt.bind(this);
     this.handleImagePostview = this.handleImagePostview.bind(this);
@@ -2816,7 +2816,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
   componentDidUpdate(prevProps, prevState) {
     if (this.messagesScroller) {
-      if (prevState.topic != this.state.topic || prevState.messages.length != this.state.messages.length) {
+      if (prevState.topic != this.state.topic || prevState.latestMsgSeq != this.state.latestMsgSeq) {
         this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition;
       } else if (prevProps.viewportHeight > this.props.viewportHeight) {
         this.messagesScroller.scrollTop += prevProps.viewportHeight - this.props.viewportHeight;
@@ -2831,7 +2831,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       }
 
       if (topic) {
-        topic.onData = this.handleNewMessage;
+        topic.onData = this.handleMessageUpdate;
         topic.onAllMessagesReceived = this.handleAllMessagesReceived;
         topic.onInfo = this.handleInfoReceipt;
         topic.onMetaDesc = this.handleDescChange;
@@ -2896,7 +2896,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
     if (!nextProps.topic) {
       nextState = {
-        messages: [],
+        latestMsgSeq: -1,
+        latestClearId: -1,
         onlineSubs: [],
         topic: null,
         title: '',
@@ -2926,7 +2927,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       };
 
       if (topic) {
-        const msgs = [];
         const subs = [];
 
         if (nextProps.connected) {
@@ -2937,13 +2937,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           });
         }
 
-        topic.messages(function (msg) {
-          if (!msg.deleted) {
-            msgs.push(msg);
-          }
-        });
         Object.assign(nextState, {
-          messages: msgs,
           onlineSubs: subs
         });
 
@@ -2972,11 +2966,14 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         }
 
         Object.assign(nextState, {
+          latestMsgSeq: topic.maxMsgSeq(),
+          latestClearId: topic.maxClearId(),
           channel: topic.isChannelType()
         });
       } else {
         Object.assign(nextState, {
-          messages: [],
+          latestMsgSeq: -1,
+          latestClearId: -1,
           onlineSubs: [],
           title: '',
           avatar: null,
@@ -3200,32 +3197,33 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
   }
 
-  handleNewMessage(msg) {
+  handleMessageUpdate(msg) {
     const topic = this.props.tinode.getTopic(this.state.topic);
-    const newState = {
-      messages: []
-    };
-    topic.messages(m => {
-      if (!m.deleted) {
-        newState.messages.push(m);
-      }
-    });
 
-    if (msg && !msg.deleted) {
-      if (topic.isNewMessage(msg.seq)) {
-        newState.scrollPosition = 0;
-      }
-
-      const status = topic.msgStatus(msg, true);
-
-      if (status >= (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().MESSAGE_STATUS_SENT) && msg.from != this.props.myUserId) {
-        this.postReadNotification(msg.seq);
-      }
-
-      this.props.onData(msg);
+    if (!msg) {
+      this.setState({
+        latestClearId: topic.maxClearId()
+      });
+      return;
     }
 
-    this.setState(newState);
+    this.setState({
+      latestMsgSeq: topic.maxMsgSeq()
+    });
+
+    if (topic.isNewMessage(msg.seq)) {
+      this.setState({
+        scrollPosition: 0
+      });
+    }
+
+    const status = topic.msgStatus(msg, true);
+
+    if (status >= (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().MESSAGE_STATUS_SENT) && msg.from != this.props.myUserId) {
+      this.postReadNotification(msg.seq);
+    }
+
+    this.props.onData(msg);
   }
 
   handleAllMessagesReceived(count) {
@@ -3485,7 +3483,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
 
   handleCancelUpload(seq, uploader) {
-    const found = this.state.messages.find(msg => msg.seq == seq);
+    const topic = this.props.tinode.getTopic(this.state.topic);
+    const found = topic.findMessage(seq);
 
     if (found) {
       found._cancelled = true;
@@ -3559,15 +3558,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         let messageNodes = [];
         let previousFrom = null;
         let chatBoxClass = null;
-
-        for (let i = 0; i < this.state.messages.length; i++) {
-          let msg = this.state.messages[i];
-          let nextFrom = null;
-
-          if (i + 1 < this.state.messages.length) {
-            nextFrom = this.state.messages[i + 1].from || 'chan';
-          }
-
+        topic.messages((msg, prev, next, i) => {
+          let nextFrom = next ? next.from || null : 'chan';
           let sequence = 'single';
           let thisFrom = msg.from || 'chan';
 
@@ -3622,8 +3614,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             onCancelUpload: this.handleCancelUpload,
             key: msg.seq
           }));
-        }
-
+        });
         let lastSeen = null;
 
         if (isChannel) {
