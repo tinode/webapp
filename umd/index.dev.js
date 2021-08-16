@@ -3441,7 +3441,9 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
           if (topic && topic.isSubscribed() && topic.msgHasMoreMessages()) {
             newState.fetchingMessages = true;
-            topic.getMessagesPage(_config_js__WEBPACK_IMPORTED_MODULE_13__.MESSAGES_PAGE).catch(err => {
+            topic.getMessagesPage(_config_js__WEBPACK_IMPORTED_MODULE_13__.MESSAGES_PAGE).then(() => this.setState({
+              fetchingMessages: false
+            })).catch(err => {
               this.setState({
                 fetchingMessages: false
               });

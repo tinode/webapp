@@ -372,10 +372,12 @@ class MessagesView extends React.Component {
           const topic = this.props.tinode.getTopic(this.state.topic);
           if (topic && topic.isSubscribed() && topic.msgHasMoreMessages()) {
             newState.fetchingMessages = true;
-            topic.getMessagesPage(MESSAGES_PAGE).catch((err) => {
-              this.setState({fetchingMessages: false});
-              this.props.onError(err.message, 'err');
-            });
+            topic.getMessagesPage(MESSAGES_PAGE)
+              .then(() => this.setState({fetchingMessages: false}))
+              .catch((err) => {
+                this.setState({fetchingMessages: false});
+                this.props.onError(err.message, 'err');
+              });
           }
         }
         return newState;
