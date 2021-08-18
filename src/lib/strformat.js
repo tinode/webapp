@@ -39,7 +39,7 @@ export function bytesToHumanSize(bytes) {
 
 // Get 32 bit integer hash value for a string. Ideally it should produce the same value
 // as Java's String#hash().
-export function stringHash(value) {
+function stringToColorHash(value) {
   let hash = 0;
   value = '' + value;
   for (let i = 0; i < value.length; i++) {
@@ -47,4 +47,9 @@ export function stringHash(value) {
     hash = hash & hash; // Convert to 32bit integer
   }
   return hash;
+}
+
+// Converts user or topic ID to a CSS color class. Ideally it should produce the same color value as Java version.
+export function idToColorClass(string, light) {
+  return (light ? 'light-color' : 'dark-color') + (Math.abs(stringToColorHash(string)) % 16);
 }
