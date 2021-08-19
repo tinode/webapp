@@ -91,6 +91,7 @@ class InfoView extends React.Component {
       owner: false,
       admin: false,
       sharer: false,
+      deleter: false,
       muted: false,
       address: null,
       groupTopic: undefined,
@@ -115,6 +116,7 @@ class InfoView extends React.Component {
 
     this.resetSubs = this.resetSubs.bind(this);
     this.resetDesc = this.resetDesc.bind(this);
+    this.resetTags = this.resetTags.bind(this);
     this.onMetaDesc = this.onMetaDesc.bind(this);
     this.onSubsUpdated = this.onSubsUpdated.bind(this);
     this.handleImageChanged = this.handleImageChanged.bind(this);
@@ -147,6 +149,7 @@ class InfoView extends React.Component {
       this.setState({topic: props.topic});
       this.resetDesc(topic, props);
       this.resetSubs(topic, props);
+      this.resetTags(topic);
     }
   }
 
@@ -199,6 +202,7 @@ class InfoView extends React.Component {
       owner: acs && acs.isOwner(),
       admin: acs && acs.isAdmin(),
       sharer: acs && acs.isSharer(),
+      deleter: acs && acs.isDeleter(),
       muted: acs && acs.isMuted(),
 
       fullName: _clip(topic.public ? topic.public.fn : undefined, MAX_TITLE_LENGTH),
@@ -215,8 +219,15 @@ class InfoView extends React.Component {
       auth: defacs.auth,
       anon: defacs.anon
     });
+  }
 
-    if (topic.getType() == 'grp' && acs && acs.isOwner()) {
+  resetTags(topic) {
+    if (topic.getType() != 'grp') {
+      return;
+    }
+
+    const acs = topic.getAccessMode();
+    if (acs && acs.isOwner()) {
       // Requesting tags: owner is editing the topic.
       topic.getMeta(topic.startMetaQuery().withTags().build());
     }
@@ -257,13 +268,12 @@ class InfoView extends React.Component {
   }
 
   handlePermissionsChanged(which, perm) {
-    console.log("handlePermissionsChanged", which, perm);
     switch (which) {
       case 'auth':
-        this.props.onTopicDescUpdate(this.props.topic, null, null, {auth: perm});
+        this.props.onTopicDescUpdateRequest(this.props.topic, null, null, {auth: perm});
         break;
       case 'anon':
-        this.props.onTopicDescUpdate(this.props.topic, null, null, {anon: perm});
+        this.props.onTopicDescUpdateRequest(this.props.topic, null, null, {anon: perm});
         break;
       case 'mode':
       case 'want':
@@ -276,10 +286,11 @@ class InfoView extends React.Component {
         this.props.onChangePermissions(this.props.topic, perm, this.state.userPermissionsEdited);
         break;
     }
+
+    this.handleBackNavigate();
   }
 
   handleLaunchPermissionsEditor(which, uid) {
-    console.log(which, uid);
     const {formatMessage} = this.props.intl;
     let toEdit, toCompare, toSkip, titleEdit, titleCompare, userTitle, userAvatar;
     switch (which) {
@@ -339,7 +350,7 @@ class InfoView extends React.Component {
         break;
       }
       default:
-        console.log("Unknown permission editing mode '" + which + "'");
+        console.error("Unknown permission editing mode '" + which + "'");
         return;
     }
     this.setState({
@@ -396,14 +407,19 @@ class InfoView extends React.Component {
       return;
     }
 
+    const isMe = this.props.tinode.isMe(params.topicName);
     const menuItems = [
       {title: formatMessage(messages.edit_permissions), handler: () => {
-        this.handleLaunchPermissionsEditor('user', params.topicName);
-      }},
-      'member_delete',
-      user.acs.isMuted() ? 'member_unmute' : 'member_mute',
-      user.acs.isJoiner() ? 'member_block' : 'member_unblock'
+        this.handleLaunchPermissionsEditor(isMe ? 'want' : 'user', params.topicName);
+      }}
     ];
+    if (!isMe) {
+      menuItems.push('member_delete');
+    }
+    menuItems.push(user.acs.isMuted() ? 'member_unmute' : 'member_mute');
+    if (!isMe) {
+      menuItems.push(user.acs.isJoiner() ? 'member_block' : 'member_unblock');
+    }
     this.props.showContextMenu({
       topicName: this.props.topic,
       x: params.x,
@@ -413,7 +429,6 @@ class InfoView extends React.Component {
 
   render() {
     const args = (this.props.panel || 'info').split('/');
-    console.log("args:", args);
     const view = args[0];
     args.shift();
 
@@ -464,17 +479,31 @@ class InfoView extends React.Component {
             tinode={this.props.tinode}
             topic={this.props.topic}
             onCredAdd={this.props.onCredAdd}
-            onTopicTagsUpdate={this.props.onTopicTagsUpdate}
+            onTopicTagsUpdateRequest={this.props.onTopicTagsUpdateRequest}
             onCredConfirm={this.props.onCredConfirm}
             onCredDelete={this.props.onCredDelete}
-            onUpdateTopicDesc={this.props.onTopicDescUpdate}
-            onUpdateTags={this.props.onUpdateTags}
+            onUpdateTopicDesc={this.props.onTopicDescUpdateRequest}
             onError={this.props.onError} />
           :
         view == 'security' ?
           <TopicSecurity
-            tinode={this.props.tinode}
             topic={this.props.topic}
+            owner={this.state.owner}
+            admin={this.state.admin}
+            sharer={this.state.sharer}
+            deleter={this.state.deleter}
+            muted={this.state.muted}
+
+            groupTopic={this.state.groupTopic}
+            channel={this.state.channel}
+            access={this.state.access}
+            modeGiven={this.state.modeGiven}
+            modeWant={this.state.modeWant}
+            modeGiven2={this.state.modeGiven2}
+            modeWant2={this.state.modeWant2}
+            auth={this.state.auth}
+            anon={this.state.anon}
+
             onShowAlert={this.props.onShowAlert}
             onDeleteMessages={this.props.onDeleteMessages}
             onLeaveTopic={this.props.onLeaveTopic}
@@ -533,17 +562,15 @@ class InfoView extends React.Component {
                 </div> : null}
             </div>
             <div className="hr" />
-            <div className="panel-form-column">
-              <div className="panel-form-row">
-                <label>
-                  <FormattedMessage id="label_muting_topic" defaultMessage="Muted:"
-                    description="Label for Muting/unmuting the topic" />
-                </label>
-                <CheckBox name="P" checked={this.state.muted} onChange={this.handleMuted} />
-              </div>
+            <div className="panel-form-row">
+              <label>
+                <FormattedMessage id="label_muting_topic" defaultMessage="Muted:"
+                  description="Label for Muting/unmuting the topic" />
+              </label>
+              <CheckBox name="P" checked={this.state.muted} onChange={this.handleMuted} />
             </div>
             <div className="hr" />
-            <div className="panel-form-column">
+            <div className="panel-form-row">
               <a href="#" className="flat-button" onClick={(e) => {e.preventDefault(); this.props.onNavigate('security');}}>
                 <i className="material-icons">security</i>&nbsp;<FormattedMessage id="button_security"
                   defaultMessage="Security" description="Navigaton button for security panel." />
@@ -552,36 +579,34 @@ class InfoView extends React.Component {
             {this.state.groupTopic && this.state.sharer ?
               <>
                 <div className="hr" />
-                <div className="panel-form-column">
-                  <div className="panel-form-row">
-                    <label className="small">
-                      <FormattedMessage id="label_group_members" defaultMessage="Group members:"
-                        description="Section title or label" />
-                    </label>
-                  </div>
-                  <div className="panel-form-row">
-                    <a href="#" className="flat-button" onClick={this.handleShowAddMembers}>
-                      <i className="material-icons">person_add</i> &nbsp;<FormattedMessage id="button_add_members"
-                        defaultMessage="Add members" description="Flat button [Add members] (to topic)" />
-                    </a>
-                  </div>
-                  <FormattedMessage id="group_has_no_members" defaultMessage="No members"
-                    description="Shown in place of group members">{
-                    (no_members) => <ContactList
-                      tinode={this.props.tinode}
-                      contacts={this.state.contactList}
-                      myUserId={this.props.myUserId}
-                      emptyListMessage={no_members}
-                      topicSelected={this.state.selectedContact}
-                      showOnline={false}
-                      showUnread={false}
-                      showMode={true}
-                      noScroll={true}
-                      onTopicSelected={this.handleMemberSelected}
-                      showContextMenu={this.state.admin ? this.handleContextMenu : false}
-                    />
-                  }</FormattedMessage>
+                <div className="panel-form-row">
+                  <label className="small">
+                    <FormattedMessage id="label_group_members" defaultMessage="Group members:"
+                      description="Section title or label" />
+                  </label>
                 </div>
+                <div className="panel-form-row">
+                  <a href="#" className="flat-button" onClick={this.handleShowAddMembers}>
+                    <i className="material-icons">person_add</i> &nbsp;<FormattedMessage id="button_add_members"
+                      defaultMessage="Add members" description="Flat button [Add members] (to topic)" />
+                  </a>
+                </div>
+                <FormattedMessage id="group_has_no_members" defaultMessage="No members"
+                  description="Shown in place of group members">{
+                  (no_members) => <ContactList
+                    tinode={this.props.tinode}
+                    contacts={this.state.contactList}
+                    myUserId={this.props.myUserId}
+                    emptyListMessage={no_members}
+                    topicSelected={this.state.selectedContact}
+                    showOnline={false}
+                    showUnread={false}
+                    showMode={true}
+                    noScroll={true}
+                    onTopicSelected={this.handleMemberSelected}
+                    showContextMenu={this.state.admin ? this.handleContextMenu : false}
+                  />
+                }</FormattedMessage>
               </>
               :
               null

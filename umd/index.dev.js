@@ -535,7 +535,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "shortDateFormat": () => (/* binding */ shortDateFormat),
 /* harmony export */   "secondsToTime": () => (/* binding */ secondsToTime),
 /* harmony export */   "bytesToHumanSize": () => (/* binding */ bytesToHumanSize),
-/* harmony export */   "stringHash": () => (/* binding */ stringHash)
+/* harmony export */   "idToColorClass": () => (/* binding */ idToColorClass)
 /* harmony export */ });
 function shortDateFormat(then, locale) {
   locale = locale || window.navigator.userLanguage || window.navigator.language;
@@ -582,7 +582,8 @@ function bytesToHumanSize(bytes) {
   const round = bucket > 0 ? count < 3 ? 2 : count < 30 ? 1 : 0 : 0;
   return count.toFixed(round) + ' ' + sizes[bucket];
 }
-function stringHash(value) {
+
+function stringToColorHash(value) {
   let hash = 0;
   value = '' + value;
 
@@ -592,6 +593,10 @@ function stringHash(value) {
   }
 
   return hash;
+}
+
+function idToColorClass(id, light, fg) {
+  return (light ? 'lt-' : 'dk-') + (fg ? 'fg-' : 'bg-') + Math.abs(stringToColorHash(id)) % 16;
 }
 
 /***/ }),
@@ -1876,6 +1881,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       owner: false,
       admin: false,
       sharer: false,
+      deleter: false,
       muted: false,
       address: null,
       groupTopic: undefined,
@@ -1899,6 +1905,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
     };
     this.resetSubs = this.resetSubs.bind(this);
     this.resetDesc = this.resetDesc.bind(this);
+    this.resetTags = this.resetTags.bind(this);
     this.onMetaDesc = this.onMetaDesc.bind(this);
     this.onSubsUpdated = this.onSubsUpdated.bind(this);
     this.handleImageChanged = this.handleImageChanged.bind(this);
@@ -1932,6 +1939,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       });
       this.resetDesc(topic, props);
       this.resetSubs(topic, props);
+      this.resetTags(topic);
     }
   }
 
@@ -1990,6 +1998,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       owner: acs && acs.isOwner(),
       admin: acs && acs.isAdmin(),
       sharer: acs && acs.isSharer(),
+      deleter: acs && acs.isDeleter(),
       muted: acs && acs.isMuted(),
       fullName: _clip(topic.public ? topic.public.fn : undefined, _config_js__WEBPACK_IMPORTED_MODULE_13__.MAX_TITLE_LENGTH),
       description: _clip(topic.public ? topic.public.note : undefined, _config_js__WEBPACK_IMPORTED_MODULE_13__.MAX_TOPIC_DESCRIPTION_LENGTH),
@@ -2005,8 +2014,16 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       auth: defacs.auth,
       anon: defacs.anon
     });
+  }
 
-    if (topic.getType() == 'grp' && acs && acs.isOwner()) {
+  resetTags(topic) {
+    if (topic.getType() != 'grp') {
+      return;
+    }
+
+    const acs = topic.getAccessMode();
+
+    if (acs && acs.isOwner()) {
       topic.getMeta(topic.startMetaQuery().withTags().build());
     }
   }
@@ -2054,17 +2071,15 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
   }
 
   handlePermissionsChanged(which, perm) {
-    console.log("handlePermissionsChanged", which, perm);
-
     switch (which) {
       case 'auth':
-        this.props.onTopicDescUpdate(this.props.topic, null, null, {
+        this.props.onTopicDescUpdateRequest(this.props.topic, null, null, {
           auth: perm
         });
         break;
 
       case 'anon':
-        this.props.onTopicDescUpdate(this.props.topic, null, null, {
+        this.props.onTopicDescUpdateRequest(this.props.topic, null, null, {
           anon: perm
         });
         break;
@@ -2082,10 +2097,11 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
         this.props.onChangePermissions(this.props.topic, perm, this.state.userPermissionsEdited);
         break;
     }
+
+    this.handleBackNavigate();
   }
 
   handleLaunchPermissionsEditor(which, uid) {
-    console.log(which, uid);
     const {
       formatMessage
     } = this.props.intl;
@@ -2161,7 +2177,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
         }
 
       default:
-        console.log("Unknown permission editing mode '" + which + "'");
+        console.error("Unknown permission editing mode '" + which + "'");
         return;
     }
 
@@ -2227,12 +2243,24 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       return;
     }
 
+    const isMe = this.props.tinode.isMe(params.topicName);
     const menuItems = [{
       title: formatMessage(messages.edit_permissions),
       handler: () => {
-        this.handleLaunchPermissionsEditor('user', params.topicName);
+        this.handleLaunchPermissionsEditor(isMe ? 'want' : 'user', params.topicName);
       }
-    }, 'member_delete', user.acs.isMuted() ? 'member_unmute' : 'member_mute', user.acs.isJoiner() ? 'member_block' : 'member_unblock'];
+    }];
+
+    if (!isMe) {
+      menuItems.push('member_delete');
+    }
+
+    menuItems.push(user.acs.isMuted() ? 'member_unmute' : 'member_mute');
+
+    if (!isMe) {
+      menuItems.push(user.acs.isJoiner() ? 'member_block' : 'member_unblock');
+    }
+
     this.props.showContextMenu({
       topicName: this.props.topic,
       x: params.x,
@@ -2243,7 +2271,6 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
 
   render() {
     const args = (this.props.panel || 'info').split('/');
-    console.log("args:", args);
     const view = args[0];
     args.shift();
     const {
@@ -2289,15 +2316,27 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       tinode: this.props.tinode,
       topic: this.props.topic,
       onCredAdd: this.props.onCredAdd,
-      onTopicTagsUpdate: this.props.onTopicTagsUpdate,
+      onTopicTagsUpdateRequest: this.props.onTopicTagsUpdateRequest,
       onCredConfirm: this.props.onCredConfirm,
       onCredDelete: this.props.onCredDelete,
-      onUpdateTopicDesc: this.props.onTopicDescUpdate,
-      onUpdateTags: this.props.onUpdateTags,
+      onUpdateTopicDesc: this.props.onTopicDescUpdateRequest,
       onError: this.props.onError
     }) : view == 'security' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_topic_security_jsx__WEBPACK_IMPORTED_MODULE_12__.default, {
-      tinode: this.props.tinode,
       topic: this.props.topic,
+      owner: this.state.owner,
+      admin: this.state.admin,
+      sharer: this.state.sharer,
+      deleter: this.state.deleter,
+      muted: this.state.muted,
+      groupTopic: this.state.groupTopic,
+      channel: this.state.channel,
+      access: this.state.access,
+      modeGiven: this.state.modeGiven,
+      modeWant: this.state.modeWant,
+      modeGiven2: this.state.modeGiven2,
+      modeWant2: this.state.modeWant2,
+      auth: this.state.auth,
+      anon: this.state.anon,
       onShowAlert: this.props.onShowAlert,
       onDeleteMessages: this.props.onDeleteMessages,
       onLeaveTopic: this.props.onLeaveTopic,
@@ -2386,8 +2425,6 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.state.description)) : null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "hr"
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_muting_topic",
@@ -2399,10 +2436,10 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       name: "P",
       checked: this.state.muted,
       onChange: this.handleMuted
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "hr"
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-column"
+      className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       className: "flat-button",
@@ -2421,8 +2458,6 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
     }))), this.state.groupTopic && this.state.sharer ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "hr"
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "small"
@@ -2464,7 +2499,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       noScroll: true,
       onTopicSelected: this.handleMemberSelected,
       showContextMenu: this.state.admin ? this.handleContextMenu : false
-    })))) : null));
+    }))) : null));
   }
 
 }
@@ -2817,7 +2852,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.handleScrollEvent = this.handleScrollEvent.bind(this);
     this.handleDescChange = this.handleDescChange.bind(this);
     this.handleSubsUpdated = this.handleSubsUpdated.bind(this);
-    this.handleNewMessage = this.handleNewMessage.bind(this);
+    this.handleMessageUpdate = this.handleMessageUpdate.bind(this);
     this.handleAllMessagesReceived = this.handleAllMessagesReceived.bind(this);
     this.handleInfoReceipt = this.handleInfoReceipt.bind(this);
     this.handleImagePostview = this.handleImagePostview.bind(this);
@@ -2857,7 +2892,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
   componentDidUpdate(prevProps, prevState) {
     if (this.messagesScroller) {
-      if (prevState.topic != this.state.topic || prevState.messages.length != this.state.messages.length) {
+      if (prevState.topic != this.state.topic || prevState.latestMsgSeq != this.state.latestMsgSeq) {
         this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition;
       } else if (prevProps.viewportHeight > this.props.viewportHeight) {
         this.messagesScroller.scrollTop += prevProps.viewportHeight - this.props.viewportHeight;
@@ -2872,7 +2907,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       }
 
       if (topic) {
-        topic.onData = this.handleNewMessage;
+        topic.onData = this.handleMessageUpdate;
         topic.onAllMessagesReceived = this.handleAllMessagesReceived;
         topic.onInfo = this.handleInfoReceipt;
         topic.onMetaDesc = this.handleDescChange;
@@ -2937,7 +2972,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
     if (!nextProps.topic) {
       nextState = {
-        messages: [],
+        latestMsgSeq: -1,
+        latestClearId: -1,
         onlineSubs: [],
         topic: null,
         title: '',
@@ -2969,7 +3005,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       };
 
       if (topic) {
-        const msgs = [];
         const subs = [];
 
         if (nextProps.connected) {
@@ -2980,13 +3015,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           });
         }
 
-        topic.messages(function (msg) {
-          if (!msg.deleted) {
-            msgs.push(msg);
-          }
-        });
         Object.assign(nextState, {
-          messages: msgs,
           onlineSubs: subs
         });
 
@@ -3015,11 +3044,14 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         }
 
         Object.assign(nextState, {
+          latestMsgSeq: topic.maxMsgSeq(),
+          latestClearId: topic.maxClearId(),
           channel: topic.isChannelType()
         });
       } else {
         Object.assign(nextState, {
-          messages: [],
+          latestMsgSeq: -1,
+          latestClearId: -1,
           onlineSubs: [],
           title: '',
           avatar: null,
@@ -3118,7 +3150,9 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
           if (topic && topic.isSubscribed() && topic.msgHasMoreMessages()) {
             newState.fetchingMessages = true;
-            topic.getMessagesPage(_config_js__WEBPACK_IMPORTED_MODULE_14__.MESSAGES_PAGE).catch(err => {
+            topic.getMessagesPage(_config_js__WEBPACK_IMPORTED_MODULE_14__.MESSAGES_PAGE).then(() => this.setState({
+              fetchingMessages: false
+            })).catch(err => {
               this.setState({
                 fetchingMessages: false
               });
@@ -3243,32 +3277,33 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
   }
 
-  handleNewMessage(msg) {
+  handleMessageUpdate(msg) {
     const topic = this.props.tinode.getTopic(this.state.topic);
-    const newState = {
-      messages: []
-    };
-    topic.messages(m => {
-      if (!m.deleted) {
-        newState.messages.push(m);
-      }
-    });
 
-    if (msg && !msg.deleted) {
-      if (topic.isNewMessage(msg.seq)) {
-        newState.scrollPosition = 0;
-      }
-
-      const status = topic.msgStatus(msg, true);
-
-      if (status >= (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().MESSAGE_STATUS_SENT) && msg.from != this.props.myUserId) {
-        this.postReadNotification(msg.seq);
-      }
-
-      this.props.onData(msg);
+    if (!msg) {
+      this.setState({
+        latestClearId: topic.maxClearId()
+      });
+      return;
     }
 
-    this.setState(newState);
+    this.setState({
+      latestMsgSeq: topic.maxMsgSeq()
+    });
+
+    if (topic.isNewMessage(msg.seq)) {
+      this.setState({
+        scrollPosition: 0
+      });
+    }
+
+    const status = topic.msgStatus(msg, true);
+
+    if (status >= (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().MESSAGE_STATUS_SENT) && msg.from != this.props.myUserId) {
+      this.postReadNotification(msg.seq);
+    }
+
+    this.props.onData(msg);
   }
 
   handleAllMessagesReceived(count) {
@@ -3528,7 +3563,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
 
   handleCancelUpload(seq, uploader) {
-    const found = this.state.messages.find(msg => msg.seq == seq);
+    const topic = this.props.tinode.getTopic(this.state.topic);
+    const found = topic.findMessage(seq);
 
     if (found) {
       found._cancelled = true;
@@ -3781,15 +3817,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         let messageNodes = [];
         let previousFrom = null;
         let chatBoxClass = null;
-
-        for (let i = 0; i < this.state.messages.length; i++) {
-          let msg = this.state.messages[i];
-          let nextFrom = null;
-
-          if (i + 1 < this.state.messages.length) {
-            nextFrom = this.state.messages[i + 1].from || 'chan';
-          }
-
+        topic.messages((msg, prev, next, i) => {
+          let nextFrom = next ? next.from || null : 'chan';
           let sequence = 'single';
           let thisFrom = msg.from || 'chan';
 
@@ -3848,8 +3877,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             onFormatQuote: quoteFormatter,
             key: msg.seq
           }));
-        }
-
+        });
         let lastSeen = null;
 
         if (isChannel) {
@@ -4974,7 +5002,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.handleNewTopicCreated = this.handleNewTopicCreated.bind(this);
     this.handleTopicUpdateRequest = this.handleTopicUpdateRequest.bind(this);
     this.handleChangePermissions = this.handleChangePermissions.bind(this);
-    this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
+    this.handleTagsUpdateRequest = this.handleTagsUpdateRequest.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.handleDeleteAccount = this.handleDeleteAccount.bind(this);
     this.handleDeleteTopicRequest = this.handleDeleteTopicRequest.bind(this);
@@ -5062,7 +5090,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       const serviceWorkerChannel = new BroadcastChannel('tinode-sw');
       serviceWorkerChannel.addEventListener('message', this.handlePushMessage);
     } else {
-      console.warn('Your browser does not support BroadcastChannel. Some features will not be available');
+      console.warn("Your browser does not support BroadcastChannel. Some features will not be available");
     }
 
     document.addEventListener('visibilitychange', this.handleVisibilityEvent);
@@ -5421,9 +5449,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
     cred = tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().credential(cred);
     let promise = null;
-    const token = this.tinode.getAuthToken();
+    let token = this.tinode.getAuthToken();
 
     if (login && password) {
+      token = null;
       this.setState({
         password: null
       });
@@ -5456,7 +5485,11 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           autoLogin: false
         });
         this.handleError(err.message, 'err');
-        localStorage.removeItem('auth-token');
+
+        if (token) {
+          this.handleLogout();
+        }
+
         _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo('');
       });
     } else {
@@ -6179,7 +6212,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
   }
 
-  handleTagsUpdated(topicName, tags) {
+  handleTagsUpdateRequest(topicName, tags) {
     const topic = this.tinode.getTopic(topicName);
 
     if (topic) {
@@ -6592,7 +6625,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       errorAction: this.state.errorAction,
       errorActionText: this.state.errorActionText,
       onNavigate: this.infoNavigator,
-      onTopicDescUpdate: this.handleTopicUpdateRequest,
+      onTopicDescUpdateRequest: this.handleTopicUpdateRequest,
       onShowAlert: this.handleShowAlert,
       onChangePermissions: this.handleChangePermissions,
       onMemberUpdateRequest: this.handleMemberUpdateRequest,
@@ -6602,7 +6635,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       onBlockTopic: this.handleBlockTopicRequest,
       onReportTopic: this.handleReportTopic,
       onAddMember: this.handleManageGroupMembers,
-      onTopicTagsUpdate: this.handleTagsUpdated,
+      onTopicTagsUpdateRequest: this.handleTagsUpdateRequest,
       onInitFind: this.tnInitFind,
       onError: this.handleError,
       showContextMenu: this.handleShowContextMenu
@@ -7445,15 +7478,13 @@ class ChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       className: "material-icons"
     }, "expand_more")))), fullDisplay ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "author"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+    }, this.props.userName || react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "user_not_found",
       defaultMessage: [{
         "type": 0,
         "value": "Not found"
       }]
-    }, notFound => {
-      return this.props.userName || react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", null, notFound);
-    })) : null));
+    }))) : null));
   }
 
 }
@@ -10149,7 +10180,7 @@ class LetterTile extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
 
     if (this.props.avatar === true) {
       const isGroup = tinode_sdk__WEBPACK_IMPORTED_MODULE_1___default().topicType(this.props.topic) == 'grp';
-      const iconColor = (isGroup ? 'light-color' : 'dark-color') + Math.abs((0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__.stringHash)(this.props.topic)) % 16;
+      const iconColor = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__.idToColorClass)(this.props.topic, isGroup);
 
       if (this.props.topic && this.props.title && this.props.title.trim()) {
         const letter = this.props.title.trim().charAt(0);
@@ -11722,9 +11753,9 @@ class TopicCommon extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       addCredActive: false,
       addCredInvalid: false,
       newCred: '',
-      tags: [],
-      previousTagsUpdated: undefined
+      tags: []
     };
+    this.previousTagsUpdated = undefined;
     this.onTagsUpdated = this.onTagsUpdated.bind(this);
     this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
     this.tnCredsUpdated = this.tnCredsUpdated.bind(this);
@@ -11831,13 +11862,13 @@ class TopicCommon extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     });
 
     if (this.previousTagsUpdated && this.previousTagsUpdated != this.onTagsUpdated) {
-      this.previousTagsUpdated();
+      this.previousTagsUpdated(tags);
     }
   }
 
   handleTagsUpdated(tags) {
     if (!(0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_4__.arrayEqual)(this.state.tags.slice(0), tags.slice(0))) {
-      this.props.onTopicTagsUpdate(this.props.topic, tags);
+      this.props.onTopicTagsUpdateRequest(this.props.topic, tags);
     }
   }
 
@@ -11878,7 +11909,7 @@ class TopicCommon extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       tinode: this.props.tinode,
       topic: this.props.topic,
       onUpdateTopicDesc: this.props.onUpdateTopicDesc,
-      onUpdateTags: this.props.onUpdateTags,
+      onUpdateTags: this.handleTagsUpdated,
       onError: this.props.onError
     }), this.state.isMe ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "hr"
@@ -11973,11 +12004,11 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       private: topic.private ? topic.private.comment : null,
       description: topic.public ? topic.public.note : undefined,
       avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__.makeImageUrl)(topic.public ? topic.public.photo : null),
-      tags: topic.tags(),
+      tags: topic.tags() || [],
       newAvatar: null,
-      newAvatarMime: null,
-      previousOnTags: topic.onTagsUpdated
+      newAvatarMime: null
     };
+    this.previousOnTags = null;
     this.tnNewTags = this.tnNewTags.bind(this);
     this.handleFullNameUpdate = this.handleFullNameUpdate.bind(this);
     this.handleImageUpdated = this.handleImageUpdated.bind(this);
@@ -11991,12 +12022,13 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
 
   componentDidMount() {
     const topic = this.props.tinode.getTopic(this.props.topic);
+    this.previousOnTags = topic.onTagsUpdated;
     topic.onTagsUpdated = this.tnNewTags;
   }
 
   componentWillUnmount() {
     const topic = this.props.tinode.getTopic(this.props.topic);
-    topic.onTagsUpdated = this.state.previousOnTags;
+    topic.onTagsUpdated = this.previousOnTags;
   }
 
   tnNewTags(tags) {
@@ -12359,45 +12391,9 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   }
 });
 
-class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
+class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
-    const topic = this.props.tinode.getTopic(this.props.topic);
-
-    if (!topic) {
-      return;
-    }
-
-    const defacs = topic.getDefaultAccess() || {};
-    const acs = topic.getAccessMode();
-    let modeGiven2 = _config_js__WEBPACK_IMPORTED_MODULE_3__.NO_ACCESS_MODE;
-    let modeWant2 = _config_js__WEBPACK_IMPORTED_MODULE_3__.NO_ACCESS_MODE;
-
-    if (topic.getType() == 'p2p') {
-      const user2 = topic.subscriber(props.topic);
-
-      if (user2 && user2.acs) {
-        modeGiven2 = user2.acs.getGiven();
-        modeWant2 = user2.acs.getWant();
-      }
-    }
-
-    this.state = {
-      owner: acs && acs.isOwner(),
-      admin: acs && acs.isAdmin(),
-      sharer: acs && acs.isSharer(),
-      deleter: acs && acs.isDeleter(),
-      muted: acs && acs.isMuted(),
-      groupTopic: topic.isGroupType(),
-      channel: topic.isChannelType(),
-      access: acs ? acs.getMode() : undefined,
-      modeGiven: acs ? acs.getGiven() : undefined,
-      modeWant: acs ? acs.getWant() : undefined,
-      modeGiven2: modeGiven2,
-      modeWant2: modeWant2,
-      auth: defacs ? defacs.auth : null,
-      anon: defacs ? defacs.anon : null
-    };
     this.handleDeleteTopic = this.handleDeleteTopic.bind(this);
     this.handleDeleteMessages = this.handleDeleteMessages.bind(this);
     this.handleLeave = this.handleLeave.bind(this);
@@ -12420,7 +12416,7 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
     const {
       formatMessage
     } = this.props.intl;
-    this.props.onShowAlert(formatMessage(this.state.deleter ? messages.delete_messages : messages.clear_messages), formatMessage(this.state.deleter ? messages.delete_messages_warning : messages.clear_messages_warning), () => {
+    this.props.onShowAlert(formatMessage(this.props.deleter ? messages.delete_messages : messages.clear_messages), formatMessage(this.props.deleter ? messages.delete_messages_warning : messages.clear_messages_warning), () => {
       this.props.onDeleteMessages(this.props.topic);
     }, null, true, null);
   }
@@ -12463,13 +12459,13 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       className: "scrollable-panel"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-column"
-    }, !this.state.channel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    }, !this.props.channel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       className: "flat-button",
       onClick: this.handleDeleteMessages
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
-    }, "delete_outline"), " \xA0", formatMessage(this.state.deleter ? messages.delete_messages : messages.clear_messages)) : null, this.state.owner ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    }, "delete_outline"), " \xA0", formatMessage(this.props.deleter ? messages.delete_messages : messages.clear_messages)) : null, this.props.owner ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       className: "danger flat-button",
       onClick: this.handleDeleteTopic
@@ -12481,13 +12477,13 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       onClick: this.handleLeave
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
-    }, "exit_to_app"), " \xA0", formatMessage(messages.leave_chat)), !this.state.groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    }, "exit_to_app"), " \xA0", formatMessage(messages.leave_chat)), !this.props.groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       className: "danger flat-button",
       onClick: this.handleBlock
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
-    }, "block"), " \xA0", formatMessage(messages.block_contact)) : null, !this.state.owner ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    }, "block"), " \xA0", formatMessage(messages.block_contact)) : null, !this.props.owner ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       className: "danger flat-button",
       onClick: this.handleReport
@@ -12497,7 +12493,7 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       className: "hr"
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-column"
-    }, this.state.groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, this.props.groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "group"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_your_permissions",
@@ -12511,7 +12507,7 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
         e.preventDefault();
         this.props.onLaunchPermissionsEditor('want');
       }
-    }, this.state.access)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, this.props.access)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "group"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "small"
@@ -12529,13 +12525,13 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
         e.preventDefault();
         this.props.onLaunchPermissionsEditor('auth');
       }
-    }, this.state.auth)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Anon: ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", {
+    }, this.props.auth)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Anon: ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", {
       className: "clickable",
       onClick: e => {
         e.preventDefault();
         this.props.onLaunchPermissionsEditor('anon');
       }
-    }, this.state.anon))))) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, this.props.anon))))) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "group"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "small"
@@ -12559,13 +12555,13 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
         e.preventDefault();
         this.props.onLaunchPermissionsEditor('want');
       }
-    }, this.state.access)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.state.fullName ? this.state.fullName : formatMessage(messages.other_user), ": \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", {
+    }, this.props.access)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.props.fullName ? this.props.fullName : formatMessage(messages.other_user), ": \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", {
       className: "clickable",
       onClick: e => {
         e.preventDefault();
         this.props.onLaunchPermissionsEditor('given');
       }
-    }, this.state.modeGiven2))))));
+    }, this.props.modeGiven2))))));
   }
 
 }

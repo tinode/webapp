@@ -7,6 +7,7 @@ import Attachment from './attachment.jsx';
 import LetterTile from './letter-tile.jsx';
 import ReceivedMarker from './received-marker.jsx'
 import UploadingImage from './uploading-image.jsx'
+
 import { sanitizeImageUrl, sanitizeUrl } from '../lib/utils.js';
 
 class ChatMessage extends React.PureComponent {
@@ -106,8 +107,10 @@ class ChatMessage extends React.PureComponent {
         attachments.push(<Attachment
           tinode={this.props.tinode}
           downloadUrl={Drafty.getDownloadUrl(att)}
-          filename={att.name} uploading={Drafty.isProcessing(att)}
-          mimetype={att.mime} size={Drafty.getEntitySize(att)}
+          filename={att.name}
+          uploading={Drafty.isProcessing(att)}
+          mimetype={att.mime}
+          size={Drafty.getEntitySize(att)}
           progress={this.state.progress}
           onCancelUpload={this.handleCancelUpload}
           onError={this.props.onError}
@@ -175,10 +178,10 @@ class ChatMessage extends React.PureComponent {
           </div>
           {fullDisplay ?
             <div className="author">
-              <FormattedMessage id="user_not_found" defaultMessage="Not found"
-                description="In place of a user's full name when the user is not found.">{
-                    (notFound) => {return this.props.userName || <i>{notFound}</i>}
-              }</FormattedMessage>
+              {this.props.userName ||
+                <i><FormattedMessage id="user_not_found" defaultMessage="Not found"
+                description="In place of a user's full name when the user is not found." /></i>
+              }
             </div>
             : null
           }
