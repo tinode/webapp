@@ -1854,6 +1854,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       owner: false,
       admin: false,
       sharer: false,
+      deleter: false,
       muted: false,
       address: null,
       groupTopic: undefined,
@@ -1970,6 +1971,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       owner: acs && acs.isOwner(),
       admin: acs && acs.isAdmin(),
       sharer: acs && acs.isSharer(),
+      deleter: acs && acs.isDeleter(),
       muted: acs && acs.isMuted(),
       fullName: _clip(topic.public ? topic.public.fn : undefined, _config_js__WEBPACK_IMPORTED_MODULE_13__.MAX_TITLE_LENGTH),
       description: _clip(topic.public ? topic.public.note : undefined, _config_js__WEBPACK_IMPORTED_MODULE_13__.MAX_TOPIC_DESCRIPTION_LENGTH),
@@ -2044,13 +2046,13 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
   handlePermissionsChanged(which, perm) {
     switch (which) {
       case 'auth':
-        this.props.onTopicDescUpdate(this.props.topic, null, null, {
+        this.props.onTopicDescUpdateRequest(this.props.topic, null, null, {
           auth: perm
         });
         break;
 
       case 'anon':
-        this.props.onTopicDescUpdate(this.props.topic, null, null, {
+        this.props.onTopicDescUpdateRequest(this.props.topic, null, null, {
           anon: perm
         });
         break;
@@ -2068,6 +2070,8 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
         this.props.onChangePermissions(this.props.topic, perm, this.state.userPermissionsEdited);
         break;
     }
+
+    this.handleBackNavigate();
   }
 
   handleLaunchPermissionsEditor(which, uid) {
@@ -2146,7 +2150,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
         }
 
       default:
-        console.log("Unknown permission editing mode '" + which + "'");
+        console.error("Unknown permission editing mode '" + which + "'");
         return;
     }
 
@@ -2291,8 +2295,21 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       onUpdateTopicDesc: this.props.onTopicDescUpdateRequest,
       onError: this.props.onError
     }) : view == 'security' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_topic_security_jsx__WEBPACK_IMPORTED_MODULE_12__.default, {
-      tinode: this.props.tinode,
       topic: this.props.topic,
+      owner: this.state.owner,
+      admin: this.state.admin,
+      sharer: this.state.sharer,
+      deleter: this.state.deleter,
+      muted: this.state.muted,
+      groupTopic: this.state.groupTopic,
+      channel: this.state.channel,
+      access: this.state.access,
+      modeGiven: this.state.modeGiven,
+      modeWant: this.state.modeWant,
+      modeGiven2: this.state.modeGiven2,
+      modeWant2: this.state.modeWant2,
+      auth: this.state.auth,
+      anon: this.state.anon,
       onShowAlert: this.props.onShowAlert,
       onDeleteMessages: this.props.onDeleteMessages,
       onLeaveTopic: this.props.onLeaveTopic,
@@ -11922,45 +11939,9 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   }
 });
 
-class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
+class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
-    const topic = this.props.tinode.getTopic(this.props.topic);
-
-    if (!topic) {
-      return;
-    }
-
-    const defacs = topic.getDefaultAccess() || {};
-    const acs = topic.getAccessMode();
-    let modeGiven2 = _config_js__WEBPACK_IMPORTED_MODULE_3__.NO_ACCESS_MODE;
-    let modeWant2 = _config_js__WEBPACK_IMPORTED_MODULE_3__.NO_ACCESS_MODE;
-
-    if (topic.getType() == 'p2p') {
-      const user2 = topic.subscriber(props.topic);
-
-      if (user2 && user2.acs) {
-        modeGiven2 = user2.acs.getGiven();
-        modeWant2 = user2.acs.getWant();
-      }
-    }
-
-    this.state = {
-      owner: acs && acs.isOwner(),
-      admin: acs && acs.isAdmin(),
-      sharer: acs && acs.isSharer(),
-      deleter: acs && acs.isDeleter(),
-      muted: acs && acs.isMuted(),
-      groupTopic: topic.isGroupType(),
-      channel: topic.isChannelType(),
-      access: acs ? acs.getMode() : undefined,
-      modeGiven: acs ? acs.getGiven() : undefined,
-      modeWant: acs ? acs.getWant() : undefined,
-      modeGiven2: modeGiven2,
-      modeWant2: modeWant2,
-      auth: defacs ? defacs.auth : null,
-      anon: defacs ? defacs.anon : null
-    };
     this.handleDeleteTopic = this.handleDeleteTopic.bind(this);
     this.handleDeleteMessages = this.handleDeleteMessages.bind(this);
     this.handleLeave = this.handleLeave.bind(this);
@@ -11983,7 +11964,7 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
     const {
       formatMessage
     } = this.props.intl;
-    this.props.onShowAlert(formatMessage(this.state.deleter ? messages.delete_messages : messages.clear_messages), formatMessage(this.state.deleter ? messages.delete_messages_warning : messages.clear_messages_warning), () => {
+    this.props.onShowAlert(formatMessage(this.props.deleter ? messages.delete_messages : messages.clear_messages), formatMessage(this.props.deleter ? messages.delete_messages_warning : messages.clear_messages_warning), () => {
       this.props.onDeleteMessages(this.props.topic);
     }, null, true, null);
   }
@@ -12026,13 +12007,13 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       className: "scrollable-panel"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-column"
-    }, !this.state.channel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    }, !this.props.channel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       className: "flat-button",
       onClick: this.handleDeleteMessages
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
-    }, "delete_outline"), " \xA0", formatMessage(this.state.deleter ? messages.delete_messages : messages.clear_messages)) : null, this.state.owner ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    }, "delete_outline"), " \xA0", formatMessage(this.props.deleter ? messages.delete_messages : messages.clear_messages)) : null, this.props.owner ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       className: "danger flat-button",
       onClick: this.handleDeleteTopic
@@ -12044,13 +12025,13 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       onClick: this.handleLeave
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
-    }, "exit_to_app"), " \xA0", formatMessage(messages.leave_chat)), !this.state.groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    }, "exit_to_app"), " \xA0", formatMessage(messages.leave_chat)), !this.props.groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       className: "danger flat-button",
       onClick: this.handleBlock
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
-    }, "block"), " \xA0", formatMessage(messages.block_contact)) : null, !this.state.owner ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    }, "block"), " \xA0", formatMessage(messages.block_contact)) : null, !this.props.owner ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       className: "danger flat-button",
       onClick: this.handleReport
@@ -12060,7 +12041,7 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       className: "hr"
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-column"
-    }, this.state.groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, this.props.groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "group"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_your_permissions",
@@ -12074,7 +12055,7 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
         e.preventDefault();
         this.props.onLaunchPermissionsEditor('want');
       }
-    }, this.state.access)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, this.props.access)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "group"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "small"
@@ -12092,13 +12073,13 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
         e.preventDefault();
         this.props.onLaunchPermissionsEditor('auth');
       }
-    }, this.state.auth)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Anon: ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", {
+    }, this.props.auth)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Anon: ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", {
       className: "clickable",
       onClick: e => {
         e.preventDefault();
         this.props.onLaunchPermissionsEditor('anon');
       }
-    }, this.state.anon))))) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, this.props.anon))))) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "group"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "small"
@@ -12122,13 +12103,13 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
         e.preventDefault();
         this.props.onLaunchPermissionsEditor('want');
       }
-    }, this.state.access)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.state.fullName ? this.state.fullName : formatMessage(messages.other_user), ": \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", {
+    }, this.props.access)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.props.fullName ? this.props.fullName : formatMessage(messages.other_user), ": \xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", {
       className: "clickable",
       onClick: e => {
         e.preventDefault();
         this.props.onLaunchPermissionsEditor('given');
       }
-    }, this.state.modeGiven2))))));
+    }, this.props.modeGiven2))))));
   }
 
 }

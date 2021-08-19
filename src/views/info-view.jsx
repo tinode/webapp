@@ -91,6 +91,7 @@ class InfoView extends React.Component {
       owner: false,
       admin: false,
       sharer: false,
+      deleter: false,
       muted: false,
       address: null,
       groupTopic: undefined,
@@ -201,6 +202,7 @@ class InfoView extends React.Component {
       owner: acs && acs.isOwner(),
       admin: acs && acs.isAdmin(),
       sharer: acs && acs.isSharer(),
+      deleter: acs && acs.isDeleter(),
       muted: acs && acs.isMuted(),
 
       fullName: _clip(topic.public ? topic.public.fn : undefined, MAX_TITLE_LENGTH),
@@ -268,10 +270,10 @@ class InfoView extends React.Component {
   handlePermissionsChanged(which, perm) {
     switch (which) {
       case 'auth':
-        this.props.onTopicDescUpdate(this.props.topic, null, null, {auth: perm});
+        this.props.onTopicDescUpdateRequest(this.props.topic, null, null, {auth: perm});
         break;
       case 'anon':
-        this.props.onTopicDescUpdate(this.props.topic, null, null, {anon: perm});
+        this.props.onTopicDescUpdateRequest(this.props.topic, null, null, {anon: perm});
         break;
       case 'mode':
       case 'want':
@@ -284,6 +286,8 @@ class InfoView extends React.Component {
         this.props.onChangePermissions(this.props.topic, perm, this.state.userPermissionsEdited);
         break;
     }
+
+    this.handleBackNavigate();
   }
 
   handleLaunchPermissionsEditor(which, uid) {
@@ -346,7 +350,7 @@ class InfoView extends React.Component {
         break;
       }
       default:
-        console.log("Unknown permission editing mode '" + which + "'");
+        console.error("Unknown permission editing mode '" + which + "'");
         return;
     }
     this.setState({
@@ -483,8 +487,23 @@ class InfoView extends React.Component {
           :
         view == 'security' ?
           <TopicSecurity
-            tinode={this.props.tinode}
             topic={this.props.topic}
+            owner={this.state.owner}
+            admin={this.state.admin}
+            sharer={this.state.sharer}
+            deleter={this.state.deleter}
+            muted={this.state.muted}
+
+            groupTopic={this.state.groupTopic}
+            channel={this.state.channel}
+            access={this.state.access}
+            modeGiven={this.state.modeGiven}
+            modeWant={this.state.modeWant}
+            modeGiven2={this.state.modeGiven2}
+            modeWant2={this.state.modeWant2}
+            auth={this.state.auth}
+            anon={this.state.anon}
+
             onShowAlert={this.props.onShowAlert}
             onDeleteMessages={this.props.onDeleteMessages}
             onLeaveTopic={this.props.onLeaveTopic}
