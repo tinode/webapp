@@ -115,6 +115,7 @@ class InfoView extends React.Component {
 
     this.resetSubs = this.resetSubs.bind(this);
     this.resetDesc = this.resetDesc.bind(this);
+    this.resetTags = this.resetTags.bind(this);
     this.onMetaDesc = this.onMetaDesc.bind(this);
     this.onSubsUpdated = this.onSubsUpdated.bind(this);
     this.handleImageChanged = this.handleImageChanged.bind(this);
@@ -147,6 +148,7 @@ class InfoView extends React.Component {
       this.setState({topic: props.topic});
       this.resetDesc(topic, props);
       this.resetSubs(topic, props);
+      this.resetTags(topic);
     }
   }
 
@@ -215,8 +217,15 @@ class InfoView extends React.Component {
       auth: defacs.auth,
       anon: defacs.anon
     });
+  }
 
-    if (topic.getType() == 'grp' && acs && acs.isOwner()) {
+  resetTags(topic) {
+    if (topic.getType() != 'grp') {
+      return;
+    }
+
+    const acs = topic.getAccessMode();
+    if (acs && acs.isOwner()) {
       // Requesting tags: owner is editing the topic.
       topic.getMeta(topic.startMetaQuery().withTags().build());
     }
@@ -257,7 +266,6 @@ class InfoView extends React.Component {
   }
 
   handlePermissionsChanged(which, perm) {
-    console.log("handlePermissionsChanged", which, perm);
     switch (which) {
       case 'auth':
         this.props.onTopicDescUpdate(this.props.topic, null, null, {auth: perm});
@@ -279,7 +287,6 @@ class InfoView extends React.Component {
   }
 
   handleLaunchPermissionsEditor(which, uid) {
-    console.log(which, uid);
     const {formatMessage} = this.props.intl;
     let toEdit, toCompare, toSkip, titleEdit, titleCompare, userTitle, userAvatar;
     switch (which) {
@@ -468,11 +475,10 @@ class InfoView extends React.Component {
             tinode={this.props.tinode}
             topic={this.props.topic}
             onCredAdd={this.props.onCredAdd}
-            onTopicTagsUpdate={this.props.onTopicTagsUpdate}
+            onTopicTagsUpdateRequest={this.props.onTopicTagsUpdateRequest}
             onCredConfirm={this.props.onCredConfirm}
             onCredDelete={this.props.onCredDelete}
-            onUpdateTopicDesc={this.props.onTopicDescUpdate}
-            onUpdateTags={this.props.onUpdateTags}
+            onUpdateTopicDesc={this.props.onTopicDescUpdateRequest}
             onError={this.props.onError} />
           :
         view == 'security' ?

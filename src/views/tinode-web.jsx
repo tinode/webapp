@@ -121,7 +121,7 @@ class TinodeWeb extends React.Component {
     this.handleNewTopicCreated = this.handleNewTopicCreated.bind(this);
     this.handleTopicUpdateRequest = this.handleTopicUpdateRequest.bind(this);
     this.handleChangePermissions = this.handleChangePermissions.bind(this);
-    this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
+    this.handleTagsUpdateRequest = this.handleTagsUpdateRequest.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.handleDeleteAccount = this.handleDeleteAccount.bind(this);
     this.handleDeleteTopicRequest = this.handleDeleteTopicRequest.bind(this);
@@ -225,7 +225,7 @@ class TinodeWeb extends React.Component {
       serviceWorkerChannel.addEventListener('message', this.handlePushMessage);
     } else {
       // Safari is broken by design.
-      console.warn('Your browser does not support BroadcastChannel. Some features will not be available');
+      console.warn("Your browser does not support BroadcastChannel. Some features will not be available");
     }
 
     // Window/tab visible or invisible for pausing timers.
@@ -1269,7 +1269,7 @@ class TinodeWeb extends React.Component {
     }
   }
 
-  handleTagsUpdated(topicName, tags) {
+  handleTagsUpdateRequest(topicName, tags) {
     const topic = this.tinode.getTopic(topicName);
     if (topic) {
       topic.setMeta({tags: tags}).catch((err) => {
@@ -1686,7 +1686,7 @@ class TinodeWeb extends React.Component {
             errorActionText={this.state.errorActionText}
 
             onNavigate={this.infoNavigator}
-            onTopicDescUpdate={this.handleTopicUpdateRequest}
+            onTopicDescUpdateRequest={this.handleTopicUpdateRequest}
             onShowAlert={this.handleShowAlert}
             onChangePermissions={this.handleChangePermissions}
             onMemberUpdateRequest={this.handleMemberUpdateRequest}
@@ -1696,7 +1696,7 @@ class TinodeWeb extends React.Component {
             onBlockTopic={this.handleBlockTopicRequest}
             onReportTopic={this.handleReportTopic}
             onAddMember={this.handleManageGroupMembers}
-            onTopicTagsUpdate={this.handleTagsUpdated}
+            onTopicTagsUpdateRequest={this.handleTagsUpdateRequest}
             onInitFind={this.tnInitFind}
             onError={this.handleError}
 

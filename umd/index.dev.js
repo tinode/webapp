@@ -508,7 +508,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "shortDateFormat": () => (/* binding */ shortDateFormat),
 /* harmony export */   "secondsToTime": () => (/* binding */ secondsToTime),
 /* harmony export */   "bytesToHumanSize": () => (/* binding */ bytesToHumanSize),
-/* harmony export */   "stringHash": () => (/* binding */ stringHash)
+/* harmony export */   "idToColorClass": () => (/* binding */ idToColorClass)
 /* harmony export */ });
 function shortDateFormat(then, locale) {
   locale = locale || window.navigator.userLanguage || window.navigator.language;
@@ -555,7 +555,8 @@ function bytesToHumanSize(bytes) {
   const round = bucket > 0 ? count < 3 ? 2 : count < 30 ? 1 : 0 : 0;
   return count.toFixed(round) + ' ' + sizes[bucket];
 }
-function stringHash(value) {
+
+function stringToColorHash(value) {
   let hash = 0;
   value = '' + value;
 
@@ -565,6 +566,10 @@ function stringHash(value) {
   }
 
   return hash;
+}
+
+function idToColorClass(id, light, fg) {
+  return (light ? 'lt-' : 'dk-') + (fg ? 'fg-' : 'bg-') + Math.abs(stringToColorHash(id)) % 16;
 }
 
 /***/ }),
@@ -1872,6 +1877,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
     };
     this.resetSubs = this.resetSubs.bind(this);
     this.resetDesc = this.resetDesc.bind(this);
+    this.resetTags = this.resetTags.bind(this);
     this.onMetaDesc = this.onMetaDesc.bind(this);
     this.onSubsUpdated = this.onSubsUpdated.bind(this);
     this.handleImageChanged = this.handleImageChanged.bind(this);
@@ -1905,6 +1911,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       });
       this.resetDesc(topic, props);
       this.resetSubs(topic, props);
+      this.resetTags(topic);
     }
   }
 
@@ -1978,8 +1985,16 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       auth: defacs.auth,
       anon: defacs.anon
     });
+  }
 
-    if (topic.getType() == 'grp' && acs && acs.isOwner()) {
+  resetTags(topic) {
+    if (topic.getType() != 'grp') {
+      return;
+    }
+
+    const acs = topic.getAccessMode();
+
+    if (acs && acs.isOwner()) {
       topic.getMeta(topic.startMetaQuery().withTags().build());
     }
   }
@@ -2027,8 +2042,6 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
   }
 
   handlePermissionsChanged(which, perm) {
-    console.log("handlePermissionsChanged", which, perm);
-
     switch (which) {
       case 'auth':
         this.props.onTopicDescUpdate(this.props.topic, null, null, {
@@ -2058,7 +2071,6 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
   }
 
   handleLaunchPermissionsEditor(which, uid) {
-    console.log(which, uid);
     const {
       formatMessage
     } = this.props.intl;
@@ -2273,11 +2285,10 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       tinode: this.props.tinode,
       topic: this.props.topic,
       onCredAdd: this.props.onCredAdd,
-      onTopicTagsUpdate: this.props.onTopicTagsUpdate,
+      onTopicTagsUpdateRequest: this.props.onTopicTagsUpdateRequest,
       onCredConfirm: this.props.onCredConfirm,
       onCredDelete: this.props.onCredDelete,
-      onUpdateTopicDesc: this.props.onTopicDescUpdate,
-      onUpdateTags: this.props.onUpdateTags,
+      onUpdateTopicDesc: this.props.onTopicDescUpdateRequest,
       onError: this.props.onError
     }) : view == 'security' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_topic_security_jsx__WEBPACK_IMPORTED_MODULE_12__.default, {
       tinode: this.props.tinode,
@@ -4625,7 +4636,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.handleNewTopicCreated = this.handleNewTopicCreated.bind(this);
     this.handleTopicUpdateRequest = this.handleTopicUpdateRequest.bind(this);
     this.handleChangePermissions = this.handleChangePermissions.bind(this);
-    this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
+    this.handleTagsUpdateRequest = this.handleTagsUpdateRequest.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.handleDeleteAccount = this.handleDeleteAccount.bind(this);
     this.handleDeleteTopicRequest = this.handleDeleteTopicRequest.bind(this);
@@ -4713,7 +4724,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       const serviceWorkerChannel = new BroadcastChannel('tinode-sw');
       serviceWorkerChannel.addEventListener('message', this.handlePushMessage);
     } else {
-      console.warn('Your browser does not support BroadcastChannel. Some features will not be available');
+      console.warn("Your browser does not support BroadcastChannel. Some features will not be available");
     }
 
     document.addEventListener('visibilitychange', this.handleVisibilityEvent);
@@ -5825,7 +5836,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
   }
 
-  handleTagsUpdated(topicName, tags) {
+  handleTagsUpdateRequest(topicName, tags) {
     const topic = this.tinode.getTopic(topicName);
 
     if (topic) {
@@ -6237,7 +6248,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       errorAction: this.state.errorAction,
       errorActionText: this.state.errorActionText,
       onNavigate: this.infoNavigator,
-      onTopicDescUpdate: this.handleTopicUpdateRequest,
+      onTopicDescUpdateRequest: this.handleTopicUpdateRequest,
       onShowAlert: this.handleShowAlert,
       onChangePermissions: this.handleChangePermissions,
       onMemberUpdateRequest: this.handleMemberUpdateRequest,
@@ -6247,7 +6258,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       onBlockTopic: this.handleBlockTopicRequest,
       onReportTopic: this.handleReportTopic,
       onAddMember: this.handleManageGroupMembers,
-      onTopicTagsUpdate: this.handleTagsUpdated,
+      onTopicTagsUpdateRequest: this.handleTagsUpdateRequest,
       onInitFind: this.tnInitFind,
       onError: this.handleError,
       showContextMenu: this.handleShowContextMenu
@@ -7063,15 +7074,13 @@ class ChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       className: "material-icons"
     }, "expand_more")))), fullDisplay ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "author"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+    }, this.props.userName || react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "user_not_found",
       defaultMessage: [{
         "type": 0,
         "value": "Not found"
       }]
-    }, notFound => {
-      return this.props.userName || react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", null, notFound);
-    })) : null));
+    }))) : null));
   }
 
 }
@@ -9731,7 +9740,7 @@ class LetterTile extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
 
     if (this.props.avatar === true) {
       const isGroup = tinode_sdk__WEBPACK_IMPORTED_MODULE_1___default().topicType(this.props.topic) == 'grp';
-      const iconColor = (isGroup ? 'light-color' : 'dark-color') + Math.abs((0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__.stringHash)(this.props.topic)) % 16;
+      const iconColor = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__.idToColorClass)(this.props.topic, isGroup);
 
       if (this.props.topic && this.props.title && this.props.title.trim()) {
         const letter = this.props.title.trim().charAt(0);
@@ -11275,9 +11284,9 @@ class TopicCommon extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       addCredActive: false,
       addCredInvalid: false,
       newCred: '',
-      tags: [],
-      previousTagsUpdated: undefined
+      tags: []
     };
+    this.previousTagsUpdated = undefined;
     this.onTagsUpdated = this.onTagsUpdated.bind(this);
     this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
     this.tnCredsUpdated = this.tnCredsUpdated.bind(this);
@@ -11384,13 +11393,13 @@ class TopicCommon extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     });
 
     if (this.previousTagsUpdated && this.previousTagsUpdated != this.onTagsUpdated) {
-      this.previousTagsUpdated();
+      this.previousTagsUpdated(tags);
     }
   }
 
   handleTagsUpdated(tags) {
     if (!(0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_4__.arrayEqual)(this.state.tags.slice(0), tags.slice(0))) {
-      this.props.onTopicTagsUpdate(this.props.topic, tags);
+      this.props.onTopicTagsUpdateRequest(this.props.topic, tags);
     }
   }
 
@@ -11431,7 +11440,7 @@ class TopicCommon extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       tinode: this.props.tinode,
       topic: this.props.topic,
       onUpdateTopicDesc: this.props.onUpdateTopicDesc,
-      onUpdateTags: this.props.onUpdateTags,
+      onUpdateTags: this.handleTagsUpdated,
       onError: this.props.onError
     }), this.state.isMe ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "hr"
@@ -11526,11 +11535,11 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       private: topic.private ? topic.private.comment : null,
       description: topic.public ? topic.public.note : undefined,
       avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__.makeImageUrl)(topic.public ? topic.public.photo : null),
-      tags: topic.tags(),
+      tags: topic.tags() || [],
       newAvatar: null,
-      newAvatarMime: null,
-      previousOnTags: topic.onTagsUpdated
+      newAvatarMime: null
     };
+    this.previousOnTags = null;
     this.tnNewTags = this.tnNewTags.bind(this);
     this.handleFullNameUpdate = this.handleFullNameUpdate.bind(this);
     this.handleImageUpdated = this.handleImageUpdated.bind(this);
@@ -11544,12 +11553,13 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
 
   componentDidMount() {
     const topic = this.props.tinode.getTopic(this.props.topic);
+    this.previousOnTags = topic.onTagsUpdated;
     topic.onTagsUpdated = this.tnNewTags;
   }
 
   componentWillUnmount() {
     const topic = this.props.tinode.getTopic(this.props.topic);
-    topic.onTagsUpdated = this.state.previousOnTags;
+    topic.onTagsUpdated = this.previousOnTags;
   }
 
   tnNewTags(tags) {

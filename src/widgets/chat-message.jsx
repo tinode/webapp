@@ -8,7 +8,6 @@ import LetterTile from './letter-tile.jsx';
 import ReceivedMarker from './received-marker.jsx'
 import UploadingImage from './uploading-image.jsx'
 
-import { idToColorClass } from '../lib/strformat.js';
 import { sanitizeImageUrl, sanitizeUrl } from '../lib/utils.js';
 
 export default class ChatMessage extends React.Component {
@@ -154,7 +153,7 @@ export default class ChatMessage extends React.Component {
             }
           </div>
           {fullDisplay ?
-            <div className={'author' + (this.props.userName ? idToColorClass(this.props.userFrom) : '')}>
+            <div className="author">
               {this.props.userName ||
                 <i><FormattedMessage id="user_not_found" defaultMessage="Not found"
                 description="In place of a user's full name when the user is not found." /></i>

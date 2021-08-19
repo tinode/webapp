@@ -28,11 +28,12 @@ export default class TopicDescEdit extends React.Component {
       private: topic.private ? topic.private.comment : null,
       description: topic.public ? topic.public.note : undefined,
       avatar: makeImageUrl(topic.public ? topic.public.photo : null),
-      tags: topic.tags(),
+      tags: topic.tags() || [],
       newAvatar: null,
-      newAvatarMime: null,
-      previousOnTags: topic.onTagsUpdated
+      newAvatarMime: null
     };
+
+    this.previousOnTags = null;
 
     this.tnNewTags = this.tnNewTags.bind(this);
     this.handleFullNameUpdate = this.handleFullNameUpdate.bind(this);
@@ -47,12 +48,13 @@ export default class TopicDescEdit extends React.Component {
 
   componentDidMount() {
     const topic = this.props.tinode.getTopic(this.props.topic);
+    this.previousOnTags = topic.onTagsUpdated;
     topic.onTagsUpdated = this.tnNewTags;
   }
 
   componentWillUnmount() {
     const topic = this.props.tinode.getTopic(this.props.topic);
-    topic.onTagsUpdated = this.state.previousOnTags;
+    topic.onTagsUpdated = this.previousOnTags;
   }
 
   tnNewTags(tags) {
