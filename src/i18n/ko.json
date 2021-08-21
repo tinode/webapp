@@ -179,5 +179,6 @@
   "drafty_attachment": "부착",
   "drafty_form": "형태:",
   "drafty_image": "이미지",
-  "topic_delete": "채팅 삭제"
+  "topic_delete": "채팅 삭제",
+  "password_reset_email_sent": "이메일이 {email}(으)로 전송되었습니다. 이메일의 지침에 따라 비밀번호를 재설정하세요."
 }

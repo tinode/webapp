@@ -12,7 +12,8 @@ export default class PasswordResetView extends React.PureComponent {
 
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      sent: false
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -21,7 +22,7 @@ export default class PasswordResetView extends React.PureComponent {
   }
 
   componentDidMount() {
-    let parsed = HashNavigation.parseUrlHash(window.location.hash);
+    const parsed = HashNavigation.parseUrlHash(window.location.hash);
     this.setState({token: parsed.params.token, scheme: parsed.params.scheme});
   }
 
@@ -29,8 +30,14 @@ export default class PasswordResetView extends React.PureComponent {
     e.preventDefault();
     if (this.state.token) {
       this.props.onReset(this.state.scheme, this.state.password.trim(), this.state.token);
+    } else if (this.state.sent) {
+      this.props.onCancel();
     } else {
-      this.props.onRequest('email', this.state.email.trim());
+      const email = this.state.email.trim();
+      this.setState({email: email});
+      this.props.onRequest('email', email).then(() => {
+        this.setState({sent: true});
+      });
     }
   }
 
@@ -43,10 +50,9 @@ export default class PasswordResetView extends React.PureComponent {
   }
 
   render() {
-    let reset = (this.state.token && this.state.scheme);
     return (
       <form id="password-reset-form" onSubmit={this.handleSubmit}>
-        {reset ?
+        {(this.state.token && this.state.scheme) ?
           <FormattedMessage id="new_password_placeholder" defaultMessage="Enter new password"
             description="Placeholder for entering new password">{
             (placeholder) => <VisiblePassword
@@ -56,7 +62,17 @@ export default class PasswordResetView extends React.PureComponent {
               required={true} autoFocus={true}
               onChange={this.handlePasswordChange} />
           }</FormattedMessage>
-          :
+        : this.state.sent ?
+          <>
+            <br/>
+            <center><i className="material-icons huge green">task_alt</i></center>
+            <br/>
+            <center><FormattedMessage id="password_reset_email_sent"
+              defaultMessage="An email has been sent to {email}. Follow the directions in the email to reset your password."
+              values={{ email: <tt>{this.state.email}</tt> }}
+              description="Notification that the email with password reset instructions has been sent" /></center>
+          </>
+        :
           <>
             <label htmlFor="inputEmail">
               <FormattedMessage id="label_reset_password"
@@ -75,8 +91,13 @@ export default class PasswordResetView extends React.PureComponent {
           </>
         }
         <div className="dialog-buttons">
-          <button className="primary" type="submit">{reset ?
-            <FormattedMessage id="button_reset" defaultMessage="Reset" description="Button [Reset]" /> :
+          <button className="primary" type="submit">{
+            (this.state.token && this.state.scheme) ?
+            <FormattedMessage id="button_reset" defaultMessage="Reset" description="Button [Reset]" />
+            : this.state.sent ?
+            <FormattedMessage id="button_ok" defaultMessage="OK"
+              description="Button [OK]" />
+            :
             <FormattedMessage id="button_send_request" defaultMessage="Send request"
               description="Button [Send request]" />
           }</button>

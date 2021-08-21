@@ -120,6 +120,7 @@
   "numeric_confirmation_code_prompt": "Numbers only",
   "online_now": "online now",
   "password_prompt": "Password",
+  "password_reset_email_sent": "An email has been sent to {email}. Follow the directions in the email to reset your password.",
   "password_unchanged_prompt": "Unchanged",
   "peers_messaging_disabled": "Peer's messaging is disabled.",
   "permission_admin": "Approve ({val})",

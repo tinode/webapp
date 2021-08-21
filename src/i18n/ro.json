@@ -176,5 +176,6 @@
   "drafty_attachment": "Atasament",
   "drafty_form": "Formă:",
   "drafty_image": "Imagine",
-  "topic_delete": "Ștergeți Chat"
+  "topic_delete": "Ștergeți Chat",
+  "password_reset_email_sent": "Un e-mail a fost trimis către {email}. Urmați instrucțiunile din e-mail pentru a vă reseta parola."
 }
