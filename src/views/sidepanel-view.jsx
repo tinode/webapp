@@ -245,8 +245,8 @@ class SidepanelView extends React.Component {
           view === 'reset' ?
           <PasswordResetView
             onRequest={this.props.onPasswordResetRequest}
-            onReset={this.props.onResetPassword} /> :
-
+            onReset={this.props.onResetPassword}
+            onCancel={this.props.onCancel} /> :
           null}
       </div>
     );
