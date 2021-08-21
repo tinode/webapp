@@ -1512,7 +1512,7 @@ class TinodeWeb extends React.Component {
 
   handlePasswordResetRequest(method, value) {
     // If already connected, connnect() will return a resolved promise.
-    this.tinode.connect()
+    return this.tinode.connect()
       .then(() => {
         return this.tinode.requestResetAuthSecret('basic', method, value);
       })
