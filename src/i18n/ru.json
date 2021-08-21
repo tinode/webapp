@@ -1368,5 +1368,12 @@
     "description": "Title for editing user's permissions",
     "missing": true,
     "obsolete": false
+  },
+  "password_reset_email_sent": {
+    "translation": "Сообщение было отправлено на адрес {email}. Следуйте инструкциям в сообщении, чтобы изменить пароль.",
+    "defaultMessage": "An email has been sent to {email}. Follow the directions in the email to reset your password.",
+    "description": "Notification that the email with password reset instructions has been sent",
+    "missing": false,
+    "obsolete": false
   }
 }
