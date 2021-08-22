@@ -241,6 +241,22 @@ class ContextMenu extends React.Component {
           });
         }
       },
+      'topic_restore': {
+        id: 'topic_restore',
+        title: formatMessage(messages.unarchive),
+        handler: (params, errorHandler) => {
+          const topic = this.props.tinode.getTopic(params.topicName);
+          if (!topic) {
+            console.log("Topic not found: ", params.topicName);
+            return;
+          }
+          return topic.archive(false).catch((err) => {
+            if (errorHandler) {
+              errorHandler(err.message, 'err');
+            }
+          });
+        }
+      },
       // menu_item_edit_permissions is defined elsewhere.
       'permissions': {
         id: 'permissions',
