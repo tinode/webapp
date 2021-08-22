@@ -1080,7 +1080,7 @@
   "sidepanel_title_crop": {
     "defaultMessage": "Drag to Adjust",
     "description": "Sidepanel title for AvatarCropView.",
-    "missing": false,
+    "missing": true,
     "obsolete": true
   },
   "sidepanel_title_login": {
@@ -1295,14 +1295,14 @@
     "translation": "",
     "defaultMessage": "General",
     "description": "Title for TopicCommonView.",
-    "missing": false,
+    "missing": true,
     "obsolete": true
   },
   "panel_title_acc_security": {
     "translation": "",
     "defaultMessage": "Security",
     "description": "Title for TopicSecirityView and AccSecurityView.",
-    "missing": false,
+    "missing": true,
     "obsolete": true
   },
   "panel_title_crop": {

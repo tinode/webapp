@@ -11,6 +11,7 @@ const EXTRACTED_STRINGS = './src/i18n/ex/base-en.json';
 const BASE_LANG        = 'en';
 const LANG_DIR         = './src/i18n/';
 const LANG_PATTERN     = './src/i18n/*.json';
+const LANG_PATTERN_ONE = './src/i18n/%s.json';
 const FINAL_FILE       = './src/messages.json';
 
 const args = process.argv.slice(2);
@@ -20,11 +21,18 @@ function getLocaleFromFileName(filename) {
   return parts[parts.length - 1].split('.json')[0];
 }
 
-// Called with a parameter?
+function printf(str) {
+  const args = [].slice.call(arguments, 1);
+  let i = 0;
+  return str.replace(/%s/g, () => args[i++]);
+}
+
+// Called with one or two parameters?
 if (args[0] == 'missing' || args[0] == 'obsolete') {
   // Extract missing or obsolete translations as requested.
-  // Read all translations.
-  const extracted = globSync(LANG_PATTERN)
+  // Read either all or just one translation.
+  const pattern = args[1] ? printf(LANG_PATTERN_ONE, args[1]) : LANG_PATTERN;
+  const extracted = globSync(pattern)
     .map((filename) => {
       const locale = getLocaleFromFileName(filename);
       const translated = JSON.parse(fs.readFileSync(filename, 'utf8'));
@@ -83,7 +91,7 @@ globSync(LANG_PATTERN)
       const [key, value] = ent;
       if (!baseMessages[key] && translated[key]) {
         // Obsolete, no longer missing.
-        translated[key].missing = false;
+        translated[key].missing = !translated[key].translation;
         translated[key].obsolete = true;
       }
     });

@@ -34,13 +34,6 @@
     "missing": false,
     "obsolete": false
   },
-  "action_more": {
-    "translation": "Más",
-    "defaultMessage": "More",
-    "description": "Action for showing more content",
-    "missing": false,
-    "obsolete": true
-  },
   "action_report_chat": {
     "translation": "Reportar conversación",
     "defaultMessage": "Report Conversation",
@@ -460,13 +453,6 @@
     "description": "Label for file content type (mime)",
     "missing": false,
     "obsolete": false
-  },
-  "label_default_access": {
-    "translation": "Modo de acceso predeterminado:",
-    "defaultMessage": "Default access mode:",
-    "description": "Section title",
-    "missing": false,
-    "obsolete": true
   },
   "label_default_access_mode": {
     "translation": "Modo de acceso predeterminado:",
@@ -1026,26 +1012,12 @@
     "missing": false,
     "obsolete": false
   },
-  "sidepanel_title_acc_general": {
-    "translation": "General",
-    "defaultMessage": "General",
-    "description": "Sidepanel title for TopicCommonView.",
-    "missing": false,
-    "obsolete": true
-  },
   "sidepanel_title_acc_notifications": {
     "translation": "Notificaciones",
     "defaultMessage": "Notifications",
     "description": "Sidepanel title for AccNotificationsView.",
     "missing": false,
     "obsolete": false
-  },
-  "sidepanel_title_acc_security": {
-    "translation": "Seguridad",
-    "defaultMessage": "Security",
-    "description": "Sidepanel title for AccSecurityView.",
-    "missing": false,
-    "obsolete": true
   },
   "sidepanel_title_acc_support": {
     "translation": "Soporte",
@@ -1081,13 +1053,6 @@
     "description": "Sidepanel title for ValidationView.",
     "missing": false,
     "obsolete": false
-  },
-  "sidepanel_title_crop": {
-    "translation": "Arrastra para ajustar",
-    "defaultMessage": "Drag to Adjust",
-    "description": "Sidepanel title for AvatarCropView.",
-    "missing": false,
-    "obsolete": true
   },
   "sidepanel_title_login": {
     "translation": "Iniciar sesión",
@@ -1180,13 +1145,6 @@
     "missing": false,
     "obsolete": false
   },
-  "title_info": {
-    "translation": "Información",
-    "defaultMessage": "Info",
-    "description": "Title for InfoView",
-    "missing": false,
-    "obsolete": true
-  },
   "title_manage_tags": {
     "translation": "Gestionar",
     "defaultMessage": "Manage",
@@ -1272,87 +1230,73 @@
     "obsolete": false
   },
   "description_editing_placeholder": {
-    "translation": "",
+    "translation": "Descripción (opcional)",
     "defaultMessage": "Description (optional)",
     "description": "Placeholder for editing topic description",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "label_description": {
-    "translation": "",
+    "translation": "Descripción",
     "defaultMessage": "Description",
     "description": "Label for editing topic description",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "button_security": {
-    "translation": "",
+    "translation": "Seguridad",
     "defaultMessage": "Security",
     "description": "Navigaton button for security panel.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
-  "panel_title_acc_general": {
-    "translation": "",
-    "defaultMessage": "General",
-    "description": "Title for TopicCommonView.",
-    "missing": false,
-    "obsolete": true
-  },
-  "panel_title_acc_security": {
-    "translation": "",
-    "defaultMessage": "Security",
-    "description": "Title for TopicSecirityView and AccSecurityView.",
-    "missing": false,
-    "obsolete": true
-  },
   "panel_title_crop": {
-    "translation": "",
+    "translation": "Arrastra para ajustar",
     "defaultMessage": "Drag to Adjust",
     "description": "Title for AvatarCropView.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "panel_title_general": {
-    "translation": "",
+    "translation": "General",
     "defaultMessage": "General",
     "description": "Title for TopicCommon.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "panel_title_members": {
-    "translation": "",
+    "translation": "Miembros",
     "defaultMessage": "Members",
     "description": "Title for managing group members view.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "panel_title_security": {
-    "translation": "",
+    "translation": "Seguridad",
     "defaultMessage": "Security",
     "description": "Title for TopicSecirity and AccSecurity.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "panel_title_info": {
-    "translation": "",
+    "translation": "Información",
     "defaultMessage": "Info",
     "description": "Title for InfoView",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "permissions_anonymous": {
-    "translation": "",
+    "translation": "Anónimo",
     "defaultMessage": "Anonymous",
     "description": "Title for editing default anonymous permissions",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "permissions_authenticated": {
-    "translation": "",
+    "translation": "Autenticado",
     "defaultMessage": "Authenticated",
     "description": "Title for editing default authenticated permissions",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "topic_delete": {
@@ -1363,10 +1307,10 @@
     "obsolete": false
   },
   "permissions_user": {
-    "translation": "",
+    "translation": "Permisos del usuario",
     "defaultMessage": "User's Permissions",
     "description": "Title for editing user's permissions",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "password_reset_email_sent": {
