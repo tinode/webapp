@@ -162,7 +162,7 @@
   "title_permissions": "Permisos",
   "message_sending": "enviando...",
   "message_sending_failed": "no se pudo enviar el mensaje",
-  "search_placeholder": "Ej. email:alice@example.com, tel:17025550003...",
+  "search_placeholder": "Ej. email:alba@example.com, tel:17025550003...",
   "messaging_disabled_prompt": "El envío de mensajes está deshabilitado",
   "new_message_prompt": "Nuevo mensaje",
   "image_caption_prompt": "Añade un comentario",
@@ -177,5 +177,6 @@
   "drafty_form": "Formulario:",
   "drafty_image": "Imagen",
   "topic_delete": "Eliminar chat",
-  "password_reset_email_sent": "Se ha enviado un correo electrónico a {email}. Siga las instrucciones del correo electrónico para restablecer su contraseña."
+  "password_reset_email_sent": "Se ha enviado un correo electrónico a {email}. Siga las instrucciones del correo electrónico para restablecer su contraseña.",
+  "menu_item_restore_topic": "Restaurar"
 }

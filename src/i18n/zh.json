@@ -177,5 +177,6 @@
   "drafty_form": "形式：",
   "drafty_image": "图像",
   "topic_delete": "删除聊天",
-  "password_reset_email_sent": "一封电子邮件已发送至 {email}。按照电子邮件中的说明重置密码。"
+  "password_reset_email_sent": "一封电子邮件已发送至 {email}。按照电子邮件中的说明重置密码。",
+  "menu_item_restore_topic": "从存档中恢复"
 }

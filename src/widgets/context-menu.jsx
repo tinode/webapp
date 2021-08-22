@@ -88,6 +88,11 @@ const messages = defineMessages({
     defaultMessage: 'Archive',
     description: 'Move topic from the list of active chats to archive'
   },
+  unarchive: {
+    id: 'menu_item_restore_topic',
+    defaultMessage: 'Restore',
+    description: 'Restore topic from archive'
+  },
   edit_permissions: {
     id: 'menu_item_edit_permissions',
     defaultMessage: 'Edit permissions',

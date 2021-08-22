@@ -162,7 +162,7 @@
   "title_permissions": "권한",
   "message_sending": "보내기...",
   "message_sending_failed": "실패",
-  "search_placeholder": "email:alice@example.com,tel:17025550003...와같은목록",
+  "search_placeholder": "email:kim@example.com,tel:17025550003...와같은목록",
   "messaging_disabled_prompt": "메시지비활성화",
   "new_message_prompt": "새메시지",
   "image_caption_prompt": "이미지설명",
@@ -180,5 +180,6 @@
   "drafty_form": "형태:",
   "drafty_image": "이미지",
   "topic_delete": "채팅 삭제",
-  "password_reset_email_sent": "이메일이 {email}(으)로 전송되었습니다. 이메일의 지침에 따라 비밀번호를 재설정하세요."
+  "password_reset_email_sent": "이메일이 {email}(으)로 전송되었습니다. 이메일의 지침에 따라 비밀번호를 재설정하세요.",
+  "menu_item_restore_topic": "복원"
 }
