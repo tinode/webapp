@@ -176,5 +176,6 @@
   "drafty_attachment": "Archivo",
   "drafty_form": "Formulario:",
   "drafty_image": "Imagen",
-  "topic_delete": "Eliminar chat"
+  "topic_delete": "Eliminar chat",
+  "password_reset_email_sent": "Se ha enviado un correo electrónico a {email}. Siga las instrucciones del correo electrónico para restablecer su contraseña."
 }

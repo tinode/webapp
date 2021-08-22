@@ -176,5 +176,6 @@
   "drafty_attachment": "Аттачмент",
   "drafty_form": "Форма:",
   "drafty_image": "Картинка",
-  "topic_delete": "Удалить чат"
+  "topic_delete": "Удалить чат",
+  "password_reset_email_sent": "Сообщение было отправлено на адрес {email}. Следуйте инструкциям в сообщении, чтобы изменить пароль."
 }

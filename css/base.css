@@ -373,6 +373,10 @@ div.alert .content {
   color: #2196f3; /* blue 500 */
 }
 
+.green {
+  color: #388e3c; /* green 700 */
+}
+
 .red {
   color: #D32F2F; /* red 700 */
 }
@@ -1935,6 +1939,9 @@ ul.tabbar li.active > a {
 }
 .material-icons.big {
   font-size: 2.4rem;
+}
+.material-icons.huge {
+  font-size: 4rem;
 }
 
 #self-avatar .material-icons {
