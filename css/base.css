@@ -810,6 +810,11 @@ i.search {
   overflow: hidden;
   padding: 1rem 1.5rem 1rem 0.5rem;
 }
+
+.info-box > span {
+  line-height: 1.5rem;
+}
+
 .info-box .cancel {
   position: absolute;
   right: 0.25rem;
@@ -834,6 +839,7 @@ i.search {
   border-bottom: 1px solid #b3e5fc;
   color: #0288d1;
 }
+
 .info-box .cancel .material-icons {
   font-size: 1rem;
   color: #757575;
