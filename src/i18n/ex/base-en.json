@@ -345,6 +345,10 @@
     "defaultMessage": "Name",
     "description": "Label for editing topic name"
   },
+  "label_unarchive_topic": {
+    "defaultMessage": "Archived:",
+    "description": "Label for unarchiving the topic"
+  },
   "label_user_contacts": {
     "defaultMessage": "Contacts:",
     "description": "Label for user contacts"

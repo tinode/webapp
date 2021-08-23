@@ -120,6 +120,7 @@ class TinodeWeb extends React.Component {
     this.handleStartTopicRequest = this.handleStartTopicRequest.bind(this);
     this.handleNewTopicCreated = this.handleNewTopicCreated.bind(this);
     this.handleTopicUpdateRequest = this.handleTopicUpdateRequest.bind(this);
+    this.handleUnarchive = this.handleUnarchive.bind(this);
     this.handleChangePermissions = this.handleChangePermissions.bind(this);
     this.handleTagsUpdateRequest = this.handleTagsUpdateRequest.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
@@ -1229,7 +1230,8 @@ class TinodeWeb extends React.Component {
         }
         params.public = pub;
       }
-      if (priv) {
+
+      if (typeof priv == 'string') {
         params.private = (priv === Tinode.DEL_CHAR) ?
           Tinode.DEL_CHAR : {comment: priv};
       }
@@ -1239,6 +1241,13 @@ class TinodeWeb extends React.Component {
       topic.setMeta({desc: params, attachments: attachments}).catch((err) => {
         this.handleError(err.message, 'err');
       });
+    }
+  }
+
+  handleUnarchive(topicName) {
+    const topic = this.tinode.getTopic(topicName);
+    if (topic) {
+      topic.archive(false);
     }
   }
 
@@ -1697,6 +1706,7 @@ class TinodeWeb extends React.Component {
             onReportTopic={this.handleReportTopic}
             onAddMember={this.handleManageGroupMembers}
             onTopicTagsUpdateRequest={this.handleTagsUpdateRequest}
+            onTopicUnArchive={this.handleUnarchive}
             onInitFind={this.tnInitFind}
             onError={this.handleError}
 

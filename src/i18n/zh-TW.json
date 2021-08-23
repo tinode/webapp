@@ -1319,5 +1319,12 @@
     "description": "Notification that the email with password reset instructions has been sent",
     "missing": false,
     "obsolete": false
+  },
+  "label_unarchive_topic": {
+    "translation": "存檔聊天：",
+    "defaultMessage": "Archived:",
+    "description": "Label for unarchiving the topic",
+    "missing": false,
+    "obsolete": false
   }
 }
