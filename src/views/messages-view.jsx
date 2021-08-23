@@ -125,7 +125,7 @@ class MessagesView extends React.Component {
   // or vertical shrinking.
   componentDidUpdate(prevProps, prevState) {
     if (this.messagesScroller) {
-      if (prevState.topic != this.state.topic || prevState.latestMsgSeq != this.state.latestMsgSeq) {
+      if (prevState.topic != this.state.topic || prevState.messageCount != this.state.messageCount) {
         // New message
         this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition;
       } else if (prevProps.viewportHeight > this.props.viewportHeight) {
@@ -209,7 +209,7 @@ class MessagesView extends React.Component {
     if (!nextProps.topic) {
       // Default state: no topic.
       nextState = {
-        latestMsgSeq: -1,
+        messageCount: 0,
         latestClearId: -1,
         onlineSubs: [],
         topic: null,
@@ -278,14 +278,14 @@ class MessagesView extends React.Component {
           });
         }
         Object.assign(nextState, {
-          latestMsgSeq: topic.maxMsgSeq(),
+          messageCount: topic.messageCount(),
           latestClearId: topic.maxClearId(),
           channel: topic.isChannelType()
         });
       } else {
         // Invalid topic.
         Object.assign(nextState, {
-          latestMsgSeq: -1,
+          messageCount: 0,
           latestClearId: -1,
           onlineSubs: [],
           title: '',
@@ -505,10 +505,10 @@ class MessagesView extends React.Component {
     }
 
     clearTimeout(this.keyPressTimer)
-    this.setState({latestMsgSeq: topic.maxMsgSeq(), typingIndicator: false});
+    this.setState({messageCount: topic.messageCount(), typingIndicator: false});
 
-    // If the message is added to the end of the message list,
-    // scroll to the bottom.
+    // Scroll to the bottom if the message is added to the end of the message list.
+    // TODO: This should be replaced by showing a "scroll to bottom" button.
     if (topic.isNewMessage(msg.seq)) {
       this.setState({scrollPosition: 0});
     }
