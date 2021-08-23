@@ -508,7 +508,8 @@ class MessagesView extends React.Component {
       return;
     }
 
-    this.setState({latestMsgSeq: topic.maxMsgSeq()});
+    clearTimeout(this.keyPressTimer)
+    this.setState({latestMsgSeq: topic.maxMsgSeq(), typingIndicator: false});
 
     // If the message is added to the end of the message list,
     // scroll to the bottom.
@@ -538,9 +539,8 @@ class MessagesView extends React.Component {
     switch (info.what) {
       case 'kp': {
         clearTimeout(this.keyPressTimer);
-        var instance = this;
-        this.keyPressTimer = setTimeout(function() {
-          instance.setState({typingIndicator: false});
+        this.keyPressTimer = setTimeout(() => {
+          this.setState({typingIndicator: false});
         }, KEYPRESS_DELAY + 1000);
         if (!this.state.typingIndicator) {
           this.setState({typingIndicator: true});

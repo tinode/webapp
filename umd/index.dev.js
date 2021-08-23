@@ -3255,8 +3255,10 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       return;
     }
 
+    clearTimeout(this.keyPressTimer);
     this.setState({
-      latestMsgSeq: topic.maxMsgSeq()
+      latestMsgSeq: topic.maxMsgSeq(),
+      typingIndicator: false
     });
 
     if (topic.isNewMessage(msg.seq)) {
@@ -3289,9 +3291,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       case 'kp':
         {
           clearTimeout(this.keyPressTimer);
-          var instance = this;
-          this.keyPressTimer = setTimeout(function () {
-            instance.setState({
+          this.keyPressTimer = setTimeout(() => {
+            this.setState({
               typingIndicator: false
             });
           }, _config_js__WEBPACK_IMPORTED_MODULE_14__.KEYPRESS_DELAY + 1000);
