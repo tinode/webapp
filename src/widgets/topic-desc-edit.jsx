@@ -91,6 +91,7 @@ export default class TopicDescEdit extends React.Component {
     this.setState({newAvatar: img, newAvatarMime: mime});
     if (!img) {
       // Deleting the avatar.
+      this.setState({avatar: null});
       this.props.onUpdateTopicDesc(this.props.topic, theCard(null, Tinode.DEL_CHAR));
     }
   }

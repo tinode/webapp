@@ -7958,7 +7958,7 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       badges: badges
     })) : this.props.small ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "contact-comment"
-    }, marker, subtitle || '\u00A0')), this.props.showContextMenu ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    }, marker, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, subtitle || '\u00A0'))), this.props.showContextMenu ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       className: "menuTrigger"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
@@ -8015,7 +8015,7 @@ function draftyFormatter(style, data, values, key) {
         values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
           key: "fm",
           className: "material-icons"
-        }, "dashboard"), formatMessage(messages.drafty_form)].concat(values || []);
+        }, "dashboard"), formatMessage(messages.drafty_form)].concat(' ', values || []);
         break;
 
       case 'RW':
@@ -11687,6 +11687,9 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
     });
 
     if (!img) {
+      this.setState({
+        avatar: null
+      });
       this.props.onUpdateTopicDesc(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(null, (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().DEL_CHAR)));
     }
   }

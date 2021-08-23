@@ -69,8 +69,8 @@ a.gray:focus {
   height: 1.4em;
   line-height: 1.4em;
   text-transform: none;
-  padding-left: .35rem;
-  padding-right: .35rem;
+  padding: 0 .35rem;
+  margin: 0.15rem;
   border: 1px solid #999;
   border-radius: 3px;
   background-color: #eee;
@@ -937,6 +937,12 @@ i.search {
   overflow-x: hidden;
   white-space: nowrap;
   font-weight: lighter;
+}
+
+.contact-box .contact-comment > span {
+  overflow-x: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .contact-box .contact-comment b {
@@ -1934,6 +1940,7 @@ ul.tabbar li.active > a {
   text-align: center;
   border-radius: 50%;
   line-height: 1;
+  padding-top: 0.1em;
   color: rgba(250, 250, 250, 0.8); /* default text color #FAFAFA, gray 50 */
 }
 

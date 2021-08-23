@@ -115,7 +115,7 @@ class Contact extends React.Component {
           </div>
           {this.props.showMode ?
             <span><ContactBadges badges={badges} /></span> :
-            this.props.small ? null : <div className="contact-comment">{marker}{subtitle || '\u00A0'}</div>}
+            this.props.small ? null : <div className="contact-comment">{marker}<span>{subtitle || '\u00A0'}</span></div>}
         </div>
         {this.props.showContextMenu ?
           <span className="menuTrigger">
@@ -161,7 +161,7 @@ function draftyFormatter(style, data, values, key) {
       case 'FM':
         el = React.Fragment;
         values = [<i key="fm" className="material-icons">dashboard</i>,
-          formatMessage(messages.drafty_form)].concat(values || []);
+          formatMessage(messages.drafty_form)].concat(' ', values || []);
         break;
       case 'RW':
         el = React.Fragment;
