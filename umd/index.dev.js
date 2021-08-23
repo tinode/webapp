@@ -3188,7 +3188,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
   componentDidUpdate(prevProps, prevState) {
     if (this.messagesScroller) {
-      if (prevState.topic != this.state.topic || prevState.latestMsgSeq != this.state.latestMsgSeq) {
+      if (prevState.topic != this.state.topic || prevState.messageCount != this.state.messageCount) {
         this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition;
       } else if (prevProps.viewportHeight > this.props.viewportHeight) {
         this.messagesScroller.scrollTop += prevProps.viewportHeight - this.props.viewportHeight;
@@ -3268,7 +3268,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
     if (!nextProps.topic) {
       nextState = {
-        latestMsgSeq: -1,
+        messageCount: 0,
         latestClearId: -1,
         onlineSubs: [],
         topic: null,
@@ -3335,13 +3335,13 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         }
 
         Object.assign(nextState, {
-          latestMsgSeq: topic.maxMsgSeq(),
+          messageCount: topic.messageCount(),
           latestClearId: topic.maxClearId(),
           channel: topic.isChannelType()
         });
       } else {
         Object.assign(nextState, {
-          latestMsgSeq: -1,
+          messageCount: 0,
           latestClearId: -1,
           onlineSubs: [],
           title: '',
@@ -3573,7 +3573,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
 
     this.setState({
-      latestMsgSeq: topic.maxMsgSeq()
+      messageCount: topic.messageCount()
     });
 
     if (topic.isNewMessage(msg.seq)) {
