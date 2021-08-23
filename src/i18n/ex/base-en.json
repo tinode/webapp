@@ -421,6 +421,10 @@
     "defaultMessage": "Mute",
     "description": "Turn off notifications"
   },
+  "menu_item_restore_topic": {
+    "defaultMessage": "Restore",
+    "description": "Restore topic from archive"
+  },
   "menu_item_send_retry": {
     "defaultMessage": "Retry",
     "description": "Retry sending message"

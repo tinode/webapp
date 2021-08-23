@@ -178,7 +178,8 @@
     "drafty_form": "Formular:",
     "drafty_image": "Bild",
     "topic_delete": "Chat löschen",
-    "password_reset_email_sent": "Eine E-Mail wurde an {email} gesendet. Folgen Sie den Anweisungen in der E-Mail, um Ihr Passwort zurückzusetzen."
+    "password_reset_email_sent": "Eine E-Mail wurde an {email} gesendet. Folgen Sie den Anweisungen in der E-Mail, um Ihr Passwort zurückzusetzen.",
+    "menu_item_restore_topic": "Wiederherstellen"
   },
   "en": {
     "action_block_contact": "Block Contact",
@@ -288,6 +289,7 @@
     "menu_item_member_delete": "Remove",
     "menu_item_mute": "Mute",
     "menu_item_reply": "Reply",
+    "menu_item_restore_topic": "Restore",
     "menu_item_send_retry": "Retry",
     "menu_item_unblock": "Unblock",
     "menu_item_unmute": "Unmute",
@@ -526,7 +528,7 @@
     "title_permissions": "Permisos",
     "message_sending": "enviando...",
     "message_sending_failed": "no se pudo enviar el mensaje",
-    "search_placeholder": "Ej. email:alice@example.com, tel:17025550003...",
+    "search_placeholder": "Ej. email:alba@example.com, tel:17025550003...",
     "messaging_disabled_prompt": "El envío de mensajes está deshabilitado",
     "new_message_prompt": "Nuevo mensaje",
     "image_caption_prompt": "Añade un comentario",
@@ -541,7 +543,8 @@
     "drafty_form": "Formulario:",
     "drafty_image": "Imagen",
     "topic_delete": "Eliminar chat",
-    "password_reset_email_sent": "Se ha enviado un correo electrónico a {email}. Siga las instrucciones del correo electrónico para restablecer su contraseña."
+    "password_reset_email_sent": "Se ha enviado un correo electrónico a {email}. Siga las instrucciones del correo electrónico para restablecer su contraseña.",
+    "menu_item_restore_topic": "Restaurar"
   },
   "ko": {
     "validate_credential_action": "확인",
@@ -704,7 +707,7 @@
     "title_permissions": "권한",
     "message_sending": "보내기...",
     "message_sending_failed": "실패",
-    "search_placeholder": "email:alice@example.com,tel:17025550003...와같은목록",
+    "search_placeholder": "email:kim@example.com,tel:17025550003...와같은목록",
     "messaging_disabled_prompt": "메시지비활성화",
     "new_message_prompt": "새메시지",
     "image_caption_prompt": "이미지설명",
@@ -722,7 +725,8 @@
     "drafty_form": "형태:",
     "drafty_image": "이미지",
     "topic_delete": "채팅 삭제",
-    "password_reset_email_sent": "이메일이 {email}(으)로 전송되었습니다. 이메일의 지침에 따라 비밀번호를 재설정하세요."
+    "password_reset_email_sent": "이메일이 {email}(으)로 전송되었습니다. 이메일의 지침에 따라 비밀번호를 재설정하세요.",
+    "menu_item_restore_topic": "복원"
   },
   "ro": {
     "validate_credential_action": "confirmă",
@@ -903,7 +907,8 @@
     "drafty_form": "Formă:",
     "drafty_image": "Imagine",
     "topic_delete": "Ștergeți Chat",
-    "password_reset_email_sent": "Un e-mail a fost trimis către {email}. Urmați instrucțiunile din e-mail pentru a vă reseta parola."
+    "password_reset_email_sent": "Un e-mail a fost trimis către {email}. Urmați instrucțiunile din e-mail pentru a vă reseta parola.",
+    "menu_item_restore_topic": "Restabili"
   },
   "ru": {
     "contacts_not_found": "Чатов нет<br />¯∖_(ツ)_/¯",
@@ -1084,7 +1089,8 @@
     "drafty_form": "Форма:",
     "drafty_image": "Картинка",
     "topic_delete": "Удалить чат",
-    "password_reset_email_sent": "Сообщение было отправлено на адрес {email}. Следуйте инструкциям в сообщении, чтобы изменить пароль."
+    "password_reset_email_sent": "Сообщение было отправлено на адрес {email}. Следуйте инструкциям в сообщении, чтобы изменить пароль.",
+    "menu_item_restore_topic": "Восстановить"
   },
   "zh-TW": {
     "action_block_contact": "封鎖聯絡人",
@@ -1265,7 +1271,8 @@
     "user_not_found": "找不到",
     "validate_credential_action": "確認",
     "topic_delete": "刪除聊天",
-    "password_reset_email_sent": "一封電子郵件已發送至 {email}。按照電子郵件中的說明重置密碼。"
+    "password_reset_email_sent": "一封電子郵件已發送至 {email}。按照電子郵件中的說明重置密碼。",
+    "menu_item_restore_topic": "恢復"
   },
   "zh": {
     "archived_contacts": "已归档联系人 ({count})",
@@ -1446,6 +1453,7 @@
     "drafty_form": "形式：",
     "drafty_image": "图像",
     "topic_delete": "删除聊天",
-    "password_reset_email_sent": "一封电子邮件已发送至 {email}。按照电子邮件中的说明重置密码。"
+    "password_reset_email_sent": "一封电子邮件已发送至 {email}。按照电子邮件中的说明重置密码。",
+    "menu_item_restore_topic": "从存档中恢复"
   }
 }
