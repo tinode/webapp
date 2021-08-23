@@ -369,23 +369,19 @@ class MessagesView extends React.Component {
   // Get older messages
   handleScrollEvent(event) {
     this.setState({scrollPosition: event.target.scrollHeight - event.target.scrollTop});
+    if (this.state.fetchingMessages) {
+      return;
+    }
+
     if (event.target.scrollTop <= 0) {
-      this.setState((prevState, props) => {
-        const newState = {};
-        if (!prevState.fetchingMessages) {
-          const topic = this.props.tinode.getTopic(this.state.topic);
-          if (topic && topic.isSubscribed() && topic.msgHasMoreMessages()) {
-            newState.fetchingMessages = true;
-            topic.getMessagesPage(MESSAGES_PAGE)
-              .then(() => this.setState({fetchingMessages: false}))
-              .catch((err) => {
-                this.setState({fetchingMessages: false});
-                this.props.onError(err.message, 'err');
-              });
-          }
-        }
-        return newState;
-      });
+      const topic = this.props.tinode.getTopic(this.state.topic);
+      if (topic && topic.isSubscribed() && topic.msgHasMoreMessages()) {
+        this.setState({fetchingMessages: true}, () => {
+          topic.getMessagesPage(MESSAGES_PAGE)
+            .catch((err) => this.props.onError(err.message, 'err'))
+            .finally(() => this.setState({fetchingMessages: false}));
+          });
+      }
     }
   }
 
