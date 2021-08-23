@@ -34,13 +34,6 @@
     "missing": false,
     "obsolete": false
   },
-  "action_more": {
-    "translation": "更多",
-    "defaultMessage": "More",
-    "description": "Action for showing more content",
-    "missing": false,
-    "obsolete": true
-  },
   "action_report_chat": {
     "translation": "檢舉對話",
     "defaultMessage": "Report Conversation",
@@ -56,9 +49,10 @@
     "obsolete": false
   },
   "badge_danger": {
+    "translation": "不可信",
     "defaultMessage": "Untrustworthy",
     "description": "Suspicious or untrustworthy account or topic badge",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "badge_owner": {
@@ -69,15 +63,17 @@
     "obsolete": false
   },
   "badge_staff": {
+    "translation": "員工管理",
     "defaultMessage": "Staff-managed",
     "description": "Explanation of a staff-managed account or topic badge",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "badge_verified": {
+    "translation": "已驗證/官方",
     "defaultMessage": "Verified/official",
     "description": "Explanation of a verified account or topic badge",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "badge_you": {
@@ -298,9 +294,10 @@
     "obsolete": false
   },
   "delete_account_warning": {
+    "translation": "您確定要刪除您的帳戶嗎？此操作無法撤消。",
     "defaultMessage": "Are you sure you want to delete your account? It cannot be undone.",
     "description": "Warning message when deleting an account",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "delete_messages_warning": {
@@ -456,13 +453,6 @@
     "description": "Label for file content type (mime)",
     "missing": false,
     "obsolete": false
-  },
-  "label_default_access": {
-    "translation": "預設存取模式：",
-    "defaultMessage": "Default access mode:",
-    "description": "Section title",
-    "missing": false,
-    "obsolete": true
   },
   "label_default_access_mode": {
     "translation": "預設存取模式：",
@@ -757,9 +747,10 @@
     "obsolete": false
   },
   "menu_item_restore_topic": {
+    "translation": "恢復",
     "defaultMessage": "Restore",
     "description": "Restore topic from archive",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "menu_item_send_retry": {
@@ -1021,26 +1012,12 @@
     "missing": false,
     "obsolete": false
   },
-  "sidepanel_title_acc_general": {
-    "translation": "一般",
-    "defaultMessage": "General",
-    "description": "Sidepanel title for TopicCommonView.",
-    "missing": false,
-    "obsolete": true
-  },
   "sidepanel_title_acc_notifications": {
     "translation": "通知",
     "defaultMessage": "Notifications",
     "description": "Sidepanel title for AccNotificationsView.",
     "missing": false,
     "obsolete": false
-  },
-  "sidepanel_title_acc_security": {
-    "translation": "安全性",
-    "defaultMessage": "Security",
-    "description": "Sidepanel title for AccSecurityView.",
-    "missing": false,
-    "obsolete": true
   },
   "sidepanel_title_acc_support": {
     "translation": "支援",
@@ -1076,12 +1053,6 @@
     "description": "Sidepanel title for ValidationView.",
     "missing": false,
     "obsolete": false
-  },
-  "sidepanel_title_crop": {
-    "defaultMessage": "Drag to Adjust",
-    "description": "Sidepanel title for AvatarCropView.",
-    "missing": false,
-    "obsolete": true
   },
   "sidepanel_title_login": {
     "translation": "登入",
@@ -1174,13 +1145,6 @@
     "missing": false,
     "obsolete": false
   },
-  "title_info": {
-    "translation": "資訊",
-    "defaultMessage": "Info",
-    "description": "Title for InfoView",
-    "missing": false,
-    "obsolete": true
-  },
   "title_manage_tags": {
     "translation": "管理",
     "defaultMessage": "Manage",
@@ -1265,93 +1229,74 @@
     "missing": false,
     "obsolete": false
   },
-  "delete_account_arning": {
-    "translation": "您確定要刪除您的帳號嗎？此操作無法復原。",
-    "missing": false,
-    "obsolete": true
-  },
   "description_editing_placeholder": {
-    "translation": "",
+    "translation": "說明（可選）",
     "defaultMessage": "Description (optional)",
     "description": "Placeholder for editing topic description",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "label_description": {
-    "translation": "",
+    "translation": "說明",
     "defaultMessage": "Description",
     "description": "Label for editing topic description",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "button_security": {
-    "translation": "",
+    "translation": "安全性",
     "defaultMessage": "Security",
     "description": "Navigaton button for security panel.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
-  "panel_title_acc_general": {
-    "translation": "",
-    "defaultMessage": "General",
-    "description": "Title for TopicCommonView.",
-    "missing": false,
-    "obsolete": true
-  },
-  "panel_title_acc_security": {
-    "translation": "",
-    "defaultMessage": "Security",
-    "description": "Title for TopicSecirityView and AccSecurityView.",
-    "missing": false,
-    "obsolete": true
-  },
   "panel_title_crop": {
-    "translation": "",
+    "translation": "拖動調整",
     "defaultMessage": "Drag to Adjust",
     "description": "Title for AvatarCropView.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "panel_title_general": {
-    "translation": "",
+    "translation": "一般",
     "defaultMessage": "General",
     "description": "Title for TopicCommon.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "panel_title_members": {
-    "translation": "",
+    "translation": "成員",
     "defaultMessage": "Members",
     "description": "Title for managing group members view.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "panel_title_security": {
-    "translation": "",
+    "translation": "安全性",
     "defaultMessage": "Security",
     "description": "Title for TopicSecirity and AccSecurity.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "panel_title_info": {
-    "translation": "",
+    "translation": "資訊",
     "defaultMessage": "Info",
     "description": "Title for InfoView",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "permissions_anonymous": {
-    "translation": "",
+    "translation": "匿名",
     "defaultMessage": "Anonymous",
     "description": "Title for editing default anonymous permissions",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "permissions_authenticated": {
-    "translation": "",
+    "translation": "已認證",
     "defaultMessage": "Authenticated",
     "description": "Title for editing default authenticated permissions",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "topic_delete": {
@@ -1362,10 +1307,24 @@
     "obsolete": false
   },
   "permissions_user": {
-    "translation": "",
+    "translation": "用戶權限",
     "defaultMessage": "User's Permissions",
     "description": "Title for editing user's permissions",
-    "missing": true,
+    "missing": false,
+    "obsolete": false
+  },
+  "password_reset_email_sent": {
+    "translation": "一封電子郵件已發送至 {email}。按照電子郵件中的說明重置密碼。",
+    "defaultMessage": "An email has been sent to {email}. Follow the directions in the email to reset your password.",
+    "description": "Notification that the email with password reset instructions has been sent",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_unarchive_topic": {
+    "translation": "存檔聊天：",
+    "defaultMessage": "Archived:",
+    "description": "Label for unarchiving the topic",
+    "missing": false,
     "obsolete": false
   },
   "menu_item_reply": {

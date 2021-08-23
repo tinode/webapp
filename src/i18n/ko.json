@@ -34,13 +34,6 @@
     "missing": false,
     "obsolete": false
   },
-  "action_more": {
-    "translation": "더보기",
-    "defaultMessage": "More",
-    "description": "Action for showing more content",
-    "missing": false,
-    "obsolete": true
-  },
   "action_report_chat": {
     "translation": "대화기록",
     "defaultMessage": "Report Conversation",
@@ -460,13 +453,6 @@
     "description": "Label for file content type (mime)",
     "missing": false,
     "obsolete": false
-  },
-  "label_default_access": {
-    "translation": "기본액세스모드: ",
-    "defaultMessage": "Default access mode:",
-    "description": "Section title",
-    "missing": false,
-    "obsolete": true
   },
   "label_default_access_mode": {
     "translation": "기본액세스모드: ",
@@ -1026,26 +1012,12 @@
     "missing": false,
     "obsolete": false
   },
-  "sidepanel_title_acc_general": {
-    "translation": "일반",
-    "defaultMessage": "General",
-    "description": "Sidepanel title for TopicCommonView.",
-    "missing": false,
-    "obsolete": true
-  },
   "sidepanel_title_acc_notifications": {
     "translation": "알림",
     "defaultMessage": "Notifications",
     "description": "Sidepanel title for AccNotificationsView.",
     "missing": false,
     "obsolete": false
-  },
-  "sidepanel_title_acc_security": {
-    "translation": "보안",
-    "defaultMessage": "Security",
-    "description": "Sidepanel title for AccSecurityView.",
-    "missing": false,
-    "obsolete": true
   },
   "sidepanel_title_acc_support": {
     "translation": "지원",
@@ -1081,13 +1053,6 @@
     "description": "Sidepanel title for ValidationView.",
     "missing": false,
     "obsolete": false
-  },
-  "sidepanel_title_crop": {
-    "translation": "드래그하여 조정",
-    "defaultMessage": "Drag to Adjust",
-    "description": "Sidepanel title for AvatarCropView.",
-    "missing": false,
-    "obsolete": true
   },
   "sidepanel_title_login": {
     "translation": "로그인",
@@ -1180,13 +1145,6 @@
     "missing": false,
     "obsolete": false
   },
-  "title_info": {
-    "translation": "정보",
-    "defaultMessage": "Info",
-    "description": "Title for InfoView",
-    "missing": false,
-    "obsolete": true
-  },
   "title_manage_tags": {
     "translation": "관리",
     "defaultMessage": "Manage",
@@ -1271,98 +1229,74 @@
     "missing": false,
     "obsolete": false
   },
-  "grant_permissions": {
-    "translation": "승인",
-    "missing": false,
-    "obsolete": true
-  },
-  "message_not_readable": {
-    "translation": "메시지에접근할수없음",
-    "missing": false,
-    "obsolete": true
-  },
   "description_editing_placeholder": {
-    "translation": "",
+    "translation": "설명(선택 사항)",
     "defaultMessage": "Description (optional)",
     "description": "Placeholder for editing topic description",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "label_description": {
-    "translation": "",
+    "translation": "설명",
     "defaultMessage": "Description",
     "description": "Label for editing topic description",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "button_security": {
-    "translation": "",
+    "translation": "보안",
     "defaultMessage": "Security",
     "description": "Navigaton button for security panel.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
-  "panel_title_acc_general": {
-    "translation": "",
-    "defaultMessage": "General",
-    "description": "Title for TopicCommonView.",
-    "missing": false,
-    "obsolete": true
-  },
-  "panel_title_acc_security": {
-    "translation": "",
-    "defaultMessage": "Security",
-    "description": "Title for TopicSecirityView and AccSecurityView.",
-    "missing": false,
-    "obsolete": true
-  },
   "panel_title_crop": {
-    "translation": "",
+    "translation": "드래그하여 조정",
     "defaultMessage": "Drag to Adjust",
     "description": "Title for AvatarCropView.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "panel_title_general": {
-    "translation": "",
+    "translation": "일반",
     "defaultMessage": "General",
     "description": "Title for TopicCommon.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "panel_title_members": {
-    "translation": "",
+    "translation": "구성원",
     "defaultMessage": "Members",
     "description": "Title for managing group members view.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "panel_title_security": {
-    "translation": "",
+    "translation": "보안",
     "defaultMessage": "Security",
     "description": "Title for TopicSecirity and AccSecurity.",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "panel_title_info": {
-    "translation": "",
+    "translation": "정보",
     "defaultMessage": "Info",
     "description": "Title for InfoView",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "permissions_anonymous": {
-    "translation": "",
+    "translation": "익명",
     "defaultMessage": "Anonymous",
     "description": "Title for editing default anonymous permissions",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "permissions_authenticated": {
-    "translation": "",
+    "translation": "인증됨",
     "defaultMessage": "Authenticated",
     "description": "Title for editing default authenticated permissions",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "topic_delete": {
@@ -1373,10 +1307,24 @@
     "obsolete": false
   },
   "permissions_user": {
-    "translation": "",
+    "translation": "사용자 권한",
     "defaultMessage": "User's Permissions",
     "description": "Title for editing user's permissions",
-    "missing": true,
+    "missing": false,
+    "obsolete": false
+  },
+  "password_reset_email_sent": {
+    "translation": "이메일이 {email}(으)로 전송되었습니다. 이메일의 지침에 따라 비밀번호를 재설정하세요.",
+    "defaultMessage": "An email has been sent to {email}. Follow the directions in the email to reset your password.",
+    "description": "Notification that the email with password reset instructions has been sent",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_unarchive_topic": {
+    "translation": "보관됨:",
+    "defaultMessage": "Archived:",
+    "description": "Label for unarchiving the topic",
+    "missing": false,
     "obsolete": false
   },
   "menu_item_reply": {

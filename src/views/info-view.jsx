@@ -121,6 +121,7 @@ class InfoView extends React.Component {
     this.onSubsUpdated = this.onSubsUpdated.bind(this);
     this.handleImageChanged = this.handleImageChanged.bind(this);
     this.handleMuted = this.handleMuted.bind(this);
+    this.handleUnarchive = this.handleUnarchive.bind(this);
     this.handlePermissionsChanged = this.handlePermissionsChanged.bind(this);
     this.handleLaunchPermissionsEditor = this.handleLaunchPermissionsEditor.bind(this);
     this.handleShowAddMembers = this.handleShowAddMembers.bind(this);
@@ -210,6 +211,7 @@ class InfoView extends React.Component {
       avatar: makeImageUrl(topic.public ? topic.public.photo : null),
       trustedBadges: badges,
       private: _clip(topic.private ? topic.private.comment : null, MAX_TITLE_LENGTH),
+      archived: topic.isArchived(),
       address: topic.name,
       groupTopic: topic.isGroupType(),
       channel: topic.isChannelType() || topic.chan,
@@ -265,6 +267,10 @@ class InfoView extends React.Component {
   handleMuted(ignored, checked) {
     this.setState({muted: checked});
     this.props.onChangePermissions(this.props.topic, checked ? '-P' : '+P');
+  }
+
+  handleUnarchive(ignored, ignored2) {
+    this.props.onTopicUnArchive(this.props.topic);
   }
 
   handlePermissionsChanged(which, perm) {
@@ -569,6 +575,17 @@ class InfoView extends React.Component {
               </label>
               <CheckBox name="P" checked={this.state.muted} onChange={this.handleMuted} />
             </div>
+            {this.state.archived ?
+              <div className="panel-form-row">
+                <label>
+                  <FormattedMessage id="label_unarchive_topic" defaultMessage="Archived:"
+                    description="Label for unarchiving the topic" />
+                </label>
+                <CheckBox name="archived" checked={true} onChange={this.handleUnarchive} />
+              </div>
+              :
+              null
+            }
             <div className="hr" />
             <div className="panel-form-row">
               <a href="#" className="flat-button" onClick={(e) => {e.preventDefault(); this.props.onNavigate('security');}}>

@@ -69,8 +69,8 @@ a.gray:focus {
   height: 1.4em;
   line-height: 1.4em;
   text-transform: none;
-  padding-left: .35rem;
-  padding-right: .35rem;
+  padding: 0 .35rem;
+  margin: 0.15rem;
   border: 1px solid #999;
   border-radius: 3px;
   background-color: #eee;
@@ -403,6 +403,10 @@ div.trusted-badge {
 
 .danger-color {
   color: #FFC107!important; /* amber 500 */
+}
+
+.green {
+  color: #388e3c; /* green 700 */
 }
 
 .red {
@@ -806,6 +810,11 @@ i.search {
   overflow: hidden;
   padding: 1rem 1.5rem 1rem 0.5rem;
 }
+
+.info-box > span {
+  line-height: 1.5rem;
+}
+
 .info-box .cancel {
   position: absolute;
   right: 0.25rem;
@@ -830,6 +839,7 @@ i.search {
   border-bottom: 1px solid #b3e5fc;
   color: #0288d1;
 }
+
 .info-box .cancel .material-icons {
   font-size: 1rem;
   color: #757575;
@@ -927,6 +937,12 @@ i.search {
   overflow-x: hidden;
   white-space: nowrap;
   font-weight: lighter;
+}
+
+.contact-box .contact-comment > span {
+  overflow-x: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .contact-box .contact-comment b {
@@ -1856,7 +1872,7 @@ ul.tabbar li.active > a {
   width: 1.35rem;
   height: 1.35rem;
   margin-left: 0.5rem;
-  line-height: 1.35rem;
+  line-height: 1.45rem;
   text-align: center;
   vertical-align: middle;
 }
@@ -1931,6 +1947,7 @@ ul.tabbar li.active > a {
   text-align: center;
   border-radius: 50%;
   line-height: 1;
+  padding-top: 0.1em;
   color: rgba(250, 250, 250, 0.8); /* default text color #FAFAFA, gray 50 */
 }
 
@@ -2149,6 +2166,9 @@ ul.tabbar li.active > a {
 }
 .material-icons.big {
   font-size: 2.4rem;
+}
+.material-icons.huge {
+  font-size: 4rem;
 }
 
 #self-avatar .material-icons {
