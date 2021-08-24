@@ -112,6 +112,7 @@ class NewTopicView extends React.Component {
                 type="p2p"
                 onSearchContacts={this.handleSearchContacts} />
               <ContactList
+                tinode={this.props.tinode}
                 contacts={this.props.searchResults}
                 myUserId={this.props.myUserId}
                 emptyListMessage={no_contacts_placeholder}

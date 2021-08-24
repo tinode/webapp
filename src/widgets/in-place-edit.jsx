@@ -35,7 +35,7 @@ export default class InPlaceEdit extends React.Component {
   }
 
   handeTextChange(e) {
-    this.setState({value: e.target.value});
+    this.setState({value: e.target.value || ''});
   }
 
   handleKeyDown(e) {
@@ -59,13 +59,13 @@ export default class InPlaceEdit extends React.Component {
   }
 
   handleEditingFinished(event) {
-    if (this.props.required && !event.target.checkValidity()) {
+    const value = this.state.value.trim();
+    if (this.props.required && (!event.target.checkValidity() || !value)) {
       // Empty input
       this.setState({value: this.props.value, active: false});
       return;
     }
     this.setState({active: false});
-    const value = this.state.value.trim();
     if ((value || this.props.value) && (value !== this.props.value)) {
       this.props.onFinished(value);
     }
