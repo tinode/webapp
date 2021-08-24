@@ -124,7 +124,7 @@ class MessagesView extends React.Component {
   // or vertical shrinking.
   componentDidUpdate(prevProps, prevState) {
     if (this.messagesScroller) {
-      if (prevState.topic != this.state.topic || prevState.latestMsgSeq != this.state.latestMsgSeq) {
+      if (prevState.topic != this.state.topic || prevState.messageCount != this.state.messageCount) {
         // New message
         this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition;
       } else if (prevProps.viewportHeight > this.props.viewportHeight) {
@@ -208,7 +208,7 @@ class MessagesView extends React.Component {
     if (!nextProps.topic) {
       // Default state: no topic.
       nextState = {
-        latestMsgSeq: -1,
+        messageCount: 0,
         latestClearId: -1,
         onlineSubs: [],
         topic: null,
@@ -274,14 +274,14 @@ class MessagesView extends React.Component {
           });
         }
         Object.assign(nextState, {
-          latestMsgSeq: topic.maxMsgSeq(),
+          messageCount: topic.messageCount(),
           latestClearId: topic.maxClearId(),
           channel: topic.isChannelType()
         });
       } else {
         // Invalid topic.
         Object.assign(nextState, {
-          latestMsgSeq: -1,
+          messageCount: 0,
           latestClearId: -1,
           onlineSubs: [],
           title: '',
@@ -365,23 +365,19 @@ class MessagesView extends React.Component {
   // Get older messages
   handleScrollEvent(event) {
     this.setState({scrollPosition: event.target.scrollHeight - event.target.scrollTop});
+    if (this.state.fetchingMessages) {
+      return;
+    }
+
     if (event.target.scrollTop <= 0) {
-      this.setState((prevState, props) => {
-        const newState = {};
-        if (!prevState.fetchingMessages) {
-          const topic = this.props.tinode.getTopic(this.state.topic);
-          if (topic && topic.isSubscribed() && topic.msgHasMoreMessages()) {
-            newState.fetchingMessages = true;
-            topic.getMessagesPage(MESSAGES_PAGE)
-              .then(() => this.setState({fetchingMessages: false}))
-              .catch((err) => {
-                this.setState({fetchingMessages: false});
-                this.props.onError(err.message, 'err');
-              });
-          }
-        }
-        return newState;
-      });
+      const topic = this.props.tinode.getTopic(this.state.topic);
+      if (topic && topic.isSubscribed() && topic.msgHasMoreMessages()) {
+        this.setState({fetchingMessages: true}, () => {
+          topic.getMessagesPage(MESSAGES_PAGE)
+            .catch((err) => this.props.onError(err.message, 'err'))
+            .finally(() => this.setState({fetchingMessages: false}));
+          });
+      }
     }
   }
 
@@ -504,10 +500,10 @@ class MessagesView extends React.Component {
       return;
     }
 
-    this.setState({latestMsgSeq: topic.maxMsgSeq()});
+    this.setState({messageCount: topic.messageCount()});
 
-    // If the message is added to the end of the message list,
-    // scroll to the bottom.
+    // Scroll to the bottom if the message is added to the end of the message list.
+    // TODO: This should be replaced by showing a "scroll to bottom" button.
     if (topic.isNewMessage(msg.seq)) {
       this.setState({scrollPosition: 0});
     }
