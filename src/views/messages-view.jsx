@@ -78,9 +78,11 @@ class MessagesView extends React.Component {
     this.state = MessagesView.getDerivedStateFromProps(props, {});
 
     this.leave = this.leave.bind(this);
+    this.sendMessage = this.sendMessage.bind(this);
     this.sendImageAttachment = this.sendImageAttachment.bind(this);
     this.sendFileAttachment = this.sendFileAttachment.bind(this);
     this.sendKeyPress = this.sendKeyPress.bind(this);
+    this.topicSubscribe = this.topicSubscribe.bind(this);
     this.handleScrollReference = this.handleScrollReference.bind(this);
     this.handleScrollEvent = this.handleScrollEvent.bind(this);
     this.handleDescChange = this.handleDescChange.bind(this);
@@ -158,49 +160,8 @@ class MessagesView extends React.Component {
       this.postReadNotification(0);
     }
 
-    if (topic && !topic.isSubscribed() && this.props.ready &&
-        ((this.state.topic != prevState.topic) || !prevProps.ready)) {
-      // Is this a new topic?
-      const newTopic = (this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic);
-
-      // Don't request the tags. They are useless unless the user
-      // is the owner and is editing the topic.
-      let getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub();
-      if (this.state.isReader || newTopic) {
-        // Reading is either permitted or we don't know because it's a new topic. Ask for messages.
-        getQuery = getQuery.withLaterData(MESSAGES_PAGE);
-        if (this.state.isReader) {
-          getQuery = getQuery.withLaterDel();
-        }
-        // And show "loading" spinner.
-        this.setState({ fetchingMessages: true });
-      }
-      const setQuery = newTopic ? this.props.newTopicParams : undefined;
-      topic.subscribe(getQuery.build(), setQuery)
-        .then((ctrl) => {
-          if (ctrl.code == 303) {
-            // Redirect to another topic requested.
-            HashNavigation.navigateTo(HashNavigation.setUrlTopic('', ctrl.params.topic));
-            return;
-          }
-          if (this.state.topic != ctrl.topic) {
-            this.setState({topic: ctrl.topic});
-          }
-          this.props.onNewTopicCreated(this.props.topic, ctrl.topic);
-          // If there are unsent messages, try sending them now.
-          topic.queuedMessages((pub) => {
-            if (!pub._sending && topic.isSubscribed()) {
-              topic.publishMessage(pub);
-            }
-          });
-        })
-        .catch((err) => {
-          console.log("Failed subscription to", this.state.topic);
-          this.props.onError(err.message, 'err');
-          const blankState = MessagesView.getDerivedStateFromProps({}, {});
-          blankState.title = this.props.intl.formatMessage(messages.not_found);
-          this.setState(blankState);
-        });
+    if ((this.state.topic != prevState.topic) || !prevProps.ready) {
+      this.topicSubscribe(topic);
     }
   }
 
@@ -334,6 +295,54 @@ class MessagesView extends React.Component {
     }
 
     return nextState;
+  }
+
+  topicSubscribe(topic) {
+    if (!topic || topic.isSubscribed() || !this.props.ready) {
+      return;
+    }
+
+    // Is this a new topic?
+    const newTopic = (this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic);
+
+    // Don't request the tags. They are useless unless the user
+    // is the owner and is editing the topic.
+    let getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub();
+    if (this.state.isReader || newTopic) {
+      // Reading is either permitted or we don't know because it's a new topic. Ask for messages.
+      getQuery = getQuery.withLaterData(MESSAGES_PAGE);
+      if (this.state.isReader) {
+        getQuery = getQuery.withLaterDel();
+      }
+      // And show "loading" spinner.
+      this.setState({ fetchingMessages: true });
+    }
+    const setQuery = newTopic ? this.props.newTopicParams : undefined;
+    topic.subscribe(getQuery.build(), setQuery)
+      .then((ctrl) => {
+        if (ctrl.code == 303) {
+          // Redirect to another topic requested.
+          HashNavigation.navigateTo(HashNavigation.setUrlTopic('', ctrl.params.topic));
+          return;
+        }
+        if (this.state.topic != ctrl.topic) {
+          this.setState({topic: ctrl.topic});
+        }
+        this.props.onNewTopicCreated(this.props.topic, ctrl.topic);
+        // If there are unsent messages, try sending them now.
+        topic.queuedMessages((pub) => {
+          if (!pub._sending && topic.isSubscribed()) {
+            this.sendMessage(pub);
+          }
+        });
+      })
+      .catch((err) => {
+        console.log("Failed subscription to", this.state.topic);
+        this.props.onError(err.message, 'err');
+        const blankState = MessagesView.getDerivedStateFromProps({}, {});
+        blankState.title = this.props.intl.formatMessage(messages.not_found);
+        this.setState(blankState);
+      });
   }
 
   leave(oldTopicName) {
@@ -566,7 +575,7 @@ class MessagesView extends React.Component {
 
   handleFormResponse(action, text, data) {
     if (action == 'pub') {
-      this.props.sendMessage(Drafty.attachJSON(Drafty.parse(text), data));
+      this.sendMessage(Drafty.attachJSON(Drafty.parse(text), data));
     } else if (action == 'url') {
       const url = new URL(data.ref);
       const params = url.searchParams;
@@ -646,12 +655,12 @@ class MessagesView extends React.Component {
         urlPromise: uploadCompletionPromise
       });
       // Pass data and the uploader to the TinodeWeb.
-      this.props.sendMessage(msg, uploadCompletionPromise, uploader);
+      this.sendMessage(msg, uploadCompletionPromise, uploader);
     } else {
       // Small enough to send inband.
       fileToBase64(file,
         (mime, bits, fname) => {
-          this.props.sendMessage(Drafty.attachFile(null, {mime: mime, data: bits, filename: fname}));
+          this.sendMessage(Drafty.attachFile(null, {mime: mime, data: bits, filename: fname}));
         },
         this.props.onError
       );
@@ -674,6 +683,11 @@ class MessagesView extends React.Component {
         type: file.type
       }});
     }
+  }
+
+  // sendMessage sends the message with an optional subscription to topic first.
+  sendMessage(msg, uploadCompletionPromise, uploader) {
+    this.props.sendMessage(msg, uploadCompletionPromise, uploader);
   }
 
   // sendImageAttachment sends the image bits inband as Drafty message.
@@ -715,7 +729,7 @@ class MessagesView extends React.Component {
               msg = Drafty.append(msg, Drafty.init(caption));
             }
             // Pass data and the uploader to the TinodeWeb.
-            this.props.sendMessage(msg, uploadCompletionPromise, uploader);
+            this.sendMessage(msg, uploadCompletionPromise, uploader);
           }
         )},
         // Failure
@@ -740,7 +754,7 @@ class MessagesView extends React.Component {
         msg = Drafty.appendLineBreak(msg);
         msg = Drafty.append(msg, Drafty.init(caption));
       }
-      this.props.sendMessage(msg);
+      this.sendMessage(msg);
     });
   }
 
@@ -983,7 +997,7 @@ class MessagesView extends React.Component {
               :
               <SendMessage
                 disabled={!this.state.isWriter}
-                onSendMessage={this.props.sendMessage}
+                onSendMessage={this.sendMessage}
                 onKeyPress={this.sendKeyPress}
                 onAttachFile={this.handleAttachFile}
                 onAttachImage={this.handleAttachImage}

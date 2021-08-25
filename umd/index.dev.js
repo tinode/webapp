@@ -2820,9 +2820,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     super(props);
     this.state = MessagesView.getDerivedStateFromProps(props, {});
     this.leave = this.leave.bind(this);
+    this.sendMessage = this.sendMessage.bind(this);
     this.sendImageAttachment = this.sendImageAttachment.bind(this);
     this.sendFileAttachment = this.sendFileAttachment.bind(this);
     this.sendKeyPress = this.sendKeyPress.bind(this);
+    this.topicSubscribe = this.topicSubscribe.bind(this);
     this.handleScrollReference = this.handleScrollReference.bind(this);
     this.handleScrollEvent = this.handleScrollEvent.bind(this);
     this.handleDescChange = this.handleDescChange.bind(this);
@@ -2892,48 +2894,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       this.postReadNotification(0);
     }
 
-    if (topic && !topic.isSubscribed() && this.props.ready && (this.state.topic != prevState.topic || !prevProps.ready)) {
-      const newTopic = this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic;
-      let getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub();
-
-      if (this.state.isReader || newTopic) {
-        getQuery = getQuery.withLaterData(_config_js__WEBPACK_IMPORTED_MODULE_14__.MESSAGES_PAGE);
-
-        if (this.state.isReader) {
-          getQuery = getQuery.withLaterDel();
-        }
-
-        this.setState({
-          fetchingMessages: true
-        });
-      }
-
-      const setQuery = newTopic ? this.props.newTopicParams : undefined;
-      topic.subscribe(getQuery.build(), setQuery).then(ctrl => {
-        if (ctrl.code == 303) {
-          _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlTopic('', ctrl.params.topic));
-          return;
-        }
-
-        if (this.state.topic != ctrl.topic) {
-          this.setState({
-            topic: ctrl.topic
-          });
-        }
-
-        this.props.onNewTopicCreated(this.props.topic, ctrl.topic);
-        topic.queuedMessages(pub => {
-          if (!pub._sending && topic.isSubscribed()) {
-            topic.publishMessage(pub);
-          }
-        });
-      }).catch(err => {
-        console.log("Failed subscription to", this.state.topic);
-        this.props.onError(err.message, 'err');
-        const blankState = MessagesView.getDerivedStateFromProps({}, {});
-        blankState.title = this.props.intl.formatMessage(messages.not_found);
-        this.setState(blankState);
-      });
+    if (this.state.topic != prevState.topic || !prevProps.ready) {
+      this.topicSubscribe(topic);
     }
   }
 
@@ -3072,6 +3034,54 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
 
     return nextState;
+  }
+
+  topicSubscribe(topic) {
+    if (!topic || topic.isSubscribed() || !this.props.ready) {
+      return;
+    }
+
+    const newTopic = this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic;
+    let getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub();
+
+    if (this.state.isReader || newTopic) {
+      getQuery = getQuery.withLaterData(_config_js__WEBPACK_IMPORTED_MODULE_14__.MESSAGES_PAGE);
+
+      if (this.state.isReader) {
+        getQuery = getQuery.withLaterDel();
+      }
+
+      this.setState({
+        fetchingMessages: true
+      });
+    }
+
+    const setQuery = newTopic ? this.props.newTopicParams : undefined;
+    topic.subscribe(getQuery.build(), setQuery).then(ctrl => {
+      if (ctrl.code == 303) {
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlTopic('', ctrl.params.topic));
+        return;
+      }
+
+      if (this.state.topic != ctrl.topic) {
+        this.setState({
+          topic: ctrl.topic
+        });
+      }
+
+      this.props.onNewTopicCreated(this.props.topic, ctrl.topic);
+      topic.queuedMessages(pub => {
+        if (!pub._sending && topic.isSubscribed()) {
+          this.sendMessage(pub);
+        }
+      });
+    }).catch(err => {
+      console.log("Failed subscription to", this.state.topic);
+      this.props.onError(err.message, 'err');
+      const blankState = MessagesView.getDerivedStateFromProps({}, {});
+      blankState.title = this.props.intl.formatMessage(messages.not_found);
+      this.setState(blankState);
+    });
   }
 
   leave(oldTopicName) {
@@ -3330,7 +3340,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
   handleFormResponse(action, text, data) {
     if (action == 'pub') {
-      this.props.sendMessage(Drafty.attachJSON(Drafty.parse(text), data));
+      this.sendMessage(Drafty.attachJSON(Drafty.parse(text), data));
     } else if (action == 'url') {
       const url = new URL(data.ref);
       const params = url.searchParams;
@@ -3414,10 +3424,10 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         size: file.size,
         urlPromise: uploadCompletionPromise
       });
-      this.props.sendMessage(msg, uploadCompletionPromise, uploader);
+      this.sendMessage(msg, uploadCompletionPromise, uploader);
     } else {
       (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.fileToBase64)(file, (mime, bits, fname) => {
-        this.props.sendMessage(Drafty.attachFile(null, {
+        this.sendMessage(Drafty.attachFile(null, {
           mime: mime,
           data: bits,
           filename: fname
@@ -3444,6 +3454,10 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         }
       });
     }
+  }
+
+  sendMessage(msg, uploadCompletionPromise, uploader) {
+    this.props.sendMessage(msg, uploadCompletionPromise, uploader);
   }
 
   sendImageAttachment(caption, blob) {
@@ -3479,7 +3493,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             msg = Drafty.append(msg, Drafty.init(caption));
           }
 
-          this.props.sendMessage(msg, uploadCompletionPromise, uploader);
+          this.sendMessage(msg, uploadCompletionPromise, uploader);
         });
       }, err => {
         this.props.onError(err, 'err');
@@ -3502,7 +3516,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         msg = Drafty.append(msg, Drafty.init(caption));
       }
 
-      this.props.sendMessage(msg);
+      this.sendMessage(msg);
     });
   }
 
@@ -3769,7 +3783,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           onAction: this.handleNewChatAcceptance
         }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_13__.default, {
           disabled: !this.state.isWriter,
-          onSendMessage: this.props.sendMessage,
+          onSendMessage: this.sendMessage,
           onKeyPress: this.sendKeyPress,
           onAttachFile: this.handleAttachFile,
           onAttachImage: this.handleAttachImage,
@@ -10139,9 +10153,8 @@ class NewTopicGroup extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
   componentDidMount() {}
 
   handleFieldEdit(name, e) {
-    console.log(name, e);
     this.setState({
-      [name]: e.target.value
+      [name]: e.target.value || ''
     });
   }
 
