@@ -82,7 +82,7 @@ class MessagesView extends React.Component {
     this.sendImageAttachment = this.sendImageAttachment.bind(this);
     this.sendFileAttachment = this.sendFileAttachment.bind(this);
     this.sendKeyPress = this.sendKeyPress.bind(this);
-    this.topicSubscribe = this.topicSubscribe.bind(this);
+    this.subscribe = this.subscribe.bind(this);
     this.handleScrollReference = this.handleScrollReference.bind(this);
     this.handleScrollEvent = this.handleScrollEvent.bind(this);
     this.handleDescChange = this.handleDescChange.bind(this);
@@ -161,7 +161,7 @@ class MessagesView extends React.Component {
     }
 
     if ((this.state.topic != prevState.topic) || !prevProps.ready) {
-      this.topicSubscribe(topic);
+      this.subscribe(topic);
     }
   }
 
@@ -297,7 +297,7 @@ class MessagesView extends React.Component {
     return nextState;
   }
 
-  topicSubscribe(topic) {
+  subscribe(topic) {
     if (!topic || topic.isSubscribed() || !this.props.ready) {
       return;
     }
@@ -317,6 +317,7 @@ class MessagesView extends React.Component {
       // And show "loading" spinner.
       this.setState({ fetchingMessages: true });
     }
+
     const setQuery = newTopic ? this.props.newTopicParams : undefined;
     topic.subscribe(getQuery.build(), setQuery)
       .then((ctrl) => {

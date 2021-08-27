@@ -2824,7 +2824,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.sendImageAttachment = this.sendImageAttachment.bind(this);
     this.sendFileAttachment = this.sendFileAttachment.bind(this);
     this.sendKeyPress = this.sendKeyPress.bind(this);
-    this.topicSubscribe = this.topicSubscribe.bind(this);
+    this.subscribe = this.subscribe.bind(this);
     this.handleScrollReference = this.handleScrollReference.bind(this);
     this.handleScrollEvent = this.handleScrollEvent.bind(this);
     this.handleDescChange = this.handleDescChange.bind(this);
@@ -2895,7 +2895,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
 
     if (this.state.topic != prevState.topic || !prevProps.ready) {
-      this.topicSubscribe(topic);
+      this.subscribe(topic);
     }
   }
 
@@ -3036,7 +3036,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     return nextState;
   }
 
-  topicSubscribe(topic) {
+  subscribe(topic) {
     if (!topic || topic.isSubscribed() || !this.props.ready) {
       return;
     }
@@ -3887,16 +3887,20 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     });
   }
 
-  handleContactSelected(sel) {
-    if (this.state.tabSelected === 'p2p') {
+  handleContactSelected(uid) {
+    if (this.state.tabSelected == 'p2p') {
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__.default.removeUrlParam(window.location.hash, 'tab'));
-      this.props.onCreateTopic(sel);
+      this.props.onCreateTopic(uid);
     }
   }
 
   handleNewGroupSubmit(name, description, dataUrl, priv, tags, isChannel) {
     _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__.default.removeUrlParam(window.location.hash, 'tab'));
-    this.props.onCreateTopic(undefined, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.theCard)(name, dataUrl, null, description), priv, tags, isChannel);
+    this.props.onCreateTopic(undefined, {
+      public: (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.theCard)(name, dataUrl, null, description),
+      private: priv,
+      tags: tags
+    }, isChannel);
   }
 
   handleGroupByID(topicName) {
@@ -5488,8 +5492,12 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         promise = Promise.resolve();
       }
 
-      promise = promise.then(() => {
-        return topic.subscribe();
+      promise = promise.then(() => topic.subscribe()).then(() => {
+        topic.queuedMessages(pub => {
+          if (!pub._sending && topic.isSubscribed()) {
+            this.sendMessage(pub);
+          }
+        });
       });
     }
 
@@ -5796,7 +5804,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     _lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_15__.default.setUrlInfoPanel(window.location.hash, hash));
   }
 
-  handleStartTopicRequest(topicName, pub, priv, tags, isChannel) {
+  handleStartTopicRequest(topicName, newTopicParams, isChannel) {
     if (topicName && this.tinode.isTopicCached(topicName)) {
       this.handleTopicSelected(topicName);
       return;
@@ -5816,12 +5824,12 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     } else {
       topicName = topicName || this.tinode.newGroupTopicName(isChannel);
       params.desc = {
-        public: pub,
+        public: newTopicParams.public,
         private: {
-          comment: priv
+          comment: newTopicParams.private
         }
       };
-      params.tags = tags;
+      params.tags = newTopicParams.tags;
     }
 
     params._topicName = topicName;

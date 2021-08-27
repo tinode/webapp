@@ -56,16 +56,17 @@ class NewTopicView extends React.Component {
     this.setState({searchQuery: Tinode.isNullValue(query) ? null : query});
   }
 
-  handleContactSelected(sel) {
-    if (this.state.tabSelected === 'p2p') {
+  handleContactSelected(uid) {
+    if (this.state.tabSelected == 'p2p') {
       HashNavigation.navigateTo(HashNavigation.removeUrlParam(window.location.hash, 'tab'));
-      this.props.onCreateTopic(sel);
+      this.props.onCreateTopic(uid);
     }
   }
 
   handleNewGroupSubmit(name, description, dataUrl, priv, tags, isChannel) {
     HashNavigation.navigateTo(HashNavigation.removeUrlParam(window.location.hash, 'tab'));
-    this.props.onCreateTopic(undefined, theCard(name, dataUrl, null, description), priv, tags, isChannel);
+    this.props.onCreateTopic(undefined,
+      {public: theCard(name, dataUrl, null, description), private: priv, tags: tags}, isChannel);
   }
 
   handleGroupByID(topicName) {

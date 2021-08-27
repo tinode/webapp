@@ -57,6 +57,7 @@ const fbMessaging = firebase.messaging();
 // This method shows the push notifications while the window is in background.
 fbMessaging.onBackgroundMessage((payload) => {
   if (payload.data.silent == 'true') {
+    // TODO: if this is an 'msg', fetch the new message in the background.
     return;
   }
 
@@ -68,8 +69,8 @@ fbMessaging.onBackgroundMessage((payload) => {
   const pushType = payload.data.what || 'msg';
   const title = payload.data.title || self.i18nMessage(pushType == 'msg' ? 'new_message' : 'new_chat');
   const options = {
-    body: payload.data.content || '',
-    icon: '/img/logo96.png',
+    body: payload.data.content || '', // TODO: content for 'sub' should be topic's or user's title.
+    icon: '/img/logo96.png', // TODO: use topic's or user's avatar (would have to fetch for 'sub', read from db for 'msg').
     badge: '/img/badge96.png',
     tag: payload.data.topic || undefined,
     data: {
