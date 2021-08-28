@@ -74,47 +74,9 @@ const messages = defineMessages({
   },
 });
 
-class TopicSecurity extends React.Component {
+class TopicSecurity extends React.PureComponent {
   constructor(props) {
     super(props);
-
-    const topic = this.props.tinode.getTopic(this.props.topic);
-    if (!topic) {
-      return;
-    }
-
-    const defacs = topic.getDefaultAccess() || {};
-    const acs = topic.getAccessMode();
-
-    let modeGiven2 = NO_ACCESS_MODE;
-    let modeWant2 = NO_ACCESS_MODE;
-    if (topic.getType() == 'p2p') {
-      // Fetch the other party in the p2p conversation.
-      // Topic may not be ready yet, so check if user is found.
-      const user2 = topic.subscriber(props.topic);
-      if (user2 && user2.acs) {
-        modeGiven2 = user2.acs.getGiven();
-        modeWant2 = user2.acs.getWant();
-      }
-    }
-
-    this.state = {
-      owner: acs && acs.isOwner(),
-      admin: acs && acs.isAdmin(),
-      sharer: acs && acs.isSharer(),
-      deleter: acs && acs.isDeleter(),
-      muted: acs && acs.isMuted(),
-
-      groupTopic: topic.isGroupType(),
-      channel: topic.isChannelType(),
-      access: acs ? acs.getMode() : undefined,
-      modeGiven: acs ? acs.getGiven() : undefined,
-      modeWant: acs ? acs.getWant() : undefined,
-      modeGiven2: modeGiven2, // P2P topic, the other user mode given
-      modeWant2: modeWant2,  // P2P topic, the other user mode want
-      auth: defacs ? defacs.auth : null,
-      anon: defacs ? defacs.anon : null,
-    };
 
     this.handleDeleteTopic = this.handleDeleteTopic.bind(this);
     this.handleDeleteMessages = this.handleDeleteMessages.bind(this);
@@ -140,8 +102,8 @@ class TopicSecurity extends React.Component {
     e.preventDefault();
     const {formatMessage} = this.props.intl;
     this.props.onShowAlert(
-      formatMessage(this.state.deleter ? messages.delete_messages : messages.clear_messages), // title
-      formatMessage(this.state.deleter ? messages.delete_messages_warning : messages.clear_messages_warning), // content
+      formatMessage(this.props.deleter ? messages.delete_messages : messages.clear_messages), // title
+      formatMessage(this.props.deleter ? messages.delete_messages_warning : messages.clear_messages_warning), // content
       (() => { this.props.onDeleteMessages(this.props.topic); }), // onConfirm
       null, // "OK"
       true, // Show Reject button
@@ -193,16 +155,16 @@ class TopicSecurity extends React.Component {
     return (
       <div className="scrollable-panel">
         <div className="panel-form-column">
-          {!this.state.channel ?
+          {!this.props.channel ?
             <a href="#" className="flat-button" onClick={this.handleDeleteMessages}>
               <i className="material-icons">delete_outline</i> &nbsp;{
-                formatMessage(this.state.deleter ? messages.delete_messages : messages.clear_messages)
+                formatMessage(this.props.deleter ? messages.delete_messages : messages.clear_messages)
               }
             </a>
             :
             null
           }
-          {this.state.owner ?
+          {this.props.owner ?
             <a href="#" className="danger flat-button" onClick={this.handleDeleteTopic}>
               <i className="material-icons">delete</i> &nbsp;{formatMessage(messages.topic_delete)}
             </a>
@@ -211,14 +173,14 @@ class TopicSecurity extends React.Component {
               <i className="material-icons">exit_to_app</i> &nbsp;{formatMessage(messages.leave_chat)}
             </a>
           }
-          {!this.state.groupTopic ?
+          {!this.props.groupTopic ?
             <a href="#" className="danger flat-button" onClick={this.handleBlock}>
               <i className="material-icons">block</i> &nbsp;{formatMessage(messages.block_contact)}
             </a>
             :
             null
           }
-          {!this.state.owner ?
+          {!this.props.owner ?
             <a href="#" className="danger flat-button" onClick={this.handleReport}>
               <i className="material-icons">report</i> &nbsp;{formatMessage(messages.report_chat)}
             </a>
@@ -228,7 +190,7 @@ class TopicSecurity extends React.Component {
         </div>
         <div className="hr" />
         <div className="panel-form-column">
-          {this.state.groupTopic ?
+          {this.props.groupTopic ?
             <>
               <div className="group">
                 <label>
@@ -236,7 +198,7 @@ class TopicSecurity extends React.Component {
                     description="Label for current user permissions" />
                 </label> <tt className="clickable"
                   onClick={(e) => {e.preventDefault(); this.props.onLaunchPermissionsEditor('want')}}>
-                  {this.state.access}
+                  {this.props.access}
                 </tt>
               </div>
               <div className="group">
@@ -248,10 +210,10 @@ class TopicSecurity extends React.Component {
                 </div>
                 <div className="quoted">
                   <div>Auth: <tt className="clickable"
-                    onClick={(e) => {e.preventDefault(); this.props.onLaunchPermissionsEditor('auth')}}>{this.state.auth}</tt>
+                    onClick={(e) => {e.preventDefault(); this.props.onLaunchPermissionsEditor('auth')}}>{this.props.auth}</tt>
                   </div>
                   <div>Anon: <tt className="clickable"
-                    onClick={(e) => {e.preventDefault(); this.props.onLaunchPermissionsEditor('anon')}}>{this.state.anon}</tt>
+                    onClick={(e) => {e.preventDefault(); this.props.onLaunchPermissionsEditor('anon')}}>{this.props.anon}</tt>
                   </div>
                 </div>
               </div>
@@ -269,13 +231,13 @@ class TopicSecurity extends React.Component {
                   <FormattedMessage id="label_you" defaultMessage="You:"
                     description="Label for the current user" /> <tt className="clickable"
                     onClick={(e) => {e.preventDefault(); this.props.onLaunchPermissionsEditor('want')}}>
-                    {this.state.access}
+                    {this.props.access}
                   </tt>
                 </div>
-                <div>{this.state.fullName ? this.state.fullName : formatMessage(messages.other_user)}:
+                <div>{this.props.fullName ? this.props.fullName : formatMessage(messages.other_user)}:
                   &nbsp;<tt className="clickable"
                     onClick={(e) => {e.preventDefault(); this.props.onLaunchPermissionsEditor('given')}}>
-                    {this.state.modeGiven2}
+                    {this.props.modeGiven2}
                   </tt>
                 </div>
               </div>

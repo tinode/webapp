@@ -91,6 +91,7 @@ class InfoView extends React.Component {
       owner: false,
       admin: false,
       sharer: false,
+      deleter: false,
       muted: false,
       address: null,
       groupTopic: undefined,
@@ -115,10 +116,12 @@ class InfoView extends React.Component {
 
     this.resetSubs = this.resetSubs.bind(this);
     this.resetDesc = this.resetDesc.bind(this);
+    this.resetTags = this.resetTags.bind(this);
     this.onMetaDesc = this.onMetaDesc.bind(this);
     this.onSubsUpdated = this.onSubsUpdated.bind(this);
     this.handleImageChanged = this.handleImageChanged.bind(this);
     this.handleMuted = this.handleMuted.bind(this);
+    this.handleUnarchive = this.handleUnarchive.bind(this);
     this.handlePermissionsChanged = this.handlePermissionsChanged.bind(this);
     this.handleLaunchPermissionsEditor = this.handleLaunchPermissionsEditor.bind(this);
     this.handleShowAddMembers = this.handleShowAddMembers.bind(this);
@@ -147,6 +150,7 @@ class InfoView extends React.Component {
       this.setState({topic: props.topic});
       this.resetDesc(topic, props);
       this.resetSubs(topic, props);
+      this.resetTags(topic);
     }
   }
 
@@ -199,6 +203,7 @@ class InfoView extends React.Component {
       owner: acs && acs.isOwner(),
       admin: acs && acs.isAdmin(),
       sharer: acs && acs.isSharer(),
+      deleter: acs && acs.isDeleter(),
       muted: acs && acs.isMuted(),
 
       fullName: _clip(topic.public ? topic.public.fn : undefined, MAX_TITLE_LENGTH),
@@ -206,6 +211,7 @@ class InfoView extends React.Component {
       avatar: makeImageUrl(topic.public ? topic.public.photo : null),
       trustedBadges: badges,
       private: _clip(topic.private ? topic.private.comment : null, MAX_TITLE_LENGTH),
+      archived: topic.isArchived(),
       address: topic.name,
       groupTopic: topic.isGroupType(),
       channel: topic.isChannelType() || topic.chan,
@@ -215,8 +221,15 @@ class InfoView extends React.Component {
       auth: defacs.auth,
       anon: defacs.anon
     });
+  }
 
-    if (topic.getType() == 'grp' && acs && acs.isOwner()) {
+  resetTags(topic) {
+    if (topic.getType() != 'grp') {
+      return;
+    }
+
+    const acs = topic.getAccessMode();
+    if (acs && acs.isOwner()) {
       // Requesting tags: owner is editing the topic.
       topic.getMeta(topic.startMetaQuery().withTags().build());
     }
@@ -256,14 +269,17 @@ class InfoView extends React.Component {
     this.props.onChangePermissions(this.props.topic, checked ? '-P' : '+P');
   }
 
+  handleUnarchive(ignored, ignored2) {
+    this.props.onTopicUnArchive(this.props.topic);
+  }
+
   handlePermissionsChanged(which, perm) {
-    console.log("handlePermissionsChanged", which, perm);
     switch (which) {
       case 'auth':
-        this.props.onTopicDescUpdate(this.props.topic, null, null, {auth: perm});
+        this.props.onTopicDescUpdateRequest(this.props.topic, null, null, {auth: perm});
         break;
       case 'anon':
-        this.props.onTopicDescUpdate(this.props.topic, null, null, {anon: perm});
+        this.props.onTopicDescUpdateRequest(this.props.topic, null, null, {anon: perm});
         break;
       case 'mode':
       case 'want':
@@ -276,10 +292,11 @@ class InfoView extends React.Component {
         this.props.onChangePermissions(this.props.topic, perm, this.state.userPermissionsEdited);
         break;
     }
+
+    this.handleBackNavigate();
   }
 
   handleLaunchPermissionsEditor(which, uid) {
-    console.log(which, uid);
     const {formatMessage} = this.props.intl;
     let toEdit, toCompare, toSkip, titleEdit, titleCompare, userTitle, userAvatar;
     switch (which) {
@@ -339,7 +356,7 @@ class InfoView extends React.Component {
         break;
       }
       default:
-        console.log("Unknown permission editing mode '" + which + "'");
+        console.error("Unknown permission editing mode '" + which + "'");
         return;
     }
     this.setState({
@@ -468,17 +485,31 @@ class InfoView extends React.Component {
             tinode={this.props.tinode}
             topic={this.props.topic}
             onCredAdd={this.props.onCredAdd}
-            onTopicTagsUpdate={this.props.onTopicTagsUpdate}
+            onTopicTagsUpdateRequest={this.props.onTopicTagsUpdateRequest}
             onCredConfirm={this.props.onCredConfirm}
             onCredDelete={this.props.onCredDelete}
-            onUpdateTopicDesc={this.props.onTopicDescUpdate}
-            onUpdateTags={this.props.onUpdateTags}
+            onUpdateTopicDesc={this.props.onTopicDescUpdateRequest}
             onError={this.props.onError} />
           :
         view == 'security' ?
           <TopicSecurity
-            tinode={this.props.tinode}
             topic={this.props.topic}
+            owner={this.state.owner}
+            admin={this.state.admin}
+            sharer={this.state.sharer}
+            deleter={this.state.deleter}
+            muted={this.state.muted}
+
+            groupTopic={this.state.groupTopic}
+            channel={this.state.channel}
+            access={this.state.access}
+            modeGiven={this.state.modeGiven}
+            modeWant={this.state.modeWant}
+            modeGiven2={this.state.modeGiven2}
+            modeWant2={this.state.modeWant2}
+            auth={this.state.auth}
+            anon={this.state.anon}
+
             onShowAlert={this.props.onShowAlert}
             onDeleteMessages={this.props.onDeleteMessages}
             onLeaveTopic={this.props.onLeaveTopic}
@@ -544,6 +575,17 @@ class InfoView extends React.Component {
               </label>
               <CheckBox name="P" checked={this.state.muted} onChange={this.handleMuted} />
             </div>
+            {this.state.archived ?
+              <div className="panel-form-row">
+                <label>
+                  <FormattedMessage id="label_unarchive_topic" defaultMessage="Archived:"
+                    description="Label for unarchiving the topic" />
+                </label>
+                <CheckBox name="archived" checked={true} onChange={this.handleUnarchive} />
+              </div>
+              :
+              null
+            }
             <div className="hr" />
             <div className="panel-form-row">
               <a href="#" className="flat-button" onClick={(e) => {e.preventDefault(); this.props.onNavigate('security');}}>

@@ -120,8 +120,9 @@ class TinodeWeb extends React.Component {
     this.handleStartTopicRequest = this.handleStartTopicRequest.bind(this);
     this.handleNewTopicCreated = this.handleNewTopicCreated.bind(this);
     this.handleTopicUpdateRequest = this.handleTopicUpdateRequest.bind(this);
+    this.handleUnarchive = this.handleUnarchive.bind(this);
     this.handleChangePermissions = this.handleChangePermissions.bind(this);
-    this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
+    this.handleTagsUpdateRequest = this.handleTagsUpdateRequest.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.handleDeleteAccount = this.handleDeleteAccount.bind(this);
     this.handleDeleteTopicRequest = this.handleDeleteTopicRequest.bind(this);
@@ -225,7 +226,7 @@ class TinodeWeb extends React.Component {
       serviceWorkerChannel.addEventListener('message', this.handlePushMessage);
     } else {
       // Safari is broken by design.
-      console.warn('Your browser does not support BroadcastChannel. Some features will not be available');
+      console.warn("Your browser does not support BroadcastChannel. Some features will not be available");
     }
 
     // Window/tab visible or invisible for pausing timers.
@@ -1238,7 +1239,8 @@ class TinodeWeb extends React.Component {
         }
         params.public = pub;
       }
-      if (priv) {
+
+      if (typeof priv == 'string') {
         params.private = (priv === Tinode.DEL_CHAR) ?
           Tinode.DEL_CHAR : {comment: priv};
       }
@@ -1248,6 +1250,13 @@ class TinodeWeb extends React.Component {
       topic.setMeta({desc: params, attachments: attachments}).catch((err) => {
         this.handleError(err.message, 'err');
       });
+    }
+  }
+
+  handleUnarchive(topicName) {
+    const topic = this.tinode.getTopic(topicName);
+    if (topic) {
+      topic.archive(false);
     }
   }
 
@@ -1278,7 +1287,7 @@ class TinodeWeb extends React.Component {
     }
   }
 
-  handleTagsUpdated(topicName, tags) {
+  handleTagsUpdateRequest(topicName, tags) {
     const topic = this.tinode.getTopic(topicName);
     if (topic) {
       topic.setMeta({tags: tags}).catch((err) => {
@@ -1433,7 +1442,7 @@ class TinodeWeb extends React.Component {
       subscribed && deleter ? 'messages_clear_hard' : null,
       muted ? (blocked ? null : 'topic_unmute') : 'topic_mute',
       self_blocked ? 'topic_unblock' : 'topic_block',
-      !archived ? 'topic_restore' : 'topic_archive',
+      archived ? 'topic_restore' : 'topic_archive',
       'topic_delete'
     ];
   }
@@ -1521,7 +1530,7 @@ class TinodeWeb extends React.Component {
 
   handlePasswordResetRequest(method, value) {
     // If already connected, connnect() will return a resolved promise.
-    this.tinode.connect()
+    return this.tinode.connect()
       .then(() => {
         return this.tinode.requestResetAuthSecret('basic', method, value);
       })
@@ -1697,7 +1706,7 @@ class TinodeWeb extends React.Component {
             errorActionText={this.state.errorActionText}
 
             onNavigate={this.infoNavigator}
-            onTopicDescUpdate={this.handleTopicUpdateRequest}
+            onTopicDescUpdateRequest={this.handleTopicUpdateRequest}
             onShowAlert={this.handleShowAlert}
             onChangePermissions={this.handleChangePermissions}
             onMemberUpdateRequest={this.handleMemberUpdateRequest}
@@ -1707,7 +1716,8 @@ class TinodeWeb extends React.Component {
             onBlockTopic={this.handleBlockTopicRequest}
             onReportTopic={this.handleReportTopic}
             onAddMember={this.handleManageGroupMembers}
-            onTopicTagsUpdate={this.handleTagsUpdated}
+            onTopicTagsUpdateRequest={this.handleTagsUpdateRequest}
+            onTopicUnArchive={this.handleUnarchive}
             onInitFind={this.tnInitFind}
             onError={this.handleError}
 

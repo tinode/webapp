@@ -21,9 +21,10 @@ export default class TopicCommon extends React.Component {
       addCredActive: false,
       addCredInvalid: false,
       newCred: '',
-      tags: [],
-      previousTagsUpdated: undefined
+      tags: []
     };
+
+    this.previousTagsUpdated = undefined;
 
     this.onTagsUpdated = this.onTagsUpdated.bind(this);
     this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
@@ -105,17 +106,19 @@ export default class TopicCommon extends React.Component {
     }
   }
 
+  // Server informs that the tags have been updated.
   onTagsUpdated(tags) {
     this.setState({tags: tags});
 
     if (this.previousTagsUpdated && this.previousTagsUpdated != this.onTagsUpdated) {
-      this.previousTagsUpdated();
+      this.previousTagsUpdated(tags);
     }
   }
 
+  // Request server to change tags.
   handleTagsUpdated(tags) {
     if (!arrayEqual(this.state.tags.slice(0), tags.slice(0))) {
-      this.props.onTopicTagsUpdate(this.props.topic, tags);
+      this.props.onTopicTagsUpdateRequest(this.props.topic, tags);
     }
   }
 
@@ -143,7 +146,7 @@ export default class TopicCommon extends React.Component {
           tinode={this.props.tinode}
           topic={this.props.topic}
           onUpdateTopicDesc={this.props.onUpdateTopicDesc}
-          onUpdateTags={this.props.onUpdateTags}
+          onUpdateTags={this.handleTagsUpdated}
           onError={this.props.onError} />
         {this.state.isMe ?
           <>
