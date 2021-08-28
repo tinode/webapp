@@ -2,6 +2,13 @@
 
 import Tinode from 'tinode-sdk';
 
+import { stringHash } from './strformat.js';
+
+// User avatar letter color id.
+export function letterTileColor(userId) {
+  return Math.abs(stringHash(userId)) % 16;
+}
+
 // Make shortcut icon appear with a green dot + show unread count in title.
 export function updateFavicon(count) {
   const oldIcon = document.getElementById('shortcut-icon');

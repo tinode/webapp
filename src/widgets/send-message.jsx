@@ -147,8 +147,6 @@ class SendMessage extends React.PureComponent {
     e.preventDefault();
     e.stopPropagation();
     if (this.props.replyTo) {
-      //quote = Drafty.format(this.props.replyTo.content, quoteFormatter, this);
-      //quote = Drafty.format(this.props.replyTo.content, this.props.onFormatQuote, this);
       const replyToSeq = this.props.replyTo.seq;
       this.props.onQuoteClick(replyToSeq);
     }

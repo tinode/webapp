@@ -904,6 +904,7 @@ class TinodeWeb extends React.Component {
   //  - msg - Drafty message with content
   //  - promise - Promise to be resolved when the upload is completed
   //  - uploader - for tracking progress
+  //  - head - head dictionary to be attached to the message
   handleSendMessage(msg, promise, uploader, head) {
     const topic = this.tinode.getTopic(this.state.topicSelected);
 
@@ -912,12 +913,7 @@ class TinodeWeb extends React.Component {
     msg._uploader = uploader;
 
     if (head) {
-      if (!msg.hasOwnProperty('head')) {
-        msg.head = {};
-      }
-      for (const [key, value] of Object.entries(head)) {
-        msg.head[key] = value;
-      }
+      msg.head = Object.assign(msg.head || {}, head);
     }
 
     if (!topic.isSubscribed()) {

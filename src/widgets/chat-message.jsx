@@ -116,16 +116,7 @@ class ChatMessage extends React.PureComponent {
           onError={this.props.onError}
           key={i} />);
       }, this);
-
-      let qte = [];
-      if (content.qte) {
-        qte = Drafty.format(content.qte, this.props.onFormatQuote, this);
-        // Append a line break.
-        const lf = Drafty.appendLineBreak(null);
-        qte = qte.concat(Drafty.format(lf, draftyFormatter, this, qte.length));
-      }
-      let tree = Drafty.format(content, draftyFormatter, this, qte.length);
-      tree = qte.concat(tree);
+      const tree = Drafty.format(content, this.props.formatter, this);
       content = React.createElement(React.Fragment, null, tree);
     } else if (this.props.deleted) {
       // Message represents a range of deleted messages.
@@ -188,102 +179,6 @@ class ChatMessage extends React.PureComponent {
         </div>
       </li>
     );
-  }
-};
-
-// Convert Drafty object to a tree of React elements.
-import { BROKEN_IMAGE_SIZE, REM_SIZE } from '../config.js';
-import { fitImageSize } from '../lib/blob-helpers.js';
-
-// Converts Drafty elements into React classes.
-// 'this' is set by the caller.
-function draftyFormatter(style, data, values, key) {
-  if (style == 'EX') {
-    // attachments are handled elsewhere.
-    return null;
-  }
-
-  let el = Drafty.tagName(style);
-  if (el) {
-    const attr = Drafty.attrValue(style, data) || {};
-    attr.key = key;
-    switch (style) {
-      case 'HL':
-        // Highlighted text. Assign class name.
-        attr.className = 'highlight';
-        break;
-      case 'IM':
-        // Additional processing for images
-        if (data) {
-          attr.className = 'inline-image';
-          const dim = fitImageSize(data.width, data.height,
-            Math.min(this.props.viewportWidth - REM_SIZE * 6.5, REM_SIZE * 34.5), REM_SIZE * 24, false) ||
-            {dstWidth: BROKEN_IMAGE_SIZE, dstHeight: BROKEN_IMAGE_SIZE};
-          attr.style = {
-            width: dim.dstWidth + 'px',
-            height: dim.dstHeight + 'px',
-            // Looks like a Chrome bug: broken image does not respect 'width' and 'height'.
-            minWidth: dim.dstWidth + 'px',
-            minHeight: dim.dstHeight + 'px'
-          };
-          if (!Drafty.isProcessing(data)) {
-            attr.src = this.props.tinode.authorizeURL(sanitizeImageUrl(attr.src));
-            attr.alt = data.name;
-            if (attr.src) {
-              attr.onClick = this.handleImagePreview;
-              attr.className += ' image-clickable';
-              attr.loading = 'lazy';
-            } else {
-              attr.src = 'img/broken_image.png';
-            }
-          } else {
-            // Use custom element instead of <img>.
-            el = UploadingImage;
-          }
-        }
-        break;
-      case 'BN':
-        // Button
-        attr.onClick = this.handleFormButtonClick;
-        let inner = React.Children.map(values, (child) => {
-          return typeof child == 'string' ? child : undefined;
-        });
-        if (!inner || inner.length == 0) {
-          inner = [attr.name]
-        }
-        // Get text which will be sent back when the button is clicked.
-        attr['data-title'] = inner.join('');
-        break;
-      case 'FM':
-        // Form
-        attr.className = 'bot-form';
-        break;
-      case 'RW':
-        // Form element formatting is dependent on element content.
-        break;
-      case 'QQ':
-        // Quote/citation.
-        attr.className = 'reply-quote'
-        attr.onClick = this.handleQuoteClick;
-        break;
-      case 'QH':
-        // Quote header.
-        attr.className = 'reply-quote-header';
-        break;
-      case 'QB':
-        // Quote body.
-        break;
-      default:
-        if (el == '_UNKN') {
-          // Unknown element.
-          // TODO: make it prettier.
-          el = <><span className="material-icons">extension</span></>;
-        }
-        break;
-    }
-    return React.createElement(el, attr, values);
-  } else {
-    return values;
   }
 };
 

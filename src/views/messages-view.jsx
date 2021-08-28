@@ -23,7 +23,7 @@ import { SUPPORTED_IMAGE_FORMATS, blobToBase64, base64ToBlob, filePasted, fileTo
   imageScaled, makeImageUrl, fitImageSize } from '../lib/blob-helpers.js';
 import HashNavigation from '../lib/navigation.js';
 import { bytesToHumanSize, shortDateFormat } from '../lib/strformat.js';
-import { sanitizeImageUrl } from '../lib/utils.js';
+import { sanitizeImageUrl, letterTileColor } from '../lib/utils.js';
 
 // Run timer with this frequency (ms) for checking notification queue.
 const NOTIFICATION_EXEC_INTERVAL = 300;
@@ -114,6 +114,7 @@ class MessagesView extends React.Component {
     this.postReadNotification = this.postReadNotification.bind(this);
     this.clearNotificationQueue = this.clearNotificationQueue.bind(this);
 
+    this.doSendMessage = this.doSendMessage.bind(this);
     this.handleSendMessage = this.handleSendMessage.bind(this);
     this.handlePickReply = this.handlePickReply.bind(this);
     this.handleCancelReply = this.handleCancelReply.bind(this);
@@ -652,6 +653,17 @@ class MessagesView extends React.Component {
     }
   }
 
+  doSendMessage(msg, uploadCompletionPromise, uploader) {
+    let head = null;
+    if (this.state.reply && this.state.reply.content) {
+      head = {replyToSeq: this.state.reply.seq};
+      let quote = this.state.reply.content;
+      msg = Drafty.attachQuote(msg, quote);
+    }
+    this.props.sendMessage(msg, uploadCompletionPromise, uploader, head);
+    this.setState({reply: null});
+  }
+
   // Send attachment as Drafty message:
   // - if file is too large, upload it and send a s link.
   // - if file is small enough, just send it in-band.
@@ -671,12 +683,13 @@ class MessagesView extends React.Component {
         urlPromise: uploadCompletionPromise
       });
       // Pass data and the uploader to the TinodeWeb.
-      this.props.sendMessage(msg, uploadCompletionPromise, uploader);
+      this.doSendMessage(msg, uploadCompletionPromise, uploader);
     } else {
       // Small enough to send inband.
       fileToBase64(file,
         (mime, bits, fname) => {
-          this.props.sendMessage(Drafty.attachFile(null, {mime: mime, data: bits, filename: fname}));
+          const msg = Drafty.attachFile(null, {mime: mime, data: bits, filename: fname});
+          this.doSendMessage(msg, undefined, undefined);
         },
         this.props.onError
       );
@@ -737,10 +750,10 @@ class MessagesView extends React.Component {
             });
             if (caption) {
               msg = Drafty.appendLineBreak(msg);
-              msg = Drafty.append(msg, Drafty.init(caption));
+              msg = Drafty.append(msg, Drafty.parse(caption));
             }
             // Pass data and the uploader to the TinodeWeb.
-            this.props.sendMessage(msg, uploadCompletionPromise, uploader);
+            this.doSendMessage(msg, uploadCompletionPromise, uploader);
           }
         )},
         // Failure
@@ -763,9 +776,9 @@ class MessagesView extends React.Component {
       });
       if (caption) {
         msg = Drafty.appendLineBreak(msg);
-        msg = Drafty.append(msg, Drafty.init(caption));
+        msg = Drafty.append(msg, Drafty.parse(caption));
       }
-      this.props.sendMessage(msg);
+      this.doSendMessage(msg, undefined, undefined);
     });
   }
 
@@ -804,33 +817,23 @@ class MessagesView extends React.Component {
   }
 
   handlePickReply(m) {
-    this.setState({reply: null})
-    //instance.setState({typingIndicator: false});
+    this.setState({reply: null});
     if (m) {
       let cont = m.content
       if (cont) {
         if (typeof cont == 'string') {
           cont = Drafty.init(cont);
         }
-        cont = Drafty.preview(cont, 30, (src, target) => {
-          if (src.data && src.tp && src.tp == 'IM') {
-            // For images, copy val and ref fields.
-            ['val', 'ref'].forEach(key => {
-              const val = src.data[key];
-              if (val) {
-                target.data[key] = val;
-              }
-            });
-          }
-        });
+        cont = Drafty.replyPreview(cont, 30, quotePreviewFmt);
 
+        // Get the author.
         let header = '';
         const seq = m.seq;
-        const idx = this.msgIndex(seq);
-        if (idx < this.state.messages.length) {
-          const m0 = this.state.messages[idx];
-
-          let thisFrom = m0.from || 'chan';
+        const topic = this.props.tinode.getTopic(this.state.topic);
+        const m0 = topic.findMessage(seq);
+        let thisFrom;
+        if (m0) {
+          thisFrom = m0.from || 'chan';
           if (thisFrom != this.props.myUserId) {
             const topic = this.props.tinode.getTopic(this.state.topic);
             const user = topic.userDesc(thisFrom);
@@ -844,7 +847,7 @@ class MessagesView extends React.Component {
 
         header = Drafty.init(header);
         // Make small image previews.
-        let ents = [];
+        const ents = [];
         if (cont.ent) {
           Drafty.entities(cont, (data, idx, tp) => {
             if (tp == 'IM') {
@@ -858,7 +861,7 @@ class MessagesView extends React.Component {
         }
         this.convertIntoThumbnails(ents, 0, (success) => {
           if (success) {
-            const msg = Drafty.createQuote(header, cont);
+            const msg = Drafty.createQuote(header, cont, letterTileColor(thisFrom));
             this.setState({reply: {content: msg, seq: m.seq}});
           }
         });
@@ -868,20 +871,6 @@ class MessagesView extends React.Component {
     }
   }
 
-  msgIndex(seq) {
-    let l = -1;
-    let r = this.state.messages.length;
-    while (r > l + 1) {
-      const m = Math.floor((l + r) / 2);
-      if (this.state.messages[m].seq < seq) {
-        l = m;
-      } else {
-        r = m;
-      }
-    }
-    return r;
-  }
-
   // Turn images in the provided Drafty.ent entries into thumbnails.
   convertIntoThumbnails(ents, idx, done) {
     if (idx >= ents.length) {
@@ -889,13 +878,14 @@ class MessagesView extends React.Component {
       return;
     }
 
-    function scale(origBlob) {
+    const scale = (origBlob) => {
       imageScaled(origBlob, IMAGE_THUMBNAIL_DIM, IMAGE_THUMBNAIL_DIM, -1, false,
         // Success
         (mime, blob, width, height, fname) => {
-          let ex = ents[idx];
+          const ex = ents[idx];
+
           ex.data.mime = mime;
-          ex.data.val = blob;
+          ex.data.size = blob.size;
           ex.data.width = width;
           ex.data.height = height;
           ex.data.name = fname;
@@ -919,11 +909,11 @@ class MessagesView extends React.Component {
         scale.call(this, b);
       }
     } else {
-      let saveThis = this;
+      //let saveThis = this;
       const from = this.props.tinode.authorizeURL(sanitizeImageUrl(ex.data.ref));
       fetch(from)
         .then(e => e.blob())
-        .then(function(b) {
+        .then((b) => {
           scale.call(saveThis, b);
         });
       return;
@@ -931,21 +921,11 @@ class MessagesView extends React.Component {
   }
 
   handleSendMessage(msg) {
-    if (this.state.reply) {
-      let quote = this.state.reply.content;
-      if (quote) {
-        if (typeof msg == 'string') {
-          msg = Drafty.init(msg);
-        }
-        msg = Drafty.attachQuote(msg, quote);
-        let head = {replyToSeq: this.state.reply.seq};
-
-        this.props.sendMessage(msg, undefined, undefined, head);
-        this.setState({reply: null})
-        return;
-      }
+    if (this.state.reply && this.state.reply.content && typeof msg == 'string') {
+      // Turn it into Drafty so we can make a quoted Drafty object later.
+      msg = Drafty.parse(msg);
     }
-    this.props.sendMessage(msg)
+    this.doSendMessage(msg, undefined, undefined);
   }
 
   handleCancelReply() {
@@ -980,6 +960,10 @@ class MessagesView extends React.Component {
         component2 = (
           <ImagePreview
             content={this.state.imagePreview}
+            tinode={this.props.tinode}
+            replyTo={this.state.reply}
+            formatter={draftyFormatter}
+            onCancelReply={this.handleCancelReply}
             onClose={this.handleClosePreview}
             onSendMessage={this.sendImageAttachment} />
         );
@@ -995,6 +979,10 @@ class MessagesView extends React.Component {
         component2 = (
           <DocPreview
             content={this.state.docPreview}
+            tinode={this.props.tinode}
+            replyTo={this.state.reply}
+            formatter={draftyFormatter}
+            onCancelReply={this.handleCancelReply}
             onClose={this.handleClosePreview}
             onSendMessage={this.sendFileAttachment} />
         );
@@ -1074,7 +1062,7 @@ class MessagesView extends React.Component {
               pickReply={this.handlePickReply}
               replyToSeq={msg.head ? msg.head.replyToSeq : null}
               onQuoteClick={this.handleQuoteClick}
-              onFormatQuote={quoteFormatter}
+              onFormatQuote={draftyFormatter}
 
               key={msg.seq} />
           );
@@ -1172,7 +1160,6 @@ class MessagesView extends React.Component {
               :
               <SendMessage
                 disabled={!this.state.isWriter}
-                //onSendMessage={this.props.sendMessage}
                 onKeyPress={this.sendKeyPress}
                 onAttachFile={this.handleAttachFile}
                 onAttachImage={this.handleAttachImage}
@@ -1182,7 +1169,7 @@ class MessagesView extends React.Component {
                 replyTo={this.state.reply}
                 onQuoteClick={this.handleQuoteClick}
                 onSendMessage={this.handleSendMessage}
-                onFormatQuote={quoteFormatter}
+                onFormatQuote={draftyFormatter}
                 onCancelReply={this.handleCancelReply} />}
           </>
         );
@@ -1194,31 +1181,69 @@ class MessagesView extends React.Component {
   }
 };
 
-// Converts Drafty object into a one-line reply quote.
-function quoteFormatter(style, data, values, key) {
+function quotePreviewFmt(fmt, ent) {
+  let tp = fmt.tp;
+  if (!tp) {
+    if (!ent || !ent.tp) {
+      return [null, null];
+    }
+    tp = ent.tp;
+  }
+  const new_fmt = {at: fmt.at, len: fmt.len, tp: fmt.tp};
+  switch (tp) {
+    case 'BR':
+      // Replace new line with a space.
+      return [null, null];
+    case 'HL':
+      return [new_fmt, ent];
+    case 'LN':
+      // Disable links in previews.
+      return [null, null];
+    case 'IM':
+      // Keep images as is.
+      return [new_fmt, ent];
+    case 'BN':
+      new_fmt.tp = null;
+      return [new_fmt, { tp: 'IC', data: { orig: 'BN', iconName: 'dashboard', iconTitle: 'drafty_form'} }];
+    case 'FM':
+      new_fmt.tp = null;
+      new_fmt.len = 0;
+      return [new_fmt, {tp: 'IC', data: { orig: 'FM', iconName: 'dashboard', iconTitle: 'drafty_form'} }];
+    case 'RW':
+      return [null, null];
+    case 'EX':
+      // Make it an icon.
+      new_fmt.tp = null;
+      return [new_fmt, {tp: 'IC', data: { orig: 'EX', iconName: 'attachment', iconTitle: 'drafty_attachment'} }];
+    case 'QQ':
+      // Quote/citation.
+      return [null,null];
+    default:
+      return [new_fmt, ent];
+  }
+}
+
+// Converts Drafty elements into React classes.
+// 'this' is set by the caller.
+function draftyFormatter(style, data, values, key) {
+  if (style == 'EX') {
+    // attachments are handled elsewhere.
+    return null;
+  }
+
   let el = Drafty.tagName(style);
-  let attr = { key: key };
   if (el) {
     const { formatMessage } = this.props.intl;
+    let attr = Drafty.attrValue(style, data) || {};
+    attr.key = key;
     switch (style) {
-      case 'BR':
-        // Replace new line with a space.
-        el = React.Fragment;
-        values = [' '];
-        break;
       case 'HL':
-        // Make highlight less prominent in preview.
-        attr.className = 'highlight preview';
-        break;
-      case 'LN':
-        // Disable links in previews.
-        el = 'span';
+        // Highlighted text. Assign class name.
+        attr.className = 'highlight';
         break;
       case 'IM':
-        // We show image thumbnails stored inline.
+        // Additional processing for images
         if (data) {
-          attr = Drafty.attrValue(style, data) || {};
-          attr.key = key;
           attr.className = 'inline-image';
           const dim = fitImageSize(data.width, data.height,
             Math.min(this.props.viewportWidth - REM_SIZE * 6.5, REM_SIZE * 34.5), REM_SIZE * 24, false) ||
@@ -1230,52 +1255,69 @@ function quoteFormatter(style, data, values, key) {
             minWidth: dim.dstWidth + 'px',
             minHeight: dim.dstHeight + 'px'
           };
-          attr.src = this.props.tinode.authorizeURL(sanitizeImageUrl(attr.src));
-          attr.alt = data.name;
-          if (!attr.src) {
-            attr.src = 'img/broken_image.png';
+          if (!Drafty.isProcessing(data)) {
+            attr.src = this.props.tinode.authorizeURL(sanitizeImageUrl(attr.src));
+            attr.alt = data.name;
+            if (attr.src) {
+              attr.onClick = this.handleImagePreview;
+              attr.className += ' image-clickable';
+              attr.loading = 'lazy';
+            } else {
+              attr.src = 'img/broken_image.png';
+            }
+          } else {
+            // Use custom element instead of <img>.
+            el = UploadingImage;
           }
         }
         break;
       case 'BN':
-        el = 'span';
-        attr.className = 'flat-button faux';
+        // Button
+        attr.onClick = this.handleFormButtonClick;
+        let inner = React.Children.map(values, (child) => {
+          return typeof child == 'string' ? child : undefined;
+        });
+        if (!inner || inner.length == 0) {
+          inner = [attr.name]
+        }
+        // Get text which will be sent back when the button is clicked.
+        attr['data-title'] = inner.join('');
+        break;
+      case 'MN':
+        // Mention
+        if (data && data.hasOwnProperty('color')) {
+          attr.className = 'mn-dark-color' + data.color;
+        }
         break;
       case 'FM':
-        el = React.Fragment;
-        values = [<i key="fm" className="material-icons">dashboard</i>,
-          //messages.drafty_form].concat(values || []);
-          formatMessage(messages.drafty_form)].concat(values || []);
+        // Form
+        attr.className = 'bot-form';
         break;
       case 'RW':
-        el = React.Fragment;
-        break;
-      case 'EX':
-        if (data && data.mime == 'application/json') {
-          // Ignore JSON attachments: they are form response payloads.
-          return null;
-        }
-        el = React.Fragment;
-        values = [<i key="ex" className="material-icons">attachment</i>,
-                  //messages.drafty_attachment];
-                  formatMessage(messages.drafty_attachment)];
+        // Form element formatting is dependent on element content.
         break;
       case 'QQ':
         // Quote/citation.
-        attr.className = 'reply-quote';
+        attr.className = 'reply-quote'
         attr.onClick = this.handleQuoteClick;
         break;
-      case 'QH':
-        // Quote/citation.
-        attr.className = 'reply-quote-header';
-        break;
-      case 'QB':
-        // Nothing.
+      case 'IC':
+        // Icon.
+        if (data.orig == 'BN') {
+          attr.className = 'flat-button faux';
+        } else {
+          el = React.Fragment;
+          //values = [<i >]
+          const iconKey = data.orig.toLowerCase();
+          values = [<i key={iconKey} className="material-icons">{data.iconName}</i>,
+            formatMessage(messages[data.iconTitle])].concat(values || []);
+        }
         break;
       default:
         if (el == '_UNKN') {
-          el = React.Fragment;
-          values = [<i key="unkn" className="material-icons">extension</i>];
+          // Unknown element.
+          // TODO: make it prettier.
+          el = <><span className="material-icons">extension</span></>;
         }
         break;
     }

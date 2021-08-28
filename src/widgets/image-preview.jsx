@@ -73,6 +73,10 @@ export default class ImagePreview extends React.PureComponent {
           <SendMessage
             messagePrompt="add_image_caption"
             acceptBlank={true}
+            tinode={this.props.tinode}
+            replyTo={this.props.replyTo}
+            formatter={this.props.onFormatQuote}
+            onCancelReply={this.props.onCancelReply}
             onSendMessage={this.handleSendImage}
             onError={this.props.onError} />
           :
