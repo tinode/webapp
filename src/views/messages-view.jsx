@@ -91,9 +91,11 @@ class MessagesView extends React.Component {
     this.state = MessagesView.getDerivedStateFromProps(props, {});
 
     this.leave = this.leave.bind(this);
+    this.sendMessage = this.sendMessage.bind(this);
     this.sendImageAttachment = this.sendImageAttachment.bind(this);
     this.sendFileAttachment = this.sendFileAttachment.bind(this);
     this.sendKeyPress = this.sendKeyPress.bind(this);
+    this.subscribe = this.subscribe.bind(this);
     this.handleScrollReference = this.handleScrollReference.bind(this);
     this.handleScrollEvent = this.handleScrollEvent.bind(this);
     this.handleDescChange = this.handleDescChange.bind(this);
@@ -114,8 +116,6 @@ class MessagesView extends React.Component {
     this.postReadNotification = this.postReadNotification.bind(this);
     this.clearNotificationQueue = this.clearNotificationQueue.bind(this);
 
-    this.doSendMessage = this.doSendMessage.bind(this);
-    this.handleSendMessage = this.handleSendMessage.bind(this);
     this.handlePickReply = this.handlePickReply.bind(this);
     this.handleCancelReply = this.handleCancelReply.bind(this);
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
@@ -145,7 +145,7 @@ class MessagesView extends React.Component {
   // or vertical shrinking.
   componentDidUpdate(prevProps, prevState) {
     if (this.messagesScroller) {
-      if (prevState.topic != this.state.topic || prevState.latestMsgSeq != this.state.latestMsgSeq) {
+      if (prevState.topic != this.state.topic || prevState.messageCount != this.state.messageCount) {
         // New message
         this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition;
       } else if (prevProps.viewportHeight > this.props.viewportHeight) {
@@ -178,49 +178,8 @@ class MessagesView extends React.Component {
       this.postReadNotification(0);
     }
 
-    if (topic && !topic.isSubscribed() && this.props.ready &&
-        ((this.state.topic != prevState.topic) || !prevProps.ready)) {
-      // Is this a new topic?
-      const newTopic = (this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic);
-
-      // Don't request the tags. They are useless unless the user
-      // is the owner and is editing the topic.
-      let getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub();
-      if (this.state.isReader || newTopic) {
-        // Reading is either permitted or we don't know because it's a new topic. Ask for messages.
-        getQuery = getQuery.withLaterData(MESSAGES_PAGE);
-        if (this.state.isReader) {
-          getQuery = getQuery.withLaterDel();
-        }
-        // And show "loading" spinner.
-        this.setState({ fetchingMessages: true });
-      }
-      const setQuery = newTopic ? this.props.newTopicParams : undefined;
-      topic.subscribe(getQuery.build(), setQuery)
-        .then((ctrl) => {
-          if (ctrl.code == 303) {
-            // Redirect to another topic requested.
-            HashNavigation.navigateTo(HashNavigation.setUrlTopic('', ctrl.params.topic));
-            return;
-          }
-          if (this.state.topic != ctrl.topic) {
-            this.setState({topic: ctrl.topic});
-          }
-          this.props.onNewTopicCreated(this.props.topic, ctrl.topic);
-          // If there are unsent messages, try sending them now.
-          topic.queuedMessages((pub) => {
-            if (!pub._sending && topic.isSubscribed()) {
-              topic.publishMessage(pub);
-            }
-          });
-        })
-        .catch((err) => {
-          console.log("Failed subscription to", this.state.topic);
-          this.props.onError(err.message, 'err');
-          const blankState = MessagesView.getDerivedStateFromProps({}, {});
-          blankState.title = this.props.intl.formatMessage(messages.not_found);
-          this.setState(blankState);
-        });
+    if ((this.state.topic != prevState.topic) || !prevProps.ready) {
+      this.subscribe(topic);
     }
   }
 
@@ -229,7 +188,7 @@ class MessagesView extends React.Component {
     if (!nextProps.topic) {
       // Default state: no topic.
       nextState = {
-        latestMsgSeq: -1,
+        messageCount: 0,
         latestClearId: -1,
         onlineSubs: [],
         topic: null,
@@ -300,14 +259,14 @@ class MessagesView extends React.Component {
           });
         }
         Object.assign(nextState, {
-          latestMsgSeq: topic.maxMsgSeq(),
+          messageCount: topic.messageCount(),
           latestClearId: topic.maxClearId(),
           channel: topic.isChannelType()
         });
       } else {
         // Invalid topic.
         Object.assign(nextState, {
-          latestMsgSeq: -1,
+          messageCount: 0,
           latestClearId: -1,
           onlineSubs: [],
           title: '',
@@ -358,6 +317,55 @@ class MessagesView extends React.Component {
     return nextState;
   }
 
+  subscribe(topic) {
+    if (!topic || topic.isSubscribed() || !this.props.ready) {
+      return;
+    }
+
+    // Is this a new topic?
+    const newTopic = (this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic);
+
+    // Don't request the tags. They are useless unless the user
+    // is the owner and is editing the topic.
+    let getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub();
+    if (this.state.isReader || newTopic) {
+      // Reading is either permitted or we don't know because it's a new topic. Ask for messages.
+      getQuery = getQuery.withLaterData(MESSAGES_PAGE);
+      if (this.state.isReader) {
+        getQuery = getQuery.withLaterDel();
+      }
+      // And show "loading" spinner.
+      this.setState({ fetchingMessages: true });
+    }
+
+    const setQuery = newTopic ? this.props.newTopicParams : undefined;
+    topic.subscribe(getQuery.build(), setQuery)
+      .then((ctrl) => {
+        if (ctrl.code == 303) {
+          // Redirect to another topic requested.
+          HashNavigation.navigateTo(HashNavigation.setUrlTopic('', ctrl.params.topic));
+          return;
+        }
+        if (this.state.topic != ctrl.topic) {
+          this.setState({topic: ctrl.topic});
+        }
+        this.props.onNewTopicCreated(this.props.topic, ctrl.topic);
+        // If there are unsent messages, try sending them now.
+        topic.queuedMessages((pub) => {
+          if (!pub._sending && topic.isSubscribed()) {
+            this.sendMessage(pub);
+          }
+        });
+      })
+      .catch((err) => {
+        console.log("Failed subscription to", this.state.topic);
+        this.props.onError(err.message, 'err');
+        const blankState = MessagesView.getDerivedStateFromProps({}, {});
+        blankState.title = this.props.intl.formatMessage(messages.not_found);
+        this.setState(blankState);
+      });
+  }
+
   leave(oldTopicName) {
     if (!oldTopicName || !this.props.tinode.isTopicCached(oldTopicName)) {
       return;
@@ -391,23 +399,19 @@ class MessagesView extends React.Component {
   // Get older messages
   handleScrollEvent(event) {
     this.setState({scrollPosition: event.target.scrollHeight - event.target.scrollTop});
+    if (this.state.fetchingMessages) {
+      return;
+    }
+
     if (event.target.scrollTop <= 0) {
-      this.setState((prevState, props) => {
-        const newState = {};
-        if (!prevState.fetchingMessages) {
-          const topic = this.props.tinode.getTopic(this.state.topic);
-          if (topic && topic.isSubscribed() && topic.msgHasMoreMessages()) {
-            newState.fetchingMessages = true;
-            topic.getMessagesPage(MESSAGES_PAGE)
-              .then(() => this.setState({fetchingMessages: false}))
-              .catch((err) => {
-                this.setState({fetchingMessages: false});
-                this.props.onError(err.message, 'err');
-              });
-          }
-        }
-        return newState;
-      });
+      const topic = this.props.tinode.getTopic(this.state.topic);
+      if (topic && topic.isSubscribed() && topic.msgHasMoreMessages()) {
+        this.setState({fetchingMessages: true}, () => {
+          topic.getMessagesPage(MESSAGES_PAGE)
+            .catch((err) => this.props.onError(err.message, 'err'))
+            .finally(() => this.setState({fetchingMessages: false}));
+          });
+      }
     }
   }
 
@@ -530,10 +534,11 @@ class MessagesView extends React.Component {
       return;
     }
 
-    this.setState({latestMsgSeq: topic.maxMsgSeq()});
+    clearTimeout(this.keyPressTimer)
+    this.setState({messageCount: topic.messageCount(), typingIndicator: false});
 
-    // If the message is added to the end of the message list,
-    // scroll to the bottom.
+    // Scroll to the bottom if the message is added to the end of the message list.
+    // TODO: This should be replaced by showing a "scroll to bottom" button.
     if (topic.isNewMessage(msg.seq)) {
       this.setState({scrollPosition: 0});
     }
@@ -560,9 +565,8 @@ class MessagesView extends React.Component {
     switch (info.what) {
       case 'kp': {
         clearTimeout(this.keyPressTimer);
-        var instance = this;
-        this.keyPressTimer = setTimeout(function() {
-          instance.setState({typingIndicator: false});
+        this.keyPressTimer = setTimeout(() => {
+          this.setState({typingIndicator: false});
         }, KEYPRESS_DELAY + 1000);
         if (!this.state.typingIndicator) {
           this.setState({typingIndicator: true});
@@ -592,7 +596,7 @@ class MessagesView extends React.Component {
 
   handleFormResponse(action, text, data) {
     if (action == 'pub') {
-      this.props.sendMessage(Drafty.attachJSON(Drafty.parse(text), data));
+      this.sendMessage(Drafty.attachJSON(Drafty.parse(text), data));
     } else if (action == 'url') {
       const url = new URL(data.ref);
       const params = url.searchParams;
@@ -653,15 +657,19 @@ class MessagesView extends React.Component {
     }
   }
 
-  doSendMessage(msg, uploadCompletionPromise, uploader) {
-    let head = null;
+  // sendMessage sends the message with an optional subscription to topic first.
+  sendMessage(msg, uploadCompletionPromise, uploader) {
+    let head;
     if (this.state.reply && this.state.reply.content) {
       head = {replyToSeq: this.state.reply.seq};
-      let quote = this.state.reply.content;
-      msg = Drafty.attachQuote(msg, quote);
+      // Turn it into Drafty so we can make a quoted Drafty object later.
+      if (typeof msg == 'string') {
+        msg = Drafty.parse(msg);
+      }
+      msg = Drafty.attachQuote(msg, this.state.reply.content);
+      this.setState({reply: null});
     }
     this.props.sendMessage(msg, uploadCompletionPromise, uploader, head);
-    this.setState({reply: null});
   }
 
   // Send attachment as Drafty message:
@@ -683,13 +691,12 @@ class MessagesView extends React.Component {
         urlPromise: uploadCompletionPromise
       });
       // Pass data and the uploader to the TinodeWeb.
-      this.doSendMessage(msg, uploadCompletionPromise, uploader);
+      this.sendMessage(msg, uploadCompletionPromise, uploader);
     } else {
       // Small enough to send inband.
       fileToBase64(file,
         (mime, bits, fname) => {
-          const msg = Drafty.attachFile(null, {mime: mime, data: bits, filename: fname});
-          this.doSendMessage(msg, undefined, undefined);
+          this.sendMessage(Drafty.attachFile(null, {mime: mime, data: bits, filename: fname}));
         },
         this.props.onError
       );
@@ -753,7 +760,7 @@ class MessagesView extends React.Component {
               msg = Drafty.append(msg, Drafty.parse(caption));
             }
             // Pass data and the uploader to the TinodeWeb.
-            this.doSendMessage(msg, uploadCompletionPromise, uploader);
+            this.sendMessage(msg, uploadCompletionPromise, uploader);
           }
         )},
         // Failure
@@ -778,7 +785,7 @@ class MessagesView extends React.Component {
         msg = Drafty.appendLineBreak(msg);
         msg = Drafty.append(msg, Drafty.parse(caption));
       }
-      this.doSendMessage(msg, undefined, undefined);
+      this.sendMessage(msg);
     });
   }
 
@@ -918,14 +925,6 @@ class MessagesView extends React.Component {
         });
       return;
     }
-  }
-
-  handleSendMessage(msg) {
-    if (this.state.reply && this.state.reply.content && typeof msg == 'string') {
-      // Turn it into Drafty so we can make a quoted Drafty object later.
-      msg = Drafty.parse(msg);
-    }
-    this.doSendMessage(msg, undefined, undefined);
   }
 
   handleCancelReply() {
@@ -1159,16 +1158,15 @@ class MessagesView extends React.Component {
               <Invitation onAction={this.handleNewChatAcceptance} />
               :
               <SendMessage
+                tinode={this.props.tinode}
                 disabled={!this.state.isWriter}
                 onKeyPress={this.sendKeyPress}
+                onSendMessage={this.sendMessage}
                 onAttachFile={this.handleAttachFile}
                 onAttachImage={this.handleAttachImage}
                 onError={this.props.onError}
-
-                tinode={this.props.tinode}
                 replyTo={this.state.reply}
                 onQuoteClick={this.handleQuoteClick}
-                onSendMessage={this.handleSendMessage}
                 onFormatQuote={draftyFormatter}
                 onCancelReply={this.handleCancelReply} />}
           </>

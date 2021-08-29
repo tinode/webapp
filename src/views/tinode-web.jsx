@@ -917,10 +917,20 @@ class TinodeWeb extends React.Component {
     }
 
     if (!topic.isSubscribed()) {
+      // Topic is not subscribed yet. Subscribe.
       if (!promise) {
         promise = Promise.resolve();
       }
-      promise = promise.then(() => { return topic.subscribe(); });
+      promise = promise
+        .then(() => topic.subscribe())
+        .then(() => {
+          // If there are unsent messages, try sending them now.
+          topic.queuedMessages((pub) => {
+            if (!pub._sending && topic.isSubscribed()) {
+              this.sendMessage(pub);
+            }
+          });
+        });
     }
 
     if (promise) {
@@ -1184,7 +1194,7 @@ class TinodeWeb extends React.Component {
   }
 
   // Request to start a topic, new or selected from search results, or "by ID".
-  handleStartTopicRequest(topicName, pub, priv, tags, isChannel) {
+  handleStartTopicRequest(topicName, newTopicParams, isChannel) {
     // Check if topic is indeed new. If not, launch it.
     if (topicName && this.tinode.isTopicCached(topicName)) {
       this.handleTopicSelected(topicName);
@@ -1199,14 +1209,14 @@ class TinodeWeb extends React.Component {
       params.desc = {defacs: {auth: DEFAULT_P2P_ACCESS_MODE}};
     } else {
       topicName = topicName || this.tinode.newGroupTopicName(isChannel);
-      params.desc = {public: pub, private: {comment: priv}};
-      params.tags = tags;
+      params.desc = {public: newTopicParams.public, private: {comment: newTopicParams.private}};
+      params.tags = newTopicParams.tags;
     }
     params._topicName = topicName;
     this.setState({newTopicParams: params}, () => {this.handleTopicSelected(topicName)});
   }
 
-  // New topic was creted, here is the new topic name.
+  // New topic was created, here is the new topic name.
   handleNewTopicCreated(oldName, newName) {
     if (this.state.topicSelected == oldName && oldName != newName) {
       // If the current URl contains the old topic name, replace it with new.

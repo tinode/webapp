@@ -196,11 +196,11 @@ export default class TopicDescEdit extends React.Component {
             <div>
               <FormattedMessage id="full_name_prompt" defaultMessage="Full name, e.g. John Doe"
                 description="Input placeholder for person's full name">{
-              (full_name_placeholder) => <InPlaceEdit
-                placeholder={full_name_placeholder}
-                value={this.state.fullName}
-                required={true}
-                onFinished={this.handleFullNameUpdate} />
+                (full_name_placeholder) => <InPlaceEdit
+                  placeholder={full_name_placeholder}
+                  value={this.state.fullName}
+                  required={true}
+                  onFinished={this.handleFullNameUpdate} />
               }</FormattedMessage>
             </div>
           </div>
@@ -212,12 +212,15 @@ export default class TopicDescEdit extends React.Component {
                   description="Label for editing topic name" />
               </label></div>
               <div>
-                <InPlaceEdit
-                  placeholder={this.state.groupTopic ? "Group name" : <i>Unknown</i>}
-                  readOnly={!editable}
-                  value={this.state.fullName}
-                  required={true}
-                  onFinished={this.handleFullNameUpdate} />
+                <FormattedMessage id="topic_name_editing_placeholder" defaultMessage="Freeform name of the group"
+                  description="Prompt for entering topic name">{
+                  (group_name_placeholder) => <InPlaceEdit
+                    placeholder={group_name_placeholder}
+                    readOnly={!editable}
+                    value={this.state.fullName}
+                    required={true}
+                    onFinished={this.handleFullNameUpdate} />
+                }</FormattedMessage>
               </div>
             </div>
             <div className="group">
@@ -228,8 +231,7 @@ export default class TopicDescEdit extends React.Component {
                 </label>
               </div>
               <div>
-                <FormattedMessage id="private_editing_placeholder"
-                  defaultMessage="Visible to you only"
+                <FormattedMessage id="private_editing_placeholder" defaultMessage="Visible to you only"
                   description="Placeholder for editing 'private'">{
                   (private_placeholder) => <InPlaceEdit
                     placeholder={private_placeholder}

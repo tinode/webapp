@@ -39,7 +39,7 @@ export function bytesToHumanSize(bytes) {
 
 // Get 32 bit integer hash value for a string. Ideally it should produce the same value
 // as Java's String#hash().
-function stringToColorHash(value) {
+export function stringToColorHash(value) {
   let hash = 0;
   value = '' + value;
   for (let i = 0; i < value.length; i++) {

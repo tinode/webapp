@@ -354,7 +354,7 @@ class ContextMenu extends React.Component {
     }
 
     if (!item) {
-      console.log("Invalid menu item ID", e.currentTarget.dataset.id);
+      console.error("Invalid menu item ID", e.currentTarget.dataset.id);
     } else {
       this.props.onAction(
         item.id,
@@ -425,12 +425,12 @@ class ContextMenu extends React.Component {
 
   replyToMessage(params, errorHandler) {
     console.log("Reply to message", params);
-    params.pickReply({ seq: params.seq, content: params.content })
+    params.pickReply({ seq: params.seq, content: params.content });
   }
 
   render() {
+    const menu = [];
     let count = 0;
-    let menu = [];
     this.props.items.map((item) => {
       if (typeof item == 'string') {
         item = this.MenuItems[item];

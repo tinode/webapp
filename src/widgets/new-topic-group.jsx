@@ -34,7 +34,7 @@ export default class NewTopicGroup extends React.PureComponent {
   }
 
   handleFieldEdit(name, e) {
-    this.setState({[name]: e.target.value});
+    this.setState({[name]: e.target.value || ''});
   }
 
   handleImageChanged(img) {
@@ -82,7 +82,7 @@ export default class NewTopicGroup extends React.PureComponent {
             <FormattedMessage id="topic_name_editing_placeholder" defaultMessage="Freeform name of the group"
               description="Prompt for entering topic name">{
               (placeholder) => <input type="text" id="new-topic-fn" placeholder={placeholder}
-                ref={this.fullName} value={this.state.fullName} onChange={this.handleFieldEdit.bind('fullName')}
+                ref={this.fullName} value={this.state.fullName} onChange={this.handleFieldEdit.bind(this, 'fullName')}
                 autoFocus required tabIndex={0} />
             }</FormattedMessage>
           </div>
@@ -94,7 +94,7 @@ export default class NewTopicGroup extends React.PureComponent {
             <FormattedMessage id="private_editing_placeholder" defaultMessage="Visible to you only"
               description="Placeholder for editing 'private'">{
               (placeholder) => <input type="text" id="new-topic-priv" placeholder={placeholder}
-                value={this.state.private} onChange={this.handleFieldEdit.bind('private')} tabIndex={1} />
+                value={this.state.private} onChange={this.handleFieldEdit.bind(this, 'private')} tabIndex={1} />
             }</FormattedMessage>
           </div>
           <div className="group">
@@ -105,7 +105,7 @@ export default class NewTopicGroup extends React.PureComponent {
             <FormattedMessage id="description_editing_placeholder" defaultMessage="Description (optional)"
               description="Placeholder for editing topic description">{
               (placeholder) => <input type="text" id="new-topic-desc" placeholder={placeholder}
-                value={this.state.description} onChange={this.handleFieldEdit.bind('description')} tabIndex={2} />
+                value={this.state.description} onChange={this.handleFieldEdit.bind(this, 'description')} tabIndex={2} />
             }</FormattedMessage>
           </div>
         </div>
