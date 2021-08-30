@@ -162,7 +162,7 @@ class SendMessage extends React.PureComponent {
 
     let quote = null;
     if (this.props.replyTo) {
-      quote = Drafty.format(this.props.replyTo.content, this.props.onFormatQuote, this);
+      quote = Drafty.format(this.props.replyTo.content, this.props.formatter, this);
     }
 
     return (

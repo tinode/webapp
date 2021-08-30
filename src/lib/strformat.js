@@ -49,11 +49,16 @@ export function stringToColorHash(value) {
   return hash;
 }
 
+// User avatar letter color id.
+export function letterTileColorId(userId) {
+  return Math.abs(stringToColorHash(userId)) % 16;
+}
+
 // Converts user or topic ID to a CSS color class. Ideally it should produce the same color value as Java version.
 // params:
 // - {string} id: user or topic ID
 // - {boolean} light: light or dark version of the color.
 // - {boolean} fg: foreground or background color.
 export function idToColorClass(id, light, fg) {
-  return (light ? 'lt-' : 'dk-') + (fg ? 'fg-' : 'bg-') + (Math.abs(stringToColorHash(id)) % 16);
+  return (light ? 'lt-' : 'dk-') + (fg ? 'fg-' : 'bg-') + letterTileColorId(id);
 }

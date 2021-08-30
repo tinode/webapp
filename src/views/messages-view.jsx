@@ -22,8 +22,8 @@ import { DEFAULT_P2P_ACCESS_MODE, IMAGE_PREVIEW_DIM, KEYPRESS_DELAY, MESSAGES_PA
 import { SUPPORTED_IMAGE_FORMATS, blobToBase64, base64ToBlob, filePasted, fileToBase64,
   imageScaled, makeImageUrl, fitImageSize } from '../lib/blob-helpers.js';
 import HashNavigation from '../lib/navigation.js';
-import { bytesToHumanSize, shortDateFormat } from '../lib/strformat.js';
-import { sanitizeImageUrl, letterTileColor } from '../lib/utils.js';
+import { bytesToHumanSize, shortDateFormat, letterTileColorId } from '../lib/strformat.js';
+import { sanitizeImageUrl } from '../lib/utils.js';
 
 // Run timer with this frequency (ms) for checking notification queue.
 const NOTIFICATION_EXEC_INTERVAL = 300;
@@ -121,8 +121,20 @@ class MessagesView extends React.Component {
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
     this.convertIntoThumbnails = this.convertIntoThumbnails.bind(this);
 
+    this.chatMessageRefs = {};
+    this.getOrCreateMessageRef = this.getOrCreateMessageRef.bind(this);
+
     this.readNotificationQueue = [];
     this.readNotificationTimer = null;
+  }
+
+  getOrCreateMessageRef(seqId) {
+    if (this.chatMessageRefs.hasOwnProperty(seqId)) {
+      return this.chatMessageRefs[seqId];
+    }
+    const ref = React.createRef();
+    this.chatMessageRefs[seqId] = ref;
+    return ref;
   }
 
   componentDidMount() {
@@ -868,7 +880,7 @@ class MessagesView extends React.Component {
         }
         this.convertIntoThumbnails(ents, 0, (success) => {
           if (success) {
-            const msg = Drafty.createQuote(header, cont, letterTileColor(thisFrom));
+            const msg = Drafty.createQuote(header, cont, letterTileColorId(thisFrom));
             this.setState({reply: {content: msg, seq: m.seq}});
           }
         });
@@ -916,12 +928,11 @@ class MessagesView extends React.Component {
         scale.call(this, b);
       }
     } else {
-      //let saveThis = this;
       const from = this.props.tinode.authorizeURL(sanitizeImageUrl(ex.data.ref));
       fetch(from)
         .then(e => e.blob())
         .then((b) => {
-          scale.call(saveThis, b);
+          scale.call(this, b);
         });
       return;
     }
@@ -932,11 +943,14 @@ class MessagesView extends React.Component {
   }
 
   handleQuoteClick(replyToSeq) {
-    const element = document.getElementById("msg-" + replyToSeq);
+    const ref = this.getOrCreateMessageRef(replyToSeq);
+    const element = ref.current;
     if (element) {
       element.scrollIntoView({block: "center", behavior: "smooth"});
       element.style.backgroundColor = 'rgb(0, 0, 0, 0.4)';
       setTimeout(() => { element.style.backgroundColor = ''; } , 1000);
+    } else {
+      console.error("Unresolved ref: seqId", replyToSeq);
     }
   }
 
@@ -1036,6 +1050,9 @@ class MessagesView extends React.Component {
             chatBoxClass='chat-box';
           }
 
+          // Ref for this chat message.
+          const ref = this.getOrCreateMessageRef(msg.seq);
+
           messageNodes.push(
             <ChatMessage
               tinode={this.props.tinode}
@@ -1061,7 +1078,8 @@ class MessagesView extends React.Component {
               pickReply={this.handlePickReply}
               replyToSeq={msg.head ? msg.head.replyToSeq : null}
               onQuoteClick={this.handleQuoteClick}
-              onFormatQuote={draftyFormatter}
+              formatter={draftyFormatter}
+              ref={ref}
 
               key={msg.seq} />
           );
@@ -1167,7 +1185,7 @@ class MessagesView extends React.Component {
                 onError={this.props.onError}
                 replyTo={this.state.reply}
                 onQuoteClick={this.handleQuoteClick}
-                onFormatQuote={draftyFormatter}
+                formatter={draftyFormatter}
                 onCancelReply={this.handleCancelReply} />}
           </>
         );
@@ -1179,6 +1197,7 @@ class MessagesView extends React.Component {
   }
 };
 
+// Transforms styles (and corresponding entities) for formatting reply quotes.
 function quotePreviewFmt(fmt, ent) {
   let tp = fmt.tp;
   if (!tp) {

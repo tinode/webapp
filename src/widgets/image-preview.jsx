@@ -75,7 +75,7 @@ export default class ImagePreview extends React.PureComponent {
             acceptBlank={true}
             tinode={this.props.tinode}
             replyTo={this.props.replyTo}
-            formatter={this.props.onFormatQuote}
+            formatter={this.props.formatter}
             onCancelReply={this.props.onCancelReply}
             onSendMessage={this.handleSendImage}
             onError={this.props.onError} />

@@ -10,7 +10,7 @@ import UploadingImage from './uploading-image.jsx'
 
 import { sanitizeImageUrl, sanitizeUrl } from '../lib/utils.js';
 
-class ChatMessage extends React.PureComponent {
+class BaseChatMessage extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -94,7 +94,6 @@ class ChatMessage extends React.PureComponent {
     const fullDisplay = (this.props.userFrom && this.props.response && !this.props.deleted &&
       (this.props.sequence == 'single' || this.props.sequence == 'last'));
 
-    const msgId = 'msg-' + this.props.seq;
     let content = this.props.content;
     const attachments = [];
     if (this.props.mimeType == Drafty.getContentType() && Drafty.isValid(content)) {
@@ -133,7 +132,7 @@ class ChatMessage extends React.PureComponent {
     }
 
     return (
-      <li id={msgId} className={sideClass}>
+      <li ref={this.props.innerRef} className={sideClass}>
         {this.props.userFrom && this.props.response ?
           <div className="avatar-box">
             {fullDisplay ?
@@ -182,4 +181,7 @@ class ChatMessage extends React.PureComponent {
   }
 };
 
-export default injectIntl(ChatMessage);
+const IntlChatMessage = injectIntl(BaseChatMessage);
+const ChatMessage = React.forwardRef((props, ref) => <IntlChatMessage innerRef = {ref} {...props} />);
+
+export default ChatMessage;
