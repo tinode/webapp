@@ -392,6 +392,9 @@ div.trusted-badge {
 .blue {
   color: #2196f3!important; /* blue 500 */
 }
+.lt-blue {
+  color: #64b5f6!important; /* blue 300 */
+}
 
 .verified-color {
   color: #03A9F4!important; /* lt-blue 500 */

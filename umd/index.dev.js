@@ -4752,7 +4752,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       serverVersion: "no connection",
       messageSounds: !settings.messageSoundsOff,
       incognitoMode: false,
-      desktopAlerts: persist && settings.desktopAlerts,
+      desktopAlerts: persist && !!settings.desktopAlerts,
       desktopAlertsEnabled: ((0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_13__.isSecureConnection)() || (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_13__.isLocalHost)()) && typeof firebase_app__WEBPACK_IMPORTED_MODULE_2__ != 'undefined' && typeof navigator != 'undefined' && typeof FIREBASE_INIT != 'undefined',
       firebaseToken: persist ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_14__.default.getObject('firebase-token') : null,
       applicationVisible: !document.hidden,
@@ -5593,6 +5593,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handleToggleIncognitoMode(on) {
+    this.setState({
+      incognitoMode: null
+    });
     const me = this.tinode.getMeTopic();
     const am = me.getAccessMode().updateWant(on ? '-P' : '+P').getWant();
     me.setMeta({
@@ -5600,6 +5603,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         mode: am
       }
     }).catch(err => {
+      this.setState({
+        incognitoMode: !on
+      });
       this.handleError(err.message, 'err');
     });
   }
@@ -5652,6 +5658,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
   togglePushToken(enabled) {
     if (enabled) {
+      this.setState({
+        desktopAlerts: null
+      });
+
       if (!this.state.firebaseToken) {
         const fcm = this.fbPush ? Promise.resolve() : this.initFCMessaging();
         fcm.then(() => {
@@ -7297,13 +7307,15 @@ class CheckBox extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompone
   }
 
   render() {
-    return this.props.onChange ? this.props.checked ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+    return this.props.onChange ? this.props.checked === true ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons blue clickable",
       onClick: this.handleChange
-    }, "check_box") : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+    }, "check_box") : this.props.checked === false ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons blue clickable",
       onClick: this.handleChange
-    }, "check_box_outline_blank") : this.props.checked ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+    }, "check_box_outline_blank") : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons lt-blue"
+    }, "indeterminate_check_box") : this.props.checked ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, "check_box") : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
