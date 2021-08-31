@@ -847,7 +847,7 @@ class MessagesView extends React.Component {
         cont = Drafty.replyPreview(cont, 30, quotePreviewFmt);
 
         // Get the author.
-        let header = '';
+        let header;
         const seq = m.seq;
         const topic = this.props.tinode.getTopic(this.state.topic);
         const m0 = topic.findMessage(seq);
@@ -865,7 +865,7 @@ class MessagesView extends React.Component {
           }
         }
 
-        header = Drafty.init(header);
+        header = Drafty.init(header || '');
         // Make small image previews.
         const ents = [];
         if (cont.ent) {
