@@ -6,7 +6,6 @@ import { Drafty } from 'tinode-sdk';
 import Attachment from './attachment.jsx';
 import LetterTile from './letter-tile.jsx';
 import ReceivedMarker from './received-marker.jsx'
-import UploadingImage from './uploading-image.jsx'
 
 import { sanitizeImageUrl, sanitizeUrl } from '../lib/utils.js';
 

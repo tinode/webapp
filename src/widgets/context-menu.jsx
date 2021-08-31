@@ -424,7 +424,6 @@ class ContextMenu extends React.Component {
   }
 
   replyToMessage(params, errorHandler) {
-    console.log("Reply to message", params);
     params.pickReply({ seq: params.seq, content: params.content });
   }
 

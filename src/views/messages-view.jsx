@@ -15,6 +15,7 @@ import LetterTile from '../widgets/letter-tile.jsx';
 import LoadSpinner from '../widgets/load-spinner.jsx';
 import LogoView from './logo-view.jsx';
 import SendMessage from '../widgets/send-message.jsx';
+import UploadingImage from '../widgets/uploading-image.jsx'
 
 import { DEFAULT_P2P_ACCESS_MODE, IMAGE_PREVIEW_DIM, KEYPRESS_DELAY, MESSAGES_PAGE,
   MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE, READ_DELAY,
@@ -974,6 +975,7 @@ class MessagesView extends React.Component {
           <ImagePreview
             content={this.state.imagePreview}
             tinode={this.props.tinode}
+            viewportWidth={this.props.viewportWidth}
             replyTo={this.state.reply}
             formatter={draftyFormatter}
             onCancelReply={this.handleCancelReply}
@@ -993,6 +995,7 @@ class MessagesView extends React.Component {
           <DocPreview
             content={this.state.docPreview}
             tinode={this.props.tinode}
+            viewportWidth={this.props.viewportWidth}
             replyTo={this.state.reply}
             formatter={draftyFormatter}
             onCancelReply={this.handleCancelReply}
@@ -1178,6 +1181,7 @@ class MessagesView extends React.Component {
               <SendMessage
                 tinode={this.props.tinode}
                 disabled={!this.state.isWriter}
+                viewportWidth={this.props.viewportWidth}
                 onKeyPress={this.sendKeyPress}
                 onSendMessage={this.sendMessage}
                 onAttachFile={this.handleAttachFile}
@@ -1276,8 +1280,11 @@ function draftyFormatter(style, data, values, key) {
             attr.src = this.props.tinode.authorizeURL(sanitizeImageUrl(attr.src));
             attr.alt = data.name;
             if (attr.src) {
-              attr.onClick = this.handleImagePreview;
-              attr.className += ' image-clickable';
+              if (Math.max(data.width || 0, data.height || 0) > IMAGE_THUMBNAIL_DIM) {
+                // Allow previews for large enough images.
+                attr.onClick = this.handleImagePreview;
+                attr.className += ' image-clickable';
+              }
               attr.loading = 'lazy';
             } else {
               attr.src = 'img/broken_image.png';

@@ -146,7 +146,7 @@ class SendMessage extends React.PureComponent {
   handleQuoteClick(e) {
     e.preventDefault();
     e.stopPropagation();
-    if (this.props.replyTo) {
+    if (this.props.replyTo && this.props.onQuoteClick) {
       const replyToSeq = this.props.replyTo.seq;
       this.props.onQuoteClick(replyToSeq);
     }
