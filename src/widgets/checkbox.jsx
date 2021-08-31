@@ -15,9 +15,11 @@ export default class CheckBox extends React.PureComponent {
   render() {
     return (
       this.props.onChange ? (
-        this.props.checked ?
+        this.props.checked === true ?
           <i className="material-icons blue clickable" onClick={this.handleChange}>check_box</i> :
-          <i className="material-icons blue clickable" onClick={this.handleChange}>check_box_outline_blank</i>
+        this.props.checked === false ?
+          <i className="material-icons blue clickable" onClick={this.handleChange}>check_box_outline_blank</i> :
+          <i className="material-icons lt-blue">indeterminate_check_box</i>
         ) : (
           this.props.checked ?
             <i className="material-icons">check_box</i> :

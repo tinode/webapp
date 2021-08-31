@@ -158,7 +158,7 @@ class TinodeWeb extends React.Component {
       // "On" is the default, so saving the "off" state.
       messageSounds: !settings.messageSoundsOff,
       incognitoMode: false,
-      desktopAlerts: persist && settings.desktopAlerts,
+      desktopAlerts: persist && !!settings.desktopAlerts,
       desktopAlertsEnabled: (isSecureConnection() || isLocalHost()) &&
         (typeof firebase != 'undefined') && (typeof navigator != 'undefined') &&
         (typeof FIREBASE_INIT != 'undefined'),
@@ -1017,9 +1017,14 @@ class TinodeWeb extends React.Component {
   }
 
   handleToggleIncognitoMode(on) {
+    // Make state undefined.
+    this.setState({incognitoMode: null});
+
     const me = this.tinode.getMeTopic();
     const am = me.getAccessMode().updateWant(on ? '-P' : '+P').getWant();
     me.setMeta({sub: {mode: am}}).catch((err) => {
+      // Request failed, keep existing state.
+      this.setState({incognitoMode: !on});
       this.handleError(err.message, 'err');
     });
   }
@@ -1080,6 +1085,7 @@ class TinodeWeb extends React.Component {
 
   togglePushToken(enabled) {
     if (enabled) {
+      this.setState({desktopAlerts: null});
       if (!this.state.firebaseToken) {
         const fcm = this.fbPush ?
           Promise.resolve() :
