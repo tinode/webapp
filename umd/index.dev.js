@@ -7265,9 +7265,10 @@ function draftyFormatter(style, data, values, key) {
 
       default:
         if (el == '_UNKN') {
-          el = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-            className: "material-icons"
-          }, "extension"));
+          el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
+          values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+            className: "material-icons gray"
+          }, "extension"), ' '].concat(values || []);
         }
 
         break;
@@ -7953,7 +7954,17 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       }
     }
 
-    const subtitle = this.props.preview ? typeof this.props.preview == 'string' ? this.props.preview : react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, tinode_sdk__WEBPACK_IMPORTED_MODULE_6__.Drafty.format(this.props.preview, draftyFormatter, this)) : this.props.comment;
+    const subtitle = this.props.preview ? typeof this.props.preview == 'string' ? this.props.preview : tinode_sdk__WEBPACK_IMPORTED_MODULE_6__.Drafty.isValid(this.props.preview) ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, tinode_sdk__WEBPACK_IMPORTED_MODULE_6__.Drafty.format(this.props.preview, draftyFormatter, this)) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons gray"
+    }, "error_outline"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "gray"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "invalid_content",
+      defaultMessage: [{
+        "type": 0,
+        "value": "invalid content"
+      }]
+    }))) : this.props.comment;
     const icon = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_7__.deliveryMarker)(this.props.received);
     const marker = icon ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: 'material-icons small space-right' + (icon.color ? ' ' + icon.color : '')
@@ -8024,6 +8035,7 @@ function draftyFormatter(style, data, values, key) {
         break;
 
       case 'LN':
+      case 'MN':
         el = 'span';
         break;
 
@@ -8070,7 +8082,7 @@ function draftyFormatter(style, data, values, key) {
           values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
             key: "unkn",
             className: "material-icons"
-          }, "extension")];
+          }, "extension"), ' '].concat(values || []);
         }
 
         break;

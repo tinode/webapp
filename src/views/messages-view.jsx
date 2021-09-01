@@ -1340,8 +1340,8 @@ function draftyFormatter(style, data, values, key) {
       default:
         if (el == '_UNKN') {
           // Unknown element.
-          // TODO: make it prettier.
-          el = <><span className="material-icons">extension</span></>;
+          el = React.Fragment;
+          values = [<i className="material-icons gray">extension</i>, ' '].concat(values || []);
         }
         break;
     }
