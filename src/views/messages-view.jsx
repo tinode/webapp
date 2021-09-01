@@ -120,7 +120,6 @@ class MessagesView extends React.Component {
     this.handlePickReply = this.handlePickReply.bind(this);
     this.handleCancelReply = this.handleCancelReply.bind(this);
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
-    this.convertIntoThumbnails = this.convertIntoThumbnails.bind(this);
 
     this.chatMessageRefs = {};
     this.getOrCreateMessageRef = this.getOrCreateMessageRef.bind(this);
@@ -1239,7 +1238,6 @@ function quotePreviewFmt(fmt, ent) {
       return [new_fmt, { tp: 'IC', data: { orig: 'BN', iconName: 'button'}}];
     case 'FM':
       new_fmt.tp = null;
-      new_fmt.len = 0;
       return [new_fmt, {tp: 'IC', data: { orig: 'FM', iconName: 'form'}}];
     case 'RW':
       return [null, null];
