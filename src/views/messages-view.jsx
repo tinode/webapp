@@ -1357,7 +1357,7 @@ function draftyFormatter(style, data, values, key) {
           if (iconName && iconTitle) {
             const iconKey = data.orig.toLowerCase();
             values = [<i key={iconKey} className="material-icons">{iconName}</i>,
-              formatMessage(messages[iconTitle])].concat(values || []);
+              formatMessage(messages[iconTitle])].concat(' ', values || []);
           } else {
             values = [];
           }
