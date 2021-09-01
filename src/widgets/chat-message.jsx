@@ -110,11 +110,9 @@ export default class ChatMessage extends React.Component {
           defaultMessage="content deleted" description="Shown when messages are deleted" />
       </i></>
     } else if (typeof content != 'string') {
-      content = <>
-          <i className="material-icons gray">error_outline</i> <i className="gray">
-            <FormattedMessage id="invalid_content"
-              defaultMessage="invalid content" description="Shown when message is unreadable" /></i>
-        </>
+      content = <><i className="material-icons gray">error_outline</i> <i className="gray">
+        <FormattedMessage id="invalid_content"
+          defaultMessage="invalid content" description="Shown when message is unreadable" /></i></>
     }
 
     return (
@@ -240,8 +238,8 @@ function draftyFormatter(style, data, values, key) {
       default:
         if (el == '_UNKN') {
           // Unknown element.
-          // TODO: make it prettier.
-          el = <><span className="material-icons">extension</span></>;
+          el = React.Fragment;
+          values = [<i className="material-icons gray">extension</i>, ' '].concat(values || []);
         }
         break;
     }

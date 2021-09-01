@@ -177,7 +177,7 @@ function draftyFormatter(style, data, values, key) {
       default:
         if (el == '_UNKN') {
           el = React.Fragment;
-          values = [<i key="unkn" className="material-icons">extension</i>];
+          values = [<i key="unkn" className="material-icons">extension</i>, ' '].concat(values || []);
         }
         break;
     }

@@ -7265,9 +7265,10 @@ function draftyFormatter(style, data, values, key) {
 
       default:
         if (el == '_UNKN') {
-          el = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-            className: "material-icons"
-          }, "extension"));
+          el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
+          values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+            className: "material-icons gray"
+          }, "extension"), ' '].concat(values || []);
         }
 
         break;
@@ -8070,7 +8071,7 @@ function draftyFormatter(style, data, values, key) {
           values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
             key: "unkn",
             className: "material-icons"
-          }, "extension")];
+          }, "extension"), ' '].concat(values || []);
         }
 
         break;
