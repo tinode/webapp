@@ -88,7 +88,13 @@ class Contact extends React.Component {
 
     const subtitle = this.props.preview ?
       (typeof this.props.preview == 'string' ? this.props.preview :
-        React.createElement(React.Fragment, null, Drafty.format(this.props.preview, draftyFormatter, this))) :
+        Drafty.isValid(this.props.preview) ?
+        React.createElement(React.Fragment, null, Drafty.format(this.props.preview, draftyFormatter, this)) :
+        <><i className="material-icons gray">error_outline</i> <i className="gray">
+          <FormattedMessage id="invalid_content"
+            defaultMessage="invalid content" description="Shown when message is unreadable" /></i>
+        </>
+      ) :
       this.props.comment;
 
     const icon = deliveryMarker(this.props.received);
@@ -146,6 +152,7 @@ function draftyFormatter(style, data, values, key) {
         attr.className = 'highlight preview';
         break;
       case 'LN':
+      case 'MN':
         // Disable links in previews.
         el = 'span';
         break;
