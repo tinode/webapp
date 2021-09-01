@@ -674,7 +674,7 @@ class MessagesView extends React.Component {
   sendMessage(msg, uploadCompletionPromise, uploader) {
     let head;
     if (this.state.reply && this.state.reply.content) {
-      head = {replyToSeq: this.state.reply.seq};
+      head = {reply: '' + this.state.reply.seq};
       // Turn it into Drafty so we can make a quoted Drafty object later.
       if (typeof msg == 'string') {
         msg = Drafty.parse(msg);
@@ -879,63 +879,68 @@ class MessagesView extends React.Component {
 
           }, this);
         }
-        this.convertIntoThumbnails(ents, 0, (success) => {
-          if (success) {
+
+        // Turn all images into thumbnails.
+        const promises = [];
+        ents.map((ex) => {
+          let p = new Promise((resolve, reject) => {
+            const scale = (origBlob) => {
+              imageScaled(origBlob, IMAGE_THUMBNAIL_DIM, IMAGE_THUMBNAIL_DIM, -1, false,
+                // Success
+                (mime, blob, width, height, fname) => {
+                  ex.data.mime = mime;
+                  ex.data.size = blob.size;
+                  ex.data.width = width;
+                  ex.data.height = height;
+                  ex.data.name = fname;
+                  ex.data.ref = undefined;
+
+                  blobToBase64(blob, (blobMime, tinyBits64) => {
+                    ex.data.val = tinyBits64;
+                    resolve(true);
+                  });
+                },
+                // Failure
+                (err) => {
+                  reject(`Could not scale image: ${err}`);
+                });
+            }
+            if (ex.data.val) {
+              const b = base64ToBlob(ex.data.val, ex.data.mime);
+              if (b) {
+                scale(b);
+              }
+            } else {
+              const from = this.props.tinode.authorizeURL(sanitizeImageUrl(ex.data.ref));
+              fetch(from)
+                .then(e => {
+                  if (e.ok) {
+                    return e.blob();
+                  } else {
+                    reject(`Image fetch unsuccessful: ${e.status} - ${e.statusText}`);
+                  }
+                })
+                .then((b) => scale(b))
+                .catch((err) => reject(`Error fetching image data: ${err}`));
+              return;
+            }
+          });
+
+          promises.push(p);
+        });
+
+        Promise.all(promises)
+          .then((_) => {
+            // All done. Create a reply quote.
             const msg = Drafty.createQuote(header, cont, letterTileColorId(thisFrom));
             this.setState({reply: {content: msg, seq: m.seq}});
-          }
-        });
+          })
+          .catch((err) => {
+            this.props.onError(err, 'err');
+          });
 
         return;
       }
-    }
-  }
-
-  // Turn images in the provided Drafty.ent entries into thumbnails.
-  convertIntoThumbnails(ents, idx, done) {
-    if (idx >= ents.length) {
-      done(true);
-      return;
-    }
-
-    const scale = (origBlob) => {
-      imageScaled(origBlob, IMAGE_THUMBNAIL_DIM, IMAGE_THUMBNAIL_DIM, -1, false,
-        // Success
-        (mime, blob, width, height, fname) => {
-          const ex = ents[idx];
-
-          ex.data.mime = mime;
-          ex.data.size = blob.size;
-          ex.data.width = width;
-          ex.data.height = height;
-          ex.data.name = fname;
-          ex.data.ref = undefined;
-
-          blobToBase64(blob, (blobMime, tinyBits64) => {
-            ex.data.val = tinyBits64;
-            this.convertIntoThumbnails(ents, idx + 1, done);
-          });
-        },
-        // Failure
-        (err) => {
-          done(false);
-          this.props.onError(err, 'err');
-        });
-    }
-    const ex = ents[idx];
-    if (ex.data.val) {
-      const b = base64ToBlob(ex.data.val, ex.data.mime);
-      if (b) {
-        scale.call(this, b);
-      }
-    } else {
-      const from = this.props.tinode.authorizeURL(sanitizeImageUrl(ex.data.ref));
-      fetch(from)
-        .then(e => e.blob())
-        .then((b) => {
-          scale.call(this, b);
-        });
-      return;
     }
   }
 
@@ -945,13 +950,16 @@ class MessagesView extends React.Component {
 
   handleQuoteClick(replyToSeq) {
     const ref = this.getOrCreateMessageRef(replyToSeq);
+    if (!ref) {
+      return;
+    }
     const element = ref.current;
     if (element) {
       element.scrollIntoView({block: "center", behavior: "smooth"});
       element.style.backgroundColor = 'rgb(0, 0, 0, 0.4)';
       setTimeout(() => { element.style.backgroundColor = ''; } , 1000);
     } else {
-      console.error("Unresolved ref: seqId", replyToSeq);
+      console.error("Unresolved message ref: seqId", replyToSeq);
     }
   }
 
@@ -975,7 +983,7 @@ class MessagesView extends React.Component {
           <ImagePreview
             content={this.state.imagePreview}
             tinode={this.props.tinode}
-            viewportWidth={this.props.viewportWidth}
+            viewportWidth={this.props.viewportWidth}  // Used by `formatter`.
             replyTo={this.state.reply}
             formatter={draftyFormatter}
             onCancelReply={this.handleCancelReply}
@@ -995,7 +1003,7 @@ class MessagesView extends React.Component {
           <DocPreview
             content={this.state.docPreview}
             tinode={this.props.tinode}
-            viewportWidth={this.props.viewportWidth}
+            viewportWidth={this.props.viewportWidth}  // Used by `formatter`.
             replyTo={this.state.reply}
             formatter={draftyFormatter}
             onCancelReply={this.handleCancelReply}
@@ -1055,6 +1063,10 @@ class MessagesView extends React.Component {
 
           // Ref for this chat message.
           const ref = this.getOrCreateMessageRef(msg.seq);
+          let replyToSeq = msg.head ? parseInt(msg.head.reply) : null;
+          if (!replyToSeq || isNaN(replyToSeq)) {
+            replyToSeq = null;
+          }
 
           messageNodes.push(
             <ChatMessage
@@ -1071,19 +1083,18 @@ class MessagesView extends React.Component {
               sequence={sequence}
               received={deliveryStatus}
               uploader={msg._uploader}
-              viewportWidth={this.props.viewportWidth}
+              viewportWidth={this.props.viewportWidth}  // Used by `formatter`.
               showContextMenu={this.state.channel? false : this.handleShowContextMenuMessage}
               onImagePreview={this.handleImagePostview}
               onFormResponse={this.handleFormResponse}
               onError={this.props.onError}
               onCancelUpload={this.handleCancelUpload}
-
               pickReply={this.handlePickReply}
-              replyToSeq={msg.head ? msg.head.replyToSeq : null}
+              replyToSeq={replyToSeq}
               onQuoteClick={this.handleQuoteClick}
               formatter={draftyFormatter}
               ref={ref}
-
+              userIsWriter={this.state.isWriter}
               key={msg.seq} />
           );
         });
@@ -1225,17 +1236,17 @@ function quotePreviewFmt(fmt, ent) {
       return [new_fmt, ent];
     case 'BN':
       new_fmt.tp = null;
-      return [new_fmt, { tp: 'IC', data: { orig: 'BN', iconName: 'dashboard', iconTitle: 'drafty_form'} }];
+      return [new_fmt, { tp: 'IC', data: { orig: 'BN', iconName: 'button'}}];
     case 'FM':
       new_fmt.tp = null;
       new_fmt.len = 0;
-      return [new_fmt, {tp: 'IC', data: { orig: 'FM', iconName: 'dashboard', iconTitle: 'drafty_form'} }];
+      return [new_fmt, {tp: 'IC', data: { orig: 'FM', iconName: 'form'}}];
     case 'RW':
       return [null, null];
     case 'EX':
       // Make it an icon.
       new_fmt.tp = null;
-      return [new_fmt, {tp: 'IC', data: { orig: 'EX', iconName: 'attachment', iconTitle: 'drafty_attachment'} }];
+      return [new_fmt, {tp: 'IC', data: { orig: 'EX', iconName: 'attachment'}}];
     case 'QQ':
       // Quote/citation.
       return [null,null];
@@ -1327,14 +1338,31 @@ function draftyFormatter(style, data, values, key) {
         break;
       case 'IC':
         // Icon.
-        if (data.orig == 'BN') {
+        if (data.iconName == 'button') {
           attr.className = 'flat-button faux';
         } else {
+          let iconName;
+          let iconTitle;
+          switch (data.iconName) {
+            case 'form':
+              iconName = 'dashboard';
+              iconTitle = 'drafty_form';
+              break;
+            case 'attachment':
+              iconName = 'attachment';
+              iconTitle = 'drafty_attachment';
+              break;
+            default:
+              break;
+          }
           el = React.Fragment;
-          //values = [<i >]
-          const iconKey = data.orig.toLowerCase();
-          values = [<i key={iconKey} className="material-icons">{data.iconName}</i>,
-            formatMessage(messages[data.iconTitle])].concat(values || []);
+          if (iconName && iconTitle) {
+            const iconKey = data.orig.toLowerCase();
+            values = [<i key={iconKey} className="material-icons">{iconName}</i>,
+              formatMessage(messages[iconTitle])].concat(values || []);
+          } else {
+            values = [];
+          }
         }
         break;
       default:

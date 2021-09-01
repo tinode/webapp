@@ -62,7 +62,8 @@ class BaseChatMessage extends React.PureComponent {
     e.preventDefault();
     e.stopPropagation();
     const menuItems = this.props.received == Tinode.MESSAGE_STATUS_FAILED ? ['menu_item_send_retry'] : [];
-    if (this.props.received >= Tinode.MESSAGE_STATUS_FAILED &&
+    if (this.props.userIsWriter &&
+        this.props.received > Tinode.MESSAGE_STATUS_FAILED &&
         this.props.received < Tinode.MESSAGE_STATUS_DEL_RANGE) {
       menuItems.push('menu_item_reply');
     }
@@ -82,7 +83,9 @@ class BaseChatMessage extends React.PureComponent {
     e.preventDefault();
     e.stopPropagation();
     const replyToSeq = this.props.replyToSeq;
-    this.props.onQuoteClick(replyToSeq);
+    if (replyToSeq) {
+      this.props.onQuoteClick(replyToSeq);
+    }
   }
 
   render() {
