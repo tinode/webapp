@@ -843,7 +843,7 @@ class MessagesView extends React.Component {
         if (typeof cont == 'string') {
           cont = Drafty.init(cont);
         }
-        cont = Drafty.replyPreview(cont, 30, quotePreviewFmt);
+        cont = Drafty.preview(cont, 30, quotePreviewFmt);
 
         // Get the author.
         let header;
