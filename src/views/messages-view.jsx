@@ -1244,6 +1244,10 @@ function quotePreviewFmt(fmt, ent) {
     case 'EX':
       // Make it an icon.
       new_fmt.tp = null;
+      if (new_fmt.at == -1) {
+        // Render it normally.
+        new_fmt.at = 0;
+      }
       return [new_fmt, {tp: 'IC', data: { orig: 'EX', iconName: 'attachment'}}];
     case 'QQ':
       // Quote/citation.
@@ -1318,8 +1322,8 @@ function draftyFormatter(style, data, values, key) {
         break;
       case 'MN':
         // Mention
-        if (data && data.hasOwnProperty('color')) {
-          attr.className = 'mn-dark-color' + data.color;
+        if (data && data.hasOwnProperty('colorId')) {
+          attr.className = 'mn-dark-color' + data.colorId;
         }
         break;
       case 'FM':
