@@ -883,6 +883,12 @@ class MessagesView extends React.Component {
         const promises = [];
         ents.map((ex) => {
           let p = new Promise((resolve, reject) => {
+            const handleFailure = () => {
+              ex.data.val = '';
+              ex.data.name = '';
+              ex.data.width = IMAGE_THUMBNAIL_DIM;
+              ex.data.height = IMAGE_THUMBNAIL_DIM;
+            };
             const scale = (origBlob) => {
               imageScaled(origBlob, IMAGE_THUMBNAIL_DIM, IMAGE_THUMBNAIL_DIM, -1, false,
                 // Success
@@ -901,6 +907,7 @@ class MessagesView extends React.Component {
                 },
                 // Failure
                 (err) => {
+                  handleFailure();
                   reject(`Could not scale image: ${err}`);
                 });
             }
@@ -908,6 +915,8 @@ class MessagesView extends React.Component {
               const b = base64ToBlob(ex.data.val, ex.data.mime);
               if (b) {
                 scale(b);
+              } else {
+                handleFailure();
               }
             } else {
               const from = this.props.tinode.authorizeURL(sanitizeImageUrl(ex.data.ref));
@@ -916,6 +925,7 @@ class MessagesView extends React.Component {
                   if (e.ok) {
                     return e.blob();
                   } else {
+                    handleFailure();
                     reject(`Image fetch unsuccessful: ${e.status} - ${e.statusText}`);
                   }
                 })
@@ -929,13 +939,13 @@ class MessagesView extends React.Component {
         });
 
         Promise.all(promises)
-          .then((_) => {
+          .catch((err) => {
+            this.props.onError(err, 'err');
+          })
+          .finally(() => {
             // All done. Create a reply quote.
             const msg = Drafty.createQuote(header, cont, letterTileColorId(thisFrom));
             this.setState({reply: {content: msg, seq: m.seq}});
-          })
-          .catch((err) => {
-            this.props.onError(err, 'err');
           });
 
         return;
@@ -982,7 +992,6 @@ class MessagesView extends React.Component {
           <ImagePreview
             content={this.state.imagePreview}
             tinode={this.props.tinode}
-            viewportWidth={this.props.viewportWidth}  // Used by `formatter`.
             replyTo={this.state.reply}
             formatter={draftyFormatter}
             onCancelReply={this.handleCancelReply}
@@ -1002,7 +1011,6 @@ class MessagesView extends React.Component {
           <DocPreview
             content={this.state.docPreview}
             tinode={this.props.tinode}
-            viewportWidth={this.props.viewportWidth}  // Used by `formatter`.
             replyTo={this.state.reply}
             formatter={draftyFormatter}
             onCancelReply={this.handleCancelReply}
@@ -1191,7 +1199,6 @@ class MessagesView extends React.Component {
               <SendMessage
                 tinode={this.props.tinode}
                 disabled={!this.state.isWriter}
-                viewportWidth={this.props.viewportWidth}
                 onKeyPress={this.sendKeyPress}
                 onSendMessage={this.sendMessage}
                 onAttachFile={this.handleAttachFile}
@@ -1280,7 +1287,8 @@ function draftyFormatter(style, data, values, key) {
         if (data) {
           attr.className = 'inline-image';
           const dim = fitImageSize(data.width, data.height,
-            Math.min(this.props.viewportWidth - REM_SIZE * 6.5, REM_SIZE * 34.5), REM_SIZE * 24, false) ||
+            this.props.hasOwnProperty('viewportWidth') ? Math.min(this.props.viewportWidth - REM_SIZE * 6.5, REM_SIZE * 34.5) : REM_SIZE * 34.5,
+            REM_SIZE * 24, false) ||
             {dstWidth: BROKEN_IMAGE_SIZE, dstHeight: BROKEN_IMAGE_SIZE};
           attr.style = {
             width: dim.dstWidth + 'px',
