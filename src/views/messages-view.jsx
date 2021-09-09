@@ -15,13 +15,16 @@ import LetterTile from '../widgets/letter-tile.jsx';
 import LoadSpinner from '../widgets/load-spinner.jsx';
 import LogoView from './logo-view.jsx';
 import SendMessage from '../widgets/send-message.jsx';
+import UploadingImage from '../widgets/uploading-image.jsx'
 
 import { DEFAULT_P2P_ACCESS_MODE, IMAGE_PREVIEW_DIM, KEYPRESS_DELAY, MESSAGES_PAGE,
-  MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE, READ_DELAY } from '../config.js';
-import { SUPPORTED_IMAGE_FORMATS, blobToBase64, filePasted, fileToBase64,
-  imageScaled, makeImageUrl } from '../lib/blob-helpers.js';
+  MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE, READ_DELAY,
+  IMAGE_THUMBNAIL_DIM, BROKEN_IMAGE_SIZE, REM_SIZE } from '../config.js';
+import { SUPPORTED_IMAGE_FORMATS, blobToBase64, base64ToBlob, filePasted, fileToBase64,
+  imageScaled, makeImageUrl, fitImageSize } from '../lib/blob-helpers.js';
 import HashNavigation from '../lib/navigation.js';
-import { bytesToHumanSize, shortDateFormat } from '../lib/strformat.js';
+import { bytesToHumanSize, shortDateFormat, letterTileColorId } from '../lib/strformat.js';
+import { sanitizeImageUrl } from '../lib/utils.js';
 
 // Run timer with this frequency (ms) for checking notification queue.
 const NOTIFICATION_EXEC_INTERVAL = 300;
@@ -51,7 +54,18 @@ const messages = defineMessages({
     id: 'file_attachment_too_large',
     defaultMessage: 'The file size {size} exceeds the {limit} limit.',
     description: 'Error message when attachment is too large'
-  }
+  },
+
+  drafty_form: {
+    id: 'drafty_form',
+    defaultMessage: 'Form: ',
+    description: 'Comment for form in drafty preview'
+  },
+  drafty_attachment: {
+    id: 'drafty_attachment',
+    defaultMessage: 'Attachment',
+    description: 'Comment for attachment in drafty preview'
+  },
 });
 
 // Checks if the access permissions are granted but not yet accepted.
@@ -103,8 +117,24 @@ class MessagesView extends React.Component {
     this.postReadNotification = this.postReadNotification.bind(this);
     this.clearNotificationQueue = this.clearNotificationQueue.bind(this);
 
+    this.handlePickReply = this.handlePickReply.bind(this);
+    this.handleCancelReply = this.handleCancelReply.bind(this);
+    this.handleQuoteClick = this.handleQuoteClick.bind(this);
+
+    this.chatMessageRefs = {};
+    this.getOrCreateMessageRef = this.getOrCreateMessageRef.bind(this);
+
     this.readNotificationQueue = [];
     this.readNotificationTimer = null;
+  }
+
+  getOrCreateMessageRef(seqId) {
+    if (this.chatMessageRefs.hasOwnProperty(seqId)) {
+      return this.chatMessageRefs[seqId];
+    }
+    const ref = React.createRef();
+    this.chatMessageRefs[seqId] = ref;
+    return ref;
   }
 
   componentDidMount() {
@@ -186,7 +216,8 @@ class MessagesView extends React.Component {
         scrollPosition: 0,
         fetchingMessages: false,
         peerMessagingDisabled: false,
-        channel: false
+        channel: false,
+        reply: null
       };
     } else if (nextProps.topic != prevState.topic) {
       const topic = nextProps.tinode.getTopic(nextProps.topic);
@@ -197,7 +228,8 @@ class MessagesView extends React.Component {
         imagePostview: null,
         typingIndicator: false,
         scrollPosition: 0,
-        fetchingMessages: false
+        fetchingMessages: false,
+        reply: null
       };
 
       if (topic) {
@@ -637,6 +669,21 @@ class MessagesView extends React.Component {
     }
   }
 
+  // sendMessage sends the message with an optional subscription to topic first.
+  sendMessage(msg, uploadCompletionPromise, uploader) {
+    let head;
+    if (this.state.reply && this.state.reply.content) {
+      head = {reply: '' + this.state.reply.seq};
+      // Turn it into Drafty so we can make a quoted Drafty object later.
+      if (typeof msg == 'string') {
+        msg = Drafty.parse(msg);
+      }
+      msg = Drafty.attachQuote(msg, this.state.reply.content);
+      this.setState({reply: null});
+    }
+    this.props.sendMessage(msg, uploadCompletionPromise, uploader, head);
+  }
+
   // Send attachment as Drafty message:
   // - if file is too large, upload it and send a s link.
   // - if file is small enough, just send it in-band.
@@ -686,11 +733,6 @@ class MessagesView extends React.Component {
     }
   }
 
-  // sendMessage sends the message with an optional subscription to topic first.
-  sendMessage(msg, uploadCompletionPromise, uploader) {
-    this.props.sendMessage(msg, uploadCompletionPromise, uploader);
-  }
-
   // sendImageAttachment sends the image bits inband as Drafty message.
   sendImageAttachment(caption, blob) {
     const mime = this.state.imagePreview.type;
@@ -727,7 +769,7 @@ class MessagesView extends React.Component {
             });
             if (caption) {
               msg = Drafty.appendLineBreak(msg);
-              msg = Drafty.append(msg, Drafty.init(caption));
+              msg = Drafty.append(msg, Drafty.parse(caption));
             }
             // Pass data and the uploader to the TinodeWeb.
             this.sendMessage(msg, uploadCompletionPromise, uploader);
@@ -753,7 +795,7 @@ class MessagesView extends React.Component {
       });
       if (caption) {
         msg = Drafty.appendLineBreak(msg);
-        msg = Drafty.append(msg, Drafty.init(caption));
+        msg = Drafty.append(msg, Drafty.parse(caption));
       }
       this.sendMessage(msg);
     });
@@ -793,6 +835,143 @@ class MessagesView extends React.Component {
     uploader.cancel();
   }
 
+  handlePickReply(m) {
+    this.setState({reply: null});
+    if (m) {
+      let cont = m.content
+      if (cont) {
+        if (typeof cont == 'string') {
+          cont = Drafty.init(cont);
+        }
+        cont = Drafty.preview(cont, 30, quotePreviewFmt);
+
+        // Get the author.
+        let header;
+        const seq = m.seq;
+        const topic = this.props.tinode.getTopic(this.state.topic);
+        const m0 = topic.findMessage(seq);
+        let thisFrom;
+        if (m0) {
+          thisFrom = m0.from || 'chan';
+          if (thisFrom != this.props.myUserId) {
+            const topic = this.props.tinode.getTopic(this.state.topic);
+            const user = topic.userDesc(thisFrom);
+            if (user && user.public) {
+              header = user.public.fn;
+            }
+          } else {
+            header = this.props.myUserName;
+          }
+        }
+
+        header = Drafty.init(header || '');
+        // Make small image previews.
+        const ents = [];
+        if (cont.ent) {
+          Drafty.entities(cont, (data, idx, tp) => {
+            if (tp == 'IM') {
+              ents.push({
+                tp: tp,
+                data: data
+              });
+            }
+
+          }, this);
+        }
+
+        // Turn all images into thumbnails.
+        const promises = [];
+        ents.map((ex) => {
+          let p = new Promise((resolve, reject) => {
+            const handleFailure = () => {
+              ex.data.val = '';
+              ex.data.name = '';
+              ex.data.width = IMAGE_THUMBNAIL_DIM;
+              ex.data.height = IMAGE_THUMBNAIL_DIM;
+            };
+            const scale = (origBlob) => {
+              imageScaled(origBlob, IMAGE_THUMBNAIL_DIM, IMAGE_THUMBNAIL_DIM, -1, false,
+                // Success
+                (mime, blob, width, height, fname) => {
+                  ex.data.mime = mime;
+                  ex.data.size = blob.size;
+                  ex.data.width = width;
+                  ex.data.height = height;
+                  ex.data.name = fname;
+                  ex.data.ref = undefined;
+
+                  blobToBase64(blob, (blobMime, tinyBits64) => {
+                    ex.data.val = tinyBits64;
+                    resolve(true);
+                  });
+                },
+                // Failure
+                (err) => {
+                  handleFailure();
+                  reject(`Could not scale image: ${err}`);
+                });
+            }
+            if (ex.data.val) {
+              const b = base64ToBlob(ex.data.val, ex.data.mime);
+              if (b) {
+                scale(b);
+              } else {
+                handleFailure();
+              }
+            } else {
+              const from = this.props.tinode.authorizeURL(sanitizeImageUrl(ex.data.ref));
+              fetch(from)
+                .then(e => {
+                  if (e.ok) {
+                    return e.blob();
+                  } else {
+                    handleFailure();
+                    reject(`Image fetch unsuccessful: ${e.status} - ${e.statusText}`);
+                  }
+                })
+                .then((b) => scale(b))
+                .catch((err) => reject(`Error fetching image data: ${err}`));
+              return;
+            }
+          });
+
+          promises.push(p);
+        });
+
+        Promise.all(promises)
+          .catch((err) => {
+            this.props.onError(err, 'err');
+          })
+          .finally(() => {
+            // All done. Create a reply quote.
+            const msg = Drafty.createQuote(header, cont, letterTileColorId(thisFrom));
+            this.setState({reply: {content: msg, seq: m.seq}});
+          });
+
+        return;
+      }
+    }
+  }
+
+  handleCancelReply() {
+    this.setState({reply: null})
+  }
+
+  handleQuoteClick(replyToSeq) {
+    const ref = this.getOrCreateMessageRef(replyToSeq);
+    if (!ref) {
+      return;
+    }
+    const element = ref.current;
+    if (element) {
+      element.scrollIntoView({block: "center", behavior: "smooth"});
+      element.style.backgroundColor = 'rgb(0, 0, 0, 0.4)';
+      setTimeout(() => { element.style.backgroundColor = ''; } , 1000);
+    } else {
+      console.error("Unresolved message ref: seqId", replyToSeq);
+    }
+  }
+
   render() {
     const {formatMessage} = this.props.intl;
 
@@ -812,6 +991,10 @@ class MessagesView extends React.Component {
         component2 = (
           <ImagePreview
             content={this.state.imagePreview}
+            tinode={this.props.tinode}
+            replyTo={this.state.reply}
+            formatter={draftyFormatter}
+            onCancelReply={this.handleCancelReply}
             onClose={this.handleClosePreview}
             onSendMessage={this.sendImageAttachment} />
         );
@@ -827,6 +1010,10 @@ class MessagesView extends React.Component {
         component2 = (
           <DocPreview
             content={this.state.docPreview}
+            tinode={this.props.tinode}
+            replyTo={this.state.reply}
+            formatter={draftyFormatter}
+            onCancelReply={this.handleCancelReply}
             onClose={this.handleClosePreview}
             onSendMessage={this.sendFileAttachment} />
         );
@@ -881,6 +1068,13 @@ class MessagesView extends React.Component {
             chatBoxClass='chat-box';
           }
 
+          // Ref for this chat message.
+          const ref = this.getOrCreateMessageRef(msg.seq);
+          let replyToSeq = msg.head ? parseInt(msg.head.reply) : null;
+          if (!replyToSeq || isNaN(replyToSeq)) {
+            replyToSeq = null;
+          }
+
           messageNodes.push(
             <ChatMessage
               tinode={this.props.tinode}
@@ -896,12 +1090,18 @@ class MessagesView extends React.Component {
               sequence={sequence}
               received={deliveryStatus}
               uploader={msg._uploader}
-              viewportWidth={this.props.viewportWidth}
+              viewportWidth={this.props.viewportWidth}  // Used by `formatter`.
               showContextMenu={this.state.channel? false : this.handleShowContextMenuMessage}
               onImagePreview={this.handleImagePostview}
               onFormResponse={this.handleFormResponse}
               onError={this.props.onError}
               onCancelUpload={this.handleCancelUpload}
+              pickReply={this.handlePickReply}
+              replyToSeq={replyToSeq}
+              onQuoteClick={this.handleQuoteClick}
+              formatter={draftyFormatter}
+              ref={ref}
+              userIsWriter={this.state.isWriter}
               key={msg.seq} />
           );
         });
@@ -997,12 +1197,17 @@ class MessagesView extends React.Component {
               <Invitation onAction={this.handleNewChatAcceptance} />
               :
               <SendMessage
+                tinode={this.props.tinode}
                 disabled={!this.state.isWriter}
-                onSendMessage={this.sendMessage}
                 onKeyPress={this.sendKeyPress}
+                onSendMessage={this.sendMessage}
                 onAttachFile={this.handleAttachFile}
                 onAttachImage={this.handleAttachImage}
-                onError={this.props.onError} />}
+                onError={this.props.onError}
+                replyTo={this.state.reply}
+                onQuoteClick={this.handleQuoteClick}
+                formatter={draftyFormatter}
+                onCancelReply={this.handleCancelReply} />}
           </>
         );
       }
@@ -1010,6 +1215,177 @@ class MessagesView extends React.Component {
       component = <div id="topic-view">{component2}</div>
     }
     return component;
+  }
+};
+
+// Transforms styles (and corresponding entities) for formatting reply quotes.
+function quotePreviewFmt(fmt, ent) {
+  let tp = fmt.tp;
+  if (!tp) {
+    if (!ent || !ent.tp) {
+      return [null, null];
+    }
+    tp = ent.tp;
+  }
+  const new_fmt = {at: fmt.at, len: fmt.len, tp: fmt.tp};
+  switch (tp) {
+    case 'BR':
+      // Replace new line with a space.
+      return [null, null];
+    case 'HL':
+      return [new_fmt, ent];
+    case 'LN':
+      // Disable links in previews.
+      return [null, null];
+    case 'IM':
+      // Keep images as is.
+      return [new_fmt, ent];
+    case 'BN':
+      new_fmt.tp = null;
+      return [new_fmt, { tp: 'IC', data: { orig: 'BN', iconName: 'button'}}];
+    case 'FM':
+      new_fmt.tp = null;
+      return [new_fmt, {tp: 'IC', data: { orig: 'FM', iconName: 'form'}}];
+    case 'RW':
+      return [null, null];
+    case 'EX':
+      // Make it an icon.
+      new_fmt.tp = null;
+      if (new_fmt.at == -1) {
+        // Render it normally.
+        new_fmt.at = 0;
+      }
+      return [new_fmt, {tp: 'IC', data: { orig: 'EX', iconName: 'attachment'}}];
+    case 'QQ':
+      // Quote/citation.
+      return [null,null];
+    default:
+      return [new_fmt, ent];
+  }
+}
+
+// Converts Drafty elements into React classes.
+// 'this' is set by the caller.
+function draftyFormatter(style, data, values, key) {
+  if (style == 'EX') {
+    // attachments are handled elsewhere.
+    return null;
+  }
+
+  let el = Drafty.tagName(style);
+  if (el) {
+    const { formatMessage } = this.props.intl;
+    let attr = Drafty.attrValue(style, data) || {};
+    attr.key = key;
+    switch (style) {
+      case 'HL':
+        // Highlighted text. Assign class name.
+        attr.className = 'highlight';
+        break;
+      case 'IM':
+        // Additional processing for images
+        if (data) {
+          attr.className = 'inline-image';
+          const dim = fitImageSize(data.width, data.height,
+            this.props.hasOwnProperty('viewportWidth') ? Math.min(this.props.viewportWidth - REM_SIZE * 6.5, REM_SIZE * 34.5) : REM_SIZE * 34.5,
+            REM_SIZE * 24, false) ||
+            {dstWidth: BROKEN_IMAGE_SIZE, dstHeight: BROKEN_IMAGE_SIZE};
+          attr.style = {
+            width: dim.dstWidth + 'px',
+            height: dim.dstHeight + 'px',
+            // Looks like a Chrome bug: broken image does not respect 'width' and 'height'.
+            minWidth: dim.dstWidth + 'px',
+            minHeight: dim.dstHeight + 'px'
+          };
+          if (!Drafty.isProcessing(data)) {
+            attr.src = this.props.tinode.authorizeURL(sanitizeImageUrl(attr.src));
+            attr.alt = data.name;
+            if (attr.src) {
+              if (Math.max(data.width || 0, data.height || 0) > IMAGE_THUMBNAIL_DIM) {
+                // Allow previews for large enough images.
+                attr.onClick = this.handleImagePreview;
+                attr.className += ' image-clickable';
+              }
+              attr.loading = 'lazy';
+            } else {
+              attr.src = 'img/broken_image.png';
+            }
+          } else {
+            // Use custom element instead of <img>.
+            el = UploadingImage;
+          }
+        }
+        break;
+      case 'BN':
+        // Button
+        attr.onClick = this.handleFormButtonClick;
+        let inner = React.Children.map(values, (child) => {
+          return typeof child == 'string' ? child : undefined;
+        });
+        if (!inner || inner.length == 0) {
+          inner = [attr.name]
+        }
+        // Get text which will be sent back when the button is clicked.
+        attr['data-title'] = inner.join('');
+        break;
+      case 'MN':
+        // Mention
+        if (data && data.hasOwnProperty('colorId')) {
+          attr.className = 'mn-dark-color' + data.colorId;
+        }
+        break;
+      case 'FM':
+        // Form
+        attr.className = 'bot-form';
+        break;
+      case 'RW':
+        // Form element formatting is dependent on element content.
+        break;
+      case 'QQ':
+        // Quote/citation.
+        attr.className = 'reply-quote'
+        attr.onClick = this.handleQuoteClick;
+        break;
+      case 'IC':
+        // Icon.
+        if (data.iconName == 'button') {
+          attr.className = 'flat-button faux';
+        } else {
+          let iconName;
+          let iconTitle;
+          switch (data.iconName) {
+            case 'form':
+              iconName = 'dashboard';
+              iconTitle = 'drafty_form';
+              break;
+            case 'attachment':
+              iconName = 'attachment';
+              iconTitle = 'drafty_attachment';
+              break;
+            default:
+              break;
+          }
+          el = React.Fragment;
+          if (iconName && iconTitle) {
+            const iconKey = data.orig.toLowerCase();
+            values = [<i key={iconKey} className="material-icons">{iconName}</i>,
+              formatMessage(messages[iconTitle])].concat(' ', values || []);
+          } else {
+            values = [];
+          }
+        }
+        break;
+      default:
+        if (el == '_UNKN') {
+          // Unknown element.
+          el = React.Fragment;
+          values = [<i className="material-icons gray">extension</i>, ' '].concat(values || []);
+        }
+        break;
+    }
+    return React.createElement(el, attr, values);
+  } else {
+    return values;
   }
 };
 

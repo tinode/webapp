@@ -244,3 +244,27 @@ export function base64ReEncode(str) {
   }
   return str;
 }
+
+// Convert a base64 encoded string with the provided mime type into a Blob.
+export function base64ToBlob(str, mime) {
+  if (!str) {
+    return null;
+  }
+
+  try {
+    // Make blob.
+    const bin = atob(str);
+    const length = bin.length;
+    const buf = new ArrayBuffer(length);
+    const arr = new Uint8Array(buf);
+    for (let i = 0; i < length; i++) {
+      arr[i] = bin.charCodeAt(i);
+    }
+
+    return new Blob([buf], { type: mime });
+  } catch(err) {
+    console.log("Failed to convert base64 to blob: ", err);
+  }
+
+  return null;
+}

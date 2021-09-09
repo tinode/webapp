@@ -901,15 +901,20 @@ class TinodeWeb extends React.Component {
 
   // User is sending a message, either plain text or a drafty object, possibly
   // with attachments.
-  //  - msg: Drafty message with content
-  //  - promise: if message is dependent on uploading media, a Promise to be resolved when the upload is completed.
-  //  - uploader: for tracking progress
-  handleSendMessage(msg, promise, uploader) {
+  //  - msg - Drafty message with content
+  //  - promise - Promise to be resolved when the upload is completed
+  //  - uploader - for tracking progress
+  //  - head - head dictionary to be attached to the message
+  handleSendMessage(msg, promise, uploader, head) {
     const topic = this.tinode.getTopic(this.state.topicSelected);
 
     msg = topic.createMessage(msg, false);
     // The uploader is used to show progress.
     msg._uploader = uploader;
+
+    if (head) {
+      msg.head = Object.assign(msg.head || {}, head);
+    }
 
     if (!topic.isSubscribed()) {
       // Topic is not subscribed yet. Subscribe.
@@ -1675,6 +1680,8 @@ class TinodeWeb extends React.Component {
             (this.state.mobilePanel !== 'topic-view' || this.state.infoPanel)}
           topic={this.state.topicSelected}
           myUserId={this.state.myUserId}
+          // User public.fn.
+          myUserName={this.state.sidePanelTitle}
           serverVersion={this.state.serverVersion}
           serverAddress={this.state.serverAddress}
           applicationVisible={this.state.applicationVisible}

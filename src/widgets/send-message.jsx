@@ -50,6 +50,8 @@ class SendMessage extends React.PureComponent {
     this.handleSend = this.handleSend.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleMessageTyping = this.handleMessageTyping.bind(this);
+
+    this.handleQuoteClick = this.handleQuoteClick.bind(this);
   }
 
   componentDidMount() {
@@ -141,6 +143,15 @@ class SendMessage extends React.PureComponent {
     this.setState(newState);
   }
 
+  handleQuoteClick(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (this.props.replyTo && this.props.onQuoteClick) {
+      const replyToSeq = this.props.replyTo.seq;
+      this.props.onQuoteClick(replyToSeq);
+    }
+  }
+
   render() {
     const {formatMessage} = this.props.intl;
     const prompt = this.props.disabled ?
@@ -148,7 +159,22 @@ class SendMessage extends React.PureComponent {
       (this.props.messagePrompt ?
         formatMessage(messages[this.props.messagePrompt]) :
         formatMessage(messages.type_new_message));
+
+    let quote = null;
+    if (this.props.replyTo) {
+      quote = Drafty.format(this.props.replyTo.content, this.props.formatter, this);
+    }
+
     return (
+      <div id="send-message-wrapper">
+      {quote ?
+        <div className="reply-quote-preview">
+          <a href="#" onClick={(e) => {e.preventDefault(); this.props.onCancelReply();}}><i className="material-icons gray">close</i></a>
+          {quote}
+        </div>
+      :
+      null}
+
       <div id="send-message-panel">
         {!this.props.disabled ?
           <>
@@ -181,6 +207,7 @@ class SendMessage extends React.PureComponent {
           :
           <div id="writing-disabled">{prompt}</div>
         }
+      </div>
       </div>
     );
   }
