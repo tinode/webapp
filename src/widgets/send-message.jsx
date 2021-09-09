@@ -168,8 +168,10 @@ class SendMessage extends React.PureComponent {
     return (
       <div id="send-message-wrapper">
       {quote ?
-        <div className="reply-quote-preview">
-          <a href="#" onClick={(e) => {e.preventDefault(); this.props.onCancelReply();}}><i className="material-icons gray">close</i></a>
+        <div id="reply-quote-preview">
+          <div className="cancel">
+            <a href="#" onClick={(e) => {e.preventDefault(); this.props.onCancelReply();}}><i className="material-icons gray">close</i></a>
+          </div>
           {quote}
         </div>
       :

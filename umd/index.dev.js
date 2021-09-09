@@ -4093,7 +4093,7 @@ function quotePreviewFmt(fmt, ent) {
         tp: 'IC',
         data: {
           orig: 'BN',
-          iconName: 'button'
+          name: 'button'
         }
       }];
 
@@ -4103,7 +4103,7 @@ function quotePreviewFmt(fmt, ent) {
         tp: 'IC',
         data: {
           orig: 'FM',
-          iconName: 'form'
+          name: 'form'
         }
       }];
 
@@ -4121,7 +4121,7 @@ function quotePreviewFmt(fmt, ent) {
         tp: 'IC',
         data: {
           orig: 'EX',
-          iconName: 'attachment'
+          name: 'attachment'
         }
       }];
 
@@ -4220,35 +4220,28 @@ function draftyFormatter(style, data, values, key) {
         break;
 
       case 'IC':
-        if (data.iconName == 'button') {
+        if (data.name == 'button') {
           attr.className = 'flat-button faux';
         } else {
-          let iconName;
-          let iconTitle;
-
-          switch (data.iconName) {
-            case 'form':
-              iconName = 'dashboard';
-              iconTitle = 'drafty_form';
-              break;
-
-            case 'attachment':
-              iconName = 'attachment';
-              iconTitle = 'drafty_attachment';
-              break;
-
-            default:
-              break;
-          }
-
+          const icons = {
+            form: {
+              name: 'dashboard',
+              title: 'drafty_form'
+            },
+            attachment: {
+              name: 'attachment',
+              title: 'drafty_attachment'
+            }
+          };
+          const icon = icons[data.name];
           el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
 
-          if (iconName && iconTitle) {
-            const iconKey = data.orig.toLowerCase();
+          if (icon) {
+            const key = data.orig.toLowerCase();
             values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-              key: iconKey,
+              key: key,
               className: "material-icons"
-            }, iconName), formatMessage(messages[iconTitle])].concat(' ', values || []);
+            }, icon.name), formatMessage(messages[icon.title])].concat(' ', values || []);
           } else {
             values = [];
           }
@@ -11466,7 +11459,9 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "send-message-wrapper"
     }, quote ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "reply-quote-preview"
+      id: "reply-quote-preview"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "cancel"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: e => {
@@ -11475,7 +11470,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons gray"
-    }, "close")), quote) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, "close"))), quote) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "send-message-panel"
     }, !this.props.disabled ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, this.props.onAttachFile ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",

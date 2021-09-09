@@ -1242,10 +1242,10 @@ function quotePreviewFmt(fmt, ent) {
       return [new_fmt, ent];
     case 'BN':
       new_fmt.tp = null;
-      return [new_fmt, { tp: 'IC', data: { orig: 'BN', iconName: 'button'}}];
+      return [new_fmt, { tp: 'IC', data: { orig: 'BN', name: 'button'}}];
     case 'FM':
       new_fmt.tp = null;
-      return [new_fmt, {tp: 'IC', data: { orig: 'FM', iconName: 'form'}}];
+      return [new_fmt, {tp: 'IC', data: { orig: 'FM', name: 'form'}}];
     case 'RW':
       return [null, null];
     case 'EX':
@@ -1255,7 +1255,7 @@ function quotePreviewFmt(fmt, ent) {
         // Render it normally.
         new_fmt.at = 0;
       }
-      return [new_fmt, {tp: 'IC', data: { orig: 'EX', iconName: 'attachment'}}];
+      return [new_fmt, {tp: 'IC', data: { orig: 'EX', name: 'attachment'}}];
     case 'QQ':
       // Quote/citation.
       return [null,null];
@@ -1348,28 +1348,23 @@ function draftyFormatter(style, data, values, key) {
         break;
       case 'IC':
         // Icon.
-        if (data.iconName == 'button') {
+        if (data.name == 'button') {
           attr.className = 'flat-button faux';
         } else {
-          let iconName;
-          let iconTitle;
-          switch (data.iconName) {
-            case 'form':
-              iconName = 'dashboard';
-              iconTitle = 'drafty_form';
-              break;
-            case 'attachment':
-              iconName = 'attachment';
-              iconTitle = 'drafty_attachment';
-              break;
-            default:
-              break;
-          }
+          const icons = {
+            form: {
+              name: 'dashboard', title: 'drafty_form'
+            },
+            attachment: {
+              name: 'attachment', title: 'drafty_attachment'
+            }
+          };
+          const icon = icons[data.name];
           el = React.Fragment;
-          if (iconName && iconTitle) {
-            const iconKey = data.orig.toLowerCase();
-            values = [<i key={iconKey} className="material-icons">{iconName}</i>,
-              formatMessage(messages[iconTitle])].concat(' ', values || []);
+          if (icon) {
+            const key = data.orig.toLowerCase();
+            values = [<i key={key} className="material-icons">{icon.name}</i>,
+              formatMessage(messages[icon.title])].concat(' ', values || []);
           } else {
             values = [];
           }

@@ -2556,22 +2556,46 @@ ul.tabbar li.active > a {
   outline: none;
 }
 
-/* Blue quote bar left of the quoted (cited) text */
+/* Quoted (cited) content */
 .reply-quote {
   position: relative;
   cursor: pointer;
-  padding-left: 1em;
-  border-left: solid #039be5;
+  padding: 0 0.5rem 0.2rem 0.5rem;
+  border-left: 0.25rem solid #039be5;
   line-height: 1.5em;
-  font-weight: 100;
-  margin-left: 0.2em;
+  font-weight: lighter;
+  border-radius: 0.25rem;
+  color: #666;
+}
+
+.chat-box .bubble .reply-quote {
+  margin: -0.25rem -0.75rem 0.5rem -0.75rem;
+}
+
+.chat-box .left .reply-quote {
+  background-color: #f3f9ed;
+}
+
+.chat-box .right .reply-quote {
+  background-color: white;
 }
 
 .reply-quote-header {
   color: #039be5;
 }
 
-.reply-quote-preview {
+#reply-quote-preview {
   display: flex;
   align-items: center;
+}
+
+#reply-quote-preview .reply-quote {
+  width: 100%;
+  background-color: #fafafa;
+  margin: 0.35rem 0.5rem 0 0;
+}
+
+#reply-quote-preview .cancel {
+  min-width: 2.4rem;
+  text-align: center;
 }
