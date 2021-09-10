@@ -2559,7 +2559,7 @@ ul.tabbar li.active > a {
 /* Quoted (cited) content */
 .reply-quote {
   position: relative;
-  padding: 0.1rem 0.5rem 0.15rem 0.5rem;
+  padding: 0.15rem 0.5rem 0.15rem 0.5rem;
   border-left: 0.25rem solid #039be5;
   line-height: 1.5em;
   font-weight: lighter;
@@ -2568,7 +2568,7 @@ ul.tabbar li.active > a {
 }
 
 .chat-box .bubble .reply-quote {
-  margin: -0.25rem -0.75rem 0.5rem -0.75rem;
+  margin: -0.25rem -0.75rem 0.35rem -0.75rem;
 }
 
 .chat-box .left .reply-quote {
