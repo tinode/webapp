@@ -1546,7 +1546,7 @@ img.channel {
   margin-bottom: 0.5rem;
 }
 
-.chat-box .bubble {
+.bubble {
   position: relative;
   display: flex;
   max-width: 36rem;
@@ -1558,6 +1558,23 @@ img.channel {
   border-radius: 0.5rem;
   box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.12);
 }
+
+/*
+NEW BUBBLE TIP STYLE 
+
+.left .bubble .tip::before {
+  content: ' ';
+  position: absolute;
+  width: 0.8rem;
+  height: 0.8rem;
+  left: -0.8rem;
+  bottom: 0;
+  background-color: inherit;
+  clip-path: polygon(100% 0, 0 110%, 100% 110%);
+  box-shadow: 0 1px 0.5px rgb(0 0 0 / 12%);
+  border-bottom-left-radius: 0.3rem;
+}
+*/
 
 .chat-box li.single {
   margin-top: 0.25rem;
@@ -1579,17 +1596,25 @@ img.channel {
   margin-bottom: 0.75rem;
 }
 
-.chat-box .left .bubble {
+.left .bubble {
   background-color: #c5e1a5;
   margin-right: 0.5rem;
 }
 
-.chat-box .right .bubble {
+.left .bubble .tip {
+  border-bottom-left-radius: 0;
+}
+
+.right .bubble {
   background-color: #fafafa;
   margin-left: 1.75rem;
 }
 
-.chat-box .center .bubble {
+.right .bubble .tip {
+  border-bottom-right-radius: 0;
+}
+
+.center .bubble {
   background-color: #e3f2fd;
   padding: 0.75rem 0.75rem 0.5rem 0.75rem;
 }
@@ -1642,11 +1667,11 @@ img.channel {
 }
 
 /* Message text + timestamp and delivery marker */
-.chat-box .bubble div.content-meta {
+.bubble div.content-meta {
   width: 100%;
 }
 
-.chat-box .bubble div.message-content {
+.bubble div.message-content {
   position: relative;
   color: #212121;
   margin: 0;
@@ -1658,7 +1683,7 @@ img.channel {
 
 /* The timestamp is a floating element. Need to ensure div.message-content is expanded
  * to accomodate it. It's usually called clearfix. */
-.chat-box .bubble div.message-content:after {
+.bubble div.message-content:after {
   content: ".";
   display: block;
   height: 0;

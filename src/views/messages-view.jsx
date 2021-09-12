@@ -93,6 +93,7 @@ class MessagesView extends React.Component {
 
     this.leave = this.leave.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
+    this.retrySend = this.retrySend.bind(this);
     this.sendImageAttachment = this.sendImageAttachment.bind(this);
     this.sendFileAttachment = this.sendFileAttachment.bind(this);
     this.sendKeyPress = this.sendKeyPress.bind(this);
@@ -365,7 +366,7 @@ class MessagesView extends React.Component {
         // If there are unsent messages, try sending them now.
         topic.queuedMessages((pub) => {
           if (!pub._sending && topic.isSubscribed()) {
-            this.sendMessage(pub);
+            this.retrySend(pub);
           }
         });
       })
@@ -682,6 +683,11 @@ class MessagesView extends React.Component {
       this.setState({reply: null});
     }
     this.props.sendMessage(msg, uploadCompletionPromise, uploader, head);
+  }
+
+  // Retry sending a message.
+  retrySend(pub) {
+    this.props.sendMessage(pub.content, undefined, undefined, pub.head);
   }
 
   // Send attachment as Drafty message:
@@ -1315,6 +1321,8 @@ function draftyFormatter(style, data, values, key) {
             el = UploadingImage;
           }
         }
+        // Image element cannot have content.
+        values = null;
         break;
       case 'BN':
         // Button

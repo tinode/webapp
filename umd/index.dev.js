@@ -4185,6 +4185,7 @@ function draftyFormatter(style, data, values, key) {
           }
         }
 
+        values = null;
         break;
 
       case 'BN':
