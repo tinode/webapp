@@ -7,6 +7,7 @@ import Attachment from './attachment.jsx';
 import LetterTile from './letter-tile.jsx';
 import ReceivedMarker from './received-marker.jsx'
 
+import { fullFormatter, quoteFormatter } from '../lib/formatters.js';
 import { sanitizeImageUrl, sanitizeUrl } from '../lib/utils.js';
 
 class BaseChatMessage extends React.PureComponent {
@@ -27,6 +28,15 @@ class BaseChatMessage extends React.PureComponent {
     this.handleCancelUpload = this.handleCancelUpload.bind(this);
 
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
+
+    this.formatterContext = {
+      getFormatter: (tp) => { return tp == 'QQ' ? quoteFormatter : null; },
+      viewportWidth: this.props.viewportWidth,
+      authorizeURL: this.props.tinode.authorizeURL,
+      onImagePreview: this.handleImagePreview,
+      onFormButtonClick: this.handleFormButtonClick,
+      onQuoteClick: this.handleQuoteClick
+    };
   }
 
   handleImagePreview(e) {
@@ -117,7 +127,7 @@ class BaseChatMessage extends React.PureComponent {
           onError={this.props.onError}
           key={i} />);
       }, this);
-      const tree = Drafty.format(content, this.props.formatter, this);
+      const tree = Drafty.format(content, fullFormatter, this.formatterContext);
       content = React.createElement(React.Fragment, null, tree);
     } else if (this.props.deleted) {
       // Message represents a range of deleted messages.

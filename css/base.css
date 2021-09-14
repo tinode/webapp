@@ -815,7 +815,7 @@ i.search {
 }
 
 .info-box > span {
-  line-height: 1.5rem;
+  line-height: 1.35rem;
 }
 
 .info-box .cancel {
@@ -1560,7 +1560,7 @@ img.channel {
 }
 
 /*
-NEW BUBBLE TIP STYLE 
+NEW BUBBLE TIP STYLE
 
 .left .bubble .tip::before {
   content: ' ';
@@ -2181,106 +2181,6 @@ ul.tabbar li.active > a {
   color: #D84315!important;
 }
 
-/* Colors of user mentions */
-.mn-light-color0 {
-  color: #ef9a9a;
-}
-.mn-light-color1 {
-  color: #90caf9;
-}
-.mn-light-color2 {
-  color: #b0bec5;
-}
-.mn-light-color3 {
-  color: #b39ddb;
-}
-.mn-light-color4 {
-  color: #ffab91;
-}
-.mn-light-color5 {
-  color: #a5d6a7;
-}
-.mn-light-color6 {
-  color: #eeeeee;
-}
-.mn-light-color7 {
-  color: #e6ee9c;
-}
-.mn-light-color8 {
-  color: #c5e1a5;
-}
-.mn-light-color9 {
-  color: #f0e57d;
-}
-.mn-light-color10 {
-  color: #f48fb1;
-}
-.mn-light-color11 {
-  color: #9fa8da;
-}
-.mn-light-color12 {
-  color: #ffe082;
-}
-.mn-light-color13 {
-  color: #bcaaa4;
-}
-.mn-light-color14 {
-  color: #80deea;
-}
-.mn-light-color15 {
-  color: #ce93d8;
-}
-
-/* Darker version of user mention colors */
-.mn-dark-color0 {
-  color: #C62828;
-}
-.mn-dark-color1 {
-  color: #AD1457;
-}
-.mn-dark-color2 {
-  color: #6A1B9A;
-}
-.mn-dark-color3 {
-  color: #4527A0;
-}
-.mn-dark-color4 {
-  color: #283593;
-}
-.mn-dark-color5 {
-  color: #1565C0;
-}
-.mn-dark-color6 {
-  color: #0277BD;
-}
-.mn-dark-color7 {
-  color: #00838F;
-}
-.mn-dark-color8 {
-  color: #00695C;
-}
-.mn-dark-color9 {
-  color: #2E7D32;
-}
-.mn-dark-color10 {
-  color: #558B2F;
-}
-.mn-dark-color11 {
-  color: #9E9D24;
-}
-.mn-dark-color12 {
-  color: #F9A825;
-}
-.mn-dark-color13 {
-  color: #FF8F00;
-}
-.mn-dark-color14 {
-  color: #EF6C00;
-}
-.mn-dark-color15 {
-  color: #D84315;
-}
-
 /* Material icons resized from the default 24pt */
 .material-icons {
   font-size: 1.4rem;
@@ -2590,6 +2490,7 @@ ul.tabbar li.active > a {
   font-weight: lighter;
   border-radius: 0.25rem;
   color: #666;
+  cursor: pointer;
 }
 
 .chat-box .bubble .reply-quote {
@@ -2602,10 +2503,6 @@ ul.tabbar li.active > a {
 
 .chat-box .right .reply-quote {
   background-color: #eee;
-}
-
-.reply-quote-header {
-  color: #039be5;
 }
 
 #reply-quote-preview {
@@ -2623,4 +2520,8 @@ ul.tabbar li.active > a {
 #reply-quote-preview .cancel {
   min-width: 2.4rem;
   text-align: center;
+}
+
+.mention {
+  font-weight: bolder;
 }
