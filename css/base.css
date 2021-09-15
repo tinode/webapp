@@ -317,34 +317,19 @@ li .menuTrigger {
   position: absolute;
   top: 0.25rem;
   right: 0.25rem;
-  width: 1.5rem;
-  height: 1.2rem;
-  line-height: 1.2rem;
-  border-radius: 0.6rem;
+  width: 1.4rem;
+  height: 1.4rem;
+  line-height: 1.4rem;
+  border-radius: 0.7rem;
   text-align: center;
   opacity: 0;
+  background-color: inherit;
 }
 li:hover .menuTrigger {
-  opacity: 1.0;
+  opacity: 0.9;
 }
-
 li:hover .menuTrigger a {
   color: #757575;
-}
-
-ul.contact-box .menuTrigger {
-  background-image: radial-gradient(#eceff1 40%, transparent 75%);
-}
-
-li.left:hover .menuTrigger {
-  background-image: radial-gradient(#c5e1a5 40%, transparent 75%);
-}
-li.right:hover .menuTrigger {
-  background-image: radial-gradient(#fafafa 40%, transparent 75%);
-}
-
-li.selected .menuTrigger {
-  background-image: radial-gradient(#cfd8dc 40%, transparent 75%);
 }
 
 /* END popup/dropdown menu */

@@ -3982,7 +3982,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     const ents = [];
     Drafty.entities(content, (data, idx, tp) => {
       if (tp == 'IM') {
-        console.log("Image", data);
         ents.push({
           tp: tp,
           data: data
@@ -4001,9 +4000,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         };
 
         const scale = origBlob => {
-          console.log("Image scaling request");
           (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.imageScaled)(origBlob, _config_js__WEBPACK_IMPORTED_MODULE_15__.IMAGE_THUMBNAIL_DIM, _config_js__WEBPACK_IMPORTED_MODULE_15__.IMAGE_THUMBNAIL_DIM, -1, false, (mime, blob, width, height, fname) => {
-            console.log("Image scaled:", width, height, fname);
             ex.data.mime = mime;
             ex.data.size = blob.size;
             ex.data.width = width;
