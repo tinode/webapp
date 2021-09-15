@@ -1518,7 +1518,6 @@ img.channel {
   margin: 0;
   padding: 0;
   align-items: flex-end;
-  transition: background-color 1s ease-out;
 }
 
 .chat-box .right {
