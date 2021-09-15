@@ -82,68 +82,72 @@ function handleImageData(el, data, attr) {
 //    onFormButtonClick: this.handleFormButtonClick
 //    onQuoteClick: this.handleQuoteClick (optional)
 export function fullFormatter(style, data, values, key) {
-  if (style == 'EX') {
-    // attachments are handled elsewhere.
+  if (!style) {
+    // Unformatted.
+    return values;
+  }
+
+  if (style == 'HD') {
+    // Hidden.
     return null;
   }
 
   let el = Drafty.tagName(style);
-  if (el) {
-    const attr = Drafty.attrValue(style, data) || {};
-    attr.key = key;
-    switch (style) {
-      case 'HL':
-        // Highlighted text. Assign class name.
-        attr.className = 'highlight';
-        break;
-      case 'IM':
-        // Additional processing for images
-        el = handleImageData.call(this, el, data, attr);
-        // Image element cannot have content.
-        values = null;
-        break;
-      case 'BN':
-        // Button
-        attr.onClick = this.onFormButtonClick;
-        let inner = React.Children.map(values, (child) => {
-          return typeof child == 'string' ? child : undefined;
-        });
-        if (!inner || inner.length == 0) {
-          inner = [attr.name]
-        }
-        // Get text which will be sent back when the button is clicked.
-        attr['data-title'] = inner.join('');
-        break;
-      case 'MN':
-        // Mention
-        if (data && data.hasOwnProperty('colorId')) {
-          attr.className = 'mn-dark-color' + data.colorId;
-        }
-        break;
-      case 'FM':
-        // Form
-        attr.className = 'bot-form';
-        break;
-      case 'RW':
-        // Form element formatting is dependent on element content.
-        break;
-      case 'QQ':
-        // Quote/citation.
-        attr.className = 'reply-quote'
-        attr.onClick = this.onQuoteClick;
-        break;
-      default:
-        if (el == '_UNKN') {
-          // Unknown element.
-          el = React.Fragment;
-          values = [<i className="material-icons gray">extension</i>, ' '].concat(values || []);
-        }
-        break;
-    }
-    return React.createElement(el, attr, values);
-  } else {
+  const attr = Drafty.attrValue(style, data) || {};
+  attr.key = key;
+  switch (style) {
+    case 'HL':
+      // Highlighted text. Assign class name.
+      attr.className = 'highlight';
+      break;
+    case 'IM':
+      // Additional processing for images
+      el = handleImageData.call(this, el, data, attr);
+      // Image element cannot have content.
+      values = null;
+      break;
+    case 'BN':
+      // Button
+      attr.onClick = this.onFormButtonClick;
+      let inner = React.Children.map(values, (child) => {
+        return typeof child == 'string' ? child : undefined;
+      });
+      if (!inner || inner.length == 0) {
+        inner = [attr.name]
+      }
+      // Get text which will be sent back when the button is clicked.
+      attr['data-title'] = inner.join('');
+      break;
+    case 'MN':
+      // Mention
+      if (data && data.hasOwnProperty('colorId')) {
+        attr.className = 'mn-dark-color' + data.colorId;
+      }
+      break;
+    case 'FM':
+      // Form
+      attr.className = 'bot-form';
+      break;
+    case 'RW':
+      // Form element formatting is dependent on element content.
+      break;
+    case 'QQ':
+      // Quote/citation.
+      attr.className = 'reply-quote'
+      attr.onClick = this.onQuoteClick;
+      break;
+    default:
+      if (el == '_UNKN') {
+        // Unknown element.
+        el = React.Fragment;
+        values = [<i className="material-icons gray">extension</i>, ' '].concat(values || []);
+      }
+      break;
+  }
+  if (!el) {
     return values;
   }
+  return React.createElement(el, attr, values);
 };
 
 // Converts Drafty object into a one-line preview. 'this' is set by the caller.
@@ -151,64 +155,73 @@ export function fullFormatter(style, data, values, key) {
 //    formatMessage: this.props.intl.formatMessage
 //    messages: formatjs messages defined with defineMessages.
 export function previewFormatter(style, data, values, key) {
-  let el = Drafty.tagName(style);
-  const attr = { key: key };
-  if (el) {
-    switch (style) {
-      case 'BR':
-        // Replace new line with a space.
-        el = React.Fragment;
-        values = [' '];
-        break;
-      case 'HL':
-        // Make highlight less prominent in preview.
-        attr.className = 'highlight preview';
-        break;
-      case 'LN':
-      case 'MN':
-        // Disable links in previews.
-        el = 'span';
-        break;
-      case 'IM':
-        // Replace image with '[icon] Image'.
-        el = React.Fragment;
-        values = [<i key="im" className="material-icons">photo</i>, this.formatMessage(messages.drafty_image)];
-        break;
-      case 'BN':
-        el = 'span';
-        attr.className = 'flat-button faux';
-        break;
-      case 'FM':
-        el = React.Fragment;
-        values = [<i key="fm" className="material-icons">dashboard</i>,
-          this.formatMessage(messages.drafty_form)].concat(' ', values || []);
-        break;
-      case 'RW':
-        el = React.Fragment;
-        break;
-      case 'EX':
-        if (data) {
-          if (data.mime == 'application/json') {
-            // Ignore JSON attachments: they are form response payloads.
-            return null;
-          }
-          // Clear inband data.
-          data.val = null;
-        }
-        el = React.Fragment;
-        values = [<i key="ex" className="material-icons">attachment</i>, this.formatMessage(messages.drafty_attachment)];
-        break;
-      default:
-        if (el == '_UNKN') {
-          el = React.Fragment;
-          values = [<i key="unkn" className="material-icons">extension</i>, ' '].concat(values || []);
-        }
-        break;
-    }
-    return React.createElement(el, attr, values);
-  } else {
+  if (!style) {
+    // Unformatted.
     return values;
   }
+
+  if (style == 'HD') {
+    // Hidden.
+    return null;
+  }
+
+  let el = Drafty.tagName(style);
+  const attr = { key: key };
+  switch (style) {
+    case 'BR':
+      // Replace new line with a space.
+      el = React.Fragment;
+      values = [' '];
+      break;
+    case 'HL':
+      // Make highlight less prominent in preview.
+      attr.className = 'highlight preview';
+      break;
+    case 'LN':
+    case 'MN':
+      // Disable links in previews.
+      el = 'span';
+      break;
+    case 'IM':
+      // Replace image with '[icon] Image'.
+      el = React.Fragment;
+      values = [<i key="im" className="material-icons">photo</i>, this.formatMessage(messages.drafty_image)];
+      break;
+    case 'BN':
+      el = 'span';
+      attr.className = 'flat-button faux';
+      break;
+    case 'FM':
+      el = React.Fragment;
+      values = [<i key="fm" className="material-icons">dashboard</i>,
+        this.formatMessage(messages.drafty_form)].concat(' ', values || []);
+      break;
+    case 'RW':
+      el = React.Fragment;
+      break;
+    case 'EX':
+      if (data) {
+        if (data.mime == 'application/json') {
+          // Ignore JSON attachments: they are form response payloads.
+          return null;
+        }
+        // Clear inband data.
+        data.val = null;
+      }
+      el = React.Fragment;
+      values = [<i key="ex" className="material-icons">attachment</i>, this.formatMessage(messages.drafty_attachment)];
+      break;
+    default:
+      if (el == '_UNKN') {
+        el = React.Fragment;
+        values = [<i key="unkn" className="material-icons">extension</i>, ' '].concat(values || []);
+      }
+      break;
+  }
+  if (!el) {
+    return values;
+  }
+  return React.createElement(el, attr, values);
 };
 
 // Converts Drafty object into a quoted reply. 'this' is set by the caller.
@@ -218,7 +231,7 @@ export function previewFormatter(style, data, values, key) {
 //    authorizeURL: this.props.tinode.authorizeURL
 //    onQuoteClick: this.handleQuoteClick (optional)
 export function quoteFormatter(style, data, values, key) {
-  if (['BR', 'IM', 'MN', 'QQ'].includes(style)) {
+  if (['BR', 'EX', 'IM', 'MN', 'QQ'].includes(style)) {
     let el = Drafty.tagName(style);
     let attr = Drafty.attrValue(style, data) || {};
     attr.key = key;
@@ -239,6 +252,23 @@ export function quoteFormatter(style, data, values, key) {
       case 'QQ':
         attr.className = 'reply-quote';
         attr.onClick = this.onQuoteClick;
+        break;
+      case 'EX':
+        let fname;
+        if (data) {
+          if (data.mime == 'application/json') {
+            // Ignore JSON attachments: they are form response payloads.
+            return null;
+          }
+          // Clear inband data.
+          data.val = null;
+          fname = data.name;
+        }
+        if (!fname)
+          fname = this.formatMessage(messages.drafty_attachment);
+        }
+        el = React.Fragment;
+        values = [<i key="ex" className="material-icons">attachment</i>, fname];
         break;
     }
     return React.createElement(el, attr, values);

@@ -450,158 +450,173 @@ function handleImageData(el, data, attr) {
 }
 
 function fullFormatter(style, data, values, key) {
-  if (style == 'EX') {
+  if (!style) {
+    return values;
+  }
+
+  if (style == 'HD') {
     return null;
   }
 
   let el = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.tagName(style);
+  const attr = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attrValue(style, data) || {};
+  attr.key = key;
 
-  if (el) {
-    const attr = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attrValue(style, data) || {};
-    attr.key = key;
+  switch (style) {
+    case 'HL':
+      attr.className = 'highlight';
+      break;
 
-    switch (style) {
-      case 'HL':
-        attr.className = 'highlight';
-        break;
+    case 'IM':
+      el = handleImageData.call(this, el, data, attr);
+      values = null;
+      break;
 
-      case 'IM':
-        el = handleImageData.call(this, el, data, attr);
-        values = null;
-        break;
+    case 'BN':
+      attr.onClick = this.onFormButtonClick;
+      let inner = react__WEBPACK_IMPORTED_MODULE_0___default().Children.map(values, child => {
+        return typeof child == 'string' ? child : undefined;
+      });
 
-      case 'BN':
-        attr.onClick = this.onFormButtonClick;
-        let inner = react__WEBPACK_IMPORTED_MODULE_0___default().Children.map(values, child => {
-          return typeof child == 'string' ? child : undefined;
-        });
+      if (!inner || inner.length == 0) {
+        inner = [attr.name];
+      }
 
-        if (!inner || inner.length == 0) {
-          inner = [attr.name];
-        }
+      attr['data-title'] = inner.join('');
+      break;
 
-        attr['data-title'] = inner.join('');
-        break;
+    case 'MN':
+      if (data && data.hasOwnProperty('colorId')) {
+        attr.className = 'mn-dark-color' + data.colorId;
+      }
 
-      case 'MN':
-        if (data && data.hasOwnProperty('colorId')) {
-          attr.className = 'mn-dark-color' + data.colorId;
-        }
+      break;
 
-        break;
+    case 'FM':
+      attr.className = 'bot-form';
+      break;
 
-      case 'FM':
-        attr.className = 'bot-form';
-        break;
+    case 'RW':
+      break;
 
-      case 'RW':
-        break;
+    case 'QQ':
+      attr.className = 'reply-quote';
+      attr.onClick = this.onQuoteClick;
+      break;
 
-      case 'QQ':
-        attr.className = 'reply-quote';
-        attr.onClick = this.onQuoteClick;
-        break;
+    default:
+      if (el == '_UNKN') {
+        el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
+        values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+          className: "material-icons gray"
+        }, "extension"), ' '].concat(values || []);
+      }
 
-      default:
-        if (el == '_UNKN') {
-          el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
-          values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-            className: "material-icons gray"
-          }, "extension"), ' '].concat(values || []);
-        }
+      break;
+  }
 
-        break;
-    }
-
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(el, attr, values);
-  } else {
+  if (!el) {
     return values;
   }
+
+  return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(el, attr, values);
 }
 ;
 function previewFormatter(style, data, values, key) {
+  if (!style) {
+    return values;
+  }
+
+  if (style == 'HD') {
+    return null;
+  }
+
   let el = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.tagName(style);
   const attr = {
     key: key
   };
 
-  if (el) {
-    switch (style) {
-      case 'BR':
-        el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
-        values = [' '];
-        break;
+  switch (style) {
+    case 'BR':
+      el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
+      values = [' '];
+      break;
 
-      case 'HL':
-        attr.className = 'highlight preview';
-        break;
+    case 'HL':
+      attr.className = 'highlight preview';
+      break;
 
-      case 'LN':
-      case 'MN':
-        el = 'span';
-        break;
+    case 'LN':
+    case 'MN':
+      el = 'span';
+      break;
 
-      case 'IM':
-        el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
-        values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-          key: "im",
-          className: "material-icons"
-        }, "photo"), this.formatMessage(messages.drafty_image)];
-        break;
+    case 'IM':
+      el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
+      values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+        key: "im",
+        className: "material-icons"
+      }, "photo"), this.formatMessage(messages.drafty_image)];
+      break;
 
-      case 'BN':
-        el = 'span';
-        attr.className = 'flat-button faux';
-        break;
+    case 'BN':
+      el = 'span';
+      attr.className = 'flat-button faux';
+      break;
 
-      case 'FM':
-        el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
-        values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-          key: "fm",
-          className: "material-icons"
-        }, "dashboard"), this.formatMessage(messages.drafty_form)].concat(' ', values || []);
-        break;
+    case 'FM':
+      el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
+      values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+        key: "fm",
+        className: "material-icons"
+      }, "dashboard"), this.formatMessage(messages.drafty_form)].concat(' ', values || []);
+      break;
 
-      case 'RW':
-        el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
-        break;
+    case 'RW':
+      el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
+      break;
 
-      case 'EX':
-        if (data) {
-          if (data.mime == 'application/json') {
-            return null;
-          }
-
-          data.val = null;
+    case 'EX':
+      if (data) {
+        if (data.mime == 'application/json') {
+          return null;
         }
 
+        data.val = null;
+      }
+
+      el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
+      values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+        key: "ex",
+        className: "material-icons"
+      }, "attachment"), this.formatMessage(messages.drafty_attachment)];
+      break;
+
+    default:
+      if (el == '_UNKN') {
         el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
         values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-          key: "ex",
+          key: "unkn",
           className: "material-icons"
-        }, "attachment"), this.formatMessage(messages.drafty_attachment)];
-        break;
+        }, "extension"), ' '].concat(values || []);
+      }
 
-      default:
-        if (el == '_UNKN') {
-          el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
-          values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-            key: "unkn",
-            className: "material-icons"
-          }, "extension"), ' '].concat(values || []);
-        }
+      break;
+  }
 
-        break;
-    }
-
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(el, attr, values);
-  } else {
+  if (!el) {
     return values;
   }
+
+  return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(el, attr, values);
 }
 ;
 function quoteFormatter(style, data, values, key) {
   if (['BR', 'IM', 'MN', 'QQ'].includes(style)) {
+    if (style == 'EX') {
+      console.log("quoteFormatter EX 1", data);
+    }
+
     let el = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.tagName(style);
     let attr = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attrValue(style, data) || {};
     attr.key = key;
@@ -633,6 +648,10 @@ function quoteFormatter(style, data, values, key) {
     }
 
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(el, attr, values);
+  }
+
+  if (style == 'EX') {
+    console.log("quoteFormatter EX 2", data);
   }
 
   return previewFormatter.call(this, style, data, values, key);
@@ -11439,10 +11458,16 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       formatMessage
     } = this.props.intl;
     const prompt = this.props.disabled ? formatMessage(messages.messaging_disabled) : this.props.messagePrompt ? formatMessage(messages[this.props.messagePrompt]) : formatMessage(messages.type_new_message);
+
+    if (this.props.replyTo) {
+      console.log("Reply:", this.props.replyTo.content);
+    }
+
     const quote = this.props.replyTo ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(this.props.replyTo.content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_5__.quoteFormatter, {
       formatMessage: formatMessage,
       authorizeURL: this.props.tinode.authorizeURL
     }) : null;
+    console.log("Quoted:", quote);
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "send-message-wrapper"
     }, quote ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
