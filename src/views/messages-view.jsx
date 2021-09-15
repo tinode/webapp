@@ -71,6 +71,11 @@ const messages = defineMessages({
     defaultMessage: 'Picture',
     description: 'Comment for embedded images in drafty preview'
   },
+  invalid_content: {
+    id: 'invalid_content',
+    defaultMessage: 'invalid content',
+    description: 'Shown when the message is unreadable'
+  },
 });
 
 // Checks if the access permissions are granted but not yet accepted.
@@ -848,6 +853,7 @@ class MessagesView extends React.Component {
 
   handlePickReply(seq, content) {
     this.setState({reply: null});
+
     if (!seq || !content) {
       return;
     }
@@ -855,7 +861,12 @@ class MessagesView extends React.Component {
     if (typeof content == 'string') {
       content = Drafty.init(content);
     }
-    content = Drafty.preview(content, 30);
+    if (Drafty.isValid(content)) {
+      content = Drafty.preview(content, 30);
+    } else {
+      content = Drafty.append(Drafty.init('\u26A0 '),
+        Drafty.wrapInto(this.props.intl.formatMessage(messages.invalid_content), 'EM'));
+    }
 
     // Get the author.
     const topic = this.props.tinode.getTopic(this.state.topic);
@@ -893,6 +904,8 @@ class MessagesView extends React.Component {
           ex.data.name = '';
           ex.data.width = IMAGE_THUMBNAIL_DIM;
           ex.data.height = IMAGE_THUMBNAIL_DIM;
+          ex.data.maxWidth = IMAGE_THUMBNAIL_DIM;
+          ex.data.maxHeight = IMAGE_THUMBNAIL_DIM;
         };
         const scale = (origBlob) => {
           imageScaled(origBlob, IMAGE_THUMBNAIL_DIM, IMAGE_THUMBNAIL_DIM, -1, false,
@@ -949,7 +962,7 @@ class MessagesView extends React.Component {
         // All done. Create a reply quote.
         this.setState({
           reply: {
-            content: Drafty.createQuote(senderName, senderId, content),
+            content: Drafty.quote(senderName, senderId, content),
             seq: seq
           }
         });
@@ -962,14 +975,12 @@ class MessagesView extends React.Component {
 
   handleQuoteClick(replyToSeq) {
     const ref = this.getOrCreateMessageRef(replyToSeq);
-    if (!ref) {
-      return;
-    }
-    const element = ref.current;
-    if (element) {
-      element.scrollIntoView({block: "center", behavior: "smooth"});
-      element.style.backgroundColor = 'rgb(0, 0, 0, 0.4)';
-      setTimeout(() => { element.style.backgroundColor = ''; } , 1000);
+    if (ref && ref.current) {
+      ref.current.scrollIntoView({block: "center", behavior: "smooth"});
+      // ref.current.style.backgroundColor = 'rgb(0, 0, 0, 0.4)';
+      ref.current.classList.add('flash');
+      setTimeout(() => { ref.current.classList.remove('flash') } , 1000);
+      //setTimeout(() => { ref.current.style.backgroundColor = ''; } , 1000);
     } else {
       console.error("Unresolved message ref: seqId", replyToSeq);
     }

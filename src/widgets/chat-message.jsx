@@ -31,8 +31,9 @@ class BaseChatMessage extends React.PureComponent {
 
     this.formatterContext = {
       getFormatter: (tp) => { return tp == 'QQ' ? quoteFormatter : null; },
-      viewportWidth: this.props.viewportWidth,
-      authorizeURL: this.props.tinode.authorizeURL,
+      formatMessage: props.intl.formatMessage,
+      viewportWidth: props.viewportWidth,
+      authorizeURL: props.tinode.authorizeURL,
       onImagePreview: this.handleImagePreview,
       onFormButtonClick: this.handleFormButtonClick,
       onQuoteClick: this.handleQuoteClick
@@ -136,9 +137,9 @@ class BaseChatMessage extends React.PureComponent {
           defaultMessage="content deleted" description="Shown when messages are deleted" />
       </i></>
     } else if (typeof content != 'string') {
-      content = <><i className="material-icons gray">error_outline</i> <i className="gray">
+      content = <><i className="material-icons gray">warning_amber</i> <i className="gray">
         <FormattedMessage id="invalid_content"
-          defaultMessage="invalid content" description="Shown when message is unreadable" /></i></>
+          defaultMessage="invalid content" description="Shown when the message is unreadable" /></i></>
     }
 
     return (

@@ -253,7 +253,7 @@
   },
   "invalid_content": {
     "defaultMessage": "invalid content",
-    "description": "Shown when message is unreadable"
+    "description": "Shown when the message is unreadable"
   },
   "invalid_security_token": {
     "defaultMessage": "Invalid security token",

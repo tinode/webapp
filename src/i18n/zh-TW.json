@@ -429,7 +429,7 @@
   "invalid_content": {
     "translation": "內容無效",
     "defaultMessage": "invalid content",
-    "description": "Shown when message is unreadable",
+    "description": "Shown when the message is unreadable",
     "missing": false,
     "obsolete": false
   },

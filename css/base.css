@@ -1557,24 +1557,9 @@ img.channel {
   text-align: left;
   border-radius: 0.5rem;
   box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.12);
+  transition: ease-out background-color 0.5s;
+  transition-delay: 0.3s;
 }
-
-/*
-NEW BUBBLE TIP STYLE
-
-.left .bubble .tip::before {
-  content: ' ';
-  position: absolute;
-  width: 0.8rem;
-  height: 0.8rem;
-  left: -0.8rem;
-  bottom: 0;
-  background-color: inherit;
-  clip-path: polygon(100% 0, 0 110%, 100% 110%);
-  box-shadow: 0 1px 0.5px rgb(0 0 0 / 12%);
-  border-bottom-left-radius: 0.3rem;
-}
-*/
 
 .chat-box li.single {
   margin-top: 0.25rem;
@@ -1601,7 +1586,11 @@ NEW BUBBLE TIP STYLE
   margin-right: 0.5rem;
 }
 
-.left .bubble .tip {
+.left.flash .bubble {
+  background-color: #94A97C;
+}
+
+.left .bubble.tip {
   border-bottom-left-radius: 0;
 }
 
@@ -1610,7 +1599,11 @@ NEW BUBBLE TIP STYLE
   margin-left: 1.75rem;
 }
 
-.right .bubble .tip {
+.right.flash .bubble {
+  background-color: #ccc;
+}
+
+.right .bubble.tip {
   border-bottom-right-radius: 0;
 }
 
@@ -1620,39 +1613,33 @@ NEW BUBBLE TIP STYLE
 }
 
 /* Left triangle placed bottom left flush. */
-.chat-box .left .tip::before {
+.left .bubble.tip::before {
   content: '';
   position: absolute;
-  width: 0;
-  height: 0;
-  right: auto;
-  left: -.8rem;
-  top: auto;
+  width: 0.85rem;
+  height: 0.85rem;
+  left: -0.8rem;
   bottom: 0;
-  border: 0.62rem solid #c5e1a5;
-  color: #c5e1a5;
-  border-top-color: transparent;
-  border-left-color: transparent;
-  box-shadow: 0 1.6px 0.5px -0.8px rgba(0, 0, 0, 0.12);
+  background-color: inherit;
+  clip-path: polygon(100% 0, 0 110%, 100% 110%);
+  -webkit-clip-path: polygon(100% 0, 0 110%, 100% 110%);
+  box-shadow: 0 1px 0.5px rgb(0 0 0 / 12%);
+  border-bottom-left-radius: 0.3rem;
 }
 
 /* Right triangle placed bottom right flush. */
-.chat-box .right .tip::before {
+.right .bubble.tip::before {
   content: '';
   position: absolute;
-  display: flex;
-  justify-content: space-between;
-  width: 0;
-  height: 0;
-  left: auto;
-  right: -.8rem;
-  top: auto;
+  width: 0.85rem;
+  height: 0.85rem;
+  left: 99.8%;
   bottom: 0;
-  border: 0.62rem solid #fafafa;
-  color: #fafafa;
-  border-top-color: transparent;
-  border-right-color: transparent;
-  box-shadow: 0 1.6px 0.5px -0.8px rgba(0, 0, 0, 0.12);
+  background-color: inherit;
+  clip-path: polygon(0 0, 100% 110%, 0 110%);
+  -webkit-clip-path: polygon(0 0, 100% 110%, 0 110%);
+  box-shadow: 0 1px 0.5px rgb(0 0 0 / 12%);
+  border-bottom-right-radius: 0.3rem;
 }
 
 .chat-box .avatar-box {
@@ -2498,11 +2485,15 @@ ul.tabbar li.active > a {
 }
 
 .chat-box .left .reply-quote {
-  background-color: #daebc6;
+  background-color: rgba(255, 255, 255, 0.4);
 }
 
 .chat-box .right .reply-quote {
-  background-color: #eee;
+  background-color: rgba(128, 128, 128, 0.12);
+}
+
+.reply-quote .inline-image {
+  vertical-align: middle;
 }
 
 #reply-quote-preview {

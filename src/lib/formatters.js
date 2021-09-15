@@ -1,5 +1,5 @@
 import React from 'react';
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages } from 'react-intl';
 
 import { IMAGE_THUMBNAIL_DIM, BROKEN_IMAGE_SIZE, REM_SIZE } from '../config.js';
 import { fitImageSize } from './blob-helpers.js';
@@ -30,20 +30,20 @@ function handleImageData(el, data, attr) {
   if (!data) {
     attr.src = 'img/broken_image.png';
     attr.style = {
-      width: BROKEN_IMAGE_SIZE + 'px',
-      height: BROKEN_IMAGE_SIZE + 'px',
+      width: IMAGE_THUMBNAIL_DIM + 'px',
+      height: IMAGE_THUMBNAIL_DIM + 'px',
       // Looks like a Chrome bug: broken image does not respect 'width' and 'height'.
-      minWidth: BROKEN_IMAGE_SIZE + 'px',
-      minHeight: BROKEN_IMAGE_SIZE + 'px'
+      minWidth: IMAGE_THUMBNAIL_DIM + 'px',
+      minHeight: IMAGE_THUMBNAIL_DIM + 'px'
     };
     return el;
   }
 
   attr.className = 'inline-image';
   const dim = fitImageSize(data.width, data.height,
-    this.viewportWidth > 0 ?
-      Math.min(this.viewportWidth - REM_SIZE * 6.5, REM_SIZE * 34.5) : REM_SIZE * 34.5,
-        REM_SIZE * 24, false) || {dstWidth: BROKEN_IMAGE_SIZE, dstHeight: BROKEN_IMAGE_SIZE};
+    this.viewportWidth > 0 ? Math.min(this.viewportWidth - REM_SIZE * 6.5, REM_SIZE * 34.5) :
+      REM_SIZE * 34.5, REM_SIZE * 24, false) ||
+      {dstWidth: BROKEN_IMAGE_SIZE, dstHeight: BROKEN_IMAGE_SIZE};
   attr.style = {
     width: dim.dstWidth + 'px',
     height: dim.dstHeight + 'px',
@@ -147,6 +147,7 @@ export function fullFormatter(style, data, values, key) {
 // Converts Drafty object into a one-line preview. 'this' is set by the caller.
 // 'this' must contain:
 //    formatMessage: this.props.intl.formatMessage
+//    messages: formatjs messages defined with defineMessages.
 export function previewFormatter(style, data, values, key) {
   let el = Drafty.tagName(style);
   const attr = { key: key };
@@ -184,9 +185,13 @@ export function previewFormatter(style, data, values, key) {
         el = React.Fragment;
         break;
       case 'EX':
-        if (data && data.mime == 'application/json') {
-          // Ignore JSON attachments: they are form response payloads.
-          return null;
+        if (data) {
+          if (data.mime == 'application/json') {
+            // Ignore JSON attachments: they are form response payloads.
+            return null;
+          }
+          // Clear inband data.
+          data.val = null;
         }
         el = React.Fragment;
         values = [<i key="ex" className="material-icons">attachment</i>, this.formatMessage(messages.drafty_attachment)];
@@ -207,17 +212,20 @@ export function previewFormatter(style, data, values, key) {
 // Converts Drafty object into a quoted reply. 'this' is set by the caller.
 // 'this' must contain:
 //    formatMessage: this.props.intl.formatMessage
+//    messages: formatjs messages defined with defineMessages.
 //    authorizeURL: this.props.tinode.authorizeURL
 //    onQuoteClick: this.handleQuoteClick (optional)
 export function quoteFormatter(style, data, values, key) {
   if (['BR', 'IM', 'MN', 'QQ'].includes(style)) {
     let el = Drafty.tagName(style);
-    const attr = Drafty.attrValue(style, data) || {};
+    let attr = Drafty.attrValue(style, data) || {};
     attr.key = key;
     switch(style) {
       case 'IM':
-        el = handleImageData.call(this, el, data, attr);
-        values = null;
+        const img = handleImageData.call(this, el, data, attr);
+        values = [React.createElement(img, attr, null), ' ', this.formatMessage(messages.drafty_image)];
+        el = React.Fragment;
+        attr = {key: key};
         break;
       case 'MN':
         el = 'span';
