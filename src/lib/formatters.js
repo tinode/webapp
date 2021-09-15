@@ -1,12 +1,14 @@
 import React from 'react';
 import { defineMessages } from 'react-intl';
 
+import { Drafty } from 'tinode-sdk';
+
+import UploadingImage from '../widgets/uploading-image.jsx'
+
 import { IMAGE_THUMBNAIL_DIM, BROKEN_IMAGE_SIZE, REM_SIZE } from '../config.js';
 import { fitImageSize } from './blob-helpers.js';
 import { idToColorClass } from './strformat.js';
 import { sanitizeImageUrl } from './utils.js';
-
-import { Drafty } from 'tinode-sdk';
 
 const messages = defineMessages({
   drafty_form: {

@@ -1609,6 +1609,9 @@ img.channel {
   -webkit-clip-path: polygon(100% 0, 0 110%, 100% 110%);
   box-shadow: 0 1px 0.5px rgb(0 0 0 / 12%);
   border-bottom-left-radius: 0.3rem;
+  -moz-transition: ease-out background-color 0.5s;
+  transition: ease-out background-color 0.5s;
+  transition-delay: 0.3s;
 }
 
 /* Right triangle placed bottom right flush. */
@@ -1624,6 +1627,9 @@ img.channel {
   -webkit-clip-path: polygon(0 0, 100% 110%, 0 110%);
   box-shadow: 0 1px 0.5px rgb(0 0 0 / 12%);
   border-bottom-right-radius: 0.3rem;
+  -moz-transition: ease-out background-color 0.5s;
+  transition: ease-out background-color 0.5s;
+  transition-delay: 0.3s;
 }
 
 .chat-box .avatar-box {

@@ -15,7 +15,6 @@ import LetterTile from '../widgets/letter-tile.jsx';
 import LoadSpinner from '../widgets/load-spinner.jsx';
 import LogoView from './logo-view.jsx';
 import SendMessage from '../widgets/send-message.jsx';
-import UploadingImage from '../widgets/uploading-image.jsx'
 
 import { DEFAULT_P2P_ACCESS_MODE, IMAGE_PREVIEW_DIM, KEYPRESS_DELAY, MESSAGES_PAGE,
   MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE, READ_DELAY,
@@ -149,7 +148,6 @@ class MessagesView extends React.Component {
   }
 
   componentDidMount() {
-    // this.propsChange(this.props, this.state);
     if (this.messagesScroller) {
       this.messagesScroller.addEventListener('scroll', this.handleScrollEvent);
     }
@@ -977,10 +975,8 @@ class MessagesView extends React.Component {
     const ref = this.getOrCreateMessageRef(replyToSeq);
     if (ref && ref.current) {
       ref.current.scrollIntoView({block: "center", behavior: "smooth"});
-      // ref.current.style.backgroundColor = 'rgb(0, 0, 0, 0.4)';
       ref.current.classList.add('flash');
       setTimeout(() => { ref.current.classList.remove('flash') } , 1000);
-      //setTimeout(() => { ref.current.style.backgroundColor = ''; } , 1000);
     } else {
       console.error("Unresolved message ref: seqId", replyToSeq);
     }
