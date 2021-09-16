@@ -1604,7 +1604,7 @@ img.channel {
   height: 0.85rem;
   left: -0.8rem;
   bottom: 0;
-  background-color: inherit;
+  background-color: #c5e1a5;
   clip-path: polygon(100% 0, 0 110%, 100% 110%);
   -webkit-clip-path: polygon(100% 0, 0 110%, 100% 110%);
   box-shadow: 0 1px 0.5px rgb(0 0 0 / 12%);
@@ -1612,6 +1612,10 @@ img.channel {
   -moz-transition: ease-out background-color 0.5s;
   transition: ease-out background-color 0.5s;
   transition-delay: 0.3s;
+}
+
+.left.flash .bubble.tip::before {
+  background-color: #94A97C;
 }
 
 /* Right triangle placed bottom right flush. */
@@ -1622,7 +1626,7 @@ img.channel {
   height: 0.85rem;
   left: 99.8%;
   bottom: 0;
-  background-color: inherit;
+  background-color: #fafafa;
   clip-path: polygon(0 0, 100% 110%, 0 110%);
   -webkit-clip-path: polygon(0 0, 100% 110%, 0 110%);
   box-shadow: 0 1px 0.5px rgb(0 0 0 / 12%);
@@ -1630,6 +1634,10 @@ img.channel {
   -moz-transition: ease-out background-color 0.5s;
   transition: ease-out background-color 0.5s;
   transition-delay: 0.3s;
+}
+
+.right.flash .bubble.tip::before {
+  background-color: #ccc;
 }
 
 .chat-box .avatar-box {
