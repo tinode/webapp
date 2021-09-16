@@ -379,7 +379,7 @@ class MessagesView extends React.Component {
         });
       })
       .catch((err) => {
-        console.log("Failed subscription to", this.state.topic);
+        console.error("Failed subscription to", this.state.topic);
         this.props.onError(err.message, 'err');
         const blankState = MessagesView.getDerivedStateFromProps({}, {});
         blankState.title = this.props.intl.formatMessage(messages.not_found);
@@ -600,7 +600,7 @@ class MessagesView extends React.Component {
         this.forceUpdate();
         break;
       default:
-        console.log("Other change in topic: ", info.what);
+        console.info("Other change in topic: ", info.what);
     }
   }
 
@@ -636,7 +636,7 @@ class MessagesView extends React.Component {
       url.search = params;
       window.open(url, '_blank');
     } else {
-      console.log("Unknown action in form", action);
+      console.info("Unknown action in form", action);
     }
   }
 
@@ -884,10 +884,10 @@ class MessagesView extends React.Component {
     }
 
     // Make small image previews.
-    const ents = [];
+    const images = [];
     Drafty.entities(content, (data, idx, tp) => {
       if (tp == 'IM') {
-        ents.push({
+        images.push({
           tp: tp,
           data: data
         });
@@ -895,7 +895,7 @@ class MessagesView extends React.Component {
     });
 
     // Turn all images into thumbnails.
-    const promises = ents.map((ex) => {
+    const promises = images.map((ex) => {
       return new Promise((resolve, reject) => {
         const handleFailure = () => {
           ex.data.val = '';
@@ -978,7 +978,7 @@ class MessagesView extends React.Component {
       ref.current.classList.add('flash');
       setTimeout(() => { ref.current.classList.remove('flash') } , 1000);
     } else {
-      console.error("Unresolved message ref: seqId", replyToSeq);
+      console.error("Unresolved message ref", replyToSeq);
     }
   }
 

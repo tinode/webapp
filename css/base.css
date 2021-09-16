@@ -1681,6 +1681,7 @@ img.channel {
   top: 0.35rem;
   float: right;
   white-space: nowrap;
+  user-select: none;
 }
 
 /* The name of the person who sent the message
@@ -2484,6 +2485,7 @@ ul.tabbar li.active > a {
 
 .reply-quote .inline-image {
   vertical-align: middle;
+  margin-bottom: 0.1rem;
 }
 
 #reply-quote-preview {

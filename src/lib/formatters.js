@@ -205,8 +205,9 @@ export function previewFormatter(style, data, values, key) {
           // Ignore JSON attachments: they are form response payloads.
           return null;
         }
-        // Clear inband data.
-        data.val = null;
+        // Clear payload.
+        delete data.val;
+        delete data.ref;
       }
       el = React.Fragment;
       values = [<i key="ex" className="material-icons">attachment</i>, this.formatMessage(messages.drafty_attachment)];
@@ -260,11 +261,12 @@ export function quoteFormatter(style, data, values, key) {
             // Ignore JSON attachments: they are form response payloads.
             return null;
           }
-          // Clear inband data.
-          data.val = null;
           fname = data.name;
+          // Clear payload.
+          delete data.val;
+          delete data.ref;
         }
-        if (!fname)
+        if (!fname) {
           fname = this.formatMessage(messages.drafty_attachment);
         }
         el = React.Fragment;

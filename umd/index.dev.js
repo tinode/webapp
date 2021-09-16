@@ -582,7 +582,8 @@ function previewFormatter(style, data, values, key) {
           return null;
         }
 
-        data.val = null;
+        delete data.val;
+        delete data.ref;
       }
 
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
@@ -612,11 +613,7 @@ function previewFormatter(style, data, values, key) {
 }
 ;
 function quoteFormatter(style, data, values, key) {
-  if (['BR', 'IM', 'MN', 'QQ'].includes(style)) {
-    if (style == 'EX') {
-      console.log("quoteFormatter EX 1", data);
-    }
-
+  if (['BR', 'EX', 'IM', 'MN', 'QQ'].includes(style)) {
     let el = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.tagName(style);
     let attr = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attrValue(style, data) || {};
     attr.key = key;
@@ -645,13 +642,33 @@ function quoteFormatter(style, data, values, key) {
         attr.className = 'reply-quote';
         attr.onClick = this.onQuoteClick;
         break;
+
+      case 'EX':
+        let fname;
+
+        if (data) {
+          if (data.mime == 'application/json') {
+            return null;
+          }
+
+          fname = data.name;
+          delete data.val;
+          delete data.ref;
+        }
+
+        if (!fname) {
+          fname = this.formatMessage(messages.drafty_attachment);
+        }
+
+        el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
+        values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+          key: "ex",
+          className: "material-icons"
+        }, "attachment"), fname];
+        break;
     }
 
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(el, attr, values);
-  }
-
-  if (style == 'EX') {
-    console.log("quoteFormatter EX 2", data);
   }
 
   return previewFormatter.call(this, style, data, values, key);
@@ -3465,7 +3482,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         }
       });
     }).catch(err => {
-      console.log("Failed subscription to", this.state.topic);
+      console.error("Failed subscription to", this.state.topic);
       this.props.onError(err.message, 'err');
       const blankState = MessagesView.getDerivedStateFromProps({}, {});
       blankState.title = this.props.intl.formatMessage(messages.not_found);
@@ -3705,7 +3722,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         break;
 
       default:
-        console.log("Other change in topic: ", info.what);
+        console.info("Other change in topic: ", info.what);
     }
   }
 
@@ -3750,7 +3767,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       url.search = params;
       window.open(url, '_blank');
     } else {
-      console.log("Unknown action in form", action);
+      console.info("Unknown action in form", action);
     }
   }
 
@@ -3998,16 +4015,16 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       }
     }
 
-    const ents = [];
+    const images = [];
     Drafty.entities(content, (data, idx, tp) => {
       if (tp == 'IM') {
-        ents.push({
+        images.push({
           tp: tp,
           data: data
         });
       }
     });
-    const promises = ents.map(ex => {
+    const promises = images.map(ex => {
       return new Promise((resolve, reject) => {
         const handleFailure = () => {
           ex.data.val = '';
@@ -4089,7 +4106,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         ref.current.classList.remove('flash');
       }, 1000);
     } else {
-      console.error("Unresolved message ref: seqId", replyToSeq);
+      console.error("Unresolved message ref", replyToSeq);
     }
   }
 
@@ -7708,7 +7725,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     const attachments = [];
 
     if (this.props.mimeType == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.getContentType() && tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isValid(content)) {
-      tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachments(content, function (att, i) {
+      tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachments(content, (att, i) => {
         if (att.mime == 'application/json') {
           return;
         }
@@ -11458,16 +11475,10 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       formatMessage
     } = this.props.intl;
     const prompt = this.props.disabled ? formatMessage(messages.messaging_disabled) : this.props.messagePrompt ? formatMessage(messages[this.props.messagePrompt]) : formatMessage(messages.type_new_message);
-
-    if (this.props.replyTo) {
-      console.log("Reply:", this.props.replyTo.content);
-    }
-
     const quote = this.props.replyTo ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(this.props.replyTo.content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_5__.quoteFormatter, {
       formatMessage: formatMessage,
       authorizeURL: this.props.tinode.authorizeURL
     }) : null;
-    console.log("Quoted:", quote);
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "send-message-wrapper"
     }, quote ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
