@@ -1,10 +1,8 @@
 // Context Menu: popup/dropdown menu.
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { injectIntl, defineMessages } from 'react-intl';
 
 import { REM_SIZE } from '../config.js';
-import HashNavigation from '../lib/navigation.js';
 
 const messages = defineMessages({
   info: {
@@ -113,6 +111,8 @@ const messages = defineMessages({
 class ContextMenu extends React.Component {
   constructor(props) {
     super(props);
+
+    this.selfRef = React.createRef();
 
     const {formatMessage} = props.intl;
 
@@ -330,7 +330,7 @@ class ContextMenu extends React.Component {
   }
 
   handlePageClick(e) {
-    if (ReactDOM.findDOMNode(this).contains(e.target)) {
+    if (this.selfRef.current.contains(e.target)) {
       return;
     }
     e.preventDefault();
@@ -354,7 +354,7 @@ class ContextMenu extends React.Component {
     }
 
     if (!item) {
-      console.log("Invalid menu item ID", e.currentTarget.dataset.id);
+      console.error("Invalid menu item ID", e.currentTarget.dataset.id);
     } else {
       this.props.onAction(
         item.id,
@@ -427,9 +427,13 @@ class ContextMenu extends React.Component {
     return result;
   }
 
+  replyToMessage(params, errorHandler) {
+    params.pickReply({ seq: params.seq, content: params.content });
+  }
+
   render() {
+    const menu = [];
     let count = 0;
-    let menu = [];
     this.props.items.map((item) => {
       if (typeof item == 'string') {
         item = this.MenuItems[item];
@@ -461,7 +465,7 @@ class ContextMenu extends React.Component {
     };
 
     return (
-      <ul className="menu" style={position}>
+      <ul className="menu" style={position} ref={this.selfRef}>
         {menu}
       </ul>
     );

@@ -20,14 +20,20 @@ export function updateFavicon(count) {
 }
 
 // Create theCard which represents user's or topic's "public" info.
-export function theCard(fn, imageUrl, imageMimeType) {
+export function theCard(fn, imageUrl, imageMimeType, note) {
   let card = null;
   fn = fn && fn.trim();
+  note = note && note.trim();
 
   if (fn) {
     card = {
       fn: fn
     };
+  }
+
+  if (typeof note == 'string') {
+    card = card || {};
+    card.note = note ? note : Tinode.DEL_CHAR;
   }
 
   if (imageUrl) {
@@ -38,10 +44,12 @@ export function theCard(fn, imageUrl, imageMimeType) {
     if (matches) {
       mimeType = matches[1];
       card.photo = {
-        data: imageUrl.substring(imageUrl.indexOf(',') + 1)
+        data: imageUrl.substring(imageUrl.indexOf(',') + 1),
+        ref: Tinode.DEL_CHAR
       };
     } else {
       card.photo = {
+        data: Tinode.DEL_CHAR,
         ref: imageUrl
       };
     }
@@ -107,10 +115,9 @@ export function isUrlRelative(url) {
 
 // Ensure URL does not present an XSS risk. Optional allowedSchemes may contain an array of
 // strings with permitted URL schemes, such as ['ftp', 'ftps']; otherwise accept http and https only.
-// If apikey and/or token is defined, it's appended to relative URL.
 export function sanitizeUrl(url, allowedSchemes) {
-  if (!url) {
-    return null;
+  if (typeof url != 'string') {
+    return url;
   }
 
   // Strip control characters and whitespace. They are not valid URL characters anyway.
@@ -139,7 +146,6 @@ export function sanitizeUrl(url, allowedSchemes) {
 
 // Ensure URL is suitable for <img src="url"> field: the URL must be a relative URL or
 // have http:, https:, blob: or data: scheme.
-// The relative URL is appended with the API key and/or auth token.
 // In case of data: scheme, the URL must start with a 'data:image/XXXX;base64,'.
 export function sanitizeImageUrl(url) {
   if (!url) {
@@ -165,7 +171,7 @@ export function deliveryMarker(received) {
     case Tinode.MESSAGE_STATUS_SENDING:
       return { name: 'access_time' }; // watch face
     case Tinode.MESSAGE_STATUS_FAILED:
-      return { name: 'warning', color: 'amber' }; // yellow icon /!\
+      return { name: 'warning', color: 'danger-color' }; // yellow icon /!\
     case Tinode.MESSAGE_STATUS_SENT:
       return { name: 'done' }; // checkmark
     case Tinode.MESSAGE_STATUS_RECEIVED:

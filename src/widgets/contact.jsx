@@ -65,6 +65,15 @@ class Contact extends React.Component {
     const avatar = this.props.avatar ? this.props.avatar : true;
     const badges = this.props.badges ? this.props.badges.slice() : [];
     const icon_badges = [];
+    if (this.props.isVerified) {
+      icon_badges.push({icon: 'verified', color: 'verified-color'});
+    }
+    if (this.props.isStaff) {
+      icon_badges.push({icon: 'staff', color: 'staff-color'});
+    }
+    if (this.props.isDangerous) {
+      icon_badges.push({icon: 'dangerous', color: 'danger-color'});
+    }
     if (this.props.acs) {
       if (this.props.showMode) {
         badges.push({name: this.props.acs.getMode(), key: 'mode'});
@@ -79,7 +88,13 @@ class Contact extends React.Component {
 
     const subtitle = this.props.preview ?
       (typeof this.props.preview == 'string' ? this.props.preview :
-        React.createElement(React.Fragment, null, Drafty.format(this.props.preview, draftyFormatter, this))) :
+        Drafty.isValid(this.props.preview) ?
+        React.createElement(React.Fragment, null, Drafty.format(this.props.preview, draftyFormatter, this)) :
+        <><i className="material-icons gray">error_outline</i> <i className="gray">
+          <FormattedMessage id="invalid_content"
+            defaultMessage="invalid content" description="Shown when message is unreadable" /></i>
+        </>
+      ) :
       this.props.comment;
 
     const icon = deliveryMarker(this.props.received);
@@ -90,6 +105,7 @@ class Contact extends React.Component {
       <li className={!this.props.showCheckmark && this.props.selected ? 'selected' : null} onClick={this.handleClick}>
         <div className="avatar-box">
           <LetterTile
+            tinode={this.props.tinode}
             avatar={avatar}
             title={this.props.title}
             topic={this.props.item} />
@@ -101,11 +117,11 @@ class Contact extends React.Component {
         <div className="text-box">
           <div><span className="contact-title">{title}</span>
             {this.props.isChannel ? <img src="/img/channel.png" className="channel" alt="channel" /> : null}
-            <UnreadBadge count={this.props.unread} /><ContactBadges badges={icon_badges} />
+            <ContactBadges badges={icon_badges} /><UnreadBadge count={this.props.unread} />
           </div>
           {this.props.showMode ?
             <span><ContactBadges badges={badges} /></span> :
-            <div className="contact-comment">{marker}{subtitle || '\u00A0'}</div>}
+            this.props.small ? null : <div className="contact-comment">{marker}<span>{subtitle || '\u00A0'}</span></div>}
         </div>
         {this.props.showContextMenu ?
           <span className="menuTrigger">
@@ -136,6 +152,7 @@ function draftyFormatter(style, data, values, key) {
         attr.className = 'highlight preview';
         break;
       case 'LN':
+      case 'MN':
         // Disable links in previews.
         el = 'span';
         break;
@@ -151,7 +168,7 @@ function draftyFormatter(style, data, values, key) {
       case 'FM':
         el = React.Fragment;
         values = [<i key="fm" className="material-icons">dashboard</i>,
-          formatMessage(messages.drafty_form)].concat(values || []);
+          formatMessage(messages.drafty_form)].concat(' ', values || []);
         break;
       case 'RW':
         el = React.Fragment;
@@ -167,7 +184,7 @@ function draftyFormatter(style, data, values, key) {
       default:
         if (el == '_UNKN') {
           el = React.Fragment;
-          values = [<i key="unkn" className="material-icons">extension</i>];
+          values = [<i key="unkn" className="material-icons">extension</i>, ' '].concat(values || []);
         }
         break;
     }

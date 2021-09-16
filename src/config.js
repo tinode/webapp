@@ -45,9 +45,12 @@ export const MEDIA_BREAKPOINT = 640;
 // Size of css 'rem' unit in pixels. Default 1rem = 10pt = 13px.
 export const REM_SIZE = 13;
 
-// Size of the avatar image: When an avatar image is uploaded, it's resized to
-// a square of this size.
-export const AVATAR_SIZE = 128;
+// Size of the avatar image: when image dimensions are greater or the image is not square, it's resized to
+// a square of this size or less.
+export const AVATAR_SIZE = 384;
+
+// Maximum size of an avatar in bytes for sending in-band. Bigger avatars will be sent out of band (as uploads).
+export const MAX_AVATAR_BYTES = 4096;
 
 // Size of the broken_image shown in MessagesView
 export const BROKEN_IMAGE_SIZE = 32;
@@ -75,12 +78,17 @@ export const MAX_IMAGE_DIM = 1024;
 // Linear dimensions of image preview: shrink image under this size for previews.
 export const IMAGE_PREVIEW_DIM = 64;
 
+// Linear dimensions of image thumbnail: shrink image under this size for thumbnails in reply quote previews.
+export const IMAGE_THUMBNAIL_DIM = 25;
+
 // Maximum number of online users to be shown in a topic title bar. Others will be
 // hidden under "+X more"
 export const MAX_ONLINE_IN_TOPIC = 4;
 
 // Maximum length of user name, topic title, and private comment.
 export const MAX_TITLE_LENGTH = 60;
+// Maximum length of topic description.
+export const MAX_TOPIC_DESCRIPTION_LENGTH = 360;
 
 // Length of message previews in chat list, in characters.
 export const MESSAGE_PREVIEW_LENGTH = 80;

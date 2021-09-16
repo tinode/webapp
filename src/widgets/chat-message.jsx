@@ -1,15 +1,15 @@
 // Single message, sent or received.
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { Drafty } from 'tinode-sdk';
 
 import Attachment from './attachment.jsx';
 import LetterTile from './letter-tile.jsx';
 import ReceivedMarker from './received-marker.jsx'
-import UploadingImage from './uploading-image.jsx'
+
 import { sanitizeImageUrl, sanitizeUrl } from '../lib/utils.js';
 
-export default class ChatMessage extends React.Component {
+class BaseChatMessage extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -25,6 +25,8 @@ export default class ChatMessage extends React.Component {
     this.handleFormButtonClick = this.handleFormButtonClick.bind(this);
     this.handleContextClick = this.handleContextClick.bind(this);
     this.handleCancelUpload = this.handleCancelUpload.bind(this);
+
+    this.handleQuoteClick = this.handleQuoteClick.bind(this);
   }
 
   handleImagePreview(e) {
@@ -60,12 +62,13 @@ export default class ChatMessage extends React.Component {
     e.preventDefault();
     e.stopPropagation();
     const menuItems = this.props.received == Tinode.MESSAGE_STATUS_FAILED ? ['menu_item_send_retry'] : [];
-    if (this.props.received >= Tinode.MESSAGE_STATUS_FAILED &&
+    if (this.props.userIsWriter &&
+        this.props.received > Tinode.MESSAGE_STATUS_FAILED &&
         this.props.received < Tinode.MESSAGE_STATUS_DEL_RANGE) {
       menuItems.push('menu_item_reply');
     }
     this.props.showContextMenu({ seq: this.props.seq, content: this.props.content,
-                                 y: e.pageY, x: e.pageX }, menuItems);
+                                 y: e.pageY, x: e.pageX, pickReply: this.props.pickReply }, menuItems);
   }
 
   handleProgress(ratio) {
@@ -74,6 +77,15 @@ export default class ChatMessage extends React.Component {
 
   handleCancelUpload() {
     this.props.onCancelUpload(this.props.seq, this.props.uploader);
+  }
+
+  handleQuoteClick(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const replyToSeq = this.props.replyToSeq;
+    if (replyToSeq) {
+      this.props.onQuoteClick(replyToSeq);
+    }
   }
 
   render() {
@@ -105,7 +117,8 @@ export default class ChatMessage extends React.Component {
           onError={this.props.onError}
           key={i} />);
       }, this);
-      content = React.createElement(React.Fragment, null, Drafty.format(content, draftyFormatter, this));
+      const tree = Drafty.format(content, this.props.formatter, this);
+      content = React.createElement(React.Fragment, null, tree);
     } else if (this.props.deleted) {
       // Message represents a range of deleted messages.
       content = <><i className="material-icons gray">block</i> <i className="gray">
@@ -113,19 +126,18 @@ export default class ChatMessage extends React.Component {
           defaultMessage="content deleted" description="Shown when messages are deleted" />
       </i></>
     } else if (typeof content != 'string') {
-      content = <>
-          <i className="material-icons gray">error_outline</i> <i className="gray">
-            <FormattedMessage id="invalid_content"
-              defaultMessage="invalid content" description="Shown when message is unreadable" /></i>
-        </>
+      content = <><i className="material-icons gray">error_outline</i> <i className="gray">
+        <FormattedMessage id="invalid_content"
+          defaultMessage="invalid content" description="Shown when message is unreadable" /></i></>
     }
 
     return (
-      <li className={sideClass}>
+      <li ref={this.props.innerRef} className={sideClass}>
         {this.props.userFrom && this.props.response ?
           <div className="avatar-box">
             {fullDisplay ?
               <LetterTile
+                tinode={this.props.tinode}
                 topic={this.props.userFrom}
                 title={this.props.userName}
                 avatar={avatar} /> :
@@ -156,10 +168,10 @@ export default class ChatMessage extends React.Component {
           </div>
           {fullDisplay ?
             <div className="author">
-              <FormattedMessage id="user_not_found" defaultMessage="Not found"
-                description="In place of a user's full name when the user is not found.">{
-                    (notFound) => {return this.props.userName || <i>{notFound}</i>}
-              }</FormattedMessage>
+              {this.props.userName ||
+                <i><FormattedMessage id="user_not_found" defaultMessage="Not found"
+                description="In place of a user's full name when the user is not found." /></i>
+              }
             </div>
             : null
           }
@@ -169,86 +181,7 @@ export default class ChatMessage extends React.Component {
   }
 };
 
-// Convert Drafty object to a tree of React elements.
-import { BROKEN_IMAGE_SIZE, REM_SIZE } from '../config.js';
-import { fitImageSize } from '../lib/blob-helpers.js';
+const IntlChatMessage = injectIntl(BaseChatMessage);
+const ChatMessage = React.forwardRef((props, ref) => <IntlChatMessage innerRef = {ref} {...props} />);
 
-// Converts Drafty elements into React classes.
-// 'this' is set by the caller.
-function draftyFormatter(style, data, values, key) {
-  if (style == 'EX') {
-    // attachments are handled elsewhere.
-    return null;
-  }
-
-  let el = Drafty.tagName(style);
-  if (el) {
-    const attr = Drafty.attrValue(style, data) || {};
-    attr.key = key;
-    switch (style) {
-      case 'HL':
-        // Highlighted text. Assign class name.
-        attr.className = 'highlight';
-        break;
-      case 'IM':
-        // Additional processing for images
-        if (data) {
-          attr.className = 'inline-image';
-          const dim = fitImageSize(data.width, data.height,
-            Math.min(this.props.viewportWidth - REM_SIZE * 6.5, REM_SIZE * 34.5), REM_SIZE * 24, false) ||
-            {dstWidth: BROKEN_IMAGE_SIZE, dstHeight: BROKEN_IMAGE_SIZE};
-          attr.style = {
-            width: dim.dstWidth + 'px',
-            height: dim.dstHeight + 'px',
-            // Looks like a Chrome bug: broken image does not respect 'width' and 'height'.
-            minWidth: dim.dstWidth + 'px',
-            minHeight: dim.dstHeight + 'px'
-          };
-          if (!Drafty.isProcessing(data)) {
-            attr.src = this.props.tinode.authorizeURL(sanitizeImageUrl(attr.src));
-            attr.alt = data.name;
-            if (attr.src) {
-              attr.onClick = this.handleImagePreview;
-              attr.className += ' image-clickable';
-              attr.loading = 'lazy';
-            } else {
-              attr.src = 'img/broken_image.png';
-            }
-          } else {
-            // Use custom element instead of <img>.
-            el = UploadingImage;
-          }
-        }
-        break;
-      case 'BN':
-        // Button
-        attr.onClick = this.handleFormButtonClick;
-        let inner = React.Children.map(values, (child) => {
-          return typeof child == 'string' ? child : undefined;
-        });
-        if (!inner || inner.length == 0) {
-          inner = [attr.name]
-        }
-        // Get text which will be sent back when the button is clicked.
-        attr['data-title'] = inner.join('');
-        break;
-      case 'FM':
-        // Form
-        attr.className = 'bot-form';
-        break;
-      case 'RW':
-        // Form element formatting is dependent on element content.
-        break;
-      default:
-        if (el == '_UNKN') {
-          // Unknown element.
-          // TODO: make it prettier.
-          el = <><span className="material-icons">extension</span></>;
-        }
-        break;
-    }
-    return React.createElement(el, attr, values);
-  } else {
-    return values;
-  }
-};
+export default ChatMessage;

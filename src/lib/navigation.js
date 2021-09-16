@@ -9,11 +9,11 @@ export default class HashNavigation {
     const params = {};
     let path = [];
     if (parts[0]) {
-      path = parts[0].substr(1).split('/');
+      path = parts[0].replace('#', '').split('/');
     }
     if (parts[1]) {
       parts[1].split('&').forEach(function(part) {
-        let item = part.split('=');
+        const item = part.split('=');
         if (item[0]) {
           params[decodeURIComponent(item[0])] = decodeURIComponent(item[1]);
         }
@@ -55,6 +55,16 @@ export default class HashNavigation {
   static setUrlSidePanel(hash, sidepanel) {
     const parsed = this.parseUrlHash(hash);
     parsed.path[0] = sidepanel;
+    return this.composeUrlHash(parsed.path, parsed.params);
+  }
+
+  static setUrlInfoPanel(hash, infopanel) {
+    const parsed = this.parseUrlHash(hash);
+    if (infopanel) {
+      parsed.params.info = infopanel;
+    } else {
+      delete parsed.params.info;
+    }
     return this.composeUrlHash(parsed.path, parsed.params);
   }
 

@@ -9,7 +9,7 @@ import Tinode from 'tinode-sdk';
 import Contact from './contact.jsx';
 import ContactAction from './contact-action.jsx';
 
-import { makeImageDataUrl } from '../lib/blob-helpers.js';
+import { makeImageUrl } from '../lib/blob-helpers.js';
 
 import { MESSAGE_PREVIEW_LENGTH } from '../config.js';
 
@@ -89,8 +89,9 @@ class ContactList extends React.Component {
           }
           contactNodes.push(
             <Contact
+              tinode={this.props.tinode}
               title={c.public ? c.public.fn : null}
-              avatar={makeImageDataUrl(c.public ? c.public.photo : null)}
+              avatar={makeImageUrl(c.public ? c.public.photo : null)}
               comment={comment}
               preview={preview}
               received={deliveryStatus}
@@ -105,6 +106,9 @@ class ContactList extends React.Component {
               isChannel={isChannel}
               onSelected={this.props.onTopicSelected}
               showContextMenu={this.props.showContextMenu}
+              isVerified={c.trusted && c.trusted.verified}
+              isStaff={c.trusted && c.trusted.staff}
+              isDangerous={c.trusted && c.trusted.danger}
               item={key}
               index={contactNodes.length}
               key={key} />

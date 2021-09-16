@@ -1,7 +1,7 @@
 {
   "name": "tinode-webapp",
   "description": "Tinode messenger for the web",
-  "version": "0.17.10-rc1",
+  "version": "0.18.0-alpha1",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinode/example-react-js.git"
@@ -11,7 +11,9 @@
     "build:css": "postcss css/base.css > css/base.min.css",
     "build:dev": "webpack --mode development",
     "build:prod": "webpack --mode production",
-    "build:i18n": "node scripts/pack-messages.js",
+    "build:i18n": "node scripts/i18n.js",
+    "i18n:missing": "node scripts/i18n.js missing",
+    "i18n:obsolete": "node scripts/i18n.js obsolete",
     "vers": "node scripts/gen-version.js",
     "extract": "formatjs extract src/**/*.jsx --out-file src/i18n/ex/base-en.json --id-interpolation-pattern '[sha512:contenthash:base64:6]'",
     "compile": "formatjs compile"
@@ -68,7 +70,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-intl": "^5.20.2",
-    "tinode-sdk": "^0.17.10-rc1"
+    "tinode-sdk": "^0.18.0-alpha1"
   },
   "devDependencies": {
     "@babel/core": "^7.14.5",

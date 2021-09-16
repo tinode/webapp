@@ -2,7 +2,7 @@ import React from 'react';
 
 import Chip from './chip.jsx';
 
-import { makeImageDataUrl } from '../lib/blob-helpers.js';
+import { makeImageUrl } from '../lib/blob-helpers.js';
 
 /* BEGIN ChipInput: group membership widget */
 export default class ChipInput extends React.Component {
@@ -118,8 +118,9 @@ export default class ChipInput extends React.Component {
     this.state.sortedChips.map((item) => {
       chips.push(
         <Chip
+          tinode={this.props.tinode}
           onCancel={this.handleChipCancel}
-          avatar={makeImageDataUrl(item.public ? item.public.photo : null)}
+          avatar={makeImageUrl(item.public ? item.public.photo : null)}
           title={item.public ? item.public.fn : undefined}
           noAvatar={this.props.avatarDisabled}
           topic={item.user}
@@ -131,6 +132,7 @@ export default class ChipInput extends React.Component {
       count++;
     });
     const className = "chip-input" + (this.state.focused ? ' focused' : '');
+    const autoFocus = !(this.props.tabIndex > 0);
     return (
       <div className={className}>
         {chips}
@@ -141,7 +143,8 @@ export default class ChipInput extends React.Component {
           onBlur={this.handleFocusLost}
           onKeyDown={this.handleKeyDown}
           value={this.state.input}
-          autoFocus />
+          tabIndex={this.props.tabIndex}
+          autoFocus={autoFocus} />
       </div>
     );
   }

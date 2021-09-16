@@ -1,182 +1,1393 @@
 {
-  "action_block_contact": "Block Contact",
-  "action_cancel": "cancel",
-  "action_clear_messages": "Clear Messages",
-  "action_delete_messages": "Clear Messages for All",
-  "action_leave_chat": "Leave Conversation",
-  "action_more": "More",
-  "action_report_chat": "Report Conversation",
-  "archived_contacts": "Archived contacts ({count})",
-  "badge_owner": "owner",
-  "badge_you": "you",
-  "block_contact_warning": "Are you sure you want to block this contact?",
-  "blocked_contacts_link": "Blocked contacts ({count})",
-  "button_add_another": "Add another",
-  "button_add_members": "Add members",
-  "button_cancel": "Cancel",
-  "button_confirm": "Confirm",
-  "button_create": "Create",
-  "button_delete_account": "Delete account",
-  "button_edit": "Edit",
-  "button_logout": "Logout",
-  "button_ok": "OK",
-  "button_reset": "Reset",
-  "button_send_request": "Send request",
-  "button_sign_in": "Sign in",
-  "button_sign_up": "Sign up",
-  "button_subscribe": "Subscribe",
-  "button_update": "Update",
-  "cannot_initiate_file_upload": "Cannot initiate file upload.",
-  "channel": "channel",
-  "channel_prompt": "This is a channel",
-  "chat_invitation": "You are invited to start a new chat. What would you like to do?",
-  "chat_invitation_accept": "Accept",
-  "chat_invitation_block": "Block",
-  "chat_invitation_ignore": "Ignore",
-  "clear_messages_warning": "Are you sure you want to clear all messages? It cannot be undone.",
-  "code_doesnot_match": "Code does not match",
-  "contacts_not_found": "You have no chats<br />¯∖_(ツ)_/¯",
-  "contacts_not_found_short": "No contacts match ''{query}''",
-  "credential_email_prompt": "Your registration email",
-  "delete_account": "Delete account",
-  "delete_account_arning": "Are you sure you want to delete your account? It cannot be undone.",
-  "delete_messages_warning": "Are you sure you want to delete all messages for everyone? It cannot be undone.",
-  "deleted_content": "content deleted",
-  "download_action": "download",
-  "drafty_attachment": "Attachment",
-  "drafty_form": "Form:",
-  "drafty_image": "Picture",
-  "email_dative": "email",
-  "email_prompt": "Email, e.g. jdoe@example.com",
-  "enable_peers_messaging": "Enable",
-  "enter_confirmation_code_prompt": "Enter confirmation code sent to you by {method}:",
-  "error_invalid_id": "Invalid ID",
-  "file_attachment_too_large": "The file size {size} exceeds the {limit} limit.",
-  "forgot_password_link": "Forgot password?",
-  "full_name_prompt": "Full name, e.g. John Doe",
-  "granted_permissions": "Granted",
-  "group_has_no_members": "No members",
-  "group_user_id_prompt": "Group or User ID",
-  "image_caption_prompt": "Image caption",
-  "invalid_content": "invalid content",
-  "invalid_security_token": "Invalid security token",
-  "label_client": "Client:",
-  "label_content_type": "Content type:",
-  "label_default_access": "Default access mode:",
-  "label_default_access_mode": "Default access mode:",
-  "label_file_name": "File name:",
-  "label_group_members": "Group members:",
-  "label_incognito_mode": "Incognito mode:",
-  "label_message_sound": "Message sound:",
-  "label_muting_topic": "Muted:",
-  "label_other_user": "Other",
-  "label_password": "Password",
-  "label_permissions": "Permissions:",
-  "label_private": "Private comment",
-  "label_push_notifications": "Notification alerts:",
-  "label_push_notifications_disabled": "Notification alerts (requires HTTPS):",
-  "label_reset_password": "Send a password reset email:",
-  "label_sdk": "SDK:",
-  "label_server": "Server:",
-  "label_server_address": "Server address:",
-  "label_server_to_use": "Server to use:",
-  "label_size": "Size:",
-  "label_topic_name": "Name",
-  "label_user_contacts": "Contacts:",
-  "label_user_id": "ID:",
-  "label_wire_transport": "Wire transport:",
-  "label_you": "You:",
-  "label_your_name": "Your name",
-  "label_your_permissions": "Your permissions:",
-  "last_seen_timestamp": "Last seen",
-  "leave_chat_warning": "Are you sure you want to leave this conversation?",
-  "link_contact_us": "Contact Us",
-  "link_privacy_policy": "Privacy Policy",
-  "link_terms_of_service": "Terms of Service",
-  "login_prompt": "Login",
-  "menu_item_archive_topic": "Archive",
-  "menu_item_block": "Block",
-  "menu_item_clear_messages": "Clear messages",
-  "menu_item_clear_messages_for_all": "Clear for All",
-  "menu_item_delete": "Delete",
-  "menu_item_delete_for_all": "Delete for All",
-  "menu_item_delete_topic": "Delete",
-  "menu_item_edit_permissions": "Edit permissions",
-  "menu_item_info": "Info",
-  "menu_item_member_delete": "Remove",
-  "menu_item_mute": "Mute",
-  "menu_item_restore_topic": "Restore",
-  "menu_item_send_retry": "Retry",
-  "menu_item_unblock": "Unblock",
-  "menu_item_unmute": "Unmute",
-  "message_sending": "sending...",
-  "message_sending_failed": "failed",
-  "messages_not_readable": "no access to messages",
-  "messaging_disabled_prompt": "Messaging disabled",
-  "more_online_members": "+{overflow} more",
-  "new_message_prompt": "New message",
-  "new_password_placeholder": "Enter new password",
-  "no_connection": "No connection",
-  "no_contacts": "You have no contacts :-(",
-  "numeric_confirmation_code_prompt": "Numbers only",
-  "online_now": "online now",
-  "password_prompt": "Password",
-  "password_reset_email_sent": "An email has been sent to {email}. Follow the directions in the email to reset your password.",
-  "password_unchanged_prompt": "Unchanged",
-  "peers_messaging_disabled": "Peer's messaging is disabled.",
-  "permission_admin": "Approve ({val})",
-  "permission_delete": "Delete ({val})",
-  "permission_join": "Join ({val})",
-  "permission_owner": "Owner ({val})",
-  "permission_pres": "Get notified ({val})",
-  "permission_read": "Read ({val})",
-  "permission_share": "Share ({val})",
-  "permission_write": "Write ({val})",
-  "phone_dative": "phone",
-  "private_editing_placeholder": "Visible to you only",
-  "push_init_failed": "Failed to initialize push notifications",
-  "reconnect_countdown": "Disconnected. Reconnecting in {seconds}…",
-  "reconnect_now": "Try now",
-  "reload_update": "Reload",
-  "report_chat_warning": "Are you sure you want to block and report this conversation?",
-  "requested_permissions": "Requested",
-  "save_attachment": "save",
-  "search_for_contacts": "Use search to find contacts",
-  "search_no_results": "Search returned no results",
-  "search_placeholder": "List like email:alice@example.com, tel:17025550003...",
-  "sidepanel_title_acc_general": "General",
-  "sidepanel_title_acc_notifications": "Notifications",
-  "sidepanel_title_acc_security": "Security",
-  "sidepanel_title_acc_support": "Support",
-  "sidepanel_title_account_settings": "Account Settings",
-  "sidepanel_title_archive": "Archived Chats",
-  "sidepanel_title_blocked": "Blocked Chats",
-  "sidepanel_title_cred": "Confirm Credentials",
-  "sidepanel_title_login": "Sign In",
-  "sidepanel_title_newtpk": "Start New Chat",
-  "sidepanel_title_register": "Create Account",
-  "sidepanel_title_reset": "Reset Password",
-  "sidepanel_title_settings": "Settings",
-  "stay_logged_in": "Stay logged in",
-  "tabtitle_find_user": "find",
-  "tabtitle_group_by_id": "by id",
-  "tabtitle_new_group": "new group",
-  "tags_editor_no_tags": "Add some tags",
-  "tags_not_found": "No tags defined. Add some.",
-  "title_all_contacts": "All Contacts",
-  "title_group_members": "Group Members",
-  "title_info": "Info",
-  "title_manage_tags": "Manage",
-  "title_not_found": "Not found",
-  "title_permissions": "Permissions",
-  "title_tag_manager": "Tags (user discovery)",
-  "topic_block_warning": "Are you sure you want to block this conversation?",
-  "topic_delete": "Delete Conversation",
-  "topic_delete_warning": "Are you sure you want to delete this conversation? It cannot be undone.",
-  "topic_name_editing_placeholder": "Freeform name of the group",
-  "unnamed_topic": "Unnamed",
-  "update_available": "Update available.",
-  "upload_finishing": "finishing...",
-  "user_not_found": "Not found",
-  "validate_credential_action": "confirm"
+  "action_block_contact": {
+    "translation": "Block Contact",
+    "defaultMessage": "Block Contact",
+    "description": "Flat button [Block Contact]",
+    "missing": false,
+    "obsolete": false
+  },
+  "action_cancel": {
+    "translation": "cancel",
+    "defaultMessage": "cancel",
+    "description": "Call to action [cancel]",
+    "missing": false,
+    "obsolete": false
+  },
+  "action_clear_messages": {
+    "translation": "Clear Messages",
+    "defaultMessage": "Clear Messages",
+    "description": "Flat button [Clear Messages] (soft-delete messages)",
+    "missing": false,
+    "obsolete": false
+  },
+  "action_delete_messages": {
+    "translation": "Clear Messages for All",
+    "defaultMessage": "Clear Messages for All",
+    "description": "Flat button [Clear for All] (hard-delete all messages)",
+    "missing": false,
+    "obsolete": false
+  },
+  "action_leave_chat": {
+    "translation": "Leave Conversation",
+    "defaultMessage": "Leave Conversation",
+    "description": "Flat button [Leave Conversation]",
+    "missing": false,
+    "obsolete": false
+  },
+  "action_more": {
+    "translation": "More",
+    "defaultMessage": "More",
+    "description": "Action for showing more content",
+    "missing": false,
+    "obsolete": true
+  },
+  "action_report_chat": {
+    "translation": "Report Conversation",
+    "defaultMessage": "Report Conversation",
+    "description": "Flat button [Report Group]",
+    "missing": false,
+    "obsolete": false
+  },
+  "archived_contacts": {
+    "translation": "Archived contacts ({count})",
+    "defaultMessage": "Archived contacts ({count})",
+    "description": "Label for archived chats",
+    "missing": false,
+    "obsolete": false
+  },
+  "badge_danger": {
+    "translation": "Untrustworthy",
+    "defaultMessage": "Untrustworthy",
+    "description": "Suspicious or untrustworthy account or topic badge",
+    "missing": false,
+    "obsolete": false
+  },
+  "badge_owner": {
+    "translation": "owner",
+    "defaultMessage": "owner",
+    "description": "Badge for indicating the owner",
+    "missing": false,
+    "obsolete": false
+  },
+  "badge_staff": {
+    "translation": "Staff-managed",
+    "defaultMessage": "Staff-managed",
+    "description": "Explanation of a staff-managed account or topic badge",
+    "missing": false,
+    "obsolete": false
+  },
+  "badge_verified": {
+    "translation": "Verified/official",
+    "defaultMessage": "Verified/official",
+    "description": "Explanation of a verified account or topic badge",
+    "missing": false,
+    "obsolete": false
+  },
+  "badge_you": {
+    "translation": "you",
+    "defaultMessage": "you",
+    "description": "Badge for indicating the current user",
+    "missing": false,
+    "obsolete": false
+  },
+  "block_contact_warning": {
+    "translation": "Are you sure you want to block this contact?",
+    "defaultMessage": "Are you sure you want to block this contact?",
+    "description": "Alert dialog warning when blocking a contact.",
+    "missing": false,
+    "obsolete": false
+  },
+  "blocked_contacts_link": {
+    "translation": "Blocked contacts ({count})",
+    "defaultMessage": "Blocked contacts ({count})",
+    "description": "Blocked contacts link",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_add_another": {
+    "translation": "Add another",
+    "defaultMessage": "Add another",
+    "description": "Call to action [+ add another]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_add_members": {
+    "translation": "Add members",
+    "defaultMessage": "Add members",
+    "description": "Flat button [Add members] (to topic)",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_cancel": {
+    "translation": "Cancel",
+    "defaultMessage": "Cancel",
+    "description": "Button [Cancel]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_confirm": {
+    "translation": "Confirm",
+    "defaultMessage": "Confirm",
+    "description": "Button [Confirm]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_create": {
+    "translation": "Create",
+    "defaultMessage": "Create",
+    "description": "Button [Create]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_delete_account": {
+    "translation": "Delete account",
+    "defaultMessage": "Delete account",
+    "description": "Button [Delete account]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_edit": {
+    "translation": "Edit",
+    "defaultMessage": "Edit",
+    "description": "Call to action [Edit]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_logout": {
+    "translation": "Logout",
+    "defaultMessage": "Logout",
+    "description": "Button [Logout]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_ok": {
+    "translation": "OK",
+    "defaultMessage": "OK",
+    "description": "Button [OK]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_reset": {
+    "translation": "Reset",
+    "defaultMessage": "Reset",
+    "description": "Button [Reset]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_send_request": {
+    "translation": "Send request",
+    "defaultMessage": "Send request",
+    "description": "Button [Send request]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_sign_in": {
+    "translation": "Sign in",
+    "defaultMessage": "Sign in",
+    "description": "Button [Sign In]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_sign_up": {
+    "translation": "Sign up",
+    "defaultMessage": "Sign up",
+    "description": "Create account button [Sign Up]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_subscribe": {
+    "translation": "Subscribe",
+    "defaultMessage": "Subscribe",
+    "description": "Button [Subscribe]",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_update": {
+    "translation": "Update",
+    "defaultMessage": "Update",
+    "description": "Button [Update]",
+    "missing": false,
+    "obsolete": false
+  },
+  "cannot_initiate_file_upload": {
+    "translation": "Cannot initiate file upload.",
+    "defaultMessage": "Cannot initiate file upload.",
+    "description": "Generic error messagewhen attachment fails",
+    "missing": false,
+    "obsolete": false
+  },
+  "channel": {
+    "translation": "channel",
+    "defaultMessage": "channel",
+    "description": "Subtitle shown for channels in MessagesView instead of last seen",
+    "missing": false,
+    "obsolete": false
+  },
+  "channel_prompt": {
+    "translation": "This is a channel",
+    "defaultMessage": "This is a channel",
+    "description": "Checkbox label when creating a channel",
+    "missing": false,
+    "obsolete": false
+  },
+  "chat_invitation": {
+    "translation": "You are invited to start a new chat. What would you like to do?",
+    "defaultMessage": "You are invited to start a new chat. What would you like to do?",
+    "description": "New chat invitation message: [Accept] [Ignore] [Block].",
+    "missing": false,
+    "obsolete": false
+  },
+  "chat_invitation_accept": {
+    "translation": "Accept",
+    "defaultMessage": "Accept",
+    "description": "Action [Accept] for chat invitation.",
+    "missing": false,
+    "obsolete": false
+  },
+  "chat_invitation_block": {
+    "translation": "Block",
+    "defaultMessage": "Block",
+    "description": "Action [Block] for chat invitation.",
+    "missing": false,
+    "obsolete": false
+  },
+  "chat_invitation_ignore": {
+    "translation": "Ignore",
+    "defaultMessage": "Ignore",
+    "description": "Action [Ignore] for chat invitation.",
+    "missing": false,
+    "obsolete": false
+  },
+  "clear_messages_warning": {
+    "translation": "Are you sure you want to clear all messages? It cannot be undone.",
+    "defaultMessage": "Are you sure you want to clear all messages? It cannot be undone.",
+    "description": "Alert dialog warning when deleting all messages.",
+    "missing": false,
+    "obsolete": false
+  },
+  "code_doesnot_match": {
+    "translation": "Code does not match",
+    "defaultMessage": "Code does not match",
+    "description": "Error message when the credential validation code is incorrect.",
+    "missing": false,
+    "obsolete": false
+  },
+  "contacts_not_found": {
+    "translation": "You have no chats<br />¯∖_(ツ)_/¯",
+    "defaultMessage": "You have no chats<br />¯∖_(ツ)_/¯",
+    "description": "HTML message shown in ContactList when no contacts are found",
+    "missing": false,
+    "obsolete": false
+  },
+  "contacts_not_found_short": {
+    "translation": "No contacts match ''{query}''",
+    "defaultMessage": "No contacts match ''{query}''",
+    "description": "Shown in ContactsView when search returned no results",
+    "missing": false,
+    "obsolete": false
+  },
+  "credential_email_prompt": {
+    "translation": "Your registration email",
+    "defaultMessage": "Your registration email",
+    "description": "Placeholder for entering email",
+    "missing": false,
+    "obsolete": false
+  },
+  "delete_account": {
+    "translation": "Delete account",
+    "defaultMessage": "Delete account",
+    "description": "Title for delete account warning",
+    "missing": false,
+    "obsolete": false
+  },
+  "delete_account_warning": {
+    "translation": "Are you sure you want to delete your account? It cannot be undone.",
+    "defaultMessage": "Are you sure you want to delete your account? It cannot be undone.",
+    "description": "Warning message when deleting an account",
+    "missing": false,
+    "obsolete": false
+  },
+  "delete_messages_warning": {
+    "translation": "Are you sure you want to delete all messages for everyone? It cannot be undone.",
+    "defaultMessage": "Are you sure you want to delete all messages for everyone? It cannot be undone.",
+    "description": "Alert dialog warning when hard-deleting all messages.",
+    "missing": false,
+    "obsolete": false
+  },
+  "deleted_content": {
+    "translation": "content deleted",
+    "defaultMessage": "content deleted",
+    "description": "Shown when messages are deleted",
+    "missing": false,
+    "obsolete": false
+  },
+  "download_action": {
+    "translation": "download",
+    "defaultMessage": "download",
+    "description": "Call to action [download]",
+    "missing": false,
+    "obsolete": false
+  },
+  "drafty_attachment": {
+    "translation": "Attachment",
+    "defaultMessage": "Attachment",
+    "description": "Comment for attachment in drafty preview",
+    "missing": false,
+    "obsolete": false
+  },
+  "drafty_form": {
+    "translation": "Form:",
+    "defaultMessage": "Form:",
+    "description": "Comment for form in drafty preview",
+    "missing": false,
+    "obsolete": false
+  },
+  "drafty_image": {
+    "translation": "Picture",
+    "defaultMessage": "Picture",
+    "description": "Comment for embedded images in drafty preview",
+    "missing": false,
+    "obsolete": false
+  },
+  "email_dative": {
+    "translation": "email",
+    "defaultMessage": "email",
+    "description": "Dative case of 'email', i.e. 'email' in 'by email'",
+    "missing": false,
+    "obsolete": false
+  },
+  "email_prompt": {
+    "translation": "Email, e.g. jdoe@example.com",
+    "defaultMessage": "Email, e.g. jdoe@example.com",
+    "description": "Input placeholder for email entry",
+    "missing": false,
+    "obsolete": false
+  },
+  "enable_peers_messaging": {
+    "translation": "Enable",
+    "defaultMessage": "Enable",
+    "description": "Call to action to enable peer's messaging",
+    "missing": false,
+    "obsolete": false
+  },
+  "enter_confirmation_code_prompt": {
+    "translation": "Enter confirmation code sent to you by {method}:",
+    "defaultMessage": "Enter confirmation code sent to you by {method}:",
+    "description": "Request to enter confirmation code",
+    "missing": false,
+    "obsolete": false
+  },
+  "error_invalid_id": {
+    "translation": "Invalid ID",
+    "defaultMessage": "Invalid ID",
+    "description": "Error message",
+    "missing": false,
+    "obsolete": false
+  },
+  "file_attachment_too_large": {
+    "translation": "The file size {size} exceeds the {limit} limit.",
+    "defaultMessage": "The file size {size} exceeds the {limit} limit.",
+    "description": "Error message when attachment is too large",
+    "missing": false,
+    "obsolete": false
+  },
+  "forgot_password_link": {
+    "translation": "Forgot password?",
+    "defaultMessage": "Forgot password?",
+    "description": "Link to Reset password form",
+    "missing": false,
+    "obsolete": false
+  },
+  "full_name_prompt": {
+    "translation": "Full name, e.g. John Doe",
+    "defaultMessage": "Full name, e.g. John Doe",
+    "description": "Input placeholder for person's full name",
+    "missing": false,
+    "obsolete": false
+  },
+  "granted_permissions": {
+    "translation": "Granted",
+    "defaultMessage": "Granted",
+    "description": "Title for permissions",
+    "missing": false,
+    "obsolete": false
+  },
+  "group_has_no_members": {
+    "translation": "No members",
+    "defaultMessage": "No members",
+    "description": "Shown in place of group members",
+    "missing": false,
+    "obsolete": false
+  },
+  "group_user_id_prompt": {
+    "translation": "Group or User ID",
+    "defaultMessage": "Group or User ID",
+    "description": "Prompt for entering user or group ID",
+    "missing": false,
+    "obsolete": false
+  },
+  "image_caption_prompt": {
+    "translation": "Image caption",
+    "defaultMessage": "Image caption",
+    "description": "Prompt in SendMessage for attached image",
+    "missing": false,
+    "obsolete": false
+  },
+  "invalid_content": {
+    "translation": "invalid content",
+    "defaultMessage": "invalid content",
+    "description": "Shown when message is unreadable",
+    "missing": false,
+    "obsolete": false
+  },
+  "invalid_security_token": {
+    "translation": "Invalid security token",
+    "defaultMessage": "Invalid security token",
+    "description": "Error message when resetting password.",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_client": {
+    "translation": "Client:",
+    "defaultMessage": "Client:",
+    "description": "Label for a client version",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_content_type": {
+    "translation": "Content type:",
+    "defaultMessage": "Content type:",
+    "description": "Label for file content type (mime)",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_default_access": {
+    "translation": "Default access mode:",
+    "defaultMessage": "Default access mode:",
+    "description": "Section title",
+    "missing": false,
+    "obsolete": true
+  },
+  "label_default_access_mode": {
+    "translation": "Default access mode:",
+    "defaultMessage": "Default access mode:",
+    "description": "Label for default access mode",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_file_name": {
+    "translation": "File name:",
+    "defaultMessage": "File name:",
+    "description": "Label for a file name",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_group_members": {
+    "translation": "Group members:",
+    "defaultMessage": "Group members:",
+    "description": "Section title or label",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_incognito_mode": {
+    "translation": "Incognito mode:",
+    "defaultMessage": "Incognito mode:",
+    "description": "Label for incognito mode toggle",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_message_sound": {
+    "translation": "Message sound:",
+    "defaultMessage": "Message sound:",
+    "description": "Label for message sounds toggle",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_muting_topic": {
+    "translation": "Muted:",
+    "defaultMessage": "Muted:",
+    "description": "Label for Muting/unmuting the topic",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_other_user": {
+    "translation": "Other",
+    "defaultMessage": "Other",
+    "description": "Label for the other user when the user is unnamed",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_password": {
+    "translation": "Password",
+    "defaultMessage": "Password",
+    "description": "Label for password editing",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_permissions": {
+    "translation": "Permissions:",
+    "defaultMessage": "Permissions:",
+    "description": "Section title",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_private": {
+    "translation": "Private comment",
+    "defaultMessage": "Private comment",
+    "description": "Label for editing 'private'",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_push_notifications": {
+    "translation": "Notification alerts:",
+    "defaultMessage": "Notification alerts:",
+    "description": "Label for push notifications switch",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_push_notifications_disabled": {
+    "translation": "Notification alerts (requires HTTPS):",
+    "defaultMessage": "Notification alerts (requires HTTPS):",
+    "description": "Label for push notifications switch",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_reset_password": {
+    "translation": "Send a password reset email:",
+    "defaultMessage": "Send a password reset email:",
+    "description": "Label for password reset field",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_sdk": {
+    "translation": "SDK:",
+    "defaultMessage": "SDK:",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_server": {
+    "translation": "Server:",
+    "defaultMessage": "Server:",
+    "description": "Label for a server version",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_server_address": {
+    "translation": "Server address:",
+    "defaultMessage": "Server address:",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_server_to_use": {
+    "translation": "Server to use:",
+    "defaultMessage": "Server to use:",
+    "description": "Label for server selector in SettingsView",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_size": {
+    "translation": "Size:",
+    "defaultMessage": "Size:",
+    "description": "Label for file size",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_topic_name": {
+    "translation": "Name",
+    "defaultMessage": "Name",
+    "description": "Label for editing topic name",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_user_contacts": {
+    "translation": "Contacts:",
+    "defaultMessage": "Contacts:",
+    "description": "Label for user contacts",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_user_id": {
+    "translation": "ID:",
+    "defaultMessage": "ID:",
+    "description": "Label for user address (ID)",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_wire_transport": {
+    "translation": "Wire transport:",
+    "defaultMessage": "Wire transport:",
+    "description": "Label for wire transport selection in SettingsView",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_you": {
+    "translation": "You:",
+    "defaultMessage": "You:",
+    "description": "Label for the current user",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_your_name": {
+    "translation": "Your name",
+    "defaultMessage": "Your name",
+    "description": "Label for full name editing",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_your_permissions": {
+    "translation": "Your permissions:",
+    "defaultMessage": "Your permissions:",
+    "description": "Label for current user permissions",
+    "missing": false,
+    "obsolete": false
+  },
+  "last_seen_timestamp": {
+    "translation": "Last seen",
+    "defaultMessage": "Last seen",
+    "description": "Label for the timestamp of when the user or topic was last online",
+    "missing": false,
+    "obsolete": false
+  },
+  "leave_chat_warning": {
+    "translation": "Are you sure you want to leave this conversation?",
+    "defaultMessage": "Are you sure you want to leave this conversation?",
+    "description": "Alert dialog warning when unsubscribing from a chat.",
+    "missing": false,
+    "obsolete": false
+  },
+  "link_contact_us": {
+    "translation": "Contact Us",
+    "defaultMessage": "Contact Us",
+    "description": "Ancor text for contacting us by email",
+    "missing": false,
+    "obsolete": false
+  },
+  "link_privacy_policy": {
+    "translation": "Privacy Policy",
+    "defaultMessage": "Privacy Policy",
+    "description": "Ancor text for privacy policy link",
+    "missing": false,
+    "obsolete": false
+  },
+  "link_terms_of_service": {
+    "translation": "Terms of Service",
+    "defaultMessage": "Terms of Service",
+    "description": "Ancor text for terms of service link",
+    "missing": false,
+    "obsolete": false
+  },
+  "login_prompt": {
+    "translation": "Login",
+    "defaultMessage": "Login",
+    "description": "Placeholer for username/login",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_archive_topic": {
+    "translation": "Archive",
+    "defaultMessage": "Archive",
+    "description": "Move topic from the list of active chats to archive",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_block": {
+    "translation": "Block",
+    "defaultMessage": "Block",
+    "description": "Block topic or user",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_clear_messages": {
+    "translation": "Clear messages",
+    "defaultMessage": "Clear messages",
+    "description": "Delete all messages",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_clear_messages_for_all": {
+    "translation": "Clear for All",
+    "defaultMessage": "Clear for All",
+    "description": "Delete all message(s) for all members",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_delete": {
+    "translation": "Delete",
+    "defaultMessage": "Delete",
+    "description": "Delete selected messages",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_delete_for_all": {
+    "translation": "Delete for All",
+    "defaultMessage": "Delete for All",
+    "description": "Delete selected message(s) for all members",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_delete_topic": {
+    "translation": "Delete",
+    "defaultMessage": "Delete",
+    "description": "Delete entire topic",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_edit_permissions": {
+    "translation": "Edit permissions",
+    "defaultMessage": "Edit permissions",
+    "description": "Menu item [Edit permissions]",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_info": {
+    "translation": "Info",
+    "defaultMessage": "Info",
+    "description": "Show extended topic information",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_member_delete": {
+    "translation": "Remove",
+    "defaultMessage": "Remove",
+    "description": "Remove user from topic",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_mute": {
+    "translation": "Mute",
+    "defaultMessage": "Mute",
+    "description": "Turn off notifications",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_reply": {
+    "translation": "Reply",
+    "defaultMessage": "Reply",
+    "description": "Reply to message",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_restore_topic": {
+    "translation": "Restore",
+    "defaultMessage": "Restore",
+    "description": "Restore topic from archive",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_send_retry": {
+    "translation": "Retry",
+    "defaultMessage": "Retry",
+    "description": "Retry sending message",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_unblock": {
+    "translation": "Unblock",
+    "defaultMessage": "Unblock",
+    "description": "Unblock topic or user",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_unmute": {
+    "translation": "Unmute",
+    "defaultMessage": "Unmute",
+    "description": "Turn notifications on",
+    "missing": false,
+    "obsolete": false
+  },
+  "message_sending": {
+    "translation": "sending...",
+    "defaultMessage": "sending...",
+    "description": "Message being sent, in place of time stamp",
+    "missing": false,
+    "obsolete": false
+  },
+  "message_sending_failed": {
+    "translation": "failed",
+    "defaultMessage": "failed",
+    "description": "Failed to send message, in place of time stamp",
+    "missing": false,
+    "obsolete": false
+  },
+  "messages_not_readable": {
+    "translation": "no access to messages",
+    "defaultMessage": "no access to messages",
+    "description": "Message shown in topic without the read access",
+    "missing": false,
+    "obsolete": false
+  },
+  "messaging_disabled_prompt": {
+    "translation": "Messaging disabled",
+    "defaultMessage": "Messaging disabled",
+    "description": "Prompt in SendMessage in read-only topic",
+    "missing": false,
+    "obsolete": false
+  },
+  "more_online_members": {
+    "translation": "+{overflow} more",
+    "defaultMessage": "+{overflow} more",
+    "description": "Shown in MessagesView title bar when the number of online subscribers exceeds MAX_ONLINE_IN_TOPIC",
+    "missing": false,
+    "obsolete": false
+  },
+  "new_message_prompt": {
+    "translation": "New message",
+    "defaultMessage": "New message",
+    "description": "Prompt in send message field",
+    "missing": false,
+    "obsolete": false
+  },
+  "new_password_placeholder": {
+    "translation": "Enter new password",
+    "defaultMessage": "Enter new password",
+    "description": "Placeholder for entering new password",
+    "missing": false,
+    "obsolete": false
+  },
+  "no_connection": {
+    "translation": "No connection",
+    "defaultMessage": "No connection",
+    "description": "Warning that the user is offline.",
+    "missing": false,
+    "obsolete": false
+  },
+  "no_contacts": {
+    "translation": "You have no contacts :-(",
+    "defaultMessage": "You have no contacts :-(",
+    "description": "Shown in ContactsView when the user has no contacts",
+    "missing": false,
+    "obsolete": false
+  },
+  "numeric_confirmation_code_prompt": {
+    "translation": "Numbers only",
+    "defaultMessage": "Numbers only",
+    "description": "Prompt for numeric conformation code",
+    "missing": false,
+    "obsolete": false
+  },
+  "online_now": {
+    "translation": "online now",
+    "defaultMessage": "online now",
+    "description": "Indicator that the user or topic is currently online",
+    "missing": false,
+    "obsolete": false
+  },
+  "password_prompt": {
+    "translation": "Password",
+    "defaultMessage": "Password",
+    "description": "Placeholder/prompt for entering password",
+    "missing": false,
+    "obsolete": false
+  },
+  "password_unchanged_prompt": {
+    "translation": "Unchanged",
+    "defaultMessage": "Unchanged",
+    "description": "Message in editor while password is unchanged",
+    "missing": false,
+    "obsolete": false
+  },
+  "peers_messaging_disabled": {
+    "translation": "Peer's messaging is disabled.",
+    "defaultMessage": "Peer's messaging is disabled.",
+    "description": "Shown when the p2p peer's messaging is disabled",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_admin": {
+    "translation": "Approve ({val})",
+    "defaultMessage": "Approve ({val})",
+    "description": "Name of A permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_delete": {
+    "translation": "Delete ({val})",
+    "defaultMessage": "Delete ({val})",
+    "description": "Name of D permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_join": {
+    "translation": "Join ({val})",
+    "defaultMessage": "Join ({val})",
+    "description": "Name of J permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_owner": {
+    "translation": "Owner ({val})",
+    "defaultMessage": "Owner ({val})",
+    "description": "Name of O permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_pres": {
+    "translation": "Get notified ({val})",
+    "defaultMessage": "Get notified ({val})",
+    "description": "Name of P permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_read": {
+    "translation": "Read ({val})",
+    "defaultMessage": "Read ({val})",
+    "description": "Name of R permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_share": {
+    "translation": "Share ({val})",
+    "defaultMessage": "Share ({val})",
+    "description": "Name of S permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "permission_write": {
+    "translation": "Write ({val})",
+    "defaultMessage": "Write ({val})",
+    "description": "Name of W permission",
+    "missing": false,
+    "obsolete": false
+  },
+  "phone_dative": {
+    "translation": "phone",
+    "defaultMessage": "phone",
+    "description": "Dative case of 'phone', i.e. 'phone' in 'by phone'",
+    "missing": false,
+    "obsolete": false
+  },
+  "private_editing_placeholder": {
+    "translation": "Visible to you only",
+    "defaultMessage": "Visible to you only",
+    "description": "Placeholder for editing 'private'",
+    "missing": false,
+    "obsolete": false
+  },
+  "push_init_failed": {
+    "translation": "Failed to initialize push notifications",
+    "defaultMessage": "Failed to initialize push notifications",
+    "description": "Error message when push notifications have failed to initialize.",
+    "missing": false,
+    "obsolete": false
+  },
+  "reconnect_countdown": {
+    "translation": "Disconnected. Reconnecting in {seconds}…",
+    "defaultMessage": "Disconnected. Reconnecting in {seconds}…",
+    "description": "Message shown when an app update is available.",
+    "missing": false,
+    "obsolete": false
+  },
+  "reconnect_now": {
+    "translation": "Try now",
+    "defaultMessage": "Try now",
+    "description": "Prompt for reconnecting now",
+    "missing": false,
+    "obsolete": false
+  },
+  "reload_update": {
+    "translation": "Reload",
+    "defaultMessage": "Reload",
+    "description": "Call to action to reload application when update is available.",
+    "missing": false,
+    "obsolete": false
+  },
+  "report_chat_warning": {
+    "translation": "Are you sure you want to block and report this conversation?",
+    "defaultMessage": "Are you sure you want to block and report this conversation?",
+    "description": "Alert dialog warning when reporting a conversation for abuse",
+    "missing": false,
+    "obsolete": false
+  },
+  "requested_permissions": {
+    "translation": "Requested",
+    "defaultMessage": "Requested",
+    "description": "Title for permissions",
+    "missing": false,
+    "obsolete": false
+  },
+  "save_attachment": {
+    "translation": "save",
+    "defaultMessage": "save",
+    "description": "Call to save an attachment",
+    "missing": false,
+    "obsolete": false
+  },
+  "search_for_contacts": {
+    "translation": "Use search to find contacts",
+    "defaultMessage": "Use search to find contacts",
+    "description": "Text shown in contacts view when user entered no search query.",
+    "missing": false,
+    "obsolete": false
+  },
+  "search_no_results": {
+    "translation": "Search returned no results",
+    "defaultMessage": "Search returned no results",
+    "description": "Text shown in contacts view when query returned no results.",
+    "missing": false,
+    "obsolete": false
+  },
+  "search_placeholder": {
+    "translation": "List like email:alice@example.com, tel:17025550003...",
+    "defaultMessage": "List like email:alice@example.com, tel:17025550003...",
+    "description": "Placeholder in contacts search field",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_acc_general": {
+    "translation": "General",
+    "defaultMessage": "General",
+    "description": "Sidepanel title for TopicCommonView.",
+    "missing": false,
+    "obsolete": true
+  },
+  "sidepanel_title_acc_notifications": {
+    "translation": "Notifications",
+    "defaultMessage": "Notifications",
+    "description": "Sidepanel title for AccNotificationsView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_acc_security": {
+    "translation": "Security",
+    "defaultMessage": "Security",
+    "description": "Sidepanel title for AccSecurityView.",
+    "missing": false,
+    "obsolete": true
+  },
+  "sidepanel_title_acc_support": {
+    "translation": "Support",
+    "defaultMessage": "Support",
+    "description": "Sidepanel title for AccSupportView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_account_settings": {
+    "translation": "Account Settings",
+    "defaultMessage": "Account Settings",
+    "description": "Sidepanel title for AccountSettingsView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_archive": {
+    "translation": "Archived Chats",
+    "defaultMessage": "Archived Chats",
+    "description": "Sidepanel title for ContactsView-Archive.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_blocked": {
+    "translation": "Blocked Chats",
+    "defaultMessage": "Blocked Chats",
+    "description": "Sidepanel title for ContactsView-Blocked.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_cred": {
+    "translation": "Confirm Credentials",
+    "defaultMessage": "Confirm Credentials",
+    "description": "Sidepanel title for ValidationView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_crop": {
+    "translation": "Drag to Adjust",
+    "defaultMessage": "Drag to Adjust",
+    "description": "Sidepanel title for AvatarCropView.",
+    "missing": false,
+    "obsolete": true
+  },
+  "sidepanel_title_login": {
+    "translation": "Sign In",
+    "defaultMessage": "Sign In",
+    "description": "Sidepanel title for LoginView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_newtpk": {
+    "translation": "Start New Chat",
+    "defaultMessage": "Start New Chat",
+    "description": "Sidepanel title for NewTopicView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_register": {
+    "translation": "Create Account",
+    "defaultMessage": "Create Account",
+    "description": "Sidepanel title for CreateAccountView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_reset": {
+    "translation": "Reset Password",
+    "defaultMessage": "Reset Password",
+    "description": "Sidepanel title for PasswordResetView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "sidepanel_title_settings": {
+    "translation": "Settings",
+    "defaultMessage": "Settings",
+    "description": "Sidepanel title for SettingsView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "stay_logged_in": {
+    "translation": "Stay logged in",
+    "defaultMessage": "Stay logged in",
+    "description": "Label for a checkbox",
+    "missing": false,
+    "obsolete": false
+  },
+  "tabtitle_find_user": {
+    "translation": "find",
+    "defaultMessage": "find",
+    "description": "Tab title Find",
+    "missing": false,
+    "obsolete": false
+  },
+  "tabtitle_group_by_id": {
+    "translation": "by id",
+    "defaultMessage": "by id",
+    "description": "Tab title Find topic by ID",
+    "missing": false,
+    "obsolete": false
+  },
+  "tabtitle_new_group": {
+    "translation": "new group",
+    "defaultMessage": "new group",
+    "description": "Tab title New Group",
+    "missing": false,
+    "obsolete": false
+  },
+  "tags_editor_no_tags": {
+    "translation": "Add some tags",
+    "defaultMessage": "Add some tags",
+    "description": "Tag editor prompt when no tags are found.",
+    "missing": false,
+    "obsolete": false
+  },
+  "tags_not_found": {
+    "translation": "No tags defined. Add some.",
+    "defaultMessage": "No tags defined. Add some.",
+    "description": "",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_all_contacts": {
+    "translation": "All Contacts",
+    "defaultMessage": "All Contacts",
+    "description": "Section title [All Contacts]",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_group_members": {
+    "translation": "Group Members",
+    "defaultMessage": "Group Members",
+    "description": "Section title",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_info": {
+    "translation": "Info",
+    "defaultMessage": "Info",
+    "description": "Title for InfoView",
+    "missing": false,
+    "obsolete": true
+  },
+  "title_manage_tags": {
+    "translation": "Manage",
+    "defaultMessage": "Manage",
+    "description": "Section title for the list of tags",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_not_found": {
+    "translation": "Not found",
+    "defaultMessage": "Not found",
+    "description": "Title shown when topic is not found",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_permissions": {
+    "translation": "Permissions",
+    "defaultMessage": "Permissions",
+    "description": "Section title",
+    "missing": false,
+    "obsolete": false
+  },
+  "title_tag_manager": {
+    "translation": "Tags (search & discovery)",
+    "defaultMessage": "Tags (search & discovery)",
+    "description": "Section title for TagManager",
+    "missing": false,
+    "obsolete": false
+  },
+  "topic_block_warning": {
+    "translation": "Are you sure you want to block this conversation?",
+    "defaultMessage": "Are you sure you want to block this conversation?",
+    "description": "Alert warning when blocking a topic.",
+    "missing": false,
+    "obsolete": false
+  },
+  "topic_delete_warning": {
+    "translation": "Are you sure you want to delete this conversation?",
+    "defaultMessage": "Are you sure you want to delete this conversation? It cannot be undone.",
+    "description": "Alert warning when deleting entire topic",
+    "missing": false,
+    "obsolete": false
+  },
+  "topic_name_editing_placeholder": {
+    "translation": "Freeform name of the group",
+    "defaultMessage": "Freeform name of the group",
+    "description": "Prompt for entering topic name",
+    "missing": false,
+    "obsolete": false
+  },
+  "unnamed_topic": {
+    "translation": "Unnamed",
+    "defaultMessage": "Unnamed",
+    "description": "Title shown when the topic has no name",
+    "missing": false,
+    "obsolete": false
+  },
+  "update_available": {
+    "translation": "Update available.",
+    "defaultMessage": "Update available.",
+    "description": "Message shown when an app update is available.",
+    "missing": false,
+    "obsolete": false
+  },
+  "upload_finishing": {
+    "translation": "finishing...",
+    "defaultMessage": "finishing...",
+    "description": "Notification that upload is finishing",
+    "missing": false,
+    "obsolete": false
+  },
+  "user_not_found": {
+    "translation": "Not found",
+    "defaultMessage": "Not found",
+    "description": "In place of a user's full name when the user is not found.",
+    "missing": false,
+    "obsolete": false
+  },
+  "validate_credential_action": {
+    "translation": "confirm",
+    "defaultMessage": "confirm",
+    "description": "Validate credentail call to action",
+    "missing": false,
+    "obsolete": false
+  },
+  "description_editing_placeholder": {
+    "translation": "Optional description",
+    "defaultMessage": "Description (optional)",
+    "description": "Placeholder for editing topic description",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_description": {
+    "translation": "Description",
+    "defaultMessage": "Description",
+    "description": "Label for editing topic description",
+    "missing": false,
+    "obsolete": false
+  },
+  "button_security": {
+    "translation": "Security",
+    "defaultMessage": "Security",
+    "description": "Navigaton button for security panel.",
+    "missing": false,
+    "obsolete": false
+  },
+  "panel_title_acc_general": {
+    "translation": "General",
+    "defaultMessage": "General",
+    "description": "Title for TopicCommonView.",
+    "missing": false,
+    "obsolete": true
+  },
+  "panel_title_acc_security": {
+    "translation": "Security",
+    "defaultMessage": "Security",
+    "description": "Title for TopicSecirityView and AccSecurityView.",
+    "missing": false,
+    "obsolete": true
+  },
+  "panel_title_crop": {
+    "translation": "Drag to Adjust",
+    "defaultMessage": "Drag to Adjust",
+    "description": "Title for AvatarCropView.",
+    "missing": false,
+    "obsolete": false
+  },
+  "panel_title_general": {
+    "translation": "General",
+    "defaultMessage": "General",
+    "description": "Title for TopicCommon.",
+    "missing": false,
+    "obsolete": false
+  },
+  "panel_title_members": {
+    "translation": "Members",
+    "defaultMessage": "Members",
+    "description": "Title for managing group members view.",
+    "missing": false,
+    "obsolete": false
+  },
+  "panel_title_security": {
+    "translation": "Security",
+    "defaultMessage": "Security",
+    "description": "Title for TopicSecirity and AccSecurity.",
+    "missing": false,
+    "obsolete": false
+  },
+  "panel_title_info": {
+    "translation": "Info",
+    "defaultMessage": "Info",
+    "description": "Title for InfoView",
+    "missing": false,
+    "obsolete": false
+  },
+  "permissions_anonymous": {
+    "translation": "Anonymous",
+    "defaultMessage": "Anonymous",
+    "description": "Title for editing default anonymous permissions",
+    "missing": false,
+    "obsolete": false
+  },
+  "permissions_authenticated": {
+    "translation": "Authenticated",
+    "defaultMessage": "Authenticated",
+    "description": "Title for editing default authenticated permissions",
+    "missing": false,
+    "obsolete": false
+  },
+  "topic_delete": {
+    "translation": "Delete Conversation",
+    "defaultMessage": "Delete Conversation",
+    "description": "Alert title when deleting the topic.",
+    "missing": false,
+    "obsolete": false
+  },
+  "permissions_user": {
+    "translation": "User's Permissions",
+    "defaultMessage": "User's Permissions",
+    "description": "Title for editing user's permissions",
+    "missing": false,
+    "obsolete": false
+  },
+  "password_reset_email_sent": {
+    "translation": "An email has been sent to {email}. Follow the directions in the email to reset your password.",
+    "defaultMessage": "An email has been sent to {email}. Follow the directions in the email to reset your password.",
+    "description": "Notification that the email with password reset instructions has been sent",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_unarchive_topic": {
+    "translation": "Archived:",
+    "defaultMessage": "Archived:",
+    "description": "Label for unarchiving the topic",
+    "missing": false,
+    "obsolete": false
+  }
 }

@@ -4,11 +4,11 @@ import { defineMessages, injectIntl } from 'react-intl';
 import ErrorPanel from '../widgets/error-panel.jsx';
 import LoadSpinner from '../widgets/load-spinner.jsx';
 import SideNavbar from '../widgets/side-navbar.jsx';
+import TopicCommon from '../widgets/topic-common.jsx';
 
+import AccountSettingsView from './account-settings-view.jsx';
 import ContactsView from './contacts-view.jsx';
 import CreateAccountView from './create-account-view.jsx';
-import EditAccountView from './edit-account-view.jsx';
-import AccGeneralView from './acc-general-view.jsx';
 import AccNotificationsView from './acc-notifications-view.jsx';
 import AccSecurityView from './acc-security-view.jsx';
 import AccSupportView from './acc-support-view.jsx';
@@ -37,18 +37,23 @@ const messages = defineMessages({
   },
   edit: {
     id: 'sidepanel_title_account_settings',
-    description: 'Sidepanel title for EditAccountView.',
+    description: 'Sidepanel title for AccountSettingsView.',
     defaultMessage: 'Account Settings'
   },
   general: {
-    id: 'sidepanel_title_acc_general',
-    description: 'Sidepanel title for AccGeneralView.',
+    id: 'panel_title_general',
+    description: 'Title for TopicCommon.',
     defaultMessage: 'General'
   },
   security: {
-    id: 'sidepanel_title_acc_security',
-    description: 'Sidepanel title for AccSecurityView.',
+    id: 'panel_title_security',
+    description: 'Title for TopicSecirity and AccSecurity.',
     defaultMessage: 'Security'
+  },
+  crop: {
+    id: 'panel_title_crop',
+    description: 'Title for AvatarCropView.',
+    defaultMessage: 'Drag to Adjust'
   },
   notif: {
     id: 'sidepanel_title_acc_notifications',
@@ -95,20 +100,22 @@ class SidepanelView extends React.Component {
   }
 
   handleNewTopic() {
-    this.props.onBasicNavigate('newtpk');
+    this.props.onNavigate('newtpk');
   }
 
   render() {
     const {formatMessage} = this.props.intl;
     const view = this.props.state || (this.props.myUserId ? 'contacts' : 'login');
 
-    let title, avatar;
+    let title, avatar, badges;
     if (view == 'contacts') {
       title = this.props.title;
       avatar = this.props.avatar ? this.props.avatar : true;
+      badges = this.props.trustedBadges;
     } else {
       title = formatMessage(messages[view]);
       avatar = false;
+      badges = null;
     }
 
     let onCancel;
@@ -122,6 +129,8 @@ class SidepanelView extends React.Component {
           state={view}
           title={title}
           avatar={avatar}
+          tinode={this.props.tinode}
+          trustedBadges={badges}
           myUserId={this.props.myUserId}
           onSignUp={this.props.onSignUp}
           onSettings={this.props.onSettings}
@@ -147,6 +156,7 @@ class SidepanelView extends React.Component {
 
           view === 'register' ?
           <CreateAccountView
+            tinode={this.props.tinode}
             onCreateAccount={this.props.onCreateAccount}
             onCancel={this.props.onCancel}
             onError={this.props.onError} /> :
@@ -159,21 +169,22 @@ class SidepanelView extends React.Component {
             onUpdate={this.props.onGlobalSettings} /> :
 
           view === 'edit' ?
-          <EditAccountView
+          <AccountSettingsView
             tinode={this.props.tinode}
             myUserId={this.props.myUserId}
-            onBasicNavigate={this.props.onBasicNavigate} /> :
+            trustedBadges={this.props.trustedBadges}
+            onNavigate={this.props.onNavigate} /> :
 
-          view === 'general' ?
-          <AccGeneralView
+          (view === 'general' || view === 'crop') ?
+          <TopicCommon
+            topic="me"
             tinode={this.props.tinode}
             myUserId={this.props.myUserId}
-            onUpdateAccount={this.props.onUpdateAccount}
+            onUpdateTopicDesc={this.props.onUpdateAccountDesc}
             onUpdateTags={this.props.onUpdateAccountTags}
             onCredAdd={this.props.onCredAdd}
             onCredDelete={this.props.onCredDelete}
             onCredConfirm={this.props.onCredConfirm}
-            onBasicNavigate={this.props.onBasicNavigate}
             onError={this.props.onError} /> :
 
           view === 'notif' ?
@@ -189,7 +200,8 @@ class SidepanelView extends React.Component {
           view === 'security' ?
           <AccSecurityView
             tinode={this.props.tinode}
-            onUpdateAccount={this.props.onUpdateAccount}
+            onUpdateAccountDesc={this.props.onUpdateAccountDesc}
+            onUpdatePassword={this.props.onUpdatePassword}
             onLogout={this.props.onLogout}
             onDeleteAccount={this.props.onDeleteAccount}
             onShowAlert={this.props.onShowAlert}
@@ -233,7 +245,8 @@ class SidepanelView extends React.Component {
           view === 'reset' ?
           <PasswordResetView
             onRequest={this.props.onPasswordResetRequest}
-            onReset={this.props.onResetPassword} /> :
+            onReset={this.props.onResetPassword}
+            onCancel={this.props.onCancel} /> :
           null}
       </div>
     );

@@ -6,9 +6,9 @@ import { bytesToHumanSize } from './strformat.js'
 export const SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
 export const MIME_EXTENSIONS         = ['jpg',        'gif',       'png',       'svg',       'svg'];
 
-// Make a data: URL from public.photo
-export function makeImageDataUrl(photo) {
-  if (photo) {
+// Get an URL from a theCard photo: either create a data: URL or return reference URL.
+export function makeImageUrl(photo) {
+  if (photo && typeof photo == 'object') {
     if (photo.data && photo.type) {
       const mime = photo.type.startsWith('image/') ? photo.type : ('image/' + photo.type);
       return 'data:' + mime + ';base64,' + photo.data;
@@ -130,6 +130,39 @@ export function imageScaled(fileOrBlob, maxWidth, maxHeight, maxSize, forceSquar
   img.src = URL.createObjectURL(fileOrBlob);
 }
 
+// Scale and crop image according to specified dimensions.
+// The coordinates are in unscaled image pixels, i.e. cut the rectangle first then scale it.
+export function imageCrop(mime, objURL, left, top, width, height, scale, onSuccess, onError) {
+  const img = new Image();
+  img.crossOrigin = 'Anonymous';
+  img.onerror = function(err) {
+    onError("Image format unrecognized");
+  }
+  img.onload = async function() {
+    // Once the image is loaded, the URL is no longer needed.
+    URL.revokeObjectURL(img.src);
+
+    let canvas = document.createElement('canvas');
+    canvas.width = width * scale;
+    canvas.height = height * scale;
+    let ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(this, left, top, width, height, 0, 0, canvas.width, canvas.height);
+
+    mime = SUPPORTED_IMAGE_FORMATS.includes(mime) ? mime : 'image/jpeg';
+    // Generate blob to check size of the image.
+    let blob = await new Promise(resolve => canvas.toBlob(resolve, mime));
+    if (!blob) {
+      onError("Unsupported image format");
+      return;
+    }
+    // Allow GC.
+    canvas = null;
+    onSuccess(mime, blob, width, height);
+  };
+  img.src = objURL;
+}
+
 // Convert File to base64 string.
 export function fileToBase64(file, onSuccess) {
   const reader = new FileReader();
@@ -157,7 +190,7 @@ export function filePasted(event, onImageSuccess, onAttachmentSuccess, onError) 
     if (item.kind === 'file') {
       var file = item.getAsFile();
       if (!file) {
-        console.log("Failed to get file object from pasted file item", item.kind, item.type);
+        console.error("Failed to get file object from pasted file item", item.kind, item.type);
         continue;
       }
       if (file.type && file.type.split('/')[0] == 'image') {
@@ -205,9 +238,33 @@ export function base64ReEncode(str) {
     try {
       str = btoa(atob(str));
     } catch(err) {
-      console.log("Failed to base64 re-encode string.", err);
+      console.error("Failed to base64 re-encode string.", err);
       str = null;
     }
   }
   return str;
+}
+
+// Convert a base64 encoded string with the provided mime type into a Blob.
+export function base64ToBlob(str, mime) {
+  if (!str) {
+    return null;
+  }
+
+  try {
+    // Make blob.
+    const bin = atob(str);
+    const length = bin.length;
+    const buf = new ArrayBuffer(length);
+    const arr = new Uint8Array(buf);
+    for (let i = 0; i < length; i++) {
+      arr[i] = bin.charCodeAt(i);
+    }
+
+    return new Blob([buf], { type: mime });
+  } catch(err) {
+    console.log("Failed to convert base64 to blob: ", err);
+  }
+
+  return null;
 }

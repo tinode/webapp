@@ -5,103 +5,82 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import Tinode from 'tinode-sdk';
 
 import AvatarUpload from '../widgets/avatar-upload.jsx';
+import BadgeList from '../widgets/badge-list.jsx';
 import CheckBox from '../widgets/checkbox.jsx';
 import ContactList from '../widgets/contact-list.jsx';
 import ErrorPanel from '../widgets/error-panel.jsx';
 import GroupManager from '../widgets/group-manager.jsx';
-import InPlaceEdit from '../widgets/in-place-edit.jsx';
 import MenuCancel from '../widgets/menu-cancel.jsx';
-import MoreButton from '../widgets/more-button.jsx';
 import PermissionsEditor from '../widgets/permissions-editor.jsx';
-import TagManager from '../widgets/tag-manager.jsx';
+import TopicCommon from '../widgets/topic-common.jsx';
+import TopicSecurity from '../widgets/topic-security.jsx';
 
-import { MAX_TITLE_LENGTH, NO_ACCESS_MODE } from '../config.js';
+import { MAX_TITLE_LENGTH, MAX_TOPIC_DESCRIPTION_LENGTH, NO_ACCESS_MODE } from '../config.js';
 
-import { makeImageDataUrl } from '../lib/blob-helpers.js';
+import { makeImageUrl } from '../lib/blob-helpers.js';
 import { arrayEqual, theCard } from '../lib/utils.js';
 
 const messages = defineMessages({
-  requested: {
+  info: {
+    id: 'panel_title_info',
+    description: 'Title for InfoView',
+    defaultMessage: 'Info'
+  },
+  general: {
+    id: 'panel_title_general',
+    description: 'Title for TopicCommon.',
+    defaultMessage: 'General'
+  },
+  security: {
+    id: 'panel_title_security',
+    description: 'Title for TopicSecirity and AccSecurity.',
+    defaultMessage: 'Security'
+  },
+  members: {
+    id: 'panel_title_members',
+    description: 'Title for managing group members view.',
+    defaultMessage: 'Members'
+  },
+  crop: {
+    id: 'panel_title_crop',
+    description: 'Title for AvatarCropView.',
+    defaultMessage: 'Drag to Adjust'
+  },
+  perm_want: {
     id: 'requested_permissions',
     defaultMessage: 'Requested',
     description: 'Title for permissions'
   },
-  granted: {
+  perm_given: {
     id: 'granted_permissions',
     defaultMessage: 'Granted',
     description: 'Title for permissions'
+  },
+  perm_auth: {
+    id: 'permissions_authenticated',
+    defaultMessage: 'Authenticated',
+    description: 'Title for editing default authenticated permissions'
+  },
+  perm_anon: {
+    id: 'permissions_anonymous',
+    defaultMessage: 'Anonymous',
+    description: 'Title for editing default anonymous permissions'
+  },
+  perm_user: {
+    id: 'permissions_user',
+    defaultMessage: 'User\'s Permissions',
+    description: 'Title for editing user\'s permissions'
   },
   edit_permissions: {
     id: 'menu_item_edit_permissions',
     defaultMessage: 'Edit permissions',
     description: 'Menu item [Edit permissions]'
   },
-  other_user: {
-    id: 'label_other_user',
-    defaultMessage: 'Other',
-    description: 'Label for the other user when the user is unnamed'
-  },
-  clear_messages: {
-    id: 'action_clear_messages',
-    defaultMessage: 'Clear Messages',
-    description: 'Flat button [Clear Messages] (soft-delete messages)'
-  },
-  clear_messages_warning: {
-    id: 'clear_messages_warning',
-    defaultMessage: 'Are you sure you want to clear all messages? It cannot be undone.',
-    description: 'Alert dialog warning when deleting all messages.'
-  },
-  delete_messages: {
-    id: 'action_delete_messages',
-    defaultMessage: 'Clear Messages for All',
-    description: 'Flat button [Clear for All] (hard-delete all messages)'
-  },
-  delete_messages_warning: {
-    id: 'delete_messages_warning',
-    defaultMessage: 'Are you sure you want to delete all messages for everyone? It cannot be undone.',
-    description: 'Alert dialog warning when hard-deleting all messages.'
-  },
-  topic_delete: {
-    id: 'topic_delete',
-    defaultMessage: 'Delete Conversation',
-    description: 'Alert title when deleting the topic.'
-  },
-  topic_delete_warning: {
-    id: 'topic_delete_warning',
-    defaultMessage: 'Are you sure you want to delete this conversation? It cannot be undone.',
-    description: 'Alert warning when deleting entire topic'
-  },
-  leave_chat: {
-    id: 'action_leave_chat',
-    defaultMessage: 'Leave Conversation',
-    description: 'Flat button [Leave Conversation]'
-  },
-  leave_chat_warning: {
-    id: 'leave_chat_warning',
-    defaultMessage: 'Are you sure you want to leave this conversation?',
-    description: 'Alert dialog warning when unsubscribing from a chat.'
-  },
-  block_contact: {
-    id: 'action_block_contact',
-    defaultMessage: "Block Contact",
-    description: "Flat button [Block Contact]"
-  },
-  block_contact_warning: {
-    id: 'block_contact_warning',
-    defaultMessage: 'Are you sure you want to block this contact?',
-    description: 'Alert dialog warning when blocking a contact.'
-  },
-  report_chat: {
-    id: 'action_report_chat',
-    defaultMessage: 'Report Conversation',
-    description: 'Flat button [Report Group]'
-  },
-  report_chat_warning: {
-    id: 'report_chat_warning',
-    defaultMessage: 'Are you sure you want to block and report this conversation?',
-    description: 'Alert dialog warning when reporting a conversation for abuse'
-  },
 });
+
+function _clip(str, length) {
+  return str && str.substring(0, length);
+}
 
 class InfoView extends React.Component {
   constructor(props) {
@@ -118,6 +97,7 @@ class InfoView extends React.Component {
       groupTopic: undefined,
       channel: undefined,
       fullName: undefined,
+      description: undefined,
       avatar: null,
       private: null,
       selectedContact: null,
@@ -129,39 +109,26 @@ class InfoView extends React.Component {
       auth: null,
       anon: null,
       contactList: [],
-      tags: [],
-      showMemberPanel: false,
-      showPermissionEditorFor: undefined,
-      moreInfoExpanded: false,
+      trustedBadges: [],
       previousMetaDesc: undefined,
       previousSubsUpdated: undefined,
-      previousTagsUpdated: undefined
     };
 
     this.resetSubs = this.resetSubs.bind(this);
     this.resetDesc = this.resetDesc.bind(this);
+    this.resetTags = this.resetTags.bind(this);
     this.onMetaDesc = this.onMetaDesc.bind(this);
     this.onSubsUpdated = this.onSubsUpdated.bind(this);
-    this.onTagsUpdated = this.onTagsUpdated.bind(this);
-    this.handleFullNameUpdate = this.handleFullNameUpdate.bind(this);
-    this.handlePrivateUpdate = this.handlePrivateUpdate.bind(this);
     this.handleImageChanged = this.handleImageChanged.bind(this);
     this.handleMuted = this.handleMuted.bind(this);
+    this.handleUnarchive = this.handleUnarchive.bind(this);
     this.handlePermissionsChanged = this.handlePermissionsChanged.bind(this);
     this.handleLaunchPermissionsEditor = this.handleLaunchPermissionsEditor.bind(this);
-    this.handleHidePermissionsEditor = this.handleHidePermissionsEditor.bind(this);
     this.handleShowAddMembers = this.handleShowAddMembers.bind(this);
-    this.handleHideAddMembers = this.handleHideAddMembers.bind(this);
     this.handleMemberUpdateRequest = this.handleMemberUpdateRequest.bind(this);
-    this.handleDeleteTopic = this.handleDeleteTopic.bind(this);
-    this.handleDeleteMessages = this.handleDeleteMessages.bind(this);
-    this.handleLeave = this.handleLeave.bind(this);
-    this.handleBlock = this.handleBlock.bind(this);
-    this.handleReport = this.handleReport.bind(this);
     this.handleMemberSelected = this.handleMemberSelected.bind(this);
-    this.handleMoreInfo = this.handleMoreInfo.bind(this);
-    this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
     this.handleContextMenu = this.handleContextMenu.bind(this);
+    this.handleBackNavigate = this.handleBackNavigate.bind(this);
   }
 
   // No need to separately handle component mount.
@@ -177,19 +144,13 @@ class InfoView extends React.Component {
 
       this.previousSubsUpdated = topic.onSubsUpdated;
       topic.onSubsUpdated = this.onSubsUpdated;
-
-      if (topic.getType() == 'grp') {
-        this.previousTagsUpdated = topic.onTagsUpdated;
-        topic.onTagsUpdated = this.onTagsUpdated;
-      } else {
-        this.previousTagsUpdated = undefined;
-      }
     }
 
     if (this.state.topic != props.topic) {
       this.setState({topic: props.topic});
       this.resetDesc(topic, props);
       this.resetSubs(topic, props);
+      this.resetTags(topic);
     }
   }
 
@@ -201,7 +162,6 @@ class InfoView extends React.Component {
     this.setState({topic: null});
     topic.onMetaDesc = this.previousMetaDesc;
     topic.onSubsUpdated = this.previousSubsUpdated;
-    topic.onTagsUpdated = this.previousTagsUpdated;
   }
 
   resetSubs(topic, props) {
@@ -230,6 +190,15 @@ class InfoView extends React.Component {
     const defacs = topic.getDefaultAccess() || {};
     const acs = topic.getAccessMode();
 
+    const badges = [];
+    if (topic.trusted) {
+      for (const [key, val] of Object.entries(topic.trusted)) {
+        if (val) {
+          badges.push(key);
+        }
+      }
+    }
+
     this.setState({
       owner: acs && acs.isOwner(),
       admin: acs && acs.isAdmin(),
@@ -237,21 +206,30 @@ class InfoView extends React.Component {
       deleter: acs && acs.isDeleter(),
       muted: acs && acs.isMuted(),
 
-      fullName: topic.public ? topic.public.fn : undefined,
-      avatar: makeImageDataUrl(topic.public ? topic.public.photo : null),
-      private: topic.private ? topic.private.comment : null,
+      fullName: _clip(topic.public ? topic.public.fn : undefined, MAX_TITLE_LENGTH),
+      description: _clip(topic.public ? topic.public.note : undefined, MAX_TOPIC_DESCRIPTION_LENGTH),
+      avatar: makeImageUrl(topic.public ? topic.public.photo : null),
+      trustedBadges: badges,
+      private: _clip(topic.private ? topic.private.comment : null, MAX_TITLE_LENGTH),
+      archived: topic.isArchived(),
       address: topic.name,
       groupTopic: topic.isGroupType(),
-      channel: topic.isChannelType(),
-      showMemberPanel: false,
+      channel: topic.isChannelType() || topic.chan,
       access: acs ? acs.getMode() : undefined,
       modeGiven: acs ? acs.getGiven() : undefined,
       modeWant: acs ? acs.getWant() : undefined,
       auth: defacs.auth,
       anon: defacs.anon
     });
+  }
 
-    if (topic.getType() == 'grp' && acs && acs.isOwner()) {
+  resetTags(topic) {
+    if (topic.getType() != 'grp') {
+      return;
+    }
+
+    const acs = topic.getAccessMode();
+    if (acs && acs.isOwner()) {
       // Requesting tags: owner is editing the topic.
       topic.getMeta(topic.startMetaQuery().withTags().build());
     }
@@ -281,30 +259,6 @@ class InfoView extends React.Component {
     }
   }
 
-  onTagsUpdated(tags) {
-    this.setState({tags: tags});
-
-    if (this.previousTagsUpdated && this.previousTagsUpdated != this.onTagsUpdated) {
-      this.previousTagsUpdated();
-    }
-  }
-
-  handleFullNameUpdate(fn) {
-    fn = fn.trim().substring(0, MAX_TITLE_LENGTH);
-    if (this.state.fullName !== fn) {
-      this.setState({fullName: fn});
-      this.props.onTopicDescUpdate(this.props.topic, theCard(fn, null), null);
-    }
-  }
-
-  handlePrivateUpdate(comment) {
-    comment = comment.trim().substring(0, MAX_TITLE_LENGTH);
-    if (this.state.private !== comment) {
-      this.setState({private: comment});
-      this.props.onTopicDescUpdate(this.props.topic, null, comment || Tinode.DEL_CHAR);
-    }
-  }
-
   handleImageChanged(img) {
     this.setState({avatar: img});
     this.props.onTopicDescUpdate(this.props.topic, theCard(null, img || Tinode.DEL_CHAR), null);
@@ -315,13 +269,17 @@ class InfoView extends React.Component {
     this.props.onChangePermissions(this.props.topic, checked ? '-P' : '+P');
   }
 
-  handlePermissionsChanged(perm) {
-    switch (this.state.showPermissionEditorFor) {
+  handleUnarchive(ignored, ignored2) {
+    this.props.onTopicUnArchive(this.props.topic);
+  }
+
+  handlePermissionsChanged(which, perm) {
+    switch (which) {
       case 'auth':
-        this.props.onTopicDescUpdate(this.props.topic, null, null, {auth: perm});
+        this.props.onTopicDescUpdateRequest(this.props.topic, null, null, {auth: perm});
         break;
       case 'anon':
-        this.props.onTopicDescUpdate(this.props.topic, null, null, {anon: perm});
+        this.props.onTopicDescUpdateRequest(this.props.topic, null, null, {anon: perm});
         break;
       case 'mode':
       case 'want':
@@ -335,7 +293,7 @@ class InfoView extends React.Component {
         break;
     }
 
-    this.setState({showPermissionEditorFor: undefined});
+    this.handleBackNavigate();
   }
 
   handleLaunchPermissionsEditor(which, uid) {
@@ -359,15 +317,15 @@ class InfoView extends React.Component {
             toSkip += 'W';
           }
         }
-        titleEdit = formatMessage(messages.requested);
-        titleCompare = formatMessage(messages.granted);
+        titleEdit = formatMessage(messages.perm_want);
+        titleCompare = formatMessage(messages.perm_given);
         break;
       case 'given':
         toEdit = this.state.modeGiven2;
         toCompare = this.state.modeWant2;
         toSkip = this.state.groupTopic ? (this.state.owner ? '' : 'O') : 'ASDO';
-        titleEdit = formatMessage(messages.granted);
-        titleCompare = formatMessage(messages.requested);
+        titleEdit = formatMessage(messages.perm_given);
+        titleCompare = formatMessage(messages.perm_want);
         break;
       case 'auth':
         toEdit = this.state.auth;
@@ -389,8 +347,8 @@ class InfoView extends React.Component {
         toEdit = user.acs.getGiven();
         toCompare = user.acs.getWant();
         toSkip = this.state.owner ? '' : 'O';
-        titleEdit = formatMessage(messages.granted);
-        titleCompare = formatMessage(messages.requested);
+        titleEdit = formatMessage(messages.perm_given);
+        titleCompare = formatMessage(messages.perm_want);
         if (user.public) {
           userTitle = user.public.fn;
           userAvatar = user.public.photo;
@@ -398,11 +356,10 @@ class InfoView extends React.Component {
         break;
       }
       default:
-        console.log("Unknown permission editing mode '" + which + "'");
-        break;
+        console.error("Unknown permission editing mode '" + which + "'");
+        return;
     }
     this.setState({
-      showPermissionEditorFor: which,
       userPermissionsEdited: uid,
       userPermissionsTitle: userTitle,
       userPermissionsAvatar: userAvatar,
@@ -412,109 +369,41 @@ class InfoView extends React.Component {
       immutablePermissionsTitle: titleCompare,
       editedPermissionsSkipped: toSkip,
     });
-  }
-
-  handleHidePermissionsEditor() {
-    this.setState({showPermissionEditorFor: undefined});
+    this.props.onNavigate(`perm/${which}`);
   }
 
   handleShowAddMembers(e) {
     e.preventDefault();
     this.props.onInitFind();
-    this.setState({showMemberPanel: true});
-  }
-
-  handleHideAddMembers() {
-    this.setState({showMemberPanel: false});
+    this.props.onNavigate('members');
   }
 
   handleMemberUpdateRequest(members, added, removed) {
     this.props.onMemberUpdateRequest(this.props.topic, added, removed);
-    this.setState({showMemberPanel: false});
-  }
-
-  handleDeleteTopic(e) {
-    e.preventDefault();
-    const {formatMessage} = this.props.intl;
-    this.props.onShowAlert(
-      formatMessage(messages.topic_delete), // title
-      formatMessage(messages.topic_delete_warning), // content
-      (() => { this.props.onDeleteTopic(this.props.topic); }), // onConfirm
-      null, // "OK"
-      true, // Show Reject button
-      null  // "Cancel"
-    );
-  }
-
-  handleDeleteMessages(e) {
-    e.preventDefault();
-    const {formatMessage} = this.props.intl;
-    this.props.onShowAlert(
-      formatMessage(this.state.deleter ? messages.delete_messages : messages.clear_messages), // title
-      formatMessage(this.state.deleter ? messages.delete_messages_warning : messages.clear_messages_warning), // content
-      (() => { this.props.onDeleteMessages(this.props.topic); }), // onConfirm
-      null, // "OK"
-      true, // Show Reject button
-      null  // "Cancel"
-    );
-  }
-
-  handleLeave(e) {
-    e.preventDefault();
-    const {formatMessage} = this.props.intl;
-    this.props.onShowAlert(
-      formatMessage(messages.leave_chat), // title
-      formatMessage(messages.leave_chat_warning), // content
-      (() => { this.props.onLeaveTopic(this.props.topic); }), // onConfirm
-      null, // "OK"
-      true, // Show Reject button
-      null  // "Cancel"
-    );
-  }
-
-  handleBlock(e) {
-    e.preventDefault();
-    const {formatMessage} = this.props.intl;
-    this.props.onShowAlert(
-      formatMessage(messages.block_contact), // title
-      formatMessage(messages.block_contact_warning), // content
-      (() => { this.props.onBlockTopic(this.props.topic); }), // onConfirm
-      null, // "OK"
-      true, // Show Reject button
-      null  // "Cancel"
-    );
-  }
-
-  handleReport(e) {
-    e.preventDefault();
-    const {formatMessage} = this.props.intl;
-    this.props.onShowAlert(
-      formatMessage(messages.report_chat), // title
-      formatMessage(messages.report_chat_warning), // content
-      (() => { this.props.onReportTopic(this.props.topic); }), // onConfirm
-      null, // "OK"
-      true, // Show Reject button
-      null  // "Cancel"
-    );
+    this.props.onNavigate('info');
   }
 
   handleMemberSelected(uid) {
     this.setState({selectedContact: uid});
   }
 
-  handleMoreInfo(open) {
-    this.setState({moreInfoExpanded: open});
-  }
-
-  handleTagsUpdated(tags) {
-    if (!arrayEqual(this.state.tags.slice(0), tags.slice(0))) {
-      this.props.onTopicTagsUpdate(this.props.topic, tags);
+  handleBackNavigate() {
+    const args = (this.props.panel || 'info').split('/');
+    if (args[0] == 'info') {
+      this.props.onNavigate(null);
+    } else if (args[0] == 'perm') {
+      if (args[1] == 'user') {
+        this.props.onNavigate('info');
+      } else {
+        this.props.onNavigate('security');
+      }
+    } else {
+      this.props.onNavigate('info');
     }
   }
 
   handleContextMenu(params) {
     const {formatMessage} = this.props.intl;
-    const instance = this;
     const topic = this.props.tinode.getTopic(this.props.topic);
     if (!topic) {
       return;
@@ -524,14 +413,19 @@ class InfoView extends React.Component {
       return;
     }
 
+    const isMe = this.props.tinode.isMe(params.topicName);
     const menuItems = [
-      {title: formatMessage(messages.edit_permissions), handler: function() {
-        instance.handleLaunchPermissionsEditor('user', params.topicName);
-      }},
-      'member_delete',
-      user.acs.isMuted() ? 'member_unmute' : 'member_mute',
-      user.acs.isJoiner() ? 'member_block' : 'member_unblock'
+      {title: formatMessage(messages.edit_permissions), handler: () => {
+        this.handleLaunchPermissionsEditor(isMe ? 'want' : 'user', params.topicName);
+      }}
     ];
+    if (!isMe) {
+      menuItems.push('member_delete');
+    }
+    menuItems.push(user.acs.isMuted() ? 'member_unmute' : 'member_mute');
+    if (!isMe) {
+      menuItems.push(user.acs.isJoiner() ? 'member_block' : 'member_unblock');
+    }
     this.props.showContextMenu({
       topicName: this.props.topic,
       x: params.x,
@@ -540,16 +434,20 @@ class InfoView extends React.Component {
   }
 
   render() {
+    const args = (this.props.panel || 'info').split('/');
+    const view = args[0];
+    args.shift();
+
     const {formatMessage} = this.props.intl;
+    const panelTitle = formatMessage((view == 'perm' ? messages['perm_' + args[0]] : messages[view])
+      || messages['info']);
 
     return (
       <div id="info-view">
         <div className="caption-panel" id="info-caption-panel">
-          <div className="panel-title" id="info-title">
-            <FormattedMessage id="title_info" defaultMessage="Info" description="Title for InfoView" />
-          </div>
+          <div className="panel-title" id="info-title">{panelTitle}</div>
           <div>
-            <MenuCancel onCancel={this.props.onCancel} />
+            <MenuCancel onCancel={this.handleBackNavigate} />
           </div>
         </div>
         {this.props.displayMobile ?
@@ -557,18 +455,20 @@ class InfoView extends React.Component {
             level={this.props.errorLevel}
             text={this.props.errorText}
             onClearError={this.props.onError} /> : null}
-        {this.state.showMemberPanel ?
+        {view == 'members' ?
           <GroupManager
+            tinode={this.props.tinode}
             members={this.state.contactList}
             requiredMember={this.props.myUserId}
             keepInitialMembers={!this.state.admin && !this.state.owner}
             myUserId={this.props.myUserId}
             contacts={this.props.searchableContacts}
-            onCancel={this.handleHideAddMembers}
+            onCancel={this.handleBackNavigate}
             onSubmit={this.handleMemberUpdateRequest} />
           :
-        this.state.showPermissionEditorFor ?
+        view == 'perm' && args.length > 0 ?
           <PermissionsEditor
+            tinode={this.props.tinode}
             mode={this.state.editedPermissions}
             compare={this.state.immutablePermissions}
             skip={this.state.editedPermissionsSkipped}
@@ -577,226 +477,153 @@ class InfoView extends React.Component {
             userTitle={this.state.userPermissionsTitle}
             item={this.state.userPermissionsEdited}
             userAvatar={this.state.userPermissionsAvatar}
-            onSubmit={this.handlePermissionsChanged}
-            onCancel={this.handleHidePermissionsEditor}
-            />
+            onSubmit={(mode) => this.handlePermissionsChanged(args[0], mode)}
+            onCancel={this.handleBackNavigate} />
+          :
+        view == 'general' ?
+          <TopicCommon
+            tinode={this.props.tinode}
+            topic={this.props.topic}
+            onCredAdd={this.props.onCredAdd}
+            onTopicTagsUpdateRequest={this.props.onTopicTagsUpdateRequest}
+            onCredConfirm={this.props.onCredConfirm}
+            onCredDelete={this.props.onCredDelete}
+            onUpdateTopicDesc={this.props.onTopicDescUpdateRequest}
+            onError={this.props.onError} />
+          :
+        view == 'security' ?
+          <TopicSecurity
+            topic={this.props.topic}
+            owner={this.state.owner}
+            admin={this.state.admin}
+            sharer={this.state.sharer}
+            deleter={this.state.deleter}
+            muted={this.state.muted}
+
+            groupTopic={this.state.groupTopic}
+            channel={this.state.channel}
+            access={this.state.access}
+            modeGiven={this.state.modeGiven}
+            modeWant={this.state.modeWant}
+            modeGiven2={this.state.modeGiven2}
+            modeWant2={this.state.modeWant2}
+            auth={this.state.auth}
+            anon={this.state.anon}
+
+            onShowAlert={this.props.onShowAlert}
+            onDeleteMessages={this.props.onDeleteMessages}
+            onLeaveTopic={this.props.onLeaveTopic}
+            onBlockTopic={this.props.onBlockTopic}
+            onReportTopic={this.props.onReportTopic}
+            onLaunchPermissionsEditor={this.handleLaunchPermissionsEditor}
+            onNavigate={this.props.onNavigate} />
           :
           <div id="info-view-content" className="scrollable-panel">
-            <div className="panel-form-row">
-              <div className="panel-form-column">
+            <div className="panel-form-column">
+              <a href="#" className="flat-button float-right" onClick={(e) => {e.preventDefault(); this.props.onNavigate('general');}}>
+                <i className="material-icons">edit</i>&nbsp;
+                <FormattedMessage id="button_edit" defaultMessage="Edit" description="Call to action [Edit]" />
+              </a>
+              <center>
+                <AvatarUpload
+                  tinode={this.props.tinode}
+                  avatar={this.state.avatar}
+                  readOnly={true}
+                  uid={this.props.topic}
+                  title={this.state.fullName} />
+              </center>
+              <div className="group">
                 <div><label className="small">
                   <FormattedMessage id="label_topic_name" defaultMessage="Name"
                     description="Label for editing topic name" />
                 </label></div>
-                <div><InPlaceEdit
-                    placeholder={this.state.groupTopic ? "Group name" : <i>Unknown</i>}
-                    readOnly={!this.state.owner}
-                    value={this.state.fullName}
-                    required={true}
-                    onFinished={this.handleFullNameUpdate} /></div>
-                <div>
-                  <label className="small">
+                <div className="large ellipsized">{this.state.fullName}
+                {this.state.channel ? <img src="/img/channel.png" className="channel" alt="channel" /> : null}</div>
+              </div>
+              {this.state.private ?
+                <div className="group">
+                  <div><label className="small">
                     <FormattedMessage id="label_private" defaultMessage="Private comment"
                       description="Label for editing 'private'" />
-                  </label>
+                  </label></div>
+                  <div className="large ellipsized">{this.state.private}</div>
                 </div>
-                <div>
-                  <FormattedMessage id="private_editing_placeholder"
-                    defaultMessage="Visible to you only"
-                    description="Placeholder for editing 'private'">{
-                    (private_placeholder) => <InPlaceEdit
-                      placeholder={private_placeholder}
-                      value={this.state.private}
-                      onFinished={this.handlePrivateUpdate} />
-                  }</FormattedMessage>
-                </div>
+                : null
+              }
+              <div className="group">
+                <label className="small"><FormattedMessage id="label_user_id" defaultMessage="ID:"
+                  description="Label for user address (ID)" /></label>&nbsp;
+                <tt>{this.state.address}</tt>
               </div>
-              <AvatarUpload
-                avatar={this.state.avatar}
-                readOnly={!this.state.owner}
-                uid={this.props.topic}
-                title={this.state.fullName}
-                onImageChanged={this.handleImageChanged}
-                onError={this.props.onError} />
+              <div className="group">
+                <BadgeList trustedBadges={this.state.trustedBadges} />
+              </div>
+              {this.state.description ?
+                <div className="group">
+                  <label className="small">
+                    <FormattedMessage id="label_description" defaultMessage="Description"
+                      description="Label for editing topic description" />
+                  </label>
+                  <div>{this.state.description}</div>
+                </div> : null}
             </div>
             <div className="hr" />
-            <div className="panel-form-column">
+            <div className="panel-form-row">
+              <label>
+                <FormattedMessage id="label_muting_topic" defaultMessage="Muted:"
+                  description="Label for Muting/unmuting the topic" />
+              </label>
+              <CheckBox name="P" checked={this.state.muted} onChange={this.handleMuted} />
+            </div>
+            {this.state.archived ?
               <div className="panel-form-row">
                 <label>
-                  <FormattedMessage id="label_muting_topic" defaultMessage="Muted:"
-                    description="Label for Muting/unmuting the topic" />
+                  <FormattedMessage id="label_unarchive_topic" defaultMessage="Archived:"
+                    description="Label for unarchiving the topic" />
                 </label>
-                <CheckBox name="P" checked={this.state.muted}
-                  onChange={this.handleMuted} />
+                <CheckBox name="archived" checked={true} onChange={this.handleUnarchive} />
               </div>
-              <FormattedMessage id="action_more" defaultMessage="More"
-                description="Action for showing more content">{
-                (more) => <MoreButton
-                  title={more}
-                  open={this.state.moreInfoExpanded}
-                  onToggle={this.handleMoreInfo} />
-              }</FormattedMessage>
-              {this.state.moreInfoExpanded ?
-                <div className="panel-form-column">
-                  <div className="panel-form-row">
-                    <label><FormattedMessage id="label_user_id" defaultMessage="ID:"
-                      description="Label for user address (ID)" /></label>
-                    <tt>{this.state.address}</tt>
-                  </div>
-                  {this.state.groupTopic ?
-                    <div className="panel-form-row">
-                      <label>
-                        <FormattedMessage id="label_your_permissions" defaultMessage="Your permissions:"
-                          description="Label for current user permissions" />
-                      </label>
-                      <tt className="clickable"
-                        onClick={this.handleLaunchPermissionsEditor.bind(this, 'want')}>
-                        {this.state.access}
-                      </tt>
-                    </div>
-                    :
-                    <div>
-                      <div>
-                        <label className="small">
-                          <FormattedMessage id="label_permissions" defaultMessage="Permissions:"
-                            description="Section title" />
-                        </label>
-                      </div>
-                      <div className="quoted">
-                        <div>
-                          <FormattedMessage id="label_you" defaultMessage="You:"
-                            description="Label for the current user" /> &nbsp;<tt className="clickable"
-                          onClick={this.handleLaunchPermissionsEditor.bind(this, 'want')}>
-                          {this.state.access}
-                        </tt></div>
-                        <div>{this.state.fullName ? this.state.fullName : formatMessage(messages.other_user)}:
-                          &nbsp;<tt className="clickable" onClick={this.handleLaunchPermissionsEditor.bind(this, 'given')}>
-                          {this.state.modeGiven2}
-                          </tt>
-                        </div>
-                      </div>
-                    </div>
-                  }
-                  {this.state.sharer && (this.state.auth || this.state.anon) ?
-                  <div>
-                    <div>
-                      <label className="small">
-                        <FormattedMessage id="label_default_access" defaultMessage="Default access mode:"
-                          description="Section title" />
-                      </label>
-                    </div>
-                    <div className="quoted">
-                      <div>Auth: {this.state.admin ?
-                        <tt className="clickable"
-                          onClick={this.handleLaunchPermissionsEditor.bind(this, 'auth')}>
-                          {this.state.auth}
-                        </tt>
-                        :
-                        <tt>{this.state.auth}</tt>
-                      }
-                      </div>
-                      <div>Anon: {this.state.admin ?
-                        <tt className="clickable"
-                          onClick={this.handleLaunchPermissionsEditor.bind(this, 'anon')}>
-                          {this.state.anon}
-                        </tt>
-                        :
-                        <tt>{this.state.anon}</tt>
-                      }
-                      </div>
-                    </div>
-                  </div>
-                  :
-                  null
-                }
-                </div>
-              :
-              null
-              }
-            </div>
-            <div className="hr" />
-            {this.state.owner ?
-              <>
-                <FormattedMessage id="title_tag_manager" defaultMessage="Tags (user discovery)"
-                  description="Section title for TagManager">{
-                  (tags) => <TagManager
-                    title={tags}
-                    tags={this.state.tags}
-                    activated={false}
-                    tinode={this.props.tinode}
-                    onSubmit={this.handleTagsUpdated} />
-                }</FormattedMessage>
-                <div className="hr" />
-              </>
               :
               null
             }
-            <div className="panel-form-column">
-              {!this.state.channel ?
-                <a href="#" className="flat-button" onClick={this.handleDeleteMessages}>
-                  <i className="material-icons">delete_outline</i> &nbsp;{
-                    formatMessage(this.state.deleter ? messages.delete_messages : messages.clear_messages)
-                  }
-                </a>
-                :
-                null
-              }
-              {this.state.owner ?
-                <a href="#" className="danger flat-button" onClick={this.handleDeleteTopic}>
-                  <i className="material-icons">delete</i> &nbsp;{formatMessage(messages.topic_delete)}
-                </a>
-                :
-                <a href="#" className="danger flat-button" onClick={this.handleLeave}>
-                  <i className="material-icons">exit_to_app</i> &nbsp;{formatMessage(messages.leave_chat)}
-                </a>
-              }
-              {!this.state.groupTopic ?
-                <a href="#" className="danger flat-button" onClick={this.handleBlock}>
-                  <i className="material-icons">block</i> &nbsp;{formatMessage(messages.block_contact)}
-                </a>
-                :
-                null
-              }
-              {!this.state.owner ?
-                <a href="#" className="danger flat-button" onClick={this.handleReport}>
-                  <i className="material-icons">report</i> &nbsp;{formatMessage(messages.report_chat)}
-                </a>
-                :
-                null
-              }
+            <div className="hr" />
+            <div className="panel-form-row">
+              <a href="#" className="flat-button" onClick={(e) => {e.preventDefault(); this.props.onNavigate('security');}}>
+                <i className="material-icons">security</i>&nbsp;<FormattedMessage id="button_security"
+                  defaultMessage="Security" description="Navigaton button for security panel." />
+              </a>
             </div>
             {this.state.groupTopic && this.state.sharer ?
               <>
                 <div className="hr" />
-                <div className="panel-form-column">
-                  <div className="panel-form-row">
-                    <label className="small">
-                      <FormattedMessage id="label_group_members" defaultMessage="Group members:"
-                        description="Section title or label" />
-                    </label>
-                  </div>
-                  <div className="panel-form-row">
-                    <a href="#" className="flat-button" onClick={this.handleShowAddMembers}>
-                      <i className="material-icons">person_add</i> &nbsp;<FormattedMessage id="button_add_members"
-                        defaultMessage="Add members" description="Flat button [Add members] (to topic)" />
-                    </a>
-                  </div>
-                  <FormattedMessage id="group_has_no_members" defaultMessage="No members"
-                    description="Shown in place of group members">{
-                    (no_members) => <ContactList
-                      contacts={this.state.contactList}
-                      myUserId={this.props.myUserId}
-                      emptyListMessage={no_members}
-                      topicSelected={this.state.selectedContact}
-                      showOnline={false}
-                      showUnread={false}
-                      showMode={true}
-                      noScroll={true}
-                      onTopicSelected={this.handleMemberSelected}
-                      showContextMenu={this.state.admin ? this.handleContextMenu : false}
-                    />
-                  }</FormattedMessage>
+                <div className="panel-form-row">
+                  <label className="small">
+                    <FormattedMessage id="label_group_members" defaultMessage="Group members:"
+                      description="Section title or label" />
+                  </label>
                 </div>
+                <div className="panel-form-row">
+                  <a href="#" className="flat-button" onClick={this.handleShowAddMembers}>
+                    <i className="material-icons">person_add</i> &nbsp;<FormattedMessage id="button_add_members"
+                      defaultMessage="Add members" description="Flat button [Add members] (to topic)" />
+                  </a>
+                </div>
+                <FormattedMessage id="group_has_no_members" defaultMessage="No members"
+                  description="Shown in place of group members">{
+                  (no_members) => <ContactList
+                    tinode={this.props.tinode}
+                    contacts={this.state.contactList}
+                    myUserId={this.props.myUserId}
+                    emptyListMessage={no_members}
+                    topicSelected={this.state.selectedContact}
+                    showOnline={false}
+                    showUnread={false}
+                    showMode={true}
+                    noScroll={true}
+                    onTopicSelected={this.handleMemberSelected}
+                    showContextMenu={this.state.admin ? this.handleContextMenu : false}
+                  />
+                }</FormattedMessage>
               </>
               :
               null
