@@ -54,22 +54,6 @@ const messages = defineMessages({
     defaultMessage: 'The file size {size} exceeds the {limit} limit.',
     description: 'Error message when attachment is too large'
   },
-
-  drafty_form: {
-    id: 'drafty_form',
-    defaultMessage: 'Form: ',
-    description: 'Comment for form in drafty preview'
-  },
-  drafty_attachment: {
-    id: 'drafty_attachment',
-    defaultMessage: 'Attachment',
-    description: 'Comment for attachment in drafty preview'
-  },
-  drafty_image: {
-    id: 'drafty_image',
-    defaultMessage: 'Picture',
-    description: 'Comment for embedded images in drafty preview'
-  },
   invalid_content: {
     id: 'invalid_content',
     defaultMessage: 'invalid content',

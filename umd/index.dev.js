@@ -3155,27 +3155,6 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
       "value": " limit."
     }]
   },
-  drafty_form: {
-    id: "drafty_form",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Form:"
-    }]
-  },
-  drafty_attachment: {
-    id: "drafty_attachment",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Attachment"
-    }]
-  },
-  drafty_image: {
-    id: "drafty_image",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Picture"
-    }]
-  },
   invalid_content: {
     id: "invalid_content",
     defaultMessage: [{
