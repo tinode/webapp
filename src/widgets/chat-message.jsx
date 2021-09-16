@@ -26,14 +26,13 @@ class BaseChatMessage extends React.PureComponent {
     this.handleFormButtonClick = this.handleFormButtonClick.bind(this);
     this.handleContextClick = this.handleContextClick.bind(this);
     this.handleCancelUpload = this.handleCancelUpload.bind(this);
-
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
 
     this.formatterContext = {
       getFormatter: (tp) => { return tp == 'QQ' ? quoteFormatter : null; },
-      formatMessage: props.intl.formatMessage,
+      formatMessage: props.intl.formatMessage.bind(props.intl),
       viewportWidth: props.viewportWidth,
-      authorizeURL: props.tinode.authorizeURL,
+      authorizeURL: props.tinode.authorizeURL.bind(props.tinode),
       onImagePreview: this.handleImagePreview,
       onFormButtonClick: this.handleFormButtonClick,
       onQuoteClick: this.handleQuoteClick

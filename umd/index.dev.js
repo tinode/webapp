@@ -7638,9 +7638,9 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       getFormatter: tp => {
         return tp == 'QQ' ? _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__.quoteFormatter : null;
       },
-      formatMessage: props.intl.formatMessage,
+      formatMessage: props.intl.formatMessage.bind(props.intl),
       viewportWidth: props.viewportWidth,
-      authorizeURL: props.tinode.authorizeURL,
+      authorizeURL: props.tinode.authorizeURL.bind(props.tinode),
       onImagePreview: this.handleImagePreview,
       onFormButtonClick: this.handleFormButtonClick,
       onQuoteClick: this.handleQuoteClick
@@ -13049,7 +13049,9 @@ const {
 } = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_5__.default.parseUrlHash(window.location.hash);
 const language = params && params.hl || navigator.languages && navigator.languages[0] || navigator.language || navigator.userLanguage || 'en';
 const baseLanguage = language.toLowerCase().split(/[-_]/)[0];
-const messages = _messages_json__WEBPACK_IMPORTED_MODULE_3__[language] || _messages_json__WEBPACK_IMPORTED_MODULE_3__[baseLanguage] || _messages_json__WEBPACK_IMPORTED_MODULE_3__.en;
+const htmlLang = _messages_json__WEBPACK_IMPORTED_MODULE_3__[language] ? langauge : _messages_json__WEBPACK_IMPORTED_MODULE_3__[baseLanguage] ? baseLanguage : 'en';
+const messages = _messages_json__WEBPACK_IMPORTED_MODULE_3__[htmlLang];
+document.getElementsByTagName('html')[0].setAttribute('lang', htmlLang);
 react_dom__WEBPACK_IMPORTED_MODULE_1___default().render(react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().StrictMode), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_2__.IntlProvider, {
   locale: language,
   messages: messages,
