@@ -79,7 +79,7 @@ export const MAX_IMAGE_DIM = 1024;
 export const IMAGE_PREVIEW_DIM = 64;
 
 // Linear dimensions of image thumbnail: shrink image under this size for thumbnails in reply quote previews.
-export const IMAGE_THUMBNAIL_DIM = 25;
+export const IMAGE_THUMBNAIL_DIM = 36;
 
 // Maximum number of online users to be shown in a topic title bar. Others will be
 // hidden under "+X more"

@@ -5,6 +5,7 @@ import { Drafty } from 'tinode-sdk';
 
 import { KEYPRESS_DELAY } from '../config.js';
 import { filePasted } from '../lib/blob-helpers.js';
+import { quoteFormatter } from '../lib/formatters.js';
 
 const messages = defineMessages({
   messaging_disabled: {
@@ -153,17 +154,19 @@ class SendMessage extends React.PureComponent {
   }
 
   render() {
-    const {formatMessage} = this.props.intl;
+    const { formatMessage } = this.props.intl;
     const prompt = this.props.disabled ?
       formatMessage(messages.messaging_disabled) :
       (this.props.messagePrompt ?
         formatMessage(messages[this.props.messagePrompt]) :
         formatMessage(messages.type_new_message));
 
-    let quote = null;
-    if (this.props.replyTo) {
-      quote = Drafty.format(this.props.replyTo.content, this.props.formatter, this);
-    }
+    const quote = this.props.replyTo ?
+      Drafty.format(this.props.replyTo.content, quoteFormatter, {
+        formatMessage: formatMessage.bind(this.props.intl),
+        authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
+      }) :
+      null;
 
     return (
       <div id="send-message-wrapper">

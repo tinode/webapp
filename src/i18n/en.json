@@ -436,7 +436,7 @@
   "invalid_content": {
     "translation": "invalid content",
     "defaultMessage": "invalid content",
-    "description": "Shown when message is unreadable",
+    "description": "Shown when the message is unreadable",
     "missing": false,
     "obsolete": false
   },

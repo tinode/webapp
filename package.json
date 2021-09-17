@@ -15,7 +15,7 @@
     "i18n:missing": "node scripts/i18n.js missing",
     "i18n:obsolete": "node scripts/i18n.js obsolete",
     "vers": "node scripts/gen-version.js",
-    "extract": "formatjs extract src/**/*.jsx --out-file src/i18n/ex/base-en.json --id-interpolation-pattern '[sha512:contenthash:base64:6]'",
+    "extract": "formatjs extract \"src/**/*.{js,jsx}\" --out-file src/i18n/ex/base-en.json --id-interpolation-pattern '[sha512:contenthash:base64:6]'",
     "compile": "formatjs compile"
   },
   "browserslist": "> 0.5%, not IE 11, not op_mini all, not and_uc >0",
