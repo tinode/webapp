@@ -163,8 +163,8 @@ class SendMessage extends React.PureComponent {
 
     const quote = this.props.replyTo ?
       Drafty.format(this.props.replyTo.content, quoteFormatter, {
-        formatMessage: formatMessage,
-        authorizeURL: this.props.tinode.authorizeURL
+        formatMessage: formatMessage.bind(this.props.intl),
+        authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
       }) :
       null;
 

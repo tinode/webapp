@@ -449,6 +449,10 @@ function handleImageData(el, data, attr) {
   return el;
 }
 
+function shortenFileName(filename) {
+  return filename.length > 16 ? filename.slice(0, 7) + '…' + filename.slice(-7) : filename;
+}
+
 function fullFormatter(style, data, values, key) {
   if (!style) {
     return values;
@@ -621,7 +625,7 @@ function quoteFormatter(style, data, values, key) {
     switch (style) {
       case 'IM':
         const img = handleImageData.call(this, el, data, attr);
-        values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement(img, attr, null), ' ', this.formatMessage(messages.drafty_image)];
+        values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement(img, attr, null), ' ', shortenFileName(data && data.name || this.formatMessage(messages.drafty_image))];
         el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
         attr = {
           key: key
@@ -656,15 +660,11 @@ function quoteFormatter(style, data, values, key) {
           delete data.ref;
         }
 
-        if (!fname) {
-          fname = this.formatMessage(messages.drafty_attachment);
-        }
-
         el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
         values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
           key: "ex",
           className: "material-icons"
-        }, "attachment"), fname];
+        }, "attachment"), shortenFileName(fname || this.formatMessage(messages.drafty_attachment))];
         break;
     }
 
@@ -4006,8 +4006,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     const promises = images.map(ex => {
       return new Promise((resolve, reject) => {
         const handleFailure = () => {
-          ex.data.val = '';
-          ex.data.name = '';
+          delete ex.data.val;
+          delete ex.data.name;
           ex.data.width = _config_js__WEBPACK_IMPORTED_MODULE_14__.IMAGE_THUMBNAIL_DIM;
           ex.data.height = _config_js__WEBPACK_IMPORTED_MODULE_14__.IMAGE_THUMBNAIL_DIM;
           ex.data.maxWidth = _config_js__WEBPACK_IMPORTED_MODULE_14__.IMAGE_THUMBNAIL_DIM;
@@ -4015,13 +4015,12 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         };
 
         const scale = origBlob => {
-          (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.imageScaled)(origBlob, _config_js__WEBPACK_IMPORTED_MODULE_14__.IMAGE_THUMBNAIL_DIM, _config_js__WEBPACK_IMPORTED_MODULE_14__.IMAGE_THUMBNAIL_DIM, -1, false, (mime, blob, width, height, fname) => {
+          (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.imageScaled)(origBlob, _config_js__WEBPACK_IMPORTED_MODULE_14__.IMAGE_THUMBNAIL_DIM, _config_js__WEBPACK_IMPORTED_MODULE_14__.IMAGE_THUMBNAIL_DIM, -1, false, (mime, blob, width, height, unused) => {
             ex.data.mime = mime;
             ex.data.size = blob.size;
             ex.data.width = width;
             ex.data.height = height;
-            ex.data.name = fname;
-            ex.data.ref = undefined;
+            delete ex.data.ref;
             (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.blobToBase64)(blob, (blobMime, tinyBits64) => {
               ex.data.val = tinyBits64;
               resolve(true);
@@ -4041,13 +4040,12 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             handleFailure();
           }
         } else {
-          const from = this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_18__.sanitizeImageUrl)(ex.data.ref));
-          fetch(from).then(e => {
+          fetch(this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_18__.sanitizeImageUrl)(ex.data.ref))).then(e => {
             if (e.ok) {
               return e.blob();
             } else {
               handleFailure();
-              reject(`Image fetch unsuccessful: ${e.status} - ${e.statusText}`);
+              reject(`Image fetch unsuccessful: ${e.status} ${e.statusText}`);
             }
           }).then(b => scale(b)).catch(err => reject(`Error fetching image data: ${err}`));
           return;
@@ -11455,8 +11453,8 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     } = this.props.intl;
     const prompt = this.props.disabled ? formatMessage(messages.messaging_disabled) : this.props.messagePrompt ? formatMessage(messages[this.props.messagePrompt]) : formatMessage(messages.type_new_message);
     const quote = this.props.replyTo ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(this.props.replyTo.content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_5__.quoteFormatter, {
-      formatMessage: formatMessage,
-      authorizeURL: this.props.tinode.authorizeURL
+      formatMessage: formatMessage.bind(this.props.intl),
+      authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
     }) : null;
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "send-message-wrapper"

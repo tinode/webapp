@@ -846,6 +846,7 @@ class MessagesView extends React.Component {
     if (Drafty.isValid(content)) {
       content = Drafty.preview(content, 30);
     } else {
+      // /!\ invalid content.
       content = Drafty.append(Drafty.init('\u26A0 '),
         Drafty.wrapInto(this.props.intl.formatMessage(messages.invalid_content), 'EM'));
     }
@@ -882,8 +883,8 @@ class MessagesView extends React.Component {
     const promises = images.map((ex) => {
       return new Promise((resolve, reject) => {
         const handleFailure = () => {
-          ex.data.val = '';
-          ex.data.name = '';
+          delete ex.data.val;
+          delete ex.data.name;
           ex.data.width = IMAGE_THUMBNAIL_DIM;
           ex.data.height = IMAGE_THUMBNAIL_DIM;
           ex.data.maxWidth = IMAGE_THUMBNAIL_DIM;
@@ -892,13 +893,13 @@ class MessagesView extends React.Component {
         const scale = (origBlob) => {
           imageScaled(origBlob, IMAGE_THUMBNAIL_DIM, IMAGE_THUMBNAIL_DIM, -1, false,
             // Success
-            (mime, blob, width, height, fname) => {
+            (mime, blob, width, height, unused) => {
               ex.data.mime = mime;
               ex.data.size = blob.size;
               ex.data.width = width;
               ex.data.height = height;
-              ex.data.name = fname;
-              ex.data.ref = undefined;
+              delete ex.data.ref;
+              // Keeping the original file name, if provided: ex.data.name;
 
               blobToBase64(blob, (blobMime, tinyBits64) => {
                 ex.data.val = tinyBits64;
@@ -919,14 +920,13 @@ class MessagesView extends React.Component {
             handleFailure();
           }
         } else {
-          const from = this.props.tinode.authorizeURL(sanitizeImageUrl(ex.data.ref));
-          fetch(from)
+          fetch(this.props.tinode.authorizeURL(sanitizeImageUrl(ex.data.ref)))
             .then(e => {
               if (e.ok) {
                 return e.blob();
               } else {
                 handleFailure();
-                reject(`Image fetch unsuccessful: ${e.status} - ${e.statusText}`);
+                reject(`Image fetch unsuccessful: ${e.status} ${e.statusText}`);
               }
             })
             .then((b) => scale(b))

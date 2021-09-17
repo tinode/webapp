@@ -74,6 +74,10 @@ function handleImageData(el, data, attr) {
   return el;
 }
 
+function shortenFileName(filename) {
+  return filename.length > 16 ? filename.slice(0, 7) + '…' + filename.slice(-7) : filename;
+}
+
 // The main Drafty formatter: converts Drafty elements into React classes. 'this' is set by the caller.
 // 'this' must contain:
 //    viewportWidth: this.props.viewportWidth;
@@ -239,8 +243,10 @@ export function quoteFormatter(style, data, values, key) {
     switch(style) {
       case 'IM':
         const img = handleImageData.call(this, el, data, attr);
-        values = [React.createElement(img, attr, null), ' ', this.formatMessage(messages.drafty_image)];
+        values = [React.createElement(img, attr, null), ' ',
+          shortenFileName((data && data.name) || this.formatMessage(messages.drafty_image))];
         el = React.Fragment;
+        // Fragment attributes.
         attr = {key: key};
         break;
       case 'MN':
@@ -266,11 +272,9 @@ export function quoteFormatter(style, data, values, key) {
           delete data.val;
           delete data.ref;
         }
-        if (!fname) {
-          fname = this.formatMessage(messages.drafty_attachment);
-        }
         el = React.Fragment;
-        values = [<i key="ex" className="material-icons">attachment</i>, fname];
+        values = [<i key="ex" className="material-icons">attachment</i>,
+          shortenFileName(fname || this.formatMessage(messages.drafty_attachment))];
         break;
     }
     return React.createElement(el, attr, values);
