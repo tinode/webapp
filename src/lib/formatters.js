@@ -28,6 +28,7 @@ const messages = defineMessages({
   },
 });
 
+// Size the already scaled image.
 function handleImageData(el, data, attr) {
   if (!data) {
     attr.src = 'img/broken_image.png';
@@ -72,6 +73,50 @@ function handleImageData(el, data, attr) {
   }
 
   return el;
+}
+
+function quotedImage(data) {
+  let promise;
+  // Get the blob from the image data.
+  if (data.val) {
+    const blob = base64ToBlob(data.val, data.mime);
+    promise = blob ? Promise.resolve(blob) : Prmise.reject(new Error("Invalid image"));
+  } else {
+    promise = fetch(this.authorizeURL(sanitizeImageUrl(data.ref))).then(evt => {
+      if (evt.ok) {
+        return evt.blob();
+      } else {
+        throw new Error(`Image fetch unsuccessful: ${evt.status} ${evt.statusText}`);
+      }
+    });
+  }
+
+  // Scale the blob.
+  return promise
+    .then(blob => {
+      return imageScaled(blob, IMAGE_THUMBNAIL_DIM, IMAGE_THUMBNAIL_DIM, -1, false)
+    }).then(scaled => {
+      data.mime = scaled.mime;
+      data.size = scaled.blob.size;
+      data.width = scaled.width;
+      data.height = scaled.height;
+      delete data.ref;
+      // Keeping the original file name, if provided: ex.data.name;
+
+      return blobToBase64(scaled.blob);
+    }).then(b64 => {
+      data.val = b64.bits;
+      return data;
+    }).catch(err => {
+      delete data.val;
+      delete data.name;
+      data.width = IMAGE_THUMBNAIL_DIM;
+      data.height = IMAGE_THUMBNAIL_DIM;
+      data.maxWidth = IMAGE_THUMBNAIL_DIM;
+      data.maxHeight = IMAGE_THUMBNAIL_DIM;
+      // Rethrow.
+      throw err;
+    });
 }
 
 function shortenFileName(filename) {
@@ -229,7 +274,7 @@ export function previewFormatter(style, data, values, key) {
   return React.createElement(el, attr, values);
 };
 
-// Converts Drafty object into a quoted reply. 'this' is set by the caller.
+// Displays a portion of Drafty within 'QQ' quotes. 'this' is set by the caller.
 // 'this' must contain:
 //    formatMessage: this.props.intl.formatMessage
 //    messages: formatjs messages defined with defineMessages.

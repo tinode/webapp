@@ -108,7 +108,8 @@ export default class TopicDescEdit extends React.Component {
   // Utility method for converting cropped avatar blob to bytes for sending inband or
   // for uploading it to the server out of band.
   uploadAvatar(mime, blob, width, height) {
-    const readyToUpload = (mime, blob, width, height) => {
+    const readyToUpload = (image) => {
+      let {mime, blob, width, height} = image;
       if (blob.size > MAX_AVATAR_BYTES) {
         // Too large to send inband - uploading out of band and sending as a link.
         const uploader = this.props.tinode.getLargeFileHelper();
@@ -127,24 +128,25 @@ export default class TopicDescEdit extends React.Component {
       } else {
         this.setState({uploading: true});
         // Convert blob to base64-encoded bits.
-        blobToBase64(blob, (unused, base64bits) => {
-          const du = makeImageUrl({data: base64bits, type: mime});
-          this.setState({source: du});
-          this.props.onUpdateTopicDesc(this.props.topic, theCard(null, du));
-          this.setState({uploading: false});
-        });
+        blobToBase64(blob)
+          .then(b64 => {
+            const du = makeImageUrl({data: b64.bits, type: mime});
+            this.setState({source: du});
+            this.props.onUpdateTopicDesc(this.props.topic, theCard(null, du));
+            this.setState({uploading: false});
+          });
       }
     };
 
     if (width > AVATAR_SIZE || height > AVATAR_SIZE || width != height) {
       // Avatar is not square or too large even after cropping. Shrink it and make square.
-      imageScaled(blob, AVATAR_SIZE, AVATAR_SIZE, MAX_EXTERN_ATTACHMENT_SIZE, true,
-        readyToUpload,
-        (err) => {
+      imageScaled(blob, AVATAR_SIZE, AVATAR_SIZE, MAX_EXTERN_ATTACHMENT_SIZE, true)
+        .then(scaled => readyToUpload)
+        .catch(err => {
           this.props.onError(err, 'err');
         });
     } else {
-      readyToUpload(mime, blob, width, height);
+      readyToUpload({mime: mime, blob: blob, width: width, height: height});
     }
   }
 
