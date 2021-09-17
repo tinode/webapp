@@ -429,7 +429,7 @@
   "invalid_content": {
     "translation": "сообщение не читается",
     "defaultMessage": "invalid content",
-    "description": "Shown when message is unreadable",
+    "description": "Shown when the message is unreadable",
     "missing": false,
     "obsolete": false
   },

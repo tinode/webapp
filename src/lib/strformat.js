@@ -58,7 +58,7 @@ export function letterTileColorId(userId) {
 // params:
 // - {string} id: user or topic ID
 // - {boolean} light: light or dark version of the color.
-// - {boolean} fg: foreground or background color.
+// - {boolean} fg: foreground (text) or background color.
 export function idToColorClass(id, light, fg) {
   return (light ? 'lt-' : 'dk-') + (fg ? 'fg-' : 'bg-') + letterTileColorId(id);
 }

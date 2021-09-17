@@ -7,6 +7,7 @@ import Attachment from './attachment.jsx';
 import LetterTile from './letter-tile.jsx';
 import ReceivedMarker from './received-marker.jsx'
 
+import { fullFormatter, quoteFormatter } from '../lib/formatters.js';
 import { sanitizeImageUrl, sanitizeUrl } from '../lib/utils.js';
 
 class BaseChatMessage extends React.PureComponent {
@@ -25,8 +26,17 @@ class BaseChatMessage extends React.PureComponent {
     this.handleFormButtonClick = this.handleFormButtonClick.bind(this);
     this.handleContextClick = this.handleContextClick.bind(this);
     this.handleCancelUpload = this.handleCancelUpload.bind(this);
-
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
+
+    this.formatterContext = {
+      getFormatter: (tp) => { return tp == 'QQ' ? quoteFormatter : null; },
+      formatMessage: props.intl.formatMessage.bind(props.intl),
+      viewportWidth: props.viewportWidth,
+      authorizeURL: props.tinode.authorizeURL.bind(props.tinode),
+      onImagePreview: this.handleImagePreview,
+      onFormButtonClick: this.handleFormButtonClick,
+      onQuoteClick: this.handleQuoteClick
+    };
   }
 
   handleImagePreview(e) {
@@ -99,7 +109,7 @@ class BaseChatMessage extends React.PureComponent {
     let content = this.props.content;
     const attachments = [];
     if (this.props.mimeType == Drafty.getContentType() && Drafty.isValid(content)) {
-      Drafty.attachments(content, function(att, i) {
+      Drafty.attachments(content, (att, i) => {
         if (att.mime == 'application/json') {
           // Don't show json objects as attachments.
           // They are not meant for users.
@@ -117,7 +127,7 @@ class BaseChatMessage extends React.PureComponent {
           onError={this.props.onError}
           key={i} />);
       }, this);
-      const tree = Drafty.format(content, this.props.formatter, this);
+      const tree = Drafty.format(content, fullFormatter, this.formatterContext);
       content = React.createElement(React.Fragment, null, tree);
     } else if (this.props.deleted) {
       // Message represents a range of deleted messages.
@@ -126,9 +136,9 @@ class BaseChatMessage extends React.PureComponent {
           defaultMessage="content deleted" description="Shown when messages are deleted" />
       </i></>
     } else if (typeof content != 'string') {
-      content = <><i className="material-icons gray">error_outline</i> <i className="gray">
+      content = <><i className="material-icons gray">warning_amber</i> <i className="gray">
         <FormattedMessage id="invalid_content"
-          defaultMessage="invalid content" description="Shown when message is unreadable" /></i></>
+          defaultMessage="invalid content" description="Shown when the message is unreadable" /></i></>
     }
 
     return (

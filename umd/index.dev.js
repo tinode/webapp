@@ -74,7 +74,7 @@ const MAX_INBAND_ATTACHMENT_SIZE = 262144;
 const MAX_EXTERN_ATTACHMENT_SIZE = 1 << 23;
 const MAX_IMAGE_DIM = 1024;
 const IMAGE_PREVIEW_DIM = 64;
-const IMAGE_THUMBNAIL_DIM = 25;
+const IMAGE_THUMBNAIL_DIM = 36;
 const MAX_ONLINE_IN_TOPIC = 4;
 const MAX_TITLE_LENGTH = 60;
 const MAX_TOPIC_DESCRIPTION_LENGTH = 360;
@@ -345,6 +345,333 @@ function base64ToBlob(str, mime) {
   }
 
   return null;
+}
+
+/***/ }),
+
+/***/ "./src/lib/formatters.js":
+/*!*******************************!*\
+  !*** ./src/lib/formatters.js ***!
+  \*******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "fullFormatter": () => (/* binding */ fullFormatter),
+/* harmony export */   "previewFormatter": () => (/* binding */ previewFormatter),
+/* harmony export */   "quoteFormatter": () => (/* binding */ quoteFormatter)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/uploading-image.jsx */ "./src/widgets/uploading-image.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _strformat_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./utils.js */ "./src/lib/utils.js");
+
+
+
+
+
+
+
+
+const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
+  drafty_form: {
+    id: "drafty_form",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Form:"
+    }]
+  },
+  drafty_attachment: {
+    id: "drafty_attachment",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Attachment"
+    }]
+  },
+  drafty_image: {
+    id: "drafty_image",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Picture"
+    }]
+  }
+});
+
+function handleImageData(el, data, attr) {
+  if (!data) {
+    attr.src = 'img/broken_image.png';
+    attr.style = {
+      width: _config_js__WEBPACK_IMPORTED_MODULE_4__.IMAGE_THUMBNAIL_DIM + 'px',
+      height: _config_js__WEBPACK_IMPORTED_MODULE_4__.IMAGE_THUMBNAIL_DIM + 'px',
+      minWidth: _config_js__WEBPACK_IMPORTED_MODULE_4__.IMAGE_THUMBNAIL_DIM + 'px',
+      minHeight: _config_js__WEBPACK_IMPORTED_MODULE_4__.IMAGE_THUMBNAIL_DIM + 'px'
+    };
+    return el;
+  }
+
+  attr.className = 'inline-image';
+  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_4__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_4__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_4__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_4__.REM_SIZE * 24, false) || {
+    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_4__.BROKEN_IMAGE_SIZE,
+    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_4__.BROKEN_IMAGE_SIZE
+  };
+  attr.style = {
+    width: dim.dstWidth + 'px',
+    height: dim.dstHeight + 'px',
+    minWidth: dim.dstWidth + 'px',
+    minHeight: dim.dstHeight + 'px'
+  };
+
+  if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isProcessing(data)) {
+    attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_7__.sanitizeImageUrl)(attr.src));
+    attr.alt = data.name;
+
+    if (attr.src) {
+      if (Math.max(data.width || 0, data.height || 0) > _config_js__WEBPACK_IMPORTED_MODULE_4__.IMAGE_THUMBNAIL_DIM) {
+        attr.onClick = this.onImagePreview;
+        attr.className += ' image-clickable';
+      }
+
+      attr.loading = 'lazy';
+    } else {
+      attr.src = 'img/broken_image.png';
+    }
+  } else {
+    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_3__.default;
+  }
+
+  return el;
+}
+
+function shortenFileName(filename) {
+  return filename.length > 16 ? filename.slice(0, 7) + '…' + filename.slice(-7) : filename;
+}
+
+function fullFormatter(style, data, values, key) {
+  if (!style) {
+    return values;
+  }
+
+  if (style == 'HD') {
+    return null;
+  }
+
+  let el = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.tagName(style);
+  const attr = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attrValue(style, data) || {};
+  attr.key = key;
+
+  switch (style) {
+    case 'HL':
+      attr.className = 'highlight';
+      break;
+
+    case 'IM':
+      el = handleImageData.call(this, el, data, attr);
+      values = null;
+      break;
+
+    case 'BN':
+      attr.onClick = this.onFormButtonClick;
+      let inner = react__WEBPACK_IMPORTED_MODULE_0___default().Children.map(values, child => {
+        return typeof child == 'string' ? child : undefined;
+      });
+
+      if (!inner || inner.length == 0) {
+        inner = [attr.name];
+      }
+
+      attr['data-title'] = inner.join('');
+      break;
+
+    case 'MN':
+      if (data && data.hasOwnProperty('colorId')) {
+        attr.className = 'mn-dark-color' + data.colorId;
+      }
+
+      break;
+
+    case 'FM':
+      attr.className = 'bot-form';
+      break;
+
+    case 'RW':
+      break;
+
+    case 'QQ':
+      attr.className = 'reply-quote';
+      attr.onClick = this.onQuoteClick;
+      break;
+
+    default:
+      if (el == '_UNKN') {
+        el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
+        values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+          className: "material-icons gray"
+        }, "extension"), ' '].concat(values || []);
+      }
+
+      break;
+  }
+
+  if (!el) {
+    return values;
+  }
+
+  return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(el, attr, values);
+}
+;
+function previewFormatter(style, data, values, key) {
+  if (!style) {
+    return values;
+  }
+
+  if (style == 'HD') {
+    return null;
+  }
+
+  let el = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.tagName(style);
+  const attr = {
+    key: key
+  };
+
+  switch (style) {
+    case 'BR':
+      el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
+      values = [' '];
+      break;
+
+    case 'HL':
+      attr.className = 'highlight preview';
+      break;
+
+    case 'LN':
+    case 'MN':
+      el = 'span';
+      break;
+
+    case 'IM':
+      el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
+      values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+        key: "im",
+        className: "material-icons"
+      }, "photo"), this.formatMessage(messages.drafty_image)];
+      break;
+
+    case 'BN':
+      el = 'span';
+      attr.className = 'flat-button faux';
+      break;
+
+    case 'FM':
+      el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
+      values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+        key: "fm",
+        className: "material-icons"
+      }, "dashboard"), this.formatMessage(messages.drafty_form)].concat(' ', values || []);
+      break;
+
+    case 'RW':
+      el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
+      break;
+
+    case 'EX':
+      if (data) {
+        if (data.mime == 'application/json') {
+          return null;
+        }
+
+        delete data.val;
+        delete data.ref;
+      }
+
+      el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
+      values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+        key: "ex",
+        className: "material-icons"
+      }, "attachment"), this.formatMessage(messages.drafty_attachment)];
+      break;
+
+    default:
+      if (el == '_UNKN') {
+        el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
+        values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+          key: "unkn",
+          className: "material-icons"
+        }, "extension"), ' '].concat(values || []);
+      }
+
+      break;
+  }
+
+  if (!el) {
+    return values;
+  }
+
+  return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(el, attr, values);
+}
+;
+function quoteFormatter(style, data, values, key) {
+  if (['BR', 'EX', 'IM', 'MN', 'QQ'].includes(style)) {
+    let el = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.tagName(style);
+    let attr = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attrValue(style, data) || {};
+    attr.key = key;
+
+    switch (style) {
+      case 'IM':
+        const img = handleImageData.call(this, el, data, attr);
+        values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement(img, attr, null), ' ', shortenFileName(data && data.name || this.formatMessage(messages.drafty_image))];
+        el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
+        attr = {
+          key: key
+        };
+        break;
+
+      case 'MN':
+        el = 'span';
+        attr.className = 'mention';
+
+        if (data) {
+          attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_6__.idToColorClass)(data.val, false, true);
+        }
+
+        break;
+
+      case 'QQ':
+        attr.className = 'reply-quote';
+        attr.onClick = this.onQuoteClick;
+        break;
+
+      case 'EX':
+        let fname;
+
+        if (data) {
+          if (data.mime == 'application/json') {
+            return null;
+          }
+
+          fname = data.name;
+          delete data.val;
+          delete data.ref;
+        }
+
+        el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
+        values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+          key: "ex",
+          className: "material-icons"
+        }, "attachment"), shortenFileName(fname || this.formatMessage(messages.drafty_attachment))];
+        break;
+    }
+
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(el, attr, values);
+  }
+
+  return previewFormatter.call(this, style, data, values, key);
 }
 
 /***/ }),
@@ -2754,17 +3081,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../widgets/load-spinner.jsx */ "./src/widgets/load-spinner.jsx");
 /* harmony import */ var _logo_view_jsx__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./logo-view.jsx */ "./src/views/logo-view.jsx");
 /* harmony import */ var _widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../widgets/send-message.jsx */ "./src/widgets/send-message.jsx");
-/* harmony import */ var _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../widgets/uploading-image.jsx */ "./src/widgets/uploading-image.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
-/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
+/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 
 
 
 const Drafty = (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().Drafty);
-
 
 
 
@@ -2830,18 +3155,11 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
       "value": " limit."
     }]
   },
-  drafty_form: {
-    id: "drafty_form",
+  invalid_content: {
+    id: "invalid_content",
     defaultMessage: [{
       "type": 0,
-      "value": "Form:"
-    }]
-  },
-  drafty_attachment: {
-    id: "drafty_attachment",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Attachment"
+      "value": "invalid content"
     }]
   }
 });
@@ -2870,6 +3188,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.state = MessagesView.getDerivedStateFromProps(props, {});
     this.leave = this.leave.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
+    this.retrySend = this.retrySend.bind(this);
     this.sendImageAttachment = this.sendImageAttachment.bind(this);
     this.sendFileAttachment = this.sendFileAttachment.bind(this);
     this.sendKeyPress = this.sendKeyPress.bind(this);
@@ -3018,7 +3337,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         if (topic.public) {
           Object.assign(nextState, {
             title: topic.public.fn,
-            avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.makeImageUrl)(topic.public.photo)
+            avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.makeImageUrl)(topic.public.photo)
           });
         } else {
           Object.assign(nextState, {
@@ -3111,7 +3430,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     let getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub();
 
     if (this.state.isReader || newTopic) {
-      getQuery = getQuery.withLaterData(_config_js__WEBPACK_IMPORTED_MODULE_15__.MESSAGES_PAGE);
+      getQuery = getQuery.withLaterData(_config_js__WEBPACK_IMPORTED_MODULE_14__.MESSAGES_PAGE);
 
       if (this.state.isReader) {
         getQuery = getQuery.withLaterDel();
@@ -3125,7 +3444,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     const setQuery = newTopic ? this.props.newTopicParams : undefined;
     topic.subscribe(getQuery.build(), setQuery).then(ctrl => {
       if (ctrl.code == 303) {
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__.default.setUrlTopic('', ctrl.params.topic));
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlTopic('', ctrl.params.topic));
         return;
       }
 
@@ -3138,11 +3457,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       this.props.onNewTopicCreated(this.props.topic, ctrl.topic);
       topic.queuedMessages(pub => {
         if (!pub._sending && topic.isSubscribed()) {
-          this.sendMessage(pub);
+          this.retrySend(pub);
         }
       });
     }).catch(err => {
-      console.log("Failed subscription to", this.state.topic);
+      console.error("Failed subscription to", this.state.topic);
       this.props.onError(err.message, 'err');
       const blankState = MessagesView.getDerivedStateFromProps({}, {});
       blankState.title = this.props.intl.formatMessage(messages.not_found);
@@ -3196,7 +3515,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         this.setState({
           fetchingMessages: true
         }, () => {
-          topic.getMessagesPage(_config_js__WEBPACK_IMPORTED_MODULE_15__.MESSAGES_PAGE).catch(err => this.props.onError(err.message, 'err')).finally(() => this.setState({
+          topic.getMessagesPage(_config_js__WEBPACK_IMPORTED_MODULE_14__.MESSAGES_PAGE).catch(err => this.props.onError(err.message, 'err')).finally(() => this.setState({
             fetchingMessages: false
           }));
         });
@@ -3208,7 +3527,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     if (desc.public) {
       this.setState({
         title: desc.public.fn,
-        avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.makeImageUrl)(desc.public.photo)
+        avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.makeImageUrl)(desc.public.photo)
       });
     } else {
       this.setState({
@@ -3274,7 +3593,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.readNotificationQueue.push({
       topicName: this.state.topic,
       seq: seq,
-      sendAt: now.setMilliseconds(now.getMilliseconds() + _config_js__WEBPACK_IMPORTED_MODULE_15__.READ_DELAY)
+      sendAt: now.setMilliseconds(now.getMilliseconds() + _config_js__WEBPACK_IMPORTED_MODULE_14__.READ_DELAY)
     });
   }
 
@@ -3365,7 +3684,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             this.setState({
               typingIndicator: false
             });
-          }, _config_js__WEBPACK_IMPORTED_MODULE_15__.KEYPRESS_DELAY + 1000);
+          }, _config_js__WEBPACK_IMPORTED_MODULE_14__.KEYPRESS_DELAY + 1000);
 
           if (!this.state.typingIndicator) {
             this.setState({
@@ -3382,7 +3701,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         break;
 
       default:
-        console.log("Other change in topic: ", info.what);
+        console.info("Other change in topic: ", info.what);
     }
   }
 
@@ -3427,7 +3746,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       url.search = params;
       window.open(url, '_blank');
     } else {
-      console.log("Unknown action in form", action);
+      console.info("Unknown action in form", action);
     }
   }
 
@@ -3467,7 +3786,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
   handleEnablePeer(e) {
     e.preventDefault();
-    this.props.onChangePermissions(this.state.topic, _config_js__WEBPACK_IMPORTED_MODULE_15__.DEFAULT_P2P_ACCESS_MODE, this.state.topic);
+    this.props.onChangePermissions(this.state.topic, _config_js__WEBPACK_IMPORTED_MODULE_14__.DEFAULT_P2P_ACCESS_MODE, this.state.topic);
   }
 
   sendKeyPress() {
@@ -3490,7 +3809,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         msg = Drafty.parse(msg);
       }
 
-      msg = Drafty.attachQuote(msg, this.state.reply.content);
+      msg = Drafty.append(this.state.reply.content, msg);
       this.setState({
         reply: null
       });
@@ -3499,8 +3818,12 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.props.sendMessage(msg, uploadCompletionPromise, uploader, head);
   }
 
+  retrySend(pub) {
+    this.props.sendMessage(pub.content, undefined, undefined, pub.head);
+  }
+
   sendFileAttachment(file) {
-    const maxInbandAttachmentSize = this.props.tinode.getServerLimit('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_15__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
+    const maxInbandAttachmentSize = this.props.tinode.getServerLimit('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_14__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
 
     if (file.size > maxInbandAttachmentSize) {
       const uploader = this.props.tinode.getLargeFileHelper();
@@ -3513,7 +3836,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       });
       this.sendMessage(msg, uploadCompletionPromise, uploader);
     } else {
-      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.fileToBase64)(file, (mime, bits, fname) => {
+      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.fileToBase64)(file, (mime, bits, fname) => {
         this.sendMessage(Drafty.attachFile(null, {
           mime: mime,
           data: bits,
@@ -3524,12 +3847,12 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
 
   handleAttachFile(file) {
-    const maxExternAttachmentSize = this.props.tinode.getServerLimit('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_15__.MAX_EXTERN_ATTACHMENT_SIZE);
+    const maxExternAttachmentSize = this.props.tinode.getServerLimit('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_14__.MAX_EXTERN_ATTACHMENT_SIZE);
 
     if (file.size > maxExternAttachmentSize) {
       this.props.onError(this.props.intl.formatMessage(messages.file_attachment_too_large, {
-        size: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_18__.bytesToHumanSize)(file.size),
-        limit: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_18__.bytesToHumanSize)(maxExternAttachmentSize)
+        size: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_17__.bytesToHumanSize)(file.size),
+        limit: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_17__.bytesToHumanSize)(maxExternAttachmentSize)
       }), 'err');
     } else {
       this.setState({
@@ -3548,7 +3871,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     const width = this.state.imagePreview.width;
     const height = this.state.imagePreview.height;
     const fname = this.state.imagePreview.filename;
-    const maxInbandAttachmentSize = this.props.tinode.getServerLimit('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_15__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
+    const maxInbandAttachmentSize = this.props.tinode.getServerLimit('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_14__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
 
     if (blob.size > maxInbandAttachmentSize) {
       const uploader = this.props.tinode.getLargeFileHelper();
@@ -3559,8 +3882,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       }
 
       const uploadCompletionPromise = uploader.upload(blob);
-      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_15__.IMAGE_PREVIEW_DIM, _config_js__WEBPACK_IMPORTED_MODULE_15__.IMAGE_PREVIEW_DIM, -1, false, (tinyMine, tinyBlob) => {
-        (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.blobToBase64)(tinyBlob, (blobMime, tinyBits64) => {
+      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_14__.IMAGE_PREVIEW_DIM, _config_js__WEBPACK_IMPORTED_MODULE_14__.IMAGE_PREVIEW_DIM, -1, false, (tinyMine, tinyBlob) => {
+        (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.blobToBase64)(tinyBlob, (blobMime, tinyBits64) => {
           let msg = Drafty.insertImage(null, 0, {
             mime: mime,
             _tempPreview: tinyBits64,
@@ -3584,7 +3907,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       return;
     }
 
-    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.blobToBase64)(blob, (blobMime, bits64) => {
+    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.blobToBase64)(blob, (blobMime, bits64) => {
       let msg = Drafty.insertImage(null, 0, {
         mime: blobMime,
         preview: bits64,
@@ -3604,8 +3927,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
 
   handleAttachImage(file) {
-    const maxExternAttachmentSize = this.props.tinode.getServerLimit('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_15__.MAX_EXTERN_ATTACHMENT_SIZE);
-    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.imageScaled)(file, _config_js__WEBPACK_IMPORTED_MODULE_15__.MAX_IMAGE_DIM, _config_js__WEBPACK_IMPORTED_MODULE_15__.MAX_IMAGE_DIM, maxExternAttachmentSize, false, (mime, blob, width, height, fname) => {
+    const maxExternAttachmentSize = this.props.tinode.getServerLimit('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_14__.MAX_EXTERN_ATTACHMENT_SIZE);
+    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.imageScaled)(file, _config_js__WEBPACK_IMPORTED_MODULE_14__.MAX_IMAGE_DIM, _config_js__WEBPACK_IMPORTED_MODULE_14__.MAX_IMAGE_DIM, maxExternAttachmentSize, false, (mime, blob, width, height, fname) => {
       this.setState({
         imagePreview: {
           url: URL.createObjectURL(blob),
@@ -3633,120 +3956,112 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     uploader.cancel();
   }
 
-  handlePickReply(m) {
+  handlePickReply(seq, content) {
     this.setState({
       reply: null
     });
 
-    if (m) {
-      let cont = m.content;
+    if (!seq || !content) {
+      return;
+    }
 
-      if (cont) {
-        if (typeof cont == 'string') {
-          cont = Drafty.init(cont);
-        }
+    if (typeof content == 'string') {
+      content = Drafty.init(content);
+    }
 
-        cont = Drafty.preview(cont, 30, quotePreviewFmt);
-        let header;
-        const seq = m.seq;
+    if (Drafty.isValid(content)) {
+      content = Drafty.preview(content, 30);
+    } else {
+      content = Drafty.append(Drafty.init('\u26A0 '), Drafty.wrapInto(this.props.intl.formatMessage(messages.invalid_content), 'EM'));
+    }
+
+    const topic = this.props.tinode.getTopic(this.state.topic);
+    const msg = topic.findMessage(seq);
+    let senderName, senderId;
+
+    if (msg) {
+      senderId = msg.from || 'chan';
+
+      if (senderId != this.props.myUserId) {
         const topic = this.props.tinode.getTopic(this.state.topic);
-        const m0 = topic.findMessage(seq);
-        let thisFrom;
+        const user = topic.userDesc(senderId);
 
-        if (m0) {
-          thisFrom = m0.from || 'chan';
-
-          if (thisFrom != this.props.myUserId) {
-            const topic = this.props.tinode.getTopic(this.state.topic);
-            const user = topic.userDesc(thisFrom);
-
-            if (user && user.public) {
-              header = user.public.fn;
-            }
-          } else {
-            header = this.props.myUserName;
-          }
+        if (user && user.public) {
+          senderName = user.public.fn;
         }
-
-        header = Drafty.init(header || '');
-        const ents = [];
-
-        if (cont.ent) {
-          Drafty.entities(cont, (data, idx, tp) => {
-            if (tp == 'IM') {
-              ents.push({
-                tp: tp,
-                data: data
-              });
-            }
-          }, this);
-        }
-
-        const promises = [];
-        ents.map(ex => {
-          let p = new Promise((resolve, reject) => {
-            const handleFailure = () => {
-              ex.data.val = '';
-              ex.data.name = '';
-              ex.data.width = _config_js__WEBPACK_IMPORTED_MODULE_15__.IMAGE_THUMBNAIL_DIM;
-              ex.data.height = _config_js__WEBPACK_IMPORTED_MODULE_15__.IMAGE_THUMBNAIL_DIM;
-            };
-
-            const scale = origBlob => {
-              (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.imageScaled)(origBlob, _config_js__WEBPACK_IMPORTED_MODULE_15__.IMAGE_THUMBNAIL_DIM, _config_js__WEBPACK_IMPORTED_MODULE_15__.IMAGE_THUMBNAIL_DIM, -1, false, (mime, blob, width, height, fname) => {
-                ex.data.mime = mime;
-                ex.data.size = blob.size;
-                ex.data.width = width;
-                ex.data.height = height;
-                ex.data.name = fname;
-                ex.data.ref = undefined;
-                (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.blobToBase64)(blob, (blobMime, tinyBits64) => {
-                  ex.data.val = tinyBits64;
-                  resolve(true);
-                });
-              }, err => {
-                handleFailure();
-                reject(`Could not scale image: ${err}`);
-              });
-            };
-
-            if (ex.data.val) {
-              const b = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.base64ToBlob)(ex.data.val, ex.data.mime);
-
-              if (b) {
-                scale(b);
-              } else {
-                handleFailure();
-              }
-            } else {
-              const from = this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_19__.sanitizeImageUrl)(ex.data.ref));
-              fetch(from).then(e => {
-                if (e.ok) {
-                  return e.blob();
-                } else {
-                  handleFailure();
-                  reject(`Image fetch unsuccessful: ${e.status} - ${e.statusText}`);
-                }
-              }).then(b => scale(b)).catch(err => reject(`Error fetching image data: ${err}`));
-              return;
-            }
-          });
-          promises.push(p);
-        });
-        Promise.all(promises).catch(err => {
-          this.props.onError(err, 'err');
-        }).finally(() => {
-          const msg = Drafty.createQuote(header, cont, (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_18__.letterTileColorId)(thisFrom));
-          this.setState({
-            reply: {
-              content: msg,
-              seq: m.seq
-            }
-          });
-        });
-        return;
+      } else {
+        senderName = this.props.myUserName;
       }
     }
+
+    const images = [];
+    Drafty.entities(content, (data, idx, tp) => {
+      if (tp == 'IM') {
+        images.push({
+          tp: tp,
+          data: data
+        });
+      }
+    });
+    const promises = images.map(ex => {
+      return new Promise((resolve, reject) => {
+        const handleFailure = () => {
+          delete ex.data.val;
+          delete ex.data.name;
+          ex.data.width = _config_js__WEBPACK_IMPORTED_MODULE_14__.IMAGE_THUMBNAIL_DIM;
+          ex.data.height = _config_js__WEBPACK_IMPORTED_MODULE_14__.IMAGE_THUMBNAIL_DIM;
+          ex.data.maxWidth = _config_js__WEBPACK_IMPORTED_MODULE_14__.IMAGE_THUMBNAIL_DIM;
+          ex.data.maxHeight = _config_js__WEBPACK_IMPORTED_MODULE_14__.IMAGE_THUMBNAIL_DIM;
+        };
+
+        const scale = origBlob => {
+          (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.imageScaled)(origBlob, _config_js__WEBPACK_IMPORTED_MODULE_14__.IMAGE_THUMBNAIL_DIM, _config_js__WEBPACK_IMPORTED_MODULE_14__.IMAGE_THUMBNAIL_DIM, -1, false, (mime, blob, width, height, unused) => {
+            ex.data.mime = mime;
+            ex.data.size = blob.size;
+            ex.data.width = width;
+            ex.data.height = height;
+            delete ex.data.ref;
+            (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.blobToBase64)(blob, (blobMime, tinyBits64) => {
+              ex.data.val = tinyBits64;
+              resolve(true);
+            });
+          }, err => {
+            handleFailure();
+            reject(`Could not scale image: ${err}`);
+          });
+        };
+
+        if (ex.data.val) {
+          const b = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.base64ToBlob)(ex.data.val, ex.data.mime);
+
+          if (b) {
+            scale(b);
+          } else {
+            handleFailure();
+          }
+        } else {
+          fetch(this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_18__.sanitizeImageUrl)(ex.data.ref))).then(e => {
+            if (e.ok) {
+              return e.blob();
+            } else {
+              handleFailure();
+              reject(`Image fetch unsuccessful: ${e.status} ${e.statusText}`);
+            }
+          }).then(b => scale(b)).catch(err => reject(`Error fetching image data: ${err}`));
+          return;
+        }
+      });
+    });
+    Promise.all(promises).catch(err => {
+      this.props.onError(err, 'err');
+    }).finally(() => {
+      this.setState({
+        reply: {
+          content: Drafty.quote(senderName, senderId, content),
+          seq: seq
+        }
+      });
+    });
   }
 
   handleCancelReply() {
@@ -3758,23 +4073,17 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   handleQuoteClick(replyToSeq) {
     const ref = this.getOrCreateMessageRef(replyToSeq);
 
-    if (!ref) {
-      return;
-    }
-
-    const element = ref.current;
-
-    if (element) {
-      element.scrollIntoView({
+    if (ref && ref.current) {
+      ref.current.scrollIntoView({
         block: "center",
         behavior: "smooth"
       });
-      element.style.backgroundColor = 'rgb(0, 0, 0, 0.4)';
+      ref.current.classList.add('flash');
       setTimeout(() => {
-        element.style.backgroundColor = '';
+        ref.current.classList.remove('flash');
       }, 1000);
     } else {
-      console.error("Unresolved message ref: seqId", replyToSeq);
+      console.error("Unresolved message ref", replyToSeq);
     }
   }
 
@@ -3799,7 +4108,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           content: this.state.imagePreview,
           tinode: this.props.tinode,
           replyTo: this.state.reply,
-          formatter: draftyFormatter,
           onCancelReply: this.handleCancelReply,
           onClose: this.handleClosePreview,
           onSendMessage: this.sendImageAttachment
@@ -3814,7 +4122,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           content: this.state.docPreview,
           tinode: this.props.tinode,
           replyTo: this.state.reply,
-          formatter: draftyFormatter,
           onCancelReply: this.handleCancelReply,
           onClose: this.handleClosePreview,
           onSendMessage: this.sendFileAttachment
@@ -3876,7 +4183,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
             if (user && user.public) {
               userName = user.public.fn;
-              userAvatar = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.makeImageUrl)(user.public.photo);
+              userAvatar = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.makeImageUrl)(user.public.photo);
             }
 
             userFrom = thisFrom;
@@ -3915,7 +4222,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             pickReply: this.handlePickReply,
             replyToSeq: replyToSeq,
             onQuoteClick: this.handleQuoteClick,
-            formatter: draftyFormatter,
             ref: ref,
             userIsWriter: this.state.isWriter,
             key: msg.seq
@@ -3932,7 +4238,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             if (cont.online) {
               lastSeen = formatMessage(messages.online_now);
             } else if (cont.seen) {
-              lastSeen = formatMessage(messages.last_seen) + ": " + (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_18__.shortDateFormat)(cont.seen.when, this.props.intl.locale);
+              lastSeen = formatMessage(messages.last_seen) + ": " + (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_17__.shortDateFormat)(cont.seen.when, this.props.intl.locale);
             }
           }
         }
@@ -4040,7 +4346,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           onError: this.props.onError,
           replyTo: this.state.reply,
           onQuoteClick: this.handleQuoteClick,
-          formatter: draftyFormatter,
           onCancelReply: this.handleCancelReply
         }));
       }
@@ -4053,217 +4358,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     return component;
   }
 
-}
-
-;
-
-function quotePreviewFmt(fmt, ent) {
-  let tp = fmt.tp;
-
-  if (!tp) {
-    if (!ent || !ent.tp) {
-      return [null, null];
-    }
-
-    tp = ent.tp;
-  }
-
-  const new_fmt = {
-    at: fmt.at,
-    len: fmt.len,
-    tp: fmt.tp
-  };
-
-  switch (tp) {
-    case 'BR':
-      return [null, null];
-
-    case 'HL':
-      return [new_fmt, ent];
-
-    case 'LN':
-      return [null, null];
-
-    case 'IM':
-      return [new_fmt, ent];
-
-    case 'BN':
-      new_fmt.tp = null;
-      return [new_fmt, {
-        tp: 'IC',
-        data: {
-          orig: 'BN',
-          name: 'button'
-        }
-      }];
-
-    case 'FM':
-      new_fmt.tp = null;
-      return [new_fmt, {
-        tp: 'IC',
-        data: {
-          orig: 'FM',
-          name: 'form'
-        }
-      }];
-
-    case 'RW':
-      return [null, null];
-
-    case 'EX':
-      new_fmt.tp = null;
-
-      if (new_fmt.at == -1) {
-        new_fmt.at = 0;
-      }
-
-      return [new_fmt, {
-        tp: 'IC',
-        data: {
-          orig: 'EX',
-          name: 'attachment'
-        }
-      }];
-
-    case 'QQ':
-      return [null, null];
-
-    default:
-      return [new_fmt, ent];
-  }
-}
-
-function draftyFormatter(style, data, values, key) {
-  if (style == 'EX') {
-    return null;
-  }
-
-  let el = Drafty.tagName(style);
-
-  if (el) {
-    const {
-      formatMessage
-    } = this.props.intl;
-    let attr = Drafty.attrValue(style, data) || {};
-    attr.key = key;
-
-    switch (style) {
-      case 'HL':
-        attr.className = 'highlight';
-        break;
-
-      case 'IM':
-        if (data) {
-          attr.className = 'inline-image';
-          const dim = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.fitImageSize)(data.width, data.height, this.props.hasOwnProperty('viewportWidth') ? Math.min(this.props.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_15__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_15__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_15__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_15__.REM_SIZE * 24, false) || {
-            dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_15__.BROKEN_IMAGE_SIZE,
-            dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_15__.BROKEN_IMAGE_SIZE
-          };
-          attr.style = {
-            width: dim.dstWidth + 'px',
-            height: dim.dstHeight + 'px',
-            minWidth: dim.dstWidth + 'px',
-            minHeight: dim.dstHeight + 'px'
-          };
-
-          if (!Drafty.isProcessing(data)) {
-            attr.src = this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_19__.sanitizeImageUrl)(attr.src));
-            attr.alt = data.name;
-
-            if (attr.src) {
-              if (Math.max(data.width || 0, data.height || 0) > _config_js__WEBPACK_IMPORTED_MODULE_15__.IMAGE_THUMBNAIL_DIM) {
-                attr.onClick = this.handleImagePreview;
-                attr.className += ' image-clickable';
-              }
-
-              attr.loading = 'lazy';
-            } else {
-              attr.src = 'img/broken_image.png';
-            }
-          } else {
-            el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_14__.default;
-          }
-        }
-
-        break;
-
-      case 'BN':
-        attr.onClick = this.handleFormButtonClick;
-        let inner = react__WEBPACK_IMPORTED_MODULE_0___default().Children.map(values, child => {
-          return typeof child == 'string' ? child : undefined;
-        });
-
-        if (!inner || inner.length == 0) {
-          inner = [attr.name];
-        }
-
-        attr['data-title'] = inner.join('');
-        break;
-
-      case 'MN':
-        if (data && data.hasOwnProperty('colorId')) {
-          attr.className = 'mn-dark-color' + data.colorId;
-        }
-
-        break;
-
-      case 'FM':
-        attr.className = 'bot-form';
-        break;
-
-      case 'RW':
-        break;
-
-      case 'QQ':
-        attr.className = 'reply-quote';
-        attr.onClick = this.handleQuoteClick;
-        break;
-
-      case 'IC':
-        if (data.name == 'button') {
-          attr.className = 'flat-button faux';
-        } else {
-          const icons = {
-            form: {
-              name: 'dashboard',
-              title: 'drafty_form'
-            },
-            attachment: {
-              name: 'attachment',
-              title: 'drafty_attachment'
-            }
-          };
-          const icon = icons[data.name];
-          el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
-
-          if (icon) {
-            const key = data.orig.toLowerCase();
-            values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-              key: key,
-              className: "material-icons"
-            }, icon.name), formatMessage(messages[icon.title])].concat(' ', values || []);
-          } else {
-            values = [];
-          }
-        }
-
-        break;
-
-      default:
-        if (el == '_UNKN') {
-          el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
-          values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-            className: "material-icons gray"
-          }, "extension"), ' '].concat(values || []);
-        }
-
-        break;
-    }
-
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(el, attr, values);
-  } else {
-    return values;
-  }
 }
 
 ;
@@ -7488,8 +7582,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _attachment_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./attachment.jsx */ "./src/widgets/attachment.jsx");
 /* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
 /* harmony import */ var _received_marker_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./received-marker.jsx */ "./src/widgets/received-marker.jsx");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
 
 
 
@@ -7515,6 +7611,17 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     this.handleContextClick = this.handleContextClick.bind(this);
     this.handleCancelUpload = this.handleCancelUpload.bind(this);
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
+    this.formatterContext = {
+      getFormatter: tp => {
+        return tp == 'QQ' ? _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__.quoteFormatter : null;
+      },
+      formatMessage: props.intl.formatMessage.bind(props.intl),
+      viewportWidth: props.viewportWidth,
+      authorizeURL: props.tinode.authorizeURL.bind(props.tinode),
+      onImagePreview: this.handleImagePreview,
+      onFormButtonClick: this.handleFormButtonClick,
+      onQuoteClick: this.handleQuoteClick
+    };
   }
 
   handleImagePreview(e) {
@@ -7541,7 +7648,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     }
 
     if (e.target.dataset.act == 'url') {
-      data.ref = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__.sanitizeUrl)(e.target.dataset.ref) || 'about:blank';
+      data.ref = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_7__.sanitizeUrl)(e.target.dataset.ref) || 'about:blank';
     }
 
     const text = e.target.dataset.title || 'unknown';
@@ -7595,7 +7702,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     const attachments = [];
 
     if (this.props.mimeType == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.getContentType() && tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isValid(content)) {
-      tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachments(content, function (att, i) {
+      tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachments(content, (att, i) => {
         if (att.mime == 'application/json') {
           return;
         }
@@ -7613,7 +7720,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
           key: i
         }));
       }, this);
-      const tree = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(content, this.props.formatter, this);
+      const tree = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__.fullFormatter, this.formatterContext);
       content = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, tree);
     } else if (this.props.deleted) {
       content = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
@@ -7630,7 +7737,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     } else if (typeof content != 'string') {
       content = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
         className: "material-icons gray"
-      }, "error_outline"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      }, "warning_amber"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
         className: "gray"
       }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
         id: "invalid_content",
@@ -8238,7 +8345,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _unread_badge_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./unread-badge.jsx */ "./src/widgets/unread-badge.jsx");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 
 
 
@@ -8247,29 +8355,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
-  drafty_image: {
-    id: "drafty_image",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Picture"
-    }]
-  },
-  drafty_form: {
-    id: "drafty_form",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Form:"
-    }]
-  },
-  drafty_attachment: {
-    id: "drafty_attachment",
-    defaultMessage: [{
-      "type": 0,
-      "value": "Attachment"
-    }]
-  }
-});
+
 
 class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
@@ -8359,9 +8445,11 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       }
     }
 
-    const subtitle = this.props.preview ? typeof this.props.preview == 'string' ? this.props.preview : tinode_sdk__WEBPACK_IMPORTED_MODULE_6__.Drafty.isValid(this.props.preview) ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, tinode_sdk__WEBPACK_IMPORTED_MODULE_6__.Drafty.format(this.props.preview, draftyFormatter, this)) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+    const subtitle = this.props.preview ? typeof this.props.preview == 'string' ? this.props.preview : tinode_sdk__WEBPACK_IMPORTED_MODULE_6__.Drafty.isValid(this.props.preview) ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, tinode_sdk__WEBPACK_IMPORTED_MODULE_6__.Drafty.format(this.props.preview, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_7__.previewFormatter, {
+      formatMessage: this.props.intl.formatMessage
+    })) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons gray"
-    }, "error_outline"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+    }, "warning_amber"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "gray"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "invalid_content",
@@ -8370,7 +8458,7 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
         "value": "invalid content"
       }]
     }))) : this.props.comment;
-    const icon = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_7__.deliveryMarker)(this.props.received);
+    const icon = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.deliveryMarker)(this.props.received);
     const marker = icon ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: 'material-icons small space-right' + (icon.color ? ' ' + icon.color : '')
     }, icon.name) : null;
@@ -8414,89 +8502,6 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
     }, "expand_more"))) : null);
   }
 
-}
-
-;
-
-function draftyFormatter(style, data, values, key) {
-  let el = tinode_sdk__WEBPACK_IMPORTED_MODULE_6__.Drafty.tagName(style);
-  const attr = {
-    key: key
-  };
-
-  if (el) {
-    const {
-      formatMessage
-    } = this.props.intl;
-
-    switch (style) {
-      case 'BR':
-        el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
-        values = [' '];
-        break;
-
-      case 'HL':
-        attr.className = 'highlight preview';
-        break;
-
-      case 'LN':
-      case 'MN':
-        el = 'span';
-        break;
-
-      case 'IM':
-        el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
-        values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-          key: "im",
-          className: "material-icons"
-        }, "photo"), formatMessage(messages.drafty_image)];
-        break;
-
-      case 'BN':
-        el = 'span';
-        attr.className = 'flat-button faux';
-        break;
-
-      case 'FM':
-        el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
-        values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-          key: "fm",
-          className: "material-icons"
-        }, "dashboard"), formatMessage(messages.drafty_form)].concat(' ', values || []);
-        break;
-
-      case 'RW':
-        el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
-        break;
-
-      case 'EX':
-        if (data && data.mime == 'application/json') {
-          return null;
-        }
-
-        el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
-        values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-          key: "ex",
-          className: "material-icons"
-        }, "attachment"), formatMessage(messages.drafty_attachment)];
-        break;
-
-      default:
-        if (el == '_UNKN') {
-          el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
-          values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-            key: "unkn",
-            className: "material-icons"
-          }, "extension"), ' '].concat(values || []);
-        }
-
-        break;
-    }
-
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(el, attr, values);
-  } else {
-    return values;
-  }
 }
 
 ;
@@ -8954,10 +8959,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
   }
 
   replyToMessage(params, errorHandler) {
-    params.pickReply({
-      seq: params.seq,
-      content: params.content
-    });
+    params.pickReply(params.seq, params.content, errorHandler);
   }
 
   render() {
@@ -9339,7 +9341,6 @@ class DocPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
       noInput: true,
       tinode: this.props.tinode,
       replyTo: this.props.replyTo,
-      formatter: this.props.formatter,
       onCancelReply: this.props.onCancelReply,
       onSendMessage: this.handleSendDoc,
       onError: this.props.onError
@@ -9999,7 +10000,6 @@ class ImagePreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       acceptBlank: true,
       tinode: this.props.tinode,
       replyTo: this.props.replyTo,
-      formatter: this.props.formatter,
       onCancelReply: this.props.onCancelReply,
       onSendMessage: this.handleSendImage,
       onError: this.props.onError
@@ -11273,6 +11273,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
+
 
 
 
@@ -11450,12 +11452,10 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       formatMessage
     } = this.props.intl;
     const prompt = this.props.disabled ? formatMessage(messages.messaging_disabled) : this.props.messagePrompt ? formatMessage(messages[this.props.messagePrompt]) : formatMessage(messages.type_new_message);
-    let quote = null;
-
-    if (this.props.replyTo) {
-      quote = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(this.props.replyTo.content, this.props.formatter, this);
-    }
-
+    const quote = this.props.replyTo ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(this.props.replyTo.content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_5__.quoteFormatter, {
+      formatMessage: formatMessage.bind(this.props.intl),
+      authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
+    }) : null;
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "send-message-wrapper"
     }, quote ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -13026,7 +13026,9 @@ const {
 } = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_5__.default.parseUrlHash(window.location.hash);
 const language = params && params.hl || navigator.languages && navigator.languages[0] || navigator.language || navigator.userLanguage || 'en';
 const baseLanguage = language.toLowerCase().split(/[-_]/)[0];
-const messages = _messages_json__WEBPACK_IMPORTED_MODULE_3__[language] || _messages_json__WEBPACK_IMPORTED_MODULE_3__[baseLanguage] || _messages_json__WEBPACK_IMPORTED_MODULE_3__.en;
+const htmlLang = _messages_json__WEBPACK_IMPORTED_MODULE_3__[language] ? langauge : _messages_json__WEBPACK_IMPORTED_MODULE_3__[baseLanguage] ? baseLanguage : 'en';
+const messages = _messages_json__WEBPACK_IMPORTED_MODULE_3__[htmlLang];
+document.getElementsByTagName('html')[0].setAttribute('lang', htmlLang);
 react_dom__WEBPACK_IMPORTED_MODULE_1___default().render(react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().StrictMode), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_2__.IntlProvider, {
   locale: language,
   messages: messages,
