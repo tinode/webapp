@@ -46,7 +46,7 @@ More translations are welcome. See [instructions](https://github.com/tinode/chat
 * End-to-End encryption.
 * Emoji support is weak.
 * Mentions, hashtags.
-* Replying or forwarding messages.
+* Forwarding messages.
 * Previews not generated for videos, audio, links or docs.
 
 ## Other
