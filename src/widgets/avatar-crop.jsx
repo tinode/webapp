@@ -34,16 +34,14 @@ export default class AvatarCrop extends React.PureComponent {
 
   handleSubmit() {
     imageCrop(this.props.mime, this.props.avatar,
-      this.state.left, this.state.top,
-      this.state.width, this.state.height,
-      this.state.scale,
-      (mime, blob, width, height) => {
-        this.props.onSubmit(mime, blob, width, height);
-      },
-      (err) => {
+      this.state.left, this.state.top, this.state.width, this.state.height,
+      this.state.scale)
+      .then(img => {
+        this.props.onSubmit(img.mime, img.blob, img.width, img.height);
+      })
+      .catch(err => {
         this.props.onError(err);
-      }
-    );
+      });
   }
 
   render() {
