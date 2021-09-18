@@ -359,7 +359,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "fullFormatter": () => (/* binding */ fullFormatter),
 /* harmony export */   "previewFormatter": () => (/* binding */ previewFormatter),
-/* harmony export */   "quoteFormatter": () => (/* binding */ quoteFormatter)
+/* harmony export */   "quoteFormatter": () => (/* binding */ quoteFormatter),
+/* harmony export */   "replyFormatter": () => (/* binding */ replyFormatter)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
@@ -367,11 +368,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/uploading-image.jsx */ "./src/widgets/uploading-image.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _strformat_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./strformat.js */ "./src/lib/strformat.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./utils.js */ "./src/lib/utils.js");
+/* harmony import */ var _widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/lazy-image.jsx */ "./src/widgets/lazy-image.jsx");
+/* harmony import */ var _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/uploading-image.jsx */ "./src/widgets/uploading-image.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _strformat_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./utils.js */ "./src/lib/utils.js");
+
 
 
 
@@ -408,18 +411,16 @@ function handleImageData(el, data, attr) {
   if (!data) {
     attr.src = 'img/broken_image.png';
     attr.style = {
-      width: _config_js__WEBPACK_IMPORTED_MODULE_4__.IMAGE_THUMBNAIL_DIM + 'px',
-      height: _config_js__WEBPACK_IMPORTED_MODULE_4__.IMAGE_THUMBNAIL_DIM + 'px',
-      minWidth: _config_js__WEBPACK_IMPORTED_MODULE_4__.IMAGE_THUMBNAIL_DIM + 'px',
-      minHeight: _config_js__WEBPACK_IMPORTED_MODULE_4__.IMAGE_THUMBNAIL_DIM + 'px'
+      width: _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM + 'px',
+      height: _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM + 'px'
     };
     return el;
   }
 
   attr.className = 'inline-image';
-  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_4__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_4__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_4__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_4__.REM_SIZE * 24, false) || {
-    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_4__.BROKEN_IMAGE_SIZE,
-    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_4__.BROKEN_IMAGE_SIZE
+  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_5__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_5__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_5__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_5__.REM_SIZE * 24, false) || {
+    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_5__.BROKEN_IMAGE_SIZE,
+    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_5__.BROKEN_IMAGE_SIZE
   };
   attr.style = {
     width: dim.dstWidth + 'px',
@@ -429,11 +430,11 @@ function handleImageData(el, data, attr) {
   };
 
   if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isProcessing(data)) {
-    attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_7__.sanitizeImageUrl)(attr.src));
+    attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_8__.sanitizeImageUrl)(attr.src));
     attr.alt = data.name;
 
     if (attr.src) {
-      if (Math.max(data.width || 0, data.height || 0) > _config_js__WEBPACK_IMPORTED_MODULE_4__.IMAGE_THUMBNAIL_DIM) {
+      if (Math.max(data.width || 0, data.height || 0) > _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM) {
         attr.onClick = this.onImagePreview;
         attr.className += ' image-clickable';
       }
@@ -443,7 +444,7 @@ function handleImageData(el, data, attr) {
       attr.src = 'img/broken_image.png';
     }
   } else {
-    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_3__.default;
+    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_4__.default;
   }
 
   return el;
@@ -490,8 +491,10 @@ function fullFormatter(style, data, values, key) {
       break;
 
     case 'MN':
-      if (data && data.hasOwnProperty('colorId')) {
-        attr.className = 'mn-dark-color' + data.colorId;
+      attr.className = 'mention';
+
+      if (data) {
+        attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_7__.idToColorClass)(data.val, false, true);
       }
 
       break;
@@ -616,6 +619,23 @@ function previewFormatter(style, data, values, key) {
   return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(el, attr, values);
 }
 ;
+
+function inlineImageAttr(attr, data) {
+  attr.style = {
+    width: _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM + 'px',
+    height: _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM + 'px'
+  };
+  attr.className = 'inline-image';
+  attr.alt = shortenFileName(data && data.name || this.formatMessage(messages.drafty_image));
+
+  if (!data) {
+    attr.src = 'img/broken_image.png';
+  }
+
+  attr.title = attr.alt;
+  return attr;
+}
+
 function quoteFormatter(style, data, values, key) {
   if (['BR', 'EX', 'IM', 'MN', 'QQ'].includes(style)) {
     let el = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.tagName(style);
@@ -624,8 +644,8 @@ function quoteFormatter(style, data, values, key) {
 
     switch (style) {
       case 'IM':
-        const img = handleImageData.call(this, el, data, attr);
-        values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement(img, attr, null), ' ', shortenFileName(data && data.name || this.formatMessage(messages.drafty_image))];
+        attr = inlineImageAttr.call(this, attr, data);
+        values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement('img', attr, null), ' ', attr.alt];
         el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
         attr = {
           key: key
@@ -637,7 +657,7 @@ function quoteFormatter(style, data, values, key) {
         attr.className = 'mention';
 
         if (data) {
-          attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_6__.idToColorClass)(data.val, false, true);
+          attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_7__.idToColorClass)(data.val, false, true);
         }
 
         break;
@@ -672,6 +692,59 @@ function quoteFormatter(style, data, values, key) {
   }
 
   return previewFormatter.call(this, style, data, values, key);
+}
+
+function quoteImage(data) {
+  let promise;
+
+  if (data.val) {
+    const blob = base64ToBlob(data.val, data.mime);
+    promise = blob ? Promise.resolve(blob) : Promise.reject(new Error("Invalid image"));
+  } else {
+    promise = fetch(this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_8__.sanitizeImageUrl)(data.ref))).then(evt => {
+      if (evt.ok) {
+        return evt.blob();
+      } else {
+        throw new Error(`Image fetch unsuccessful: ${evt.status} ${evt.statusText}`);
+      }
+    });
+  }
+
+  return promise.then(blob => {
+    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM, _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM, -1, true);
+  }).then(scaled => {
+    data.mime = scaled.mime;
+    data.size = scaled.blob.size;
+    data.width = scaled.width;
+    data.height = scaled.height;
+    delete data.ref;
+    data.src = URL.createObjectURL(scaled.blob);
+    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__.blobToBase64)(scaled.blob);
+  }).then(b64 => {
+    data.val = b64.bits;
+    return data;
+  }).catch(err => {
+    delete data.val;
+    delete data.src;
+    data.width = _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM;
+    data.height = _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM;
+    throw err;
+  });
+}
+
+function replyFormatter(style, data, values, key) {
+  if (style != 'IM') {
+    return quoteFormatter.call(this, style, data, values, key);
+  }
+
+  const attr = inlineImageAttr.call(this, {
+    key: key
+  }, data);
+  attr.whenDone = quoteImage.call(this, data);
+  values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_3__.default, attr, null), ' ', attr.alt];
+  return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), {
+    key: key
+  }, values);
 }
 
 /***/ }),
@@ -3996,7 +4069,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
     const images = [];
     Drafty.entities(content, (data, idx, tp) => {
-      if (tp == 'IM') {
+      if (tp == 'IM-disable') {
         images.push({
           tp: tp,
           data: data
@@ -10270,6 +10343,49 @@ class Invitation extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
 
 /***/ }),
 
+/***/ "./src/widgets/lazy-image.jsx":
+/*!************************************!*\
+  !*** ./src/widgets/lazy-image.jsx ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ LazyImage)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+
+
+class LazyImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
+  constructor(props) {
+    super(props);
+    this.state = {
+      src: 'img/placeholder.png',
+      style: this.props.style,
+      className: this.props.className,
+      loading: 'lazy',
+      alt: this.props.alt,
+      onClick: this.props.onClick
+    };
+    this.props.whenDone.then(data => this.setState({
+      src: data.src
+    })).catch(() => this.setState({
+      src: 'img/broken_image.png'
+    }));
+  }
+
+  render() {
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement('img', this.state);
+  }
+
+}
+;
+
+/***/ }),
+
 /***/ "./src/widgets/letter-tile.jsx":
 /*!*************************************!*\
   !*** ./src/widgets/letter-tile.jsx ***!
@@ -11452,7 +11568,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       formatMessage
     } = this.props.intl;
     const prompt = this.props.disabled ? formatMessage(messages.messaging_disabled) : this.props.messagePrompt ? formatMessage(messages[this.props.messagePrompt]) : formatMessage(messages.type_new_message);
-    const quote = this.props.replyTo ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(this.props.replyTo.content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_5__.quoteFormatter, {
+    const quote = this.props.replyTo ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(this.props.replyTo.content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_5__.replyFormatter, {
       formatMessage: formatMessage.bind(this.props.intl),
       authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
     }) : null;

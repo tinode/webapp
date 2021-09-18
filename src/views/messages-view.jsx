@@ -871,7 +871,7 @@ class MessagesView extends React.Component {
     // Make small image previews.
     const images = [];
     Drafty.entities(content, (data, idx, tp) => {
-      if (tp == 'IM') {
+      if (tp == 'IM-disable') {
         images.push({
           tp: tp,
           data: data
