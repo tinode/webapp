@@ -7,8 +7,8 @@ import LazyImage from '../widgets/lazy-image.jsx'
 import UploadingImage from '../widgets/uploading-image.jsx'
 
 import { IMAGE_THUMBNAIL_DIM, BROKEN_IMAGE_SIZE, REM_SIZE } from '../config.js';
-import { blobToBase64, fitImageSize, imageScaled } from './blob-helpers.js';
-import { idToColorClass } from './strformat.js';
+import { base64ToBlob, blobToBase64, fitImageSize, imageScaled } from './blob-helpers.js';
+import { idToColorClass, shortenFileName } from './strformat.js';
 import { sanitizeImageUrl } from './utils.js';
 
 const messages = defineMessages({
@@ -29,6 +29,7 @@ const messages = defineMessages({
   },
 });
 
+// Size the already scaled image.
 function handleImageData(el, data, attr) {
   if (!data) {
     attr.src = 'img/broken_image.png';
@@ -72,8 +73,48 @@ function handleImageData(el, data, attr) {
   return el;
 }
 
-function shortenFileName(filename) {
-  return filename.length > 16 ? filename.slice(0, 7) + '…' + filename.slice(-7) : filename;
+function quotedImage(data) {
+  let promise;
+  // Get the blob from the image data.
+  if (data.val) {
+    const blob = base64ToBlob(data.val, data.mime);
+    promise = blob ? Promise.resolve(blob) : Prmise.reject(new Error("Invalid image"));
+  } else {
+    promise = fetch(this.authorizeURL(sanitizeImageUrl(data.ref))).then(evt => {
+      if (evt.ok) {
+        return evt.blob();
+      } else {
+        throw new Error(`Image fetch unsuccessful: ${evt.status} ${evt.statusText}`);
+      }
+    });
+  }
+
+  // Scale the blob.
+  return promise
+    .then(blob => {
+      return imageScaled(blob, IMAGE_THUMBNAIL_DIM, IMAGE_THUMBNAIL_DIM, -1, true)
+    }).then(scaled => {
+      data.mime = scaled.mime;
+      data.size = scaled.blob.size;
+      data.width = scaled.width;
+      data.height = scaled.height;
+      delete data.ref;
+      // Keeping the original file name, if provided: ex.data.name;
+
+      return blobToBase64(scaled.blob);
+    }).then(b64 => {
+      data.val = b64.bits;
+      return data;
+    }).catch(err => {
+      delete data.val;
+      delete data.name;
+      data.width = IMAGE_THUMBNAIL_DIM;
+      data.height = IMAGE_THUMBNAIL_DIM;
+      data.maxWidth = IMAGE_THUMBNAIL_DIM;
+      data.maxHeight = IMAGE_THUMBNAIL_DIM;
+      // Rethrow.
+      throw err;
+    });
 }
 
 // The main Drafty formatter: converts Drafty elements into React classes. 'this' is set by the caller.
@@ -233,9 +274,11 @@ function inlineImageAttr(attr, data) {
   attr.style = {
     width: IMAGE_THUMBNAIL_DIM + 'px',
     height: IMAGE_THUMBNAIL_DIM + 'px',
+    maxWidth: IMAGE_THUMBNAIL_DIM + 'px',
+    maxHeight: IMAGE_THUMBNAIL_DIM + 'px',
   }
   attr.className = 'inline-image';
-  attr.alt = shortenFileName((data && data.name) || this.formatMessage(messages.drafty_image));
+  attr.alt = shortenFileName(data && data.name, 16) || this.formatMessage(messages.drafty_image);
   if (!data) {
     attr.src = 'img/broken_image.png';
   }
@@ -287,7 +330,7 @@ export function quoteFormatter(style, data, values, key) {
         }
         el = React.Fragment;
         values = [<i key="ex" className="material-icons">attachment</i>,
-          shortenFileName(fname || this.formatMessage(messages.drafty_attachment))];
+          shortenFileName(fname, 16) || this.formatMessage(messages.drafty_attachment)];
         break;
     }
     return React.createElement(el, attr, values);

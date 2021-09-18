@@ -77,132 +77,146 @@ export function fileNameForMime(fname, mime) {
 }
 
 // Scale uploaded image to fit under certain dimensions and byte size, optionally constraining to a square.
-// On success calls onSuccess callback with the scaled image as Blob.
-export function imageScaled(fileOrBlob, maxWidth, maxHeight, maxSize, forceSquare, onSuccess, onError) {
-  const img = new Image();
-  img.crossOrigin = 'Anonymous';
-  img.onerror = function(err) {
-    onError("Image format unrecognized");
-  }
-  img.onload = async function() {
-    // Once the image is loaded, the URL is no longer needed.
-    URL.revokeObjectURL(img.src);
-
-    // Calculate the desired image dimensions.
-    const dim = fitImageSize(this.width, this.height, maxWidth, maxHeight, forceSquare);
-    if (!dim) {
-      onError("Invalid image");
-      return;
+// Returns a promise which is resolven on success or rejected on failure.
+export function imageScaled(fileOrBlob, maxWidth, maxHeight, maxSize, forceSquare) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.onerror = function(err) {
+      reject(new Error("Image format unrecognized"));
     }
-    let canvas = document.createElement('canvas');
-    canvas.width = dim.dstWidth;
-    canvas.height = dim.dstHeight;
-    let ctx = canvas.getContext('2d');
-    ctx.imageSmoothingEnabled = true;
-    ctx.drawImage(this, dim.xoffset, dim.yoffset, dim.srcWidth, dim.srcHeight,
-      0, 0, dim.dstWidth, dim.dstHeight);
+    img.onload = async function() {
+      // Once the image is loaded, the URL is no longer needed.
+      URL.revokeObjectURL(img.src);
 
-    const mime = SUPPORTED_IMAGE_FORMATS.includes(fileOrBlob.type) ? fileOrBlob.type : 'image/jpeg';
-    // Generate blob to check size of the image.
-    let blob = await new Promise(resolve => canvas.toBlob(resolve, mime));
-    if (!blob) {
-      onError("Unsupported image format");
-      return;
-    }
-
-    // Ensure the image is not too large. Shrink the image keeping the aspect ratio.
-    // Do nothing if maxsize is <= 0.
-    while (maxSize > 0 && blob.length > maxSize) {
-      dim.dstWidth = (dim.dstWidth * 0.70710678118) | 0;
-      dim.dstHeight = (dim.dstHeight * 0.70710678118) | 0;
+      // Calculate the desired image dimensions.
+      const dim = fitImageSize(this.width, this.height, maxWidth, maxHeight, forceSquare);
+      if (!dim) {
+        reject(new Error("Invalid image"));
+        return;
+      }
+      let canvas = document.createElement('canvas');
       canvas.width = dim.dstWidth;
       canvas.height = dim.dstHeight;
-      ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      let ctx = canvas.getContext('2d');
+      ctx.imageSmoothingEnabled = true;
       ctx.drawImage(this, dim.xoffset, dim.yoffset, dim.srcWidth, dim.srcHeight,
         0, 0, dim.dstWidth, dim.dstHeight);
-      blob = await new Promise(resolve => canvas.toBlob(resolve, mime));
-    }
 
-    canvas = null;
-    onSuccess(mime, blob, dim.dstWidth, dim.dstHeight, fileNameForMime(fileOrBlob.name, mime));
-  };
-  img.src = URL.createObjectURL(fileOrBlob);
+      const mime = SUPPORTED_IMAGE_FORMATS.includes(fileOrBlob.type) ? fileOrBlob.type : 'image/jpeg';
+      // Generate blob to check size of the image.
+      let blob = await new Promise(resolve => canvas.toBlob(resolve, mime));
+      if (!blob) {
+        reject(new Error("Unsupported image format"));
+        return;
+      }
+
+      // Ensure the image is not too large. Shrink the image keeping the aspect ratio.
+      // Do nothing if maxsize is <= 0.
+      while (maxSize > 0 && blob.length > maxSize) {
+        dim.dstWidth = (dim.dstWidth * 0.70710678118) | 0;
+        dim.dstHeight = (dim.dstHeight * 0.70710678118) | 0;
+        canvas.width = dim.dstWidth;
+        canvas.height = dim.dstHeight;
+        ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(this, dim.xoffset, dim.yoffset, dim.srcWidth, dim.srcHeight,
+          0, 0, dim.dstWidth, dim.dstHeight);
+        blob = await new Promise(resolve => canvas.toBlob(resolve, mime));
+      }
+
+      canvas = null;
+      resolve({mime: mime, blob: blob, width: dim.dstWidth, height: dim.dstHeight, name: fileNameForMime(fileOrBlob.name, mime)});
+    };
+    img.src = URL.createObjectURL(fileOrBlob);
+  });
 }
 
 // Scale and crop image according to specified dimensions.
 // The coordinates are in unscaled image pixels, i.e. cut the rectangle first then scale it.
-export function imageCrop(mime, objURL, left, top, width, height, scale, onSuccess, onError) {
-  const img = new Image();
-  img.crossOrigin = 'Anonymous';
-  img.onerror = function(err) {
-    onError("Image format unrecognized");
-  }
-  img.onload = async function() {
-    // Once the image is loaded, the URL is no longer needed.
-    URL.revokeObjectURL(img.src);
+// returns a promise.
+export function imageCrop(mime, objURL, left, top, width, height, scale) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.onerror = (err) => {
+      reject(new Error("Image format unrecognized"));
+    };
+    img.onload = () => {
+      // Once the image is loaded, the URL is no longer needed.
+      URL.revokeObjectURL(img.src);
 
-    let canvas = document.createElement('canvas');
-    canvas.width = width * scale;
-    canvas.height = height * scale;
-    let ctx = canvas.getContext('2d');
-    ctx.imageSmoothingEnabled = true;
-    ctx.drawImage(this, left, top, width, height, 0, 0, canvas.width, canvas.height);
+      let canvas = document.createElement('canvas');
+      canvas.width = width * scale;
+      canvas.height = height * scale;
+      let ctx = canvas.getContext('2d');
+      ctx.imageSmoothingEnabled = true;
+      ctx.drawImage(this, left, top, width, height, 0, 0, canvas.width, canvas.height);
 
-    mime = SUPPORTED_IMAGE_FORMATS.includes(mime) ? mime : 'image/jpeg';
-    // Generate blob to check size of the image.
-    let blob = await new Promise(resolve => canvas.toBlob(resolve, mime));
-    if (!blob) {
-      onError("Unsupported image format");
-      return;
-    }
-    // Allow GC.
-    canvas = null;
-    onSuccess(mime, blob, width, height);
-  };
-  img.src = objURL;
+      mime = SUPPORTED_IMAGE_FORMATS.includes(mime) ? mime : 'image/jpeg';
+      // Generate blob to check size of the image.
+      canvas.toBlob((blob) => {
+        // Allow GC.
+        canvas = null;
+        if (blob) {
+          resolve({mime: mime, blob: blob, width: width, height: height});
+        } else {
+          reject(new Error("Unsupported image format"));
+        }
+      }, mime);
+    };
+    img.src = objURL;
+  });
 }
 
-// Convert File to base64 string.
-export function fileToBase64(file, onSuccess) {
-  const reader = new FileReader();
-  reader.addEventListener('load', function() {
-    onSuccess(file.type, reader.result.split(',')[1], file.name);
+// Convert file to base64 string.
+export function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = (evt) => {
+      reject(reader.error);
+    };
+    reader.onload = () => {
+      resolve({mime: file.type, bits: reader.result.split(',')[1], name: file.name});
+    };
+    reader.readAsDataURL(file);
   });
-  reader.readAsDataURL(file);
 }
 
-// Convert Blob to base64 string.
-export function blobToBase64(blob, onSuccess) {
-  const reader = new FileReader();
-  reader.addEventListener('load', function() {
-    onSuccess(blob.type, reader.result.split(',')[1]);
+// Convert Blob to base64 string. Returns a promise resolved with the base64 string and mime.
+export function blobToBase64(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = (evt) => {
+      reject(reader.error);
+    };
+    reader.onload = () => {
+      resolve({mime: blob.type, bits: reader.result.split(',')[1]});
+    };
+    reader.readAsDataURL(blob);
   });
-  reader.readAsDataURL(blob);
 }
 
 // File pasted from the clipboard. It's either an inline image or a file attachment.
-// FIXME: handle large files out of band.
 export function filePasted(event, onImageSuccess, onAttachmentSuccess, onError) {
-  var items = (event.clipboardData || event.originalEvent.clipboardData || {}).items;
-  for (var i in items) {
-    var item = items[i];
+  const items = (event.clipboardData || event.originalEvent.clipboardData || {}).items;
+  if (!Array.isArray(items)) {
+    return false;
+  }
+
+  for (let i in items) {
+    const item = items[i];
     if (item.kind === 'file') {
-      var file = item.getAsFile();
+      const file = item.getAsFile();
       if (!file) {
         console.error("Failed to get file object from pasted file item", item.kind, item.type);
+        onError("Failed to get file object from pasted file item");
         continue;
       }
       if (file.type && file.type.split('/')[0] == 'image') {
-        // Handle inline image
-        if (file.size > MAX_INBAND_ATTACHMENT_SIZE || SUPPORTED_IMAGE_FORMATS.indexOf(file.type) < 0) {
-          imageFileScaledToBase64(file, MAX_IMAGE_DIM, MAX_IMAGE_DIM, false, onImageSuccess, onError);
-        } else {
-          imageFileToBase64(file, onImageSuccess, onError);
-        }
+        onImageSuccess(file);
       } else {
-        // Handle file attachment
-        fileToBase64(file, onAttachmentSuccess, onError)
+        onAttachmentSuccess(file);
       }
       // Indicate that the pasted data contains a file.
       return true;
@@ -263,7 +277,7 @@ export function base64ToBlob(str, mime) {
 
     return new Blob([buf], { type: mime });
   } catch(err) {
-    console.log("Failed to convert base64 to blob: ", err);
+    console.error("Failed to convert base64 to blob: ", err);
   }
 
   return null;
