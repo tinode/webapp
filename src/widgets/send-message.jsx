@@ -5,7 +5,7 @@ import { Drafty } from 'tinode-sdk';
 
 import { KEYPRESS_DELAY } from '../config.js';
 import { filePasted } from '../lib/blob-helpers.js';
-import { quoteFormatter } from '../lib/formatters.js';
+import { quoteFormatter, replyFormatter } from '../lib/formatters.js';
 
 const messages = defineMessages({
   messaging_disabled: {
@@ -59,6 +59,13 @@ class SendMessage extends React.PureComponent {
     if (this.messageEditArea) {
       this.messageEditArea.addEventListener('paste', this.handlePasteEvent, false);
     }
+
+    this.setState({quote: this.props.replyTo ?
+      Drafty.format(this.props.replyTo.content, replyFormatter, {
+        formatMessage: this.props.intl.formatMessage.bind(this.props.intl),
+        authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
+      }) :
+      null});
   }
 
   componentWillUnmount() {
@@ -67,9 +74,18 @@ class SendMessage extends React.PureComponent {
     }
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     if (this.messageEditArea) {
       this.messageEditArea.focus();
+    }
+
+    if (prevProps.replyTo != this.props.replyTo) {
+      this.setState({quote: this.props.replyTo ?
+        Drafty.format(this.props.replyTo.content, replyFormatter, {
+          formatMessage: this.props.intl.formatMessage.bind(this.props.intl),
+          authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
+        }) :
+        null});
     }
   }
 
@@ -161,21 +177,14 @@ class SendMessage extends React.PureComponent {
         formatMessage(messages[this.props.messagePrompt]) :
         formatMessage(messages.type_new_message));
 
-    const quote = this.props.replyTo ?
-      Drafty.format(this.props.replyTo.content, quoteFormatter, {
-        formatMessage: formatMessage.bind(this.props.intl),
-        authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
-      }) :
-      null;
-
     return (
       <div id="send-message-wrapper">
-      {quote ?
+      {this.state.quote ?
         <div id="reply-quote-preview">
           <div className="cancel">
             <a href="#" onClick={(e) => {e.preventDefault(); this.props.onCancelReply();}}><i className="material-icons gray">close</i></a>
           </div>
-          {quote}
+          {this.state.quote}
         </div>
       :
       null}

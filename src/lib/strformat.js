@@ -37,6 +37,15 @@ export function bytesToHumanSize(bytes) {
   return count.toFixed(round) + ' ' + sizes[bucket];
 }
 
+// Shorten a file name to be under maxLength by clipping out the middle.
+export function shortenFileName(filename, maxLength) {
+  if (typeof filename != 'string') {
+    return filename;
+  }
+  return filename.length > maxLength ?
+    filename.slice(0, maxLength/2 - 1) + '…' + filename.slice(1 - maxLength/2) : filename;
+}
+
 // Get 32 bit integer hash value for a string. Ideally it should produce the same value
 // as Java's String#hash().
 function stringToColorHash(value) {

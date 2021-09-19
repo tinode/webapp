@@ -2513,6 +2513,14 @@ ul.tabbar li.active > a {
   text-align: center;
 }
 
+#reply-quote-preview .inline-image {
+  background-color: #ccc;
+}
+
+#reply-quote-preview img.inline-image::before {
+  content: '';
+}
+
 .mention {
   font-weight: bolder;
 }

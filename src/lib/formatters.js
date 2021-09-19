@@ -3,11 +3,12 @@ import { defineMessages } from 'react-intl';
 
 import { Drafty } from 'tinode-sdk';
 
+import LazyImage from '../widgets/lazy-image.jsx'
 import UploadingImage from '../widgets/uploading-image.jsx'
 
 import { IMAGE_THUMBNAIL_DIM, BROKEN_IMAGE_SIZE, REM_SIZE } from '../config.js';
-import { fitImageSize } from './blob-helpers.js';
-import { idToColorClass } from './strformat.js';
+import { base64ToBlob, blobToBase64, fitImageSize, imageScaled } from './blob-helpers.js';
+import { idToColorClass, shortenFileName } from './strformat.js';
 import { sanitizeImageUrl } from './utils.js';
 
 const messages = defineMessages({
@@ -35,9 +36,6 @@ function handleImageData(el, data, attr) {
     attr.style = {
       width: IMAGE_THUMBNAIL_DIM + 'px',
       height: IMAGE_THUMBNAIL_DIM + 'px',
-      // Looks like a Chrome bug: broken image does not respect 'width' and 'height'.
-      minWidth: IMAGE_THUMBNAIL_DIM + 'px',
-      minHeight: IMAGE_THUMBNAIL_DIM + 'px'
     };
     return el;
   }
@@ -94,7 +92,7 @@ function quotedImage(data) {
   // Scale the blob.
   return promise
     .then(blob => {
-      return imageScaled(blob, IMAGE_THUMBNAIL_DIM, IMAGE_THUMBNAIL_DIM, -1, false)
+      return imageScaled(blob, IMAGE_THUMBNAIL_DIM, IMAGE_THUMBNAIL_DIM, -1, true)
     }).then(scaled => {
       data.mime = scaled.mime;
       data.size = scaled.blob.size;
@@ -117,10 +115,6 @@ function quotedImage(data) {
       // Rethrow.
       throw err;
     });
-}
-
-function shortenFileName(filename) {
-  return filename.length > 16 ? filename.slice(0, 7) + '…' + filename.slice(-7) : filename;
 }
 
 // The main Drafty formatter: converts Drafty elements into React classes. 'this' is set by the caller.
@@ -169,8 +163,9 @@ export function fullFormatter(style, data, values, key) {
       break;
     case 'MN':
       // Mention
-      if (data && data.hasOwnProperty('colorId')) {
-        attr.className = 'mn-dark-color' + data.colorId;
+      attr.className = 'mention'
+      if (data) {
+        attr.className += ' ' + idToColorClass(data.val, false, true);
       }
       break;
     case 'FM':
@@ -274,6 +269,23 @@ export function previewFormatter(style, data, values, key) {
   return React.createElement(el, attr, values);
 };
 
+// Converts Drafty object into a quoted reply. 'this' is set by the caller.
+function inlineImageAttr(attr, data) {
+  attr.style = {
+    width: IMAGE_THUMBNAIL_DIM + 'px',
+    height: IMAGE_THUMBNAIL_DIM + 'px',
+    maxWidth: IMAGE_THUMBNAIL_DIM + 'px',
+    maxHeight: IMAGE_THUMBNAIL_DIM + 'px',
+  }
+  attr.className = 'inline-image';
+  attr.alt = shortenFileName(data && data.name, 16) || this.formatMessage(messages.drafty_image);
+  if (!data) {
+    attr.src = 'img/broken_image.png';
+  }
+  attr.title = attr.alt;
+  return attr;
+}
+
 // Displays a portion of Drafty within 'QQ' quotes. 'this' is set by the caller.
 // 'this' must contain:
 //    formatMessage: this.props.intl.formatMessage
@@ -287,9 +299,8 @@ export function quoteFormatter(style, data, values, key) {
     attr.key = key;
     switch(style) {
       case 'IM':
-        const img = handleImageData.call(this, el, data, attr);
-        values = [React.createElement(img, attr, null), ' ',
-          shortenFileName((data && data.name) || this.formatMessage(messages.drafty_image))];
+        attr = inlineImageAttr.call(this, attr, data);
+        values = [React.createElement('img', attr, null), ' ', attr.alt];
         el = React.Fragment;
         // Fragment attributes.
         attr = {key: key};
@@ -319,10 +330,66 @@ export function quoteFormatter(style, data, values, key) {
         }
         el = React.Fragment;
         values = [<i key="ex" className="material-icons">attachment</i>,
-          shortenFileName(fname || this.formatMessage(messages.drafty_attachment))];
+          shortenFileName(fname, 16) || this.formatMessage(messages.drafty_attachment)];
         break;
     }
     return React.createElement(el, attr, values);
   }
   return previewFormatter.call(this, style, data, values, key);
+}
+
+// Create image thumbnail suitable for inclusion in a quote.
+function quoteImage(data) {
+  let promise;
+  // Get the blob from the image data.
+  if (data.val) {
+    const blob = base64ToBlob(data.val, data.mime);
+    promise = blob ? Promise.resolve(blob) : Promise.reject(new Error("Invalid image"));
+  } else {
+    promise = fetch(this.authorizeURL(sanitizeImageUrl(data.ref))).then(evt => {
+      if (evt.ok) {
+        return evt.blob();
+      } else {
+        throw new Error(`Image fetch unsuccessful: ${evt.status} ${evt.statusText}`);
+      }
+    });
+  }
+
+  // Scale the blob.
+  return promise
+    .then(blob => {
+      // Cut the square from the center of the image and shrink it.
+      return imageScaled(blob, IMAGE_THUMBNAIL_DIM, IMAGE_THUMBNAIL_DIM, -1, true)
+    }).then(scaled => {
+      data.mime = scaled.mime;
+      data.size = scaled.blob.size;
+      data.width = scaled.width;
+      data.height = scaled.height;
+      delete data.ref;
+      // Keeping the original file name, if provided: ex.data.name;
+
+      data.src = URL.createObjectURL(scaled.blob);
+      return blobToBase64(scaled.blob);
+    }).then(b64 => {
+      data.val = b64.bits;
+      return data;
+    }).catch(err => {
+      delete data.val;
+      delete data.src;
+      data.width = IMAGE_THUMBNAIL_DIM;
+      data.height = IMAGE_THUMBNAIL_DIM;
+      // Rethrow.
+      throw err;
+    });
+}
+
+// Create a preview of a reply.
+export function replyFormatter(style, data, values, key) {
+  if (style != 'IM') {
+    return quoteFormatter.call(this, style, data, values, key);
+  }
+  const attr = inlineImageAttr.call(this, {key: key}, data);
+  attr.whenDone = quoteImage.call(this, data);
+  values = [React.createElement(LazyImage, attr, null), ' ', attr.alt];
+  return React.createElement(React.Fragment, {key: key}, values);
 }
