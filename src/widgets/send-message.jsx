@@ -59,6 +59,13 @@ class SendMessage extends React.PureComponent {
     if (this.messageEditArea) {
       this.messageEditArea.addEventListener('paste', this.handlePasteEvent, false);
     }
+
+    this.setState({quote: this.props.replyTo ?
+      Drafty.format(this.props.replyTo.content, replyFormatter, {
+        formatMessage: this.props.intl.formatMessage.bind(this.props.intl),
+        authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
+      }) :
+      null});
   }
 
   componentWillUnmount() {
