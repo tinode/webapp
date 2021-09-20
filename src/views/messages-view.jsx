@@ -16,9 +16,9 @@ import LoadSpinner from '../widgets/load-spinner.jsx';
 import LogoView from './logo-view.jsx';
 import SendMessage from '../widgets/send-message.jsx';
 
-import { DEFAULT_P2P_ACCESS_MODE, IMAGE_PREVIEW_DIM, KEYPRESS_DELAY, MESSAGES_PAGE,
-  MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE, READ_DELAY,
-  IMAGE_THUMBNAIL_DIM } from '../config.js';
+import { DEFAULT_P2P_ACCESS_MODE, IMAGE_PREVIEW_DIM, IMAGE_THUMBNAIL_DIM, KEYPRESS_DELAY,
+  MESSAGES_PAGE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE,
+  READ_DELAY, QUOTED_REPLY_LENGTH } from '../config.js';
 import { SUPPORTED_IMAGE_FORMATS, blobToBase64, base64ToBlob, filePasted, fileToBase64,
   imageScaled, makeImageUrl } from '../lib/blob-helpers.js';
 import HashNavigation from '../lib/navigation.js';
@@ -719,21 +719,23 @@ class MessagesView extends React.Component {
       this.props.onError(this.props.intl.formatMessage(messages.file_attachment_too_large,
         {size: bytesToHumanSize(file.size), limit: bytesToHumanSize(maxExternAttachmentSize)}), 'err');
     } else {
-      this.setState({ docPreview: {
-        file: file,
-        filename: file.name,
-        size: file.size,
-        type: file.type
-      }});
+      this.setState({
+        docPreview: {
+          file: file,
+          name: file.name,
+          size: file.size,
+          type: file.type
+        }
+      });
     }
   }
 
   // sendImageAttachment sends the image bits inband as Drafty message.
   sendImageAttachment(caption, blob) {
-    const mime = this.state.imagePreview.type;
+    const mime = this.state.imagePreview.mime;
     const width = this.state.imagePreview.width;
     const height = this.state.imagePreview.height;
-    const fname = this.state.imagePreview.filename;
+    const fname = this.state.imagePreview.name;
 
     // Server-provided limit reduced for base64 encoding and overhead.
     const maxInbandAttachmentSize = (this.props.tinode.getServerLimit('maxMessageSize',
@@ -803,11 +805,11 @@ class MessagesView extends React.Component {
         this.setState({imagePreview: {
           url: URL.createObjectURL(scaled.blob),
           blob: scaled.blob,
-          filename: scaled.fname,
+          name: scaled.name,
           width: scaled.width,
           height: scaled.height,
           size: scaled.blob.size,
-          type: scaled.mime
+          mime: scaled.mime
         }});
       }).catch(err => {
         this.props.onError(err, 'err');
@@ -834,7 +836,7 @@ class MessagesView extends React.Component {
       content = Drafty.init(content);
     }
     if (Drafty.isValid(content)) {
-      content = Drafty.preview(content, 30);
+      content = Drafty.preview(content, QUOTED_REPLY_LENGTH);
     } else {
       // /!\ invalid content.
       content = Drafty.append(Drafty.init('\u26A0 '),
@@ -858,75 +860,12 @@ class MessagesView extends React.Component {
       }
     }
 
-    // Make small image previews.
-    const images = [];
-    Drafty.entities(content, (data, idx, tp) => {
-      if (tp == 'IM') {
-        images.push({
-          tp: tp,
-          data: data
-        });
+    this.setState({
+      reply: {
+        content: Drafty.quote(senderName, senderId, content),
+        seq: seq
       }
     });
-
-    const quotedImage = (data) => {
-      let promise;
-      // Get the blob from the image data.
-      if (data.val) {
-        const blob = base64ToBlob(data.val, data.mime);
-        promise = blob ? Promise.resolve(blob) : Prmise.reject(new Error("Invalid image"));
-      } else {
-        promise = fetch(this.props.tinode.authorizeURL(sanitizeImageUrl(data.ref))).then(evt => {
-          if (evt.ok) {
-            return evt.blob();
-          } else {
-            throw new Error(`Image fetch unsuccessful: ${evt.status} ${evt.statusText}`);
-          }
-        });
-      }
-
-      // Scale the blob.
-      return promise
-        .then(blob => {
-          return imageScaled(blob, IMAGE_THUMBNAIL_DIM, IMAGE_THUMBNAIL_DIM, -1, false)
-        }).then(scaled => {
-          data.mime = scaled.mime;
-          data.size = scaled.blob.size;
-          data.width = scaled.width;
-          data.height = scaled.height;
-          delete data.ref;
-          // Keeping the original file name, if provided: ex.data.name;
-
-          return blobToBase64(scaled.blob);
-        }).then(b64 => {
-          data.val = b64.bits;
-          return data;
-        }).catch(err => {
-          delete data.val;
-          delete data.name;
-          data.width = IMAGE_THUMBNAIL_DIM;
-          data.height = IMAGE_THUMBNAIL_DIM;
-          data.maxWidth = IMAGE_THUMBNAIL_DIM;
-          data.maxHeight = IMAGE_THUMBNAIL_DIM;
-          // Rethrow.
-          throw err;
-        });
-    }
-
-    // Turn all images into thumbnails.
-    Promise.all(images.map(ex => quotedImage(ex.data)))
-      .catch((err) => {
-        this.props.onError(err, 'err');
-      })
-      .finally(() => {
-        // All done. Create a reply quote.
-        this.setState({
-          reply: {
-            content: Drafty.quote(senderName, senderId, content),
-            seq: seq
-          }
-        });
-      });
   }
 
   handleCancelReply() {

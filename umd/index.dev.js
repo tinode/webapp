@@ -40,6 +40,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "MAX_TITLE_LENGTH": () => (/* binding */ MAX_TITLE_LENGTH),
 /* harmony export */   "MAX_TOPIC_DESCRIPTION_LENGTH": () => (/* binding */ MAX_TOPIC_DESCRIPTION_LENGTH),
 /* harmony export */   "MESSAGE_PREVIEW_LENGTH": () => (/* binding */ MESSAGE_PREVIEW_LENGTH),
+/* harmony export */   "QUOTED_REPLY_LENGTH": () => (/* binding */ QUOTED_REPLY_LENGTH),
 /* harmony export */   "LINK_CONTACT_US": () => (/* binding */ LINK_CONTACT_US),
 /* harmony export */   "LINK_PRIVACY_POLICY": () => (/* binding */ LINK_PRIVACY_POLICY),
 /* harmony export */   "LINK_TERMS_OF_SERVICE": () => (/* binding */ LINK_TERMS_OF_SERVICE)
@@ -79,6 +80,7 @@ const MAX_ONLINE_IN_TOPIC = 4;
 const MAX_TITLE_LENGTH = 60;
 const MAX_TOPIC_DESCRIPTION_LENGTH = 360;
 const MESSAGE_PREVIEW_LENGTH = 80;
+const QUOTED_REPLY_LENGTH = 30;
 const LINK_CONTACT_US = 'email:support@tinode.co';
 const LINK_PRIVACY_POLICY = 'https://tinode.co/privacy.html';
 const LINK_TERMS_OF_SERVICE = 'https://tinode.co/terms.html';
@@ -398,7 +400,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "fullFormatter": () => (/* binding */ fullFormatter),
 /* harmony export */   "previewFormatter": () => (/* binding */ previewFormatter),
-/* harmony export */   "quoteFormatter": () => (/* binding */ quoteFormatter)
+/* harmony export */   "quoteFormatter": () => (/* binding */ quoteFormatter),
+/* harmony export */   "replyFormatter": () => (/* binding */ replyFormatter)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
@@ -406,11 +409,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/uploading-image.jsx */ "./src/widgets/uploading-image.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _strformat_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./strformat.js */ "./src/lib/strformat.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./utils.js */ "./src/lib/utils.js");
+/* harmony import */ var _widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/lazy-image.jsx */ "./src/widgets/lazy-image.jsx");
+/* harmony import */ var _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/uploading-image.jsx */ "./src/widgets/uploading-image.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _strformat_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./utils.js */ "./src/lib/utils.js");
+
 
 
 
@@ -447,18 +452,16 @@ function handleImageData(el, data, attr) {
   if (!data) {
     attr.src = 'img/broken_image.png';
     attr.style = {
-      width: _config_js__WEBPACK_IMPORTED_MODULE_4__.IMAGE_THUMBNAIL_DIM + 'px',
-      height: _config_js__WEBPACK_IMPORTED_MODULE_4__.IMAGE_THUMBNAIL_DIM + 'px',
-      minWidth: _config_js__WEBPACK_IMPORTED_MODULE_4__.IMAGE_THUMBNAIL_DIM + 'px',
-      minHeight: _config_js__WEBPACK_IMPORTED_MODULE_4__.IMAGE_THUMBNAIL_DIM + 'px'
+      width: _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM + 'px',
+      height: _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM + 'px'
     };
     return el;
   }
 
   attr.className = 'inline-image';
-  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_4__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_4__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_4__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_4__.REM_SIZE * 24, false) || {
-    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_4__.BROKEN_IMAGE_SIZE,
-    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_4__.BROKEN_IMAGE_SIZE
+  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_5__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_5__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_5__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_5__.REM_SIZE * 24, false) || {
+    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_5__.BROKEN_IMAGE_SIZE,
+    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_5__.BROKEN_IMAGE_SIZE
   };
   attr.style = {
     width: dim.dstWidth + 'px',
@@ -468,11 +471,11 @@ function handleImageData(el, data, attr) {
   };
 
   if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isProcessing(data)) {
-    attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_7__.sanitizeImageUrl)(attr.src));
+    attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_8__.sanitizeImageUrl)(attr.src));
     attr.alt = data.name;
 
     if (attr.src) {
-      if (Math.max(data.width || 0, data.height || 0) > _config_js__WEBPACK_IMPORTED_MODULE_4__.IMAGE_THUMBNAIL_DIM) {
+      if (Math.max(data.width || 0, data.height || 0) > _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM) {
         attr.onClick = this.onImagePreview;
         attr.className += ' image-clickable';
       }
@@ -482,7 +485,7 @@ function handleImageData(el, data, attr) {
       attr.src = 'img/broken_image.png';
     }
   } else {
-    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_3__.default;
+    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_4__.default;
   }
 
   return el;
@@ -492,10 +495,10 @@ function quotedImage(data) {
   let promise;
 
   if (data.val) {
-    const blob = base64ToBlob(data.val, data.mime);
+    const blob = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__.base64ToBlob)(data.val, data.mime);
     promise = blob ? Promise.resolve(blob) : Prmise.reject(new Error("Invalid image"));
   } else {
-    promise = fetch(this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_7__.sanitizeImageUrl)(data.ref))).then(evt => {
+    promise = fetch(this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_8__.sanitizeImageUrl)(data.ref))).then(evt => {
       if (evt.ok) {
         return evt.blob();
       } else {
@@ -505,30 +508,26 @@ function quotedImage(data) {
   }
 
   return promise.then(blob => {
-    return imageScaled(blob, _config_js__WEBPACK_IMPORTED_MODULE_4__.IMAGE_THUMBNAIL_DIM, _config_js__WEBPACK_IMPORTED_MODULE_4__.IMAGE_THUMBNAIL_DIM, -1, false);
+    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM, _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM, -1, true);
   }).then(scaled => {
     data.mime = scaled.mime;
     data.size = scaled.blob.size;
     data.width = scaled.width;
     data.height = scaled.height;
     delete data.ref;
-    return blobToBase64(scaled.blob);
+    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__.blobToBase64)(scaled.blob);
   }).then(b64 => {
     data.val = b64.bits;
     return data;
   }).catch(err => {
     delete data.val;
     delete data.name;
-    data.width = _config_js__WEBPACK_IMPORTED_MODULE_4__.IMAGE_THUMBNAIL_DIM;
-    data.height = _config_js__WEBPACK_IMPORTED_MODULE_4__.IMAGE_THUMBNAIL_DIM;
-    data.maxWidth = _config_js__WEBPACK_IMPORTED_MODULE_4__.IMAGE_THUMBNAIL_DIM;
-    data.maxHeight = _config_js__WEBPACK_IMPORTED_MODULE_4__.IMAGE_THUMBNAIL_DIM;
+    data.width = _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM;
+    data.height = _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM;
+    data.maxWidth = _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM;
+    data.maxHeight = _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM;
     throw err;
   });
-}
-
-function shortenFileName(filename) {
-  return filename.length > 16 ? filename.slice(0, 7) + '…' + filename.slice(-7) : filename;
 }
 
 function fullFormatter(style, data, values, key) {
@@ -568,8 +567,10 @@ function fullFormatter(style, data, values, key) {
       break;
 
     case 'MN':
-      if (data && data.hasOwnProperty('colorId')) {
-        attr.className = 'mn-dark-color' + data.colorId;
+      attr.className = 'mention';
+
+      if (data) {
+        attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_7__.idToColorClass)(data.val, false, true);
       }
 
       break;
@@ -694,6 +695,25 @@ function previewFormatter(style, data, values, key) {
   return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(el, attr, values);
 }
 ;
+
+function inlineImageAttr(attr, data) {
+  attr.style = {
+    width: _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM + 'px',
+    height: _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM + 'px',
+    maxWidth: _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM + 'px',
+    maxHeight: _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM + 'px'
+  };
+  attr.className = 'inline-image';
+  attr.alt = (0,_strformat_js__WEBPACK_IMPORTED_MODULE_7__.shortenFileName)(data && data.name, 16) || this.formatMessage(messages.drafty_image);
+
+  if (!data) {
+    attr.src = 'img/broken_image.png';
+  }
+
+  attr.title = attr.alt;
+  return attr;
+}
+
 function quoteFormatter(style, data, values, key) {
   if (['BR', 'EX', 'IM', 'MN', 'QQ'].includes(style)) {
     let el = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.tagName(style);
@@ -702,8 +722,8 @@ function quoteFormatter(style, data, values, key) {
 
     switch (style) {
       case 'IM':
-        const img = handleImageData.call(this, el, data, attr);
-        values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement(img, attr, null), ' ', shortenFileName(data && data.name || this.formatMessage(messages.drafty_image))];
+        attr = inlineImageAttr.call(this, attr, data);
+        values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement('img', attr, null), ' ', attr.alt];
         el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
         attr = {
           key: key
@@ -715,7 +735,7 @@ function quoteFormatter(style, data, values, key) {
         attr.className = 'mention';
 
         if (data) {
-          attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_6__.idToColorClass)(data.val, false, true);
+          attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_7__.idToColorClass)(data.val, false, true);
         }
 
         break;
@@ -742,7 +762,7 @@ function quoteFormatter(style, data, values, key) {
         values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
           key: "ex",
           className: "material-icons"
-        }, "attachment"), shortenFileName(fname || this.formatMessage(messages.drafty_attachment))];
+        }, "attachment"), (0,_strformat_js__WEBPACK_IMPORTED_MODULE_7__.shortenFileName)(fname, 16) || this.formatMessage(messages.drafty_attachment)];
         break;
     }
 
@@ -750,6 +770,59 @@ function quoteFormatter(style, data, values, key) {
   }
 
   return previewFormatter.call(this, style, data, values, key);
+}
+
+function quoteImage(data) {
+  let promise;
+
+  if (data.val) {
+    const blob = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__.base64ToBlob)(data.val, data.mime);
+    promise = blob ? Promise.resolve(blob) : Promise.reject(new Error("Invalid image"));
+  } else {
+    promise = fetch(this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_8__.sanitizeImageUrl)(data.ref))).then(evt => {
+      if (evt.ok) {
+        return evt.blob();
+      } else {
+        throw new Error(`Image fetch unsuccessful: ${evt.status} ${evt.statusText}`);
+      }
+    });
+  }
+
+  return promise.then(blob => {
+    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM, _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM, -1, true);
+  }).then(scaled => {
+    data.mime = scaled.mime;
+    data.size = scaled.blob.size;
+    data.width = scaled.width;
+    data.height = scaled.height;
+    delete data.ref;
+    data.src = URL.createObjectURL(scaled.blob);
+    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__.blobToBase64)(scaled.blob);
+  }).then(b64 => {
+    data.val = b64.bits;
+    return data;
+  }).catch(err => {
+    delete data.val;
+    delete data.src;
+    data.width = _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM;
+    data.height = _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM;
+    throw err;
+  });
+}
+
+function replyFormatter(style, data, values, key) {
+  if (style != 'IM') {
+    return quoteFormatter.call(this, style, data, values, key);
+  }
+
+  const attr = inlineImageAttr.call(this, {
+    key: key
+  }, data);
+  attr.whenDone = quoteImage.call(this, data);
+  values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_3__.default, attr, null), ' ', attr.alt];
+  return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), {
+    key: key
+  }, values);
 }
 
 /***/ }),
@@ -940,6 +1013,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "shortDateFormat": () => (/* binding */ shortDateFormat),
 /* harmony export */   "secondsToTime": () => (/* binding */ secondsToTime),
 /* harmony export */   "bytesToHumanSize": () => (/* binding */ bytesToHumanSize),
+/* harmony export */   "shortenFileName": () => (/* binding */ shortenFileName),
 /* harmony export */   "letterTileColorId": () => (/* binding */ letterTileColorId),
 /* harmony export */   "idToColorClass": () => (/* binding */ idToColorClass)
 /* harmony export */ });
@@ -987,6 +1061,13 @@ function bytesToHumanSize(bytes) {
   const count = bytes / Math.pow(1024, bucket);
   const round = bucket > 0 ? count < 3 ? 2 : count < 30 ? 1 : 0 : 0;
   return count.toFixed(round) + ' ' + sizes[bucket];
+}
+function shortenFileName(filename, maxLength) {
+  if (typeof filename != 'string') {
+    return filename;
+  }
+
+  return filename.length > maxLength ? filename.slice(0, maxLength / 2 - 1) + '…' + filename.slice(1 - maxLength / 2) : filename;
 }
 
 function stringToColorHash(value) {
@@ -3934,7 +4015,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       this.setState({
         docPreview: {
           file: file,
-          filename: file.name,
+          name: file.name,
           size: file.size,
           type: file.type
         }
@@ -3943,10 +4024,10 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
 
   sendImageAttachment(caption, blob) {
-    const mime = this.state.imagePreview.type;
+    const mime = this.state.imagePreview.mime;
     const width = this.state.imagePreview.width;
     const height = this.state.imagePreview.height;
-    const fname = this.state.imagePreview.filename;
+    const fname = this.state.imagePreview.name;
     const maxInbandAttachmentSize = this.props.tinode.getServerLimit('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_14__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
 
     if (blob.size > maxInbandAttachmentSize) {
@@ -4007,11 +4088,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         imagePreview: {
           url: URL.createObjectURL(scaled.blob),
           blob: scaled.blob,
-          filename: scaled.fname,
+          name: scaled.name,
           width: scaled.width,
           height: scaled.height,
           size: scaled.blob.size,
-          type: scaled.mime
+          mime: scaled.mime
         }
       });
     }).catch(err => {
@@ -4044,7 +4125,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
 
     if (Drafty.isValid(content)) {
-      content = Drafty.preview(content, 30);
+      content = Drafty.preview(content, _config_js__WEBPACK_IMPORTED_MODULE_14__.QUOTED_REPLY_LENGTH);
     } else {
       content = Drafty.append(Drafty.init('\u26A0 '), Drafty.wrapInto(this.props.intl.formatMessage(messages.invalid_content), 'EM'));
     }
@@ -4068,64 +4149,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       }
     }
 
-    const images = [];
-    Drafty.entities(content, (data, idx, tp) => {
-      if (tp == 'IM') {
-        images.push({
-          tp: tp,
-          data: data
-        });
+    this.setState({
+      reply: {
+        content: Drafty.quote(senderName, senderId, content),
+        seq: seq
       }
-    });
-
-    const quotedImage = data => {
-      let promise;
-
-      if (data.val) {
-        const blob = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.base64ToBlob)(data.val, data.mime);
-        promise = blob ? Promise.resolve(blob) : Prmise.reject(new Error("Invalid image"));
-      } else {
-        promise = fetch(this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_18__.sanitizeImageUrl)(data.ref))).then(evt => {
-          if (evt.ok) {
-            return evt.blob();
-          } else {
-            throw new Error(`Image fetch unsuccessful: ${evt.status} ${evt.statusText}`);
-          }
-        });
-      }
-
-      return promise.then(blob => {
-        return (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_14__.IMAGE_THUMBNAIL_DIM, _config_js__WEBPACK_IMPORTED_MODULE_14__.IMAGE_THUMBNAIL_DIM, -1, false);
-      }).then(scaled => {
-        data.mime = scaled.mime;
-        data.size = scaled.blob.size;
-        data.width = scaled.width;
-        data.height = scaled.height;
-        delete data.ref;
-        return (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.blobToBase64)(scaled.blob);
-      }).then(b64 => {
-        data.val = b64.bits;
-        return data;
-      }).catch(err => {
-        delete data.val;
-        delete data.name;
-        data.width = _config_js__WEBPACK_IMPORTED_MODULE_14__.IMAGE_THUMBNAIL_DIM;
-        data.height = _config_js__WEBPACK_IMPORTED_MODULE_14__.IMAGE_THUMBNAIL_DIM;
-        data.maxWidth = _config_js__WEBPACK_IMPORTED_MODULE_14__.IMAGE_THUMBNAIL_DIM;
-        data.maxHeight = _config_js__WEBPACK_IMPORTED_MODULE_14__.IMAGE_THUMBNAIL_DIM;
-        throw err;
-      });
-    };
-
-    Promise.all(images.map(ex => quotedImage(ex.data))).catch(err => {
-      this.props.onError(err, 'err');
-    }).finally(() => {
-      this.setState({
-        reply: {
-          content: Drafty.quote(senderName, senderId, content),
-          seq: seq
-        }
-      });
     });
   }
 
@@ -9376,7 +9404,7 @@ class DocPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
       id: "image-preview"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "image-preview-caption-panel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, this.props.content.filename), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, this.props.content.name), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: e => {
         e.preventDefault();
@@ -9391,6 +9419,12 @@ class DocPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons gray"
     }, iconFromMime(this.props.content.type)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "label_file_name",
+      defaultMessage: [{
+        "type": 0,
+        "value": "File name:"
+      }]
+    })), " ", (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__.shortenFileName)(this.props.content.name, 24) || '-'), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_content_type",
       defaultMessage: [{
         "type": 0,
@@ -10020,13 +10054,8 @@ class ImagePreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
     };
     size.maxWidth = '100%';
     size.maxHeight = '100%';
-    let filename = this.props.content.filename;
     const maxlength = Math.max((this.state.width / _config_js__WEBPACK_IMPORTED_MODULE_3__.REM_SIZE / 1.5 | 0) - 2, 12);
-
-    if (filename.length > maxlength) {
-      filename = filename.slice(0, maxlength / 2 - 1) + '…' + filename.slice(1 - maxlength / 2);
-    }
-
+    const fname = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__.shortenFileName)(this.props.content.name, maxlength) || '-';
     const width = this.props.content.width || '-';
     const height = this.props.content.height || '-';
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -10035,7 +10064,7 @@ class ImagePreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       id: "image-preview-caption-panel"
     }, !this.props.onSendMessage ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: this.props.content.url,
-      download: this.props.content.filename
+      download: this.props.content.name
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, "file_download"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
@@ -10044,7 +10073,7 @@ class ImagePreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
         "type": 0,
         "value": "download"
       }]
-    })) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, this.props.content.filename), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    })) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, fname), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: e => {
         e.preventDefault();
@@ -10059,7 +10088,7 @@ class ImagePreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       src: this.props.content.url,
       style: size,
       className: "image-preview",
-      alt: this.props.content.filename
+      alt: this.props.content.name
     })), this.props.onSendMessage ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
       messagePrompt: "add_image_caption",
       acceptBlank: true,
@@ -10077,8 +10106,8 @@ class ImagePreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
         "value": "File name:"
       }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      title: this.props.content.filename
-    }, filename ? filename : '-'))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      title: this.props.content.name
+    }, fname))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_content_type",
       defaultMessage: [{
         "type": 0,
@@ -10328,6 +10357,75 @@ class Invitation extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
         "value": "Block"
       }]
     }))));
+  }
+
+}
+;
+
+/***/ }),
+
+/***/ "./src/widgets/lazy-image.jsx":
+/*!************************************!*\
+  !*** ./src/widgets/lazy-image.jsx ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ LazyImage)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+
+
+class LazyImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
+  constructor(props) {
+    super(props);
+    this.state = {
+      src: 'img/placeholder.png',
+      style: Object.assign({
+        padding: '4px'
+      }, this.props.style),
+      className: this.props.className,
+      alt: this.props.alt,
+      onClick: this.props.onClick
+    };
+  }
+
+  componentDidMount() {
+    this.props.whenDone.then(data => this.setState({
+      src: data.src,
+      style: { ...this.state.style,
+        padding: 0
+      }
+    })).catch(() => this.setState({
+      src: 'img/broken_image.png'
+    }));
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.whenDone != this.props.whenDone) {
+      this.setState({
+        src: 'img/placeholder.png',
+        style: { ...this.state.style,
+          padding: '4px'
+        }
+      });
+      this.props.whenDone.then(data => this.setState({
+        src: data.src,
+        style: { ...this.state.style,
+          padding: 0
+        }
+      })).catch(() => this.setState({
+        src: 'img/broken_image.png'
+      }));
+    }
+  }
+
+  render() {
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement('img', this.state);
   }
 
 }
@@ -11415,6 +11513,13 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     if (this.messageEditArea) {
       this.messageEditArea.addEventListener('paste', this.handlePasteEvent, false);
     }
+
+    this.setState({
+      quote: this.props.replyTo ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(this.props.replyTo.content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_5__.replyFormatter, {
+        formatMessage: this.props.intl.formatMessage.bind(this.props.intl),
+        authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
+      }) : null
+    });
   }
 
   componentWillUnmount() {
@@ -11423,9 +11528,18 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     }
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     if (this.messageEditArea) {
       this.messageEditArea.focus();
+    }
+
+    if (prevProps.replyTo != this.props.replyTo) {
+      this.setState({
+        quote: this.props.replyTo ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(this.props.replyTo.content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_5__.replyFormatter, {
+          formatMessage: this.props.intl.formatMessage.bind(this.props.intl),
+          authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
+        }) : null
+      });
     }
   }
 
@@ -11517,13 +11631,9 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       formatMessage
     } = this.props.intl;
     const prompt = this.props.disabled ? formatMessage(messages.messaging_disabled) : this.props.messagePrompt ? formatMessage(messages[this.props.messagePrompt]) : formatMessage(messages.type_new_message);
-    const quote = this.props.replyTo ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(this.props.replyTo.content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_5__.quoteFormatter, {
-      formatMessage: formatMessage.bind(this.props.intl),
-      authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
-    }) : null;
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "send-message-wrapper"
-    }, quote ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, this.state.quote ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "reply-quote-preview"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "cancel"
@@ -11535,7 +11645,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons gray"
-    }, "close"))), quote) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, "close"))), this.state.quote) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "send-message-panel"
     }, !this.props.disabled ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, this.props.onAttachFile ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
