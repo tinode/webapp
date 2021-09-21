@@ -50,6 +50,11 @@ const messages = defineMessages({
     defaultMessage: 'Reply',
     description: 'Reply to message'
   },
+  forward: {
+    id: 'menu_item_forward',
+    defaultMessage: 'Forward',
+    description: 'Forward message'
+  },
   topic_delete: {
     id: 'menu_item_delete_topic',
     defaultMessage: 'Delete',
@@ -181,6 +186,13 @@ class ContextMenu extends React.Component {
         title: formatMessage(messages.reply),
         handler: (params, errorHandler) => {
           return this.replyToMessage(params, errorHandler);
+        }
+      },
+      'menu_item_forward': {
+        id: 'menu_item_forward',
+        title: formatMessage(messages.forward),
+        handler: (params, errorHandler) => {
+          return this.forwardMessage(params, errorHandler);
         }
       },
       'topic_unmute': {
@@ -428,7 +440,13 @@ class ContextMenu extends React.Component {
   }
 
   replyToMessage(params, errorHandler) {
-    params.pickReply(params.seq, params.content, errorHandler);
+    params.pickReply(params.seq, params.content, params.userFrom, params.userName, errorHandler);
+  }
+
+  forwardMessage(params, errorHandler) {
+    //params.pickReply({ seq: params.seq, content: params.content });
+    //this.props.
+    console.log('forwarding msg ', params);
   }
 
   render() {

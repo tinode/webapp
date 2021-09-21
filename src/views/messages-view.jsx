@@ -214,6 +214,17 @@ class MessagesView extends React.Component {
       };
     } else if (nextProps.topic != prevState.topic) {
       const topic = nextProps.tinode.getTopic(nextProps.topic);
+
+      let reply = null;
+      if (nextProps.forwardedMessage) {
+        // We are forwarding a message. Show preview.
+        const preview = nextProps.forwardedMessage.preview;
+        reply = {
+          content: preview,
+          seq: null
+        };
+      }
+
       nextState = {
         topic: nextProps.topic,
         docPreview: null,
@@ -222,7 +233,7 @@ class MessagesView extends React.Component {
         typingIndicator: false,
         scrollPosition: 0,
         fetchingMessages: false,
-        reply: null
+        reply: reply
       };
 
       if (topic) {
@@ -665,14 +676,20 @@ class MessagesView extends React.Component {
   // sendMessage sends the message with an optional subscription to topic first.
   sendMessage(msg, uploadCompletionPromise, uploader) {
     let head;
-    if (this.state.reply && this.state.reply.content) {
+    if (this.props.forwardedMessage) {
+      // We are forwarding a message.
+      msg = this.props.forwardedMessage.msg;
+      head = this.props.forwardedMessage.head;
+      this.handleCancelReply();
+    } else if (this.state.reply && this.state.reply.content) {
+      // We are replying to a message in this topic.
       head = {reply: '' + this.state.reply.seq};
       // Turn it into Drafty so we can make a quoted Drafty object later.
       if (typeof msg == 'string') {
         msg = Drafty.parse(msg);
       }
       msg = Drafty.append(this.state.reply.content, msg);
-      this.setState({reply: null});
+      this.handleCancelReply();
     }
     this.props.sendMessage(msg, uploadCompletionPromise, uploader, head);
   }
@@ -825,7 +842,7 @@ class MessagesView extends React.Component {
     uploader.cancel();
   }
 
-  handlePickReply(seq, content) {
+  handlePickReply(seq, content, senderId, senderName) {
     this.setState({reply: null});
 
     if (!seq || !content) {
@@ -843,23 +860,6 @@ class MessagesView extends React.Component {
         Drafty.wrapInto(this.props.intl.formatMessage(messages.invalid_content), 'EM'));
     }
 
-    // Get the author.
-    const topic = this.props.tinode.getTopic(this.state.topic);
-    const msg = topic.findMessage(seq);
-    let senderName, senderId;
-    if (msg) {
-      senderId = msg.from || 'chan';
-      if (senderId != this.props.myUserId) {
-        const topic = this.props.tinode.getTopic(this.state.topic);
-        const user = topic.userDesc(senderId);
-        if (user && user.public) {
-          senderName = user.public.fn;
-        }
-      } else {
-        senderName = this.props.myUserName;
-      }
-    }
-
     this.setState({
       reply: {
         content: Drafty.quote(senderName, senderId, content),
@@ -869,7 +869,8 @@ class MessagesView extends React.Component {
   }
 
   handleCancelReply() {
-    this.setState({reply: null})
+    this.setState({reply: null});
+    this.props.onCancelForwardMessage();
   }
 
   handleQuoteClick(replyToSeq) {
@@ -964,18 +965,14 @@ class MessagesView extends React.Component {
           const isReply = !(thisFrom == this.props.myUserId);
           const deliveryStatus = topic.msgStatus(msg, true);
 
-          let userName, userAvatar, userFrom;
-          if (groupTopic) {
-            const user = topic.userDesc(thisFrom);
-            if (user && user.public) {
-              userName = user.public.fn;
-              userAvatar = makeImageUrl(user.public.photo);
-            }
-            userFrom = thisFrom;
-            chatBoxClass='chat-box group';
-          } else {
-            chatBoxClass='chat-box';
+          let userFrom = thisFrom, userName, userAvatar;
+          const user = topic.userDesc(thisFrom);
+          if (user && user.public) {
+            userName = user.public.fn;
+            userAvatar = makeImageUrl(user.public.photo);
           }
+            //userFrom = thisFrom;
+          chatBoxClass = groupTopic ? 'chat-box group' : 'chat-box';
 
           // Ref for this chat message.
           const ref = this.getOrCreateMessageRef(msg.seq);
@@ -993,6 +990,7 @@ class MessagesView extends React.Component {
               timestamp={msg.ts}
               response={isReply}
               seq={msg.seq}
+              isGroup={groupTopic}
               userFrom={userFrom}
               userName={userName}
               userAvatar={userAvatar}
@@ -1106,11 +1104,12 @@ class MessagesView extends React.Component {
               :
               <SendMessage
                 tinode={this.props.tinode}
+                noInput={this.props.forwardedMessage != null}
                 disabled={!this.state.isWriter}
                 onKeyPress={this.sendKeyPress}
                 onSendMessage={this.sendMessage}
-                onAttachFile={this.handleAttachFile}
-                onAttachImage={this.handleAttachImage}
+                onAttachFile={this.props.forwardedMessage == null ? this.handleAttachFile : null}
+                onAttachImage={this.props.forwardedMessage == null ? this.handleAttachImage : null}
                 onError={this.props.onError}
                 replyTo={this.state.reply}
                 onQuoteClick={this.handleQuoteClick}

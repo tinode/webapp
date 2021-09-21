@@ -2528,3 +2528,16 @@ ul.tabbar li.active > a {
 .mention {
   font-weight: bolder;
 }
+
+/* Message forwarding. */
+
+.forward-menu {
+  position: absolute;
+  z-index: 4;
+  max-height: 80%;
+  border-radius: 0.2rem;
+  padding-top: 0.35rem;
+  padding-bottom: 0.35rem;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, .45);
+  background-color: white;
+}

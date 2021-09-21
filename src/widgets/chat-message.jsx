@@ -76,8 +76,10 @@ class BaseChatMessage extends React.PureComponent {
         this.props.received > Tinode.MESSAGE_STATUS_FAILED &&
         this.props.received < Tinode.MESSAGE_STATUS_DEL_RANGE) {
       menuItems.push('menu_item_reply');
+      menuItems.push('menu_item_forward');
     }
     this.props.showContextMenu({ seq: this.props.seq, content: this.props.content,
+                                 userFrom: this.props.userFrom, userName: this.props.userName,
                                  y: e.pageY, x: e.pageX, pickReply: this.props.pickReply }, menuItems);
   }
 
@@ -103,7 +105,7 @@ class BaseChatMessage extends React.PureComponent {
       (this.props.sequence + ' ' + (this.props.response ? 'left' : 'right'));
     const bubbleClass = (this.props.sequence == 'single' || this.props.sequence == 'last') ? 'bubble tip' : 'bubble';
     const avatar = this.props.deleted ? null : (this.props.userAvatar || true);
-    const fullDisplay = (this.props.userFrom && this.props.response && !this.props.deleted &&
+    const fullDisplay = (this.props.isGroup && this.props.response && !this.props.deleted &&
       (this.props.sequence == 'single' || this.props.sequence == 'last'));
 
     let content = this.props.content;
@@ -143,7 +145,7 @@ class BaseChatMessage extends React.PureComponent {
 
     return (
       <li ref={this.props.innerRef} className={sideClass}>
-        {this.props.userFrom && this.props.response ?
+        {this.props.isGroup && this.props.response ?
           <div className="avatar-box">
             {fullDisplay ?
               <LetterTile
