@@ -221,6 +221,7 @@ class MessagesView extends React.Component {
         const preview = nextProps.forwardedMessage.preview;
         reply = {
           content: preview,
+          forwarded: nextProps.forwardedMessage.head.forwarded,
           seq: null
         };
       }
@@ -971,7 +972,6 @@ class MessagesView extends React.Component {
             userName = user.public.fn;
             userAvatar = makeImageUrl(user.public.photo);
           }
-            //userFrom = thisFrom;
           chatBoxClass = groupTopic ? 'chat-box group' : 'chat-box';
 
           // Ref for this chat message.
@@ -985,6 +985,7 @@ class MessagesView extends React.Component {
             <ChatMessage
               tinode={this.props.tinode}
               content={msg.content}
+              forwarded={msg.head ? msg.head.forwarded : null}
               deleted={msg.hi}
               mimeType={msg.head ? msg.head.mime : null}
               timestamp={msg.ts}

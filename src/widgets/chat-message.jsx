@@ -7,7 +7,7 @@ import Attachment from './attachment.jsx';
 import LetterTile from './letter-tile.jsx';
 import ReceivedMarker from './received-marker.jsx'
 
-import { fullFormatter, quoteFormatter } from '../lib/formatters.js';
+import { fullFormatter, quoteFormatter, formatDrafty, forwardedDecorator } from '../lib/formatters.js';
 import { sanitizeImageUrl, sanitizeUrl } from '../lib/utils.js';
 
 class BaseChatMessage extends React.PureComponent {
@@ -129,7 +129,8 @@ class BaseChatMessage extends React.PureComponent {
           onError={this.props.onError}
           key={i} />);
       }, this);
-      const tree = Drafty.format(content, fullFormatter, this.formatterContext);
+      const tree = formatDrafty(content, fullFormatter, this.formatterContext,
+                                this.props.forwarded ? { before: forwardedDecorator } : null);
       content = React.createElement(React.Fragment, null, tree);
     } else if (this.props.deleted) {
       // Message represents a range of deleted messages.

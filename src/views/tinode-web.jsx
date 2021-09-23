@@ -1450,7 +1450,7 @@ class TinodeWeb extends React.Component {
       // If the Find panel is active, close it.
       this.handleSidepanelCancel();
     }
-    const header = "Forwarded from " + params.userName;
+    const header = params.userName;
     const content = typeof params.content == 'string' ? Tinode.Drafty.init(params.content) : params.content;
     const preview = Tinode.Drafty.preview(content, 30);
     const msg = Tinode.Drafty.append(
@@ -1459,9 +1459,7 @@ class TinodeWeb extends React.Component {
         content);
     const msgPreview = Tinode.Drafty.quote(header, params.userFrom, preview);
     const head = {
-      // TODO: decide what parameters to store.
-      fwdFrom: params.topicName,
-      authorUid: params.userFrom
+      forwarded: params.topicName + ':' + params.seq
     };
     this.setState({
       forwardMenuVisible: true,
@@ -1760,7 +1758,7 @@ class TinodeWeb extends React.Component {
           applicationVisible={this.state.applicationVisible}
 
           // Show the forwareded message if the user has selected a topic to forward this message to.
-          forwardedMessage={this.state.forwardMessage && this.stateTopicSelected != this.state.forwardMessage.head.fwdFrom ? this.state.forwardMessage : null}
+          forwardedMessage={this.state.forwardMessage && !this.state.forwardMessage.head.forwarded.startsWith(this.stateTopicSelected) ? this.state.forwardMessage : null}
           onCancelForwardMessage={this.handleHideForwardMenu}
 
           errorText={this.state.errorText}
