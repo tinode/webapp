@@ -688,7 +688,7 @@ class MessagesView extends React.Component {
       if (typeof msg == 'string') {
         msg = Drafty.parse(msg);
       }
-      msg = Drafty.append(this.state.reply.content, msg);
+      msg = Drafty.append(Drafty.appendLineBreak(this.state.reply.content), msg);
       this.handleCancelReply();
     }
     this.props.sendMessage(msg, uploadCompletionPromise, uploader, head);

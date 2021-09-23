@@ -429,6 +429,10 @@
     "defaultMessage": "Edit permissions",
     "description": "Menu item [Edit permissions]"
   },
+  "menu_item_forward": {
+    "defaultMessage": "Forward",
+    "description": "Forward message"
+  },
   "menu_item_info": {
     "defaultMessage": "Info",
     "description": "Show extended topic information"
