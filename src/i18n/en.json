@@ -1389,5 +1389,12 @@
     "description": "Label for unarchiving the topic",
     "missing": false,
     "obsolete": false
+  },
+  "menu_item_forward": {
+    "translation": "Forward",
+    "defaultMessage": "Forward",
+    "description": "Forward message",
+    "missing": false,
+    "obsolete": false
   }
 }

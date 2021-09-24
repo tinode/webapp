@@ -1333,5 +1333,12 @@
     "description": "Reply to message",
     "missing": true,
     "obsolete": false
+  },
+  "menu_item_forward": {
+    "translation": "",
+    "defaultMessage": "Forward",
+    "description": "Forward message",
+    "missing": true,
+    "obsolete": false
   }
 }
