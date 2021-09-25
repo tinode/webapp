@@ -485,7 +485,7 @@ function handleImageData(el, data, attr) {
       attr.src = 'img/broken_image.png';
     }
   } else {
-    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_4__.default;
+    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_4__["default"];
   }
 
   return el;
@@ -819,7 +819,7 @@ function replyFormatter(style, data, values, key) {
     key: key
   }, data);
   attr.whenDone = quoteImage.call(this, data);
-  values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_3__.default, attr, null), ' ', attr.alt];
+  values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], attr, null), ' ', attr.alt];
   return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), {
     key: key
   }, values);
@@ -1349,7 +1349,7 @@ class EditAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
         "type": 0,
         "value": "Message sound:"
       }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       name: "sound",
       id: "message-sound",
       checked: this.props.messageSounds,
@@ -1370,7 +1370,7 @@ class EditAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
         "type": 0,
         "value": "Notification alerts (requires HTTPS):"
       }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       name: "alert",
       id: "desktop-alerts",
       checked: this.props.desktopAlerts,
@@ -1385,7 +1385,7 @@ class EditAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
         "type": 0,
         "value": "Incognito mode:"
       }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       name: "incognito",
       id: "incognito-mode",
       checked: this.props.incognitoMode,
@@ -1501,7 +1501,7 @@ class AccSecurityView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Comp
   }
 
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, this.state.showPermissionEditorFor ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_permissions_editor_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, this.state.showPermissionEditorFor ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_permissions_editor_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       mode: this.state.editedPermissions,
       skip: "O",
       onSubmit: this.handlePermissionsChanged,
@@ -1524,7 +1524,7 @@ class AccSecurityView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Comp
         "type": 0,
         "value": "Unchanged"
       }]
-    }, password_unchanged => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+    }, password_unchanged => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       placeholder: password_unchanged,
       type: "password",
       onFinished: this.handlePasswordUpdate
@@ -1794,7 +1794,7 @@ class AccountSettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().
         "type": 0,
         "value": "Edit"
       }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("center", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("center", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       tinode: this.props.tinode,
       avatar: this.state.avatar,
       readOnly: true,
@@ -1824,7 +1824,7 @@ class AccountSettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().
       }]
     })), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", null, this.props.myUserId)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "group"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_badge_list_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_badge_list_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       trustedBadges: this.props.trustedBadges
     })), this.state.description ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "group"
@@ -2009,7 +2009,7 @@ class ContactsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         "type": 0,
         "value": "¯∖_(ツ)_/¯"
       }]
-    }, no_contacts => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_contact_list_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+    }, no_contacts => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_contact_list_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       tinode: this.props.tinode,
       connected: this.props.connected,
       contacts: this.state.contactList,
@@ -2067,7 +2067,7 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       fn: '',
       imageDataUrl: null,
       errorCleared: false,
-      saveToken: _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_5__.default.getObject('keep-logged-in')
+      saveToken: _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_5__["default"].getObject('keep-logged-in')
     };
     this.handleLoginChange = this.handleLoginChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
@@ -2109,7 +2109,7 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
   }
 
   handleToggleSaveToken() {
-    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_5__.default.setObject('keep-logged-in', !this.state.saveToken);
+    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_5__["default"].setObject('keep-logged-in', !this.state.saveToken);
     this.setState({
       saveToken: !this.state.saveToken
     });
@@ -2160,13 +2160,13 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
         "type": 0,
         "value": "Password"
       }]
-    }, password_prompt => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_visible_password_jsx__WEBPACK_IMPORTED_MODULE_4__.default, {
+    }, password_prompt => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_visible_password_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
       placeholder: password_prompt,
       autoComplete: "new-password",
       value: this.state.password,
       onFinished: this.handlePasswordChange,
       required: true
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       tinode: this.props.tinode,
       onImageChanged: this.handleImageChanged,
       onError: this.props.onError
@@ -2202,7 +2202,7 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       required: true
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       id: "save-token",
       name: "save-token",
       checked: this.state.saveToken,
@@ -2781,13 +2781,13 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-title",
       id: "info-title"
-    }, panelTitle), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_menu_cancel_jsx__WEBPACK_IMPORTED_MODULE_9__.default, {
+    }, panelTitle), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_menu_cancel_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
       onCancel: this.handleBackNavigate
-    }))), this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_7__.default, {
+    }))), this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
       level: this.props.errorLevel,
       text: this.props.errorText,
       onClearError: this.props.onError
-    }) : null, view == 'members' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_group_manager_jsx__WEBPACK_IMPORTED_MODULE_8__.default, {
+    }) : null, view == 'members' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_group_manager_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
       tinode: this.props.tinode,
       members: this.state.contactList,
       requiredMember: this.props.myUserId,
@@ -2796,7 +2796,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       contacts: this.props.searchableContacts,
       onCancel: this.handleBackNavigate,
       onSubmit: this.handleMemberUpdateRequest
-    }) : view == 'perm' && args.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_permissions_editor_jsx__WEBPACK_IMPORTED_MODULE_10__.default, {
+    }) : view == 'perm' && args.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_permissions_editor_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
       tinode: this.props.tinode,
       mode: this.state.editedPermissions,
       compare: this.state.immutablePermissions,
@@ -2808,7 +2808,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       userAvatar: this.state.userPermissionsAvatar,
       onSubmit: mode => this.handlePermissionsChanged(args[0], mode),
       onCancel: this.handleBackNavigate
-    }) : view == 'general' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_topic_common_jsx__WEBPACK_IMPORTED_MODULE_11__.default, {
+    }) : view == 'general' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_topic_common_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
       tinode: this.props.tinode,
       topic: this.props.topic,
       onCredAdd: this.props.onCredAdd,
@@ -2817,7 +2817,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       onCredDelete: this.props.onCredDelete,
       onUpdateTopicDesc: this.props.onTopicDescUpdateRequest,
       onError: this.props.onError
-    }) : view == 'security' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_topic_security_jsx__WEBPACK_IMPORTED_MODULE_12__.default, {
+    }) : view == 'security' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_topic_security_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
       topic: this.props.topic,
       owner: this.state.owner,
       admin: this.state.admin,
@@ -2860,7 +2860,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
         "type": 0,
         "value": "Edit"
       }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("center", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("center", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       tinode: this.props.tinode,
       avatar: this.state.avatar,
       readOnly: true,
@@ -2906,7 +2906,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       }]
     })), "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", null, this.state.address)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "group"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_badge_list_jsx__WEBPACK_IMPORTED_MODULE_4__.default, {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_badge_list_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
       trustedBadges: this.state.trustedBadges
     })), this.state.description ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "group"
@@ -2928,7 +2928,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
         "type": 0,
         "value": "Muted:"
       }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_5__.default, {
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
       name: "P",
       checked: this.state.muted,
       onChange: this.handleMuted
@@ -2940,7 +2940,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
         "type": 0,
         "value": "Archived:"
       }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_5__.default, {
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
       name: "archived",
       checked: true,
       onChange: this.handleUnarchive
@@ -2995,7 +2995,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
         "type": 0,
         "value": "No members"
       }]
-    }, no_members => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_contact_list_jsx__WEBPACK_IMPORTED_MODULE_6__.default, {
+    }, no_members => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_contact_list_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
       tinode: this.props.tinode,
       contacts: this.state.contactList,
       myUserId: this.props.myUserId,
@@ -3111,7 +3111,7 @@ class LoginView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         "type": 0,
         "value": "Password"
       }]
-    }, password_prompt => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_visible_password_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+    }, password_prompt => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_visible_password_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       type: "password",
       id: "inputPassword",
       placeholder: password_prompt,
@@ -3121,7 +3121,7 @@ class LoginView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       required: true
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       id: "save-token",
       name: "save-token",
       checked: this.state.saveToken,
@@ -3613,7 +3613,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     const setQuery = newTopic ? this.props.newTopicParams : undefined;
     topic.subscribe(getQuery.build(), setQuery).then(ctrl => {
       if (ctrl.code == 303) {
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlTopic('', ctrl.params.topic));
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic('', ctrl.params.topic));
         return;
       }
 
@@ -4183,7 +4183,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     if (this.props.hideSelf) {
       component = null;
     } else if (!this.state.topic) {
-      component = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_logo_view_jsx__WEBPACK_IMPORTED_MODULE_12__.default, {
+      component = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_logo_view_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
         serverVersion: this.props.serverVersion,
         serverAddress: this.props.serverAddress
       });
@@ -4191,7 +4191,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       let component2;
 
       if (this.state.imagePreview) {
-        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_8__.default, {
+        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
           content: this.state.imagePreview,
           tinode: this.props.tinode,
           replyTo: this.state.reply,
@@ -4200,12 +4200,12 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           onSendMessage: this.sendImageAttachment
         });
       } else if (this.state.imagePostview) {
-        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_8__.default, {
+        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
           content: this.state.imagePostview,
           onClose: this.handleClosePreview
         });
       } else if (this.state.docPreview) {
-        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_doc_preview_jsx__WEBPACK_IMPORTED_MODULE_5__.default, {
+        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_doc_preview_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
           content: this.state.docPreview,
           tinode: this.props.tinode,
           replyTo: this.state.reply,
@@ -4268,10 +4268,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
               userAvatar;
           const user = topic.userDesc(thisFrom);
 
-          if (!isReply) {
-            console.log("topic.userDesc", user ? user.public : "NULL");
-          }
-
           if (user && user.public) {
             userName = user.public.fn;
             userAvatar = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.makeImageUrl)(user.public.photo);
@@ -4285,7 +4281,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             replyToSeq = null;
           }
 
-          messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_chat_message_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+          messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_chat_message_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
             tinode: this.props.tinode,
             content: msg.content,
             deleted: msg.hi,
@@ -4346,7 +4342,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           className: "material-icons"
         }, "arrow_back")) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           className: "avatar-box"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_10__.default, {
+        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
           tinode: this.props.tinode,
           avatar: avatar,
           topic: this.state.topic,
@@ -4364,11 +4360,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             "type": 0,
             "value": "Unnamed"
           }]
-        })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_4__.default, {
+        })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
           badges: icon_badges
         })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "topic-last-seen"
-        }, lastSeen)), groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_group_subs_jsx__WEBPACK_IMPORTED_MODULE_7__.default, {
+        }, lastSeen)), groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_group_subs_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
           tinode: this.props.tinode,
           subscribers: this.state.onlineSubs
         }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -4378,11 +4374,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           onClick: this.handleContextClick
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
           className: "material-icons"
-        }, "more_vert")))), this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_6__.default, {
+        }, "more_vert")))), this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
           level: this.props.errorLevel,
           text: this.props.errorText,
           onClearError: this.props.onError
-        }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_11__.default, {
+        }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
           show: this.state.fetchingMessages
         }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "messages-container"
@@ -4421,9 +4417,9 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             "type": 0,
             "value": "Enable"
           }]
-        })), ".") : null, this.state.unconfirmed ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_invitation_jsx__WEBPACK_IMPORTED_MODULE_9__.default, {
+        })), ".") : null, this.state.unconfirmed ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_invitation_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
           onAction: this.handleNewChatAcceptance
-        }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_13__.default, {
+        }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
           tinode: this.props.tinode,
           noInput: this.props.forwardedMessage != null,
           disabled: !this.state.isWriter,
@@ -4521,7 +4517,7 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
   handleTabClick(e) {
     e.preventDefault();
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__.default.addUrlParam(window.location.hash, 'tab', e.currentTarget.dataset.id));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].addUrlParam(window.location.hash, 'tab', e.currentTarget.dataset.id));
     this.setState({
       tabSelected: e.currentTarget.dataset.id
     });
@@ -4536,13 +4532,13 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
   handleContactSelected(uid) {
     if (this.state.tabSelected == 'p2p') {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__.default.removeUrlParam(window.location.hash, 'tab'));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].removeUrlParam(window.location.hash, 'tab'));
       this.props.onCreateTopic(uid);
     }
   }
 
   handleNewGroupSubmit(name, description, dataUrl, priv, tags, isChannel) {
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__.default.removeUrlParam(window.location.hash, 'tab'));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].removeUrlParam(window.location.hash, 'tab'));
     this.props.onCreateTopic(undefined, {
       public: (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.theCard)(name, dataUrl, null, description),
       private: priv,
@@ -4551,7 +4547,7 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
 
   handleGroupByID(topicName) {
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__.default.removeUrlParam(window.location.hash, 'tab'));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].removeUrlParam(window.location.hash, 'tab'));
     this.props.onCreateTopic(topicName);
   }
 
@@ -4600,18 +4596,18 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         "type": 0,
         "value": "by id"
       }]
-    })))), this.state.tabSelected === 'grp' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_new_topic_group_jsx__WEBPACK_IMPORTED_MODULE_5__.default, {
+    })))), this.state.tabSelected === 'grp' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_new_topic_group_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
       tinode: this.props.tinode,
       onSubmit: this.handleNewGroupSubmit
-    }) : this.state.tabSelected === 'byid' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_new_topic_by_id_jsx__WEBPACK_IMPORTED_MODULE_4__.default, {
+    }) : this.state.tabSelected === 'byid' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_new_topic_by_id_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
       onSubmit: this.handleGroupByID,
       onError: this.props.onError
     }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "flex-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_search_contacts_jsx__WEBPACK_IMPORTED_MODULE_6__.default, {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_search_contacts_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
       type: "p2p",
       onSearchContacts: this.handleSearchContacts
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_contact_list_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_contact_list_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       tinode: this.props.tinode,
       contacts: this.props.searchResults,
       myUserId: this.props.myUserId,
@@ -4664,7 +4660,7 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
   }
 
   componentDidMount() {
-    const parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_3__.default.parseUrlHash(window.location.hash);
+    const parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_3__["default"].parseUrlHash(window.location.hash);
     this.setState({
       token: parsed.params.token,
       scheme: parsed.params.scheme
@@ -4713,7 +4709,7 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
         "type": 0,
         "value": "Enter new password"
       }]
-    }, placeholder => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_visible_password_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+    }, placeholder => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_visible_password_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       placeholder: placeholder,
       autoComplete: "new-password",
       value: this.state.password,
@@ -4877,7 +4873,7 @@ class SettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
         "type": 0,
         "value": "Server to use:"
       }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_host_selector_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_host_selector_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       serverAddress: this.state.serverAddress,
       onServerAddressChange: this.handleServerAddressChange
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -5096,7 +5092,7 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "sidepanel",
       className: this.props.hideSelf ? 'nodisplay' : null
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_side_navbar_jsx__WEBPACK_IMPORTED_MODULE_4__.default, {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_side_navbar_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
       state: view,
       title: title,
       avatar: avatar,
@@ -5107,36 +5103,36 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       onSettings: this.props.onSettings,
       onNewTopic: this.handleNewTopic,
       onCancel: onCancel
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       level: this.props.errorLevel,
       text: this.props.errorText,
       action: this.props.errorAction,
       actionText: this.props.errorActionText,
       onClearError: this.props.onError
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       show: this.props.loadSpinnerVisible
-    }), view === 'login' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_login_view_jsx__WEBPACK_IMPORTED_MODULE_12__.default, {
+    }), view === 'login' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_login_view_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
       login: this.props.login,
       disabled: this.props.loginDisabled,
       persist: this.props.persist,
       onLogin: this.props.onLoginRequest,
       onPersistenceChange: this.props.onPersistenceChange
-    }) : view === 'register' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_create_account_view_jsx__WEBPACK_IMPORTED_MODULE_8__.default, {
+    }) : view === 'register' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_create_account_view_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
       tinode: this.props.tinode,
       onCreateAccount: this.props.onCreateAccount,
       onCancel: this.props.onCancel,
       onError: this.props.onError
-    }) : view === 'settings' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_settings_view_jsx__WEBPACK_IMPORTED_MODULE_15__.default, {
+    }) : view === 'settings' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_settings_view_jsx__WEBPACK_IMPORTED_MODULE_15__["default"], {
       transport: this.props.transport,
       serverAddress: this.props.serverAddress,
       onCancel: this.props.onCancel,
       onUpdate: this.props.onGlobalSettings
-    }) : view === 'edit' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_account_settings_view_jsx__WEBPACK_IMPORTED_MODULE_6__.default, {
+    }) : view === 'edit' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_account_settings_view_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
       tinode: this.props.tinode,
       myUserId: this.props.myUserId,
       trustedBadges: this.props.trustedBadges,
       onNavigate: this.props.onNavigate
-    }) : view === 'general' || view === 'crop' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_topic_common_jsx__WEBPACK_IMPORTED_MODULE_5__.default, {
+    }) : view === 'general' || view === 'crop' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_topic_common_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
       topic: "me",
       tinode: this.props.tinode,
       myUserId: this.props.myUserId,
@@ -5146,7 +5142,7 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       onCredDelete: this.props.onCredDelete,
       onCredConfirm: this.props.onCredConfirm,
       onError: this.props.onError
-    }) : view === 'notif' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_acc_notifications_view_jsx__WEBPACK_IMPORTED_MODULE_9__.default, {
+    }) : view === 'notif' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_acc_notifications_view_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
       messageSounds: this.props.messageSounds,
       desktopAlerts: this.props.desktopAlerts,
       desktopAlertsEnabled: this.props.desktopAlertsEnabled,
@@ -5154,7 +5150,7 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       onTogglePushNotifications: this.props.onTogglePushNotifications,
       onToggleMessageSounds: this.props.onToggleMessageSounds,
       onToggleIncognitoMode: this.props.onToggleIncognitoMode
-    }) : view === 'security' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_acc_security_view_jsx__WEBPACK_IMPORTED_MODULE_10__.default, {
+    }) : view === 'security' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_acc_security_view_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
       tinode: this.props.tinode,
       onUpdateAccountDesc: this.props.onUpdateAccountDesc,
       onUpdatePassword: this.props.onUpdatePassword,
@@ -5162,10 +5158,10 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       onDeleteAccount: this.props.onDeleteAccount,
       onShowAlert: this.props.onShowAlert,
       onShowBlocked: this.props.onShowBlocked
-    }) : view === 'support' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_acc_support_view_jsx__WEBPACK_IMPORTED_MODULE_11__.default, {
+    }) : view === 'support' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_acc_support_view_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
       serverAddress: this.props.serverAddress,
       serverVersion: this.props.serverVersion
-    }) : view === 'contacts' || view == 'archive' || view == 'blocked' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contacts_view_jsx__WEBPACK_IMPORTED_MODULE_7__.default, {
+    }) : view === 'contacts' || view == 'archive' || view == 'blocked' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contacts_view_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
       tinode: this.props.tinode,
       myUserId: this.props.myUserId,
       connected: this.props.connected,
@@ -5176,20 +5172,20 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       showContextMenu: this.props.showContextMenu,
       onTopicSelected: this.props.onTopicSelected,
       onShowArchive: this.props.onShowArchive
-    }) : view === 'newtpk' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_new_topic_view_jsx__WEBPACK_IMPORTED_MODULE_13__.default, {
+    }) : view === 'newtpk' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_new_topic_view_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
       tinode: this.props.tinode,
       searchResults: this.props.searchResults,
       onInitFind: this.props.onInitFind,
       onSearchContacts: this.props.onSearchContacts,
       onCreateTopic: this.props.onCreateTopic,
       onError: this.props.onError
-    }) : view === 'cred' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_validation_view_jsx__WEBPACK_IMPORTED_MODULE_16__.default, {
+    }) : view === 'cred' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_validation_view_jsx__WEBPACK_IMPORTED_MODULE_16__["default"], {
       credCode: this.props.credCode,
       credMethod: this.props.credMethod,
       onSubmit: this.props.onValidateCredentials,
       onCancel: this.props.onCancel,
       onError: this.props.onError
-    }) : view === 'reset' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_password_reset_view_jsx__WEBPACK_IMPORTED_MODULE_14__.default, {
+    }) : view === 'reset' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_password_reset_view_jsx__WEBPACK_IMPORTED_MODULE_14__["default"], {
       onRequest: this.props.onPasswordResetRequest,
       onReset: this.props.onResetPassword,
       onCancel: this.props.onCancel
@@ -5393,8 +5389,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   getBlankState() {
-    const settings = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.getObject('settings') || {};
-    const persist = !!_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.getObject('keep-logged-in');
+    const settings = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('settings') || {};
+    const persist = !!_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('keep-logged-in');
     return {
       connected: false,
       ready: false,
@@ -5406,7 +5402,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       incognitoMode: false,
       desktopAlerts: persist && !!settings.desktopAlerts,
       desktopAlertsEnabled: ((0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_14__.isSecureConnection)() || (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_14__.isLocalHost)()) && typeof firebase_app__WEBPACK_IMPORTED_MODULE_2__ != 'undefined' && typeof navigator != 'undefined' && typeof FIREBASE_INIT != 'undefined',
-      firebaseToken: persist ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.getObject('firebase-token') : null,
+      firebaseToken: persist ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('firebase-token') : null,
       applicationVisible: !document.hidden,
       errorText: '',
       errorLevel: null,
@@ -5490,9 +5486,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         }).catch(() => {});
       }
 
-      const parsedNav = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.parseUrlHash(window.location.hash);
+      const parsedNav = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].parseUrlHash(window.location.hash);
       this.resetContactList();
-      const token = this.state.persist ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.getObject('auth-token') : undefined;
+      const token = this.state.persist ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('auth-token') : undefined;
 
       if (token) {
         this.setState({
@@ -5508,7 +5504,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.setState({
         requestedTopic: parsedNav.path[1]
       });
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo('');
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo('');
       this.readTimer = null;
       this.readTimerCallback = null;
       this.handleHashRoute();
@@ -5624,7 +5620,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handleHashRoute() {
-    const hash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.parseUrlHash(window.location.hash);
+    const hash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].parseUrlHash(window.location.hash);
 
     if (hash.path && hash.path.length > 0) {
       if (['register', 'settings', 'edit', 'notif', 'security', 'support', 'general', 'crop', 'cred', 'reset', 'newtpk', 'archive', 'blocked', 'contacts', ''].includes(hash.path[0])) {
@@ -5737,14 +5733,14 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   handlePersistenceChange(persist) {
     if (persist) {
       this.tinode.initStorage().then(() => {
-        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.setObject('keep-logged-in', true);
+        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].setObject('keep-logged-in', true);
         this.setState({
           persist: true
         });
       });
     } else {
       this.tinode.clearStorage().then(() => {
-        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.setObject('keep-logged-in', false);
+        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].setObject('keep-logged-in', false);
         this.setState({
           persist: false
         });
@@ -5818,7 +5814,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
   doLogin(login, password, cred) {
     if (this.tinode.isAuthenticated()) {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo('');
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo('');
       return;
     }
 
@@ -5865,10 +5861,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           this.handleLogout();
         }
 
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo('');
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo('');
       });
     } else {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo('');
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo('');
       this.setState({
         loginDisabled: false
       });
@@ -5876,17 +5872,17 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handleCredentialsRequest(params) {
-    const parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.parseUrlHash(window.location.hash);
+    const parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].parseUrlHash(window.location.hash);
     parsed.path[0] = 'cred';
     parsed.params['method'] = params.cred[0];
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.composeUrlHash(parsed.path, parsed.params));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].composeUrlHash(parsed.path, parsed.params));
   }
 
   handleLoginSuccessful() {
     this.handleError();
 
-    if (_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.getObject('keep-logged-in')) {
-      _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.setObject('auth-token', this.tinode.getAuthToken());
+    if (_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('keep-logged-in')) {
+      _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].setObject('auth-token', this.tinode.getAuthToken());
     }
 
     const goToTopic = this.state.requestedTopic;
@@ -5906,19 +5902,19 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.tinode.disconnect();
       localStorage.removeItem('auth-token');
       this.handleError(err.message, 'err');
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo('');
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo('');
     }).finally(() => {
       this.setState({
         loadSpinnerVisible: false
       });
     });
-    let urlHash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlSidePanel(window.location.hash, 'contacts');
+    let urlHash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlSidePanel(window.location.hash, 'contacts');
 
     if (goToTopic) {
-      urlHash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlTopic(urlHash, goToTopic);
+      urlHash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic(urlHash, goToTopic);
     }
 
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(urlHash);
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(urlHash);
   }
 
   tnMeMetaDesc(desc) {
@@ -6118,7 +6114,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           topicSelectedAcs: this.tinode.getTopicAccessMode(topicName),
           forwardMessage: null
         });
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlTopic('', topicName));
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic('', topicName));
       }
     } else {
       this.setState({
@@ -6130,7 +6126,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         infoPanel: undefined,
         forwardMessage: null
       });
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlTopic('', null));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic('', null));
     }
   }
 
@@ -6138,7 +6134,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.setState({
       mobilePanel: 'sidepanel'
     });
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlTopic(window.location.hash, null));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic(window.location.hash, null));
   }
 
   handleSendMessage(msg, promise, uploader, head) {
@@ -6237,7 +6233,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
   handleNewAccount() {
     this.handleError();
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlSidePanel(window.location.hash, 'register'));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlSidePanel(window.location.hash, 'register'));
   }
 
   handleNewAccountRequest(login_, password_, public_, cred_, tags_) {
@@ -6287,7 +6283,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
   handleSettings() {
     this.handleError();
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlSidePanel(window.location.hash, this.state.myUserId ? 'edit' : 'settings'));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlSidePanel(window.location.hash, this.state.myUserId ? 'edit' : 'settings'));
   }
 
   handleGlobalSettings(settings) {
@@ -6300,7 +6296,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.tinode.disconnect();
     }
 
-    this.tinode = TinodeWeb.tnSetup(serverAddress, transport, this.props.intl.locale, _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.getObject('keep-logged-in'));
+    this.tinode = TinodeWeb.tnSetup(serverAddress, transport, this.props.intl.locale, _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('keep-logged-in'));
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
     this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
@@ -6308,19 +6304,19 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       serverAddress: serverAddress,
       transport: transport
     });
-    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.setObject('settings', {
+    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].setObject('settings', {
       serverAddress: serverAddress,
       transport: transport
     });
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlSidePanel(window.location.hash, ''));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlSidePanel(window.location.hash, ''));
   }
 
   handleShowArchive() {
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlSidePanel(window.location.hash, this.state.myUserId ? 'archive' : ''));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlSidePanel(window.location.hash, this.state.myUserId ? 'archive' : ''));
   }
 
   handleShowBlocked() {
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlSidePanel(window.location.hash, this.state.myUserId ? 'blocked' : ''));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlSidePanel(window.location.hash, this.state.myUserId ? 'blocked' : ''));
   }
 
   togglePushToken(enabled) {
@@ -6342,7 +6338,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
             desktopAlerts: false,
             firebaseToken: null
           });
-          _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.updateObject('settings', {
+          _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].updateObject('settings', {
             desktopAlerts: false
           });
         });
@@ -6351,8 +6347,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           desktopAlerts: true
         });
 
-        if (_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.getObject('keep-logged-in')) {
-          _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.updateObject('settings', {
+        if (_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('keep-logged-in')) {
+          _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].updateObject('settings', {
             desktopAlerts: true
           });
         }
@@ -6361,7 +6357,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.fbPush.deleteToken(this.state.firebaseToken).catch(err => {
         console.error("Unable to delete token.", err);
       }).finally(() => {
-        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.updateObject('settings', {
+        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].updateObject('settings', {
           desktopAlerts: false
         });
         localStorage.removeItem('firebase-token');
@@ -6376,7 +6372,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         desktopAlerts: false,
         firebaseToken: null
       });
-      _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.updateObject('settings', {
+      _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].updateObject('settings', {
         desktopAlerts: false
       });
     }
@@ -6384,13 +6380,13 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
   requestPushToken() {
     this.fbPush.getToken().then(refreshedToken => {
-      const persist = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.getObject('keep-logged-in');
+      const persist = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('keep-logged-in');
 
       if (refreshedToken != this.state.firebaseToken) {
         this.tinode.setDeviceToken(refreshedToken);
 
         if (persist) {
-          _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.setObject('firebase-token', refreshedToken);
+          _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].setObject('firebase-token', refreshedToken);
         }
       }
 
@@ -6400,7 +6396,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       });
 
       if (persist) {
-        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.updateObject('settings', {
+        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].updateObject('settings', {
           desktopAlerts: true
         });
       }
@@ -6414,7 +6410,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.setState({
       messageSounds: enabled
     });
-    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.updateObject('settings', {
+    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].updateObject('settings', {
       messageSoundsOff: !enabled
     });
   }
@@ -6445,7 +6441,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handleSidepanelCancel() {
-    const parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.parseUrlHash(window.location.hash);
+    const parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].parseUrlHash(window.location.hash);
     let path = '';
 
     if (['security', 'support', 'general', 'notif'].includes(parsed.path[0])) {
@@ -6466,7 +6462,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       delete parsed.params.tab;
     }
 
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.composeUrlHash(parsed.path, parsed.params));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].composeUrlHash(parsed.path, parsed.params));
     this.setState({
       errorText: '',
       errorLevel: null
@@ -6474,11 +6470,11 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   basicNavigator(hash) {
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlSidePanel(window.location.hash, hash));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlSidePanel(window.location.hash, hash));
   }
 
   infoNavigator(hash) {
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlInfoPanel(window.location.hash, hash));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlInfoPanel(window.location.hash, hash));
   }
 
   handleStartTopicRequest(topicName, newTopicParams, isChannel) {
@@ -6522,7 +6518,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.setState({
         topicSelected: newName
       }, () => {
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlTopic('', newName));
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic('', newName));
       });
     }
   }
@@ -6640,11 +6636,11 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
 
     this.setState(this.getBlankState());
-    this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport, this.props.intl.locale, _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__.default.getObject('keep-logged-in'));
+    this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport, this.props.intl.locale, _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('keep-logged-in'));
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
     this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo('');
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo('');
   }
 
   handleDeleteAccount() {
@@ -6661,7 +6657,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
 
     topic.delTopic(true).then(ctrl => {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlTopic(window.location.hash, ''));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic(window.location.hash, ''));
     }).catch(err => {
       this.handleError(err.message, 'err');
     });
@@ -6687,7 +6683,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
 
     topic.leave(true).then(ctrl => {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlTopic(window.location.hash, ''));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic(window.location.hash, ''));
     }).catch(err => {
       this.handleError(err.message, 'err');
     });
@@ -6701,7 +6697,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
 
     topic.updateMode(null, '-JP').then(ctrl => {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlTopic(window.location.hash, ''));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic(window.location.hash, ''));
     }).catch(err => {
       this.handleError(err.message, 'err');
     });
@@ -6719,7 +6715,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       'target': topicName
     }));
     topic.updateMode(null, '-JP').then(ctrl => {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.setUrlTopic(window.location.hash, ''));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic(window.location.hash, ''));
     }).catch(err => {
       this.handleError(err.message, 'err');
     });
@@ -6840,7 +6836,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handleShowInfoView() {
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.addUrlParam(window.location.hash, 'info', 'info'));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].addUrlParam(window.location.hash, 'info', 'info'));
     this.setState({
       infoPanel: 'info'
     });
@@ -6883,7 +6879,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           resp: code
         }
       }).then(() => {
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__.default.navigateTo('');
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo('');
       }).catch(err => {
         this.handleError(err.message, 'err');
       });
@@ -6927,7 +6923,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "app-container",
       ref: this.selfRef
-    }, this.state.contextMenuVisible ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_context_menu_jsx__WEBPACK_IMPORTED_MODULE_6__.default, {
+    }, this.state.contextMenuVisible ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_context_menu_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
       tinode: this.tinode,
       bounds: this.state.contextMenuBounds,
       clickAt: this.state.contextMenuClickAt,
@@ -6942,7 +6938,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         }
       },
       onError: this.handleError
-    }) : null, this.state.forwardMenuVisible ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_forward_menu_jsx__WEBPACK_IMPORTED_MODULE_7__.default, {
+    }) : null, this.state.forwardMenuVisible ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_forward_menu_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
       tinode: this.tinode,
       bounds: this.state.forwardMenuBounds,
       clickAt: this.state.forwardMenuClickAt,
@@ -6954,7 +6950,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       searchResults: this.state.searchResults,
       onSearchContacts: this.handleSearchContacts,
       onCreateTopic: this.handleStartTopicRequest
-    }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_alert_jsx__WEBPACK_IMPORTED_MODULE_5__.default, {
+    }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_alert_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
       visible: this.state.alertVisible,
       title: this.state.alertParams.title,
       content: this.state.alertParams.content,
@@ -6971,7 +6967,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         this.state.alertParams.onConfirm();
       },
       confirm: this.state.alertParams.confirm
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_sidepanel_view_jsx__WEBPACK_IMPORTED_MODULE_10__.default, {
+    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_sidepanel_view_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
       tinode: this.tinode,
       connected: this.state.connected,
       displayMobile: this.state.displayMobile,
@@ -7032,7 +7028,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       searchResults: this.state.searchResults,
       onSearchContacts: this.handleSearchContacts,
       showContextMenu: this.handleShowContextMenu
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_messages_view_jsx__WEBPACK_IMPORTED_MODULE_9__.default, {
+    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_messages_view_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
       tinode: this.tinode,
       connected: this.state.connected,
       ready: this.state.ready,
@@ -7063,7 +7059,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       onChangePermissions: this.handleChangePermissions,
       onNewChat: this.handleNewChatInvitation,
       sendMessage: this.handleSendMessage
-    }), this.state.infoPanel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_info_view_jsx__WEBPACK_IMPORTED_MODULE_8__.default, {
+    }), this.state.infoPanel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_info_view_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
       tinode: this.tinode,
       connected: this.state.connected,
       displayMobile: this.state.displayMobile,
@@ -7417,7 +7413,7 @@ class Attachment extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
       className: "material-icons big gray"
     }, "insert_drive_file")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "flex-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, filename, " ", size), this.props.uploading || this.state.downloader ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_file_progress_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, filename, " ", size), this.props.uploading || this.state.downloader ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_file_progress_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       progress: this.props.uploading ? this.props.progress : this.state.progress,
       onCancel: this.handleCancel
     }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, url ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
@@ -7491,7 +7487,7 @@ class AvatarCrop extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
       className: "panel-form"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_cropper_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_cropper_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       source: this.props.avatar,
       onChange: this.handleChange
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -7585,7 +7581,7 @@ class AvatarUpload extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       className: "preview"
     }) : this.props.readOnly && this.props.uid ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__.default, {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
       tinode: this.props.tinode,
       avatar: true,
       topic: this.props.uid,
@@ -7603,7 +7599,7 @@ class AvatarUpload extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       className: "round"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
-    }, "file_upload")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+    }, "file_upload")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       show: this.props.uploading,
       large: true,
       clear: true,
@@ -7868,7 +7864,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
           return;
         }
 
-        attachments.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_attachment_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+        attachments.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_attachment_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
           tinode: this.props.tinode,
           downloadUrl: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.getDownloadUrl(att),
           filename: att.name,
@@ -7914,7 +7910,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       className: sideClass
     }, this.props.isGroup && this.props.response ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
-    }, fullDisplay ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_4__.default, {
+    }, fullDisplay ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
       tinode: this.props.tinode,
       topic: this.props.userFrom,
       title: this.props.userName,
@@ -7925,7 +7921,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       className: "content-meta"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "message-content"
-    }, content, attachments), this.props.timestamp ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_received_marker_jsx__WEBPACK_IMPORTED_MODULE_5__.default, {
+    }, content, attachments), this.props.timestamp ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_received_marker_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
       timestamp: this.props.timestamp,
       received: this.props.received
     }) : null), this.props.deleted || !this.props.showContextMenu ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
@@ -8134,7 +8130,7 @@ class ChipInput extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     let count = 0;
     const staticMembers = this.props.staticMembers || [];
     this.state.sortedChips.map(item => {
-      chips.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_chip_jsx__WEBPACK_IMPORTED_MODULE_1__.default, {
+      chips.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_chip_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
         tinode: this.props.tinode,
         onCancel: this.handleChipCancel,
         avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_2__.makeImageUrl)(item.public ? item.public.photo : null),
@@ -8205,7 +8201,7 @@ class Chip extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) 
       className: "spacer"
     }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__.default, {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
       tinode: this.props.tinode,
       avatar: this.props.avatar || true,
       topic: this.props.topic,
@@ -8378,7 +8374,7 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     if (this.props.contacts && this.props.contacts.length > 0) {
       this.props.contacts.map(c => {
         if (c.action) {
-          contactNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_action_jsx__WEBPACK_IMPORTED_MODULE_4__.default, {
+          contactNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_action_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
             title: c.title,
             action: c.action,
             values: c.values,
@@ -8437,7 +8433,7 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
             }
           }
 
-          contactNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+          contactNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
             tinode: this.props.tinode,
             title: c.public ? c.public.fn : null,
             avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__.makeImageUrl)(c.public ? c.public.photo : null),
@@ -8628,7 +8624,7 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       onClick: this.handleClick
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       tinode: this.props.tinode,
       avatar: avatar,
       title: this.props.title,
@@ -8645,11 +8641,11 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       src: "/img/channel.png",
       className: "channel",
       alt: "channel"
-    }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+    }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       badges: icon_badges
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_unread_badge_jsx__WEBPACK_IMPORTED_MODULE_5__.default, {
+    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_unread_badge_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
       count: this.props.unread
-    })), this.props.showMode ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+    })), this.props.showMode ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       badges: badges
     })) : this.props.small ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "contact-comment"
@@ -9526,7 +9522,7 @@ class DocPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
         "type": 0,
         "value": "Size:"
       }]
-    })), " ", (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__.bytesToHumanSize)(this.props.content.size)))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+    })), " ", (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__.bytesToHumanSize)(this.props.content.size)))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       noInput: true,
       tinode: this.props.tinode,
       replyTo: this.props.replyTo,
@@ -9608,7 +9604,7 @@ class ErrorPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
       }
     }, this.props.actionText)) : null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "cancel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_menu_cancel_jsx__WEBPACK_IMPORTED_MODULE_1__.default, {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_menu_cancel_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
       onCancel: this.hide
     })));
   }
@@ -9755,9 +9751,9 @@ class ForwardMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       ref: this.selfRef
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "flex-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_search_contacts_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_search_contacts_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       onSearchContacts: this.handleSearchContacts
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_list_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_list_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       tinode: this.props.tinode,
       contacts: this.props.searchResults,
       myUserId: this.props.myUserId,
@@ -9982,7 +9978,7 @@ class GroupManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_chip_input_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_chip_input_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       tinode: this.props.tinode,
       chips: this.state.members,
       staticMembers: this.state.staticMembers,
@@ -9999,7 +9995,7 @@ class GroupManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         "type": 0,
         "value": "All Contacts"
       }]
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_list_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_list_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       tinode: this.props.tinode,
       contacts: this.props.contacts,
       myUserId: this.props.myUserId,
@@ -10076,7 +10072,7 @@ class GroupSubs extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       usersOnline.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         className: "avatar-box",
         key: sub.user
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
         tinode: this.props.tinode,
         topic: sub.user,
         avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.makeImageUrl)(sub.public ? sub.public.photo : null) || true,
@@ -10283,7 +10279,7 @@ class ImagePreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       style: size,
       className: "image-preview",
       alt: this.props.content.name
-    })), this.props.onSendMessage ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+    })), this.props.onSendMessage ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       messagePrompt: "add_image_caption",
       acceptBlank: true,
       tinode: this.props.tinode,
@@ -10446,7 +10442,7 @@ class InPlaceEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     const attr = {};
 
     if (this.props.type == 'password') {
-      element = _visible_password_jsx__WEBPACK_IMPORTED_MODULE_1__.default;
+      element = _visible_password_jsx__WEBPACK_IMPORTED_MODULE_1__["default"];
       attr.onFinished = this.handlePasswordFinished;
     } else {
       if (this.props.multiline > 1) {
@@ -11022,7 +11018,7 @@ class NewTopicGroup extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       onSubmit: this.handleSubmit
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("center", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("center", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       tinode: this.props.tinode,
       onError: this.props.onError,
       onImageChanged: this.handleImageChanged
@@ -11103,7 +11099,7 @@ class NewTopicGroup extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       tabIndex: 2
     })))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_checkbox_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_checkbox_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       checked: this.state.isChannel,
       tabIndex: 3,
       onChange: this.handleChannelToggle
@@ -11121,7 +11117,7 @@ class NewTopicGroup extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
         "type": 0,
         "value": "Tags (search & discovery)"
       }]
-    }, title => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_tag_manager_jsx__WEBPACK_IMPORTED_MODULE_4__.default, {
+    }, title => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_tag_manager_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
       tinode: this.props.tinode,
       tags: this.state.tags,
       activated: true,
@@ -11363,16 +11359,16 @@ class PermissionsEditor extends (react__WEBPACK_IMPORTED_MODULE_0___default().Co
         key: c
       }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", null, names[c]), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
         className: "checkbox"
-      }, skip.indexOf(c) < 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+      }, skip.indexOf(c) < 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
         name: c,
         checked: mode.indexOf(c) >= 0,
         onChange: this.handleChange
-      }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+      }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
         name: c,
         checked: mode.indexOf(c) >= 0
       })), this.props.compare ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
         className: "checkbox"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
         name: c,
         checked: compare.indexOf(c) >= 0
       })) : null));
@@ -11382,7 +11378,7 @@ class PermissionsEditor extends (react__WEBPACK_IMPORTED_MODULE_0___default().Co
       className: "panel-form-column"
     }, this.props.userTitle ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
       className: "contact-box small"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       tinode: this.props.tinode,
       item: this.props.item,
       title: this.props.userTitle,
@@ -11955,12 +11951,12 @@ class SideNavbar extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "side-caption-panel",
       className: "caption-panel"
-    }, this.props.onCancel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_button_back_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+    }, this.props.onCancel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_button_back_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       onBack: this.props.onCancel
     }) : null, avatar ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "self-avatar",
       className: "avatar-box"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__.default, {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
       tinode: this.props.tinode,
       avatar: avatar,
       topic: this.props.myUserId,
@@ -11968,12 +11964,12 @@ class SideNavbar extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
     })) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "sidepanel-title",
       className: "panel-title"
-    }, this.props.title, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+    }, this.props.title, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       badges: icon_badges
-    })), this.props.state === 'login' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_menu_start_jsx__WEBPACK_IMPORTED_MODULE_5__.default, {
+    })), this.props.state === 'login' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_menu_start_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
       onSignUp: this.props.onSignUp,
       onSettings: this.props.onSettings
-    }) : this.props.state === 'contacts' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_menu_contacts_jsx__WEBPACK_IMPORTED_MODULE_4__.default, {
+    }) : this.props.state === 'contacts' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_menu_contacts_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
       onNewTopic: this.props.onNewTopic,
       onSettings: this.props.onSettings
     }) : null);
@@ -12147,7 +12143,7 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
         "type": 0,
         "value": "Add some tags"
       }]
-    }, add_tags_prompt => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_chip_input_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+    }, add_tags_prompt => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_chip_input_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       tinode: this.props.tinode,
       chips: tags,
       avatarDisabled: true,
@@ -12392,7 +12388,7 @@ class TopicCommon extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
 
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "scrollable-panel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_topic_desc_edit_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_topic_desc_edit_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       tinode: this.props.tinode,
       topic: this.props.topic,
       onUpdateTopicDesc: this.props.onUpdateTopicDesc,
@@ -12658,7 +12654,7 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
 
   render() {
     if (this.state.newAvatar) {
-      return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_avatar_crop_jsx__WEBPACK_IMPORTED_MODULE_3__.default, {
+      return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_avatar_crop_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
         avatar: this.state.newAvatar,
         mime: this.state.newAvatarMime,
         onSubmit: this.handleAvatarCropped,
@@ -12670,7 +12666,7 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
     const editable = this.state.isMe || this.state.owner;
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("center", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_4__.default, {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("center", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
       tinode: this.props.tinode,
       avatar: this.state.avatar,
       readOnly: !editable,
@@ -12694,7 +12690,7 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
         "type": 0,
         "value": "Full name, e.g. John Doe"
       }]
-    }, full_name_placeholder => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__.default, {
+    }, full_name_placeholder => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
       placeholder: full_name_placeholder,
       value: this.state.fullName,
       required: true,
@@ -12715,7 +12711,7 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
         "type": 0,
         "value": "Freeform name of the group"
       }]
-    }, group_name_placeholder => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__.default, {
+    }, group_name_placeholder => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
       placeholder: group_name_placeholder,
       readOnly: !editable,
       value: this.state.fullName,
@@ -12737,7 +12733,7 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
         "type": 0,
         "value": "Visible to you only"
       }]
-    }, private_placeholder => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__.default, {
+    }, private_placeholder => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
       placeholder: private_placeholder,
       value: this.state.private,
       onFinished: this.handlePrivateUpdate
@@ -12757,7 +12753,7 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
         "type": 0,
         "value": "Description (optional)"
       }]
-    }, private_placeholder => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__.default, {
+    }, private_placeholder => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
       placeholder: private_placeholder,
       readOnly: !editable,
       value: this.state.description,
@@ -12771,7 +12767,7 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
         "type": 0,
         "value": "Tags (search & discovery)"
       }]
-    }, title_tag_manager => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_tag_manager_jsx__WEBPACK_IMPORTED_MODULE_6__.default, {
+    }, title_tag_manager => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_tag_manager_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
       tinode: this.props.tinode,
       title: title_tag_manager,
       activated: false,
@@ -13132,7 +13128,7 @@ class UploadingImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       className: "inline-image"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement('img', this.props), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "rounded-container"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_file_progress_jsx__WEBPACK_IMPORTED_MODULE_2__.default, {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_file_progress_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       progress: this.props.progress,
       onCancel: this.props.onCancelUpload
     })));
@@ -13404,7 +13400,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const {
   params
-} = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_5__.default.parseUrlHash(window.location.hash);
+} = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_5__["default"].parseUrlHash(window.location.hash);
 const language = params && params.hl || navigator.languages && navigator.languages[0] || navigator.language || navigator.userLanguage || 'en';
 const baseLanguage = language.toLowerCase().split(/[-_]/)[0];
 const htmlLang = _messages_json__WEBPACK_IMPORTED_MODULE_3__[language] ? langauge : _messages_json__WEBPACK_IMPORTED_MODULE_3__[baseLanguage] ? baseLanguage : 'en';
@@ -13414,7 +13410,7 @@ react_dom__WEBPACK_IMPORTED_MODULE_1___default().render(react__WEBPACK_IMPORTED_
   locale: language,
   messages: messages,
   textComponent: (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment)
-}, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_views_tinode_web_jsx__WEBPACK_IMPORTED_MODULE_4__.default, null))), document.getElementById('mountPoint'));
+}, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_views_tinode_web_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], null))), document.getElementById('mountPoint'));
 })();
 
 /******/ })()
