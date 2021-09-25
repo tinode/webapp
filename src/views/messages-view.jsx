@@ -843,16 +843,17 @@ class MessagesView extends React.Component {
     uploader.cancel();
   }
 
-  handlePickReply(seq, content, senderId, senderName) {
+  handlePickReply(seq, content, forwarded, senderId, senderName) {
     this.setState({reply: null});
 
     if (!seq || !content) {
       return;
     }
 
-    if (typeof content == 'string') {
-      content = Drafty.init(content);
-    }
+    content = forwarded ?
+        Drafty.forwardedContent(content) :
+        typeof content == 'string' ?
+            Drafty.init(content) : content;
     if (Drafty.isValid(content)) {
       content = Drafty.preview(content, QUOTED_REPLY_LENGTH);
     } else {

@@ -5,7 +5,7 @@ import { Drafty } from 'tinode-sdk';
 
 import { KEYPRESS_DELAY } from '../config.js';
 import { filePasted } from '../lib/blob-helpers.js';
-import { quoteFormatter, replyFormatter, formatDrafty, forwardedDecorator } from '../lib/formatters.js';
+import { quoteFormatter, replyFormatter } from '../lib/formatters.js';
 
 const messages = defineMessages({
   messaging_disabled: {
@@ -61,11 +61,10 @@ class SendMessage extends React.PureComponent {
     }
 
     this.setState({quote: this.props.replyTo ?
-      formatDrafty(this.props.replyTo.content, replyFormatter, {
+      Drafty.format(this.props.replyTo.content, replyFormatter, {
         formatMessage: this.props.intl.formatMessage.bind(this.props.intl),
         authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
-      },
-      this.props.replyTo.forwarded ? { before: forwardedDecorator } : null) :
+      }) :
       null});
   }
 
@@ -82,11 +81,10 @@ class SendMessage extends React.PureComponent {
 
     if (prevProps.replyTo != this.props.replyTo) {
       this.setState({quote: this.props.replyTo ?
-        formatDrafty(this.props.replyTo.content, replyFormatter, {
+        Drafty.format(this.props.replyTo.content, replyFormatter, {
           formatMessage: this.props.intl.formatMessage.bind(this.props.intl),
           authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
-        },
-        this.props.replyTo.forwarded ? { before: forwardedDecorator } : null) :
+        }) :
         null});
     }
   }

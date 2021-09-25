@@ -393,22 +393,3 @@ export function replyFormatter(style, data, values, key) {
   values = [React.createElement(LazyImage, attr, null), ' ', attr.alt];
   return React.createElement(React.Fragment, {key: key}, values);
 }
-
-// Creates a "forward" icon fragment.
-export function forwardedDecorator(context) {
-  return [<i key="fwd" className="material-icons">forward</i>];
-}
-
-// Returns a fully decorated ready for rendering representation of a drafty object.
-export function formatDrafty(content, formatter, context, decorators) {
-  let tree = Drafty.format(content, formatter, context);
-  if (decorators) {
-    if (decorators.before) {
-      tree = decorators.before(context).concat(tree);
-    }
-    if (decorators.after) {
-      tree = tree.concat(decorators.after(context));
-    }
-  }
-  return tree;
-}

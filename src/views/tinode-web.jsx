@@ -1450,8 +1450,12 @@ class TinodeWeb extends React.Component {
       // If the Find panel is active, close it.
       this.handleSidepanelCancel();
     }
-    const header = params.userName;
-    const content = typeof params.content == 'string' ? Tinode.Drafty.init(params.content) : params.content;
+    const header = '➦ ' + params.userName;
+    const content = params.forwarded ?
+        Tinode.Drafty.forwardedContent(params.content) :
+        typeof params.content == 'string' ?
+            Tinode.Drafty.init(params.content) : params.content;
+    //const content = typeof params.content == 'string' ? Tinode.Drafty.init(params.content) : params.content;
     const preview = Tinode.Drafty.preview(content, 30);
     const msg = Tinode.Drafty.append(
         Tinode.Drafty.appendLineBreak(

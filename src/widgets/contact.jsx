@@ -9,7 +9,7 @@ import UnreadBadge from './unread-badge.jsx';
 
 import { Drafty } from 'tinode-sdk';
 
-import { previewFormatter, formatDrafty, forwardedDecorator } from '../lib/formatters.js';
+import { previewFormatter } from '../lib/formatters.js';
 import { deliveryMarker } from '../lib/utils.js';
 
 class Contact extends React.Component {
@@ -72,8 +72,8 @@ class Contact extends React.Component {
     const subtitle = this.props.preview ?
       (typeof this.props.preview == 'string' ? this.props.preview :
         Drafty.isValid(this.props.preview) ?
-        React.createElement(React.Fragment, null, formatDrafty(this.props.preview, previewFormatter,
-          {formatMessage: this.props.intl.formatMessage}, this.props.forwarded ? { before: forwardedDecorator } : null)) :
+        React.createElement(React.Fragment, null, Drafty.format(this.props.preview, previewFormatter,
+          {formatMessage: this.props.intl.formatMessage})) :
         <><i className="material-icons gray">warning_amber</i> <i className="gray">
           <FormattedMessage id="invalid_content"
             defaultMessage="invalid content" description="Shown when the message is unreadable" /></i>
