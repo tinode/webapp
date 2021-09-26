@@ -278,7 +278,7 @@ function inlineImageAttr(attr, data) {
     maxHeight: IMAGE_THUMBNAIL_DIM + 'px',
   }
   attr.className = 'inline-image';
-  attr.alt = shortenFileName(data && data.name, 16) || this.formatMessage(messages.drafty_image);
+  attr.alt = this.formatMessage(messages.drafty_image);
   if (!data) {
     attr.src = 'img/broken_image.png';
   }
