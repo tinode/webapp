@@ -181,3 +181,22 @@ export function deliveryMarker(received) {
   }
   return null;
 }
+
+// Wraps a promise to make it cancelable.
+export function cancelablePromise(promise) {
+  let hasCanceled = false;
+
+  const wrappedPromise = new Promise((resolve, reject) => {
+    promise.then(
+      result => hasCanceled ? reject({isCanceled: true}) : resolve(result),
+      error => hasCanceled ? reject({isCanceled: true}) : reject(error)
+    );
+  });
+
+  return {
+    promise: wrappedPromise,
+    cancel( ) {
+      hasCanceled = true;
+    },
+  };
+};

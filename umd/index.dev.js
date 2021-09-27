@@ -818,7 +818,7 @@ function replyFormatter(style, data, values, key) {
   const attr = inlineImageAttr.call(this, {
     key: key
   }, data);
-  attr.whenDone = quoteImage.call(this, data);
+  attr.whenDone = (0,_utils_js__WEBPACK_IMPORTED_MODULE_8__.cancelablePromise)(quoteImage.call(this, data));
   values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], attr, null), ' ', attr.alt];
   return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), {
     key: key
@@ -1107,7 +1107,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "isUrlRelative": () => (/* binding */ isUrlRelative),
 /* harmony export */   "sanitizeUrl": () => (/* binding */ sanitizeUrl),
 /* harmony export */   "sanitizeImageUrl": () => (/* binding */ sanitizeImageUrl),
-/* harmony export */   "deliveryMarker": () => (/* binding */ deliveryMarker)
+/* harmony export */   "deliveryMarker": () => (/* binding */ deliveryMarker),
+/* harmony export */   "cancelablePromise": () => (/* binding */ cancelablePromise)
 /* harmony export */ });
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_0__);
@@ -1285,6 +1286,25 @@ function deliveryMarker(received) {
 
   return null;
 }
+function cancelablePromise(promise) {
+  let hasCanceled = false;
+  const wrappedPromise = new Promise((resolve, reject) => {
+    promise.then(result => hasCanceled ? reject({
+      isCanceled: true
+    }) : resolve(result), error => hasCanceled ? reject({
+      isCanceled: true
+    }) : reject(error));
+  });
+  return {
+    promise: wrappedPromise,
+
+    cancel() {
+      hasCanceled = true;
+    }
+
+  };
+}
+;
 
 /***/ }),
 
@@ -10585,7 +10605,7 @@ class LazyImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   }
 
   componentDidMount() {
-    this.props.whenDone.then(data => this.setState({
+    this.props.whenDone.promise.then(data => this.setState({
       src: data.src,
       style: { ...this.state.style,
         padding: 0
@@ -10593,6 +10613,10 @@ class LazyImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     })).catch(() => this.setState({
       src: 'img/broken_image.png'
     }));
+  }
+
+  componentWillUnmount() {
+    this.props.whenDone.cancel();
   }
 
   componentDidUpdate(prevProps) {
