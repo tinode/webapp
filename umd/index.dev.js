@@ -3982,7 +3982,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         msg = Drafty.parse(msg);
       }
 
-      msg = Drafty.append(Drafty.appendLineBreak(this.state.reply.content), msg);
+      msg = Drafty.append(this.state.reply.content, msg);
       this.handleCancelReply();
     }
 

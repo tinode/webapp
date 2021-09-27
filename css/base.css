@@ -2500,11 +2500,6 @@ ul.tabbar li.active > a {
   margin-bottom: 0.1rem;
 }
 
-/* Hide <BR> after the quote */
-.chat-box .reply-quote + br {
-  display: none;
-}
-
 #reply-quote-preview {
   display: flex;
   align-items: center;
