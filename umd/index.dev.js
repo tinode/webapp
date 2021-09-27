@@ -704,7 +704,7 @@ function inlineImageAttr(attr, data) {
     maxHeight: _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM + 'px'
   };
   attr.className = 'inline-image';
-  attr.alt = (0,_strformat_js__WEBPACK_IMPORTED_MODULE_7__.shortenFileName)(data && data.name, 16) || this.formatMessage(messages.drafty_image);
+  attr.alt = this.formatMessage(messages.drafty_image);
 
   if (!data) {
     attr.src = 'img/broken_image.png';
