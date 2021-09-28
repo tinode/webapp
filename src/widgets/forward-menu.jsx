@@ -65,7 +65,9 @@ export default class ForwardMenu extends React.Component {
   }
 
   render() {
-    const contacts = this.state.query != null ? this.props.searchResults : this.props.contacts;
+    let contacts = this.state.query != null ? this.props.searchResults : this.props.contacts;
+    // Filter out contacts without a 'W' permission.
+    contacts = contacts.filter((c) => { return c.acs.isJoiner() && c.acs.isWriter(); });
     // Ensure that menu is inside the app-container.
     const hSize = 20 * REM_SIZE;
     const vSize = REM_SIZE * (0.7 + contacts.length * 3);

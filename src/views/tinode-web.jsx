@@ -16,7 +16,7 @@ import MessagesView from './messages-view.jsx';
 import SidepanelView from './sidepanel-view.jsx';
 
 import { API_KEY, APP_NAME, DEFAULT_P2P_ACCESS_MODE, LOGGING_ENABLED,
-  MEDIA_BREAKPOINT, RECEIVED_DELAY } from '../config.js';
+  MEDIA_BREAKPOINT, QUOTED_REPLY_LENGTH, RECEIVED_DELAY } from '../config.js';
 import { PACKAGE_VERSION } from '../version.js';
 import { base64ReEncode, makeImageUrl } from '../lib/blob-helpers.js';
 import { detectServerAddress, isLocalHost, isSecureConnection } from '../lib/host-name.js';
@@ -1455,8 +1455,8 @@ class TinodeWeb extends React.Component {
         Tinode.Drafty.forwardedContent(params.content) :
         typeof params.content == 'string' ?
             Tinode.Drafty.init(params.content) : params.content;
-    //const content = typeof params.content == 'string' ? Tinode.Drafty.init(params.content) : params.content;
-    const preview = Tinode.Drafty.preview(content, 30);
+    const preview = Tinode.Drafty.preview(content, QUOTED_REPLY_LENGTH,
+                                          undefined, params.forwarded != null);
     const msg = Tinode.Drafty.append(
         Tinode.Drafty.appendLineBreak(
             Tinode.Drafty.mention(header, params.userFrom)),
