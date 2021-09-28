@@ -9,7 +9,7 @@ import UploadingImage from '../widgets/uploading-image.jsx'
 import { IMAGE_THUMBNAIL_DIM, BROKEN_IMAGE_SIZE, REM_SIZE } from '../config.js';
 import { base64ToBlob, blobToBase64, fitImageSize, imageScaled } from './blob-helpers.js';
 import { idToColorClass, shortenFileName } from './strformat.js';
-import { sanitizeImageUrl } from './utils.js';
+import { cancelablePromise, sanitizeImageUrl } from './utils.js';
 
 const messages = defineMessages({
   drafty_form: {
@@ -389,7 +389,7 @@ export function replyFormatter(style, data, values, key) {
     return quoteFormatter.call(this, style, data, values, key);
   }
   const attr = inlineImageAttr.call(this, {key: key}, data);
-  attr.whenDone = quoteImage.call(this, data);
+  attr.whenDone = cancelablePromise(quoteImage.call(this, data));
   values = [React.createElement(LazyImage, attr, null), ' ', attr.alt];
   return React.createElement(React.Fragment, {key: key}, values);
 }

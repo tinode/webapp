@@ -16,9 +16,15 @@ export default class LazyImage extends React.PureComponent {
   }
 
   componentDidMount() {
+    // whenDone is a wrapper around an actual promise to be able to cancel it.
     this.props.whenDone
+      .promise
       .then(data => this.setState({src: data.src, style: {...this.state.style, padding: 0}}))
       .catch(() => this.setState({src: 'img/broken_image.png'}));
+  }
+
+  componentWillUnmount() {
+    this.props.whenDone.cancel();
   }
 
   componentDidUpdate(prevProps) {
