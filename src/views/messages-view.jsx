@@ -221,6 +221,7 @@ class MessagesView extends React.Component {
         const preview = nextProps.forwardedMessage.preview;
         reply = {
           content: preview,
+          forwarded: nextProps.forwardedMessage.head.forwarded,
           seq: null
         };
       }
@@ -842,18 +843,19 @@ class MessagesView extends React.Component {
     uploader.cancel();
   }
 
-  handlePickReply(seq, content, senderId, senderName) {
+  handlePickReply(seq, content, forwarded, senderId, senderName) {
     this.setState({reply: null});
 
     if (!seq || !content) {
       return;
     }
 
-    if (typeof content == 'string') {
-      content = Drafty.init(content);
-    }
+    content = forwarded ?
+        Drafty.forwardedContent(content) :
+        typeof content == 'string' ?
+            Drafty.init(content) : content;
     if (Drafty.isValid(content)) {
-      content = Drafty.preview(content, QUOTED_REPLY_LENGTH);
+      content = Drafty.preview(content, QUOTED_REPLY_LENGTH, undefined, forwarded != null);
     } else {
       // /!\ invalid content.
       content = Drafty.append(Drafty.init('\u26A0 '),
@@ -971,7 +973,6 @@ class MessagesView extends React.Component {
             userName = user.public.fn;
             userAvatar = makeImageUrl(user.public.photo);
           }
-            //userFrom = thisFrom;
           chatBoxClass = groupTopic ? 'chat-box group' : 'chat-box';
 
           // Ref for this chat message.
@@ -985,6 +986,7 @@ class MessagesView extends React.Component {
             <ChatMessage
               tinode={this.props.tinode}
               content={msg.content}
+              forwarded={msg.head ? msg.head.forwarded : null}
               deleted={msg.hi}
               mimeType={msg.head ? msg.head.mime : null}
               timestamp={msg.ts}

@@ -26,7 +26,7 @@ const messages = defineMessages({
     id: 'drafty_image',
     defaultMessage: 'Picture',
     description: 'Comment for embedded images in drafty preview'
-  },
+  }
 });
 
 // Size the already scaled image.

@@ -77,14 +77,16 @@ class ContactList extends React.Component {
           const comment = Array.isArray(c.private) ?
             c.private.join(',') : (c.private ? c.private.comment : null);
           let preview;
+          let forwarded;
           let deliveryStatus;
           if (!this.props.showMode && c.latestMessage) {
             const msg = c.latestMessage(true);
             if (msg) {
+              forwarded = msg.head ? msg.head.forwarded : null;
               deliveryStatus = msg._status || c.msgStatus(msg, true);
               preview = typeof msg.content == 'string' ?
                 msg.content.substr(0, MESSAGE_PREVIEW_LENGTH) :
-                Drafty.preview(msg.content, MESSAGE_PREVIEW_LENGTH);
+                Drafty.preview(msg.content, MESSAGE_PREVIEW_LENGTH, undefined, forwarded != null);
             }
           }
           contactNodes.push(
@@ -94,6 +96,7 @@ class ContactList extends React.Component {
               avatar={makeImageUrl(c.public ? c.public.photo : null)}
               comment={comment}
               preview={preview}
+              forwarded={forwarded}
               received={deliveryStatus}
               unread={this.props.showUnread ? c.unread : 0}
               now={c.online && this.props.connected}

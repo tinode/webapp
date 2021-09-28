@@ -83,6 +83,7 @@ class BaseChatMessage extends React.PureComponent {
       content: this.props.content,
       userFrom: this.props.userFrom,
       userName: this.props.userName,
+      forwarded: this.props.forwarded,
       y: e.pageY,
       x: e.pageX,
       pickReply: this.props.pickReply

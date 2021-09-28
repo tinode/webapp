@@ -16,7 +16,7 @@ import MessagesView from './messages-view.jsx';
 import SidepanelView from './sidepanel-view.jsx';
 
 import { API_KEY, APP_NAME, DEFAULT_P2P_ACCESS_MODE, LOGGING_ENABLED,
-  MEDIA_BREAKPOINT, RECEIVED_DELAY } from '../config.js';
+  MEDIA_BREAKPOINT, QUOTED_REPLY_LENGTH, RECEIVED_DELAY } from '../config.js';
 import { PACKAGE_VERSION } from '../version.js';
 import { base64ReEncode, makeImageUrl } from '../lib/blob-helpers.js';
 import { detectServerAddress, isLocalHost, isSecureConnection } from '../lib/host-name.js';
@@ -1450,18 +1450,20 @@ class TinodeWeb extends React.Component {
       // If the Find panel is active, close it.
       this.handleSidepanelCancel();
     }
-    const header = "Forwarded from " + params.userName;
-    const content = typeof params.content == 'string' ? Tinode.Drafty.init(params.content) : params.content;
-    const preview = Tinode.Drafty.preview(content, 30);
+    const header = '➦ ' + params.userName;
+    const content = params.forwarded ?
+        Tinode.Drafty.forwardedContent(params.content) :
+        typeof params.content == 'string' ?
+            Tinode.Drafty.init(params.content) : params.content;
+    const preview = Tinode.Drafty.preview(content, QUOTED_REPLY_LENGTH,
+                                          undefined, params.forwarded != null);
     const msg = Tinode.Drafty.append(
         Tinode.Drafty.appendLineBreak(
             Tinode.Drafty.mention(header, params.userFrom)),
         content);
     const msgPreview = Tinode.Drafty.quote(header, params.userFrom, preview);
     const head = {
-      // TODO: decide what parameters to store.
-      fwdFrom: params.topicName,
-      authorUid: params.userFrom
+      forwarded: params.topicName + ':' + params.seq
     };
     this.setState({
       forwardMenuVisible: true,
@@ -1760,7 +1762,7 @@ class TinodeWeb extends React.Component {
           applicationVisible={this.state.applicationVisible}
 
           // Show the forwareded message if the user has selected a topic to forward this message to.
-          forwardedMessage={this.state.forwardMessage && this.stateTopicSelected != this.state.forwardMessage.head.fwdFrom ? this.state.forwardMessage : null}
+          forwardedMessage={this.state.forwardMessage && !this.state.forwardMessage.head.forwarded.startsWith(this.stateTopicSelected) ? this.state.forwardMessage : null}
           onCancelForwardMessage={this.handleHideForwardMenu}
 
           errorText={this.state.errorText}
