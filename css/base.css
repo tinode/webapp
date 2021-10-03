@@ -2540,4 +2540,5 @@ ul.tabbar li.active > a {
   padding-bottom: 0.35rem;
   box-shadow: 0 1px 6px rgba(0, 0, 0, .45);
   background-color: white;
+  overflow: auto;
 }

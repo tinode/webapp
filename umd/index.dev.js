@@ -9770,14 +9770,13 @@ class ForwardMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       return c.acs.isJoiner() && c.acs.isWriter();
     });
     const hSize = 20 * _config_js__WEBPACK_IMPORTED_MODULE_5__.REM_SIZE;
-    const vSize = _config_js__WEBPACK_IMPORTED_MODULE_5__.REM_SIZE * (0.7 + contacts.length * 3);
+    const vSize = _config_js__WEBPACK_IMPORTED_MODULE_5__.REM_SIZE * 4 * (1 + contacts.length);
     const left = this.props.bounds.right - this.props.clickAt.x < hSize ? this.props.clickAt.x - this.props.bounds.left - hSize : this.props.clickAt.x - this.props.bounds.left;
     const top = this.props.bounds.bottom - this.props.clickAt.y < vSize ? Math.max(this.props.clickAt.y - this.props.bounds.top - vSize, this.props.bounds.top + 70) : this.props.clickAt.y - this.props.bounds.top;
     const style = {
       left: left + 'px',
       top: top + 'px',
-      maxWidth: hSize + 'px',
-      height: '100%'
+      maxWidth: hSize + 'px'
     };
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "forward-menu",

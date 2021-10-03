@@ -70,7 +70,8 @@ export default class ForwardMenu extends React.Component {
     contacts = contacts.filter((c) => { return c.acs.isJoiner() && c.acs.isWriter(); });
     // Ensure that menu is inside the app-container.
     const hSize = 20 * REM_SIZE;
-    const vSize = REM_SIZE * (0.7 + contacts.length * 3);
+    // Total vertical size is rougly 4rem x (#contacts + 1 search box).
+    const vSize = REM_SIZE * 4 * (1 + contacts.length);
     const left = (this.props.bounds.right - this.props.clickAt.x < hSize) ?
         (this.props.clickAt.x - this.props.bounds.left - hSize) :
         (this.props.clickAt.x - this.props.bounds.left);
@@ -81,8 +82,7 @@ export default class ForwardMenu extends React.Component {
     const style = {
       left: left + 'px',
       top: top + 'px',
-      maxWidth: hSize + 'px',
-      height: '100%'
+      maxWidth: hSize + 'px'
     };
 
     return (
