@@ -64,9 +64,10 @@ export default class SearchContacts extends React.PureComponent {
               value={this.state.search} onChange={this.handleSearchChange}
               onKeyDown={this.handleKeyDown} required autoFocus />
           }</FormattedMessage>
-          <a href="#" onClick={this.handleClear}>
-            <i className="material-icons">close</i>
-          </a>
+          {this.state.search ?
+            <a href="#" onClick={this.handleClear}><i className="material-icons">highlight_off</i></a>
+            :
+            <span><i className="material-icons">&nbsp;</i></span>}
         </div>
       </div>
     );

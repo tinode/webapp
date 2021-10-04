@@ -231,6 +231,9 @@
     "defaultMessage": "Forgot password?",
     "description": "Link to Reset password form"
   },
+  "forward_to": {
+    "defaultMessage": "Forward to"
+  },
   "full_name_prompt": {
     "defaultMessage": "Full name, e.g. John Doe",
     "description": "Input placeholder for person's full name"

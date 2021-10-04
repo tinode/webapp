@@ -9,7 +9,7 @@ import Tinode from 'tinode-sdk';
 
 import Alert from '../widgets/alert.jsx';
 import ContextMenu from '../widgets/context-menu.jsx';
-import ForwardMenu from '../widgets/forward-menu.jsx';
+import ForwardDialog from '../widgets/forward-dialog.jsx';
 
 import InfoView from './info-view.jsx';
 import MessagesView from './messages-view.jsx';
@@ -142,8 +142,8 @@ class TinodeWeb extends React.Component {
     this.handleResetPassword = this.handleResetPassword.bind(this);
     this.handleContextMenuAction = this.handleContextMenuAction.bind(this);
 
-    this.handleShowForwardMenu = this.handleShowForwardMenu.bind(this);
-    this.handleHideForwardMenu = this.handleHideForwardMenu.bind(this);
+    this.handleShowForwardDialog = this.handleShowForwardDialog.bind(this);
+    this.handleHideForwardDialog = this.handleHideForwardDialog.bind(this);
 
     this.sendMessageToTopic = this.sendMessageToTopic.bind(this);
   }
@@ -203,9 +203,8 @@ class TinodeWeb extends React.Component {
       contextMenuParams: null,
       contextMenuItems: [],
 
-      forwardMenuVisible: false,
-      forwardMenuBounds: null,
-      forwardMenuClickAt: null,
+      forwardDialogVisible: false,
+      forwardDialogClickAt: null,
       forwardMessage: null,
 
       // Modal alert dialog.
@@ -563,7 +562,7 @@ class TinodeWeb extends React.Component {
       errorLevel: err && err.message ? 'err' : 'warn',
       loginDisabled: false,
       contextMenuVisible: false,
-      forwardMenuVisible: false,
+      forwardDialogVisible: false,
       serverVersion: "no connection"
     });
   }
@@ -1445,7 +1444,7 @@ class TinodeWeb extends React.Component {
     });
   }
 
-  handleShowForwardMenu(params) {
+  handleShowForwardDialog(params) {
     if (this.state.sidePanelSelected == 'newtpk') {
       // If the Find panel is active, close it.
       this.handleSidepanelCancel();
@@ -1466,9 +1465,7 @@ class TinodeWeb extends React.Component {
       forwarded: params.topicName + ':' + params.seq
     };
     this.setState({
-      forwardMenuVisible: true,
-      forwardMenuBounds: this.selfRef.current.getBoundingClientRect(),
-      forwardMenuClickAt: {x: params.x, y: params.y},
+      forwardDialogVisible: true,
       forwardMessage: { head: head, msg: msg, preview: msgPreview }
     });
   }
@@ -1513,11 +1510,9 @@ class TinodeWeb extends React.Component {
     });
   }
 
-  handleHideForwardMenu(keepForwardedMessage) {
+  handleHideForwardDialog(keepForwardedMessage) {
     this.setState({
-      forwardMenuVisible: false,
-      forwardMenuBounds: null,
-      forwardMenuClickAt: null,
+      forwardDialogVisible: false,
       forwardMessage: keepForwardedMessage ? this.state.forwardMessage : null
     });
   }
@@ -1530,7 +1525,7 @@ class TinodeWeb extends React.Component {
         });
       }
     } else if (action == 'menu_item_forward') {
-      this.handleShowForwardMenu(params);
+      this.handleShowForwardDialog(params);
     }
   }
 
@@ -1646,21 +1641,18 @@ class TinodeWeb extends React.Component {
           :
           null
         }
-        {this.state.forwardMenuVisible ?
-          <ForwardMenu
+        {this.state.forwardDialogVisible ?
+          <ForwardDialog
             tinode={this.tinode}
-            bounds={this.state.forwardMenuBounds}
-            clickAt={this.state.forwardMenuClickAt}
-
             contacts={this.state.chatList}
             topicSelected={this.props.topicSelected}
             myUserId={this.state.myUserId}
 
-            hide={this.handleHideForwardMenu}
+            hide={this.handleHideForwardDialog}
             onInitFind={this.tnInitFind}
             searchResults={this.state.searchResults}
             onSearchContacts={this.handleSearchContacts}
-            onCreateTopic={this.handleStartTopicRequest}
+            onTopicSelected={this.handleStartTopicRequest}
           />
           :
           null
@@ -1763,7 +1755,7 @@ class TinodeWeb extends React.Component {
 
           // Show the forwareded message if the user has selected a topic to forward this message to.
           forwardedMessage={this.state.forwardMessage && !this.state.forwardMessage.head.forwarded.startsWith(this.stateTopicSelected) ? this.state.forwardMessage : null}
-          onCancelForwardMessage={this.handleHideForwardMenu}
+          onCancelForwardMessage={this.handleHideForwardDialog}
 
           errorText={this.state.errorText}
           errorLevel={this.state.errorLevel}

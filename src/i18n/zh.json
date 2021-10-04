@@ -1340,5 +1340,11 @@
     "description": "Forward message",
     "missing": true,
     "obsolete": false
+  },
+  "forward_to": {
+    "translation": "",
+    "defaultMessage": "Forward to",
+    "missing": true,
+    "obsolete": false
   }
 }

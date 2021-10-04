@@ -1,0 +1,79 @@
+// Forward Menu: message forwarding popup/dropdown menu.
+import React from 'react';
+import { FormattedMessage } from 'react-intl';
+
+import Tinode from 'tinode-sdk';
+
+import ContactList from './contact-list.jsx';
+import SearchContacts from './search-contacts.jsx';
+
+export default class ForwardDialog extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      query: null
+    };
+
+    this.handleEscapeKey = this.handleEscapeKey.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+
+    this.handleSearchContacts = this.handleSearchContacts.bind(this);
+    this.handleContactSelected = this.handleContactSelected.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.onInitFind();
+  }
+
+  handleEscapeKey(e) {
+    if (e.keyCode === 27) {
+      // Not forwarding the message.
+      this.props.hide(false);
+    }
+  }
+
+  handleClose(e) {
+    e.preventDefault();
+    this.props.hide(false);
+  }
+
+  handleSearchContacts(query) {
+    this.setState({ query: Tinode.isNullValue(query) ? null : query });
+    this.props.onSearchContacts(query);
+  }
+
+  handleContactSelected(uid) {
+    this.props.onTopicSelected(uid);
+    this.props.hide(true);
+  }
+
+  render() {
+    let contacts = this.state.query != null ? this.props.searchResults : this.props.contacts;
+    // Filter out contacts without a 'W' permission.
+    contacts = contacts.filter((c) => { return c.acs.isJoiner() && c.acs.isWriter(); });
+
+    return (
+      <div className="alert-container">
+        <div className="forward-dialog">
+          <div className="title with-control">
+            <div><FormattedMessage id="forward_to" defaultMessage="Forward to"
+              desription="Title of the contact selector dialog when forwarding a message" /></div>
+            <div><a href="#" onClick={this.handleClose}><i className="material-icons">close</i></a></div>
+          </div>
+          <SearchContacts
+            onSearchContacts={this.handleSearchContacts} />
+          <ContactList
+            tinode={this.props.tinode}
+            contacts={contacts}
+            myUserId={this.props.myUserId}
+            emptyListMessage={null}
+            showOnline={false}
+            showUnread={false}
+            showContextMenu={false}
+            onTopicSelected={this.handleContactSelected} />
+        </div>
+      </div>
+    );
+  }
+}

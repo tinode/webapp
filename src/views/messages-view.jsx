@@ -852,10 +852,9 @@ class MessagesView extends React.Component {
 
     content = forwarded ?
         Drafty.forwardedContent(content) :
-        typeof content == 'string' ?
-            Drafty.init(content) : content;
+        typeof content == 'string' ? Drafty.init(content) : content;
     if (Drafty.isValid(content)) {
-      content = Drafty.preview(content, QUOTED_REPLY_LENGTH, undefined, forwarded != null);
+      content = Drafty.preview(content, QUOTED_REPLY_LENGTH, undefined, !forwarded);
     } else {
       // /!\ invalid content.
       content = Drafty.append(Drafty.init('\u26A0 '),
