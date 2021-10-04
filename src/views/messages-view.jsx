@@ -905,7 +905,7 @@ class MessagesView extends React.Component {
           <ImagePreview
             content={this.state.imagePreview}
             tinode={this.props.tinode}
-            replyTo={this.state.reply}
+            reply={this.state.reply}
             onCancelReply={this.handleCancelReply}
             onClose={this.handleClosePreview}
             onSendMessage={this.sendImageAttachment} />
@@ -923,7 +923,7 @@ class MessagesView extends React.Component {
           <DocPreview
             content={this.state.docPreview}
             tinode={this.props.tinode}
-            replyTo={this.state.reply}
+            reply={this.state.reply}
             onCancelReply={this.handleCancelReply}
             onClose={this.handleClosePreview}
             onSendMessage={this.sendFileAttachment} />
@@ -1112,7 +1112,7 @@ class MessagesView extends React.Component {
                 onAttachFile={this.props.forwardedMessage == null ? this.handleAttachFile : null}
                 onAttachImage={this.props.forwardedMessage == null ? this.handleAttachImage : null}
                 onError={this.props.onError}
-                replyTo={this.state.reply}
+                reply={this.state.reply}
                 onQuoteClick={this.handleQuoteClick}
                 onCancelReply={this.handleCancelReply} />}
           </>

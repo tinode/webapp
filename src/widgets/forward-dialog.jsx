@@ -63,15 +63,18 @@ export default class ForwardDialog extends React.Component {
           </div>
           <SearchContacts
             onSearchContacts={this.handleSearchContacts} />
-          <ContactList
-            tinode={this.props.tinode}
-            contacts={contacts}
-            myUserId={this.props.myUserId}
-            emptyListMessage={null}
-            showOnline={false}
-            showUnread={false}
-            showContextMenu={false}
-            onTopicSelected={this.handleContactSelected} />
+          <FormattedMessage id="search_no_results" defaultMessage="Search returned no results"
+              description="Text shown in contacts view when query returned no results.">{
+            (not_found_placeholder) => <ContactList
+              tinode={this.props.tinode}
+              contacts={contacts}
+              myUserId={this.props.myUserId}
+              emptyListMessage={not_found_placeholder}
+              showOnline={false}
+              showUnread={false}
+              showContextMenu={false}
+              onTopicSelected={this.handleContactSelected} />
+          }</FormattedMessage>
         </div>
       </div>
     );

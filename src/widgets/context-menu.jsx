@@ -418,10 +418,6 @@ class ContextMenu extends React.Component {
     });
   }
 
-  replyToMessage(params, errorHandler) {
-    console.log("Reply to message", params);
-  }
-
   // Function is used by context menu to set permissions.
   topicPermissionSetter(mode, params, errorHandler) {
     const topic = this.props.tinode.getTopic(params.topicName);

@@ -204,7 +204,6 @@ class TinodeWeb extends React.Component {
       contextMenuItems: [],
 
       forwardDialogVisible: false,
-      forwardDialogClickAt: null,
       forwardMessage: null,
 
       // Modal alert dialog.

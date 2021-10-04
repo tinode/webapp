@@ -53,6 +53,8 @@ class SendMessage extends React.PureComponent {
     this.handleMessageTyping = this.handleMessageTyping.bind(this);
 
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
+
+    this.formatReply = this.formatReply.bind(this);
   }
 
   componentDidMount() {
@@ -60,12 +62,7 @@ class SendMessage extends React.PureComponent {
       this.messageEditArea.addEventListener('paste', this.handlePasteEvent, false);
     }
 
-    this.setState({quote: this.props.replyTo ?
-      Drafty.format(this.props.replyTo.content, replyFormatter, {
-        formatMessage: this.props.intl.formatMessage.bind(this.props.intl),
-        authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
-      }) :
-      null});
+    this.setState({quote: this.formatReply()});
   }
 
   componentWillUnmount() {
@@ -79,14 +76,17 @@ class SendMessage extends React.PureComponent {
       this.messageEditArea.focus();
     }
 
-    if (prevProps.replyTo != this.props.replyTo) {
-      this.setState({quote: this.props.replyTo ?
-        Drafty.format(this.props.replyTo.content, replyFormatter, {
-          formatMessage: this.props.intl.formatMessage.bind(this.props.intl),
-          authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
-        }) :
-        null});
+    if (prevProps.reply != this.props.reply) {
+      this.setState({quote: this.formatReply()});
     }
+  }
+
+  formatReply() {
+    return this.props.reply ?
+      Drafty.format(this.props.reply.content, replyFormatter, {
+        formatMessage: this.props.intl.formatMessage.bind(this.props.intl),
+        authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
+      }) : null;
   }
 
   handlePasteEvent(e) {
@@ -163,8 +163,8 @@ class SendMessage extends React.PureComponent {
   handleQuoteClick(e) {
     e.preventDefault();
     e.stopPropagation();
-    if (this.props.replyTo && this.props.onQuoteClick) {
-      const replyToSeq = this.props.replyTo.seq;
+    if (this.props.reply && this.props.onQuoteClick) {
+      const replyToSeq = this.props.reply.seq;
       this.props.onQuoteClick(replyToSeq);
     }
   }
@@ -179,49 +179,48 @@ class SendMessage extends React.PureComponent {
 
     return (
       <div id="send-message-wrapper">
-      {this.state.quote ?
-        <div id="reply-quote-preview">
-          <div className="cancel">
-            <a href="#" onClick={(e) => {e.preventDefault(); this.props.onCancelReply();}}><i className="material-icons gray">close</i></a>
+        {this.state.quote ?
+          <div id="reply-quote-preview">
+            <div className="cancel">
+              <a href="#" onClick={(e) => {e.preventDefault(); this.props.onCancelReply();}}><i className="material-icons gray">close</i></a>
+            </div>
+            {this.state.quote}
           </div>
-          {this.state.quote}
+        :
+        null}
+        <div id="send-message-panel">
+          {!this.props.disabled ?
+            <>
+              {this.props.onAttachFile ?
+                <>
+                  <a href="#" onClick={(e) => {e.preventDefault(); this.attachImage.click();}} title="Add image">
+                    <i className="material-icons secondary">photo</i>
+                  </a>
+                  <a href="#" onClick={(e) => {e.preventDefault(); this.attachFile.click();}} title="Attach file">
+                    <i className="material-icons secondary">attach_file</i>
+                  </a>
+                </>
+                :
+                null}
+              {this.props.noInput ?
+                <div className="hr thin" /> :
+                <textarea id="sendMessage" placeholder={prompt}
+                  value={this.state.message} onChange={this.handleMessageTyping}
+                  onKeyPress={this.handleKeyPress}
+                  ref={(ref) => {this.messageEditArea = ref;}}
+                  autoFocus />}
+              <a href="#" onClick={this.handleSend} title="Send">
+                <i className="material-icons">send</i>
+              </a>
+              <input type="file" ref={(ref) => {this.attachFile = ref;}}
+                onChange={this.handleAttachFile} style={{display: 'none'}} />
+              <input type="file" ref={(ref) => {this.attachImage = ref;}} accept="image/*"
+                onChange={this.handleAttachImage} style={{display: 'none'}} />
+            </>
+            :
+            <div id="writing-disabled">{prompt}</div>
+          }
         </div>
-      :
-      null}
-
-      <div id="send-message-panel">
-        {!this.props.disabled ?
-          <>
-            {this.props.onAttachFile ?
-              <>
-                <a href="#" onClick={(e) => {e.preventDefault(); this.attachImage.click();}} title="Add image">
-                  <i className="material-icons secondary">photo</i>
-                </a>
-                <a href="#" onClick={(e) => {e.preventDefault(); this.attachFile.click();}} title="Attach file">
-                  <i className="material-icons secondary">attach_file</i>
-                </a>
-              </>
-              :
-              null}
-            {this.props.noInput ?
-              <div className="hr thin" /> :
-              <textarea id="sendMessage" placeholder={prompt}
-                value={this.state.message} onChange={this.handleMessageTyping}
-                onKeyPress={this.handleKeyPress}
-                ref={(ref) => {this.messageEditArea = ref;}}
-                autoFocus />}
-            <a href="#" onClick={this.handleSend} title="Send">
-              <i className="material-icons">send</i>
-            </a>
-            <input type="file" ref={(ref) => {this.attachFile = ref;}}
-              onChange={this.handleAttachFile} style={{display: 'none'}} />
-            <input type="file" ref={(ref) => {this.attachImage = ref;}} accept="image/*"
-              onChange={this.handleAttachImage} style={{display: 'none'}} />
-          </>
-          :
-          <div id="writing-disabled">{prompt}</div>
-        }
-      </div>
       </div>
     );
   }

@@ -48,7 +48,7 @@ export default class DocPreview extends React.PureComponent {
         <SendMessage
           noInput={true}
           tinode={this.props.tinode}
-          replyTo={this.props.replyTo}
+          reply={this.props.reply}
           onCancelReply={this.props.onCancelReply}
           onSendMessage={this.handleSendDoc}
           onError={this.props.onError} />

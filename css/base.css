@@ -348,7 +348,7 @@ div.alert-container {
 div.alert {
   position: relative;
   background-color: white;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, .45);
+  box-shadow: 0.15rem 0.15rem 1.5rem rgb(0 0 0 / 45%);
   padding: 1rem;
   border-radius: 0.3rem;
   margin: auto 2rem auto 2rem;
@@ -2542,14 +2542,16 @@ ul.tabbar li.active > a {
 /* Message forwarding. */
 .forward-dialog {
   position: relative;
-  overflow: auto;
+  overflow: hidden;
   background-color: white;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, .45);
+  box-shadow: 0.15rem 0.15rem 1.5rem rgb(0 0 0 / 45%);
   padding: 0.5rem;
   border-radius: 0.3rem;
   margin: auto 1rem auto 1rem;
-  width: fit-content;
-  min-width: 16rem;
-  max-width: 24rem;
-  max-height: 80%;
+  width: 24rem;
+  height: 80%;
+}
+
+.forward-dialog .scrollable-panel {
+  height: 80%;
 }

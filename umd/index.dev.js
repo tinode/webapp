@@ -4213,7 +4213,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
           content: this.state.imagePreview,
           tinode: this.props.tinode,
-          replyTo: this.state.reply,
+          reply: this.state.reply,
           onCancelReply: this.handleCancelReply,
           onClose: this.handleClosePreview,
           onSendMessage: this.sendImageAttachment
@@ -4227,7 +4227,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_doc_preview_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
           content: this.state.docPreview,
           tinode: this.props.tinode,
-          replyTo: this.state.reply,
+          reply: this.state.reply,
           onCancelReply: this.handleCancelReply,
           onClose: this.handleClosePreview,
           onSendMessage: this.sendFileAttachment
@@ -4448,7 +4448,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           onAttachFile: this.props.forwardedMessage == null ? this.handleAttachFile : null,
           onAttachImage: this.props.forwardedMessage == null ? this.handleAttachImage : null,
           onError: this.props.onError,
-          replyTo: this.state.reply,
+          reply: this.state.reply,
           onQuoteClick: this.handleQuoteClick,
           onCancelReply: this.handleCancelReply
         }));
@@ -5452,7 +5452,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       contextMenuParams: null,
       contextMenuItems: [],
       forwardDialogVisible: false,
-      forwardDialogClickAt: null,
       forwardMessage: null,
       alertVisible: false,
       alertParams: {},
@@ -9123,10 +9122,6 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     });
   }
 
-  replyToMessage(params, errorHandler) {
-    console.log("Reply to message", params);
-  }
-
   topicPermissionSetter(mode, params, errorHandler) {
     const topic = this.props.tinode.getTopic(params.topicName);
 
@@ -9538,7 +9533,7 @@ class DocPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
     })), " ", (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__.bytesToHumanSize)(this.props.content.size)))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       noInput: true,
       tinode: this.props.tinode,
-      replyTo: this.props.replyTo,
+      reply: this.props.reply,
       onCancelReply: this.props.onCancelReply,
       onSendMessage: this.handleSendDoc,
       onError: this.props.onError
@@ -9765,16 +9760,22 @@ class ForwardDialog extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       className: "material-icons"
     }, "close")))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_search_contacts_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
       onSearchContacts: this.handleSearchContacts
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_list_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "search_no_results",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Search returned no results"
+      }]
+    }, not_found_placeholder => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_list_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       tinode: this.props.tinode,
       contacts: contacts,
       myUserId: this.props.myUserId,
-      emptyListMessage: null,
+      emptyListMessage: not_found_placeholder,
       showOnline: false,
       showUnread: false,
       showContextMenu: false,
       onTopicSelected: this.handleContactSelected
-    })));
+    }))));
   }
 
 }
@@ -10295,7 +10296,7 @@ class ImagePreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       messagePrompt: "add_image_caption",
       acceptBlank: true,
       tinode: this.props.tinode,
-      replyTo: this.props.replyTo,
+      reply: this.props.reply,
       onCancelReply: this.props.onCancelReply,
       onSendMessage: this.handleSendImage,
       onError: this.props.onError
@@ -11715,6 +11716,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleMessageTyping = this.handleMessageTyping.bind(this);
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
+    this.formatReply = this.formatReply.bind(this);
   }
 
   componentDidMount() {
@@ -11723,10 +11725,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     }
 
     this.setState({
-      quote: this.props.replyTo ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(this.props.replyTo.content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_5__.replyFormatter, {
-        formatMessage: this.props.intl.formatMessage.bind(this.props.intl),
-        authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
-      }) : null
+      quote: this.formatReply()
     });
   }
 
@@ -11741,14 +11740,18 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       this.messageEditArea.focus();
     }
 
-    if (prevProps.replyTo != this.props.replyTo) {
+    if (prevProps.reply != this.props.reply) {
       this.setState({
-        quote: this.props.replyTo ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(this.props.replyTo.content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_5__.replyFormatter, {
-          formatMessage: this.props.intl.formatMessage.bind(this.props.intl),
-          authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
-        }) : null
+        quote: this.formatReply()
       });
     }
+  }
+
+  formatReply() {
+    return this.props.reply ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(this.props.reply.content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_5__.replyFormatter, {
+      formatMessage: this.props.intl.formatMessage.bind(this.props.intl),
+      authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
+    }) : null;
   }
 
   handlePasteEvent(e) {
@@ -11828,8 +11831,8 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     e.preventDefault();
     e.stopPropagation();
 
-    if (this.props.replyTo && this.props.onQuoteClick) {
-      const replyToSeq = this.props.replyTo.seq;
+    if (this.props.reply && this.props.onQuoteClick) {
+      const replyToSeq = this.props.reply.seq;
       this.props.onQuoteClick(replyToSeq);
     }
   }
