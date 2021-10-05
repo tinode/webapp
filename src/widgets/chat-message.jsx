@@ -71,13 +71,16 @@ class BaseChatMessage extends React.PureComponent {
   handleContextClick(e) {
     e.preventDefault();
     e.stopPropagation();
-    const menuItems = this.props.received == Tinode.MESSAGE_STATUS_FAILED ? ['menu_item_send_retry'] : [];
+    const menuItems = [];
+    if (this.props.received == Tinode.MESSAGE_STATUS_FAILED) {
+      menuItems.push('menu_item_send_retry');
+    }
     if (this.props.userIsWriter &&
         this.props.received > Tinode.MESSAGE_STATUS_FAILED &&
         this.props.received < Tinode.MESSAGE_STATUS_DEL_RANGE) {
       menuItems.push('menu_item_reply');
-      menuItems.push('menu_item_forward');
     }
+    menuItems.push('menu_item_forward');
 
     this.props.showContextMenu({
       seq: this.props.seq,

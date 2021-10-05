@@ -102,7 +102,7 @@ class MessagesView extends React.Component {
     this.handleClosePreview = this.handleClosePreview.bind(this);
     this.handleFormResponse = this.handleFormResponse.bind(this);
     this.handleContextClick = this.handleContextClick.bind(this);
-    this.handleShowContextMenuMessage = this.handleShowContextMenuMessage.bind(this);
+    this.handleShowMessageContextMenu = this.handleShowMessageContextMenu.bind(this);
     this.handleNewChatAcceptance = this.handleNewChatAcceptance.bind(this);
     this.handleEnablePeer = this.handleEnablePeer.bind(this);
     this.handleAttachFile = this.handleAttachFile.bind(this);
@@ -642,7 +642,11 @@ class MessagesView extends React.Component {
     this.props.showContextMenu({ topicName: this.state.topic, y: e.pageY, x: e.pageX });
   }
 
-  handleShowContextMenuMessage(params, messageSpecificMenuItems) {
+  handleShowMessageContextMenu(params, messageSpecificMenuItems) {
+    if (params.userFrom == 'chan') {
+      params.userFrom = this.state.topic;
+      params.userName = this.state.title;
+    }
     params.topicName = this.state.topic;
     const menuItems = messageSpecificMenuItems || [];
     const topic = this.props.tinode.getTopic(params.topicName);
@@ -950,7 +954,7 @@ class MessagesView extends React.Component {
         let previousFrom = null;
         let chatBoxClass = null;
         topic.messages((msg, prev, next, i) => {
-          let nextFrom = next ? (next.from || null) : 'chan';
+          let nextFrom = next ? (next.from || 'chan') : null;
 
           let sequence = 'single';
           let thisFrom = msg.from || 'chan';
@@ -994,6 +998,7 @@ class MessagesView extends React.Component {
               response={isReply}
               seq={msg.seq}
               isGroup={groupTopic}
+              isChan={this.state.channel}
               userFrom={userFrom}
               userName={userName}
               userAvatar={userAvatar}
@@ -1001,7 +1006,7 @@ class MessagesView extends React.Component {
               received={deliveryStatus}
               uploader={msg._uploader}
               viewportWidth={this.props.viewportWidth}  // Used by `formatter`.
-              showContextMenu={this.state.channel? false : this.handleShowContextMenuMessage}
+              showContextMenu={this.handleShowMessageContextMenu}
               onImagePreview={this.handleImagePostview}
               onFormResponse={this.handleFormResponse}
               onError={this.props.onError}

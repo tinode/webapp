@@ -52,7 +52,6 @@ export default class ForwardDialog extends React.Component {
     let contacts = this.state.query != null ? this.props.searchResults : this.props.contacts;
     // Filter out contacts without a 'W' or 'J' permissions as well as the current topic.
     contacts = contacts.filter((c) => {
-      console.log(c.name, this.props.topicSelected);
       return (c.name != this.props.topicSelected) && c.acs.isJoiner() && c.acs.isWriter();
     });
 

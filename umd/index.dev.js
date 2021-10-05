@@ -41,6 +41,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "MAX_TOPIC_DESCRIPTION_LENGTH": () => (/* binding */ MAX_TOPIC_DESCRIPTION_LENGTH),
 /* harmony export */   "MESSAGE_PREVIEW_LENGTH": () => (/* binding */ MESSAGE_PREVIEW_LENGTH),
 /* harmony export */   "QUOTED_REPLY_LENGTH": () => (/* binding */ QUOTED_REPLY_LENGTH),
+/* harmony export */   "FORWARDED_PREVIEW_LENGTH": () => (/* binding */ FORWARDED_PREVIEW_LENGTH),
 /* harmony export */   "LINK_CONTACT_US": () => (/* binding */ LINK_CONTACT_US),
 /* harmony export */   "LINK_PRIVACY_POLICY": () => (/* binding */ LINK_PRIVACY_POLICY),
 /* harmony export */   "LINK_TERMS_OF_SERVICE": () => (/* binding */ LINK_TERMS_OF_SERVICE)
@@ -81,6 +82,7 @@ const MAX_TITLE_LENGTH = 60;
 const MAX_TOPIC_DESCRIPTION_LENGTH = 360;
 const MESSAGE_PREVIEW_LENGTH = 80;
 const QUOTED_REPLY_LENGTH = 30;
+const FORWARDED_PREVIEW_LENGTH = 128;
 const LINK_CONTACT_US = 'email:support@tinode.co';
 const LINK_PRIVACY_POLICY = 'https://tinode.co/privacy.html';
 const LINK_TERMS_OF_SERVICE = 'https://tinode.co/terms.html';
@@ -3383,7 +3385,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.handleClosePreview = this.handleClosePreview.bind(this);
     this.handleFormResponse = this.handleFormResponse.bind(this);
     this.handleContextClick = this.handleContextClick.bind(this);
-    this.handleShowContextMenuMessage = this.handleShowContextMenuMessage.bind(this);
+    this.handleShowMessageContextMenu = this.handleShowMessageContextMenu.bind(this);
     this.handleNewChatAcceptance = this.handleNewChatAcceptance.bind(this);
     this.handleEnablePeer = this.handleEnablePeer.bind(this);
     this.handleAttachFile = this.handleAttachFile.bind(this);
@@ -3950,7 +3952,12 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     });
   }
 
-  handleShowContextMenuMessage(params, messageSpecificMenuItems) {
+  handleShowMessageContextMenu(params, messageSpecificMenuItems) {
+    if (params.userFrom == 'chan') {
+      params.userFrom = this.state.topic;
+      params.userName = this.state.title;
+    }
+
     params.topicName = this.state.topic;
     const menuItems = messageSpecificMenuItems || [];
     const topic = this.props.tinode.getTopic(params.topicName);
@@ -4266,7 +4273,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         let previousFrom = null;
         let chatBoxClass = null;
         topic.messages((msg, prev, next, i) => {
-          let nextFrom = next ? next.from || null : 'chan';
+          let nextFrom = next ? next.from || 'chan' : null;
           let sequence = 'single';
           let thisFrom = msg.from || 'chan';
 
@@ -4311,6 +4318,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             response: isReply,
             seq: msg.seq,
             isGroup: groupTopic,
+            isChan: this.state.channel,
             userFrom: userFrom,
             userName: userName,
             userAvatar: userAvatar,
@@ -4318,7 +4326,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             received: deliveryStatus,
             uploader: msg._uploader,
             viewportWidth: this.props.viewportWidth,
-            showContextMenu: this.state.channel ? false : this.handleShowContextMenuMessage,
+            showContextMenu: this.handleShowMessageContextMenu,
             onImagePreview: this.handleImagePostview,
             onFormResponse: this.handleFormResponse,
             onError: this.props.onError,
@@ -6760,7 +6768,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
     const header = '➦ ' + params.userName;
     const content = params.forwarded ? tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.forwardedContent(params.content) : typeof params.content == 'string' ? tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.init(params.content) : params.content;
-    const preview = tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.preview(content, _config_js__WEBPACK_IMPORTED_MODULE_11__.QUOTED_REPLY_LENGTH, undefined, params.forwarded != null);
+    const preview = tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.preview(content, _config_js__WEBPACK_IMPORTED_MODULE_11__.FORWARDED_PREVIEW_LENGTH, undefined, params.forwarded != null);
     const msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.append(tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.appendLineBreak(tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.mention(header, params.userFrom)), content);
     const msgPreview = tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.quote(header, params.userFrom, preview);
     const head = {
@@ -7821,13 +7829,17 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
   handleContextClick(e) {
     e.preventDefault();
     e.stopPropagation();
-    const menuItems = this.props.received == Tinode.MESSAGE_STATUS_FAILED ? ['menu_item_send_retry'] : [];
+    const menuItems = [];
+
+    if (this.props.received == Tinode.MESSAGE_STATUS_FAILED) {
+      menuItems.push('menu_item_send_retry');
+    }
 
     if (this.props.userIsWriter && this.props.received > Tinode.MESSAGE_STATUS_FAILED && this.props.received < Tinode.MESSAGE_STATUS_DEL_RANGE) {
       menuItems.push('menu_item_reply');
-      menuItems.push('menu_item_forward');
     }
 
+    menuItems.push('menu_item_forward');
     this.props.showContextMenu({
       seq: this.props.seq,
       content: this.props.content,
@@ -9733,7 +9745,6 @@ class ForwardDialog extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
   render() {
     let contacts = this.state.query != null ? this.props.searchResults : this.props.contacts;
     contacts = contacts.filter(c => {
-      console.log(c.name, this.props.topicSelected);
       return c.name != this.props.topicSelected && c.acs.isJoiner() && c.acs.isWriter();
     });
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {

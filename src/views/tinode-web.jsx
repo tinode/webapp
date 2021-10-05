@@ -15,7 +15,7 @@ import InfoView from './info-view.jsx';
 import MessagesView from './messages-view.jsx';
 import SidepanelView from './sidepanel-view.jsx';
 
-import { API_KEY, APP_NAME, DEFAULT_P2P_ACCESS_MODE, LOGGING_ENABLED,
+import { API_KEY, APP_NAME, DEFAULT_P2P_ACCESS_MODE, FORWARDED_PREVIEW_LENGTH, LOGGING_ENABLED,
   MEDIA_BREAKPOINT, QUOTED_REPLY_LENGTH, RECEIVED_DELAY } from '../config.js';
 import { PACKAGE_VERSION } from '../version.js';
 import { base64ReEncode, makeImageUrl } from '../lib/blob-helpers.js';
