@@ -3489,11 +3489,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       const topic = nextProps.tinode.getTopic(nextProps.topic);
       let reply = null;
 
-      if (nextProps.forwardedMessage) {
-        const preview = nextProps.forwardedMessage.preview;
+      if (nextProps.forwardMessage) {
+        const preview = nextProps.forwardMessage.preview;
         reply = {
           content: preview,
-          forwarded: nextProps.forwardedMessage.head.forwarded,
+          forwarded: nextProps.forwardMessage.head.forwarded,
           seq: null
         };
       }
@@ -3990,9 +3990,9 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   sendMessage(msg, uploadCompletionPromise, uploader) {
     let head;
 
-    if (this.props.forwardedMessage) {
-      msg = this.props.forwardedMessage.msg;
-      head = this.props.forwardedMessage.head;
+    if (this.props.forwardMessage) {
+      msg = this.props.forwardMessage.msg;
+      head = this.props.forwardMessage.head;
       this.handleCancelReply();
     } else if (this.state.reply && this.state.reply.content) {
       head = {
@@ -4145,6 +4145,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
 
   handlePickReply(seq, content, forwarded, senderId, senderName) {
+    console.log("handlePickReply", seq, content, forwarded, senderId, senderName, new Error("stacktrace"));
     this.setState({
       reply: null
     });
@@ -4441,12 +4442,12 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           onAction: this.handleNewChatAcceptance
         }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
           tinode: this.props.tinode,
-          noInput: this.props.forwardedMessage != null,
+          noInput: !!this.props.forwardMessage,
           disabled: !this.state.isWriter,
           onKeyPress: this.sendKeyPress,
           onSendMessage: this.sendMessage,
-          onAttachFile: this.props.forwardedMessage == null ? this.handleAttachFile : null,
-          onAttachImage: this.props.forwardedMessage == null ? this.handleAttachImage : null,
+          onAttachFile: this.props.forwardMessage ? null : this.handleAttachFile,
+          onAttachImage: this.props.forwardMessage ? null : this.handleAttachImage,
           onError: this.props.onError,
           reply: this.state.reply,
           onQuoteClick: this.handleQuoteClick,
@@ -6951,7 +6952,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }) : null, this.state.forwardDialogVisible ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_forward_dialog_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
       tinode: this.tinode,
       contacts: this.state.chatList,
-      topicSelected: this.props.topicSelected,
+      topicSelected: this.state.topicSelected,
       myUserId: this.state.myUserId,
       hide: this.handleHideForwardDialog,
       onInitFind: this.tnInitFind,
@@ -7052,7 +7053,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       serverVersion: this.state.serverVersion,
       serverAddress: this.state.serverAddress,
       applicationVisible: this.state.applicationVisible,
-      forwardedMessage: this.state.forwardMessage && !this.state.forwardMessage.head.forwarded.startsWith(this.stateTopicSelected) ? this.state.forwardMessage : null,
+      forwardMessage: this.state.forwardMessage,
       onCancelForwardMessage: this.handleHideForwardDialog,
       errorText: this.state.errorText,
       errorLevel: this.state.errorLevel,
@@ -8911,9 +8912,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       'menu_item_forward': {
         id: 'menu_item_forward',
         title: formatMessage(messages.forward),
-        handler: (params, errorHandler) => {
-          return this.forwardMessage(params, errorHandler);
-        }
+        handler: () => {}
       },
       'topic_unmute': {
         id: 'topic_unmute',
@@ -9143,10 +9142,6 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
 
   replyToMessage(params, errorHandler) {
     params.pickReply(params.seq, params.content, params.forwarded, params.userFrom, params.userName, errorHandler);
-  }
-
-  forwardMessage(params, errorHandler) {
-    console.log('forwarding msg ', params);
   }
 
   render() {
@@ -9738,7 +9733,8 @@ class ForwardDialog extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
   render() {
     let contacts = this.state.query != null ? this.props.searchResults : this.props.contacts;
     contacts = contacts.filter(c => {
-      return c.acs.isJoiner() && c.acs.isWriter();
+      console.log(c.name, this.props.topicSelected);
+      return c.name != this.props.topicSelected && c.acs.isJoiner() && c.acs.isWriter();
     });
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "alert-container"
@@ -11842,9 +11838,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       formatMessage
     } = this.props.intl;
     const prompt = this.props.disabled ? formatMessage(messages.messaging_disabled) : this.props.messagePrompt ? formatMessage(messages[this.props.messagePrompt]) : formatMessage(messages.type_new_message);
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "send-message-wrapper"
-    }, this.state.quote ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    const quote = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "reply-quote-preview"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "cancel"
@@ -11856,7 +11850,10 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons gray"
-    }, "close"))), this.state.quote) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, "close"))), this.state.quote);
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "send-message-wrapper"
+    }, this.state.quote && !this.props.noInput ? quote : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "send-message-panel"
     }, !this.props.disabled ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, this.props.onAttachFile ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
@@ -11876,7 +11873,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       title: "Attach file"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons secondary"
-    }, "attach_file"))) : null, this.props.noInput ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, "attach_file"))) : null, this.props.noInput ? this.state.quote ? quote : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "hr thin"
     }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("textarea", {
       id: "sendMessage",

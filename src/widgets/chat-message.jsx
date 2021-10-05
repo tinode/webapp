@@ -78,6 +78,7 @@ class BaseChatMessage extends React.PureComponent {
       menuItems.push('menu_item_reply');
       menuItems.push('menu_item_forward');
     }
+
     this.props.showContextMenu({
       seq: this.props.seq,
       content: this.props.content,

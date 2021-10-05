@@ -216,12 +216,12 @@ class MessagesView extends React.Component {
       const topic = nextProps.tinode.getTopic(nextProps.topic);
 
       let reply = null;
-      if (nextProps.forwardedMessage) {
+      if (nextProps.forwardMessage) {
         // We are forwarding a message. Show preview.
-        const preview = nextProps.forwardedMessage.preview;
+        const preview = nextProps.forwardMessage.preview;
         reply = {
           content: preview,
-          forwarded: nextProps.forwardedMessage.head.forwarded,
+          forwarded: nextProps.forwardMessage.head.forwarded,
           seq: null
         };
       }
@@ -677,10 +677,10 @@ class MessagesView extends React.Component {
   // sendMessage sends the message with an optional subscription to topic first.
   sendMessage(msg, uploadCompletionPromise, uploader) {
     let head;
-    if (this.props.forwardedMessage) {
+    if (this.props.forwardMessage) {
       // We are forwarding a message.
-      msg = this.props.forwardedMessage.msg;
-      head = this.props.forwardedMessage.head;
+      msg = this.props.forwardMessage.msg;
+      head = this.props.forwardMessage.head;
       this.handleCancelReply();
     } else if (this.state.reply && this.state.reply.content) {
       // We are replying to a message in this topic.
@@ -844,6 +844,8 @@ class MessagesView extends React.Component {
   }
 
   handlePickReply(seq, content, forwarded, senderId, senderName) {
+    console.log("handlePickReply", seq, content, forwarded, senderId, senderName, new Error("stacktrace"));
+
     this.setState({reply: null});
 
     if (!seq || !content) {
@@ -1105,12 +1107,12 @@ class MessagesView extends React.Component {
               :
               <SendMessage
                 tinode={this.props.tinode}
-                noInput={this.props.forwardedMessage != null}
+                noInput={!!this.props.forwardMessage}
                 disabled={!this.state.isWriter}
                 onKeyPress={this.sendKeyPress}
                 onSendMessage={this.sendMessage}
-                onAttachFile={this.props.forwardedMessage == null ? this.handleAttachFile : null}
-                onAttachImage={this.props.forwardedMessage == null ? this.handleAttachImage : null}
+                onAttachFile={this.props.forwardMessage ? null : this.handleAttachFile}
+                onAttachImage={this.props.forwardMessage ? null : this.handleAttachImage}
                 onError={this.props.onError}
                 reply={this.state.reply}
                 onQuoteClick={this.handleQuoteClick}

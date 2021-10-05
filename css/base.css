@@ -2535,6 +2535,13 @@ ul.tabbar li.active > a {
   content: '';
 }
 
+#send-message-panel #reply-quote-preview {
+  width: 100%;
+}
+#send-message-panel #reply-quote-preview .reply-quote {
+  margin-bottom: 0.35rem;
+}
+
 .mention {
   font-weight: bolder;
 }

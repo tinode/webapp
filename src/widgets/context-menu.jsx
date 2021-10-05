@@ -191,9 +191,7 @@ class ContextMenu extends React.Component {
       'menu_item_forward': {
         id: 'menu_item_forward',
         title: formatMessage(messages.forward),
-        handler: (params, errorHandler) => {
-          return this.forwardMessage(params, errorHandler);
-        }
+        handler: () => {} /* the action is taken directly in tinode-web */
       },
       'topic_unmute': {
         id: 'topic_unmute',
@@ -437,12 +435,6 @@ class ContextMenu extends React.Component {
 
   replyToMessage(params, errorHandler) {
     params.pickReply(params.seq, params.content, params.forwarded, params.userFrom, params.userName, errorHandler);
-  }
-
-  forwardMessage(params, errorHandler) {
-    //params.pickReply({ seq: params.seq, content: params.content });
-    //this.props.
-    console.log('forwarding msg ', params);
   }
 
   render() {

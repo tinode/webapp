@@ -1453,7 +1453,7 @@ class TinodeWeb extends React.Component {
         Tinode.Drafty.forwardedContent(params.content) :
         typeof params.content == 'string' ?
             Tinode.Drafty.init(params.content) : params.content;
-    const preview = Tinode.Drafty.preview(content, QUOTED_REPLY_LENGTH,
+    const preview = Tinode.Drafty.preview(content, FORWARDED_PREVIEW_LENGTH,
                                           undefined, params.forwarded != null);
     const msg = Tinode.Drafty.append(
         Tinode.Drafty.appendLineBreak(
@@ -1644,7 +1644,7 @@ class TinodeWeb extends React.Component {
           <ForwardDialog
             tinode={this.tinode}
             contacts={this.state.chatList}
-            topicSelected={this.props.topicSelected}
+            topicSelected={this.state.topicSelected}
             myUserId={this.state.myUserId}
 
             hide={this.handleHideForwardDialog}
@@ -1752,8 +1752,7 @@ class TinodeWeb extends React.Component {
           serverAddress={this.state.serverAddress}
           applicationVisible={this.state.applicationVisible}
 
-          // Show the forwareded message if the user has selected a topic to forward this message to.
-          forwardedMessage={this.state.forwardMessage && !this.state.forwardMessage.head.forwarded.startsWith(this.stateTopicSelected) ? this.state.forwardMessage : null}
+          forwardMessage={this.state.forwardMessage}
           onCancelForwardMessage={this.handleHideForwardDialog}
 
           errorText={this.state.errorText}

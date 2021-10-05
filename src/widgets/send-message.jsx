@@ -177,17 +177,17 @@ class SendMessage extends React.PureComponent {
         formatMessage(messages[this.props.messagePrompt]) :
         formatMessage(messages.type_new_message));
 
+    const quote =
+      (<div id="reply-quote-preview">
+        <div className="cancel">
+          <a href="#" onClick={(e) => {e.preventDefault(); this.props.onCancelReply();}}><i className="material-icons gray">close</i></a>
+        </div>
+        {this.state.quote}
+      </div>);
+
     return (
       <div id="send-message-wrapper">
-        {this.state.quote ?
-          <div id="reply-quote-preview">
-            <div className="cancel">
-              <a href="#" onClick={(e) => {e.preventDefault(); this.props.onCancelReply();}}><i className="material-icons gray">close</i></a>
-            </div>
-            {this.state.quote}
-          </div>
-        :
-        null}
+        {this.state.quote && !this.props.noInput ? quote : null}
         <div id="send-message-panel">
           {!this.props.disabled ?
             <>
@@ -203,7 +203,7 @@ class SendMessage extends React.PureComponent {
                 :
                 null}
               {this.props.noInput ?
-                <div className="hr thin" /> :
+                (this.state.quote ? quote : <div className="hr thin" />) :
                 <textarea id="sendMessage" placeholder={prompt}
                   value={this.state.message} onChange={this.handleMessageTyping}
                   onKeyPress={this.handleKeyPress}

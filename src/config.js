@@ -95,6 +95,8 @@ export const MESSAGE_PREVIEW_LENGTH = 80;
 
 // Length of a quote in quoted reply (for outgoing messages).
 export const QUOTED_REPLY_LENGTH = 30;
+// Length of a preview of a forwarded message.
+export const FORWARDED_PREVIEW_LENGTH = 128;
 
 // Link for "Contact Us".
 export const LINK_CONTACT_US = 'email:support@tinode.co';
