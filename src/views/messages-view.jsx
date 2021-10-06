@@ -848,8 +848,6 @@ class MessagesView extends React.Component {
   }
 
   handlePickReply(seq, content, forwarded, senderId, senderName) {
-    console.log("handlePickReply", seq, content, forwarded, senderId, senderName, new Error("stacktrace"));
-
     this.setState({reply: null});
 
     if (!seq || !content) {

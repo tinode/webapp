@@ -201,22 +201,36 @@ class TopicSecurity extends React.PureComponent {
                   {this.props.access}
                 </tt>
               </div>
-              <div className="group">
-                <div>
-                  <label className="small">
-                    <FormattedMessage id="label_default_access_mode" defaultMessage="Default access mode:"
-                    description="Label for default access mode" />
-                  </label>
-                </div>
-                <div className="quoted">
-                  <div>Auth: <tt className="clickable"
-                    onClick={(e) => {e.preventDefault(); this.props.onLaunchPermissionsEditor('auth')}}>{this.props.auth}</tt>
+              {!this.props.channel ?
+                <div className="group">
+                  <div>
+                    <label className="small">
+                      <FormattedMessage id="label_default_access_mode" defaultMessage="Default access mode:"
+                      description="Label for default access mode" />
+                    </label>
                   </div>
-                  <div>Anon: <tt className="clickable"
-                    onClick={(e) => {e.preventDefault(); this.props.onLaunchPermissionsEditor('anon')}}>{this.props.anon}</tt>
+                  <div className="quoted">
+                    <div>Auth: <tt className={this.props.owner ? 'clickable' : null}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (this.props.owner) {
+                          this.props.onLaunchPermissionsEditor('auth');
+                        }
+                      }}>{this.props.auth}</tt>
+                    </div>
+                    <div>Anon: <tt className={this.props.owner ? 'clickable' : null}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (this.props.owner) {
+                          this.props.onLaunchPermissionsEditor('anon');
+                        }
+                      }}>{this.props.anon}</tt>
+                    </div>
                   </div>
                 </div>
-              </div>
+              :
+                null
+              }
             </>
             :
             <div className="group">

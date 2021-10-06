@@ -85,7 +85,7 @@ class AccSecurityView extends React.Component {
 
   render() {
     return (
-      <React.Fragment>{this.state.showPermissionEditorFor ?
+      <>{this.state.showPermissionEditorFor ?
         <PermissionsEditor
           mode={this.state.editedPermissions}
           skip="O"
@@ -147,7 +147,7 @@ class AccSecurityView extends React.Component {
             </>
             : null }
         </div>
-      }</React.Fragment>
+      }</>
     );
   }
 };

@@ -4152,7 +4152,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
 
   handlePickReply(seq, content, forwarded, senderId, senderName) {
-    console.log("handlePickReply", seq, content, forwarded, senderId, senderName, new Error("stacktrace"));
     this.setState({
       reply: null
     });
@@ -13040,7 +13039,7 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
         e.preventDefault();
         this.props.onLaunchPermissionsEditor('want');
       }
-    }, this.props.access)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, this.props.access)), !this.props.channel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "group"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "small"
@@ -13053,18 +13052,24 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "quoted"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Auth: ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", {
-      className: "clickable",
+      className: this.props.owner ? 'clickable' : null,
       onClick: e => {
         e.preventDefault();
-        this.props.onLaunchPermissionsEditor('auth');
+
+        if (this.props.owner) {
+          this.props.onLaunchPermissionsEditor('auth');
+        }
       }
     }, this.props.auth)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Anon: ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", {
-      className: "clickable",
+      className: this.props.owner ? 'clickable' : null,
       onClick: e => {
         e.preventDefault();
-        this.props.onLaunchPermissionsEditor('anon');
+
+        if (this.props.owner) {
+          this.props.onLaunchPermissionsEditor('anon');
+        }
       }
-    }, this.props.anon))))) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, this.props.anon)))) : null) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "group"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "small"
