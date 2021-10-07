@@ -1328,23 +1328,23 @@
     "obsolete": false
   },
   "menu_item_reply": {
-    "translation": "",
+    "translation": "Respuesta",
     "defaultMessage": "Reply",
     "description": "Reply to message",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "menu_item_forward": {
-    "translation": "",
+    "translation": "Reenviar",
     "defaultMessage": "Forward",
     "description": "Forward message",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "forward_to": {
-    "translation": "",
+    "translation": "Reenviar a",
     "defaultMessage": "Forward to",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   }
 }

@@ -1328,23 +1328,23 @@
     "obsolete": false
   },
   "menu_item_reply": {
-    "translation": "",
+    "translation": "회신하다",
     "defaultMessage": "Reply",
     "description": "Reply to message",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "menu_item_forward": {
-    "translation": "",
+    "translation": "리디렉션",
     "defaultMessage": "Forward",
     "description": "Forward message",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "forward_to": {
-    "translation": "",
+    "translation": "메시지를 리디렉션",
     "defaultMessage": "Forward to",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   }
 }

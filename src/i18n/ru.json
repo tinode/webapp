@@ -1328,23 +1328,23 @@
     "obsolete": false
   },
   "menu_item_reply": {
-    "translation": "",
+    "translation": "Ответить",
     "defaultMessage": "Reply",
     "description": "Reply to message",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "menu_item_forward": {
-    "translation": "",
+    "translation": "Переслать",
     "defaultMessage": "Forward",
     "description": "Forward message",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "forward_to": {
-    "translation": "",
+    "translation": "Переслать",
     "defaultMessage": "Forward to",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   }
 }
