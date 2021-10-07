@@ -2543,7 +2543,7 @@ ul.tabbar li.active > a {
 }
 
 .mention {
-  font-weight: bolder;
+  font-weight: 500;
 }
 
 /* Message forwarding. */
