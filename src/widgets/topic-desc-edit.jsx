@@ -141,10 +141,8 @@ export default class TopicDescEdit extends React.Component {
     if (width > AVATAR_SIZE || height > AVATAR_SIZE || width != height) {
       // Avatar is not square or too large even after cropping. Shrink it and make square.
       imageScaled(blob, AVATAR_SIZE, AVATAR_SIZE, MAX_EXTERN_ATTACHMENT_SIZE, true)
-        .then(scaled => readyToUpload)
-        .catch(err => {
-          this.props.onError(err, 'err');
-        });
+        .then(scaled => readyToUpload(scaled))
+        .catch(err => this.props.onError(err, 'err'));
     } else {
       readyToUpload({mime: mime, blob: blob, width: width, height: height});
     }

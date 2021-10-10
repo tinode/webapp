@@ -191,7 +191,7 @@ function imageScaled(fileOrBlob, maxWidth, maxHeight, maxSize, forceSquare) {
 
     img.onload = async function () {
       URL.revokeObjectURL(img.src);
-      const dim = fitImageSize(this.width, this.height, maxWidth, maxHeight, forceSquare);
+      const dim = fitImageSize(img.width, img.height, maxWidth, maxHeight, forceSquare);
 
       if (!dim) {
         reject(new Error("Invalid image"));
@@ -203,7 +203,7 @@ function imageScaled(fileOrBlob, maxWidth, maxHeight, maxSize, forceSquare) {
       canvas.height = dim.dstHeight;
       let ctx = canvas.getContext('2d');
       ctx.imageSmoothingEnabled = true;
-      ctx.drawImage(this, dim.xoffset, dim.yoffset, dim.srcWidth, dim.srcHeight, 0, 0, dim.dstWidth, dim.dstHeight);
+      ctx.drawImage(img, dim.xoffset, dim.yoffset, dim.srcWidth, dim.srcHeight, 0, 0, dim.dstWidth, dim.dstHeight);
       const mime = SUPPORTED_IMAGE_FORMATS.includes(fileOrBlob.type) ? fileOrBlob.type : 'image/jpeg';
       let blob = await new Promise(resolve => canvas.toBlob(resolve, mime));
 
@@ -219,7 +219,7 @@ function imageScaled(fileOrBlob, maxWidth, maxHeight, maxSize, forceSquare) {
         canvas.height = dim.dstHeight;
         ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(this, dim.xoffset, dim.yoffset, dim.srcWidth, dim.srcHeight, 0, 0, dim.dstWidth, dim.dstHeight);
+        ctx.drawImage(img, dim.xoffset, dim.yoffset, dim.srcWidth, dim.srcHeight, 0, 0, dim.dstWidth, dim.dstHeight);
         blob = await new Promise(resolve => canvas.toBlob(resolve, mime));
       }
 
@@ -252,7 +252,7 @@ function imageCrop(mime, objURL, left, top, width, height, scale) {
       canvas.height = height * scale;
       let ctx = canvas.getContext('2d');
       ctx.imageSmoothingEnabled = true;
-      ctx.drawImage(this, left, top, width, height, 0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, left, top, width, height, 0, 0, canvas.width, canvas.height);
       mime = SUPPORTED_IMAGE_FORMATS.includes(mime) ? mime : 'image/jpeg';
       canvas.toBlob(blob => {
         canvas = null;
@@ -12652,9 +12652,7 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
     };
 
     if (width > _config_js__WEBPACK_IMPORTED_MODULE_7__.AVATAR_SIZE || height > _config_js__WEBPACK_IMPORTED_MODULE_7__.AVATAR_SIZE || width != height) {
-      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_7__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_7__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_7__.MAX_EXTERN_ATTACHMENT_SIZE, true).then(scaled => readyToUpload).catch(err => {
-        this.props.onError(err, 'err');
-      });
+      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_7__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_7__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_7__.MAX_EXTERN_ATTACHMENT_SIZE, true).then(scaled => readyToUpload(scaled)).catch(err => this.props.onError(err, 'err'));
     } else {
       readyToUpload({
         mime: mime,

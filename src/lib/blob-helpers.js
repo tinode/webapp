@@ -90,7 +90,7 @@ export function imageScaled(fileOrBlob, maxWidth, maxHeight, maxSize, forceSquar
       URL.revokeObjectURL(img.src);
 
       // Calculate the desired image dimensions.
-      const dim = fitImageSize(this.width, this.height, maxWidth, maxHeight, forceSquare);
+      const dim = fitImageSize(img.width, img.height, maxWidth, maxHeight, forceSquare);
       if (!dim) {
         reject(new Error("Invalid image"));
         return;
@@ -100,7 +100,7 @@ export function imageScaled(fileOrBlob, maxWidth, maxHeight, maxSize, forceSquar
       canvas.height = dim.dstHeight;
       let ctx = canvas.getContext('2d');
       ctx.imageSmoothingEnabled = true;
-      ctx.drawImage(this, dim.xoffset, dim.yoffset, dim.srcWidth, dim.srcHeight,
+      ctx.drawImage(img, dim.xoffset, dim.yoffset, dim.srcWidth, dim.srcHeight,
         0, 0, dim.dstWidth, dim.dstHeight);
 
       const mime = SUPPORTED_IMAGE_FORMATS.includes(fileOrBlob.type) ? fileOrBlob.type : 'image/jpeg';
@@ -110,7 +110,6 @@ export function imageScaled(fileOrBlob, maxWidth, maxHeight, maxSize, forceSquar
         reject(new Error("Unsupported image format"));
         return;
       }
-
       // Ensure the image is not too large. Shrink the image keeping the aspect ratio.
       // Do nothing if maxsize is <= 0.
       while (maxSize > 0 && blob.length > maxSize) {
@@ -120,7 +119,7 @@ export function imageScaled(fileOrBlob, maxWidth, maxHeight, maxSize, forceSquar
         canvas.height = dim.dstHeight;
         ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(this, dim.xoffset, dim.yoffset, dim.srcWidth, dim.srcHeight,
+        ctx.drawImage(img, dim.xoffset, dim.yoffset, dim.srcWidth, dim.srcHeight,
           0, 0, dim.dstWidth, dim.dstHeight);
         blob = await new Promise(resolve => canvas.toBlob(resolve, mime));
       }
@@ -151,7 +150,7 @@ export function imageCrop(mime, objURL, left, top, width, height, scale) {
       canvas.height = height * scale;
       let ctx = canvas.getContext('2d');
       ctx.imageSmoothingEnabled = true;
-      ctx.drawImage(this, left, top, width, height, 0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, left, top, width, height, 0, 0, canvas.width, canvas.height);
 
       mime = SUPPORTED_IMAGE_FORMATS.includes(mime) ? mime : 'image/jpeg';
       // Generate blob to check size of the image.

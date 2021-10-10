@@ -810,7 +810,7 @@ i.search {
   position: relative;
   display: none;
   overflow: hidden;
-  padding: 1rem 1.5rem 1rem 0.5rem;
+  padding: 1rem 1.5rem 0.75rem 0.5rem;
 }
 
 .info-box > span {
