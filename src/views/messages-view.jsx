@@ -871,6 +871,7 @@ class MessagesView extends React.Component {
         seq: seq
       }
     });
+    this.props.onCancelForwardMessage();
   }
 
   handleCancelReply() {

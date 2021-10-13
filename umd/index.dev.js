@@ -4174,6 +4174,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         seq: seq
       }
     });
+    this.props.onCancelForwardMessage();
   }
 
   handleCancelReply() {
