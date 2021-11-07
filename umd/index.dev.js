@@ -504,7 +504,7 @@ function quotedImage(data) {
       if (evt.ok) {
         return evt.blob();
       } else {
-        throw new Error(`Image fetch unsuccessful: ${evt.status} ${evt.statusText}`);
+        throw new Error("Image fetch unsuccessful: ".concat(evt.status, " ").concat(evt.statusText));
       }
     });
   }
@@ -785,7 +785,7 @@ function quoteImage(data) {
       if (evt.ok) {
         return evt.blob();
       } else {
-        throw new Error(`Image fetch unsuccessful: ${evt.status} ${evt.statusText}`);
+        throw new Error("Image fetch unsuccessful: ".concat(evt.status, " ").concat(evt.statusText));
       }
     });
   }
@@ -1050,8 +1050,8 @@ function shortDateFormat(then, locale) {
 function secondsToTime(seconds) {
   const min = Math.floor(seconds / 60);
   let sec = seconds % 60;
-  sec = sec < 10 ? `0${sec}` : sec;
-  return `${min}:${sec}`;
+  sec = sec < 10 ? "0".concat(sec) : sec;
+  return "".concat(min, ":").concat(sec);
 }
 function bytesToHumanSize(bytes) {
   if (!bytes || bytes == 0) {
@@ -2709,7 +2709,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       immutablePermissionsTitle: titleCompare,
       editedPermissionsSkipped: toSkip
     });
-    this.props.onNavigate(`perm/${which}`);
+    this.props.onNavigate("perm/".concat(which));
   }
 
   handleShowAddMembers(e) {
@@ -9407,13 +9407,13 @@ class Cropper extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   }
 
   render() {
-    const t3d = `translate3d(${this.state.panX}px, ${this.state.panY}px, 0) scale(${this.state.zoom})`;
-    const orig = `${this.state.originX}px ${this.state.originY}px`;
+    const t3d = "translate3d(".concat(this.state.panX, "px, ").concat(this.state.panY, "px, 0) scale(").concat(this.state.zoom, ")");
+    const orig = "".concat(this.state.originX, "px ").concat(this.state.originY, "px");
     const overlay = {
-      top: `${this.originY - this.state.originY * this.state.zoom}px`,
-      left: `${this.originX - this.state.originX * this.state.zoom}px`,
-      width: `${this.imageWidth * this.state.zoom}px`,
-      height: `${this.imageHeight * this.state.zoom}px`
+      top: "".concat(this.originY - this.state.originY * this.state.zoom, "px"),
+      left: "".concat(this.originX - this.state.originX * this.state.zoom, "px"),
+      width: "".concat(this.imageWidth * this.state.zoom, "px"),
+      height: "".concat(this.imageHeight * this.state.zoom, "px")
     };
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "cropper"
