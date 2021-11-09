@@ -546,28 +546,6 @@ div.trusted-badge {
   height: 100%;
 }
 
-@media (max-width: 960px) {
-  #mountPoint {
-    padding: 0;
-  }
-}
-
-@media (max-width: 640px) {
-  #app-container {
-    width: 100%;
-    border-radius: 0;
-    box-shadow: none;
-  }
-
-  #sidepanel {
-    width: 100%;
-  }
-
-  #info-view {
-    width: 100%;
-  }
-}
-
 /* Generic announcement text, centered vertically and horizontally */
 .center-medium-text {
   width: 100%;
@@ -1379,7 +1357,7 @@ img.channel {
   padding: 0.4rem 0.4rem 0.4rem 0.6rem;
   background-color: #eceff1;
   z-index: 2;
-  height: 4rem;
+  min-height: 4rem;
 }
 
 #send-message-panel #writing-disabled {
@@ -2560,4 +2538,42 @@ ul.tabbar li.active > a {
 
 .forward-dialog .scrollable-panel {
   height: 80%;
+}
+
+/*
+ Mobile styles.
+ */
+
+@media (max-width: 960px) {
+  #mountPoint {
+    padding: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  #app-container {
+    width: 100%;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  #sidepanel {
+    width: 100%;
+  }
+
+  #info-view {
+    width: 100%;
+  }
+
+  /* Bottom sheet rathar than a dialog */
+  .forward-dialog {
+    border-radius: 0.3rem 0.3rem 0 0;
+    margin: auto 0 0 0;
+    width: 100%;
+  }
+
+  /* Must make it a bit visible on mobile because there is no :hover */
+  li .menuTrigger {
+    opacity: 0.3;
+  }
 }
