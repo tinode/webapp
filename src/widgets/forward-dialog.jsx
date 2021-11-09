@@ -63,8 +63,12 @@ export default class ForwardDialog extends React.Component {
               desription="Title of the contact selector dialog when forwarding a message" /></div>
             <div><a href="#" onClick={this.handleClose}><i className="material-icons">close</i></a></div>
           </div>
-          <SearchContacts
-            onSearchContacts={this.handleSearchContacts} />
+          <FormattedMessage id="forward_to_dearch_placeholder"  defaultMessage="Search contacts"
+            description="Contact search prompt when forwarding a message.">{
+            (search_placeholder) => <SearchContacts
+              placeholder={search_placeholder}
+              onSearchContacts={this.handleSearchContacts} />
+          }</FormattedMessage>
           <FormattedMessage id="search_no_results" defaultMessage="Search returned no results"
               description="Text shown in contacts view when query returned no results.">{
             (not_found_placeholder) => <ContactList

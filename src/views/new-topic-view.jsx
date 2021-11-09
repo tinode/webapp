@@ -22,7 +22,12 @@ const messages = defineMessages({
     id: "search_no_results",
     defaultMessage: "Search returned no results",
     description: "Text shown in contacts view when query returned no results."
-  }
+  },
+  search_placeholder: {
+    id: "search_placeholder",
+    defaultMessage: "List like email:alice@example.com, tel:17025550003...",
+    description: "Placeholder in contacts search field"
+  },
 });
 
 class NewTopicView extends React.Component {
@@ -78,6 +83,7 @@ class NewTopicView extends React.Component {
     const {formatMessage} = this.props.intl;
     const no_contacts_placeholder = formatMessage(this.state.searchQuery ?
       messages.search_no_results : messages.search_for_contacts);
+    const search_placeholder = formatMessage(messages.search_placeholder);
     return (
       <div className="flex-column">
         <ul className="tabbar">
@@ -111,6 +117,7 @@ class NewTopicView extends React.Component {
             <div className="flex-column">
               <SearchContacts
                 type="p2p"
+                placeholder={search_placeholder}
                 onSearchContacts={this.handleSearchContacts} />
               <ContactList
                 tinode={this.props.tinode}
