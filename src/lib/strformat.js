@@ -37,9 +37,18 @@ export function bytesToHumanSize(bytes) {
   return count.toFixed(round) + ' ' + sizes[bucket];
 }
 
+// Shorten a file name to be under maxLength by clipping out the middle.
+export function shortenFileName(filename, maxLength) {
+  if (typeof filename != 'string') {
+    return filename;
+  }
+  return filename.length > maxLength ?
+    filename.slice(0, maxLength/2 - 1) + '…' + filename.slice(1 - maxLength/2) : filename;
+}
+
 // Get 32 bit integer hash value for a string. Ideally it should produce the same value
 // as Java's String#hash().
-export function stringHash(value) {
+function stringToColorHash(value) {
   let hash = 0;
   value = '' + value;
   for (let i = 0; i < value.length; i++) {
@@ -47,4 +56,18 @@ export function stringHash(value) {
     hash = hash & hash; // Convert to 32bit integer
   }
   return hash;
+}
+
+// User avatar letter color id.
+export function letterTileColorId(userId) {
+  return Math.abs(stringToColorHash(userId)) % 16;
+}
+
+// Converts user or topic ID to a CSS color class. Ideally it should produce the same color value as Java version.
+// params:
+// - {string} id: user or topic ID
+// - {boolean} light: light or dark version of the color.
+// - {boolean} fg: foreground (text) or background color.
+export function idToColorClass(id, light, fg) {
+  return (light ? 'lt-' : 'dk-') + (fg ? 'fg-' : 'bg-') + letterTileColorId(id);
 }

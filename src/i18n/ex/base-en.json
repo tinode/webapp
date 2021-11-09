@@ -19,10 +19,6 @@
     "defaultMessage": "Leave Conversation",
     "description": "Flat button [Leave Conversation]"
   },
-  "action_more": {
-    "defaultMessage": "More",
-    "description": "Action for showing more content"
-  },
   "action_report_chat": {
     "defaultMessage": "Report Conversation",
     "description": "Flat button [Report Group]"
@@ -31,9 +27,21 @@
     "defaultMessage": "Archived contacts ({count})",
     "description": "Label for archived chats"
   },
+  "badge_danger": {
+    "defaultMessage": "Untrustworthy",
+    "description": "Suspicious or untrustworthy account or topic badge"
+  },
   "badge_owner": {
     "defaultMessage": "owner",
     "description": "Badge for indicating the owner"
+  },
+  "badge_staff": {
+    "defaultMessage": "Staff-managed",
+    "description": "Explanation of a staff-managed account or topic badge"
+  },
+  "badge_verified": {
+    "defaultMessage": "Verified/official",
+    "description": "Explanation of a verified account or topic badge"
   },
   "badge_you": {
     "defaultMessage": "you",
@@ -86,6 +94,10 @@
   "button_reset": {
     "defaultMessage": "Reset",
     "description": "Button [Reset]"
+  },
+  "button_security": {
+    "defaultMessage": "Security",
+    "description": "Navigaton button for security panel."
   },
   "button_send_request": {
     "defaultMessage": "Send request",
@@ -159,7 +171,7 @@
     "defaultMessage": "Delete account",
     "description": "Title for delete account warning"
   },
-  "delete_account_arning": {
+  "delete_account_warning": {
     "defaultMessage": "Are you sure you want to delete your account? It cannot be undone.",
     "description": "Warning message when deleting an account"
   },
@@ -170,6 +182,10 @@
   "deleted_content": {
     "defaultMessage": "content deleted",
     "description": "Shown when messages are deleted"
+  },
+  "description_editing_placeholder": {
+    "defaultMessage": "Description (optional)",
+    "description": "Placeholder for editing topic description"
   },
   "download_action": {
     "defaultMessage": "download",
@@ -215,6 +231,13 @@
     "defaultMessage": "Forgot password?",
     "description": "Link to Reset password form"
   },
+  "forward_to": {
+    "defaultMessage": "Forward to"
+  },
+  "forward_to_search_placeholder": {
+    "defaultMessage": "Search contacts",
+    "description": "Contact search prompt when forwarding a message."
+  },
   "full_name_prompt": {
     "defaultMessage": "Full name, e.g. John Doe",
     "description": "Input placeholder for person's full name"
@@ -237,7 +260,7 @@
   },
   "invalid_content": {
     "defaultMessage": "invalid content",
-    "description": "Shown when message is unreadable"
+    "description": "Shown when the message is unreadable"
   },
   "invalid_security_token": {
     "defaultMessage": "Invalid security token",
@@ -251,13 +274,13 @@
     "defaultMessage": "Content type:",
     "description": "Label for file content type (mime)"
   },
-  "label_default_access": {
-    "defaultMessage": "Default access mode:",
-    "description": "Section title"
-  },
   "label_default_access_mode": {
     "defaultMessage": "Default access mode:",
     "description": "Label for default access mode"
+  },
+  "label_description": {
+    "defaultMessage": "Description",
+    "description": "Label for editing topic description"
   },
   "label_file_name": {
     "defaultMessage": "File name:",
@@ -328,6 +351,10 @@
   "label_topic_name": {
     "defaultMessage": "Name",
     "description": "Label for editing topic name"
+  },
+  "label_unarchive_topic": {
+    "defaultMessage": "Archived:",
+    "description": "Label for unarchiving the topic"
   },
   "label_user_contacts": {
     "defaultMessage": "Contacts:",
@@ -409,6 +436,10 @@
     "defaultMessage": "Edit permissions",
     "description": "Menu item [Edit permissions]"
   },
+  "menu_item_forward": {
+    "defaultMessage": "Forward",
+    "description": "Forward message"
+  },
   "menu_item_info": {
     "defaultMessage": "Info",
     "description": "Show extended topic information"
@@ -420,6 +451,10 @@
   "menu_item_mute": {
     "defaultMessage": "Mute",
     "description": "Turn off notifications"
+  },
+  "menu_item_reply": {
+    "defaultMessage": "Reply",
+    "description": "Reply to message"
   },
   "menu_item_restore_topic": {
     "defaultMessage": "Restore",
@@ -481,6 +516,26 @@
     "defaultMessage": "online now",
     "description": "Indicator that the user or topic is currently online"
   },
+  "panel_title_crop": {
+    "defaultMessage": "Drag to Adjust",
+    "description": "Title for AvatarCropView."
+  },
+  "panel_title_general": {
+    "defaultMessage": "General",
+    "description": "Title for TopicCommon."
+  },
+  "panel_title_info": {
+    "defaultMessage": "Info",
+    "description": "Title for InfoView"
+  },
+  "panel_title_members": {
+    "defaultMessage": "Members",
+    "description": "Title for managing group members view."
+  },
+  "panel_title_security": {
+    "defaultMessage": "Security",
+    "description": "Title for TopicSecirity and AccSecurity."
+  },
   "password_prompt": {
     "defaultMessage": "Password",
     "description": "Placeholder/prompt for entering password"
@@ -528,6 +583,18 @@
   "permission_write": {
     "defaultMessage": "Write ({val})",
     "description": "Name of W permission"
+  },
+  "permissions_anonymous": {
+    "defaultMessage": "Anonymous",
+    "description": "Title for editing default anonymous permissions"
+  },
+  "permissions_authenticated": {
+    "defaultMessage": "Authenticated",
+    "description": "Title for editing default authenticated permissions"
+  },
+  "permissions_user": {
+    "defaultMessage": "User's Permissions",
+    "description": "Title for editing user's permissions"
   },
   "phone_dative": {
     "defaultMessage": "phone",
@@ -577,17 +644,9 @@
     "defaultMessage": "List like email:alice@example.com, tel:17025550003...",
     "description": "Placeholder in contacts search field"
   },
-  "sidepanel_title_acc_general": {
-    "defaultMessage": "General",
-    "description": "Sidepanel title for AccGeneralView."
-  },
   "sidepanel_title_acc_notifications": {
     "defaultMessage": "Notifications",
     "description": "Sidepanel title for AccNotificationsView."
-  },
-  "sidepanel_title_acc_security": {
-    "defaultMessage": "Security",
-    "description": "Sidepanel title for AccSecurityView."
   },
   "sidepanel_title_acc_support": {
     "defaultMessage": "Support",
@@ -595,7 +654,7 @@
   },
   "sidepanel_title_account_settings": {
     "defaultMessage": "Account Settings",
-    "description": "Sidepanel title for EditAccountView."
+    "description": "Sidepanel title for AccountSettingsView."
   },
   "sidepanel_title_archive": {
     "defaultMessage": "Archived Chats",
@@ -661,10 +720,6 @@
     "defaultMessage": "Group Members",
     "description": "Section title"
   },
-  "title_info": {
-    "defaultMessage": "Info",
-    "description": "Title for InfoView"
-  },
   "title_manage_tags": {
     "defaultMessage": "Manage",
     "description": "Section title for the list of tags"
@@ -678,7 +733,7 @@
     "description": "Section title"
   },
   "title_tag_manager": {
-    "defaultMessage": "Tags (user discovery)",
+    "defaultMessage": "Tags (search & discovery)",
     "description": "Section title for TagManager"
   },
   "topic_block_warning": {

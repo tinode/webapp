@@ -9,7 +9,7 @@ import Tinode from 'tinode-sdk';
 import Contact from './contact.jsx';
 import ContactAction from './contact-action.jsx';
 
-import { makeImageDataUrl } from '../lib/blob-helpers.js';
+import { makeImageUrl } from '../lib/blob-helpers.js';
 
 import { MESSAGE_PREVIEW_LENGTH } from '../config.js';
 
@@ -77,22 +77,26 @@ class ContactList extends React.Component {
           const comment = Array.isArray(c.private) ?
             c.private.join(',') : (c.private ? c.private.comment : null);
           let preview;
+          let forwarded;
           let deliveryStatus;
           if (!this.props.showMode && c.latestMessage) {
             const msg = c.latestMessage(true);
             if (msg) {
+              forwarded = msg.head ? msg.head.forwarded : null;
               deliveryStatus = msg._status || c.msgStatus(msg, true);
               preview = typeof msg.content == 'string' ?
                 msg.content.substr(0, MESSAGE_PREVIEW_LENGTH) :
-                Drafty.preview(msg.content, MESSAGE_PREVIEW_LENGTH);
+                Drafty.preview(msg.content, MESSAGE_PREVIEW_LENGTH, undefined, forwarded != null);
             }
           }
           contactNodes.push(
             <Contact
+              tinode={this.props.tinode}
               title={c.public ? c.public.fn : null}
-              avatar={makeImageDataUrl(c.public ? c.public.photo : null)}
+              avatar={makeImageUrl(c.public ? c.public.photo : null)}
               comment={comment}
               preview={preview}
+              forwarded={forwarded}
               received={deliveryStatus}
               unread={this.props.showUnread ? c.unread : 0}
               now={c.online && this.props.connected}
@@ -105,6 +109,9 @@ class ContactList extends React.Component {
               isChannel={isChannel}
               onSelected={this.props.onTopicSelected}
               showContextMenu={this.props.showContextMenu}
+              isVerified={c.trusted && c.trusted.verified}
+              isStaff={c.trusted && c.trusted.staff}
+              isDangerous={c.trusted && c.trusted.danger}
               item={key}
               index={contactNodes.length}
               key={key} />

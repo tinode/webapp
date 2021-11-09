@@ -5,6 +5,7 @@ import { Drafty } from 'tinode-sdk';
 
 import { KEYPRESS_DELAY } from '../config.js';
 import { filePasted } from '../lib/blob-helpers.js';
+import { quoteFormatter, replyFormatter } from '../lib/formatters.js';
 
 const messages = defineMessages({
   messaging_disabled: {
@@ -50,12 +51,18 @@ class SendMessage extends React.PureComponent {
     this.handleSend = this.handleSend.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleMessageTyping = this.handleMessageTyping.bind(this);
+
+    this.handleQuoteClick = this.handleQuoteClick.bind(this);
+
+    this.formatReply = this.formatReply.bind(this);
   }
 
   componentDidMount() {
     if (this.messageEditArea) {
       this.messageEditArea.addEventListener('paste', this.handlePasteEvent, false);
     }
+
+    this.setState({quote: this.formatReply()});
   }
 
   componentWillUnmount() {
@@ -64,10 +71,22 @@ class SendMessage extends React.PureComponent {
     }
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     if (this.messageEditArea) {
       this.messageEditArea.focus();
     }
+
+    if (prevProps.reply != this.props.reply) {
+      this.setState({quote: this.formatReply()});
+    }
+  }
+
+  formatReply() {
+    return this.props.reply ?
+      Drafty.format(this.props.reply.content, replyFormatter, {
+        formatMessage: this.props.intl.formatMessage.bind(this.props.intl),
+        authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
+      }) : null;
   }
 
   handlePasteEvent(e) {
@@ -141,46 +160,67 @@ class SendMessage extends React.PureComponent {
     this.setState(newState);
   }
 
+  handleQuoteClick(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (this.props.reply && this.props.onQuoteClick) {
+      const replyToSeq = this.props.reply.seq;
+      this.props.onQuoteClick(replyToSeq);
+    }
+  }
+
   render() {
-    const {formatMessage} = this.props.intl;
+    const { formatMessage } = this.props.intl;
     const prompt = this.props.disabled ?
       formatMessage(messages.messaging_disabled) :
       (this.props.messagePrompt ?
         formatMessage(messages[this.props.messagePrompt]) :
         formatMessage(messages.type_new_message));
+
+    const quote =
+      (<div id="reply-quote-preview">
+        <div className="cancel">
+          <a href="#" onClick={(e) => {e.preventDefault(); this.props.onCancelReply();}}><i className="material-icons gray">close</i></a>
+        </div>
+        {this.state.quote}
+      </div>);
+
     return (
-      <div id="send-message-panel">
-        {!this.props.disabled ?
-          <>
-            {this.props.onAttachFile ?
-              <>
-                <a href="#" onClick={(e) => {e.preventDefault(); this.attachImage.click();}} title="Add image">
-                  <i className="material-icons secondary">photo</i>
-                </a>
-                <a href="#" onClick={(e) => {e.preventDefault(); this.attachFile.click();}} title="Attach file">
-                  <i className="material-icons secondary">attach_file</i>
-                </a>
-              </>
-              :
-              null}
-            {this.props.noInput ?
-              <div className="hr thin" /> :
-              <textarea id="sendMessage" placeholder={prompt}
-                value={this.state.message} onChange={this.handleMessageTyping}
-                onKeyPress={this.handleKeyPress}
-                ref={(ref) => {this.messageEditArea = ref;}}
-                autoFocus />}
-            <a href="#" onClick={this.handleSend} title="Send">
-              <i className="material-icons">send</i>
-            </a>
-            <input type="file" ref={(ref) => {this.attachFile = ref;}}
-              onChange={this.handleAttachFile} style={{display: 'none'}} />
-            <input type="file" ref={(ref) => {this.attachImage = ref;}} accept="image/*"
-              onChange={this.handleAttachImage} style={{display: 'none'}} />
-          </>
-          :
-          <div id="writing-disabled">{prompt}</div>
-        }
+      <div id="send-message-wrapper">
+        {this.state.quote && !this.props.noInput ? quote : null}
+        <div id="send-message-panel">
+          {!this.props.disabled ?
+            <>
+              {this.props.onAttachFile ?
+                <>
+                  <a href="#" onClick={(e) => {e.preventDefault(); this.attachImage.click();}} title="Add image">
+                    <i className="material-icons secondary">photo</i>
+                  </a>
+                  <a href="#" onClick={(e) => {e.preventDefault(); this.attachFile.click();}} title="Attach file">
+                    <i className="material-icons secondary">attach_file</i>
+                  </a>
+                </>
+                :
+                null}
+              {this.props.noInput ?
+                (this.state.quote ? quote : <div className="hr thin" />) :
+                <textarea id="sendMessage" placeholder={prompt}
+                  value={this.state.message} onChange={this.handleMessageTyping}
+                  onKeyPress={this.handleKeyPress}
+                  ref={(ref) => {this.messageEditArea = ref;}}
+                  autoFocus />}
+              <a href="#" onClick={this.handleSend} title="Send">
+                <i className="material-icons">send</i>
+              </a>
+              <input type="file" ref={(ref) => {this.attachFile = ref;}}
+                onChange={this.handleAttachFile} style={{display: 'none'}} />
+              <input type="file" ref={(ref) => {this.attachImage = ref;}} accept="image/*"
+                onChange={this.handleAttachImage} style={{display: 'none'}} />
+            </>
+            :
+            <div id="writing-disabled">{prompt}</div>
+          }
+        </div>
       </div>
     );
   }

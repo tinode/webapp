@@ -1,7 +1,7 @@
 {
   "name": "tinode-webapp",
   "description": "Tinode messenger for the web",
-  "version": "0.17.10",
+  "version": "0.18.0-beta1",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinode/example-react-js.git"
@@ -11,9 +11,11 @@
     "build:css": "postcss css/base.css > css/base.min.css",
     "build:dev": "webpack --mode development",
     "build:prod": "webpack --mode production",
-    "build:i18n": "node scripts/pack-messages.js",
+    "build:i18n": "node scripts/i18n.js",
+    "i18n:missing": "node scripts/i18n.js missing",
+    "i18n:obsolete": "node scripts/i18n.js obsolete",
     "vers": "node scripts/gen-version.js",
-    "extract": "formatjs extract src/**/*.jsx --out-file src/i18n/ex/base-en.json --id-interpolation-pattern '[sha512:contenthash:base64:6]'",
+    "extract": "formatjs extract \"src/**/*.{js,jsx}\" --out-file src/i18n/ex/base-en.json --id-interpolation-pattern '[sha512:contenthash:base64:6]'",
     "compile": "formatjs compile"
   },
   "browserslist": "> 0.5%, not IE 11, not op_mini all, not and_uc >0",
@@ -64,11 +66,11 @@
   "author": "Tinode Authors <info@tinode.co>",
   "license": "Apache-2.0",
   "dependencies": {
-    "firebase": "^8.9.1",
+    "firebase": "^9.4.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-intl": "^5.20.2",
-    "tinode-sdk": "^0.17.10"
+    "tinode-sdk": "^0.18.0-beta1"
   },
   "devDependencies": {
     "@babel/core": "^7.14.5",
@@ -83,7 +85,7 @@
     "glob": "^7.1.7",
     "mkdirp": "^1.0.4",
     "postcss": "^8.3.2",
-    "postcss-cli": "^8.3.1",
+    "postcss-cli": "^9.0.2",
     "webpack": "^5.38.1",
     "webpack-cli": "^4.7.2"
   }

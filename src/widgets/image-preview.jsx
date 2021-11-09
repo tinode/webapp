@@ -4,7 +4,7 @@ import SendMessage from '../widgets/send-message.jsx';
 
 import { REM_SIZE } from '../config.js';
 import { fitImageSize } from '../lib/blob-helpers.js';
-import { bytesToHumanSize } from '../lib/strformat.js';
+import { bytesToHumanSize, shortenFileName } from '../lib/strformat.js';
 
 export default class ImagePreview extends React.PureComponent {
   constructor(props) {
@@ -45,34 +45,35 @@ export default class ImagePreview extends React.PureComponent {
     size.maxWidth = '100%';
     size.maxHeight = '100%';
 
-    let filename = this.props.content.filename;
     // Average font aspect ratio is ~0.5; File name takes 1/3 of the viewport width.
     const maxlength = Math.max(((this.state.width / REM_SIZE / 1.5) | 0) - 2, 12);
-    if (filename.length > maxlength) {
-      filename = filename.slice(0, maxlength/2 - 1) + '…' + filename.slice(1 - maxlength/2);
-    }
+    const fname = shortenFileName(this.props.content.name, maxlength) || '-';
+
     const width = this.props.content.width || '-';
     const height = this.props.content.height || '-';
     return (
       <div id="image-preview">
         <div id="image-preview-caption-panel">
           {!this.props.onSendMessage ?
-            <a href={this.props.content.url} download={this.props.content.filename}>
+            <a href={this.props.content.url} download={this.props.content.name}>
               <i className="material-icons">file_download</i> <FormattedMessage
                 id="download_action" defaultMessage="download" description="Call to action [download]" />
             </a>
             :
-            <span>{this.props.content.filename}</span>
+            <span>{fname}</span>
           }
           <a href="#" onClick={(e) => {e.preventDefault(); this.props.onClose();}}><i className="material-icons gray">close</i></a>
         </div>
         <div id="image-preview-container" ref={(node) => this.assignWidth(node)}>
-          <img src={this.props.content.url} style={size} className="image-preview" alt={this.props.content.filename} />
+          <img src={this.props.content.url} style={size} className="image-preview" alt={this.props.content.name} />
         </div>
         {this.props.onSendMessage ?
           <SendMessage
             messagePrompt="add_image_caption"
             acceptBlank={true}
+            tinode={this.props.tinode}
+            reply={this.props.reply}
+            onCancelReply={this.props.onCancelReply}
             onSendMessage={this.handleSendImage}
             onError={this.props.onError} />
           :
@@ -80,7 +81,7 @@ export default class ImagePreview extends React.PureComponent {
             <div>
               <div><b><FormattedMessage id="label_file_name" defaultMessage="File name:"
                 description="Label for a file name" /></b></div>
-              <div><span title={this.props.content.filename}>{filename ? filename : '-'}</span></div>
+              <div><span title={this.props.content.name}>{fname}</span></div>
             </div>
             <div>
               <div><b><FormattedMessage id="label_content_type" defaultMessage="Content type:"

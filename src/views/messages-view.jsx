@@ -5,6 +5,7 @@ import Tinode from 'tinode-sdk';
 const Drafty = Tinode.Drafty;
 
 import ChatMessage from '../widgets/chat-message.jsx';
+import ContactBadges from '../widgets/contact-badges.jsx';
 import DocPreview from '../widgets/doc-preview.jsx';
 import ErrorPanel from '../widgets/error-panel.jsx';
 import GroupSubs from '../widgets/group-subs.jsx';
@@ -15,12 +16,14 @@ import LoadSpinner from '../widgets/load-spinner.jsx';
 import LogoView from './logo-view.jsx';
 import SendMessage from '../widgets/send-message.jsx';
 
-import { DEFAULT_P2P_ACCESS_MODE, IMAGE_PREVIEW_DIM, KEYPRESS_DELAY, MESSAGES_PAGE,
-  MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE, READ_DELAY } from '../config.js';
-import { SUPPORTED_IMAGE_FORMATS, blobToBase64, filePasted, fileToBase64,
-  imageScaled, makeImageDataUrl } from '../lib/blob-helpers.js';
+import { DEFAULT_P2P_ACCESS_MODE, IMAGE_PREVIEW_DIM, IMAGE_THUMBNAIL_DIM, KEYPRESS_DELAY,
+  MESSAGES_PAGE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE,
+  READ_DELAY, QUOTED_REPLY_LENGTH } from '../config.js';
+import { SUPPORTED_IMAGE_FORMATS, blobToBase64, base64ToBlob, filePasted, fileToBase64,
+  imageScaled, makeImageUrl } from '../lib/blob-helpers.js';
 import HashNavigation from '../lib/navigation.js';
-import { bytesToHumanSize, shortDateFormat } from '../lib/strformat.js';
+import { bytesToHumanSize, shortDateFormat, letterTileColorId } from '../lib/strformat.js';
+import { sanitizeImageUrl } from '../lib/utils.js';
 
 // Run timer with this frequency (ms) for checking notification queue.
 const NOTIFICATION_EXEC_INTERVAL = 300;
@@ -50,7 +53,12 @@ const messages = defineMessages({
     id: 'file_attachment_too_large',
     defaultMessage: 'The file size {size} exceeds the {limit} limit.',
     description: 'Error message when attachment is too large'
-  }
+  },
+  invalid_content: {
+    id: 'invalid_content',
+    defaultMessage: 'invalid content',
+    description: 'Shown when the message is unreadable'
+  },
 });
 
 // Checks if the access permissions are granted but not yet accepted.
@@ -77,9 +85,12 @@ class MessagesView extends React.Component {
     this.state = MessagesView.getDerivedStateFromProps(props, {});
 
     this.leave = this.leave.bind(this);
+    this.sendMessage = this.sendMessage.bind(this);
+    this.retrySend = this.retrySend.bind(this);
     this.sendImageAttachment = this.sendImageAttachment.bind(this);
     this.sendFileAttachment = this.sendFileAttachment.bind(this);
     this.sendKeyPress = this.sendKeyPress.bind(this);
+    this.subscribe = this.subscribe.bind(this);
     this.handleScrollReference = this.handleScrollReference.bind(this);
     this.handleScrollEvent = this.handleScrollEvent.bind(this);
     this.handleDescChange = this.handleDescChange.bind(this);
@@ -91,7 +102,7 @@ class MessagesView extends React.Component {
     this.handleClosePreview = this.handleClosePreview.bind(this);
     this.handleFormResponse = this.handleFormResponse.bind(this);
     this.handleContextClick = this.handleContextClick.bind(this);
-    this.handleShowContextMenuMessage = this.handleShowContextMenuMessage.bind(this);
+    this.handleShowMessageContextMenu = this.handleShowMessageContextMenu.bind(this);
     this.handleNewChatAcceptance = this.handleNewChatAcceptance.bind(this);
     this.handleEnablePeer = this.handleEnablePeer.bind(this);
     this.handleAttachFile = this.handleAttachFile.bind(this);
@@ -100,12 +111,27 @@ class MessagesView extends React.Component {
     this.postReadNotification = this.postReadNotification.bind(this);
     this.clearNotificationQueue = this.clearNotificationQueue.bind(this);
 
+    this.handlePickReply = this.handlePickReply.bind(this);
+    this.handleCancelReply = this.handleCancelReply.bind(this);
+    this.handleQuoteClick = this.handleQuoteClick.bind(this);
+
+    this.chatMessageRefs = {};
+    this.getOrCreateMessageRef = this.getOrCreateMessageRef.bind(this);
+
     this.readNotificationQueue = [];
     this.readNotificationTimer = null;
   }
 
+  getOrCreateMessageRef(seqId) {
+    if (this.chatMessageRefs.hasOwnProperty(seqId)) {
+      return this.chatMessageRefs[seqId];
+    }
+    const ref = React.createRef();
+    this.chatMessageRefs[seqId] = ref;
+    return ref;
+  }
+
   componentDidMount() {
-    // this.propsChange(this.props, this.state);
     if (this.messagesScroller) {
       this.messagesScroller.addEventListener('scroll', this.handleScrollEvent);
     }
@@ -157,49 +183,8 @@ class MessagesView extends React.Component {
       this.postReadNotification(0);
     }
 
-    if (topic && !topic.isSubscribed() && this.props.ready &&
-        ((this.state.topic != prevState.topic) || !prevProps.ready)) {
-      // Is this a new topic?
-      const newTopic = (this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic);
-
-      // Don't request the tags. They are useless unless the user
-      // is the owner and is editing the topic.
-      let getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub();
-      if (this.state.isReader || newTopic) {
-        // Reading is either permitted or we don't know because it's a new topic. Ask for messages.
-        getQuery = getQuery.withLaterData(MESSAGES_PAGE);
-        if (this.state.isReader) {
-          getQuery = getQuery.withLaterDel();
-        }
-        // And show "loading" spinner.
-        this.setState({ fetchingMessages: true });
-      }
-      const setQuery = newTopic ? this.props.newTopicParams : undefined;
-      topic.subscribe(getQuery.build(), setQuery)
-        .then((ctrl) => {
-          if (ctrl.code == 303) {
-            // Redirect to another topic requested.
-            HashNavigation.navigateTo(HashNavigation.setUrlTopic('', ctrl.params.topic));
-            return;
-          }
-          if (this.state.topic != ctrl.topic) {
-            this.setState({topic: ctrl.topic});
-          }
-          this.props.onNewTopicCreated(this.props.topic, ctrl.topic);
-          // If there are unsent messages, try sending them now.
-          topic.queuedMessages((pub) => {
-            if (!pub._sending && topic.isSubscribed()) {
-              topic.publishMessage(pub);
-            }
-          });
-        })
-        .catch((err) => {
-          console.log("Failed subscription to", this.state.topic);
-          this.props.onError(err.message, 'err');
-          const blankState = MessagesView.getDerivedStateFromProps({}, {});
-          blankState.title = this.props.intl.formatMessage(messages.not_found);
-          this.setState(blankState);
-        });
+    if ((this.state.topic != prevState.topic) || !prevProps.ready) {
+      this.subscribe(topic);
     }
   }
 
@@ -214,6 +199,9 @@ class MessagesView extends React.Component {
         topic: null,
         title: '',
         avatar: null,
+        isVerified: false,
+        isStaff: false,
+        isDangerous: false,
         docPreview: null,
         imagePreview: null,
         imagePostview: null,
@@ -221,10 +209,23 @@ class MessagesView extends React.Component {
         scrollPosition: 0,
         fetchingMessages: false,
         peerMessagingDisabled: false,
-        channel: false
+        channel: false,
+        reply: null
       };
     } else if (nextProps.topic != prevState.topic) {
       const topic = nextProps.tinode.getTopic(nextProps.topic);
+
+      let reply = null;
+      if (nextProps.forwardMessage) {
+        // We are forwarding a message. Show preview.
+        const preview = nextProps.forwardMessage.preview;
+        reply = {
+          content: preview,
+          forwarded: nextProps.forwardMessage.head.forwarded,
+          seq: null
+        };
+      }
+
       nextState = {
         topic: nextProps.topic,
         docPreview: null,
@@ -232,7 +233,8 @@ class MessagesView extends React.Component {
         imagePostview: null,
         typingIndicator: false,
         scrollPosition: 0,
-        fetchingMessages: false
+        fetchingMessages: false,
+        reply: reply
       };
 
       if (topic) {
@@ -254,7 +256,7 @@ class MessagesView extends React.Component {
         if (topic.public) {
           Object.assign(nextState, {
             title: topic.public.fn,
-            avatar: makeImageDataUrl(topic.public.photo)
+            avatar: makeImageUrl(topic.public.photo)
           });
         } else {
           Object.assign(nextState, {
@@ -332,6 +334,55 @@ class MessagesView extends React.Component {
     return nextState;
   }
 
+  subscribe(topic) {
+    if (!topic || topic.isSubscribed() || !this.props.ready) {
+      return;
+    }
+
+    // Is this a new topic?
+    const newTopic = (this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic);
+
+    // Don't request the tags. They are useless unless the user
+    // is the owner and is editing the topic.
+    let getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub();
+    if (this.state.isReader || newTopic) {
+      // Reading is either permitted or we don't know because it's a new topic. Ask for messages.
+      getQuery = getQuery.withLaterData(MESSAGES_PAGE);
+      if (this.state.isReader) {
+        getQuery = getQuery.withLaterDel();
+      }
+      // And show "loading" spinner.
+      this.setState({ fetchingMessages: true });
+    }
+
+    const setQuery = newTopic ? this.props.newTopicParams : undefined;
+    topic.subscribe(getQuery.build(), setQuery)
+      .then((ctrl) => {
+        if (ctrl.code == 303) {
+          // Redirect to another topic requested.
+          HashNavigation.navigateTo(HashNavigation.setUrlTopic('', ctrl.params.topic));
+          return;
+        }
+        if (this.state.topic != ctrl.topic) {
+          this.setState({topic: ctrl.topic});
+        }
+        this.props.onNewTopicCreated(this.props.topic, ctrl.topic);
+        // If there are unsent messages, try sending them now.
+        topic.queuedMessages((pub) => {
+          if (!pub._sending && topic.isSubscribed()) {
+            this.retrySend(pub);
+          }
+        });
+      })
+      .catch((err) => {
+        console.error("Failed subscription to", this.state.topic);
+        this.props.onError(err.message, 'err');
+        const blankState = MessagesView.getDerivedStateFromProps({}, {});
+        blankState.title = this.props.intl.formatMessage(messages.not_found);
+        this.setState(blankState);
+      });
+  }
+
   leave(oldTopicName) {
     if (!oldTopicName || !this.props.tinode.isTopicCached(oldTopicName)) {
       return;
@@ -385,7 +436,7 @@ class MessagesView extends React.Component {
     if (desc.public) {
       this.setState({
         title: desc.public.fn,
-        avatar: makeImageDataUrl(desc.public.photo)
+        avatar: makeImageUrl(desc.public.photo)
       });
     } else {
       this.setState({
@@ -500,7 +551,8 @@ class MessagesView extends React.Component {
       return;
     }
 
-    this.setState({messageCount: topic.messageCount()});
+    clearTimeout(this.keyPressTimer)
+    this.setState({messageCount: topic.messageCount(), typingIndicator: false});
 
     // Scroll to the bottom if the message is added to the end of the message list.
     // TODO: This should be replaced by showing a "scroll to bottom" button.
@@ -530,9 +582,8 @@ class MessagesView extends React.Component {
     switch (info.what) {
       case 'kp': {
         clearTimeout(this.keyPressTimer);
-        var instance = this;
-        this.keyPressTimer = setTimeout(function() {
-          instance.setState({typingIndicator: false});
+        this.keyPressTimer = setTimeout(() => {
+          this.setState({typingIndicator: false});
         }, KEYPRESS_DELAY + 1000);
         if (!this.state.typingIndicator) {
           this.setState({typingIndicator: true});
@@ -545,7 +596,7 @@ class MessagesView extends React.Component {
         this.forceUpdate();
         break;
       default:
-        console.log("Other change in topic: ", info.what);
+        console.info("Other change in topic: ", info.what);
     }
   }
 
@@ -562,7 +613,7 @@ class MessagesView extends React.Component {
 
   handleFormResponse(action, text, data) {
     if (action == 'pub') {
-      this.props.sendMessage(Drafty.attachJSON(Drafty.parse(text), data));
+      this.sendMessage(Drafty.attachJSON(Drafty.parse(text), data));
     } else if (action == 'url') {
       const url = new URL(data.ref);
       const params = url.searchParams;
@@ -581,7 +632,7 @@ class MessagesView extends React.Component {
       url.search = params;
       window.open(url, '_blank');
     } else {
-      console.log("Unknown action in form", action);
+      console.info("Unknown action in form", action);
     }
   }
 
@@ -591,7 +642,11 @@ class MessagesView extends React.Component {
     this.props.showContextMenu({ topicName: this.state.topic, y: e.pageY, x: e.pageX });
   }
 
-  handleShowContextMenuMessage(params, messageSpecificMenuItems) {
+  handleShowMessageContextMenu(params, messageSpecificMenuItems) {
+    if (params.userFrom == 'chan') {
+      params.userFrom = this.state.topic;
+      params.userName = this.state.title;
+    }
     params.topicName = this.state.topic;
     const menuItems = messageSpecificMenuItems || [];
     const topic = this.props.tinode.getTopic(params.topicName);
@@ -623,6 +678,32 @@ class MessagesView extends React.Component {
     }
   }
 
+  // sendMessage sends the message with an optional subscription to topic first.
+  sendMessage(msg, uploadCompletionPromise, uploader) {
+    let head;
+    if (this.props.forwardMessage) {
+      // We are forwarding a message.
+      msg = this.props.forwardMessage.msg;
+      head = this.props.forwardMessage.head;
+      this.handleCancelReply();
+    } else if (this.state.reply && this.state.reply.content) {
+      // We are replying to a message in this topic.
+      head = {reply: '' + this.state.reply.seq};
+      // Turn it into Drafty so we can make a quoted Drafty object later.
+      if (typeof msg == 'string') {
+        msg = Drafty.parse(msg);
+      }
+      msg = Drafty.append(this.state.reply.content, msg);
+      this.handleCancelReply();
+    }
+    this.props.sendMessage(msg, uploadCompletionPromise, uploader, head);
+  }
+
+  // Retry sending a message.
+  retrySend(pub) {
+    this.props.sendMessage(pub.content, undefined, undefined, pub.head);
+  }
+
   // Send attachment as Drafty message:
   // - if file is too large, upload it and send a s link.
   // - if file is small enough, just send it in-band.
@@ -634,10 +715,6 @@ class MessagesView extends React.Component {
     if (file.size > maxInbandAttachmentSize) {
       // Too large to send inband - uploading out of band and sending as a link.
       const uploader = this.props.tinode.getLargeFileHelper();
-      if (!uploader) {
-        this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
-        return;
-      }
       const uploadCompletionPromise = uploader.upload(file);
       const msg = Drafty.attachFile(null, {
         mime: file.type,
@@ -646,15 +723,12 @@ class MessagesView extends React.Component {
         urlPromise: uploadCompletionPromise
       });
       // Pass data and the uploader to the TinodeWeb.
-      this.props.sendMessage(msg, uploadCompletionPromise, uploader);
+      this.sendMessage(msg, uploadCompletionPromise, uploader);
     } else {
       // Small enough to send inband.
-      fileToBase64(file,
-        (mime, bits, fname) => {
-          this.props.sendMessage(Drafty.attachFile(null, {mime: mime, data: bits, filename: fname}));
-        },
-        this.props.onError
-      );
+      fileToBase64(file)
+        .then(b64 => this.sendMessage(Drafty.attachFile(null, {mime: b64.mime, data: b64.bits, filename: b64.name})))
+        .catch(err => this.props.onError(err));
     }
   }
 
@@ -667,21 +741,23 @@ class MessagesView extends React.Component {
       this.props.onError(this.props.intl.formatMessage(messages.file_attachment_too_large,
         {size: bytesToHumanSize(file.size), limit: bytesToHumanSize(maxExternAttachmentSize)}), 'err');
     } else {
-      this.setState({ docPreview: {
-        file: file,
-        filename: file.name,
-        size: file.size,
-        type: file.type
-      }});
+      this.setState({
+        docPreview: {
+          file: file,
+          name: file.name,
+          size: file.size,
+          type: file.type
+        }
+      });
     }
   }
 
   // sendImageAttachment sends the image bits inband as Drafty message.
   sendImageAttachment(caption, blob) {
-    const mime = this.state.imagePreview.type;
+    const mime = this.state.imagePreview.mime;
     const width = this.state.imagePreview.width;
     const height = this.state.imagePreview.height;
-    const fname = this.state.imagePreview.filename;
+    const fname = this.state.imagePreview.name;
 
     // Server-provided limit reduced for base64 encoding and overhead.
     const maxInbandAttachmentSize = (this.props.tinode.getServerLimit('maxMessageSize',
@@ -697,13 +773,13 @@ class MessagesView extends React.Component {
       const uploadCompletionPromise = uploader.upload(blob);
 
       // Make small preview to show while uploading.
-      imageScaled(blob, IMAGE_PREVIEW_DIM, IMAGE_PREVIEW_DIM, -1, false,
-        (tinyMine, tinyBlob) => {
-          // Convert tiny image into base64 for serialization and previewing.
-          blobToBase64(tinyBlob, (blobMime, tinyBits64) => {
+      imageScaled(blob, IMAGE_PREVIEW_DIM, IMAGE_PREVIEW_DIM, -1, false)
+        // Convert tiny image into base64 for serialization and previewing.
+        .then(scaled => blobToBase64(scaled.blob))
+        .then(b64 => {
             let msg = Drafty.insertImage(null, 0, {
               mime: mime,
-              _tempPreview: tinyBits64, // This preview will not be serialized.
+              _tempPreview: b64.bits, // This preview will not be serialized.
               width: width,
               height: height,
               filename: fname,
@@ -712,36 +788,33 @@ class MessagesView extends React.Component {
             });
             if (caption) {
               msg = Drafty.appendLineBreak(msg);
-              msg = Drafty.append(msg, Drafty.init(caption));
+              msg = Drafty.append(msg, Drafty.parse(caption));
             }
             // Pass data and the uploader to the TinodeWeb.
-            this.props.sendMessage(msg, uploadCompletionPromise, uploader);
-          }
-        )},
-        // Failure
-        (err) => {
+            this.sendMessage(msg, uploadCompletionPromise, uploader);
+        }).catch((err) => {
           this.props.onError(err, 'err');
-        }
-      );
-      return;
+        });
+        return;
     }
 
     // Upload the image if it's too big to be send inband.
-    blobToBase64(blob, (blobMime, bits64) => {
-      let msg = Drafty.insertImage(null, 0, {
-        mime: blobMime,
-        preview: bits64, // Serializable preview
-        width: width,
-        height: height,
-        filename: fname,
-        size: blob.size
+    blobToBase64(blob)
+      .then(b64 => {
+        let msg = Drafty.insertImage(null, 0, {
+          mime: b64.mime,
+          preview: b64.bits, // Serializable preview
+          width: width,
+          height: height,
+          filename: fname,
+          size: blob.size
+        });
+        if (caption) {
+          msg = Drafty.appendLineBreak(msg);
+          msg = Drafty.append(msg, Drafty.parse(caption));
+        }
+        this.sendMessage(msg);
       });
-      if (caption) {
-        msg = Drafty.appendLineBreak(msg);
-        msg = Drafty.append(msg, Drafty.init(caption));
-      }
-      this.props.sendMessage(msg);
-    });
   }
 
   // handleAttachImage method is called when [Attach image] button is clicked.
@@ -749,24 +822,20 @@ class MessagesView extends React.Component {
     const maxExternAttachmentSize = this.props.tinode.getServerLimit('maxFileUploadSize', MAX_EXTERN_ATTACHMENT_SIZE);
 
     // Get image dimensions and size, optionally scale it down.
-    imageScaled(file, MAX_IMAGE_DIM, MAX_IMAGE_DIM, maxExternAttachmentSize, false,
-      // Success
-      (mime, blob, width, height, fname) => {
+    imageScaled(file, MAX_IMAGE_DIM, MAX_IMAGE_DIM, maxExternAttachmentSize, false)
+      .then(scaled => {
         this.setState({imagePreview: {
-          url: URL.createObjectURL(blob),
-          blob: blob,
-          filename: fname,
-          width: width,
-          height: height,
-          size: blob.size,
-          type: mime
+          url: URL.createObjectURL(scaled.blob),
+          blob: scaled.blob,
+          name: scaled.name,
+          width: scaled.width,
+          height: scaled.height,
+          size: scaled.blob.size,
+          mime: scaled.mime
         }});
-      },
-      // Failure
-      (err) => {
+      }).catch(err => {
         this.props.onError(err, 'err');
-      }
-    );
+      });
   }
 
   handleCancelUpload(seq, uploader) {
@@ -776,6 +845,49 @@ class MessagesView extends React.Component {
       found._cancelled = true;
     }
     uploader.cancel();
+  }
+
+  handlePickReply(seq, content, forwarded, senderId, senderName) {
+    this.setState({reply: null});
+
+    if (!seq || !content) {
+      return;
+    }
+
+    content = forwarded ?
+        Drafty.forwardedContent(content) :
+        typeof content == 'string' ? Drafty.init(content) : content;
+    if (Drafty.isValid(content)) {
+      content = Drafty.preview(content, QUOTED_REPLY_LENGTH, undefined, !forwarded);
+    } else {
+      // /!\ invalid content.
+      content = Drafty.append(Drafty.init('\u26A0 '),
+        Drafty.wrapInto(this.props.intl.formatMessage(messages.invalid_content), 'EM'));
+    }
+
+    this.setState({
+      reply: {
+        content: Drafty.quote(senderName, senderId, content),
+        seq: seq
+      }
+    });
+    this.props.onCancelForwardMessage();
+  }
+
+  handleCancelReply() {
+    this.setState({reply: null});
+    this.props.onCancelForwardMessage();
+  }
+
+  handleQuoteClick(replyToSeq) {
+    const ref = this.getOrCreateMessageRef(replyToSeq);
+    if (ref && ref.current) {
+      ref.current.scrollIntoView({block: "center", behavior: "smooth"});
+      ref.current.classList.add('flash');
+      setTimeout(() => { ref.current.classList.remove('flash') } , 1000);
+    } else {
+      console.error("Unresolved message ref", replyToSeq);
+    }
   }
 
   render() {
@@ -797,6 +909,9 @@ class MessagesView extends React.Component {
         component2 = (
           <ImagePreview
             content={this.state.imagePreview}
+            tinode={this.props.tinode}
+            reply={this.state.reply}
+            onCancelReply={this.handleCancelReply}
             onClose={this.handleClosePreview}
             onSendMessage={this.sendImageAttachment} />
         );
@@ -812,6 +927,9 @@ class MessagesView extends React.Component {
         component2 = (
           <DocPreview
             content={this.state.docPreview}
+            tinode={this.props.tinode}
+            reply={this.state.reply}
+            onCancelReply={this.handleCancelReply}
             onClose={this.handleClosePreview}
             onSendMessage={this.sendFileAttachment} />
         );
@@ -819,11 +937,23 @@ class MessagesView extends React.Component {
         const topic = this.props.tinode.getTopic(this.state.topic);
         const isChannel = topic.isChannelType();
         const groupTopic = topic.isGroupType() && !isChannel;
+        const icon_badges = [];
+        if (topic.trusted) {
+          if (topic.trusted.verified) {
+            icon_badges.push({icon: 'verified', color: 'badge-inv'});
+          }
+          if (topic.trusted.staff) {
+            icon_badges.push({icon: 'staff', color: 'badge-inv'});
+          }
+          if (topic.trusted.danger) {
+            icon_badges.push({icon: 'dangerous', color: 'badge-inv'});
+          }
+        }
         let messageNodes = [];
         let previousFrom = null;
         let chatBoxClass = null;
         topic.messages((msg, prev, next, i) => {
-          let nextFrom = next ? (next.from || null) : 'chan';
+          let nextFrom = next ? (next.from || 'chan') : null;
 
           let sequence = 'single';
           let thisFrom = msg.from || 'chan';
@@ -841,40 +971,50 @@ class MessagesView extends React.Component {
           const isReply = !(thisFrom == this.props.myUserId);
           const deliveryStatus = topic.msgStatus(msg, true);
 
-          let userName, userAvatar, userFrom;
-          if (groupTopic) {
-            const user = topic.userDesc(thisFrom);
-            if (user && user.public) {
-              userName = user.public.fn;
-              userAvatar = makeImageDataUrl(user.public.photo);
-            }
-            userFrom = thisFrom;
-            chatBoxClass='chat-box group';
-          } else {
-            chatBoxClass='chat-box';
+          let userFrom = thisFrom, userName, userAvatar;
+          const user = topic.userDesc(thisFrom);
+          if (user && user.public) {
+            userName = user.public.fn;
+            userAvatar = makeImageUrl(user.public.photo);
+          }
+          chatBoxClass = groupTopic ? 'chat-box group' : 'chat-box';
+
+          // Ref for this chat message.
+          const ref = this.getOrCreateMessageRef(msg.seq);
+          let replyToSeq = msg.head ? parseInt(msg.head.reply) : null;
+          if (!replyToSeq || isNaN(replyToSeq)) {
+            replyToSeq = null;
           }
 
           messageNodes.push(
             <ChatMessage
               tinode={this.props.tinode}
               content={msg.content}
+              forwarded={msg.head ? msg.head.forwarded : null}
               deleted={msg.hi}
               mimeType={msg.head ? msg.head.mime : null}
               timestamp={msg.ts}
               response={isReply}
               seq={msg.seq}
+              isGroup={groupTopic}
+              isChan={this.state.channel}
               userFrom={userFrom}
               userName={userName}
               userAvatar={userAvatar}
               sequence={sequence}
               received={deliveryStatus}
               uploader={msg._uploader}
-              viewportWidth={this.props.viewportWidth}
-              showContextMenu={this.state.channel? false : this.handleShowContextMenuMessage}
+              viewportWidth={this.props.viewportWidth}  // Used by `formatter`.
+              showContextMenu={this.handleShowMessageContextMenu}
               onImagePreview={this.handleImagePostview}
               onFormResponse={this.handleFormResponse}
               onError={this.props.onError}
               onCancelUpload={this.handleCancelUpload}
+              pickReply={this.handlePickReply}
+              replyToSeq={replyToSeq}
+              onQuoteClick={this.handleQuoteClick}
+              ref={ref}
+              userIsWriter={this.state.isWriter}
               key={msg.seq} />
           );
         });
@@ -908,6 +1048,7 @@ class MessagesView extends React.Component {
                 null}
               <div className="avatar-box">
                 <LetterTile
+                  tinode={this.props.tinode}
                   avatar={avatar}
                   topic={this.state.topic}
                   title={this.state.title} />
@@ -918,11 +1059,12 @@ class MessagesView extends React.Component {
                   this.state.title ||
                   <i><FormattedMessage id="unnamed_topic" defaultMessage="Unnamed"
                     description="Title shown when the topic has no name" /></i>
-                }</div>
+                }<ContactBadges badges={icon_badges} /></div>
                 <div id="topic-last-seen">{lastSeen}</div>
               </div>
               {groupTopic ?
                 <GroupSubs
+                  tinode={this.props.tinode}
                   subscribers={this.state.onlineSubs} /> :
                 <div id="topic-users" />
               }
@@ -968,12 +1110,17 @@ class MessagesView extends React.Component {
               <Invitation onAction={this.handleNewChatAcceptance} />
               :
               <SendMessage
+                tinode={this.props.tinode}
+                noInput={!!this.props.forwardMessage}
                 disabled={!this.state.isWriter}
-                onSendMessage={this.props.sendMessage}
                 onKeyPress={this.sendKeyPress}
-                onAttachFile={this.handleAttachFile}
-                onAttachImage={this.handleAttachImage}
-                onError={this.props.onError} />}
+                onSendMessage={this.sendMessage}
+                onAttachFile={this.props.forwardMessage ? null : this.handleAttachFile}
+                onAttachImage={this.props.forwardMessage ? null : this.handleAttachImage}
+                onError={this.props.onError}
+                reply={this.state.reply}
+                onQuoteClick={this.handleQuoteClick}
+                onCancelReply={this.handleCancelReply} />}
           </>
         );
       }

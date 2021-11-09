@@ -23,10 +23,11 @@ const language = (params && params.hl) ||
 const baseLanguage = language.toLowerCase().split(/[-_]/)[0];
 
 // Try the full locale first, then the locale without the region code, fallback to 'en'.
-const messages =
-  allMessages[language] ||
-  allMessages[baseLanguage] ||
-  allMessages.en;
+const htmlLang = allMessages[language] ? langauge : allMessages[baseLanguage] ? baseLanguage : 'en';
+const messages = allMessages[htmlLang];
+
+// Set lang attribute of the HTML element: <html lang="XX">
+document.getElementsByTagName('html')[0].setAttribute('lang', htmlLang);
 
 ReactDOM.render(
   <React.StrictMode>

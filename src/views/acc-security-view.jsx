@@ -12,7 +12,7 @@ const messages = defineMessages({
     description: 'Title for delete account warning'
   },
   delete_account_warning: {
-    id: 'delete_account_arning',
+    id: 'delete_account_warning',
     defaultMessage: 'Are you sure you want to delete your account? It cannot be undone.',
     description: 'Warning message when deleting an account'
   }
@@ -46,7 +46,7 @@ class AccSecurityView extends React.Component {
 
   handlePasswordUpdate(pwd) {
     this.setState({password: pwd});
-    this.props.onUpdateAccount(pwd);
+    this.props.onUpdatePassword(pwd);
   }
 
   handleLaunchPermissionsEditor(which) {
@@ -63,7 +63,7 @@ class AccSecurityView extends React.Component {
   handlePermissionsChanged(perm) {
     let defacs = {};
     defacs[this.state.showPermissionEditorFor] = perm;
-    this.props.onUpdateAccount(undefined, undefined, defacs);
+    this.props.onUpdateAccountDesc('me', undefined, undefined, defacs);
 
     let newState = {showPermissionEditorFor: undefined};
     newState[this.state.showPermissionEditorFor] = perm;
@@ -85,7 +85,7 @@ class AccSecurityView extends React.Component {
 
   render() {
     return (
-      <React.Fragment>{this.state.showPermissionEditorFor ?
+      <>{this.state.showPermissionEditorFor ?
         <PermissionsEditor
           mode={this.state.editedPermissions}
           skip="O"
@@ -147,7 +147,7 @@ class AccSecurityView extends React.Component {
             </>
             : null }
         </div>
-      }</React.Fragment>
+      }</>
     );
   }
 };

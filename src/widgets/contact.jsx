@@ -1,6 +1,6 @@
 // A single topic or user.
 import React from 'react';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import ContactBadges from './contact-badges.jsx';
 import LetterTile from './letter-tile.jsx';
@@ -9,25 +9,8 @@ import UnreadBadge from './unread-badge.jsx';
 
 import { Drafty } from 'tinode-sdk';
 
+import { previewFormatter } from '../lib/formatters.js';
 import { deliveryMarker } from '../lib/utils.js';
-
-const messages = defineMessages({
-  drafty_image: {
-    id: 'drafty_image',
-    defaultMessage: 'Picture',
-    description: 'Comment for embedded images in drafty preview'
-  },
-  drafty_form: {
-    id: 'drafty_form',
-    defaultMessage: 'Form: ',
-    description: 'Comment for form in drafty preview'
-  },
-  drafty_attachment: {
-    id: 'drafty_attachment',
-    defaultMessage: 'Attachment',
-    description: 'Comment for attachment in drafty preview'
-  },
-});
 
 class Contact extends React.Component {
   constructor(props) {
@@ -65,6 +48,15 @@ class Contact extends React.Component {
     const avatar = this.props.avatar ? this.props.avatar : true;
     const badges = this.props.badges ? this.props.badges.slice() : [];
     const icon_badges = [];
+    if (this.props.isVerified) {
+      icon_badges.push({icon: 'verified', color: 'verified-color'});
+    }
+    if (this.props.isStaff) {
+      icon_badges.push({icon: 'staff', color: 'staff-color'});
+    }
+    if (this.props.isDangerous) {
+      icon_badges.push({icon: 'dangerous', color: 'danger-color'});
+    }
     if (this.props.acs) {
       if (this.props.showMode) {
         badges.push({name: this.props.acs.getMode(), key: 'mode'});
@@ -79,7 +71,14 @@ class Contact extends React.Component {
 
     const subtitle = this.props.preview ?
       (typeof this.props.preview == 'string' ? this.props.preview :
-        React.createElement(React.Fragment, null, Drafty.format(this.props.preview, draftyFormatter, this))) :
+        Drafty.isValid(this.props.preview) ?
+        React.createElement(React.Fragment, null, Drafty.format(this.props.preview, previewFormatter,
+          {formatMessage: this.props.intl.formatMessage})) :
+        <><i className="material-icons gray">warning_amber</i> <i className="gray">
+          <FormattedMessage id="invalid_content"
+            defaultMessage="invalid content" description="Shown when the message is unreadable" /></i>
+        </>
+      ) :
       this.props.comment;
 
     const icon = deliveryMarker(this.props.received);
@@ -90,6 +89,7 @@ class Contact extends React.Component {
       <li className={!this.props.showCheckmark && this.props.selected ? 'selected' : null} onClick={this.handleClick}>
         <div className="avatar-box">
           <LetterTile
+            tinode={this.props.tinode}
             avatar={avatar}
             title={this.props.title}
             topic={this.props.item} />
@@ -101,11 +101,11 @@ class Contact extends React.Component {
         <div className="text-box">
           <div><span className="contact-title">{title}</span>
             {this.props.isChannel ? <img src="/img/channel.png" className="channel" alt="channel" /> : null}
-            <UnreadBadge count={this.props.unread} /><ContactBadges badges={icon_badges} />
+            <ContactBadges badges={icon_badges} /><UnreadBadge count={this.props.unread} />
           </div>
           {this.props.showMode ?
             <span><ContactBadges badges={badges} /></span> :
-            <div className="contact-comment">{marker}{subtitle || '\u00A0'}</div>}
+            this.props.small ? null : <div className="contact-comment">{marker}<span>{subtitle || '\u00A0'}</span></div>}
         </div>
         {this.props.showContextMenu ?
           <span className="menuTrigger">
@@ -115,65 +115,6 @@ class Contact extends React.Component {
           </span> : null}
       </li>
     );
-  }
-};
-
-
-// Converts Drafty object into a one-line preview.
-function draftyFormatter(style, data, values, key) {
-  let el = Drafty.tagName(style);
-  const attr = { key: key };
-  if (el) {
-    const { formatMessage } = this.props.intl;
-    switch (style) {
-      case 'BR':
-        // Replace new line with a space.
-        el = React.Fragment;
-        values = [' '];
-        break;
-      case 'HL':
-        // Make highlight less prominent in preview.
-        attr.className = 'highlight preview';
-        break;
-      case 'LN':
-        // Disable links in previews.
-        el = 'span';
-        break;
-      case 'IM':
-        // Replace image with '[icon] Image'.
-        el = React.Fragment;
-        values = [<i key="im" className="material-icons">photo</i>, formatMessage(messages.drafty_image)];
-        break;
-      case 'BN':
-        el = 'span';
-        attr.className = 'flat-button faux';
-        break;
-      case 'FM':
-        el = React.Fragment;
-        values = [<i key="fm" className="material-icons">dashboard</i>,
-          formatMessage(messages.drafty_form)].concat(values || []);
-        break;
-      case 'RW':
-        el = React.Fragment;
-        break;
-      case 'EX':
-        if (data && data.mime == 'application/json') {
-          // Ignore JSON attachments: they are form response payloads.
-          return null;
-        }
-        el = React.Fragment;
-        values = [<i key="ex" className="material-icons">attachment</i>, formatMessage(messages.drafty_attachment)];
-        break;
-      default:
-        if (el == '_UNKN') {
-          el = React.Fragment;
-          values = [<i key="unkn" className="material-icons">extension</i>];
-        }
-        break;
-    }
-    return React.createElement(el, attr, values);
-  } else {
-    return values;
   }
 };
 

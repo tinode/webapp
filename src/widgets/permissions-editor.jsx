@@ -6,7 +6,7 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import CheckBox from './checkbox.jsx';
 import Contact from './contact.jsx';
 
-import { makeImageDataUrl } from '../lib/blob-helpers.js';
+import { makeImageUrl } from '../lib/blob-helpers.js';
 
 // Translatable permission names.
 const messages = defineMessages({
@@ -67,7 +67,7 @@ class PermissionsEditor extends React.Component {
 
   handleChange(val) {
     let mode = this.state.mode;
-    let idx = mode.indexOf(val);
+    const idx = mode.indexOf(val);
     if (idx == -1) {
       mode += val;
     } else {
@@ -78,8 +78,8 @@ class PermissionsEditor extends React.Component {
 
   handleSubmit() {
     // Normalize string, otherwise cannot check if mode has changed.
-    var mode = (this.state.mode || 'N').split('').sort().join('');
-    var before = (this.props.mode || 'N').split('').sort().join('')
+    const mode = (this.state.mode || 'N').split('').sort().join('');
+    const before = (this.props.mode || 'N').split('').sort().join('')
     if (mode !== before) {
       this.props.onSubmit(mode);
     } else {
@@ -132,10 +132,12 @@ class PermissionsEditor extends React.Component {
     return (
       <div className="panel-form-column">
         {this.props.userTitle ?
-          <ul className="contact-box"><Contact
+          <ul className="contact-box small"><Contact
+            tinode={this.props.tinode}
             item={this.props.item}
             title={this.props.userTitle}
-            avatar={makeImageDataUrl(this.props.userAvatar ? this.props.userAvatar : null)} /></ul> : null}
+            small={true}
+            avatar={makeImageUrl(this.props.userAvatar ? this.props.userAvatar : null)} /></ul> : null}
         <label className="small"><FormattedMessage id="title_permissions"
           defaultMessage="Permissions" description="Section title"/></label>
         <table className="permission-editor">

@@ -89,6 +89,7 @@ export default class ContactsView extends React.Component {
         defaultMessage="You have no chats<br />¯∖_(ツ)_/¯"
         description="HTML message shown in ContactList when no contacts are found">{
         (no_contacts) => <ContactList
+          tinode={this.props.tinode}
           connected={this.props.connected}
           contacts={this.state.contactList}
           emptyListMessage={no_contacts}

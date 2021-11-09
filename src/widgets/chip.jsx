@@ -23,6 +23,7 @@ export default class Chip extends React.PureComponent {
           <span className="spacer" /> :
           <div className="avatar-box">
             <LetterTile
+              tinode={this.props.tinode}
               avatar={this.props.avatar || true}
               topic={this.props.topic}
               title={this.props.title} />

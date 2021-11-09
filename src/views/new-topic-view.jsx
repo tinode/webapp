@@ -22,7 +22,12 @@ const messages = defineMessages({
     id: "search_no_results",
     defaultMessage: "Search returned no results",
     description: "Text shown in contacts view when query returned no results."
-  }
+  },
+  search_placeholder: {
+    id: "search_placeholder",
+    defaultMessage: "List like email:alice@example.com, tel:17025550003...",
+    description: "Placeholder in contacts search field"
+  },
 });
 
 class NewTopicView extends React.Component {
@@ -56,16 +61,17 @@ class NewTopicView extends React.Component {
     this.setState({searchQuery: Tinode.isNullValue(query) ? null : query});
   }
 
-  handleContactSelected(sel) {
-    if (this.state.tabSelected === 'p2p') {
+  handleContactSelected(uid) {
+    if (this.state.tabSelected == 'p2p') {
       HashNavigation.navigateTo(HashNavigation.removeUrlParam(window.location.hash, 'tab'));
-      this.props.onCreateTopic(sel);
+      this.props.onCreateTopic(uid);
     }
   }
 
-  handleNewGroupSubmit(name, dataUrl, priv, tags, isChannel) {
+  handleNewGroupSubmit(name, description, dataUrl, priv, tags, isChannel) {
     HashNavigation.navigateTo(HashNavigation.removeUrlParam(window.location.hash, 'tab'));
-    this.props.onCreateTopic(undefined, theCard(name, dataUrl), priv, tags, isChannel);
+    this.props.onCreateTopic(undefined,
+      {public: theCard(name, dataUrl, null, description), private: priv, tags: tags}, isChannel);
   }
 
   handleGroupByID(topicName) {
@@ -77,6 +83,7 @@ class NewTopicView extends React.Component {
     const {formatMessage} = this.props.intl;
     const no_contacts_placeholder = formatMessage(this.state.searchQuery ?
       messages.search_no_results : messages.search_for_contacts);
+    const search_placeholder = formatMessage(messages.search_placeholder);
     return (
       <div className="flex-column">
         <ul className="tabbar">
@@ -110,8 +117,10 @@ class NewTopicView extends React.Component {
             <div className="flex-column">
               <SearchContacts
                 type="p2p"
+                placeholder={search_placeholder}
                 onSearchContacts={this.handleSearchContacts} />
               <ContactList
+                tinode={this.props.tinode}
                 contacts={this.props.searchResults}
                 myUserId={this.props.myUserId}
                 emptyListMessage={no_contacts_placeholder}
