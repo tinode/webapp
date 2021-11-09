@@ -234,6 +234,10 @@
   "forward_to": {
     "defaultMessage": "Forward to"
   },
+  "forward_to_search_placeholder": {
+    "defaultMessage": "Search contacts",
+    "description": "Contact search prompt when forwarding a message."
+  },
   "full_name_prompt": {
     "defaultMessage": "Full name, e.g. John Doe",
     "description": "Input placeholder for person's full name"

@@ -1346,5 +1346,12 @@
     "defaultMessage": "Forward to",
     "missing": false,
     "obsolete": false
+  },
+  "forward_to_search_placeholder": {
+    "translation": "연락처 검색",
+    "defaultMessage": "Search contacts",
+    "description": "Contact search prompt when forwarding a message.",
+    "missing": false,
+    "obsolete": false
   }
 }
