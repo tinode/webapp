@@ -16,7 +16,7 @@ For demo access and other instructions [see here](https://github.com/tinode/chat
 
 ## Installing and running
 
-This is NOT a standalone app, this is just a frontend, a client. It requires a [backend](https://github.com/tinode/chat/). See [installation instructions](https://github.com/tinode/chat/blob/master/INSTALL.md). See instructions for [enabling push notifications](push.md).
+This is _NOT_ a standalone app, this is just a frontend, a client. It requires a [backend](https://github.com/tinode/chat/). See [installation instructions](https://github.com/tinode/chat/blob/master/INSTALL.md). See instructions for [enabling push notifications](push.md).
 
 ## Getting support
 
