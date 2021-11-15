@@ -4411,7 +4411,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           show: this.state.fetchingMessages
         }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "messages-container"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+          className: "action-button"
+        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+          className: "material-icons"
+        }, "arrow_downward")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "messages-panel",
           ref: this.handleScrollReference
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {

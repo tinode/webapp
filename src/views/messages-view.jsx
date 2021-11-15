@@ -1082,6 +1082,9 @@ class MessagesView extends React.Component {
               : null}
             <LoadSpinner show={this.state.fetchingMessages} />
             <div id="messages-container">
+              <button className="action-button">
+                <i className="material-icons">arrow_downward</i>
+              </button>
               <div id="messages-panel" ref={this.handleScrollReference}>
                 <ul id="scroller" className={chatBoxClass}>
                   {messageNodes}

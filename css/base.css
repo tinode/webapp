@@ -46,36 +46,6 @@ a.gray:focus {
   color: #999;
 }
 
-.flat-button {
-  display: flex;
-  align-items: center;
-  margin: 0.15rem 0.35rem;
-  height: 2em;
-  line-height: 2em;
-  font-weight: normal;
-  text-align: center;
-  vertical-align: middle;
-  touch-action: manipulation;
-  white-space: nowrap;
-  text-transform: uppercase;
-}
-.flat-button:hover,
-.flat-button:focus {
-  text-decoration: none;
-}
-
-.flat-button.faux {
-  display: inline-block;
-  height: 1.4em;
-  line-height: 1.4em;
-  text-transform: none;
-  padding: 0 .35rem;
-  margin: 0.15rem;
-  border: 1px solid #999;
-  border-radius: 3px;
-  background-color: #eee;
-}
-
 form {
   font-size: 1.1rem;
   padding: 0.5rem 0.75rem;
@@ -147,6 +117,7 @@ button.round.small {
   line-height: 2rem;
   box-shadow: 0 2px 0.35rem 0 rgba(0, 0, 0, 0.25);
 }
+
 button:focus, button:hover, button:active {
   color: #fff;
 }
@@ -432,6 +403,7 @@ div.trusted-badge {
   font-size: 120%;
 }
 
+/* Other universal style components */
 .small {
   font-size: 90%;
 }
@@ -459,6 +431,66 @@ div.trusted-badge {
   overflow-x: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.flat-button {
+  display: flex;
+  align-items: center;
+  margin: 0.15rem 0.35rem;
+  height: 2em;
+  line-height: 2em;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+.flat-button:hover,
+.flat-button:focus {
+  text-decoration: none;
+}
+
+.flat-button.faux {
+  display: inline-block;
+  height: 1.4em;
+  line-height: 1.4em;
+  text-transform: none;
+  padding: 0 .35rem;
+  margin: 0.15rem;
+  border: 1px solid #999;
+  border-radius: 3px;
+  background-color: #eee;
+}
+
+.action-button {
+  display: block;
+  position: absolute;
+  color: #999;
+  font-size: 1.8rem;
+  background-color: #fafafa;
+  right: 1rem;
+  bottom: 1rem;
+  border-radius: 50%;
+  width: 3.25rem;
+  height: 3.25rem;
+  min-width: unset;
+  min-height: unset;
+  padding: 0;
+  margin: 0;
+  line-height: 3.25rem;
+  outline: none; /* otherwise a square outline is shown */
+  box-shadow: 0 2px 0.5rem 0 rgba(0, 0, 0, 0.25);
+  transition: all 250ms;
+  z-index: 2;
+}
+
+.action-button:focus, .action-button:hover {
+  color: #888;
+}
+.action-button:active {
+  color: #777;
+  background-color: #e0e0e0;
 }
 
 /* Element which can take focus but shows no outline */
