@@ -16,17 +16,17 @@ import LoadSpinner from '../widgets/load-spinner.jsx';
 import LogoView from './logo-view.jsx';
 import SendMessage from '../widgets/send-message.jsx';
 
-import { DEFAULT_P2P_ACCESS_MODE, IMAGE_PREVIEW_DIM, IMAGE_THUMBNAIL_DIM, KEYPRESS_DELAY,
+import { DEFAULT_P2P_ACCESS_MODE, IMAGE_PREVIEW_DIM, KEYPRESS_DELAY,
   MESSAGES_PAGE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE,
   READ_DELAY, QUOTED_REPLY_LENGTH } from '../config.js';
-import { SUPPORTED_IMAGE_FORMATS, blobToBase64, base64ToBlob, filePasted, fileToBase64,
-  imageScaled, makeImageUrl } from '../lib/blob-helpers.js';
+import { blobToBase64, fileToBase64, imageScaled, makeImageUrl } from '../lib/blob-helpers.js';
 import HashNavigation from '../lib/navigation.js';
-import { bytesToHumanSize, shortDateFormat, letterTileColorId } from '../lib/strformat.js';
-import { sanitizeImageUrl } from '../lib/utils.js';
+import { bytesToHumanSize, shortDateFormat } from '../lib/strformat.js';
 
 // Run timer with this frequency (ms) for checking notification queue.
 const NOTIFICATION_EXEC_INTERVAL = 300;
+// Scroll distance before [go to latest message] button is shown.
+const SHOW_GO_TO_LAST_DIST = 100;
 
 const messages = defineMessages({
   online_now: {
@@ -110,6 +110,7 @@ class MessagesView extends React.Component {
     this.handleCancelUpload = this.handleCancelUpload.bind(this);
     this.postReadNotification = this.postReadNotification.bind(this);
     this.clearNotificationQueue = this.clearNotificationQueue.bind(this);
+    this.goToLatestMessage = this.goToLatestMessage.bind(this);
 
     this.handlePickReply = this.handlePickReply.bind(this);
     this.handleCancelReply = this.handleCancelReply.bind(this);
@@ -149,13 +150,13 @@ class MessagesView extends React.Component {
   // Scroll last message into view on component update e.g. on message received
   // or vertical shrinking.
   componentDidUpdate(prevProps, prevState) {
-    if (this.messagesScroller) {
-      if (prevState.topic != this.state.topic || prevState.messageCount != this.state.messageCount) {
-        // New message
-        this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition;
-      } else if (prevProps.viewportHeight > this.props.viewportHeight) {
-        // Componet changed height.
-        this.messagesScroller.scrollTop += prevProps.viewportHeight - this.props.viewportHeight;
+    if (this.messagesScroller &&
+      (prevState.topic != this.state.topic || prevState.messageCount != this.state.messageCount)) {
+      // New message.
+      if (this.state.scrollPosition < SHOW_GO_TO_LAST_DIST) {
+        this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight -
+          this.state.scrollPosition -
+          this.messagesScroller.offsetHeight;
       }
     }
 
@@ -210,7 +211,8 @@ class MessagesView extends React.Component {
         fetchingMessages: false,
         peerMessagingDisabled: false,
         channel: false,
-        reply: null
+        reply: null,
+        showGoToLastButton: false
       };
     } else if (nextProps.topic != prevState.topic) {
       const topic = nextProps.tinode.getTopic(nextProps.topic);
@@ -234,7 +236,8 @@ class MessagesView extends React.Component {
         typingIndicator: false,
         scrollPosition: 0,
         fetchingMessages: false,
-        reply: reply
+        reply: reply,
+        showGoToLastButton: false
       };
 
       if (topic) {
@@ -405,6 +408,7 @@ class MessagesView extends React.Component {
     }
   }
 
+  // Don't use React.createRef as the ref.current is not available in componentDidMount in this component.
   handleScrollReference(node) {
     if (node) {
       node.addEventListener('scroll', this.handleScrollEvent);
@@ -413,9 +417,14 @@ class MessagesView extends React.Component {
     }
   }
 
-  // Get older messages
+  // Get older messages and show/hide [go to latest message] button.
   handleScrollEvent(event) {
-    this.setState({scrollPosition: event.target.scrollHeight - event.target.scrollTop});
+    const pos = event.target.scrollHeight - event.target.scrollTop - event.target.offsetHeight;
+    this.setState({
+      scrollPosition: pos,
+      showGoToLastButton: pos > SHOW_GO_TO_LAST_DIST,
+    });
+
     if (this.state.fetchingMessages) {
       return;
     }
@@ -429,6 +438,13 @@ class MessagesView extends React.Component {
             .finally(() => this.setState({fetchingMessages: false}));
           });
       }
+    }
+  }
+
+  goToLatestMessage() {
+    this.setState({scrollPosition: 0});
+    if (this.messagesScroller) {
+      this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight;
     }
   }
 
@@ -557,7 +573,11 @@ class MessagesView extends React.Component {
     // Scroll to the bottom if the message is added to the end of the message list.
     // TODO: This should be replaced by showing a "scroll to bottom" button.
     if (topic.isNewMessage(msg.seq)) {
-      this.setState({scrollPosition: 0});
+      if (this.state.scrollPosition > SHOW_GO_TO_LAST_DIST) {
+        this.setState({showGoToLastButton: true});
+      } else {
+        this.setState({scrollPosition: 0});
+      }
     }
 
     // Aknowledge messages except own messages. They are
@@ -1082,7 +1102,8 @@ class MessagesView extends React.Component {
               : null}
             <LoadSpinner show={this.state.fetchingMessages} />
             <div id="messages-container">
-              <button className="action-button">
+              <button className={'action-button' + (this.state.showGoToLastButton ? '' : ' hidden')}
+                onClick={this.goToLatestMessage}>
                 <i className="material-icons">arrow_downward</i>
               </button>
               <div id="messages-panel" ref={this.handleScrollReference}>

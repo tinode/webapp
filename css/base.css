@@ -478,19 +478,29 @@ div.trusted-badge {
   min-height: unset;
   padding: 0;
   margin: 0;
-  line-height: 3.25rem;
   outline: none; /* otherwise a square outline is shown */
   box-shadow: 0 2px 0.5rem 0 rgba(0, 0, 0, 0.25);
-  transition: all 250ms;
+  transition: all 150ms;
   z-index: 2;
 }
 
 .action-button:focus, .action-button:hover {
   color: #888;
+  background-color: #f0f0f0;
 }
 .action-button:active {
   color: #777;
-  background-color: #e0e0e0;
+  background-color: #eee;
+}
+
+.action-button.hidden {
+  width: 1px;
+  height: 1px;
+  font-size: 1px;
+  line-height: 1px;
+  right: 2.625rem;
+  bottom: 2.625rem;
+  opacity: 0;
 }
 
 /* Element which can take focus but shows no outline */

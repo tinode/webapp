@@ -3266,7 +3266,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 /* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 
 
 
@@ -3286,8 +3285,8 @@ const Drafty = (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().Drafty);
 
 
 
-
 const NOTIFICATION_EXEC_INTERVAL = 300;
+const SHOW_GO_TO_LAST_DIST = 100;
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   online_now: {
     id: "online_now",
@@ -3393,6 +3392,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.handleCancelUpload = this.handleCancelUpload.bind(this);
     this.postReadNotification = this.postReadNotification.bind(this);
     this.clearNotificationQueue = this.clearNotificationQueue.bind(this);
+    this.goToLatestMessage = this.goToLatestMessage.bind(this);
     this.handlePickReply = this.handlePickReply.bind(this);
     this.handleCancelReply = this.handleCancelReply.bind(this);
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
@@ -3427,11 +3427,9 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.messagesScroller) {
-      if (prevState.topic != this.state.topic || prevState.messageCount != this.state.messageCount) {
-        this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition;
-      } else if (prevProps.viewportHeight > this.props.viewportHeight) {
-        this.messagesScroller.scrollTop += prevProps.viewportHeight - this.props.viewportHeight;
+    if (this.messagesScroller && (prevState.topic != this.state.topic || prevState.messageCount != this.state.messageCount)) {
+      if (this.state.scrollPosition < SHOW_GO_TO_LAST_DIST) {
+        this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition - this.messagesScroller.offsetHeight;
       }
     }
 
@@ -3485,7 +3483,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         fetchingMessages: false,
         peerMessagingDisabled: false,
         channel: false,
-        reply: null
+        reply: null,
+        showGoToLastButton: false
       };
     } else if (nextProps.topic != prevState.topic) {
       const topic = nextProps.tinode.getTopic(nextProps.topic);
@@ -3508,7 +3507,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         typingIndicator: false,
         scrollPosition: 0,
         fetchingMessages: false,
-        reply: reply
+        reply: reply,
+        showGoToLastButton: false
       };
 
       if (topic) {
@@ -3692,8 +3692,10 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
 
   handleScrollEvent(event) {
+    const pos = event.target.scrollHeight - event.target.scrollTop - event.target.offsetHeight;
     this.setState({
-      scrollPosition: event.target.scrollHeight - event.target.scrollTop
+      scrollPosition: pos,
+      showGoToLastButton: pos > SHOW_GO_TO_LAST_DIST
     });
 
     if (this.state.fetchingMessages) {
@@ -3712,6 +3714,16 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           }));
         });
       }
+    }
+  }
+
+  goToLatestMessage() {
+    this.setState({
+      scrollPosition: 0
+    });
+
+    if (this.messagesScroller) {
+      this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight;
     }
   }
 
@@ -3843,9 +3855,17 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     });
 
     if (topic.isNewMessage(msg.seq)) {
-      this.setState({
-        scrollPosition: 0
-      });
+      console.log("new message", this.state.scrollPosition, SHOW_GO_TO_LAST_DIST);
+
+      if (this.state.scrollPosition > SHOW_GO_TO_LAST_DIST) {
+        this.setState({
+          showGoToLastButton: true
+        });
+      } else {
+        this.setState({
+          scrollPosition: 0
+        });
+      }
     }
 
     const status = topic.msgStatus(msg, true);
@@ -4412,7 +4432,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "messages-container"
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-          className: "action-button"
+          className: 'action-button' + (this.state.showGoToLastButton ? '' : ' hidden'),
+          onClick: this.goToLatestMessage
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
           className: "material-icons"
         }, "arrow_downward")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
