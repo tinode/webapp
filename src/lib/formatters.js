@@ -192,7 +192,18 @@ export function fullFormatter(style, data, values, key) {
     return values;
   }
   return React.createElement(el, attr, values);
-};
+}
+
+// Unexported utility function: extract '➦' from mention if it's the first symbol,
+// otherwise return the whole mention.
+function extractMentionSymbol(content) {
+  if (Array.isArray(content) && content.length > 0) {
+    content = extractMentionSymbol(content[0]);
+  } else if (typeof content == 'string' && content.startsWith('➦')) {
+    content = ['➦'];
+  }
+  return content;
+}
 
 // Converts Drafty object into a one-line preview. 'this' is set by the caller.
 // 'this' must contain:
@@ -222,8 +233,12 @@ export function previewFormatter(style, data, values, key) {
       attr.className = 'highlight preview';
       break;
     case 'LN':
-    case 'MN':
       // Disable links in previews.
+      el = 'span';
+      break;
+    case 'MN':
+      // If mention starts with '➦', keep just that one symbol.
+      values = extractMentionSymbol(values);
       el = 'span';
       break;
     case 'IM':

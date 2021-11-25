@@ -606,7 +606,17 @@ function fullFormatter(style, data, values, key) {
 
   return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(el, attr, values);
 }
-;
+
+function extractMentionSymbol(content) {
+  if (Array.isArray(content) && content.length > 0) {
+    content = extractMentionSymbol(content[0]);
+  } else if (typeof content == 'string' && content.startsWith('➦')) {
+    content = ['➦'];
+  }
+
+  return content;
+}
+
 function previewFormatter(style, data, values, key) {
   if (!style) {
     return values;
@@ -632,7 +642,11 @@ function previewFormatter(style, data, values, key) {
       break;
 
     case 'LN':
+      el = 'span';
+      break;
+
     case 'MN':
+      values = extractMentionSymbol(values);
       el = 'span';
       break;
 
