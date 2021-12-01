@@ -288,9 +288,12 @@ class TinodeWeb extends React.Component {
         });
       }
 
-      // Save possible topic name and navigate to blank state.
-      this.setState({requestedTopic: parsedNav.path[1]});
-      HashNavigation.navigateTo('');
+      // Maybe navigate to home screen.
+      if (!['cred', 'reset', 'register'].includes(parsedNav.path[0])) {
+        // Save possible topic name.
+        this.setState({requestedTopic: parsedNav.path[1]});
+        HashNavigation.navigateTo('');
+      }
 
       this.readTimer = null;
       this.readTimerCallback = null;
@@ -1199,6 +1202,8 @@ class TinodeWeb extends React.Component {
       delete parsed.params.code;
       delete parsed.params.method;
       delete parsed.params.tab;
+      delete parsed.params.scheme;
+      delete parsed.params.token;
     }
     HashNavigation.navigateTo(HashNavigation.composeUrlHash(parsed.path, parsed.params));
     this.setState({errorText: '', errorLevel: null});
@@ -1610,6 +1615,9 @@ class TinodeWeb extends React.Component {
       this.tinode.connect()
         .then(() => {
           return this.tinode.updateAccountBasic(null, null, newPassword, {token: token});
+        })
+        .then(() => {
+          HashNavigation.navigateTo('');
         })
         .catch((err) => {
           // Socket error
