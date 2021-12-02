@@ -2491,6 +2491,10 @@ ul.tabbar li.active > a {
   margin-bottom: 0.1rem;
 }
 
+.reply-quote img.inline-image::before {
+  content: '';
+}
+
 #reply-quote-preview {
   display: flex;
   align-items: center;
