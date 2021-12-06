@@ -1464,6 +1464,7 @@ class TinodeWeb extends React.Component {
         Tinode.Drafty.appendLineBreak(
             Tinode.Drafty.mention(header, params.userFrom)),
         content);
+
     const msgPreview = Tinode.Drafty.quote(header, params.userFrom, preview);
     const head = {
       forwarded: params.topicName + ':' + params.seq
