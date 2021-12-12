@@ -847,18 +847,23 @@ class MessagesView extends React.Component {
     uploader.cancel();
   }
 
+  // seq: seq ID of the source message
+  // context: message content.
+  // forwarded: true if the source message is also a forwarded message.
+  // senderId: UID of the sender of the source message.
+  // senderName: full name of the sender of the original message.
   handlePickReply(seq, content, forwarded, senderId, senderName) {
+    console.log("forwarded message:", forwarded);
+
     this.setState({reply: null});
 
     if (!seq || !content) {
       return;
     }
 
-    content = forwarded ?
-        Drafty.forwardedContent(content) :
-        typeof content == 'string' ? Drafty.init(content) : content;
+    content = typeof content == 'string' ? Drafty.init(content) : content;
     if (Drafty.isValid(content)) {
-      content = Drafty.preview(content, QUOTED_REPLY_LENGTH, undefined, !forwarded);
+      content = Drafty.preview(content, QUOTED_REPLY_LENGTH, undefined, forwarded);
     } else {
       // /!\ invalid content.
       content = Drafty.append(Drafty.init('\u26A0 '),
@@ -990,7 +995,7 @@ class MessagesView extends React.Component {
             <ChatMessage
               tinode={this.props.tinode}
               content={msg.content}
-              forwarded={msg.head ? msg.head.forwarded : null}
+              forwarded={msg.head ? !!msg.head.forwarded : null}
               deleted={msg.hi}
               mimeType={msg.head ? msg.head.mime : null}
               timestamp={msg.ts}

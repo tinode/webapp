@@ -4166,6 +4166,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
 
   handlePickReply(seq, content, forwarded, senderId, senderName) {
+    console.log("forwarded message:", forwarded);
     this.setState({
       reply: null
     });
@@ -4174,10 +4175,10 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       return;
     }
 
-    content = forwarded ? Drafty.forwardedContent(content) : typeof content == 'string' ? Drafty.init(content) : content;
+    content = typeof content == 'string' ? Drafty.init(content) : content;
 
     if (Drafty.isValid(content)) {
-      content = Drafty.preview(content, _config_js__WEBPACK_IMPORTED_MODULE_14__.QUOTED_REPLY_LENGTH, undefined, !forwarded);
+      content = Drafty.preview(content, _config_js__WEBPACK_IMPORTED_MODULE_14__.QUOTED_REPLY_LENGTH, undefined, forwarded);
     } else {
       content = Drafty.append(Drafty.init('\u26A0 '), Drafty.wrapInto(this.props.intl.formatMessage(messages.invalid_content), 'EM'));
     }
@@ -4325,7 +4326,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_chat_message_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
             tinode: this.props.tinode,
             content: msg.content,
-            forwarded: msg.head ? msg.head.forwarded : null,
+            forwarded: msg.head ? !!msg.head.forwarded : null,
             deleted: msg.hi,
             mimeType: msg.head ? msg.head.mime : null,
             timestamp: msg.ts,
