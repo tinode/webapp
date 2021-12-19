@@ -69,17 +69,20 @@ class Contact extends React.Component {
       }
     }
 
-    const subtitle = this.props.preview ?
-      (typeof this.props.preview == 'string' ? this.props.preview :
-        Drafty.isValid(this.props.preview) ?
-        React.createElement(React.Fragment, null, Drafty.format(this.props.preview, previewFormatter,
-          {formatMessage: this.props.intl.formatMessage})) :
+    // The this.props.preview contains alreay shortened Drafty or string.
+    let preview;
+    if (typeof this.props.preview == 'string') {
+      preview = this.props.preview;
+    } else if (Drafty.isValid(this.props.preview)) {
+      preview = React.createElement(React.Fragment, null, Drafty.format(this.props.preview, previewFormatter,
+        {formatMessage: this.props.intl.formatMessage}));
+    } else if (this.props.preview) {
+      preview =
         <><i className="material-icons gray">warning_amber</i> <i className="gray">
           <FormattedMessage id="invalid_content"
             defaultMessage="invalid content" description="Shown when the message is unreadable" /></i>
-        </>
-      ) :
-      this.props.comment;
+        </>;
+    }
 
     const icon = deliveryMarker(this.props.received);
     const marker = icon ? <i className={'material-icons small space-right' +
@@ -105,7 +108,7 @@ class Contact extends React.Component {
           </div>
           {this.props.showMode ?
             <span><ContactBadges badges={badges} /></span> :
-            this.props.small ? null : <div className="contact-comment">{marker}<span>{subtitle || '\u00A0'}</span></div>}
+            this.props.small ? null : <div className="contact-comment">{marker}<span>{preview || this.props.comment || '\u00A0'}</span></div>}
         </div>
         {this.props.showContextMenu ?
           <span className="menuTrigger">

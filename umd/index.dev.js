@@ -546,6 +546,10 @@ function fullFormatter(style, data, values, key) {
   attr.key = key;
 
   switch (style) {
+    case 'BR':
+      values = null;
+      break;
+
     case 'HL':
       attr.className = 'highlight';
       break;
@@ -606,18 +610,9 @@ function fullFormatter(style, data, values, key) {
 
   return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(el, attr, values);
 }
-
-function extractMentionSymbol(content) {
-  if (Array.isArray(content) && content.length > 0) {
-    content = extractMentionSymbol(content[0]);
-  } else if (typeof content == 'string' && content.startsWith('➦')) {
-    content = ['➦'];
-  }
-
-  return content;
-}
-
 function previewFormatter(style, data, values, key) {
+  console.log("Formatting (s, d, v, k):", style, data, values, key);
+
   if (!style) {
     return values;
   }
@@ -642,11 +637,7 @@ function previewFormatter(style, data, values, key) {
       break;
 
     case 'LN':
-      el = 'span';
-      break;
-
     case 'MN':
-      values = extractMentionSymbol(values);
       el = 'span';
       break;
 
@@ -737,6 +728,10 @@ function quoteFormatter(style, data, values, key) {
     attr.key = key;
 
     switch (style) {
+      case 'BR':
+        values = null;
+        break;
+
       case 'IM':
         attr = inlineImageAttr.call(this, attr, data);
         values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement('img', attr, null), ' ', attr.alt];
@@ -8493,7 +8488,7 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
             if (msg) {
               forwarded = msg.head ? msg.head.forwarded : null;
               deliveryStatus = msg._status || c.msgStatus(msg, true);
-              preview = typeof msg.content == 'string' ? msg.content.substr(0, _config_js__WEBPACK_IMPORTED_MODULE_6__.MESSAGE_PREVIEW_LENGTH) : tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.preview(msg.content, _config_js__WEBPACK_IMPORTED_MODULE_6__.MESSAGE_PREVIEW_LENGTH, undefined, forwarded != null);
+              preview = typeof msg.content == 'string' ? msg.content.substr(0, _config_js__WEBPACK_IMPORTED_MODULE_6__.MESSAGE_PREVIEW_LENGTH) : tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.preview(msg.content, _config_js__WEBPACK_IMPORTED_MODULE_6__.MESSAGE_PREVIEW_LENGTH);
             }
           }
 
@@ -8667,19 +8662,28 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       }
     }
 
-    const subtitle = this.props.preview ? typeof this.props.preview == 'string' ? this.props.preview : tinode_sdk__WEBPACK_IMPORTED_MODULE_6__.Drafty.isValid(this.props.preview) ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, tinode_sdk__WEBPACK_IMPORTED_MODULE_6__.Drafty.format(this.props.preview, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_7__.previewFormatter, {
-      formatMessage: this.props.intl.formatMessage
-    })) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons gray"
-    }, "warning_amber"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "gray"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "invalid_content",
-      defaultMessage: [{
-        "type": 0,
-        "value": "invalid content"
-      }]
-    }))) : this.props.comment;
+    let preview;
+
+    if (typeof this.props.preview == 'string') {
+      preview = this.props.preview;
+    } else if (tinode_sdk__WEBPACK_IMPORTED_MODULE_6__.Drafty.isValid(this.props.preview)) {
+      preview = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, tinode_sdk__WEBPACK_IMPORTED_MODULE_6__.Drafty.format(this.props.preview, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_7__.previewFormatter, {
+        formatMessage: this.props.intl.formatMessage
+      }));
+    } else if (this.props.preview) {
+      preview = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+        className: "material-icons gray"
+      }, "warning_amber"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+        className: "gray"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+        id: "invalid_content",
+        defaultMessage: [{
+          "type": 0,
+          "value": "invalid content"
+        }]
+      })));
+    }
+
     const icon = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.deliveryMarker)(this.props.received);
     const marker = icon ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: 'material-icons small space-right' + (icon.color ? ' ' + icon.color : '')
@@ -8714,7 +8718,7 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       badges: badges
     })) : this.props.small ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "contact-comment"
-    }, marker, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, subtitle || '\u00A0'))), this.props.showContextMenu ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    }, marker, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, preview || this.props.comment || '\u00A0'))), this.props.showContextMenu ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       className: "menuTrigger"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",

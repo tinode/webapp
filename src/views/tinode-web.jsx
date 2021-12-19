@@ -16,7 +16,7 @@ import MessagesView from './messages-view.jsx';
 import SidepanelView from './sidepanel-view.jsx';
 
 import { API_KEY, APP_NAME, DEFAULT_P2P_ACCESS_MODE, FORWARDED_PREVIEW_LENGTH, LOGGING_ENABLED,
-  MEDIA_BREAKPOINT, QUOTED_REPLY_LENGTH, RECEIVED_DELAY } from '../config.js';
+  MEDIA_BREAKPOINT, RECEIVED_DELAY } from '../config.js';
 import { PACKAGE_VERSION } from '../version.js';
 import { base64ReEncode, makeImageUrl } from '../lib/blob-helpers.js';
 import { detectServerAddress, isLocalHost, isSecureConnection } from '../lib/host-name.js';
@@ -1448,12 +1448,14 @@ class TinodeWeb extends React.Component {
     });
   }
 
+  //
   handleShowForwardDialog(params) {
     if (this.state.sidePanelSelected == 'newtpk') {
       // If the Find panel is active, close it.
       this.handleSidepanelCancel();
     }
     const header = '➦ ' + params.userName;
+    // params.forwarded means the source message is also a forwarded message.
     const content = params.forwarded ?
         Tinode.Drafty.forwardedContent(params.content) :
         typeof params.content == 'string' ?

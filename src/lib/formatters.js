@@ -139,6 +139,9 @@ export function fullFormatter(style, data, values, key) {
   const attr = Drafty.attrValue(style, data) || {};
   attr.key = key;
   switch (style) {
+    case 'BR':
+      values = null;
+      break;
     case 'HL':
       // Highlighted text. Assign class name.
       attr.className = 'highlight';
@@ -194,22 +197,12 @@ export function fullFormatter(style, data, values, key) {
   return React.createElement(el, attr, values);
 }
 
-// Unexported utility function: extract '➦' from mention if it's the first symbol,
-// otherwise return the whole mention.
-function extractMentionSymbol(content) {
-  if (Array.isArray(content) && content.length > 0) {
-    content = extractMentionSymbol(content[0]);
-  } else if (typeof content == 'string' && content.startsWith('➦')) {
-    content = ['➦'];
-  }
-  return content;
-}
-
 // Converts Drafty object into a one-line preview. 'this' is set by the caller.
 // 'this' must contain:
 //    formatMessage: this.props.intl.formatMessage
 //    messages: formatjs messages defined with defineMessages.
 export function previewFormatter(style, data, values, key) {
+  console.log("Formatting (s, d, v, k):", style, data, values, key);
   if (!style) {
     // Unformatted.
     return values;
@@ -233,12 +226,8 @@ export function previewFormatter(style, data, values, key) {
       attr.className = 'highlight preview';
       break;
     case 'LN':
-      // Disable links in previews.
-      el = 'span';
-      break;
     case 'MN':
-      // If mention starts with '➦', keep just that one symbol.
-      values = extractMentionSymbol(values);
+      // Disable links in previews.
       el = 'span';
       break;
     case 'IM':
@@ -313,6 +302,9 @@ export function quoteFormatter(style, data, values, key) {
     let attr = Drafty.attrValue(style, data) || {};
     attr.key = key;
     switch(style) {
+      case 'BR':
+        values = null;
+        break;
       case 'IM':
         attr = inlineImageAttr.call(this, attr, data);
         values = [React.createElement('img', attr, null), ' ', attr.alt];
