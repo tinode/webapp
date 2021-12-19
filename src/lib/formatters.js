@@ -260,6 +260,10 @@ export function previewFormatter(style, data, values, key) {
       el = React.Fragment;
       values = [<i key="ex" className="material-icons">attachment</i>, this.formatMessage(messages.drafty_attachment)];
       break;
+    case 'QQ':
+      el = null;
+      values = null;
+      break;
     default:
       if (el == '_UNKN') {
         el = React.Fragment;

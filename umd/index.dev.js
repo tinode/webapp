@@ -683,6 +683,11 @@ function previewFormatter(style, data, values, key) {
       }, "attachment"), this.formatMessage(messages.drafty_attachment)];
       break;
 
+    case 'QQ':
+      el = null;
+      values = null;
+      break;
+
     default:
       if (el == '_UNKN') {
         el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
