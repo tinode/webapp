@@ -202,15 +202,9 @@ export function fullFormatter(style, data, values, key) {
 //    formatMessage: this.props.intl.formatMessage
 //    messages: formatjs messages defined with defineMessages.
 export function previewFormatter(style, data, values, key) {
-  console.log("Formatting (s, d, v, k):", style, data, values, key);
   if (!style) {
     // Unformatted.
     return values;
-  }
-
-  if (style == 'HD') {
-    // Hidden.
-    return null;
   }
 
   let el = Drafty.tagName(style);
@@ -261,6 +255,7 @@ export function previewFormatter(style, data, values, key) {
       values = [<i key="ex" className="material-icons">attachment</i>, this.formatMessage(messages.drafty_attachment)];
       break;
     case 'QQ':
+    case 'HD':
       el = null;
       values = null;
       break;
