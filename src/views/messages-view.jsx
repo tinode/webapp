@@ -853,8 +853,6 @@ class MessagesView extends React.Component {
   // senderId: UID of the sender of the source message.
   // senderName: full name of the sender of the original message.
   handlePickReply(seq, content, forwarded, senderId, senderName) {
-    console.log("forwarded message:", forwarded);
-
     this.setState({reply: null});
 
     if (!seq || !content) {
@@ -863,7 +861,7 @@ class MessagesView extends React.Component {
 
     content = typeof content == 'string' ? Drafty.init(content) : content;
     if (Drafty.isValid(content)) {
-      content = Drafty.preview(content, QUOTED_REPLY_LENGTH, undefined, forwarded);
+      content = Drafty.replyContent(content, QUOTED_REPLY_LENGTH);
     } else {
       // /!\ invalid content.
       content = Drafty.append(Drafty.init('\u26A0 '),

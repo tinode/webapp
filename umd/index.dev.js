@@ -611,14 +611,8 @@ function fullFormatter(style, data, values, key) {
   return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(el, attr, values);
 }
 function previewFormatter(style, data, values, key) {
-  console.log("Formatting (s, d, v, k):", style, data, values, key);
-
   if (!style) {
     return values;
-  }
-
-  if (style == 'HD') {
-    return null;
   }
 
   let el = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.tagName(style);
@@ -684,6 +678,7 @@ function previewFormatter(style, data, values, key) {
       break;
 
     case 'QQ':
+    case 'HD':
       el = null;
       values = null;
       break;
@@ -4166,7 +4161,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
 
   handlePickReply(seq, content, forwarded, senderId, senderName) {
-    console.log("forwarded message:", forwarded);
     this.setState({
       reply: null
     });
@@ -4178,7 +4172,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     content = typeof content == 'string' ? Drafty.init(content) : content;
 
     if (Drafty.isValid(content)) {
-      content = Drafty.preview(content, _config_js__WEBPACK_IMPORTED_MODULE_14__.QUOTED_REPLY_LENGTH, undefined, forwarded);
+      content = Drafty.replyContent(content, _config_js__WEBPACK_IMPORTED_MODULE_14__.QUOTED_REPLY_LENGTH);
     } else {
       content = Drafty.append(Drafty.init('\u26A0 '), Drafty.wrapInto(this.props.intl.formatMessage(messages.invalid_content), 'EM'));
     }
