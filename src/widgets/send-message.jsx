@@ -82,12 +82,11 @@ class SendMessage extends React.PureComponent {
   }
 
   formatReply() {
-    const fmt = this.props.reply ?
+    return this.props.reply ?
       Drafty.format(this.props.reply.content, replyFormatter, {
         formatMessage: this.props.intl.formatMessage.bind(this.props.intl),
         authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
       }) : null;
-    return fmt;
   }
 
   handlePasteEvent(e) {

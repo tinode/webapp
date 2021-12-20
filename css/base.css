@@ -2527,6 +2527,11 @@ ul.tabbar li.active > a {
   margin-bottom: 0.35rem;
 }
 
+.forwarding-quote {
+  font-size: 200%;
+  line-height: 200%;
+}
+
 .mention {
   font-weight: 500;
 }

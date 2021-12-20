@@ -820,7 +820,7 @@ function quoteImage(data) {
   });
 }
 
-function replyFormatter(style, data, values, key) {
+function replyFormatter(style, data, values, key, stack) {
   if (style == 'IM') {
     const attr = inlineImageAttr.call(this, {
       key: key
@@ -831,11 +831,19 @@ function replyFormatter(style, data, values, key) {
       key: key
     }, values);
   } else if (style == 'QQ') {
-    let el = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.tagName('QQ');
+    if (stack.includes('QQ')) {
+      return react__WEBPACK_IMPORTED_MODULE_0___default().createElement('span', {
+        key: key
+      }, [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+        key: "qq",
+        className: "material-icons"
+      }, "format_quote"), ' ']);
+    }
+
     const attr = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attrValue('QQ', data) || {};
     attr.key = key;
     attr.className = 'reply-quote';
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(el, attr, values);
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.tagName('QQ'), attr, values);
   }
 
   return quoteFormatter.call(this, style, data, values, key);
@@ -11798,12 +11806,10 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
   }
 
   formatReply() {
-    const fmt = this.props.reply ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(this.props.reply.content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_5__.replyFormatter, {
+    return this.props.reply ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(this.props.reply.content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_5__.replyFormatter, {
       formatMessage: this.props.intl.formatMessage.bind(this.props.intl),
       authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
     }) : null;
-    console.log("formatReply", this.props.reply, fmt);
-    return fmt;
   }
 
   handlePasteEvent(e) {

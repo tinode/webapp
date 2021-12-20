@@ -389,18 +389,23 @@ function quoteImage(data) {
 }
 
 // Create a preview of a reply.
-export function replyFormatter(style, data, values, key) {
+export function replyFormatter(style, data, values, key, stack) {
   if (style == 'IM') {
     const attr = inlineImageAttr.call(this, {key: key}, data);
     attr.whenDone = cancelablePromise(quoteImage.call(this, data));
     values = [React.createElement(LazyImage, attr, null), ' ', attr.alt];
     return React.createElement(React.Fragment, {key: key}, values);
   } else if (style == 'QQ') {
-    let el = Drafty.tagName('QQ');
+    if (stack.includes('QQ')) {
+      // Quote inside quote when forwarding a message.
+      return React.createElement('span', {key: key},
+        [<i key="qq" className="material-icons">format_quote</i>, ' ']);
+    }
+
     const attr = Drafty.attrValue('QQ', data) || {};
     attr.key = key;
     attr.className = 'reply-quote'
-    return React.createElement(el, attr, values);
+    return React.createElement(Drafty.tagName('QQ'), attr, values);
   }
   return quoteFormatter.call(this, style, data, values, key);
 }
