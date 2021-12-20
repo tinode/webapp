@@ -1455,11 +1455,8 @@ class TinodeWeb extends React.Component {
       this.handleSidepanelCancel();
     }
     const header = '➦ ' + params.userName;
-    // params.forwarded means the source message is also a forwarded message.
-    const content = params.forwarded ?
-        Tinode.Drafty.forwardedContent(params.content) :
-        typeof params.content == 'string' ?
-            Tinode.Drafty.init(params.content) : params.content;
+    const content = typeof params.content == 'string' ?
+            Tinode.Drafty.init(params.content) : Tinode.Drafty.forwardedContent(params.content);
     const preview = Tinode.Drafty.preview(content, FORWARDED_PREVIEW_LENGTH,
                                           undefined, params.forwarded != null);
     const msg = Tinode.Drafty.append(

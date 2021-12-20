@@ -6810,7 +6810,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
 
     const header = '➦ ' + params.userName;
-    const content = params.forwarded ? tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.forwardedContent(params.content) : typeof params.content == 'string' ? tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.init(params.content) : params.content;
+    const content = typeof params.content == 'string' ? tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.init(params.content) : tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.forwardedContent(params.content);
     const preview = tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.preview(content, _config_js__WEBPACK_IMPORTED_MODULE_11__.FORWARDED_PREVIEW_LENGTH, undefined, params.forwarded != null);
     const msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.append(tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.appendLineBreak(tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.mention(header, params.userFrom)), content);
     const msgPreview = tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.quote(header, params.userFrom, preview);
@@ -11764,6 +11764,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
   constructor(props) {
     super(props);
     this.state = {
+      quote: null,
       message: '',
       keypressTimestamp: new Date().getTime() - _config_js__WEBPACK_IMPORTED_MODULE_3__.KEYPRESS_DELAY - 1
     };

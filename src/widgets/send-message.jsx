@@ -40,6 +40,7 @@ class SendMessage extends React.PureComponent {
     super(props);
 
     this.state = {
+      quote: null,
       message: '',
       // Make initial keypress time as if it happened 5001 milliseconds in the past.
       keypressTimestamp: new Date().getTime() - KEYPRESS_DELAY - 1
