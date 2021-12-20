@@ -5,7 +5,7 @@ import { Drafty } from 'tinode-sdk';
 
 import { KEYPRESS_DELAY } from '../config.js';
 import { filePasted } from '../lib/blob-helpers.js';
-import { quoteFormatter, replyFormatter } from '../lib/formatters.js';
+import { replyFormatter } from '../lib/formatters.js';
 
 const messages = defineMessages({
   messaging_disabled: {
@@ -82,11 +82,12 @@ class SendMessage extends React.PureComponent {
   }
 
   formatReply() {
-    return this.props.reply ?
+    const fmt = this.props.reply ?
       Drafty.format(this.props.reply.content, replyFormatter, {
         formatMessage: this.props.intl.formatMessage.bind(this.props.intl),
         authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
       }) : null;
+    return fmt;
   }
 
   handlePasteEvent(e) {

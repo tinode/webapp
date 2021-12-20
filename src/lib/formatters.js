@@ -124,15 +124,14 @@ function quotedImage(data) {
 //    onImagePreview: this.handleImagePreview
 //    onFormButtonClick: this.handleFormButtonClick
 //    onQuoteClick: this.handleQuoteClick (optional)
-export function fullFormatter(style, data, values, key) {
+export function fullFormatter(style, data, values, key, stack) {
+  if (stack.includes('QQ')) {
+    return quoteFormatter(style, data, values, key);
+  }
+
   if (!style) {
     // Unformatted.
     return values;
-  }
-
-  if (style == 'HD') {
-    // Hidden.
-    return null;
   }
 
   let el = Drafty.tagName(style);
@@ -145,6 +144,10 @@ export function fullFormatter(style, data, values, key) {
     case 'HL':
       // Highlighted text. Assign class name.
       attr.className = 'highlight';
+      break;
+    case 'HD':
+      el = null;
+      values = null;
       break;
     case 'IM':
       // Additional processing for images
@@ -295,8 +298,8 @@ function inlineImageAttr(attr, data) {
 //    messages: formatjs messages defined with defineMessages.
 //    authorizeURL: this.props.tinode.authorizeURL
 //    onQuoteClick: this.handleQuoteClick (optional)
-export function quoteFormatter(style, data, values, key) {
-  if (['BR', 'EX', 'IM', 'MN', 'QQ'].includes(style)) {
+function quoteFormatter(style, data, values, key) {
+  if (['BR', 'EX', 'IM', 'MN'].includes(style)) {
     let el = Drafty.tagName(style);
     let attr = Drafty.attrValue(style, data) || {};
     attr.key = key;
@@ -317,10 +320,6 @@ export function quoteFormatter(style, data, values, key) {
         if (data) {
           attr.className += ' ' + idToColorClass(data.val, false, true);
         }
-        break;
-      case 'QQ':
-        attr.className = 'reply-quote';
-        attr.onClick = this.onQuoteClick;
         break;
       case 'EX':
         let fname;
@@ -391,11 +390,17 @@ function quoteImage(data) {
 
 // Create a preview of a reply.
 export function replyFormatter(style, data, values, key) {
-  if (style != 'IM') {
-    return quoteFormatter.call(this, style, data, values, key);
+  if (style == 'IM') {
+    const attr = inlineImageAttr.call(this, {key: key}, data);
+    attr.whenDone = cancelablePromise(quoteImage.call(this, data));
+    values = [React.createElement(LazyImage, attr, null), ' ', attr.alt];
+    return React.createElement(React.Fragment, {key: key}, values);
+  } else if (style == 'QQ') {
+    let el = Drafty.tagName('QQ');
+    const attr = Drafty.attrValue('QQ', data) || {};
+    attr.key = key;
+    attr.className = 'reply-quote'
+    return React.createElement(el, attr, values);
   }
-  const attr = inlineImageAttr.call(this, {key: key}, data);
-  attr.whenDone = cancelablePromise(quoteImage.call(this, data));
-  values = [React.createElement(LazyImage, attr, null), ' ', attr.alt];
-  return React.createElement(React.Fragment, {key: key}, values);
+  return quoteFormatter.call(this, style, data, values, key);
 }

@@ -221,7 +221,6 @@ class MessagesView extends React.Component {
         const preview = nextProps.forwardMessage.preview;
         reply = {
           content: preview,
-          forwarded: nextProps.forwardMessage.head.forwarded,
           seq: null
         };
       }
@@ -852,7 +851,7 @@ class MessagesView extends React.Component {
   // forwarded: true if the source message is also a forwarded message.
   // senderId: UID of the sender of the source message.
   // senderName: full name of the sender of the original message.
-  handlePickReply(seq, content, forwarded, senderId, senderName) {
+  handlePickReply(seq, content, senderId, senderName) {
     this.setState({reply: null});
 
     if (!seq || !content) {
@@ -993,7 +992,6 @@ class MessagesView extends React.Component {
             <ChatMessage
               tinode={this.props.tinode}
               content={msg.content}
-              forwarded={msg.head ? !!msg.head.forwarded : null}
               deleted={msg.hi}
               mimeType={msg.head ? msg.head.mime : null}
               timestamp={msg.ts}

@@ -7,8 +7,8 @@ import Attachment from './attachment.jsx';
 import LetterTile from './letter-tile.jsx';
 import ReceivedMarker from './received-marker.jsx'
 
-import { fullFormatter, quoteFormatter } from '../lib/formatters.js';
-import { sanitizeImageUrl, sanitizeUrl } from '../lib/utils.js';
+import { fullFormatter } from '../lib/formatters.js';
+import { sanitizeUrl } from '../lib/utils.js';
 
 class BaseChatMessage extends React.PureComponent {
   constructor(props) {
@@ -29,7 +29,6 @@ class BaseChatMessage extends React.PureComponent {
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
 
     this.formatterContext = {
-      getFormatter: (tp) => { return tp == 'QQ' ? quoteFormatter : null; },
       formatMessage: props.intl.formatMessage.bind(props.intl),
       viewportWidth: props.viewportWidth,
       authorizeURL: props.tinode.authorizeURL.bind(props.tinode),
@@ -87,7 +86,6 @@ class BaseChatMessage extends React.PureComponent {
       content: this.props.content,
       userFrom: this.props.userFrom,
       userName: this.props.userName,
-      forwarded: this.props.forwarded,
       y: e.pageY,
       x: e.pageX,
       pickReply: this.props.pickReply

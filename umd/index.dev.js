@@ -402,7 +402,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "fullFormatter": () => (/* binding */ fullFormatter),
 /* harmony export */   "previewFormatter": () => (/* binding */ previewFormatter),
-/* harmony export */   "quoteFormatter": () => (/* binding */ quoteFormatter),
 /* harmony export */   "replyFormatter": () => (/* binding */ replyFormatter)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
@@ -532,13 +531,13 @@ function quotedImage(data) {
   });
 }
 
-function fullFormatter(style, data, values, key) {
-  if (!style) {
-    return values;
+function fullFormatter(style, data, values, key, stack) {
+  if (stack.includes('QQ')) {
+    return quoteFormatter(style, data, values, key);
   }
 
-  if (style == 'HD') {
-    return null;
+  if (!style) {
+    return values;
   }
 
   let el = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.tagName(style);
@@ -552,6 +551,11 @@ function fullFormatter(style, data, values, key) {
 
     case 'HL':
       attr.className = 'highlight';
+      break;
+
+    case 'HD':
+      el = null;
+      values = null;
       break;
 
     case 'IM':
@@ -722,7 +726,7 @@ function inlineImageAttr(attr, data) {
 }
 
 function quoteFormatter(style, data, values, key) {
-  if (['BR', 'EX', 'IM', 'MN', 'QQ'].includes(style)) {
+  if (['BR', 'EX', 'IM', 'MN'].includes(style)) {
     let el = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.tagName(style);
     let attr = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attrValue(style, data) || {};
     attr.key = key;
@@ -749,11 +753,6 @@ function quoteFormatter(style, data, values, key) {
           attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_7__.idToColorClass)(data.val, false, true);
         }
 
-        break;
-
-      case 'QQ':
-        attr.className = 'reply-quote';
-        attr.onClick = this.onQuoteClick;
         break;
 
       case 'EX':
@@ -822,18 +821,24 @@ function quoteImage(data) {
 }
 
 function replyFormatter(style, data, values, key) {
-  if (style != 'IM') {
-    return quoteFormatter.call(this, style, data, values, key);
+  if (style == 'IM') {
+    const attr = inlineImageAttr.call(this, {
+      key: key
+    }, data);
+    attr.whenDone = (0,_utils_js__WEBPACK_IMPORTED_MODULE_8__.cancelablePromise)(quoteImage.call(this, data));
+    values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], attr, null), ' ', attr.alt];
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), {
+      key: key
+    }, values);
+  } else if (style == 'QQ') {
+    let el = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.tagName('QQ');
+    const attr = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attrValue('QQ', data) || {};
+    attr.key = key;
+    attr.className = 'reply-quote';
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(el, attr, values);
   }
 
-  const attr = inlineImageAttr.call(this, {
-    key: key
-  }, data);
-  attr.whenDone = (0,_utils_js__WEBPACK_IMPORTED_MODULE_8__.cancelablePromise)(quoteImage.call(this, data));
-  values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], attr, null), ' ', attr.alt];
-  return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), {
-    key: key
-  }, values);
+  return quoteFormatter.call(this, style, data, values, key);
 }
 
 /***/ }),
@@ -3504,7 +3509,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         const preview = nextProps.forwardMessage.preview;
         reply = {
           content: preview,
-          forwarded: nextProps.forwardMessage.head.forwarded,
           seq: null
         };
       }
@@ -4160,7 +4164,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     uploader.cancel();
   }
 
-  handlePickReply(seq, content, forwarded, senderId, senderName) {
+  handlePickReply(seq, content, senderId, senderName) {
     this.setState({
       reply: null
     });
@@ -4320,7 +4324,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_chat_message_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
             tinode: this.props.tinode,
             content: msg.content,
-            forwarded: msg.head ? !!msg.head.forwarded : null,
             deleted: msg.hi,
             mimeType: msg.head ? msg.head.mime : null,
             timestamp: msg.ts,
@@ -7817,9 +7820,6 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     this.handleCancelUpload = this.handleCancelUpload.bind(this);
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
     this.formatterContext = {
-      getFormatter: tp => {
-        return tp == 'QQ' ? _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__.quoteFormatter : null;
-      },
       formatMessage: props.intl.formatMessage.bind(props.intl),
       viewportWidth: props.viewportWidth,
       authorizeURL: props.tinode.authorizeURL.bind(props.tinode),
@@ -7879,7 +7879,6 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       content: this.props.content,
       userFrom: this.props.userFrom,
       userName: this.props.userName,
-      forwarded: this.props.forwarded,
       y: e.pageY,
       x: e.pageX,
       pickReply: this.props.pickReply
@@ -9196,7 +9195,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
   }
 
   replyToMessage(params, errorHandler) {
-    params.pickReply(params.seq, params.content, params.forwarded, params.userFrom, params.userName, errorHandler);
+    params.pickReply(params.seq, params.content, params.userFrom, params.userName, errorHandler);
   }
 
   render() {
@@ -11799,10 +11798,12 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
   }
 
   formatReply() {
-    return this.props.reply ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(this.props.reply.content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_5__.replyFormatter, {
+    const fmt = this.props.reply ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(this.props.reply.content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_5__.replyFormatter, {
       formatMessage: this.props.intl.formatMessage.bind(this.props.intl),
       authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
     }) : null;
+    console.log("formatReply", this.props.reply, fmt);
+    return fmt;
   }
 
   handlePasteEvent(e) {
