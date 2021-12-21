@@ -126,7 +126,7 @@ function quotedImage(data) {
 //    onQuoteClick: this.handleQuoteClick (optional)
 export function fullFormatter(style, data, values, key, stack) {
   if (stack.includes('QQ')) {
-    return quoteFormatter(style, data, values, key);
+    return quoteFormatter.call(this, style, data, values, key);
   }
 
   if (!style) {
