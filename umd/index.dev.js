@@ -787,8 +787,13 @@ function quoteImage(data) {
 
   if (data.val) {
     const blob = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__.base64ToBlob)(data.val, data.mime);
-    promise = blob ? Promise.resolve(blob) : Promise.reject(new Error("Invalid image"));
-  } else {
+
+    if (!blob) {
+      throw new Error("Invalid image");
+    }
+
+    promise = Promise.resolve(blob);
+  } else if (data.ref) {
     promise = fetch(this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_8__.sanitizeImageUrl)(data.ref))).then(evt => {
       if (evt.ok) {
         return evt.blob();
@@ -796,6 +801,8 @@ function quoteImage(data) {
         throw new Error("Image fetch unsuccessful: ".concat(evt.status, " ").concat(evt.statusText));
       }
     });
+  } else {
+    throw new Error("Missing image data");
   }
 
   return promise.then(blob => {
@@ -825,7 +832,15 @@ function replyFormatter(style, data, values, key, stack) {
     const attr = inlineImageAttr.call(this, {
       key: key
     }, data);
-    attr.whenDone = (0,_utils_js__WEBPACK_IMPORTED_MODULE_8__.cancelablePromise)(quoteImage.call(this, data));
+    let loadedPromise;
+
+    try {
+      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_8__.cancelablePromise)(quoteImage.call(this, data));
+    } catch (error) {
+      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_8__.cancelablePromise)(error);
+    }
+
+    attr.whenDone = loadedPromise;
     values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], attr, null), ' ', attr.alt];
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), {
       key: key
@@ -1312,7 +1327,7 @@ function deliveryMarker(received) {
 }
 function cancelablePromise(promise) {
   let hasCanceled = false;
-  const wrappedPromise = new Promise((resolve, reject) => {
+  const wrappedPromise = promise instanceof Error ? Promise.reject(promise) : new Promise((resolve, reject) => {
     promise.then(result => hasCanceled ? reject({
       isCanceled: true
     }) : resolve(result), error => hasCanceled ? reject({
@@ -10331,7 +10346,7 @@ class ImagePreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       id: "image-preview-caption-panel"
     }, !this.props.onSendMessage ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: this.props.content.url,
-      download: this.props.content.name
+      download: true
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, "file_download"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
@@ -10684,7 +10699,7 @@ class LazyImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
           padding: '4px'
         }
       });
-      this.props.whenDone.then(data => this.setState({
+      this.props.whenDone.promise.then(data => this.setState({
         src: data.src,
         style: { ...this.state.style,
           padding: 0

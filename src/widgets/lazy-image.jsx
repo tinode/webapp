@@ -31,6 +31,7 @@ export default class LazyImage extends React.PureComponent {
     if (prevProps.whenDone != this.props.whenDone) {
       this.setState({src: 'img/placeholder.png', style: {...this.state.style, padding: '4px'}});
       this.props.whenDone
+        .promise
         .then(data => this.setState({src: data.src, style: {...this.state.style, padding: 0}}))
         .catch(() => this.setState({src: 'img/broken_image.png'}));
     }

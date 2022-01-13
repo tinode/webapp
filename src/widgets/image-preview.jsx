@@ -55,7 +55,7 @@ export default class ImagePreview extends React.PureComponent {
       <div id="image-preview">
         <div id="image-preview-caption-panel">
           {!this.props.onSendMessage ?
-            <a href={this.props.content.url} download={this.props.content.name}>
+            <a href={this.props.content.url} download={true}>
               <i className="material-icons">file_download</i> <FormattedMessage
                 id="download_action" defaultMessage="download" description="Call to action [download]" />
             </a>

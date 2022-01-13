@@ -349,15 +349,21 @@ function quoteImage(data) {
   // Get the blob from the image data.
   if (data.val) {
     const blob = base64ToBlob(data.val, data.mime);
-    promise = blob ? Promise.resolve(blob) : Promise.reject(new Error("Invalid image"));
+    if (!blob) {
+      throw new Error("Invalid image");
+    }
+    promise = Promise.resolve(blob);
+  } else if (data.ref) {
+    promise = fetch(this.authorizeURL(sanitizeImageUrl(data.ref)))
+      .then(evt => {
+        if (evt.ok) {
+          return evt.blob();
+        } else {
+          throw new Error(`Image fetch unsuccessful: ${evt.status} ${evt.statusText}`);
+        }
+      });
   } else {
-    promise = fetch(this.authorizeURL(sanitizeImageUrl(data.ref))).then(evt => {
-      if (evt.ok) {
-        return evt.blob();
-      } else {
-        throw new Error(`Image fetch unsuccessful: ${evt.status} ${evt.statusText}`);
-      }
-    });
+    throw new Error("Missing image data");
   }
 
   // Scale the blob.
@@ -392,7 +398,13 @@ function quoteImage(data) {
 export function replyFormatter(style, data, values, key, stack) {
   if (style == 'IM') {
     const attr = inlineImageAttr.call(this, {key: key}, data);
-    attr.whenDone = cancelablePromise(quoteImage.call(this, data));
+    let loadedPromise;
+    try {
+      loadedPromise = cancelablePromise(quoteImage.call(this, data));
+    } catch (error) {
+      loadedPromise = cancelablePromise(error);
+    }
+    attr.whenDone = loadedPromise;
     values = [React.createElement(LazyImage, attr, null), ' ', attr.alt];
     return React.createElement(React.Fragment, {key: key}, values);
   } else if (style == 'QQ') {
