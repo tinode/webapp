@@ -3303,12 +3303,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 /* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 
 
 
 const Drafty = (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().Drafty);
-
 
 
 
@@ -4046,7 +4044,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         msg = Drafty.parse(msg);
       }
 
-      msg = Drafty.append(this.state.reply.content, msg);
+      msg = Drafty.append(Drafty.sanitizeEntities(this.state.reply.content), msg);
       this.handleCancelReply();
     }
 

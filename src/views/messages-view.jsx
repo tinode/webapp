@@ -16,14 +16,13 @@ import LoadSpinner from '../widgets/load-spinner.jsx';
 import LogoView from './logo-view.jsx';
 import SendMessage from '../widgets/send-message.jsx';
 
-import { DEFAULT_P2P_ACCESS_MODE, IMAGE_PREVIEW_DIM, IMAGE_THUMBNAIL_DIM, KEYPRESS_DELAY,
+import { DEFAULT_P2P_ACCESS_MODE, IMAGE_PREVIEW_DIM, KEYPRESS_DELAY,
   MESSAGES_PAGE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE,
   READ_DELAY, QUOTED_REPLY_LENGTH } from '../config.js';
-import { SUPPORTED_IMAGE_FORMATS, blobToBase64, base64ToBlob, filePasted, fileToBase64,
+import { blobToBase64, fileToBase64,
   imageScaled, makeImageUrl } from '../lib/blob-helpers.js';
 import HashNavigation from '../lib/navigation.js';
-import { bytesToHumanSize, shortDateFormat, letterTileColorId } from '../lib/strformat.js';
-import { sanitizeImageUrl } from '../lib/utils.js';
+import { bytesToHumanSize, shortDateFormat } from '../lib/strformat.js';
 
 // Run timer with this frequency (ms) for checking notification queue.
 const NOTIFICATION_EXEC_INTERVAL = 300;
@@ -692,7 +691,7 @@ class MessagesView extends React.Component {
       if (typeof msg == 'string') {
         msg = Drafty.parse(msg);
       }
-      msg = Drafty.append(this.state.reply.content, msg);
+      msg = Drafty.append(Drafty.sanitizeEntities(this.state.reply.content), msg);
       this.handleCancelReply();
     }
     this.props.sendMessage(msg, uploadCompletionPromise, uploader, head);
