@@ -113,20 +113,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "base64ReEncode": () => (/* binding */ base64ReEncode),
 /* harmony export */   "base64ToBlob": () => (/* binding */ base64ToBlob)
 /* harmony export */ });
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _strformat_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./strformat.js */ "./src/lib/strformat.js");
-
-
 const SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
 const MIME_EXTENSIONS = ['jpg', 'gif', 'png', 'svg', 'svg'];
 function makeImageUrl(photo) {
   if (photo && typeof photo == 'object') {
+    if (photo.ref) {
+      return photo.ref;
+    }
+
     if (photo.data && photo.type) {
       const mime = photo.type.startsWith('image/') ? photo.type : 'image/' + photo.type;
       return 'data:' + mime + ';base64,' + photo.data;
     }
-
-    return photo.ref;
   }
 
   return null;
@@ -7638,7 +7636,7 @@ class AvatarUpload extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
 
   render() {
-    const randId = 'file-input-avatar-' + (Math.random() + '').substr(2);
+    const randId = 'file-input-avatar-' + ('' + Math.random()).substring(0, 4);
     const className = 'avatar-upload' + (this.props.readOnly ? ' read-only' : '');
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: className

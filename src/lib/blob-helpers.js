@@ -1,6 +1,4 @@
 // File and image helper functions.
-import { MAX_INBAND_ATTACHMENT_SIZE, MAX_IMAGE_DIM } from '../config.js';
-import { bytesToHumanSize } from './strformat.js'
 
 // Supported image MIME types and corresponding file extensions.
 export const SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
@@ -9,11 +7,13 @@ export const MIME_EXTENSIONS         = ['jpg',        'gif',       'png',       
 // Get an URL from a theCard photo: either create a data: URL or return reference URL.
 export function makeImageUrl(photo) {
   if (photo && typeof photo == 'object') {
+    if (photo.ref) {
+      return photo.ref
+    }
     if (photo.data && photo.type) {
       const mime = photo.type.startsWith('image/') ? photo.type : ('image/' + photo.type);
       return 'data:' + mime + ';base64,' + photo.data;
     }
-    return photo.ref;
   }
   return null;
 }

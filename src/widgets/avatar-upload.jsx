@@ -34,7 +34,7 @@ export default class AvatarUpload extends React.Component {
   render() {
     // Randomize id value in case more than one AvatarUpload is shown
     // at the same time.
-    const randId = 'file-input-avatar-' + (Math.random() + '').substr(2);
+    const randId = 'file-input-avatar-' + ('' + Math.random()).substring(0, 4);
     const className = 'avatar-upload' + (this.props.readOnly ? ' read-only' : '');
     return (
       <div className={className}>
