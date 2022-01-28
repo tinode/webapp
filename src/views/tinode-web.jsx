@@ -1235,8 +1235,10 @@ class TinodeWeb extends React.Component {
       params.desc = {defacs: {auth: DEFAULT_P2P_ACCESS_MODE}};
     } else {
       topicName = topicName || this.tinode.newGroupTopicName(isChannel);
-      params.desc = {public: newTopicParams.public, private: {comment: newTopicParams.private}};
-      params.tags = newTopicParams.tags;
+      if (newTopicParams) {
+        params.desc = {public: newTopicParams.public, private: {comment: newTopicParams.private}};
+        params.tags = newTopicParams.tags;
+      }
     }
     params._topicName = topicName;
     this.setState({newTopicParams: params}, () => {this.handleTopicSelected(topicName)});

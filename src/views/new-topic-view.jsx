@@ -35,7 +35,7 @@ class NewTopicView extends React.Component {
     super(props);
 
     this.state = {
-      tabSelected: 'p2p',
+      tabSelected: 'find',
       searchQuery: null
     };
 
@@ -62,7 +62,7 @@ class NewTopicView extends React.Component {
   }
 
   handleContactSelected(uid) {
-    if (this.state.tabSelected == 'p2p') {
+    if (this.state.tabSelected == 'find') {
       HashNavigation.navigateTo(HashNavigation.removeUrlParam(window.location.hash, 'tab'));
       this.props.onCreateTopic(uid);
     }
@@ -87,8 +87,8 @@ class NewTopicView extends React.Component {
     return (
       <div className="flex-column">
         <ul className="tabbar">
-          <li className={this.state.tabSelected === "p2p" ? "active" : null}>
-            <a href="#" data-id="p2p" onClick={this.handleTabClick}>
+          <li className={this.state.tabSelected === "find" ? "active" : null}>
+            <a href="#" data-id="find" onClick={this.handleTabClick}>
               <FormattedMessage id="tabtitle_find_user" defaultMessage="find"
                 description="Tab title Find" />
             </a>
@@ -116,7 +116,6 @@ class NewTopicView extends React.Component {
               onError={this.props.onError} /> :
             <div className="flex-column">
               <SearchContacts
-                type="p2p"
                 placeholder={search_placeholder}
                 onSearchContacts={this.handleSearchContacts} />
               <ContactList

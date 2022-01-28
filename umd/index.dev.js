@@ -4568,7 +4568,7 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   constructor(props) {
     super(props);
     this.state = {
-      tabSelected: 'p2p',
+      tabSelected: 'find',
       searchQuery: null
     };
     this.handleTabClick = this.handleTabClick.bind(this);
@@ -4598,7 +4598,7 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
 
   handleContactSelected(uid) {
-    if (this.state.tabSelected == 'p2p') {
+    if (this.state.tabSelected == 'find') {
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].removeUrlParam(window.location.hash, 'tab'));
       this.props.onCreateTopic(uid);
     }
@@ -4629,10 +4629,10 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
       className: "tabbar"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
-      className: this.state.tabSelected === "p2p" ? "active" : null
+      className: this.state.tabSelected === "find" ? "active" : null
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
-      "data-id": "p2p",
+      "data-id": "find",
       onClick: this.handleTabClick
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "tabtitle_find_user",
@@ -4673,7 +4673,6 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "flex-column"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_search_contacts_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
-      type: "p2p",
       placeholder: search_placeholder,
       onSearchContacts: this.handleSearchContacts
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_contact_list_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
@@ -6577,13 +6576,16 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       };
     } else {
       topicName = topicName || this.tinode.newGroupTopicName(isChannel);
-      params.desc = {
-        public: newTopicParams.public,
-        private: {
-          comment: newTopicParams.private
-        }
-      };
-      params.tags = newTopicParams.tags;
+
+      if (newTopicParams) {
+        params.desc = {
+          public: newTopicParams.public,
+          private: {
+            comment: newTopicParams.private
+          }
+        };
+        params.tags = newTopicParams.tags;
+      }
     }
 
     params._topicName = topicName;
@@ -11599,11 +11601,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
-
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_1__);
 
 
 class SearchContacts extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -11625,7 +11624,7 @@ class SearchContacts extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
         search: '',
         edited: false
       });
-      this.props.onSearchContacts((tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().DEL_CHAR));
+      this.props.onSearchContacts((tinode_sdk__WEBPACK_IMPORTED_MODULE_1___default().DEL_CHAR));
     }
   }
 
@@ -11641,14 +11640,14 @@ class SearchContacts extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     this.setState({
       edited: query.length > 0
     });
-    this.props.onSearchContacts(query.length > 0 ? query : (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().DEL_CHAR));
+    this.props.onSearchContacts(query.length > 0 ? query : (tinode_sdk__WEBPACK_IMPORTED_MODULE_1___default().DEL_CHAR));
   }
 
   handleClear(e) {
     e.preventDefault();
 
     if (this.state.edited) {
-      this.props.onSearchContacts((tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().DEL_CHAR));
+      this.props.onSearchContacts((tinode_sdk__WEBPACK_IMPORTED_MODULE_1___default().DEL_CHAR));
     }
 
     this.setState({
