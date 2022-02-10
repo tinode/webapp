@@ -53,15 +53,21 @@ export default class PasswordResetView extends React.PureComponent {
     return (
       <form id="password-reset-form" onSubmit={this.handleSubmit}>
         {(this.state.token && this.state.scheme) ?
+          <><label htmlFor="new-password">
+            <FormattedMessage id="label_new_password"
+              defaultMessage="New password"
+              description="Label for entering a new password" />
+          </label>
           <FormattedMessage id="new_password_placeholder" defaultMessage="Enter new password"
             description="Placeholder for entering new password">{
             (placeholder) => <VisiblePassword
+              id="new-password"
               placeholder={placeholder}
               autoComplete="new-password"
               value={this.state.password}
               required={true} autoFocus={true}
               onChange={this.handlePasswordChange} />
-          }</FormattedMessage>
+          }</FormattedMessage></>
         : this.state.sent ?
           <>
             <br/>

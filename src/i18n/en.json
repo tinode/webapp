@@ -34,13 +34,6 @@
     "missing": false,
     "obsolete": false
   },
-  "action_more": {
-    "translation": "More",
-    "defaultMessage": "More",
-    "description": "Action for showing more content",
-    "missing": false,
-    "obsolete": true
-  },
   "action_report_chat": {
     "translation": "Report Conversation",
     "defaultMessage": "Report Conversation",
@@ -460,13 +453,6 @@
     "description": "Label for file content type (mime)",
     "missing": false,
     "obsolete": false
-  },
-  "label_default_access": {
-    "translation": "Default access mode:",
-    "defaultMessage": "Default access mode:",
-    "description": "Section title",
-    "missing": false,
-    "obsolete": true
   },
   "label_default_access_mode": {
     "translation": "Default access mode:",
@@ -1033,26 +1019,12 @@
     "missing": false,
     "obsolete": false
   },
-  "sidepanel_title_acc_general": {
-    "translation": "General",
-    "defaultMessage": "General",
-    "description": "Sidepanel title for TopicCommonView.",
-    "missing": false,
-    "obsolete": true
-  },
   "sidepanel_title_acc_notifications": {
     "translation": "Notifications",
     "defaultMessage": "Notifications",
     "description": "Sidepanel title for AccNotificationsView.",
     "missing": false,
     "obsolete": false
-  },
-  "sidepanel_title_acc_security": {
-    "translation": "Security",
-    "defaultMessage": "Security",
-    "description": "Sidepanel title for AccSecurityView.",
-    "missing": false,
-    "obsolete": true
   },
   "sidepanel_title_acc_support": {
     "translation": "Support",
@@ -1088,13 +1060,6 @@
     "description": "Sidepanel title for ValidationView.",
     "missing": false,
     "obsolete": false
-  },
-  "sidepanel_title_crop": {
-    "translation": "Drag to Adjust",
-    "defaultMessage": "Drag to Adjust",
-    "description": "Sidepanel title for AvatarCropView.",
-    "missing": false,
-    "obsolete": true
   },
   "sidepanel_title_login": {
     "translation": "Sign In",
@@ -1186,13 +1151,6 @@
     "description": "Section title",
     "missing": false,
     "obsolete": false
-  },
-  "title_info": {
-    "translation": "Info",
-    "defaultMessage": "Info",
-    "description": "Title for InfoView",
-    "missing": false,
-    "obsolete": true
   },
   "title_manage_tags": {
     "translation": "Manage",
@@ -1299,20 +1257,6 @@
     "missing": false,
     "obsolete": false
   },
-  "panel_title_acc_general": {
-    "translation": "General",
-    "defaultMessage": "General",
-    "description": "Title for TopicCommonView.",
-    "missing": false,
-    "obsolete": true
-  },
-  "panel_title_acc_security": {
-    "translation": "Security",
-    "defaultMessage": "Security",
-    "description": "Title for TopicSecirityView and AccSecurityView.",
-    "missing": false,
-    "obsolete": true
-  },
   "panel_title_crop": {
     "translation": "Drag to Adjust",
     "defaultMessage": "Drag to Adjust",
@@ -1407,6 +1351,13 @@
     "translation": "Search contacts",
     "defaultMessage": "Search contacts",
     "description": "Contact search prompt when forwarding a message.",
+    "missing": false,
+    "obsolete": false
+  },
+  "label_new_password": {
+    "translation": "New password",
+    "defaultMessage": "New password",
+    "description": "Label for entering a new password",
     "missing": false,
     "obsolete": false
   }

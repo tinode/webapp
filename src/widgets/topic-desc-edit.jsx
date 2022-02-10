@@ -10,8 +10,8 @@ import AvatarUpload from './avatar-upload.jsx';
 import InPlaceEdit from './in-place-edit.jsx';
 import TagManager from './tag-manager.jsx';
 
-import { AVATAR_SIZE, MAX_AVATAR_BYTES, MAX_EXTERN_ATTACHMENT_SIZE,
-  MAX_INBAND_ATTACHMENT_SIZE, MAX_TITLE_LENGTH, MAX_TOPIC_DESCRIPTION_LENGTH } from '../config.js';
+import { AVATAR_SIZE, MAX_AVATAR_BYTES, MAX_EXTERN_ATTACHMENT_SIZE, MAX_TITLE_LENGTH,
+  MAX_TOPIC_DESCRIPTION_LENGTH } from '../config.js';
 import { imageScaled, blobToBase64, makeImageUrl } from '../lib/blob-helpers.js';
 import { arrayEqual, theCard } from '../lib/utils.js';
 

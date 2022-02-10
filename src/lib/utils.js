@@ -183,19 +183,23 @@ export function deliveryMarker(received) {
 }
 
 // Wraps a promise to make it cancelable.
+// The parameter can be either a promise or an error. If it's an error, the wrapped promise is
+// created in a rejected state.
 export function cancelablePromise(promise) {
   let hasCanceled = false;
 
-  const wrappedPromise = new Promise((resolve, reject) => {
-    promise.then(
-      result => hasCanceled ? reject({isCanceled: true}) : resolve(result),
-      error => hasCanceled ? reject({isCanceled: true}) : reject(error)
-    );
-  });
+  const wrappedPromise = promise instanceof Error ?
+    Promise.reject(promise) :
+    new Promise((resolve, reject) => {
+      promise.then(
+        result => hasCanceled ? reject({isCanceled: true}) : resolve(result),
+        error => hasCanceled ? reject({isCanceled: true}) : reject(error)
+      );
+    });
 
   return {
     promise: wrappedPromise,
-    cancel( ) {
+    cancel() {
       hasCanceled = true;
     },
   };

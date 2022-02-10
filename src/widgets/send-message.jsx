@@ -5,7 +5,7 @@ import { Drafty } from 'tinode-sdk';
 
 import { KEYPRESS_DELAY } from '../config.js';
 import { filePasted } from '../lib/blob-helpers.js';
-import { quoteFormatter, replyFormatter } from '../lib/formatters.js';
+import { replyFormatter } from '../lib/formatters.js';
 
 const messages = defineMessages({
   messaging_disabled: {
@@ -40,6 +40,7 @@ class SendMessage extends React.PureComponent {
     super(props);
 
     this.state = {
+      quote: null,
       message: '',
       // Make initial keypress time as if it happened 5001 milliseconds in the past.
       keypressTimestamp: new Date().getTime() - KEYPRESS_DELAY - 1

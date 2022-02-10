@@ -302,6 +302,10 @@
     "defaultMessage": "Muted:",
     "description": "Label for Muting/unmuting the topic"
   },
+  "label_new_password": {
+    "defaultMessage": "New password",
+    "description": "Label for entering a new password"
+  },
   "label_other_user": {
     "defaultMessage": "Other",
     "description": "Label for the other user when the user is unnamed"

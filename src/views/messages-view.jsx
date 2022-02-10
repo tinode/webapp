@@ -223,7 +223,6 @@ class MessagesView extends React.Component {
         const preview = nextProps.forwardMessage.preview;
         reply = {
           content: preview,
-          forwarded: nextProps.forwardMessage.head.forwarded,
           seq: null
         };
       }
@@ -713,7 +712,7 @@ class MessagesView extends React.Component {
       if (typeof msg == 'string') {
         msg = Drafty.parse(msg);
       }
-      msg = Drafty.append(this.state.reply.content, msg);
+      msg = Drafty.append(Drafty.sanitizeEntities(this.state.reply.content), msg);
       this.handleCancelReply();
     }
     this.props.sendMessage(msg, uploadCompletionPromise, uploader, head);
@@ -867,18 +866,21 @@ class MessagesView extends React.Component {
     uploader.cancel();
   }
 
-  handlePickReply(seq, content, forwarded, senderId, senderName) {
+  // seq: seq ID of the source message
+  // context: message content.
+  // forwarded: true if the source message is also a forwarded message.
+  // senderId: UID of the sender of the source message.
+  // senderName: full name of the sender of the original message.
+  handlePickReply(seq, content, senderId, senderName) {
     this.setState({reply: null});
 
     if (!seq || !content) {
       return;
     }
 
-    content = forwarded ?
-        Drafty.forwardedContent(content) :
-        typeof content == 'string' ? Drafty.init(content) : content;
+    content = typeof content == 'string' ? Drafty.init(content) : content;
     if (Drafty.isValid(content)) {
-      content = Drafty.preview(content, QUOTED_REPLY_LENGTH, undefined, !forwarded);
+      content = Drafty.replyContent(content, QUOTED_REPLY_LENGTH);
     } else {
       // /!\ invalid content.
       content = Drafty.append(Drafty.init('\u26A0 '),
@@ -1010,7 +1012,6 @@ class MessagesView extends React.Component {
             <ChatMessage
               tinode={this.props.tinode}
               content={msg.content}
-              forwarded={msg.head ? msg.head.forwarded : null}
               deleted={msg.hi}
               mimeType={msg.head ? msg.head.mime : null}
               timestamp={msg.ts}

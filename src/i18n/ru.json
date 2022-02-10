@@ -1353,5 +1353,12 @@
     "description": "Contact search prompt when forwarding a message.",
     "missing": false,
     "obsolete": false
+  },
+  "label_new_password": {
+    "translation": "Новый пароль",
+    "defaultMessage": "New password",
+    "description": "Label for entering a new password",
+    "missing": false,
+    "obsolete": false
   }
 }

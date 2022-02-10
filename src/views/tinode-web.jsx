@@ -16,7 +16,7 @@ import MessagesView from './messages-view.jsx';
 import SidepanelView from './sidepanel-view.jsx';
 
 import { API_KEY, APP_NAME, DEFAULT_P2P_ACCESS_MODE, FORWARDED_PREVIEW_LENGTH, LOGGING_ENABLED,
-  MEDIA_BREAKPOINT, QUOTED_REPLY_LENGTH, RECEIVED_DELAY } from '../config.js';
+  MEDIA_BREAKPOINT, RECEIVED_DELAY } from '../config.js';
 import { PACKAGE_VERSION } from '../version.js';
 import { base64ReEncode, makeImageUrl } from '../lib/blob-helpers.js';
 import { detectServerAddress, isLocalHost, isSecureConnection } from '../lib/host-name.js';
@@ -288,9 +288,12 @@ class TinodeWeb extends React.Component {
         });
       }
 
-      // Save possible topic name and navigate to blank state.
-      this.setState({requestedTopic: parsedNav.path[1]});
-      HashNavigation.navigateTo('');
+      // Maybe navigate to home screen.
+      if (!['cred', 'reset', 'register'].includes(parsedNav.path[0])) {
+        // Save possible topic name.
+        this.setState({requestedTopic: parsedNav.path[1]});
+        HashNavigation.navigateTo('');
+      }
 
       this.readTimer = null;
       this.readTimerCallback = null;
@@ -1199,6 +1202,8 @@ class TinodeWeb extends React.Component {
       delete parsed.params.code;
       delete parsed.params.method;
       delete parsed.params.tab;
+      delete parsed.params.scheme;
+      delete parsed.params.token;
     }
     HashNavigation.navigateTo(HashNavigation.composeUrlHash(parsed.path, parsed.params));
     this.setState({errorText: '', errorLevel: null});
@@ -1230,8 +1235,10 @@ class TinodeWeb extends React.Component {
       params.desc = {defacs: {auth: DEFAULT_P2P_ACCESS_MODE}};
     } else {
       topicName = topicName || this.tinode.newGroupTopicName(isChannel);
-      params.desc = {public: newTopicParams.public, private: {comment: newTopicParams.private}};
-      params.tags = newTopicParams.tags;
+      if (newTopicParams) {
+        params.desc = {public: newTopicParams.public, private: {comment: newTopicParams.private}};
+        params.tags = newTopicParams.tags;
+      }
     }
     params._topicName = topicName;
     this.setState({newTopicParams: params}, () => {this.handleTopicSelected(topicName)});
@@ -1443,22 +1450,22 @@ class TinodeWeb extends React.Component {
     });
   }
 
+  //
   handleShowForwardDialog(params) {
     if (this.state.sidePanelSelected == 'newtpk') {
       // If the Find panel is active, close it.
       this.handleSidepanelCancel();
     }
     const header = '➦ ' + params.userName;
-    const content = params.forwarded ?
-        Tinode.Drafty.forwardedContent(params.content) :
-        typeof params.content == 'string' ?
-            Tinode.Drafty.init(params.content) : params.content;
+    const content = typeof params.content == 'string' ?
+            Tinode.Drafty.init(params.content) : Tinode.Drafty.forwardedContent(params.content);
     const preview = Tinode.Drafty.preview(content, FORWARDED_PREVIEW_LENGTH,
                                           undefined, params.forwarded != null);
     const msg = Tinode.Drafty.append(
         Tinode.Drafty.appendLineBreak(
             Tinode.Drafty.mention(header, params.userFrom)),
         content);
+
     const msgPreview = Tinode.Drafty.quote(header, params.userFrom, preview);
     const head = {
       forwarded: params.topicName + ':' + params.seq
@@ -1610,6 +1617,9 @@ class TinodeWeb extends React.Component {
       this.tinode.connect()
         .then(() => {
           return this.tinode.updateAccountBasic(null, null, newPassword, {token: token});
+        })
+        .then(() => {
+          HashNavigation.navigateTo('');
         })
         .catch((err) => {
           // Socket error

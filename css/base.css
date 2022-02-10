@@ -236,6 +236,7 @@ textarea.inplace-edit {
 
 ::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2);
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.2);
   background-color: rgba(255,255,255,0.1);
 }
 
@@ -2512,7 +2513,11 @@ ul.tabbar li.active > a {
 }
 
 .chat-box .bubble .reply-quote {
-  margin: -0.25rem -0.75rem 0.35rem -0.75rem;
+  margin: 0.15rem -0.75rem 0.3rem -0.75rem;
+}
+
+.chat-box .bubble .reply-quote:first-child {
+  margin-top: -0.25rem;
 }
 
 .chat-box .left .reply-quote {
@@ -2526,6 +2531,10 @@ ul.tabbar li.active > a {
 .reply-quote .inline-image {
   vertical-align: middle;
   margin-bottom: 0.1rem;
+}
+
+.reply-quote img.inline-image::before {
+  content: '';
 }
 
 #reply-quote-preview {
@@ -2558,6 +2567,11 @@ ul.tabbar li.active > a {
 }
 #send-message-panel #reply-quote-preview .reply-quote {
   margin-bottom: 0.35rem;
+}
+
+.forwarding-quote {
+  font-size: 200%;
+  line-height: 200%;
 }
 
 .mention {
