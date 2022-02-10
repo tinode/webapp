@@ -14,6 +14,7 @@ import Invitation from '../widgets/invitation.jsx';
 import LetterTile from '../widgets/letter-tile.jsx';
 import LoadSpinner from '../widgets/load-spinner.jsx';
 import LogoView from './logo-view.jsx';
+import MetaMessage from '../widgets/meta-message.jsx';
 import SendMessage from '../widgets/send-message.jsx';
 
 import { DEFAULT_P2P_ACCESS_MODE, IMAGE_PREVIEW_DIM, KEYPRESS_DELAY,
@@ -971,9 +972,11 @@ class MessagesView extends React.Component {
             icon_badges.push({icon: 'dangerous', color: 'badge-inv'});
           }
         }
-        let messageNodes = [];
+
+        const messageNodes = [];
         let previousFrom = null;
         let chatBoxClass = null;
+        const dateFmt = new Intl.DateTimeFormat(this.props.intl.locale);
         topic.messages((msg, prev, next, i) => {
           let nextFrom = next ? (next.from || 'chan') : null;
 
@@ -1008,36 +1011,55 @@ class MessagesView extends React.Component {
             replyToSeq = null;
           }
 
-          messageNodes.push(
-            <ChatMessage
-              tinode={this.props.tinode}
-              content={msg.content}
-              deleted={msg.hi}
-              mimeType={msg.head ? msg.head.mime : null}
-              timestamp={msg.ts}
-              response={isReply}
-              seq={msg.seq}
-              isGroup={groupTopic}
-              isChan={this.state.channel}
-              userFrom={userFrom}
-              userName={userName}
-              userAvatar={userAvatar}
-              sequence={sequence}
-              received={deliveryStatus}
-              uploader={msg._uploader}
-              viewportWidth={this.props.viewportWidth}  // Used by `formatter`.
-              showContextMenu={this.handleShowMessageContextMenu}
-              onImagePreview={this.handleImagePostview}
-              onFormResponse={this.handleFormResponse}
-              onError={this.props.onError}
-              onCancelUpload={this.handleCancelUpload}
-              pickReply={this.handlePickReply}
-              replyToSeq={replyToSeq}
-              onQuoteClick={this.handleQuoteClick}
-              ref={ref}
-              userIsWriter={this.state.isWriter}
-              key={msg.seq} />
-          );
+          // This message was sent on a different date than the previous.
+          if (!prev || new Date(prev.ts).toDateString() != new Date(msg.ts).toDateString()) {
+            messageNodes.push(
+            <MetaMessage
+              date={dateFmt.format(msg.ts)}
+              locale={this.props.intl.locale}
+              key={'date-' + msg.seq} />
+            );
+          }
+
+          if (msg.hi) {
+            // Deleted message.
+            messageNodes.push(
+              <MetaMessage
+                deleted={true}
+                key={msg.seq} />
+              );
+          } else {
+            messageNodes.push(
+              <ChatMessage
+                tinode={this.props.tinode}
+                content={msg.content}
+                deleted={msg.hi}
+                mimeType={msg.head ? msg.head.mime : null}
+                timestamp={msg.ts}
+                response={isReply}
+                seq={msg.seq}
+                isGroup={groupTopic}
+                isChan={this.state.channel}
+                userFrom={userFrom}
+                userName={userName}
+                userAvatar={userAvatar}
+                sequence={sequence}
+                received={deliveryStatus}
+                uploader={msg._uploader}
+                viewportWidth={this.props.viewportWidth}  // Used by `formatter`.
+                showContextMenu={this.handleShowMessageContextMenu}
+                onImagePreview={this.handleImagePostview}
+                onFormResponse={this.handleFormResponse}
+                onError={this.props.onError}
+                onCancelUpload={this.handleCancelUpload}
+                pickReply={this.handlePickReply}
+                replyToSeq={replyToSeq}
+                onQuoteClick={this.handleQuoteClick}
+                ref={ref}
+                userIsWriter={this.state.isWriter}
+                key={msg.seq} />
+            );
+          }
         });
 
         let lastSeen = null;

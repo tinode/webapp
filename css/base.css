@@ -1557,12 +1557,6 @@ img.channel {
   justify-content: flex-end;
 }
 
-.chat-box .center {
-  justify-content: center;
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
 .bubble {
   position: relative;
   display: flex;
@@ -1572,6 +1566,7 @@ img.channel {
   padding: 0.75rem 0.5rem 0.75rem 0.5rem;
   margin: 0;
   text-align: left;
+  color: #212121;
   border-radius: 0.5rem;
   box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.12);
   transition: ease-out background-color 0.5s;
@@ -1624,9 +1619,26 @@ img.channel {
   border-bottom-right-radius: 0;
 }
 
-.center .bubble {
+.chat-box .meta {
+  justify-content: center;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.chat-box .meta .bubble {
+  color: #666;
+  min-width: unset;
+}
+
+.meta .bubble.deleted {
   background-color: #e3f2fd;
   padding: 0.75rem 0.75rem 0.5rem 0.75rem;
+}
+
+.meta .bubble.date {
+  font-size: smaller;
+  padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+  background-color: rgb(244 244 244 / 66%);
 }
 
 /* Left triangle placed bottom left flush. */
@@ -1691,7 +1703,6 @@ img.channel {
 
 .bubble div.message-content {
   position: relative;
-  color: #212121;
   margin: 0;
   width: 100%;
   max-width: 36rem;
