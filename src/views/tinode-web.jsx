@@ -12,6 +12,7 @@ import ContextMenu from '../widgets/context-menu.jsx';
 import ForwardDialog from '../widgets/forward-dialog.jsx';
 
 import InfoView from './info-view.jsx';
+import CallView from './call-view.jsx';
 import MessagesView from './messages-view.jsx';
 import SidepanelView from './sidepanel-view.jsx';
 
@@ -63,6 +64,11 @@ const messages = defineMessages({
     id: 'menu_item_info',
     defaultMessage: 'Info',
     description: 'Show extended topic information'
+  },
+  menu_item_video_call: {
+    id: 'menu_item_video_call',
+    defaultMessage: 'Video Call',
+    description: 'Start video call'
   }
 });
 
@@ -145,6 +151,22 @@ class TinodeWeb extends React.Component {
     this.handleShowForwardDialog = this.handleShowForwardDialog.bind(this);
     this.handleHideForwardDialog = this.handleHideForwardDialog.bind(this);
 
+    this.handleStartVideoCall = this.handleStartVideoCall.bind(this);
+    this.handleTeleMessage = this.handleTeleMessage.bind(this);
+    this.handleCallClose = this.handleCallClose.bind(this);
+
+    this.handleTeleInvite = this.handleTeleInvite.bind(this);
+    this.handleTeleRinging = this.handleTeleRinging.bind(this);
+    this.handleTeleHangup = this.handleTeleHangup.bind(this);
+    this.handleTeleSendOffer = this.handleTeleSendOffer.bind(this);
+    this.handleTeleIceCandidate = this.handleTeleIceCandidate.bind(this);
+    this.handleTeleSendAnswer = this.handleTeleSendAnswer.bind(this);
+
+    this.handleTeleAcceptCall = this.handleTeleAcceptCall.bind(this);
+    this.handleTeleUpdateLease = this.handleTeleUpdateLease.bind(this);
+    this.handleTeleLeaseReply = this.handleTeleLeaseReply.bind(this);
+    this.setLeaseTimer = this.setLeaseTimer.bind(this);
+
     this.sendMessageToTopic = this.sendMessageToTopic.bind(this);
   }
 
@@ -196,6 +218,10 @@ class TinodeWeb extends React.Component {
       displayMobile: (window.innerWidth <= MEDIA_BREAKPOINT),
       infoPanel: undefined,
       mobilePanel: 'sidepanel',
+
+      callTopic: undefined,
+      callState: 0,
+      //isCallOriginator: false,
 
       contextMenuVisible: false,
       contextMenuBounds: null,
@@ -252,6 +278,7 @@ class TinodeWeb extends React.Component {
       this.tinode.onConnect = this.handleConnected;
       this.tinode.onDisconnect = this.handleDisconnect;
       this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
+      this.tinode.onTeleMessage = this.handleTeleMessage;
     }).then(() => {
       // Initialize desktop alerts.
       if (this.state.desktopAlertsEnabled) {
@@ -825,7 +852,26 @@ class TinodeWeb extends React.Component {
         this.receivedTimer = undefined;
         topic.noteRecv(data.seq);
       }, RECEIVED_DELAY);
+
+      /*
+      if (typeof data.head != 'undefined' && data.head['mime'] == 'application/tinode-video-call' && topic.msgRecvCount(data.seq) == 0) {
+        this.setState({
+          callTopic: data.topic,
+          callState: 2
+        });
+      }
+      */
     }
+
+    /*
+    // Incoming call.
+    if (data.from != this.state.myUserId && data.seq > topic.maxMsgSeq()) {
+      this.setState({
+        callTopic: data.topic,
+        callState: 2
+      });
+    }
+    */
   }
 
   /* Fnd topic: find contacts by tokens */
@@ -1355,6 +1401,7 @@ class TinodeWeb extends React.Component {
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
     this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
+    this.tinode.onTeleMessage = this.handleTeleMessage;
     HashNavigation.navigateTo('');
   }
 
@@ -1498,6 +1545,10 @@ class TinodeWeb extends React.Component {
         title: this.props.intl.formatMessage(messages.menu_item_info),
         handler: this.handleShowInfoView
       } : null,
+      subscribed && Tinode.isP2PTopicName(topicName) ? {
+        title: this.props.intl.formatMessage(messages.menu_item_video_call),
+        handler: this.handleStartVideoCall
+      } : null,
       subscribed ? 'messages_clear' : null,
       subscribed && deleter ? 'messages_clear_hard' : null,
       muted ? (blocked ? null : 'topic_unmute') : 'topic_mute',
@@ -1625,6 +1676,209 @@ class TinodeWeb extends React.Component {
           // Socket error
           this.handleError(err.message, 'err');
         });
+    }
+  }
+
+  handleStartVideoCall() {
+    this.setState({
+      callTopic: this.state.topicSelected,
+      callState: 1,
+    });
+  }
+
+  setLeaseTimer(seq, leaseExp, now, shift) {
+    if (leaseExp < now) {
+      // Lease has expired.
+      this.handleCallClose();
+      return;
+    }
+    let period = leaseExp - now - shift;
+    if (period < 0) {
+      period = 0;
+    }
+    console.log('X: setting timeout to ', period, ', seq = ', seq, ', leaseExp = ', leaseExp, ', now = ', now, ', shift = ', shift);
+
+    //setTimeout(() => {console.log("before callTimeout")}, period - 500); 
+    let callTimeout = setTimeout(this.handleTeleUpdateLease, period);
+    console.log('setting call timeout -> ', callTimeout);
+    let callState = {
+      callLeaseExpires: leaseExp,
+      callTimeout: callTimeout
+    };
+   
+    if (seq) {
+      callState.callSeq = seq;
+    }
+    this.setState(callState);
+  }
+
+  handleTeleLeaseReply(ctrl, shift) {
+    if (ctrl.code < 200 || ctrl.code >= 300 || !('params' in ctrl)) {
+      this.handleCallClose();
+      return;
+    }
+    const ds = ctrl.params['lease-expires'];
+    if (!ds) {
+      this.handleCallClose();
+      return;
+    }
+    const leaseExp = new Date(ds);
+    const now = Date.now();
+    this.setLeaseTimer(ctrl.params['seq'], leaseExp.getTime(), now, shift);
+  }
+
+  handleTeleUpdateLease() {
+    console.log('update lease event');
+    const topic = this.tinode.getTopic(this.state.callTopic);
+    if (!topic) {
+      return;
+    }
+    const now = Date.now();
+    if (now >= this.state.callLeaseExpires) {
+      // Lease has expired.
+      this.handleCallClose();
+      return;
+    }
+    /*
+    if (!extend) {
+      this.handleCallClose();
+      return;
+    }
+    */
+
+    let until = new Date(this.state.callLeaseExpires); //this.state.callLeaseExpires.getSeconds() + 10;
+    until.setSeconds(until.getSeconds() + 10);
+    topic.call('extend-lease', this.state.callSeq, undefined, until)
+      .then((ctrl) => {
+				this.handleTeleLeaseReply(ctrl, 2000);
+      });
+    }
+
+  handleTeleInvite(callTopic, callSeq, callState) {
+    const topic = this.tinode.getTopic(this.state.topicSelected);
+    if (!topic) {
+      return;
+    }
+ 
+    if (callState == 1) {
+      topic.call('invite').then((ctrl) => {
+				if (ctrl.params && ctrl.params['sip-code'] == 100) {
+          this.handleTeleLeaseReply(ctrl, 0);
+				}
+      });
+    } else if (callState == 3) {
+      topic.call('accept', callSeq).then((ctrl) => {
+        this.handleTeleLeaseReply(ctrl, 2000);
+      });
+    }
+  }
+
+  handleTeleRinging(callTopic, callSeq) {
+    const topic = this.tinode.getTopic(callTopic);
+    if (!topic) {
+      return;
+    }
+ 
+    topic.call('ringing', callSeq);
+  }
+
+  handleTeleHangup(callTopic, callSeq) {
+    const topic = this.tinode.getTopic(callTopic);
+    if (!topic) {
+      return;
+    }
+ 
+    topic.call('hang-up', callSeq);
+  }
+
+  handleTeleSendOffer(callTopic, callSeq, sdp) {
+    const topic = this.tinode.getTopic(callTopic);
+    if (!topic) {
+      return;
+    }
+ 
+    topic.call('offer', callSeq, sdp);
+  }
+
+  handleTeleIceCandidate(callTopic, callSeq, candidate) {
+    const topic = this.tinode.getTopic(callTopic);
+    if (!topic) {
+      return;
+    }
+ 
+    topic.call('ice-candidate', callSeq, candidate);
+  }
+  handleTeleSendAnswer(callTopic, callSeq, sdp) {
+    const topic = this.tinode.getTopic(callTopic);
+    if (!topic) {
+      return;
+    }
+ 
+    topic.call('answer', callSeq, sdp);
+  }
+
+  handleCallClose() {
+    if (this.state.callTimeout) {
+      console.log('closing call timeout ', this.state.callTimeout);
+      clearTimeout(this.state.callTimeout);
+    }
+    this.setState({
+      callTopic: undefined,
+      callState: 0,
+      callLeaseExpires: undefined,
+      callTimeout: undefined
+    });
+  }
+
+  handleTeleAcceptCall(topicName) {
+    this.handleTopicSelected(this.state.callTopic);
+    this.setState({
+      callState: 3
+    });
+  }
+
+  handleTeleMessage(tele) {
+    //
+    switch (tele.what) {
+      case 'invite':
+        console.log('invite: ', tele);
+        if (tele.from != this.state.myUserId) {
+          // incoming call.
+          this.setState({
+            callTopic: tele.src,
+            callState: 2,
+            callSeq: tele.seq,
+            sdp: tele.sdp
+          });
+        }
+        break;
+      case 'accept':
+        console.log('TinodeWeb: received accept msg ', tele);
+        // If another my session has accepted the call.
+        if (tele.topic == 'me' && tele.from == this.state.myUserId) {
+          this.setState({
+            callTopic: null,//tele.src,
+            callState: 0,
+            callSeq: null,//tele.seq,
+            //sdp: tele.sdp
+          });
+        }
+        if (tele.topic == this.state.callTopic) {
+          // Update state.
+          this.setState({callState: 3});
+          if (this.state.callTimeout) {
+            clearTimeout(this.state.callTimeout);
+            this.setState({callTimeout: undefined});
+            this.setLeaseTimer(this.state.callSeq, this.state.callLeaseExpires, Date.now(), 2000);
+          }
+        }
+        break;
+      case 'hang-up':
+        //if (tele.topic == 'me') {
+          // remote hangup.
+        this.handleCallClose();
+        break;
+        //}
     }
   }
 
@@ -1765,6 +2019,17 @@ class TinodeWeb extends React.Component {
           forwardMessage={this.state.forwardMessage}
           onCancelForwardMessage={this.handleHideForwardDialog}
 
+          callTopic={this.state.callTopic}
+          callSeq={this.state.callSeq}
+          callState={this.state.callState}
+          onTeleHangup={this.handleTeleHangup}
+
+          onTeleInvite={this.handleTeleInvite}
+          onTeleSendOffer={this.handleTeleSendOffer}
+          onTeleIceCandidate={this.handleTeleIceCandidate}
+          onTeleSendAnswer={this.handleTeleSendAnswer}
+          //onTemeMedia
+
           errorText={this.state.errorText}
           errorLevel={this.state.errorLevel}
           errorAction={this.state.errorAction}
@@ -1779,7 +2044,8 @@ class TinodeWeb extends React.Component {
           showContextMenu={this.handleShowContextMenu}
           onChangePermissions={this.handleChangePermissions}
           onNewChat={this.handleNewChatInvitation}
-          sendMessage={this.handleSendMessage} />
+          sendMessage={this.handleSendMessage} 
+          onVideoCallClosed={this.handleCallClose} />
 
         {this.state.infoPanel ?
           <InfoView
@@ -1813,6 +2079,21 @@ class TinodeWeb extends React.Component {
             onError={this.handleError}
 
             showContextMenu={this.handleShowContextMenu}
+            />
+          :
+          null
+        }
+
+        {this.state.callTopic && this.state.callState == 2 ?
+          <CallView
+            tinode={this.tinode}
+            onClose={this.handleCallClose}
+            topic={this.state.callTopic}
+            seq={this.state.callSeq}
+            callState={this.state.callState}
+            onRinging={this.handleTeleRinging}
+            onAcceptCall={this.handleTeleAcceptCall}
+            onReject={this.handleTeleHangup}
             />
           :
           null

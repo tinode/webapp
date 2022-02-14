@@ -14,6 +14,7 @@ import Invitation from '../widgets/invitation.jsx';
 import LetterTile from '../widgets/letter-tile.jsx';
 import LoadSpinner from '../widgets/load-spinner.jsx';
 import LogoView from './logo-view.jsx';
+import RtcPanel from '../widgets/rtc-panel.jsx';
 import SendMessage from '../widgets/send-message.jsx';
 
 import { DEFAULT_P2P_ACCESS_MODE, IMAGE_PREVIEW_DIM, KEYPRESS_DELAY,
@@ -113,6 +114,8 @@ class MessagesView extends React.Component {
     this.handlePickReply = this.handlePickReply.bind(this);
     this.handleCancelReply = this.handleCancelReply.bind(this);
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
+    this.handleRtcClick = this.handleRtcClick.bind(this);
+    this.handleRtcClose = this.handleRtcClose.bind(this);
 
     this.chatMessageRefs = {};
     this.getOrCreateMessageRef = this.getOrCreateMessageRef.bind(this);
@@ -173,7 +176,17 @@ class MessagesView extends React.Component {
         topic.onPres = this.handleSubsUpdated;
       }
     }
-
+    /*
+    if (this.props.callTopic == this.props.topic && !this.state.rtcPanel) {
+      this.handleRtcClick();
+    }
+    */
+    /*
+    if (this.state.rtcPanel == null && topic && topic.name == this.props.callTopic && (this.props.callState == 1 || this.props.callState == 3)) {
+      console.log('--> setting rtc panel, call state = ', this.props.callState);
+      this.setState({rtcPanel: { topic: this.props.callTopic }});
+    }
+    */
     if (!this.props.applicationVisible) {
       // If application is not visible, flush all unsent 'read' notifications.
       this.clearNotificationQueue();
@@ -189,6 +202,11 @@ class MessagesView extends React.Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     let nextState = {};
+    /*
+    if (nextProps.callState == 3 || nextProps.callState == 1) {
+      nextState.rtcPanel = { topic: nextProps.topic };
+    }
+    */
     if (!nextProps.topic) {
       // Default state: no topic.
       nextState = {
@@ -204,6 +222,7 @@ class MessagesView extends React.Component {
         docPreview: null,
         imagePreview: null,
         imagePostview: null,
+        rtcPanel: null,//typeof nextProps.topic != 'undefined' && nextPropstopic.name == this.props.callTopic && (nextProps.callState == 1 || nextProps.callState == 3) ? { topic: nextProps.topic } : null,
         typingIndicator: false,
         scrollPosition: 0,
         fetchingMessages: false,
@@ -229,6 +248,7 @@ class MessagesView extends React.Component {
         docPreview: null,
         imagePreview: null,
         imagePostview: null,
+        rtcPanel: null,
         typingIndicator: false,
         scrollPosition: 0,
         fetchingMessages: false,
@@ -278,6 +298,12 @@ class MessagesView extends React.Component {
           latestClearId: topic.maxClearId(),
           channel: topic.isChannelType()
         });
+
+        if (nextProps.callTopic == topic.name && (nextProps.callState == 1 || nextProps.callState == 3)) {
+          Object.assign(nextState, {
+            rtcPanel: nextProps.callTopic,
+          }); 
+        }
       } else {
         // Invalid topic.
         Object.assign(nextState, {
@@ -289,6 +315,13 @@ class MessagesView extends React.Component {
           peerMessagingDisabled: false,
           channel: false
         });
+      }
+    } else {
+      // same topic
+      if (!prevState.rtcPanel && nextProps.callTopic == prevState.topic && (nextProps.callState == 1 || nextProps.callState == 3)) {
+        Object.assign(nextState, {
+          rtcPanel: nextProps.callTopic,
+        }); 
       }
     }
 
@@ -750,6 +783,28 @@ class MessagesView extends React.Component {
     }
   }
 
+  handleRtcClick() {
+    this.setState({
+      rtcPanel: {
+      /*
+        file: file,
+        name: file.name,
+        size: file.size,
+        type: file.type
+        */
+        topic: this.state.topic
+      }
+    });
+    
+  }
+
+  handleRtcClose() {
+    this.props.onVideoCallClosed();
+    this.setState({
+      rtcPanel: null
+    });
+  }
+
   // sendImageAttachment sends the image bits inband as Drafty message.
   sendImageAttachment(caption, blob) {
     const mime = this.state.imagePreview.mime;
@@ -933,6 +988,25 @@ class MessagesView extends React.Component {
             onCancelReply={this.handleCancelReply}
             onClose={this.handleClosePreview}
             onSendMessage={this.sendFileAttachment} />
+        );
+      } else if (this.state.rtcPanel) {
+        const topic = this.props.tinode.getTopic(this.state.topic);
+        component2 = (
+          <RtcPanel
+            topic={topic}
+            seq={this.props.callSeq}
+            callState={this.props.callState}
+            onError={this.props.onError}
+            onClose={this.handleRtcClose}
+            onHangup={this.props.onTeleHangup}
+
+            onInvite={this.props.onTeleInvite}
+            onSendOffer={this.props.onTeleSendOffer}
+            onIceCandidate={this.props.onTeleIceCandidate}
+            onSendAnswer={this.props.onTeleSendAnswer}
+            //content={this.state.imagePostview}
+            //onClose={this.handleClosePreview}
+          />
         );
       } else {
         const topic = this.props.tinode.getTopic(this.state.topic);
@@ -1124,7 +1198,7 @@ class MessagesView extends React.Component {
           </>
         );
       }
-
+      //<button onClick={this.handleRtcClick} >abc</button>
       component = <div id="topic-view">{component2}</div>
     }
     return component;
