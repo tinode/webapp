@@ -223,6 +223,7 @@ textarea {
 
 textarea.inplace-edit {
   height: unset;
+  font-size: unset;
 }
 
 /* END of input and buttons */
@@ -2307,7 +2308,7 @@ ul.tabbar li.active > a {
 
 .chip > a {
   display: inline-block;
-  color: #ccc;
+  color: #eee;
   background-color: #aaa;
   border-radius: 50%;
   margin: 0.3rem;
@@ -2321,7 +2322,7 @@ ul.tabbar li.active > a {
 .chip > a:focus,
 .chip > a:hover {
   text-decoration: none;
-  color: #ddd;
+  color: #fff;
   background-color: #bbb;
 }
 
