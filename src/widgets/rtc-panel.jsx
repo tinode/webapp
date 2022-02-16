@@ -12,7 +12,7 @@ export default class RtcPanel extends React.PureComponent {
       pc: undefined,
       remoteStream: undefined,
 
-      previousOnTele: undefined
+      previousOnInfo: undefined
     };
 
     this.localStreamConstraints = {
@@ -40,7 +40,7 @@ export default class RtcPanel extends React.PureComponent {
     this.localRef = React.createRef();
     this.remoteRef = React.createRef();
 
-    this.onTele = this.onTele.bind(this);
+    this.onInfo = this.onInfo.bind(this);
     this.launchStream = this.launchStream.bind(this);
 
     this.createPeerConnection = this.createPeerConnection.bind(this);
@@ -72,41 +72,44 @@ export default class RtcPanel extends React.PureComponent {
     this.handleVideoCallAccepted = this.handleVideoCallAccepted.bind(this);
   }
 
-  handleVideoCallAccepted(tele) { 
+  handleVideoCallAccepted(info) { 
     const pc = this.createPeerConnection();
     const stream = this.state.localStream;
     stream.getTracks().forEach(track => pc.addTrack(track, stream));
-    console.log('RtcPanel: tele msg', tele);
+    console.log('RtcPanel: info msg', info);
   }
 
-  onTele(tele) {
-    console.log('tele --> ', tele);
-    switch (tele.what) {
+  onInfo(info) {
+    console.log('info --> ', info);
+    if (info.what != 'call') {
+      return;
+    }
+    switch (info.event) {
       //case 'invite'
       case 'accept':
         // Call accepted.
-        this.handleVideoCallAccepted(tele);
+        this.handleVideoCallAccepted(info);
         break;
       case 'offer':
-        this.handleVideoOfferMsg(tele);
+        this.handleVideoOfferMsg(info);
         break;
       case 'answer':
-        this.handleVideoAnswerMsg(tele);
+        this.handleVideoAnswerMsg(info);
         break;
       case 'ice-candidate':
-        this.handleNewICECandidateMsg(tele);
+        this.handleNewICECandidateMsg(info);
         break;
       case 'hang-up':
-        this.handleRemoteHangup(tele);
+        this.handleRemoteHangup(info);
         break;
     }
   }
 
   componentDidUpdate(props) {
     const topic = this.props.topic;
-    if (this.onTele != topic.onTele) {
-      this.previousOnTele = topic.onTele;
-      topic.onTele = this.onTele;
+    if (this.onInfo != topic.onInfo) {
+      this.previousOnInfo = topic.onInfo;
+      topic.onInfo = this.onInfo;
     }
   }
 
@@ -117,7 +120,7 @@ export default class RtcPanel extends React.PureComponent {
   }
 
   componentWillUnmount() {
-    this.props.topic.onTele = this.previousOnTele;
+    this.props.topic.onInfo = this.previousOnInfo;
   }
 
   launchStream() {
@@ -151,13 +154,13 @@ export default class RtcPanel extends React.PureComponent {
     return pc;
   }
 
-  handleVideoAnswerMsg(tele) {
+  handleVideoAnswerMsg(info) {
     console.log("*** Call recipient has accepted our call");
   
     // Configure the remote description, which is the SDP payload
     // in our "video-answer" message.
   
-    var desc = new RTCSessionDescription(tele.payload);
+    var desc = new RTCSessionDescription(info.payload);
     this.state.pc.setRemoteDescription(desc).catch(this.reportError);
   }
 
@@ -181,8 +184,8 @@ export default class RtcPanel extends React.PureComponent {
     }
   }
 
-  handleNewICECandidateMsg(tele) {
-    var candidate = new RTCIceCandidate(tele.payload);
+  handleNewICECandidateMsg(info) {
+    var candidate = new RTCIceCandidate(info.payload);
   
     this.state.pc.addIceCandidate(candidate)
       .catch(reportError);
@@ -236,12 +239,12 @@ export default class RtcPanel extends React.PureComponent {
   }
 
 
-  handleVideoOfferMsg(tele) {
+  handleVideoOfferMsg(info) {
     var localStream = null;
   
     const pc = this.createPeerConnection();
   
-    var desc = new RTCSessionDescription(tele.payload);
+    var desc = new RTCSessionDescription(info.payload);
   
     pc.setRemoteDescription(desc).then(() => {
       return navigator.mediaDevices.getUserMedia(this.localStreamConstraints);

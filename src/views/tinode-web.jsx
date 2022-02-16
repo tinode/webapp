@@ -152,7 +152,7 @@ class TinodeWeb extends React.Component {
     this.handleHideForwardDialog = this.handleHideForwardDialog.bind(this);
 
     this.handleStartVideoCall = this.handleStartVideoCall.bind(this);
-    this.handleTeleMessage = this.handleTeleMessage.bind(this);
+    this.handleInfoMessage = this.handleInfoMessage.bind(this);
     this.handleCallClose = this.handleCallClose.bind(this);
 
     this.handleTeleInvite = this.handleTeleInvite.bind(this);
@@ -278,7 +278,7 @@ class TinodeWeb extends React.Component {
       this.tinode.onConnect = this.handleConnected;
       this.tinode.onDisconnect = this.handleDisconnect;
       this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
-      this.tinode.onTeleMessage = this.handleTeleMessage;
+      this.tinode.onInfoMessage = this.handleInfoMessage;
     }).then(() => {
       // Initialize desktop alerts.
       if (this.state.desktopAlertsEnabled) {
@@ -968,7 +968,7 @@ class TinodeWeb extends React.Component {
   //  - head - head dictionary to be attached to the message
   handleSendMessage(msg, promise, uploader, head) {
     const topic = this.tinode.getTopic(this.state.topicSelected);
-    this.sendMessageToTopic(topic, msg, promise, uploader, head);
+    return this.sendMessageToTopic(topic, msg, promise, uploader, head);
   }
 
   sendMessageToTopic(topic, msg, promise, uploader, head) {
@@ -1003,11 +1003,12 @@ class TinodeWeb extends React.Component {
       });
     }
 
-    topic.publishDraft(msg, promise)
+    return topic.publishDraft(msg, promise)
       .then((ctrl) => {
         if (topic.isArchived()) {
           return topic.archive(false);
         }
+        return ctrl;
       })
       .catch((err) => {
         this.handleError(err.message, 'err');
@@ -1401,7 +1402,7 @@ class TinodeWeb extends React.Component {
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
     this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
-    this.tinode.onTeleMessage = this.handleTeleMessage;
+    this.tinode.onInfoMessage = this.handleInfoMessage;
     HashNavigation.navigateTo('');
   }
 
@@ -1755,18 +1756,29 @@ class TinodeWeb extends React.Component {
     }
 
   handleTeleInvite(callTopic, callSeq, callState) {
-    const topic = this.tinode.getTopic(this.state.topicSelected);
-    if (!topic) {
-      return;
-    }
- 
     if (callState == 1) {
+      let head = {mime: 'application/tinode-video-call'};
+      this.handleSendMessage('started', undefined, undefined, head)
+        .then((ctrl) => {
+          //this.handleTeleLeaseReply(ctrl, 0);
+          if (ctrl.code < 200 || ctrl.code >= 300 || typeof ctrl.params == 'undefined' || typeof ctrl.params['seq'] == 'undefined') {
+            this.handleCallClose();
+            return;
+          }
+          this.setState({callSeq: ctrl.params['seq']});
+        });
+      /*
       topic.call('invite').then((ctrl) => {
 				if (ctrl.params && ctrl.params['sip-code'] == 100) {
           this.handleTeleLeaseReply(ctrl, 0);
 				}
       });
+      */
     } else if (callState == 3) {
+      const topic = this.tinode.getTopic(callTopic);
+      if (!topic) {
+        return;
+      }
       topic.call('accept', callSeq).then((ctrl) => {
         this.handleTeleLeaseReply(ctrl, 2000);
       });
@@ -1837,33 +1849,36 @@ class TinodeWeb extends React.Component {
     });
   }
 
-  handleTeleMessage(tele) {
+  handleInfoMessage(info) {
     //
-    switch (tele.what) {
+    if (info.what != 'call') {
+      return;
+    }
+    switch (info.event) {
       case 'invite':
-        console.log('invite: ', tele);
-        if (tele.from != this.state.myUserId) {
+        console.log('invite: ', info);
+        if (info.from != this.state.myUserId) {
           // incoming call.
           this.setState({
-            callTopic: tele.src,
+            callTopic: info.src,
             callState: 2,
-            callSeq: tele.seq,
-            sdp: tele.sdp
+            callSeq: info.seq
+            //sdp: info.sdp
           });
         }
         break;
       case 'accept':
-        console.log('TinodeWeb: received accept msg ', tele);
+        console.log('TinodeWeb: received accept msg ', info);
         // If another my session has accepted the call.
-        if (tele.topic == 'me' && tele.from == this.state.myUserId) {
+        if (info.topic == 'me' && info.from == this.state.myUserId) {
           this.setState({
             callTopic: null,//tele.src,
             callState: 0,
-            callSeq: null,//tele.seq,
+            callSeq: null//tele.seq,
             //sdp: tele.sdp
           });
         }
-        if (tele.topic == this.state.callTopic) {
+        if (info.topic == this.state.callTopic) {
           // Update state.
           this.setState({callState: 3});
           if (this.state.callTimeout) {
