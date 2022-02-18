@@ -84,9 +84,11 @@ class ContactList extends React.Component {
             if (msg) {
               forwarded = msg.head ? msg.head.forwarded : null;
               deliveryStatus = msg._status || c.msgStatus(msg, true);
-              preview = typeof msg.content == 'string' ?
-                msg.content.substr(0, MESSAGE_PREVIEW_LENGTH) :
-                Drafty.preview(msg.content, MESSAGE_PREVIEW_LENGTH);
+              if (msg.content) {
+                preview = typeof msg.content == 'string' ?
+                  msg.content.substr(0, MESSAGE_PREVIEW_LENGTH) :
+                  Drafty.preview(msg.content, MESSAGE_PREVIEW_LENGTH);
+              }
             }
           }
 
