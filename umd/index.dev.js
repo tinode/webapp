@@ -4380,7 +4380,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_chat_message_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
               tinode: this.props.tinode,
               content: msg.content,
-              deleted: msg.hi,
               mimeType: msg.head ? msg.head.mime : null,
               timestamp: msg.ts,
               response: isReply,
@@ -4525,7 +4524,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_14__["default"], {
           tinode: this.props.tinode,
           noInput: !!this.props.forwardMessage,
-          disabled: !this.state.isWriter,
+          disabled: !this.state.isWriter || topic.deleted,
           onKeyPress: this.sendKeyPress,
           onSendMessage: this.sendMessage,
           onAttachFile: this.props.forwardMessage ? null : this.handleAttachFile,
@@ -8567,6 +8566,7 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
             isVerified: c.trusted && c.trusted.verified,
             isStaff: c.trusted && c.trusted.staff,
             isDangerous: c.trusted && c.trusted.danger,
+            deleted: c.deleted,
             item: key,
             index: contactNodes.length,
             key: key
@@ -8611,13 +8611,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _contact_badges_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./contact-badges.jsx */ "./src/widgets/contact-badges.jsx");
 /* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
-/* harmony import */ var _received_marker_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./received-marker.jsx */ "./src/widgets/received-marker.jsx");
-/* harmony import */ var _unread_badge_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./unread-badge.jsx */ "./src/widgets/unread-badge.jsx");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-
+/* harmony import */ var _unread_badge_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./unread-badge.jsx */ "./src/widgets/unread-badge.jsx");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 
 
 
@@ -8719,8 +8717,8 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
 
     if (typeof this.props.preview == 'string') {
       preview = this.props.preview;
-    } else if (tinode_sdk__WEBPACK_IMPORTED_MODULE_6__.Drafty.isValid(this.props.preview)) {
-      preview = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, tinode_sdk__WEBPACK_IMPORTED_MODULE_6__.Drafty.format(this.props.preview, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_7__.previewFormatter, {
+    } else if (tinode_sdk__WEBPACK_IMPORTED_MODULE_5__.Drafty.isValid(this.props.preview)) {
+      preview = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, tinode_sdk__WEBPACK_IMPORTED_MODULE_5__.Drafty.format(this.props.preview, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__.previewFormatter, {
         formatMessage: this.props.intl.formatMessage
       }));
     } else if (this.props.preview) {
@@ -8737,7 +8735,7 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       })));
     }
 
-    const icon = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.deliveryMarker)(this.props.received);
+    const icon = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_7__.deliveryMarker)(this.props.received);
     const marker = icon ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: 'material-icons small space-right' + (icon.color ? ' ' + icon.color : '')
     }, icon.name) : null;
@@ -8750,8 +8748,11 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       tinode: this.props.tinode,
       avatar: avatar,
       title: this.props.title,
-      topic: this.props.item
-    }), this.props.showOnline ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+      topic: this.props.item,
+      disabled: this.props.deleted
+    }), this.props.deleted ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "deleted material-icons"
+    }, "cancel") : this.props.showOnline ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       className: online
     }) : this.props.showCheckmark && this.props.selected ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "checkmark material-icons"
@@ -8765,7 +8766,7 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       alt: "channel"
     }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       badges: icon_badges
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_unread_badge_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_unread_badge_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
       count: this.props.unread
     })), this.props.showMode ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       badges: badges
@@ -10776,17 +10777,17 @@ class LetterTile extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
     let avatar;
 
     if (this.props.avatar === true) {
-      const isGroup = tinode_sdk__WEBPACK_IMPORTED_MODULE_1___default().topicType(this.props.topic) == 'grp';
+      const isGroup = tinode_sdk__WEBPACK_IMPORTED_MODULE_1___default().isGroupTopicName(this.props.topic);
       const iconColor = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__.idToColorClass)(this.props.topic, isGroup);
 
       if (this.props.topic && this.props.title && this.props.title.trim()) {
         const letter = this.props.title.trim().charAt(0);
-        const className = 'lettertile ' + iconColor;
+        const className = 'lettertile ' + iconColor + (this.props.disabled ? ' disabled' : '');
         avatar = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           className: className
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, letter));
       } else {
-        const className = 'material-icons ' + iconColor;
+        const className = 'material-icons ' + iconColor + (this.props.disabled ? ' disabled' : '');
         avatar = isGroup ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
           className: className
         }, "group") : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
@@ -10795,8 +10796,9 @@ class LetterTile extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
       }
     } else if (this.props.avatar) {
       const url = this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__.sanitizeImageUrl)(this.props.avatar));
+      const className = 'avatar' + (this.props.disabled ? ' disabled' : '');
       avatar = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
-        className: "avatar",
+        className: className,
         alt: "avatar",
         src: url,
         onError: e => {

@@ -115,6 +115,7 @@ class ContactList extends React.Component {
               isVerified={c.trusted && c.trusted.verified}
               isStaff={c.trusted && c.trusted.staff}
               isDangerous={c.trusted && c.trusted.danger}
+              deleted={c.deleted}
               item={key}
               index={contactNodes.length}
               key={key} />

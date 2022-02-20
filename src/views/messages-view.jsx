@@ -1033,7 +1033,6 @@ class MessagesView extends React.Component {
               <ChatMessage
                 tinode={this.props.tinode}
                 content={msg.content}
-                deleted={msg.hi}
                 mimeType={msg.head ? msg.head.mime : null}
                 timestamp={msg.ts}
                 response={isReply}
@@ -1159,7 +1158,7 @@ class MessagesView extends React.Component {
               <SendMessage
                 tinode={this.props.tinode}
                 noInput={!!this.props.forwardMessage}
-                disabled={!this.state.isWriter}
+                disabled={!this.state.isWriter || topic.deleted}
                 onKeyPress={this.sendKeyPress}
                 onSendMessage={this.sendMessage}
                 onAttachFile={this.props.forwardMessage ? null : this.handleAttachFile}

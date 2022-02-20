@@ -4,7 +4,6 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 
 import ContactBadges from './contact-badges.jsx';
 import LetterTile from './letter-tile.jsx';
-import ReceivedMarker from './received-marker.jsx'
 import UnreadBadge from './unread-badge.jsx';
 
 import { Drafty } from 'tinode-sdk';
@@ -95,11 +94,13 @@ class Contact extends React.Component {
             tinode={this.props.tinode}
             avatar={avatar}
             title={this.props.title}
-            topic={this.props.item} />
-          {this.props.showOnline ? <span className={online} /> :
-            (this.props.showCheckmark && this.props.selected ?
+            topic={this.props.item}
+            disabled={this.props.deleted} />
+          {this.props.deleted ? <i className="deleted material-icons">cancel</i> :
+            this.props.showOnline ? <span className={online} /> :
+            (this.props.showCheckmark && this.props.selected) ?
             <i className="checkmark material-icons">check_circle</i>
-            : null)}
+            : null}
         </div>
         <div className="text-box">
           <div><span className="contact-title">{title}</span>

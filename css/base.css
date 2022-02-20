@@ -1007,6 +1007,10 @@ i.search {
   height: 2rem;
 }
 
+.avatar.disabled {
+  opacity: 0.5;
+}
+
 .contact-box .avatar-box > .material-icons {
   display: flex;
   flex-direction: column;
@@ -1087,7 +1091,6 @@ img.channel {
   width: 1.5rem;
   height: 1.5rem;
   font-size: 1.5rem;
-  line-height: 1.5rem;
   color: #0097A7;
   position: absolute;
   right: 0.05rem;
@@ -1096,6 +1099,18 @@ img.channel {
   overflow: visible;
   border: 0.0px solid transparent;
 }
+
+.contact-box .deleted.material-icons {
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 1.5rem;
+  color: gray;
+  position: absolute;
+  right: 0.05rem;
+  bottom: 0.05rem;
+  background-color: white;
+}
+
 /* END of avatar box */
 
 #add-topic {
@@ -2011,6 +2026,10 @@ ul.tabbar li.active > a {
 
 .lettertile:hover {
   color: white;
+}
+
+.lettertile.disabled {
+  opacity: 0.5;
 }
 
 /* Colors of letter tiles */
