@@ -6753,19 +6753,25 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
 
     clearInterval(this.reconnectCountdown);
+    let cleared;
 
     if (this.tinode) {
-      this.tinode.clearStorage();
+      cleared = this.tinode.clearStorage();
       this.tinode.onDisconnect = undefined;
       this.tinode.disconnect();
+    } else {
+      cleared = Promose.resolve();
     }
 
     this.setState(this.getBlankState());
-    this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport, this.props.intl.locale, _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('keep-logged-in'));
-    this.tinode.onConnect = this.handleConnected;
-    this.tinode.onDisconnect = this.handleDisconnect;
-    this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo('');
+    cleared.then(() => {
+      this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport, this.props.intl.locale, _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('keep-logged-in'), () => {
+        this.tinode.onConnect = this.handleConnected;
+        this.tinode.onDisconnect = this.handleDisconnect;
+        this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo('');
+      });
+    });
   }
 
   handleDeleteAccount() {
