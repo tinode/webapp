@@ -86,6 +86,7 @@ class Contact extends React.Component {
     const icon = deliveryMarker(this.props.received);
     const marker = icon ? <i className={'material-icons small space-right' +
       (icon.color ? ' ' + icon.color : '')}>{icon.name}</i> : null;
+    const titleClass = 'contact-title' + (this.props.deleted ? ' deleted' : '');
 
     return (
       <li className={!this.props.showCheckmark && this.props.selected ? 'selected' : null} onClick={this.handleClick}>
@@ -95,7 +96,7 @@ class Contact extends React.Component {
             avatar={avatar}
             title={this.props.title}
             topic={this.props.item}
-            disabled={this.props.deleted} />
+            deleted={this.props.deleted} />
           {this.props.deleted ? <i className="deleted material-icons">cancel</i> :
             this.props.showOnline ? <span className={online} /> :
             (this.props.showCheckmark && this.props.selected) ?
@@ -103,9 +104,10 @@ class Contact extends React.Component {
             : null}
         </div>
         <div className="text-box">
-          <div><span className="contact-title">{title}</span>
+          <div><span className={titleClass}>{title}</span>
             {this.props.isChannel ? <img src="/img/channel.png" className="channel" alt="channel" /> : null}
-            <ContactBadges badges={icon_badges} /><UnreadBadge count={this.props.unread} />
+            <ContactBadges badges={icon_badges} />
+            {!this.props.deleted ? <UnreadBadge count={this.props.unread} /> : null}
           </div>
           {this.props.showMode ?
             <span><ContactBadges badges={badges} /></span> :

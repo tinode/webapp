@@ -3512,6 +3512,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         isVerified: false,
         isStaff: false,
         isDangerous: false,
+        deleted: false,
         docPreview: null,
         imagePreview: null,
         imagePostview: null,
@@ -3544,7 +3545,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         scrollPosition: 0,
         fetchingMessages: false,
         reply: reply,
-        showGoToLastButton: false
+        showGoToLastButton: false,
+        deleted: topic._deleted
       };
 
       if (topic) {
@@ -4424,7 +4426,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         }
 
         const avatar = this.state.avatar || true;
-        const online = this.props.online ? 'online' + (this.state.typingIndicator ? ' typing' : '') : 'offline';
+        const online = this.state.deleted ? null : this.props.online ? 'online' + (this.state.typingIndicator ? ' typing' : '') : 'offline';
+        const titleClass = 'panel-title' + (this.state.deleted ? ' deleted' : '');
         component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "topic-caption-panel",
           className: "caption-panel"
@@ -4443,14 +4446,15 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           tinode: this.props.tinode,
           avatar: avatar,
           topic: this.state.topic,
-          title: this.state.title
+          title: this.state.title,
+          deleted: this.state.deleted
         }), !isChannel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
           className: online
         }) : null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "topic-title-group"
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "topic-title",
-          className: "panel-title"
+          className: titleClass
         }, this.state.title || react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
           id: "unnamed_topic",
           defaultMessage: [{
@@ -4524,7 +4528,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_14__["default"], {
           tinode: this.props.tinode,
           noInput: !!this.props.forwardMessage,
-          disabled: !this.state.isWriter || topic.deleted,
+          disabled: !this.state.isWriter || this.state.deleted,
           onKeyPress: this.sendKeyPress,
           onSendMessage: this.sendMessage,
           onAttachFile: this.props.forwardMessage ? null : this.handleAttachFile,
@@ -8572,7 +8576,7 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
             isVerified: c.trusted && c.trusted.verified,
             isStaff: c.trusted && c.trusted.staff,
             isDangerous: c.trusted && c.trusted.danger,
-            deleted: c.deleted,
+            deleted: c._deleted,
             item: key,
             index: contactNodes.length,
             key: key
@@ -8745,6 +8749,7 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
     const marker = icon ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: 'material-icons small space-right' + (icon.color ? ' ' + icon.color : '')
     }, icon.name) : null;
+    const titleClass = 'contact-title' + (this.props.deleted ? ' deleted' : '');
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
       className: !this.props.showCheckmark && this.props.selected ? 'selected' : null,
       onClick: this.handleClick
@@ -8755,7 +8760,7 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       avatar: avatar,
       title: this.props.title,
       topic: this.props.item,
-      disabled: this.props.deleted
+      deleted: this.props.deleted
     }), this.props.deleted ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "deleted material-icons"
     }, "cancel") : this.props.showOnline ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
@@ -8765,16 +8770,16 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
     }, "check_circle") : null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "text-box"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      className: "contact-title"
+      className: titleClass
     }, title), this.props.isChannel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
       src: "/img/channel.png",
       className: "channel",
       alt: "channel"
     }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       badges: icon_badges
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_unread_badge_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    }), !this.props.deleted ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_unread_badge_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
       count: this.props.unread
-    })), this.props.showMode ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    }) : null), this.props.showMode ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       badges: badges
     })) : this.props.small ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "contact-comment"
@@ -10788,12 +10793,12 @@ class LetterTile extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
 
       if (this.props.topic && this.props.title && this.props.title.trim()) {
         const letter = this.props.title.trim().charAt(0);
-        const className = 'lettertile ' + iconColor + (this.props.disabled ? ' disabled' : '');
+        const className = 'lettertile ' + iconColor + (this.props.deleted ? ' disabled' : '');
         avatar = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           className: className
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, letter));
       } else {
-        const className = 'material-icons ' + iconColor + (this.props.disabled ? ' disabled' : '');
+        const className = 'material-icons ' + iconColor + (this.props.deleted ? ' disabled' : '');
         avatar = isGroup ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
           className: className
         }, "group") : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
@@ -10802,7 +10807,7 @@ class LetterTile extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
       }
     } else if (this.props.avatar) {
       const url = this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__.sanitizeImageUrl)(this.props.avatar));
-      const className = 'avatar' + (this.props.disabled ? ' disabled' : '');
+      const className = 'avatar' + (this.props.deleted ? ' deleted' : '');
       avatar = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
         className: className,
         alt: "avatar",

@@ -204,6 +204,7 @@ class MessagesView extends React.Component {
         isVerified: false,
         isStaff: false,
         isDangerous: false,
+        deleted: false,
         docPreview: null,
         imagePreview: null,
         imagePostview: null,
@@ -237,7 +238,8 @@ class MessagesView extends React.Component {
         scrollPosition: 0,
         fetchingMessages: false,
         reply: reply,
-        showGoToLastButton: false
+        showGoToLastButton: false,
+        deleted: topic._deleted
       };
 
       if (topic) {
@@ -1077,7 +1079,10 @@ class MessagesView extends React.Component {
           }
         }
         const avatar = this.state.avatar || true;
-        const online = this.props.online ? 'online' + (this.state.typingIndicator ? ' typing' : '') : 'offline';
+        const online = this.state.deleted ? null :
+          this.props.online ? 'online' + (this.state.typingIndicator ? ' typing' : '') : 'offline';
+
+        const titleClass = 'panel-title' + (this.state.deleted ? ' deleted' : '');
 
         component2 = (
           <>
@@ -1093,11 +1098,12 @@ class MessagesView extends React.Component {
                   tinode={this.props.tinode}
                   avatar={avatar}
                   topic={this.state.topic}
-                  title={this.state.title} />
+                  title={this.state.title}
+                  deleted={this.state.deleted} />
                 {!isChannel ? <span className={online} /> : null}
               </div>
               <div id="topic-title-group">
-                <div id="topic-title" className="panel-title">{
+                <div id="topic-title" className={titleClass}>{
                   this.state.title ||
                   <i><FormattedMessage id="unnamed_topic" defaultMessage="Unnamed"
                     description="Title shown when the topic has no name" /></i>
@@ -1158,7 +1164,7 @@ class MessagesView extends React.Component {
               <SendMessage
                 tinode={this.props.tinode}
                 noInput={!!this.props.forwardMessage}
-                disabled={!this.state.isWriter || topic.deleted}
+                disabled={!this.state.isWriter || this.state.deleted}
                 onKeyPress={this.sendKeyPress}
                 onSendMessage={this.sendMessage}
                 onAttachFile={this.props.forwardMessage ? null : this.handleAttachFile}

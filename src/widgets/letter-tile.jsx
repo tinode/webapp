@@ -13,16 +13,16 @@ export default class LetterTile extends React.PureComponent {
       const iconColor = idToColorClass(this.props.topic, isGroup);
       if (this.props.topic && this.props.title && this.props.title.trim()) {
         const letter = this.props.title.trim().charAt(0);
-        const className = 'lettertile ' + iconColor + (this.props.disabled ? ' disabled' : '');
+        const className = 'lettertile ' + iconColor + (this.props.deleted ? ' disabled' : '');
         avatar = (<div className={className}><div>{letter}</div></div>)
       } else {
-        const className = 'material-icons ' + iconColor + (this.props.disabled ? ' disabled' : '');
+        const className = 'material-icons ' + iconColor + (this.props.deleted ? ' disabled' : '');
         avatar = isGroup ? <i className={className}>group</i> : <i className={className}>person</i>;
       }
     } else if (this.props.avatar) {
       const url = this.props.tinode.authorizeURL(sanitizeImageUrl(this.props.avatar));
       // If avatar image is invalid, show a placeholder.
-      const className = 'avatar' + (this.props.disabled ? ' disabled' : '');
+      const className = 'avatar' + (this.props.deleted ? ' deleted' : '');
       avatar = <img className={className} alt="avatar" src={url}
         onError={(e)=>{e.target.onerror = null; e.target.src="../img/broken_image.png"}} />;
     } else {

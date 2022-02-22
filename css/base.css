@@ -714,6 +714,10 @@ table.permission-editor td.checkbox {
   white-space: nowrap;
 }
 
+.panel-title.deleted {
+  text-decoration: line-through;
+}
+
 .caption-panel {
   display: flex;
   align-items: center;
@@ -956,6 +960,12 @@ i.search {
   white-space: nowrap;
 }
 
+.contact-box .contact-title.deleted {
+  opacity: 0.66;
+  text-decoration: line-through;
+  text-decoration-thickness: 0.5px;
+}
+
 .contact-box .contact-comment {
   text-overflow: ellipsis;
   overflow-x: hidden;
@@ -1007,8 +1017,9 @@ i.search {
   height: 2rem;
 }
 
-.avatar.disabled {
-  opacity: 0.5;
+.avatar.deleted {
+  opacity: 0.75;
+  filter: grayscale(1);
 }
 
 .contact-box .avatar-box > .material-icons {
@@ -1093,22 +1104,24 @@ img.channel {
   font-size: 1.5rem;
   color: #0097A7;
   position: absolute;
-  right: 0.05rem;
-  bottom: 0.05rem;
+  right: 0;
+  bottom: 0;
   background-color: white;
   overflow: visible;
   border: 0.0px solid transparent;
+  padding-left: 0.5px;
 }
 
 .contact-box .deleted.material-icons {
   width: 1.5rem;
   height: 1.5rem;
   font-size: 1.5rem;
-  color: gray;
+  color: #999;
   position: absolute;
-  right: 0.05rem;
-  bottom: 0.05rem;
+  right: 0;
+  bottom: 0;
   background-color: white;
+  padding-left: 0.5px;
 }
 
 /* END of avatar box */
