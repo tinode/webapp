@@ -5479,8 +5479,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.handleCredDelete = this.handleCredDelete.bind(this);
     this.handleCredConfirm = this.handleCredConfirm.bind(this);
     this.initFCMessaging = this.initFCMessaging.bind(this);
-    this.togglePushToken = this.togglePushToken.bind(this);
-    this.requestPushToken = this.requestPushToken.bind(this);
+    this.toggleFCMToken = this.toggleFCMToken.bind(this);
     this.handlePushMessage = this.handlePushMessage.bind(this);
     this.handleSidepanelCancel = this.handleSidepanelCancel.bind(this);
     this.handleStartTopicRequest = this.handleStartTopicRequest.bind(this);
@@ -5524,7 +5523,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       messageSounds: !settings.messageSoundsOff,
       incognitoMode: false,
       desktopAlerts: persist && !!settings.desktopAlerts,
-      desktopAlertsEnabled: ((0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_14__.isSecureConnection)() || (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_14__.isLocalHost)()) && typeof firebase_app__WEBPACK_IMPORTED_MODULE_2__ != 'undefined' && typeof navigator != 'undefined' && typeof FIREBASE_INIT != 'undefined',
+      desktopAlertsEnabled: ((0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_14__.isSecureConnection)() || (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_14__.isLocalHost)()) && typeof firebase != 'undefined' && typeof navigator != 'undefined' && typeof FIREBASE_INIT != 'undefined',
       firebaseToken: persist ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('firebase-token') : null,
       applicationVisible: !document.hidden,
       errorText: '',
@@ -5599,7 +5598,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         this.initFCMessaging().then(() => {
           if (this.state.desktopAlerts) {
             if (!this.state.firebaseToken) {
-              this.togglePushToken(true);
+              this.toggleFCMToken(true);
             } else {
               this.tinode.setDeviceToken(this.state.firebaseToken);
             }
@@ -5676,30 +5675,77 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     };
 
     try {
-      this.fbPush = firebase_app__WEBPACK_IMPORTED_MODULE_2__.initializeApp(FIREBASE_INIT, _config_js__WEBPACK_IMPORTED_MODULE_11__.APP_NAME).messaging();
-      this.fbPush.usePublicVapidKey(FIREBASE_INIT.messagingVapidKey);
+      this.fcm = (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.getMessaging)((0,firebase_app__WEBPACK_IMPORTED_MODULE_2__.initializeApp)(FIREBASE_INIT, _config_js__WEBPACK_IMPORTED_MODULE_11__.APP_NAME));
       return navigator.serviceWorker.register('/service-worker.js').then(reg => {
         this.checkForAppUpdate(reg);
-        this.fbPush.useServiceWorker(reg);
         reg.active.postMessage(JSON.stringify({
           locale: locale,
           version: _version_js__WEBPACK_IMPORTED_MODULE_12__.PACKAGE_VERSION
         }));
-        this.fbPush.onTokenRefresh(() => {
-          this.requestPushToken();
+        return reg;
+      }).then(reg => {
+        return TinodeWeb.requestFCMToken(this.fcm, reg);
+      }).then(token => {
+        const persist = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('keep-logged-in');
+
+        if (token != this.state.firebaseToken) {
+          this.tinode.setDeviceToken(token);
+
+          if (persist) {
+            _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].setObject('firebase-token', token);
+          }
+        }
+
+        this.setState({
+          firebaseToken: token,
+          desktopAlerts: true
         });
-        this.fbPush.onMessage(payload => {
+
+        if (persist) {
+          _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].updateObject('settings', {
+            desktopAlerts: true
+          });
+        }
+
+        (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.onMessage)(this.fcm, payload => {
           this.handlePushMessage(payload.data);
         });
-        return reg;
       }).catch(err => {
-        onError("Failed to register service worker:", err);
-        return Promise.reject(err);
+        onError(err);
+        throw err;
       });
     } catch (err) {
-      onError("Failed to initialize push notifications", err);
+      onError(err);
       return Promise.reject(err);
     }
+  }
+
+  static requestFCMToken(fcm, sw) {
+    return (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.getToken)(fcm, {
+      serviceWorkerRegistration: sw,
+      vapidKey: FIREBASE_INIT.messagingVapidKey
+    }).then(token => {
+      if (token) {
+        return token;
+      } else {
+        return Notification.requestPermission().then(permission => {
+          if (permission === 'granted') {
+            return (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.getToken)(fcm, {
+              serviceWorkerRegistration: reg,
+              vapidKey: FIREBASE_INIT.messagingVapidKey
+            }).then(token => {
+              if (token) {
+                return token;
+              } else {
+                throw new Error("Failed to initialize notifications");
+              }
+            });
+          } else {
+            throw new Error("No permission to send notifications: " + permission);
+          }
+        });
+      }
+    });
   }
 
   handleResize() {
@@ -6443,21 +6489,14 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlSidePanel(window.location.hash, this.state.myUserId ? 'blocked' : ''));
   }
 
-  togglePushToken(enabled) {
+  toggleFCMToken(enabled) {
     if (enabled) {
       this.setState({
         desktopAlerts: null
       });
 
       if (!this.state.firebaseToken) {
-        const fcm = this.fbPush ? Promise.resolve() : this.initFCMessaging();
-        fcm.then(() => {
-          return this.fbPush.requestPermission();
-        }).then(() => {
-          this.requestPushToken();
-        }).catch(err => {
-          console.error("Failed to get notification permission.", err);
-          this.handleError(err.message, 'err');
+        this.initFCMessaging().catch(() => {
           this.setState({
             desktopAlerts: false,
             firebaseToken: null
@@ -6477,8 +6516,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           });
         }
       }
-    } else if (this.state.firebaseToken && this.fbPush) {
-      this.fbPush.deleteToken(this.state.firebaseToken).catch(err => {
+    } else if (this.state.firebaseToken && this.fcm) {
+      (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.deleteToken)(this.fcm).catch(err => {
         console.error("Unable to delete token.", err);
       }).finally(() => {
         _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].updateObject('settings', {
@@ -6500,34 +6539,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         desktopAlerts: false
       });
     }
-  }
-
-  requestPushToken() {
-    this.fbPush.getToken().then(refreshedToken => {
-      const persist = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('keep-logged-in');
-
-      if (refreshedToken != this.state.firebaseToken) {
-        this.tinode.setDeviceToken(refreshedToken);
-
-        if (persist) {
-          _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].setObject('firebase-token', refreshedToken);
-        }
-      }
-
-      this.setState({
-        firebaseToken: refreshedToken,
-        desktopAlerts: true
-      });
-
-      if (persist) {
-        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].updateObject('settings', {
-          desktopAlerts: true
-        });
-      }
-    }).catch(err => {
-      this.handleError(err.message, 'err');
-      console.error("Failed to retrieve firebase token", err);
-    });
   }
 
   handleToggleMessageSounds(enabled) {
@@ -6753,7 +6764,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     localStorage.removeItem('settings');
 
     if (this.state.firebaseToken) {
-      this.fbPush.deleteToken(this.state.firebaseToken);
+      (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.deleteToken)(this.fcm);
     }
 
     clearInterval(this.reconnectCountdown);
@@ -7133,7 +7144,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       onUpdateAccountDesc: this.handleTopicUpdateRequest,
       onUpdatePassword: this.handleUpdatePasswordRequest,
       onUpdateAccountTags: this.handleUpdateAccountTagsRequest,
-      onTogglePushNotifications: this.togglePushToken,
+      onTogglePushNotifications: this.toggleFCMToken,
       onToggleMessageSounds: this.handleToggleMessageSounds,
       onToggleIncognitoMode: this.handleToggleIncognitoMode,
       onCredAdd: this.handleCredAdd,

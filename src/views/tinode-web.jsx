@@ -2,8 +2,9 @@
 import React from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
-import * as firebase from 'firebase/app';
-import 'firebase/messaging';
+import { initializeApp as firebaseInitApp } from 'firebase/app';
+import { getMessaging as firebaseGetMessaging, getToken as firebaseGetToken,
+  deleteToken as firebaseDelToken, onMessage as firebaseOnMessage } from 'firebase/messaging';
 
 import Tinode from 'tinode-sdk';
 
@@ -114,8 +115,7 @@ class TinodeWeb extends React.Component {
     this.handleCredDelete = this.handleCredDelete.bind(this);
     this.handleCredConfirm = this.handleCredConfirm.bind(this);
     this.initFCMessaging = this.initFCMessaging.bind(this);
-    this.togglePushToken = this.togglePushToken.bind(this);
-    this.requestPushToken = this.requestPushToken.bind(this);
+    this.toggleFCMToken = this.toggleFCMToken.bind(this);
     this.handlePushMessage = this.handlePushMessage.bind(this);
     this.handleSidepanelCancel = this.handleSidepanelCancel.bind(this);
     this.handleStartTopicRequest = this.handleStartTopicRequest.bind(this);
@@ -258,7 +258,7 @@ class TinodeWeb extends React.Component {
         this.initFCMessaging().then(() => {
           if (this.state.desktopAlerts) {
             if (!this.state.firebaseToken) {
-              this.togglePushToken(true);
+              this.toggleFCMToken(true);
             } else {
               this.tinode.setDeviceToken(this.state.firebaseToken);
             }
@@ -334,34 +334,70 @@ class TinodeWeb extends React.Component {
     }
 
     try {
-      this.fbPush = firebase.initializeApp(FIREBASE_INIT, APP_NAME).messaging();
-      this.fbPush.usePublicVapidKey(FIREBASE_INIT.messagingVapidKey);
-
+      this.fcm = firebaseGetMessaging(firebaseInitApp(FIREBASE_INIT, APP_NAME));
       return navigator.serviceWorker.register('/service-worker.js').then((reg) => {
         this.checkForAppUpdate(reg);
-        this.fbPush.useServiceWorker(reg);
         reg.active.postMessage(JSON.stringify({locale: locale, version: PACKAGE_VERSION}));
-
-        // Google could not be bothered to mention that onTokenRefresh is never called.
-        this.fbPush.onTokenRefresh(() => {
-          this.requestPushToken();
-        });
+        return reg;
+      }).then((reg) => {
+        // Request token.
+        return TinodeWeb.requestFCMToken(this.fcm, reg);
+      }).then((token) => {
+        const persist = LocalStorageUtil.getObject('keep-logged-in');
+        if (token != this.state.firebaseToken) {
+          this.tinode.setDeviceToken(token);
+          if (persist) {
+            LocalStorageUtil.setObject('firebase-token', token);
+          }
+        }
+        this.setState({firebaseToken: token, desktopAlerts: true});
+        if (persist) {
+          LocalStorageUtil.updateObject('settings', {desktopAlerts: true});
+        }
 
         // Handhe FCM pushes
         // (a) for channels always,
-        // (b) pushes when the app is in foreground but has not focus.
-        this.fbPush.onMessage(payload => { this.handlePushMessage(payload.data); });
-
-        return reg;
+        // (b) pushes when the app is in foreground but has no focus.
+        firebaseOnMessage(this.fcm, (payload) => { this.handlePushMessage(payload.data); });
       }).catch((err) => {
-        // registration failed :(
-        onError("Failed to register service worker:", err);
-        return Promise.reject(err);
+        // SW registration or FCM has failed :(
+        onError(err);
+        throw err;
       });
     } catch (err) {
-      onError("Failed to initialize push notifications", err);
+      onError(err);
       return Promise.reject(err);
     }
+  }
+
+  // Google's FCM API is idiotic.
+  static requestFCMToken(fcm, sw) {
+    return firebaseGetToken(fcm, {
+      serviceWorkerRegistration: sw,
+      vapidKey: FIREBASE_INIT.messagingVapidKey
+    }).then((token) => {
+      if (token) {
+        return token;
+      } else {
+        // Try to request permissions.
+        return Notification.requestPermission().then((permission) => {
+          if (permission === 'granted') {
+            return firebaseGetToken(fcm, {
+              serviceWorkerRegistration: reg,
+              vapidKey: FIREBASE_INIT.messagingVapidKey
+            }).then((token) => {
+              if (token) {
+                return token;
+              } else {
+                throw new Error("Failed to initialize notifications");
+              }
+            });
+          } else {
+            throw new Error("No permission to send notifications: " + permission);
+          }
+        });
+      }
+    });
   }
 
   handleResize() {
@@ -1101,20 +1137,11 @@ class TinodeWeb extends React.Component {
       this.state.myUserId ? 'blocked' : ''));
   }
 
-  togglePushToken(enabled) {
+  toggleFCMToken(enabled) {
     if (enabled) {
       this.setState({desktopAlerts: null});
       if (!this.state.firebaseToken) {
-        const fcm = this.fbPush ?
-          Promise.resolve() :
-          this.initFCMessaging();
-        fcm.then(() => {
-          return this.fbPush.requestPermission();
-        }).then(() => {
-          this.requestPushToken();
-        }).catch((err) => {
-          console.error("Failed to get notification permission.", err);
-          this.handleError(err.message, 'err');
+        this.initFCMessaging().catch(() => {
           this.setState({desktopAlerts: false, firebaseToken: null});
           LocalStorageUtil.updateObject('settings', {desktopAlerts: false});
         });
@@ -1124,8 +1151,8 @@ class TinodeWeb extends React.Component {
           LocalStorageUtil.updateObject('settings', {desktopAlerts: true});
         }
       }
-    } else if (this.state.firebaseToken && this.fbPush) {
-      this.fbPush.deleteToken(this.state.firebaseToken).catch((err) => {
+    } else if (this.state.firebaseToken && this.fcm) {
+      firebaseDelToken(this.fcm).catch((err) => {
         console.error("Unable to delete token.", err);
       }).finally(() => {
         LocalStorageUtil.updateObject('settings', {desktopAlerts: false});
@@ -1138,25 +1165,6 @@ class TinodeWeb extends React.Component {
       this.setState({desktopAlerts: false, firebaseToken: null});
       LocalStorageUtil.updateObject('settings', {desktopAlerts: false});
     }
-  }
-
-  requestPushToken() {
-    this.fbPush.getToken().then((refreshedToken) => {
-      const persist = LocalStorageUtil.getObject('keep-logged-in');
-      if (refreshedToken != this.state.firebaseToken) {
-        this.tinode.setDeviceToken(refreshedToken);
-        if (persist) {
-          LocalStorageUtil.setObject('firebase-token', refreshedToken);
-        }
-      }
-      this.setState({firebaseToken: refreshedToken, desktopAlerts: true});
-      if (persist) {
-        LocalStorageUtil.updateObject('settings', {desktopAlerts: true});
-      }
-    }).catch((err) => {
-      this.handleError(err.message, 'err');
-      console.error("Failed to retrieve firebase token", err);
-    });
   }
 
   handleToggleMessageSounds(enabled) {
@@ -1338,7 +1346,7 @@ class TinodeWeb extends React.Component {
     localStorage.removeItem('firebase-token');
     localStorage.removeItem('settings');
     if (this.state.firebaseToken) {
-      this.fbPush.deleteToken(this.state.firebaseToken)
+      firebaseDelToken(this.fcm);
     }
 
     clearInterval(this.reconnectCountdown);
@@ -1724,7 +1732,7 @@ class TinodeWeb extends React.Component {
           onUpdateAccountDesc={this.handleTopicUpdateRequest}
           onUpdatePassword={this.handleUpdatePasswordRequest}
           onUpdateAccountTags={this.handleUpdateAccountTagsRequest}
-          onTogglePushNotifications={this.togglePushToken}
+          onTogglePushNotifications={this.toggleFCMToken}
           onToggleMessageSounds={this.handleToggleMessageSounds}
           onToggleIncognitoMode={this.handleToggleIncognitoMode}
           onCredAdd={this.handleCredAdd}
