@@ -52,8 +52,8 @@ module.exports = (env, argv) => {
       ]
     },
     performance: {
-      maxEntrypointSize: 294912,
-      maxAssetSize: 294912
+      maxEntrypointSize: 320000,
+      maxAssetSize: 320000
     },
     plugins: [
       new CopyPlugin({
@@ -66,8 +66,6 @@ module.exports = (env, argv) => {
       'react': 'React',
       'react-dom': 'ReactDOM',
       'react-intl': 'ReactIntl',
-      'firebase/app': 'firebase',
-      'firebase/messaging': ['firebase', 'messaging'],
       'tinode-sdk': 'Tinode',
     },
   };

@@ -164,9 +164,11 @@ class TinodeWeb extends React.Component {
       // "On" is the default, so saving the "off" state.
       messageSounds: !settings.messageSoundsOff,
       incognitoMode: false,
+      // Persistent request to enable alerts.
       desktopAlerts: persist && !!settings.desktopAlerts,
+      // Enable / disable checkbox.
       desktopAlertsEnabled: (isSecureConnection() || isLocalHost()) &&
-        (typeof firebase != 'undefined') && (typeof navigator != 'undefined') &&
+        (typeof firebaseInitApp != 'undefined') && (typeof navigator != 'undefined') &&
         (typeof FIREBASE_INIT != 'undefined'),
       firebaseToken: persist ? LocalStorageUtil.getObject('firebase-token') : null,
 
@@ -257,11 +259,7 @@ class TinodeWeb extends React.Component {
       if (this.state.desktopAlertsEnabled) {
         this.initFCMessaging().then(() => {
           if (this.state.desktopAlerts) {
-            if (!this.state.firebaseToken) {
-              this.toggleFCMToken(true);
-            } else {
-              this.tinode.setDeviceToken(this.state.firebaseToken);
-            }
+            this.tinode.setDeviceToken(this.state.firebaseToken);
           }
         }).catch(() => {
           // do nothing: handled earlier.
@@ -330,7 +328,8 @@ class TinodeWeb extends React.Component {
     const onError = (msg, err) => {
       console.error(msg, err);
       this.handleError(formatMessage(messages.push_init_failed), 'err');
-      this.setState({desktopAlertsEnabled: false});
+      this.setState({desktopAlertsEnabled: false, firebaseToken: null});
+      LocalStorageUtil.updateObject('settings', {desktopAlerts: false});
     }
 
     try {
@@ -1141,10 +1140,7 @@ class TinodeWeb extends React.Component {
     if (enabled) {
       this.setState({desktopAlerts: null});
       if (!this.state.firebaseToken) {
-        this.initFCMessaging().catch(() => {
-          this.setState({desktopAlerts: false, firebaseToken: null});
-          LocalStorageUtil.updateObject('settings', {desktopAlerts: false});
-        });
+        this.initFCMessaging();
       } else {
         this.setState({desktopAlerts: true});
         if (LocalStorageUtil.getObject('keep-logged-in')) {

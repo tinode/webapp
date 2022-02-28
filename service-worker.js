@@ -1,4 +1,5 @@
 // Must be located at the root.
+// FIXME: update Firebase version.
 importScripts('https://cdn.jsdelivr.net/npm/firebase@8.10.1/firebase-app.js');
 importScripts('https://cdn.jsdelivr.net/npm/firebase@8.10.1/firebase-messaging.js');
 importScripts('firebase-init.js');
