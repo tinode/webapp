@@ -7652,7 +7652,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         break;
 
       case 'read':
-        console.log("Message read on another device", data.seq);
         this.tinode.oobNotification('read', data.topic, data.seq);
         break;
 

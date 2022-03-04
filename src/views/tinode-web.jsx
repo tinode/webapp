@@ -325,7 +325,7 @@ class TinodeWeb extends React.Component {
       }
       break;
     case 'read':
-      console.log("Message read on another device", data.seq);
+      // Message read on another device, clear it here.
       this.tinode.oobNotification('read', data.topic, data.seq);
       break;
     default:
