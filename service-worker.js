@@ -44,7 +44,11 @@ const i18n = {
     'new_chat': "新聊天",
   }
 };
+
 self.i18nMessage = function(id) {
+  if (!id) {
+    return null;
+  }
   // Choose translations: given something like 'de-CH', try 'de-CH' then 'de' then 'en'.
   const lang = i18n[self.locale] || i18n[self.baseLocale] || i18n['en'];
   // Try finding string by id in the specified language, if missing try English, otherwise use the id itself
@@ -63,22 +67,25 @@ fbMessaging.onBackgroundMessage((payload) => {
   }
 
   // Notify webapp that a message was received.
-  if (webAppChannel) {
+  if (webAppChannel || payload.data.what == 'read') {
     webAppChannel.postMessage(payload.data);
   }
 
+  const titles = {'msg': 'new_message', 'sub': 'new_chat'};
   const pushType = payload.data.what || 'msg';
-  const title = payload.data.title || self.i18nMessage(pushType == 'msg' ? 'new_message' : 'new_chat');
-  const options = {
-    body: payload.data.content || '', // TODO: content for 'sub' should be topic's or user's title.
-    icon: '/img/logo96.png', // TODO: use topic's or user's avatar (would have to fetch for 'sub', read from db for 'msg').
-    badge: '/img/badge96.png',
-    tag: payload.data.topic || undefined,
-    data: {
-      topic: payload.data.topic
-    }
-  };
-  return self.registration.showNotification(title, options);
+  const title = payload.data.title || self.i18nMessage(titles[pushType]);
+  if (title) {
+    const options = {
+      body: payload.data.content || '', // TODO: content for 'sub' should be topic's or user's title.
+      icon: '/img/logo96.png', // TODO: use topic's or user's avatar (would have to fetch for 'sub', read from db for 'msg').
+      badge: '/img/badge96.png',
+      tag: payload.data.topic || undefined,
+      data: {
+        topic: payload.data.topic
+      }
+    };
+    return self.registration.showNotification(title, options);
+  }
 });
 
 // Update service worker immediately for both the current client

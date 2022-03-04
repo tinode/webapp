@@ -7643,8 +7643,21 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handlePushMessage(data) {
-    if (data.what == 'msg' && tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().isChannelTopicName(data.topic)) {
-      this.tinode.oobNotification(data.topic, data.seq, 'fake-uid');
+    switch (data.what) {
+      case 'msg':
+        if (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().isChannelTopicName(data.topic)) {
+          this.tinode.oobNotification('msg', data.topic, data.seq, 'fake-uid');
+        }
+
+        break;
+
+      case 'read':
+        console.log("Message read on another device", data.seq);
+        this.tinode.oobNotification('read', data.topic, data.seq);
+        break;
+
+      default:
+        console.warn("Unknown push type ignored", data.what, data);
     }
   }
 

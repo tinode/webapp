@@ -315,11 +315,21 @@ class TinodeWeb extends React.Component {
     return tinode;
   }
 
-  // Notifiy Tinode that a push message was received from the server.
+  // Tinode received a push notification from the server.
   handlePushMessage(data) {
-    if (data.what == 'msg' && Tinode.isChannelTopicName(data.topic)) {
-      // The last argument is a fake user Id: otherwise the update is seen as one from the current user.
-      this.tinode.oobNotification(data.topic, data.seq, 'fake-uid');
+    switch (data.what) {
+    case 'msg':
+      if (Tinode.isChannelTopicName(data.topic)) {
+        // The last argument is a fake user Id: otherwise the update is seen as one from the current user.
+        this.tinode.oobNotification('msg', data.topic, data.seq, 'fake-uid');
+      }
+      break;
+    case 'read':
+      console.log("Message read on another device", data.seq);
+      this.tinode.oobNotification('read', data.topic, data.seq);
+      break;
+    default:
+      console.warn("Unknown push type ignored", data.what, data);
     }
   }
 
