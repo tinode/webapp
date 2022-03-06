@@ -316,7 +316,8 @@ class TinodeWeb extends React.Component {
   }
 
   // Tinode received a push notification from the server.
-  handlePushMessage(data) {
+  handlePushMessage(payload) {
+    const data = payload.data || {};
     switch (data.what) {
     case 'msg':
       if (Tinode.isChannelTopicName(data.topic)) {
@@ -367,7 +368,7 @@ class TinodeWeb extends React.Component {
         // Handhe FCM pushes
         // (a) for channels always,
         // (b) pushes when the app is in foreground but has no focus.
-        firebaseOnMessage(this.fcm, (payload) => { this.handlePushMessage(payload.data); });
+        firebaseOnMessage(this.fcm, (payload) => { this.handlePushMessage(payload); });
       }).catch((err) => {
         // SW registration or FCM has failed :(
         onError(err);

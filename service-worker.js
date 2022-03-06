@@ -67,7 +67,7 @@ fbMessaging.onBackgroundMessage((payload) => {
   }
 
   // Notify webapp that a message was received.
-  if (webAppChannel || payload.data.what == 'read') {
+  if (webAppChannel) {
     webAppChannel.postMessage(payload.data);
   }
 
@@ -97,10 +97,14 @@ self.addEventListener('install', event => {
 // This code handles a click on notification: takes
 // the user to the browser tab with the chat or opens a new tab.
 self.addEventListener('notificationclick', event => {
-  const notification = event.notification;
-  notification.close();
+  const data = event.notification.data;
+  event.notification.close();
+  if (!data) {
+    console.info("Missing 'data' in notification", event.notification);
+    return;
+  }
 
-  const urlHash = '#/' + notification.data.topic;
+  const urlHash = '#/' + data.topic;
 
   event.waitUntil(self.clients.matchAll({
     type: 'window',
@@ -109,7 +113,7 @@ self.addEventListener('notificationclick', event => {
     let anyClient = null;
     for (let i = 0; i < windowClients.length; i++) {
       const url = new URL(windowClients[i].url);
-      if (url.hash.includes(notification.data.topic)) {
+      if (url.hash.includes(data.topic)) {
         // Found the Tinode tab with the right topic open.
         return windowClients[i].focus();
       } else {

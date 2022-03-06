@@ -7642,7 +7642,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     return tinode;
   }
 
-  handlePushMessage(data) {
+  handlePushMessage(payload) {
+    const data = payload.data || {};
+
     switch (data.what) {
       case 'msg':
         if (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().isChannelTopicName(data.topic)) {
@@ -7712,7 +7714,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         }
 
         (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.onMessage)(this.fcm, payload => {
-          this.handlePushMessage(payload.data);
+          this.handlePushMessage(payload);
         });
       }).catch(err => {
         onError(err);
