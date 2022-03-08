@@ -1,3 +1,5 @@
+// Panel with a chat.
+
 import React from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
@@ -185,8 +187,13 @@ class MessagesView extends React.Component {
       this.postReadNotification(0);
     }
 
-    if ((this.state.topic != prevState.topic) || !prevProps.ready) {
-      this.subscribe(topic);
+    if (topic && ((this.state.topic != prevState.topic) || !prevProps.ready)) {
+      if (topic._new) {
+        console.log('Fetching new topic description');
+        topic.getMeta(topic.startMetaQuery().withDesc().build());
+      } else {
+        this.subscribe(topic);
+      }
     }
   }
 
@@ -340,7 +347,7 @@ class MessagesView extends React.Component {
   }
 
   subscribe(topic) {
-    if (!topic || topic.isSubscribed() || !this.props.ready) {
+    if (topic.isSubscribed() || !this.props.ready) {
       return;
     }
 

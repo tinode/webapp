@@ -3334,7 +3334,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "PACKAGE_VERSION": () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.18.3-beta1";
+const PACKAGE_VERSION = "0.19.0-alpha1";
 
 /***/ }),
 
@@ -5482,8 +5482,13 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       this.postReadNotification(0);
     }
 
-    if (this.state.topic != prevState.topic || !prevProps.ready) {
-      this.subscribe(topic);
+    if (topic && (this.state.topic != prevState.topic || !prevProps.ready)) {
+      if (topic._new) {
+        console.log('Fetching new topic description');
+        topic.getMeta(topic.startMetaQuery().withDesc().build());
+      } else {
+        this.subscribe(topic);
+      }
     }
   }
 
@@ -5641,7 +5646,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
 
   subscribe(topic) {
-    if (!topic || topic.isSubscribed() || !this.props.ready) {
+    if (topic.isSubscribed() || !this.props.ready) {
       return;
     }
 
@@ -6609,7 +6614,7 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     };
     this.handleTabClick = this.handleTabClick.bind(this);
     this.handleSearchContacts = this.handleSearchContacts.bind(this);
-    this.handleContactSelected = this.handleContactSelected.bind(this);
+    this.handleSearchResultSelected = this.handleSearchResultSelected.bind(this);
     this.handleNewGroupSubmit = this.handleNewGroupSubmit.bind(this);
     this.handleGroupByID = this.handleGroupByID.bind(this);
   }
@@ -6633,10 +6638,10 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     });
   }
 
-  handleContactSelected(uid) {
+  handleSearchResultSelected(name) {
     if (this.state.tabSelected == 'find') {
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].removeUrlParam(window.location.hash, 'tab'));
-      this.props.onCreateTopic(uid);
+      this.props.onCreateTopic(name);
     }
   }
 
@@ -6719,7 +6724,7 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       showOnline: false,
       showUnread: false,
       showContextMenu: false,
-      onTopicSelected: this.handleContactSelected
+      onTopicSelected: this.handleSearchResultSelected
     })));
   }
 
@@ -7814,16 +7819,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           topicName = null;
         }
 
-        const newState = {
-          topicSelected: topicName
-        };
-        const acs = this.tinode.getTopicAccessMode(topicName);
-
-        if (acs) {
-          newState.topicSelectedAcs = acs;
-        }
-
-        this.setState(newState);
+        this.setState({
+          topicSelected: topicName,
+          topicSelectedAcs: this.tinode.getTopicAccessMode(topicName)
+        });
       }
     } else {
       this.setState({

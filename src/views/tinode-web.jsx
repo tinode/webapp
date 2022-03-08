@@ -460,14 +460,10 @@ class TinodeWeb extends React.Component {
           // Clear invalid topic name.
           topicName = null;
         }
-        const newState = {
-          topicSelected: topicName
-        };
-        const acs = this.tinode.getTopicAccessMode(topicName);
-        if (acs) {
-          newState.topicSelectedAcs = acs;
-        }
-        this.setState(newState);
+        this.setState({
+          topicSelected: topicName,
+          topicSelectedAcs: this.tinode.getTopicAccessMode(topicName)
+        });
       }
     } else {
       // Empty hashpath
@@ -911,7 +907,7 @@ class TinodeWeb extends React.Component {
     });
   }
 
-  // User clicked on a contact in the side panel or deleted a contact.
+  // User clicked on a topic in the side panel or deleted a topic.
   handleTopicSelected(topicName) {
     // Clear newTopicParams after use.
     if (this.state.newTopicParams && this.state.newTopicParams._topicName != topicName) {
@@ -927,7 +923,7 @@ class TinodeWeb extends React.Component {
         mobilePanel: 'topic-view',
         infoPanel: undefined
       });
-      // Different contact selected.
+      // Different topic selected.
       if (this.state.topicSelected != topicName) {
         this.setState({
           topicSelectedOnline: this.tinode.isTopicOnline(topicName),
