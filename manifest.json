@@ -36,5 +36,10 @@
       "platform": "itunes",
       "url": "https://apps.apple.com/us/app/tinode/id1483763538"
     }
-  ]
+  ],
+  "permissions": {
+    "audio-capture": {
+      "description": "Required for recording voice messages"
+    }
+  }
 }

@@ -2639,6 +2639,12 @@ ul.tabbar li.active > a {
   height: 80%;
 }
 
+.audio-visualiser {
+  background-color: #eee;
+  width: 12rem;
+  height: 3rem;
+}
+
 /*
  Mobile styles.
  */
