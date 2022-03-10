@@ -2639,10 +2639,28 @@ ul.tabbar li.active > a {
   height: 80%;
 }
 
-.audio-visualiser {
+.audio {
+  display: flex;
+  align-items: center;
+  flex: none;
   background-color: #eee;
-  width: 12rem;
   height: 3rem;
+  border-radius: 1.5rem;
+}
+
+.audio canvas.visualiser {
+  padding-left: 1.3rem;
+  width: 12rem;
+  height: 2.6rem;
+}
+
+.audio .duration {
+  font-size: large;
+}
+
+.audio .material-icons {
+  font-size: 2rem;
+  padding: 0.5rem;
 }
 
 /*

@@ -3059,9 +3059,14 @@ function shortDateFormat(then, locale) {
     day: 'numeric'
   });
 }
-function secondsToTime(seconds) {
-  const min = Math.floor(seconds / 60);
-  let sec = seconds % 60;
+function secondsToTime(seconds, fixedMin) {
+  let min = Math.floor(seconds / 60);
+
+  if (fixedMin) {
+    min = min < 10 ? "0".concat(min) : min;
+  }
+
+  let sec = seconds % 60 | 0;
   sec = sec < 10 ? "0".concat(sec) : sec;
   return "".concat(min, ":").concat(sec);
 }
@@ -9584,8 +9589,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _lib_strformat__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/strformat */ "./src/lib/strformat.js");
+
 
 const BUFFER_SIZE = 256;
+const LINE_WIDTH = 5;
+const SPACING = 2;
+const MILLIS_PER_BAR = 100;
+const BAR_COLOR = '#8fbed6';
+const BKG_COLOR = '#eeeeee';
 class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
@@ -9593,16 +9605,17 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     this.state = {
       enabled: enabled,
       audioRecord: null,
-      length: 0
+      recording: false,
+      paused: false,
+      duration: '0:00'
     };
-    this.recording = false;
     this.visualize = this.visualize.bind(this);
     this.initMediaRecording = this.initMediaRecording.bind(this);
     this.handleStart = this.handleStart.bind(this);
     this.handleStop = this.handleStop.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
-    this.min = 1000000;
-    this.max = 0;
+    this.durationMillis = 0;
+    this.startedOn = null;
     this.canvasRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
   }
 
@@ -9612,6 +9625,8 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     }
 
     this.canvasContext = this.canvasRef.current.getContext('2d');
+    this.canvasContext.lineCap = 'round';
+    this.canvasContext.translate(0.5, 0.5);
     this.stream = null;
     this.mediaRecorder = null;
     this.audioContext = null;
@@ -9622,72 +9637,89 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
   }
 
   visualize() {
-    const record = [];
-    const pcmData = new Uint8Array(BUFFER_SIZE);
+    const pcmData = new Uint8Array(this.analyser.frequencyBinCount);
     const width = this.canvasRef.current.width;
     const height = this.canvasRef.current.height;
+    const viewBuffer = [];
+    const viewLength = width / (LINE_WIDTH + SPACING) | 0;
+    const viewDuration = MILLIS_PER_BAR * viewLength;
+    const samples = 0.1 * this.sampleRate | 0;
+    this.canvasContext.fillStyle = BKG_COLOR;
+    this.canvasContext.lineWidth = LINE_WIDTH;
+    this.canvasContext.strokeStyle = BAR_COLOR;
+    let prevBarCount = 0;
 
     const drawFrame = () => {
-      if (this.recording) {
+      const duration = this.durationMillis + Date.now() - this.startedOn;
+      this.setState({
+        duration: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(duration / 1000)
+      });
+
+      if (this.state.recording) {
         window.requestAnimationFrame(drawFrame);
       }
 
       this.analyser.getByteTimeDomainData(pcmData);
-      this.canvasContext.fillStyle = 'rgb(200, 200, 200)';
-      this.canvasContext.fillRect(0, 0, width, height);
-      this.canvasContext.lineWidth = 2;
-      this.canvasContext.strokeStyle = 'rgb(0, 0, 0)';
       let volume = 0.0;
 
       for (const amplitude of pcmData) {
         volume += (amplitude - 127) ** 2;
       }
 
-      console.log("Amp sum, sqrt(sum), ave, sqrt(ave):", volume, Math.sqrt(volume) | 0, volume / pcmData.length | 0, Math.sqrt(volume / pcmData.length) | 0);
-      this.min = Math.min(this.min, Math.sqrt(volume / pcmData.length));
-      this.max = Math.max(this.max, Math.sqrt(volume / pcmData.length));
-      record.push(volume);
+      volume = Math.sqrt(volume / pcmData.length);
+      let barCount = duration / MILLIS_PER_BAR | 0;
+      const dx = viewDuration > duration ? 0 : (duration - MILLIS_PER_BAR * barCount) / MILLIS_PER_BAR * (LINE_WIDTH + SPACING);
 
-      if (record.length > BUFFER_SIZE) {
-        record.shift();
-      }
+      if (prevBarCount != barCount) {
+        prevBarCount = barCount;
+        viewBuffer.push(volume);
 
-      this.canvasContext.beginPath();
-      const sliceWidth = width / BUFFER_SIZE;
-      let x = 0;
-
-      for (let i = 0; i < record.length; i++) {
-        let v = record[i] / 128.0;
-        let y = v * height * 0.5;
-
-        if (i == 0) {
-          this.canvasContext.moveTo(x, y);
-        } else {
-          this.canvasContext.lineTo(x, y);
+        if (viewBuffer.length > viewLength) {
+          viewBuffer.shift();
         }
-
-        x += sliceWidth;
       }
+
+      this.canvasContext.fillRect(0, 0, width, height);
+      this.canvasContext.beginPath();
+
+      for (let i = 0; i < viewBuffer.length; i++) {
+        let x = i * (LINE_WIDTH + SPACING) - dx;
+        let y = viewBuffer[i] / 64 * height;
+        this.canvasContext.moveTo(x, (height - y) * 0.5);
+        this.canvasContext.lineTo(x, height * 0.5 + y * 0.5);
+      }
+
+      this.canvasContext.stroke();
     };
 
     drawFrame();
   }
 
   handleStop() {
-    this.recording = false;
-    this.mediaRecorder.stop();
-    console.log(this.mediaRecorder.state);
-    console.log("recorder stopped");
+    this.mediaRecorder.pause();
+    this.durationMillis += Date.now() - this.startedOn;
+    this.setState({
+      recording: false,
+      duration: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(this.durationMillis / 1000)
+    });
   }
 
   handleStart() {
-    try {
-      navigator.mediaDevices.getUserMedia({
-        audio: true,
-        video: false
-      }).then(this.initMediaRecording, this.props.onError);
-    } catch (err) {
-      this.props.onError(err);
+    if (this.mediaRecorder) {
+      this.startedOn = Date.now();
+      this.mediaRecorder.resume();
+      this.setState({
+        recording: true
+      }, this.visualize);
+    } else {
+      try {
+        navigator.mediaDevices.getUserMedia({
+          audio: true,
+          video: false
+        }).then(this.initMediaRecording, this.props.onError);
+      } catch (err) {
+        this.props.onError(err);
+      }
     }
   }
 
@@ -9696,9 +9728,7 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
   }
 
   initMediaRecording(stream) {
-    this.recording = true;
     this.stream = stream;
-    this.recording = true;
     this.mediaRecorder = new MediaRecorder(stream);
     this.audioContext = new AudioContext();
     this.sampleRate = this.audioContext.sampleRate;
@@ -9706,10 +9736,9 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     this.analyser = this.audioContext.createAnalyser();
     this.analyser.fftSize = BUFFER_SIZE;
     this.audioInput.connect(this.analyser);
-    this.visualize();
 
     this.mediaRecorder.onstop = _ => {
-      console.log("Data available after MediaRecorder.stop() called.", this.min, this.max);
+      console.log("Data available after MediaRecorder.stop() called.");
       const blob = new Blob(this.audioChunks, {
         'type': 'audio/mp3; codecs=mp3'
       });
@@ -9722,25 +9751,41 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     };
 
     this.mediaRecorder.ondataavailable = e => {
-      this.audioChunks.push(e.data);
+      if (e.data.size > 0) {
+        this.audioChunks.push(e.data);
+      }
     };
 
+    this.startedOn = Date.now();
     this.mediaRecorder.start();
+    this.setState({
+      recording: true
+    }, this.visualize);
   }
 
   render() {
-    return this.state.enabled ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("canvas", {
-      className: "audio-visualiser",
+    return this.state.enabled ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "audio"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("canvas", {
+      className: "visualiser",
       width: "200",
       height: "60",
       ref: this.canvasRef
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "record",
-      onClick: this.handleStart
-    }, "Record"), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "stop",
-      onClick: this.handleStop
-    }, "Stop")) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Audio not available");
+    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "duration"
+    }, this.state.duration), this.state.recording ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+      href: "#",
+      onClick: this.handleStop,
+      title: "Pause"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, "pause_circle_outline")) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+      href: "#",
+      onClick: this.handleStart,
+      title: "Resume"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, "mic"))) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Audio not available");
   }
 
 }

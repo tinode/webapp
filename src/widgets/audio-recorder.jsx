@@ -2,7 +2,20 @@
 
 import React from 'react';
 
+import { secondsToTime } from '../lib/strformat';
+
+// FFT resolution.
 const BUFFER_SIZE = 256;
+// Thickness of a visualization bar.
+const LINE_WIDTH = 5;
+// Spacing between two visualization bars.
+const SPACING = 2;
+// Duration represented by one visualization bar.
+const MILLIS_PER_BAR = 100;
+// Color of histogram bars
+const BAR_COLOR = '#8fbed6';
+// Background color
+const BKG_COLOR = '#eeeeee';
 
 export default class AudioRecorder extends React.PureComponent {
   constructor(props) {
@@ -12,20 +25,19 @@ export default class AudioRecorder extends React.PureComponent {
     this.state = {
       enabled: enabled,
       audioRecord: null,
-      length: 0
+      recording: false,
+      paused: false,
+      duration: '0:00'
     };
 
-    this.recording = false;
     this.visualize = this.visualize.bind(this);
     this.initMediaRecording = this.initMediaRecording.bind(this);
     this.handleStart = this.handleStart.bind(this);
     this.handleStop = this.handleStop.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
 
-    // DEBUG
-    this.min = 1000000;
-    this.max = 0;
-
+    this.durationMillis = 0;
+    this.startedOn = null;
     this.canvasRef = React.createRef();
   }
 
@@ -35,6 +47,9 @@ export default class AudioRecorder extends React.PureComponent {
     }
 
     this.canvasContext = this.canvasRef.current.getContext('2d');
+    this.canvasContext.lineCap = 'round';
+    // To reduce line blurring.
+    this.canvasContext.translate(0.5, 0.5);
 
     this.stream = null;
     this.mediaRecorder = null;
@@ -48,72 +63,91 @@ export default class AudioRecorder extends React.PureComponent {
 
   // Draw amplitude of sound.
   visualize() {
-    const record = [];
-    const pcmData = new Uint8Array(BUFFER_SIZE);
+    const pcmData = new Uint8Array(this.analyser.frequencyBinCount);
     const width = this.canvasRef.current.width;
     const height = this.canvasRef.current.height;
+    const viewBuffer = [];
+    const viewLength = (width / (LINE_WIDTH + SPACING)) | 0;
+    const viewDuration = MILLIS_PER_BAR * viewLength;
 
+    // Take each N-th sample:
+    const samples = (0.1 * this.sampleRate) | 0;
+
+    this.canvasContext.fillStyle = BKG_COLOR;
+    this.canvasContext.lineWidth = LINE_WIDTH;
+    this.canvasContext.strokeStyle = BAR_COLOR;
+
+    let prevBarCount = 0;
     const drawFrame = () => {
-      if (this.recording) {
+      const duration = this.durationMillis + Date.now() - this.startedOn;
+      // Update record length timer.
+      this.setState({duration: secondsToTime(duration / 1000)});
+
+      if (this.state.recording) {
         window.requestAnimationFrame(drawFrame);
       }
 
-      // Get current waveform.
+      // Draw histogram.
+
+      // Get current waveform and calculate its amplitude.
       this.analyser.getByteTimeDomainData(pcmData);
-
-      this.canvasContext.fillStyle = 'rgb(200, 200, 200)';
-      this.canvasContext.fillRect(0, 0, width, height);
-
-      this.canvasContext.lineWidth = 2;
-      this.canvasContext.strokeStyle = 'rgb(0, 0, 0)';
-
       let volume = 0.0;
       for (const amplitude of pcmData) {
         volume += (amplitude - 127) ** 2;
       }
-      console.log("Amp sum, sqrt(sum), ave, sqrt(ave):", volume, Math.sqrt(volume) | 0, (volume/pcmData.length) | 0, Math.sqrt(volume/pcmData.length) | 0);
+      volume = Math.sqrt(volume/pcmData.length);
 
-      this.min = Math.min(this.min, Math.sqrt(volume/pcmData.length))
-      this.max = Math.max(this.max, Math.sqrt(volume/pcmData.length));
+      let barCount = (duration / MILLIS_PER_BAR) | 0;
+      // Shift of the histogram along x-axis to make scrolling smooth. No need to shift if recording is too short.
+      const dx = viewDuration > duration ? 0 :
+        (duration - MILLIS_PER_BAR * barCount) / MILLIS_PER_BAR * (LINE_WIDTH + SPACING);
 
-      record.push(volume);
-      if (record.length > BUFFER_SIZE) {
-        record.shift();
-      }
-
-      this.canvasContext.beginPath();
-
-      const sliceWidth = width / BUFFER_SIZE;
-      let x = 0;
-      for (let i = 0; i < record.length; i++) {
-        let v = record[i] / 128.0;
-        let y = v * height * 0.5;
-
-        if (i == 0) {
-          this.canvasContext.moveTo(x, y);
-        } else {
-          this.canvasContext.lineTo(x, y);
+      if (prevBarCount != barCount) {
+        prevBarCount = barCount;
+        // Add new amplitude visualization bar.
+        viewBuffer.push(volume);
+        if (viewBuffer.length > viewLength) {
+          // Keep at most 'viewLength' amplitude bars.
+          viewBuffer.shift();
         }
-
-        x += sliceWidth;
       }
+
+      // Clear canvas.
+      this.canvasContext.fillRect(0, 0, width, height);
+
+      // Draw amplitude bars.
+      this.canvasContext.beginPath();
+      for (let i = 0; i < viewBuffer.length; i++) {
+        let x = i * (LINE_WIDTH + SPACING) - dx;
+        let y = viewBuffer[i] / 64 * height;
+
+        this.canvasContext.moveTo(x, (height - y) * 0.5);
+        this.canvasContext.lineTo(x, height * 0.5 + y * 0.5);
+      }
+      // Actually draw the bars on canvas.
+      this.canvasContext.stroke();
     }
 
     drawFrame();
   }
 
   handleStop() {
-    this.recording = false;
-    this.mediaRecorder.stop();
-    console.log(this.mediaRecorder.state);
-    console.log("recorder stopped");
+    this.mediaRecorder.pause();
+    this.durationMillis += Date.now() - this.startedOn;
+    this.setState({recording: false, duration: secondsToTime(this.durationMillis / 1000)});
   }
 
   handleStart() {
-    try {
-      navigator.mediaDevices.getUserMedia({audio: true, video: false}).then(this.initMediaRecording, this.props.onError);
-    } catch (err) {
-      this.props.onError(err);
+    if (this.mediaRecorder) {
+      this.startedOn = Date.now();
+      this.mediaRecorder.resume();
+      this.setState({recording: true}, this.visualize);
+    } else {
+      try {
+        navigator.mediaDevices.getUserMedia({audio: true, video: false}).then(this.initMediaRecording, this.props.onError);
+      } catch (err) {
+        this.props.onError(err);
+      }
     }
   }
 
@@ -123,11 +157,7 @@ export default class AudioRecorder extends React.PureComponent {
   }
 
   initMediaRecording(stream) {
-    this.recording = true;
-
     this.stream = stream;
-    this.recording = true;
-
     this.mediaRecorder = new MediaRecorder(stream);
 
     // The following code is needed for visualization.
@@ -137,10 +167,9 @@ export default class AudioRecorder extends React.PureComponent {
     this.analyser = this.audioContext.createAnalyser();
     this.analyser.fftSize = BUFFER_SIZE;
     this.audioInput.connect(this.analyser);
-    this.visualize();
 
     this.mediaRecorder.onstop = _ => {
-      console.log("Data available after MediaRecorder.stop() called.", this.min, this.max);
+      console.log("Data available after MediaRecorder.stop() called.");
       const blob = new Blob(this.audioChunks, { 'type' : 'audio/mp3; codecs=mp3' });
       this.audioChunks = [];
       const url = window.URL.createObjectURL(blob);
@@ -149,19 +178,30 @@ export default class AudioRecorder extends React.PureComponent {
     }
 
     this.mediaRecorder.ondataavailable = (e) => {
-      this.audioChunks.push(e.data);
+      if (e.data.size > 0) {
+        this.audioChunks.push(e.data);
+      }
     }
 
+    this.startedOn = Date.now();
     this.mediaRecorder.start();
+    this.setState({recording: true}, this.visualize);
   }
 
   render() {
     return (this.state.enabled ?
-      <>
-        <canvas className="audio-visualiser" width="200" height="60" ref={this.canvasRef} />
-        <button className="record" onClick={this.handleStart}>Record</button>
-        <button className="stop" onClick={this.handleStop}>Stop</button>
-      </> :
+      <div className="audio">
+        <canvas className="visualiser" width="200" height="60" ref={this.canvasRef} />
+        <div className="duration">{this.state.duration}</div>
+        {this.state.recording ?
+          <a href="#" onClick={this.handleStop} title="Pause">
+            <i className="material-icons">pause_circle_outline</i>
+          </a> :
+          <a href="#" onClick={this.handleStart} title="Resume">
+            <i className="material-icons">mic</i>
+          </a>
+        }
+      </div> :
       <div>Audio not available</div>);
   }
 }
