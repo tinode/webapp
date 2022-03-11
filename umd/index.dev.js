@@ -9596,7 +9596,7 @@ const BAR_COLOR = '#8fbed6';
 const BAR_SCALE = 96.0;
 const BKG_COLOR = '#eeeeee';
 const MIN_DURATION = 200;
-const MAX_DURATION = 5000;
+const MAX_DURATION = 600000;
 class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
@@ -9609,6 +9609,7 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     };
     this.visualize = this.visualize.bind(this);
     this.initMediaRecording = this.initMediaRecording.bind(this);
+    this.cleanUp = this.cleanUp.bind(this);
     this.handleResume = this.handleResume.bind(this);
     this.handlePause = this.handlePause.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
@@ -9626,7 +9627,6 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     this.stream = null;
     this.mediaRecorder = null;
     this.audioContext = null;
-    this.sampleRate = null;
     this.audioInput = null;
     this.analyser = null;
     this.audioChunks = [];
@@ -9738,7 +9738,7 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     this.durationMillis = 0;
     this.startedOn = null;
     this.mediaRecorder.stop();
-    this.mediaRecorder = null;
+    this.cleanUp();
     this.setState({
       recording: false
     });
@@ -9764,7 +9764,6 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     this.stream = stream;
     this.mediaRecorder = new MediaRecorder(stream);
     this.audioContext = new AudioContext();
-    this.sampleRate = this.audioContext.sampleRate;
     this.audioInput = this.audioContext.createMediaStreamSource(stream);
     this.analyser = this.audioContext.createAnalyser();
     this.analyser.fftSize = BUFFER_SIZE;
@@ -9776,6 +9775,7 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       });
       this.audioChunks = [];
       const url = window.URL.createObjectURL(blob);
+      this.cleanUp();
 
       if (this.durationMillis > MIN_DURATION) {
         this.props.onFinished(url, this.durationMillis);
@@ -9794,6 +9794,12 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     this.startedOn = Date.now();
     this.mediaRecorder.start();
     this.visualize();
+  }
+
+  cleanUp() {
+    this.stream.getTracks().forEach(track => track.stop());
+    this.audioInput.disconnect();
+    this.audioContext.close();
   }
 
   render() {
@@ -9825,7 +9831,7 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       title: "Resume"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: resumeClass
-    }, "fiber_manual_record")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    }, "radio_button_checked")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: this.handleDone,
       title: "Send"

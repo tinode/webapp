@@ -37,6 +37,8 @@ export default class AudioRecorder extends React.PureComponent {
 
     this.visualize = this.visualize.bind(this);
     this.initMediaRecording = this.initMediaRecording.bind(this);
+    this.cleanUp = this.cleanUp.bind(this);
+
     this.handleResume = this.handleResume.bind(this);
     this.handlePause = this.handlePause.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
@@ -57,7 +59,6 @@ export default class AudioRecorder extends React.PureComponent {
     this.stream = null;
     this.mediaRecorder = null;
     this.audioContext = null;
-    this.sampleRate = null;
     this.audioInput = null;
     this.analyser = null;
 
@@ -168,7 +169,7 @@ export default class AudioRecorder extends React.PureComponent {
     this.durationMillis = 0;
     this.startedOn = null;
     this.mediaRecorder.stop();
-    this.mediaRecorder = null;
+    this.cleanUp();
     this.setState({recording: false});
   }
 
@@ -191,7 +192,6 @@ export default class AudioRecorder extends React.PureComponent {
 
     // The following code is needed for visualization.
     this.audioContext = new AudioContext();
-    this.sampleRate = this.audioContext.sampleRate;
     this.audioInput = this.audioContext.createMediaStreamSource(stream);
     this.analyser = this.audioContext.createAnalyser();
     this.analyser.fftSize = BUFFER_SIZE;
@@ -201,6 +201,7 @@ export default class AudioRecorder extends React.PureComponent {
       const blob = new Blob(this.audioChunks, { 'type' : 'audio/mp3; codecs=mp3' });
       this.audioChunks = [];
       const url = window.URL.createObjectURL(blob);
+      this.cleanUp();
       if (this.durationMillis > MIN_DURATION) {
         this.props.onFinished(url, this.durationMillis);
       } else {
@@ -220,6 +221,12 @@ export default class AudioRecorder extends React.PureComponent {
     this.visualize();
   }
 
+  cleanUp() {
+    this.stream.getTracks().forEach(track => track.stop());
+    this.audioInput.disconnect();
+    this.audioContext.close();
+  }
+
   render() {
     const resumeClass = 'material-icons ' + (this.state.enabled ? 'red' : 'gray');
     return (
@@ -234,7 +241,7 @@ export default class AudioRecorder extends React.PureComponent {
             <i className="material-icons">pause_circle_outline</i>
           </a> :
           <a href="#" onClick={this.handleResume} title="Resume">
-            <i className={resumeClass}>fiber_manual_record</i>
+            <i className={resumeClass}>radio_button_checked</i>
           </a>
         }
         <a href="#" onClick={this.handleDone} title="Send">
