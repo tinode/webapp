@@ -44,7 +44,7 @@ More translations are welcome. See [instructions](https://github.com/tinode/chat
 
 ## Not done yet
 
-* Voice or video messages, video or audio calling.
+* Video or audio calling.
 * End-to-End encryption.
 * Emoji support is weak.
 * Mentions, hashtags.

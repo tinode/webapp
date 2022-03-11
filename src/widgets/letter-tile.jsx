@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Tinode from 'tinode-sdk';
+import { Tinode } from 'tinode-sdk';
 
 import { idToColorClass } from '../lib/strformat.js';
 import { sanitizeImageUrl } from '../lib/utils.js';

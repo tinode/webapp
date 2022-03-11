@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Tinode from 'tinode-sdk';
+import { Tinode } from 'tinode-sdk';
 
 export default class SearchContacts extends React.PureComponent {
   constructor(props) {

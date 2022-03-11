@@ -3,8 +3,7 @@
 import React from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 
-import { Drafty } from 'tinode-sdk';
-import Tinode from 'tinode-sdk';
+import { Drafty, Tinode } from 'tinode-sdk';
 
 import Contact from './contact.jsx';
 import ContactAction from './contact-action.jsx';

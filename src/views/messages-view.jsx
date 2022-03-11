@@ -3,8 +3,7 @@
 import React from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
-import Tinode from 'tinode-sdk';
-const Drafty = Tinode.Drafty;
+import { Drafty, Tinode } from 'tinode-sdk';
 
 import ChatMessage from '../widgets/chat-message.jsx';
 import ContactBadges from '../widgets/contact-badges.jsx';
@@ -92,6 +91,7 @@ class MessagesView extends React.Component {
     this.retrySend = this.retrySend.bind(this);
     this.sendImageAttachment = this.sendImageAttachment.bind(this);
     this.sendFileAttachment = this.sendFileAttachment.bind(this);
+    this.sendAudioAttachment = this.sendAudioAttachment.bind(this);
     this.sendKeyPress = this.sendKeyPress.bind(this);
     this.subscribe = this.subscribe.bind(this);
     this.handleScrollReference = this.handleScrollReference.bind(this);
@@ -189,7 +189,7 @@ class MessagesView extends React.Component {
 
     if (topic && ((this.state.topic != prevState.topic) || !prevProps.ready)) {
       if (topic._new) {
-        console.log('Fetching new topic description');
+        console.log('DEBUG: Fetching new topic description');
         // topic.getMeta(topic.startMetaQuery().withDesc().build());
       } else {
         this.subscribe(topic);
@@ -744,6 +744,10 @@ class MessagesView extends React.Component {
     if (file.size > maxInbandAttachmentSize) {
       // Too large to send inband - uploading out of band and sending as a link.
       const uploader = this.props.tinode.getLargeFileHelper();
+      if (!uploader) {
+        this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
+        return;
+      }
       const uploadCompletionPromise = uploader.upload(file);
       const msg = Drafty.attachFile(null, {
         mime: file.type,
@@ -761,7 +765,7 @@ class MessagesView extends React.Component {
     }
   }
 
-  // handleAttachFile method is called when [Attach file] button is clicked.
+  // handleAttachFile method is called when [Attach file] button is clicked: launch attachment preview.
   handleAttachFile(file) {
     const maxExternAttachmentSize = this.props.tinode.getServerLimit('maxFileUploadSize', MAX_EXTERN_ATTACHMENT_SIZE);
 
@@ -846,7 +850,7 @@ class MessagesView extends React.Component {
       });
   }
 
-  // handleAttachImage method is called when [Attach image] button is clicked.
+  // handleAttachImage method is called when [Attach image] button is clicked: launch image preview.
   handleAttachImage(file) {
     const maxExternAttachmentSize = this.props.tinode.getServerLimit('maxFileUploadSize', MAX_EXTERN_ATTACHMENT_SIZE);
 
@@ -865,6 +869,41 @@ class MessagesView extends React.Component {
       }).catch(err => {
         this.props.onError(err, 'err');
       });
+  }
+
+  // sendAudioAttachment sends audio bits inband as Drafty message (no preview).
+  sendAudioAttachment(url, duration) {
+    // Server-provided limit reduced for base64 encoding and overhead.
+    const maxInbandAttachmentSize = (this.props.tinode.getServerLimit(
+      'maxMessageSize', MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024) | 0;
+    fetch(url).then(result => {
+      return result.blob();
+    }).then(blob => {
+      if (blob.size > maxInbandAttachmentSize) {
+        // Too large to send inband - uploading out of band and sending as a link.
+        const uploader = this.props.tinode.getLargeFileHelper();
+        if (!uploader) {
+          this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
+          return;
+        }
+        const uploadCompletionPromise = uploader.upload(blob);
+        const msg = Drafty.appendAudio(null, {
+          mime: blob.type,
+          size: blob.size,
+          duration: duration,
+          urlPromise: uploadCompletionPromise
+        });
+        // Pass data and the uploader to the TinodeWeb.
+        this.sendMessage(msg, uploadCompletionPromise, uploader);
+      } else {
+        // Small enough to send inband.
+        blobToBase64(blob)
+          .then(b64 => {
+            this.sendMessage(Drafty.appendAudio(null, {mime: b64.mime, data: b64.bits, duration: duration}))
+          })
+          .catch(err => {this.props.onError(err)});
+      }
+    });
   }
 
   handleCancelUpload(seq, uploader) {
@@ -1176,6 +1215,7 @@ class MessagesView extends React.Component {
                 onSendMessage={this.sendMessage}
                 onAttachFile={this.props.forwardMessage ? null : this.handleAttachFile}
                 onAttachImage={this.props.forwardMessage ? null : this.handleAttachImage}
+                onAttachAudio={this.sendAudioAttachment}
                 onError={this.props.onError}
                 reply={this.state.reply}
                 onQuoteClick={this.handleQuoteClick}

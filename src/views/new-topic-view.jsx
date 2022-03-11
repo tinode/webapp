@@ -2,7 +2,7 @@
 import React from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
-import Tinode from 'tinode-sdk';
+import { Tinode } from 'tinode-sdk';
 
 import ContactList from '../widgets/contact-list.jsx';
 import NewTopicById from '../widgets/new-topic-by-id.jsx';

@@ -6,7 +6,7 @@ import { initializeApp as firebaseInitApp } from 'firebase/app';
 import { getMessaging as firebaseGetMessaging, getToken as firebaseGetToken,
   deleteToken as firebaseDelToken, onMessage as firebaseOnMessage } from 'firebase/messaging';
 
-import Tinode from 'tinode-sdk';
+import { Drafty, Tinode } from 'tinode-sdk';
 
 import Alert from '../widgets/alert.jsx';
 import ContextMenu from '../widgets/context-menu.jsx';
@@ -987,7 +987,7 @@ class TinodeWeb extends React.Component {
           // If there are unsent messages, try sending them now.
           topic.queuedMessages((pub) => {
             if (!pub._sending && topic.isSubscribed()) {
-              this.sendMessage(pub);
+              topic.publishMessage(pub);
             }
           });
         });
@@ -1443,7 +1443,7 @@ class TinodeWeb extends React.Component {
     }
 
     // Publish spam report.
-    this.tinode.publish(Tinode.TOPIC_SYS, Tinode.Drafty.attachJSON(null, {
+    this.tinode.publish(Tinode.TOPIC_SYS, Drafty.attachJSON(null, {
       'action': 'report',
       'target': topicName
     }));
@@ -1474,16 +1474,11 @@ class TinodeWeb extends React.Component {
       this.handleSidepanelCancel();
     }
     const header = '➦ ' + params.userName;
-    const content = typeof params.content == 'string' ?
-            Tinode.Drafty.init(params.content) : Tinode.Drafty.forwardedContent(params.content);
-    const preview = Tinode.Drafty.preview(content, FORWARDED_PREVIEW_LENGTH,
-                                          undefined, params.forwarded != null);
-    const msg = Tinode.Drafty.append(
-        Tinode.Drafty.appendLineBreak(
-            Tinode.Drafty.mention(header, params.userFrom)),
-        content);
+    const content = typeof params.content == 'string' ? Drafty.init(params.content) : Drafty.forwardedContent(params.content);
+    const preview = Drafty.preview(content, FORWARDED_PREVIEW_LENGTH, undefined, params.forwarded != null);
+    const msg = Drafty.append(Drafty.appendLineBreak(Drafty.mention(header, params.userFrom)), content);
 
-    const msgPreview = Tinode.Drafty.quote(header, params.userFrom, preview);
+    const msgPreview = Drafty.quote(header, params.userFrom, preview);
     const head = {
       forwarded: params.topicName + ':' + params.seq
     };

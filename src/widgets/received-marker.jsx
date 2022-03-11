@@ -2,7 +2,7 @@
 import React from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 
-import Tinode from 'tinode-sdk';
+import { Tinode } from 'tinode-sdk';
 
 import { deliveryMarker } from '../lib/utils.js';
 

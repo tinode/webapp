@@ -186,7 +186,7 @@ export function fileToBase64(file) {
 export function blobToBase64(blob) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onerror = (evt) => {
+    reader.onerror = _ => {
       reject(reader.error);
     };
     reader.onload = () => {

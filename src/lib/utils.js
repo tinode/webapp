@@ -1,6 +1,6 @@
 // Odds and ends
 
-import Tinode from 'tinode-sdk';
+import { Tinode } from 'tinode-sdk';
 
 // Make shortcut icon appear with a green dot + show unread count in title.
 export function updateFavicon(count) {

@@ -3,7 +3,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import Tinode from 'tinode-sdk';
+import { Tinode } from 'tinode-sdk';
 
 import AvatarCrop from './avatar-crop.jsx';
 import AvatarUpload from './avatar-upload.jsx';

@@ -2266,7 +2266,7 @@ function blobToBase64(blob) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
-    reader.onerror = evt => {
+    reader.onerror = _ => {
       reject(reader.error);
     };
 
@@ -3162,7 +3162,7 @@ function theCard(fn, imageUrl, imageMimeType, note) {
 
   if (typeof note == 'string') {
     card = card || {};
-    card.note = note ? note : (tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default().DEL_CHAR);
+    card.note = note ? note : tinode_sdk__WEBPACK_IMPORTED_MODULE_0__.Tinode.DEL_CHAR;
   }
 
   if (imageUrl) {
@@ -3174,11 +3174,11 @@ function theCard(fn, imageUrl, imageMimeType, note) {
       mimeType = matches[1];
       card.photo = {
         data: imageUrl.substring(imageUrl.indexOf(',') + 1),
-        ref: (tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default().DEL_CHAR)
+        ref: tinode_sdk__WEBPACK_IMPORTED_MODULE_0__.Tinode.DEL_CHAR
       };
     } else {
       card.photo = {
-        data: (tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default().DEL_CHAR),
+        data: tinode_sdk__WEBPACK_IMPORTED_MODULE_0__.Tinode.DEL_CHAR,
         ref: imageUrl
       };
     }
@@ -3276,28 +3276,28 @@ function sanitizeImageUrl(url) {
 }
 function deliveryMarker(received) {
   switch (received) {
-    case (tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default().MESSAGE_STATUS_SENDING):
+    case tinode_sdk__WEBPACK_IMPORTED_MODULE_0__.Tinode.MESSAGE_STATUS_SENDING:
       return {
         name: 'access_time'
       };
 
-    case (tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default().MESSAGE_STATUS_FAILED):
+    case tinode_sdk__WEBPACK_IMPORTED_MODULE_0__.Tinode.MESSAGE_STATUS_FAILED:
       return {
         name: 'warning',
         color: 'danger-color'
       };
 
-    case (tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default().MESSAGE_STATUS_SENT):
+    case tinode_sdk__WEBPACK_IMPORTED_MODULE_0__.Tinode.MESSAGE_STATUS_SENT:
       return {
         name: 'done'
       };
 
-    case (tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default().MESSAGE_STATUS_RECEIVED):
+    case tinode_sdk__WEBPACK_IMPORTED_MODULE_0__.Tinode.MESSAGE_STATUS_RECEIVED:
       return {
         name: 'done_all'
       };
 
-    case (tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default().MESSAGE_STATUS_READ):
+    case tinode_sdk__WEBPACK_IMPORTED_MODULE_0__.Tinode.MESSAGE_STATUS_READ:
       return {
         name: 'done_all',
         color: 'blue'
@@ -3750,7 +3750,7 @@ class AccSupportView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
         "type": 0,
         "value": "SDK:"
       }]
-    })), tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().getLibrary()), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    })), tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.getLibrary()), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "small"
@@ -4600,7 +4600,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
     this.setState({
       avatar: img
     });
-    this.props.onTopicDescUpdate(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_15__.theCard)(null, img || (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().DEL_CHAR)), null);
+    this.props.onTopicDescUpdate(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_15__.theCard)(null, img || tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.DEL_CHAR), null);
   }
 
   handleMuted(ignored, checked) {
@@ -4663,7 +4663,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
         if (this.state.owner) {
           toSkip = 'O';
         } else {
-          toSkip = tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().AccessMode.encode(tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().AccessMode.diff('ASDO', this.state.modeGiven));
+          toSkip = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.AccessMode.encode(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.AccessMode.diff('ASDO', this.state.modeGiven));
 
           if (this.state.channel) {
             toSkip += 'W';
@@ -5234,7 +5234,7 @@ __webpack_require__.r(__webpack_exports__);
 
 class LogoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
-    const version = _config_js__WEBPACK_IMPORTED_MODULE_3__.APP_NAME + ' (' + tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().getLibrary() + ')';
+    const version = _config_js__WEBPACK_IMPORTED_MODULE_3__.APP_NAME + ' (' + tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.getLibrary() + ')';
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "dummy-view"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
@@ -5299,7 +5299,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const Drafty = (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().Drafty);
 
 
 
@@ -5402,6 +5401,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.retrySend = this.retrySend.bind(this);
     this.sendImageAttachment = this.sendImageAttachment.bind(this);
     this.sendFileAttachment = this.sendFileAttachment.bind(this);
+    this.sendAudioAttachment = this.sendAudioAttachment.bind(this);
     this.sendKeyPress = this.sendKeyPress.bind(this);
     this.subscribe = this.subscribe.bind(this);
     this.handleScrollReference = this.handleScrollReference.bind(this);
@@ -5467,7 +5467,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     const topic = this.props.tinode ? this.props.tinode.getTopic(this.state.topic) : undefined;
 
     if (this.state.topic != prevState.topic) {
-      if (prevState.topic && !tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().isNewGroupTopicName(prevState.topic)) {
+      if (prevState.topic && !tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isNewGroupTopicName(prevState.topic)) {
         this.leave(prevState.topic);
       }
 
@@ -5489,7 +5489,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
     if (topic && (this.state.topic != prevState.topic || !prevProps.ready)) {
       if (topic._new) {
-        console.log('Fetching new topic description');
+        console.log('DEBUG: Fetching new topic description');
       } else {
         this.subscribe(topic);
       }
@@ -5904,7 +5904,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
     const status = topic.msgStatus(msg, true);
 
-    if (status >= (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().MESSAGE_STATUS_SENT) && msg.from != this.props.myUserId) {
+    if (status >= tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_SENT && msg.from != this.props.myUserId) {
       this.postReadNotification(msg.seq);
     }
 
@@ -5971,7 +5971,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
   handleFormResponse(action, text, data) {
     if (action == 'pub') {
-      this.sendMessage(Drafty.attachJSON(Drafty.parse(text), data));
+      this.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachJSON(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.parse(text), data));
     } else if (action == 'url') {
       const url = new URL(data.ref);
       const params = url.searchParams;
@@ -6061,10 +6061,10 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       };
 
       if (typeof msg == 'string') {
-        msg = Drafty.parse(msg);
+        msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.parse(msg);
       }
 
-      msg = Drafty.append(Drafty.sanitizeEntities(this.state.reply.content), msg);
+      msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.sanitizeEntities(this.state.reply.content), msg);
       this.handleCancelReply();
     }
 
@@ -6080,8 +6080,14 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
     if (file.size > maxInbandAttachmentSize) {
       const uploader = this.props.tinode.getLargeFileHelper();
+
+      if (!uploader) {
+        this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
+        return;
+      }
+
       const uploadCompletionPromise = uploader.upload(file);
-      const msg = Drafty.attachFile(null, {
+      const msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachFile(null, {
         mime: file.type,
         filename: file.name,
         size: file.size,
@@ -6089,7 +6095,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       });
       this.sendMessage(msg, uploadCompletionPromise, uploader);
     } else {
-      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.fileToBase64)(file).then(b64 => this.sendMessage(Drafty.attachFile(null, {
+      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.fileToBase64)(file).then(b64 => this.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachFile(null, {
         mime: b64.mime,
         data: b64.bits,
         filename: b64.name
@@ -6134,7 +6140,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
       const uploadCompletionPromise = uploader.upload(blob);
       (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_15__.IMAGE_PREVIEW_DIM, _config_js__WEBPACK_IMPORTED_MODULE_15__.IMAGE_PREVIEW_DIM, -1, false).then(scaled => (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.blobToBase64)(scaled.blob)).then(b64 => {
-        let msg = Drafty.insertImage(null, 0, {
+        let msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.insertImage(null, 0, {
           mime: mime,
           _tempPreview: b64.bits,
           width: width,
@@ -6145,8 +6151,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         });
 
         if (caption) {
-          msg = Drafty.appendLineBreak(msg);
-          msg = Drafty.append(msg, Drafty.parse(caption));
+          msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendLineBreak(msg);
+          msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(msg, tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.parse(caption));
         }
 
         this.sendMessage(msg, uploadCompletionPromise, uploader);
@@ -6157,7 +6163,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
 
     (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.blobToBase64)(blob).then(b64 => {
-      let msg = Drafty.insertImage(null, 0, {
+      let msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.insertImage(null, 0, {
         mime: b64.mime,
         preview: b64.bits,
         width: width,
@@ -6167,8 +6173,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       });
 
       if (caption) {
-        msg = Drafty.appendLineBreak(msg);
-        msg = Drafty.append(msg, Drafty.parse(caption));
+        msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendLineBreak(msg);
+        msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(msg, tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.parse(caption));
       }
 
       this.sendMessage(msg);
@@ -6194,6 +6200,41 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     });
   }
 
+  sendAudioAttachment(url, duration) {
+    const maxInbandAttachmentSize = this.props.tinode.getServerLimit('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_15__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
+    fetch(url).then(result => {
+      return result.blob();
+    }).then(blob => {
+      if (blob.size > maxInbandAttachmentSize) {
+        const uploader = this.props.tinode.getLargeFileHelper();
+
+        if (!uploader) {
+          this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
+          return;
+        }
+
+        const uploadCompletionPromise = uploader.upload(blob);
+        const msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendAudio(null, {
+          mime: blob.type,
+          size: blob.size,
+          duration: duration,
+          urlPromise: uploadCompletionPromise
+        });
+        this.sendMessage(msg, uploadCompletionPromise, uploader);
+      } else {
+        (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.blobToBase64)(blob).then(b64 => {
+          this.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendAudio(null, {
+            mime: b64.mime,
+            data: b64.bits,
+            duration: duration
+          }));
+        }).catch(err => {
+          this.props.onError(err);
+        });
+      }
+    });
+  }
+
   handleCancelUpload(seq, uploader) {
     const topic = this.props.tinode.getTopic(this.state.topic);
     const found = topic.findMessage(seq);
@@ -6214,17 +6255,17 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       return;
     }
 
-    content = typeof content == 'string' ? Drafty.init(content) : content;
+    content = typeof content == 'string' ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.init(content) : content;
 
-    if (Drafty.isValid(content)) {
-      content = Drafty.replyContent(content, _config_js__WEBPACK_IMPORTED_MODULE_15__.QUOTED_REPLY_LENGTH);
+    if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isValid(content)) {
+      content = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.replyContent(content, _config_js__WEBPACK_IMPORTED_MODULE_15__.QUOTED_REPLY_LENGTH);
     } else {
-      content = Drafty.append(Drafty.init('\u26A0 '), Drafty.wrapInto(this.props.intl.formatMessage(messages.invalid_content), 'EM'));
+      content = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.init('\u26A0 '), tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.wrapInto(this.props.intl.formatMessage(messages.invalid_content), 'EM'));
     }
 
     this.setState({
       reply: {
-        content: Drafty.quote(senderName, senderId, content),
+        content: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.quote(senderName, senderId, content),
         seq: seq
       }
     });
@@ -6414,7 +6455,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         } else {
           const cont = this.props.tinode.getMeTopic().getContact(this.state.topic);
 
-          if (cont && tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().isP2PTopicName(cont.topic)) {
+          if (cont && tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isP2PTopicName(cont.topic)) {
             if (cont.online) {
               lastSeen = formatMessage(messages.online_now);
             } else if (cont.seen) {
@@ -6531,6 +6572,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           onSendMessage: this.sendMessage,
           onAttachFile: this.props.forwardMessage ? null : this.handleAttachFile,
           onAttachImage: this.props.forwardMessage ? null : this.handleAttachImage,
+          onAttachAudio: this.sendAudioAttachment,
           onError: this.props.onError,
           reply: this.state.reply,
           onQuoteClick: this.handleQuoteClick,
@@ -6638,7 +6680,7 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   handleSearchContacts(query) {
     this.props.onSearchContacts(query);
     this.setState({
-      searchQuery: tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().isNullValue(query) ? null : query
+      searchQuery: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isNullValue(query) ? null : query
     });
   }
 
@@ -7638,7 +7680,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   static tnSetup(serverAddress, transport, locale, persistentCache, onSetupCompleted) {
-    const tinode = new (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default())({
+    const tinode = new tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode({
       appName: _config_js__WEBPACK_IMPORTED_MODULE_11__.APP_NAME,
       host: serverAddress,
       apiKey: _config_js__WEBPACK_IMPORTED_MODULE_11__.API_KEY,
@@ -7656,7 +7698,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
     switch (data.what) {
       case 'msg':
-        if (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().isChannelTopicName(data.topic)) {
+        if (tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.isChannelTopicName(data.topic)) {
           this.tinode.oobNotification('msg', data.topic, data.seq, 'fake-uid');
         }
 
@@ -7819,7 +7861,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       let topicName = hash.path[1] || null;
 
       if (topicName != this.state.topicSelected) {
-        if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().topicType(topicName)) {
+        if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.topicType(topicName)) {
           topicName = null;
         }
 
@@ -7997,7 +8039,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       return;
     }
 
-    cred = tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().credential(cred);
+    cred = tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.credential(cred);
     let promise = null;
     let token = this.tinode.getAuthToken();
 
@@ -8174,7 +8216,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     const merged = {};
 
     for (const c of chatList) {
-      if (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().isP2PTopicName(c.topic)) {
+      if (tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.isP2PTopicName(c.topic)) {
         merged[c.topic] = {
           user: c.topic,
           updated: c.updated,
@@ -8226,7 +8268,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   tnData(data) {
     const topic = this.tinode.getTopic(data.topic);
 
-    if (topic.msgStatus(data, true) >= (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().MESSAGE_STATUS_SENT) && data.from != this.state.myUserId) {
+    if (topic.msgStatus(data, true) >= tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.MESSAGE_STATUS_SENT && data.from != this.state.myUserId) {
       clearTimeout(this.receivedTimer);
       this.receivedTimer = setTimeout(() => {
         this.receivedTimer = undefined;
@@ -8337,7 +8379,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       promise = promise.then(() => topic.subscribe()).then(() => {
         topic.queuedMessages(pub => {
           if (!pub._sending && topic.isSubscribed()) {
-            this.sendMessage(pub);
+            topic.publishMessage(pub);
           }
         });
       });
@@ -8421,7 +8463,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       return this.tinode.createAccountBasic(login_, password_, {
         public: public_,
         tags: tags_,
-        cred: tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().credential(cred_)
+        cred: tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.credential(cred_)
       });
     }).then(ctrl => {
       if (ctrl.code >= 300 && ctrl.text == 'validate credentials') {
@@ -8623,7 +8665,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
     const params = {};
 
-    if (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().isP2PTopicName(topicName)) {
+    if (tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.isP2PTopicName(topicName)) {
       params.sub = {
         mode: _config_js__WEBPACK_IMPORTED_MODULE_11__.DEFAULT_P2P_ACCESS_MODE
       };
@@ -8674,10 +8716,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
       if (pub) {
         if (pub.photo) {
-          if (pub.photo.ref && pub.photo.ref != (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().DEL_CHAR)) {
+          if (pub.photo.ref && pub.photo.ref != tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.DEL_CHAR) {
             attachments = [pub.photo.ref];
-          } else if (!pub.photo.data || pub.photo.data == (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().DEL_CHAR)) {
-            pub.photo = (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().DEL_CHAR);
+          } else if (!pub.photo.data || pub.photo.data == tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.DEL_CHAR) {
+            pub.photo = tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.DEL_CHAR;
           }
         }
 
@@ -8685,7 +8727,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       }
 
       if (typeof priv == 'string') {
-        params.private = priv === (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().DEL_CHAR) ? (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().DEL_CHAR) : {
+        params.private = priv === tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.DEL_CHAR ? tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.DEL_CHAR : {
           comment: priv
         };
       }
@@ -8857,7 +8899,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       return;
     }
 
-    this.tinode.publish((tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().TOPIC_SYS), tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.attachJSON(null, {
+    this.tinode.publish(tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.TOPIC_SYS, tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.attachJSON(null, {
       'action': 'report',
       'target': topicName
     }));
@@ -8887,10 +8929,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
 
     const header = '➦ ' + params.userName;
-    const content = typeof params.content == 'string' ? tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.init(params.content) : tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.forwardedContent(params.content);
-    const preview = tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.preview(content, _config_js__WEBPACK_IMPORTED_MODULE_11__.FORWARDED_PREVIEW_LENGTH, undefined, params.forwarded != null);
-    const msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.append(tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.appendLineBreak(tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.mention(header, params.userFrom)), content);
-    const msgPreview = tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.quote(header, params.userFrom, preview);
+    const content = typeof params.content == 'string' ? tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.init(params.content) : tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.forwardedContent(params.content);
+    const preview = tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.preview(content, _config_js__WEBPACK_IMPORTED_MODULE_11__.FORWARDED_PREVIEW_LENGTH, undefined, params.forwarded != null);
+    const msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.append(tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.appendLineBreak(tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.mention(header, params.userFrom)), content);
+    const msgPreview = tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.quote(header, params.userFrom, preview);
     const head = {
       forwarded: params.topicName + ':' + params.seq
     };
@@ -9797,9 +9839,8 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
   }
 
   cleanUp() {
-    this.stream.getTracks().forEach(track => track.stop());
     this.audioInput.disconnect();
-    this.audioContext.close();
+    this.stream.getTracks().forEach(track => track.stop());
   }
 
   render() {
@@ -10758,7 +10799,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   badge_you: {
     id: "badge_you",
@@ -10814,7 +10854,7 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
             }
           }
 
-          const isChannel = tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().isChannelTopicName(key);
+          const isChannel = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isChannelTopicName(key);
           const selected = showCheckmark ? this.props.topicSelected.indexOf(key) > -1 : this.props.topicSelected === key;
           const badges = [];
 
@@ -11370,7 +11410,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
             const topic = this.props.tinode.getTopic(params.topicName);
 
             if (!topic) {
-              console.log("Topic not found: ", params.topicName);
+              console.warn("Topic not found: ", params.topicName);
               return;
             }
 
@@ -11389,7 +11429,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
           const topic = this.props.tinode.getTopic(params.topicName);
 
           if (!topic) {
-            console.log("Topic not found: ", params.topicName);
+            console.warn("Topic not found: ", params.topicName);
             return;
           }
 
@@ -11407,7 +11447,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
           const topic = this.props.tinode.getTopic(params.topicName);
 
           if (!topic) {
-            console.log("Topic not found: ", params.topicName);
+            console.warn("Topic not found: ", params.topicName);
             return;
           }
 
@@ -11430,7 +11470,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
           const topic = this.props.tinode.getTopic(params.topicName);
 
           if (!topic || !params.user) {
-            console.log("Topic or user not found: '" + params.topicName + "', '" + params.user + "'");
+            console.warn("Topic or user not found: '" + params.topicName + "', '" + params.user + "'");
             return;
           }
 
@@ -11511,7 +11551,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     const topic = this.props.tinode.getTopic(params.topicName);
 
     if (!topic) {
-      console.log("Topic not found: ", params.topicName);
+      console.warn("Topic not found: ", params.topicName);
       return;
     }
 
@@ -11546,7 +11586,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     const topic = this.props.tinode.getTopic(params.topicName);
 
     if (!topic) {
-      console.log("Topic not found", params.topicName);
+      console.warn("Topic not found", params.topicName);
       return;
     }
 
@@ -12146,7 +12186,7 @@ class ForwardDialog extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
 
   handleSearchContacts(query) {
     this.setState({
-      query: tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().isNullValue(query) ? null : query
+      query: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isNullValue(query) ? null : query
     });
     this.props.onSearchContacts(query);
   }
@@ -13101,7 +13141,7 @@ class LetterTile extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
     let avatar;
 
     if (this.props.avatar === true) {
-      const isGroup = tinode_sdk__WEBPACK_IMPORTED_MODULE_1___default().isGroupTopicName(this.props.topic);
+      const isGroup = tinode_sdk__WEBPACK_IMPORTED_MODULE_1__.Tinode.isGroupTopicName(this.props.topic);
       const iconColor = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__.idToColorClass)(this.props.topic, isGroup);
 
       if (this.props.topic && this.props.title && this.props.title.trim()) {
@@ -13993,9 +14033,9 @@ class ReceivedMarker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     } = this.props.intl;
     let timestamp;
 
-    if (this.props.received <= (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().MESSAGE_STATUS_SENDING)) {
+    if (this.props.received <= tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_SENDING) {
       timestamp = formatMessage(messages.message_sending);
-    } else if (this.props.received == (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().MESSAGE_STATUS_FAILED)) {
+    } else if (this.props.received == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_FAILED) {
       timestamp = formatMessage(messages.message_sending_failed);
     } else {
       timestamp = this.props.timestamp.toLocaleTimeString(this.props.intl.locale, {
@@ -14055,7 +14095,7 @@ class SearchContacts extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
         search: '',
         edited: false
       });
-      this.props.onSearchContacts((tinode_sdk__WEBPACK_IMPORTED_MODULE_1___default().DEL_CHAR));
+      this.props.onSearchContacts(tinode_sdk__WEBPACK_IMPORTED_MODULE_1__.Tinode.DEL_CHAR);
     }
   }
 
@@ -14071,14 +14111,14 @@ class SearchContacts extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     this.setState({
       edited: query.length > 0
     });
-    this.props.onSearchContacts(query.length > 0 ? query : (tinode_sdk__WEBPACK_IMPORTED_MODULE_1___default().DEL_CHAR));
+    this.props.onSearchContacts(query.length > 0 ? query : tinode_sdk__WEBPACK_IMPORTED_MODULE_1__.Tinode.DEL_CHAR);
   }
 
   handleClear(e) {
     e.preventDefault();
 
     if (this.state.edited) {
-      this.props.onSearchContacts((tinode_sdk__WEBPACK_IMPORTED_MODULE_1___default().DEL_CHAR));
+      this.props.onSearchContacts(tinode_sdk__WEBPACK_IMPORTED_MODULE_1__.Tinode.DEL_CHAR);
     }
 
     this.setState({
@@ -14294,7 +14334,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     this.setState({
       audioRec: false
     });
-    console.log("this.props.onAttachAudio", url, duration);
+    this.props.onAttachAudio(url, duration);
   }
 
   handleSend(e) {
@@ -15038,7 +15078,7 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
     const topic = this.props.tinode.getTopic(this.props.topic);
     const acs = topic.getAccessMode();
     this.state = {
-      isMe: tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().isMeTopicName(this.props.topic),
+      isMe: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isMeTopicName(this.props.topic),
       owner: acs && acs.isOwner(),
       fullName: topic.public ? topic.public.fn : undefined,
       private: topic.private ? topic.private.comment : null,
@@ -15095,7 +15135,7 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       this.setState({
         private: comment
       });
-      this.props.onUpdateTopicDesc(this.props.topic, null, comment || (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().DEL_CHAR));
+      this.props.onUpdateTopicDesc(this.props.topic, null, comment || tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.DEL_CHAR);
     }
   }
 
@@ -15120,7 +15160,7 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       this.setState({
         avatar: null
       });
-      this.props.onUpdateTopicDesc(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(null, (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().DEL_CHAR)));
+      this.props.onUpdateTopicDesc(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(null, tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.DEL_CHAR));
     }
   }
 
