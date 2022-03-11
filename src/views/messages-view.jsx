@@ -190,7 +190,7 @@ class MessagesView extends React.Component {
     if (topic && ((this.state.topic != prevState.topic) || !prevProps.ready)) {
       if (topic._new) {
         console.log('Fetching new topic description');
-        topic.getMeta(topic.startMetaQuery().withDesc().build());
+        // topic.getMeta(topic.startMetaQuery().withDesc().build());
       } else {
         this.subscribe(topic);
       }

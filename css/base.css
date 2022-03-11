@@ -1450,7 +1450,8 @@ img.channel {
 }
 
 #send-message-panel .material-icons {
-  min-width: 1.75rem;
+  min-width: 2rem;
+  font-size: 1.6rem;
 }
 
 #send-message-panel .material-icons.secondary, .material-icons.disabled {
@@ -2641,6 +2642,7 @@ ul.tabbar li.active > a {
 
 .audio {
   display: flex;
+  margin-left: auto;
   align-items: center;
   flex: none;
   background-color: #eee;
@@ -2649,18 +2651,12 @@ ul.tabbar li.active > a {
 }
 
 .audio canvas.visualiser {
-  padding-left: 1.3rem;
   width: 12rem;
   height: 2.6rem;
 }
 
 .audio .duration {
   font-size: large;
-}
-
-.audio .material-icons {
-  font-size: 2rem;
-  padding: 0.5rem;
 }
 
 /*

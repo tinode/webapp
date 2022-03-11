@@ -4,14 +4,10 @@ import { FormattedMessage } from 'react-intl';
 
 import Tinode from 'tinode-sdk';
 
-import AudioRecorder from '../widgets/audio-recorder.jsx';
-
 import { APP_NAME } from '../config.js';
 
 export default class LogoView extends React.PureComponent {
   render() {
-    return <AudioRecorder />
-
     const version = APP_NAME + ' (' + Tinode.getLibrary() + ')';
     return (
       <div id="dummy-view">

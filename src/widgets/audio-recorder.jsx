@@ -7,45 +7,48 @@ import { secondsToTime } from '../lib/strformat';
 // FFT resolution.
 const BUFFER_SIZE = 256;
 // Thickness of a visualization bar.
-const LINE_WIDTH = 5;
+const LINE_WIDTH = 4;
 // Spacing between two visualization bars.
 const SPACING = 2;
 // Duration represented by one visualization bar.
 const MILLIS_PER_BAR = 100;
 // Color of histogram bars
 const BAR_COLOR = '#8fbed6';
+// Scaling for visualization bars.
+const BAR_SCALE = 96.0;
 // Background color
 const BKG_COLOR = '#eeeeee';
+// Minimum duration of a recording in milliseconds.
+const MIN_DURATION = 200;
+// Maximum duration of a recording in milliseconds (10 min).
+const MAX_DURATION = 600000;
 
 export default class AudioRecorder extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    const enabled = !!navigator.mediaDevices.getUserMedia;
     this.state = {
-      enabled: enabled,
+      enabled: true,
       audioRecord: null,
-      recording: false,
+      recording: true,
       paused: false,
       duration: '0:00'
     };
 
     this.visualize = this.visualize.bind(this);
     this.initMediaRecording = this.initMediaRecording.bind(this);
-    this.handleStart = this.handleStart.bind(this);
-    this.handleStop = this.handleStop.bind(this);
+    this.handleResume = this.handleResume.bind(this);
+    this.handlePause = this.handlePause.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleDone = this.handleDone.bind(this);
 
     this.durationMillis = 0;
     this.startedOn = null;
+    this.viewBuffer = [];
     this.canvasRef = React.createRef();
   }
 
   componentDidMount() {
-    if (!this.state.enabled) {
-      return;
-    }
-
     this.canvasContext = this.canvasRef.current.getContext('2d');
     this.canvasContext.lineCap = 'round';
     // To reduce line blurring.
@@ -59,6 +62,13 @@ export default class AudioRecorder extends React.PureComponent {
     this.analyser = null;
 
     this.audioChunks = [];
+
+    // Start recorder right away.
+    try {
+      navigator.mediaDevices.getUserMedia({audio: true, video: false}).then(this.initMediaRecording, this.props.onError);
+    } catch (err) {
+      this.props.onError(err);
+    }
   }
 
   // Draw amplitude of sound.
@@ -66,12 +76,8 @@ export default class AudioRecorder extends React.PureComponent {
     const pcmData = new Uint8Array(this.analyser.frequencyBinCount);
     const width = this.canvasRef.current.width;
     const height = this.canvasRef.current.height;
-    const viewBuffer = [];
     const viewLength = (width / (LINE_WIDTH + SPACING)) | 0;
     const viewDuration = MILLIS_PER_BAR * viewLength;
-
-    // Take each N-th sample:
-    const samples = (0.1 * this.sampleRate) | 0;
 
     this.canvasContext.fillStyle = BKG_COLOR;
     this.canvasContext.lineWidth = LINE_WIDTH;
@@ -79,12 +85,21 @@ export default class AudioRecorder extends React.PureComponent {
 
     let prevBarCount = 0;
     const drawFrame = () => {
-      const duration = this.durationMillis + Date.now() - this.startedOn;
+      if (!this.startedOn) {
+        return;
+      }
+      window.requestAnimationFrame(drawFrame);
+
+      const duration = this.durationMillis + (Date.now() - this.startedOn);
       // Update record length timer.
       this.setState({duration: secondsToTime(duration / 1000)});
 
-      if (this.state.recording) {
-        window.requestAnimationFrame(drawFrame);
+      // Check if record is too long.
+      if (duration > MAX_DURATION) {
+        this.mediaRecorder.pause();
+        this.durationMillis += Date.now() - this.startedOn;
+        this.startedOn = null;
+        this.setState({enabled: false, recording: false, duration: secondsToTime(this.durationMillis / 1000)});
       }
 
       // Draw histogram.
@@ -105,10 +120,10 @@ export default class AudioRecorder extends React.PureComponent {
       if (prevBarCount != barCount) {
         prevBarCount = barCount;
         // Add new amplitude visualization bar.
-        viewBuffer.push(volume);
-        if (viewBuffer.length > viewLength) {
+        this.viewBuffer.push(volume);
+        if (this.viewBuffer.length > viewLength) {
           // Keep at most 'viewLength' amplitude bars.
-          viewBuffer.shift();
+          this.viewBuffer.shift();
         }
       }
 
@@ -117,9 +132,9 @@ export default class AudioRecorder extends React.PureComponent {
 
       // Draw amplitude bars.
       this.canvasContext.beginPath();
-      for (let i = 0; i < viewBuffer.length; i++) {
+      for (let i = 0; i < this.viewBuffer.length; i++) {
         let x = i * (LINE_WIDTH + SPACING) - dx;
-        let y = viewBuffer[i] / 64 * height;
+        let y = this.viewBuffer[i] / BAR_SCALE * height;
 
         this.canvasContext.moveTo(x, (height - y) * 0.5);
         this.canvasContext.lineTo(x, height * 0.5 + y * 0.5);
@@ -131,29 +146,43 @@ export default class AudioRecorder extends React.PureComponent {
     drawFrame();
   }
 
-  handleStop() {
+  handlePause(e) {
+    e.preventDefault();
     this.mediaRecorder.pause();
     this.durationMillis += Date.now() - this.startedOn;
+    this.startedOn = null;
     this.setState({recording: false, duration: secondsToTime(this.durationMillis / 1000)});
   }
 
-  handleStart() {
-    if (this.mediaRecorder) {
+  handleResume(e) {
+    e.preventDefault();
+    if (this.state.enabled) {
       this.startedOn = Date.now();
       this.mediaRecorder.resume();
       this.setState({recording: true}, this.visualize);
-    } else {
-      try {
-        navigator.mediaDevices.getUserMedia({audio: true, video: false}).then(this.initMediaRecording, this.props.onError);
-      } catch (err) {
-        this.props.onError(err);
-      }
     }
   }
 
-  handleDelete() {
-    // Delete current recording.
-    console.log("Delete current cached recording");
+  handleDelete(e) {
+    e.preventDefault();
+    this.durationMillis = 0;
+    this.startedOn = null;
+    this.mediaRecorder.stop();
+    this.mediaRecorder = null;
+    this.setState({recording: false});
+  }
+
+  handleDone(e) {
+    e.preventDefault();
+    this.setState({recording: false});
+    if (this.startedOn) {
+      this.durationMillis += Date.now() - this.startedOn;
+      this.startedOn = null;
+    }
+    // Stop recording and return data.
+    if (this.mediaRecorder) {
+      this.mediaRecorder.stop();
+    }
   }
 
   initMediaRecording(stream) {
@@ -169,12 +198,14 @@ export default class AudioRecorder extends React.PureComponent {
     this.audioInput.connect(this.analyser);
 
     this.mediaRecorder.onstop = _ => {
-      console.log("Data available after MediaRecorder.stop() called.");
       const blob = new Blob(this.audioChunks, { 'type' : 'audio/mp3; codecs=mp3' });
       this.audioChunks = [];
       const url = window.URL.createObjectURL(blob);
-      this.setState({audioRecord: url});
-      console.log("Audio URL:", url);
+      if (this.durationMillis > MIN_DURATION) {
+        this.props.onFinished(url, this.durationMillis);
+      } else {
+        this.props.onDeleted();
+      }
     }
 
     this.mediaRecorder.ondataavailable = (e) => {
@@ -183,25 +214,33 @@ export default class AudioRecorder extends React.PureComponent {
       }
     }
 
+    this.durationMillis = 0;
     this.startedOn = Date.now();
     this.mediaRecorder.start();
-    this.setState({recording: true}, this.visualize);
+    this.visualize();
   }
 
   render() {
-    return (this.state.enabled ?
+    const resumeClass = 'material-icons ' + (this.state.enabled ? 'red' : 'gray');
+    return (
       <div className="audio">
+        <a href="#" onClick={this.handleDelete} title="Delete">
+          <i className="material-icons">delete_outline</i>
+        </a>
         <canvas className="visualiser" width="200" height="60" ref={this.canvasRef} />
         <div className="duration">{this.state.duration}</div>
         {this.state.recording ?
-          <a href="#" onClick={this.handleStop} title="Pause">
+          <a href="#" onClick={this.handlePause} title="Pause">
             <i className="material-icons">pause_circle_outline</i>
           </a> :
-          <a href="#" onClick={this.handleStart} title="Resume">
-            <i className="material-icons">mic</i>
+          <a href="#" onClick={this.handleResume} title="Resume">
+            <i className={resumeClass}>fiber_manual_record</i>
           </a>
         }
-      </div> :
-      <div>Audio not available</div>);
+        <a href="#" onClick={this.handleDone} title="Send">
+          <i className="material-icons">send</i>
+        </a>
+      </div>
+    );
   }
 }
