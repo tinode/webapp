@@ -222,9 +222,8 @@ export default class AudioRecorder extends React.PureComponent {
   }
 
   cleanUp() {
-    this.stream.getTracks().forEach(track => track.stop());
     this.audioInput.disconnect();
-    this.audioContext.close();
+    this.stream.getTracks().forEach(track => track.stop());
   }
 
   render() {
