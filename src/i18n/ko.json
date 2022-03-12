@@ -324,21 +324,21 @@
   "drafty_attachment": {
     "translation": "부착",
     "defaultMessage": "Attachment",
-    "description": "Comment for attachment in drafty preview",
+    "description": "Comment for attachment in drafty",
     "missing": false,
     "obsolete": false
   },
   "drafty_form": {
     "translation": "형태:",
     "defaultMessage": "Form:",
-    "description": "Comment for form in drafty preview",
+    "description": "Comment for form in drafty",
     "missing": false,
     "obsolete": false
   },
   "drafty_image": {
     "translation": "이미지",
     "defaultMessage": "Picture",
-    "description": "Comment for embedded images in drafty preview",
+    "description": "Comment for embedded images in drafty",
     "missing": false,
     "obsolete": false
   },
@@ -1359,6 +1359,13 @@
     "defaultMessage": "New password",
     "description": "Label for entering a new password",
     "missing": false,
+    "obsolete": false
+  },
+  "drafty_unknown": {
+    "translation": "",
+    "defaultMessage": "Unsupported",
+    "description": "Unsupported entity in drafty",
+    "missing": true,
     "obsolete": false
   }
 }

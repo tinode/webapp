@@ -15,19 +15,32 @@ const messages = defineMessages({
   drafty_form: {
     id: 'drafty_form',
     defaultMessage: 'Form: ',
-    description: 'Comment for form in drafty preview'
+    description: 'Comment for form in drafty'
   },
   drafty_attachment: {
     id: 'drafty_attachment',
     defaultMessage: 'Attachment',
-    description: 'Comment for attachment in drafty preview'
+    description: 'Comment for attachment in drafty'
   },
   drafty_image: {
     id: 'drafty_image',
     defaultMessage: 'Picture',
-    description: 'Comment for embedded images in drafty preview'
+    description: 'Comment for embedded images in drafty'
+  },
+  drafty_unknown: {
+    id: 'drafty_unknown',
+    defaultMessage: 'Unsupported',
+    description: 'Unsupported entity in drafty'
   }
 });
+
+// Get comment for unknown element
+function unsupportedComment(values, ifMissing) {
+  if (Array.isArray(values) && values.join('').trim()) {
+    return values;
+  }
+  return [<span className="gray">{ifMissing}</span>];
+}
 
 // Size the already scaled image.
 function handleImageData(el, data, attr) {
@@ -71,50 +84,6 @@ function handleImageData(el, data, attr) {
   }
 
   return el;
-}
-
-function quotedImage(data) {
-  let promise;
-  // Get the blob from the image data.
-  if (data.val) {
-    const blob = base64ToBlob(data.val, data.mime);
-    promise = blob ? Promise.resolve(blob) : Prmise.reject(new Error("Invalid image"));
-  } else {
-    promise = fetch(this.authorizeURL(sanitizeImageUrl(data.ref))).then(evt => {
-      if (evt.ok) {
-        return evt.blob();
-      } else {
-        throw new Error(`Image fetch unsuccessful: ${evt.status} ${evt.statusText}`);
-      }
-    });
-  }
-
-  // Scale the blob.
-  return promise
-    .then(blob => {
-      return imageScaled(blob, IMAGE_THUMBNAIL_DIM, IMAGE_THUMBNAIL_DIM, -1, true)
-    }).then(scaled => {
-      data.mime = scaled.mime;
-      data.size = scaled.blob.size;
-      data.width = scaled.width;
-      data.height = scaled.height;
-      delete data.ref;
-      // Keeping the original file name, if provided: ex.data.name;
-
-      return blobToBase64(scaled.blob);
-    }).then(b64 => {
-      data.val = b64.bits;
-      return data;
-    }).catch(err => {
-      delete data.val;
-      delete data.name;
-      data.width = IMAGE_THUMBNAIL_DIM;
-      data.height = IMAGE_THUMBNAIL_DIM;
-      data.maxWidth = IMAGE_THUMBNAIL_DIM;
-      data.maxHeight = IMAGE_THUMBNAIL_DIM;
-      // Rethrow.
-      throw err;
-    });
 }
 
 // The main Drafty formatter: converts Drafty elements into React classes. 'this' is set by the caller.
@@ -187,11 +156,10 @@ export function fullFormatter(style, data, values, key, stack) {
       attr.onClick = this.onQuoteClick;
       break;
     default:
-      if (el == '_UNKN') {
-        // Unknown element.
-        el = React.Fragment;
-        values = [<i className="material-icons gray">extension</i>, ' '].concat(values || []);
-      }
+      // Unknown element.
+      el = React.Fragment;
+      values = [<i className="material-icons gray">extension</i>, ' ']
+        .concat(unsupportedComment(values, this.formatMessage(messages.drafty_unknown)));
       break;
   }
   if (!el) {
@@ -263,10 +231,9 @@ export function previewFormatter(style, data, values, key) {
       values = null;
       break;
     default:
-      if (el == '_UNKN') {
-        el = React.Fragment;
-        values = [<i key="unkn" className="material-icons">extension</i>, ' '].concat(values || []);
-      }
+      el = React.Fragment;
+      values = [<i className="material-icons gray">extension</i>, ' ']
+        .concat(unsupportedComment(values, this.formatMessage(messages.drafty_unknown)));
       break;
   }
   if (!el) {

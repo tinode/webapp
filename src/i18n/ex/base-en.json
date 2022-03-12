@@ -193,15 +193,19 @@
   },
   "drafty_attachment": {
     "defaultMessage": "Attachment",
-    "description": "Comment for attachment in drafty preview"
+    "description": "Comment for attachment in drafty"
   },
   "drafty_form": {
     "defaultMessage": "Form:",
-    "description": "Comment for form in drafty preview"
+    "description": "Comment for form in drafty"
   },
   "drafty_image": {
     "defaultMessage": "Picture",
-    "description": "Comment for embedded images in drafty preview"
+    "description": "Comment for embedded images in drafty"
+  },
+  "drafty_unknown": {
+    "defaultMessage": "Unsupported",
+    "description": "Unsupported entity in drafty"
   },
   "email_dative": {
     "defaultMessage": "email",
