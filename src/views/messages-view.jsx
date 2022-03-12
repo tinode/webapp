@@ -191,9 +191,8 @@ class MessagesView extends React.Component {
       if (topic._new) {
         console.log('DEBUG: Fetching new topic description');
         // topic.getMeta(topic.startMetaQuery().withDesc().build());
-      } else {
-        this.subscribe(topic);
       }
+      this.subscribe(topic);
     }
   }
 
@@ -1023,6 +1022,7 @@ class MessagesView extends React.Component {
 
         const messageNodes = [];
         let previousFrom = null;
+        let prevDate = null;
         let chatBoxClass = null;
         const dateFmt = new Intl.DateTimeFormat(this.props.intl.locale);
         topic.messages((msg, prev, next, i) => {
@@ -1067,14 +1067,16 @@ class MessagesView extends React.Component {
                 key={msg.seq} />
               );
           } else {
+            const thisDate = new Date(msg.ts);
             // This message was sent on a different date than the previous.
-            if (!prev || (!prev.hi && new Date(prev.ts).toDateString() != new Date(msg.ts).toDateString())) {
+            if (!prevDate || prevDate.toDateString() != thisDate.toDateString()) {
               messageNodes.push(
                 <MetaMessage
                   date={dateFmt.format(msg.ts)}
                   locale={this.props.intl.locale}
                   key={'date-' + msg.seq} />
               );
+              prevDate = thisDate;
             }
             messageNodes.push(
               <ChatMessage

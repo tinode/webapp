@@ -5465,9 +5465,9 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     if (topic && (this.state.topic != prevState.topic || !prevProps.ready)) {
       if (topic._new) {
         console.log('DEBUG: Fetching new topic description');
-      } else {
-        this.subscribe(topic);
       }
+
+      this.subscribe(topic);
     }
   }
 
@@ -6341,6 +6341,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
         const messageNodes = [];
         let previousFrom = null;
+        let prevDate = null;
         let chatBoxClass = null;
         const dateFmt = new Intl.DateTimeFormat(this.props.intl.locale);
         topic.messages((msg, prev, next, i) => {
@@ -6385,12 +6386,15 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
               key: msg.seq
             }));
           } else {
-            if (!prev || !prev.hi && new Date(prev.ts).toDateString() != new Date(msg.ts).toDateString()) {
+            const thisDate = new Date(msg.ts);
+
+            if (!prevDate || prevDate.toDateString() != thisDate.toDateString()) {
               messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_meta_message_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
                 date: dateFmt.format(msg.ts),
                 locale: this.props.intl.locale,
                 key: 'date-' + msg.seq
               }));
+              prevDate = thisDate;
             }
 
             messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_chat_message_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
