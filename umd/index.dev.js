@@ -2427,16 +2427,6 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   }
 });
 
-function unsupportedComment(values, ifMissing) {
-  if (Array.isArray(values) && values.join('').trim()) {
-    return values;
-  }
-
-  return [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-    className: "gray"
-  }, ifMissing)];
-}
-
 function handleImageData(el, data, attr) {
   if (!data) {
     attr.src = 'img/broken_image.png';
@@ -2490,7 +2480,7 @@ function fullFormatter(style, data, values, key, stack) {
   }
 
   let el = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.tagName(style);
-  const attr = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attrValue(style, data) || {};
+  let attr = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attrValue(style, data) || {};
   attr.key = key;
 
   switch (style) {
@@ -2548,9 +2538,22 @@ function fullFormatter(style, data, values, key, stack) {
 
     default:
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
+      attr = {
+        key: key
+      };
+      let body = values;
+
+      if (!Array.isArray(values) || !values.join('').trim()) {
+        body = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+          key: "x1",
+          className: "gray"
+        }, this.formatMessage(messages.drafty_unknown))];
+      }
+
       values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+        key: "x0",
         className: "material-icons gray"
-      }, "extension"), ' '].concat(unsupportedComment(values, this.formatMessage(messages.drafty_unknown)));
+      }, "extension"), ' '].concat(body);
       break;
   }
 
@@ -2636,8 +2639,9 @@ function previewFormatter(style, data, values, key) {
     default:
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
       values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+        key: "x0",
         className: "material-icons gray"
-      }, "extension"), ' '].concat(unsupportedComment(values, this.formatMessage(messages.drafty_unknown)));
+      }, "extension"), this.formatMessage(messages.drafty_unknown)];
       break;
   }
 
@@ -6375,20 +6379,20 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             replyToSeq = null;
           }
 
-          if (!prev || new Date(prev.ts).toDateString() != new Date(msg.ts).toDateString()) {
-            messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_meta_message_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
-              date: dateFmt.format(msg.ts),
-              locale: this.props.intl.locale,
-              key: 'date-' + msg.seq
-            }));
-          }
-
           if (msg.hi) {
             messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_meta_message_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
               deleted: true,
               key: msg.seq
             }));
           } else {
+            if (!prev || !prev.hi && new Date(prev.ts).toDateString() != new Date(msg.ts).toDateString()) {
+              messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_meta_message_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
+                date: dateFmt.format(msg.ts),
+                locale: this.props.intl.locale,
+                key: 'date-' + msg.seq
+              }));
+            }
+
             messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_chat_message_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
               tinode: this.props.tinode,
               content: msg.content,

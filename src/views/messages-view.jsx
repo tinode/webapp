@@ -1059,16 +1059,6 @@ class MessagesView extends React.Component {
             replyToSeq = null;
           }
 
-          // This message was sent on a different date than the previous.
-          if (!prev || new Date(prev.ts).toDateString() != new Date(msg.ts).toDateString()) {
-            messageNodes.push(
-            <MetaMessage
-              date={dateFmt.format(msg.ts)}
-              locale={this.props.intl.locale}
-              key={'date-' + msg.seq} />
-            );
-          }
-
           if (msg.hi) {
             // Deleted message.
             messageNodes.push(
@@ -1077,6 +1067,15 @@ class MessagesView extends React.Component {
                 key={msg.seq} />
               );
           } else {
+            // This message was sent on a different date than the previous.
+            if (!prev || (!prev.hi && new Date(prev.ts).toDateString() != new Date(msg.ts).toDateString())) {
+              messageNodes.push(
+                <MetaMessage
+                  date={dateFmt.format(msg.ts)}
+                  locale={this.props.intl.locale}
+                  key={'date-' + msg.seq} />
+              );
+            }
             messageNodes.push(
               <ChatMessage
                 tinode={this.props.tinode}

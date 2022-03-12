@@ -34,14 +34,6 @@ const messages = defineMessages({
   }
 });
 
-// Get comment for unknown element
-function unsupportedComment(values, ifMissing) {
-  if (Array.isArray(values) && values.join('').trim()) {
-    return values;
-  }
-  return [<span className="gray">{ifMissing}</span>];
-}
-
 // Size the already scaled image.
 function handleImageData(el, data, attr) {
   if (!data) {
@@ -104,7 +96,7 @@ export function fullFormatter(style, data, values, key, stack) {
   }
 
   let el = Drafty.tagName(style);
-  const attr = Drafty.attrValue(style, data) || {};
+  let attr = Drafty.attrValue(style, data) || {};
   attr.key = key;
   switch (style) {
     case 'BR':
@@ -158,8 +150,13 @@ export function fullFormatter(style, data, values, key, stack) {
     default:
       // Unknown element.
       el = React.Fragment;
-      values = [<i className="material-icons gray">extension</i>, ' ']
-        .concat(unsupportedComment(values, this.formatMessage(messages.drafty_unknown)));
+      attr = {key: key};
+      // Generate comment for unknown element.
+      let body = values;
+      if (!Array.isArray(values) || !values.join('').trim()) {
+        body = [<span key="x1" className="gray">{this.formatMessage(messages.drafty_unknown)}</span>];
+      }
+      values = [<i key="x0" className="material-icons gray">extension</i>, ' '].concat(body);
       break;
   }
   if (!el) {
@@ -232,8 +229,7 @@ export function previewFormatter(style, data, values, key) {
       break;
     default:
       el = React.Fragment;
-      values = [<i className="material-icons gray">extension</i>, ' ']
-        .concat(unsupportedComment(values, this.formatMessage(messages.drafty_unknown)));
+      values = [<i key="x0" className="material-icons gray">extension</i>, this.formatMessage(messages.drafty_unknown)];
       break;
   }
   if (!el) {
