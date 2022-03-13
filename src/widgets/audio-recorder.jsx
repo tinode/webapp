@@ -15,13 +15,15 @@ const MILLIS_PER_BAR = 100;
 // Color of histogram bars
 const BAR_COLOR = '#8fbed6';
 // Scaling for visualization bars.
-const BAR_SCALE = 96.0;
+const BAR_SCALE = 64.0;
 // Background color
 const BKG_COLOR = '#eeeeee';
 // Minimum duration of a recording in milliseconds.
 const MIN_DURATION = 200;
 // Maximum duration of a recording in milliseconds (10 min).
 const MAX_DURATION = 600000;
+// Number of bars in preview.
+const VISUALIZATION_BARS = 96;
 
 export default class AudioRecorder extends React.PureComponent {
   constructor(props) {
@@ -85,6 +87,8 @@ export default class AudioRecorder extends React.PureComponent {
     this.canvasContext.strokeStyle = BAR_COLOR;
 
     let prevBarCount = 0;
+    let volume = 0.0;
+    let countPerBar = 0;
     const drawFrame = () => {
       if (!this.startedOn) {
         return;
@@ -107,11 +111,14 @@ export default class AudioRecorder extends React.PureComponent {
 
       // Get current waveform and calculate its amplitude.
       this.analyser.getByteTimeDomainData(pcmData);
-      let volume = 0.0;
+      let amp = 0.0;
       for (const amplitude of pcmData) {
-        volume += (amplitude - 127) ** 2;
+        amp += (amplitude - 127) ** 2;
       }
-      volume = Math.sqrt(volume/pcmData.length);
+
+      // Sum the amplitude.
+      volume += Math.sqrt(amp/pcmData.length);
+      countPerBar ++;
 
       let barCount = (duration / MILLIS_PER_BAR) | 0;
       // Shift of the histogram along x-axis to make scrolling smooth. No need to shift if recording is too short.
@@ -121,7 +128,9 @@ export default class AudioRecorder extends React.PureComponent {
       if (prevBarCount != barCount) {
         prevBarCount = barCount;
         // Add new amplitude visualization bar.
-        this.viewBuffer.push(volume);
+        this.viewBuffer.push(volume/countPerBar);
+        volume = 0.0;
+        countPerBar = 0;
         if (this.viewBuffer.length > viewLength) {
           // Keep at most 'viewLength' amplitude bars.
           this.viewBuffer.shift();
@@ -135,7 +144,7 @@ export default class AudioRecorder extends React.PureComponent {
       this.canvasContext.beginPath();
       for (let i = 0; i < this.viewBuffer.length; i++) {
         let x = i * (LINE_WIDTH + SPACING) - dx;
-        let y = this.viewBuffer[i] / BAR_SCALE * height;
+        let y = Math.min(this.viewBuffer[i] / BAR_SCALE, 0.9) * height;
 
         this.canvasContext.moveTo(x, (height - y) * 0.5);
         this.canvasContext.lineTo(x, height * 0.5 + y * 0.5);
@@ -198,15 +207,17 @@ export default class AudioRecorder extends React.PureComponent {
     this.audioInput.connect(this.analyser);
 
     this.mediaRecorder.onstop = _ => {
-      const blob = new Blob(this.audioChunks, { 'type' : 'audio/mp3; codecs=mp3' });
+      const blob = new Blob(this.audioChunks, {'type' : 'audio/mp3; codecs=mp3'});
       this.audioChunks = [];
       const url = window.URL.createObjectURL(blob);
-      this.cleanUp();
       if (this.durationMillis > MIN_DURATION) {
-        this.props.onFinished(url, this.durationMillis);
+        blob.arrayBuffer().then(ab => this.audioContext.decodeAudioData(ab))
+          .then(data => this.createPreview(data))
+          .then(preview => this.props.onFinished(url, preview, this.durationMillis));
       } else {
         this.props.onDeleted();
       }
+      this.cleanUp();
     }
 
     this.mediaRecorder.ondataavailable = (e) => {
@@ -219,6 +230,31 @@ export default class AudioRecorder extends React.PureComponent {
     this.startedOn = Date.now();
     this.mediaRecorder.start();
     this.visualize();
+  }
+
+  // Preview must be calculated at the source: Chrome does not allow background AudioContext.
+  createPreview(audio) {
+    const data = audio.getChannelData(0);
+    // Number of amplitude bars in preview.
+    const viewLength = Math.min(data.length, VISUALIZATION_BARS);
+    // The number of samples in each bar. Limit the number of samples to something reasonable, no need to process all.
+    const spb = Math.min(100, (data.length / viewLength) | 0);
+    let buffer = [];
+    let max = -1;
+    for (let i = 0; i < viewLength; i++) {
+      let amplitude = 0;
+      for (let j = 0; j < spb; j++) {
+        amplitude += data[spb * i + j] ** 2;
+      }
+      const val = Math.sqrt(amplitude / spb);
+      buffer.push(val);
+      max = Math.max(max, val);
+    }
+    // Normalize amplitude to 0..100.
+    if (max > 0) {
+      buffer = buffer.map(a => (100 * a / max) | 0);
+    }
+    return buffer;
   }
 
   cleanUp() {

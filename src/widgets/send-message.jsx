@@ -130,9 +130,9 @@ class SendMessage extends React.PureComponent {
     e.target.value = '';
   }
 
-  handleAttachAudio(url, duration) {
+  handleAttachAudio(url, preview, duration) {
     this.setState({audioRec: false});
-    this.props.onAttachAudio(url, duration);
+    this.props.onAttachAudio(url, preview, duration);
   }
 
   handleSend(e) {

@@ -4,8 +4,6 @@ import React from 'react';
 
 import { secondsToTime } from '../lib/strformat';
 
-// FFT resolution.
-const BUFFER_SIZE = 256;
 // Thickness of a visualization bar.
 const LINE_WIDTH = 4;
 // Spacing between two visualization bars.
@@ -18,8 +16,6 @@ const BAR_COLOR = '#8fbed6';
 const BAR_SCALE = 96.0;
 // Background color
 const BKG_COLOR = '#eeeeee';
-// Maximum duration of a recording in milliseconds (10 min).
-const MAX_DURATION = 600000;
 
 export default class AudioPlayer extends React.PureComponent {
   constructor(props) {
@@ -33,11 +29,13 @@ export default class AudioPlayer extends React.PureComponent {
     };
 
     this.visualize = this.visualize.bind(this);
+    this.initVisualizer = this.initVisualizer.bind(this);
 
     this.handlePlay = this.handlePlay.bind(this);
     this.handlePause = this.handlePause.bind(this);
+    this.handleError = this.handleError.bind(this);
 
-    this.audioPlayer = this.props.src ? new Audio(this.props.src) : null;
+    this.audioPlayer = null;
 
     this.durationMillis = 0;
     this.startedOn = null;
@@ -51,23 +49,21 @@ export default class AudioPlayer extends React.PureComponent {
     // To reduce line blurring.
     this.canvasContext.translate(0.5, 0.5);
 
-    if (this.audioPlayer) {
-      this.audioPlayer.addEventListener('canplay', _ => {
-        console.log('canplay', this.audioPlayer.duration);
-        this.setState({canPlay: true, duration: secondsToTime(this.audioPlayer.duration)})
-      });
+    if (this.props.src) {
+      this.audioPlayer = new Audio(this.props.src);
+      this.audioPlayer.addEventListener('loadedmetadata', _ => this.setState({duration: secondsToTime(this.audioPlayer.duration)}));
+      this.audioPlayer.addEventListener('canplay', _ => this.setState({canPlay: true}));
       this.audioPlayer.addEventListener('timeupdate', _ => console.log(this.audioPlayer.currentTime));
       this.audioPlayer.addEventListener('ended', _ => this.setState({playing: false, currentTime: secondsToTime(0)}));
+    }
+
+    if (this.props.src) {
+      this.initVisualizer();
     }
   }
 
   // Draw amplitude of sound.
   visualize() {
-    const pcmData = new Uint8Array(this.analyser.frequencyBinCount);
-    const width = this.canvasRef.current.width;
-    const height = this.canvasRef.current.height;
-    const viewLength = (width / (LINE_WIDTH + SPACING)) | 0;
-    const viewDuration = MILLIS_PER_BAR * viewLength;
 
     this.canvasContext.fillStyle = BKG_COLOR;
     this.canvasContext.lineWidth = LINE_WIDTH;
@@ -136,6 +132,10 @@ export default class AudioPlayer extends React.PureComponent {
     drawFrame();
   }
 
+  initVisualizer() {
+    console.log("Draw amplitude bars");
+  }
+
   handlePause(e) {
     e.preventDefault();
     this.setState({recording: false, duration: secondsToTime(this.durationMillis / 1000)});
@@ -154,6 +154,10 @@ export default class AudioPlayer extends React.PureComponent {
     this.setState({playing: !this.state.playing});
   }
 
+  handleError(err) {
+    console.log(err);
+  }
+
   render() {
     const playClass = 'material-icons large' + (this.state.canPlay ? '' : ' disabled');
     return (
@@ -162,7 +166,7 @@ export default class AudioPlayer extends React.PureComponent {
           <i className={playClass}>{this.state.playing ? 'pause_circle' : 'play_circle'}</i>
         </a>
         <div>
-          <canvas className="visualiser" style={{backgroundColor: '#666'}} ref={this.canvasRef} />
+          <canvas className="visualiser" style={{border: '1px solid #666'}} ref={this.canvasRef} />
           <div className="timer">{this.state.currentTime}/{this.state.duration}</div>
         </div>
       </div>

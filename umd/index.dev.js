@@ -6197,11 +6197,14 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     });
   }
 
-  sendAudioAttachment(url, duration) {
-    const maxInbandAttachmentSize = this.props.tinode.getServerLimit('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_15__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
-    fetch(url).then(result => {
-      return result.blob();
-    }).then(blob => {
+  sendAudioAttachment(url, preview, duration) {
+    let previewEncoded;
+    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.blobToBase64)(new Blob(Uint8Array.from(preview))).then(pv64 => {
+      previewEncoded = pv64 ? pv64.bits : undefined;
+      return fetch(url);
+    }).then(result => result.blob()).then(blob => {
+      const maxInbandAttachmentSize = this.props.tinode.getServerLimit('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_15__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024;
+
       if (blob.size > maxInbandAttachmentSize) {
         const uploader = this.props.tinode.getLargeFileHelper();
 
@@ -6215,6 +6218,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           mime: blob.type,
           size: blob.size,
           duration: duration,
+          preview: previewEncoded,
           urlPromise: uploadCompletionPromise
         });
         this.sendMessage(msg, uploadCompletionPromise, uploader);
@@ -6222,14 +6226,17 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.blobToBase64)(blob).then(b64 => {
           this.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendAudio(null, {
             mime: b64.mime,
+            size: blob.size,
             data: b64.bits,
-            duration: duration
+            duration: duration,
+            preview: previewEncoded
           }));
-        }).catch(err => {
-          this.props.onError(err);
         });
       }
+    }).catch(err => {
+      this.props.onError(err);
     });
+    ;
   }
 
   handleCancelUpload(seq, uploader) {
@@ -9631,15 +9638,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_strformat__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/strformat */ "./src/lib/strformat.js");
 
 
-const BUFFER_SIZE = 256;
 const LINE_WIDTH = 4;
 const SPACING = 2;
 const MILLIS_PER_BAR = 100;
 const BAR_COLOR = '#8fbed6';
 const BAR_SCALE = 96.0;
 const BKG_COLOR = '#eeeeee';
-const MIN_DURATION = 200;
-const MAX_DURATION = 600000;
 class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
@@ -9647,12 +9651,14 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       canPlay: false,
       playing: false,
       currentTime: '0:00',
-      duration: '0:00'
+      duration: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(this.props.duration)
     };
     this.visualize = this.visualize.bind(this);
+    this.initVisualizer = this.initVisualizer.bind(this);
     this.handlePlay = this.handlePlay.bind(this);
     this.handlePause = this.handlePause.bind(this);
-    this.audioPlayer = this.props.src ? new Audio(this.props.src) : null;
+    this.handleError = this.handleError.bind(this);
+    this.audioPlayer = null;
     this.durationMillis = 0;
     this.startedOn = null;
     this.viewBuffer = [];
@@ -9664,28 +9670,27 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     this.canvasContext.lineCap = 'round';
     this.canvasContext.translate(0.5, 0.5);
 
-    if (this.audioPlayer) {
-      this.audioPlayer.addEventListener('canplay', _ => {
-        console.log('canplay', this.audioPlayer.duration);
-        this.setState({
-          canPlay: true,
-          duration: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(this.audioPlayer.duration)
-        });
-      });
+    if (this.props.src) {
+      this.audioPlayer = new Audio(this.props.src);
+      this.audioPlayer.addEventListener('loadedmetadata', _ => this.setState({
+        duration: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(this.audioPlayer.duration)
+      }));
+      this.audioPlayer.addEventListener('canplay', _ => this.setState({
+        canPlay: true
+      }));
       this.audioPlayer.addEventListener('timeupdate', _ => console.log(this.audioPlayer.currentTime));
       this.audioPlayer.addEventListener('ended', _ => this.setState({
         playing: false,
         currentTime: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(0)
       }));
     }
+
+    if (this.props.src) {
+      this.initVisualizer();
+    }
   }
 
   visualize() {
-    const pcmData = new Uint8Array(this.analyser.frequencyBinCount);
-    const width = this.canvasRef.current.width;
-    const height = this.canvasRef.current.height;
-    const viewLength = width / (LINE_WIDTH + SPACING) | 0;
-    const viewDuration = MILLIS_PER_BAR * viewLength;
     this.canvasContext.fillStyle = BKG_COLOR;
     this.canvasContext.lineWidth = LINE_WIDTH;
     this.canvasContext.strokeStyle = BAR_COLOR;
@@ -9749,6 +9754,10 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     drawFrame();
   }
 
+  initVisualizer() {
+    console.log("Draw amplitude bars");
+  }
+
   handlePause(e) {
     e.preventDefault();
     this.setState({
@@ -9775,6 +9784,10 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     });
   }
 
+  handleError(err) {
+    console.log(err);
+  }
+
   render() {
     const playClass = 'material-icons large' + (this.state.canPlay ? '' : ' disabled');
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -9788,7 +9801,7 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     }, this.state.playing ? 'pause_circle' : 'play_circle')), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("canvas", {
       className: "visualiser",
       style: {
-        backgroundColor: '#666'
+        border: '1px solid #666'
       },
       ref: this.canvasRef
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -9821,10 +9834,11 @@ const LINE_WIDTH = 4;
 const SPACING = 2;
 const MILLIS_PER_BAR = 100;
 const BAR_COLOR = '#8fbed6';
-const BAR_SCALE = 96.0;
+const BAR_SCALE = 64.0;
 const BKG_COLOR = '#eeeeee';
 const MIN_DURATION = 200;
 const MAX_DURATION = 600000;
+const VISUALIZATION_BARS = 96;
 class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
@@ -9879,6 +9893,8 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     this.canvasContext.lineWidth = LINE_WIDTH;
     this.canvasContext.strokeStyle = BAR_COLOR;
     let prevBarCount = 0;
+    let volume = 0.0;
+    let countPerBar = 0;
 
     const drawFrame = () => {
       if (!this.startedOn) {
@@ -9903,19 +9919,22 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       }
 
       this.analyser.getByteTimeDomainData(pcmData);
-      let volume = 0.0;
+      let amp = 0.0;
 
       for (const amplitude of pcmData) {
-        volume += (amplitude - 127) ** 2;
+        amp += (amplitude - 127) ** 2;
       }
 
-      volume = Math.sqrt(volume / pcmData.length);
+      volume += Math.sqrt(amp / pcmData.length);
+      countPerBar++;
       let barCount = duration / MILLIS_PER_BAR | 0;
       const dx = viewDuration > duration ? 0 : (duration - MILLIS_PER_BAR * barCount) / MILLIS_PER_BAR * (LINE_WIDTH + SPACING);
 
       if (prevBarCount != barCount) {
         prevBarCount = barCount;
-        this.viewBuffer.push(volume);
+        this.viewBuffer.push(volume / countPerBar);
+        volume = 0.0;
+        countPerBar = 0;
 
         if (this.viewBuffer.length > viewLength) {
           this.viewBuffer.shift();
@@ -9927,7 +9946,7 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
 
       for (let i = 0; i < this.viewBuffer.length; i++) {
         let x = i * (LINE_WIDTH + SPACING) - dx;
-        let y = this.viewBuffer[i] / BAR_SCALE * height;
+        let y = Math.min(this.viewBuffer[i] / BAR_SCALE, 0.9) * height;
         this.canvasContext.moveTo(x, (height - y) * 0.5);
         this.canvasContext.lineTo(x, height * 0.5 + y * 0.5);
       }
@@ -10003,13 +10022,14 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       });
       this.audioChunks = [];
       const url = window.URL.createObjectURL(blob);
-      this.cleanUp();
 
       if (this.durationMillis > MIN_DURATION) {
-        this.props.onFinished(url, this.durationMillis);
+        blob.arrayBuffer().then(ab => this.audioContext.decodeAudioData(ab)).then(data => this.createPreview(data)).then(preview => this.props.onFinished(url, preview, this.durationMillis));
       } else {
         this.props.onDeleted();
       }
+
+      this.cleanUp();
     };
 
     this.mediaRecorder.ondataavailable = e => {
@@ -10022,6 +10042,32 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     this.startedOn = Date.now();
     this.mediaRecorder.start();
     this.visualize();
+  }
+
+  createPreview(audio) {
+    const data = audio.getChannelData(0);
+    const viewLength = Math.min(data.length, VISUALIZATION_BARS);
+    const spb = Math.min(100, data.length / viewLength | 0);
+    let buffer = [];
+    let max = -1;
+
+    for (let i = 0; i < viewLength; i++) {
+      let amplitude = 0;
+
+      for (let j = 0; j < spb; j++) {
+        amplitude += data[spb * i + j] ** 2;
+      }
+
+      const val = Math.sqrt(amplitude / spb);
+      buffer.push(val);
+      max = Math.max(max, val);
+    }
+
+    if (max > 0) {
+      buffer = buffer.map(a => 100 * a / max | 0);
+    }
+
+    return buffer;
   }
 
   cleanUp() {
@@ -14514,11 +14560,11 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     e.target.value = '';
   }
 
-  handleAttachAudio(url, duration) {
+  handleAttachAudio(url, preview, duration) {
     this.setState({
       audioRec: false
     });
-    this.props.onAttachAudio(url, duration);
+    this.props.onAttachAudio(url, preview, duration);
   }
 
   handleSend(e) {

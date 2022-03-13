@@ -871,38 +871,49 @@ class MessagesView extends React.Component {
   }
 
   // sendAudioAttachment sends audio bits inband as Drafty message (no preview).
-  sendAudioAttachment(url, duration) {
-    // Server-provided limit reduced for base64 encoding and overhead.
-    const maxInbandAttachmentSize = (this.props.tinode.getServerLimit(
-      'maxMessageSize', MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024) | 0;
-    fetch(url).then(result => {
-      return result.blob();
-    }).then(blob => {
-      if (blob.size > maxInbandAttachmentSize) {
-        // Too large to send inband - uploading out of band and sending as a link.
-        const uploader = this.props.tinode.getLargeFileHelper();
-        if (!uploader) {
-          this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
-          return;
+  sendAudioAttachment(url, preview, duration) {
+    let previewEncoded;
+    blobToBase64(new Blob(Uint8Array.from(preview)))
+      .then(pv64 => {
+        previewEncoded = pv64 ? pv64.bits : undefined;
+        return fetch(url);
+      })
+      .then(result => result.blob())
+      .then(blob => {
+        // Server-provided limit reduced for base64 encoding and overhead.
+        const maxInbandAttachmentSize = this.props.tinode.getServerLimit('maxMessageSize', MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024;
+        if (blob.size > maxInbandAttachmentSize) {
+          // Too large to send inband - uploading out of band and sending as a link.
+          const uploader = this.props.tinode.getLargeFileHelper();
+          if (!uploader) {
+            this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
+            return;
+          }
+          const uploadCompletionPromise = uploader.upload(blob);
+          const msg = Drafty.appendAudio(null, {
+            mime: blob.type,
+            size: blob.size,
+            duration: duration,
+            preview: previewEncoded,
+            urlPromise: uploadCompletionPromise
+          });
+          // Pass data and the uploader to the TinodeWeb.
+          this.sendMessage(msg, uploadCompletionPromise, uploader);
+        } else {
+          // Small enough to send inband.
+          blobToBase64(blob)
+            .then(b64 => {
+              this.sendMessage(Drafty.appendAudio(null, {
+                mime: b64.mime,
+                size: blob.size,
+                data: b64.bits,
+                duration: duration,
+                preview: previewEncoded,
+              }))
+            })
         }
-        const uploadCompletionPromise = uploader.upload(blob);
-        const msg = Drafty.appendAudio(null, {
-          mime: blob.type,
-          size: blob.size,
-          duration: duration,
-          urlPromise: uploadCompletionPromise
-        });
-        // Pass data and the uploader to the TinodeWeb.
-        this.sendMessage(msg, uploadCompletionPromise, uploader);
-      } else {
-        // Small enough to send inband.
-        blobToBase64(blob)
-          .then(b64 => {
-            this.sendMessage(Drafty.appendAudio(null, {mime: b64.mime, data: b64.bits, duration: duration}))
-          })
-          .catch(err => {this.props.onError(err)});
-      }
-    });
+      })
+      .catch(err => {this.props.onError(err)});;
   }
 
   handleCancelUpload(seq, uploader) {
