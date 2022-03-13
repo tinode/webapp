@@ -19,7 +19,7 @@ export function shortDateFormat(then, locale) {
 // Convert seconds to minutes:seconds, i.e. 156 sec -> 2:36.
 // If <code>fixedMins</code> is true, then minutes are represented by at least two digits.
 export function secondsToTime(seconds, fixedMin) {
-  let min = Math.floor(seconds / 60);
+  let min = Math.floor(seconds / 60) | 0;
   if (fixedMin) {
     min = min < 10 ? `0${min}` : min;
   }

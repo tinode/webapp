@@ -18,31 +18,26 @@ const BAR_COLOR = '#8fbed6';
 const BAR_SCALE = 96.0;
 // Background color
 const BKG_COLOR = '#eeeeee';
-// Minimum duration of a recording in milliseconds.
-const MIN_DURATION = 200;
 // Maximum duration of a recording in milliseconds (10 min).
 const MAX_DURATION = 600000;
 
-export default class AudioRecorder extends React.PureComponent {
+export default class AudioPlayer extends React.PureComponent {
   constructor(props) {
     super(props);
 
     this.state = {
-      enabled: true,
-      audioRecord: null,
-      recording: true,
-      paused: false,
-      duration: '0:00'
+      canPlay: false,
+      playing: false,
+      currentTime: '0:00',
+      duration: secondsToTime(this.props.duration)
     };
 
     this.visualize = this.visualize.bind(this);
-    this.initMediaRecording = this.initMediaRecording.bind(this);
-    this.cleanUp = this.cleanUp.bind(this);
 
-    this.handleResume = this.handleResume.bind(this);
+    this.handlePlay = this.handlePlay.bind(this);
     this.handlePause = this.handlePause.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
-    this.handleDone = this.handleDone.bind(this);
+
+    this.audioPlayer = this.props.src ? new Audio(this.props.src) : null;
 
     this.durationMillis = 0;
     this.startedOn = null;
@@ -56,19 +51,13 @@ export default class AudioRecorder extends React.PureComponent {
     // To reduce line blurring.
     this.canvasContext.translate(0.5, 0.5);
 
-    this.stream = null;
-    this.mediaRecorder = null;
-    this.audioContext = null;
-    this.audioInput = null;
-    this.analyser = null;
-
-    this.audioChunks = [];
-
-    // Start recorder right away.
-    try {
-      navigator.mediaDevices.getUserMedia({audio: true, video: false}).then(this.initMediaRecording, this.props.onError);
-    } catch (err) {
-      this.props.onError(err);
+    if (this.audioPlayer) {
+      this.audioPlayer.addEventListener('canplay', _ => {
+        console.log('canplay', this.audioPlayer.duration);
+        this.setState({canPlay: true, duration: secondsToTime(this.audioPlayer.duration)})
+      });
+      this.audioPlayer.addEventListener('timeupdate', _ => console.log(this.audioPlayer.currentTime));
+      this.audioPlayer.addEventListener('ended', _ => this.setState({playing: false, currentTime: secondsToTime(0)}));
     }
   }
 
@@ -149,103 +138,33 @@ export default class AudioRecorder extends React.PureComponent {
 
   handlePause(e) {
     e.preventDefault();
-    this.mediaRecorder.pause();
-    this.durationMillis += Date.now() - this.startedOn;
-    this.startedOn = null;
     this.setState({recording: false, duration: secondsToTime(this.durationMillis / 1000)});
   }
 
-  handleResume(e) {
+  handlePlay(e) {
     e.preventDefault();
-    if (this.state.enabled) {
-      this.startedOn = Date.now();
-      this.mediaRecorder.resume();
-      this.setState({recording: true}, this.visualize);
+    if (!this.state.canPlay) {
+      return;
     }
-  }
-
-  handleDelete(e) {
-    e.preventDefault();
-    this.durationMillis = 0;
-    this.startedOn = null;
-    this.mediaRecorder.stop();
-    this.cleanUp();
-    this.setState({recording: false});
-  }
-
-  handleDone(e) {
-    e.preventDefault();
-    this.setState({recording: false});
-    if (this.startedOn) {
-      this.durationMillis += Date.now() - this.startedOn;
-      this.startedOn = null;
+    if (this.state.playing) {
+      this.audioPlayer.pause();
+    } else {
+      this.audioPlayer.play();
     }
-    // Stop recording and return data.
-    if (this.mediaRecorder) {
-      this.mediaRecorder.stop();
-    }
-  }
-
-  initMediaRecording(stream) {
-    this.stream = stream;
-    this.mediaRecorder = new MediaRecorder(stream);
-
-    // The following code is needed for visualization.
-    this.audioContext = new AudioContext();
-    this.audioInput = this.audioContext.createMediaStreamSource(stream);
-    this.analyser = this.audioContext.createAnalyser();
-    this.analyser.fftSize = BUFFER_SIZE;
-    this.audioInput.connect(this.analyser);
-
-    this.mediaRecorder.onstop = _ => {
-      const blob = new Blob(this.audioChunks, { 'type' : 'audio/mp3; codecs=mp3' });
-      this.audioChunks = [];
-      const url = window.URL.createObjectURL(blob);
-      this.cleanUp();
-      if (this.durationMillis > MIN_DURATION) {
-        this.props.onFinished(url, this.durationMillis);
-      } else {
-        this.props.onDeleted();
-      }
-    }
-
-    this.mediaRecorder.ondataavailable = (e) => {
-      if (e.data.size > 0) {
-        this.audioChunks.push(e.data);
-      }
-    }
-
-    this.durationMillis = 0;
-    this.startedOn = Date.now();
-    this.mediaRecorder.start();
-    this.visualize();
-  }
-
-  cleanUp() {
-    this.audioInput.disconnect();
-    this.stream.getTracks().forEach(track => track.stop());
+    this.setState({playing: !this.state.playing});
   }
 
   render() {
-    const resumeClass = 'material-icons ' + (this.state.enabled ? 'red' : 'gray');
+    const playClass = 'material-icons large' + (this.state.canPlay ? '' : ' disabled');
     return (
-      <div className="audio">
-        <a href="#" onClick={this.handleDelete} title="Delete">
-          <i className="material-icons">delete_outline</i>
+      <div className="audio-player">
+        <a href="#" onClick={this.handlePlay} title="Play">
+          <i className={playClass}>{this.state.playing ? 'pause_circle' : 'play_circle'}</i>
         </a>
-        <canvas className="visualiser" ref={this.canvasRef} />
-        <div className="duration">{this.state.duration}</div>
-        {this.state.recording ?
-          <a href="#" onClick={this.handlePause} title="Pause">
-            <i className="material-icons">pause_circle_outline</i>
-          </a> :
-          <a href="#" onClick={this.handleResume} title="Resume">
-            <i className={resumeClass}>radio_button_checked</i>
-          </a>
-        }
-        <a href="#" onClick={this.handleDone} title="Send">
-          <i className="material-icons">send</i>
-        </a>
+        <div>
+          <canvas className="visualiser" style={{backgroundColor: '#666'}} ref={this.canvasRef} />
+          <div className="timer">{this.state.currentTime}/{this.state.duration}</div>
+        </div>
       </div>
     );
   }

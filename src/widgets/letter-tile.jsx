@@ -3,7 +3,7 @@ import React from 'react';
 import { Tinode } from 'tinode-sdk';
 
 import { idToColorClass } from '../lib/strformat.js';
-import { sanitizeImageUrl } from '../lib/utils.js';
+import { sanitizeUrlForMime } from '../lib/utils.js';
 
 export default class LetterTile extends React.PureComponent {
   render() {
@@ -20,7 +20,7 @@ export default class LetterTile extends React.PureComponent {
         avatar = isGroup ? <i className={className}>group</i> : <i className={className}>person</i>;
       }
     } else if (this.props.avatar) {
-      const url = this.props.tinode.authorizeURL(sanitizeImageUrl(this.props.avatar));
+      const url = this.props.tinode.authorizeURL(sanitizeUrlForMime(this.props.avatar, 'image'));
       // If avatar image is invalid, show a placeholder.
       const className = 'avatar' + (this.props.deleted ? ' deleted' : '');
       avatar = <img className={className} alt="avatar" src={url}

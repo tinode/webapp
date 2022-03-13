@@ -2659,6 +2659,32 @@ ul.tabbar li.active > a {
   font-size: large;
 }
 
+.audio-player {
+  display: flex;
+  align-items: center;
+}
+
+.audio-player .material-icons.large {
+  font-size: 2.5rem;
+}
+
+.audio-player .material-icons.disabled {
+  color: #999;
+}
+
+.audio-player canvas.visualiser {
+  display: block;
+  width: 12rem;
+  height: 2.6rem;
+}
+
+.audio-player .timer {
+  font-size: small;
+  float: right;
+  padding-right: 7.4rem;
+  color: #666;
+}
+
 /*
  Mobile styles.
  */

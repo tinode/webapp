@@ -2381,12 +2381,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/lazy-image.jsx */ "./src/widgets/lazy-image.jsx");
-/* harmony import */ var _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/uploading-image.jsx */ "./src/widgets/uploading-image.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _strformat_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./strformat.js */ "./src/lib/strformat.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./utils.js */ "./src/lib/utils.js");
+/* harmony import */ var _widgets_audio_player_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/audio-player.jsx */ "./src/widgets/audio-player.jsx");
+/* harmony import */ var _widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/lazy-image.jsx */ "./src/widgets/lazy-image.jsx");
+/* harmony import */ var _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/uploading-image.jsx */ "./src/widgets/uploading-image.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _strformat_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./utils.js */ "./src/lib/utils.js");
+
 
 
 
@@ -2431,16 +2433,16 @@ function handleImageData(el, data, attr) {
   if (!data) {
     attr.src = 'img/broken_image.png';
     attr.style = {
-      width: _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM + 'px',
-      height: _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM + 'px'
+      width: _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM + 'px',
+      height: _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM + 'px'
     };
     return el;
   }
 
   attr.className = 'inline-image';
-  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_5__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_5__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_5__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_5__.REM_SIZE * 24, false) || {
-    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_5__.BROKEN_IMAGE_SIZE,
-    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_5__.BROKEN_IMAGE_SIZE
+  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_6__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_6__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_6__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_6__.REM_SIZE * 24, false) || {
+    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_6__.BROKEN_IMAGE_SIZE,
+    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_6__.BROKEN_IMAGE_SIZE
   };
   attr.style = {
     width: dim.dstWidth + 'px',
@@ -2450,11 +2452,11 @@ function handleImageData(el, data, attr) {
   };
 
   if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isProcessing(data)) {
-    attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_8__.sanitizeImageUrl)(attr.src));
+    attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.sanitizeUrlForMime)(attr.src, 'image'));
     attr.alt = data.name;
 
     if (attr.src) {
-      if (Math.max(data.width || 0, data.height || 0) > _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM) {
+      if (Math.max(data.width || 0, data.height || 0) > _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM) {
         attr.onClick = this.onImagePreview;
         attr.className += ' image-clickable';
       }
@@ -2464,7 +2466,7 @@ function handleImageData(el, data, attr) {
       attr.src = 'img/broken_image.png';
     }
   } else {
-    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_4__["default"];
+    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_5__["default"];
   }
 
   return el;
@@ -2484,6 +2486,16 @@ function fullFormatter(style, data, values, key, stack) {
   attr.key = key;
 
   switch (style) {
+    case 'AU':
+      if (attr.src) {
+        attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.sanitizeUrlForMime)(attr.src, 'audio'));
+        attr.loading = 'lazy';
+      }
+
+      el = _widgets_audio_player_jsx__WEBPACK_IMPORTED_MODULE_3__["default"];
+      values = null;
+      break;
+
     case 'BR':
       values = null;
       break;
@@ -2519,7 +2531,7 @@ function fullFormatter(style, data, values, key, stack) {
       attr.className = 'mention';
 
       if (data) {
-        attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_7__.idToColorClass)(data.val, false, true);
+        attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_8__.idToColorClass)(data.val, false, true);
       }
 
       break;
@@ -2574,6 +2586,14 @@ function previewFormatter(style, data, values, key) {
   };
 
   switch (style) {
+    case 'AU':
+      el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
+      values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+        key: "au",
+        className: "material-icons"
+      }, "mic"), ' ', (0,_strformat_js__WEBPACK_IMPORTED_MODULE_8__.secondsToTime)(data.duration / 1000)];
+      break;
+
     case 'BR':
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
       values = [' '];
@@ -2593,7 +2613,7 @@ function previewFormatter(style, data, values, key) {
       values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
         key: "im",
         className: "material-icons"
-      }, "photo"), this.formatMessage(messages.drafty_image)];
+      }, "photo"), ' ', this.formatMessage(messages.drafty_image)];
       break;
 
     case 'BN':
@@ -2627,7 +2647,7 @@ function previewFormatter(style, data, values, key) {
       values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
         key: "ex",
         className: "material-icons"
-      }, "attachment"), this.formatMessage(messages.drafty_attachment)];
+      }, "attachment"), ' ', this.formatMessage(messages.drafty_attachment)];
       break;
 
     case 'QQ':
@@ -2641,7 +2661,7 @@ function previewFormatter(style, data, values, key) {
       values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
         key: "x0",
         className: "material-icons gray"
-      }, "extension"), this.formatMessage(messages.drafty_unknown)];
+      }, "extension"), ' ', this.formatMessage(messages.drafty_unknown)];
       break;
   }
 
@@ -2655,10 +2675,10 @@ function previewFormatter(style, data, values, key) {
 
 function inlineImageAttr(attr, data) {
   attr.style = {
-    width: _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM + 'px',
-    height: _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM + 'px',
-    maxWidth: _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM + 'px',
-    maxHeight: _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM + 'px'
+    width: _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM + 'px',
+    height: _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM + 'px',
+    maxWidth: _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM + 'px',
+    maxHeight: _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM + 'px'
   };
   attr.className = 'inline-image';
   attr.alt = this.formatMessage(messages.drafty_image);
@@ -2696,7 +2716,7 @@ function quoteFormatter(style, data, values, key) {
         attr.className = 'mention';
 
         if (data) {
-          attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_7__.idToColorClass)(data.val, false, true);
+          attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_8__.idToColorClass)(data.val, false, true);
         }
 
         break;
@@ -2718,7 +2738,7 @@ function quoteFormatter(style, data, values, key) {
         values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
           key: "ex",
           className: "material-icons"
-        }, "attachment"), (0,_strformat_js__WEBPACK_IMPORTED_MODULE_7__.shortenFileName)(fname, 16) || this.formatMessage(messages.drafty_attachment)];
+        }, "attachment"), (0,_strformat_js__WEBPACK_IMPORTED_MODULE_8__.shortenFileName)(fname, 16) || this.formatMessage(messages.drafty_attachment)];
         break;
     }
 
@@ -2732,7 +2752,7 @@ function quoteImage(data) {
   let promise;
 
   if (data.val) {
-    const blob = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__.base64ToBlob)(data.val, data.mime);
+    const blob = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__.base64ToBlob)(data.val, data.mime);
 
     if (!blob) {
       throw new Error("Invalid image");
@@ -2740,7 +2760,7 @@ function quoteImage(data) {
 
     promise = Promise.resolve(blob);
   } else if (data.ref) {
-    promise = fetch(this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_8__.sanitizeImageUrl)(data.ref))).then(evt => {
+    promise = fetch(this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.sanitizeUrlForMime)(data.ref, 'image'))).then(evt => {
       if (evt.ok) {
         return evt.blob();
       } else {
@@ -2752,7 +2772,7 @@ function quoteImage(data) {
   }
 
   return promise.then(blob => {
-    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM, _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM, -1, true);
+    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM, _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM, -1, true);
   }).then(scaled => {
     data.mime = scaled.mime;
     data.size = scaled.blob.size;
@@ -2760,15 +2780,15 @@ function quoteImage(data) {
     data.height = scaled.height;
     delete data.ref;
     data.src = URL.createObjectURL(scaled.blob);
-    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__.blobToBase64)(scaled.blob);
+    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__.blobToBase64)(scaled.blob);
   }).then(b64 => {
     data.val = b64.bits;
     return data;
   }).catch(err => {
     delete data.val;
     delete data.src;
-    data.width = _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM;
-    data.height = _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM;
+    data.width = _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM;
+    data.height = _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM;
     throw err;
   });
 }
@@ -2781,13 +2801,13 @@ function replyFormatter(style, data, values, key, stack) {
     let loadedPromise;
 
     try {
-      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_8__.cancelablePromise)(quoteImage.call(this, data));
+      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.cancelablePromise)(quoteImage.call(this, data));
     } catch (error) {
-      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_8__.cancelablePromise)(error);
+      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.cancelablePromise)(error);
     }
 
     attr.whenDone = loadedPromise;
-    values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], attr, null), ' ', attr.alt];
+    values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], attr, null), ' ', attr.alt];
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), {
       key: key
     }, values);
@@ -3035,7 +3055,7 @@ function shortDateFormat(then, locale) {
   });
 }
 function secondsToTime(seconds, fixedMin) {
-  let min = Math.floor(seconds / 60);
+  let min = Math.floor(seconds / 60) | 0;
 
   if (fixedMin) {
     min = min < 10 ? "0".concat(min) : min;
@@ -3101,7 +3121,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "asEmail": () => (/* binding */ asEmail),
 /* harmony export */   "isUrlRelative": () => (/* binding */ isUrlRelative),
 /* harmony export */   "sanitizeUrl": () => (/* binding */ sanitizeUrl),
-/* harmony export */   "sanitizeImageUrl": () => (/* binding */ sanitizeImageUrl),
+/* harmony export */   "sanitizeUrlForMime": () => (/* binding */ sanitizeUrlForMime),
 /* harmony export */   "deliveryMarker": () => (/* binding */ deliveryMarker),
 /* harmony export */   "cancelablePromise": () => (/* binding */ cancelablePromise)
 /* harmony export */ });
@@ -3232,7 +3252,7 @@ function sanitizeUrl(url, allowedSchemes) {
 
   return url;
 }
-function sanitizeImageUrl(url) {
+function sanitizeUrlForMime(url, mimeMajor) {
   if (!url) {
     return null;
   }
@@ -3243,7 +3263,9 @@ function sanitizeImageUrl(url) {
     return sanitizedUrl;
   }
 
-  if (/data:image\/[a-z0-9.-]+;base64,/i.test(url.trim())) {
+  const re = new RegExp("data:".concat(mimeMajor, "/[a-z0-9.-]+;base64,"), 'i');
+
+  if (re.test(url.trim())) {
     return url;
   }
 
@@ -9593,6 +9615,191 @@ class Attachment extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
 
 /***/ }),
 
+/***/ "./src/widgets/audio-player.jsx":
+/*!**************************************!*\
+  !*** ./src/widgets/audio-player.jsx ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ AudioPlayer)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _lib_strformat__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/strformat */ "./src/lib/strformat.js");
+
+
+const BUFFER_SIZE = 256;
+const LINE_WIDTH = 4;
+const SPACING = 2;
+const MILLIS_PER_BAR = 100;
+const BAR_COLOR = '#8fbed6';
+const BAR_SCALE = 96.0;
+const BKG_COLOR = '#eeeeee';
+const MIN_DURATION = 200;
+const MAX_DURATION = 600000;
+class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
+  constructor(props) {
+    super(props);
+    this.state = {
+      canPlay: false,
+      playing: false,
+      currentTime: '0:00',
+      duration: '0:00'
+    };
+    this.visualize = this.visualize.bind(this);
+    this.handlePlay = this.handlePlay.bind(this);
+    this.handlePause = this.handlePause.bind(this);
+    this.audioPlayer = this.props.src ? new Audio(this.props.src) : null;
+    this.durationMillis = 0;
+    this.startedOn = null;
+    this.viewBuffer = [];
+    this.canvasRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
+  }
+
+  componentDidMount() {
+    this.canvasContext = this.canvasRef.current.getContext('2d');
+    this.canvasContext.lineCap = 'round';
+    this.canvasContext.translate(0.5, 0.5);
+
+    if (this.audioPlayer) {
+      this.audioPlayer.addEventListener('canplay', _ => {
+        console.log('canplay', this.audioPlayer.duration);
+        this.setState({
+          canPlay: true,
+          duration: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(this.audioPlayer.duration)
+        });
+      });
+      this.audioPlayer.addEventListener('timeupdate', _ => console.log(this.audioPlayer.currentTime));
+      this.audioPlayer.addEventListener('ended', _ => this.setState({
+        playing: false,
+        currentTime: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(0)
+      }));
+    }
+  }
+
+  visualize() {
+    const pcmData = new Uint8Array(this.analyser.frequencyBinCount);
+    const width = this.canvasRef.current.width;
+    const height = this.canvasRef.current.height;
+    const viewLength = width / (LINE_WIDTH + SPACING) | 0;
+    const viewDuration = MILLIS_PER_BAR * viewLength;
+    this.canvasContext.fillStyle = BKG_COLOR;
+    this.canvasContext.lineWidth = LINE_WIDTH;
+    this.canvasContext.strokeStyle = BAR_COLOR;
+    let prevBarCount = 0;
+
+    const drawFrame = () => {
+      if (!this.startedOn) {
+        return;
+      }
+
+      window.requestAnimationFrame(drawFrame);
+      const duration = this.durationMillis + (Date.now() - this.startedOn);
+      this.setState({
+        duration: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(duration / 1000)
+      });
+
+      if (duration > MAX_DURATION) {
+        this.mediaRecorder.pause();
+        this.durationMillis += Date.now() - this.startedOn;
+        this.startedOn = null;
+        this.setState({
+          enabled: false,
+          recording: false,
+          duration: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(this.durationMillis / 1000)
+        });
+      }
+
+      this.analyser.getByteTimeDomainData(pcmData);
+      let volume = 0.0;
+
+      for (const amplitude of pcmData) {
+        volume += (amplitude - 127) ** 2;
+      }
+
+      volume = Math.sqrt(volume / pcmData.length);
+      let barCount = duration / MILLIS_PER_BAR | 0;
+      const dx = viewDuration > duration ? 0 : (duration - MILLIS_PER_BAR * barCount) / MILLIS_PER_BAR * (LINE_WIDTH + SPACING);
+
+      if (prevBarCount != barCount) {
+        prevBarCount = barCount;
+        this.viewBuffer.push(volume);
+
+        if (this.viewBuffer.length > viewLength) {
+          this.viewBuffer.shift();
+        }
+      }
+
+      this.canvasContext.fillRect(0, 0, width, height);
+      this.canvasContext.beginPath();
+
+      for (let i = 0; i < this.viewBuffer.length; i++) {
+        let x = i * (LINE_WIDTH + SPACING) - dx;
+        let y = this.viewBuffer[i] / BAR_SCALE * height;
+        this.canvasContext.moveTo(x, (height - y) * 0.5);
+        this.canvasContext.lineTo(x, height * 0.5 + y * 0.5);
+      }
+
+      this.canvasContext.stroke();
+    };
+
+    drawFrame();
+  }
+
+  handlePause(e) {
+    e.preventDefault();
+    this.setState({
+      recording: false,
+      duration: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(this.durationMillis / 1000)
+    });
+  }
+
+  handlePlay(e) {
+    e.preventDefault();
+
+    if (!this.state.canPlay) {
+      return;
+    }
+
+    if (this.state.playing) {
+      this.audioPlayer.pause();
+    } else {
+      this.audioPlayer.play();
+    }
+
+    this.setState({
+      playing: !this.state.playing
+    });
+  }
+
+  render() {
+    const playClass = 'material-icons large' + (this.state.canPlay ? '' : ' disabled');
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "audio-player"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+      href: "#",
+      onClick: this.handlePlay,
+      title: "Play"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: playClass
+    }, this.state.playing ? 'pause_circle' : 'play_circle')), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("canvas", {
+      className: "visualiser",
+      style: {
+        backgroundColor: '#666'
+      },
+      ref: this.canvasRef
+    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "timer"
+    }, this.state.currentTime, "/", this.state.duration)));
+  }
+
+}
+
+/***/ }),
+
 /***/ "./src/widgets/audio-recorder.jsx":
 /*!****************************************!*\
   !*** ./src/widgets/audio-recorder.jsx ***!
@@ -9834,8 +10041,6 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       className: "material-icons"
     }, "delete_outline")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("canvas", {
       className: "visualiser",
-      width: "200",
-      height: "60",
       ref: this.canvasRef
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "duration"
@@ -10013,7 +10218,7 @@ class AvatarUpload extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, "clear")), this.state.source ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
-      src: this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__.sanitizeImageUrl)(this.state.source)),
+      src: this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__.sanitizeUrlForMime)(this.state.source, 'image')),
       className: "preview"
     }) : this.props.readOnly && this.props.uid ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
@@ -13138,7 +13343,7 @@ class LetterTile extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
         }, "person");
       }
     } else if (this.props.avatar) {
-      const url = this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__.sanitizeImageUrl)(this.props.avatar));
+      const url = this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__.sanitizeUrlForMime)(this.props.avatar, 'image'));
       const className = 'avatar' + (this.props.deleted ? ' deleted' : '');
       avatar = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
         className: className,
@@ -14518,7 +14723,7 @@ class SideNavbar extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
     let avatar = null;
 
     if (this.props.tinode) {
-      avatar = this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__.sanitizeImageUrl)(this.props.avatar));
+      avatar = this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__.sanitizeUrlForMime)(this.props.avatar, 'image'));
     }
 
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {

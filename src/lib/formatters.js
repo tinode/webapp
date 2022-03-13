@@ -3,13 +3,14 @@ import { defineMessages } from 'react-intl';
 
 import { Drafty } from 'tinode-sdk';
 
+import AudioPlayer from '../widgets/audio-player.jsx'
 import LazyImage from '../widgets/lazy-image.jsx'
 import UploadingImage from '../widgets/uploading-image.jsx'
 
 import { IMAGE_THUMBNAIL_DIM, BROKEN_IMAGE_SIZE, REM_SIZE } from '../config.js';
 import { base64ToBlob, blobToBase64, fitImageSize, imageScaled } from './blob-helpers.js';
-import { idToColorClass, shortenFileName } from './strformat.js';
-import { cancelablePromise, sanitizeImageUrl } from './utils.js';
+import { idToColorClass, secondsToTime, shortenFileName } from './strformat.js';
+import { cancelablePromise, sanitizeUrlForMime } from './utils.js';
 
 const messages = defineMessages({
   drafty_form: {
@@ -34,7 +35,7 @@ const messages = defineMessages({
   }
 });
 
-// Size the already scaled image.
+// Additional processing of image data.
 function handleImageData(el, data, attr) {
   if (!data) {
     attr.src = 'img/broken_image.png';
@@ -58,7 +59,7 @@ function handleImageData(el, data, attr) {
     minHeight: dim.dstHeight + 'px'
   };
   if (!Drafty.isProcessing(data)) {
-    attr.src = this.authorizeURL(sanitizeImageUrl(attr.src));
+    attr.src = this.authorizeURL(sanitizeUrlForMime(attr.src, 'image'));
     attr.alt = data.name;
     if (attr.src) {
       if (Math.max(data.width || 0, data.height || 0) > IMAGE_THUMBNAIL_DIM) {
@@ -99,6 +100,16 @@ export function fullFormatter(style, data, values, key, stack) {
   let attr = Drafty.attrValue(style, data) || {};
   attr.key = key;
   switch (style) {
+    case 'AU':
+      // Show audio player.
+      if (attr.src) {
+        attr.src = this.authorizeURL(sanitizeUrlForMime(attr.src, 'audio'));
+        attr.loading = 'lazy';
+      }
+      el = AudioPlayer;
+      // Audio element cannot have content.
+      values = null;
+      break;
     case 'BR':
       values = null;
       break;
@@ -178,6 +189,11 @@ export function previewFormatter(style, data, values, key) {
   let el = Drafty.tagName(style);
   const attr = { key: key };
   switch (style) {
+    case 'AU':
+      // Voicemail as '[mic] 0:00'.
+      el = React.Fragment;
+      values = [<i key="au" className="material-icons">mic</i>, ' ', secondsToTime(data.duration/1000)];
+      break;
     case 'BR':
       // Replace new line with a space.
       el = React.Fragment;
@@ -195,7 +211,7 @@ export function previewFormatter(style, data, values, key) {
     case 'IM':
       // Replace image with '[icon] Image'.
       el = React.Fragment;
-      values = [<i key="im" className="material-icons">photo</i>, this.formatMessage(messages.drafty_image)];
+      values = [<i key="im" className="material-icons">photo</i>, ' ', this.formatMessage(messages.drafty_image)];
       break;
     case 'BN':
       el = 'span';
@@ -220,7 +236,7 @@ export function previewFormatter(style, data, values, key) {
         delete data.ref;
       }
       el = React.Fragment;
-      values = [<i key="ex" className="material-icons">attachment</i>, this.formatMessage(messages.drafty_attachment)];
+      values = [<i key="ex" className="material-icons">attachment</i>, ' ', this.formatMessage(messages.drafty_attachment)];
       break;
     case 'QQ':
     case 'HD':
@@ -229,7 +245,7 @@ export function previewFormatter(style, data, values, key) {
       break;
     default:
       el = React.Fragment;
-      values = [<i key="x0" className="material-icons gray">extension</i>, this.formatMessage(messages.drafty_unknown)];
+      values = [<i key="x0" className="material-icons gray">extension</i>, ' ', this.formatMessage(messages.drafty_unknown)];
       break;
   }
   if (!el) {
@@ -317,7 +333,7 @@ function quoteImage(data) {
     }
     promise = Promise.resolve(blob);
   } else if (data.ref) {
-    promise = fetch(this.authorizeURL(sanitizeImageUrl(data.ref)))
+    promise = fetch(this.authorizeURL(sanitizeUrlForMime(data.ref, 'image')))
       .then(evt => {
         if (evt.ok) {
           return evt.blob();
