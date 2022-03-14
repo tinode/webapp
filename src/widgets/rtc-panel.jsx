@@ -121,6 +121,7 @@ export default class RtcPanel extends React.PureComponent {
 
   componentWillUnmount() {
     this.props.topic.onInfo = this.previousOnInfo;
+    this.stop();
   }
 
   launchStream() {

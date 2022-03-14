@@ -165,6 +165,11 @@ class MessagesView extends React.Component {
     if (this.state.topic != prevState.topic) {
       if (prevState.topic && !Tinode.isNewGroupTopicName(prevState.topic)) {
         this.leave(prevState.topic);
+        if (prevState.rtcPanel) {
+          console.log('hangup: ', prevState.topic);
+          this.props.onTeleHangup(prevState.topic, prevProps.callSeq);
+          this.handleRtcClose();
+        }
       }
 
       if (topic) {
@@ -176,17 +181,7 @@ class MessagesView extends React.Component {
         topic.onPres = this.handleSubsUpdated;
       }
     }
-    /*
-    if (this.props.callTopic == this.props.topic && !this.state.rtcPanel) {
-      this.handleRtcClick();
-    }
-    */
-    /*
-    if (this.state.rtcPanel == null && topic && topic.name == this.props.callTopic && (this.props.callState == 1 || this.props.callState == 3)) {
-      console.log('--> setting rtc panel, call state = ', this.props.callState);
-      this.setState({rtcPanel: { topic: this.props.callTopic }});
-    }
-    */
+
     if (!this.props.applicationVisible) {
       // If application is not visible, flush all unsent 'read' notifications.
       this.clearNotificationQueue();
@@ -418,6 +413,7 @@ class MessagesView extends React.Component {
     if (!oldTopicName || !this.props.tinode.isTopicCached(oldTopicName)) {
       return;
     }
+
     const oldTopic = this.props.tinode.getTopic(oldTopicName);
     if (oldTopic && oldTopic.isSubscribed()) {
       oldTopic.leave(false)
