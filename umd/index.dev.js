@@ -9671,7 +9671,7 @@ const LINE_WIDTH = 3 * CANVAS_UPSCALING;
 const SPACING = 2 * CANVAS_UPSCALING;
 const BAR_COLOR = '#8fbed6';
 const BAR_COLOR_DARK = '#5f8ea5';
-const BKG_COLOR = '#eee';
+const BKG_COLOR = '#fff';
 const MIN_PREVIEW_LENGTH = 16;
 class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
@@ -9730,13 +9730,12 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     this.canvasContext.lineWidth = LINE_WIDTH;
 
     const drawFrame = () => {
-      this.canvasContext.fillStyle = BKG_COLOR;
-      this.canvasContext.strokeStyle = BAR_COLOR;
-      this.canvasContext.fillRect(0, 0, width, height);
+      this.canvasContext.clearRect(0, 0, width, height);
       this.canvasContext.beginPath();
 
       if (this.viewBuffer) {
         window.requestAnimationFrame(drawFrame);
+        this.canvasContext.strokeStyle = BAR_COLOR;
 
         for (let i = 0; i < this.viewBuffer.length; i++) {
           let x = 1 + i * (LINE_WIDTH + SPACING) + LINE_WIDTH * 0.5;
@@ -9744,16 +9743,16 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
           this.canvasContext.moveTo(x, (height - y) * 0.5);
           this.canvasContext.lineTo(x, height * 0.5 + y * 0.5);
         }
-      }
 
-      this.canvasContext.stroke();
+        this.canvasContext.stroke();
 
-      if (this.props.duration) {
-        this.canvasContext.beginPath();
-        const x = Math.max(0, Math.min(this.audioPlayer.currentTime * 1000 / this.props.duration, 1)) * width;
-        this.canvasContext.arc(x + LINE_WIDTH * 0.5, height * 0.5, LINE_WIDTH * 2, 0, 2 * Math.PI);
-        this.canvasContext.fillStyle = BAR_COLOR_DARK;
-        this.canvasContext.fill();
+        if (this.props.duration) {
+          this.canvasContext.beginPath();
+          const x = Math.max(0, Math.min(this.audioPlayer.currentTime * 1000 / this.props.duration, 1)) * width;
+          this.canvasContext.arc(x + LINE_WIDTH * 0.5, height * 0.5, LINE_WIDTH * 2, 0, 2 * Math.PI);
+          this.canvasContext.fillStyle = BAR_COLOR_DARK;
+          this.canvasContext.fill();
+        }
       }
     };
 
@@ -9762,7 +9761,6 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
 
   calcPreviewBars(original) {
     const barCount = Math.min(original.length, (this.canvasRef.current.width - 1) / (LINE_WIDTH + SPACING) | 0);
-    console.log("Bar count:", barCount, this.canvasRef.current.width, LINE_WIDTH + SPACING);
     const factor = original.length / barCount;
     let amps = [];
     let max = -1;

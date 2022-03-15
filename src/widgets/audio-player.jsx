@@ -16,7 +16,7 @@ const BAR_COLOR = '#8fbed6';
 const BAR_COLOR_DARK = '#5f8ea5';
 
 // Background color
-const BKG_COLOR = '#eee';
+const BKG_COLOR = '#fff';
 // Minimum number of amplitude bars to draw.
 const MIN_PREVIEW_LENGTH = 16;
 
@@ -71,7 +71,6 @@ export default class AudioPlayer extends React.PureComponent {
     }
   }
 
-
   // Draw amplitude of sound.
   visualize() {
     const width = this.canvasRef.current.width;
@@ -80,11 +79,7 @@ export default class AudioPlayer extends React.PureComponent {
     this.canvasContext.lineWidth = LINE_WIDTH;
 
     const drawFrame = () => {
-      // Clear canvas.
-
-      this.canvasContext.fillStyle = BKG_COLOR;
-      this.canvasContext.strokeStyle = BAR_COLOR;
-      this.canvasContext.fillRect(0, 0, width, height);
+      this.canvasContext.clearRect(0, 0, width, height);
 
       // Start new drawing.
       this.canvasContext.beginPath();
@@ -92,6 +87,7 @@ export default class AudioPlayer extends React.PureComponent {
       if (this.viewBuffer) {
         window.requestAnimationFrame(drawFrame);
 
+        this.canvasContext.strokeStyle = BAR_COLOR;
         // Draw amplitude bars.
         for (let i = 0; i < this.viewBuffer.length; i++) {
           let x = 1 + i * (LINE_WIDTH + SPACING) + LINE_WIDTH * 0.5;
@@ -100,27 +96,27 @@ export default class AudioPlayer extends React.PureComponent {
           this.canvasContext.moveTo(x, (height - y) * 0.5);
           this.canvasContext.lineTo(x, height * 0.5 + y * 0.5);
         }
-      }
-      // Actually draw the bars on canvas.
-      this.canvasContext.stroke();
 
-      if (this.props.duration) {
-        this.canvasContext.beginPath();
+        // Actually draw the bars on canvas.
+        this.canvasContext.stroke();
 
-        const x = Math.max(0, Math.min(this.audioPlayer.currentTime * 1000 / this.props.duration, 1)) * width;
-        this.canvasContext.arc(x + LINE_WIDTH * 0.5, height * 0.5, LINE_WIDTH * 2, 0, 2 * Math.PI);
-        this.canvasContext.fillStyle = BAR_COLOR_DARK;
-        this.canvasContext.fill();
+        if (this.props.duration) {
+          this.canvasContext.beginPath();
+
+          const x = Math.max(0, Math.min(this.audioPlayer.currentTime * 1000 / this.props.duration, 1)) * width;
+          this.canvasContext.arc(x + LINE_WIDTH * 0.5, height * 0.5, LINE_WIDTH * 2, 0, 2 * Math.PI);
+          this.canvasContext.fillStyle = BAR_COLOR_DARK;
+          this.canvasContext.fill();
+        }
       }
     }
 
     drawFrame();
   }
 
+  // Quick and dirty downsampling of the original preview bars into a smaller (or equal) number of bars we can display here.
   calcPreviewBars(original) {
-    // Quick and dirty downsampling of the original preview bars into a smaller (or equal) number of bars we can display here.
     const barCount = Math.min(original.length, ((this.canvasRef.current.width - 1) / (LINE_WIDTH + SPACING)) | 0);
-    console.log("Bar count:", barCount, this.canvasRef.current.width, LINE_WIDTH + SPACING);
     const factor = original.length / barCount;
     let amps = [];
     let max = -1;
