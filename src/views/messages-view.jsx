@@ -21,7 +21,7 @@ import SendMessage from '../widgets/send-message.jsx';
 import { DEFAULT_P2P_ACCESS_MODE, IMAGE_PREVIEW_DIM, KEYPRESS_DELAY,
   MESSAGES_PAGE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE,
   READ_DELAY, QUOTED_REPLY_LENGTH } from '../config.js';
-import { blobToBase64, fileToBase64, imageScaled, makeImageUrl } from '../lib/blob-helpers.js';
+import { blobToBase64, fileToBase64, imageScaled, intArrayToBase64, makeImageUrl } from '../lib/blob-helpers.js';
 import HashNavigation from '../lib/navigation.js';
 import { bytesToHumanSize, shortDateFormat } from '../lib/strformat.js';
 
@@ -872,12 +872,7 @@ class MessagesView extends React.Component {
 
   // sendAudioAttachment sends audio bits inband as Drafty message (no preview).
   sendAudioAttachment(url, preview, duration) {
-    let previewEncoded;
-    blobToBase64(new Blob(Uint8Array.from(preview)))
-      .then(pv64 => {
-        previewEncoded = pv64 ? pv64.bits : undefined;
-        return fetch(url);
-      })
+    fetch(url)
       .then(result => result.blob())
       .then(blob => {
         // Server-provided limit reduced for base64 encoding and overhead.
@@ -894,7 +889,7 @@ class MessagesView extends React.Component {
             mime: blob.type,
             size: blob.size,
             duration: duration,
-            preview: previewEncoded,
+            preview: intArrayToBase64(preview),
             urlPromise: uploadCompletionPromise
           });
           // Pass data and the uploader to the TinodeWeb.
@@ -908,7 +903,7 @@ class MessagesView extends React.Component {
                 size: blob.size,
                 data: b64.bits,
                 duration: duration,
-                preview: previewEncoded,
+                preview: intArrayToBase64(preview),
               }))
             })
         }

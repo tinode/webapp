@@ -104,6 +104,8 @@ export function fullFormatter(style, data, values, key, stack) {
       // Show audio player.
       if (attr.src) {
         attr.src = this.authorizeURL(sanitizeUrlForMime(attr.src, 'audio'));
+        attr.duration = data.duration > 0 ? (data.duration | 0) : undefined;
+        attr.preview = data.preview;
         attr.loading = 'lazy';
       }
       el = AudioPlayer;

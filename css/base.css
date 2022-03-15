@@ -2672,10 +2672,21 @@ ul.tabbar li.active > a {
   color: #999;
 }
 
-.audio-player canvas.visualiser {
-  display: block;
+.audio-player .visualiser {
   width: 12rem;
   height: 2.6rem;
+}
+
+.audio-player canvas.visualiser {
+  display: block;
+}
+
+.audio-player div.visualiser {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #757575;
+  font-size: small;
 }
 
 .audio-player .timer {

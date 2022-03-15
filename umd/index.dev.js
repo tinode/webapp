@@ -2083,7 +2083,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "base64EncodedLen": () => (/* binding */ base64EncodedLen),
 /* harmony export */   "base64DecodedLen": () => (/* binding */ base64DecodedLen),
 /* harmony export */   "base64ReEncode": () => (/* binding */ base64ReEncode),
-/* harmony export */   "base64ToBlob": () => (/* binding */ base64ToBlob)
+/* harmony export */   "base64ToBlob": () => (/* binding */ base64ToBlob),
+/* harmony export */   "intArrayToBase64": () => (/* binding */ intArrayToBase64),
+/* harmony export */   "base64ToIntArray": () => (/* binding */ base64ToIntArray)
 /* harmony export */ });
 const SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
 const MIME_EXTENSIONS = ['jpg', 'gif', 'png', 'svg', 'svg'];
@@ -2359,6 +2361,32 @@ function base64ToBlob(str, mime) {
 
   return null;
 }
+function intArrayToBase64(arr) {
+  if (!Array.isArray(arr)) {
+    return null;
+  }
+
+  try {
+    let bin = '';
+    new Uint8Array(arr).forEach(b => bin += String.fromCharCode(b));
+    return window.btoa(bin);
+  } catch (err) {}
+
+  return null;
+}
+function base64ToIntArray(b64) {
+  const arr = [];
+
+  try {
+    const bin = window.atob(b64);
+    [...bin].forEach(c => {
+      arr.push(c.charCodeAt(0));
+    });
+    return arr;
+  } catch (err) {}
+
+  return null;
+}
 
 /***/ }),
 
@@ -2489,6 +2517,8 @@ function fullFormatter(style, data, values, key, stack) {
     case 'AU':
       if (attr.src) {
         attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.sanitizeUrlForMime)(attr.src, 'audio'));
+        attr.duration = data.duration > 0 ? data.duration | 0 : undefined;
+        attr.preview = data.preview;
         attr.loading = 'lazy';
       }
 
@@ -6198,11 +6228,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
 
   sendAudioAttachment(url, preview, duration) {
-    let previewEncoded;
-    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.blobToBase64)(new Blob(Uint8Array.from(preview))).then(pv64 => {
-      previewEncoded = pv64 ? pv64.bits : undefined;
-      return fetch(url);
-    }).then(result => result.blob()).then(blob => {
+    fetch(url).then(result => result.blob()).then(blob => {
       const maxInbandAttachmentSize = this.props.tinode.getServerLimit('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_15__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024;
 
       if (blob.size > maxInbandAttachmentSize) {
@@ -6218,7 +6244,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           mime: blob.type,
           size: blob.size,
           duration: duration,
-          preview: previewEncoded,
+          preview: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.intArrayToBase64)(preview),
           urlPromise: uploadCompletionPromise
         });
         this.sendMessage(msg, uploadCompletionPromise, uploader);
@@ -6229,7 +6255,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             size: blob.size,
             data: b64.bits,
             duration: duration,
-            preview: previewEncoded
+            preview: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_16__.intArrayToBase64)(preview)
           }));
         });
       }
@@ -9636,134 +9662,129 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _lib_strformat__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/strformat */ "./src/lib/strformat.js");
+/* harmony import */ var _lib_blob_helpers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/blob-helpers */ "./src/lib/blob-helpers.js");
 
 
-const LINE_WIDTH = 4;
-const SPACING = 2;
-const MILLIS_PER_BAR = 100;
+
+const CANVAS_UPSCALING = 2.0;
+const LINE_WIDTH = 3 * CANVAS_UPSCALING;
+const SPACING = 2 * CANVAS_UPSCALING;
 const BAR_COLOR = '#8fbed6';
-const BAR_SCALE = 96.0;
-const BKG_COLOR = '#eeeeee';
+const BAR_COLOR_DARK = '#5f8ea5';
+const BKG_COLOR = '#eee';
+const MIN_PREVIEW_LENGTH = 16;
 class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
+    let preview = (0,_lib_blob_helpers__WEBPACK_IMPORTED_MODULE_2__.base64ToIntArray)(this.props.preview);
+
+    if (Array.isArray(preview) && preview.length < MIN_PREVIEW_LENGTH) {
+      preview = null;
+    }
+
     this.state = {
       canPlay: false,
       playing: false,
       currentTime: '0:00',
-      duration: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(this.props.duration)
+      duration: this.props.duration > 0 ? (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(this.props.duration / 1000) : '-:--',
+      preview: preview
     };
+    this.calcPreviewBars = this.calcPreviewBars.bind(this);
     this.visualize = this.visualize.bind(this);
-    this.initVisualizer = this.initVisualizer.bind(this);
     this.handlePlay = this.handlePlay.bind(this);
-    this.handlePause = this.handlePause.bind(this);
+    this.handleSeek = this.handleSeek.bind(this);
     this.handleError = this.handleError.bind(this);
     this.audioPlayer = null;
-    this.durationMillis = 0;
-    this.startedOn = null;
     this.viewBuffer = [];
     this.canvasRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
   }
 
   componentDidMount() {
-    this.canvasContext = this.canvasRef.current.getContext('2d');
-    this.canvasContext.lineCap = 'round';
-    this.canvasContext.translate(0.5, 0.5);
-
     if (this.props.src) {
       this.audioPlayer = new Audio(this.props.src);
-      this.audioPlayer.addEventListener('loadedmetadata', _ => this.setState({
-        duration: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(this.audioPlayer.duration)
-      }));
       this.audioPlayer.addEventListener('canplay', _ => this.setState({
         canPlay: true
       }));
-      this.audioPlayer.addEventListener('timeupdate', _ => console.log(this.audioPlayer.currentTime));
+      this.audioPlayer.addEventListener('timeupdate', _ => this.setState({
+        currentTime: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(this.audioPlayer.currentTime)
+      }));
       this.audioPlayer.addEventListener('ended', _ => this.setState({
         playing: false,
         currentTime: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(0)
       }));
     }
 
-    if (this.props.src) {
-      this.initVisualizer();
+    if (this.state.preview) {
+      this.canvasRef.current.width = this.canvasRef.current.offsetWidth * CANVAS_UPSCALING;
+      this.canvasRef.current.height = this.canvasRef.current.offsetHeight * CANVAS_UPSCALING;
+      this.canvasContext = this.canvasRef.current.getContext('2d');
+      this.canvasContext.lineCap = 'round';
+      this.viewBuffer = this.calcPreviewBars(this.state.preview);
+      this.visualize();
     }
   }
 
   visualize() {
-    this.canvasContext.fillStyle = BKG_COLOR;
+    const width = this.canvasRef.current.width;
+    const height = this.canvasRef.current.height;
     this.canvasContext.lineWidth = LINE_WIDTH;
-    this.canvasContext.strokeStyle = BAR_COLOR;
-    let prevBarCount = 0;
 
     const drawFrame = () => {
-      if (!this.startedOn) {
-        return;
-      }
-
-      window.requestAnimationFrame(drawFrame);
-      const duration = this.durationMillis + (Date.now() - this.startedOn);
-      this.setState({
-        duration: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(duration / 1000)
-      });
-
-      if (duration > MAX_DURATION) {
-        this.mediaRecorder.pause();
-        this.durationMillis += Date.now() - this.startedOn;
-        this.startedOn = null;
-        this.setState({
-          enabled: false,
-          recording: false,
-          duration: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(this.durationMillis / 1000)
-        });
-      }
-
-      this.analyser.getByteTimeDomainData(pcmData);
-      let volume = 0.0;
-
-      for (const amplitude of pcmData) {
-        volume += (amplitude - 127) ** 2;
-      }
-
-      volume = Math.sqrt(volume / pcmData.length);
-      let barCount = duration / MILLIS_PER_BAR | 0;
-      const dx = viewDuration > duration ? 0 : (duration - MILLIS_PER_BAR * barCount) / MILLIS_PER_BAR * (LINE_WIDTH + SPACING);
-
-      if (prevBarCount != barCount) {
-        prevBarCount = barCount;
-        this.viewBuffer.push(volume);
-
-        if (this.viewBuffer.length > viewLength) {
-          this.viewBuffer.shift();
-        }
-      }
-
+      this.canvasContext.fillStyle = BKG_COLOR;
+      this.canvasContext.strokeStyle = BAR_COLOR;
       this.canvasContext.fillRect(0, 0, width, height);
       this.canvasContext.beginPath();
 
-      for (let i = 0; i < this.viewBuffer.length; i++) {
-        let x = i * (LINE_WIDTH + SPACING) - dx;
-        let y = this.viewBuffer[i] / BAR_SCALE * height;
-        this.canvasContext.moveTo(x, (height - y) * 0.5);
-        this.canvasContext.lineTo(x, height * 0.5 + y * 0.5);
+      if (this.viewBuffer) {
+        window.requestAnimationFrame(drawFrame);
+
+        for (let i = 0; i < this.viewBuffer.length; i++) {
+          let x = 1 + i * (LINE_WIDTH + SPACING) + LINE_WIDTH * 0.5;
+          let y = this.viewBuffer[i] * height * 0.9;
+          this.canvasContext.moveTo(x, (height - y) * 0.5);
+          this.canvasContext.lineTo(x, height * 0.5 + y * 0.5);
+        }
       }
 
       this.canvasContext.stroke();
+
+      if (this.props.duration) {
+        this.canvasContext.beginPath();
+        const x = Math.max(0, Math.min(this.audioPlayer.currentTime * 1000 / this.props.duration, 1)) * width;
+        this.canvasContext.arc(x + LINE_WIDTH * 0.5, height * 0.5, LINE_WIDTH * 2, 0, 2 * Math.PI);
+        this.canvasContext.fillStyle = BAR_COLOR_DARK;
+        this.canvasContext.fill();
+      }
     };
 
     drawFrame();
   }
 
-  initVisualizer() {
-    console.log("Draw amplitude bars");
-  }
+  calcPreviewBars(original) {
+    const barCount = Math.min(original.length, (this.canvasRef.current.width - 1) / (LINE_WIDTH + SPACING) | 0);
+    console.log("Bar count:", barCount, this.canvasRef.current.width, LINE_WIDTH + SPACING);
+    const factor = original.length / barCount;
+    let amps = [];
+    let max = -1;
 
-  handlePause(e) {
-    e.preventDefault();
-    this.setState({
-      recording: false,
-      duration: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(this.durationMillis / 1000)
-    });
+    for (let i = 0; i < barCount; i++) {
+      let lo = i * factor | 0;
+      let hi = (i + 1) * factor | 0;
+      let amp = 0.0;
+
+      for (let j = lo; j < hi; j++) {
+        amp += original[j];
+      }
+
+      amps[i] = Math.max(0, amp / (hi - lo));
+      max = Math.max(amps[i], max);
+    }
+
+    if (max > 0) {
+      return amps.map(a => a / max);
+    }
+
+    return null;
   }
 
   handlePlay(e) {
@@ -9775,8 +9796,10 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
 
     if (this.state.playing) {
       this.audioPlayer.pause();
+      this.startedOn = null;
     } else {
       this.audioPlayer.play();
+      this.startedOn = Date.now();
     }
 
     this.setState({
@@ -9786,6 +9809,19 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
 
   handleError(err) {
     console.log(err);
+  }
+
+  handleSeek(e) {
+    e.preventDefault();
+
+    if (e.target && this.props.duration) {
+      const rect = e.target.getBoundingClientRect();
+      const offset = (e.clientX - rect.left) / rect.width;
+      this.audioPlayer.currentTime = this.props.duration * offset / 1000;
+      this.setState({
+        currentTime: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(this.audioPlayer.currentTime)
+      });
+    }
   }
 
   render() {
@@ -9798,13 +9834,13 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       title: "Play"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: playClass
-    }, this.state.playing ? 'pause_circle' : 'play_circle')), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("canvas", {
+    }, this.state.playing ? 'pause_circle' : 'play_circle')), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.state.preview ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("canvas", {
       className: "visualiser",
-      style: {
-        border: '1px solid #666'
-      },
-      ref: this.canvasRef
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      ref: this.canvasRef,
+      onClick: this.handleSeek
+    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "visualiser"
+    }, "unavailable"), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "timer"
     }, this.state.currentTime, "/", this.state.duration)));
   }
