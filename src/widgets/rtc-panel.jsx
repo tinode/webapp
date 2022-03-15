@@ -309,8 +309,6 @@ export default class RtcPanel extends React.PureComponent {
   handleCloseClick() {
     this.stop();
     this.props.onHangup(this.props.topic.name, this.props.seq);
-
-    this.props.onClose();
   }
 
   toggleMedia(kind) {

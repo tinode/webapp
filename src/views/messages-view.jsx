@@ -115,7 +115,7 @@ class MessagesView extends React.Component {
     this.handleCancelReply = this.handleCancelReply.bind(this);
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
     this.handleRtcClick = this.handleRtcClick.bind(this);
-    this.handleRtcClose = this.handleRtcClose.bind(this);
+    this.handleTeleHangup = this.handleTeleHangup.bind(this);
 
     this.chatMessageRefs = {};
     this.getOrCreateMessageRef = this.getOrCreateMessageRef.bind(this);
@@ -167,8 +167,7 @@ class MessagesView extends React.Component {
         this.leave(prevState.topic);
         if (prevState.rtcPanel) {
           console.log('hangup: ', prevState.topic);
-          this.props.onTeleHangup(prevState.topic, prevProps.callSeq);
-          this.handleRtcClose();
+          this.handleTeleHangup(prevState.topic, prevProps.callSeq);
         }
       }
 
@@ -781,24 +780,17 @@ class MessagesView extends React.Component {
 
   handleRtcClick() {
     this.setState({
-      rtcPanel: {
-      /*
-        file: file,
-        name: file.name,
-        size: file.size,
-        type: file.type
-        */
-        topic: this.state.topic
-      }
+      rtcPanel: { topic: this.state.topic }
     });
     
   }
 
-  handleRtcClose() {
+  handleTeleHangup(topic, seq) {
     this.props.onVideoCallClosed();
     this.setState({
       rtcPanel: null
     });
+    this.props.onTeleHangup(topic, seq);
   }
 
   // sendImageAttachment sends the image bits inband as Drafty message.
@@ -993,15 +985,11 @@ class MessagesView extends React.Component {
             seq={this.props.callSeq}
             callState={this.props.callState}
             onError={this.props.onError}
-            onClose={this.handleRtcClose}
-            onHangup={this.props.onTeleHangup}
-
+            onHangup={this.handleTeleHangup}
             onInvite={this.props.onTeleInvite}
             onSendOffer={this.props.onTeleSendOffer}
             onIceCandidate={this.props.onTeleIceCandidate}
             onSendAnswer={this.props.onTeleSendAnswer}
-            //content={this.state.imagePostview}
-            //onClose={this.handleClosePreview}
           />
         );
       } else {
@@ -1194,7 +1182,6 @@ class MessagesView extends React.Component {
           </>
         );
       }
-      //<button onClick={this.handleRtcClick} >abc</button>
       component = <div id="topic-view">{component2}</div>
     }
     return component;
