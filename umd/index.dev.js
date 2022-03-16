@@ -9681,10 +9681,9 @@ __webpack_require__.r(__webpack_exports__);
 const CANVAS_UPSCALING = 2.0;
 const LINE_WIDTH = 3 * CANVAS_UPSCALING;
 const SPACING = 2 * CANVAS_UPSCALING;
-const BAR_COLOR = '#85c7c5';
-const BAR_COLOR_DARK = '#559695';
-const THUMB_COLOR = '#246867';
-const BKG_COLOR = '#fff';
+const BAR_COLOR = '#bbb';
+const BAR_COLOR_DARK = '#888';
+const THUMB_COLOR = '#666';
 const MIN_PREVIEW_LENGTH = 16;
 class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
@@ -9700,6 +9699,7 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       playing: false,
       currentTime: '0:00',
       duration: this.props.duration > 0 ? (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_2__.secondsToTime)(this.props.duration / 1000) : '-:--',
+      longMin: this.props.duration >= 600000,
       preview: preview
     };
     this.initAudio = this.initAudio.bind(this);
@@ -9760,14 +9760,14 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     });
 
     this.audioPlayer.ontimeupdate = _ => this.setState({
-      currentTime: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_2__.secondsToTime)(this.audioPlayer.currentTime)
+      currentTime: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_2__.secondsToTime)(this.audioPlayer.currentTime, this.state.longMin)
     });
 
     this.audioPlayer.onended = _ => {
       this.audioPlayer.currentTime = 0;
       this.setState({
         playing: false,
-        currentTime: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_2__.secondsToTime)(0)
+        currentTime: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_2__.secondsToTime)(0, this.state.longMin)
       });
     };
   }
@@ -9894,7 +9894,7 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       const offset = (e.clientX - rect.left) / this.effectiveWidth * CANVAS_UPSCALING;
       this.audioPlayer.currentTime = this.props.duration * offset / 1000;
       this.setState({
-        currentTime: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_2__.secondsToTime)(this.audioPlayer.currentTime)
+        currentTime: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_2__.secondsToTime)(this.audioPlayer.currentTime, this.state.longMin)
       });
 
       if (!this.state.playing && this.state.preview) {
@@ -9911,21 +9911,21 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       title: "Play"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: playClass
-    }, this.state.playing ? 'pause_circle' : 'play_circle'));
+    }, this.state.playing ? 'pause_circle' : this.state.canPlay ? 'play_circle' : 'not_interested'));
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "audio-player"
     }, this.props.short ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.state.preview ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("canvas", {
-      className: "visualiser",
+      className: "playback",
       ref: this.canvasRef,
       onClick: this.handleSeek
     }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "visualiser"
+      className: "playback"
     }, " - ")), play) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, play, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.state.preview ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("canvas", {
-      className: "visualiser",
+      className: "playback",
       ref: this.canvasRef,
       onClick: this.handleSeek
     }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "visualiser"
+      className: "playback"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "preview_unavailable",
       defaultMessage: [{
@@ -9962,15 +9962,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const BUFFER_SIZE = 256;
-const LINE_WIDTH = 4;
-const SPACING = 2;
+const CANVAS_UPSCALING = 2.0;
+const LINE_WIDTH = 3 * CANVAS_UPSCALING;
+const SPACING = 2 * CANVAS_UPSCALING;
 const MILLIS_PER_BAR = 100;
-const BAR_COLOR = '#8fbed6';
+const BAR_COLOR = '#bbb';
 const BAR_SCALE = 64.0;
-const BKG_COLOR = '#eeeeee';
 const MIN_DURATION = 200;
 const MAX_DURATION = 600000;
 const VISUALIZATION_BARS = 96;
+const MAX_SAMPLES_PER_BAR = 10;
 class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
@@ -9985,6 +9986,7 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     };
     this.visualize = this.visualize.bind(this);
     this.initMediaRecording = this.initMediaRecording.bind(this);
+    this.initCanvas = this.initCanvas.bind(this);
     this.getRecording = this.getRecording.bind(this);
     this.cleanUp = this.cleanUp.bind(this);
     this.handleResume = this.handleResume.bind(this);
@@ -9998,9 +10000,6 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
   }
 
   componentDidMount() {
-    this.canvasContext = this.canvasRef.current.getContext('2d');
-    this.canvasContext.lineCap = 'round';
-    this.canvasContext.translate(0.5, 0.5);
     this.stream = null;
     this.mediaRecorder = null;
     this.audioContext = null;
@@ -10019,12 +10018,12 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
   }
 
   visualize() {
+    this.initCanvas();
     const pcmData = new Uint8Array(this.analyser.frequencyBinCount);
-    const width = this.canvasRef.current.width;
-    const height = this.canvasRef.current.height;
+    const width = this.canvasWidth;
+    const height = this.canvasHeight;
     const viewLength = width / (LINE_WIDTH + SPACING) | 0;
     const viewDuration = MILLIS_PER_BAR * viewLength;
-    this.canvasContext.fillStyle = BKG_COLOR;
     this.canvasContext.lineWidth = LINE_WIDTH;
     this.canvasContext.strokeStyle = BAR_COLOR;
     let prevBarCount = 0;
@@ -10076,7 +10075,7 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
         }
       }
 
-      this.canvasContext.fillRect(0, 0, width, height);
+      this.canvasContext.clearRect(0, 0, width, height);
       this.canvasContext.beginPath();
 
       for (let i = 0; i < this.viewBuffer.length; i++) {
@@ -10142,6 +10141,16 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     }
   }
 
+  initCanvas() {
+    this.canvasRef.current.width = this.canvasRef.current.offsetWidth * CANVAS_UPSCALING;
+    this.canvasRef.current.height = this.canvasRef.current.offsetHeight * CANVAS_UPSCALING;
+    this.canvasContext = this.canvasRef.current.getContext('2d');
+    this.canvasContext.lineCap = 'round';
+    this.canvasContext.translate(0.5, 0.5);
+    this.canvasWidth = this.canvasRef.current.width;
+    this.canvasHeight = this.canvasRef.current.height;
+  }
+
   initMediaRecording(stream) {
     this.stream = stream;
     this.mediaRecorder = new MediaRecorder(stream);
@@ -10198,18 +10207,21 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
   createPreview(audio) {
     const data = audio.getChannelData(0);
     const viewLength = Math.min(data.length, VISUALIZATION_BARS);
-    const spb = Math.min(100, data.length / viewLength | 0);
+    const totalSPB = data.length / viewLength | 0;
+    const samplingRate = Math.max(1, totalSPB / MAX_SAMPLES_PER_BAR | 0);
     let buffer = [];
     let max = -1;
 
     for (let i = 0; i < viewLength; i++) {
       let amplitude = 0;
+      let count = 0;
 
-      for (let j = 0; j < spb; j++) {
-        amplitude += data[spb * i + j] ** 2;
+      for (let j = 0; j < totalSPB; j += samplingRate) {
+        amplitude += data[totalSPB * i + j] ** 2;
+        count++;
       }
 
-      const val = Math.sqrt(amplitude / spb);
+      const val = Math.sqrt(amplitude / count);
       buffer.push(val);
       max = Math.max(max, val);
     }
@@ -10237,7 +10249,6 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, "delete_outline")), this.state.recording ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("canvas", {
-      className: "visualiser",
       ref: this.canvasRef
     }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_audio_player_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
       src: this.state.blobUrl,

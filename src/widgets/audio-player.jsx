@@ -12,13 +12,10 @@ const CANVAS_UPSCALING = 2.0;
 const LINE_WIDTH = 3 * CANVAS_UPSCALING;
 // Spacing between two visualization bars.
 const SPACING = 2 * CANVAS_UPSCALING;
-// Color of histogram bars (base color #009688).
-const BAR_COLOR = '#85c7c5';
-const BAR_COLOR_DARK = '#559695';
-const THUMB_COLOR = '#246867';
-
-// Background color
-const BKG_COLOR = '#fff';
+// Color of histogram bars.
+const BAR_COLOR = '#bbb';
+const BAR_COLOR_DARK = '#888';
+const THUMB_COLOR = '#666';
 // Minimum number of amplitude bars to draw.
 const MIN_PREVIEW_LENGTH = 16;
 
@@ -36,6 +33,7 @@ export default class AudioPlayer extends React.PureComponent {
       playing: false,
       currentTime: '0:00',
       duration: this.props.duration > 0 ? secondsToTime(this.props.duration / 1000) : '-:--',
+      longMin: this.props.duration >= 600000,
       preview: preview
     };
 
@@ -91,10 +89,12 @@ export default class AudioPlayer extends React.PureComponent {
   initAudio() {
     this.audioPlayer = new Audio(this.props.src);
     this.audioPlayer.oncanplay = _ => this.setState({canPlay: true});
-    this.audioPlayer.ontimeupdate = _ => this.setState({currentTime: secondsToTime(this.audioPlayer.currentTime)});
+    this.audioPlayer.ontimeupdate = _ => this.setState({
+      currentTime: secondsToTime(this.audioPlayer.currentTime, this.state.longMin)
+    });
     this.audioPlayer.onended = _ => {
       this.audioPlayer.currentTime = 0;
-      this.setState({playing: false, currentTime: secondsToTime(0)})
+      this.setState({playing: false, currentTime: secondsToTime(0, this.state.longMin)})
     }
   }
 
@@ -220,7 +220,7 @@ export default class AudioPlayer extends React.PureComponent {
       const rect = e.target.getBoundingClientRect();
       const offset = (e.clientX - rect.left) / this.effectiveWidth * CANVAS_UPSCALING;
       this.audioPlayer.currentTime = this.props.duration * offset / 1000;
-      this.setState({currentTime: secondsToTime(this.audioPlayer.currentTime)});
+      this.setState({currentTime: secondsToTime(this.audioPlayer.currentTime, this.state.longMin)});
       if (!this.state.playing && this.state.preview) {
         this.visualize();
       }
@@ -232,14 +232,15 @@ export default class AudioPlayer extends React.PureComponent {
       (this.props.short ? '' : ' large') +
       (this.state.canPlay ? '' : ' disabled');
     const play = (<a href="#" onClick={this.handlePlay} title="Play">
-        <i className={playClass}>{this.state.playing ? 'pause_circle' : 'play_circle'}</i>
+        <i className={playClass}>{this.state.playing ? 'pause_circle' :
+          (this.state.canPlay ? 'play_circle' : 'not_interested')}</i>
       </a>);
     return (<div className="audio-player">{this.props.short ?
       <>
         <div>
           {this.state.preview ?
-            <canvas className="visualiser" ref={this.canvasRef} onClick={this.handleSeek} /> :
-            <div className="visualiser"> - </div>
+            <canvas className="playback" ref={this.canvasRef} onClick={this.handleSeek} /> :
+            <div className="playback"> - </div>
           }
         </div>
         {play}
@@ -249,8 +250,8 @@ export default class AudioPlayer extends React.PureComponent {
         {play}
         <div>
           {this.state.preview ?
-            <canvas className="visualiser" ref={this.canvasRef} onClick={this.handleSeek} /> :
-            <div className="visualiser">
+            <canvas className="playback" ref={this.canvasRef} onClick={this.handleSeek} /> :
+            <div className="playback">
               <FormattedMessage
                 id="preview_unavailable" defaultMessage="unavailable" description="Message shown when media preview is not available" />
             </div>

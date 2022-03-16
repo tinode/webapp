@@ -9,24 +9,26 @@ import { secondsToTime } from '../lib/strformat';
 
 // FFT resolution.
 const BUFFER_SIZE = 256;
+// Make canvas bigger than the element size to reduce blurring.
+const CANVAS_UPSCALING = 2.0;
 // Thickness of a visualization bar.
-const LINE_WIDTH = 4;
+const LINE_WIDTH = 3 * CANVAS_UPSCALING;
 // Spacing between two visualization bars.
-const SPACING = 2;
+const SPACING = 2 * CANVAS_UPSCALING;
 // Duration represented by one visualization bar.
 const MILLIS_PER_BAR = 100;
 // Color of histogram bars
-const BAR_COLOR = '#8fbed6';
-// Scaling for visualization bars.
+const BAR_COLOR = '#bbb';
+// Vertical scaling for visualization bars.
 const BAR_SCALE = 64.0;
-// Background color
-const BKG_COLOR = '#eeeeee';
 // Minimum duration of a recording in milliseconds.
 const MIN_DURATION = 200;
 // Maximum duration of a recording in milliseconds (10 min).
 const MAX_DURATION = 600000;
 // Number of bars in preview.
 const VISUALIZATION_BARS = 96;
+// Maximum number of samples per bar.
+const MAX_SAMPLES_PER_BAR = 10;
 
 export default class AudioRecorder extends React.PureComponent {
   constructor(props) {
@@ -44,6 +46,7 @@ export default class AudioRecorder extends React.PureComponent {
 
     this.visualize = this.visualize.bind(this);
     this.initMediaRecording = this.initMediaRecording.bind(this);
+    this.initCanvas = this.initCanvas.bind(this);
     this.getRecording = this.getRecording.bind(this);
     this.cleanUp = this.cleanUp.bind(this);
 
@@ -59,11 +62,6 @@ export default class AudioRecorder extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.canvasContext = this.canvasRef.current.getContext('2d');
-    this.canvasContext.lineCap = 'round';
-    // To reduce line blurring.
-    this.canvasContext.translate(0.5, 0.5);
-
     this.stream = null;
     this.mediaRecorder = null;
     this.audioContext = null;
@@ -82,13 +80,16 @@ export default class AudioRecorder extends React.PureComponent {
 
   // Draw amplitude of sound.
   visualize() {
+    this.initCanvas();
+
     const pcmData = new Uint8Array(this.analyser.frequencyBinCount);
-    const width = this.canvasRef.current.width;
-    const height = this.canvasRef.current.height;
+    const width = this.canvasWidth;
+    const height = this.canvasHeight;
+    // Number of bars.
     const viewLength = (width / (LINE_WIDTH + SPACING)) | 0;
+    // Duration of audio which fits onto the screen.
     const viewDuration = MILLIS_PER_BAR * viewLength;
 
-    this.canvasContext.fillStyle = BKG_COLOR;
     this.canvasContext.lineWidth = LINE_WIDTH;
     this.canvasContext.strokeStyle = BAR_COLOR;
 
@@ -144,7 +145,7 @@ export default class AudioRecorder extends React.PureComponent {
       }
 
       // Clear canvas.
-      this.canvasContext.fillRect(0, 0, width, height);
+      this.canvasContext.clearRect(0, 0, width, height);
 
       // Draw amplitude bars.
       this.canvasContext.beginPath();
@@ -200,6 +201,18 @@ export default class AudioRecorder extends React.PureComponent {
     if (this.mediaRecorder) {
       this.mediaRecorder.stop();
     }
+  }
+
+  initCanvas() {
+    this.canvasRef.current.width = this.canvasRef.current.offsetWidth * CANVAS_UPSCALING;
+    this.canvasRef.current.height = this.canvasRef.current.offsetHeight * CANVAS_UPSCALING;
+
+    this.canvasContext = this.canvasRef.current.getContext('2d');
+    this.canvasContext.lineCap = 'round';
+    // To reduce line blurring.
+    this.canvasContext.translate(0.5, 0.5);
+    this.canvasWidth = this.canvasRef.current.width;
+    this.canvasHeight = this.canvasRef.current.height;
   }
 
   initMediaRecording(stream) {
@@ -260,16 +273,21 @@ export default class AudioRecorder extends React.PureComponent {
     const data = audio.getChannelData(0);
     // Number of amplitude bars in preview.
     const viewLength = Math.min(data.length, VISUALIZATION_BARS);
-    // The number of samples in each bar. Limit the number of samples to something reasonable, no need to process all.
-    const spb = Math.min(100, (data.length / viewLength) | 0);
+    // The number of samples in each bar.
+    const totalSPB = (data.length / viewLength) | 0;
+    // Distance between samples: we are going to take just a fracton of samples.
+    const samplingRate = Math.max(1, (totalSPB / MAX_SAMPLES_PER_BAR) | 0);
+
     let buffer = [];
     let max = -1;
     for (let i = 0; i < viewLength; i++) {
       let amplitude = 0;
-      for (let j = 0; j < spb; j++) {
-        amplitude += data[spb * i + j] ** 2;
+      let count = 0;
+      for (let j = 0; j < totalSPB; j += samplingRate) {
+        amplitude += data[totalSPB * i + j] ** 2;
+        count ++;
       }
-      const val = Math.sqrt(amplitude / spb);
+      const val = Math.sqrt(amplitude / count);
       buffer.push(val);
       max = Math.max(max, val);
     }
@@ -293,7 +311,7 @@ export default class AudioRecorder extends React.PureComponent {
           <i className="material-icons">delete_outline</i>
         </a>
         {this.state.recording ?
-          <canvas className="visualiser" ref={this.canvasRef} />
+          <canvas ref={this.canvasRef} />
           :
           <AudioPlayer
             src={this.state.blobUrl}

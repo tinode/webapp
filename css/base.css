@@ -2650,9 +2650,14 @@ ul.tabbar li.active > a {
   border-radius: 1.5rem;
 }
 
-.audio canvas.visualiser {
-  width: 12rem;
+.audio canvas {
+  width: 14rem;
   height: 2.6rem;
+  margin-right: 2rem;
+}
+
+.audio canvas.playback {
+  margin-right: 0;
 }
 
 .audio .duration {
@@ -2665,8 +2670,8 @@ ul.tabbar li.active > a {
 }
 
 .audio-player .material-icons.large {
-  font-size: 2.5rem;
-  color: #009688;
+  font-size: 2.4rem;
+  color: #667575;
 }
 
 .audio-player .material-icons.disabled {
@@ -2674,16 +2679,16 @@ ul.tabbar li.active > a {
   cursor: default;
 }
 
-.audio-player .visualiser {
-  width: 12rem;
+.audio-player .playback {
+  width: 14rem;
   height: 2.6rem;
 }
 
-.audio-player canvas.visualiser {
+.audio-player canvas.playback {
   display: block;
 }
 
-.audio-player div.visualiser {
+.audio-player div.playback {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2692,9 +2697,7 @@ ul.tabbar li.active > a {
 }
 
 .audio-player .timer {
-  font-size: small;
-  float: right;
-  padding-right: 7.4rem;
+  font-size: smaller;
   color: #666;
 }
 
