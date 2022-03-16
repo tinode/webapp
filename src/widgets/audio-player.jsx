@@ -112,6 +112,10 @@ export default class AudioPlayer extends React.PureComponent {
 
   // Draw amplitude of sound.
   visualize() {
+    if (!this.canvasRef.current) {
+      return;
+    }
+
     const width = this.effectiveWidth;
     const height = this.canvasRef.current.height;
 

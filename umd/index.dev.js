@@ -9782,6 +9782,10 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
   }
 
   visualize() {
+    if (!this.canvasRef.current) {
+      return;
+    }
+
     const width = this.effectiveWidth;
     const height = this.canvasRef.current.height;
     this.canvasContext.lineWidth = LINE_WIDTH;
