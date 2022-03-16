@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { Drafty } from 'tinode-sdk';
+import { Drafty, Tinode } from 'tinode-sdk';
 
 import Attachment from './attachment.jsx';
 import LetterTile from './letter-tile.jsx';

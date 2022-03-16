@@ -18,7 +18,7 @@ import TopicSecurity from '../widgets/topic-security.jsx';
 import { MAX_TITLE_LENGTH, MAX_TOPIC_DESCRIPTION_LENGTH, NO_ACCESS_MODE } from '../config.js';
 
 import { makeImageUrl } from '../lib/blob-helpers.js';
-import { arrayEqual, theCard } from '../lib/utils.js';
+import { theCard } from '../lib/utils.js';
 
 const messages = defineMessages({
   info: {

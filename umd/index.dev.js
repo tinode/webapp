@@ -10668,11 +10668,11 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     e.stopPropagation();
     const menuItems = [];
 
-    if (this.props.received == Tinode.MESSAGE_STATUS_FAILED) {
+    if (this.props.received == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_FAILED) {
       menuItems.push('menu_item_send_retry');
     }
 
-    if (this.props.userIsWriter && this.props.received > Tinode.MESSAGE_STATUS_FAILED && this.props.received < Tinode.MESSAGE_STATUS_DEL_RANGE) {
+    if (this.props.userIsWriter && this.props.received > tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_FAILED && this.props.received < tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_DEL_RANGE) {
       menuItems.push('menu_item_reply');
     }
 
