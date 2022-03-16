@@ -1,5 +1,7 @@
 import React from 'react';
 
+import LetterTile from '../widgets/letter-tile.jsx';
+
 export default class RtcPanel extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -342,24 +344,48 @@ export default class RtcPanel extends React.PureComponent {
     }
 
     return (
-      <div className="h-100" id="video_display">
-      	<div id ="video_container" className="align-items-center" style={{marginTop: "10%"}}>
-      		<div className="local_div" id="div1">
-			      <video id="localVideo" className="" ref={this.localRef} autoPlay muted playsInline></video>
-		      </div>
-		      <div className="remote_div" id="div2">
-			      <video id="remoteVideo" className="" ref={this.remoteRef} autoPlay playsInline></video>
-		      </div>
-    	  </div>
-        <div id="close" style={{padding: "20px", textAlign: "center"}}>
-          <button onClick={this.handleCloseClick} style={{borderRadius: "10px", backgroundColor: "red"}}>
-            <i className="material-icons">call_end</i>
-          </button>
-          <button onClick={this.handleToggleCameraClick} style={{borderRadius: "10px", backgroundColor: "gray"}}><i className="material-icons">video_camera_front</i></button>
-          <button onClick={this.handleToggleMicClick} style={{borderRadius: "10px", backgroundColor: "gray"}}><i className="material-icons">mic</i></button>
+      <>
+        <div id="topic-caption-panel" className="caption-panel">
+          {this.props.displayMobile ?
+            <a href="#" id="hide-message-view" onClick={(e) => {e.preventDefault(); this.props.onHideMessagesView();}}>
+              <i className="material-icons">arrow_back</i>
+            </a>
+            :
+            null}
+          <div className="avatar-box">
+            <LetterTile
+              tinode={this.props.tinode}
+              avatar={this.props.avatar}
+              topic={this.props.topic}
+              title={this.props.title} />
+          </div>
+          <div id="topic-title-group">
+            <div id="topic-title" className="panel-title">{
+              this.props.title ||
+              <i><FormattedMessage id="unnamed_topic" defaultMessage="Unnamed"
+                description="Title shown when the topic has no name" /></i>
+            }</div>
+          </div>
         </div>
-        <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-      </div>
+        <div id="video-container">
+          <div id="video-container-panel">
+            <div className="local-video">
+              <video id="localVideo" ref={this.localRef} autoPlay muted playsInline></video>
+            </div>
+            <div className="remote-video">
+              <video id="remoteVideo" ref={this.remoteRef} autoPlay playsInline></video>
+            </div>
+          </div>
+          <div id="video-container-controls">
+            <button id="video-call-hangup" onClick={this.handleCloseClick}>
+              <i className="material-icons">call_end</i>
+            </button>
+            <button className="video-call-toggle-media" onClick={this.handleToggleCameraClick}><i className="material-icons">video_camera_front</i></button>
+            <button className="video-call-toggle-media" onClick={this.handleToggleMicClick}><i className="material-icons">mic</i></button>
+          </div>
+          <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+        </div>
+      </>
     );
   }
 };

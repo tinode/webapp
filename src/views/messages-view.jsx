@@ -984,6 +984,11 @@ class MessagesView extends React.Component {
             topic={topic}
             seq={this.props.callSeq}
             callState={this.props.callState}
+            displayMobile={this.props.displayMobile}
+            tinode={this.props.tinode}
+            title={this.state.title}
+            avatar={this.state.avatar || true}
+
             onError={this.props.onError}
             onHangup={this.handleTeleHangup}
             onInvite={this.props.onTeleInvite}
