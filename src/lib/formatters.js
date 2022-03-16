@@ -115,6 +115,9 @@ export function fullFormatter(style, data, values, key, stack) {
     case 'BR':
       values = null;
       break;
+    case 'EX':
+      // Ignore.
+      break;
     case 'HL':
       // Highlighted text. Assign class name.
       attr.className = 'highlight';
@@ -161,15 +164,17 @@ export function fullFormatter(style, data, values, key, stack) {
       attr.onClick = this.onQuoteClick;
       break;
     default:
-      // Unknown element.
-      el = React.Fragment;
-      attr = {key: key};
-      // Generate comment for unknown element.
-      let body = values;
-      if (!Array.isArray(values) || !values.join('').trim()) {
-        body = [<span key="x1" className="gray">{this.formatMessage(messages.drafty_unknown)}</span>];
+      if (!el) {
+        // Unknown element.
+        el = React.Fragment;
+        attr = {key: key};
+        // Generate comment for unknown element.
+        let body = values;
+        if (!Array.isArray(values) || !values.join('').trim()) {
+          body = [<span key="x1" className="gray">{this.formatMessage(messages.drafty_unknown)}</span>];
+        }
+        values = [<i key="x0" className="material-icons gray">extension</i>, ' '].concat(body);
       }
-      values = [<i key="x0" className="material-icons gray">extension</i>, ' '].concat(body);
       break;
   }
   if (!el) {
@@ -246,8 +251,11 @@ export function previewFormatter(style, data, values, key) {
       values = null;
       break;
     default:
-      el = React.Fragment;
-      values = [<i key="x0" className="material-icons gray">extension</i>, ' ', this.formatMessage(messages.drafty_unknown)];
+      if (!el) {
+        // Unknown element.
+        el = React.Fragment;
+        values = [<i key="x0" className="material-icons gray">extension</i>, ' ', this.formatMessage(messages.drafty_unknown)];
+      }
       break;
   }
   if (!el) {

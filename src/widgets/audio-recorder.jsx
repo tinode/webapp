@@ -2,6 +2,9 @@
 
 import React from 'react';
 
+import AudioPlayer from './audio-player.jsx';
+
+import { intArrayToBase64 } from '../lib/blob-helpers.js'
 import { secondsToTime } from '../lib/strformat';
 
 // FFT resolution.
@@ -34,11 +37,14 @@ export default class AudioRecorder extends React.PureComponent {
       audioRecord: null,
       recording: true,
       paused: false,
-      duration: '0:00'
+      duration: '0:00',
+      blobUrl: null,
+      preview: null
     };
 
     this.visualize = this.visualize.bind(this);
     this.initMediaRecording = this.initMediaRecording.bind(this);
+    this.getRecording = this.getRecording.bind(this);
     this.cleanUp = this.cleanUp.bind(this);
 
     this.handleResume = this.handleResume.bind(this);
@@ -159,9 +165,10 @@ export default class AudioRecorder extends React.PureComponent {
   handlePause(e) {
     e.preventDefault();
     this.mediaRecorder.pause();
+    this.mediaRecorder.requestData();
     this.durationMillis += Date.now() - this.startedOn;
     this.startedOn = null;
-    this.setState({recording: false, duration: secondsToTime(this.durationMillis / 1000)});
+    this.setState({recording: false});
   }
 
   handleResume(e) {
@@ -207,13 +214,9 @@ export default class AudioRecorder extends React.PureComponent {
     this.audioInput.connect(this.analyser);
 
     this.mediaRecorder.onstop = _ => {
-      const blob = new Blob(this.audioChunks, {'type' : 'audio/mp3; codecs=mp3'});
-      this.audioChunks = [];
-      const url = window.URL.createObjectURL(blob);
       if (this.durationMillis > MIN_DURATION) {
-        blob.arrayBuffer().then(ab => this.audioContext.decodeAudioData(ab))
-          .then(data => this.createPreview(data))
-          .then(preview => this.props.onFinished(url, preview, this.durationMillis));
+        this.getRecording()
+          .then(result => this.props.onFinished(result.url, result.preview, this.durationMillis));
       } else {
         this.props.onDeleted();
       }
@@ -224,12 +227,32 @@ export default class AudioRecorder extends React.PureComponent {
       if (e.data.size > 0) {
         this.audioChunks.push(e.data);
       }
+
+      if (this.mediaRecorder.state != 'inactive') {
+        this.getRecording().then(result => {
+          this.setState({
+            blobUrl: result.url,
+            preview: result.preview
+          });
+        });
+      }
     }
 
     this.durationMillis = 0;
     this.startedOn = Date.now();
     this.mediaRecorder.start();
     this.visualize();
+  }
+
+  // Obtain data in a form sutable for sending or playing back.
+  getRecording() {
+    const blob = new Blob(this.audioChunks, {'type' : 'audio/mp3; codecs=mp3'});
+    const url = window.URL.createObjectURL(blob);
+    return blob.arrayBuffer().then(ab => this.audioContext.decodeAudioData(ab))
+      .then(data => this.createPreview(data))
+      .then(preview => {
+        return {url: url, preview: intArrayToBase64(preview)}
+      });
   }
 
   // Preview must be calculated at the source: Chrome does not allow background AudioContext.
@@ -269,7 +292,15 @@ export default class AudioRecorder extends React.PureComponent {
         <a href="#" onClick={this.handleDelete} title="Delete">
           <i className="material-icons">delete_outline</i>
         </a>
-        <canvas className="visualiser" ref={this.canvasRef} />
+        {this.state.recording ?
+          <canvas className="visualiser" ref={this.canvasRef} />
+          :
+          <AudioPlayer
+            src={this.state.blobUrl}
+            preview={this.state.preview}
+            duration={this.durationMillis}
+            short={true} />
+        }
         <div className="duration">{this.state.duration}</div>
         {this.state.recording ?
           <a href="#" onClick={this.handlePause} title="Pause">

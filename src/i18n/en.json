@@ -1367,5 +1367,12 @@
     "description": "Unsupported entity in drafty",
     "missing": false,
     "obsolete": false
+  },
+  "preview_unavailable": {
+    "translation": "unavailable",
+    "defaultMessage": "unavailable",
+    "description": "Message shown when media preview is not available",
+    "missing": false,
+    "obsolete": false
   }
 }

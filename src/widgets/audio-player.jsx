@@ -1,6 +1,7 @@
 // Audio recorder widget.
 
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 
 import { secondsToTime } from '../lib/strformat';
 import { base64ToIntArray } from '../lib/blob-helpers';
@@ -11,9 +12,10 @@ const CANVAS_UPSCALING = 2.0;
 const LINE_WIDTH = 3 * CANVAS_UPSCALING;
 // Spacing between two visualization bars.
 const SPACING = 2 * CANVAS_UPSCALING;
-// Color of histogram bars
-const BAR_COLOR = '#8fbed6';
-const BAR_COLOR_DARK = '#5f8ea5';
+// Color of histogram bars (base color #009688).
+const BAR_COLOR = '#85c7c5';
+const BAR_COLOR_DARK = '#559695';
+const THUMB_COLOR = '#246867';
 
 // Background color
 const BKG_COLOR = '#fff';
@@ -37,6 +39,8 @@ export default class AudioPlayer extends React.PureComponent {
       preview: preview
     };
 
+    this.initAudio = this.initAudio.bind(this);
+    this.initCanvas = this.initCanvas.bind(this);
     this.calcPreviewBars = this.calcPreviewBars.bind(this);
     this.visualize = this.visualize.bind(this);
 
@@ -52,60 +56,109 @@ export default class AudioPlayer extends React.PureComponent {
 
   componentDidMount() {
     if (this.props.src) {
-      this.audioPlayer = new Audio(this.props.src);
-      this.audioPlayer.addEventListener('canplay', _ => this.setState({canPlay: true}));
-      this.audioPlayer.addEventListener('timeupdate', _ => this.setState({currentTime: secondsToTime(this.audioPlayer.currentTime)}));
-      this.audioPlayer.addEventListener('ended', _ => this.setState({playing: false, currentTime: secondsToTime(0)}));
+      this.initAudio();
     }
 
     if (this.state.preview) {
-      // Force canvas aspect ration to match one of the element + upscale canvas to reduce blurring.
-      this.canvasRef.current.width = this.canvasRef.current.offsetWidth * CANVAS_UPSCALING;
-      this.canvasRef.current.height = this.canvasRef.current.offsetHeight * CANVAS_UPSCALING;
-
-      this.canvasContext = this.canvasRef.current.getContext('2d');
-      this.canvasContext.lineCap = 'round';
-
-      this.viewBuffer = this.calcPreviewBars(this.state.preview);
-      this.visualize();
+      this.initCanvas();
     }
+  }
+
+  componentWillUnmount() {
+    if (this.audioPlayer) {
+      this.audioPlayer.oncanplay = null;
+      this.audioPlayer.ontimeupdate = null;
+      this.audioPlayer.onended = null;
+      this.audioPlayer.pause();
+      this.audioPlayer = null;
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.src != prevProps.src) {
+      this.initAudio();
+    }
+
+    if (this.props.preview != prevProps.preview) {
+      let preview = base64ToIntArray(this.props.preview);
+      if (Array.isArray(preview) && preview.length < MIN_PREVIEW_LENGTH) {
+        preview = null;
+      }
+      this.setState({preview: preview}, this.initCanvas);
+    }
+  }
+
+  initAudio() {
+    this.audioPlayer = new Audio(this.props.src);
+    this.audioPlayer.oncanplay = _ => this.setState({canPlay: true});
+    this.audioPlayer.ontimeupdate = _ => this.setState({currentTime: secondsToTime(this.audioPlayer.currentTime)});
+    this.audioPlayer.onended = _ => {
+      this.audioPlayer.currentTime = 0;
+      this.setState({playing: false, currentTime: secondsToTime(0)})
+    }
+  }
+
+  initCanvas() {
+    // Force canvas aspect ration to match one of the element + upscale canvas to reduce blurring.
+    this.canvasRef.current.width = this.canvasRef.current.offsetWidth * CANVAS_UPSCALING;
+    this.canvasRef.current.height = this.canvasRef.current.offsetHeight * CANVAS_UPSCALING;
+
+    this.canvasContext = this.canvasRef.current.getContext('2d');
+    this.canvasContext.lineCap = 'round';
+
+    this.viewBuffer = this.calcPreviewBars(this.state.preview);
+    this.visualize();
   }
 
   // Draw amplitude of sound.
   visualize() {
-    const width = this.canvasRef.current.width;
+    const width = this.effectiveWidth;
     const height = this.canvasRef.current.height;
 
     this.canvasContext.lineWidth = LINE_WIDTH;
 
     const drawFrame = () => {
-      this.canvasContext.clearRect(0, 0, width, height);
+      if (!this.canvasRef.current) {
+        // The component is unmounted.
+        return;
+      }
 
-      // Start new drawing.
-      this.canvasContext.beginPath();
+      this.canvasContext.clearRect(0, 0, this.canvasRef.current.width, height);
 
       if (this.viewBuffer) {
-        window.requestAnimationFrame(drawFrame);
+        if (this.state.playing) {
+          window.requestAnimationFrame(drawFrame);
+        }
 
-        this.canvasContext.strokeStyle = BAR_COLOR;
+        // Current pplayback position.
+        const thumbAt = this.props.duration ?
+          Math.max(0, Math.min(this.audioPlayer.currentTime * 1000 / this.props.duration, 1)) * (width - LINE_WIDTH * 2) : -1;
+
         // Draw amplitude bars.
+        this.canvasContext.beginPath();
+        this.canvasContext.strokeStyle = BAR_COLOR_DARK;
         for (let i = 0; i < this.viewBuffer.length; i++) {
           let x = 1 + i * (LINE_WIDTH + SPACING) + LINE_WIDTH * 0.5;
           let y = this.viewBuffer[i] * height * 0.9;
 
+          const color = x < thumbAt ? BAR_COLOR_DARK : BAR_COLOR;
+          if (this.canvasContext.strokeStyle != color) {
+            this.canvasContext.stroke();
+            this.canvasContext.beginPath();
+            this.canvasContext.strokeStyle = color;
+          }
+
           this.canvasContext.moveTo(x, (height - y) * 0.5);
           this.canvasContext.lineTo(x, height * 0.5 + y * 0.5);
         }
-
         // Actually draw the bars on canvas.
         this.canvasContext.stroke();
 
+        // Draw thumb.
         if (this.props.duration) {
           this.canvasContext.beginPath();
-
-          const x = Math.max(0, Math.min(this.audioPlayer.currentTime * 1000 / this.props.duration, 1)) * width;
-          this.canvasContext.arc(x + LINE_WIDTH * 0.5, height * 0.5, LINE_WIDTH * 2, 0, 2 * Math.PI);
-          this.canvasContext.fillStyle = BAR_COLOR_DARK;
+          this.canvasContext.arc(thumbAt + LINE_WIDTH * 2, height * 0.5, LINE_WIDTH * 2, 0, 2 * Math.PI);
+          this.canvasContext.fillStyle = THUMB_COLOR;
           this.canvasContext.fill();
         }
       }
@@ -116,7 +169,7 @@ export default class AudioPlayer extends React.PureComponent {
 
   // Quick and dirty downsampling of the original preview bars into a smaller (or equal) number of bars we can display here.
   calcPreviewBars(original) {
-    const barCount = Math.min(original.length, ((this.canvasRef.current.width - 1) / (LINE_WIDTH + SPACING)) | 0);
+    const barCount = Math.min(original.length, ((this.canvasRef.current.width - SPACING) / (LINE_WIDTH + SPACING)) | 0);
     const factor = original.length / barCount;
     let amps = [];
     let max = -1;
@@ -132,6 +185,8 @@ export default class AudioPlayer extends React.PureComponent {
     }
 
     if (max > 0) {
+      // Remove extra padding on the right due to fractional bar which is not drawn.
+      this.effectiveWidth = barCount * (LINE_WIDTH + SPACING) + SPACING;
       return amps.map(a => a / max);
     }
     return null;
@@ -144,12 +199,11 @@ export default class AudioPlayer extends React.PureComponent {
     }
     if (this.state.playing) {
       this.audioPlayer.pause();
-      this.startedOn = null;
+      this.setState({playing: false});
     } else {
       this.audioPlayer.play();
-      this.startedOn = Date.now();
+      this.setState({playing: true}, this.visualize);
     }
-    this.setState({playing: !this.state.playing});
   }
 
   handleError(err) {
@@ -160,27 +214,47 @@ export default class AudioPlayer extends React.PureComponent {
     e.preventDefault();
     if (e.target && this.props.duration) {
       const rect = e.target.getBoundingClientRect();
-      const offset = (e.clientX - rect.left) / rect.width;
+      const offset = (e.clientX - rect.left) / this.effectiveWidth * CANVAS_UPSCALING;
       this.audioPlayer.currentTime = this.props.duration * offset / 1000;
       this.setState({currentTime: secondsToTime(this.audioPlayer.currentTime)});
+      if (!this.state.playing && this.state.preview) {
+        this.visualize();
+      }
     }
   }
 
   render() {
-    const playClass = 'material-icons large' + (this.state.canPlay ? '' : ' disabled');
-    return (
-      <div className="audio-player">
-        <a href="#" onClick={this.handlePlay} title="Play">
-          <i className={playClass}>{this.state.playing ? 'pause_circle' : 'play_circle'}</i>
-        </a>
+    const playClass = 'material-icons' +
+      (this.props.short ? '' : ' large') +
+      (this.state.canPlay ? '' : ' disabled');
+    const play = (<a href="#" onClick={this.handlePlay} title="Play">
+        <i className={playClass}>{this.state.playing ? 'pause_circle' : 'play_circle'}</i>
+      </a>);
+    return (<div className="audio-player">{this.props.short ?
+      <>
         <div>
           {this.state.preview ?
             <canvas className="visualiser" ref={this.canvasRef} onClick={this.handleSeek} /> :
-            <div className="visualiser">unavailable</div>
+            <div className="visualiser"> - </div>
+          }
+        </div>
+        {play}
+      </>
+    :
+      <>
+        {play}
+        <div>
+          {this.state.preview ?
+            <canvas className="visualiser" ref={this.canvasRef} onClick={this.handleSeek} /> :
+            <div className="visualiser">
+              <FormattedMessage
+                id="preview_unavailable" defaultMessage="unavailable" description="Message shown when media preview is not available" />
+            </div>
           }
           <div className="timer">{this.state.currentTime}/{this.state.duration}</div>
         </div>
-      </div>
-    );
+      </>
+    }
+    </div>);
   }
 }

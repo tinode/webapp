@@ -2666,10 +2666,12 @@ ul.tabbar li.active > a {
 
 .audio-player .material-icons.large {
   font-size: 2.5rem;
+  color: #009688;
 }
 
 .audio-player .material-icons.disabled {
   color: #999;
+  cursor: default;
 }
 
 .audio-player .visualiser {

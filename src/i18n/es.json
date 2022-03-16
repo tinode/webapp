@@ -1362,10 +1362,17 @@
     "obsolete": false
   },
   "drafty_unknown": {
-    "translation": "",
+    "translation": "No soportado",
     "defaultMessage": "Unsupported",
     "description": "Unsupported entity in drafty",
-    "missing": true,
+    "missing": false,
+    "obsolete": false
+  },
+  "preview_unavailable": {
+    "translation": "indisponible",
+    "defaultMessage": "unavailable",
+    "description": "Message shown when media preview is not available",
+    "missing": false,
     "obsolete": false
   }
 }
