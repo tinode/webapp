@@ -1222,7 +1222,7 @@ class MessagesView extends React.Component {
                 onSendMessage={this.sendMessage}
                 onAttachFile={this.props.forwardMessage ? null : this.handleAttachFile}
                 onAttachImage={this.props.forwardMessage ? null : this.handleAttachImage}
-                onAttachAudio={this.sendAudioAttachment}
+                onAttachAudio={this.props.forwardMessage ? null : this.sendAudioAttachment}
                 onError={this.props.onError}
                 reply={this.state.reply}
                 onQuoteClick={this.handleQuoteClick}
