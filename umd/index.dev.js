@@ -10019,6 +10019,8 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
   }
 
   componentWillUnmount() {
+    this.startedOn = null;
+
     if (this.stream) {
       this.cleanUp();
     }
@@ -10049,9 +10051,9 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       });
 
       if (duration > MAX_DURATION) {
+        this.startedOn = null;
         this.mediaRecorder.pause();
         this.durationMillis += Date.now() - this.startedOn;
-        this.startedOn = null;
         this.setState({
           enabled: false,
           recording: false,

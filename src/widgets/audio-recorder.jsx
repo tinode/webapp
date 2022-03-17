@@ -79,6 +79,7 @@ export default class AudioRecorder extends React.PureComponent {
   }
 
   componentWillUnmount() {
+    this.startedOn = null;
     if (this.stream) {
       this.cleanUp();
     }
@@ -114,9 +115,9 @@ export default class AudioRecorder extends React.PureComponent {
 
       // Check if record is too long.
       if (duration > MAX_DURATION) {
+        this.startedOn = null;
         this.mediaRecorder.pause();
         this.durationMillis += Date.now() - this.startedOn;
-        this.startedOn = null;
         this.setState({enabled: false, recording: false, duration: secondsToTime(this.durationMillis / 1000)});
       }
 
