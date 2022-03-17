@@ -1459,8 +1459,7 @@ class TinodeWeb extends React.Component {
     const header = '➦ ' + params.userName;
     const content = typeof params.content == 'string' ?
             Tinode.Drafty.init(params.content) : Tinode.Drafty.forwardedContent(params.content);
-    const preview = Tinode.Drafty.preview(content, FORWARDED_PREVIEW_LENGTH,
-                                          undefined, params.forwarded != null);
+    const preview = Tinode.Drafty.preview(content, FORWARDED_PREVIEW_LENGTH, true);
     const msg = Tinode.Drafty.append(
         Tinode.Drafty.appendLineBreak(
             Tinode.Drafty.mention(header, params.userFrom)),
