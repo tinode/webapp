@@ -1216,6 +1216,7 @@ class MessagesView extends React.Component {
               :
               <SendMessage
                 tinode={this.props.tinode}
+                topicName={this.state.topic}
                 noInput={!!this.props.forwardMessage}
                 disabled={!this.state.isWriter || this.state.deleted}
                 onKeyPress={this.sendKeyPress}

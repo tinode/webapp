@@ -6609,6 +6609,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           onAction: this.handleNewChatAcceptance
         }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_14__["default"], {
           tinode: this.props.tinode,
+          topicName: this.state.topic,
           noInput: !!this.props.forwardMessage,
           disabled: !this.state.isWriter || this.state.deleted,
           onKeyPress: this.sendKeyPress,
@@ -10017,6 +10018,12 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     }
   }
 
+  componentWillUnmount() {
+    if (this.stream) {
+      this.cleanUp();
+    }
+  }
+
   visualize() {
     this.initCanvas();
     const pcmData = new Uint8Array(this.analyser.frequencyBinCount);
@@ -10247,7 +10254,7 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       onClick: this.handleDelete,
       title: "Delete"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
+      className: "material-icons gray"
     }, "delete_outline")), this.state.recording ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("canvas", {
       ref: this.canvasRef
     }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_audio_player_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
@@ -14683,7 +14690,13 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       this.messageEditArea.focus();
     }
 
-    if (prevProps.reply != this.props.reply) {
+    if (prevProps.topicName != this.props.topicName) {
+      this.setState({
+        message: '',
+        audioRec: false,
+        quote: null
+      });
+    } else if (prevProps.reply != this.props.reply) {
       this.setState({
         quote: this.formatReply()
       });

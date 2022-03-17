@@ -78,6 +78,12 @@ export default class AudioRecorder extends React.PureComponent {
     }
   }
 
+  componentWillUnmount() {
+    if (this.stream) {
+      this.cleanUp();
+    }
+  }
+
   // Draw amplitude of sound.
   visualize() {
     this.initCanvas();
@@ -308,7 +314,7 @@ export default class AudioRecorder extends React.PureComponent {
     return (
       <div className="audio">
         <a href="#" onClick={this.handleDelete} title="Delete">
-          <i className="material-icons">delete_outline</i>
+          <i className="material-icons gray">delete_outline</i>
         </a>
         {this.state.recording ?
           <canvas ref={this.canvasRef} />

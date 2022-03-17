@@ -82,7 +82,9 @@ class SendMessage extends React.PureComponent {
       this.messageEditArea.focus();
     }
 
-    if (prevProps.reply != this.props.reply) {
+    if (prevProps.topicName != this.props.topicName) {
+      this.setState({message: '', audioRec: false, quote: null});
+    } else if (prevProps.reply != this.props.reply) {
       this.setState({quote: this.formatReply()});
     }
   }
