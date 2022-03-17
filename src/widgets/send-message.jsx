@@ -45,7 +45,7 @@ class SendMessage extends React.PureComponent {
       quote: null,
       message: '',
       audioRec: false,
-      audioEnabled: !!navigator.mediaDevices.getUserMedia && this.props.onAttachAudio,
+      audioAvailable: !!navigator.mediaDevices.getUserMedia,
       // Make initial keypress time as if it happened 5001 milliseconds in the past.
       keypressTimestamp: new Date().getTime() - KEYPRESS_DELAY - 1
     };
@@ -201,7 +201,7 @@ class SendMessage extends React.PureComponent {
         </div>
         {this.state.quote}
       </div>);
-
+    const audioEnabled = this.state.audioAvailable && this.props.onAttachAudio;
     return (
       <div id="send-message-wrapper">
         {this.state.quote && !this.props.noInput ? quote : null}
@@ -230,7 +230,7 @@ class SendMessage extends React.PureComponent {
                     onKeyPress={this.handleKeyPress}
                     ref={(ref) => {this.messageEditArea = ref;}}
                     autoFocus />)}
-              {this.state.message || !this.state.audioEnabled ?
+              {this.state.message || !audioEnabled ?
                 <a href="#" onClick={this.handleSend} title="Send">
                   <i className="material-icons">send</i>
                 </a> :

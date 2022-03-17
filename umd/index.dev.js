@@ -6615,7 +6615,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           onSendMessage: this.sendMessage,
           onAttachFile: this.props.forwardMessage ? null : this.handleAttachFile,
           onAttachImage: this.props.forwardMessage ? null : this.handleAttachImage,
-          onAttachAudio: this.sendAudioAttachment,
+          onAttachAudio: this.props.forwardMessage ? null : this.sendAudioAttachment,
           onError: this.props.onError,
           reply: this.state.reply,
           onQuoteClick: this.handleQuoteClick,
@@ -8973,7 +8973,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
     const header = '➦ ' + params.userName;
     const content = typeof params.content == 'string' ? tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.init(params.content) : tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.forwardedContent(params.content);
-    const preview = tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.preview(content, _config_js__WEBPACK_IMPORTED_MODULE_11__.FORWARDED_PREVIEW_LENGTH, undefined, params.forwarded != null);
+    const preview = tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.preview(content, _config_js__WEBPACK_IMPORTED_MODULE_11__.FORWARDED_PREVIEW_LENGTH, true);
     const msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.append(tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.appendLineBreak(tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.mention(header, params.userFrom)), content);
     const msgPreview = tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.quote(header, params.userFrom, preview);
     const head = {
@@ -14648,7 +14648,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       quote: null,
       message: '',
       audioRec: false,
-      audioEnabled: !!navigator.mediaDevices.getUserMedia && this.props.onAttachAudio,
+      audioAvailable: !!navigator.mediaDevices.getUserMedia,
       keypressTimestamp: new Date().getTime() - _config_js__WEBPACK_IMPORTED_MODULE_4__.KEYPRESS_DELAY - 1
     };
     this.handlePasteEvent = this.handlePasteEvent.bind(this);
@@ -14807,6 +14807,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons gray"
     }, "close"))), this.state.quote);
+    const audioEnabled = this.state.audioAvailable && this.props.onAttachAudio;
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "send-message-wrapper"
     }, this.state.quote && !this.props.noInput ? quote : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -14846,7 +14847,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
         this.messageEditArea = ref;
       },
       autoFocus: true
-    }), this.state.message || !this.state.audioEnabled ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    }), this.state.message || !audioEnabled ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: this.handleSend,
       title: "Send"

@@ -1475,10 +1475,10 @@ class TinodeWeb extends React.Component {
     }
     const header = '➦ ' + params.userName;
     const content = typeof params.content == 'string' ? Drafty.init(params.content) : Drafty.forwardedContent(params.content);
-    const preview = Drafty.preview(content, FORWARDED_PREVIEW_LENGTH, undefined, params.forwarded != null);
+    const preview = Drafty.preview(content, FORWARDED_PREVIEW_LENGTH, true);
     const msg = Drafty.append(Drafty.appendLineBreak(Drafty.mention(header, params.userFrom)), content);
-
     const msgPreview = Drafty.quote(header, params.userFrom, preview);
+
     const head = {
       forwarded: params.topicName + ':' + params.seq
     };
