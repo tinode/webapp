@@ -6779,7 +6779,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       return;
     }
 
-    topic.updateMode(null, '-JP').then(ctrl => {
+    topic.updateMode(null, '-JP').then(_ => {
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic(window.location.hash, ''));
     }).catch(err => {
       this.handleError(err.message, 'err');
@@ -6793,10 +6793,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       return;
     }
 
-    this.tinode.publish((tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().TOPIC_SYS), tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.attachJSON(null, {
-      'action': 'report',
-      'target': topicName
-    }));
+    this.tinode.report('report', topicName);
     topic.updateMode(null, '-JP').then(ctrl => {
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic(window.location.hash, ''));
     }).catch(err => {
