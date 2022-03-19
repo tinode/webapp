@@ -5524,11 +5524,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
 
     if (topic && (this.state.topic != prevState.topic || !prevProps.ready)) {
-      if (topic._new) {
-        console.log('DEBUG: Fetching new topic description');
+      if (topic._new && topic.isP2PType()) {
+        topic.getMeta(topic.startMetaQuery().withDesc().build());
+      } else {
+        this.subscribe(topic);
       }
-
-      this.subscribe(topic);
     }
   }
 
@@ -5720,7 +5720,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
       this.props.onNewTopicCreated(this.props.topic, ctrl.topic);
       topic.queuedMessages(pub => {
-        if (!pub._sending && topic.isSubscribed()) {
+        if (pub._sending) {
+          return;
+        }
+
+        if (topic.isSubscribed()) {
           this.retrySend(pub);
         }
       });
@@ -8402,12 +8406,12 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic(window.location.hash, null));
   }
 
-  handleSendMessage(msg, promise, uploader, head) {
+  handleSendMessage(msg, uploadCompletionPromise, uploader, head) {
     const topic = this.tinode.getTopic(this.state.topicSelected);
-    this.sendMessageToTopic(topic, msg, promise, uploader, head);
+    this.sendMessageToTopic(topic, msg, uploadCompletionPromise, uploader, head);
   }
 
-  sendMessageToTopic(topic, msg, promise, uploader, head) {
+  sendMessageToTopic(topic, msg, uploadCompletionPromise, uploader, head) {
     msg = topic.createMessage(msg, false);
     msg._uploader = uploader;
 
@@ -8415,29 +8419,30 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       msg.head = Object.assign(msg.head || {}, head);
     }
 
-    if (!topic.isSubscribed()) {
-      if (!promise) {
-        promise = Promise.resolve();
-      }
+    const completion = [];
 
-      promise = promise.then(() => topic.subscribe()).then(() => {
+    if (uploadCompletionPromise) {
+      completion.push(uploadCompletionPromise);
+    }
+
+    if (!topic.isSubscribed()) {
+      const subscribePromise = topic.subscribe().then(() => {
         topic.queuedMessages(pub => {
-          if (!pub._sending && topic.isSubscribed()) {
+          if (pub._sending || pub.seq == msg.seq) {
+            return;
+          }
+
+          if (topic.isSubscribed()) {
             topic.publishMessage(pub);
           }
         });
       });
+      completion.push(subscribePromise);
     }
 
-    if (promise) {
-      promise = promise.catch(err => {
-        this.handleError(err.message, 'err');
-      });
-    }
-
-    topic.publishDraft(msg, promise).then(ctrl => {
+    topic.publishDraft(msg, Promise.all(completion)).then(_ => {
       if (topic.isArchived()) {
-        return topic.archive(false);
+        topic.archive(false);
       }
     }).catch(err => {
       this.handleError(err.message, 'err');

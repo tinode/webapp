@@ -188,11 +188,12 @@ class MessagesView extends React.Component {
     }
 
     if (topic && ((this.state.topic != prevState.topic) || !prevProps.ready)) {
-      if (topic._new) {
-        console.log('DEBUG: Fetching new topic description');
-        // topic.getMeta(topic.startMetaQuery().withDesc().build());
+      // Don't immediately subscribe to a new p2p topic, wait for the first message.
+      if (topic._new && topic.isP2PType()) {
+        topic.getMeta(topic.startMetaQuery().withDesc().build());
+      } else {
+        this.subscribe(topic);
       }
-      this.subscribe(topic);
     }
   }
 
@@ -380,7 +381,10 @@ class MessagesView extends React.Component {
         this.props.onNewTopicCreated(this.props.topic, ctrl.topic);
         // If there are unsent messages, try sending them now.
         topic.queuedMessages((pub) => {
-          if (!pub._sending && topic.isSubscribed()) {
+          if (pub._sending) {
+            return;
+          }
+          if (topic.isSubscribed()) {
             this.retrySend(pub);
           }
         });

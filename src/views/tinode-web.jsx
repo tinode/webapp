@@ -960,14 +960,14 @@ class TinodeWeb extends React.Component {
   // with attachments.
   //  - msg - Drafty message with content
   //  - promise - Promise to be resolved when the upload is completed
-  //  - uploader - for tracking progress
+  //  - uploadCompletionPromise - for tracking progress
   //  - head - head dictionary to be attached to the message
-  handleSendMessage(msg, promise, uploader, head) {
+  handleSendMessage(msg, uploadCompletionPromise, uploader, head) {
     const topic = this.tinode.getTopic(this.state.topicSelected);
-    this.sendMessageToTopic(topic, msg, promise, uploader, head);
+    this.sendMessageToTopic(topic, msg, uploadCompletionPromise, uploader, head);
   }
 
-  sendMessageToTopic(topic, msg, promise, uploader, head) {
+  sendMessageToTopic(topic, msg, uploadCompletionPromise, uploader, head) {
     msg = topic.createMessage(msg, false);
     // The uploader is used to show progress.
     msg._uploader = uploader;
@@ -976,33 +976,33 @@ class TinodeWeb extends React.Component {
       msg.head = Object.assign(msg.head || {}, head);
     }
 
+    const completion = [];
+    if (uploadCompletionPromise) {
+      completion.push(uploadCompletionPromise);
+    }
+
     if (!topic.isSubscribed()) {
       // Topic is not subscribed yet. Subscribe.
-      if (!promise) {
-        promise = Promise.resolve();
-      }
-      promise = promise
-        .then(() => topic.subscribe())
-        .then(() => {
-          // If there are unsent messages, try sending them now.
-          topic.queuedMessages((pub) => {
-            if (!pub._sending && topic.isSubscribed()) {
-              topic.publishMessage(pub);
-            }
+      const subscribePromise =
+        topic.subscribe()
+          .then(() => {
+            // If there are unsent messages, try sending them now.
+            topic.queuedMessages(pub => {
+              if (pub._sending || pub.seq == msg.seq) {
+                return;
+              }
+              if (topic.isSubscribed()) {
+                topic.publishMessage(pub);
+              }
+            });
           });
-        });
+      completion.push(subscribePromise);
     }
 
-    if (promise) {
-      promise = promise.catch((err) => {
-        this.handleError(err.message, 'err');
-      });
-    }
-
-    topic.publishDraft(msg, promise)
-      .then((ctrl) => {
+    topic.publishDraft(msg, Promise.all(completion))
+      .then(_ => {
         if (topic.isArchived()) {
-          return topic.archive(false);
+          topic.archive(false);
         }
       })
       .catch((err) => {
