@@ -1443,10 +1443,7 @@ class TinodeWeb extends React.Component {
     }
 
     // Publish spam report.
-    this.tinode.publish(Tinode.TOPIC_SYS, Drafty.attachJSON(null, {
-      'action': 'report',
-      'target': topicName
-    }));
+    this.tinode.report('report',topicName);
 
     // Remove J and P permissions.
     topic.updateMode(null, '-JP').then((ctrl) => {

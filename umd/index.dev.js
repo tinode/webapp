@@ -8948,10 +8948,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       return;
     }
 
-    this.tinode.publish(tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.TOPIC_SYS, tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.attachJSON(null, {
-      'action': 'report',
-      'target': topicName
-    }));
+    this.tinode.report('report', topicName);
     topic.updateMode(null, '-JP').then(ctrl => {
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic(window.location.hash, ''));
     }).catch(err => {
