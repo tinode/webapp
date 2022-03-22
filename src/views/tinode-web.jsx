@@ -1459,7 +1459,7 @@ class TinodeWeb extends React.Component {
       return;
     }
 
-    topic.updateMode(null, '-JP').then((ctrl) => {
+    topic.updateMode(null, '-JP').then(_ => {
       // Hide MessagesView and InfoView panels.
       HashNavigation.navigateTo(HashNavigation.setUrlTopic(window.location.hash, ''));
     }).catch((err) => {
@@ -1474,10 +1474,7 @@ class TinodeWeb extends React.Component {
     }
 
     // Publish spam report.
-    this.tinode.publish(Tinode.TOPIC_SYS, Tinode.Drafty.attachJSON(null, {
-      'action': 'report',
-      'target': topicName
-    }));
+    this.tinode.report('report', topicName);
 
     // Remove J and P permissions.
     topic.updateMode(null, '-JP').then((ctrl) => {
@@ -1507,8 +1504,7 @@ class TinodeWeb extends React.Component {
     const header = '➦ ' + params.userName;
     const content = typeof params.content == 'string' ?
             Tinode.Drafty.init(params.content) : Tinode.Drafty.forwardedContent(params.content);
-    const preview = Tinode.Drafty.preview(content, FORWARDED_PREVIEW_LENGTH,
-                                          undefined, params.forwarded != null);
+    const preview = Tinode.Drafty.preview(content, FORWARDED_PREVIEW_LENGTH, true);
     const msg = Tinode.Drafty.append(
         Tinode.Drafty.appendLineBreak(
             Tinode.Drafty.mention(header, params.userFrom)),

@@ -10,41 +10,41 @@
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "APP_NAME": () => (/* binding */ APP_NAME),
 /* harmony export */   "API_KEY": () => (/* binding */ API_KEY),
-/* harmony export */   "KNOWN_HOSTS": () => (/* binding */ KNOWN_HOSTS),
-/* harmony export */   "DEFAULT_HOST": () => (/* binding */ DEFAULT_HOST),
-/* harmony export */   "LOGGING_ENABLED": () => (/* binding */ LOGGING_ENABLED),
-/* harmony export */   "KEYPRESS_DELAY": () => (/* binding */ KEYPRESS_DELAY),
-/* harmony export */   "RECEIVED_DELAY": () => (/* binding */ RECEIVED_DELAY),
-/* harmony export */   "READ_DELAY": () => (/* binding */ READ_DELAY),
-/* harmony export */   "MIN_TAG_LENGTH": () => (/* binding */ MIN_TAG_LENGTH),
-/* harmony export */   "MAX_TAG_LENGTH": () => (/* binding */ MAX_TAG_LENGTH),
-/* harmony export */   "MAX_TAG_COUNT": () => (/* binding */ MAX_TAG_COUNT),
-/* harmony export */   "DEFAULT_P2P_ACCESS_MODE": () => (/* binding */ DEFAULT_P2P_ACCESS_MODE),
-/* harmony export */   "NEW_GRP_ACCESS_MODE": () => (/* binding */ NEW_GRP_ACCESS_MODE),
-/* harmony export */   "CHANNEL_ACCESS_MODE": () => (/* binding */ CHANNEL_ACCESS_MODE),
-/* harmony export */   "NO_ACCESS_MODE": () => (/* binding */ NO_ACCESS_MODE),
-/* harmony export */   "MEDIA_BREAKPOINT": () => (/* binding */ MEDIA_BREAKPOINT),
-/* harmony export */   "REM_SIZE": () => (/* binding */ REM_SIZE),
+/* harmony export */   "APP_NAME": () => (/* binding */ APP_NAME),
 /* harmony export */   "AVATAR_SIZE": () => (/* binding */ AVATAR_SIZE),
-/* harmony export */   "MAX_AVATAR_BYTES": () => (/* binding */ MAX_AVATAR_BYTES),
 /* harmony export */   "BROKEN_IMAGE_SIZE": () => (/* binding */ BROKEN_IMAGE_SIZE),
-/* harmony export */   "MESSAGES_PAGE": () => (/* binding */ MESSAGES_PAGE),
-/* harmony export */   "MAX_INBAND_ATTACHMENT_SIZE": () => (/* binding */ MAX_INBAND_ATTACHMENT_SIZE),
-/* harmony export */   "MAX_EXTERN_ATTACHMENT_SIZE": () => (/* binding */ MAX_EXTERN_ATTACHMENT_SIZE),
-/* harmony export */   "MAX_IMAGE_DIM": () => (/* binding */ MAX_IMAGE_DIM),
+/* harmony export */   "CHANNEL_ACCESS_MODE": () => (/* binding */ CHANNEL_ACCESS_MODE),
+/* harmony export */   "DEFAULT_HOST": () => (/* binding */ DEFAULT_HOST),
+/* harmony export */   "DEFAULT_P2P_ACCESS_MODE": () => (/* binding */ DEFAULT_P2P_ACCESS_MODE),
+/* harmony export */   "FORWARDED_PREVIEW_LENGTH": () => (/* binding */ FORWARDED_PREVIEW_LENGTH),
 /* harmony export */   "IMAGE_PREVIEW_DIM": () => (/* binding */ IMAGE_PREVIEW_DIM),
 /* harmony export */   "IMAGE_THUMBNAIL_DIM": () => (/* binding */ IMAGE_THUMBNAIL_DIM),
-/* harmony export */   "MAX_ONLINE_IN_TOPIC": () => (/* binding */ MAX_ONLINE_IN_TOPIC),
-/* harmony export */   "MAX_TITLE_LENGTH": () => (/* binding */ MAX_TITLE_LENGTH),
-/* harmony export */   "MAX_TOPIC_DESCRIPTION_LENGTH": () => (/* binding */ MAX_TOPIC_DESCRIPTION_LENGTH),
-/* harmony export */   "MESSAGE_PREVIEW_LENGTH": () => (/* binding */ MESSAGE_PREVIEW_LENGTH),
-/* harmony export */   "QUOTED_REPLY_LENGTH": () => (/* binding */ QUOTED_REPLY_LENGTH),
-/* harmony export */   "FORWARDED_PREVIEW_LENGTH": () => (/* binding */ FORWARDED_PREVIEW_LENGTH),
+/* harmony export */   "KEYPRESS_DELAY": () => (/* binding */ KEYPRESS_DELAY),
+/* harmony export */   "KNOWN_HOSTS": () => (/* binding */ KNOWN_HOSTS),
 /* harmony export */   "LINK_CONTACT_US": () => (/* binding */ LINK_CONTACT_US),
 /* harmony export */   "LINK_PRIVACY_POLICY": () => (/* binding */ LINK_PRIVACY_POLICY),
-/* harmony export */   "LINK_TERMS_OF_SERVICE": () => (/* binding */ LINK_TERMS_OF_SERVICE)
+/* harmony export */   "LINK_TERMS_OF_SERVICE": () => (/* binding */ LINK_TERMS_OF_SERVICE),
+/* harmony export */   "LOGGING_ENABLED": () => (/* binding */ LOGGING_ENABLED),
+/* harmony export */   "MAX_AVATAR_BYTES": () => (/* binding */ MAX_AVATAR_BYTES),
+/* harmony export */   "MAX_EXTERN_ATTACHMENT_SIZE": () => (/* binding */ MAX_EXTERN_ATTACHMENT_SIZE),
+/* harmony export */   "MAX_IMAGE_DIM": () => (/* binding */ MAX_IMAGE_DIM),
+/* harmony export */   "MAX_INBAND_ATTACHMENT_SIZE": () => (/* binding */ MAX_INBAND_ATTACHMENT_SIZE),
+/* harmony export */   "MAX_ONLINE_IN_TOPIC": () => (/* binding */ MAX_ONLINE_IN_TOPIC),
+/* harmony export */   "MAX_TAG_COUNT": () => (/* binding */ MAX_TAG_COUNT),
+/* harmony export */   "MAX_TAG_LENGTH": () => (/* binding */ MAX_TAG_LENGTH),
+/* harmony export */   "MAX_TITLE_LENGTH": () => (/* binding */ MAX_TITLE_LENGTH),
+/* harmony export */   "MAX_TOPIC_DESCRIPTION_LENGTH": () => (/* binding */ MAX_TOPIC_DESCRIPTION_LENGTH),
+/* harmony export */   "MEDIA_BREAKPOINT": () => (/* binding */ MEDIA_BREAKPOINT),
+/* harmony export */   "MESSAGES_PAGE": () => (/* binding */ MESSAGES_PAGE),
+/* harmony export */   "MESSAGE_PREVIEW_LENGTH": () => (/* binding */ MESSAGE_PREVIEW_LENGTH),
+/* harmony export */   "MIN_TAG_LENGTH": () => (/* binding */ MIN_TAG_LENGTH),
+/* harmony export */   "NEW_GRP_ACCESS_MODE": () => (/* binding */ NEW_GRP_ACCESS_MODE),
+/* harmony export */   "NO_ACCESS_MODE": () => (/* binding */ NO_ACCESS_MODE),
+/* harmony export */   "QUOTED_REPLY_LENGTH": () => (/* binding */ QUOTED_REPLY_LENGTH),
+/* harmony export */   "READ_DELAY": () => (/* binding */ READ_DELAY),
+/* harmony export */   "RECEIVED_DELAY": () => (/* binding */ RECEIVED_DELAY),
+/* harmony export */   "REM_SIZE": () => (/* binding */ REM_SIZE)
 /* harmony export */ });
 /* harmony import */ var _version_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./version.js */ "./src/version.js");
 
@@ -97,21 +97,21 @@ const LINK_TERMS_OF_SERVICE = 'https://tinode.co/terms.html';
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "SUPPORTED_IMAGE_FORMATS": () => (/* binding */ SUPPORTED_IMAGE_FORMATS),
 /* harmony export */   "MIME_EXTENSIONS": () => (/* binding */ MIME_EXTENSIONS),
-/* harmony export */   "makeImageUrl": () => (/* binding */ makeImageUrl),
-/* harmony export */   "fitImageSize": () => (/* binding */ fitImageSize),
-/* harmony export */   "fileNameForMime": () => (/* binding */ fileNameForMime),
-/* harmony export */   "imageScaled": () => (/* binding */ imageScaled),
-/* harmony export */   "imageCrop": () => (/* binding */ imageCrop),
-/* harmony export */   "fileToBase64": () => (/* binding */ fileToBase64),
-/* harmony export */   "blobToBase64": () => (/* binding */ blobToBase64),
-/* harmony export */   "filePasted": () => (/* binding */ filePasted),
-/* harmony export */   "getMimeType": () => (/* binding */ getMimeType),
-/* harmony export */   "base64EncodedLen": () => (/* binding */ base64EncodedLen),
+/* harmony export */   "SUPPORTED_IMAGE_FORMATS": () => (/* binding */ SUPPORTED_IMAGE_FORMATS),
 /* harmony export */   "base64DecodedLen": () => (/* binding */ base64DecodedLen),
+/* harmony export */   "base64EncodedLen": () => (/* binding */ base64EncodedLen),
 /* harmony export */   "base64ReEncode": () => (/* binding */ base64ReEncode),
-/* harmony export */   "base64ToBlob": () => (/* binding */ base64ToBlob)
+/* harmony export */   "base64ToBlob": () => (/* binding */ base64ToBlob),
+/* harmony export */   "blobToBase64": () => (/* binding */ blobToBase64),
+/* harmony export */   "fileNameForMime": () => (/* binding */ fileNameForMime),
+/* harmony export */   "filePasted": () => (/* binding */ filePasted),
+/* harmony export */   "fileToBase64": () => (/* binding */ fileToBase64),
+/* harmony export */   "fitImageSize": () => (/* binding */ fitImageSize),
+/* harmony export */   "getMimeType": () => (/* binding */ getMimeType),
+/* harmony export */   "imageCrop": () => (/* binding */ imageCrop),
+/* harmony export */   "imageScaled": () => (/* binding */ imageScaled),
+/* harmony export */   "makeImageUrl": () => (/* binding */ makeImageUrl)
 /* harmony export */ });
 const SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
 const MIME_EXTENSIONS = ['jpg', 'gif', 'png', 'svg', 'svg'];
@@ -873,8 +873,8 @@ function replyFormatter(style, data, values, key, stack) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "detectServerAddress": () => (/* binding */ detectServerAddress),
-/* harmony export */   "isSecureConnection": () => (/* binding */ isSecureConnection),
-/* harmony export */   "isLocalHost": () => (/* binding */ isLocalHost)
+/* harmony export */   "isLocalHost": () => (/* binding */ isLocalHost),
+/* harmony export */   "isSecureConnection": () => (/* binding */ isSecureConnection)
 /* harmony export */ });
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 
@@ -1047,12 +1047,12 @@ class HashNavigation {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "shortDateFormat": () => (/* binding */ shortDateFormat),
-/* harmony export */   "secondsToTime": () => (/* binding */ secondsToTime),
 /* harmony export */   "bytesToHumanSize": () => (/* binding */ bytesToHumanSize),
-/* harmony export */   "shortenFileName": () => (/* binding */ shortenFileName),
+/* harmony export */   "idToColorClass": () => (/* binding */ idToColorClass),
 /* harmony export */   "letterTileColorId": () => (/* binding */ letterTileColorId),
-/* harmony export */   "idToColorClass": () => (/* binding */ idToColorClass)
+/* harmony export */   "secondsToTime": () => (/* binding */ secondsToTime),
+/* harmony export */   "shortDateFormat": () => (/* binding */ shortDateFormat),
+/* harmony export */   "shortenFileName": () => (/* binding */ shortenFileName)
 /* harmony export */ });
 function shortDateFormat(then, locale) {
   locale = locale || window.navigator.userLanguage || window.navigator.language;
@@ -1136,16 +1136,16 @@ function idToColorClass(id, light, fg) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "updateFavicon": () => (/* binding */ updateFavicon),
-/* harmony export */   "theCard": () => (/* binding */ theCard),
 /* harmony export */   "arrayEqual": () => (/* binding */ arrayEqual),
-/* harmony export */   "asPhone": () => (/* binding */ asPhone),
 /* harmony export */   "asEmail": () => (/* binding */ asEmail),
-/* harmony export */   "isUrlRelative": () => (/* binding */ isUrlRelative),
-/* harmony export */   "sanitizeUrl": () => (/* binding */ sanitizeUrl),
-/* harmony export */   "sanitizeImageUrl": () => (/* binding */ sanitizeImageUrl),
+/* harmony export */   "asPhone": () => (/* binding */ asPhone),
+/* harmony export */   "cancelablePromise": () => (/* binding */ cancelablePromise),
 /* harmony export */   "deliveryMarker": () => (/* binding */ deliveryMarker),
-/* harmony export */   "cancelablePromise": () => (/* binding */ cancelablePromise)
+/* harmony export */   "isUrlRelative": () => (/* binding */ isUrlRelative),
+/* harmony export */   "sanitizeImageUrl": () => (/* binding */ sanitizeImageUrl),
+/* harmony export */   "sanitizeUrl": () => (/* binding */ sanitizeUrl),
+/* harmony export */   "theCard": () => (/* binding */ theCard),
+/* harmony export */   "updateFavicon": () => (/* binding */ updateFavicon)
 /* harmony export */ });
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_0__);
@@ -1355,7 +1355,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "PACKAGE_VERSION": () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.18.2";
+const PACKAGE_VERSION = "0.18.3-rc1";
 
 /***/ }),
 
@@ -6779,7 +6779,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       return;
     }
 
-    topic.updateMode(null, '-JP').then(ctrl => {
+    topic.updateMode(null, '-JP').then(_ => {
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic(window.location.hash, ''));
     }).catch(err => {
       this.handleError(err.message, 'err');
@@ -6793,10 +6793,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       return;
     }
 
-    this.tinode.publish((tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().TOPIC_SYS), tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.attachJSON(null, {
-      'action': 'report',
-      'target': topicName
-    }));
+    this.tinode.report('report', topicName);
     topic.updateMode(null, '-JP').then(ctrl => {
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic(window.location.hash, ''));
     }).catch(err => {
@@ -6824,7 +6821,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
     const header = '➦ ' + params.userName;
     const content = typeof params.content == 'string' ? tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.init(params.content) : tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.forwardedContent(params.content);
-    const preview = tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.preview(content, _config_js__WEBPACK_IMPORTED_MODULE_11__.FORWARDED_PREVIEW_LENGTH, undefined, params.forwarded != null);
+    const preview = tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.preview(content, _config_js__WEBPACK_IMPORTED_MODULE_11__.FORWARDED_PREVIEW_LENGTH, true);
     const msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.append(tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.appendLineBreak(tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.mention(header, params.userFrom)), content);
     const msgPreview = tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.quote(header, params.userFrom, preview);
     const head = {
@@ -13042,7 +13039,7 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     const {
       formatMessage
     } = this.props.intl;
-    this.props.onShowAlert(formatMessage(messages.report_chat), formatMessage(messages.report_chat_warning), () => {
+    this.props.onShowAlert(formatMessage(messages.report_chat), formatMessage(messages.report_chat_warning), _ => {
       this.props.onReportTopic(this.props.topic);
     }, null, true, null);
   }
@@ -13501,7 +13498,7 @@ const {
 } = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_5__["default"].parseUrlHash(window.location.hash);
 const language = params && params.hl || navigator.languages && navigator.languages[0] || navigator.language || navigator.userLanguage || 'en';
 const baseLanguage = language.toLowerCase().split(/[-_]/)[0];
-const htmlLang = _messages_json__WEBPACK_IMPORTED_MODULE_3__[language] ? langauge : _messages_json__WEBPACK_IMPORTED_MODULE_3__[baseLanguage] ? baseLanguage : 'en';
+const htmlLang = _messages_json__WEBPACK_IMPORTED_MODULE_3__[language] ? language : _messages_json__WEBPACK_IMPORTED_MODULE_3__[baseLanguage] ? baseLanguage : 'en';
 const messages = _messages_json__WEBPACK_IMPORTED_MODULE_3__[htmlLang];
 document.getElementsByTagName('html')[0].setAttribute('lang', htmlLang);
 react_dom__WEBPACK_IMPORTED_MODULE_1___default().render(react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().StrictMode), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_2__.IntlProvider, {
