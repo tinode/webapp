@@ -218,6 +218,8 @@ export default class RtcPanel extends React.PureComponent {
 
   handleTrackEvent(event) {
     this.remoteRef.current.srcObject = event.streams[0];
+    // Make sure we redraw the UI properly.
+    this.forceUpdate();
   }
 
   handleGetUserMediaError(e) {
@@ -276,7 +278,6 @@ export default class RtcPanel extends React.PureComponent {
   }
 
   stopTracks(el) {
-    //let lr = this.localRef.current;
     if (el == null) { return; }
     let stream = el.srcObject;
     if (stream == null) { return; }
@@ -343,6 +344,8 @@ export default class RtcPanel extends React.PureComponent {
       return null;
     }
 
+    const remoteActive = this.remoteRef.current != null && this.remoteRef.current.srcObject != null;
+
     return (
       <>
         <div id="topic-caption-panel" className="caption-panel">
@@ -368,12 +371,17 @@ export default class RtcPanel extends React.PureComponent {
           </div>
         </div>
         <div id="video-container">
-          <div id="video-container-panel">
-            <div className="local-video">
+          <div className="video-container-panel">
+            <div className="video-elem">
               <video id="localVideo" ref={this.localRef} autoPlay muted playsInline></video>
+              <div className="video-title">You</div>
             </div>
-            <div className="remote-video">
+            <div className="video-elem">
               <video id="remoteVideo" ref={this.remoteRef} autoPlay playsInline></video>
+              {remoteActive ?
+                <div className="video-title">{this.props.title}</div>
+                :
+                null}
             </div>
           </div>
           <div id="video-container-controls">

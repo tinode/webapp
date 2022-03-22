@@ -2605,20 +2605,26 @@ video {
   width:100%;
 }
 
-#video-container-panel {
+.video-container-panel {
   -ms-flex-align: center!important;
   align-items: center!important;
   margin-top: 10%;
+  position:relative;
 }
 
-.local-video {
+.video-elem {
   width:50%;
   float:left;
+  position:relative;
+  z-index:0;
 }
 
-.remote-video {
-  width:50%;
-  float:left;
+.video-title {
+  position:absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 1;
+  background-color: white;
 }
 
 #video-container-controls {

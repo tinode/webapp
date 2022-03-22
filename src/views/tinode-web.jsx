@@ -1736,14 +1736,8 @@ class TinodeWeb extends React.Component {
       this.handleCallClose();
       return;
     }
-    /*
-    if (!extend) {
-      this.handleCallClose();
-      return;
-    }
-    */
 
-    let until = new Date(this.state.callLeaseExpires); //this.state.callLeaseExpires.getSeconds() + 10;
+    let until = new Date(this.state.callLeaseExpires);
     until.setSeconds(until.getSeconds() + 10);
     topic.call('extend-lease', this.state.callSeq, undefined, until)
       .then((ctrl) => {
@@ -1756,20 +1750,12 @@ class TinodeWeb extends React.Component {
       let head = {mime: 'application/tinode-video-call'};
       this.handleSendMessage('started', undefined, undefined, head)
         .then((ctrl) => {
-          //this.handleTeleLeaseReply(ctrl, 0);
           if (ctrl.code < 200 || ctrl.code >= 300 || typeof ctrl.params == 'undefined' || typeof ctrl.params['seq'] == 'undefined') {
             this.handleCallClose();
             return;
           }
           this.setState({callSeq: ctrl.params['seq']});
         });
-      /*
-      topic.call('invite').then((ctrl) => {
-				if (ctrl.params && ctrl.params['sip-code'] == 100) {
-          this.handleTeleLeaseReply(ctrl, 0);
-				}
-      });
-      */
     } else if (callState == 3) {
       const topic = this.tinode.getTopic(callTopic);
       if (!topic) {
