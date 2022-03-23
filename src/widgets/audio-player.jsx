@@ -39,7 +39,7 @@ export default class AudioPlayer extends React.PureComponent {
 
     this.initAudio = this.initAudio.bind(this);
     this.initCanvas = this.initCanvas.bind(this);
-    this.calcPreviewBars = this.calcPreviewBars.bind(this);
+    this.resampleBars = this.resampleBars.bind(this);
     this.visualize = this.visualize.bind(this);
 
     this.handlePlay = this.handlePlay.bind(this);
@@ -106,7 +106,7 @@ export default class AudioPlayer extends React.PureComponent {
     this.canvasContext = this.canvasRef.current.getContext('2d');
     this.canvasContext.lineCap = 'round';
 
-    this.viewBuffer = this.calcPreviewBars(this.state.preview);
+    this.viewBuffer = this.resampleBars(this.state.preview);
     this.visualize();
   }
 
@@ -172,7 +172,7 @@ export default class AudioPlayer extends React.PureComponent {
   }
 
   // Quick and dirty downsampling of the original preview bars into a smaller (or equal) number of bars we can display here.
-  calcPreviewBars(original) {
+  resampleBars(original) {
     const barCount = Math.min(original.length, ((this.canvasRef.current.width - SPACING) / (LINE_WIDTH + SPACING)) | 0);
     const factor = original.length / barCount;
     let amps = [];
