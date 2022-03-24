@@ -9707,7 +9707,7 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     };
     this.initAudio = this.initAudio.bind(this);
     this.initCanvas = this.initCanvas.bind(this);
-    this.calcPreviewBars = this.calcPreviewBars.bind(this);
+    this.resampleBars = this.resampleBars.bind(this);
     this.visualize = this.visualize.bind(this);
     this.handlePlay = this.handlePlay.bind(this);
     this.handleSeek = this.handleSeek.bind(this);
@@ -9780,7 +9780,7 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     this.canvasRef.current.height = this.canvasRef.current.offsetHeight * CANVAS_UPSCALING;
     this.canvasContext = this.canvasRef.current.getContext('2d');
     this.canvasContext.lineCap = 'round';
-    this.viewBuffer = this.calcPreviewBars(this.state.preview);
+    this.viewBuffer = this.resampleBars(this.state.preview);
     this.visualize();
   }
 
@@ -9838,7 +9838,7 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     drawFrame();
   }
 
-  calcPreviewBars(original) {
+  resampleBars(original) {
     const barCount = Math.min(original.length, (this.canvasRef.current.width - SPACING) / (LINE_WIDTH + SPACING) | 0);
     const factor = original.length / barCount;
     let amps = [];
