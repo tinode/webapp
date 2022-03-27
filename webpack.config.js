@@ -52,8 +52,8 @@ module.exports = (env, argv) => {
       ]
     },
     performance: {
-      maxEntrypointSize: 320000,
-      maxAssetSize: 320000
+      maxEntrypointSize: 360000,
+      maxAssetSize: 360000
     },
     plugins: [
       new CopyPlugin({

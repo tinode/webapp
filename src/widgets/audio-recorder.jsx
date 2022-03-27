@@ -3,6 +3,8 @@
 import React from 'react';
 
 import AudioPlayer from './audio-player.jsx';
+// Workaround for https://bugs.chromium.org/p/chromium/issues/detail?id=642012
+import fixWebmDuration from 'fix-webm-duration';
 
 import { intArrayToBase64 } from '../lib/blob-helpers.js'
 import { secondsToTime } from '../lib/strformat';
@@ -29,6 +31,9 @@ const MAX_DURATION = 600000;
 const VISUALIZATION_BARS = 96;
 // Maximum number of samples per bar.
 const MAX_SAMPLES_PER_BAR = 10;
+
+// Recording format.
+const AUDIO_MIME_TYPE = 'audio/webm';
 
 export default class AudioRecorder extends React.PureComponent {
   constructor(props) {
@@ -224,7 +229,7 @@ export default class AudioRecorder extends React.PureComponent {
 
   initMediaRecording(stream) {
     this.stream = stream;
-    this.mediaRecorder = new MediaRecorder(stream);
+    this.mediaRecorder = new MediaRecorder(stream, {mimeType: AUDIO_MIME_TYPE});
 
     // The following code is needed for visualization.
     this.audioContext = new AudioContext();
@@ -235,7 +240,7 @@ export default class AudioRecorder extends React.PureComponent {
 
     this.mediaRecorder.onstop = _ => {
       if (this.durationMillis > MIN_DURATION) {
-        this.getRecording()
+        this.getRecording(this.mediaRecorder.mimeType, this.durationMillis)
           .then(result => this.props.onFinished(result.url, result.preview, this.durationMillis));
       } else {
         this.props.onDeleted();
@@ -249,7 +254,7 @@ export default class AudioRecorder extends React.PureComponent {
       }
 
       if (this.mediaRecorder.state != 'inactive') {
-        this.getRecording().then(result => {
+        this.getRecording(this.mediaRecorder.mimeType).then(result => {
           this.setState({
             blobUrl: result.url,
             preview: result.preview
@@ -265,14 +270,14 @@ export default class AudioRecorder extends React.PureComponent {
   }
 
   // Obtain data in a form sutable for sending or playing back.
-  getRecording() {
-    const blob = new Blob(this.audioChunks, {'type' : 'audio/mp3; codecs=mp3'});
-    const url = window.URL.createObjectURL(blob);
-    return blob.arrayBuffer().then(ab => this.audioContext.decodeAudioData(ab))
-      .then(data => this.createPreview(data))
-      .then(preview => {
-        return {url: url, preview: intArrayToBase64(preview)}
-      });
+  // If duration is valid, apply fix for Chrome's WebM duration bug.
+  getRecording(mimeType, duration) {
+    let blob = new Blob(this.audioChunks, {type: mimeType || AUDIO_MIME_TYPE});
+    return (duration > 0 ? fixWebmDuration(blob, duration, {logger: false}) : Promise.resolve(blob))
+      .then(fixedBlob => { blob = fixedBlob; return fixedBlob.arrayBuffer(); })
+      .then(arrayBuff => this.audioContext.decodeAudioData(arrayBuff))
+      .then(decoded => this.createPreview(decoded))
+      .then(preview => ({url: window.URL.createObjectURL(blob), preview: intArrayToBase64(preview)}));
   }
 
   // Preview must be calculated at the source: Chrome does not allow background AudioContext.
