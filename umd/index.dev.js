@@ -5729,7 +5729,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         }
       });
     }).catch(err => {
-      console.error("Failed subscription to", this.state.topic);
+      console.error("Failed subscription to", this.state.topic, err);
       this.props.onError(err.message, 'err');
       const blankState = MessagesView.getDerivedStateFromProps({}, {});
       blankState.title = this.props.intl.formatMessage(messages.not_found);
