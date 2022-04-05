@@ -11,6 +11,7 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "CONSTANTS": () => (/* binding */ CONSTANTS),
+/* harmony export */   "DBWrapper": () => (/* binding */ DBWrapper),
 /* harmony export */   "Deferred": () => (/* binding */ Deferred),
 /* harmony export */   "ErrorFactory": () => (/* binding */ ErrorFactory),
 /* harmony export */   "FirebaseError": () => (/* binding */ FirebaseError),
@@ -33,6 +34,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "deepCopy": () => (/* binding */ deepCopy),
 /* harmony export */   "deepEqual": () => (/* binding */ deepEqual),
 /* harmony export */   "deepExtend": () => (/* binding */ deepExtend),
+/* harmony export */   "deleteDB": () => (/* binding */ deleteDB),
 /* harmony export */   "errorPrefix": () => (/* binding */ errorPrefix),
 /* harmony export */   "extractQuerystring": () => (/* binding */ extractQuerystring),
 /* harmony export */   "getGlobal": () => (/* binding */ getGlobal),
@@ -56,6 +58,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "issuedAtTime": () => (/* binding */ issuedAtTime),
 /* harmony export */   "jsonEval": () => (/* binding */ jsonEval),
 /* harmony export */   "map": () => (/* binding */ map),
+/* harmony export */   "openDB": () => (/* binding */ openDB),
 /* harmony export */   "ordinal": () => (/* binding */ ordinal),
 /* harmony export */   "querystring": () => (/* binding */ querystring),
 /* harmony export */   "querystringDecode": () => (/* binding */ querystringDecode),
@@ -1966,6 +1969,162 @@ function getModularInstance(service) {
     }
 }
 
+/**
+ * @license
+ * Copyright 2022 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * @internal
+ */
+function promisifyRequest(request, errorMessage) {
+    return new Promise((resolve, reject) => {
+        request.onsuccess = event => {
+            resolve(event.target.result);
+        };
+        request.onerror = event => {
+            var _a;
+            reject(`${errorMessage}: ${(_a = event.target.error) === null || _a === void 0 ? void 0 : _a.message}`);
+        };
+    });
+}
+/**
+ * @internal
+ */
+class DBWrapper {
+    constructor(_db) {
+        this._db = _db;
+        this.objectStoreNames = this._db.objectStoreNames;
+    }
+    transaction(storeNames, mode) {
+        return new TransactionWrapper(this._db.transaction.call(this._db, storeNames, mode));
+    }
+    createObjectStore(storeName, options) {
+        return new ObjectStoreWrapper(this._db.createObjectStore(storeName, options));
+    }
+    close() {
+        this._db.close();
+    }
+}
+/**
+ * @internal
+ */
+class TransactionWrapper {
+    constructor(_transaction) {
+        this._transaction = _transaction;
+        this.complete = new Promise((resolve, reject) => {
+            this._transaction.oncomplete = function () {
+                resolve();
+            };
+            this._transaction.onerror = () => {
+                reject(this._transaction.error);
+            };
+            this._transaction.onabort = () => {
+                reject(this._transaction.error);
+            };
+        });
+    }
+    objectStore(storeName) {
+        return new ObjectStoreWrapper(this._transaction.objectStore(storeName));
+    }
+}
+/**
+ * @internal
+ */
+class ObjectStoreWrapper {
+    constructor(_store) {
+        this._store = _store;
+    }
+    index(name) {
+        return new IndexWrapper(this._store.index(name));
+    }
+    createIndex(name, keypath, options) {
+        return new IndexWrapper(this._store.createIndex(name, keypath, options));
+    }
+    get(key) {
+        const request = this._store.get(key);
+        return promisifyRequest(request, 'Error reading from IndexedDB');
+    }
+    put(value, key) {
+        const request = this._store.put(value, key);
+        return promisifyRequest(request, 'Error writing to IndexedDB');
+    }
+    delete(key) {
+        const request = this._store.delete(key);
+        return promisifyRequest(request, 'Error deleting from IndexedDB');
+    }
+    clear() {
+        const request = this._store.clear();
+        return promisifyRequest(request, 'Error clearing IndexedDB object store');
+    }
+}
+/**
+ * @internal
+ */
+class IndexWrapper {
+    constructor(_index) {
+        this._index = _index;
+    }
+    get(key) {
+        const request = this._index.get(key);
+        return promisifyRequest(request, 'Error reading from IndexedDB');
+    }
+}
+/**
+ * @internal
+ */
+function openDB(dbName, dbVersion, upgradeCallback) {
+    return new Promise((resolve, reject) => {
+        try {
+            const request = indexedDB.open(dbName, dbVersion);
+            request.onsuccess = event => {
+                resolve(new DBWrapper(event.target.result));
+            };
+            request.onerror = event => {
+                var _a;
+                reject(`Error opening indexedDB: ${(_a = event.target.error) === null || _a === void 0 ? void 0 : _a.message}`);
+            };
+            request.onupgradeneeded = event => {
+                upgradeCallback(new DBWrapper(request.result), event.oldVersion, event.newVersion, new TransactionWrapper(request.transaction));
+            };
+        }
+        catch (e) {
+            reject(`Error opening indexedDB: ${e.message}`);
+        }
+    });
+}
+/**
+ * @internal
+ */
+async function deleteDB(dbName) {
+    return new Promise((resolve, reject) => {
+        try {
+            const request = indexedDB.deleteDatabase(dbName);
+            request.onsuccess = () => {
+                resolve();
+            };
+            request.onerror = event => {
+                var _a;
+                reject(`Error deleting indexedDB database "${dbName}": ${(_a = event.target.error) === null || _a === void 0 ? void 0 : _a.message}`);
+            };
+        }
+        catch (e) {
+            reject(`Error deleting indexedDB database "${dbName}": ${e.message}`);
+        }
+    });
+}
+
 
 //# sourceMappingURL=index.esm2017.js.map
 
@@ -1981,41 +2140,41 @@ function getModularInstance(service) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "APP_NAME": () => (/* binding */ APP_NAME),
 /* harmony export */   "API_KEY": () => (/* binding */ API_KEY),
-/* harmony export */   "KNOWN_HOSTS": () => (/* binding */ KNOWN_HOSTS),
-/* harmony export */   "DEFAULT_HOST": () => (/* binding */ DEFAULT_HOST),
-/* harmony export */   "LOGGING_ENABLED": () => (/* binding */ LOGGING_ENABLED),
-/* harmony export */   "KEYPRESS_DELAY": () => (/* binding */ KEYPRESS_DELAY),
-/* harmony export */   "RECEIVED_DELAY": () => (/* binding */ RECEIVED_DELAY),
-/* harmony export */   "READ_DELAY": () => (/* binding */ READ_DELAY),
-/* harmony export */   "MIN_TAG_LENGTH": () => (/* binding */ MIN_TAG_LENGTH),
-/* harmony export */   "MAX_TAG_LENGTH": () => (/* binding */ MAX_TAG_LENGTH),
-/* harmony export */   "MAX_TAG_COUNT": () => (/* binding */ MAX_TAG_COUNT),
-/* harmony export */   "DEFAULT_P2P_ACCESS_MODE": () => (/* binding */ DEFAULT_P2P_ACCESS_MODE),
-/* harmony export */   "NEW_GRP_ACCESS_MODE": () => (/* binding */ NEW_GRP_ACCESS_MODE),
-/* harmony export */   "CHANNEL_ACCESS_MODE": () => (/* binding */ CHANNEL_ACCESS_MODE),
-/* harmony export */   "NO_ACCESS_MODE": () => (/* binding */ NO_ACCESS_MODE),
-/* harmony export */   "MEDIA_BREAKPOINT": () => (/* binding */ MEDIA_BREAKPOINT),
-/* harmony export */   "REM_SIZE": () => (/* binding */ REM_SIZE),
+/* harmony export */   "APP_NAME": () => (/* binding */ APP_NAME),
 /* harmony export */   "AVATAR_SIZE": () => (/* binding */ AVATAR_SIZE),
-/* harmony export */   "MAX_AVATAR_BYTES": () => (/* binding */ MAX_AVATAR_BYTES),
 /* harmony export */   "BROKEN_IMAGE_SIZE": () => (/* binding */ BROKEN_IMAGE_SIZE),
-/* harmony export */   "MESSAGES_PAGE": () => (/* binding */ MESSAGES_PAGE),
-/* harmony export */   "MAX_INBAND_ATTACHMENT_SIZE": () => (/* binding */ MAX_INBAND_ATTACHMENT_SIZE),
-/* harmony export */   "MAX_EXTERN_ATTACHMENT_SIZE": () => (/* binding */ MAX_EXTERN_ATTACHMENT_SIZE),
-/* harmony export */   "MAX_IMAGE_DIM": () => (/* binding */ MAX_IMAGE_DIM),
+/* harmony export */   "CHANNEL_ACCESS_MODE": () => (/* binding */ CHANNEL_ACCESS_MODE),
+/* harmony export */   "DEFAULT_HOST": () => (/* binding */ DEFAULT_HOST),
+/* harmony export */   "DEFAULT_P2P_ACCESS_MODE": () => (/* binding */ DEFAULT_P2P_ACCESS_MODE),
+/* harmony export */   "FORWARDED_PREVIEW_LENGTH": () => (/* binding */ FORWARDED_PREVIEW_LENGTH),
 /* harmony export */   "IMAGE_PREVIEW_DIM": () => (/* binding */ IMAGE_PREVIEW_DIM),
 /* harmony export */   "IMAGE_THUMBNAIL_DIM": () => (/* binding */ IMAGE_THUMBNAIL_DIM),
-/* harmony export */   "MAX_ONLINE_IN_TOPIC": () => (/* binding */ MAX_ONLINE_IN_TOPIC),
-/* harmony export */   "MAX_TITLE_LENGTH": () => (/* binding */ MAX_TITLE_LENGTH),
-/* harmony export */   "MAX_TOPIC_DESCRIPTION_LENGTH": () => (/* binding */ MAX_TOPIC_DESCRIPTION_LENGTH),
-/* harmony export */   "MESSAGE_PREVIEW_LENGTH": () => (/* binding */ MESSAGE_PREVIEW_LENGTH),
-/* harmony export */   "QUOTED_REPLY_LENGTH": () => (/* binding */ QUOTED_REPLY_LENGTH),
-/* harmony export */   "FORWARDED_PREVIEW_LENGTH": () => (/* binding */ FORWARDED_PREVIEW_LENGTH),
+/* harmony export */   "KEYPRESS_DELAY": () => (/* binding */ KEYPRESS_DELAY),
+/* harmony export */   "KNOWN_HOSTS": () => (/* binding */ KNOWN_HOSTS),
 /* harmony export */   "LINK_CONTACT_US": () => (/* binding */ LINK_CONTACT_US),
 /* harmony export */   "LINK_PRIVACY_POLICY": () => (/* binding */ LINK_PRIVACY_POLICY),
-/* harmony export */   "LINK_TERMS_OF_SERVICE": () => (/* binding */ LINK_TERMS_OF_SERVICE)
+/* harmony export */   "LINK_TERMS_OF_SERVICE": () => (/* binding */ LINK_TERMS_OF_SERVICE),
+/* harmony export */   "LOGGING_ENABLED": () => (/* binding */ LOGGING_ENABLED),
+/* harmony export */   "MAX_AVATAR_BYTES": () => (/* binding */ MAX_AVATAR_BYTES),
+/* harmony export */   "MAX_EXTERN_ATTACHMENT_SIZE": () => (/* binding */ MAX_EXTERN_ATTACHMENT_SIZE),
+/* harmony export */   "MAX_IMAGE_DIM": () => (/* binding */ MAX_IMAGE_DIM),
+/* harmony export */   "MAX_INBAND_ATTACHMENT_SIZE": () => (/* binding */ MAX_INBAND_ATTACHMENT_SIZE),
+/* harmony export */   "MAX_ONLINE_IN_TOPIC": () => (/* binding */ MAX_ONLINE_IN_TOPIC),
+/* harmony export */   "MAX_TAG_COUNT": () => (/* binding */ MAX_TAG_COUNT),
+/* harmony export */   "MAX_TAG_LENGTH": () => (/* binding */ MAX_TAG_LENGTH),
+/* harmony export */   "MAX_TITLE_LENGTH": () => (/* binding */ MAX_TITLE_LENGTH),
+/* harmony export */   "MAX_TOPIC_DESCRIPTION_LENGTH": () => (/* binding */ MAX_TOPIC_DESCRIPTION_LENGTH),
+/* harmony export */   "MEDIA_BREAKPOINT": () => (/* binding */ MEDIA_BREAKPOINT),
+/* harmony export */   "MESSAGES_PAGE": () => (/* binding */ MESSAGES_PAGE),
+/* harmony export */   "MESSAGE_PREVIEW_LENGTH": () => (/* binding */ MESSAGE_PREVIEW_LENGTH),
+/* harmony export */   "MIN_TAG_LENGTH": () => (/* binding */ MIN_TAG_LENGTH),
+/* harmony export */   "NEW_GRP_ACCESS_MODE": () => (/* binding */ NEW_GRP_ACCESS_MODE),
+/* harmony export */   "NO_ACCESS_MODE": () => (/* binding */ NO_ACCESS_MODE),
+/* harmony export */   "QUOTED_REPLY_LENGTH": () => (/* binding */ QUOTED_REPLY_LENGTH),
+/* harmony export */   "READ_DELAY": () => (/* binding */ READ_DELAY),
+/* harmony export */   "RECEIVED_DELAY": () => (/* binding */ RECEIVED_DELAY),
+/* harmony export */   "REM_SIZE": () => (/* binding */ REM_SIZE)
 /* harmony export */ });
 /* harmony import */ var _version_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./version.js */ "./src/version.js");
 
@@ -2069,23 +2228,23 @@ const LINK_TERMS_OF_SERVICE = 'https://tinode.co/terms.html';
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "SUPPORTED_IMAGE_FORMATS": () => (/* binding */ SUPPORTED_IMAGE_FORMATS),
 /* harmony export */   "MIME_EXTENSIONS": () => (/* binding */ MIME_EXTENSIONS),
-/* harmony export */   "makeImageUrl": () => (/* binding */ makeImageUrl),
-/* harmony export */   "fitImageSize": () => (/* binding */ fitImageSize),
-/* harmony export */   "fileNameForMime": () => (/* binding */ fileNameForMime),
-/* harmony export */   "imageScaled": () => (/* binding */ imageScaled),
-/* harmony export */   "imageCrop": () => (/* binding */ imageCrop),
-/* harmony export */   "fileToBase64": () => (/* binding */ fileToBase64),
-/* harmony export */   "blobToBase64": () => (/* binding */ blobToBase64),
-/* harmony export */   "filePasted": () => (/* binding */ filePasted),
-/* harmony export */   "getMimeType": () => (/* binding */ getMimeType),
-/* harmony export */   "base64EncodedLen": () => (/* binding */ base64EncodedLen),
+/* harmony export */   "SUPPORTED_IMAGE_FORMATS": () => (/* binding */ SUPPORTED_IMAGE_FORMATS),
 /* harmony export */   "base64DecodedLen": () => (/* binding */ base64DecodedLen),
+/* harmony export */   "base64EncodedLen": () => (/* binding */ base64EncodedLen),
 /* harmony export */   "base64ReEncode": () => (/* binding */ base64ReEncode),
 /* harmony export */   "base64ToBlob": () => (/* binding */ base64ToBlob),
+/* harmony export */   "base64ToIntArray": () => (/* binding */ base64ToIntArray),
+/* harmony export */   "blobToBase64": () => (/* binding */ blobToBase64),
+/* harmony export */   "fileNameForMime": () => (/* binding */ fileNameForMime),
+/* harmony export */   "filePasted": () => (/* binding */ filePasted),
+/* harmony export */   "fileToBase64": () => (/* binding */ fileToBase64),
+/* harmony export */   "fitImageSize": () => (/* binding */ fitImageSize),
+/* harmony export */   "getMimeType": () => (/* binding */ getMimeType),
+/* harmony export */   "imageCrop": () => (/* binding */ imageCrop),
+/* harmony export */   "imageScaled": () => (/* binding */ imageScaled),
 /* harmony export */   "intArrayToBase64": () => (/* binding */ intArrayToBase64),
-/* harmony export */   "base64ToIntArray": () => (/* binding */ base64ToIntArray)
+/* harmony export */   "makeImageUrl": () => (/* binding */ makeImageUrl)
 /* harmony export */ });
 const SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
 const MIME_EXTENSIONS = ['jpg', 'gif', 'png', 'svg', 'svg'];
@@ -2881,8 +3040,8 @@ function replyFormatter(style, data, values, key, stack) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "detectServerAddress": () => (/* binding */ detectServerAddress),
-/* harmony export */   "isSecureConnection": () => (/* binding */ isSecureConnection),
-/* harmony export */   "isLocalHost": () => (/* binding */ isLocalHost)
+/* harmony export */   "isLocalHost": () => (/* binding */ isLocalHost),
+/* harmony export */   "isSecureConnection": () => (/* binding */ isSecureConnection)
 /* harmony export */ });
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 
@@ -3058,12 +3217,12 @@ class HashNavigation {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "shortDateFormat": () => (/* binding */ shortDateFormat),
-/* harmony export */   "secondsToTime": () => (/* binding */ secondsToTime),
 /* harmony export */   "bytesToHumanSize": () => (/* binding */ bytesToHumanSize),
-/* harmony export */   "shortenFileName": () => (/* binding */ shortenFileName),
+/* harmony export */   "idToColorClass": () => (/* binding */ idToColorClass),
 /* harmony export */   "letterTileColorId": () => (/* binding */ letterTileColorId),
-/* harmony export */   "idToColorClass": () => (/* binding */ idToColorClass)
+/* harmony export */   "secondsToTime": () => (/* binding */ secondsToTime),
+/* harmony export */   "shortDateFormat": () => (/* binding */ shortDateFormat),
+/* harmony export */   "shortenFileName": () => (/* binding */ shortenFileName)
 /* harmony export */ });
 function shortDateFormat(then, locale) {
   locale = locale || window.navigator.userLanguage || window.navigator.language;
@@ -3153,16 +3312,16 @@ function idToColorClass(id, light, fg) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "updateFavicon": () => (/* binding */ updateFavicon),
-/* harmony export */   "theCard": () => (/* binding */ theCard),
 /* harmony export */   "arrayEqual": () => (/* binding */ arrayEqual),
-/* harmony export */   "asPhone": () => (/* binding */ asPhone),
 /* harmony export */   "asEmail": () => (/* binding */ asEmail),
+/* harmony export */   "asPhone": () => (/* binding */ asPhone),
+/* harmony export */   "cancelablePromise": () => (/* binding */ cancelablePromise),
+/* harmony export */   "deliveryMarker": () => (/* binding */ deliveryMarker),
 /* harmony export */   "isUrlRelative": () => (/* binding */ isUrlRelative),
 /* harmony export */   "sanitizeUrl": () => (/* binding */ sanitizeUrl),
 /* harmony export */   "sanitizeUrlForMime": () => (/* binding */ sanitizeUrlForMime),
-/* harmony export */   "deliveryMarker": () => (/* binding */ deliveryMarker),
-/* harmony export */   "cancelablePromise": () => (/* binding */ cancelablePromise)
+/* harmony export */   "theCard": () => (/* binding */ theCard),
+/* harmony export */   "updateFavicon": () => (/* binding */ updateFavicon)
 /* harmony export */ });
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_0__);
@@ -16297,7 +16456,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var name = "firebase";
-var version = "9.6.7";
+var version = "9.6.10";
 
 /**
  * @license
@@ -16866,331 +17025,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (nam
 
 /***/ }),
 
-/***/ "./node_modules/idb/build/idb.js":
-/*!***************************************!*\
-  !*** ./node_modules/idb/build/idb.js ***!
-  \***************************************/
-/***/ (function(__unused_webpack_module, exports) {
-
-(function (global, factory) {
-   true ? factory(exports) :
-  0;
-}(this, function (exports) { 'use strict';
-
-  function toArray(arr) {
-    return Array.prototype.slice.call(arr);
-  }
-
-  function promisifyRequest(request) {
-    return new Promise(function(resolve, reject) {
-      request.onsuccess = function() {
-        resolve(request.result);
-      };
-
-      request.onerror = function() {
-        reject(request.error);
-      };
-    });
-  }
-
-  function promisifyRequestCall(obj, method, args) {
-    var request;
-    var p = new Promise(function(resolve, reject) {
-      request = obj[method].apply(obj, args);
-      promisifyRequest(request).then(resolve, reject);
-    });
-
-    p.request = request;
-    return p;
-  }
-
-  function promisifyCursorRequestCall(obj, method, args) {
-    var p = promisifyRequestCall(obj, method, args);
-    return p.then(function(value) {
-      if (!value) return;
-      return new Cursor(value, p.request);
-    });
-  }
-
-  function proxyProperties(ProxyClass, targetProp, properties) {
-    properties.forEach(function(prop) {
-      Object.defineProperty(ProxyClass.prototype, prop, {
-        get: function() {
-          return this[targetProp][prop];
-        },
-        set: function(val) {
-          this[targetProp][prop] = val;
-        }
-      });
-    });
-  }
-
-  function proxyRequestMethods(ProxyClass, targetProp, Constructor, properties) {
-    properties.forEach(function(prop) {
-      if (!(prop in Constructor.prototype)) return;
-      ProxyClass.prototype[prop] = function() {
-        return promisifyRequestCall(this[targetProp], prop, arguments);
-      };
-    });
-  }
-
-  function proxyMethods(ProxyClass, targetProp, Constructor, properties) {
-    properties.forEach(function(prop) {
-      if (!(prop in Constructor.prototype)) return;
-      ProxyClass.prototype[prop] = function() {
-        return this[targetProp][prop].apply(this[targetProp], arguments);
-      };
-    });
-  }
-
-  function proxyCursorRequestMethods(ProxyClass, targetProp, Constructor, properties) {
-    properties.forEach(function(prop) {
-      if (!(prop in Constructor.prototype)) return;
-      ProxyClass.prototype[prop] = function() {
-        return promisifyCursorRequestCall(this[targetProp], prop, arguments);
-      };
-    });
-  }
-
-  function Index(index) {
-    this._index = index;
-  }
-
-  proxyProperties(Index, '_index', [
-    'name',
-    'keyPath',
-    'multiEntry',
-    'unique'
-  ]);
-
-  proxyRequestMethods(Index, '_index', IDBIndex, [
-    'get',
-    'getKey',
-    'getAll',
-    'getAllKeys',
-    'count'
-  ]);
-
-  proxyCursorRequestMethods(Index, '_index', IDBIndex, [
-    'openCursor',
-    'openKeyCursor'
-  ]);
-
-  function Cursor(cursor, request) {
-    this._cursor = cursor;
-    this._request = request;
-  }
-
-  proxyProperties(Cursor, '_cursor', [
-    'direction',
-    'key',
-    'primaryKey',
-    'value'
-  ]);
-
-  proxyRequestMethods(Cursor, '_cursor', IDBCursor, [
-    'update',
-    'delete'
-  ]);
-
-  // proxy 'next' methods
-  ['advance', 'continue', 'continuePrimaryKey'].forEach(function(methodName) {
-    if (!(methodName in IDBCursor.prototype)) return;
-    Cursor.prototype[methodName] = function() {
-      var cursor = this;
-      var args = arguments;
-      return Promise.resolve().then(function() {
-        cursor._cursor[methodName].apply(cursor._cursor, args);
-        return promisifyRequest(cursor._request).then(function(value) {
-          if (!value) return;
-          return new Cursor(value, cursor._request);
-        });
-      });
-    };
-  });
-
-  function ObjectStore(store) {
-    this._store = store;
-  }
-
-  ObjectStore.prototype.createIndex = function() {
-    return new Index(this._store.createIndex.apply(this._store, arguments));
-  };
-
-  ObjectStore.prototype.index = function() {
-    return new Index(this._store.index.apply(this._store, arguments));
-  };
-
-  proxyProperties(ObjectStore, '_store', [
-    'name',
-    'keyPath',
-    'indexNames',
-    'autoIncrement'
-  ]);
-
-  proxyRequestMethods(ObjectStore, '_store', IDBObjectStore, [
-    'put',
-    'add',
-    'delete',
-    'clear',
-    'get',
-    'getAll',
-    'getKey',
-    'getAllKeys',
-    'count'
-  ]);
-
-  proxyCursorRequestMethods(ObjectStore, '_store', IDBObjectStore, [
-    'openCursor',
-    'openKeyCursor'
-  ]);
-
-  proxyMethods(ObjectStore, '_store', IDBObjectStore, [
-    'deleteIndex'
-  ]);
-
-  function Transaction(idbTransaction) {
-    this._tx = idbTransaction;
-    this.complete = new Promise(function(resolve, reject) {
-      idbTransaction.oncomplete = function() {
-        resolve();
-      };
-      idbTransaction.onerror = function() {
-        reject(idbTransaction.error);
-      };
-      idbTransaction.onabort = function() {
-        reject(idbTransaction.error);
-      };
-    });
-  }
-
-  Transaction.prototype.objectStore = function() {
-    return new ObjectStore(this._tx.objectStore.apply(this._tx, arguments));
-  };
-
-  proxyProperties(Transaction, '_tx', [
-    'objectStoreNames',
-    'mode'
-  ]);
-
-  proxyMethods(Transaction, '_tx', IDBTransaction, [
-    'abort'
-  ]);
-
-  function UpgradeDB(db, oldVersion, transaction) {
-    this._db = db;
-    this.oldVersion = oldVersion;
-    this.transaction = new Transaction(transaction);
-  }
-
-  UpgradeDB.prototype.createObjectStore = function() {
-    return new ObjectStore(this._db.createObjectStore.apply(this._db, arguments));
-  };
-
-  proxyProperties(UpgradeDB, '_db', [
-    'name',
-    'version',
-    'objectStoreNames'
-  ]);
-
-  proxyMethods(UpgradeDB, '_db', IDBDatabase, [
-    'deleteObjectStore',
-    'close'
-  ]);
-
-  function DB(db) {
-    this._db = db;
-  }
-
-  DB.prototype.transaction = function() {
-    return new Transaction(this._db.transaction.apply(this._db, arguments));
-  };
-
-  proxyProperties(DB, '_db', [
-    'name',
-    'version',
-    'objectStoreNames'
-  ]);
-
-  proxyMethods(DB, '_db', IDBDatabase, [
-    'close'
-  ]);
-
-  // Add cursor iterators
-  // TODO: remove this once browsers do the right thing with promises
-  ['openCursor', 'openKeyCursor'].forEach(function(funcName) {
-    [ObjectStore, Index].forEach(function(Constructor) {
-      // Don't create iterateKeyCursor if openKeyCursor doesn't exist.
-      if (!(funcName in Constructor.prototype)) return;
-
-      Constructor.prototype[funcName.replace('open', 'iterate')] = function() {
-        var args = toArray(arguments);
-        var callback = args[args.length - 1];
-        var nativeObject = this._store || this._index;
-        var request = nativeObject[funcName].apply(nativeObject, args.slice(0, -1));
-        request.onsuccess = function() {
-          callback(request.result);
-        };
-      };
-    });
-  });
-
-  // polyfill getAll
-  [Index, ObjectStore].forEach(function(Constructor) {
-    if (Constructor.prototype.getAll) return;
-    Constructor.prototype.getAll = function(query, count) {
-      var instance = this;
-      var items = [];
-
-      return new Promise(function(resolve) {
-        instance.iterateCursor(query, function(cursor) {
-          if (!cursor) {
-            resolve(items);
-            return;
-          }
-          items.push(cursor.value);
-
-          if (count !== undefined && items.length == count) {
-            resolve(items);
-            return;
-          }
-          cursor.continue();
-        });
-      });
-    };
-  });
-
-  function openDb(name, version, upgradeCallback) {
-    var p = promisifyRequestCall(indexedDB, 'open', [name, version]);
-    var request = p.request;
-
-    if (request) {
-      request.onupgradeneeded = function(event) {
-        if (upgradeCallback) {
-          upgradeCallback(new UpgradeDB(request.result, event.oldVersion, request.transaction));
-        }
-      };
-    }
-
-    return p.then(function(db) {
-      return new DB(db);
-    });
-  }
-
-  function deleteDb(name) {
-    return promisifyRequestCall(indexedDB, 'deleteDatabase', [name]);
-  }
-
-  exports.openDb = openDb;
-  exports.deleteDb = deleteDb;
-
-  Object.defineProperty(exports, '__esModule', { value: true });
-
-}));
-
-
-/***/ }),
-
 /***/ "react":
 /*!************************!*\
   !*** external "React" ***!
@@ -17325,7 +17159,7 @@ function isVersionServiceProvider(provider) {
 }
 
 const name$o = "@firebase/app";
-const version$1 = "0.7.17";
+const version$1 = "0.7.20";
 
 /**
  * @license
@@ -17392,7 +17226,7 @@ const name$2 = "@firebase/firestore";
 const name$1 = "@firebase/firestore-compat";
 
 const name = "firebase";
-const version = "9.6.7";
+const version = "9.6.10";
 
 /**
  * @license
@@ -17522,6 +17356,12 @@ function _registerComponent(component) {
  * @internal
  */
 function _getProvider(app, name) {
+    const heartbeatController = app.container
+        .getProvider('heartbeat')
+        .getImmediate({ optional: true });
+    if (heartbeatController) {
+        void heartbeatController.triggerHeartbeat();
+    }
     return app.container.getProvider(name);
 }
 /**
@@ -17568,7 +17408,11 @@ const ERRORS = {
     ["app-deleted" /* APP_DELETED */]: "Firebase App named '{$appName}' already deleted",
     ["invalid-app-argument" /* INVALID_APP_ARGUMENT */]: 'firebase.{$appName}() takes either no argument or a ' +
         'Firebase App instance.',
-    ["invalid-log-argument" /* INVALID_LOG_ARGUMENT */]: 'First argument to `onLog` must be null or a function.'
+    ["invalid-log-argument" /* INVALID_LOG_ARGUMENT */]: 'First argument to `onLog` must be null or a function.',
+    ["storage-open" /* STORAGE_OPEN */]: 'Error thrown when opening storage. Original error: {$originalErrorMessage}.',
+    ["storage-get" /* STORAGE_GET */]: 'Error thrown when reading from storage. Original error: {$originalErrorMessage}.',
+    ["storage-set" /* STORAGE_WRITE */]: 'Error thrown when writing to storage. Original error: {$originalErrorMessage}.',
+    ["storage-delete" /* STORAGE_DELETE */]: 'Error thrown when deleting from storage. Original error: {$originalErrorMessage}.'
 };
 const ERROR_FACTORY = new _firebase_util__WEBPACK_IMPORTED_MODULE_2__.ErrorFactory('app', 'Firebase', ERRORS);
 
@@ -17826,6 +17670,310 @@ function setLogLevel(logLevel) {
 
 /**
  * @license
+ * Copyright 2021 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const DB_NAME = 'firebase-heartbeat-database';
+const DB_VERSION = 1;
+const STORE_NAME = 'firebase-heartbeat-store';
+let dbPromise = null;
+function getDbPromise() {
+    if (!dbPromise) {
+        dbPromise = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.openDB)(DB_NAME, DB_VERSION, (db, oldVersion) => {
+            // We don't use 'break' in this switch statement, the fall-through
+            // behavior is what we want, because if there are multiple versions between
+            // the old version and the current version, we want ALL the migrations
+            // that correspond to those versions to run, not only the last one.
+            // eslint-disable-next-line default-case
+            switch (oldVersion) {
+                case 0:
+                    db.createObjectStore(STORE_NAME);
+            }
+        }).catch(e => {
+            throw ERROR_FACTORY.create("storage-open" /* STORAGE_OPEN */, {
+                originalErrorMessage: e.message
+            });
+        });
+    }
+    return dbPromise;
+}
+async function readHeartbeatsFromIndexedDB(app) {
+    try {
+        const db = await getDbPromise();
+        return db
+            .transaction(STORE_NAME)
+            .objectStore(STORE_NAME)
+            .get(computeKey(app));
+    }
+    catch (e) {
+        throw ERROR_FACTORY.create("storage-get" /* STORAGE_GET */, {
+            originalErrorMessage: e.message
+        });
+    }
+}
+async function writeHeartbeatsToIndexedDB(app, heartbeatObject) {
+    try {
+        const db = await getDbPromise();
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        const objectStore = tx.objectStore(STORE_NAME);
+        await objectStore.put(heartbeatObject, computeKey(app));
+        return tx.complete;
+    }
+    catch (e) {
+        throw ERROR_FACTORY.create("storage-set" /* STORAGE_WRITE */, {
+            originalErrorMessage: e.message
+        });
+    }
+}
+function computeKey(app) {
+    return `${app.name}!${app.options.appId}`;
+}
+
+/**
+ * @license
+ * Copyright 2021 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const MAX_HEADER_BYTES = 1024;
+// 30 days
+const STORED_HEARTBEAT_RETENTION_MAX_MILLIS = 30 * 24 * 60 * 60 * 1000;
+class HeartbeatServiceImpl {
+    constructor(container) {
+        this.container = container;
+        /**
+         * In-memory cache for heartbeats, used by getHeartbeatsHeader() to generate
+         * the header string.
+         * Stores one record per date. This will be consolidated into the standard
+         * format of one record per user agent string before being sent as a header.
+         * Populated from indexedDB when the controller is instantiated and should
+         * be kept in sync with indexedDB.
+         * Leave public for easier testing.
+         */
+        this._heartbeatsCache = null;
+        const app = this.container.getProvider('app').getImmediate();
+        this._storage = new HeartbeatStorageImpl(app);
+        this._heartbeatsCachePromise = this._storage.read().then(result => {
+            this._heartbeatsCache = result;
+            return result;
+        });
+    }
+    /**
+     * Called to report a heartbeat. The function will generate
+     * a HeartbeatsByUserAgent object, update heartbeatsCache, and persist it
+     * to IndexedDB.
+     * Note that we only store one heartbeat per day. So if a heartbeat for today is
+     * already logged, subsequent calls to this function in the same day will be ignored.
+     */
+    async triggerHeartbeat() {
+        const platformLogger = this.container
+            .getProvider('platform-logger')
+            .getImmediate();
+        // This is the "Firebase user agent" string from the platform logger
+        // service, not the browser user agent.
+        const agent = platformLogger.getPlatformInfoString();
+        const date = getUTCDateString();
+        if (this._heartbeatsCache === null) {
+            this._heartbeatsCache = await this._heartbeatsCachePromise;
+        }
+        // Do not store a heartbeat if one is already stored for this day
+        // or if a header has already been sent today.
+        if (this._heartbeatsCache.lastSentHeartbeatDate === date ||
+            this._heartbeatsCache.heartbeats.some(singleDateHeartbeat => singleDateHeartbeat.date === date)) {
+            return;
+        }
+        else {
+            // There is no entry for this date. Create one.
+            this._heartbeatsCache.heartbeats.push({ date, agent });
+        }
+        // Remove entries older than 30 days.
+        this._heartbeatsCache.heartbeats = this._heartbeatsCache.heartbeats.filter(singleDateHeartbeat => {
+            const hbTimestamp = new Date(singleDateHeartbeat.date).valueOf();
+            const now = Date.now();
+            return now - hbTimestamp <= STORED_HEARTBEAT_RETENTION_MAX_MILLIS;
+        });
+        return this._storage.overwrite(this._heartbeatsCache);
+    }
+    /**
+     * Returns a base64 encoded string which can be attached to the heartbeat-specific header directly.
+     * It also clears all heartbeats from memory as well as in IndexedDB.
+     *
+     * NOTE: Consuming product SDKs should not send the header if this method
+     * returns an empty string.
+     */
+    async getHeartbeatsHeader() {
+        if (this._heartbeatsCache === null) {
+            await this._heartbeatsCachePromise;
+        }
+        // If it's still null or the array is empty, there is no data to send.
+        if (this._heartbeatsCache === null ||
+            this._heartbeatsCache.heartbeats.length === 0) {
+            return '';
+        }
+        const date = getUTCDateString();
+        // Extract as many heartbeats from the cache as will fit under the size limit.
+        const { heartbeatsToSend, unsentEntries } = extractHeartbeatsForHeader(this._heartbeatsCache.heartbeats);
+        const headerString = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.base64urlEncodeWithoutPadding)(JSON.stringify({ version: 2, heartbeats: heartbeatsToSend }));
+        // Store last sent date to prevent another being logged/sent for the same day.
+        this._heartbeatsCache.lastSentHeartbeatDate = date;
+        if (unsentEntries.length > 0) {
+            // Store any unsent entries if they exist.
+            this._heartbeatsCache.heartbeats = unsentEntries;
+            // This seems more likely than emptying the array (below) to lead to some odd state
+            // since the cache isn't empty and this will be called again on the next request,
+            // and is probably safest if we await it.
+            await this._storage.overwrite(this._heartbeatsCache);
+        }
+        else {
+            this._heartbeatsCache.heartbeats = [];
+            // Do not wait for this, to reduce latency.
+            void this._storage.overwrite(this._heartbeatsCache);
+        }
+        return headerString;
+    }
+}
+function getUTCDateString() {
+    const today = new Date();
+    // Returns date format 'YYYY-MM-DD'
+    return today.toISOString().substring(0, 10);
+}
+function extractHeartbeatsForHeader(heartbeatsCache, maxSize = MAX_HEADER_BYTES) {
+    // Heartbeats grouped by user agent in the standard format to be sent in
+    // the header.
+    const heartbeatsToSend = [];
+    // Single date format heartbeats that are not sent.
+    let unsentEntries = heartbeatsCache.slice();
+    for (const singleDateHeartbeat of heartbeatsCache) {
+        // Look for an existing entry with the same user agent.
+        const heartbeatEntry = heartbeatsToSend.find(hb => hb.agent === singleDateHeartbeat.agent);
+        if (!heartbeatEntry) {
+            // If no entry for this user agent exists, create one.
+            heartbeatsToSend.push({
+                agent: singleDateHeartbeat.agent,
+                dates: [singleDateHeartbeat.date]
+            });
+            if (countBytes(heartbeatsToSend) > maxSize) {
+                // If the header would exceed max size, remove the added heartbeat
+                // entry and stop adding to the header.
+                heartbeatsToSend.pop();
+                break;
+            }
+        }
+        else {
+            heartbeatEntry.dates.push(singleDateHeartbeat.date);
+            // If the header would exceed max size, remove the added date
+            // and stop adding to the header.
+            if (countBytes(heartbeatsToSend) > maxSize) {
+                heartbeatEntry.dates.pop();
+                break;
+            }
+        }
+        // Pop unsent entry from queue. (Skipped if adding the entry exceeded
+        // quota and the loop breaks early.)
+        unsentEntries = unsentEntries.slice(1);
+    }
+    return {
+        heartbeatsToSend,
+        unsentEntries
+    };
+}
+class HeartbeatStorageImpl {
+    constructor(app) {
+        this.app = app;
+        this._canUseIndexedDBPromise = this.runIndexedDBEnvironmentCheck();
+    }
+    async runIndexedDBEnvironmentCheck() {
+        if (!(0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.isIndexedDBAvailable)()) {
+            return false;
+        }
+        else {
+            return (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.validateIndexedDBOpenable)()
+                .then(() => true)
+                .catch(() => false);
+        }
+    }
+    /**
+     * Read all heartbeats.
+     */
+    async read() {
+        const canUseIndexedDB = await this._canUseIndexedDBPromise;
+        if (!canUseIndexedDB) {
+            return { heartbeats: [] };
+        }
+        else {
+            const idbHeartbeatObject = await readHeartbeatsFromIndexedDB(this.app);
+            return idbHeartbeatObject || { heartbeats: [] };
+        }
+    }
+    // overwrite the storage with the provided heartbeats
+    async overwrite(heartbeatsObject) {
+        var _a;
+        const canUseIndexedDB = await this._canUseIndexedDBPromise;
+        if (!canUseIndexedDB) {
+            return;
+        }
+        else {
+            const existingHeartbeatsObject = await this.read();
+            return writeHeartbeatsToIndexedDB(this.app, {
+                lastSentHeartbeatDate: (_a = heartbeatsObject.lastSentHeartbeatDate) !== null && _a !== void 0 ? _a : existingHeartbeatsObject.lastSentHeartbeatDate,
+                heartbeats: heartbeatsObject.heartbeats
+            });
+        }
+    }
+    // add heartbeats
+    async add(heartbeatsObject) {
+        var _a;
+        const canUseIndexedDB = await this._canUseIndexedDBPromise;
+        if (!canUseIndexedDB) {
+            return;
+        }
+        else {
+            const existingHeartbeatsObject = await this.read();
+            return writeHeartbeatsToIndexedDB(this.app, {
+                lastSentHeartbeatDate: (_a = heartbeatsObject.lastSentHeartbeatDate) !== null && _a !== void 0 ? _a : existingHeartbeatsObject.lastSentHeartbeatDate,
+                heartbeats: [
+                    ...existingHeartbeatsObject.heartbeats,
+                    ...heartbeatsObject.heartbeats
+                ]
+            });
+        }
+    }
+}
+/**
+ * Calculate bytes of a HeartbeatsByUserAgent array after being wrapped
+ * in a platform logging header JSON object, stringified, and converted
+ * to base 64.
+ */
+function countBytes(heartbeatsCache) {
+    // base64 has a restricted set of characters, all of which should be 1 byte.
+    return (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.base64urlEncodeWithoutPadding)(
+    // heartbeatsCache wrapper properties
+    JSON.stringify({ version: 2, heartbeats: heartbeatsCache })).length;
+}
+
+/**
+ * @license
  * Copyright 2019 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17842,6 +17990,7 @@ function setLogLevel(logLevel) {
  */
 function registerCoreComponents(variant) {
     _registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component('platform-logger', container => new PlatformLoggerServiceImpl(container), "PRIVATE" /* PRIVATE */));
+    _registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component('heartbeat', container => new HeartbeatServiceImpl(container), "PRIVATE" /* PRIVATE */));
     // Register `app` package.
     registerVersion(name$o, version$1, variant);
     // BUILD_TARGET will be replaced by values like esm5, esm2017, cjs5, etc during the compilation
@@ -18309,14 +18458,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
 /* harmony import */ var _firebase_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @firebase/component */ "./node_modules/@firebase/component/dist/esm/index.esm2017.js");
 /* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm2017.js");
-/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! idb */ "./node_modules/idb/build/idb.js");
-
 
 
 
 
 const name = "@firebase/installations";
-const version = "0.5.5";
+const version = "0.5.7";
 
 /**
  * @license
@@ -18459,9 +18606,19 @@ function getAuthorizationHeader(refreshToken) {
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-async function createInstallationRequest(appConfig, { fid }) {
+async function createInstallationRequest({ appConfig, heartbeatServiceProvider }, { fid }) {
     const endpoint = getInstallationsEndpoint(appConfig);
     const headers = getHeaders(appConfig);
+    // If heartbeat service exists, add the heartbeat string to the header.
+    const heartbeatService = heartbeatServiceProvider.getImmediate({
+        optional: true
+    });
+    if (heartbeatService) {
+        const heartbeatsHeader = await heartbeatService.getHeartbeatsHeader();
+        if (heartbeatsHeader) {
+            headers.append('x-firebase-client', heartbeatsHeader);
+        }
+    }
     const body = {
         fid,
         authVersion: INTERNAL_AUTH_VERSION,
@@ -18708,15 +18865,15 @@ const OBJECT_STORE_NAME = 'firebase-installations-store';
 let dbPromise = null;
 function getDbPromise() {
     if (!dbPromise) {
-        dbPromise = (0,idb__WEBPACK_IMPORTED_MODULE_3__.openDb)(DATABASE_NAME, DATABASE_VERSION, upgradeDB => {
+        dbPromise = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.openDB)(DATABASE_NAME, DATABASE_VERSION, (db, oldVersion) => {
             // We don't use 'break' in this switch statement, the fall-through
             // behavior is what we want, because if there are multiple versions between
             // the old version and the current version, we want ALL the migrations
             // that correspond to those versions to run, not only the last one.
             // eslint-disable-next-line default-case
-            switch (upgradeDB.oldVersion) {
+            switch (oldVersion) {
                 case 0:
-                    upgradeDB.createObjectStore(OBJECT_STORE_NAME);
+                    db.createObjectStore(OBJECT_STORE_NAME);
             }
         });
     }
@@ -18728,7 +18885,7 @@ async function set(appConfig, value) {
     const db = await getDbPromise();
     const tx = db.transaction(OBJECT_STORE_NAME, 'readwrite');
     const objectStore = tx.objectStore(OBJECT_STORE_NAME);
-    const oldValue = await objectStore.get(key);
+    const oldValue = (await objectStore.get(key));
     await objectStore.put(value, key);
     await tx.complete;
     if (!oldValue || oldValue.fid !== value.fid) {
@@ -18755,7 +18912,7 @@ async function update(appConfig, updateFn) {
     const db = await getDbPromise();
     const tx = db.transaction(OBJECT_STORE_NAME, 'readwrite');
     const store = tx.objectStore(OBJECT_STORE_NAME);
-    const oldValue = await store.get(key);
+    const oldValue = (await store.get(key));
     const newValue = updateFn(oldValue);
     if (newValue === undefined) {
         await store.delete(key);
@@ -18790,11 +18947,11 @@ async function update(appConfig, updateFn) {
  * Updates and returns the InstallationEntry from the database.
  * Also triggers a registration request if it is necessary and possible.
  */
-async function getInstallationEntry(appConfig) {
+async function getInstallationEntry(installations) {
     let registrationPromise;
-    const installationEntry = await update(appConfig, oldEntry => {
+    const installationEntry = await update(installations.appConfig, oldEntry => {
         const installationEntry = updateOrCreateInstallationEntry(oldEntry);
-        const entryWithPromise = triggerRegistrationIfNecessary(appConfig, installationEntry);
+        const entryWithPromise = triggerRegistrationIfNecessary(installations, installationEntry);
         registrationPromise = entryWithPromise.registrationPromise;
         return entryWithPromise.installationEntry;
     });
@@ -18825,7 +18982,7 @@ function updateOrCreateInstallationEntry(oldEntry) {
  * If registrationPromise does not exist, the installationEntry is guaranteed
  * to be registered.
  */
-function triggerRegistrationIfNecessary(appConfig, installationEntry) {
+function triggerRegistrationIfNecessary(installations, installationEntry) {
     if (installationEntry.registrationStatus === 0 /* NOT_STARTED */) {
         if (!navigator.onLine) {
             // Registration required but app is offline.
@@ -18841,13 +18998,13 @@ function triggerRegistrationIfNecessary(appConfig, installationEntry) {
             registrationStatus: 1 /* IN_PROGRESS */,
             registrationTime: Date.now()
         };
-        const registrationPromise = registerInstallation(appConfig, inProgressEntry);
+        const registrationPromise = registerInstallation(installations, inProgressEntry);
         return { installationEntry: inProgressEntry, registrationPromise };
     }
     else if (installationEntry.registrationStatus === 1 /* IN_PROGRESS */) {
         return {
             installationEntry,
-            registrationPromise: waitUntilFidRegistration(appConfig)
+            registrationPromise: waitUntilFidRegistration(installations)
         };
     }
     else {
@@ -18855,20 +19012,20 @@ function triggerRegistrationIfNecessary(appConfig, installationEntry) {
     }
 }
 /** This will be executed only once for each new Firebase Installation. */
-async function registerInstallation(appConfig, installationEntry) {
+async function registerInstallation(installations, installationEntry) {
     try {
-        const registeredInstallationEntry = await createInstallationRequest(appConfig, installationEntry);
-        return set(appConfig, registeredInstallationEntry);
+        const registeredInstallationEntry = await createInstallationRequest(installations, installationEntry);
+        return set(installations.appConfig, registeredInstallationEntry);
     }
     catch (e) {
         if (isServerError(e) && e.customData.serverCode === 409) {
             // Server returned a "FID can not be used" error.
             // Generate a new ID next time.
-            await remove(appConfig);
+            await remove(installations.appConfig);
         }
         else {
             // Registration failed. Set FID as not registered.
-            await set(appConfig, {
+            await set(installations.appConfig, {
                 fid: installationEntry.fid,
                 registrationStatus: 0 /* NOT_STARTED */
             });
@@ -18877,19 +19034,19 @@ async function registerInstallation(appConfig, installationEntry) {
     }
 }
 /** Call if FID registration is pending in another request. */
-async function waitUntilFidRegistration(appConfig) {
+async function waitUntilFidRegistration(installations) {
     // Unfortunately, there is no way of reliably observing when a value in
     // IndexedDB changes (yet, see https://github.com/WICG/indexed-db-observers),
     // so we need to poll.
-    let entry = await updateInstallationRequest(appConfig);
+    let entry = await updateInstallationRequest(installations.appConfig);
     while (entry.registrationStatus === 1 /* IN_PROGRESS */) {
         // createInstallation request still in progress.
         await sleep(100);
-        entry = await updateInstallationRequest(appConfig);
+        entry = await updateInstallationRequest(installations.appConfig);
     }
     if (entry.registrationStatus === 0 /* NOT_STARTED */) {
         // The request timed out or failed in a different call. Try again.
-        const { installationEntry, registrationPromise } = await getInstallationEntry(appConfig);
+        const { installationEntry, registrationPromise } = await getInstallationEntry(installations);
         if (registrationPromise) {
             return registrationPromise;
         }
@@ -18946,19 +19103,23 @@ function hasInstallationRequestTimedOut(installationEntry) {
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-async function generateAuthTokenRequest({ appConfig, platformLoggerProvider }, installationEntry) {
+async function generateAuthTokenRequest({ appConfig, heartbeatServiceProvider }, installationEntry) {
     const endpoint = getGenerateAuthTokenEndpoint(appConfig, installationEntry);
     const headers = getHeadersWithAuth(appConfig, installationEntry);
-    // If platform logger exists, add the platform info string to the header.
-    const platformLogger = platformLoggerProvider.getImmediate({
+    // If heartbeat service exists, add the heartbeat string to the header.
+    const heartbeatService = heartbeatServiceProvider.getImmediate({
         optional: true
     });
-    if (platformLogger) {
-        headers.append('x-firebase-client', platformLogger.getPlatformInfoString());
+    if (heartbeatService) {
+        const heartbeatsHeader = await heartbeatService.getHeartbeatsHeader();
+        if (heartbeatsHeader) {
+            headers.append('x-firebase-client', heartbeatsHeader);
+        }
     }
     const body = {
         installation: {
-            sdkVersion: PACKAGE_VERSION
+            sdkVersion: PACKAGE_VERSION,
+            appId: appConfig.appId
         }
     };
     const request = {
@@ -19150,7 +19311,7 @@ function hasAuthTokenRequestTimedOut(authToken) {
  */
 async function getId(installations) {
     const installationsImpl = installations;
-    const { installationEntry, registrationPromise } = await getInstallationEntry(installationsImpl.appConfig);
+    const { installationEntry, registrationPromise } = await getInstallationEntry(installationsImpl);
     if (registrationPromise) {
         registrationPromise.catch(console.error);
     }
@@ -19188,14 +19349,14 @@ async function getId(installations) {
  */
 async function getToken(installations, forceRefresh = false) {
     const installationsImpl = installations;
-    await completeInstallationRegistration(installationsImpl.appConfig);
+    await completeInstallationRegistration(installationsImpl);
     // At this point we either have a Registered Installation in the DB, or we've
     // already thrown an error.
     const authToken = await refreshAuthToken(installationsImpl, forceRefresh);
     return authToken.token;
 }
-async function completeInstallationRegistration(appConfig) {
-    const { registrationPromise } = await getInstallationEntry(appConfig);
+async function completeInstallationRegistration(installations) {
+    const { registrationPromise } = await getInstallationEntry(installations);
     if (registrationPromise) {
         // A createInstallation request is in progress. Wait until it finishes.
         await registrationPromise;
@@ -19412,11 +19573,11 @@ const publicFactory = (container) => {
     const app = container.getProvider('app').getImmediate();
     // Throws if app isn't configured properly.
     const appConfig = extractAppConfig(app);
-    const platformLoggerProvider = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__._getProvider)(app, 'platform-logger');
+    const heartbeatServiceProvider = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__._getProvider)(app, 'heartbeat');
     const installationsImpl = {
         app,
         appConfig,
-        platformLoggerProvider,
+        heartbeatServiceProvider,
         _delete: () => Promise.resolve()
     };
     return installationsImpl;
@@ -19706,10 +19867,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _firebase_installations__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/installations */ "./node_modules/@firebase/installations/dist/esm/index.esm2017.js");
 /* harmony import */ var _firebase_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @firebase/component */ "./node_modules/@firebase/component/dist/esm/index.esm2017.js");
-/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! idb */ "./node_modules/idb/build/idb.js");
-/* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm2017.js");
-/* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
-
+/* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm2017.js");
+/* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
 
 
 
@@ -19835,9 +19994,9 @@ async function migrateOldDatabase(senderId) {
         }
     }
     let tokenDetails = null;
-    const db = await (0,idb__WEBPACK_IMPORTED_MODULE_2__.openDb)(OLD_DB_NAME, OLD_DB_VERSION, async (db) => {
+    const db = await (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.openDB)(OLD_DB_NAME, OLD_DB_VERSION, async (db, oldVersion, newVersion, upgradeTransaction) => {
         var _a;
-        if (db.oldVersion < 2) {
+        if (oldVersion < 2) {
             // Database too old, skip migration.
             return;
         }
@@ -19845,14 +20004,14 @@ async function migrateOldDatabase(senderId) {
             // Database did not exist. Nothing to do.
             return;
         }
-        const objectStore = db.transaction.objectStore(OLD_OBJECT_STORE_NAME);
+        const objectStore = upgradeTransaction.objectStore(OLD_OBJECT_STORE_NAME);
         const value = await objectStore.index('fcmSenderId').get(senderId);
         await objectStore.clear();
         if (!value) {
             // No entry in the database, nothing to migrate.
             return;
         }
-        if (db.oldVersion === 2) {
+        if (oldVersion === 2) {
             const oldDetails = value;
             if (!oldDetails.auth || !oldDetails.p256dh || !oldDetails.endpoint) {
                 return;
@@ -19871,7 +20030,7 @@ async function migrateOldDatabase(senderId) {
                 }
             };
         }
-        else if (db.oldVersion === 3) {
+        else if (oldVersion === 3) {
             const oldDetails = value;
             tokenDetails = {
                 token: oldDetails.fcmToken,
@@ -19885,7 +20044,7 @@ async function migrateOldDatabase(senderId) {
                 }
             };
         }
-        else if (db.oldVersion === 4) {
+        else if (oldVersion === 4) {
             const oldDetails = value;
             tokenDetails = {
                 token: oldDetails.fcmToken,
@@ -19902,9 +20061,9 @@ async function migrateOldDatabase(senderId) {
     });
     db.close();
     // Delete all old databases.
-    await (0,idb__WEBPACK_IMPORTED_MODULE_2__.deleteDb)(OLD_DB_NAME);
-    await (0,idb__WEBPACK_IMPORTED_MODULE_2__.deleteDb)('fcm_vapid_details_db');
-    await (0,idb__WEBPACK_IMPORTED_MODULE_2__.deleteDb)('undefined');
+    await (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.deleteDB)(OLD_DB_NAME);
+    await (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.deleteDB)('fcm_vapid_details_db');
+    await (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.deleteDB)('undefined');
     return checkTokenDetails(tokenDetails) ? tokenDetails : null;
 }
 function checkTokenDetails(tokenDetails) {
@@ -19951,12 +20110,12 @@ const OBJECT_STORE_NAME = 'firebase-messaging-store';
 let dbPromise = null;
 function getDbPromise() {
     if (!dbPromise) {
-        dbPromise = (0,idb__WEBPACK_IMPORTED_MODULE_2__.openDb)(DATABASE_NAME, DATABASE_VERSION, upgradeDb => {
+        dbPromise = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.openDB)(DATABASE_NAME, DATABASE_VERSION, (upgradeDb, oldVersion) => {
             // We don't use 'break' in this switch statement, the fall-through behavior is what we want,
             // because if there are multiple versions between the old version and the current version, we
             // want ALL the migrations that correspond to those versions to run, not only the last one.
             // eslint-disable-next-line default-case
-            switch (upgradeDb.oldVersion) {
+            switch (oldVersion) {
                 case 0:
                     upgradeDb.createObjectStore(OBJECT_STORE_NAME);
             }
@@ -19968,10 +20127,10 @@ function getDbPromise() {
 async function dbGet(firebaseDependencies) {
     const key = getKey(firebaseDependencies);
     const db = await getDbPromise();
-    const tokenDetails = await db
+    const tokenDetails = (await db
         .transaction(OBJECT_STORE_NAME)
         .objectStore(OBJECT_STORE_NAME)
-        .get(key);
+        .get(key));
     if (tokenDetails) {
         return tokenDetails;
     }
@@ -20044,7 +20203,7 @@ const ERROR_MAP = {
     ["use-vapid-key-after-get-token" /* USE_VAPID_KEY_AFTER_GET_TOKEN */]: 'The usePublicVapidKey() method may only be called once and must be ' +
         'called before calling getToken() to ensure your VAPID key is used.'
 };
-const ERROR_FACTORY = new _firebase_util__WEBPACK_IMPORTED_MODULE_3__.ErrorFactory('messaging', 'Messaging', ERROR_MAP);
+const ERROR_FACTORY = new _firebase_util__WEBPACK_IMPORTED_MODULE_2__.ErrorFactory('messaging', 'Messaging', ERROR_MAP);
 
 /**
  * @license
@@ -20696,7 +20855,7 @@ async function messageEventListener(messaging, event) {
 }
 
 const name = "@firebase/messaging";
-const version = "0.9.8";
+const version = "0.9.11";
 
 /**
  * @license
@@ -20729,11 +20888,11 @@ const WindowMessagingInternalFactory = (container) => {
     return messagingInternal;
 };
 function registerMessagingInWindow() {
-    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component('messaging', WindowMessagingFactory, "PUBLIC" /* PUBLIC */));
-    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component('messaging-internal', WindowMessagingInternalFactory, "PRIVATE" /* PRIVATE */));
-    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__.registerVersion)(name, version);
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_3__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component('messaging', WindowMessagingFactory, "PUBLIC" /* PUBLIC */));
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_3__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component('messaging-internal', WindowMessagingInternalFactory, "PRIVATE" /* PRIVATE */));
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_3__.registerVersion)(name, version);
     // BUILD_TARGET will be replaced by values like esm5, esm2017, cjs5, etc during the compilation
-    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__.registerVersion)(name, version, 'esm2017');
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_3__.registerVersion)(name, version, 'esm2017');
 }
 
 /**
@@ -20762,7 +20921,7 @@ async function isWindowSupported() {
     try {
         // This throws if open() is unsupported, so adding it to the conditional
         // statement below can cause an uncaught error.
-        await (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.validateIndexedDBOpenable)();
+        await (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.validateIndexedDBOpenable)();
     }
     catch (e) {
         return false;
@@ -20771,8 +20930,8 @@ async function isWindowSupported() {
     // might be prohibited to run. In these contexts, an error would be thrown during the messaging
     // instantiating phase, informing the developers to import/call isSupported for special handling.
     return (typeof window !== 'undefined' &&
-        (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.isIndexedDBAvailable)() &&
-        (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.areCookiesEnabled)() &&
+        (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.isIndexedDBAvailable)() &&
+        (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.areCookiesEnabled)() &&
         'serviceWorker' in navigator &&
         'PushManager' in window &&
         'Notification' in window &&
@@ -20856,7 +21015,7 @@ function onMessage$1(messaging, nextOrObserver) {
  *
  * @public
  */
-function getMessagingInWindow(app = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__.getApp)()) {
+function getMessagingInWindow(app = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_3__.getApp)()) {
     // Conscious decision to make this async check non-blocking during the messaging instance
     // initialization phase for performance consideration. An error would be thrown latter for
     // developer's information. Developers can then choose to import and call `isSupported` for
@@ -20870,7 +21029,7 @@ function getMessagingInWindow(app = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4_
         // If `isWindowSupported()` rejected.
         throw ERROR_FACTORY.create("indexed-db-unsupported" /* INDEXED_DB_UNSUPPORTED */);
     });
-    return (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__._getProvider)((0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.getModularInstance)(app), 'messaging').getImmediate();
+    return (0,_firebase_app__WEBPACK_IMPORTED_MODULE_3__._getProvider)((0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.getModularInstance)(app), 'messaging').getImmediate();
 }
 /**
  * Subscribes the {@link Messaging} instance to push notifications. Returns an Firebase Cloud
@@ -20888,7 +21047,7 @@ function getMessagingInWindow(app = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4_
  * @public
  */
 async function getToken(messaging, options) {
-    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.getModularInstance)(messaging);
+    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.getModularInstance)(messaging);
     return getToken$1(messaging, options);
 }
 /**
@@ -20902,7 +21061,7 @@ async function getToken(messaging, options) {
  * @public
  */
 function deleteToken(messaging) {
-    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.getModularInstance)(messaging);
+    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.getModularInstance)(messaging);
     return deleteToken$1(messaging);
 }
 /**
@@ -20919,7 +21078,7 @@ function deleteToken(messaging) {
  * @public
  */
 function onMessage(messaging, nextOrObserver) {
-    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.getModularInstance)(messaging);
+    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.getModularInstance)(messaging);
     return onMessage$1(messaging, nextOrObserver);
 }
 
@@ -20967,7 +21126,7 @@ module.exports = JSON.parse('{"de":{"action_block_contact":"Kontakt blockieren",
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
