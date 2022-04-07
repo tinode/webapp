@@ -19,7 +19,8 @@ import SendMessage from '../widgets/send-message.jsx';
 
 import { DEFAULT_P2P_ACCESS_MODE, IMAGE_PREVIEW_DIM, KEYPRESS_DELAY,
   MESSAGES_PAGE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE,
-  READ_DELAY, QUOTED_REPLY_LENGTH } from '../config.js';
+  READ_DELAY, QUOTED_REPLY_LENGTH,
+  CALL_STATE_OUTGOING_INITATED, CALL_STATE_IN_PROGRESS } from '../config.js';
 import { blobToBase64, fileToBase64,
   imageScaled, makeImageUrl } from '../lib/blob-helpers.js';
 import HashNavigation from '../lib/navigation.js';
@@ -76,6 +77,13 @@ function isPeerRestricted(acs) {
     return acs.isJoiner('want') && (ms.includes('R') || ms.includes('W'));
   }
   return false;
+}
+
+function shouldPresentCallPanel(callState) {
+  // Show call panel if either:
+  // - call is outgoing (and the client is waiting for the other side to pick up) or,
+  // - call is already in progress.
+  return callState == CALL_STATE_OUTGOING_INITATED || callState == CALL_STATE_IN_PROGRESS;
 }
 
 class MessagesView extends React.Component {
@@ -196,11 +204,6 @@ class MessagesView extends React.Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     let nextState = {};
-    /*
-    if (nextProps.callState == 3 || nextProps.callState == 1) {
-      nextState.rtcPanel = { topic: nextProps.topic };
-    }
-    */
     if (!nextProps.topic) {
       // Default state: no topic.
       nextState = {
@@ -216,7 +219,7 @@ class MessagesView extends React.Component {
         docPreview: null,
         imagePreview: null,
         imagePostview: null,
-        rtcPanel: null,//typeof nextProps.topic != 'undefined' && nextPropstopic.name == this.props.callTopic && (nextProps.callState == 1 || nextProps.callState == 3) ? { topic: nextProps.topic } : null,
+        rtcPanel: null,
         typingIndicator: false,
         scrollPosition: 0,
         fetchingMessages: false,
@@ -293,7 +296,7 @@ class MessagesView extends React.Component {
           channel: topic.isChannelType()
         });
 
-        if (nextProps.callTopic == topic.name && (nextProps.callState == 1 || nextProps.callState == 3)) {
+        if (nextProps.callTopic == topic.name && shouldPresentCallPanel(nextProps.callState)) {
           Object.assign(nextState, {
             rtcPanel: nextProps.callTopic,
           }); 
@@ -311,8 +314,9 @@ class MessagesView extends React.Component {
         });
       }
     } else {
-      // same topic
-      if (!prevState.rtcPanel && nextProps.callTopic == prevState.topic && (nextProps.callState == 1 || nextProps.callState == 3)) {
+      // We are still in same topic. Show the call panel if necessary.
+      if (nextProps.callTopic == prevState.topic && !prevState.rtcPanel &&
+          shouldPresentCallPanel(nextProps.callState)) {
         Object.assign(nextState, {
           rtcPanel: nextProps.callTopic,
         }); 

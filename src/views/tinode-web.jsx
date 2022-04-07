@@ -17,7 +17,9 @@ import MessagesView from './messages-view.jsx';
 import SidepanelView from './sidepanel-view.jsx';
 
 import { API_KEY, APP_NAME, DEFAULT_P2P_ACCESS_MODE, FORWARDED_PREVIEW_LENGTH, LOGGING_ENABLED,
-  MEDIA_BREAKPOINT, RECEIVED_DELAY } from '../config.js';
+  MEDIA_BREAKPOINT, RECEIVED_DELAY,
+  CALL_STATE_NONE, CALL_STATE_OUTGOING_INITATED,
+  CALL_STATE_INCOMING_RECEIVED, CALL_STATE_IN_PROGRESS } from '../config.js';
 import { PACKAGE_VERSION } from '../version.js';
 import { base64ReEncode, makeImageUrl } from '../lib/blob-helpers.js';
 import { detectServerAddress, isLocalHost, isSecureConnection } from '../lib/host-name.js';
@@ -163,9 +165,6 @@ class TinodeWeb extends React.Component {
     this.handleTeleSendAnswer = this.handleTeleSendAnswer.bind(this);
 
     this.handleTeleAcceptCall = this.handleTeleAcceptCall.bind(this);
-    this.handleTeleUpdateLease = this.handleTeleUpdateLease.bind(this);
-    this.handleTeleLeaseReply = this.handleTeleLeaseReply.bind(this);
-    this.setLeaseTimer = this.setLeaseTimer.bind(this);
 
     this.sendMessageToTopic = this.sendMessageToTopic.bind(this);
   }
@@ -219,9 +218,12 @@ class TinodeWeb extends React.Component {
       infoPanel: undefined,
       mobilePanel: 'sidepanel',
 
+      // Video calls.
       callTopic: undefined,
-      callState: 0,
-      //isCallOriginator: false,
+      callState: CALL_STATE_NONE,
+      // If true, call state should be transitioned to CALL_STATE_IN_PROGRESS upon
+      // switching to the call topic.
+      callShouldStart: false,
 
       contextMenuVisible: false,
       contextMenuBounds: null,
@@ -486,7 +488,13 @@ class TinodeWeb extends React.Component {
   }
 
   handleError(err, level, action, actionText) {
-    this.setState({errorText: err, errorLevel: level, errorAction: action, errorActionText: actionText});
+    this.setState({
+      errorText: err,
+      errorLevel: level,
+      errorAction: action,
+      errorActionText: actionText,
+      callShouldStart: false,
+    });
   }
 
   // User clicked Login button in the side panel.
@@ -852,26 +860,7 @@ class TinodeWeb extends React.Component {
         this.receivedTimer = undefined;
         topic.noteRecv(data.seq);
       }, RECEIVED_DELAY);
-
-      /*
-      if (typeof data.head != 'undefined' && data.head['mime'] == 'application/tinode-video-call' && topic.msgRecvCount(data.seq) == 0) {
-        this.setState({
-          callTopic: data.topic,
-          callState: 2
-        });
-      }
-      */
     }
-
-    /*
-    // Incoming call.
-    if (data.from != this.state.myUserId && data.seq > topic.maxMsgSeq()) {
-      this.setState({
-        callTopic: data.topic,
-        callState: 2
-      });
-    }
-    */
   }
 
   /* Fnd topic: find contacts by tokens */
@@ -1293,11 +1282,20 @@ class TinodeWeb extends React.Component {
 
   // New topic was created, here is the new topic name.
   handleNewTopicCreated(oldName, newName) {
+    let nextState = {};
+    if (this.state.callShouldStart) {
+      nextState = {callState: CALL_STATE_IN_PROGRESS, callShouldStart: false};
+    }
     if (this.state.topicSelected == oldName && oldName != newName) {
       // If the current URl contains the old topic name, replace it with new.
       // Update the name of the selected topic first so the navigator doen't clear
       // the state.
-      this.setState({topicSelected: newName}, () => {
+      const newTopic = {topicSelected: newName};
+      this.setState(...nextState, ...newTopic, () => {
+        HashNavigation.navigateTo(HashNavigation.setUrlTopic('', newName));
+      });
+    } else {
+      this.setState(nextState, () => {
         HashNavigation.navigateTo(HashNavigation.setUrlTopic('', newName));
       });
     }
@@ -1679,91 +1677,35 @@ class TinodeWeb extends React.Component {
   handleStartVideoCall() {
     this.setState({
       callTopic: this.state.topicSelected,
-      callState: 1,
+      callState: CALL_STATE_OUTGOING_INITATED
     });
   }
 
-  setLeaseTimer(seq, leaseExp, now, shift) {
-    if (leaseExp < now) {
-      // Lease has expired.
-      this.handleCallClose();
-      return;
-    }
-    let period = leaseExp - now - shift;
-    if (period < 0) {
-      period = 0;
-    }
-    console.log('X: setting timeout to ', period, ', seq = ', seq, ', leaseExp = ', leaseExp, ', now = ', now, ', shift = ', shift);
-
-    //setTimeout(() => {console.log("before callTimeout")}, period - 500); 
-    let callTimeout = setTimeout(this.handleTeleUpdateLease, period);
-    console.log('setting call timeout -> ', callTimeout);
-    let callState = {
-      callLeaseExpires: leaseExp,
-      callTimeout: callTimeout
-    };
-   
-    if (seq) {
-      callState.callSeq = seq;
-    }
-    this.setState(callState);
-  }
-
-  handleTeleLeaseReply(ctrl, shift) {
-    if (ctrl.code < 200 || ctrl.code >= 300 || !('params' in ctrl)) {
-      this.handleCallClose();
-      return;
-    }
-    const ds = ctrl.params['lease-expires'];
-    if (!ds) {
-      this.handleCallClose();
-      return;
-    }
-    const leaseExp = new Date(ds);
-    const now = Date.now();
-    this.setLeaseTimer(ctrl.params['seq'], leaseExp.getTime(), now, shift);
-  }
-
-  handleTeleUpdateLease() {
-    console.log('update lease event');
-    const topic = this.tinode.getTopic(this.state.callTopic);
-    if (!topic) {
-      return;
-    }
-    const now = Date.now();
-    if (now >= this.state.callLeaseExpires) {
-      // Lease has expired.
-      this.handleCallClose();
-      return;
-    }
-
-    let until = new Date(this.state.callLeaseExpires);
-    until.setSeconds(until.getSeconds() + 10);
-    topic.call('extend-lease', this.state.callSeq, undefined, until)
-      .then((ctrl) => {
-				this.handleTeleLeaseReply(ctrl, 2000);
-      });
-    }
-
   handleTeleInvite(callTopic, callSeq, callState) {
-    if (callState == 1) {
-      let head = {mime: 'application/tinode-video-call'};
-      this.handleSendMessage('started', undefined, undefined, head)
-        .then((ctrl) => {
-          if (ctrl.code < 200 || ctrl.code >= 300 || typeof ctrl.params == 'undefined' || typeof ctrl.params['seq'] == 'undefined') {
-            this.handleCallClose();
-            return;
-          }
-          this.setState({callSeq: ctrl.params['seq']});
+    switch (callState) {
+      case CALL_STATE_OUTGOING_INITATED:
+        let head = {mime: 'application/tinode-video-call'};
+        this.handleSendMessage('started', undefined, undefined, head)
+          .then((ctrl) => {
+            if (ctrl.code < 200 || ctrl.code >= 300 ||
+                typeof ctrl.params == 'undefined' || typeof ctrl.params['seq'] == 'undefined') {
+              this.handleCallClose();
+              return;
+            }
+            this.setState({callSeq: ctrl.params['seq']});
+          });
+        break;
+      case CALL_STATE_IN_PROGRESS:
+        const topic = this.tinode.getTopic(callTopic);
+        if (!topic) {
+          return;
+        }
+        // We've accepted the call. Let the other side know.
+        topic.call('accept', callSeq).catch((err) => {
+          this.handleCallClose();
+          this.handleError(err.message, 'err');
         });
-    } else if (callState == 3) {
-      const topic = this.tinode.getTopic(callTopic);
-      if (!topic) {
-        return;
-      }
-      topic.call('accept', callSeq).then((ctrl) => {
-        this.handleTeleLeaseReply(ctrl, 2000);
-      });
+        break;
     }
   }
 
@@ -1818,21 +1760,29 @@ class TinodeWeb extends React.Component {
     }
     this.setState({
       callTopic: undefined,
-      callState: 0,
-      callLeaseExpires: undefined,
-      callTimeout: undefined
+      callState: CALL_STATE_NONE
     });
   }
 
   handleTeleAcceptCall(topicName) {
-    this.handleTopicSelected(this.state.callTopic);
-    this.setState({
-      callState: 3
-    });
+    const topic = this.tinode.getTopic(topicName);
+    if (!topic) {
+      return;
+    }
+    if (topic.isSubscribed()) {
+      this.handleTopicSelected(this.state.callTopic);
+      this.setState({
+        callState: CALL_STATE_IN_PROGRESS
+      });
+    } else {
+      // We need to switch and subscribe to callTopic first.
+      this.setState({
+        callShouldStart: true,
+      }, () => this.handleTopicSelected(this.state.callTopic));
+    }
   }
 
   handleInfoMessage(info) {
-    //
     if (info.what != 'call') {
       return;
     }
@@ -1840,12 +1790,11 @@ class TinodeWeb extends React.Component {
       case 'invite':
         console.log('invite: ', info);
         if (info.from != this.state.myUserId) {
-          // incoming call.
+          // Incoming call.
           this.setState({
             callTopic: info.src,
-            callState: 2,
+            callState: CALL_STATE_INCOMING_RECEIVED,
             callSeq: info.seq
-            //sdp: info.sdp
           });
         }
         break;
@@ -1854,28 +1803,21 @@ class TinodeWeb extends React.Component {
         // If another my session has accepted the call.
         if (info.topic == 'me' && info.from == this.state.myUserId) {
           this.setState({
-            callTopic: null,//tele.src,
-            callState: 0,
-            callSeq: null//tele.seq,
-            //sdp: tele.sdp
+            callTopic: null,
+            callState: CALL_STATE_NONE,
+            callSeq: null
           });
+          return;
         }
         if (info.topic == this.state.callTopic) {
           // Update state.
-          this.setState({callState: 3});
-          if (this.state.callTimeout) {
-            clearTimeout(this.state.callTimeout);
-            this.setState({callTimeout: undefined});
-            this.setLeaseTimer(this.state.callSeq, this.state.callLeaseExpires, Date.now(), 2000);
-          }
+          this.setState({callState: CALL_STATE_IN_PROGRESS});
         }
         break;
       case 'hang-up':
-        //if (tele.topic == 'me') {
-          // remote hangup.
+        // Remote hangup.
         this.handleCallClose();
         break;
-        //}
     }
   }
 
@@ -2081,7 +2023,7 @@ class TinodeWeb extends React.Component {
           null
         }
 
-        {this.state.callTopic && this.state.callState == 2 ?
+        {this.state.callTopic && this.state.callState == CALL_STATE_INCOMING_RECEIVED ?
           <CallView
             tinode={this.tinode}
             onClose={this.handleCallClose}

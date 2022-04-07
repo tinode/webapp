@@ -2,6 +2,8 @@ import React from 'react';
 
 import LetterTile from '../widgets/letter-tile.jsx';
 
+import { CALL_STATE_OUTGOING_INITATED, CALL_STATE_IN_PROGRESS } from '../config.js';
+
 export default class RtcPanel extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -12,7 +14,6 @@ export default class RtcPanel extends React.PureComponent {
       isStarted: false,
       localStream: undefined,
       pc: undefined,
-      remoteStream: undefined,
 
       previousOnInfo: undefined
     };
@@ -43,7 +44,7 @@ export default class RtcPanel extends React.PureComponent {
     this.remoteRef = React.createRef();
 
     this.onInfo = this.onInfo.bind(this);
-    this.launchStream = this.launchStream.bind(this);
+    this.start = this.start.bind(this);
 
     this.createPeerConnection = this.createPeerConnection.bind(this);
 
@@ -77,8 +78,10 @@ export default class RtcPanel extends React.PureComponent {
   handleVideoCallAccepted(info) { 
     const pc = this.createPeerConnection();
     const stream = this.state.localStream;
-    stream.getTracks().forEach(track => pc.addTrack(track, stream));
-    console.log('RtcPanel: info msg', info);
+    stream.getTracks().forEach(track => {
+      console.log('local stream adding track ', track.id, track.kind, track.readyState);
+      pc.addTrack(track, stream);
+    });
   }
 
   onInfo(info) {
@@ -87,7 +90,6 @@ export default class RtcPanel extends React.PureComponent {
       return;
     }
     switch (info.event) {
-      //case 'invite'
       case 'accept':
         // Call accepted.
         this.handleVideoCallAccepted(info);
@@ -107,6 +109,7 @@ export default class RtcPanel extends React.PureComponent {
     }
   }
 
+  /*
   componentDidUpdate(props) {
     const topic = this.props.topic;
     if (this.onInfo != topic.onInfo) {
@@ -114,31 +117,43 @@ export default class RtcPanel extends React.PureComponent {
       topic.onInfo = this.onInfo;
     }
   }
+  */
 
   componentDidMount() {
-    if ((this.props.callState == 1 || this.props.callState == 3) && this.localRef.current) {
-      this.launchStream();
+    const topic = this.props.topic;
+    this.previousOnInfo = topic.onInfo;
+    topic.onInfo = this.onInfo;
+    if ((this.props.callState == CALL_STATE_OUTGOING_INITATED ||
+         this.props.callState == CALL_STATE_IN_PROGRESS) && this.localRef.current) {
+      this.start();
     }
   }
 
   componentWillUnmount() {
     this.props.topic.onInfo = this.previousOnInfo;
+    console.log('will unmount. stop');
     this.stop();
   }
 
-  launchStream() {
+  start() {
     if (this.state.localStream) {
       console.log("You can't start a call because you already have one open!");
     } else {
-      navigator.mediaDevices.getUserMedia(this.localStreamConstraints)
-      .then(stream => {
-        console.log('Adding local stream.', this.localRef.current);
-        this.setState({localStream: stream});
-        this.localRef.current.srcObject = stream;
-        // Send call invitation (or accept call).
+      if (this.props.callState == CALL_STATE_IN_PROGRESS) {
+        // We apparently just accepted the call.
         this.props.onInvite(this.props.topic.name, this.props.seq, this.props.callState);
-      })
-      .catch(this.handleGetUserMediaError);
+        return;
+      }
+      // This is an outgoing call waiting for the other side to pick up.
+      // Start local video.
+      navigator.mediaDevices.getUserMedia(this.localStreamConstraints)
+        .then(stream => {
+          this.setState({localStream: stream});
+          this.localRef.current.srcObject = stream;
+          // Send call invitation.
+          this.props.onInvite(this.props.topic.name, this.props.seq, this.props.callState);
+        })
+        .catch(this.handleGetUserMediaError);
     }
   }
 
@@ -178,7 +193,7 @@ export default class RtcPanel extends React.PureComponent {
     .then(() => {
       this.props.onSendOffer(this.props.topic.name, this.props.seq, this.state.pc.localDescription.toJSON());
     })
-    .catch(reportError);
+    .catch(this.reportError);
   }
 
   handleICECandidateEvent(event) {
@@ -191,7 +206,7 @@ export default class RtcPanel extends React.PureComponent {
     var candidate = new RTCIceCandidate(info.payload);
   
     this.state.pc.addIceCandidate(candidate)
-      .catch(reportError);
+      .catch(this.reportError);
   }
 
   handleICEConnectionStateChangeEvent(event) {
@@ -243,7 +258,6 @@ export default class RtcPanel extends React.PureComponent {
     this.handleCloseClick();
   }
 
-
   handleVideoOfferMsg(info) {
     var localStream = null;
   
@@ -252,6 +266,7 @@ export default class RtcPanel extends React.PureComponent {
     var desc = new RTCSessionDescription(info.payload);
   
     pc.setRemoteDescription(desc).then(() => {
+      console.log('!!! handleVideoOffer/setRemoteDescription -> getUserMesia');
       return navigator.mediaDevices.getUserMedia(this.localStreamConstraints);
     })
     .then(stream => {
@@ -259,7 +274,10 @@ export default class RtcPanel extends React.PureComponent {
       this.localRef.current.srcObject = stream;
       this.setState({localStream: stream});
   
-      localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+      localStream.getTracks().forEach(track => {
+        console.log('local stream A adding track ', track.id, track.kind, track.readyState);
+        pc.addTrack(track, localStream);
+      });
     })
     .then(() => {
       return pc.createAnswer();
@@ -284,11 +302,14 @@ export default class RtcPanel extends React.PureComponent {
     let tracks = stream.getTracks();
 
     if (tracks != null) {
-      tracks.forEach(function(track) {
+      tracks.forEach((track) => {
         track.stop();
+        track.enabled = false;
+        console.log('stopped track ', track.id, track.kind, track.readyState);
       });
     }
     el.srcObject = null;
+    el.src = '';
   }
 
   stop() {
