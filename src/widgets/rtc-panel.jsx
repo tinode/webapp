@@ -2,16 +2,13 @@ import React from 'react';
 
 import LetterTile from '../widgets/letter-tile.jsx';
 
-import { CALL_STATE_OUTGOING_INITATED, CALL_STATE_IN_PROGRESS } from '../config.js';
+import { CALL_STATE_OUTGOING_INITATED, CALL_STATE_IN_PROGRESS, CALL_WEBRTC_CONFIG } from '../config.js';
 
 export default class RtcPanel extends React.PureComponent {
   constructor(props) {
     super(props);
 
     this.state = {
-      isChannelReady: false,
-      isInitiator: false,
-      isStarted: false,
       localStream: undefined,
       pc: undefined,
 
@@ -22,23 +19,6 @@ export default class RtcPanel extends React.PureComponent {
       audio: true,
       video: true
     };
-
-    this.pcConfig = {
-      iceServers: [
-        { urls: [ "stun:bn-turn1.xirsys.com" ] }, 
-        {   
-          username: "0kYXFmQL9xojOrUy4VFemlTnNPVFZpp7jfPjpB3AjxahuRe4QWrCs6Ll1vDc7TTjAAAAAGAG2whXZWJUdXRzUGx1cw==",   
-          credential: "285ff060-5a58-11eb-b269-0242ac140004",   
-          urls: [       
-            "turn:bn-turn1.xirsys.com:80?transport=udp",       
-            "turn:bn-turn1.xirsys.com:3478?transport=udp",       
-            "turn:bn-turn1.xirsys.com:80?transport=tcp",       
-            "turn:bn-turn1.xirsys.com:3478?transport=tcp",       
-            "turns:bn-turn1.xirsys.com:443?transport=tcp",       
-            "turns:bn-turn1.xirsys.com:5349?transport=tcp"   
-           ]
-        }
-     ]};
 
     this.localRef = React.createRef();
     this.remoteRef = React.createRef();
@@ -158,7 +138,7 @@ export default class RtcPanel extends React.PureComponent {
   }
 
   createPeerConnection() {
-    var pc = new RTCPeerConnection(this.pcConfig);
+    var pc = new RTCPeerConnection(CALL_WEBRTC_CONFIG);
 
     pc.onicecandidate = this.handleICECandidateEvent;
     pc.oniceconnectionstatechange = this.handleICEConnectionStateChangeEvent;
@@ -327,7 +307,7 @@ export default class RtcPanel extends React.PureComponent {
 
       this.state.pc.close();
     }
-    this.setState({isStarted: false, isChannelReady: false, isInitiator: false, pc: null});
+    this.setState({pc: null});
   }
 
   handleCloseClick() {

@@ -17,6 +17,8 @@ function _clip(str, length) {
   return str && str.substring(0, length);
 }
 
+const RING_SOUND = new Audio("audio/phone_ring.mp3");
+
 class CallView extends React.Component {
   constructor(props) {
     super(props);
@@ -34,6 +36,7 @@ class CallView extends React.Component {
     this.onMetaDesc = this.onMetaDesc.bind(this);
     this.handleRejectCall = this.handleRejectCall.bind(this);
     this.handleAcceptCall = this.handleAcceptCall.bind(this);
+    this.ringTimer = null;
   }
 
   componentDidMount() {
@@ -43,6 +46,8 @@ class CallView extends React.Component {
     }
     this.resetDesc(topic, this.props);
     if (this.props.callState == 2) {
+      RING_SOUND.play();
+      this.ringTimer = setInterval(() => RING_SOUND.play(), 2000);
       this.props.onRinging(this.props.topic, this.props.seq);
     }
   }
@@ -66,6 +71,10 @@ class CallView extends React.Component {
   }
 
   componentWillUnmount() {
+    if (this.ringTimer != null) {
+      clearInterval(this.ringTimer);
+      RING_SOUND.pause();
+    }
     const topic = this.props.tinode.getTopic(this.props.topic);
     if (!topic) {
       return;
