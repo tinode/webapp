@@ -146,6 +146,11 @@ class BaseChatMessage extends React.PureComponent {
         <FormattedMessage id="deleted_content"
           defaultMessage="content deleted" description="Shown when messages are deleted" />
       </i></>
+    } else if (this.props.mimeType == "application/tinode-video-call") {
+      // Video calls.
+      const direction = this.props.response ? "call_received" : "call_made";
+      const text = this.props.response ? "Incoming Call" : "Outgoing Call";
+      content = <><i className="material-icons" style={{color:this.props.content == "disconnected" ? "red" : "green"}}>{direction}</i>{text}</>
     } else if (typeof content != 'string') {
       content = <><i className="material-icons gray">warning_amber</i> <i className="gray">
         <FormattedMessage id="invalid_content"
