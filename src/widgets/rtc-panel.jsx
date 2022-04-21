@@ -89,16 +89,6 @@ export default class RtcPanel extends React.PureComponent {
     }
   }
 
-  /*
-  componentDidUpdate(props) {
-    const topic = this.props.topic;
-    if (this.onInfo != topic.onInfo) {
-      this.previousOnInfo = topic.onInfo;
-      topic.onInfo = this.onInfo;
-    }
-  }
-  */
-
   componentDidMount() {
     const topic = this.props.topic;
     this.previousOnInfo = topic.onInfo;
@@ -207,8 +197,7 @@ export default class RtcPanel extends React.PureComponent {
   }
 
   handleICEGatheringStateChangeEvent(event) {
-    // Our sample just logs information to console here,
-    // but you can do whatever you need.
+    console.log('ICE gathering change state: ', event);
   }
 
   handleTrackEvent(event) {
@@ -315,21 +304,18 @@ export default class RtcPanel extends React.PureComponent {
     this.props.onHangup(this.props.topic.name, this.props.seq);
   }
 
+  // Mute/unmute audio/video (specified by kind).
   toggleMedia(kind) {
-    const video = this.localRef.current;
-
-    // A video's MediaStream object is available through its srcObject attribute
-    const mediaStream = video.srcObject;
-
-    // Through the MediaStream, you can get the MediaStreamTracks with getTracks():
-    const tracks = mediaStream.getTracks();
-
-    // Or stop all like so:
-    tracks.forEach(track => {
-      if (track.kind == kind) {
-        track.stop();
+    const stream = this.state.localStream;
+    stream.getTracks().forEach(track => {
+      if (track.kind != kind) {
+        return;
       }
+      console.log('local stream: toggling track ', track.id, track.kind, track.readyState);
+      track.enabled = !track.enabled;
     });
+    // Make sure we redraw the UI properly.
+    this.forceUpdate();
   }
 
   handleToggleCameraClick() {
@@ -346,6 +332,8 @@ export default class RtcPanel extends React.PureComponent {
     }
 
     const remoteActive = this.remoteRef.current != null && this.remoteRef.current.srcObject != null;
+    const audioIcon = this.state.localStream != null && this.state.localStream.getAudioTracks()[0].enabled ? 'mic' : 'mic_off';
+    const videoIcon = this.state.localStream != null && this.state.localStream.getVideoTracks()[0].enabled ? 'videocam' : 'videocam_off';
 
     return (
       <>
@@ -389,8 +377,8 @@ export default class RtcPanel extends React.PureComponent {
             <button id="video-call-hangup" onClick={this.handleCloseClick}>
               <i className="material-icons">call_end</i>
             </button>
-            <button className="video-call-toggle-media" onClick={this.handleToggleCameraClick}><i className="material-icons">video_camera_front</i></button>
-            <button className="video-call-toggle-media" onClick={this.handleToggleMicClick}><i className="material-icons">mic</i></button>
+            <button className="video-call-toggle-media" onClick={this.handleToggleCameraClick}><i className="material-icons">{videoIcon}</i></button>
+            <button className="video-call-toggle-media" onClick={this.handleToggleMicClick}><i className="material-icons">{audioIcon}</i></button>
           </div>
           <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
         </div>

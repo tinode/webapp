@@ -1,6 +1,7 @@
 // Single message, sent or received.
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
+import FormattedDuration from 'react-intl-formatted-duration';
 import { Drafty } from 'tinode-sdk';
 
 import Attachment from './attachment.jsx';
@@ -150,7 +151,9 @@ class BaseChatMessage extends React.PureComponent {
       // Video calls.
       const direction = this.props.response ? "call_received" : "call_made";
       const text = this.props.response ? "Incoming Call" : "Outgoing Call";
-      content = <><i className="material-icons" style={{color:this.props.content == "disconnected" ? "red" : "green"}}>{direction}</i>{text}</>
+      content = <><i className="material-icons" style={{color:this.props.content == "disconnected" ? "red" : "green"}}>{direction}</i>{text}
+        (<FormattedDuration seconds={this.props.duration / 1000} format="{hours} {minutes} {seconds}" />)
+      </>
     } else if (typeof content != 'string') {
       content = <><i className="material-icons gray">warning_amber</i> <i className="gray">
         <FormattedMessage id="invalid_content"

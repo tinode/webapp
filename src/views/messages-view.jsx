@@ -1061,6 +1061,7 @@ class MessagesView extends React.Component {
               deleted={msg.hi}
               mimeType={msg.head ? msg.head.mime : null}
               timestamp={msg.ts}
+              duration={msg.origTs ? msg.ts - msg.origTs : null}
               response={isReply}
               seq={msg.seq}
               isGroup={groupTopic}
