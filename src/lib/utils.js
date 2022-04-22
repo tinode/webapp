@@ -204,3 +204,8 @@ export function cancelablePromise(promise) {
     },
   };
 };
+
+// Returns true if specified mime type represents a Tinode video call.
+export function isVideoCall(mime) {
+  return mime == 'application/tinode-video-call';
+}

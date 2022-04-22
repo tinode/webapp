@@ -9,7 +9,7 @@ import LetterTile from './letter-tile.jsx';
 import ReceivedMarker from './received-marker.jsx'
 
 import { fullFormatter } from '../lib/formatters.js';
-import { sanitizeUrl } from '../lib/utils.js';
+import { isVideoCall, sanitizeUrl } from '../lib/utils.js';
 
 class BaseChatMessage extends React.PureComponent {
   constructor(props) {
@@ -147,12 +147,19 @@ class BaseChatMessage extends React.PureComponent {
         <FormattedMessage id="deleted_content"
           defaultMessage="content deleted" description="Shown when messages are deleted" />
       </i></>
-    } else if (this.props.mimeType == "application/tinode-video-call") {
+    } else if (isVideoCall(this.props.mimeType)) {
       // Video calls.
       const direction = this.props.response ? "call_received" : "call_made";
-      const text = this.props.response ? "Incoming Call" : "Outgoing Call";
-      content = <><i className="material-icons" style={{color:this.props.content == "disconnected" ? "red" : "green"}}>{direction}</i>{text}
-        (<FormattedDuration seconds={this.props.duration / 1000} format="{hours} {minutes} {seconds}" />)
+      const text = this.props.response ?
+        <FormattedMessage id="calls_incoming"
+          defaultMessage="Incoming Call" description="Incoming call label" /> :
+        <FormattedMessage id="calls_outgoing"
+          defaultMessage="Outgoing Call" description="Outgoing call label" />;
+      const isCallDropped = this.props.content == "disconnected";
+      content = <><i className="material-icons" style={{color: isCallDropped ? "red" : "green"}}>{direction}</i>{text}
+        { !isCallDropped ?
+          [' (', <FormattedDuration seconds={this.props.duration / 1000} format="{hours} {minutes} {seconds}" />, ')'] :
+          null}
       </>
     } else if (typeof content != 'string') {
       content = <><i className="material-icons gray">warning_amber</i> <i className="gray">

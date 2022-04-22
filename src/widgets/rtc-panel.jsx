@@ -1,4 +1,5 @@
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 
 import LetterTile from '../widgets/letter-tile.jsx';
 
@@ -363,7 +364,10 @@ export default class RtcPanel extends React.PureComponent {
           <div className="video-container-panel">
             <div className="video-elem">
               <video id="localVideo" ref={this.localRef} autoPlay muted playsInline></video>
-              <div className="video-title">You</div>
+              <div className="video-title">
+                <FormattedMessage id="calls_you_label"
+                  defaultMessage="You" description="Shown over the local video screen" />
+              </div>
             </div>
             <div className="video-elem">
               <video id="remoteVideo" ref={this.remoteRef} autoPlay playsInline></video>
