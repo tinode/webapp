@@ -14,7 +14,7 @@ import Invitation from '../widgets/invitation.jsx';
 import LetterTile from '../widgets/letter-tile.jsx';
 import LoadSpinner from '../widgets/load-spinner.jsx';
 import LogoView from './logo-view.jsx';
-import RtcPanel from '../widgets/rtc-panel.jsx';
+import CallPanel from '../widgets/call-panel.jsx';
 import SendMessage from '../widgets/send-message.jsx';
 
 import { DEFAULT_P2P_ACCESS_MODE, IMAGE_PREVIEW_DIM, KEYPRESS_DELAY,
@@ -984,7 +984,7 @@ class MessagesView extends React.Component {
       } else if (this.state.rtcPanel) {
         const topic = this.props.tinode.getTopic(this.state.topic);
         component2 = (
-          <RtcPanel
+          <CallPanel
             topic={topic}
             seq={this.props.callSeq}
             callState={this.props.callState}

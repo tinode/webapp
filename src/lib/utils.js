@@ -209,3 +209,8 @@ export function cancelablePromise(promise) {
 export function isVideoCall(mime) {
   return mime == 'application/tinode-video-call';
 }
+
+// Clips string to the specified length.
+export function clipStr(str, length) {
+  return str && str.substring(0, length);
+}

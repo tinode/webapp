@@ -12,7 +12,7 @@ import ContextMenu from '../widgets/context-menu.jsx';
 import ForwardDialog from '../widgets/forward-dialog.jsx';
 
 import InfoView from './info-view.jsx';
-import CallView from './call-view.jsx';
+import IncomingCallView from './incoming-call-view.jsx';
 import MessagesView from './messages-view.jsx';
 import SidepanelView from './sidepanel-view.jsx';
 
@@ -2024,7 +2024,7 @@ class TinodeWeb extends React.Component {
         }
 
         {this.state.callTopic && this.state.callState == CALL_STATE_INCOMING_RECEIVED ?
-          <CallView
+          <IncomingCallView
             tinode={this.tinode}
             onClose={this.handleCallClose}
             topic={this.state.callTopic}

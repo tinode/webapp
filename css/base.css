@@ -2633,7 +2633,12 @@ video {
   padding: 20px;
 }
 
-#video-call-hangup {
+.video-call-accept {
+  border-radius: 10px;
+  background-color: green;
+}
+
+.video-call-hangup {
   border-radius: 10px;
   background-color: red;
 }
@@ -2641,4 +2646,18 @@ video {
 .video-call-toggle-media {
   border-radius: 10px;
   background-color: gray;
+}
+
+.incoming-call-title {
+  text-align: center;
+  padding: 10px;
+}
+
+.incoming-call-badges {
+  text-align: center;
+}
+
+.incoming-call-actions {
+  text-align: center;
+  padding: 20px;
 }

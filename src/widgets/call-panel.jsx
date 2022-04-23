@@ -1,11 +1,15 @@
+// CallPanel: displays local and remote viewports and controls.
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import LetterTile from '../widgets/letter-tile.jsx';
 
-import { CALL_STATE_OUTGOING_INITATED, CALL_STATE_IN_PROGRESS, CALL_WEBRTC_CONFIG } from '../config.js';
+import { CALL_STATE_OUTGOING_INITATED, CALL_STATE_IN_PROGRESS, CALL_WEBRTC_CONFIG,
+         MAX_TITLE_LENGTH } from '../config.js';
 
-export default class RtcPanel extends React.PureComponent {
+import { clipStr } from '../lib/utils.js'
+
+export default class CallPanel extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -372,13 +376,13 @@ export default class RtcPanel extends React.PureComponent {
             <div className="video-elem">
               <video id="remoteVideo" ref={this.remoteRef} autoPlay playsInline></video>
               {remoteActive ?
-                <div className="video-title">{this.props.title}</div>
+                <div className="video-title">{clipStr(this.props.title, MAX_TITLE_LENGTH)}</div>
                 :
                 null}
             </div>
           </div>
           <div id="video-container-controls">
-            <button id="video-call-hangup" onClick={this.handleCloseClick}>
+            <button className="video-call-hangup" onClick={this.handleCloseClick}>
               <i className="material-icons">call_end</i>
             </button>
             <button className="video-call-toggle-media" onClick={this.handleToggleCameraClick}><i className="material-icons">{videoIcon}</i></button>

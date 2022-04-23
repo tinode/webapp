@@ -1,6 +1,6 @@
-// InfoView: panel with topic/user info.
+// IncomingCallView: displays Accept & Reject buttons for incoming calls.
 import React from 'react';
-import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import Tinode from 'tinode-sdk';
 
@@ -8,18 +8,14 @@ import AvatarUpload from '../widgets/avatar-upload.jsx';
 import BadgeList from '../widgets/badge-list.jsx';
 import MenuCancel from '../widgets/menu-cancel.jsx';
 
-import { MAX_TITLE_LENGTH, MAX_TOPIC_DESCRIPTION_LENGTH, NO_ACCESS_MODE } from '../config.js';
+import { CALL_STATE_INCOMING_RECEIVED, MAX_TITLE_LENGTH } from '../config.js';
 
 import { makeImageUrl } from '../lib/blob-helpers.js';
-import { arrayEqual, theCard } from '../lib/utils.js';
-
-function _clip(str, length) {
-  return str && str.substring(0, length);
-}
+import { clipStr } from '../lib/utils.js'
 
 const RING_SOUND = new Audio("audio/phone_ring.mp3");
 
-class CallView extends React.Component {
+class IncomingCallView extends React.Component {
   constructor(props) {
     super(props);
 
@@ -29,7 +25,6 @@ class CallView extends React.Component {
       avatar: null,
       trustedBadges: [],
       previousMetaDesc: undefined,
-      offerSent: false,
     };
 
     this.resetDesc = this.resetDesc.bind(this);
@@ -45,7 +40,7 @@ class CallView extends React.Component {
       return;
     }
     this.resetDesc(topic, this.props);
-    if (this.props.callState == 2) {
+    if (this.props.callState == CALL_STATE_INCOMING_RECEIVED) {
       RING_SOUND.play();
       this.ringTimer = setInterval(() => RING_SOUND.play(), 2000);
       this.props.onRinging(this.props.topic, this.props.seq);
@@ -96,7 +91,7 @@ class CallView extends React.Component {
     }
 
     this.setState({
-      fullName: _clip(topic.public ? topic.public.fn : undefined, MAX_TITLE_LENGTH),
+      fullName: clipStr(topic.public ? topic.public.fn : undefined, MAX_TITLE_LENGTH),
       avatar: makeImageUrl(topic.public ? topic.public.photo : null),
       trustedBadges: badges,
     });
@@ -126,16 +121,9 @@ class CallView extends React.Component {
   render() {
     const {formatMessage} = this.props.intl;
     let panelTitle = 'Unknown';
-    switch (this.props.callState) {
-      case 1:
-        panelTitle = 'Calling';
-        break;
-      case 2:
-        panelTitle = 'Incoming Call From';
-        break;
-      case 3:
-        panelTitle = 'Call Established';
-        break;
+    if (this.props.callState == CALL_STATE_INCOMING_RECEIVED) {
+      panelTitle = <FormattedMessage id="calls_incoming_title"
+          defaultMessage="Incoming Call" description="Incoming call title (Incoming call view)" />;
     }
 
     return (
@@ -146,43 +134,41 @@ class CallView extends React.Component {
             <MenuCancel onCancel={this.handleRejectCall} />
           </div>
         </div>
-          <div id="info-view-content" className="scrollable-panel">
-            <div className="panel-form-column">
-              <center>
-                <AvatarUpload
-                  tinode={this.props.tinode}
-                  avatar={this.state.avatar}
-                  readOnly={true}
-                  uid={this.props.topic}
-                  title={this.state.fullName} />
-              </center>
-              <div className="group" style={{padding: "10px", textAlign: "center"}}>
-                <div className="large ellipsized">{this.state.fullName}</div>
-              </div>
-              <div className="group" style={{textAlign: "center"}}>
-                <BadgeList trustedBadges={this.state.trustedBadges} />
-              </div>
-              <div id="actions" className="group" style={{padding: "20px", textAlign: "center"}}>
-                {this.props.callState >= 1 && this.props.callState < 3 ?
-                  <button onClick={this.handleRejectCall} style={{borderRadius: "10px", backgroundColor: "red"}}>
+        <div id="info-view-content" className="scrollable-panel">
+          <div className="panel-form-column">
+            <center>
+              <AvatarUpload
+                tinode={this.props.tinode}
+                avatar={this.state.avatar}
+                readOnly={true}
+                uid={this.props.topic}
+                title={this.state.fullName} />
+            </center>
+            <div className="group incoming-call-title">
+              <div className="large ellipsized">{clipStr(this.state.fullName)}</div>
+            </div>
+            <div className="group incoming-call-badges">
+              <BadgeList trustedBadges={this.state.trustedBadges} />
+            </div>
+            <div id="actions" className="group incoming-call-actions">
+              {this.props.callState == CALL_STATE_INCOMING_RECEIVED ?
+                <>
+                  <button className="video-call-hangup" onClick={this.handleRejectCall}>
                     <i className="material-icons">call_end</i>
                   </button>
-                  :
-                  null
-                }
-                {this.props.callState >= 2 && this.props.callState < 3 ?
-                  <button onClick={this.handleAcceptCall} style={{borderRadius: "10px", backgroundColor: "green"}}>
+                  <button className="video-call-accept" onClick={this.handleAcceptCall}>
                     <i className="material-icons">call</i>
                   </button>
-                  :
-                  null
-                }
-              </div>
+                </>
+                :
+                null
+              }
             </div>
           </div>
+        </div>
       </div>
     );
   }
 };
 
-export default injectIntl(CallView);
+export default injectIntl(IncomingCallView);
