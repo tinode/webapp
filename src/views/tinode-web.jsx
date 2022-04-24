@@ -157,14 +157,14 @@ class TinodeWeb extends React.Component {
     this.handleInfoMessage = this.handleInfoMessage.bind(this);
     this.handleCallClose = this.handleCallClose.bind(this);
 
-    this.handleTeleInvite = this.handleTeleInvite.bind(this);
-    this.handleTeleRinging = this.handleTeleRinging.bind(this);
-    this.handleTeleHangup = this.handleTeleHangup.bind(this);
-    this.handleTeleSendOffer = this.handleTeleSendOffer.bind(this);
-    this.handleTeleIceCandidate = this.handleTeleIceCandidate.bind(this);
-    this.handleTeleSendAnswer = this.handleTeleSendAnswer.bind(this);
+    this.handleCallInvite = this.handleCallInvite.bind(this);
+    this.handleCallRinging = this.handleCallRinging.bind(this);
+    this.handleCallHangup = this.handleCallHangup.bind(this);
+    this.handleCallSendOffer = this.handleCallSendOffer.bind(this);
+    this.handleCallIceCandidate = this.handleCallIceCandidate.bind(this);
+    this.handleCallSendAnswer = this.handleCallSendAnswer.bind(this);
 
-    this.handleTeleAcceptCall = this.handleTeleAcceptCall.bind(this);
+    this.handleCallAcceptCall = this.handleCallAcceptCall.bind(this);
 
     this.sendMessageToTopic = this.sendMessageToTopic.bind(this);
   }
@@ -1681,7 +1681,7 @@ class TinodeWeb extends React.Component {
     });
   }
 
-  handleTeleInvite(callTopic, callSeq, callState) {
+  handleCallInvite(callTopic, callSeq, callState) {
     switch (callState) {
       case CALL_STATE_OUTGOING_INITATED:
         let head = {mime: 'application/tinode-video-call'};
@@ -1709,7 +1709,7 @@ class TinodeWeb extends React.Component {
     }
   }
 
-  handleTeleRinging(callTopic, callSeq) {
+  handleCallRinging(callTopic, callSeq) {
     const topic = this.tinode.getTopic(callTopic);
     if (!topic) {
       return;
@@ -1718,7 +1718,7 @@ class TinodeWeb extends React.Component {
     topic.call('ringing', callSeq);
   }
 
-  handleTeleHangup(callTopic, callSeq) {
+  handleCallHangup(callTopic, callSeq) {
     const topic = this.tinode.getTopic(callTopic);
     if (!topic) {
       return;
@@ -1727,7 +1727,7 @@ class TinodeWeb extends React.Component {
     topic.call('hang-up', callSeq);
   }
 
-  handleTeleSendOffer(callTopic, callSeq, sdp) {
+  handleCallSendOffer(callTopic, callSeq, sdp) {
     const topic = this.tinode.getTopic(callTopic);
     if (!topic) {
       return;
@@ -1736,7 +1736,7 @@ class TinodeWeb extends React.Component {
     topic.call('offer', callSeq, sdp);
   }
 
-  handleTeleIceCandidate(callTopic, callSeq, candidate) {
+  handleCallIceCandidate(callTopic, callSeq, candidate) {
     const topic = this.tinode.getTopic(callTopic);
     if (!topic) {
       return;
@@ -1744,7 +1744,7 @@ class TinodeWeb extends React.Component {
  
     topic.call('ice-candidate', callSeq, candidate);
   }
-  handleTeleSendAnswer(callTopic, callSeq, sdp) {
+  handleCallSendAnswer(callTopic, callSeq, sdp) {
     const topic = this.tinode.getTopic(callTopic);
     if (!topic) {
       return;
@@ -1764,7 +1764,7 @@ class TinodeWeb extends React.Component {
     });
   }
 
-  handleTeleAcceptCall(topicName) {
+  handleCallAcceptCall(topicName) {
     const topic = this.tinode.getTopic(topicName);
     if (!topic) {
       return;
@@ -1961,13 +1961,12 @@ class TinodeWeb extends React.Component {
           callTopic={this.state.callTopic}
           callSeq={this.state.callSeq}
           callState={this.state.callState}
-          onTeleHangup={this.handleTeleHangup}
+          onCallHangup={this.handleCallHangup}
 
-          onTeleInvite={this.handleTeleInvite}
-          onTeleSendOffer={this.handleTeleSendOffer}
-          onTeleIceCandidate={this.handleTeleIceCandidate}
-          onTeleSendAnswer={this.handleTeleSendAnswer}
-          //onTemeMedia
+          onCallInvite={this.handleCallInvite}
+          onCallSendOffer={this.handleCallSendOffer}
+          onCallIceCandidate={this.handleCallIceCandidate}
+          onCallSendAnswer={this.handleCallSendAnswer}
 
           errorText={this.state.errorText}
           errorLevel={this.state.errorLevel}
@@ -2030,9 +2029,9 @@ class TinodeWeb extends React.Component {
             topic={this.state.callTopic}
             seq={this.state.callSeq}
             callState={this.state.callState}
-            onRinging={this.handleTeleRinging}
-            onAcceptCall={this.handleTeleAcceptCall}
-            onReject={this.handleTeleHangup}
+            onRinging={this.handleCallRinging}
+            onAcceptCall={this.handleCallAcceptCall}
+            onReject={this.handleCallHangup}
             />
           :
           null

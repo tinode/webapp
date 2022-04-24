@@ -122,8 +122,7 @@ class MessagesView extends React.Component {
     this.handlePickReply = this.handlePickReply.bind(this);
     this.handleCancelReply = this.handleCancelReply.bind(this);
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
-    this.handleRtcClick = this.handleRtcClick.bind(this);
-    this.handleTeleHangup = this.handleTeleHangup.bind(this);
+    this.handleCallHangup = this.handleCallHangup.bind(this);
 
     this.chatMessageRefs = {};
     this.getOrCreateMessageRef = this.getOrCreateMessageRef.bind(this);
@@ -175,7 +174,7 @@ class MessagesView extends React.Component {
         this.leave(prevState.topic);
         if (prevState.rtcPanel) {
           console.log('hangup: ', prevState.topic);
-          this.handleTeleHangup(prevState.topic, prevProps.callSeq);
+          this.handleCallHangup(prevState.topic, prevProps.callSeq);
         }
       }
 
@@ -299,7 +298,7 @@ class MessagesView extends React.Component {
         if (nextProps.callTopic == topic.name && shouldPresentCallPanel(nextProps.callState)) {
           Object.assign(nextState, {
             rtcPanel: nextProps.callTopic,
-          }); 
+          });
         }
       } else {
         // Invalid topic.
@@ -319,7 +318,7 @@ class MessagesView extends React.Component {
           shouldPresentCallPanel(nextProps.callState)) {
         Object.assign(nextState, {
           rtcPanel: nextProps.callTopic,
-        }); 
+        });
       }
     }
 
@@ -782,19 +781,12 @@ class MessagesView extends React.Component {
     }
   }
 
-  handleRtcClick() {
-    this.setState({
-      rtcPanel: { topic: this.state.topic }
-    });
-    
-  }
-
-  handleTeleHangup(topic, seq) {
+  handleCallHangup(topic, seq) {
     this.props.onVideoCallClosed();
     this.setState({
       rtcPanel: null
     });
-    this.props.onTeleHangup(topic, seq);
+    this.props.onCallHangup(topic, seq);
   }
 
   // sendImageAttachment sends the image bits inband as Drafty message.
@@ -994,11 +986,11 @@ class MessagesView extends React.Component {
             avatar={this.state.avatar || true}
 
             onError={this.props.onError}
-            onHangup={this.handleTeleHangup}
-            onInvite={this.props.onTeleInvite}
-            onSendOffer={this.props.onTeleSendOffer}
-            onIceCandidate={this.props.onTeleIceCandidate}
-            onSendAnswer={this.props.onTeleSendAnswer}
+            onHangup={this.handleCallHangup}
+            onInvite={this.props.onCallInvite}
+            onSendOffer={this.props.onCallSendOffer}
+            onIceCandidate={this.props.onCallIceCandidate}
+            onSendAnswer={this.props.onCallSendAnswer}
           />
         );
       } else {
