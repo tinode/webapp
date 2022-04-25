@@ -1714,7 +1714,7 @@ class TinodeWeb extends React.Component {
     if (!topic) {
       return;
     }
- 
+
     topic.call('ringing', callSeq);
   }
 
@@ -1723,7 +1723,7 @@ class TinodeWeb extends React.Component {
     if (!topic) {
       return;
     }
- 
+
     topic.call('hang-up', callSeq);
   }
 
@@ -1732,7 +1732,7 @@ class TinodeWeb extends React.Component {
     if (!topic) {
       return;
     }
- 
+
     topic.call('offer', callSeq, sdp);
   }
 
@@ -1741,7 +1741,7 @@ class TinodeWeb extends React.Component {
     if (!topic) {
       return;
     }
- 
+
     topic.call('ice-candidate', callSeq, candidate);
   }
   handleCallSendAnswer(callTopic, callSeq, sdp) {
@@ -1749,7 +1749,7 @@ class TinodeWeb extends React.Component {
     if (!topic) {
       return;
     }
- 
+
     topic.call('answer', callSeq, sdp);
   }
 

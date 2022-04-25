@@ -149,10 +149,10 @@ export default class CallPanel extends React.PureComponent {
 
   handleVideoAnswerMsg(info) {
     console.log("*** Call recipient has accepted our call");
-  
+
     // Configure the remote description, which is the SDP payload
     // in our "video-answer" message.
-  
+
     var desc = new RTCSessionDescription(info.payload);
     this.state.pc.setRemoteDescription(desc).catch(this.reportError);
   }
@@ -179,7 +179,7 @@ export default class CallPanel extends React.PureComponent {
 
   handleNewICECandidateMsg(info) {
     var candidate = new RTCIceCandidate(info.payload);
-  
+
     this.state.pc.addIceCandidate(candidate)
       .catch(this.reportError);
   }
@@ -234,11 +234,11 @@ export default class CallPanel extends React.PureComponent {
 
   handleVideoOfferMsg(info) {
     var localStream = null;
-  
+
     const pc = this.createPeerConnection();
-  
+
     var desc = new RTCSessionDescription(info.payload);
-  
+
     pc.setRemoteDescription(desc).then(() => {
       console.log('!!! handleVideoOffer/setRemoteDescription -> getUserMesia');
       return navigator.mediaDevices.getUserMedia(this.localStreamConstraints);
@@ -247,7 +247,7 @@ export default class CallPanel extends React.PureComponent {
       localStream = stream;
       this.localRef.current.srcObject = stream;
       this.setState({localStream: stream});
-  
+
       localStream.getTracks().forEach(track => {
         console.log('local stream A adding track ', track.id, track.kind, track.readyState);
         pc.addTrack(track, localStream);
