@@ -1,6 +1,4300 @@
 /******/ (() => { // webpackBootstrap
-/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
+
+/***/ "./node_modules/@firebase/util/dist/index.esm2017.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/@firebase/util/dist/index.esm2017.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "CONSTANTS": () => (/* binding */ CONSTANTS),
+/* harmony export */   "DBWrapper": () => (/* binding */ DBWrapper),
+/* harmony export */   "Deferred": () => (/* binding */ Deferred),
+/* harmony export */   "ErrorFactory": () => (/* binding */ ErrorFactory),
+/* harmony export */   "FirebaseError": () => (/* binding */ FirebaseError),
+/* harmony export */   "MAX_VALUE_MILLIS": () => (/* binding */ MAX_VALUE_MILLIS),
+/* harmony export */   "RANDOM_FACTOR": () => (/* binding */ RANDOM_FACTOR),
+/* harmony export */   "Sha1": () => (/* binding */ Sha1),
+/* harmony export */   "areCookiesEnabled": () => (/* binding */ areCookiesEnabled),
+/* harmony export */   "assert": () => (/* binding */ assert),
+/* harmony export */   "assertionError": () => (/* binding */ assertionError),
+/* harmony export */   "async": () => (/* binding */ async),
+/* harmony export */   "base64": () => (/* binding */ base64),
+/* harmony export */   "base64Decode": () => (/* binding */ base64Decode),
+/* harmony export */   "base64Encode": () => (/* binding */ base64Encode),
+/* harmony export */   "base64urlEncodeWithoutPadding": () => (/* binding */ base64urlEncodeWithoutPadding),
+/* harmony export */   "calculateBackoffMillis": () => (/* binding */ calculateBackoffMillis),
+/* harmony export */   "contains": () => (/* binding */ contains),
+/* harmony export */   "createMockUserToken": () => (/* binding */ createMockUserToken),
+/* harmony export */   "createSubscribe": () => (/* binding */ createSubscribe),
+/* harmony export */   "decode": () => (/* binding */ decode),
+/* harmony export */   "deepCopy": () => (/* binding */ deepCopy),
+/* harmony export */   "deepEqual": () => (/* binding */ deepEqual),
+/* harmony export */   "deepExtend": () => (/* binding */ deepExtend),
+/* harmony export */   "deleteDB": () => (/* binding */ deleteDB),
+/* harmony export */   "errorPrefix": () => (/* binding */ errorPrefix),
+/* harmony export */   "extractQuerystring": () => (/* binding */ extractQuerystring),
+/* harmony export */   "getGlobal": () => (/* binding */ getGlobal),
+/* harmony export */   "getModularInstance": () => (/* binding */ getModularInstance),
+/* harmony export */   "getUA": () => (/* binding */ getUA),
+/* harmony export */   "isAdmin": () => (/* binding */ isAdmin),
+/* harmony export */   "isBrowser": () => (/* binding */ isBrowser),
+/* harmony export */   "isBrowserExtension": () => (/* binding */ isBrowserExtension),
+/* harmony export */   "isElectron": () => (/* binding */ isElectron),
+/* harmony export */   "isEmpty": () => (/* binding */ isEmpty),
+/* harmony export */   "isIE": () => (/* binding */ isIE),
+/* harmony export */   "isIndexedDBAvailable": () => (/* binding */ isIndexedDBAvailable),
+/* harmony export */   "isMobileCordova": () => (/* binding */ isMobileCordova),
+/* harmony export */   "isNode": () => (/* binding */ isNode),
+/* harmony export */   "isNodeSdk": () => (/* binding */ isNodeSdk),
+/* harmony export */   "isReactNative": () => (/* binding */ isReactNative),
+/* harmony export */   "isSafari": () => (/* binding */ isSafari),
+/* harmony export */   "isUWP": () => (/* binding */ isUWP),
+/* harmony export */   "isValidFormat": () => (/* binding */ isValidFormat),
+/* harmony export */   "isValidTimestamp": () => (/* binding */ isValidTimestamp),
+/* harmony export */   "issuedAtTime": () => (/* binding */ issuedAtTime),
+/* harmony export */   "jsonEval": () => (/* binding */ jsonEval),
+/* harmony export */   "map": () => (/* binding */ map),
+/* harmony export */   "openDB": () => (/* binding */ openDB),
+/* harmony export */   "ordinal": () => (/* binding */ ordinal),
+/* harmony export */   "querystring": () => (/* binding */ querystring),
+/* harmony export */   "querystringDecode": () => (/* binding */ querystringDecode),
+/* harmony export */   "safeGet": () => (/* binding */ safeGet),
+/* harmony export */   "stringLength": () => (/* binding */ stringLength),
+/* harmony export */   "stringToByteArray": () => (/* binding */ stringToByteArray),
+/* harmony export */   "stringify": () => (/* binding */ stringify),
+/* harmony export */   "validateArgCount": () => (/* binding */ validateArgCount),
+/* harmony export */   "validateCallback": () => (/* binding */ validateCallback),
+/* harmony export */   "validateContextObject": () => (/* binding */ validateContextObject),
+/* harmony export */   "validateIndexedDBOpenable": () => (/* binding */ validateIndexedDBOpenable),
+/* harmony export */   "validateNamespace": () => (/* binding */ validateNamespace)
+/* harmony export */ });
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * @fileoverview Firebase constants.  Some of these (@defines) can be overridden at compile-time.
+ */
+const CONSTANTS = {
+    /**
+     * @define {boolean} Whether this is the client Node.js SDK.
+     */
+    NODE_CLIENT: false,
+    /**
+     * @define {boolean} Whether this is the Admin Node.js SDK.
+     */
+    NODE_ADMIN: false,
+    /**
+     * Firebase SDK Version
+     */
+    SDK_VERSION: '${JSCORE_VERSION}'
+};
+
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Throws an error if the provided assertion is falsy
+ */
+const assert = function (assertion, message) {
+    if (!assertion) {
+        throw assertionError(message);
+    }
+};
+/**
+ * Returns an Error object suitable for throwing.
+ */
+const assertionError = function (message) {
+    return new Error('Firebase Database (' +
+        CONSTANTS.SDK_VERSION +
+        ') INTERNAL ASSERT FAILED: ' +
+        message);
+};
+
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const stringToByteArray$1 = function (str) {
+    // TODO(user): Use native implementations if/when available
+    const out = [];
+    let p = 0;
+    for (let i = 0; i < str.length; i++) {
+        let c = str.charCodeAt(i);
+        if (c < 128) {
+            out[p++] = c;
+        }
+        else if (c < 2048) {
+            out[p++] = (c >> 6) | 192;
+            out[p++] = (c & 63) | 128;
+        }
+        else if ((c & 0xfc00) === 0xd800 &&
+            i + 1 < str.length &&
+            (str.charCodeAt(i + 1) & 0xfc00) === 0xdc00) {
+            // Surrogate Pair
+            c = 0x10000 + ((c & 0x03ff) << 10) + (str.charCodeAt(++i) & 0x03ff);
+            out[p++] = (c >> 18) | 240;
+            out[p++] = ((c >> 12) & 63) | 128;
+            out[p++] = ((c >> 6) & 63) | 128;
+            out[p++] = (c & 63) | 128;
+        }
+        else {
+            out[p++] = (c >> 12) | 224;
+            out[p++] = ((c >> 6) & 63) | 128;
+            out[p++] = (c & 63) | 128;
+        }
+    }
+    return out;
+};
+/**
+ * Turns an array of numbers into the string given by the concatenation of the
+ * characters to which the numbers correspond.
+ * @param bytes Array of numbers representing characters.
+ * @return Stringification of the array.
+ */
+const byteArrayToString = function (bytes) {
+    // TODO(user): Use native implementations if/when available
+    const out = [];
+    let pos = 0, c = 0;
+    while (pos < bytes.length) {
+        const c1 = bytes[pos++];
+        if (c1 < 128) {
+            out[c++] = String.fromCharCode(c1);
+        }
+        else if (c1 > 191 && c1 < 224) {
+            const c2 = bytes[pos++];
+            out[c++] = String.fromCharCode(((c1 & 31) << 6) | (c2 & 63));
+        }
+        else if (c1 > 239 && c1 < 365) {
+            // Surrogate Pair
+            const c2 = bytes[pos++];
+            const c3 = bytes[pos++];
+            const c4 = bytes[pos++];
+            const u = (((c1 & 7) << 18) | ((c2 & 63) << 12) | ((c3 & 63) << 6) | (c4 & 63)) -
+                0x10000;
+            out[c++] = String.fromCharCode(0xd800 + (u >> 10));
+            out[c++] = String.fromCharCode(0xdc00 + (u & 1023));
+        }
+        else {
+            const c2 = bytes[pos++];
+            const c3 = bytes[pos++];
+            out[c++] = String.fromCharCode(((c1 & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+        }
+    }
+    return out.join('');
+};
+// We define it as an object literal instead of a class because a class compiled down to es5 can't
+// be treeshaked. https://github.com/rollup/rollup/issues/1691
+// Static lookup maps, lazily populated by init_()
+const base64 = {
+    /**
+     * Maps bytes to characters.
+     */
+    byteToCharMap_: null,
+    /**
+     * Maps characters to bytes.
+     */
+    charToByteMap_: null,
+    /**
+     * Maps bytes to websafe characters.
+     * @private
+     */
+    byteToCharMapWebSafe_: null,
+    /**
+     * Maps websafe characters to bytes.
+     * @private
+     */
+    charToByteMapWebSafe_: null,
+    /**
+     * Our default alphabet, shared between
+     * ENCODED_VALS and ENCODED_VALS_WEBSAFE
+     */
+    ENCODED_VALS_BASE: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' + 'abcdefghijklmnopqrstuvwxyz' + '0123456789',
+    /**
+     * Our default alphabet. Value 64 (=) is special; it means "nothing."
+     */
+    get ENCODED_VALS() {
+        return this.ENCODED_VALS_BASE + '+/=';
+    },
+    /**
+     * Our websafe alphabet.
+     */
+    get ENCODED_VALS_WEBSAFE() {
+        return this.ENCODED_VALS_BASE + '-_.';
+    },
+    /**
+     * Whether this browser supports the atob and btoa functions. This extension
+     * started at Mozilla but is now implemented by many browsers. We use the
+     * ASSUME_* variables to avoid pulling in the full useragent detection library
+     * but still allowing the standard per-browser compilations.
+     *
+     */
+    HAS_NATIVE_SUPPORT: typeof atob === 'function',
+    /**
+     * Base64-encode an array of bytes.
+     *
+     * @param input An array of bytes (numbers with
+     *     value in [0, 255]) to encode.
+     * @param webSafe Boolean indicating we should use the
+     *     alternative alphabet.
+     * @return The base64 encoded string.
+     */
+    encodeByteArray(input, webSafe) {
+        if (!Array.isArray(input)) {
+            throw Error('encodeByteArray takes an array as a parameter');
+        }
+        this.init_();
+        const byteToCharMap = webSafe
+            ? this.byteToCharMapWebSafe_
+            : this.byteToCharMap_;
+        const output = [];
+        for (let i = 0; i < input.length; i += 3) {
+            const byte1 = input[i];
+            const haveByte2 = i + 1 < input.length;
+            const byte2 = haveByte2 ? input[i + 1] : 0;
+            const haveByte3 = i + 2 < input.length;
+            const byte3 = haveByte3 ? input[i + 2] : 0;
+            const outByte1 = byte1 >> 2;
+            const outByte2 = ((byte1 & 0x03) << 4) | (byte2 >> 4);
+            let outByte3 = ((byte2 & 0x0f) << 2) | (byte3 >> 6);
+            let outByte4 = byte3 & 0x3f;
+            if (!haveByte3) {
+                outByte4 = 64;
+                if (!haveByte2) {
+                    outByte3 = 64;
+                }
+            }
+            output.push(byteToCharMap[outByte1], byteToCharMap[outByte2], byteToCharMap[outByte3], byteToCharMap[outByte4]);
+        }
+        return output.join('');
+    },
+    /**
+     * Base64-encode a string.
+     *
+     * @param input A string to encode.
+     * @param webSafe If true, we should use the
+     *     alternative alphabet.
+     * @return The base64 encoded string.
+     */
+    encodeString(input, webSafe) {
+        // Shortcut for Mozilla browsers that implement
+        // a native base64 encoder in the form of "btoa/atob"
+        if (this.HAS_NATIVE_SUPPORT && !webSafe) {
+            return btoa(input);
+        }
+        return this.encodeByteArray(stringToByteArray$1(input), webSafe);
+    },
+    /**
+     * Base64-decode a string.
+     *
+     * @param input to decode.
+     * @param webSafe True if we should use the
+     *     alternative alphabet.
+     * @return string representing the decoded value.
+     */
+    decodeString(input, webSafe) {
+        // Shortcut for Mozilla browsers that implement
+        // a native base64 encoder in the form of "btoa/atob"
+        if (this.HAS_NATIVE_SUPPORT && !webSafe) {
+            return atob(input);
+        }
+        return byteArrayToString(this.decodeStringToByteArray(input, webSafe));
+    },
+    /**
+     * Base64-decode a string.
+     *
+     * In base-64 decoding, groups of four characters are converted into three
+     * bytes.  If the encoder did not apply padding, the input length may not
+     * be a multiple of 4.
+     *
+     * In this case, the last group will have fewer than 4 characters, and
+     * padding will be inferred.  If the group has one or two characters, it decodes
+     * to one byte.  If the group has three characters, it decodes to two bytes.
+     *
+     * @param input Input to decode.
+     * @param webSafe True if we should use the web-safe alphabet.
+     * @return bytes representing the decoded value.
+     */
+    decodeStringToByteArray(input, webSafe) {
+        this.init_();
+        const charToByteMap = webSafe
+            ? this.charToByteMapWebSafe_
+            : this.charToByteMap_;
+        const output = [];
+        for (let i = 0; i < input.length;) {
+            const byte1 = charToByteMap[input.charAt(i++)];
+            const haveByte2 = i < input.length;
+            const byte2 = haveByte2 ? charToByteMap[input.charAt(i)] : 0;
+            ++i;
+            const haveByte3 = i < input.length;
+            const byte3 = haveByte3 ? charToByteMap[input.charAt(i)] : 64;
+            ++i;
+            const haveByte4 = i < input.length;
+            const byte4 = haveByte4 ? charToByteMap[input.charAt(i)] : 64;
+            ++i;
+            if (byte1 == null || byte2 == null || byte3 == null || byte4 == null) {
+                throw Error();
+            }
+            const outByte1 = (byte1 << 2) | (byte2 >> 4);
+            output.push(outByte1);
+            if (byte3 !== 64) {
+                const outByte2 = ((byte2 << 4) & 0xf0) | (byte3 >> 2);
+                output.push(outByte2);
+                if (byte4 !== 64) {
+                    const outByte3 = ((byte3 << 6) & 0xc0) | byte4;
+                    output.push(outByte3);
+                }
+            }
+        }
+        return output;
+    },
+    /**
+     * Lazy static initialization function. Called before
+     * accessing any of the static map variables.
+     * @private
+     */
+    init_() {
+        if (!this.byteToCharMap_) {
+            this.byteToCharMap_ = {};
+            this.charToByteMap_ = {};
+            this.byteToCharMapWebSafe_ = {};
+            this.charToByteMapWebSafe_ = {};
+            // We want quick mappings back and forth, so we precompute two maps.
+            for (let i = 0; i < this.ENCODED_VALS.length; i++) {
+                this.byteToCharMap_[i] = this.ENCODED_VALS.charAt(i);
+                this.charToByteMap_[this.byteToCharMap_[i]] = i;
+                this.byteToCharMapWebSafe_[i] = this.ENCODED_VALS_WEBSAFE.charAt(i);
+                this.charToByteMapWebSafe_[this.byteToCharMapWebSafe_[i]] = i;
+                // Be forgiving when decoding and correctly decode both encodings.
+                if (i >= this.ENCODED_VALS_BASE.length) {
+                    this.charToByteMap_[this.ENCODED_VALS_WEBSAFE.charAt(i)] = i;
+                    this.charToByteMapWebSafe_[this.ENCODED_VALS.charAt(i)] = i;
+                }
+            }
+        }
+    }
+};
+/**
+ * URL-safe base64 encoding
+ */
+const base64Encode = function (str) {
+    const utf8Bytes = stringToByteArray$1(str);
+    return base64.encodeByteArray(utf8Bytes, true);
+};
+/**
+ * URL-safe base64 encoding (without "." padding in the end).
+ * e.g. Used in JSON Web Token (JWT) parts.
+ */
+const base64urlEncodeWithoutPadding = function (str) {
+    // Use base64url encoding and remove padding in the end (dot characters).
+    return base64Encode(str).replace(/\./g, '');
+};
+/**
+ * URL-safe base64 decoding
+ *
+ * NOTE: DO NOT use the global atob() function - it does NOT support the
+ * base64Url variant encoding.
+ *
+ * @param str To be decoded
+ * @return Decoded result, if possible
+ */
+const base64Decode = function (str) {
+    try {
+        return base64.decodeString(str, true);
+    }
+    catch (e) {
+        console.error('base64Decode failed: ', e);
+    }
+    return null;
+};
+
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Do a deep-copy of basic JavaScript Objects or Arrays.
+ */
+function deepCopy(value) {
+    return deepExtend(undefined, value);
+}
+/**
+ * Copy properties from source to target (recursively allows extension
+ * of Objects and Arrays).  Scalar values in the target are over-written.
+ * If target is undefined, an object of the appropriate type will be created
+ * (and returned).
+ *
+ * We recursively copy all child properties of plain Objects in the source- so
+ * that namespace- like dictionaries are merged.
+ *
+ * Note that the target can be a function, in which case the properties in
+ * the source Object are copied onto it as static properties of the Function.
+ *
+ * Note: we don't merge __proto__ to prevent prototype pollution
+ */
+function deepExtend(target, source) {
+    if (!(source instanceof Object)) {
+        return source;
+    }
+    switch (source.constructor) {
+        case Date:
+            // Treat Dates like scalars; if the target date object had any child
+            // properties - they will be lost!
+            const dateValue = source;
+            return new Date(dateValue.getTime());
+        case Object:
+            if (target === undefined) {
+                target = {};
+            }
+            break;
+        case Array:
+            // Always copy the array source and overwrite the target.
+            target = [];
+            break;
+        default:
+            // Not a plain Object - treat it as a scalar.
+            return source;
+    }
+    for (const prop in source) {
+        // use isValidKey to guard against prototype pollution. See https://snyk.io/vuln/SNYK-JS-LODASH-450202
+        if (!source.hasOwnProperty(prop) || !isValidKey(prop)) {
+            continue;
+        }
+        target[prop] = deepExtend(target[prop], source[prop]);
+    }
+    return target;
+}
+function isValidKey(key) {
+    return key !== '__proto__';
+}
+
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+class Deferred {
+    constructor() {
+        this.reject = () => { };
+        this.resolve = () => { };
+        this.promise = new Promise((resolve, reject) => {
+            this.resolve = resolve;
+            this.reject = reject;
+        });
+    }
+    /**
+     * Our API internals are not promiseified and cannot because our callback APIs have subtle expectations around
+     * invoking promises inline, which Promises are forbidden to do. This method accepts an optional node-style callback
+     * and returns a node-style callback which will resolve or reject the Deferred's promise.
+     */
+    wrapCallback(callback) {
+        return (error, value) => {
+            if (error) {
+                this.reject(error);
+            }
+            else {
+                this.resolve(value);
+            }
+            if (typeof callback === 'function') {
+                // Attaching noop handler just in case developer wasn't expecting
+                // promises
+                this.promise.catch(() => { });
+                // Some of our callbacks don't expect a value and our own tests
+                // assert that the parameter length is 1
+                if (callback.length === 1) {
+                    callback(error);
+                }
+                else {
+                    callback(error, value);
+                }
+            }
+        };
+    }
+}
+
+/**
+ * @license
+ * Copyright 2021 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function createMockUserToken(token, projectId) {
+    if (token.uid) {
+        throw new Error('The "uid" field is no longer supported by mockUserToken. Please use "sub" instead for Firebase Auth User ID.');
+    }
+    // Unsecured JWTs use "none" as the algorithm.
+    const header = {
+        alg: 'none',
+        type: 'JWT'
+    };
+    const project = projectId || 'demo-project';
+    const iat = token.iat || 0;
+    const sub = token.sub || token.user_id;
+    if (!sub) {
+        throw new Error("mockUserToken must contain 'sub' or 'user_id' field!");
+    }
+    const payload = Object.assign({ 
+        // Set all required fields to decent defaults
+        iss: `https://securetoken.google.com/${project}`, aud: project, iat, exp: iat + 3600, auth_time: iat, sub, user_id: sub, firebase: {
+            sign_in_provider: 'custom',
+            identities: {}
+        } }, token);
+    // Unsecured JWTs use the empty string as a signature.
+    const signature = '';
+    return [
+        base64urlEncodeWithoutPadding(JSON.stringify(header)),
+        base64urlEncodeWithoutPadding(JSON.stringify(payload)),
+        signature
+    ].join('.');
+}
+
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Returns navigator.userAgent string or '' if it's not defined.
+ * @return user agent string
+ */
+function getUA() {
+    if (typeof navigator !== 'undefined' &&
+        typeof navigator['userAgent'] === 'string') {
+        return navigator['userAgent'];
+    }
+    else {
+        return '';
+    }
+}
+/**
+ * Detect Cordova / PhoneGap / Ionic frameworks on a mobile device.
+ *
+ * Deliberately does not rely on checking `file://` URLs (as this fails PhoneGap
+ * in the Ripple emulator) nor Cordova `onDeviceReady`, which would normally
+ * wait for a callback.
+ */
+function isMobileCordova() {
+    return (typeof window !== 'undefined' &&
+        // @ts-ignore Setting up an broadly applicable index signature for Window
+        // just to deal with this case would probably be a bad idea.
+        !!(window['cordova'] || window['phonegap'] || window['PhoneGap']) &&
+        /ios|iphone|ipod|ipad|android|blackberry|iemobile/i.test(getUA()));
+}
+/**
+ * Detect Node.js.
+ *
+ * @return true if Node.js environment is detected.
+ */
+// Node detection logic from: https://github.com/iliakan/detect-node/
+function isNode() {
+    try {
+        return (Object.prototype.toString.call(__webpack_require__.g.process) === '[object process]');
+    }
+    catch (e) {
+        return false;
+    }
+}
+/**
+ * Detect Browser Environment
+ */
+function isBrowser() {
+    return typeof self === 'object' && self.self === self;
+}
+function isBrowserExtension() {
+    const runtime = typeof chrome === 'object'
+        ? chrome.runtime
+        : typeof browser === 'object'
+            ? browser.runtime
+            : undefined;
+    return typeof runtime === 'object' && runtime.id !== undefined;
+}
+/**
+ * Detect React Native.
+ *
+ * @return true if ReactNative environment is detected.
+ */
+function isReactNative() {
+    return (typeof navigator === 'object' && navigator['product'] === 'ReactNative');
+}
+/** Detects Electron apps. */
+function isElectron() {
+    return getUA().indexOf('Electron/') >= 0;
+}
+/** Detects Internet Explorer. */
+function isIE() {
+    const ua = getUA();
+    return ua.indexOf('MSIE ') >= 0 || ua.indexOf('Trident/') >= 0;
+}
+/** Detects Universal Windows Platform apps. */
+function isUWP() {
+    return getUA().indexOf('MSAppHost/') >= 0;
+}
+/**
+ * Detect whether the current SDK build is the Node version.
+ *
+ * @return true if it's the Node SDK build.
+ */
+function isNodeSdk() {
+    return CONSTANTS.NODE_CLIENT === true || CONSTANTS.NODE_ADMIN === true;
+}
+/** Returns true if we are running in Safari. */
+function isSafari() {
+    return (!isNode() &&
+        navigator.userAgent.includes('Safari') &&
+        !navigator.userAgent.includes('Chrome'));
+}
+/**
+ * This method checks if indexedDB is supported by current browser/service worker context
+ * @return true if indexedDB is supported by current browser/service worker context
+ */
+function isIndexedDBAvailable() {
+    return typeof indexedDB === 'object';
+}
+/**
+ * This method validates browser/sw context for indexedDB by opening a dummy indexedDB database and reject
+ * if errors occur during the database open operation.
+ *
+ * @throws exception if current browser/sw context can't run idb.open (ex: Safari iframe, Firefox
+ * private browsing)
+ */
+function validateIndexedDBOpenable() {
+    return new Promise((resolve, reject) => {
+        try {
+            let preExist = true;
+            const DB_CHECK_NAME = 'validate-browser-context-for-indexeddb-analytics-module';
+            const request = self.indexedDB.open(DB_CHECK_NAME);
+            request.onsuccess = () => {
+                request.result.close();
+                // delete database only when it doesn't pre-exist
+                if (!preExist) {
+                    self.indexedDB.deleteDatabase(DB_CHECK_NAME);
+                }
+                resolve(true);
+            };
+            request.onupgradeneeded = () => {
+                preExist = false;
+            };
+            request.onerror = () => {
+                var _a;
+                reject(((_a = request.error) === null || _a === void 0 ? void 0 : _a.message) || '');
+            };
+        }
+        catch (error) {
+            reject(error);
+        }
+    });
+}
+/**
+ *
+ * This method checks whether cookie is enabled within current browser
+ * @return true if cookie is enabled within current browser
+ */
+function areCookiesEnabled() {
+    if (typeof navigator === 'undefined' || !navigator.cookieEnabled) {
+        return false;
+    }
+    return true;
+}
+/**
+ * Polyfill for `globalThis` object.
+ * @returns the `globalThis` object for the given environment.
+ */
+function getGlobal() {
+    if (typeof self !== 'undefined') {
+        return self;
+    }
+    if (typeof window !== 'undefined') {
+        return window;
+    }
+    if (typeof __webpack_require__.g !== 'undefined') {
+        return __webpack_require__.g;
+    }
+    throw new Error('Unable to locate global object.');
+}
+
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * @fileoverview Standardized Firebase Error.
+ *
+ * Usage:
+ *
+ *   // Typescript string literals for type-safe codes
+ *   type Err =
+ *     'unknown' |
+ *     'object-not-found'
+ *     ;
+ *
+ *   // Closure enum for type-safe error codes
+ *   // at-enum {string}
+ *   var Err = {
+ *     UNKNOWN: 'unknown',
+ *     OBJECT_NOT_FOUND: 'object-not-found',
+ *   }
+ *
+ *   let errors: Map<Err, string> = {
+ *     'generic-error': "Unknown error",
+ *     'file-not-found': "Could not find file: {$file}",
+ *   };
+ *
+ *   // Type-safe function - must pass a valid error code as param.
+ *   let error = new ErrorFactory<Err>('service', 'Service', errors);
+ *
+ *   ...
+ *   throw error.create(Err.GENERIC);
+ *   ...
+ *   throw error.create(Err.FILE_NOT_FOUND, {'file': fileName});
+ *   ...
+ *   // Service: Could not file file: foo.txt (service/file-not-found).
+ *
+ *   catch (e) {
+ *     assert(e.message === "Could not find file: foo.txt.");
+ *     if (e.code === 'service/file-not-found') {
+ *       console.log("Could not read file: " + e['file']);
+ *     }
+ *   }
+ */
+const ERROR_NAME = 'FirebaseError';
+// Based on code from:
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error#Custom_Error_Types
+class FirebaseError extends Error {
+    constructor(
+    /** The error code for this error. */
+    code, message, 
+    /** Custom data for this error. */
+    customData) {
+        super(message);
+        this.code = code;
+        this.customData = customData;
+        /** The custom name for all FirebaseErrors. */
+        this.name = ERROR_NAME;
+        // Fix For ES5
+        // https://github.com/Microsoft/TypeScript-wiki/blob/master/Breaking-Changes.md#extending-built-ins-like-error-array-and-map-may-no-longer-work
+        Object.setPrototypeOf(this, FirebaseError.prototype);
+        // Maintains proper stack trace for where our error was thrown.
+        // Only available on V8.
+        if (Error.captureStackTrace) {
+            Error.captureStackTrace(this, ErrorFactory.prototype.create);
+        }
+    }
+}
+class ErrorFactory {
+    constructor(service, serviceName, errors) {
+        this.service = service;
+        this.serviceName = serviceName;
+        this.errors = errors;
+    }
+    create(code, ...data) {
+        const customData = data[0] || {};
+        const fullCode = `${this.service}/${code}`;
+        const template = this.errors[code];
+        const message = template ? replaceTemplate(template, customData) : 'Error';
+        // Service Name: Error message (service/code).
+        const fullMessage = `${this.serviceName}: ${message} (${fullCode}).`;
+        const error = new FirebaseError(fullCode, fullMessage, customData);
+        return error;
+    }
+}
+function replaceTemplate(template, data) {
+    return template.replace(PATTERN, (_, key) => {
+        const value = data[key];
+        return value != null ? String(value) : `<${key}?>`;
+    });
+}
+const PATTERN = /\{\$([^}]+)}/g;
+
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Evaluates a JSON string into a javascript object.
+ *
+ * @param {string} str A string containing JSON.
+ * @return {*} The javascript object representing the specified JSON.
+ */
+function jsonEval(str) {
+    return JSON.parse(str);
+}
+/**
+ * Returns JSON representing a javascript object.
+ * @param {*} data Javascript object to be stringified.
+ * @return {string} The JSON contents of the object.
+ */
+function stringify(data) {
+    return JSON.stringify(data);
+}
+
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Decodes a Firebase auth. token into constituent parts.
+ *
+ * Notes:
+ * - May return with invalid / incomplete claims if there's no native base64 decoding support.
+ * - Doesn't check if the token is actually valid.
+ */
+const decode = function (token) {
+    let header = {}, claims = {}, data = {}, signature = '';
+    try {
+        const parts = token.split('.');
+        header = jsonEval(base64Decode(parts[0]) || '');
+        claims = jsonEval(base64Decode(parts[1]) || '');
+        signature = parts[2];
+        data = claims['d'] || {};
+        delete claims['d'];
+    }
+    catch (e) { }
+    return {
+        header,
+        claims,
+        data,
+        signature
+    };
+};
+/**
+ * Decodes a Firebase auth. token and checks the validity of its time-based claims. Will return true if the
+ * token is within the time window authorized by the 'nbf' (not-before) and 'iat' (issued-at) claims.
+ *
+ * Notes:
+ * - May return a false negative if there's no native base64 decoding support.
+ * - Doesn't check if the token is actually valid.
+ */
+const isValidTimestamp = function (token) {
+    const claims = decode(token).claims;
+    const now = Math.floor(new Date().getTime() / 1000);
+    let validSince = 0, validUntil = 0;
+    if (typeof claims === 'object') {
+        if (claims.hasOwnProperty('nbf')) {
+            validSince = claims['nbf'];
+        }
+        else if (claims.hasOwnProperty('iat')) {
+            validSince = claims['iat'];
+        }
+        if (claims.hasOwnProperty('exp')) {
+            validUntil = claims['exp'];
+        }
+        else {
+            // token will expire after 24h by default
+            validUntil = validSince + 86400;
+        }
+    }
+    return (!!now &&
+        !!validSince &&
+        !!validUntil &&
+        now >= validSince &&
+        now <= validUntil);
+};
+/**
+ * Decodes a Firebase auth. token and returns its issued at time if valid, null otherwise.
+ *
+ * Notes:
+ * - May return null if there's no native base64 decoding support.
+ * - Doesn't check if the token is actually valid.
+ */
+const issuedAtTime = function (token) {
+    const claims = decode(token).claims;
+    if (typeof claims === 'object' && claims.hasOwnProperty('iat')) {
+        return claims['iat'];
+    }
+    return null;
+};
+/**
+ * Decodes a Firebase auth. token and checks the validity of its format. Expects a valid issued-at time.
+ *
+ * Notes:
+ * - May return a false negative if there's no native base64 decoding support.
+ * - Doesn't check if the token is actually valid.
+ */
+const isValidFormat = function (token) {
+    const decoded = decode(token), claims = decoded.claims;
+    return !!claims && typeof claims === 'object' && claims.hasOwnProperty('iat');
+};
+/**
+ * Attempts to peer into an auth token and determine if it's an admin auth token by looking at the claims portion.
+ *
+ * Notes:
+ * - May return a false negative if there's no native base64 decoding support.
+ * - Doesn't check if the token is actually valid.
+ */
+const isAdmin = function (token) {
+    const claims = decode(token).claims;
+    return typeof claims === 'object' && claims['admin'] === true;
+};
+
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function contains(obj, key) {
+    return Object.prototype.hasOwnProperty.call(obj, key);
+}
+function safeGet(obj, key) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+        return obj[key];
+    }
+    else {
+        return undefined;
+    }
+}
+function isEmpty(obj) {
+    for (const key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+            return false;
+        }
+    }
+    return true;
+}
+function map(obj, fn, contextObj) {
+    const res = {};
+    for (const key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+            res[key] = fn.call(contextObj, obj[key], key, obj);
+        }
+    }
+    return res;
+}
+/**
+ * Deep equal two objects. Support Arrays and Objects.
+ */
+function deepEqual(a, b) {
+    if (a === b) {
+        return true;
+    }
+    const aKeys = Object.keys(a);
+    const bKeys = Object.keys(b);
+    for (const k of aKeys) {
+        if (!bKeys.includes(k)) {
+            return false;
+        }
+        const aProp = a[k];
+        const bProp = b[k];
+        if (isObject(aProp) && isObject(bProp)) {
+            if (!deepEqual(aProp, bProp)) {
+                return false;
+            }
+        }
+        else if (aProp !== bProp) {
+            return false;
+        }
+    }
+    for (const k of bKeys) {
+        if (!aKeys.includes(k)) {
+            return false;
+        }
+    }
+    return true;
+}
+function isObject(thing) {
+    return thing !== null && typeof thing === 'object';
+}
+
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Returns a querystring-formatted string (e.g. &arg=val&arg2=val2) from a
+ * params object (e.g. {arg: 'val', arg2: 'val2'})
+ * Note: You must prepend it with ? when adding it to a URL.
+ */
+function querystring(querystringParams) {
+    const params = [];
+    for (const [key, value] of Object.entries(querystringParams)) {
+        if (Array.isArray(value)) {
+            value.forEach(arrayVal => {
+                params.push(encodeURIComponent(key) + '=' + encodeURIComponent(arrayVal));
+            });
+        }
+        else {
+            params.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
+        }
+    }
+    return params.length ? '&' + params.join('&') : '';
+}
+/**
+ * Decodes a querystring (e.g. ?arg=val&arg2=val2) into a params object
+ * (e.g. {arg: 'val', arg2: 'val2'})
+ */
+function querystringDecode(querystring) {
+    const obj = {};
+    const tokens = querystring.replace(/^\?/, '').split('&');
+    tokens.forEach(token => {
+        if (token) {
+            const [key, value] = token.split('=');
+            obj[decodeURIComponent(key)] = decodeURIComponent(value);
+        }
+    });
+    return obj;
+}
+/**
+ * Extract the query string part of a URL, including the leading question mark (if present).
+ */
+function extractQuerystring(url) {
+    const queryStart = url.indexOf('?');
+    if (!queryStart) {
+        return '';
+    }
+    const fragmentStart = url.indexOf('#', queryStart);
+    return url.substring(queryStart, fragmentStart > 0 ? fragmentStart : undefined);
+}
+
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * @fileoverview SHA-1 cryptographic hash.
+ * Variable names follow the notation in FIPS PUB 180-3:
+ * http://csrc.nist.gov/publications/fips/fips180-3/fips180-3_final.pdf.
+ *
+ * Usage:
+ *   var sha1 = new sha1();
+ *   sha1.update(bytes);
+ *   var hash = sha1.digest();
+ *
+ * Performance:
+ *   Chrome 23:   ~400 Mbit/s
+ *   Firefox 16:  ~250 Mbit/s
+ *
+ */
+/**
+ * SHA-1 cryptographic hash constructor.
+ *
+ * The properties declared here are discussed in the above algorithm document.
+ * @constructor
+ * @final
+ * @struct
+ */
+class Sha1 {
+    constructor() {
+        /**
+         * Holds the previous values of accumulated variables a-e in the compress_
+         * function.
+         * @private
+         */
+        this.chain_ = [];
+        /**
+         * A buffer holding the partially computed hash result.
+         * @private
+         */
+        this.buf_ = [];
+        /**
+         * An array of 80 bytes, each a part of the message to be hashed.  Referred to
+         * as the message schedule in the docs.
+         * @private
+         */
+        this.W_ = [];
+        /**
+         * Contains data needed to pad messages less than 64 bytes.
+         * @private
+         */
+        this.pad_ = [];
+        /**
+         * @private {number}
+         */
+        this.inbuf_ = 0;
+        /**
+         * @private {number}
+         */
+        this.total_ = 0;
+        this.blockSize = 512 / 8;
+        this.pad_[0] = 128;
+        for (let i = 1; i < this.blockSize; ++i) {
+            this.pad_[i] = 0;
+        }
+        this.reset();
+    }
+    reset() {
+        this.chain_[0] = 0x67452301;
+        this.chain_[1] = 0xefcdab89;
+        this.chain_[2] = 0x98badcfe;
+        this.chain_[3] = 0x10325476;
+        this.chain_[4] = 0xc3d2e1f0;
+        this.inbuf_ = 0;
+        this.total_ = 0;
+    }
+    /**
+     * Internal compress helper function.
+     * @param buf Block to compress.
+     * @param offset Offset of the block in the buffer.
+     * @private
+     */
+    compress_(buf, offset) {
+        if (!offset) {
+            offset = 0;
+        }
+        const W = this.W_;
+        // get 16 big endian words
+        if (typeof buf === 'string') {
+            for (let i = 0; i < 16; i++) {
+                // TODO(user): [bug 8140122] Recent versions of Safari for Mac OS and iOS
+                // have a bug that turns the post-increment ++ operator into pre-increment
+                // during JIT compilation.  We have code that depends heavily on SHA-1 for
+                // correctness and which is affected by this bug, so I've removed all uses
+                // of post-increment ++ in which the result value is used.  We can revert
+                // this change once the Safari bug
+                // (https://bugs.webkit.org/show_bug.cgi?id=109036) has been fixed and
+                // most clients have been updated.
+                W[i] =
+                    (buf.charCodeAt(offset) << 24) |
+                        (buf.charCodeAt(offset + 1) << 16) |
+                        (buf.charCodeAt(offset + 2) << 8) |
+                        buf.charCodeAt(offset + 3);
+                offset += 4;
+            }
+        }
+        else {
+            for (let i = 0; i < 16; i++) {
+                W[i] =
+                    (buf[offset] << 24) |
+                        (buf[offset + 1] << 16) |
+                        (buf[offset + 2] << 8) |
+                        buf[offset + 3];
+                offset += 4;
+            }
+        }
+        // expand to 80 words
+        for (let i = 16; i < 80; i++) {
+            const t = W[i - 3] ^ W[i - 8] ^ W[i - 14] ^ W[i - 16];
+            W[i] = ((t << 1) | (t >>> 31)) & 0xffffffff;
+        }
+        let a = this.chain_[0];
+        let b = this.chain_[1];
+        let c = this.chain_[2];
+        let d = this.chain_[3];
+        let e = this.chain_[4];
+        let f, k;
+        // TODO(user): Try to unroll this loop to speed up the computation.
+        for (let i = 0; i < 80; i++) {
+            if (i < 40) {
+                if (i < 20) {
+                    f = d ^ (b & (c ^ d));
+                    k = 0x5a827999;
+                }
+                else {
+                    f = b ^ c ^ d;
+                    k = 0x6ed9eba1;
+                }
+            }
+            else {
+                if (i < 60) {
+                    f = (b & c) | (d & (b | c));
+                    k = 0x8f1bbcdc;
+                }
+                else {
+                    f = b ^ c ^ d;
+                    k = 0xca62c1d6;
+                }
+            }
+            const t = (((a << 5) | (a >>> 27)) + f + e + k + W[i]) & 0xffffffff;
+            e = d;
+            d = c;
+            c = ((b << 30) | (b >>> 2)) & 0xffffffff;
+            b = a;
+            a = t;
+        }
+        this.chain_[0] = (this.chain_[0] + a) & 0xffffffff;
+        this.chain_[1] = (this.chain_[1] + b) & 0xffffffff;
+        this.chain_[2] = (this.chain_[2] + c) & 0xffffffff;
+        this.chain_[3] = (this.chain_[3] + d) & 0xffffffff;
+        this.chain_[4] = (this.chain_[4] + e) & 0xffffffff;
+    }
+    update(bytes, length) {
+        // TODO(johnlenz): tighten the function signature and remove this check
+        if (bytes == null) {
+            return;
+        }
+        if (length === undefined) {
+            length = bytes.length;
+        }
+        const lengthMinusBlock = length - this.blockSize;
+        let n = 0;
+        // Using local instead of member variables gives ~5% speedup on Firefox 16.
+        const buf = this.buf_;
+        let inbuf = this.inbuf_;
+        // The outer while loop should execute at most twice.
+        while (n < length) {
+            // When we have no data in the block to top up, we can directly process the
+            // input buffer (assuming it contains sufficient data). This gives ~25%
+            // speedup on Chrome 23 and ~15% speedup on Firefox 16, but requires that
+            // the data is provided in large chunks (or in multiples of 64 bytes).
+            if (inbuf === 0) {
+                while (n <= lengthMinusBlock) {
+                    this.compress_(bytes, n);
+                    n += this.blockSize;
+                }
+            }
+            if (typeof bytes === 'string') {
+                while (n < length) {
+                    buf[inbuf] = bytes.charCodeAt(n);
+                    ++inbuf;
+                    ++n;
+                    if (inbuf === this.blockSize) {
+                        this.compress_(buf);
+                        inbuf = 0;
+                        // Jump to the outer loop so we use the full-block optimization.
+                        break;
+                    }
+                }
+            }
+            else {
+                while (n < length) {
+                    buf[inbuf] = bytes[n];
+                    ++inbuf;
+                    ++n;
+                    if (inbuf === this.blockSize) {
+                        this.compress_(buf);
+                        inbuf = 0;
+                        // Jump to the outer loop so we use the full-block optimization.
+                        break;
+                    }
+                }
+            }
+        }
+        this.inbuf_ = inbuf;
+        this.total_ += length;
+    }
+    /** @override */
+    digest() {
+        const digest = [];
+        let totalBits = this.total_ * 8;
+        // Add pad 0x80 0x00*.
+        if (this.inbuf_ < 56) {
+            this.update(this.pad_, 56 - this.inbuf_);
+        }
+        else {
+            this.update(this.pad_, this.blockSize - (this.inbuf_ - 56));
+        }
+        // Add # bits.
+        for (let i = this.blockSize - 1; i >= 56; i--) {
+            this.buf_[i] = totalBits & 255;
+            totalBits /= 256; // Don't use bit-shifting here!
+        }
+        this.compress_(this.buf_);
+        let n = 0;
+        for (let i = 0; i < 5; i++) {
+            for (let j = 24; j >= 0; j -= 8) {
+                digest[n] = (this.chain_[i] >> j) & 255;
+                ++n;
+            }
+        }
+        return digest;
+    }
+}
+
+/**
+ * Helper to make a Subscribe function (just like Promise helps make a
+ * Thenable).
+ *
+ * @param executor Function which can make calls to a single Observer
+ *     as a proxy.
+ * @param onNoObservers Callback when count of Observers goes to zero.
+ */
+function createSubscribe(executor, onNoObservers) {
+    const proxy = new ObserverProxy(executor, onNoObservers);
+    return proxy.subscribe.bind(proxy);
+}
+/**
+ * Implement fan-out for any number of Observers attached via a subscribe
+ * function.
+ */
+class ObserverProxy {
+    /**
+     * @param executor Function which can make calls to a single Observer
+     *     as a proxy.
+     * @param onNoObservers Callback when count of Observers goes to zero.
+     */
+    constructor(executor, onNoObservers) {
+        this.observers = [];
+        this.unsubscribes = [];
+        this.observerCount = 0;
+        // Micro-task scheduling by calling task.then().
+        this.task = Promise.resolve();
+        this.finalized = false;
+        this.onNoObservers = onNoObservers;
+        // Call the executor asynchronously so subscribers that are called
+        // synchronously after the creation of the subscribe function
+        // can still receive the very first value generated in the executor.
+        this.task
+            .then(() => {
+            executor(this);
+        })
+            .catch(e => {
+            this.error(e);
+        });
+    }
+    next(value) {
+        this.forEachObserver((observer) => {
+            observer.next(value);
+        });
+    }
+    error(error) {
+        this.forEachObserver((observer) => {
+            observer.error(error);
+        });
+        this.close(error);
+    }
+    complete() {
+        this.forEachObserver((observer) => {
+            observer.complete();
+        });
+        this.close();
+    }
+    /**
+     * Subscribe function that can be used to add an Observer to the fan-out list.
+     *
+     * - We require that no event is sent to a subscriber sychronously to their
+     *   call to subscribe().
+     */
+    subscribe(nextOrObserver, error, complete) {
+        let observer;
+        if (nextOrObserver === undefined &&
+            error === undefined &&
+            complete === undefined) {
+            throw new Error('Missing Observer.');
+        }
+        // Assemble an Observer object when passed as callback functions.
+        if (implementsAnyMethods(nextOrObserver, [
+            'next',
+            'error',
+            'complete'
+        ])) {
+            observer = nextOrObserver;
+        }
+        else {
+            observer = {
+                next: nextOrObserver,
+                error,
+                complete
+            };
+        }
+        if (observer.next === undefined) {
+            observer.next = noop;
+        }
+        if (observer.error === undefined) {
+            observer.error = noop;
+        }
+        if (observer.complete === undefined) {
+            observer.complete = noop;
+        }
+        const unsub = this.unsubscribeOne.bind(this, this.observers.length);
+        // Attempt to subscribe to a terminated Observable - we
+        // just respond to the Observer with the final error or complete
+        // event.
+        if (this.finalized) {
+            // eslint-disable-next-line @typescript-eslint/no-floating-promises
+            this.task.then(() => {
+                try {
+                    if (this.finalError) {
+                        observer.error(this.finalError);
+                    }
+                    else {
+                        observer.complete();
+                    }
+                }
+                catch (e) {
+                    // nothing
+                }
+                return;
+            });
+        }
+        this.observers.push(observer);
+        return unsub;
+    }
+    // Unsubscribe is synchronous - we guarantee that no events are sent to
+    // any unsubscribed Observer.
+    unsubscribeOne(i) {
+        if (this.observers === undefined || this.observers[i] === undefined) {
+            return;
+        }
+        delete this.observers[i];
+        this.observerCount -= 1;
+        if (this.observerCount === 0 && this.onNoObservers !== undefined) {
+            this.onNoObservers(this);
+        }
+    }
+    forEachObserver(fn) {
+        if (this.finalized) {
+            // Already closed by previous event....just eat the additional values.
+            return;
+        }
+        // Since sendOne calls asynchronously - there is no chance that
+        // this.observers will become undefined.
+        for (let i = 0; i < this.observers.length; i++) {
+            this.sendOne(i, fn);
+        }
+    }
+    // Call the Observer via one of it's callback function. We are careful to
+    // confirm that the observe has not been unsubscribed since this asynchronous
+    // function had been queued.
+    sendOne(i, fn) {
+        // Execute the callback asynchronously
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        this.task.then(() => {
+            if (this.observers !== undefined && this.observers[i] !== undefined) {
+                try {
+                    fn(this.observers[i]);
+                }
+                catch (e) {
+                    // Ignore exceptions raised in Observers or missing methods of an
+                    // Observer.
+                    // Log error to console. b/31404806
+                    if (typeof console !== 'undefined' && console.error) {
+                        console.error(e);
+                    }
+                }
+            }
+        });
+    }
+    close(err) {
+        if (this.finalized) {
+            return;
+        }
+        this.finalized = true;
+        if (err !== undefined) {
+            this.finalError = err;
+        }
+        // Proxy is no longer needed - garbage collect references
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        this.task.then(() => {
+            this.observers = undefined;
+            this.onNoObservers = undefined;
+        });
+    }
+}
+/** Turn synchronous function into one called asynchronously. */
+// eslint-disable-next-line @typescript-eslint/ban-types
+function async(fn, onError) {
+    return (...args) => {
+        Promise.resolve(true)
+            .then(() => {
+            fn(...args);
+        })
+            .catch((error) => {
+            if (onError) {
+                onError(error);
+            }
+        });
+    };
+}
+/**
+ * Return true if the object passed in implements any of the named methods.
+ */
+function implementsAnyMethods(obj, methods) {
+    if (typeof obj !== 'object' || obj === null) {
+        return false;
+    }
+    for (const method of methods) {
+        if (method in obj && typeof obj[method] === 'function') {
+            return true;
+        }
+    }
+    return false;
+}
+function noop() {
+    // do nothing
+}
+
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Check to make sure the appropriate number of arguments are provided for a public function.
+ * Throws an error if it fails.
+ *
+ * @param fnName The function name
+ * @param minCount The minimum number of arguments to allow for the function call
+ * @param maxCount The maximum number of argument to allow for the function call
+ * @param argCount The actual number of arguments provided.
+ */
+const validateArgCount = function (fnName, minCount, maxCount, argCount) {
+    let argError;
+    if (argCount < minCount) {
+        argError = 'at least ' + minCount;
+    }
+    else if (argCount > maxCount) {
+        argError = maxCount === 0 ? 'none' : 'no more than ' + maxCount;
+    }
+    if (argError) {
+        const error = fnName +
+            ' failed: Was called with ' +
+            argCount +
+            (argCount === 1 ? ' argument.' : ' arguments.') +
+            ' Expects ' +
+            argError +
+            '.';
+        throw new Error(error);
+    }
+};
+/**
+ * Generates a string to prefix an error message about failed argument validation
+ *
+ * @param fnName The function name
+ * @param argName The name of the argument
+ * @return The prefix to add to the error thrown for validation.
+ */
+function errorPrefix(fnName, argName) {
+    return `${fnName} failed: ${argName} argument `;
+}
+/**
+ * @param fnName
+ * @param argumentNumber
+ * @param namespace
+ * @param optional
+ */
+function validateNamespace(fnName, namespace, optional) {
+    if (optional && !namespace) {
+        return;
+    }
+    if (typeof namespace !== 'string') {
+        //TODO: I should do more validation here. We only allow certain chars in namespaces.
+        throw new Error(errorPrefix(fnName, 'namespace') + 'must be a valid firebase namespace.');
+    }
+}
+function validateCallback(fnName, argumentName, 
+// eslint-disable-next-line @typescript-eslint/ban-types
+callback, optional) {
+    if (optional && !callback) {
+        return;
+    }
+    if (typeof callback !== 'function') {
+        throw new Error(errorPrefix(fnName, argumentName) + 'must be a valid function.');
+    }
+}
+function validateContextObject(fnName, argumentName, context, optional) {
+    if (optional && !context) {
+        return;
+    }
+    if (typeof context !== 'object' || context === null) {
+        throw new Error(errorPrefix(fnName, argumentName) + 'must be a valid context object.');
+    }
+}
+
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+// Code originally came from goog.crypt.stringToUtf8ByteArray, but for some reason they
+// automatically replaced '\r\n' with '\n', and they didn't handle surrogate pairs,
+// so it's been modified.
+// Note that not all Unicode characters appear as single characters in JavaScript strings.
+// fromCharCode returns the UTF-16 encoding of a character - so some Unicode characters
+// use 2 characters in Javascript.  All 4-byte UTF-8 characters begin with a first
+// character in the range 0xD800 - 0xDBFF (the first character of a so-called surrogate
+// pair).
+// See http://www.ecma-international.org/ecma-262/5.1/#sec-15.1.3
+/**
+ * @param {string} str
+ * @return {Array}
+ */
+const stringToByteArray = function (str) {
+    const out = [];
+    let p = 0;
+    for (let i = 0; i < str.length; i++) {
+        let c = str.charCodeAt(i);
+        // Is this the lead surrogate in a surrogate pair?
+        if (c >= 0xd800 && c <= 0xdbff) {
+            const high = c - 0xd800; // the high 10 bits.
+            i++;
+            assert(i < str.length, 'Surrogate pair missing trail surrogate.');
+            const low = str.charCodeAt(i) - 0xdc00; // the low 10 bits.
+            c = 0x10000 + (high << 10) + low;
+        }
+        if (c < 128) {
+            out[p++] = c;
+        }
+        else if (c < 2048) {
+            out[p++] = (c >> 6) | 192;
+            out[p++] = (c & 63) | 128;
+        }
+        else if (c < 65536) {
+            out[p++] = (c >> 12) | 224;
+            out[p++] = ((c >> 6) & 63) | 128;
+            out[p++] = (c & 63) | 128;
+        }
+        else {
+            out[p++] = (c >> 18) | 240;
+            out[p++] = ((c >> 12) & 63) | 128;
+            out[p++] = ((c >> 6) & 63) | 128;
+            out[p++] = (c & 63) | 128;
+        }
+    }
+    return out;
+};
+/**
+ * Calculate length without actually converting; useful for doing cheaper validation.
+ * @param {string} str
+ * @return {number}
+ */
+const stringLength = function (str) {
+    let p = 0;
+    for (let i = 0; i < str.length; i++) {
+        const c = str.charCodeAt(i);
+        if (c < 128) {
+            p++;
+        }
+        else if (c < 2048) {
+            p += 2;
+        }
+        else if (c >= 0xd800 && c <= 0xdbff) {
+            // Lead surrogate of a surrogate pair.  The pair together will take 4 bytes to represent.
+            p += 4;
+            i++; // skip trail surrogate.
+        }
+        else {
+            p += 3;
+        }
+    }
+    return p;
+};
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * The amount of milliseconds to exponentially increase.
+ */
+const DEFAULT_INTERVAL_MILLIS = 1000;
+/**
+ * The factor to backoff by.
+ * Should be a number greater than 1.
+ */
+const DEFAULT_BACKOFF_FACTOR = 2;
+/**
+ * The maximum milliseconds to increase to.
+ *
+ * <p>Visible for testing
+ */
+const MAX_VALUE_MILLIS = 4 * 60 * 60 * 1000; // Four hours, like iOS and Android.
+/**
+ * The percentage of backoff time to randomize by.
+ * See
+ * http://go/safe-client-behavior#step-1-determine-the-appropriate-retry-interval-to-handle-spike-traffic
+ * for context.
+ *
+ * <p>Visible for testing
+ */
+const RANDOM_FACTOR = 0.5;
+/**
+ * Based on the backoff method from
+ * https://github.com/google/closure-library/blob/master/closure/goog/math/exponentialbackoff.js.
+ * Extracted here so we don't need to pass metadata and a stateful ExponentialBackoff object around.
+ */
+function calculateBackoffMillis(backoffCount, intervalMillis = DEFAULT_INTERVAL_MILLIS, backoffFactor = DEFAULT_BACKOFF_FACTOR) {
+    // Calculates an exponentially increasing value.
+    // Deviation: calculates value from count and a constant interval, so we only need to save value
+    // and count to restore state.
+    const currBaseValue = intervalMillis * Math.pow(backoffFactor, backoffCount);
+    // A random "fuzz" to avoid waves of retries.
+    // Deviation: randomFactor is required.
+    const randomWait = Math.round(
+    // A fraction of the backoff value to add/subtract.
+    // Deviation: changes multiplication order to improve readability.
+    RANDOM_FACTOR *
+        currBaseValue *
+        // A random float (rounded to int by Math.round above) in the range [-1, 1]. Determines
+        // if we add or subtract.
+        (Math.random() - 0.5) *
+        2);
+    // Limits backoff to max to avoid effectively permanent backoff.
+    return Math.min(MAX_VALUE_MILLIS, currBaseValue + randomWait);
+}
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Provide English ordinal letters after a number
+ */
+function ordinal(i) {
+    if (!Number.isFinite(i)) {
+        return `${i}`;
+    }
+    return i + indicator(i);
+}
+function indicator(i) {
+    i = Math.abs(i);
+    const cent = i % 100;
+    if (cent >= 10 && cent <= 20) {
+        return 'th';
+    }
+    const dec = i % 10;
+    if (dec === 1) {
+        return 'st';
+    }
+    if (dec === 2) {
+        return 'nd';
+    }
+    if (dec === 3) {
+        return 'rd';
+    }
+    return 'th';
+}
+
+/**
+ * @license
+ * Copyright 2021 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function getModularInstance(service) {
+    if (service && service._delegate) {
+        return service._delegate;
+    }
+    else {
+        return service;
+    }
+}
+
+/**
+ * @license
+ * Copyright 2022 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * @internal
+ */
+function promisifyRequest(request, errorMessage) {
+    return new Promise((resolve, reject) => {
+        request.onsuccess = event => {
+            resolve(event.target.result);
+        };
+        request.onerror = event => {
+            var _a;
+            reject(`${errorMessage}: ${(_a = event.target.error) === null || _a === void 0 ? void 0 : _a.message}`);
+        };
+    });
+}
+/**
+ * @internal
+ */
+class DBWrapper {
+    constructor(_db) {
+        this._db = _db;
+        this.objectStoreNames = this._db.objectStoreNames;
+    }
+    transaction(storeNames, mode = 'readonly') {
+        return new TransactionWrapper(this._db.transaction.call(this._db, storeNames, mode));
+    }
+    createObjectStore(storeName, options) {
+        return new ObjectStoreWrapper(this._db.createObjectStore(storeName, options));
+    }
+    close() {
+        this._db.close();
+    }
+}
+/**
+ * @internal
+ */
+class TransactionWrapper {
+    constructor(_transaction) {
+        this._transaction = _transaction;
+        this.complete = new Promise((resolve, reject) => {
+            this._transaction.oncomplete = function () {
+                resolve();
+            };
+            this._transaction.onerror = () => {
+                reject(this._transaction.error);
+            };
+            this._transaction.onabort = () => {
+                reject(this._transaction.error);
+            };
+        });
+    }
+    objectStore(storeName) {
+        return new ObjectStoreWrapper(this._transaction.objectStore(storeName));
+    }
+}
+/**
+ * @internal
+ */
+class ObjectStoreWrapper {
+    constructor(_store) {
+        this._store = _store;
+    }
+    index(name) {
+        return new IndexWrapper(this._store.index(name));
+    }
+    createIndex(name, keypath, options) {
+        return new IndexWrapper(this._store.createIndex(name, keypath, options));
+    }
+    get(key) {
+        const request = this._store.get(key);
+        return promisifyRequest(request, 'Error reading from IndexedDB');
+    }
+    put(value, key) {
+        const request = this._store.put(value, key);
+        return promisifyRequest(request, 'Error writing to IndexedDB');
+    }
+    delete(key) {
+        const request = this._store.delete(key);
+        return promisifyRequest(request, 'Error deleting from IndexedDB');
+    }
+    clear() {
+        const request = this._store.clear();
+        return promisifyRequest(request, 'Error clearing IndexedDB object store');
+    }
+}
+/**
+ * @internal
+ */
+class IndexWrapper {
+    constructor(_index) {
+        this._index = _index;
+    }
+    get(key) {
+        const request = this._index.get(key);
+        return promisifyRequest(request, 'Error reading from IndexedDB');
+    }
+}
+/**
+ * @internal
+ */
+function openDB(dbName, dbVersion, upgradeCallback) {
+    return new Promise((resolve, reject) => {
+        try {
+            const request = indexedDB.open(dbName, dbVersion);
+            request.onsuccess = event => {
+                resolve(new DBWrapper(event.target.result));
+            };
+            request.onerror = event => {
+                var _a;
+                reject(`Error opening indexedDB: ${(_a = event.target.error) === null || _a === void 0 ? void 0 : _a.message}`);
+            };
+            request.onupgradeneeded = event => {
+                upgradeCallback(new DBWrapper(request.result), event.oldVersion, event.newVersion, new TransactionWrapper(request.transaction));
+            };
+        }
+        catch (e) {
+            reject(`Error opening indexedDB: ${e.message}`);
+        }
+    });
+}
+/**
+ * @internal
+ */
+async function deleteDB(dbName) {
+    return new Promise((resolve, reject) => {
+        try {
+            const request = indexedDB.deleteDatabase(dbName);
+            request.onsuccess = () => {
+                resolve();
+            };
+            request.onerror = event => {
+                var _a;
+                reject(`Error deleting indexedDB database "${dbName}": ${(_a = event.target.error) === null || _a === void 0 ? void 0 : _a.message}`);
+            };
+        }
+        catch (e) {
+            reject(`Error deleting indexedDB database "${dbName}": ${e.message}`);
+        }
+    });
+}
+
+
+//# sourceMappingURL=index.esm2017.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/@formatjs/fast-memoize/lib/index.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/@formatjs/fast-memoize/lib/index.js ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ memoize),
+/* harmony export */   "strategies": () => (/* binding */ strategies)
+/* harmony export */ });
+//
+// Main
+//
+function memoize(fn, options) {
+    var cache = options && options.cache ? options.cache : cacheDefault;
+    var serializer = options && options.serializer ? options.serializer : serializerDefault;
+    var strategy = options && options.strategy ? options.strategy : strategyDefault;
+    return strategy(fn, {
+        cache: cache,
+        serializer: serializer,
+    });
+}
+//
+// Strategy
+//
+function isPrimitive(value) {
+    return (value == null || typeof value === 'number' || typeof value === 'boolean'); // || typeof value === "string" 'unsafe' primitive for our needs
+}
+function monadic(fn, cache, serializer, arg) {
+    var cacheKey = isPrimitive(arg) ? arg : serializer(arg);
+    var computedValue = cache.get(cacheKey);
+    if (typeof computedValue === 'undefined') {
+        computedValue = fn.call(this, arg);
+        cache.set(cacheKey, computedValue);
+    }
+    return computedValue;
+}
+function variadic(fn, cache, serializer) {
+    var args = Array.prototype.slice.call(arguments, 3);
+    var cacheKey = serializer(args);
+    var computedValue = cache.get(cacheKey);
+    if (typeof computedValue === 'undefined') {
+        computedValue = fn.apply(this, args);
+        cache.set(cacheKey, computedValue);
+    }
+    return computedValue;
+}
+function assemble(fn, context, strategy, cache, serialize) {
+    return strategy.bind(context, fn, cache, serialize);
+}
+function strategyDefault(fn, options) {
+    var strategy = fn.length === 1 ? monadic : variadic;
+    return assemble(fn, this, strategy, options.cache.create(), options.serializer);
+}
+function strategyVariadic(fn, options) {
+    return assemble(fn, this, variadic, options.cache.create(), options.serializer);
+}
+function strategyMonadic(fn, options) {
+    return assemble(fn, this, monadic, options.cache.create(), options.serializer);
+}
+//
+// Serializer
+//
+var serializerDefault = function () {
+    return JSON.stringify(arguments);
+};
+//
+// Cache
+//
+function ObjectWithoutPrototypeCache() {
+    this.cache = Object.create(null);
+}
+ObjectWithoutPrototypeCache.prototype.get = function (key) {
+    return this.cache[key];
+};
+ObjectWithoutPrototypeCache.prototype.set = function (key, value) {
+    this.cache[key] = value;
+};
+var cacheDefault = {
+    create: function create() {
+        // @ts-ignore
+        return new ObjectWithoutPrototypeCache();
+    },
+};
+var strategies = {
+    variadic: strategyVariadic,
+    monadic: strategyMonadic,
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/@formatjs/icu-messageformat-parser/lib/error.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/@formatjs/icu-messageformat-parser/lib/error.js ***!
+  \**********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "ErrorKind": () => (/* binding */ ErrorKind)
+/* harmony export */ });
+var ErrorKind;
+(function (ErrorKind) {
+    /** Argument is unclosed (e.g. `{0`) */
+    ErrorKind[ErrorKind["EXPECT_ARGUMENT_CLOSING_BRACE"] = 1] = "EXPECT_ARGUMENT_CLOSING_BRACE";
+    /** Argument is empty (e.g. `{}`). */
+    ErrorKind[ErrorKind["EMPTY_ARGUMENT"] = 2] = "EMPTY_ARGUMENT";
+    /** Argument is malformed (e.g. `{foo!}``) */
+    ErrorKind[ErrorKind["MALFORMED_ARGUMENT"] = 3] = "MALFORMED_ARGUMENT";
+    /** Expect an argument type (e.g. `{foo,}`) */
+    ErrorKind[ErrorKind["EXPECT_ARGUMENT_TYPE"] = 4] = "EXPECT_ARGUMENT_TYPE";
+    /** Unsupported argument type (e.g. `{foo,foo}`) */
+    ErrorKind[ErrorKind["INVALID_ARGUMENT_TYPE"] = 5] = "INVALID_ARGUMENT_TYPE";
+    /** Expect an argument style (e.g. `{foo, number, }`) */
+    ErrorKind[ErrorKind["EXPECT_ARGUMENT_STYLE"] = 6] = "EXPECT_ARGUMENT_STYLE";
+    /** The number skeleton is invalid. */
+    ErrorKind[ErrorKind["INVALID_NUMBER_SKELETON"] = 7] = "INVALID_NUMBER_SKELETON";
+    /** The date time skeleton is invalid. */
+    ErrorKind[ErrorKind["INVALID_DATE_TIME_SKELETON"] = 8] = "INVALID_DATE_TIME_SKELETON";
+    /** Exepct a number skeleton following the `::` (e.g. `{foo, number, ::}`) */
+    ErrorKind[ErrorKind["EXPECT_NUMBER_SKELETON"] = 9] = "EXPECT_NUMBER_SKELETON";
+    /** Exepct a date time skeleton following the `::` (e.g. `{foo, date, ::}`) */
+    ErrorKind[ErrorKind["EXPECT_DATE_TIME_SKELETON"] = 10] = "EXPECT_DATE_TIME_SKELETON";
+    /** Unmatched apostrophes in the argument style (e.g. `{foo, number, 'test`) */
+    ErrorKind[ErrorKind["UNCLOSED_QUOTE_IN_ARGUMENT_STYLE"] = 11] = "UNCLOSED_QUOTE_IN_ARGUMENT_STYLE";
+    /** Missing select argument options (e.g. `{foo, select}`) */
+    ErrorKind[ErrorKind["EXPECT_SELECT_ARGUMENT_OPTIONS"] = 12] = "EXPECT_SELECT_ARGUMENT_OPTIONS";
+    /** Expecting an offset value in `plural` or `selectordinal` argument (e.g `{foo, plural, offset}`) */
+    ErrorKind[ErrorKind["EXPECT_PLURAL_ARGUMENT_OFFSET_VALUE"] = 13] = "EXPECT_PLURAL_ARGUMENT_OFFSET_VALUE";
+    /** Offset value in `plural` or `selectordinal` is invalid (e.g. `{foo, plural, offset: x}`) */
+    ErrorKind[ErrorKind["INVALID_PLURAL_ARGUMENT_OFFSET_VALUE"] = 14] = "INVALID_PLURAL_ARGUMENT_OFFSET_VALUE";
+    /** Expecting a selector in `select` argument (e.g `{foo, select}`) */
+    ErrorKind[ErrorKind["EXPECT_SELECT_ARGUMENT_SELECTOR"] = 15] = "EXPECT_SELECT_ARGUMENT_SELECTOR";
+    /** Expecting a selector in `plural` or `selectordinal` argument (e.g `{foo, plural}`) */
+    ErrorKind[ErrorKind["EXPECT_PLURAL_ARGUMENT_SELECTOR"] = 16] = "EXPECT_PLURAL_ARGUMENT_SELECTOR";
+    /** Expecting a message fragment after the `select` selector (e.g. `{foo, select, apple}`) */
+    ErrorKind[ErrorKind["EXPECT_SELECT_ARGUMENT_SELECTOR_FRAGMENT"] = 17] = "EXPECT_SELECT_ARGUMENT_SELECTOR_FRAGMENT";
+    /**
+     * Expecting a message fragment after the `plural` or `selectordinal` selector
+     * (e.g. `{foo, plural, one}`)
+     */
+    ErrorKind[ErrorKind["EXPECT_PLURAL_ARGUMENT_SELECTOR_FRAGMENT"] = 18] = "EXPECT_PLURAL_ARGUMENT_SELECTOR_FRAGMENT";
+    /** Selector in `plural` or `selectordinal` is malformed (e.g. `{foo, plural, =x {#}}`) */
+    ErrorKind[ErrorKind["INVALID_PLURAL_ARGUMENT_SELECTOR"] = 19] = "INVALID_PLURAL_ARGUMENT_SELECTOR";
+    /**
+     * Duplicate selectors in `plural` or `selectordinal` argument.
+     * (e.g. {foo, plural, one {#} one {#}})
+     */
+    ErrorKind[ErrorKind["DUPLICATE_PLURAL_ARGUMENT_SELECTOR"] = 20] = "DUPLICATE_PLURAL_ARGUMENT_SELECTOR";
+    /** Duplicate selectors in `select` argument.
+     * (e.g. {foo, select, apple {apple} apple {apple}})
+     */
+    ErrorKind[ErrorKind["DUPLICATE_SELECT_ARGUMENT_SELECTOR"] = 21] = "DUPLICATE_SELECT_ARGUMENT_SELECTOR";
+    /** Plural or select argument option must have `other` clause. */
+    ErrorKind[ErrorKind["MISSING_OTHER_CLAUSE"] = 22] = "MISSING_OTHER_CLAUSE";
+    /** The tag is malformed. (e.g. `<bold!>foo</bold!>) */
+    ErrorKind[ErrorKind["INVALID_TAG"] = 23] = "INVALID_TAG";
+    /** The tag name is invalid. (e.g. `<123>foo</123>`) */
+    ErrorKind[ErrorKind["INVALID_TAG_NAME"] = 25] = "INVALID_TAG_NAME";
+    /** The closing tag does not match the opening tag. (e.g. `<bold>foo</italic>`) */
+    ErrorKind[ErrorKind["UNMATCHED_CLOSING_TAG"] = 26] = "UNMATCHED_CLOSING_TAG";
+    /** The opening tag has unmatched closing tag. (e.g. `<bold>foo`) */
+    ErrorKind[ErrorKind["UNCLOSED_TAG"] = 27] = "UNCLOSED_TAG";
+})(ErrorKind || (ErrorKind = {}));
+
+
+/***/ }),
+
+/***/ "./node_modules/@formatjs/icu-messageformat-parser/lib/index.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/@formatjs/icu-messageformat-parser/lib/index.js ***!
+  \**********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "SKELETON_TYPE": () => (/* reexport safe */ _types__WEBPACK_IMPORTED_MODULE_2__.SKELETON_TYPE),
+/* harmony export */   "TYPE": () => (/* reexport safe */ _types__WEBPACK_IMPORTED_MODULE_2__.TYPE),
+/* harmony export */   "createLiteralElement": () => (/* reexport safe */ _types__WEBPACK_IMPORTED_MODULE_2__.createLiteralElement),
+/* harmony export */   "createNumberElement": () => (/* reexport safe */ _types__WEBPACK_IMPORTED_MODULE_2__.createNumberElement),
+/* harmony export */   "isArgumentElement": () => (/* reexport safe */ _types__WEBPACK_IMPORTED_MODULE_2__.isArgumentElement),
+/* harmony export */   "isDateElement": () => (/* reexport safe */ _types__WEBPACK_IMPORTED_MODULE_2__.isDateElement),
+/* harmony export */   "isDateTimeSkeleton": () => (/* reexport safe */ _types__WEBPACK_IMPORTED_MODULE_2__.isDateTimeSkeleton),
+/* harmony export */   "isLiteralElement": () => (/* reexport safe */ _types__WEBPACK_IMPORTED_MODULE_2__.isLiteralElement),
+/* harmony export */   "isNumberElement": () => (/* reexport safe */ _types__WEBPACK_IMPORTED_MODULE_2__.isNumberElement),
+/* harmony export */   "isNumberSkeleton": () => (/* reexport safe */ _types__WEBPACK_IMPORTED_MODULE_2__.isNumberSkeleton),
+/* harmony export */   "isPluralElement": () => (/* reexport safe */ _types__WEBPACK_IMPORTED_MODULE_2__.isPluralElement),
+/* harmony export */   "isPoundElement": () => (/* reexport safe */ _types__WEBPACK_IMPORTED_MODULE_2__.isPoundElement),
+/* harmony export */   "isSelectElement": () => (/* reexport safe */ _types__WEBPACK_IMPORTED_MODULE_2__.isSelectElement),
+/* harmony export */   "isTagElement": () => (/* reexport safe */ _types__WEBPACK_IMPORTED_MODULE_2__.isTagElement),
+/* harmony export */   "isTimeElement": () => (/* reexport safe */ _types__WEBPACK_IMPORTED_MODULE_2__.isTimeElement),
+/* harmony export */   "parse": () => (/* binding */ parse)
+/* harmony export */ });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _error__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./error */ "./node_modules/@formatjs/icu-messageformat-parser/lib/error.js");
+/* harmony import */ var _parser__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./parser */ "./node_modules/@formatjs/icu-messageformat-parser/lib/parser.js");
+/* harmony import */ var _types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./types */ "./node_modules/@formatjs/icu-messageformat-parser/lib/types.js");
+
+
+
+
+function pruneLocation(els) {
+    els.forEach(function (el) {
+        delete el.location;
+        if ((0,_types__WEBPACK_IMPORTED_MODULE_2__.isSelectElement)(el) || (0,_types__WEBPACK_IMPORTED_MODULE_2__.isPluralElement)(el)) {
+            for (var k in el.options) {
+                delete el.options[k].location;
+                pruneLocation(el.options[k].value);
+            }
+        }
+        else if ((0,_types__WEBPACK_IMPORTED_MODULE_2__.isNumberElement)(el) && (0,_types__WEBPACK_IMPORTED_MODULE_2__.isNumberSkeleton)(el.style)) {
+            delete el.style.location;
+        }
+        else if (((0,_types__WEBPACK_IMPORTED_MODULE_2__.isDateElement)(el) || (0,_types__WEBPACK_IMPORTED_MODULE_2__.isTimeElement)(el)) &&
+            (0,_types__WEBPACK_IMPORTED_MODULE_2__.isDateTimeSkeleton)(el.style)) {
+            delete el.style.location;
+        }
+        else if ((0,_types__WEBPACK_IMPORTED_MODULE_2__.isTagElement)(el)) {
+            pruneLocation(el.children);
+        }
+    });
+}
+function parse(message, opts) {
+    if (opts === void 0) { opts = {}; }
+    opts = (0,tslib__WEBPACK_IMPORTED_MODULE_3__.__assign)({ shouldParseSkeletons: true, requiresOtherClause: true }, opts);
+    var result = new _parser__WEBPACK_IMPORTED_MODULE_1__.Parser(message, opts).parse();
+    if (result.err) {
+        var error = SyntaxError(_error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind[result.err.kind]);
+        // @ts-expect-error Assign to error object
+        error.location = result.err.location;
+        // @ts-expect-error Assign to error object
+        error.originalMessage = result.err.message;
+        throw error;
+    }
+    if (!(opts === null || opts === void 0 ? void 0 : opts.captureLocation)) {
+        pruneLocation(result.val);
+    }
+    return result.val;
+}
+
+
+
+/***/ }),
+
+/***/ "./node_modules/@formatjs/icu-messageformat-parser/lib/parser.js":
+/*!***********************************************************************!*\
+  !*** ./node_modules/@formatjs/icu-messageformat-parser/lib/parser.js ***!
+  \***********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Parser": () => (/* binding */ Parser)
+/* harmony export */ });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _error__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./error */ "./node_modules/@formatjs/icu-messageformat-parser/lib/error.js");
+/* harmony import */ var _types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./types */ "./node_modules/@formatjs/icu-messageformat-parser/lib/types.js");
+/* harmony import */ var _regex_generated__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./regex.generated */ "./node_modules/@formatjs/icu-messageformat-parser/lib/regex.generated.js");
+/* harmony import */ var _formatjs_icu_skeleton_parser__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @formatjs/icu-skeleton-parser */ "./node_modules/@formatjs/icu-skeleton-parser/lib/index.js");
+var _a;
+
+
+
+
+
+var SPACE_SEPARATOR_START_REGEX = new RegExp("^".concat(_regex_generated__WEBPACK_IMPORTED_MODULE_2__.SPACE_SEPARATOR_REGEX.source, "*"));
+var SPACE_SEPARATOR_END_REGEX = new RegExp("".concat(_regex_generated__WEBPACK_IMPORTED_MODULE_2__.SPACE_SEPARATOR_REGEX.source, "*$"));
+function createLocation(start, end) {
+    return { start: start, end: end };
+}
+// #region Ponyfills
+// Consolidate these variables up top for easier toggling during debugging
+var hasNativeStartsWith = !!String.prototype.startsWith;
+var hasNativeFromCodePoint = !!String.fromCodePoint;
+var hasNativeFromEntries = !!Object.fromEntries;
+var hasNativeCodePointAt = !!String.prototype.codePointAt;
+var hasTrimStart = !!String.prototype.trimStart;
+var hasTrimEnd = !!String.prototype.trimEnd;
+var hasNativeIsSafeInteger = !!Number.isSafeInteger;
+var isSafeInteger = hasNativeIsSafeInteger
+    ? Number.isSafeInteger
+    : function (n) {
+        return (typeof n === 'number' &&
+            isFinite(n) &&
+            Math.floor(n) === n &&
+            Math.abs(n) <= 0x1fffffffffffff);
+    };
+// IE11 does not support y and u.
+var REGEX_SUPPORTS_U_AND_Y = true;
+try {
+    var re = RE('([^\\p{White_Space}\\p{Pattern_Syntax}]*)', 'yu');
+    /**
+     * legacy Edge or Xbox One browser
+     * Unicode flag support: supported
+     * Pattern_Syntax support: not supported
+     * See https://github.com/formatjs/formatjs/issues/2822
+     */
+    REGEX_SUPPORTS_U_AND_Y = ((_a = re.exec('a')) === null || _a === void 0 ? void 0 : _a[0]) === 'a';
+}
+catch (_) {
+    REGEX_SUPPORTS_U_AND_Y = false;
+}
+var startsWith = hasNativeStartsWith
+    ? // Native
+        function startsWith(s, search, position) {
+            return s.startsWith(search, position);
+        }
+    : // For IE11
+        function startsWith(s, search, position) {
+            return s.slice(position, position + search.length) === search;
+        };
+var fromCodePoint = hasNativeFromCodePoint
+    ? String.fromCodePoint
+    : // IE11
+        function fromCodePoint() {
+            var codePoints = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                codePoints[_i] = arguments[_i];
+            }
+            var elements = '';
+            var length = codePoints.length;
+            var i = 0;
+            var code;
+            while (length > i) {
+                code = codePoints[i++];
+                if (code > 0x10ffff)
+                    throw RangeError(code + ' is not a valid code point');
+                elements +=
+                    code < 0x10000
+                        ? String.fromCharCode(code)
+                        : String.fromCharCode(((code -= 0x10000) >> 10) + 0xd800, (code % 0x400) + 0xdc00);
+            }
+            return elements;
+        };
+var fromEntries = 
+// native
+hasNativeFromEntries
+    ? Object.fromEntries
+    : // Ponyfill
+        function fromEntries(entries) {
+            var obj = {};
+            for (var _i = 0, entries_1 = entries; _i < entries_1.length; _i++) {
+                var _a = entries_1[_i], k = _a[0], v = _a[1];
+                obj[k] = v;
+            }
+            return obj;
+        };
+var codePointAt = hasNativeCodePointAt
+    ? // Native
+        function codePointAt(s, index) {
+            return s.codePointAt(index);
+        }
+    : // IE 11
+        function codePointAt(s, index) {
+            var size = s.length;
+            if (index < 0 || index >= size) {
+                return undefined;
+            }
+            var first = s.charCodeAt(index);
+            var second;
+            return first < 0xd800 ||
+                first > 0xdbff ||
+                index + 1 === size ||
+                (second = s.charCodeAt(index + 1)) < 0xdc00 ||
+                second > 0xdfff
+                ? first
+                : ((first - 0xd800) << 10) + (second - 0xdc00) + 0x10000;
+        };
+var trimStart = hasTrimStart
+    ? // Native
+        function trimStart(s) {
+            return s.trimStart();
+        }
+    : // Ponyfill
+        function trimStart(s) {
+            return s.replace(SPACE_SEPARATOR_START_REGEX, '');
+        };
+var trimEnd = hasTrimEnd
+    ? // Native
+        function trimEnd(s) {
+            return s.trimEnd();
+        }
+    : // Ponyfill
+        function trimEnd(s) {
+            return s.replace(SPACE_SEPARATOR_END_REGEX, '');
+        };
+// Prevent minifier to translate new RegExp to literal form that might cause syntax error on IE11.
+function RE(s, flag) {
+    return new RegExp(s, flag);
+}
+// #endregion
+var matchIdentifierAtIndex;
+if (REGEX_SUPPORTS_U_AND_Y) {
+    // Native
+    var IDENTIFIER_PREFIX_RE_1 = RE('([^\\p{White_Space}\\p{Pattern_Syntax}]*)', 'yu');
+    matchIdentifierAtIndex = function matchIdentifierAtIndex(s, index) {
+        var _a;
+        IDENTIFIER_PREFIX_RE_1.lastIndex = index;
+        var match = IDENTIFIER_PREFIX_RE_1.exec(s);
+        return (_a = match[1]) !== null && _a !== void 0 ? _a : '';
+    };
+}
+else {
+    // IE11
+    matchIdentifierAtIndex = function matchIdentifierAtIndex(s, index) {
+        var match = [];
+        while (true) {
+            var c = codePointAt(s, index);
+            if (c === undefined || _isWhiteSpace(c) || _isPatternSyntax(c)) {
+                break;
+            }
+            match.push(c);
+            index += c >= 0x10000 ? 2 : 1;
+        }
+        return fromCodePoint.apply(void 0, match);
+    };
+}
+var Parser = /** @class */ (function () {
+    function Parser(message, options) {
+        if (options === void 0) { options = {}; }
+        this.message = message;
+        this.position = { offset: 0, line: 1, column: 1 };
+        this.ignoreTag = !!options.ignoreTag;
+        this.requiresOtherClause = !!options.requiresOtherClause;
+        this.shouldParseSkeletons = !!options.shouldParseSkeletons;
+    }
+    Parser.prototype.parse = function () {
+        if (this.offset() !== 0) {
+            throw Error('parser can only be used once');
+        }
+        return this.parseMessage(0, '', false);
+    };
+    Parser.prototype.parseMessage = function (nestingLevel, parentArgType, expectingCloseTag) {
+        var elements = [];
+        while (!this.isEOF()) {
+            var char = this.char();
+            if (char === 123 /* `{` */) {
+                var result = this.parseArgument(nestingLevel, expectingCloseTag);
+                if (result.err) {
+                    return result;
+                }
+                elements.push(result.val);
+            }
+            else if (char === 125 /* `}` */ && nestingLevel > 0) {
+                break;
+            }
+            else if (char === 35 /* `#` */ &&
+                (parentArgType === 'plural' || parentArgType === 'selectordinal')) {
+                var position = this.clonePosition();
+                this.bump();
+                elements.push({
+                    type: _types__WEBPACK_IMPORTED_MODULE_1__.TYPE.pound,
+                    location: createLocation(position, this.clonePosition()),
+                });
+            }
+            else if (char === 60 /* `<` */ &&
+                !this.ignoreTag &&
+                this.peek() === 47 // char code for '/'
+            ) {
+                if (expectingCloseTag) {
+                    break;
+                }
+                else {
+                    return this.error(_error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.UNMATCHED_CLOSING_TAG, createLocation(this.clonePosition(), this.clonePosition()));
+                }
+            }
+            else if (char === 60 /* `<` */ &&
+                !this.ignoreTag &&
+                _isAlpha(this.peek() || 0)) {
+                var result = this.parseTag(nestingLevel, parentArgType);
+                if (result.err) {
+                    return result;
+                }
+                elements.push(result.val);
+            }
+            else {
+                var result = this.parseLiteral(nestingLevel, parentArgType);
+                if (result.err) {
+                    return result;
+                }
+                elements.push(result.val);
+            }
+        }
+        return { val: elements, err: null };
+    };
+    /**
+     * A tag name must start with an ASCII lower/upper case letter. The grammar is based on the
+     * [custom element name][] except that a dash is NOT always mandatory and uppercase letters
+     * are accepted:
+     *
+     * ```
+     * tag ::= "<" tagName (whitespace)* "/>" | "<" tagName (whitespace)* ">" message "</" tagName (whitespace)* ">"
+     * tagName ::= [a-z] (PENChar)*
+     * PENChar ::=
+     *     "-" | "." | [0-9] | "_" | [a-z] | [A-Z] | #xB7 | [#xC0-#xD6] | [#xD8-#xF6] | [#xF8-#x37D] |
+     *     [#x37F-#x1FFF] | [#x200C-#x200D] | [#x203F-#x2040] | [#x2070-#x218F] | [#x2C00-#x2FEF] |
+     *     [#x3001-#xD7FF] | [#xF900-#xFDCF] | [#xFDF0-#xFFFD] | [#x10000-#xEFFFF]
+     * ```
+     *
+     * [custom element name]: https://html.spec.whatwg.org/multipage/custom-elements.html#valid-custom-element-name
+     * NOTE: We're a bit more lax here since HTML technically does not allow uppercase HTML element but we do
+     * since other tag-based engines like React allow it
+     */
+    Parser.prototype.parseTag = function (nestingLevel, parentArgType) {
+        var startPosition = this.clonePosition();
+        this.bump(); // `<`
+        var tagName = this.parseTagName();
+        this.bumpSpace();
+        if (this.bumpIf('/>')) {
+            // Self closing tag
+            return {
+                val: {
+                    type: _types__WEBPACK_IMPORTED_MODULE_1__.TYPE.literal,
+                    value: "<".concat(tagName, "/>"),
+                    location: createLocation(startPosition, this.clonePosition()),
+                },
+                err: null,
+            };
+        }
+        else if (this.bumpIf('>')) {
+            var childrenResult = this.parseMessage(nestingLevel + 1, parentArgType, true);
+            if (childrenResult.err) {
+                return childrenResult;
+            }
+            var children = childrenResult.val;
+            // Expecting a close tag
+            var endTagStartPosition = this.clonePosition();
+            if (this.bumpIf('</')) {
+                if (this.isEOF() || !_isAlpha(this.char())) {
+                    return this.error(_error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.INVALID_TAG, createLocation(endTagStartPosition, this.clonePosition()));
+                }
+                var closingTagNameStartPosition = this.clonePosition();
+                var closingTagName = this.parseTagName();
+                if (tagName !== closingTagName) {
+                    return this.error(_error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.UNMATCHED_CLOSING_TAG, createLocation(closingTagNameStartPosition, this.clonePosition()));
+                }
+                this.bumpSpace();
+                if (!this.bumpIf('>')) {
+                    return this.error(_error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.INVALID_TAG, createLocation(endTagStartPosition, this.clonePosition()));
+                }
+                return {
+                    val: {
+                        type: _types__WEBPACK_IMPORTED_MODULE_1__.TYPE.tag,
+                        value: tagName,
+                        children: children,
+                        location: createLocation(startPosition, this.clonePosition()),
+                    },
+                    err: null,
+                };
+            }
+            else {
+                return this.error(_error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.UNCLOSED_TAG, createLocation(startPosition, this.clonePosition()));
+            }
+        }
+        else {
+            return this.error(_error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.INVALID_TAG, createLocation(startPosition, this.clonePosition()));
+        }
+    };
+    /**
+     * This method assumes that the caller has peeked ahead for the first tag character.
+     */
+    Parser.prototype.parseTagName = function () {
+        var startOffset = this.offset();
+        this.bump(); // the first tag name character
+        while (!this.isEOF() && _isPotentialElementNameChar(this.char())) {
+            this.bump();
+        }
+        return this.message.slice(startOffset, this.offset());
+    };
+    Parser.prototype.parseLiteral = function (nestingLevel, parentArgType) {
+        var start = this.clonePosition();
+        var value = '';
+        while (true) {
+            var parseQuoteResult = this.tryParseQuote(parentArgType);
+            if (parseQuoteResult) {
+                value += parseQuoteResult;
+                continue;
+            }
+            var parseUnquotedResult = this.tryParseUnquoted(nestingLevel, parentArgType);
+            if (parseUnquotedResult) {
+                value += parseUnquotedResult;
+                continue;
+            }
+            var parseLeftAngleResult = this.tryParseLeftAngleBracket();
+            if (parseLeftAngleResult) {
+                value += parseLeftAngleResult;
+                continue;
+            }
+            break;
+        }
+        var location = createLocation(start, this.clonePosition());
+        return {
+            val: { type: _types__WEBPACK_IMPORTED_MODULE_1__.TYPE.literal, value: value, location: location },
+            err: null,
+        };
+    };
+    Parser.prototype.tryParseLeftAngleBracket = function () {
+        if (!this.isEOF() &&
+            this.char() === 60 /* `<` */ &&
+            (this.ignoreTag ||
+                // If at the opening tag or closing tag position, bail.
+                !_isAlphaOrSlash(this.peek() || 0))) {
+            this.bump(); // `<`
+            return '<';
+        }
+        return null;
+    };
+    /**
+     * Starting with ICU 4.8, an ASCII apostrophe only starts quoted text if it immediately precedes
+     * a character that requires quoting (that is, "only where needed"), and works the same in
+     * nested messages as on the top level of the pattern. The new behavior is otherwise compatible.
+     */
+    Parser.prototype.tryParseQuote = function (parentArgType) {
+        if (this.isEOF() || this.char() !== 39 /* `'` */) {
+            return null;
+        }
+        // Parse escaped char following the apostrophe, or early return if there is no escaped char.
+        // Check if is valid escaped character
+        switch (this.peek()) {
+            case 39 /* `'` */:
+                // double quote, should return as a single quote.
+                this.bump();
+                this.bump();
+                return "'";
+            // '{', '<', '>', '}'
+            case 123:
+            case 60:
+            case 62:
+            case 125:
+                break;
+            case 35: // '#'
+                if (parentArgType === 'plural' || parentArgType === 'selectordinal') {
+                    break;
+                }
+                return null;
+            default:
+                return null;
+        }
+        this.bump(); // apostrophe
+        var codePoints = [this.char()]; // escaped char
+        this.bump();
+        // read chars until the optional closing apostrophe is found
+        while (!this.isEOF()) {
+            var ch = this.char();
+            if (ch === 39 /* `'` */) {
+                if (this.peek() === 39 /* `'` */) {
+                    codePoints.push(39);
+                    // Bump one more time because we need to skip 2 characters.
+                    this.bump();
+                }
+                else {
+                    // Optional closing apostrophe.
+                    this.bump();
+                    break;
+                }
+            }
+            else {
+                codePoints.push(ch);
+            }
+            this.bump();
+        }
+        return fromCodePoint.apply(void 0, codePoints);
+    };
+    Parser.prototype.tryParseUnquoted = function (nestingLevel, parentArgType) {
+        if (this.isEOF()) {
+            return null;
+        }
+        var ch = this.char();
+        if (ch === 60 /* `<` */ ||
+            ch === 123 /* `{` */ ||
+            (ch === 35 /* `#` */ &&
+                (parentArgType === 'plural' || parentArgType === 'selectordinal')) ||
+            (ch === 125 /* `}` */ && nestingLevel > 0)) {
+            return null;
+        }
+        else {
+            this.bump();
+            return fromCodePoint(ch);
+        }
+    };
+    Parser.prototype.parseArgument = function (nestingLevel, expectingCloseTag) {
+        var openingBracePosition = this.clonePosition();
+        this.bump(); // `{`
+        this.bumpSpace();
+        if (this.isEOF()) {
+            return this.error(_error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.EXPECT_ARGUMENT_CLOSING_BRACE, createLocation(openingBracePosition, this.clonePosition()));
+        }
+        if (this.char() === 125 /* `}` */) {
+            this.bump();
+            return this.error(_error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.EMPTY_ARGUMENT, createLocation(openingBracePosition, this.clonePosition()));
+        }
+        // argument name
+        var value = this.parseIdentifierIfPossible().value;
+        if (!value) {
+            return this.error(_error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.MALFORMED_ARGUMENT, createLocation(openingBracePosition, this.clonePosition()));
+        }
+        this.bumpSpace();
+        if (this.isEOF()) {
+            return this.error(_error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.EXPECT_ARGUMENT_CLOSING_BRACE, createLocation(openingBracePosition, this.clonePosition()));
+        }
+        switch (this.char()) {
+            // Simple argument: `{name}`
+            case 125 /* `}` */: {
+                this.bump(); // `}`
+                return {
+                    val: {
+                        type: _types__WEBPACK_IMPORTED_MODULE_1__.TYPE.argument,
+                        // value does not include the opening and closing braces.
+                        value: value,
+                        location: createLocation(openingBracePosition, this.clonePosition()),
+                    },
+                    err: null,
+                };
+            }
+            // Argument with options: `{name, format, ...}`
+            case 44 /* `,` */: {
+                this.bump(); // `,`
+                this.bumpSpace();
+                if (this.isEOF()) {
+                    return this.error(_error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.EXPECT_ARGUMENT_CLOSING_BRACE, createLocation(openingBracePosition, this.clonePosition()));
+                }
+                return this.parseArgumentOptions(nestingLevel, expectingCloseTag, value, openingBracePosition);
+            }
+            default:
+                return this.error(_error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.MALFORMED_ARGUMENT, createLocation(openingBracePosition, this.clonePosition()));
+        }
+    };
+    /**
+     * Advance the parser until the end of the identifier, if it is currently on
+     * an identifier character. Return an empty string otherwise.
+     */
+    Parser.prototype.parseIdentifierIfPossible = function () {
+        var startingPosition = this.clonePosition();
+        var startOffset = this.offset();
+        var value = matchIdentifierAtIndex(this.message, startOffset);
+        var endOffset = startOffset + value.length;
+        this.bumpTo(endOffset);
+        var endPosition = this.clonePosition();
+        var location = createLocation(startingPosition, endPosition);
+        return { value: value, location: location };
+    };
+    Parser.prototype.parseArgumentOptions = function (nestingLevel, expectingCloseTag, value, openingBracePosition) {
+        var _a;
+        // Parse this range:
+        // {name, type, style}
+        //        ^---^
+        var typeStartPosition = this.clonePosition();
+        var argType = this.parseIdentifierIfPossible().value;
+        var typeEndPosition = this.clonePosition();
+        switch (argType) {
+            case '':
+                // Expecting a style string number, date, time, plural, selectordinal, or select.
+                return this.error(_error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.EXPECT_ARGUMENT_TYPE, createLocation(typeStartPosition, typeEndPosition));
+            case 'number':
+            case 'date':
+            case 'time': {
+                // Parse this range:
+                // {name, number, style}
+                //              ^-------^
+                this.bumpSpace();
+                var styleAndLocation = null;
+                if (this.bumpIf(',')) {
+                    this.bumpSpace();
+                    var styleStartPosition = this.clonePosition();
+                    var result = this.parseSimpleArgStyleIfPossible();
+                    if (result.err) {
+                        return result;
+                    }
+                    var style = trimEnd(result.val);
+                    if (style.length === 0) {
+                        return this.error(_error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.EXPECT_ARGUMENT_STYLE, createLocation(this.clonePosition(), this.clonePosition()));
+                    }
+                    var styleLocation = createLocation(styleStartPosition, this.clonePosition());
+                    styleAndLocation = { style: style, styleLocation: styleLocation };
+                }
+                var argCloseResult = this.tryParseArgumentClose(openingBracePosition);
+                if (argCloseResult.err) {
+                    return argCloseResult;
+                }
+                var location_1 = createLocation(openingBracePosition, this.clonePosition());
+                // Extract style or skeleton
+                if (styleAndLocation && startsWith(styleAndLocation === null || styleAndLocation === void 0 ? void 0 : styleAndLocation.style, '::', 0)) {
+                    // Skeleton starts with `::`.
+                    var skeleton = trimStart(styleAndLocation.style.slice(2));
+                    if (argType === 'number') {
+                        var result = this.parseNumberSkeletonFromString(skeleton, styleAndLocation.styleLocation);
+                        if (result.err) {
+                            return result;
+                        }
+                        return {
+                            val: { type: _types__WEBPACK_IMPORTED_MODULE_1__.TYPE.number, value: value, location: location_1, style: result.val },
+                            err: null,
+                        };
+                    }
+                    else {
+                        if (skeleton.length === 0) {
+                            return this.error(_error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.EXPECT_DATE_TIME_SKELETON, location_1);
+                        }
+                        var style = {
+                            type: _types__WEBPACK_IMPORTED_MODULE_1__.SKELETON_TYPE.dateTime,
+                            pattern: skeleton,
+                            location: styleAndLocation.styleLocation,
+                            parsedOptions: this.shouldParseSkeletons
+                                ? (0,_formatjs_icu_skeleton_parser__WEBPACK_IMPORTED_MODULE_3__.parseDateTimeSkeleton)(skeleton)
+                                : {},
+                        };
+                        var type = argType === 'date' ? _types__WEBPACK_IMPORTED_MODULE_1__.TYPE.date : _types__WEBPACK_IMPORTED_MODULE_1__.TYPE.time;
+                        return {
+                            val: { type: type, value: value, location: location_1, style: style },
+                            err: null,
+                        };
+                    }
+                }
+                // Regular style or no style.
+                return {
+                    val: {
+                        type: argType === 'number'
+                            ? _types__WEBPACK_IMPORTED_MODULE_1__.TYPE.number
+                            : argType === 'date'
+                                ? _types__WEBPACK_IMPORTED_MODULE_1__.TYPE.date
+                                : _types__WEBPACK_IMPORTED_MODULE_1__.TYPE.time,
+                        value: value,
+                        location: location_1,
+                        style: (_a = styleAndLocation === null || styleAndLocation === void 0 ? void 0 : styleAndLocation.style) !== null && _a !== void 0 ? _a : null,
+                    },
+                    err: null,
+                };
+            }
+            case 'plural':
+            case 'selectordinal':
+            case 'select': {
+                // Parse this range:
+                // {name, plural, options}
+                //              ^---------^
+                var typeEndPosition_1 = this.clonePosition();
+                this.bumpSpace();
+                if (!this.bumpIf(',')) {
+                    return this.error(_error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.EXPECT_SELECT_ARGUMENT_OPTIONS, createLocation(typeEndPosition_1, (0,tslib__WEBPACK_IMPORTED_MODULE_4__.__assign)({}, typeEndPosition_1)));
+                }
+                this.bumpSpace();
+                // Parse offset:
+                // {name, plural, offset:1, options}
+                //                ^-----^
+                //
+                // or the first option:
+                //
+                // {name, plural, one {...} other {...}}
+                //                ^--^
+                var identifierAndLocation = this.parseIdentifierIfPossible();
+                var pluralOffset = 0;
+                if (argType !== 'select' && identifierAndLocation.value === 'offset') {
+                    if (!this.bumpIf(':')) {
+                        return this.error(_error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.EXPECT_PLURAL_ARGUMENT_OFFSET_VALUE, createLocation(this.clonePosition(), this.clonePosition()));
+                    }
+                    this.bumpSpace();
+                    var result = this.tryParseDecimalInteger(_error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.EXPECT_PLURAL_ARGUMENT_OFFSET_VALUE, _error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.INVALID_PLURAL_ARGUMENT_OFFSET_VALUE);
+                    if (result.err) {
+                        return result;
+                    }
+                    // Parse another identifier for option parsing
+                    this.bumpSpace();
+                    identifierAndLocation = this.parseIdentifierIfPossible();
+                    pluralOffset = result.val;
+                }
+                var optionsResult = this.tryParsePluralOrSelectOptions(nestingLevel, argType, expectingCloseTag, identifierAndLocation);
+                if (optionsResult.err) {
+                    return optionsResult;
+                }
+                var argCloseResult = this.tryParseArgumentClose(openingBracePosition);
+                if (argCloseResult.err) {
+                    return argCloseResult;
+                }
+                var location_2 = createLocation(openingBracePosition, this.clonePosition());
+                if (argType === 'select') {
+                    return {
+                        val: {
+                            type: _types__WEBPACK_IMPORTED_MODULE_1__.TYPE.select,
+                            value: value,
+                            options: fromEntries(optionsResult.val),
+                            location: location_2,
+                        },
+                        err: null,
+                    };
+                }
+                else {
+                    return {
+                        val: {
+                            type: _types__WEBPACK_IMPORTED_MODULE_1__.TYPE.plural,
+                            value: value,
+                            options: fromEntries(optionsResult.val),
+                            offset: pluralOffset,
+                            pluralType: argType === 'plural' ? 'cardinal' : 'ordinal',
+                            location: location_2,
+                        },
+                        err: null,
+                    };
+                }
+            }
+            default:
+                return this.error(_error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.INVALID_ARGUMENT_TYPE, createLocation(typeStartPosition, typeEndPosition));
+        }
+    };
+    Parser.prototype.tryParseArgumentClose = function (openingBracePosition) {
+        // Parse: {value, number, ::currency/GBP }
+        //
+        if (this.isEOF() || this.char() !== 125 /* `}` */) {
+            return this.error(_error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.EXPECT_ARGUMENT_CLOSING_BRACE, createLocation(openingBracePosition, this.clonePosition()));
+        }
+        this.bump(); // `}`
+        return { val: true, err: null };
+    };
+    /**
+     * See: https://github.com/unicode-org/icu/blob/af7ed1f6d2298013dc303628438ec4abe1f16479/icu4c/source/common/messagepattern.cpp#L659
+     */
+    Parser.prototype.parseSimpleArgStyleIfPossible = function () {
+        var nestedBraces = 0;
+        var startPosition = this.clonePosition();
+        while (!this.isEOF()) {
+            var ch = this.char();
+            switch (ch) {
+                case 39 /* `'` */: {
+                    // Treat apostrophe as quoting but include it in the style part.
+                    // Find the end of the quoted literal text.
+                    this.bump();
+                    var apostrophePosition = this.clonePosition();
+                    if (!this.bumpUntil("'")) {
+                        return this.error(_error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.UNCLOSED_QUOTE_IN_ARGUMENT_STYLE, createLocation(apostrophePosition, this.clonePosition()));
+                    }
+                    this.bump();
+                    break;
+                }
+                case 123 /* `{` */: {
+                    nestedBraces += 1;
+                    this.bump();
+                    break;
+                }
+                case 125 /* `}` */: {
+                    if (nestedBraces > 0) {
+                        nestedBraces -= 1;
+                    }
+                    else {
+                        return {
+                            val: this.message.slice(startPosition.offset, this.offset()),
+                            err: null,
+                        };
+                    }
+                    break;
+                }
+                default:
+                    this.bump();
+                    break;
+            }
+        }
+        return {
+            val: this.message.slice(startPosition.offset, this.offset()),
+            err: null,
+        };
+    };
+    Parser.prototype.parseNumberSkeletonFromString = function (skeleton, location) {
+        var tokens = [];
+        try {
+            tokens = (0,_formatjs_icu_skeleton_parser__WEBPACK_IMPORTED_MODULE_3__.parseNumberSkeletonFromString)(skeleton);
+        }
+        catch (e) {
+            return this.error(_error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.INVALID_NUMBER_SKELETON, location);
+        }
+        return {
+            val: {
+                type: _types__WEBPACK_IMPORTED_MODULE_1__.SKELETON_TYPE.number,
+                tokens: tokens,
+                location: location,
+                parsedOptions: this.shouldParseSkeletons
+                    ? (0,_formatjs_icu_skeleton_parser__WEBPACK_IMPORTED_MODULE_3__.parseNumberSkeleton)(tokens)
+                    : {},
+            },
+            err: null,
+        };
+    };
+    /**
+     * @param nesting_level The current nesting level of messages.
+     *     This can be positive when parsing message fragment in select or plural argument options.
+     * @param parent_arg_type The parent argument's type.
+     * @param parsed_first_identifier If provided, this is the first identifier-like selector of
+     *     the argument. It is a by-product of a previous parsing attempt.
+     * @param expecting_close_tag If true, this message is directly or indirectly nested inside
+     *     between a pair of opening and closing tags. The nested message will not parse beyond
+     *     the closing tag boundary.
+     */
+    Parser.prototype.tryParsePluralOrSelectOptions = function (nestingLevel, parentArgType, expectCloseTag, parsedFirstIdentifier) {
+        var _a;
+        var hasOtherClause = false;
+        var options = [];
+        var parsedSelectors = new Set();
+        var selector = parsedFirstIdentifier.value, selectorLocation = parsedFirstIdentifier.location;
+        // Parse:
+        // one {one apple}
+        // ^--^
+        while (true) {
+            if (selector.length === 0) {
+                var startPosition = this.clonePosition();
+                if (parentArgType !== 'select' && this.bumpIf('=')) {
+                    // Try parse `={number}` selector
+                    var result = this.tryParseDecimalInteger(_error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.EXPECT_PLURAL_ARGUMENT_SELECTOR, _error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.INVALID_PLURAL_ARGUMENT_SELECTOR);
+                    if (result.err) {
+                        return result;
+                    }
+                    selectorLocation = createLocation(startPosition, this.clonePosition());
+                    selector = this.message.slice(startPosition.offset, this.offset());
+                }
+                else {
+                    break;
+                }
+            }
+            // Duplicate selector clauses
+            if (parsedSelectors.has(selector)) {
+                return this.error(parentArgType === 'select'
+                    ? _error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.DUPLICATE_SELECT_ARGUMENT_SELECTOR
+                    : _error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.DUPLICATE_PLURAL_ARGUMENT_SELECTOR, selectorLocation);
+            }
+            if (selector === 'other') {
+                hasOtherClause = true;
+            }
+            // Parse:
+            // one {one apple}
+            //     ^----------^
+            this.bumpSpace();
+            var openingBracePosition = this.clonePosition();
+            if (!this.bumpIf('{')) {
+                return this.error(parentArgType === 'select'
+                    ? _error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.EXPECT_SELECT_ARGUMENT_SELECTOR_FRAGMENT
+                    : _error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.EXPECT_PLURAL_ARGUMENT_SELECTOR_FRAGMENT, createLocation(this.clonePosition(), this.clonePosition()));
+            }
+            var fragmentResult = this.parseMessage(nestingLevel + 1, parentArgType, expectCloseTag);
+            if (fragmentResult.err) {
+                return fragmentResult;
+            }
+            var argCloseResult = this.tryParseArgumentClose(openingBracePosition);
+            if (argCloseResult.err) {
+                return argCloseResult;
+            }
+            options.push([
+                selector,
+                {
+                    value: fragmentResult.val,
+                    location: createLocation(openingBracePosition, this.clonePosition()),
+                },
+            ]);
+            // Keep track of the existing selectors
+            parsedSelectors.add(selector);
+            // Prep next selector clause.
+            this.bumpSpace();
+            (_a = this.parseIdentifierIfPossible(), selector = _a.value, selectorLocation = _a.location);
+        }
+        if (options.length === 0) {
+            return this.error(parentArgType === 'select'
+                ? _error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.EXPECT_SELECT_ARGUMENT_SELECTOR
+                : _error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.EXPECT_PLURAL_ARGUMENT_SELECTOR, createLocation(this.clonePosition(), this.clonePosition()));
+        }
+        if (this.requiresOtherClause && !hasOtherClause) {
+            return this.error(_error__WEBPACK_IMPORTED_MODULE_0__.ErrorKind.MISSING_OTHER_CLAUSE, createLocation(this.clonePosition(), this.clonePosition()));
+        }
+        return { val: options, err: null };
+    };
+    Parser.prototype.tryParseDecimalInteger = function (expectNumberError, invalidNumberError) {
+        var sign = 1;
+        var startingPosition = this.clonePosition();
+        if (this.bumpIf('+')) {
+        }
+        else if (this.bumpIf('-')) {
+            sign = -1;
+        }
+        var hasDigits = false;
+        var decimal = 0;
+        while (!this.isEOF()) {
+            var ch = this.char();
+            if (ch >= 48 /* `0` */ && ch <= 57 /* `9` */) {
+                hasDigits = true;
+                decimal = decimal * 10 + (ch - 48);
+                this.bump();
+            }
+            else {
+                break;
+            }
+        }
+        var location = createLocation(startingPosition, this.clonePosition());
+        if (!hasDigits) {
+            return this.error(expectNumberError, location);
+        }
+        decimal *= sign;
+        if (!isSafeInteger(decimal)) {
+            return this.error(invalidNumberError, location);
+        }
+        return { val: decimal, err: null };
+    };
+    Parser.prototype.offset = function () {
+        return this.position.offset;
+    };
+    Parser.prototype.isEOF = function () {
+        return this.offset() === this.message.length;
+    };
+    Parser.prototype.clonePosition = function () {
+        // This is much faster than `Object.assign` or spread.
+        return {
+            offset: this.position.offset,
+            line: this.position.line,
+            column: this.position.column,
+        };
+    };
+    /**
+     * Return the code point at the current position of the parser.
+     * Throws if the index is out of bound.
+     */
+    Parser.prototype.char = function () {
+        var offset = this.position.offset;
+        if (offset >= this.message.length) {
+            throw Error('out of bound');
+        }
+        var code = codePointAt(this.message, offset);
+        if (code === undefined) {
+            throw Error("Offset ".concat(offset, " is at invalid UTF-16 code unit boundary"));
+        }
+        return code;
+    };
+    Parser.prototype.error = function (kind, location) {
+        return {
+            val: null,
+            err: {
+                kind: kind,
+                message: this.message,
+                location: location,
+            },
+        };
+    };
+    /** Bump the parser to the next UTF-16 code unit. */
+    Parser.prototype.bump = function () {
+        if (this.isEOF()) {
+            return;
+        }
+        var code = this.char();
+        if (code === 10 /* '\n' */) {
+            this.position.line += 1;
+            this.position.column = 1;
+            this.position.offset += 1;
+        }
+        else {
+            this.position.column += 1;
+            // 0 ~ 0x10000 -> unicode BMP, otherwise skip the surrogate pair.
+            this.position.offset += code < 0x10000 ? 1 : 2;
+        }
+    };
+    /**
+     * If the substring starting at the current position of the parser has
+     * the given prefix, then bump the parser to the character immediately
+     * following the prefix and return true. Otherwise, don't bump the parser
+     * and return false.
+     */
+    Parser.prototype.bumpIf = function (prefix) {
+        if (startsWith(this.message, prefix, this.offset())) {
+            for (var i = 0; i < prefix.length; i++) {
+                this.bump();
+            }
+            return true;
+        }
+        return false;
+    };
+    /**
+     * Bump the parser until the pattern character is found and return `true`.
+     * Otherwise bump to the end of the file and return `false`.
+     */
+    Parser.prototype.bumpUntil = function (pattern) {
+        var currentOffset = this.offset();
+        var index = this.message.indexOf(pattern, currentOffset);
+        if (index >= 0) {
+            this.bumpTo(index);
+            return true;
+        }
+        else {
+            this.bumpTo(this.message.length);
+            return false;
+        }
+    };
+    /**
+     * Bump the parser to the target offset.
+     * If target offset is beyond the end of the input, bump the parser to the end of the input.
+     */
+    Parser.prototype.bumpTo = function (targetOffset) {
+        if (this.offset() > targetOffset) {
+            throw Error("targetOffset ".concat(targetOffset, " must be greater than or equal to the current offset ").concat(this.offset()));
+        }
+        targetOffset = Math.min(targetOffset, this.message.length);
+        while (true) {
+            var offset = this.offset();
+            if (offset === targetOffset) {
+                break;
+            }
+            if (offset > targetOffset) {
+                throw Error("targetOffset ".concat(targetOffset, " is at invalid UTF-16 code unit boundary"));
+            }
+            this.bump();
+            if (this.isEOF()) {
+                break;
+            }
+        }
+    };
+    /** advance the parser through all whitespace to the next non-whitespace code unit. */
+    Parser.prototype.bumpSpace = function () {
+        while (!this.isEOF() && _isWhiteSpace(this.char())) {
+            this.bump();
+        }
+    };
+    /**
+     * Peek at the *next* Unicode codepoint in the input without advancing the parser.
+     * If the input has been exhausted, then this returns null.
+     */
+    Parser.prototype.peek = function () {
+        if (this.isEOF()) {
+            return null;
+        }
+        var code = this.char();
+        var offset = this.offset();
+        var nextCode = this.message.charCodeAt(offset + (code >= 0x10000 ? 2 : 1));
+        return nextCode !== null && nextCode !== void 0 ? nextCode : null;
+    };
+    return Parser;
+}());
+
+/**
+ * This check if codepoint is alphabet (lower & uppercase)
+ * @param codepoint
+ * @returns
+ */
+function _isAlpha(codepoint) {
+    return ((codepoint >= 97 && codepoint <= 122) ||
+        (codepoint >= 65 && codepoint <= 90));
+}
+function _isAlphaOrSlash(codepoint) {
+    return _isAlpha(codepoint) || codepoint === 47; /* '/' */
+}
+/** See `parseTag` function docs. */
+function _isPotentialElementNameChar(c) {
+    return (c === 45 /* '-' */ ||
+        c === 46 /* '.' */ ||
+        (c >= 48 && c <= 57) /* 0..9 */ ||
+        c === 95 /* '_' */ ||
+        (c >= 97 && c <= 122) /** a..z */ ||
+        (c >= 65 && c <= 90) /* A..Z */ ||
+        c == 0xb7 ||
+        (c >= 0xc0 && c <= 0xd6) ||
+        (c >= 0xd8 && c <= 0xf6) ||
+        (c >= 0xf8 && c <= 0x37d) ||
+        (c >= 0x37f && c <= 0x1fff) ||
+        (c >= 0x200c && c <= 0x200d) ||
+        (c >= 0x203f && c <= 0x2040) ||
+        (c >= 0x2070 && c <= 0x218f) ||
+        (c >= 0x2c00 && c <= 0x2fef) ||
+        (c >= 0x3001 && c <= 0xd7ff) ||
+        (c >= 0xf900 && c <= 0xfdcf) ||
+        (c >= 0xfdf0 && c <= 0xfffd) ||
+        (c >= 0x10000 && c <= 0xeffff));
+}
+/**
+ * Code point equivalent of regex `\p{White_Space}`.
+ * From: https://www.unicode.org/Public/UCD/latest/ucd/PropList.txt
+ */
+function _isWhiteSpace(c) {
+    return ((c >= 0x0009 && c <= 0x000d) ||
+        c === 0x0020 ||
+        c === 0x0085 ||
+        (c >= 0x200e && c <= 0x200f) ||
+        c === 0x2028 ||
+        c === 0x2029);
+}
+/**
+ * Code point equivalent of regex `\p{Pattern_Syntax}`.
+ * See https://www.unicode.org/Public/UCD/latest/ucd/PropList.txt
+ */
+function _isPatternSyntax(c) {
+    return ((c >= 0x0021 && c <= 0x0023) ||
+        c === 0x0024 ||
+        (c >= 0x0025 && c <= 0x0027) ||
+        c === 0x0028 ||
+        c === 0x0029 ||
+        c === 0x002a ||
+        c === 0x002b ||
+        c === 0x002c ||
+        c === 0x002d ||
+        (c >= 0x002e && c <= 0x002f) ||
+        (c >= 0x003a && c <= 0x003b) ||
+        (c >= 0x003c && c <= 0x003e) ||
+        (c >= 0x003f && c <= 0x0040) ||
+        c === 0x005b ||
+        c === 0x005c ||
+        c === 0x005d ||
+        c === 0x005e ||
+        c === 0x0060 ||
+        c === 0x007b ||
+        c === 0x007c ||
+        c === 0x007d ||
+        c === 0x007e ||
+        c === 0x00a1 ||
+        (c >= 0x00a2 && c <= 0x00a5) ||
+        c === 0x00a6 ||
+        c === 0x00a7 ||
+        c === 0x00a9 ||
+        c === 0x00ab ||
+        c === 0x00ac ||
+        c === 0x00ae ||
+        c === 0x00b0 ||
+        c === 0x00b1 ||
+        c === 0x00b6 ||
+        c === 0x00bb ||
+        c === 0x00bf ||
+        c === 0x00d7 ||
+        c === 0x00f7 ||
+        (c >= 0x2010 && c <= 0x2015) ||
+        (c >= 0x2016 && c <= 0x2017) ||
+        c === 0x2018 ||
+        c === 0x2019 ||
+        c === 0x201a ||
+        (c >= 0x201b && c <= 0x201c) ||
+        c === 0x201d ||
+        c === 0x201e ||
+        c === 0x201f ||
+        (c >= 0x2020 && c <= 0x2027) ||
+        (c >= 0x2030 && c <= 0x2038) ||
+        c === 0x2039 ||
+        c === 0x203a ||
+        (c >= 0x203b && c <= 0x203e) ||
+        (c >= 0x2041 && c <= 0x2043) ||
+        c === 0x2044 ||
+        c === 0x2045 ||
+        c === 0x2046 ||
+        (c >= 0x2047 && c <= 0x2051) ||
+        c === 0x2052 ||
+        c === 0x2053 ||
+        (c >= 0x2055 && c <= 0x205e) ||
+        (c >= 0x2190 && c <= 0x2194) ||
+        (c >= 0x2195 && c <= 0x2199) ||
+        (c >= 0x219a && c <= 0x219b) ||
+        (c >= 0x219c && c <= 0x219f) ||
+        c === 0x21a0 ||
+        (c >= 0x21a1 && c <= 0x21a2) ||
+        c === 0x21a3 ||
+        (c >= 0x21a4 && c <= 0x21a5) ||
+        c === 0x21a6 ||
+        (c >= 0x21a7 && c <= 0x21ad) ||
+        c === 0x21ae ||
+        (c >= 0x21af && c <= 0x21cd) ||
+        (c >= 0x21ce && c <= 0x21cf) ||
+        (c >= 0x21d0 && c <= 0x21d1) ||
+        c === 0x21d2 ||
+        c === 0x21d3 ||
+        c === 0x21d4 ||
+        (c >= 0x21d5 && c <= 0x21f3) ||
+        (c >= 0x21f4 && c <= 0x22ff) ||
+        (c >= 0x2300 && c <= 0x2307) ||
+        c === 0x2308 ||
+        c === 0x2309 ||
+        c === 0x230a ||
+        c === 0x230b ||
+        (c >= 0x230c && c <= 0x231f) ||
+        (c >= 0x2320 && c <= 0x2321) ||
+        (c >= 0x2322 && c <= 0x2328) ||
+        c === 0x2329 ||
+        c === 0x232a ||
+        (c >= 0x232b && c <= 0x237b) ||
+        c === 0x237c ||
+        (c >= 0x237d && c <= 0x239a) ||
+        (c >= 0x239b && c <= 0x23b3) ||
+        (c >= 0x23b4 && c <= 0x23db) ||
+        (c >= 0x23dc && c <= 0x23e1) ||
+        (c >= 0x23e2 && c <= 0x2426) ||
+        (c >= 0x2427 && c <= 0x243f) ||
+        (c >= 0x2440 && c <= 0x244a) ||
+        (c >= 0x244b && c <= 0x245f) ||
+        (c >= 0x2500 && c <= 0x25b6) ||
+        c === 0x25b7 ||
+        (c >= 0x25b8 && c <= 0x25c0) ||
+        c === 0x25c1 ||
+        (c >= 0x25c2 && c <= 0x25f7) ||
+        (c >= 0x25f8 && c <= 0x25ff) ||
+        (c >= 0x2600 && c <= 0x266e) ||
+        c === 0x266f ||
+        (c >= 0x2670 && c <= 0x2767) ||
+        c === 0x2768 ||
+        c === 0x2769 ||
+        c === 0x276a ||
+        c === 0x276b ||
+        c === 0x276c ||
+        c === 0x276d ||
+        c === 0x276e ||
+        c === 0x276f ||
+        c === 0x2770 ||
+        c === 0x2771 ||
+        c === 0x2772 ||
+        c === 0x2773 ||
+        c === 0x2774 ||
+        c === 0x2775 ||
+        (c >= 0x2794 && c <= 0x27bf) ||
+        (c >= 0x27c0 && c <= 0x27c4) ||
+        c === 0x27c5 ||
+        c === 0x27c6 ||
+        (c >= 0x27c7 && c <= 0x27e5) ||
+        c === 0x27e6 ||
+        c === 0x27e7 ||
+        c === 0x27e8 ||
+        c === 0x27e9 ||
+        c === 0x27ea ||
+        c === 0x27eb ||
+        c === 0x27ec ||
+        c === 0x27ed ||
+        c === 0x27ee ||
+        c === 0x27ef ||
+        (c >= 0x27f0 && c <= 0x27ff) ||
+        (c >= 0x2800 && c <= 0x28ff) ||
+        (c >= 0x2900 && c <= 0x2982) ||
+        c === 0x2983 ||
+        c === 0x2984 ||
+        c === 0x2985 ||
+        c === 0x2986 ||
+        c === 0x2987 ||
+        c === 0x2988 ||
+        c === 0x2989 ||
+        c === 0x298a ||
+        c === 0x298b ||
+        c === 0x298c ||
+        c === 0x298d ||
+        c === 0x298e ||
+        c === 0x298f ||
+        c === 0x2990 ||
+        c === 0x2991 ||
+        c === 0x2992 ||
+        c === 0x2993 ||
+        c === 0x2994 ||
+        c === 0x2995 ||
+        c === 0x2996 ||
+        c === 0x2997 ||
+        c === 0x2998 ||
+        (c >= 0x2999 && c <= 0x29d7) ||
+        c === 0x29d8 ||
+        c === 0x29d9 ||
+        c === 0x29da ||
+        c === 0x29db ||
+        (c >= 0x29dc && c <= 0x29fb) ||
+        c === 0x29fc ||
+        c === 0x29fd ||
+        (c >= 0x29fe && c <= 0x2aff) ||
+        (c >= 0x2b00 && c <= 0x2b2f) ||
+        (c >= 0x2b30 && c <= 0x2b44) ||
+        (c >= 0x2b45 && c <= 0x2b46) ||
+        (c >= 0x2b47 && c <= 0x2b4c) ||
+        (c >= 0x2b4d && c <= 0x2b73) ||
+        (c >= 0x2b74 && c <= 0x2b75) ||
+        (c >= 0x2b76 && c <= 0x2b95) ||
+        c === 0x2b96 ||
+        (c >= 0x2b97 && c <= 0x2bff) ||
+        (c >= 0x2e00 && c <= 0x2e01) ||
+        c === 0x2e02 ||
+        c === 0x2e03 ||
+        c === 0x2e04 ||
+        c === 0x2e05 ||
+        (c >= 0x2e06 && c <= 0x2e08) ||
+        c === 0x2e09 ||
+        c === 0x2e0a ||
+        c === 0x2e0b ||
+        c === 0x2e0c ||
+        c === 0x2e0d ||
+        (c >= 0x2e0e && c <= 0x2e16) ||
+        c === 0x2e17 ||
+        (c >= 0x2e18 && c <= 0x2e19) ||
+        c === 0x2e1a ||
+        c === 0x2e1b ||
+        c === 0x2e1c ||
+        c === 0x2e1d ||
+        (c >= 0x2e1e && c <= 0x2e1f) ||
+        c === 0x2e20 ||
+        c === 0x2e21 ||
+        c === 0x2e22 ||
+        c === 0x2e23 ||
+        c === 0x2e24 ||
+        c === 0x2e25 ||
+        c === 0x2e26 ||
+        c === 0x2e27 ||
+        c === 0x2e28 ||
+        c === 0x2e29 ||
+        (c >= 0x2e2a && c <= 0x2e2e) ||
+        c === 0x2e2f ||
+        (c >= 0x2e30 && c <= 0x2e39) ||
+        (c >= 0x2e3a && c <= 0x2e3b) ||
+        (c >= 0x2e3c && c <= 0x2e3f) ||
+        c === 0x2e40 ||
+        c === 0x2e41 ||
+        c === 0x2e42 ||
+        (c >= 0x2e43 && c <= 0x2e4f) ||
+        (c >= 0x2e50 && c <= 0x2e51) ||
+        c === 0x2e52 ||
+        (c >= 0x2e53 && c <= 0x2e7f) ||
+        (c >= 0x3001 && c <= 0x3003) ||
+        c === 0x3008 ||
+        c === 0x3009 ||
+        c === 0x300a ||
+        c === 0x300b ||
+        c === 0x300c ||
+        c === 0x300d ||
+        c === 0x300e ||
+        c === 0x300f ||
+        c === 0x3010 ||
+        c === 0x3011 ||
+        (c >= 0x3012 && c <= 0x3013) ||
+        c === 0x3014 ||
+        c === 0x3015 ||
+        c === 0x3016 ||
+        c === 0x3017 ||
+        c === 0x3018 ||
+        c === 0x3019 ||
+        c === 0x301a ||
+        c === 0x301b ||
+        c === 0x301c ||
+        c === 0x301d ||
+        (c >= 0x301e && c <= 0x301f) ||
+        c === 0x3020 ||
+        c === 0x3030 ||
+        c === 0xfd3e ||
+        c === 0xfd3f ||
+        (c >= 0xfe45 && c <= 0xfe46));
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@formatjs/icu-messageformat-parser/lib/regex.generated.js":
+/*!********************************************************************************!*\
+  !*** ./node_modules/@formatjs/icu-messageformat-parser/lib/regex.generated.js ***!
+  \********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "SPACE_SEPARATOR_REGEX": () => (/* binding */ SPACE_SEPARATOR_REGEX),
+/* harmony export */   "WHITE_SPACE_REGEX": () => (/* binding */ WHITE_SPACE_REGEX)
+/* harmony export */ });
+// @generated from regex-gen.ts
+var SPACE_SEPARATOR_REGEX = /[ \xA0\u1680\u2000-\u200A\u202F\u205F\u3000]/;
+var WHITE_SPACE_REGEX = /[\t-\r \x85\u200E\u200F\u2028\u2029]/;
+
+
+/***/ }),
+
+/***/ "./node_modules/@formatjs/icu-messageformat-parser/lib/types.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/@formatjs/icu-messageformat-parser/lib/types.js ***!
+  \**********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "SKELETON_TYPE": () => (/* binding */ SKELETON_TYPE),
+/* harmony export */   "TYPE": () => (/* binding */ TYPE),
+/* harmony export */   "createLiteralElement": () => (/* binding */ createLiteralElement),
+/* harmony export */   "createNumberElement": () => (/* binding */ createNumberElement),
+/* harmony export */   "isArgumentElement": () => (/* binding */ isArgumentElement),
+/* harmony export */   "isDateElement": () => (/* binding */ isDateElement),
+/* harmony export */   "isDateTimeSkeleton": () => (/* binding */ isDateTimeSkeleton),
+/* harmony export */   "isLiteralElement": () => (/* binding */ isLiteralElement),
+/* harmony export */   "isNumberElement": () => (/* binding */ isNumberElement),
+/* harmony export */   "isNumberSkeleton": () => (/* binding */ isNumberSkeleton),
+/* harmony export */   "isPluralElement": () => (/* binding */ isPluralElement),
+/* harmony export */   "isPoundElement": () => (/* binding */ isPoundElement),
+/* harmony export */   "isSelectElement": () => (/* binding */ isSelectElement),
+/* harmony export */   "isTagElement": () => (/* binding */ isTagElement),
+/* harmony export */   "isTimeElement": () => (/* binding */ isTimeElement)
+/* harmony export */ });
+var TYPE;
+(function (TYPE) {
+    /**
+     * Raw text
+     */
+    TYPE[TYPE["literal"] = 0] = "literal";
+    /**
+     * Variable w/o any format, e.g `var` in `this is a {var}`
+     */
+    TYPE[TYPE["argument"] = 1] = "argument";
+    /**
+     * Variable w/ number format
+     */
+    TYPE[TYPE["number"] = 2] = "number";
+    /**
+     * Variable w/ date format
+     */
+    TYPE[TYPE["date"] = 3] = "date";
+    /**
+     * Variable w/ time format
+     */
+    TYPE[TYPE["time"] = 4] = "time";
+    /**
+     * Variable w/ select format
+     */
+    TYPE[TYPE["select"] = 5] = "select";
+    /**
+     * Variable w/ plural format
+     */
+    TYPE[TYPE["plural"] = 6] = "plural";
+    /**
+     * Only possible within plural argument.
+     * This is the `#` symbol that will be substituted with the count.
+     */
+    TYPE[TYPE["pound"] = 7] = "pound";
+    /**
+     * XML-like tag
+     */
+    TYPE[TYPE["tag"] = 8] = "tag";
+})(TYPE || (TYPE = {}));
+var SKELETON_TYPE;
+(function (SKELETON_TYPE) {
+    SKELETON_TYPE[SKELETON_TYPE["number"] = 0] = "number";
+    SKELETON_TYPE[SKELETON_TYPE["dateTime"] = 1] = "dateTime";
+})(SKELETON_TYPE || (SKELETON_TYPE = {}));
+/**
+ * Type Guards
+ */
+function isLiteralElement(el) {
+    return el.type === TYPE.literal;
+}
+function isArgumentElement(el) {
+    return el.type === TYPE.argument;
+}
+function isNumberElement(el) {
+    return el.type === TYPE.number;
+}
+function isDateElement(el) {
+    return el.type === TYPE.date;
+}
+function isTimeElement(el) {
+    return el.type === TYPE.time;
+}
+function isSelectElement(el) {
+    return el.type === TYPE.select;
+}
+function isPluralElement(el) {
+    return el.type === TYPE.plural;
+}
+function isPoundElement(el) {
+    return el.type === TYPE.pound;
+}
+function isTagElement(el) {
+    return el.type === TYPE.tag;
+}
+function isNumberSkeleton(el) {
+    return !!(el && typeof el === 'object' && el.type === SKELETON_TYPE.number);
+}
+function isDateTimeSkeleton(el) {
+    return !!(el && typeof el === 'object' && el.type === SKELETON_TYPE.dateTime);
+}
+function createLiteralElement(value) {
+    return {
+        type: TYPE.literal,
+        value: value,
+    };
+}
+function createNumberElement(value, style) {
+    return {
+        type: TYPE.number,
+        value: value,
+        style: style,
+    };
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@formatjs/icu-skeleton-parser/lib/date-time.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/@formatjs/icu-skeleton-parser/lib/date-time.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "parseDateTimeSkeleton": () => (/* binding */ parseDateTimeSkeleton)
+/* harmony export */ });
+/**
+ * https://unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table
+ * Credit: https://github.com/caridy/intl-datetimeformat-pattern/blob/master/index.js
+ * with some tweaks
+ */
+var DATE_TIME_REGEX = /(?:[Eec]{1,6}|G{1,5}|[Qq]{1,5}|(?:[yYur]+|U{1,5})|[ML]{1,5}|d{1,2}|D{1,3}|F{1}|[abB]{1,5}|[hkHK]{1,2}|w{1,2}|W{1}|m{1,2}|s{1,2}|[zZOvVxX]{1,4})(?=([^']*'[^']*')*[^']*$)/g;
+/**
+ * Parse Date time skeleton into Intl.DateTimeFormatOptions
+ * Ref: https://unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table
+ * @public
+ * @param skeleton skeleton string
+ */
+function parseDateTimeSkeleton(skeleton) {
+    var result = {};
+    skeleton.replace(DATE_TIME_REGEX, function (match) {
+        var len = match.length;
+        switch (match[0]) {
+            // Era
+            case 'G':
+                result.era = len === 4 ? 'long' : len === 5 ? 'narrow' : 'short';
+                break;
+            // Year
+            case 'y':
+                result.year = len === 2 ? '2-digit' : 'numeric';
+                break;
+            case 'Y':
+            case 'u':
+            case 'U':
+            case 'r':
+                throw new RangeError('`Y/u/U/r` (year) patterns are not supported, use `y` instead');
+            // Quarter
+            case 'q':
+            case 'Q':
+                throw new RangeError('`q/Q` (quarter) patterns are not supported');
+            // Month
+            case 'M':
+            case 'L':
+                result.month = ['numeric', '2-digit', 'short', 'long', 'narrow'][len - 1];
+                break;
+            // Week
+            case 'w':
+            case 'W':
+                throw new RangeError('`w/W` (week) patterns are not supported');
+            case 'd':
+                result.day = ['numeric', '2-digit'][len - 1];
+                break;
+            case 'D':
+            case 'F':
+            case 'g':
+                throw new RangeError('`D/F/g` (day) patterns are not supported, use `d` instead');
+            // Weekday
+            case 'E':
+                result.weekday = len === 4 ? 'short' : len === 5 ? 'narrow' : 'short';
+                break;
+            case 'e':
+                if (len < 4) {
+                    throw new RangeError('`e..eee` (weekday) patterns are not supported');
+                }
+                result.weekday = ['short', 'long', 'narrow', 'short'][len - 4];
+                break;
+            case 'c':
+                if (len < 4) {
+                    throw new RangeError('`c..ccc` (weekday) patterns are not supported');
+                }
+                result.weekday = ['short', 'long', 'narrow', 'short'][len - 4];
+                break;
+            // Period
+            case 'a': // AM, PM
+                result.hour12 = true;
+                break;
+            case 'b': // am, pm, noon, midnight
+            case 'B': // flexible day periods
+                throw new RangeError('`b/B` (period) patterns are not supported, use `a` instead');
+            // Hour
+            case 'h':
+                result.hourCycle = 'h12';
+                result.hour = ['numeric', '2-digit'][len - 1];
+                break;
+            case 'H':
+                result.hourCycle = 'h23';
+                result.hour = ['numeric', '2-digit'][len - 1];
+                break;
+            case 'K':
+                result.hourCycle = 'h11';
+                result.hour = ['numeric', '2-digit'][len - 1];
+                break;
+            case 'k':
+                result.hourCycle = 'h24';
+                result.hour = ['numeric', '2-digit'][len - 1];
+                break;
+            case 'j':
+            case 'J':
+            case 'C':
+                throw new RangeError('`j/J/C` (hour) patterns are not supported, use `h/H/K/k` instead');
+            // Minute
+            case 'm':
+                result.minute = ['numeric', '2-digit'][len - 1];
+                break;
+            // Second
+            case 's':
+                result.second = ['numeric', '2-digit'][len - 1];
+                break;
+            case 'S':
+            case 'A':
+                throw new RangeError('`S/A` (second) patterns are not supported, use `s` instead');
+            // Zone
+            case 'z': // 1..3, 4: specific non-location format
+                result.timeZoneName = len < 4 ? 'short' : 'long';
+                break;
+            case 'Z': // 1..3, 4, 5: The ISO8601 varios formats
+            case 'O': // 1, 4: miliseconds in day short, long
+            case 'v': // 1, 4: generic non-location format
+            case 'V': // 1, 2, 3, 4: time zone ID or city
+            case 'X': // 1, 2, 3, 4: The ISO8601 varios formats
+            case 'x': // 1, 2, 3, 4: The ISO8601 varios formats
+                throw new RangeError('`Z/O/v/V/X/x` (timeZone) patterns are not supported, use `z` instead');
+        }
+        return '';
+    });
+    return result;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@formatjs/icu-skeleton-parser/lib/index.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/@formatjs/icu-skeleton-parser/lib/index.js ***!
+  \*****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "parseDateTimeSkeleton": () => (/* reexport safe */ _date_time__WEBPACK_IMPORTED_MODULE_0__.parseDateTimeSkeleton),
+/* harmony export */   "parseNumberSkeleton": () => (/* reexport safe */ _number__WEBPACK_IMPORTED_MODULE_1__.parseNumberSkeleton),
+/* harmony export */   "parseNumberSkeletonFromString": () => (/* reexport safe */ _number__WEBPACK_IMPORTED_MODULE_1__.parseNumberSkeletonFromString)
+/* harmony export */ });
+/* harmony import */ var _date_time__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./date-time */ "./node_modules/@formatjs/icu-skeleton-parser/lib/date-time.js");
+/* harmony import */ var _number__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./number */ "./node_modules/@formatjs/icu-skeleton-parser/lib/number.js");
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/@formatjs/icu-skeleton-parser/lib/number.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@formatjs/icu-skeleton-parser/lib/number.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "parseNumberSkeleton": () => (/* binding */ parseNumberSkeleton),
+/* harmony export */   "parseNumberSkeletonFromString": () => (/* binding */ parseNumberSkeletonFromString)
+/* harmony export */ });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _regex_generated__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./regex.generated */ "./node_modules/@formatjs/icu-skeleton-parser/lib/regex.generated.js");
+
+
+function parseNumberSkeletonFromString(skeleton) {
+    if (skeleton.length === 0) {
+        throw new Error('Number skeleton cannot be empty');
+    }
+    // Parse the skeleton
+    var stringTokens = skeleton
+        .split(_regex_generated__WEBPACK_IMPORTED_MODULE_0__.WHITE_SPACE_REGEX)
+        .filter(function (x) { return x.length > 0; });
+    var tokens = [];
+    for (var _i = 0, stringTokens_1 = stringTokens; _i < stringTokens_1.length; _i++) {
+        var stringToken = stringTokens_1[_i];
+        var stemAndOptions = stringToken.split('/');
+        if (stemAndOptions.length === 0) {
+            throw new Error('Invalid number skeleton');
+        }
+        var stem = stemAndOptions[0], options = stemAndOptions.slice(1);
+        for (var _a = 0, options_1 = options; _a < options_1.length; _a++) {
+            var option = options_1[_a];
+            if (option.length === 0) {
+                throw new Error('Invalid number skeleton');
+            }
+        }
+        tokens.push({ stem: stem, options: options });
+    }
+    return tokens;
+}
+function icuUnitToEcma(unit) {
+    return unit.replace(/^(.*?)-/, '');
+}
+var FRACTION_PRECISION_REGEX = /^\.(?:(0+)(\*)?|(#+)|(0+)(#+))$/g;
+var SIGNIFICANT_PRECISION_REGEX = /^(@+)?(\+|#+)?[rs]?$/g;
+var INTEGER_WIDTH_REGEX = /(\*)(0+)|(#+)(0+)|(0+)/g;
+var CONCISE_INTEGER_WIDTH_REGEX = /^(0+)$/;
+function parseSignificantPrecision(str) {
+    var result = {};
+    if (str[str.length - 1] === 'r') {
+        result.roundingPriority = 'morePrecision';
+    }
+    else if (str[str.length - 1] === 's') {
+        result.roundingPriority = 'lessPrecision';
+    }
+    str.replace(SIGNIFICANT_PRECISION_REGEX, function (_, g1, g2) {
+        // @@@ case
+        if (typeof g2 !== 'string') {
+            result.minimumSignificantDigits = g1.length;
+            result.maximumSignificantDigits = g1.length;
+        }
+        // @@@+ case
+        else if (g2 === '+') {
+            result.minimumSignificantDigits = g1.length;
+        }
+        // .### case
+        else if (g1[0] === '#') {
+            result.maximumSignificantDigits = g1.length;
+        }
+        // .@@## or .@@@ case
+        else {
+            result.minimumSignificantDigits = g1.length;
+            result.maximumSignificantDigits =
+                g1.length + (typeof g2 === 'string' ? g2.length : 0);
+        }
+        return '';
+    });
+    return result;
+}
+function parseSign(str) {
+    switch (str) {
+        case 'sign-auto':
+            return {
+                signDisplay: 'auto',
+            };
+        case 'sign-accounting':
+        case '()':
+            return {
+                currencySign: 'accounting',
+            };
+        case 'sign-always':
+        case '+!':
+            return {
+                signDisplay: 'always',
+            };
+        case 'sign-accounting-always':
+        case '()!':
+            return {
+                signDisplay: 'always',
+                currencySign: 'accounting',
+            };
+        case 'sign-except-zero':
+        case '+?':
+            return {
+                signDisplay: 'exceptZero',
+            };
+        case 'sign-accounting-except-zero':
+        case '()?':
+            return {
+                signDisplay: 'exceptZero',
+                currencySign: 'accounting',
+            };
+        case 'sign-never':
+        case '+_':
+            return {
+                signDisplay: 'never',
+            };
+    }
+}
+function parseConciseScientificAndEngineeringStem(stem) {
+    // Engineering
+    var result;
+    if (stem[0] === 'E' && stem[1] === 'E') {
+        result = {
+            notation: 'engineering',
+        };
+        stem = stem.slice(2);
+    }
+    else if (stem[0] === 'E') {
+        result = {
+            notation: 'scientific',
+        };
+        stem = stem.slice(1);
+    }
+    if (result) {
+        var signDisplay = stem.slice(0, 2);
+        if (signDisplay === '+!') {
+            result.signDisplay = 'always';
+            stem = stem.slice(2);
+        }
+        else if (signDisplay === '+?') {
+            result.signDisplay = 'exceptZero';
+            stem = stem.slice(2);
+        }
+        if (!CONCISE_INTEGER_WIDTH_REGEX.test(stem)) {
+            throw new Error('Malformed concise eng/scientific notation');
+        }
+        result.minimumIntegerDigits = stem.length;
+    }
+    return result;
+}
+function parseNotationOptions(opt) {
+    var result = {};
+    var signOpts = parseSign(opt);
+    if (signOpts) {
+        return signOpts;
+    }
+    return result;
+}
+/**
+ * https://github.com/unicode-org/icu/blob/master/docs/userguide/format_parse/numbers/skeletons.md#skeleton-stems-and-options
+ */
+function parseNumberSkeleton(tokens) {
+    var result = {};
+    for (var _i = 0, tokens_1 = tokens; _i < tokens_1.length; _i++) {
+        var token = tokens_1[_i];
+        switch (token.stem) {
+            case 'percent':
+            case '%':
+                result.style = 'percent';
+                continue;
+            case '%x100':
+                result.style = 'percent';
+                result.scale = 100;
+                continue;
+            case 'currency':
+                result.style = 'currency';
+                result.currency = token.options[0];
+                continue;
+            case 'group-off':
+            case ',_':
+                result.useGrouping = false;
+                continue;
+            case 'precision-integer':
+            case '.':
+                result.maximumFractionDigits = 0;
+                continue;
+            case 'measure-unit':
+            case 'unit':
+                result.style = 'unit';
+                result.unit = icuUnitToEcma(token.options[0]);
+                continue;
+            case 'compact-short':
+            case 'K':
+                result.notation = 'compact';
+                result.compactDisplay = 'short';
+                continue;
+            case 'compact-long':
+            case 'KK':
+                result.notation = 'compact';
+                result.compactDisplay = 'long';
+                continue;
+            case 'scientific':
+                result = (0,tslib__WEBPACK_IMPORTED_MODULE_1__.__assign)((0,tslib__WEBPACK_IMPORTED_MODULE_1__.__assign)((0,tslib__WEBPACK_IMPORTED_MODULE_1__.__assign)({}, result), { notation: 'scientific' }), token.options.reduce(function (all, opt) { return ((0,tslib__WEBPACK_IMPORTED_MODULE_1__.__assign)((0,tslib__WEBPACK_IMPORTED_MODULE_1__.__assign)({}, all), parseNotationOptions(opt))); }, {}));
+                continue;
+            case 'engineering':
+                result = (0,tslib__WEBPACK_IMPORTED_MODULE_1__.__assign)((0,tslib__WEBPACK_IMPORTED_MODULE_1__.__assign)((0,tslib__WEBPACK_IMPORTED_MODULE_1__.__assign)({}, result), { notation: 'engineering' }), token.options.reduce(function (all, opt) { return ((0,tslib__WEBPACK_IMPORTED_MODULE_1__.__assign)((0,tslib__WEBPACK_IMPORTED_MODULE_1__.__assign)({}, all), parseNotationOptions(opt))); }, {}));
+                continue;
+            case 'notation-simple':
+                result.notation = 'standard';
+                continue;
+            // https://github.com/unicode-org/icu/blob/master/icu4c/source/i18n/unicode/unumberformatter.h
+            case 'unit-width-narrow':
+                result.currencyDisplay = 'narrowSymbol';
+                result.unitDisplay = 'narrow';
+                continue;
+            case 'unit-width-short':
+                result.currencyDisplay = 'code';
+                result.unitDisplay = 'short';
+                continue;
+            case 'unit-width-full-name':
+                result.currencyDisplay = 'name';
+                result.unitDisplay = 'long';
+                continue;
+            case 'unit-width-iso-code':
+                result.currencyDisplay = 'symbol';
+                continue;
+            case 'scale':
+                result.scale = parseFloat(token.options[0]);
+                continue;
+            // https://unicode-org.github.io/icu/userguide/format_parse/numbers/skeletons.html#integer-width
+            case 'integer-width':
+                if (token.options.length > 1) {
+                    throw new RangeError('integer-width stems only accept a single optional option');
+                }
+                token.options[0].replace(INTEGER_WIDTH_REGEX, function (_, g1, g2, g3, g4, g5) {
+                    if (g1) {
+                        result.minimumIntegerDigits = g2.length;
+                    }
+                    else if (g3 && g4) {
+                        throw new Error('We currently do not support maximum integer digits');
+                    }
+                    else if (g5) {
+                        throw new Error('We currently do not support exact integer digits');
+                    }
+                    return '';
+                });
+                continue;
+        }
+        // https://unicode-org.github.io/icu/userguide/format_parse/numbers/skeletons.html#integer-width
+        if (CONCISE_INTEGER_WIDTH_REGEX.test(token.stem)) {
+            result.minimumIntegerDigits = token.stem.length;
+            continue;
+        }
+        if (FRACTION_PRECISION_REGEX.test(token.stem)) {
+            // Precision
+            // https://unicode-org.github.io/icu/userguide/format_parse/numbers/skeletons.html#fraction-precision
+            // precision-integer case
+            if (token.options.length > 1) {
+                throw new RangeError('Fraction-precision stems only accept a single optional option');
+            }
+            token.stem.replace(FRACTION_PRECISION_REGEX, function (_, g1, g2, g3, g4, g5) {
+                // .000* case (before ICU67 it was .000+)
+                if (g2 === '*') {
+                    result.minimumFractionDigits = g1.length;
+                }
+                // .### case
+                else if (g3 && g3[0] === '#') {
+                    result.maximumFractionDigits = g3.length;
+                }
+                // .00## case
+                else if (g4 && g5) {
+                    result.minimumFractionDigits = g4.length;
+                    result.maximumFractionDigits = g4.length + g5.length;
+                }
+                else {
+                    result.minimumFractionDigits = g1.length;
+                    result.maximumFractionDigits = g1.length;
+                }
+                return '';
+            });
+            var opt = token.options[0];
+            // https://unicode-org.github.io/icu/userguide/format_parse/numbers/skeletons.html#trailing-zero-display
+            if (opt === 'w') {
+                result = (0,tslib__WEBPACK_IMPORTED_MODULE_1__.__assign)((0,tslib__WEBPACK_IMPORTED_MODULE_1__.__assign)({}, result), { trailingZeroDisplay: 'stripIfInteger' });
+            }
+            else if (opt) {
+                result = (0,tslib__WEBPACK_IMPORTED_MODULE_1__.__assign)((0,tslib__WEBPACK_IMPORTED_MODULE_1__.__assign)({}, result), parseSignificantPrecision(opt));
+            }
+            continue;
+        }
+        // https://unicode-org.github.io/icu/userguide/format_parse/numbers/skeletons.html#significant-digits-precision
+        if (SIGNIFICANT_PRECISION_REGEX.test(token.stem)) {
+            result = (0,tslib__WEBPACK_IMPORTED_MODULE_1__.__assign)((0,tslib__WEBPACK_IMPORTED_MODULE_1__.__assign)({}, result), parseSignificantPrecision(token.stem));
+            continue;
+        }
+        var signOpts = parseSign(token.stem);
+        if (signOpts) {
+            result = (0,tslib__WEBPACK_IMPORTED_MODULE_1__.__assign)((0,tslib__WEBPACK_IMPORTED_MODULE_1__.__assign)({}, result), signOpts);
+        }
+        var conciseScientificAndEngineeringOpts = parseConciseScientificAndEngineeringStem(token.stem);
+        if (conciseScientificAndEngineeringOpts) {
+            result = (0,tslib__WEBPACK_IMPORTED_MODULE_1__.__assign)((0,tslib__WEBPACK_IMPORTED_MODULE_1__.__assign)({}, result), conciseScientificAndEngineeringOpts);
+        }
+    }
+    return result;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@formatjs/icu-skeleton-parser/lib/regex.generated.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/@formatjs/icu-skeleton-parser/lib/regex.generated.js ***!
+  \***************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "WHITE_SPACE_REGEX": () => (/* binding */ WHITE_SPACE_REGEX)
+/* harmony export */ });
+// @generated from regex-gen.ts
+var WHITE_SPACE_REGEX = /[\t-\r \x85\u200E\u200F\u2028\u2029]/i;
+
+
+/***/ }),
 
 /***/ "./src/config.js":
 /*!***********************!*\
@@ -8,12 +4302,18 @@
   \***********************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "API_KEY": () => (/* binding */ API_KEY),
 /* harmony export */   "APP_NAME": () => (/* binding */ APP_NAME),
 /* harmony export */   "AVATAR_SIZE": () => (/* binding */ AVATAR_SIZE),
 /* harmony export */   "BROKEN_IMAGE_SIZE": () => (/* binding */ BROKEN_IMAGE_SIZE),
+/* harmony export */   "CALL_STATE_INCOMING_RECEIVED": () => (/* binding */ CALL_STATE_INCOMING_RECEIVED),
+/* harmony export */   "CALL_STATE_IN_PROGRESS": () => (/* binding */ CALL_STATE_IN_PROGRESS),
+/* harmony export */   "CALL_STATE_NONE": () => (/* binding */ CALL_STATE_NONE),
+/* harmony export */   "CALL_STATE_OUTGOING_INITATED": () => (/* binding */ CALL_STATE_OUTGOING_INITATED),
+/* harmony export */   "CALL_WEBRTC_CONFIG": () => (/* binding */ CALL_WEBRTC_CONFIG),
 /* harmony export */   "CHANNEL_ACCESS_MODE": () => (/* binding */ CHANNEL_ACCESS_MODE),
 /* harmony export */   "DEFAULT_HOST": () => (/* binding */ DEFAULT_HOST),
 /* harmony export */   "DEFAULT_P2P_ACCESS_MODE": () => (/* binding */ DEFAULT_P2P_ACCESS_MODE),
@@ -86,6 +4386,19 @@ const FORWARDED_PREVIEW_LENGTH = 84;
 const LINK_CONTACT_US = 'email:support@tinode.co';
 const LINK_PRIVACY_POLICY = 'https://tinode.co/privacy.html';
 const LINK_TERMS_OF_SERVICE = 'https://tinode.co/terms.html';
+const CALL_STATE_NONE = 0;
+const CALL_STATE_OUTGOING_INITATED = 1;
+const CALL_STATE_INCOMING_RECEIVED = 2;
+const CALL_STATE_IN_PROGRESS = 3;
+const CALL_WEBRTC_CONFIG = {
+  iceServers: [{
+    urls: ["stun:bn-turn1.xirsys.com"]
+  }, {
+    username: "0kYXFmQL9xojOrUy4VFemlTnNPVFZpp7jfPjpB3AjxahuRe4QWrCs6Ll1vDc7TTjAAAAAGAG2whXZWJUdXRzUGx1cw==",
+    credential: "285ff060-5a58-11eb-b269-0242ac140004",
+    urls: ["turn:bn-turn1.xirsys.com:80?transport=udp", "turn:bn-turn1.xirsys.com:3478?transport=udp", "turn:bn-turn1.xirsys.com:80?transport=tcp", "turn:bn-turn1.xirsys.com:3478?transport=tcp", "turns:bn-turn1.xirsys.com:443?transport=tcp", "turns:bn-turn1.xirsys.com:5349?transport=tcp"]
+  }]
+};
 
 /***/ }),
 
@@ -95,6 +4408,7 @@ const LINK_TERMS_OF_SERVICE = 'https://tinode.co/terms.html';
   \*********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "MIME_EXTENSIONS": () => (/* binding */ MIME_EXTENSIONS),
@@ -103,6 +4417,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "base64EncodedLen": () => (/* binding */ base64EncodedLen),
 /* harmony export */   "base64ReEncode": () => (/* binding */ base64ReEncode),
 /* harmony export */   "base64ToBlob": () => (/* binding */ base64ToBlob),
+/* harmony export */   "base64ToIntArray": () => (/* binding */ base64ToIntArray),
 /* harmony export */   "blobToBase64": () => (/* binding */ blobToBase64),
 /* harmony export */   "fileNameForMime": () => (/* binding */ fileNameForMime),
 /* harmony export */   "filePasted": () => (/* binding */ filePasted),
@@ -111,6 +4426,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "getMimeType": () => (/* binding */ getMimeType),
 /* harmony export */   "imageCrop": () => (/* binding */ imageCrop),
 /* harmony export */   "imageScaled": () => (/* binding */ imageScaled),
+/* harmony export */   "intArrayToBase64": () => (/* binding */ intArrayToBase64),
 /* harmony export */   "makeImageUrl": () => (/* binding */ makeImageUrl)
 /* harmony export */ });
 const SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
@@ -294,7 +4610,7 @@ function blobToBase64(blob) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
-    reader.onerror = evt => {
+    reader.onerror = _ => {
       reject(reader.error);
     };
 
@@ -387,6 +4703,32 @@ function base64ToBlob(str, mime) {
 
   return null;
 }
+function intArrayToBase64(arr) {
+  if (!Array.isArray(arr)) {
+    return null;
+  }
+
+  try {
+    let bin = '';
+    new Uint8Array(arr).forEach(b => bin += String.fromCharCode(b));
+    return window.btoa(bin);
+  } catch (err) {}
+
+  return null;
+}
+function base64ToIntArray(b64) {
+  const arr = [];
+
+  try {
+    const bin = window.atob(b64);
+    [...bin].forEach(c => {
+      arr.push(c.charCodeAt(0));
+    });
+    return arr;
+  } catch (err) {}
+
+  return null;
+}
 
 /***/ }),
 
@@ -396,6 +4738,7 @@ function base64ToBlob(str, mime) {
   \*******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "fullFormatter": () => (/* binding */ fullFormatter),
@@ -408,12 +4751,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/lazy-image.jsx */ "./src/widgets/lazy-image.jsx");
-/* harmony import */ var _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/uploading-image.jsx */ "./src/widgets/uploading-image.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _strformat_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./strformat.js */ "./src/lib/strformat.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./utils.js */ "./src/lib/utils.js");
+/* harmony import */ var _widgets_audio_player_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/audio-player.jsx */ "./src/widgets/audio-player.jsx");
+/* harmony import */ var _widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/lazy-image.jsx */ "./src/widgets/lazy-image.jsx");
+/* harmony import */ var _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/uploading-image.jsx */ "./src/widgets/uploading-image.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _strformat_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./utils.js */ "./src/lib/utils.js");
+
 
 
 
@@ -444,6 +4789,13 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
       "type": 0,
       "value": "Picture"
     }]
+  },
+  drafty_unknown: {
+    id: "drafty_unknown",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Unsupported"
+    }]
   }
 });
 
@@ -451,16 +4803,16 @@ function handleImageData(el, data, attr) {
   if (!data) {
     attr.src = 'img/broken_image.png';
     attr.style = {
-      width: _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM + 'px',
-      height: _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM + 'px'
+      width: _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM + 'px',
+      height: _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM + 'px'
     };
     return el;
   }
 
   attr.className = 'inline-image';
-  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_5__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_5__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_5__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_5__.REM_SIZE * 24, false) || {
-    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_5__.BROKEN_IMAGE_SIZE,
-    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_5__.BROKEN_IMAGE_SIZE
+  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_6__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_6__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_6__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_6__.REM_SIZE * 24, false) || {
+    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_6__.BROKEN_IMAGE_SIZE,
+    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_6__.BROKEN_IMAGE_SIZE
   };
   attr.style = {
     width: dim.dstWidth + 'px',
@@ -470,11 +4822,11 @@ function handleImageData(el, data, attr) {
   };
 
   if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isProcessing(data)) {
-    attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_8__.sanitizeImageUrl)(attr.src));
+    attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.sanitizeUrlForMime)(attr.src, 'image'));
     attr.alt = data.name;
 
     if (attr.src) {
-      if (Math.max(data.width || 0, data.height || 0) > _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM) {
+      if (Math.max(data.width || 0, data.height || 0) > _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM) {
         attr.onClick = this.onImagePreview;
         attr.className += ' image-clickable';
       }
@@ -484,49 +4836,10 @@ function handleImageData(el, data, attr) {
       attr.src = 'img/broken_image.png';
     }
   } else {
-    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_4__["default"];
+    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_5__["default"];
   }
 
   return el;
-}
-
-function quotedImage(data) {
-  let promise;
-
-  if (data.val) {
-    const blob = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__.base64ToBlob)(data.val, data.mime);
-    promise = blob ? Promise.resolve(blob) : Prmise.reject(new Error("Invalid image"));
-  } else {
-    promise = fetch(this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_8__.sanitizeImageUrl)(data.ref))).then(evt => {
-      if (evt.ok) {
-        return evt.blob();
-      } else {
-        throw new Error("Image fetch unsuccessful: ".concat(evt.status, " ").concat(evt.statusText));
-      }
-    });
-  }
-
-  return promise.then(blob => {
-    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM, _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM, -1, true);
-  }).then(scaled => {
-    data.mime = scaled.mime;
-    data.size = scaled.blob.size;
-    data.width = scaled.width;
-    data.height = scaled.height;
-    delete data.ref;
-    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__.blobToBase64)(scaled.blob);
-  }).then(b64 => {
-    data.val = b64.bits;
-    return data;
-  }).catch(err => {
-    delete data.val;
-    delete data.name;
-    data.width = _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM;
-    data.height = _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM;
-    data.maxWidth = _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM;
-    data.maxHeight = _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM;
-    throw err;
-  });
 }
 
 function fullFormatter(style, data, values, key, stack) {
@@ -539,12 +4852,27 @@ function fullFormatter(style, data, values, key, stack) {
   }
 
   let el = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.tagName(style);
-  const attr = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attrValue(style, data) || {};
+  let attr = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attrValue(style, data) || {};
   attr.key = key;
 
   switch (style) {
+    case 'AU':
+      if (attr.src) {
+        attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.sanitizeUrlForMime)(attr.src, 'audio'));
+        attr.duration = data.duration > 0 ? data.duration | 0 : undefined;
+        attr.preview = data.preview;
+        attr.loading = 'lazy';
+      }
+
+      el = _widgets_audio_player_jsx__WEBPACK_IMPORTED_MODULE_3__["default"];
+      values = null;
+      break;
+
     case 'BR':
       values = null;
+      break;
+
+    case 'EX':
       break;
 
     case 'HL':
@@ -578,7 +4906,7 @@ function fullFormatter(style, data, values, key, stack) {
       attr.className = 'mention';
 
       if (data) {
-        attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_7__.idToColorClass)(data.val, false, true);
+        attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_8__.idToColorClass)(data.val, false, true);
       }
 
       break;
@@ -596,11 +4924,24 @@ function fullFormatter(style, data, values, key, stack) {
       break;
 
     default:
-      if (el == '_UNKN') {
+      if (!el) {
         el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
+        attr = {
+          key: key
+        };
+        let body = values;
+
+        if (!Array.isArray(values) || !values.join('').trim()) {
+          body = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+            key: "x1",
+            className: "gray"
+          }, this.formatMessage(messages.drafty_unknown))];
+        }
+
         values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+          key: "x0",
           className: "material-icons gray"
-        }, "extension"), ' '].concat(values || []);
+        }, "extension"), ' '].concat(body);
       }
 
       break;
@@ -623,6 +4964,14 @@ function previewFormatter(style, data, values, key) {
   };
 
   switch (style) {
+    case 'AU':
+      el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
+      values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+        key: "au",
+        className: "material-icons"
+      }, "mic"), ' ', (0,_strformat_js__WEBPACK_IMPORTED_MODULE_8__.secondsToTime)(data.duration / 1000)];
+      break;
+
     case 'BR':
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
       values = [' '];
@@ -642,7 +4991,7 @@ function previewFormatter(style, data, values, key) {
       values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
         key: "im",
         className: "material-icons"
-      }, "photo"), this.formatMessage(messages.drafty_image)];
+      }, "photo"), ' ', this.formatMessage(messages.drafty_image)];
       break;
 
     case 'BN':
@@ -676,7 +5025,7 @@ function previewFormatter(style, data, values, key) {
       values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
         key: "ex",
         className: "material-icons"
-      }, "attachment"), this.formatMessage(messages.drafty_attachment)];
+      }, "attachment"), ' ', this.formatMessage(messages.drafty_attachment)];
       break;
 
     case 'QQ':
@@ -686,12 +5035,12 @@ function previewFormatter(style, data, values, key) {
       break;
 
     default:
-      if (el == '_UNKN') {
+      if (!el) {
         el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
         values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-          key: "unkn",
-          className: "material-icons"
-        }, "extension"), ' '].concat(values || []);
+          key: "x0",
+          className: "material-icons gray"
+        }, "extension"), ' ', this.formatMessage(messages.drafty_unknown)];
       }
 
       break;
@@ -707,10 +5056,10 @@ function previewFormatter(style, data, values, key) {
 
 function inlineImageAttr(attr, data) {
   attr.style = {
-    width: _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM + 'px',
-    height: _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM + 'px',
-    maxWidth: _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM + 'px',
-    maxHeight: _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM + 'px'
+    width: _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM + 'px',
+    height: _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM + 'px',
+    maxWidth: _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM + 'px',
+    maxHeight: _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM + 'px'
   };
   attr.className = 'inline-image';
   attr.alt = this.formatMessage(messages.drafty_image);
@@ -748,7 +5097,7 @@ function quoteFormatter(style, data, values, key) {
         attr.className = 'mention';
 
         if (data) {
-          attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_7__.idToColorClass)(data.val, false, true);
+          attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_8__.idToColorClass)(data.val, false, true);
         }
 
         break;
@@ -770,7 +5119,7 @@ function quoteFormatter(style, data, values, key) {
         values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
           key: "ex",
           className: "material-icons"
-        }, "attachment"), (0,_strformat_js__WEBPACK_IMPORTED_MODULE_7__.shortenFileName)(fname, 16) || this.formatMessage(messages.drafty_attachment)];
+        }, "attachment"), (0,_strformat_js__WEBPACK_IMPORTED_MODULE_8__.shortenFileName)(fname, 16) || this.formatMessage(messages.drafty_attachment)];
         break;
     }
 
@@ -784,7 +5133,7 @@ function quoteImage(data) {
   let promise;
 
   if (data.val) {
-    const blob = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__.base64ToBlob)(data.val, data.mime);
+    const blob = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__.base64ToBlob)(data.val, data.mime);
 
     if (!blob) {
       throw new Error("Invalid image");
@@ -792,7 +5141,7 @@ function quoteImage(data) {
 
     promise = Promise.resolve(blob);
   } else if (data.ref) {
-    promise = fetch(this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_8__.sanitizeImageUrl)(data.ref))).then(evt => {
+    promise = fetch(this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.sanitizeUrlForMime)(data.ref, 'image'))).then(evt => {
       if (evt.ok) {
         return evt.blob();
       } else {
@@ -804,7 +5153,7 @@ function quoteImage(data) {
   }
 
   return promise.then(blob => {
-    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM, _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM, -1, true);
+    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM, _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM, -1, true);
   }).then(scaled => {
     data.mime = scaled.mime;
     data.size = scaled.blob.size;
@@ -812,15 +5161,15 @@ function quoteImage(data) {
     data.height = scaled.height;
     delete data.ref;
     data.src = URL.createObjectURL(scaled.blob);
-    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__.blobToBase64)(scaled.blob);
+    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__.blobToBase64)(scaled.blob);
   }).then(b64 => {
     data.val = b64.bits;
     return data;
   }).catch(err => {
     delete data.val;
     delete data.src;
-    data.width = _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM;
-    data.height = _config_js__WEBPACK_IMPORTED_MODULE_5__.IMAGE_THUMBNAIL_DIM;
+    data.width = _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM;
+    data.height = _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM;
     throw err;
   });
 }
@@ -833,13 +5182,13 @@ function replyFormatter(style, data, values, key, stack) {
     let loadedPromise;
 
     try {
-      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_8__.cancelablePromise)(quoteImage.call(this, data));
+      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.cancelablePromise)(quoteImage.call(this, data));
     } catch (error) {
-      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_8__.cancelablePromise)(error);
+      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.cancelablePromise)(error);
     }
 
     attr.whenDone = loadedPromise;
-    values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], attr, null), ' ', attr.alt];
+    values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], attr, null), ' ', attr.alt];
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), {
       key: key
     }, values);
@@ -870,6 +5219,7 @@ function replyFormatter(style, data, values, key, stack) {
   \******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "detectServerAddress": () => (/* binding */ detectServerAddress),
@@ -914,6 +5264,7 @@ function isLocalHost() {
   \**********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ LocalStorageUtil)
@@ -947,6 +5298,7 @@ class LocalStorageUtil {
   \*******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ HashNavigation)
@@ -1045,6 +5397,7 @@ class HashNavigation {
   \******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "bytesToHumanSize": () => (/* binding */ bytesToHumanSize),
@@ -1082,9 +5435,14 @@ function shortDateFormat(then, locale) {
     day: 'numeric'
   });
 }
-function secondsToTime(seconds) {
-  const min = Math.floor(seconds / 60);
-  let sec = seconds % 60;
+function secondsToTime(seconds, fixedMin) {
+  let min = Math.floor(seconds / 60) | 0;
+
+  if (fixedMin) {
+    min = min < 10 ? "0".concat(min) : min;
+  }
+
+  let sec = seconds % 60 | 0;
   sec = sec < 10 ? "0".concat(sec) : sec;
   return "".concat(min, ":").concat(sec);
 }
@@ -1134,16 +5492,19 @@ function idToColorClass(id, light, fg) {
   \**************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "arrayEqual": () => (/* binding */ arrayEqual),
 /* harmony export */   "asEmail": () => (/* binding */ asEmail),
 /* harmony export */   "asPhone": () => (/* binding */ asPhone),
 /* harmony export */   "cancelablePromise": () => (/* binding */ cancelablePromise),
+/* harmony export */   "clipStr": () => (/* binding */ clipStr),
 /* harmony export */   "deliveryMarker": () => (/* binding */ deliveryMarker),
 /* harmony export */   "isUrlRelative": () => (/* binding */ isUrlRelative),
-/* harmony export */   "sanitizeImageUrl": () => (/* binding */ sanitizeImageUrl),
+/* harmony export */   "isVideoCall": () => (/* binding */ isVideoCall),
 /* harmony export */   "sanitizeUrl": () => (/* binding */ sanitizeUrl),
+/* harmony export */   "sanitizeUrlForMime": () => (/* binding */ sanitizeUrlForMime),
 /* harmony export */   "theCard": () => (/* binding */ theCard),
 /* harmony export */   "updateFavicon": () => (/* binding */ updateFavicon)
 /* harmony export */ });
@@ -1179,7 +5540,7 @@ function theCard(fn, imageUrl, imageMimeType, note) {
 
   if (typeof note == 'string') {
     card = card || {};
-    card.note = note ? note : (tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default().DEL_CHAR);
+    card.note = note ? note : tinode_sdk__WEBPACK_IMPORTED_MODULE_0__.Tinode.DEL_CHAR;
   }
 
   if (imageUrl) {
@@ -1191,11 +5552,11 @@ function theCard(fn, imageUrl, imageMimeType, note) {
       mimeType = matches[1];
       card.photo = {
         data: imageUrl.substring(imageUrl.indexOf(',') + 1),
-        ref: (tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default().DEL_CHAR)
+        ref: tinode_sdk__WEBPACK_IMPORTED_MODULE_0__.Tinode.DEL_CHAR
       };
     } else {
       card.photo = {
-        data: (tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default().DEL_CHAR),
+        data: tinode_sdk__WEBPACK_IMPORTED_MODULE_0__.Tinode.DEL_CHAR,
         ref: imageUrl
       };
     }
@@ -1274,7 +5635,7 @@ function sanitizeUrl(url, allowedSchemes) {
 
   return url;
 }
-function sanitizeImageUrl(url) {
+function sanitizeUrlForMime(url, mimeMajor) {
   if (!url) {
     return null;
   }
@@ -1285,7 +5646,9 @@ function sanitizeImageUrl(url) {
     return sanitizedUrl;
   }
 
-  if (/data:image\/[a-z0-9.-]+;base64,/i.test(url.trim())) {
+  const re = new RegExp("data:".concat(mimeMajor, "/[a-z0-9.-]+;base64,"), 'i');
+
+  if (re.test(url.trim())) {
     return url;
   }
 
@@ -1293,28 +5656,28 @@ function sanitizeImageUrl(url) {
 }
 function deliveryMarker(received) {
   switch (received) {
-    case (tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default().MESSAGE_STATUS_SENDING):
+    case tinode_sdk__WEBPACK_IMPORTED_MODULE_0__.Tinode.MESSAGE_STATUS_SENDING:
       return {
         name: 'access_time'
       };
 
-    case (tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default().MESSAGE_STATUS_FAILED):
+    case tinode_sdk__WEBPACK_IMPORTED_MODULE_0__.Tinode.MESSAGE_STATUS_FAILED:
       return {
         name: 'warning',
         color: 'danger-color'
       };
 
-    case (tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default().MESSAGE_STATUS_SENT):
+    case tinode_sdk__WEBPACK_IMPORTED_MODULE_0__.Tinode.MESSAGE_STATUS_SENT:
       return {
         name: 'done'
       };
 
-    case (tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default().MESSAGE_STATUS_RECEIVED):
+    case tinode_sdk__WEBPACK_IMPORTED_MODULE_0__.Tinode.MESSAGE_STATUS_RECEIVED:
       return {
         name: 'done_all'
       };
 
-    case (tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default().MESSAGE_STATUS_READ):
+    case tinode_sdk__WEBPACK_IMPORTED_MODULE_0__.Tinode.MESSAGE_STATUS_READ:
       return {
         name: 'done_all',
         color: 'blue'
@@ -1342,6 +5705,12 @@ function cancelablePromise(promise) {
   };
 }
 ;
+function isVideoCall(mime) {
+  return mime == 'application/tinode-video-call';
+}
+function clipStr(str, length) {
+  return str && str.substring(0, length);
+}
 
 /***/ }),
 
@@ -1351,11 +5720,12 @@ function cancelablePromise(promise) {
   \************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "PACKAGE_VERSION": () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.18.3";
+const PACKAGE_VERSION = "0.20.0-alpha1";
 
 /***/ }),
 
@@ -1365,6 +5735,7 @@ const PACKAGE_VERSION = "0.18.3";
   \**********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ EditAccountView)
@@ -1461,6 +5832,7 @@ class EditAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
   \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -1682,6 +6054,7 @@ class AccSecurityView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Comp
   \****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ AccSupportView)
@@ -1763,7 +6136,7 @@ class AccSupportView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
         "type": 0,
         "value": "SDK:"
       }]
-    })), tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().getLibrary()), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    })), tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.getLibrary()), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "small"
@@ -1797,6 +6170,7 @@ class AccSupportView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
   \*********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ AccountSettingsView)
@@ -1956,6 +6330,7 @@ class AccountSettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().
   \*************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ ContactsView)
@@ -2092,6 +6467,7 @@ class ContactsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   \*******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ CreateAccountView)
@@ -2291,12 +6667,229 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
 
 /***/ }),
 
+/***/ "./src/views/incoming-call-view.jsx":
+/*!******************************************!*\
+  !*** ./src/views/incoming-call-view.jsx ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/avatar-upload.jsx */ "./src/widgets/avatar-upload.jsx");
+/* harmony import */ var _widgets_badge_list_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/badge-list.jsx */ "./src/widgets/badge-list.jsx");
+/* harmony import */ var _widgets_menu_cancel_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/menu-cancel.jsx */ "./src/widgets/menu-cancel.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+
+
+
+
+
+
+
+
+
+const RING_SOUND = new Audio("audio/phone_ring.mp3");
+
+class IncomingCallView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
+  constructor(props) {
+    super(props);
+    this.state = {
+      topic: null,
+      fullName: undefined,
+      avatar: null,
+      trustedBadges: [],
+      previousMetaDesc: undefined
+    };
+    this.resetDesc = this.resetDesc.bind(this);
+    this.onMetaDesc = this.onMetaDesc.bind(this);
+    this.handleRejectCall = this.handleRejectCall.bind(this);
+    this.handleAcceptCall = this.handleAcceptCall.bind(this);
+    this.ringTimer = null;
+  }
+
+  componentDidMount() {
+    const topic = this.props.tinode.getTopic(this.props.topic);
+
+    if (!topic) {
+      return;
+    }
+
+    this.resetDesc(topic, this.props);
+
+    if (this.props.callState == _config_js__WEBPACK_IMPORTED_MODULE_6__.CALL_STATE_INCOMING_RECEIVED) {
+      RING_SOUND.play();
+      this.ringTimer = setInterval(() => RING_SOUND.play(), 2000);
+      this.props.onRinging(this.props.topic, this.props.seq);
+    }
+  }
+
+  componentDidUpdate(props) {
+    const topic = this.props.tinode.getTopic(props.topic);
+
+    if (!topic) {
+      return;
+    }
+
+    if (this.onMetaDesc != topic.onMetaDesc) {
+      this.previousMetaDesc = topic.onMetaDesc;
+      topic.onMetaDesc = this.onMetaDesc;
+    }
+
+    if (this.state.topic != props.topic) {
+      this.setState({
+        topic: props.topic
+      });
+      this.resetDesc(topic, props);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.ringTimer != null) {
+      clearInterval(this.ringTimer);
+      RING_SOUND.pause();
+    }
+
+    const topic = this.props.tinode.getTopic(this.props.topic);
+
+    if (!topic) {
+      return;
+    }
+
+    this.setState({
+      topic: null
+    });
+    topic.onMetaDesc = this.previousMetaDesc;
+  }
+
+  resetDesc(topic, props) {
+    const defacs = topic.getDefaultAccess() || {};
+    const acs = topic.getAccessMode();
+    const badges = [];
+
+    if (topic.trusted) {
+      for (const [key, val] of Object.entries(topic.trusted)) {
+        if (val) {
+          badges.push(key);
+        }
+      }
+    }
+
+    this.setState({
+      fullName: (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.clipStr)(topic.public ? topic.public.fn : undefined, _config_js__WEBPACK_IMPORTED_MODULE_6__.MAX_TITLE_LENGTH),
+      avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__.makeImageUrl)(topic.public ? topic.public.photo : null),
+      trustedBadges: badges
+    });
+  }
+
+  onMetaDesc(desc) {
+    const topic = this.props.tinode.getTopic(this.props.topic);
+
+    if (!topic) {
+      return;
+    }
+
+    this.resetDesc(topic, this.props);
+
+    if (this.previousMetaDesc && this.previousMetaDesc != this.onMetaDesc) {
+      this.previousMetaDesc(desc);
+    }
+  }
+
+  handleAcceptCall() {
+    this.props.onAcceptCall(this.props.topic);
+  }
+
+  handleRejectCall() {
+    this.props.onReject(this.props.topic, this.props.seq);
+    this.props.onClose();
+  }
+
+  render() {
+    const {
+      formatMessage
+    } = this.props.intl;
+    let panelTitle = 'Unknown';
+
+    if (this.props.callState == _config_js__WEBPACK_IMPORTED_MODULE_6__.CALL_STATE_INCOMING_RECEIVED) {
+      panelTitle = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+        id: "calls_incoming_title",
+        defaultMessage: [{
+          "type": 0,
+          "value": "Incoming Call"
+        }]
+      });
+    }
+
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "info-view"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "caption-panel",
+      id: "info-caption-panel"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "panel-title",
+      id: "info-title"
+    }, panelTitle), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_menu_cancel_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      onCancel: this.handleRejectCall
+    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "info-view-content",
+      className: "scrollable-panel"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "panel-form-column"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("center", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      tinode: this.props.tinode,
+      avatar: this.state.avatar,
+      readOnly: true,
+      uid: this.props.topic,
+      title: this.state.fullName
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "group incoming-call-title"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "large ellipsized"
+    }, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.clipStr)(this.state.fullName))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "group incoming-call-badges"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_badge_list_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      trustedBadges: this.state.trustedBadges
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "actions",
+      className: "group incoming-call-actions"
+    }, this.props.callState == _config_js__WEBPACK_IMPORTED_MODULE_6__.CALL_STATE_INCOMING_RECEIVED ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+      className: "video-call-hangup",
+      onClick: this.handleRejectCall
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, "call_end")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+      className: "video-call-accept",
+      onClick: this.handleAcceptCall
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, "call"))) : null))));
+  }
+
+}
+
+;
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(IncomingCallView));
+
+/***/ }),
+
 /***/ "./src/views/info-view.jsx":
 /*!*********************************!*\
   !*** ./src/views/info-view.jsx ***!
   \*********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -2415,10 +7008,6 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   }
 });
-
-function _clip(str, length) {
-  return str && str.substring(0, length);
-}
 
 class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
@@ -2548,11 +7137,11 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       sharer: acs && acs.isSharer(),
       deleter: acs && acs.isDeleter(),
       muted: acs && acs.isMuted(),
-      fullName: _clip(topic.public ? topic.public.fn : undefined, _config_js__WEBPACK_IMPORTED_MODULE_13__.MAX_TITLE_LENGTH),
-      description: _clip(topic.public ? topic.public.note : undefined, _config_js__WEBPACK_IMPORTED_MODULE_13__.MAX_TOPIC_DESCRIPTION_LENGTH),
+      fullName: (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_15__.clipStr)(topic.public ? topic.public.fn : undefined, _config_js__WEBPACK_IMPORTED_MODULE_13__.MAX_TITLE_LENGTH),
+      description: (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_15__.clipStr)(topic.public ? topic.public.note : undefined, _config_js__WEBPACK_IMPORTED_MODULE_13__.MAX_TOPIC_DESCRIPTION_LENGTH),
       avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__.makeImageUrl)(topic.public ? topic.public.photo : null),
       trustedBadges: badges,
-      private: _clip(topic.private ? topic.private.comment : null, _config_js__WEBPACK_IMPORTED_MODULE_13__.MAX_TITLE_LENGTH),
+      private: (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_15__.clipStr)(topic.private ? topic.private.comment : null, _config_js__WEBPACK_IMPORTED_MODULE_13__.MAX_TITLE_LENGTH),
       archived: topic.isArchived(),
       address: topic.name,
       groupTopic: topic.isGroupType(),
@@ -2609,7 +7198,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
     this.setState({
       avatar: img
     });
-    this.props.onTopicDescUpdate(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_15__.theCard)(null, img || (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().DEL_CHAR)), null);
+    this.props.onTopicDescUpdate(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_15__.theCard)(null, img || tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.DEL_CHAR), null);
   }
 
   handleMuted(ignored, checked) {
@@ -2672,7 +7261,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
         if (this.state.owner) {
           toSkip = 'O';
         } else {
-          toSkip = tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().AccessMode.encode(tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().AccessMode.diff('ASDO', this.state.modeGiven));
+          toSkip = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.AccessMode.encode(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.AccessMode.diff('ASDO', this.state.modeGiven));
 
           if (this.state.channel) {
             toSkip += 'W';
@@ -3080,6 +7669,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
   \**********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ LoginView)
@@ -3224,6 +7814,7 @@ class LoginView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   \*********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ LogoView)
@@ -3241,7 +7832,7 @@ __webpack_require__.r(__webpack_exports__);
 
 class LogoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
-    const version = _config_js__WEBPACK_IMPORTED_MODULE_3__.APP_NAME + ' (' + tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().getLibrary() + ')';
+    const version = _config_js__WEBPACK_IMPORTED_MODULE_3__.APP_NAME + ' (' + tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.getLibrary() + ')';
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "dummy-view"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
@@ -3276,6 +7867,7 @@ class LogoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompone
   \*************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -3286,25 +7878,28 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _widgets_chat_message_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/chat-message.jsx */ "./src/widgets/chat-message.jsx");
-/* harmony import */ var _widgets_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/contact-badges.jsx */ "./src/widgets/contact-badges.jsx");
-/* harmony import */ var _widgets_doc_preview_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/doc-preview.jsx */ "./src/widgets/doc-preview.jsx");
-/* harmony import */ var _widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/error-panel.jsx */ "./src/widgets/error-panel.jsx");
-/* harmony import */ var _widgets_group_subs_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../widgets/group-subs.jsx */ "./src/widgets/group-subs.jsx");
-/* harmony import */ var _widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../widgets/image-preview.jsx */ "./src/widgets/image-preview.jsx");
-/* harmony import */ var _widgets_invitation_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../widgets/invitation.jsx */ "./src/widgets/invitation.jsx");
-/* harmony import */ var _widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../widgets/letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
-/* harmony import */ var _widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../widgets/load-spinner.jsx */ "./src/widgets/load-spinner.jsx");
-/* harmony import */ var _logo_view_jsx__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./logo-view.jsx */ "./src/views/logo-view.jsx");
-/* harmony import */ var _widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../widgets/send-message.jsx */ "./src/widgets/send-message.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
-/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _widgets_call_panel_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/call-panel.jsx */ "./src/widgets/call-panel.jsx");
+/* harmony import */ var _widgets_chat_message_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/chat-message.jsx */ "./src/widgets/chat-message.jsx");
+/* harmony import */ var _widgets_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/contact-badges.jsx */ "./src/widgets/contact-badges.jsx");
+/* harmony import */ var _widgets_doc_preview_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/doc-preview.jsx */ "./src/widgets/doc-preview.jsx");
+/* harmony import */ var _widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../widgets/error-panel.jsx */ "./src/widgets/error-panel.jsx");
+/* harmony import */ var _widgets_group_subs_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../widgets/group-subs.jsx */ "./src/widgets/group-subs.jsx");
+/* harmony import */ var _widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../widgets/image-preview.jsx */ "./src/widgets/image-preview.jsx");
+/* harmony import */ var _widgets_invitation_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../widgets/invitation.jsx */ "./src/widgets/invitation.jsx");
+/* harmony import */ var _widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../widgets/letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
+/* harmony import */ var _widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../widgets/load-spinner.jsx */ "./src/widgets/load-spinner.jsx");
+/* harmony import */ var _logo_view_jsx__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./logo-view.jsx */ "./src/views/logo-view.jsx");
+/* harmony import */ var _widgets_meta_message_jsx__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../widgets/meta-message.jsx */ "./src/widgets/meta-message.jsx");
+/* harmony import */ var _widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../widgets/send-message.jsx */ "./src/widgets/send-message.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
+/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
 
 
 
-const Drafty = (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().Drafty);
+
+
 
 
 
@@ -3321,6 +7916,7 @@ const Drafty = (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().Drafty);
 
 
 const NOTIFICATION_EXEC_INTERVAL = 300;
+const SHOW_GO_TO_LAST_DIST = 100;
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   online_now: {
     id: "online_now",
@@ -3396,6 +7992,10 @@ function isPeerRestricted(acs) {
   return false;
 }
 
+function shouldPresentCallPanel(callState) {
+  return callState == _config_js__WEBPACK_IMPORTED_MODULE_16__.CALL_STATE_OUTGOING_INITATED || callState == _config_js__WEBPACK_IMPORTED_MODULE_16__.CALL_STATE_IN_PROGRESS;
+}
+
 class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
@@ -3405,6 +8005,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.retrySend = this.retrySend.bind(this);
     this.sendImageAttachment = this.sendImageAttachment.bind(this);
     this.sendFileAttachment = this.sendFileAttachment.bind(this);
+    this.sendAudioAttachment = this.sendAudioAttachment.bind(this);
     this.sendKeyPress = this.sendKeyPress.bind(this);
     this.subscribe = this.subscribe.bind(this);
     this.handleScrollReference = this.handleScrollReference.bind(this);
@@ -3426,9 +8027,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.handleCancelUpload = this.handleCancelUpload.bind(this);
     this.postReadNotification = this.postReadNotification.bind(this);
     this.clearNotificationQueue = this.clearNotificationQueue.bind(this);
+    this.goToLatestMessage = this.goToLatestMessage.bind(this);
     this.handlePickReply = this.handlePickReply.bind(this);
     this.handleCancelReply = this.handleCancelReply.bind(this);
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
+    this.handleCallHangup = this.handleCallHangup.bind(this);
     this.chatMessageRefs = {};
     this.getOrCreateMessageRef = this.getOrCreateMessageRef.bind(this);
     this.readNotificationQueue = [];
@@ -3460,19 +8063,22 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.messagesScroller) {
-      if (prevState.topic != this.state.topic || prevState.messageCount != this.state.messageCount) {
-        this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition;
-      } else if (prevProps.viewportHeight > this.props.viewportHeight) {
-        this.messagesScroller.scrollTop += prevProps.viewportHeight - this.props.viewportHeight;
+    if (this.messagesScroller && (prevState.topic != this.state.topic || prevState.messageCount != this.state.messageCount)) {
+      if (this.state.scrollPosition < SHOW_GO_TO_LAST_DIST) {
+        this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition - this.messagesScroller.offsetHeight;
       }
     }
 
     const topic = this.props.tinode ? this.props.tinode.getTopic(this.state.topic) : undefined;
 
     if (this.state.topic != prevState.topic) {
-      if (prevState.topic && !tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().isNewGroupTopicName(prevState.topic)) {
+      if (prevState.topic && !tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isNewGroupTopicName(prevState.topic)) {
         this.leave(prevState.topic);
+
+        if (prevState.rtcPanel) {
+          console.log('hangup: ', prevState.topic);
+          this.handleCallHangup(prevState.topic, prevProps.callSeq);
+        }
       }
 
       if (topic) {
@@ -3491,8 +8097,12 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       this.postReadNotification(0);
     }
 
-    if (this.state.topic != prevState.topic || !prevProps.ready) {
-      this.subscribe(topic);
+    if (topic && (this.state.topic != prevState.topic || !prevProps.ready)) {
+      if (topic._new && topic.isP2PType()) {
+        topic.getMeta(topic.startMetaQuery().withDesc().build());
+      } else {
+        this.subscribe(topic);
+      }
     }
   }
 
@@ -3510,15 +8120,18 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         isVerified: false,
         isStaff: false,
         isDangerous: false,
+        deleted: false,
         docPreview: null,
         imagePreview: null,
         imagePostview: null,
+        rtcPanel: null,
         typingIndicator: false,
         scrollPosition: 0,
         fetchingMessages: false,
         peerMessagingDisabled: false,
         channel: false,
-        reply: null
+        reply: null,
+        showGoToLastButton: false
       };
     } else if (nextProps.topic != prevState.topic) {
       const topic = nextProps.tinode.getTopic(nextProps.topic);
@@ -3537,10 +8150,13 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         docPreview: null,
         imagePreview: null,
         imagePostview: null,
+        rtcPanel: null,
         typingIndicator: false,
         scrollPosition: 0,
         fetchingMessages: false,
-        reply: reply
+        reply: reply,
+        showGoToLastButton: false,
+        deleted: topic._deleted
       };
 
       if (topic) {
@@ -3561,7 +8177,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         if (topic.public) {
           Object.assign(nextState, {
             title: topic.public.fn,
-            avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.makeImageUrl)(topic.public.photo)
+            avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_17__.makeImageUrl)(topic.public.photo)
           });
         } else {
           Object.assign(nextState, {
@@ -3587,6 +8203,12 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           latestClearId: topic.maxClearId(),
           channel: topic.isChannelType()
         });
+
+        if (nextProps.callTopic == topic.name && shouldPresentCallPanel(nextProps.callState)) {
+          Object.assign(nextState, {
+            rtcPanel: nextProps.callTopic
+          });
+        }
       } else {
         Object.assign(nextState, {
           messageCount: 0,
@@ -3596,6 +8218,12 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           avatar: null,
           peerMessagingDisabled: false,
           channel: false
+        });
+      }
+    } else {
+      if (nextProps.callTopic == prevState.topic && !prevState.rtcPanel && shouldPresentCallPanel(nextProps.callState)) {
+        Object.assign(nextState, {
+          rtcPanel: nextProps.callTopic
         });
       }
     }
@@ -3646,7 +8274,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
 
   subscribe(topic) {
-    if (!topic || topic.isSubscribed() || !this.props.ready) {
+    if (topic.isSubscribed() || !this.props.ready) {
       return;
     }
 
@@ -3654,7 +8282,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     let getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub();
 
     if (this.state.isReader || newTopic) {
-      getQuery = getQuery.withLaterData(_config_js__WEBPACK_IMPORTED_MODULE_14__.MESSAGES_PAGE);
+      getQuery = getQuery.withLaterData(_config_js__WEBPACK_IMPORTED_MODULE_16__.MESSAGES_PAGE);
 
       if (this.state.isReader) {
         getQuery = getQuery.withLaterDel();
@@ -3668,7 +8296,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     const setQuery = newTopic ? this.props.newTopicParams : undefined;
     topic.subscribe(getQuery.build(), setQuery).then(ctrl => {
       if (ctrl.code == 303) {
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic('', ctrl.params.topic));
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].setUrlTopic('', ctrl.params.topic));
         return;
       }
 
@@ -3680,12 +8308,16 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
       this.props.onNewTopicCreated(this.props.topic, ctrl.topic);
       topic.queuedMessages(pub => {
-        if (!pub._sending && topic.isSubscribed()) {
+        if (pub._sending) {
+          return;
+        }
+
+        if (topic.isSubscribed()) {
           this.retrySend(pub);
         }
       });
     }).catch(err => {
-      console.error("Failed subscription to", this.state.topic);
+      console.error("Failed subscription to", this.state.topic, err);
       this.props.onError(err.message, 'err');
       const blankState = MessagesView.getDerivedStateFromProps({}, {});
       blankState.title = this.props.intl.formatMessage(messages.not_found);
@@ -3724,8 +8356,10 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
 
   handleScrollEvent(event) {
+    const pos = event.target.scrollHeight - event.target.scrollTop - event.target.offsetHeight;
     this.setState({
-      scrollPosition: event.target.scrollHeight - event.target.scrollTop
+      scrollPosition: pos,
+      showGoToLastButton: pos > SHOW_GO_TO_LAST_DIST
     });
 
     if (this.state.fetchingMessages) {
@@ -3739,7 +8373,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         this.setState({
           fetchingMessages: true
         }, () => {
-          topic.getMessagesPage(_config_js__WEBPACK_IMPORTED_MODULE_14__.MESSAGES_PAGE).catch(err => this.props.onError(err.message, 'err')).finally(() => this.setState({
+          topic.getMessagesPage(_config_js__WEBPACK_IMPORTED_MODULE_16__.MESSAGES_PAGE).catch(err => this.props.onError(err.message, 'err')).finally(() => this.setState({
             fetchingMessages: false
           }));
         });
@@ -3747,11 +8381,21 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
   }
 
+  goToLatestMessage() {
+    this.setState({
+      scrollPosition: 0
+    });
+
+    if (this.messagesScroller) {
+      this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight;
+    }
+  }
+
   handleDescChange(desc) {
     if (desc.public) {
       this.setState({
         title: desc.public.fn,
-        avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.makeImageUrl)(desc.public.photo)
+        avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_17__.makeImageUrl)(desc.public.photo)
       });
     } else {
       this.setState({
@@ -3817,7 +8461,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.readNotificationQueue.push({
       topicName: this.state.topic,
       seq: seq,
-      sendAt: now.setMilliseconds(now.getMilliseconds() + _config_js__WEBPACK_IMPORTED_MODULE_14__.READ_DELAY)
+      sendAt: now.setMilliseconds(now.getMilliseconds() + _config_js__WEBPACK_IMPORTED_MODULE_16__.READ_DELAY)
     });
   }
 
@@ -3875,14 +8519,20 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     });
 
     if (topic.isNewMessage(msg.seq)) {
-      this.setState({
-        scrollPosition: 0
-      });
+      if (this.state.scrollPosition > SHOW_GO_TO_LAST_DIST) {
+        this.setState({
+          showGoToLastButton: true
+        });
+      } else {
+        this.setState({
+          scrollPosition: 0
+        });
+      }
     }
 
     const status = topic.msgStatus(msg, true);
 
-    if (status >= (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().MESSAGE_STATUS_SENT) && msg.from != this.props.myUserId) {
+    if (status >= tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_SENT && msg.from != this.props.myUserId) {
       this.postReadNotification(msg.seq);
     }
 
@@ -3908,7 +8558,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             this.setState({
               typingIndicator: false
             });
-          }, _config_js__WEBPACK_IMPORTED_MODULE_14__.KEYPRESS_DELAY + 1000);
+          }, _config_js__WEBPACK_IMPORTED_MODULE_16__.KEYPRESS_DELAY + 1000);
 
           if (!this.state.typingIndicator) {
             this.setState({
@@ -3949,7 +8599,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
   handleFormResponse(action, text, data) {
     if (action == 'pub') {
-      this.sendMessage(Drafty.attachJSON(Drafty.parse(text), data));
+      this.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachJSON(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.parse(text), data));
     } else if (action == 'url') {
       const url = new URL(data.ref);
       const params = url.searchParams;
@@ -4015,7 +8665,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
   handleEnablePeer(e) {
     e.preventDefault();
-    this.props.onChangePermissions(this.state.topic, _config_js__WEBPACK_IMPORTED_MODULE_14__.DEFAULT_P2P_ACCESS_MODE, this.state.topic);
+    this.props.onChangePermissions(this.state.topic, _config_js__WEBPACK_IMPORTED_MODULE_16__.DEFAULT_P2P_ACCESS_MODE, this.state.topic);
   }
 
   sendKeyPress() {
@@ -4039,10 +8689,10 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       };
 
       if (typeof msg == 'string') {
-        msg = Drafty.parse(msg);
+        msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.parse(msg);
       }
 
-      msg = Drafty.append(Drafty.sanitizeEntities(this.state.reply.content), msg);
+      msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.sanitizeEntities(this.state.reply.content), msg);
       this.handleCancelReply();
     }
 
@@ -4054,12 +8704,18 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
 
   sendFileAttachment(file) {
-    const maxInbandAttachmentSize = this.props.tinode.getServerLimit('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_14__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
+    const maxInbandAttachmentSize = this.props.tinode.getServerLimit('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
 
     if (file.size > maxInbandAttachmentSize) {
       const uploader = this.props.tinode.getLargeFileHelper();
+
+      if (!uploader) {
+        this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
+        return;
+      }
+
       const uploadCompletionPromise = uploader.upload(file);
-      const msg = Drafty.attachFile(null, {
+      const msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachFile(null, {
         mime: file.type,
         filename: file.name,
         size: file.size,
@@ -4067,7 +8723,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       });
       this.sendMessage(msg, uploadCompletionPromise, uploader);
     } else {
-      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.fileToBase64)(file).then(b64 => this.sendMessage(Drafty.attachFile(null, {
+      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_17__.fileToBase64)(file).then(b64 => this.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachFile(null, {
         mime: b64.mime,
         data: b64.bits,
         filename: b64.name
@@ -4076,12 +8732,12 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
 
   handleAttachFile(file) {
-    const maxExternAttachmentSize = this.props.tinode.getServerLimit('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_14__.MAX_EXTERN_ATTACHMENT_SIZE);
+    const maxExternAttachmentSize = this.props.tinode.getServerLimit('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_EXTERN_ATTACHMENT_SIZE);
 
     if (file.size > maxExternAttachmentSize) {
       this.props.onError(this.props.intl.formatMessage(messages.file_attachment_too_large, {
-        size: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_17__.bytesToHumanSize)(file.size),
-        limit: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_17__.bytesToHumanSize)(maxExternAttachmentSize)
+        size: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_19__.bytesToHumanSize)(file.size),
+        limit: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_19__.bytesToHumanSize)(maxExternAttachmentSize)
       }), 'err');
     } else {
       this.setState({
@@ -4095,12 +8751,20 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
   }
 
+  handleCallHangup(topic, seq) {
+    this.props.onVideoCallClosed();
+    this.setState({
+      rtcPanel: null
+    });
+    this.props.onCallHangup(topic, seq);
+  }
+
   sendImageAttachment(caption, blob) {
     const mime = this.state.imagePreview.mime;
     const width = this.state.imagePreview.width;
     const height = this.state.imagePreview.height;
     const fname = this.state.imagePreview.name;
-    const maxInbandAttachmentSize = this.props.tinode.getServerLimit('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_14__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
+    const maxInbandAttachmentSize = this.props.tinode.getServerLimit('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
 
     if (blob.size > maxInbandAttachmentSize) {
       const uploader = this.props.tinode.getLargeFileHelper();
@@ -4111,8 +8775,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       }
 
       const uploadCompletionPromise = uploader.upload(blob);
-      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_14__.IMAGE_PREVIEW_DIM, _config_js__WEBPACK_IMPORTED_MODULE_14__.IMAGE_PREVIEW_DIM, -1, false).then(scaled => (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.blobToBase64)(scaled.blob)).then(b64 => {
-        let msg = Drafty.insertImage(null, 0, {
+      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_17__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_16__.IMAGE_PREVIEW_DIM, _config_js__WEBPACK_IMPORTED_MODULE_16__.IMAGE_PREVIEW_DIM, -1, false).then(scaled => (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_17__.blobToBase64)(scaled.blob)).then(b64 => {
+        let msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.insertImage(null, 0, {
           mime: mime,
           _tempPreview: b64.bits,
           width: width,
@@ -4123,8 +8787,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         });
 
         if (caption) {
-          msg = Drafty.appendLineBreak(msg);
-          msg = Drafty.append(msg, Drafty.parse(caption));
+          msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendLineBreak(msg);
+          msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(msg, tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.parse(caption));
         }
 
         this.sendMessage(msg, uploadCompletionPromise, uploader);
@@ -4134,8 +8798,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       return;
     }
 
-    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.blobToBase64)(blob).then(b64 => {
-      let msg = Drafty.insertImage(null, 0, {
+    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_17__.blobToBase64)(blob).then(b64 => {
+      let msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.insertImage(null, 0, {
         mime: b64.mime,
         preview: b64.bits,
         width: width,
@@ -4145,8 +8809,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       });
 
       if (caption) {
-        msg = Drafty.appendLineBreak(msg);
-        msg = Drafty.append(msg, Drafty.parse(caption));
+        msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendLineBreak(msg);
+        msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(msg, tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.parse(caption));
       }
 
       this.sendMessage(msg);
@@ -4154,8 +8818,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
 
   handleAttachImage(file) {
-    const maxExternAttachmentSize = this.props.tinode.getServerLimit('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_14__.MAX_EXTERN_ATTACHMENT_SIZE);
-    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.imageScaled)(file, _config_js__WEBPACK_IMPORTED_MODULE_14__.MAX_IMAGE_DIM, _config_js__WEBPACK_IMPORTED_MODULE_14__.MAX_IMAGE_DIM, maxExternAttachmentSize, false).then(scaled => {
+    const maxExternAttachmentSize = this.props.tinode.getServerLimit('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_EXTERN_ATTACHMENT_SIZE);
+    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_17__.imageScaled)(file, _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_IMAGE_DIM, _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_IMAGE_DIM, maxExternAttachmentSize, false).then(scaled => {
       this.setState({
         imagePreview: {
           url: URL.createObjectURL(scaled.blob),
@@ -4170,6 +8834,44 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }).catch(err => {
       this.props.onError(err, 'err');
     });
+  }
+
+  sendAudioAttachment(url, preview, duration) {
+    fetch(url).then(result => result.blob()).then(blob => {
+      const maxInbandAttachmentSize = this.props.tinode.getServerLimit('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024;
+
+      if (blob.size > maxInbandAttachmentSize) {
+        const uploader = this.props.tinode.getLargeFileHelper();
+
+        if (!uploader) {
+          this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
+          return;
+        }
+
+        const uploadCompletionPromise = uploader.upload(blob);
+        const msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendAudio(null, {
+          mime: blob.type,
+          size: blob.size,
+          duration: duration,
+          preview: preview,
+          urlPromise: uploadCompletionPromise
+        });
+        this.sendMessage(msg, uploadCompletionPromise, uploader);
+      } else {
+        (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_17__.blobToBase64)(blob).then(b64 => {
+          this.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendAudio(null, {
+            mime: b64.mime,
+            size: blob.size,
+            data: b64.bits,
+            duration: duration,
+            preview: preview
+          }));
+        });
+      }
+    }).catch(err => {
+      this.props.onError(err);
+    });
+    ;
   }
 
   handleCancelUpload(seq, uploader) {
@@ -4192,17 +8894,17 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       return;
     }
 
-    content = typeof content == 'string' ? Drafty.init(content) : content;
+    content = typeof content == 'string' ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.init(content) : content;
 
-    if (Drafty.isValid(content)) {
-      content = Drafty.replyContent(content, _config_js__WEBPACK_IMPORTED_MODULE_14__.QUOTED_REPLY_LENGTH);
+    if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isValid(content)) {
+      content = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.replyContent(content, _config_js__WEBPACK_IMPORTED_MODULE_16__.QUOTED_REPLY_LENGTH);
     } else {
-      content = Drafty.append(Drafty.init('\u26A0 '), Drafty.wrapInto(this.props.intl.formatMessage(messages.invalid_content), 'EM'));
+      content = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.init('\u26A0 '), tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.wrapInto(this.props.intl.formatMessage(messages.invalid_content), 'EM'));
     }
 
     this.setState({
       reply: {
-        content: Drafty.quote(senderName, senderId, content),
+        content: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.quote(senderName, senderId, content),
         seq: seq
       }
     });
@@ -4242,7 +8944,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     if (this.props.hideSelf) {
       component = null;
     } else if (!this.state.topic) {
-      component = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_logo_view_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
+      component = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_logo_view_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
         serverVersion: this.props.serverVersion,
         serverAddress: this.props.serverAddress
       });
@@ -4250,7 +8952,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       let component2;
 
       if (this.state.imagePreview) {
-        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
+        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
           content: this.state.imagePreview,
           tinode: this.props.tinode,
           reply: this.state.reply,
@@ -4259,18 +8961,35 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           onSendMessage: this.sendImageAttachment
         });
       } else if (this.state.imagePostview) {
-        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
+        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
           content: this.state.imagePostview,
           onClose: this.handleClosePreview
         });
       } else if (this.state.docPreview) {
-        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_doc_preview_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_doc_preview_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
           content: this.state.docPreview,
           tinode: this.props.tinode,
           reply: this.state.reply,
           onCancelReply: this.handleCancelReply,
           onClose: this.handleClosePreview,
           onSendMessage: this.sendFileAttachment
+        });
+      } else if (this.state.rtcPanel) {
+        const topic = this.props.tinode.getTopic(this.state.topic);
+        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_call_panel_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+          topic: topic,
+          seq: this.props.callSeq,
+          callState: this.props.callState,
+          displayMobile: this.props.displayMobile,
+          tinode: this.props.tinode,
+          title: this.state.title,
+          avatar: this.state.avatar || true,
+          onError: this.props.onError,
+          onHangup: this.handleCallHangup,
+          onInvite: this.props.onCallInvite,
+          onSendOffer: this.props.onCallSendOffer,
+          onIceCandidate: this.props.onCallIceCandidate,
+          onSendAnswer: this.props.onCallSendAnswer
         });
       } else {
         const topic = this.props.tinode.getTopic(this.state.topic);
@@ -4301,9 +9020,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           }
         }
 
-        let messageNodes = [];
+        const messageNodes = [];
         let previousFrom = null;
+        let prevDate = null;
         let chatBoxClass = null;
+        const dateFmt = new Intl.DateTimeFormat(this.props.intl.locale);
         topic.messages((msg, prev, next, i) => {
           let nextFrom = next ? next.from || 'chan' : null;
           let sequence = 'single';
@@ -4329,7 +9050,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
           if (user && user.public) {
             userName = user.public.fn;
-            userAvatar = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.makeImageUrl)(user.public.photo);
+            userAvatar = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_17__.makeImageUrl)(user.public.photo);
           }
 
           chatBoxClass = groupTopic ? 'chat-box group' : 'chat-box';
@@ -4340,35 +9061,53 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             replyToSeq = null;
           }
 
-          messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_chat_message_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-            tinode: this.props.tinode,
-            content: msg.content,
-            deleted: msg.hi,
-            mimeType: msg.head ? msg.head.mime : null,
-            timestamp: msg.ts,
-            response: isReply,
-            seq: msg.seq,
-            isGroup: groupTopic,
-            isChan: this.state.channel,
-            userFrom: userFrom,
-            userName: userName,
-            userAvatar: userAvatar,
-            sequence: sequence,
-            received: deliveryStatus,
-            uploader: msg._uploader,
-            viewportWidth: this.props.viewportWidth,
-            showContextMenu: this.handleShowMessageContextMenu,
-            onImagePreview: this.handleImagePostview,
-            onFormResponse: this.handleFormResponse,
-            onError: this.props.onError,
-            onCancelUpload: this.handleCancelUpload,
-            pickReply: this.handlePickReply,
-            replyToSeq: replyToSeq,
-            onQuoteClick: this.handleQuoteClick,
-            ref: ref,
-            userIsWriter: this.state.isWriter,
-            key: msg.seq
-          }));
+          if (msg.hi) {
+            messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_meta_message_jsx__WEBPACK_IMPORTED_MODULE_14__["default"], {
+              deleted: true,
+              key: msg.seq
+            }));
+          } else {
+            const thisDate = new Date(msg.ts);
+
+            if (!prevDate || prevDate.toDateString() != thisDate.toDateString()) {
+              messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_meta_message_jsx__WEBPACK_IMPORTED_MODULE_14__["default"], {
+                date: dateFmt.format(msg.ts),
+                locale: this.props.intl.locale,
+                key: 'date-' + msg.seq
+              }));
+              prevDate = thisDate;
+            }
+
+            messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_chat_message_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+              tinode: this.props.tinode,
+              content: msg.content,
+              mimeType: msg.head ? msg.head.mime : null,
+              timestamp: msg.ts,
+              duration: msg.origTs ? msg.ts - msg.origTs : null,
+              response: isReply,
+              seq: msg.seq,
+              isGroup: groupTopic,
+              isChan: this.state.channel,
+              userFrom: userFrom,
+              userName: userName,
+              userAvatar: userAvatar,
+              sequence: sequence,
+              received: deliveryStatus,
+              uploader: msg._uploader,
+              viewportWidth: this.props.viewportWidth,
+              showContextMenu: this.handleShowMessageContextMenu,
+              onImagePreview: this.handleImagePostview,
+              onFormResponse: this.handleFormResponse,
+              onError: this.props.onError,
+              onCancelUpload: this.handleCancelUpload,
+              pickReply: this.handlePickReply,
+              replyToSeq: replyToSeq,
+              onQuoteClick: this.handleQuoteClick,
+              ref: ref,
+              userIsWriter: this.state.isWriter,
+              key: msg.seq
+            }));
+          }
         });
         let lastSeen = null;
 
@@ -4377,17 +9116,18 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         } else {
           const cont = this.props.tinode.getMeTopic().getContact(this.state.topic);
 
-          if (cont && tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().isP2PTopicName(cont.topic)) {
+          if (cont && tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isP2PTopicName(cont.topic)) {
             if (cont.online) {
               lastSeen = formatMessage(messages.online_now);
             } else if (cont.seen) {
-              lastSeen = formatMessage(messages.last_seen) + ": " + (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_17__.shortDateFormat)(cont.seen.when, this.props.intl.locale);
+              lastSeen = formatMessage(messages.last_seen) + ": " + (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_19__.shortDateFormat)(cont.seen.when, this.props.intl.locale);
             }
           }
         }
 
         const avatar = this.state.avatar || true;
-        const online = this.props.online ? 'online' + (this.state.typingIndicator ? ' typing' : '') : 'offline';
+        const online = this.state.deleted ? null : this.props.online ? 'online' + (this.state.typingIndicator ? ' typing' : '') : 'offline';
+        const titleClass = 'panel-title' + (this.state.deleted ? ' deleted' : '');
         component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "topic-caption-panel",
           className: "caption-panel"
@@ -4402,29 +9142,30 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           className: "material-icons"
         }, "arrow_back")) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           className: "avatar-box"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
+        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
           tinode: this.props.tinode,
           avatar: avatar,
           topic: this.state.topic,
-          title: this.state.title
+          title: this.state.title,
+          deleted: this.state.deleted
         }), !isChannel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
           className: online
         }) : null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "topic-title-group"
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "topic-title",
-          className: "panel-title"
+          className: titleClass
         }, this.state.title || react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
           id: "unnamed_topic",
           defaultMessage: [{
             "type": 0,
             "value": "Unnamed"
           }]
-        })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
           badges: icon_badges
         })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "topic-last-seen"
-        }, lastSeen)), groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_group_subs_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
+        }, lastSeen)), groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_group_subs_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
           tinode: this.props.tinode,
           subscribers: this.state.onlineSubs
         }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -4434,15 +9175,20 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           onClick: this.handleContextClick
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
           className: "material-icons"
-        }, "more_vert")))), this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
+        }, "more_vert")))), this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
           level: this.props.errorLevel,
           text: this.props.errorText,
           onClearError: this.props.onError
-        }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
+        }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
           show: this.state.fetchingMessages
         }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "messages-container"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+          className: 'action-button' + (this.state.showGoToLastButton ? '' : ' hidden'),
+          onClick: this.goToLatestMessage
+        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+          className: "material-icons"
+        }, "arrow_downward")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "messages-panel",
           ref: this.handleScrollReference
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
@@ -4477,16 +9223,18 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             "type": 0,
             "value": "Enable"
           }]
-        })), ".") : null, this.state.unconfirmed ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_invitation_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
+        })), ".") : null, this.state.unconfirmed ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_invitation_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
           onAction: this.handleNewChatAcceptance
-        }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
+        }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_15__["default"], {
           tinode: this.props.tinode,
+          topicName: this.state.topic,
           noInput: !!this.props.forwardMessage,
-          disabled: !this.state.isWriter,
+          disabled: !this.state.isWriter || this.state.deleted,
           onKeyPress: this.sendKeyPress,
           onSendMessage: this.sendMessage,
           onAttachFile: this.props.forwardMessage ? null : this.handleAttachFile,
           onAttachImage: this.props.forwardMessage ? null : this.handleAttachImage,
+          onAttachAudio: this.props.forwardMessage ? null : this.sendAudioAttachment,
           onError: this.props.onError,
           reply: this.state.reply,
           onQuoteClick: this.handleQuoteClick,
@@ -4515,6 +9263,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   \**************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -4573,7 +9322,7 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     };
     this.handleTabClick = this.handleTabClick.bind(this);
     this.handleSearchContacts = this.handleSearchContacts.bind(this);
-    this.handleContactSelected = this.handleContactSelected.bind(this);
+    this.handleSearchResultSelected = this.handleSearchResultSelected.bind(this);
     this.handleNewGroupSubmit = this.handleNewGroupSubmit.bind(this);
     this.handleGroupByID = this.handleGroupByID.bind(this);
   }
@@ -4593,14 +9342,14 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   handleSearchContacts(query) {
     this.props.onSearchContacts(query);
     this.setState({
-      searchQuery: tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().isNullValue(query) ? null : query
+      searchQuery: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isNullValue(query) ? null : query
     });
   }
 
-  handleContactSelected(uid) {
+  handleSearchResultSelected(name) {
     if (this.state.tabSelected == 'find') {
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].removeUrlParam(window.location.hash, 'tab'));
-      this.props.onCreateTopic(uid);
+      this.props.onCreateTopic(name);
     }
   }
 
@@ -4683,7 +9432,7 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       showOnline: false,
       showUnread: false,
       showContextMenu: false,
-      onTopicSelected: this.handleContactSelected
+      onTopicSelected: this.handleSearchResultSelected
     })));
   }
 
@@ -4700,6 +9449,7 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   \*******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ PasswordResetView)
@@ -4869,6 +9619,7 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
   \*************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ SettingsView)
@@ -4992,6 +9743,7 @@ class SettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
   \**************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -5282,6 +10034,7 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
   \**********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -5290,26 +10043,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var firebase_app__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! firebase/app */ "firebase/app");
-/* harmony import */ var firebase_app__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(firebase_app__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var firebase_messaging__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! firebase/messaging */ "firebase/messaging");
-/* harmony import */ var firebase_messaging__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(firebase_messaging__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var firebase_app__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! firebase/app */ "./node_modules/firebase/app/dist/index.esm.js");
+/* harmony import */ var firebase_messaging__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! firebase/messaging */ "./node_modules/firebase/messaging/dist/index.esm.js");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _widgets_alert_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/alert.jsx */ "./src/widgets/alert.jsx");
 /* harmony import */ var _widgets_context_menu_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/context-menu.jsx */ "./src/widgets/context-menu.jsx");
 /* harmony import */ var _widgets_forward_dialog_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../widgets/forward-dialog.jsx */ "./src/widgets/forward-dialog.jsx");
 /* harmony import */ var _info_view_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./info-view.jsx */ "./src/views/info-view.jsx");
-/* harmony import */ var _messages_view_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./messages-view.jsx */ "./src/views/messages-view.jsx");
-/* harmony import */ var _sidepanel_view_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./sidepanel-view.jsx */ "./src/views/sidepanel-view.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _version_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../version.js */ "./src/version.js");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_host_name_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../lib/host-name.js */ "./src/lib/host-name.js");
-/* harmony import */ var _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../lib/local-storage.js */ "./src/lib/local-storage.js");
-/* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
-/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var _incoming_call_view_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./incoming-call-view.jsx */ "./src/views/incoming-call-view.jsx");
+/* harmony import */ var _messages_view_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./messages-view.jsx */ "./src/views/messages-view.jsx");
+/* harmony import */ var _sidepanel_view_jsx__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./sidepanel-view.jsx */ "./src/views/sidepanel-view.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _version_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../version.js */ "./src/version.js");
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _lib_host_name_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../lib/host-name.js */ "./src/lib/host-name.js");
+/* harmony import */ var _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../lib/local-storage.js */ "./src/lib/local-storage.js");
+/* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
+/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+
 
 
 
@@ -5385,6 +10138,13 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
       "type": 0,
       "value": "Info"
     }]
+  },
+  menu_item_video_call: {
+    id: "menu_item_video_call",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Video Call"
+    }]
   }
 });
 
@@ -5433,8 +10193,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.handleCredDelete = this.handleCredDelete.bind(this);
     this.handleCredConfirm = this.handleCredConfirm.bind(this);
     this.initFCMessaging = this.initFCMessaging.bind(this);
-    this.togglePushToken = this.togglePushToken.bind(this);
-    this.requestPushToken = this.requestPushToken.bind(this);
+    this.toggleFCMToken = this.toggleFCMToken.bind(this);
     this.handlePushMessage = this.handlePushMessage.bind(this);
     this.handleSidepanelCancel = this.handleSidepanelCancel.bind(this);
     this.handleStartTopicRequest = this.handleStartTopicRequest.bind(this);
@@ -5462,24 +10221,34 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.handleContextMenuAction = this.handleContextMenuAction.bind(this);
     this.handleShowForwardDialog = this.handleShowForwardDialog.bind(this);
     this.handleHideForwardDialog = this.handleHideForwardDialog.bind(this);
+    this.handleStartVideoCall = this.handleStartVideoCall.bind(this);
+    this.handleInfoMessage = this.handleInfoMessage.bind(this);
+    this.handleCallClose = this.handleCallClose.bind(this);
+    this.handleCallInvite = this.handleCallInvite.bind(this);
+    this.handleCallRinging = this.handleCallRinging.bind(this);
+    this.handleCallHangup = this.handleCallHangup.bind(this);
+    this.handleCallSendOffer = this.handleCallSendOffer.bind(this);
+    this.handleCallIceCandidate = this.handleCallIceCandidate.bind(this);
+    this.handleCallSendAnswer = this.handleCallSendAnswer.bind(this);
+    this.handleCallAcceptCall = this.handleCallAcceptCall.bind(this);
     this.sendMessageToTopic = this.sendMessageToTopic.bind(this);
   }
 
   getBlankState() {
-    const settings = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('settings') || {};
-    const persist = !!_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('keep-logged-in');
+    const settings = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].getObject('settings') || {};
+    const persist = !!_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].getObject('keep-logged-in');
     return {
       connected: false,
       ready: false,
       autoLogin: false,
       transport: settings.transport || null,
-      serverAddress: settings.serverAddress || (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_14__.detectServerAddress)(),
+      serverAddress: settings.serverAddress || (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_15__.detectServerAddress)(),
       serverVersion: "no connection",
       messageSounds: !settings.messageSoundsOff,
       incognitoMode: false,
       desktopAlerts: persist && !!settings.desktopAlerts,
-      desktopAlertsEnabled: ((0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_14__.isSecureConnection)() || (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_14__.isLocalHost)()) && typeof firebase_app__WEBPACK_IMPORTED_MODULE_2__ != 'undefined' && typeof navigator != 'undefined' && typeof FIREBASE_INIT != 'undefined',
-      firebaseToken: persist ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('firebase-token') : null,
+      desktopAlertsEnabled: ((0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_15__.isSecureConnection)() || (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_15__.isLocalHost)()) && typeof firebase_app__WEBPACK_IMPORTED_MODULE_2__.initializeApp != 'undefined' && typeof navigator != 'undefined' && typeof FIREBASE_INIT != 'undefined',
+      firebaseToken: persist ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].getObject('firebase-token') : null,
       applicationVisible: !document.hidden,
       errorText: '',
       errorLevel: null,
@@ -5500,9 +10269,12 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       topicSelectedAcs: null,
       newTopicParams: null,
       loginDisabled: false,
-      displayMobile: window.innerWidth <= _config_js__WEBPACK_IMPORTED_MODULE_11__.MEDIA_BREAKPOINT,
+      displayMobile: window.innerWidth <= _config_js__WEBPACK_IMPORTED_MODULE_12__.MEDIA_BREAKPOINT,
       infoPanel: undefined,
       mobilePanel: 'sidepanel',
+      callTopic: undefined,
+      callState: _config_js__WEBPACK_IMPORTED_MODULE_12__.CALL_STATE_NONE,
+      callShouldStart: false,
       contextMenuVisible: false,
       contextMenuBounds: null,
       contextMenuClickAt: null,
@@ -5548,22 +10320,19 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.tinode.onConnect = this.handleConnected;
       this.tinode.onDisconnect = this.handleDisconnect;
       this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
+      this.tinode.onInfoMessage = this.handleInfoMessage;
     }).then(() => {
       if (this.state.desktopAlertsEnabled) {
         this.initFCMessaging().then(() => {
           if (this.state.desktopAlerts) {
-            if (!this.state.firebaseToken) {
-              this.togglePushToken(true);
-            } else {
-              this.tinode.setDeviceToken(this.state.firebaseToken);
-            }
+            this.tinode.setDeviceToken(this.state.firebaseToken);
           }
         }).catch(() => {});
       }
 
-      const parsedNav = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].parseUrlHash(window.location.hash);
+      const parsedNav = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].parseUrlHash(window.location.hash);
       this.resetContactList();
-      const token = this.state.persist ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('auth-token') : undefined;
+      const token = this.state.persist ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].getObject('auth-token') : undefined;
 
       if (token) {
         this.setState({
@@ -5580,7 +10349,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         this.setState({
           requestedTopic: parsedNav.path[1]
         });
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo('');
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo('');
       }
 
       this.readTimer = null;
@@ -5596,22 +10365,36 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   static tnSetup(serverAddress, transport, locale, persistentCache, onSetupCompleted) {
-    const tinode = new (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default())({
-      appName: _config_js__WEBPACK_IMPORTED_MODULE_11__.APP_NAME,
+    const tinode = new tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode({
+      appName: _config_js__WEBPACK_IMPORTED_MODULE_12__.APP_NAME,
       host: serverAddress,
-      apiKey: _config_js__WEBPACK_IMPORTED_MODULE_11__.API_KEY,
+      apiKey: _config_js__WEBPACK_IMPORTED_MODULE_12__.API_KEY,
       transport: transport,
-      secure: (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_14__.isSecureConnection)(),
+      secure: (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_15__.isSecureConnection)(),
       persist: persistentCache
     }, onSetupCompleted);
     tinode.setHumanLanguage(locale);
-    tinode.enableLogging(_config_js__WEBPACK_IMPORTED_MODULE_11__.LOGGING_ENABLED, true);
+    tinode.enableLogging(_config_js__WEBPACK_IMPORTED_MODULE_12__.LOGGING_ENABLED, true);
     return tinode;
   }
 
-  handlePushMessage(data) {
-    if (data.what == 'msg' && tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().isChannelTopicName(data.topic)) {
-      this.tinode.oobNotification(data.topic, data.seq, 'fake-uid');
+  handlePushMessage(payload) {
+    const data = payload.data || {};
+
+    switch (data.what) {
+      case 'msg':
+        if (tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.isChannelTopicName(data.topic)) {
+          this.tinode.oobNotification('msg', data.topic, data.seq, 'fake-uid');
+        }
+
+        break;
+
+      case 'read':
+        this.tinode.oobNotification('read', data.topic, data.seq);
+        break;
+
+      default:
+        console.warn("Unknown push type ignored", data.what, data);
     }
   }
 
@@ -5625,39 +10408,90 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       console.error(msg, err);
       this.handleError(formatMessage(messages.push_init_failed), 'err');
       this.setState({
-        desktopAlertsEnabled: false
+        desktopAlertsEnabled: false,
+        firebaseToken: null
+      });
+      _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].updateObject('settings', {
+        desktopAlerts: false
       });
     };
 
     try {
-      this.fbPush = firebase_app__WEBPACK_IMPORTED_MODULE_2__.initializeApp(FIREBASE_INIT, _config_js__WEBPACK_IMPORTED_MODULE_11__.APP_NAME).messaging();
-      this.fbPush.usePublicVapidKey(FIREBASE_INIT.messagingVapidKey);
+      this.fcm = (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.getMessaging)((0,firebase_app__WEBPACK_IMPORTED_MODULE_2__.initializeApp)(FIREBASE_INIT, _config_js__WEBPACK_IMPORTED_MODULE_12__.APP_NAME));
       return navigator.serviceWorker.register('/service-worker.js').then(reg => {
         this.checkForAppUpdate(reg);
-        this.fbPush.useServiceWorker(reg);
         reg.active.postMessage(JSON.stringify({
           locale: locale,
-          version: _version_js__WEBPACK_IMPORTED_MODULE_12__.PACKAGE_VERSION
+          version: _version_js__WEBPACK_IMPORTED_MODULE_13__.PACKAGE_VERSION
         }));
-        this.fbPush.onTokenRefresh(() => {
-          this.requestPushToken();
-        });
-        this.fbPush.onMessage(payload => {
-          this.handlePushMessage(payload.data);
-        });
         return reg;
+      }).then(reg => {
+        return TinodeWeb.requestFCMToken(this.fcm, reg);
+      }).then(token => {
+        const persist = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].getObject('keep-logged-in');
+
+        if (token != this.state.firebaseToken) {
+          this.tinode.setDeviceToken(token);
+
+          if (persist) {
+            _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].setObject('firebase-token', token);
+          }
+        }
+
+        this.setState({
+          firebaseToken: token,
+          desktopAlerts: true
+        });
+
+        if (persist) {
+          _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].updateObject('settings', {
+            desktopAlerts: true
+          });
+        }
+
+        (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.onMessage)(this.fcm, payload => {
+          this.handlePushMessage(payload);
+        });
       }).catch(err => {
-        onError("Failed to register service worker:", err);
-        return Promise.reject(err);
+        onError(err);
+        throw err;
       });
     } catch (err) {
-      onError("Failed to initialize push notifications", err);
+      onError(err);
       return Promise.reject(err);
     }
   }
 
+  static requestFCMToken(fcm, sw) {
+    return (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.getToken)(fcm, {
+      serviceWorkerRegistration: sw,
+      vapidKey: FIREBASE_INIT.messagingVapidKey
+    }).then(token => {
+      if (token) {
+        return token;
+      } else {
+        return Notification.requestPermission().then(permission => {
+          if (permission === 'granted') {
+            return (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.getToken)(fcm, {
+              serviceWorkerRegistration: reg,
+              vapidKey: FIREBASE_INIT.messagingVapidKey
+            }).then(token => {
+              if (token) {
+                return token;
+              } else {
+                throw new Error("Failed to initialize notifications");
+              }
+            });
+          } else {
+            throw new Error("No permission to send notifications: " + permission);
+          }
+        });
+      }
+    });
+  }
+
   handleResize() {
-    const mobile = document.documentElement.clientWidth <= _config_js__WEBPACK_IMPORTED_MODULE_11__.MEDIA_BREAKPOINT;
+    const mobile = document.documentElement.clientWidth <= _config_js__WEBPACK_IMPORTED_MODULE_12__.MEDIA_BREAKPOINT;
     this.setState({
       viewportWidth: document.documentElement.clientWidth,
       viewportHeight: document.documentElement.clientHeight
@@ -5698,7 +10532,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handleHashRoute() {
-    const hash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].parseUrlHash(window.location.hash);
+    const hash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].parseUrlHash(window.location.hash);
 
     if (hash.path && hash.path.length > 0) {
       if (['register', 'settings', 'edit', 'notif', 'security', 'support', 'general', 'crop', 'cred', 'reset', 'newtpk', 'archive', 'blocked', 'contacts', ''].includes(hash.path[0])) {
@@ -5712,20 +10546,14 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       let topicName = hash.path[1] || null;
 
       if (topicName != this.state.topicSelected) {
-        if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().topicType(topicName)) {
+        if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.topicType(topicName)) {
           topicName = null;
         }
 
-        const newState = {
-          topicSelected: topicName
-        };
-        const acs = this.tinode.getTopicAccessMode(topicName);
-
-        if (acs) {
-          newState.topicSelectedAcs = acs;
-        }
-
-        this.setState(newState);
+        this.setState({
+          topicSelected: topicName,
+          topicSelectedAcs: this.tinode.getTopicAccessMode(topicName)
+        });
       }
     } else {
       this.setState({
@@ -5777,7 +10605,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       errorText: err,
       errorLevel: level,
       errorAction: action,
-      errorActionText: actionText
+      errorActionText: actionText,
+      callShouldStart: false
     });
   }
 
@@ -5811,14 +10640,14 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   handlePersistenceChange(persist) {
     if (persist) {
       this.tinode.initStorage().then(() => {
-        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].setObject('keep-logged-in', true);
+        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].setObject('keep-logged-in', true);
         this.setState({
           persist: true
         });
       });
     } else {
       this.tinode.clearStorage().then(() => {
-        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].setObject('keep-logged-in', false);
+        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].setObject('keep-logged-in', false);
         this.setState({
           persist: false
         });
@@ -5865,7 +10694,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     let count = sec / 1000;
     count = count | count;
     this.reconnectCountdown = setInterval(() => {
-      const timeLeft = count > 99 ? (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_17__.secondsToTime)(count) : count;
+      const timeLeft = count > 99 ? (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_18__.secondsToTime)(count) : count;
       this.handleError(formatMessage(messages.reconnect_countdown, {
         seconds: timeLeft
       }), 'warn', () => {
@@ -5892,11 +10721,11 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
   doLogin(login, password, cred) {
     if (this.tinode.isAuthenticated()) {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo('');
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo('');
       return;
     }
 
-    cred = tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().credential(cred);
+    cred = tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.credential(cred);
     let promise = null;
     let token = this.tinode.getAuthToken();
 
@@ -5939,10 +10768,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           this.handleLogout();
         }
 
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo('');
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo('');
       });
     } else {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo('');
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo('');
       this.setState({
         loginDisabled: false
       });
@@ -5950,17 +10779,17 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handleCredentialsRequest(params) {
-    const parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].parseUrlHash(window.location.hash);
+    const parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].parseUrlHash(window.location.hash);
     parsed.path[0] = 'cred';
     parsed.params['method'] = params.cred[0];
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].composeUrlHash(parsed.path, parsed.params));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].composeUrlHash(parsed.path, parsed.params));
   }
 
   handleLoginSuccessful() {
     this.handleError();
 
-    if (_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('keep-logged-in')) {
-      _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].setObject('auth-token', this.tinode.getAuthToken());
+    if (_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].getObject('keep-logged-in')) {
+      _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].setObject('auth-token', this.tinode.getAuthToken());
     }
 
     const goToTopic = this.state.requestedTopic;
@@ -5980,19 +10809,19 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.tinode.disconnect();
       localStorage.removeItem('auth-token');
       this.handleError(err.message, 'err');
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo('');
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo('');
     }).finally(() => {
       this.setState({
         loadSpinnerVisible: false
       });
     });
-    let urlHash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlSidePanel(window.location.hash, 'contacts');
+    let urlHash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlSidePanel(window.location.hash, 'contacts');
 
     if (goToTopic) {
-      urlHash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic(urlHash, goToTopic);
+      urlHash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlTopic(urlHash, goToTopic);
     }
 
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(urlHash);
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(urlHash);
   }
 
   tnMeMetaDesc(desc) {
@@ -6000,7 +10829,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       if (desc.public) {
         this.setState({
           sidePanelTitle: desc.public.fn,
-          sidePanelAvatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__.makeImageUrl)(desc.public.photo)
+          sidePanelAvatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__.makeImageUrl)(desc.public.photo)
         });
       }
 
@@ -6073,7 +10902,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     const merged = {};
 
     for (const c of chatList) {
-      if (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().isP2PTopicName(c.topic)) {
+      if (tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.isP2PTopicName(c.topic)) {
         merged[c.topic] = {
           user: c.topic,
           updated: c.updated,
@@ -6125,12 +10954,12 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   tnData(data) {
     const topic = this.tinode.getTopic(data.topic);
 
-    if (topic.msgStatus(data, true) >= (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().MESSAGE_STATUS_SENT) && data.from != this.state.myUserId) {
+    if (topic.msgStatus(data, true) >= tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.MESSAGE_STATUS_SENT && data.from != this.state.myUserId) {
       clearTimeout(this.receivedTimer);
       this.receivedTimer = setTimeout(() => {
         this.receivedTimer = undefined;
         topic.noteRecv(data.seq);
-      }, _config_js__WEBPACK_IMPORTED_MODULE_11__.RECEIVED_DELAY);
+      }, _config_js__WEBPACK_IMPORTED_MODULE_12__.RECEIVED_DELAY);
     }
   }
 
@@ -6192,7 +11021,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           topicSelectedAcs: this.tinode.getTopicAccessMode(topicName),
           forwardMessage: null
         });
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic('', topicName));
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlTopic('', topicName));
       }
     } else {
       this.setState({
@@ -6204,7 +11033,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         infoPanel: undefined,
         forwardMessage: null
       });
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic('', null));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlTopic('', null));
     }
   }
 
@@ -6212,15 +11041,15 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.setState({
       mobilePanel: 'sidepanel'
     });
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic(window.location.hash, null));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlTopic(window.location.hash, null));
   }
 
-  handleSendMessage(msg, promise, uploader, head) {
+  handleSendMessage(msg, uploadCompletionPromise, uploader, head) {
     const topic = this.tinode.getTopic(this.state.topicSelected);
-    this.sendMessageToTopic(topic, msg, promise, uploader, head);
+    return this.sendMessageToTopic(topic, msg, uploadCompletionPromise, uploader, head);
   }
 
-  sendMessageToTopic(topic, msg, promise, uploader, head) {
+  sendMessageToTopic(topic, msg, uploadCompletionPromise, uploader, head) {
     msg = topic.createMessage(msg, false);
     msg._uploader = uploader;
 
@@ -6228,30 +11057,33 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       msg.head = Object.assign(msg.head || {}, head);
     }
 
-    if (!topic.isSubscribed()) {
-      if (!promise) {
-        promise = Promise.resolve();
-      }
+    const completion = [];
 
-      promise = promise.then(() => topic.subscribe()).then(() => {
+    if (uploadCompletionPromise) {
+      completion.push(uploadCompletionPromise);
+    }
+
+    if (!topic.isSubscribed()) {
+      const subscribePromise = topic.subscribe().then(() => {
         topic.queuedMessages(pub => {
-          if (!pub._sending && topic.isSubscribed()) {
-            this.sendMessage(pub);
+          if (pub._sending || pub.seq == msg.seq) {
+            return;
+          }
+
+          if (topic.isSubscribed()) {
+            topic.publishMessage(pub);
           }
         });
       });
+      completion.push(subscribePromise);
     }
 
-    if (promise) {
-      promise = promise.catch(err => {
-        this.handleError(err.message, 'err');
-      });
-    }
-
-    topic.publishDraft(msg, promise).then(ctrl => {
+    return topic.publishDraft(msg, Promise.all(completion)).then(_ => {
       if (topic.isArchived()) {
-        return topic.archive(false);
+        topic.archive(false);
       }
+
+      return ctrl;
     }).catch(err => {
       this.handleError(err.message, 'err');
     });
@@ -6311,7 +11143,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
   handleNewAccount() {
     this.handleError();
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlSidePanel(window.location.hash, 'register'));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlSidePanel(window.location.hash, 'register'));
   }
 
   handleNewAccountRequest(login_, password_, public_, cred_, tags_) {
@@ -6320,7 +11152,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       return this.tinode.createAccountBasic(login_, password_, {
         public: public_,
         tags: tags_,
-        cred: tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().credential(cred_)
+        cred: tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.credential(cred_)
       });
     }).then(ctrl => {
       if (ctrl.code >= 300 && ctrl.text == 'validate credentials') {
@@ -6361,7 +11193,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
   handleSettings() {
     this.handleError();
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlSidePanel(window.location.hash, this.state.myUserId ? 'edit' : 'settings'));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlSidePanel(window.location.hash, this.state.myUserId ? 'edit' : 'settings'));
   }
 
   handleGlobalSettings(settings) {
@@ -6374,7 +11206,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.tinode.disconnect();
     }
 
-    this.tinode = TinodeWeb.tnSetup(serverAddress, transport, this.props.intl.locale, _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('keep-logged-in'));
+    this.tinode = TinodeWeb.tnSetup(serverAddress, transport, this.props.intl.locale, _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].getObject('keep-logged-in'));
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
     this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
@@ -6382,60 +11214,45 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       serverAddress: serverAddress,
       transport: transport
     });
-    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].setObject('settings', {
+    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].setObject('settings', {
       serverAddress: serverAddress,
       transport: transport
     });
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlSidePanel(window.location.hash, ''));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlSidePanel(window.location.hash, ''));
   }
 
   handleShowArchive() {
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlSidePanel(window.location.hash, this.state.myUserId ? 'archive' : ''));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlSidePanel(window.location.hash, this.state.myUserId ? 'archive' : ''));
   }
 
   handleShowBlocked() {
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlSidePanel(window.location.hash, this.state.myUserId ? 'blocked' : ''));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlSidePanel(window.location.hash, this.state.myUserId ? 'blocked' : ''));
   }
 
-  togglePushToken(enabled) {
+  toggleFCMToken(enabled) {
     if (enabled) {
       this.setState({
         desktopAlerts: null
       });
 
       if (!this.state.firebaseToken) {
-        const fcm = this.fbPush ? Promise.resolve() : this.initFCMessaging();
-        fcm.then(() => {
-          return this.fbPush.requestPermission();
-        }).then(() => {
-          this.requestPushToken();
-        }).catch(err => {
-          console.error("Failed to get notification permission.", err);
-          this.handleError(err.message, 'err');
-          this.setState({
-            desktopAlerts: false,
-            firebaseToken: null
-          });
-          _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].updateObject('settings', {
-            desktopAlerts: false
-          });
-        });
+        this.initFCMessaging();
       } else {
         this.setState({
           desktopAlerts: true
         });
 
-        if (_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('keep-logged-in')) {
-          _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].updateObject('settings', {
+        if (_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].getObject('keep-logged-in')) {
+          _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].updateObject('settings', {
             desktopAlerts: true
           });
         }
       }
-    } else if (this.state.firebaseToken && this.fbPush) {
-      this.fbPush.deleteToken(this.state.firebaseToken).catch(err => {
+    } else if (this.state.firebaseToken && this.fcm) {
+      (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.deleteToken)(this.fcm).catch(err => {
         console.error("Unable to delete token.", err);
       }).finally(() => {
-        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].updateObject('settings', {
+        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].updateObject('settings', {
           desktopAlerts: false
         });
         localStorage.removeItem('firebase-token');
@@ -6450,45 +11267,17 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         desktopAlerts: false,
         firebaseToken: null
       });
-      _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].updateObject('settings', {
+      _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].updateObject('settings', {
         desktopAlerts: false
       });
     }
-  }
-
-  requestPushToken() {
-    this.fbPush.getToken().then(refreshedToken => {
-      const persist = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('keep-logged-in');
-
-      if (refreshedToken != this.state.firebaseToken) {
-        this.tinode.setDeviceToken(refreshedToken);
-
-        if (persist) {
-          _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].setObject('firebase-token', refreshedToken);
-        }
-      }
-
-      this.setState({
-        firebaseToken: refreshedToken,
-        desktopAlerts: true
-      });
-
-      if (persist) {
-        _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].updateObject('settings', {
-          desktopAlerts: true
-        });
-      }
-    }).catch(err => {
-      this.handleError(err.message, 'err');
-      console.error("Failed to retrieve firebase token", err);
-    });
   }
 
   handleToggleMessageSounds(enabled) {
     this.setState({
       messageSounds: enabled
     });
-    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].updateObject('settings', {
+    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].updateObject('settings', {
       messageSoundsOff: !enabled
     });
   }
@@ -6519,7 +11308,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handleSidepanelCancel() {
-    const parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].parseUrlHash(window.location.hash);
+    const parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].parseUrlHash(window.location.hash);
     let path = '';
 
     if (['security', 'support', 'general', 'notif'].includes(parsed.path[0])) {
@@ -6542,7 +11331,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       delete parsed.params.token;
     }
 
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].composeUrlHash(parsed.path, parsed.params));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].composeUrlHash(parsed.path, parsed.params));
     this.setState({
       errorText: '',
       errorLevel: null
@@ -6550,11 +11339,11 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   basicNavigator(hash) {
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlSidePanel(window.location.hash, hash));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlSidePanel(window.location.hash, hash));
   }
 
   infoNavigator(hash) {
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlInfoPanel(window.location.hash, hash));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlInfoPanel(window.location.hash, hash));
   }
 
   handleStartTopicRequest(topicName, newTopicParams, isChannel) {
@@ -6565,13 +11354,13 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
     const params = {};
 
-    if (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().isP2PTopicName(topicName)) {
+    if (tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.isP2PTopicName(topicName)) {
       params.sub = {
-        mode: _config_js__WEBPACK_IMPORTED_MODULE_11__.DEFAULT_P2P_ACCESS_MODE
+        mode: _config_js__WEBPACK_IMPORTED_MODULE_12__.DEFAULT_P2P_ACCESS_MODE
       };
       params.desc = {
         defacs: {
-          auth: _config_js__WEBPACK_IMPORTED_MODULE_11__.DEFAULT_P2P_ACCESS_MODE
+          auth: _config_js__WEBPACK_IMPORTED_MODULE_12__.DEFAULT_P2P_ACCESS_MODE
         }
       };
     } else {
@@ -6597,11 +11386,25 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handleNewTopicCreated(oldName, newName) {
+    let nextState = {};
+
+    if (this.state.callShouldStart) {
+      nextState = {
+        callState: _config_js__WEBPACK_IMPORTED_MODULE_12__.CALL_STATE_IN_PROGRESS,
+        callShouldStart: false
+      };
+    }
+
     if (this.state.topicSelected == oldName && oldName != newName) {
-      this.setState({
+      const newTopic = {
         topicSelected: newName
-      }, () => {
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic('', newName));
+      };
+      this.setState(...nextState, ...newTopic, () => {
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlTopic('', newName));
+      });
+    } else {
+      this.setState(nextState, () => {
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlTopic('', newName));
       });
     }
   }
@@ -6616,10 +11419,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
       if (pub) {
         if (pub.photo) {
-          if (pub.photo.ref && pub.photo.ref != (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().DEL_CHAR)) {
+          if (pub.photo.ref && pub.photo.ref != tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.DEL_CHAR) {
             attachments = [pub.photo.ref];
-          } else if (!pub.photo.data || pub.photo.data == (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().DEL_CHAR)) {
-            pub.photo = (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().DEL_CHAR);
+          } else if (!pub.photo.data || pub.photo.data == tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.DEL_CHAR) {
+            pub.photo = tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.DEL_CHAR;
           }
         }
 
@@ -6627,7 +11430,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       }
 
       if (typeof priv == 'string') {
-        params.private = priv === (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().DEL_CHAR) ? (tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().DEL_CHAR) : {
+        params.private = priv === tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.DEL_CHAR ? tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.DEL_CHAR : {
           comment: priv
         };
       }
@@ -6701,33 +11504,39 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handleLogout() {
-    (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_18__.updateFavicon)(0);
+    (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_19__.updateFavicon)(0);
     localStorage.removeItem('auth-token');
     localStorage.removeItem('firebase-token');
     localStorage.removeItem('settings');
 
     if (this.state.firebaseToken) {
-      this.fbPush.deleteToken(this.state.firebaseToken);
+      (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.deleteToken)(this.fcm);
     }
 
     clearInterval(this.reconnectCountdown);
+    let cleared;
 
     if (this.tinode) {
-      this.tinode.clearStorage();
+      cleared = this.tinode.clearStorage();
       this.tinode.onDisconnect = undefined;
       this.tinode.disconnect();
+    } else {
+      cleared = Promose.resolve();
     }
 
     this.setState(this.getBlankState());
-    this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport, this.props.intl.locale, _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_15__["default"].getObject('keep-logged-in'));
-    this.tinode.onConnect = this.handleConnected;
-    this.tinode.onDisconnect = this.handleDisconnect;
-    this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo('');
+    cleared.then(() => {
+      this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport, this.props.intl.locale, _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_16__["default"].getObject('keep-logged-in'), () => {
+        this.tinode.onConnect = this.handleConnected;
+        this.tinode.onDisconnect = this.handleDisconnect;
+        this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo('');
+      });
+    });
   }
 
   handleDeleteAccount() {
-    this.tinode.delCurrentUser(true).then(ctrl => {
+    this.tinode.delCurrentUser(true).then(_ => {
       this.handleLogout();
     });
   }
@@ -6740,7 +11549,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
 
     topic.delTopic(true).then(ctrl => {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic(window.location.hash, ''));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlTopic(window.location.hash, ''));
     }).catch(err => {
       this.handleError(err.message, 'err');
     });
@@ -6766,7 +11575,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
 
     topic.leave(true).then(ctrl => {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic(window.location.hash, ''));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlTopic(window.location.hash, ''));
     }).catch(err => {
       this.handleError(err.message, 'err');
     });
@@ -6780,7 +11589,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
 
     topic.updateMode(null, '-JP').then(_ => {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic(window.location.hash, ''));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlTopic(window.location.hash, ''));
     }).catch(err => {
       this.handleError(err.message, 'err');
     });
@@ -6795,7 +11604,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
     this.tinode.report('report', topicName);
     topic.updateMode(null, '-JP').then(ctrl => {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].setUrlTopic(window.location.hash, ''));
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].setUrlTopic(window.location.hash, ''));
     }).catch(err => {
       this.handleError(err.message, 'err');
     });
@@ -6820,10 +11629,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
 
     const header = '➦ ' + params.userName;
-    const content = typeof params.content == 'string' ? tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.init(params.content) : tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.forwardedContent(params.content);
-    const preview = tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.preview(content, _config_js__WEBPACK_IMPORTED_MODULE_11__.FORWARDED_PREVIEW_LENGTH, true);
-    const msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.append(tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.appendLineBreak(tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.mention(header, params.userFrom)), content);
-    const msgPreview = tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default().Drafty.quote(header, params.userFrom, preview);
+    const content = typeof params.content == 'string' ? tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.init(params.content) : tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.forwardedContent(params.content);
+    const preview = tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.preview(content, _config_js__WEBPACK_IMPORTED_MODULE_12__.FORWARDED_PREVIEW_LENGTH, true);
+    const msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.append(tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.appendLineBreak(tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.mention(header, params.userFrom)), content);
+    const msgPreview = tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.quote(header, params.userFrom, preview);
     const head = {
       forwarded: params.topicName + ':' + params.seq
     };
@@ -6862,6 +11671,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     return [subscribed ? {
       title: this.props.intl.formatMessage(messages.menu_item_info),
       handler: this.handleShowInfoView
+    } : null, subscribed && tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.isP2PTopicName(topicName) ? {
+      title: this.props.intl.formatMessage(messages.menu_item_video_call),
+      handler: this.handleStartVideoCall
     } : null, subscribed ? 'messages_clear' : null, subscribed && deleter ? 'messages_clear_hard' : null, muted ? blocked ? null : 'topic_unmute' : 'topic_mute', self_blocked ? 'topic_unblock' : 'topic_block', archived ? 'topic_restore' : 'topic_archive', 'topic_delete'];
   }
 
@@ -6908,7 +11720,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handleShowInfoView() {
-    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].addUrlParam(window.location.hash, 'info', 'info'));
+    _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].addUrlParam(window.location.hash, 'info', 'info'));
     this.setState({
       infoPanel: 'info'
     });
@@ -6951,7 +11763,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           resp: code
         }
       }).then(() => {
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo('');
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo('');
       }).catch(err => {
         this.handleError(err.message, 'err');
       });
@@ -6976,7 +11788,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handleResetPassword(scheme, newPassword, token) {
-    token = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_13__.base64ReEncode)(token);
+    token = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__.base64ReEncode)(token);
 
     if (!token) {
       this.handleError(this.props.intl.formatMessage(messages.invalid_security_token), 'err');
@@ -6986,10 +11798,176 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           token: token
         });
       }).then(() => {
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_16__["default"].navigateTo('');
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_17__["default"].navigateTo('');
       }).catch(err => {
         this.handleError(err.message, 'err');
       });
+    }
+  }
+
+  handleStartVideoCall() {
+    this.setState({
+      callTopic: this.state.topicSelected,
+      callState: _config_js__WEBPACK_IMPORTED_MODULE_12__.CALL_STATE_OUTGOING_INITATED
+    });
+  }
+
+  handleCallInvite(callTopic, callSeq, callState) {
+    switch (callState) {
+      case _config_js__WEBPACK_IMPORTED_MODULE_12__.CALL_STATE_OUTGOING_INITATED:
+        let head = {
+          mime: 'application/tinode-video-call'
+        };
+        this.handleSendMessage('started', undefined, undefined, head).then(ctrl => {
+          if (ctrl.code < 200 || ctrl.code >= 300 || typeof ctrl.params == 'undefined' || typeof ctrl.params['seq'] == 'undefined') {
+            this.handleCallClose();
+            return;
+          }
+
+          this.setState({
+            callSeq: ctrl.params['seq']
+          });
+        });
+        break;
+
+      case _config_js__WEBPACK_IMPORTED_MODULE_12__.CALL_STATE_IN_PROGRESS:
+        const topic = this.tinode.getTopic(callTopic);
+
+        if (!topic) {
+          return;
+        }
+
+        topic.call('accept', callSeq).catch(err => {
+          this.handleCallClose();
+          this.handleError(err.message, 'err');
+        });
+        break;
+    }
+  }
+
+  handleCallRinging(callTopic, callSeq) {
+    const topic = this.tinode.getTopic(callTopic);
+
+    if (!topic) {
+      return;
+    }
+
+    topic.call('ringing', callSeq);
+  }
+
+  handleCallHangup(callTopic, callSeq) {
+    const topic = this.tinode.getTopic(callTopic);
+
+    if (!topic) {
+      return;
+    }
+
+    topic.call('hang-up', callSeq);
+  }
+
+  handleCallSendOffer(callTopic, callSeq, sdp) {
+    const topic = this.tinode.getTopic(callTopic);
+
+    if (!topic) {
+      return;
+    }
+
+    topic.call('offer', callSeq, sdp);
+  }
+
+  handleCallIceCandidate(callTopic, callSeq, candidate) {
+    const topic = this.tinode.getTopic(callTopic);
+
+    if (!topic) {
+      return;
+    }
+
+    topic.call('ice-candidate', callSeq, candidate);
+  }
+
+  handleCallSendAnswer(callTopic, callSeq, sdp) {
+    const topic = this.tinode.getTopic(callTopic);
+
+    if (!topic) {
+      return;
+    }
+
+    topic.call('answer', callSeq, sdp);
+  }
+
+  handleCallClose() {
+    if (this.state.callTimeout) {
+      console.log('closing call timeout ', this.state.callTimeout);
+      clearTimeout(this.state.callTimeout);
+    }
+
+    this.setState({
+      callTopic: undefined,
+      callState: _config_js__WEBPACK_IMPORTED_MODULE_12__.CALL_STATE_NONE
+    });
+  }
+
+  handleCallAcceptCall(topicName) {
+    const topic = this.tinode.getTopic(topicName);
+
+    if (!topic) {
+      return;
+    }
+
+    if (topic.isSubscribed()) {
+      this.handleTopicSelected(this.state.callTopic);
+      this.setState({
+        callState: _config_js__WEBPACK_IMPORTED_MODULE_12__.CALL_STATE_IN_PROGRESS
+      });
+    } else {
+      this.setState({
+        callShouldStart: true
+      }, () => this.handleTopicSelected(this.state.callTopic));
+    }
+  }
+
+  handleInfoMessage(info) {
+    if (info.what != 'call') {
+      return;
+    }
+
+    switch (info.event) {
+      case 'invite':
+        console.log('invite: ', info);
+
+        if (info.from != this.state.myUserId) {
+          this.setState({
+            callTopic: info.src,
+            callState: _config_js__WEBPACK_IMPORTED_MODULE_12__.CALL_STATE_INCOMING_RECEIVED,
+            callSeq: info.seq
+          });
+        }
+
+        break;
+
+      case 'accept':
+        console.log('TinodeWeb: received accept msg ', info);
+
+        if (info.topic == 'me' && info.from == this.state.myUserId) {
+          this.setState({
+            callTopic: null,
+            callState: _config_js__WEBPACK_IMPORTED_MODULE_12__.CALL_STATE_NONE,
+            callSeq: null
+          });
+          return;
+        }
+
+        if (info.topic == this.state.callTopic) {
+          this.setState({
+            callState: _config_js__WEBPACK_IMPORTED_MODULE_12__.CALL_STATE_IN_PROGRESS
+          });
+        }
+
+        break;
+
+      case 'hang-up':
+        this.handleCallClose();
+        break;
     }
   }
 
@@ -7039,7 +12017,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         this.state.alertParams.onConfirm();
       },
       confirm: this.state.alertParams.confirm
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_sidepanel_view_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
+    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_sidepanel_view_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
       tinode: this.tinode,
       connected: this.state.connected,
       displayMobile: this.state.displayMobile,
@@ -7078,7 +12056,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       onUpdateAccountDesc: this.handleTopicUpdateRequest,
       onUpdatePassword: this.handleUpdatePasswordRequest,
       onUpdateAccountTags: this.handleUpdateAccountTagsRequest,
-      onTogglePushNotifications: this.togglePushToken,
+      onTogglePushNotifications: this.toggleFCMToken,
       onToggleMessageSounds: this.handleToggleMessageSounds,
       onToggleIncognitoMode: this.handleToggleIncognitoMode,
       onCredAdd: this.handleCredAdd,
@@ -7100,7 +12078,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       searchResults: this.state.searchResults,
       onSearchContacts: this.handleSearchContacts,
       showContextMenu: this.handleShowContextMenu
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_messages_view_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
+    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_messages_view_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
       tinode: this.tinode,
       connected: this.state.connected,
       ready: this.state.ready,
@@ -7118,6 +12096,14 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       applicationVisible: this.state.applicationVisible,
       forwardMessage: this.state.forwardMessage,
       onCancelForwardMessage: this.handleHideForwardDialog,
+      callTopic: this.state.callTopic,
+      callSeq: this.state.callSeq,
+      callState: this.state.callState,
+      onCallHangup: this.handleCallHangup,
+      onCallInvite: this.handleCallInvite,
+      onCallSendOffer: this.handleCallSendOffer,
+      onCallIceCandidate: this.handleCallIceCandidate,
+      onCallSendAnswer: this.handleCallSendAnswer,
       errorText: this.state.errorText,
       errorLevel: this.state.errorLevel,
       errorAction: this.state.errorAction,
@@ -7130,7 +12116,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       showContextMenu: this.handleShowContextMenu,
       onChangePermissions: this.handleChangePermissions,
       onNewChat: this.handleNewChatInvitation,
-      sendMessage: this.handleSendMessage
+      sendMessage: this.handleSendMessage,
+      onVideoCallClosed: this.handleCallClose
     }), this.state.infoPanel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_info_view_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
       tinode: this.tinode,
       connected: this.state.connected,
@@ -7159,6 +12146,15 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       onInitFind: this.tnInitFind,
       onError: this.handleError,
       showContextMenu: this.handleShowContextMenu
+    }) : null, this.state.callTopic && this.state.callState == _config_js__WEBPACK_IMPORTED_MODULE_12__.CALL_STATE_INCOMING_RECEIVED ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_incoming_call_view_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
+      tinode: this.tinode,
+      onClose: this.handleCallClose,
+      topic: this.state.callTopic,
+      seq: this.state.callSeq,
+      callState: this.state.callState,
+      onRinging: this.handleCallRinging,
+      onAcceptCall: this.handleCallAcceptCall,
+      onReject: this.handleCallHangup
     }) : null);
   }
 
@@ -7175,6 +12171,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   \***************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -7324,6 +12321,7 @@ class ValidationView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
   \*******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ Alert)
@@ -7378,6 +12376,7 @@ class Alert extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent)
   \************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ Attachment)
@@ -7502,12 +12501,654 @@ class Attachment extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
 
 /***/ }),
 
+/***/ "./src/widgets/audio-player.jsx":
+/*!**************************************!*\
+  !*** ./src/widgets/audio-player.jsx ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ AudioPlayer)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _lib_strformat__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/strformat */ "./src/lib/strformat.js");
+/* harmony import */ var _lib_blob_helpers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/blob-helpers */ "./src/lib/blob-helpers.js");
+
+
+
+
+const CANVAS_UPSCALING = 2.0;
+const LINE_WIDTH = 3 * CANVAS_UPSCALING;
+const SPACING = 2 * CANVAS_UPSCALING;
+const BAR_COLOR = '#bbb';
+const BAR_COLOR_DARK = '#888';
+const THUMB_COLOR = '#666';
+const MIN_PREVIEW_LENGTH = 16;
+class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
+  constructor(props) {
+    super(props);
+    let preview = (0,_lib_blob_helpers__WEBPACK_IMPORTED_MODULE_3__.base64ToIntArray)(this.props.preview);
+
+    if (Array.isArray(preview) && preview.length < MIN_PREVIEW_LENGTH) {
+      preview = null;
+    }
+
+    this.state = {
+      canPlay: false,
+      playing: false,
+      currentTime: '0:00',
+      duration: this.props.duration > 0 ? (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_2__.secondsToTime)(this.props.duration / 1000) : '-:--',
+      longMin: this.props.duration >= 600000,
+      preview: preview
+    };
+    this.initAudio = this.initAudio.bind(this);
+    this.initCanvas = this.initCanvas.bind(this);
+    this.resampleBars = this.resampleBars.bind(this);
+    this.visualize = this.visualize.bind(this);
+    this.handlePlay = this.handlePlay.bind(this);
+    this.handleSeek = this.handleSeek.bind(this);
+    this.handleError = this.handleError.bind(this);
+    this.audioPlayer = null;
+    this.viewBuffer = [];
+    this.canvasRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
+  }
+
+  componentDidMount() {
+    if (this.props.src) {
+      this.initAudio();
+    }
+
+    if (this.state.preview) {
+      this.initCanvas();
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.audioPlayer) {
+      this.audioPlayer.oncanplay = null;
+      this.audioPlayer.ontimeupdate = null;
+      this.audioPlayer.onended = null;
+      this.audioPlayer.pause();
+      this.audioPlayer = null;
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.src != prevProps.src) {
+      this.initAudio();
+    }
+
+    if (this.props.preview != prevProps.preview) {
+      let preview = (0,_lib_blob_helpers__WEBPACK_IMPORTED_MODULE_3__.base64ToIntArray)(this.props.preview);
+
+      if (Array.isArray(preview) && preview.length < MIN_PREVIEW_LENGTH) {
+        preview = null;
+      }
+
+      this.setState({
+        preview: preview
+      }, this.initCanvas);
+    }
+  }
+
+  initAudio() {
+    this.audioPlayer = new Audio(this.props.src);
+
+    this.audioPlayer.oncanplay = _ => this.setState({
+      canPlay: true
+    });
+
+    this.audioPlayer.ontimeupdate = _ => this.setState({
+      currentTime: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_2__.secondsToTime)(this.audioPlayer.currentTime, this.state.longMin)
+    });
+
+    this.audioPlayer.onended = _ => {
+      this.audioPlayer.currentTime = 0;
+      this.setState({
+        playing: false,
+        currentTime: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_2__.secondsToTime)(0, this.state.longMin)
+      });
+    };
+  }
+
+  initCanvas() {
+    this.canvasRef.current.width = this.canvasRef.current.offsetWidth * CANVAS_UPSCALING;
+    this.canvasRef.current.height = this.canvasRef.current.offsetHeight * CANVAS_UPSCALING;
+    this.canvasContext = this.canvasRef.current.getContext('2d');
+    this.canvasContext.lineCap = 'round';
+    this.viewBuffer = this.resampleBars(this.state.preview);
+    this.visualize();
+  }
+
+  visualize() {
+    if (!this.canvasRef.current) {
+      return;
+    }
+
+    const width = this.effectiveWidth;
+    const height = this.canvasRef.current.height;
+    this.canvasContext.lineWidth = LINE_WIDTH;
+
+    const drawFrame = () => {
+      if (!this.canvasRef.current) {
+        return;
+      }
+
+      this.canvasContext.clearRect(0, 0, this.canvasRef.current.width, height);
+
+      if (this.viewBuffer) {
+        if (this.state.playing) {
+          window.requestAnimationFrame(drawFrame);
+        }
+
+        const thumbAt = this.props.duration ? Math.max(0, Math.min(this.audioPlayer.currentTime * 1000 / this.props.duration, 1)) * (width - LINE_WIDTH * 2) : -1;
+        this.canvasContext.beginPath();
+        this.canvasContext.strokeStyle = BAR_COLOR_DARK;
+
+        for (let i = 0; i < this.viewBuffer.length; i++) {
+          let x = 1 + i * (LINE_WIDTH + SPACING) + LINE_WIDTH * 0.5;
+          let y = this.viewBuffer[i] * height * 0.9;
+          const color = x < thumbAt ? BAR_COLOR_DARK : BAR_COLOR;
+
+          if (this.canvasContext.strokeStyle != color) {
+            this.canvasContext.stroke();
+            this.canvasContext.beginPath();
+            this.canvasContext.strokeStyle = color;
+          }
+
+          this.canvasContext.moveTo(x, (height - y) * 0.5);
+          this.canvasContext.lineTo(x, height * 0.5 + y * 0.5);
+        }
+
+        this.canvasContext.stroke();
+
+        if (this.props.duration) {
+          this.canvasContext.beginPath();
+          this.canvasContext.arc(thumbAt + LINE_WIDTH * 2, height * 0.5, LINE_WIDTH * 2, 0, 2 * Math.PI);
+          this.canvasContext.fillStyle = THUMB_COLOR;
+          this.canvasContext.fill();
+        }
+      }
+    };
+
+    drawFrame();
+  }
+
+  resampleBars(original) {
+    const barCount = Math.min(original.length, (this.canvasRef.current.width - SPACING) / (LINE_WIDTH + SPACING) | 0);
+    const factor = original.length / barCount;
+    let amps = [];
+    let max = -1;
+
+    for (let i = 0; i < barCount; i++) {
+      let lo = i * factor | 0;
+      let hi = (i + 1) * factor | 0;
+      let amp = 0.0;
+
+      for (let j = lo; j < hi; j++) {
+        amp += original[j];
+      }
+
+      amps[i] = Math.max(0, amp / (hi - lo));
+      max = Math.max(amps[i], max);
+    }
+
+    if (max > 0) {
+      this.effectiveWidth = barCount * (LINE_WIDTH + SPACING) + SPACING;
+      return amps.map(a => a / max);
+    }
+
+    return null;
+  }
+
+  handlePlay(e) {
+    e.preventDefault();
+
+    if (!this.state.canPlay) {
+      return;
+    }
+
+    if (this.state.playing) {
+      this.audioPlayer.pause();
+      this.setState({
+        playing: false
+      });
+    } else {
+      this.audioPlayer.play();
+      this.setState({
+        playing: true
+      }, this.visualize);
+    }
+  }
+
+  handleError(err) {
+    console.log(err);
+  }
+
+  handleSeek(e) {
+    e.preventDefault();
+
+    if (e.target && this.props.duration) {
+      const rect = e.target.getBoundingClientRect();
+      const offset = (e.clientX - rect.left) / this.effectiveWidth * CANVAS_UPSCALING;
+      this.audioPlayer.currentTime = this.props.duration * offset / 1000;
+      this.setState({
+        currentTime: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_2__.secondsToTime)(this.audioPlayer.currentTime, this.state.longMin)
+      });
+
+      if (!this.state.playing && this.state.preview) {
+        this.visualize();
+      }
+    }
+  }
+
+  render() {
+    const playClass = 'material-icons' + (this.props.short ? '' : ' large') + (this.state.canPlay ? '' : ' disabled');
+    const play = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+      href: "#",
+      onClick: this.handlePlay,
+      title: "Play"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: playClass
+    }, this.state.playing ? 'pause_circle' : this.state.canPlay ? 'play_circle' : 'not_interested'));
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "audio-player"
+    }, this.props.short ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.state.preview ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("canvas", {
+      className: "playback",
+      ref: this.canvasRef,
+      onClick: this.handleSeek
+    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "playback"
+    }, " - ")), play) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, play, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.state.preview ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("canvas", {
+      className: "playback",
+      ref: this.canvasRef,
+      onClick: this.handleSeek
+    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "playback"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "preview_unavailable",
+      defaultMessage: [{
+        "type": 0,
+        "value": "unavailable"
+      }]
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "timer"
+    }, this.state.currentTime, "/", this.state.duration))));
+  }
+
+}
+
+/***/ }),
+
+/***/ "./src/widgets/audio-recorder.jsx":
+/*!****************************************!*\
+  !*** ./src/widgets/audio-recorder.jsx ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ AudioRecorder)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _audio_player_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./audio-player.jsx */ "./src/widgets/audio-player.jsx");
+/* harmony import */ var fix_webm_duration__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! fix-webm-duration */ "./node_modules/fix-webm-duration/fix-webm-duration.js");
+/* harmony import */ var fix_webm_duration__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(fix_webm_duration__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _lib_strformat__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/strformat */ "./src/lib/strformat.js");
+
+
+
+
+
+const BUFFER_SIZE = 256;
+const CANVAS_UPSCALING = 2.0;
+const LINE_WIDTH = 3 * CANVAS_UPSCALING;
+const SPACING = 2 * CANVAS_UPSCALING;
+const MILLIS_PER_BAR = 100;
+const BAR_COLOR = '#bbb';
+const BAR_SCALE = 64.0;
+const MIN_DURATION = 200;
+const MAX_DURATION = 600000;
+const VISUALIZATION_BARS = 96;
+const MAX_SAMPLES_PER_BAR = 10;
+const AUDIO_MIME_TYPE = 'audio/webm';
+class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
+  constructor(props) {
+    super(props);
+    this.state = {
+      enabled: true,
+      audioRecord: null,
+      recording: true,
+      paused: false,
+      duration: '0:00',
+      blobUrl: null,
+      preview: null
+    };
+    this.visualize = this.visualize.bind(this);
+    this.initMediaRecording = this.initMediaRecording.bind(this);
+    this.initCanvas = this.initCanvas.bind(this);
+    this.getRecording = this.getRecording.bind(this);
+    this.cleanUp = this.cleanUp.bind(this);
+    this.handleResume = this.handleResume.bind(this);
+    this.handlePause = this.handlePause.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+    this.handleDone = this.handleDone.bind(this);
+    this.durationMillis = 0;
+    this.startedOn = null;
+    this.viewBuffer = [];
+    this.canvasRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
+  }
+
+  componentDidMount() {
+    this.stream = null;
+    this.mediaRecorder = null;
+    this.audioContext = null;
+    this.audioInput = null;
+    this.analyser = null;
+    this.audioChunks = [];
+
+    try {
+      navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: false
+      }).then(this.initMediaRecording, this.props.onError);
+    } catch (err) {
+      this.props.onError(err);
+    }
+  }
+
+  componentWillUnmount() {
+    this.startedOn = null;
+
+    if (this.stream) {
+      this.cleanUp();
+    }
+  }
+
+  visualize() {
+    this.initCanvas();
+    const pcmData = new Uint8Array(this.analyser.frequencyBinCount);
+    const width = this.canvasWidth;
+    const height = this.canvasHeight;
+    const viewLength = width / (LINE_WIDTH + SPACING) | 0;
+    const viewDuration = MILLIS_PER_BAR * viewLength;
+    this.canvasContext.lineWidth = LINE_WIDTH;
+    this.canvasContext.strokeStyle = BAR_COLOR;
+    let prevBarCount = 0;
+    let volume = 0.0;
+    let countPerBar = 0;
+
+    const drawFrame = () => {
+      if (!this.startedOn) {
+        return;
+      }
+
+      window.requestAnimationFrame(drawFrame);
+      const duration = this.durationMillis + (Date.now() - this.startedOn);
+      this.setState({
+        duration: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_4__.secondsToTime)(duration / 1000)
+      });
+
+      if (duration > MAX_DURATION) {
+        this.startedOn = null;
+        this.mediaRecorder.pause();
+        this.durationMillis += Date.now() - this.startedOn;
+        this.setState({
+          enabled: false,
+          recording: false,
+          duration: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_4__.secondsToTime)(this.durationMillis / 1000)
+        });
+      }
+
+      this.analyser.getByteTimeDomainData(pcmData);
+      let amp = 0.0;
+
+      for (const amplitude of pcmData) {
+        amp += (amplitude - 127) ** 2;
+      }
+
+      volume += Math.sqrt(amp / pcmData.length);
+      countPerBar++;
+      let barCount = duration / MILLIS_PER_BAR | 0;
+      const dx = viewDuration > duration ? 0 : (duration - MILLIS_PER_BAR * barCount) / MILLIS_PER_BAR * (LINE_WIDTH + SPACING);
+
+      if (prevBarCount != barCount) {
+        prevBarCount = barCount;
+        this.viewBuffer.push(volume / countPerBar);
+        volume = 0.0;
+        countPerBar = 0;
+
+        if (this.viewBuffer.length > viewLength) {
+          this.viewBuffer.shift();
+        }
+      }
+
+      this.canvasContext.clearRect(0, 0, width, height);
+      this.canvasContext.beginPath();
+
+      for (let i = 0; i < this.viewBuffer.length; i++) {
+        let x = i * (LINE_WIDTH + SPACING) - dx;
+        let y = Math.min(this.viewBuffer[i] / BAR_SCALE, 0.9) * height;
+        this.canvasContext.moveTo(x, (height - y) * 0.5);
+        this.canvasContext.lineTo(x, height * 0.5 + y * 0.5);
+      }
+
+      this.canvasContext.stroke();
+    };
+
+    drawFrame();
+  }
+
+  handlePause(e) {
+    e.preventDefault();
+    this.mediaRecorder.pause();
+    this.mediaRecorder.requestData();
+    this.durationMillis += Date.now() - this.startedOn;
+    this.startedOn = null;
+    this.setState({
+      recording: false
+    });
+  }
+
+  handleResume(e) {
+    e.preventDefault();
+
+    if (this.state.enabled) {
+      this.startedOn = Date.now();
+      this.mediaRecorder.resume();
+      this.setState({
+        recording: true
+      }, this.visualize);
+    }
+  }
+
+  handleDelete(e) {
+    e.preventDefault();
+    this.durationMillis = 0;
+    this.startedOn = null;
+    this.mediaRecorder.stop();
+    this.cleanUp();
+    this.setState({
+      recording: false
+    });
+  }
+
+  handleDone(e) {
+    e.preventDefault();
+    this.setState({
+      recording: false
+    });
+
+    if (this.startedOn) {
+      this.durationMillis += Date.now() - this.startedOn;
+      this.startedOn = null;
+    }
+
+    if (this.mediaRecorder) {
+      this.mediaRecorder.stop();
+    }
+  }
+
+  initCanvas() {
+    this.canvasRef.current.width = this.canvasRef.current.offsetWidth * CANVAS_UPSCALING;
+    this.canvasRef.current.height = this.canvasRef.current.offsetHeight * CANVAS_UPSCALING;
+    this.canvasContext = this.canvasRef.current.getContext('2d');
+    this.canvasContext.lineCap = 'round';
+    this.canvasContext.translate(0.5, 0.5);
+    this.canvasWidth = this.canvasRef.current.width;
+    this.canvasHeight = this.canvasRef.current.height;
+  }
+
+  initMediaRecording(stream) {
+    this.stream = stream;
+    this.mediaRecorder = new MediaRecorder(stream, {
+      mimeType: AUDIO_MIME_TYPE
+    });
+    this.audioContext = new AudioContext();
+    this.audioInput = this.audioContext.createMediaStreamSource(stream);
+    this.analyser = this.audioContext.createAnalyser();
+    this.analyser.fftSize = BUFFER_SIZE;
+    this.audioInput.connect(this.analyser);
+
+    this.mediaRecorder.onstop = _ => {
+      if (this.durationMillis > MIN_DURATION) {
+        this.getRecording(this.mediaRecorder.mimeType, this.durationMillis).then(result => this.props.onFinished(result.url, result.preview, this.durationMillis));
+      } else {
+        this.props.onDeleted();
+      }
+
+      this.cleanUp();
+    };
+
+    this.mediaRecorder.ondataavailable = e => {
+      if (e.data.size > 0) {
+        this.audioChunks.push(e.data);
+      }
+
+      if (this.mediaRecorder.state != 'inactive') {
+        this.getRecording(this.mediaRecorder.mimeType).then(result => {
+          this.setState({
+            blobUrl: result.url,
+            preview: result.preview
+          });
+        });
+      }
+    };
+
+    this.durationMillis = 0;
+    this.startedOn = Date.now();
+    this.mediaRecorder.start();
+    this.visualize();
+  }
+
+  getRecording(mimeType, duration) {
+    let blob = new Blob(this.audioChunks, {
+      type: mimeType || AUDIO_MIME_TYPE
+    });
+    return (duration > 0 ? fix_webm_duration__WEBPACK_IMPORTED_MODULE_2___default()(blob, duration, {
+      logger: false
+    }) : Promise.resolve(blob)).then(fixedBlob => {
+      blob = fixedBlob;
+      return fixedBlob.arrayBuffer();
+    }).then(arrayBuff => this.audioContext.decodeAudioData(arrayBuff)).then(decoded => this.createPreview(decoded)).then(preview => ({
+      url: window.URL.createObjectURL(blob),
+      preview: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__.intArrayToBase64)(preview)
+    }));
+  }
+
+  createPreview(audio) {
+    const data = audio.getChannelData(0);
+    const viewLength = Math.min(data.length, VISUALIZATION_BARS);
+    const totalSPB = data.length / viewLength | 0;
+    const samplingRate = Math.max(1, totalSPB / MAX_SAMPLES_PER_BAR | 0);
+    let buffer = [];
+    let max = -1;
+
+    for (let i = 0; i < viewLength; i++) {
+      let amplitude = 0;
+      let count = 0;
+
+      for (let j = 0; j < totalSPB; j += samplingRate) {
+        amplitude += data[totalSPB * i + j] ** 2;
+        count++;
+      }
+
+      const val = Math.sqrt(amplitude / count);
+      buffer.push(val);
+      max = Math.max(max, val);
+    }
+
+    if (max > 0) {
+      buffer = buffer.map(a => 100 * a / max | 0);
+    }
+
+    return buffer;
+  }
+
+  cleanUp() {
+    this.audioInput.disconnect();
+    this.stream.getTracks().forEach(track => track.stop());
+  }
+
+  render() {
+    const resumeClass = 'material-icons ' + (this.state.enabled ? 'red' : 'gray');
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "audio"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+      href: "#",
+      onClick: this.handleDelete,
+      title: "Delete"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons gray"
+    }, "delete_outline")), this.state.recording ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("canvas", {
+      ref: this.canvasRef
+    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_audio_player_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      src: this.state.blobUrl,
+      preview: this.state.preview,
+      duration: this.durationMillis,
+      short: true
+    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "duration"
+    }, this.state.duration), this.state.recording ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+      href: "#",
+      onClick: this.handlePause,
+      title: "Pause"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, "pause_circle_outline")) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+      href: "#",
+      onClick: this.handleResume,
+      title: "Resume"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: resumeClass
+    }, "radio_button_checked")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+      href: "#",
+      onClick: this.handleDone,
+      title: "Send"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, "send")));
+  }
+
+}
+
+/***/ }),
+
 /***/ "./src/widgets/avatar-crop.jsx":
 /*!*************************************!*\
   !*** ./src/widgets/avatar-crop.jsx ***!
   \*************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ AvatarCrop)
@@ -7596,6 +13237,7 @@ class AvatarCrop extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
   \***************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ AvatarUpload)
@@ -7649,7 +13291,7 @@ class AvatarUpload extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, "clear")), this.state.source ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
-      src: this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__.sanitizeImageUrl)(this.state.source)),
+      src: this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__.sanitizeUrlForMime)(this.state.source, 'image')),
       className: "preview"
     }) : this.props.readOnly && this.props.uid ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
@@ -7690,6 +13332,7 @@ class AvatarUpload extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   \************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -7765,6 +13408,7 @@ class BadgeList extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   \*************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ ButtonBack)
@@ -7789,12 +13433,435 @@ class ButtonBack extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
 
 /***/ }),
 
+/***/ "./src/widgets/call-panel.jsx":
+/*!************************************!*\
+  !*** ./src/widgets/call-panel.jsx ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ CallPanel)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+
+
+
+
+
+class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
+  constructor(props) {
+    super(props);
+    this.state = {
+      localStream: undefined,
+      pc: undefined,
+      previousOnInfo: undefined
+    };
+    this.localStreamConstraints = {
+      audio: true,
+      video: true
+    };
+    this.localRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
+    this.remoteRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
+    this.onInfo = this.onInfo.bind(this);
+    this.start = this.start.bind(this);
+    this.createPeerConnection = this.createPeerConnection.bind(this);
+    this.handleNegotiationNeededEvent = this.handleNegotiationNeededEvent.bind(this);
+    this.handleICECandidateEvent = this.handleICECandidateEvent.bind(this);
+    this.handleNewICECandidateMsg = this.handleNewICECandidateMsg.bind(this);
+    this.handleICEConnectionStateChangeEvent = this.handleICEConnectionStateChangeEvent.bind(this);
+    this.handleSignalingStateChangeEvent = this.handleSignalingStateChangeEvent.bind(this);
+    this.handleICEGatheringStateChangeEvent = this.handleICEGatheringStateChangeEvent.bind(this);
+    this.handleTrackEvent = this.handleTrackEvent.bind(this);
+    this.handleVideoOfferMsg = this.handleVideoOfferMsg.bind(this);
+    this.handleVideoAnswerMsg = this.handleVideoAnswerMsg.bind(this);
+    this.handleNewICECandidateMsg = this.handleNewICECandidateMsg.bind(this);
+    this.reportError = this.reportError.bind(this);
+    this.handleGetUserMediaError = this.handleGetUserMediaError.bind(this);
+    this.stop = this.stop.bind(this);
+    this.stopTracks = this.stopTracks.bind(this);
+    this.handleCloseClick = this.handleCloseClick.bind(this);
+    this.handleToggleCameraClick = this.handleToggleCameraClick.bind(this);
+    this.handleToggleMicClick = this.handleToggleMicClick.bind(this);
+    this.toggleMedia = this.toggleMedia.bind(this);
+    this.handleRemoteHangup = this.handleRemoteHangup.bind(this);
+    this.handleVideoCallAccepted = this.handleVideoCallAccepted.bind(this);
+  }
+
+  handleVideoCallAccepted(info) {
+    const pc = this.createPeerConnection();
+    const stream = this.state.localStream;
+    stream.getTracks().forEach(track => {
+      console.log('local stream adding track ', track.id, track.kind, track.readyState);
+      pc.addTrack(track, stream);
+    });
+  }
+
+  onInfo(info) {
+    console.log('info --> ', info);
+
+    if (info.what != 'call') {
+      return;
+    }
+
+    switch (info.event) {
+      case 'accept':
+        this.handleVideoCallAccepted(info);
+        break;
+
+      case 'offer':
+        this.handleVideoOfferMsg(info);
+        break;
+
+      case 'answer':
+        this.handleVideoAnswerMsg(info);
+        break;
+
+      case 'ice-candidate':
+        this.handleNewICECandidateMsg(info);
+        break;
+
+      case 'hang-up':
+        this.handleRemoteHangup(info);
+        break;
+    }
+  }
+
+  componentDidMount() {
+    const topic = this.props.topic;
+    this.previousOnInfo = topic.onInfo;
+    topic.onInfo = this.onInfo;
+
+    if ((this.props.callState == _config_js__WEBPACK_IMPORTED_MODULE_3__.CALL_STATE_OUTGOING_INITATED || this.props.callState == _config_js__WEBPACK_IMPORTED_MODULE_3__.CALL_STATE_IN_PROGRESS) && this.localRef.current) {
+      this.start();
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.topic.onInfo = this.previousOnInfo;
+    console.log('will unmount. stop');
+    this.stop();
+  }
+
+  start() {
+    if (this.state.localStream) {
+      console.log("You can't start a call because you already have one open!");
+    } else {
+      if (this.props.callState == _config_js__WEBPACK_IMPORTED_MODULE_3__.CALL_STATE_IN_PROGRESS) {
+        this.props.onInvite(this.props.topic.name, this.props.seq, this.props.callState);
+        return;
+      }
+
+      navigator.mediaDevices.getUserMedia(this.localStreamConstraints).then(stream => {
+        this.setState({
+          localStream: stream
+        });
+        this.localRef.current.srcObject = stream;
+        this.props.onInvite(this.props.topic.name, this.props.seq, this.props.callState);
+      }).catch(this.handleGetUserMediaError);
+    }
+  }
+
+  createPeerConnection() {
+    var pc = new RTCPeerConnection(_config_js__WEBPACK_IMPORTED_MODULE_3__.CALL_WEBRTC_CONFIG);
+    pc.onicecandidate = this.handleICECandidateEvent;
+    pc.oniceconnectionstatechange = this.handleICEConnectionStateChangeEvent;
+    pc.onicegatheringstatechange = this.handleICEGatheringStateChangeEvent;
+    pc.onsignalingstatechange = this.handleSignalingStateChangeEvent;
+    pc.onnegotiationneeded = this.handleNegotiationNeededEvent;
+    pc.ontrack = this.handleTrackEvent;
+    this.setState({
+      pc: pc
+    });
+    console.log('Created RTCPeerConnnection');
+    return pc;
+  }
+
+  handleVideoAnswerMsg(info) {
+    console.log("*** Call recipient has accepted our call");
+    var desc = new RTCSessionDescription(info.payload);
+    this.state.pc.setRemoteDescription(desc).catch(this.reportError);
+  }
+
+  reportError(errMessage) {
+    console.log("Error ".concat(errMessage.name, ": ").concat(errMessage.message));
+  }
+
+  handleNegotiationNeededEvent() {
+    this.state.pc.createOffer().then(offer => {
+      return this.state.pc.setLocalDescription(offer);
+    }).then(() => {
+      this.props.onSendOffer(this.props.topic.name, this.props.seq, this.state.pc.localDescription.toJSON());
+    }).catch(this.reportError);
+  }
+
+  handleICECandidateEvent(event) {
+    if (event.candidate) {
+      this.props.onIceCandidate(this.props.topic.name, this.props.seq, event.candidate.toJSON());
+    }
+  }
+
+  handleNewICECandidateMsg(info) {
+    var candidate = new RTCIceCandidate(info.payload);
+    this.state.pc.addIceCandidate(candidate).catch(this.reportError);
+  }
+
+  handleICEConnectionStateChangeEvent(event) {
+    switch (this.state.pc.iceConnectionState) {
+      case "closed":
+      case "failed":
+        this.handleCloseClick();
+        break;
+    }
+  }
+
+  handleSignalingStateChangeEvent(event) {
+    switch (this.state.pc.signalingState) {
+      case "closed":
+        this.handleCloseClick();
+        break;
+    }
+  }
+
+  handleICEGatheringStateChangeEvent(event) {
+    console.log('ICE gathering change state: ', event);
+  }
+
+  handleTrackEvent(event) {
+    this.remoteRef.current.srcObject = event.streams[0];
+    this.forceUpdate();
+  }
+
+  handleGetUserMediaError(e) {
+    console.log('-->', e);
+
+    switch (e.name) {
+      case "NotFoundError":
+        console.log("Unable to open your call because no camera and/or microphone" + "were found.");
+        break;
+
+      case "SecurityError":
+      case "PermissionDeniedError":
+        break;
+
+      default:
+        console.log("Error opening your camera and/or microphone: " + e.message);
+        break;
+    }
+
+    this.handleCloseClick();
+  }
+
+  handleVideoOfferMsg(info) {
+    var localStream = null;
+    const pc = this.createPeerConnection();
+    var desc = new RTCSessionDescription(info.payload);
+    pc.setRemoteDescription(desc).then(() => {
+      console.log('!!! handleVideoOffer/setRemoteDescription -> getUserMesia');
+      return navigator.mediaDevices.getUserMedia(this.localStreamConstraints);
+    }).then(stream => {
+      localStream = stream;
+      this.localRef.current.srcObject = stream;
+      this.setState({
+        localStream: stream
+      });
+      localStream.getTracks().forEach(track => {
+        console.log('local stream A adding track ', track.id, track.kind, track.readyState);
+        pc.addTrack(track, localStream);
+      });
+    }).then(() => {
+      return pc.createAnswer();
+    }).then(answer => {
+      return pc.setLocalDescription(answer);
+    }).then(() => {
+      this.props.onSendAnswer(this.props.topic.name, this.props.seq, pc.localDescription.toJSON());
+    }).catch(this.handleGetUserMediaError);
+  }
+
+  handleRemoteHangup() {
+    this.handleCloseClick();
+  }
+
+  stopTracks(el) {
+    if (el == null) {
+      return;
+    }
+
+    let stream = el.srcObject;
+
+    if (stream == null) {
+      return;
+    }
+
+    let tracks = stream.getTracks();
+
+    if (tracks != null) {
+      tracks.forEach(track => {
+        track.stop();
+        track.enabled = false;
+        console.log('stopped track ', track.id, track.kind, track.readyState);
+      });
+    }
+
+    el.srcObject = null;
+    el.src = '';
+  }
+
+  stop() {
+    this.stopTracks(this.localRef.current);
+    this.stopTracks(this.remoteRef.current);
+
+    if (this.state.pc != null) {
+      this.state.pc.ontrack = null;
+      this.state.pc.onremovetrack = null;
+      this.state.pc.onremovestream = null;
+      this.state.pc.onicecandidate = null;
+      this.state.pc.oniceconnectionstatechange = null;
+      this.state.pc.onsignalingstatechange = null;
+      this.state.pc.onicegatheringstatechange = null;
+      this.state.pc.onnegotiationneeded = null;
+      this.state.pc.close();
+    }
+
+    this.setState({
+      pc: null
+    });
+  }
+
+  handleCloseClick() {
+    this.stop();
+    this.props.onHangup(this.props.topic.name, this.props.seq);
+  }
+
+  toggleMedia(kind) {
+    const stream = this.state.localStream;
+    stream.getTracks().forEach(track => {
+      if (track.kind != kind) {
+        return;
+      }
+
+      console.log('local stream: toggling track ', track.id, track.kind, track.readyState);
+      track.enabled = !track.enabled;
+    });
+    this.forceUpdate();
+  }
+
+  handleToggleCameraClick() {
+    this.toggleMedia('video');
+  }
+
+  handleToggleMicClick() {
+    this.toggleMedia('audio');
+  }
+
+  render() {
+    if (!this.props.topic) {
+      return null;
+    }
+
+    const remoteActive = this.remoteRef.current != null && this.remoteRef.current.srcObject != null;
+    const audioIcon = this.state.localStream != null && this.state.localStream.getAudioTracks()[0].enabled ? 'mic' : 'mic_off';
+    const videoIcon = this.state.localStream != null && this.state.localStream.getVideoTracks()[0].enabled ? 'videocam' : 'videocam_off';
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "topic-caption-panel",
+      className: "caption-panel"
+    }, this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+      href: "#",
+      id: "hide-message-view",
+      onClick: e => {
+        e.preventDefault();
+        this.props.onHideMessagesView();
+      }
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, "arrow_back")) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "avatar-box"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      tinode: this.props.tinode,
+      avatar: this.props.avatar,
+      topic: this.props.topic,
+      title: this.props.title
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "topic-title-group"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "topic-title",
+      className: "panel-title"
+    }, this.props.title || react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "unnamed_topic",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Unnamed"
+      }]
+    }))))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "video-container"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "video-container-panel"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "video-elem"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
+      id: "localVideo",
+      ref: this.localRef,
+      autoPlay: true,
+      muted: true,
+      playsInline: true
+    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "video-title"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "calls_you_label",
+      defaultMessage: [{
+        "type": 0,
+        "value": "You"
+      }]
+    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "video-elem"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
+      id: "remoteVideo",
+      ref: this.remoteRef,
+      autoPlay: true,
+      playsInline: true
+    }), remoteActive ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "video-title"
+    }, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_4__.clipStr)(this.props.title, _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_TITLE_LENGTH)) : null)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "video-container-controls"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+      className: "video-call-hangup",
+      onClick: this.handleCloseClick
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, "call_end")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+      className: "video-call-toggle-media",
+      onClick: this.handleToggleCameraClick
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, videoIcon)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+      className: "video-call-toggle-media",
+      onClick: this.handleToggleMicClick
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, audioIcon))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("script", {
+      src: "https://webrtc.github.io/adapter/adapter-latest.js"
+    })));
+  }
+
+}
+;
+
+/***/ }),
+
 /***/ "./src/widgets/chat-message.jsx":
 /*!**************************************!*\
   !*** ./src/widgets/chat-message.jsx ***!
   \**************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -7803,14 +13870,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _attachment_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./attachment.jsx */ "./src/widgets/attachment.jsx");
-/* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
-/* harmony import */ var _received_marker_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./received-marker.jsx */ "./src/widgets/received-marker.jsx");
-/* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var react_intl_formatted_duration__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-intl-formatted-duration */ "./node_modules/react-intl-formatted-duration/dist/module.js");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _attachment_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./attachment.jsx */ "./src/widgets/attachment.jsx");
+/* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
+/* harmony import */ var _received_marker_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./received-marker.jsx */ "./src/widgets/received-marker.jsx");
+/* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
 
 
 
@@ -7871,7 +13940,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     }
 
     if (e.target.dataset.act == 'url') {
-      data.ref = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_7__.sanitizeUrl)(e.target.dataset.ref) || 'about:blank';
+      data.ref = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.sanitizeUrl)(e.target.dataset.ref) || 'about:blank';
     }
 
     const text = e.target.dataset.title || 'unknown';
@@ -7883,11 +13952,11 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     e.stopPropagation();
     const menuItems = [];
 
-    if (this.props.received == Tinode.MESSAGE_STATUS_FAILED) {
+    if (this.props.received == tinode_sdk__WEBPACK_IMPORTED_MODULE_3__.Tinode.MESSAGE_STATUS_FAILED) {
       menuItems.push('menu_item_send_retry');
     }
 
-    if (this.props.userIsWriter && this.props.received > Tinode.MESSAGE_STATUS_FAILED && this.props.received < Tinode.MESSAGE_STATUS_DEL_RANGE) {
+    if (this.props.userIsWriter && this.props.received > tinode_sdk__WEBPACK_IMPORTED_MODULE_3__.Tinode.MESSAGE_STATUS_FAILED && this.props.received < tinode_sdk__WEBPACK_IMPORTED_MODULE_3__.Tinode.MESSAGE_STATUS_DEL_RANGE) {
       menuItems.push('menu_item_reply');
     }
 
@@ -7924,33 +13993,33 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
   }
 
   render() {
-    const sideClass = this.props.deleted ? 'center' : this.props.sequence + ' ' + (this.props.response ? 'left' : 'right');
+    const sideClass = this.props.sequence + ' ' + (this.props.response ? 'left' : 'right');
     const bubbleClass = this.props.sequence == 'single' || this.props.sequence == 'last' ? 'bubble tip' : 'bubble';
-    const avatar = this.props.deleted ? null : this.props.userAvatar || true;
-    const fullDisplay = this.props.isGroup && this.props.response && !this.props.deleted && (this.props.sequence == 'single' || this.props.sequence == 'last');
+    const avatar = this.props.userAvatar || true;
+    const fullDisplay = this.props.isGroup && this.props.response && (this.props.sequence == 'single' || this.props.sequence == 'last');
     let content = this.props.content;
     const attachments = [];
 
-    if (this.props.mimeType == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.getContentType() && tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isValid(content)) {
-      tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachments(content, (att, i) => {
+    if (this.props.mimeType == tinode_sdk__WEBPACK_IMPORTED_MODULE_3__.Drafty.getContentType() && tinode_sdk__WEBPACK_IMPORTED_MODULE_3__.Drafty.isValid(content)) {
+      tinode_sdk__WEBPACK_IMPORTED_MODULE_3__.Drafty.attachments(content, (att, i) => {
         if (att.mime == 'application/json') {
           return;
         }
 
-        attachments.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_attachment_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        attachments.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_attachment_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
           tinode: this.props.tinode,
-          downloadUrl: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.getDownloadUrl(att),
+          downloadUrl: tinode_sdk__WEBPACK_IMPORTED_MODULE_3__.Drafty.getDownloadUrl(att),
           filename: att.name,
-          uploading: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isProcessing(att),
+          uploading: tinode_sdk__WEBPACK_IMPORTED_MODULE_3__.Drafty.isProcessing(att),
           mimetype: att.mime,
-          size: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.getEntitySize(att),
+          size: tinode_sdk__WEBPACK_IMPORTED_MODULE_3__.Drafty.getEntitySize(att),
           progress: this.state.progress,
           onCancelUpload: this.handleCancelUpload,
           onError: this.props.onError,
           key: i
         }));
       }, this);
-      const tree = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__.fullFormatter, this.formatterContext);
+      const tree = tinode_sdk__WEBPACK_IMPORTED_MODULE_3__.Drafty.format(content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_7__.fullFormatter, this.formatterContext);
       content = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, tree);
     } else if (this.props.deleted) {
       content = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
@@ -7964,6 +14033,31 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
           "value": "content deleted"
         }]
       })));
+    } else if ((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.isVideoCall)(this.props.mimeType)) {
+      const direction = this.props.response ? "call_received" : "call_made";
+      const text = this.props.response ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+        id: "calls_incoming",
+        defaultMessage: [{
+          "type": 0,
+          "value": "Incoming Call"
+        }]
+      }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+        id: "calls_outgoing",
+        defaultMessage: [{
+          "type": 0,
+          "value": "Outgoing Call"
+        }]
+      });
+      const isCallDropped = this.props.content == "disconnected";
+      content = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+        className: "material-icons",
+        style: {
+          color: isCallDropped ? "red" : "green"
+        }
+      }, direction), text, !isCallDropped ? [' (', react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl_formatted_duration__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        seconds: this.props.duration / 1000,
+        format: "{hours} {minutes} {seconds}"
+      }), ')'] : null);
     } else if (typeof content != 'string') {
       content = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
         className: "material-icons gray"
@@ -7983,7 +14077,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       className: sideClass
     }, this.props.isGroup && this.props.response ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
-    }, fullDisplay ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    }, fullDisplay ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
       tinode: this.props.tinode,
       topic: this.props.userFrom,
       title: this.props.userName,
@@ -7994,17 +14088,17 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       className: "content-meta"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "message-content"
-    }, content, attachments), this.props.timestamp ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_received_marker_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    }, content, attachments), this.props.timestamp ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_received_marker_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
       timestamp: this.props.timestamp,
       received: this.props.received
-    }) : null), this.props.deleted || !this.props.showContextMenu ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+    }) : null), this.props.showContextMenu ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       className: "menuTrigger"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: this.handleContextClick
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
-    }, "expand_more")))), fullDisplay ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, "expand_more"))) : null), fullDisplay ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "author"
     }, this.props.userName || react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "user_not_found",
@@ -8032,6 +14126,7 @@ const ChatMessage = react__WEBPACK_IMPORTED_MODULE_0___default().forwardRef((pro
   \**********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ CheckBox)
@@ -8075,6 +14170,7 @@ class CheckBox extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompone
   \************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ ChipInput)
@@ -8245,6 +14341,7 @@ class ChipInput extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   \******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ Chip)
@@ -8298,6 +14395,7 @@ class Chip extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) 
   \****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -8346,6 +14444,7 @@ class ContactAction extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
   \****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ ContactBadges)
@@ -8396,6 +14495,7 @@ class ContactBadges extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
   \**************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -8409,7 +14509,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _contact_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./contact.jsx */ "./src/widgets/contact.jsx");
 /* harmony import */ var _contact_action_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./contact-action.jsx */ "./src/widgets/contact-action.jsx");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 
 
 
@@ -8473,7 +14574,7 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
             }
           }
 
-          const isChannel = tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().isChannelTopicName(key);
+          const isChannel = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isChannelTopicName(key);
           const selected = showCheckmark ? this.props.topicSelected.indexOf(key) > -1 : this.props.topicSelected === key;
           const badges = [];
 
@@ -8496,6 +14597,8 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
           const comment = Array.isArray(c.private) ? c.private.join(',') : c.private ? c.private.comment : null;
           let preview;
           let forwarded;
+          let previewIsVideoCall;
+          let previewIsResponse;
           let deliveryStatus;
 
           if (!this.props.showMode && c.latestMessage) {
@@ -8504,9 +14607,11 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
             if (msg) {
               forwarded = msg.head ? msg.head.forwarded : null;
               deliveryStatus = msg._status || c.msgStatus(msg, true);
+              previewIsVideoCall = msg.head ? (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__.isVideoCall)(msg.head.mime) : null;
+              previewIsResponse = msg.from != this.props.myUserId;
 
               if (msg.content) {
-                preview = typeof msg.content == 'string' ? msg.content.substr(0, _config_js__WEBPACK_IMPORTED_MODULE_6__.MESSAGE_PREVIEW_LENGTH) : tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.preview(msg.content, _config_js__WEBPACK_IMPORTED_MODULE_6__.MESSAGE_PREVIEW_LENGTH);
+                preview = typeof msg.content == 'string' ? msg.content.substr(0, _config_js__WEBPACK_IMPORTED_MODULE_7__.MESSAGE_PREVIEW_LENGTH) : tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.preview(msg.content, _config_js__WEBPACK_IMPORTED_MODULE_7__.MESSAGE_PREVIEW_LENGTH);
               }
             }
           }
@@ -8517,6 +14622,8 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
             avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__.makeImageUrl)(c.public ? c.public.photo : null),
             comment: comment,
             preview: preview,
+            previewIsVideoCall: previewIsVideoCall,
+            previewIsResponse: previewIsResponse,
             forwarded: forwarded,
             received: deliveryStatus,
             unread: this.props.showUnread ? c.unread : 0,
@@ -8533,6 +14640,7 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
             isVerified: c.trusted && c.trusted.verified,
             isStaff: c.trusted && c.trusted.staff,
             isDangerous: c.trusted && c.trusted.danger,
+            deleted: c._deleted,
             item: key,
             index: contactNodes.length,
             key: key
@@ -8567,6 +14675,7 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
   \*********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -8577,13 +14686,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _contact_badges_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./contact-badges.jsx */ "./src/widgets/contact-badges.jsx");
 /* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
-/* harmony import */ var _received_marker_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./received-marker.jsx */ "./src/widgets/received-marker.jsx");
-/* harmony import */ var _unread_badge_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./unread-badge.jsx */ "./src/widgets/unread-badge.jsx");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-
+/* harmony import */ var _unread_badge_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./unread-badge.jsx */ "./src/widgets/unread-badge.jsx");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 
 
 
@@ -8683,10 +14790,16 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
 
     let preview;
 
-    if (typeof this.props.preview == 'string') {
+    if (this.props.previewIsVideoCall) {
+      preview = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+        className: "material-icons"
+      }, this.props.previewIsResponse ? 'call_received' : 'call_made'), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+        className: "material-icons"
+      }, "video_call"));
+    } else if (typeof this.props.preview == 'string') {
       preview = this.props.preview;
-    } else if (tinode_sdk__WEBPACK_IMPORTED_MODULE_6__.Drafty.isValid(this.props.preview)) {
-      preview = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, tinode_sdk__WEBPACK_IMPORTED_MODULE_6__.Drafty.format(this.props.preview, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_7__.previewFormatter, {
+    } else if (tinode_sdk__WEBPACK_IMPORTED_MODULE_5__.Drafty.isValid(this.props.preview)) {
+      preview = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, tinode_sdk__WEBPACK_IMPORTED_MODULE_5__.Drafty.format(this.props.preview, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__.previewFormatter, {
         formatMessage: this.props.intl.formatMessage
       }));
     } else if (this.props.preview) {
@@ -8703,10 +14816,11 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       })));
     }
 
-    const icon = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.deliveryMarker)(this.props.received);
+    const icon = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_7__.deliveryMarker)(this.props.received);
     const marker = icon ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: 'material-icons small space-right' + (icon.color ? ' ' + icon.color : '')
     }, icon.name) : null;
+    const titleClass = 'contact-title' + (this.props.deleted ? ' deleted' : '');
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
       className: !this.props.showCheckmark && this.props.selected ? 'selected' : null,
       onClick: this.handleClick
@@ -8716,24 +14830,27 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       tinode: this.props.tinode,
       avatar: avatar,
       title: this.props.title,
-      topic: this.props.item
-    }), this.props.showOnline ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+      topic: this.props.item,
+      deleted: this.props.deleted
+    }), this.props.deleted ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "deleted material-icons"
+    }, "cancel") : this.props.showOnline ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       className: online
     }) : this.props.showCheckmark && this.props.selected ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "checkmark material-icons"
     }, "check_circle") : null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "text-box"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      className: "contact-title"
+      className: titleClass
     }, title), this.props.isChannel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
       src: "/img/channel.png",
       className: "channel",
       alt: "channel"
     }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       badges: icon_badges
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_unread_badge_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    }), !this.props.deleted ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_unread_badge_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
       count: this.props.unread
-    })), this.props.showMode ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    }) : null), this.props.showMode ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       badges: badges
     })) : this.props.small ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "contact-comment"
@@ -8760,6 +14877,7 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   \**************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -9024,7 +15142,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
             const topic = this.props.tinode.getTopic(params.topicName);
 
             if (!topic) {
-              console.log("Topic not found: ", params.topicName);
+              console.warn("Topic not found: ", params.topicName);
               return;
             }
 
@@ -9043,7 +15161,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
           const topic = this.props.tinode.getTopic(params.topicName);
 
           if (!topic) {
-            console.log("Topic not found: ", params.topicName);
+            console.warn("Topic not found: ", params.topicName);
             return;
           }
 
@@ -9061,7 +15179,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
           const topic = this.props.tinode.getTopic(params.topicName);
 
           if (!topic) {
-            console.log("Topic not found: ", params.topicName);
+            console.warn("Topic not found: ", params.topicName);
             return;
           }
 
@@ -9084,7 +15202,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
           const topic = this.props.tinode.getTopic(params.topicName);
 
           if (!topic || !params.user) {
-            console.log("Topic or user not found: '" + params.topicName + "', '" + params.user + "'");
+            console.warn("Topic or user not found: '" + params.topicName + "', '" + params.user + "'");
             return;
           }
 
@@ -9165,7 +15283,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     const topic = this.props.tinode.getTopic(params.topicName);
 
     if (!topic) {
-      console.log("Topic not found: ", params.topicName);
+      console.warn("Topic not found: ", params.topicName);
       return;
     }
 
@@ -9200,7 +15318,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     const topic = this.props.tinode.getTopic(params.topicName);
 
     if (!topic) {
-      console.log("Topic not found", params.topicName);
+      console.warn("Topic not found", params.topicName);
       return;
     }
 
@@ -9267,6 +15385,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
   \*********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ Cropper)
@@ -9523,6 +15642,7 @@ class Cropper extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   \*************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ DocPreview)
@@ -9621,6 +15741,7 @@ class DocPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
   \*************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ ErrorPanel)
@@ -9698,6 +15819,7 @@ class ErrorPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
   \***************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ FileProgress)
@@ -9749,6 +15871,7 @@ class FileProgress extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
   \****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ ForwardDialog)
@@ -9795,7 +15918,7 @@ class ForwardDialog extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
 
   handleSearchContacts(query) {
     this.setState({
-      query: tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().isNullValue(query) ? null : query
+      query: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isNullValue(query) ? null : query
     });
     this.props.onSearchContacts(query);
   }
@@ -9865,6 +15988,7 @@ class ForwardDialog extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
   \***************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -10133,6 +16257,7 @@ class GroupManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   \************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ GroupSubs)
@@ -10201,6 +16326,7 @@ class GroupSubs extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   \***************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ HostSelector)
@@ -10275,6 +16401,7 @@ class HostSelector extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
   \***************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ ImagePreview)
@@ -10413,6 +16540,7 @@ class ImagePreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
   \***************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ InPlaceEdit)
@@ -10569,6 +16697,7 @@ class InPlaceEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
   \************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ Invitation)
@@ -10650,6 +16779,7 @@ class Invitation extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
   \************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ LazyImage)
@@ -10723,6 +16853,7 @@ class LazyImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   \*************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ LetterTile)
@@ -10742,17 +16873,17 @@ class LetterTile extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
     let avatar;
 
     if (this.props.avatar === true) {
-      const isGroup = tinode_sdk__WEBPACK_IMPORTED_MODULE_1___default().topicType(this.props.topic) == 'grp';
+      const isGroup = tinode_sdk__WEBPACK_IMPORTED_MODULE_1__.Tinode.isGroupTopicName(this.props.topic);
       const iconColor = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__.idToColorClass)(this.props.topic, isGroup);
 
       if (this.props.topic && this.props.title && this.props.title.trim()) {
         const letter = this.props.title.trim().charAt(0);
-        const className = 'lettertile ' + iconColor;
+        const className = 'lettertile ' + iconColor + (this.props.deleted ? ' disabled' : '');
         avatar = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           className: className
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, letter));
       } else {
-        const className = 'material-icons ' + iconColor;
+        const className = 'material-icons ' + iconColor + (this.props.deleted ? ' disabled' : '');
         avatar = isGroup ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
           className: className
         }, "group") : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
@@ -10760,9 +16891,10 @@ class LetterTile extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
         }, "person");
       }
     } else if (this.props.avatar) {
-      const url = this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__.sanitizeImageUrl)(this.props.avatar));
+      const url = this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__.sanitizeUrlForMime)(this.props.avatar, 'image'));
+      const className = 'avatar' + (this.props.deleted ? ' deleted' : '');
       avatar = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
-        className: "avatar",
+        className: className,
         alt: "avatar",
         src: url,
         onError: e => {
@@ -10787,6 +16919,7 @@ class LetterTile extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
   \**************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ LoadSpinner)
@@ -10814,6 +16947,7 @@ class LoadSpinner extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
   \*************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ MenuCancel)
@@ -10844,6 +16978,7 @@ class MenuCancel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
   \***************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ MenuContacts)
@@ -10883,6 +17018,7 @@ class MenuContacts extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
   \************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ MenuStart)
@@ -10916,12 +17052,75 @@ class MenuStart extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
 
 /***/ }),
 
+/***/ "./src/widgets/meta-message.jsx":
+/*!**************************************!*\
+  !*** ./src/widgets/meta-message.jsx ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ MetaMessage)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+
+
+class MetaMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    let content = null;
+    let bubbleClass = 'bubble';
+
+    if (this.props.deleted) {
+      content = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+        className: "material-icons gray"
+      }, "block"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+        className: "gray"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+        id: "deleted_content",
+        defaultMessage: [{
+          "type": 0,
+          "value": "content deleted"
+        }]
+      })));
+      bubbleClass += ' deleted';
+    } else if (this.props.date) {
+      content = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, this.props.date);
+      bubbleClass += ' date';
+    }
+
+    if (!content) {
+      return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, null);
+    }
+
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
+      className: "meta"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: bubbleClass
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "message-content"
+    }, content)));
+  }
+
+}
+;
+
+/***/ }),
+
 /***/ "./src/widgets/new-topic-by-id.jsx":
 /*!*****************************************!*\
   !*** ./src/widgets/new-topic-by-id.jsx ***!
   \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -11026,6 +17225,7 @@ class NewTopicById extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
   \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ NewTopicGroup)
@@ -11242,6 +17442,7 @@ class NewTopicGroup extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
   \********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -11524,6 +17725,7 @@ class PermissionsEditor extends (react__WEBPACK_IMPORTED_MODULE_0___default().Co
   \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -11534,9 +17736,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 
 
 
@@ -11565,15 +17765,17 @@ class ReceivedMarker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     } = this.props.intl;
     let timestamp;
 
-    if (this.props.received <= (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().MESSAGE_STATUS_SENDING)) {
+    if (this.props.received <= tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_SENDING) {
       timestamp = formatMessage(messages.message_sending);
-    } else if (this.props.received == (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().MESSAGE_STATUS_FAILED)) {
+    } else if (this.props.received == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_FAILED) {
       timestamp = formatMessage(messages.message_sending_failed);
     } else {
-      timestamp = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__.shortDateFormat)(this.props.timestamp, this.props.intl.locale);
+      timestamp = this.props.timestamp.toLocaleTimeString(this.props.intl.locale, {
+        timeStyle: 'short'
+      });
     }
 
-    const icon = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_4__.deliveryMarker)(this.props.received);
+    const icon = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__.deliveryMarker)(this.props.received);
     const marker = icon ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: 'material-icons small ' + icon.color
     }, icon.name) : null;
@@ -11595,6 +17797,7 @@ class ReceivedMarker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
   \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ SearchContacts)
@@ -11624,7 +17827,7 @@ class SearchContacts extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
         search: '',
         edited: false
       });
-      this.props.onSearchContacts((tinode_sdk__WEBPACK_IMPORTED_MODULE_1___default().DEL_CHAR));
+      this.props.onSearchContacts(tinode_sdk__WEBPACK_IMPORTED_MODULE_1__.Tinode.DEL_CHAR);
     }
   }
 
@@ -11640,14 +17843,14 @@ class SearchContacts extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     this.setState({
       edited: query.length > 0
     });
-    this.props.onSearchContacts(query.length > 0 ? query : (tinode_sdk__WEBPACK_IMPORTED_MODULE_1___default().DEL_CHAR));
+    this.props.onSearchContacts(query.length > 0 ? query : tinode_sdk__WEBPACK_IMPORTED_MODULE_1__.Tinode.DEL_CHAR);
   }
 
   handleClear(e) {
     e.preventDefault();
 
     if (this.state.edited) {
-      this.props.onSearchContacts((tinode_sdk__WEBPACK_IMPORTED_MODULE_1___default().DEL_CHAR));
+      this.props.onSearchContacts(tinode_sdk__WEBPACK_IMPORTED_MODULE_1__.Tinode.DEL_CHAR);
     }
 
     this.setState({
@@ -11701,6 +17904,7 @@ class SearchContacts extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
   \**************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -11711,9 +17915,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
+/* harmony import */ var _audio_recorder_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./audio-recorder.jsx */ "./src/widgets/audio-recorder.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
+
 
 
 
@@ -11776,11 +17982,14 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     this.state = {
       quote: null,
       message: '',
-      keypressTimestamp: new Date().getTime() - _config_js__WEBPACK_IMPORTED_MODULE_3__.KEYPRESS_DELAY - 1
+      audioRec: false,
+      audioAvailable: !!navigator.mediaDevices.getUserMedia,
+      keypressTimestamp: new Date().getTime() - _config_js__WEBPACK_IMPORTED_MODULE_4__.KEYPRESS_DELAY - 1
     };
     this.handlePasteEvent = this.handlePasteEvent.bind(this);
     this.handleAttachImage = this.handleAttachImage.bind(this);
     this.handleAttachFile = this.handleAttachFile.bind(this);
+    this.handleAttachAudio = this.handleAttachAudio.bind(this);
     this.handleSend = this.handleSend.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleMessageTyping = this.handleMessageTyping.bind(this);
@@ -11809,7 +18018,13 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       this.messageEditArea.focus();
     }
 
-    if (prevProps.reply != this.props.reply) {
+    if (prevProps.topicName != this.props.topicName) {
+      this.setState({
+        message: '',
+        audioRec: false,
+        quote: null
+      });
+    } else if (prevProps.reply != this.props.reply) {
       this.setState({
         quote: this.formatReply()
       });
@@ -11817,7 +18032,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
   }
 
   formatReply() {
-    return this.props.reply ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(this.props.reply.content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_5__.replyFormatter, {
+    return this.props.reply ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(this.props.reply.content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__.replyFormatter, {
       formatMessage: this.props.intl.formatMessage.bind(this.props.intl),
       authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
     }) : null;
@@ -11828,7 +18043,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       return;
     }
 
-    if ((0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.filePasted)(e, (bits, mime, width, height, fname) => {
+    if ((0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__.filePasted)(e, (bits, mime, width, height, fname) => {
       this.props.onAttachImage(mime, bits, width, height, fname);
     }, (mime, bits, fname) => {
       this.props.onAttachFile(mime, bits, fname);
@@ -11846,15 +18061,18 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
   }
 
   handleAttachFile(e) {
-    const {
-      formatMessage
-    } = this.props.intl;
-
     if (e.target.files && e.target.files.length > 0) {
       this.props.onAttachFile(e.target.files[0]);
     }
 
     e.target.value = '';
+  }
+
+  handleAttachAudio(url, preview, duration) {
+    this.setState({
+      audioRec: false
+    });
+    this.props.onAttachAudio(url, preview, duration);
   }
 
   handleSend(e) {
@@ -11870,6 +18088,12 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
   }
 
   handleKeyPress(e) {
+    if (this.state.audioRec) {
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+
     if (e.key === 'Enter') {
       if (!e.shiftKey) {
         e.preventDefault();
@@ -11887,7 +18111,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     if (this.props.onKeyPress) {
       const now = new Date().getTime();
 
-      if (now - this.state.keypressTimestamp > _config_js__WEBPACK_IMPORTED_MODULE_3__.KEYPRESS_DELAY) {
+      if (now - this.state.keypressTimestamp > _config_js__WEBPACK_IMPORTED_MODULE_4__.KEYPRESS_DELAY) {
         this.props.onKeyPress();
         newState.keypressTimestamp = now;
       }
@@ -11924,11 +18148,12 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons gray"
     }, "close"))), this.state.quote);
+    const audioEnabled = this.state.audioAvailable && this.props.onAttachAudio;
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "send-message-wrapper"
     }, this.state.quote && !this.props.noInput ? quote : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "send-message-panel"
-    }, !this.props.disabled ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, this.props.onAttachFile ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    }, !this.props.disabled ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, this.props.onAttachFile && !this.state.audioRec ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: e => {
         e.preventDefault();
@@ -11948,6 +18173,11 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       className: "material-icons secondary"
     }, "attach_file"))) : null, this.props.noInput ? this.state.quote ? quote : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "hr thin"
+    }) : this.state.audioRec ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_audio_recorder_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      onDeleted: _ => this.setState({
+        audioRec: false
+      }),
+      onFinished: this.handleAttachAudio
     }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("textarea", {
       id: "sendMessage",
       placeholder: prompt,
@@ -11958,13 +18188,24 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
         this.messageEditArea = ref;
       },
       autoFocus: true
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    }), this.state.message || !audioEnabled ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: this.handleSend,
       title: "Send"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
-    }, "send")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+    }, "send")) : !this.state.audioRec ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+      href: "#",
+      onClick: e => {
+        e.preventDefault();
+        this.setState({
+          audioRec: true
+        });
+      },
+      title: "Voice"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, "mic")) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
       type: "file",
       ref: ref => {
         this.attachFile = ref;
@@ -12001,6 +18242,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
   \*************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ SideNavbar)
@@ -12036,7 +18278,7 @@ class SideNavbar extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
     let avatar = null;
 
     if (this.props.tinode) {
-      avatar = this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__.sanitizeImageUrl)(this.props.avatar));
+      avatar = this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__.sanitizeUrlForMime)(this.props.avatar, 'image'));
     }
 
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -12077,6 +18319,7 @@ class SideNavbar extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
   \*************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ TagManager)
@@ -12299,6 +18542,7 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
   \**************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ TopicCommon)
@@ -12539,6 +18783,7 @@ class TopicCommon extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
   \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ TopicDescEdit)
@@ -12572,7 +18817,7 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
     const topic = this.props.tinode.getTopic(this.props.topic);
     const acs = topic.getAccessMode();
     this.state = {
-      isMe: tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().isMeTopicName(this.props.topic),
+      isMe: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isMeTopicName(this.props.topic),
       owner: acs && acs.isOwner(),
       fullName: topic.public ? topic.public.fn : undefined,
       private: topic.private ? topic.private.comment : null,
@@ -12629,7 +18874,7 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       this.setState({
         private: comment
       });
-      this.props.onUpdateTopicDesc(this.props.topic, null, comment || (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().DEL_CHAR));
+      this.props.onUpdateTopicDesc(this.props.topic, null, comment || tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.DEL_CHAR);
     }
   }
 
@@ -12654,7 +18899,7 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       this.setState({
         avatar: null
       });
-      this.props.onUpdateTopicDesc(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(null, (tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default().DEL_CHAR)));
+      this.props.onUpdateTopicDesc(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(null, tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.DEL_CHAR));
     }
   }
 
@@ -12675,9 +18920,7 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
     const readyToUpload = image => {
       let {
         mime,
-        blob,
-        width,
-        height
+        blob
       } = image;
 
       if (blob.size > _config_js__WEBPACK_IMPORTED_MODULE_7__.MAX_AVATAR_BYTES) {
@@ -12876,6 +19119,7 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
   \****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -13176,6 +19420,7 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
   \**************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ UnreadBadge)
@@ -13201,6 +19446,7 @@ class UnreadBadge extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
   \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ UploadingImage)
@@ -13240,6 +19486,7 @@ class UploadingImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
   \******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ VisiblePassword)
@@ -13333,12 +19580,1806 @@ class VisiblePassword extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
 
 /***/ }),
 
+/***/ "./node_modules/firebase/app/dist/index.esm.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/firebase/app/dist/index.esm.js ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "FirebaseError": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.FirebaseError),
+/* harmony export */   "SDK_VERSION": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.SDK_VERSION),
+/* harmony export */   "_DEFAULT_ENTRY_NAME": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._DEFAULT_ENTRY_NAME),
+/* harmony export */   "_addComponent": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._addComponent),
+/* harmony export */   "_addOrOverwriteComponent": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._addOrOverwriteComponent),
+/* harmony export */   "_apps": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._apps),
+/* harmony export */   "_clearComponents": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._clearComponents),
+/* harmony export */   "_components": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._components),
+/* harmony export */   "_getProvider": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._getProvider),
+/* harmony export */   "_registerComponent": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._registerComponent),
+/* harmony export */   "_removeServiceInstance": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._removeServiceInstance),
+/* harmony export */   "deleteApp": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.deleteApp),
+/* harmony export */   "getApp": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.getApp),
+/* harmony export */   "getApps": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.getApps),
+/* harmony export */   "initializeApp": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.initializeApp),
+/* harmony export */   "onLog": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.onLog),
+/* harmony export */   "registerVersion": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion),
+/* harmony export */   "setLogLevel": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.setLogLevel)
+/* harmony export */ });
+/* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
+
+
+
+var name = "firebase";
+var version = "9.6.11";
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+(0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion)(name, version, 'app');
+//# sourceMappingURL=index.esm.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/firebase/messaging/dist/index.esm.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/firebase/messaging/dist/index.esm.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "deleteToken": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.deleteToken),
+/* harmony export */   "getMessaging": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.getMessaging),
+/* harmony export */   "getToken": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.getToken),
+/* harmony export */   "isSupported": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.isSupported),
+/* harmony export */   "onMessage": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.onMessage)
+/* harmony export */ });
+/* harmony import */ var _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/messaging */ "./node_modules/@firebase/messaging/dist/esm/index.esm2017.js");
+
+//# sourceMappingURL=index.esm.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/fix-webm-duration/fix-webm-duration.js":
+/*!*************************************************************!*\
+  !*** ./node_modules/fix-webm-duration/fix-webm-duration.js ***!
+  \*************************************************************/
+/***/ ((module, exports, __webpack_require__) => {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (name, definition) {
+    if (true) { // RequireJS / AMD
+        !(__WEBPACK_AMD_DEFINE_FACTORY__ = (definition),
+		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+		(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
+		__WEBPACK_AMD_DEFINE_FACTORY__),
+		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else {}
+})('fix-webm-duration', function () {
+    /*
+     * This is the list of possible WEBM file sections by their IDs.
+     * Possible types: Container, Binary, Uint, Int, String, Float, Date
+     */
+    var sections = {
+        0xa45dfa3: { name: 'EBML', type: 'Container' },
+        0x286: { name: 'EBMLVersion', type: 'Uint' },
+        0x2f7: { name: 'EBMLReadVersion', type: 'Uint' },
+        0x2f2: { name: 'EBMLMaxIDLength', type: 'Uint' },
+        0x2f3: { name: 'EBMLMaxSizeLength', type: 'Uint' },
+        0x282: { name: 'DocType', type: 'String' },
+        0x287: { name: 'DocTypeVersion', type: 'Uint' },
+        0x285: { name: 'DocTypeReadVersion', type: 'Uint' },
+        0x6c: { name: 'Void', type: 'Binary' },
+        0x3f: { name: 'CRC-32', type: 'Binary' },
+        0xb538667: { name: 'SignatureSlot', type: 'Container' },
+        0x3e8a: { name: 'SignatureAlgo', type: 'Uint' },
+        0x3e9a: { name: 'SignatureHash', type: 'Uint' },
+        0x3ea5: { name: 'SignaturePublicKey', type: 'Binary' },
+        0x3eb5: { name: 'Signature', type: 'Binary' },
+        0x3e5b: { name: 'SignatureElements', type: 'Container' },
+        0x3e7b: { name: 'SignatureElementList', type: 'Container' },
+        0x2532: { name: 'SignedElement', type: 'Binary' },
+        0x8538067: { name: 'Segment', type: 'Container' },
+        0x14d9b74: { name: 'SeekHead', type: 'Container' },
+        0xdbb: { name: 'Seek', type: 'Container' },
+        0x13ab: { name: 'SeekID', type: 'Binary' },
+        0x13ac: { name: 'SeekPosition', type: 'Uint' },
+        0x549a966: { name: 'Info', type: 'Container' },
+        0x33a4: { name: 'SegmentUID', type: 'Binary' },
+        0x3384: { name: 'SegmentFilename', type: 'String' },
+        0x1cb923: { name: 'PrevUID', type: 'Binary' },
+        0x1c83ab: { name: 'PrevFilename', type: 'String' },
+        0x1eb923: { name: 'NextUID', type: 'Binary' },
+        0x1e83bb: { name: 'NextFilename', type: 'String' },
+        0x444: { name: 'SegmentFamily', type: 'Binary' },
+        0x2924: { name: 'ChapterTranslate', type: 'Container' },
+        0x29fc: { name: 'ChapterTranslateEditionUID', type: 'Uint' },
+        0x29bf: { name: 'ChapterTranslateCodec', type: 'Uint' },
+        0x29a5: { name: 'ChapterTranslateID', type: 'Binary' },
+        0xad7b1: { name: 'TimecodeScale', type: 'Uint' },
+        0x489: { name: 'Duration', type: 'Float' },
+        0x461: { name: 'DateUTC', type: 'Date' },
+        0x3ba9: { name: 'Title', type: 'String' },
+        0xd80: { name: 'MuxingApp', type: 'String' },
+        0x1741: { name: 'WritingApp', type: 'String' },
+        // 0xf43b675: { name: 'Cluster', type: 'Container' },
+        0x67: { name: 'Timecode', type: 'Uint' },
+        0x1854: { name: 'SilentTracks', type: 'Container' },
+        0x18d7: { name: 'SilentTrackNumber', type: 'Uint' },
+        0x27: { name: 'Position', type: 'Uint' },
+        0x2b: { name: 'PrevSize', type: 'Uint' },
+        0x23: { name: 'SimpleBlock', type: 'Binary' },
+        0x20: { name: 'BlockGroup', type: 'Container' },
+        0x21: { name: 'Block', type: 'Binary' },
+        0x22: { name: 'BlockVirtual', type: 'Binary' },
+        0x35a1: { name: 'BlockAdditions', type: 'Container' },
+        0x26: { name: 'BlockMore', type: 'Container' },
+        0x6e: { name: 'BlockAddID', type: 'Uint' },
+        0x25: { name: 'BlockAdditional', type: 'Binary' },
+        0x1b: { name: 'BlockDuration', type: 'Uint' },
+        0x7a: { name: 'ReferencePriority', type: 'Uint' },
+        0x7b: { name: 'ReferenceBlock', type: 'Int' },
+        0x7d: { name: 'ReferenceVirtual', type: 'Int' },
+        0x24: { name: 'CodecState', type: 'Binary' },
+        0x35a2: { name: 'DiscardPadding', type: 'Int' },
+        0xe: { name: 'Slices', type: 'Container' },
+        0x68: { name: 'TimeSlice', type: 'Container' },
+        0x4c: { name: 'LaceNumber', type: 'Uint' },
+        0x4d: { name: 'FrameNumber', type: 'Uint' },
+        0x4b: { name: 'BlockAdditionID', type: 'Uint' },
+        0x4e: { name: 'Delay', type: 'Uint' },
+        0x4f: { name: 'SliceDuration', type: 'Uint' },
+        0x48: { name: 'ReferenceFrame', type: 'Container' },
+        0x49: { name: 'ReferenceOffset', type: 'Uint' },
+        0x4a: { name: 'ReferenceTimeCode', type: 'Uint' },
+        0x2f: { name: 'EncryptedBlock', type: 'Binary' },
+        0x654ae6b: { name: 'Tracks', type: 'Container' },
+        0x2e: { name: 'TrackEntry', type: 'Container' },
+        0x57: { name: 'TrackNumber', type: 'Uint' },
+        0x33c5: { name: 'TrackUID', type: 'Uint' },
+        0x3: { name: 'TrackType', type: 'Uint' },
+        0x39: { name: 'FlagEnabled', type: 'Uint' },
+        0x8: { name: 'FlagDefault', type: 'Uint' },
+        0x15aa: { name: 'FlagForced', type: 'Uint' },
+        0x1c: { name: 'FlagLacing', type: 'Uint' },
+        0x2de7: { name: 'MinCache', type: 'Uint' },
+        0x2df8: { name: 'MaxCache', type: 'Uint' },
+        0x3e383: { name: 'DefaultDuration', type: 'Uint' },
+        0x34e7a: { name: 'DefaultDecodedFieldDuration', type: 'Uint' },
+        0x3314f: { name: 'TrackTimecodeScale', type: 'Float' },
+        0x137f: { name: 'TrackOffset', type: 'Int' },
+        0x15ee: { name: 'MaxBlockAdditionID', type: 'Uint' },
+        0x136e: { name: 'Name', type: 'String' },
+        0x2b59c: { name: 'Language', type: 'String' },
+        0x6: { name: 'CodecID', type: 'String' },
+        0x23a2: { name: 'CodecPrivate', type: 'Binary' },
+        0x58688: { name: 'CodecName', type: 'String' },
+        0x3446: { name: 'AttachmentLink', type: 'Uint' },
+        0x1a9697: { name: 'CodecSettings', type: 'String' },
+        0x1b4040: { name: 'CodecInfoURL', type: 'String' },
+        0x6b240: { name: 'CodecDownloadURL', type: 'String' },
+        0x2a: { name: 'CodecDecodeAll', type: 'Uint' },
+        0x2fab: { name: 'TrackOverlay', type: 'Uint' },
+        0x16aa: { name: 'CodecDelay', type: 'Uint' },
+        0x16bb: { name: 'SeekPreRoll', type: 'Uint' },
+        0x2624: { name: 'TrackTranslate', type: 'Container' },
+        0x26fc: { name: 'TrackTranslateEditionUID', type: 'Uint' },
+        0x26bf: { name: 'TrackTranslateCodec', type: 'Uint' },
+        0x26a5: { name: 'TrackTranslateTrackID', type: 'Binary' },
+        0x60: { name: 'Video', type: 'Container' },
+        0x1a: { name: 'FlagInterlaced', type: 'Uint' },
+        0x13b8: { name: 'StereoMode', type: 'Uint' },
+        0x13c0: { name: 'AlphaMode', type: 'Uint' },
+        0x13b9: { name: 'OldStereoMode', type: 'Uint' },
+        0x30: { name: 'PixelWidth', type: 'Uint' },
+        0x3a: { name: 'PixelHeight', type: 'Uint' },
+        0x14aa: { name: 'PixelCropBottom', type: 'Uint' },
+        0x14bb: { name: 'PixelCropTop', type: 'Uint' },
+        0x14cc: { name: 'PixelCropLeft', type: 'Uint' },
+        0x14dd: { name: 'PixelCropRight', type: 'Uint' },
+        0x14b0: { name: 'DisplayWidth', type: 'Uint' },
+        0x14ba: { name: 'DisplayHeight', type: 'Uint' },
+        0x14b2: { name: 'DisplayUnit', type: 'Uint' },
+        0x14b3: { name: 'AspectRatioType', type: 'Uint' },
+        0xeb524: { name: 'ColourSpace', type: 'Binary' },
+        0xfb523: { name: 'GammaValue', type: 'Float' },
+        0x383e3: { name: 'FrameRate', type: 'Float' },
+        0x61: { name: 'Audio', type: 'Container' },
+        0x35: { name: 'SamplingFrequency', type: 'Float' },
+        0x38b5: { name: 'OutputSamplingFrequency', type: 'Float' },
+        0x1f: { name: 'Channels', type: 'Uint' },
+        0x3d7b: { name: 'ChannelPositions', type: 'Binary' },
+        0x2264: { name: 'BitDepth', type: 'Uint' },
+        0x62: { name: 'TrackOperation', type: 'Container' },
+        0x63: { name: 'TrackCombinePlanes', type: 'Container' },
+        0x64: { name: 'TrackPlane', type: 'Container' },
+        0x65: { name: 'TrackPlaneUID', type: 'Uint' },
+        0x66: { name: 'TrackPlaneType', type: 'Uint' },
+        0x69: { name: 'TrackJoinBlocks', type: 'Container' },
+        0x6d: { name: 'TrackJoinUID', type: 'Uint' },
+        0x40: { name: 'TrickTrackUID', type: 'Uint' },
+        0x41: { name: 'TrickTrackSegmentUID', type: 'Binary' },
+        0x46: { name: 'TrickTrackFlag', type: 'Uint' },
+        0x47: { name: 'TrickMasterTrackUID', type: 'Uint' },
+        0x44: { name: 'TrickMasterTrackSegmentUID', type: 'Binary' },
+        0x2d80: { name: 'ContentEncodings', type: 'Container' },
+        0x2240: { name: 'ContentEncoding', type: 'Container' },
+        0x1031: { name: 'ContentEncodingOrder', type: 'Uint' },
+        0x1032: { name: 'ContentEncodingScope', type: 'Uint' },
+        0x1033: { name: 'ContentEncodingType', type: 'Uint' },
+        0x1034: { name: 'ContentCompression', type: 'Container' },
+        0x254: { name: 'ContentCompAlgo', type: 'Uint' },
+        0x255: { name: 'ContentCompSettings', type: 'Binary' },
+        0x1035: { name: 'ContentEncryption', type: 'Container' },
+        0x7e1: { name: 'ContentEncAlgo', type: 'Uint' },
+        0x7e2: { name: 'ContentEncKeyID', type: 'Binary' },
+        0x7e3: { name: 'ContentSignature', type: 'Binary' },
+        0x7e4: { name: 'ContentSigKeyID', type: 'Binary' },
+        0x7e5: { name: 'ContentSigAlgo', type: 'Uint' },
+        0x7e6: { name: 'ContentSigHashAlgo', type: 'Uint' },
+        0xc53bb6b: { name: 'Cues', type: 'Container' },
+        0x3b: { name: 'CuePoint', type: 'Container' },
+        0x33: { name: 'CueTime', type: 'Uint' },
+        0x37: { name: 'CueTrackPositions', type: 'Container' },
+        0x77: { name: 'CueTrack', type: 'Uint' },
+        0x71: { name: 'CueClusterPosition', type: 'Uint' },
+        0x70: { name: 'CueRelativePosition', type: 'Uint' },
+        0x32: { name: 'CueDuration', type: 'Uint' },
+        0x1378: { name: 'CueBlockNumber', type: 'Uint' },
+        0x6a: { name: 'CueCodecState', type: 'Uint' },
+        0x5b: { name: 'CueReference', type: 'Container' },
+        0x16: { name: 'CueRefTime', type: 'Uint' },
+        0x17: { name: 'CueRefCluster', type: 'Uint' },
+        0x135f: { name: 'CueRefNumber', type: 'Uint' },
+        0x6b: { name: 'CueRefCodecState', type: 'Uint' },
+        0x941a469: { name: 'Attachments', type: 'Container' },
+        0x21a7: { name: 'AttachedFile', type: 'Container' },
+        0x67e: { name: 'FileDescription', type: 'String' },
+        0x66e: { name: 'FileName', type: 'String' },
+        0x660: { name: 'FileMimeType', type: 'String' },
+        0x65c: { name: 'FileData', type: 'Binary' },
+        0x6ae: { name: 'FileUID', type: 'Uint' },
+        0x675: { name: 'FileReferral', type: 'Binary' },
+        0x661: { name: 'FileUsedStartTime', type: 'Uint' },
+        0x662: { name: 'FileUsedEndTime', type: 'Uint' },
+        0x43a770: { name: 'Chapters', type: 'Container' },
+        0x5b9: { name: 'EditionEntry', type: 'Container' },
+        0x5bc: { name: 'EditionUID', type: 'Uint' },
+        0x5bd: { name: 'EditionFlagHidden', type: 'Uint' },
+        0x5db: { name: 'EditionFlagDefault', type: 'Uint' },
+        0x5dd: { name: 'EditionFlagOrdered', type: 'Uint' },
+        0x36: { name: 'ChapterAtom', type: 'Container' },
+        0x33c4: { name: 'ChapterUID', type: 'Uint' },
+        0x1654: { name: 'ChapterStringUID', type: 'String' },
+        0x11: { name: 'ChapterTimeStart', type: 'Uint' },
+        0x12: { name: 'ChapterTimeEnd', type: 'Uint' },
+        0x18: { name: 'ChapterFlagHidden', type: 'Uint' },
+        0x598: { name: 'ChapterFlagEnabled', type: 'Uint' },
+        0x2e67: { name: 'ChapterSegmentUID', type: 'Binary' },
+        0x2ebc: { name: 'ChapterSegmentEditionUID', type: 'Uint' },
+        0x23c3: { name: 'ChapterPhysicalEquiv', type: 'Uint' },
+        0xf: { name: 'ChapterTrack', type: 'Container' },
+        0x9: { name: 'ChapterTrackNumber', type: 'Uint' },
+        0x0: { name: 'ChapterDisplay', type: 'Container' },
+        0x5: { name: 'ChapString', type: 'String' },
+        0x37c: { name: 'ChapLanguage', type: 'String' },
+        0x37e: { name: 'ChapCountry', type: 'String' },
+        0x2944: { name: 'ChapProcess', type: 'Container' },
+        0x2955: { name: 'ChapProcessCodecID', type: 'Uint' },
+        0x50d: { name: 'ChapProcessPrivate', type: 'Binary' },
+        0x2911: { name: 'ChapProcessCommand', type: 'Container' },
+        0x2922: { name: 'ChapProcessTime', type: 'Uint' },
+        0x2933: { name: 'ChapProcessData', type: 'Binary' },
+        0x254c367: { name: 'Tags', type: 'Container' },
+        0x3373: { name: 'Tag', type: 'Container' },
+        0x23c0: { name: 'Targets', type: 'Container' },
+        0x28ca: { name: 'TargetTypeValue', type: 'Uint' },
+        0x23ca: { name: 'TargetType', type: 'String' },
+        0x23c5: { name: 'TagTrackUID', type: 'Uint' },
+        0x23c9: { name: 'TagEditionUID', type: 'Uint' },
+        0x23c4: { name: 'TagChapterUID', type: 'Uint' },
+        0x23c6: { name: 'TagAttachmentUID', type: 'Uint' },
+        0x27c8: { name: 'SimpleTag', type: 'Container' },
+        0x5a3: { name: 'TagName', type: 'String' },
+        0x47a: { name: 'TagLanguage', type: 'String' },
+        0x484: { name: 'TagDefault', type: 'Uint' },
+        0x487: { name: 'TagString', type: 'String' },
+        0x485: { name: 'TagBinary', type: 'Binary' }
+    };
+
+    function doInherit(newClass, baseClass) {
+        newClass.prototype = Object.create(baseClass.prototype);
+        newClass.prototype.constructor = newClass;
+    }
+
+    function WebmBase(name, type) {
+        this.name = name || 'Unknown';
+        this.type = type || 'Unknown';
+    }
+    WebmBase.prototype.updateBySource = function() { };
+    WebmBase.prototype.setSource = function(source) {
+        this.source = source;
+        this.updateBySource();
+    };
+    WebmBase.prototype.updateByData = function() { };
+    WebmBase.prototype.setData = function(data) {
+        this.data = data;
+        this.updateByData();
+    };
+
+    function WebmUint(name, type) {
+        WebmBase.call(this, name, type || 'Uint');
+    }
+    doInherit(WebmUint, WebmBase);
+    function padHex(hex) {
+        return hex.length % 2 === 1 ? '0' + hex : hex;
+    }
+    WebmUint.prototype.updateBySource = function() {
+        // use hex representation of a number instead of number value
+        this.data = '';
+        for (var i = 0; i < this.source.length; i++) {
+            var hex = this.source[i].toString(16);
+            this.data += padHex(hex);
+        }
+    };
+    WebmUint.prototype.updateByData = function() {
+        var length = this.data.length / 2;
+        this.source = new Uint8Array(length);
+        for (var i = 0; i < length; i++) {
+            var hex = this.data.substr(i * 2, 2);
+            this.source[i] = parseInt(hex, 16);
+        }
+    };
+    WebmUint.prototype.getValue = function() {
+        return parseInt(this.data, 16);
+    };
+    WebmUint.prototype.setValue = function(value) {
+        this.setData(padHex(value.toString(16)));
+    };
+
+    function WebmFloat(name, type) {
+        WebmBase.call(this, name, type || 'Float');
+    }
+    doInherit(WebmFloat, WebmBase);
+    WebmFloat.prototype.getFloatArrayType = function() {
+        return this.source && this.source.length === 4 ? Float32Array : Float64Array;
+    };
+    WebmFloat.prototype.updateBySource = function() {
+        var byteArray = this.source.reverse();
+        var floatArrayType = this.getFloatArrayType();
+        var floatArray = new floatArrayType(byteArray.buffer);
+        this.data = floatArray[0];
+    };
+    WebmFloat.prototype.updateByData = function() {
+        var floatArrayType = this.getFloatArrayType();
+        var floatArray = new floatArrayType([ this.data ]);
+        var byteArray = new Uint8Array(floatArray.buffer);
+        this.source = byteArray.reverse();
+    };
+    WebmFloat.prototype.getValue = function() {
+        return this.data;
+    };
+    WebmFloat.prototype.setValue = function(value) {
+        this.setData(value);
+    };
+
+    function WebmContainer(name, type) {
+        WebmBase.call(this, name, type || 'Container');
+    }
+    doInherit(WebmContainer, WebmBase);
+    WebmContainer.prototype.readByte = function() {
+        return this.source[this.offset++];
+    };
+    WebmContainer.prototype.readUint = function() {
+        var firstByte = this.readByte();
+        var bytes = 8 - firstByte.toString(2).length;
+        var value = firstByte - (1 << (7 - bytes));
+        for (var i = 0; i < bytes; i++) {
+            // don't use bit operators to support x86
+            value *= 256;
+            value += this.readByte();
+        }
+        return value;
+    };
+    WebmContainer.prototype.updateBySource = function() {
+        this.data = [];
+        for (this.offset = 0; this.offset < this.source.length; this.offset = end) {
+            var id = this.readUint();
+            var len = this.readUint();
+            var end = Math.min(this.offset + len, this.source.length);
+            var data = this.source.slice(this.offset, end);
+
+            var info = sections[id] || { name: 'Unknown', type: 'Unknown' };
+            var ctr = WebmBase;
+            switch (info.type) {
+                case 'Container':
+                    ctr = WebmContainer;
+                    break;
+                case 'Uint':
+                    ctr = WebmUint;
+                    break;
+                case 'Float':
+                    ctr = WebmFloat;
+                    break;
+            }
+            var section = new ctr(info.name, info.type);
+            section.setSource(data);
+            this.data.push({
+                id: id,
+                idHex: id.toString(16),
+                data: section
+            });
+        }
+    };
+    WebmContainer.prototype.writeUint = function(x, draft) {
+        for (var bytes = 1, flag = 0x80; x >= flag && bytes < 8; bytes++, flag *= 0x80) { }
+
+        if (!draft) {
+            var value = flag + x;
+            for (var i = bytes - 1; i >= 0; i--) {
+                // don't use bit operators to support x86
+                var c = value % 256;
+                this.source[this.offset + i] = c;
+                value = (value - c) / 256;
+            }
+        }
+
+        this.offset += bytes;
+    };
+    WebmContainer.prototype.writeSections = function(draft) {
+        this.offset = 0;
+        for (var i = 0; i < this.data.length; i++) {
+            var section = this.data[i],
+                content = section.data.source,
+                contentLength = content.length;
+            this.writeUint(section.id, draft);
+            this.writeUint(contentLength, draft);
+            if (!draft) {
+                this.source.set(content, this.offset);
+            }
+            this.offset += contentLength;
+        }
+        return this.offset;
+    };
+    WebmContainer.prototype.updateByData = function() {
+        // run without accessing this.source to determine total length - need to know it to create Uint8Array
+        var length = this.writeSections('draft');
+        this.source = new Uint8Array(length);
+        // now really write data
+        this.writeSections();
+    };
+    WebmContainer.prototype.getSectionById = function(id) {
+        for (var i = 0; i < this.data.length; i++) {
+            var section = this.data[i];
+            if (section.id === id) {
+                return section.data;
+            }
+        }
+        return null;
+    };
+
+    function WebmFile(source) {
+        WebmContainer.call(this, 'File', 'File');
+        this.setSource(source);
+    }
+    doInherit(WebmFile, WebmContainer);
+    WebmFile.prototype.fixDuration = function(duration, options) {
+        var logger = options && options.logger;
+        if (logger === undefined) {
+            logger = function(message) {
+                console.log(message);
+            };
+        } else if (!logger) {
+            logger = function() { };
+        }
+
+        var segmentSection = this.getSectionById(0x8538067);
+        if (!segmentSection) {
+            logger('[fix-webm-duration] Segment section is missing');
+            return false;
+        }
+
+        var infoSection = segmentSection.getSectionById(0x549a966);
+        if (!infoSection) {
+            logger('[fix-webm-duration] Info section is missing');
+            return false;
+        }
+
+        var timeScaleSection = infoSection.getSectionById(0xad7b1);
+        if (!timeScaleSection) {
+            logger('[fix-webm-duration] TimecodeScale section is missing');
+            return false;
+        }
+
+        var durationSection = infoSection.getSectionById(0x489);
+        if (durationSection) {
+            if (durationSection.getValue() <= 0) {
+                logger('[fix-webm-duration] Duration section is present, but the value is empty');
+                durationSection.setValue(duration);
+            } else {
+                logger('[fix-webm-duration] Duration section is present');
+                return false;
+            }
+        } else {
+            logger('[fix-webm-duration] Duration section is missing');
+            // append Duration section
+            durationSection = new WebmFloat('Duration', 'Float');
+            durationSection.setValue(duration);
+            infoSection.data.push({
+                id: 0x489,
+                data: durationSection
+            });
+        }
+
+        // set default time scale to 1 millisecond (1000000 nanoseconds)
+        timeScaleSection.setValue(1000000);
+        infoSection.updateByData();
+        segmentSection.updateByData();
+        this.updateByData();
+
+        return true;
+    };
+    WebmFile.prototype.toBlob = function(mimeType) {
+        return new Blob([ this.source.buffer ], { type: mimeType || 'video/webm' });
+    };
+
+    function fixWebmDuration(blob, duration, callback, options) {
+        // The callback may be omitted - then the third argument is options
+        if (typeof callback === "object") {
+            options = callback;
+            callback = undefined;
+        }
+
+        if (!callback) {
+            return new Promise(function(resolve) {
+                fixWebmDuration(blob, duration, resolve, options);
+            });
+        }
+
+        try {
+            var reader = new FileReader();
+            reader.onloadend = function() {
+                try {
+                    var file = new WebmFile(new Uint8Array(reader.result));
+                    if (file.fixDuration(duration, options)) {
+                        blob = file.toBlob(blob.type);
+                    }
+                } catch (ex) {
+                    // ignore
+                }
+                callback(blob);
+            };
+            reader.readAsArrayBuffer(blob);
+        } catch (ex) {
+            callback(blob);
+        }
+    }
+
+    // Support AMD import default
+    fixWebmDuration.default = fixWebmDuration;
+
+    return fixWebmDuration;
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/intl-messageformat/lib/index.js":
+/*!******************************************************!*\
+  !*** ./node_modules/intl-messageformat/lib/index.js ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "ErrorCode": () => (/* reexport safe */ _src_error__WEBPACK_IMPORTED_MODULE_2__.ErrorCode),
+/* harmony export */   "FormatError": () => (/* reexport safe */ _src_error__WEBPACK_IMPORTED_MODULE_2__.FormatError),
+/* harmony export */   "IntlMessageFormat": () => (/* reexport safe */ _src_core__WEBPACK_IMPORTED_MODULE_1__.IntlMessageFormat),
+/* harmony export */   "InvalidValueError": () => (/* reexport safe */ _src_error__WEBPACK_IMPORTED_MODULE_2__.InvalidValueError),
+/* harmony export */   "InvalidValueTypeError": () => (/* reexport safe */ _src_error__WEBPACK_IMPORTED_MODULE_2__.InvalidValueTypeError),
+/* harmony export */   "MissingValueError": () => (/* reexport safe */ _src_error__WEBPACK_IMPORTED_MODULE_2__.MissingValueError),
+/* harmony export */   "PART_TYPE": () => (/* reexport safe */ _src_formatters__WEBPACK_IMPORTED_MODULE_0__.PART_TYPE),
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   "formatToParts": () => (/* reexport safe */ _src_formatters__WEBPACK_IMPORTED_MODULE_0__.formatToParts),
+/* harmony export */   "isFormatXMLElementFn": () => (/* reexport safe */ _src_formatters__WEBPACK_IMPORTED_MODULE_0__.isFormatXMLElementFn)
+/* harmony export */ });
+/* harmony import */ var _src_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./src/core */ "./node_modules/intl-messageformat/lib/src/core.js");
+/* harmony import */ var _src_formatters__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./src/formatters */ "./node_modules/intl-messageformat/lib/src/formatters.js");
+/* harmony import */ var _src_error__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./src/error */ "./node_modules/intl-messageformat/lib/src/error.js");
+/*
+Copyright (c) 2014, Yahoo! Inc. All rights reserved.
+Copyrights licensed under the New BSD License.
+See the accompanying LICENSE file for terms.
+*/
+
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_src_core__WEBPACK_IMPORTED_MODULE_1__.IntlMessageFormat);
+
+
+/***/ }),
+
+/***/ "./node_modules/intl-messageformat/lib/src/core.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/intl-messageformat/lib/src/core.js ***!
+  \*********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "IntlMessageFormat": () => (/* binding */ IntlMessageFormat)
+/* harmony export */ });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _formatjs_icu_messageformat_parser__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @formatjs/icu-messageformat-parser */ "./node_modules/@formatjs/icu-messageformat-parser/lib/index.js");
+/* harmony import */ var _formatjs_fast_memoize__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @formatjs/fast-memoize */ "./node_modules/@formatjs/fast-memoize/lib/index.js");
+/* harmony import */ var _formatters__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./formatters */ "./node_modules/intl-messageformat/lib/src/formatters.js");
+/*
+Copyright (c) 2014, Yahoo! Inc. All rights reserved.
+Copyrights licensed under the New BSD License.
+See the accompanying LICENSE file for terms.
+*/
+
+
+
+
+// -- MessageFormat --------------------------------------------------------
+function mergeConfig(c1, c2) {
+    if (!c2) {
+        return c1;
+    }
+    return (0,tslib__WEBPACK_IMPORTED_MODULE_2__.__assign)((0,tslib__WEBPACK_IMPORTED_MODULE_2__.__assign)((0,tslib__WEBPACK_IMPORTED_MODULE_2__.__assign)({}, (c1 || {})), (c2 || {})), Object.keys(c1).reduce(function (all, k) {
+        all[k] = (0,tslib__WEBPACK_IMPORTED_MODULE_2__.__assign)((0,tslib__WEBPACK_IMPORTED_MODULE_2__.__assign)({}, c1[k]), (c2[k] || {}));
+        return all;
+    }, {}));
+}
+function mergeConfigs(defaultConfig, configs) {
+    if (!configs) {
+        return defaultConfig;
+    }
+    return Object.keys(defaultConfig).reduce(function (all, k) {
+        all[k] = mergeConfig(defaultConfig[k], configs[k]);
+        return all;
+    }, (0,tslib__WEBPACK_IMPORTED_MODULE_2__.__assign)({}, defaultConfig));
+}
+function createFastMemoizeCache(store) {
+    return {
+        create: function () {
+            return {
+                get: function (key) {
+                    return store[key];
+                },
+                set: function (key, value) {
+                    store[key] = value;
+                },
+            };
+        },
+    };
+}
+function createDefaultFormatters(cache) {
+    if (cache === void 0) { cache = {
+        number: {},
+        dateTime: {},
+        pluralRules: {},
+    }; }
+    return {
+        getNumberFormat: (0,_formatjs_fast_memoize__WEBPACK_IMPORTED_MODULE_1__["default"])(function () {
+            var _a;
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            return new ((_a = Intl.NumberFormat).bind.apply(_a, (0,tslib__WEBPACK_IMPORTED_MODULE_2__.__spreadArray)([void 0], args, false)))();
+        }, {
+            cache: createFastMemoizeCache(cache.number),
+            strategy: _formatjs_fast_memoize__WEBPACK_IMPORTED_MODULE_1__.strategies.variadic,
+        }),
+        getDateTimeFormat: (0,_formatjs_fast_memoize__WEBPACK_IMPORTED_MODULE_1__["default"])(function () {
+            var _a;
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            return new ((_a = Intl.DateTimeFormat).bind.apply(_a, (0,tslib__WEBPACK_IMPORTED_MODULE_2__.__spreadArray)([void 0], args, false)))();
+        }, {
+            cache: createFastMemoizeCache(cache.dateTime),
+            strategy: _formatjs_fast_memoize__WEBPACK_IMPORTED_MODULE_1__.strategies.variadic,
+        }),
+        getPluralRules: (0,_formatjs_fast_memoize__WEBPACK_IMPORTED_MODULE_1__["default"])(function () {
+            var _a;
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            return new ((_a = Intl.PluralRules).bind.apply(_a, (0,tslib__WEBPACK_IMPORTED_MODULE_2__.__spreadArray)([void 0], args, false)))();
+        }, {
+            cache: createFastMemoizeCache(cache.pluralRules),
+            strategy: _formatjs_fast_memoize__WEBPACK_IMPORTED_MODULE_1__.strategies.variadic,
+        }),
+    };
+}
+var IntlMessageFormat = /** @class */ (function () {
+    function IntlMessageFormat(message, locales, overrideFormats, opts) {
+        var _this = this;
+        if (locales === void 0) { locales = IntlMessageFormat.defaultLocale; }
+        this.formatterCache = {
+            number: {},
+            dateTime: {},
+            pluralRules: {},
+        };
+        this.format = function (values) {
+            var parts = _this.formatToParts(values);
+            // Hot path for straight simple msg translations
+            if (parts.length === 1) {
+                return parts[0].value;
+            }
+            var result = parts.reduce(function (all, part) {
+                if (!all.length ||
+                    part.type !== _formatters__WEBPACK_IMPORTED_MODULE_3__.PART_TYPE.literal ||
+                    typeof all[all.length - 1] !== 'string') {
+                    all.push(part.value);
+                }
+                else {
+                    all[all.length - 1] += part.value;
+                }
+                return all;
+            }, []);
+            if (result.length <= 1) {
+                return result[0] || '';
+            }
+            return result;
+        };
+        this.formatToParts = function (values) {
+            return (0,_formatters__WEBPACK_IMPORTED_MODULE_3__.formatToParts)(_this.ast, _this.locales, _this.formatters, _this.formats, values, undefined, _this.message);
+        };
+        this.resolvedOptions = function () { return ({
+            locale: Intl.NumberFormat.supportedLocalesOf(_this.locales)[0],
+        }); };
+        this.getAst = function () { return _this.ast; };
+        if (typeof message === 'string') {
+            this.message = message;
+            if (!IntlMessageFormat.__parse) {
+                throw new TypeError('IntlMessageFormat.__parse must be set to process `message` of type `string`');
+            }
+            // Parse string messages into an AST.
+            this.ast = IntlMessageFormat.__parse(message, {
+                ignoreTag: opts === null || opts === void 0 ? void 0 : opts.ignoreTag,
+            });
+        }
+        else {
+            this.ast = message;
+        }
+        if (!Array.isArray(this.ast)) {
+            throw new TypeError('A message must be provided as a String or AST.');
+        }
+        // Creates a new object with the specified `formats` merged with the default
+        // formats.
+        this.formats = mergeConfigs(IntlMessageFormat.formats, overrideFormats);
+        // Defined first because it's used to build the format pattern.
+        this.locales = locales;
+        this.formatters =
+            (opts && opts.formatters) || createDefaultFormatters(this.formatterCache);
+    }
+    Object.defineProperty(IntlMessageFormat, "defaultLocale", {
+        get: function () {
+            if (!IntlMessageFormat.memoizedDefaultLocale) {
+                IntlMessageFormat.memoizedDefaultLocale =
+                    new Intl.NumberFormat().resolvedOptions().locale;
+            }
+            return IntlMessageFormat.memoizedDefaultLocale;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    IntlMessageFormat.memoizedDefaultLocale = null;
+    IntlMessageFormat.__parse = _formatjs_icu_messageformat_parser__WEBPACK_IMPORTED_MODULE_0__.parse;
+    // Default format options used as the prototype of the `formats` provided to the
+    // constructor. These are used when constructing the internal Intl.NumberFormat
+    // and Intl.DateTimeFormat instances.
+    IntlMessageFormat.formats = {
+        number: {
+            integer: {
+                maximumFractionDigits: 0,
+            },
+            currency: {
+                style: 'currency',
+            },
+            percent: {
+                style: 'percent',
+            },
+        },
+        date: {
+            short: {
+                month: 'numeric',
+                day: 'numeric',
+                year: '2-digit',
+            },
+            medium: {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+            },
+            long: {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric',
+            },
+            full: {
+                weekday: 'long',
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric',
+            },
+        },
+        time: {
+            short: {
+                hour: 'numeric',
+                minute: 'numeric',
+            },
+            medium: {
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric',
+            },
+            long: {
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric',
+                timeZoneName: 'short',
+            },
+            full: {
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric',
+                timeZoneName: 'short',
+            },
+        },
+    };
+    return IntlMessageFormat;
+}());
+
+
+
+/***/ }),
+
+/***/ "./node_modules/intl-messageformat/lib/src/error.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/intl-messageformat/lib/src/error.js ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "ErrorCode": () => (/* binding */ ErrorCode),
+/* harmony export */   "FormatError": () => (/* binding */ FormatError),
+/* harmony export */   "InvalidValueError": () => (/* binding */ InvalidValueError),
+/* harmony export */   "InvalidValueTypeError": () => (/* binding */ InvalidValueTypeError),
+/* harmony export */   "MissingValueError": () => (/* binding */ MissingValueError)
+/* harmony export */ });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+
+var ErrorCode;
+(function (ErrorCode) {
+    // When we have a placeholder but no value to format
+    ErrorCode["MISSING_VALUE"] = "MISSING_VALUE";
+    // When value supplied is invalid
+    ErrorCode["INVALID_VALUE"] = "INVALID_VALUE";
+    // When we need specific Intl API but it's not available
+    ErrorCode["MISSING_INTL_API"] = "MISSING_INTL_API";
+})(ErrorCode || (ErrorCode = {}));
+var FormatError = /** @class */ (function (_super) {
+    (0,tslib__WEBPACK_IMPORTED_MODULE_0__.__extends)(FormatError, _super);
+    function FormatError(msg, code, originalMessage) {
+        var _this = _super.call(this, msg) || this;
+        _this.code = code;
+        _this.originalMessage = originalMessage;
+        return _this;
+    }
+    FormatError.prototype.toString = function () {
+        return "[formatjs Error: ".concat(this.code, "] ").concat(this.message);
+    };
+    return FormatError;
+}(Error));
+
+var InvalidValueError = /** @class */ (function (_super) {
+    (0,tslib__WEBPACK_IMPORTED_MODULE_0__.__extends)(InvalidValueError, _super);
+    function InvalidValueError(variableId, value, options, originalMessage) {
+        return _super.call(this, "Invalid values for \"".concat(variableId, "\": \"").concat(value, "\". Options are \"").concat(Object.keys(options).join('", "'), "\""), ErrorCode.INVALID_VALUE, originalMessage) || this;
+    }
+    return InvalidValueError;
+}(FormatError));
+
+var InvalidValueTypeError = /** @class */ (function (_super) {
+    (0,tslib__WEBPACK_IMPORTED_MODULE_0__.__extends)(InvalidValueTypeError, _super);
+    function InvalidValueTypeError(value, type, originalMessage) {
+        return _super.call(this, "Value for \"".concat(value, "\" must be of type ").concat(type), ErrorCode.INVALID_VALUE, originalMessage) || this;
+    }
+    return InvalidValueTypeError;
+}(FormatError));
+
+var MissingValueError = /** @class */ (function (_super) {
+    (0,tslib__WEBPACK_IMPORTED_MODULE_0__.__extends)(MissingValueError, _super);
+    function MissingValueError(variableId, originalMessage) {
+        return _super.call(this, "The intl string context variable \"".concat(variableId, "\" was not provided to the string \"").concat(originalMessage, "\""), ErrorCode.MISSING_VALUE, originalMessage) || this;
+    }
+    return MissingValueError;
+}(FormatError));
+
+
+
+/***/ }),
+
+/***/ "./node_modules/intl-messageformat/lib/src/formatters.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/intl-messageformat/lib/src/formatters.js ***!
+  \***************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "PART_TYPE": () => (/* binding */ PART_TYPE),
+/* harmony export */   "formatToParts": () => (/* binding */ formatToParts),
+/* harmony export */   "isFormatXMLElementFn": () => (/* binding */ isFormatXMLElementFn)
+/* harmony export */ });
+/* harmony import */ var _formatjs_icu_messageformat_parser__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @formatjs/icu-messageformat-parser */ "./node_modules/@formatjs/icu-messageformat-parser/lib/index.js");
+/* harmony import */ var _error__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./error */ "./node_modules/intl-messageformat/lib/src/error.js");
+
+
+var PART_TYPE;
+(function (PART_TYPE) {
+    PART_TYPE[PART_TYPE["literal"] = 0] = "literal";
+    PART_TYPE[PART_TYPE["object"] = 1] = "object";
+})(PART_TYPE || (PART_TYPE = {}));
+function mergeLiteral(parts) {
+    if (parts.length < 2) {
+        return parts;
+    }
+    return parts.reduce(function (all, part) {
+        var lastPart = all[all.length - 1];
+        if (!lastPart ||
+            lastPart.type !== PART_TYPE.literal ||
+            part.type !== PART_TYPE.literal) {
+            all.push(part);
+        }
+        else {
+            lastPart.value += part.value;
+        }
+        return all;
+    }, []);
+}
+function isFormatXMLElementFn(el) {
+    return typeof el === 'function';
+}
+// TODO(skeleton): add skeleton support
+function formatToParts(els, locales, formatters, formats, values, currentPluralValue, 
+// For debugging
+originalMessage) {
+    // Hot path for straight simple msg translations
+    if (els.length === 1 && (0,_formatjs_icu_messageformat_parser__WEBPACK_IMPORTED_MODULE_0__.isLiteralElement)(els[0])) {
+        return [
+            {
+                type: PART_TYPE.literal,
+                value: els[0].value,
+            },
+        ];
+    }
+    var result = [];
+    for (var _i = 0, els_1 = els; _i < els_1.length; _i++) {
+        var el = els_1[_i];
+        // Exit early for string parts.
+        if ((0,_formatjs_icu_messageformat_parser__WEBPACK_IMPORTED_MODULE_0__.isLiteralElement)(el)) {
+            result.push({
+                type: PART_TYPE.literal,
+                value: el.value,
+            });
+            continue;
+        }
+        // TODO: should this part be literal type?
+        // Replace `#` in plural rules with the actual numeric value.
+        if ((0,_formatjs_icu_messageformat_parser__WEBPACK_IMPORTED_MODULE_0__.isPoundElement)(el)) {
+            if (typeof currentPluralValue === 'number') {
+                result.push({
+                    type: PART_TYPE.literal,
+                    value: formatters.getNumberFormat(locales).format(currentPluralValue),
+                });
+            }
+            continue;
+        }
+        var varName = el.value;
+        // Enforce that all required values are provided by the caller.
+        if (!(values && varName in values)) {
+            throw new _error__WEBPACK_IMPORTED_MODULE_1__.MissingValueError(varName, originalMessage);
+        }
+        var value = values[varName];
+        if ((0,_formatjs_icu_messageformat_parser__WEBPACK_IMPORTED_MODULE_0__.isArgumentElement)(el)) {
+            if (!value || typeof value === 'string' || typeof value === 'number') {
+                value =
+                    typeof value === 'string' || typeof value === 'number'
+                        ? String(value)
+                        : '';
+            }
+            result.push({
+                type: typeof value === 'string' ? PART_TYPE.literal : PART_TYPE.object,
+                value: value,
+            });
+            continue;
+        }
+        // Recursively format plural and select parts' option — which can be a
+        // nested pattern structure. The choosing of the option to use is
+        // abstracted-by and delegated-to the part helper object.
+        if ((0,_formatjs_icu_messageformat_parser__WEBPACK_IMPORTED_MODULE_0__.isDateElement)(el)) {
+            var style = typeof el.style === 'string'
+                ? formats.date[el.style]
+                : (0,_formatjs_icu_messageformat_parser__WEBPACK_IMPORTED_MODULE_0__.isDateTimeSkeleton)(el.style)
+                    ? el.style.parsedOptions
+                    : undefined;
+            result.push({
+                type: PART_TYPE.literal,
+                value: formatters
+                    .getDateTimeFormat(locales, style)
+                    .format(value),
+            });
+            continue;
+        }
+        if ((0,_formatjs_icu_messageformat_parser__WEBPACK_IMPORTED_MODULE_0__.isTimeElement)(el)) {
+            var style = typeof el.style === 'string'
+                ? formats.time[el.style]
+                : (0,_formatjs_icu_messageformat_parser__WEBPACK_IMPORTED_MODULE_0__.isDateTimeSkeleton)(el.style)
+                    ? el.style.parsedOptions
+                    : formats.time.medium;
+            result.push({
+                type: PART_TYPE.literal,
+                value: formatters
+                    .getDateTimeFormat(locales, style)
+                    .format(value),
+            });
+            continue;
+        }
+        if ((0,_formatjs_icu_messageformat_parser__WEBPACK_IMPORTED_MODULE_0__.isNumberElement)(el)) {
+            var style = typeof el.style === 'string'
+                ? formats.number[el.style]
+                : (0,_formatjs_icu_messageformat_parser__WEBPACK_IMPORTED_MODULE_0__.isNumberSkeleton)(el.style)
+                    ? el.style.parsedOptions
+                    : undefined;
+            if (style && style.scale) {
+                value =
+                    value *
+                        (style.scale || 1);
+            }
+            result.push({
+                type: PART_TYPE.literal,
+                value: formatters
+                    .getNumberFormat(locales, style)
+                    .format(value),
+            });
+            continue;
+        }
+        if ((0,_formatjs_icu_messageformat_parser__WEBPACK_IMPORTED_MODULE_0__.isTagElement)(el)) {
+            var children = el.children, value_1 = el.value;
+            var formatFn = values[value_1];
+            if (!isFormatXMLElementFn(formatFn)) {
+                throw new _error__WEBPACK_IMPORTED_MODULE_1__.InvalidValueTypeError(value_1, 'function', originalMessage);
+            }
+            var parts = formatToParts(children, locales, formatters, formats, values, currentPluralValue);
+            var chunks = formatFn(parts.map(function (p) { return p.value; }));
+            if (!Array.isArray(chunks)) {
+                chunks = [chunks];
+            }
+            result.push.apply(result, chunks.map(function (c) {
+                return {
+                    type: typeof c === 'string' ? PART_TYPE.literal : PART_TYPE.object,
+                    value: c,
+                };
+            }));
+        }
+        if ((0,_formatjs_icu_messageformat_parser__WEBPACK_IMPORTED_MODULE_0__.isSelectElement)(el)) {
+            var opt = el.options[value] || el.options.other;
+            if (!opt) {
+                throw new _error__WEBPACK_IMPORTED_MODULE_1__.InvalidValueError(el.value, value, Object.keys(el.options), originalMessage);
+            }
+            result.push.apply(result, formatToParts(opt.value, locales, formatters, formats, values));
+            continue;
+        }
+        if ((0,_formatjs_icu_messageformat_parser__WEBPACK_IMPORTED_MODULE_0__.isPluralElement)(el)) {
+            var opt = el.options["=".concat(value)];
+            if (!opt) {
+                if (!Intl.PluralRules) {
+                    throw new _error__WEBPACK_IMPORTED_MODULE_1__.FormatError("Intl.PluralRules is not available in this environment.\nTry polyfilling it using \"@formatjs/intl-pluralrules\"\n", _error__WEBPACK_IMPORTED_MODULE_1__.ErrorCode.MISSING_INTL_API, originalMessage);
+                }
+                var rule = formatters
+                    .getPluralRules(locales, { type: el.pluralType })
+                    .select(value - (el.offset || 0));
+                opt = el.options[rule] || el.options.other;
+            }
+            if (!opt) {
+                throw new _error__WEBPACK_IMPORTED_MODULE_1__.InvalidValueError(el.value, value, Object.keys(el.options), originalMessage);
+            }
+            result.push.apply(result, formatToParts(opt.value, locales, formatters, formats, values, value - (el.offset || 0)));
+            continue;
+        }
+    }
+    return mergeLiteral(result);
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/react-intl-formatted-duration/dist/module.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/react-intl-formatted-duration/dist/module.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "EXTENDED_FORMAT": () => (/* binding */ EXTENDED_FORMAT),
+/* harmony export */   "TIMER_FORMAT": () => (/* binding */ TIMER_FORMAT),
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var intl_messageformat__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! intl-messageformat */ "./node_modules/intl-messageformat/lib/index.js");
+
+
+
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
+function _objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+
+  return target;
+}
+
+function _objectWithoutProperties(source, excluded) {
+  if (source == null) return {};
+
+  var target = _objectWithoutPropertiesLoose(source, excluded);
+
+  var key, i;
+
+  if (Object.getOwnPropertySymbols) {
+    var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
+
+    for (i = 0; i < sourceSymbolKeys.length; i++) {
+      key = sourceSymbolKeys[i];
+      if (excluded.indexOf(key) >= 0) continue;
+      if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
+      target[key] = source[key];
+    }
+  }
+
+  return target;
+}
+
+function _interopDefault(ex) {
+  return ex && typeof ex === 'object' && 'default' in ex ? ex['default'] : ex;
+}
+
+var IntlMessageFormat = _interopDefault(intl_messageformat__WEBPACK_IMPORTED_MODULE_2__["default"]);
+
+const INITIAL_ZERO = /^0/;
+
+function leftTrim(parts) {
+  let previousEmpty = true;
+  return parts.filter(token => {
+    if (token.type === 'literal' && !token.value.trim()) {
+      if (previousEmpty) return false;
+      previousEmpty = true;
+      return true;
+    } else {
+      previousEmpty = false;
+    }
+
+    return true;
+  });
+}
+
+function trim(parts, trimFirstPaddedValue = false) {
+  const trimmed = leftTrim(leftTrim(parts).reverse()).reverse();
+
+  if (trimFirstPaddedValue) {
+    const first = trimmed.find(token => token.type !== 'literal');
+    first.value = first.value.replace(INITIAL_ZERO, '');
+  }
+
+  return trimmed;
+}
+
+function DurationUnitFormat(locales, options = defaultOptions) {
+  this.locales = locales; // TODO I'm ignoring the unit for now, value is always expressed in seconds
+
+  this.unit = 'second'; // .style determines how the placeholders are converted to plain text
+
+  this.style = options.style || DurationUnitFormat.styles.LONG; // .isTimer determines some special behaviour, we want to keep the 0s
+
+  this.isTimer = this.style === DurationUnitFormat.styles.TIMER; // .format used `seconds`, `minutes`, `hours`, ... as placeholders
+
+  this.format = options.format || (this.isTimer ? '{minutes}:{seconds}' : '{seconds}'); // How to format unit according to style
+
+  this.formatUnits = options.formatUnits || defaultOptions.formatUnits; // .formatDuration determines whether we use a space or not
+
+  this.formatDuration = options.formatDuration || defaultOptions.formatDuration;
+  this.shouldRound = options.round === true;
+}
+
+DurationUnitFormat.units = {
+  DAY: 'day',
+  HOUR: 'hour',
+  MINUTE: 'minute',
+  SECOND: 'second'
+};
+DurationUnitFormat.styles = {
+  CUSTOM: 'custom',
+  TIMER: 'timer',
+  // http://www.unicode.org/cldr/charts/27/summary/pl.html#5556
+  LONG: 'long',
+  SHORT: 'short',
+  NARROW: 'narrow'
+};
+
+DurationUnitFormat.prototype.formatToParts = function (value) {
+  // Extract all the parts that are actually used from the localised format
+  const parts = new IntlMessageFormat(this.format, this.locales).formatToParts({
+    second: {
+      unit: DurationUnitFormat.units.SECOND
+    },
+    seconds: {
+      unit: DurationUnitFormat.units.SECOND
+    },
+    minute: {
+      unit: DurationUnitFormat.units.MINUTE
+    },
+    minutes: {
+      unit: DurationUnitFormat.units.MINUTE
+    },
+    hour: {
+      unit: DurationUnitFormat.units.HOUR
+    },
+    hours: {
+      unit: DurationUnitFormat.units.HOUR
+    },
+    day: {
+      unit: DurationUnitFormat.units.DAY
+    },
+    days: {
+      unit: DurationUnitFormat.units.DAY
+    }
+  }); // Compute the value of each bucket depending on which parts are used
+
+  const buckets = splitSecondsInBuckets(value, this.unit, parts, this.shouldRound); // Each part from the format message could potentially contain multiple parts
+
+  const result = parts.reduce((all, token) => all.concat(this._formatToken(token, buckets)), []);
+  return this._trimOutput(result, parts);
+};
+
+DurationUnitFormat.prototype._formatToken = function (token, buckets) {
+  const {
+    value
+  } = token;
+
+  if (value.unit) {
+    const number = buckets[value.unit];
+    return number || this.isTimer ? this._formatDurationToParts(value.unit, number) : [];
+  } else if (value) {
+    // If there is no .unit it's text, but it could be an empty string
+    return [{
+      type: 'literal',
+      value
+    }];
+  }
+
+  return [];
+};
+
+DurationUnitFormat.prototype._formatDurationToParts = function (unit, number) {
+  if (this.isTimer) {
+    // With timer style, we only show the value
+    return [{
+      type: unit,
+      value: this._formatValue(number)
+    }];
+  } else if (isSpecialStyle(this.style)) {
+    return new Intl.NumberFormat(this.locales, {
+      style: 'unit',
+      unit: unit,
+      unitDisplay: this.style
+    }).formatToParts(number).map(_ => ({
+      // NumberFormat uses 'integer' for types, but I prefer using the unit
+      // This is more similar to what happens in DateTimeFormat
+      type: _.type === 'integer' ? unit : _.type,
+      value: _.value
+    }));
+  } // This is now only needed for the custom formatting
+
+
+  return this.formatDuration.split(SPLIT_POINTS).map(text => {
+    if (text === '{value}') {
+      return {
+        type: unit,
+        value: this._formatValue(number)
+      };
+    }
+
+    if (text === '{unit}') {
+      const message = this.formatUnits[unit] || '{value}';
+      const formattedUnit = new IntlMessageFormat(message, this.locales).format({
+        value: number
+      });
+      return {
+        type: 'unit',
+        value: formattedUnit
+      };
+    }
+
+    if (text) {
+      return {
+        type: 'literal',
+        value: text
+      };
+    }
+  }).filter(Boolean);
+};
+
+DurationUnitFormat.prototype._formatValue = function (number) {
+  return this.isTimer ? number.toString().padStart(2, '0') : number.toString();
+};
+
+DurationUnitFormat.prototype._trimOutput = function (result, parts) {
+  const trimmed = trim(result, this.isTimer);
+
+  if (!trimmed.find(_ => _.type !== 'literal')) {
+    // if everything cancels out and there are only literals,
+    // then return 0 on the lowest available unit
+    const minUnit = [DurationUnitFormat.units.SECOND, DurationUnitFormat.units.MINUTE, DurationUnitFormat.units.HOUR, DurationUnitFormat.units.DAY].find(unit => has(parts, unit));
+    return this._formatDurationToParts(minUnit, 0);
+  }
+
+  return trimmed;
+};
+
+const defaultOptions = {
+  // unit: DurationUnitFormat.units.SECOND,
+  formatDuration: '{value} {unit}',
+  formatUnits: {
+    // custom values
+    [DurationUnitFormat.units.DAY]: '{value, plural, one {day} other {days}}',
+    [DurationUnitFormat.units.HOUR]: '{value, plural, one {hour} other {hours}}',
+    [DurationUnitFormat.units.MINUTE]: '{value, plural, one {minute} other {minutes}}',
+    [DurationUnitFormat.units.SECOND]: '{value, plural, one {second} other {seconds}}'
+  },
+  style: DurationUnitFormat.styles.LONG
+};
+const SPLIT_POINTS = /(\{value\}|\{unit\})/;
+const SECONDS_IN = {
+  day: 24 * 60 * 60,
+  hour: 60 * 60,
+  minute: 60,
+  second: 1
+};
+
+function has(parts, unit) {
+  return !!parts.find(_ => _.value.unit === unit);
+}
+
+function splitSecondsInBuckets(value, valueUnit, parts, shouldRound) {
+  let seconds = value * SECONDS_IN[valueUnit]; // Rounding will only affect the lowest unit
+  // check how many seconds we need to add
+
+  if (shouldRound) {
+    const lowestUnit = [DurationUnitFormat.units.SECOND, DurationUnitFormat.units.MINUTE, DurationUnitFormat.units.HOUR, DurationUnitFormat.units.DAY].find(unit => has(parts, unit)); // These many seconds will be ignored by the lowest unit
+
+    const remainder = seconds % SECONDS_IN[lowestUnit];
+
+    if (2 * remainder >= SECONDS_IN[lowestUnit]) {
+      // The remainder is large, add enough seconds to increse the lowest unit
+      seconds += SECONDS_IN[lowestUnit] - remainder;
+    }
+  }
+
+  const buckets = {};
+  [DurationUnitFormat.units.DAY, DurationUnitFormat.units.HOUR, DurationUnitFormat.units.MINUTE, DurationUnitFormat.units.SECOND].forEach(unit => {
+    if (has(parts, unit)) {
+      buckets[unit] = Math.floor(seconds / SECONDS_IN[unit]);
+      seconds -= buckets[unit] * SECONDS_IN[unit];
+    }
+  });
+  return buckets;
+}
+
+function isSpecialStyle(style) {
+  return [DurationUnitFormat.styles.LONG, DurationUnitFormat.styles.SHORT, DurationUnitFormat.styles.NARROW].includes(style);
+}
+
+var durationUnitFormat_cjs = DurationUnitFormat;
+
+var EXTENDED_FORMAT = 'EXTENDED_FORMAT';
+var TIMER_FORMAT = 'TIMER_FORMAT';
+
+function DurationMessage(_ref) {
+  var _formatUnits;
+
+  var intl = _ref.intl,
+      seconds = _ref.seconds,
+      format = _ref.format,
+      textComponent = _ref.textComponent,
+      unitDisplay = _ref.unitDisplay,
+      valueComponent = _ref.valueComponent,
+      otherProps = _objectWithoutProperties(_ref, ["intl", "seconds", "format", "textComponent", "unitDisplay", "valueComponent"]);
+
+  var actualFormat = intl.messages["react-intl-formatted-duration/custom-format/".concat(format || '')] || format;
+
+  if (!format || format === EXTENDED_FORMAT) {
+    actualFormat = intl.messages['react-intl-formatted-duration.longFormatting'] || '{minutes} {seconds}';
+  }
+
+  if (format === TIMER_FORMAT) {
+    actualFormat = intl.messages['react-intl-formatted-duration.timerFormatting'] || '{minutes}:{seconds}';
+  }
+
+  var actualSytle = unitDisplay;
+
+  if (!actualSytle) {
+    actualSytle = format === TIMER_FORMAT ? durationUnitFormat_cjs.styles.TIMER : durationUnitFormat_cjs.styles.CUSTOM;
+  }
+
+  var parts = new durationUnitFormat_cjs(intl.locale, {
+    format: actualFormat,
+    formatUnits: (_formatUnits = {}, _defineProperty(_formatUnits, durationUnitFormat_cjs.units.DAY, intl.messages['react-intl-formatted-duration.daysUnit'] || '{value, plural, one {day} other {days}}'), _defineProperty(_formatUnits, durationUnitFormat_cjs.units.HOUR, intl.messages['react-intl-formatted-duration.hoursUnit'] || '{value, plural, one {hour} other {hours}}'), _defineProperty(_formatUnits, durationUnitFormat_cjs.units.MINUTE, intl.messages['react-intl-formatted-duration.minutesUnit'] || '{value, plural, one {minute} other {minutes}}'), _defineProperty(_formatUnits, durationUnitFormat_cjs.units.SECOND, intl.messages['react-intl-formatted-duration.secondsUnit'] || '{value, plural, one {second} other {seconds}}'), _formatUnits),
+    formatDuration: intl.messages['react-intl-formatted-duration.duration'] || '{value} {unit}',
+    round: true,
+    // TODO backward compatible, add a prop to configure it
+    style: actualSytle
+  }).formatToParts(seconds);
+  var Text = textComponent || intl.textComponent;
+  var Value = valueComponent || textComponent || intl.textComponent;
+  return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(Text, otherProps, parts.map(function (token) {
+    if (token.type === 'literal' || token.type === 'unit') return token.value;
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(Value, {
+      key: token.type
+    }, token.value);
+  }));
+}
+
+var index = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(DurationMessage);
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (index);
+
+
+
+/***/ }),
+
+/***/ "./node_modules/tslib/tslib.es6.js":
+/*!*****************************************!*\
+  !*** ./node_modules/tslib/tslib.es6.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "__assign": () => (/* binding */ __assign),
+/* harmony export */   "__asyncDelegator": () => (/* binding */ __asyncDelegator),
+/* harmony export */   "__asyncGenerator": () => (/* binding */ __asyncGenerator),
+/* harmony export */   "__asyncValues": () => (/* binding */ __asyncValues),
+/* harmony export */   "__await": () => (/* binding */ __await),
+/* harmony export */   "__awaiter": () => (/* binding */ __awaiter),
+/* harmony export */   "__classPrivateFieldGet": () => (/* binding */ __classPrivateFieldGet),
+/* harmony export */   "__classPrivateFieldSet": () => (/* binding */ __classPrivateFieldSet),
+/* harmony export */   "__createBinding": () => (/* binding */ __createBinding),
+/* harmony export */   "__decorate": () => (/* binding */ __decorate),
+/* harmony export */   "__exportStar": () => (/* binding */ __exportStar),
+/* harmony export */   "__extends": () => (/* binding */ __extends),
+/* harmony export */   "__generator": () => (/* binding */ __generator),
+/* harmony export */   "__importDefault": () => (/* binding */ __importDefault),
+/* harmony export */   "__importStar": () => (/* binding */ __importStar),
+/* harmony export */   "__makeTemplateObject": () => (/* binding */ __makeTemplateObject),
+/* harmony export */   "__metadata": () => (/* binding */ __metadata),
+/* harmony export */   "__param": () => (/* binding */ __param),
+/* harmony export */   "__read": () => (/* binding */ __read),
+/* harmony export */   "__rest": () => (/* binding */ __rest),
+/* harmony export */   "__spread": () => (/* binding */ __spread),
+/* harmony export */   "__spreadArray": () => (/* binding */ __spreadArray),
+/* harmony export */   "__spreadArrays": () => (/* binding */ __spreadArrays),
+/* harmony export */   "__values": () => (/* binding */ __values)
+/* harmony export */ });
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+/* global Reflect, Promise */
+
+var extendStatics = function(d, b) {
+    extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+    return extendStatics(d, b);
+};
+
+function __extends(d, b) {
+    if (typeof b !== "function" && b !== null)
+        throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+    extendStatics(d, b);
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+}
+
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    }
+    return __assign.apply(this, arguments);
+}
+
+function __rest(s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+}
+
+function __decorate(decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+}
+
+function __param(paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+}
+
+function __metadata(metadataKey, metadataValue) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
+}
+
+function __awaiter(thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+}
+
+function __generator(thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+}
+
+var __createBinding = Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+});
+
+function __exportStar(m, o) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(o, p)) __createBinding(o, m, p);
+}
+
+function __values(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+}
+
+function __read(o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+}
+
+/** @deprecated */
+function __spread() {
+    for (var ar = [], i = 0; i < arguments.length; i++)
+        ar = ar.concat(__read(arguments[i]));
+    return ar;
+}
+
+/** @deprecated */
+function __spreadArrays() {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+}
+
+function __spreadArray(to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+}
+
+function __await(v) {
+    return this instanceof __await ? (this.v = v, this) : new __await(v);
+}
+
+function __asyncGenerator(thisArg, _arguments, generator) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var g = generator.apply(thisArg, _arguments || []), i, q = [];
+    return i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i;
+    function verb(n) { if (g[n]) i[n] = function (v) { return new Promise(function (a, b) { q.push([n, v, a, b]) > 1 || resume(n, v); }); }; }
+    function resume(n, v) { try { step(g[n](v)); } catch (e) { settle(q[0][3], e); } }
+    function step(r) { r.value instanceof __await ? Promise.resolve(r.value.v).then(fulfill, reject) : settle(q[0][2], r); }
+    function fulfill(value) { resume("next", value); }
+    function reject(value) { resume("throw", value); }
+    function settle(f, v) { if (f(v), q.shift(), q.length) resume(q[0][0], q[0][1]); }
+}
+
+function __asyncDelegator(o) {
+    var i, p;
+    return i = {}, verb("next"), verb("throw", function (e) { throw e; }), verb("return"), i[Symbol.iterator] = function () { return this; }, i;
+    function verb(n, f) { i[n] = o[n] ? function (v) { return (p = !p) ? { value: __await(o[n](v)), done: n === "return" } : f ? f(v) : v; } : f; }
+}
+
+function __asyncValues(o) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var m = o[Symbol.asyncIterator], i;
+    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
+    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
+    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
+}
+
+function __makeTemplateObject(cooked, raw) {
+    if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
+    return cooked;
+};
+
+var __setModuleDefault = Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+};
+
+function __importStar(mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+}
+
+function __importDefault(mod) {
+    return (mod && mod.__esModule) ? mod : { default: mod };
+}
+
+function __classPrivateFieldGet(receiver, state, kind, f) {
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
+}
+
+function __classPrivateFieldSet(receiver, state, value, kind, f) {
+    if (kind === "m") throw new TypeError("Private method is not writable");
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
+    return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
+}
+
+
+/***/ }),
+
 /***/ "react":
 /*!************************!*\
   !*** external "React" ***!
   \************************/
 /***/ ((module) => {
 
+"use strict";
 module.exports = React;
 
 /***/ }),
@@ -13349,6 +21390,7 @@ module.exports = React;
   \***************************/
 /***/ ((module) => {
 
+"use strict";
 module.exports = ReactDOM;
 
 /***/ }),
@@ -13359,6 +21401,7 @@ module.exports = ReactDOM;
   \****************************/
 /***/ ((module) => {
 
+"use strict";
 module.exports = ReactIntl;
 
 /***/ }),
@@ -13369,27 +21412,4034 @@ module.exports = ReactIntl;
   \*************************/
 /***/ ((module) => {
 
+"use strict";
 module.exports = Tinode;
 
 /***/ }),
 
-/***/ "firebase/app":
-/*!***************************!*\
-  !*** external "firebase" ***!
-  \***************************/
-/***/ ((module) => {
+/***/ "./node_modules/@firebase/app/dist/esm/index.esm2017.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/@firebase/app/dist/esm/index.esm2017.js ***!
+  \**************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-module.exports = firebase;
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "FirebaseError": () => (/* reexport safe */ _firebase_util__WEBPACK_IMPORTED_MODULE_2__.FirebaseError),
+/* harmony export */   "SDK_VERSION": () => (/* binding */ SDK_VERSION),
+/* harmony export */   "_DEFAULT_ENTRY_NAME": () => (/* binding */ DEFAULT_ENTRY_NAME),
+/* harmony export */   "_addComponent": () => (/* binding */ _addComponent),
+/* harmony export */   "_addOrOverwriteComponent": () => (/* binding */ _addOrOverwriteComponent),
+/* harmony export */   "_apps": () => (/* binding */ _apps),
+/* harmony export */   "_clearComponents": () => (/* binding */ _clearComponents),
+/* harmony export */   "_components": () => (/* binding */ _components),
+/* harmony export */   "_getProvider": () => (/* binding */ _getProvider),
+/* harmony export */   "_registerComponent": () => (/* binding */ _registerComponent),
+/* harmony export */   "_removeServiceInstance": () => (/* binding */ _removeServiceInstance),
+/* harmony export */   "deleteApp": () => (/* binding */ deleteApp),
+/* harmony export */   "getApp": () => (/* binding */ getApp),
+/* harmony export */   "getApps": () => (/* binding */ getApps),
+/* harmony export */   "initializeApp": () => (/* binding */ initializeApp),
+/* harmony export */   "onLog": () => (/* binding */ onLog),
+/* harmony export */   "registerVersion": () => (/* binding */ registerVersion),
+/* harmony export */   "setLogLevel": () => (/* binding */ setLogLevel)
+/* harmony export */ });
+/* harmony import */ var _firebase_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/component */ "./node_modules/@firebase/component/dist/esm/index.esm2017.js");
+/* harmony import */ var _firebase_logger__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @firebase/logger */ "./node_modules/@firebase/logger/dist/esm/index.esm2017.js");
+/* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm2017.js");
+
+
+
+
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+class PlatformLoggerServiceImpl {
+    constructor(container) {
+        this.container = container;
+    }
+    // In initial implementation, this will be called by installations on
+    // auth token refresh, and installations will send this string.
+    getPlatformInfoString() {
+        const providers = this.container.getProviders();
+        // Loop through providers and get library/version pairs from any that are
+        // version components.
+        return providers
+            .map(provider => {
+            if (isVersionServiceProvider(provider)) {
+                const service = provider.getImmediate();
+                return `${service.library}/${service.version}`;
+            }
+            else {
+                return null;
+            }
+        })
+            .filter(logString => logString)
+            .join(' ');
+    }
+}
+/**
+ *
+ * @param provider check if this provider provides a VersionService
+ *
+ * NOTE: Using Provider<'app-version'> is a hack to indicate that the provider
+ * provides VersionService. The provider is not necessarily a 'app-version'
+ * provider.
+ */
+function isVersionServiceProvider(provider) {
+    const component = provider.getComponent();
+    return (component === null || component === void 0 ? void 0 : component.type) === "VERSION" /* VERSION */;
+}
+
+const name$o = "@firebase/app";
+const version$1 = "0.7.21";
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const logger = new _firebase_logger__WEBPACK_IMPORTED_MODULE_1__.Logger('@firebase/app');
+
+const name$n = "@firebase/app-compat";
+
+const name$m = "@firebase/analytics-compat";
+
+const name$l = "@firebase/analytics";
+
+const name$k = "@firebase/app-check-compat";
+
+const name$j = "@firebase/app-check";
+
+const name$i = "@firebase/auth";
+
+const name$h = "@firebase/auth-compat";
+
+const name$g = "@firebase/database";
+
+const name$f = "@firebase/database-compat";
+
+const name$e = "@firebase/functions";
+
+const name$d = "@firebase/functions-compat";
+
+const name$c = "@firebase/installations";
+
+const name$b = "@firebase/installations-compat";
+
+const name$a = "@firebase/messaging";
+
+const name$9 = "@firebase/messaging-compat";
+
+const name$8 = "@firebase/performance";
+
+const name$7 = "@firebase/performance-compat";
+
+const name$6 = "@firebase/remote-config";
+
+const name$5 = "@firebase/remote-config-compat";
+
+const name$4 = "@firebase/storage";
+
+const name$3 = "@firebase/storage-compat";
+
+const name$2 = "@firebase/firestore";
+
+const name$1 = "@firebase/firestore-compat";
+
+const name = "firebase";
+const version = "9.6.11";
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * The default app name
+ *
+ * @internal
+ */
+const DEFAULT_ENTRY_NAME = '[DEFAULT]';
+const PLATFORM_LOG_STRING = {
+    [name$o]: 'fire-core',
+    [name$n]: 'fire-core-compat',
+    [name$l]: 'fire-analytics',
+    [name$m]: 'fire-analytics-compat',
+    [name$j]: 'fire-app-check',
+    [name$k]: 'fire-app-check-compat',
+    [name$i]: 'fire-auth',
+    [name$h]: 'fire-auth-compat',
+    [name$g]: 'fire-rtdb',
+    [name$f]: 'fire-rtdb-compat',
+    [name$e]: 'fire-fn',
+    [name$d]: 'fire-fn-compat',
+    [name$c]: 'fire-iid',
+    [name$b]: 'fire-iid-compat',
+    [name$a]: 'fire-fcm',
+    [name$9]: 'fire-fcm-compat',
+    [name$8]: 'fire-perf',
+    [name$7]: 'fire-perf-compat',
+    [name$6]: 'fire-rc',
+    [name$5]: 'fire-rc-compat',
+    [name$4]: 'fire-gcs',
+    [name$3]: 'fire-gcs-compat',
+    [name$2]: 'fire-fst',
+    [name$1]: 'fire-fst-compat',
+    'fire-js': 'fire-js',
+    [name]: 'fire-js-all'
+};
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * @internal
+ */
+const _apps = new Map();
+/**
+ * Registered components.
+ *
+ * @internal
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const _components = new Map();
+/**
+ * @param component - the component being added to this app's container
+ *
+ * @internal
+ */
+function _addComponent(app, component) {
+    try {
+        app.container.addComponent(component);
+    }
+    catch (e) {
+        logger.debug(`Component ${component.name} failed to register with FirebaseApp ${app.name}`, e);
+    }
+}
+/**
+ *
+ * @internal
+ */
+function _addOrOverwriteComponent(app, component) {
+    app.container.addOrOverwriteComponent(component);
+}
+/**
+ *
+ * @param component - the component to register
+ * @returns whether or not the component is registered successfully
+ *
+ * @internal
+ */
+function _registerComponent(component) {
+    const componentName = component.name;
+    if (_components.has(componentName)) {
+        logger.debug(`There were multiple attempts to register component ${componentName}.`);
+        return false;
+    }
+    _components.set(componentName, component);
+    // add the component to existing app instances
+    for (const app of _apps.values()) {
+        _addComponent(app, component);
+    }
+    return true;
+}
+/**
+ *
+ * @param app - FirebaseApp instance
+ * @param name - service name
+ *
+ * @returns the provider for the service with the matching name
+ *
+ * @internal
+ */
+function _getProvider(app, name) {
+    const heartbeatController = app.container
+        .getProvider('heartbeat')
+        .getImmediate({ optional: true });
+    if (heartbeatController) {
+        void heartbeatController.triggerHeartbeat();
+    }
+    return app.container.getProvider(name);
+}
+/**
+ *
+ * @param app - FirebaseApp instance
+ * @param name - service name
+ * @param instanceIdentifier - service instance identifier in case the service supports multiple instances
+ *
+ * @internal
+ */
+function _removeServiceInstance(app, name, instanceIdentifier = DEFAULT_ENTRY_NAME) {
+    _getProvider(app, name).clearInstance(instanceIdentifier);
+}
+/**
+ * Test only
+ *
+ * @internal
+ */
+function _clearComponents() {
+    _components.clear();
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const ERRORS = {
+    ["no-app" /* NO_APP */]: "No Firebase App '{$appName}' has been created - " +
+        'call Firebase App.initializeApp()',
+    ["bad-app-name" /* BAD_APP_NAME */]: "Illegal App name: '{$appName}",
+    ["duplicate-app" /* DUPLICATE_APP */]: "Firebase App named '{$appName}' already exists with different options or config",
+    ["app-deleted" /* APP_DELETED */]: "Firebase App named '{$appName}' already deleted",
+    ["invalid-app-argument" /* INVALID_APP_ARGUMENT */]: 'firebase.{$appName}() takes either no argument or a ' +
+        'Firebase App instance.',
+    ["invalid-log-argument" /* INVALID_LOG_ARGUMENT */]: 'First argument to `onLog` must be null or a function.',
+    ["storage-open" /* STORAGE_OPEN */]: 'Error thrown when opening storage. Original error: {$originalErrorMessage}.',
+    ["storage-get" /* STORAGE_GET */]: 'Error thrown when reading from storage. Original error: {$originalErrorMessage}.',
+    ["storage-set" /* STORAGE_WRITE */]: 'Error thrown when writing to storage. Original error: {$originalErrorMessage}.',
+    ["storage-delete" /* STORAGE_DELETE */]: 'Error thrown when deleting from storage. Original error: {$originalErrorMessage}.'
+};
+const ERROR_FACTORY = new _firebase_util__WEBPACK_IMPORTED_MODULE_2__.ErrorFactory('app', 'Firebase', ERRORS);
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+class FirebaseAppImpl {
+    constructor(options, config, container) {
+        this._isDeleted = false;
+        this._options = Object.assign({}, options);
+        this._config = Object.assign({}, config);
+        this._name = config.name;
+        this._automaticDataCollectionEnabled =
+            config.automaticDataCollectionEnabled;
+        this._container = container;
+        this.container.addComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component('app', () => this, "PUBLIC" /* PUBLIC */));
+    }
+    get automaticDataCollectionEnabled() {
+        this.checkDestroyed();
+        return this._automaticDataCollectionEnabled;
+    }
+    set automaticDataCollectionEnabled(val) {
+        this.checkDestroyed();
+        this._automaticDataCollectionEnabled = val;
+    }
+    get name() {
+        this.checkDestroyed();
+        return this._name;
+    }
+    get options() {
+        this.checkDestroyed();
+        return this._options;
+    }
+    get config() {
+        this.checkDestroyed();
+        return this._config;
+    }
+    get container() {
+        return this._container;
+    }
+    get isDeleted() {
+        return this._isDeleted;
+    }
+    set isDeleted(val) {
+        this._isDeleted = val;
+    }
+    /**
+     * This function will throw an Error if the App has already been deleted -
+     * use before performing API actions on the App.
+     */
+    checkDestroyed() {
+        if (this.isDeleted) {
+            throw ERROR_FACTORY.create("app-deleted" /* APP_DELETED */, { appName: this._name });
+        }
+    }
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * The current SDK version.
+ *
+ * @public
+ */
+const SDK_VERSION = version;
+function initializeApp(options, rawConfig = {}) {
+    if (typeof rawConfig !== 'object') {
+        const name = rawConfig;
+        rawConfig = { name };
+    }
+    const config = Object.assign({ name: DEFAULT_ENTRY_NAME, automaticDataCollectionEnabled: false }, rawConfig);
+    const name = config.name;
+    if (typeof name !== 'string' || !name) {
+        throw ERROR_FACTORY.create("bad-app-name" /* BAD_APP_NAME */, {
+            appName: String(name)
+        });
+    }
+    const existingApp = _apps.get(name);
+    if (existingApp) {
+        // return the existing app if options and config deep equal the ones in the existing app.
+        if ((0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.deepEqual)(options, existingApp.options) &&
+            (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.deepEqual)(config, existingApp.config)) {
+            return existingApp;
+        }
+        else {
+            throw ERROR_FACTORY.create("duplicate-app" /* DUPLICATE_APP */, { appName: name });
+        }
+    }
+    const container = new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.ComponentContainer(name);
+    for (const component of _components.values()) {
+        container.addComponent(component);
+    }
+    const newApp = new FirebaseAppImpl(options, config, container);
+    _apps.set(name, newApp);
+    return newApp;
+}
+/**
+ * Retrieves a {@link @firebase/app#FirebaseApp} instance.
+ *
+ * When called with no arguments, the default app is returned. When an app name
+ * is provided, the app corresponding to that name is returned.
+ *
+ * An exception is thrown if the app being retrieved has not yet been
+ * initialized.
+ *
+ * @example
+ * ```javascript
+ * // Return the default app
+ * const app = getApp();
+ * ```
+ *
+ * @example
+ * ```javascript
+ * // Return a named app
+ * const otherApp = getApp("otherApp");
+ * ```
+ *
+ * @param name - Optional name of the app to return. If no name is
+ *   provided, the default is `"[DEFAULT]"`.
+ *
+ * @returns The app corresponding to the provided app name.
+ *   If no app name is provided, the default app is returned.
+ *
+ * @public
+ */
+function getApp(name = DEFAULT_ENTRY_NAME) {
+    const app = _apps.get(name);
+    if (!app) {
+        throw ERROR_FACTORY.create("no-app" /* NO_APP */, { appName: name });
+    }
+    return app;
+}
+/**
+ * A (read-only) array of all initialized apps.
+ * @public
+ */
+function getApps() {
+    return Array.from(_apps.values());
+}
+/**
+ * Renders this app unusable and frees the resources of all associated
+ * services.
+ *
+ * @example
+ * ```javascript
+ * deleteApp(app)
+ *   .then(function() {
+ *     console.log("App deleted successfully");
+ *   })
+ *   .catch(function(error) {
+ *     console.log("Error deleting app:", error);
+ *   });
+ * ```
+ *
+ * @public
+ */
+async function deleteApp(app) {
+    const name = app.name;
+    if (_apps.has(name)) {
+        _apps.delete(name);
+        await Promise.all(app.container
+            .getProviders()
+            .map(provider => provider.delete()));
+        app.isDeleted = true;
+    }
+}
+/**
+ * Registers a library's name and version for platform logging purposes.
+ * @param library - Name of 1p or 3p library (e.g. firestore, angularfire)
+ * @param version - Current version of that library.
+ * @param variant - Bundle variant, e.g., node, rn, etc.
+ *
+ * @public
+ */
+function registerVersion(libraryKeyOrName, version, variant) {
+    var _a;
+    // TODO: We can use this check to whitelist strings when/if we set up
+    // a good whitelist system.
+    let library = (_a = PLATFORM_LOG_STRING[libraryKeyOrName]) !== null && _a !== void 0 ? _a : libraryKeyOrName;
+    if (variant) {
+        library += `-${variant}`;
+    }
+    const libraryMismatch = library.match(/\s|\//);
+    const versionMismatch = version.match(/\s|\//);
+    if (libraryMismatch || versionMismatch) {
+        const warning = [
+            `Unable to register library "${library}" with version "${version}":`
+        ];
+        if (libraryMismatch) {
+            warning.push(`library name "${library}" contains illegal characters (whitespace or "/")`);
+        }
+        if (libraryMismatch && versionMismatch) {
+            warning.push('and');
+        }
+        if (versionMismatch) {
+            warning.push(`version name "${version}" contains illegal characters (whitespace or "/")`);
+        }
+        logger.warn(warning.join(' '));
+        return;
+    }
+    _registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component(`${library}-version`, () => ({ library, version }), "VERSION" /* VERSION */));
+}
+/**
+ * Sets log handler for all Firebase SDKs.
+ * @param logCallback - An optional custom log handler that executes user code whenever
+ * the Firebase SDK makes a logging call.
+ *
+ * @public
+ */
+function onLog(logCallback, options) {
+    if (logCallback !== null && typeof logCallback !== 'function') {
+        throw ERROR_FACTORY.create("invalid-log-argument" /* INVALID_LOG_ARGUMENT */);
+    }
+    (0,_firebase_logger__WEBPACK_IMPORTED_MODULE_1__.setUserLogHandler)(logCallback, options);
+}
+/**
+ * Sets log level for all Firebase SDKs.
+ *
+ * All of the log types above the current log level are captured (i.e. if
+ * you set the log level to `info`, errors are logged, but `debug` and
+ * `verbose` logs are not).
+ *
+ * @public
+ */
+function setLogLevel(logLevel) {
+    (0,_firebase_logger__WEBPACK_IMPORTED_MODULE_1__.setLogLevel)(logLevel);
+}
+
+/**
+ * @license
+ * Copyright 2021 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const DB_NAME = 'firebase-heartbeat-database';
+const DB_VERSION = 1;
+const STORE_NAME = 'firebase-heartbeat-store';
+let dbPromise = null;
+function getDbPromise() {
+    if (!dbPromise) {
+        dbPromise = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.openDB)(DB_NAME, DB_VERSION, (db, oldVersion) => {
+            // We don't use 'break' in this switch statement, the fall-through
+            // behavior is what we want, because if there are multiple versions between
+            // the old version and the current version, we want ALL the migrations
+            // that correspond to those versions to run, not only the last one.
+            // eslint-disable-next-line default-case
+            switch (oldVersion) {
+                case 0:
+                    db.createObjectStore(STORE_NAME);
+            }
+        }).catch(e => {
+            throw ERROR_FACTORY.create("storage-open" /* STORAGE_OPEN */, {
+                originalErrorMessage: e.message
+            });
+        });
+    }
+    return dbPromise;
+}
+async function readHeartbeatsFromIndexedDB(app) {
+    try {
+        const db = await getDbPromise();
+        return db
+            .transaction(STORE_NAME)
+            .objectStore(STORE_NAME)
+            .get(computeKey(app));
+    }
+    catch (e) {
+        throw ERROR_FACTORY.create("storage-get" /* STORAGE_GET */, {
+            originalErrorMessage: e.message
+        });
+    }
+}
+async function writeHeartbeatsToIndexedDB(app, heartbeatObject) {
+    try {
+        const db = await getDbPromise();
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        const objectStore = tx.objectStore(STORE_NAME);
+        await objectStore.put(heartbeatObject, computeKey(app));
+        return tx.complete;
+    }
+    catch (e) {
+        throw ERROR_FACTORY.create("storage-set" /* STORAGE_WRITE */, {
+            originalErrorMessage: e.message
+        });
+    }
+}
+function computeKey(app) {
+    return `${app.name}!${app.options.appId}`;
+}
+
+/**
+ * @license
+ * Copyright 2021 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const MAX_HEADER_BYTES = 1024;
+// 30 days
+const STORED_HEARTBEAT_RETENTION_MAX_MILLIS = 30 * 24 * 60 * 60 * 1000;
+class HeartbeatServiceImpl {
+    constructor(container) {
+        this.container = container;
+        /**
+         * In-memory cache for heartbeats, used by getHeartbeatsHeader() to generate
+         * the header string.
+         * Stores one record per date. This will be consolidated into the standard
+         * format of one record per user agent string before being sent as a header.
+         * Populated from indexedDB when the controller is instantiated and should
+         * be kept in sync with indexedDB.
+         * Leave public for easier testing.
+         */
+        this._heartbeatsCache = null;
+        const app = this.container.getProvider('app').getImmediate();
+        this._storage = new HeartbeatStorageImpl(app);
+        this._heartbeatsCachePromise = this._storage.read().then(result => {
+            this._heartbeatsCache = result;
+            return result;
+        });
+    }
+    /**
+     * Called to report a heartbeat. The function will generate
+     * a HeartbeatsByUserAgent object, update heartbeatsCache, and persist it
+     * to IndexedDB.
+     * Note that we only store one heartbeat per day. So if a heartbeat for today is
+     * already logged, subsequent calls to this function in the same day will be ignored.
+     */
+    async triggerHeartbeat() {
+        const platformLogger = this.container
+            .getProvider('platform-logger')
+            .getImmediate();
+        // This is the "Firebase user agent" string from the platform logger
+        // service, not the browser user agent.
+        const agent = platformLogger.getPlatformInfoString();
+        const date = getUTCDateString();
+        if (this._heartbeatsCache === null) {
+            this._heartbeatsCache = await this._heartbeatsCachePromise;
+        }
+        // Do not store a heartbeat if one is already stored for this day
+        // or if a header has already been sent today.
+        if (this._heartbeatsCache.lastSentHeartbeatDate === date ||
+            this._heartbeatsCache.heartbeats.some(singleDateHeartbeat => singleDateHeartbeat.date === date)) {
+            return;
+        }
+        else {
+            // There is no entry for this date. Create one.
+            this._heartbeatsCache.heartbeats.push({ date, agent });
+        }
+        // Remove entries older than 30 days.
+        this._heartbeatsCache.heartbeats = this._heartbeatsCache.heartbeats.filter(singleDateHeartbeat => {
+            const hbTimestamp = new Date(singleDateHeartbeat.date).valueOf();
+            const now = Date.now();
+            return now - hbTimestamp <= STORED_HEARTBEAT_RETENTION_MAX_MILLIS;
+        });
+        return this._storage.overwrite(this._heartbeatsCache);
+    }
+    /**
+     * Returns a base64 encoded string which can be attached to the heartbeat-specific header directly.
+     * It also clears all heartbeats from memory as well as in IndexedDB.
+     *
+     * NOTE: Consuming product SDKs should not send the header if this method
+     * returns an empty string.
+     */
+    async getHeartbeatsHeader() {
+        if (this._heartbeatsCache === null) {
+            await this._heartbeatsCachePromise;
+        }
+        // If it's still null or the array is empty, there is no data to send.
+        if (this._heartbeatsCache === null ||
+            this._heartbeatsCache.heartbeats.length === 0) {
+            return '';
+        }
+        const date = getUTCDateString();
+        // Extract as many heartbeats from the cache as will fit under the size limit.
+        const { heartbeatsToSend, unsentEntries } = extractHeartbeatsForHeader(this._heartbeatsCache.heartbeats);
+        const headerString = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.base64urlEncodeWithoutPadding)(JSON.stringify({ version: 2, heartbeats: heartbeatsToSend }));
+        // Store last sent date to prevent another being logged/sent for the same day.
+        this._heartbeatsCache.lastSentHeartbeatDate = date;
+        if (unsentEntries.length > 0) {
+            // Store any unsent entries if they exist.
+            this._heartbeatsCache.heartbeats = unsentEntries;
+            // This seems more likely than emptying the array (below) to lead to some odd state
+            // since the cache isn't empty and this will be called again on the next request,
+            // and is probably safest if we await it.
+            await this._storage.overwrite(this._heartbeatsCache);
+        }
+        else {
+            this._heartbeatsCache.heartbeats = [];
+            // Do not wait for this, to reduce latency.
+            void this._storage.overwrite(this._heartbeatsCache);
+        }
+        return headerString;
+    }
+}
+function getUTCDateString() {
+    const today = new Date();
+    // Returns date format 'YYYY-MM-DD'
+    return today.toISOString().substring(0, 10);
+}
+function extractHeartbeatsForHeader(heartbeatsCache, maxSize = MAX_HEADER_BYTES) {
+    // Heartbeats grouped by user agent in the standard format to be sent in
+    // the header.
+    const heartbeatsToSend = [];
+    // Single date format heartbeats that are not sent.
+    let unsentEntries = heartbeatsCache.slice();
+    for (const singleDateHeartbeat of heartbeatsCache) {
+        // Look for an existing entry with the same user agent.
+        const heartbeatEntry = heartbeatsToSend.find(hb => hb.agent === singleDateHeartbeat.agent);
+        if (!heartbeatEntry) {
+            // If no entry for this user agent exists, create one.
+            heartbeatsToSend.push({
+                agent: singleDateHeartbeat.agent,
+                dates: [singleDateHeartbeat.date]
+            });
+            if (countBytes(heartbeatsToSend) > maxSize) {
+                // If the header would exceed max size, remove the added heartbeat
+                // entry and stop adding to the header.
+                heartbeatsToSend.pop();
+                break;
+            }
+        }
+        else {
+            heartbeatEntry.dates.push(singleDateHeartbeat.date);
+            // If the header would exceed max size, remove the added date
+            // and stop adding to the header.
+            if (countBytes(heartbeatsToSend) > maxSize) {
+                heartbeatEntry.dates.pop();
+                break;
+            }
+        }
+        // Pop unsent entry from queue. (Skipped if adding the entry exceeded
+        // quota and the loop breaks early.)
+        unsentEntries = unsentEntries.slice(1);
+    }
+    return {
+        heartbeatsToSend,
+        unsentEntries
+    };
+}
+class HeartbeatStorageImpl {
+    constructor(app) {
+        this.app = app;
+        this._canUseIndexedDBPromise = this.runIndexedDBEnvironmentCheck();
+    }
+    async runIndexedDBEnvironmentCheck() {
+        if (!(0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.isIndexedDBAvailable)()) {
+            return false;
+        }
+        else {
+            return (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.validateIndexedDBOpenable)()
+                .then(() => true)
+                .catch(() => false);
+        }
+    }
+    /**
+     * Read all heartbeats.
+     */
+    async read() {
+        const canUseIndexedDB = await this._canUseIndexedDBPromise;
+        if (!canUseIndexedDB) {
+            return { heartbeats: [] };
+        }
+        else {
+            const idbHeartbeatObject = await readHeartbeatsFromIndexedDB(this.app);
+            return idbHeartbeatObject || { heartbeats: [] };
+        }
+    }
+    // overwrite the storage with the provided heartbeats
+    async overwrite(heartbeatsObject) {
+        var _a;
+        const canUseIndexedDB = await this._canUseIndexedDBPromise;
+        if (!canUseIndexedDB) {
+            return;
+        }
+        else {
+            const existingHeartbeatsObject = await this.read();
+            return writeHeartbeatsToIndexedDB(this.app, {
+                lastSentHeartbeatDate: (_a = heartbeatsObject.lastSentHeartbeatDate) !== null && _a !== void 0 ? _a : existingHeartbeatsObject.lastSentHeartbeatDate,
+                heartbeats: heartbeatsObject.heartbeats
+            });
+        }
+    }
+    // add heartbeats
+    async add(heartbeatsObject) {
+        var _a;
+        const canUseIndexedDB = await this._canUseIndexedDBPromise;
+        if (!canUseIndexedDB) {
+            return;
+        }
+        else {
+            const existingHeartbeatsObject = await this.read();
+            return writeHeartbeatsToIndexedDB(this.app, {
+                lastSentHeartbeatDate: (_a = heartbeatsObject.lastSentHeartbeatDate) !== null && _a !== void 0 ? _a : existingHeartbeatsObject.lastSentHeartbeatDate,
+                heartbeats: [
+                    ...existingHeartbeatsObject.heartbeats,
+                    ...heartbeatsObject.heartbeats
+                ]
+            });
+        }
+    }
+}
+/**
+ * Calculate bytes of a HeartbeatsByUserAgent array after being wrapped
+ * in a platform logging header JSON object, stringified, and converted
+ * to base 64.
+ */
+function countBytes(heartbeatsCache) {
+    // base64 has a restricted set of characters, all of which should be 1 byte.
+    return (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.base64urlEncodeWithoutPadding)(
+    // heartbeatsCache wrapper properties
+    JSON.stringify({ version: 2, heartbeats: heartbeatsCache })).length;
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function registerCoreComponents(variant) {
+    _registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component('platform-logger', container => new PlatformLoggerServiceImpl(container), "PRIVATE" /* PRIVATE */));
+    _registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component('heartbeat', container => new HeartbeatServiceImpl(container), "PRIVATE" /* PRIVATE */));
+    // Register `app` package.
+    registerVersion(name$o, version$1, variant);
+    // BUILD_TARGET will be replaced by values like esm5, esm2017, cjs5, etc during the compilation
+    registerVersion(name$o, version$1, 'esm2017');
+    // Register platform SDK identifier (no version).
+    registerVersion('fire-js', '');
+}
+
+/**
+ * Firebase App
+ *
+ * @remarks This package coordinates the communication between the different Firebase components
+ * @packageDocumentation
+ */
+registerCoreComponents('');
+
+
+//# sourceMappingURL=index.esm2017.js.map
+
 
 /***/ }),
 
-/***/ "firebase/messaging":
-/*!*****************************************!*\
-  !*** external ["firebase","messaging"] ***!
-  \*****************************************/
-/***/ ((module) => {
+/***/ "./node_modules/@firebase/component/dist/esm/index.esm2017.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/@firebase/component/dist/esm/index.esm2017.js ***!
+  \********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-module.exports = firebase.messaging;
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Component": () => (/* binding */ Component),
+/* harmony export */   "ComponentContainer": () => (/* binding */ ComponentContainer),
+/* harmony export */   "Provider": () => (/* binding */ Provider)
+/* harmony export */ });
+/* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm2017.js");
+
+
+/**
+ * Component for service name T, e.g. `auth`, `auth-internal`
+ */
+class Component {
+    /**
+     *
+     * @param name The public service name, e.g. app, auth, firestore, database
+     * @param instanceFactory Service factory responsible for creating the public interface
+     * @param type whether the service provided by the component is public or private
+     */
+    constructor(name, instanceFactory, type) {
+        this.name = name;
+        this.instanceFactory = instanceFactory;
+        this.type = type;
+        this.multipleInstances = false;
+        /**
+         * Properties to be added to the service namespace
+         */
+        this.serviceProps = {};
+        this.instantiationMode = "LAZY" /* LAZY */;
+        this.onInstanceCreated = null;
+    }
+    setInstantiationMode(mode) {
+        this.instantiationMode = mode;
+        return this;
+    }
+    setMultipleInstances(multipleInstances) {
+        this.multipleInstances = multipleInstances;
+        return this;
+    }
+    setServiceProps(props) {
+        this.serviceProps = props;
+        return this;
+    }
+    setInstanceCreatedCallback(callback) {
+        this.onInstanceCreated = callback;
+        return this;
+    }
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const DEFAULT_ENTRY_NAME = '[DEFAULT]';
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Provider for instance for service name T, e.g. 'auth', 'auth-internal'
+ * NameServiceMapping[T] is an alias for the type of the instance
+ */
+class Provider {
+    constructor(name, container) {
+        this.name = name;
+        this.container = container;
+        this.component = null;
+        this.instances = new Map();
+        this.instancesDeferred = new Map();
+        this.instancesOptions = new Map();
+        this.onInitCallbacks = new Map();
+    }
+    /**
+     * @param identifier A provider can provide mulitple instances of a service
+     * if this.component.multipleInstances is true.
+     */
+    get(identifier) {
+        // if multipleInstances is not supported, use the default name
+        const normalizedIdentifier = this.normalizeInstanceIdentifier(identifier);
+        if (!this.instancesDeferred.has(normalizedIdentifier)) {
+            const deferred = new _firebase_util__WEBPACK_IMPORTED_MODULE_0__.Deferred();
+            this.instancesDeferred.set(normalizedIdentifier, deferred);
+            if (this.isInitialized(normalizedIdentifier) ||
+                this.shouldAutoInitialize()) {
+                // initialize the service if it can be auto-initialized
+                try {
+                    const instance = this.getOrInitializeService({
+                        instanceIdentifier: normalizedIdentifier
+                    });
+                    if (instance) {
+                        deferred.resolve(instance);
+                    }
+                }
+                catch (e) {
+                    // when the instance factory throws an exception during get(), it should not cause
+                    // a fatal error. We just return the unresolved promise in this case.
+                }
+            }
+        }
+        return this.instancesDeferred.get(normalizedIdentifier).promise;
+    }
+    getImmediate(options) {
+        var _a;
+        // if multipleInstances is not supported, use the default name
+        const normalizedIdentifier = this.normalizeInstanceIdentifier(options === null || options === void 0 ? void 0 : options.identifier);
+        const optional = (_a = options === null || options === void 0 ? void 0 : options.optional) !== null && _a !== void 0 ? _a : false;
+        if (this.isInitialized(normalizedIdentifier) ||
+            this.shouldAutoInitialize()) {
+            try {
+                return this.getOrInitializeService({
+                    instanceIdentifier: normalizedIdentifier
+                });
+            }
+            catch (e) {
+                if (optional) {
+                    return null;
+                }
+                else {
+                    throw e;
+                }
+            }
+        }
+        else {
+            // In case a component is not initialized and should/can not be auto-initialized at the moment, return null if the optional flag is set, or throw
+            if (optional) {
+                return null;
+            }
+            else {
+                throw Error(`Service ${this.name} is not available`);
+            }
+        }
+    }
+    getComponent() {
+        return this.component;
+    }
+    setComponent(component) {
+        if (component.name !== this.name) {
+            throw Error(`Mismatching Component ${component.name} for Provider ${this.name}.`);
+        }
+        if (this.component) {
+            throw Error(`Component for ${this.name} has already been provided`);
+        }
+        this.component = component;
+        // return early without attempting to initialize the component if the component requires explicit initialization (calling `Provider.initialize()`)
+        if (!this.shouldAutoInitialize()) {
+            return;
+        }
+        // if the service is eager, initialize the default instance
+        if (isComponentEager(component)) {
+            try {
+                this.getOrInitializeService({ instanceIdentifier: DEFAULT_ENTRY_NAME });
+            }
+            catch (e) {
+                // when the instance factory for an eager Component throws an exception during the eager
+                // initialization, it should not cause a fatal error.
+                // TODO: Investigate if we need to make it configurable, because some component may want to cause
+                // a fatal error in this case?
+            }
+        }
+        // Create service instances for the pending promises and resolve them
+        // NOTE: if this.multipleInstances is false, only the default instance will be created
+        // and all promises with resolve with it regardless of the identifier.
+        for (const [instanceIdentifier, instanceDeferred] of this.instancesDeferred.entries()) {
+            const normalizedIdentifier = this.normalizeInstanceIdentifier(instanceIdentifier);
+            try {
+                // `getOrInitializeService()` should always return a valid instance since a component is guaranteed. use ! to make typescript happy.
+                const instance = this.getOrInitializeService({
+                    instanceIdentifier: normalizedIdentifier
+                });
+                instanceDeferred.resolve(instance);
+            }
+            catch (e) {
+                // when the instance factory throws an exception, it should not cause
+                // a fatal error. We just leave the promise unresolved.
+            }
+        }
+    }
+    clearInstance(identifier = DEFAULT_ENTRY_NAME) {
+        this.instancesDeferred.delete(identifier);
+        this.instancesOptions.delete(identifier);
+        this.instances.delete(identifier);
+    }
+    // app.delete() will call this method on every provider to delete the services
+    // TODO: should we mark the provider as deleted?
+    async delete() {
+        const services = Array.from(this.instances.values());
+        await Promise.all([
+            ...services
+                .filter(service => 'INTERNAL' in service) // legacy services
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                .map(service => service.INTERNAL.delete()),
+            ...services
+                .filter(service => '_delete' in service) // modularized services
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                .map(service => service._delete())
+        ]);
+    }
+    isComponentSet() {
+        return this.component != null;
+    }
+    isInitialized(identifier = DEFAULT_ENTRY_NAME) {
+        return this.instances.has(identifier);
+    }
+    getOptions(identifier = DEFAULT_ENTRY_NAME) {
+        return this.instancesOptions.get(identifier) || {};
+    }
+    initialize(opts = {}) {
+        const { options = {} } = opts;
+        const normalizedIdentifier = this.normalizeInstanceIdentifier(opts.instanceIdentifier);
+        if (this.isInitialized(normalizedIdentifier)) {
+            throw Error(`${this.name}(${normalizedIdentifier}) has already been initialized`);
+        }
+        if (!this.isComponentSet()) {
+            throw Error(`Component ${this.name} has not been registered yet`);
+        }
+        const instance = this.getOrInitializeService({
+            instanceIdentifier: normalizedIdentifier,
+            options
+        });
+        // resolve any pending promise waiting for the service instance
+        for (const [instanceIdentifier, instanceDeferred] of this.instancesDeferred.entries()) {
+            const normalizedDeferredIdentifier = this.normalizeInstanceIdentifier(instanceIdentifier);
+            if (normalizedIdentifier === normalizedDeferredIdentifier) {
+                instanceDeferred.resolve(instance);
+            }
+        }
+        return instance;
+    }
+    /**
+     *
+     * @param callback - a function that will be invoked  after the provider has been initialized by calling provider.initialize().
+     * The function is invoked SYNCHRONOUSLY, so it should not execute any longrunning tasks in order to not block the program.
+     *
+     * @param identifier An optional instance identifier
+     * @returns a function to unregister the callback
+     */
+    onInit(callback, identifier) {
+        var _a;
+        const normalizedIdentifier = this.normalizeInstanceIdentifier(identifier);
+        const existingCallbacks = (_a = this.onInitCallbacks.get(normalizedIdentifier)) !== null && _a !== void 0 ? _a : new Set();
+        existingCallbacks.add(callback);
+        this.onInitCallbacks.set(normalizedIdentifier, existingCallbacks);
+        const existingInstance = this.instances.get(normalizedIdentifier);
+        if (existingInstance) {
+            callback(existingInstance, normalizedIdentifier);
+        }
+        return () => {
+            existingCallbacks.delete(callback);
+        };
+    }
+    /**
+     * Invoke onInit callbacks synchronously
+     * @param instance the service instance`
+     */
+    invokeOnInitCallbacks(instance, identifier) {
+        const callbacks = this.onInitCallbacks.get(identifier);
+        if (!callbacks) {
+            return;
+        }
+        for (const callback of callbacks) {
+            try {
+                callback(instance, identifier);
+            }
+            catch (_a) {
+                // ignore errors in the onInit callback
+            }
+        }
+    }
+    getOrInitializeService({ instanceIdentifier, options = {} }) {
+        let instance = this.instances.get(instanceIdentifier);
+        if (!instance && this.component) {
+            instance = this.component.instanceFactory(this.container, {
+                instanceIdentifier: normalizeIdentifierForFactory(instanceIdentifier),
+                options
+            });
+            this.instances.set(instanceIdentifier, instance);
+            this.instancesOptions.set(instanceIdentifier, options);
+            /**
+             * Invoke onInit listeners.
+             * Note this.component.onInstanceCreated is different, which is used by the component creator,
+             * while onInit listeners are registered by consumers of the provider.
+             */
+            this.invokeOnInitCallbacks(instance, instanceIdentifier);
+            /**
+             * Order is important
+             * onInstanceCreated() should be called after this.instances.set(instanceIdentifier, instance); which
+             * makes `isInitialized()` return true.
+             */
+            if (this.component.onInstanceCreated) {
+                try {
+                    this.component.onInstanceCreated(this.container, instanceIdentifier, instance);
+                }
+                catch (_a) {
+                    // ignore errors in the onInstanceCreatedCallback
+                }
+            }
+        }
+        return instance || null;
+    }
+    normalizeInstanceIdentifier(identifier = DEFAULT_ENTRY_NAME) {
+        if (this.component) {
+            return this.component.multipleInstances ? identifier : DEFAULT_ENTRY_NAME;
+        }
+        else {
+            return identifier; // assume multiple instances are supported before the component is provided.
+        }
+    }
+    shouldAutoInitialize() {
+        return (!!this.component &&
+            this.component.instantiationMode !== "EXPLICIT" /* EXPLICIT */);
+    }
+}
+// undefined should be passed to the service factory for the default instance
+function normalizeIdentifierForFactory(identifier) {
+    return identifier === DEFAULT_ENTRY_NAME ? undefined : identifier;
+}
+function isComponentEager(component) {
+    return component.instantiationMode === "EAGER" /* EAGER */;
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * ComponentContainer that provides Providers for service name T, e.g. `auth`, `auth-internal`
+ */
+class ComponentContainer {
+    constructor(name) {
+        this.name = name;
+        this.providers = new Map();
+    }
+    /**
+     *
+     * @param component Component being added
+     * @param overwrite When a component with the same name has already been registered,
+     * if overwrite is true: overwrite the existing component with the new component and create a new
+     * provider with the new component. It can be useful in tests where you want to use different mocks
+     * for different tests.
+     * if overwrite is false: throw an exception
+     */
+    addComponent(component) {
+        const provider = this.getProvider(component.name);
+        if (provider.isComponentSet()) {
+            throw new Error(`Component ${component.name} has already been registered with ${this.name}`);
+        }
+        provider.setComponent(component);
+    }
+    addOrOverwriteComponent(component) {
+        const provider = this.getProvider(component.name);
+        if (provider.isComponentSet()) {
+            // delete the existing provider from the container, so we can register the new component
+            this.providers.delete(component.name);
+        }
+        this.addComponent(component);
+    }
+    /**
+     * getProvider provides a type safe interface where it can only be called with a field name
+     * present in NameServiceMapping interface.
+     *
+     * Firebase SDKs providing services should extend NameServiceMapping interface to register
+     * themselves.
+     */
+    getProvider(name) {
+        if (this.providers.has(name)) {
+            return this.providers.get(name);
+        }
+        // create a Provider for a service that hasn't registered with Firebase
+        const provider = new Provider(name, this);
+        this.providers.set(name, provider);
+        return provider;
+    }
+    getProviders() {
+        return Array.from(this.providers.values());
+    }
+}
+
+
+//# sourceMappingURL=index.esm2017.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/@firebase/installations/dist/esm/index.esm2017.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/@firebase/installations/dist/esm/index.esm2017.js ***!
+  \************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "deleteInstallations": () => (/* binding */ deleteInstallations),
+/* harmony export */   "getId": () => (/* binding */ getId),
+/* harmony export */   "getInstallations": () => (/* binding */ getInstallations),
+/* harmony export */   "getToken": () => (/* binding */ getToken),
+/* harmony export */   "onIdChange": () => (/* binding */ onIdChange)
+/* harmony export */ });
+/* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
+/* harmony import */ var _firebase_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @firebase/component */ "./node_modules/@firebase/component/dist/esm/index.esm2017.js");
+/* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm2017.js");
+
+
+
+
+const name = "@firebase/installations";
+const version = "0.5.8";
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const PENDING_TIMEOUT_MS = 10000;
+const PACKAGE_VERSION = `w:${version}`;
+const INTERNAL_AUTH_VERSION = 'FIS_v2';
+const INSTALLATIONS_API_URL = 'https://firebaseinstallations.googleapis.com/v1';
+const TOKEN_EXPIRATION_BUFFER = 60 * 60 * 1000; // One hour
+const SERVICE = 'installations';
+const SERVICE_NAME = 'Installations';
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const ERROR_DESCRIPTION_MAP = {
+    ["missing-app-config-values" /* MISSING_APP_CONFIG_VALUES */]: 'Missing App configuration value: "{$valueName}"',
+    ["not-registered" /* NOT_REGISTERED */]: 'Firebase Installation is not registered.',
+    ["installation-not-found" /* INSTALLATION_NOT_FOUND */]: 'Firebase Installation not found.',
+    ["request-failed" /* REQUEST_FAILED */]: '{$requestName} request failed with error "{$serverCode} {$serverStatus}: {$serverMessage}"',
+    ["app-offline" /* APP_OFFLINE */]: 'Could not process request. Application offline.',
+    ["delete-pending-registration" /* DELETE_PENDING_REGISTRATION */]: "Can't delete installation while there is a pending registration request."
+};
+const ERROR_FACTORY = new _firebase_util__WEBPACK_IMPORTED_MODULE_2__.ErrorFactory(SERVICE, SERVICE_NAME, ERROR_DESCRIPTION_MAP);
+/** Returns true if error is a FirebaseError that is based on an error from the server. */
+function isServerError(error) {
+    return (error instanceof _firebase_util__WEBPACK_IMPORTED_MODULE_2__.FirebaseError &&
+        error.code.includes("request-failed" /* REQUEST_FAILED */));
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function getInstallationsEndpoint({ projectId }) {
+    return `${INSTALLATIONS_API_URL}/projects/${projectId}/installations`;
+}
+function extractAuthTokenInfoFromResponse(response) {
+    return {
+        token: response.token,
+        requestStatus: 2 /* COMPLETED */,
+        expiresIn: getExpiresInFromResponseExpiresIn(response.expiresIn),
+        creationTime: Date.now()
+    };
+}
+async function getErrorFromResponse(requestName, response) {
+    const responseJson = await response.json();
+    const errorData = responseJson.error;
+    return ERROR_FACTORY.create("request-failed" /* REQUEST_FAILED */, {
+        requestName,
+        serverCode: errorData.code,
+        serverMessage: errorData.message,
+        serverStatus: errorData.status
+    });
+}
+function getHeaders({ apiKey }) {
+    return new Headers({
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        'x-goog-api-key': apiKey
+    });
+}
+function getHeadersWithAuth(appConfig, { refreshToken }) {
+    const headers = getHeaders(appConfig);
+    headers.append('Authorization', getAuthorizationHeader(refreshToken));
+    return headers;
+}
+/**
+ * Calls the passed in fetch wrapper and returns the response.
+ * If the returned response has a status of 5xx, re-runs the function once and
+ * returns the response.
+ */
+async function retryIfServerError(fn) {
+    const result = await fn();
+    if (result.status >= 500 && result.status < 600) {
+        // Internal Server Error. Retry request.
+        return fn();
+    }
+    return result;
+}
+function getExpiresInFromResponseExpiresIn(responseExpiresIn) {
+    // This works because the server will never respond with fractions of a second.
+    return Number(responseExpiresIn.replace('s', '000'));
+}
+function getAuthorizationHeader(refreshToken) {
+    return `${INTERNAL_AUTH_VERSION} ${refreshToken}`;
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+async function createInstallationRequest({ appConfig, heartbeatServiceProvider }, { fid }) {
+    const endpoint = getInstallationsEndpoint(appConfig);
+    const headers = getHeaders(appConfig);
+    // If heartbeat service exists, add the heartbeat string to the header.
+    const heartbeatService = heartbeatServiceProvider.getImmediate({
+        optional: true
+    });
+    if (heartbeatService) {
+        const heartbeatsHeader = await heartbeatService.getHeartbeatsHeader();
+        if (heartbeatsHeader) {
+            headers.append('x-firebase-client', heartbeatsHeader);
+        }
+    }
+    const body = {
+        fid,
+        authVersion: INTERNAL_AUTH_VERSION,
+        appId: appConfig.appId,
+        sdkVersion: PACKAGE_VERSION
+    };
+    const request = {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body)
+    };
+    const response = await retryIfServerError(() => fetch(endpoint, request));
+    if (response.ok) {
+        const responseValue = await response.json();
+        const registeredInstallationEntry = {
+            fid: responseValue.fid || fid,
+            registrationStatus: 2 /* COMPLETED */,
+            refreshToken: responseValue.refreshToken,
+            authToken: extractAuthTokenInfoFromResponse(responseValue.authToken)
+        };
+        return registeredInstallationEntry;
+    }
+    else {
+        throw await getErrorFromResponse('Create Installation', response);
+    }
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/** Returns a promise that resolves after given time passes. */
+function sleep(ms) {
+    return new Promise(resolve => {
+        setTimeout(resolve, ms);
+    });
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function bufferToBase64UrlSafe(array) {
+    const b64 = btoa(String.fromCharCode(...array));
+    return b64.replace(/\+/g, '-').replace(/\//g, '_');
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const VALID_FID_PATTERN = /^[cdef][\w-]{21}$/;
+const INVALID_FID = '';
+/**
+ * Generates a new FID using random values from Web Crypto API.
+ * Returns an empty string if FID generation fails for any reason.
+ */
+function generateFid() {
+    try {
+        // A valid FID has exactly 22 base64 characters, which is 132 bits, or 16.5
+        // bytes. our implementation generates a 17 byte array instead.
+        const fidByteArray = new Uint8Array(17);
+        const crypto = self.crypto || self.msCrypto;
+        crypto.getRandomValues(fidByteArray);
+        // Replace the first 4 random bits with the constant FID header of 0b0111.
+        fidByteArray[0] = 0b01110000 + (fidByteArray[0] % 0b00010000);
+        const fid = encode(fidByteArray);
+        return VALID_FID_PATTERN.test(fid) ? fid : INVALID_FID;
+    }
+    catch (_a) {
+        // FID generation errored
+        return INVALID_FID;
+    }
+}
+/** Converts a FID Uint8Array to a base64 string representation. */
+function encode(fidByteArray) {
+    const b64String = bufferToBase64UrlSafe(fidByteArray);
+    // Remove the 23rd character that was added because of the extra 4 bits at the
+    // end of our 17 byte array, and the '=' padding.
+    return b64String.substr(0, 22);
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/** Returns a string key that can be used to identify the app. */
+function getKey(appConfig) {
+    return `${appConfig.appName}!${appConfig.appId}`;
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const fidChangeCallbacks = new Map();
+/**
+ * Calls the onIdChange callbacks with the new FID value, and broadcasts the
+ * change to other tabs.
+ */
+function fidChanged(appConfig, fid) {
+    const key = getKey(appConfig);
+    callFidChangeCallbacks(key, fid);
+    broadcastFidChange(key, fid);
+}
+function addCallback(appConfig, callback) {
+    // Open the broadcast channel if it's not already open,
+    // to be able to listen to change events from other tabs.
+    getBroadcastChannel();
+    const key = getKey(appConfig);
+    let callbackSet = fidChangeCallbacks.get(key);
+    if (!callbackSet) {
+        callbackSet = new Set();
+        fidChangeCallbacks.set(key, callbackSet);
+    }
+    callbackSet.add(callback);
+}
+function removeCallback(appConfig, callback) {
+    const key = getKey(appConfig);
+    const callbackSet = fidChangeCallbacks.get(key);
+    if (!callbackSet) {
+        return;
+    }
+    callbackSet.delete(callback);
+    if (callbackSet.size === 0) {
+        fidChangeCallbacks.delete(key);
+    }
+    // Close broadcast channel if there are no more callbacks.
+    closeBroadcastChannel();
+}
+function callFidChangeCallbacks(key, fid) {
+    const callbacks = fidChangeCallbacks.get(key);
+    if (!callbacks) {
+        return;
+    }
+    for (const callback of callbacks) {
+        callback(fid);
+    }
+}
+function broadcastFidChange(key, fid) {
+    const channel = getBroadcastChannel();
+    if (channel) {
+        channel.postMessage({ key, fid });
+    }
+    closeBroadcastChannel();
+}
+let broadcastChannel = null;
+/** Opens and returns a BroadcastChannel if it is supported by the browser. */
+function getBroadcastChannel() {
+    if (!broadcastChannel && 'BroadcastChannel' in self) {
+        broadcastChannel = new BroadcastChannel('[Firebase] FID Change');
+        broadcastChannel.onmessage = e => {
+            callFidChangeCallbacks(e.data.key, e.data.fid);
+        };
+    }
+    return broadcastChannel;
+}
+function closeBroadcastChannel() {
+    if (fidChangeCallbacks.size === 0 && broadcastChannel) {
+        broadcastChannel.close();
+        broadcastChannel = null;
+    }
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const DATABASE_NAME = 'firebase-installations-database';
+const DATABASE_VERSION = 1;
+const OBJECT_STORE_NAME = 'firebase-installations-store';
+let dbPromise = null;
+function getDbPromise() {
+    if (!dbPromise) {
+        dbPromise = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.openDB)(DATABASE_NAME, DATABASE_VERSION, (db, oldVersion) => {
+            // We don't use 'break' in this switch statement, the fall-through
+            // behavior is what we want, because if there are multiple versions between
+            // the old version and the current version, we want ALL the migrations
+            // that correspond to those versions to run, not only the last one.
+            // eslint-disable-next-line default-case
+            switch (oldVersion) {
+                case 0:
+                    db.createObjectStore(OBJECT_STORE_NAME);
+            }
+        });
+    }
+    return dbPromise;
+}
+/** Assigns or overwrites the record for the given key with the given value. */
+async function set(appConfig, value) {
+    const key = getKey(appConfig);
+    const db = await getDbPromise();
+    const tx = db.transaction(OBJECT_STORE_NAME, 'readwrite');
+    const objectStore = tx.objectStore(OBJECT_STORE_NAME);
+    const oldValue = (await objectStore.get(key));
+    await objectStore.put(value, key);
+    await tx.complete;
+    if (!oldValue || oldValue.fid !== value.fid) {
+        fidChanged(appConfig, value.fid);
+    }
+    return value;
+}
+/** Removes record(s) from the objectStore that match the given key. */
+async function remove(appConfig) {
+    const key = getKey(appConfig);
+    const db = await getDbPromise();
+    const tx = db.transaction(OBJECT_STORE_NAME, 'readwrite');
+    await tx.objectStore(OBJECT_STORE_NAME).delete(key);
+    await tx.complete;
+}
+/**
+ * Atomically updates a record with the result of updateFn, which gets
+ * called with the current value. If newValue is undefined, the record is
+ * deleted instead.
+ * @return Updated value
+ */
+async function update(appConfig, updateFn) {
+    const key = getKey(appConfig);
+    const db = await getDbPromise();
+    const tx = db.transaction(OBJECT_STORE_NAME, 'readwrite');
+    const store = tx.objectStore(OBJECT_STORE_NAME);
+    const oldValue = (await store.get(key));
+    const newValue = updateFn(oldValue);
+    if (newValue === undefined) {
+        await store.delete(key);
+    }
+    else {
+        await store.put(newValue, key);
+    }
+    await tx.complete;
+    if (newValue && (!oldValue || oldValue.fid !== newValue.fid)) {
+        fidChanged(appConfig, newValue.fid);
+    }
+    return newValue;
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Updates and returns the InstallationEntry from the database.
+ * Also triggers a registration request if it is necessary and possible.
+ */
+async function getInstallationEntry(installations) {
+    let registrationPromise;
+    const installationEntry = await update(installations.appConfig, oldEntry => {
+        const installationEntry = updateOrCreateInstallationEntry(oldEntry);
+        const entryWithPromise = triggerRegistrationIfNecessary(installations, installationEntry);
+        registrationPromise = entryWithPromise.registrationPromise;
+        return entryWithPromise.installationEntry;
+    });
+    if (installationEntry.fid === INVALID_FID) {
+        // FID generation failed. Waiting for the FID from the server.
+        return { installationEntry: await registrationPromise };
+    }
+    return {
+        installationEntry,
+        registrationPromise
+    };
+}
+/**
+ * Creates a new Installation Entry if one does not exist.
+ * Also clears timed out pending requests.
+ */
+function updateOrCreateInstallationEntry(oldEntry) {
+    const entry = oldEntry || {
+        fid: generateFid(),
+        registrationStatus: 0 /* NOT_STARTED */
+    };
+    return clearTimedOutRequest(entry);
+}
+/**
+ * If the Firebase Installation is not registered yet, this will trigger the
+ * registration and return an InProgressInstallationEntry.
+ *
+ * If registrationPromise does not exist, the installationEntry is guaranteed
+ * to be registered.
+ */
+function triggerRegistrationIfNecessary(installations, installationEntry) {
+    if (installationEntry.registrationStatus === 0 /* NOT_STARTED */) {
+        if (!navigator.onLine) {
+            // Registration required but app is offline.
+            const registrationPromiseWithError = Promise.reject(ERROR_FACTORY.create("app-offline" /* APP_OFFLINE */));
+            return {
+                installationEntry,
+                registrationPromise: registrationPromiseWithError
+            };
+        }
+        // Try registering. Change status to IN_PROGRESS.
+        const inProgressEntry = {
+            fid: installationEntry.fid,
+            registrationStatus: 1 /* IN_PROGRESS */,
+            registrationTime: Date.now()
+        };
+        const registrationPromise = registerInstallation(installations, inProgressEntry);
+        return { installationEntry: inProgressEntry, registrationPromise };
+    }
+    else if (installationEntry.registrationStatus === 1 /* IN_PROGRESS */) {
+        return {
+            installationEntry,
+            registrationPromise: waitUntilFidRegistration(installations)
+        };
+    }
+    else {
+        return { installationEntry };
+    }
+}
+/** This will be executed only once for each new Firebase Installation. */
+async function registerInstallation(installations, installationEntry) {
+    try {
+        const registeredInstallationEntry = await createInstallationRequest(installations, installationEntry);
+        return set(installations.appConfig, registeredInstallationEntry);
+    }
+    catch (e) {
+        if (isServerError(e) && e.customData.serverCode === 409) {
+            // Server returned a "FID can not be used" error.
+            // Generate a new ID next time.
+            await remove(installations.appConfig);
+        }
+        else {
+            // Registration failed. Set FID as not registered.
+            await set(installations.appConfig, {
+                fid: installationEntry.fid,
+                registrationStatus: 0 /* NOT_STARTED */
+            });
+        }
+        throw e;
+    }
+}
+/** Call if FID registration is pending in another request. */
+async function waitUntilFidRegistration(installations) {
+    // Unfortunately, there is no way of reliably observing when a value in
+    // IndexedDB changes (yet, see https://github.com/WICG/indexed-db-observers),
+    // so we need to poll.
+    let entry = await updateInstallationRequest(installations.appConfig);
+    while (entry.registrationStatus === 1 /* IN_PROGRESS */) {
+        // createInstallation request still in progress.
+        await sleep(100);
+        entry = await updateInstallationRequest(installations.appConfig);
+    }
+    if (entry.registrationStatus === 0 /* NOT_STARTED */) {
+        // The request timed out or failed in a different call. Try again.
+        const { installationEntry, registrationPromise } = await getInstallationEntry(installations);
+        if (registrationPromise) {
+            return registrationPromise;
+        }
+        else {
+            // if there is no registrationPromise, entry is registered.
+            return installationEntry;
+        }
+    }
+    return entry;
+}
+/**
+ * Called only if there is a CreateInstallation request in progress.
+ *
+ * Updates the InstallationEntry in the DB based on the status of the
+ * CreateInstallation request.
+ *
+ * Returns the updated InstallationEntry.
+ */
+function updateInstallationRequest(appConfig) {
+    return update(appConfig, oldEntry => {
+        if (!oldEntry) {
+            throw ERROR_FACTORY.create("installation-not-found" /* INSTALLATION_NOT_FOUND */);
+        }
+        return clearTimedOutRequest(oldEntry);
+    });
+}
+function clearTimedOutRequest(entry) {
+    if (hasInstallationRequestTimedOut(entry)) {
+        return {
+            fid: entry.fid,
+            registrationStatus: 0 /* NOT_STARTED */
+        };
+    }
+    return entry;
+}
+function hasInstallationRequestTimedOut(installationEntry) {
+    return (installationEntry.registrationStatus === 1 /* IN_PROGRESS */ &&
+        installationEntry.registrationTime + PENDING_TIMEOUT_MS < Date.now());
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+async function generateAuthTokenRequest({ appConfig, heartbeatServiceProvider }, installationEntry) {
+    const endpoint = getGenerateAuthTokenEndpoint(appConfig, installationEntry);
+    const headers = getHeadersWithAuth(appConfig, installationEntry);
+    // If heartbeat service exists, add the heartbeat string to the header.
+    const heartbeatService = heartbeatServiceProvider.getImmediate({
+        optional: true
+    });
+    if (heartbeatService) {
+        const heartbeatsHeader = await heartbeatService.getHeartbeatsHeader();
+        if (heartbeatsHeader) {
+            headers.append('x-firebase-client', heartbeatsHeader);
+        }
+    }
+    const body = {
+        installation: {
+            sdkVersion: PACKAGE_VERSION,
+            appId: appConfig.appId
+        }
+    };
+    const request = {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body)
+    };
+    const response = await retryIfServerError(() => fetch(endpoint, request));
+    if (response.ok) {
+        const responseValue = await response.json();
+        const completedAuthToken = extractAuthTokenInfoFromResponse(responseValue);
+        return completedAuthToken;
+    }
+    else {
+        throw await getErrorFromResponse('Generate Auth Token', response);
+    }
+}
+function getGenerateAuthTokenEndpoint(appConfig, { fid }) {
+    return `${getInstallationsEndpoint(appConfig)}/${fid}/authTokens:generate`;
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Returns a valid authentication token for the installation. Generates a new
+ * token if one doesn't exist, is expired or about to expire.
+ *
+ * Should only be called if the Firebase Installation is registered.
+ */
+async function refreshAuthToken(installations, forceRefresh = false) {
+    let tokenPromise;
+    const entry = await update(installations.appConfig, oldEntry => {
+        if (!isEntryRegistered(oldEntry)) {
+            throw ERROR_FACTORY.create("not-registered" /* NOT_REGISTERED */);
+        }
+        const oldAuthToken = oldEntry.authToken;
+        if (!forceRefresh && isAuthTokenValid(oldAuthToken)) {
+            // There is a valid token in the DB.
+            return oldEntry;
+        }
+        else if (oldAuthToken.requestStatus === 1 /* IN_PROGRESS */) {
+            // There already is a token request in progress.
+            tokenPromise = waitUntilAuthTokenRequest(installations, forceRefresh);
+            return oldEntry;
+        }
+        else {
+            // No token or token expired.
+            if (!navigator.onLine) {
+                throw ERROR_FACTORY.create("app-offline" /* APP_OFFLINE */);
+            }
+            const inProgressEntry = makeAuthTokenRequestInProgressEntry(oldEntry);
+            tokenPromise = fetchAuthTokenFromServer(installations, inProgressEntry);
+            return inProgressEntry;
+        }
+    });
+    const authToken = tokenPromise
+        ? await tokenPromise
+        : entry.authToken;
+    return authToken;
+}
+/**
+ * Call only if FID is registered and Auth Token request is in progress.
+ *
+ * Waits until the current pending request finishes. If the request times out,
+ * tries once in this thread as well.
+ */
+async function waitUntilAuthTokenRequest(installations, forceRefresh) {
+    // Unfortunately, there is no way of reliably observing when a value in
+    // IndexedDB changes (yet, see https://github.com/WICG/indexed-db-observers),
+    // so we need to poll.
+    let entry = await updateAuthTokenRequest(installations.appConfig);
+    while (entry.authToken.requestStatus === 1 /* IN_PROGRESS */) {
+        // generateAuthToken still in progress.
+        await sleep(100);
+        entry = await updateAuthTokenRequest(installations.appConfig);
+    }
+    const authToken = entry.authToken;
+    if (authToken.requestStatus === 0 /* NOT_STARTED */) {
+        // The request timed out or failed in a different call. Try again.
+        return refreshAuthToken(installations, forceRefresh);
+    }
+    else {
+        return authToken;
+    }
+}
+/**
+ * Called only if there is a GenerateAuthToken request in progress.
+ *
+ * Updates the InstallationEntry in the DB based on the status of the
+ * GenerateAuthToken request.
+ *
+ * Returns the updated InstallationEntry.
+ */
+function updateAuthTokenRequest(appConfig) {
+    return update(appConfig, oldEntry => {
+        if (!isEntryRegistered(oldEntry)) {
+            throw ERROR_FACTORY.create("not-registered" /* NOT_REGISTERED */);
+        }
+        const oldAuthToken = oldEntry.authToken;
+        if (hasAuthTokenRequestTimedOut(oldAuthToken)) {
+            return Object.assign(Object.assign({}, oldEntry), { authToken: { requestStatus: 0 /* NOT_STARTED */ } });
+        }
+        return oldEntry;
+    });
+}
+async function fetchAuthTokenFromServer(installations, installationEntry) {
+    try {
+        const authToken = await generateAuthTokenRequest(installations, installationEntry);
+        const updatedInstallationEntry = Object.assign(Object.assign({}, installationEntry), { authToken });
+        await set(installations.appConfig, updatedInstallationEntry);
+        return authToken;
+    }
+    catch (e) {
+        if (isServerError(e) &&
+            (e.customData.serverCode === 401 || e.customData.serverCode === 404)) {
+            // Server returned a "FID not found" or a "Invalid authentication" error.
+            // Generate a new ID next time.
+            await remove(installations.appConfig);
+        }
+        else {
+            const updatedInstallationEntry = Object.assign(Object.assign({}, installationEntry), { authToken: { requestStatus: 0 /* NOT_STARTED */ } });
+            await set(installations.appConfig, updatedInstallationEntry);
+        }
+        throw e;
+    }
+}
+function isEntryRegistered(installationEntry) {
+    return (installationEntry !== undefined &&
+        installationEntry.registrationStatus === 2 /* COMPLETED */);
+}
+function isAuthTokenValid(authToken) {
+    return (authToken.requestStatus === 2 /* COMPLETED */ &&
+        !isAuthTokenExpired(authToken));
+}
+function isAuthTokenExpired(authToken) {
+    const now = Date.now();
+    return (now < authToken.creationTime ||
+        authToken.creationTime + authToken.expiresIn < now + TOKEN_EXPIRATION_BUFFER);
+}
+/** Returns an updated InstallationEntry with an InProgressAuthToken. */
+function makeAuthTokenRequestInProgressEntry(oldEntry) {
+    const inProgressAuthToken = {
+        requestStatus: 1 /* IN_PROGRESS */,
+        requestTime: Date.now()
+    };
+    return Object.assign(Object.assign({}, oldEntry), { authToken: inProgressAuthToken });
+}
+function hasAuthTokenRequestTimedOut(authToken) {
+    return (authToken.requestStatus === 1 /* IN_PROGRESS */ &&
+        authToken.requestTime + PENDING_TIMEOUT_MS < Date.now());
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Creates a Firebase Installation if there isn't one for the app and
+ * returns the Installation ID.
+ * @param installations - The `Installations` instance.
+ *
+ * @public
+ */
+async function getId(installations) {
+    const installationsImpl = installations;
+    const { installationEntry, registrationPromise } = await getInstallationEntry(installationsImpl);
+    if (registrationPromise) {
+        registrationPromise.catch(console.error);
+    }
+    else {
+        // If the installation is already registered, update the authentication
+        // token if needed.
+        refreshAuthToken(installationsImpl).catch(console.error);
+    }
+    return installationEntry.fid;
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Returns a Firebase Installations auth token, identifying the current
+ * Firebase Installation.
+ * @param installations - The `Installations` instance.
+ * @param forceRefresh - Force refresh regardless of token expiration.
+ *
+ * @public
+ */
+async function getToken(installations, forceRefresh = false) {
+    const installationsImpl = installations;
+    await completeInstallationRegistration(installationsImpl);
+    // At this point we either have a Registered Installation in the DB, or we've
+    // already thrown an error.
+    const authToken = await refreshAuthToken(installationsImpl, forceRefresh);
+    return authToken.token;
+}
+async function completeInstallationRegistration(installations) {
+    const { registrationPromise } = await getInstallationEntry(installations);
+    if (registrationPromise) {
+        // A createInstallation request is in progress. Wait until it finishes.
+        await registrationPromise;
+    }
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+async function deleteInstallationRequest(appConfig, installationEntry) {
+    const endpoint = getDeleteEndpoint(appConfig, installationEntry);
+    const headers = getHeadersWithAuth(appConfig, installationEntry);
+    const request = {
+        method: 'DELETE',
+        headers
+    };
+    const response = await retryIfServerError(() => fetch(endpoint, request));
+    if (!response.ok) {
+        throw await getErrorFromResponse('Delete Installation', response);
+    }
+}
+function getDeleteEndpoint(appConfig, { fid }) {
+    return `${getInstallationsEndpoint(appConfig)}/${fid}`;
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Deletes the Firebase Installation and all associated data.
+ * @param installations - The `Installations` instance.
+ *
+ * @public
+ */
+async function deleteInstallations(installations) {
+    const { appConfig } = installations;
+    const entry = await update(appConfig, oldEntry => {
+        if (oldEntry && oldEntry.registrationStatus === 0 /* NOT_STARTED */) {
+            // Delete the unregistered entry without sending a deleteInstallation request.
+            return undefined;
+        }
+        return oldEntry;
+    });
+    if (entry) {
+        if (entry.registrationStatus === 1 /* IN_PROGRESS */) {
+            // Can't delete while trying to register.
+            throw ERROR_FACTORY.create("delete-pending-registration" /* DELETE_PENDING_REGISTRATION */);
+        }
+        else if (entry.registrationStatus === 2 /* COMPLETED */) {
+            if (!navigator.onLine) {
+                throw ERROR_FACTORY.create("app-offline" /* APP_OFFLINE */);
+            }
+            else {
+                await deleteInstallationRequest(appConfig, entry);
+                await remove(appConfig);
+            }
+        }
+    }
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Sets a new callback that will get called when Installation ID changes.
+ * Returns an unsubscribe function that will remove the callback when called.
+ * @param installations - The `Installations` instance.
+ * @param callback - The callback function that is invoked when FID changes.
+ * @returns A function that can be called to unsubscribe.
+ *
+ * @public
+ */
+function onIdChange(installations, callback) {
+    const { appConfig } = installations;
+    addCallback(appConfig, callback);
+    return () => {
+        removeCallback(appConfig, callback);
+    };
+}
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Returns an instance of {@link Installations} associated with the given
+ * {@link @firebase/app#FirebaseApp} instance.
+ * @param app - The {@link @firebase/app#FirebaseApp} instance.
+ *
+ * @public
+ */
+function getInstallations(app = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__.getApp)()) {
+    const installationsImpl = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__._getProvider)(app, 'installations').getImmediate();
+    return installationsImpl;
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function extractAppConfig(app) {
+    if (!app || !app.options) {
+        throw getMissingValueError('App Configuration');
+    }
+    if (!app.name) {
+        throw getMissingValueError('App Name');
+    }
+    // Required app config keys
+    const configKeys = [
+        'projectId',
+        'apiKey',
+        'appId'
+    ];
+    for (const keyName of configKeys) {
+        if (!app.options[keyName]) {
+            throw getMissingValueError(keyName);
+        }
+    }
+    return {
+        appName: app.name,
+        projectId: app.options.projectId,
+        apiKey: app.options.apiKey,
+        appId: app.options.appId
+    };
+}
+function getMissingValueError(valueName) {
+    return ERROR_FACTORY.create("missing-app-config-values" /* MISSING_APP_CONFIG_VALUES */, {
+        valueName
+    });
+}
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const INSTALLATIONS_NAME = 'installations';
+const INSTALLATIONS_NAME_INTERNAL = 'installations-internal';
+const publicFactory = (container) => {
+    const app = container.getProvider('app').getImmediate();
+    // Throws if app isn't configured properly.
+    const appConfig = extractAppConfig(app);
+    const heartbeatServiceProvider = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__._getProvider)(app, 'heartbeat');
+    const installationsImpl = {
+        app,
+        appConfig,
+        heartbeatServiceProvider,
+        _delete: () => Promise.resolve()
+    };
+    return installationsImpl;
+};
+const internalFactory = (container) => {
+    const app = container.getProvider('app').getImmediate();
+    // Internal FIS instance relies on public FIS instance.
+    const installations = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__._getProvider)(app, INSTALLATIONS_NAME).getImmediate();
+    const installationsInternal = {
+        getId: () => getId(installations),
+        getToken: (forceRefresh) => getToken(installations, forceRefresh)
+    };
+    return installationsInternal;
+};
+function registerInstallations() {
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component(INSTALLATIONS_NAME, publicFactory, "PUBLIC" /* PUBLIC */));
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component(INSTALLATIONS_NAME_INTERNAL, internalFactory, "PRIVATE" /* PRIVATE */));
+}
+
+/**
+ * Firebase Installations
+ *
+ * @packageDocumentation
+ */
+registerInstallations();
+(0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion)(name, version);
+// BUILD_TARGET will be replaced by values like esm5, esm2017, cjs5, etc during the compilation
+(0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion)(name, version, 'esm2017');
+
+
+//# sourceMappingURL=index.esm2017.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/@firebase/logger/dist/esm/index.esm2017.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/@firebase/logger/dist/esm/index.esm2017.js ***!
+  \*****************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "LogLevel": () => (/* binding */ LogLevel),
+/* harmony export */   "Logger": () => (/* binding */ Logger),
+/* harmony export */   "setLogLevel": () => (/* binding */ setLogLevel),
+/* harmony export */   "setUserLogHandler": () => (/* binding */ setUserLogHandler)
+/* harmony export */ });
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * A container for all of the Logger instances
+ */
+const instances = [];
+/**
+ * The JS SDK supports 5 log levels and also allows a user the ability to
+ * silence the logs altogether.
+ *
+ * The order is a follows:
+ * DEBUG < VERBOSE < INFO < WARN < ERROR
+ *
+ * All of the log types above the current log level will be captured (i.e. if
+ * you set the log level to `INFO`, errors will still be logged, but `DEBUG` and
+ * `VERBOSE` logs will not)
+ */
+var LogLevel;
+(function (LogLevel) {
+    LogLevel[LogLevel["DEBUG"] = 0] = "DEBUG";
+    LogLevel[LogLevel["VERBOSE"] = 1] = "VERBOSE";
+    LogLevel[LogLevel["INFO"] = 2] = "INFO";
+    LogLevel[LogLevel["WARN"] = 3] = "WARN";
+    LogLevel[LogLevel["ERROR"] = 4] = "ERROR";
+    LogLevel[LogLevel["SILENT"] = 5] = "SILENT";
+})(LogLevel || (LogLevel = {}));
+const levelStringToEnum = {
+    'debug': LogLevel.DEBUG,
+    'verbose': LogLevel.VERBOSE,
+    'info': LogLevel.INFO,
+    'warn': LogLevel.WARN,
+    'error': LogLevel.ERROR,
+    'silent': LogLevel.SILENT
+};
+/**
+ * The default log level
+ */
+const defaultLogLevel = LogLevel.INFO;
+/**
+ * By default, `console.debug` is not displayed in the developer console (in
+ * chrome). To avoid forcing users to have to opt-in to these logs twice
+ * (i.e. once for firebase, and once in the console), we are sending `DEBUG`
+ * logs to the `console.log` function.
+ */
+const ConsoleMethod = {
+    [LogLevel.DEBUG]: 'log',
+    [LogLevel.VERBOSE]: 'log',
+    [LogLevel.INFO]: 'info',
+    [LogLevel.WARN]: 'warn',
+    [LogLevel.ERROR]: 'error'
+};
+/**
+ * The default log handler will forward DEBUG, VERBOSE, INFO, WARN, and ERROR
+ * messages on to their corresponding console counterparts (if the log method
+ * is supported by the current log level)
+ */
+const defaultLogHandler = (instance, logType, ...args) => {
+    if (logType < instance.logLevel) {
+        return;
+    }
+    const now = new Date().toISOString();
+    const method = ConsoleMethod[logType];
+    if (method) {
+        console[method](`[${now}]  ${instance.name}:`, ...args);
+    }
+    else {
+        throw new Error(`Attempted to log a message with an invalid logType (value: ${logType})`);
+    }
+};
+class Logger {
+    /**
+     * Gives you an instance of a Logger to capture messages according to
+     * Firebase's logging scheme.
+     *
+     * @param name The name that the logs will be associated with
+     */
+    constructor(name) {
+        this.name = name;
+        /**
+         * The log level of the given Logger instance.
+         */
+        this._logLevel = defaultLogLevel;
+        /**
+         * The main (internal) log handler for the Logger instance.
+         * Can be set to a new function in internal package code but not by user.
+         */
+        this._logHandler = defaultLogHandler;
+        /**
+         * The optional, additional, user-defined log handler for the Logger instance.
+         */
+        this._userLogHandler = null;
+        /**
+         * Capture the current instance for later use
+         */
+        instances.push(this);
+    }
+    get logLevel() {
+        return this._logLevel;
+    }
+    set logLevel(val) {
+        if (!(val in LogLevel)) {
+            throw new TypeError(`Invalid value "${val}" assigned to \`logLevel\``);
+        }
+        this._logLevel = val;
+    }
+    // Workaround for setter/getter having to be the same type.
+    setLogLevel(val) {
+        this._logLevel = typeof val === 'string' ? levelStringToEnum[val] : val;
+    }
+    get logHandler() {
+        return this._logHandler;
+    }
+    set logHandler(val) {
+        if (typeof val !== 'function') {
+            throw new TypeError('Value assigned to `logHandler` must be a function');
+        }
+        this._logHandler = val;
+    }
+    get userLogHandler() {
+        return this._userLogHandler;
+    }
+    set userLogHandler(val) {
+        this._userLogHandler = val;
+    }
+    /**
+     * The functions below are all based on the `console` interface
+     */
+    debug(...args) {
+        this._userLogHandler && this._userLogHandler(this, LogLevel.DEBUG, ...args);
+        this._logHandler(this, LogLevel.DEBUG, ...args);
+    }
+    log(...args) {
+        this._userLogHandler &&
+            this._userLogHandler(this, LogLevel.VERBOSE, ...args);
+        this._logHandler(this, LogLevel.VERBOSE, ...args);
+    }
+    info(...args) {
+        this._userLogHandler && this._userLogHandler(this, LogLevel.INFO, ...args);
+        this._logHandler(this, LogLevel.INFO, ...args);
+    }
+    warn(...args) {
+        this._userLogHandler && this._userLogHandler(this, LogLevel.WARN, ...args);
+        this._logHandler(this, LogLevel.WARN, ...args);
+    }
+    error(...args) {
+        this._userLogHandler && this._userLogHandler(this, LogLevel.ERROR, ...args);
+        this._logHandler(this, LogLevel.ERROR, ...args);
+    }
+}
+function setLogLevel(level) {
+    instances.forEach(inst => {
+        inst.setLogLevel(level);
+    });
+}
+function setUserLogHandler(logCallback, options) {
+    for (const instance of instances) {
+        let customLogLevel = null;
+        if (options && options.level) {
+            customLogLevel = levelStringToEnum[options.level];
+        }
+        if (logCallback === null) {
+            instance.userLogHandler = null;
+        }
+        else {
+            instance.userLogHandler = (instance, level, ...args) => {
+                const message = args
+                    .map(arg => {
+                    if (arg == null) {
+                        return null;
+                    }
+                    else if (typeof arg === 'string') {
+                        return arg;
+                    }
+                    else if (typeof arg === 'number' || typeof arg === 'boolean') {
+                        return arg.toString();
+                    }
+                    else if (arg instanceof Error) {
+                        return arg.message;
+                    }
+                    else {
+                        try {
+                            return JSON.stringify(arg);
+                        }
+                        catch (ignored) {
+                            return null;
+                        }
+                    }
+                })
+                    .filter(arg => arg)
+                    .join(' ');
+                if (level >= (customLogLevel !== null && customLogLevel !== void 0 ? customLogLevel : instance.logLevel)) {
+                    logCallback({
+                        level: LogLevel[level].toLowerCase(),
+                        message,
+                        args,
+                        type: instance.name
+                    });
+                }
+            };
+        }
+    }
+}
+
+
+//# sourceMappingURL=index.esm2017.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/@firebase/messaging/dist/esm/index.esm2017.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/@firebase/messaging/dist/esm/index.esm2017.js ***!
+  \********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "deleteToken": () => (/* binding */ deleteToken),
+/* harmony export */   "getMessaging": () => (/* binding */ getMessagingInWindow),
+/* harmony export */   "getToken": () => (/* binding */ getToken),
+/* harmony export */   "isSupported": () => (/* binding */ isWindowSupported),
+/* harmony export */   "onMessage": () => (/* binding */ onMessage)
+/* harmony export */ });
+/* harmony import */ var _firebase_installations__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/installations */ "./node_modules/@firebase/installations/dist/esm/index.esm2017.js");
+/* harmony import */ var _firebase_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @firebase/component */ "./node_modules/@firebase/component/dist/esm/index.esm2017.js");
+/* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm2017.js");
+/* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
+
+
+
+
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const DEFAULT_SW_PATH = '/firebase-messaging-sw.js';
+const DEFAULT_SW_SCOPE = '/firebase-cloud-messaging-push-scope';
+const DEFAULT_VAPID_KEY = 'BDOU99-h67HcA6JeFXHbSNMu7e2yNNu3RzoMj8TM4W88jITfq7ZmPvIM1Iv-4_l2LxQcYwhqby2xGpWwzjfAnG4';
+const ENDPOINT = 'https://fcmregistrations.googleapis.com/v1';
+const CONSOLE_CAMPAIGN_ID = 'google.c.a.c_id';
+const CONSOLE_CAMPAIGN_NAME = 'google.c.a.c_l';
+const CONSOLE_CAMPAIGN_TIME = 'google.c.a.ts';
+/** Set to '1' if Analytics is enabled for the campaign */
+const CONSOLE_CAMPAIGN_ANALYTICS_ENABLED = 'google.c.a.e';
+var MessageType$1;
+(function (MessageType) {
+    MessageType[MessageType["DATA_MESSAGE"] = 1] = "DATA_MESSAGE";
+    MessageType[MessageType["DISPLAY_NOTIFICATION"] = 3] = "DISPLAY_NOTIFICATION";
+})(MessageType$1 || (MessageType$1 = {}));
+
+/**
+ * @license
+ * Copyright 2018 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+var MessageType;
+(function (MessageType) {
+    MessageType["PUSH_RECEIVED"] = "push-received";
+    MessageType["NOTIFICATION_CLICKED"] = "notification-clicked";
+})(MessageType || (MessageType = {}));
+
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function arrayToBase64(array) {
+    const uint8Array = new Uint8Array(array);
+    const base64String = btoa(String.fromCharCode(...uint8Array));
+    return base64String.replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+}
+function base64ToArray(base64String) {
+    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+    const base64 = (base64String + padding)
+        .replace(/\-/g, '+')
+        .replace(/_/g, '/');
+    const rawData = atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const OLD_DB_NAME = 'fcm_token_details_db';
+/**
+ * The last DB version of 'fcm_token_details_db' was 4. This is one higher, so that the upgrade
+ * callback is called for all versions of the old DB.
+ */
+const OLD_DB_VERSION = 5;
+const OLD_OBJECT_STORE_NAME = 'fcm_token_object_Store';
+async function migrateOldDatabase(senderId) {
+    if ('databases' in indexedDB) {
+        // indexedDb.databases() is an IndexedDB v3 API and does not exist in all browsers. TODO: Remove
+        // typecast when it lands in TS types.
+        const databases = await indexedDB.databases();
+        const dbNames = databases.map(db => db.name);
+        if (!dbNames.includes(OLD_DB_NAME)) {
+            // old DB didn't exist, no need to open.
+            return null;
+        }
+    }
+    let tokenDetails = null;
+    const db = await (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.openDB)(OLD_DB_NAME, OLD_DB_VERSION, async (db, oldVersion, newVersion, upgradeTransaction) => {
+        var _a;
+        if (oldVersion < 2) {
+            // Database too old, skip migration.
+            return;
+        }
+        if (!db.objectStoreNames.contains(OLD_OBJECT_STORE_NAME)) {
+            // Database did not exist. Nothing to do.
+            return;
+        }
+        const objectStore = upgradeTransaction.objectStore(OLD_OBJECT_STORE_NAME);
+        const value = await objectStore.index('fcmSenderId').get(senderId);
+        await objectStore.clear();
+        if (!value) {
+            // No entry in the database, nothing to migrate.
+            return;
+        }
+        if (oldVersion === 2) {
+            const oldDetails = value;
+            if (!oldDetails.auth || !oldDetails.p256dh || !oldDetails.endpoint) {
+                return;
+            }
+            tokenDetails = {
+                token: oldDetails.fcmToken,
+                createTime: (_a = oldDetails.createTime) !== null && _a !== void 0 ? _a : Date.now(),
+                subscriptionOptions: {
+                    auth: oldDetails.auth,
+                    p256dh: oldDetails.p256dh,
+                    endpoint: oldDetails.endpoint,
+                    swScope: oldDetails.swScope,
+                    vapidKey: typeof oldDetails.vapidKey === 'string'
+                        ? oldDetails.vapidKey
+                        : arrayToBase64(oldDetails.vapidKey)
+                }
+            };
+        }
+        else if (oldVersion === 3) {
+            const oldDetails = value;
+            tokenDetails = {
+                token: oldDetails.fcmToken,
+                createTime: oldDetails.createTime,
+                subscriptionOptions: {
+                    auth: arrayToBase64(oldDetails.auth),
+                    p256dh: arrayToBase64(oldDetails.p256dh),
+                    endpoint: oldDetails.endpoint,
+                    swScope: oldDetails.swScope,
+                    vapidKey: arrayToBase64(oldDetails.vapidKey)
+                }
+            };
+        }
+        else if (oldVersion === 4) {
+            const oldDetails = value;
+            tokenDetails = {
+                token: oldDetails.fcmToken,
+                createTime: oldDetails.createTime,
+                subscriptionOptions: {
+                    auth: arrayToBase64(oldDetails.auth),
+                    p256dh: arrayToBase64(oldDetails.p256dh),
+                    endpoint: oldDetails.endpoint,
+                    swScope: oldDetails.swScope,
+                    vapidKey: arrayToBase64(oldDetails.vapidKey)
+                }
+            };
+        }
+    });
+    db.close();
+    // Delete all old databases.
+    await (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.deleteDB)(OLD_DB_NAME);
+    await (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.deleteDB)('fcm_vapid_details_db');
+    await (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.deleteDB)('undefined');
+    return checkTokenDetails(tokenDetails) ? tokenDetails : null;
+}
+function checkTokenDetails(tokenDetails) {
+    if (!tokenDetails || !tokenDetails.subscriptionOptions) {
+        return false;
+    }
+    const { subscriptionOptions } = tokenDetails;
+    return (typeof tokenDetails.createTime === 'number' &&
+        tokenDetails.createTime > 0 &&
+        typeof tokenDetails.token === 'string' &&
+        tokenDetails.token.length > 0 &&
+        typeof subscriptionOptions.auth === 'string' &&
+        subscriptionOptions.auth.length > 0 &&
+        typeof subscriptionOptions.p256dh === 'string' &&
+        subscriptionOptions.p256dh.length > 0 &&
+        typeof subscriptionOptions.endpoint === 'string' &&
+        subscriptionOptions.endpoint.length > 0 &&
+        typeof subscriptionOptions.swScope === 'string' &&
+        subscriptionOptions.swScope.length > 0 &&
+        typeof subscriptionOptions.vapidKey === 'string' &&
+        subscriptionOptions.vapidKey.length > 0);
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+// Exported for tests.
+const DATABASE_NAME = 'firebase-messaging-database';
+const DATABASE_VERSION = 1;
+const OBJECT_STORE_NAME = 'firebase-messaging-store';
+let dbPromise = null;
+function getDbPromise() {
+    if (!dbPromise) {
+        dbPromise = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.openDB)(DATABASE_NAME, DATABASE_VERSION, (upgradeDb, oldVersion) => {
+            // We don't use 'break' in this switch statement, the fall-through behavior is what we want,
+            // because if there are multiple versions between the old version and the current version, we
+            // want ALL the migrations that correspond to those versions to run, not only the last one.
+            // eslint-disable-next-line default-case
+            switch (oldVersion) {
+                case 0:
+                    upgradeDb.createObjectStore(OBJECT_STORE_NAME);
+            }
+        });
+    }
+    return dbPromise;
+}
+/** Gets record(s) from the objectStore that match the given key. */
+async function dbGet(firebaseDependencies) {
+    const key = getKey(firebaseDependencies);
+    const db = await getDbPromise();
+    const tokenDetails = (await db
+        .transaction(OBJECT_STORE_NAME)
+        .objectStore(OBJECT_STORE_NAME)
+        .get(key));
+    if (tokenDetails) {
+        return tokenDetails;
+    }
+    else {
+        // Check if there is a tokenDetails object in the old DB.
+        const oldTokenDetails = await migrateOldDatabase(firebaseDependencies.appConfig.senderId);
+        if (oldTokenDetails) {
+            await dbSet(firebaseDependencies, oldTokenDetails);
+            return oldTokenDetails;
+        }
+    }
+}
+/** Assigns or overwrites the record for the given key with the given value. */
+async function dbSet(firebaseDependencies, tokenDetails) {
+    const key = getKey(firebaseDependencies);
+    const db = await getDbPromise();
+    const tx = db.transaction(OBJECT_STORE_NAME, 'readwrite');
+    await tx.objectStore(OBJECT_STORE_NAME).put(tokenDetails, key);
+    await tx.complete;
+    return tokenDetails;
+}
+/** Removes record(s) from the objectStore that match the given key. */
+async function dbRemove(firebaseDependencies) {
+    const key = getKey(firebaseDependencies);
+    const db = await getDbPromise();
+    const tx = db.transaction(OBJECT_STORE_NAME, 'readwrite');
+    await tx.objectStore(OBJECT_STORE_NAME).delete(key);
+    await tx.complete;
+}
+function getKey({ appConfig }) {
+    return appConfig.appId;
+}
+
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const ERROR_MAP = {
+    ["missing-app-config-values" /* MISSING_APP_CONFIG_VALUES */]: 'Missing App configuration value: "{$valueName}"',
+    ["only-available-in-window" /* AVAILABLE_IN_WINDOW */]: 'This method is available in a Window context.',
+    ["only-available-in-sw" /* AVAILABLE_IN_SW */]: 'This method is available in a service worker context.',
+    ["permission-default" /* PERMISSION_DEFAULT */]: 'The notification permission was not granted and dismissed instead.',
+    ["permission-blocked" /* PERMISSION_BLOCKED */]: 'The notification permission was not granted and blocked instead.',
+    ["unsupported-browser" /* UNSUPPORTED_BROWSER */]: "This browser doesn't support the API's required to use the Firebase SDK.",
+    ["indexed-db-unsupported" /* INDEXED_DB_UNSUPPORTED */]: "This browser doesn't support indexedDb.open() (ex. Safari iFrame, Firefox Private Browsing, etc)",
+    ["failed-service-worker-registration" /* FAILED_DEFAULT_REGISTRATION */]: 'We are unable to register the default service worker. {$browserErrorMessage}',
+    ["token-subscribe-failed" /* TOKEN_SUBSCRIBE_FAILED */]: 'A problem occurred while subscribing the user to FCM: {$errorInfo}',
+    ["token-subscribe-no-token" /* TOKEN_SUBSCRIBE_NO_TOKEN */]: 'FCM returned no token when subscribing the user to push.',
+    ["token-unsubscribe-failed" /* TOKEN_UNSUBSCRIBE_FAILED */]: 'A problem occurred while unsubscribing the ' +
+        'user from FCM: {$errorInfo}',
+    ["token-update-failed" /* TOKEN_UPDATE_FAILED */]: 'A problem occurred while updating the user from FCM: {$errorInfo}',
+    ["token-update-no-token" /* TOKEN_UPDATE_NO_TOKEN */]: 'FCM returned no token when updating the user to push.',
+    ["use-sw-after-get-token" /* USE_SW_AFTER_GET_TOKEN */]: 'The useServiceWorker() method may only be called once and must be ' +
+        'called before calling getToken() to ensure your service worker is used.',
+    ["invalid-sw-registration" /* INVALID_SW_REGISTRATION */]: 'The input to useServiceWorker() must be a ServiceWorkerRegistration.',
+    ["invalid-bg-handler" /* INVALID_BG_HANDLER */]: 'The input to setBackgroundMessageHandler() must be a function.',
+    ["invalid-vapid-key" /* INVALID_VAPID_KEY */]: 'The public VAPID key must be a string.',
+    ["use-vapid-key-after-get-token" /* USE_VAPID_KEY_AFTER_GET_TOKEN */]: 'The usePublicVapidKey() method may only be called once and must be ' +
+        'called before calling getToken() to ensure your VAPID key is used.'
+};
+const ERROR_FACTORY = new _firebase_util__WEBPACK_IMPORTED_MODULE_2__.ErrorFactory('messaging', 'Messaging', ERROR_MAP);
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+async function requestGetToken(firebaseDependencies, subscriptionOptions) {
+    const headers = await getHeaders(firebaseDependencies);
+    const body = getBody(subscriptionOptions);
+    const subscribeOptions = {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body)
+    };
+    let responseData;
+    try {
+        const response = await fetch(getEndpoint(firebaseDependencies.appConfig), subscribeOptions);
+        responseData = await response.json();
+    }
+    catch (err) {
+        throw ERROR_FACTORY.create("token-subscribe-failed" /* TOKEN_SUBSCRIBE_FAILED */, {
+            errorInfo: err
+        });
+    }
+    if (responseData.error) {
+        const message = responseData.error.message;
+        throw ERROR_FACTORY.create("token-subscribe-failed" /* TOKEN_SUBSCRIBE_FAILED */, {
+            errorInfo: message
+        });
+    }
+    if (!responseData.token) {
+        throw ERROR_FACTORY.create("token-subscribe-no-token" /* TOKEN_SUBSCRIBE_NO_TOKEN */);
+    }
+    return responseData.token;
+}
+async function requestUpdateToken(firebaseDependencies, tokenDetails) {
+    const headers = await getHeaders(firebaseDependencies);
+    const body = getBody(tokenDetails.subscriptionOptions);
+    const updateOptions = {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify(body)
+    };
+    let responseData;
+    try {
+        const response = await fetch(`${getEndpoint(firebaseDependencies.appConfig)}/${tokenDetails.token}`, updateOptions);
+        responseData = await response.json();
+    }
+    catch (err) {
+        throw ERROR_FACTORY.create("token-update-failed" /* TOKEN_UPDATE_FAILED */, {
+            errorInfo: err
+        });
+    }
+    if (responseData.error) {
+        const message = responseData.error.message;
+        throw ERROR_FACTORY.create("token-update-failed" /* TOKEN_UPDATE_FAILED */, {
+            errorInfo: message
+        });
+    }
+    if (!responseData.token) {
+        throw ERROR_FACTORY.create("token-update-no-token" /* TOKEN_UPDATE_NO_TOKEN */);
+    }
+    return responseData.token;
+}
+async function requestDeleteToken(firebaseDependencies, token) {
+    const headers = await getHeaders(firebaseDependencies);
+    const unsubscribeOptions = {
+        method: 'DELETE',
+        headers
+    };
+    try {
+        const response = await fetch(`${getEndpoint(firebaseDependencies.appConfig)}/${token}`, unsubscribeOptions);
+        const responseData = await response.json();
+        if (responseData.error) {
+            const message = responseData.error.message;
+            throw ERROR_FACTORY.create("token-unsubscribe-failed" /* TOKEN_UNSUBSCRIBE_FAILED */, {
+                errorInfo: message
+            });
+        }
+    }
+    catch (err) {
+        throw ERROR_FACTORY.create("token-unsubscribe-failed" /* TOKEN_UNSUBSCRIBE_FAILED */, {
+            errorInfo: err
+        });
+    }
+}
+function getEndpoint({ projectId }) {
+    return `${ENDPOINT}/projects/${projectId}/registrations`;
+}
+async function getHeaders({ appConfig, installations }) {
+    const authToken = await installations.getToken();
+    return new Headers({
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        'x-goog-api-key': appConfig.apiKey,
+        'x-goog-firebase-installations-auth': `FIS ${authToken}`
+    });
+}
+function getBody({ p256dh, auth, endpoint, vapidKey }) {
+    const body = {
+        web: {
+            endpoint,
+            auth,
+            p256dh
+        }
+    };
+    if (vapidKey !== DEFAULT_VAPID_KEY) {
+        body.web.applicationPubKey = vapidKey;
+    }
+    return body;
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+// UpdateRegistration will be called once every week.
+const TOKEN_EXPIRATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+async function getTokenInternal(messaging) {
+    const pushSubscription = await getPushSubscription(messaging.swRegistration, messaging.vapidKey);
+    const subscriptionOptions = {
+        vapidKey: messaging.vapidKey,
+        swScope: messaging.swRegistration.scope,
+        endpoint: pushSubscription.endpoint,
+        auth: arrayToBase64(pushSubscription.getKey('auth')),
+        p256dh: arrayToBase64(pushSubscription.getKey('p256dh'))
+    };
+    const tokenDetails = await dbGet(messaging.firebaseDependencies);
+    if (!tokenDetails) {
+        // No token, get a new one.
+        return getNewToken(messaging.firebaseDependencies, subscriptionOptions);
+    }
+    else if (!isTokenValid(tokenDetails.subscriptionOptions, subscriptionOptions)) {
+        // Invalid token, get a new one.
+        try {
+            await requestDeleteToken(messaging.firebaseDependencies, tokenDetails.token);
+        }
+        catch (e) {
+            // Suppress errors because of #2364
+            console.warn(e);
+        }
+        return getNewToken(messaging.firebaseDependencies, subscriptionOptions);
+    }
+    else if (Date.now() >= tokenDetails.createTime + TOKEN_EXPIRATION_MS) {
+        // Weekly token refresh
+        return updateToken(messaging, {
+            token: tokenDetails.token,
+            createTime: Date.now(),
+            subscriptionOptions
+        });
+    }
+    else {
+        // Valid token, nothing to do.
+        return tokenDetails.token;
+    }
+}
+/**
+ * This method deletes the token from the database, unsubscribes the token from FCM, and unregisters
+ * the push subscription if it exists.
+ */
+async function deleteTokenInternal(messaging) {
+    const tokenDetails = await dbGet(messaging.firebaseDependencies);
+    if (tokenDetails) {
+        await requestDeleteToken(messaging.firebaseDependencies, tokenDetails.token);
+        await dbRemove(messaging.firebaseDependencies);
+    }
+    // Unsubscribe from the push subscription.
+    const pushSubscription = await messaging.swRegistration.pushManager.getSubscription();
+    if (pushSubscription) {
+        return pushSubscription.unsubscribe();
+    }
+    // If there's no SW, consider it a success.
+    return true;
+}
+async function updateToken(messaging, tokenDetails) {
+    try {
+        const updatedToken = await requestUpdateToken(messaging.firebaseDependencies, tokenDetails);
+        const updatedTokenDetails = Object.assign(Object.assign({}, tokenDetails), { token: updatedToken, createTime: Date.now() });
+        await dbSet(messaging.firebaseDependencies, updatedTokenDetails);
+        return updatedToken;
+    }
+    catch (e) {
+        await deleteTokenInternal(messaging);
+        throw e;
+    }
+}
+async function getNewToken(firebaseDependencies, subscriptionOptions) {
+    const token = await requestGetToken(firebaseDependencies, subscriptionOptions);
+    const tokenDetails = {
+        token,
+        createTime: Date.now(),
+        subscriptionOptions
+    };
+    await dbSet(firebaseDependencies, tokenDetails);
+    return tokenDetails.token;
+}
+/**
+ * Gets a PushSubscription for the current user.
+ */
+async function getPushSubscription(swRegistration, vapidKey) {
+    const subscription = await swRegistration.pushManager.getSubscription();
+    if (subscription) {
+        return subscription;
+    }
+    return swRegistration.pushManager.subscribe({
+        userVisibleOnly: true,
+        // Chrome <= 75 doesn't support base64-encoded VAPID key. For backward compatibility, VAPID key
+        // submitted to pushManager#subscribe must be of type Uint8Array.
+        applicationServerKey: base64ToArray(vapidKey)
+    });
+}
+/**
+ * Checks if the saved tokenDetails object matches the configuration provided.
+ */
+function isTokenValid(dbOptions, currentOptions) {
+    const isVapidKeyEqual = currentOptions.vapidKey === dbOptions.vapidKey;
+    const isEndpointEqual = currentOptions.endpoint === dbOptions.endpoint;
+    const isAuthEqual = currentOptions.auth === dbOptions.auth;
+    const isP256dhEqual = currentOptions.p256dh === dbOptions.p256dh;
+    return isVapidKeyEqual && isEndpointEqual && isAuthEqual && isP256dhEqual;
+}
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function externalizePayload(internalPayload) {
+    const payload = {
+        from: internalPayload.from,
+        // eslint-disable-next-line camelcase
+        collapseKey: internalPayload.collapse_key,
+        // eslint-disable-next-line camelcase
+        messageId: internalPayload.fcmMessageId
+    };
+    propagateNotificationPayload(payload, internalPayload);
+    propagateDataPayload(payload, internalPayload);
+    propagateFcmOptions(payload, internalPayload);
+    return payload;
+}
+function propagateNotificationPayload(payload, messagePayloadInternal) {
+    if (!messagePayloadInternal.notification) {
+        return;
+    }
+    payload.notification = {};
+    const title = messagePayloadInternal.notification.title;
+    if (!!title) {
+        payload.notification.title = title;
+    }
+    const body = messagePayloadInternal.notification.body;
+    if (!!body) {
+        payload.notification.body = body;
+    }
+    const image = messagePayloadInternal.notification.image;
+    if (!!image) {
+        payload.notification.image = image;
+    }
+}
+function propagateDataPayload(payload, messagePayloadInternal) {
+    if (!messagePayloadInternal.data) {
+        return;
+    }
+    payload.data = messagePayloadInternal.data;
+}
+function propagateFcmOptions(payload, messagePayloadInternal) {
+    if (!messagePayloadInternal.fcmOptions) {
+        return;
+    }
+    payload.fcmOptions = {};
+    const link = messagePayloadInternal.fcmOptions.link;
+    if (!!link) {
+        payload.fcmOptions.link = link;
+    }
+    // eslint-disable-next-line camelcase
+    const analyticsLabel = messagePayloadInternal.fcmOptions.analytics_label;
+    if (!!analyticsLabel) {
+        payload.fcmOptions.analyticsLabel = analyticsLabel;
+    }
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function isConsoleMessage(data) {
+    // This message has a campaign ID, meaning it was sent using the Firebase Console.
+    return typeof data === 'object' && !!data && CONSOLE_CAMPAIGN_ID in data;
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+_mergeStrings('hts/frbslgigp.ogepscmv/ieo/eaylg', 'tp:/ieaeogn-agolai.o/1frlglgc/o');
+_mergeStrings('AzSCbw63g1R0nCw85jG8', 'Iaya3yLKwmgvh7cF0q4');
+function _mergeStrings(s1, s2) {
+    const resultArray = [];
+    for (let i = 0; i < s1.length; i++) {
+        resultArray.push(s1.charAt(i));
+        if (i < s2.length) {
+            resultArray.push(s2.charAt(i));
+        }
+    }
+    return resultArray.join('');
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function extractAppConfig(app) {
+    if (!app || !app.options) {
+        throw getMissingValueError('App Configuration Object');
+    }
+    if (!app.name) {
+        throw getMissingValueError('App Name');
+    }
+    // Required app config keys
+    const configKeys = [
+        'projectId',
+        'apiKey',
+        'appId',
+        'messagingSenderId'
+    ];
+    const { options } = app;
+    for (const keyName of configKeys) {
+        if (!options[keyName]) {
+            throw getMissingValueError(keyName);
+        }
+    }
+    return {
+        appName: app.name,
+        projectId: options.projectId,
+        apiKey: options.apiKey,
+        appId: options.appId,
+        senderId: options.messagingSenderId
+    };
+}
+function getMissingValueError(valueName) {
+    return ERROR_FACTORY.create("missing-app-config-values" /* MISSING_APP_CONFIG_VALUES */, {
+        valueName
+    });
+}
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+class MessagingService {
+    constructor(app, installations, analyticsProvider) {
+        // logging is only done with end user consent. Default to false.
+        this.deliveryMetricsExportedToBigQueryEnabled = false;
+        this.onBackgroundMessageHandler = null;
+        this.onMessageHandler = null;
+        this.logEvents = [];
+        this.isLogServiceStarted = false;
+        const appConfig = extractAppConfig(app);
+        this.firebaseDependencies = {
+            app,
+            appConfig,
+            installations,
+            analyticsProvider
+        };
+    }
+    _delete() {
+        return Promise.resolve();
+    }
+}
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+async function registerDefaultSw(messaging) {
+    try {
+        messaging.swRegistration = await navigator.serviceWorker.register(DEFAULT_SW_PATH, {
+            scope: DEFAULT_SW_SCOPE
+        });
+        // The timing when browser updates sw when sw has an update is unreliable from experiment. It
+        // leads to version conflict when the SDK upgrades to a newer version in the main page, but sw
+        // is stuck with the old version. For example,
+        // https://github.com/firebase/firebase-js-sdk/issues/2590 The following line reliably updates
+        // sw if there was an update.
+        messaging.swRegistration.update().catch(() => {
+            /* it is non blocking and we don't care if it failed */
+        });
+    }
+    catch (e) {
+        throw ERROR_FACTORY.create("failed-service-worker-registration" /* FAILED_DEFAULT_REGISTRATION */, {
+            browserErrorMessage: e.message
+        });
+    }
+}
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+async function updateSwReg(messaging, swRegistration) {
+    if (!swRegistration && !messaging.swRegistration) {
+        await registerDefaultSw(messaging);
+    }
+    if (!swRegistration && !!messaging.swRegistration) {
+        return;
+    }
+    if (!(swRegistration instanceof ServiceWorkerRegistration)) {
+        throw ERROR_FACTORY.create("invalid-sw-registration" /* INVALID_SW_REGISTRATION */);
+    }
+    messaging.swRegistration = swRegistration;
+}
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+async function updateVapidKey(messaging, vapidKey) {
+    if (!!vapidKey) {
+        messaging.vapidKey = vapidKey;
+    }
+    else if (!messaging.vapidKey) {
+        messaging.vapidKey = DEFAULT_VAPID_KEY;
+    }
+}
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+async function getToken$1(messaging, options) {
+    if (!navigator) {
+        throw ERROR_FACTORY.create("only-available-in-window" /* AVAILABLE_IN_WINDOW */);
+    }
+    if (Notification.permission === 'default') {
+        await Notification.requestPermission();
+    }
+    if (Notification.permission !== 'granted') {
+        throw ERROR_FACTORY.create("permission-blocked" /* PERMISSION_BLOCKED */);
+    }
+    await updateVapidKey(messaging, options === null || options === void 0 ? void 0 : options.vapidKey);
+    await updateSwReg(messaging, options === null || options === void 0 ? void 0 : options.serviceWorkerRegistration);
+    return getTokenInternal(messaging);
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+async function logToScion(messaging, messageType, data) {
+    const eventType = getEventType(messageType);
+    const analytics = await messaging.firebaseDependencies.analyticsProvider.get();
+    analytics.logEvent(eventType, {
+        /* eslint-disable camelcase */
+        message_id: data[CONSOLE_CAMPAIGN_ID],
+        message_name: data[CONSOLE_CAMPAIGN_NAME],
+        message_time: data[CONSOLE_CAMPAIGN_TIME],
+        message_device_time: Math.floor(Date.now() / 1000)
+        /* eslint-enable camelcase */
+    });
+}
+function getEventType(messageType) {
+    switch (messageType) {
+        case MessageType.NOTIFICATION_CLICKED:
+            return 'notification_open';
+        case MessageType.PUSH_RECEIVED:
+            return 'notification_foreground';
+        default:
+            throw new Error();
+    }
+}
+
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+async function messageEventListener(messaging, event) {
+    const internalPayload = event.data;
+    if (!internalPayload.isFirebaseMessaging) {
+        return;
+    }
+    if (messaging.onMessageHandler &&
+        internalPayload.messageType === MessageType.PUSH_RECEIVED) {
+        if (typeof messaging.onMessageHandler === 'function') {
+            messaging.onMessageHandler(externalizePayload(internalPayload));
+        }
+        else {
+            messaging.onMessageHandler.next(externalizePayload(internalPayload));
+        }
+    }
+    // Log to Scion if applicable
+    const dataPayload = internalPayload.data;
+    if (isConsoleMessage(dataPayload) &&
+        dataPayload[CONSOLE_CAMPAIGN_ANALYTICS_ENABLED] === '1') {
+        await logToScion(messaging, internalPayload.messageType, dataPayload);
+    }
+}
+
+const name = "@firebase/messaging";
+const version = "0.9.12";
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const WindowMessagingFactory = (container) => {
+    const messaging = new MessagingService(container.getProvider('app').getImmediate(), container.getProvider('installations-internal').getImmediate(), container.getProvider('analytics-internal'));
+    navigator.serviceWorker.addEventListener('message', e => messageEventListener(messaging, e));
+    return messaging;
+};
+const WindowMessagingInternalFactory = (container) => {
+    const messaging = container
+        .getProvider('messaging')
+        .getImmediate();
+    const messagingInternal = {
+        getToken: (options) => getToken$1(messaging, options)
+    };
+    return messagingInternal;
+};
+function registerMessagingInWindow() {
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_3__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component('messaging', WindowMessagingFactory, "PUBLIC" /* PUBLIC */));
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_3__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component('messaging-internal', WindowMessagingInternalFactory, "PRIVATE" /* PRIVATE */));
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_3__.registerVersion)(name, version);
+    // BUILD_TARGET will be replaced by values like esm5, esm2017, cjs5, etc during the compilation
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_3__.registerVersion)(name, version, 'esm2017');
+}
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Checks if all required APIs exist in the browser.
+ * @returns a Promise that resolves to a boolean.
+ *
+ * @public
+ */
+async function isWindowSupported() {
+    try {
+        // This throws if open() is unsupported, so adding it to the conditional
+        // statement below can cause an uncaught error.
+        await (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.validateIndexedDBOpenable)();
+    }
+    catch (e) {
+        return false;
+    }
+    // firebase-js-sdk/issues/2393 reveals that idb#open in Safari iframe and Firefox private browsing
+    // might be prohibited to run. In these contexts, an error would be thrown during the messaging
+    // instantiating phase, informing the developers to import/call isSupported for special handling.
+    return (typeof window !== 'undefined' &&
+        (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.isIndexedDBAvailable)() &&
+        (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.areCookiesEnabled)() &&
+        'serviceWorker' in navigator &&
+        'PushManager' in window &&
+        'Notification' in window &&
+        'fetch' in window &&
+        ServiceWorkerRegistration.prototype.hasOwnProperty('showNotification') &&
+        PushSubscription.prototype.hasOwnProperty('getKey'));
+}
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+async function deleteToken$1(messaging) {
+    if (!navigator) {
+        throw ERROR_FACTORY.create("only-available-in-window" /* AVAILABLE_IN_WINDOW */);
+    }
+    if (!messaging.swRegistration) {
+        await registerDefaultSw(messaging);
+    }
+    return deleteTokenInternal(messaging);
+}
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function onMessage$1(messaging, nextOrObserver) {
+    if (!navigator) {
+        throw ERROR_FACTORY.create("only-available-in-window" /* AVAILABLE_IN_WINDOW */);
+    }
+    messaging.onMessageHandler = nextOrObserver;
+    return () => {
+        messaging.onMessageHandler = null;
+    };
+}
+
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Retrieves a Firebase Cloud Messaging instance.
+ *
+ * @returns The Firebase Cloud Messaging instance associated with the provided firebase app.
+ *
+ * @public
+ */
+function getMessagingInWindow(app = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_3__.getApp)()) {
+    // Conscious decision to make this async check non-blocking during the messaging instance
+    // initialization phase for performance consideration. An error would be thrown latter for
+    // developer's information. Developers can then choose to import and call `isSupported` for
+    // special handling.
+    isWindowSupported().then(isSupported => {
+        // If `isWindowSupported()` resolved, but returned false.
+        if (!isSupported) {
+            throw ERROR_FACTORY.create("unsupported-browser" /* UNSUPPORTED_BROWSER */);
+        }
+    }, _ => {
+        // If `isWindowSupported()` rejected.
+        throw ERROR_FACTORY.create("indexed-db-unsupported" /* INDEXED_DB_UNSUPPORTED */);
+    });
+    return (0,_firebase_app__WEBPACK_IMPORTED_MODULE_3__._getProvider)((0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.getModularInstance)(app), 'messaging').getImmediate();
+}
+/**
+ * Subscribes the {@link Messaging} instance to push notifications. Returns an Firebase Cloud
+ * Messaging registration token that can be used to send push messages to that {@link Messaging}
+ * instance.
+ *
+ * If a notification permission isn't already granted, this method asks the user for permission. The
+ * returned promise rejects if the user does not allow the app to show notifications.
+ *
+ * @param messaging - The {@link Messaging} instance.
+ * @param options - Provides an optional vapid key and an optinoal service worker registration
+ *
+ * @returns The promise resolves with an FCM registration token.
+ *
+ * @public
+ */
+async function getToken(messaging, options) {
+    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.getModularInstance)(messaging);
+    return getToken$1(messaging, options);
+}
+/**
+ * Deletes the registration token associated with this {@link Messaging} instance and unsubscribes
+ * the {@link Messaging} instance from the push subscription.
+ *
+ * @param messaging - The {@link Messaging} instance.
+ *
+ * @returns The promise resolves when the token has been successfully deleted.
+ *
+ * @public
+ */
+function deleteToken(messaging) {
+    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.getModularInstance)(messaging);
+    return deleteToken$1(messaging);
+}
+/**
+ * When a push message is received and the user is currently on a page for your origin, the
+ * message is passed to the page and an `onMessage()` event is dispatched with the payload of
+ * the push message.
+ *
+ *
+ * @param messaging - The {@link Messaging} instance.
+ * @param nextOrObserver - This function, or observer object with `next` defined,
+ *     is called when a message is received and the user is currently viewing your page.
+ * @returns To stop listening for messages execute this returned function.
+ *
+ * @public
+ */
+function onMessage(messaging, nextOrObserver) {
+    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.getModularInstance)(messaging);
+    return onMessage$1(messaging, nextOrObserver);
+}
+
+/**
+ * Firebase Cloud Messaging
+ *
+ * @packageDocumentation
+ */
+registerMessagingInWindow();
+
+
+//# sourceMappingURL=index.esm2017.js.map
+
 
 /***/ }),
 
@@ -13399,7 +25449,8 @@ module.exports = firebase.messaging;
   \***************************/
 /***/ ((module) => {
 
-module.exports = JSON.parse('{"de":{"action_block_contact":"Kontakt blockieren","action_cancel":"Abbrechen","action_clear_messages":"Nachrichten leeren","action_delete_messages":"Nachrichten für alle löschen","action_leave_chat":"Unterhaltung verlassen","action_report_chat":"Unterhaltung melden","archived_contacts":"Archivierte Kontakte ({count})","badge_danger":"Verdächtig","badge_owner":"Besitzer","badge_staff":"Verwaltung","badge_verified":"Verifiziert","badge_you":"Sie","block_contact_warning":"Möchten Sie diesen Kontakt wirklich blockieren?","blocked_contacts_link":"Blockierte Kontakte ({count})","button_add_another":"Hinzufügen","button_add_members":"Mitglieder hinzufügen","button_cancel":"Abbrechen","button_confirm":"Bestätigen","button_create":"Erstellen","button_delete_account":"Konto löschen","button_edit":"Bearbeiten","button_logout":"Abmelden","button_ok":"OK","button_reset":"Zurücksetzen","button_send_request":"Anfrage senden","button_sign_in":"Anmelden","button_sign_up":"Anmelden","button_subscribe":"Abbonieren","button_update":"Aktualisieren","cannot_initiate_file_upload":"Datei kann nicht hochgeladen werden.","channel":"Sender","channel_prompt":"Dies ist ein Sender","chat_invitation":"Sie sind eingeladen, an einem neuen Chat teilzunehmen. Was möchten Sie tun?","chat_invitation_accept":"Akzeptieren","chat_invitation_block":"Blockieren","chat_invitation_ignore":"Ignorieren","clear_messages_warning":"Sind Sie sicher, dass Sie diese Unterhaltung für alle leeren wollen? Das kann nicht rückgängig gemacht werden.","code_doesnot_match":"Code stimmt nicht überein","contacts_not_found":"Sie haben keine Unterhaltungen<br />¯∖_(ツ)_/¯","contacts_not_found_short":"Keine Kontakte für \'\'{query}\'\'","credential_email_prompt":"E-Mail Adresse für Registrierung","delete_account":"Konto löschen","delete_account_warning":"Möchten Sie das Konto wirklich löschen? Das kann nicht rückgängig gemacht werden","delete_messages_warning":"Sind Sie sicher, dass Sie diese Unterhaltung für alle löschen wollen? Das kann nicht rückgängig gemacht werden.","deleted_content":"Inhalt gelöscht","download_action":"herunterladen","drafty_attachment":"Dateianhang","drafty_form":"Formular:","drafty_image":"Bild","email_dative":"E-Mail","email_prompt":"E-Mail, z.B. lisam@beispiel.de","enable_peers_messaging":"Aktivieren","enter_confirmation_code_prompt":"Geben Sie den Bestätigungscode ein, der per {method} geschickt wurde:","error_invalid_id":"ungültige ID","file_attachment_too_large":"Die Dateigröße {size} überschreitet das Limit von {limit}.","forgot_password_link":"Passwort vergessen?","full_name_prompt":"Vollständiger Name, z.B. Lisa Musterfrau","granted_permissions":"Erteilt","group_has_no_members":"Keine Mitglieder","group_user_id_prompt":"Gruppe oder Benutzer ID","image_caption_prompt":"Bildunterschrift","invalid_content":"ungültiger Inhalt","invalid_security_token":"Ungültiger Sicherheitsschlüssel","label_client":"Client:","label_content_type":"Inhaltsart:","label_default_access_mode":"Standard Zugriffsmodus:","label_file_name":"Dateiname:","label_group_members":"Gruppenmitglieder:","label_incognito_mode":"inkognito-Modus:","label_message_sound":"Benachrichtigungston:","label_muting_topic":"Stumm geschaltet:","label_other_user":"Andere","label_password":"Passwort","label_permissions":"Berechtigungen:","label_private":"Privater Kommentar","label_push_notifications":"Benachrichtigungsmeldungen:","label_push_notifications_disabled":"Benachrichtigungsmeldungen (erfordert HTTPS):","label_reset_password":"Passwort per E-Mail wiederherstellen:","label_sdk":"SDK:","label_server":"Server:","label_server_address":"Server Adresse:","label_server_to_use":"Server verwenden:","label_size":"Größe:","label_topic_name":"Name","label_user_contacts":"Kontakte:","label_user_id":"ID:","label_wire_transport":"Übertragung per Kabel:","label_you":"Sie:","label_your_name":"Ihr Name","label_your_permissions":"Ihre Berechtigungen:","last_seen_timestamp":"Zuletzt gesehen","leave_chat_warning":"Möchten Sie diese Unterhaltung wirklich verlassen?","link_contact_us":"Kontakt","link_privacy_policy":"Datenschutzerklärung","link_terms_of_service":"Nutzungsbedingungen","login_prompt":"Anmelden","menu_item_archive_topic":"Archivieren","menu_item_block":"Blockieren","menu_item_clear_messages":"Nachrichten leeren","menu_item_clear_messages_for_all":"Für alle leeren","menu_item_delete":"Löschen","menu_item_delete_for_all":"Für alle löschen","menu_item_delete_topic":"Entfernen","menu_item_edit_permissions":"Berechtigungen ändern","menu_item_info":"Info","menu_item_member_delete":"Entfernen","menu_item_mute":"Unterhaltung stumm schalten","menu_item_restore_topic":"Wiederherstellen","menu_item_send_retry":"Wiederholen","menu_item_unblock":"Blockierung aufheben","menu_item_unmute":"Stumm schalten beenden","message_sending":"wird gesendet...","message_sending_failed":"fehlgeschlagen","messages_not_readable":"Neue Nachrichten können nicht gelesen werden","messaging_disabled_prompt":"Nachrichtenübermittlung deaktiviert","more_online_members":"+{overflow} mehr","new_message_prompt":"Neue Nachricht","new_password_placeholder":"Geben Sie ein neues Passwort ein","no_connection":"Keine Verbindung","no_contacts":"Sie haben keine Kontakte :-(","numeric_confirmation_code_prompt":"Nur zahlen","online_now":"jetzt online","password_prompt":"Passwort","password_unchanged_prompt":"unverändert","peers_messaging_disabled":"Gruppennachrichten sind deaktiviert","permission_admin":"Bestätigen ({val})","permission_delete":"Entfernen ({val})","permission_join":"Beitreten ({val})","permission_owner":"Besitzer ({val})","permission_pres":"Benachrichtigt werden ({val})","permission_read":"Lesen ({val})","permission_share":"Teilen ({val})","permission_write":"Schreiben ({val})","phone_dative":"Telefon","private_editing_placeholder":"Nur für Sie sichtbar","push_init_failed":"Initialisierung von Push-Benachrichtigungen fehlgeschlagen","reconnect_countdown":"Getrennt. Wiederverbinden in {seconds}…","reconnect_now":"Jetzt probieren","reload_update":"Neu laden","report_chat_warning":"Möchten Sie diese Unterhaltung wirklich blockieren und melden?","requested_permissions":"Angefordert","save_attachment":"Speichern","search_for_contacts":"Nutzen Sie die Suche um Kontakte zu finden","search_no_results":"Die Suche hatte keine Ergebnisse","search_placeholder":"Liste: email:lisa@beispiel.de, tel:17025550003...","sidepanel_title_acc_notifications":"Benachrichtigungen","sidepanel_title_acc_support":"Unterstützung","sidepanel_title_account_settings":"Konto-Einstellungen","sidepanel_title_archive":"Archivierte Unterhaltungen","sidepanel_title_blocked":"Blockierte Unterhaltungen","sidepanel_title_cred":"Anmeldeinformationen bestätigen","sidepanel_title_login":"Anmelden","sidepanel_title_newtpk":"Neue Unterhaltung starten","sidepanel_title_register":"Konto erstellen","sidepanel_title_reset":"Passwort zurücksetzen","sidepanel_title_settings":"Einstellungen","stay_logged_in":"Angemeldet bleiben","tabtitle_find_user":"Suchen","tabtitle_group_by_id":"nach ID","tabtitle_new_group":"Neue Gruppe","tags_editor_no_tags":"Schlagworte hinzufügen","tags_not_found":"Keine Schlagworte definiert. Erstellen Sie welche.","title_all_contacts":"Alle Kontakte","title_group_members":"Gruppenmitglieder","panel_title_info":"Info","title_manage_tags":"Verwalten","title_not_found":"Nicht gefunden","title_permissions":"Berechtigungen","title_tag_manager":"Schlagworte (Nutzer entdecken)","topic_block_warning":"Möchten Sie diese Unterhaltung wirklich blockieren?","topic_delete_warning":"Möchten Sie diese Unterhaltung wirklich löschen?","topic_name_editing_placeholder":"Freiform Name der Gruppe","unnamed_topic":"Unbenannt","update_available":"Aktualisierung verfügbar.","upload_finishing":"wird abgeschlossen...","user_not_found":"Nicht gefunden","validate_credential_action":"bestätigen","description_editing_placeholder":"Beschreibung (optional)","label_description":"Beschreibung","button_security":"Sicherheit","panel_title_general":"Allgemein","panel_title_security":"Sicherheit","panel_title_crop":"Zum Anpassen ziehen","panel_title_members":"Mitglieder","permissions_anonymous":"Anonym","permissions_authenticated":"Authentifiziert","topic_delete":"Chat löschen","permissions_user":"Benutzerberechtigungen","password_reset_email_sent":"Eine E-Mail wurde an {email} gesendet. Folgen Sie den Anweisungen in der E-Mail, um Ihr Passwort zurückzusetzen.","label_unarchive_topic":"Archiviert:","menu_item_reply":"Antwort","menu_item_forward":"Nach vorne","forward_to":"Weiterleiten","forward_to_search_placeholder":"Kontakte durchsuchen","label_new_password":"Neues Kennwort"},"en":{"action_block_contact":"Block Contact","action_cancel":"cancel","action_clear_messages":"Clear Messages","action_delete_messages":"Clear Messages for All","action_leave_chat":"Leave Conversation","action_report_chat":"Report Conversation","archived_contacts":"Archived contacts ({count})","badge_danger":"Untrustworthy","badge_owner":"owner","badge_staff":"Staff-managed","badge_verified":"Verified/official","badge_you":"you","block_contact_warning":"Are you sure you want to block this contact?","blocked_contacts_link":"Blocked contacts ({count})","button_add_another":"Add another","button_add_members":"Add members","button_cancel":"Cancel","button_confirm":"Confirm","button_create":"Create","button_delete_account":"Delete account","button_edit":"Edit","button_logout":"Logout","button_ok":"OK","button_reset":"Reset","button_send_request":"Send request","button_sign_in":"Sign in","button_sign_up":"Sign up","button_subscribe":"Subscribe","button_update":"Update","cannot_initiate_file_upload":"Cannot initiate file upload.","channel":"channel","channel_prompt":"This is a channel","chat_invitation":"You are invited to start a new chat. What would you like to do?","chat_invitation_accept":"Accept","chat_invitation_block":"Block","chat_invitation_ignore":"Ignore","clear_messages_warning":"Are you sure you want to clear all messages? It cannot be undone.","code_doesnot_match":"Code does not match","contacts_not_found":"You have no chats<br />¯∖_(ツ)_/¯","contacts_not_found_short":"No contacts match \'\'{query}\'\'","credential_email_prompt":"Your registration email","delete_account":"Delete account","delete_account_warning":"Are you sure you want to delete your account? It cannot be undone.","delete_messages_warning":"Are you sure you want to delete all messages for everyone? It cannot be undone.","deleted_content":"content deleted","download_action":"download","drafty_attachment":"Attachment","drafty_form":"Form:","drafty_image":"Picture","email_dative":"email","email_prompt":"Email, e.g. jdoe@example.com","enable_peers_messaging":"Enable","enter_confirmation_code_prompt":"Enter confirmation code sent to you by {method}:","error_invalid_id":"Invalid ID","file_attachment_too_large":"The file size {size} exceeds the {limit} limit.","forgot_password_link":"Forgot password?","full_name_prompt":"Full name, e.g. John Doe","granted_permissions":"Granted","group_has_no_members":"No members","group_user_id_prompt":"Group or User ID","image_caption_prompt":"Image caption","invalid_content":"invalid content","invalid_security_token":"Invalid security token","label_client":"Client:","label_content_type":"Content type:","label_default_access_mode":"Default access mode:","label_file_name":"File name:","label_group_members":"Group members:","label_incognito_mode":"Incognito mode:","label_message_sound":"Message sound:","label_muting_topic":"Muted:","label_other_user":"Other","label_password":"Password","label_permissions":"Permissions:","label_private":"Private comment","label_push_notifications":"Notification alerts:","label_push_notifications_disabled":"Notification alerts (requires HTTPS):","label_reset_password":"Send a password reset email:","label_sdk":"SDK:","label_server":"Server:","label_server_address":"Server address:","label_server_to_use":"Server to use:","label_size":"Size:","label_topic_name":"Name","label_user_contacts":"Contacts:","label_user_id":"ID:","label_wire_transport":"Wire transport:","label_you":"You:","label_your_name":"Your name","label_your_permissions":"Your permissions:","last_seen_timestamp":"Last seen","leave_chat_warning":"Are you sure you want to leave this conversation?","link_contact_us":"Contact Us","link_privacy_policy":"Privacy Policy","link_terms_of_service":"Terms of Service","login_prompt":"Login","menu_item_archive_topic":"Archive","menu_item_block":"Block","menu_item_clear_messages":"Clear messages","menu_item_clear_messages_for_all":"Clear for All","menu_item_delete":"Delete","menu_item_delete_for_all":"Delete for All","menu_item_delete_topic":"Delete","menu_item_edit_permissions":"Edit permissions","menu_item_info":"Info","menu_item_member_delete":"Remove","menu_item_mute":"Mute","menu_item_reply":"Reply","menu_item_restore_topic":"Restore","menu_item_send_retry":"Retry","menu_item_unblock":"Unblock","menu_item_unmute":"Unmute","message_sending":"sending...","message_sending_failed":"failed","messages_not_readable":"no access to messages","messaging_disabled_prompt":"Messaging disabled","more_online_members":"+{overflow} more","new_message_prompt":"New message","new_password_placeholder":"Enter new password","no_connection":"No connection","no_contacts":"You have no contacts :-(","numeric_confirmation_code_prompt":"Numbers only","online_now":"online now","password_prompt":"Password","password_unchanged_prompt":"Unchanged","peers_messaging_disabled":"Peer\'s messaging is disabled.","permission_admin":"Approve ({val})","permission_delete":"Delete ({val})","permission_join":"Join ({val})","permission_owner":"Owner ({val})","permission_pres":"Get notified ({val})","permission_read":"Read ({val})","permission_share":"Share ({val})","permission_write":"Write ({val})","phone_dative":"phone","private_editing_placeholder":"Visible to you only","push_init_failed":"Failed to initialize push notifications","reconnect_countdown":"Disconnected. Reconnecting in {seconds}…","reconnect_now":"Try now","reload_update":"Reload","report_chat_warning":"Are you sure you want to block and report this conversation?","requested_permissions":"Requested","save_attachment":"save","search_for_contacts":"Use search to find contacts","search_no_results":"Search returned no results","search_placeholder":"List like email:alice@example.com, tel:17025550003...","sidepanel_title_acc_notifications":"Notifications","sidepanel_title_acc_support":"Support","sidepanel_title_account_settings":"Account Settings","sidepanel_title_archive":"Archived Chats","sidepanel_title_blocked":"Blocked Chats","sidepanel_title_cred":"Confirm Credentials","sidepanel_title_login":"Sign In","sidepanel_title_newtpk":"Start New Chat","sidepanel_title_register":"Create Account","sidepanel_title_reset":"Reset Password","sidepanel_title_settings":"Settings","stay_logged_in":"Stay logged in","tabtitle_find_user":"find","tabtitle_group_by_id":"by id","tabtitle_new_group":"new group","tags_editor_no_tags":"Add some tags","tags_not_found":"No tags defined. Add some.","title_all_contacts":"All Contacts","title_group_members":"Group Members","title_manage_tags":"Manage","title_not_found":"Not found","title_permissions":"Permissions","title_tag_manager":"Tags (search & discovery)","topic_block_warning":"Are you sure you want to block this conversation?","topic_delete_warning":"Are you sure you want to delete this conversation?","topic_name_editing_placeholder":"Freeform name of the group","unnamed_topic":"Unnamed","update_available":"Update available.","upload_finishing":"finishing...","user_not_found":"Not found","validate_credential_action":"confirm","description_editing_placeholder":"Optional description","label_description":"Description","button_security":"Security","panel_title_crop":"Drag to Adjust","panel_title_general":"General","panel_title_members":"Members","panel_title_security":"Security","panel_title_info":"Info","permissions_anonymous":"Anonymous","permissions_authenticated":"Authenticated","topic_delete":"Delete Conversation","permissions_user":"User\'s Permissions","password_reset_email_sent":"An email has been sent to {email}. Follow the directions in the email to reset your password.","label_unarchive_topic":"Archived:","menu_item_forward":"Forward","forward_to":"Forward to","forward_to_search_placeholder":"Search contacts","label_new_password":"New password"},"es":{"action_block_contact":"Bloquear contacto","action_cancel":"cancelar","action_clear_messages":"Borrar mensajes","action_delete_messages":"Borrar mensajes para todos","action_leave_chat":"Dejar conversación","action_report_chat":"Reportar conversación","archived_contacts":"Contactos archivados ({count})","badge_danger":"Suspicaz","badge_owner":"propietario","badge_staff":"Administración","badge_verified":"Verificado","badge_you":"tú","block_contact_warning":"¿Estás seguro de que quieres bloquear a este contacto?","blocked_contacts_link":"Contactos bloqueados ({count})","button_add_another":"Añadir contacto","button_add_members":"Añadir miembros","button_cancel":"Cancelar","button_confirm":"Confirmar","button_create":"Crear","button_delete_account":"Eliminar cuenta","button_edit":"Editar","button_logout":"Cerrar sesión","button_ok":"OK","button_reset":"Restablecer","button_send_request":"Enviar petición","button_sign_in":"Entrar","button_sign_up":"Regístrate","button_subscribe":"Suscribirse","button_update":"Actualizar","cannot_initiate_file_upload":"No se pudo iniciar la carga del archivo.","channel":"canal","channel_prompt":"Este es un canal","chat_invitation":"Estás invitado a participar en un nuevo chat. ¿Qué te gustaría hacer?","chat_invitation_accept":"Aceptar","chat_invitation_block":"Bloquear","chat_invitation_ignore":"Ignorar","clear_messages_warning":"¿Estás seguro de que quieres eliminar todos los mensajes? Esta acción es irreversible.","code_doesnot_match":"El código no coincide","contacts_not_found":"No tienes chats<br />¯∖_(ツ)_/¯","contacts_not_found_short":"Ningún contacto coincide con \'\'{query}\'\'","credential_email_prompt":"Tu correo electrónico de registro","delete_account":"Eliminar cuenta","delete_account_warning":"¿Estás seguro de que deseas eliminar permanentemente tu cuenta? Esta acción es irreversible.","delete_messages_warning":"¿Estás seguro de que quieres eliminar todos los mensajes para todos? Esta acción es irreversible.","deleted_content":"este mensaje fue eliminado","download_action":"descargar","drafty_attachment":"Archivo","drafty_form":"Formulario:","drafty_image":"Imagen","email_dative":"correo electrónico","email_prompt":"Correo electrónico, p.ej. juan@example.com","enable_peers_messaging":"Habilitar","enter_confirmation_code_prompt":"Introduzca el código de confirmación enviado a tu {method}:","error_invalid_id":"ID inválido","file_attachment_too_large":"El tamaño del archivo {size} excede el límite de {limit}.","forgot_password_link":"¿Olvidaste tu contraseña?","full_name_prompt":"Nombre completo, p.ej. Juan González Hernández","granted_permissions":"Otorgados","group_has_no_members":"No hay miembros","group_user_id_prompt":"ID del grupo o usuario","image_caption_prompt":"Añade un comentario","invalid_content":"contenido inválido","invalid_security_token":"Token de seguridad inválido","label_client":"Cliente:","label_content_type":"Tipo de contenido:","label_default_access_mode":"Modo de acceso predeterminado:","label_file_name":"Nombre del archivo:","label_group_members":"Miembros del grupo:","label_incognito_mode":"Modo incógnito:","label_message_sound":"Sonido de mensaje:","label_muting_topic":"Silenciado:","label_other_user":"Otros","label_password":"Contraseña","label_permissions":"Permisos:","label_private":"Comentario privado","label_push_notifications":"Alertas de notificaciones:","label_push_notifications_disabled":"Alertas de notificaciones (requiere HTTPS):","label_reset_password":"Enviar un correo electrónico de restablecimiento de contraseña:","label_sdk":"SDK:","label_server":"Servidor:","label_server_address":"Dirección del servidor:","label_server_to_use":"Servidor para usar:","label_size":"Tamaño:","label_topic_name":"Nombre del tema","label_user_contacts":"Contactos:","label_user_id":"ID:","label_wire_transport":"Transporte de alambre:","label_you":"Tú:","label_your_name":"Tu nombre","label_your_permissions":"Tus permisos:","last_seen_timestamp":"Últ. vez","leave_chat_warning":"¿Estás seguro de que quieres dejar esta conversación?","link_contact_us":"Contáctanos","link_privacy_policy":"Política de privacidad","link_terms_of_service":"Términos de uso","login_prompt":"Nombre de usuario","menu_item_archive_topic":"Archivar","menu_item_block":"Bloquear","menu_item_clear_messages":"Borrar mensajes","menu_item_clear_messages_for_all":"Borrar para todos","menu_item_delete":"Eliminar","menu_item_delete_for_all":"Eliminar para todos","menu_item_delete_topic":"Eliminar","menu_item_edit_permissions":"Editar permisos","menu_item_info":"Información","menu_item_member_delete":"Eliminar","menu_item_mute":"Silenciar","menu_item_restore_topic":"Restaurar","menu_item_send_retry":"Inténtalo de nuevo","menu_item_unblock":"Desbloquear","menu_item_unmute":"Anular el silencio","message_sending":"enviando...","message_sending_failed":"no se pudo enviar el mensaje","messages_not_readable":"sin acceso a mensajes","messaging_disabled_prompt":"El envío de mensajes está deshabilitado","more_online_members":"+{overflow} más","new_message_prompt":"Nuevo mensaje","new_password_placeholder":"Introduzca una nueva contraseña","no_connection":"Sin conexión","no_contacts":"No tienes contactos :-(","numeric_confirmation_code_prompt":"Sólo números","online_now":"en línea","password_prompt":"Contraseña","password_unchanged_prompt":"Sin cambios","peers_messaging_disabled":"La mensajería Peer está deshabilitada.","permission_admin":"Approbar ({val})","permission_delete":"Eliminar ({val})","permission_join":"Unirse ({val})","permission_owner":"Propietario ({val})","permission_pres":"Ser notificado ({val})","permission_read":"Leer ({val})","permission_share":"Compartir ({val})","permission_write":"Escribir ({val})","phone_dative":"teléfono","private_editing_placeholder":"Sólo visible para tí","push_init_failed":"Error al inicializar las notificaciones push","reconnect_countdown":"Desconectado. Reconectando en {seconds}…","reconnect_now":"Reintentar","reload_update":"Recargar","report_chat_warning":"¿Estás seguro de que quieres bloquear y reportar a esta conversación?","requested_permissions":"Solicitados","save_attachment":"guardar","search_for_contacts":"Usa la búsqueda para encontrar contactos","search_no_results":"La búsqueda no arrojó resultados","search_placeholder":"Ej. email:alice@example.com, tel:17025550003...","sidepanel_title_acc_notifications":"Notificaciones","sidepanel_title_acc_support":"Soporte","sidepanel_title_account_settings":"Ajustes de la cuenta","sidepanel_title_archive":"Chats archivados","sidepanel_title_blocked":"Chats bloqueados","sidepanel_title_cred":"Confirmar credenciales","sidepanel_title_login":"Iniciar sesión","sidepanel_title_newtpk":"Iniciar un nuevo chat","sidepanel_title_register":"Crear cuenta","sidepanel_title_reset":"Restablecer contraseña","sidepanel_title_settings":"Ajustes","stay_logged_in":"Permanecer conectado","tabtitle_find_user":"encontrar","tabtitle_group_by_id":"por ID","tabtitle_new_group":"nuevo grupo","tags_editor_no_tags":"Añadir etiquetas","tags_not_found":"No hay etiquetas definidas. Añade unas.","title_all_contacts":"Todos los contactos","title_group_members":"Miembros del grupo","title_manage_tags":"Gestionar","title_not_found":"No encontrado","title_permissions":"Permisos","title_tag_manager":"Etiquetas (descubrimiento de usuarios)","topic_block_warning":"¿Estás seguro de que quieres bloquear esta conversación","topic_delete_warning":"¿Estás seguro de que quieres eliminar esta conversación?","topic_name_editing_placeholder":"Nombre del grupo","unnamed_topic":"Sin nombre","update_available":"Actualización disponible.","upload_finishing":"terminando...","user_not_found":"Usuario no encontrado","validate_credential_action":"confirmar","description_editing_placeholder":"Descripción (opcional)","label_description":"Descripción","button_security":"Seguridad","panel_title_crop":"Arrastra para ajustar","panel_title_general":"General","panel_title_members":"Miembros","panel_title_security":"Seguridad","panel_title_info":"Información","permissions_anonymous":"Anónimo","permissions_authenticated":"Autenticado","topic_delete":"Eliminar chat","permissions_user":"Permisos del usuario","password_reset_email_sent":"Se ha enviado un correo electrónico a {email}. Siga las instrucciones del correo electrónico para restablecer su contraseña.","label_unarchive_topic":"Archivado:","menu_item_reply":"Respuesta","menu_item_forward":"Reenviar","forward_to":"Reenviar a","forward_to_search_placeholder":"Buscar contactos","label_new_password":"Nueva contraseña"},"ko":{"action_block_contact":"연락차단","action_cancel":"취소","action_clear_messages":"메시지지우기","action_delete_messages":"모든메시지지우기","action_leave_chat":"대화나누기","action_report_chat":"대화기록","archived_contacts":"보관된연락처({수})","badge_danger":"의심 많은","badge_owner":"소유자","badge_staff":"직원 관리하에","badge_verified":"확인 됨","badge_you":"당신","block_contact_warning":"이연락처를차단하시겠습니까?","blocked_contacts_link":"차단된연락처({수})","button_add_another":"다른항목추가","button_add_members":"회원추가","button_cancel":"취소","button_confirm":"확인","button_create":"작성","button_delete_account":"계정삭제","button_edit":"편집","button_logout":"로그아웃","button_ok":"OK","button_reset":"재설정","button_send_request":"요청보내기","button_sign_in":"로그인","button_sign_up":"가입","button_subscribe":"구독","button_update":"업데이트","cannot_initiate_file_upload":"파일업로드를시작할수없습니다.","channel":"채널","channel_prompt":"이 채널입니다","chat_invitation":"새로운대화를시작하도록초대되었습니다.무엇을하시겠습니까?","chat_invitation_accept":"수락","chat_invitation_block":"차단","chat_invitation_ignore":"무시","clear_messages_warning":"모든메시지를지우시겠습니까?실행취소할수없습니다.","code_doesnot_match":"코드가일치하지않습니다","contacts_not_found":"채팅이없습니다<br/>¯∖_(ツ)_/¯","contacts_not_found_short":"\'{문의}\'와일치하는연락처가없습니다.","credential_email_prompt":"등록이메일","delete_account":"계정삭제","delete_account_warning":"계정을삭제하시겠습니까?실행취소할수없습니다.","delete_messages_warning":"모든사람의모든메시지를삭제하시겠습니까?실행취소할수없습니다.","deleted_content":"내용이 삭제되었습니다","download_action":"다운로드","drafty_attachment":"부착","drafty_form":"형태:","drafty_image":"이미지","email_dative":"이메일","email_prompt":"이메일(예:hong@example.com)","enable_peers_messaging":"활성화","enter_confirmation_code_prompt":"{방법}으로보낸확인코드를입력하십시오:","error_invalid_id":"잘못된ID","file_attachment_too_large":"파일크기{크기}이(가){제한}제한을초과합니다.","forgot_password_link":"비밀번호를잊으셨습니까?","full_name_prompt":"전체이름(예:홍길동)","granted_permissions":"승낙하다","group_has_no_members":"회원없음","group_user_id_prompt":"그룹또는사용자ID","image_caption_prompt":"이미지설명","invalid_content":"잘못된내용","invalid_security_token":"유효하지않은보안토큰","label_client":"클라이언트: ","label_content_type":"컨텐츠유형: ","label_default_access_mode":"기본액세스모드: ","label_file_name":"파일이름: ","label_group_members":"그룹회원: ","label_incognito_mode":"시크릿모드: ","label_message_sound":"메시지소리: ","label_muting_topic":"음소거: ","label_other_user":"기타","label_password":"비밀번호","label_permissions":"권한: ","label_private":"개인코멘트","label_push_notifications":"통지경보: ","label_push_notifications_disabled":"통지경보(HTTPS필요): ","label_reset_password":"비밀번호재설정이메일보내기: ","label_sdk":"SDK:","label_server":"서버: ","label_server_address":"서버주소: ","label_server_to_use":"사용할서버:","label_size":"크기: ","label_topic_name":"이름","label_user_contacts":"연락처: ","label_user_id":"ID:","label_wire_transport":"와이어수송:","label_you":"당신: ","label_your_name":"이름","label_your_permissions":"권한: ","last_seen_timestamp":"마지막으로본","leave_chat_warning":"이대화를나가시겠습니까?","link_contact_us":"문의처","link_privacy_policy":"개인정보보호정책","link_terms_of_service":"서비스약관","login_prompt":"로그인","menu_item_archive_topic":"보관","menu_item_block":"차단","menu_item_clear_messages":"메시지지우기","menu_item_clear_messages_for_all":"모두지우기","menu_item_delete":"삭제","menu_item_delete_for_all":"모두삭제","menu_item_delete_topic":"삭제","menu_item_edit_permissions":"편집권한","menu_item_info":"정보","menu_item_member_delete":"제거","menu_item_mute":"음소거","menu_item_restore_topic":"복원","menu_item_send_retry":"다시시도","menu_item_unblock":"차단해제","menu_item_unmute":"음소거해제","message_sending":"보내기...","message_sending_failed":"실패","messages_not_readable":"메시지에 액세스 할 수 없습니다","messaging_disabled_prompt":"메시지비활성화","more_online_members":"+{넘침}더보기","new_message_prompt":"새메시지","new_password_placeholder":"새비밀번호입력","no_connection":"연결없음","no_contacts":"연락처가없습니다 (._.)","numeric_confirmation_code_prompt":"숫자만","online_now":"현재접속중","password_prompt":"비밀번호","password_unchanged_prompt":"변경되지않음","peers_messaging_disabled":"동료의메시지가비활성화되었습니다.","permission_admin":"승인({val})","permission_delete":"삭제({val})","permission_join":"참여({val})","permission_owner":"소유자({val})","permission_pres":"알림받기({val})","permission_read":"읽기({val})","permission_share":"공유({val})","permission_write":"쓰기({val})","phone_dative":"전화","private_editing_placeholder":"나만볼수있습니다","push_init_failed":"푸시알림을초기화하지못했습니다","reconnect_countdown":"연결이끊어졌습니다.다시연결하는중{초}…","reconnect_now":"지금시도","reload_update":"재로드","report_chat_warning":"이대화를차단하고기록하시겠습니까?","requested_permissions":"요청","save_attachment":"저장","search_for_contacts":"검색을사용하여연락처찾기","search_no_results":"검색결과가없습니다","search_placeholder":"email:alice@example.com,tel:17025550003...와같은목록","sidepanel_title_acc_notifications":"알림","sidepanel_title_acc_support":"지원","sidepanel_title_account_settings":"계정설정","sidepanel_title_archive":"보관된채팅","sidepanel_title_blocked":"차단된채팅","sidepanel_title_cred":"자격증명확인","sidepanel_title_login":"로그인","sidepanel_title_newtpk":"새채팅시작","sidepanel_title_register":"계정만들기","sidepanel_title_reset":"비밀번호재설정","sidepanel_title_settings":"설정","stay_logged_in":"로그인상태유지","tabtitle_find_user":"찾기","tabtitle_group_by_id":"id로","tabtitle_new_group":"새그룹","tags_editor_no_tags":"일부태그추가","tags_not_found":"태그가정의되지않았습니다.일부를추가하십시오.","title_all_contacts":"모든연락처","title_group_members":"그룹구성원","title_manage_tags":"관리","title_not_found":"찾을수없음","title_permissions":"권한","title_tag_manager":"태그(사용자검색)","topic_block_warning":"이대화를차단하시겠습니까?","topic_delete_warning":"이대화를삭제하시겠습니까?","topic_name_editing_placeholder":"그룹의자유형이름","unnamed_topic":"이름없는","update_available":"업데이트가능.","upload_finishing":"마무리...","user_not_found":"찾을수없음","validate_credential_action":"확인","description_editing_placeholder":"설명(선택 사항)","label_description":"설명","button_security":"보안","panel_title_crop":"드래그하여 조정","panel_title_general":"일반","panel_title_members":"구성원","panel_title_security":"보안","panel_title_info":"정보","permissions_anonymous":"익명","permissions_authenticated":"인증됨","topic_delete":"채팅 삭제","permissions_user":"사용자 권한","password_reset_email_sent":"이메일이 {email}(으)로 전송되었습니다. 이메일의 지침에 따라 비밀번호를 재설정하세요.","label_unarchive_topic":"보관됨:","menu_item_reply":"회신하다","menu_item_forward":"리디렉션","forward_to":"메시지를 리디렉션","forward_to_search_placeholder":"연락처 검색","label_new_password":"새 비밀번호"},"ro":{"action_block_contact":"Blochează contact","action_cancel":"anulează","action_clear_messages":"Șterge mesajele","action_delete_messages":"Șterge toate mesajele","action_leave_chat":"Ieși din conversație","action_report_chat":"Raportează conversația","archived_contacts":"Contacte arhivate ({count})","badge_danger":"Suspicios","badge_owner":"owner","badge_staff":"Administrare","badge_verified":"Verificat","badge_you":"tu","block_contact_warning":"Ești sigur că dorești să blochezi acest contact?","blocked_contacts_link":"Contact blocate ({count})","button_add_another":"Adaugă","button_add_members":"Adaugă persoane","button_cancel":"Anulează","button_confirm":"Confirmă","button_create":"Creează","button_delete_account":"Șterge cont","button_edit":"Editează","button_logout":"Deconectare","button_ok":"OK","button_reset":"Resetează","button_send_request":"Trimite cerere","button_sign_in":"Conectează-te","button_sign_up":"Creează cont","button_subscribe":"Subscribe","button_update":"Actualizează","cannot_initiate_file_upload":"Nu se poate face încărcarea.","channel":"canal","channel_prompt":"Acesta este un canal","chat_invitation":"Ai primit invitație într-o conversație. Accepți?","chat_invitation_accept":"Da, accept","chat_invitation_block":"Blochează","chat_invitation_ignore":"Ignoră","clear_messages_warning":"Ești sigur că dorești să ștergi mesajele? Acestea nu pot fi recuperate.","code_doesnot_match":"Codul furnizat nu este valid","contacts_not_found":"Nu ai contacte salvate<br />¯∖_(ツ)_/¯","contacts_not_found_short":"Niciun contact găsit după criteriile \'\'{query}\'\'","credential_email_prompt":"Adresa de e-mail","delete_account":"Șterge contul","delete_account_warning":"Ești sigur că dorești să ștergi contul? Acesta nu va putea fi recuperat.","delete_messages_warning":"Ești sigur că dorești să șterge mesajele din toate conversațiile? Acestea nu pot fi recuperate.","deleted_content":"conținut șters","download_action":"download","drafty_attachment":"Atasament","drafty_form":"Formă:","drafty_image":"Imagine","email_dative":"email","email_prompt":"Adresa de e-mail","enable_peers_messaging":"Activează","enter_confirmation_code_prompt":"Introu codul de confirmare trimis pe {method}:","error_invalid_id":"ID Invalid","file_attachment_too_large":"Dimensiunea fișiterului {size} depășește limita de {limit}.","forgot_password_link":"Ți-ai uitat parola?","full_name_prompt":"Numele tău","granted_permissions":"Oferite","group_has_no_members":"În acest grup nu se află persoane","group_user_id_prompt":"Grup sau user ID","image_caption_prompt":"Titlul imaginii","invalid_content":"conținut invalid","invalid_security_token":"Codul de securitate este invalid","label_client":"Client:","label_content_type":"Tip conținut:","label_default_access_mode":"Default access mode:","label_file_name":"Nume fișier:","label_group_members":"Membrii grupului:","label_incognito_mode":"Mod incognito:","label_message_sound":"Sunet de mesaj:","label_muting_topic":"Mod silențios (muted):","label_other_user":"Altele","label_password":"Parola","label_permissions":"Permisiuni:","label_private":"Comentariu privat","label_push_notifications":"Alerte de notificare:","label_push_notifications_disabled":"Alerte de notificare (necesită HTTPS):","label_reset_password":"Resetează parola:","label_sdk":"SDK:","label_server":"Server:","label_server_address":"Adresa serverului:","label_server_to_use":"Server de utilizat:","label_size":"Size:","label_topic_name":"Nume","label_user_contacts":"Contacte:","label_user_id":"ID:","label_wire_transport":"Transportul legat:","label_you":"Tu:","label_your_name":"Numele tău","label_your_permissions":"Permisiuniile tale:","last_seen_timestamp":"Văzut ultima dată","leave_chat_warning":"Ești sigur că dorești să ieși din conersație?","link_contact_us":"Contactează-ne","link_privacy_policy":"Politica de Confidențialitate","link_terms_of_service":"Termenii Serviciului","login_prompt":"Conectează-te","menu_item_archive_topic":"Arhivează","menu_item_block":"Blochează","menu_item_clear_messages":"Șterge mesajele","menu_item_clear_messages_for_all":"Ștergele pe toate","menu_item_delete":"Șterge","menu_item_delete_for_all":"Ștergele pe toate","menu_item_delete_topic":"Șterge","menu_item_edit_permissions":"Editează permisiuni","menu_item_info":"Info","menu_item_member_delete":"Șterge persoană","menu_item_mute":"Mute","menu_item_restore_topic":"Restabili","menu_item_send_retry":"Reîncearcă","menu_item_unblock":"Deblochează","menu_item_unmute":"Unmute","message_sending":"se trimite...","message_sending_failed":"eroare","messages_not_readable":"Mesajele nu pot fi citite","messaging_disabled_prompt":"Mesageria este dezactivată","more_online_members":"+{overflow} mai mult","new_message_prompt":"Mesaj nou","new_password_placeholder":"Introdu parolă","no_connection":"Nu există conexiune","no_contacts":"Nu ai contacte adăugate :-(","numeric_confirmation_code_prompt":"Doar cifre","online_now":"online acum","password_prompt":"Parola","password_unchanged_prompt":"Neschimbată","peers_messaging_disabled":"Mesageria de tip Peer este dezactivată.","permission_admin":"Aprobare ({val})","permission_delete":"Ștergere ({val})","permission_join":"Participare ({val})","permission_owner":"Deținător ({val})","permission_pres":"Notificare ({val})","permission_read":"Citire ({val})","permission_share":"Distribuire ({val})","permission_write":"Scriere ({val})","phone_dative":"telefon","private_editing_placeholder":"Vizibil doar ție","push_init_failed":"Nu s-a reușit inițializarea tip push notifications","reconnect_countdown":"Deconectat. Se încearcă conectarea în {seconds}…","reconnect_now":"Încearcă din nou","reload_update":"Reîncarcă","report_chat_warning":"Ești sigur că dorești să blochezi și să raportezi această conversație?","requested_permissions":"Necesare","save_attachment":"salvează","search_for_contacts":"Caută în contacte","search_no_results":"Nu s-au găsit rezultate","search_placeholder":"Caută după e-mail sau număr telefon...","sidepanel_title_acc_notifications":"Notificări","sidepanel_title_acc_support":"Ajutor","sidepanel_title_account_settings":"Setările Contului","sidepanel_title_archive":"Conversații Arhivate","sidepanel_title_blocked":"Conversații Blocate","sidepanel_title_cred":"Confirmă credențiale","sidepanel_title_login":"Conectează-te","sidepanel_title_newtpk":"Creeză un nou Chat","sidepanel_title_register":"Creează Cont","sidepanel_title_reset":"Resetează Parola","sidepanel_title_settings":"Setări","stay_logged_in":"Rămâi conectat","tabtitle_find_user":"caută","tabtitle_group_by_id":"după id","tabtitle_new_group":"grup nou","tags_editor_no_tags":"Adaugă tag-uri","tags_not_found":"Niciun tag definit. Adaugă.","title_all_contacts":"Toate Contactele","title_group_members":"Persoanele din grup","title_manage_tags":"Administrează","title_not_found":"Nu a fost găsit","title_permissions":"Permisiuni","title_tag_manager":"Tag-uri (user discovery)","topic_block_warning":"Ești sigur că dorești să blochezi această conversație?","topic_delete_warning":"Ești sigur că dorești să șterge această conversație?","topic_name_editing_placeholder":"Numele grupului","unnamed_topic":"Nedenumit","update_available":"Actualizare disponibilă.","upload_finishing":"se încarcă...","user_not_found":"Utilizatorul nu a fost găsit","validate_credential_action":"confirmă","description_editing_placeholder":"Descriere (opțional)","label_description":"Descriere","button_security":"Securitate","panel_title_crop":"Trageți pentru a ajusta","panel_title_general":"Generale","panel_title_members":"Membri","panel_title_security":"Securitate","panel_title_info":"Info","permissions_anonymous":"Anonim","permissions_authenticated":"Autentificat","topic_delete":"Ștergeți Chat","permissions_user":"Permisiunile utilizatorului","password_reset_email_sent":"Un e-mail a fost trimis către {email}. Urmați instrucțiunile din e-mail pentru a vă reseta parola.","label_unarchive_topic":"Arhivat:","menu_item_reply":"A raspunde","menu_item_forward":"Redirecţiona","forward_to":"Redirecționați către","forward_to_search_placeholder":"Căutați contacte","label_new_password":"Parolă Nouă"},"ru":{"action_block_contact":"Заблокировать контакт","action_cancel":"отменить","action_clear_messages":"Удалить сообщения","action_delete_messages":"Удалить сообщения","action_leave_chat":"Уйти из чата","action_report_chat":"Сообщить о нарушении","archived_contacts":"Чаты в архиве ({count})","badge_danger":"Подозрительный","badge_owner":"влад.","badge_staff":"Администрация","badge_verified":"Верифицированный","badge_you":"вы","block_contact_warning":"Вы действительно заблокировать этот контакт?","blocked_contacts_link":"Заблокированные ({count})","button_add_another":"Добавить","button_add_members":"Добавить","button_cancel":"Отменить","button_confirm":"Подтвердить","button_create":"Создать","button_delete_account":"Удалить аккаунт","button_edit":"Редактировать","button_logout":"Выйти","button_ok":"OK","button_reset":"Изменить","button_send_request":"Отправить","button_sign_in":"Войти","button_sign_up":"Создать аккаунт","button_subscribe":"Подписаться","button_update":"Применить","cannot_initiate_file_upload":"Ошибка загрузки файла.","channel":"канал","channel_prompt":"Создать канал","chat_invitation":"Вас пригласили начать новый чат. Как вы хотите поступить?","chat_invitation_accept":"Принять","chat_invitation_block":"Заблокировать","chat_invitation_ignore":"Игнорировать","clear_messages_warning":"Вы действительно хотите удалить все сообщения в чате? Их будет невозможно восстановить.","code_doesnot_match":"Код не совпадает","contacts_not_found":"Чатов нет<br />¯∖_(ツ)_/¯","contacts_not_found_short":"Нет контактов для запроса \'\'{query}\'\'","credential_email_prompt":"Регистрационный емейл","delete_account":"Удалить аккаунт","delete_account_warning":"Вы уверены, что ходите удалить свой аккаунт? Его невозможно будет восстановить.","delete_messages_warning":"Вы действительно хотите удалить все сообщения?","deleted_content":"удалено","download_action":"скачать","drafty_attachment":"Аттачмент","drafty_form":"Форма:","drafty_image":"Картинка","email_dative":"емейлу","email_prompt":"Email, напр. ivan@example.com","enable_peers_messaging":"Разблокировать.","enter_confirmation_code_prompt":"Код подтверждения, полученный по {method}:","error_invalid_id":"Неверный ID","file_attachment_too_large":"Размер файла {size} превышает {limit} лимит.","forgot_password_link":"Напомнить пароль","full_name_prompt":"Полное имя, напр. Иван Петров","granted_permissions":"Получены","group_has_no_members":"Нет участников","group_user_id_prompt":"ID чата или пользователя","image_caption_prompt":"Подпись к фото","invalid_content":"сообщение не читается","invalid_security_token":"Токен некорректен","label_client":"Клиент:","label_content_type":"Тип:","label_default_access_mode":"Доступ по умолчанию:","label_file_name":"Имя файла:","label_group_members":"Участники чата:","label_incognito_mode":"Режим инкогнито:","label_message_sound":"Звук нового сообщения:","label_muting_topic":"Без уведомлений","label_other_user":"Второй","label_password":"Пароль","label_permissions":"Права доступа:","label_private":"Комментарий","label_push_notifications":"Уведомления:","label_push_notifications_disabled":"Уведомления (требуют HTTPS):","label_reset_password":"Отправить емейл для смены пароля:","label_sdk":"SDK:","label_server":"Сервер:","label_server_address":"Адрес сервера:","label_server_to_use":"Использовать сервер:","label_size":"Размер:","label_topic_name":"Название","label_user_contacts":"Конакты:","label_user_id":"ID:","label_wire_transport":"Соединение:","label_you":"Вы:","label_your_name":"Ваше имя","label_your_permissions":"Ваши права доступа:","last_seen_timestamp":"Был активен","leave_chat_warning":"Вы действительно хотите покинуть этот чат?","link_contact_us":"Связаться с нами","link_privacy_policy":"Политика конфиденциальности","link_terms_of_service":"Условия сервиса","login_prompt":"Логин","menu_item_archive_topic":"В архив","menu_item_block":"Заблокировать","menu_item_clear_messages":"Удалить сообщения","menu_item_clear_messages_for_all":"Удалить для всех","menu_item_delete":"Удалить","menu_item_delete_for_all":"Удалить для всех","menu_item_delete_topic":"Удалить чат","menu_item_edit_permissions":"Права доступа","menu_item_info":"Информация","menu_item_member_delete":"Отписать","menu_item_mute":"Не уведомлять","menu_item_restore_topic":"Разархивировать","menu_item_send_retry":"Отправить заново","menu_item_unblock":"Разблокировать","menu_item_unmute":"Уведомлять","message_sending":"в пути...","message_sending_failed":"ошибка","messages_not_readable":"нет доступа к сообщениям","messaging_disabled_prompt":"Отправка недоступна","more_online_members":"+еще {overflow}","new_message_prompt":"Новое сообщение","new_password_placeholder":"Введите новый пароль","no_connection":"Нет связи","no_contacts":"Ничего нет :-(","numeric_confirmation_code_prompt":"Только цифры","online_now":"онлайн","password_prompt":"Пароль","password_unchanged_prompt":"Не изменен","peers_messaging_disabled":"Чат заблокирован у корреспондента.","permission_admin":"Подтверждать ({val})","permission_delete":"Удалять ({val})","permission_join":"Подписываться ({val})","permission_owner":"Владелец ({val})","permission_pres":"Уведомлять ({val})","permission_read":"Читать ({val})","permission_share":"Приглашать ({val})","permission_write":"Писать ({val})","phone_dative":"телефону","private_editing_placeholder":"Виден только вам","push_init_failed":"Ошибка инициализации пуш уведомлений","reconnect_countdown":"Нет связи. Подключение через {seconds}…","reconnect_now":"Подключить сейчас.","reload_update":"Обновить","report_chat_warning":"Вы действительно хотите сообщить о нарушении и заблокировать этот чат?","requested_permissions":"Требуются","save_attachment":"сохранить","search_for_contacts":"Поиск контактов","search_no_results":"Ничего не найдено","search_placeholder":"Список, напр. email:alice@example.com, tel:+17025550003...","sidepanel_title_acc_notifications":"Уведомления","sidepanel_title_acc_support":"Поддержка","sidepanel_title_account_settings":"Настройки аккаунта","sidepanel_title_archive":"Архив чатов","sidepanel_title_blocked":"Заблокированные чаты","sidepanel_title_cred":"Подтвердить","sidepanel_title_login":"Авторизация","sidepanel_title_newtpk":"Новый чат","sidepanel_title_register":"Зарегистрироваться","sidepanel_title_reset":"Сменить пароль","sidepanel_title_settings":"Настройки","stay_logged_in":"Запомнить","tabtitle_find_user":"найти","tabtitle_group_by_id":"по id","tabtitle_new_group":"создать","tags_editor_no_tags":"Добавьте теги","tags_not_found":"Тегов нет. Добавьте","title_all_contacts":"Все контакты","title_group_members":"Участники","title_manage_tags":"Редактировать","title_not_found":"Не найден","title_permissions":"Права доступа","title_tag_manager":"Теги для поиска","topic_block_warning":"Вы действительно хотите заблокировать этот чат?","topic_delete_warning":"Вы действительно хотите удалить этот чат?","topic_name_editing_placeholder":"Название чата","unnamed_topic":"Без названия","update_available":"Есть новая версия приложения.","upload_finishing":"завершение...","user_not_found":"Не найден","validate_credential_action":"подтвердить","description_editing_placeholder":"Описание (не обязательно)","label_description":"Описание","button_security":"Безопасность","panel_title_crop":"Обрезать картинку","panel_title_general":"Общие настройки","panel_title_members":"Участники","panel_title_security":"Безопасность","panel_title_info":"Подробности","permissions_anonymous":"Анонимный","permissions_authenticated":"Авторизованный","topic_delete":"Удалить чат","permissions_user":"Права доступа","password_reset_email_sent":"Сообщение было отправлено на адрес {email}. Следуйте инструкциям в сообщении, чтобы изменить пароль.","label_unarchive_topic":"Архивирован:","menu_item_reply":"Ответить","menu_item_forward":"Переслать","forward_to":"Переслать","forward_to_search_placeholder":"Поиск контактов","label_new_password":"Новый пароль"},"zh-TW":{"action_block_contact":"封鎖聯絡人","action_cancel":"取消","action_clear_messages":"清除訊息","action_delete_messages":"為所有人清除訊息","action_leave_chat":"離開對話","action_report_chat":"檢舉對話","archived_contacts":"已封存的聯絡人 ({count})","badge_danger":"不可信","badge_owner":"擁有者","badge_staff":"員工管理","badge_verified":"已驗證/官方","badge_you":"您","block_contact_warning":"您確定要封鎖此聯絡人嗎？","blocked_contacts_link":"已封鎖的聯絡人 ({count})","button_add_another":"新增其他人","button_add_members":"新增成員","button_cancel":"取消","button_confirm":"確認","button_create":"建立","button_delete_account":"刪除帳號","button_edit":"編輯","button_logout":"登出","button_ok":"OK","button_reset":"重設","button_send_request":"傳送要求","button_sign_in":"登入","button_sign_up":"註冊","button_subscribe":"訂閱","button_update":"更新","cannot_initiate_file_upload":"無法為檔案上傳初始化。","channel":"頻道","channel_prompt":"這是頻道","chat_invitation":"您已被邀請開始新對話。您接下來要做什麼呢？","chat_invitation_accept":"接受","chat_invitation_block":"封鎖","chat_invitation_ignore":"忽略","clear_messages_warning":"您確定要清除所有訊息嗎？此操作無法復原。","code_doesnot_match":"代碼不相符","contacts_not_found":"您沒有任何對話<br />¯∖_(ツ)_/¯","contacts_not_found_short":"沒有符合 \'\'{query}\'\' 的聯絡人","credential_email_prompt":"您的註冊電子郵件地址","delete_account":"刪除帳號","delete_account_warning":"您確定要刪除您的帳戶嗎？此操作無法撤消。","delete_messages_warning":"您確定要為所有人刪除所有訊息嗎？此操作無法復原。","deleted_content":"內容已被刪除","download_action":"下載","drafty_attachment":"附加檔案","drafty_form":"表單：","drafty_image":"圖片","email_dative":"電子郵件地址","email_prompt":"電子郵件地址，例如：jdoe@example.com","enable_peers_messaging":"啟用","enter_confirmation_code_prompt":"輸入透過 {method} 傳送給您的確認碼：","error_invalid_id":"ID 無效","file_attachment_too_large":"檔案大小 {size} 超出 {limit} 限制。","forgot_password_link":"忘記密碼？","full_name_prompt":"全名，例如：王小明","granted_permissions":"已授權","group_has_no_members":"無成員","group_user_id_prompt":"群組或使用者 ID","image_caption_prompt":"圖片說明","invalid_content":"內容無效","invalid_security_token":"安全權杖無效","label_client":"客戶端：","label_content_type":"類型：","label_default_access_mode":"預設存取模式：","label_file_name":"檔名：","label_group_members":"群組成員：","label_incognito_mode":"無痕模式：","label_message_sound":"訊息提示聲：","label_muting_topic":"靜音：","label_other_user":"其他","label_password":"密碼","label_permissions":"權限：","label_private":"私人留言","label_push_notifications":"通知：","label_push_notifications_disabled":"通知 (需要 HTTPS)：","label_reset_password":"傳送重設密碼郵件：","label_sdk":"SDK：","label_server":"伺服器：","label_server_address":"伺服器位址：","label_server_to_use":"使用的伺服器：","label_size":"大小：","label_topic_name":"名稱","label_user_contacts":"聯絡人：","label_user_id":"ID：","label_wire_transport":"Wire transport：","label_you":"您：","label_your_name":"您的名字","label_your_permissions":"您的權限：","last_seen_timestamp":"最後上線","leave_chat_warning":"您確定要離開此對話嗎？","link_contact_us":"聯絡我們","link_privacy_policy":"隱私權政策","link_terms_of_service":"服務條款","login_prompt":"登入","menu_item_archive_topic":"封存","menu_item_block":"封鎖","menu_item_clear_messages":"清除訊息","menu_item_clear_messages_for_all":"為所有人清除訊息","menu_item_delete":"刪除","menu_item_delete_for_all":"為所有人刪除","menu_item_delete_topic":"刪除","menu_item_edit_permissions":"編輯權限","menu_item_info":"Info","menu_item_member_delete":"移除","menu_item_mute":"靜音","menu_item_restore_topic":"恢復","menu_item_send_retry":"重試","menu_item_unblock":"解除封鎖","menu_item_unmute":"解除靜音","message_sending":"正在傳送...","message_sending_failed":"失敗","messages_not_readable":"沒有存取訊息的權限","messaging_disabled_prompt":"停用訊息","more_online_members":"+{overflow}","new_message_prompt":"新訊息","new_password_placeholder":"輸入新的密碼","no_connection":"無連線","no_contacts":"您沒有任何聯絡人 :-(","numeric_confirmation_code_prompt":"僅數字","online_now":"上線中","password_prompt":"密碼","password_unchanged_prompt":"未修改","peers_messaging_disabled":"Peer 已停用訊息。","permission_admin":"核可 ({val})","permission_delete":"刪除 ({val})","permission_join":"加入 ({val})","permission_owner":"擁有者 ({val})","permission_pres":"收到通知 ({val})","permission_read":"讀取 ({val})","permission_share":"分享 ({val})","permission_write":"撰寫 ({val})","phone_dative":"phone","private_editing_placeholder":"僅您可見","push_init_failed":"初始化通知失敗。","reconnect_countdown":"已斷線。將在 {seconds} 秒後重新連線…","reconnect_now":"現在重試","reload_update":"重新載入","report_chat_warning":"您確定要封鎖並檢舉此對話嗎？","requested_permissions":"重新請求","save_attachment":"儲存","search_for_contacts":"使用搜尋來尋找聯絡人","search_no_results":"搜尋無結果","search_placeholder":"例如 email:alice@example.com, tel:17025550003... 的清單","sidepanel_title_acc_notifications":"通知","sidepanel_title_acc_support":"支援","sidepanel_title_account_settings":"帳號設定","sidepanel_title_archive":"已封存的對話","sidepanel_title_blocked":"已封鎖的對話","sidepanel_title_cred":"確認認證","sidepanel_title_login":"登入","sidepanel_title_newtpk":"開始新對話","sidepanel_title_register":"建立帳號","sidepanel_title_reset":"重設密碼","sidepanel_title_settings":"設定","stay_logged_in":"保持登入","tabtitle_find_user":"尋找","tabtitle_group_by_id":"以 id","tabtitle_new_group":"新群組","tags_editor_no_tags":"新增一些標籤","tags_not_found":"未定義任何標籤。請新增一些標籤。","title_all_contacts":"所有聯絡人","title_group_members":"群組成員","title_manage_tags":"管理","title_not_found":"找不到","title_permissions":"權限","title_tag_manager":"標籤 (使用者探索)","topic_block_warning":"您確定要封鎖此對話嗎？","topic_delete_warning":"您確定要刪除此對話嗎？","topic_name_editing_placeholder":"群組的任意名稱","unnamed_topic":"未命名","update_available":"有可用的更新。","upload_finishing":"正在完成...","user_not_found":"找不到","validate_credential_action":"確認","description_editing_placeholder":"說明（可選）","label_description":"說明","button_security":"安全性","panel_title_crop":"拖動調整","panel_title_general":"一般","panel_title_members":"成員","panel_title_security":"安全性","panel_title_info":"資訊","permissions_anonymous":"匿名","permissions_authenticated":"已認證","topic_delete":"刪除聊天","permissions_user":"用戶權限","password_reset_email_sent":"一封電子郵件已發送至 {email}。按照電子郵件中的說明重置密碼。","label_unarchive_topic":"存檔聊天：","menu_item_reply":"回答","menu_item_forward":"重定向","forward_to":"重定向消息","forward_to_search_placeholder":"搜索聯繫人","label_new_password":"新密碼"},"zh":{"action_block_contact":"屏蔽联系人","action_cancel":"取消","action_clear_messages":"删除讯息","action_delete_messages":"删除所有帖子","action_leave_chat":"离开","action_report_chat":"检举垃圾邮件","archived_contacts":"已归档联系人 ({count})","badge_danger":"可疑的","badge_owner":"所有者","badge_staff":"在员工管理下","badge_verified":"值得信赖","badge_you":"你","block_contact_warning":"您确定要阻止此联系人吗？","blocked_contacts_link":"封锁的联络人 ({count})","button_add_another":"加上另一个","button_add_members":"添加成员","button_cancel":"取消","button_confirm":"确认","button_create":"创建","button_delete_account":"删除帐户","button_edit":"编辑","button_logout":"登出","button_ok":"好","button_reset":"重置","button_send_request":"发送请求","button_sign_in":"登录","button_sign_up":"注册","button_subscribe":"订阅","button_update":"更新","cannot_initiate_file_upload":"无法初始化文件上传。","channel":"频道","channel_prompt":"这是一个频道","chat_invitation":"你受邀开始新会话。你想怎么做？","chat_invitation_accept":"接受","chat_invitation_block":"屏蔽","chat_invitation_ignore":"忽略","clear_messages_warning":"您确定要清除所有消息吗？无法撤消。","code_doesnot_match":"代码不匹配","contacts_not_found":"你尚无会话<br />¯∖_(ツ)_/¯","contacts_not_found_short":"无联系人匹配\'\'{query}\'\'","credential_email_prompt":"你的注册邮箱","delete_account":"删除帐户","delete_account_warning":"您确定要删除您的帐户吗？无法撤消。","delete_messages_warning":"您确定要删除所有消息吗？无法撤消。","deleted_content":"内容已删除","download_action":"下载","drafty_attachment":"附件","drafty_form":"形式：","drafty_image":"图像","email_dative":"电子邮件","email_prompt":"电子邮件，例如 zhang@example.com","enable_peers_messaging":"启用","enter_confirmation_code_prompt":"输入通过{method}发送的验证码：","error_invalid_id":"无效 ID","file_attachment_too_large":"文件大小 {size} 超过 {limit} 限制。","forgot_password_link":"忘记密码？","full_name_prompt":"全名，例如张伟","granted_permissions":"已授予","group_has_no_members":"无成员","group_user_id_prompt":"群组或用户 ID","image_caption_prompt":"图片标题","invalid_content":"无效内容","invalid_security_token":"无效的安全令牌","label_client":"客户端：","label_content_type":"内容类型：","label_default_access_mode":"蓦然访问模式：","label_file_name":"文件名：","label_group_members":"群组成员：","label_incognito_mode":"无痕模式：","label_message_sound":"消息提示音：","label_muting_topic":"已静音：","label_other_user":"其他","label_password":"密码","label_permissions":"权限：","label_private":"私人评论","label_push_notifications":"通知提醒：","label_push_notifications_disabled":"通知提醒（需要 HTTPS）：","label_reset_password":"发送密码重置邮件：","label_sdk":"开发包：","label_server":"服务器：","label_server_address":"服务器地址：","label_server_to_use":"使用的服务器：","label_size":"大小：","label_topic_name":"名称","label_user_contacts":"往来：","label_user_id":"地址：","label_wire_transport":"线路传输：","label_you":"你：","label_your_name":"你的姓名","label_your_permissions":"你的权限：","last_seen_timestamp":"最后可见","leave_chat_warning":"您确定要退出此对话吗？","link_contact_us":"联系我们","link_privacy_policy":"隐私政策","link_terms_of_service":"条款和条件","login_prompt":"登录","menu_item_archive_topic":"归档","menu_item_block":"屏蔽","menu_item_clear_messages":"清空消息","menu_item_clear_messages_for_all":"全部清除","menu_item_delete":"删除","menu_item_delete_for_all":"全部删除","menu_item_delete_topic":"删除","menu_item_edit_permissions":"编辑权限","menu_item_info":"信息","menu_item_member_delete":"移除","menu_item_mute":"静音","menu_item_restore_topic":"从存档中恢复","menu_item_send_retry":"重试","menu_item_unblock":"取消屏蔽","menu_item_unmute":"取消静音","message_sending":"正在发送...","message_sending_failed":"发送失败","messages_not_readable":"无消息访问权限","messaging_disabled_prompt":"消息已禁用","more_online_members":"还有{overflow}个","new_message_prompt":"新消息","new_password_placeholder":"输入新密码","no_connection":"无连接","no_contacts":"你尚无联系人 (._.)","numeric_confirmation_code_prompt":"仅数字","online_now":"在线","password_prompt":"密码","password_unchanged_prompt":"未改变","peers_messaging_disabled":"成员间消息已禁用。","permission_admin":"批准 ({val})","permission_delete":"删除 ({val})","permission_join":"加入 ({val})","permission_owner":"所有者 ({val})","permission_pres":"获取通知 ({val})","permission_read":"读取 ({val})","permission_share":"分享 ({val})","permission_write":"写入 ({val})","phone_dative":"电话","private_editing_placeholder":"仅自己可见","push_init_failed":"初始化推送通知失败","reconnect_countdown":"连接已断开。{seconds} 秒后重新连接…","reconnect_now":"立即尝试","reload_update":"重新载入","report_chat_warning":"您确定要停止并报告此对话吗？","requested_permissions":"已请求","save_attachment":"保存","search_for_contacts":"使用搜索寻找联系人","search_no_results":"搜索返回任何结果","search_placeholder":"列表如 email:alice@example.com, tel:+17025550003...","sidepanel_title_acc_notifications":"通知","sidepanel_title_acc_support":"支持","sidepanel_title_account_settings":"帐号设定","sidepanel_title_archive":"已存档会话","sidepanel_title_blocked":"被阻止的聊天","sidepanel_title_cred":"确认凭据","sidepanel_title_login":"登录","sidepanel_title_newtpk":"开始新会话","sidepanel_title_register":"创建账户","sidepanel_title_reset":"重置密码","sidepanel_title_settings":"设置","stay_logged_in":"保持登录","tabtitle_find_user":"搜索","tabtitle_group_by_id":"通过 id","tabtitle_new_group":"新群组","tags_editor_no_tags":"添加一些标签","tags_not_found":"尚未定义标签。添加一些。","title_all_contacts":"全部联系人","title_group_members":"群组成员","title_manage_tags":"管理标签","title_not_found":"无法找到","title_permissions":"权限","title_tag_manager":"标签（用户发现）","topic_block_warning":"您确定要阻止此对话吗？","topic_delete_warning":"您确定要删除此对话吗？","topic_name_editing_placeholder":"群组自由格式名称","unnamed_topic":"未命名","update_available":"更新可用。","upload_finishing":"正在结束...","user_not_found":"未找到","validate_credential_action":"确认","description_editing_placeholder":"说明（可选）","label_description":"说明","button_security":"安全","panel_title_crop":"拖动调整","panel_title_general":"常用设定","panel_title_members":"成员","panel_title_security":"安全","panel_title_info":"信息","permissions_anonymous":"匿名","permissions_authenticated":"已认证","topic_delete":"删除聊天","permissions_user":"用户权限","password_reset_email_sent":"一封电子邮件已发送至 {email}。按照电子邮件中的说明重置密码。","label_unarchive_topic":"存档：","menu_item_reply":"回复","menu_item_forward":"重定向","forward_to":"重定向消息","forward_to_search_placeholder":"搜索联系人","label_new_password":"新密码"}}');
+"use strict";
+module.exports = JSON.parse('{"de":{"action_block_contact":"Kontakt blockieren","action_cancel":"Abbrechen","action_clear_messages":"Nachrichten leeren","action_delete_messages":"Nachrichten für alle löschen","action_leave_chat":"Unterhaltung verlassen","action_report_chat":"Unterhaltung melden","archived_contacts":"Archivierte Kontakte ({count})","badge_danger":"Verdächtig","badge_owner":"Besitzer","badge_staff":"Verwaltung","badge_verified":"Verifiziert","badge_you":"Sie","block_contact_warning":"Möchten Sie diesen Kontakt wirklich blockieren?","blocked_contacts_link":"Blockierte Kontakte ({count})","button_add_another":"Hinzufügen","button_add_members":"Mitglieder hinzufügen","button_cancel":"Abbrechen","button_confirm":"Bestätigen","button_create":"Erstellen","button_delete_account":"Konto löschen","button_edit":"Bearbeiten","button_logout":"Abmelden","button_ok":"OK","button_reset":"Zurücksetzen","button_send_request":"Anfrage senden","button_sign_in":"Anmelden","button_sign_up":"Anmelden","button_subscribe":"Abbonieren","button_update":"Aktualisieren","cannot_initiate_file_upload":"Datei kann nicht hochgeladen werden.","channel":"Sender","channel_prompt":"Dies ist ein Sender","chat_invitation":"Sie sind eingeladen, an einem neuen Chat teilzunehmen. Was möchten Sie tun?","chat_invitation_accept":"Akzeptieren","chat_invitation_block":"Blockieren","chat_invitation_ignore":"Ignorieren","clear_messages_warning":"Sind Sie sicher, dass Sie diese Unterhaltung für alle leeren wollen? Das kann nicht rückgängig gemacht werden.","code_doesnot_match":"Code stimmt nicht überein","contacts_not_found":"Sie haben keine Unterhaltungen<br />¯∖_(ツ)_/¯","contacts_not_found_short":"Keine Kontakte für \'\'{query}\'\'","credential_email_prompt":"E-Mail Adresse für Registrierung","delete_account":"Konto löschen","delete_account_warning":"Möchten Sie das Konto wirklich löschen? Das kann nicht rückgängig gemacht werden","delete_messages_warning":"Sind Sie sicher, dass Sie diese Unterhaltung für alle löschen wollen? Das kann nicht rückgängig gemacht werden.","deleted_content":"Inhalt gelöscht","download_action":"herunterladen","drafty_attachment":"Dateianhang","drafty_form":"Formular:","drafty_image":"Bild","email_dative":"E-Mail","email_prompt":"E-Mail, z.B. lisam@beispiel.de","enable_peers_messaging":"Aktivieren","enter_confirmation_code_prompt":"Geben Sie den Bestätigungscode ein, der per {method} geschickt wurde:","error_invalid_id":"ungültige ID","file_attachment_too_large":"Die Dateigröße {size} überschreitet das Limit von {limit}.","forgot_password_link":"Passwort vergessen?","full_name_prompt":"Vollständiger Name, z.B. Lisa Musterfrau","granted_permissions":"Erteilt","group_has_no_members":"Keine Mitglieder","group_user_id_prompt":"Gruppe oder Benutzer ID","image_caption_prompt":"Bildunterschrift","invalid_content":"ungültiger Inhalt","invalid_security_token":"Ungültiger Sicherheitsschlüssel","label_client":"Client:","label_content_type":"Inhaltsart:","label_default_access_mode":"Standard Zugriffsmodus:","label_file_name":"Dateiname:","label_group_members":"Gruppenmitglieder:","label_incognito_mode":"inkognito-Modus:","label_message_sound":"Benachrichtigungston:","label_muting_topic":"Stumm geschaltet:","label_other_user":"Andere","label_password":"Passwort","label_permissions":"Berechtigungen:","label_private":"Privater Kommentar","label_push_notifications":"Benachrichtigungsmeldungen:","label_push_notifications_disabled":"Benachrichtigungsmeldungen (erfordert HTTPS):","label_reset_password":"Passwort per E-Mail wiederherstellen:","label_sdk":"SDK:","label_server":"Server:","label_server_address":"Server Adresse:","label_server_to_use":"Server verwenden:","label_size":"Größe:","label_topic_name":"Name","label_user_contacts":"Kontakte:","label_user_id":"ID:","label_wire_transport":"Übertragung per Kabel:","label_you":"Sie:","label_your_name":"Ihr Name","label_your_permissions":"Ihre Berechtigungen:","last_seen_timestamp":"Zuletzt gesehen","leave_chat_warning":"Möchten Sie diese Unterhaltung wirklich verlassen?","link_contact_us":"Kontakt","link_privacy_policy":"Datenschutzerklärung","link_terms_of_service":"Nutzungsbedingungen","login_prompt":"Anmelden","menu_item_archive_topic":"Archivieren","menu_item_block":"Blockieren","menu_item_clear_messages":"Nachrichten leeren","menu_item_clear_messages_for_all":"Für alle leeren","menu_item_delete":"Löschen","menu_item_delete_for_all":"Für alle löschen","menu_item_delete_topic":"Entfernen","menu_item_edit_permissions":"Berechtigungen ändern","menu_item_info":"Info","menu_item_member_delete":"Entfernen","menu_item_mute":"Unterhaltung stumm schalten","menu_item_restore_topic":"Wiederherstellen","menu_item_send_retry":"Wiederholen","menu_item_unblock":"Blockierung aufheben","menu_item_unmute":"Stumm schalten beenden","message_sending":"wird gesendet...","message_sending_failed":"fehlgeschlagen","messages_not_readable":"Neue Nachrichten können nicht gelesen werden","messaging_disabled_prompt":"Nachrichtenübermittlung deaktiviert","more_online_members":"+{overflow} mehr","new_message_prompt":"Neue Nachricht","new_password_placeholder":"Geben Sie ein neues Passwort ein","no_connection":"Keine Verbindung","no_contacts":"Sie haben keine Kontakte :-(","numeric_confirmation_code_prompt":"Nur zahlen","online_now":"jetzt online","password_prompt":"Passwort","password_unchanged_prompt":"unverändert","peers_messaging_disabled":"Gruppennachrichten sind deaktiviert","permission_admin":"Bestätigen ({val})","permission_delete":"Entfernen ({val})","permission_join":"Beitreten ({val})","permission_owner":"Besitzer ({val})","permission_pres":"Benachrichtigt werden ({val})","permission_read":"Lesen ({val})","permission_share":"Teilen ({val})","permission_write":"Schreiben ({val})","phone_dative":"Telefon","private_editing_placeholder":"Nur für Sie sichtbar","push_init_failed":"Initialisierung von Push-Benachrichtigungen fehlgeschlagen","reconnect_countdown":"Getrennt. Wiederverbinden in {seconds}…","reconnect_now":"Jetzt probieren","reload_update":"Neu laden","report_chat_warning":"Möchten Sie diese Unterhaltung wirklich blockieren und melden?","requested_permissions":"Angefordert","save_attachment":"Speichern","search_for_contacts":"Nutzen Sie die Suche um Kontakte zu finden","search_no_results":"Die Suche hatte keine Ergebnisse","search_placeholder":"Liste: email:lisa@beispiel.de, tel:17025550003...","sidepanel_title_acc_notifications":"Benachrichtigungen","sidepanel_title_acc_support":"Unterstützung","sidepanel_title_account_settings":"Konto-Einstellungen","sidepanel_title_archive":"Archivierte Unterhaltungen","sidepanel_title_blocked":"Blockierte Unterhaltungen","sidepanel_title_cred":"Anmeldeinformationen bestätigen","sidepanel_title_login":"Anmelden","sidepanel_title_newtpk":"Neue Unterhaltung starten","sidepanel_title_register":"Konto erstellen","sidepanel_title_reset":"Passwort zurücksetzen","sidepanel_title_settings":"Einstellungen","stay_logged_in":"Angemeldet bleiben","tabtitle_find_user":"Suchen","tabtitle_group_by_id":"nach ID","tabtitle_new_group":"Neue Gruppe","tags_editor_no_tags":"Schlagworte hinzufügen","tags_not_found":"Keine Schlagworte definiert. Erstellen Sie welche.","title_all_contacts":"Alle Kontakte","title_group_members":"Gruppenmitglieder","panel_title_info":"Info","title_manage_tags":"Verwalten","title_not_found":"Nicht gefunden","title_permissions":"Berechtigungen","title_tag_manager":"Schlagworte (Nutzer entdecken)","topic_block_warning":"Möchten Sie diese Unterhaltung wirklich blockieren?","topic_delete_warning":"Möchten Sie diese Unterhaltung wirklich löschen?","topic_name_editing_placeholder":"Freiform Name der Gruppe","unnamed_topic":"Unbenannt","update_available":"Aktualisierung verfügbar.","upload_finishing":"wird abgeschlossen...","user_not_found":"Nicht gefunden","validate_credential_action":"bestätigen","description_editing_placeholder":"Beschreibung (optional)","label_description":"Beschreibung","button_security":"Sicherheit","panel_title_general":"Allgemein","panel_title_security":"Sicherheit","panel_title_crop":"Zum Anpassen ziehen","panel_title_members":"Mitglieder","permissions_anonymous":"Anonym","permissions_authenticated":"Authentifiziert","topic_delete":"Chat löschen","permissions_user":"Benutzerberechtigungen","password_reset_email_sent":"Eine E-Mail wurde an {email} gesendet. Folgen Sie den Anweisungen in der E-Mail, um Ihr Passwort zurückzusetzen.","label_unarchive_topic":"Archiviert:","menu_item_reply":"Antwort","menu_item_forward":"Nach vorne","forward_to":"Weiterleiten","forward_to_search_placeholder":"Kontakte durchsuchen","label_new_password":"Neues Kennwort","drafty_unknown":"Nicht unterstützt","preview_unavailable":"nicht verfügbar"},"en":{"action_block_contact":"Block Contact","action_cancel":"cancel","action_clear_messages":"Clear Messages","action_delete_messages":"Clear Messages for All","action_leave_chat":"Leave Conversation","action_report_chat":"Report Conversation","archived_contacts":"Archived contacts ({count})","badge_danger":"Untrustworthy","badge_owner":"owner","badge_staff":"Staff-managed","badge_verified":"Verified/official","badge_you":"you","block_contact_warning":"Are you sure you want to block this contact?","blocked_contacts_link":"Blocked contacts ({count})","button_add_another":"Add another","button_add_members":"Add members","button_cancel":"Cancel","button_confirm":"Confirm","button_create":"Create","button_delete_account":"Delete account","button_edit":"Edit","button_logout":"Logout","button_ok":"OK","button_reset":"Reset","button_send_request":"Send request","button_sign_in":"Sign in","button_sign_up":"Sign up","button_subscribe":"Subscribe","button_update":"Update","cannot_initiate_file_upload":"Cannot initiate file upload.","channel":"channel","channel_prompt":"This is a channel","chat_invitation":"You are invited to start a new chat. What would you like to do?","chat_invitation_accept":"Accept","chat_invitation_block":"Block","chat_invitation_ignore":"Ignore","clear_messages_warning":"Are you sure you want to clear all messages? It cannot be undone.","code_doesnot_match":"Code does not match","contacts_not_found":"You have no chats<br />¯∖_(ツ)_/¯","contacts_not_found_short":"No contacts match \'\'{query}\'\'","credential_email_prompt":"Your registration email","delete_account":"Delete account","delete_account_warning":"Are you sure you want to delete your account? It cannot be undone.","delete_messages_warning":"Are you sure you want to delete all messages for everyone? It cannot be undone.","deleted_content":"content deleted","download_action":"download","drafty_attachment":"Attachment","drafty_form":"Form:","drafty_image":"Picture","email_dative":"email","email_prompt":"Email, e.g. jdoe@example.com","enable_peers_messaging":"Enable","enter_confirmation_code_prompt":"Enter confirmation code sent to you by {method}:","error_invalid_id":"Invalid ID","file_attachment_too_large":"The file size {size} exceeds the {limit} limit.","forgot_password_link":"Forgot password?","full_name_prompt":"Full name, e.g. John Doe","granted_permissions":"Granted","group_has_no_members":"No members","group_user_id_prompt":"Group or User ID","image_caption_prompt":"Image caption","invalid_content":"invalid content","invalid_security_token":"Invalid security token","label_client":"Client:","label_content_type":"Content type:","label_default_access_mode":"Default access mode:","label_file_name":"File name:","label_group_members":"Group members:","label_incognito_mode":"Incognito mode:","label_message_sound":"Message sound:","label_muting_topic":"Muted:","label_other_user":"Other","label_password":"Password","label_permissions":"Permissions:","label_private":"Private comment","label_push_notifications":"Notification alerts:","label_push_notifications_disabled":"Notification alerts (requires HTTPS):","label_reset_password":"Send a password reset email:","label_sdk":"SDK:","label_server":"Server:","label_server_address":"Server address:","label_server_to_use":"Server to use:","label_size":"Size:","label_topic_name":"Name","label_user_contacts":"Contacts:","label_user_id":"ID:","label_wire_transport":"Wire transport:","label_you":"You:","label_your_name":"Your name","label_your_permissions":"Your permissions:","last_seen_timestamp":"Last seen","leave_chat_warning":"Are you sure you want to leave this conversation?","link_contact_us":"Contact Us","link_privacy_policy":"Privacy Policy","link_terms_of_service":"Terms of Service","login_prompt":"Login","menu_item_archive_topic":"Archive","menu_item_block":"Block","menu_item_clear_messages":"Clear messages","menu_item_clear_messages_for_all":"Clear for All","menu_item_delete":"Delete","menu_item_delete_for_all":"Delete for All","menu_item_delete_topic":"Delete","menu_item_edit_permissions":"Edit permissions","menu_item_info":"Info","menu_item_member_delete":"Remove","menu_item_mute":"Mute","menu_item_reply":"Reply","menu_item_restore_topic":"Restore","menu_item_send_retry":"Retry","menu_item_unblock":"Unblock","menu_item_unmute":"Unmute","message_sending":"sending...","message_sending_failed":"failed","messages_not_readable":"no access to messages","messaging_disabled_prompt":"Messaging disabled","more_online_members":"+{overflow} more","new_message_prompt":"New message","new_password_placeholder":"Enter new password","no_connection":"No connection","no_contacts":"You have no contacts :-(","numeric_confirmation_code_prompt":"Numbers only","online_now":"online now","password_prompt":"Password","password_unchanged_prompt":"Unchanged","peers_messaging_disabled":"Peer\'s messaging is disabled.","permission_admin":"Approve ({val})","permission_delete":"Delete ({val})","permission_join":"Join ({val})","permission_owner":"Owner ({val})","permission_pres":"Get notified ({val})","permission_read":"Read ({val})","permission_share":"Share ({val})","permission_write":"Write ({val})","phone_dative":"phone","private_editing_placeholder":"Visible to you only","push_init_failed":"Failed to initialize push notifications","reconnect_countdown":"Disconnected. Reconnecting in {seconds}…","reconnect_now":"Try now","reload_update":"Reload","report_chat_warning":"Are you sure you want to block and report this conversation?","requested_permissions":"Requested","save_attachment":"save","search_for_contacts":"Use search to find contacts","search_no_results":"Search returned no results","search_placeholder":"List like email:alice@example.com, tel:17025550003...","sidepanel_title_acc_notifications":"Notifications","sidepanel_title_acc_support":"Support","sidepanel_title_account_settings":"Account Settings","sidepanel_title_archive":"Archived Chats","sidepanel_title_blocked":"Blocked Chats","sidepanel_title_cred":"Confirm Credentials","sidepanel_title_login":"Sign In","sidepanel_title_newtpk":"Start New Chat","sidepanel_title_register":"Create Account","sidepanel_title_reset":"Reset Password","sidepanel_title_settings":"Settings","stay_logged_in":"Stay logged in","tabtitle_find_user":"find","tabtitle_group_by_id":"by id","tabtitle_new_group":"new group","tags_editor_no_tags":"Add some tags","tags_not_found":"No tags defined. Add some.","title_all_contacts":"All Contacts","title_group_members":"Group Members","title_manage_tags":"Manage","title_not_found":"Not found","title_permissions":"Permissions","title_tag_manager":"Tags (search & discovery)","topic_block_warning":"Are you sure you want to block this conversation?","topic_delete_warning":"Are you sure you want to delete this conversation?","topic_name_editing_placeholder":"Freeform name of the group","unnamed_topic":"Unnamed","update_available":"Update available.","upload_finishing":"finishing...","user_not_found":"Not found","validate_credential_action":"confirm","description_editing_placeholder":"Optional description","label_description":"Description","button_security":"Security","panel_title_crop":"Drag to Adjust","panel_title_general":"General","panel_title_members":"Members","panel_title_security":"Security","panel_title_info":"Info","permissions_anonymous":"Anonymous","permissions_authenticated":"Authenticated","topic_delete":"Delete Conversation","permissions_user":"User\'s Permissions","password_reset_email_sent":"An email has been sent to {email}. Follow the directions in the email to reset your password.","label_unarchive_topic":"Archived:","menu_item_forward":"Forward","forward_to":"Forward to","forward_to_search_placeholder":"Search contacts","label_new_password":"New password","drafty_unknown":"Unsupported","preview_unavailable":"unavailable","calls_incoming":"Incoming Call","calls_incoming_title":"Incoming Call","calls_outgoing":"Outgoing Call","calls_you_label":"You","menu_item_video_call":"Video Call"},"es":{"action_block_contact":"Bloquear contacto","action_cancel":"cancelar","action_clear_messages":"Borrar mensajes","action_delete_messages":"Borrar mensajes para todos","action_leave_chat":"Dejar conversación","action_report_chat":"Reportar conversación","archived_contacts":"Contactos archivados ({count})","badge_danger":"Suspicaz","badge_owner":"propietario","badge_staff":"Administración","badge_verified":"Verificado","badge_you":"tú","block_contact_warning":"¿Estás seguro de que quieres bloquear a este contacto?","blocked_contacts_link":"Contactos bloqueados ({count})","button_add_another":"Añadir contacto","button_add_members":"Añadir miembros","button_cancel":"Cancelar","button_confirm":"Confirmar","button_create":"Crear","button_delete_account":"Eliminar cuenta","button_edit":"Editar","button_logout":"Cerrar sesión","button_ok":"OK","button_reset":"Restablecer","button_send_request":"Enviar petición","button_sign_in":"Entrar","button_sign_up":"Regístrate","button_subscribe":"Suscribirse","button_update":"Actualizar","cannot_initiate_file_upload":"No se pudo iniciar la carga del archivo.","channel":"canal","channel_prompt":"Este es un canal","chat_invitation":"Estás invitado a participar en un nuevo chat. ¿Qué te gustaría hacer?","chat_invitation_accept":"Aceptar","chat_invitation_block":"Bloquear","chat_invitation_ignore":"Ignorar","clear_messages_warning":"¿Estás seguro de que quieres eliminar todos los mensajes? Esta acción es irreversible.","code_doesnot_match":"El código no coincide","contacts_not_found":"No tienes chats<br />¯∖_(ツ)_/¯","contacts_not_found_short":"Ningún contacto coincide con \'\'{query}\'\'","credential_email_prompt":"Tu correo electrónico de registro","delete_account":"Eliminar cuenta","delete_account_warning":"¿Estás seguro de que deseas eliminar permanentemente tu cuenta? Esta acción es irreversible.","delete_messages_warning":"¿Estás seguro de que quieres eliminar todos los mensajes para todos? Esta acción es irreversible.","deleted_content":"este mensaje fue eliminado","download_action":"descargar","drafty_attachment":"Archivo","drafty_form":"Formulario:","drafty_image":"Imagen","email_dative":"correo electrónico","email_prompt":"Correo electrónico, p.ej. juan@example.com","enable_peers_messaging":"Habilitar","enter_confirmation_code_prompt":"Introduzca el código de confirmación enviado a tu {method}:","error_invalid_id":"ID inválido","file_attachment_too_large":"El tamaño del archivo {size} excede el límite de {limit}.","forgot_password_link":"¿Olvidaste tu contraseña?","full_name_prompt":"Nombre completo, p.ej. Juan González Hernández","granted_permissions":"Otorgados","group_has_no_members":"No hay miembros","group_user_id_prompt":"ID del grupo o usuario","image_caption_prompt":"Añade un comentario","invalid_content":"contenido inválido","invalid_security_token":"Token de seguridad inválido","label_client":"Cliente:","label_content_type":"Tipo de contenido:","label_default_access_mode":"Modo de acceso predeterminado:","label_file_name":"Nombre del archivo:","label_group_members":"Miembros del grupo:","label_incognito_mode":"Modo incógnito:","label_message_sound":"Sonido de mensaje:","label_muting_topic":"Silenciado:","label_other_user":"Otros","label_password":"Contraseña","label_permissions":"Permisos:","label_private":"Comentario privado","label_push_notifications":"Alertas de notificaciones:","label_push_notifications_disabled":"Alertas de notificaciones (requiere HTTPS):","label_reset_password":"Enviar un correo electrónico de restablecimiento de contraseña:","label_sdk":"SDK:","label_server":"Servidor:","label_server_address":"Dirección del servidor:","label_server_to_use":"Servidor para usar:","label_size":"Tamaño:","label_topic_name":"Nombre del tema","label_user_contacts":"Contactos:","label_user_id":"ID:","label_wire_transport":"Transporte de alambre:","label_you":"Tú:","label_your_name":"Tu nombre","label_your_permissions":"Tus permisos:","last_seen_timestamp":"Últ. vez","leave_chat_warning":"¿Estás seguro de que quieres dejar esta conversación?","link_contact_us":"Contáctanos","link_privacy_policy":"Política de privacidad","link_terms_of_service":"Términos de uso","login_prompt":"Nombre de usuario","menu_item_archive_topic":"Archivar","menu_item_block":"Bloquear","menu_item_clear_messages":"Borrar mensajes","menu_item_clear_messages_for_all":"Borrar para todos","menu_item_delete":"Eliminar","menu_item_delete_for_all":"Eliminar para todos","menu_item_delete_topic":"Eliminar","menu_item_edit_permissions":"Editar permisos","menu_item_info":"Información","menu_item_member_delete":"Eliminar","menu_item_mute":"Silenciar","menu_item_restore_topic":"Restaurar","menu_item_send_retry":"Inténtalo de nuevo","menu_item_unblock":"Desbloquear","menu_item_unmute":"Anular el silencio","message_sending":"enviando...","message_sending_failed":"no se pudo enviar el mensaje","messages_not_readable":"sin acceso a mensajes","messaging_disabled_prompt":"El envío de mensajes está deshabilitado","more_online_members":"+{overflow} más","new_message_prompt":"Nuevo mensaje","new_password_placeholder":"Introduzca una nueva contraseña","no_connection":"Sin conexión","no_contacts":"No tienes contactos :-(","numeric_confirmation_code_prompt":"Sólo números","online_now":"en línea","password_prompt":"Contraseña","password_unchanged_prompt":"Sin cambios","peers_messaging_disabled":"La mensajería Peer está deshabilitada.","permission_admin":"Approbar ({val})","permission_delete":"Eliminar ({val})","permission_join":"Unirse ({val})","permission_owner":"Propietario ({val})","permission_pres":"Ser notificado ({val})","permission_read":"Leer ({val})","permission_share":"Compartir ({val})","permission_write":"Escribir ({val})","phone_dative":"teléfono","private_editing_placeholder":"Sólo visible para tí","push_init_failed":"Error al inicializar las notificaciones push","reconnect_countdown":"Desconectado. Reconectando en {seconds}…","reconnect_now":"Reintentar","reload_update":"Recargar","report_chat_warning":"¿Estás seguro de que quieres bloquear y reportar a esta conversación?","requested_permissions":"Solicitados","save_attachment":"guardar","search_for_contacts":"Usa la búsqueda para encontrar contactos","search_no_results":"La búsqueda no arrojó resultados","search_placeholder":"Ej. email:alice@example.com, tel:17025550003...","sidepanel_title_acc_notifications":"Notificaciones","sidepanel_title_acc_support":"Soporte","sidepanel_title_account_settings":"Ajustes de la cuenta","sidepanel_title_archive":"Chats archivados","sidepanel_title_blocked":"Chats bloqueados","sidepanel_title_cred":"Confirmar credenciales","sidepanel_title_login":"Iniciar sesión","sidepanel_title_newtpk":"Iniciar un nuevo chat","sidepanel_title_register":"Crear cuenta","sidepanel_title_reset":"Restablecer contraseña","sidepanel_title_settings":"Ajustes","stay_logged_in":"Permanecer conectado","tabtitle_find_user":"encontrar","tabtitle_group_by_id":"por ID","tabtitle_new_group":"nuevo grupo","tags_editor_no_tags":"Añadir etiquetas","tags_not_found":"No hay etiquetas definidas. Añade unas.","title_all_contacts":"Todos los contactos","title_group_members":"Miembros del grupo","title_manage_tags":"Gestionar","title_not_found":"No encontrado","title_permissions":"Permisos","title_tag_manager":"Etiquetas (descubrimiento de usuarios)","topic_block_warning":"¿Estás seguro de que quieres bloquear esta conversación","topic_delete_warning":"¿Estás seguro de que quieres eliminar esta conversación?","topic_name_editing_placeholder":"Nombre del grupo","unnamed_topic":"Sin nombre","update_available":"Actualización disponible.","upload_finishing":"terminando...","user_not_found":"Usuario no encontrado","validate_credential_action":"confirmar","description_editing_placeholder":"Descripción (opcional)","label_description":"Descripción","button_security":"Seguridad","panel_title_crop":"Arrastra para ajustar","panel_title_general":"General","panel_title_members":"Miembros","panel_title_security":"Seguridad","panel_title_info":"Información","permissions_anonymous":"Anónimo","permissions_authenticated":"Autenticado","topic_delete":"Eliminar chat","permissions_user":"Permisos del usuario","password_reset_email_sent":"Se ha enviado un correo electrónico a {email}. Siga las instrucciones del correo electrónico para restablecer su contraseña.","label_unarchive_topic":"Archivado:","menu_item_reply":"Respuesta","menu_item_forward":"Reenviar","forward_to":"Reenviar a","forward_to_search_placeholder":"Buscar contactos","label_new_password":"Nueva contraseña","drafty_unknown":"No soportado","preview_unavailable":"indisponible"},"ko":{"action_block_contact":"연락차단","action_cancel":"취소","action_clear_messages":"메시지지우기","action_delete_messages":"모든메시지지우기","action_leave_chat":"대화나누기","action_report_chat":"대화기록","archived_contacts":"보관된연락처({수})","badge_danger":"의심 많은","badge_owner":"소유자","badge_staff":"직원 관리하에","badge_verified":"확인 됨","badge_you":"당신","block_contact_warning":"이연락처를차단하시겠습니까?","blocked_contacts_link":"차단된연락처({수})","button_add_another":"다른항목추가","button_add_members":"회원추가","button_cancel":"취소","button_confirm":"확인","button_create":"작성","button_delete_account":"계정삭제","button_edit":"편집","button_logout":"로그아웃","button_ok":"OK","button_reset":"재설정","button_send_request":"요청보내기","button_sign_in":"로그인","button_sign_up":"가입","button_subscribe":"구독","button_update":"업데이트","cannot_initiate_file_upload":"파일업로드를시작할수없습니다.","channel":"채널","channel_prompt":"이 채널입니다","chat_invitation":"새로운대화를시작하도록초대되었습니다.무엇을하시겠습니까?","chat_invitation_accept":"수락","chat_invitation_block":"차단","chat_invitation_ignore":"무시","clear_messages_warning":"모든메시지를지우시겠습니까?실행취소할수없습니다.","code_doesnot_match":"코드가일치하지않습니다","contacts_not_found":"채팅이없습니다<br/>¯∖_(ツ)_/¯","contacts_not_found_short":"\'{문의}\'와일치하는연락처가없습니다.","credential_email_prompt":"등록이메일","delete_account":"계정삭제","delete_account_warning":"계정을삭제하시겠습니까?실행취소할수없습니다.","delete_messages_warning":"모든사람의모든메시지를삭제하시겠습니까?실행취소할수없습니다.","deleted_content":"내용이 삭제되었습니다","download_action":"다운로드","drafty_attachment":"부착","drafty_form":"형태:","drafty_image":"이미지","email_dative":"이메일","email_prompt":"이메일(예:hong@example.com)","enable_peers_messaging":"활성화","enter_confirmation_code_prompt":"{방법}으로보낸확인코드를입력하십시오:","error_invalid_id":"잘못된ID","file_attachment_too_large":"파일크기{크기}이(가){제한}제한을초과합니다.","forgot_password_link":"비밀번호를잊으셨습니까?","full_name_prompt":"전체이름(예:홍길동)","granted_permissions":"승낙하다","group_has_no_members":"회원없음","group_user_id_prompt":"그룹또는사용자ID","image_caption_prompt":"이미지설명","invalid_content":"잘못된내용","invalid_security_token":"유효하지않은보안토큰","label_client":"클라이언트: ","label_content_type":"컨텐츠유형: ","label_default_access_mode":"기본액세스모드: ","label_file_name":"파일이름: ","label_group_members":"그룹회원: ","label_incognito_mode":"시크릿모드: ","label_message_sound":"메시지소리: ","label_muting_topic":"음소거: ","label_other_user":"기타","label_password":"비밀번호","label_permissions":"권한: ","label_private":"개인코멘트","label_push_notifications":"통지경보: ","label_push_notifications_disabled":"통지경보(HTTPS필요): ","label_reset_password":"비밀번호재설정이메일보내기: ","label_sdk":"SDK:","label_server":"서버: ","label_server_address":"서버주소: ","label_server_to_use":"사용할서버:","label_size":"크기: ","label_topic_name":"이름","label_user_contacts":"연락처: ","label_user_id":"ID:","label_wire_transport":"와이어수송:","label_you":"당신: ","label_your_name":"이름","label_your_permissions":"권한: ","last_seen_timestamp":"마지막으로본","leave_chat_warning":"이대화를나가시겠습니까?","link_contact_us":"문의처","link_privacy_policy":"개인정보보호정책","link_terms_of_service":"서비스약관","login_prompt":"로그인","menu_item_archive_topic":"보관","menu_item_block":"차단","menu_item_clear_messages":"메시지지우기","menu_item_clear_messages_for_all":"모두지우기","menu_item_delete":"삭제","menu_item_delete_for_all":"모두삭제","menu_item_delete_topic":"삭제","menu_item_edit_permissions":"편집권한","menu_item_info":"정보","menu_item_member_delete":"제거","menu_item_mute":"음소거","menu_item_restore_topic":"복원","menu_item_send_retry":"다시시도","menu_item_unblock":"차단해제","menu_item_unmute":"음소거해제","message_sending":"보내기...","message_sending_failed":"실패","messages_not_readable":"메시지에 액세스 할 수 없습니다","messaging_disabled_prompt":"메시지비활성화","more_online_members":"+{넘침}더보기","new_message_prompt":"새메시지","new_password_placeholder":"새비밀번호입력","no_connection":"연결없음","no_contacts":"연락처가없습니다 (._.)","numeric_confirmation_code_prompt":"숫자만","online_now":"현재접속중","password_prompt":"비밀번호","password_unchanged_prompt":"변경되지않음","peers_messaging_disabled":"동료의메시지가비활성화되었습니다.","permission_admin":"승인({val})","permission_delete":"삭제({val})","permission_join":"참여({val})","permission_owner":"소유자({val})","permission_pres":"알림받기({val})","permission_read":"읽기({val})","permission_share":"공유({val})","permission_write":"쓰기({val})","phone_dative":"전화","private_editing_placeholder":"나만볼수있습니다","push_init_failed":"푸시알림을초기화하지못했습니다","reconnect_countdown":"연결이끊어졌습니다.다시연결하는중{초}…","reconnect_now":"지금시도","reload_update":"재로드","report_chat_warning":"이대화를차단하고기록하시겠습니까?","requested_permissions":"요청","save_attachment":"저장","search_for_contacts":"검색을사용하여연락처찾기","search_no_results":"검색결과가없습니다","search_placeholder":"email:alice@example.com,tel:17025550003...와같은목록","sidepanel_title_acc_notifications":"알림","sidepanel_title_acc_support":"지원","sidepanel_title_account_settings":"계정설정","sidepanel_title_archive":"보관된채팅","sidepanel_title_blocked":"차단된채팅","sidepanel_title_cred":"자격증명확인","sidepanel_title_login":"로그인","sidepanel_title_newtpk":"새채팅시작","sidepanel_title_register":"계정만들기","sidepanel_title_reset":"비밀번호재설정","sidepanel_title_settings":"설정","stay_logged_in":"로그인상태유지","tabtitle_find_user":"찾기","tabtitle_group_by_id":"id로","tabtitle_new_group":"새그룹","tags_editor_no_tags":"일부태그추가","tags_not_found":"태그가정의되지않았습니다.일부를추가하십시오.","title_all_contacts":"모든연락처","title_group_members":"그룹구성원","title_manage_tags":"관리","title_not_found":"찾을수없음","title_permissions":"권한","title_tag_manager":"태그(사용자검색)","topic_block_warning":"이대화를차단하시겠습니까?","topic_delete_warning":"이대화를삭제하시겠습니까?","topic_name_editing_placeholder":"그룹의자유형이름","unnamed_topic":"이름없는","update_available":"업데이트가능.","upload_finishing":"마무리...","user_not_found":"찾을수없음","validate_credential_action":"확인","description_editing_placeholder":"설명(선택 사항)","label_description":"설명","button_security":"보안","panel_title_crop":"드래그하여 조정","panel_title_general":"일반","panel_title_members":"구성원","panel_title_security":"보안","panel_title_info":"정보","permissions_anonymous":"익명","permissions_authenticated":"인증됨","topic_delete":"채팅 삭제","permissions_user":"사용자 권한","password_reset_email_sent":"이메일이 {email}(으)로 전송되었습니다. 이메일의 지침에 따라 비밀번호를 재설정하세요.","label_unarchive_topic":"보관됨:","menu_item_reply":"회신하다","menu_item_forward":"리디렉션","forward_to":"메시지를 리디렉션","forward_to_search_placeholder":"연락처 검색","label_new_password":"새 비밀번호","drafty_unknown":"지원되지 않음","preview_unavailable":"없는"},"ro":{"action_block_contact":"Blochează contact","action_cancel":"anulează","action_clear_messages":"Șterge mesajele","action_delete_messages":"Șterge toate mesajele","action_leave_chat":"Ieși din conversație","action_report_chat":"Raportează conversația","archived_contacts":"Contacte arhivate ({count})","badge_danger":"Suspicios","badge_owner":"owner","badge_staff":"Administrare","badge_verified":"Verificat","badge_you":"tu","block_contact_warning":"Ești sigur că dorești să blochezi acest contact?","blocked_contacts_link":"Contact blocate ({count})","button_add_another":"Adaugă","button_add_members":"Adaugă persoane","button_cancel":"Anulează","button_confirm":"Confirmă","button_create":"Creează","button_delete_account":"Șterge cont","button_edit":"Editează","button_logout":"Deconectare","button_ok":"OK","button_reset":"Resetează","button_send_request":"Trimite cerere","button_sign_in":"Conectează-te","button_sign_up":"Creează cont","button_subscribe":"Subscribe","button_update":"Actualizează","cannot_initiate_file_upload":"Nu se poate face încărcarea.","channel":"canal","channel_prompt":"Acesta este un canal","chat_invitation":"Ai primit invitație într-o conversație. Accepți?","chat_invitation_accept":"Da, accept","chat_invitation_block":"Blochează","chat_invitation_ignore":"Ignoră","clear_messages_warning":"Ești sigur că dorești să ștergi mesajele? Acestea nu pot fi recuperate.","code_doesnot_match":"Codul furnizat nu este valid","contacts_not_found":"Nu ai contacte salvate<br />¯∖_(ツ)_/¯","contacts_not_found_short":"Niciun contact găsit după criteriile \'\'{query}\'\'","credential_email_prompt":"Adresa de e-mail","delete_account":"Șterge contul","delete_account_warning":"Ești sigur că dorești să ștergi contul? Acesta nu va putea fi recuperat.","delete_messages_warning":"Ești sigur că dorești să șterge mesajele din toate conversațiile? Acestea nu pot fi recuperate.","deleted_content":"conținut șters","download_action":"download","drafty_attachment":"Atasament","drafty_form":"Formă:","drafty_image":"Imagine","email_dative":"email","email_prompt":"Adresa de e-mail","enable_peers_messaging":"Activează","enter_confirmation_code_prompt":"Introu codul de confirmare trimis pe {method}:","error_invalid_id":"ID Invalid","file_attachment_too_large":"Dimensiunea fișiterului {size} depășește limita de {limit}.","forgot_password_link":"Ți-ai uitat parola?","full_name_prompt":"Numele tău","granted_permissions":"Oferite","group_has_no_members":"În acest grup nu se află persoane","group_user_id_prompt":"Grup sau user ID","image_caption_prompt":"Titlul imaginii","invalid_content":"conținut invalid","invalid_security_token":"Codul de securitate este invalid","label_client":"Client:","label_content_type":"Tip conținut:","label_default_access_mode":"Default access mode:","label_file_name":"Nume fișier:","label_group_members":"Membrii grupului:","label_incognito_mode":"Mod incognito:","label_message_sound":"Sunet de mesaj:","label_muting_topic":"Mod silențios (muted):","label_other_user":"Altele","label_password":"Parola","label_permissions":"Permisiuni:","label_private":"Comentariu privat","label_push_notifications":"Alerte de notificare:","label_push_notifications_disabled":"Alerte de notificare (necesită HTTPS):","label_reset_password":"Resetează parola:","label_sdk":"SDK:","label_server":"Server:","label_server_address":"Adresa serverului:","label_server_to_use":"Server de utilizat:","label_size":"Size:","label_topic_name":"Nume","label_user_contacts":"Contacte:","label_user_id":"ID:","label_wire_transport":"Transportul legat:","label_you":"Tu:","label_your_name":"Numele tău","label_your_permissions":"Permisiuniile tale:","last_seen_timestamp":"Văzut ultima dată","leave_chat_warning":"Ești sigur că dorești să ieși din conersație?","link_contact_us":"Contactează-ne","link_privacy_policy":"Politica de Confidențialitate","link_terms_of_service":"Termenii Serviciului","login_prompt":"Conectează-te","menu_item_archive_topic":"Arhivează","menu_item_block":"Blochează","menu_item_clear_messages":"Șterge mesajele","menu_item_clear_messages_for_all":"Ștergele pe toate","menu_item_delete":"Șterge","menu_item_delete_for_all":"Ștergele pe toate","menu_item_delete_topic":"Șterge","menu_item_edit_permissions":"Editează permisiuni","menu_item_info":"Info","menu_item_member_delete":"Șterge persoană","menu_item_mute":"Mute","menu_item_restore_topic":"Restabili","menu_item_send_retry":"Reîncearcă","menu_item_unblock":"Deblochează","menu_item_unmute":"Unmute","message_sending":"se trimite...","message_sending_failed":"eroare","messages_not_readable":"Mesajele nu pot fi citite","messaging_disabled_prompt":"Mesageria este dezactivată","more_online_members":"+{overflow} mai mult","new_message_prompt":"Mesaj nou","new_password_placeholder":"Introdu parolă","no_connection":"Nu există conexiune","no_contacts":"Nu ai contacte adăugate :-(","numeric_confirmation_code_prompt":"Doar cifre","online_now":"online acum","password_prompt":"Parola","password_unchanged_prompt":"Neschimbată","peers_messaging_disabled":"Mesageria de tip Peer este dezactivată.","permission_admin":"Aprobare ({val})","permission_delete":"Ștergere ({val})","permission_join":"Participare ({val})","permission_owner":"Deținător ({val})","permission_pres":"Notificare ({val})","permission_read":"Citire ({val})","permission_share":"Distribuire ({val})","permission_write":"Scriere ({val})","phone_dative":"telefon","private_editing_placeholder":"Vizibil doar ție","push_init_failed":"Nu s-a reușit inițializarea tip push notifications","reconnect_countdown":"Deconectat. Se încearcă conectarea în {seconds}…","reconnect_now":"Încearcă din nou","reload_update":"Reîncarcă","report_chat_warning":"Ești sigur că dorești să blochezi și să raportezi această conversație?","requested_permissions":"Necesare","save_attachment":"salvează","search_for_contacts":"Caută în contacte","search_no_results":"Nu s-au găsit rezultate","search_placeholder":"Caută după e-mail sau număr telefon...","sidepanel_title_acc_notifications":"Notificări","sidepanel_title_acc_support":"Ajutor","sidepanel_title_account_settings":"Setările Contului","sidepanel_title_archive":"Conversații Arhivate","sidepanel_title_blocked":"Conversații Blocate","sidepanel_title_cred":"Confirmă credențiale","sidepanel_title_login":"Conectează-te","sidepanel_title_newtpk":"Creeză un nou Chat","sidepanel_title_register":"Creează Cont","sidepanel_title_reset":"Resetează Parola","sidepanel_title_settings":"Setări","stay_logged_in":"Rămâi conectat","tabtitle_find_user":"caută","tabtitle_group_by_id":"după id","tabtitle_new_group":"grup nou","tags_editor_no_tags":"Adaugă tag-uri","tags_not_found":"Niciun tag definit. Adaugă.","title_all_contacts":"Toate Contactele","title_group_members":"Persoanele din grup","title_manage_tags":"Administrează","title_not_found":"Nu a fost găsit","title_permissions":"Permisiuni","title_tag_manager":"Tag-uri (user discovery)","topic_block_warning":"Ești sigur că dorești să blochezi această conversație?","topic_delete_warning":"Ești sigur că dorești să șterge această conversație?","topic_name_editing_placeholder":"Numele grupului","unnamed_topic":"Nedenumit","update_available":"Actualizare disponibilă.","upload_finishing":"se încarcă...","user_not_found":"Utilizatorul nu a fost găsit","validate_credential_action":"confirmă","description_editing_placeholder":"Descriere (opțional)","label_description":"Descriere","button_security":"Securitate","panel_title_crop":"Trageți pentru a ajusta","panel_title_general":"Generale","panel_title_members":"Membri","panel_title_security":"Securitate","panel_title_info":"Info","permissions_anonymous":"Anonim","permissions_authenticated":"Autentificat","topic_delete":"Ștergeți Chat","permissions_user":"Permisiunile utilizatorului","password_reset_email_sent":"Un e-mail a fost trimis către {email}. Urmați instrucțiunile din e-mail pentru a vă reseta parola.","label_unarchive_topic":"Arhivat:","menu_item_reply":"A raspunde","menu_item_forward":"Redirecţiona","forward_to":"Redirecționați către","forward_to_search_placeholder":"Căutați contacte","label_new_password":"Parolă Nouă","drafty_unknown":"Neacceptat","preview_unavailable":"indisponibil"},"ru":{"action_block_contact":"Заблокировать контакт","action_cancel":"отменить","action_clear_messages":"Удалить сообщения","action_delete_messages":"Удалить сообщения","action_leave_chat":"Уйти из чата","action_report_chat":"Сообщить о нарушении","archived_contacts":"Чаты в архиве ({count})","badge_danger":"Подозрительный","badge_owner":"влад.","badge_staff":"Администрация","badge_verified":"Верифицированный","badge_you":"вы","block_contact_warning":"Вы действительно заблокировать этот контакт?","blocked_contacts_link":"Заблокированные ({count})","button_add_another":"Добавить","button_add_members":"Добавить","button_cancel":"Отменить","button_confirm":"Подтвердить","button_create":"Создать","button_delete_account":"Удалить аккаунт","button_edit":"Редактировать","button_logout":"Выйти","button_ok":"OK","button_reset":"Изменить","button_send_request":"Отправить","button_sign_in":"Войти","button_sign_up":"Создать аккаунт","button_subscribe":"Подписаться","button_update":"Применить","cannot_initiate_file_upload":"Ошибка загрузки файла.","channel":"канал","channel_prompt":"Создать канал","chat_invitation":"Вас пригласили начать новый чат. Как вы хотите поступить?","chat_invitation_accept":"Принять","chat_invitation_block":"Заблокировать","chat_invitation_ignore":"Игнорировать","clear_messages_warning":"Вы действительно хотите удалить все сообщения в чате? Их будет невозможно восстановить.","code_doesnot_match":"Код не совпадает","contacts_not_found":"Чатов нет<br />¯∖_(ツ)_/¯","contacts_not_found_short":"Нет контактов для запроса \'\'{query}\'\'","credential_email_prompt":"Регистрационный емейл","delete_account":"Удалить аккаунт","delete_account_warning":"Вы уверены, что ходите удалить свой аккаунт? Его невозможно будет восстановить.","delete_messages_warning":"Вы действительно хотите удалить все сообщения?","deleted_content":"удалено","download_action":"скачать","drafty_attachment":"Аттачмент","drafty_form":"Форма:","drafty_image":"Картинка","email_dative":"емейлу","email_prompt":"Email, напр. ivan@example.com","enable_peers_messaging":"Разблокировать.","enter_confirmation_code_prompt":"Код подтверждения, полученный по {method}:","error_invalid_id":"Неверный ID","file_attachment_too_large":"Размер файла {size} превышает {limit} лимит.","forgot_password_link":"Напомнить пароль","full_name_prompt":"Полное имя, напр. Иван Петров","granted_permissions":"Получены","group_has_no_members":"Нет участников","group_user_id_prompt":"ID чата или пользователя","image_caption_prompt":"Подпись к фото","invalid_content":"сообщение не читается","invalid_security_token":"Токен некорректен","label_client":"Клиент:","label_content_type":"Тип:","label_default_access_mode":"Доступ по умолчанию:","label_file_name":"Имя файла:","label_group_members":"Участники чата:","label_incognito_mode":"Режим инкогнито:","label_message_sound":"Звук нового сообщения:","label_muting_topic":"Без уведомлений","label_other_user":"Второй","label_password":"Пароль","label_permissions":"Права доступа:","label_private":"Комментарий","label_push_notifications":"Уведомления:","label_push_notifications_disabled":"Уведомления (требуют HTTPS):","label_reset_password":"Отправить емейл для смены пароля:","label_sdk":"SDK:","label_server":"Сервер:","label_server_address":"Адрес сервера:","label_server_to_use":"Использовать сервер:","label_size":"Размер:","label_topic_name":"Название","label_user_contacts":"Конакты:","label_user_id":"ID:","label_wire_transport":"Соединение:","label_you":"Вы:","label_your_name":"Ваше имя","label_your_permissions":"Ваши права доступа:","last_seen_timestamp":"Был активен","leave_chat_warning":"Вы действительно хотите покинуть этот чат?","link_contact_us":"Связаться с нами","link_privacy_policy":"Политика конфиденциальности","link_terms_of_service":"Условия сервиса","login_prompt":"Логин","menu_item_archive_topic":"В архив","menu_item_block":"Заблокировать","menu_item_clear_messages":"Удалить сообщения","menu_item_clear_messages_for_all":"Удалить для всех","menu_item_delete":"Удалить","menu_item_delete_for_all":"Удалить для всех","menu_item_delete_topic":"Удалить чат","menu_item_edit_permissions":"Права доступа","menu_item_info":"Информация","menu_item_member_delete":"Отписать","menu_item_mute":"Не уведомлять","menu_item_restore_topic":"Разархивировать","menu_item_send_retry":"Отправить заново","menu_item_unblock":"Разблокировать","menu_item_unmute":"Уведомлять","message_sending":"в пути...","message_sending_failed":"ошибка","messages_not_readable":"нет доступа к сообщениям","messaging_disabled_prompt":"Отправка недоступна","more_online_members":"+еще {overflow}","new_message_prompt":"Новое сообщение","new_password_placeholder":"Введите новый пароль","no_connection":"Нет связи","no_contacts":"Ничего нет :-(","numeric_confirmation_code_prompt":"Только цифры","online_now":"онлайн","password_prompt":"Пароль","password_unchanged_prompt":"Не изменен","peers_messaging_disabled":"Чат заблокирован у корреспондента.","permission_admin":"Подтверждать ({val})","permission_delete":"Удалять ({val})","permission_join":"Подписываться ({val})","permission_owner":"Владелец ({val})","permission_pres":"Уведомлять ({val})","permission_read":"Читать ({val})","permission_share":"Приглашать ({val})","permission_write":"Писать ({val})","phone_dative":"телефону","private_editing_placeholder":"Виден только вам","push_init_failed":"Ошибка инициализации пуш уведомлений","reconnect_countdown":"Нет связи. Подключение через {seconds}…","reconnect_now":"Подключить сейчас.","reload_update":"Обновить","report_chat_warning":"Вы действительно хотите сообщить о нарушении и заблокировать этот чат?","requested_permissions":"Требуются","save_attachment":"сохранить","search_for_contacts":"Поиск контактов","search_no_results":"Ничего не найдено","search_placeholder":"Список, напр. email:alice@example.com, tel:+17025550003...","sidepanel_title_acc_notifications":"Уведомления","sidepanel_title_acc_support":"Поддержка","sidepanel_title_account_settings":"Настройки аккаунта","sidepanel_title_archive":"Архив чатов","sidepanel_title_blocked":"Заблокированные чаты","sidepanel_title_cred":"Подтвердить","sidepanel_title_login":"Авторизация","sidepanel_title_newtpk":"Новый чат","sidepanel_title_register":"Зарегистрироваться","sidepanel_title_reset":"Сменить пароль","sidepanel_title_settings":"Настройки","stay_logged_in":"Запомнить","tabtitle_find_user":"найти","tabtitle_group_by_id":"по id","tabtitle_new_group":"создать","tags_editor_no_tags":"Добавьте теги","tags_not_found":"Тегов нет. Добавьте","title_all_contacts":"Все контакты","title_group_members":"Участники","title_manage_tags":"Редактировать","title_not_found":"Не найден","title_permissions":"Права доступа","title_tag_manager":"Теги для поиска","topic_block_warning":"Вы действительно хотите заблокировать этот чат?","topic_delete_warning":"Вы действительно хотите удалить этот чат?","topic_name_editing_placeholder":"Название чата","unnamed_topic":"Без названия","update_available":"Есть новая версия приложения.","upload_finishing":"завершение...","user_not_found":"Не найден","validate_credential_action":"подтвердить","description_editing_placeholder":"Описание (не обязательно)","label_description":"Описание","button_security":"Безопасность","panel_title_crop":"Обрезать картинку","panel_title_general":"Общие настройки","panel_title_members":"Участники","panel_title_security":"Безопасность","panel_title_info":"Подробности","permissions_anonymous":"Анонимный","permissions_authenticated":"Авторизованный","topic_delete":"Удалить чат","permissions_user":"Права доступа","password_reset_email_sent":"Сообщение было отправлено на адрес {email}. Следуйте инструкциям в сообщении, чтобы изменить пароль.","label_unarchive_topic":"Архивирован:","menu_item_reply":"Ответить","menu_item_forward":"Переслать","forward_to":"Переслать","forward_to_search_placeholder":"Поиск контактов","label_new_password":"Новый пароль","drafty_unknown":"Не поддерживается","preview_unavailable":"недоступно"},"zh-TW":{"action_block_contact":"封鎖聯絡人","action_cancel":"取消","action_clear_messages":"清除訊息","action_delete_messages":"為所有人清除訊息","action_leave_chat":"離開對話","action_report_chat":"檢舉對話","archived_contacts":"已封存的聯絡人 ({count})","badge_danger":"不可信","badge_owner":"擁有者","badge_staff":"員工管理","badge_verified":"已驗證/官方","badge_you":"您","block_contact_warning":"您確定要封鎖此聯絡人嗎？","blocked_contacts_link":"已封鎖的聯絡人 ({count})","button_add_another":"新增其他人","button_add_members":"新增成員","button_cancel":"取消","button_confirm":"確認","button_create":"建立","button_delete_account":"刪除帳號","button_edit":"編輯","button_logout":"登出","button_ok":"OK","button_reset":"重設","button_send_request":"傳送要求","button_sign_in":"登入","button_sign_up":"註冊","button_subscribe":"訂閱","button_update":"更新","cannot_initiate_file_upload":"無法為檔案上傳初始化。","channel":"頻道","channel_prompt":"這是頻道","chat_invitation":"您已被邀請開始新對話。您接下來要做什麼呢？","chat_invitation_accept":"接受","chat_invitation_block":"封鎖","chat_invitation_ignore":"忽略","clear_messages_warning":"您確定要清除所有訊息嗎？此操作無法復原。","code_doesnot_match":"代碼不相符","contacts_not_found":"您沒有任何對話<br />¯∖_(ツ)_/¯","contacts_not_found_short":"沒有符合 \'\'{query}\'\' 的聯絡人","credential_email_prompt":"您的註冊電子郵件地址","delete_account":"刪除帳號","delete_account_warning":"您確定要刪除您的帳戶嗎？此操作無法撤消。","delete_messages_warning":"您確定要為所有人刪除所有訊息嗎？此操作無法復原。","deleted_content":"內容已被刪除","download_action":"下載","drafty_attachment":"附加檔案","drafty_form":"表單：","drafty_image":"圖片","email_dative":"電子郵件地址","email_prompt":"電子郵件地址，例如：jdoe@example.com","enable_peers_messaging":"啟用","enter_confirmation_code_prompt":"輸入透過 {method} 傳送給您的確認碼：","error_invalid_id":"ID 無效","file_attachment_too_large":"檔案大小 {size} 超出 {limit} 限制。","forgot_password_link":"忘記密碼？","full_name_prompt":"全名，例如：王小明","granted_permissions":"已授權","group_has_no_members":"無成員","group_user_id_prompt":"群組或使用者 ID","image_caption_prompt":"圖片說明","invalid_content":"內容無效","invalid_security_token":"安全權杖無效","label_client":"客戶端：","label_content_type":"類型：","label_default_access_mode":"預設存取模式：","label_file_name":"檔名：","label_group_members":"群組成員：","label_incognito_mode":"無痕模式：","label_message_sound":"訊息提示聲：","label_muting_topic":"靜音：","label_other_user":"其他","label_password":"密碼","label_permissions":"權限：","label_private":"私人留言","label_push_notifications":"通知：","label_push_notifications_disabled":"通知 (需要 HTTPS)：","label_reset_password":"傳送重設密碼郵件：","label_sdk":"SDK：","label_server":"伺服器：","label_server_address":"伺服器位址：","label_server_to_use":"使用的伺服器：","label_size":"大小：","label_topic_name":"名稱","label_user_contacts":"聯絡人：","label_user_id":"ID：","label_wire_transport":"Wire transport：","label_you":"您：","label_your_name":"您的名字","label_your_permissions":"您的權限：","last_seen_timestamp":"最後上線","leave_chat_warning":"您確定要離開此對話嗎？","link_contact_us":"聯絡我們","link_privacy_policy":"隱私權政策","link_terms_of_service":"服務條款","login_prompt":"登入","menu_item_archive_topic":"封存","menu_item_block":"封鎖","menu_item_clear_messages":"清除訊息","menu_item_clear_messages_for_all":"為所有人清除訊息","menu_item_delete":"刪除","menu_item_delete_for_all":"為所有人刪除","menu_item_delete_topic":"刪除","menu_item_edit_permissions":"編輯權限","menu_item_info":"Info","menu_item_member_delete":"移除","menu_item_mute":"靜音","menu_item_restore_topic":"恢復","menu_item_send_retry":"重試","menu_item_unblock":"解除封鎖","menu_item_unmute":"解除靜音","message_sending":"正在傳送...","message_sending_failed":"失敗","messages_not_readable":"沒有存取訊息的權限","messaging_disabled_prompt":"停用訊息","more_online_members":"+{overflow}","new_message_prompt":"新訊息","new_password_placeholder":"輸入新的密碼","no_connection":"無連線","no_contacts":"您沒有任何聯絡人 :-(","numeric_confirmation_code_prompt":"僅數字","online_now":"上線中","password_prompt":"密碼","password_unchanged_prompt":"未修改","peers_messaging_disabled":"Peer 已停用訊息。","permission_admin":"核可 ({val})","permission_delete":"刪除 ({val})","permission_join":"加入 ({val})","permission_owner":"擁有者 ({val})","permission_pres":"收到通知 ({val})","permission_read":"讀取 ({val})","permission_share":"分享 ({val})","permission_write":"撰寫 ({val})","phone_dative":"phone","private_editing_placeholder":"僅您可見","push_init_failed":"初始化通知失敗。","reconnect_countdown":"已斷線。將在 {seconds} 秒後重新連線…","reconnect_now":"現在重試","reload_update":"重新載入","report_chat_warning":"您確定要封鎖並檢舉此對話嗎？","requested_permissions":"重新請求","save_attachment":"儲存","search_for_contacts":"使用搜尋來尋找聯絡人","search_no_results":"搜尋無結果","search_placeholder":"例如 email:alice@example.com, tel:17025550003... 的清單","sidepanel_title_acc_notifications":"通知","sidepanel_title_acc_support":"支援","sidepanel_title_account_settings":"帳號設定","sidepanel_title_archive":"已封存的對話","sidepanel_title_blocked":"已封鎖的對話","sidepanel_title_cred":"確認認證","sidepanel_title_login":"登入","sidepanel_title_newtpk":"開始新對話","sidepanel_title_register":"建立帳號","sidepanel_title_reset":"重設密碼","sidepanel_title_settings":"設定","stay_logged_in":"保持登入","tabtitle_find_user":"尋找","tabtitle_group_by_id":"以 id","tabtitle_new_group":"新群組","tags_editor_no_tags":"新增一些標籤","tags_not_found":"未定義任何標籤。請新增一些標籤。","title_all_contacts":"所有聯絡人","title_group_members":"群組成員","title_manage_tags":"管理","title_not_found":"找不到","title_permissions":"權限","title_tag_manager":"標籤 (使用者探索)","topic_block_warning":"您確定要封鎖此對話嗎？","topic_delete_warning":"您確定要刪除此對話嗎？","topic_name_editing_placeholder":"群組的任意名稱","unnamed_topic":"未命名","update_available":"有可用的更新。","upload_finishing":"正在完成...","user_not_found":"找不到","validate_credential_action":"確認","description_editing_placeholder":"說明（可選）","label_description":"說明","button_security":"安全性","panel_title_crop":"拖動調整","panel_title_general":"一般","panel_title_members":"成員","panel_title_security":"安全性","panel_title_info":"資訊","permissions_anonymous":"匿名","permissions_authenticated":"已認證","topic_delete":"刪除聊天","permissions_user":"用戶權限","password_reset_email_sent":"一封電子郵件已發送至 {email}。按照電子郵件中的說明重置密碼。","label_unarchive_topic":"存檔聊天：","menu_item_reply":"回答","menu_item_forward":"重定向","forward_to":"重定向消息","forward_to_search_placeholder":"搜索聯繫人","label_new_password":"新密碼","drafty_unknown":"不支持","preview_unavailable":"不可用"},"zh":{"action_block_contact":"屏蔽联系人","action_cancel":"取消","action_clear_messages":"删除讯息","action_delete_messages":"删除所有帖子","action_leave_chat":"离开","action_report_chat":"检举垃圾邮件","archived_contacts":"已归档联系人 ({count})","badge_danger":"可疑的","badge_owner":"所有者","badge_staff":"在员工管理下","badge_verified":"值得信赖","badge_you":"你","block_contact_warning":"您确定要阻止此联系人吗？","blocked_contacts_link":"封锁的联络人 ({count})","button_add_another":"加上另一个","button_add_members":"添加成员","button_cancel":"取消","button_confirm":"确认","button_create":"创建","button_delete_account":"删除帐户","button_edit":"编辑","button_logout":"登出","button_ok":"好","button_reset":"重置","button_send_request":"发送请求","button_sign_in":"登录","button_sign_up":"注册","button_subscribe":"订阅","button_update":"更新","cannot_initiate_file_upload":"无法初始化文件上传。","channel":"频道","channel_prompt":"这是一个频道","chat_invitation":"你受邀开始新会话。你想怎么做？","chat_invitation_accept":"接受","chat_invitation_block":"屏蔽","chat_invitation_ignore":"忽略","clear_messages_warning":"您确定要清除所有消息吗？无法撤消。","code_doesnot_match":"代码不匹配","contacts_not_found":"你尚无会话<br />¯∖_(ツ)_/¯","contacts_not_found_short":"无联系人匹配\'\'{query}\'\'","credential_email_prompt":"你的注册邮箱","delete_account":"删除帐户","delete_account_warning":"您确定要删除您的帐户吗？无法撤消。","delete_messages_warning":"您确定要删除所有消息吗？无法撤消。","deleted_content":"内容已删除","download_action":"下载","drafty_attachment":"附件","drafty_form":"形式：","drafty_image":"图像","email_dative":"电子邮件","email_prompt":"电子邮件，例如 zhang@example.com","enable_peers_messaging":"启用","enter_confirmation_code_prompt":"输入通过{method}发送的验证码：","error_invalid_id":"无效 ID","file_attachment_too_large":"文件大小 {size} 超过 {limit} 限制。","forgot_password_link":"忘记密码？","full_name_prompt":"全名，例如张伟","granted_permissions":"已授予","group_has_no_members":"无成员","group_user_id_prompt":"群组或用户 ID","image_caption_prompt":"图片标题","invalid_content":"无效内容","invalid_security_token":"无效的安全令牌","label_client":"客户端：","label_content_type":"内容类型：","label_default_access_mode":"蓦然访问模式：","label_file_name":"文件名：","label_group_members":"群组成员：","label_incognito_mode":"无痕模式：","label_message_sound":"消息提示音：","label_muting_topic":"已静音：","label_other_user":"其他","label_password":"密码","label_permissions":"权限：","label_private":"私人评论","label_push_notifications":"通知提醒：","label_push_notifications_disabled":"通知提醒（需要 HTTPS）：","label_reset_password":"发送密码重置邮件：","label_sdk":"开发包：","label_server":"服务器：","label_server_address":"服务器地址：","label_server_to_use":"使用的服务器：","label_size":"大小：","label_topic_name":"名称","label_user_contacts":"往来：","label_user_id":"地址：","label_wire_transport":"线路传输：","label_you":"你：","label_your_name":"你的姓名","label_your_permissions":"你的权限：","last_seen_timestamp":"最后可见","leave_chat_warning":"您确定要退出此对话吗？","link_contact_us":"联系我们","link_privacy_policy":"隐私政策","link_terms_of_service":"条款和条件","login_prompt":"登录","menu_item_archive_topic":"归档","menu_item_block":"屏蔽","menu_item_clear_messages":"清空消息","menu_item_clear_messages_for_all":"全部清除","menu_item_delete":"删除","menu_item_delete_for_all":"全部删除","menu_item_delete_topic":"删除","menu_item_edit_permissions":"编辑权限","menu_item_info":"信息","menu_item_member_delete":"移除","menu_item_mute":"静音","menu_item_restore_topic":"从存档中恢复","menu_item_send_retry":"重试","menu_item_unblock":"取消屏蔽","menu_item_unmute":"取消静音","message_sending":"正在发送...","message_sending_failed":"发送失败","messages_not_readable":"无消息访问权限","messaging_disabled_prompt":"消息已禁用","more_online_members":"还有{overflow}个","new_message_prompt":"新消息","new_password_placeholder":"输入新密码","no_connection":"无连接","no_contacts":"你尚无联系人 (._.)","numeric_confirmation_code_prompt":"仅数字","online_now":"在线","password_prompt":"密码","password_unchanged_prompt":"未改变","peers_messaging_disabled":"成员间消息已禁用。","permission_admin":"批准 ({val})","permission_delete":"删除 ({val})","permission_join":"加入 ({val})","permission_owner":"所有者 ({val})","permission_pres":"获取通知 ({val})","permission_read":"读取 ({val})","permission_share":"分享 ({val})","permission_write":"写入 ({val})","phone_dative":"电话","private_editing_placeholder":"仅自己可见","push_init_failed":"初始化推送通知失败","reconnect_countdown":"连接已断开。{seconds} 秒后重新连接…","reconnect_now":"立即尝试","reload_update":"重新载入","report_chat_warning":"您确定要停止并报告此对话吗？","requested_permissions":"已请求","save_attachment":"保存","search_for_contacts":"使用搜索寻找联系人","search_no_results":"搜索返回任何结果","search_placeholder":"列表如 email:alice@example.com, tel:+17025550003...","sidepanel_title_acc_notifications":"通知","sidepanel_title_acc_support":"支持","sidepanel_title_account_settings":"帐号设定","sidepanel_title_archive":"已存档会话","sidepanel_title_blocked":"被阻止的聊天","sidepanel_title_cred":"确认凭据","sidepanel_title_login":"登录","sidepanel_title_newtpk":"开始新会话","sidepanel_title_register":"创建账户","sidepanel_title_reset":"重置密码","sidepanel_title_settings":"设置","stay_logged_in":"保持登录","tabtitle_find_user":"搜索","tabtitle_group_by_id":"通过 id","tabtitle_new_group":"新群组","tags_editor_no_tags":"添加一些标签","tags_not_found":"尚未定义标签。添加一些。","title_all_contacts":"全部联系人","title_group_members":"群组成员","title_manage_tags":"管理标签","title_not_found":"无法找到","title_permissions":"权限","title_tag_manager":"标签（用户发现）","topic_block_warning":"您确定要阻止此对话吗？","topic_delete_warning":"您确定要删除此对话吗？","topic_name_editing_placeholder":"群组自由格式名称","unnamed_topic":"未命名","update_available":"更新可用。","upload_finishing":"正在结束...","user_not_found":"未找到","validate_credential_action":"确认","description_editing_placeholder":"说明（可选）","label_description":"说明","button_security":"安全","panel_title_crop":"拖动调整","panel_title_general":"常用设定","panel_title_members":"成员","panel_title_security":"安全","panel_title_info":"信息","permissions_anonymous":"匿名","permissions_authenticated":"已认证","topic_delete":"删除聊天","permissions_user":"用户权限","password_reset_email_sent":"一封电子邮件已发送至 {email}。按照电子邮件中的说明重置密码。","label_unarchive_topic":"存档：","menu_item_reply":"回复","menu_item_forward":"重定向","forward_to":"重定向消息","forward_to_search_placeholder":"搜索联系人","label_new_password":"新密码","drafty_unknown":"不支持","preview_unavailable":"不可用"}}');
 
 /***/ })
 
@@ -13454,6 +25505,18 @@ module.exports = JSON.parse('{"de":{"action_block_contact":"Kontakt blockieren",
 /******/ 		};
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/global */
+/******/ 	(() => {
+/******/ 		__webpack_require__.g = (function() {
+/******/ 			if (typeof globalThis === 'object') return globalThis;
+/******/ 			try {
+/******/ 				return this || new Function('return this')();
+/******/ 			} catch (e) {
+/******/ 				if (typeof window === 'object') return window;
+/******/ 			}
+/******/ 		})();
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
@@ -13472,8 +25535,9 @@ module.exports = JSON.parse('{"de":{"action_block_contact":"Kontakt blockieren",
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
+"use strict";
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/

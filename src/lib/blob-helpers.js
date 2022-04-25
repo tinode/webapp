@@ -186,7 +186,7 @@ export function fileToBase64(file) {
 export function blobToBase64(blob) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onerror = (evt) => {
+    reader.onerror = _ => {
       reject(reader.error);
     };
     reader.onload = () => {
@@ -279,5 +279,29 @@ export function base64ToBlob(str, mime) {
     console.error("Failed to convert base64 to blob: ", err);
   }
 
+  return null;
+}
+
+export function intArrayToBase64(arr) {
+  if (!Array.isArray(arr)) {
+    return null;
+  }
+  try {
+    let bin = '';
+    new Uint8Array(arr).forEach(b => bin += String.fromCharCode(b));
+    return window.btoa(bin);
+  } catch (err) {}
+  return null;
+}
+
+export function base64ToIntArray(b64) {
+  const arr = [];
+  try {
+    const bin =  window.atob(b64);
+    [...bin].forEach(c => {
+      arr.push(c.charCodeAt(0));
+    });
+    return arr;
+  } catch (err) {}
   return null;
 }

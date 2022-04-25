@@ -2,7 +2,7 @@
 import React from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
-import Tinode from 'tinode-sdk';
+import { Tinode } from 'tinode-sdk';
 
 import ContactList from '../widgets/contact-list.jsx';
 import NewTopicById from '../widgets/new-topic-by-id.jsx';
@@ -41,7 +41,7 @@ class NewTopicView extends React.Component {
 
     this.handleTabClick = this.handleTabClick.bind(this);
     this.handleSearchContacts = this.handleSearchContacts.bind(this);
-    this.handleContactSelected = this.handleContactSelected.bind(this);
+    this.handleSearchResultSelected = this.handleSearchResultSelected.bind(this);
     this.handleNewGroupSubmit = this.handleNewGroupSubmit.bind(this);
     this.handleGroupByID = this.handleGroupByID.bind(this);
   }
@@ -61,10 +61,10 @@ class NewTopicView extends React.Component {
     this.setState({searchQuery: Tinode.isNullValue(query) ? null : query});
   }
 
-  handleContactSelected(uid) {
+  handleSearchResultSelected(name) {
     if (this.state.tabSelected == 'find') {
       HashNavigation.navigateTo(HashNavigation.removeUrlParam(window.location.hash, 'tab'));
-      this.props.onCreateTopic(uid);
+      this.props.onCreateTopic(name);
     }
   }
 
@@ -126,7 +126,7 @@ class NewTopicView extends React.Component {
                 showOnline={false}
                 showUnread={false}
                 showContextMenu={false}
-                onTopicSelected={this.handleContactSelected} />
+                onTopicSelected={this.handleSearchResultSelected} />
             </div>}
       </div>
     );

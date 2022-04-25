@@ -324,21 +324,21 @@
   "drafty_attachment": {
     "translation": "Dateianhang",
     "defaultMessage": "Attachment",
-    "description": "Comment for attachment in drafty preview",
+    "description": "Comment for attachment in drafty",
     "missing": false,
     "obsolete": false
   },
   "drafty_form": {
     "translation": "Formular:",
     "defaultMessage": "Form:",
-    "description": "Comment for form in drafty preview",
+    "description": "Comment for form in drafty",
     "missing": false,
     "obsolete": false
   },
   "drafty_image": {
     "translation": "Bild",
     "defaultMessage": "Picture",
-    "description": "Comment for embedded images in drafty preview",
+    "description": "Comment for embedded images in drafty",
     "missing": false,
     "obsolete": false
   },
@@ -1359,6 +1359,55 @@
     "defaultMessage": "New password",
     "description": "Label for entering a new password",
     "missing": false,
+    "obsolete": false
+  },
+  "drafty_unknown": {
+    "translation": "Nicht unterstützt",
+    "defaultMessage": "Unsupported",
+    "description": "Unsupported entity in drafty",
+    "missing": false,
+    "obsolete": false
+  },
+  "preview_unavailable": {
+    "translation": "nicht verfügbar",
+    "defaultMessage": "unavailable",
+    "description": "Message shown when media preview is not available",
+    "missing": false,
+    "obsolete": false
+  },
+  "calls_incoming": {
+    "translation": "",
+    "defaultMessage": "Incoming Call",
+    "description": "Incoming call label",
+    "missing": true,
+    "obsolete": false
+  },
+  "calls_incoming_title": {
+    "translation": "",
+    "defaultMessage": "Incoming Call",
+    "description": "Incoming call title (Incoming call view)",
+    "missing": true,
+    "obsolete": false
+  },
+  "calls_outgoing": {
+    "translation": "",
+    "defaultMessage": "Outgoing Call",
+    "description": "Outgoing call label",
+    "missing": true,
+    "obsolete": false
+  },
+  "calls_you_label": {
+    "translation": "",
+    "defaultMessage": "You",
+    "description": "Shown over the local video screen",
+    "missing": true,
+    "obsolete": false
+  },
+  "menu_item_video_call": {
+    "translation": "",
+    "defaultMessage": "Video Call",
+    "description": "Start video call",
+    "missing": true,
     "obsolete": false
   }
 }

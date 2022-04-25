@@ -1,6 +1,6 @@
 // Odds and ends
 
-import Tinode from 'tinode-sdk';
+import { Tinode } from 'tinode-sdk';
 
 // Make shortcut icon appear with a green dot + show unread count in title.
 export function updateFavicon(count) {
@@ -144,10 +144,10 @@ export function sanitizeUrl(url, allowedSchemes) {
   return url;
 }
 
-// Ensure URL is suitable for <img src="url"> field: the URL must be a relative URL or
+// Ensure URL is suitable as a source like <img src="url"> field: the URL must be a relative URL or
 // have http:, https:, blob: or data: scheme.
-// In case of data: scheme, the URL must start with a 'data:image/XXXX;base64,'.
-export function sanitizeImageUrl(url) {
+// In case of data: scheme, the URL must must be of the right MIME type such as 'data:{mimeMajor}/XXXX;base64,'.
+export function sanitizeUrlForMime(url, mimeMajor) {
   if (!url) {
     return null;
   }
@@ -157,8 +157,9 @@ export function sanitizeImageUrl(url) {
     return sanitizedUrl;
   }
 
-  // Is this a data: URL of an image?
-  if (/data:image\/[a-z0-9.-]+;base64,/i.test(url.trim())) {
+  // Is this a data: URL of the appropriate mime type?
+  const re = new RegExp(`data:${mimeMajor}\/[a-z0-9.-]+;base64,`, 'i');
+  if (re.test(url.trim())) {
     return url;
   }
 

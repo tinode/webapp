@@ -119,6 +119,22 @@
     "defaultMessage": "Update",
     "description": "Button [Update]"
   },
+  "calls_incoming": {
+    "defaultMessage": "Incoming Call",
+    "description": "Incoming call label"
+  },
+  "calls_incoming_title": {
+    "defaultMessage": "Incoming Call",
+    "description": "Incoming call title (Incoming call view)"
+  },
+  "calls_outgoing": {
+    "defaultMessage": "Outgoing Call",
+    "description": "Outgoing call label"
+  },
+  "calls_you_label": {
+    "defaultMessage": "You",
+    "description": "Shown over the local video screen"
+  },
   "cannot_initiate_file_upload": {
     "defaultMessage": "Cannot initiate file upload.",
     "description": "Generic error messagewhen attachment fails"
@@ -193,15 +209,19 @@
   },
   "drafty_attachment": {
     "defaultMessage": "Attachment",
-    "description": "Comment for attachment in drafty preview"
+    "description": "Comment for attachment in drafty"
   },
   "drafty_form": {
     "defaultMessage": "Form:",
-    "description": "Comment for form in drafty preview"
+    "description": "Comment for form in drafty"
   },
   "drafty_image": {
     "defaultMessage": "Picture",
-    "description": "Comment for embedded images in drafty preview"
+    "description": "Comment for embedded images in drafty"
+  },
+  "drafty_unknown": {
+    "defaultMessage": "Unsupported",
+    "description": "Unsupported entity in drafty"
   },
   "email_dative": {
     "defaultMessage": "email",
@@ -476,6 +496,10 @@
     "defaultMessage": "Unmute",
     "description": "Turn notifications on"
   },
+  "menu_item_video_call": {
+    "defaultMessage": "Video Call",
+    "description": "Start video call"
+  },
   "message_sending": {
     "defaultMessage": "sending...",
     "description": "Message being sent, in place of time stamp"
@@ -603,6 +627,10 @@
   "phone_dative": {
     "defaultMessage": "phone",
     "description": "Dative case of 'phone', i.e. 'phone' in 'by phone'"
+  },
+  "preview_unavailable": {
+    "defaultMessage": "unavailable",
+    "description": "Message shown when media preview is not available"
   },
   "private_editing_placeholder": {
     "defaultMessage": "Visible to you only",

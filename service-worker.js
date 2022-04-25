@@ -1,6 +1,7 @@
 // Must be located at the root.
-importScripts('https://cdn.jsdelivr.net/npm/firebase@8.9.1/firebase-app.js');
-importScripts('https://cdn.jsdelivr.net/npm/firebase@8.9.1/firebase-messaging.js');
+// FIXME: update Firebase version.
+importScripts('https://cdn.jsdelivr.net/npm/firebase@8.10.1/firebase-app.js');
+importScripts('https://cdn.jsdelivr.net/npm/firebase@8.10.1/firebase-messaging.js');
 importScripts('firebase-init.js');
 importScripts('version.js');
 
@@ -43,7 +44,11 @@ const i18n = {
     'new_chat': "新聊天",
   }
 };
+
 self.i18nMessage = function(id) {
+  if (!id) {
+    return null;
+  }
   // Choose translations: given something like 'de-CH', try 'de-CH' then 'de' then 'en'.
   const lang = i18n[self.locale] || i18n[self.baseLocale] || i18n['en'];
   // Try finding string by id in the specified language, if missing try English, otherwise use the id itself
@@ -66,18 +71,21 @@ fbMessaging.onBackgroundMessage((payload) => {
     webAppChannel.postMessage(payload.data);
   }
 
+  const titles = {'msg': 'new_message', 'sub': 'new_chat'};
   const pushType = payload.data.what || 'msg';
-  const title = payload.data.title || self.i18nMessage(pushType == 'msg' ? 'new_message' : 'new_chat');
-  const options = {
-    body: payload.data.content || '', // TODO: content for 'sub' should be topic's or user's title.
-    icon: '/img/logo96.png', // TODO: use topic's or user's avatar (would have to fetch for 'sub', read from db for 'msg').
-    badge: '/img/badge96.png',
-    tag: payload.data.topic || undefined,
-    data: {
-      topic: payload.data.topic
-    }
-  };
-  return self.registration.showNotification(title, options);
+  const title = payload.data.title || self.i18nMessage(titles[pushType]);
+  if (title) {
+    const options = {
+      body: payload.data.content || '', // TODO: content for 'sub' should be topic's or user's title.
+      icon: '/img/logo96.png', // TODO: use topic's or user's avatar (would have to fetch for 'sub', read from db for 'msg').
+      badge: '/img/badge96.png',
+      tag: payload.data.topic || undefined,
+      data: {
+        topic: payload.data.topic
+      }
+    };
+    return self.registration.showNotification(title, options);
+  }
 });
 
 // Update service worker immediately for both the current client
@@ -89,10 +97,14 @@ self.addEventListener('install', event => {
 // This code handles a click on notification: takes
 // the user to the browser tab with the chat or opens a new tab.
 self.addEventListener('notificationclick', event => {
-  const notification = event.notification;
-  notification.close();
+  const data = event.notification.data;
+  event.notification.close();
+  if (!data) {
+    console.info("Missing 'data' in notification", event.notification);
+    return;
+  }
 
-  const urlHash = '#/' + notification.data.topic;
+  const urlHash = '#/' + data.topic;
 
   event.waitUntil(self.clients.matchAll({
     type: 'window',
@@ -101,7 +113,7 @@ self.addEventListener('notificationclick', event => {
     let anyClient = null;
     for (let i = 0; i < windowClients.length; i++) {
       const url = new URL(windowClients[i].url);
-      if (url.hash.includes(notification.data.topic)) {
+      if (url.hash.includes(data.topic)) {
         // Found the Tinode tab with the right topic open.
         return windowClients[i].focus();
       } else {

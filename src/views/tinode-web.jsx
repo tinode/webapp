@@ -2,10 +2,11 @@
 import React from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
-import * as firebase from 'firebase/app';
-import 'firebase/messaging';
+import { initializeApp as firebaseInitApp } from 'firebase/app';
+import { getMessaging as firebaseGetMessaging, getToken as firebaseGetToken,
+  deleteToken as firebaseDelToken, onMessage as firebaseOnMessage } from 'firebase/messaging';
 
-import Tinode from 'tinode-sdk';
+import { Drafty, Tinode } from 'tinode-sdk';
 
 import Alert from '../widgets/alert.jsx';
 import ContextMenu from '../widgets/context-menu.jsx';
@@ -122,8 +123,7 @@ class TinodeWeb extends React.Component {
     this.handleCredDelete = this.handleCredDelete.bind(this);
     this.handleCredConfirm = this.handleCredConfirm.bind(this);
     this.initFCMessaging = this.initFCMessaging.bind(this);
-    this.togglePushToken = this.togglePushToken.bind(this);
-    this.requestPushToken = this.requestPushToken.bind(this);
+    this.toggleFCMToken = this.toggleFCMToken.bind(this);
     this.handlePushMessage = this.handlePushMessage.bind(this);
     this.handleSidepanelCancel = this.handleSidepanelCancel.bind(this);
     this.handleStartTopicRequest = this.handleStartTopicRequest.bind(this);
@@ -185,9 +185,11 @@ class TinodeWeb extends React.Component {
       // "On" is the default, so saving the "off" state.
       messageSounds: !settings.messageSoundsOff,
       incognitoMode: false,
+      // Persistent request to enable alerts.
       desktopAlerts: persist && !!settings.desktopAlerts,
+      // Enable / disable checkbox.
       desktopAlertsEnabled: (isSecureConnection() || isLocalHost()) &&
-        (typeof firebase != 'undefined') && (typeof navigator != 'undefined') &&
+        (typeof firebaseInitApp != 'undefined') && (typeof navigator != 'undefined') &&
         (typeof FIREBASE_INIT != 'undefined'),
       firebaseToken: persist ? LocalStorageUtil.getObject('firebase-token') : null,
 
@@ -286,11 +288,7 @@ class TinodeWeb extends React.Component {
       if (this.state.desktopAlertsEnabled) {
         this.initFCMessaging().then(() => {
           if (this.state.desktopAlerts) {
-            if (!this.state.firebaseToken) {
-              this.togglePushToken(true);
-            } else {
-              this.tinode.setDeviceToken(this.state.firebaseToken);
-            }
+            this.tinode.setDeviceToken(this.state.firebaseToken);
           }
         }).catch(() => {
           // do nothing: handled earlier.
@@ -346,11 +344,22 @@ class TinodeWeb extends React.Component {
     return tinode;
   }
 
-  // Notifiy Tinode that a push message was received from the server.
-  handlePushMessage(data) {
-    if (data.what == 'msg' && Tinode.isChannelTopicName(data.topic)) {
-      // The last argument is a fake user Id: otherwise the update is seen as one from the current user.
-      this.tinode.oobNotification(data.topic, data.seq, 'fake-uid');
+  // Tinode received a push notification from the server.
+  handlePushMessage(payload) {
+    const data = payload.data || {};
+    switch (data.what) {
+    case 'msg':
+      if (Tinode.isChannelTopicName(data.topic)) {
+        // The last argument is a fake user Id: otherwise the update is seen as one from the current user.
+        this.tinode.oobNotification('msg', data.topic, data.seq, 'fake-uid');
+      }
+      break;
+    case 'read':
+      // Message read on another device, clear it here.
+      this.tinode.oobNotification('read', data.topic, data.seq);
+      break;
+    default:
+      console.warn("Unknown push type ignored", data.what, data);
     }
   }
 
@@ -359,38 +368,75 @@ class TinodeWeb extends React.Component {
     const onError = (msg, err) => {
       console.error(msg, err);
       this.handleError(formatMessage(messages.push_init_failed), 'err');
-      this.setState({desktopAlertsEnabled: false});
+      this.setState({desktopAlertsEnabled: false, firebaseToken: null});
+      LocalStorageUtil.updateObject('settings', {desktopAlerts: false});
     }
 
     try {
-      this.fbPush = firebase.initializeApp(FIREBASE_INIT, APP_NAME).messaging();
-      this.fbPush.usePublicVapidKey(FIREBASE_INIT.messagingVapidKey);
-
+      this.fcm = firebaseGetMessaging(firebaseInitApp(FIREBASE_INIT, APP_NAME));
       return navigator.serviceWorker.register('/service-worker.js').then((reg) => {
         this.checkForAppUpdate(reg);
-        this.fbPush.useServiceWorker(reg);
         reg.active.postMessage(JSON.stringify({locale: locale, version: PACKAGE_VERSION}));
-
-        // Google could not be bothered to mention that onTokenRefresh is never called.
-        this.fbPush.onTokenRefresh(() => {
-          this.requestPushToken();
-        });
+        return reg;
+      }).then((reg) => {
+        // Request token.
+        return TinodeWeb.requestFCMToken(this.fcm, reg);
+      }).then((token) => {
+        const persist = LocalStorageUtil.getObject('keep-logged-in');
+        if (token != this.state.firebaseToken) {
+          this.tinode.setDeviceToken(token);
+          if (persist) {
+            LocalStorageUtil.setObject('firebase-token', token);
+          }
+        }
+        this.setState({firebaseToken: token, desktopAlerts: true});
+        if (persist) {
+          LocalStorageUtil.updateObject('settings', {desktopAlerts: true});
+        }
 
         // Handhe FCM pushes
         // (a) for channels always,
-        // (b) pushes when the app is in foreground but has not focus.
-        this.fbPush.onMessage(payload => { this.handlePushMessage(payload.data); });
-
-        return reg;
+        // (b) pushes when the app is in foreground but has no focus.
+        firebaseOnMessage(this.fcm, (payload) => { this.handlePushMessage(payload); });
       }).catch((err) => {
-        // registration failed :(
-        onError("Failed to register service worker:", err);
-        return Promise.reject(err);
+        // SW registration or FCM has failed :(
+        onError(err);
+        throw err;
       });
     } catch (err) {
-      onError("Failed to initialize push notifications", err);
+      onError(err);
       return Promise.reject(err);
     }
+  }
+
+  // Google's FCM API is idiotic.
+  static requestFCMToken(fcm, sw) {
+    return firebaseGetToken(fcm, {
+      serviceWorkerRegistration: sw,
+      vapidKey: FIREBASE_INIT.messagingVapidKey
+    }).then((token) => {
+      if (token) {
+        return token;
+      } else {
+        // Try to request permissions.
+        return Notification.requestPermission().then((permission) => {
+          if (permission === 'granted') {
+            return firebaseGetToken(fcm, {
+              serviceWorkerRegistration: reg,
+              vapidKey: FIREBASE_INIT.messagingVapidKey
+            }).then((token) => {
+              if (token) {
+                return token;
+              } else {
+                throw new Error("Failed to initialize notifications");
+              }
+            });
+          } else {
+            throw new Error("No permission to send notifications: " + permission);
+          }
+        });
+      }
+    });
   }
 
   handleResize() {
@@ -443,14 +489,10 @@ class TinodeWeb extends React.Component {
           // Clear invalid topic name.
           topicName = null;
         }
-        const newState = {
-          topicSelected: topicName
-        };
-        const acs = this.tinode.getTopicAccessMode(topicName);
-        if (acs) {
-          newState.topicSelectedAcs = acs;
-        }
-        this.setState(newState);
+        this.setState({
+          topicSelected: topicName,
+          topicSelectedAcs: this.tinode.getTopicAccessMode(topicName)
+        });
       }
     } else {
       // Empty hashpath
@@ -900,7 +942,7 @@ class TinodeWeb extends React.Component {
     });
   }
 
-  // User clicked on a contact in the side panel or deleted a contact.
+  // User clicked on a topic in the side panel or deleted a topic.
   handleTopicSelected(topicName) {
     // Clear newTopicParams after use.
     if (this.state.newTopicParams && this.state.newTopicParams._topicName != topicName) {
@@ -916,7 +958,7 @@ class TinodeWeb extends React.Component {
         mobilePanel: 'topic-view',
         infoPanel: undefined
       });
-      // Different contact selected.
+      // Different topic selected.
       if (this.state.topicSelected != topicName) {
         this.setState({
           topicSelectedOnline: this.tinode.isTopicOnline(topicName),
@@ -953,14 +995,15 @@ class TinodeWeb extends React.Component {
   // with attachments.
   //  - msg - Drafty message with content
   //  - promise - Promise to be resolved when the upload is completed
-  //  - uploader - for tracking progress
+  //  - uploadCompletionPromise - for tracking progress
   //  - head - head dictionary to be attached to the message
-  handleSendMessage(msg, promise, uploader, head) {
+  handleSendMessage(msg, uploadCompletionPromise, uploader, head) {
     const topic = this.tinode.getTopic(this.state.topicSelected);
-    return this.sendMessageToTopic(topic, msg, promise, uploader, head);
+    /* TODO: check if return is required */
+    return this.sendMessageToTopic(topic, msg, uploadCompletionPromise, uploader, head);
   }
 
-  sendMessageToTopic(topic, msg, promise, uploader, head) {
+  sendMessageToTopic(topic, msg, uploadCompletionPromise, uploader, head) {
     msg = topic.createMessage(msg, false);
     // The uploader is used to show progress.
     msg._uploader = uploader;
@@ -969,33 +1012,34 @@ class TinodeWeb extends React.Component {
       msg.head = Object.assign(msg.head || {}, head);
     }
 
+    const completion = [];
+    if (uploadCompletionPromise) {
+      completion.push(uploadCompletionPromise);
+    }
+
     if (!topic.isSubscribed()) {
       // Topic is not subscribed yet. Subscribe.
-      if (!promise) {
-        promise = Promise.resolve();
-      }
-      promise = promise
-        .then(() => topic.subscribe())
-        .then(() => {
-          // If there are unsent messages, try sending them now.
-          topic.queuedMessages((pub) => {
-            if (!pub._sending && topic.isSubscribed()) {
-              this.sendMessage(pub);
-            }
+      const subscribePromise =
+        topic.subscribe()
+          .then(() => {
+            // If there are unsent messages, try sending them now.
+            topic.queuedMessages(pub => {
+              if (pub._sending || pub.seq == msg.seq) {
+                return;
+              }
+              if (topic.isSubscribed()) {
+                topic.publishMessage(pub);
+              }
+            });
           });
-        });
+      completion.push(subscribePromise);
     }
 
-    if (promise) {
-      promise = promise.catch((err) => {
-        this.handleError(err.message, 'err');
-      });
-    }
-
-    return topic.publishDraft(msg, promise)
-      .then((ctrl) => {
+    // TODO: check if return is required.
+    return topic.publishDraft(msg, Promise.all(completion))
+      .then(_ => {
         if (topic.isArchived()) {
-          return topic.archive(false);
+          topic.archive(false);
         }
         return ctrl;
       })
@@ -1137,31 +1181,19 @@ class TinodeWeb extends React.Component {
       this.state.myUserId ? 'blocked' : ''));
   }
 
-  togglePushToken(enabled) {
+  toggleFCMToken(enabled) {
     if (enabled) {
       this.setState({desktopAlerts: null});
       if (!this.state.firebaseToken) {
-        const fcm = this.fbPush ?
-          Promise.resolve() :
-          this.initFCMessaging();
-        fcm.then(() => {
-          return this.fbPush.requestPermission();
-        }).then(() => {
-          this.requestPushToken();
-        }).catch((err) => {
-          console.error("Failed to get notification permission.", err);
-          this.handleError(err.message, 'err');
-          this.setState({desktopAlerts: false, firebaseToken: null});
-          LocalStorageUtil.updateObject('settings', {desktopAlerts: false});
-        });
+        this.initFCMessaging();
       } else {
         this.setState({desktopAlerts: true});
         if (LocalStorageUtil.getObject('keep-logged-in')) {
           LocalStorageUtil.updateObject('settings', {desktopAlerts: true});
         }
       }
-    } else if (this.state.firebaseToken && this.fbPush) {
-      this.fbPush.deleteToken(this.state.firebaseToken).catch((err) => {
+    } else if (this.state.firebaseToken && this.fcm) {
+      firebaseDelToken(this.fcm).catch((err) => {
         console.error("Unable to delete token.", err);
       }).finally(() => {
         LocalStorageUtil.updateObject('settings', {desktopAlerts: false});
@@ -1174,25 +1206,6 @@ class TinodeWeb extends React.Component {
       this.setState({desktopAlerts: false, firebaseToken: null});
       LocalStorageUtil.updateObject('settings', {desktopAlerts: false});
     }
-  }
-
-  requestPushToken() {
-    this.fbPush.getToken().then((refreshedToken) => {
-      const persist = LocalStorageUtil.getObject('keep-logged-in');
-      if (refreshedToken != this.state.firebaseToken) {
-        this.tinode.setDeviceToken(refreshedToken);
-        if (persist) {
-          LocalStorageUtil.setObject('firebase-token', refreshedToken);
-        }
-      }
-      this.setState({firebaseToken: refreshedToken, desktopAlerts: true});
-      if (persist) {
-        LocalStorageUtil.updateObject('settings', {desktopAlerts: true});
-      }
-    }).catch((err) => {
-      this.handleError(err.message, 'err');
-      console.error("Failed to retrieve firebase token", err);
-    });
   }
 
   handleToggleMessageSounds(enabled) {
@@ -1383,29 +1396,34 @@ class TinodeWeb extends React.Component {
     localStorage.removeItem('firebase-token');
     localStorage.removeItem('settings');
     if (this.state.firebaseToken) {
-      this.fbPush.deleteToken(this.state.firebaseToken)
+      firebaseDelToken(this.fcm);
     }
 
     clearInterval(this.reconnectCountdown);
 
+    let cleared;
     if (this.tinode) {
-      this.tinode.clearStorage();
+      cleared = this.tinode.clearStorage();
       this.tinode.onDisconnect = undefined;
       this.tinode.disconnect();
+    } else {
+      cleared = Promose.resolve();
     }
     this.setState(this.getBlankState());
 
-    this.tinode = TinodeWeb.tnSetup(this.state.serverAddress,
-      this.state.transport, this.props.intl.locale, LocalStorageUtil.getObject('keep-logged-in'));
-    this.tinode.onConnect = this.handleConnected;
-    this.tinode.onDisconnect = this.handleDisconnect;
-    this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
-    this.tinode.onInfoMessage = this.handleInfoMessage;
-    HashNavigation.navigateTo('');
+    cleared.then(() => {
+      this.tinode = TinodeWeb.tnSetup(this.state.serverAddress,
+        this.state.transport, this.props.intl.locale, LocalStorageUtil.getObject('keep-logged-in'), () => {
+          this.tinode.onConnect = this.handleConnected;
+          this.tinode.onDisconnect = this.handleDisconnect;
+          this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
+          HashNavigation.navigateTo('');
+        })
+    });
   }
 
   handleDeleteAccount() {
-    this.tinode.delCurrentUser(true).then((ctrl) => {
+    this.tinode.delCurrentUser(true).then(_ => {
       this.handleLogout();
     });
   }
@@ -1500,15 +1518,11 @@ class TinodeWeb extends React.Component {
       this.handleSidepanelCancel();
     }
     const header = '➦ ' + params.userName;
-    const content = typeof params.content == 'string' ?
-            Tinode.Drafty.init(params.content) : Tinode.Drafty.forwardedContent(params.content);
-    const preview = Tinode.Drafty.preview(content, FORWARDED_PREVIEW_LENGTH, true);
-    const msg = Tinode.Drafty.append(
-        Tinode.Drafty.appendLineBreak(
-            Tinode.Drafty.mention(header, params.userFrom)),
-        content);
+    const content = typeof params.content == 'string' ? Drafty.init(params.content) : Drafty.forwardedContent(params.content);
+    const preview = Drafty.preview(content, FORWARDED_PREVIEW_LENGTH, true);
+    const msg = Drafty.append(Drafty.appendLineBreak(Drafty.mention(header, params.userFrom)), content);
+    const msgPreview = Drafty.quote(header, params.userFrom, preview);
 
-    const msgPreview = Tinode.Drafty.quote(header, params.userFrom, preview);
     const head = {
       forwarded: params.topicName + ':' + params.seq
     };
@@ -1911,7 +1925,7 @@ class TinodeWeb extends React.Component {
           onUpdateAccountDesc={this.handleTopicUpdateRequest}
           onUpdatePassword={this.handleUpdatePasswordRequest}
           onUpdateAccountTags={this.handleUpdateAccountTagsRequest}
-          onTogglePushNotifications={this.togglePushToken}
+          onTogglePushNotifications={this.toggleFCMToken}
           onToggleMessageSounds={this.handleToggleMessageSounds}
           onToggleIncognitoMode={this.handleToggleIncognitoMode}
           onCredAdd={this.handleCredAdd}
@@ -1982,7 +1996,7 @@ class TinodeWeb extends React.Component {
           showContextMenu={this.handleShowContextMenu}
           onChangePermissions={this.handleChangePermissions}
           onNewChat={this.handleNewChatInvitation}
-          sendMessage={this.handleSendMessage} 
+          sendMessage={this.handleSendMessage}
           onVideoCallClosed={this.handleCallClose} />
 
         {this.state.infoPanel ?

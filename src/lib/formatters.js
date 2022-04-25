@@ -3,33 +3,39 @@ import { defineMessages } from 'react-intl';
 
 import { Drafty } from 'tinode-sdk';
 
+import AudioPlayer from '../widgets/audio-player.jsx'
 import LazyImage from '../widgets/lazy-image.jsx'
 import UploadingImage from '../widgets/uploading-image.jsx'
 
 import { IMAGE_THUMBNAIL_DIM, BROKEN_IMAGE_SIZE, REM_SIZE } from '../config.js';
 import { base64ToBlob, blobToBase64, fitImageSize, imageScaled } from './blob-helpers.js';
-import { idToColorClass, shortenFileName } from './strformat.js';
-import { cancelablePromise, sanitizeImageUrl } from './utils.js';
+import { idToColorClass, secondsToTime, shortenFileName } from './strformat.js';
+import { cancelablePromise, sanitizeUrlForMime } from './utils.js';
 
 const messages = defineMessages({
   drafty_form: {
     id: 'drafty_form',
     defaultMessage: 'Form: ',
-    description: 'Comment for form in drafty preview'
+    description: 'Comment for form in drafty'
   },
   drafty_attachment: {
     id: 'drafty_attachment',
     defaultMessage: 'Attachment',
-    description: 'Comment for attachment in drafty preview'
+    description: 'Comment for attachment in drafty'
   },
   drafty_image: {
     id: 'drafty_image',
     defaultMessage: 'Picture',
-    description: 'Comment for embedded images in drafty preview'
+    description: 'Comment for embedded images in drafty'
+  },
+  drafty_unknown: {
+    id: 'drafty_unknown',
+    defaultMessage: 'Unsupported',
+    description: 'Unsupported entity in drafty'
   }
 });
 
-// Size the already scaled image.
+// Additional processing of image data.
 function handleImageData(el, data, attr) {
   if (!data) {
     attr.src = 'img/broken_image.png';
@@ -53,7 +59,7 @@ function handleImageData(el, data, attr) {
     minHeight: dim.dstHeight + 'px'
   };
   if (!Drafty.isProcessing(data)) {
-    attr.src = this.authorizeURL(sanitizeImageUrl(attr.src));
+    attr.src = this.authorizeURL(sanitizeUrlForMime(attr.src, 'image'));
     attr.alt = data.name;
     if (attr.src) {
       if (Math.max(data.width || 0, data.height || 0) > IMAGE_THUMBNAIL_DIM) {
@@ -71,50 +77,6 @@ function handleImageData(el, data, attr) {
   }
 
   return el;
-}
-
-function quotedImage(data) {
-  let promise;
-  // Get the blob from the image data.
-  if (data.val) {
-    const blob = base64ToBlob(data.val, data.mime);
-    promise = blob ? Promise.resolve(blob) : Prmise.reject(new Error("Invalid image"));
-  } else {
-    promise = fetch(this.authorizeURL(sanitizeImageUrl(data.ref))).then(evt => {
-      if (evt.ok) {
-        return evt.blob();
-      } else {
-        throw new Error(`Image fetch unsuccessful: ${evt.status} ${evt.statusText}`);
-      }
-    });
-  }
-
-  // Scale the blob.
-  return promise
-    .then(blob => {
-      return imageScaled(blob, IMAGE_THUMBNAIL_DIM, IMAGE_THUMBNAIL_DIM, -1, true)
-    }).then(scaled => {
-      data.mime = scaled.mime;
-      data.size = scaled.blob.size;
-      data.width = scaled.width;
-      data.height = scaled.height;
-      delete data.ref;
-      // Keeping the original file name, if provided: ex.data.name;
-
-      return blobToBase64(scaled.blob);
-    }).then(b64 => {
-      data.val = b64.bits;
-      return data;
-    }).catch(err => {
-      delete data.val;
-      delete data.name;
-      data.width = IMAGE_THUMBNAIL_DIM;
-      data.height = IMAGE_THUMBNAIL_DIM;
-      data.maxWidth = IMAGE_THUMBNAIL_DIM;
-      data.maxHeight = IMAGE_THUMBNAIL_DIM;
-      // Rethrow.
-      throw err;
-    });
 }
 
 // The main Drafty formatter: converts Drafty elements into React classes. 'this' is set by the caller.
@@ -135,11 +97,26 @@ export function fullFormatter(style, data, values, key, stack) {
   }
 
   let el = Drafty.tagName(style);
-  const attr = Drafty.attrValue(style, data) || {};
+  let attr = Drafty.attrValue(style, data) || {};
   attr.key = key;
   switch (style) {
+    case 'AU':
+      // Show audio player.
+      if (attr.src) {
+        attr.src = this.authorizeURL(sanitizeUrlForMime(attr.src, 'audio'));
+        attr.duration = data.duration > 0 ? (data.duration | 0) : undefined;
+        attr.preview = data.preview;
+        attr.loading = 'lazy';
+      }
+      el = AudioPlayer;
+      // Audio element cannot have content.
+      values = null;
+      break;
     case 'BR':
       values = null;
+      break;
+    case 'EX':
+      // Ignore.
       break;
     case 'HL':
       // Highlighted text. Assign class name.
@@ -187,10 +164,16 @@ export function fullFormatter(style, data, values, key, stack) {
       attr.onClick = this.onQuoteClick;
       break;
     default:
-      if (el == '_UNKN') {
+      if (!el) {
         // Unknown element.
         el = React.Fragment;
-        values = [<i className="material-icons gray">extension</i>, ' '].concat(values || []);
+        attr = {key: key};
+        // Generate comment for unknown element.
+        let body = values;
+        if (!Array.isArray(values) || !values.join('').trim()) {
+          body = [<span key="x1" className="gray">{this.formatMessage(messages.drafty_unknown)}</span>];
+        }
+        values = [<i key="x0" className="material-icons gray">extension</i>, ' '].concat(body);
       }
       break;
   }
@@ -213,6 +196,11 @@ export function previewFormatter(style, data, values, key) {
   let el = Drafty.tagName(style);
   const attr = { key: key };
   switch (style) {
+    case 'AU':
+      // Voicemail as '[mic] 0:00'.
+      el = React.Fragment;
+      values = [<i key="au" className="material-icons">mic</i>, ' ', secondsToTime(data.duration/1000)];
+      break;
     case 'BR':
       // Replace new line with a space.
       el = React.Fragment;
@@ -230,7 +218,7 @@ export function previewFormatter(style, data, values, key) {
     case 'IM':
       // Replace image with '[icon] Image'.
       el = React.Fragment;
-      values = [<i key="im" className="material-icons">photo</i>, this.formatMessage(messages.drafty_image)];
+      values = [<i key="im" className="material-icons">photo</i>, ' ', this.formatMessage(messages.drafty_image)];
       break;
     case 'BN':
       el = 'span';
@@ -255,7 +243,7 @@ export function previewFormatter(style, data, values, key) {
         delete data.ref;
       }
       el = React.Fragment;
-      values = [<i key="ex" className="material-icons">attachment</i>, this.formatMessage(messages.drafty_attachment)];
+      values = [<i key="ex" className="material-icons">attachment</i>, ' ', this.formatMessage(messages.drafty_attachment)];
       break;
     case 'QQ':
     case 'HD':
@@ -263,9 +251,10 @@ export function previewFormatter(style, data, values, key) {
       values = null;
       break;
     default:
-      if (el == '_UNKN') {
+      if (!el) {
+        // Unknown element.
         el = React.Fragment;
-        values = [<i key="unkn" className="material-icons">extension</i>, ' '].concat(values || []);
+        values = [<i key="x0" className="material-icons gray">extension</i>, ' ', this.formatMessage(messages.drafty_unknown)];
       }
       break;
   }
@@ -354,7 +343,7 @@ function quoteImage(data) {
     }
     promise = Promise.resolve(blob);
   } else if (data.ref) {
-    promise = fetch(this.authorizeURL(sanitizeImageUrl(data.ref)))
+    promise = fetch(this.authorizeURL(sanitizeUrlForMime(data.ref, 'image')))
       .then(evt => {
         if (evt.ok) {
           return evt.blob();

@@ -2,9 +2,8 @@
 import React from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 
-import Tinode from 'tinode-sdk';
+import { Tinode } from 'tinode-sdk';
 
-import { shortDateFormat } from '../lib/strformat.js';
 import { deliveryMarker } from '../lib/utils.js';
 
 const messages = defineMessages({
@@ -29,7 +28,7 @@ class ReceivedMarker extends React.PureComponent {
     } else if (this.props.received == Tinode.MESSAGE_STATUS_FAILED) {
       timestamp = formatMessage(messages.message_sending_failed);
     } else {
-      timestamp = shortDateFormat(this.props.timestamp, this.props.intl.locale);
+      timestamp = this.props.timestamp.toLocaleTimeString(this.props.intl.locale, { timeStyle: 'short' });
     }
 
     const icon = deliveryMarker(this.props.received);
