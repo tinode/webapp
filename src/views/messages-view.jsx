@@ -21,10 +21,12 @@ import SendMessage from '../widgets/send-message.jsx';
 
 import { DEFAULT_P2P_ACCESS_MODE, IMAGE_PREVIEW_DIM, KEYPRESS_DELAY,
   MESSAGES_PAGE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE,
-  READ_DELAY, QUOTED_REPLY_LENGTH, CALL_STATE_OUTGOING_INITATED, CALL_STATE_IN_PROGRESS } from '../config.js';
+  READ_DELAY, QUOTED_REPLY_LENGTH } from '../config.js';
+import { CALL_STATE_OUTGOING_INITATED, CALL_STATE_IN_PROGRESS } from '../constants.js';
 import { blobToBase64, fileToBase64, imageScaled, makeImageUrl } from '../lib/blob-helpers.js';
 import HashNavigation from '../lib/navigation.js';
 import { bytesToHumanSize, shortDateFormat } from '../lib/strformat.js';
+import { isVideoCall } from '../lib/utils.js';
 
 // Run timer with this frequency (ms) for checking notification queue.
 const NOTIFICATION_EXEC_INTERVAL = 300;
@@ -177,7 +179,6 @@ class MessagesView extends React.Component {
       if (prevState.topic && !Tinode.isNewGroupTopicName(prevState.topic)) {
         this.leave(prevState.topic);
         if (prevState.rtcPanel) {
-          console.log('hangup: ', prevState.topic);
           this.handleCallHangup(prevState.topic, prevProps.callSeq);
         }
       }
@@ -1146,13 +1147,21 @@ class MessagesView extends React.Component {
               );
               prevDate = thisDate;
             }
+            let duration;
+            if (msg.head && isVideoCall(msg.head.mime)) {
+              topic.messageVersions(msg, (cur, before, unused1, unused2) => {
+                if (cur.content == 'finished' && before.content == 'accepted') {
+                  duration = msg.ts - before.ts;
+                }
+              });
+            }
             messageNodes.push(
               <ChatMessage
                 tinode={this.props.tinode}
                 content={msg.content}
                 mimeType={msg.head ? msg.head.mime : null}
                 timestamp={msg.ts}
-                duration={msg.origTs ? msg.ts - msg.origTs : null}
+                duration={duration}
                 response={isReply}
                 seq={msg.seq}
                 isGroup={groupTopic}

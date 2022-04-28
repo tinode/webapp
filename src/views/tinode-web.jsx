@@ -18,9 +18,10 @@ import MessagesView from './messages-view.jsx';
 import SidepanelView from './sidepanel-view.jsx';
 
 import { API_KEY, APP_NAME, DEFAULT_P2P_ACCESS_MODE, FORWARDED_PREVIEW_LENGTH, LOGGING_ENABLED,
-  MEDIA_BREAKPOINT, RECEIVED_DELAY,
-  CALL_STATE_NONE, CALL_STATE_OUTGOING_INITATED,
-  CALL_STATE_INCOMING_RECEIVED, CALL_STATE_IN_PROGRESS } from '../config.js';
+  MEDIA_BREAKPOINT, RECEIVED_DELAY } from '../config.js';
+import { CALL_STATE_NONE, CALL_STATE_OUTGOING_INITATED,
+         CALL_STATE_INCOMING_RECEIVED, CALL_STATE_IN_PROGRESS,
+         CALL_MESSAGE_MIME_TYPE }  from '../constants.js';
 import { PACKAGE_VERSION } from '../version.js';
 import { base64ReEncode, makeImageUrl } from '../lib/blob-helpers.js';
 import { detectServerAddress, isLocalHost, isSecureConnection } from '../lib/host-name.js';
@@ -1037,7 +1038,7 @@ class TinodeWeb extends React.Component {
 
     // TODO: check if return is required.
     return topic.publishDraft(msg, Promise.all(completion))
-      .then(_ => {
+      .then((ctrl) => {
         if (topic.isArchived()) {
           topic.archive(false);
         }
@@ -1698,11 +1699,10 @@ class TinodeWeb extends React.Component {
   handleCallInvite(callTopic, callSeq, callState) {
     switch (callState) {
       case CALL_STATE_OUTGOING_INITATED:
-        let head = {mime: 'application/tinode-video-call'};
+        let head = {mime: CALL_MESSAGE_MIME_TYPE };
         this.handleSendMessage('started', undefined, undefined, head)
           .then((ctrl) => {
-            if (ctrl.code < 200 || ctrl.code >= 300 ||
-                typeof ctrl.params == 'undefined' || typeof ctrl.params['seq'] == 'undefined') {
+            if (ctrl.code < 200 || ctrl.code >= 300 || !ctrl.params || !ctrl.params.seq) {
               this.handleCallClose();
               return;
             }
@@ -1715,7 +1715,7 @@ class TinodeWeb extends React.Component {
           return;
         }
         // We've accepted the call. Let the other side know.
-        topic.call('accept', callSeq).catch((err) => {
+        topic.videoCall('accept', callSeq).catch((err) => {
           this.handleCallClose();
           this.handleError(err.message, 'err');
         });
@@ -1729,7 +1729,7 @@ class TinodeWeb extends React.Component {
       return;
     }
 
-    topic.call('ringing', callSeq);
+    topic.videoCall('ringing', callSeq);
   }
 
   handleCallHangup(callTopic, callSeq) {
@@ -1738,7 +1738,7 @@ class TinodeWeb extends React.Component {
       return;
     }
 
-    topic.call('hang-up', callSeq);
+    topic.videoCall('hang-up', callSeq);
   }
 
   handleCallSendOffer(callTopic, callSeq, sdp) {
@@ -1747,7 +1747,7 @@ class TinodeWeb extends React.Component {
       return;
     }
 
-    topic.call('offer', callSeq, sdp);
+    topic.videoCall('offer', callSeq, sdp);
   }
 
   handleCallIceCandidate(callTopic, callSeq, candidate) {
@@ -1756,7 +1756,7 @@ class TinodeWeb extends React.Component {
       return;
     }
 
-    topic.call('ice-candidate', callSeq, candidate);
+    topic.videoCall('ice-candidate', callSeq, candidate);
   }
   handleCallSendAnswer(callTopic, callSeq, sdp) {
     const topic = this.tinode.getTopic(callTopic);
@@ -1764,7 +1764,7 @@ class TinodeWeb extends React.Component {
       return;
     }
 
-    topic.call('answer', callSeq, sdp);
+    topic.videoCall('answer', callSeq, sdp);
   }
 
   handleCallClose() {
@@ -1802,7 +1802,6 @@ class TinodeWeb extends React.Component {
     }
     switch (info.event) {
       case 'invite':
-        console.log('invite: ', info);
         if (info.from != this.state.myUserId) {
           // Incoming call.
           this.setState({

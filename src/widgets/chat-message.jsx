@@ -149,7 +149,7 @@ class BaseChatMessage extends React.PureComponent {
       </i></>
     } else if (isVideoCall(this.props.mimeType)) {
       // Video calls.
-      const direction = this.props.response ? "call_received" : "call_made";
+      const direction = this.props.response ? 'call_received' : 'call_made';
       const text = this.props.response ?
         <FormattedMessage id="calls_incoming"
           defaultMessage="Incoming Call" description="Incoming call label" /> :
@@ -157,7 +157,7 @@ class BaseChatMessage extends React.PureComponent {
           defaultMessage="Outgoing Call" description="Outgoing call label" />;
       const isCallDropped = this.props.content == "disconnected";
       content = <><i className="material-icons" style={{color: isCallDropped ? "red" : "green"}}>{direction}</i>{text}
-        { !isCallDropped ?
+        { !isCallDropped && this.props.duration ?
           [' (', <FormattedDuration seconds={this.props.duration / 1000} format="{hours} {minutes} {seconds}" />, ')'] :
           null}
       </>

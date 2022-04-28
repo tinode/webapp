@@ -4,8 +4,8 @@ import { FormattedMessage } from 'react-intl';
 
 import LetterTile from '../widgets/letter-tile.jsx';
 
-import { CALL_STATE_OUTGOING_INITATED, CALL_STATE_IN_PROGRESS, CALL_WEBRTC_CONFIG,
-         MAX_TITLE_LENGTH } from '../config.js';
+import { CALL_WEBRTC_CONFIG, MAX_TITLE_LENGTH } from '../config.js';
+import { CALL_STATE_OUTGOING_INITATED, CALL_STATE_IN_PROGRESS } from '../constants.js';
 
 import { clipStr } from '../lib/utils.js'
 
@@ -64,19 +64,16 @@ export default class CallPanel extends React.PureComponent {
     const pc = this.createPeerConnection();
     const stream = this.state.localStream;
     stream.getTracks().forEach(track => {
-      console.log('local stream adding track ', track.id, track.kind, track.readyState);
       pc.addTrack(track, stream);
     });
   }
 
   onInfo(info) {
-    console.log('info --> ', info);
     if (info.what != 'call') {
       return;
     }
     switch (info.event) {
       case 'accept':
-        // Call accepted.
         this.handleVideoCallAccepted(info);
         break;
       case 'offer':
@@ -106,7 +103,6 @@ export default class CallPanel extends React.PureComponent {
 
   componentWillUnmount() {
     this.props.topic.onInfo = this.previousOnInfo;
-    console.log('will unmount. stop');
     this.stop();
   }
 
@@ -143,16 +139,12 @@ export default class CallPanel extends React.PureComponent {
     pc.ontrack = this.handleTrackEvent;
 
     this.setState({pc: pc});
-    console.log('Created RTCPeerConnnection');
     return pc;
   }
 
   handleVideoAnswerMsg(info) {
-    console.log("*** Call recipient has accepted our call");
-
     // Configure the remote description, which is the SDP payload
-    // in our "video-answer" message.
-
+    // in 'info' message.
     var desc = new RTCSessionDescription(info.payload);
     this.state.pc.setRemoteDescription(desc).catch(this.reportError);
   }
@@ -186,18 +178,16 @@ export default class CallPanel extends React.PureComponent {
 
   handleICEConnectionStateChangeEvent(event) {
     switch (this.state.pc.iceConnectionState) {
-      case "closed":
-      case "failed":
+      case 'closed':
+      case 'failed':
         this.handleCloseClick();
         break;
     }
   }
 
   handleSignalingStateChangeEvent(event) {
-    switch (this.state.pc.signalingState) {
-      case "closed":
-        this.handleCloseClick();
-        break;
+    if (this.state.pc.signalingState == 'closed') {
+      this.handleCloseClick();
     }
   }
 
@@ -212,18 +202,17 @@ export default class CallPanel extends React.PureComponent {
   }
 
   handleGetUserMediaError(e) {
-    console.log('-->', e);
     switch(e.name) {
-      case "NotFoundError":
+      case 'NotFoundError':
         console.log("Unable to open your call because no camera and/or microphone" +
               "were found.");
         break;
-      case "SecurityError":
-      case "PermissionDeniedError":
+      case 'SecurityError':
+      case 'PermissionDeniedError':
         // Do nothing; this is the same as the user canceling the call.
         break;
       default:
-        console.log("Error opening your camera and/or microphone: " + e.message);
+        console.log('Error opening your camera and/or microphone: ' + e.message);
         break;
     }
 
@@ -240,7 +229,6 @@ export default class CallPanel extends React.PureComponent {
     var desc = new RTCSessionDescription(info.payload);
 
     pc.setRemoteDescription(desc).then(() => {
-      console.log('!!! handleVideoOffer/setRemoteDescription -> getUserMesia');
       return navigator.mediaDevices.getUserMedia(this.localStreamConstraints);
     })
     .then(stream => {
@@ -249,7 +237,6 @@ export default class CallPanel extends React.PureComponent {
       this.setState({localStream: stream});
 
       localStream.getTracks().forEach(track => {
-        console.log('local stream A adding track ', track.id, track.kind, track.readyState);
         pc.addTrack(track, localStream);
       });
     })
@@ -279,7 +266,6 @@ export default class CallPanel extends React.PureComponent {
       tracks.forEach((track) => {
         track.stop();
         track.enabled = false;
-        console.log('stopped track ', track.id, track.kind, track.readyState);
       });
     }
     el.srcObject = null;
@@ -316,7 +302,6 @@ export default class CallPanel extends React.PureComponent {
       if (track.kind != kind) {
         return;
       }
-      console.log('local stream: toggling track ', track.id, track.kind, track.readyState);
       track.enabled = !track.enabled;
     });
     // Make sure we redraw the UI properly.

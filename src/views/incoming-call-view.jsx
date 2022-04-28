@@ -1,21 +1,20 @@
 // IncomingCallView: displays Accept & Reject buttons for incoming calls.
 import React from 'react';
-import { FormattedMessage, injectIntl } from 'react-intl';
-
-import Tinode from 'tinode-sdk';
+import { FormattedMessage } from 'react-intl';
 
 import AvatarUpload from '../widgets/avatar-upload.jsx';
 import BadgeList from '../widgets/badge-list.jsx';
 import MenuCancel from '../widgets/menu-cancel.jsx';
 
-import { CALL_STATE_INCOMING_RECEIVED, MAX_TITLE_LENGTH } from '../config.js';
+import { MAX_TITLE_LENGTH } from '../config.js';
+import { CALL_STATE_INCOMING_RECEIVED } from '../constants.js';
 
 import { makeImageUrl } from '../lib/blob-helpers.js';
 import { clipStr } from '../lib/utils.js'
 
-const RING_SOUND = new Audio("audio/phone_ring.mp3");
+const RING_SOUND = new Audio('audio/phone_ring.mp3');
 
-class IncomingCallView extends React.Component {
+export default class IncomingCallView extends React.Component {
   constructor(props) {
     super(props);
 
@@ -119,12 +118,8 @@ class IncomingCallView extends React.Component {
   }
 
   render() {
-    const {formatMessage} = this.props.intl;
-    let panelTitle = 'Unknown';
-    if (this.props.callState == CALL_STATE_INCOMING_RECEIVED) {
-      panelTitle = <FormattedMessage id="calls_incoming_title"
-          defaultMessage="Incoming Call" description="Incoming call title (Incoming call view)" />;
-    }
+    let panelTitle = <FormattedMessage id="calls_incoming_title"
+        defaultMessage="Incoming Call" description="Incoming call title (Incoming call view)" />;
 
     return (
       <div id="info-view">
@@ -170,5 +165,3 @@ class IncomingCallView extends React.Component {
     );
   }
 };
-
-export default injectIntl(IncomingCallView);
