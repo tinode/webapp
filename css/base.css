@@ -2738,3 +2738,74 @@ ul.tabbar li.active > a {
     opacity: 0.3;
   }
 }
+
+#video-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+	height: 100%!important;
+  width: 85%;
+  margin: auto;
+  height: 80%;
+}
+
+video {
+  width:100%;
+}
+
+.video-container-panel {
+  -ms-flex-align: center!important;
+  align-items: center!important;
+  margin-top: 10%;
+  position:relative;
+}
+
+.video-elem {
+  width:50%;
+  float:left;
+  position:relative;
+  z-index:0;
+}
+
+.video-title {
+  position:absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 1;
+  background-color: white;
+}
+
+#video-container-controls {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.video-call-accept {
+  border-radius: 10px;
+  background-color: green;
+}
+
+.video-call-hangup {
+  border-radius: 10px;
+  background-color: red;
+}
+
+.video-call-toggle-media {
+  border-radius: 10px;
+  background-color: gray;
+}
+
+.incoming-call-title {
+  text-align: center;
+  padding: 10px;
+}
+
+.incoming-call-badges {
+  text-align: center;
+}
+
+.incoming-call-actions {
+  text-align: center;
+  padding: 20px;
+}

@@ -119,6 +119,22 @@
     "defaultMessage": "Update",
     "description": "Button [Update]"
   },
+  "calls_incoming": {
+    "defaultMessage": "Incoming Call",
+    "description": "Incoming call label"
+  },
+  "calls_incoming_title": {
+    "defaultMessage": "Incoming Call",
+    "description": "Incoming call title (Incoming call view)"
+  },
+  "calls_outgoing": {
+    "defaultMessage": "Outgoing Call",
+    "description": "Outgoing call label"
+  },
+  "calls_you_label": {
+    "defaultMessage": "You",
+    "description": "Shown over the local video screen"
+  },
   "cannot_initiate_file_upload": {
     "defaultMessage": "Cannot initiate file upload.",
     "description": "Generic error messagewhen attachment fails"
@@ -479,6 +495,10 @@
   "menu_item_unmute": {
     "defaultMessage": "Unmute",
     "description": "Turn notifications on"
+  },
+  "menu_item_video_call": {
+    "defaultMessage": "Video Call",
+    "description": "Start video call"
   },
   "message_sending": {
     "defaultMessage": "sending...",

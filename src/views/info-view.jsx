@@ -18,7 +18,7 @@ import TopicSecurity from '../widgets/topic-security.jsx';
 import { MAX_TITLE_LENGTH, MAX_TOPIC_DESCRIPTION_LENGTH, NO_ACCESS_MODE } from '../config.js';
 
 import { makeImageUrl } from '../lib/blob-helpers.js';
-import { theCard } from '../lib/utils.js';
+import { theCard, clipStr } from '../lib/utils.js';
 
 const messages = defineMessages({
   info: {
@@ -77,10 +77,6 @@ const messages = defineMessages({
     description: 'Menu item [Edit permissions]'
   },
 });
-
-function _clip(str, length) {
-  return str && str.substring(0, length);
-}
 
 class InfoView extends React.Component {
   constructor(props) {
@@ -206,11 +202,11 @@ class InfoView extends React.Component {
       deleter: acs && acs.isDeleter(),
       muted: acs && acs.isMuted(),
 
-      fullName: _clip(topic.public ? topic.public.fn : undefined, MAX_TITLE_LENGTH),
-      description: _clip(topic.public ? topic.public.note : undefined, MAX_TOPIC_DESCRIPTION_LENGTH),
+      fullName: clipStr(topic.public && topic.public.fn, MAX_TITLE_LENGTH),
+      description: clipStr(topic.public && topic.public.note, MAX_TOPIC_DESCRIPTION_LENGTH),
       avatar: makeImageUrl(topic.public ? topic.public.photo : null),
       trustedBadges: badges,
-      private: _clip(topic.private ? topic.private.comment : null, MAX_TITLE_LENGTH),
+      private: clipStr(topic.private && topic.private.comment, MAX_TITLE_LENGTH),
       archived: topic.isArchived(),
       address: topic.name,
       groupTopic: topic.isGroupType(),

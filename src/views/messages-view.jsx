@@ -5,6 +5,7 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
 import { Drafty, Tinode } from 'tinode-sdk';
 
+import CallPanel from '../widgets/call-panel.jsx';
 import ChatMessage from '../widgets/chat-message.jsx';
 import ContactBadges from '../widgets/contact-badges.jsx';
 import DocPreview from '../widgets/doc-preview.jsx';
@@ -21,9 +22,11 @@ import SendMessage from '../widgets/send-message.jsx';
 import { DEFAULT_P2P_ACCESS_MODE, IMAGE_PREVIEW_DIM, KEYPRESS_DELAY,
   MESSAGES_PAGE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE,
   READ_DELAY, QUOTED_REPLY_LENGTH } from '../config.js';
+import { CALL_STATE_OUTGOING_INITATED, CALL_STATE_IN_PROGRESS } from '../constants.js';
 import { blobToBase64, fileToBase64, imageScaled, makeImageUrl } from '../lib/blob-helpers.js';
 import HashNavigation from '../lib/navigation.js';
 import { bytesToHumanSize, shortDateFormat } from '../lib/strformat.js';
+import { isVideoCall } from '../lib/utils.js';
 
 // Run timer with this frequency (ms) for checking notification queue.
 const NOTIFICATION_EXEC_INTERVAL = 300;
@@ -80,6 +83,13 @@ function isPeerRestricted(acs) {
   return false;
 }
 
+function shouldPresentCallPanel(callState) {
+  // Show call panel if either:
+  // - call is outgoing (and the client is waiting for the other side to pick up) or,
+  // - call is already in progress.
+  return callState == CALL_STATE_OUTGOING_INITATED || callState == CALL_STATE_IN_PROGRESS;
+}
+
 class MessagesView extends React.Component {
   constructor(props) {
     super(props);
@@ -118,6 +128,7 @@ class MessagesView extends React.Component {
     this.handlePickReply = this.handlePickReply.bind(this);
     this.handleCancelReply = this.handleCancelReply.bind(this);
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
+    this.handleCallHangup = this.handleCallHangup.bind(this);
 
     this.chatMessageRefs = {};
     this.getOrCreateMessageRef = this.getOrCreateMessageRef.bind(this);
@@ -167,6 +178,9 @@ class MessagesView extends React.Component {
     if (this.state.topic != prevState.topic) {
       if (prevState.topic && !Tinode.isNewGroupTopicName(prevState.topic)) {
         this.leave(prevState.topic);
+        if (prevState.rtcPanel) {
+          this.handleCallHangup(prevState.topic, prevProps.callSeq);
+        }
       }
 
       if (topic) {
@@ -215,6 +229,7 @@ class MessagesView extends React.Component {
         docPreview: null,
         imagePreview: null,
         imagePostview: null,
+        rtcPanel: null,
         typingIndicator: false,
         scrollPosition: 0,
         fetchingMessages: false,
@@ -241,6 +256,7 @@ class MessagesView extends React.Component {
         docPreview: null,
         imagePreview: null,
         imagePostview: null,
+        rtcPanel: null,
         typingIndicator: false,
         scrollPosition: 0,
         fetchingMessages: false,
@@ -292,6 +308,10 @@ class MessagesView extends React.Component {
           latestClearId: topic.maxClearId(),
           channel: topic.isChannelType()
         });
+
+        if (nextProps.callTopic == topic.name && shouldPresentCallPanel(nextProps.callState)) {
+          nextState.rtcPanel = nextProps.callTopic;
+        }
       } else {
         // Invalid topic.
         Object.assign(nextState, {
@@ -303,6 +323,12 @@ class MessagesView extends React.Component {
           peerMessagingDisabled: false,
           channel: false
         });
+      }
+    } else {
+      // We are still in same topic. Show the call panel if necessary.
+      if (nextProps.callTopic == prevState.topic && !prevState.rtcPanel &&
+          shouldPresentCallPanel(nextProps.callState)) {
+        nextState.rtcPanel = nextProps.callTopic;
       }
     }
 
@@ -402,6 +428,7 @@ class MessagesView extends React.Component {
     if (!oldTopicName || !this.props.tinode.isTopicCached(oldTopicName)) {
       return;
     }
+
     const oldTopic = this.props.tinode.getTopic(oldTopicName);
     if (oldTopic && oldTopic.isSubscribed()) {
       oldTopic.leave(false)
@@ -788,6 +815,14 @@ class MessagesView extends React.Component {
     }
   }
 
+  handleCallHangup(topic, seq) {
+    this.props.onVideoCallClosed();
+    this.setState({
+      rtcPanel: null
+    });
+    this.props.onCallHangup(topic, seq);
+  }
+
   // sendImageAttachment sends the image bits inband as Drafty message.
   sendImageAttachment(caption, blob) {
     const mime = this.state.imagePreview.mime;
@@ -1013,6 +1048,26 @@ class MessagesView extends React.Component {
             onClose={this.handleClosePreview}
             onSendMessage={this.sendFileAttachment} />
         );
+      } else if (this.state.rtcPanel) {
+        const topic = this.props.tinode.getTopic(this.state.topic);
+        component2 = (
+          <CallPanel
+            topic={topic}
+            seq={this.props.callSeq}
+            callState={this.props.callState}
+            displayMobile={this.props.displayMobile}
+            tinode={this.props.tinode}
+            title={this.state.title}
+            avatar={this.state.avatar || true}
+
+            onError={this.props.onError}
+            onHangup={this.handleCallHangup}
+            onInvite={this.props.onCallInvite}
+            onSendOffer={this.props.onCallSendOffer}
+            onIceCandidate={this.props.onCallIceCandidate}
+            onSendAnswer={this.props.onCallSendAnswer}
+          />
+        );
       } else {
         const topic = this.props.tinode.getTopic(this.state.topic);
         const isChannel = topic.isChannelType();
@@ -1088,12 +1143,21 @@ class MessagesView extends React.Component {
               );
               prevDate = thisDate;
             }
+            let duration;
+            if (msg.head && isVideoCall(msg.head.mime)) {
+              topic.messageVersions(msg, (cur, before) => {
+                if (cur.content == 'finished' && before.content == 'accepted') {
+                  duration = msg.ts - before.ts;
+                }
+              });
+            }
             messageNodes.push(
               <ChatMessage
                 tinode={this.props.tinode}
                 content={msg.content}
                 mimeType={msg.head ? msg.head.mime : null}
                 timestamp={msg.ts}
+                duration={duration}
                 response={isReply}
                 seq={msg.seq}
                 isGroup={groupTopic}
@@ -1235,7 +1299,6 @@ class MessagesView extends React.Component {
           </>
         );
       }
-
       component = <div id="topic-view">{component2}</div>
     }
     return component;

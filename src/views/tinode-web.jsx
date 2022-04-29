@@ -13,11 +13,15 @@ import ContextMenu from '../widgets/context-menu.jsx';
 import ForwardDialog from '../widgets/forward-dialog.jsx';
 
 import InfoView from './info-view.jsx';
+import IncomingCallView from './incoming-call-view.jsx';
 import MessagesView from './messages-view.jsx';
 import SidepanelView from './sidepanel-view.jsx';
 
 import { API_KEY, APP_NAME, DEFAULT_P2P_ACCESS_MODE, FORWARDED_PREVIEW_LENGTH, LOGGING_ENABLED,
   MEDIA_BREAKPOINT, RECEIVED_DELAY } from '../config.js';
+import { CALL_STATE_NONE, CALL_STATE_OUTGOING_INITATED,
+         CALL_STATE_INCOMING_RECEIVED, CALL_STATE_IN_PROGRESS,
+         CALL_MESSAGE_MIME_TYPE }  from '../constants.js';
 import { PACKAGE_VERSION } from '../version.js';
 import { base64ReEncode, makeImageUrl } from '../lib/blob-helpers.js';
 import { detectServerAddress, isLocalHost, isSecureConnection } from '../lib/host-name.js';
@@ -64,6 +68,11 @@ const messages = defineMessages({
     id: 'menu_item_info',
     defaultMessage: 'Info',
     description: 'Show extended topic information'
+  },
+  menu_item_video_call: {
+    id: 'menu_item_video_call',
+    defaultMessage: 'Video Call',
+    description: 'Start video call'
   }
 });
 
@@ -145,6 +154,19 @@ class TinodeWeb extends React.Component {
     this.handleShowForwardDialog = this.handleShowForwardDialog.bind(this);
     this.handleHideForwardDialog = this.handleHideForwardDialog.bind(this);
 
+    this.handleStartVideoCall = this.handleStartVideoCall.bind(this);
+    this.handleInfoMessage = this.handleInfoMessage.bind(this);
+    this.handleCallClose = this.handleCallClose.bind(this);
+
+    this.handleCallInvite = this.handleCallInvite.bind(this);
+    this.handleCallRinging = this.handleCallRinging.bind(this);
+    this.handleCallHangup = this.handleCallHangup.bind(this);
+    this.handleCallSendOffer = this.handleCallSendOffer.bind(this);
+    this.handleCallIceCandidate = this.handleCallIceCandidate.bind(this);
+    this.handleCallSendAnswer = this.handleCallSendAnswer.bind(this);
+
+    this.handleCallAcceptCall = this.handleCallAcceptCall.bind(this);
+
     this.sendMessageToTopic = this.sendMessageToTopic.bind(this);
   }
 
@@ -198,6 +220,13 @@ class TinodeWeb extends React.Component {
       displayMobile: (window.innerWidth <= MEDIA_BREAKPOINT),
       infoPanel: undefined,
       mobilePanel: 'sidepanel',
+
+      // Video calls.
+      callTopic: undefined,
+      callState: CALL_STATE_NONE,
+      // If true, call state should be transitioned to CALL_STATE_IN_PROGRESS upon
+      // switching to the call topic.
+      callShouldStart: false,
 
       contextMenuVisible: false,
       contextMenuBounds: null,
@@ -254,6 +283,7 @@ class TinodeWeb extends React.Component {
       this.tinode.onConnect = this.handleConnected;
       this.tinode.onDisconnect = this.handleDisconnect;
       this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
+      this.tinode.onInfoMessage = this.handleInfoMessage;
     }).then(() => {
       // Initialize desktop alerts.
       if (this.state.desktopAlertsEnabled) {
@@ -501,7 +531,13 @@ class TinodeWeb extends React.Component {
   }
 
   handleError(err, level, action, actionText) {
-    this.setState({errorText: err, errorLevel: level, errorAction: action, errorActionText: actionText});
+    this.setState({
+      errorText: err,
+      errorLevel: level,
+      errorAction: action,
+      errorActionText: actionText,
+      callShouldStart: false,
+    });
   }
 
   // User clicked Login button in the side panel.
@@ -964,7 +1000,8 @@ class TinodeWeb extends React.Component {
   //  - head - head dictionary to be attached to the message
   handleSendMessage(msg, uploadCompletionPromise, uploader, head) {
     const topic = this.tinode.getTopic(this.state.topicSelected);
-    this.sendMessageToTopic(topic, msg, uploadCompletionPromise, uploader, head);
+    /* TODO: check if return is required */
+    return this.sendMessageToTopic(topic, msg, uploadCompletionPromise, uploader, head);
   }
 
   sendMessageToTopic(topic, msg, uploadCompletionPromise, uploader, head) {
@@ -999,11 +1036,13 @@ class TinodeWeb extends React.Component {
       completion.push(subscribePromise);
     }
 
-    topic.publishDraft(msg, Promise.all(completion))
-      .then(_ => {
+    // TODO: check if return is required.
+    return topic.publishDraft(msg, Promise.all(completion))
+      .then((ctrl) => {
         if (topic.isArchived()) {
           topic.archive(false);
         }
+        return ctrl;
       })
       .catch((err) => {
         this.handleError(err.message, 'err');
@@ -1257,14 +1296,19 @@ class TinodeWeb extends React.Component {
 
   // New topic was created, here is the new topic name.
   handleNewTopicCreated(oldName, newName) {
+    let nextState = {};
+    if (this.state.callShouldStart) {
+      nextState = {callState: CALL_STATE_IN_PROGRESS, callShouldStart: false};
+    }
     if (this.state.topicSelected == oldName && oldName != newName) {
       // If the current URl contains the old topic name, replace it with new.
       // Update the name of the selected topic first so the navigator doen't clear
       // the state.
-      this.setState({topicSelected: newName}, () => {
-        HashNavigation.navigateTo(HashNavigation.setUrlTopic('', newName));
-      });
+      nextState.topicSelected = newName;
     }
+    this.setState(nextState, _ => {
+      HashNavigation.navigateTo(HashNavigation.setUrlTopic('', newName));
+    });
   }
 
   handleTopicUpdateRequest(topicName, pub, priv, defacs) {
@@ -1376,7 +1420,7 @@ class TinodeWeb extends React.Component {
   }
 
   handleDeleteAccount() {
-    this.tinode.delCurrentUser(true).then((ctrl) => {
+    this.tinode.delCurrentUser(true).then(_ => {
       this.handleLogout();
     });
   }
@@ -1428,7 +1472,7 @@ class TinodeWeb extends React.Component {
       return;
     }
 
-    topic.updateMode(null, '-JP').then((ctrl) => {
+    topic.updateMode(null, '-JP').then(_ => {
       // Hide MessagesView and InfoView panels.
       HashNavigation.navigateTo(HashNavigation.setUrlTopic(window.location.hash, ''));
     }).catch((err) => {
@@ -1443,7 +1487,7 @@ class TinodeWeb extends React.Component {
     }
 
     // Publish spam report.
-    this.tinode.report('report',topicName);
+    this.tinode.report('report', topicName);
 
     // Remove J and P permissions.
     topic.updateMode(null, '-JP').then((ctrl) => {
@@ -1506,6 +1550,10 @@ class TinodeWeb extends React.Component {
       subscribed ? {
         title: this.props.intl.formatMessage(messages.menu_item_info),
         handler: this.handleShowInfoView
+      } : null,
+      subscribed && Tinode.isP2PTopicName(topicName) ? {
+        title: this.props.intl.formatMessage(messages.menu_item_video_call),
+        handler: this.handleStartVideoCall
       } : null,
       subscribed ? 'messages_clear' : null,
       subscribed && deleter ? 'messages_clear_hard' : null,
@@ -1634,6 +1682,151 @@ class TinodeWeb extends React.Component {
           // Socket error
           this.handleError(err.message, 'err');
         });
+    }
+  }
+
+  handleStartVideoCall() {
+    this.setState({
+      callTopic: this.state.topicSelected,
+      callState: CALL_STATE_OUTGOING_INITATED
+    });
+  }
+
+  handleCallInvite(callTopic, callSeq, callState) {
+    switch (callState) {
+      case CALL_STATE_OUTGOING_INITATED:
+        let head = {mime: CALL_MESSAGE_MIME_TYPE };
+        this.handleSendMessage('started', undefined, undefined, head)
+          .then((ctrl) => {
+            if (ctrl.code < 200 || ctrl.code >= 300 || !ctrl.params || !ctrl.params.seq) {
+              this.handleCallClose();
+              return;
+            }
+            this.setState({callSeq: ctrl.params['seq']});
+          });
+        break;
+      case CALL_STATE_IN_PROGRESS:
+        const topic = this.tinode.getTopic(callTopic);
+        if (!topic) {
+          return;
+        }
+        // We've accepted the call. Let the other side know.
+        topic.videoCall('accept', callSeq).catch((err) => {
+          this.handleCallClose();
+          this.handleError(err.message, 'err');
+        });
+        break;
+    }
+  }
+
+  handleCallRinging(callTopic, callSeq) {
+    const topic = this.tinode.getTopic(callTopic);
+    if (!topic) {
+      return;
+    }
+
+    topic.videoCall('ringing', callSeq);
+  }
+
+  handleCallHangup(callTopic, callSeq) {
+    const topic = this.tinode.getTopic(callTopic);
+    if (!topic) {
+      return;
+    }
+
+    topic.videoCall('hang-up', callSeq);
+  }
+
+  handleCallSendOffer(callTopic, callSeq, sdp) {
+    const topic = this.tinode.getTopic(callTopic);
+    if (!topic) {
+      return;
+    }
+
+    topic.videoCall('offer', callSeq, sdp);
+  }
+
+  handleCallIceCandidate(callTopic, callSeq, candidate) {
+    const topic = this.tinode.getTopic(callTopic);
+    if (!topic) {
+      return;
+    }
+
+    topic.videoCall('ice-candidate', callSeq, candidate);
+  }
+  handleCallSendAnswer(callTopic, callSeq, sdp) {
+    const topic = this.tinode.getTopic(callTopic);
+    if (!topic) {
+      return;
+    }
+
+    topic.videoCall('answer', callSeq, sdp);
+  }
+
+  handleCallClose() {
+    if (this.state.callTimeout) {
+      console.log('closing call timeout ', this.state.callTimeout);
+      clearTimeout(this.state.callTimeout);
+    }
+    this.setState({
+      callTopic: undefined,
+      callState: CALL_STATE_NONE
+    });
+  }
+
+  handleCallAcceptCall(topicName) {
+    const topic = this.tinode.getTopic(topicName);
+    if (!topic) {
+      return;
+    }
+    if (topic.isSubscribed()) {
+      this.handleTopicSelected(this.state.callTopic);
+      this.setState({
+        callState: CALL_STATE_IN_PROGRESS
+      });
+    } else {
+      // We need to switch and subscribe to callTopic first.
+      this.setState({
+        callShouldStart: true,
+      }, () => this.handleTopicSelected(this.state.callTopic));
+    }
+  }
+
+  handleInfoMessage(info) {
+    if (info.what != 'call') {
+      return;
+    }
+    switch (info.event) {
+      case 'invite':
+        if (info.from != this.state.myUserId) {
+          // Incoming call.
+          this.setState({
+            callTopic: info.src,
+            callState: CALL_STATE_INCOMING_RECEIVED,
+            callSeq: info.seq
+          });
+        }
+        break;
+      case 'accept':
+        console.log('TinodeWeb: received accept msg ', info);
+        // If another my session has accepted the call.
+        if (Tinode.isMeTopicName(info.topic) && this.tinode.isMe(info.from)) {
+          this.setState({
+            callTopic: null,
+            callState: CALL_STATE_NONE,
+            callSeq: null
+          });
+          return;
+        }
+        if (info.topic == this.state.callTopic) {
+          // Update state.
+          this.setState({callState: CALL_STATE_IN_PROGRESS});
+        }
+        break;
+      case 'hang-up':
+        // Remote hangup.
+        this.handleCallClose();
+        break;
     }
   }
 
@@ -1774,6 +1967,16 @@ class TinodeWeb extends React.Component {
           forwardMessage={this.state.forwardMessage}
           onCancelForwardMessage={this.handleHideForwardDialog}
 
+          callTopic={this.state.callTopic}
+          callSeq={this.state.callSeq}
+          callState={this.state.callState}
+          onCallHangup={this.handleCallHangup}
+
+          onCallInvite={this.handleCallInvite}
+          onCallSendOffer={this.handleCallSendOffer}
+          onCallIceCandidate={this.handleCallIceCandidate}
+          onCallSendAnswer={this.handleCallSendAnswer}
+
           errorText={this.state.errorText}
           errorLevel={this.state.errorLevel}
           errorAction={this.state.errorAction}
@@ -1788,7 +1991,8 @@ class TinodeWeb extends React.Component {
           showContextMenu={this.handleShowContextMenu}
           onChangePermissions={this.handleChangePermissions}
           onNewChat={this.handleNewChatInvitation}
-          sendMessage={this.handleSendMessage} />
+          sendMessage={this.handleSendMessage}
+          onVideoCallClosed={this.handleCallClose} />
 
         {this.state.infoPanel ?
           <InfoView
@@ -1822,6 +2026,21 @@ class TinodeWeb extends React.Component {
             onError={this.handleError}
 
             showContextMenu={this.handleShowContextMenu}
+            />
+          :
+          null
+        }
+
+        {this.state.callTopic && this.state.callState == CALL_STATE_INCOMING_RECEIVED ?
+          <IncomingCallView
+            tinode={this.tinode}
+            onClose={this.handleCallClose}
+            topic={this.state.callTopic}
+            seq={this.state.callSeq}
+            callState={this.state.callState}
+            onRinging={this.handleCallRinging}
+            onAcceptCall={this.handleCallAcceptCall}
+            onReject={this.handleCallHangup}
             />
           :
           null
