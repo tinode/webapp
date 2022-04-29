@@ -310,9 +310,7 @@ class MessagesView extends React.Component {
         });
 
         if (nextProps.callTopic == topic.name && shouldPresentCallPanel(nextProps.callState)) {
-          Object.assign(nextState, {
-            rtcPanel: nextProps.callTopic,
-          });
+          nextState.rtcPanel = nextProps.callTopic;
         }
       } else {
         // Invalid topic.
@@ -330,9 +328,7 @@ class MessagesView extends React.Component {
       // We are still in same topic. Show the call panel if necessary.
       if (nextProps.callTopic == prevState.topic && !prevState.rtcPanel &&
           shouldPresentCallPanel(nextProps.callState)) {
-        Object.assign(nextState, {
-          rtcPanel: nextProps.callTopic,
-        });
+        nextState.rtcPanel = nextProps.callTopic;
       }
     }
 
@@ -1149,7 +1145,7 @@ class MessagesView extends React.Component {
             }
             let duration;
             if (msg.head && isVideoCall(msg.head.mime)) {
-              topic.messageVersions(msg, (cur, before, unused1, unused2) => {
+              topic.messageVersions(msg, (cur, before) => {
                 if (cur.content == 'finished' && before.content == 'accepted') {
                   duration = msg.ts - before.ts;
                 }

@@ -155,8 +155,8 @@ class BaseChatMessage extends React.PureComponent {
           defaultMessage="Incoming Call" description="Incoming call label" /> :
         <FormattedMessage id="calls_outgoing"
           defaultMessage="Outgoing Call" description="Outgoing call label" />;
-      const isCallDropped = this.props.content == "disconnected";
-      content = <><i className="material-icons" style={{color: isCallDropped ? "red" : "green"}}>{direction}</i>{text}
+      const isCallDropped = this.props.content == 'disconnected';
+      content = <><i className="material-icons" style={{color: isCallDropped ? 'red' : 'green'}}>{direction}</i>{text}
         { !isCallDropped && this.props.duration ?
           [' (', <FormattedDuration seconds={this.props.duration / 1000} format="{hours} {minutes} {seconds}" />, ')'] :
           null}

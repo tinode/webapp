@@ -149,15 +149,15 @@ export default class CallPanel extends React.PureComponent {
     this.state.pc.setRemoteDescription(desc).catch(this.reportError);
   }
 
-  reportError(errMessage) {
-    console.log(`Error ${errMessage.name}: ${errMessage.message}`);
+  reportError(err) {
+    this.props.onError(err.message, 'err');
   }
 
   handleNegotiationNeededEvent() {
     this.state.pc.createOffer().then(offer => {
       return this.state.pc.setLocalDescription(offer);
     })
-    .then(() => {
+    .then(_ => {
       this.props.onSendOffer(this.props.topic.name, this.props.seq, this.state.pc.localDescription.toJSON());
     })
     .catch(this.reportError);
@@ -196,16 +196,17 @@ export default class CallPanel extends React.PureComponent {
   }
 
   handleTrackEvent(event) {
+    // Remote video becomes available.
     this.remoteRef.current.srcObject = event.streams[0];
-    // Make sure we redraw the UI properly.
+    // Make sure we display the title (peer's name) over the remote video.
     this.forceUpdate();
   }
 
   handleGetUserMediaError(e) {
     switch(e.name) {
       case 'NotFoundError':
-        console.log("Unable to open your call because no camera and/or microphone" +
-              "were found.");
+        // Cannot start the call b/c no camera and/or microphone found. 
+        this.reportError(e);
         break;
       case 'SecurityError':
       case 'PermissionDeniedError':
@@ -304,7 +305,7 @@ export default class CallPanel extends React.PureComponent {
       }
       track.enabled = !track.enabled;
     });
-    // Make sure we redraw the UI properly.
+    // Make sure we redraw the mute/unmute icons (e.g. mic -> mic_off).
     this.forceUpdate();
   }
 
@@ -373,7 +374,6 @@ export default class CallPanel extends React.PureComponent {
             <button className="video-call-toggle-media" onClick={this.handleToggleCameraClick}><i className="material-icons">{videoIcon}</i></button>
             <button className="video-call-toggle-media" onClick={this.handleToggleMicClick}><i className="material-icons">{audioIcon}</i></button>
           </div>
-          <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
         </div>
       </>
     );

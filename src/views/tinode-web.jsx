@@ -1304,15 +1304,11 @@ class TinodeWeb extends React.Component {
       // If the current URl contains the old topic name, replace it with new.
       // Update the name of the selected topic first so the navigator doen't clear
       // the state.
-      const newTopic = {topicSelected: newName};
-      this.setState(...nextState, ...newTopic, () => {
-        HashNavigation.navigateTo(HashNavigation.setUrlTopic('', newName));
-      });
-    } else {
-      this.setState(nextState, () => {
-        HashNavigation.navigateTo(HashNavigation.setUrlTopic('', newName));
-      });
+      nextState.topicSelected = newName;
     }
+    this.setState(nextState, _ => {
+      HashNavigation.navigateTo(HashNavigation.setUrlTopic('', newName));
+    });
   }
 
   handleTopicUpdateRequest(topicName, pub, priv, defacs) {
@@ -1814,7 +1810,7 @@ class TinodeWeb extends React.Component {
       case 'accept':
         console.log('TinodeWeb: received accept msg ', info);
         // If another my session has accepted the call.
-        if (info.topic == 'me' && info.from == this.state.myUserId) {
+        if (Tinode.isMeTopicName(info.topic) && this.tinode.isMe(info.from)) {
           this.setState({
             callTopic: null,
             callState: CALL_STATE_NONE,

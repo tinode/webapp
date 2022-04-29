@@ -71,8 +71,8 @@ class Contact extends React.Component {
     // The this.props.preview contains alreay shortened Drafty or string.
     let preview;
     if (this.props.previewIsVideoCall) {
-      preview = <><i className='material-icons'>{this.props.previewIsResponse ? 'call_received' : 'call_made'}</i>
-                  <i className='material-icons'>video_call</i></>;
+      preview = <><i className="material-icons">{this.props.previewIsResponse ? 'call_received' : 'call_made'}</i>
+                  <i className="material-icons">video_call</i></>;
     } else if (typeof this.props.preview == 'string') {
       preview = this.props.preview;
     } else if (Drafty.isValid(this.props.preview)) {
