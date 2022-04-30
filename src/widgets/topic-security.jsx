@@ -143,7 +143,7 @@ class TopicSecurity extends React.PureComponent {
     this.props.onShowAlert(
       formatMessage(messages.report_chat), // title
       formatMessage(messages.report_chat_warning), // content
-      (() => { this.props.onReportTopic(this.props.topic); }), // onConfirm
+      (_ => { this.props.onReportTopic(this.props.topic); }), // onConfirm
       null, // "OK"
       true, // Show Reject button
       null  // "Cancel"

@@ -1428,7 +1428,7 @@ class TinodeWeb extends React.Component {
       return;
     }
 
-    topic.updateMode(null, '-JP').then((ctrl) => {
+    topic.updateMode(null, '-JP').then(_ => {
       // Hide MessagesView and InfoView panels.
       HashNavigation.navigateTo(HashNavigation.setUrlTopic(window.location.hash, ''));
     }).catch((err) => {
@@ -1443,7 +1443,7 @@ class TinodeWeb extends React.Component {
     }
 
     // Publish spam report.
-    this.tinode.report('report',topicName);
+    this.tinode.report('report', topicName);
 
     // Remove J and P permissions.
     topic.updateMode(null, '-JP').then((ctrl) => {
