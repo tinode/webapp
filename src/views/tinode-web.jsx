@@ -1711,10 +1711,7 @@ class TinodeWeb extends React.Component {
           return;
         }
         // We've accepted the call. Let the other side know.
-        topic.videoCall('accept', callSeq).catch((err) => {
-          this.handleCallClose();
-          this.handleError(err.message, 'err');
-        });
+        topic.videoCall('accept', callSeq);
         break;
     }
   }
