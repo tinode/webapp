@@ -608,10 +608,6 @@
     "defaultMessage": "phone",
     "description": "Dative case of 'phone', i.e. 'phone' in 'by phone'"
   },
-  "preview_unavailable": {
-    "defaultMessage": "unavailable",
-    "description": "Message shown when media preview is not available"
-  },
   "private_editing_placeholder": {
     "defaultMessage": "Visible to you only",
     "description": "Placeholder for editing 'private'"

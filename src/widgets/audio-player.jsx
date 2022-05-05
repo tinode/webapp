@@ -24,7 +24,7 @@ export default class AudioPlayer extends React.PureComponent {
     super(props);
 
     let preview = base64ToIntArray(this.props.preview);
-    if (Array.isArray(preview) && preview.length < MIN_PREVIEW_LENGTH) {
+    if (!Array.isArray(preview) || preview.length < MIN_PREVIEW_LENGTH) {
       preview = null;
     }
 
@@ -57,9 +57,7 @@ export default class AudioPlayer extends React.PureComponent {
       this.initAudio();
     }
 
-    if (this.state.preview) {
-      this.initCanvas();
-    }
+    this.initCanvas();
   }
 
   componentWillUnmount() {
@@ -79,7 +77,7 @@ export default class AudioPlayer extends React.PureComponent {
 
     if (this.props.preview != prevProps.preview) {
       let preview = base64ToIntArray(this.props.preview);
-      if (Array.isArray(preview) && preview.length < MIN_PREVIEW_LENGTH) {
+      if (!Array.isArray(preview) || preview.length < MIN_PREVIEW_LENGTH) {
         preview = null;
       }
       this.setState({preview: preview}, this.initCanvas);
@@ -173,27 +171,36 @@ export default class AudioPlayer extends React.PureComponent {
 
   // Quick and dirty downsampling of the original preview bars into a smaller (or equal) number of bars we can display here.
   resampleBars(original) {
-    const barCount = Math.min(original.length, ((this.canvasRef.current.width - SPACING) / (LINE_WIDTH + SPACING)) | 0);
-    const factor = original.length / barCount;
-    let amps = [];
-    let max = -1;
-    for (let i=0;i<barCount;i++) {
-      let lo = (i * factor) | 0; // low bound;
-      let hi = ((i + 1) * factor) | 0; // high bound;
-      let amp = 0.0;
-      for (let j=lo; j<hi; j++) {
-        amp += original[j]
-      }
-      amps[i] = Math.max(0, amp / (hi - lo));
-      max = Math.max(amps[i], max);
+    const dstCount = ((this.canvasRef.current.width - SPACING) / (LINE_WIDTH + SPACING)) | 0;
+    // Remove extra padding on the right due to fractional bar which is not drawn.
+    this.effectiveWidth = dstCount * (LINE_WIDTH + SPACING) + SPACING;
+
+    if (!Array.isArray(original) || original.length == 0) {
+      return Array.apply(null, Array(dstCount)).map(_ => 0.01);
     }
 
-    if (max > 0) {
-      // Remove extra padding on the right due to fractional bar which is not drawn.
-      this.effectiveWidth = barCount * (LINE_WIDTH + SPACING) + SPACING;
-      return amps.map(a => a / max);
+    const factor = original.length / dstCount;
+    let amps = [];
+    let maxAmp = -1;
+    for (let i=0; i<dstCount; i++) {
+      let lo = (i * factor) | 0; // low bound;
+      let hi = ((i + 1) * factor) | 0; // high bound;
+      if (hi == lo) {
+        amps[i] = original[lo];
+      } else {
+        let amp = 0.0;
+        for (let j=lo; j<hi; j++) {
+          amp += original[j]
+        }
+        amps[i] = Math.max(0, amp / (hi - lo));
+      }
+      maxAmp = Math.max(amps[i], maxAmp);
     }
-    return null;
+
+    if (maxAmp > 0) {
+      return amps.map(a => a / maxAmp);
+    }
+    return Array.apply(null, Array(dstCount)).map(_ => 0.01);
   }
 
   handlePlay(e) {
@@ -221,7 +228,7 @@ export default class AudioPlayer extends React.PureComponent {
       const offset = (e.clientX - rect.left) / this.effectiveWidth * CANVAS_UPSCALING;
       this.audioPlayer.currentTime = this.props.duration * offset / 1000;
       this.setState({currentTime: secondsToTime(this.audioPlayer.currentTime, this.state.longMin)});
-      if (!this.state.playing && this.state.preview) {
+      if (!this.state.playing) {
         this.visualize();
       }
     }
@@ -237,25 +244,14 @@ export default class AudioPlayer extends React.PureComponent {
       </a>);
     return (<div className="audio-player">{this.props.short ?
       <>
-        <div>
-          {this.state.preview ?
-            <canvas className="playback" ref={this.canvasRef} onClick={this.handleSeek} /> :
-            <div className="playback"> - </div>
-          }
-        </div>
+        <canvas className="playback" ref={this.canvasRef} onClick={this.handleSeek} />
         {play}
       </>
     :
       <>
         {play}
         <div>
-          {this.state.preview ?
-            <canvas className="playback" ref={this.canvasRef} onClick={this.handleSeek} /> :
-            <div className="playback">
-              <FormattedMessage
-                id="preview_unavailable" defaultMessage="unavailable" description="Message shown when media preview is not available" />
-            </div>
-          }
+          <canvas className="playback" ref={this.canvasRef} onClick={this.handleSeek} />
           <div className="timer">{this.state.currentTime}/{this.state.duration}</div>
         </div>
       </>

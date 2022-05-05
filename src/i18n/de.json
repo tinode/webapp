@@ -1373,6 +1373,6 @@
     "defaultMessage": "unavailable",
     "description": "Message shown when media preview is not available",
     "missing": false,
-    "obsolete": false
+    "obsolete": true
   }
 }
