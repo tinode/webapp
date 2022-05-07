@@ -2157,6 +2157,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "LINK_TERMS_OF_SERVICE": () => (/* binding */ LINK_TERMS_OF_SERVICE),
 /* harmony export */   "LOGGING_ENABLED": () => (/* binding */ LOGGING_ENABLED),
 /* harmony export */   "MAX_AVATAR_BYTES": () => (/* binding */ MAX_AVATAR_BYTES),
+/* harmony export */   "MAX_DURATION": () => (/* binding */ MAX_DURATION),
 /* harmony export */   "MAX_EXTERN_ATTACHMENT_SIZE": () => (/* binding */ MAX_EXTERN_ATTACHMENT_SIZE),
 /* harmony export */   "MAX_IMAGE_DIM": () => (/* binding */ MAX_IMAGE_DIM),
 /* harmony export */   "MAX_INBAND_ATTACHMENT_SIZE": () => (/* binding */ MAX_INBAND_ATTACHMENT_SIZE),
@@ -2168,6 +2169,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "MEDIA_BREAKPOINT": () => (/* binding */ MEDIA_BREAKPOINT),
 /* harmony export */   "MESSAGES_PAGE": () => (/* binding */ MESSAGES_PAGE),
 /* harmony export */   "MESSAGE_PREVIEW_LENGTH": () => (/* binding */ MESSAGE_PREVIEW_LENGTH),
+/* harmony export */   "MIN_DURATION": () => (/* binding */ MIN_DURATION),
 /* harmony export */   "MIN_TAG_LENGTH": () => (/* binding */ MIN_TAG_LENGTH),
 /* harmony export */   "NEW_GRP_ACCESS_MODE": () => (/* binding */ NEW_GRP_ACCESS_MODE),
 /* harmony export */   "NO_ACCESS_MODE": () => (/* binding */ NO_ACCESS_MODE),
@@ -2186,7 +2188,7 @@ const KNOWN_HOSTS = {
 };
 const DEFAULT_HOST = KNOWN_HOSTS.hosted;
 const LOGGING_ENABLED = true;
-const KEYPRESS_DELAY = 3 * 1000;
+const KEYPRESS_DELAY = 3000;
 const RECEIVED_DELAY = 500;
 const READ_DELAY = 1000;
 const MIN_TAG_LENGTH = 2;
@@ -2213,6 +2215,8 @@ const MAX_TOPIC_DESCRIPTION_LENGTH = 360;
 const MESSAGE_PREVIEW_LENGTH = 80;
 const QUOTED_REPLY_LENGTH = 30;
 const FORWARDED_PREVIEW_LENGTH = 84;
+const MIN_DURATION = 2000;
+const MAX_DURATION = 600000;
 const LINK_CONTACT_US = 'email:support@tinode.co';
 const LINK_PRIVACY_POLICY = 'https://tinode.co/privacy.html';
 const LINK_TERMS_OF_SERVICE = 'https://tinode.co/terms.html';
@@ -8218,7 +8222,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       const timeLeft = count > 99 ? (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_17__.secondsToTime)(count) : count;
       this.handleError(formatMessage(messages.reconnect_countdown, {
         seconds: timeLeft
-      }), 'warn', () => {
+      }), 'warn', _ => {
         clearInterval(this.reconnectCountdown);
         this.tinode.reconnect();
       }, formatMessage(messages.reconnect_now));
@@ -9832,25 +9836,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _lib_strformat__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/strformat */ "./src/lib/strformat.js");
-/* harmony import */ var _lib_blob_helpers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/blob-helpers */ "./src/lib/blob-helpers.js");
-
+/* harmony import */ var _lib_strformat__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/strformat */ "./src/lib/strformat.js");
+/* harmony import */ var _lib_blob_helpers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/blob-helpers */ "./src/lib/blob-helpers.js");
 
 
 
 const CANVAS_UPSCALING = 2.0;
 const LINE_WIDTH = 3 * CANVAS_UPSCALING;
 const SPACING = 2 * CANVAS_UPSCALING;
-const BAR_COLOR = '#bbb';
-const BAR_COLOR_DARK = '#888';
-const THUMB_COLOR = '#666';
+const BAR_COLOR = '#888A';
+const BAR_COLOR_DARK = '#666C';
+const THUMB_COLOR = '#444E';
 const MIN_PREVIEW_LENGTH = 16;
 class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
-    let preview = (0,_lib_blob_helpers__WEBPACK_IMPORTED_MODULE_3__.base64ToIntArray)(this.props.preview);
+    let preview = (0,_lib_blob_helpers__WEBPACK_IMPORTED_MODULE_2__.base64ToIntArray)(this.props.preview);
 
     if (!Array.isArray(preview) || preview.length < MIN_PREVIEW_LENGTH) {
       preview = null;
@@ -9860,7 +9861,7 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       canPlay: false,
       playing: false,
       currentTime: '0:00',
-      duration: this.props.duration > 0 ? (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_2__.secondsToTime)(this.props.duration / 1000) : '-:--',
+      duration: this.props.duration > 0 ? (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(this.props.duration / 1000) : '-:--',
       longMin: this.props.duration >= 600000,
       preview: preview
     };
@@ -9900,7 +9901,7 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     }
 
     if (this.props.preview != prevProps.preview) {
-      let preview = (0,_lib_blob_helpers__WEBPACK_IMPORTED_MODULE_3__.base64ToIntArray)(this.props.preview);
+      let preview = (0,_lib_blob_helpers__WEBPACK_IMPORTED_MODULE_2__.base64ToIntArray)(this.props.preview);
 
       if (!Array.isArray(preview) || preview.length < MIN_PREVIEW_LENGTH) {
         preview = null;
@@ -9920,14 +9921,14 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     });
 
     this.audioPlayer.ontimeupdate = _ => this.setState({
-      currentTime: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_2__.secondsToTime)(this.audioPlayer.currentTime, this.state.longMin)
+      currentTime: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(this.audioPlayer.currentTime, this.state.longMin)
     });
 
     this.audioPlayer.onended = _ => {
       this.audioPlayer.currentTime = 0;
       this.setState({
         playing: false,
-        currentTime: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_2__.secondsToTime)(0, this.state.longMin)
+        currentTime: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(0, this.state.longMin)
       });
     };
   }
@@ -10065,7 +10066,7 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       const offset = (e.clientX - rect.left) / this.effectiveWidth * CANVAS_UPSCALING;
       this.audioPlayer.currentTime = this.props.duration * offset / 1000;
       this.setState({
-        currentTime: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_2__.secondsToTime)(this.audioPlayer.currentTime, this.state.longMin)
+        currentTime: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(this.audioPlayer.currentTime, this.state.longMin)
       });
 
       if (!this.state.playing) {
@@ -10120,6 +10121,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var fix_webm_duration__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(fix_webm_duration__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 /* harmony import */ var _lib_strformat__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/strformat */ "./src/lib/strformat.js");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+
 
 
 
@@ -10130,10 +10133,8 @@ const CANVAS_UPSCALING = 2.0;
 const LINE_WIDTH = 3 * CANVAS_UPSCALING;
 const SPACING = 2 * CANVAS_UPSCALING;
 const MILLIS_PER_BAR = 100;
-const BAR_COLOR = '#bbb';
+const BAR_COLOR = '#BBBD';
 const BAR_SCALE = 64.0;
-const MIN_DURATION = 200;
-const MAX_DURATION = 600000;
 const VISUALIZATION_BARS = 96;
 const MAX_SAMPLES_PER_BAR = 10;
 const AUDIO_MIME_TYPE = 'audio/webm';
@@ -10214,7 +10215,7 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
         duration: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_4__.secondsToTime)(duration / 1000)
       });
 
-      if (duration > MAX_DURATION) {
+      if (duration > _config_js__WEBPACK_IMPORTED_MODULE_5__.MAX_DURATION) {
         this.startedOn = null;
         this.mediaRecorder.pause();
         this.durationMillis += Date.now() - this.startedOn;
@@ -10336,7 +10337,7 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     this.audioInput.connect(this.analyser);
 
     this.mediaRecorder.onstop = _ => {
-      if (this.durationMillis > MIN_DURATION) {
+      if (this.durationMillis > _config_js__WEBPACK_IMPORTED_MODULE_5__.MIN_DURATION) {
         this.getRecording(this.mediaRecorder.mimeType, this.durationMillis).then(result => this.props.onFinished(result.url, result.preview, this.durationMillis));
       } else {
         this.props.onDeleted();

@@ -2671,11 +2671,11 @@ ul.tabbar li.active > a {
 
 .audio-player .material-icons.large {
   font-size: 2.4rem;
-  color: #667575;
+  color: #667575CC;
 }
 
 .audio-player .material-icons.disabled {
-  color: #999;
+  color: #999C;
   cursor: default;
 }
 
@@ -2692,13 +2692,13 @@ ul.tabbar li.active > a {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #757575;
+  color: #757575CC;
   font-size: small;
 }
 
 .audio-player .timer {
   font-size: smaller;
-  color: #666;
+  color: #666C;
 }
 
 /*

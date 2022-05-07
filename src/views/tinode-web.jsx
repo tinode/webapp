@@ -586,7 +586,7 @@ class TinodeWeb extends React.Component {
       this.handleError(
         formatMessage(messages.reconnect_countdown, {seconds: timeLeft}),
         'warn',
-        () => {
+        _ => {
           clearInterval(this.reconnectCountdown);
           this.tinode.reconnect();
         },

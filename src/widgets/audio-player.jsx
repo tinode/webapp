@@ -1,7 +1,6 @@
 // Audio recorder widget.
 
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
 
 import { secondsToTime } from '../lib/strformat';
 import { base64ToIntArray } from '../lib/blob-helpers';
@@ -13,9 +12,9 @@ const LINE_WIDTH = 3 * CANVAS_UPSCALING;
 // Spacing between two visualization bars.
 const SPACING = 2 * CANVAS_UPSCALING;
 // Color of histogram bars.
-const BAR_COLOR = '#bbb';
-const BAR_COLOR_DARK = '#888';
-const THUMB_COLOR = '#666';
+const BAR_COLOR = '#888A';
+const BAR_COLOR_DARK = '#666C';
+const THUMB_COLOR = '#444E';
 // Minimum number of amplitude bars to draw.
 const MIN_PREVIEW_LENGTH = 16;
 
