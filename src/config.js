@@ -104,7 +104,7 @@ export const MIN_DURATION = 2_000;
 export const MAX_DURATION = 600_000;
 
 // Link for "Contact Us".
-export const LINK_CONTACT_US = 'email:support@tinode.co';
+export const LINK_CONTACT_US = 'mailto:support@tinode.co';
 
 // Link to Privacy Policy.
 export const LINK_PRIVACY_POLICY = 'https://tinode.co/privacy.html';
