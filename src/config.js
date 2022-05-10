@@ -99,7 +99,7 @@ export const QUOTED_REPLY_LENGTH = 30;
 export const FORWARDED_PREVIEW_LENGTH = 84;
 
 // Link for "Contact Us".
-export const LINK_CONTACT_US = 'email:support@tinode.co';
+export const LINK_CONTACT_US = 'mailto:support@tinode.co';
 
 // Link to Privacy Policy.
 export const LINK_PRIVACY_POLICY = 'https://tinode.co/privacy.html';
