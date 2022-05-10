@@ -83,7 +83,7 @@ const MAX_TOPIC_DESCRIPTION_LENGTH = 360;
 const MESSAGE_PREVIEW_LENGTH = 80;
 const QUOTED_REPLY_LENGTH = 30;
 const FORWARDED_PREVIEW_LENGTH = 84;
-const LINK_CONTACT_US = 'email:support@tinode.co';
+const LINK_CONTACT_US = 'mailto:support@tinode.co';
 const LINK_PRIVACY_POLICY = 'https://tinode.co/privacy.html';
 const LINK_TERMS_OF_SERVICE = 'https://tinode.co/terms.html';
 
