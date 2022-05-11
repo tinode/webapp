@@ -96,7 +96,7 @@ export default class AudioPlayer extends React.PureComponent {
   }
 
   initCanvas() {
-    // Force canvas aspect ration to match one of the element + upscale canvas to reduce blurring.
+    // Force canvas aspect ratio to match one of the element + upscale canvas to reduce blurring.
     this.canvasRef.current.width = this.canvasRef.current.offsetWidth * CANVAS_UPSCALING;
     this.canvasRef.current.height = this.canvasRef.current.offsetHeight * CANVAS_UPSCALING;
 
@@ -119,7 +119,7 @@ export default class AudioPlayer extends React.PureComponent {
     this.canvasContext.lineWidth = LINE_WIDTH;
 
     const drawFrame = () => {
-      if (!this.canvasRef.current) {
+      if (!this.canvasRef.current || !this.audioPlayer) {
         // The component is unmounted.
         return;
       }
@@ -131,7 +131,7 @@ export default class AudioPlayer extends React.PureComponent {
           window.requestAnimationFrame(drawFrame);
         }
 
-        // Current pplayback position.
+        // Current playback position.
         const thumbAt = this.props.duration ?
           Math.max(0, Math.min(this.audioPlayer.currentTime * 1000 / this.props.duration, 1)) * (width - LINE_WIDTH * 2) : -1;
 

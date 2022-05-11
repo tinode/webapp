@@ -9952,7 +9952,7 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     this.canvasContext.lineWidth = LINE_WIDTH;
 
     const drawFrame = () => {
-      if (!this.canvasRef.current) {
+      if (!this.canvasRef.current || !this.audioPlayer) {
         return;
       }
 
