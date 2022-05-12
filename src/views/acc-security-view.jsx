@@ -124,7 +124,7 @@ class AccSecurityView extends React.Component {
             <div>
               <label className="small">
                 <FormattedMessage id="label_default_access_mode" defaultMessage="Default access mode:"
-                description="Label for default access mode" />
+                  description="Label for default access mode" />
               </label>
             </div>
             <div className="quoted">

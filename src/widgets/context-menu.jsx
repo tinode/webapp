@@ -237,7 +237,7 @@ class ContextMenu extends React.Component {
             (() => {
               const topic = this.props.tinode.getTopic(params.topicName);
               if (!topic) {
-                console.log("Topic not found: ", params.topicName);
+                console.warn("Topic not found: ", params.topicName);
                 return;
               }
               return topic.delTopic(true).catch((err) => {
@@ -258,7 +258,7 @@ class ContextMenu extends React.Component {
         handler: (params, errorHandler) => {
           const topic = this.props.tinode.getTopic(params.topicName);
           if (!topic) {
-            console.log("Topic not found: ", params.topicName);
+            console.warn("Topic not found: ", params.topicName);
             return;
           }
           return topic.archive(true).catch((err) => {
@@ -274,7 +274,7 @@ class ContextMenu extends React.Component {
         handler: (params, errorHandler) => {
           const topic = this.props.tinode.getTopic(params.topicName);
           if (!topic) {
-            console.log("Topic not found: ", params.topicName);
+            console.warn("Topic not found: ", params.topicName);
             return;
           }
           return topic.archive(false).catch((err) => {
@@ -296,7 +296,7 @@ class ContextMenu extends React.Component {
         handler: (params, errorHandler) => {
           const topic = this.props.tinode.getTopic(params.topicName);
           if (!topic || !params.user) {
-            console.log("Topic or user not found: '" + params.topicName + "', '" + params.user + "'");
+            console.warn("Topic or user not found: '" + params.topicName + "', '" + params.user + "'");
             return;
           }
           return topic.delSubscription(params.user).catch((err) => {
@@ -378,7 +378,7 @@ class ContextMenu extends React.Component {
   deleteMessages(all, hard, params, errorHandler) {
     const topic = this.props.tinode.getTopic(params.topicName);
     if (!topic) {
-      console.log("Topic not found: ", params.topicName);
+      console.warn("Topic not found: ", params.topicName);
       return;
     }
 
@@ -420,7 +420,7 @@ class ContextMenu extends React.Component {
   topicPermissionSetter(mode, params, errorHandler) {
     const topic = this.props.tinode.getTopic(params.topicName);
     if (!topic) {
-      console.log("Topic not found", params.topicName);
+      console.warn("Topic not found", params.topicName);
       return;
     }
 

@@ -1,7 +1,7 @@
 {
   "name": "tinode-webapp",
   "description": "Tinode messenger for the web",
-  "version": "0.18.6",
+  "version": "0.19.0-beta1",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinode/example-react-js.git"
@@ -66,11 +66,12 @@
   "author": "Tinode Authors <info@tinode.co>",
   "license": "Apache-2.0",
   "dependencies": {
-    "firebase": "^8.10.0",
+    "firebase": "^9.6.7",
+    "fix-webm-duration": "^1.0.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-intl": "^5.20.2",
-    "tinode-sdk": "^0.18.3"
+    "tinode-sdk": "^0.19.0-beta1"
   },
   "devDependencies": {
     "@babel/core": "^7.14.5",
@@ -80,7 +81,7 @@
     "babel-loader": "^8.2.2",
     "babel-plugin-formatjs": "^10.2.19",
     "browserslist": "^4.16.5",
-    "copy-webpack-plugin": "^9.0.0",
+    "copy-webpack-plugin": "^10.0.0",
     "cssnano": "^5.0.6",
     "glob": "^7.1.7",
     "mkdirp": "^1.0.4",

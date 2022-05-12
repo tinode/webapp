@@ -6,7 +6,7 @@ import ContactBadges from './contact-badges.jsx';
 import MenuContacts from './menu-contacts.jsx';
 import MenuStart from './menu-start.jsx';
 
-import { sanitizeImageUrl } from '../lib/utils.js';
+import { sanitizeUrlForMime } from '../lib/utils.js';
 
 export default class SideNavbar extends React.PureComponent {
   render() {
@@ -18,7 +18,7 @@ export default class SideNavbar extends React.PureComponent {
     }
     let avatar = null;
     if (this.props.tinode) {
-      avatar = this.props.tinode.authorizeURL(sanitizeImageUrl(this.props.avatar));
+      avatar = this.props.tinode.authorizeURL(sanitizeUrlForMime(this.props.avatar, 'image'));
     }
     return (
       <div id="side-caption-panel" className="caption-panel">

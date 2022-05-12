@@ -1,8 +1,9 @@
+// Panel with a chat.
+
 import React from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
-import Tinode from 'tinode-sdk';
-const Drafty = Tinode.Drafty;
+import { Drafty, Tinode } from 'tinode-sdk';
 
 import ChatMessage from '../widgets/chat-message.jsx';
 import ContactBadges from '../widgets/contact-badges.jsx';
@@ -14,18 +15,20 @@ import Invitation from '../widgets/invitation.jsx';
 import LetterTile from '../widgets/letter-tile.jsx';
 import LoadSpinner from '../widgets/load-spinner.jsx';
 import LogoView from './logo-view.jsx';
+import MetaMessage from '../widgets/meta-message.jsx';
 import SendMessage from '../widgets/send-message.jsx';
 
 import { DEFAULT_P2P_ACCESS_MODE, IMAGE_PREVIEW_DIM, KEYPRESS_DELAY,
   MESSAGES_PAGE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE,
   READ_DELAY, QUOTED_REPLY_LENGTH } from '../config.js';
-import { blobToBase64, fileToBase64,
-  imageScaled, makeImageUrl } from '../lib/blob-helpers.js';
+import { blobToBase64, fileToBase64, imageScaled, makeImageUrl } from '../lib/blob-helpers.js';
 import HashNavigation from '../lib/navigation.js';
 import { bytesToHumanSize, shortDateFormat } from '../lib/strformat.js';
 
 // Run timer with this frequency (ms) for checking notification queue.
 const NOTIFICATION_EXEC_INTERVAL = 300;
+// Scroll distance before [go to latest message] button is shown.
+const SHOW_GO_TO_LAST_DIST = 100;
 
 const messages = defineMessages({
   online_now: {
@@ -88,6 +91,7 @@ class MessagesView extends React.Component {
     this.retrySend = this.retrySend.bind(this);
     this.sendImageAttachment = this.sendImageAttachment.bind(this);
     this.sendFileAttachment = this.sendFileAttachment.bind(this);
+    this.sendAudioAttachment = this.sendAudioAttachment.bind(this);
     this.sendKeyPress = this.sendKeyPress.bind(this);
     this.subscribe = this.subscribe.bind(this);
     this.handleScrollReference = this.handleScrollReference.bind(this);
@@ -109,6 +113,7 @@ class MessagesView extends React.Component {
     this.handleCancelUpload = this.handleCancelUpload.bind(this);
     this.postReadNotification = this.postReadNotification.bind(this);
     this.clearNotificationQueue = this.clearNotificationQueue.bind(this);
+    this.goToLatestMessage = this.goToLatestMessage.bind(this);
 
     this.handlePickReply = this.handlePickReply.bind(this);
     this.handleCancelReply = this.handleCancelReply.bind(this);
@@ -148,13 +153,13 @@ class MessagesView extends React.Component {
   // Scroll last message into view on component update e.g. on message received
   // or vertical shrinking.
   componentDidUpdate(prevProps, prevState) {
-    if (this.messagesScroller) {
-      if (prevState.topic != this.state.topic || prevState.messageCount != this.state.messageCount) {
-        // New message
-        this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition;
-      } else if (prevProps.viewportHeight > this.props.viewportHeight) {
-        // Componet changed height.
-        this.messagesScroller.scrollTop += prevProps.viewportHeight - this.props.viewportHeight;
+    if (this.messagesScroller &&
+      (prevState.topic != this.state.topic || prevState.messageCount != this.state.messageCount)) {
+      // New message.
+      if (this.state.scrollPosition < SHOW_GO_TO_LAST_DIST) {
+        this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight -
+          this.state.scrollPosition -
+          this.messagesScroller.offsetHeight;
       }
     }
 
@@ -182,8 +187,13 @@ class MessagesView extends React.Component {
       this.postReadNotification(0);
     }
 
-    if ((this.state.topic != prevState.topic) || !prevProps.ready) {
-      this.subscribe(topic);
+    if (topic && ((this.state.topic != prevState.topic) || !prevProps.ready)) {
+      // Don't immediately subscribe to a new p2p topic, wait for the first message.
+      if (topic._new && topic.isP2PType()) {
+        topic.getMeta(topic.startMetaQuery().withDesc().build());
+      } else {
+        this.subscribe(topic);
+      }
     }
   }
 
@@ -201,6 +211,7 @@ class MessagesView extends React.Component {
         isVerified: false,
         isStaff: false,
         isDangerous: false,
+        deleted: false,
         docPreview: null,
         imagePreview: null,
         imagePostview: null,
@@ -209,7 +220,8 @@ class MessagesView extends React.Component {
         fetchingMessages: false,
         peerMessagingDisabled: false,
         channel: false,
-        reply: null
+        reply: null,
+        showGoToLastButton: false
       };
     } else if (nextProps.topic != prevState.topic) {
       const topic = nextProps.tinode.getTopic(nextProps.topic);
@@ -232,7 +244,9 @@ class MessagesView extends React.Component {
         typingIndicator: false,
         scrollPosition: 0,
         fetchingMessages: false,
-        reply: reply
+        reply: reply,
+        showGoToLastButton: false,
+        deleted: topic._deleted
       };
 
       if (topic) {
@@ -333,7 +347,7 @@ class MessagesView extends React.Component {
   }
 
   subscribe(topic) {
-    if (!topic || topic.isSubscribed() || !this.props.ready) {
+    if (topic.isSubscribed() || !this.props.ready) {
       return;
     }
 
@@ -367,13 +381,16 @@ class MessagesView extends React.Component {
         this.props.onNewTopicCreated(this.props.topic, ctrl.topic);
         // If there are unsent messages, try sending them now.
         topic.queuedMessages((pub) => {
-          if (!pub._sending && topic.isSubscribed()) {
+          if (pub._sending) {
+            return;
+          }
+          if (topic.isSubscribed()) {
             this.retrySend(pub);
           }
         });
       })
       .catch((err) => {
-        console.error("Failed subscription to", this.state.topic);
+        console.error("Failed subscription to", this.state.topic, err);
         this.props.onError(err.message, 'err');
         const blankState = MessagesView.getDerivedStateFromProps({}, {});
         blankState.title = this.props.intl.formatMessage(messages.not_found);
@@ -403,6 +420,7 @@ class MessagesView extends React.Component {
     }
   }
 
+  // Don't use React.createRef as the ref.current is not available in componentDidMount in this component.
   handleScrollReference(node) {
     if (node) {
       node.addEventListener('scroll', this.handleScrollEvent);
@@ -411,9 +429,14 @@ class MessagesView extends React.Component {
     }
   }
 
-  // Get older messages
+  // Get older messages and show/hide [go to latest message] button.
   handleScrollEvent(event) {
-    this.setState({scrollPosition: event.target.scrollHeight - event.target.scrollTop});
+    const pos = event.target.scrollHeight - event.target.scrollTop - event.target.offsetHeight;
+    this.setState({
+      scrollPosition: pos,
+      showGoToLastButton: pos > SHOW_GO_TO_LAST_DIST,
+    });
+
     if (this.state.fetchingMessages) {
       return;
     }
@@ -427,6 +450,13 @@ class MessagesView extends React.Component {
             .finally(() => this.setState({fetchingMessages: false}));
           });
       }
+    }
+  }
+
+  goToLatestMessage() {
+    this.setState({scrollPosition: 0});
+    if (this.messagesScroller) {
+      this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight;
     }
   }
 
@@ -555,7 +585,11 @@ class MessagesView extends React.Component {
     // Scroll to the bottom if the message is added to the end of the message list.
     // TODO: This should be replaced by showing a "scroll to bottom" button.
     if (topic.isNewMessage(msg.seq)) {
-      this.setState({scrollPosition: 0});
+      if (this.state.scrollPosition > SHOW_GO_TO_LAST_DIST) {
+        this.setState({showGoToLastButton: true});
+      } else {
+        this.setState({scrollPosition: 0});
+      }
     }
 
     // Aknowledge messages except own messages. They are
@@ -713,6 +747,10 @@ class MessagesView extends React.Component {
     if (file.size > maxInbandAttachmentSize) {
       // Too large to send inband - uploading out of band and sending as a link.
       const uploader = this.props.tinode.getLargeFileHelper();
+      if (!uploader) {
+        this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
+        return;
+      }
       const uploadCompletionPromise = uploader.upload(file);
       const msg = Drafty.attachFile(null, {
         mime: file.type,
@@ -730,7 +768,7 @@ class MessagesView extends React.Component {
     }
   }
 
-  // handleAttachFile method is called when [Attach file] button is clicked.
+  // handleAttachFile method is called when [Attach file] button is clicked: launch attachment preview.
   handleAttachFile(file) {
     const maxExternAttachmentSize = this.props.tinode.getServerLimit('maxFileUploadSize', MAX_EXTERN_ATTACHMENT_SIZE);
 
@@ -815,7 +853,7 @@ class MessagesView extends React.Component {
       });
   }
 
-  // handleAttachImage method is called when [Attach image] button is clicked.
+  // handleAttachImage method is called when [Attach image] button is clicked: launch image preview.
   handleAttachImage(file) {
     const maxExternAttachmentSize = this.props.tinode.getServerLimit('maxFileUploadSize', MAX_EXTERN_ATTACHMENT_SIZE);
 
@@ -834,6 +872,47 @@ class MessagesView extends React.Component {
       }).catch(err => {
         this.props.onError(err, 'err');
       });
+  }
+
+  // sendAudioAttachment sends audio bits inband as Drafty message (no preview).
+  sendAudioAttachment(url, preview, duration) {
+    fetch(url)
+      .then(result => result.blob())
+      .then(blob => {
+        // Server-provided limit reduced for base64 encoding and overhead.
+        const maxInbandAttachmentSize = this.props.tinode.getServerLimit('maxMessageSize', MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024;
+        if (blob.size > maxInbandAttachmentSize) {
+          // Too large to send inband - uploading out of band and sending as a link.
+          const uploader = this.props.tinode.getLargeFileHelper();
+          if (!uploader) {
+            this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
+            return;
+          }
+          const uploadCompletionPromise = uploader.upload(blob);
+          const msg = Drafty.appendAudio(null, {
+            mime: blob.type,
+            size: blob.size,
+            duration: duration,
+            preview: preview,
+            urlPromise: uploadCompletionPromise
+          });
+          // Pass data and the uploader to the TinodeWeb.
+          this.sendMessage(msg, uploadCompletionPromise, uploader);
+        } else {
+          // Small enough to send inband.
+          blobToBase64(blob)
+            .then(b64 => {
+              this.sendMessage(Drafty.appendAudio(null, {
+                mime: b64.mime,
+                size: blob.size,
+                data: b64.bits,
+                duration: duration,
+                preview: preview,
+              }))
+            })
+        }
+      })
+      .catch(err => {this.props.onError(err)});;
   }
 
   handleCancelUpload(seq, uploader) {
@@ -950,9 +1029,12 @@ class MessagesView extends React.Component {
             icon_badges.push({icon: 'dangerous', color: 'badge-inv'});
           }
         }
-        let messageNodes = [];
+
+        const messageNodes = [];
         let previousFrom = null;
+        let prevDate = null;
         let chatBoxClass = null;
+        const dateFmt = new Intl.DateTimeFormat(this.props.intl.locale);
         topic.messages((msg, prev, next, i) => {
           let nextFrom = next ? (next.from || 'chan') : null;
 
@@ -987,36 +1069,55 @@ class MessagesView extends React.Component {
             replyToSeq = null;
           }
 
-          messageNodes.push(
-            <ChatMessage
-              tinode={this.props.tinode}
-              content={msg.content}
-              deleted={msg.hi}
-              mimeType={msg.head ? msg.head.mime : null}
-              timestamp={msg.ts}
-              response={isReply}
-              seq={msg.seq}
-              isGroup={groupTopic}
-              isChan={this.state.channel}
-              userFrom={userFrom}
-              userName={userName}
-              userAvatar={userAvatar}
-              sequence={sequence}
-              received={deliveryStatus}
-              uploader={msg._uploader}
-              viewportWidth={this.props.viewportWidth}  // Used by `formatter`.
-              showContextMenu={this.handleShowMessageContextMenu}
-              onImagePreview={this.handleImagePostview}
-              onFormResponse={this.handleFormResponse}
-              onError={this.props.onError}
-              onCancelUpload={this.handleCancelUpload}
-              pickReply={this.handlePickReply}
-              replyToSeq={replyToSeq}
-              onQuoteClick={this.handleQuoteClick}
-              ref={ref}
-              userIsWriter={this.state.isWriter}
-              key={msg.seq} />
-          );
+          if (msg.hi) {
+            // Deleted message.
+            messageNodes.push(
+              <MetaMessage
+                deleted={true}
+                key={msg.seq} />
+              );
+          } else {
+            const thisDate = new Date(msg.ts);
+            // This message was sent on a different date than the previous.
+            if (!prevDate || prevDate.toDateString() != thisDate.toDateString()) {
+              messageNodes.push(
+                <MetaMessage
+                  date={dateFmt.format(msg.ts)}
+                  locale={this.props.intl.locale}
+                  key={'date-' + msg.seq} />
+              );
+              prevDate = thisDate;
+            }
+            messageNodes.push(
+              <ChatMessage
+                tinode={this.props.tinode}
+                content={msg.content}
+                mimeType={msg.head ? msg.head.mime : null}
+                timestamp={msg.ts}
+                response={isReply}
+                seq={msg.seq}
+                isGroup={groupTopic}
+                isChan={this.state.channel}
+                userFrom={userFrom}
+                userName={userName}
+                userAvatar={userAvatar}
+                sequence={sequence}
+                received={deliveryStatus}
+                uploader={msg._uploader}
+                viewportWidth={this.props.viewportWidth}  // Used by `formatter`.
+                showContextMenu={this.handleShowMessageContextMenu}
+                onImagePreview={this.handleImagePostview}
+                onFormResponse={this.handleFormResponse}
+                onError={this.props.onError}
+                onCancelUpload={this.handleCancelUpload}
+                pickReply={this.handlePickReply}
+                replyToSeq={replyToSeq}
+                onQuoteClick={this.handleQuoteClick}
+                ref={ref}
+                userIsWriter={this.state.isWriter}
+                key={msg.seq} />
+            );
+          }
         });
 
         let lastSeen = null;
@@ -1035,7 +1136,10 @@ class MessagesView extends React.Component {
           }
         }
         const avatar = this.state.avatar || true;
-        const online = this.props.online ? 'online' + (this.state.typingIndicator ? ' typing' : '') : 'offline';
+        const online = this.state.deleted ? null :
+          this.props.online ? 'online' + (this.state.typingIndicator ? ' typing' : '') : 'offline';
+
+        const titleClass = 'panel-title' + (this.state.deleted ? ' deleted' : '');
 
         component2 = (
           <>
@@ -1051,11 +1155,12 @@ class MessagesView extends React.Component {
                   tinode={this.props.tinode}
                   avatar={avatar}
                   topic={this.state.topic}
-                  title={this.state.title} />
+                  title={this.state.title}
+                  deleted={this.state.deleted} />
                 {!isChannel ? <span className={online} /> : null}
               </div>
               <div id="topic-title-group">
-                <div id="topic-title" className="panel-title">{
+                <div id="topic-title" className={titleClass}>{
                   this.state.title ||
                   <i><FormattedMessage id="unnamed_topic" defaultMessage="Unnamed"
                     description="Title shown when the topic has no name" /></i>
@@ -1082,6 +1187,10 @@ class MessagesView extends React.Component {
               : null}
             <LoadSpinner show={this.state.fetchingMessages} />
             <div id="messages-container">
+              <button className={'action-button' + (this.state.showGoToLastButton ? '' : ' hidden')}
+                onClick={this.goToLatestMessage}>
+                <i className="material-icons">arrow_downward</i>
+              </button>
               <div id="messages-panel" ref={this.handleScrollReference}>
                 <ul id="scroller" className={chatBoxClass}>
                   {messageNodes}
@@ -1111,12 +1220,14 @@ class MessagesView extends React.Component {
               :
               <SendMessage
                 tinode={this.props.tinode}
+                topicName={this.state.topic}
                 noInput={!!this.props.forwardMessage}
-                disabled={!this.state.isWriter}
+                disabled={!this.state.isWriter || this.state.deleted}
                 onKeyPress={this.sendKeyPress}
                 onSendMessage={this.sendMessage}
                 onAttachFile={this.props.forwardMessage ? null : this.handleAttachFile}
                 onAttachImage={this.props.forwardMessage ? null : this.handleAttachImage}
+                onAttachAudio={this.props.forwardMessage ? null : this.sendAudioAttachment}
                 onError={this.props.onError}
                 reply={this.state.reply}
                 onQuoteClick={this.handleQuoteClick}

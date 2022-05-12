@@ -3,7 +3,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import Tinode from 'tinode-sdk';
+import { Tinode } from 'tinode-sdk';
 
 import AvatarCrop from './avatar-crop.jsx';
 import AvatarUpload from './avatar-upload.jsx';
@@ -109,7 +109,7 @@ export default class TopicDescEdit extends React.Component {
   // for uploading it to the server out of band.
   uploadAvatar(mime, blob, width, height) {
     const readyToUpload = (image) => {
-      let {mime, blob, width, height} = image;
+      let {mime, blob} = image;
       if (blob.size > MAX_AVATAR_BYTES) {
         // Too large to send inband - uploading out of band and sending as a link.
         const uploader = this.props.tinode.getLargeFileHelper();

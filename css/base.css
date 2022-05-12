@@ -46,36 +46,6 @@ a.gray:focus {
   color: #999;
 }
 
-.flat-button {
-  display: flex;
-  align-items: center;
-  margin: 0.15rem 0.35rem;
-  height: 2em;
-  line-height: 2em;
-  font-weight: normal;
-  text-align: center;
-  vertical-align: middle;
-  touch-action: manipulation;
-  white-space: nowrap;
-  text-transform: uppercase;
-}
-.flat-button:hover,
-.flat-button:focus {
-  text-decoration: none;
-}
-
-.flat-button.faux {
-  display: inline-block;
-  height: 1.4em;
-  line-height: 1.4em;
-  text-transform: none;
-  padding: 0 .35rem;
-  margin: 0.15rem;
-  border: 1px solid #999;
-  border-radius: 3px;
-  background-color: #eee;
-}
-
 form {
   font-size: 1.1rem;
   padding: 0.5rem 0.75rem;
@@ -147,6 +117,7 @@ button.round.small {
   line-height: 2rem;
   box-shadow: 0 2px 0.35rem 0 rgba(0, 0, 0, 0.25);
 }
+
 button:focus, button:hover, button:active {
   color: #fff;
 }
@@ -252,6 +223,7 @@ textarea {
 
 textarea.inplace-edit {
   height: unset;
+  font-size: unset;
 }
 
 /* END of input and buttons */
@@ -433,6 +405,7 @@ div.trusted-badge {
   font-size: 120%;
 }
 
+/* Other universal style components */
 .small {
   font-size: 90%;
 }
@@ -460,6 +433,76 @@ div.trusted-badge {
   overflow-x: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.flat-button {
+  display: flex;
+  align-items: center;
+  margin: 0.15rem 0.35rem;
+  height: 2em;
+  line-height: 2em;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+.flat-button:hover,
+.flat-button:focus {
+  text-decoration: none;
+}
+
+.flat-button.faux {
+  display: inline-block;
+  height: 1.4em;
+  line-height: 1.4em;
+  text-transform: none;
+  padding: 0 .35rem;
+  margin: 0.15rem;
+  border: 1px solid #999;
+  border-radius: 3px;
+  background-color: #eee;
+}
+
+.action-button {
+  display: block;
+  position: absolute;
+  color: #999;
+  font-size: 1.8rem;
+  background-color: #fafafa;
+  right: 1rem;
+  bottom: 1rem;
+  border-radius: 50%;
+  width: 3.25rem;
+  height: 3.25rem;
+  min-width: unset;
+  min-height: unset;
+  padding: 0;
+  margin: 0;
+  outline: none; /* otherwise a square outline is shown */
+  box-shadow: 0 2px 0.5rem 0 rgba(0, 0, 0, 0.25);
+  transition: all 150ms;
+  z-index: 2;
+}
+
+.action-button:focus, .action-button:hover {
+  color: #888;
+  background-color: #f0f0f0;
+}
+.action-button:active {
+  color: #777;
+  background-color: #eee;
+}
+
+.action-button.hidden {
+  width: 1px;
+  height: 1px;
+  font-size: 1px;
+  line-height: 1px;
+  right: 2.625rem;
+  bottom: 2.625rem;
+  opacity: 0;
 }
 
 /* Element which can take focus but shows no outline */
@@ -669,6 +712,10 @@ table.permission-editor td.checkbox {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.panel-title.deleted {
+  text-decoration: line-through;
 }
 
 .caption-panel {
@@ -913,6 +960,12 @@ i.search {
   white-space: nowrap;
 }
 
+.contact-box .contact-title.deleted {
+  opacity: 0.66;
+  text-decoration: line-through;
+  text-decoration-thickness: 0.5px;
+}
+
 .contact-box .contact-comment {
   text-overflow: ellipsis;
   overflow-x: hidden;
@@ -962,6 +1015,11 @@ i.search {
 .contact-box.small .avatar {
   width: 2rem;
   height: 2rem;
+}
+
+.avatar.deleted {
+  opacity: 0.75;
+  filter: grayscale(1);
 }
 
 .contact-box .avatar-box > .material-icons {
@@ -1044,15 +1102,28 @@ img.channel {
   width: 1.5rem;
   height: 1.5rem;
   font-size: 1.5rem;
-  line-height: 1.5rem;
   color: #0097A7;
   position: absolute;
-  right: 0.05rem;
-  bottom: 0.05rem;
+  right: 0;
+  bottom: 0;
   background-color: white;
   overflow: visible;
   border: 0.0px solid transparent;
+  padding-left: 0.5px;
 }
+
+.contact-box .deleted.material-icons {
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 1.5rem;
+  color: #999;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  background-color: white;
+  padding-left: 0.5px;
+}
+
 /* END of avatar box */
 
 #add-topic {
@@ -1379,7 +1450,8 @@ img.channel {
 }
 
 #send-message-panel .material-icons {
-  min-width: 1.75rem;
+  min-width: 2rem;
+  font-size: 1.6rem;
 }
 
 #send-message-panel .material-icons.secondary, .material-icons.disabled {
@@ -1515,12 +1587,6 @@ img.channel {
   justify-content: flex-end;
 }
 
-.chat-box .center {
-  justify-content: center;
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
 .bubble {
   position: relative;
   display: flex;
@@ -1530,6 +1596,7 @@ img.channel {
   padding: 0.75rem 0.5rem 0.75rem 0.5rem;
   margin: 0;
   text-align: left;
+  color: #212121;
   border-radius: 0.5rem;
   box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.12);
   transition: ease-out background-color 0.5s;
@@ -1582,9 +1649,26 @@ img.channel {
   border-bottom-right-radius: 0;
 }
 
-.center .bubble {
+.chat-box .meta {
+  justify-content: center;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.chat-box .meta .bubble {
+  color: #666;
+  min-width: unset;
+}
+
+.meta .bubble.deleted {
   background-color: #e3f2fd;
   padding: 0.75rem 0.75rem 0.5rem 0.75rem;
+}
+
+.meta .bubble.date {
+  font-size: smaller;
+  padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+  background-color: rgb(244 244 244 / 66%);
 }
 
 /* Left triangle placed bottom left flush. */
@@ -1649,7 +1733,6 @@ img.channel {
 
 .bubble div.message-content {
   position: relative;
-  color: #212121;
   margin: 0;
   width: 100%;
   max-width: 36rem;
@@ -1959,6 +2042,10 @@ ul.tabbar li.active > a {
   color: white;
 }
 
+.lettertile.disabled {
+  opacity: 0.5;
+}
+
 /* Colors of letter tiles */
 .lt-bg-0 {
   background-color: #ef9a9a;
@@ -2254,7 +2341,7 @@ ul.tabbar li.active > a {
 
 .chip > a {
   display: inline-block;
-  color: #ccc;
+  color: #eee;
   background-color: #aaa;
   border-radius: 50%;
   margin: 0.3rem;
@@ -2268,7 +2355,7 @@ ul.tabbar li.active > a {
 .chip > a:focus,
 .chip > a:hover {
   text-decoration: none;
-  color: #ddd;
+  color: #fff;
   background-color: #bbb;
 }
 
@@ -2551,6 +2638,67 @@ ul.tabbar li.active > a {
 
 .forward-dialog .scrollable-panel {
   height: 80%;
+}
+
+.audio {
+  display: flex;
+  margin-left: auto;
+  align-items: center;
+  flex: none;
+  background-color: #eee;
+  height: 3rem;
+  border-radius: 1.5rem;
+}
+
+.audio canvas {
+  width: 14rem;
+  height: 2.6rem;
+  margin-right: 2rem;
+}
+
+.audio canvas.playback {
+  margin-right: 0;
+}
+
+.audio .duration {
+  font-size: large;
+}
+
+.audio-player {
+  display: flex;
+  align-items: center;
+}
+
+.audio-player .material-icons.large {
+  font-size: 2.4rem;
+  color: #667575CC;
+}
+
+.audio-player .material-icons.disabled {
+  color: #999C;
+  cursor: default;
+}
+
+.audio-player .playback {
+  width: 14rem;
+  height: 2.6rem;
+}
+
+.audio-player canvas.playback {
+  display: block;
+}
+
+.audio-player div.playback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #757575CC;
+  font-size: small;
+}
+
+.audio-player .timer {
+  font-size: smaller;
+  color: #666C;
 }
 
 /*

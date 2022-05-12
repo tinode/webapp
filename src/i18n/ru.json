@@ -324,21 +324,21 @@
   "drafty_attachment": {
     "translation": "Аттачмент",
     "defaultMessage": "Attachment",
-    "description": "Comment for attachment in drafty preview",
+    "description": "Comment for attachment in drafty",
     "missing": false,
     "obsolete": false
   },
   "drafty_form": {
     "translation": "Форма:",
     "defaultMessage": "Form:",
-    "description": "Comment for form in drafty preview",
+    "description": "Comment for form in drafty",
     "missing": false,
     "obsolete": false
   },
   "drafty_image": {
     "translation": "Картинка",
     "defaultMessage": "Picture",
-    "description": "Comment for embedded images in drafty preview",
+    "description": "Comment for embedded images in drafty",
     "missing": false,
     "obsolete": false
   },
@@ -1358,6 +1358,13 @@
     "translation": "Новый пароль",
     "defaultMessage": "New password",
     "description": "Label for entering a new password",
+    "missing": false,
+    "obsolete": false
+  },
+  "drafty_unknown": {
+    "translation": "Не поддерживается",
+    "defaultMessage": "Unsupported",
+    "description": "Unsupported entity in drafty",
     "missing": false,
     "obsolete": false
   }

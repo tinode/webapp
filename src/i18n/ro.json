@@ -324,21 +324,21 @@
   "drafty_attachment": {
     "translation": "Atasament",
     "defaultMessage": "Attachment",
-    "description": "Comment for attachment in drafty preview",
+    "description": "Comment for attachment in drafty",
     "missing": false,
     "obsolete": false
   },
   "drafty_form": {
     "translation": "Formă:",
     "defaultMessage": "Form:",
-    "description": "Comment for form in drafty preview",
+    "description": "Comment for form in drafty",
     "missing": false,
     "obsolete": false
   },
   "drafty_image": {
     "translation": "Imagine",
     "defaultMessage": "Picture",
-    "description": "Comment for embedded images in drafty preview",
+    "description": "Comment for embedded images in drafty",
     "missing": false,
     "obsolete": false
   },
@@ -1358,6 +1358,13 @@
     "translation": "Parolă Nouă",
     "defaultMessage": "New password",
     "description": "Label for entering a new password",
+    "missing": false,
+    "obsolete": false
+  },
+  "drafty_unknown": {
+    "translation": "Neacceptat",
+    "defaultMessage": "Unsupported",
+    "description": "Unsupported entity in drafty",
     "missing": false,
     "obsolete": false
   }

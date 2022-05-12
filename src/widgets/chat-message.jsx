@@ -1,7 +1,8 @@
-// Single message, sent or received.
+// Single chat message bubble, sent or received.
+
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { Drafty } from 'tinode-sdk';
+import { Drafty, Tinode } from 'tinode-sdk';
 
 import Attachment from './attachment.jsx';
 import LetterTile from './letter-tile.jsx';
@@ -110,11 +111,10 @@ class BaseChatMessage extends React.PureComponent {
   }
 
   render() {
-    const sideClass = this.props.deleted ? 'center' :
-      (this.props.sequence + ' ' + (this.props.response ? 'left' : 'right'));
+    const sideClass = this.props.sequence + ' ' + (this.props.response ? 'left' : 'right');
     const bubbleClass = (this.props.sequence == 'single' || this.props.sequence == 'last') ? 'bubble tip' : 'bubble';
-    const avatar = this.props.deleted ? null : (this.props.userAvatar || true);
-    const fullDisplay = (this.props.isGroup && this.props.response && !this.props.deleted &&
+    const avatar = this.props.userAvatar || true;
+    const fullDisplay = (this.props.isGroup && this.props.response &&
       (this.props.sequence == 'single' || this.props.sequence == 'last'));
 
     let content = this.props.content;
@@ -140,12 +140,6 @@ class BaseChatMessage extends React.PureComponent {
       }, this);
       const tree = Drafty.format(content, fullFormatter, this.formatterContext);
       content = React.createElement(React.Fragment, null, tree);
-    } else if (this.props.deleted) {
-      // Message represents a range of deleted messages.
-      content = <><i className="material-icons gray">block</i> <i className="gray">
-        <FormattedMessage id="deleted_content"
-          defaultMessage="content deleted" description="Shown when messages are deleted" />
-      </i></>
     } else if (typeof content != 'string') {
       content = <><i className="material-icons gray">warning_amber</i> <i className="gray">
         <FormattedMessage id="invalid_content"
@@ -178,13 +172,12 @@ class BaseChatMessage extends React.PureComponent {
                   received={this.props.received} />
                 : null}
             </div>
-            {this.props.deleted || !this.props.showContextMenu ?
-              null :
+            {this.props.showContextMenu ?
               <span className="menuTrigger">
                 <a href="#" onClick={this.handleContextClick}>
                   <i className="material-icons">expand_more</i>
                 </a>
-              </span>
+              </span> : null
             }
           </div>
           {fullDisplay ?
