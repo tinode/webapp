@@ -217,7 +217,7 @@ export default class AudioPlayer extends React.PureComponent {
   }
 
   handleError(err) {
-    console.log(err);
+    console.error(err);
   }
 
   handleSeek(e) {

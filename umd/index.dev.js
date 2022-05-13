@@ -5564,16 +5564,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       };
     } else if (nextProps.topic != prevState.topic) {
       const topic = nextProps.tinode.getTopic(nextProps.topic);
-      let reply = null;
-
-      if (nextProps.forwardMessage) {
-        const preview = nextProps.forwardMessage.preview;
-        reply = {
-          content: preview,
-          seq: null
-        };
-      }
-
       nextState = {
         topic: nextProps.topic,
         docPreview: null,
@@ -5582,10 +5572,16 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         typingIndicator: false,
         scrollPosition: 0,
         fetchingMessages: false,
-        reply: reply,
         showGoToLastButton: false,
         deleted: topic._deleted
       };
+
+      if (nextProps.forwardMessage) {
+        nextState.reply = {
+          content: nextProps.forwardMessage.preview,
+          seq: null
+        };
+      }
 
       if (topic) {
         const subs = [];
@@ -9896,7 +9892,7 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
   }
 
   handleError(err) {
-    console.log(err);
+    console.error(err);
   }
 
   handleSeek(e) {
@@ -14708,7 +14704,9 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
         audioRec: false,
         quote: null
       });
-    } else if (prevProps.reply != this.props.reply) {
+    }
+
+    if (prevProps.reply != this.props.reply) {
       this.setState({
         quote: this.formatReply()
       });
@@ -14819,7 +14817,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       formatMessage
     } = this.props.intl;
     const prompt = this.props.disabled ? formatMessage(messages.messaging_disabled) : this.props.messagePrompt ? formatMessage(messages[this.props.messagePrompt]) : formatMessage(messages.type_new_message);
-    const quote = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    const quote = this.state.quote ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "reply-quote-preview"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "cancel"
@@ -14831,11 +14829,11 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons gray"
-    }, "close"))), this.state.quote);
+    }, "close"))), this.state.quote) : null;
     const audioEnabled = this.state.audioAvailable && this.props.onAttachAudio;
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "send-message-wrapper"
-    }, this.state.quote && !this.props.noInput ? quote : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, !this.props.noInput ? quote : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "send-message-panel"
     }, !this.props.disabled ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, this.props.onAttachFile && !this.state.audioRec ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
@@ -14855,7 +14853,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       title: "Attach file"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons secondary"
-    }, "attach_file"))) : null, this.props.noInput ? this.state.quote ? quote : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, "attach_file"))) : null, this.props.noInput ? quote || react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "hr thin"
     }) : this.state.audioRec ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_audio_recorder_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       onDeleted: _ => this.setState({

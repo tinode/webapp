@@ -84,7 +84,8 @@ class SendMessage extends React.PureComponent {
 
     if (prevProps.topicName != this.props.topicName) {
       this.setState({message: '', audioRec: false, quote: null});
-    } else if (prevProps.reply != this.props.reply) {
+    }
+    if (prevProps.reply != this.props.reply) {
       this.setState({quote: this.formatReply()});
     }
   }
@@ -196,17 +197,17 @@ class SendMessage extends React.PureComponent {
         formatMessage(messages[this.props.messagePrompt]) :
         formatMessage(messages.type_new_message));
 
-    const quote =
+    const quote = this.state.quote ?
       (<div id="reply-quote-preview">
         <div className="cancel">
           <a href="#" onClick={(e) => {e.preventDefault(); this.props.onCancelReply();}}><i className="material-icons gray">close</i></a>
         </div>
         {this.state.quote}
-      </div>);
+      </div>) : null;
     const audioEnabled = this.state.audioAvailable && this.props.onAttachAudio;
     return (
       <div id="send-message-wrapper">
-        {this.state.quote && !this.props.noInput ? quote : null}
+        {!this.props.noInput ? quote : null}
         <div id="send-message-panel">
           {!this.props.disabled ?
             <>
@@ -222,7 +223,7 @@ class SendMessage extends React.PureComponent {
                 :
                 null}
               {this.props.noInput ?
-                (this.state.quote ? quote : <div className="hr thin" />) :
+                (quote || <div className="hr thin" />) :
                 (this.state.audioRec ?
                   <AudioRecorder
                     onDeleted={_ => this.setState({audioRec: false})}
