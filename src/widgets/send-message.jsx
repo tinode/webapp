@@ -104,12 +104,8 @@ class SendMessage extends React.PureComponent {
     }
     // FIXME: handle large files too.
     if (filePasted(e,
-      (bits, mime, width, height, fname) => {
-        this.props.onAttachImage(mime, bits, width, height, fname);
-      },
-      (mime, bits, fname) => {
-        this.props.onAttachFile(mime, bits, fname);
-      },
+      file => { this.props.onAttachImage(file); },
+      file => { this.props.onAttachFile(file); },
       this.props.onError)) {
 
       // If a file was pasted, don't paste base64 data into input field.

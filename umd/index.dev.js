@@ -2288,8 +2288,9 @@ function blobToBase64(blob) {
 }
 function filePasted(event, onImageSuccess, onAttachmentSuccess, onError) {
   const items = (event.clipboardData || event.originalEvent.clipboardData || {}).items;
+  console.log("pasted items", items);
 
-  if (!Array.isArray(items)) {
+  if (!items || !items.length) {
     return false;
   }
 
@@ -14725,10 +14726,10 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       return;
     }
 
-    if ((0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__.filePasted)(e, (bits, mime, width, height, fname) => {
-      this.props.onAttachImage(mime, bits, width, height, fname);
-    }, (mime, bits, fname) => {
-      this.props.onAttachFile(mime, bits, fname);
+    if ((0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__.filePasted)(e, file => {
+      this.props.onAttachImage(file);
+    }, file => {
+      this.props.onAttachFile(file);
     }, this.props.onError)) {
       e.preventDefault();
     }

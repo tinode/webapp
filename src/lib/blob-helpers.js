@@ -199,7 +199,7 @@ export function blobToBase64(blob) {
 // File pasted from the clipboard. It's either an inline image or a file attachment.
 export function filePasted(event, onImageSuccess, onAttachmentSuccess, onError) {
   const items = (event.clipboardData || event.originalEvent.clipboardData || {}).items;
-  if (!Array.isArray(items)) {
+  if (!items || !items.length) {
     return false;
   }
 
