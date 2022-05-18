@@ -2288,7 +2288,6 @@ function blobToBase64(blob) {
 }
 function filePasted(event, onImageSuccess, onAttachmentSuccess, onError) {
   const items = (event.clipboardData || event.originalEvent.clipboardData || {}).items;
-  console.log("pasted items", items);
 
   if (!items || !items.length) {
     return false;
