@@ -431,7 +431,8 @@ class MessagesView extends React.Component {
     const pos = event.target.scrollHeight - event.target.scrollTop - event.target.offsetHeight;
     this.setState({
       scrollPosition: pos,
-      showGoToLastButton: pos > SHOW_GO_TO_LAST_DIST,
+      // Show [go to latest message] if far enough from bottom and scrolling down.
+      showGoToLastButton: (pos > SHOW_GO_TO_LAST_DIST) && (pos < this.state.scrollPosition),
     });
 
     if (this.state.fetchingMessages) {
@@ -579,8 +580,8 @@ class MessagesView extends React.Component {
     clearTimeout(this.keyPressTimer)
     this.setState({messageCount: topic.messageCount(), typingIndicator: false});
 
-    // Scroll to the bottom if the message is added to the end of the message list.
-    // TODO: This should be replaced by showing a "scroll to bottom" button.
+    // Scroll to the bottom if the message is added to the end of the message
+    // list if already at the bottom, otherwise show [go to latest] button.
     if (topic.isNewMessage(msg.seq)) {
       if (this.state.scrollPosition > SHOW_GO_TO_LAST_DIST) {
         this.setState({showGoToLastButton: true});

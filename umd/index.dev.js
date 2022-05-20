@@ -5771,7 +5771,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     const pos = event.target.scrollHeight - event.target.scrollTop - event.target.offsetHeight;
     this.setState({
       scrollPosition: pos,
-      showGoToLastButton: pos > SHOW_GO_TO_LAST_DIST
+      showGoToLastButton: pos > SHOW_GO_TO_LAST_DIST && pos < this.state.scrollPosition
     });
 
     if (this.state.fetchingMessages) {
