@@ -1121,7 +1121,6 @@ img.channel {
   right: 0;
   bottom: 0;
   background-color: white;
-  padding-left: 0.5px;
 }
 
 /* END of avatar box */
@@ -2324,7 +2323,7 @@ ul.tabbar li.active > a {
   white-space: nowrap;
   font-size: 90%;
   max-width: 12rem;
-  overflow-x: hidden;
+  overflow: hidden;
   text-overflow: ellipsis;
 }
 

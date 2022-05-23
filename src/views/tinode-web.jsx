@@ -1488,6 +1488,12 @@ class TinodeWeb extends React.Component {
   defaultTopicContextMenu(topicName) {
     const topic = this.tinode.getTopic(topicName);
 
+    if (topic._deleted) {
+      return [
+        'topic_delete'
+      ];
+    }
+
     let muted = false, blocked = false, self_blocked = false, subscribed = false, deleter = false, archived = false;
     if (topic) {
       subscribed = topic.isSubscribed();

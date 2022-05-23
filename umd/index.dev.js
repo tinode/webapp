@@ -8994,6 +8994,11 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
   defaultTopicContextMenu(topicName) {
     const topic = this.tinode.getTopic(topicName);
+
+    if (topic._deleted) {
+      return ['topic_delete'];
+    }
+
     let muted = false,
         blocked = false,
         self_blocked = false,
@@ -11321,12 +11326,12 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
             selected: selected,
             showOnline: this.props.showOnline && !isChannel,
             isChannel: isChannel,
-            onSelected: this.props.onTopicSelected,
             showContextMenu: this.props.showContextMenu,
             isVerified: c.trusted && c.trusted.verified,
             isStaff: c.trusted && c.trusted.staff,
             isDangerous: c.trusted && c.trusted.danger,
             deleted: c._deleted,
+            onSelected: this.props.onTopicSelected,
             item: key,
             index: contactNodes.length,
             key: key
