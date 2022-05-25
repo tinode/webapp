@@ -7742,30 +7742,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handlePushMessage(payload) {
-    const data = payload.data || {};
-
-    switch (data.what) {
-      case 'msg':
-        if (tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.isChannelTopicName(data.topic)) {
-          this.tinode.oobNotification('msg', data.topic, data.seq, 'fake-uid');
-        }
-
-        break;
-
-      case 'read':
-        this.tinode.oobNotification('read', data.topic, data.seq);
-        break;
-
-      case 'sub':
-        this.tinode.oobNotification('sub', data.topic, -1, data.xfrom, {
-          give: data.modeGiven,
-          want: data.modeWant
-        });
-        break;
-
-      default:
-        console.warn("Unknown push type ignored", data.what, data);
-    }
+    this.tinode.oobNotification(payload.data || {});
   }
 
   initFCMessaging() {

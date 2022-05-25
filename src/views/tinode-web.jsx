@@ -317,25 +317,7 @@ class TinodeWeb extends React.Component {
 
   // Tinode received a push notification from the server.
   handlePushMessage(payload) {
-    const data = payload.data || {};
-    switch (data.what) {
-    case 'msg':
-      if (Tinode.isChannelTopicName(data.topic)) {
-        // The last argument is a fake user Id: otherwise the update is seen as one from the current user.
-        this.tinode.oobNotification('msg', data.topic, data.seq, 'fake-uid');
-      }
-      break;
-    case 'read':
-      // Message read on another device, clear it here.
-      this.tinode.oobNotification('read', data.topic, data.seq);
-      break;
-    case 'sub':
-      // Subscription update: new subscription or subscription is deleted.
-      this.tinode.oobNotification('sub', data.topic, -1, data.xfrom, {give: data.modeGiven, want: data.modeWant});
-      break;
-    default:
-      console.warn("Unknown push type ignored", data.what, data);
-    }
+    this.tinode.oobNotification(payload.data || {});
   }
 
   initFCMessaging() {
