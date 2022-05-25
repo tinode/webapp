@@ -7756,6 +7756,13 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         this.tinode.oobNotification('read', data.topic, data.seq);
         break;
 
+      case 'sub':
+        this.tinode.oobNotification('sub', data.topic, -1, data.xfrom, {
+          give: data.modeGiven,
+          want: modeWant
+        });
+        break;
+
       default:
         console.warn("Unknown push type ignored", data.what, data);
     }

@@ -329,6 +329,10 @@ class TinodeWeb extends React.Component {
       // Message read on another device, clear it here.
       this.tinode.oobNotification('read', data.topic, data.seq);
       break;
+    case 'sub':
+      // Subscription update: new subscription or subscription is deleted.
+      this.tinode.oobNotification('sub', data.topic, -1, data.xfrom, {give: data.modeGiven, want: data.modeWant});
+      break;
     default:
       console.warn("Unknown push type ignored", data.what, data);
     }
