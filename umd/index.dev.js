@@ -7759,7 +7759,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       case 'sub':
         this.tinode.oobNotification('sub', data.topic, -1, data.xfrom, {
           give: data.modeGiven,
-          want: modeWant
+          want: data.modeWant
         });
         break;
 
