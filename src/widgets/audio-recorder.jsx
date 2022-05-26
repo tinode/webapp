@@ -8,6 +8,7 @@ import fixWebmDuration from 'fix-webm-duration';
 
 import { intArrayToBase64 } from '../lib/blob-helpers.js'
 import { secondsToTime } from '../lib/strformat';
+import { MAX_DURATION, MIN_DURATION } from '../config.js';
 
 // FFT resolution.
 const BUFFER_SIZE = 256;
@@ -20,13 +21,9 @@ const SPACING = 2 * CANVAS_UPSCALING;
 // Duration represented by one visualization bar.
 const MILLIS_PER_BAR = 100;
 // Color of histogram bars
-const BAR_COLOR = '#bbb';
+const BAR_COLOR = '#BBBD';
 // Vertical scaling for visualization bars.
 const BAR_SCALE = 64.0;
-// Minimum duration of a recording in milliseconds.
-const MIN_DURATION = 200;
-// Maximum duration of a recording in milliseconds (10 min).
-const MAX_DURATION = 600000;
 // Number of bars in preview.
 const VISUALIZATION_BARS = 96;
 // Maximum number of samples per bar.

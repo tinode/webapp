@@ -241,16 +241,6 @@ class MessagesView extends React.Component {
     } else if (nextProps.topic != prevState.topic) {
       const topic = nextProps.tinode.getTopic(nextProps.topic);
 
-      let reply = null;
-      if (nextProps.forwardMessage) {
-        // We are forwarding a message. Show preview.
-        const preview = nextProps.forwardMessage.preview;
-        reply = {
-          content: preview,
-          seq: null
-        };
-      }
-
       nextState = {
         topic: nextProps.topic,
         docPreview: null,
@@ -260,10 +250,17 @@ class MessagesView extends React.Component {
         typingIndicator: false,
         scrollPosition: 0,
         fetchingMessages: false,
-        reply: reply,
         showGoToLastButton: false,
         deleted: topic._deleted
       };
+
+      if (nextProps.forwardMessage) {
+        // We are forwarding a message. Show preview.
+        nextState.reply = {
+          content: nextProps.forwardMessage.preview,
+          seq: null
+        };
+      }
 
       if (topic) {
         // Topic exists.
@@ -461,7 +458,8 @@ class MessagesView extends React.Component {
     const pos = event.target.scrollHeight - event.target.scrollTop - event.target.offsetHeight;
     this.setState({
       scrollPosition: pos,
-      showGoToLastButton: pos > SHOW_GO_TO_LAST_DIST,
+      // Show [go to latest message] if far enough from bottom and scrolling down.
+      showGoToLastButton: (pos > SHOW_GO_TO_LAST_DIST) && (pos < this.state.scrollPosition),
     });
 
     if (this.state.fetchingMessages) {
@@ -609,8 +607,8 @@ class MessagesView extends React.Component {
     clearTimeout(this.keyPressTimer)
     this.setState({messageCount: topic.messageCount(), typingIndicator: false});
 
-    // Scroll to the bottom if the message is added to the end of the message list.
-    // TODO: This should be replaced by showing a "scroll to bottom" button.
+    // Scroll to the bottom if the message is added to the end of the message
+    // list if already at the bottom, otherwise show [go to latest] button.
     if (topic.isNewMessage(msg.seq)) {
       if (this.state.scrollPosition > SHOW_GO_TO_LAST_DIST) {
         this.setState({showGoToLastButton: true});
@@ -961,7 +959,6 @@ class MessagesView extends React.Component {
 
   // seq: seq ID of the source message
   // context: message content.
-  // forwarded: true if the source message is also a forwarded message.
   // senderId: UID of the sender of the source message.
   // senderName: full name of the sender of the original message.
   handlePickReply(seq, content, senderId, senderName) {

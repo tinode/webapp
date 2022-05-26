@@ -16,16 +16,21 @@ export function shortDateFormat(then, locale) {
   return then.toLocaleDateString(locale, {year: 'numeric', month: 'short', day: 'numeric'});
 }
 
-// Convert seconds to minutes:seconds, i.e. 156 sec -> 2:36.
+// Convert seconds to [hours:]minutes:seconds, i.e. 156 sec -> 2:36, 3756 sec -> 1:02:36.
 // If <code>fixedMins</code> is true, then minutes are represented by at least two digits.
 export function secondsToTime(seconds, fixedMin) {
   let min = Math.floor(seconds / 60) | 0;
-  if (fixedMin) {
+  let hours = Math.floor(min / 60) | 0;
+
+  if (fixedMin || hours > 0) {
     min = min < 10 ? `0${min}` : min;
   }
   let sec = (seconds % 60) | 0;
   sec = sec < 10 ? `0${sec}` : sec;
-  return `${min}:${sec}`;
+  if (hours == 0) {
+    return `${min}:${sec}`;
+  }
+  return `${hours}:${min}:${sec}`;
 }
 
 // Convert a number of bytes to human-readable format.

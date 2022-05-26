@@ -48,7 +48,7 @@ More translations are welcome. See [instructions](https://github.com/tinode/chat
 * End-to-End encryption.
 * Emoji support is weak.
 * Mentions, hashtags.
-* Previews not generated for videos, audio, links or docs.
+* Previews not generated for videos, links or docs.
 
 ## Other
 

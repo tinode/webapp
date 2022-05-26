@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import FormattedDuration from 'react-intl-formatted-duration';
 import { Drafty, Tinode } from 'tinode-sdk';
 
 import Attachment from './attachment.jsx';
@@ -11,6 +10,7 @@ import ReceivedMarker from './received-marker.jsx'
 
 import { fullFormatter } from '../lib/formatters.js';
 import { isVideoCall, sanitizeUrl } from '../lib/utils.js';
+import { secondsToTime } from '../lib/strformat.js';
 
 class BaseChatMessage extends React.PureComponent {
   constructor(props) {
@@ -157,9 +157,7 @@ class BaseChatMessage extends React.PureComponent {
           defaultMessage="Outgoing Call" description="Outgoing call label" />;
       const isCallDropped = this.props.content == 'disconnected';
       content = <><i className="material-icons" style={{color: isCallDropped ? 'red' : 'green'}}>{direction}</i>{text}
-        { !isCallDropped && this.props.duration ?
-          [' (', <FormattedDuration seconds={this.props.duration / 1000} format="{hours} {minutes} {seconds}" />, ')'] :
-          null}
+        { !isCallDropped && this.props.duration ? [' (', secondsToTime(this.props.duration / 1000), ')'] : null}
       </>
     } else if (typeof content != 'string') {
       content = <><i className="material-icons gray">warning_amber</i> <i className="gray">

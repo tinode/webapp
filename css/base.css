@@ -1121,7 +1121,6 @@ img.channel {
   right: 0;
   bottom: 0;
   background-color: white;
-  padding-left: 0.5px;
 }
 
 /* END of avatar box */
@@ -2324,7 +2323,7 @@ ul.tabbar li.active > a {
   white-space: nowrap;
   font-size: 90%;
   max-width: 12rem;
-  overflow-x: hidden;
+  overflow: hidden;
   text-overflow: ellipsis;
 }
 
@@ -2671,11 +2670,11 @@ ul.tabbar li.active > a {
 
 .audio-player .material-icons.large {
   font-size: 2.4rem;
-  color: #667575;
+  color: #667575CC;
 }
 
 .audio-player .material-icons.disabled {
-  color: #999;
+  color: #999C;
   cursor: default;
 }
 
@@ -2692,13 +2691,13 @@ ul.tabbar li.active > a {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #757575;
+  color: #757575CC;
   font-size: small;
 }
 
 .audio-player .timer {
   font-size: smaller;
-  color: #666;
+  color: #666C;
 }
 
 /*

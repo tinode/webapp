@@ -16,7 +16,7 @@ export const DEFAULT_HOST = KNOWN_HOSTS.hosted;
 export const LOGGING_ENABLED = true;
 
 // Minimum time between two keypress notifications, milliseconds.
-export const KEYPRESS_DELAY = 3*1000;
+export const KEYPRESS_DELAY = 3_000;
 // Delay before sending a {note} for reciving a message, milliseconds.
 export const RECEIVED_DELAY = 500;
 // Delay before sending a read notification, milliseconds.
@@ -64,7 +64,7 @@ export const MESSAGES_PAGE = 24;
 // for instance 1024 bytes.
 // Increase this limit to a greater value in production, if desired. Also increase
 // max_message_size in the server config.
-export const MAX_INBAND_ATTACHMENT_SIZE = 262144;
+export const MAX_INBAND_ATTACHMENT_SIZE = 262_144;
 
 // Default absolute maximum attachment size to be used with the server = 8MB.
 // Used when the server-provided value is unavailable. Increase to something like 100MB in production.
@@ -98,8 +98,13 @@ export const QUOTED_REPLY_LENGTH = 30;
 // Length of a preview of a forwarded message.
 export const FORWARDED_PREVIEW_LENGTH = 84;
 
+// Minimum duration of an audio recording in milliseconds (2 sec).
+export const MIN_DURATION = 2_000;
+// Maximum duration of an audio recording in milliseconds (10 min).
+export const MAX_DURATION = 600_000;
+
 // Link for "Contact Us".
-export const LINK_CONTACT_US = 'email:support@tinode.co';
+export const LINK_CONTACT_US = 'mailto:support@tinode.co';
 
 // Link to Privacy Policy.
 export const LINK_PRIVACY_POLICY = 'https://tinode.co/privacy.html';

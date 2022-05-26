@@ -116,12 +116,12 @@ class ContactList extends React.Component {
               selected={selected}
               showOnline={this.props.showOnline && !isChannel}
               isChannel={isChannel}
-              onSelected={this.props.onTopicSelected}
               showContextMenu={this.props.showContextMenu}
               isVerified={c.trusted && c.trusted.verified}
               isStaff={c.trusted && c.trusted.staff}
               isDangerous={c.trusted && c.trusted.danger}
               deleted={c._deleted}
+              onSelected={this.props.onTopicSelected}
               item={key}
               index={contactNodes.length}
               key={key} />
