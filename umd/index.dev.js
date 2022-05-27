@@ -2004,6 +2004,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "MAX_IMAGE_DIM": () => (/* binding */ MAX_IMAGE_DIM),
 /* harmony export */   "MAX_INBAND_ATTACHMENT_SIZE": () => (/* binding */ MAX_INBAND_ATTACHMENT_SIZE),
 /* harmony export */   "MAX_ONLINE_IN_TOPIC": () => (/* binding */ MAX_ONLINE_IN_TOPIC),
+/* harmony export */   "MAX_PEER_TITLE_LENGTH": () => (/* binding */ MAX_PEER_TITLE_LENGTH),
 /* harmony export */   "MAX_TAG_COUNT": () => (/* binding */ MAX_TAG_COUNT),
 /* harmony export */   "MAX_TAG_LENGTH": () => (/* binding */ MAX_TAG_LENGTH),
 /* harmony export */   "MAX_TITLE_LENGTH": () => (/* binding */ MAX_TITLE_LENGTH),
@@ -2054,6 +2055,7 @@ const IMAGE_THUMBNAIL_DIM = 36;
 const MAX_ONLINE_IN_TOPIC = 4;
 const MAX_TITLE_LENGTH = 60;
 const MAX_TOPIC_DESCRIPTION_LENGTH = 360;
+const MAX_PEER_TITLE_LENGTH = 20;
 const MESSAGE_PREVIEW_LENGTH = 80;
 const QUOTED_REPLY_LENGTH = 30;
 const FORWARDED_PREVIEW_LENGTH = 84;
@@ -6661,12 +6663,10 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           onSendMessage: this.sendFileAttachment
         });
       } else if (this.state.rtcPanel) {
-        const topic = this.props.tinode.getTopic(this.state.topic);
         component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_call_panel_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-          topic: topic,
+          topic: this.state.topic,
           seq: this.props.callSeq,
           callState: this.props.callState,
-          displayMobile: this.props.displayMobile,
           tinode: this.props.tinode,
           title: this.state.title,
           avatar: this.state.avatar || true,
@@ -11181,7 +11181,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   }
 
   componentDidMount() {
-    const topic = this.props.topic;
+    const topic = this.props.tinode.getTopic(this.props.topic);
     this.previousOnInfo = topic.onInfo;
     topic.onInfo = this.onInfo;
 
@@ -11191,7 +11191,8 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   }
 
   componentWillUnmount() {
-    this.props.topic.onInfo = this.previousOnInfo;
+    const topic = this.props.tinode.getTopic(this.props.topic);
+    topic.onInfo = this.previousOnInfo;
     this.stop();
   }
 
@@ -11238,7 +11239,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     }
 
     if (this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_IN_PROGRESS) {
-      this.props.onInvite(this.props.topic.name, this.props.seq, this.props.callState);
+      this.props.onInvite(this.props.topic, this.props.seq, this.props.callState);
       return;
     }
 
@@ -11247,7 +11248,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
         localStream: stream
       });
       this.localRef.current.srcObject = stream;
-      this.props.onInvite(this.props.topic.name, this.props.seq, this.props.callState);
+      this.props.onInvite(this.props.topic, this.props.seq, this.props.callState);
     }).catch(this.handleGetUserMediaError);
   }
 
@@ -11323,13 +11324,13 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     this.state.pc.createOffer().then(offer => {
       return this.state.pc.setLocalDescription(offer);
     }).then(_ => {
-      this.props.onSendOffer(this.props.topic.name, this.props.seq, this.state.pc.localDescription.toJSON());
+      this.props.onSendOffer(this.props.topic, this.props.seq, this.state.pc.localDescription.toJSON());
     }).catch(this.reportError);
   }
 
   handleICECandidateEvent(event) {
     if (event.candidate) {
-      this.props.onIceCandidate(this.props.topic.name, this.props.seq, event.candidate.toJSON());
+      this.props.onIceCandidate(this.props.topic, this.props.seq, event.candidate.toJSON());
     }
   }
 
@@ -11400,7 +11401,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     }).then(answer => {
       return pc.setLocalDescription(answer);
     }).then(() => {
-      this.props.onSendAnswer(this.props.topic.name, this.props.seq, pc.localDescription.toJSON());
+      this.props.onSendAnswer(this.props.topic, this.props.seq, pc.localDescription.toJSON());
     }).catch(this.handleGetUserMediaError);
   }
 
@@ -11410,7 +11411,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
 
   handleCloseClick() {
     this.stop();
-    this.props.onHangup(this.props.topic.name, this.props.seq);
+    this.props.onHangup(this.props.topic, this.props.seq);
   }
 
   toggleMedia(kind) {
@@ -11434,26 +11435,23 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   }
 
   render() {
-    if (!this.props.topic) {
-      return null;
-    }
-
     const remoteActive = this.remoteRef.current && this.remoteRef.current.srcObject;
     const audioIcon = this.state.localStream && this.state.localStream.getAudioTracks()[0].enabled ? 'mic' : 'mic_off';
     const videoIcon = this.state.localStream && this.state.localStream.getVideoTracks()[0].enabled ? 'videocam' : 'videocam_off';
+    const peerTitle = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_5__.clipStr)(this.props.title, _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_PEER_TITLE_LENGTH);
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "video-container"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "video-container-panel"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "video-elem self"
+      className: "call-party self"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
       ref: this.localRef,
       autoPlay: true,
       muted: true,
       playsInline: true
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "video-title"
+      className: "title inactive"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "calls_you_label",
       defaultMessage: [{
@@ -11461,14 +11459,25 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
         "value": "You"
       }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "video-elem peer"
+      className: "call-party peer"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
       ref: this.remoteRef,
       autoPlay: true,
       playsInline: true
     }), remoteActive ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "video-title"
-    }, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_5__.clipStr)(this.props.title, _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_TITLE_LENGTH)) : null)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "title inactive"
+    }, peerTitle) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "peer-card"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "avatar-box"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      tinode: this.props.tinode,
+      avatar: this.props.avatar,
+      topic: this.props.topic,
+      title: this.props.title
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "title"
+    }, peerTitle)))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "video-container-controls"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       className: "danger",

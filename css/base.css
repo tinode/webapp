@@ -1608,18 +1608,18 @@ img.channel {
   width: 100%;
 }
 
-.video-elem {
+.call-party {
   background-color: #eee;
   border-radius: 0.5rem;
   border: 2px solid #ccc;
   overflow: hidden;
 }
 
-.video-elem:hover {
+.call-party:hover {
   border: 2px solid #2196f3;
 }
 
-.video-elem.peer {
+.call-party.peer {
   position: absolute;
   top: 1rem;
   left: 1rem;
@@ -1628,7 +1628,7 @@ img.channel {
   z-index: 1;
 }
 
-.video-elem.self {
+.call-party.self {
   position: absolute;
   right: 0.5rem;
   bottom: 0.5rem;
@@ -1643,20 +1643,55 @@ video {
   object-fit: contain;
 }
 
-.video-elem.self video {
+.call-party.self video {
   transform: scaleX(-1);
 }
 
-/* "You" badge. */
-.video-title {
+.peer-card {
   position: absolute;
-  bottom: 0.25rem;
-  right: 0.25rem;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.peer-card .avatar-box {
+  width: 10rem;
+  height: 10rem;
+  font-size: 6rem;
+}
+
+/* Badge with "You" for current user or peer's name. */
+.call-party .title {
   padding: 0.15rem 0.5rem;
   border-radius: 0.35rem;
   z-index: 1;
   text-shadow: 0 0 1px white;
   background-color: rgba(255, 255, 255, 0.7);
+}
+
+.call-party.self .title.inactive {
+  position: absolute;
+  bottom: 0.25rem;
+  right: 0.25rem;
+}
+
+.call-party .peer-card .title {
+  font-size: larger;
+  margin-top: 0.5rem;
+}
+
+.call-party.peer .title.inactive {
+  position: absolute;
+  font-size: larger;
+  left: 50%;
+  bottom: 0.5rem;
+  transform: translateX(-50%);
+  margin: 0 auto;
 }
 
 .video-call-accept {

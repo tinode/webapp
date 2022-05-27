@@ -89,6 +89,8 @@ export const MAX_ONLINE_IN_TOPIC = 4;
 export const MAX_TITLE_LENGTH = 60;
 // Maximum length of topic description.
 export const MAX_TOPIC_DESCRIPTION_LENGTH = 360;
+// Maximum length of user name when displaying a video call.
+export const MAX_PEER_TITLE_LENGTH = 20;
 
 // Length of message previews in chat list, in characters.
 export const MESSAGE_PREVIEW_LENGTH = 80;

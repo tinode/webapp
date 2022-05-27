@@ -4,7 +4,7 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
 import LetterTile from '../widgets/letter-tile.jsx';
 
-import { CALL_WEBRTC_CONFIG, MAX_TITLE_LENGTH } from '../config.js';
+import { CALL_WEBRTC_CONFIG, MAX_PEER_TITLE_LENGTH } from '../config.js';
 import { CALL_STATE_OUTGOING_INITATED, CALL_STATE_IN_PROGRESS } from '../constants.js';
 
 import { clipStr } from '../lib/utils.js'
@@ -69,7 +69,7 @@ class CallPanel extends React.PureComponent {
   }
 
   componentDidMount() {
-    const topic = this.props.topic;
+    const topic = this.props.tinode.getTopic(this.props.topic);
     this.previousOnInfo = topic.onInfo;
     topic.onInfo = this.onInfo;
     if ((this.props.callState == CALL_STATE_OUTGOING_INITATED ||
@@ -79,7 +79,8 @@ class CallPanel extends React.PureComponent {
   }
 
   componentWillUnmount() {
-    this.props.topic.onInfo = this.previousOnInfo;
+    const topic = this.props.tinode.getTopic(this.props.topic);
+    topic.onInfo = this.previousOnInfo;
     this.stop();
   }
 
@@ -122,7 +123,7 @@ class CallPanel extends React.PureComponent {
 
     if (this.props.callState == CALL_STATE_IN_PROGRESS) {
       // We apparently just accepted the call.
-      this.props.onInvite(this.props.topic.name, this.props.seq, this.props.callState);
+      this.props.onInvite(this.props.topic, this.props.seq, this.props.callState);
       return;
     }
 
@@ -133,7 +134,7 @@ class CallPanel extends React.PureComponent {
         this.setState({localStream: stream});
         this.localRef.current.srcObject = stream;
         // Send call invitation.
-        this.props.onInvite(this.props.topic.name, this.props.seq, this.props.callState);
+        this.props.onInvite(this.props.topic, this.props.seq, this.props.callState);
       })
       .catch(this.handleGetUserMediaError);
   }
@@ -206,14 +207,14 @@ class CallPanel extends React.PureComponent {
       return this.state.pc.setLocalDescription(offer);
     })
     .then(_ => {
-      this.props.onSendOffer(this.props.topic.name, this.props.seq, this.state.pc.localDescription.toJSON());
+      this.props.onSendOffer(this.props.topic, this.props.seq, this.state.pc.localDescription.toJSON());
     })
     .catch(this.reportError);
   }
 
   handleICECandidateEvent(event) {
     if (event.candidate) {
-      this.props.onIceCandidate(this.props.topic.name, this.props.seq, event.candidate.toJSON());
+      this.props.onIceCandidate(this.props.topic, this.props.seq, event.candidate.toJSON());
     }
   }
 
@@ -296,7 +297,7 @@ class CallPanel extends React.PureComponent {
       return pc.setLocalDescription(answer);
     })
     .then(() => {
-      this.props.onSendAnswer(this.props.topic.name, this.props.seq, pc.localDescription.toJSON());
+      this.props.onSendAnswer(this.props.topic, this.props.seq, pc.localDescription.toJSON());
     })
     .catch(this.handleGetUserMediaError);
   }
@@ -307,7 +308,7 @@ class CallPanel extends React.PureComponent {
 
   handleCloseClick() {
     this.stop();
-    this.props.onHangup(this.props.topic.name, this.props.seq);
+    this.props.onHangup(this.props.topic, this.props.seq);
   }
 
   // Mute/unmute audio/video (specified by kind).
@@ -332,31 +333,37 @@ class CallPanel extends React.PureComponent {
   }
 
   render() {
-    if (!this.props.topic) {
-      return null;
-    }
-
     const remoteActive = this.remoteRef.current && this.remoteRef.current.srcObject;
     const audioIcon = this.state.localStream && this.state.localStream.getAudioTracks()[0].enabled ? 'mic' : 'mic_off';
     const videoIcon = this.state.localStream && this.state.localStream.getVideoTracks()[0].enabled ? 'videocam' : 'videocam_off';
+    const peerTitle = clipStr(this.props.title, MAX_PEER_TITLE_LENGTH);
 
     return (
       <>
         <div id="video-container">
           <div id="video-container-panel">
-            <div className="video-elem self">
+            <div className="call-party self">
               <video ref={this.localRef} autoPlay muted playsInline></video>
-              <div className="video-title">
+              <div className="title inactive">
                 <FormattedMessage id="calls_you_label"
                   defaultMessage="You" description="Shown over the local video screen" />
               </div>
             </div>
-            <div className="video-elem peer">
+            <div className="call-party peer">
               <video ref={this.remoteRef} autoPlay playsInline></video>
               {remoteActive ?
-                <div className="video-title">{clipStr(this.props.title, MAX_TITLE_LENGTH)}</div>
-                :
-                null}
+                <div className="title inactive">{peerTitle}</div> :
+                <div className="peer-card">
+                  <div className="avatar-box">
+                    <LetterTile
+                      tinode={this.props.tinode}
+                      avatar={this.props.avatar}
+                      topic={this.props.topic}
+                      title={this.props.title} />
+                  </div>
+                  <div className="title">{peerTitle}</div>
+                </div>
+              }
             </div>
           </div>
           <div id="video-container-controls">

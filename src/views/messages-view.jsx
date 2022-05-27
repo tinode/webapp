@@ -1046,13 +1046,11 @@ class MessagesView extends React.Component {
             onSendMessage={this.sendFileAttachment} />
         );
       } else if (this.state.rtcPanel) {
-        const topic = this.props.tinode.getTopic(this.state.topic);
         component2 = (
           <CallPanel
-            topic={topic}
+            topic={this.state.topic}
             seq={this.props.callSeq}
             callState={this.props.callState}
-            displayMobile={this.props.displayMobile}
             tinode={this.props.tinode}
             title={this.state.title}
             avatar={this.state.avatar || true}

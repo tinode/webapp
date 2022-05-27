@@ -2019,7 +2019,6 @@ class TinodeWeb extends React.Component {
           :
           null
         }
-
         {this.state.callTopic && this.state.callState == CALL_STATE_INCOMING_RECEIVED ?
           <IncomingCallView
             tinode={this.tinode}
