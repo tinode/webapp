@@ -123,12 +123,15 @@
     "defaultMessage": "Update",
     "description": "Button [Update]"
   },
+  "call_cancelled": {
+    "defaultMessage": "cancelled"
+  },
   "calls_incoming": {
-    "defaultMessage": "Incoming Call",
+    "defaultMessage": "Incoming call",
     "description": "Incoming call label"
   },
   "calls_outgoing": {
-    "defaultMessage": "Outgoing Call",
+    "defaultMessage": "Outgoing call",
     "description": "Outgoing call label"
   },
   "calls_you_label": {

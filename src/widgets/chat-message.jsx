@@ -5,12 +5,12 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { Drafty, Tinode } from 'tinode-sdk';
 
 import Attachment from './attachment.jsx';
+import CallMessage from './call-message.jsx';
 import LetterTile from './letter-tile.jsx';
 import ReceivedMarker from './received-marker.jsx'
 
 import { fullFormatter } from '../lib/formatters.js';
 import { isVideoCall, sanitizeUrl } from '../lib/utils.js';
-import { secondsToTime } from '../lib/strformat.js';
 
 class BaseChatMessage extends React.PureComponent {
   constructor(props) {
@@ -148,17 +148,11 @@ class BaseChatMessage extends React.PureComponent {
           defaultMessage="content deleted" description="Shown when messages are deleted" />
       </i></>
     } else if (isVideoCall(this.props.mimeType)) {
-      // Video calls.
-      const direction = this.props.response ? 'call_received' : 'call_made';
-      const text = this.props.response ?
-        <FormattedMessage id="calls_incoming"
-          defaultMessage="Incoming Call" description="Incoming call label" /> :
-        <FormattedMessage id="calls_outgoing"
-          defaultMessage="Outgoing Call" description="Outgoing call label" />;
-      const isCallDropped = this.props.content == 'disconnected';
-      content = <><i className="material-icons" style={{color: isCallDropped ? 'red' : 'green'}}>{direction}</i>{text}
-        { !isCallDropped && this.props.duration ? [' (', secondsToTime(this.props.duration / 1000), ')'] : null}
-      </>
+      // Video call message.
+      content = <CallMessage
+        content={this.props.content}
+        response={this.props.response}
+        duration={this.props.duration} />
     } else if (typeof content != 'string') {
       content = <><i className="material-icons gray">warning_amber</i> <i className="gray">
         <FormattedMessage id="invalid_content"

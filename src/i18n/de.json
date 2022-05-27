@@ -1377,7 +1377,7 @@
   },
   "calls_incoming": {
     "translation": "",
-    "defaultMessage": "Incoming Call",
+    "defaultMessage": "Incoming call",
     "description": "Incoming call label",
     "missing": true,
     "obsolete": false
@@ -1391,7 +1391,7 @@
   },
   "calls_outgoing": {
     "translation": "",
-    "defaultMessage": "Outgoing Call",
+    "defaultMessage": "Outgoing call",
     "description": "Outgoing call label",
     "missing": true,
     "obsolete": false
@@ -1414,6 +1414,12 @@
     "translation": "",
     "defaultMessage": "You already in an ongoing call!",
     "description": "Error message when the user tried to accept a new call without finishing pervious one",
+    "missing": true,
+    "obsolete": false
+  },
+  "call_cancelled": {
+    "translation": "",
+    "defaultMessage": "cancelled",
     "missing": true,
     "obsolete": false
   }

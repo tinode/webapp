@@ -1727,6 +1727,15 @@ video {
   text-align: center;
 }
 
+.call-message {
+  display: flex;
+  flex-direction: row;
+}
+
+.call-message .duration {
+  font-weight: lighter;
+}
+
 /* Talk bubbles */
 .chat-box {
   list-style: none;
@@ -2418,6 +2427,9 @@ ul.tabbar li.active > a {
 }
 .material-icons.small {
   font-size: 1rem;
+}
+.material-icons.medium {
+  font-size: 1.2rem;
 }
 .material-icons.big {
   font-size: 2.4rem;
