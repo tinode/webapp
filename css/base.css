@@ -1612,6 +1612,7 @@ img.channel {
   background-color: #eee;
   border-radius: 0.5rem;
   border: 2px solid #ccc;
+  overflow: hidden;
 }
 
 .video-elem:hover {

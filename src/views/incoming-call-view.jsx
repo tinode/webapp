@@ -12,7 +12,7 @@ import { CALL_STATE_INCOMING_RECEIVED } from '../constants.js';
 import { makeImageUrl } from '../lib/blob-helpers.js';
 import { clipStr } from '../lib/utils.js'
 
-const RING_SOUND = new Audio('audio/phone_ring.mp3');
+const RING_SOUND = new Audio('audio/call-in.mp3');
 
 export default class IncomingCallView extends React.Component {
   constructor(props) {

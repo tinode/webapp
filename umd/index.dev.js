@@ -4401,7 +4401,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const RING_SOUND = new Audio('audio/phone_ring.mp3');
+const RING_SOUND = new Audio('audio/call-in.mp3');
 class IncomingCallView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
