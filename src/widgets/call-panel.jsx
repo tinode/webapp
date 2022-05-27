@@ -1,6 +1,6 @@
 // CallPanel: displays local and remote viewports and controls.
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
 import LetterTile from '../widgets/letter-tile.jsx';
 
@@ -9,7 +9,15 @@ import { CALL_STATE_OUTGOING_INITATED, CALL_STATE_IN_PROGRESS } from '../constan
 
 import { clipStr } from '../lib/utils.js'
 
-export default class CallPanel extends React.PureComponent {
+const messages = defineMessages({
+  already_in_call: {
+    id: 'already_in_call',
+    defaultMessage: 'You already in an ongoing call!',
+    description: 'Error message when the user tried to accept a new call without finishing pervious one',
+  }
+});
+
+class CallPanel extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -108,24 +116,64 @@ export default class CallPanel extends React.PureComponent {
 
   start() {
     if (this.state.localStream) {
-      console.log("You can't start a call because you already have one open!");
-    } else {
-      if (this.props.callState == CALL_STATE_IN_PROGRESS) {
-        // We apparently just accepted the call.
-        this.props.onInvite(this.props.topic.name, this.props.seq, this.props.callState);
-        return;
-      }
-      // This is an outgoing call waiting for the other side to pick up.
-      // Start local video.
-      navigator.mediaDevices.getUserMedia(this.localStreamConstraints)
-        .then(stream => {
-          this.setState({localStream: stream});
-          this.localRef.current.srcObject = stream;
-          // Send call invitation.
-          this.props.onInvite(this.props.topic.name, this.props.seq, this.props.callState);
-        })
-        .catch(this.handleGetUserMediaError);
+      this.props.onError(this.props.intl.formatMessage(messages.already_in_call));
+      return;
     }
+
+    if (this.props.callState == CALL_STATE_IN_PROGRESS) {
+      // We apparently just accepted the call.
+      this.props.onInvite(this.props.topic.name, this.props.seq, this.props.callState);
+      return;
+    }
+
+    // This is an outgoing call waiting for the other side to pick up.
+    // Start local video.
+    navigator.mediaDevices.getUserMedia(this.localStreamConstraints)
+      .then(stream => {
+        this.setState({localStream: stream});
+        this.localRef.current.srcObject = stream;
+        // Send call invitation.
+        this.props.onInvite(this.props.topic.name, this.props.seq, this.props.callState);
+      })
+      .catch(this.handleGetUserMediaError);
+  }
+
+  stop() {
+    this.stopTracks(this.localRef.current);
+    this.stopTracks(this.remoteRef.current);
+    if (this.state.pc) {
+      this.state.pc.ontrack = null;
+      this.state.pc.onremovetrack = null;
+      this.state.pc.onremovestream = null;
+      this.state.pc.onicecandidate = null;
+      this.state.pc.oniceconnectionstatechange = null;
+      this.state.pc.onsignalingstatechange = null;
+      this.state.pc.onicegatheringstatechange = null;
+      this.state.pc.onnegotiationneeded = null;
+
+      this.state.pc.close();
+    }
+    this.setState({pc: null});
+  }
+
+  stopTracks(el) {
+    if (!el) {
+      return;
+    }
+    let stream = el.srcObject;
+    if (!stream) {
+      return;
+    }
+
+    let tracks = stream.getTracks();
+    if (tracks) {
+      tracks.forEach(track => {
+        track.stop();
+        track.enabled = false;
+      });
+    }
+    el.srcObject = null;
+    el.src = '';
   }
 
   createPeerConnection() {
@@ -257,40 +305,6 @@ export default class CallPanel extends React.PureComponent {
     this.handleCloseClick();
   }
 
-  stopTracks(el) {
-    if (el == null) { return; }
-    let stream = el.srcObject;
-    if (stream == null) { return; }
-    let tracks = stream.getTracks();
-
-    if (tracks != null) {
-      tracks.forEach((track) => {
-        track.stop();
-        track.enabled = false;
-      });
-    }
-    el.srcObject = null;
-    el.src = '';
-  }
-
-  stop() {
-    this.stopTracks(this.localRef.current);
-    this.stopTracks(this.remoteRef.current);
-    if (this.state.pc != null) {
-      this.state.pc.ontrack = null;
-      this.state.pc.onremovetrack = null;
-      this.state.pc.onremovestream = null;
-      this.state.pc.onicecandidate = null;
-      this.state.pc.oniceconnectionstatechange = null;
-      this.state.pc.onsignalingstatechange = null;
-      this.state.pc.onicegatheringstatechange = null;
-      this.state.pc.onnegotiationneeded = null;
-
-      this.state.pc.close();
-    }
-    this.setState({pc: null});
-  }
-
   handleCloseClick() {
     this.stop();
     this.props.onHangup(this.props.topic.name, this.props.seq);
@@ -322,23 +336,23 @@ export default class CallPanel extends React.PureComponent {
       return null;
     }
 
-    const remoteActive = this.remoteRef.current != null && this.remoteRef.current.srcObject != null;
-    const audioIcon = this.state.localStream != null && this.state.localStream.getAudioTracks()[0].enabled ? 'mic' : 'mic_off';
-    const videoIcon = this.state.localStream != null && this.state.localStream.getVideoTracks()[0].enabled ? 'videocam' : 'videocam_off';
+    const remoteActive = this.remoteRef.current && this.remoteRef.current.srcObject;
+    const audioIcon = this.state.localStream && this.state.localStream.getAudioTracks()[0].enabled ? 'mic' : 'mic_off';
+    const videoIcon = this.state.localStream && this.state.localStream.getVideoTracks()[0].enabled ? 'videocam' : 'videocam_off';
 
     return (
       <>
         <div id="video-container">
           <div id="video-container-panel">
-            <div className="video-elem">
-              <video id="localVideo" ref={this.localRef} autoPlay muted playsInline></video>
+            <div className="video-elem self">
+              <video ref={this.localRef} autoPlay muted playsInline></video>
               <div className="video-title">
                 <FormattedMessage id="calls_you_label"
                   defaultMessage="You" description="Shown over the local video screen" />
               </div>
             </div>
-            <div className="video-elem">
-              <video id="remoteVideo" ref={this.remoteRef} autoPlay playsInline></video>
+            <div className="video-elem peer">
+              <video ref={this.remoteRef} autoPlay playsInline></video>
               {remoteActive ?
                 <div className="video-title">{clipStr(this.props.title, MAX_TITLE_LENGTH)}</div>
                 :
@@ -346,9 +360,7 @@ export default class CallPanel extends React.PureComponent {
             </div>
           </div>
           <div id="video-container-controls">
-            <button className="danger" onClick={this.handleCloseClick}>
-              <i className="material-icons">call_end</i>
-            </button>
+            <button className="danger" onClick={this.handleCloseClick}><i className="material-icons">call_end</i></button>
             <button className="secondary" onClick={this.handleToggleCameraClick}><i className="material-icons">{videoIcon}</i></button>
             <button className="secondary" onClick={this.handleToggleMicClick}><i className="material-icons">{audioIcon}</i></button>
           </div>
@@ -357,3 +369,5 @@ export default class CallPanel extends React.PureComponent {
     );
   }
 };
+
+export default injectIntl(CallPanel);

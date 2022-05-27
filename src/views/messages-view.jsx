@@ -1062,8 +1062,7 @@ class MessagesView extends React.Component {
             onInvite={this.props.onCallInvite}
             onSendOffer={this.props.onCallSendOffer}
             onIceCandidate={this.props.onCallIceCandidate}
-            onSendAnswer={this.props.onCallSendAnswer}
-          />
+            onSendAnswer={this.props.onCallSendAnswer} />
         );
       } else {
         const topic = this.props.tinode.getTopic(this.state.topic);

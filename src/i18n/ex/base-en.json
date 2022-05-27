@@ -23,6 +23,10 @@
     "defaultMessage": "Report Conversation",
     "description": "Flat button [Report Group]"
   },
+  "already_in_call": {
+    "defaultMessage": "You already in an ongoing call!",
+    "description": "Error message when the user tried to accept a new call without finishing pervious one"
+  },
   "archived_contacts": {
     "defaultMessage": "Archived contacts ({count})",
     "description": "Label for archived chats"

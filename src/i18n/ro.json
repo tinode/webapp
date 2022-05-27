@@ -1409,5 +1409,12 @@
     "description": "Start video call",
     "missing": true,
     "obsolete": false
+  },
+  "already_in_call": {
+    "translation": "",
+    "defaultMessage": "You already in an ongoing call!",
+    "description": "Error message when the user tried to accept a new call without finishing pervious one",
+    "missing": true,
+    "obsolete": false
   }
 }
