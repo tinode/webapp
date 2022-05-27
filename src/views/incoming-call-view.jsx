@@ -148,10 +148,10 @@ export default class IncomingCallView extends React.Component {
             <div id="actions" className="group incoming-call-actions">
               {this.props.callState == CALL_STATE_INCOMING_RECEIVED ?
                 <>
-                  <button className="video-call-hangup" onClick={this.handleRejectCall}>
+                  <button className="danger" onClick={this.handleRejectCall}>
                     <i className="material-icons">call_end</i>
                   </button>
-                  <button className="video-call-accept" onClick={this.handleAcceptCall}>
+                  <button className="positive" onClick={this.handleAcceptCall}>
                     <i className="material-icons">call</i>
                   </button>
                 </>

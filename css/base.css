@@ -154,6 +154,22 @@ button.outline:focus, button.outline:hover, button.outline:active {
   background-color: #e8eaf6; /* indigo 50 */
 }
 
+button.danger {
+  background-color: #ec6560;
+  color: white;
+}
+button.danger:focus, button.danger:hover, button.danger:active {
+  background-color: #f77;
+}
+
+button.positive {
+  background-color: #9de39b;
+  color: white;
+}
+button.positive:focus, button.positive:hover, button.positive:active {
+  background-color: #7f7;
+}
+
 textarea, input {
   font-family: inherit;
   font-size: 1.1rem;
@@ -1562,6 +1578,88 @@ img.channel {
   font-size: 6rem;
 }
 
+/* Video-call related styles */
+
+#video-container {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255,255,255,0.90);
+}
+
+#video-container-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 3.2rem;
+  z-index: 1;
+  background-color: #eceff1;
+  box-shadow: 0px -2px 3px -1px rgba(0,0,0,0.1); /* Faint shadow above panel */
+}
+
+#video-container-panel {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.video-elem {
+  width: 50%;
+  position: relative;
+  background-color: #eee;
+  border-radius: 0.5rem;
+  border: 1px solid #ccc;
+  margin: 0.25rem;
+  box-sizing: content-box;
+}
+
+.video-elem:hover {
+  border: 2px solid #2196f3;
+}
+
+video {
+  width: 100%;
+}
+
+/* "You" badge. */
+.video-title {
+  position: absolute;
+  bottom: 0.25rem;
+  right: 0.25rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 0.35rem;
+  z-index: 1;
+  text-shadow: 0 0 1px white;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+.video-call-accept {
+  border-radius: 10px;
+  background-color: green;
+}
+
+.incoming-call-title {
+  text-align: center;
+  padding: 10px;
+}
+
+.incoming-call-badges {
+  text-align: center;
+}
+
+.incoming-call-actions {
+  text-align: center;
+  padding: 20px;
+}
+
 /* Talk bubbles */
 .chat-box {
   list-style: none;
@@ -2736,75 +2834,4 @@ ul.tabbar li.active > a {
   li .menuTrigger {
     opacity: 0.3;
   }
-}
-
-#video-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-	height: 100%!important;
-  width: 85%;
-  margin: auto;
-  height: 80%;
-}
-
-video {
-  width:100%;
-}
-
-.video-container-panel {
-  -ms-flex-align: center!important;
-  align-items: center!important;
-  margin-top: 10%;
-  position:relative;
-}
-
-.video-elem {
-  width:50%;
-  float:left;
-  position:relative;
-  z-index:0;
-}
-
-.video-title {
-  position:absolute;
-  bottom: 0;
-  right: 0;
-  z-index: 1;
-  background-color: white;
-}
-
-#video-container-controls {
-  display: flex;
-  justify-content: center;
-  padding: 20px;
-}
-
-.video-call-accept {
-  border-radius: 10px;
-  background-color: green;
-}
-
-.video-call-hangup {
-  border-radius: 10px;
-  background-color: red;
-}
-
-.video-call-toggle-media {
-  border-radius: 10px;
-  background-color: gray;
-}
-
-.incoming-call-title {
-  text-align: center;
-  padding: 10px;
-}
-
-.incoming-call-badges {
-  text-align: center;
-}
-
-.incoming-call-actions {
-  text-align: center;
-  padding: 20px;
 }

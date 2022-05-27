@@ -30,6 +30,7 @@ export default class CallPanel extends React.PureComponent {
 
     this.onInfo = this.onInfo.bind(this);
     this.start = this.start.bind(this);
+    this.stop = this.stop.bind(this);
 
     this.createPeerConnection = this.createPeerConnection.bind(this);
 
@@ -48,7 +49,6 @@ export default class CallPanel extends React.PureComponent {
     this.reportError = this.reportError.bind(this);
     this.handleGetUserMediaError = this.handleGetUserMediaError.bind(this);
 
-    this.stop = this.stop.bind(this);
     this.stopTracks = this.stopTracks.bind(this);
 
     this.handleCloseClick = this.handleCloseClick.bind(this);
@@ -60,7 +60,22 @@ export default class CallPanel extends React.PureComponent {
     this.handleVideoCallAccepted = this.handleVideoCallAccepted.bind(this);
   }
 
-  handleVideoCallAccepted(info) { 
+  componentDidMount() {
+    const topic = this.props.topic;
+    this.previousOnInfo = topic.onInfo;
+    topic.onInfo = this.onInfo;
+    if ((this.props.callState == CALL_STATE_OUTGOING_INITATED ||
+         this.props.callState == CALL_STATE_IN_PROGRESS) && this.localRef.current) {
+      this.start();
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.topic.onInfo = this.previousOnInfo;
+    this.stop();
+  }
+
+  handleVideoCallAccepted(info) {
     const pc = this.createPeerConnection();
     const stream = this.state.localStream;
     stream.getTracks().forEach(track => {
@@ -89,21 +104,6 @@ export default class CallPanel extends React.PureComponent {
         this.handleRemoteHangup(info);
         break;
     }
-  }
-
-  componentDidMount() {
-    const topic = this.props.topic;
-    this.previousOnInfo = topic.onInfo;
-    topic.onInfo = this.onInfo;
-    if ((this.props.callState == CALL_STATE_OUTGOING_INITATED ||
-         this.props.callState == CALL_STATE_IN_PROGRESS) && this.localRef.current) {
-      this.start();
-    }
-  }
-
-  componentWillUnmount() {
-    this.props.topic.onInfo = this.previousOnInfo;
-    this.stop();
   }
 
   start() {
@@ -205,7 +205,7 @@ export default class CallPanel extends React.PureComponent {
   handleGetUserMediaError(e) {
     switch(e.name) {
       case 'NotFoundError':
-        // Cannot start the call b/c no camera and/or microphone found. 
+        // Cannot start the call b/c no camera and/or microphone found.
         this.reportError(e);
         break;
       case 'SecurityError':
@@ -328,30 +328,8 @@ export default class CallPanel extends React.PureComponent {
 
     return (
       <>
-        <div id="topic-caption-panel" className="caption-panel">
-          {this.props.displayMobile ?
-            <a href="#" id="hide-message-view" onClick={(e) => {e.preventDefault(); this.props.onHideMessagesView();}}>
-              <i className="material-icons">arrow_back</i>
-            </a>
-            :
-            null}
-          <div className="avatar-box">
-            <LetterTile
-              tinode={this.props.tinode}
-              avatar={this.props.avatar}
-              topic={this.props.topic}
-              title={this.props.title} />
-          </div>
-          <div id="topic-title-group">
-            <div id="topic-title" className="panel-title">{
-              this.props.title ||
-              <i><FormattedMessage id="unnamed_topic" defaultMessage="Unnamed"
-                description="Title shown when the topic has no name" /></i>
-            }</div>
-          </div>
-        </div>
         <div id="video-container">
-          <div className="video-container-panel">
+          <div id="video-container-panel">
             <div className="video-elem">
               <video id="localVideo" ref={this.localRef} autoPlay muted playsInline></video>
               <div className="video-title">
@@ -368,11 +346,11 @@ export default class CallPanel extends React.PureComponent {
             </div>
           </div>
           <div id="video-container-controls">
-            <button className="video-call-hangup" onClick={this.handleCloseClick}>
+            <button className="danger" onClick={this.handleCloseClick}>
               <i className="material-icons">call_end</i>
             </button>
-            <button className="video-call-toggle-media" onClick={this.handleToggleCameraClick}><i className="material-icons">{videoIcon}</i></button>
-            <button className="video-call-toggle-media" onClick={this.handleToggleMicClick}><i className="material-icons">{audioIcon}</i></button>
+            <button className="secondary" onClick={this.handleToggleCameraClick}><i className="material-icons">{videoIcon}</i></button>
+            <button className="secondary" onClick={this.handleToggleMicClick}><i className="material-icons">{audioIcon}</i></button>
           </div>
         </div>
       </>

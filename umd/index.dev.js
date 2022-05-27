@@ -4557,12 +4557,12 @@ class IncomingCallView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Com
       id: "actions",
       className: "group incoming-call-actions"
     }, this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_6__.CALL_STATE_INCOMING_RECEIVED ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "video-call-hangup",
+      className: "danger",
       onClick: this.handleRejectCall
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, "call_end")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "video-call-accept",
+      className: "positive",
       onClick: this.handleAcceptCall
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
@@ -11147,6 +11147,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     this.remoteRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
     this.onInfo = this.onInfo.bind(this);
     this.start = this.start.bind(this);
+    this.stop = this.stop.bind(this);
     this.createPeerConnection = this.createPeerConnection.bind(this);
     this.handleNegotiationNeededEvent = this.handleNegotiationNeededEvent.bind(this);
     this.handleICECandidateEvent = this.handleICECandidateEvent.bind(this);
@@ -11160,7 +11161,6 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     this.handleNewICECandidateMsg = this.handleNewICECandidateMsg.bind(this);
     this.reportError = this.reportError.bind(this);
     this.handleGetUserMediaError = this.handleGetUserMediaError.bind(this);
-    this.stop = this.stop.bind(this);
     this.stopTracks = this.stopTracks.bind(this);
     this.handleCloseClick = this.handleCloseClick.bind(this);
     this.handleToggleCameraClick = this.handleToggleCameraClick.bind(this);
@@ -11168,6 +11168,21 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     this.toggleMedia = this.toggleMedia.bind(this);
     this.handleRemoteHangup = this.handleRemoteHangup.bind(this);
     this.handleVideoCallAccepted = this.handleVideoCallAccepted.bind(this);
+  }
+
+  componentDidMount() {
+    const topic = this.props.topic;
+    this.previousOnInfo = topic.onInfo;
+    topic.onInfo = this.onInfo;
+
+    if ((this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_OUTGOING_INITATED || this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_IN_PROGRESS) && this.localRef.current) {
+      this.start();
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.topic.onInfo = this.previousOnInfo;
+    this.stop();
   }
 
   handleVideoCallAccepted(info) {
@@ -11204,21 +11219,6 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
         this.handleRemoteHangup(info);
         break;
     }
-  }
-
-  componentDidMount() {
-    const topic = this.props.topic;
-    this.previousOnInfo = topic.onInfo;
-    topic.onInfo = this.onInfo;
-
-    if ((this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_OUTGOING_INITATED || this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_IN_PROGRESS) && this.localRef.current) {
-      this.start();
-    }
-  }
-
-  componentWillUnmount() {
-    this.props.topic.onInfo = this.previousOnInfo;
-    this.stop();
   }
 
   start() {
@@ -11431,39 +11431,9 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     const audioIcon = this.state.localStream != null && this.state.localStream.getAudioTracks()[0].enabled ? 'mic' : 'mic_off';
     const videoIcon = this.state.localStream != null && this.state.localStream.getVideoTracks()[0].enabled ? 'videocam' : 'videocam_off';
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "topic-caption-panel",
-      className: "caption-panel"
-    }, this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      id: "hide-message-view",
-      onClick: e => {
-        e.preventDefault();
-        this.props.onHideMessagesView();
-      }
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, "arrow_back")) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "avatar-box"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      tinode: this.props.tinode,
-      avatar: this.props.avatar,
-      topic: this.props.topic,
-      title: this.props.title
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "topic-title-group"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "topic-title",
-      className: "panel-title"
-    }, this.props.title || react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "unnamed_topic",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Unnamed"
-      }]
-    }))))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "video-container"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "video-container-panel"
+      id: "video-container-panel"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "video-elem"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
@@ -11492,17 +11462,17 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     }, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_5__.clipStr)(this.props.title, _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_TITLE_LENGTH)) : null)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "video-container-controls"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "video-call-hangup",
+      className: "danger",
       onClick: this.handleCloseClick
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, "call_end")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "video-call-toggle-media",
+      className: "secondary",
       onClick: this.handleToggleCameraClick
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, videoIcon)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "video-call-toggle-media",
+      className: "secondary",
       onClick: this.handleToggleMicClick
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
