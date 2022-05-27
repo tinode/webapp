@@ -1643,6 +1643,10 @@ video {
   object-fit: contain;
 }
 
+.video-elem.self video {
+  transform: scaleX(-1);
+}
+
 /* "You" badge. */
 .video-title {
   position: absolute;
