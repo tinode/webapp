@@ -31,7 +31,7 @@ import { secondsToTime } from '../lib/strformat.js'
 import { updateFavicon } from '../lib/utils.js';
 
 // Sound to play on message received.
-const POP_SOUND = new Audio('audio/msg.mp3');
+const POP_SOUND = new Audio('audio/msg.m4a');
 
 const messages = defineMessages({
   reconnect_countdown: {

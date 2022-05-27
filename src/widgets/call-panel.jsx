@@ -9,6 +9,9 @@ import { CALL_STATE_OUTGOING_INITATED, CALL_STATE_IN_PROGRESS } from '../constan
 
 import { clipStr } from '../lib/utils.js'
 
+const RING_SOUND = new Audio('audio/call-out.m4a');
+RING_SOUND.loop = true;
+
 const messages = defineMessages({
   already_in_call: {
     id: 'already_in_call',
@@ -133,6 +136,9 @@ class CallPanel extends React.PureComponent {
       .then(stream => {
         this.setState({localStream: stream});
         this.localRef.current.srcObject = stream;
+
+        RING_SOUND.play();
+
         // Send call invitation.
         this.props.onInvite(this.props.topic, this.props.seq, this.props.callState);
       })
@@ -140,6 +146,9 @@ class CallPanel extends React.PureComponent {
   }
 
   stop() {
+    RING_SOUND.stop();
+    RING_SOUND.currentTime = 0;
+
     this.stopTracks(this.localRef.current);
     this.stopTracks(this.remoteRef.current);
     if (this.state.pc) {
