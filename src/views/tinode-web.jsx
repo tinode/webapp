@@ -13,7 +13,7 @@ import ContextMenu from '../widgets/context-menu.jsx';
 import ForwardDialog from '../widgets/forward-dialog.jsx';
 
 import InfoView from './info-view.jsx';
-import IncomingCallView from './incoming-call-view.jsx';
+import IncomingCallView from '../widgets/call-incoming.jsx';
 import MessagesView from './messages-view.jsx';
 import SidepanelView from './sidepanel-view.jsx';
 
@@ -1857,6 +1857,20 @@ class TinodeWeb extends React.Component {
           :
           null
         }
+        {this.state.callTopic && this.state.callState == CALL_STATE_INCOMING_RECEIVED ?
+          <IncomingCallView
+            tinode={this.tinode}
+            onClose={this.handleCallClose}
+            topic={this.state.callTopic}
+            seq={this.state.callSeq}
+            callState={this.state.callState}
+            onRinging={this.handleCallRinging}
+            onAcceptCall={this.handleCallAcceptCall}
+            onReject={this.handleCallHangup}
+            />
+          :
+          null
+        }
         <Alert
           visible={this.state.alertVisible}
           title={this.state.alertParams.title}
@@ -2015,20 +2029,6 @@ class TinodeWeb extends React.Component {
             onError={this.handleError}
 
             showContextMenu={this.handleShowContextMenu}
-            />
-          :
-          null
-        }
-        {this.state.callTopic && this.state.callState == CALL_STATE_INCOMING_RECEIVED ?
-          <IncomingCallView
-            tinode={this.tinode}
-            onClose={this.handleCallClose}
-            topic={this.state.callTopic}
-            seq={this.state.callSeq}
-            callState={this.state.callState}
-            onRinging={this.handleCallRinging}
-            onAcceptCall={this.handleCallAcceptCall}
-            onReject={this.handleCallHangup}
             />
           :
           null

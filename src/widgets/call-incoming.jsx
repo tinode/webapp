@@ -2,11 +2,10 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import AvatarUpload from '../widgets/avatar-upload.jsx';
-import BadgeList from '../widgets/badge-list.jsx';
-import MenuCancel from '../widgets/menu-cancel.jsx';
+import BadgeList from './badge-list.jsx';
+import LetterTile from './letter-tile.jsx';
 
-import { MAX_TITLE_LENGTH } from '../config.js';
+import { MAX_TITLE_LENGTH, MAX_PEER_TITLE_LENGTH } from '../config.js';
 import { CALL_STATE_INCOMING_RECEIVED } from '../constants.js';
 
 import { makeImageUrl } from '../lib/blob-helpers.js';
@@ -38,6 +37,7 @@ export default class IncomingCallView extends React.Component {
     if (!topic) {
       return;
     }
+
     this.resetDesc(topic, this.props);
     if (this.props.callState == CALL_STATE_INCOMING_RECEIVED) {
       RING_SOUND.play();
@@ -118,47 +118,35 @@ export default class IncomingCallView extends React.Component {
   }
 
   render() {
-    let panelTitle = <FormattedMessage id="calls_incoming_title"
-        defaultMessage="Incoming Call" description="Incoming call title (Incoming call view)" />;
-
     return (
-      <div id="info-view">
-        <div className="caption-panel" id="info-caption-panel">
-          <div className="panel-title" id="info-title">{panelTitle}</div>
-          <div>
-            <MenuCancel onCancel={this.handleRejectCall} />
-          </div>
-        </div>
-        <div id="info-view-content" className="scrollable-panel">
-          <div className="panel-form-column">
-            <center>
-              <AvatarUpload
+      <div className="alert-container">
+        <div className="incoming-call">
+          <div className="caller-card incoming">
+            <div className="avatar-box">
+              <LetterTile
                 tinode={this.props.tinode}
-                avatar={this.state.avatar}
-                readOnly={true}
-                uid={this.props.topic}
+                avatar={this.state.avatar || true}
+                topic={this.props.topic}
                 title={this.state.fullName} />
-            </center>
-            <div className="group incoming-call-title">
-              <div className="large ellipsized">{clipStr(this.state.fullName)}</div>
             </div>
-            <div className="group incoming-call-badges">
-              <BadgeList trustedBadges={this.state.trustedBadges} />
-            </div>
-            <div id="actions" className="group incoming-call-actions">
-              {this.props.callState == CALL_STATE_INCOMING_RECEIVED ?
-                <>
-                  <button className="danger" onClick={this.handleRejectCall}>
-                    <i className="material-icons">call_end</i>
-                  </button>
-                  <button className="positive" onClick={this.handleAcceptCall}>
-                    <i className="material-icons">call</i>
-                  </button>
-                </>
-                :
-                null
-              }
-            </div>
+            <div className="caller-name">{clipStr(this.state.fullName, MAX_PEER_TITLE_LENGTH)}</div>
+          </div>
+          <div className="group incoming-call-badges">
+            <BadgeList trustedBadges={this.state.trustedBadges} />
+          </div>
+          <div className="controls">
+            {this.props.callState == CALL_STATE_INCOMING_RECEIVED ?
+              <>
+                <button className="danger" onClick={this.handleRejectCall}>
+                  <i className="material-icons">call_end</i>
+                </button>
+                <button className="positive" onClick={this.handleAcceptCall}>
+                  <i className="material-icons">call</i>
+                </button>
+              </>
+              :
+              null
+            }
           </div>
         </div>
       </div>

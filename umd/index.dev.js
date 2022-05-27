@@ -4372,210 +4372,6 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
 
 /***/ }),
 
-/***/ "./src/views/incoming-call-view.jsx":
-/*!******************************************!*\
-  !*** ./src/views/incoming-call-view.jsx ***!
-  \******************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ IncomingCallView)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/avatar-upload.jsx */ "./src/widgets/avatar-upload.jsx");
-/* harmony import */ var _widgets_badge_list_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/badge-list.jsx */ "./src/widgets/badge-list.jsx");
-/* harmony import */ var _widgets_menu_cancel_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/menu-cancel.jsx */ "./src/widgets/menu-cancel.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../constants.js */ "./src/constants.js");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-
-
-
-
-
-
-
-
-
-const RING_SOUND = new Audio('audio/call-in.m4a');
-class IncomingCallView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
-  constructor(props) {
-    super(props);
-    this.state = {
-      topic: null,
-      fullName: undefined,
-      avatar: null,
-      trustedBadges: [],
-      previousMetaDesc: undefined
-    };
-    this.resetDesc = this.resetDesc.bind(this);
-    this.onMetaDesc = this.onMetaDesc.bind(this);
-    this.handleRejectCall = this.handleRejectCall.bind(this);
-    this.handleAcceptCall = this.handleAcceptCall.bind(this);
-    this.ringTimer = null;
-  }
-
-  componentDidMount() {
-    const topic = this.props.tinode.getTopic(this.props.topic);
-
-    if (!topic) {
-      return;
-    }
-
-    this.resetDesc(topic, this.props);
-
-    if (this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_6__.CALL_STATE_INCOMING_RECEIVED) {
-      RING_SOUND.play();
-      this.ringTimer = setInterval(() => RING_SOUND.play(), 2000);
-      this.props.onRinging(this.props.topic, this.props.seq);
-    }
-  }
-
-  componentDidUpdate(props) {
-    const topic = this.props.tinode.getTopic(props.topic);
-
-    if (!topic) {
-      return;
-    }
-
-    if (this.onMetaDesc != topic.onMetaDesc) {
-      this.previousMetaDesc = topic.onMetaDesc;
-      topic.onMetaDesc = this.onMetaDesc;
-    }
-
-    if (this.state.topic != props.topic) {
-      this.setState({
-        topic: props.topic
-      });
-      this.resetDesc(topic, props);
-    }
-  }
-
-  componentWillUnmount() {
-    if (this.ringTimer != null) {
-      clearInterval(this.ringTimer);
-      RING_SOUND.pause();
-    }
-
-    const topic = this.props.tinode.getTopic(this.props.topic);
-
-    if (!topic) {
-      return;
-    }
-
-    this.setState({
-      topic: null
-    });
-    topic.onMetaDesc = this.previousMetaDesc;
-  }
-
-  resetDesc(topic, props) {
-    const defacs = topic.getDefaultAccess() || {};
-    const acs = topic.getAccessMode();
-    const badges = [];
-
-    if (topic.trusted) {
-      for (const [key, val] of Object.entries(topic.trusted)) {
-        if (val) {
-          badges.push(key);
-        }
-      }
-    }
-
-    this.setState({
-      fullName: (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.clipStr)(topic.public ? topic.public.fn : undefined, _config_js__WEBPACK_IMPORTED_MODULE_5__.MAX_TITLE_LENGTH),
-      avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__.makeImageUrl)(topic.public ? topic.public.photo : null),
-      trustedBadges: badges
-    });
-  }
-
-  onMetaDesc(desc) {
-    const topic = this.props.tinode.getTopic(this.props.topic);
-
-    if (!topic) {
-      return;
-    }
-
-    this.resetDesc(topic, this.props);
-
-    if (this.previousMetaDesc && this.previousMetaDesc != this.onMetaDesc) {
-      this.previousMetaDesc(desc);
-    }
-  }
-
-  handleAcceptCall() {
-    this.props.onAcceptCall(this.props.topic);
-  }
-
-  handleRejectCall() {
-    this.props.onReject(this.props.topic, this.props.seq);
-    this.props.onClose();
-  }
-
-  render() {
-    let panelTitle = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "calls_incoming_title",
-      defaultMessage: [{
-        "type": 0,
-        "value": "Incoming Call"
-      }]
-    });
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "info-view"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "caption-panel",
-      id: "info-caption-panel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-title",
-      id: "info-title"
-    }, panelTitle), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_menu_cancel_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      onCancel: this.handleRejectCall
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "info-view-content",
-      className: "scrollable-panel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("center", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      tinode: this.props.tinode,
-      avatar: this.state.avatar,
-      readOnly: true,
-      uid: this.props.topic,
-      title: this.state.fullName
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "group incoming-call-title"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "large ellipsized"
-    }, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.clipStr)(this.state.fullName))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "group incoming-call-badges"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_badge_list_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      trustedBadges: this.state.trustedBadges
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "actions",
-      className: "group incoming-call-actions"
-    }, this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_6__.CALL_STATE_INCOMING_RECEIVED ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "danger",
-      onClick: this.handleRejectCall
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, "call_end")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-      className: "positive",
-      onClick: this.handleAcceptCall
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, "call"))) : null))));
-  }
-
-}
-;
-
-/***/ }),
-
 /***/ "./src/views/info-view.jsx":
 /*!*********************************!*\
   !*** ./src/views/info-view.jsx ***!
@@ -7747,7 +7543,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _widgets_context_menu_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/context-menu.jsx */ "./src/widgets/context-menu.jsx");
 /* harmony import */ var _widgets_forward_dialog_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../widgets/forward-dialog.jsx */ "./src/widgets/forward-dialog.jsx");
 /* harmony import */ var _info_view_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./info-view.jsx */ "./src/views/info-view.jsx");
-/* harmony import */ var _incoming_call_view_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./incoming-call-view.jsx */ "./src/views/incoming-call-view.jsx");
+/* harmony import */ var _widgets_call_incoming_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../widgets/call-incoming.jsx */ "./src/widgets/call-incoming.jsx");
 /* harmony import */ var _messages_view_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./messages-view.jsx */ "./src/views/messages-view.jsx");
 /* harmony import */ var _sidepanel_view_jsx__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./sidepanel-view.jsx */ "./src/views/sidepanel-view.jsx");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
@@ -9677,7 +9473,16 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       searchResults: this.state.searchResults,
       onSearchContacts: this.handleSearchContacts,
       onTopicSelected: this.handleStartTopicRequest
-    }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_alert_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    }) : null,  true ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_call_incoming_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
+      tinode: this.tinode,
+      onClose: this.handleCallClose,
+      topic: this.state.callTopic,
+      seq: this.state.callSeq,
+      callState: this.state.callState,
+      onRinging: this.handleCallRinging,
+      onAcceptCall: this.handleCallAcceptCall,
+      onReject: this.handleCallHangup
+    }) : 0, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_alert_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
       visible: this.state.alertVisible,
       title: this.state.alertParams.title,
       content: this.state.alertParams.content,
@@ -9823,15 +9628,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       onInitFind: this.tnInitFind,
       onError: this.handleError,
       showContextMenu: this.handleShowContextMenu
-    }) : null, this.state.callTopic && this.state.callState == _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_INCOMING_RECEIVED ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_incoming_call_view_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
-      tinode: this.tinode,
-      onClose: this.handleCallClose,
-      topic: this.state.callTopic,
-      seq: this.state.callSeq,
-      callState: this.state.callState,
-      onRinging: this.handleCallRinging,
-      onAcceptCall: this.handleCallAcceptCall,
-      onReject: this.handleCallHangup
     }) : null);
   }
 
@@ -11106,6 +10902,203 @@ class ButtonBack extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
 
 /***/ }),
 
+/***/ "./src/widgets/call-incoming.jsx":
+/*!***************************************!*\
+  !*** ./src/widgets/call-incoming.jsx ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ IncomingCallView)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _badge_list_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./badge-list.jsx */ "./src/widgets/badge-list.jsx");
+/* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../constants.js */ "./src/constants.js");
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+
+
+
+
+
+
+
+
+const RING_SOUND = new Audio('audio/call-in.m4a');
+class IncomingCallView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
+  constructor(props) {
+    super(props);
+    this.state = {
+      topic: null,
+      fullName: undefined,
+      avatar: null,
+      trustedBadges: [],
+      previousMetaDesc: undefined
+    };
+    this.resetDesc = this.resetDesc.bind(this);
+    this.onMetaDesc = this.onMetaDesc.bind(this);
+    this.handleRejectCall = this.handleRejectCall.bind(this);
+    this.handleAcceptCall = this.handleAcceptCall.bind(this);
+    this.ringTimer = null;
+  }
+
+  componentDidMount() {
+    if (!this.props.tinode) {
+      return;
+    }
+
+    const topic = this.props.tinode.getTopic(this.props.topic);
+
+    if (!topic) {
+      return;
+    }
+
+    this.resetDesc(topic, this.props);
+
+    if (this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_5__.CALL_STATE_INCOMING_RECEIVED) {
+      RING_SOUND.play();
+      this.ringTimer = setInterval(() => RING_SOUND.play(), 2000);
+      this.props.onRinging(this.props.topic, this.props.seq);
+    }
+  }
+
+  componentDidUpdate(props) {
+    const topic = this.props.tinode.getTopic(props.topic);
+
+    if (!topic) {
+      return;
+    }
+
+    if (this.onMetaDesc != topic.onMetaDesc) {
+      this.previousMetaDesc = topic.onMetaDesc;
+      topic.onMetaDesc = this.onMetaDesc;
+    }
+
+    if (this.state.topic != props.topic) {
+      this.setState({
+        topic: props.topic
+      });
+      this.resetDesc(topic, props);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.ringTimer != null) {
+      clearInterval(this.ringTimer);
+      RING_SOUND.pause();
+    }
+
+    const topic = this.props.tinode.getTopic(this.props.topic);
+
+    if (!topic) {
+      return;
+    }
+
+    this.setState({
+      topic: null
+    });
+    topic.onMetaDesc = this.previousMetaDesc;
+  }
+
+  resetDesc(topic, props) {
+    const defacs = topic.getDefaultAccess() || {};
+    const acs = topic.getAccessMode();
+    const badges = [];
+
+    if (topic.trusted) {
+      for (const [key, val] of Object.entries(topic.trusted)) {
+        if (val) {
+          badges.push(key);
+        }
+      }
+    }
+
+    this.setState({
+      fullName: (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_7__.clipStr)(topic.public ? topic.public.fn : undefined, _config_js__WEBPACK_IMPORTED_MODULE_4__.MAX_TITLE_LENGTH),
+      avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__.makeImageUrl)(topic.public ? topic.public.photo : null),
+      trustedBadges: badges
+    });
+  }
+
+  onMetaDesc(desc) {
+    const topic = this.props.tinode.getTopic(this.props.topic);
+
+    if (!topic) {
+      return;
+    }
+
+    this.resetDesc(topic, this.props);
+
+    if (this.previousMetaDesc && this.previousMetaDesc != this.onMetaDesc) {
+      this.previousMetaDesc(desc);
+    }
+  }
+
+  handleAcceptCall() {
+    this.props.onAcceptCall(this.props.topic);
+  }
+
+  handleRejectCall() {
+    this.props.onReject(this.props.topic, this.props.seq);
+    this.props.onClose();
+  }
+
+  render() {
+    const panelTitle = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "calls_incoming_title",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Incoming Call"
+      }]
+    });
+    const title = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_7__.clipStr)(this.state.fullName, _config_js__WEBPACK_IMPORTED_MODULE_4__.MAX_PEER_TITLE_LENGTH) || 'Lorem Ipsum';
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "alert-container"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "incoming-call"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "caller-card incoming"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "avatar-box"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      tinode: this.props.tinode,
+      avatar: this.state.avatar || true,
+      topic: this.props.topic,
+      title: this.state.fullName
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "caller-name"
+    }, title)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "group incoming-call-badges"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_badge_list_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      trustedBadges: this.state.trustedBadges
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "video-container-controls",
+      className: "group incoming-call-actions"
+    },  true ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+      className: "danger",
+      onClick: this.handleRejectCall
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, "call_end")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+      className: "positive",
+      onClick: this.handleAcceptCall
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, "call"))) : 0)));
+  }
+
+}
+;
+
+/***/ }),
+
 /***/ "./src/widgets/call-panel.jsx":
 /*!************************************!*\
   !*** ./src/widgets/call-panel.jsx ***!
@@ -11121,7 +11114,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
+/* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../constants.js */ "./src/constants.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
@@ -11456,7 +11449,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       muted: true,
       playsInline: true
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "title inactive"
+      className: "caller-name inactive"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "calls_you_label",
       defaultMessage: [{
@@ -11470,18 +11463,18 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       autoPlay: true,
       playsInline: true
     }), remoteActive ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "title inactive"
+      className: "caller-name inactive"
     }, peerTitle) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "peer-card"
+      className: "caller-card"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       tinode: this.props.tinode,
       avatar: this.props.avatar,
       topic: this.props.topic,
       title: this.props.title
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "title"
+      className: "caller-name"
     }, peerTitle)))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "video-container-controls"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {

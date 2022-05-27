@@ -1,8 +1,8 @@
-// CallPanel: displays local and remote viewports and controls.
+// CallPanel displays call in progress: local and remote viewports and controls.
 import React from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
-import LetterTile from '../widgets/letter-tile.jsx';
+import LetterTile from './letter-tile.jsx';
 
 import { CALL_WEBRTC_CONFIG, MAX_PEER_TITLE_LENGTH } from '../config.js';
 import { CALL_STATE_OUTGOING_INITATED, CALL_STATE_IN_PROGRESS } from '../constants.js';
@@ -353,7 +353,7 @@ class CallPanel extends React.PureComponent {
           <div id="video-container-panel">
             <div className="call-party self">
               <video ref={this.localRef} autoPlay muted playsInline></video>
-              <div className="title inactive">
+              <div className="caller-name inactive">
                 <FormattedMessage id="calls_you_label"
                   defaultMessage="You" description="Shown over the local video screen" />
               </div>
@@ -361,8 +361,8 @@ class CallPanel extends React.PureComponent {
             <div className="call-party peer">
               <video ref={this.remoteRef} autoPlay playsInline></video>
               {remoteActive ?
-                <div className="title inactive">{peerTitle}</div> :
-                <div className="peer-card">
+                <div className="caller-name inactive">{peerTitle}</div> :
+                <div className="caller-card">
                   <div className="avatar-box">
                     <LetterTile
                       tinode={this.props.tinode}
@@ -370,12 +370,12 @@ class CallPanel extends React.PureComponent {
                       topic={this.props.topic}
                       title={this.props.title} />
                   </div>
-                  <div className="title">{peerTitle}</div>
+                  <div className="caller-name">{peerTitle}</div>
                 </div>
               }
             </div>
           </div>
-          <div id="video-container-controls">
+          <div className="controls">
             <button className="danger" onClick={this.handleCloseClick}><i className="material-icons">call_end</i></button>
             <button className="secondary" onClick={this.handleToggleCameraClick}><i className="material-icons">{videoIcon}</i></button>
             <button className="secondary" onClick={this.handleToggleMicClick}><i className="material-icons">{audioIcon}</i></button>
