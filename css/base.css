@@ -1592,7 +1592,7 @@ img.channel {
   background-color: rgba(255,255,255,0.90);
 }
 
-#video-container .controls {
+.controls {
   display: flex;
   align-items: center;
   justify-content: center;

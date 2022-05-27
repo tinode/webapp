@@ -1387,7 +1387,7 @@
     "defaultMessage": "Incoming Call",
     "description": "Incoming call title (Incoming call view)",
     "missing": false,
-    "obsolete": false
+    "obsolete": true
   },
   "calls_outgoing": {
     "translation": "Outgoing Call",

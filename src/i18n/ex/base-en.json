@@ -127,10 +127,6 @@
     "defaultMessage": "Incoming Call",
     "description": "Incoming call label"
   },
-  "calls_incoming_title": {
-    "defaultMessage": "Incoming Call",
-    "description": "Incoming call title (Incoming call view)"
-  },
   "calls_outgoing": {
     "defaultMessage": "Outgoing Call",
     "description": "Outgoing call label"
