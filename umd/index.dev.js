@@ -4403,7 +4403,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const RING_SOUND = new Audio('audio/call-in.mp3');
+const RING_SOUND = new Audio('audio/call-in.m4a');
 class IncomingCallView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
@@ -7780,7 +7780,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const POP_SOUND = new Audio('audio/msg.mp3');
+const POP_SOUND = new Audio('audio/msg.m4a');
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   reconnect_countdown: {
     id: "reconnect_countdown",
@@ -11131,6 +11131,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+const RING_SOUND = new Audio('audio/call-out.m4a');
+RING_SOUND.loop = true;
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   already_in_call: {
     id: "already_in_call",
@@ -11248,11 +11250,14 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
         localStream: stream
       });
       this.localRef.current.srcObject = stream;
+      RING_SOUND.play();
       this.props.onInvite(this.props.topic, this.props.seq, this.props.callState);
     }).catch(this.handleGetUserMediaError);
   }
 
   stop() {
+    RING_SOUND.pause();
+    RING_SOUND.currentTime = 0;
     this.stopTracks(this.localRef.current);
     this.stopTracks(this.remoteRef.current);
 

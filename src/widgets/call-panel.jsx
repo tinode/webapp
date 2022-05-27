@@ -146,7 +146,7 @@ class CallPanel extends React.PureComponent {
   }
 
   stop() {
-    RING_SOUND.stop();
+    RING_SOUND.pause();
     RING_SOUND.currentTime = 0;
 
     this.stopTracks(this.localRef.current);
