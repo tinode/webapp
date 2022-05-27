@@ -26,7 +26,7 @@
     "umd/index.dev.js.map",
     "umd/tinode.prod.js",
     "umd/tinode.dev.js",
-    "audio/msg.mp3",
+    "audio/*.mp3",
     "css/base.css",
     "css/base.min.css",
     "img/*.png",
