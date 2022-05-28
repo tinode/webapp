@@ -8,12 +8,15 @@ import { secondsToTime } from '../lib/strformat.js';
 export default class CallMessage extends React.PureComponent {
   render() {
     const isCallDropped = this.props.content == 'disconnected';
+    const successClass = 'material-icons medium ' + (isCallDropped ? 'red' : 'green');
     const callIcon = this.props.response ?
       (isCallDropped ? 'call_missed' : 'call_received') :
       (isCallDropped ? 'call_missed_outgoing' : 'call_made');
-    const successClass = 'material-icons medium ' + (isCallDropped ? 'red' : 'green');
-    const duration = isCallDropped ?
-      <FormattedMessage id="call_cancelled" defaultMessage="cancelled" dexcription="Label for cancelled call, incoming or outgoing" /> :
+    const duration = isCallDropped ? (
+        this.props.response ?
+        <FormattedMessage id="call_missed" defaultMessage="missed" description="Label for cancelled incoming call" /> :
+        <FormattedMessage id="call_cancelled" defaultMessage="cancelled" description="Label for cancelled outgoing call" />
+      ) :
       <span>{secondsToTime(this.props.duration / 1000)}</span>;
     return <div className="call-message">
       <div><i className="material-icons big gray">call</i></div>

@@ -1368,59 +1368,53 @@
     "missing": false,
     "obsolete": false
   },
-  "preview_unavailable": {
-    "translation": "不可用",
-    "defaultMessage": "unavailable",
-    "description": "Message shown when media preview is not available",
-    "missing": false,
-    "obsolete": true
-  },
   "calls_incoming": {
-    "translation": "",
+    "translation": "來電",
     "defaultMessage": "Incoming call",
     "description": "Incoming call label",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
-  "calls_incoming_title": {
-    "translation": "",
-    "defaultMessage": "Incoming Call",
-    "description": "Incoming call title (Incoming call view)",
-    "missing": true,
-    "obsolete": true
-  },
   "calls_outgoing": {
-    "translation": "",
+    "translation": "撥出電話",
     "defaultMessage": "Outgoing call",
     "description": "Outgoing call label",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "calls_you_label": {
-    "translation": "",
+    "translation": "你",
     "defaultMessage": "You",
     "description": "Shown over the local video screen",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "menu_item_video_call": {
-    "translation": "",
+    "translation": "視頻電話",
     "defaultMessage": "Video call",
     "description": "Start video call",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "already_in_call": {
-    "translation": "",
+    "translation": "你已經在說話了！",
     "defaultMessage": "You already in an ongoing call!",
     "description": "Error message when the user tried to accept a new call without finishing pervious one",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "call_cancelled": {
-    "translation": "",
+    "translation": "取消",
     "defaultMessage": "cancelled",
-    "missing": true,
+    "description": "Label for cancelled outgoing call",
+    "missing": false,
+    "obsolete": false
+  },
+  "call_missed": {
+    "translation": "未接",
+    "defaultMessage": "missed",
+    "description": "Label for cancelled incoming call",
+    "missing": false,
     "obsolete": false
   }
 }

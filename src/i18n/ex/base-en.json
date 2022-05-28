@@ -124,7 +124,12 @@
     "description": "Button [Update]"
   },
   "call_cancelled": {
-    "defaultMessage": "cancelled"
+    "defaultMessage": "cancelled",
+    "description": "Label for cancelled outgoing call"
+  },
+  "call_missed": {
+    "defaultMessage": "missed",
+    "description": "Label for cancelled incoming call"
   },
   "calls_incoming": {
     "defaultMessage": "Incoming call",

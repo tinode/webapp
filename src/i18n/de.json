@@ -1368,59 +1368,53 @@
     "missing": false,
     "obsolete": false
   },
-  "preview_unavailable": {
-    "translation": "nicht verfügbar",
-    "defaultMessage": "unavailable",
-    "description": "Message shown when media preview is not available",
-    "missing": false,
-    "obsolete": true
-  },
   "calls_incoming": {
-    "translation": "",
+    "translation": "Eingehender Anruf",
     "defaultMessage": "Incoming call",
     "description": "Incoming call label",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
-  "calls_incoming_title": {
-    "translation": "",
-    "defaultMessage": "Incoming Call",
-    "description": "Incoming call title (Incoming call view)",
-    "missing": true,
-    "obsolete": true
-  },
   "calls_outgoing": {
-    "translation": "",
+    "translation": "Ausgehender Anruf",
     "defaultMessage": "Outgoing call",
     "description": "Outgoing call label",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "calls_you_label": {
-    "translation": "",
+    "translation": "Du",
     "defaultMessage": "You",
     "description": "Shown over the local video screen",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "menu_item_video_call": {
-    "translation": "",
+    "translation": "Videoanruf",
     "defaultMessage": "Video call",
     "description": "Start video call",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "already_in_call": {
-    "translation": "",
+    "translation": "Du redest schon!",
     "defaultMessage": "You already in an ongoing call!",
     "description": "Error message when the user tried to accept a new call without finishing pervious one",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "call_cancelled": {
-    "translation": "",
+    "translation": "abgebrochen",
     "defaultMessage": "cancelled",
-    "missing": true,
+    "description": "Label for cancelled outgoing call",
+    "missing": false,
+    "obsolete": false
+  },
+  "call_missed": {
+    "translation": "verpasster",
+    "defaultMessage": "missed",
+    "description": "Label for cancelled incoming call",
+    "missing": false,
     "obsolete": false
   }
 }

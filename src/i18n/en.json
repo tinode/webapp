@@ -1368,26 +1368,12 @@
     "missing": false,
     "obsolete": false
   },
-  "preview_unavailable": {
-    "translation": "unavailable",
-    "defaultMessage": "unavailable",
-    "description": "Message shown when media preview is not available",
-    "missing": false,
-    "obsolete": true
-  },
   "calls_incoming": {
-    "translation": "Incoming Call",
+    "translation": "Incoming call",
     "defaultMessage": "Incoming call",
     "description": "Incoming call label",
     "missing": false,
     "obsolete": false
-  },
-  "calls_incoming_title": {
-    "translation": "Incoming call",
-    "defaultMessage": "Incoming call",
-    "description": "Incoming call title (Incoming call view)",
-    "missing": false,
-    "obsolete": true
   },
   "calls_outgoing": {
     "translation": "Outgoing call",
@@ -1420,6 +1406,14 @@
   "call_cancelled": {
     "translation": "cancelled",
     "defaultMessage": "cancelled",
+    "description": "Label for cancelled outgoing call",
+    "missing": false,
+    "obsolete": false
+  },
+  "call_missed": {
+    "translation": "missed",
+    "defaultMessage": "missed",
+    "description": "Label for cancelled incoming call",
     "missing": false,
     "obsolete": false
   }

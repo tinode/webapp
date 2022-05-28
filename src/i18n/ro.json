@@ -1368,59 +1368,53 @@
     "missing": false,
     "obsolete": false
   },
-  "preview_unavailable": {
-    "translation": "indisponibil",
-    "defaultMessage": "unavailable",
-    "description": "Message shown when media preview is not available",
-    "missing": false,
-    "obsolete": true
-  },
   "calls_incoming": {
-    "translation": "",
+    "translation": "Apel primit",
     "defaultMessage": "Incoming call",
     "description": "Incoming call label",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
-  "calls_incoming_title": {
-    "translation": "",
-    "defaultMessage": "Incoming Call",
-    "description": "Incoming call title (Incoming call view)",
-    "missing": true,
-    "obsolete": true
-  },
   "calls_outgoing": {
-    "translation": "",
+    "translation": "Apel efectuat",
     "defaultMessage": "Outgoing call",
     "description": "Outgoing call label",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "calls_you_label": {
-    "translation": "",
+    "translation": "Tu",
     "defaultMessage": "You",
     "description": "Shown over the local video screen",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "menu_item_video_call": {
-    "translation": "",
+    "translation": "Apel video",
     "defaultMessage": "Video call",
     "description": "Start video call",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "already_in_call": {
-    "translation": "",
+    "translation": "Deja vorbesti!",
     "defaultMessage": "You already in an ongoing call!",
     "description": "Error message when the user tried to accept a new call without finishing pervious one",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "call_cancelled": {
-    "translation": "",
+    "translation": "anulat",
     "defaultMessage": "cancelled",
-    "missing": true,
+    "description": "Label for cancelled outgoing call",
+    "missing": false,
+    "obsolete": false
+  },
+  "call_missed": {
+    "translation": "pierdut",
+    "defaultMessage": "missed",
+    "description": "Label for cancelled incoming call",
+    "missing": false,
     "obsolete": false
   }
 }
