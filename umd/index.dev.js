@@ -7542,8 +7542,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _widgets_alert_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/alert.jsx */ "./src/widgets/alert.jsx");
 /* harmony import */ var _widgets_context_menu_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/context-menu.jsx */ "./src/widgets/context-menu.jsx");
 /* harmony import */ var _widgets_forward_dialog_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../widgets/forward-dialog.jsx */ "./src/widgets/forward-dialog.jsx");
-/* harmony import */ var _info_view_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./info-view.jsx */ "./src/views/info-view.jsx");
-/* harmony import */ var _widgets_call_incoming_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../widgets/call-incoming.jsx */ "./src/widgets/call-incoming.jsx");
+/* harmony import */ var _widgets_call_incoming_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../widgets/call-incoming.jsx */ "./src/widgets/call-incoming.jsx");
+/* harmony import */ var _info_view_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./info-view.jsx */ "./src/views/info-view.jsx");
 /* harmony import */ var _messages_view_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./messages-view.jsx */ "./src/views/messages-view.jsx");
 /* harmony import */ var _sidepanel_view_jsx__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./sidepanel-view.jsx */ "./src/views/sidepanel-view.jsx");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
@@ -9473,7 +9473,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       searchResults: this.state.searchResults,
       onSearchContacts: this.handleSearchContacts,
       onTopicSelected: this.handleStartTopicRequest
-    }) : null, this.state.callTopic && this.state.callState == _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_INCOMING_RECEIVED ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_call_incoming_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
+    }) : null, this.state.callTopic && this.state.callState == _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_INCOMING_RECEIVED ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_call_incoming_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
       tinode: this.tinode,
       onClose: this.handleCallClose,
       topic: this.state.callTopic,
@@ -9600,7 +9600,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       onNewChat: this.handleNewChatInvitation,
       sendMessage: this.handleSendMessage,
       onVideoCallClosed: this.handleCallClose
-    }), this.state.infoPanel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_info_view_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
+    }), this.state.infoPanel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_info_view_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
       tinode: this.tinode,
       connected: this.state.connected,
       displayMobile: this.state.displayMobile,
@@ -10911,19 +10911,16 @@ class ButtonBack extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ IncomingCallView)
+/* harmony export */   "default": () => (/* binding */ IncomingCall)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _badge_list_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./badge-list.jsx */ "./src/widgets/badge-list.jsx");
-/* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../constants.js */ "./src/constants.js");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-
+/* harmony import */ var _badge_list_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./badge-list.jsx */ "./src/widgets/badge-list.jsx");
+/* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../constants.js */ "./src/constants.js");
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 
 
 
@@ -10932,7 +10929,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const RING_SOUND = new Audio('audio/call-in.m4a');
-class IncomingCallView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
+class IncomingCall extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
     this.state = {
@@ -10958,7 +10955,7 @@ class IncomingCallView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Com
 
     this.resetDesc(topic, this.props);
 
-    if (this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_5__.CALL_STATE_INCOMING_RECEIVED) {
+    if (this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_INCOMING_RECEIVED) {
       RING_SOUND.play();
       this.ringTimer = setInterval(() => RING_SOUND.play(), 2000);
       this.props.onRinging(this.props.topic, this.props.seq);
@@ -11017,8 +11014,8 @@ class IncomingCallView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Com
     }
 
     this.setState({
-      fullName: (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_7__.clipStr)(topic.public ? topic.public.fn : undefined, _config_js__WEBPACK_IMPORTED_MODULE_4__.MAX_TITLE_LENGTH),
-      avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_6__.makeImageUrl)(topic.public ? topic.public.photo : null),
+      fullName: (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__.clipStr)(topic.public ? topic.public.fn : undefined, _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_TITLE_LENGTH),
+      avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__.makeImageUrl)(topic.public ? topic.public.photo : null),
       trustedBadges: badges
     });
   }
@@ -11052,23 +11049,23 @@ class IncomingCallView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Com
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "incoming-call"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "caller-card incoming"
+      className: "caller-card incoming pulse"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       tinode: this.props.tinode,
       avatar: this.state.avatar || true,
       topic: this.props.topic,
       title: this.state.fullName
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "caller-name"
-    }, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_7__.clipStr)(this.state.fullName, _config_js__WEBPACK_IMPORTED_MODULE_4__.MAX_PEER_TITLE_LENGTH))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__.clipStr)(this.state.fullName, _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_PEER_TITLE_LENGTH))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "group incoming-call-badges"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_badge_list_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_badge_list_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
       trustedBadges: this.state.trustedBadges
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "controls"
-    }, this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_5__.CALL_STATE_INCOMING_RECEIVED ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+    }, this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_INCOMING_RECEIVED ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       className: "danger",
       onClick: this.handleRejectCall
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
@@ -11482,6 +11479,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
 
   render() {
     const remoteActive = this.remoteRef.current && this.remoteRef.current.srcObject;
+    const disabled = !(this.state.localStream && this.state.localStream.getTracks());
     const audioIcon = this.state.localStream && this.state.localStream.getAudioTracks()[0].enabled ? 'mic' : 'mic_off';
     const videoIcon = this.state.localStream && this.state.localStream.getVideoTracks()[0].enabled ? 'videocam' : 'videocam_off';
     const peerTitle = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_5__.clipStr)(this.props.title, _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_PEER_TITLE_LENGTH);
@@ -11513,7 +11511,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     }), remoteActive ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "caller-name inactive"
     }, peerTitle) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "caller-card"
+      className: "caller-card pulse"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
@@ -11532,12 +11530,14 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       className: "material-icons"
     }, "call_end")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       className: "secondary",
-      onClick: this.handleToggleCameraClick
+      onClick: this.handleToggleCameraClick,
+      disabled: disabled
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, videoIcon)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       className: "secondary",
-      onClick: this.handleToggleMicClick
+      onClick: this.handleToggleMicClick,
+      disabled: disabled
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, audioIcon)))));

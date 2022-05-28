@@ -1665,6 +1665,11 @@ video {
   font-size: 6rem;
 }
 
+.caller-card.pulse img.avatar,
+.caller-card.pulse .lettertile {
+  animation: active-call 1.5s linear infinite;;
+}
+
 .caller-card .avatar-box .material-icons {
   font-size: 6rem;
   line-height: 1.6;
@@ -1734,6 +1739,24 @@ video {
 
 .call-message .duration {
   font-weight: lighter;
+}
+
+
+@keyframes active-call {
+  0% {
+    box-shadow:
+      0 0 0 0 rgba(33, 150, 243, 0.3),
+      0 0 0 0.1rem rgba(33, 150, 243, 0.3),
+      0 0 0 0.3rem rgba(33, 150, 243, 0.3),
+      0 0 0 0.5rem rgba(33, 150, 243, 0.3);
+  }
+  100% {
+    box-shadow:
+      0 0 0 0 rgba(33, 150, 243, 0.3),
+      0 0 0 0.4rem rgba(33, 150, 243, 0.3),
+      0 0 0 2rem rgba(33, 150, 243, 0),
+      0 0 0 3rem rgba(33, 150, 243, 0);
+  }
 }
 
 /* Talk bubbles */

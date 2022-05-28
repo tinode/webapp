@@ -1,6 +1,5 @@
-// IncomingCallView: displays Accept & Reject buttons for incoming calls.
+// IncomingCall: displays Accept & Reject buttons for incoming calls.
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
 
 import BadgeList from './badge-list.jsx';
 import LetterTile from './letter-tile.jsx';
@@ -13,7 +12,7 @@ import { clipStr } from '../lib/utils.js'
 
 const RING_SOUND = new Audio('audio/call-in.m4a');
 
-export default class IncomingCallView extends React.Component {
+export default class IncomingCall extends React.Component {
   constructor(props) {
     super(props);
 
@@ -121,7 +120,7 @@ export default class IncomingCallView extends React.Component {
     return (
       <div className="alert-container">
         <div className="incoming-call">
-          <div className="caller-card incoming">
+          <div className="caller-card incoming pulse">
             <div className="avatar-box">
               <LetterTile
                 tinode={this.props.tinode}

@@ -343,6 +343,7 @@ class CallPanel extends React.PureComponent {
 
   render() {
     const remoteActive = this.remoteRef.current && this.remoteRef.current.srcObject;
+    const disabled = !(this.state.localStream && this.state.localStream.getTracks());
     const audioIcon = this.state.localStream && this.state.localStream.getAudioTracks()[0].enabled ? 'mic' : 'mic_off';
     const videoIcon = this.state.localStream && this.state.localStream.getVideoTracks()[0].enabled ? 'videocam' : 'videocam_off';
     const peerTitle = clipStr(this.props.title, MAX_PEER_TITLE_LENGTH);
@@ -362,7 +363,7 @@ class CallPanel extends React.PureComponent {
               <video ref={this.remoteRef} autoPlay playsInline></video>
               {remoteActive ?
                 <div className="caller-name inactive">{peerTitle}</div> :
-                <div className="caller-card">
+                <div className="caller-card pulse">
                   <div className="avatar-box">
                     <LetterTile
                       tinode={this.props.tinode}
@@ -376,9 +377,15 @@ class CallPanel extends React.PureComponent {
             </div>
           </div>
           <div className="controls">
-            <button className="danger" onClick={this.handleCloseClick}><i className="material-icons">call_end</i></button>
-            <button className="secondary" onClick={this.handleToggleCameraClick}><i className="material-icons">{videoIcon}</i></button>
-            <button className="secondary" onClick={this.handleToggleMicClick}><i className="material-icons">{audioIcon}</i></button>
+            <button className="danger" onClick={this.handleCloseClick}>
+              <i className="material-icons">call_end</i>
+            </button>
+            <button className="secondary" onClick={this.handleToggleCameraClick} disabled={disabled}>
+              <i className="material-icons">{videoIcon}</i>
+            </button>
+            <button className="secondary" onClick={this.handleToggleMicClick} disabled={disabled}>
+              <i className="material-icons">{audioIcon}</i>
+            </button>
           </div>
         </div>
       </>
