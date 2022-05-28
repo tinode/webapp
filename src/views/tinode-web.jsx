@@ -71,7 +71,7 @@ const messages = defineMessages({
   },
   menu_item_video_call: {
     id: 'menu_item_video_call',
-    defaultMessage: 'Video Call',
+    defaultMessage: 'Video call',
     description: 'Start video call'
   }
 });

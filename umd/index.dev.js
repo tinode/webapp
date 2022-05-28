@@ -7637,7 +7637,7 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     id: "menu_item_video_call",
     defaultMessage: [{
       "type": 0,
-      "value": "Video Call"
+      "value": "Video call"
     }]
   }
 });

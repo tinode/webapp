@@ -500,7 +500,7 @@
     "description": "Turn notifications on"
   },
   "menu_item_video_call": {
-    "defaultMessage": "Video Call",
+    "defaultMessage": "Video call",
     "description": "Start video call"
   },
   "message_sending": {
