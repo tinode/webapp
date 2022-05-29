@@ -8,7 +8,6 @@ import Attachment from './attachment.jsx';
 import LetterTile from './letter-tile.jsx';
 import ReceivedMarker from './received-marker.jsx'
 
-import { CALL_MESSAGE_MIME_TYPE } from '../constants.js'
 import { fullFormatter } from '../lib/formatters.js';
 import { isVideoCall, sanitizeUrl } from '../lib/utils.js';
 
@@ -126,7 +125,7 @@ class BaseChatMessage extends React.PureComponent {
 
     let content = this.props.content;
     const attachments = [];
-    if ([Drafty.getContentType(), CALL_MESSAGE_MIME_TYPE].includes(this.props.mimeType) && Drafty.isValid(content)) {
+    if (this.props.mimeType == Drafty.getContentType() && Drafty.isValid(content)) {
       Drafty.attachments(content, (att, i) => {
         if (att.mime == 'application/json') {
           // Don't show json objects as attachments.

@@ -2245,7 +2245,6 @@ const CALL_WEBRTC_CONFIG = {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "CALL_HEAD_STARTED": () => (/* binding */ CALL_HEAD_STARTED),
-/* harmony export */   "CALL_MESSAGE_MIME_TYPE": () => (/* binding */ CALL_MESSAGE_MIME_TYPE),
 /* harmony export */   "CALL_STATE_INCOMING_RECEIVED": () => (/* binding */ CALL_STATE_INCOMING_RECEIVED),
 /* harmony export */   "CALL_STATE_IN_PROGRESS": () => (/* binding */ CALL_STATE_IN_PROGRESS),
 /* harmony export */   "CALL_STATE_NONE": () => (/* binding */ CALL_STATE_NONE),
@@ -2255,7 +2254,6 @@ const CALL_STATE_NONE = 0;
 const CALL_STATE_OUTGOING_INITATED = 1;
 const CALL_STATE_INCOMING_RECEIVED = 2;
 const CALL_STATE_IN_PROGRESS = 3;
-const CALL_MESSAGE_MIME_TYPE = 'application/x-tinode-webrtc';
 const CALL_HEAD_STARTED = 'started';
 
 /***/ }),
@@ -3385,7 +3383,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "clipStr": () => (/* binding */ clipStr),
 /* harmony export */   "deliveryMarker": () => (/* binding */ deliveryMarker),
 /* harmony export */   "isUrlRelative": () => (/* binding */ isUrlRelative),
-/* harmony export */   "isVideoCall": () => (/* binding */ isVideoCall),
 /* harmony export */   "sanitizeUrl": () => (/* binding */ sanitizeUrl),
 /* harmony export */   "sanitizeUrlForMime": () => (/* binding */ sanitizeUrlForMime),
 /* harmony export */   "theCard": () => (/* binding */ theCard),
@@ -3393,8 +3390,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../constants.js */ "./src/constants.js");
-
 
 function updateFavicon(count) {
   const oldIcon = document.getElementById('shortcut-icon');
@@ -3590,9 +3585,6 @@ function cancelablePromise(promise) {
   };
 }
 ;
-function isVideoCall(mime) {
-  return mime == _constants_js__WEBPACK_IMPORTED_MODULE_1__.CALL_MESSAGE_MIME_TYPE;
-}
 function clipStr(str, length) {
   return str && str.substring(0, length);
 }
@@ -9466,7 +9458,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     switch (callState) {
       case _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_OUTGOING_INITATED:
         let head = {
-          mime: _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_MESSAGE_MIME_TYPE,
           webrtc: _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_HEAD_STARTED
         };
         this.handleSendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.videoCall(), undefined, undefined, head).then(ctrl => {
@@ -11779,11 +11770,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _attachment_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./attachment.jsx */ "./src/widgets/attachment.jsx");
 /* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
 /* harmony import */ var _received_marker_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./received-marker.jsx */ "./src/widgets/received-marker.jsx");
-/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../constants.js */ "./src/constants.js");
-/* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
 
 
 
@@ -11847,7 +11836,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     }
 
     if (e.target.dataset.act == 'url') {
-      data.ref = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.sanitizeUrl)(e.target.dataset.ref) || 'about:blank';
+      data.ref = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_7__.sanitizeUrl)(e.target.dataset.ref) || 'about:blank';
     }
 
     const text = e.target.dataset.title || 'unknown';
@@ -11907,7 +11896,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     let content = this.props.content;
     const attachments = [];
 
-    if ([tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.getContentType(), _constants_js__WEBPACK_IMPORTED_MODULE_6__.CALL_MESSAGE_MIME_TYPE].includes(this.props.mimeType) && tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isValid(content)) {
+    if (this.props.mimeType == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.getContentType() && tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isValid(content)) {
       tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachments(content, (att, i) => {
         if (att.mime == 'application/json') {
           return;
@@ -11926,7 +11915,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
           key: i
         }));
       }, this);
-      const tree = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_7__.fullFormatter, this.formatterContext);
+      const tree = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__.fullFormatter, this.formatterContext);
       content = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, tree);
     } else if (this.props.deleted) {
       content = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
@@ -12391,9 +12380,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _contact_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./contact.jsx */ "./src/widgets/contact.jsx");
 /* harmony import */ var _contact_action_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./contact-action.jsx */ "./src/widgets/contact-action.jsx");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 
 
 
@@ -12489,11 +12476,11 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
             if (msg) {
               forwarded = msg.head ? msg.head.forwarded : null;
               deliveryStatus = msg._status || c.msgStatus(msg, true);
-              previewIsVideoCall = msg.head ? (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__.isVideoCall)(msg.head.mime) : null;
+              previewIsVideoCall = msg.head ? msg.head.webrtc !== undefined : null;
               previewIsResponse = msg.from != this.props.myUserId;
 
               if (msg.content) {
-                preview = typeof msg.content == 'string' ? msg.content.substr(0, _config_js__WEBPACK_IMPORTED_MODULE_7__.MESSAGE_PREVIEW_LENGTH) : tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.preview(msg.content, _config_js__WEBPACK_IMPORTED_MODULE_7__.MESSAGE_PREVIEW_LENGTH);
+                preview = typeof msg.content == 'string' ? msg.content.substr(0, _config_js__WEBPACK_IMPORTED_MODULE_6__.MESSAGE_PREVIEW_LENGTH) : tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.preview(msg.content, _config_js__WEBPACK_IMPORTED_MODULE_6__.MESSAGE_PREVIEW_LENGTH);
               }
             }
           }
