@@ -2,8 +2,6 @@
 
 import { Tinode } from 'tinode-sdk';
 
-import { CALL_MESSAGE_MIME_TYPE } from '../constants.js'
-
 // Make shortcut icon appear with a green dot + show unread count in title.
 export function updateFavicon(count) {
   const oldIcon = document.getElementById('shortcut-icon');
@@ -207,11 +205,6 @@ export function cancelablePromise(promise) {
     },
   };
 };
-
-// Returns true if specified mime type represents a Tinode video call.
-export function isVideoCall(mime) {
-  return mime == CALL_MESSAGE_MIME_TYPE;
-}
 
 // Clips string to the specified length.
 export function clipStr(str, length) {

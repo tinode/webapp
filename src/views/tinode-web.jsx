@@ -21,7 +21,7 @@ import { API_KEY, APP_NAME, DEFAULT_P2P_ACCESS_MODE, FORWARDED_PREVIEW_LENGTH, L
   MEDIA_BREAKPOINT, RECEIVED_DELAY } from '../config.js';
 import { CALL_STATE_NONE, CALL_STATE_OUTGOING_INITATED,
          CALL_STATE_INCOMING_RECEIVED, CALL_STATE_IN_PROGRESS,
-         CALL_MESSAGE_MIME_TYPE }  from '../constants.js';
+         CALL_HEAD_STARTED }  from '../constants.js';
 import { PACKAGE_VERSION } from '../version.js';
 import { base64ReEncode, makeImageUrl } from '../lib/blob-helpers.js';
 import { detectServerAddress, isLocalHost, isSecureConnection } from '../lib/host-name.js';
@@ -1687,8 +1687,8 @@ class TinodeWeb extends React.Component {
   handleCallInvite(callTopic, callSeq, callState) {
     switch (callState) {
       case CALL_STATE_OUTGOING_INITATED:
-        let head = {mime: CALL_MESSAGE_MIME_TYPE };
-        this.handleSendMessage('started', undefined, undefined, head)
+        let head = { webrtc: CALL_HEAD_STARTED };
+        this.handleSendMessage(Drafty.videoCall(), undefined, undefined, head)
           .then((ctrl) => {
             if (ctrl.code < 200 || ctrl.code >= 300 || !ctrl.params || !ctrl.params.seq) {
               this.handleCallClose();

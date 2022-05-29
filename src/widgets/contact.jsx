@@ -2,7 +2,6 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
-import CallStatus from './call-status.jsx';
 import ContactBadges from './contact-badges.jsx';
 import LetterTile from './letter-tile.jsx';
 import UnreadBadge from './unread-badge.jsx';
@@ -71,16 +70,11 @@ class Contact extends React.Component {
 
     // The this.props.preview contains alreay shortened Drafty or string.
     let preview;
-    if (this.props.previewIsVideoCall) {
-      // TODO: use words to describe call status and duration.
-      preview = <CallStatus
-        incoming={this.props.previewIsResponse}
-        success={true} />; // FIXME: use actuall call completion status instead of TRUE.
-    } else if (typeof this.props.preview == 'string') {
+    if (typeof this.props.preview == 'string') {
       preview = this.props.preview;
     } else if (Drafty.isValid(this.props.preview)) {
       preview = React.createElement(React.Fragment, null, Drafty.format(this.props.preview, previewFormatter,
-        {formatMessage: this.props.intl.formatMessage}));
+        {formatMessage: this.props.intl.formatMessage, previewIsResponse: this.props.previewIsResponse}));
     } else if (this.props.preview) {
       preview =
         <><i className="material-icons gray">warning_amber</i> <i className="gray">

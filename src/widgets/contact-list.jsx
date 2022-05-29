@@ -9,7 +9,6 @@ import Contact from './contact.jsx';
 import ContactAction from './contact-action.jsx';
 
 import { makeImageUrl } from '../lib/blob-helpers.js';
-import { isVideoCall } from '../lib/utils.js'
 
 import { MESSAGE_PREVIEW_LENGTH } from '../config.js';
 
@@ -86,7 +85,7 @@ class ContactList extends React.Component {
             if (msg) {
               forwarded = msg.head ? msg.head.forwarded : null;
               deliveryStatus = msg._status || c.msgStatus(msg, true);
-              previewIsVideoCall = msg.head ? isVideoCall(msg.head.mime) : null;
+              previewIsVideoCall = msg.head ? (msg.head.webrtc !== undefined) : null;
               previewIsResponse = msg.from != this.props.myUserId;
               if (msg.content) {
                 preview = typeof msg.content == 'string' ?

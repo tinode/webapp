@@ -4,6 +4,8 @@ import { defineMessages } from 'react-intl';
 import { Drafty } from 'tinode-sdk';
 
 import AudioPlayer from '../widgets/audio-player.jsx'
+import CallMessage from '../widgets/call-message.jsx'
+import CallStatus from '../widgets/call-status.jsx';
 import LazyImage from '../widgets/lazy-image.jsx'
 import UploadingImage from '../widgets/uploading-image.jsx'
 
@@ -163,6 +165,14 @@ export function fullFormatter(style, data, values, key, stack) {
       attr.className = 'reply-quote'
       attr.onClick = this.onQuoteClick;
       break;
+    case 'VC':
+      el = CallMessage;
+      // Video call messages do not have content.
+      values = null;
+      attr.content = this.callState;
+      attr.response = this.isResponse;
+      attr.duration = this.callDuration;
+      break;
     default:
       if (!el) {
         // Unknown element.
@@ -244,6 +254,12 @@ export function previewFormatter(style, data, values, key) {
       }
       el = React.Fragment;
       values = [<i key="ex" className="material-icons">attachment</i>, ' ', this.formatMessage(messages.drafty_attachment)];
+      break;
+    case 'VC':
+      el = CallStatus;
+      attr.incoming = this.previewIsResponse;
+      attr.success = true; // FIXME: use actuall call completion status instead of TRUE.
+      values = null;
       break;
     case 'QQ':
     case 'HD':
