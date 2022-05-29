@@ -2,6 +2,7 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
+import CallStatus from './call-status.jsx';
 import ContactBadges from './contact-badges.jsx';
 import LetterTile from './letter-tile.jsx';
 import UnreadBadge from './unread-badge.jsx';
@@ -71,10 +72,10 @@ class Contact extends React.Component {
     // The this.props.preview contains alreay shortened Drafty or string.
     let preview;
     if (this.props.previewIsVideoCall) {
-      preview = <>
-        <i className="material-icons">call</i>
-        <i className="material-icons medium">{this.props.previewIsResponse ? 'call_received' : 'call_made'}</i>
-      </>;
+      // TODO: use words to describe call status and duration.
+      preview = <CallStatus
+        direction={this.props.previewIsResponse}
+        success={true} />; // FIXME: use actuall call completion status instead of TRUE.
     } else if (typeof this.props.preview == 'string') {
       preview = this.props.preview;
     } else if (Drafty.isValid(this.props.preview)) {

@@ -2460,6 +2460,17 @@ ul.tabbar li.active > a {
 .material-icons.huge {
   font-size: 4rem;
 }
+.composed-material {
+  display: inline-block;
+  position: relative;
+}
+.composed-material i:nth-child(2) {
+  position: absolute;
+  font-size: 85%;
+  top: 0;
+  left: 39%;
+  font-weight: bold;
+}
 
 #self-avatar .material-icons {
   font-size: 2.4rem;
