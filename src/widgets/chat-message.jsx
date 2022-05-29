@@ -5,10 +5,10 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { Drafty, Tinode } from 'tinode-sdk';
 
 import Attachment from './attachment.jsx';
-import CallMessage from './call-message.jsx';
 import LetterTile from './letter-tile.jsx';
 import ReceivedMarker from './received-marker.jsx'
 
+import { CALL_MESSAGE_MIME_TYPE } from '../constants.js'
 import { fullFormatter } from '../lib/formatters.js';
 import { isVideoCall, sanitizeUrl } from '../lib/utils.js';
 
@@ -34,6 +34,12 @@ class BaseChatMessage extends React.PureComponent {
       formatMessage: props.intl.formatMessage.bind(props.intl),
       viewportWidth: props.viewportWidth,
       authorizeURL: props.tinode.authorizeURL.bind(props.tinode),
+
+      // Video call related bits.
+      callState: props.callState,
+      isResponse: props.response,
+      callDuration: props.duration,
+
       onImagePreview: this.handleImagePreview,
       onFormButtonClick: this.handleFormButtonClick,
       onQuoteClick: this.handleQuoteClick
@@ -120,7 +126,7 @@ class BaseChatMessage extends React.PureComponent {
 
     let content = this.props.content;
     const attachments = [];
-    if (this.props.mimeType == Drafty.getContentType() && Drafty.isValid(content)) {
+    if ([Drafty.getContentType(), CALL_MESSAGE_MIME_TYPE].includes(this.props.mimeType) && Drafty.isValid(content)) {
       Drafty.attachments(content, (att, i) => {
         if (att.mime == 'application/json') {
           // Don't show json objects as attachments.
@@ -147,12 +153,6 @@ class BaseChatMessage extends React.PureComponent {
         <FormattedMessage id="deleted_content"
           defaultMessage="content deleted" description="Shown when messages are deleted" />
       </i></>
-    } else if (isVideoCall(this.props.mimeType)) {
-      // Video call message.
-      content = <CallMessage
-        content={this.props.content}
-        response={this.props.response}
-        duration={this.props.duration} />
     } else if (typeof content != 'string') {
       content = <><i className="material-icons gray">warning_amber</i> <i className="gray">
         <FormattedMessage id="invalid_content"

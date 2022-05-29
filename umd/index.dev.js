@@ -11,6 +11,7 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "CONSTANTS": () => (/* binding */ CONSTANTS),
+/* harmony export */   "DBWrapper": () => (/* binding */ DBWrapper),
 /* harmony export */   "Deferred": () => (/* binding */ Deferred),
 /* harmony export */   "ErrorFactory": () => (/* binding */ ErrorFactory),
 /* harmony export */   "FirebaseError": () => (/* binding */ FirebaseError),
@@ -33,6 +34,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "deepCopy": () => (/* binding */ deepCopy),
 /* harmony export */   "deepEqual": () => (/* binding */ deepEqual),
 /* harmony export */   "deepExtend": () => (/* binding */ deepExtend),
+/* harmony export */   "deleteDB": () => (/* binding */ deleteDB),
 /* harmony export */   "errorPrefix": () => (/* binding */ errorPrefix),
 /* harmony export */   "extractQuerystring": () => (/* binding */ extractQuerystring),
 /* harmony export */   "getGlobal": () => (/* binding */ getGlobal),
@@ -56,6 +58,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "issuedAtTime": () => (/* binding */ issuedAtTime),
 /* harmony export */   "jsonEval": () => (/* binding */ jsonEval),
 /* harmony export */   "map": () => (/* binding */ map),
+/* harmony export */   "openDB": () => (/* binding */ openDB),
 /* harmony export */   "ordinal": () => (/* binding */ ordinal),
 /* harmony export */   "querystring": () => (/* binding */ querystring),
 /* harmony export */   "querystringDecode": () => (/* binding */ querystringDecode),
@@ -1966,6 +1969,162 @@ function getModularInstance(service) {
     }
 }
 
+/**
+ * @license
+ * Copyright 2022 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * @internal
+ */
+function promisifyRequest(request, errorMessage) {
+    return new Promise((resolve, reject) => {
+        request.onsuccess = event => {
+            resolve(event.target.result);
+        };
+        request.onerror = event => {
+            var _a;
+            reject(`${errorMessage}: ${(_a = event.target.error) === null || _a === void 0 ? void 0 : _a.message}`);
+        };
+    });
+}
+/**
+ * @internal
+ */
+class DBWrapper {
+    constructor(_db) {
+        this._db = _db;
+        this.objectStoreNames = this._db.objectStoreNames;
+    }
+    transaction(storeNames, mode = 'readonly') {
+        return new TransactionWrapper(this._db.transaction.call(this._db, storeNames, mode));
+    }
+    createObjectStore(storeName, options) {
+        return new ObjectStoreWrapper(this._db.createObjectStore(storeName, options));
+    }
+    close() {
+        this._db.close();
+    }
+}
+/**
+ * @internal
+ */
+class TransactionWrapper {
+    constructor(_transaction) {
+        this._transaction = _transaction;
+        this.complete = new Promise((resolve, reject) => {
+            this._transaction.oncomplete = function () {
+                resolve();
+            };
+            this._transaction.onerror = () => {
+                reject(this._transaction.error);
+            };
+            this._transaction.onabort = () => {
+                reject(this._transaction.error);
+            };
+        });
+    }
+    objectStore(storeName) {
+        return new ObjectStoreWrapper(this._transaction.objectStore(storeName));
+    }
+}
+/**
+ * @internal
+ */
+class ObjectStoreWrapper {
+    constructor(_store) {
+        this._store = _store;
+    }
+    index(name) {
+        return new IndexWrapper(this._store.index(name));
+    }
+    createIndex(name, keypath, options) {
+        return new IndexWrapper(this._store.createIndex(name, keypath, options));
+    }
+    get(key) {
+        const request = this._store.get(key);
+        return promisifyRequest(request, 'Error reading from IndexedDB');
+    }
+    put(value, key) {
+        const request = this._store.put(value, key);
+        return promisifyRequest(request, 'Error writing to IndexedDB');
+    }
+    delete(key) {
+        const request = this._store.delete(key);
+        return promisifyRequest(request, 'Error deleting from IndexedDB');
+    }
+    clear() {
+        const request = this._store.clear();
+        return promisifyRequest(request, 'Error clearing IndexedDB object store');
+    }
+}
+/**
+ * @internal
+ */
+class IndexWrapper {
+    constructor(_index) {
+        this._index = _index;
+    }
+    get(key) {
+        const request = this._index.get(key);
+        return promisifyRequest(request, 'Error reading from IndexedDB');
+    }
+}
+/**
+ * @internal
+ */
+function openDB(dbName, dbVersion, upgradeCallback) {
+    return new Promise((resolve, reject) => {
+        try {
+            const request = indexedDB.open(dbName, dbVersion);
+            request.onsuccess = event => {
+                resolve(new DBWrapper(event.target.result));
+            };
+            request.onerror = event => {
+                var _a;
+                reject(`Error opening indexedDB: ${(_a = event.target.error) === null || _a === void 0 ? void 0 : _a.message}`);
+            };
+            request.onupgradeneeded = event => {
+                upgradeCallback(new DBWrapper(request.result), event.oldVersion, event.newVersion, new TransactionWrapper(request.transaction));
+            };
+        }
+        catch (e) {
+            reject(`Error opening indexedDB: ${e.message}`);
+        }
+    });
+}
+/**
+ * @internal
+ */
+async function deleteDB(dbName) {
+    return new Promise((resolve, reject) => {
+        try {
+            const request = indexedDB.deleteDatabase(dbName);
+            request.onsuccess = () => {
+                resolve();
+            };
+            request.onerror = event => {
+                var _a;
+                reject(`Error deleting indexedDB database "${dbName}": ${(_a = event.target.error) === null || _a === void 0 ? void 0 : _a.message}`);
+            };
+        }
+        catch (e) {
+            reject(`Error deleting indexedDB database "${dbName}": ${e.message}`);
+        }
+    });
+}
+
 
 //# sourceMappingURL=index.esm2017.js.map
 
@@ -2085,6 +2244,7 @@ const CALL_WEBRTC_CONFIG = {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "CALL_HEAD_STARTED": () => (/* binding */ CALL_HEAD_STARTED),
 /* harmony export */   "CALL_MESSAGE_MIME_TYPE": () => (/* binding */ CALL_MESSAGE_MIME_TYPE),
 /* harmony export */   "CALL_STATE_INCOMING_RECEIVED": () => (/* binding */ CALL_STATE_INCOMING_RECEIVED),
 /* harmony export */   "CALL_STATE_IN_PROGRESS": () => (/* binding */ CALL_STATE_IN_PROGRESS),
@@ -2096,6 +2256,7 @@ const CALL_STATE_OUTGOING_INITATED = 1;
 const CALL_STATE_INCOMING_RECEIVED = 2;
 const CALL_STATE_IN_PROGRESS = 3;
 const CALL_MESSAGE_MIME_TYPE = 'application/x-tinode-webrtc';
+const CALL_HEAD_STARTED = 'started';
 
 /***/ }),
 
@@ -2449,12 +2610,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _widgets_audio_player_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/audio-player.jsx */ "./src/widgets/audio-player.jsx");
-/* harmony import */ var _widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/lazy-image.jsx */ "./src/widgets/lazy-image.jsx");
-/* harmony import */ var _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/uploading-image.jsx */ "./src/widgets/uploading-image.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _strformat_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./strformat.js */ "./src/lib/strformat.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./utils.js */ "./src/lib/utils.js");
+/* harmony import */ var _widgets_call_message_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/call-message.jsx */ "./src/widgets/call-message.jsx");
+/* harmony import */ var _widgets_call_status_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/call-status.jsx */ "./src/widgets/call-status.jsx");
+/* harmony import */ var _widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/lazy-image.jsx */ "./src/widgets/lazy-image.jsx");
+/* harmony import */ var _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../widgets/uploading-image.jsx */ "./src/widgets/uploading-image.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _strformat_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./utils.js */ "./src/lib/utils.js");
+
+
 
 
 
@@ -2500,16 +2665,16 @@ function handleImageData(el, data, attr) {
   if (!data) {
     attr.src = 'img/broken_image.png';
     attr.style = {
-      width: _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM + 'px',
-      height: _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM + 'px'
+      width: _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM + 'px',
+      height: _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM + 'px'
     };
     return el;
   }
 
   attr.className = 'inline-image';
-  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_6__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_6__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_6__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_6__.REM_SIZE * 24, false) || {
-    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_6__.BROKEN_IMAGE_SIZE,
-    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_6__.BROKEN_IMAGE_SIZE
+  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 24, false) || {
+    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_8__.BROKEN_IMAGE_SIZE,
+    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_8__.BROKEN_IMAGE_SIZE
   };
   attr.style = {
     width: dim.dstWidth + 'px',
@@ -2519,11 +2684,11 @@ function handleImageData(el, data, attr) {
   };
 
   if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isProcessing(data)) {
-    attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.sanitizeUrlForMime)(attr.src, 'image'));
+    attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.sanitizeUrlForMime)(attr.src, 'image'));
     attr.alt = data.name;
 
     if (attr.src) {
-      if (Math.max(data.width || 0, data.height || 0) > _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM) {
+      if (Math.max(data.width || 0, data.height || 0) > _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM) {
         attr.onClick = this.onImagePreview;
         attr.className += ' image-clickable';
       }
@@ -2533,7 +2698,7 @@ function handleImageData(el, data, attr) {
       attr.src = 'img/broken_image.png';
     }
   } else {
-    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_5__["default"];
+    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_7__["default"];
   }
 
   return el;
@@ -2555,7 +2720,7 @@ function fullFormatter(style, data, values, key, stack) {
   switch (style) {
     case 'AU':
       if (attr.src) {
-        attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.sanitizeUrlForMime)(attr.src, 'audio'));
+        attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.sanitizeUrlForMime)(attr.src, 'audio'));
         attr.duration = data.duration > 0 ? data.duration | 0 : undefined;
         attr.preview = data.preview;
         attr.loading = 'lazy';
@@ -2603,7 +2768,7 @@ function fullFormatter(style, data, values, key, stack) {
       attr.className = 'mention';
 
       if (data) {
-        attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_8__.idToColorClass)(data.val, false, true);
+        attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_10__.idToColorClass)(data.val, false, true);
       }
 
       break;
@@ -2618,6 +2783,14 @@ function fullFormatter(style, data, values, key, stack) {
     case 'QQ':
       attr.className = 'reply-quote';
       attr.onClick = this.onQuoteClick;
+      break;
+
+    case 'VC':
+      el = _widgets_call_message_jsx__WEBPACK_IMPORTED_MODULE_4__["default"];
+      values = null;
+      attr.content = this.callState;
+      attr.response = this.isResponse;
+      attr.duration = this.callDuration;
       break;
 
     default:
@@ -2666,7 +2839,7 @@ function previewFormatter(style, data, values, key) {
       values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
         key: "au",
         className: "material-icons"
-      }, "mic"), ' ', (0,_strformat_js__WEBPACK_IMPORTED_MODULE_8__.secondsToTime)(data.duration / 1000)];
+      }, "mic"), ' ', (0,_strformat_js__WEBPACK_IMPORTED_MODULE_10__.secondsToTime)(data.duration / 1000)];
       break;
 
     case 'BR':
@@ -2725,6 +2898,13 @@ function previewFormatter(style, data, values, key) {
       }, "attachment"), ' ', this.formatMessage(messages.drafty_attachment)];
       break;
 
+    case 'VC':
+      el = _widgets_call_status_jsx__WEBPACK_IMPORTED_MODULE_5__["default"];
+      attr.incoming = this.previewIsResponse;
+      attr.success = true;
+      values = null;
+      break;
+
     case 'QQ':
     case 'HD':
       el = null;
@@ -2753,10 +2933,10 @@ function previewFormatter(style, data, values, key) {
 
 function inlineImageAttr(attr, data) {
   attr.style = {
-    width: _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM + 'px',
-    height: _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM + 'px',
-    maxWidth: _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM + 'px',
-    maxHeight: _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM + 'px'
+    width: _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM + 'px',
+    height: _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM + 'px',
+    maxWidth: _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM + 'px',
+    maxHeight: _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM + 'px'
   };
   attr.className = 'inline-image';
   attr.alt = this.formatMessage(messages.drafty_image);
@@ -2794,7 +2974,7 @@ function quoteFormatter(style, data, values, key) {
         attr.className = 'mention';
 
         if (data) {
-          attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_8__.idToColorClass)(data.val, false, true);
+          attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_10__.idToColorClass)(data.val, false, true);
         }
 
         break;
@@ -2816,7 +2996,7 @@ function quoteFormatter(style, data, values, key) {
         values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
           key: "ex",
           className: "material-icons"
-        }, "attachment"), (0,_strformat_js__WEBPACK_IMPORTED_MODULE_8__.shortenFileName)(fname, 16) || this.formatMessage(messages.drafty_attachment)];
+        }, "attachment"), (0,_strformat_js__WEBPACK_IMPORTED_MODULE_10__.shortenFileName)(fname, 16) || this.formatMessage(messages.drafty_attachment)];
         break;
     }
 
@@ -2830,7 +3010,7 @@ function quoteImage(data) {
   let promise;
 
   if (data.val) {
-    const blob = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__.base64ToBlob)(data.val, data.mime);
+    const blob = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__.base64ToBlob)(data.val, data.mime);
 
     if (!blob) {
       throw new Error("Invalid image");
@@ -2838,7 +3018,7 @@ function quoteImage(data) {
 
     promise = Promise.resolve(blob);
   } else if (data.ref) {
-    promise = fetch(this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.sanitizeUrlForMime)(data.ref, 'image'))).then(evt => {
+    promise = fetch(this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.sanitizeUrlForMime)(data.ref, 'image'))).then(evt => {
       if (evt.ok) {
         return evt.blob();
       } else {
@@ -2850,7 +3030,7 @@ function quoteImage(data) {
   }
 
   return promise.then(blob => {
-    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM, _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM, -1, true);
+    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM, _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM, -1, true);
   }).then(scaled => {
     data.mime = scaled.mime;
     data.size = scaled.blob.size;
@@ -2858,15 +3038,15 @@ function quoteImage(data) {
     data.height = scaled.height;
     delete data.ref;
     data.src = URL.createObjectURL(scaled.blob);
-    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__.blobToBase64)(scaled.blob);
+    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__.blobToBase64)(scaled.blob);
   }).then(b64 => {
     data.val = b64.bits;
     return data;
   }).catch(err => {
     delete data.val;
     delete data.src;
-    data.width = _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM;
-    data.height = _config_js__WEBPACK_IMPORTED_MODULE_6__.IMAGE_THUMBNAIL_DIM;
+    data.width = _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM;
+    data.height = _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM;
     throw err;
   });
 }
@@ -2879,13 +3059,13 @@ function replyFormatter(style, data, values, key, stack) {
     let loadedPromise;
 
     try {
-      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.cancelablePromise)(quoteImage.call(this, data));
+      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.cancelablePromise)(quoteImage.call(this, data));
     } catch (error) {
-      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.cancelablePromise)(error);
+      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.cancelablePromise)(error);
     }
 
     attr.whenDone = loadedPromise;
-    values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], attr, null), ' ', attr.alt];
+    values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], attr, null), ' ', attr.alt];
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), {
       key: key
     }, values);
@@ -6560,21 +6740,13 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
               prevDate = thisDate;
             }
 
-            let duration;
-
-            if (msg.head && (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_21__.isVideoCall)(msg.head.mime)) {
-              topic.messageVersions(msg, (cur, before) => {
-                if (cur.content == 'finished' && before.content == 'accepted') {
-                  duration = msg.ts - before.ts;
-                }
-              });
-            }
-
+            const duration = msg.head ? msg.head['webrtc-duration'] : undefined;
             messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_chat_message_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
               tinode: this.props.tinode,
               content: msg.content,
               mimeType: msg.head ? msg.head.mime : null,
               timestamp: msg.ts,
+              callState: msg.head ? msg.head.webrtc : null,
               duration: duration,
               response: isReply,
               seq: msg.seq,
@@ -9294,9 +9466,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     switch (callState) {
       case _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_OUTGOING_INITATED:
         let head = {
-          mime: _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_MESSAGE_MIME_TYPE
+          mime: _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_MESSAGE_MIME_TYPE,
+          webrtc: _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_HEAD_STARTED
         };
-        this.handleSendMessage('started', undefined, undefined, head).then(ctrl => {
+        this.handleSendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.videoCall(), undefined, undefined, head).then(ctrl => {
           if (ctrl.code < 200 || ctrl.code >= 300 || !ctrl.params || !ctrl.params.seq) {
             this.handleCallClose();
             return;
@@ -11575,9 +11748,9 @@ class CallStatus extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "composed-material"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      class: "material-icons"
+      className: "material-icons"
     }, "call"), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      class: "material-icons second"
+      className: "material-icons second"
     }, icon2));
   }
 
@@ -11604,9 +11777,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _attachment_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./attachment.jsx */ "./src/widgets/attachment.jsx");
-/* harmony import */ var _call_message_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./call-message.jsx */ "./src/widgets/call-message.jsx");
-/* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
-/* harmony import */ var _received_marker_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./received-marker.jsx */ "./src/widgets/received-marker.jsx");
+/* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
+/* harmony import */ var _received_marker_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./received-marker.jsx */ "./src/widgets/received-marker.jsx");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../constants.js */ "./src/constants.js");
 /* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
@@ -11641,6 +11814,9 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       formatMessage: props.intl.formatMessage.bind(props.intl),
       viewportWidth: props.viewportWidth,
       authorizeURL: props.tinode.authorizeURL.bind(props.tinode),
+      callState: props.callState,
+      isResponse: props.response,
+      callDuration: props.duration,
       onImagePreview: this.handleImagePreview,
       onFormButtonClick: this.handleFormButtonClick,
       onQuoteClick: this.handleQuoteClick
@@ -11731,7 +11907,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     let content = this.props.content;
     const attachments = [];
 
-    if (this.props.mimeType == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.getContentType() && tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isValid(content)) {
+    if ([tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.getContentType(), _constants_js__WEBPACK_IMPORTED_MODULE_6__.CALL_MESSAGE_MIME_TYPE].includes(this.props.mimeType) && tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isValid(content)) {
       tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachments(content, (att, i) => {
         if (att.mime == 'application/json') {
           return;
@@ -11764,12 +11940,6 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
           "value": "content deleted"
         }]
       })));
-    } else if ((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.isVideoCall)(this.props.mimeType)) {
-      content = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_call_message_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
-        content: this.props.content,
-        response: this.props.response,
-        duration: this.props.duration
-      });
     } else if (typeof content != 'string') {
       content = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
         className: "material-icons gray"
@@ -11789,7 +11959,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       className: sideClass
     }, this.props.isGroup && this.props.response ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
-    }, fullDisplay ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    }, fullDisplay ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
       tinode: this.props.tinode,
       topic: this.props.userFrom,
       title: this.props.userName,
@@ -11800,7 +11970,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       className: "content-meta"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "message-content"
-    }, content, attachments), this.props.timestamp ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_received_marker_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
+    }, content, attachments), this.props.timestamp ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_received_marker_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
       timestamp: this.props.timestamp,
       received: this.props.received
     }) : null), this.props.showContextMenu ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
@@ -12396,15 +12566,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _call_status_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./call-status.jsx */ "./src/widgets/call-status.jsx");
-/* harmony import */ var _contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./contact-badges.jsx */ "./src/widgets/contact-badges.jsx");
-/* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
-/* harmony import */ var _unread_badge_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./unread-badge.jsx */ "./src/widgets/unread-badge.jsx");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
-/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-
+/* harmony import */ var _contact_badges_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./contact-badges.jsx */ "./src/widgets/contact-badges.jsx");
+/* harmony import */ var _letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
+/* harmony import */ var _unread_badge_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./unread-badge.jsx */ "./src/widgets/unread-badge.jsx");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
+/* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
 
 
 
@@ -12504,16 +12672,12 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
 
     let preview;
 
-    if (this.props.previewIsVideoCall) {
-      preview = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_call_status_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-        incoming: this.props.previewIsResponse,
-        success: true
-      });
-    } else if (typeof this.props.preview == 'string') {
+    if (typeof this.props.preview == 'string') {
       preview = this.props.preview;
-    } else if (tinode_sdk__WEBPACK_IMPORTED_MODULE_6__.Drafty.isValid(this.props.preview)) {
-      preview = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, tinode_sdk__WEBPACK_IMPORTED_MODULE_6__.Drafty.format(this.props.preview, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_7__.previewFormatter, {
-        formatMessage: this.props.intl.formatMessage
+    } else if (tinode_sdk__WEBPACK_IMPORTED_MODULE_5__.Drafty.isValid(this.props.preview)) {
+      preview = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, tinode_sdk__WEBPACK_IMPORTED_MODULE_5__.Drafty.format(this.props.preview, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__.previewFormatter, {
+        formatMessage: this.props.intl.formatMessage,
+        previewIsResponse: this.props.previewIsResponse
       }));
     } else if (this.props.preview) {
       preview = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
@@ -12529,7 +12693,7 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       })));
     }
 
-    const icon = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.deliveryMarker)(this.props.received);
+    const icon = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_7__.deliveryMarker)(this.props.received);
     const marker = icon ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: 'material-icons small space-right' + (icon.color ? ' ' + icon.color : '')
     }, icon.name) : null;
@@ -12539,7 +12703,7 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       onClick: this.handleClick
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       tinode: this.props.tinode,
       avatar: avatar,
       title: this.props.title,
@@ -12559,11 +12723,11 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       src: "/img/channel.png",
       className: "channel",
       alt: "channel"
-    }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       badges: icon_badges
-    }), !this.props.deleted ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_unread_badge_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    }), !this.props.deleted ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_unread_badge_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
       count: this.props.unread
-    }) : null), this.props.showMode ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    }) : null), this.props.showMode ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       badges: badges
     })) : this.props.small ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "contact-comment"
@@ -17328,7 +17492,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var name = "firebase";
-var version = "9.8.1";
+var version = "9.6.11";
 
 /**
  * @license
@@ -17972,8 +18136,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _firebase_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/component */ "./node_modules/@firebase/component/dist/esm/index.esm2017.js");
 /* harmony import */ var _firebase_logger__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @firebase/logger */ "./node_modules/@firebase/logger/dist/esm/index.esm2017.js");
 /* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm2017.js");
-/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! idb */ "./node_modules/idb/build/index.js");
-
 
 
 
@@ -18033,7 +18195,7 @@ function isVersionServiceProvider(provider) {
 }
 
 const name$o = "@firebase/app";
-const version$1 = "0.7.24";
+const version$1 = "0.7.21";
 
 /**
  * @license
@@ -18100,7 +18262,7 @@ const name$2 = "@firebase/firestore";
 const name$1 = "@firebase/firestore-compat";
 
 const name = "firebase";
-const version = "9.8.1";
+const version = "9.6.11";
 
 /**
  * @license
@@ -18564,17 +18726,15 @@ const STORE_NAME = 'firebase-heartbeat-store';
 let dbPromise = null;
 function getDbPromise() {
     if (!dbPromise) {
-        dbPromise = (0,idb__WEBPACK_IMPORTED_MODULE_3__.openDB)(DB_NAME, DB_VERSION, {
-            upgrade: (db, oldVersion) => {
-                // We don't use 'break' in this switch statement, the fall-through
-                // behavior is what we want, because if there are multiple versions between
-                // the old version and the current version, we want ALL the migrations
-                // that correspond to those versions to run, not only the last one.
-                // eslint-disable-next-line default-case
-                switch (oldVersion) {
-                    case 0:
-                        db.createObjectStore(STORE_NAME);
-                }
+        dbPromise = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.openDB)(DB_NAME, DB_VERSION, (db, oldVersion) => {
+            // We don't use 'break' in this switch statement, the fall-through
+            // behavior is what we want, because if there are multiple versions between
+            // the old version and the current version, we want ALL the migrations
+            // that correspond to those versions to run, not only the last one.
+            // eslint-disable-next-line default-case
+            switch (oldVersion) {
+                case 0:
+                    db.createObjectStore(STORE_NAME);
             }
         }).catch(e => {
             throw ERROR_FACTORY.create("storage-open" /* STORAGE_OPEN */, {
@@ -18604,7 +18764,7 @@ async function writeHeartbeatsToIndexedDB(app, heartbeatObject) {
         const tx = db.transaction(STORE_NAME, 'readwrite');
         const objectStore = tx.objectStore(STORE_NAME);
         await objectStore.put(heartbeatObject, computeKey(app));
-        return tx.done;
+        return tx.complete;
     }
     catch (e) {
         throw ERROR_FACTORY.create("storage-set" /* STORAGE_WRITE */, {
@@ -19334,14 +19494,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
 /* harmony import */ var _firebase_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @firebase/component */ "./node_modules/@firebase/component/dist/esm/index.esm2017.js");
 /* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm2017.js");
-/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! idb */ "./node_modules/idb/build/index.js");
-
 
 
 
 
 const name = "@firebase/installations";
-const version = "0.5.9";
+const version = "0.5.8";
 
 /**
  * @license
@@ -19743,17 +19901,15 @@ const OBJECT_STORE_NAME = 'firebase-installations-store';
 let dbPromise = null;
 function getDbPromise() {
     if (!dbPromise) {
-        dbPromise = (0,idb__WEBPACK_IMPORTED_MODULE_3__.openDB)(DATABASE_NAME, DATABASE_VERSION, {
-            upgrade: (db, oldVersion) => {
-                // We don't use 'break' in this switch statement, the fall-through
-                // behavior is what we want, because if there are multiple versions between
-                // the old version and the current version, we want ALL the migrations
-                // that correspond to those versions to run, not only the last one.
-                // eslint-disable-next-line default-case
-                switch (oldVersion) {
-                    case 0:
-                        db.createObjectStore(OBJECT_STORE_NAME);
-                }
+        dbPromise = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.openDB)(DATABASE_NAME, DATABASE_VERSION, (db, oldVersion) => {
+            // We don't use 'break' in this switch statement, the fall-through
+            // behavior is what we want, because if there are multiple versions between
+            // the old version and the current version, we want ALL the migrations
+            // that correspond to those versions to run, not only the last one.
+            // eslint-disable-next-line default-case
+            switch (oldVersion) {
+                case 0:
+                    db.createObjectStore(OBJECT_STORE_NAME);
             }
         });
     }
@@ -19767,7 +19923,7 @@ async function set(appConfig, value) {
     const objectStore = tx.objectStore(OBJECT_STORE_NAME);
     const oldValue = (await objectStore.get(key));
     await objectStore.put(value, key);
-    await tx.done;
+    await tx.complete;
     if (!oldValue || oldValue.fid !== value.fid) {
         fidChanged(appConfig, value.fid);
     }
@@ -19779,7 +19935,7 @@ async function remove(appConfig) {
     const db = await getDbPromise();
     const tx = db.transaction(OBJECT_STORE_NAME, 'readwrite');
     await tx.objectStore(OBJECT_STORE_NAME).delete(key);
-    await tx.done;
+    await tx.complete;
 }
 /**
  * Atomically updates a record with the result of updateFn, which gets
@@ -19800,7 +19956,7 @@ async function update(appConfig, updateFn) {
     else {
         await store.put(newValue, key);
     }
-    await tx.done;
+    await tx.complete;
     if (newValue && (!oldValue || oldValue.fid !== newValue.fid)) {
         fidChanged(appConfig, newValue.fid);
     }
@@ -20747,10 +20903,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _firebase_installations__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/installations */ "./node_modules/@firebase/installations/dist/esm/index.esm2017.js");
 /* harmony import */ var _firebase_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @firebase/component */ "./node_modules/@firebase/component/dist/esm/index.esm2017.js");
-/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! idb */ "./node_modules/idb/build/index.js");
-/* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm2017.js");
-/* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
-
+/* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm2017.js");
+/* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
 
 
 
@@ -20876,78 +21030,76 @@ async function migrateOldDatabase(senderId) {
         }
     }
     let tokenDetails = null;
-    const db = await (0,idb__WEBPACK_IMPORTED_MODULE_2__.openDB)(OLD_DB_NAME, OLD_DB_VERSION, {
-        upgrade: async (db, oldVersion, newVersion, upgradeTransaction) => {
-            var _a;
-            if (oldVersion < 2) {
-                // Database too old, skip migration.
+    const db = await (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.openDB)(OLD_DB_NAME, OLD_DB_VERSION, async (db, oldVersion, newVersion, upgradeTransaction) => {
+        var _a;
+        if (oldVersion < 2) {
+            // Database too old, skip migration.
+            return;
+        }
+        if (!db.objectStoreNames.contains(OLD_OBJECT_STORE_NAME)) {
+            // Database did not exist. Nothing to do.
+            return;
+        }
+        const objectStore = upgradeTransaction.objectStore(OLD_OBJECT_STORE_NAME);
+        const value = await objectStore.index('fcmSenderId').get(senderId);
+        await objectStore.clear();
+        if (!value) {
+            // No entry in the database, nothing to migrate.
+            return;
+        }
+        if (oldVersion === 2) {
+            const oldDetails = value;
+            if (!oldDetails.auth || !oldDetails.p256dh || !oldDetails.endpoint) {
                 return;
             }
-            if (!db.objectStoreNames.contains(OLD_OBJECT_STORE_NAME)) {
-                // Database did not exist. Nothing to do.
-                return;
-            }
-            const objectStore = upgradeTransaction.objectStore(OLD_OBJECT_STORE_NAME);
-            const value = await objectStore.index('fcmSenderId').get(senderId);
-            await objectStore.clear();
-            if (!value) {
-                // No entry in the database, nothing to migrate.
-                return;
-            }
-            if (oldVersion === 2) {
-                const oldDetails = value;
-                if (!oldDetails.auth || !oldDetails.p256dh || !oldDetails.endpoint) {
-                    return;
+            tokenDetails = {
+                token: oldDetails.fcmToken,
+                createTime: (_a = oldDetails.createTime) !== null && _a !== void 0 ? _a : Date.now(),
+                subscriptionOptions: {
+                    auth: oldDetails.auth,
+                    p256dh: oldDetails.p256dh,
+                    endpoint: oldDetails.endpoint,
+                    swScope: oldDetails.swScope,
+                    vapidKey: typeof oldDetails.vapidKey === 'string'
+                        ? oldDetails.vapidKey
+                        : arrayToBase64(oldDetails.vapidKey)
                 }
-                tokenDetails = {
-                    token: oldDetails.fcmToken,
-                    createTime: (_a = oldDetails.createTime) !== null && _a !== void 0 ? _a : Date.now(),
-                    subscriptionOptions: {
-                        auth: oldDetails.auth,
-                        p256dh: oldDetails.p256dh,
-                        endpoint: oldDetails.endpoint,
-                        swScope: oldDetails.swScope,
-                        vapidKey: typeof oldDetails.vapidKey === 'string'
-                            ? oldDetails.vapidKey
-                            : arrayToBase64(oldDetails.vapidKey)
-                    }
-                };
-            }
-            else if (oldVersion === 3) {
-                const oldDetails = value;
-                tokenDetails = {
-                    token: oldDetails.fcmToken,
-                    createTime: oldDetails.createTime,
-                    subscriptionOptions: {
-                        auth: arrayToBase64(oldDetails.auth),
-                        p256dh: arrayToBase64(oldDetails.p256dh),
-                        endpoint: oldDetails.endpoint,
-                        swScope: oldDetails.swScope,
-                        vapidKey: arrayToBase64(oldDetails.vapidKey)
-                    }
-                };
-            }
-            else if (oldVersion === 4) {
-                const oldDetails = value;
-                tokenDetails = {
-                    token: oldDetails.fcmToken,
-                    createTime: oldDetails.createTime,
-                    subscriptionOptions: {
-                        auth: arrayToBase64(oldDetails.auth),
-                        p256dh: arrayToBase64(oldDetails.p256dh),
-                        endpoint: oldDetails.endpoint,
-                        swScope: oldDetails.swScope,
-                        vapidKey: arrayToBase64(oldDetails.vapidKey)
-                    }
-                };
-            }
+            };
+        }
+        else if (oldVersion === 3) {
+            const oldDetails = value;
+            tokenDetails = {
+                token: oldDetails.fcmToken,
+                createTime: oldDetails.createTime,
+                subscriptionOptions: {
+                    auth: arrayToBase64(oldDetails.auth),
+                    p256dh: arrayToBase64(oldDetails.p256dh),
+                    endpoint: oldDetails.endpoint,
+                    swScope: oldDetails.swScope,
+                    vapidKey: arrayToBase64(oldDetails.vapidKey)
+                }
+            };
+        }
+        else if (oldVersion === 4) {
+            const oldDetails = value;
+            tokenDetails = {
+                token: oldDetails.fcmToken,
+                createTime: oldDetails.createTime,
+                subscriptionOptions: {
+                    auth: arrayToBase64(oldDetails.auth),
+                    p256dh: arrayToBase64(oldDetails.p256dh),
+                    endpoint: oldDetails.endpoint,
+                    swScope: oldDetails.swScope,
+                    vapidKey: arrayToBase64(oldDetails.vapidKey)
+                }
+            };
         }
     });
     db.close();
     // Delete all old databases.
-    await (0,idb__WEBPACK_IMPORTED_MODULE_2__.deleteDB)(OLD_DB_NAME);
-    await (0,idb__WEBPACK_IMPORTED_MODULE_2__.deleteDB)('fcm_vapid_details_db');
-    await (0,idb__WEBPACK_IMPORTED_MODULE_2__.deleteDB)('undefined');
+    await (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.deleteDB)(OLD_DB_NAME);
+    await (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.deleteDB)('fcm_vapid_details_db');
+    await (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.deleteDB)('undefined');
     return checkTokenDetails(tokenDetails) ? tokenDetails : null;
 }
 function checkTokenDetails(tokenDetails) {
@@ -20994,16 +21146,14 @@ const OBJECT_STORE_NAME = 'firebase-messaging-store';
 let dbPromise = null;
 function getDbPromise() {
     if (!dbPromise) {
-        dbPromise = (0,idb__WEBPACK_IMPORTED_MODULE_2__.openDB)(DATABASE_NAME, DATABASE_VERSION, {
-            upgrade: (upgradeDb, oldVersion) => {
-                // We don't use 'break' in this switch statement, the fall-through behavior is what we want,
-                // because if there are multiple versions between the old version and the current version, we
-                // want ALL the migrations that correspond to those versions to run, not only the last one.
-                // eslint-disable-next-line default-case
-                switch (oldVersion) {
-                    case 0:
-                        upgradeDb.createObjectStore(OBJECT_STORE_NAME);
-                }
+        dbPromise = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.openDB)(DATABASE_NAME, DATABASE_VERSION, (upgradeDb, oldVersion) => {
+            // We don't use 'break' in this switch statement, the fall-through behavior is what we want,
+            // because if there are multiple versions between the old version and the current version, we
+            // want ALL the migrations that correspond to those versions to run, not only the last one.
+            // eslint-disable-next-line default-case
+            switch (oldVersion) {
+                case 0:
+                    upgradeDb.createObjectStore(OBJECT_STORE_NAME);
             }
         });
     }
@@ -21035,7 +21185,7 @@ async function dbSet(firebaseDependencies, tokenDetails) {
     const db = await getDbPromise();
     const tx = db.transaction(OBJECT_STORE_NAME, 'readwrite');
     await tx.objectStore(OBJECT_STORE_NAME).put(tokenDetails, key);
-    await tx.done;
+    await tx.complete;
     return tokenDetails;
 }
 /** Removes record(s) from the objectStore that match the given key. */
@@ -21044,7 +21194,7 @@ async function dbRemove(firebaseDependencies) {
     const db = await getDbPromise();
     const tx = db.transaction(OBJECT_STORE_NAME, 'readwrite');
     await tx.objectStore(OBJECT_STORE_NAME).delete(key);
-    await tx.done;
+    await tx.complete;
 }
 function getKey({ appConfig }) {
     return appConfig.appId;
@@ -21089,7 +21239,7 @@ const ERROR_MAP = {
     ["use-vapid-key-after-get-token" /* USE_VAPID_KEY_AFTER_GET_TOKEN */]: 'The usePublicVapidKey() method may only be called once and must be ' +
         'called before calling getToken() to ensure your VAPID key is used.'
 };
-const ERROR_FACTORY = new _firebase_util__WEBPACK_IMPORTED_MODULE_3__.ErrorFactory('messaging', 'Messaging', ERROR_MAP);
+const ERROR_FACTORY = new _firebase_util__WEBPACK_IMPORTED_MODULE_2__.ErrorFactory('messaging', 'Messaging', ERROR_MAP);
 
 /**
  * @license
@@ -21741,7 +21891,7 @@ async function messageEventListener(messaging, event) {
 }
 
 const name = "@firebase/messaging";
-const version = "0.9.13";
+const version = "0.9.12";
 
 /**
  * @license
@@ -21774,11 +21924,11 @@ const WindowMessagingInternalFactory = (container) => {
     return messagingInternal;
 };
 function registerMessagingInWindow() {
-    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component('messaging', WindowMessagingFactory, "PUBLIC" /* PUBLIC */));
-    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component('messaging-internal', WindowMessagingInternalFactory, "PRIVATE" /* PRIVATE */));
-    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__.registerVersion)(name, version);
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_3__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component('messaging', WindowMessagingFactory, "PUBLIC" /* PUBLIC */));
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_3__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component('messaging-internal', WindowMessagingInternalFactory, "PRIVATE" /* PRIVATE */));
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_3__.registerVersion)(name, version);
     // BUILD_TARGET will be replaced by values like esm5, esm2017, cjs5, etc during the compilation
-    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__.registerVersion)(name, version, 'esm2017');
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_3__.registerVersion)(name, version, 'esm2017');
 }
 
 /**
@@ -21807,7 +21957,7 @@ async function isWindowSupported() {
     try {
         // This throws if open() is unsupported, so adding it to the conditional
         // statement below can cause an uncaught error.
-        await (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.validateIndexedDBOpenable)();
+        await (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.validateIndexedDBOpenable)();
     }
     catch (e) {
         return false;
@@ -21816,8 +21966,8 @@ async function isWindowSupported() {
     // might be prohibited to run. In these contexts, an error would be thrown during the messaging
     // instantiating phase, informing the developers to import/call isSupported for special handling.
     return (typeof window !== 'undefined' &&
-        (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.isIndexedDBAvailable)() &&
-        (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.areCookiesEnabled)() &&
+        (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.isIndexedDBAvailable)() &&
+        (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.areCookiesEnabled)() &&
         'serviceWorker' in navigator &&
         'PushManager' in window &&
         'Notification' in window &&
@@ -21901,7 +22051,7 @@ function onMessage$1(messaging, nextOrObserver) {
  *
  * @public
  */
-function getMessagingInWindow(app = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__.getApp)()) {
+function getMessagingInWindow(app = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_3__.getApp)()) {
     // Conscious decision to make this async check non-blocking during the messaging instance
     // initialization phase for performance consideration. An error would be thrown latter for
     // developer's information. Developers can then choose to import and call `isSupported` for
@@ -21915,7 +22065,7 @@ function getMessagingInWindow(app = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4_
         // If `isWindowSupported()` rejected.
         throw ERROR_FACTORY.create("indexed-db-unsupported" /* INDEXED_DB_UNSUPPORTED */);
     });
-    return (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__._getProvider)((0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.getModularInstance)(app), 'messaging').getImmediate();
+    return (0,_firebase_app__WEBPACK_IMPORTED_MODULE_3__._getProvider)((0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.getModularInstance)(app), 'messaging').getImmediate();
 }
 /**
  * Subscribes the {@link Messaging} instance to push notifications. Returns an Firebase Cloud
@@ -21933,7 +22083,7 @@ function getMessagingInWindow(app = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4_
  * @public
  */
 async function getToken(messaging, options) {
-    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.getModularInstance)(messaging);
+    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.getModularInstance)(messaging);
     return getToken$1(messaging, options);
 }
 /**
@@ -21947,7 +22097,7 @@ async function getToken(messaging, options) {
  * @public
  */
 function deleteToken(messaging) {
-    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.getModularInstance)(messaging);
+    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.getModularInstance)(messaging);
     return deleteToken$1(messaging);
 }
 /**
@@ -21964,7 +22114,7 @@ function deleteToken(messaging) {
  * @public
  */
 function onMessage(messaging, nextOrObserver) {
-    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.getModularInstance)(messaging);
+    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.getModularInstance)(messaging);
     return onMessage$1(messaging, nextOrObserver);
 }
 
@@ -21977,317 +22127,6 @@ registerMessagingInWindow();
 
 
 //# sourceMappingURL=index.esm2017.js.map
-
-
-/***/ }),
-
-/***/ "./node_modules/idb/build/index.js":
-/*!*****************************************!*\
-  !*** ./node_modules/idb/build/index.js ***!
-  \*****************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "deleteDB": () => (/* binding */ deleteDB),
-/* harmony export */   "openDB": () => (/* binding */ openDB),
-/* harmony export */   "unwrap": () => (/* reexport safe */ _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.u),
-/* harmony export */   "wrap": () => (/* reexport safe */ _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)
-/* harmony export */ });
-/* harmony import */ var _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./wrap-idb-value.js */ "./node_modules/idb/build/wrap-idb-value.js");
-
-
-
-/**
- * Open a database.
- *
- * @param name Name of the database.
- * @param version Schema version.
- * @param callbacks Additional callbacks.
- */
-function openDB(name, version, { blocked, upgrade, blocking, terminated } = {}) {
-    const request = indexedDB.open(name, version);
-    const openPromise = (0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request);
-    if (upgrade) {
-        request.addEventListener('upgradeneeded', (event) => {
-            upgrade((0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request.result), event.oldVersion, event.newVersion, (0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request.transaction));
-        });
-    }
-    if (blocked)
-        request.addEventListener('blocked', () => blocked());
-    openPromise
-        .then((db) => {
-        if (terminated)
-            db.addEventListener('close', () => terminated());
-        if (blocking)
-            db.addEventListener('versionchange', () => blocking());
-    })
-        .catch(() => { });
-    return openPromise;
-}
-/**
- * Delete a database.
- *
- * @param name Name of the database.
- */
-function deleteDB(name, { blocked } = {}) {
-    const request = indexedDB.deleteDatabase(name);
-    if (blocked)
-        request.addEventListener('blocked', () => blocked());
-    return (0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request).then(() => undefined);
-}
-
-const readMethods = ['get', 'getKey', 'getAll', 'getAllKeys', 'count'];
-const writeMethods = ['put', 'add', 'delete', 'clear'];
-const cachedMethods = new Map();
-function getMethod(target, prop) {
-    if (!(target instanceof IDBDatabase &&
-        !(prop in target) &&
-        typeof prop === 'string')) {
-        return;
-    }
-    if (cachedMethods.get(prop))
-        return cachedMethods.get(prop);
-    const targetFuncName = prop.replace(/FromIndex$/, '');
-    const useIndex = prop !== targetFuncName;
-    const isWrite = writeMethods.includes(targetFuncName);
-    if (
-    // Bail if the target doesn't exist on the target. Eg, getAll isn't in Edge.
-    !(targetFuncName in (useIndex ? IDBIndex : IDBObjectStore).prototype) ||
-        !(isWrite || readMethods.includes(targetFuncName))) {
-        return;
-    }
-    const method = async function (storeName, ...args) {
-        // isWrite ? 'readwrite' : undefined gzipps better, but fails in Edge :(
-        const tx = this.transaction(storeName, isWrite ? 'readwrite' : 'readonly');
-        let target = tx.store;
-        if (useIndex)
-            target = target.index(args.shift());
-        // Must reject if op rejects.
-        // If it's a write operation, must reject if tx.done rejects.
-        // Must reject with op rejection first.
-        // Must resolve with op value.
-        // Must handle both promises (no unhandled rejections)
-        return (await Promise.all([
-            target[targetFuncName](...args),
-            isWrite && tx.done,
-        ]))[0];
-    };
-    cachedMethods.set(prop, method);
-    return method;
-}
-(0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.r)((oldTraps) => ({
-    ...oldTraps,
-    get: (target, prop, receiver) => getMethod(target, prop) || oldTraps.get(target, prop, receiver),
-    has: (target, prop) => !!getMethod(target, prop) || oldTraps.has(target, prop),
-}));
-
-
-
-
-/***/ }),
-
-/***/ "./node_modules/idb/build/wrap-idb-value.js":
-/*!**************************************************!*\
-  !*** ./node_modules/idb/build/wrap-idb-value.js ***!
-  \**************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "a": () => (/* binding */ reverseTransformCache),
-/* harmony export */   "i": () => (/* binding */ instanceOfAny),
-/* harmony export */   "r": () => (/* binding */ replaceTraps),
-/* harmony export */   "u": () => (/* binding */ unwrap),
-/* harmony export */   "w": () => (/* binding */ wrap)
-/* harmony export */ });
-const instanceOfAny = (object, constructors) => constructors.some((c) => object instanceof c);
-
-let idbProxyableTypes;
-let cursorAdvanceMethods;
-// This is a function to prevent it throwing up in node environments.
-function getIdbProxyableTypes() {
-    return (idbProxyableTypes ||
-        (idbProxyableTypes = [
-            IDBDatabase,
-            IDBObjectStore,
-            IDBIndex,
-            IDBCursor,
-            IDBTransaction,
-        ]));
-}
-// This is a function to prevent it throwing up in node environments.
-function getCursorAdvanceMethods() {
-    return (cursorAdvanceMethods ||
-        (cursorAdvanceMethods = [
-            IDBCursor.prototype.advance,
-            IDBCursor.prototype.continue,
-            IDBCursor.prototype.continuePrimaryKey,
-        ]));
-}
-const cursorRequestMap = new WeakMap();
-const transactionDoneMap = new WeakMap();
-const transactionStoreNamesMap = new WeakMap();
-const transformCache = new WeakMap();
-const reverseTransformCache = new WeakMap();
-function promisifyRequest(request) {
-    const promise = new Promise((resolve, reject) => {
-        const unlisten = () => {
-            request.removeEventListener('success', success);
-            request.removeEventListener('error', error);
-        };
-        const success = () => {
-            resolve(wrap(request.result));
-            unlisten();
-        };
-        const error = () => {
-            reject(request.error);
-            unlisten();
-        };
-        request.addEventListener('success', success);
-        request.addEventListener('error', error);
-    });
-    promise
-        .then((value) => {
-        // Since cursoring reuses the IDBRequest (*sigh*), we cache it for later retrieval
-        // (see wrapFunction).
-        if (value instanceof IDBCursor) {
-            cursorRequestMap.set(value, request);
-        }
-        // Catching to avoid "Uncaught Promise exceptions"
-    })
-        .catch(() => { });
-    // This mapping exists in reverseTransformCache but doesn't doesn't exist in transformCache. This
-    // is because we create many promises from a single IDBRequest.
-    reverseTransformCache.set(promise, request);
-    return promise;
-}
-function cacheDonePromiseForTransaction(tx) {
-    // Early bail if we've already created a done promise for this transaction.
-    if (transactionDoneMap.has(tx))
-        return;
-    const done = new Promise((resolve, reject) => {
-        const unlisten = () => {
-            tx.removeEventListener('complete', complete);
-            tx.removeEventListener('error', error);
-            tx.removeEventListener('abort', error);
-        };
-        const complete = () => {
-            resolve();
-            unlisten();
-        };
-        const error = () => {
-            reject(tx.error || new DOMException('AbortError', 'AbortError'));
-            unlisten();
-        };
-        tx.addEventListener('complete', complete);
-        tx.addEventListener('error', error);
-        tx.addEventListener('abort', error);
-    });
-    // Cache it for later retrieval.
-    transactionDoneMap.set(tx, done);
-}
-let idbProxyTraps = {
-    get(target, prop, receiver) {
-        if (target instanceof IDBTransaction) {
-            // Special handling for transaction.done.
-            if (prop === 'done')
-                return transactionDoneMap.get(target);
-            // Polyfill for objectStoreNames because of Edge.
-            if (prop === 'objectStoreNames') {
-                return target.objectStoreNames || transactionStoreNamesMap.get(target);
-            }
-            // Make tx.store return the only store in the transaction, or undefined if there are many.
-            if (prop === 'store') {
-                return receiver.objectStoreNames[1]
-                    ? undefined
-                    : receiver.objectStore(receiver.objectStoreNames[0]);
-            }
-        }
-        // Else transform whatever we get back.
-        return wrap(target[prop]);
-    },
-    set(target, prop, value) {
-        target[prop] = value;
-        return true;
-    },
-    has(target, prop) {
-        if (target instanceof IDBTransaction &&
-            (prop === 'done' || prop === 'store')) {
-            return true;
-        }
-        return prop in target;
-    },
-};
-function replaceTraps(callback) {
-    idbProxyTraps = callback(idbProxyTraps);
-}
-function wrapFunction(func) {
-    // Due to expected object equality (which is enforced by the caching in `wrap`), we
-    // only create one new func per func.
-    // Edge doesn't support objectStoreNames (booo), so we polyfill it here.
-    if (func === IDBDatabase.prototype.transaction &&
-        !('objectStoreNames' in IDBTransaction.prototype)) {
-        return function (storeNames, ...args) {
-            const tx = func.call(unwrap(this), storeNames, ...args);
-            transactionStoreNamesMap.set(tx, storeNames.sort ? storeNames.sort() : [storeNames]);
-            return wrap(tx);
-        };
-    }
-    // Cursor methods are special, as the behaviour is a little more different to standard IDB. In
-    // IDB, you advance the cursor and wait for a new 'success' on the IDBRequest that gave you the
-    // cursor. It's kinda like a promise that can resolve with many values. That doesn't make sense
-    // with real promises, so each advance methods returns a new promise for the cursor object, or
-    // undefined if the end of the cursor has been reached.
-    if (getCursorAdvanceMethods().includes(func)) {
-        return function (...args) {
-            // Calling the original function with the proxy as 'this' causes ILLEGAL INVOCATION, so we use
-            // the original object.
-            func.apply(unwrap(this), args);
-            return wrap(cursorRequestMap.get(this));
-        };
-    }
-    return function (...args) {
-        // Calling the original function with the proxy as 'this' causes ILLEGAL INVOCATION, so we use
-        // the original object.
-        return wrap(func.apply(unwrap(this), args));
-    };
-}
-function transformCachableValue(value) {
-    if (typeof value === 'function')
-        return wrapFunction(value);
-    // This doesn't return, it just creates a 'done' promise for the transaction,
-    // which is later returned for transaction.done (see idbObjectHandler).
-    if (value instanceof IDBTransaction)
-        cacheDonePromiseForTransaction(value);
-    if (instanceOfAny(value, getIdbProxyableTypes()))
-        return new Proxy(value, idbProxyTraps);
-    // Return the same value back if we're not going to transform it.
-    return value;
-}
-function wrap(value) {
-    // We sometimes generate multiple promises from a single IDBRequest (eg when cursoring), because
-    // IDB is weird and a single IDBRequest can yield many responses, so these can't be cached.
-    if (value instanceof IDBRequest)
-        return promisifyRequest(value);
-    // If we've already transformed this value before, reuse the transformed value.
-    // This is faster, but it also provides object equality.
-    if (transformCache.has(value))
-        return transformCache.get(value);
-    const newValue = transformCachableValue(value);
-    // Not all types are transformed.
-    // These may be primitive types, so they can't be WeakMap keys.
-    if (newValue !== value) {
-        transformCache.set(value, newValue);
-        reverseTransformCache.set(newValue, value);
-    }
-    return newValue;
-}
-const unwrap = (value) => reverseTransformCache.get(value);
-
-
 
 
 /***/ }),

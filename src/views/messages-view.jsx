@@ -1137,20 +1137,14 @@ class MessagesView extends React.Component {
               );
               prevDate = thisDate;
             }
-            let duration;
-            if (msg.head && isVideoCall(msg.head.mime)) {
-              topic.messageVersions(msg, (cur, before) => {
-                if (cur.content == 'finished' && before.content == 'accepted') {
-                  duration = msg.ts - before.ts;
-                }
-              });
-            }
+            const duration = msg.head ? msg.head['webrtc-duration'] : undefined;
             messageNodes.push(
               <ChatMessage
                 tinode={this.props.tinode}
                 content={msg.content}
                 mimeType={msg.head ? msg.head.mime : null}
                 timestamp={msg.ts}
+                callState={msg.head ? msg.head.webrtc : null}
                 duration={duration}
                 response={isReply}
                 seq={msg.seq}
