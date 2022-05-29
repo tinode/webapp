@@ -11,7 +11,7 @@ import { Drafty, Tinode } from 'tinode-sdk';
 import Alert from '../widgets/alert.jsx';
 import ContextMenu from '../widgets/context-menu.jsx';
 import ForwardDialog from '../widgets/forward-dialog.jsx';
-import IncomingCall from '../widgets/call-incoming.jsx';
+import CallIncoming from '../widgets/call-incoming.jsx';
 
 import InfoView from './info-view.jsx';
 import MessagesView from './messages-view.jsx';
@@ -1858,7 +1858,7 @@ class TinodeWeb extends React.Component {
           null
         }
         {this.state.callTopic && this.state.callState == CALL_STATE_INCOMING_RECEIVED ?
-          <IncomingCall
+          <CallIncoming
             tinode={this.tinode}
             onClose={this.handleCallClose}
             topic={this.state.callTopic}

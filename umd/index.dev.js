@@ -12506,7 +12506,7 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
 
     if (this.props.previewIsVideoCall) {
       preview = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_call_status_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-        direction: this.props.previewIsResponse,
+        incoming: this.props.previewIsResponse,
         success: true
       });
     } else if (typeof this.props.preview == 'string') {

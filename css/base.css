@@ -1721,15 +1721,19 @@ video {
   left: initial;
   width: 100%;
   height: 100%;
-  padding: 2rem;
+  padding: 5rem 3.5rem 2rem 3.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
 }
 
-.incoming-call-badges {
-  text-align: center;
+.incoming-call .caller-name {
+  padding: 0.15rem 0.5rem;
+  border-radius: 0.35rem;
+  z-index: 1;
+  text-shadow: 0 0 1px white;
+  background-color: rgba(255, 255, 255, 0.7);
 }
 
 .call-message {

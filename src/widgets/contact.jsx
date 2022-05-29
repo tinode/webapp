@@ -74,7 +74,7 @@ class Contact extends React.Component {
     if (this.props.previewIsVideoCall) {
       // TODO: use words to describe call status and duration.
       preview = <CallStatus
-        direction={this.props.previewIsResponse}
+        incoming={this.props.previewIsResponse}
         success={true} />; // FIXME: use actuall call completion status instead of TRUE.
     } else if (typeof this.props.preview == 'string') {
       preview = this.props.preview;
