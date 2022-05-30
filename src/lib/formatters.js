@@ -169,8 +169,8 @@ export function fullFormatter(style, data, values, key, stack) {
       el = CallMessage;
       // Video call messages do not have content.
       values = null;
-      attr.content = this.callState;
-      attr.response = this.isResponse;
+      attr.callState = this.callState;
+      attr.incoming = this.isResponse;
       attr.duration = this.callDuration;
       break;
     default:
@@ -257,7 +257,9 @@ export function previewFormatter(style, data, values, key) {
       break;
     case 'VC':
       el = CallStatus;
+      attr.callState = this.callState;
       attr.incoming = this.previewIsResponse;
+      attr.duration = this.callDuration;
       attr.success = true; // FIXME: use actuall call completion status instead of TRUE.
       values = null;
       break;

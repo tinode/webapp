@@ -11,7 +11,6 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "CONSTANTS": () => (/* binding */ CONSTANTS),
-/* harmony export */   "DBWrapper": () => (/* binding */ DBWrapper),
 /* harmony export */   "Deferred": () => (/* binding */ Deferred),
 /* harmony export */   "ErrorFactory": () => (/* binding */ ErrorFactory),
 /* harmony export */   "FirebaseError": () => (/* binding */ FirebaseError),
@@ -34,7 +33,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "deepCopy": () => (/* binding */ deepCopy),
 /* harmony export */   "deepEqual": () => (/* binding */ deepEqual),
 /* harmony export */   "deepExtend": () => (/* binding */ deepExtend),
-/* harmony export */   "deleteDB": () => (/* binding */ deleteDB),
 /* harmony export */   "errorPrefix": () => (/* binding */ errorPrefix),
 /* harmony export */   "extractQuerystring": () => (/* binding */ extractQuerystring),
 /* harmony export */   "getGlobal": () => (/* binding */ getGlobal),
@@ -58,7 +56,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "issuedAtTime": () => (/* binding */ issuedAtTime),
 /* harmony export */   "jsonEval": () => (/* binding */ jsonEval),
 /* harmony export */   "map": () => (/* binding */ map),
-/* harmony export */   "openDB": () => (/* binding */ openDB),
 /* harmony export */   "ordinal": () => (/* binding */ ordinal),
 /* harmony export */   "querystring": () => (/* binding */ querystring),
 /* harmony export */   "querystringDecode": () => (/* binding */ querystringDecode),
@@ -1969,162 +1966,6 @@ function getModularInstance(service) {
     }
 }
 
-/**
- * @license
- * Copyright 2022 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/**
- * @internal
- */
-function promisifyRequest(request, errorMessage) {
-    return new Promise((resolve, reject) => {
-        request.onsuccess = event => {
-            resolve(event.target.result);
-        };
-        request.onerror = event => {
-            var _a;
-            reject(`${errorMessage}: ${(_a = event.target.error) === null || _a === void 0 ? void 0 : _a.message}`);
-        };
-    });
-}
-/**
- * @internal
- */
-class DBWrapper {
-    constructor(_db) {
-        this._db = _db;
-        this.objectStoreNames = this._db.objectStoreNames;
-    }
-    transaction(storeNames, mode = 'readonly') {
-        return new TransactionWrapper(this._db.transaction.call(this._db, storeNames, mode));
-    }
-    createObjectStore(storeName, options) {
-        return new ObjectStoreWrapper(this._db.createObjectStore(storeName, options));
-    }
-    close() {
-        this._db.close();
-    }
-}
-/**
- * @internal
- */
-class TransactionWrapper {
-    constructor(_transaction) {
-        this._transaction = _transaction;
-        this.complete = new Promise((resolve, reject) => {
-            this._transaction.oncomplete = function () {
-                resolve();
-            };
-            this._transaction.onerror = () => {
-                reject(this._transaction.error);
-            };
-            this._transaction.onabort = () => {
-                reject(this._transaction.error);
-            };
-        });
-    }
-    objectStore(storeName) {
-        return new ObjectStoreWrapper(this._transaction.objectStore(storeName));
-    }
-}
-/**
- * @internal
- */
-class ObjectStoreWrapper {
-    constructor(_store) {
-        this._store = _store;
-    }
-    index(name) {
-        return new IndexWrapper(this._store.index(name));
-    }
-    createIndex(name, keypath, options) {
-        return new IndexWrapper(this._store.createIndex(name, keypath, options));
-    }
-    get(key) {
-        const request = this._store.get(key);
-        return promisifyRequest(request, 'Error reading from IndexedDB');
-    }
-    put(value, key) {
-        const request = this._store.put(value, key);
-        return promisifyRequest(request, 'Error writing to IndexedDB');
-    }
-    delete(key) {
-        const request = this._store.delete(key);
-        return promisifyRequest(request, 'Error deleting from IndexedDB');
-    }
-    clear() {
-        const request = this._store.clear();
-        return promisifyRequest(request, 'Error clearing IndexedDB object store');
-    }
-}
-/**
- * @internal
- */
-class IndexWrapper {
-    constructor(_index) {
-        this._index = _index;
-    }
-    get(key) {
-        const request = this._index.get(key);
-        return promisifyRequest(request, 'Error reading from IndexedDB');
-    }
-}
-/**
- * @internal
- */
-function openDB(dbName, dbVersion, upgradeCallback) {
-    return new Promise((resolve, reject) => {
-        try {
-            const request = indexedDB.open(dbName, dbVersion);
-            request.onsuccess = event => {
-                resolve(new DBWrapper(event.target.result));
-            };
-            request.onerror = event => {
-                var _a;
-                reject(`Error opening indexedDB: ${(_a = event.target.error) === null || _a === void 0 ? void 0 : _a.message}`);
-            };
-            request.onupgradeneeded = event => {
-                upgradeCallback(new DBWrapper(request.result), event.oldVersion, event.newVersion, new TransactionWrapper(request.transaction));
-            };
-        }
-        catch (e) {
-            reject(`Error opening indexedDB: ${e.message}`);
-        }
-    });
-}
-/**
- * @internal
- */
-async function deleteDB(dbName) {
-    return new Promise((resolve, reject) => {
-        try {
-            const request = indexedDB.deleteDatabase(dbName);
-            request.onsuccess = () => {
-                resolve();
-            };
-            request.onerror = event => {
-                var _a;
-                reject(`Error deleting indexedDB database "${dbName}": ${(_a = event.target.error) === null || _a === void 0 ? void 0 : _a.message}`);
-            };
-        }
-        catch (e) {
-            reject(`Error deleting indexedDB database "${dbName}": ${e.message}`);
-        }
-    });
-}
-
 
 //# sourceMappingURL=index.esm2017.js.map
 
@@ -2786,8 +2627,8 @@ function fullFormatter(style, data, values, key, stack) {
     case 'VC':
       el = _widgets_call_message_jsx__WEBPACK_IMPORTED_MODULE_4__["default"];
       values = null;
-      attr.content = this.callState;
-      attr.response = this.isResponse;
+      attr.callState = this.callState;
+      attr.incoming = this.isResponse;
       attr.duration = this.callDuration;
       break;
 
@@ -2898,7 +2739,10 @@ function previewFormatter(style, data, values, key) {
 
     case 'VC':
       el = _widgets_call_status_jsx__WEBPACK_IMPORTED_MODULE_5__["default"];
+      attr.callState = this.callState;
       attr.incoming = this.previewIsResponse;
+      attr.duration = this.callDuration;
+      ;
       attr.success = true;
       values = null;
       break;
@@ -11268,10 +11112,10 @@ __webpack_require__.r(__webpack_exports__);
 
 class CallMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
-    const isCallDropped = this.props.content == 'disconnected';
+    const isCallDropped = this.props.callState == 'disconnected';
     const successClass = 'material-icons medium ' + (isCallDropped ? 'red' : 'green');
-    const callIcon = this.props.response ? isCallDropped ? 'call_missed' : 'call_received' : isCallDropped ? 'call_missed_outgoing' : 'call_made';
-    const duration = isCallDropped ? this.props.response ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+    const callIcon = this.props.incoming ? isCallDropped ? 'call_missed' : 'call_received' : isCallDropped ? 'call_missed_outgoing' : 'call_made';
+    const duration = isCallDropped ? this.props.incoming ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "call_missed",
       defaultMessage: [{
         "type": 0,
@@ -11290,7 +11134,7 @@ class CallMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       className: "material-icons big gray"
     }, "call")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "flex-column narrow"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.props.response ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.props.incoming ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "calls_incoming",
       defaultMessage: [{
         "type": 0,
@@ -11742,7 +11586,7 @@ class CallStatus extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
       className: "material-icons"
     }, "call"), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons second"
-    }, icon2));
+    }, icon2), this.props.callState);
   }
 
 }
@@ -17479,7 +17323,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var name = "firebase";
-var version = "9.6.11";
+var version = "9.8.1";
 
 /**
  * @license
@@ -18123,6 +17967,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _firebase_component__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/component */ "./node_modules/@firebase/component/dist/esm/index.esm2017.js");
 /* harmony import */ var _firebase_logger__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @firebase/logger */ "./node_modules/@firebase/logger/dist/esm/index.esm2017.js");
 /* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm2017.js");
+/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! idb */ "./node_modules/idb/build/index.js");
+
 
 
 
@@ -18182,7 +18028,7 @@ function isVersionServiceProvider(provider) {
 }
 
 const name$o = "@firebase/app";
-const version$1 = "0.7.21";
+const version$1 = "0.7.24";
 
 /**
  * @license
@@ -18249,7 +18095,7 @@ const name$2 = "@firebase/firestore";
 const name$1 = "@firebase/firestore-compat";
 
 const name = "firebase";
-const version = "9.6.11";
+const version = "9.8.1";
 
 /**
  * @license
@@ -18713,15 +18559,17 @@ const STORE_NAME = 'firebase-heartbeat-store';
 let dbPromise = null;
 function getDbPromise() {
     if (!dbPromise) {
-        dbPromise = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.openDB)(DB_NAME, DB_VERSION, (db, oldVersion) => {
-            // We don't use 'break' in this switch statement, the fall-through
-            // behavior is what we want, because if there are multiple versions between
-            // the old version and the current version, we want ALL the migrations
-            // that correspond to those versions to run, not only the last one.
-            // eslint-disable-next-line default-case
-            switch (oldVersion) {
-                case 0:
-                    db.createObjectStore(STORE_NAME);
+        dbPromise = (0,idb__WEBPACK_IMPORTED_MODULE_3__.openDB)(DB_NAME, DB_VERSION, {
+            upgrade: (db, oldVersion) => {
+                // We don't use 'break' in this switch statement, the fall-through
+                // behavior is what we want, because if there are multiple versions between
+                // the old version and the current version, we want ALL the migrations
+                // that correspond to those versions to run, not only the last one.
+                // eslint-disable-next-line default-case
+                switch (oldVersion) {
+                    case 0:
+                        db.createObjectStore(STORE_NAME);
+                }
             }
         }).catch(e => {
             throw ERROR_FACTORY.create("storage-open" /* STORAGE_OPEN */, {
@@ -18751,7 +18599,7 @@ async function writeHeartbeatsToIndexedDB(app, heartbeatObject) {
         const tx = db.transaction(STORE_NAME, 'readwrite');
         const objectStore = tx.objectStore(STORE_NAME);
         await objectStore.put(heartbeatObject, computeKey(app));
-        return tx.complete;
+        return tx.done;
     }
     catch (e) {
         throw ERROR_FACTORY.create("storage-set" /* STORAGE_WRITE */, {
@@ -19481,12 +19329,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
 /* harmony import */ var _firebase_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @firebase/component */ "./node_modules/@firebase/component/dist/esm/index.esm2017.js");
 /* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm2017.js");
+/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! idb */ "./node_modules/idb/build/index.js");
+
 
 
 
 
 const name = "@firebase/installations";
-const version = "0.5.8";
+const version = "0.5.9";
 
 /**
  * @license
@@ -19888,15 +19738,17 @@ const OBJECT_STORE_NAME = 'firebase-installations-store';
 let dbPromise = null;
 function getDbPromise() {
     if (!dbPromise) {
-        dbPromise = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.openDB)(DATABASE_NAME, DATABASE_VERSION, (db, oldVersion) => {
-            // We don't use 'break' in this switch statement, the fall-through
-            // behavior is what we want, because if there are multiple versions between
-            // the old version and the current version, we want ALL the migrations
-            // that correspond to those versions to run, not only the last one.
-            // eslint-disable-next-line default-case
-            switch (oldVersion) {
-                case 0:
-                    db.createObjectStore(OBJECT_STORE_NAME);
+        dbPromise = (0,idb__WEBPACK_IMPORTED_MODULE_3__.openDB)(DATABASE_NAME, DATABASE_VERSION, {
+            upgrade: (db, oldVersion) => {
+                // We don't use 'break' in this switch statement, the fall-through
+                // behavior is what we want, because if there are multiple versions between
+                // the old version and the current version, we want ALL the migrations
+                // that correspond to those versions to run, not only the last one.
+                // eslint-disable-next-line default-case
+                switch (oldVersion) {
+                    case 0:
+                        db.createObjectStore(OBJECT_STORE_NAME);
+                }
             }
         });
     }
@@ -19910,7 +19762,7 @@ async function set(appConfig, value) {
     const objectStore = tx.objectStore(OBJECT_STORE_NAME);
     const oldValue = (await objectStore.get(key));
     await objectStore.put(value, key);
-    await tx.complete;
+    await tx.done;
     if (!oldValue || oldValue.fid !== value.fid) {
         fidChanged(appConfig, value.fid);
     }
@@ -19922,7 +19774,7 @@ async function remove(appConfig) {
     const db = await getDbPromise();
     const tx = db.transaction(OBJECT_STORE_NAME, 'readwrite');
     await tx.objectStore(OBJECT_STORE_NAME).delete(key);
-    await tx.complete;
+    await tx.done;
 }
 /**
  * Atomically updates a record with the result of updateFn, which gets
@@ -19943,7 +19795,7 @@ async function update(appConfig, updateFn) {
     else {
         await store.put(newValue, key);
     }
-    await tx.complete;
+    await tx.done;
     if (newValue && (!oldValue || oldValue.fid !== newValue.fid)) {
         fidChanged(appConfig, newValue.fid);
     }
@@ -20890,8 +20742,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _firebase_installations__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/installations */ "./node_modules/@firebase/installations/dist/esm/index.esm2017.js");
 /* harmony import */ var _firebase_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @firebase/component */ "./node_modules/@firebase/component/dist/esm/index.esm2017.js");
-/* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm2017.js");
-/* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
+/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! idb */ "./node_modules/idb/build/index.js");
+/* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm2017.js");
+/* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
+
 
 
 
@@ -21017,76 +20871,78 @@ async function migrateOldDatabase(senderId) {
         }
     }
     let tokenDetails = null;
-    const db = await (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.openDB)(OLD_DB_NAME, OLD_DB_VERSION, async (db, oldVersion, newVersion, upgradeTransaction) => {
-        var _a;
-        if (oldVersion < 2) {
-            // Database too old, skip migration.
-            return;
-        }
-        if (!db.objectStoreNames.contains(OLD_OBJECT_STORE_NAME)) {
-            // Database did not exist. Nothing to do.
-            return;
-        }
-        const objectStore = upgradeTransaction.objectStore(OLD_OBJECT_STORE_NAME);
-        const value = await objectStore.index('fcmSenderId').get(senderId);
-        await objectStore.clear();
-        if (!value) {
-            // No entry in the database, nothing to migrate.
-            return;
-        }
-        if (oldVersion === 2) {
-            const oldDetails = value;
-            if (!oldDetails.auth || !oldDetails.p256dh || !oldDetails.endpoint) {
+    const db = await (0,idb__WEBPACK_IMPORTED_MODULE_2__.openDB)(OLD_DB_NAME, OLD_DB_VERSION, {
+        upgrade: async (db, oldVersion, newVersion, upgradeTransaction) => {
+            var _a;
+            if (oldVersion < 2) {
+                // Database too old, skip migration.
                 return;
             }
-            tokenDetails = {
-                token: oldDetails.fcmToken,
-                createTime: (_a = oldDetails.createTime) !== null && _a !== void 0 ? _a : Date.now(),
-                subscriptionOptions: {
-                    auth: oldDetails.auth,
-                    p256dh: oldDetails.p256dh,
-                    endpoint: oldDetails.endpoint,
-                    swScope: oldDetails.swScope,
-                    vapidKey: typeof oldDetails.vapidKey === 'string'
-                        ? oldDetails.vapidKey
-                        : arrayToBase64(oldDetails.vapidKey)
+            if (!db.objectStoreNames.contains(OLD_OBJECT_STORE_NAME)) {
+                // Database did not exist. Nothing to do.
+                return;
+            }
+            const objectStore = upgradeTransaction.objectStore(OLD_OBJECT_STORE_NAME);
+            const value = await objectStore.index('fcmSenderId').get(senderId);
+            await objectStore.clear();
+            if (!value) {
+                // No entry in the database, nothing to migrate.
+                return;
+            }
+            if (oldVersion === 2) {
+                const oldDetails = value;
+                if (!oldDetails.auth || !oldDetails.p256dh || !oldDetails.endpoint) {
+                    return;
                 }
-            };
-        }
-        else if (oldVersion === 3) {
-            const oldDetails = value;
-            tokenDetails = {
-                token: oldDetails.fcmToken,
-                createTime: oldDetails.createTime,
-                subscriptionOptions: {
-                    auth: arrayToBase64(oldDetails.auth),
-                    p256dh: arrayToBase64(oldDetails.p256dh),
-                    endpoint: oldDetails.endpoint,
-                    swScope: oldDetails.swScope,
-                    vapidKey: arrayToBase64(oldDetails.vapidKey)
-                }
-            };
-        }
-        else if (oldVersion === 4) {
-            const oldDetails = value;
-            tokenDetails = {
-                token: oldDetails.fcmToken,
-                createTime: oldDetails.createTime,
-                subscriptionOptions: {
-                    auth: arrayToBase64(oldDetails.auth),
-                    p256dh: arrayToBase64(oldDetails.p256dh),
-                    endpoint: oldDetails.endpoint,
-                    swScope: oldDetails.swScope,
-                    vapidKey: arrayToBase64(oldDetails.vapidKey)
-                }
-            };
+                tokenDetails = {
+                    token: oldDetails.fcmToken,
+                    createTime: (_a = oldDetails.createTime) !== null && _a !== void 0 ? _a : Date.now(),
+                    subscriptionOptions: {
+                        auth: oldDetails.auth,
+                        p256dh: oldDetails.p256dh,
+                        endpoint: oldDetails.endpoint,
+                        swScope: oldDetails.swScope,
+                        vapidKey: typeof oldDetails.vapidKey === 'string'
+                            ? oldDetails.vapidKey
+                            : arrayToBase64(oldDetails.vapidKey)
+                    }
+                };
+            }
+            else if (oldVersion === 3) {
+                const oldDetails = value;
+                tokenDetails = {
+                    token: oldDetails.fcmToken,
+                    createTime: oldDetails.createTime,
+                    subscriptionOptions: {
+                        auth: arrayToBase64(oldDetails.auth),
+                        p256dh: arrayToBase64(oldDetails.p256dh),
+                        endpoint: oldDetails.endpoint,
+                        swScope: oldDetails.swScope,
+                        vapidKey: arrayToBase64(oldDetails.vapidKey)
+                    }
+                };
+            }
+            else if (oldVersion === 4) {
+                const oldDetails = value;
+                tokenDetails = {
+                    token: oldDetails.fcmToken,
+                    createTime: oldDetails.createTime,
+                    subscriptionOptions: {
+                        auth: arrayToBase64(oldDetails.auth),
+                        p256dh: arrayToBase64(oldDetails.p256dh),
+                        endpoint: oldDetails.endpoint,
+                        swScope: oldDetails.swScope,
+                        vapidKey: arrayToBase64(oldDetails.vapidKey)
+                    }
+                };
+            }
         }
     });
     db.close();
     // Delete all old databases.
-    await (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.deleteDB)(OLD_DB_NAME);
-    await (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.deleteDB)('fcm_vapid_details_db');
-    await (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.deleteDB)('undefined');
+    await (0,idb__WEBPACK_IMPORTED_MODULE_2__.deleteDB)(OLD_DB_NAME);
+    await (0,idb__WEBPACK_IMPORTED_MODULE_2__.deleteDB)('fcm_vapid_details_db');
+    await (0,idb__WEBPACK_IMPORTED_MODULE_2__.deleteDB)('undefined');
     return checkTokenDetails(tokenDetails) ? tokenDetails : null;
 }
 function checkTokenDetails(tokenDetails) {
@@ -21133,14 +20989,16 @@ const OBJECT_STORE_NAME = 'firebase-messaging-store';
 let dbPromise = null;
 function getDbPromise() {
     if (!dbPromise) {
-        dbPromise = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.openDB)(DATABASE_NAME, DATABASE_VERSION, (upgradeDb, oldVersion) => {
-            // We don't use 'break' in this switch statement, the fall-through behavior is what we want,
-            // because if there are multiple versions between the old version and the current version, we
-            // want ALL the migrations that correspond to those versions to run, not only the last one.
-            // eslint-disable-next-line default-case
-            switch (oldVersion) {
-                case 0:
-                    upgradeDb.createObjectStore(OBJECT_STORE_NAME);
+        dbPromise = (0,idb__WEBPACK_IMPORTED_MODULE_2__.openDB)(DATABASE_NAME, DATABASE_VERSION, {
+            upgrade: (upgradeDb, oldVersion) => {
+                // We don't use 'break' in this switch statement, the fall-through behavior is what we want,
+                // because if there are multiple versions between the old version and the current version, we
+                // want ALL the migrations that correspond to those versions to run, not only the last one.
+                // eslint-disable-next-line default-case
+                switch (oldVersion) {
+                    case 0:
+                        upgradeDb.createObjectStore(OBJECT_STORE_NAME);
+                }
             }
         });
     }
@@ -21172,7 +21030,7 @@ async function dbSet(firebaseDependencies, tokenDetails) {
     const db = await getDbPromise();
     const tx = db.transaction(OBJECT_STORE_NAME, 'readwrite');
     await tx.objectStore(OBJECT_STORE_NAME).put(tokenDetails, key);
-    await tx.complete;
+    await tx.done;
     return tokenDetails;
 }
 /** Removes record(s) from the objectStore that match the given key. */
@@ -21181,7 +21039,7 @@ async function dbRemove(firebaseDependencies) {
     const db = await getDbPromise();
     const tx = db.transaction(OBJECT_STORE_NAME, 'readwrite');
     await tx.objectStore(OBJECT_STORE_NAME).delete(key);
-    await tx.complete;
+    await tx.done;
 }
 function getKey({ appConfig }) {
     return appConfig.appId;
@@ -21226,7 +21084,7 @@ const ERROR_MAP = {
     ["use-vapid-key-after-get-token" /* USE_VAPID_KEY_AFTER_GET_TOKEN */]: 'The usePublicVapidKey() method may only be called once and must be ' +
         'called before calling getToken() to ensure your VAPID key is used.'
 };
-const ERROR_FACTORY = new _firebase_util__WEBPACK_IMPORTED_MODULE_2__.ErrorFactory('messaging', 'Messaging', ERROR_MAP);
+const ERROR_FACTORY = new _firebase_util__WEBPACK_IMPORTED_MODULE_3__.ErrorFactory('messaging', 'Messaging', ERROR_MAP);
 
 /**
  * @license
@@ -21878,7 +21736,7 @@ async function messageEventListener(messaging, event) {
 }
 
 const name = "@firebase/messaging";
-const version = "0.9.12";
+const version = "0.9.13";
 
 /**
  * @license
@@ -21911,11 +21769,11 @@ const WindowMessagingInternalFactory = (container) => {
     return messagingInternal;
 };
 function registerMessagingInWindow() {
-    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_3__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component('messaging', WindowMessagingFactory, "PUBLIC" /* PUBLIC */));
-    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_3__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component('messaging-internal', WindowMessagingInternalFactory, "PRIVATE" /* PRIVATE */));
-    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_3__.registerVersion)(name, version);
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component('messaging', WindowMessagingFactory, "PUBLIC" /* PUBLIC */));
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component('messaging-internal', WindowMessagingInternalFactory, "PRIVATE" /* PRIVATE */));
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__.registerVersion)(name, version);
     // BUILD_TARGET will be replaced by values like esm5, esm2017, cjs5, etc during the compilation
-    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_3__.registerVersion)(name, version, 'esm2017');
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__.registerVersion)(name, version, 'esm2017');
 }
 
 /**
@@ -21944,7 +21802,7 @@ async function isWindowSupported() {
     try {
         // This throws if open() is unsupported, so adding it to the conditional
         // statement below can cause an uncaught error.
-        await (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.validateIndexedDBOpenable)();
+        await (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.validateIndexedDBOpenable)();
     }
     catch (e) {
         return false;
@@ -21953,8 +21811,8 @@ async function isWindowSupported() {
     // might be prohibited to run. In these contexts, an error would be thrown during the messaging
     // instantiating phase, informing the developers to import/call isSupported for special handling.
     return (typeof window !== 'undefined' &&
-        (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.isIndexedDBAvailable)() &&
-        (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.areCookiesEnabled)() &&
+        (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.isIndexedDBAvailable)() &&
+        (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.areCookiesEnabled)() &&
         'serviceWorker' in navigator &&
         'PushManager' in window &&
         'Notification' in window &&
@@ -22038,7 +21896,7 @@ function onMessage$1(messaging, nextOrObserver) {
  *
  * @public
  */
-function getMessagingInWindow(app = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_3__.getApp)()) {
+function getMessagingInWindow(app = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__.getApp)()) {
     // Conscious decision to make this async check non-blocking during the messaging instance
     // initialization phase for performance consideration. An error would be thrown latter for
     // developer's information. Developers can then choose to import and call `isSupported` for
@@ -22052,7 +21910,7 @@ function getMessagingInWindow(app = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_3_
         // If `isWindowSupported()` rejected.
         throw ERROR_FACTORY.create("indexed-db-unsupported" /* INDEXED_DB_UNSUPPORTED */);
     });
-    return (0,_firebase_app__WEBPACK_IMPORTED_MODULE_3__._getProvider)((0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.getModularInstance)(app), 'messaging').getImmediate();
+    return (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__._getProvider)((0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.getModularInstance)(app), 'messaging').getImmediate();
 }
 /**
  * Subscribes the {@link Messaging} instance to push notifications. Returns an Firebase Cloud
@@ -22070,7 +21928,7 @@ function getMessagingInWindow(app = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_3_
  * @public
  */
 async function getToken(messaging, options) {
-    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.getModularInstance)(messaging);
+    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.getModularInstance)(messaging);
     return getToken$1(messaging, options);
 }
 /**
@@ -22084,7 +21942,7 @@ async function getToken(messaging, options) {
  * @public
  */
 function deleteToken(messaging) {
-    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.getModularInstance)(messaging);
+    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.getModularInstance)(messaging);
     return deleteToken$1(messaging);
 }
 /**
@@ -22101,7 +21959,7 @@ function deleteToken(messaging) {
  * @public
  */
 function onMessage(messaging, nextOrObserver) {
-    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.getModularInstance)(messaging);
+    messaging = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.getModularInstance)(messaging);
     return onMessage$1(messaging, nextOrObserver);
 }
 
@@ -22114,6 +21972,317 @@ registerMessagingInWindow();
 
 
 //# sourceMappingURL=index.esm2017.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/idb/build/index.js":
+/*!*****************************************!*\
+  !*** ./node_modules/idb/build/index.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "deleteDB": () => (/* binding */ deleteDB),
+/* harmony export */   "openDB": () => (/* binding */ openDB),
+/* harmony export */   "unwrap": () => (/* reexport safe */ _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.u),
+/* harmony export */   "wrap": () => (/* reexport safe */ _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)
+/* harmony export */ });
+/* harmony import */ var _wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./wrap-idb-value.js */ "./node_modules/idb/build/wrap-idb-value.js");
+
+
+
+/**
+ * Open a database.
+ *
+ * @param name Name of the database.
+ * @param version Schema version.
+ * @param callbacks Additional callbacks.
+ */
+function openDB(name, version, { blocked, upgrade, blocking, terminated } = {}) {
+    const request = indexedDB.open(name, version);
+    const openPromise = (0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request);
+    if (upgrade) {
+        request.addEventListener('upgradeneeded', (event) => {
+            upgrade((0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request.result), event.oldVersion, event.newVersion, (0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request.transaction));
+        });
+    }
+    if (blocked)
+        request.addEventListener('blocked', () => blocked());
+    openPromise
+        .then((db) => {
+        if (terminated)
+            db.addEventListener('close', () => terminated());
+        if (blocking)
+            db.addEventListener('versionchange', () => blocking());
+    })
+        .catch(() => { });
+    return openPromise;
+}
+/**
+ * Delete a database.
+ *
+ * @param name Name of the database.
+ */
+function deleteDB(name, { blocked } = {}) {
+    const request = indexedDB.deleteDatabase(name);
+    if (blocked)
+        request.addEventListener('blocked', () => blocked());
+    return (0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.w)(request).then(() => undefined);
+}
+
+const readMethods = ['get', 'getKey', 'getAll', 'getAllKeys', 'count'];
+const writeMethods = ['put', 'add', 'delete', 'clear'];
+const cachedMethods = new Map();
+function getMethod(target, prop) {
+    if (!(target instanceof IDBDatabase &&
+        !(prop in target) &&
+        typeof prop === 'string')) {
+        return;
+    }
+    if (cachedMethods.get(prop))
+        return cachedMethods.get(prop);
+    const targetFuncName = prop.replace(/FromIndex$/, '');
+    const useIndex = prop !== targetFuncName;
+    const isWrite = writeMethods.includes(targetFuncName);
+    if (
+    // Bail if the target doesn't exist on the target. Eg, getAll isn't in Edge.
+    !(targetFuncName in (useIndex ? IDBIndex : IDBObjectStore).prototype) ||
+        !(isWrite || readMethods.includes(targetFuncName))) {
+        return;
+    }
+    const method = async function (storeName, ...args) {
+        // isWrite ? 'readwrite' : undefined gzipps better, but fails in Edge :(
+        const tx = this.transaction(storeName, isWrite ? 'readwrite' : 'readonly');
+        let target = tx.store;
+        if (useIndex)
+            target = target.index(args.shift());
+        // Must reject if op rejects.
+        // If it's a write operation, must reject if tx.done rejects.
+        // Must reject with op rejection first.
+        // Must resolve with op value.
+        // Must handle both promises (no unhandled rejections)
+        return (await Promise.all([
+            target[targetFuncName](...args),
+            isWrite && tx.done,
+        ]))[0];
+    };
+    cachedMethods.set(prop, method);
+    return method;
+}
+(0,_wrap_idb_value_js__WEBPACK_IMPORTED_MODULE_0__.r)((oldTraps) => ({
+    ...oldTraps,
+    get: (target, prop, receiver) => getMethod(target, prop) || oldTraps.get(target, prop, receiver),
+    has: (target, prop) => !!getMethod(target, prop) || oldTraps.has(target, prop),
+}));
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/idb/build/wrap-idb-value.js":
+/*!**************************************************!*\
+  !*** ./node_modules/idb/build/wrap-idb-value.js ***!
+  \**************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "a": () => (/* binding */ reverseTransformCache),
+/* harmony export */   "i": () => (/* binding */ instanceOfAny),
+/* harmony export */   "r": () => (/* binding */ replaceTraps),
+/* harmony export */   "u": () => (/* binding */ unwrap),
+/* harmony export */   "w": () => (/* binding */ wrap)
+/* harmony export */ });
+const instanceOfAny = (object, constructors) => constructors.some((c) => object instanceof c);
+
+let idbProxyableTypes;
+let cursorAdvanceMethods;
+// This is a function to prevent it throwing up in node environments.
+function getIdbProxyableTypes() {
+    return (idbProxyableTypes ||
+        (idbProxyableTypes = [
+            IDBDatabase,
+            IDBObjectStore,
+            IDBIndex,
+            IDBCursor,
+            IDBTransaction,
+        ]));
+}
+// This is a function to prevent it throwing up in node environments.
+function getCursorAdvanceMethods() {
+    return (cursorAdvanceMethods ||
+        (cursorAdvanceMethods = [
+            IDBCursor.prototype.advance,
+            IDBCursor.prototype.continue,
+            IDBCursor.prototype.continuePrimaryKey,
+        ]));
+}
+const cursorRequestMap = new WeakMap();
+const transactionDoneMap = new WeakMap();
+const transactionStoreNamesMap = new WeakMap();
+const transformCache = new WeakMap();
+const reverseTransformCache = new WeakMap();
+function promisifyRequest(request) {
+    const promise = new Promise((resolve, reject) => {
+        const unlisten = () => {
+            request.removeEventListener('success', success);
+            request.removeEventListener('error', error);
+        };
+        const success = () => {
+            resolve(wrap(request.result));
+            unlisten();
+        };
+        const error = () => {
+            reject(request.error);
+            unlisten();
+        };
+        request.addEventListener('success', success);
+        request.addEventListener('error', error);
+    });
+    promise
+        .then((value) => {
+        // Since cursoring reuses the IDBRequest (*sigh*), we cache it for later retrieval
+        // (see wrapFunction).
+        if (value instanceof IDBCursor) {
+            cursorRequestMap.set(value, request);
+        }
+        // Catching to avoid "Uncaught Promise exceptions"
+    })
+        .catch(() => { });
+    // This mapping exists in reverseTransformCache but doesn't doesn't exist in transformCache. This
+    // is because we create many promises from a single IDBRequest.
+    reverseTransformCache.set(promise, request);
+    return promise;
+}
+function cacheDonePromiseForTransaction(tx) {
+    // Early bail if we've already created a done promise for this transaction.
+    if (transactionDoneMap.has(tx))
+        return;
+    const done = new Promise((resolve, reject) => {
+        const unlisten = () => {
+            tx.removeEventListener('complete', complete);
+            tx.removeEventListener('error', error);
+            tx.removeEventListener('abort', error);
+        };
+        const complete = () => {
+            resolve();
+            unlisten();
+        };
+        const error = () => {
+            reject(tx.error || new DOMException('AbortError', 'AbortError'));
+            unlisten();
+        };
+        tx.addEventListener('complete', complete);
+        tx.addEventListener('error', error);
+        tx.addEventListener('abort', error);
+    });
+    // Cache it for later retrieval.
+    transactionDoneMap.set(tx, done);
+}
+let idbProxyTraps = {
+    get(target, prop, receiver) {
+        if (target instanceof IDBTransaction) {
+            // Special handling for transaction.done.
+            if (prop === 'done')
+                return transactionDoneMap.get(target);
+            // Polyfill for objectStoreNames because of Edge.
+            if (prop === 'objectStoreNames') {
+                return target.objectStoreNames || transactionStoreNamesMap.get(target);
+            }
+            // Make tx.store return the only store in the transaction, or undefined if there are many.
+            if (prop === 'store') {
+                return receiver.objectStoreNames[1]
+                    ? undefined
+                    : receiver.objectStore(receiver.objectStoreNames[0]);
+            }
+        }
+        // Else transform whatever we get back.
+        return wrap(target[prop]);
+    },
+    set(target, prop, value) {
+        target[prop] = value;
+        return true;
+    },
+    has(target, prop) {
+        if (target instanceof IDBTransaction &&
+            (prop === 'done' || prop === 'store')) {
+            return true;
+        }
+        return prop in target;
+    },
+};
+function replaceTraps(callback) {
+    idbProxyTraps = callback(idbProxyTraps);
+}
+function wrapFunction(func) {
+    // Due to expected object equality (which is enforced by the caching in `wrap`), we
+    // only create one new func per func.
+    // Edge doesn't support objectStoreNames (booo), so we polyfill it here.
+    if (func === IDBDatabase.prototype.transaction &&
+        !('objectStoreNames' in IDBTransaction.prototype)) {
+        return function (storeNames, ...args) {
+            const tx = func.call(unwrap(this), storeNames, ...args);
+            transactionStoreNamesMap.set(tx, storeNames.sort ? storeNames.sort() : [storeNames]);
+            return wrap(tx);
+        };
+    }
+    // Cursor methods are special, as the behaviour is a little more different to standard IDB. In
+    // IDB, you advance the cursor and wait for a new 'success' on the IDBRequest that gave you the
+    // cursor. It's kinda like a promise that can resolve with many values. That doesn't make sense
+    // with real promises, so each advance methods returns a new promise for the cursor object, or
+    // undefined if the end of the cursor has been reached.
+    if (getCursorAdvanceMethods().includes(func)) {
+        return function (...args) {
+            // Calling the original function with the proxy as 'this' causes ILLEGAL INVOCATION, so we use
+            // the original object.
+            func.apply(unwrap(this), args);
+            return wrap(cursorRequestMap.get(this));
+        };
+    }
+    return function (...args) {
+        // Calling the original function with the proxy as 'this' causes ILLEGAL INVOCATION, so we use
+        // the original object.
+        return wrap(func.apply(unwrap(this), args));
+    };
+}
+function transformCachableValue(value) {
+    if (typeof value === 'function')
+        return wrapFunction(value);
+    // This doesn't return, it just creates a 'done' promise for the transaction,
+    // which is later returned for transaction.done (see idbObjectHandler).
+    if (value instanceof IDBTransaction)
+        cacheDonePromiseForTransaction(value);
+    if (instanceOfAny(value, getIdbProxyableTypes()))
+        return new Proxy(value, idbProxyTraps);
+    // Return the same value back if we're not going to transform it.
+    return value;
+}
+function wrap(value) {
+    // We sometimes generate multiple promises from a single IDBRequest (eg when cursoring), because
+    // IDB is weird and a single IDBRequest can yield many responses, so these can't be cached.
+    if (value instanceof IDBRequest)
+        return promisifyRequest(value);
+    // If we've already transformed this value before, reuse the transformed value.
+    // This is faster, but it also provides object equality.
+    if (transformCache.has(value))
+        return transformCache.get(value);
+    const newValue = transformCachableValue(value);
+    // Not all types are transformed.
+    // These may be primitive types, so they can't be WeakMap keys.
+    if (newValue !== value) {
+        transformCache.set(value, newValue);
+        reverseTransformCache.set(newValue, value);
+    }
+    return newValue;
+}
+const unwrap = (value) => reverseTransformCache.get(value);
+
+
 
 
 /***/ }),
