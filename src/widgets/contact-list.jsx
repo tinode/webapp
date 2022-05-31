@@ -77,7 +77,6 @@ class ContactList extends React.Component {
             c.private.join(',') : (c.private ? c.private.comment : null);
           let preview;
           let forwarded;
-          let previewIsVideoCall;
           let previewIsResponse;
           let deliveryStatus;
           if (!this.props.showMode && c.latestMessage) {
@@ -85,7 +84,6 @@ class ContactList extends React.Component {
             if (msg) {
               forwarded = msg.head ? msg.head.forwarded : null;
               deliveryStatus = msg._status || c.msgStatus(msg, true);
-              previewIsVideoCall = msg.head ? (msg.head.webrtc !== undefined) : null;
               previewIsResponse = msg.from != this.props.myUserId;
               if (msg.content) {
                 preview = typeof msg.content == 'string' ?
@@ -102,7 +100,6 @@ class ContactList extends React.Component {
               avatar={makeImageUrl(c.public ? c.public.photo : null)}
               comment={comment}
               preview={preview}
-              previewIsVideoCall={previewIsVideoCall}
               previewIsResponse={previewIsResponse}
               forwarded={forwarded}
               received={deliveryStatus}

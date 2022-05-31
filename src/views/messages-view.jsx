@@ -26,7 +26,6 @@ import { CALL_STATE_OUTGOING_INITATED, CALL_STATE_IN_PROGRESS } from '../constan
 import { blobToBase64, fileToBase64, imageScaled, makeImageUrl } from '../lib/blob-helpers.js';
 import HashNavigation from '../lib/navigation.js';
 import { bytesToHumanSize, shortDateFormat } from '../lib/strformat.js';
-import { isVideoCall } from '../lib/utils.js';
 
 // Run timer with this frequency (ms) for checking notification queue.
 const NOTIFICATION_EXEC_INTERVAL = 300;
@@ -1137,15 +1136,12 @@ class MessagesView extends React.Component {
               );
               prevDate = thisDate;
             }
-            const duration = msg.head ? msg.head['webrtc-duration'] : undefined;
             messageNodes.push(
               <ChatMessage
                 tinode={this.props.tinode}
                 content={msg.content}
-                mimeType={msg.head ? msg.head.mime : null}
+                mimeType={msg.head && msg.head.mime}
                 timestamp={msg.ts}
-                callState={msg.head ? msg.head.webrtc : null}
-                duration={duration}
                 response={isReply}
                 seq={msg.seq}
                 isGroup={groupTopic}

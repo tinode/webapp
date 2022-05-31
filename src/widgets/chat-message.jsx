@@ -9,7 +9,7 @@ import LetterTile from './letter-tile.jsx';
 import ReceivedMarker from './received-marker.jsx'
 
 import { fullFormatter } from '../lib/formatters.js';
-import { isVideoCall, sanitizeUrl } from '../lib/utils.js';
+import { sanitizeUrl } from '../lib/utils.js';
 
 class BaseChatMessage extends React.PureComponent {
   constructor(props) {
@@ -33,11 +33,6 @@ class BaseChatMessage extends React.PureComponent {
       formatMessage: props.intl.formatMessage.bind(props.intl),
       viewportWidth: props.viewportWidth,
       authorizeURL: props.tinode.authorizeURL.bind(props.tinode),
-
-      // Video call related bits.
-      callState: props.callState,
-      isResponse: props.response,
-      callDuration: props.duration,
 
       onImagePreview: this.handleImagePreview,
       onFormButtonClick: this.handleFormButtonClick,

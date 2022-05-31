@@ -2627,9 +2627,13 @@ function fullFormatter(style, data, values, key, stack) {
     case 'VC':
       el = _widgets_call_message_jsx__WEBPACK_IMPORTED_MODULE_4__["default"];
       values = null;
-      attr.callState = this.callState;
-      attr.incoming = this.isResponse;
-      attr.duration = this.callDuration;
+
+      if (data) {
+        attr.callState = data.state;
+        attr.incoming = data.incoming;
+        attr.duration = data.duration;
+      }
+
       break;
 
     default:
@@ -2739,11 +2743,13 @@ function previewFormatter(style, data, values, key) {
 
     case 'VC':
       el = _widgets_call_status_jsx__WEBPACK_IMPORTED_MODULE_5__["default"];
-      attr.callState = this.callState;
-      attr.incoming = this.previewIsResponse;
-      attr.duration = this.callDuration;
-      ;
-      attr.success = true;
+
+      if (data) {
+        attr.callState = data.state;
+        attr.incoming = data.incoming;
+        attr.duration = data.duration;
+      }
+
       values = null;
       break;
 
@@ -5401,8 +5407,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 /* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-
 
 
 
@@ -6576,14 +6580,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
               prevDate = thisDate;
             }
 
-            const duration = msg.head ? msg.head['webrtc-duration'] : undefined;
             messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_chat_message_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
               tinode: this.props.tinode,
               content: msg.content,
-              mimeType: msg.head ? msg.head.mime : null,
+              mimeType: msg.head && msg.head.mime,
               timestamp: msg.ts,
-              callState: msg.head ? msg.head.webrtc : null,
-              duration: duration,
               response: isReply,
               seq: msg.seq,
               isGroup: groupTopic,
@@ -11576,17 +11577,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+
+
 
 class CallStatus extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
-    const icon2 = [['call_received', 'call_missed'], ['call_made', 'call_missed_outgoing']][this.props.incoming ? 0 : 1][this.props.success ? 0 : 1] || 'question_mark';
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    const isCallDropped = this.props.callState == 'disconnected';
+    const icon2 = this.props.incoming ? isCallDropped ? 'call_missed' : 'call_received' : isCallDropped ? 'call_missed_outgoing' : 'call_made';
+    const duration = isCallDropped ? this.props.incoming ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "call_missed",
+      defaultMessage: [{
+        "type": 0,
+        "value": "missed"
+      }]
+    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "call_cancelled",
+      defaultMessage: [{
+        "type": 0,
+        "value": "cancelled"
+      }]
+    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__.secondsToTime)(this.props.duration / 1000));
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "composed-material"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, "call"), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons second"
-    }, icon2), this.props.callState);
+    }, icon2)), " ", duration);
   }
 
 }
@@ -11647,9 +11667,6 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       formatMessage: props.intl.formatMessage.bind(props.intl),
       viewportWidth: props.viewportWidth,
       authorizeURL: props.tinode.authorizeURL.bind(props.tinode),
-      callState: props.callState,
-      isResponse: props.response,
-      callDuration: props.duration,
       onImagePreview: this.handleImagePreview,
       onFormButtonClick: this.handleFormButtonClick,
       onQuoteClick: this.handleQuoteClick
@@ -12310,7 +12327,6 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
           const comment = Array.isArray(c.private) ? c.private.join(',') : c.private ? c.private.comment : null;
           let preview;
           let forwarded;
-          let previewIsVideoCall;
           let previewIsResponse;
           let deliveryStatus;
 
@@ -12320,7 +12336,6 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
             if (msg) {
               forwarded = msg.head ? msg.head.forwarded : null;
               deliveryStatus = msg._status || c.msgStatus(msg, true);
-              previewIsVideoCall = msg.head ? msg.head.webrtc !== undefined : null;
               previewIsResponse = msg.from != this.props.myUserId;
 
               if (msg.content) {
@@ -12335,7 +12350,6 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
             avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__.makeImageUrl)(c.public ? c.public.photo : null),
             comment: comment,
             preview: preview,
-            previewIsVideoCall: previewIsVideoCall,
             previewIsResponse: previewIsResponse,
             forwarded: forwarded,
             received: deliveryStatus,
