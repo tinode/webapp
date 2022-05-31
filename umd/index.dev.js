@@ -1985,7 +1985,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "APP_NAME": () => (/* binding */ APP_NAME),
 /* harmony export */   "AVATAR_SIZE": () => (/* binding */ AVATAR_SIZE),
 /* harmony export */   "BROKEN_IMAGE_SIZE": () => (/* binding */ BROKEN_IMAGE_SIZE),
-/* harmony export */   "CALL_WEBRTC_CONFIG": () => (/* binding */ CALL_WEBRTC_CONFIG),
 /* harmony export */   "CHANNEL_ACCESS_MODE": () => (/* binding */ CHANNEL_ACCESS_MODE),
 /* harmony export */   "DEFAULT_HOST": () => (/* binding */ DEFAULT_HOST),
 /* harmony export */   "DEFAULT_P2P_ACCESS_MODE": () => (/* binding */ DEFAULT_P2P_ACCESS_MODE),
@@ -2064,15 +2063,6 @@ const MAX_DURATION = 600000;
 const LINK_CONTACT_US = 'mailto:support@tinode.co';
 const LINK_PRIVACY_POLICY = 'https://tinode.co/privacy.html';
 const LINK_TERMS_OF_SERVICE = 'https://tinode.co/terms.html';
-const CALL_WEBRTC_CONFIG = {
-  iceServers: [{
-    urls: ["stun:bn-turn1.xirsys.com"]
-  }, {
-    username: "0kYXFmQL9xojOrUy4VFemlTnNPVFZpp7jfPjpB3AjxahuRe4QWrCs6Ll1vDc7TTjAAAAAGAG2whXZWJUdXRzUGx1cw==",
-    credential: "285ff060-5a58-11eb-b269-0242ac140004",
-    urls: ["turn:bn-turn1.xirsys.com:80?transport=udp", "turn:bn-turn1.xirsys.com:3478?transport=udp", "turn:bn-turn1.xirsys.com:80?transport=tcp", "turn:bn-turn1.xirsys.com:3478?transport=tcp", "turns:bn-turn1.xirsys.com:443?transport=tcp", "turns:bn-turn1.xirsys.com:5349?transport=tcp"]
-  }]
-};
 
 /***/ }),
 
@@ -6208,7 +6198,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
 
   sendFileAttachment(file) {
-    const maxInbandAttachmentSize = this.props.tinode.getServerLimit('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
+    const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
 
     if (file.size > maxInbandAttachmentSize) {
       const uploader = this.props.tinode.getLargeFileHelper();
@@ -6236,7 +6226,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
 
   handleAttachFile(file) {
-    const maxExternAttachmentSize = this.props.tinode.getServerLimit('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_EXTERN_ATTACHMENT_SIZE);
+    const maxExternAttachmentSize = this.props.tinode.getServerParam('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_EXTERN_ATTACHMENT_SIZE);
 
     if (file.size > maxExternAttachmentSize) {
       this.props.onError(this.props.intl.formatMessage(messages.file_attachment_too_large, {
@@ -6268,7 +6258,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     const width = this.state.imagePreview.width;
     const height = this.state.imagePreview.height;
     const fname = this.state.imagePreview.name;
-    const maxInbandAttachmentSize = this.props.tinode.getServerLimit('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
+    const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
 
     if (blob.size > maxInbandAttachmentSize) {
       const uploader = this.props.tinode.getLargeFileHelper();
@@ -6322,7 +6312,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
 
   handleAttachImage(file) {
-    const maxExternAttachmentSize = this.props.tinode.getServerLimit('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_EXTERN_ATTACHMENT_SIZE);
+    const maxExternAttachmentSize = this.props.tinode.getServerParam('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_EXTERN_ATTACHMENT_SIZE);
     (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_18__.imageScaled)(file, _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_IMAGE_DIM, _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_IMAGE_DIM, maxExternAttachmentSize, false).then(scaled => {
       this.setState({
         imagePreview: {
@@ -6342,7 +6332,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
   sendAudioAttachment(url, preview, duration) {
     fetch(url).then(result => result.blob()).then(blob => {
-      const maxInbandAttachmentSize = this.props.tinode.getServerLimit('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024;
+      const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024;
 
       if (blob.size > maxInbandAttachmentSize) {
         const uploader = this.props.tinode.getLargeFileHelper();
@@ -11355,7 +11345,10 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   }
 
   createPeerConnection() {
-    var pc = new RTCPeerConnection(_config_js__WEBPACK_IMPORTED_MODULE_3__.CALL_WEBRTC_CONFIG);
+    const iceServers = this.props.tinode.getServerParam('iceServers', null);
+    const pc = iceServers ? new RTCPeerConnection({
+      iceServers: iceServers
+    }) : new RTCPeerConnection();
     pc.onicecandidate = this.handleICECandidateEvent;
     pc.oniceconnectionstatechange = this.handleICEConnectionStateChangeEvent;
     pc.onicegatheringstatechange = this.handleICEGatheringStateChangeEvent;
@@ -11369,7 +11362,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   }
 
   handleVideoAnswerMsg(info) {
-    var desc = new RTCSessionDescription(info.payload);
+    const desc = new RTCSessionDescription(info.payload);
     this.state.pc.setRemoteDescription(desc).catch(this.reportError);
   }
 
@@ -11392,7 +11385,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   }
 
   handleNewICECandidateMsg(info) {
-    var candidate = new RTCIceCandidate(info.payload);
+    const candidate = new RTCIceCandidate(info.payload);
     this.state.pc.addIceCandidate(candidate).catch(this.reportError);
   }
 
@@ -11439,10 +11432,10 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   }
 
   handleVideoOfferMsg(info) {
-    var localStream = null;
+    let localStream = null;
     const pc = this.createPeerConnection();
-    var desc = new RTCSessionDescription(info.payload);
-    pc.setRemoteDescription(desc).then(() => {
+    const desc = new RTCSessionDescription(info.payload);
+    pc.setRemoteDescription(desc).then(_ => {
       return navigator.mediaDevices.getUserMedia(this.localStreamConstraints);
     }).then(stream => {
       localStream = stream;
@@ -11453,11 +11446,11 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       localStream.getTracks().forEach(track => {
         pc.addTrack(track, localStream);
       });
-    }).then(() => {
+    }).then(_ => {
       return pc.createAnswer();
     }).then(answer => {
       return pc.setLocalDescription(answer);
-    }).then(() => {
+    }).then(_ => {
       this.props.onSendAnswer(this.props.topic, this.props.seq, pc.localDescription.toJSON());
     }).catch(this.handleGetUserMediaError);
   }
@@ -16106,7 +16099,7 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
   }
 
   handleAddTag(tag) {
-    const maxTagCount = this.props.tinode.getServerLimit('maxTagCount', _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_TAG_COUNT);
+    const maxTagCount = this.props.tinode.getServerParam('maxTagCount', _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_TAG_COUNT);
 
     if (tag.length > 0 && this.state.tags.length < maxTagCount) {
       const tags = this.state.tags.slice(0);
@@ -16159,8 +16152,8 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
   }
 
   render() {
-    const minTagLength = this.props.tinode.getServerLimit('minTagLength', _config_js__WEBPACK_IMPORTED_MODULE_3__.MIN_TAG_LENGTH);
-    const maxTagLength = this.props.tinode.getServerLimit('maxTagLength', _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_TAG_LENGTH);
+    const minTagLength = this.props.tinode.getServerParam('minTagLength', _config_js__WEBPACK_IMPORTED_MODULE_3__.MIN_TAG_LENGTH);
+    const maxTagLength = this.props.tinode.getServerParam('maxTagLength', _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_TAG_LENGTH);
     let tags = [];
 
     if (this.state.activated) {

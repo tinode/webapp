@@ -765,7 +765,7 @@ class MessagesView extends React.Component {
   // - if file is small enough, just send it in-band.
   sendFileAttachment(file) {
     // Server-provided limit reduced for base64 encoding and overhead.
-    const maxInbandAttachmentSize = (this.props.tinode.getServerLimit('maxMessageSize',
+    const maxInbandAttachmentSize = (this.props.tinode.getServerParam('maxMessageSize',
       MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024) | 0;
 
     if (file.size > maxInbandAttachmentSize) {
@@ -794,7 +794,7 @@ class MessagesView extends React.Component {
 
   // handleAttachFile method is called when [Attach file] button is clicked: launch attachment preview.
   handleAttachFile(file) {
-    const maxExternAttachmentSize = this.props.tinode.getServerLimit('maxFileUploadSize', MAX_EXTERN_ATTACHMENT_SIZE);
+    const maxExternAttachmentSize = this.props.tinode.getServerParam('maxFileUploadSize', MAX_EXTERN_ATTACHMENT_SIZE);
 
     if (file.size > maxExternAttachmentSize) {
       // Too large.
@@ -828,7 +828,7 @@ class MessagesView extends React.Component {
     const fname = this.state.imagePreview.name;
 
     // Server-provided limit reduced for base64 encoding and overhead.
-    const maxInbandAttachmentSize = (this.props.tinode.getServerLimit('maxMessageSize',
+    const maxInbandAttachmentSize = (this.props.tinode.getServerParam('maxMessageSize',
       MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024) | 0;
 
     if (blob.size > maxInbandAttachmentSize) {
@@ -887,7 +887,7 @@ class MessagesView extends React.Component {
 
   // handleAttachImage method is called when [Attach image] button is clicked: launch image preview.
   handleAttachImage(file) {
-    const maxExternAttachmentSize = this.props.tinode.getServerLimit('maxFileUploadSize', MAX_EXTERN_ATTACHMENT_SIZE);
+    const maxExternAttachmentSize = this.props.tinode.getServerParam('maxFileUploadSize', MAX_EXTERN_ATTACHMENT_SIZE);
 
     // Get image dimensions and size, optionally scale it down.
     imageScaled(file, MAX_IMAGE_DIM, MAX_IMAGE_DIM, maxExternAttachmentSize, false)
@@ -912,7 +912,7 @@ class MessagesView extends React.Component {
       .then(result => result.blob())
       .then(blob => {
         // Server-provided limit reduced for base64 encoding and overhead.
-        const maxInbandAttachmentSize = this.props.tinode.getServerLimit('maxMessageSize', MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024;
+        const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024;
         if (blob.size > maxInbandAttachmentSize) {
           // Too large to send inband - uploading out of band and sending as a link.
           const uploader = this.props.tinode.getLargeFileHelper();

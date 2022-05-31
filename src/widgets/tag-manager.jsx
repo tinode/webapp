@@ -49,7 +49,7 @@ export default class TagManager extends React.Component {
   }
 
   handleAddTag(tag) {
-    const maxTagCount = this.props.tinode.getServerLimit('maxTagCount', MAX_TAG_COUNT);
+    const maxTagCount = this.props.tinode.getServerParam('maxTagCount', MAX_TAG_COUNT);
 
     if (tag.length > 0 && this.state.tags.length < maxTagCount) {
       const tags = this.state.tags.slice(0);
@@ -87,8 +87,8 @@ export default class TagManager extends React.Component {
   }
 
   render() {
-    const minTagLength = this.props.tinode.getServerLimit('minTagLength', MIN_TAG_LENGTH);
-    const maxTagLength = this.props.tinode.getServerLimit('maxTagLength', MAX_TAG_LENGTH);
+    const minTagLength = this.props.tinode.getServerParam('minTagLength', MIN_TAG_LENGTH);
+    const maxTagLength = this.props.tinode.getServerParam('maxTagLength', MAX_TAG_LENGTH);
 
     let tags = [];
     if (this.state.activated) {

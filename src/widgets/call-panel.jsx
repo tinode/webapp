@@ -4,7 +4,7 @@ import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
 import LetterTile from './letter-tile.jsx';
 
-import { CALL_WEBRTC_CONFIG, MAX_PEER_TITLE_LENGTH } from '../config.js';
+import { MAX_PEER_TITLE_LENGTH } from '../config.js';
 import { CALL_STATE_OUTGOING_INITATED, CALL_STATE_IN_PROGRESS } from '../constants.js';
 
 import { clipStr } from '../lib/utils.js'
@@ -187,7 +187,8 @@ class CallPanel extends React.PureComponent {
   }
 
   createPeerConnection() {
-    var pc = new RTCPeerConnection(CALL_WEBRTC_CONFIG);
+    const iceServers = this.props.tinode.getServerParam('iceServers', null);
+    const pc = iceServers ? new RTCPeerConnection({iceServers: iceServers}) : new RTCPeerConnection();
 
     pc.onicecandidate = this.handleICECandidateEvent;
     pc.oniceconnectionstatechange = this.handleICEConnectionStateChangeEvent;
@@ -203,7 +204,7 @@ class CallPanel extends React.PureComponent {
   handleVideoAnswerMsg(info) {
     // Configure the remote description, which is the SDP payload
     // in 'info' message.
-    var desc = new RTCSessionDescription(info.payload);
+    const desc = new RTCSessionDescription(info.payload);
     this.state.pc.setRemoteDescription(desc).catch(this.reportError);
   }
 
@@ -228,8 +229,7 @@ class CallPanel extends React.PureComponent {
   }
 
   handleNewICECandidateMsg(info) {
-    var candidate = new RTCIceCandidate(info.payload);
-
+    const candidate = new RTCIceCandidate(info.payload);
     this.state.pc.addIceCandidate(candidate)
       .catch(this.reportError);
   }
@@ -281,13 +281,11 @@ class CallPanel extends React.PureComponent {
   }
 
   handleVideoOfferMsg(info) {
-    var localStream = null;
-
+    let localStream = null;
     const pc = this.createPeerConnection();
+    const desc = new RTCSessionDescription(info.payload);
 
-    var desc = new RTCSessionDescription(info.payload);
-
-    pc.setRemoteDescription(desc).then(() => {
+    pc.setRemoteDescription(desc).then(_ => {
       return navigator.mediaDevices.getUserMedia(this.localStreamConstraints);
     })
     .then(stream => {
@@ -299,13 +297,13 @@ class CallPanel extends React.PureComponent {
         pc.addTrack(track, localStream);
       });
     })
-    .then(() => {
+    .then(_ => {
       return pc.createAnswer();
     })
     .then(answer => {
       return pc.setLocalDescription(answer);
     })
-    .then(() => {
+    .then(_ => {
       this.props.onSendAnswer(this.props.topic, this.props.seq, pc.localDescription.toJSON());
     })
     .catch(this.handleGetUserMediaError);
