@@ -2471,7 +2471,7 @@ ul.tabbar li.active > a {
 .composed-material i:nth-child(2) {
   position: absolute;
   font-size: 85%;
-  top: 0;
+  top: 7%;
   left: 39%;
   font-weight: bold;
 }
