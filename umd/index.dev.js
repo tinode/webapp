@@ -10848,7 +10848,7 @@ class BadgeList extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     if (this.props.trustedBadges && this.props.trustedBadges.length > 0) {
       badges = [];
       this.props.trustedBadges.map(b => {
-        const comment = formatMessage(messages['badge_' + b]);
+        const comment = this.props.short ? null : formatMessage(messages['badge_' + b]);
         const style = 'material-icons ' + b + '-color';
         badges.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           className: "trusted-badge",
@@ -10910,7 +10910,7 @@ class ButtonBack extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ IncomingCall)
+/* harmony export */   "default": () => (/* binding */ CallIncoming)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
@@ -10928,7 +10928,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const RING_SOUND = new Audio('audio/call-in.m4a');
-class IncomingCall extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
+class CallIncoming extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
     this.state = {
@@ -11058,11 +11058,10 @@ class IncomingCall extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       title: this.state.fullName
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "caller-name"
-    }, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__.clipStr)(this.state.fullName, _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_PEER_TITLE_LENGTH))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "group incoming-call-badges"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_badge_list_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    }, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__.clipStr)(this.state.fullName, _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_PEER_TITLE_LENGTH), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_badge_list_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      short: true,
       trustedBadges: this.state.trustedBadges
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "controls"
     }, this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_INCOMING_RECEIVED ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       className: "danger",

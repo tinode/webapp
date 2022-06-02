@@ -1695,6 +1695,10 @@ video {
   margin-top: 0.5rem;
 }
 
+.caller-card .trusted-badge {
+  display: inline-block;
+}
+
 .call-party.peer .caller-name.inactive {
   position: absolute;
   font-size: larger;

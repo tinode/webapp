@@ -12,7 +12,7 @@ import { clipStr } from '../lib/utils.js'
 
 const RING_SOUND = new Audio('audio/call-in.m4a');
 
-export default class IncomingCall extends React.Component {
+export default class CallIncoming extends React.Component {
   constructor(props) {
     super(props);
 
@@ -128,10 +128,8 @@ export default class IncomingCall extends React.Component {
                 topic={this.props.topic}
                 title={this.state.fullName} />
             </div>
-            <div className="caller-name">{clipStr(this.state.fullName, MAX_PEER_TITLE_LENGTH)}</div>
-          </div>
-          <div className="group incoming-call-badges">
-            <BadgeList trustedBadges={this.state.trustedBadges} />
+            <div className="caller-name">{clipStr(this.state.fullName, MAX_PEER_TITLE_LENGTH)}
+              <BadgeList short={true} trustedBadges={this.state.trustedBadges} /></div>
           </div>
           <div className="controls">
             {this.props.callState == CALL_STATE_INCOMING_RECEIVED ?
