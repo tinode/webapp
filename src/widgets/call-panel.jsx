@@ -11,6 +11,8 @@ import { clipStr } from '../lib/utils.js'
 
 const RING_SOUND = new Audio('audio/call-out.m4a');
 RING_SOUND.loop = true;
+const CALL_ENDED_SOUND = new Audio('audio/call-end.m4a');
+CALL_ENDED_SOUND.loop = true;
 
 const messages = defineMessages({
   already_in_call: {
@@ -28,7 +30,8 @@ class CallPanel extends React.PureComponent {
       localStream: undefined,
       pc: undefined,
 
-      previousOnInfo: undefined
+      previousOnInfo: undefined,
+      waitingForPeer: false
     };
 
     this.localStreamConstraints = {
@@ -134,7 +137,7 @@ class CallPanel extends React.PureComponent {
     // Start local video.
     navigator.mediaDevices.getUserMedia(this.localStreamConstraints)
       .then(stream => {
-        this.setState({localStream: stream});
+        this.setState({localStream: stream, waitingForPeer: true});
         this.localRef.current.srcObject = stream;
 
         RING_SOUND.play();
@@ -146,6 +149,8 @@ class CallPanel extends React.PureComponent {
   }
 
   stop() {
+    CALL_ENDED_SOUND.pause();
+    CALL_ENDED_SOUND.currentTime = 0;
     RING_SOUND.pause();
     RING_SOUND.currentTime = 0;
 
@@ -163,7 +168,7 @@ class CallPanel extends React.PureComponent {
 
       this.state.pc.close();
     }
-    this.setState({pc: null});
+    this.setState({pc: null, waitingForPeer: false});
   }
 
   stopTracks(el) {
@@ -197,7 +202,7 @@ class CallPanel extends React.PureComponent {
     pc.onnegotiationneeded = this.handleNegotiationNeededEvent;
     pc.ontrack = this.handleTrackEvent;
 
-    this.setState({pc: pc});
+    this.setState({pc: pc, waitingForPeer: false});
     return pc;
   }
 
@@ -264,14 +269,15 @@ class CallPanel extends React.PureComponent {
     switch(e.name) {
       case 'NotFoundError':
         // Cannot start the call b/c no camera and/or microphone found.
-        this.reportError(e);
+        this.reportError(e.message);
         break;
       case 'SecurityError':
       case 'PermissionDeniedError':
         // Do nothing; this is the same as the user canceling the call.
         break;
       default:
-        console.log('Error opening your camera and/or microphone: ' + e.message);
+        this.reportError(e.message);
+        console.error('Error opening your camera and/or microphone: ' + e.message);
         break;
     }
 
@@ -309,8 +315,24 @@ class CallPanel extends React.PureComponent {
     .catch(this.handleGetUserMediaError);
   }
 
+  // Call disconnected by remote.
   handleRemoteHangup() {
-    this.handleCloseClick();
+    if (!this.state.waitingForPeer) {
+      // This is live call, just hang up.
+      this.handleCloseClick();
+    } else {
+      // This is a call which is not yet connected.
+      // Stop pulse animation.
+      this.setState({waitingForPeer: false});
+      // Change sound and wait a bit before ending it.
+      RING_SOUND.pause();
+      RING_SOUND.currentTime = 0;
+      CALL_ENDED_SOUND.loop = true;
+      CALL_ENDED_SOUND.play();
+      setTimeout(_ => {
+        this.handleCloseClick();
+      }, 2000);
+    }
   }
 
   handleCloseClick() {
@@ -345,6 +367,7 @@ class CallPanel extends React.PureComponent {
     const audioIcon = this.state.localStream && this.state.localStream.getAudioTracks()[0].enabled ? 'mic' : 'mic_off';
     const videoIcon = this.state.localStream && this.state.localStream.getVideoTracks()[0].enabled ? 'videocam' : 'videocam_off';
     const peerTitle = clipStr(this.props.title, MAX_PEER_TITLE_LENGTH);
+    const pulseAnimation = this.state.waitingForPeer ? ' pulse' : '';
 
     return (
       <>
@@ -361,7 +384,7 @@ class CallPanel extends React.PureComponent {
               <video ref={this.remoteRef} autoPlay playsInline></video>
               {remoteActive ?
                 <div className="caller-name inactive">{peerTitle}</div> :
-                <div className="caller-card pulse">
+                <div className={`caller-card${pulseAnimation}`}>
                   <div className="avatar-box">
                     <LetterTile
                       tinode={this.props.tinode}
