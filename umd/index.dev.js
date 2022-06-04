@@ -11402,6 +11402,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   }
 
   handleVideoCallAccepted(info) {
+    RING_SOUND.pause();
     const pc = this.createPeerConnection();
     const stream = this.state.localStream;
     stream.getTracks().forEach(track => {

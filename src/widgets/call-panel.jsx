@@ -91,6 +91,7 @@ class CallPanel extends React.PureComponent {
   }
 
   handleVideoCallAccepted(info) {
+    RING_SOUND.pause();
     const pc = this.createPeerConnection();
     const stream = this.state.localStream;
     stream.getTracks().forEach(track => {
