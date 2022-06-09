@@ -1413,7 +1413,14 @@
   "call_missed": {
     "translation": "missed",
     "defaultMessage": "missed",
-    "description": "Label for cancelled incoming call",
+    "description": "Label for missed incoming call",
+    "missing": false,
+    "obsolete": false
+  },
+  "call_declined": {
+    "translation": "declined",
+    "defaultMessage": "declined",
+    "description": "Label for declined incoming call",
     "missing": false,
     "obsolete": false
   }

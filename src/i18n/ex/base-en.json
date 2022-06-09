@@ -127,9 +127,13 @@
     "defaultMessage": "cancelled",
     "description": "Label for cancelled outgoing call"
   },
+  "call_declined": {
+    "defaultMessage": "declined",
+    "description": "Label for declined incoming call"
+  },
   "call_missed": {
     "defaultMessage": "missed",
-    "description": "Label for cancelled incoming call"
+    "description": "Label for missed incoming call"
   },
   "calls_incoming": {
     "defaultMessage": "Incoming call",
