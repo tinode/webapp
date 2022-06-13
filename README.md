@@ -33,6 +33,7 @@ The app is currently available in the following languages:
  * English
  * Chinese (simplified)
  * Chinese (traditional)
+ * French
  * German
  * Korean
  * Romanian
