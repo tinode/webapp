@@ -168,6 +168,9 @@ class TinodeWeb extends React.Component {
     this.handleCallAcceptCall = this.handleCallAcceptCall.bind(this);
 
     this.sendMessageToTopic = this.sendMessageToTopic.bind(this);
+
+    // FIXME: this is unused.
+    this.callTimeoutTimer = null;
   }
 
   getBlankState() {
@@ -1753,9 +1756,8 @@ class TinodeWeb extends React.Component {
   }
 
   handleCallClose() {
-    if (this.state.callTimeout) {
-      console.log('closing call timeout ', this.state.callTimeout);
-      clearTimeout(this.state.callTimeout);
+    if (this.callTimeoutTimer) {
+      clearTimeout(this.callTimeoutTimer);
     }
     this.setState({
       callTopic: undefined,
@@ -1797,7 +1799,6 @@ class TinodeWeb extends React.Component {
         }
         break;
       case 'accept':
-        console.log('TinodeWeb: received accept msg ', info);
         // If another my session has accepted the call.
         if (Tinode.isMeTopicName(info.topic) && this.tinode.isMe(info.from)) {
           this.setState({

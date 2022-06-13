@@ -5539,6 +5539,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.getOrCreateMessageRef = this.getOrCreateMessageRef.bind(this);
     this.readNotificationQueue = [];
     this.readNotificationTimer = null;
+    this.keyPressTimer = null;
   }
 
   getOrCreateMessageRef(seqId) {
@@ -5914,7 +5915,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
 
     if (!this.readNotificationTimer) {
-      this.readNotificationTimer = setInterval(() => {
+      this.readNotificationTimer = setInterval(_ => {
         if (this.readNotificationQueue.length == 0) {
           clearInterval(this.readNotificationTimer);
           this.readNotificationTimer = null;
@@ -7725,6 +7726,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.handleCallSendAnswer = this.handleCallSendAnswer.bind(this);
     this.handleCallAcceptCall = this.handleCallAcceptCall.bind(this);
     this.sendMessageToTopic = this.sendMessageToTopic.bind(this);
+    this.callTimeoutTimer = null;
   }
 
   getBlankState() {
@@ -9370,9 +9372,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handleCallClose() {
-    if (this.state.callTimeout) {
-      console.log('closing call timeout ', this.state.callTimeout);
-      clearTimeout(this.state.callTimeout);
+    if (this.callTimeoutTimer) {
+      console.log('closing call timeout ', this.state.callTimeoutTimer);
+      clearTimeout(this.state.callTimeoutTimer);
     }
 
     this.setState({
@@ -11439,7 +11441,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
 
       default:
         this.reportError(e.message);
-        console.error('Error opening your camera and/or microphone: ' + e.message);
+        console.error("Error opening your camera and/or microphone:", e.message);
         break;
     }
 
@@ -11488,6 +11490,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   }
 
   handleCloseClick() {
+    console.log("handleCloseClick", new Error("stacktrace"));
     this.stop();
     this.props.onHangup(this.props.topic, this.props.seq);
   }

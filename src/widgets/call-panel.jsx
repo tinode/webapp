@@ -256,7 +256,7 @@ class CallPanel extends React.PureComponent {
   }
 
   handleICEGatheringStateChangeEvent(event) {
-    console.log('ICE gathering change state: ', event);
+    // console.log('ICE gathering change state: ', event);
   }
 
   handleTrackEvent(event) {
@@ -278,7 +278,7 @@ class CallPanel extends React.PureComponent {
         break;
       default:
         this.reportError(e.message);
-        console.error('Error opening your camera and/or microphone: ' + e.message);
+        console.error("Error opening your camera and/or microphone:", e.message);
         break;
     }
 

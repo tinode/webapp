@@ -134,6 +134,8 @@ class MessagesView extends React.Component {
 
     this.readNotificationQueue = [];
     this.readNotificationTimer = null;
+
+    this.keyPressTimer = null;
   }
 
   getOrCreateMessageRef(seqId) {
@@ -515,7 +517,7 @@ class MessagesView extends React.Component {
 
     // Set up the timer if it's not running already.
     if (!this.readNotificationTimer) {
-      this.readNotificationTimer = setInterval(() => {
+      this.readNotificationTimer = setInterval(_ => {
         if (this.readNotificationQueue.length == 0) {
           // Shut down the timer if the queue is empty.
           clearInterval(this.readNotificationTimer);
