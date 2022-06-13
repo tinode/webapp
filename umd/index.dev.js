@@ -9373,8 +9373,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
   handleCallClose() {
     if (this.callTimeoutTimer) {
-      console.log('closing call timeout ', this.state.callTimeoutTimer);
-      clearTimeout(this.state.callTimeoutTimer);
+      clearTimeout(this.callTimeoutTimer);
     }
 
     this.setState({
@@ -9420,8 +9419,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         break;
 
       case 'accept':
-        console.log('TinodeWeb: received accept msg ', info);
-
         if (tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.isMeTopicName(info.topic) && this.tinode.isMe(info.from)) {
           this.setState({
             callTopic: null,
@@ -11420,9 +11417,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     }
   }
 
-  handleICEGatheringStateChangeEvent(event) {
-    console.log('ICE gathering change state: ', event);
-  }
+  handleICEGatheringStateChangeEvent(event) {}
 
   handleTrackEvent(event) {
     this.remoteRef.current.srcObject = event.streams[0];
@@ -11490,7 +11485,6 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   }
 
   handleCloseClick() {
-    console.log("handleCloseClick", new Error("stacktrace"));
     this.stop();
     this.props.onHangup(this.props.topic, this.props.seq);
   }
