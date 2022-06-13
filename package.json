@@ -84,7 +84,7 @@
     "browserslist": "^4.16.5",
     "copy-webpack-plugin": "^10.0.0",
     "cssnano": "^5.0.6",
-    "glob": "^7.1.7",
+    "glob": "^8.0.3",
     "mkdirp": "^1.0.4",
     "postcss": "^8.3.2",
     "postcss-cli": "^9.0.2",
