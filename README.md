@@ -33,6 +33,7 @@ The app is currently available in the following languages:
  * English
  * Chinese (simplified)
  * Chinese (traditional)
+ * French
  * German
  * Korean
  * Romanian
@@ -44,7 +45,6 @@ More translations are welcome. See [instructions](https://github.com/tinode/chat
 
 ## Not done yet
 
-* Video or audio calling.
 * End-to-End encryption.
 * Emoji support is weak.
 * Mentions, hashtags.
