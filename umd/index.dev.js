@@ -6011,20 +6011,17 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.setState({
       messageCount: topic.messageCount(),
       typingIndicator: false
-    });
-
-    if (topic.isNewMessage(msg.seq)) {
-      if (this.state.scrollPosition > SHOW_GO_TO_LAST_DIST) {
-        this.setState({
-          showGoToLastButton: true
-        });
-      } else {
-        this.setState({
-          scrollPosition: 0
-        });
+    }, _ => {
+      if (topic.isNewMessage(msg.seq)) {
+        if (this.state.scrollPosition > SHOW_GO_TO_LAST_DIST) {
+          this.setState({
+            showGoToLastButton: true
+          });
+        } else {
+          this.goToLatestMessage();
+        }
       }
-    }
-
+    });
     const status = topic.msgStatus(msg, true);
 
     if (status >= tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_SENT && msg.from != this.props.myUserId) {

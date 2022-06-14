@@ -606,17 +606,18 @@ class MessagesView extends React.Component {
     }
 
     clearTimeout(this.keyPressTimer)
-    this.setState({messageCount: topic.messageCount(), typingIndicator: false});
-
-    // Scroll to the bottom if the message is added to the end of the message
-    // list if already at the bottom, otherwise show [go to latest] button.
-    if (topic.isNewMessage(msg.seq)) {
-      if (this.state.scrollPosition > SHOW_GO_TO_LAST_DIST) {
-        this.setState({showGoToLastButton: true});
-      } else {
-        this.setState({scrollPosition: 0});
+    this.setState({messageCount: topic.messageCount(), typingIndicator: false}, _ => {
+      // Scroll to the bottom if the message is added to the end of the message
+      // list if already at the bottom, otherwise show [go to latest] button.
+      // Implemented as a callback to be sure the scroll height has been updated.
+      if (topic.isNewMessage(msg.seq)) {
+        if (this.state.scrollPosition > SHOW_GO_TO_LAST_DIST) {
+          this.setState({showGoToLastButton: true});
+        } else {
+          this.goToLatestMessage();
+        }
       }
-    }
+    });
 
     // Aknowledge messages except own messages. They are
     // automatically assumed to be read and recived.
