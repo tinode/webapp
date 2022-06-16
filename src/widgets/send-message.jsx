@@ -45,7 +45,7 @@ class SendMessage extends React.PureComponent {
       quote: null,
       message: '',
       audioRec: false,
-      audioAvailable: !!navigator.mediaDevices.getUserMedia,
+      audioAvailable: !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia),
       // Make initial keypress time as if it happened 5001 milliseconds in the past.
       keypressTimestamp: new Date().getTime() - KEYPRESS_DELAY - 1
     };

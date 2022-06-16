@@ -14649,7 +14649,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       quote: null,
       message: '',
       audioRec: false,
-      audioAvailable: !!navigator.mediaDevices.getUserMedia,
+      audioAvailable: !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia),
       keypressTimestamp: new Date().getTime() - _config_js__WEBPACK_IMPORTED_MODULE_4__.KEYPRESS_DELAY - 1
     };
     this.handlePasteEvent = this.handlePasteEvent.bind(this);
