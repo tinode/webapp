@@ -13,6 +13,7 @@ const RING_SOUND = new Audio('audio/call-out.m4a');
 RING_SOUND.loop = true;
 const CALL_ENDED_SOUND = new Audio('audio/call-end.m4a');
 CALL_ENDED_SOUND.loop = true;
+const DIALING_SOUND = new Audio('audio/dialing.m4a');
 
 const messages = defineMessages({
   already_in_call: {
@@ -107,9 +108,6 @@ class CallPanel extends React.PureComponent {
       case 'accept':
         this.handleVideoCallAccepted(info);
         break;
-      case 'offer':
-        this.handleVideoOfferMsg(info);
-        break;
       case 'answer':
         this.handleVideoAnswerMsg(info);
         break;
@@ -118,6 +116,15 @@ class CallPanel extends React.PureComponent {
         break;
       case 'hang-up':
         this.handleRemoteHangup(info);
+        break;
+      case 'offer':
+        this.handleVideoOfferMsg(info);
+        break;
+      case 'ringing':
+        RING_SOUND.play();
+        break;
+      default:
+        console.warn("Unknown call event", info.event);
         break;
     }
   }
@@ -141,7 +148,7 @@ class CallPanel extends React.PureComponent {
         this.setState({localStream: stream, waitingForPeer: true});
         this.localRef.current.srcObject = stream;
 
-        RING_SOUND.play();
+        DIALING_SOUND.play();
 
         // Send call invitation.
         this.props.onInvite(this.props.topic, this.props.seq, this.props.callState);

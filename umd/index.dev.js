@@ -11178,6 +11178,7 @@ const RING_SOUND = new Audio('audio/call-out.m4a');
 RING_SOUND.loop = true;
 const CALL_ENDED_SOUND = new Audio('audio/call-end.m4a');
 CALL_ENDED_SOUND.loop = true;
+const DIALING_SOUND = new Audio('audio/dialing.m4a');
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   already_in_call: {
     id: "already_in_call",
@@ -11263,10 +11264,6 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
         this.handleVideoCallAccepted(info);
         break;
 
-      case 'offer':
-        this.handleVideoOfferMsg(info);
-        break;
-
       case 'answer':
         this.handleVideoAnswerMsg(info);
         break;
@@ -11277,6 +11274,18 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
 
       case 'hang-up':
         this.handleRemoteHangup(info);
+        break;
+
+      case 'offer':
+        this.handleVideoOfferMsg(info);
+        break;
+
+      case 'ringing':
+        RING_SOUND.play();
+        break;
+
+      default:
+        console.warn("Unknown call event", info.event);
         break;
     }
   }
@@ -11298,7 +11307,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
         waitingForPeer: true
       });
       this.localRef.current.srcObject = stream;
-      RING_SOUND.play();
+      DIALING_SOUND.play();
       this.props.onInvite(this.props.topic, this.props.seq, this.props.callState);
     }).catch(this.handleGetUserMediaError);
   }
