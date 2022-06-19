@@ -68,5 +68,5 @@ More translations are welcome. See [instructions](https://github.com/tinode/chat
 ### Mobile screenshots
 
 <p align="center">
-  <kbd><img src="web-mob-contacts.png" alt="Mobile web: contacts" width=250 /></kbd> <kbd><img src="web-mob-chat.png" alt="Mobile web: chat" width=250 /></kbd> <kbd><img src="web-mob-info.png" alt="Mobile web: topic info" width=250 /></kbd> <kbd><img src="web-mob-forward.png" alt="Mobile web: forward message" width=250 /></kbd> <kbd><img src="web-mob-acc-settings.png" alt="Mobile web: account settings" width=250 /></kbd> <kbd><img src="web-mob-avatar.png" alt="Mobile web: change avatar" width=250 /></kbd>
+  <kbd><img src="web-mob-contacts.png" alt="Mobile web: contacts" width=250 /></kbd> <kbd><img src="web-mob-chat.png" alt="Mobile web: chat" width=250 /></kbd> <kbd><img src="web-mob-info.png" alt="Mobile web: topic info" width=250 /></kbd> <kbd><img src="web-mob-forward.png" alt="Mobile web: forward message" width=250 /></kbd> <kbd><img src="web-mob-video-call.png" alt="Mobile web: video call" width=250 /></kbd> <kbd><img src="web-mob-avatar.png" alt="Mobile web: change avatar" width=250 /></kbd>
 </p>
