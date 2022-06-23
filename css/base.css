@@ -1667,7 +1667,7 @@ video {
 
 .caller-card.pulse img.avatar,
 .caller-card.pulse .lettertile {
-  animation: active-call 1.5s linear infinite;;
+  animation: active-call 1.5s linear infinite;
 }
 
 .caller-card .avatar-box .material-icons {
