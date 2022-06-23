@@ -1753,14 +1753,12 @@ video {
 @keyframes active-call {
   0% {
     box-shadow:
-      0 0 0 0 rgba(33, 150, 243, 0.3),
       0 0 0 0.1rem rgba(33, 150, 243, 0.3),
       0 0 0 0.3rem rgba(33, 150, 243, 0.3),
       0 0 0 0.5rem rgba(33, 150, 243, 0.3);
   }
   100% {
     box-shadow:
-      0 0 0 0 rgba(33, 150, 243, 0.3),
       0 0 0 0.4rem rgba(33, 150, 243, 0.3),
       0 0 0 2rem rgba(33, 150, 243, 0),
       0 0 0 3rem rgba(33, 150, 243, 0);
