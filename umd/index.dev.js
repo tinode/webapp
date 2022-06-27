@@ -2017,7 +2017,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "NO_ACCESS_MODE": () => (/* binding */ NO_ACCESS_MODE),
 /* harmony export */   "QUOTED_REPLY_LENGTH": () => (/* binding */ QUOTED_REPLY_LENGTH),
 /* harmony export */   "READ_DELAY": () => (/* binding */ READ_DELAY),
-/* harmony export */   "RECEIVED_DELAY": () => (/* binding */ RECEIVED_DELAY),
 /* harmony export */   "REM_SIZE": () => (/* binding */ REM_SIZE)
 /* harmony export */ });
 /* harmony import */ var _version_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./version.js */ "./src/version.js");
@@ -2031,8 +2030,7 @@ const KNOWN_HOSTS = {
 const DEFAULT_HOST = KNOWN_HOSTS.hosted;
 const LOGGING_ENABLED = true;
 const KEYPRESS_DELAY = 3000;
-const RECEIVED_DELAY = 500;
-const READ_DELAY = 1000;
+const READ_DELAY = 1500;
 const MIN_TAG_LENGTH = 2;
 const MAX_TAG_LENGTH = 96;
 const MAX_TAG_COUNT = 16;
@@ -8348,7 +8346,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
       if (cont.unread > 0 && this.state.messageSounds && !archived) {
         if (document.hidden || this.state.topicSelected != cont.topic) {
-          POP_SOUND.play();
+          POP_SOUND.play().catch(_ => {});
         }
       }
 
@@ -8365,8 +8363,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           topicSelectedAcs: cont.acs
         });
       }
-    } else if (what == 'del') {} else if (what == 'upd') {} else {
-      console.info("Unsupported (yet) presence update:" + what + " in: " + cont.topic);
+    } else if (what == 'del') {} else if (what == 'upd' || what == 'call') {} else {
+      console.info("Unsupported (yet) contact update:" + what + " in: " + cont.topic);
     }
   }
 
@@ -8427,17 +8425,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.setState(newState);
   }
 
-  tnData(data) {
-    const topic = this.tinode.getTopic(data.topic);
-
-    if (topic.msgStatus(data, true) >= tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.MESSAGE_STATUS_SENT && data.from != this.state.myUserId) {
-      clearTimeout(this.receivedTimer);
-      this.receivedTimer = setTimeout(() => {
-        this.receivedTimer = undefined;
-        topic.noteRecv(data.seq);
-      }, _config_js__WEBPACK_IMPORTED_MODULE_12__.RECEIVED_DELAY);
-    }
-  }
+  tnData(data) {}
 
   tnInitFind() {
     const fnd = this.tinode.getFndTopic();
@@ -10951,8 +10939,10 @@ class CallIncoming extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.resetDesc(topic, this.props);
 
     if (this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_INCOMING_RECEIVED) {
-      RING_SOUND.play();
-      this.ringTimer = setInterval(() => RING_SOUND.play(), 2000);
+      RING_SOUND.play().catch(_ => {});
+      this.ringTimer = setInterval(_ => {
+        RING_SOUND.play().catch(_ => {});
+      }, 2000);
       this.props.onRinging(this.props.topic, this.props.seq);
     }
   }
@@ -11281,7 +11271,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
         break;
 
       case 'ringing':
-        RING_SOUND.play();
+        RING_SOUND.play().catch(_ => {});
         break;
 
       default:
@@ -11483,7 +11473,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       RING_SOUND.pause();
       RING_SOUND.currentTime = 0;
       CALL_ENDED_SOUND.loop = true;
-      CALL_ENDED_SOUND.play();
+      CALL_ENDED_SOUND.play().catch(_ => {});
       setTimeout(_ => {
         this.handleCloseClick();
       }, 2000);

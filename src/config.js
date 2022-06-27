@@ -17,10 +17,8 @@ export const LOGGING_ENABLED = true;
 
 // Minimum time between two keypress notifications, milliseconds.
 export const KEYPRESS_DELAY = 3_000;
-// Delay before sending a {note} for reciving a message, milliseconds.
-export const RECEIVED_DELAY = 500;
 // Delay before sending a read notification, milliseconds.
-export const READ_DELAY = 1000;
+export const READ_DELAY = 1_500;
 
 // The default shortest allowed tag length. Matches the value on the server.
 export const MIN_TAG_LENGTH = 2;

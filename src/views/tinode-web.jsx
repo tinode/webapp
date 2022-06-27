@@ -18,7 +18,7 @@ import MessagesView from './messages-view.jsx';
 import SidepanelView from './sidepanel-view.jsx';
 
 import { API_KEY, APP_NAME, DEFAULT_P2P_ACCESS_MODE, FORWARDED_PREVIEW_LENGTH, LOGGING_ENABLED,
-  MEDIA_BREAKPOINT, RECEIVED_DELAY } from '../config.js';
+  MEDIA_BREAKPOINT } from '../config.js';
 import { CALL_STATE_NONE, CALL_STATE_OUTGOING_INITATED,
          CALL_STATE_INCOMING_RECEIVED, CALL_STATE_IN_PROGRESS,
          CALL_HEAD_STARTED }  from '../constants.js';
@@ -786,7 +786,9 @@ class TinodeWeb extends React.Component {
       if (cont.unread > 0 && this.state.messageSounds && !archived) {
         // Skip update if the topic is currently open, otherwise the badge will annoyingly flash.
         if (document.hidden || this.state.topicSelected != cont.topic) {
-          POP_SOUND.play();
+          POP_SOUND.play().catch(_ => {
+            // play() throws if the user did not click the app first: https://goo.gl/xX8pDD.
+          });
         }
       }
       // Reorder contact list to use possibly updated 'touched'.
@@ -809,12 +811,12 @@ class TinodeWeb extends React.Component {
       }
     } else if (what == 'del') {
       // TODO: messages deleted (hard or soft) -- update pill counter.
-    } else if (what == 'upd') {
-      // upd - handled by the SDK. Explicitly ignoring here.
+    } else if (what == 'upd' || what == 'call') {
+      // call, upd - handled elsewhere. Explicitly ignoring here.
     } else {
       // TODO(gene): handle other types of notifications:
       // * ua -- user agent changes (maybe display a pictogram for mobile/desktop).
-      console.info("Unsupported (yet) presence update:" + what + " in: " + cont.topic);
+      console.info("Unsupported (yet) contact update:" + what + " in: " + cont.topic);
     }
   }
 
@@ -883,16 +885,7 @@ class TinodeWeb extends React.Component {
     this.setState(newState);
   }
 
-  // Sending "received" notifications
   tnData(data) {
-    const topic = this.tinode.getTopic(data.topic);
-    if (topic.msgStatus(data, true) >= Tinode.MESSAGE_STATUS_SENT && data.from != this.state.myUserId) {
-      clearTimeout(this.receivedTimer);
-      this.receivedTimer = setTimeout(() => {
-        this.receivedTimer = undefined;
-        topic.noteRecv(data.seq);
-      }, RECEIVED_DELAY);
-    }
   }
 
   /* Fnd topic: find contacts by tokens */
