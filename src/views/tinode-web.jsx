@@ -1783,12 +1783,18 @@ class TinodeWeb extends React.Component {
     switch (info.event) {
       case 'invite':
         if (info.from != this.state.myUserId) {
-          // Incoming call.
-          this.setState({
-            callTopic: info.src,
-            callState: CALL_STATE_INCOMING_RECEIVED,
-            callSeq: info.seq
-          });
+          if (this.state.callState == CALL_STATE_NONE) {
+            // Incoming call.
+            this.setState({
+              callTopic: info.src,
+              callState: CALL_STATE_INCOMING_RECEIVED,
+              callSeq: info.seq
+            });
+          } else {
+            // Another call is either in progress or being established.
+            // Reject the incoming call.
+            this.handleCallHangup(info.src, info.seq);
+          }
         }
         break;
       case 'accept':
