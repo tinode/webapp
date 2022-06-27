@@ -121,7 +121,8 @@ class CallPanel extends React.PureComponent {
         this.handleVideoOfferMsg(info);
         break;
       case 'ringing':
-        RING_SOUND.play();
+        // play() throws if the user did not click the app first: https://goo.gl/xX8pDD.
+        RING_SOUND.play().catch(_ => {});
         break;
       default:
         console.warn("Unknown call event", info.event);
@@ -336,7 +337,7 @@ class CallPanel extends React.PureComponent {
       RING_SOUND.pause();
       RING_SOUND.currentTime = 0;
       CALL_ENDED_SOUND.loop = true;
-      CALL_ENDED_SOUND.play();
+      CALL_ENDED_SOUND.play().catch(_ => {});
       setTimeout(_ => {
         this.handleCloseClick();
       }, 2000);

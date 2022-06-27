@@ -39,8 +39,9 @@ export default class CallIncoming extends React.Component {
 
     this.resetDesc(topic, this.props);
     if (this.props.callState == CALL_STATE_INCOMING_RECEIVED) {
-      RING_SOUND.play();
-      this.ringTimer = setInterval(() => RING_SOUND.play(), 2000);
+      // play() throws if the user did not click the app first: https://goo.gl/xX8pDD.
+      RING_SOUND.play().catch(_ => {});
+      this.ringTimer = setInterval(_ => {RING_SOUND.play().catch(_ => {})}, 2000);
       this.props.onRinging(this.props.topic, this.props.seq);
     }
   }
