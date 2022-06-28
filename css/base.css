@@ -822,6 +822,10 @@ table.permission-editor td.checkbox {
   padding-left: 0.5rem;
 }
 
+input#host-name {
+  width: 15rem;
+}
+
 /* Input with a search icon on the left */
 input.search {
   text-indent: 1.4rem;
