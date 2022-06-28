@@ -156,6 +156,7 @@ class TinodeWeb extends React.Component {
 
     this.handleStartVideoCall = this.handleStartVideoCall.bind(this);
     this.handleInfoMessage = this.handleInfoMessage.bind(this);
+    this.handleDataMessage = this.handleDataMessage.bind(this);
     this.handleCallClose = this.handleCallClose.bind(this);
 
     this.handleCallInvite = this.handleCallInvite.bind(this);
@@ -287,6 +288,7 @@ class TinodeWeb extends React.Component {
       this.tinode.onDisconnect = this.handleDisconnect;
       this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
       this.tinode.onInfoMessage = this.handleInfoMessage;
+      this.tinode.onDataMessage = this.handleDataMessage;
     }).then(() => {
       // Initialize desktop alerts.
       if (this.state.desktopAlertsEnabled) {
@@ -1781,22 +1783,6 @@ class TinodeWeb extends React.Component {
       return;
     }
     switch (info.event) {
-      case 'invite':
-        if (info.from != this.state.myUserId) {
-          if (this.state.callState == CALL_STATE_NONE) {
-            // Incoming call.
-            this.setState({
-              callTopic: info.src,
-              callState: CALL_STATE_INCOMING_RECEIVED,
-              callSeq: info.seq
-            });
-          } else {
-            // Another call is either in progress or being established.
-            // Reject the incoming call.
-            this.handleCallHangup(info.src, info.seq);
-          }
-        }
-        break;
       case 'accept':
         // If another my session has accepted the call.
         if (Tinode.isMeTopicName(info.topic) && this.tinode.isMe(info.from)) {
@@ -1816,6 +1802,43 @@ class TinodeWeb extends React.Component {
         // Remote hangup.
         this.handleCallClose();
         break;
+    }
+  }
+
+  handleDataMessage(data) {
+    if (data.head && data.head.webrtc && data.head.webrtc == CALL_HEAD_STARTED) {
+      // If it's a video call invite message.
+      // See if we need to display incoming call UI.
+      const topic = this.tinode.getTopic(data.topic);
+      if (topic) {
+        // Check if we have a later version of the message (which means the call
+        // has been either accepted or finished).
+        let isNewCall = true;
+        topic.messageVersions(data, (msg) => {
+          if (msg.head.webrtc && msg.head.webrtc != CALL_HEAD_STARTED) {
+            isNewCall = false;
+          }
+        });
+        if (isNewCall) {
+          // This is a legit new call.
+          if (data.from != this.state.myUserId) {
+            if (this.state.callState == CALL_STATE_NONE) {
+              // Incoming call.
+              this.setState({
+                callTopic: data.topic,
+                callState: CALL_STATE_INCOMING_RECEIVED,
+                callSeq: data.seq
+              });
+            } else {
+              // Another call is either in progress or being established.
+              // Reject the incoming call.
+              this.handleCallHangup(data.topic, data.seq);
+            }
+          }
+        }
+      } else {
+        console.log('Could not find topic', data.topic);
+      }
     }
   }
 
