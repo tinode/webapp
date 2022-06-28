@@ -9394,11 +9394,15 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     switch (info.event) {
       case 'invite':
         if (info.from != this.state.myUserId) {
-          this.setState({
-            callTopic: info.src,
-            callState: _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_INCOMING_RECEIVED,
-            callSeq: info.seq
-          });
+          if (this.state.callState == _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_NONE) {
+            this.setState({
+              callTopic: info.src,
+              callState: _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_INCOMING_RECEIVED,
+              callSeq: info.seq
+            });
+          } else {
+            this.handleCallHangup(info.src, info.seq);
+          }
         }
 
         break;
