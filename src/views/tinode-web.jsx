@@ -1811,14 +1811,10 @@ class TinodeWeb extends React.Component {
       // See if we need to display incoming call UI.
       const topic = this.tinode.getTopic(data.topic);
       if (topic) {
-        // Check if we have a later version of the message (which means the call
-        // has been either accepted or finished).
-        let isNewCall = true;
+        // Check if a later version of the message exists (which means the call
+        // has been either accepted or finished already).
         const msg = topic.latestMsgVersion(data.seq) || data;
-        if (msg.head.webrtc && msg.head.webrtc != CALL_HEAD_STARTED) {
-          isNewCall = false;
-        }
-        if (isNewCall) {
+        if (msg.head && msg.head.webrtc && msg.head.webrtc == CALL_HEAD_STARTED) {
           // This is a legit new call.
           if (data.from != this.state.myUserId) {
             if (this.state.callState == CALL_STATE_NONE) {

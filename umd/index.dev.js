@@ -9423,14 +9423,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       const topic = this.tinode.getTopic(data.topic);
 
       if (topic) {
-        let isNewCall = true;
         const msg = topic.latestMsgVersion(data.seq) || data;
 
-        if (msg.head.webrtc && msg.head.webrtc != _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_HEAD_STARTED) {
-          isNewCall = false;
-        }
-
-        if (isNewCall) {
+        if (msg.head && msg.head.webrtc && msg.head.webrtc == _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_HEAD_STARTED) {
           if (data.from != this.state.myUserId) {
             if (this.state.callState == _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_NONE) {
               this.setState({
