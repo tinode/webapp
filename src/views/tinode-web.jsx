@@ -1814,11 +1814,10 @@ class TinodeWeb extends React.Component {
         // Check if we have a later version of the message (which means the call
         // has been either accepted or finished).
         let isNewCall = true;
-        topic.messageVersions(data, (msg) => {
-          if (msg.head.webrtc && msg.head.webrtc != CALL_HEAD_STARTED) {
-            isNewCall = false;
-          }
-        });
+        const msg = topic.latestMsgVersion(data.seq) || data;
+        if (msg.head.webrtc && msg.head.webrtc != CALL_HEAD_STARTED) {
+          isNewCall = false;
+        }
         if (isNewCall) {
           // This is a legit new call.
           if (data.from != this.state.myUserId) {
@@ -1837,7 +1836,7 @@ class TinodeWeb extends React.Component {
           }
         }
       } else {
-        console.log('Could not find topic', data.topic);
+        console.warn("Received vc data message from unknown topic", data.topic);
       }
     }
   }

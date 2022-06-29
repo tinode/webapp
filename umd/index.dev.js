@@ -7712,6 +7712,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.handleHideForwardDialog = this.handleHideForwardDialog.bind(this);
     this.handleStartVideoCall = this.handleStartVideoCall.bind(this);
     this.handleInfoMessage = this.handleInfoMessage.bind(this);
+    this.handleDataMessage = this.handleDataMessage.bind(this);
     this.handleCallClose = this.handleCallClose.bind(this);
     this.handleCallInvite = this.handleCallInvite.bind(this);
     this.handleCallRinging = this.handleCallRinging.bind(this);
@@ -7811,6 +7812,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.tinode.onDisconnect = this.handleDisconnect;
       this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
       this.tinode.onInfoMessage = this.handleInfoMessage;
+      this.tinode.onDataMessage = this.handleDataMessage;
     }).then(() => {
       if (this.state.desktopAlertsEnabled) {
         this.initFCMessaging().then(() => {
@@ -9392,21 +9394,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
 
     switch (info.event) {
-      case 'invite':
-        if (info.from != this.state.myUserId) {
-          if (this.state.callState == _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_NONE) {
-            this.setState({
-              callTopic: info.src,
-              callState: _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_INCOMING_RECEIVED,
-              callSeq: info.seq
-            });
-          } else {
-            this.handleCallHangup(info.src, info.seq);
-          }
-        }
-
-        break;
-
       case 'accept':
         if (tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.isMeTopicName(info.topic) && this.tinode.isMe(info.from)) {
           this.setState({
@@ -9428,6 +9415,37 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       case 'hang-up':
         this.handleCallClose();
         break;
+    }
+  }
+
+  handleDataMessage(data) {
+    if (data.head && data.head.webrtc && data.head.webrtc == _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_HEAD_STARTED) {
+      const topic = this.tinode.getTopic(data.topic);
+
+      if (topic) {
+        let isNewCall = true;
+        const msg = topic.latestMsgVersion(data.seq) || data;
+
+        if (msg.head.webrtc && msg.head.webrtc != _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_HEAD_STARTED) {
+          isNewCall = false;
+        }
+
+        if (isNewCall) {
+          if (data.from != this.state.myUserId) {
+            if (this.state.callState == _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_NONE) {
+              this.setState({
+                callTopic: data.topic,
+                callState: _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_INCOMING_RECEIVED,
+                callSeq: data.seq
+              });
+            } else {
+              this.handleCallHangup(data.topic, data.seq);
+            }
+          }
+        }
+      } else {
+        console.warn("Received vc data message from unknown topic", data.topic);
+      }
     }
   }
 
