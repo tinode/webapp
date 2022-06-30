@@ -14433,6 +14433,7 @@ class InPlaceEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       }
 
       attr.value = this.state.value;
+      attr.ref = this.selfRef;
       attr.onChange = this.handeTextChange;
       attr.onKeyDown = this.handleKeyDown;
       attr.onBlur = this.handleEditingFinished;
@@ -14442,7 +14443,6 @@ class InPlaceEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     attr.required = this.props.required ? 'required' : '';
     attr.autoComplete = this.props.autoComplete;
     attr.autoFocus = true;
-    attr.ref = this.selfRef;
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(element, attr, null);
   }
 
@@ -17259,6 +17259,7 @@ __webpack_require__.r(__webpack_exports__);
 class VisiblePassword extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
+    this.inputRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
     this.state = {
       value: this.props.value,
       visible: false
@@ -17267,6 +17268,10 @@ class VisiblePassword extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     this.handeTextChange = this.handeTextChange.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleEditingFinished = this.handleEditingFinished.bind(this);
+  }
+
+  componentDidMount() {
+    this.inputRef.current.focus();
   }
 
   handeTextChange(e) {
@@ -17330,7 +17335,8 @@ class VisiblePassword extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       autoFocus: this.props.autoFocus ? 'autoFocus' : '',
       autoComplete: this.props.autoComplete,
       onChange: this.handeTextChange,
-      onKeyDown: this.handleKeyDown
+      onKeyDown: this.handleKeyDown,
+      ref: this.inputRef
     }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       onClick: this.handleVisibility
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {

@@ -110,6 +110,7 @@ export default class InPlaceEdit extends React.Component {
         attr.type = this.props.type || 'text';
       }
       attr.value = this.state.value;
+      attr.ref = this.selfRef;
       attr.onChange = this.handeTextChange;
       attr.onKeyDown = this.handleKeyDown;
       attr.onBlur = this.handleEditingFinished;
@@ -118,7 +119,6 @@ export default class InPlaceEdit extends React.Component {
     attr.required = this.props.required ? 'required' : '';
     attr.autoComplete = this.props.autoComplete;
     attr.autoFocus = true;
-    attr.ref = this.selfRef;
 
     return React.createElement(element, attr, null);
   }

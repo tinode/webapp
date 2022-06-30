@@ -5,6 +5,8 @@ export default class VisiblePassword extends React.PureComponent {
   constructor(props) {
     super(props);
 
+    this.inputRef = React.createRef();
+
     this.state = {
       value: this.props.value,
       visible: false
@@ -14,6 +16,10 @@ export default class VisiblePassword extends React.PureComponent {
     this.handeTextChange = this.handeTextChange.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleEditingFinished = this.handleEditingFinished.bind(this);
+  }
+
+  componentDidMount() {
+    this.inputRef.current.focus();
   }
 
   handeTextChange(e) {
@@ -58,8 +64,7 @@ export default class VisiblePassword extends React.PureComponent {
 
   render() {
     return (
-      <div tabIndex="-1" className="group-focus"
-        onBlur={this.handleEditingFinished}>
+      <div tabIndex="-1" className="group-focus" onBlur={this.handleEditingFinished}>
         <input className="with-visibility"
           type={this.state.visible ? "text" : "password"}
           value={this.state.value}
@@ -68,7 +73,8 @@ export default class VisiblePassword extends React.PureComponent {
           autoFocus={this.props.autoFocus ? 'autoFocus' : ''}
           autoComplete={this.props.autoComplete}
           onChange={this.handeTextChange}
-          onKeyDown={this.handleKeyDown} />
+          onKeyDown={this.handleKeyDown}
+          ref={this.inputRef} />
         <span onClick={this.handleVisibility}>
           <i className="material-icons clickable light-gray">
             {this.state.visible ? 'visibility' : 'visibility_off'}
