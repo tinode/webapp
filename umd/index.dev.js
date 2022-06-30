@@ -8232,8 +8232,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           topicSelectedAcs: cont.acs
         });
       }
-    } else if (what == 'del') {} else if (what == 'upd') {} else {
-      console.info("Unsupported (yet) presence update:" + what + " in: " + cont.topic);
+    } else if (what == 'del') {} else if (what == 'upd' || what == 'call') {} else {
+      console.info("Unsupported (yet) presence update:", what, "in", cont.topic);
     }
   }
 
@@ -8779,7 +8779,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     const topic = this.tinode.getTopic(topicName);
 
     if (topic) {
-      topic.archive(false);
+      topic.archive(false).catch(err => {
+        this.handleError(err.message, 'err');
+      });
     }
   }
 
