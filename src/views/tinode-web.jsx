@@ -814,11 +814,11 @@ class TinodeWeb extends React.Component {
     } else if (what == 'del') {
       // TODO: messages deleted (hard or soft) -- update pill counter.
     } else if (what == 'upd' || what == 'call') {
-      // call, upd - handled elsewhere. Explicitly ignoring here.
+      // upd, call - handled by the SDK. Explicitly ignoring here.
     } else {
       // TODO(gene): handle other types of notifications:
       // * ua -- user agent changes (maybe display a pictogram for mobile/desktop).
-      console.info("Unsupported (yet) contact update:" + what + " in: " + cont.topic);
+      console.info("Unsupported (yet) presence update:", what, "in", cont.topic);
     }
   }
 
@@ -1329,7 +1329,9 @@ class TinodeWeb extends React.Component {
   handleUnarchive(topicName) {
     const topic = this.tinode.getTopic(topicName);
     if (topic) {
-      topic.archive(false);
+      topic.archive(false).catch((err) => {
+        this.handleError(err.message, 'err');
+      });
     }
   }
 

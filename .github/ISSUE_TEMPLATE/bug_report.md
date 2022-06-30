@@ -32,7 +32,7 @@ If applicable, add screenshots to help explain your problem.
  - TinodeWeb Version [e.g. 0.16.6]
 
 **Console log**
-Please attach or insert console log which illustrates the problem.
+Please attach or insert console log which illustrates the problem. Please use the log produced by `index-dev.html`, not `index.html`; `index.html` uses minified javascript which produces unusable logs.
 
 **Additional context**
 Add any other context about the problem here.

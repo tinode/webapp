@@ -8366,7 +8366,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         });
       }
     } else if (what == 'del') {} else if (what == 'upd' || what == 'call') {} else {
-      console.info("Unsupported (yet) contact update:" + what + " in: " + cont.topic);
+      console.info("Unsupported (yet) presence update:", what, "in", cont.topic);
     }
   }
 
@@ -8913,7 +8913,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     const topic = this.tinode.getTopic(topicName);
 
     if (topic) {
-      topic.archive(false);
+      topic.archive(false).catch(err => {
+        this.handleError(err.message, 'err');
+      });
     }
   }
 
@@ -15743,7 +15745,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       quote: null,
       message: '',
       audioRec: false,
-      audioAvailable: !!navigator.mediaDevices.getUserMedia,
+      audioAvailable: !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia),
       keypressTimestamp: new Date().getTime() - _config_js__WEBPACK_IMPORTED_MODULE_4__.KEYPRESS_DELAY - 1
     };
     this.handlePasteEvent = this.handlePasteEvent.bind(this);
