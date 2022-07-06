@@ -32,22 +32,29 @@ class CallPanel extends React.PureComponent {
       pc: undefined,
 
       previousOnInfo: undefined,
-      waitingForPeer: false
+      waitingForPeer: false,
+      // If true, the client has received a remote SDP from the peer and has sent a local SDP to the peer.
+      callInitialSetupComplete: false
     };
 
     this.localStreamConstraints = {
       audio: true,
       video: true
     };
+    this.isOutgoingCall = props.callState == CALL_STATE_OUTGOING_INITATED;
 
     this.localRef = React.createRef();
     this.remoteRef = React.createRef();
+    // Cache for remote ice candidates until initial setup gets completed.
+    this.remoteIceCandidatesCache = [];
 
     this.onInfo = this.onInfo.bind(this);
     this.start = this.start.bind(this);
     this.stop = this.stop.bind(this);
 
     this.createPeerConnection = this.createPeerConnection.bind(this);
+    this.canSendOffer = this.canSendOffer.bind(this);
+    this.drainRemoteIceCandidatesCache = this.drainRemoteIceCandidatesCache.bind(this);
 
     this.handleNegotiationNeededEvent = this.handleNegotiationNeededEvent.bind(this);
     this.handleICECandidateEvent = this.handleICECandidateEvent.bind(this);
@@ -219,14 +226,25 @@ class CallPanel extends React.PureComponent {
     // Configure the remote description, which is the SDP payload
     // in 'info' message.
     const desc = new RTCSessionDescription(info.payload);
-    this.state.pc.setRemoteDescription(desc).catch(this.reportError);
+    this.state.pc.setRemoteDescription(desc)
+      .then(_ => {
+        this.setState({ callInitialSetupComplete: true }, () => this.drainRemoteIceCandidatesCache());
+      })
+      .catch(this.reportError);
   }
 
   reportError(err) {
     this.props.onError(err.message, 'err');
   }
 
+  canSendOffer() {
+    return this.isOutgoingCall || this.state.callInitialSetupComplete;
+  }
+
   handleNegotiationNeededEvent() {
+    if (!this.canSendOffer()) {
+      return;
+    }
     this.state.pc.createOffer().then(offer => {
       return this.state.pc.setLocalDescription(offer);
     })
@@ -244,8 +262,20 @@ class CallPanel extends React.PureComponent {
 
   handleNewICECandidateMsg(info) {
     const candidate = new RTCIceCandidate(info.payload);
-    this.state.pc.addIceCandidate(candidate)
-      .catch(this.reportError);
+    if (this.state.callInitialSetupComplete) {
+      this.state.pc.addIceCandidate(candidate)
+        .catch(this.reportError);
+    } else {
+      this.remoteIceCandidatesCache.push(candidate);
+    }
+  }
+
+  drainRemoteIceCandidatesCache() {
+    this.remoteIceCandidatesCache.forEach(candidate => {
+      this.state.pc.addIceCandidate(candidate)
+        .catch(this.reportError);
+    });
+    this.remoteIceCandidatesCache = [];
   }
 
   handleICEConnectionStateChangeEvent(event) {
@@ -320,6 +350,7 @@ class CallPanel extends React.PureComponent {
     })
     .then(_ => {
       this.props.onSendAnswer(this.props.topic, this.props.seq, pc.localDescription.toJSON());
+      this.setState({ callInitialSetupComplete: true }, () => this.drainRemoteIceCandidatesCache());
     })
     .catch(this.handleGetUserMediaError);
   }
