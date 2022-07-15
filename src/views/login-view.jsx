@@ -5,8 +5,6 @@ import { FormattedMessage } from 'react-intl';
 import CheckBox from '../widgets/checkbox.jsx';
 import VisiblePassword from '../widgets/visible-password.jsx';
 
-import LocalStorageUtil from '../lib/local-storage.js';
-
 export default class LoginView extends React.Component {
   constructor(props) {
     super(props);

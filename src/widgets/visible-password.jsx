@@ -19,7 +19,9 @@ export default class VisiblePassword extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.inputRef.current.focus();
+    if (this.props.autoFocus) {
+      this.inputRef.current.focus();
+    }
   }
 
   handeTextChange(e) {
