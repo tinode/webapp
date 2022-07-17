@@ -1007,15 +1007,25 @@ class TinodeWeb extends React.Component {
       const subscribePromise =
         topic.subscribe()
           .then(() => {
-            // If there are unsent messages, try sending them now.
+            // If there are unsent messages (except video call messages),
+            // try sending them now. Unsent video call messages will be dropped.
+            let calls = [];
             topic.queuedMessages(pub => {
               if (pub._sending || pub.seq == msg.seq) {
+                return;
+              }
+              if (pub.head && pub.head.webrtc) {
+                // Filter out unsent video call messages.
+                calls.push(pub.seq);
                 return;
               }
               if (topic.isSubscribed()) {
                 topic.publishMessage(pub);
               }
             });
+            if (calls.length > 0) {
+              topic.delMessagesList(calls, true);
+            }
           });
       completion.push(subscribePromise);
     }

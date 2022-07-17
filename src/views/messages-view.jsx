@@ -403,15 +403,25 @@ class MessagesView extends React.Component {
           this.setState({topic: ctrl.topic});
         }
         this.props.onNewTopicCreated(this.props.topic, ctrl.topic);
-        // If there are unsent messages, try sending them now.
+        // If there are unsent messages (except video call messages),
+        // try sending them now. Unsent video call messages will be dropped.
+        let calls = [];
         topic.queuedMessages((pub) => {
           if (pub._sending) {
+            return;
+          }
+          if (pub.head && pub.head.webrtc) {
+            // Filter out unsent video call messages.
+            calls.push(pub.seq);
             return;
           }
           if (topic.isSubscribed()) {
             this.retrySend(pub);
           }
         });
+        if (calls.length > 0) {
+          topic.delMessagesList(calls, true);
+        }
       })
       .catch((err) => {
         console.error("Failed subscription to", this.state.topic, err);
@@ -760,7 +770,12 @@ class MessagesView extends React.Component {
 
   // Retry sending a message.
   retrySend(pub) {
-    this.props.sendMessage(pub.content, undefined, undefined, pub.head);
+    this.props.sendMessage(pub.content, undefined, undefined, pub.head)
+      .then(() => {
+        // All good. Remove the original message draft from the cache.
+        const topic = this.props.tinode.getTopic(this.state.topic);
+        topic.delMessagesList([pub.seq], true);
+      });
   }
 
   // Send attachment as Drafty message:
