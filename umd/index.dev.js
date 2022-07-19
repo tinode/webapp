@@ -5855,8 +5855,14 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       }
 
       this.props.onNewTopicCreated(this.props.topic, ctrl.topic);
+      let calls = [];
       topic.queuedMessages(pub => {
         if (pub._sending) {
+          return;
+        }
+
+        if (pub.head && pub.head.webrtc) {
+          calls.push(pub.seq);
           return;
         }
 
@@ -5864,6 +5870,10 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           this.retrySend(pub);
         }
       });
+
+      if (calls.length > 0) {
+        topic.delMessagesList(calls, true);
+      }
     }).catch(err => {
       console.error("Failed subscription to", this.state.topic, err);
       this.props.onError(err.message, 'err');
@@ -6245,7 +6255,10 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
 
   retrySend(pub) {
-    this.props.sendMessage(pub.content, undefined, undefined, pub.head);
+    this.props.sendMessage(pub.content, undefined, undefined, pub.head).then(() => {
+      const topic = this.props.tinode.getTopic(this.state.topic);
+      topic.delMessagesList([pub.seq], true);
+    });
   }
 
   sendFileAttachment(file) {
@@ -8586,8 +8599,14 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
     if (!topic.isSubscribed()) {
       const subscribePromise = topic.subscribe().then(() => {
+        let calls = [];
         topic.queuedMessages(pub => {
           if (pub._sending || pub.seq == msg.seq) {
+            return;
+          }
+
+          if (pub.head && pub.head.webrtc) {
+            calls.push(pub.seq);
             return;
           }
 
@@ -8595,6 +8614,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
             topic.publishMessage(pub);
           }
         });
+
+        if (calls.length > 0) {
+          topic.delMessagesList(calls, true);
+        }
       });
       completion.push(subscribePromise);
     }
