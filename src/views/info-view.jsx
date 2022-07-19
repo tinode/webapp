@@ -2,7 +2,7 @@
 import React from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
-import { Tinode } from 'tinode-sdk';
+import { AccessMode, Tinode } from 'tinode-sdk';
 
 import AvatarUpload from '../widgets/avatar-upload.jsx';
 import BadgeList from '../widgets/badge-list.jsx';
@@ -307,7 +307,7 @@ class InfoView extends React.Component {
           toSkip = 'O';
         } else {
           // Allow accepting any of 'ASDO' permissions but don't allow asking for them.
-          toSkip = Tinode.AccessMode.encode(Tinode.AccessMode.diff('ASDO', this.state.modeGiven));
+          toSkip = AccessMode.encode(AccessMode.diff('ASDO', this.state.modeGiven));
           if (this.state.channel) {
             // Channels are read-only.
             toSkip += 'W';

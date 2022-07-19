@@ -4817,7 +4817,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
         if (this.state.owner) {
           toSkip = 'O';
         } else {
-          toSkip = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.AccessMode.encode(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.AccessMode.diff('ASDO', this.state.modeGiven));
+          toSkip = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.AccessMode.encode(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.AccessMode.diff('ASDO', this.state.modeGiven));
 
           if (this.state.channel) {
             toSkip += 'W';
