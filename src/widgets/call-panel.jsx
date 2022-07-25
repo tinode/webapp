@@ -62,6 +62,7 @@ class CallPanel extends React.PureComponent {
     this.handleICEConnectionStateChangeEvent = this.handleICEConnectionStateChangeEvent.bind(this);
     this.handleSignalingStateChangeEvent = this.handleSignalingStateChangeEvent.bind(this);
     this.handleICEGatheringStateChangeEvent = this.handleICEGatheringStateChangeEvent.bind(this);
+    this.handleIceCandidateErrorEvent = this.handleIceCandidateErrorEvent.bind(this);
     this.handleTrackEvent = this.handleTrackEvent.bind(this);
 
     this.handleVideoOfferMsg = this.handleVideoOfferMsg.bind(this);
@@ -181,6 +182,7 @@ class CallPanel extends React.PureComponent {
       this.state.pc.onsignalingstatechange = null;
       this.state.pc.onicegatheringstatechange = null;
       this.state.pc.onnegotiationneeded = null;
+      this.state.pc.onicecandidateerror = null;
 
       this.state.pc.close();
     }
@@ -216,6 +218,7 @@ class CallPanel extends React.PureComponent {
     pc.onicegatheringstatechange = this.handleICEGatheringStateChangeEvent;
     pc.onsignalingstatechange = this.handleSignalingStateChangeEvent;
     pc.onnegotiationneeded = this.handleNegotiationNeededEvent;
+    pc.onicecandidateerror = this.handleIceCandidateErrorEvent;
     pc.ontrack = this.handleTrackEvent;
 
     this.setState({pc: pc, waitingForPeer: false});
@@ -252,6 +255,10 @@ class CallPanel extends React.PureComponent {
       this.props.onSendOffer(this.props.topic, this.props.seq, this.state.pc.localDescription.toJSON());
     })
     .catch(this.reportError);
+  }
+
+  handleIceCandidateErrorEvent(event) {
+    console.log('ICE candidate error: ', event);
   }
 
   handleICECandidateEvent(event) {
