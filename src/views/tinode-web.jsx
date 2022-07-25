@@ -1151,6 +1151,8 @@ class TinodeWeb extends React.Component {
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
     this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
+    this.tinode.onInfoMessage = this.handleInfoMessage;
+    this.tinode.onDataMessage = this.handleDataMessage;
 
     this.setState({
       serverAddress: serverAddress,
@@ -1410,6 +1412,8 @@ class TinodeWeb extends React.Component {
           this.tinode.onConnect = this.handleConnected;
           this.tinode.onDisconnect = this.handleDisconnect;
           this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
+          this.tinode.onInfoMessage = this.handleInfoMessage;
+          this.tinode.onDataMessage = this.handleDataMessage;
           HashNavigation.navigateTo('');
         })
     });
