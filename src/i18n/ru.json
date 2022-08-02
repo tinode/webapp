@@ -1420,8 +1420,15 @@
   "call_declined": {
     "translation": "отклонен",
     "defaultMessage": "declined",
-    "description": "Label for declined incoming call",
+    "description": "Label for declined call",
     "missing": false,
+    "obsolete": false
+  },
+  "call_disconnected": {
+    "translation": "",
+    "defaultMessage": "disconnected",
+    "description": "Label for disconnected call",
+    "missing": true,
     "obsolete": false
   }
 }

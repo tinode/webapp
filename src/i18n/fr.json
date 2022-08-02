@@ -1385,7 +1385,7 @@
   "call_declined": {
     "translation": "",
     "defaultMessage": "declined",
-    "description": "Label for declined incoming call",
+    "description": "Label for declined call",
     "missing": true,
     "obsolete": false
   },
@@ -1421,6 +1421,13 @@
     "translation": "",
     "defaultMessage": "Video call",
     "description": "Start video call",
+    "missing": true,
+    "obsolete": false
+  },
+  "call_disconnected": {
+    "translation": "",
+    "defaultMessage": "disconnected",
+    "description": "Label for disconnected call",
     "missing": true,
     "obsolete": false
   }
