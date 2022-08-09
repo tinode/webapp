@@ -17558,7 +17558,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var name = "firebase";
-var version = "9.9.0";
+var version = "9.9.2";
 
 /**
  * @license
@@ -18263,7 +18263,7 @@ function isVersionServiceProvider(provider) {
 }
 
 const name$o = "@firebase/app";
-const version$1 = "0.7.28";
+const version$1 = "0.7.30";
 
 /**
  * @license
@@ -18330,7 +18330,7 @@ const name$2 = "@firebase/firestore";
 const name$1 = "@firebase/firestore-compat";
 
 const name = "firebase";
-const version = "9.9.0";
+const version = "9.9.2";
 
 /**
  * @license
@@ -18513,10 +18513,10 @@ const ERRORS = {
     ["invalid-app-argument" /* INVALID_APP_ARGUMENT */]: 'firebase.{$appName}() takes either no argument or a ' +
         'Firebase App instance.',
     ["invalid-log-argument" /* INVALID_LOG_ARGUMENT */]: 'First argument to `onLog` must be null or a function.',
-    ["storage-open" /* STORAGE_OPEN */]: 'Error thrown when opening storage. Original error: {$originalErrorMessage}.',
-    ["storage-get" /* STORAGE_GET */]: 'Error thrown when reading from storage. Original error: {$originalErrorMessage}.',
-    ["storage-set" /* STORAGE_WRITE */]: 'Error thrown when writing to storage. Original error: {$originalErrorMessage}.',
-    ["storage-delete" /* STORAGE_DELETE */]: 'Error thrown when deleting from storage. Original error: {$originalErrorMessage}.'
+    ["idb-open" /* IDB_OPEN */]: 'Error thrown when opening IndexedDB. Original error: {$originalErrorMessage}.',
+    ["idb-get" /* IDB_GET */]: 'Error thrown when reading from IndexedDB. Original error: {$originalErrorMessage}.',
+    ["idb-set" /* IDB_WRITE */]: 'Error thrown when writing to IndexedDB. Original error: {$originalErrorMessage}.',
+    ["idb-delete" /* IDB_DELETE */]: 'Error thrown when deleting from IndexedDB. Original error: {$originalErrorMessage}.'
 };
 const ERROR_FACTORY = new _firebase_util__WEBPACK_IMPORTED_MODULE_2__.ErrorFactory('app', 'Firebase', ERRORS);
 
@@ -18807,7 +18807,7 @@ function getDbPromise() {
                 }
             }
         }).catch(e => {
-            throw ERROR_FACTORY.create("storage-open" /* STORAGE_OPEN */, {
+            throw ERROR_FACTORY.create("idb-open" /* IDB_OPEN */, {
                 originalErrorMessage: e.message
             });
         });
@@ -18824,9 +18824,15 @@ async function readHeartbeatsFromIndexedDB(app) {
             .get(computeKey(app));
     }
     catch (e) {
-        throw ERROR_FACTORY.create("storage-get" /* STORAGE_GET */, {
-            originalErrorMessage: (_a = e) === null || _a === void 0 ? void 0 : _a.message
-        });
+        if (e instanceof _firebase_util__WEBPACK_IMPORTED_MODULE_2__.FirebaseError) {
+            logger.warn(e.message);
+        }
+        else {
+            const idbGetError = ERROR_FACTORY.create("idb-get" /* IDB_GET */, {
+                originalErrorMessage: (_a = e) === null || _a === void 0 ? void 0 : _a.message
+            });
+            logger.warn(idbGetError.message);
+        }
     }
 }
 async function writeHeartbeatsToIndexedDB(app, heartbeatObject) {
@@ -18839,9 +18845,15 @@ async function writeHeartbeatsToIndexedDB(app, heartbeatObject) {
         return tx.done;
     }
     catch (e) {
-        throw ERROR_FACTORY.create("storage-set" /* STORAGE_WRITE */, {
-            originalErrorMessage: (_a = e) === null || _a === void 0 ? void 0 : _a.message
-        });
+        if (e instanceof _firebase_util__WEBPACK_IMPORTED_MODULE_2__.FirebaseError) {
+            logger.warn(e.message);
+        }
+        else {
+            const idbGetError = ERROR_FACTORY.create("idb-set" /* IDB_WRITE */, {
+                originalErrorMessage: (_a = e) === null || _a === void 0 ? void 0 : _a.message
+            });
+            logger.warn(idbGetError.message);
+        }
     }
 }
 function computeKey(app) {
