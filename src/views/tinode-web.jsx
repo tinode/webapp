@@ -1538,7 +1538,8 @@ class TinodeWeb extends React.Component {
       ];
     }
 
-    let muted = false, blocked = false, self_blocked = false, subscribed = false, deleter = false, archived = false;
+    let muted = false, blocked = false, self_blocked = false, subscribed = false, deleter = false,
+      archived = false, webrtc = false;
     if (topic) {
       subscribed = topic.isSubscribed();
       archived = topic.isArchived();
@@ -1552,12 +1553,14 @@ class TinodeWeb extends React.Component {
       }
     }
 
+    webrtc = !!this.tinode.getServerParam('iceServers');
+
     return [
       subscribed ? {
         title: this.props.intl.formatMessage(messages.menu_item_info),
         handler: this.handleShowInfoView
       } : null,
-      subscribed && Tinode.isP2PTopicName(topicName) ? {
+      subscribed && Tinode.isP2PTopicName(topicName) && webrtc ? {
         title: this.props.intl.formatMessage(messages.menu_item_video_call),
         handler: this.handleStartVideoCall
       } : null,
