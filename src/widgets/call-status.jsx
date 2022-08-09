@@ -13,13 +13,24 @@ export default class CallStatus extends React.PureComponent {
     const icon2 = this.props.incoming ?
       (isCallDropped ? 'call_missed' : 'call_received') :
       (isCallDropped ? 'call_missed_outgoing' : 'call_made');
-    const duration = isCallDropped ? (
-      this.props.incoming ? (this.props.callState == 'declined' ?
-        <FormattedMessage id="call_declined" defaultMessage="declined" description="Label for declined incoming call" /> :
-        <FormattedMessage id="call_missed" defaultMessage="missed" description="Label for missed incoming call" />
-      ) :
-      <FormattedMessage id="call_cancelled" defaultMessage="cancelled" description="Label for cancelled outgoing call" />
-    ) : <span>{secondsToTime(this.props.duration / 1000)}</span>;
+    let duration;
+    if (isCallDropped) {
+      switch (this.props.callState) {
+        case 'declined':
+          duration = <FormattedMessage id="call_declined" defaultMessage="declined" description="Label for declined call" />;
+          break;
+        case 'missed':
+          duration = this.props.incoming ?
+            <FormattedMessage id="call_missed" defaultMessage="missed" description="Label for missed incoming call" /> :
+            <FormattedMessage id="call_cancelled" defaultMessage="cancelled" description="Label for cancelled outgoing call" />;
+          break;
+        default:
+          duration = <FormattedMessage id="call_disconnected" defaultMessage="disconnected" description="Label for disconnected call" />;
+          break;
+      }
+    } else {
+      duration = <span>{secondsToTime(this.props.duration / 1000)}</span>;
+    }
     return (
       <>
         <div className="composed-material">
