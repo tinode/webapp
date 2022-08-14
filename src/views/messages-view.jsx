@@ -635,8 +635,6 @@ class MessagesView extends React.Component {
     if (status >= Tinode.MESSAGE_STATUS_SENT && msg.from != this.props.myUserId) {
       this.postReadNotification(msg.seq);
     }
-    // This will send "received" notifications right away.
-    this.props.onData(msg);
   }
 
   handleAllMessagesReceived(count) {

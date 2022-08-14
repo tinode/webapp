@@ -396,6 +396,10 @@
     "defaultMessage": "Archived:",
     "description": "Label for unarchiving the topic"
   },
+  "label_use_secure_connection": {
+    "defaultMessage": "Use secure connection",
+    "description": "Label for WS/WSS connection type in SettingsView"
+  },
   "label_user_contacts": {
     "defaultMessage": "Contacts:",
     "description": "Label for user contacts"

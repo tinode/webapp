@@ -1425,10 +1425,17 @@
     "obsolete": false
   },
   "call_disconnected": {
-    "translation": "",
+    "translation": "연결 끊김",
     "defaultMessage": "disconnected",
     "description": "Label for disconnected call",
-    "missing": true,
+    "missing": false,
+    "obsolete": false
+  },
+  "label_use_secure_connection": {
+    "translation": "보안 연결 사용",
+    "defaultMessage": "Use secure connection",
+    "description": "Label for WS/WSS connection type in SettingsView",
+    "missing": false,
     "obsolete": false
   }
 }

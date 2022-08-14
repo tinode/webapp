@@ -839,7 +839,7 @@ table.permission-editor td.checkbox {
 }
 
 input#host-name {
-  width: 15rem;
+  width: 100%;
 }
 
 /* Input with a search icon on the left */

@@ -165,6 +165,7 @@ class SidepanelView extends React.Component {
           <SettingsView
             transport={this.props.transport}
             serverAddress={this.props.serverAddress}
+            secureConnection={this.props.secureConnection}
             onCancel={this.props.onCancel}
             onUpdate={this.props.onGlobalSettings} /> :
 

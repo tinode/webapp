@@ -1369,66 +1369,73 @@
     "obsolete": false
   },
   "already_in_call": {
-    "translation": "",
+    "translation": "Vous êtes déjà dans un appel en cours!",
     "defaultMessage": "You already in an ongoing call!",
     "description": "Error message when the user tried to accept a new call without finishing pervious one",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "call_cancelled": {
-    "translation": "",
+    "translation": "annulé",
     "defaultMessage": "cancelled",
     "description": "Label for cancelled outgoing call",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "call_declined": {
-    "translation": "",
+    "translation": "refusé",
     "defaultMessage": "declined",
     "description": "Label for declined call",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "call_missed": {
-    "translation": "",
+    "translation": "manqué",
     "defaultMessage": "missed",
     "description": "Label for missed incoming call",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "calls_incoming": {
-    "translation": "",
+    "translation": "Appel entrant",
     "defaultMessage": "Incoming call",
     "description": "Incoming call label",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "calls_outgoing": {
-    "translation": "",
+    "translation": "Appel sortant",
     "defaultMessage": "Outgoing call",
     "description": "Outgoing call label",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "calls_you_label": {
-    "translation": "",
+    "translation": "Tu",
     "defaultMessage": "You",
     "description": "Shown over the local video screen",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "menu_item_video_call": {
-    "translation": "",
+    "translation": "Appel vidéo",
     "defaultMessage": "Video call",
     "description": "Start video call",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "call_disconnected": {
-    "translation": "",
+    "translation": "débranché",
     "defaultMessage": "disconnected",
     "description": "Label for disconnected call",
-    "missing": true,
+    "missing": false,
+    "obsolete": false
+  },
+  "label_use_secure_connection": {
+    "translation": "Utiliser une connexion sécurisée",
+    "defaultMessage": "Use secure connection",
+    "description": "Label for WS/WSS connection type in SettingsView",
+    "missing": false,
     "obsolete": false
   }
 }

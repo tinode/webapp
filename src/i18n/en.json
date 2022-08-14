@@ -1430,5 +1430,12 @@
     "description": "Label for disconnected call",
     "missing": false,
     "obsolete": false
+  },
+  "label_use_secure_connection": {
+    "translation": "Use secure connection",
+    "defaultMessage": "Use secure connection",
+    "description": "Label for WS/WSS connection type in SettingsView",
+    "missing": false,
+    "obsolete": false
   }
 }

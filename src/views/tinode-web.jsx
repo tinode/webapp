@@ -102,7 +102,6 @@ class TinodeWeb extends React.Component {
     this.tnMeContactUpdate = this.tnMeContactUpdate.bind(this);
     this.tnMeSubsUpdated = this.tnMeSubsUpdated.bind(this);
     this.resetContactList = this.resetContactList.bind(this);
-    this.tnData = this.tnData.bind(this);
     this.tnInitFind = this.tnInitFind.bind(this);
     this.tnFndSubsUpdated = this.tnFndSubsUpdated.bind(this);
     this.handleSearchContacts = this.handleSearchContacts.bind(this);
@@ -282,7 +281,7 @@ class TinodeWeb extends React.Component {
     });
 
     new Promise((resolve, reject) => {
-      this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, this.state.transport,
+      this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, isSecureConnection(), this.state.transport,
         this.props.intl.locale, this.state.persist, resolve);
       this.tinode.onConnect = this.handleConnected;
       this.tinode.onDisconnect = this.handleDisconnect;
@@ -342,9 +341,9 @@ class TinodeWeb extends React.Component {
   }
 
   // Setup transport (usually websocket) and server address. This will terminate connection with the server.
-  static tnSetup(serverAddress, transport, locale, persistentCache, onSetupCompleted) {
+  static tnSetup(serverAddress, secureConnection, transport, locale, persistentCache, onSetupCompleted) {
     const tinode = new Tinode({appName: APP_NAME, host: serverAddress, apiKey: API_KEY, transport: transport,
-      secure: isSecureConnection(), persist: persistentCache}, onSetupCompleted);
+      secure: secureConnection, persist: persistentCache}, onSetupCompleted);
     tinode.setHumanLanguage(locale);
     tinode.enableLogging(LOGGING_ENABLED, true);
     return tinode;
@@ -887,9 +886,6 @@ class TinodeWeb extends React.Component {
     this.setState(newState);
   }
 
-  tnData(data) {
-  }
-
   /* Fnd topic: find contacts by tokens */
   tnInitFind() {
     const fnd = this.tinode.getFndTopic();
@@ -1146,8 +1142,8 @@ class TinodeWeb extends React.Component {
       this.tinode.onDisconnect = undefined;
       this.tinode.disconnect();
     }
-    this.tinode = TinodeWeb.tnSetup(serverAddress, transport, this.props.intl.locale,
-      LocalStorageUtil.getObject('keep-logged-in'));
+    this.tinode = TinodeWeb.tnSetup(serverAddress, settings.secureConnection, transport,
+      this.props.intl.locale, LocalStorageUtil.getObject('keep-logged-in'));
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
     this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
@@ -1407,7 +1403,7 @@ class TinodeWeb extends React.Component {
     this.setState(this.getBlankState());
 
     cleared.then(() => {
-      this.tinode = TinodeWeb.tnSetup(this.state.serverAddress,
+      this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, isSecureConnection(),
         this.state.transport, this.props.intl.locale, LocalStorageUtil.getObject('keep-logged-in'), () => {
           this.tinode.onConnect = this.handleConnected;
           this.tinode.onDisconnect = this.handleDisconnect;
@@ -1948,6 +1944,7 @@ class TinodeWeb extends React.Component {
           desktopAlertsEnabled={this.state.desktopAlertsEnabled}
           incognitoMode={this.state.incognitoMode}
           serverAddress={this.state.serverAddress}
+          secureConnection={isSecureConnection()}
           serverVersion={this.state.serverVersion}
 
           onGlobalSettings={this.handleGlobalSettings}
@@ -2025,7 +2022,6 @@ class TinodeWeb extends React.Component {
           newTopicParams={this.state.newTopicParams}
 
           onHideMessagesView={this.handleHideMessagesView}
-          onData={this.tnData}
           onError={this.handleError}
           onNewTopicCreated={this.handleNewTopicCreated}
           showContextMenu={this.handleShowContextMenu}
