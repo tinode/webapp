@@ -7274,8 +7274,11 @@ class SettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       id: "secure-connection",
       name: "secure-connection",
       checked: this.state.secureConnection,
+      className: "quoted",
       onChange: this.handleToggleSecure
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+      htmlFor: "secure-connection"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_use_secure_connection",
       defaultMessage: [{
         "type": 0,
@@ -7824,6 +7827,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       autoLogin: false,
       transport: settings.transport || null,
       serverAddress: settings.serverAddress || (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_16__.detectServerAddress)(),
+      secureConnection: settings.secureConnection === undefined ? (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_16__.isSecureConnection)() : settings.secureConnection,
       serverVersion: "no connection",
       messageSounds: !settings.messageSoundsOff,
       incognitoMode: false,
@@ -8763,6 +8767,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   handleGlobalSettings(settings) {
     const serverAddress = settings.serverAddress || this.state.serverAddress;
     const transport = settings.transport || this.state.transport;
+    const secureConnection = settings.secureConnection === undefined ? this.state.secureConnection : settings.secureConnection;
 
     if (this.tinode) {
       this.tinode.clearStorage();
@@ -8770,7 +8775,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.tinode.disconnect();
     }
 
-    this.tinode = TinodeWeb.tnSetup(serverAddress, settings.secureConnection, transport, this.props.intl.locale, _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].getObject('keep-logged-in'));
+    this.tinode = TinodeWeb.tnSetup(serverAddress, secureConnection, transport, this.props.intl.locale, _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].getObject('keep-logged-in'));
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
     this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
@@ -8778,11 +8783,13 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.tinode.onDataMessage = this.handleDataMessage;
     this.setState({
       serverAddress: serverAddress,
-      transport: transport
+      transport: transport,
+      secureConnection: secureConnection
     });
     _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].setObject('settings', {
       serverAddress: serverAddress,
-      transport: transport
+      transport: transport,
+      secureConnection: secureConnection
     });
     _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].setUrlSidePanel(window.location.hash, ''));
   }
@@ -9633,7 +9640,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       desktopAlertsEnabled: this.state.desktopAlertsEnabled,
       incognitoMode: this.state.incognitoMode,
       serverAddress: this.state.serverAddress,
-      secureConnection: (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_16__.isSecureConnection)(),
+      secureConnection: this.state.secureConnection,
       serverVersion: this.state.serverVersion,
       onGlobalSettings: this.handleGlobalSettings,
       onSignUp: this.handleNewAccount,
@@ -12110,19 +12117,44 @@ class CheckBox extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompone
   }
 
   render() {
-    return this.props.onChange ? this.props.checked === true ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons blue clickable",
-      onClick: this.handleChange
-    }, "check_box") : this.props.checked === false ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons blue clickable",
-      onClick: this.handleChange
-    }, "check_box_outline_blank") : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons lt-blue"
-    }, "indeterminate_check_box") : this.props.checked ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, "check_box") : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, "check_box_outline_blank");
+    let classList = ['material-icons'];
+    let iconName;
+
+    if (Array.isArray(this.props.className)) {
+      classList.push(...this.props.className);
+    } else if (this.props.className) {
+      classList.push(this.props.className);
+    }
+
+    if (this.props.onChange) {
+      if (this.props.checked) {
+        classList.push('blue', 'clickable');
+        iconName = 'check_box';
+      } else if (this.props.checked === false) {
+        classList.push('blue', 'clickable');
+        iconName = 'check_box_outline_blank';
+      } else {
+        classList.push('lt-blue');
+        iconName = 'indeterminate_check_box';
+      }
+    } else {
+      if (this.props.checked) {
+        iconName = 'check_box';
+      } else {
+        iconName = 'check_box_outline_blank';
+      }
+    }
+
+    let attrs = {
+      className: classList.join(' '),
+      id: this.props.id
+    };
+
+    if (this.props.onChange) {
+      attrs.onClick = this.handleChange;
+    }
+
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement('i', attrs, iconName);
   }
 
 }

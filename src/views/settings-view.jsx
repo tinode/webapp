@@ -70,7 +70,7 @@ export default class SettingsView extends React.PureComponent {
         <HostSelector serverAddress={this.state.serverAddress} onServerAddressChange={this.handleServerAddressChange} />
         <div className="panel-form-row">
           <CheckBox id="secure-connection" name="secure-connection" checked={this.state.secureConnection}
-            onChange={this.handleToggleSecure} /><label>
+            className="quoted" onChange={this.handleToggleSecure} /><label htmlFor="secure-connection">
             <FormattedMessage id="label_use_secure_connection" defaultMessage="Use secure connection"
               description="Label for WS/WSS connection type in SettingsView" />
           </label>

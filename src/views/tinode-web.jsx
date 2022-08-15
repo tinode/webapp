@@ -185,6 +185,8 @@ class TinodeWeb extends React.Component {
       autoLogin: false,
       transport: settings.transport || null,
       serverAddress: settings.serverAddress || detectServerAddress(),
+      secureConnection: settings.secureConnection === undefined ?
+        isSecureConnection() : settings.secureConnection,
       serverVersion: "no connection",
       // "On" is the default, so saving the "off" state.
       messageSounds: !settings.messageSoundsOff,
@@ -1137,12 +1139,14 @@ class TinodeWeb extends React.Component {
   handleGlobalSettings(settings) {
     const serverAddress = settings.serverAddress || this.state.serverAddress;
     const transport = settings.transport || this.state.transport;
+    const secureConnection = settings.secureConnection === undefined ?
+      this.state.secureConnection : settings.secureConnection;
     if (this.tinode) {
       this.tinode.clearStorage();
       this.tinode.onDisconnect = undefined;
       this.tinode.disconnect();
     }
-    this.tinode = TinodeWeb.tnSetup(serverAddress, settings.secureConnection, transport,
+    this.tinode = TinodeWeb.tnSetup(serverAddress, secureConnection, transport,
       this.props.intl.locale, LocalStorageUtil.getObject('keep-logged-in'));
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
@@ -1152,11 +1156,13 @@ class TinodeWeb extends React.Component {
 
     this.setState({
       serverAddress: serverAddress,
-      transport: transport
+      transport: transport,
+      secureConnection: secureConnection,
     });
     LocalStorageUtil.setObject('settings', {
       serverAddress: serverAddress,
-      transport: transport
+      transport: transport,
+      secureConnection: secureConnection,
     });
 
     HashNavigation.navigateTo(HashNavigation.setUrlSidePanel(window.location.hash, ''));
@@ -1944,7 +1950,7 @@ class TinodeWeb extends React.Component {
           desktopAlertsEnabled={this.state.desktopAlertsEnabled}
           incognitoMode={this.state.incognitoMode}
           serverAddress={this.state.serverAddress}
-          secureConnection={isSecureConnection()}
+          secureConnection={this.state.secureConnection}
           serverVersion={this.state.serverVersion}
 
           onGlobalSettings={this.handleGlobalSettings}
