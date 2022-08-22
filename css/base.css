@@ -284,6 +284,7 @@ ul.menu {
 
 ul.menu > li {
   padding: 0.75rem 0.75rem 0.75rem 1.25rem;
+  cursor: pointer;
 }
 
 ul.menu > li:hover {
@@ -463,6 +464,8 @@ div.trusted-badge {
   touch-action: manipulation;
   white-space: nowrap;
   text-transform: uppercase;
+  background-color: white;
+  z-index: 1;
 }
 .flat-button:hover,
 .flat-button:focus {

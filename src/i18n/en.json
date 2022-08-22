@@ -1437,5 +1437,12 @@
     "description": "Label for WS/WSS connection type in SettingsView",
     "missing": false,
     "obsolete": false
+  },
+  "phone_or_email_prompt": {
+    "translation": "Phone number or email",
+    "defaultMessage": "Phone number or email",
+    "description": "Placeholer for phone or email",
+    "missing": false,
+    "obsolete": false
   }
 }

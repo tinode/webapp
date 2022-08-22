@@ -3,7 +3,6 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import AvatarUpload from '../widgets/avatar-upload.jsx';
 import TopicDescEdit from '../widgets/topic-desc-edit.jsx';
 
 import { arrayEqual, asEmail, asPhone } from '../lib/utils.js';
@@ -159,10 +158,13 @@ export default class TopicCommon extends React.Component {
               <div className="quoted">
                 {credentials}
                 {this.state.addCredActive ?
-                  <input type="text" value={this.state.value}
-                    className={this.state.addCredInvalid ? 'invalid' : null}
-                    placeholder="Phone number or email" required="required" autoFocus
-                    onChange={this.handleCredChange} onKeyDown={this.handleCredKeyDown} onBlur={this.handleCredEntered} />
+                  <FormattedMessage id="phone_or_email_prompt" defaultMessage="Phone number or email"
+                    description="Placeholer for phone or email">{(phone_or_email_prompt) =>
+                    <input type="text" value={this.state.value}
+                      className={this.state.addCredInvalid ? 'invalid' : null}
+                      placeholder={phone_or_email_prompt} required="required" autoFocus
+                      onChange={this.handleCredChange} onKeyDown={this.handleCredKeyDown} onBlur={this.handleCredEntered} />
+                  }</FormattedMessage>
                   : null}
                 <div>
                   <a href="#" onClick={(e) => {e.preventDefault(); this.setState({addCredActive: true});}}>
