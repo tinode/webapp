@@ -2925,6 +2925,15 @@ ul.tabbar li.active > a {
 }
 
 /*
+ Very wide monitor.
+ */
+@media (min-width: 1440px){
+  #app-container {
+    max-width: 114rem;
+  }
+}
+
+/*
  Mobile styles.
  */
 
