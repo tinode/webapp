@@ -139,7 +139,7 @@ class ContextMenu extends React.Component {
           return props.onShowAlert(
             formatMessage(messages.clear_messages), // title
             formatMessage(messages.clear_messages_warning), // content
-            (() => { this.deleteMessages(true, false, params, errorHandler); }), // onConfirm
+            (_ => { this.deleteMessages(true, false, params, errorHandler); }), // onConfirm
             null, // "OK"
             true, // Show Reject button
             null  // "Cancel"
@@ -152,8 +152,8 @@ class ContextMenu extends React.Component {
         handler: (params, errorHandler) => {
           return props.onShowAlert(
             formatMessage(messages.clear_for_all), // title
-            formatMessage(message.delete_messages_warning), // content
-            (() => { return this.deleteMessages(true, true, params, errorHandler); }),
+            formatMessage(messages.delete_messages_warning), // content
+            (_ => { return this.deleteMessages(true, true, params, errorHandler); }),
             null, // "OK"
             true, // Show Reject button
             null  // "Cancel"

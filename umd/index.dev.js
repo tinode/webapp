@@ -13047,7 +13047,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         id: 'messages_clear',
         title: formatMessage(messages.clear_messages),
         handler: (params, errorHandler) => {
-          return props.onShowAlert(formatMessage(messages.clear_messages), formatMessage(messages.clear_messages_warning), () => {
+          return props.onShowAlert(formatMessage(messages.clear_messages), formatMessage(messages.clear_messages_warning), _ => {
             this.deleteMessages(true, false, params, errorHandler);
           }, null, true, null);
         }
@@ -13056,7 +13056,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         id: 'messages_clear_hard',
         title: formatMessage(messages.clear_for_all),
         handler: (params, errorHandler) => {
-          return props.onShowAlert(formatMessage(messages.clear_for_all), formatMessage(message.delete_messages_warning), () => {
+          return props.onShowAlert(formatMessage(messages.clear_for_all), formatMessage(messages.delete_messages_warning), _ => {
             return this.deleteMessages(true, true, params, errorHandler);
           }, null, true, null);
         }
