@@ -9789,12 +9789,30 @@ class ValidationView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
   constructor(props) {
     super(props);
     this.state = {
-      code: props.credCode || ''
+      code: props.credCode || '',
+      codeReceived: false
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.credCode != prevState.code) {
+      return {
+        code: nextProps.credCode || '',
+        codeReceived: !!nextProps.credCode
+      };
+    }
+
+    return prevState;
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.codeReceived && this.state.code != prevState.code) {
+      this.props.onSubmit(this.props.credMethod, this.state.code.trim());
+    }
   }
 
   handleChange(e) {
