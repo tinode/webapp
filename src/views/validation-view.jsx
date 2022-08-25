@@ -42,7 +42,7 @@ class ValidationView extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // Submit code audomatically if it's received from the parent.
+    // Submit code automatically if it's received from the parent.
     if (this.state.codeReceived && this.state.code != prevState.code) {
       this.props.onSubmit(this.props.credMethod, this.state.code.trim());
     }

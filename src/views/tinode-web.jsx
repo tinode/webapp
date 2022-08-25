@@ -73,6 +73,11 @@ const messages = defineMessages({
     id: 'menu_item_video_call',
     defaultMessage: 'Video call',
     description: 'Start video call'
+  },
+  cred_confirmed_successfully: {
+    id: 'cred_confirmed_successfully',
+    defaultMessage: 'Confirmed successfully',
+    description: 'Message explaining that the credential was successfully validated.'
   }
 });
 
@@ -1653,7 +1658,8 @@ class TinodeWeb extends React.Component {
     if (this.tinode.isAuthenticated()) {
       const me = this.tinode.getMeTopic();
       me.setMeta({cred: {meth: cred, resp: code}})
-        .then(() => {
+        .then(_ => {
+          this.handleError(this.props.intl.formatMessage(cred_confirmed_successfully), 'info');
           HashNavigation.navigateTo('');
         })
         .catch((err) => {

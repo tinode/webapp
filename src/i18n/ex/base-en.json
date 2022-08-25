@@ -195,6 +195,10 @@
     "defaultMessage": "No contacts match ''{query}''",
     "description": "Shown in ContactsView when search returned no results"
   },
+  "cred_confirmed_successfully": {
+    "defaultMessage": "Confirmed successfully",
+    "description": "Message explaining that the credential was successfully validated."
+  },
   "credential_email_prompt": {
     "defaultMessage": "Your registration email",
     "description": "Placeholder for entering email"

@@ -1444,5 +1444,12 @@
     "description": "Placeholer for phone or email",
     "missing": false,
     "obsolete": false
+  },
+  "cred_confirmed_successfully": {
+    "translation": "Confirmé avec succès",
+    "defaultMessage": "Confirmed successfully",
+    "description": "Message explaining that the credential was successfully validated.",
+    "missing": false,
+    "obsolete": false
   }
 }
