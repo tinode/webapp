@@ -15,6 +15,7 @@ export default class HostSelector extends React.PureComponent {
 
     this.handleHostNameChange = this.handleHostNameChange.bind(this);
     this.handleEditingFinished = this.handleEditingFinished.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   handleHostNameChange(e) {
@@ -25,6 +26,12 @@ export default class HostSelector extends React.PureComponent {
     if (this.state.changed) {
       this.setState({changed: false});
       this.props.onServerAddressChange(this.state.hostName.trim());
+    }
+  }
+
+  handleKeyDown(e) {
+    if (e.key == 'Enter') {
+      this.handleEditingFinished();
     }
   }
 
@@ -40,7 +47,8 @@ export default class HostSelector extends React.PureComponent {
       <div className="panel-form-row">
         <input type="search" id="host-name" placeholder={this.props.hostName} list="known-hosts"
           className="quoted" value={this.state.hostName} onChange={this.handleHostNameChange}
-          onBlur={this.handleEditingFinished} required />
+          onBlur={this.handleEditingFinished}
+          onKeyDown={this.handleKeyDown} required />
         <datalist id="known-hosts">
           {hostOptions}
         </datalist>
