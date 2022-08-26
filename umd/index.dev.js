@@ -3084,7 +3084,7 @@ class HashNavigation {
     }
 
     if (parts[1]) {
-      parts[1].split('&').forEach(function (part) {
+      parts[1].split('&').forEach(part => {
         const item = part.split('=');
 
         if (item[0]) {
@@ -3121,25 +3121,25 @@ class HashNavigation {
   }
 
   static addUrlParam(hash, key, value) {
-    const parsed = this.parseUrlHash(hash);
+    const parsed = HashNavigation.parseUrlHash(hash);
     parsed.params[key] = value;
-    return this.composeUrlHash(parsed.path, parsed.params);
+    return HashNavigation.composeUrlHash(parsed.path, parsed.params);
   }
 
   static removeUrlParam(hash, key) {
-    const parsed = this.parseUrlHash(hash);
+    const parsed = HashNavigation.parseUrlHash(hash);
     delete parsed.params[key];
-    return this.composeUrlHash(parsed.path, parsed.params);
+    return HashNavigation.composeUrlHash(parsed.path, parsed.params);
   }
 
   static setUrlSidePanel(hash, sidepanel) {
-    const parsed = this.parseUrlHash(hash);
+    const parsed = HashNavigation.parseUrlHash(hash);
     parsed.path[0] = sidepanel;
-    return this.composeUrlHash(parsed.path, parsed.params);
+    return HashNavigation.composeUrlHash(parsed.path, parsed.params);
   }
 
   static setUrlInfoPanel(hash, infopanel) {
-    const parsed = this.parseUrlHash(hash);
+    const parsed = HashNavigation.parseUrlHash(hash);
 
     if (infopanel) {
       parsed.params.info = infopanel;
@@ -3147,14 +3147,14 @@ class HashNavigation {
       delete parsed.params.info;
     }
 
-    return this.composeUrlHash(parsed.path, parsed.params);
+    return HashNavigation.composeUrlHash(parsed.path, parsed.params);
   }
 
   static setUrlTopic(hash, topic) {
-    const parsed = this.parseUrlHash(hash);
+    const parsed = HashNavigation.parseUrlHash(hash);
     parsed.path[1] = topic;
     delete parsed.params.info;
-    return this.composeUrlHash(parsed.path, parsed.params);
+    return HashNavigation.composeUrlHash(parsed.path, parsed.params);
   }
 
 }
@@ -7828,6 +7828,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   getBlankState() {
     const settings = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].getObject('settings') || {};
     const persist = !!_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].getObject('keep-logged-in');
+    console.log("Blank state");
     return {
       connected: false,
       ready: false,
@@ -7942,7 +7943,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         this.setState({
           requestedTopic: parsedNav.path[1]
         });
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo('');
+        const path = parsedNav.params && parsedNav.params.cred_done ? _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].addUrlParam('', 'cred_done', parsedNav.params.cred_done) : '';
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo(path);
       }
 
       this.readTimer = null;
@@ -8149,6 +8151,11 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.setState({
         credCode: hash.params.code
       });
+    }
+
+    if (hash.params.cred_done) {
+      console.log("credentials validated");
+      this.handleError(this.props.intl.formatMessage(messages.cred_confirmed_successfully), 'info');
     }
 
     this.setState({
@@ -9349,8 +9356,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           resp: code
         }
       }).then(_ => {
-        this.handleError(this.props.intl.formatMessage(cred_confirmed_successfully), 'info');
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo('');
+        console.log("URL with creds:", _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].addUrlParam('', 'cred_done', 1));
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].addUrlParam('', 'cred_done', 1));
       }).catch(err => {
         this.handleError(err.message, 'err');
       });

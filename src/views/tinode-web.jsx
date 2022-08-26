@@ -331,7 +331,10 @@ class TinodeWeb extends React.Component {
       if (!['cred', 'reset', 'register'].includes(parsedNav.path[0])) {
         // Save possible topic name.
         this.setState({requestedTopic: parsedNav.path[1]});
-        HashNavigation.navigateTo('');
+        const path = parsedNav.params && parsedNav.params.cred_done ?
+          HashNavigation.addUrlParam('', 'cred_done', parsedNav.params.cred_done):
+          '';
+        HashNavigation.navigateTo(path);
       }
 
       this.readTimer = null;
@@ -503,6 +506,10 @@ class TinodeWeb extends React.Component {
     }
     if (hash.params.code) {
       this.setState({ credCode: hash.params.code });
+    }
+    // Validation was successful, show a message.
+    if (hash.params.cred_done) {
+      this.handleError(this.props.intl.formatMessage(messages.cred_confirmed_successfully), 'info');
     }
 
     // Additional parameters of panels.
@@ -1659,8 +1666,7 @@ class TinodeWeb extends React.Component {
       const me = this.tinode.getMeTopic();
       me.setMeta({cred: {meth: cred, resp: code}})
         .then(_ => {
-          this.handleError(this.props.intl.formatMessage(cred_confirmed_successfully), 'info');
-          HashNavigation.navigateTo('');
+          HashNavigation.navigateTo(HashNavigation.addUrlParam('', 'cred_done', 1));
         })
         .catch((err) => {
           this.handleError(err.message, 'err');
