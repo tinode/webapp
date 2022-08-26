@@ -50,7 +50,8 @@ export default class CreateAccountView extends React.PureComponent {
     this.setState({fn: e.target.value});
   }
 
-  handleImageChanged(img) {
+  handleImageChanged(mime, img) {
+    console.log("handleImageChanged", mime, img);
     this.setState({imageDataUrl: img});
   }
 
@@ -93,7 +94,8 @@ export default class CreateAccountView extends React.PureComponent {
           </div>
           <AvatarUpload
             tinode={this.props.tinode}
-            onImageChanged={this.handleImageChanged}
+            avatar={this.state.imageDataUrl}
+            onImageUpdated={this.handleImageChanged}
             onError={this.props.onError} />
         </div>
         <div  className="panel-form-row">

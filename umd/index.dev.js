@@ -4307,7 +4307,8 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
     });
   }
 
-  handleImageChanged(img) {
+  handleImageChanged(mime, img) {
+    console.log("handleImageChanged", mime, img);
     this.setState({
       imageDataUrl: img
     });
@@ -4373,7 +4374,8 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       required: true
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       tinode: this.props.tinode,
-      onImageChanged: this.handleImageChanged,
+      avatar: this.state.imageDataUrl,
+      onImageUpdated: this.handleImageChanged,
       onError: this.props.onError
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
@@ -4750,7 +4752,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
     }
   }
 
-  handleImageChanged(img) {
+  handleImageChanged(mime, img) {
     this.setState({
       avatar: img
     });
@@ -7828,7 +7830,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   getBlankState() {
     const settings = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].getObject('settings') || {};
     const persist = !!_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].getObject('keep-logged-in');
-    console.log("Blank state");
     return {
       connected: false,
       ready: false,
@@ -8154,7 +8155,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
 
     if (hash.params.cred_done) {
-      console.log("credentials validated");
       this.handleError(this.props.intl.formatMessage(messages.cred_confirmed_successfully), 'info');
     }
 
@@ -9356,7 +9356,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           resp: code
         }
       }).then(_ => {
-        console.log("URL with creds:", _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].addUrlParam('', 'cred_done', 1));
         _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].addUrlParam('', 'cred_done', 1));
       }).catch(err => {
         this.handleError(err.message, 'err');
@@ -15299,7 +15298,7 @@ class NewTopicGroup extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     });
   }
 
-  handleImageChanged(img) {
+  handleImageChanged(mime, img) {
     this.setState({
       imageDataUrl: img
     });
@@ -15343,7 +15342,7 @@ class NewTopicGroup extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("center", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       tinode: this.props.tinode,
       onError: this.props.onError,
-      onImageChanged: this.handleImageChanged
+      onImageUpdated: this.handleImageChanged
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "group"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {

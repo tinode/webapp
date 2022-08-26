@@ -37,7 +37,7 @@ export default class NewTopicGroup extends React.PureComponent {
     this.setState({[name]: e.target.value || ''});
   }
 
-  handleImageChanged(img) {
+  handleImageChanged(mime, img) {
     this.setState({imageDataUrl: img});
   }
 
@@ -72,7 +72,7 @@ export default class NewTopicGroup extends React.PureComponent {
             <AvatarUpload
               tinode={this.props.tinode}
               onError={this.props.onError}
-              onImageChanged={this.handleImageChanged} />
+              onImageUpdated={this.handleImageChanged} />
           </center>
           <div className="group">
             <label className="small" htmlFor="new-topic-fn">

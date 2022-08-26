@@ -255,7 +255,7 @@ class InfoView extends React.Component {
     }
   }
 
-  handleImageChanged(img) {
+  handleImageChanged(mime, img) {
     this.setState({avatar: img});
     this.props.onTopicDescUpdate(this.props.topic, theCard(null, img || Tinode.DEL_CHAR), null);
   }
