@@ -9804,7 +9804,7 @@ class ValidationView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     super(props);
     this.state = {
       code: props.credCode || '',
-      codeReceived: false
+      codeReceived: props.credCode
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
@@ -9813,10 +9813,10 @@ class ValidationView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.credCode != prevState.code) {
+    if (nextProps.credCode != prevState.codeReceived) {
       return {
         code: nextProps.credCode || '',
-        codeReceived: !!nextProps.credCode
+        codeReceived: nextProps.credCode
       };
     }
 

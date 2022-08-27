@@ -21,7 +21,7 @@ class ValidationView extends React.PureComponent {
 
     this.state = {
       code: props.credCode || '',
-      codeReceived: false
+      codeReceived: props.credCode
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -31,10 +31,10 @@ class ValidationView extends React.PureComponent {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.credCode != prevState.code) {
+    if (nextProps.credCode != prevState.codeReceived) {
       return {
         code: nextProps.credCode || '',
-        codeReceived: !!nextProps.credCode
+        codeReceived: nextProps.credCode
       };
     }
 
