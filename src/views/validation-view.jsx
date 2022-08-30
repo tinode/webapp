@@ -41,15 +41,23 @@ class ValidationView extends React.PureComponent {
     return prevState;
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidMount() {
     // Submit code automatically if it's received from the parent.
-    if (this.state.codeReceived && this.state.code != prevState.code) {
-      this.props.onSubmit(this.props.credMethod, this.state.code.trim());
+    if (this.props.credCode) {
+      this.props.onSubmit(this.props.credMethod, this.props.credCode, this.props.credToken);
     }
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    // Submit code automatically if it's received from the parent.
+    if (this.state.codeReceived && this.state.code && this.state.code != prevState.code) {
+      this.props.onSubmit(this.props.credMethod, this.state.code, this.props.credToken);
+    }
+  }
+
+
   handleChange(e) {
-    this.setState({code: e.target.value});
+    this.setState({code: e.target.value.trim()});
   }
 
   handleKeyPress(e) {
@@ -63,7 +71,7 @@ class ValidationView extends React.PureComponent {
   handleSubmit(e) {
     e.preventDefault();
     if (this.state.code && this.state.code.trim()) {
-      this.props.onSubmit(this.props.credMethod, this.state.code.trim());
+      this.props.onSubmit(this.props.credMethod, this.state.code.trim(), this.props.credToken);
     }
   }
 
@@ -75,7 +83,7 @@ class ValidationView extends React.PureComponent {
   render() {
     const { formatMessage } = this.props.intl;
     const methods = {'email': formatMessage(messages.email), 'tel': formatMessage(messages.phone)};
-    let method = methods[this.props.credMethod] || this.props.credMethod;
+    const method = methods[this.props.credMethod] || this.props.credMethod;
     return (
       <div className="panel-form">
         <div className="panel-form-row">

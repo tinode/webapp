@@ -12,10 +12,11 @@ export default class HashNavigation {
       path = parts[0].replace('#', '').split('/');
     }
     if (parts[1]) {
-      parts[1].split('&').forEach((part) => {
-        const item = part.split('=');
-        if (item[0]) {
-          params[decodeURIComponent(item[0])] = decodeURIComponent(item[1]);
+      parts[1].split('&').forEach((arg) => {
+        // Can't use split() because the value may contain '='.
+        const eq = arg.indexOf('=');
+        if (eq > 0) {
+          params[arg.slice(0, eq)] = decodeURIComponent(arg.slice(eq + 1));
         }
       });
     }
@@ -31,7 +32,7 @@ export default class HashNavigation {
     const args = [];
     for (const key in params) {
       if (params.hasOwnProperty(key)) {
-        args.push(key + '=' + params[key]);
+        args.push(key + '=' + encodeURIComponent(params[key]));
       }
     }
     if (args.length > 0) {

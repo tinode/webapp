@@ -100,7 +100,6 @@ class TinodeWeb extends React.Component {
     this.handleConnected = this.handleConnected.bind(this);
     this.handleAutoreconnectIteration = this.handleAutoreconnectIteration.bind(this);
     this.doLogin = this.doLogin.bind(this);
-    this.handleCredentialsRequest = this.handleCredentialsRequest.bind(this);
     this.handleLoginSuccessful = this.handleLoginSuccessful.bind(this);
     this.handleDisconnect = this.handleDisconnect.bind(this);
     this.tnMeMetaDesc = this.tnMeMetaDesc.bind(this);
@@ -257,8 +256,10 @@ class TinodeWeb extends React.Component {
       searchResults: [],
       // Merged results of a search query and p2p chats.
       searchableContacts: [],
+      // Credential validation.
       credMethod: undefined,
       credCode: undefined,
+      credToken: undefined,
       // Topic to go to after login.
       requestedTopic: undefined
     };
@@ -295,10 +296,10 @@ class TinodeWeb extends React.Component {
       this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
       this.tinode.onInfoMessage = this.handleInfoMessage;
       this.tinode.onDataMessage = this.handleDataMessage;
-    }).then(() => {
+    }).then(_ => {
       // Initialize desktop alerts.
       if (this.state.desktopAlertsEnabled) {
-        this.initFCMessaging().then(() => {
+        this.initFCMessaging().then(_ => {
           if (this.state.desktopAlerts) {
             this.tinode.setDeviceToken(this.state.firebaseToken);
           }
@@ -327,6 +328,9 @@ class TinodeWeb extends React.Component {
         });
       }
 
+      this.readTimer = null;
+      this.readTimerCallback = null;
+
       // Maybe navigate to home screen.
       if (!['cred', 'reset', 'register'].includes(parsedNav.path[0])) {
         // Save possible topic name.
@@ -335,12 +339,9 @@ class TinodeWeb extends React.Component {
           HashNavigation.addUrlParam('', 'cred_done', parsedNav.params.cred_done):
           '';
         HashNavigation.navigateTo(path);
+      } else {
+        this.handleHashRoute();
       }
-
-      this.readTimer = null;
-      this.readTimerCallback = null;
-
-      this.handleHashRoute();
     });
   }
 
@@ -471,14 +472,20 @@ class TinodeWeb extends React.Component {
     }
   }
 
-  // Handle for hashchange event: display appropriate panels.
+  // Handle for hash navigation (hashchange) event: update state.
   handleHashRoute() {
     const hash = HashNavigation.parseUrlHash(window.location.hash);
+    // Start with panel parameters.
+    const newState = {
+      infoPanel: hash.params.info,
+      newTopicTabSelected: hash.params.tab
+    };
+
     if (hash.path && hash.path.length > 0) {
       // Left-side panel selector.
       if (['register','settings','edit','notif','security','support','general','crop',
           'cred','reset','newtpk','archive','blocked','contacts',''].includes(hash.path[0])) {
-        this.setState({sidePanelSelected: hash.path[0]});
+        newState.sidePanelSelected = hash.path[0];
       } else {
         console.warn("Unknown sidepanel view", hash.path[0]);
       }
@@ -490,33 +497,34 @@ class TinodeWeb extends React.Component {
           // Clear invalid topic name.
           topicName = null;
         }
-        this.setState({
+        Object.assign(newState, {
           topicSelected: topicName,
           topicSelectedAcs: this.tinode.getTopicAccessMode(topicName)
         });
       }
     } else {
       // Empty hashpath
-      this.setState({sidePanelSelected: '', topicSelected: null});
+      Object.assign(newState, {sidePanelSelected: '', topicSelected: null});
     }
 
-    // Save validation credentials, if available.
+    // Save credential validation parameters, if available.
     if (hash.params.method) {
-      this.setState({ credMethod: hash.params.method });
+      newState.credMethod = hash.params.method;
     }
     if (hash.params.code) {
-      this.setState({ credCode: hash.params.code });
+      newState.credCode = hash.params.code;
     }
-    // Validation was successful, show a message.
-    if (hash.params.cred_done) {
-      this.handleError(this.props.intl.formatMessage(messages.cred_confirmed_successfully), 'info');
+    if (hash.params.token) {
+      newState.credToken = hash.params.token;
     }
 
-    // Additional parameters of panels.
-    this.setState({
-      infoPanel: hash.params.info,
-      newTopicTabSelected: hash.params.tab
-    });
+    // Show a message if validation was successful.
+    if (hash.params.cred_done) {
+      Object.assign(newState,
+        TinodeWeb.stateForError(this.props.intl.formatMessage(messages.cred_confirmed_successfully), 'info'));
+    }
+
+    this.setState(newState);
   }
 
   handleOnline(online) {
@@ -534,14 +542,18 @@ class TinodeWeb extends React.Component {
     this.setState({applicationVisible: !document.hidden});
   }
 
-  handleError(err, level, action, actionText) {
-    this.setState({
+  static stateForError(err, level, action, actionText) {
+    return {
       errorText: err,
       errorLevel: level,
       errorAction: action,
       errorActionText: actionText,
       callShouldStart: false,
-    });
+    };
+  }
+
+  handleError(err, level, action, actionText) {
+    this.setState(TinodeWeb.stateForError(err, level, action, actionText));
   }
 
   // User clicked Login button in the side panel.
@@ -556,7 +568,7 @@ class TinodeWeb extends React.Component {
     this.handleError('', null);
 
     if (this.tinode.isConnected()) {
-      this.doLogin(login, password, {meth: this.state.credMethod, resp: this.state.credCode});
+      this.doLogin(login, password, null, {meth: this.state.credMethod, resp: this.state.credCode});
     } else {
       this.tinode.connect().catch((err) => {
         // Socket error
@@ -593,7 +605,8 @@ class TinodeWeb extends React.Component {
     });
 
     if (this.state.autoLogin) {
-      this.doLogin(this.state.login, this.state.password, {meth: this.state.credMethod, resp: this.state.credCode});
+      this.doLogin(this.state.login, this.state.password, null,
+        {meth: this.state.credMethod, resp: this.state.credCode});
     }
   }
 
@@ -651,63 +664,69 @@ class TinodeWeb extends React.Component {
     });
   }
 
-  doLogin(login, password, cred) {
+  doLogin(login, password, tmpToken, cred) {
     if (this.tinode.isAuthenticated()) {
       // Already logged in. Go to default screen.
       HashNavigation.navigateTo('');
       return;
     }
-    // Sanitize and package credentail.
-    cred = Tinode.credential(cred);
-    // Try to login with login/password. If they are not available, try token. If no token, ask for login/password.
-    let promise = null;
-    let token = this.tinode.getAuthToken();
-    if (login && password) {
-      token = null;
-      this.setState({password: null});
-      promise = this.tinode.loginBasic(login, password, cred);
-    } else if (token) {
-      promise = this.tinode.loginToken(token.token, cred);
-    }
 
-    if (promise) {
-      promise.then((ctrl) => {
-        if (ctrl.code >= 300 && ctrl.text === 'validate credentials') {
-          this.setState({loadSpinnerVisible: false});
-          if (cred) {
-            this.handleError(this.props.intl.formatMessage(messages.code_doesnot_match), 'warn');
-          }
-          this.handleCredentialsRequest(ctrl.params);
-        } else {
-          this.handleLoginSuccessful();
-        }
-      }).catch((err) => {
-        // Login failed, report error.
-        this.setState({
-          loginDisabled: false,
-          credMethod: undefined,
-          credCode: undefined,
-          loadSpinnerVisible: false,
-          autoLogin: false
-        });
-        this.handleError(err.message, 'err');
-        if (token) {
-          this.handleLogout();
-        }
-        HashNavigation.navigateTo('');
-      });
-    } else {
+    let token = tmpToken || (this.tinode.getAuthToken() || {}).token;
+    if (!(login && password) && !token) {
       // No login credentials provided.
       // Make sure we are on the login page.
       HashNavigation.navigateTo('');
       this.setState({loginDisabled: false});
+      return;
     }
+
+    // Sanitize and package credentail.
+    cred = Tinode.credential(cred);
+    // May be disconnected.
+    let connectionPromise = this.tinode.isConnected() ? Promise.resolve() : this.tinode.connect();
+    // Try to login with login/password. If they are not available, try token; if no token, ask for login/password.
+    let loginPromise;
+    if (login && password) {
+      token = null;
+      this.setState({password: null});
+      loginPromise = connectionPromise.then(_ => this.tinode.loginBasic(login, password, cred));
+    } else {
+      loginPromise = connectionPromise.then(_ => this.tinode.loginToken(token, cred));
+    }
+
+    loginPromise.then((ctrl) => {
+      if (ctrl.code >= 300 && ctrl.text === 'validate credentials') {
+        this.setState({loadSpinnerVisible: false});
+        if (cred) {
+          this.handleError(this.props.intl.formatMessage(messages.code_doesnot_match), 'warn');
+        }
+        TinodeWeb.navigateToCredentialsView(ctrl.params);
+      } else {
+        this.handleLoginSuccessful();
+      }
+    }).catch((err) => {
+      // Connection or login failed, report error.
+      this.setState({
+        loginDisabled: false,
+        credMethod: undefined,
+        credCode: undefined,
+        loadSpinnerVisible: false,
+        autoLogin: false
+      });
+      this.handleError(err.message, 'err');
+      console.warn("Login failed", err);
+      if (token) {
+        this.handleLogout();
+      }
+      HashNavigation.navigateTo('');
+    });
   }
 
-  handleCredentialsRequest(params) {
+  static navigateToCredentialsView(params) {
     const parsed = HashNavigation.parseUrlHash(window.location.hash);
     parsed.path[0] = 'cred';
     parsed.params['method'] = params.cred[0];
+    parsed.params['token'] = params.token;
     HashNavigation.navigateTo(HashNavigation.composeUrlHash(parsed.path, parsed.params));
   }
 
@@ -729,6 +748,7 @@ class TinodeWeb extends React.Component {
       connected: true,
       credMethod: undefined,
       credCode: undefined,
+      credToken: undefined,
       myUserId: this.tinode.getCurrentUserID(),
       autoLogin: true,
       requestedTopic: undefined,
@@ -1110,7 +1130,7 @@ class TinodeWeb extends React.Component {
           {public: public_, tags: tags_, cred: Tinode.credential(cred_)});
       }).then((ctrl) => {
         if (ctrl.code >= 300 && ctrl.text == 'validate credentials') {
-          this.handleCredentialsRequest(ctrl.params);
+          TinodeWeb.navigateToCredentialsView(ctrl.params);
         } else {
           this.handleLoginSuccessful(this);
         }
@@ -1241,7 +1261,7 @@ class TinodeWeb extends React.Component {
   }
 
   handleCredConfirm(method, response) {
-    this.handleCredentialsRequest({cred: [method]});
+    TinodeWeb.navigateToCredentialsView({cred: [method]});
   }
 
   // User clicked Cancel button in Setting or Sign Up panel.
@@ -1661,19 +1681,17 @@ class TinodeWeb extends React.Component {
     }
   }
 
-  handleValidateCredentialsRequest(cred, code) {
+  handleValidateCredentialsRequest(cred, code, token) {
     if (this.tinode.isAuthenticated()) {
-      const me = this.tinode.getMeTopic();
-      me.setMeta({cred: {meth: cred, resp: code}})
-        .then(_ => {
-          HashNavigation.navigateTo(HashNavigation.addUrlParam('', 'cred_done', 1));
-        })
+      // Adding new email or phone number in account setting.
+      this.tinode.getMeTopic().setMeta({cred: {meth: cred, resp: code}})
         .catch((err) => {
           this.handleError(err.message, 'err');
         });
     } else {
-      this.setState({credMethod: cred, credCode: code});
-      this.doLogin(null, null, {meth: cred, resp: code});
+      // Credential validation on signup.
+      this.setState({credMethod: cred, credCode: code, credToken: token});
+      this.doLogin(null, null, token, {meth: cred, resp: code});
     }
   }
 
@@ -1955,6 +1973,7 @@ class TinodeWeb extends React.Component {
           chatList={this.state.chatList}
           credMethod={this.state.credMethod}
           credCode={this.state.credCode}
+          credToken={this.state.credToken}
 
           transport={this.state.transport}
           messageSounds={this.state.messageSounds}

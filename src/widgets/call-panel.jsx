@@ -258,7 +258,7 @@ class CallPanel extends React.PureComponent {
   }
 
   handleIceCandidateErrorEvent(event) {
-    console.log('ICE candidate error: ', event);
+    console.warn("ICE candidate error:", event);
   }
 
   handleICECandidateEvent(event) {
@@ -301,7 +301,7 @@ class CallPanel extends React.PureComponent {
   }
 
   handleICEGatheringStateChangeEvent(event) {
-    // console.log('ICE gathering change state: ', event);
+    // ICE gathering change state
   }
 
   handleTrackEvent(event) {

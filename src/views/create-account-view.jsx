@@ -51,7 +51,6 @@ export default class CreateAccountView extends React.PureComponent {
   }
 
   handleImageChanged(mime, img) {
-    console.log("handleImageChanged", mime, img);
     this.setState({imageDataUrl: img});
   }
 

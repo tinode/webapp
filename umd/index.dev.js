@@ -3084,11 +3084,11 @@ class HashNavigation {
     }
 
     if (parts[1]) {
-      parts[1].split('&').forEach(part => {
-        const item = part.split('=');
+      parts[1].split('&').forEach(arg => {
+        const eq = arg.indexOf('=');
 
-        if (item[0]) {
-          params[decodeURIComponent(item[0])] = decodeURIComponent(item[1]);
+        if (eq > 0) {
+          params[arg.slice(0, eq)] = decodeURIComponent(arg.slice(eq + 1));
         }
       });
     }
@@ -3109,7 +3109,7 @@ class HashNavigation {
 
     for (const key in params) {
       if (params.hasOwnProperty(key)) {
-        args.push(key + '=' + params[key]);
+        args.push(key + '=' + encodeURIComponent(params[key]));
       }
     }
 
@@ -4308,7 +4308,6 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
   }
 
   handleImageChanged(mime, img) {
-    console.log("handleImageChanged", mime, img);
     this.setState({
       imageDataUrl: img
     });
@@ -7467,7 +7466,7 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   }
 });
 
-class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
+class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
     this.handleNewTopic = this.handleNewTopic.bind(this);
@@ -7594,9 +7593,9 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
     }) : view === 'cred' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_validation_view_jsx__WEBPACK_IMPORTED_MODULE_16__["default"], {
       credCode: this.props.credCode,
       credMethod: this.props.credMethod,
+      credToken: this.props.credToken,
       onSubmit: this.props.onValidateCredentials,
-      onCancel: this.props.onCancel,
-      onError: this.props.onError
+      onCancel: this.props.onCancel
     }) : view === 'reset' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_password_reset_view_jsx__WEBPACK_IMPORTED_MODULE_14__["default"], {
       onRequest: this.props.onPasswordResetRequest,
       onReset: this.props.onResetPassword,
@@ -7756,7 +7755,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.handleConnected = this.handleConnected.bind(this);
     this.handleAutoreconnectIteration = this.handleAutoreconnectIteration.bind(this);
     this.doLogin = this.doLogin.bind(this);
-    this.handleCredentialsRequest = this.handleCredentialsRequest.bind(this);
     this.handleLoginSuccessful = this.handleLoginSuccessful.bind(this);
     this.handleDisconnect = this.handleDisconnect.bind(this);
     this.tnMeMetaDesc = this.tnMeMetaDesc.bind(this);
@@ -7883,6 +7881,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       searchableContacts: [],
       credMethod: undefined,
       credCode: undefined,
+      credToken: undefined,
       requestedTopic: undefined
     };
   }
@@ -7916,9 +7915,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
       this.tinode.onInfoMessage = this.handleInfoMessage;
       this.tinode.onDataMessage = this.handleDataMessage;
-    }).then(() => {
+    }).then(_ => {
       if (this.state.desktopAlertsEnabled) {
-        this.initFCMessaging().then(() => {
+        this.initFCMessaging().then(_ => {
           if (this.state.desktopAlerts) {
             this.tinode.setDeviceToken(this.state.firebaseToken);
           }
@@ -7940,17 +7939,18 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         });
       }
 
+      this.readTimer = null;
+      this.readTimerCallback = null;
+
       if (!['cred', 'reset', 'register'].includes(parsedNav.path[0])) {
         this.setState({
           requestedTopic: parsedNav.path[1]
         });
         const path = parsedNav.params && parsedNav.params.cred_done ? _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].addUrlParam('', 'cred_done', parsedNav.params.cred_done) : '';
         _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo(path);
+      } else {
+        this.handleHashRoute();
       }
-
-      this.readTimer = null;
-      this.readTimerCallback = null;
-      this.handleHashRoute();
     });
   }
 
@@ -8113,12 +8113,14 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
   handleHashRoute() {
     const hash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].parseUrlHash(window.location.hash);
+    const newState = {
+      infoPanel: hash.params.info,
+      newTopicTabSelected: hash.params.tab
+    };
 
     if (hash.path && hash.path.length > 0) {
       if (['register', 'settings', 'edit', 'notif', 'security', 'support', 'general', 'crop', 'cred', 'reset', 'newtpk', 'archive', 'blocked', 'contacts', ''].includes(hash.path[0])) {
-        this.setState({
-          sidePanelSelected: hash.path[0]
-        });
+        newState.sidePanelSelected = hash.path[0];
       } else {
         console.warn("Unknown sidepanel view", hash.path[0]);
       }
@@ -8130,38 +8132,35 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           topicName = null;
         }
 
-        this.setState({
+        Object.assign(newState, {
           topicSelected: topicName,
           topicSelectedAcs: this.tinode.getTopicAccessMode(topicName)
         });
       }
     } else {
-      this.setState({
+      Object.assign(newState, {
         sidePanelSelected: '',
         topicSelected: null
       });
     }
 
     if (hash.params.method) {
-      this.setState({
-        credMethod: hash.params.method
-      });
+      newState.credMethod = hash.params.method;
     }
 
     if (hash.params.code) {
-      this.setState({
-        credCode: hash.params.code
-      });
+      newState.credCode = hash.params.code;
+    }
+
+    if (hash.params.token) {
+      newState.credToken = hash.params.token;
     }
 
     if (hash.params.cred_done) {
-      this.handleError(this.props.intl.formatMessage(messages.cred_confirmed_successfully), 'info');
+      Object.assign(newState, TinodeWeb.stateForError(this.props.intl.formatMessage(messages.cred_confirmed_successfully), 'info'));
     }
 
-    this.setState({
-      infoPanel: hash.params.info,
-      newTopicTabSelected: hash.params.tab
-    });
+    this.setState(newState);
   }
 
   handleOnline(online) {
@@ -8184,14 +8183,18 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     });
   }
 
-  handleError(err, level, action, actionText) {
-    this.setState({
+  static stateForError(err, level, action, actionText) {
+    return {
       errorText: err,
       errorLevel: level,
       errorAction: action,
       errorActionText: actionText,
       callShouldStart: false
-    });
+    };
+  }
+
+  handleError(err, level, action, actionText) {
+    this.setState(TinodeWeb.stateForError(err, level, action, actionText));
   }
 
   handleLoginRequest(login, password) {
@@ -8205,7 +8208,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.handleError('', null);
 
     if (this.tinode.isConnected()) {
-      this.doLogin(login, password, {
+      this.doLogin(login, password, null, {
         meth: this.state.credMethod,
         resp: this.state.credCode
       });
@@ -8248,7 +8251,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     });
 
     if (this.state.autoLogin) {
-      this.doLogin(this.state.login, this.state.password, {
+      this.doLogin(this.state.login, this.state.password, null, {
         meth: this.state.credMethod,
         resp: this.state.credCode
       });
@@ -8303,69 +8306,74 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     });
   }
 
-  doLogin(login, password, cred) {
+  doLogin(login, password, tmpToken, cred) {
     if (this.tinode.isAuthenticated()) {
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo('');
       return;
     }
 
+    let token = tmpToken || (this.tinode.getAuthToken() || {}).token;
+
+    if (!(login && password) && !token) {
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo('');
+      this.setState({
+        loginDisabled: false
+      });
+      return;
+    }
+
     cred = tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.credential(cred);
-    let promise = null;
-    let token = this.tinode.getAuthToken();
+    let connectionPromise = this.tinode.isConnected() ? Promise.resolve() : this.tinode.connect();
+    let loginPromise;
 
     if (login && password) {
       token = null;
       this.setState({
         password: null
       });
-      promise = this.tinode.loginBasic(login, password, cred);
-    } else if (token) {
-      promise = this.tinode.loginToken(token.token, cred);
-    }
-
-    if (promise) {
-      promise.then(ctrl => {
-        if (ctrl.code >= 300 && ctrl.text === 'validate credentials') {
-          this.setState({
-            loadSpinnerVisible: false
-          });
-
-          if (cred) {
-            this.handleError(this.props.intl.formatMessage(messages.code_doesnot_match), 'warn');
-          }
-
-          this.handleCredentialsRequest(ctrl.params);
-        } else {
-          this.handleLoginSuccessful();
-        }
-      }).catch(err => {
-        this.setState({
-          loginDisabled: false,
-          credMethod: undefined,
-          credCode: undefined,
-          loadSpinnerVisible: false,
-          autoLogin: false
-        });
-        this.handleError(err.message, 'err');
-
-        if (token) {
-          this.handleLogout();
-        }
-
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo('');
-      });
+      loginPromise = connectionPromise.then(_ => this.tinode.loginBasic(login, password, cred));
     } else {
-      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo('');
-      this.setState({
-        loginDisabled: false
-      });
+      loginPromise = connectionPromise.then(_ => this.tinode.loginToken(token, cred));
     }
+
+    loginPromise.then(ctrl => {
+      if (ctrl.code >= 300 && ctrl.text === 'validate credentials') {
+        this.setState({
+          loadSpinnerVisible: false
+        });
+
+        if (cred) {
+          this.handleError(this.props.intl.formatMessage(messages.code_doesnot_match), 'warn');
+        }
+
+        TinodeWeb.navigateToCredentialsView(ctrl.params);
+      } else {
+        this.handleLoginSuccessful();
+      }
+    }).catch(err => {
+      this.setState({
+        loginDisabled: false,
+        credMethod: undefined,
+        credCode: undefined,
+        loadSpinnerVisible: false,
+        autoLogin: false
+      });
+      this.handleError(err.message, 'err');
+      console.warn("Login failed", err);
+
+      if (token) {
+        this.handleLogout();
+      }
+
+      _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo('');
+    });
   }
 
-  handleCredentialsRequest(params) {
+  static navigateToCredentialsView(params) {
     const parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].parseUrlHash(window.location.hash);
     parsed.path[0] = 'cred';
     parsed.params['method'] = params.cred[0];
+    parsed.params['token'] = params.token;
     _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].composeUrlHash(parsed.path, parsed.params));
   }
 
@@ -8385,6 +8393,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       connected: true,
       credMethod: undefined,
       credCode: undefined,
+      credToken: undefined,
       myUserId: this.tinode.getCurrentUserID(),
       autoLogin: true,
       requestedTopic: undefined
@@ -8738,7 +8747,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       });
     }).then(ctrl => {
       if (ctrl.code >= 300 && ctrl.text == 'validate credentials') {
-        this.handleCredentialsRequest(ctrl.params);
+        TinodeWeb.navigateToCredentialsView(ctrl.params);
       } else {
         this.handleLoginSuccessful(this);
       }
@@ -8889,7 +8898,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handleCredConfirm(method, response) {
-    this.handleCredentialsRequest({
+    TinodeWeb.navigateToCredentialsView({
       cred: [method]
     });
   }
@@ -9347,25 +9356,23 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
   }
 
-  handleValidateCredentialsRequest(cred, code) {
+  handleValidateCredentialsRequest(cred, code, token) {
     if (this.tinode.isAuthenticated()) {
-      const me = this.tinode.getMeTopic();
-      me.setMeta({
+      this.tinode.getMeTopic().setMeta({
         cred: {
           meth: cred,
           resp: code
         }
-      }).then(_ => {
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].addUrlParam('', 'cred_done', 1));
       }).catch(err => {
         this.handleError(err.message, 'err');
       });
     } else {
       this.setState({
         credMethod: cred,
-        credCode: code
+        credCode: code,
+        credToken: token
       });
-      this.doLogin(null, null, {
+      this.doLogin(null, null, token, {
         meth: cred,
         resp: code
       });
@@ -9648,6 +9655,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       chatList: this.state.chatList,
       credMethod: this.state.credMethod,
       credCode: this.state.credCode,
+      credToken: this.state.credToken,
       transport: this.state.transport,
       messageSounds: this.state.messageSounds,
       desktopAlerts: this.state.desktopAlerts,
@@ -9823,15 +9831,21 @@ class ValidationView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     return prevState;
   }
 
+  componentDidMount() {
+    if (this.props.credCode) {
+      this.props.onSubmit(this.props.credMethod, this.props.credCode, this.props.credToken);
+    }
+  }
+
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.codeReceived && this.state.code != prevState.code) {
-      this.props.onSubmit(this.props.credMethod, this.state.code.trim());
+    if (this.state.codeReceived && this.state.code && this.state.code != prevState.code) {
+      this.props.onSubmit(this.props.credMethod, this.state.code, this.props.credToken);
     }
   }
 
   handleChange(e) {
     this.setState({
-      code: e.target.value
+      code: e.target.value.trim()
     });
   }
 
@@ -9847,7 +9861,7 @@ class ValidationView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     e.preventDefault();
 
     if (this.state.code && this.state.code.trim()) {
-      this.props.onSubmit(this.props.credMethod, this.state.code.trim());
+      this.props.onSubmit(this.props.credMethod, this.state.code.trim(), this.props.credToken);
     }
   }
 
@@ -9864,7 +9878,7 @@ class ValidationView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       'email': formatMessage(messages.email),
       'tel': formatMessage(messages.phone)
     };
-    let method = methods[this.props.credMethod] || this.props.credMethod;
+    const method = methods[this.props.credMethod] || this.props.credMethod;
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -11595,7 +11609,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   }
 
   handleIceCandidateErrorEvent(event) {
-    console.log('ICE candidate error: ', event);
+    console.warn("ICE candidate error:", event);
   }
 
   handleICECandidateEvent(event) {
