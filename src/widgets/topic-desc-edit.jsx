@@ -39,10 +39,10 @@ export default class TopicDescEdit extends React.Component {
     this.handleFullNameUpdate = this.handleFullNameUpdate.bind(this);
     this.handleImageUpdated = this.handleImageUpdated.bind(this);
     this.handleAvatarCropped = this.handleAvatarCropped.bind(this);
+    this.handleAvatarCropCancel = this.handleAvatarCropCancel.bind(this);
+    this.uploadAvatar = this.uploadAvatar.bind(this);
     this.handlePrivateUpdate = this.handlePrivateUpdate.bind(this);
     this.handleDescriptionUpdate = this.handleDescriptionUpdate.bind(this);
-    this.uploadAvatar = this.uploadAvatar.bind(this);
-    this.handleAvatarCropCancel = this.handleAvatarCropCancel.bind(this);
     this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
   }
 
@@ -113,27 +113,16 @@ export default class TopicDescEdit extends React.Component {
       if (blob.size > MAX_AVATAR_BYTES) {
         // Too large to send inband - uploading out of band and sending as a link.
         const uploader = this.props.tinode.getLargeFileHelper();
-
-        this.setState({uploading: true});
         uploader.upload(blob)
-          .then((url) => {
-            this.props.onUpdateTopicDesc(this.props.topic, theCard(null, url));
-          })
-          .catch((err) => {
-            this.props.onError(err, 'err');
-          })
-          .finally(() => {
-            this.setState({uploading: false});
-          });
+          .then(url => this.props.onUpdateTopicDesc(this.props.topic, theCard(null, url)))
+          .catch(err => this.props.onError(err.message, 'err'));
       } else {
-        this.setState({uploading: true});
         // Convert blob to base64-encoded bits.
         blobToBase64(blob)
           .then(b64 => {
             const du = makeImageUrl({data: b64.bits, type: mime});
             this.setState({source: du});
             this.props.onUpdateTopicDesc(this.props.topic, theCard(null, du));
-            this.setState({uploading: false});
           });
       }
     };
@@ -142,13 +131,13 @@ export default class TopicDescEdit extends React.Component {
       // Avatar is not square or too large even after cropping. Shrink it and make square.
       imageScaled(blob, AVATAR_SIZE, AVATAR_SIZE, MAX_EXTERN_ATTACHMENT_SIZE, true)
         .then(scaled => readyToUpload(scaled))
-        .catch(err => this.props.onError(err, 'err'));
+        .catch(err => this.props.onError(err.message, 'err'));
     } else {
       readyToUpload({mime: mime, blob: blob, width: width, height: height});
     }
   }
 
-  handleAvatarCropCancel(img) {
+  handleAvatarCropCancel() {
     this.setState({newAvatar: null, newAvatarMime: null});
   }
 

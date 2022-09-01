@@ -4248,12 +4248,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/avatar-upload.jsx */ "./src/widgets/avatar-upload.jsx");
-/* harmony import */ var _widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/checkbox.jsx */ "./src/widgets/checkbox.jsx");
-/* harmony import */ var _widgets_visible_password_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/visible-password.jsx */ "./src/widgets/visible-password.jsx");
-/* harmony import */ var _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/local-storage.js */ "./src/lib/local-storage.js");
-/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _widgets_avatar_crop_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/avatar-crop.jsx */ "./src/widgets/avatar-crop.jsx");
+/* harmony import */ var _widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/avatar-upload.jsx */ "./src/widgets/avatar-upload.jsx");
+/* harmony import */ var _widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/checkbox.jsx */ "./src/widgets/checkbox.jsx");
+/* harmony import */ var _widgets_visible_password_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/visible-password.jsx */ "./src/widgets/visible-password.jsx");
+/* harmony import */ var _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/local-storage.js */ "./src/lib/local-storage.js");
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+
+
 
 
 
@@ -4270,9 +4274,13 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       password: '',
       email: '',
       fn: '',
-      imageDataUrl: null,
+      imageUrl: null,
+      uploadUrl: null,
+      newAvatar: null,
+      newAvatarMime: null,
       errorCleared: false,
-      saveToken: _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_5__["default"].getObject('keep-logged-in')
+      buttonDisabled: false,
+      saveToken: _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_6__["default"].getObject('keep-logged-in')
     };
     this.handleLoginChange = this.handleLoginChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
@@ -4280,6 +4288,9 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
     this.handleFnChange = this.handleFnChange.bind(this);
     this.handleImageChanged = this.handleImageChanged.bind(this);
     this.handleToggleSaveToken = this.handleToggleSaveToken.bind(this);
+    this.handleAvatarCropped = this.handleAvatarCropped.bind(this);
+    this.handleAvatarCropCancel = this.handleAvatarCropCancel.bind(this);
+    this.uploadAvatar = this.uploadAvatar.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -4309,12 +4320,13 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
 
   handleImageChanged(mime, img) {
     this.setState({
-      imageDataUrl: img
+      newAvatar: img,
+      newAvatarMime: mime
     });
   }
 
   handleToggleSaveToken() {
-    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_5__["default"].setObject('keep-logged-in', !this.state.saveToken);
+    _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_6__["default"].setObject('keep-logged-in', !this.state.saveToken);
     this.setState({
       saveToken: !this.state.saveToken
     });
@@ -4325,13 +4337,85 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
     this.setState({
       errorCleared: false
     });
-    this.props.onCreateAccount(this.state.login.trim(), this.state.password.trim(), (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__.theCard)(this.state.fn.trim().substring(0, _config_js__WEBPACK_IMPORTED_MODULE_7__.MAX_TITLE_LENGTH), this.state.imageDataUrl), {
+    this.props.onCreateAccount(this.state.login.trim(), this.state.password.trim(), (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.theCard)(this.state.fn.trim().substring(0, _config_js__WEBPACK_IMPORTED_MODULE_9__.MAX_TITLE_LENGTH), this.state.uploadUrl), {
       'meth': 'email',
       'val': this.state.email
     });
   }
 
+  handleAvatarCropped(mime, blob, width, height) {
+    const url = blob ? URL.createObjectURL(blob) : null;
+    this.setState({
+      avatar: url,
+      newAvatar: null,
+      newAvatarMime: null
+    });
+
+    if (blob) {
+      this.uploadAvatar(mime, blob, width, height);
+    }
+  }
+
+  handleAvatarCropCancel() {
+    this.setState({
+      newAvatar: null,
+      newAvatarMime: null
+    });
+  }
+
+  uploadAvatar(mime, blob, width, height) {
+    const readyToUpload = image => {
+      let {
+        mime,
+        blob
+      } = image;
+      this.setState({
+        imageUrl: URL.createObjectURL(blob),
+        buttonDisabled: true
+      });
+
+      if (blob.size > _config_js__WEBPACK_IMPORTED_MODULE_9__.MAX_AVATAR_BYTES) {
+        const uploader = this.props.tinode.getLargeFileHelper();
+        uploader.upload(blob, 'newacc').then(url => this.setState({
+          uploadUrl: url
+        })).catch(err => this.props.onError(err.message, 'err')).finally(_ => this.setState({
+          buttonDisabled: false
+        }));
+      } else {
+        (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__.blobToBase64)(blob).then(b64 => this.setState({
+          uploadUrl: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__.makeImageUrl)({
+            data: b64.bits,
+            type: mime
+          })
+        })).finally(_ => this.setState({
+          buttonDisabled: false
+        }));
+      }
+    };
+
+    if (width > _config_js__WEBPACK_IMPORTED_MODULE_9__.AVATAR_SIZE || height > _config_js__WEBPACK_IMPORTED_MODULE_9__.AVATAR_SIZE || width != height) {
+      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_9__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_9__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_9__.MAX_EXTERN_ATTACHMENT_SIZE, true).then(scaled => readyToUpload(scaled)).catch(err => this.props.onError(err.message, 'err'));
+    } else {
+      readyToUpload({
+        mime: mime,
+        blob: blob,
+        width: width,
+        height: height
+      });
+    }
+  }
+
   render() {
+    if (this.state.newAvatar) {
+      return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_avatar_crop_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        avatar: this.state.newAvatar,
+        mime: this.state.newAvatarMime,
+        onSubmit: this.handleAvatarCropped,
+        onCancel: this.handleAvatarCropCancel,
+        onError: this.props.onError
+      });
+    }
+
     let submitClasses = 'primary';
 
     if (this.props.disabled) {
@@ -4365,15 +4449,15 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
         "type": 0,
         "value": "Password"
       }]
-    }, password_prompt => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_visible_password_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    }, password_prompt => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_visible_password_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
       placeholder: password_prompt,
       autoComplete: "new-password",
       value: this.state.password,
       onFinished: this.handlePasswordChange,
       required: true
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       tinode: this.props.tinode,
-      avatar: this.state.imageDataUrl,
+      avatar: this.state.imageUrl,
       onImageUpdated: this.handleImageChanged,
       onError: this.props.onError
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -4408,7 +4492,7 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       required: true
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
       id: "save-token",
       name: "save-token",
       checked: this.state.saveToken,
@@ -4425,7 +4509,8 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       className: "dialog-buttons"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       className: submitClasses,
-      type: "submit"
+      type: "submit",
+      disabled: this.state.buttonDisabled
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_sign_up",
       defaultMessage: [{
@@ -8194,6 +8279,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handleError(err, level, action, actionText) {
+    console.log("handleError", err, new Error());
     this.setState(TinodeWeb.stateForError(err, level, action, actionText));
   }
 
@@ -8739,11 +8825,18 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
   handleNewAccountRequest(login_, password_, public_, cred_, tags_) {
     this.handleError();
-    this.tinode.connect(this.state.serverAddress).then(() => {
+    this.tinode.connect(this.state.serverAddress).then(_ => {
+      let attachments;
+
+      if (public_ && public_.photo && public_.photo.ref) {
+        attachments = [public_.photo.ref];
+      }
+
       return this.tinode.createAccountBasic(login_, password_, {
         public: public_,
         tags: tags_,
-        cred: tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.credential(cred_)
+        cred: tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.credential(cred_),
+        attachments: attachments
       });
     }).then(ctrl => {
       if (ctrl.code >= 300 && ctrl.text == 'validate credentials') {
@@ -16879,10 +16972,10 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
     this.handleFullNameUpdate = this.handleFullNameUpdate.bind(this);
     this.handleImageUpdated = this.handleImageUpdated.bind(this);
     this.handleAvatarCropped = this.handleAvatarCropped.bind(this);
+    this.handleAvatarCropCancel = this.handleAvatarCropCancel.bind(this);
+    this.uploadAvatar = this.uploadAvatar.bind(this);
     this.handlePrivateUpdate = this.handlePrivateUpdate.bind(this);
     this.handleDescriptionUpdate = this.handleDescriptionUpdate.bind(this);
-    this.uploadAvatar = this.uploadAvatar.bind(this);
-    this.handleAvatarCropCancel = this.handleAvatarCropCancel.bind(this);
     this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
   }
 
@@ -16972,22 +17065,8 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
 
       if (blob.size > _config_js__WEBPACK_IMPORTED_MODULE_7__.MAX_AVATAR_BYTES) {
         const uploader = this.props.tinode.getLargeFileHelper();
-        this.setState({
-          uploading: true
-        });
-        uploader.upload(blob).then(url => {
-          this.props.onUpdateTopicDesc(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(null, url));
-        }).catch(err => {
-          this.props.onError(err, 'err');
-        }).finally(() => {
-          this.setState({
-            uploading: false
-          });
-        });
+        uploader.upload(blob).then(url => this.props.onUpdateTopicDesc(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(null, url))).catch(err => this.props.onError(err.message, 'err'));
       } else {
-        this.setState({
-          uploading: true
-        });
         (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__.blobToBase64)(blob).then(b64 => {
           const du = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__.makeImageUrl)({
             data: b64.bits,
@@ -16997,15 +17076,12 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
             source: du
           });
           this.props.onUpdateTopicDesc(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(null, du));
-          this.setState({
-            uploading: false
-          });
         });
       }
     };
 
     if (width > _config_js__WEBPACK_IMPORTED_MODULE_7__.AVATAR_SIZE || height > _config_js__WEBPACK_IMPORTED_MODULE_7__.AVATAR_SIZE || width != height) {
-      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_7__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_7__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_7__.MAX_EXTERN_ATTACHMENT_SIZE, true).then(scaled => readyToUpload(scaled)).catch(err => this.props.onError(err, 'err'));
+      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_7__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_7__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_7__.MAX_EXTERN_ATTACHMENT_SIZE, true).then(scaled => readyToUpload(scaled)).catch(err => this.props.onError(err.message, 'err'));
     } else {
       readyToUpload({
         mime: mime,
@@ -17016,7 +17092,7 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
     }
   }
 
-  handleAvatarCropCancel(img) {
+  handleAvatarCropCancel() {
     this.setState({
       newAvatar: null,
       newAvatarMime: null
@@ -17668,7 +17744,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var name = "firebase";
-var version = "9.9.2";
+var version = "9.9.3";
 
 /**
  * @license
@@ -18373,7 +18449,7 @@ function isVersionServiceProvider(provider) {
 }
 
 const name$o = "@firebase/app";
-const version$1 = "0.7.30";
+const version$1 = "0.7.31";
 
 /**
  * @license
@@ -18440,7 +18516,7 @@ const name$2 = "@firebase/firestore";
 const name$1 = "@firebase/firestore-compat";
 
 const name = "firebase";
-const version = "9.9.2";
+const version = "9.9.3";
 
 /**
  * @license

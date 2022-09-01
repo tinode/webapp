@@ -536,7 +536,7 @@ div.trusted-badge {
 #mountPoint {
   height: 100%;
   padding-top: 1rem;
-  padding-bottom: 3rem;
+  padding-bottom: 1rem;
 }
 
 /* Top-level application layout style: sidepanel + main view */

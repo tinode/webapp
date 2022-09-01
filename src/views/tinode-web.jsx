@@ -1125,16 +1125,20 @@ class TinodeWeb extends React.Component {
     this.handleError();
 
     this.tinode.connect(this.state.serverAddress)
-      .then(() => {
+      .then(_ => {
+        let attachments;
+        if (public_ && public_.photo && public_.photo.ref) {
+          attachments = [public_.photo.ref];
+        }
         return this.tinode.createAccountBasic(login_, password_,
-          {public: public_, tags: tags_, cred: Tinode.credential(cred_)});
-      }).then((ctrl) => {
+          {public: public_, tags: tags_, cred: Tinode.credential(cred_), attachments: attachments});
+      }).then(ctrl => {
         if (ctrl.code >= 300 && ctrl.text == 'validate credentials') {
           TinodeWeb.navigateToCredentialsView(ctrl.params);
         } else {
           this.handleLoginSuccessful(this);
         }
-      }).catch((err) => {
+      }).catch(err => {
         this.handleError(err.message, 'err');
       });
   }

@@ -2,14 +2,17 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
+import AvatarCrop from '../widgets/avatar-crop.jsx';
 import AvatarUpload from '../widgets/avatar-upload.jsx';
 import CheckBox from '../widgets/checkbox.jsx';
 import VisiblePassword from '../widgets/visible-password.jsx';
 
 import LocalStorageUtil from '../lib/local-storage.js';
+import { imageScaled, blobToBase64, makeImageUrl } from '../lib/blob-helpers.js';
 import { theCard } from '../lib/utils.js';
 
-import { MAX_TITLE_LENGTH } from '../config.js';
+import { AVATAR_SIZE, MAX_AVATAR_BYTES, MAX_EXTERN_ATTACHMENT_SIZE,
+  MAX_TITLE_LENGTH } from '../config.js';
 
 export default class CreateAccountView extends React.PureComponent {
   constructor(props) {
@@ -20,8 +23,12 @@ export default class CreateAccountView extends React.PureComponent {
       password: '',
       email: '',
       fn: '', // full/formatted name
-      imageDataUrl: null,
+      imageUrl: null,
+      uploadUrl: null,
+      newAvatar: null,
+      newAvatarMime: null,
       errorCleared: false,
+      buttonDisabled: false,
       saveToken: LocalStorageUtil.getObject('keep-logged-in')
     };
 
@@ -31,6 +38,9 @@ export default class CreateAccountView extends React.PureComponent {
     this.handleFnChange = this.handleFnChange.bind(this);
     this.handleImageChanged = this.handleImageChanged.bind(this);
     this.handleToggleSaveToken = this.handleToggleSaveToken.bind(this);
+    this.handleAvatarCropped = this.handleAvatarCropped.bind(this);
+    this.handleAvatarCropCancel = this.handleAvatarCropCancel.bind(this);
+    this.uploadAvatar = this.uploadAvatar.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -51,7 +61,7 @@ export default class CreateAccountView extends React.PureComponent {
   }
 
   handleImageChanged(mime, img) {
-    this.setState({imageDataUrl: img});
+    this.setState({newAvatar: img, newAvatarMime: mime});
   }
 
   handleToggleSaveToken() {
@@ -65,11 +75,66 @@ export default class CreateAccountView extends React.PureComponent {
     this.props.onCreateAccount(
       this.state.login.trim(),
       this.state.password.trim(),
-      theCard(this.state.fn.trim().substring(0, MAX_TITLE_LENGTH), this.state.imageDataUrl),
+      theCard(this.state.fn.trim().substring(0, MAX_TITLE_LENGTH), this.state.uploadUrl),
       {'meth': 'email', 'val': this.state.email});
   }
 
+  // AvatarCropView calls this method when the user has cropped the image.
+  handleAvatarCropped(mime, blob, width, height) {
+    const url = blob ? URL.createObjectURL(blob) : null;
+    this.setState({avatar: url, newAvatar: null, newAvatarMime: null});
+    if (blob) {
+      this.uploadAvatar(mime, blob, width, height);
+    }
+  }
+
+  handleAvatarCropCancel() {
+    this.setState({newAvatar: null, newAvatarMime: null});
+  }
+
+    // Utility method for converting cropped avatar blob to bytes for sending inband or
+  // for uploading it to the server out of band.
+  uploadAvatar(mime, blob, width, height) {
+    const readyToUpload = (image) => {
+      let {mime, blob} = image;
+      this.setState({imageUrl: URL.createObjectURL(blob), buttonDisabled: true});
+      if (blob.size > MAX_AVATAR_BYTES) {
+        // Too large to send inband - uploading out of band and sending as a link.
+        const uploader = this.props.tinode.getLargeFileHelper();
+        uploader.upload(blob, 'newacc')
+          .then(url => this.setState({uploadUrl: url}))
+          .catch(err => this.props.onError(err.message, 'err'))
+          .finally(_ => this.setState({buttonDisabled: false}));
+      } else {
+        // Convert blob to base64-encoded bits.
+        blobToBase64(blob)
+          .then(b64 => this.setState({uploadUrl: makeImageUrl({data: b64.bits, type: mime})}))
+          .finally(_ => this.setState({buttonDisabled: false}));
+      }
+    };
+
+    if (width > AVATAR_SIZE || height > AVATAR_SIZE || width != height) {
+      // Avatar is not square or too large even after cropping. Shrink it and make square.
+      imageScaled(blob, AVATAR_SIZE, AVATAR_SIZE, MAX_EXTERN_ATTACHMENT_SIZE, true)
+        .then(scaled => readyToUpload(scaled))
+        .catch(err => this.props.onError(err.message, 'err'));
+    } else {
+      readyToUpload({mime: mime, blob: blob, width: width, height: height});
+    }
+  }
+
   render() {
+    if (this.state.newAvatar) {
+      return (
+        <AvatarCrop
+          avatar={this.state.newAvatar}
+          mime={this.state.newAvatarMime}
+          onSubmit={this.handleAvatarCropped}
+          onCancel={this.handleAvatarCropCancel}
+          onError={this.props.onError} />
+      );
+    }
+
     let submitClasses = 'primary';
     if (this.props.disabled) {
       submitClasses += ' disabled';
@@ -93,7 +158,7 @@ export default class CreateAccountView extends React.PureComponent {
           </div>
           <AvatarUpload
             tinode={this.props.tinode}
-            avatar={this.state.imageDataUrl}
+            avatar={this.state.imageUrl}
             onImageUpdated={this.handleImageChanged}
             onError={this.props.onError} />
         </div>
@@ -120,7 +185,7 @@ export default class CreateAccountView extends React.PureComponent {
           }</FormattedMessage>
         </div>
         <div className="dialog-buttons">
-          <button className={submitClasses} type="submit">
+          <button className={submitClasses} type="submit" disabled={this.state.buttonDisabled}>
             <FormattedMessage id="button_sign_up" defaultMessage="Sign up"
               description="Create account button [Sign Up]" />
           </button>
