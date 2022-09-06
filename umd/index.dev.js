@@ -2086,8 +2086,8 @@ const KNOWN_HOSTS = {
 };
 const DEFAULT_HOST = KNOWN_HOSTS.hosted;
 const LOGGING_ENABLED = true;
-const KEYPRESS_DELAY = 3000;
-const READ_DELAY = 1500;
+const KEYPRESS_DELAY = 3_000;
+const READ_DELAY = 1_500;
 const MIN_TAG_LENGTH = 2;
 const MAX_TAG_LENGTH = 96;
 const MAX_TAG_COUNT = 16;
@@ -2101,7 +2101,7 @@ const AVATAR_SIZE = 384;
 const MAX_AVATAR_BYTES = 4096;
 const BROKEN_IMAGE_SIZE = 32;
 const MESSAGES_PAGE = 24;
-const MAX_INBAND_ATTACHMENT_SIZE = 262144;
+const MAX_INBAND_ATTACHMENT_SIZE = 262_144;
 const MAX_EXTERN_ATTACHMENT_SIZE = 1 << 23;
 const MAX_IMAGE_DIM = 1024;
 const IMAGE_PREVIEW_DIM = 64;
@@ -2113,8 +2113,8 @@ const MAX_PEER_TITLE_LENGTH = 20;
 const MESSAGE_PREVIEW_LENGTH = 80;
 const QUOTED_REPLY_LENGTH = 30;
 const FORWARDED_PREVIEW_LENGTH = 84;
-const MIN_DURATION = 2000;
-const MAX_DURATION = 600000;
+const MIN_DURATION = 2_000;
+const MAX_DURATION = 600_000;
 const LINK_CONTACT_US = 'mailto:support@tinode.co';
 const LINK_PRIVACY_POLICY = 'https://tinode.co/privacy.html';
 const LINK_TERMS_OF_SERVICE = 'https://tinode.co/terms.html';
@@ -2915,7 +2915,7 @@ function quoteImage(data) {
       if (evt.ok) {
         return evt.blob();
       } else {
-        throw new Error("Image fetch unsuccessful: ".concat(evt.status, " ").concat(evt.statusText));
+        throw new Error(`Image fetch unsuccessful: ${evt.status} ${evt.statusText}`);
       }
     });
   } else {
@@ -3210,17 +3210,17 @@ function secondsToTime(seconds, fixedMin) {
   let hours = Math.floor(min / 60) | 0;
 
   if (fixedMin || hours > 0) {
-    min = min < 10 ? "0".concat(min) : min;
+    min = min < 10 ? `0${min}` : min;
   }
 
   let sec = seconds % 60 | 0;
-  sec = sec < 10 ? "0".concat(sec) : sec;
+  sec = sec < 10 ? `0${sec}` : sec;
 
   if (hours == 0) {
-    return "".concat(min, ":").concat(sec);
+    return `${min}:${sec}`;
   }
 
-  return "".concat(hours, ":").concat(min, ":").concat(sec);
+  return `${hours}:${min}:${sec}`;
 }
 function bytesToHumanSize(bytes) {
   if (!bytes || bytes == 0) {
@@ -3421,7 +3421,7 @@ function sanitizeUrlForMime(url, mimeMajor) {
     return sanitizedUrl;
   }
 
-  const re = new RegExp("data:".concat(mimeMajor, "/[a-z0-9.-]+;base64,"), 'i');
+  const re = new RegExp(`data:${mimeMajor}\/[a-z0-9.-]+;base64,`, 'i');
 
   if (re.test(url.trim())) {
     return url;
@@ -3497,7 +3497,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "PACKAGE_VERSION": () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.20.0-rc1";
+const PACKAGE_VERSION = "0.20.0-rc2";
 
 /***/ }),
 
@@ -4975,7 +4975,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       immutablePermissionsTitle: titleCompare,
       editedPermissionsSkipped: toSkip
     });
-    this.props.onNavigate("perm/".concat(which));
+    this.props.onNavigate(`perm/${which}`);
   }
 
   handleShowAddMembers(e) {
@@ -8279,7 +8279,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   handleError(err, level, action, actionText) {
-    console.log("handleError", err, new Error());
     this.setState(TinodeWeb.stateForError(err, level, action, actionText));
   }
 
@@ -11873,7 +11872,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     }), remoteActive ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "caller-name inactive"
     }, peerTitle) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "caller-card".concat(pulseAnimation)
+      className: `caller-card${pulseAnimation}`
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "avatar-box"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
@@ -13715,13 +13714,13 @@ class Cropper extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   }
 
   render() {
-    const t3d = "translate3d(".concat(this.state.panX, "px, ").concat(this.state.panY, "px, 0) scale(").concat(this.state.zoom, ")");
-    const orig = "".concat(this.state.originX, "px ").concat(this.state.originY, "px");
+    const t3d = `translate3d(${this.state.panX}px, ${this.state.panY}px, 0) scale(${this.state.zoom})`;
+    const orig = `${this.state.originX}px ${this.state.originY}px`;
     const overlay = {
-      top: "".concat(this.originY - this.state.originY * this.state.zoom, "px"),
-      left: "".concat(this.originX - this.state.originX * this.state.zoom, "px"),
-      width: "".concat(this.imageWidth * this.state.zoom, "px"),
-      height: "".concat(this.imageHeight * this.state.zoom, "px")
+      top: `${this.originY - this.state.originY * this.state.zoom}px`,
+      left: `${this.originX - this.state.originX * this.state.zoom}px`,
+      width: `${this.imageWidth * this.state.zoom}px`,
+      height: `${this.imageHeight * this.state.zoom}px`
     };
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "cropper"
@@ -17744,7 +17743,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var name = "firebase";
-var version = "9.9.3";
+var version = "9.9.4";
 
 /**
  * @license
@@ -18449,7 +18448,7 @@ function isVersionServiceProvider(provider) {
 }
 
 const name$o = "@firebase/app";
-const version$1 = "0.7.31";
+const version$1 = "0.7.32";
 
 /**
  * @license
@@ -18516,7 +18515,7 @@ const name$2 = "@firebase/firestore";
 const name$1 = "@firebase/firestore-compat";
 
 const name = "firebase";
-const version = "9.9.3";
+const version = "9.9.4";
 
 /**
  * @license
