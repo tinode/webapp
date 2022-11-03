@@ -35,6 +35,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "deepExtend": () => (/* binding */ deepExtend),
 /* harmony export */   "errorPrefix": () => (/* binding */ errorPrefix),
 /* harmony export */   "extractQuerystring": () => (/* binding */ extractQuerystring),
+/* harmony export */   "getDefaultAppConfig": () => (/* binding */ getDefaultAppConfig),
+/* harmony export */   "getDefaultEmulatorHost": () => (/* binding */ getDefaultEmulatorHost),
+/* harmony export */   "getDefaultEmulatorHostnameAndPort": () => (/* binding */ getDefaultEmulatorHostnameAndPort),
+/* harmony export */   "getExperimentalSetting": () => (/* binding */ getExperimentalSetting),
 /* harmony export */   "getGlobal": () => (/* binding */ getGlobal),
 /* harmony export */   "getModularInstance": () => (/* binding */ getModularInstance),
 /* harmony export */   "getUA": () => (/* binding */ getUA),
@@ -536,107 +540,6 @@ function isValidKey(key) {
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class Deferred {
-    constructor() {
-        this.reject = () => { };
-        this.resolve = () => { };
-        this.promise = new Promise((resolve, reject) => {
-            this.resolve = resolve;
-            this.reject = reject;
-        });
-    }
-    /**
-     * Our API internals are not promiseified and cannot because our callback APIs have subtle expectations around
-     * invoking promises inline, which Promises are forbidden to do. This method accepts an optional node-style callback
-     * and returns a node-style callback which will resolve or reject the Deferred's promise.
-     */
-    wrapCallback(callback) {
-        return (error, value) => {
-            if (error) {
-                this.reject(error);
-            }
-            else {
-                this.resolve(value);
-            }
-            if (typeof callback === 'function') {
-                // Attaching noop handler just in case developer wasn't expecting
-                // promises
-                this.promise.catch(() => { });
-                // Some of our callbacks don't expect a value and our own tests
-                // assert that the parameter length is 1
-                if (callback.length === 1) {
-                    callback(error);
-                }
-                else {
-                    callback(error, value);
-                }
-            }
-        };
-    }
-}
-
-/**
- * @license
- * Copyright 2021 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-function createMockUserToken(token, projectId) {
-    if (token.uid) {
-        throw new Error('The "uid" field is no longer supported by mockUserToken. Please use "sub" instead for Firebase Auth User ID.');
-    }
-    // Unsecured JWTs use "none" as the algorithm.
-    const header = {
-        alg: 'none',
-        type: 'JWT'
-    };
-    const project = projectId || 'demo-project';
-    const iat = token.iat || 0;
-    const sub = token.sub || token.user_id;
-    if (!sub) {
-        throw new Error("mockUserToken must contain 'sub' or 'user_id' field!");
-    }
-    const payload = Object.assign({ 
-        // Set all required fields to decent defaults
-        iss: `https://securetoken.google.com/${project}`, aud: project, iat, exp: iat + 3600, auth_time: iat, sub, user_id: sub, firebase: {
-            sign_in_provider: 'custom',
-            identities: {}
-        } }, token);
-    // Unsecured JWTs use the empty string as a signature.
-    const signature = '';
-    return [
-        base64urlEncodeWithoutPadding(JSON.stringify(header)),
-        base64urlEncodeWithoutPadding(JSON.stringify(payload)),
-        signature
-    ].join('.');
-}
-
-/**
- * @license
- * Copyright 2017 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 /**
  * Returns navigator.userAgent string or '' if it's not defined.
  * @return user agent string
@@ -794,6 +697,221 @@ function getGlobal() {
         return __webpack_require__.g;
     }
     throw new Error('Unable to locate global object.');
+}
+
+/**
+ * @license
+ * Copyright 2022 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const getDefaultsFromGlobal = () => getGlobal().__FIREBASE_DEFAULTS__;
+/**
+ * Attempt to read defaults from a JSON string provided to
+ * process.env.__FIREBASE_DEFAULTS__ or a JSON file whose path is in
+ * process.env.__FIREBASE_DEFAULTS_PATH__
+ */
+const getDefaultsFromEnvVariable = () => {
+    if (typeof process === 'undefined' || typeof process.env === 'undefined') {
+        return;
+    }
+    const defaultsJsonString = process.env.__FIREBASE_DEFAULTS__;
+    if (defaultsJsonString) {
+        return JSON.parse(defaultsJsonString);
+    }
+};
+const getDefaultsFromCookie = () => {
+    if (typeof document === 'undefined') {
+        return;
+    }
+    let match;
+    try {
+        match = document.cookie.match(/__FIREBASE_DEFAULTS__=([^;]+)/);
+    }
+    catch (e) {
+        // Some environments such as Angular Universal SSR have a
+        // `document` object but error on accessing `document.cookie`.
+        return;
+    }
+    const decoded = match && base64Decode(match[1]);
+    return decoded && JSON.parse(decoded);
+};
+/**
+ * Get the __FIREBASE_DEFAULTS__ object. It checks in order:
+ * (1) if such an object exists as a property of `globalThis`
+ * (2) if such an object was provided on a shell environment variable
+ * (3) if such an object exists in a cookie
+ */
+const getDefaults = () => {
+    try {
+        return (getDefaultsFromGlobal() ||
+            getDefaultsFromEnvVariable() ||
+            getDefaultsFromCookie());
+    }
+    catch (e) {
+        /**
+         * Catch-all for being unable to get __FIREBASE_DEFAULTS__ due
+         * to any environment case we have not accounted for. Log to
+         * info instead of swallowing so we can find these unknown cases
+         * and add paths for them if needed.
+         */
+        console.info(`Unable to get __FIREBASE_DEFAULTS__ due to: ${e}`);
+        return;
+    }
+};
+/**
+ * Returns emulator host stored in the __FIREBASE_DEFAULTS__ object
+ * for the given product.
+ * @returns a URL host formatted like `127.0.0.1:9999` or `[::1]:4000` if available
+ * @public
+ */
+const getDefaultEmulatorHost = (productName) => { var _a, _b; return (_b = (_a = getDefaults()) === null || _a === void 0 ? void 0 : _a.emulatorHosts) === null || _b === void 0 ? void 0 : _b[productName]; };
+/**
+ * Returns emulator hostname and port stored in the __FIREBASE_DEFAULTS__ object
+ * for the given product.
+ * @returns a pair of hostname and port like `["::1", 4000]` if available
+ * @public
+ */
+const getDefaultEmulatorHostnameAndPort = (productName) => {
+    const host = getDefaultEmulatorHost(productName);
+    if (!host) {
+        return undefined;
+    }
+    const separatorIndex = host.lastIndexOf(':'); // Finding the last since IPv6 addr also has colons.
+    if (separatorIndex <= 0 || separatorIndex + 1 === host.length) {
+        throw new Error(`Invalid host ${host} with no separate hostname and port!`);
+    }
+    // eslint-disable-next-line no-restricted-globals
+    const port = parseInt(host.substring(separatorIndex + 1), 10);
+    if (host[0] === '[') {
+        // Bracket-quoted `[ipv6addr]:port` => return "ipv6addr" (without brackets).
+        return [host.substring(1, separatorIndex - 1), port];
+    }
+    else {
+        return [host.substring(0, separatorIndex), port];
+    }
+};
+/**
+ * Returns Firebase app config stored in the __FIREBASE_DEFAULTS__ object.
+ * @public
+ */
+const getDefaultAppConfig = () => { var _a; return (_a = getDefaults()) === null || _a === void 0 ? void 0 : _a.config; };
+/**
+ * Returns an experimental setting on the __FIREBASE_DEFAULTS__ object (properties
+ * prefixed by "_")
+ * @public
+ */
+const getExperimentalSetting = (name) => { var _a; return (_a = getDefaults()) === null || _a === void 0 ? void 0 : _a[`_${name}`]; };
+
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+class Deferred {
+    constructor() {
+        this.reject = () => { };
+        this.resolve = () => { };
+        this.promise = new Promise((resolve, reject) => {
+            this.resolve = resolve;
+            this.reject = reject;
+        });
+    }
+    /**
+     * Our API internals are not promiseified and cannot because our callback APIs have subtle expectations around
+     * invoking promises inline, which Promises are forbidden to do. This method accepts an optional node-style callback
+     * and returns a node-style callback which will resolve or reject the Deferred's promise.
+     */
+    wrapCallback(callback) {
+        return (error, value) => {
+            if (error) {
+                this.reject(error);
+            }
+            else {
+                this.resolve(value);
+            }
+            if (typeof callback === 'function') {
+                // Attaching noop handler just in case developer wasn't expecting
+                // promises
+                this.promise.catch(() => { });
+                // Some of our callbacks don't expect a value and our own tests
+                // assert that the parameter length is 1
+                if (callback.length === 1) {
+                    callback(error);
+                }
+                else {
+                    callback(error, value);
+                }
+            }
+        };
+    }
+}
+
+/**
+ * @license
+ * Copyright 2021 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function createMockUserToken(token, projectId) {
+    if (token.uid) {
+        throw new Error('The "uid" field is no longer supported by mockUserToken. Please use "sub" instead for Firebase Auth User ID.');
+    }
+    // Unsecured JWTs use "none" as the algorithm.
+    const header = {
+        alg: 'none',
+        type: 'JWT'
+    };
+    const project = projectId || 'demo-project';
+    const iat = token.iat || 0;
+    const sub = token.sub || token.user_id;
+    if (!sub) {
+        throw new Error("mockUserToken must contain 'sub' or 'user_id' field!");
+    }
+    const payload = Object.assign({ 
+        // Set all required fields to decent defaults
+        iss: `https://securetoken.google.com/${project}`, aud: project, iat, exp: iat + 3600, auth_time: iat, sub, user_id: sub, firebase: {
+            sign_in_provider: 'custom',
+            identities: {}
+        } }, token);
+    // Unsecured JWTs use the empty string as a signature.
+    const signature = '';
+    return [
+        base64urlEncodeWithoutPadding(JSON.stringify(header)),
+        base64urlEncodeWithoutPadding(JSON.stringify(payload)),
+        signature
+    ].join('.');
 }
 
 /**
@@ -2078,45 +2196,72 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _version_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./version.js */ "./src/version.js");
 
+
 const APP_NAME = 'TinodeWeb/' + (_version_js__WEBPACK_IMPORTED_MODULE_0__.PACKAGE_VERSION || '0.17');
+
 const API_KEY = 'AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K';
+
 const KNOWN_HOSTS = {
   hosted: 'web.tinode.co',
   local: 'localhost:6060'
 };
+
 const DEFAULT_HOST = KNOWN_HOSTS.hosted;
+
 const LOGGING_ENABLED = true;
+
 const KEYPRESS_DELAY = 3_000;
 const READ_DELAY = 1_500;
+
 const MIN_TAG_LENGTH = 2;
 const MAX_TAG_LENGTH = 96;
 const MAX_TAG_COUNT = 16;
+
 const DEFAULT_P2P_ACCESS_MODE = 'JRWPS';
 const NEW_GRP_ACCESS_MODE = 'JRWPSAO';
 const CHANNEL_ACCESS_MODE = 'JR';
+
 const NO_ACCESS_MODE = 'N';
+
 const MEDIA_BREAKPOINT = 640;
 const REM_SIZE = 13;
+
 const AVATAR_SIZE = 384;
+
 const MAX_AVATAR_BYTES = 4096;
+
 const BROKEN_IMAGE_SIZE = 32;
+
 const MESSAGES_PAGE = 24;
+
 const MAX_INBAND_ATTACHMENT_SIZE = 262_144;
+
 const MAX_EXTERN_ATTACHMENT_SIZE = 1 << 23;
+
 const MAX_IMAGE_DIM = 1024;
+
 const IMAGE_PREVIEW_DIM = 64;
+
 const IMAGE_THUMBNAIL_DIM = 36;
+
 const MAX_ONLINE_IN_TOPIC = 4;
+
 const MAX_TITLE_LENGTH = 60;
 const MAX_TOPIC_DESCRIPTION_LENGTH = 360;
 const MAX_PEER_TITLE_LENGTH = 20;
+
 const MESSAGE_PREVIEW_LENGTH = 80;
+
 const QUOTED_REPLY_LENGTH = 30;
 const FORWARDED_PREVIEW_LENGTH = 84;
+
 const MIN_DURATION = 2_000;
 const MAX_DURATION = 600_000;
+
 const LINK_CONTACT_US = 'mailto:support@tinode.co';
+
 const LINK_PRIVACY_POLICY = 'https://tinode.co/privacy.html';
+
 const LINK_TERMS_OF_SERVICE = 'https://tinode.co/terms.html';
 
 /***/ }),
@@ -2136,10 +2281,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "CALL_STATE_NONE": () => (/* binding */ CALL_STATE_NONE),
 /* harmony export */   "CALL_STATE_OUTGOING_INITATED": () => (/* binding */ CALL_STATE_OUTGOING_INITATED)
 /* harmony export */ });
+
 const CALL_STATE_NONE = 0;
 const CALL_STATE_OUTGOING_INITATED = 1;
 const CALL_STATE_INCOMING_RECEIVED = 2;
 const CALL_STATE_IN_PROGRESS = 3;
+
 const CALL_HEAD_STARTED = 'started';
 
 /***/ }),
@@ -2171,42 +2318,40 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "intArrayToBase64": () => (/* binding */ intArrayToBase64),
 /* harmony export */   "makeImageUrl": () => (/* binding */ makeImageUrl)
 /* harmony export */ });
+
+
 const SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/gif', 'image/png', 'image/svg', 'image/svg+xml'];
 const MIME_EXTENSIONS = ['jpg', 'gif', 'png', 'svg', 'svg'];
+
 function makeImageUrl(photo) {
   if (photo && typeof photo == 'object') {
     if (photo.ref) {
       return photo.ref;
     }
-
     if (photo.data && photo.type) {
       const mime = photo.type.startsWith('image/') ? photo.type : 'image/' + photo.type;
       return 'data:' + mime + ';base64,' + photo.data;
     }
   }
-
   return null;
 }
+
 function fitImageSize(width, height, maxWidth, maxHeight, forceSquare) {
   width = width | 0;
   height = height | 0;
   maxWidth = maxWidth | 0;
   maxHeight = maxHeight | 0;
-
   if (width <= 0 || height <= 0 || maxWidth <= 0 || maxHeight <= 0) {
     return null;
   }
-
   if (forceSquare) {
     maxWidth = maxHeight = Math.min(maxWidth, maxHeight);
   }
-
   const scale = Math.min(Math.min(width, maxWidth) / width, Math.min(height, maxHeight) / height);
   const size = {
     dstWidth: width * scale | 0,
     dstHeight: height * scale | 0
   };
-
   if (forceSquare) {
     size.dstWidth = size.dstHeight = Math.min(size.dstWidth, size.dstHeight);
     size.srcWidth = size.srcHeight = Math.min(width, height);
@@ -2217,43 +2362,37 @@ function fitImageSize(width, height, maxWidth, maxHeight, forceSquare) {
     size.srcWidth = width;
     size.srcHeight = height;
   }
-
   return size;
 }
+
 function fileNameForMime(fname, mime) {
   const idx = SUPPORTED_IMAGE_FORMATS.indexOf(mime);
-
   if (idx < 0 || !fname) {
     return fname;
   }
-
   const ext = MIME_EXTENSIONS[idx];
   const at = fname.lastIndexOf('.');
-
   if (at >= 0) {
     fname = fname.substring(0, at);
   }
-
   return fname + '.' + ext;
 }
+
 function imageScaled(fileOrBlob, maxWidth, maxHeight, maxSize, forceSquare) {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.crossOrigin = 'Anonymous';
-
     img.onerror = function (err) {
       reject(new Error("Image format unrecognized"));
     };
-
     img.onload = async function () {
       URL.revokeObjectURL(img.src);
-      const dim = fitImageSize(img.width, img.height, maxWidth, maxHeight, forceSquare);
 
+      const dim = fitImageSize(img.width, img.height, maxWidth, maxHeight, forceSquare);
       if (!dim) {
         reject(new Error("Invalid image"));
         return;
       }
-
       let canvas = document.createElement('canvas');
       canvas.width = dim.dstWidth;
       canvas.height = dim.dstHeight;
@@ -2262,12 +2401,10 @@ function imageScaled(fileOrBlob, maxWidth, maxHeight, maxSize, forceSquare) {
       ctx.drawImage(img, dim.xoffset, dim.yoffset, dim.srcWidth, dim.srcHeight, 0, 0, dim.dstWidth, dim.dstHeight);
       const mime = SUPPORTED_IMAGE_FORMATS.includes(fileOrBlob.type) ? fileOrBlob.type : 'image/jpeg';
       let blob = await new Promise(resolve => canvas.toBlob(resolve, mime));
-
       if (!blob) {
         reject(new Error("Unsupported image format"));
         return;
       }
-
       while (maxSize > 0 && blob.length > maxSize) {
         dim.dstWidth = dim.dstWidth * 0.70710678118 | 0;
         dim.dstHeight = dim.dstHeight * 0.70710678118 | 0;
@@ -2278,7 +2415,6 @@ function imageScaled(fileOrBlob, maxWidth, maxHeight, maxSize, forceSquare) {
         ctx.drawImage(img, dim.xoffset, dim.yoffset, dim.srcWidth, dim.srcHeight, 0, 0, dim.dstWidth, dim.dstHeight);
         blob = await new Promise(resolve => canvas.toBlob(resolve, mime));
       }
-
       canvas = null;
       resolve({
         mime: mime,
@@ -2288,19 +2424,17 @@ function imageScaled(fileOrBlob, maxWidth, maxHeight, maxSize, forceSquare) {
         name: fileNameForMime(fileOrBlob.name, mime)
       });
     };
-
     img.src = URL.createObjectURL(fileOrBlob);
   });
 }
+
 function imageCrop(mime, objURL, left, top, width, height, scale) {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.crossOrigin = 'Anonymous';
-
     img.onerror = err => {
       reject(new Error("Image format unrecognized"));
     };
-
     img.onload = () => {
       URL.revokeObjectURL(img.src);
       let canvas = document.createElement('canvas');
@@ -2312,7 +2446,6 @@ function imageCrop(mime, objURL, left, top, width, height, scale) {
       mime = SUPPORTED_IMAGE_FORMATS.includes(mime) ? mime : 'image/jpeg';
       canvas.toBlob(blob => {
         canvas = null;
-
         if (blob) {
           resolve({
             mime: mime,
@@ -2325,18 +2458,16 @@ function imageCrop(mime, objURL, left, top, width, height, scale) {
         }
       }, mime);
     };
-
     img.src = objURL;
   });
 }
+
 function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-
     reader.onerror = evt => {
       reject(reader.error);
     };
-
     reader.onload = () => {
       resolve({
         mime: file.type,
@@ -2344,73 +2475,67 @@ function fileToBase64(file) {
         name: file.name
       });
     };
-
     reader.readAsDataURL(file);
   });
 }
+
 function blobToBase64(blob) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-
     reader.onerror = _ => {
       reject(reader.error);
     };
-
     reader.onload = () => {
       resolve({
         mime: blob.type,
         bits: reader.result.split(',')[1]
       });
     };
-
     reader.readAsDataURL(blob);
   });
 }
+
 function filePasted(event, onImageSuccess, onAttachmentSuccess, onError) {
   const items = (event.clipboardData || event.originalEvent.clipboardData || {}).items;
-
   if (!items || !items.length) {
     return false;
   }
-
   for (let i in items) {
     const item = items[i];
-
     if (item.kind === 'file') {
       const file = item.getAsFile();
-
       if (!file) {
         console.error("Failed to get file object from pasted file item", item.kind, item.type);
         onError("Failed to get file object from pasted file item");
         continue;
       }
-
       if (file.type && file.type.split('/')[0] == 'image') {
         onImageSuccess(file);
       } else {
         onAttachmentSuccess(file);
       }
-
       return true;
     }
   }
-
   return false;
 }
+
 function getMimeType(header) {
   var mime = /^data:(image\/[-+a-z0-9.]+);base64/.exec(header);
   return mime && mime.length > 1 ? mime[1] : null;
 }
+
 function base64EncodedLen(n) {
   return Math.floor((n + 2) / 3) * 4;
 }
+
 function base64DecodedLen(n) {
   return Math.floor(n / 4) * 3;
 }
+
 function base64ReEncode(str) {
   if (str) {
     str = str.replace(/-/g, '+').replace(/_/g, '/');
-
     try {
       str = btoa(atob(str));
     } catch (err) {
@@ -2418,49 +2543,42 @@ function base64ReEncode(str) {
       str = null;
     }
   }
-
   return str;
 }
+
 function base64ToBlob(str, mime) {
   if (!str) {
     return null;
   }
-
   try {
     const bin = atob(str);
     const length = bin.length;
     const buf = new ArrayBuffer(length);
     const arr = new Uint8Array(buf);
-
     for (let i = 0; i < length; i++) {
       arr[i] = bin.charCodeAt(i);
     }
-
     return new Blob([buf], {
       type: mime
     });
   } catch (err) {
     console.error("Failed to convert base64 to blob: ", err);
   }
-
   return null;
 }
 function intArrayToBase64(arr) {
   if (!Array.isArray(arr)) {
     return null;
   }
-
   try {
     let bin = '';
     new Uint8Array(arr).forEach(b => bin += String.fromCharCode(b));
     return window.btoa(bin);
   } catch (err) {}
-
   return null;
 }
 function base64ToIntArray(b64) {
   const arr = [];
-
   try {
     const bin = window.atob(b64);
     [...bin].forEach(c => {
@@ -2468,7 +2586,6 @@ function base64ToIntArray(b64) {
     });
     return arr;
   } catch (err) {}
-
   return null;
 }
 
@@ -2554,7 +2671,6 @@ function handleImageData(el, data, attr) {
     };
     return el;
   }
-
   attr.className = 'inline-image';
   const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 24, false) || {
     dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_8__.BROKEN_IMAGE_SIZE,
@@ -2566,17 +2682,14 @@ function handleImageData(el, data, attr) {
     minWidth: dim.dstWidth + 'px',
     minHeight: dim.dstHeight + 'px'
   };
-
   if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isProcessing(data)) {
     attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.sanitizeUrlForMime)(attr.src, 'image'));
     attr.alt = data.name;
-
     if (attr.src) {
       if (Math.max(data.width || 0, data.height || 0) > _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM) {
         attr.onClick = this.onImagePreview;
         attr.className += ' image-clickable';
       }
-
       attr.loading = 'lazy';
     } else {
       attr.src = 'img/broken_image.png';
@@ -2584,7 +2697,6 @@ function handleImageData(el, data, attr) {
   } else {
     el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_7__["default"];
   }
-
   return el;
 }
 
@@ -2592,15 +2704,12 @@ function fullFormatter(style, data, values, key, stack) {
   if (stack.includes('QQ')) {
     return quoteFormatter.call(this, style, data, values, key);
   }
-
   if (!style) {
     return values;
   }
-
   let el = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.tagName(style);
   let attr = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attrValue(style, data) || {};
   attr.key = key;
-
   switch (style) {
     case 'AU':
       if (attr.src) {
@@ -2609,78 +2718,59 @@ function fullFormatter(style, data, values, key, stack) {
         attr.preview = data.preview;
         attr.loading = 'lazy';
       }
-
       el = _widgets_audio_player_jsx__WEBPACK_IMPORTED_MODULE_3__["default"];
       values = null;
       break;
-
     case 'BR':
       values = null;
       break;
-
     case 'EX':
       break;
-
     case 'HL':
       attr.className = 'highlight';
       break;
-
     case 'HD':
       el = null;
       values = null;
       break;
-
     case 'IM':
       el = handleImageData.call(this, el, data, attr);
       values = null;
       break;
-
     case 'BN':
       attr.onClick = this.onFormButtonClick;
       let inner = react__WEBPACK_IMPORTED_MODULE_0___default().Children.map(values, child => {
         return typeof child == 'string' ? child : undefined;
       });
-
       if (!inner || inner.length == 0) {
         inner = [attr.name];
       }
-
       attr['data-title'] = inner.join('');
       break;
-
     case 'MN':
       attr.className = 'mention';
-
       if (data) {
         attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_10__.idToColorClass)(data.val, false, true);
       }
-
       break;
-
     case 'FM':
       attr.className = 'bot-form';
       break;
-
     case 'RW':
       break;
-
     case 'QQ':
       attr.className = 'reply-quote';
       attr.onClick = this.onQuoteClick;
       break;
-
     case 'VC':
       el = _widgets_call_message_jsx__WEBPACK_IMPORTED_MODULE_4__["default"];
       values = null;
-
       if (data) {
         attr.callState = data.state;
         attr.incoming = data.incoming;
         attr.duration = data.duration;
       }
-
       break;
-
     default:
       if (!el) {
         el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
@@ -2688,39 +2778,33 @@ function fullFormatter(style, data, values, key, stack) {
           key: key
         };
         let body = values;
-
         if (!Array.isArray(values) || !values.join('').trim()) {
           body = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
             key: "x1",
             className: "gray"
           }, this.formatMessage(messages.drafty_unknown))];
         }
-
         values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
           key: "x0",
           className: "material-icons gray"
         }, "extension"), ' '].concat(body);
       }
-
       break;
   }
-
   if (!el) {
     return values;
   }
-
   return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(el, attr, values);
 }
+
 function previewFormatter(style, data, values, key) {
   if (!style) {
     return values;
   }
-
   let el = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.tagName(style);
   const attr = {
     key: key
   };
-
   switch (style) {
     case 'AU':
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
@@ -2729,21 +2813,17 @@ function previewFormatter(style, data, values, key) {
         className: "material-icons"
       }, "mic"), ' ', (0,_strformat_js__WEBPACK_IMPORTED_MODULE_10__.secondsToTime)(data.duration / 1000)];
       break;
-
     case 'BR':
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
       values = [' '];
       break;
-
     case 'HL':
       attr.className = 'highlight preview';
       break;
-
     case 'LN':
     case 'MN':
       el = 'span';
       break;
-
     case 'IM':
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
       values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
@@ -2751,12 +2831,10 @@ function previewFormatter(style, data, values, key) {
         className: "material-icons"
       }, "photo"), ' ', this.formatMessage(messages.drafty_image)];
       break;
-
     case 'BN':
       el = 'span';
       attr.className = 'flat-button faux';
       break;
-
     case 'FM':
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
       values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
@@ -2764,46 +2842,37 @@ function previewFormatter(style, data, values, key) {
         className: "material-icons"
       }, "dashboard"), this.formatMessage(messages.drafty_form)].concat(' ', values || []);
       break;
-
     case 'RW':
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
       break;
-
     case 'EX':
       if (data) {
         if (data.mime == 'application/json') {
           return null;
         }
-
         delete data.val;
         delete data.ref;
       }
-
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
       values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
         key: "ex",
         className: "material-icons"
       }, "attachment"), ' ', this.formatMessage(messages.drafty_attachment)];
       break;
-
     case 'VC':
       el = _widgets_call_status_jsx__WEBPACK_IMPORTED_MODULE_5__["default"];
-
       if (data) {
         attr.callState = data.state;
         attr.incoming = data.incoming;
         attr.duration = data.duration;
       }
-
       values = null;
       break;
-
     case 'QQ':
     case 'HD':
       el = null;
       values = null;
       break;
-
     default:
       if (!el) {
         el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
@@ -2812,14 +2881,11 @@ function previewFormatter(style, data, values, key) {
           className: "material-icons gray"
         }, "extension"), ' ', this.formatMessage(messages.drafty_unknown)];
       }
-
       break;
   }
-
   if (!el) {
     return values;
   }
-
   return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(el, attr, values);
 }
 ;
@@ -2833,11 +2899,9 @@ function inlineImageAttr(attr, data) {
   };
   attr.className = 'inline-image';
   attr.alt = this.formatMessage(messages.drafty_image);
-
   if (!data) {
     attr.src = 'img/broken_image.png';
   }
-
   attr.title = attr.alt;
   return attr;
 }
@@ -2847,12 +2911,10 @@ function quoteFormatter(style, data, values, key) {
     let el = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.tagName(style);
     let attr = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attrValue(style, data) || {};
     attr.key = key;
-
     switch (style) {
       case 'BR':
         values = null;
         break;
-
       case 'IM':
         attr = inlineImageAttr.call(this, attr, data);
         values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement('img', attr, null), ' ', attr.alt];
@@ -2861,30 +2923,23 @@ function quoteFormatter(style, data, values, key) {
           key: key
         };
         break;
-
       case 'MN':
         el = 'span';
         attr.className = 'mention';
-
         if (data) {
           attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_10__.idToColorClass)(data.val, false, true);
         }
-
         break;
-
       case 'EX':
         let fname;
-
         if (data) {
           if (data.mime == 'application/json') {
             return null;
           }
-
           fname = data.name;
           delete data.val;
           delete data.ref;
         }
-
         el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
         values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
           key: "ex",
@@ -2892,23 +2947,18 @@ function quoteFormatter(style, data, values, key) {
         }, "attachment"), (0,_strformat_js__WEBPACK_IMPORTED_MODULE_10__.shortenFileName)(fname, 16) || this.formatMessage(messages.drafty_attachment)];
         break;
     }
-
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(el, attr, values);
   }
-
   return previewFormatter.call(this, style, data, values, key);
 }
 
 function quoteImage(data) {
   let promise;
-
   if (data.val) {
     const blob = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__.base64ToBlob)(data.val, data.mime);
-
     if (!blob) {
       throw new Error("Invalid image");
     }
-
     promise = Promise.resolve(blob);
   } else if (data.ref) {
     promise = fetch(this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.sanitizeUrlForMime)(data.ref, 'image'))).then(evt => {
@@ -2930,6 +2980,7 @@ function quoteImage(data) {
     data.width = scaled.width;
     data.height = scaled.height;
     delete data.ref;
+
     data.src = URL.createObjectURL(scaled.blob);
     return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__.blobToBase64)(scaled.blob);
   }).then(b64 => {
@@ -2950,13 +3001,11 @@ function replyFormatter(style, data, values, key, stack) {
       key: key
     }, data);
     let loadedPromise;
-
     try {
       loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.cancelablePromise)(quoteImage.call(this, data));
     } catch (error) {
       loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.cancelablePromise)(error);
     }
-
     attr.whenDone = loadedPromise;
     values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], attr, null), ' ', attr.alt];
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), {
@@ -2971,13 +3020,11 @@ function replyFormatter(style, data, values, key, stack) {
         className: "material-icons"
       }, "format_quote"), ' ']);
     }
-
     const attr = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attrValue('QQ', data) || {};
     attr.key = key;
     attr.className = 'reply-quote';
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.tagName('QQ'), attr, values);
   }
-
   return quoteFormatter.call(this, style, data, values, key);
 }
 
@@ -2998,9 +3045,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 
+
 function detectServerAddress() {
   let host = _config_js__WEBPACK_IMPORTED_MODULE_0__.DEFAULT_HOST;
-
   if (typeof window.location == 'object') {
     if (window.location.protocol == 'file:' || window.location.hostname == 'localhost') {
       host = _config_js__WEBPACK_IMPORTED_MODULE_0__.KNOWN_HOSTS.local;
@@ -3008,21 +3055,19 @@ function detectServerAddress() {
       host = window.location.hostname + (window.location.port ? ':' + window.location.port : '');
     }
   }
-
   return host;
 }
+
 function isSecureConnection() {
   if (typeof window.location == 'object') {
     return window.location.protocol == 'https:';
   }
-
   return false;
 }
 function isLocalHost() {
   if (typeof window.location == 'object') {
     return window.location.hostname == 'localhost';
   }
-
   return false;
 }
 
@@ -3039,6 +3084,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ LocalStorageUtil)
 /* harmony export */ });
+
+
 class LocalStorageUtil {
   static setObject(key, value) {
     localStorage.setItem(key, JSON.stringify(value));
@@ -3057,7 +3104,6 @@ class LocalStorageUtil {
   static removeItem(key) {
     localStorage.removeItem(key);
   }
-
 }
 
 /***/ }),
@@ -3073,90 +3119,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ HashNavigation)
 /* harmony export */ });
+
+
 class HashNavigation {
   static parseUrlHash(hash) {
     const parts = hash.split('?', 2);
     const params = {};
     let path = [];
-
     if (parts[0]) {
       path = parts[0].replace('#', '').split('/');
     }
-
     if (parts[1]) {
       parts[1].split('&').forEach(arg => {
         const eq = arg.indexOf('=');
-
         if (eq > 0) {
           params[arg.slice(0, eq)] = decodeURIComponent(arg.slice(eq + 1));
         }
       });
     }
-
     return {
       path: path,
       params: params
     };
   }
-
   static navigateTo(url) {
     window.location.hash = url;
   }
-
   static composeUrlHash(path, params) {
     let url = path.join('/');
     const args = [];
-
     for (const key in params) {
       if (params.hasOwnProperty(key)) {
         args.push(key + '=' + encodeURIComponent(params[key]));
       }
     }
-
     if (args.length > 0) {
       url += '?' + args.join('&');
     }
-
     return url;
   }
-
   static addUrlParam(hash, key, value) {
     const parsed = HashNavigation.parseUrlHash(hash);
     parsed.params[key] = value;
     return HashNavigation.composeUrlHash(parsed.path, parsed.params);
   }
-
   static removeUrlParam(hash, key) {
     const parsed = HashNavigation.parseUrlHash(hash);
     delete parsed.params[key];
     return HashNavigation.composeUrlHash(parsed.path, parsed.params);
   }
-
   static setUrlSidePanel(hash, sidepanel) {
     const parsed = HashNavigation.parseUrlHash(hash);
     parsed.path[0] = sidepanel;
     return HashNavigation.composeUrlHash(parsed.path, parsed.params);
   }
-
   static setUrlInfoPanel(hash, infopanel) {
     const parsed = HashNavigation.parseUrlHash(hash);
-
     if (infopanel) {
       parsed.params.info = infopanel;
     } else {
       delete parsed.params.info;
     }
-
     return HashNavigation.composeUrlHash(parsed.path, parsed.params);
   }
-
   static setUrlTopic(hash, topic) {
     const parsed = HashNavigation.parseUrlHash(hash);
     parsed.path[1] = topic;
     delete parsed.params.info;
     return HashNavigation.composeUrlHash(parsed.path, parsed.params);
   }
-
 }
 
 /***/ }),
@@ -3177,10 +3208,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "shortDateFormat": () => (/* binding */ shortDateFormat),
 /* harmony export */   "shortenFileName": () => (/* binding */ shortenFileName)
 /* harmony export */ });
+
 function shortDateFormat(then, locale) {
   locale = locale || window.navigator.userLanguage || window.navigator.language;
   const now = new Date();
-
   if (then.getFullYear() == now.getFullYear()) {
     if (then.getMonth() == now.getMonth() && then.getDate() == now.getDate()) {
       return then.toLocaleTimeString(locale, {
@@ -3189,7 +3220,6 @@ function shortDateFormat(then, locale) {
         minute: '2-digit'
       });
     }
-
     return then.toLocaleDateString(locale, {
       hour12: false,
       month: 'short',
@@ -3198,53 +3228,48 @@ function shortDateFormat(then, locale) {
       minute: '2-digit'
     });
   }
-
   return then.toLocaleDateString(locale, {
     year: 'numeric',
     month: 'short',
     day: 'numeric'
   });
 }
+
 function secondsToTime(seconds, fixedMin) {
   let min = Math.floor(seconds / 60) | 0;
   let hours = Math.floor(min / 60) | 0;
-
   if (fixedMin || hours > 0) {
     min = min < 10 ? `0${min}` : min;
   }
-
   let sec = seconds % 60 | 0;
   sec = sec < 10 ? `0${sec}` : sec;
-
   if (hours == 0) {
     return `${min}:${sec}`;
   }
-
   return `${hours}:${min}:${sec}`;
 }
+
 function bytesToHumanSize(bytes) {
   if (!bytes || bytes == 0) {
     return '0 Bytes';
   }
-
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB'];
   const bucket = Math.min(Math.floor(Math.log2(bytes) / 10) | 0, sizes.length - 1);
   const count = bytes / Math.pow(1024, bucket);
   const round = bucket > 0 ? count < 3 ? 2 : count < 30 ? 1 : 0 : 0;
   return count.toFixed(round) + ' ' + sizes[bucket];
 }
+
 function shortenFileName(filename, maxLength) {
   if (typeof filename != 'string') {
     return filename;
   }
-
   return filename.length > maxLength ? filename.slice(0, maxLength / 2 - 1) + '…' + filename.slice(1 - maxLength / 2) : filename;
 }
 
 function stringToColorHash(value) {
   let hash = 0;
   value = '' + value;
-
   for (let i = 0; i < value.length; i++) {
     hash = (hash << 5) - hash + value.charCodeAt(i);
     hash = hash & hash;
@@ -3256,6 +3281,7 @@ function stringToColorHash(value) {
 function letterTileColorId(userId) {
   return Math.abs(stringToColorHash(userId)) % 16;
 }
+
 function idToColorClass(id, light, fg) {
   return (light ? 'lt-' : 'dk-') + (fg ? 'fg-' : 'bg-') + letterTileColorId(id);
 }
@@ -3286,6 +3312,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_0__);
 
+
+
+
 function updateFavicon(count) {
   const oldIcon = document.getElementById('shortcut-icon');
   const head = document.head || document.getElementsByTagName('head')[0];
@@ -3294,35 +3323,30 @@ function updateFavicon(count) {
   newIcon.id = 'shortcut-icon';
   newIcon.rel = 'shortcut icon';
   newIcon.href = 'img/logo32x32' + (count > 0 ? 'a' : '') + '.png';
-
   if (oldIcon) {
     head.removeChild(oldIcon);
   }
-
   head.appendChild(newIcon);
   document.title = (count > 0 ? '(' + count + ') ' : '') + 'Tinode';
 }
+
 function theCard(fn, imageUrl, imageMimeType, note) {
   let card = null;
   fn = fn && fn.trim();
   note = note && note.trim();
-
   if (fn) {
     card = {
       fn: fn
     };
   }
-
   if (typeof note == 'string') {
     card = card || {};
     card.note = note ? note : tinode_sdk__WEBPACK_IMPORTED_MODULE_0__.Tinode.DEL_CHAR;
   }
-
   if (imageUrl) {
     card = card || {};
     let mimeType = imageMimeType;
     const matches = /^data:(image\/[-a-z0-9+.]+)?(;base64)?,/i.exec(imageUrl);
-
     if (matches) {
       mimeType = matches[1];
       card.photo = {
@@ -3335,17 +3359,15 @@ function theCard(fn, imageUrl, imageMimeType, note) {
         ref: imageUrl
       };
     }
-
     card.photo.type = (mimeType || 'image/jpeg').substring('image/'.length);
   }
-
   return card;
 }
+
 function arrayEqual(a, b) {
   if (a === b) {
     return true;
   }
-
   if (!Array.isArray(a) || !Array.isArray(b)) {
     return false;
   }
@@ -3353,39 +3375,36 @@ function arrayEqual(a, b) {
   if (a.length != b.length) {
     return false;
   }
-
   a.sort();
   b.sort();
-
   for (let i = 0, l = a.length; i < l; i++) {
     if (a[i] !== b[i]) {
       return false;
     }
   }
-
   return true;
 }
+
 function asPhone(val) {
   val = val.trim();
-
   if (/^(?:\+?(\d{1,3}))?[- (.]*(\d{3})[- ).]*(\d{3})[- .]*(\d{2})[- .]*(\d{2})?$/.test(val)) {
     return val.replace(/[- ().]*/, '');
   }
-
   return null;
 }
+
 function asEmail(val) {
   val = val.trim();
-
   if (/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/.test(val)) {
     return val;
   }
-
   return null;
 }
+
 function isUrlRelative(url) {
   return url && !/^\s*([a-z][a-z0-9+.-]*:|\/\/)/im.test(url);
 }
+
 function sanitizeUrl(url, allowedSchemes) {
   if (typeof url != 'string') {
     return url;
@@ -3403,55 +3422,47 @@ function sanitizeUrl(url, allowedSchemes) {
 
   const schemes = Array.isArray(allowedSchemes) ? allowedSchemes.join('|') : 'http|https';
   const re = new RegExp('^((' + schemes + '):|//)', 'i');
-
   if (!re.test(url)) {
     return null;
   }
-
   return url;
 }
+
 function sanitizeUrlForMime(url, mimeMajor) {
   if (!url) {
     return null;
   }
-
   const sanitizedUrl = sanitizeUrl(url);
-
   if (sanitizedUrl) {
     return sanitizedUrl;
   }
 
   const re = new RegExp(`data:${mimeMajor}\/[a-z0-9.-]+;base64,`, 'i');
-
   if (re.test(url.trim())) {
     return url;
   }
-
   return null;
 }
+
 function deliveryMarker(received) {
   switch (received) {
     case tinode_sdk__WEBPACK_IMPORTED_MODULE_0__.Tinode.MESSAGE_STATUS_SENDING:
       return {
         name: 'access_time'
       };
-
     case tinode_sdk__WEBPACK_IMPORTED_MODULE_0__.Tinode.MESSAGE_STATUS_FAILED:
       return {
         name: 'warning',
         color: 'danger-color'
       };
-
     case tinode_sdk__WEBPACK_IMPORTED_MODULE_0__.Tinode.MESSAGE_STATUS_SENT:
       return {
         name: 'done'
       };
-
     case tinode_sdk__WEBPACK_IMPORTED_MODULE_0__.Tinode.MESSAGE_STATUS_RECEIVED:
       return {
         name: 'done_all'
       };
-
     case tinode_sdk__WEBPACK_IMPORTED_MODULE_0__.Tinode.MESSAGE_STATUS_READ:
       return {
         name: 'done_all',
@@ -3461,6 +3472,7 @@ function deliveryMarker(received) {
 
   return null;
 }
+
 function cancelablePromise(promise) {
   let hasCanceled = false;
   const wrappedPromise = promise instanceof Error ? Promise.reject(promise) : new Promise((resolve, reject) => {
@@ -3472,14 +3484,13 @@ function cancelablePromise(promise) {
   });
   return {
     promise: wrappedPromise,
-
     cancel() {
       hasCanceled = true;
     }
-
   };
 }
 ;
+
 function clipStr(str, length) {
   return str && str.substring(0, length);
 }
@@ -3497,7 +3508,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "PACKAGE_VERSION": () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.20.0";
+
+
+const PACKAGE_VERSION = "0.20.1";
 
 /***/ }),
 
@@ -3520,12 +3533,12 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 class EditAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
     this.handleCheckboxClick = this.handleCheckboxClick.bind(this);
   }
-
   handleCheckboxClick(what, checked) {
     if (what == 'sound') {
       this.props.onToggleMessageSounds(checked);
@@ -3535,7 +3548,6 @@ class EditAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       this.props.onToggleIncognitoMode(checked);
     }
   }
-
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "scrollable-panel"
@@ -3592,7 +3604,6 @@ class EditAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       onChange: this.handleCheckboxClick
     })));
   }
-
 }
 ;
 
@@ -3619,6 +3630,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   delete_account: {
     id: "delete_account",
@@ -3635,7 +3647,6 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   }
 });
-
 class AccSecurityView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
@@ -3659,27 +3670,23 @@ class AccSecurityView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Comp
     this.handlePermissionsChanged = this.handlePermissionsChanged.bind(this);
     this.handleDeleteAccount = this.handleDeleteAccount.bind(this);
   }
-
   handlePasswordUpdate(pwd) {
     this.setState({
       password: pwd
     });
     this.props.onUpdatePassword(pwd);
   }
-
   handleLaunchPermissionsEditor(which) {
     this.setState({
       showPermissionEditorFor: which,
       editedPermissions: this.state[which]
     });
   }
-
   handleHidePermissionsEditor() {
     this.setState({
       showPermissionEditorFor: undefined
     });
   }
-
   handlePermissionsChanged(perm) {
     let defacs = {};
     defacs[this.state.showPermissionEditorFor] = perm;
@@ -3690,15 +3697,19 @@ class AccSecurityView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Comp
     newState[this.state.showPermissionEditorFor] = perm;
     this.setState(newState);
   }
-
   handleDeleteAccount(e) {
     e.preventDefault();
     const {
       formatMessage
     } = this.props.intl;
-    this.props.onShowAlert(formatMessage(messages.delete_account), formatMessage(messages.delete_account_warning), () => {
+    this.props.onShowAlert(formatMessage(messages.delete_account),
+    formatMessage(messages.delete_account_warning),
+    () => {
       this.props.onDeleteAccount();
-    }, null, true, null);
+    },
+    null,
+    true,
+    null);
   }
 
   render() {
@@ -3812,9 +3823,7 @@ class AccSecurityView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Comp
       }
     })))) : null));
   }
-
 }
-
 ;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(AccSecurityView));
 
@@ -3838,6 +3847,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+
 
 
 
@@ -3930,7 +3940,6 @@ class AccSupportView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       }]
     })), this.props.serverAddress)));
   }
-
 }
 ;
 
@@ -3965,7 +3974,6 @@ __webpack_require__.r(__webpack_exports__);
 function _clip(str, length) {
   return str && str.substring(0, length);
 }
-
 class AccountSettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
@@ -3976,7 +3984,6 @@ class AccountSettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().
       avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.makeImageUrl)(me.public ? me.public.photo : null)
     };
   }
-
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "scrollable-panel"
@@ -4090,7 +4097,6 @@ class AccountSettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().
       }]
     }))));
   }
-
 }
 ;
 
@@ -4117,6 +4123,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   archived_contacts_title: {
     id: "archived_contacts",
@@ -4138,22 +4145,18 @@ class ContactsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.handleAction = this.handleAction.bind(this);
     this.state = ContactsView.deriveStateFromProps(props);
   }
-
   static deriveStateFromProps(props) {
     const contacts = [];
     let unreadThreads = 0;
     let archivedCount = 0;
     props.chatList.map(c => {
       const blocked = c.acs && !c.acs.isJoiner();
-
       if (blocked && props.blocked) {
         contacts.push(c);
       }
-
       if (blocked || props.blocked) {
         return;
       }
-
       if (c.private && c.private.arch) {
         if (props.archive) {
           contacts.push(c);
@@ -4168,7 +4171,6 @@ class ContactsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     contacts.sort((a, b) => {
       return (b.touched || 0) - (a.touched || 0);
     });
-
     if (archivedCount > 0) {
       contacts.push({
         action: 'archive',
@@ -4178,28 +4180,23 @@ class ContactsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         }
       });
     }
-
     return {
       contactList: contacts,
       unreadThreads: unreadThreads
     };
   }
-
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.chatList != this.props.chatList || prevProps.archive != this.props.archive || prevProps.blocked != this.props.blocked) {
       const newState = ContactsView.deriveStateFromProps(this.props);
       this.setState(newState);
-
       if (newState.unreadThreads != prevState.unreadThreads) {
         (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__.updateFavicon)(newState.unreadThreads);
       }
     }
   }
-
   handleAction(action_ignored) {
     this.props.onShowArchive();
   }
-
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "contacts_not_found",
@@ -4227,7 +4224,6 @@ class ContactsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       onAction: this.handleAction
     }));
   }
-
 }
 ;
 
@@ -4266,6 +4262,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
@@ -4293,45 +4290,38 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
     this.uploadAvatar = this.uploadAvatar.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-
   handleLoginChange(e) {
     this.setState({
       login: e.target.value
     });
   }
-
   handlePasswordChange(password) {
     this.setState({
       password: password
     });
   }
-
   handleEmailChange(e) {
     this.setState({
       email: e.target.value
     });
   }
-
   handleFnChange(e) {
     this.setState({
       fn: e.target.value
     });
   }
-
   handleImageChanged(mime, img) {
     this.setState({
       newAvatar: img,
       newAvatarMime: mime
     });
   }
-
   handleToggleSaveToken() {
     _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_6__["default"].setObject('keep-logged-in', !this.state.saveToken);
     this.setState({
       saveToken: !this.state.saveToken
     });
   }
-
   handleSubmit(e) {
     e.preventDefault();
     this.setState({
@@ -4350,12 +4340,10 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       newAvatar: null,
       newAvatarMime: null
     });
-
     if (blob) {
       this.uploadAvatar(mime, blob, width, height);
     }
   }
-
   handleAvatarCropCancel() {
     this.setState({
       newAvatar: null,
@@ -4373,7 +4361,6 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
         imageUrl: URL.createObjectURL(blob),
         buttonDisabled: true
       });
-
       if (blob.size > _config_js__WEBPACK_IMPORTED_MODULE_9__.MAX_AVATAR_BYTES) {
         const uploader = this.props.tinode.getLargeFileHelper();
         uploader.upload(blob, 'newacc').then(url => this.setState({
@@ -4392,7 +4379,6 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
         }));
       }
     };
-
     if (width > _config_js__WEBPACK_IMPORTED_MODULE_9__.AVATAR_SIZE || height > _config_js__WEBPACK_IMPORTED_MODULE_9__.AVATAR_SIZE || width != height) {
       (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_9__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_9__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_9__.MAX_EXTERN_ATTACHMENT_SIZE, true).then(scaled => readyToUpload(scaled)).catch(err => this.props.onError(err.message, 'err'));
     } else {
@@ -4404,7 +4390,6 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       });
     }
   }
-
   render() {
     if (this.state.newAvatar) {
       return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_avatar_crop_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
@@ -4415,13 +4400,10 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
         onError: this.props.onError
       });
     }
-
     let submitClasses = 'primary';
-
     if (this.props.disabled) {
       submitClasses += ' disabled';
     }
-
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
       className: "panel-form-column",
       onSubmit: this.handleSubmit
@@ -4519,7 +4501,6 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       }]
     }))));
   }
-
 }
 ;
 
@@ -4555,6 +4536,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+
 
 
 
@@ -4650,7 +4632,6 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   }
 });
-
 class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
@@ -4700,18 +4681,15 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
 
   componentDidUpdate(props) {
     const topic = this.props.tinode.getTopic(props.topic);
-
     if (!topic) {
       return;
     }
-
     if (this.onMetaDesc != topic.onMetaDesc) {
       this.previousMetaDesc = topic.onMetaDesc;
       topic.onMetaDesc = this.onMetaDesc;
       this.previousSubsUpdated = topic.onSubsUpdated;
       topic.onSubsUpdated = this.onSubsUpdated;
     }
-
     if (this.state.topic != props.topic) {
       this.setState({
         topic: props.topic
@@ -4721,29 +4699,23 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       this.resetTags(topic);
     }
   }
-
   componentWillUnmount() {
     const topic = this.props.tinode.getTopic(this.props.topic);
-
     if (!topic) {
       return;
     }
-
     this.setState({
       topic: null
     });
     topic.onMetaDesc = this.previousMetaDesc;
     topic.onSubsUpdated = this.previousSubsUpdated;
   }
-
   resetSubs(topic, props) {
     const newState = {
       contactList: []
     };
-
     if (topic.getType() == 'p2p') {
       const user2 = topic.subscriber(props.topic);
-
       if (user2) {
         newState.modeGiven2 = user2.acs.getGiven();
         newState.modeWant2 = user2.acs.getWant();
@@ -4756,15 +4728,12 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
         newState.contactList.push(sub);
       }, this);
     }
-
     this.setState(newState);
   }
-
   resetDesc(topic, props) {
     const defacs = topic.getDefaultAccess() || {};
     const acs = topic.getAccessMode();
     const badges = [];
-
     if (topic.trusted) {
       for (const [key, val] of Object.entries(topic.trusted)) {
         if (val) {
@@ -4772,7 +4741,6 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
         }
       }
     }
-
     this.setState({
       owner: acs && acs.isOwner(),
       admin: acs && acs.isAdmin(),
@@ -4795,65 +4763,50 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       anon: defacs.anon
     });
   }
-
   resetTags(topic) {
     if (topic.getType() != 'grp') {
       return;
     }
-
     const acs = topic.getAccessMode();
-
     if (acs && acs.isOwner()) {
       topic.getMeta(topic.startMetaQuery().withTags().build());
     }
   }
-
   onMetaDesc(desc) {
     const topic = this.props.tinode.getTopic(this.props.topic);
-
     if (!topic) {
       return;
     }
-
     this.resetDesc(topic, this.props);
-
     if (this.previousMetaDesc && this.previousMetaDesc != this.onMetaDesc) {
       this.previousMetaDesc(desc);
     }
   }
-
   onSubsUpdated(subs) {
     const topic = this.props.tinode.getTopic(this.props.topic);
-
     if (!topic) {
       return;
     }
-
     this.resetSubs(topic, this.props);
-
     if (this.previousSubsUpdated && this.previousSubsUpdated != this.onSubsUpdated) {
       this.previousSubsUpdated(subs);
     }
   }
-
   handleImageChanged(mime, img) {
     this.setState({
       avatar: img
     });
     this.props.onTopicDescUpdate(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_15__.theCard)(null, img || tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.DEL_CHAR), null);
   }
-
   handleMuted(ignored, checked) {
     this.setState({
       muted: checked
     });
     this.props.onChangePermissions(this.props.topic, checked ? '-P' : '+P');
   }
-
   handleUnarchive(ignored, ignored2) {
     this.props.onTopicUnArchive(this.props.topic);
   }
-
   handlePermissionsChanged(which, perm) {
     switch (which) {
       case 'auth':
@@ -4861,59 +4814,47 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
           auth: perm
         });
         break;
-
       case 'anon':
         this.props.onTopicDescUpdateRequest(this.props.topic, null, null, {
           anon: perm
         });
         break;
-
       case 'mode':
       case 'want':
         this.props.onChangePermissions(this.props.topic, perm);
         break;
-
       case 'given':
         this.props.onChangePermissions(this.props.topic, perm, this.props.topic);
         break;
-
       case 'user':
         this.props.onChangePermissions(this.props.topic, perm, this.state.userPermissionsEdited);
         break;
     }
-
     this.handleBackNavigate();
   }
-
   handleLaunchPermissionsEditor(which, uid) {
     const {
       formatMessage
     } = this.props.intl;
     let toEdit, toCompare, toSkip, titleEdit, titleCompare, userTitle, userAvatar;
-
     switch (which) {
       case 'mode':
         toEdit = this.state.access;
         break;
-
       case 'want':
         toEdit = this.state.modeWant;
         toCompare = this.state.modeGiven;
-
         if (this.state.owner) {
           toSkip = 'O';
         } else {
           toSkip = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.AccessMode.encode(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.AccessMode.diff('ASDO', this.state.modeGiven));
-
           if (this.state.channel) {
             toSkip += 'W';
           }
         }
-
         titleEdit = formatMessage(messages.perm_want);
         titleCompare = formatMessage(messages.perm_given);
         break;
-
       case 'given':
         toEdit = this.state.modeGiven2;
         toCompare = this.state.modeWant2;
@@ -4921,50 +4862,39 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
         titleEdit = formatMessage(messages.perm_given);
         titleCompare = formatMessage(messages.perm_want);
         break;
-
       case 'auth':
         toEdit = this.state.auth;
         toSkip = 'O';
         break;
-
       case 'anon':
         toEdit = this.state.anon;
         toSkip = 'O';
         break;
-
       case 'user':
         {
           const topic = this.props.tinode.getTopic(this.props.topic);
-
           if (!topic) {
             return;
           }
-
           const user = topic.subscriber(uid);
-
           if (!user || !user.acs) {
             return;
           }
-
           toEdit = user.acs.getGiven();
           toCompare = user.acs.getWant();
           toSkip = this.state.owner ? '' : 'O';
           titleEdit = formatMessage(messages.perm_given);
           titleCompare = formatMessage(messages.perm_want);
-
           if (user.public) {
             userTitle = user.public.fn;
             userAvatar = user.public.photo;
           }
-
           break;
         }
-
       default:
         console.error("Unknown permission editing mode '" + which + "'");
         return;
     }
-
     this.setState({
       userPermissionsEdited: uid,
       userPermissionsTitle: userTitle,
@@ -4977,27 +4907,22 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
     });
     this.props.onNavigate(`perm/${which}`);
   }
-
   handleShowAddMembers(e) {
     e.preventDefault();
     this.props.onInitFind();
     this.props.onNavigate('members');
   }
-
   handleMemberUpdateRequest(members, added, removed) {
     this.props.onMemberUpdateRequest(this.props.topic, added, removed);
     this.props.onNavigate('info');
   }
-
   handleMemberSelected(uid) {
     this.setState({
       selectedContact: uid
     });
   }
-
   handleBackNavigate() {
     const args = (this.props.panel || 'info').split('/');
-
     if (args[0] == 'info') {
       this.props.onNavigate(null);
     } else if (args[0] == 'perm') {
@@ -5010,23 +4935,18 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       this.props.onNavigate('info');
     }
   }
-
   handleContextMenu(params) {
     const {
       formatMessage
     } = this.props.intl;
     const topic = this.props.tinode.getTopic(this.props.topic);
-
     if (!topic) {
       return;
     }
-
     const user = topic.subscriber(params.topicName);
-
     if (!user || !user.acs) {
       return;
     }
-
     const isMe = this.props.tinode.isMe(params.topicName);
     const menuItems = [{
       title: formatMessage(messages.edit_permissions),
@@ -5034,17 +4954,13 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
         this.handleLaunchPermissionsEditor(isMe ? 'want' : 'user', params.topicName);
       }
     }];
-
     if (!isMe) {
       menuItems.push('member_delete');
     }
-
     menuItems.push(user.acs.isMuted() ? 'member_unmute' : 'member_mute');
-
     if (!isMe) {
       menuItems.push(user.acs.isJoiner() ? 'member_block' : 'member_unblock');
     }
-
     this.props.showContextMenu({
       topicName: this.props.topic,
       x: params.x,
@@ -5052,7 +4968,6 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       user: params.topicName
     }, menuItems);
   }
-
   render() {
     const args = (this.props.panel || 'info').split('/');
     const view = args[0];
@@ -5297,9 +5212,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       showContextMenu: this.state.admin ? this.handleContextMenu : false
     }))) : null));
   }
-
 }
-
 ;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(InfoView));
 
@@ -5326,6 +5239,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 class LoginView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
@@ -5340,38 +5254,31 @@ class LoginView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.handleToggleSaveToken = this.handleToggleSaveToken.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-
   handleLoginChange(e) {
     this.setState({
       login: e.target.value
     });
   }
-
   handlePasswordChange(e) {
     this.setState({
       password: e.target.value
     });
   }
-
   handleToggleSaveToken() {
     this.props.onPersistenceChange(!this.state.saveToken);
     this.setState({
       saveToken: !this.state.saveToken
     });
   }
-
   handleSubmit(e) {
     e.preventDefault();
     this.props.onLogin(this.state.login.trim(), this.state.password.trim());
   }
-
   render() {
     let submitClasses = 'primary';
-
     if (this.props.disabled) {
       submitClasses += ' disabled';
     }
-
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
       id: "login-form",
       onSubmit: this.handleSubmit
@@ -5442,7 +5349,6 @@ class LoginView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       }]
     }))));
   }
-
 }
 ;
 
@@ -5466,6 +5372,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+
 
 
 
@@ -5495,7 +5402,6 @@ class LogoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompone
       }]
     }), " ", this.props.serverVersion, " (", this.props.serverAddress, ")")));
   }
-
 }
 ;
 
@@ -5536,6 +5442,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 /* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+
+
+
 
 
 
@@ -5621,23 +5530,18 @@ function isUnconfirmed(acs) {
     const ex = acs.getExcessive() || '';
     return acs.isJoiner('given') && (ex.includes('R') || ex.includes('W'));
   }
-
   return false;
 }
-
 function isPeerRestricted(acs) {
   if (acs) {
     const ms = acs.getMissing() || '';
     return acs.isJoiner('want') && (ms.includes('R') || ms.includes('W'));
   }
-
   return false;
 }
-
 function shouldPresentCallPanel(callState) {
   return callState == _constants_js__WEBPACK_IMPORTED_MODULE_17__.CALL_STATE_OUTGOING_INITATED || callState == _constants_js__WEBPACK_IMPORTED_MODULE_17__.CALL_STATE_IN_PROGRESS;
 }
-
 class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
@@ -5680,23 +5584,19 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.readNotificationTimer = null;
     this.keyPressTimer = null;
   }
-
   getOrCreateMessageRef(seqId) {
     if (this.chatMessageRefs.hasOwnProperty(seqId)) {
       return this.chatMessageRefs[seqId];
     }
-
     const ref = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
     this.chatMessageRefs[seqId] = ref;
     return ref;
   }
-
   componentDidMount() {
     if (this.messagesScroller) {
       this.messagesScroller.addEventListener('scroll', this.handleScrollEvent);
     }
   }
-
   componentWillUnmount() {
     if (this.messagesScroller) {
       this.messagesScroller.removeEventListener('scroll', this.handleScrollEvent);
@@ -5711,18 +5611,14 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition - this.messagesScroller.offsetHeight;
       }
     }
-
     const topic = this.props.tinode ? this.props.tinode.getTopic(this.state.topic) : undefined;
-
     if (this.state.topic != prevState.topic) {
       if (prevState.topic && !tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isNewGroupTopicName(prevState.topic)) {
         this.leave(prevState.topic);
-
         if (prevState.rtcPanel) {
           this.handleCallHangup(prevState.topic, prevProps.callSeq);
         }
       }
-
       if (topic) {
         topic.onData = this.handleMessageUpdate;
         topic.onAllMessagesReceived = this.handleAllMessagesReceived;
@@ -5732,13 +5628,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         topic.onPres = this.handleSubsUpdated;
       }
     }
-
     if (!this.props.applicationVisible) {
       this.clearNotificationQueue();
     } else {
       this.postReadNotification(0);
     }
-
     if (topic && (this.state.topic != prevState.topic || !prevProps.ready)) {
       if (topic._new && topic.isP2PType()) {
         topic.getMeta(topic.startMetaQuery().withDesc().build());
@@ -5747,10 +5641,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       }
     }
   }
-
   static getDerivedStateFromProps(nextProps, prevState) {
     let nextState = {};
-
     if (!nextProps.topic) {
       nextState = {
         messageCount: 0,
@@ -5789,17 +5681,14 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         showGoToLastButton: false,
         deleted: topic._deleted
       };
-
       if (nextProps.forwardMessage) {
         nextState.reply = {
           content: nextProps.forwardMessage.preview,
           seq: null
         };
       }
-
       if (topic) {
         const subs = [];
-
         if (nextProps.connected) {
           topic.subscribers(sub => {
             if (sub.online && sub.user != nextProps.myUserId) {
@@ -5807,11 +5696,9 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             }
           });
         }
-
         Object.assign(nextState, {
           onlineSubs: subs
         });
-
         if (topic.public) {
           Object.assign(nextState, {
             title: topic.public.fn,
@@ -5823,9 +5710,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             avatar: null
           });
         }
-
         const peer = topic.p2pPeerDesc();
-
         if (peer) {
           Object.assign(nextState, {
             peerMessagingDisabled: isPeerRestricted(peer.acs)
@@ -5835,13 +5720,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             peerMessagingDisabled: false
           });
         }
-
         Object.assign(nextState, {
           messageCount: topic.messageCount(),
           latestClearId: topic.maxClearId(),
           channel: topic.isChannelType()
         });
-
         if (nextProps.callTopic == topic.name && shouldPresentCallPanel(nextProps.callState)) {
           nextState.rtcPanel = nextProps.callTopic;
         }
@@ -5861,20 +5744,16 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         nextState.rtcPanel = nextProps.callTopic;
       }
     }
-
     if (nextProps.acs) {
       if (nextProps.acs.isWriter() != prevState.isWriter) {
         nextState.isWriter = !prevState.isWriter;
       }
-
       if (nextProps.acs.isReader() != prevState.isReader) {
         nextState.isReader = !prevState.isReader;
       }
-
       if (!nextProps.acs.isReader('given') != prevState.readingBlocked) {
         nextState.readingBlocked = !prevState.readingBlocked;
       }
-
       if (nextProps.acs.isSharer() != prevState.isSharer) {
         nextState.isSharer = !prevState.isSharer;
       }
@@ -5882,20 +5761,16 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       if (prevState.isWriter) {
         nextState.isWriter = false;
       }
-
       if (prevState.isReader) {
         nextState.isReader = false;
       }
-
       if (!prevState.readingBlocked) {
         prevState.readingBlocked = true;
       }
-
       if (prevState.isSharer) {
         nextState.isSharer = false;
       }
     }
-
     if (isUnconfirmed(nextProps.acs) == !prevState.unconformed) {
       nextState.unconfirmed = !prevState.unconformed;
     }
@@ -5903,60 +5778,50 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     if (!nextProps.connected && prevState.onlineSubs && prevState.onlineSubs.length > 0) {
       nextState.onlineSubs = [];
     }
-
     return nextState;
   }
-
   subscribe(topic) {
     if (topic.isSubscribed() || !this.props.ready) {
       return;
     }
 
     const newTopic = this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic;
-    let getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub();
 
+    let getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub();
     if (this.state.isReader || newTopic) {
       getQuery = getQuery.withLaterData(_config_js__WEBPACK_IMPORTED_MODULE_16__.MESSAGES_PAGE);
-
       if (this.state.isReader) {
         getQuery = getQuery.withLaterDel();
       }
-
       this.setState({
         fetchingMessages: true
       });
     }
-
     const setQuery = newTopic ? this.props.newTopicParams : undefined;
     topic.subscribe(getQuery.build(), setQuery).then(ctrl => {
       if (ctrl.code == 303) {
         _lib_navigation_js__WEBPACK_IMPORTED_MODULE_19__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_19__["default"].setUrlTopic('', ctrl.params.topic));
         return;
       }
-
       if (this.state.topic != ctrl.topic) {
         this.setState({
           topic: ctrl.topic
         });
       }
-
       this.props.onNewTopicCreated(this.props.topic, ctrl.topic);
       let calls = [];
       topic.queuedMessages(pub => {
         if (pub._sending) {
           return;
         }
-
         if (pub.head && pub.head.webrtc) {
           calls.push(pub.seq);
           return;
         }
-
         if (topic.isSubscribed()) {
           this.retrySend(pub);
         }
       });
-
       if (calls.length > 0) {
         topic.delMessagesList(calls, true);
       }
@@ -5968,14 +5833,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       this.setState(blankState);
     });
   }
-
   leave(oldTopicName) {
     if (!oldTopicName || !this.props.tinode.isTopicCached(oldTopicName)) {
       return;
     }
-
     const oldTopic = this.props.tinode.getTopic(oldTopicName);
-
     if (oldTopic && oldTopic.isSubscribed()) {
       oldTopic.leave(false).catch(() => {}).finally(() => {
         this.setState({
@@ -6005,14 +5867,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       scrollPosition: pos,
       showGoToLastButton: pos > SHOW_GO_TO_LAST_DIST && pos < this.state.scrollPosition
     });
-
     if (this.state.fetchingMessages) {
       return;
     }
-
     if (event.target.scrollTop <= 0) {
       const topic = this.props.tinode.getTopic(this.state.topic);
-
       if (topic && topic.isSubscribed() && topic.msgHasMoreMessages()) {
         this.setState({
           fetchingMessages: true
@@ -6024,17 +5883,14 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       }
     }
   }
-
   goToLatestMessage() {
     this.setState({
       scrollPosition: 0
     });
-
     if (this.messagesScroller) {
       this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight;
     }
   }
-
   handleDescChange(desc) {
     if (desc.public) {
       this.setState({
@@ -6047,7 +5903,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         avatar: null
       });
     }
-
     if (desc.acs) {
       this.setState({
         isWriter: desc.acs.isWriter(),
@@ -6057,7 +5912,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       });
     }
   }
-
   postReadNotification(seq) {
     if (!this.props.applicationVisible) {
       return;
@@ -6070,19 +5924,14 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           this.readNotificationTimer = null;
           return;
         }
-
         let seq = -1;
-
         while (this.readNotificationQueue.length > 0) {
           const n = this.readNotificationQueue[0];
-
           if (n.topicName != this.state.topic) {
             this.readNotificationQueue.shift();
             continue;
           }
-
           const now = new Date();
-
           if (n.sendAt <= now) {
             this.readNotificationQueue.shift();
             seq = Math.max(seq, n.seq);
@@ -6093,14 +5942,12 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
         if (seq >= 0) {
           const topic = this.props.tinode.getTopic(this.state.topic);
-
           if (topic) {
             topic.noteRead(seq);
           }
         }
       }, NOTIFICATION_EXEC_INTERVAL);
     }
-
     const now = new Date();
     this.readNotificationQueue.push({
       topicName: this.state.topic,
@@ -6111,13 +5958,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
   clearNotificationQueue() {
     this.readNotificationQueue = [];
-
     if (this.readNotificationTimer) {
       clearInterval(this.readNotificationTimer);
       this.readNotificationTimer = null;
     }
   }
-
   handleSubsUpdated() {
     if (this.state.topic) {
       const subs = [];
@@ -6131,7 +5976,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         onlineSubs: subs
       };
       const peer = topic.p2pPeerDesc();
-
       if (peer) {
         Object.assign(newState, {
           peerMessagingDisabled: isPeerRestricted(peer.acs)
@@ -6141,21 +5985,18 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           peerMessagingDisabled: false
         });
       }
-
       this.setState(newState);
     }
   }
 
   handleMessageUpdate(msg) {
     const topic = this.props.tinode.getTopic(this.state.topic);
-
     if (!msg) {
       this.setState({
         latestClearId: topic.maxClearId()
       });
       return;
     }
-
     clearTimeout(this.keyPressTimer);
     this.setState({
       messageCount: topic.messageCount(),
@@ -6171,23 +6012,20 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         }
       }
     });
-    const status = topic.msgStatus(msg, true);
 
+    const status = topic.msgStatus(msg, true);
     if (status >= tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_SENT && msg.from != this.props.myUserId) {
       this.postReadNotification(msg.seq);
     }
   }
-
   handleAllMessagesReceived(count) {
     this.setState({
       fetchingMessages: false
     });
-
     if (count > 0) {
       this.postReadNotification(0);
     }
   }
-
   handleInfoReceipt(info) {
     switch (info.what) {
       case 'kp':
@@ -6198,57 +6036,47 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
               typingIndicator: false
             });
           }, _config_js__WEBPACK_IMPORTED_MODULE_16__.KEYPRESS_DELAY + 1000);
-
           if (!this.state.typingIndicator) {
             this.setState({
               typingIndicator: true
             });
           }
-
           break;
         }
-
       case 'read':
       case 'recv':
         this.forceUpdate();
         break;
-
       default:
         console.info("Other change in topic: ", info.what);
     }
   }
-
   handleImagePostview(content) {
     this.setState({
       imagePostview: content
     });
   }
-
   handleClosePreview() {
     if (this.state.imagePreview && this.state.imagePreview.url) {
       URL.revokeObjectURL(this.state.imagePreview.url);
     }
-
     this.setState({
       imagePostview: null,
       imagePreview: null,
       docPreview: null
     });
   }
-
   handleFormResponse(action, text, data) {
     if (action == 'pub') {
       this.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachJSON(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.parse(text), data));
     } else if (action == 'url') {
       const url = new URL(data.ref);
       const params = url.searchParams;
-
       for (let key in data.resp) {
         if (data.resp.hasOwnProperty(key)) {
           params.set(key, data.resp[key]);
         }
       }
-
       ['name', 'seq'].map(key => {
         if (data[key]) {
           params.set(key, data[key]);
@@ -6262,7 +6090,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       console.info("Unknown action in form", action);
     }
   }
-
   handleContextClick(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -6272,44 +6099,34 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       x: e.pageX
     });
   }
-
   handleShowMessageContextMenu(params, messageSpecificMenuItems) {
     if (params.userFrom == 'chan') {
       params.userFrom = this.state.topic;
       params.userName = this.state.title;
     }
-
     params.topicName = this.state.topic;
     const menuItems = messageSpecificMenuItems || [];
     const topic = this.props.tinode.getTopic(params.topicName);
-
     if (topic) {
       if (!topic.isChannelType()) {
         menuItems.push('message_delete');
       }
-
       const acs = topic.getAccessMode();
-
       if (acs && acs.isDeleter()) {
         menuItems.push('message_delete_hard');
       }
     }
-
     this.props.showContextMenu(params, menuItems);
   }
-
   handleNewChatAcceptance(action) {
     this.props.onNewChat(this.state.topic, action);
   }
-
   handleEnablePeer(e) {
     e.preventDefault();
     this.props.onChangePermissions(this.state.topic, _config_js__WEBPACK_IMPORTED_MODULE_16__.DEFAULT_P2P_ACCESS_MODE, this.state.topic);
   }
-
   sendKeyPress() {
     const topic = this.props.tinode.getTopic(this.state.topic);
-
     if (topic.isSubscribed()) {
       topic.noteKeyPress();
     }
@@ -6317,7 +6134,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
   sendMessage(msg, uploadCompletionPromise, uploader) {
     let head;
-
     if (this.props.forwardMessage) {
       msg = this.props.forwardMessage.msg;
       head = this.props.forwardMessage.head;
@@ -6326,15 +6142,12 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       head = {
         reply: '' + this.state.reply.seq
       };
-
       if (typeof msg == 'string') {
         msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.parse(msg);
       }
-
       msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.sanitizeEntities(this.state.reply.content), msg);
       this.handleCancelReply();
     }
-
     this.props.sendMessage(msg, uploadCompletionPromise, uploader, head);
   }
 
@@ -6347,15 +6160,12 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
   sendFileAttachment(file) {
     const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
-
     if (file.size > maxInbandAttachmentSize) {
       const uploader = this.props.tinode.getLargeFileHelper();
-
       if (!uploader) {
         this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
         return;
       }
-
       const uploadCompletionPromise = uploader.upload(file);
       const msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachFile(null, {
         mime: file.type,
@@ -6375,7 +6185,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
   handleAttachFile(file) {
     const maxExternAttachmentSize = this.props.tinode.getServerParam('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_EXTERN_ATTACHMENT_SIZE);
-
     if (file.size > maxExternAttachmentSize) {
       this.props.onError(this.props.intl.formatMessage(messages.file_attachment_too_large, {
         size: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_20__.bytesToHumanSize)(file.size),
@@ -6392,7 +6201,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       });
     }
   }
-
   handleCallHangup(topic, seq) {
     this.props.onVideoCallClosed();
     this.setState({
@@ -6406,18 +6214,18 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     const width = this.state.imagePreview.width;
     const height = this.state.imagePreview.height;
     const fname = this.state.imagePreview.name;
-    const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
 
+    const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
     if (blob.size > maxInbandAttachmentSize) {
       const uploader = this.props.tinode.getLargeFileHelper();
-
       if (!uploader) {
         this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
         return;
       }
-
       const uploadCompletionPromise = uploader.upload(blob);
-      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_18__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_16__.IMAGE_PREVIEW_DIM, _config_js__WEBPACK_IMPORTED_MODULE_16__.IMAGE_PREVIEW_DIM, -1, false).then(scaled => (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_18__.blobToBase64)(scaled.blob)).then(b64 => {
+
+      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_18__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_16__.IMAGE_PREVIEW_DIM, _config_js__WEBPACK_IMPORTED_MODULE_16__.IMAGE_PREVIEW_DIM, -1, false)
+      .then(scaled => (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_18__.blobToBase64)(scaled.blob)).then(b64 => {
         let msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.insertImage(null, 0, {
           mime: mime,
           _tempPreview: b64.bits,
@@ -6427,12 +6235,10 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           size: blob.size,
           urlPromise: uploadCompletionPromise
         });
-
         if (caption) {
           msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendLineBreak(msg);
           msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(msg, tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.parse(caption));
         }
-
         this.sendMessage(msg, uploadCompletionPromise, uploader);
       }).catch(err => {
         this.props.onError(err, 'err');
@@ -6449,18 +6255,17 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         filename: fname,
         size: blob.size
       });
-
       if (caption) {
         msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendLineBreak(msg);
         msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(msg, tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.parse(caption));
       }
-
       this.sendMessage(msg);
     });
   }
 
   handleAttachImage(file) {
     const maxExternAttachmentSize = this.props.tinode.getServerParam('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_EXTERN_ATTACHMENT_SIZE);
+
     (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_18__.imageScaled)(file, _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_IMAGE_DIM, _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_IMAGE_DIM, maxExternAttachmentSize, false).then(scaled => {
       this.setState({
         imagePreview: {
@@ -6481,15 +6286,12 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   sendAudioAttachment(url, preview, duration) {
     fetch(url).then(result => result.blob()).then(blob => {
       const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024;
-
       if (blob.size > maxInbandAttachmentSize) {
         const uploader = this.props.tinode.getLargeFileHelper();
-
         if (!uploader) {
           this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
           return;
         }
-
         const uploadCompletionPromise = uploader.upload(blob);
         const msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendAudio(null, {
           mime: blob.type,
@@ -6515,15 +6317,12 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     });
     ;
   }
-
   handleCancelUpload(seq, uploader) {
     const topic = this.props.tinode.getTopic(this.state.topic);
     const found = topic.findMessage(seq);
-
     if (found) {
       found._cancelled = true;
     }
-
     uploader.cancel();
   }
 
@@ -6531,19 +6330,15 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.setState({
       reply: null
     });
-
     if (!seq || !content) {
       return;
     }
-
     content = typeof content == 'string' ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.init(content) : content;
-
     if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isValid(content)) {
       content = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.replyContent(content, _config_js__WEBPACK_IMPORTED_MODULE_16__.QUOTED_REPLY_LENGTH);
     } else {
       content = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.init('\u26A0 '), tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.wrapInto(this.props.intl.formatMessage(messages.invalid_content), 'EM'));
     }
-
     this.setState({
       reply: {
         content: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.quote(senderName, senderId, content),
@@ -6552,17 +6347,14 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     });
     this.props.onCancelForwardMessage();
   }
-
   handleCancelReply() {
     this.setState({
       reply: null
     });
     this.props.onCancelForwardMessage();
   }
-
   handleQuoteClick(replyToSeq) {
     const ref = this.getOrCreateMessageRef(replyToSeq);
-
     if (ref && ref.current) {
       ref.current.scrollIntoView({
         block: "center",
@@ -6576,13 +6368,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       console.error("Unresolved message ref", replyToSeq);
     }
   }
-
   render() {
     const {
       formatMessage
     } = this.props.intl;
     let component;
-
     if (this.props.hideSelf) {
       component = null;
     } else if (!this.state.topic) {
@@ -6592,7 +6382,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       });
     } else {
       let component2;
-
       if (this.state.imagePreview) {
         component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
           content: this.state.imagePreview,
@@ -6636,7 +6425,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         const isChannel = topic.isChannelType();
         const groupTopic = topic.isGroupType() && !isChannel;
         const icon_badges = [];
-
         if (topic.trusted) {
           if (topic.trusted.verified) {
             icon_badges.push({
@@ -6644,14 +6432,12 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
               color: 'badge-inv'
             });
           }
-
           if (topic.trusted.staff) {
             icon_badges.push({
               icon: 'staff',
               color: 'badge-inv'
             });
           }
-
           if (topic.trusted.danger) {
             icon_badges.push({
               icon: 'dangerous',
@@ -6659,7 +6445,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             });
           }
         }
-
         const messageNodes = [];
         let previousFrom = null;
         let prevDate = null;
@@ -6669,7 +6454,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           let nextFrom = next ? next.from || 'chan' : null;
           let sequence = 'single';
           let thisFrom = msg.from || 'chan';
-
           if (thisFrom == previousFrom) {
             if (thisFrom == nextFrom) {
               sequence = 'middle';
@@ -6679,28 +6463,24 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           } else if (thisFrom == nextFrom) {
             sequence = 'first';
           }
-
           previousFrom = thisFrom;
           const isReply = !(thisFrom == this.props.myUserId);
           const deliveryStatus = topic.msgStatus(msg, true);
           let userFrom = thisFrom,
-              userName,
-              userAvatar;
+            userName,
+            userAvatar;
           const user = topic.userDesc(thisFrom);
-
           if (user && user.public) {
             userName = user.public.fn;
             userAvatar = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_18__.makeImageUrl)(user.public.photo);
           }
-
           chatBoxClass = groupTopic ? 'chat-box group' : 'chat-box';
+
           const ref = this.getOrCreateMessageRef(msg.seq);
           let replyToSeq = msg.head ? parseInt(msg.head.reply) : null;
-
           if (!replyToSeq || isNaN(replyToSeq)) {
             replyToSeq = null;
           }
-
           if (msg.hi) {
             messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_meta_message_jsx__WEBPACK_IMPORTED_MODULE_14__["default"], {
               deleted: true,
@@ -6708,7 +6488,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             }));
           } else {
             const thisDate = new Date(msg.ts);
-
             if (!prevDate || prevDate.toDateString() != thisDate.toDateString()) {
               messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_meta_message_jsx__WEBPACK_IMPORTED_MODULE_14__["default"], {
                 date: dateFmt.format(msg.ts),
@@ -6717,7 +6496,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
               }));
               prevDate = thisDate;
             }
-
             messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_chat_message_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
               tinode: this.props.tinode,
               content: msg.content,
@@ -6749,12 +6527,10 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           }
         });
         let lastSeen = null;
-
         if (isChannel) {
           lastSeen = formatMessage(messages.channel);
         } else {
           const cont = this.props.tinode.getMeTopic().getContact(this.state.topic);
-
           if (cont && tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isP2PTopicName(cont.topic)) {
             if (cont.online) {
               lastSeen = formatMessage(messages.online_now);
@@ -6880,17 +6656,13 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           onCancelReply: this.handleCancelReply
         }));
       }
-
       component = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         id: "topic-view"
       }, component2);
     }
-
     return component;
   }
-
 }
-
 ;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(MessagesView));
 
@@ -6928,6 +6700,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   search_for_contacts: {
     id: "search_for_contacts",
@@ -6951,7 +6724,6 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   }
 });
-
 class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
@@ -6965,11 +6737,9 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.handleNewGroupSubmit = this.handleNewGroupSubmit.bind(this);
     this.handleGroupByID = this.handleGroupByID.bind(this);
   }
-
   componentDidMount() {
     this.props.onInitFind();
   }
-
   handleTabClick(e) {
     e.preventDefault();
     _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].addUrlParam(window.location.hash, 'tab', e.currentTarget.dataset.id));
@@ -6977,21 +6747,18 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       tabSelected: e.currentTarget.dataset.id
     });
   }
-
   handleSearchContacts(query) {
     this.props.onSearchContacts(query);
     this.setState({
       searchQuery: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isNullValue(query) ? null : query
     });
   }
-
   handleSearchResultSelected(name) {
     if (this.state.tabSelected == 'find') {
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].removeUrlParam(window.location.hash, 'tab'));
       this.props.onCreateTopic(name);
     }
   }
-
   handleNewGroupSubmit(name, description, dataUrl, priv, tags, isChannel) {
     _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].removeUrlParam(window.location.hash, 'tab'));
     this.props.onCreateTopic(undefined, {
@@ -7000,12 +6767,10 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       tags: tags
     }, isChannel);
   }
-
   handleGroupByID(topicName) {
     _lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_7__["default"].removeUrlParam(window.location.hash, 'tab'));
     this.props.onCreateTopic(topicName);
   }
-
   render() {
     const {
       formatMessage
@@ -7074,9 +6839,7 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       onTopicSelected: this.handleSearchResultSelected
     })));
   }
-
 }
-
 ;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(NewTopicView));
 
@@ -7103,6 +6866,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
@@ -7115,7 +6879,6 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
     this.handleEmailChange = this.handleEmailChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
   }
-
   componentDidMount() {
     const parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_3__["default"].parseUrlHash(window.location.hash);
     this.setState({
@@ -7123,10 +6886,8 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       scheme: parsed.params.scheme
     });
   }
-
   handleSubmit(e) {
     e.preventDefault();
-
     if (this.state.token) {
       this.props.onReset(this.state.scheme, this.state.password.trim(), this.state.token);
     } else if (this.state.sent) {
@@ -7143,19 +6904,16 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       });
     }
   }
-
   handleEmailChange(e) {
     this.setState({
       email: e.target.value
     });
   }
-
   handlePasswordChange(e) {
     this.setState({
       password: e.target.value
     });
   }
-
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
       id: "password-reset-form",
@@ -7247,7 +7005,6 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       }]
     }))));
   }
-
 }
 
 /***/ }),
@@ -7273,6 +7030,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 class SettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
@@ -7286,7 +7044,6 @@ class SettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
     this.handleServerAddressChange = this.handleServerAddressChange.bind(this);
     this.handleToggleSecure = this.handleToggleSecure.bind(this);
   }
-
   handleSubmit(e) {
     e.preventDefault();
     this.props.onUpdate({
@@ -7295,25 +7052,21 @@ class SettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       secureConnection: this.state.secureConnection
     });
   }
-
   handleTransportSelected(e) {
     this.setState({
       transport: e.currentTarget.value
     });
   }
-
   handleServerAddressChange(name) {
     this.setState({
       serverAddress: name
     });
   }
-
   handleToggleSecure(e) {
     this.setState({
       secureConnection: !this.state.secureConnection
     });
   }
-
   render() {
     const names = {
       def: "default",
@@ -7397,7 +7150,6 @@ class SettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       }]
     }))));
   }
-
 }
 ;
 
@@ -7433,6 +7185,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _password_reset_view_jsx__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./password-reset-view.jsx */ "./src/views/password-reset-view.jsx");
 /* harmony import */ var _settings_view_jsx__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./settings-view.jsx */ "./src/views/settings-view.jsx");
 /* harmony import */ var _validation_view_jsx__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./validation-view.jsx */ "./src/views/validation-view.jsx");
+
 
 
 
@@ -7550,24 +7303,20 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   }
 });
-
 class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
     this.handleNewTopic = this.handleNewTopic.bind(this);
   }
-
   handleNewTopic() {
     this.props.onNavigate('newtpk');
   }
-
   render() {
     const {
       formatMessage
     } = this.props.intl;
     const view = this.props.state || (this.props.myUserId ? 'contacts' : 'login');
     let title, avatar, badges;
-
     if (view == 'contacts') {
       title = this.props.title;
       avatar = this.props.avatar ? this.props.avatar : true;
@@ -7577,13 +7326,10 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       avatar = false;
       badges = null;
     }
-
     let onCancel;
-
     if (['login', 'contacts'].indexOf(view) == -1) {
       onCancel = this.props.onCancel;
     }
-
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "sidepanel",
       className: this.props.hideSelf ? 'nodisplay' : null
@@ -7687,9 +7433,7 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       onCancel: this.props.onCancel
     }) : null);
   }
-
 }
-
 ;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(SidepanelView));
 
@@ -7730,6 +7474,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+
+
 
 
 
@@ -7823,7 +7569,6 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   }
 });
-
 class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
@@ -7907,9 +7652,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.handleCallSendAnswer = this.handleCallSendAnswer.bind(this);
     this.handleCallAcceptCall = this.handleCallAcceptCall.bind(this);
     this.sendMessageToTopic = this.sendMessageToTopic.bind(this);
+
     this.callTimeoutTimer = null;
   }
-
   getBlankState() {
     const settings = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].getObject('settings') || {};
     const persist = !!_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].getObject('keep-logged-in');
@@ -7970,7 +7715,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       requestedTopic: undefined
     };
   }
-
   componentDidMount() {
     window.addEventListener('resize', this.handleResize);
     window.addEventListener('online', e => {
@@ -8006,24 +7750,25 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           if (this.state.desktopAlerts) {
             this.tinode.setDeviceToken(this.state.firebaseToken);
           }
-        }).catch(() => {});
+        }).catch(() => {
+        });
       }
 
       const parsedNav = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].parseUrlHash(window.location.hash);
+
       this.resetContactList();
       const token = this.state.persist ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].getObject('auth-token') : undefined;
-
       if (token) {
         this.setState({
           autoLogin: true
         });
+
         token.expires = new Date(token.expires);
         this.tinode.setAuthToken(token);
         this.tinode.connect().catch(err => {
           this.handleError(err.message, 'err');
         });
       }
-
       this.readTimer = null;
       this.readTimerCallback = null;
 
@@ -8038,7 +7783,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       }
     });
   }
-
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize);
     window.removeEventListener('hashchange', this.handleHashRoute);
@@ -8062,13 +7806,11 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   handlePushMessage(payload) {
     this.tinode.oobNotification(payload.data || {});
   }
-
   initFCMessaging() {
     const {
       formatMessage,
       locale
     } = this.props.intl;
-
     const onError = (msg, err) => {
       console.error(msg, err);
       this.handleError(formatMessage(messages.push_init_failed), 'err');
@@ -8080,7 +7822,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         desktopAlerts: false
       });
     };
-
     try {
       this.fcm = (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.getMessaging)((0,firebase_app__WEBPACK_IMPORTED_MODULE_2__.initializeApp)(FIREBASE_INIT, _config_js__WEBPACK_IMPORTED_MODULE_12__.APP_NAME));
       return navigator.serviceWorker.register('/service-worker.js').then(reg => {
@@ -8094,20 +7835,16 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         return TinodeWeb.requestFCMToken(this.fcm, reg);
       }).then(token => {
         const persist = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].getObject('keep-logged-in');
-
         if (token != this.state.firebaseToken) {
           this.tinode.setDeviceToken(token);
-
           if (persist) {
             _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].setObject('firebase-token', token);
           }
         }
-
         this.setState({
           firebaseToken: token,
           desktopAlerts: true
         });
-
         if (persist) {
           _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].updateObject('settings', {
             desktopAlerts: true
@@ -8154,14 +7891,12 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       }
     });
   }
-
   handleResize() {
     const mobile = document.documentElement.clientWidth <= _config_js__WEBPACK_IMPORTED_MODULE_12__.MEDIA_BREAKPOINT;
     this.setState({
       viewportWidth: document.documentElement.clientWidth,
       viewportHeight: document.documentElement.clientHeight
     });
-
     if (this.state.displayMobile != mobile) {
       this.setState({
         displayMobile: mobile
@@ -8172,7 +7907,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   checkForAppUpdate(reg) {
     reg.onupdatefound = () => {
       const installingWorker = reg.installing;
-
       installingWorker.onstatechange = () => {
         if (installingWorker.state == 'installed' && navigator.serviceWorker.controller) {
           const msg = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
@@ -8202,7 +7936,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       infoPanel: hash.params.info,
       newTopicTabSelected: hash.params.tab
     };
-
     if (hash.path && hash.path.length > 0) {
       if (['register', 'settings', 'edit', 'notif', 'security', 'support', 'general', 'crop', 'cred', 'reset', 'newtpk', 'archive', 'blocked', 'contacts', ''].includes(hash.path[0])) {
         newState.sidePanelSelected = hash.path[0];
@@ -8211,12 +7944,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       }
 
       let topicName = hash.path[1] || null;
-
       if (topicName != this.state.topicSelected) {
         if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.topicType(topicName)) {
           topicName = null;
         }
-
         Object.assign(newState, {
           topicSelected: topicName,
           topicSelectedAcs: this.tinode.getTopicAccessMode(topicName)
@@ -8232,11 +7963,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     if (hash.params.method) {
       newState.credMethod = hash.params.method;
     }
-
     if (hash.params.code) {
       newState.credCode = hash.params.code;
     }
-
     if (hash.params.token) {
       newState.credToken = hash.params.token;
     }
@@ -8244,10 +7973,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     if (hash.params.cred_done) {
       Object.assign(newState, TinodeWeb.stateForError(this.props.intl.formatMessage(messages.cred_confirmed_successfully), 'info'));
     }
-
     this.setState(newState);
   }
-
   handleOnline(online) {
     if (online) {
       this.handleError();
@@ -8256,18 +7983,15 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     } else {
       this.handleError(this.props.intl.formatMessage(messages.no_connection), 'warn');
     }
-
     this.setState({
       liveConnection: online
     });
   }
-
   handleVisibilityEvent() {
     this.setState({
       applicationVisible: !document.hidden
     });
   }
-
   static stateForError(err, level, action, actionText) {
     return {
       errorText: err,
@@ -8277,7 +8001,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       callShouldStart: false
     };
   }
-
   handleError(err, level, action, actionText) {
     this.setState(TinodeWeb.stateForError(err, level, action, actionText));
   }
@@ -8291,7 +8014,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       autoLogin: true
     });
     this.handleError('', null);
-
     if (this.tinode.isConnected()) {
       this.doLogin(login, password, null, {
         meth: this.state.credMethod,
@@ -8334,7 +8056,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.setState({
       serverVersion: params.ver + ' ' + (params.build ? params.build : 'none')
     });
-
     if (this.state.autoLogin) {
       this.doLogin(this.state.login, this.state.password, null, {
         meth: this.state.credMethod,
@@ -8345,12 +8066,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
   handleAutoreconnectIteration(sec, prom) {
     clearInterval(this.reconnectCountdown);
-
     if (sec < 0) {
       this.handleError();
       return;
     }
-
     if (prom) {
       prom.then(() => {
         this.handleError();
@@ -8359,7 +8078,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       });
       return;
     }
-
     const {
       formatMessage
     } = this.props.intl;
@@ -8390,15 +8108,12 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       serverVersion: "no connection"
     });
   }
-
   doLogin(login, password, tmpToken, cred) {
     if (this.tinode.isAuthenticated()) {
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo('');
       return;
     }
-
     let token = tmpToken || (this.tinode.getAuthToken() || {}).token;
-
     if (!(login && password) && !token) {
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo('');
       this.setState({
@@ -8410,7 +8125,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     cred = tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.credential(cred);
     let connectionPromise = this.tinode.isConnected() ? Promise.resolve() : this.tinode.connect();
     let loginPromise;
-
     if (login && password) {
       token = null;
       this.setState({
@@ -8420,17 +8134,14 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     } else {
       loginPromise = connectionPromise.then(_ => this.tinode.loginToken(token, cred));
     }
-
     loginPromise.then(ctrl => {
       if (ctrl.code >= 300 && ctrl.text === 'validate credentials') {
         this.setState({
           loadSpinnerVisible: false
         });
-
         if (cred) {
           this.handleError(this.props.intl.formatMessage(messages.code_doesnot_match), 'warn');
         }
-
         TinodeWeb.navigateToCredentialsView(ctrl.params);
       } else {
         this.handleLoginSuccessful();
@@ -8445,15 +8156,12 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       });
       this.handleError(err.message, 'err');
       console.warn("Login failed", err);
-
       if (token) {
         this.handleLogout();
       }
-
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo('');
     });
   }
-
   static navigateToCredentialsView(params) {
     const parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].parseUrlHash(window.location.hash);
     parsed.path[0] = 'cred';
@@ -8461,14 +8169,12 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     parsed.params['token'] = params.token;
     _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].composeUrlHash(parsed.path, parsed.params));
   }
-
   handleLoginSuccessful() {
     this.handleError();
 
     if (_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].getObject('keep-logged-in')) {
       _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].setObject('auth-token', this.tinode.getAuthToken());
     }
-
     const goToTopic = this.state.requestedTopic;
     const me = this.tinode.getMeTopic();
     me.onMetaDesc = this.tnMeMetaDesc;
@@ -8494,14 +8200,11 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       });
     });
     let urlHash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].setUrlSidePanel(window.location.hash, 'contacts');
-
     if (goToTopic) {
       urlHash = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].setUrlTopic(urlHash, goToTopic);
     }
-
     _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo(urlHash);
   }
-
   tnMeMetaDesc(desc) {
     if (desc) {
       if (desc.public) {
@@ -8510,21 +8213,17 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           sidePanelAvatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.makeImageUrl)(desc.public.photo)
         });
       }
-
       if (desc.trusted) {
         const badges = [];
-
         for (const [key, val] of Object.entries(desc.trusted)) {
           if (val) {
             badges.push(key);
           }
         }
-
         this.setState({
           myTrustedBadges: badges
         });
       }
-
       if (desc.acs) {
         this.setState({
           incognitoMode: !desc.acs.isPresencer()
@@ -8536,7 +8235,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   tnMeContactUpdate(what, cont) {
     if (what == 'on' || what == 'off') {
       this.resetContactList();
-
       if (this.state.topicSelected == cont.topic) {
         this.setState({
           topicSelectedOnline: what == 'on'
@@ -8550,16 +8248,16 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
       if (cont.unread > 0 && this.state.messageSounds && !archived) {
         if (document.hidden || this.state.topicSelected != cont.topic) {
-          POP_SOUND.play().catch(_ => {});
+          POP_SOUND.play().catch(_ => {
+          });
         }
       }
-
       this.resetContactList();
-    } else if (what == 'recv') {} else if (what == 'gone' || what == 'unsub') {
+    } else if (what == 'recv') {
+    } else if (what == 'gone' || what == 'unsub') {
       if (this.state.topicSelected == cont.topic) {
         this.handleTopicSelected(null);
       }
-
       this.resetContactList();
     } else if (what == 'acs') {
       if (this.state.topicSelected == cont.topic) {
@@ -8567,11 +8265,12 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           topicSelectedAcs: cont.acs
         });
       }
-    } else if (what == 'del') {} else if (what == 'upd' || what == 'call') {} else {
+    } else if (what == 'del') {
+    } else if (what == 'upd' || what == 'call') {
+    } else {
       console.info("Unsupported (yet) presence update:", what, "in", cont.topic);
     }
   }
-
   tnMeSubsUpdated(unused) {
     this.resetContactList();
   }
@@ -8596,26 +8295,20 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         merged[c.user] = c;
       }
     }
-
     return Object.values(merged);
   }
-
   resetContactList() {
     const newState = {
       chatList: []
     };
-
     if (!this.state.ready) {
       newState.ready = true;
     }
-
     this.tinode.getMeTopic().contacts(c => {
       if (!c.topic && !c.user) {
         c.topic = c.name;
       }
-
       newState.chatList.push(c);
-
       if (this.state.topicSelected == c.topic) {
         newState.topicSelectedOnline = c.online;
         newState.topicSelectedAcs = c.acs;
@@ -8625,6 +8318,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     newState.chatList.sort((a, b) => {
       return (a.touched || past).getTime() - (b.touched || past).getTime();
     });
+
     newState.searchableContacts = TinodeWeb.prepareSearchableContacts(newState.chatList, this.state.searchResults);
     this.setState(newState);
   }
@@ -8632,7 +8326,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   tnInitFind() {
     const fnd = this.tinode.getFndTopic();
     fnd.onSubsUpdated = this.tnFndSubsUpdated;
-
     if (fnd.isSubscribed()) {
       this.tnFndSubsUpdated();
     } else {
@@ -8641,7 +8334,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       });
     }
   }
-
   tnFndSubsUpdated() {
     const foundContacts = [];
     this.tinode.getFndTopic().contacts(s => {
@@ -8672,7 +8364,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         newTopicParams: null
       });
     }
-
     if (topicName) {
       this.setState({
         errorText: '',
@@ -8680,7 +8371,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         mobilePanel: 'topic-view',
         infoPanel: undefined
       });
-
       if (this.state.topicSelected != topicName) {
         this.setState({
           topicSelectedOnline: this.tinode.isTopicOnline(topicName),
@@ -8714,21 +8404,16 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     const topic = this.tinode.getTopic(this.state.topicSelected);
     return this.sendMessageToTopic(topic, msg, uploadCompletionPromise, uploader, head);
   }
-
   sendMessageToTopic(topic, msg, uploadCompletionPromise, uploader, head) {
     msg = topic.createMessage(msg, false);
     msg._uploader = uploader;
-
     if (head) {
       msg.head = Object.assign(msg.head || {}, head);
     }
-
     const completion = [];
-
     if (uploadCompletionPromise) {
       completion.push(uploadCompletionPromise);
     }
-
     if (!topic.isSubscribed()) {
       const subscribePromise = topic.subscribe().then(() => {
         let calls = [];
@@ -8736,17 +8421,14 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           if (pub._sending || pub.seq == msg.seq) {
             return;
           }
-
           if (pub.head && pub.head.webrtc) {
             calls.push(pub.seq);
             return;
           }
-
           if (topic.isSubscribed()) {
             topic.publishMessage(pub);
           }
         });
-
         if (calls.length > 0) {
           topic.delMessagesList(calls, true);
         }
@@ -8758,17 +8440,14 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       if (topic.isArchived()) {
         topic.archive(false);
       }
-
       return ctrl;
     }).catch(err => {
       this.handleError(err.message, 'err');
     });
   }
-
   handleNewChatInvitation(topicName, action) {
     const topic = this.tinode.getTopic(topicName);
     let response = null;
-
     switch (action) {
       case 'accept':
         const mode = topic.getAccessMode().getGiven();
@@ -8777,7 +8456,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
             mode: mode
           }
         });
-
         if (topic.isP2PType()) {
           response = response.then(ctrl => {
             topic.setMeta({
@@ -8788,13 +8466,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
             });
           });
         }
-
         break;
-
       case 'delete':
         response = topic.delTopic(true);
         break;
-
       case 'block':
         const am = topic.getAccessMode().updateWant('-JP').getWant();
         response = topic.setMeta({
@@ -8805,11 +8480,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           return this.handleTopicSelected(null);
         });
         break;
-
       default:
         console.warn("Unknown invitation action", '"' + action + '""');
     }
-
     if (response != null) {
       response.catch(err => {
         this.handleError(err.message, 'err');
@@ -8826,11 +8499,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.handleError();
     this.tinode.connect(this.state.serverAddress).then(_ => {
       let attachments;
-
       if (public_ && public_.photo && public_.photo.ref) {
         attachments = [public_.photo.ref];
       }
-
       return this.tinode.createAccountBasic(login_, password_, {
         public: public_,
         tags: tags_,
@@ -8847,7 +8518,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.handleError(err.message, 'err');
     });
   }
-
   handleToggleIncognitoMode(on) {
     this.setState({
       incognitoMode: null
@@ -8865,7 +8535,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.handleError(err.message, 'err');
     });
   }
-
   handleUpdateAccountTagsRequest(tags) {
     this.tinode.getMeTopic().setMeta({
       tags: tags
@@ -8883,13 +8552,11 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     const serverAddress = settings.serverAddress || this.state.serverAddress;
     const transport = settings.transport || this.state.transport;
     const secureConnection = settings.secureConnection === undefined ? this.state.secureConnection : settings.secureConnection;
-
     if (this.tinode) {
       this.tinode.clearStorage();
       this.tinode.onDisconnect = undefined;
       this.tinode.disconnect();
     }
-
     this.tinode = TinodeWeb.tnSetup(serverAddress, secureConnection, transport, this.props.intl.locale, _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].getObject('keep-logged-in'));
     this.tinode.onConnect = this.handleConnected;
     this.tinode.onDisconnect = this.handleDisconnect;
@@ -8916,20 +8583,17 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   handleShowBlocked() {
     _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].setUrlSidePanel(window.location.hash, this.state.myUserId ? 'blocked' : ''));
   }
-
   toggleFCMToken(enabled) {
     if (enabled) {
       this.setState({
         desktopAlerts: null
       });
-
       if (!this.state.firebaseToken) {
         this.initFCMessaging();
       } else {
         this.setState({
           desktopAlerts: true
         });
-
         if (_lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].getObject('keep-logged-in')) {
           _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].updateObject('settings', {
             desktopAlerts: true
@@ -8960,7 +8624,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       });
     }
   }
-
   handleToggleMessageSounds(enabled) {
     this.setState({
       messageSounds: enabled
@@ -8969,7 +8632,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       messageSoundsOff: !enabled
     });
   }
-
   handleCredAdd(method, value) {
     const me = this.tinode.getMeTopic();
     me.setMeta({
@@ -8981,14 +8643,12 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.handleError(err.message, 'err');
     });
   }
-
   handleCredDelete(method, value) {
     const me = this.tinode.getMeTopic();
     me.delCredential(method, value).catch(err => {
       this.handleError(err.message, 'err');
     });
   }
-
   handleCredConfirm(method, response) {
     TinodeWeb.navigateToCredentialsView({
       cred: [method]
@@ -8998,7 +8658,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   handleSidepanelCancel() {
     const parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].parseUrlHash(window.location.hash);
     let path = '';
-
     if (['security', 'support', 'general', 'notif'].includes(parsed.path[0])) {
       path = 'edit';
     } else if ('crop' == parsed.path[0]) {
@@ -9008,9 +8667,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     } else if (this.state.myUserId) {
       path = 'contacts';
     }
-
     parsed.path[0] = path;
-
     if (parsed.params) {
       delete parsed.params.code;
       delete parsed.params.method;
@@ -9018,7 +8675,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       delete parsed.params.scheme;
       delete parsed.params.token;
     }
-
     _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].composeUrlHash(parsed.path, parsed.params));
     this.setState({
       errorText: '',
@@ -9039,9 +8695,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.handleTopicSelected(topicName);
       return;
     }
-
     const params = {};
-
     if (tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.isP2PTopicName(topicName)) {
       params.sub = {
         mode: _config_js__WEBPACK_IMPORTED_MODULE_12__.DEFAULT_P2P_ACCESS_MODE
@@ -9053,7 +8707,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       };
     } else {
       topicName = topicName || this.tinode.newGroupTopicName(isChannel);
-
       if (newTopicParams) {
         params.desc = {
           public: newTopicParams.public,
@@ -9064,7 +8717,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         params.tags = newTopicParams.tags;
       }
     }
-
     params._topicName = topicName;
     this.setState({
       newTopicParams: params
@@ -9075,31 +8727,25 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
   handleNewTopicCreated(oldName, newName) {
     let nextState = {};
-
     if (this.state.callShouldStart) {
       nextState = {
         callState: _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_IN_PROGRESS,
         callShouldStart: false
       };
     }
-
     if (this.state.topicSelected == oldName && oldName != newName) {
       nextState.topicSelected = newName;
     }
-
     this.setState(nextState, _ => {
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].setUrlTopic('', newName));
     });
   }
-
   handleTopicUpdateRequest(topicName, pub, priv, defacs) {
     this.handleError();
     const topic = this.tinode.getTopic(topicName);
-
     if (topic) {
       const params = {};
       let attachments;
-
       if (pub) {
         if (pub.photo) {
           if (pub.photo.ref && pub.photo.ref != tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.DEL_CHAR) {
@@ -9108,20 +8754,16 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
             pub.photo = tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.DEL_CHAR;
           }
         }
-
         params.public = pub;
       }
-
       if (typeof priv == 'string') {
         params.private = priv === tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.DEL_CHAR ? tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.DEL_CHAR : {
           comment: priv
         };
       }
-
       if (defacs) {
         params.defacs = defacs;
       }
-
       topic.setMeta({
         desc: params,
         attachments: attachments
@@ -9130,33 +8772,26 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       });
     }
   }
-
   handleUnarchive(topicName) {
     const topic = this.tinode.getTopic(topicName);
-
     if (topic) {
       topic.archive(false).catch(err => {
         this.handleError(err.message, 'err');
       });
     }
   }
-
   handleUpdatePasswordRequest(password) {
     this.handleError();
-
     if (password) {
       this.tinode.updateAccountBasic(null, this.tinode.getCurrentLogin(), password).catch(err => {
         this.handleError(err.message, 'err');
       });
     }
   }
-
   handleChangePermissions(topicName, mode, uid) {
     const topic = this.tinode.getTopic(topicName);
-
     if (topic) {
       const am = topic.getAccessMode();
-
       if (uid) {
         am.updateGiven(mode);
         mode = am.getGiven();
@@ -9164,7 +8799,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         am.updateWant(mode);
         mode = am.getWant();
       }
-
       topic.setMeta({
         sub: {
           user: uid,
@@ -9175,10 +8809,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       });
     }
   }
-
   handleTagsUpdateRequest(topicName, tags) {
     const topic = this.tinode.getTopic(topicName);
-
     if (topic) {
       topic.setMeta({
         tags: tags
@@ -9187,20 +8819,17 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       });
     }
   }
-
   handleLogout() {
     (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_20__.updateFavicon)(0);
+
     localStorage.removeItem('auth-token');
     localStorage.removeItem('firebase-token');
     localStorage.removeItem('settings');
-
     if (this.state.firebaseToken) {
       (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.deleteToken)(this.fcm);
     }
-
     clearInterval(this.reconnectCountdown);
     let cleared;
-
     if (this.tinode) {
       cleared = this.tinode.clearStorage();
       this.tinode.onDisconnect = undefined;
@@ -9208,7 +8837,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     } else {
       cleared = Promose.resolve();
     }
-
     this.setState(this.getBlankState());
     cleared.then(() => {
       this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_16__.isSecureConnection)(), this.state.transport, this.props.intl.locale, _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].getObject('keep-logged-in'), () => {
@@ -9221,16 +8849,13 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       });
     });
   }
-
   handleDeleteAccount() {
     this.tinode.delCurrentUser(true).then(_ => {
       this.handleLogout();
     });
   }
-
   handleDeleteTopicRequest(topicName) {
     const topic = this.tinode.getTopic(topicName);
-
     if (!topic) {
       return;
     }
@@ -9241,10 +8866,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.handleError(err.message, 'err');
     });
   }
-
   handleDeleteMessagesRequest(topicName) {
     const topic = this.tinode.getTopic(topicName);
-
     if (!topic) {
       return;
     }
@@ -9253,50 +8876,42 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.handleError(err.message, 'err');
     });
   }
-
   handleLeaveUnsubRequest(topicName) {
     const topic = this.tinode.getTopic(topicName);
-
     if (!topic) {
       return;
     }
-
     topic.leave(true).then(ctrl => {
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].setUrlTopic(window.location.hash, ''));
     }).catch(err => {
       this.handleError(err.message, 'err');
     });
   }
-
   handleBlockTopicRequest(topicName) {
     const topic = this.tinode.getTopic(topicName);
-
     if (!topic) {
       return;
     }
-
     topic.updateMode(null, '-JP').then(_ => {
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].setUrlTopic(window.location.hash, ''));
     }).catch(err => {
       this.handleError(err.message, 'err');
     });
   }
-
   handleReportTopic(topicName) {
     const topic = this.tinode.getTopic(topicName);
-
     if (!topic) {
       return;
     }
 
     this.tinode.report('report', topicName);
+
     topic.updateMode(null, '-JP').then(ctrl => {
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].setUrlTopic(window.location.hash, ''));
     }).catch(err => {
       this.handleError(err.message, 'err');
     });
   }
-
   handleShowContextMenu(params, menuItems) {
     this.setState({
       contextMenuVisible: true,
@@ -9314,7 +8929,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     if (this.state.sidePanelSelected == 'newtpk') {
       this.handleSidepanelCancel();
     }
-
     const header = '➦ ' + params.userName;
     const content = typeof params.content == 'string' ? tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.init(params.content) : tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.forwardedContent(params.content);
     const preview = tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.preview(content, _config_js__WEBPACK_IMPORTED_MODULE_12__.FORWARDED_PREVIEW_LENGTH, true);
@@ -9332,27 +8946,22 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       }
     });
   }
-
   defaultTopicContextMenu(topicName) {
     const topic = this.tinode.getTopic(topicName);
-
     if (topic._deleted) {
       return ['topic_delete'];
     }
-
     let muted = false,
-        blocked = false,
-        self_blocked = false,
-        subscribed = false,
-        deleter = false,
-        archived = false,
-        webrtc = false;
-
+      blocked = false,
+      self_blocked = false,
+      subscribed = false,
+      deleter = false,
+      archived = false,
+      webrtc = false;
     if (topic) {
       subscribed = topic.isSubscribed();
       archived = topic.isArchived();
       const acs = topic.getAccessMode();
-
       if (acs) {
         muted = acs.isMuted();
         blocked = !acs.isJoiner();
@@ -9360,7 +8969,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         deleter = acs.isDeleter();
       }
     }
-
     webrtc = !!this.tinode.getServerParam('iceServers');
     return [subscribed ? {
       title: this.props.intl.formatMessage(messages.menu_item_info),
@@ -9370,7 +8978,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       handler: this.handleStartVideoCall
     } : null, subscribed ? 'messages_clear' : null, subscribed && deleter ? 'messages_clear_hard' : null, muted ? blocked ? null : 'topic_unmute' : 'topic_mute', self_blocked ? 'topic_unblock' : 'topic_block', archived ? 'topic_restore' : 'topic_archive', 'topic_delete'];
   }
-
   handleHideContextMenu() {
     this.setState({
       contextMenuVisible: false,
@@ -9379,14 +8986,12 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       contextMenuBounds: null
     });
   }
-
   handleHideForwardDialog(keepForwardedMessage) {
     this.setState({
       forwardDialogVisible: false,
       forwardMessage: keepForwardedMessage ? this.state.forwardMessage : null
     });
   }
-
   handleContextMenuAction(action, promise, params) {
     if (action == 'topic_archive') {
       if (promise && params.topicName && params.topicName == this.state.topicSelected) {
@@ -9398,7 +9003,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.handleShowForwardDialog(params);
     }
   }
-
   handleShowAlert(title, content, onConfirm, confirmText, onReject, rejectText) {
     this.setState({
       alertVisible: true,
@@ -9412,25 +9016,20 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       }
     });
   }
-
   handleShowInfoView() {
     _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].addUrlParam(window.location.hash, 'info', 'info'));
     this.setState({
       infoPanel: 'info'
     });
   }
-
   handleMemberUpdateRequest(topicName, added, removed) {
     if (!topicName) {
       return;
     }
-
     const topic = this.tinode.getTopic(topicName);
-
     if (!topic) {
       return;
     }
-
     if (added && added.length > 0) {
       added.map(uid => {
         topic.invite(uid, null).catch(err => {
@@ -9438,7 +9037,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         });
       });
     }
-
     if (removed && removed.length > 0) {
       removed.map(uid => {
         topic.delSubscription(uid).catch(err => {
@@ -9447,7 +9045,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       });
     }
   }
-
   handleValidateCredentialsRequest(cred, code, token) {
     if (this.tinode.isAuthenticated()) {
       this.tinode.getMeTopic().setMeta({
@@ -9470,7 +9067,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       });
     }
   }
-
   handlePasswordResetRequest(method, value) {
     return this.tinode.connect().then(() => {
       return this.tinode.requestResetAuthSecret('basic', method, value);
@@ -9478,10 +9074,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.handleError(err.message, 'err');
     });
   }
-
   handleResetPassword(scheme, newPassword, token) {
     token = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.base64ReEncode)(token);
-
     if (!token) {
       this.handleError(this.props.intl.formatMessage(messages.invalid_security_token), 'err');
     } else {
@@ -9496,14 +9090,12 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       });
     }
   }
-
   handleStartVideoCall() {
     this.setState({
       callTopic: this.state.topicSelected,
       callState: _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_OUTGOING_INITATED
     });
   }
-
   handleCallInvite(callTopic, callSeq, callState) {
     switch (callState) {
       case _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_OUTGOING_INITATED:
@@ -9515,93 +9107,69 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
             this.handleCallClose();
             return;
           }
-
           this.setState({
             callSeq: ctrl.params['seq']
           });
         });
         break;
-
       case _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_IN_PROGRESS:
         const topic = this.tinode.getTopic(callTopic);
-
         if (!topic) {
           return;
         }
-
         topic.videoCall('accept', callSeq);
         break;
     }
   }
-
   handleCallRinging(callTopic, callSeq) {
     const topic = this.tinode.getTopic(callTopic);
-
     if (!topic) {
       return;
     }
-
     topic.videoCall('ringing', callSeq);
   }
-
   handleCallHangup(callTopic, callSeq) {
     const topic = this.tinode.getTopic(callTopic);
-
     if (!topic) {
       return;
     }
-
     topic.videoCall('hang-up', callSeq);
   }
-
   handleCallSendOffer(callTopic, callSeq, sdp) {
     const topic = this.tinode.getTopic(callTopic);
-
     if (!topic) {
       return;
     }
-
     topic.videoCall('offer', callSeq, sdp);
   }
-
   handleCallIceCandidate(callTopic, callSeq, candidate) {
     const topic = this.tinode.getTopic(callTopic);
-
     if (!topic) {
       return;
     }
-
     topic.videoCall('ice-candidate', callSeq, candidate);
   }
-
   handleCallSendAnswer(callTopic, callSeq, sdp) {
     const topic = this.tinode.getTopic(callTopic);
-
     if (!topic) {
       return;
     }
-
     topic.videoCall('answer', callSeq, sdp);
   }
-
   handleCallClose() {
     if (this.callTimeoutTimer) {
       clearTimeout(this.callTimeoutTimer);
     }
-
     this.setState({
       callTopic: undefined,
       callState: _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_NONE
     });
   }
-
   handleCallAcceptCall(topicName) {
     const topic = this.tinode.getTopic(topicName);
-
     if (!topic) {
       return;
     }
-
     if (topic.isSubscribed()) {
       this.handleTopicSelected(this.state.callTopic);
       this.setState({
@@ -9613,12 +9181,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       }, () => this.handleTopicSelected(this.state.callTopic));
     }
   }
-
   handleInfoMessage(info) {
     if (info.what != 'call') {
       return;
     }
-
     switch (info.event) {
       case 'accept':
         if (tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.isMeTopicName(info.topic) && this.tinode.isMe(info.from)) {
@@ -9629,28 +9195,22 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           });
           return;
         }
-
         if (info.topic == this.state.callTopic) {
           this.setState({
             callState: _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_IN_PROGRESS
           });
         }
-
         break;
-
       case 'hang-up':
         this.handleCallClose();
         break;
     }
   }
-
   handleDataMessage(data) {
     if (data.head && data.head.webrtc && data.head.webrtc == _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_HEAD_STARTED) {
       const topic = this.tinode.getTopic(data.topic);
-
       if (topic) {
         const msg = topic.latestMsgVersion(data.seq) || data;
-
         if (msg.head && msg.head.webrtc && msg.head.webrtc == _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_HEAD_STARTED) {
           if (data.from != this.state.myUserId) {
             if (this.state.callState == _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_NONE) {
@@ -9669,7 +9229,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       }
     }
   }
-
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "app-container",
@@ -9799,7 +9358,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       viewportHeight: this.state.viewportHeight,
       hideSelf: this.state.displayMobile && (this.state.mobilePanel !== 'topic-view' || this.state.infoPanel),
       topic: this.state.topicSelected,
-      myUserId: this.state.myUserId,
+      myUserId: this.state.myUserId
+      ,
       myUserName: this.state.sidePanelTitle,
       serverVersion: this.state.serverVersion,
       serverAddress: this.state.serverAddress,
@@ -9857,9 +9417,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       showContextMenu: this.handleShowContextMenu
     }) : null);
   }
-
 }
-
 ;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(TinodeWeb));
 
@@ -9882,6 +9440,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 
 
+
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   phone: {
     id: "phone_dative",
@@ -9898,7 +9457,6 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   }
 });
-
 class ValidationView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
@@ -9911,7 +9469,6 @@ class ValidationView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
   }
-
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.credCode != prevState.codeReceived) {
       return {
@@ -9919,28 +9476,23 @@ class ValidationView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
         codeReceived: nextProps.credCode
       };
     }
-
     return prevState;
   }
-
   componentDidMount() {
     if (this.props.credCode) {
       this.props.onSubmit(this.props.credMethod, this.props.credCode, this.props.credToken);
     }
   }
-
   componentDidUpdate(prevProps, prevState) {
     if (this.state.codeReceived && this.state.code && this.state.code != prevState.code) {
       this.props.onSubmit(this.props.credMethod, this.state.code, this.props.credToken);
     }
   }
-
   handleChange(e) {
     this.setState({
       code: e.target.value.trim()
     });
   }
-
   handleKeyPress(e) {
     if (e.key === 'Enter') {
       this.handleSubmit(e);
@@ -9948,20 +9500,16 @@ class ValidationView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       this.handleCancel(e);
     }
   }
-
   handleSubmit(e) {
     e.preventDefault();
-
     if (this.state.code && this.state.code.trim()) {
       this.props.onSubmit(this.props.credMethod, this.state.code.trim(), this.props.credToken);
     }
   }
-
   handleCancel(e) {
     e.preventDefault();
     this.props.onCancel();
   }
-
   render() {
     const {
       formatMessage
@@ -10031,9 +9579,7 @@ class ValidationView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       }]
     }))));
   }
-
 }
-
 ;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(ValidationView));
 
@@ -10088,7 +9634,6 @@ class Alert extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent)
       }]
     }))))) : null;
   }
-
 }
 ;
 
@@ -10127,13 +9672,11 @@ class Attachment extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
     this.downloadFile = this.downloadFile.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
   }
-
   downloadFile(url, filename, mimetype) {
     if (!url) {
       this.props.onError("Invalid download URL '" + url + "'");
       return;
     }
-
     const downloader = this.props.tinode.getLargeFileHelper();
     this.setState({
       downloader: downloader
@@ -10153,14 +9696,12 @@ class Attachment extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
       if (err) {
         this.props.onError("Error downloading file: " + err.message, 'err');
       }
-
       this.setState({
         downloader: null,
         progress: 0
       });
     });
   }
-
   handleCancel() {
     if (this.props.uploading) {
       this.props.onCancelUpload();
@@ -10168,22 +9709,18 @@ class Attachment extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
       this.state.downloader.cancel();
     }
   }
-
   render() {
     let filename = this.props.filename || 'file_attachment';
-
     if (filename.length > 36) {
       filename = filename.substr(0, 16) + '...' + filename.substr(-16);
     }
-
     let size = this.props.size > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       className: "small gray"
     }, "(", (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__.bytesToHumanSize)(this.props.size), ")") : null;
-    let url, helperFunc;
 
+    let url, helperFunc;
     if (!this.props.uploading && !this.state.downloader && (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_4__.isUrlRelative)(this.props.downloadUrl)) {
       url = '#';
-
       helperFunc = e => {
         e.preventDefault();
         this.downloadFile(this.props.downloadUrl, this.props.filename, this.props.mimetype);
@@ -10192,7 +9729,6 @@ class Attachment extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
       url = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_4__.sanitizeUrl)(this.props.downloadUrl);
       helperFunc = null;
     }
-
     const downloadWidget = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, "file_download"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
@@ -10219,7 +9755,6 @@ class Attachment extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
       className: "light-gray"
     }, downloadWidget))));
   }
-
 }
 ;
 
@@ -10243,6 +9778,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
 const CANVAS_UPSCALING = 2.0;
 const LINE_WIDTH = 3 * CANVAS_UPSCALING;
 const SPACING = 2 * CANVAS_UPSCALING;
@@ -10254,11 +9792,9 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
   constructor(props) {
     super(props);
     let preview = (0,_lib_blob_helpers__WEBPACK_IMPORTED_MODULE_2__.base64ToIntArray)(this.props.preview);
-
     if (!Array.isArray(preview) || preview.length < MIN_PREVIEW_LENGTH) {
       preview = null;
     }
-
     this.state = {
       canPlay: false,
       playing: false,
@@ -10278,15 +9814,12 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     this.viewBuffer = [];
     this.canvasRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
   }
-
   componentDidMount() {
     if (this.props.src) {
       this.initAudio();
     }
-
     this.initCanvas();
   }
-
   componentWillUnmount() {
     if (this.audioPlayer) {
       this.audioPlayer.oncanplay = null;
@@ -10296,36 +9829,28 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       this.audioPlayer = null;
     }
   }
-
   componentDidUpdate(prevProps) {
     if (this.props.src != prevProps.src) {
       this.initAudio();
     }
-
     if (this.props.preview != prevProps.preview) {
       let preview = (0,_lib_blob_helpers__WEBPACK_IMPORTED_MODULE_2__.base64ToIntArray)(this.props.preview);
-
       if (!Array.isArray(preview) || preview.length < MIN_PREVIEW_LENGTH) {
         preview = null;
       }
-
       this.setState({
         preview: preview
       }, this.initCanvas);
     }
   }
-
   initAudio() {
     this.audioPlayer = new Audio(this.props.src);
-
     this.audioPlayer.oncanplay = _ => this.setState({
       canPlay: true
     });
-
     this.audioPlayer.ontimeupdate = _ => this.setState({
       currentTime: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(this.audioPlayer.currentTime, this.state.longMin)
     });
-
     this.audioPlayer.onended = _ => {
       this.audioPlayer.currentTime = 0;
       this.setState({
@@ -10334,7 +9859,6 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       });
     };
   }
-
   initCanvas() {
     this.canvasRef.current.width = this.canvasRef.current.offsetWidth * CANVAS_UPSCALING;
     this.canvasRef.current.height = this.canvasRef.current.offsetHeight * CANVAS_UPSCALING;
@@ -10348,42 +9872,35 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     if (!this.canvasRef.current) {
       return;
     }
-
     const width = this.effectiveWidth;
     const height = this.canvasRef.current.height;
     this.canvasContext.lineWidth = LINE_WIDTH;
-
     const drawFrame = () => {
       if (!this.canvasRef.current || !this.audioPlayer) {
         return;
       }
-
       this.canvasContext.clearRect(0, 0, this.canvasRef.current.width, height);
-
       if (this.viewBuffer) {
         if (this.state.playing) {
           window.requestAnimationFrame(drawFrame);
         }
 
         const thumbAt = this.props.duration ? Math.max(0, Math.min(this.audioPlayer.currentTime * 1000 / this.props.duration, 1)) * (width - LINE_WIDTH * 2) : -1;
+
         this.canvasContext.beginPath();
         this.canvasContext.strokeStyle = BAR_COLOR_DARK;
-
         for (let i = 0; i < this.viewBuffer.length; i++) {
           let x = 1 + i * (LINE_WIDTH + SPACING) + LINE_WIDTH * 0.5;
           let y = this.viewBuffer[i] * height * 0.9;
           const color = x < thumbAt ? BAR_COLOR_DARK : BAR_COLOR;
-
           if (this.canvasContext.strokeStyle != color) {
             this.canvasContext.stroke();
             this.canvasContext.beginPath();
             this.canvasContext.strokeStyle = color;
           }
-
           this.canvasContext.moveTo(x, (height - y) * 0.5);
           this.canvasContext.lineTo(x, height * 0.5 + y * 0.5);
         }
-
         this.canvasContext.stroke();
 
         if (this.props.duration) {
@@ -10394,55 +9911,42 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
         }
       }
     };
-
     drawFrame();
   }
 
   resampleBars(original) {
     const dstCount = (this.canvasRef.current.width - SPACING) / (LINE_WIDTH + SPACING) | 0;
     this.effectiveWidth = dstCount * (LINE_WIDTH + SPACING) + SPACING;
-
     if (!Array.isArray(original) || original.length == 0) {
       return Array.apply(null, Array(dstCount)).map(_ => 0.01);
     }
-
     const factor = original.length / dstCount;
     let amps = [];
     let maxAmp = -1;
-
     for (let i = 0; i < dstCount; i++) {
       let lo = i * factor | 0;
       let hi = (i + 1) * factor | 0;
-
       if (hi == lo) {
         amps[i] = original[lo];
       } else {
         let amp = 0.0;
-
         for (let j = lo; j < hi; j++) {
           amp += original[j];
         }
-
         amps[i] = Math.max(0, amp / (hi - lo));
       }
-
       maxAmp = Math.max(amps[i], maxAmp);
     }
-
     if (maxAmp > 0) {
       return amps.map(a => a / maxAmp);
     }
-
     return Array.apply(null, Array(dstCount)).map(_ => 0.01);
   }
-
   handlePlay(e) {
     e.preventDefault();
-
     if (!this.state.canPlay) {
       return;
     }
-
     if (this.state.playing) {
       this.audioPlayer.pause();
       this.setState({
@@ -10455,14 +9959,11 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       }, this.visualize);
     }
   }
-
   handleError(err) {
     console.error(err);
   }
-
   handleSeek(e) {
     e.preventDefault();
-
     if (e.target && this.props.duration) {
       const rect = e.target.getBoundingClientRect();
       const offset = (e.clientX - rect.left) / this.effectiveWidth * CANVAS_UPSCALING;
@@ -10470,13 +9971,11 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       this.setState({
         currentTime: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(this.audioPlayer.currentTime, this.state.longMin)
       });
-
       if (!this.state.playing) {
         this.visualize();
       }
     }
   }
-
   render() {
     const playClass = 'material-icons' + (this.props.short ? '' : ' large') + (this.state.canPlay ? '' : ' disabled');
     const play = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
@@ -10500,7 +9999,6 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       className: "timer"
     }, this.state.currentTime, "/", this.state.duration))));
   }
-
 }
 
 /***/ }),
@@ -10530,6 +10028,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
 const BUFFER_SIZE = 256;
 const CANVAS_UPSCALING = 2.0;
 const LINE_WIDTH = 3 * CANVAS_UPSCALING;
@@ -10539,6 +10040,7 @@ const BAR_COLOR = '#BBBD';
 const BAR_SCALE = 64.0;
 const VISUALIZATION_BARS = 96;
 const MAX_SAMPLES_PER_BAR = 10;
+
 const AUDIO_MIME_TYPE = 'audio/webm';
 class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
@@ -10566,7 +10068,6 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     this.viewBuffer = [];
     this.canvasRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
   }
-
   componentDidMount() {
     this.stream = null;
     this.mediaRecorder = null;
@@ -10584,10 +10085,8 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       this.props.onError(err);
     }
   }
-
   componentWillUnmount() {
     this.startedOn = null;
-
     if (this.stream) {
       this.cleanUp();
     }
@@ -10605,12 +10104,10 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     let prevBarCount = 0;
     let volume = 0.0;
     let countPerBar = 0;
-
     const drawFrame = () => {
       if (!this.startedOn) {
         return;
       }
-
       window.requestAnimationFrame(drawFrame);
       const duration = this.durationMillis + (Date.now() - this.startedOn);
       this.setState({
@@ -10630,7 +10127,6 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
 
       this.analyser.getByteTimeDomainData(pcmData);
       let amp = 0.0;
-
       for (const amplitude of pcmData) {
         amp += (amplitude - 127) ** 2;
       }
@@ -10639,34 +10135,29 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       countPerBar++;
       let barCount = duration / MILLIS_PER_BAR | 0;
       const dx = viewDuration > duration ? 0 : (duration - MILLIS_PER_BAR * barCount) / MILLIS_PER_BAR * (LINE_WIDTH + SPACING);
-
       if (prevBarCount != barCount) {
         prevBarCount = barCount;
         this.viewBuffer.push(volume / countPerBar);
         volume = 0.0;
         countPerBar = 0;
-
         if (this.viewBuffer.length > viewLength) {
           this.viewBuffer.shift();
         }
       }
 
       this.canvasContext.clearRect(0, 0, width, height);
-      this.canvasContext.beginPath();
 
+      this.canvasContext.beginPath();
       for (let i = 0; i < this.viewBuffer.length; i++) {
         let x = i * (LINE_WIDTH + SPACING) - dx;
         let y = Math.min(this.viewBuffer[i] / BAR_SCALE, 0.9) * height;
         this.canvasContext.moveTo(x, (height - y) * 0.5);
         this.canvasContext.lineTo(x, height * 0.5 + y * 0.5);
       }
-
       this.canvasContext.stroke();
     };
-
     drawFrame();
   }
-
   handlePause(e) {
     e.preventDefault();
     this.mediaRecorder.pause();
@@ -10677,10 +10168,8 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       recording: false
     });
   }
-
   handleResume(e) {
     e.preventDefault();
-
     if (this.state.enabled) {
       this.startedOn = Date.now();
       this.mediaRecorder.resume();
@@ -10689,7 +10178,6 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       }, this.visualize);
     }
   }
-
   handleDelete(e) {
     e.preventDefault();
     this.durationMillis = 0;
@@ -10700,23 +10188,19 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       recording: false
     });
   }
-
   handleDone(e) {
     e.preventDefault();
     this.setState({
       recording: false
     });
-
     if (this.startedOn) {
       this.durationMillis += Date.now() - this.startedOn;
       this.startedOn = null;
     }
-
     if (this.mediaRecorder) {
       this.mediaRecorder.stop();
     }
   }
-
   initCanvas() {
     this.canvasRef.current.width = this.canvasRef.current.offsetWidth * CANVAS_UPSCALING;
     this.canvasRef.current.height = this.canvasRef.current.offsetHeight * CANVAS_UPSCALING;
@@ -10726,33 +10210,29 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     this.canvasWidth = this.canvasRef.current.width;
     this.canvasHeight = this.canvasRef.current.height;
   }
-
   initMediaRecording(stream) {
     this.stream = stream;
     this.mediaRecorder = new MediaRecorder(stream, {
       mimeType: AUDIO_MIME_TYPE
     });
+
     this.audioContext = new AudioContext();
     this.audioInput = this.audioContext.createMediaStreamSource(stream);
     this.analyser = this.audioContext.createAnalyser();
     this.analyser.fftSize = BUFFER_SIZE;
     this.audioInput.connect(this.analyser);
-
     this.mediaRecorder.onstop = _ => {
       if (this.durationMillis > _config_js__WEBPACK_IMPORTED_MODULE_5__.MIN_DURATION) {
         this.getRecording(this.mediaRecorder.mimeType, this.durationMillis).then(result => this.props.onFinished(result.url, result.preview, this.durationMillis));
       } else {
         this.props.onDeleted();
       }
-
       this.cleanUp();
     };
-
     this.mediaRecorder.ondataavailable = e => {
       if (e.data.size > 0) {
         this.audioChunks.push(e.data);
       }
-
       if (this.mediaRecorder.state != 'inactive') {
         this.getRecording(this.mediaRecorder.mimeType).then(result => {
           this.setState({
@@ -10762,7 +10242,6 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
         });
       }
     };
-
     this.durationMillis = 0;
     this.startedOn = Date.now();
     this.mediaRecorder.start();
@@ -10791,33 +10270,26 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     const samplingRate = Math.max(1, totalSPB / MAX_SAMPLES_PER_BAR | 0);
     let buffer = [];
     let max = -1;
-
     for (let i = 0; i < viewLength; i++) {
       let amplitude = 0;
       let count = 0;
-
       for (let j = 0; j < totalSPB; j += samplingRate) {
         amplitude += data[totalSPB * i + j] ** 2;
         count++;
       }
-
       const val = Math.sqrt(amplitude / count);
       buffer.push(val);
       max = Math.max(max, val);
     }
-
     if (max > 0) {
       buffer = buffer.map(a => 100 * a / max | 0);
     }
-
     return buffer;
   }
-
   cleanUp() {
     this.audioInput.disconnect();
     this.stream.getTracks().forEach(track => track.stop());
   }
-
   render() {
     const resumeClass = 'material-icons ' + (this.state.enabled ? 'red' : 'gray');
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -10857,7 +10329,6 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       className: "material-icons"
     }, "send")));
   }
-
 }
 
 /***/ }),
@@ -10879,6 +10350,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _cropper_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./cropper.jsx */ "./src/widgets/cropper.jsx");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+
 
 
 
@@ -10906,7 +10378,6 @@ class AvatarCrop extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
       scale: scale
     });
   }
-
   handleSubmit() {
     (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__.imageCrop)(this.props.mime, this.props.avatar, this.state.left, this.state.top, this.state.width, this.state.height, this.state.scale).then(img => {
       this.props.onSubmit(img.mime, img.blob, img.width, img.height);
@@ -10914,7 +10385,6 @@ class AvatarCrop extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
       this.props.onError(err);
     });
   }
-
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form"
@@ -10945,7 +10415,6 @@ class AvatarCrop extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
       }]
     }))));
   }
-
 }
 ;
 
@@ -10981,7 +10450,6 @@ class AvatarUpload extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     };
     this.handleFileReceived = this.handleFileReceived.bind(this);
   }
-
   componentDidUpdate(prevProps) {
     if (this.props.avatar != prevProps.avatar) {
       this.setState({
@@ -10989,13 +10457,11 @@ class AvatarUpload extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       });
     }
   }
-
   handleFileReceived(e) {
     const image = e.target.files[0];
     this.props.onImageUpdated(image.type, URL.createObjectURL(image), image.name);
     e.target.value = '';
   }
-
   render() {
     const randId = 'file-input-avatar-' + ('' + Math.random()).substring(0, 4);
     const className = 'avatar-upload' + (this.props.readOnly ? ' read-only' : '');
@@ -11040,7 +10506,6 @@ class AvatarUpload extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       centered: true
     }));
   }
-
 }
 ;
 
@@ -11096,7 +10561,6 @@ class BadgeList extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       formatMessage
     } = this.props.intl;
     let badges = null;
-
     if (this.props.trustedBadges && this.props.trustedBadges.length > 0) {
       badges = [];
       this.props.trustedBadges.map(b => {
@@ -11111,12 +10575,9 @@ class BadgeList extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       });
       return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, badges);
     }
-
     return null;
   }
-
 }
-
 ;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(BadgeList));
 
@@ -11136,6 +10597,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
+
 class ButtonBack extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
@@ -11148,7 +10610,6 @@ class ButtonBack extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
       className: "material-icons"
     }, "arrow_back"));
   }
-
 }
 
 /***/ }),
@@ -11179,6 +10640,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 const RING_SOUND = new Audio('audio/call-in.m4a');
 class CallIncoming extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
@@ -11196,16 +10658,12 @@ class CallIncoming extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.handleAcceptCall = this.handleAcceptCall.bind(this);
     this.ringTimer = null;
   }
-
   componentDidMount() {
     const topic = this.props.tinode.getTopic(this.props.topic);
-
     if (!topic) {
       return;
     }
-
     this.resetDesc(topic, this.props);
-
     if (this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_INCOMING_RECEIVED) {
       RING_SOUND.play().catch(_ => {});
       this.ringTimer = setInterval(_ => {
@@ -11217,16 +10675,13 @@ class CallIncoming extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
   componentDidUpdate(props) {
     const topic = this.props.tinode.getTopic(props.topic);
-
     if (!topic) {
       return;
     }
-
     if (this.onMetaDesc != topic.onMetaDesc) {
       this.previousMetaDesc = topic.onMetaDesc;
       topic.onMetaDesc = this.onMetaDesc;
     }
-
     if (this.state.topic != props.topic) {
       this.setState({
         topic: props.topic
@@ -11234,30 +10689,24 @@ class CallIncoming extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       this.resetDesc(topic, props);
     }
   }
-
   componentWillUnmount() {
     if (this.ringTimer != null) {
       clearInterval(this.ringTimer);
       RING_SOUND.pause();
     }
-
     const topic = this.props.tinode.getTopic(this.props.topic);
-
     if (!topic) {
       return;
     }
-
     this.setState({
       topic: null
     });
     topic.onMetaDesc = this.previousMetaDesc;
   }
-
   resetDesc(topic, props) {
     const defacs = topic.getDefaultAccess() || {};
     const acs = topic.getAccessMode();
     const badges = [];
-
     if (topic.trusted) {
       for (const [key, val] of Object.entries(topic.trusted)) {
         if (val) {
@@ -11265,37 +10714,29 @@ class CallIncoming extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         }
       }
     }
-
     this.setState({
       fullName: (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__.clipStr)(topic.public ? topic.public.fn : undefined, _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_TITLE_LENGTH),
       avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__.makeImageUrl)(topic.public ? topic.public.photo : null),
       trustedBadges: badges
     });
   }
-
   onMetaDesc(desc) {
     const topic = this.props.tinode.getTopic(this.props.topic);
-
     if (!topic) {
       return;
     }
-
     this.resetDesc(topic, this.props);
-
     if (this.previousMetaDesc && this.previousMetaDesc != this.onMetaDesc) {
       this.previousMetaDesc(desc);
     }
   }
-
   handleAcceptCall() {
     this.props.onAcceptCall(this.props.topic);
   }
-
   handleRejectCall() {
     this.props.onReject(this.props.topic, this.props.seq);
     this.props.onClose();
   }
-
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "alert-container"
@@ -11329,7 +10770,6 @@ class CallIncoming extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       className: "material-icons"
     }, "call"))) : null)));
   }
-
 }
 ;
 
@@ -11354,13 +10794,14 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
 class CallMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
     const isCallDropped = ['declined', 'disconnected', 'missed'].includes(this.props.callState);
     const successClass = 'material-icons medium ' + (isCallDropped ? 'red' : 'green');
     const callIcon = this.props.incoming ? isCallDropped ? 'call_missed' : 'call_received' : isCallDropped ? 'call_missed_outgoing' : 'call_made';
     let duration;
-
     if (isCallDropped) {
       switch (this.props.callState) {
         case 'declined':
@@ -11372,7 +10813,6 @@ class CallMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
             }]
           });
           break;
-
         case 'missed':
           duration = this.props.incoming ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
             id: "call_missed",
@@ -11388,7 +10828,6 @@ class CallMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
             }]
           });
           break;
-
         default:
           duration = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
             id: "call_disconnected",
@@ -11402,7 +10841,6 @@ class CallMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     } else {
       duration = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__.secondsToTime)(this.props.duration / 1000));
     }
-
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "call-message"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
@@ -11427,7 +10865,6 @@ class CallMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       className: successClass
     }, callIcon), " ", duration)));
   }
-
 }
 
 /***/ }),
@@ -11457,6 +10894,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 const RING_SOUND = new Audio('audio/call-out.m4a');
 RING_SOUND.loop = true;
 const CALL_ENDED_SOUND = new Audio('audio/call-end.m4a');
@@ -11471,7 +10909,6 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   }
 });
-
 class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
@@ -11517,23 +10954,19 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     this.handleRemoteHangup = this.handleRemoteHangup.bind(this);
     this.handleVideoCallAccepted = this.handleVideoCallAccepted.bind(this);
   }
-
   componentDidMount() {
     const topic = this.props.tinode.getTopic(this.props.topic);
     this.previousOnInfo = topic.onInfo;
     topic.onInfo = this.onInfo;
-
     if ((this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_OUTGOING_INITATED || this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_IN_PROGRESS) && this.localRef.current) {
       this.start();
     }
   }
-
   componentWillUnmount() {
     const topic = this.props.tinode.getTopic(this.props.topic);
     topic.onInfo = this.previousOnInfo;
     this.stop();
   }
-
   handleVideoCallAccepted(info) {
     RING_SOUND.pause();
     const pc = this.createPeerConnection();
@@ -11542,49 +10975,39 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       pc.addTrack(track, stream);
     });
   }
-
   onInfo(info) {
     if (info.what != 'call') {
       return;
     }
-
     switch (info.event) {
       case 'accept':
         this.handleVideoCallAccepted(info);
         break;
-
       case 'answer':
         this.handleVideoAnswerMsg(info);
         break;
-
       case 'ice-candidate':
         this.handleNewICECandidateMsg(info);
         break;
-
       case 'hang-up':
         this.handleRemoteHangup(info);
         break;
-
       case 'offer':
         this.handleVideoOfferMsg(info);
         break;
-
       case 'ringing':
         RING_SOUND.play().catch(_ => {});
         break;
-
       default:
         console.warn("Unknown call event", info.event);
         break;
     }
   }
-
   start() {
     if (this.state.localStream) {
       this.props.onError(this.props.intl.formatMessage(messages.already_in_call));
       return;
     }
-
     if (this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_IN_PROGRESS) {
       this.props.onInvite(this.props.topic, this.props.seq, this.props.callState);
       return;
@@ -11597,10 +11020,10 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       });
       this.localRef.current.srcObject = stream;
       DIALING_SOUND.play();
+
       this.props.onInvite(this.props.topic, this.props.seq, this.props.callState);
     }).catch(this.handleGetUserMediaError);
   }
-
   stop() {
     CALL_ENDED_SOUND.pause();
     CALL_ENDED_SOUND.currentTime = 0;
@@ -11608,7 +11031,6 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     RING_SOUND.currentTime = 0;
     this.stopTracks(this.localRef.current);
     this.stopTracks(this.remoteRef.current);
-
     if (this.state.pc) {
       this.state.pc.ontrack = null;
       this.state.pc.onremovetrack = null;
@@ -11621,37 +11043,29 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       this.state.pc.onicecandidateerror = null;
       this.state.pc.close();
     }
-
     this.setState({
       pc: null,
       waitingForPeer: false
     });
   }
-
   stopTracks(el) {
     if (!el) {
       return;
     }
-
     let stream = el.srcObject;
-
     if (!stream) {
       return;
     }
-
     let tracks = stream.getTracks();
-
     if (tracks) {
       tracks.forEach(track => {
         track.stop();
         track.enabled = false;
       });
     }
-
     el.srcObject = null;
     el.src = '';
   }
-
   createPeerConnection() {
     const iceServers = this.props.tinode.getServerParam('iceServers', null);
     const pc = iceServers ? new RTCPeerConnection({
@@ -11670,7 +11084,6 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     });
     return pc;
   }
-
   handleVideoAnswerMsg(info) {
     const desc = new RTCSessionDescription(info.payload);
     this.state.pc.setRemoteDescription(desc).then(_ => {
@@ -11679,54 +11092,44 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       }, () => this.drainRemoteIceCandidatesCache());
     }).catch(this.reportError);
   }
-
   reportError(err) {
     this.props.onError(err.message, 'err');
   }
-
   canSendOffer() {
     return this.isOutgoingCall || this.state.callInitialSetupComplete;
   }
-
   handleNegotiationNeededEvent() {
     if (!this.canSendOffer()) {
       return;
     }
-
     this.state.pc.createOffer().then(offer => {
       return this.state.pc.setLocalDescription(offer);
     }).then(_ => {
       this.props.onSendOffer(this.props.topic, this.props.seq, this.state.pc.localDescription.toJSON());
     }).catch(this.reportError);
   }
-
   handleIceCandidateErrorEvent(event) {
     console.warn("ICE candidate error:", event);
   }
-
   handleICECandidateEvent(event) {
     if (event.candidate) {
       this.props.onIceCandidate(this.props.topic, this.props.seq, event.candidate.toJSON());
     }
   }
-
   handleNewICECandidateMsg(info) {
     const candidate = new RTCIceCandidate(info.payload);
-
     if (this.state.callInitialSetupComplete) {
       this.state.pc.addIceCandidate(candidate).catch(this.reportError);
     } else {
       this.remoteIceCandidatesCache.push(candidate);
     }
   }
-
   drainRemoteIceCandidatesCache() {
     this.remoteIceCandidatesCache.forEach(candidate => {
       this.state.pc.addIceCandidate(candidate).catch(this.reportError);
     });
     this.remoteIceCandidatesCache = [];
   }
-
   handleICEConnectionStateChangeEvent(event) {
     switch (this.state.pc.iceConnectionState) {
       case 'closed':
@@ -11735,30 +11138,25 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
         break;
     }
   }
-
   handleSignalingStateChangeEvent(event) {
     if (this.state.pc.signalingState == 'closed') {
       this.handleCloseClick();
     }
   }
-
-  handleICEGatheringStateChangeEvent(event) {}
-
+  handleICEGatheringStateChangeEvent(event) {
+  }
   handleTrackEvent(event) {
     this.remoteRef.current.srcObject = event.streams[0];
     this.forceUpdate();
   }
-
   handleGetUserMediaError(e) {
     switch (e.name) {
       case 'NotFoundError':
         this.reportError(e.message);
         break;
-
       case 'SecurityError':
       case 'PermissionDeniedError':
         break;
-
       default:
         this.reportError(e.message);
         console.error("Error opening your camera and/or microphone:", e.message);
@@ -11767,7 +11165,6 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
 
     this.handleCloseClick();
   }
-
   handleVideoOfferMsg(info) {
     let localStream = null;
     const pc = this.createPeerConnection();
@@ -11811,7 +11208,6 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       }, 2000);
     }
   }
-
   handleCloseClick() {
     this.stop();
     this.props.onHangup(this.props.topic, this.props.seq);
@@ -11823,20 +11219,16 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       if (track.kind != kind) {
         return;
       }
-
       track.enabled = !track.enabled;
     });
     this.forceUpdate();
   }
-
   handleToggleCameraClick() {
     this.toggleMedia('video');
   }
-
   handleToggleMicClick() {
     this.toggleMedia('audio');
   }
-
   render() {
     const remoteActive = this.remoteRef.current && this.remoteRef.current.srcObject;
     const disabled = !(this.state.localStream && this.state.localStream.getTracks());
@@ -11903,9 +11295,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       className: "material-icons"
     }, audioIcon)))));
   }
-
 }
-
 ;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(CallPanel));
 
@@ -11930,12 +11320,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
 class CallStatus extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
     const isCallDropped = ['declined', 'disconnected', 'missed'].includes(this.props.callState);
     const icon2 = this.props.incoming ? isCallDropped ? 'call_missed' : 'call_received' : isCallDropped ? 'call_missed_outgoing' : 'call_made';
     let duration;
-
     if (isCallDropped) {
       switch (this.props.callState) {
         case 'declined':
@@ -11947,7 +11338,6 @@ class CallStatus extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
             }]
           });
           break;
-
         case 'missed':
           duration = this.props.incoming ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
             id: "call_missed",
@@ -11963,7 +11353,6 @@ class CallStatus extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
             }]
           });
           break;
-
         default:
           duration = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
             id: "call_disconnected",
@@ -11977,7 +11366,6 @@ class CallStatus extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
     } else {
       duration = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__.secondsToTime)(this.props.duration / 1000));
     }
-
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "composed-material"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
@@ -11986,7 +11374,6 @@ class CallStatus extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
       className: "material-icons second"
     }, icon2)), " ", duration);
   }
-
 }
 ;
 
@@ -12024,18 +11411,15 @@ function _extends() { _extends = Object.assign ? Object.assign.bind() : function
 
 
 
-
 class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
     this.state = {
       progress: 0
     };
-
     if (props.uploader) {
       props.uploader.onProgress = this.handleProgress.bind(this);
     }
-
     this.handleImagePreview = this.handleImagePreview.bind(this);
     this.handleFormButtonClick = this.handleFormButtonClick.bind(this);
     this.handleContextClick = this.handleContextClick.bind(this);
@@ -12050,7 +11434,6 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       onQuoteClick: this.handleQuoteClick
     };
   }
-
   handleImagePreview(e) {
     e.preventDefault();
     this.props.onImagePreview({
@@ -12062,39 +11445,31 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       type: e.target.dataset.mime
     });
   }
-
   handleFormButtonClick(e) {
     e.preventDefault();
     const data = {
       seq: this.props.seq
     };
     data.resp = {};
-
     if (e.target.dataset.name) {
       data.resp[e.target.dataset.name] = e.target.dataset.val ? e.target.dataset.val : e.target.dataset.val === undefined ? 1 : '' + e.target.dataset.val;
     }
-
     if (e.target.dataset.act == 'url') {
       data.ref = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_7__.sanitizeUrl)(e.target.dataset.ref) || 'about:blank';
     }
-
     const text = e.target.dataset.title || 'unknown';
     this.props.onFormResponse(e.target.dataset.act, text, data);
   }
-
   handleContextClick(e) {
     e.preventDefault();
     e.stopPropagation();
     const menuItems = [];
-
     if (this.props.received == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_FAILED) {
       menuItems.push('menu_item_send_retry');
     }
-
     if (this.props.userIsWriter && this.props.received > tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_FAILED && this.props.received < tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_DEL_RANGE) {
       menuItems.push('menu_item_reply');
     }
-
     menuItems.push('menu_item_forward');
     this.props.showContextMenu({
       seq: this.props.seq,
@@ -12106,27 +11481,22 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       pickReply: this.props.pickReply
     }, menuItems);
   }
-
   handleProgress(ratio) {
     this.setState({
       progress: ratio
     });
   }
-
   handleCancelUpload() {
     this.props.onCancelUpload(this.props.seq, this.props.uploader);
   }
-
   handleQuoteClick(e) {
     e.preventDefault();
     e.stopPropagation();
     const replyToSeq = this.props.replyToSeq;
-
     if (replyToSeq) {
       this.props.onQuoteClick(replyToSeq);
     }
   }
-
   render() {
     const sideClass = this.props.sequence + ' ' + (this.props.response ? 'left' : 'right');
     const bubbleClass = this.props.sequence == 'single' || this.props.sequence == 'last' ? 'bubble tip' : 'bubble';
@@ -12134,13 +11504,11 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     const fullDisplay = this.props.isGroup && this.props.response && (this.props.sequence == 'single' || this.props.sequence == 'last');
     let content = this.props.content;
     const attachments = [];
-
     if (this.props.mimeType == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.getContentType() && tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isValid(content)) {
       tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachments(content, (att, i) => {
         if (att.mime == 'application/json') {
           return;
         }
-
         attachments.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_attachment_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
           tinode: this.props.tinode,
           downloadUrl: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.getDownloadUrl(att),
@@ -12181,7 +11549,6 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
         }]
       })));
     }
-
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
       ref: this.props.innerRef,
       className: sideClass
@@ -12218,9 +11585,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       }]
     }))) : null));
   }
-
 }
-
 ;
 const IntlChatMessage = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(BaseChatMessage);
 const ChatMessage = react__WEBPACK_IMPORTED_MODULE_0___default().forwardRef((props, ref) => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(IntlChatMessage, _extends({
@@ -12244,26 +11609,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
+
 class CheckBox extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
   }
-
   handleChange() {
     this.props.onChange(this.props.name, !this.props.checked);
   }
-
   render() {
     let classList = ['material-icons'];
     let iconName;
-
     if (Array.isArray(this.props.className)) {
       classList.push(...this.props.className);
     } else if (this.props.className) {
       classList.push(this.props.className);
     }
-
     if (this.props.onChange) {
       if (this.props.checked) {
         classList.push('blue', 'clickable');
@@ -12282,19 +11644,15 @@ class CheckBox extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompone
         iconName = 'check_box_outline_blank';
       }
     }
-
     let attrs = {
       className: classList.join(' '),
       id: this.props.id
     };
-
     if (this.props.onChange) {
       attrs.onClick = this.handleChange;
     }
-
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement('i', attrs, iconName);
   }
-
 }
 
 /***/ }),
@@ -12317,6 +11675,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 class ChipInput extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
@@ -12330,7 +11689,6 @@ class ChipInput extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.handleFocusLost = this.handleFocusLost.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
   }
-
   static deriveStateFromProps(props) {
     return {
       placeholder: props.chips ? '' : props.prompt,
@@ -12338,12 +11696,10 @@ class ChipInput extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       chipIndex: ChipInput.indexChips(props.chips)
     };
   }
-
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.chips != this.props.chips || prevProps.staticMembers != this.props.staticMembers || prevProps.prompt != this.props.prompt) {
       this.setState(ChipInput.deriveStateFromProps(this.props));
     }
-
     if (!prevState || this.props.chips.length > prevState.sortedChips.length) {
       this.setState({
         input: ''
@@ -12373,47 +11729,38 @@ class ChipInput extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     });
     return required.concat(normal);
   }
-
   handleTextInput(e) {
     this.setState({
       input: e.target.value
     });
-
     if (this.props.filterFunc) {
       this.props.filterFunc(e.target.value);
     }
   }
-
   removeChipAt(idx) {
     const removed = this.state.sortedChips[idx];
     this.props.onChipRemoved(removed.user, this.state.chipIndex[removed.user]);
   }
-
   handleChipCancel(item, idx) {
     this.removeChipAt(idx);
   }
-
   handleFocusGained() {
     this.setState({
       focused: true
     });
   }
-
   handleFocusLost() {
     this.setState({
       focused: false
     });
-
     if (this.props.onFocusLost) {
       this.props.onFocusLost(this.state.input);
     }
   }
-
   handleKeyDown(e) {
     if (e.key === 'Backspace') {
       if (this.state.input.length == 0 && this.state.sortedChips.length > 0) {
         const at = this.state.sortedChips.length - 1;
-
         if (this.state.sortedChips[at].user !== this.props.staticMembers) {
           this.removeChipAt(at);
         }
@@ -12428,7 +11775,6 @@ class ChipInput extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       }
     }
   }
-
   render() {
     const chips = [];
     let count = 0;
@@ -12464,7 +11810,6 @@ class ChipInput extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       autoFocus: autoFocus
     }));
   }
-
 }
 ;
 
@@ -12491,12 +11836,10 @@ class Chip extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) 
     super(props);
     this.handleCancel = this.handleCancel.bind(this);
   }
-
   handleCancel(e) {
     e.preventDefault();
     this.props.onCancel(this.props.topic, this.props.index);
   }
-
   render() {
     const title = this.props.title || this.props.topic;
     const className = this.props.invalid ? 'chip invalid' : 'chip';
@@ -12518,7 +11861,6 @@ class Chip extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) 
       className: "spacer"
     }));
   }
-
 }
 ;
 
@@ -12547,13 +11889,11 @@ class ContactAction extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     super(props);
     this.handleClick = this.handleClick.bind(this);
   }
-
   handleClick(e) {
     e.preventDefault();
     e.stopPropagation();
     this.props.onAction(this.props.action);
   }
-
   render() {
     const {
       formatMessage
@@ -12565,9 +11905,7 @@ class ContactAction extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       className: "action-text"
     }, formatMessage(this.props.title, this.props.values)));
   }
-
 }
-
 ;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(ContactAction));
 
@@ -12592,15 +11930,14 @@ const icon_mapping = {
   'banned': 'block',
   'staff': 'verified_user'
 };
+
 class ContactBadges extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
     let badges = null;
-
     if (this.props.badges && this.props.badges.length > 0) {
       badges = [];
       this.props.badges.map(b => {
         const color = b.color ? ' ' + b.color : '';
-
         if (b.icon) {
           badges.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
             className: 'material-icons as-badge' + color,
@@ -12615,10 +11952,8 @@ class ContactBadges extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       });
       return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, badges);
     }
-
     return null;
   }
-
 }
 ;
 
@@ -12652,6 +11987,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   badge_you: {
     id: "badge_you",
@@ -12668,7 +12004,6 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   }
 });
-
 class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   render() {
     const {
@@ -12677,7 +12012,6 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     const showCheckmark = Array.isArray(this.props.topicSelected);
     const contactNodes = [];
     let contactsCount = 0;
-
     if (this.props.contacts && this.props.contacts.length > 0) {
       this.props.contacts.map(c => {
         if (c.action) {
@@ -12690,27 +12024,21 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
           }));
         } else {
           const key = this.props.showMode ? c.user : c.topic || c.user;
-
           if (this.props.filterFunc && this.props.filter) {
             const filterOn = [key];
-
             if (c.private && c.private.comment) {
               filterOn.push(('' + c.private.comment).toLowerCase());
             }
-
             if (c.public && c.public.fn) {
               filterOn.push(('' + c.public.fn).toLowerCase());
             }
-
             if (!this.props.filterFunc(this.props.filter, filterOn)) {
               return;
             }
           }
-
           const isChannel = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isChannelTopicName(key);
           const selected = showCheckmark ? this.props.topicSelected.indexOf(key) > -1 : this.props.topicSelected === key;
           const badges = [];
-
           if (this.props.showMode) {
             if (key == this.props.myUserId) {
               badges.push({
@@ -12718,7 +12046,6 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
                 color: 'green'
               });
             }
-
             if (c.acs && c.acs.isOwner()) {
               badges.push({
                 name: formatMessage(messages.badge_owner),
@@ -12726,27 +12053,22 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
               });
             }
           }
-
           const comment = Array.isArray(c.private) ? c.private.join(',') : c.private ? c.private.comment : null;
           let preview;
           let forwarded;
           let previewIsResponse;
           let deliveryStatus;
-
           if (!this.props.showMode && c.latestMessage) {
             const msg = c.latestMessage(true);
-
             if (msg) {
               forwarded = msg.head ? msg.head.forwarded : null;
               deliveryStatus = msg._status || c.msgStatus(msg, true);
               previewIsResponse = msg.from != this.props.myUserId;
-
               if (msg.content) {
                 preview = typeof msg.content == 'string' ? msg.content.substr(0, _config_js__WEBPACK_IMPORTED_MODULE_6__.MESSAGE_PREVIEW_LENGTH) : tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.preview(msg.content, _config_js__WEBPACK_IMPORTED_MODULE_6__.MESSAGE_PREVIEW_LENGTH);
               }
             }
           }
-
           contactNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_contact_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
             tinode: this.props.tinode,
             title: c.public ? c.public.fn : null,
@@ -12779,7 +12101,6 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         }
       }, this);
     }
-
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: this.props.noScroll ? null : "scrollable-panel"
     }, contactsCount == 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -12791,9 +12112,7 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       className: "contact-box"
     }, contactNodes) : null);
   }
-
 }
-
 ;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(ContactList));
 
@@ -12836,16 +12155,13 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
     this.handleClick = this.handleClick.bind(this);
     this.handleContextClick = this.handleContextClick.bind(this);
   }
-
   handleClick(e) {
     e.preventDefault();
     e.stopPropagation();
-
     if (this.props.onSelected) {
       this.props.onSelected(this.props.item, this.props.index);
     }
   }
-
   handleContextClick(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -12855,10 +12171,8 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       x: e.pageX
     });
   }
-
   render() {
     let title = this.props.title;
-
     if (!title) {
       title = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
         id: "unnamed_topic",
@@ -12870,33 +12184,28 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
     } else if (title.length > 30) {
       title = title.substring(0, 28) + '…';
     }
-
     const online = this.props.now ? 'online' : 'offline';
     const avatar = this.props.avatar ? this.props.avatar : true;
     const badges = this.props.badges ? this.props.badges.slice() : [];
     const icon_badges = [];
-
     if (this.props.isVerified) {
       icon_badges.push({
         icon: 'verified',
         color: 'verified-color'
       });
     }
-
     if (this.props.isStaff) {
       icon_badges.push({
         icon: 'staff',
         color: 'staff-color'
       });
     }
-
     if (this.props.isDangerous) {
       icon_badges.push({
         icon: 'dangerous',
         color: 'danger-color'
       });
     }
-
     if (this.props.acs) {
       if (this.props.showMode) {
         badges.push({
@@ -12904,13 +12213,11 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
           key: 'mode'
         });
       }
-
       if (this.props.acs.isMuted()) {
         icon_badges.push({
           icon: 'muted'
         });
       }
-
       if (!this.props.acs.isJoiner()) {
         icon_badges.push({
           icon: 'banned'
@@ -12919,7 +12226,6 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
     }
 
     let preview;
-
     if (typeof this.props.preview == 'string') {
       preview = this.props.preview;
     } else if (tinode_sdk__WEBPACK_IMPORTED_MODULE_5__.Drafty.isValid(this.props.preview)) {
@@ -12940,7 +12246,6 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
         }]
       })));
     }
-
     const icon = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_7__.deliveryMarker)(this.props.received);
     const marker = icon ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: 'material-icons small space-right' + (icon.color ? ' ' + icon.color : '')
@@ -12988,9 +12293,7 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       className: "material-icons"
     }, "expand_more"))) : null);
   }
-
 }
-
 ;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(Contact));
 
@@ -13012,6 +12315,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+
 
 
 
@@ -13164,7 +12468,6 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   }
 });
-
 class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
@@ -13175,6 +12478,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     this.handlePageClick = this.handlePageClick.bind(this);
     this.handleEscapeKey = this.handleEscapeKey.bind(this);
     this.handleClick = this.handleClick.bind(this);
+
     this.MenuItems = {
       'topic_info': {
         id: 'topic_info',
@@ -13185,20 +12489,31 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         id: 'messages_clear',
         title: formatMessage(messages.clear_messages),
         handler: (params, errorHandler) => {
-          return props.onShowAlert(formatMessage(messages.clear_messages), formatMessage(messages.clear_messages_warning), _ => {
+          return props.onShowAlert(formatMessage(messages.clear_messages),
+          formatMessage(messages.clear_messages_warning),
+          _ => {
             this.deleteMessages(true, false, params, errorHandler);
-          }, null, true, null);
+          },
+          null,
+          true,
+          null);
         }
       },
+
       'messages_clear_hard': {
         id: 'messages_clear_hard',
         title: formatMessage(messages.clear_for_all),
         handler: (params, errorHandler) => {
-          return props.onShowAlert(formatMessage(messages.clear_for_all), formatMessage(messages.delete_messages_warning), _ => {
+          return props.onShowAlert(formatMessage(messages.clear_for_all),
+          formatMessage(messages.delete_messages_warning),
+          _ => {
             return this.deleteMessages(true, true, params, errorHandler);
-          }, null, true, null);
+          }, null,
+          true,
+          null);
         }
       },
+
       'message_delete': {
         id: 'message_delete',
         title: formatMessage(messages.delete),
@@ -13232,6 +12547,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         title: formatMessage(messages.forward),
         handler: () => {}
       },
+
       'topic_unmute': {
         id: 'topic_unmute',
         title: formatMessage(messages.unmute),
@@ -13251,45 +12567,51 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         id: 'topic_block',
         title: formatMessage(messages.block),
         handler: (params, errorHandler) => {
-          return props.onShowAlert(formatMessage(messages.block), formatMessage(messages.topic_block_warning), () => {
+          return props.onShowAlert(formatMessage(messages.block),
+          formatMessage(messages.topic_block_warning),
+          () => {
             return this.topicPermissionSetter('-JP', params, errorHandler).then(ctrl => {
               this.props.onTopicRemoved(params.topicName);
               return ctrl;
             });
-          }, null, true, null);
+          }, null,
+          true,
+          null);
         }
       },
+
       'topic_delete': {
         id: 'topic_delete',
         title: formatMessage(messages.topic_delete),
         handler: (params, errorHandler) => {
-          return props.onShowAlert(formatMessage(messages.topic_delete), formatMessage(messages.topic_delete_warning), () => {
+          return props.onShowAlert(formatMessage(messages.topic_delete),
+          formatMessage(messages.topic_delete_warning),
+          () => {
             const topic = this.props.tinode.getTopic(params.topicName);
-
             if (!topic) {
               console.warn("Topic not found: ", params.topicName);
               return;
             }
-
             return topic.delTopic(true).catch(err => {
               if (errorHandler) {
                 errorHandler(err.message, 'err');
               }
             });
-          }, null, true, null);
+          }, null,
+          true,
+          null);
         }
       },
+
       'topic_archive': {
         id: 'topic_archive',
         title: formatMessage(messages.archive),
         handler: (params, errorHandler) => {
           const topic = this.props.tinode.getTopic(params.topicName);
-
           if (!topic) {
             console.warn("Topic not found: ", params.topicName);
             return;
           }
-
           return topic.archive(true).catch(err => {
             if (errorHandler) {
               errorHandler(err.message, 'err');
@@ -13302,12 +12624,10 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         title: formatMessage(messages.unarchive),
         handler: (params, errorHandler) => {
           const topic = this.props.tinode.getTopic(params.topicName);
-
           if (!topic) {
             console.warn("Topic not found: ", params.topicName);
             return;
           }
-
           return topic.archive(false).catch(err => {
             if (errorHandler) {
               errorHandler(err.message, 'err');
@@ -13325,12 +12645,10 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         title: formatMessage(messages.member_delete),
         handler: (params, errorHandler) => {
           const topic = this.props.tinode.getTopic(params.topicName);
-
           if (!topic || !params.user) {
             console.warn("Topic or user not found: '" + params.topicName + "', '" + params.user + "'");
             return;
           }
-
           return topic.delSubscription(params.user).catch(err => {
             if (errorHandler) {
               errorHandler(err.message, 'err');
@@ -13360,43 +12678,35 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       }
     };
   }
-
   componentDidMount() {
     document.addEventListener('mousedown', this.handlePageClick, false);
     document.addEventListener('keyup', this.handleEscapeKey, false);
   }
-
   componentWillUnmount() {
     document.removeEventListener('mousedown', this.handlePageClick, false);
     document.removeEventListener('keyup', this.handleEscapeKey, false);
   }
-
   handlePageClick(e) {
     if (this.selfRef.current.contains(e.target)) {
       return;
     }
-
     e.preventDefault();
     e.stopPropagation();
     this.props.hide();
   }
-
   handleEscapeKey(e) {
     if (e.keyCode === 27) {
       this.props.hide();
     }
   }
-
   handleClick(e) {
     e.preventDefault();
     e.stopPropagation();
     this.props.hide();
     let item = this.props.items[e.currentTarget.dataset.id];
-
     if (typeof item == 'string') {
       item = this.MenuItems[item];
     }
-
     if (!item) {
       console.error("Invalid menu item ID", e.currentTarget.dataset.id);
     } else {
@@ -13406,7 +12716,6 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
 
   deleteMessages(all, hard, params, errorHandler) {
     const topic = this.props.tinode.getTopic(params.topicName);
-
     if (!topic) {
       console.warn("Topic not found: ", params.topicName);
       return;
@@ -13415,7 +12724,6 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     if (!all && topic.cancelSend(params.seq)) {
       return;
     }
-
     const promise = all ? topic.delMessagesAll(hard) : topic.delMessagesList([params.seq], hard);
     return promise.catch(err => {
       if (errorHandler) {
@@ -13426,11 +12734,9 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
 
   retryMessage(params, errorHandler) {
     const topic = this.props.tinode.getTopic(params.topicName);
-
     if (!topic || !topic.flushMessage(params.seq)) {
       return;
     }
-
     const msg = topic.createMessage(params.content, false);
     return topic.publishDraft(msg).catch(err => {
       if (errorHandler) {
@@ -13441,27 +12747,21 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
 
   topicPermissionSetter(mode, params, errorHandler) {
     const topic = this.props.tinode.getTopic(params.topicName);
-
     if (!topic) {
       console.warn("Topic not found", params.topicName);
       return;
     }
-
     let result = topic.updateMode(params.user, mode);
-
     if (errorHandler) {
       result = result.catch(err => {
         errorHandler(err.message, 'err');
       });
     }
-
     return result;
   }
-
   replyToMessage(params, errorHandler) {
     params.pickReply(params.seq, params.content, params.userFrom, params.userName, errorHandler);
   }
-
   render() {
     const menu = [];
     let count = 0;
@@ -13469,7 +12769,6 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       if (typeof item == 'string') {
         item = this.MenuItems[item];
       }
-
       if (item && item.title) {
         menu.push(item.title == '-' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
           className: "separator",
@@ -13480,9 +12779,9 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
           key: count
         }, item.title));
       }
-
       count++;
     });
+
     const hSize = 12 * _config_js__WEBPACK_IMPORTED_MODULE_2__.REM_SIZE;
     const vSize = _config_js__WEBPACK_IMPORTED_MODULE_2__.REM_SIZE * (0.7 + menu.length * 2.5);
     const left = this.props.bounds.right - this.props.clickAt.x < hSize ? this.props.clickAt.x - this.props.bounds.left - hSize : this.props.clickAt.x - this.props.bounds.left;
@@ -13497,9 +12796,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       ref: this.selfRef
     }, menu);
   }
-
 }
-
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(ContextMenu));
 
 /***/ }),
@@ -13518,6 +12815,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
+
+
 const DEFAULT_MAX_ZOOM = 2.5;
 class Cropper extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
@@ -13531,15 +12830,19 @@ class Cropper extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       minZoom: 0,
       maxZoom: DEFAULT_MAX_ZOOM
     };
+
     this.overlay = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
     this.cutout = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
     this.preview = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
     this.boundingBox = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
+
     this.imageWidth = 0;
     this.imageHeight = 0;
+
     this.mouseX = 0;
     this.mouseY = 0;
     this.prevDistance = 0;
+
     this.cutoutRect = {};
     this.bBoxRect = {};
     this.originX = 0;
@@ -13554,7 +12857,6 @@ class Cropper extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
     this.positionAll = this.positionAll.bind(this);
     this.translate = this.translate.bind(this);
   }
-
   componentDidMount() {
     this.overlay.current.addEventListener('mousedown', this.mouseDown, {
       passive: true
@@ -13562,12 +12864,13 @@ class Cropper extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
     this.overlay.current.addEventListener('touchstart', this.mouseDown, {
       passive: true
     });
+
     this.bBoxRect = this.boundingBox.current.getBoundingClientRect();
     this.originX = this.bBoxRect.width / 2;
     this.originY = this.bBoxRect.height / 2;
+
     this.cutoutRect = this.cutout.current.getBoundingClientRect();
   }
-
   componentWillUnmount() {
     this.overlay.current.removeEventListener('mousedown', this.mouseDown);
     this.overlay.current.removeEventListener('touchstart', this.mouseDown);
@@ -13581,6 +12884,7 @@ class Cropper extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       originX: this.originX - panX,
       originY: this.originY - panY
     });
+
     const left = (this.originX - panX) * zoom - this.originX;
     const top = (this.originY - panY) * zoom - this.originY;
     this.props.onChange((left + this.cutoutRect.left - this.bBoxRect.left) / zoom, (top + this.cutoutRect.top - this.bBoxRect.top) / zoom, this.cutoutRect.width / zoom, this.cutoutRect.height / zoom, zoom);
@@ -13588,63 +12892,56 @@ class Cropper extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
 
   static checkBound(currPan, img, cutout, delta) {
     let nextDiff = Math.min(0, cutout[0] - img[0] - delta, img[1] - cutout[1] + delta);
-
     if (nextDiff == 0) {
       currPan += delta;
     } else if (Math.min(0, cutout[0] - img[0], img[1] - cutout[1]) < nextDiff) {
       currPan += delta;
     }
-
     return currPan;
   }
-
   initScaling() {
     const imgRect = this.preview.current.getBoundingClientRect();
     this.imageWidth = imgRect.width;
     this.imageHeight = imgRect.height;
+
     const minZoom = Math.max(this.cutoutRect.width / imgRect.width, this.cutoutRect.height / imgRect.height);
     this.setState({
       minZoom: minZoom,
       maxZoom: Math.max(DEFAULT_MAX_ZOOM, minZoom + 1)
     });
+
     const zoom = Math.max(this.bBoxRect.width / imgRect.width, this.bBoxRect.height / imgRect.height);
     const panX = this.cutoutRect.left - this.bBoxRect.left - (imgRect.width - this.cutoutRect.width) / 2;
     const panY = this.cutoutRect.top - this.bBoxRect.top - (imgRect.height - this.cutoutRect.height) / 2;
     this.positionAll(panX, panY, zoom);
   }
-
   onZoom(e) {
     this.handleZoom(e.target.value);
   }
-
   handleZoom(zoom) {
     let panX = this.state.panX;
     let panY = this.state.panY;
+
     const imgLeft = this.originX - (this.originX - panX) * zoom;
     const imgRight = imgLeft + this.imageWidth * zoom;
     const coLeft = this.cutoutRect.left - this.bBoxRect.left;
     const coRight = coLeft + this.cutoutRect.width;
-
     if (coLeft < imgLeft) {
       panX -= imgLeft - coLeft;
     } else if (coRight > imgRight) {
       panX += coRight - imgRight;
     }
-
     const imgTop = this.originY - (this.originY - panY) * zoom;
     const imgBottom = imgTop + this.imageHeight * zoom;
     const coTop = this.cutoutRect.top - this.bBoxRect.top;
     const coBottom = coTop + this.cutoutRect.height;
-
     if (coTop < imgTop) {
       panY -= imgTop - coTop;
     } else if (coBottom > imgBottom) {
       panY += coBottom - imgBottom;
     }
-
     this.positionAll(panX, panY, zoom);
   }
-
   mouseDown(e) {
     if (e.touches) {
       this.mouseX = e.touches[0].pageX;
@@ -13653,7 +12950,6 @@ class Cropper extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       this.mouseX = e.pageX;
       this.mouseY = e.pageY;
     }
-
     window.addEventListener('mousemove', this.mouseMove, {
       passive: false
     });
@@ -13674,7 +12970,9 @@ class Cropper extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
     const dY = pageY - this.mouseY;
     this.mouseX = pageX;
     this.mouseY = pageY;
+
     const imgRect = this.preview.current.getBoundingClientRect();
+
     let panX = Cropper.checkBound(this.state.panX, [imgRect.left, imgRect.right], [this.cutoutRect.left, this.cutoutRect.right], dX);
     let panY = Cropper.checkBound(this.state.panY, [imgRect.top, imgRect.bottom], [this.cutoutRect.top, this.cutoutRect.bottom], dY);
     this.positionAll(panX, panY, this.state.zoom);
@@ -13684,10 +12982,8 @@ class Cropper extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
     e.preventDefault();
     this.translate(e.pageX, e.pageY);
   }
-
   mouseTouch(e) {
     e.preventDefault();
-
     if (e.touches.length == 1) {
       this.translate(e.touches[0].pageX, e.touches[0].pageY);
       return;
@@ -13695,15 +12991,12 @@ class Cropper extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
 
     const [touch0, touch1] = e.touches;
     const distance = Math.sqrt((touch0.pageX - touch1.pageX) * (touch0.pageX - touch1.pageX) + (touch0.pageY - touch1.pageY) * (touch0.pageY - touch1.pageY));
-
     if (!this.prevDistance) {
       this.prevDistance = distance / this.state.zoom;
     }
-
     let scale = distance / this.prevDistance;
     this.handleZoom(Math.max(this.minZoom, Math.min(this.maxZoom, scale)));
   }
-
   mouseUp(e) {
     window.removeEventListener('mousemove', this.mouseMove);
     window.removeEventListener('touchmove', this.mouseTouch);
@@ -13712,10 +13005,10 @@ class Cropper extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
     document.body.style['userSelect'] = '';
     this.positionAll(this.state.panX, this.state.panY, this.state.zoom);
   }
-
   render() {
     const t3d = `translate3d(${this.state.panX}px, ${this.state.panY}px, 0) scale(${this.state.zoom})`;
     const orig = `${this.state.originX}px ${this.state.originY}px`;
+
     const overlay = {
       top: `${this.originY - this.state.originY * this.state.zoom}px`,
       left: `${this.originX - this.state.originX * this.state.zoom}px`,
@@ -13756,7 +13049,6 @@ class Cropper extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       onChange: this.onZoom
     })));
   }
-
 }
 
 /***/ }),
@@ -13792,23 +13084,19 @@ function iconFromMime(mime) {
   };
   return mimeToIcon[mime] || mimeToIcon[(mime || '').split('/')[0]] || mimeToIcon['default'];
 }
-
 class DocPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
     this.handleSendDoc = this.handleSendDoc.bind(this);
   }
-
   handleSendDoc(caption) {
     this.props.onClose();
     this.props.onSendMessage(this.props.content.file);
   }
-
   render() {
     if (!this.props.content) {
       return null;
     }
-
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "image-preview"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -13854,7 +13142,6 @@ class DocPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
       onError: this.props.onError
     }));
   }
-
 }
 ;
 
@@ -13884,7 +13171,6 @@ class ErrorPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
     };
     this.hide = this.hide.bind(this);
   }
-
   componentDidUpdate(prevProps) {
     if (prevProps.level !== this.props.level) {
       this.setState({
@@ -13892,17 +13178,14 @@ class ErrorPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
       });
     }
   }
-
   hide() {
     this.setState({
       show: false
     });
-
     if (this.props.onClearError) {
       this.props.onClearError();
     }
   }
-
   render() {
     const icons = {
       err: 'error',
@@ -13932,7 +13215,6 @@ class ErrorPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
       onCancel: this.hide
     })));
   }
-
 }
 ;
 
@@ -13953,6 +13235,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+
 
 
 class FileProgress extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -13985,7 +13268,6 @@ class FileProgress extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       }]
     }));
   }
-
 }
 
 /***/ }),
@@ -14014,6 +13296,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 class ForwardDialog extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
@@ -14025,34 +13308,28 @@ class ForwardDialog extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
     this.handleSearchContacts = this.handleSearchContacts.bind(this);
     this.handleContactSelected = this.handleContactSelected.bind(this);
   }
-
   componentDidMount() {
     this.props.onInitFind();
   }
-
   handleEscapeKey(e) {
     if (e.keyCode === 27) {
       this.props.hide(false);
     }
   }
-
   handleClose(e) {
     e.preventDefault();
     this.props.hide(false);
   }
-
   handleSearchContacts(query) {
     this.setState({
       query: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isNullValue(query) ? null : query
     });
     this.props.onSearchContacts(query);
   }
-
   handleContactSelected(uid) {
     this.props.onTopicSelected(uid);
     this.props.hide(true);
   }
-
   render() {
     let contacts = this.state.query != null ? this.props.searchResults : this.props.contacts;
     contacts = contacts.filter(c => {
@@ -14102,7 +13379,6 @@ class ForwardDialog extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       onTopicSelected: this.handleContactSelected
     }))));
   }
-
 }
 
 /***/ }),
@@ -14124,6 +13400,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _chip_input_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./chip-input.jsx */ "./src/widgets/chip-input.jsx");
 /* harmony import */ var _contact_list_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./contact-list.jsx */ "./src/widgets/contact-list.jsx");
+
 
 
 
@@ -14150,7 +13427,6 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   }
 });
-
 class GroupManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
@@ -14168,7 +13444,6 @@ class GroupManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
   }
-
   static indexMembers(members) {
     let index = {};
     members.map(m => {
@@ -14177,9 +13452,9 @@ class GroupManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         present: true
       };
     });
+
     return index;
   }
-
   static staticMembers(members, keepInitial, requiredMember) {
     let stat = [];
     members.map(m => {
@@ -14189,7 +13464,6 @@ class GroupManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     });
     return stat;
   }
-
   static selectedContacts(members) {
     let sel = [];
     members.map(m => {
@@ -14197,15 +13471,12 @@ class GroupManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     });
     return sel;
   }
-
   handleContactSelected(userId, index) {
     let status = this.state.index[userId];
-
     if (status) {
       if (status.present) {
         return;
       }
-
       status.delta += 1;
       status.present = true;
     } else {
@@ -14214,7 +13485,6 @@ class GroupManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         present: true
       };
     }
-
     let m = this.state.members.slice();
     m.push(this.props.contacts[index]);
     const sel = GroupManager.selectedContacts(m);
@@ -14226,14 +13496,11 @@ class GroupManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       selectedContacts: sel
     });
   }
-
   handleMemberRemoved(userId, index) {
     const status = this.state.index[userId];
-
     if (!status || !status.present) {
       return;
     }
-
     status.present = false;
     status.delta -= 1;
     let m = this.state.members.slice();
@@ -14247,7 +13514,6 @@ class GroupManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       selectedContacts: sel
     });
   }
-
   handleContactFilter(val) {
     const {
       formatMessage
@@ -14260,7 +13526,6 @@ class GroupManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       noContactsMessage: msg
     });
   }
-
   static doContactFiltering(filter, values) {
     if (filter) {
       for (let i = 0; i < values.length; i++) {
@@ -14268,13 +13533,10 @@ class GroupManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           return true;
         }
       }
-
       return false;
     }
-
     return true;
   }
-
   handleSubmit() {
     var instance = this;
     var members = [];
@@ -14285,7 +13547,6 @@ class GroupManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       if (instance.state.index[k].present) {
         members.push(k);
       }
-
       if (instance.state.index[k].delta > 0) {
         added.push(k);
       } else if (instance.state.index[k].delta < 0) {
@@ -14294,11 +13555,9 @@ class GroupManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     });
     this.props.onSubmit(members, added, removed);
   }
-
   handleCancel() {
     this.props.onCancel();
   }
-
   render() {
     const {
       formatMessage
@@ -14368,9 +13627,7 @@ class GroupManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       }]
     }))));
   }
-
 }
-
 ;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(GroupManager));
 
@@ -14399,11 +13656,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 class GroupSubs extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
   }
-
   render() {
     const usersOnline = [];
     const totalCount = (this.props.subscribers || []).length;
@@ -14439,7 +13696,6 @@ class GroupSubs extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       }
     })) : null);
   }
-
 }
 ;
 
@@ -14461,6 +13717,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 
 
+
 class HostSelector extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
@@ -14472,14 +13729,12 @@ class HostSelector extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
     this.handleEditingFinished = this.handleEditingFinished.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
   }
-
   handleHostNameChange(e) {
     this.setState({
       hostName: e.target.value,
       changed: true
     });
   }
-
   handleEditingFinished() {
     if (this.state.changed) {
       this.setState({
@@ -14488,16 +13743,13 @@ class HostSelector extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       this.props.onServerAddressChange(this.state.hostName.trim());
     }
   }
-
   handleKeyDown(e) {
     if (e.key == 'Enter') {
       this.handleEditingFinished();
     }
   }
-
   render() {
     var hostOptions = [];
-
     for (let key in _config_js__WEBPACK_IMPORTED_MODULE_1__.KNOWN_HOSTS) {
       let item = _config_js__WEBPACK_IMPORTED_MODULE_1__.KNOWN_HOSTS[key];
       hostOptions.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("option", {
@@ -14505,7 +13757,6 @@ class HostSelector extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
         value: item
       }));
     }
-
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
@@ -14523,7 +13774,6 @@ class HostSelector extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       id: "known-hosts"
     }, hostOptions));
   }
-
 }
 
 /***/ }),
@@ -14562,7 +13812,6 @@ class ImagePreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
     };
     this.handleSendImage = this.handleSendImage.bind(this);
   }
-
   assignWidth(node) {
     if (node && !this.state.width) {
       const bounds = node.getBoundingClientRect();
@@ -14572,17 +13821,14 @@ class ImagePreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       });
     }
   }
-
   handleSendImage(caption) {
     this.props.onClose();
     this.props.onSendMessage(caption, this.props.content.blob);
   }
-
   render() {
     if (!this.props.content) {
       return null;
     }
-
     const dim = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.fitImageSize)(this.props.content.width, this.props.content.height, this.state.width, this.state.height, false);
     const size = dim ? {
       width: dim.dstWidth + 'px',
@@ -14594,6 +13840,7 @@ class ImagePreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
     };
     size.maxWidth = '100%';
     size.maxHeight = '100%';
+
     const maxlength = Math.max((this.state.width / _config_js__WEBPACK_IMPORTED_MODULE_3__.REM_SIZE / 1.5 | 0) - 2, 12);
     const fname = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__.shortenFileName)(this.props.content.name, maxlength) || '-';
     const width = this.props.content.width || '-';
@@ -14661,7 +13908,6 @@ class ImagePreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, width, " \xD7 ", height, " px; ", (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__.bytesToHumanSize)(this.props.content.size)))));
   }
-
 }
 ;
 
@@ -14683,6 +13929,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _visible_password_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./visible-password.jsx */ "./src/widgets/visible-password.jsx");
 
 
+
 class InPlaceEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
@@ -14698,10 +13945,8 @@ class InPlaceEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     this.handleEditingFinished = this.handleEditingFinished.bind(this);
     this.handlePasswordFinished = this.handlePasswordFinished.bind(this);
   }
-
   componentDidUpdate(prevProps, prevState) {
     const newValue = this.props.value || '';
-
     if (prevState.initialValue != newValue && !prevState.active) {
       this.setState({
         initialValue: newValue,
@@ -14709,13 +13954,11 @@ class InPlaceEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       });
     }
   }
-
   handeTextChange(e) {
     this.setState({
       value: e.target.value || ''
     });
   }
-
   handleKeyDown(e) {
     if (e.keyCode === 27) {
       this.setState({
@@ -14726,7 +13969,6 @@ class InPlaceEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       this.handleEditingFinished(e);
     }
   }
-
   handleStartEditing() {
     if (!this.props.readOnly) {
       this.setState({
@@ -14738,10 +13980,8 @@ class InPlaceEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       });
     }
   }
-
   handleEditingFinished(event) {
     const value = this.state.value.trim();
-
     if (this.props.required && (!event.target.checkValidity() || !value)) {
       this.setState({
         value: this.props.value,
@@ -14749,49 +13989,39 @@ class InPlaceEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       });
       return;
     }
-
     this.setState({
       active: false
     });
-
     if ((value || this.props.value) && value !== this.props.value) {
       this.props.onFinished(value);
     }
   }
-
   handlePasswordFinished(value) {
     this.setState({
       active: false
     });
-
     if (value && value !== this.props.value) {
       this.props.onFinished(value);
     }
   }
-
   render() {
     if (!this.state.active) {
       let spanText = this.props.type == 'password' ? '••••••••' : this.state.value;
       let spanClass = 'in-place-edit' + (this.props.readOnly ? ' disabled' : '');
-
       if (!spanText) {
         spanText = this.props.placeholder;
         spanClass += ' placeholder';
       }
-
       if (!this.props.multiline || this.props.multiline == 1) {
         spanClass += ' short';
       }
-
       return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
         className: spanClass,
         onClick: this.handleStartEditing
       }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, spanText));
     }
-
     let element;
     const attr = {};
-
     if (this.props.type == 'password') {
       element = _visible_password_jsx__WEBPACK_IMPORTED_MODULE_1__["default"];
       attr.onFinished = this.handlePasswordFinished;
@@ -14804,21 +14034,18 @@ class InPlaceEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         element = 'input';
         attr.type = this.props.type || 'text';
       }
-
       attr.value = this.state.value;
       attr.ref = this.selfRef;
       attr.onChange = this.handeTextChange;
       attr.onKeyDown = this.handleKeyDown;
       attr.onBlur = this.handleEditingFinished;
     }
-
     attr.placeholder = this.props.placeholder;
     attr.required = this.props.required ? 'required' : '';
     attr.autoComplete = this.props.autoComplete;
     attr.autoFocus = true;
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(element, attr, null);
   }
-
 }
 ;
 
@@ -14841,17 +14068,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 
 
+
 class Invitation extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
     this.handleButtonAction = this.handleButtonAction.bind(this);
   }
-
   handleButtonAction(evt, data) {
     evt.preventDefault();
     this.props.onAction(data);
   }
-
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "accept-invite-panel"
@@ -14900,7 +14126,6 @@ class Invitation extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
       }]
     }))));
   }
-
 }
 ;
 
@@ -14923,6 +14148,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 
 
+
 class LazyImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
@@ -14936,33 +14162,33 @@ class LazyImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       onClick: this.props.onClick
     };
   }
-
   componentDidMount() {
     this.props.whenDone.promise.then(data => this.setState({
       src: data.src,
-      style: { ...this.state.style,
+      style: {
+        ...this.state.style,
         padding: 0
       }
     })).catch(() => this.setState({
       src: 'img/broken_image.png'
     }));
   }
-
   componentWillUnmount() {
     this.props.whenDone.cancel();
   }
-
   componentDidUpdate(prevProps) {
     if (prevProps.whenDone != this.props.whenDone) {
       this.setState({
         src: 'img/placeholder.png',
-        style: { ...this.state.style,
+        style: {
+          ...this.state.style,
           padding: '4px'
         }
       });
       this.props.whenDone.promise.then(data => this.setState({
         src: data.src,
-        style: { ...this.state.style,
+        style: {
+          ...this.state.style,
           padding: 0
         }
       })).catch(() => this.setState({
@@ -14970,11 +14196,9 @@ class LazyImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       }));
     }
   }
-
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement('img', this.state);
   }
-
 }
 ;
 
@@ -15004,11 +14228,9 @@ __webpack_require__.r(__webpack_exports__);
 class LetterTile extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
     let avatar;
-
     if (this.props.avatar === true) {
       const isGroup = tinode_sdk__WEBPACK_IMPORTED_MODULE_1__.Tinode.isGroupTopicName(this.props.topic);
       const iconColor = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__.idToColorClass)(this.props.topic, isGroup);
-
       if (this.props.topic && this.props.title && this.props.title.trim()) {
         const letter = this.props.title.trim().charAt(0);
         const className = 'lettertile ' + iconColor + (this.props.deleted ? ' disabled' : '');
@@ -15038,10 +14260,8 @@ class LetterTile extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
     } else {
       avatar = null;
     }
-
     return avatar;
   }
-
 }
 
 /***/ }),
@@ -15069,7 +14289,6 @@ class LoadSpinner extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       className: "loader-spinner"
     })) : null;
   }
-
 }
 
 /***/ }),
@@ -15088,6 +14307,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
+
 class MenuCancel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
@@ -15100,7 +14320,6 @@ class MenuCancel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
       className: "material-icons"
     }, "close"));
   }
-
 }
 
 /***/ }),
@@ -15139,7 +14358,6 @@ class MenuContacts extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       className: "material-icons"
     }, "settings")));
   }
-
 }
 ;
 
@@ -15179,7 +14397,6 @@ class MenuStart extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       className: "material-icons"
     }, "settings")));
   }
-
 }
 ;
 
@@ -15202,15 +14419,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 
 
+
+
 class MetaMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
   }
-
   render() {
     let content = null;
     let bubbleClass = 'bubble';
-
     if (this.props.deleted) {
       content = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
         className: "material-icons gray"
@@ -15228,11 +14445,9 @@ class MetaMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       content = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, this.props.date);
       bubbleClass += ' date';
     }
-
     if (!content) {
       return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, null);
     }
-
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
       className: "meta"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -15241,7 +14456,6 @@ class MetaMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       className: "message-content"
     }, content)));
   }
-
 }
 ;
 
@@ -15273,7 +14487,6 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   }
 });
-
 class NewTopicById extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
@@ -15284,26 +14497,21 @@ class NewTopicById extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-
   handleChange(e) {
     this.setState({
       groupId: e.target.value
     });
   }
-
   handleKeyPress(e) {
     if (e.key === 'Enter') {
       this.handleSubmit(e);
     }
   }
-
   handleSubmit(e) {
     e.preventDefault();
-
     if (this.state.groupId) {
       const name = this.state.groupId.trim();
       const prefix = name.substr(0, 3);
-
       if (name.length > 3 && ['usr', 'grp', 'chn'].includes(prefix)) {
         this.props.onSubmit(name);
       } else {
@@ -15311,7 +14519,6 @@ class NewTopicById extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       }
     }
   }
-
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form"
@@ -15344,9 +14551,7 @@ class NewTopicById extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       }]
     }))));
   }
-
 }
-
 ;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(NewTopicById));
 
@@ -15395,51 +14600,42 @@ class NewTopicGroup extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     this.handleChannelToggle = this.handleChannelToggle.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-
-  componentDidMount() {}
-
+  componentDidMount() {
+  }
   handleFieldEdit(name, e) {
     this.setState({
       [name]: e.target.value || ''
     });
   }
-
   handleImageChanged(mime, img) {
     this.setState({
       imageDataUrl: img
     });
   }
-
   handleTagsChanged(tags) {
     this.setState({
       tags: tags
     });
   }
-
   handleChannelToggle() {
     this.setState({
       isChannel: !this.state.isChannel
     });
   }
-
   handleSubmit(e) {
     e.preventDefault();
     const fn = this.state.fullName.trim().substring(0, _config_js__WEBPACK_IMPORTED_MODULE_5__.MAX_TITLE_LENGTH);
     const comment = this.state.private.trim().substring(0, _config_js__WEBPACK_IMPORTED_MODULE_5__.MAX_TITLE_LENGTH);
     const description = this.state.description.trim().substring(0, _config_js__WEBPACK_IMPORTED_MODULE_5__.MAX_TOPIC_DESCRIPTION_LENGTH);
-
     if (fn) {
       this.props.onSubmit(fn, description, this.state.imageDataUrl, comment, this.state.tags, this.state.isChannel);
     }
   }
-
   render() {
     let submitClasses = 'primary';
-
     if (this.props.disabled) {
       submitClasses += ' disabled';
     }
-
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
       className: "panel-form",
       onSubmit: this.handleSubmit
@@ -15563,7 +14759,6 @@ class NewTopicGroup extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       }]
     }))));
   }
-
 }
 ;
 
@@ -15587,6 +14782,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _checkbox_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./checkbox.jsx */ "./src/widgets/checkbox.jsx");
 /* harmony import */ var _contact_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./contact.jsx */ "./src/widgets/contact.jsx");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+
+
 
 
 
@@ -15698,7 +14895,6 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   }
 });
-
 class PermissionsEditor extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
@@ -15709,37 +14905,30 @@ class PermissionsEditor extends (react__WEBPACK_IMPORTED_MODULE_0___default().Co
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
   }
-
   handleChange(val) {
     let mode = this.state.mode;
     const idx = mode.indexOf(val);
-
     if (idx == -1) {
       mode += val;
     } else {
       mode = mode.replace(val, '');
     }
-
     this.setState({
       mode: mode
     });
   }
-
   handleSubmit() {
     const mode = (this.state.mode || 'N').split('').sort().join('');
     const before = (this.props.mode || 'N').split('').sort().join('');
-
     if (mode !== before) {
       this.props.onSubmit(mode);
     } else {
       this.props.onCancel();
     }
   }
-
   handleCancel() {
     this.props.onCancel();
   }
-
   render() {
     const {
       formatMessage
@@ -15775,14 +14964,11 @@ class PermissionsEditor extends (react__WEBPACK_IMPORTED_MODULE_0___default().Co
     let mode = this.state.mode;
     let compare = (this.props.compare || '').replace('N', '');
     let items = [];
-
     for (let i = 0; i < all.length; i++) {
       let c = all.charAt(i);
-
       if (skip.indexOf(c) >= 0 && mode.indexOf(c) < 0) {
         continue;
       }
-
       items.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tr", {
         key: c
       }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", null, names[c]), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("td", {
@@ -15801,7 +14987,6 @@ class PermissionsEditor extends (react__WEBPACK_IMPORTED_MODULE_0___default().Co
         checked: compare.indexOf(c) >= 0
       })) : null));
     }
-
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-column"
     }, this.props.userTitle ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
@@ -15844,9 +15029,7 @@ class PermissionsEditor extends (react__WEBPACK_IMPORTED_MODULE_0___default().Co
       }]
     }))));
   }
-
 }
-
 ;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(PermissionsEditor));
 
@@ -15874,6 +15057,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   message_sending: {
     id: "message_sending",
@@ -15890,14 +15074,12 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   }
 });
-
 class ReceivedMarker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
     const {
       formatMessage
     } = this.props.intl;
     let timestamp;
-
     if (this.props.received <= tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_SENDING) {
       timestamp = formatMessage(messages.message_sending);
     } else if (this.props.received == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_FAILED) {
@@ -15907,7 +15089,6 @@ class ReceivedMarker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
         timeStyle: 'short'
       });
     }
-
     const icon = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__.deliveryMarker)(this.props.received);
     const marker = icon ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: 'material-icons small ' + icon.color
@@ -15916,9 +15097,7 @@ class ReceivedMarker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       className: "timestamp"
     }, timestamp, '\u00a0', marker);
   }
-
 }
-
 ;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(ReceivedMarker));
 
@@ -15953,7 +15132,6 @@ class SearchContacts extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     this.handleClear = this.handleClear.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
   }
-
   componentWillUnmount() {
     if (this.state.edited) {
       this.setState({
@@ -15963,13 +15141,11 @@ class SearchContacts extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       this.props.onSearchContacts(tinode_sdk__WEBPACK_IMPORTED_MODULE_1__.Tinode.DEL_CHAR);
     }
   }
-
   handleSearchChange(e) {
     this.setState({
       search: e.target.value
     });
   }
-
   handleSearch(e) {
     e.preventDefault();
     var query = this.state.search.trim();
@@ -15978,20 +15154,16 @@ class SearchContacts extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     });
     this.props.onSearchContacts(query.length > 0 ? query : tinode_sdk__WEBPACK_IMPORTED_MODULE_1__.Tinode.DEL_CHAR);
   }
-
   handleClear(e) {
     e.preventDefault();
-
     if (this.state.edited) {
       this.props.onSearchContacts(tinode_sdk__WEBPACK_IMPORTED_MODULE_1__.Tinode.DEL_CHAR);
     }
-
     this.setState({
       search: '',
       edited: false
     });
   }
-
   handleKeyDown(e) {
     if (e.key === 'Enter') {
       this.handleSearch(e);
@@ -15999,7 +15171,6 @@ class SearchContacts extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       this.handleClear();
     }
   }
-
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form"
@@ -16025,7 +15196,6 @@ class SearchContacts extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       className: "material-icons"
     }, "\xA0"))));
   }
-
 }
 ;
 
@@ -16052,6 +15222,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 /* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
+
 
 
 
@@ -16108,7 +15279,6 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   }
 });
-
 class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
@@ -16129,28 +15299,23 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
     this.formatReply = this.formatReply.bind(this);
   }
-
   componentDidMount() {
     if (this.messageEditArea) {
       this.messageEditArea.addEventListener('paste', this.handlePasteEvent, false);
     }
-
     this.setState({
       quote: this.formatReply()
     });
   }
-
   componentWillUnmount() {
     if (this.messageEditArea) {
       this.messageEditArea.removeEventListener('paste', this.handlePasteEvent, false);
     }
   }
-
   componentDidUpdate(prevProps) {
     if (this.messageEditArea) {
       this.messageEditArea.focus();
     }
-
     if (prevProps.topicName != this.props.topicName) {
       this.setState({
         message: '',
@@ -16158,26 +15323,22 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
         quote: null
       });
     }
-
     if (prevProps.reply != this.props.reply) {
       this.setState({
         quote: this.formatReply()
       });
     }
   }
-
   formatReply() {
     return this.props.reply ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(this.props.reply.content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__.replyFormatter, {
       formatMessage: this.props.intl.formatMessage.bind(this.props.intl),
       authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
     }) : null;
   }
-
   handlePasteEvent(e) {
     if (this.props.disabled) {
       return;
     }
-
     if ((0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__.filePasted)(e, file => {
       this.props.onAttachImage(file);
     }, file => {
@@ -16186,34 +15347,27 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       e.preventDefault();
     }
   }
-
   handleAttachImage(e) {
     if (e.target.files && e.target.files.length > 0) {
       this.props.onAttachImage(e.target.files[0]);
     }
-
     e.target.value = '';
   }
-
   handleAttachFile(e) {
     if (e.target.files && e.target.files.length > 0) {
       this.props.onAttachFile(e.target.files[0]);
     }
-
     e.target.value = '';
   }
-
   handleAttachAudio(url, preview, duration) {
     this.setState({
       audioRec: false
     });
     this.props.onAttachAudio(url, preview, duration);
   }
-
   handleSend(e) {
     e.preventDefault();
     const message = this.state.message.trim();
-
     if (message || this.props.acceptBlank || this.props.noInput) {
       this.props.onSendMessage(message);
       this.setState({
@@ -16237,34 +15391,27 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       }
     }
   }
-
   handleMessageTyping(e) {
     const newState = {
       message: e.target.value
     };
-
     if (this.props.onKeyPress) {
       const now = new Date().getTime();
-
       if (now - this.state.keypressTimestamp > _config_js__WEBPACK_IMPORTED_MODULE_4__.KEYPRESS_DELAY) {
         this.props.onKeyPress();
         newState.keypressTimestamp = now;
       }
     }
-
     this.setState(newState);
   }
-
   handleQuoteClick(e) {
     e.preventDefault();
     e.stopPropagation();
-
     if (this.props.reply && this.props.onQuoteClick) {
       const replyToSeq = this.props.reply.seq;
       this.props.onQuoteClick(replyToSeq);
     }
   }
-
   render() {
     const {
       formatMessage
@@ -16363,9 +15510,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       id: "writing-disabled"
     }, prompt)));
   }
-
 }
-
 ;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(SendMessage));
 
@@ -16400,7 +15545,6 @@ __webpack_require__.r(__webpack_exports__);
 class SideNavbar extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
     const icon_badges = [];
-
     if (this.props.trustedBadges) {
       this.props.trustedBadges.map(b => {
         icon_badges.push({
@@ -16409,13 +15553,10 @@ class SideNavbar extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
         });
       });
     }
-
     let avatar = null;
-
     if (this.props.tinode) {
       avatar = this.props.tinode.authorizeURL((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_6__.sanitizeUrlForMime)(this.props.avatar, 'image'));
     }
-
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "side-caption-panel",
       className: "caption-panel"
@@ -16442,7 +15583,6 @@ class SideNavbar extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
       onSettings: this.props.onSettings
     }) : null);
   }
-
 }
 ;
 
@@ -16471,6 +15611,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
@@ -16485,27 +15626,21 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
   }
-
   static getDerivedStateFromProps(nextProps, prevState) {
     const tags = nextProps.tags || [];
-
     if (!(0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_4__.arrayEqual)(tags, prevState.tags) && !prevState.activated) {
       return {
         tags: tags
       };
     }
-
     return null;
   }
-
   handleTagInput(text) {
     this.setState({
       tagInput: text
     });
-
     if (text.length > 0) {
       const last = text[text.length - 1];
-
       if (text[0] == '"') {
         if (text.length > 1 && last == '"') {
           this.handleAddTag(text.substring(1, text.length - 1));
@@ -16515,10 +15650,8 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
       }
     }
   }
-
   handleAddTag(tag) {
     const maxTagCount = this.props.tinode.getServerParam('maxTagCount', _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_TAG_COUNT);
-
     if (tag.length > 0 && this.state.tags.length < maxTagCount) {
       const tags = this.state.tags.slice(0);
       tags.push(tag);
@@ -16526,29 +15659,23 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
         tags: tags,
         tagInput: ''
       });
-
       if (this.props.onTagsChanged) {
         this.props.onTagsChanged(tags);
       }
-
       return tags;
     }
-
     return this.state.tags;
   }
-
   handleRemoveTag(tag, index) {
     const tags = this.state.tags.slice(0);
     tags.splice(index, 1);
     this.setState({
       tags: tags
     });
-
     if (this.props.onTagsChanged) {
       this.props.onTagsChanged(tags);
     }
   }
-
   handleSubmit() {
     this.props.onSubmit(this.handleAddTag(this.state.tagInput.trim()));
     this.setState({
@@ -16556,24 +15683,20 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
       tags: this.props.tags || []
     });
   }
-
   handleCancel() {
     this.setState({
       activated: false,
       tagInput: '',
       tags: this.props.tags || []
     });
-
     if (this.props.onCancel) {
       this.props.onCancel();
     }
   }
-
   render() {
     const minTagLength = this.props.tinode.getServerParam('minTagLength', _config_js__WEBPACK_IMPORTED_MODULE_3__.MIN_TAG_LENGTH);
     const maxTagLength = this.props.tinode.getServerParam('maxTagLength', _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_TAG_LENGTH);
     let tags = [];
-
     if (this.state.activated) {
       this.state.tags.map(tag => {
         tags.push({
@@ -16588,7 +15711,6 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
           key: tags.length
         }, tag));
       });
-
       if (tags.length == 0) {
         tags = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
           id: "tags_not_found",
@@ -16599,7 +15721,6 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
         }));
       }
     }
-
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-column"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -16665,7 +15786,6 @@ class TagManager extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
       }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, tags)));
   }
-
 }
 ;
 
@@ -16688,6 +15808,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _widgets_topic_desc_edit_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/topic-desc-edit.jsx */ "./src/widgets/topic-desc-edit.jsx");
 /* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/utils.js */ "./src/lib/utils.js");
+
+
 
 
 
@@ -16717,13 +15839,10 @@ class TopicCommon extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
 
   componentDidUpdate(props) {
     const topic = this.props.tinode.getTopic(props.topic);
-
     if (!topic) {
       return;
     }
-
     topic.onCredsUpdated = this.tnCredsUpdated;
-
     if (topic.onTagsUpdated != this.onTagsUpdated) {
       if (topic.getType() == 'grp') {
         this.previousTagsUpdated = topic.onTagsUpdated;
@@ -16732,33 +15851,28 @@ class TopicCommon extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         this.previousTagsUpdated = undefined;
       }
     }
-
     if (this.state.topic != props.topic) {
       this.setState({
         topic: props.topic
       });
     }
   }
-
   componentWillUnmount() {
     const topic = this.props.tinode.getTopic(this.props.topic);
     topic.onCredsUpdated = undefined;
     topic.onTagsUpdated = this.previousTagsUpdated;
   }
-
   tnCredsUpdated(creds) {
     this.setState({
       credentials: creds || []
     });
   }
-
   handleCredChange(e) {
     this.setState({
       newCred: e.target.value,
       addCredInvalid: false
     });
   }
-
   handleCredKeyDown(e) {
     if (e.keyCode === 27) {
       this.setState({
@@ -16769,10 +15883,8 @@ class TopicCommon extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       this.handleCredEntered(e);
     }
   }
-
   handleCredEntered(e) {
     const value = this.state.newCred.trim();
-
     if (!value) {
       this.setState({
         addCredActive: false,
@@ -16780,20 +15892,16 @@ class TopicCommon extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       });
       return;
     }
-
     let val = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__.asPhone)(value);
     let method;
-
     if (val) {
       method = 'tel';
     } else {
       val = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__.asEmail)(value);
-
       if (val) {
         method = 'email';
       }
     }
-
     if (method) {
       this.props.onCredAdd(method, val);
       this.setState({
@@ -16811,7 +15919,6 @@ class TopicCommon extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     this.setState({
       tags: tags
     });
-
     if (this.previousTagsUpdated && this.previousTagsUpdated != this.onTagsUpdated) {
       this.previousTagsUpdated(tags);
     }
@@ -16822,10 +15929,8 @@ class TopicCommon extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       this.props.onTopicTagsUpdateRequest(this.props.topic, tags);
     }
   }
-
   render() {
     const credentials = [];
-
     if (this.state.isMe) {
       this.state.credentials.map(cred => {
         credentials.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -16853,7 +15958,6 @@ class TopicCommon extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         }, "delete_outline")))));
       });
     }
-
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "scrollable-panel"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_topic_desc_edit_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
@@ -16910,7 +16014,6 @@ class TopicCommon extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       }]
     })))))) : null);
   }
-
 }
 ;
 
@@ -16950,6 +16053,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
 class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
     super(props);
@@ -16977,27 +16082,22 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
     this.handleDescriptionUpdate = this.handleDescriptionUpdate.bind(this);
     this.handleTagsUpdated = this.handleTagsUpdated.bind(this);
   }
-
   componentDidMount() {
     const topic = this.props.tinode.getTopic(this.props.topic);
     this.previousOnTags = topic.onTagsUpdated;
     topic.onTagsUpdated = this.tnNewTags;
   }
-
   componentWillUnmount() {
     const topic = this.props.tinode.getTopic(this.props.topic);
     topic.onTagsUpdated = this.previousOnTags;
   }
-
   tnNewTags(tags) {
     this.setState({
       tags: tags
     });
   }
-
   handleFullNameUpdate(fn) {
     fn = fn.trim().substring(0, _config_js__WEBPACK_IMPORTED_MODULE_7__.MAX_TITLE_LENGTH);
-
     if (fn && this.state.fullName !== fn) {
       this.setState({
         fullName: fn
@@ -17005,10 +16105,8 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       this.props.onUpdateTopicDesc(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(fn, null));
     }
   }
-
   handlePrivateUpdate(comment) {
     comment = comment.trim().substring(0, _config_js__WEBPACK_IMPORTED_MODULE_7__.MAX_TITLE_LENGTH);
-
     if (this.state.private !== comment) {
       this.setState({
         private: comment
@@ -17016,10 +16114,8 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       this.props.onUpdateTopicDesc(this.props.topic, null, comment || tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.DEL_CHAR);
     }
   }
-
   handleDescriptionUpdate(desc) {
     desc = desc.trim().substring(0, _config_js__WEBPACK_IMPORTED_MODULE_7__.MAX_TOPIC_DESCRIPTION_LENGTH);
-
     if (desc) {
       this.setState({
         description: desc
@@ -17033,7 +16129,6 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       newAvatar: img,
       newAvatarMime: mime
     });
-
     if (!img) {
       this.setState({
         avatar: null
@@ -17049,7 +16144,6 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       newAvatar: null,
       newAvatarMime: null
     });
-
     if (blob) {
       this.uploadAvatar(mime, blob, width, height);
     }
@@ -17061,7 +16155,6 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
         mime,
         blob
       } = image;
-
       if (blob.size > _config_js__WEBPACK_IMPORTED_MODULE_7__.MAX_AVATAR_BYTES) {
         const uploader = this.props.tinode.getLargeFileHelper();
         uploader.upload(blob).then(url => this.props.onUpdateTopicDesc(this.props.topic, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.theCard)(null, url))).catch(err => this.props.onError(err.message, 'err'));
@@ -17078,7 +16171,6 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
         });
       }
     };
-
     if (width > _config_js__WEBPACK_IMPORTED_MODULE_7__.AVATAR_SIZE || height > _config_js__WEBPACK_IMPORTED_MODULE_7__.AVATAR_SIZE || width != height) {
       (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_8__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_7__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_7__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_7__.MAX_EXTERN_ATTACHMENT_SIZE, true).then(scaled => readyToUpload(scaled)).catch(err => this.props.onError(err.message, 'err'));
     } else {
@@ -17090,22 +16182,18 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       });
     }
   }
-
   handleAvatarCropCancel() {
     this.setState({
       newAvatar: null,
       newAvatarMime: null
     });
   }
-
   handleTagsUpdated(tags) {
     if ((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_9__.arrayEqual)(this.state.tags.slice(0), tags.slice(0))) {
       return;
     }
-
     this.props.onUpdateTags(tags);
   }
-
   render() {
     if (this.state.newAvatar) {
       return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_avatar_crop_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
@@ -17116,7 +16204,6 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
         onError: this.props.onError
       });
     }
-
     const editable = this.state.isMe || this.state.owner;
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-column"
@@ -17229,7 +16316,6 @@ class TopicDescEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compon
       onSubmit: this.handleTagsUpdated
     }))) : null);
   }
-
 }
 ;
 
@@ -17252,6 +16338,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _in_place_edit_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./in-place-edit.jsx */ "./src/widgets/in-place-edit.jsx");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+
 
 
 
@@ -17349,7 +16436,6 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   }
 });
-
 class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
@@ -17359,15 +16445,19 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     this.handleBlock = this.handleBlock.bind(this);
     this.handleReport = this.handleReport.bind(this);
   }
-
   handleDeleteTopic(e) {
     e.preventDefault();
     const {
       formatMessage
     } = this.props.intl;
-    this.props.onShowAlert(formatMessage(messages.topic_delete), formatMessage(messages.topic_delete_warning), () => {
+    this.props.onShowAlert(formatMessage(messages.topic_delete),
+    formatMessage(messages.topic_delete_warning),
+    () => {
       this.props.onDeleteTopic(this.props.topic);
-    }, null, true, null);
+    },
+    null,
+    true,
+    null);
   }
 
   handleDeleteMessages(e) {
@@ -17375,9 +16465,14 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     const {
       formatMessage
     } = this.props.intl;
-    this.props.onShowAlert(formatMessage(this.props.deleter ? messages.delete_messages : messages.clear_messages), formatMessage(this.props.deleter ? messages.delete_messages_warning : messages.clear_messages_warning), () => {
+    this.props.onShowAlert(formatMessage(this.props.deleter ? messages.delete_messages : messages.clear_messages),
+    formatMessage(this.props.deleter ? messages.delete_messages_warning : messages.clear_messages_warning),
+    () => {
       this.props.onDeleteMessages(this.props.topic);
-    }, null, true, null);
+    },
+    null,
+    true,
+    null);
   }
 
   handleLeave(e) {
@@ -17385,9 +16480,14 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     const {
       formatMessage
     } = this.props.intl;
-    this.props.onShowAlert(formatMessage(messages.leave_chat), formatMessage(messages.leave_chat_warning), () => {
+    this.props.onShowAlert(formatMessage(messages.leave_chat),
+    formatMessage(messages.leave_chat_warning),
+    () => {
       this.props.onLeaveTopic(this.props.topic);
-    }, null, true, null);
+    },
+    null,
+    true,
+    null);
   }
 
   handleBlock(e) {
@@ -17395,9 +16495,14 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     const {
       formatMessage
     } = this.props.intl;
-    this.props.onShowAlert(formatMessage(messages.block_contact), formatMessage(messages.block_contact_warning), () => {
+    this.props.onShowAlert(formatMessage(messages.block_contact),
+    formatMessage(messages.block_contact_warning),
+    () => {
       this.props.onBlockTopic(this.props.topic);
-    }, null, true, null);
+    },
+    null,
+    true,
+    null);
   }
 
   handleReport(e) {
@@ -17405,9 +16510,14 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     const {
       formatMessage
     } = this.props.intl;
-    this.props.onShowAlert(formatMessage(messages.report_chat), formatMessage(messages.report_chat_warning), _ => {
+    this.props.onShowAlert(formatMessage(messages.report_chat),
+    formatMessage(messages.report_chat_warning),
+    _ => {
       this.props.onReportTopic(this.props.topic);
-    }, null, true, null);
+    },
+    null,
+    true,
+    null);
   }
 
   render() {
@@ -17482,7 +16592,6 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       className: this.props.owner ? 'clickable' : null,
       onClick: e => {
         e.preventDefault();
-
         if (this.props.owner) {
           this.props.onLaunchPermissionsEditor('auth');
         }
@@ -17491,7 +16600,6 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       className: this.props.owner ? 'clickable' : null,
       onClick: e => {
         e.preventDefault();
-
         if (this.props.owner) {
           this.props.onLaunchPermissionsEditor('anon');
         }
@@ -17528,9 +16636,7 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       }
     }, this.props.modeGiven2))))));
   }
-
 }
-
 ;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(TopicSecurity));
 
@@ -17550,13 +16656,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
+
 class UnreadBadge extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
     return this.props.count > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       className: "unread"
     }, this.props.count > 9 ? "9+" : this.props.count) : null;
   }
-
 }
 ;
 
@@ -17581,11 +16687,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 class UploadingImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
   }
-
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "inline-image"
@@ -17596,7 +16702,6 @@ class UploadingImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       onCancel: this.props.onCancelUpload
     })));
   }
-
 }
 ;
 
@@ -17616,6 +16721,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
+
 class VisiblePassword extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
@@ -17629,37 +16735,31 @@ class VisiblePassword extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleEditingFinished = this.handleEditingFinished.bind(this);
   }
-
   componentDidMount() {
     if (this.props.autoFocus) {
       this.inputRef.current.focus();
     }
   }
-
   handeTextChange(e) {
     this.setState({
       value: e.target.value
     });
-
     if (this.props.onChange) {
       this.props.onChange(e);
     }
   }
-
   handleVisibility(e) {
     e.preventDefault();
     this.setState({
       visible: !this.state.visible
     });
   }
-
   handleKeyDown(e) {
     if (e.keyCode == 27) {
       this.setState({
         value: this.props.value,
         visible: false
       });
-
       if (this.props.onFinished) {
         this.props.onFinished();
       }
@@ -17667,7 +16767,6 @@ class VisiblePassword extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       this.handleEditingFinished();
     }
   }
-
   handleEditingFinished(e) {
     if (e) {
       let currentTarget = e.currentTarget;
@@ -17682,7 +16781,6 @@ class VisiblePassword extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       this.props.onFinished(this.state.value.trim());
     }
   }
-
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       tabIndex: "-1",
@@ -17705,7 +16803,6 @@ class VisiblePassword extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       className: "material-icons clickable light-gray"
     }, this.state.visible ? 'visibility' : 'visibility_off')));
   }
-
 }
 
 /***/ }),
@@ -17743,7 +16840,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var name = "firebase";
-var version = "9.9.4";
+var version = "9.13.0";
 
 /**
  * @license
@@ -18448,7 +17545,7 @@ function isVersionServiceProvider(provider) {
 }
 
 const name$o = "@firebase/app";
-const version$1 = "0.7.32";
+const version$1 = "0.8.3";
 
 /**
  * @license
@@ -18515,7 +17612,7 @@ const name$2 = "@firebase/firestore";
 const name$1 = "@firebase/firestore-compat";
 
 const name = "firebase";
-const version = "9.9.4";
+const version = "9.13.0";
 
 /**
  * @license
@@ -18695,6 +17792,7 @@ const ERRORS = {
     ["bad-app-name" /* BAD_APP_NAME */]: "Illegal App name: '{$appName}",
     ["duplicate-app" /* DUPLICATE_APP */]: "Firebase App named '{$appName}' already exists with different options or config",
     ["app-deleted" /* APP_DELETED */]: "Firebase App named '{$appName}' already deleted",
+    ["no-options" /* NO_OPTIONS */]: 'Need to provide options, when not being deployed to hosting via source.',
     ["invalid-app-argument" /* INVALID_APP_ARGUMENT */]: 'firebase.{$appName}() takes either no argument or a ' +
         'Firebase App instance.',
     ["invalid-log-argument" /* INVALID_LOG_ARGUMENT */]: 'First argument to `onLog` must be null or a function.',
@@ -18794,7 +17892,8 @@ class FirebaseAppImpl {
  * @public
  */
 const SDK_VERSION = version;
-function initializeApp(options, rawConfig = {}) {
+function initializeApp(_options, rawConfig = {}) {
+    let options = _options;
     if (typeof rawConfig !== 'object') {
         const name = rawConfig;
         rawConfig = { name };
@@ -18805,6 +17904,10 @@ function initializeApp(options, rawConfig = {}) {
         throw ERROR_FACTORY.create("bad-app-name" /* BAD_APP_NAME */, {
             appName: String(name)
         });
+    }
+    options || (options = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.getDefaultAppConfig)());
+    if (!options) {
+        throw ERROR_FACTORY.create("no-options" /* NO_OPTIONS */);
     }
     const existingApp = _apps.get(name);
     if (existingApp) {
@@ -18856,6 +17959,9 @@ function initializeApp(options, rawConfig = {}) {
  */
 function getApp(name = DEFAULT_ENTRY_NAME) {
     const app = _apps.get(name);
+    if (!app && name === DEFAULT_ENTRY_NAME) {
+        return initializeApp();
+    }
     if (!app) {
         throw ERROR_FACTORY.create("no-app" /* NO_APP */, { appName: name });
     }
@@ -19770,7 +18876,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const name = "@firebase/installations";
-const version = "0.5.12";
+const version = "0.5.16";
 
 /**
  * @license
@@ -21813,6 +20919,10 @@ function propagateNotificationPayload(payload, messagePayloadInternal) {
     if (!!image) {
         payload.notification.image = image;
     }
+    const icon = messagePayloadInternal.notification.icon;
+    if (!!icon) {
+        payload.notification.icon = icon;
+    }
 }
 function propagateDataPayload(payload, messagePayloadInternal) {
     if (!messagePayloadInternal.data) {
@@ -22177,7 +21287,7 @@ async function messageEventListener(messaging, event) {
 }
 
 const name = "@firebase/messaging";
-const version = "0.9.16";
+const version = "0.10.0";
 
 /**
  * @license
@@ -22842,13 +21952,19 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
 const {
   params
 } = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_5__["default"].parseUrlHash(window.location.hash);
 const language = params && params.hl || navigator.languages && navigator.languages[0] || navigator.language || navigator.userLanguage || 'en';
+
 const baseLanguage = language.toLowerCase().split(/[-_]/)[0];
+
 const htmlLang = _messages_json__WEBPACK_IMPORTED_MODULE_3__[language] ? language : _messages_json__WEBPACK_IMPORTED_MODULE_3__[baseLanguage] ? baseLanguage : 'en';
 const messages = _messages_json__WEBPACK_IMPORTED_MODULE_3__[htmlLang];
+
 document.getElementsByTagName('html')[0].setAttribute('lang', htmlLang);
 react_dom__WEBPACK_IMPORTED_MODULE_1___default().render(react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().StrictMode), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_2__.IntlProvider, {
   locale: language,
