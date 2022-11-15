@@ -8071,7 +8071,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       return;
     }
     if (prom) {
-      prom.then(() => {
+      prom.then(_ => {
         this.handleError();
       }).catch(err => {
         this.handleError(err.message, 'err');
@@ -8083,10 +8083,15 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     } = this.props.intl;
     let count = sec / 1000;
     count = count | count;
-    this.reconnectCountdown = setInterval(() => {
-      const timeLeft = count > 99 ? (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_19__.secondsToTime)(count) : count;
+    this.reconnectCountdown = setInterval(_ => {
+      if (count < -10) {
+        clearInterval(this.reconnectCountdown);
+        this.tinode.reconnect();
+        return;
+      }
+      const fmtTime = count > 99 ? (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_19__.secondsToTime)(count) : count;
       this.handleError(formatMessage(messages.reconnect_countdown, {
-        seconds: timeLeft
+        seconds: fmtTime
       }), 'warn', _ => {
         clearInterval(this.reconnectCountdown);
         this.tinode.reconnect();

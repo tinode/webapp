@@ -622,7 +622,7 @@ class TinodeWeb extends React.Component {
 
     if (prom) {
       // Reconnecting now
-      prom.then(() => {
+      prom.then(_ => {
         // Reconnected: clear error
         this.handleError();
       }).catch((err) => {
@@ -634,10 +634,17 @@ class TinodeWeb extends React.Component {
     const {formatMessage} = this.props.intl;
     let count = sec / 1000;
     count = count | count;
-    this.reconnectCountdown = setInterval(() => {
-      const timeLeft = (count > 99) ? secondsToTime(count) : count;
+    this.reconnectCountdown = setInterval(_ => {
+      if (count < -10) {
+        // Count could go to negative if computer woke up from sleep.
+        clearInterval(this.reconnectCountdown);
+        this.tinode.reconnect();
+        return;
+      }
+
+      const fmtTime = (count > 99) ? secondsToTime(count) : count;
       this.handleError(
-        formatMessage(messages.reconnect_countdown, {seconds: timeLeft}),
+        formatMessage(messages.reconnect_countdown, {seconds: fmtTime}),
         'warn',
         _ => {
           clearInterval(this.reconnectCountdown);
