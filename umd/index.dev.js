@@ -3510,7 +3510,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 
 
-const PACKAGE_VERSION = "0.20.1";
+const PACKAGE_VERSION = "0.20.2";
 
 /***/ }),
 
@@ -7751,7 +7751,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
             this.tinode.setDeviceToken(this.state.firebaseToken);
           }
         }).catch(() => {
-        });
+        }
+        );
       }
 
       const parsedNav = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].parseUrlHash(window.location.hash);
@@ -11150,6 +11151,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   }
   handleICEGatheringStateChangeEvent(event) {
   }
+
   handleTrackEvent(event) {
     this.remoteRef.current.srcObject = event.streams[0];
     this.forceUpdate();
@@ -14607,6 +14609,7 @@ class NewTopicGroup extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
   }
   componentDidMount() {
   }
+
   handleFieldEdit(name, e) {
     this.setState({
       [name]: e.target.value || ''
@@ -16845,7 +16848,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var name = "firebase";
-var version = "9.13.0";
+var version = "9.14.0";
 
 /**
  * @license
@@ -17550,7 +17553,7 @@ function isVersionServiceProvider(provider) {
 }
 
 const name$o = "@firebase/app";
-const version$1 = "0.8.3";
+const version$1 = "0.8.4";
 
 /**
  * @license
@@ -17617,7 +17620,7 @@ const name$2 = "@firebase/firestore";
 const name$1 = "@firebase/firestore-compat";
 
 const name = "firebase";
-const version = "9.13.0";
+const version = "9.14.0";
 
 /**
  * @license
@@ -21292,7 +21295,7 @@ async function messageEventListener(messaging, event) {
 }
 
 const name = "@firebase/messaging";
-const version = "0.10.0";
+const version = "0.11.0";
 
 /**
  * @license
