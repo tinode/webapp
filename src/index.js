@@ -2,7 +2,7 @@
 // Used to generate umd/index.prod.js
 
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
 import { IntlProvider } from 'react-intl';
 
@@ -29,11 +29,12 @@ const messages = allMessages[htmlLang];
 // Set lang attribute of the HTML element: <html lang="XX">
 document.getElementsByTagName('html')[0].setAttribute('lang', htmlLang);
 
-ReactDOM.render(
+// Render the app.
+const root = createRoot(document.getElementById('mountPoint'));
+root.render(
   <React.StrictMode>
     <IntlProvider locale={language} messages={messages} textComponent={React.Fragment}>
       <TinodeWeb />
     </IntlProvider>
-  </React.StrictMode>,
-  document.getElementById('mountPoint')
+  </React.StrictMode>
 );
