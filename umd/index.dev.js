@@ -2434,10 +2434,10 @@ function imageCrop(mime, objURL, left, top, width, height, scale) {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.crossOrigin = 'Anonymous';
-    img.onerror = err => {
+    img.onerror = _ => {
       reject(new Error("Image format unrecognized"));
     };
-    img.onload = () => {
+    img.onload = _ => {
       URL.revokeObjectURL(img.src);
       let canvas = document.createElement('canvas');
       canvas.width = width * scale;
@@ -2470,7 +2470,7 @@ function fileToBase64(file) {
     reader.onerror = evt => {
       reject(reader.error);
     };
-    reader.onload = () => {
+    reader.onload = _ => {
       resolve({
         mime: file.type,
         bits: reader.result.split(',')[1],
@@ -2487,7 +2487,7 @@ function blobToBase64(blob) {
     reader.onerror = _ => {
       reject(reader.error);
     };
-    reader.onload = () => {
+    reader.onload = _ => {
       resolve({
         mime: blob.type,
         bits: reader.result.split(',')[1]
@@ -3706,9 +3706,7 @@ class AccSecurityView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Comp
     } = this.props.intl;
     this.props.onShowAlert(formatMessage(messages.delete_account),
     formatMessage(messages.delete_account_warning),
-    () => {
-      this.props.onDeleteAccount();
-    },
+    _ => this.props.onDeleteAccount(),
     null,
     true,
     null);
@@ -4952,9 +4950,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
     const isMe = this.props.tinode.isMe(params.topicName);
     const menuItems = [{
       title: formatMessage(messages.edit_permissions),
-      handler: () => {
-        this.handleLaunchPermissionsEditor(isMe ? 'want' : 'user', params.topicName);
-      }
+      handler: _ => this.handleLaunchPermissionsEditor(isMe ? 'want' : 'user', params.topicName)
     }];
     if (!isMe) {
       menuItems.push('member_delete');
@@ -5850,7 +5846,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
     const oldTopic = this.props.tinode.getTopic(oldTopicName);
     if (oldTopic && oldTopic.isSubscribed()) {
-      oldTopic.leave(false).catch(() => {}).finally(() => {
+      oldTopic.leave(false).catch(_ => {}).finally(_ => {
         this.setState({
           fetchingMessages: false
         });
@@ -5886,8 +5882,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       if (topic && topic.isSubscribed() && topic.msgHasMoreMessages()) {
         this.setState({
           fetchingMessages: true
-        }, () => {
-          topic.getMessagesPage(_config_js__WEBPACK_IMPORTED_MODULE_16__.MESSAGES_PAGE).catch(err => this.props.onError(err.message, 'err')).finally(() => this.setState({
+        }, _ => {
+          topic.getMessagesPage(_config_js__WEBPACK_IMPORTED_MODULE_16__.MESSAGES_PAGE).catch(err => this.props.onError(err.message, 'err')).finally(_ => this.setState({
             fetchingMessages: false
           }));
         });
@@ -6042,11 +6038,9 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       case 'kp':
         {
           clearTimeout(this.keyPressTimer);
-          this.keyPressTimer = setTimeout(() => {
-            this.setState({
-              typingIndicator: false
-            });
-          }, _config_js__WEBPACK_IMPORTED_MODULE_16__.KEYPRESS_DELAY + 1000);
+          this.keyPressTimer = setTimeout(_ => this.setState({
+            typingIndicator: false
+          }), _config_js__WEBPACK_IMPORTED_MODULE_16__.KEYPRESS_DELAY + 1000);
           if (!this.state.typingIndicator) {
             this.setState({
               typingIndicator: true
@@ -6261,9 +6255,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(msg, tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.parse(caption));
         }
         this.sendMessage(msg, uploadCompletionPromise, uploader);
-      }).catch(err => {
-        this.props.onError(err, 'err');
-      });
+      }).catch(err => this.props.onError(err, 'err'));
       return;
     }
 
@@ -6947,11 +6939,9 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       this.setState({
         email: email
       });
-      this.props.onRequest('email', email).then(() => {
-        this.setState({
-          sent: true
-        });
-      });
+      this.props.onRequest('email', email).then(_ => this.setState({
+        sent: true
+      }));
     }
   }
   handleEmailChange(e) {
@@ -7800,7 +7790,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           if (this.state.desktopAlerts) {
             this.tinode.setDeviceToken(this.state.firebaseToken);
           }
-        }).catch(() => {
+        }).catch(_ => {
         }
         );
       }
@@ -7956,9 +7946,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
 
   checkForAppUpdate(reg) {
-    reg.onupdatefound = () => {
+    reg.onupdatefound = _ => {
       const installingWorker = reg.installing;
-      installingWorker.onstatechange = () => {
+      installingWorker.onstatechange = _ => {
         if (installingWorker.state == 'installed' && navigator.serviceWorker.controller) {
           const msg = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
             id: "update_available",
@@ -8084,14 +8074,14 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
   handlePersistenceChange(persist) {
     if (persist) {
-      this.tinode.initStorage().then(() => {
+      this.tinode.initStorage().then(_ => {
         _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].setObject('keep-logged-in', true);
         this.setState({
           persist: true
         });
       });
     } else {
-      this.tinode.clearStorage().then(() => {
+      this.tinode.clearStorage().then(_ => {
         _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].setObject('keep-logged-in', false);
         this.setState({
           persist: false
@@ -8250,7 +8240,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       localStorage.removeItem('auth-token');
       this.handleError(err.message, 'err');
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo('');
-    }).finally(() => {
+    }).finally(_ => {
       this.setState({
         loadSpinnerVisible: false
       });
@@ -8407,11 +8397,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       desc: {
         public: query
       }
-    }).then(ctrl => {
-      return fnd.getMeta(fnd.startMetaQuery().withSub().build());
-    }).catch(err => {
-      this.handleError(err.message, 'err');
-    });
+    }).then(_ => fnd.getMeta(fnd.startMetaQuery().withSub().build())).catch(err => this.handleError(err.message, 'err'));
   }
 
   handleTopicSelected(topicName) {
@@ -8471,7 +8457,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       completion.push(uploadCompletionPromise);
     }
     if (!topic.isSubscribed()) {
-      const subscribePromise = topic.subscribe().then(() => {
+      const subscribePromise = topic.subscribe().then(_ => {
         let calls = [];
         topic.queuedMessages(pub => {
           if (pub._sending || pub.seq == msg.seq) {
@@ -8497,9 +8483,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         topic.archive(false);
       }
       return ctrl;
-    }).catch(err => {
-      this.handleError(err.message, 'err');
-    });
+    }).catch(err => this.handleError(err.message, 'err'));
   }
   handleNewChatInvitation(topicName, action) {
     const topic = this.tinode.getTopic(topicName);
@@ -8513,14 +8497,12 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           }
         });
         if (topic.isP2PType()) {
-          response = response.then(ctrl => {
-            topic.setMeta({
-              sub: {
-                user: topicName,
-                mode: mode
-              }
-            });
-          });
+          response = response.then(_ => topic.setMeta({
+            sub: {
+              user: topicName,
+              mode: mode
+            }
+          }));
         }
         break;
       case 'delete':
@@ -8532,17 +8514,13 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           sub: {
             mode: am
           }
-        }).then(ctrl => {
-          return this.handleTopicSelected(null);
-        });
+        }).then(_ => this.handleTopicSelected(null));
         break;
       default:
         console.warn("Unknown invitation action", '"' + action + '""');
     }
     if (response != null) {
-      response.catch(err => {
-        this.handleError(err.message, 'err');
-      });
+      response.catch(err => this.handleError(err.message, 'err'));
     }
   }
 
@@ -8594,9 +8572,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   handleUpdateAccountTagsRequest(tags) {
     this.tinode.getMeTopic().setMeta({
       tags: tags
-    }).catch(err => {
-      this.handleError(err.message, 'err');
-    });
+    }).catch(err => this.handleError(err.message, 'err'));
   }
 
   handleSettings() {
@@ -8659,7 +8635,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     } else if (this.state.firebaseToken && this.fcm) {
       (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.deleteToken)(this.fcm).catch(err => {
         console.error("Unable to delete token.", err);
-      }).finally(() => {
+      }).finally(_ => {
         _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].updateObject('settings', {
           desktopAlerts: false
         });
@@ -8695,15 +8671,11 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         meth: method,
         val: value
       }
-    }).catch(err => {
-      this.handleError(err.message, 'err');
-    });
+    }).catch(err => this.handleError(err.message, 'err'));
   }
   handleCredDelete(method, value) {
     const me = this.tinode.getMeTopic();
-    me.delCredential(method, value).catch(err => {
-      this.handleError(err.message, 'err');
-    });
+    me.delCredential(method, value).catch(err => this.handleError(err.message, 'err'));
   }
   handleCredConfirm(method, response) {
     TinodeWeb.navigateToCredentialsView({
@@ -8776,7 +8748,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     params._topicName = topicName;
     this.setState({
       newTopicParams: params
-    }, () => {
+    }, _ => {
       this.handleTopicSelected(topicName);
     });
   }
@@ -8823,25 +8795,19 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       topic.setMeta({
         desc: params,
         attachments: attachments
-      }).catch(err => {
-        this.handleError(err.message, 'err');
-      });
+      }).catch(err => this.handleError(err.message, 'err'));
     }
   }
   handleUnarchive(topicName) {
     const topic = this.tinode.getTopic(topicName);
     if (topic) {
-      topic.archive(false).catch(err => {
-        this.handleError(err.message, 'err');
-      });
+      topic.archive(false).catch(err => this.handleError(err.message, 'err'));
     }
   }
   handleUpdatePasswordRequest(password) {
     this.handleError();
     if (password) {
-      this.tinode.updateAccountBasic(null, this.tinode.getCurrentLogin(), password).catch(err => {
-        this.handleError(err.message, 'err');
-      });
+      this.tinode.updateAccountBasic(null, this.tinode.getCurrentLogin(), password).catch(err => this.handleError(err.message, 'err'));
     }
   }
   handleChangePermissions(topicName, mode, uid) {
@@ -8860,9 +8826,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           user: uid,
           mode: mode
         }
-      }).catch(err => {
-        this.handleError(err.message, 'err');
-      });
+      }).catch(err => this.handleError(err.message, 'err'));
     }
   }
   handleTagsUpdateRequest(topicName, tags) {
@@ -8870,9 +8834,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     if (topic) {
       topic.setMeta({
         tags: tags
-      }).catch(err => {
-        this.handleError(err.message, 'err');
-      });
+      }).catch(err => this.handleError(err.message, 'err'));
     }
   }
   handleLogout() {
@@ -8894,8 +8856,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       cleared = Promose.resolve();
     }
     this.setState(this.getBlankState());
-    cleared.then(() => {
-      this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_16__.isSecureConnection)(), this.state.transport, this.props.intl.locale, _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].getObject('keep-logged-in'), () => {
+    cleared.then(_ => {
+      this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_16__.isSecureConnection)(), this.state.transport, this.props.intl.locale, _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].getObject('keep-logged-in'), _ => {
         this.tinode.onConnect = this.handleConnected;
         this.tinode.onDisconnect = this.handleDisconnect;
         this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
@@ -8916,7 +8878,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       return;
     }
 
-    topic.delTopic(true).then(ctrl => {
+    topic.delTopic(true).then(_ => {
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].setUrlTopic(window.location.hash, ''));
     }).catch(err => {
       this.handleError(err.message, 'err');
@@ -8928,16 +8890,14 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       return;
     }
 
-    topic.delMessagesAll(true).catch(err => {
-      this.handleError(err.message, 'err');
-    });
+    topic.delMessagesAll(true).catch(err => this.handleError(err.message, 'err'));
   }
   handleLeaveUnsubRequest(topicName) {
     const topic = this.tinode.getTopic(topicName);
     if (!topic) {
       return;
     }
-    topic.leave(true).then(ctrl => {
+    topic.leave(true).then(_ => {
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].setUrlTopic(window.location.hash, ''));
     }).catch(err => {
       this.handleError(err.message, 'err');
@@ -8950,9 +8910,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
     topic.updateMode(null, '-JP').then(_ => {
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].setUrlTopic(window.location.hash, ''));
-    }).catch(err => {
-      this.handleError(err.message, 'err');
-    });
+    }).catch(err => this.handleError(err.message, 'err'));
   }
   handleReportTopic(topicName) {
     const topic = this.tinode.getTopic(topicName);
@@ -8962,11 +8920,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
 
     this.tinode.report('report', topicName);
 
-    topic.updateMode(null, '-JP').then(ctrl => {
+    topic.updateMode(null, '-JP').then(_ => {
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].setUrlTopic(window.location.hash, ''));
-    }).catch(err => {
-      this.handleError(err.message, 'err');
-    });
+    }).catch(err => this.handleError(err.message, 'err'));
   }
   handleShowContextMenu(params, menuItems) {
     this.setState({
@@ -9051,7 +9007,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   handleContextMenuAction(action, promise, params) {
     if (action == 'topic_archive') {
       if (promise && params.topicName && params.topicName == this.state.topicSelected) {
-        promise.then(() => {
+        promise.then(_ => {
           this.handleTopicSelected(null);
         });
       }
@@ -9088,16 +9044,12 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
     if (added && added.length > 0) {
       added.map(uid => {
-        topic.invite(uid, null).catch(err => {
-          this.handleError(err.message, 'err');
-        });
+        topic.invite(uid, null).catch(err => this.handleError(err.message, 'err'));
       });
     }
     if (removed && removed.length > 0) {
       removed.map(uid => {
-        topic.delSubscription(uid).catch(err => {
-          this.handleError(err.message, 'err');
-        });
+        topic.delSubscription(uid).catch(err => this.handleError(err.message, 'err'));
       });
     }
   }
@@ -9108,9 +9060,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           meth: cred,
           resp: code
         }
-      }).catch(err => {
-        this.handleError(err.message, 'err');
-      });
+      }).catch(err => this.handleError(err.message, 'err'));
     } else {
       this.setState({
         credMethod: cred,
@@ -9124,9 +9074,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
   }
   handlePasswordResetRequest(method, value) {
-    return this.tinode.connect().then(() => {
-      return this.tinode.requestResetAuthSecret('basic', method, value);
-    }).catch(err => {
+    return this.tinode.connect().then(_ => this.tinode.requestResetAuthSecret('basic', method, value)).catch(err => {
       this.handleError(err.message, 'err');
     });
   }
@@ -9135,13 +9083,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     if (!token) {
       this.handleError(this.props.intl.formatMessage(messages.invalid_security_token), 'err');
     } else {
-      this.tinode.connect().then(() => {
-        return this.tinode.updateAccountBasic(null, null, newPassword, {
-          token: token
-        });
-      }).then(() => {
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo('');
-      }).catch(err => {
+      this.tinode.connect().then(_ => this.tinode.updateAccountBasic(null, null, newPassword, {
+        token: token
+      })).then(_ => _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo('')).catch(err => {
         this.handleError(err.message, 'err');
       });
     }
@@ -9234,7 +9178,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     } else {
       this.setState({
         callShouldStart: true
-      }, () => this.handleTopicSelected(this.state.callTopic));
+      }, _ => this.handleTopicSelected(this.state.callTopic));
     }
   }
   handleInfoMessage(info) {
@@ -9327,13 +9271,11 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       visible: this.state.alertVisible,
       title: this.state.alertParams.title,
       content: this.state.alertParams.content,
-      onReject: this.state.alertParams.onReject ? () => {
-        this.setState({
-          alertVisible: false
-        });
-      } : null,
+      onReject: this.state.alertParams.onReject ? _ => this.setState({
+        alertVisible: false
+      }) : null,
       reject: this.state.alertParams.reject,
-      onConfirm: () => {
+      onConfirm: _ => {
         this.setState({
           alertVisible: false
         });
@@ -9737,18 +9679,12 @@ class Attachment extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
     this.setState({
       downloader: downloader
     });
-    downloader.download(url, filename, mimetype, loaded => {
-      this.setState({
-        progress: loaded / this.props.size
-      });
-    }, err => {
-      this.props.onError(err, 'err');
-    }).then(() => {
-      this.setState({
-        downloader: null,
-        progress: 0
-      });
-    }).catch(err => {
+    downloader.download(url, filename, mimetype, loaded => this.setState({
+      progress: loaded / this.props.size
+    }), err => this.props.onError(err, 'err')).then(_ => this.setState({
+      downloader: null,
+      progress: 0
+    })).catch(err => {
       if (err) {
         this.props.onError("Error downloading file: " + err.message, 'err');
       }
@@ -9931,7 +9867,7 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     const width = this.effectiveWidth;
     const height = this.canvasRef.current.height;
     this.canvasContext.lineWidth = LINE_WIDTH;
-    const drawFrame = () => {
+    const drawFrame = _ => {
       if (!this.canvasRef.current || !this.audioPlayer) {
         return;
       }
@@ -10160,7 +10096,7 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     let prevBarCount = 0;
     let volume = 0.0;
     let countPerBar = 0;
-    const drawFrame = () => {
+    const drawFrame = _ => {
       if (!this.startedOn) {
         return;
       }
@@ -11145,7 +11081,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     this.state.pc.setRemoteDescription(desc).then(_ => {
       this.setState({
         callInitialSetupComplete: true
-      }, () => this.drainRemoteIceCandidatesCache());
+      }, _ => this.drainRemoteIceCandidatesCache());
     }).catch(this.reportError);
   }
   reportError(err) {
@@ -11245,7 +11181,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       this.props.onSendAnswer(this.props.topic, this.props.seq, pc.localDescription.toJSON());
       this.setState({
         callInitialSetupComplete: true
-      }, () => this.drainRemoteIceCandidatesCache());
+      }, _ => this.drainRemoteIceCandidatesCache());
     }).catch(this.handleGetUserMediaError);
   }
 
@@ -12614,7 +12550,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       'menu_item_forward': {
         id: 'menu_item_forward',
         title: formatMessage(messages.forward),
-        handler: () => {}
+        handler: _ => {}
       },
 
       'menu_item_edit': {
@@ -12645,12 +12581,10 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         handler: (params, errorHandler) => {
           return props.onShowAlert(formatMessage(messages.block),
           formatMessage(messages.topic_block_warning),
-          () => {
-            return this.topicPermissionSetter('-JP', params, errorHandler).then(ctrl => {
-              this.props.onTopicRemoved(params.topicName);
-              return ctrl;
-            });
-          }, null,
+          _ => this.topicPermissionSetter('-JP', params, errorHandler).then(ctrl => {
+            this.props.onTopicRemoved(params.topicName);
+            return ctrl;
+          }), null,
           true,
           null);
         }
@@ -12662,7 +12596,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         handler: (params, errorHandler) => {
           return props.onShowAlert(formatMessage(messages.topic_delete),
           formatMessage(messages.topic_delete_warning),
-          () => {
+          _ => {
             const topic = this.props.tinode.getTopic(params.topicName);
             if (!topic) {
               console.warn("Topic not found: ", params.topicName);
@@ -12829,9 +12763,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     }
     let result = topic.updateMode(params.user, mode);
     if (errorHandler) {
-      result = result.catch(err => {
-        errorHandler(err.message, 'err');
-      });
+      result = result.catch(err => errorHandler(err.message, 'err'));
     }
     return result;
   }
@@ -14052,7 +13984,7 @@ class InPlaceEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     if (!this.props.readOnly) {
       this.setState({
         active: true
-      }, () => {
+      }, _ => {
         if (this.selfRef.current) {
           this.selfRef.current.focus();
         }
@@ -14248,7 +14180,7 @@ class LazyImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
         ...this.state.style,
         padding: 0
       }
-    })).catch(() => this.setState({
+    })).catch(_ => this.setState({
       src: 'img/broken_image.png'
     }));
   }
@@ -14270,7 +14202,7 @@ class LazyImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
           ...this.state.style,
           padding: 0
         }
-      })).catch(() => this.setState({
+      })).catch(_ => this.setState({
         src: 'img/broken_image.png'
       }));
     }
@@ -16549,9 +16481,7 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     } = this.props.intl;
     this.props.onShowAlert(formatMessage(messages.topic_delete),
     formatMessage(messages.topic_delete_warning),
-    () => {
-      this.props.onDeleteTopic(this.props.topic);
-    },
+    _ => this.props.onDeleteTopic(this.props.topic),
     null,
     true,
     null);
@@ -16564,9 +16494,7 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     } = this.props.intl;
     this.props.onShowAlert(formatMessage(this.props.deleter ? messages.delete_messages : messages.clear_messages),
     formatMessage(this.props.deleter ? messages.delete_messages_warning : messages.clear_messages_warning),
-    () => {
-      this.props.onDeleteMessages(this.props.topic);
-    },
+    _ => this.props.onDeleteMessages(this.props.topic),
     null,
     true,
     null);
@@ -16579,9 +16507,7 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     } = this.props.intl;
     this.props.onShowAlert(formatMessage(messages.leave_chat),
     formatMessage(messages.leave_chat_warning),
-    () => {
-      this.props.onLeaveTopic(this.props.topic);
-    },
+    _ => this.props.onLeaveTopic(this.props.topic),
     null,
     true,
     null);
@@ -16594,9 +16520,7 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     } = this.props.intl;
     this.props.onShowAlert(formatMessage(messages.block_contact),
     formatMessage(messages.block_contact_warning),
-    () => {
-      this.props.onBlockTopic(this.props.topic);
-    },
+    _ => this.props.onBlockTopic(this.props.topic),
     null,
     true,
     null);
@@ -16867,7 +16791,7 @@ class VisiblePassword extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
   handleEditingFinished(e) {
     if (e) {
       let currentTarget = e.currentTarget;
-      setTimeout(() => {
+      setTimeout(_ => {
         if (!currentTarget.contains(document.activeElement)) {
           if (this.props.onFinished) {
             this.props.onFinished(this.state.value);

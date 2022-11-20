@@ -52,7 +52,7 @@ export default class VisiblePassword extends React.PureComponent {
   handleEditingFinished(e) {
     if (e) {
       let currentTarget = e.currentTarget;
-      setTimeout(() => {
+      setTimeout(_ => {
         if (!currentTarget.contains(document.activeElement)) {
           if (this.props.onFinished) {
             this.props.onFinished(this.state.value);

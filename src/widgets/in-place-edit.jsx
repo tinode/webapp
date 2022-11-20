@@ -50,7 +50,7 @@ export default class InPlaceEdit extends React.Component {
 
    handleStartEditing() {
     if (!this.props.readOnly) {
-      this.setState({active: true}, () => {
+      this.setState({active: true}, _ => {
         if (this.selfRef.current) {
           this.selfRef.current.focus();
         }

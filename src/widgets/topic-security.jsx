@@ -91,7 +91,7 @@ class TopicSecurity extends React.PureComponent {
     this.props.onShowAlert(
       formatMessage(messages.topic_delete), // title
       formatMessage(messages.topic_delete_warning), // content
-      (() => { this.props.onDeleteTopic(this.props.topic); }), // onConfirm
+      _ => this.props.onDeleteTopic(this.props.topic), // onConfirm
       null, // "OK"
       true, // Show Reject button
       null  // "Cancel"
@@ -104,7 +104,7 @@ class TopicSecurity extends React.PureComponent {
     this.props.onShowAlert(
       formatMessage(this.props.deleter ? messages.delete_messages : messages.clear_messages), // title
       formatMessage(this.props.deleter ? messages.delete_messages_warning : messages.clear_messages_warning), // content
-      (() => { this.props.onDeleteMessages(this.props.topic); }), // onConfirm
+      _ => this.props.onDeleteMessages(this.props.topic), // onConfirm
       null, // "OK"
       true, // Show Reject button
       null  // "Cancel"
@@ -117,7 +117,7 @@ class TopicSecurity extends React.PureComponent {
     this.props.onShowAlert(
       formatMessage(messages.leave_chat), // title
       formatMessage(messages.leave_chat_warning), // content
-      (() => { this.props.onLeaveTopic(this.props.topic); }), // onConfirm
+      _ => this.props.onLeaveTopic(this.props.topic), // onConfirm
       null, // "OK"
       true, // Show Reject button
       null  // "Cancel"
@@ -130,7 +130,7 @@ class TopicSecurity extends React.PureComponent {
     this.props.onShowAlert(
       formatMessage(messages.block_contact), // title
       formatMessage(messages.block_contact_warning), // content
-      (() => { this.props.onBlockTopic(this.props.topic); }), // onConfirm
+      _ => this.props.onBlockTopic(this.props.topic), // onConfirm
       null, // "OK"
       true, // Show Reject button
       null  // "Cancel"

@@ -105,7 +105,7 @@ export default class AudioRecorder extends React.PureComponent {
     let prevBarCount = 0;
     let volume = 0.0;
     let countPerBar = 0;
-    const drawFrame = () => {
+    const drawFrame = _ => {
       if (!this.startedOn) {
         return;
       }

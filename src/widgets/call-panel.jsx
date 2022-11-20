@@ -231,7 +231,7 @@ class CallPanel extends React.PureComponent {
     const desc = new RTCSessionDescription(info.payload);
     this.state.pc.setRemoteDescription(desc)
       .then(_ => {
-        this.setState({ callInitialSetupComplete: true }, () => this.drainRemoteIceCandidatesCache());
+        this.setState({ callInitialSetupComplete: true }, _ => this.drainRemoteIceCandidatesCache());
       })
       .catch(this.reportError);
   }
@@ -357,7 +357,7 @@ class CallPanel extends React.PureComponent {
     })
     .then(_ => {
       this.props.onSendAnswer(this.props.topic, this.props.seq, pc.localDescription.toJSON());
-      this.setState({ callInitialSetupComplete: true }, () => this.drainRemoteIceCandidatesCache());
+      this.setState({ callInitialSetupComplete: true }, _ => this.drainRemoteIceCandidatesCache());
     })
     .catch(this.handleGetUserMediaError);
   }

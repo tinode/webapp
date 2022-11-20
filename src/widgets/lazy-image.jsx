@@ -20,7 +20,7 @@ export default class LazyImage extends React.PureComponent {
     this.props.whenDone
       .promise
       .then(data => this.setState({src: data.src, style: {...this.state.style, padding: 0}}))
-      .catch(() => this.setState({src: 'img/broken_image.png'}));
+      .catch(_ => this.setState({src: 'img/broken_image.png'}));
   }
 
   componentWillUnmount() {
@@ -33,7 +33,7 @@ export default class LazyImage extends React.PureComponent {
       this.props.whenDone
         .promise
         .then(data => this.setState({src: data.src, style: {...this.state.style, padding: 0}}))
-        .catch(() => this.setState({src: 'img/broken_image.png'}));
+        .catch(_ => this.setState({src: 'img/broken_image.png'}));
     }
   }
 

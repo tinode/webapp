@@ -400,7 +400,7 @@ class MessagesView extends React.Component {
 
     const setQuery = newTopic ? this.props.newTopicParams : undefined;
     topic.subscribe(getQuery.build(), setQuery)
-      .then((ctrl) => {
+      .then(ctrl => {
         if (ctrl.code == 303) {
           // Redirect to another topic requested.
           HashNavigation.navigateTo(HashNavigation.setUrlTopic('', ctrl.params.topic));
@@ -430,7 +430,7 @@ class MessagesView extends React.Component {
           topic.delMessagesList(calls, true);
         }
       })
-      .catch((err) => {
+      .catch(err => {
         console.error("Failed subscription to", this.state.topic, err);
         this.props.onError(err.message, 'err');
         const blankState = MessagesView.getDerivedStateFromProps({}, {});
@@ -447,8 +447,8 @@ class MessagesView extends React.Component {
     const oldTopic = this.props.tinode.getTopic(oldTopicName);
     if (oldTopic && oldTopic.isSubscribed()) {
       oldTopic.leave(false)
-        .catch(() => { /* do nothing here */ })
-        .finally(() => {
+        .catch(_ => { /* do nothing here */ })
+        .finally(_ => {
           // We don't care if the request succeeded or failed.
           // The topic is dead regardless.
           this.setState({fetchingMessages: false});
@@ -487,10 +487,10 @@ class MessagesView extends React.Component {
     if (event.target.scrollTop <= 0) {
       const topic = this.props.tinode.getTopic(this.state.topic);
       if (topic && topic.isSubscribed() && topic.msgHasMoreMessages()) {
-        this.setState({fetchingMessages: true}, () => {
+        this.setState({fetchingMessages: true}, _ => {
           topic.getMessagesPage(MESSAGES_PAGE)
-            .catch((err) => this.props.onError(err.message, 'err'))
-            .finally(() => this.setState({fetchingMessages: false}));
+            .catch(err => this.props.onError(err.message, 'err'))
+            .finally(_ => this.setState({fetchingMessages: false}));
           });
       }
     }
@@ -656,9 +656,7 @@ class MessagesView extends React.Component {
     switch (info.what) {
       case 'kp': {
         clearTimeout(this.keyPressTimer);
-        this.keyPressTimer = setTimeout(() => {
-          this.setState({typingIndicator: false});
-        }, KEYPRESS_DELAY + 1000);
+        this.keyPressTimer = setTimeout(_ => this.setState({typingIndicator: false}), KEYPRESS_DELAY + 1000);
         if (!this.state.typingIndicator) {
           this.setState({typingIndicator: true});
         }
@@ -893,9 +891,8 @@ class MessagesView extends React.Component {
             }
             // Pass data and the uploader to the TinodeWeb.
             this.sendMessage(msg, uploadCompletionPromise, uploader);
-        }).catch((err) => {
-          this.props.onError(err, 'err');
-        });
+        })
+        .catch(err => this.props.onError(err, 'err'));
         return;
     }
 

@@ -118,7 +118,7 @@ export default class AudioPlayer extends React.PureComponent {
 
     this.canvasContext.lineWidth = LINE_WIDTH;
 
-    const drawFrame = () => {
+    const drawFrame = _ => {
       if (!this.canvasRef.current || !this.audioPlayer) {
         // The component is unmounted.
         return;
