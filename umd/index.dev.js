@@ -6151,6 +6151,10 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       this.handleCancelReply();
     } else if (this.state.reply) {
       if (this.state.reply.editing) {
+        if (msg == this.state.contentToEdit) {
+          this.handleCancelReply();
+          return;
+        }
         head = {
           replace: ':' + this.state.reply.seq
         };
@@ -6381,7 +6385,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
     this.setState({
       reply: {
-        content: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.quote(this.props.intl.formatMessage(messages.message_editing), null, content),
+        content: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.quote(this.props.intl.formatMessage(messages.editing_message), null, content),
         seq: seq,
         editing: true
       },

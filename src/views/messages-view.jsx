@@ -762,6 +762,11 @@ class MessagesView extends React.Component {
       this.handleCancelReply();
     } else if (this.state.reply) {
       if (this.state.reply.editing) {
+        if (msg == this.state.contentToEdit) {
+          // Message unchanged.
+          this.handleCancelReply();
+          return;
+        }
         // Editing an existing message.
         head = {replace: ':' + this.state.reply.seq};
       } else if (this.state.reply.content) {
@@ -1032,7 +1037,7 @@ class MessagesView extends React.Component {
 
     this.setState({
       reply: {
-        content: Drafty.quote(this.props.intl.formatMessage(messages.message_editing), null, content),
+        content: Drafty.quote(this.props.intl.formatMessage(messages.editing_message), null, content),
         seq: seq,
         editing: true
       },
