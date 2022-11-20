@@ -19,7 +19,7 @@ import LogoView from './logo-view.jsx';
 import MetaMessage from '../widgets/meta-message.jsx';
 import SendMessage from '../widgets/send-message.jsx';
 
-import { DEFAULT_P2P_ACCESS_MODE, IMAGE_PREVIEW_DIM, KEYPRESS_DELAY,
+import { DEFAULT_P2P_ACCESS_MODE, EDIT_PREVIEW_LENGTH, IMAGE_PREVIEW_DIM, KEYPRESS_DELAY,
   MESSAGES_PAGE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE,
   READ_DELAY, QUOTED_REPLY_LENGTH } from '../config.js';
 import { CALL_STATE_OUTGOING_INITATED, CALL_STATE_IN_PROGRESS } from '../constants.js';
@@ -63,6 +63,11 @@ const messages = defineMessages({
     defaultMessage: 'invalid content',
     description: 'Shown when the message is unreadable'
   },
+  editing_message: {
+    id: 'editing_message',
+    defaultMessage: 'Editing',
+    description: 'Title over message editing preview'
+  }
 });
 
 // Checks if the access permissions are granted but not yet accepted.
@@ -125,6 +130,7 @@ class MessagesView extends React.Component {
     this.goToLatestMessage = this.goToLatestMessage.bind(this);
 
     this.handlePickReply = this.handlePickReply.bind(this);
+    this.handleEditMessage = this.handleEditMessage.bind(this);
     this.handleCancelReply = this.handleCancelReply.bind(this);
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
     this.handleCallHangup = this.handleCallHangup.bind(this);
@@ -237,6 +243,7 @@ class MessagesView extends React.Component {
         peerMessagingDisabled: false,
         channel: false,
         reply: null,
+        contentToEdit: null,
         showGoToLastButton: false
       };
     } else if (nextProps.topic != prevState.topic) {
@@ -753,14 +760,19 @@ class MessagesView extends React.Component {
       msg = this.props.forwardMessage.msg;
       head = this.props.forwardMessage.head;
       this.handleCancelReply();
-    } else if (this.state.reply && this.state.reply.content) {
-      // We are replying to a message in this topic.
-      head = {reply: '' + this.state.reply.seq};
-      // Turn it into Drafty so we can make a quoted Drafty object later.
-      if (typeof msg == 'string') {
-        msg = Drafty.parse(msg);
+    } else if (this.state.reply) {
+      if (this.state.reply.editing) {
+        // Editing an existing message.
+        head = {replace: ':' + this.state.reply.seq};
+      } else if (this.state.reply.content) {
+        // Replying to a message in this topic.
+        // Turn it into Drafty so we can make a quoted Drafty object later.
+        head = {reply: '' + this.state.reply.seq};
+        if (typeof msg == 'string') {
+          msg = Drafty.parse(msg);
+        }
+        msg = Drafty.append(Drafty.sanitizeEntities(this.state.reply.content), msg);
       }
-      msg = Drafty.append(Drafty.sanitizeEntities(this.state.reply.content), msg);
       this.handleCancelReply();
     }
     this.props.sendMessage(msg, uploadCompletionPromise, uploader, head);
@@ -769,7 +781,7 @@ class MessagesView extends React.Component {
   // Retry sending a message.
   retrySend(pub) {
     this.props.sendMessage(pub.content, undefined, undefined, pub.head)
-      .then(() => {
+      .then(_ => {
         // All good. Remove the original message draft from the cache.
         const topic = this.props.tinode.getTopic(this.state.topic);
         topic.delMessagesList([pub.seq], true);
@@ -977,9 +989,8 @@ class MessagesView extends React.Component {
   // senderId: UID of the sender of the source message.
   // senderName: full name of the sender of the original message.
   handlePickReply(seq, content, senderId, senderName) {
-    this.setState({reply: null});
-
     if (!seq || !content) {
+      this.setState({reply: null});
       return;
     }
 
@@ -1001,8 +1012,38 @@ class MessagesView extends React.Component {
     this.props.onCancelForwardMessage();
   }
 
+  // seq: seq ID of the message to edit.
+  // context: message content.
+  handleEditMessage(seq, content) {
+    if (!seq || !content) {
+      this.setState({reply: null});
+      return;
+    }
+
+    content = typeof content == 'string' ? Drafty.init(content) : content;
+    const editable = Drafty.toMarkdown(content);
+    if (Drafty.isValid(content)) {
+      content = Drafty.replyContent(content, EDIT_PREVIEW_LENGTH);
+    } else {
+      // /!\ invalid content.
+      content = Drafty.append(Drafty.init('\u26A0 '),
+        Drafty.wrapInto(this.props.intl.formatMessage(messages.invalid_content), 'EM'));
+    }
+
+    this.setState({
+      reply: {
+        content: Drafty.quote(this.props.intl.formatMessage(messages.message_editing), null, content),
+        seq: seq,
+        editing: true
+      },
+      contentToEdit: editable
+    });
+    this.props.onCancelForwardMessage();
+  }
+
+
   handleCancelReply() {
-    this.setState({reply: null});
+    this.setState({reply: null, contentToEdit: null});
     this.props.onCancelForwardMessage();
   }
 
@@ -1011,7 +1052,7 @@ class MessagesView extends React.Component {
     if (ref && ref.current) {
       ref.current.scrollIntoView({block: "center", behavior: "smooth"});
       ref.current.classList.add('flash');
-      setTimeout(() => { ref.current.classList.remove('flash') } , 1000);
+      setTimeout(_ => {ref.current.classList.remove('flash')} , 1000);
     } else {
       console.error("Unresolved message ref", replyToSeq);
     }
@@ -1157,6 +1198,8 @@ class MessagesView extends React.Component {
                 tinode={this.props.tinode}
                 content={msg.content}
                 mimeType={msg.head && msg.head.mime}
+                replyToSeq={replyToSeq}
+                edited={msg.head && msg.head.replace && !msg.head.webrtc}
                 timestamp={msg.ts}
                 response={isReply}
                 seq={msg.seq}
@@ -1168,17 +1211,17 @@ class MessagesView extends React.Component {
                 sequence={sequence}
                 received={deliveryStatus}
                 uploader={msg._uploader}
+                userIsWriter={this.state.isWriter}
                 viewportWidth={this.props.viewportWidth}  // Used by `formatter`.
                 showContextMenu={this.handleShowMessageContextMenu}
                 onImagePreview={this.handleImagePostview}
                 onFormResponse={this.handleFormResponse}
-                onError={this.props.onError}
                 onCancelUpload={this.handleCancelUpload}
                 pickReply={this.handlePickReply}
-                replyToSeq={replyToSeq}
+                editMessage={this.handleEditMessage}
                 onQuoteClick={this.handleQuoteClick}
+                onError={this.props.onError}
                 ref={ref}
-                userIsWriter={this.state.isWriter}
                 key={msg.seq} />
             );
           }
@@ -1287,13 +1330,14 @@ class MessagesView extends React.Component {
                 topicName={this.state.topic}
                 noInput={!!this.props.forwardMessage}
                 disabled={!this.state.isWriter || this.state.deleted}
+                reply={this.state.reply}
+                initMessage={this.state.contentToEdit}
                 onKeyPress={this.sendKeyPress}
                 onSendMessage={this.sendMessage}
                 onAttachFile={this.props.forwardMessage ? null : this.handleAttachFile}
                 onAttachImage={this.props.forwardMessage ? null : this.handleAttachImage}
                 onAttachAudio={this.props.forwardMessage ? null : this.sendAudioAttachment}
                 onError={this.props.onError}
-                reply={this.state.reply}
                 onQuoteClick={this.handleQuoteClick}
                 onCancelReply={this.handleCancelReply} />}
           </>

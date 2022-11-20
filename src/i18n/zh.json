@@ -1451,5 +1451,26 @@
     "description": "Message explaining that the credential was successfully validated.",
     "missing": false,
     "obsolete": false
+  },
+  "menu_item_edit": {
+    "translation": "编辑",
+    "defaultMessage": "Edit",
+    "description": "Edit message",
+    "missing": false,
+    "obsolete": false
+  },
+  "editing_message": {
+    "translation": "编辑",
+    "defaultMessage": "Editing",
+    "description": "Title over message editing preview",
+    "missing": false,
+    "obsolete": false
+  },
+  "message_edited_marker": {
+    "translation": "，编辑",
+    "defaultMessage": ", edited",
+    "description": "Marker indicating that the message was edited",
+    "missing": false,
+    "obsolete": false
   }
 }

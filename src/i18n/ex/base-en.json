@@ -243,6 +243,10 @@
     "defaultMessage": "Unsupported",
     "description": "Unsupported entity in drafty"
   },
+  "editing_message": {
+    "defaultMessage": "Editing",
+    "description": "Title over message editing preview"
+  },
   "email_dative": {
     "defaultMessage": "email",
     "description": "Dative case of 'email', i.e. 'email' in 'by email'"
@@ -480,6 +484,10 @@
     "defaultMessage": "Delete",
     "description": "Delete entire topic"
   },
+  "menu_item_edit": {
+    "defaultMessage": "Edit",
+    "description": "Edit message"
+  },
   "menu_item_edit_permissions": {
     "defaultMessage": "Edit permissions",
     "description": "Menu item [Edit permissions]"
@@ -523,6 +531,10 @@
   "menu_item_video_call": {
     "defaultMessage": "Video call",
     "description": "Start video call"
+  },
+  "message_edited_marker": {
+    "defaultMessage": ", edited",
+    "description": "Marker indicating that the message was edited"
   },
   "message_sending": {
     "defaultMessage": "sending...",

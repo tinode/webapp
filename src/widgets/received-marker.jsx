@@ -16,6 +16,11 @@ const messages = defineMessages({
     id: 'message_sending_failed',
     defaultMessage: 'failed',
     description: 'Failed to send message, in place of time stamp'
+  },
+  message_edited_marker: {
+    id: 'message_edited_marker',
+    defaultMessage: ', edited',
+    description: 'Marker indicating that the message was edited'
   }
 });
 
@@ -33,10 +38,11 @@ class ReceivedMarker extends React.PureComponent {
 
     const icon = deliveryMarker(this.props.received);
     const marker = icon ? <i className={'material-icons small ' + icon.color}>{icon.name}</i> : null;
+    const edited = this.props.edited ? formatMessage(messages.message_edited_marker) : null;
 
     return (
       <span className="timestamp">
-        {timestamp}{'\u00a0'}{marker}
+        {timestamp}{edited}{'\u00a0'}{marker}
       </span>
     );
   }

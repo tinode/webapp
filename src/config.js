@@ -97,6 +97,8 @@ export const MESSAGE_PREVIEW_LENGTH = 80;
 export const QUOTED_REPLY_LENGTH = 30;
 // Length of a preview of a forwarded message.
 export const FORWARDED_PREVIEW_LENGTH = 84;
+// Length of preview for a message being edited.
+export const EDIT_PREVIEW_LENGTH = 60;
 
 // Minimum duration of an audio recording in milliseconds (2 sec).
 export const MIN_DURATION = 2_000;

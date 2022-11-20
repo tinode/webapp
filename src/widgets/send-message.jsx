@@ -83,7 +83,14 @@ class SendMessage extends React.PureComponent {
     }
 
     if (prevProps.topicName != this.props.topicName) {
-      this.setState({message: '', audioRec: false, quote: null});
+      this.setState({message: this.props.initMessage || '', audioRec: false, quote: null});
+    } else if (prevProps.initMessage != this.props.initMessage) {
+      const msg = this.props.initMessage || '';
+      this.setState({message: msg}, _ => {
+        // If there is text, scroll to bottom and set caret to the end.
+        this.messageEditArea.scrollTop = this.messageEditArea.scrollHeight;
+        this.messageEditArea.setSelectionRange(msg.length, msg.length);
+      });
     }
     if (prevProps.reply != this.props.reply) {
       this.setState({quote: this.formatReply()});
@@ -193,10 +200,13 @@ class SendMessage extends React.PureComponent {
         formatMessage(messages[this.props.messagePrompt]) :
         formatMessage(messages.type_new_message));
 
+    const sendIcon = (this.props.reply && this.props.reply.editing) ?
+      'check_circle' : 'send';
+
     const quote = this.state.quote ?
       (<div id="reply-quote-preview">
         <div className="cancel">
-          <a href="#" onClick={(e) => {e.preventDefault(); this.props.onCancelReply();}}><i className="material-icons gray">close</i></a>
+          <a href="#" onClick={e => {e.preventDefault(); this.props.onCancelReply();}}><i className="material-icons gray">close</i></a>
         </div>
         {this.state.quote}
       </div>) : null;
@@ -209,10 +219,10 @@ class SendMessage extends React.PureComponent {
             <>
               {this.props.onAttachFile && !this.state.audioRec ?
                 <>
-                  <a href="#" onClick={(e) => {e.preventDefault(); this.attachImage.click();}} title="Add image">
+                  <a href="#" onClick={e => {e.preventDefault(); this.attachImage.click();}} title="Add image">
                     <i className="material-icons secondary">photo</i>
                   </a>
-                  <a href="#" onClick={(e) => {e.preventDefault(); this.attachFile.click();}} title="Attach file">
+                  <a href="#" onClick={e => {e.preventDefault(); this.attachFile.click();}} title="Attach file">
                     <i className="material-icons secondary">attach_file</i>
                   </a>
                 </>
@@ -225,13 +235,14 @@ class SendMessage extends React.PureComponent {
                     onDeleted={_ => this.setState({audioRec: false})}
                     onFinished={this.handleAttachAudio}/> :
                   <textarea id="sendMessage" placeholder={prompt}
-                    value={this.state.message} onChange={this.handleMessageTyping}
+                    value={this.state.message}
+                    onChange={this.handleMessageTyping}
                     onKeyPress={this.handleKeyPress}
                     ref={(ref) => {this.messageEditArea = ref;}}
                     autoFocus />)}
               {this.state.message || !audioEnabled ?
                 <a href="#" onClick={this.handleSend} title="Send">
-                  <i className="material-icons">send</i>
+                  <i className="material-icons">{sendIcon}</i>
                 </a> :
                 !this.state.audioRec ?
                   <a href="#" onClick={e => {e.preventDefault(); this.setState({audioRec: true})}} title="Voice">
@@ -239,9 +250,9 @@ class SendMessage extends React.PureComponent {
                   </a> :
                   null
               }
-              <input type="file" ref={(ref) => {this.attachFile = ref;}}
+              <input type="file" ref={ref => {this.attachFile = ref}}
                 onChange={this.handleAttachFile} style={{display: 'none'}} />
-              <input type="file" ref={(ref) => {this.attachImage = ref;}} accept="image/*"
+              <input type="file" ref={ref => {this.attachImage = ref}} accept="image/*"
                 onChange={this.handleAttachImage} style={{display: 'none'}} />
             </>
             :

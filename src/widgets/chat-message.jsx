@@ -80,6 +80,9 @@ class BaseChatMessage extends React.PureComponent {
         this.props.received > Tinode.MESSAGE_STATUS_FAILED &&
         this.props.received < Tinode.MESSAGE_STATUS_DEL_RANGE) {
       menuItems.push('menu_item_reply');
+      if (!this.props.response) {
+        menuItems.push('menu_item_edit');
+      }
     }
     menuItems.push('menu_item_forward');
 
@@ -90,7 +93,8 @@ class BaseChatMessage extends React.PureComponent {
       userName: this.props.userName,
       y: e.pageY,
       x: e.pageX,
-      pickReply: this.props.pickReply
+      pickReply: this.props.pickReply,
+      editMessage: this.props.editMessage,
     }, menuItems);
   }
 
@@ -175,6 +179,7 @@ class BaseChatMessage extends React.PureComponent {
               </div>
               {this.props.timestamp ?
                 <ReceivedMarker
+                  edited={this.props.edited}
                   timestamp={this.props.timestamp}
                   received={this.props.received} />
                 : null}

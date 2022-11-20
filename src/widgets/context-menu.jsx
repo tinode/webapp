@@ -55,6 +55,11 @@ const messages = defineMessages({
     defaultMessage: 'Forward',
     description: 'Forward message'
   },
+  edit: {
+    id: 'menu_item_edit',
+    defaultMessage: 'Edit',
+    description: 'Edit message'
+  },
   topic_delete: {
     id: 'menu_item_delete_topic',
     defaultMessage: 'Delete',
@@ -192,6 +197,13 @@ class ContextMenu extends React.Component {
         id: 'menu_item_forward',
         title: formatMessage(messages.forward),
         handler: () => {} /* the action is taken directly in tinode-web */
+      },
+      'menu_item_edit': {
+        id: 'menu_item_edit',
+        title: formatMessage(messages.edit),
+        handler: (params, errorHandler) => {
+          return this.editMessage(params, errorHandler);
+        }
       },
       'topic_unmute': {
         id: 'topic_unmute',
@@ -435,6 +447,10 @@ class ContextMenu extends React.Component {
 
   replyToMessage(params, errorHandler) {
     params.pickReply(params.seq, params.content, params.userFrom, params.userName, errorHandler);
+  }
+
+  editMessage(params, errorHandler) {
+    params.editMessage(params.seq, params.content, errorHandler);
   }
 
   render() {
