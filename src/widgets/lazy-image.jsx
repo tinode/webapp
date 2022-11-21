@@ -1,6 +1,5 @@
 // Image with a placeholder which is replaced when the promise is resolved.
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
 
 export default class LazyImage extends React.PureComponent {
   constructor(props) {

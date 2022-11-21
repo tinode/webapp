@@ -412,8 +412,10 @@ export function replyFormatter(style, data, values, key, stack) {
     try {
       loadedPromise = cancelablePromise(quoteImage.call(this, data));
     } catch (error) {
+      console.error("Failed to quote image", error);
       loadedPromise = cancelablePromise(error);
     }
+
     attr.whenDone = loadedPromise;
     values = [React.createElement(LazyImage, attr, null), ' ', attr.alt];
     return React.createElement(React.Fragment, {key: key}, values);

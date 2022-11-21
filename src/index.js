@@ -32,9 +32,7 @@ document.getElementsByTagName('html')[0].setAttribute('lang', htmlLang);
 // Render the app.
 const root = createRoot(document.getElementById('mountPoint'));
 root.render(
-  <React.StrictMode>
-    <IntlProvider locale={language} messages={messages} textComponent={React.Fragment}>
-      <TinodeWeb />
-    </IntlProvider>
-  </React.StrictMode>
+  <IntlProvider locale={language} messages={messages} textComponent={React.Fragment}>
+    <TinodeWeb />
+  </IntlProvider>
 );
