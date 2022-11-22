@@ -399,10 +399,12 @@ class ContextMenu extends React.Component {
     if (!all && topic.cancelSend(params.seq)) {
       return;
     }
-    // Can't cancel. Delete instead.
+
     const promise = all ?
       topic.delMessagesAll(hard) :
-      topic.delMessagesList([params.seq], hard);
+      params.replace > 0 ?
+        topic.delMessagesEdits(params.replace, hard) :
+        topic.delMessagesList([params.seq], hard);
 
     return promise.catch(err => {
       if (errorHandler) {
@@ -446,7 +448,7 @@ class ContextMenu extends React.Component {
   }
 
   editMessage(params, errorHandler) {
-    params.editMessage(params.seq, params.content, errorHandler);
+    params.editMessage(params.replace || params.seq, params.content, errorHandler);
   }
 
   render() {

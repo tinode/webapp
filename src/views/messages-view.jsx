@@ -1201,7 +1201,7 @@ class MessagesView extends React.Component {
                 content={msg.content}
                 mimeType={msg.head && msg.head.mime}
                 replyToSeq={replyToSeq}
-                edited={msg.head && msg.head.replace && !msg.head.webrtc}
+                edited={msg.head && !msg.head.webrtc && msg.head.replace}
                 timestamp={msg.ts}
                 response={isReply}
                 seq={msg.seq}

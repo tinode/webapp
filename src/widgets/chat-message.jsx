@@ -88,6 +88,7 @@ class BaseChatMessage extends React.PureComponent {
 
     this.props.showContextMenu({
       seq: this.props.seq,
+      replace: this.props.edited ? parseInt(this.props.edited.split(':')[1]) : 0,
       content: this.props.content,
       userFrom: this.props.userFrom,
       userName: this.props.userName,

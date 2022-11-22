@@ -6541,7 +6541,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
               content: msg.content,
               mimeType: msg.head && msg.head.mime,
               replyToSeq: replyToSeq,
-              edited: msg.head && msg.head.replace && !msg.head.webrtc,
+              edited: msg.head && !msg.head.webrtc && msg.head.replace,
               timestamp: msg.ts,
               response: isReply,
               seq: msg.seq,
@@ -11470,6 +11470,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     menuItems.push('menu_item_forward');
     this.props.showContextMenu({
       seq: this.props.seq,
+      replace: this.props.edited ? parseInt(this.props.edited.split(':')[1]) : 0,
       content: this.props.content,
       userFrom: this.props.userFrom,
       userName: this.props.userName,
@@ -12735,7 +12736,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     if (!all && topic.cancelSend(params.seq)) {
       return;
     }
-    const promise = all ? topic.delMessagesAll(hard) : topic.delMessagesList([params.seq], hard);
+    const promise = all ? topic.delMessagesAll(hard) : params.replace > 0 ? topic.delMessagesEdits(params.replace, hard) : topic.delMessagesList([params.seq], hard);
     return promise.catch(err => {
       if (errorHandler) {
         errorHandler(err.message, 'err');
@@ -12772,7 +12773,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     params.pickReply(params.seq, params.content, params.userFrom, params.userName, errorHandler);
   }
   editMessage(params, errorHandler) {
-    params.editMessage(params.seq, params.content, errorHandler);
+    params.editMessage(params.replace || params.seq, params.content, errorHandler);
   }
   render() {
     const menu = [];
