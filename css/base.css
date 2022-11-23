@@ -1944,7 +1944,7 @@ video {
   margin: 0;
   width: 100%;
   max-width: 36rem;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
   padding: 0 0.75rem 0 0.75rem;
 }
 
