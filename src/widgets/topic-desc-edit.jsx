@@ -108,7 +108,7 @@ export default class TopicDescEdit extends React.Component {
   // Utility method for converting cropped avatar blob to bytes for sending inband or
   // for uploading it to the server out of band.
   uploadAvatar(mime, blob, width, height) {
-    const readyToUpload = (image) => {
+    const readyToUpload = image => {
       let {mime, blob} = image;
       if (blob.size > MAX_AVATAR_BYTES) {
         // Too large to send inband - uploading out of band and sending as a link.
