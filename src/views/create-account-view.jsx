@@ -95,7 +95,7 @@ export default class CreateAccountView extends React.PureComponent {
     // Utility method for converting cropped avatar blob to bytes for sending inband or
   // for uploading it to the server out of band.
   uploadAvatar(mime, blob, width, height) {
-    const readyToUpload = (image) => {
+    const readyToUpload = image => {
       let {mime, blob} = image;
       this.setState({imageUrl: URL.createObjectURL(blob), buttonDisabled: true});
       if (blob.size > MAX_AVATAR_BYTES) {
