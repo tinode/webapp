@@ -226,7 +226,7 @@ export default class AudioRecorder extends React.PureComponent {
 
   initMediaRecording(stream) {
     this.stream = stream;
-    this.mediaRecorder = new MediaRecorder(stream, {mimeType: AUDIO_MIME_TYPE, audioBitsPerSecond: 24_000});
+    this.mediaRecorder = new MediaRecorder(stream, {mimeType: AUDIO_MIME_TYPE});
 
     // The following code is needed for visualization.
     this.audioContext = new AudioContext();

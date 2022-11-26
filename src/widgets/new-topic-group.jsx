@@ -1,14 +1,11 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-import AvatarCrop from './avatar-crop.jsx';
 import AvatarUpload from './avatar-upload.jsx';
 import CheckBox from './checkbox.jsx';
 import TagManager from './tag-manager.jsx';
 
-import { AVATAR_SIZE, MAX_AVATAR_BYTES, MAX_EXTERN_ATTACHMENT_SIZE, MAX_TITLE_LENGTH,
-  MAX_TOPIC_DESCRIPTION_LENGTH } from '../config.js';
-import { imageScaled, blobToBase64, makeImageUrl } from '../lib/blob-helpers.js';
+import { MAX_TITLE_LENGTH, MAX_TOPIC_DESCRIPTION_LENGTH } from '../config.js';
 
 export default class NewTopicGroup extends React.PureComponent {
   constructor(props) {
@@ -20,18 +17,13 @@ export default class NewTopicGroup extends React.PureComponent {
       fullName: '', // full/formatted name
       private: '',
       description: '',
-      imageUrl: null,
+      imageDataUrl: null,
       tags: [],
-      isChannel: false,
-      newAvatar: null,
-      newAvatarMime: null
+      isChannel: false
     };
 
     this.handleFieldEdit = this.handleFieldEdit.bind(this);
     this.handleImageChanged = this.handleImageChanged.bind(this);
-    this.handleAvatarCropped = this.handleAvatarCropped.bind(this);
-    this.handleAvatarCropCancel = this.handleAvatarCropCancel.bind(this);
-    this.uploadAvatar = this.uploadAvatar.bind(this);
     this.handleTagsChanged = this.handleTagsChanged.bind(this);
     this.handleChannelToggle = this.handleChannelToggle.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -46,47 +38,7 @@ export default class NewTopicGroup extends React.PureComponent {
   }
 
   handleImageChanged(mime, img) {
-    this.setState({newAvatar: img, newAvatarMime: mime});
-  }
-
-  handleAvatarCropped(mime, blob, width, height) {
-    const url = blob ? URL.createObjectURL(blob) : null;
-    this.setState({imageUrl: url, newAvatar: null, newAvatarMime: null});
-    if (blob) {
-      this.uploadAvatar(mime, blob, width, height);
-    }
-  }
-
-  handleAvatarCropCancel() {
-    this.setState({newAvatar: null, newAvatarMime: null});
-  }
-
-  // Utility method for converting cropped avatar blob to bytes for sending inband or
-  // for uploading it to the server out of band.
-  uploadAvatar(mime, blob, width, height) {
-    const readyToUpload = image => {
-      let {mime, blob} = image;
-      if (blob.size > MAX_AVATAR_BYTES) {
-        // Too large to send inband - uploading out of band and sending as a link.
-        const uploader = this.props.tinode.getLargeFileHelper();
-        uploader.upload(blob)
-          .then(url => this.setState({imageUrl: url}))
-          .catch(err => this.props.onError(err.message, 'err'));
-      } else {
-        // Convert blob to base64-encoded bits.
-        blobToBase64(blob)
-          .then(b64 => this.setState({imageUrl: makeImageUrl({data: b64.bits, type: mime})}));
-      }
-    };
-
-    if (width > AVATAR_SIZE || height > AVATAR_SIZE || width != height) {
-      // Avatar is not square or too large even after cropping. Shrink it and make square.
-      imageScaled(blob, AVATAR_SIZE, AVATAR_SIZE, MAX_EXTERN_ATTACHMENT_SIZE, true)
-        .then(scaled => readyToUpload(scaled))
-        .catch(err => this.props.onError(err.message, 'err'));
-    } else {
-      readyToUpload({mime: mime, blob: blob, width: width, height: height});
-    }
+    this.setState({imageDataUrl: img});
   }
 
   handleTagsChanged(tags) {
@@ -104,22 +56,11 @@ export default class NewTopicGroup extends React.PureComponent {
     const comment = this.state.private.trim().substring(0, MAX_TITLE_LENGTH);
     const description = this.state.description.trim().substring(0, MAX_TOPIC_DESCRIPTION_LENGTH);
     if (fn) {
-      this.props.onSubmit(fn, description, this.state.imageUrl, comment, this.state.tags, this.state.isChannel);
+      this.props.onSubmit(fn, description, this.state.imageDataUrl, comment, this.state.tags, this.state.isChannel);
     }
   }
 
   render() {
-    if (this.state.newAvatar) {
-      return (
-        <AvatarCrop
-          avatar={this.state.newAvatar}
-          mime={this.state.newAvatarMime}
-          onSubmit={this.handleAvatarCropped}
-          onCancel={this.handleAvatarCropCancel}
-          onError={this.props.onError} />
-      );
-    }
-
     let submitClasses = 'primary';
     if (this.props.disabled) {
       submitClasses += ' disabled';
@@ -130,7 +71,6 @@ export default class NewTopicGroup extends React.PureComponent {
           <center>
             <AvatarUpload
               tinode={this.props.tinode}
-              avatar={this.state.imageUrl}
               onError={this.props.onError}
               onImageUpdated={this.handleImageChanged} />
           </center>
