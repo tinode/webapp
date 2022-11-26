@@ -949,6 +949,7 @@ i.search {
   /* partial bottom border */
   background: linear-gradient(to right, transparent 3.5rem, #eee 1px, #eee 100%) 0 100% / 100% 1px no-repeat, #fff;
   overflow-x: hidden;
+  cursor: pointer;
 }
 
 .contact-box.small > li {
@@ -1944,7 +1945,7 @@ video {
   margin: 0;
   width: 100%;
   max-width: 36rem;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
   padding: 0 0.75rem 0 0.75rem;
 }
 

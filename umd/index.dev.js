@@ -6862,7 +6862,8 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       }]
     })))), this.state.tabSelected === 'grp' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_new_topic_group_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
       tinode: this.props.tinode,
-      onSubmit: this.handleNewGroupSubmit
+      onSubmit: this.handleNewGroupSubmit,
+      onError: this.props.onError
     }) : this.state.tabSelected === 'byid' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_new_topic_by_id_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
       onSubmit: this.handleGroupByID,
       onError: this.props.onError
@@ -10206,7 +10207,8 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
   initMediaRecording(stream) {
     this.stream = stream;
     this.mediaRecorder = new MediaRecorder(stream, {
-      mimeType: AUDIO_MIME_TYPE
+      mimeType: AUDIO_MIME_TYPE,
+      audioBitsPerSecond: 24_000
     });
 
     this.audioContext = new AudioContext();
@@ -14582,10 +14584,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./avatar-upload.jsx */ "./src/widgets/avatar-upload.jsx");
-/* harmony import */ var _checkbox_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./checkbox.jsx */ "./src/widgets/checkbox.jsx");
-/* harmony import */ var _tag_manager_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./tag-manager.jsx */ "./src/widgets/tag-manager.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _avatar_crop_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./avatar-crop.jsx */ "./src/widgets/avatar-crop.jsx");
+/* harmony import */ var _avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./avatar-upload.jsx */ "./src/widgets/avatar-upload.jsx");
+/* harmony import */ var _checkbox_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./checkbox.jsx */ "./src/widgets/checkbox.jsx");
+/* harmony import */ var _tag_manager_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./tag-manager.jsx */ "./src/widgets/tag-manager.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+
+
 
 
 
@@ -14600,12 +14606,17 @@ class NewTopicGroup extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       fullName: '',
       private: '',
       description: '',
-      imageDataUrl: null,
+      imageUrl: null,
       tags: [],
-      isChannel: false
+      isChannel: false,
+      newAvatar: null,
+      newAvatarMime: null
     };
     this.handleFieldEdit = this.handleFieldEdit.bind(this);
     this.handleImageChanged = this.handleImageChanged.bind(this);
+    this.handleAvatarCropped = this.handleAvatarCropped.bind(this);
+    this.handleAvatarCropCancel = this.handleAvatarCropCancel.bind(this);
+    this.uploadAvatar = this.uploadAvatar.bind(this);
     this.handleTagsChanged = this.handleTagsChanged.bind(this);
     this.handleChannelToggle = this.handleChannelToggle.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -14620,8 +14631,58 @@ class NewTopicGroup extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
   }
   handleImageChanged(mime, img) {
     this.setState({
-      imageDataUrl: img
+      newAvatar: img,
+      newAvatarMime: mime
     });
+  }
+  handleAvatarCropped(mime, blob, width, height) {
+    const url = blob ? URL.createObjectURL(blob) : null;
+    this.setState({
+      imageUrl: url,
+      newAvatar: null,
+      newAvatarMime: null
+    });
+    if (blob) {
+      this.uploadAvatar(mime, blob, width, height);
+    }
+  }
+  handleAvatarCropCancel() {
+    this.setState({
+      newAvatar: null,
+      newAvatarMime: null
+    });
+  }
+
+  uploadAvatar(mime, blob, width, height) {
+    const readyToUpload = image => {
+      let {
+        mime,
+        blob
+      } = image;
+      if (blob.size > _config_js__WEBPACK_IMPORTED_MODULE_6__.MAX_AVATAR_BYTES) {
+        const uploader = this.props.tinode.getLargeFileHelper();
+        uploader.upload(blob).then(url => this.setState({
+          imageUrl: url
+        })).catch(err => this.props.onError(err.message, 'err'));
+      } else {
+        (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__.blobToBase64)(blob).then(b64 => this.setState({
+          imageUrl: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__.makeImageUrl)({
+            data: b64.bits,
+            type: mime
+          })
+        }));
+      }
+    };
+    if (width > _config_js__WEBPACK_IMPORTED_MODULE_6__.AVATAR_SIZE || height > _config_js__WEBPACK_IMPORTED_MODULE_6__.AVATAR_SIZE || width != height) {
+      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_7__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_6__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_6__.AVATAR_SIZE, _config_js__WEBPACK_IMPORTED_MODULE_6__.MAX_EXTERN_ATTACHMENT_SIZE, true).then(scaled => readyToUpload(scaled)).catch(err => this.props.onError(err.message, 'err'));
+    } else {
+      readyToUpload({
+        mime: mime,
+        blob: blob,
+        width: width,
+        height: height
+      });
+    }
   }
   handleTagsChanged(tags) {
     this.setState({
@@ -14635,14 +14696,23 @@ class NewTopicGroup extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
   }
   handleSubmit(e) {
     e.preventDefault();
-    const fn = this.state.fullName.trim().substring(0, _config_js__WEBPACK_IMPORTED_MODULE_5__.MAX_TITLE_LENGTH);
-    const comment = this.state.private.trim().substring(0, _config_js__WEBPACK_IMPORTED_MODULE_5__.MAX_TITLE_LENGTH);
-    const description = this.state.description.trim().substring(0, _config_js__WEBPACK_IMPORTED_MODULE_5__.MAX_TOPIC_DESCRIPTION_LENGTH);
+    const fn = this.state.fullName.trim().substring(0, _config_js__WEBPACK_IMPORTED_MODULE_6__.MAX_TITLE_LENGTH);
+    const comment = this.state.private.trim().substring(0, _config_js__WEBPACK_IMPORTED_MODULE_6__.MAX_TITLE_LENGTH);
+    const description = this.state.description.trim().substring(0, _config_js__WEBPACK_IMPORTED_MODULE_6__.MAX_TOPIC_DESCRIPTION_LENGTH);
     if (fn) {
-      this.props.onSubmit(fn, description, this.state.imageDataUrl, comment, this.state.tags, this.state.isChannel);
+      this.props.onSubmit(fn, description, this.state.imageUrl, comment, this.state.tags, this.state.isChannel);
     }
   }
   render() {
+    if (this.state.newAvatar) {
+      return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_avatar_crop_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        avatar: this.state.newAvatar,
+        mime: this.state.newAvatarMime,
+        onSubmit: this.handleAvatarCropped,
+        onCancel: this.handleAvatarCropCancel,
+        onError: this.props.onError
+      });
+    }
     let submitClasses = 'primary';
     if (this.props.disabled) {
       submitClasses += ' disabled';
@@ -14652,8 +14722,9 @@ class NewTopicGroup extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       onSubmit: this.handleSubmit
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-column"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("center", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("center", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_avatar_upload_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
       tinode: this.props.tinode,
+      avatar: this.state.imageUrl,
       onError: this.props.onError,
       onImageUpdated: this.handleImageChanged
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -14733,7 +14804,7 @@ class NewTopicGroup extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       tabIndex: 2
     })))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_checkbox_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_checkbox_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
       checked: this.state.isChannel,
       tabIndex: 3,
       onChange: this.handleChannelToggle
@@ -14751,7 +14822,7 @@ class NewTopicGroup extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
         "type": 0,
         "value": "Tags (search & discovery)"
       }]
-    }, title => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_tag_manager_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    }, title => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_tag_manager_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
       tinode: this.props.tinode,
       tags: this.state.tags,
       activated: true,
