@@ -68,12 +68,10 @@
   "license": "Apache-2.0",
   "dependencies": {
     "firebase": "^9.6.7",
-    "fix-webm-duration": "^1.0.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-intl": "^5.20.2",
-    "tinode-sdk": "^0.20.2",
-    "webrtc-adapter": "^8.1.1"
+    "tinode-sdk": "^0.20.2"
   },
   "devDependencies": {
     "@babel/core": "^7.14.5",
