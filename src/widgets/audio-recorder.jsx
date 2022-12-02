@@ -5,6 +5,7 @@ import React from 'react';
 import AudioPlayer from './audio-player.jsx';
 // Workaround for https://bugs.chromium.org/p/chromium/issues/detail?id=642012
 // import fixWebmDuration from 'fix-webm-duration';
+import * as ebml from 'ts-ebml';
 
 import { intArrayToBase64 } from '../lib/blob-helpers.js'
 import { secondsToTime } from '../lib/strformat';
@@ -269,12 +270,38 @@ export default class AudioRecorder extends React.PureComponent {
   // Obtain data in a form sutable for sending or playing back.
   // If duration is valid, apply fix for Chrome's WebM duration bug.
   getRecording(mimeType, duration) {
-    let blob = new Blob(this.audioChunks, {type: mimeType || AUDIO_MIME_TYPE});
+    mimeType = mimeType || AUDIO_MIME_TYPE;
+    let blob = new Blob(this.audioChunks, {type: mimeType});
+    return this.tempFixMetadata(blob, mimeType)
+      .then(fixedBlob => { blob = fixedBlob; return fixedBlob.arrayBuffer(); })
+      .then(arrayBuff => this.audioContext.decodeAudioData(arrayBuff))
+      .then(decoded => this.createPreview(decoded))
+      .then(preview => ({url: window.URL.createObjectURL(blob), preview: intArrayToBase64(preview)}));
+    /*
     return (duration > 0 ? ysFixWebmDuration(blob, duration, {logger: false}) : Promise.resolve(blob))
       .then(fixedBlob => { blob = fixedBlob; return fixedBlob.arrayBuffer(); })
       .then(arrayBuff => this.audioContext.decodeAudioData(arrayBuff))
       .then(decoded => this.createPreview(decoded))
       .then(preview => ({url: window.URL.createObjectURL(blob), preview: intArrayToBase64(preview)}));
+      */
+  }
+
+  tempFixMetadata(blob, mimeType) {
+    const decoder = new ebml.Decoder();
+    const reader = new ebml.Reader();
+    reader.logging = true;
+    reader.logGroup = "Raw WebM file";
+    reader.drop_default_duration = false;
+    let webmBuf;
+    blob.arrayBuffer()
+      .then(buf => { webmBuf = buf; return decoder.decode(buf); })
+      .then(elms => {
+        elms.forEach(elm => reader.read(elm))
+        reader.stop();
+        const fixedMetadataBuf = ebml.tools.makeMetadataSeekable(reader.metadatas, reader.duration, reader.cues);
+        const body = webmBuf.slice(reader.metadataSize);
+        return new Blob([fixedMetadataBuf, body], {type: mimeType});
+      });
   }
 
   // Preview must be calculated at the source: Chrome does not allow background AudioContext.
