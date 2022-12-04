@@ -26,6 +26,7 @@ module.exports = (env, argv) => {
       publicPath: '/umd/'
     },
     optimization: {
+      runtimeChunk: 'single',
       minimize: (mode === 'prod'),
       minimizer: [
         new TerserPlugin({
@@ -63,7 +64,6 @@ module.exports = (env, argv) => {
       }),
     ],
     externals: {
-      // 'fix-webm-duration': 'fixWebmDuration',
       'react': 'React',
       'react-dom': 'ReactDOM',
       'react-intl': 'ReactIntl',
