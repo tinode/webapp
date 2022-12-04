@@ -2307,6 +2307,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./lib/navigation.js */ "./src/lib/navigation.js");
 
 
+console.log("hello!");
 
 
 
@@ -2319,13 +2320,14 @@ const {
 } = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_5__["default"].parseUrlHash(window.location.hash);
 const language = params && params.hl || navigator.languages && navigator.languages[0] || navigator.language || navigator.userLanguage || 'en';
 
-const baseLanguage = language.toLowerCase().split(/[-_]/)[0];
+const normalized = language.replace('_', '-');
+const baseLanguage = normalized.split(/[-]/)[0].toLowerCase();
 
-const htmlLang = _messages_json__WEBPACK_IMPORTED_MODULE_3__[language] ? language : _messages_json__WEBPACK_IMPORTED_MODULE_3__[baseLanguage] ? baseLanguage : 'en';
+const htmlLang = _messages_json__WEBPACK_IMPORTED_MODULE_3__[normalized] ? language : _messages_json__WEBPACK_IMPORTED_MODULE_3__[baseLanguage] ? baseLanguage : 'en';
 const messages = _messages_json__WEBPACK_IMPORTED_MODULE_3__[htmlLang];
+console.log("language:", htmlLang, "messages loaded", messages);
 
 document.getElementsByTagName('html')[0].setAttribute('lang', htmlLang);
-
 const root = (0,react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot)(document.getElementById('mountPoint'));
 root.render(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_2__.IntlProvider, {
   locale: language,

@@ -9,10 +9,10 @@ const mkdirpSync = require('mkdirp').sync;
 
 const EXTRACTED_STRINGS = './src/i18n/ex/base-en.json';
 const BASE_LANG        = 'en';
-const LANG_DIR         = './src/i18n/';
 const LANG_PATTERN     = './src/i18n/*.json';
 const LANG_PATTERN_ONE = './src/i18n/%s.json';
 const FINAL_FILE       = './src/messages.json';
+const OUTPUT_PATTERN   = './src/i18n.min/%s.json';
 
 const args = process.argv.slice(2);
 
@@ -99,8 +99,9 @@ globSync(LANG_PATTERN)
     fs.writeFileSync(filename, JSON.stringify(translated, null, 2)+"\n");
   });
 
-// Combine all translations into a single json {"lang_1": {...}, "lang_2: {...}"}
+// Legacy: Combine all translations into a single json {"lang_1": {...}, "lang_2: {...}"}
 // while removing messages marked as missing or obsolete.
+// New way: Emit one file per language with all unnecessary data stripped.
 
 // Read all translations.
 const messages = globSync(LANG_PATTERN)
@@ -122,6 +123,11 @@ const messages = globSync(LANG_PATTERN)
     return { ...collection, ...descriptors };
   }, {});
 
-// Write a file with all translations combined.
+// Legacy: Write a single file with all translations combined.
 mkdirpSync(path.dirname(FINAL_FILE));
 fs.writeFileSync(FINAL_FILE, JSON.stringify(messages));
+
+// New way: write minified ptraslation files.
+for (let lang in messages) {
+  fs.writeFileSync(printf(OUTPUT_PATTERN, lang), JSON.stringify(messages[lang]));
+}
