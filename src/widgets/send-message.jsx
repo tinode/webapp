@@ -1,9 +1,11 @@
 // Send message form.
-import React from 'react';
+import React, { Suspense } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Drafty } from 'tinode-sdk';
 
-import AudioRecorder from './audio-recorder.jsx';
+// Lazy-loading AudioRecorder because it's quite large due to
+// a dependency on webm-duration-fix.
+const AudioRecorder = React.lazy(_ => import('./audio-recorder.jsx'));
 
 import { KEYPRESS_DELAY } from '../config.js';
 import { filePasted } from '../lib/blob-helpers.js';
@@ -231,9 +233,11 @@ class SendMessage extends React.PureComponent {
               {this.props.noInput ?
                 (quote || <div className="hr thin" />) :
                 (this.state.audioRec ?
-                  <AudioRecorder
-                    onDeleted={_ => this.setState({audioRec: false})}
-                    onFinished={this.handleAttachAudio}/> :
+                  (<Suspense fallback={<div>Loading...</div>}>
+                    <AudioRecorder
+                      onDeleted={_ => this.setState({audioRec: false})}
+                      onFinished={this.handleAttachAudio}/>
+                  </Suspense>) :
                   <textarea id="sendMessage" placeholder={prompt}
                     value={this.state.message}
                     onChange={this.handleMessageTyping}

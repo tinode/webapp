@@ -4,7 +4,8 @@ import React from 'react';
 
 import AudioPlayer from './audio-player.jsx';
 // Workaround for https://bugs.chromium.org/p/chromium/issues/detail?id=642012
-import fixWebmDuration from 'fix-webm-duration';
+// It adds duration and SeekHead to the webm record.
+import fixWebmDuration from 'webm-duration-fix';
 
 import { intArrayToBase64 } from '../lib/blob-helpers.js'
 import { secondsToTime } from '../lib/strformat';
@@ -269,8 +270,9 @@ export default class AudioRecorder extends React.PureComponent {
   // Obtain data in a form sutable for sending or playing back.
   // If duration is valid, apply fix for Chrome's WebM duration bug.
   getRecording(mimeType, duration) {
-    let blob = new Blob(this.audioChunks, {type: mimeType || AUDIO_MIME_TYPE});
-    return (duration > 0 ? fixWebmDuration(blob, duration, {logger: false}) : Promise.resolve(blob))
+    mimeType = mimeType || AUDIO_MIME_TYPE;
+    let blob = new Blob(this.audioChunks, {type: mimeType});
+    return fixWebmDuration(blob, mimeType)
       .then(fixedBlob => { blob = fixedBlob; return fixedBlob.arrayBuffer(); })
       .then(arrayBuff => this.audioContext.decodeAudioData(arrayBuff))
       .then(decoded => this.createPreview(decoded))
