@@ -2321,7 +2321,7 @@ const {
 const language = params && params.hl || navigator.languages && navigator.languages[0] || navigator.language || navigator.userLanguage || 'en';
 
 const normalized = language.replace('_', '-');
-const baseLanguage = normalized.split(/[-]/)[0].toLowerCase();
+const baseLanguage = normalized.split(/[-_]/)[0].toLowerCase();
 
 const htmlLang = _messages_json__WEBPACK_IMPORTED_MODULE_3__[normalized] ? language : _messages_json__WEBPACK_IMPORTED_MODULE_3__[baseLanguage] ? baseLanguage : 'en';
 const messages = _messages_json__WEBPACK_IMPORTED_MODULE_3__[htmlLang];

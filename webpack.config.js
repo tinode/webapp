@@ -69,8 +69,5 @@ module.exports = (env, argv) => {
       'react-intl': 'ReactIntl',
       'tinode-sdk': 'Tinode',
     },
-    experiments: {
-      topLevelAwait: true
-    },
   };
 }

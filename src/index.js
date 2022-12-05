@@ -39,7 +39,7 @@ const language = (params && params.hl) ||
 // Make sure names like 'en_GB' and 'en-GB' consistently use '-'.
 const normalized = language.replace('_', '-');
 // Get the base language 'en' from a more specific 'en_GB' or 'en-US' as a partial fallback.
-const baseLanguage = normalized.split(/[-]/)[0].toLowerCase();
+const baseLanguage = normalized.split(/[-_]/)[0].toLowerCase();
 
 // Try the full locale first, then the locale without the region code, fallback to 'en'.
 // const htmlLang = messageLoader[normalized] ? language : messageLoader[baseLanguage] ? baseLanguage : 'en';
