@@ -25,9 +25,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-
-
 const BUFFER_SIZE = 256;
 const CANVAS_UPSCALING = 2.0;
 const LINE_WIDTH = 3 * CANVAS_UPSCALING;
@@ -37,7 +34,6 @@ const BAR_COLOR = '#BBBD';
 const BAR_SCALE = 64.0;
 const VISUALIZATION_BARS = 96;
 const MAX_SAMPLES_PER_BAR = 10;
-
 const AUDIO_MIME_TYPE = 'audio/webm';
 class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
@@ -72,7 +68,6 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     this.audioInput = null;
     this.analyser = null;
     this.audioChunks = [];
-
     try {
       navigator.mediaDevices.getUserMedia({
         audio: true,
@@ -88,7 +83,6 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       this.cleanUp();
     }
   }
-
   visualize() {
     this.initCanvas();
     const pcmData = new Uint8Array(this.analyser.frequencyBinCount);
@@ -110,7 +104,6 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       this.setState({
         duration: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_4__.secondsToTime)(duration / 1000)
       });
-
       if (duration > _config_js__WEBPACK_IMPORTED_MODULE_5__.MAX_DURATION) {
         this.startedOn = null;
         this.mediaRecorder.pause();
@@ -121,13 +114,11 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
           duration: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_4__.secondsToTime)(this.durationMillis / 1000)
         });
       }
-
       this.analyser.getByteTimeDomainData(pcmData);
       let amp = 0.0;
       for (const amplitude of pcmData) {
         amp += (amplitude - 127) ** 2;
       }
-
       volume += Math.sqrt(amp / pcmData.length);
       countPerBar++;
       let barCount = duration / MILLIS_PER_BAR | 0;
@@ -141,9 +132,7 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
           this.viewBuffer.shift();
         }
       }
-
       this.canvasContext.clearRect(0, 0, width, height);
-
       this.canvasContext.beginPath();
       for (let i = 0; i < this.viewBuffer.length; i++) {
         let x = i * (LINE_WIDTH + SPACING) - dx;
@@ -213,7 +202,6 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       mimeType: AUDIO_MIME_TYPE,
       audioBitsPerSecond: 24_000
     });
-
     this.audioContext = new AudioContext();
     this.audioInput = this.audioContext.createMediaStreamSource(stream);
     this.analyser = this.audioContext.createAnalyser();
@@ -245,7 +233,6 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     this.mediaRecorder.start();
     this.visualize();
   }
-
   getRecording(mimeType, duration) {
     mimeType = mimeType || AUDIO_MIME_TYPE;
     let blob = new Blob(this.audioChunks, {
@@ -259,7 +246,6 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       preview: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__.intArrayToBase64)(preview)
     }));
   }
-
   createPreview(audio) {
     const data = audio.getChannelData(0);
     const viewLength = Math.min(data.length, VISUALIZATION_BARS);
