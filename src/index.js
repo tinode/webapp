@@ -1,8 +1,6 @@
 // Put all packages together.
 // Used to generate umd/index.prod.js
 
-console.log("hello!");
-
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 
@@ -38,8 +36,8 @@ const language = (params && params.hl) ||
 
 // Make sure names like 'en_GB' and 'en-GB' consistently use '-'.
 const normalized = language.replace('_', '-');
-// Get the base language 'en' from a more specific 'en_GB' or 'en-US' as a partial fallback.
-const baseLanguage = normalized.split(/[-_]/)[0].toLowerCase();
+// Get the base language 'en' from a more specific 'en-US' as a partial fallback.
+const baseLanguage = normalized.split('-')[0].toLowerCase();
 
 // Try the full locale first, then the locale without the region code, fallback to 'en'.
 // const htmlLang = messageLoader[normalized] ? language : messageLoader[baseLanguage] ? baseLanguage : 'en';
@@ -47,10 +45,9 @@ const baseLanguage = normalized.split(/[-_]/)[0].toLowerCase();
 const htmlLang = allMessages[normalized] ? language : allMessages[baseLanguage] ? baseLanguage : 'en';
 const messages = allMessages[htmlLang];
 
-console.log("language:", htmlLang, "messages loaded", messages);
-
 // Set lang attribute of the HTML element: <html lang="XX">
 document.getElementsByTagName('html')[0].setAttribute('lang', htmlLang);
+
 // Render the app.
 const root = createRoot(document.getElementById('mountPoint'));
 root.render(
