@@ -10,8 +10,7 @@ import allMessages from './messages.json';
 import TinodeWeb from './views/tinode-web.jsx';
 import HashNavigation from './lib/navigation.js';
 
-/*
-// Load just one language.
+// Allow loading translation strings for just one language.
 const messageLoader = {
   'de': _ => import('./i18n.min/de.json'),
   'en': _ => import('./i18n.min/en.json'),
@@ -23,7 +22,6 @@ const messageLoader = {
   'zh': _ => import('./i18n.min/zh.json'),
   'zh-TW': _ => import('./i18n.min/zh-TW.json')
 };
-*/
 
 // Detect human language to use in the UI:
 //  Check parameters from URL hash #?hl=ru, then browser, then use 'en' as a fallback.
@@ -40,18 +38,16 @@ const normalized = language.replace('_', '-');
 const baseLanguage = normalized.split('-')[0].toLowerCase();
 
 // Try the full locale first, then the locale without the region code, fallback to 'en'.
-// const htmlLang = messageLoader[normalized] ? language : messageLoader[baseLanguage] ? baseLanguage : 'en';
-// const messages = await messageLoader[htmlLang]();
-const htmlLang = allMessages[normalized] ? language : allMessages[baseLanguage] ? baseLanguage : 'en';
-const messages = allMessages[htmlLang];
+const htmlLang = messageLoader[normalized] ? language : messageLoader[baseLanguage] ? baseLanguage : 'en';
 
 // Set lang attribute of the HTML element: <html lang="XX">
 document.getElementsByTagName('html')[0].setAttribute('lang', htmlLang);
 
 // Render the app.
 const root = createRoot(document.getElementById('mountPoint'));
-root.render(
-  <IntlProvider locale={language} messages={messages} textComponent={React.Fragment}>
-    <TinodeWeb />
-  </IntlProvider>
-);
+messageLoader[htmlLang]().then(messages =>
+  root.render(
+    <IntlProvider locale={language} messages={messages} textComponent={React.Fragment}>
+      <TinodeWeb />
+    </IntlProvider>
+));
