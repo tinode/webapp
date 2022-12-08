@@ -5,13 +5,11 @@
 const fs = require('fs');
 const path = require('path');
 const globSync = require('glob').sync;
-const mkdirpSync = require('mkdirp').sync;
 
 const EXTRACTED_STRINGS = './src/i18n/ex/base-en.json';
 const BASE_LANG        = 'en';
 const LANG_PATTERN     = './src/i18n/*.json';
 const LANG_PATTERN_ONE = './src/i18n/%s.json';
-const FINAL_FILE       = './src/messages.json';
 const OUTPUT_PATTERN   = './src/i18n.min/%s.json';
 
 const args = process.argv.slice(2);
@@ -123,11 +121,7 @@ const messages = globSync(LANG_PATTERN)
     return { ...collection, ...descriptors };
   }, {});
 
-// Legacy: Write a single file with all translations combined.
-//mkdirpSync(path.dirname(FINAL_FILE));
-//fs.writeFileSync(FINAL_FILE, JSON.stringify(messages));
-
-// New way: write minified ptraslation files.
+// Write minified translation files, one per language.
 for (let lang in messages) {
   fs.writeFileSync(printf(OUTPUT_PATTERN, lang), JSON.stringify(messages[lang]));
 }
