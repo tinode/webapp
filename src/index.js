@@ -6,7 +6,6 @@ import { createRoot } from 'react-dom/client';
 
 import { IntlProvider } from 'react-intl';
 
-import allMessages from './messages.json';
 import TinodeWeb from './views/tinode-web.jsx';
 import HashNavigation from './lib/navigation.js';
 
