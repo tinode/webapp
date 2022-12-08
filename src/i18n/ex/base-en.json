@@ -215,10 +215,6 @@
     "defaultMessage": "Are you sure you want to delete all messages for everyone? It cannot be undone.",
     "description": "Alert dialog warning when hard-deleting all messages."
   },
-  "deleted_content": {
-    "defaultMessage": "content deleted",
-    "description": "Shown when messages are deleted"
-  },
   "description_editing_placeholder": {
     "defaultMessage": "Description (optional)",
     "description": "Placeholder for editing topic description"

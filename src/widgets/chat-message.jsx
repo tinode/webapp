@@ -76,9 +76,7 @@ class BaseChatMessage extends React.PureComponent {
     if (this.props.received == Tinode.MESSAGE_STATUS_FAILED) {
       menuItems.push('menu_item_send_retry');
     }
-    if (this.props.userIsWriter &&
-        this.props.received > Tinode.MESSAGE_STATUS_FAILED &&
-        this.props.received < Tinode.MESSAGE_STATUS_DEL_RANGE) {
+    if (this.props.userIsWriter && this.props.received > Tinode.MESSAGE_STATUS_FAILED) {
       menuItems.push('menu_item_reply');
       if (!this.props.response) {
         menuItems.push('menu_item_edit');
@@ -146,12 +144,6 @@ class BaseChatMessage extends React.PureComponent {
       }, this);
       const tree = Drafty.format(content, fullFormatter, this.formatterContext);
       content = React.createElement(React.Fragment, null, tree);
-    } else if (this.props.deleted) {
-      // Message represents a range of deleted messages.
-      content = <><i className="material-icons gray">block</i> <i className="gray">
-        <FormattedMessage id="deleted_content"
-          defaultMessage="content deleted" description="Shown when messages are deleted" />
-      </i></>
     } else if (typeof content != 'string') {
       content = <><i className="material-icons gray">warning_amber</i> <i className="gray">
         <FormattedMessage id="invalid_content"

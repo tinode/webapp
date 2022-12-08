@@ -307,13 +307,6 @@
     "missing": false,
     "obsolete": false
   },
-  "deleted_content": {
-    "translation": "内容已删除",
-    "defaultMessage": "content deleted",
-    "description": "Shown when messages are deleted",
-    "missing": false,
-    "obsolete": false
-  },
   "download_action": {
     "translation": "下载",
     "defaultMessage": "download",

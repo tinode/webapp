@@ -307,13 +307,6 @@
     "missing": false,
     "obsolete": false
   },
-  "deleted_content": {
-    "translation": "contenu supprimé",
-    "defaultMessage": "content deleted",
-    "description": "Shown when messages are deleted",
-    "missing": false,
-    "obsolete": false
-  },
   "download_action": {
     "translation": "télécharger",
     "defaultMessage": "download",

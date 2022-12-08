@@ -307,13 +307,6 @@
     "missing": false,
     "obsolete": false
   },
-  "deleted_content": {
-    "translation": "내용이 삭제되었습니다",
-    "defaultMessage": "content deleted",
-    "description": "Shown when messages are deleted",
-    "missing": false,
-    "obsolete": false
-  },
   "download_action": {
     "translation": "다운로드",
     "defaultMessage": "download",
