@@ -1,6 +1,7 @@
 // Audio recorder widget.
 
 import React from 'react';
+import { defineMessages, injectIntl } from 'react-intl';
 
 import AudioPlayer from './audio-player.jsx';
 // Workaround for https://bugs.chromium.org/p/chromium/issues/detail?id=642012
@@ -33,7 +34,30 @@ const MAX_SAMPLES_PER_BAR = 10;
 // Recording format.
 const AUDIO_MIME_TYPE = 'audio/webm';
 
-export default class AudioRecorder extends React.PureComponent {
+const messages = defineMessages({
+  icon_title_delete: {
+    id: 'icon_title_delete',
+    defaultMessage: 'Delete recording',
+    description: 'Icon tool tip for deleting recorded audio'
+  },
+  icon_title_pause: {
+    id: 'icon_title_pause',
+    defaultMessage: 'Pause playback',
+    description: 'Icon tool tip for pausing audio playback'
+  },
+  icon_title_resume: {
+    id: 'icon_title_resume',
+    defaultMessage: 'Resume playback',
+    description: 'Icon tool tip for resuming audio playback'
+  },
+  icon_title_send: {
+    id: 'icon_title_send',
+    defaultMessage: 'Send message',
+    description: 'Icon tool tip for sending a message'
+  },
+});
+
+class AudioRecorder extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -315,10 +339,11 @@ export default class AudioRecorder extends React.PureComponent {
   }
 
   render() {
+    const {formatMessage} = this.props.intl;
     const resumeClass = 'material-icons ' + (this.state.enabled ? 'red' : 'gray');
     return (
       <div className="audio">
-        <a href="#" onClick={this.handleDelete} title="Delete">
+        <a href="#" onClick={this.handleDelete} title={formatMessage(messages.icon_title_delete)}>
           <i className="material-icons gray">delete_outline</i>
         </a>
         {this.state.recording ?
@@ -332,17 +357,19 @@ export default class AudioRecorder extends React.PureComponent {
         }
         <div className="duration">{this.state.duration}</div>
         {this.state.recording ?
-          <a href="#" onClick={this.handlePause} title="Pause">
+          <a href="#" onClick={this.handlePause} title={formatMessage(messages.icon_title_pause)}>
             <i className="material-icons">pause_circle_outline</i>
           </a> :
-          <a href="#" onClick={this.handleResume} title="Resume">
+          <a href="#" onClick={this.handleResume} title={formatMessage(messages.icon_title_resume)}>
             <i className={resumeClass}>radio_button_checked</i>
           </a>
         }
-        <a href="#" onClick={this.handleDone} title="Send">
+        <a href="#" onClick={this.handleDone} title={formatMessage(messages.icon_title_send)}>
           <i className="material-icons">send</i>
         </a>
       </div>
     );
   }
 }
+
+export default injectIntl(AudioRecorder);

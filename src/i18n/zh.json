@@ -1472,5 +1472,61 @@
     "description": "Marker indicating that the message was edited",
     "missing": false,
     "obsolete": false
+  },
+  "icon_title_add_image": {
+    "translation": "添加图片",
+    "defaultMessage": "Add image",
+    "description": "Icon tool tip for attaching an image",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_attach_file": {
+    "translation": "附加文件",
+    "defaultMessage": "Attach file",
+    "description": "Icon tool tip for attaching a file",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_delete": {
+    "translation": "删除录音",
+    "defaultMessage": "Delete recording",
+    "description": "Icon tool tip for deleting recorded audio",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_pause": {
+    "translation": "暂停播放",
+    "defaultMessage": "Pause playback",
+    "description": "Icon tool tip for pausing audio playback",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_play": {
+    "translation": "播放录音",
+    "defaultMessage": "Play recording",
+    "description": "Icon tool tip for starting audio playback",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_record_voice": {
+    "translation": "录制语音信息",
+    "defaultMessage": "Record voice message",
+    "description": "Icon tool tip for recording a voice message",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_resume": {
+    "translation": "恢复播放",
+    "defaultMessage": "Resume playback",
+    "description": "Icon tool tip for resuming audio playback",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_send": {
+    "translation": "发信息",
+    "defaultMessage": "Send message",
+    "description": "Icon tool tip for sending a message",
+    "missing": false,
+    "obsolete": false
   }
 }

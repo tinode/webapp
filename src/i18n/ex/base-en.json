@@ -298,6 +298,38 @@
     "defaultMessage": "Group or User ID",
     "description": "Prompt for entering user or group ID"
   },
+  "icon_title_add_image": {
+    "defaultMessage": "Add image",
+    "description": "Icon tool tip for attaching an image"
+  },
+  "icon_title_attach_file": {
+    "defaultMessage": "Attach file",
+    "description": "Icon tool tip for attaching a file"
+  },
+  "icon_title_delete": {
+    "defaultMessage": "Delete recording",
+    "description": "Icon tool tip for deleting recorded audio"
+  },
+  "icon_title_pause": {
+    "defaultMessage": "Pause playback",
+    "description": "Icon tool tip for pausing audio playback"
+  },
+  "icon_title_play": {
+    "defaultMessage": "Play recording",
+    "description": "Icon tool tip for starting audio playback"
+  },
+  "icon_title_record_voice": {
+    "defaultMessage": "Record voice message",
+    "description": "Icon tool tip for recording a voice message"
+  },
+  "icon_title_resume": {
+    "defaultMessage": "Resume playback",
+    "description": "Icon tool tip for resuming audio playback"
+  },
+  "icon_title_send": {
+    "defaultMessage": "Send message",
+    "description": "Icon tool tip for sending a message"
+  },
   "image_caption_prompt": {
     "defaultMessage": "Image caption",
     "description": "Prompt in SendMessage for attached image"

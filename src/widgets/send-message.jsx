@@ -37,6 +37,26 @@ const messages = defineMessages({
     defaultMessage: 'Cannot initiate file upload.',
     description: 'Generic error messagewhen attachment fails'
   },
+  icon_title_record_voice: {
+    id: 'icon_title_record_voice',
+    defaultMessage: 'Record voice message',
+    description: 'Icon tool tip for recording a voice message'
+  },
+  icon_title_attach_file: {
+    id: 'icon_title_attach_file',
+    defaultMessage: 'Attach file',
+    description: 'Icon tool tip for attaching a file'
+  },
+  icon_title_add_image: {
+    id: 'icon_title_add_image',
+    defaultMessage: 'Add image',
+    description: 'Icon tool tip for attaching an image'
+  },
+  icon_title_send: {
+    id: 'icon_title_send',
+    defaultMessage: 'Send message',
+    description: 'Icon tool tip for sending a message'
+  },
 });
 
 class SendMessage extends React.PureComponent {
@@ -221,10 +241,10 @@ class SendMessage extends React.PureComponent {
             <>
               {this.props.onAttachFile && !this.state.audioRec ?
                 <>
-                  <a href="#" onClick={e => {e.preventDefault(); this.attachImage.click();}} title="Add image">
+                  <a href="#" onClick={e => {e.preventDefault(); this.attachImage.click();}} title={formatMessage(messages.icon_title_add_image)}>
                     <i className="material-icons secondary">photo</i>
                   </a>
-                  <a href="#" onClick={e => {e.preventDefault(); this.attachFile.click();}} title="Attach file">
+                  <a href="#" onClick={e => {e.preventDefault(); this.attachFile.click();}} title={formatMessage(messages.icon_title_attach_file)}>
                     <i className="material-icons secondary">attach_file</i>
                   </a>
                 </>
@@ -245,11 +265,11 @@ class SendMessage extends React.PureComponent {
                     ref={(ref) => {this.messageEditArea = ref;}}
                     autoFocus />)}
               {this.state.message || !audioEnabled ?
-                <a href="#" onClick={this.handleSend} title="Send">
+                <a href="#" onClick={this.handleSend} title={formatMessage(messages.icon_title_send)}>
                   <i className="material-icons">{sendIcon}</i>
                 </a> :
                 !this.state.audioRec ?
-                  <a href="#" onClick={e => {e.preventDefault(); this.setState({audioRec: true})}} title="Voice">
+                  <a href="#" onClick={e => {e.preventDefault(); this.setState({audioRec: true})}} title={formatMessage(messages.icon_title_record_voice)}>
                     <i className="material-icons">mic</i>
                   </a> :
                   null

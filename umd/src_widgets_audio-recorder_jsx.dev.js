@@ -9,16 +9,19 @@
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ AudioRecorder)
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _audio_player_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./audio-player.jsx */ "./src/widgets/audio-player.jsx");
-/* harmony import */ var webm_duration_fix__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! webm-duration-fix */ "./node_modules/webm-duration-fix/lib/index.js");
-/* harmony import */ var webm_duration_fix__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(webm_duration_fix__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_strformat__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/strformat */ "./src/lib/strformat.js");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _audio_player_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./audio-player.jsx */ "./src/widgets/audio-player.jsx");
+/* harmony import */ var webm_duration_fix__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! webm-duration-fix */ "./node_modules/webm-duration-fix/lib/index.js");
+/* harmony import */ var webm_duration_fix__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(webm_duration_fix__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _lib_strformat__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/strformat */ "./src/lib/strformat.js");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+
 
 
 
@@ -35,6 +38,36 @@ const BAR_SCALE = 64.0;
 const VISUALIZATION_BARS = 96;
 const MAX_SAMPLES_PER_BAR = 10;
 const AUDIO_MIME_TYPE = 'audio/webm';
+const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
+  icon_title_delete: {
+    id: "icon_title_delete",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Delete recording"
+    }]
+  },
+  icon_title_pause: {
+    id: "icon_title_pause",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Pause playback"
+    }]
+  },
+  icon_title_resume: {
+    id: "icon_title_resume",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Resume playback"
+    }]
+  },
+  icon_title_send: {
+    id: "icon_title_send",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Send message"
+    }]
+  }
+});
 class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
@@ -102,16 +135,16 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       window.requestAnimationFrame(drawFrame);
       const duration = this.durationMillis + (Date.now() - this.startedOn);
       this.setState({
-        duration: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_4__.secondsToTime)(duration / 1000)
+        duration: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_5__.secondsToTime)(duration / 1000)
       });
-      if (duration > _config_js__WEBPACK_IMPORTED_MODULE_5__.MAX_DURATION) {
+      if (duration > _config_js__WEBPACK_IMPORTED_MODULE_6__.MAX_DURATION) {
         this.startedOn = null;
         this.mediaRecorder.pause();
         this.durationMillis += Date.now() - this.startedOn;
         this.setState({
           enabled: false,
           recording: false,
-          duration: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_4__.secondsToTime)(this.durationMillis / 1000)
+          duration: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_5__.secondsToTime)(this.durationMillis / 1000)
         });
       }
       this.analyser.getByteTimeDomainData(pcmData);
@@ -208,7 +241,7 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     this.analyser.fftSize = BUFFER_SIZE;
     this.audioInput.connect(this.analyser);
     this.mediaRecorder.onstop = _ => {
-      if (this.durationMillis > _config_js__WEBPACK_IMPORTED_MODULE_5__.MIN_DURATION) {
+      if (this.durationMillis > _config_js__WEBPACK_IMPORTED_MODULE_6__.MIN_DURATION) {
         this.getRecording(this.mediaRecorder.mimeType, this.durationMillis).then(result => this.props.onFinished(result.url, result.preview, this.durationMillis));
       } else {
         this.props.onDeleted();
@@ -238,12 +271,12 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     let blob = new Blob(this.audioChunks, {
       type: mimeType
     });
-    return webm_duration_fix__WEBPACK_IMPORTED_MODULE_2___default()(blob, mimeType).then(fixedBlob => {
+    return webm_duration_fix__WEBPACK_IMPORTED_MODULE_3___default()(blob, mimeType).then(fixedBlob => {
       blob = fixedBlob;
       return fixedBlob.arrayBuffer();
     }).then(arrayBuff => this.audioContext.decodeAudioData(arrayBuff)).then(decoded => this.createPreview(decoded)).then(preview => ({
       url: window.URL.createObjectURL(blob),
-      preview: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_3__.intArrayToBase64)(preview)
+      preview: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.intArrayToBase64)(preview)
     }));
   }
   createPreview(audio) {
@@ -274,18 +307,21 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     this.stream.getTracks().forEach(track => track.stop());
   }
   render() {
+    const {
+      formatMessage
+    } = this.props.intl;
     const resumeClass = 'material-icons ' + (this.state.enabled ? 'red' : 'gray');
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "audio"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: this.handleDelete,
-      title: "Delete"
+      title: formatMessage(messages.icon_title_delete)
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons gray"
     }, "delete_outline")), this.state.recording ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("canvas", {
       ref: this.canvasRef
-    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_audio_player_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_audio_player_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       src: this.state.blobUrl,
       preview: this.state.preview,
       duration: this.durationMillis,
@@ -295,24 +331,25 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     }, this.state.duration), this.state.recording ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: this.handlePause,
-      title: "Pause"
+      title: formatMessage(messages.icon_title_pause)
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, "pause_circle_outline")) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: this.handleResume,
-      title: "Resume"
+      title: formatMessage(messages.icon_title_resume)
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: resumeClass
     }, "radio_button_checked")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: this.handleDone,
-      title: "Send"
+      title: formatMessage(messages.icon_title_send)
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, "send")));
   }
 }
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(AudioRecorder));
 
 /***/ })
 

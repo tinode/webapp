@@ -1472,5 +1472,61 @@
     "description": "Marker indicating that the message was edited",
     "missing": false,
     "obsolete": false
+  },
+  "icon_title_add_image": {
+    "translation": "Adauga imagine",
+    "defaultMessage": "Add image",
+    "description": "Icon tool tip for attaching an image",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_attach_file": {
+    "translation": "Ataseaza fisier",
+    "defaultMessage": "Attach file",
+    "description": "Icon tool tip for attaching a file",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_delete": {
+    "translation": "Ștergeți înregistrarea",
+    "defaultMessage": "Delete recording",
+    "description": "Icon tool tip for deleting recorded audio",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_pause": {
+    "translation": "Întrerupeți redarea",
+    "defaultMessage": "Pause playback",
+    "description": "Icon tool tip for pausing audio playback",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_play": {
+    "translation": "Redați înregistrarea",
+    "defaultMessage": "Play recording",
+    "description": "Icon tool tip for starting audio playback",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_record_voice": {
+    "translation": "Înregistrați mesajul vocal",
+    "defaultMessage": "Record voice message",
+    "description": "Icon tool tip for recording a voice message",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_resume": {
+    "translation": "Reluați redarea",
+    "defaultMessage": "Resume playback",
+    "description": "Icon tool tip for resuming audio playback",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_send": {
+    "translation": "Trimite mesaj",
+    "defaultMessage": "Send message",
+    "description": "Icon tool tip for sending a message",
+    "missing": false,
+    "obsolete": false
   }
 }
