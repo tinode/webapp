@@ -124,8 +124,8 @@ const messages = globSync(LANG_PATTERN)
   }, {});
 
 // Legacy: Write a single file with all translations combined.
-mkdirpSync(path.dirname(FINAL_FILE));
-fs.writeFileSync(FINAL_FILE, JSON.stringify(messages));
+//mkdirpSync(path.dirname(FINAL_FILE));
+//fs.writeFileSync(FINAL_FILE, JSON.stringify(messages));
 
 // New way: write minified ptraslation files.
 for (let lang in messages) {

@@ -79,7 +79,14 @@ class BaseChatMessage extends React.PureComponent {
     if (this.props.userIsWriter && this.props.received > Tinode.MESSAGE_STATUS_FAILED) {
       menuItems.push('menu_item_reply');
       if (!this.props.response) {
-        menuItems.push('menu_item_edit');
+        let immutable = false;
+        Drafty.entities(this.props.content, (_0, _1, tp) => {
+          immutable = ['AU', 'EX', 'FM', 'IM', 'VC'].includes(tp);
+          return immutable;
+        });
+        if (!immutable) {
+          menuItems.push('menu_item_edit');
+        }
       }
     }
     menuItems.push('menu_item_forward');
