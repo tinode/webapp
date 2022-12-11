@@ -2196,7 +2196,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _version_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./version.js */ "./src/version.js");
 
-const APP_NAME = 'TinodeWeb/' + (_version_js__WEBPACK_IMPORTED_MODULE_0__.PACKAGE_VERSION || '0.17');
+const APP_NAME = 'TinodeWeb/' + (_version_js__WEBPACK_IMPORTED_MODULE_0__.PACKAGE_VERSION || '0.21');
 const API_KEY = 'AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K';
 const KNOWN_HOSTS = {
   hosted: 'web.tinode.co',
@@ -5984,10 +5984,14 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     e.preventDefault();
     this.props.onChangePermissions(this.state.topic, _config_js__WEBPACK_IMPORTED_MODULE_16__.DEFAULT_P2P_ACCESS_MODE, this.state.topic);
   }
-  sendKeyPress() {
+  sendKeyPress(audio) {
     const topic = this.props.tinode.getTopic(this.state.topic);
     if (topic.isSubscribed()) {
-      topic.noteKeyPress();
+      if (audio) {
+        topic.noteRecording(true);
+      } else {
+        topic.noteKeyPress();
+      }
     }
   }
   sendMessage(msg, uploadCompletionPromise, uploader) {
@@ -6527,6 +6531,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           reply: this.state.reply,
           initMessage: this.state.contentToEdit,
           onKeyPress: this.sendKeyPress,
+          onRecordingProgress: this.sendKeyPress,
           onSendMessage: this.sendMessage,
           onAttachFile: this.props.forwardMessage ? null : this.handleAttachFile,
           onAttachImage: this.props.forwardMessage ? null : this.handleAttachImage,
@@ -14678,9 +14683,9 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       quote: null,
       message: '',
       audioRec: false,
-      audioAvailable: !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia),
-      keypressTimestamp: new Date().getTime() - _config_js__WEBPACK_IMPORTED_MODULE_3__.KEYPRESS_DELAY - 1
+      audioAvailable: !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
     };
+    this.keypressTimestamp = 0;
     this.handlePasteEvent = this.handlePasteEvent.bind(this);
     this.handleAttachImage = this.handleAttachImage.bind(this);
     this.handleAttachFile = this.handleAttachFile.bind(this);
@@ -14790,17 +14795,16 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     }
   }
   handleMessageTyping(e) {
-    const newState = {
+    this.setState({
       message: e.target.value
-    };
+    });
     if (this.props.onKeyPress) {
       const now = new Date().getTime();
-      if (now - this.state.keypressTimestamp > _config_js__WEBPACK_IMPORTED_MODULE_3__.KEYPRESS_DELAY) {
+      if (now - this.keypressTimestamp > _config_js__WEBPACK_IMPORTED_MODULE_3__.KEYPRESS_DELAY) {
         this.props.onKeyPress();
-        newState.keypressTimestamp = now;
+        this.keypressTimestamp = now;
       }
     }
-    this.setState(newState);
   }
   handleQuoteClick(e) {
     e.preventDefault();
@@ -14857,6 +14861,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     }) : this.state.audioRec ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
       fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Loading...")
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(AudioRecorder, {
+      onRecordingProgress: _ => this.props.onKeyPress(true),
       onDeleted: _ => this.setState({
         audioRec: false
       }),

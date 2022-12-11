@@ -93,6 +93,7 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     this.startedOn = null;
     this.viewBuffer = [];
     this.canvasRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
+    this.recordingTimestamp = 0;
   }
   componentDidMount() {
     this.stream = null;
@@ -174,6 +175,11 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
         this.canvasContext.lineTo(x, height * 0.5 + y * 0.5);
       }
       this.canvasContext.stroke();
+      const now = new Date().getTime();
+      if (now - this.recordingTimestamp > _config_js__WEBPACK_IMPORTED_MODULE_6__.KEYPRESS_DELAY) {
+        this.props.onRecordingProgress();
+        this.recordingTimestamp = now;
+      }
     };
     drawFrame();
   }
@@ -242,7 +248,7 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     this.audioInput.connect(this.analyser);
     this.mediaRecorder.onstop = _ => {
       if (this.durationMillis > _config_js__WEBPACK_IMPORTED_MODULE_6__.MIN_DURATION) {
-        this.getRecording(this.mediaRecorder.mimeType, this.durationMillis).then(result => this.props.onFinished(result.url, result.preview, this.durationMillis));
+        this.getRecording(this.mediaRecorder.mimeType).then(result => this.props.onFinished(result.url, result.preview, this.durationMillis));
       } else {
         this.props.onDeleted();
       }
@@ -265,8 +271,10 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     this.startedOn = Date.now();
     this.mediaRecorder.start();
     this.visualize();
+    this.props.onRecordingProgress();
+    this.recordingTimestamp = this.startedOn;
   }
-  getRecording(mimeType, duration) {
+  getRecording(mimeType) {
     mimeType = mimeType || AUDIO_MIME_TYPE;
     let blob = new Blob(this.audioChunks, {
       type: mimeType

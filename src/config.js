@@ -1,7 +1,7 @@
 import { PACKAGE_VERSION } from './version.js';
 
 // Name of this application, used in the User-Agent.
-export const APP_NAME = 'TinodeWeb/' + (PACKAGE_VERSION || '0.17');
+export const APP_NAME = 'TinodeWeb/' + (PACKAGE_VERSION || '0.21');
 
 // API key. Use https://github.com/tinode/chat/tree/master/keygen to generate your own
 export const API_KEY = 'AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K';

@@ -68,9 +68,10 @@ class SendMessage extends React.PureComponent {
       message: '',
       audioRec: false,
       audioAvailable: !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia),
-      // Make initial keypress time as if it happened 5001 milliseconds in the past.
-      keypressTimestamp: new Date().getTime() - KEYPRESS_DELAY - 1
     };
+
+    // Timestamp when the previous key press was sent to the server.
+    this.keypressTimestamp = 0;
 
     this.handlePasteEvent = this.handlePasteEvent.bind(this);
     this.handleAttachImage = this.handleAttachImage.bind(this);
@@ -194,15 +195,14 @@ class SendMessage extends React.PureComponent {
   }
 
   handleMessageTyping(e) {
-    const newState = {message: e.target.value};
+    this.setState({message: e.target.value});
     if (this.props.onKeyPress) {
       const now = new Date().getTime();
-      if (now - this.state.keypressTimestamp > KEYPRESS_DELAY) {
+      if (now - this.keypressTimestamp > KEYPRESS_DELAY) {
         this.props.onKeyPress();
-        newState.keypressTimestamp = now;
+        this.keypressTimestamp = now;
       }
     }
-    this.setState(newState);
   }
 
   handleQuoteClick(e) {
@@ -255,6 +255,7 @@ class SendMessage extends React.PureComponent {
                 (this.state.audioRec ?
                   (<Suspense fallback={<div>Loading...</div>}>
                     <AudioRecorder
+                      onRecordingProgress={_ => this.props.onKeyPress(true)}
                       onDeleted={_ => this.setState({audioRec: false})}
                       onFinished={this.handleAttachAudio}/>
                   </Suspense>) :
@@ -262,7 +263,7 @@ class SendMessage extends React.PureComponent {
                     value={this.state.message}
                     onChange={this.handleMessageTyping}
                     onKeyPress={this.handleKeyPress}
-                    ref={(ref) => {this.messageEditArea = ref;}}
+                    ref={ref => {this.messageEditArea = ref;}}
                     autoFocus />)}
               {this.state.message || !audioEnabled ?
                 <a href="#" onClick={this.handleSend} title={formatMessage(messages.icon_title_send)}>

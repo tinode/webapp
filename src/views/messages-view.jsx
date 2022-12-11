@@ -743,10 +743,14 @@ class MessagesView extends React.Component {
     this.props.onChangePermissions(this.state.topic, DEFAULT_P2P_ACCESS_MODE, this.state.topic);
   }
 
-  sendKeyPress() {
+  sendKeyPress(audio) {
     const topic = this.props.tinode.getTopic(this.state.topic);
     if (topic.isSubscribed()) {
-      topic.noteKeyPress();
+      if (audio) {
+        topic.noteRecording(true);
+      } else {
+        topic.noteKeyPress();
+      }
     }
   }
 
@@ -1335,6 +1339,7 @@ class MessagesView extends React.Component {
                 reply={this.state.reply}
                 initMessage={this.state.contentToEdit}
                 onKeyPress={this.sendKeyPress}
+                onRecordingProgress={this.sendKeyPress}
                 onSendMessage={this.sendMessage}
                 onAttachFile={this.props.forwardMessage ? null : this.handleAttachFile}
                 onAttachImage={this.props.forwardMessage ? null : this.handleAttachImage}

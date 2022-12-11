@@ -10,7 +10,7 @@ import fixWebmDuration from 'webm-duration-fix';
 
 import { intArrayToBase64 } from '../lib/blob-helpers.js'
 import { secondsToTime } from '../lib/strformat';
-import { MAX_DURATION, MIN_DURATION } from '../config.js';
+import { KEYPRESS_DELAY, MAX_DURATION, MIN_DURATION } from '../config.js';
 
 // FFT resolution.
 const BUFFER_SIZE = 256;
@@ -86,6 +86,9 @@ class AudioRecorder extends React.PureComponent {
     this.startedOn = null;
     this.viewBuffer = [];
     this.canvasRef = React.createRef();
+
+    // Timestamp for sending "recording" notifications.
+    this.recordingTimestamp = 0;
   }
 
   componentDidMount() {
@@ -192,6 +195,13 @@ class AudioRecorder extends React.PureComponent {
       }
       // Actually draw the bars on canvas.
       this.canvasContext.stroke();
+
+      // Send notification, if needed.
+      const now = new Date().getTime();
+      if (now - this.recordingTimestamp > KEYPRESS_DELAY) {
+        this.props.onRecordingProgress();
+        this.recordingTimestamp = now;
+      }
     }
 
     drawFrame();
@@ -262,7 +272,7 @@ class AudioRecorder extends React.PureComponent {
 
     this.mediaRecorder.onstop = _ => {
       if (this.durationMillis > MIN_DURATION) {
-        this.getRecording(this.mediaRecorder.mimeType, this.durationMillis)
+        this.getRecording(this.mediaRecorder.mimeType)
           .then(result => this.props.onFinished(result.url, result.preview, this.durationMillis));
       } else {
         this.props.onDeleted();
@@ -289,11 +299,14 @@ class AudioRecorder extends React.PureComponent {
     this.startedOn = Date.now();
     this.mediaRecorder.start();
     this.visualize();
+
+    this.props.onRecordingProgress();
+    this.recordingTimestamp = this.startedOn;
   }
 
   // Obtain data in a form sutable for sending or playing back.
   // If duration is valid, apply fix for Chrome's WebM duration bug.
-  getRecording(mimeType, duration) {
+  getRecording(mimeType) {
     mimeType = mimeType || AUDIO_MIME_TYPE;
     let blob = new Blob(this.audioChunks, {type: mimeType});
     return fixWebmDuration(blob, mimeType)
