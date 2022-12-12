@@ -1878,6 +1878,7 @@ video {
   font-size: smaller;
   padding: 0.5rem 0.5rem 0.5rem 0.5rem;
   background-color: rgb(244 244 244 / 66%);
+  text-transform: uppercase;
 }
 
 /* Left triangle placed bottom left flush. */

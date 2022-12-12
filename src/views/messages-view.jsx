@@ -25,7 +25,7 @@ import { DEFAULT_P2P_ACCESS_MODE, EDIT_PREVIEW_LENGTH, IMAGE_PREVIEW_DIM, KEYPRE
 import { CALL_STATE_OUTGOING_INITATED, CALL_STATE_IN_PROGRESS } from '../constants.js';
 import { blobToBase64, fileToBase64, imageScaled, makeImageUrl } from '../lib/blob-helpers.js';
 import HashNavigation from '../lib/navigation.js';
-import { bytesToHumanSize, shortDateFormat } from '../lib/strformat.js';
+import { bytesToHumanSize, relativeDateFormat, shortDateFormat } from '../lib/strformat.js';
 
 // Run timer with this frequency (ms) for checking notification queue.
 const NOTIFICATION_EXEC_INTERVAL = 300;
@@ -1145,7 +1145,6 @@ class MessagesView extends React.Component {
         let previousFrom = null;
         let prevDate = null;
         let chatBoxClass = null;
-        const dateFmt = new Intl.DateTimeFormat(this.props.intl.locale);
         topic.messages((msg, prev, next, i) => {
           let nextFrom = next ? (next.from || 'chan') : null;
 
@@ -1193,7 +1192,7 @@ class MessagesView extends React.Component {
             if (!prevDate || prevDate.toDateString() != thisDate.toDateString()) {
               messageNodes.push(
                 <MetaMessage
-                  date={dateFmt.format(msg.ts)}
+                  date={relativeDateFormat(msg.ts)}
                   locale={this.props.intl.locale}
                   key={'date-' + msg.seq} />
               );

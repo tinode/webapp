@@ -3136,6 +3136,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "bytesToHumanSize": () => (/* binding */ bytesToHumanSize),
 /* harmony export */   "idToColorClass": () => (/* binding */ idToColorClass),
 /* harmony export */   "letterTileColorId": () => (/* binding */ letterTileColorId),
+/* harmony export */   "relativeDateFormat": () => (/* binding */ relativeDateFormat),
 /* harmony export */   "secondsToTime": () => (/* binding */ secondsToTime),
 /* harmony export */   "shortDateFormat": () => (/* binding */ shortDateFormat),
 /* harmony export */   "shortenFileName": () => (/* binding */ shortenFileName)
@@ -3164,6 +3165,19 @@ function shortDateFormat(then, locale) {
     month: 'short',
     day: 'numeric'
   });
+}
+function relativeDateFormat(then, locale) {
+  locale = locale || window.navigator.userLanguage || window.navigator.language;
+  const now = new Date();
+  const thenDays = Math.floor((then.getTime() - then.getTimezoneOffset() * 60_000) / 86_400_000);
+  const nowDays = Math.floor((now.getTime() - now.getTimezoneOffset() * 60_000) / 86_400_000);
+  const diff = thenDays - nowDays;
+  if (Math.abs(diff) < 2) {
+    return new Intl.RelativeTimeFormat(locale, {
+      numeric: 'auto'
+    }).format(diff, 'day');
+  }
+  return new Intl.DateTimeFormat(locale).format(then);
 }
 function secondsToTime(seconds, fixedMin) {
   let min = Math.floor(seconds / 60) | 0;
@@ -6332,7 +6346,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         let previousFrom = null;
         let prevDate = null;
         let chatBoxClass = null;
-        const dateFmt = new Intl.DateTimeFormat(this.props.intl.locale);
         topic.messages((msg, prev, next, i) => {
           let nextFrom = next ? next.from || 'chan' : null;
           let sequence = 'single';
@@ -6372,7 +6385,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             const thisDate = new Date(msg.ts);
             if (!prevDate || prevDate.toDateString() != thisDate.toDateString()) {
               messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_meta_message_jsx__WEBPACK_IMPORTED_MODULE_14__["default"], {
-                date: dateFmt.format(msg.ts),
+                date: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_20__.relativeDateFormat)(msg.ts),
                 locale: this.props.intl.locale,
                 key: 'date-' + msg.seq
               }));
