@@ -421,14 +421,14 @@ class CallPanel extends React.PureComponent {
         <div id="video-container">
           <div id="video-container-panel">
             <div className="call-party self">
-              <video ref={this.localRef} autoPlay muted playsInline></video>
+              <video ref={this.localRef} autoPlay muted playsInline />
               <div className="caller-name inactive">
                 <FormattedMessage id="calls_you_label"
                   defaultMessage="You" description="Shown over the local video screen" />
               </div>
             </div>
             <div className="call-party peer">
-              <video ref={this.remoteRef} autoPlay playsInline></video>
+              <video ref={this.remoteRef} autoPlay playsInline />
               {remoteActive ?
                 <div className="caller-name inactive">{peerTitle}</div> :
                 <div className={`caller-card${pulseAnimation}`}>

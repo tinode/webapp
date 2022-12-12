@@ -169,7 +169,7 @@ class TinodeWeb extends React.Component {
     this.handleCallIceCandidate = this.handleCallIceCandidate.bind(this);
     this.handleCallSendAnswer = this.handleCallSendAnswer.bind(this);
 
-    this.handleCallAcceptCall = this.handleCallAcceptCall.bind(this);
+    this.handleCallAccept = this.handleCallAccept.bind(this);
 
     this.sendMessageToTopic = this.sendMessageToTopic.bind(this);
 
@@ -1791,7 +1791,7 @@ class TinodeWeb extends React.Component {
     });
   }
 
-  handleCallAcceptCall(topicName) {
+  handleCallAccept(topicName) {
     const topic = this.tinode.getTopic(topicName);
     if (!topic) {
       return;
@@ -1914,7 +1914,7 @@ class TinodeWeb extends React.Component {
             seq={this.state.callSeq}
             callState={this.state.callState}
             onRinging={this.handleCallRinging}
-            onAcceptCall={this.handleCallAcceptCall}
+            onAcceptCall={this.handleCallAccept}
             onReject={this.handleCallHangup}
             />
           :

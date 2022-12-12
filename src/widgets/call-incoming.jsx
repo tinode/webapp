@@ -37,7 +37,7 @@ export default class CallIncoming extends React.Component {
       return;
     }
 
-    this.resetDesc(topic, this.props);
+    this.resetDesc(topic);
     if (this.props.callState == CALL_STATE_INCOMING_RECEIVED) {
       // play() throws if the user did not click the app first: https://goo.gl/xX8pDD.
       RING_SOUND.play().catch(_ => {});
@@ -77,9 +77,7 @@ export default class CallIncoming extends React.Component {
     topic.onMetaDesc = this.previousMetaDesc;
   }
 
-  resetDesc(topic, props) {
-    const defacs = topic.getDefaultAccess() || {};
-    const acs = topic.getAccessMode();
+  resetDesc(topic) {
     const badges = [];
     if (topic.trusted) {
       for (const [key, val] of Object.entries(topic.trusted)) {
@@ -101,7 +99,7 @@ export default class CallIncoming extends React.Component {
     if (!topic) {
       return;
     }
-    this.resetDesc(topic, this.props);
+    this.resetDesc(topic);
 
     if (this.previousMetaDesc && this.previousMetaDesc != this.onMetaDesc) {
       this.previousMetaDesc(desc);
