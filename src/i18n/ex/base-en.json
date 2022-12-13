@@ -239,6 +239,10 @@
     "defaultMessage": "Unsupported",
     "description": "Unsupported entity in drafty"
   },
+  "drag_file": {
+    "defaultMessage": "Drag file here",
+    "description": "Prompt on the file drag-n-drop overlay banner"
+  },
   "editing_message": {
     "defaultMessage": "Editing",
     "description": "Title over message editing preview"

@@ -7,8 +7,6 @@ import { Drafty } from 'tinode-sdk';
 // a dependency on webm-duration-fix.
 const AudioRecorder = React.lazy(_ => import('./audio-recorder.jsx'));
 
-import DragAndDrop from './drag-and-drop.jsx';
-
 import { KEYPRESS_DELAY } from '../config.js';
 import { filePasted } from '../lib/blob-helpers.js';
 import { replyFormatter } from '../lib/formatters.js';
@@ -243,13 +241,6 @@ class SendMessage extends React.PureComponent {
         {this.state.quote}
       </div>) : null;
     const audioEnabled = this.state.audioAvailable && this.props.onAttachAudio;
-    const inputField = (<textarea id="sendMessage" placeholder={prompt}
-      value={this.state.message} onChange={this.handleMessageTyping}
-      onKeyPress={this.handleKeyPress}
-      ref={(ref) => {this.messageEditArea = ref;}}
-      autoFocus />);
-    const inputArea = this.props.onAttachFile ?
-      (<DragAndDrop actionPrompt={formatMessage(messages.icon_title_attach_file)} onDrop={this.handleDropAttach}>{inputField}</DragAndDrop>) : {inputField};
     return (
       <div id="send-message-wrapper">
         {!this.props.noInput ? quote : null}
@@ -276,7 +267,11 @@ class SendMessage extends React.PureComponent {
                       onDeleted={_ => this.setState({audioRec: false})}
                       onFinished={this.handleAttachAudio}/>
                   </Suspense>) :
-                  inputArea)}
+                  <textarea id="sendMessage" placeholder={prompt}
+                    value={this.state.message} onChange={this.handleMessageTyping}
+                    onKeyPress={this.handleKeyPress}
+                    ref={(ref) => {this.messageEditArea = ref;}}
+                    autoFocus />)}
               {this.state.message || !audioEnabled ?
                 <a href="#" onClick={this.handleSend} title={formatMessage(messages.icon_title_send)}>
                   <i className="material-icons">{sendIcon}</i>

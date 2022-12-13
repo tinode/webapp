@@ -1,7 +1,7 @@
 // Drag & drop container: displays a banner on drag and calls a handler on drop.
 import React from 'react';
 
-export default class DragAndDrop extends React.Component {
+export default class DragAndDrop extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {

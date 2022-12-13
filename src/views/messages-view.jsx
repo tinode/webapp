@@ -9,6 +9,7 @@ import CallPanel from '../widgets/call-panel.jsx';
 import ChatMessage from '../widgets/chat-message.jsx';
 import ContactBadges from '../widgets/contact-badges.jsx';
 import DocPreview from '../widgets/doc-preview.jsx';
+import DragAndDrop from '../widgets/drag-and-drop.jsx'
 import ErrorPanel from '../widgets/error-panel.jsx';
 import GroupSubs from '../widgets/group-subs.jsx';
 import ImagePreview from '../widgets/image-preview.jsx';
@@ -67,6 +68,11 @@ const messages = defineMessages({
     id: 'editing_message',
     defaultMessage: 'Editing',
     description: 'Title over message editing preview'
+  },
+  drag_file: {
+    id: 'drag_file',
+    defaultMessage: 'Drag file here',
+    description: 'Prompt on the file drag-n-drop overlay banner'
   }
 });
 
@@ -128,6 +134,7 @@ class MessagesView extends React.Component {
     this.postReadNotification = this.postReadNotification.bind(this);
     this.clearNotificationQueue = this.clearNotificationQueue.bind(this);
     this.goToLatestMessage = this.goToLatestMessage.bind(this);
+    this.handleFileDrop = this.handleFileDrop.bind(this);
 
     this.handlePickReply = this.handlePickReply.bind(this);
     this.handleEditMessage = this.handleEditMessage.bind(this);
@@ -940,6 +947,19 @@ class MessagesView extends React.Component {
       });
   }
 
+  // handleFileDrop is called when the user drags & drops a file upon the message view.
+  handleFileDrop(files) {
+    if (!files || files.length == 0) {
+      return;
+    }
+    const file = files[0];
+    if (file.type && file.type.startsWith('image/')) {
+      this.handleAttachImage(file);
+    } else {
+      this.handleAttachFile(file);
+    }
+  }
+
   // sendAudioAttachment sends audio bits inband as Drafty message (no preview).
   sendAudioAttachment(url, preview, duration) {
     fetch(url)
@@ -1253,51 +1273,8 @@ class MessagesView extends React.Component {
 
         const titleClass = 'panel-title' + (this.state.deleted ? ' deleted' : '');
 
-        component2 = (
+        let messagesComponent = (
           <>
-            <div id="topic-caption-panel" className="caption-panel">
-              {this.props.displayMobile ?
-                <a href="#" id="hide-message-view" onClick={(e) => {e.preventDefault(); this.props.onHideMessagesView();}}>
-                  <i className="material-icons">arrow_back</i>
-                </a>
-                :
-                null}
-              <div className="avatar-box">
-                <LetterTile
-                  tinode={this.props.tinode}
-                  avatar={avatar}
-                  topic={this.state.topic}
-                  title={this.state.title}
-                  deleted={this.state.deleted} />
-                {!isChannel ? <span className={online} /> : null}
-              </div>
-              <div id="topic-title-group">
-                <div id="topic-title" className={titleClass}>{
-                  this.state.title ||
-                  <i><FormattedMessage id="unnamed_topic" defaultMessage="Unnamed"
-                    description="Title shown when the topic has no name" /></i>
-                }<ContactBadges badges={icon_badges} /></div>
-                <div id="topic-last-seen">{lastSeen}</div>
-              </div>
-              {groupTopic ?
-                <GroupSubs
-                  tinode={this.props.tinode}
-                  subscribers={this.state.onlineSubs} /> :
-                <div id="topic-users" />
-              }
-              <div>
-                <a href="#" onClick={this.handleContextClick}>
-                  <i className="material-icons">more_vert</i>
-                </a>
-              </div>
-            </div>
-            {this.props.displayMobile ?
-              <ErrorPanel
-                level={this.props.errorLevel}
-                text={this.props.errorText}
-                onClearError={this.props.onError} />
-              : null}
-            <LoadSpinner show={this.state.fetchingMessages} />
             <div id="messages-container">
               <button className={'action-button' + (this.state.showGoToLastButton ? '' : ' hidden')}
                 onClick={this.goToLatestMessage}>
@@ -1346,6 +1323,57 @@ class MessagesView extends React.Component {
                 onError={this.props.onError}
                 onQuoteClick={this.handleQuoteClick}
                 onCancelReply={this.handleCancelReply} />}
+          </>
+        );
+
+        component2 = (
+          <>
+            <div id="topic-caption-panel" className="caption-panel">
+              {this.props.displayMobile ?
+                <a href="#" id="hide-message-view" onClick={(e) => {e.preventDefault(); this.props.onHideMessagesView();}}>
+                  <i className="material-icons">arrow_back</i>
+                </a>
+                :
+                null}
+              <div className="avatar-box">
+                <LetterTile
+                  tinode={this.props.tinode}
+                  avatar={avatar}
+                  topic={this.state.topic}
+                  title={this.state.title}
+                  deleted={this.state.deleted} />
+                {!isChannel ? <span className={online} /> : null}
+              </div>
+              <div id="topic-title-group">
+                <div id="topic-title" className={titleClass}>{
+                  this.state.title ||
+                  <i><FormattedMessage id="unnamed_topic" defaultMessage="Unnamed"
+                    description="Title shown when the topic has no name" /></i>
+                }<ContactBadges badges={icon_badges} /></div>
+                <div id="topic-last-seen">{lastSeen}</div>
+              </div>
+              {groupTopic ?
+                <GroupSubs
+                  tinode={this.props.tinode}
+                  subscribers={this.state.onlineSubs} /> :
+                <div id="topic-users" />
+              }
+              <div>
+                <a href="#" onClick={this.handleContextClick}>
+                  <i className="material-icons">more_vert</i>
+                </a>
+              </div>
+            </div>
+            {this.props.displayMobile ?
+              <ErrorPanel
+                level={this.props.errorLevel}
+                text={this.props.errorText}
+                onClearError={this.props.onError} />
+              : null}
+            <LoadSpinner show={this.state.fetchingMessages} />
+            {!this.state.unconfirmed && !this.props.forwardMessage ?
+              <DragAndDrop actionPrompt={this.props.intl.formatMessage(messages.drag_file)} onDrop={this.handleFileDrop} >{messagesComponent}</DragAndDrop>
+              : messagesComponent}
           </>
         );
       }
