@@ -6,6 +6,7 @@ import { Drafty } from 'tinode-sdk';
 import AudioPlayer from '../widgets/audio-player.jsx'
 import CallMessage from '../widgets/call-message.jsx'
 import CallStatus from '../widgets/call-status.jsx';
+import InlineVideo from '../widgets/inline-video.jsx';
 import LazyImage from '../widgets/lazy-image.jsx'
 import UploadingImage from '../widgets/uploading-image.jsx'
 
@@ -36,50 +37,6 @@ const messages = defineMessages({
     description: 'Unsupported entity in drafty'
   }
 });
-
-// Additional processing of image data.
-function handleImageData(el, data, attr) {
-  if (!data) {
-    attr.src = 'img/broken_image.png';
-    attr.style = {
-      width: IMAGE_THUMBNAIL_DIM + 'px',
-      height: IMAGE_THUMBNAIL_DIM + 'px',
-    };
-    return el;
-  }
-
-  attr.className = 'inline-image';
-  const dim = fitImageSize(data.width, data.height,
-    this.viewportWidth > 0 ? Math.min(this.viewportWidth - REM_SIZE * 6.5, REM_SIZE * 34.5) :
-      REM_SIZE * 34.5, REM_SIZE * 24, false) ||
-      {dstWidth: BROKEN_IMAGE_SIZE, dstHeight: BROKEN_IMAGE_SIZE};
-  attr.style = {
-    width: dim.dstWidth + 'px',
-    height: dim.dstHeight + 'px',
-    // Looks like a Chrome bug: broken image does not respect 'width' and 'height'.
-    minWidth: dim.dstWidth + 'px',
-    minHeight: dim.dstHeight + 'px'
-  };
-  if (!Drafty.isProcessing(data)) {
-    attr.src = this.authorizeURL(sanitizeUrlForMime(attr.src, 'image'));
-    attr.alt = data.name;
-    if (attr.src) {
-      if (Math.max(data.width || 0, data.height || 0) > IMAGE_THUMBNAIL_DIM) {
-        // Allow previews for large enough images.
-        attr.onClick = this.onImagePreview;
-        attr.className += ' image-clickable';
-      }
-      attr.loading = 'lazy';
-    } else {
-      attr.src = 'img/broken_image.png';
-    }
-  } else {
-    // Use custom element instead of <img>.
-    el = UploadingImage;
-  }
-
-  return el;
-}
 
 // The main Drafty formatter: converts Drafty elements into React classes. 'this' is set by the caller.
 // 'this' must contain:
@@ -175,6 +132,12 @@ export function fullFormatter(style, data, values, key, stack) {
         attr.duration = data.duration;
       }
       break;
+    case 'VD':
+      // Additional processing for videos.
+      el = handleVideoData.call(this, el, data, attr);
+      // Video element cannot have content.
+      values = null;
+      break;
     default:
       if (!el) {
         // Unknown element.
@@ -193,6 +156,95 @@ export function fullFormatter(style, data, values, key, stack) {
     return values;
   }
   return React.createElement(el, attr, values);
+}
+
+// Additional processing of image data.
+function handleImageData(el, data, attr) {
+  if (!data) {
+    attr.src = 'img/broken_image.png';
+    attr.style = {
+      width: IMAGE_THUMBNAIL_DIM + 'px',
+      height: IMAGE_THUMBNAIL_DIM + 'px',
+    };
+    return el;
+  }
+
+  attr.className = 'inline-image';
+  const dim = fitImageSize(data.width, data.height,
+    this.viewportWidth > 0 ? Math.min(this.viewportWidth - REM_SIZE * 6.5, REM_SIZE * 34.5) :
+      REM_SIZE * 34.5, REM_SIZE * 24, false) ||
+      {dstWidth: BROKEN_IMAGE_SIZE, dstHeight: BROKEN_IMAGE_SIZE};
+  attr.style = {
+    width: dim.dstWidth + 'px',
+    height: dim.dstHeight + 'px',
+    // Looks like a Chrome bug: broken image does not respect 'width' and 'height'.
+    minWidth: dim.dstWidth + 'px',
+    minHeight: dim.dstHeight + 'px'
+  };
+  if (!Drafty.isProcessing(data)) {
+    attr.src = this.authorizeURL(sanitizeUrlForMime(attr.src, 'image'));
+    attr.alt = data.name;
+    if (attr.src) {
+      if (Math.max(data.width || 0, data.height || 0) > IMAGE_THUMBNAIL_DIM) {
+        // Allow previews for large enough images.
+        attr.onClick = this.onImagePreview;
+        attr.className += ' image-clickable';
+      }
+      attr.loading = 'lazy';
+    } else {
+      attr.src = 'img/broken_image.png';
+    }
+  } else {
+    // Use custom element instead of <img>.
+    el = UploadingImage;
+  }
+
+  return el;
+}
+
+// Additional processing of image data.
+function handleVideoData(el, data, attr) {
+  if (!data) {
+    attr.src = 'img/broken_video.png';
+    attr.style = {
+      width: IMAGE_THUMBNAIL_DIM + 'px',
+      height: IMAGE_THUMBNAIL_DIM + 'px',
+    };
+    return el;
+  }
+
+  attr.className = 'inline-image';
+  const dim = fitImageSize(data.width, data.height,
+    this.viewportWidth > 0 ? Math.min(this.viewportWidth - REM_SIZE * 6.5, REM_SIZE * 34.5) :
+      REM_SIZE * 34.5, REM_SIZE * 24, false) ||
+      {dstWidth: BROKEN_IMAGE_SIZE, dstHeight: BROKEN_IMAGE_SIZE};
+  attr.style = {
+    width: dim.dstWidth + 'px',
+    height: dim.dstHeight + 'px',
+    // Looks like a Chrome bug: broken image does not respect 'width' and 'height'.
+    minWidth: dim.dstWidth + 'px',
+    minHeight: dim.dstHeight + 'px'
+  };
+  if (!Drafty.isProcessing(data)) {
+    /*
+    attr.src = this.authorizeURL(sanitizeUrlForMime(attr.src, 'video'));
+    attr.alt = data.name;
+    if (attr.src) {
+      attr.onClick = this.onImagePreview;
+      attr.className += ' image-clickable';
+      attr.loading = 'lazy';
+      attr.controls = 'controls';
+    } else {
+      attr.src = 'img/broken_video.png';
+    }
+    */
+    el = InlineVideo;
+  } else {
+    // Use custom element instead of <img>.
+    el = UploadingImage;
+  }
+
+  return el;
 }
 
 // Converts Drafty object into a one-line preview. 'this' is set by the caller.

@@ -284,7 +284,7 @@ class SendMessage extends React.PureComponent {
               }
               <input type="file" ref={ref => {this.attachFile = ref}}
                 onChange={this.handleAttachFile} style={{display: 'none'}} />
-              <input type="file" ref={ref => {this.attachImage = ref}} accept="image/*"
+              <input type="file" ref={ref => {this.attachImage = ref}} accept="image/*, video/*"
                 onChange={this.handleAttachImage} style={{display: 'none'}} />
             </>
             :

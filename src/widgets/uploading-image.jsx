@@ -1,6 +1,5 @@
 // Image view with progress bar and a cancel button.
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
 
 import FileProgress from './file-progress.jsx';
 

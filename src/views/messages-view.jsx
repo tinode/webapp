@@ -19,6 +19,7 @@ import LoadSpinner from '../widgets/load-spinner.jsx';
 import LogoView from './logo-view.jsx';
 import MetaMessage from '../widgets/meta-message.jsx';
 import SendMessage from '../widgets/send-message.jsx';
+import VideoPreview from '../widgets/video-preview.jsx';
 
 import { DEFAULT_P2P_ACCESS_MODE, EDIT_PREVIEW_LENGTH, IMAGE_PREVIEW_DIM, KEYPRESS_DELAY,
   MESSAGES_PAGE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE,
@@ -110,6 +111,7 @@ class MessagesView extends React.Component {
     this.sendMessage = this.sendMessage.bind(this);
     this.retrySend = this.retrySend.bind(this);
     this.sendImageAttachment = this.sendImageAttachment.bind(this);
+    this.sendVideoAttachment = this.sendVideoAttachment.bind(this);
     this.sendFileAttachment = this.sendFileAttachment.bind(this);
     this.sendAudioAttachment = this.sendAudioAttachment.bind(this);
     this.sendKeyPress = this.sendKeyPress.bind(this);
@@ -129,7 +131,7 @@ class MessagesView extends React.Component {
     this.handleNewChatAcceptance = this.handleNewChatAcceptance.bind(this);
     this.handleEnablePeer = this.handleEnablePeer.bind(this);
     this.handleAttachFile = this.handleAttachFile.bind(this);
-    this.handleAttachImage = this.handleAttachImage.bind(this);
+    this.handleAttachImageOrVideo = this.handleAttachImageOrVideo.bind(this);
     this.handleCancelUpload = this.handleCancelUpload.bind(this);
     this.postReadNotification = this.postReadNotification.bind(this);
     this.clearNotificationQueue = this.clearNotificationQueue.bind(this);
@@ -687,7 +689,10 @@ class MessagesView extends React.Component {
     if (this.state.imagePreview && this.state.imagePreview.url) {
       URL.revokeObjectURL(this.state.imagePreview.url);
     }
-    this.setState({ imagePostview: null, imagePreview: null, docPreview: null });
+    if (this.state.videoPreview && this.state.videoPreview.url) {
+      URL.revokeObjectURL(this.state.videoPreview.url);
+    }
+    this.setState({ imagePostview: null, imagePreview: null, docPreview: null, videoPreview: null });
   }
 
   handleFormResponse(action, text, data) {
@@ -862,7 +867,7 @@ class MessagesView extends React.Component {
     this.props.onCallHangup(topic, seq);
   }
 
-  // sendImageAttachment sends the image bits inband as Drafty message.
+  // sendImageAttachment sends the image bits as Drafty message.
   sendImageAttachment(caption, blob) {
     const mime = this.state.imagePreview.mime;
     const width = this.state.imagePreview.width;
@@ -904,10 +909,10 @@ class MessagesView extends React.Component {
             this.sendMessage(msg, uploadCompletionPromise, uploader);
         })
         .catch(err => this.props.onError(err, 'err'));
-        return;
+      return;
     }
 
-    // Upload the image if it's too big to be send inband.
+    // Send the image inband if it's not too big.
     blobToBase64(blob)
       .then(b64 => {
         let msg = Drafty.insertImage(null, 0, {
@@ -926,9 +931,86 @@ class MessagesView extends React.Component {
       });
   }
 
-  // handleAttachImage method is called when [Attach image] button is clicked: launch image preview.
-  handleAttachImage(file) {
+  // sendVideoAttachment sends the video bits as Drafty message.
+  sendVideoAttachment(caption, videoBlob, previewBlob, params) {
+    const mime = params.mime;
+    const width = params.width;
+    const height = params.height;
+    const fname = params.name;
+    const duration = params.duration;
+
+    // Server-provided limit reduced for base64 encoding and overhead.
+    const maxInbandAttachmentSize = (this.props.tinode.getServerParam('maxMessageSize',
+      MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024) | 0;
+
+    if (videoBlob.size > maxInbandAttachmentSize) {
+      // Too large to send inband - uploading out of band and sending as a link.
+      const uploader = this.props.tinode.getLargeFileHelper();
+      if (!uploader) {
+        this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
+        return;
+      }
+      const uploadCompletionPromise = uploader.upload(videoBlob);
+      // Make small preview to show while uploading.
+      imageScaled(previewBlob, IMAGE_PREVIEW_DIM, IMAGE_PREVIEW_DIM, -1, false)
+        // Convert tiny image into base64 for serialization and previewing.
+        .then(scaled => blobToBase64(scaled.blob))
+        .then(b64 => {
+            let msg = Drafty.insertVideo(null, 0, {
+              mime: mime,
+              _tempPreview: b64.bits, // This preview will not be serialized.
+              width: width,
+              height: height,
+              duration: duration,
+              filename: fname,
+              size: videoBlob.size,
+              urlPromise: uploadCompletionPromise
+            });
+            if (caption) {
+              msg = Drafty.appendLineBreak(msg);
+              msg = Drafty.append(msg, Drafty.parse(caption));
+            }
+            // Pass data and the uploader to the TinodeWeb.
+            this.sendMessage(msg, uploadCompletionPromise, uploader);
+        })
+        .catch(err => /* this.props.onError(err, 'err') */ console.log(err));
+      return;
+    }
+
+    // Send the video inband if it's small enough.
+    blobToBase64(videoBlob)
+      .then(b64 => {
+        let msg = Drafty.insertVideo(null, 0, {
+          mime: b64.mime,
+          preview: b64.bits, // Serializable preview
+          width: width,
+          height: height,
+          duration: duration,
+          filename: fname,
+          size: blob.size
+        });
+        if (caption) {
+          msg = Drafty.appendLineBreak(msg);
+          msg = Drafty.append(msg, Drafty.parse(caption));
+        }
+        this.sendMessage(msg);
+      });
+  }
+
+  // handleAttachImageOrVideo method is called when [Attach image or video] button is clicked: launch image or video preview.
+  handleAttachImageOrVideo(file) {
     const maxExternAttachmentSize = this.props.tinode.getServerParam('maxFileUploadSize', MAX_EXTERN_ATTACHMENT_SIZE);
+
+    if (file.type.startsWith('video/')) {
+      this.setState({videoPreview: {
+        url: URL.createObjectURL(file),
+        blob: file,
+        name: file.name,
+        size: file.size,
+        mime: file.type
+      }});
+      return;
+    }
 
     // Get image dimensions and size, optionally scale it down.
     imageScaled(file, MAX_IMAGE_DIM, MAX_IMAGE_DIM, maxExternAttachmentSize, false)
@@ -954,7 +1036,7 @@ class MessagesView extends React.Component {
     }
     const file = files[0];
     if (file.type && file.type.startsWith('image/')) {
-      this.handleAttachImage(file);
+      this.handleAttachImageOrVideo(file);
     } else {
       this.handleAttachFile(file);
     }
@@ -1108,6 +1190,17 @@ class MessagesView extends React.Component {
             onCancelReply={this.handleCancelReply}
             onClose={this.handleClosePreview}
             onSendMessage={this.sendImageAttachment} />
+        );
+      } else if (this.state.videoPreview) {
+          // Preview video.
+        component2 = (
+          <VideoPreview
+            content={this.state.videoPreview}
+            tinode={this.props.tinode}
+            reply={this.state.reply}
+            onCancelReply={this.handleCancelReply}
+            onClose={this.handleClosePreview}
+            onSendMessage={this.sendVideoAttachment} />
         );
       } else if (this.state.imagePostview) {
         // Expand received image.
@@ -1318,7 +1411,7 @@ class MessagesView extends React.Component {
                 onRecordingProgress={this.sendKeyPress}
                 onSendMessage={this.sendMessage}
                 onAttachFile={this.props.forwardMessage ? null : this.handleAttachFile}
-                onAttachImage={this.props.forwardMessage ? null : this.handleAttachImage}
+                onAttachImage={this.props.forwardMessage ? null : this.handleAttachImageOrVideo}
                 onAttachAudio={this.props.forwardMessage ? null : this.sendAudioAttachment}
                 onError={this.props.onError}
                 onQuoteClick={this.handleQuoteClick}
