@@ -1521,5 +1521,12 @@
     "description": "Icon tool tip for sending a message",
     "missing": false,
     "obsolete": false
+  },
+  "drag_file": {
+    "translation": "",
+    "defaultMessage": "Drag file here",
+    "description": "Prompt on the file drag-n-drop overlay banner",
+    "missing": true,
+    "obsolete": false
   }
 }
