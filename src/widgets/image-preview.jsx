@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import SendMessage from '../widgets/send-message.jsx';
+import SendMessage from './send-message.jsx';
 
 import { REM_SIZE } from '../config.js';
 import { fitImageSize } from '../lib/blob-helpers.js';
