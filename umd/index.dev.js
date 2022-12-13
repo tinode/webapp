@@ -2614,43 +2614,6 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   }
 });
-function handleImageData(el, data, attr) {
-  if (!data) {
-    attr.src = 'img/broken_image.png';
-    attr.style = {
-      width: _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM + 'px',
-      height: _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM + 'px'
-    };
-    return el;
-  }
-  attr.className = 'inline-image';
-  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 24, false) || {
-    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_8__.BROKEN_IMAGE_SIZE,
-    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_8__.BROKEN_IMAGE_SIZE
-  };
-  attr.style = {
-    width: dim.dstWidth + 'px',
-    height: dim.dstHeight + 'px',
-    minWidth: dim.dstWidth + 'px',
-    minHeight: dim.dstHeight + 'px'
-  };
-  if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isProcessing(data)) {
-    attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.sanitizeUrlForMime)(attr.src, 'image'));
-    attr.alt = data.name;
-    if (attr.src) {
-      if (Math.max(data.width || 0, data.height || 0) > _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM) {
-        attr.onClick = this.onImagePreview;
-        attr.className += ' image-clickable';
-      }
-      attr.loading = 'lazy';
-    } else {
-      attr.src = 'img/broken_image.png';
-    }
-  } else {
-    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_7__["default"];
-  }
-  return el;
-}
 function fullFormatter(style, data, values, key, stack) {
   if (stack.includes('QQ')) {
     return quoteFormatter.call(this, style, data, values, key);
@@ -2722,6 +2685,10 @@ function fullFormatter(style, data, values, key, stack) {
         attr.duration = data.duration;
       }
       break;
+    case 'VD':
+      el = handleVideoData.call(this, el, data, attr);
+      values = null;
+      break;
     default:
       if (!el) {
         el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
@@ -2746,6 +2713,79 @@ function fullFormatter(style, data, values, key, stack) {
     return values;
   }
   return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(el, attr, values);
+}
+function handleImageData(el, data, attr) {
+  if (!data) {
+    attr.src = 'img/broken_image.png';
+    attr.style = {
+      width: _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM + 'px',
+      height: _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM + 'px'
+    };
+    return el;
+  }
+  attr.className = 'inline-image';
+  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 24, false) || {
+    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_8__.BROKEN_IMAGE_SIZE,
+    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_8__.BROKEN_IMAGE_SIZE
+  };
+  attr.style = {
+    width: dim.dstWidth + 'px',
+    height: dim.dstHeight + 'px',
+    minWidth: dim.dstWidth + 'px',
+    minHeight: dim.dstHeight + 'px'
+  };
+  if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isProcessing(data)) {
+    attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.sanitizeUrlForMime)(attr.src, 'image'));
+    attr.alt = data.name;
+    if (attr.src) {
+      if (Math.max(data.width || 0, data.height || 0) > _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM) {
+        attr.onClick = this.onImagePreview;
+        attr.className += ' image-clickable';
+      }
+      attr.loading = 'lazy';
+    } else {
+      attr.src = 'img/broken_image.png';
+    }
+  } else {
+    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_7__["default"];
+  }
+  return el;
+}
+function handleVideoData(el, data, attr) {
+  if (!data) {
+    attr.src = 'img/broken_video.png';
+    attr.style = {
+      width: _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM + 'px',
+      height: _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM + 'px'
+    };
+    return el;
+  }
+  attr.className = 'inline-image';
+  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 24, false) || {
+    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_8__.BROKEN_IMAGE_SIZE,
+    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_8__.BROKEN_IMAGE_SIZE
+  };
+  attr.style = {
+    width: dim.dstWidth + 'px',
+    height: dim.dstHeight + 'px',
+    minWidth: dim.dstWidth + 'px',
+    minHeight: dim.dstHeight + 'px'
+  };
+  if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isProcessing(data)) {
+    attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.sanitizeUrlForMime)(attr.src, 'video'));
+    attr.alt = data.name;
+    if (attr.src) {
+      attr.onClick = this.onImagePreview;
+      attr.className += ' image-clickable';
+      attr.loading = 'lazy';
+      attr.controls = 'controls';
+    } else {
+      attr.src = 'img/broken_video.png';
+    }
+  } else {
+    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_7__["default"];
+  }
+  return el;
 }
 function previewFormatter(style, data, values, key) {
   if (!style) {
@@ -6153,16 +6193,13 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     const duration = params.duration;
     const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_17__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
     if (videoBlob.size > maxInbandAttachmentSize) {
-      console.log("1");
       const uploader = this.props.tinode.getLargeFileHelper();
       if (!uploader) {
         this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
         return;
       }
       const uploadCompletionPromise = uploader.upload(videoBlob);
-      console.log("2");
       (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.imageScaled)(previewBlob, _config_js__WEBPACK_IMPORTED_MODULE_17__.IMAGE_PREVIEW_DIM, _config_js__WEBPACK_IMPORTED_MODULE_17__.IMAGE_PREVIEW_DIM, -1, false).then(scaled => (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(scaled.blob)).then(b64 => {
-        console.log("3");
         let msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.insertVideo(null, 0, {
           mime: mime,
           _tempPreview: b64.bits,
@@ -6173,17 +6210,14 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           size: videoBlob.size,
           urlPromise: uploadCompletionPromise
         });
-        console.log("4");
         if (caption) {
           msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendLineBreak(msg);
           msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(msg, tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.parse(caption));
         }
         this.sendMessage(msg, uploadCompletionPromise, uploader);
-        console.log("5");
       }).catch(err => console.log(err));
       return;
     }
-    console.log("6");
     (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(videoBlob).then(b64 => {
       let msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.insertVideo(null, 0, {
         mime: b64.mime,

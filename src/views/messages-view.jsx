@@ -937,7 +937,6 @@ class MessagesView extends React.Component {
       MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024) | 0;
 
     if (videoBlob.size > maxInbandAttachmentSize) {
-      console.log("1");
       // Too large to send inband - uploading out of band and sending as a link.
       const uploader = this.props.tinode.getLargeFileHelper();
       if (!uploader) {
@@ -945,13 +944,11 @@ class MessagesView extends React.Component {
         return;
       }
       const uploadCompletionPromise = uploader.upload(videoBlob);
-      console.log("2");
       // Make small preview to show while uploading.
       imageScaled(previewBlob, IMAGE_PREVIEW_DIM, IMAGE_PREVIEW_DIM, -1, false)
         // Convert tiny image into base64 for serialization and previewing.
         .then(scaled => blobToBase64(scaled.blob))
         .then(b64 => {
-            console.log("3");
             let msg = Drafty.insertVideo(null, 0, {
               mime: mime,
               _tempPreview: b64.bits, // This preview will not be serialized.
@@ -962,20 +959,16 @@ class MessagesView extends React.Component {
               size: videoBlob.size,
               urlPromise: uploadCompletionPromise
             });
-            console.log("4");
             if (caption) {
               msg = Drafty.appendLineBreak(msg);
               msg = Drafty.append(msg, Drafty.parse(caption));
             }
             // Pass data and the uploader to the TinodeWeb.
             this.sendMessage(msg, uploadCompletionPromise, uploader);
-            console.log("5");
         })
         .catch(err => /* this.props.onError(err, 'err') */ console.log(err));
       return;
     }
-
-    console.log("6");
 
     // Send the video inband if it's small enough.
     blobToBase64(videoBlob)
