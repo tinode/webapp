@@ -12513,6 +12513,95 @@ class DocPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
 
 /***/ }),
 
+/***/ "./src/widgets/drag-and-drop.jsx":
+/*!***************************************!*\
+  !*** ./src/widgets/drag-and-drop.jsx ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ DragAndDrop)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+class DragAndDrop extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
+  constructor(props) {
+    super(props);
+    this.state = {
+      dragging: false
+    };
+    this.dropRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
+    this.dragCounter = 0;
+    this.handleDrag = this.handleDrag.bind(this);
+    this.handleDragIn = this.handleDragIn.bind(this);
+    this.handleDragOut = this.handleDragOut.bind(this);
+    this.handleDrop = this.handleDrop.bind(this);
+  }
+  componentDidMount() {
+    let div = this.dropRef.current;
+    div.addEventListener('dragenter', this.handleDragIn);
+    div.addEventListener('dragleave', this.handleDragOut);
+    div.addEventListener('dragover', this.handleDrag);
+    div.addEventListener('drop', this.handleDrop);
+  }
+  componentWillUnmount() {
+    let div = this.dropRef.current;
+    div.removeEventListener('dragenter', this.handleDragIn);
+    div.removeEventListener('dragleave', this.handleDragOut);
+    div.removeEventListener('dragover', this.handleDrag);
+    div.removeEventListener('drop', this.handleDrop);
+  }
+  handleDrag(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  handleDragIn(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.dragCounter++;
+    if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
+      this.setState({
+        dragging: true
+      });
+    }
+  }
+  handleDragOut(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.dragCounter--;
+    if (this.dragCounter == 0) {
+      this.setState({
+        dragging: false
+      });
+    }
+  }
+  handleDrop(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.setState({
+      dragging: false
+    });
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      this.props.onDrop(e.dataTransfer.files);
+      e.dataTransfer.clearData();
+      this.dragCounter = 0;
+    }
+  }
+  render() {
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "drag-and-drop",
+      ref: this.dropRef
+    }, this.state.dragging ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "banner"
+    }, this.props.actionPrompt) : null, this.props.children);
+  }
+}
+;
+
+/***/ }),
+
 /***/ "./src/widgets/error-panel.jsx":
 /*!*************************************!*\
   !*** ./src/widgets/error-panel.jsx ***!
@@ -14602,13 +14691,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
+/* harmony import */ var _drag_and_drop_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./drag-and-drop.jsx */ "./src/widgets/drag-and-drop.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
 
 
 
 const AudioRecorder = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_webm-duration-fix_lib_index_js"), __webpack_require__.e("src_widgets_audio-recorder_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./audio-recorder.jsx */ "./src/widgets/audio-recorder.jsx")));
+
 
 
 
@@ -14706,6 +14797,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     this.handleSend = this.handleSend.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleMessageTyping = this.handleMessageTyping.bind(this);
+    this.handleDropAttach = this.handleDropAttach.bind(this);
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
     this.formatReply = this.formatReply.bind(this);
   }
@@ -14748,7 +14840,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     }
   }
   formatReply() {
-    return this.props.reply ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(this.props.reply.content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_5__.replyFormatter, {
+    return this.props.reply ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(this.props.reply.content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__.replyFormatter, {
       formatMessage: this.props.intl.formatMessage.bind(this.props.intl),
       authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
     }) : null;
@@ -14757,7 +14849,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     if (this.props.disabled) {
       return;
     }
-    if ((0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.filePasted)(e, file => {
+    if ((0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__.filePasted)(e, file => {
       this.props.onAttachImage(file);
     }, file => {
       this.props.onAttachFile(file);
@@ -14776,6 +14868,12 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       this.props.onAttachFile(e.target.files[0]);
     }
     e.target.value = '';
+  }
+  handleDropAttach(files) {
+    if (files && files.length > 0) {
+      console.log('Dropping ', files);
+      this.props.onAttachFile(files[0]);
+    }
   }
   handleAttachAudio(url, preview, duration) {
     this.setState({
@@ -14813,7 +14911,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     });
     if (this.props.onKeyPress) {
       const now = new Date().getTime();
-      if (now - this.keypressTimestamp > _config_js__WEBPACK_IMPORTED_MODULE_3__.KEYPRESS_DELAY) {
+      if (now - this.keypressTimestamp > _config_js__WEBPACK_IMPORTED_MODULE_4__.KEYPRESS_DELAY) {
         this.props.onKeyPress();
         this.keypressTimestamp = now;
       }
@@ -14847,6 +14945,23 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       className: "material-icons gray"
     }, "close"))), this.state.quote) : null;
     const audioEnabled = this.state.audioAvailable && this.props.onAttachAudio;
+    const inputField = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("textarea", {
+      id: "sendMessage",
+      placeholder: prompt,
+      value: this.state.message,
+      onChange: this.handleMessageTyping,
+      onKeyPress: this.handleKeyPress,
+      ref: ref => {
+        this.messageEditArea = ref;
+      },
+      autoFocus: true
+    });
+    const inputArea = this.props.onAttachFile ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_drag_and_drop_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      actionPrompt: formatMessage(messages.icon_title_attach_file),
+      onDrop: this.handleDropAttach
+    }, inputField) : {
+      inputField
+    };
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "send-message-wrapper"
     }, !this.props.noInput ? quote : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -14879,17 +14994,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
         audioRec: false
       }),
       onFinished: this.handleAttachAudio
-    })) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("textarea", {
-      id: "sendMessage",
-      placeholder: prompt,
-      value: this.state.message,
-      onChange: this.handleMessageTyping,
-      onKeyPress: this.handleKeyPress,
-      ref: ref => {
-        this.messageEditArea = ref;
-      },
-      autoFocus: true
-    }), this.state.message || !audioEnabled ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    })) : inputArea, this.state.message || !audioEnabled ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: this.handleSend,
       title: formatMessage(messages.icon_title_send)

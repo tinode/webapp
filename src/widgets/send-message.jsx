@@ -7,6 +7,8 @@ import { Drafty } from 'tinode-sdk';
 // a dependency on webm-duration-fix.
 const AudioRecorder = React.lazy(_ => import('./audio-recorder.jsx'));
 
+import DragAndDrop from './drag-and-drop.jsx';
+
 import { KEYPRESS_DELAY } from '../config.js';
 import { filePasted } from '../lib/blob-helpers.js';
 import { replyFormatter } from '../lib/formatters.js';
@@ -80,6 +82,7 @@ class SendMessage extends React.PureComponent {
     this.handleSend = this.handleSend.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleMessageTyping = this.handleMessageTyping.bind(this);
+    this.handleDropAttach = this.handleDropAttach.bind(this);
 
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
 
@@ -159,6 +162,13 @@ class SendMessage extends React.PureComponent {
     e.target.value = '';
   }
 
+  handleDropAttach(files) {
+    if (files && files.length > 0) {
+      console.log('Dropping ', files);
+      this.props.onAttachFile(files[0]);
+    }
+  }
+
   handleAttachAudio(url, preview, duration) {
     this.setState({audioRec: false});
     this.props.onAttachAudio(url, preview, duration);
@@ -233,6 +243,13 @@ class SendMessage extends React.PureComponent {
         {this.state.quote}
       </div>) : null;
     const audioEnabled = this.state.audioAvailable && this.props.onAttachAudio;
+    const inputField = (<textarea id="sendMessage" placeholder={prompt}
+      value={this.state.message} onChange={this.handleMessageTyping}
+      onKeyPress={this.handleKeyPress}
+      ref={(ref) => {this.messageEditArea = ref;}}
+      autoFocus />);
+    const inputArea = this.props.onAttachFile ?
+      (<DragAndDrop actionPrompt={formatMessage(messages.icon_title_attach_file)} onDrop={this.handleDropAttach}>{inputField}</DragAndDrop>) : {inputField};
     return (
       <div id="send-message-wrapper">
         {!this.props.noInput ? quote : null}
@@ -259,12 +276,7 @@ class SendMessage extends React.PureComponent {
                       onDeleted={_ => this.setState({audioRec: false})}
                       onFinished={this.handleAttachAudio}/>
                   </Suspense>) :
-                  <textarea id="sendMessage" placeholder={prompt}
-                    value={this.state.message}
-                    onChange={this.handleMessageTyping}
-                    onKeyPress={this.handleKeyPress}
-                    ref={ref => {this.messageEditArea = ref;}}
-                    autoFocus />)}
+                  inputArea)}
               {this.state.message || !audioEnabled ?
                 <a href="#" onClick={this.handleSend} title={formatMessage(messages.icon_title_send)}>
                   <i className="material-icons">{sendIcon}</i>
