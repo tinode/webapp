@@ -1,2 +1,3 @@
 umd/* binary
 package-lock.json binary
+*.min.css binary
