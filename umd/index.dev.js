@@ -2566,12 +2566,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _widgets_audio_player_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/audio-player.jsx */ "./src/widgets/audio-player.jsx");
 /* harmony import */ var _widgets_call_message_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/call-message.jsx */ "./src/widgets/call-message.jsx");
 /* harmony import */ var _widgets_call_status_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/call-status.jsx */ "./src/widgets/call-status.jsx");
-/* harmony import */ var _widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/lazy-image.jsx */ "./src/widgets/lazy-image.jsx");
-/* harmony import */ var _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../widgets/uploading-image.jsx */ "./src/widgets/uploading-image.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _strformat_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./strformat.js */ "./src/lib/strformat.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./utils.js */ "./src/lib/utils.js");
+/* harmony import */ var _widgets_inline_video_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/inline-video.jsx */ "./src/widgets/inline-video.jsx");
+/* harmony import */ var _widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../widgets/lazy-image.jsx */ "./src/widgets/lazy-image.jsx");
+/* harmony import */ var _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../widgets/uploading-image.jsx */ "./src/widgets/uploading-image.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _strformat_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./utils.js */ "./src/lib/utils.js");
+
 
 
 
@@ -2627,7 +2629,7 @@ function fullFormatter(style, data, values, key, stack) {
   switch (style) {
     case 'AU':
       if (attr.src) {
-        attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.sanitizeUrlForMime)(attr.src, 'audio'));
+        attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.sanitizeUrlForMime)(attr.src, 'audio'));
         attr.duration = data.duration > 0 ? data.duration | 0 : undefined;
         attr.preview = data.preview;
         attr.loading = 'lazy';
@@ -2664,7 +2666,7 @@ function fullFormatter(style, data, values, key, stack) {
     case 'MN':
       attr.className = 'mention';
       if (data) {
-        attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_10__.idToColorClass)(data.val, false, true);
+        attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_11__.idToColorClass)(data.val, false, true);
       }
       break;
     case 'FM':
@@ -2718,15 +2720,15 @@ function handleImageData(el, data, attr) {
   if (!data) {
     attr.src = 'img/broken_image.png';
     attr.style = {
-      width: _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM + 'px',
-      height: _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM + 'px'
+      width: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px',
+      height: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px'
     };
     return el;
   }
   attr.className = 'inline-image';
-  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 24, false) || {
-    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_8__.BROKEN_IMAGE_SIZE,
-    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_8__.BROKEN_IMAGE_SIZE
+  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 24, false) || {
+    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_9__.BROKEN_IMAGE_SIZE,
+    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_9__.BROKEN_IMAGE_SIZE
   };
   attr.style = {
     width: dim.dstWidth + 'px',
@@ -2735,10 +2737,10 @@ function handleImageData(el, data, attr) {
     minHeight: dim.dstHeight + 'px'
   };
   if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isProcessing(data)) {
-    attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.sanitizeUrlForMime)(attr.src, 'image'));
+    attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.sanitizeUrlForMime)(attr.src, 'image'));
     attr.alt = data.name;
     if (attr.src) {
-      if (Math.max(data.width || 0, data.height || 0) > _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM) {
+      if (Math.max(data.width || 0, data.height || 0) > _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM) {
         attr.onClick = this.onImagePreview;
         attr.className += ' image-clickable';
       }
@@ -2747,7 +2749,7 @@ function handleImageData(el, data, attr) {
       attr.src = 'img/broken_image.png';
     }
   } else {
-    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_7__["default"];
+    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_8__["default"];
   }
   return el;
 }
@@ -2755,15 +2757,15 @@ function handleVideoData(el, data, attr) {
   if (!data) {
     attr.src = 'img/broken_video.png';
     attr.style = {
-      width: _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM + 'px',
-      height: _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM + 'px'
+      width: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px',
+      height: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px'
     };
     return el;
   }
   attr.className = 'inline-image';
-  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 24, false) || {
-    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_8__.BROKEN_IMAGE_SIZE,
-    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_8__.BROKEN_IMAGE_SIZE
+  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 24, false) || {
+    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_9__.BROKEN_IMAGE_SIZE,
+    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_9__.BROKEN_IMAGE_SIZE
   };
   attr.style = {
     width: dim.dstWidth + 'px',
@@ -2772,18 +2774,9 @@ function handleVideoData(el, data, attr) {
     minHeight: dim.dstHeight + 'px'
   };
   if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isProcessing(data)) {
-    attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.sanitizeUrlForMime)(attr.src, 'video'));
-    attr.alt = data.name;
-    if (attr.src) {
-      attr.onClick = this.onImagePreview;
-      attr.className += ' image-clickable';
-      attr.loading = 'lazy';
-      attr.controls = 'controls';
-    } else {
-      attr.src = 'img/broken_video.png';
-    }
+    el = _widgets_inline_video_jsx__WEBPACK_IMPORTED_MODULE_6__["default"];
   } else {
-    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_7__["default"];
+    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_8__["default"];
   }
   return el;
 }
@@ -2801,7 +2794,7 @@ function previewFormatter(style, data, values, key) {
       values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
         key: "au",
         className: "material-icons"
-      }, "mic"), ' ', (0,_strformat_js__WEBPACK_IMPORTED_MODULE_10__.secondsToTime)(data.duration / 1000)];
+      }, "mic"), ' ', (0,_strformat_js__WEBPACK_IMPORTED_MODULE_11__.secondsToTime)(data.duration / 1000)];
       break;
     case 'BR':
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
@@ -2881,10 +2874,10 @@ function previewFormatter(style, data, values, key) {
 ;
 function inlineImageAttr(attr, data) {
   attr.style = {
-    width: _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM + 'px',
-    height: _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM + 'px',
-    maxWidth: _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM + 'px',
-    maxHeight: _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM + 'px'
+    width: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px',
+    height: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px',
+    maxWidth: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px',
+    maxHeight: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px'
   };
   attr.className = 'inline-image';
   attr.alt = this.formatMessage(messages.drafty_image);
@@ -2915,7 +2908,7 @@ function quoteFormatter(style, data, values, key) {
         el = 'span';
         attr.className = 'mention';
         if (data) {
-          attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_10__.idToColorClass)(data.val, false, true);
+          attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_11__.idToColorClass)(data.val, false, true);
         }
         break;
       case 'EX':
@@ -2932,7 +2925,7 @@ function quoteFormatter(style, data, values, key) {
         values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
           key: "ex",
           className: "material-icons"
-        }, "attachment"), (0,_strformat_js__WEBPACK_IMPORTED_MODULE_10__.shortenFileName)(fname, 16) || this.formatMessage(messages.drafty_attachment)];
+        }, "attachment"), (0,_strformat_js__WEBPACK_IMPORTED_MODULE_11__.shortenFileName)(fname, 16) || this.formatMessage(messages.drafty_attachment)];
         break;
     }
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(el, attr, values);
@@ -2942,13 +2935,13 @@ function quoteFormatter(style, data, values, key) {
 function quoteImage(data) {
   let promise;
   if (data.val) {
-    const blob = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__.base64ToBlob)(data.val, data.mime);
+    const blob = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__.base64ToBlob)(data.val, data.mime);
     if (!blob) {
       throw new Error("Invalid image");
     }
     promise = Promise.resolve(blob);
   } else if (data.ref) {
-    promise = fetch(this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.sanitizeUrlForMime)(data.ref, 'image'))).then(evt => {
+    promise = fetch(this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.sanitizeUrlForMime)(data.ref, 'image'))).then(evt => {
       if (evt.ok) {
         return evt.blob();
       } else {
@@ -2959,7 +2952,7 @@ function quoteImage(data) {
     throw new Error("Missing image data");
   }
   return promise.then(blob => {
-    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM, _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM, -1, true);
+    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM, _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM, -1, true);
   }).then(scaled => {
     data.mime = scaled.mime;
     data.size = scaled.blob.size;
@@ -2967,15 +2960,15 @@ function quoteImage(data) {
     data.height = scaled.height;
     delete data.ref;
     data.src = URL.createObjectURL(scaled.blob);
-    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__.blobToBase64)(scaled.blob);
+    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__.blobToBase64)(scaled.blob);
   }).then(b64 => {
     data.val = b64.bits;
     return data;
   }).catch(err => {
     delete data.val;
     delete data.src;
-    data.width = _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM;
-    data.height = _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM;
+    data.width = _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM;
+    data.height = _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM;
     throw err;
   });
 }
@@ -2986,13 +2979,13 @@ function replyFormatter(style, data, values, key, stack) {
     }, data);
     let loadedPromise;
     try {
-      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.cancelablePromise)(quoteImage.call(this, data));
+      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.cancelablePromise)(quoteImage.call(this, data));
     } catch (error) {
       console.error("Failed to quote image", error);
-      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.cancelablePromise)(error);
+      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.cancelablePromise)(error);
     }
     attr.whenDone = loadedPromise;
-    values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], attr, null), ' ', attr.alt];
+    values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], attr, null), ' ', attr.alt];
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), {
       key: key
     }, values);
@@ -13517,6 +13510,39 @@ class InPlaceEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
 
 /***/ }),
 
+/***/ "./src/widgets/inline-video.jsx":
+/*!**************************************!*\
+  !*** ./src/widgets/inline-video.jsx ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ InlineVideo)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+class InlineVideo extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "inline-image video"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement('img', this.props), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "play-control"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      class: "material-icons white bigger"
+    }, "play_arrow")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "duration"
+    }, "1:12:45"));
+  }
+}
+;
+
+/***/ }),
+
 /***/ "./src/widgets/invitation.jsx":
 /*!************************************!*\
   !*** ./src/widgets/invitation.jsx ***!
@@ -16158,10 +16184,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _file_progress_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./file-progress.jsx */ "./src/widgets/file-progress.jsx");
-
+/* harmony import */ var _file_progress_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./file-progress.jsx */ "./src/widgets/file-progress.jsx");
 
 
 class UploadingImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -16173,7 +16196,7 @@ class UploadingImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       className: "inline-image"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement('img', this.props), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "rounded-container"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_file_progress_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_file_progress_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
       progress: this.props.progress,
       onCancel: this.props.onCancelUpload
     })));

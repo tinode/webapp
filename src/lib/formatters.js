@@ -6,6 +6,7 @@ import { Drafty } from 'tinode-sdk';
 import AudioPlayer from '../widgets/audio-player.jsx'
 import CallMessage from '../widgets/call-message.jsx'
 import CallStatus from '../widgets/call-status.jsx';
+import InlineVideo from '../widgets/inline-video.jsx';
 import LazyImage from '../widgets/lazy-image.jsx'
 import UploadingImage from '../widgets/uploading-image.jsx'
 
@@ -225,6 +226,7 @@ function handleVideoData(el, data, attr) {
     minHeight: dim.dstHeight + 'px'
   };
   if (!Drafty.isProcessing(data)) {
+    /*
     attr.src = this.authorizeURL(sanitizeUrlForMime(attr.src, 'video'));
     attr.alt = data.name;
     if (attr.src) {
@@ -235,6 +237,8 @@ function handleVideoData(el, data, attr) {
     } else {
       attr.src = 'img/broken_video.png';
     }
+    */
+    el = InlineVideo;
   } else {
     // Use custom element instead of <img>.
     el = UploadingImage;
