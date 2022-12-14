@@ -172,7 +172,7 @@ export function imageCrop(mime, objURL, left, top, width, height, scale) {
 export function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onerror = (evt) => {
+    reader.onerror = _ => {
       reject(reader.error);
     };
     reader.onload = _ => {

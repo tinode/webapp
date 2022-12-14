@@ -2192,7 +2192,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "NO_ACCESS_MODE": () => (/* binding */ NO_ACCESS_MODE),
 /* harmony export */   "QUOTED_REPLY_LENGTH": () => (/* binding */ QUOTED_REPLY_LENGTH),
 /* harmony export */   "READ_DELAY": () => (/* binding */ READ_DELAY),
-/* harmony export */   "REM_SIZE": () => (/* binding */ REM_SIZE)
+/* harmony export */   "REM_SIZE": () => (/* binding */ REM_SIZE),
+/* harmony export */   "VIDEO_PREVIEW_DIM": () => (/* binding */ VIDEO_PREVIEW_DIM)
 /* harmony export */ });
 /* harmony import */ var _version_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./version.js */ "./src/version.js");
 
@@ -2223,6 +2224,7 @@ const MAX_INBAND_ATTACHMENT_SIZE = 262_144;
 const MAX_EXTERN_ATTACHMENT_SIZE = 1 << 23;
 const MAX_IMAGE_DIM = 1024;
 const IMAGE_PREVIEW_DIM = 64;
+const VIDEO_PREVIEW_DIM = 96;
 const IMAGE_THUMBNAIL_DIM = 36;
 const MAX_ONLINE_IN_TOPIC = 4;
 const MAX_TITLE_LENGTH = 60;
@@ -2426,7 +2428,7 @@ function imageCrop(mime, objURL, left, top, width, height, scale) {
 function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onerror = evt => {
+    reader.onerror = _ => {
       reject(reader.error);
     };
     reader.onload = _ => {
@@ -2746,7 +2748,7 @@ function handleImageData(el, data, attr) {
       }
       attr.loading = 'lazy';
     } else {
-      attr.src = 'img/broken_image.png';
+      attr.src = null;
     }
   } else {
     el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_8__["default"];
@@ -2774,6 +2776,13 @@ function handleVideoData(el, data, attr) {
     minHeight: dim.dstHeight + 'px'
   };
   if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isProcessing(data)) {
+    attr.alt = data.name;
+    if (data.ref || data.val) {
+      attr.onClick = this.onVideoPreview;
+      attr.loading = 'lazy';
+    } else {
+      attr.src = null;
+    }
     el = _widgets_inline_video_jsx__WEBPACK_IMPORTED_MODULE_6__["default"];
   } else {
     el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_8__["default"];
@@ -3213,12 +3222,15 @@ function relativeDateFormat(then, locale) {
   return new Intl.DateTimeFormat(locale).format(then);
 }
 function secondsToTime(seconds, fixedMin) {
-  let min = Math.floor(seconds / 60) | 0;
-  let hours = Math.floor(min / 60) | 0;
+  if (typeof seconds != 'number') {
+    return '';
+  }
+  let min = (Math.floor(seconds / 60) | 0) % 60;
+  let hours = Math.floor(seconds / 36000) | 0;
   if (fixedMin || hours > 0) {
     min = min < 10 ? `0${min}` : min;
   }
-  let sec = seconds % 60 | 0;
+  let sec = (seconds | 0) % 60;
   sec = sec < 10 ? `0${sec}` : sec;
   if (hours == 0) {
     return `${min}:${sec}`;
@@ -6103,7 +6115,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         mime: b64.mime,
         data: b64.bits,
         filename: b64.name
-      }))).catch(err => this.props.onError(err));
+      }))).catch(err => this.props.onError(err.message, 'err'));
     }
   }
   handleAttachFile(file) {
@@ -6148,6 +6160,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         let msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.insertImage(null, 0, {
           mime: mime,
           _tempPreview: b64.bits,
+          bits: b64.bits,
           width: width,
           height: height,
           filename: fname,
@@ -6165,7 +6178,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(blob).then(b64 => {
       let msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.insertImage(null, 0, {
         mime: b64.mime,
-        preview: b64.bits,
+        bits: b64.bits,
         width: width,
         height: height,
         filename: fname,
@@ -6179,54 +6192,68 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     });
   }
   sendVideoAttachment(caption, videoBlob, previewBlob, params) {
-    const mime = params.mime;
     const width = params.width;
     const height = params.height;
-    const fname = params.name;
-    const duration = params.duration;
     const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_17__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
-    if (videoBlob.size > maxInbandAttachmentSize) {
-      const uploader = this.props.tinode.getLargeFileHelper();
+    const uploads = [];
+    let uploader;
+    if (videoBlob.size + previewBlob.size > maxInbandAttachmentSize) {
+      uploader = this.props.tinode.getLargeFileHelper();
       if (!uploader) {
         this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
         return;
       }
-      const uploadCompletionPromise = uploader.upload(videoBlob);
-      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.imageScaled)(previewBlob, _config_js__WEBPACK_IMPORTED_MODULE_17__.IMAGE_PREVIEW_DIM, _config_js__WEBPACK_IMPORTED_MODULE_17__.IMAGE_PREVIEW_DIM, -1, false).then(scaled => (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(scaled.blob)).then(b64 => {
+      uploads[0] = videoBlob.size > maxInbandAttachmentSize * 0.675 ? uploader.upload(videoBlob) : null;
+      uploads[1] = previewBlob.size > maxInbandAttachmentSize * 0.275 ? uploader.upload(previewBlob) : null;
+    }
+    if (uploads.length == 0) {
+      Promise.all((0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(videoBlob), (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(previewBlob)).then(b64s => {
+        const [v64, i64] = b64s;
         let msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.insertVideo(null, 0, {
-          mime: mime,
-          _tempPreview: b64.bits,
+          mime: v64.mime,
+          bits: v64.bits,
+          preview: i64.bits,
+          premime: i64.mime,
           width: width,
           height: height,
-          duration: duration,
-          filename: fname,
-          size: videoBlob.size,
-          urlPromise: uploadCompletionPromise
+          duration: params.duration,
+          filename: params.name,
+          size: videoBlob.size
         });
         if (caption) {
           msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendLineBreak(msg);
           msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(msg, tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.parse(caption));
         }
-        this.sendMessage(msg, uploadCompletionPromise, uploader);
-      }).catch(err => console.log(err));
+        this.sendMessage(msg);
+      });
       return;
     }
-    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(videoBlob).then(b64 => {
+    const uploadCompletionPromise = Promise.all(uploads);
+    const b64conv = [];
+    b64conv[0] = uploads[0] ? null : (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(videoBlob);
+    b64conv[1] = uploads[1] ? null : (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.imageScaled)(previewBlob, _config_js__WEBPACK_IMPORTED_MODULE_17__.MAX_IMAGE_DIM, _config_js__WEBPACK_IMPORTED_MODULE_17__.MAX_IMAGE_DIM, -1, false).then(scaled => (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(scaled.blob));
+    b64conv[2] = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.imageScaled)(previewBlob, _config_js__WEBPACK_IMPORTED_MODULE_17__.VIDEO_PREVIEW_DIM, _config_js__WEBPACK_IMPORTED_MODULE_17__.VIDEO_PREVIEW_DIM, -1, false).then(scaled => (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(scaled.blob));
+    Promise.all(b64conv).then(b64s => {
+      const [video, img, preview] = b64s;
       let msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.insertVideo(null, 0, {
-        mime: b64.mime,
-        preview: b64.bits,
+        mime: params.mime,
+        bits: video ? video.bits : null,
+        _tempPreview: preview.bits,
+        preview: img ? img.bits : preview.bits,
+        premime: img ? img.mime : preview.mime,
         width: width,
         height: height,
-        duration: duration,
-        filename: fname,
-        size: blob.size
+        duration: params.duration,
+        filename: params.name,
+        size: videoBlob.size,
+        urlPromise: uploadCompletionPromise
       });
       if (caption) {
         msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendLineBreak(msg);
         msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(msg, tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.parse(caption));
       }
-      this.sendMessage(msg);
-    });
+      this.sendMessage(msg, uploadCompletionPromise, uploader);
+    }).catch(err => this.props.onError(err.message, 'err'));
   }
   handleAttachImageOrVideo(file) {
     const maxExternAttachmentSize = this.props.tinode.getServerParam('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_17__.MAX_EXTERN_ATTACHMENT_SIZE);
@@ -6255,7 +6282,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         }
       });
     }).catch(err => {
-      this.props.onError(err, 'err');
+      this.props.onError(err.message, 'err');
     });
   }
   sendAudioAttachment(url, preview, duration) {
@@ -6280,15 +6307,15 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(blob).then(b64 => {
           this.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendAudio(null, {
             mime: b64.mime,
+            bits: b64.bits,
             size: blob.size,
-            data: b64.bits,
             duration: duration,
             preview: preview
           }));
         });
       }
     }).catch(err => {
-      this.props.onError(err);
+      this.props.onError(err.message, 'err');
     });
     ;
   }
@@ -10960,6 +10987,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       viewportWidth: props.viewportWidth,
       authorizeURL: props.tinode.authorizeURL.bind(props.tinode),
       onImagePreview: this.handleImagePreview,
+      onVideoPreview: this.handleImagePreview,
       onFormButtonClick: this.handleFormButtonClick,
       onQuoteClick: this.handleQuoteClick
     };
@@ -11002,7 +11030,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       if (!this.props.response) {
         let immutable = false;
         tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.entities(this.props.content, (_0, _1, tp) => {
-          immutable = ['AU', 'EX', 'FM', 'IM', 'VC'].includes(tp);
+          immutable = ['AU', 'EX', 'FM', 'IM', 'QQ', 'VC', 'VD'].includes(tp);
           return immutable;
         });
         if (!immutable) {
@@ -13522,21 +13550,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+
 
 class InlineVideo extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
   }
   render() {
+    const duration = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(this.props['data-duration'] / 1000);
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "inline-image video"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement('img', this.props), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "play-control"
+      className: "inline-video"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement('img', this.props), this.props.onClick ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "play-control",
+      onClick: this.props.onClick
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      class: "material-icons white bigger"
-    }, "play_arrow")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "material-icons white bigger"
+    }, "play_arrow")) : null, duration ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "duration"
-    }, "1:12:45"));
+    }, duration) : null);
   }
 }
 ;

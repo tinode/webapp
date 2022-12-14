@@ -35,6 +35,7 @@ class BaseChatMessage extends React.PureComponent {
       authorizeURL: props.tinode.authorizeURL.bind(props.tinode),
 
       onImagePreview: this.handleImagePreview,
+      onVideoPreview: this.handleImagePreview,
       onFormButtonClick: this.handleFormButtonClick,
       onQuoteClick: this.handleQuoteClick
     };
@@ -81,7 +82,7 @@ class BaseChatMessage extends React.PureComponent {
       if (!this.props.response) {
         let immutable = false;
         Drafty.entities(this.props.content, (_0, _1, tp) => {
-          immutable = ['AU', 'EX', 'FM', 'IM', 'VC'].includes(tp);
+          immutable = ['AU', 'EX', 'FM', 'IM', 'QQ', 'VC', 'VD'].includes(tp);
           return immutable;
         });
         if (!immutable) {

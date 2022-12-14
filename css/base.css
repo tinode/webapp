@@ -2036,11 +2036,6 @@ img.image-preview::before {
   background-size: 10rem 10rem;
 }
 
-.inline-image.video {
-  align-items: center;
-  justify-content: center;
-}
-
 .inline-image.video > img.inline-image::before, img.image-preview.video::before {
   background: center no-repeat #ccc url("../img/broken_video.png");
 }
@@ -2049,7 +2044,18 @@ img.image-preview::before {
   background-size: 3rem 3rem;
 }
 
-.inline-image.video .duration {
+.inline-video {
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+}
+
+.inline-video > img.inline-image::before {
+  background: #ccc;
+}
+
+.inline-video .duration {
   padding: 0.25rem 0.5rem;
   color: #333;
   background-color: rgba(255, 255, 255, 0.5);
@@ -2060,15 +2066,16 @@ img.image-preview::before {
   border-radius: 0.3rem;
 }
 
-.inline-image.video .play-control {
+.inline-video .play-control {
   display: flex;
   position: absolute;
   align-items: center;
   justify-content: center;
   width: 4rem;
   height: 4rem;
-  background-color: rgba(0, 0, 0, 0.25);
+  background-color: rgba(0, 0, 0, 0.4);
   border-radius: 50%;
+  cursor: pointer;
 }
 
 /* Attachment styles */

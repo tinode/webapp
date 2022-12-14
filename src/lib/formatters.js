@@ -40,11 +40,12 @@ const messages = defineMessages({
 
 // The main Drafty formatter: converts Drafty elements into React classes. 'this' is set by the caller.
 // 'this' must contain:
-//    viewportWidth: this.props.viewportWidth;
-//    authorizeURL: this.props.tinode.authorizeURL
-//    onImagePreview: this.handleImagePreview
-//    onFormButtonClick: this.handleFormButtonClick
-//    onQuoteClick: this.handleQuoteClick (optional)
+//    viewportWidth:
+//    authorizeURL:
+//    onImagePreview:
+//    onVideoPreview:
+//    onFormButtonClick:
+//    onQuoteClick:
 export function fullFormatter(style, data, values, key, stack) {
   if (stack.includes('QQ')) {
     return quoteFormatter.call(this, style, data, values, key);
@@ -192,7 +193,7 @@ function handleImageData(el, data, attr) {
       }
       attr.loading = 'lazy';
     } else {
-      attr.src = 'img/broken_image.png';
+      attr.src = null;
     }
   } else {
     // Use custom element instead of <img>.
@@ -226,18 +227,13 @@ function handleVideoData(el, data, attr) {
     minHeight: dim.dstHeight + 'px'
   };
   if (!Drafty.isProcessing(data)) {
-    /*
-    attr.src = this.authorizeURL(sanitizeUrlForMime(attr.src, 'video'));
     attr.alt = data.name;
-    if (attr.src) {
-      attr.onClick = this.onImagePreview;
-      attr.className += ' image-clickable';
+    if (data.ref || data.val) {
+      attr.onClick = this.onVideoPreview;
       attr.loading = 'lazy';
-      attr.controls = 'controls';
     } else {
-      attr.src = 'img/broken_video.png';
+      attr.src = null;
     }
-    */
     el = InlineVideo;
   } else {
     // Use custom element instead of <img>.

@@ -34,13 +34,17 @@ export function relativeDateFormat(then, locale) {
 // Convert seconds to [hours:]minutes:seconds, i.e. 156 sec -> 2:36, 3756 sec -> 1:02:36.
 // If <code>fixedMins</code> is true, then minutes are represented by at least two digits.
 export function secondsToTime(seconds, fixedMin) {
-  let min = Math.floor(seconds / 60) | 0;
-  let hours = Math.floor(min / 60) | 0;
+  if (typeof seconds != 'number') {
+    return '';
+  }
+
+  let min = (Math.floor(seconds / 60) | 0) % 60;
+  let hours = Math.floor(seconds / 36000) | 0;
 
   if (fixedMin || hours > 0) {
     min = min < 10 ? `0${min}` : min;
   }
-  let sec = (seconds % 60) | 0;
+  let sec = (seconds | 0) % 60;
   sec = sec < 10 ? `0${sec}` : sec;
   if (hours == 0) {
     return `${min}:${sec}`;

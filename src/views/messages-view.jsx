@@ -22,7 +22,7 @@ import VideoPreview from '../widgets/video-preview.jsx';
 
 import { DEFAULT_P2P_ACCESS_MODE, EDIT_PREVIEW_LENGTH, IMAGE_PREVIEW_DIM, KEYPRESS_DELAY,
   MESSAGES_PAGE, MAX_EXTERN_ATTACHMENT_SIZE, MAX_IMAGE_DIM, MAX_INBAND_ATTACHMENT_SIZE,
-  READ_DELAY, QUOTED_REPLY_LENGTH } from '../config.js';
+  READ_DELAY, QUOTED_REPLY_LENGTH, VIDEO_PREVIEW_DIM } from '../config.js';
 import { CALL_STATE_OUTGOING_INITATED, CALL_STATE_IN_PROGRESS } from '../constants.js';
 import { blobToBase64, fileToBase64, imageScaled, makeImageUrl } from '../lib/blob-helpers.js';
 import HashNavigation from '../lib/navigation.js';
@@ -828,7 +828,7 @@ class MessagesView extends React.Component {
       // Small enough to send inband.
       fileToBase64(file)
         .then(b64 => this.sendMessage(Drafty.attachFile(null, {mime: b64.mime, data: b64.bits, filename: b64.name})))
-        .catch(err => this.props.onError(err));
+        .catch(err => this.props.onError(err.message, 'err'));
     }
   }
 
@@ -885,32 +885,34 @@ class MessagesView extends React.Component {
         // Convert tiny image into base64 for serialization and previewing.
         .then(scaled => blobToBase64(scaled.blob))
         .then(b64 => {
-            let msg = Drafty.insertImage(null, 0, {
-              mime: mime,
-              _tempPreview: b64.bits, // This preview will not be serialized.
-              width: width,
-              height: height,
-              filename: fname,
-              size: blob.size,
-              urlPromise: uploadCompletionPromise
-            });
-            if (caption) {
-              msg = Drafty.appendLineBreak(msg);
-              msg = Drafty.append(msg, Drafty.parse(caption));
-            }
-            // Pass data and the uploader to the TinodeWeb.
-            this.sendMessage(msg, uploadCompletionPromise, uploader);
+          let msg = Drafty.insertImage(null, 0, {
+            mime: mime,
+            _tempPreview: b64.bits, // This preview will not be serialized.
+            bits: b64.bits, // Image thumbnail.
+            width: width,
+            height: height,
+            filename: fname,
+            size: blob.size,
+            urlPromise: uploadCompletionPromise
+          });
+          if (caption) {
+            msg = Drafty.appendLineBreak(msg);
+            msg = Drafty.append(msg, Drafty.parse(caption));
+          }
+          // Pass data and the uploader to the TinodeWeb.
+          this.sendMessage(msg, uploadCompletionPromise, uploader);
         })
         .catch(err => this.props.onError(err, 'err'));
       return;
     }
 
-    // Send the image inband if it's not too big.
+    // Send the image inband if it's not too big. The image has been scaled already
+    // in image preview.
     blobToBase64(blob)
       .then(b64 => {
         let msg = Drafty.insertImage(null, 0, {
           mime: b64.mime,
-          preview: b64.bits, // Serializable preview
+          bits: b64.bits,
           width: width,
           height: height,
           filename: fname,
@@ -926,68 +928,88 @@ class MessagesView extends React.Component {
 
   // sendVideoAttachment sends the video bits as Drafty message.
   sendVideoAttachment(caption, videoBlob, previewBlob, params) {
-    const mime = params.mime;
     const width = params.width;
     const height = params.height;
-    const fname = params.name;
-    const duration = params.duration;
 
     // Server-provided limit reduced for base64 encoding and overhead.
     const maxInbandAttachmentSize = (this.props.tinode.getServerParam('maxMessageSize',
       MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024) | 0;
 
-    if (videoBlob.size > maxInbandAttachmentSize) {
-      // Too large to send inband - uploading out of band and sending as a link.
-      const uploader = this.props.tinode.getLargeFileHelper();
+    const uploads = [];
+    let uploader;
+    if ((videoBlob.size + previewBlob.size) > maxInbandAttachmentSize) {
+      // One or both are too large to send inband. Uploading out of band and sending as a link.
+      uploader = this.props.tinode.getLargeFileHelper();
       if (!uploader) {
         this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
         return;
       }
-      const uploadCompletionPromise = uploader.upload(videoBlob);
-      // Make small preview to show while uploading.
-      imageScaled(previewBlob, IMAGE_PREVIEW_DIM, IMAGE_PREVIEW_DIM, -1, false)
-        // Convert tiny image into base64 for serialization and previewing.
-        .then(scaled => blobToBase64(scaled.blob))
-        .then(b64 => {
-            let msg = Drafty.insertVideo(null, 0, {
-              mime: mime,
-              _tempPreview: b64.bits, // This preview will not be serialized.
-              width: width,
-              height: height,
-              duration: duration,
-              filename: fname,
-              size: videoBlob.size,
-              urlPromise: uploadCompletionPromise
-            });
-            if (caption) {
-              msg = Drafty.appendLineBreak(msg);
-              msg = Drafty.append(msg, Drafty.parse(caption));
-            }
-            // Pass data and the uploader to the TinodeWeb.
-            this.sendMessage(msg, uploadCompletionPromise, uploader);
-        })
-        .catch(err => /* this.props.onError(err, 'err') */ console.log(err));
+
+      uploads[0] = videoBlob.size > maxInbandAttachmentSize * 0.675 ? uploader.upload(videoBlob) : null;
+      uploads[1] = previewBlob.size > maxInbandAttachmentSize * 0.275 ? uploader.upload(previewBlob) : null;
+    }
+
+    if (uploads.length == 0) {
+      // Both video and preview are small enough to send inband.
+      Promise.all(blobToBase64(videoBlob), blobToBase64(previewBlob))
+        .then(b64s => {
+          const [v64, i64] = b64s;
+          let msg = Drafty.insertVideo(null, 0, {
+            mime: v64.mime,
+            bits: v64.bits,
+            preview: i64.bits,
+            premime: i64.mime,
+            width: width,
+            height: height,
+            duration: params.duration,
+            filename: params.name,
+            size: videoBlob.size
+          });
+          if (caption) {
+            msg = Drafty.appendLineBreak(msg);
+            msg = Drafty.append(msg, Drafty.parse(caption));
+          }
+          this.sendMessage(msg);
+      });
       return;
     }
 
-    // Send the video inband if it's small enough.
-    blobToBase64(videoBlob)
-      .then(b64 => {
+    const uploadCompletionPromise = Promise.all(uploads);
+
+    const b64conv = [];
+    // Small video converted to base64.
+    b64conv[0] = uploads[0] ? null : blobToBase64(videoBlob);
+    // Full-size preview fits inline.
+    b64conv[1] = uploads[1] ? null : imageScaled(previewBlob, MAX_IMAGE_DIM, MAX_IMAGE_DIM, -1, false)
+      .then(scaled => blobToBase64(scaled.blob));
+    // Small preview to show while uploading.
+    b64conv[2] = imageScaled(previewBlob, VIDEO_PREVIEW_DIM, VIDEO_PREVIEW_DIM, -1, false)
+      .then(scaled => blobToBase64(scaled.blob));
+    Promise.all(b64conv)
+      // Convert tiny image into base64 for serialization and previewing.
+      .then(b64s => {
+        const [video, img, preview] = b64s;
         let msg = Drafty.insertVideo(null, 0, {
-          mime: b64.mime,
-          preview: b64.bits, // Serializable preview
+          mime: params.mime,
+          bits: video ? video.bits : null,
+          _tempPreview: preview.bits,
+          preview: img ? img.bits : preview.bits,
+          premime: img ? img.mime : preview.mime,
           width: width,
           height: height,
-          duration: duration,
-          filename: fname,
-          size: blob.size
+          duration: params.duration,
+          filename: params.name,
+          size: videoBlob.size,
+          urlPromise: uploadCompletionPromise
         });
         if (caption) {
           msg = Drafty.appendLineBreak(msg);
           msg = Drafty.append(msg, Drafty.parse(caption));
         }
-        this.sendMessage(msg);
-      });
+        // Pass data and the uploader to the TinodeWeb.
+        this.sendMessage(msg, uploadCompletionPromise, uploader);
+      })
+      .catch(err => this.props.onError(err.message, 'err'));
   }
 
   // handleAttachImageOrVideo method is called when [Attach image or video] button is clicked: launch image or video preview.
@@ -1018,7 +1040,7 @@ class MessagesView extends React.Component {
           mime: scaled.mime
         }});
       }).catch(err => {
-        this.props.onError(err, 'err');
+        this.props.onError(err.message, 'err');
       });
   }
 
@@ -1052,15 +1074,15 @@ class MessagesView extends React.Component {
             .then(b64 => {
               this.sendMessage(Drafty.appendAudio(null, {
                 mime: b64.mime,
+                bits: b64.bits,
                 size: blob.size,
-                data: b64.bits,
                 duration: duration,
                 preview: preview,
               }))
             })
         }
       })
-      .catch(err => {this.props.onError(err)});;
+      .catch(err => {this.props.onError(err.message, 'err')});;
   }
 
   handleCancelUpload(seq, uploader) {
