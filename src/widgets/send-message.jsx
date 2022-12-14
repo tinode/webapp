@@ -80,6 +80,7 @@ class SendMessage extends React.PureComponent {
     this.handleSend = this.handleSend.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleMessageTyping = this.handleMessageTyping.bind(this);
+    this.handleDropAttach = this.handleDropAttach.bind(this);
 
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
 
@@ -157,6 +158,13 @@ class SendMessage extends React.PureComponent {
     }
     // Clear the value so the same file can be uploaded again.
     e.target.value = '';
+  }
+
+  handleDropAttach(files) {
+    if (files && files.length > 0) {
+      console.log('Dropping ', files);
+      this.props.onAttachFile(files[0]);
+    }
   }
 
   handleAttachAudio(url, preview, duration) {
@@ -260,10 +268,9 @@ class SendMessage extends React.PureComponent {
                       onFinished={this.handleAttachAudio}/>
                   </Suspense>) :
                   <textarea id="sendMessage" placeholder={prompt}
-                    value={this.state.message}
-                    onChange={this.handleMessageTyping}
+                    value={this.state.message} onChange={this.handleMessageTyping}
                     onKeyPress={this.handleKeyPress}
-                    ref={ref => {this.messageEditArea = ref;}}
+                    ref={(ref) => {this.messageEditArea = ref;}}
                     autoFocus />)}
               {this.state.message || !audioEnabled ?
                 <a href="#" onClick={this.handleSend} title={formatMessage(messages.icon_title_send)}>
