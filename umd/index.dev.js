@@ -2610,6 +2610,13 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
       "value": "Picture"
     }]
   },
+  drafty_video: {
+    id: "drafty_video",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Video recording"
+    }]
+  },
   drafty_unknown: {
     id: "drafty_unknown",
     defaultMessage: [{
@@ -2865,6 +2872,13 @@ function previewFormatter(style, data, values, key) {
       el = null;
       values = null;
       break;
+    case 'VD':
+      el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
+      values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+        key: "im",
+        className: "material-icons"
+      }, "play_circle_outline"), ' ', this.formatMessage(messages.drafty_video)];
+      break;
     default:
       if (!el) {
         el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
@@ -2896,6 +2910,15 @@ function inlineImageAttr(attr, data) {
   attr.title = attr.alt;
   return attr;
 }
+function inlineVideoAttr(attr, data) {
+  inlineImageAttr.call(this, attr, data);
+  attr.alt = this.formatMessage(messages.drafty_video);
+  attr.title = attr.alt;
+  if (!data) {
+    attr.src = 'img/broken_video.png';
+  }
+  return attr;
+}
 function quoteFormatter(style, data, values, key) {
   if (['BR', 'EX', 'IM', 'MN'].includes(style)) {
     let el = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.tagName(style);
@@ -2907,6 +2930,14 @@ function quoteFormatter(style, data, values, key) {
         break;
       case 'IM':
         attr = inlineImageAttr.call(this, attr, data);
+        values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement('img', attr, null), ' ', attr.alt];
+        el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
+        attr = {
+          key: key
+        };
+        break;
+      case 'VD':
+        attr = inlineVideoAttr.call(this, attr, data);
         values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement('img', attr, null), ' ', attr.alt];
         el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
         attr = {
@@ -2982,8 +3013,10 @@ function quoteImage(data) {
   });
 }
 function replyFormatter(style, data, values, key, stack) {
-  if (style == 'IM') {
-    const attr = inlineImageAttr.call(this, {
+  if (style == 'IM' || style == 'VD') {
+    const attr = style == 'IM' ? inlineImageAttr.call(this, {
+      key: key
+    }, data) : inlineVideoAttr.call(this, {
       key: key
     }, data);
     let loadedPromise;
@@ -5355,23 +5388,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _widgets_chat_message_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/chat-message.jsx */ "./src/widgets/chat-message.jsx");
 /* harmony import */ var _widgets_contact_badges_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/contact-badges.jsx */ "./src/widgets/contact-badges.jsx");
 /* harmony import */ var _widgets_doc_preview_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/doc-preview.jsx */ "./src/widgets/doc-preview.jsx");
-/* harmony import */ var _widgets_drag_and_drop_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../widgets/drag-and-drop.jsx */ "./src/widgets/drag-and-drop.jsx");
-/* harmony import */ var _widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../widgets/error-panel.jsx */ "./src/widgets/error-panel.jsx");
-/* harmony import */ var _widgets_group_subs_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../widgets/group-subs.jsx */ "./src/widgets/group-subs.jsx");
-/* harmony import */ var _widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../widgets/image-preview.jsx */ "./src/widgets/image-preview.jsx");
-/* harmony import */ var _widgets_invitation_jsx__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../widgets/invitation.jsx */ "./src/widgets/invitation.jsx");
-/* harmony import */ var _widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../widgets/letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
-/* harmony import */ var _widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../widgets/load-spinner.jsx */ "./src/widgets/load-spinner.jsx");
-/* harmony import */ var _logo_view_jsx__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./logo-view.jsx */ "./src/views/logo-view.jsx");
-/* harmony import */ var _widgets_meta_message_jsx__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../widgets/meta-message.jsx */ "./src/widgets/meta-message.jsx");
-/* harmony import */ var _widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../widgets/send-message.jsx */ "./src/widgets/send-message.jsx");
-/* harmony import */ var _widgets_video_preview_jsx__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../widgets/video-preview.jsx */ "./src/widgets/video-preview.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../constants.js */ "./src/constants.js");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
-/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
-
+/* harmony import */ var _widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../widgets/error-panel.jsx */ "./src/widgets/error-panel.jsx");
+/* harmony import */ var _widgets_group_subs_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../widgets/group-subs.jsx */ "./src/widgets/group-subs.jsx");
+/* harmony import */ var _widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../widgets/image-preview.jsx */ "./src/widgets/image-preview.jsx");
+/* harmony import */ var _widgets_invitation_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../widgets/invitation.jsx */ "./src/widgets/invitation.jsx");
+/* harmony import */ var _widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../widgets/letter-tile.jsx */ "./src/widgets/letter-tile.jsx");
+/* harmony import */ var _widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../widgets/load-spinner.jsx */ "./src/widgets/load-spinner.jsx");
+/* harmony import */ var _logo_view_jsx__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./logo-view.jsx */ "./src/views/logo-view.jsx");
+/* harmony import */ var _widgets_meta_message_jsx__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../widgets/meta-message.jsx */ "./src/widgets/meta-message.jsx");
+/* harmony import */ var _widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../widgets/send-message.jsx */ "./src/widgets/send-message.jsx");
+/* harmony import */ var _widgets_video_preview_jsx__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../widgets/video-preview.jsx */ "./src/widgets/video-preview.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../constants.js */ "./src/constants.js");
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
+/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
 
 
 
@@ -5481,7 +5512,7 @@ function isPeerRestricted(acs) {
   return false;
 }
 function shouldPresentCallPanel(callState) {
-  return callState == _constants_js__WEBPACK_IMPORTED_MODULE_19__.CALL_STATE_OUTGOING_INITATED || callState == _constants_js__WEBPACK_IMPORTED_MODULE_19__.CALL_STATE_IN_PROGRESS;
+  return callState == _constants_js__WEBPACK_IMPORTED_MODULE_18__.CALL_STATE_OUTGOING_INITATED || callState == _constants_js__WEBPACK_IMPORTED_MODULE_18__.CALL_STATE_IN_PROGRESS;
 }
 class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
@@ -5497,6 +5528,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.sendKeyPress = this.sendKeyPress.bind(this);
     this.subscribe = this.subscribe.bind(this);
     this.handleScrollReference = this.handleScrollReference.bind(this);
+    this.mountDnDEvents = this.mountDnDEvents.bind(this);
     this.handleScrollEvent = this.handleScrollEvent.bind(this);
     this.handleDescChange = this.handleDescChange.bind(this);
     this.handleSubsUpdated = this.handleSubsUpdated.bind(this);
@@ -5522,8 +5554,15 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.handleCancelReply = this.handleCancelReply.bind(this);
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
     this.handleCallHangup = this.handleCallHangup.bind(this);
+    this.isDragEnabled = this.isDragEnabled.bind(this);
+    this.handleDragIn = this.handleDragIn.bind(this);
+    this.handleDragOut = this.handleDragOut.bind(this);
+    this.handleDrag = this.handleDrag.bind(this);
+    this.handleDrop = this.handleDrop.bind(this);
     this.chatMessageRefs = {};
     this.getOrCreateMessageRef = this.getOrCreateMessageRef.bind(this);
+    this.dragCounter = 0;
+    this.dndRef = null;
     this.readNotificationQueue = [];
     this.readNotificationTimer = null;
     this.keyPressTimer = null;
@@ -5540,12 +5579,24 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     if (this.messagesScroller) {
       this.messagesScroller.addEventListener('scroll', this.handleScrollEvent);
     }
+    if (this.dndRef) {
+      this.dndRef.addEventListener('dragenter', this.handleDragIn);
+      this.dndRef.addEventListener('dragleave', this.handleDragOut);
+      this.dndRef.addEventListener('dragover', this.handleDrag);
+      this.dndRef.addEventListener('drop', this.handleDrop);
+    }
   }
   componentWillUnmount() {
     if (this.messagesScroller) {
       this.messagesScroller.removeEventListener('scroll', this.handleScrollEvent);
     }
     this.clearNotificationQueue();
+    if (this.dndRef) {
+      this.dndRef.removeEventListener('dragenter', this.handleDragIn);
+      this.dndRef.removeEventListener('dragleave', this.handleDragOut);
+      this.dndRef.removeEventListener('dragover', this.handleDrag);
+      this.dndRef.removeEventListener('drop', this.handleDrop);
+    }
   }
   componentDidUpdate(prevProps, prevState) {
     if (this.messagesScroller && (prevState.topic != this.state.topic || prevState.messageCount != this.state.messageCount)) {
@@ -5645,7 +5696,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         if (topic.public) {
           Object.assign(nextState, {
             title: topic.public.fn,
-            avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.makeImageUrl)(topic.public.photo)
+            avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.makeImageUrl)(topic.public.photo)
           });
         } else {
           Object.assign(nextState, {
@@ -5729,7 +5780,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     const newTopic = this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic;
     let getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub();
     if (this.state.isReader || newTopic) {
-      getQuery = getQuery.withLaterData(_config_js__WEBPACK_IMPORTED_MODULE_18__.MESSAGES_PAGE);
+      getQuery = getQuery.withLaterData(_config_js__WEBPACK_IMPORTED_MODULE_17__.MESSAGES_PAGE);
       if (this.state.isReader) {
         getQuery = getQuery.withLaterDel();
       }
@@ -5740,7 +5791,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     const setQuery = newTopic ? this.props.newTopicParams : undefined;
     topic.subscribe(getQuery.build(), setQuery).then(ctrl => {
       if (ctrl.code == 303) {
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_21__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_21__["default"].setUrlTopic('', ctrl.params.topic));
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_20__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_20__["default"].setUrlTopic('', ctrl.params.topic));
         return;
       }
       if (this.state.topic != ctrl.topic) {
@@ -5814,11 +5865,20 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         this.setState({
           fetchingMessages: true
         }, _ => {
-          topic.getMessagesPage(_config_js__WEBPACK_IMPORTED_MODULE_18__.MESSAGES_PAGE).catch(err => this.props.onError(err.message, 'err')).finally(_ => this.setState({
+          topic.getMessagesPage(_config_js__WEBPACK_IMPORTED_MODULE_17__.MESSAGES_PAGE).catch(err => this.props.onError(err.message, 'err')).finally(_ => this.setState({
             fetchingMessages: false
           }));
         });
       }
+    }
+  }
+  mountDnDEvents(dnd) {
+    if (dnd) {
+      dnd.addEventListener('dragenter', this.handleDragIn);
+      dnd.addEventListener('dragleave', this.handleDragOut);
+      dnd.addEventListener('dragover', this.handleDrag);
+      dnd.addEventListener('drop', this.handleDrop);
+      this.dndRef = dnd;
     }
   }
   goToLatestMessage() {
@@ -5833,7 +5893,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     if (desc.public) {
       this.setState({
         title: desc.public.fn,
-        avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.makeImageUrl)(desc.public.photo)
+        avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.makeImageUrl)(desc.public.photo)
       });
     } else {
       this.setState({
@@ -5888,7 +5948,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.readNotificationQueue.push({
       topicName: this.state.topic,
       seq: seq,
-      sendAt: now.setMilliseconds(now.getMilliseconds() + _config_js__WEBPACK_IMPORTED_MODULE_18__.READ_DELAY)
+      sendAt: now.setMilliseconds(now.getMilliseconds() + _config_js__WEBPACK_IMPORTED_MODULE_17__.READ_DELAY)
     });
   }
   clearNotificationQueue() {
@@ -5966,7 +6026,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           clearTimeout(this.keyPressTimer);
           this.keyPressTimer = setTimeout(_ => this.setState({
             typingIndicator: false
-          }), _config_js__WEBPACK_IMPORTED_MODULE_18__.KEYPRESS_DELAY + 1000);
+          }), _config_js__WEBPACK_IMPORTED_MODULE_17__.KEYPRESS_DELAY + 1000);
           if (!this.state.typingIndicator) {
             this.setState({
               typingIndicator: true
@@ -6058,7 +6118,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
   handleEnablePeer(e) {
     e.preventDefault();
-    this.props.onChangePermissions(this.state.topic, _config_js__WEBPACK_IMPORTED_MODULE_18__.DEFAULT_P2P_ACCESS_MODE, this.state.topic);
+    this.props.onChangePermissions(this.state.topic, _config_js__WEBPACK_IMPORTED_MODULE_17__.DEFAULT_P2P_ACCESS_MODE, this.state.topic);
   }
   sendKeyPress(audio) {
     const topic = this.props.tinode.getTopic(this.state.topic);
@@ -6105,7 +6165,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     });
   }
   sendFileAttachment(file) {
-    const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
+    const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_17__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
     if (file.size > maxInbandAttachmentSize) {
       const uploader = this.props.tinode.getLargeFileHelper();
       if (!uploader) {
@@ -6121,7 +6181,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       });
       this.sendMessage(msg, uploadCompletionPromise, uploader);
     } else {
-      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.fileToBase64)(file).then(b64 => this.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachFile(null, {
+      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.fileToBase64)(file).then(b64 => this.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachFile(null, {
         mime: b64.mime,
         data: b64.bits,
         filename: b64.name
@@ -6129,11 +6189,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
   }
   handleAttachFile(file) {
-    const maxExternAttachmentSize = this.props.tinode.getServerParam('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_EXTERN_ATTACHMENT_SIZE);
+    const maxExternAttachmentSize = this.props.tinode.getServerParam('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_17__.MAX_EXTERN_ATTACHMENT_SIZE);
     if (file.size > maxExternAttachmentSize) {
       this.props.onError(this.props.intl.formatMessage(messages.file_attachment_too_large, {
-        size: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_22__.bytesToHumanSize)(file.size),
-        limit: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_22__.bytesToHumanSize)(maxExternAttachmentSize)
+        size: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_21__.bytesToHumanSize)(file.size),
+        limit: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_21__.bytesToHumanSize)(maxExternAttachmentSize)
       }), 'err');
     } else {
       this.setState({
@@ -6158,7 +6218,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     const width = this.state.imagePreview.width;
     const height = this.state.imagePreview.height;
     const fname = this.state.imagePreview.name;
-    const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
+    const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_17__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
     if (blob.size > maxInbandAttachmentSize) {
       const uploader = this.props.tinode.getLargeFileHelper();
       if (!uploader) {
@@ -6166,7 +6226,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         return;
       }
       const uploadCompletionPromise = uploader.upload(blob);
-      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_18__.IMAGE_PREVIEW_DIM, _config_js__WEBPACK_IMPORTED_MODULE_18__.IMAGE_PREVIEW_DIM, -1, false).then(scaled => (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.blobToBase64)(scaled.blob)).then(b64 => {
+      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_17__.IMAGE_PREVIEW_DIM, _config_js__WEBPACK_IMPORTED_MODULE_17__.IMAGE_PREVIEW_DIM, -1, false).then(scaled => (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(scaled.blob)).then(b64 => {
         let msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.insertImage(null, 0, {
           mime: mime,
           _tempPreview: b64.bits,
@@ -6185,7 +6245,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       }).catch(err => this.props.onError(err, 'err'));
       return;
     }
-    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.blobToBase64)(blob).then(b64 => {
+    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(blob).then(b64 => {
       let msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.insertImage(null, 0, {
         mime: b64.mime,
         bits: b64.bits,
@@ -6204,7 +6264,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   sendVideoAttachment(caption, videoBlob, previewBlob, params) {
     const width = params.width;
     const height = params.height;
-    const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
+    const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_17__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
     const uploads = [];
     let uploader;
     if (videoBlob.size + previewBlob.size > maxInbandAttachmentSize) {
@@ -6217,7 +6277,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       uploads[1] = previewBlob.size > maxInbandAttachmentSize * 0.275 ? uploader.upload(previewBlob) : null;
     }
     if (uploads.length == 0) {
-      Promise.all((0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.blobToBase64)(videoBlob), (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.blobToBase64)(previewBlob)).then(b64s => {
+      Promise.all((0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(videoBlob), (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(previewBlob)).then(b64s => {
         const [v64, i64] = b64s;
         let msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.insertVideo(null, 0, {
           mime: v64.mime,
@@ -6240,9 +6300,9 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
     const uploadCompletionPromise = Promise.all(uploads);
     const b64conv = [];
-    b64conv[0] = uploads[0] ? null : (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.blobToBase64)(videoBlob);
-    b64conv[1] = uploads[1] ? null : (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.imageScaled)(previewBlob, _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_IMAGE_DIM, _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_IMAGE_DIM, -1, false).then(scaled => (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.blobToBase64)(scaled.blob));
-    b64conv[2] = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.imageScaled)(previewBlob, _config_js__WEBPACK_IMPORTED_MODULE_18__.VIDEO_PREVIEW_DIM, _config_js__WEBPACK_IMPORTED_MODULE_18__.VIDEO_PREVIEW_DIM, -1, false).then(scaled => (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.blobToBase64)(scaled.blob));
+    b64conv[0] = uploads[0] ? null : (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(videoBlob);
+    b64conv[1] = uploads[1] ? null : (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.imageScaled)(previewBlob, _config_js__WEBPACK_IMPORTED_MODULE_17__.MAX_IMAGE_DIM, _config_js__WEBPACK_IMPORTED_MODULE_17__.MAX_IMAGE_DIM, -1, false).then(scaled => (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(scaled.blob));
+    b64conv[2] = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.imageScaled)(previewBlob, _config_js__WEBPACK_IMPORTED_MODULE_17__.VIDEO_PREVIEW_DIM, _config_js__WEBPACK_IMPORTED_MODULE_17__.VIDEO_PREVIEW_DIM, -1, false).then(scaled => (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(scaled.blob));
     Promise.all(b64conv).then(b64s => {
       const [video, img, preview] = b64s;
       let msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.insertVideo(null, 0, {
@@ -6266,7 +6326,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }).catch(err => this.props.onError(err.message, 'err'));
   }
   handleAttachImageOrVideo(file) {
-    const maxExternAttachmentSize = this.props.tinode.getServerParam('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_EXTERN_ATTACHMENT_SIZE);
+    const maxExternAttachmentSize = this.props.tinode.getServerParam('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_17__.MAX_EXTERN_ATTACHMENT_SIZE);
     if (file.type.startsWith('video/')) {
       this.setState({
         videoPreview: {
@@ -6279,7 +6339,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       });
       return;
     }
-    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.imageScaled)(file, _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_IMAGE_DIM, _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_IMAGE_DIM, maxExternAttachmentSize, false).then(scaled => {
+    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.imageScaled)(file, _config_js__WEBPACK_IMPORTED_MODULE_17__.MAX_IMAGE_DIM, _config_js__WEBPACK_IMPORTED_MODULE_17__.MAX_IMAGE_DIM, maxExternAttachmentSize, false).then(scaled => {
       this.setState({
         imagePreview: {
           url: URL.createObjectURL(scaled.blob),
@@ -6308,7 +6368,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
   sendAudioAttachment(url, preview, duration) {
     fetch(url).then(result => result.blob()).then(blob => {
-      const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_18__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024;
+      const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_17__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024;
       if (blob.size > maxInbandAttachmentSize) {
         const uploader = this.props.tinode.getLargeFileHelper();
         if (!uploader) {
@@ -6325,7 +6385,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         });
         this.sendMessage(msg, uploadCompletionPromise, uploader);
       } else {
-        (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.blobToBase64)(blob).then(b64 => {
+        (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(blob).then(b64 => {
           this.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendAudio(null, {
             mime: b64.mime,
             bits: b64.bits,
@@ -6357,7 +6417,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
     content = typeof content == 'string' ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.init(content) : content;
     if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isValid(content)) {
-      content = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.replyContent(content, _config_js__WEBPACK_IMPORTED_MODULE_18__.QUOTED_REPLY_LENGTH);
+      content = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.replyContent(content, _config_js__WEBPACK_IMPORTED_MODULE_17__.QUOTED_REPLY_LENGTH);
     } else {
       content = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.init('\u26A0 '), tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.wrapInto(this.props.intl.formatMessage(messages.invalid_content), 'EM'));
     }
@@ -6379,7 +6439,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     content = typeof content == 'string' ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.init(content) : content;
     const editable = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.toMarkdown(content);
     if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isValid(content)) {
-      content = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.replyContent(content, _config_js__WEBPACK_IMPORTED_MODULE_18__.EDIT_PREVIEW_LENGTH);
+      content = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.replyContent(content, _config_js__WEBPACK_IMPORTED_MODULE_17__.EDIT_PREVIEW_LENGTH);
     } else {
       content = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.init('\u26A0 '), tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.wrapInto(this.props.intl.formatMessage(messages.invalid_content), 'EM'));
     }
@@ -6415,6 +6475,45 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       console.error("Unresolved message ref", replyToSeq);
     }
   }
+  isDragEnabled() {
+    return this.state.isWriter && !this.state.unconfirmed && !this.props.forwardMessage && !this.state.peerMessagingDisabled;
+  }
+  handleDrag(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  handleDragIn(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.dragCounter++;
+    if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
+      this.setState({
+        dragging: true
+      });
+    }
+  }
+  handleDragOut(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.dragCounter--;
+    if (this.dragCounter <= 0) {
+      this.setState({
+        dragging: false
+      });
+    }
+  }
+  handleDrop(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.setState({
+      dragging: false
+    });
+    if (this.isDragEnabled() && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      this.handleFileDrop(e.dataTransfer.files);
+      e.dataTransfer.clearData();
+      this.dragCounter = 0;
+    }
+  }
   render() {
     const {
       formatMessage
@@ -6423,14 +6522,14 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     if (this.props.hideSelf) {
       component = null;
     } else if (!this.state.topic) {
-      component = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_logo_view_jsx__WEBPACK_IMPORTED_MODULE_14__["default"], {
+      component = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_logo_view_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
         serverVersion: this.props.serverVersion,
         serverAddress: this.props.serverAddress
       });
     } else {
       let component2;
       if (this.state.imagePreview) {
-        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
+        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
           content: this.state.imagePreview,
           tinode: this.props.tinode,
           reply: this.state.reply,
@@ -6439,7 +6538,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           onSendMessage: this.sendImageAttachment
         });
       } else if (this.state.videoPreview) {
-        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_video_preview_jsx__WEBPACK_IMPORTED_MODULE_17__["default"], {
+        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_video_preview_jsx__WEBPACK_IMPORTED_MODULE_16__["default"], {
           content: this.state.videoPreview,
           tinode: this.props.tinode,
           reply: this.state.reply,
@@ -6448,7 +6547,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           onSendMessage: this.sendVideoAttachment
         });
       } else if (this.state.imagePostview) {
-        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
+        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
           content: this.state.imagePostview,
           onClose: this.handleClosePreview
         });
@@ -6527,7 +6626,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           const user = topic.userDesc(thisFrom);
           if (user && user.public) {
             userName = user.public.fn;
-            userAvatar = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_20__.makeImageUrl)(user.public.photo);
+            userAvatar = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.makeImageUrl)(user.public.photo);
           }
           chatBoxClass = groupTopic ? 'chat-box group' : 'chat-box';
           const ref = this.getOrCreateMessageRef(msg.seq);
@@ -6536,15 +6635,15 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             replyToSeq = null;
           }
           if (msg.hi) {
-            messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_meta_message_jsx__WEBPACK_IMPORTED_MODULE_15__["default"], {
+            messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_meta_message_jsx__WEBPACK_IMPORTED_MODULE_14__["default"], {
               deleted: true,
               key: msg.seq
             }));
           } else {
             const thisDate = new Date(msg.ts);
             if (!prevDate || prevDate.toDateString() != thisDate.toDateString()) {
-              messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_meta_message_jsx__WEBPACK_IMPORTED_MODULE_15__["default"], {
-                date: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_22__.relativeDateFormat)(msg.ts),
+              messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_meta_message_jsx__WEBPACK_IMPORTED_MODULE_14__["default"], {
+                date: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_21__.relativeDateFormat)(msg.ts),
                 locale: this.props.intl.locale,
                 key: 'date-' + msg.seq
               }));
@@ -6591,7 +6690,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             if (cont.online) {
               lastSeen = formatMessage(messages.online_now);
             } else if (cont.seen) {
-              lastSeen = formatMessage(messages.last_seen) + ": " + (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_22__.shortDateFormat)(cont.seen.when, this.props.intl.locale);
+              lastSeen = formatMessage(messages.last_seen) + ": " + (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_21__.shortDateFormat)(cont.seen.when, this.props.intl.locale);
             }
           }
         }
@@ -6640,9 +6739,9 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             "type": 0,
             "value": "Enable"
           }]
-        })), ".") : null, this.state.unconfirmed ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_invitation_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
+        })), ".") : null, this.state.unconfirmed ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_invitation_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
           onAction: this.handleNewChatAcceptance
-        }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_16__["default"], {
+        }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_15__["default"], {
           tinode: this.props.tinode,
           topicName: this.state.topic,
           noInput: !!this.props.forwardMessage,
@@ -6673,7 +6772,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           className: "material-icons"
         }, "arrow_back")) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           className: "avatar-box"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
+        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_letter_tile_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
           tinode: this.props.tinode,
           avatar: avatar,
           topic: this.state.topic,
@@ -6696,7 +6795,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           badges: icon_badges
         })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "topic-last-seen"
-        }, lastSeen)), groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_group_subs_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
+        }, lastSeen)), groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_group_subs_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
           tinode: this.props.tinode,
           subscribers: this.state.onlineSubs
         }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -6706,19 +6805,19 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           onClick: this.handleContextClick
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
           className: "material-icons"
-        }, "more_vert")))), this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
+        }, "more_vert")))), this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
           level: this.props.errorLevel,
           text: this.props.errorText,
           onClearError: this.props.onError
-        }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
+        }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
           show: this.state.fetchingMessages
-        }), !this.state.unconfirmed && !this.props.forwardMessage && this.state.isWriter && !this.state.peerMessagingDisabled ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_drag_and_drop_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
-          actionPrompt: this.props.intl.formatMessage(messages.drag_file),
-          onDrop: this.handleFileDrop
-        }, messagesComponent) : messagesComponent);
+        }), messagesComponent, this.state.dragging && this.isDragEnabled() ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+          className: "drag-n-drop"
+        }, formatMessage(messages.drag_file)) : null);
       }
       component = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        id: "topic-view"
+        id: "topic-view",
+        ref: this.mountDnDEvents
       }, component2);
     }
     return component;
@@ -12669,95 +12768,6 @@ class DocPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
       onSendMessage: this.handleSendDoc,
       onError: this.props.onError
     }));
-  }
-}
-;
-
-/***/ }),
-
-/***/ "./src/widgets/drag-and-drop.jsx":
-/*!***************************************!*\
-  !*** ./src/widgets/drag-and-drop.jsx ***!
-  \***************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ DragAndDrop)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-
-class DragAndDrop extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
-  constructor(props) {
-    super(props);
-    this.state = {
-      dragging: false
-    };
-    this.dropRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
-    this.dragCounter = 0;
-    this.handleDrag = this.handleDrag.bind(this);
-    this.handleDragIn = this.handleDragIn.bind(this);
-    this.handleDragOut = this.handleDragOut.bind(this);
-    this.handleDrop = this.handleDrop.bind(this);
-  }
-  componentDidMount() {
-    const div = this.dropRef.current;
-    div.addEventListener('dragenter', this.handleDragIn);
-    div.addEventListener('dragleave', this.handleDragOut);
-    div.addEventListener('dragover', this.handleDrag);
-    div.addEventListener('drop', this.handleDrop);
-  }
-  componentWillUnmount() {
-    const div = this.dropRef.current;
-    div.removeEventListener('dragenter', this.handleDragIn);
-    div.removeEventListener('dragleave', this.handleDragOut);
-    div.removeEventListener('dragover', this.handleDrag);
-    div.removeEventListener('drop', this.handleDrop);
-  }
-  handleDrag(e) {
-    e.preventDefault();
-    e.stopPropagation();
-  }
-  handleDragIn(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.dragCounter++;
-    if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
-      this.setState({
-        dragging: true
-      });
-    }
-  }
-  handleDragOut(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.dragCounter--;
-    if (this.dragCounter <= 0) {
-      this.setState({
-        dragging: false
-      });
-    }
-  }
-  handleDrop(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.setState({
-      dragging: false
-    });
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      this.props.onDrop(e.dataTransfer.files);
-      e.dataTransfer.clearData();
-      this.dragCounter = 0;
-    }
-  }
-  render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "drag-and-drop",
-      ref: this.dropRef
-    }, this.state.dragging ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "banner"
-    }, this.props.actionPrompt) : null, this.props.children);
   }
 }
 ;

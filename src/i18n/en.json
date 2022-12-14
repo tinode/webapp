@@ -317,21 +317,21 @@
   "drafty_attachment": {
     "translation": "Attachment",
     "defaultMessage": "Attachment",
-    "description": "Comment for attachment in drafty",
+    "description": "Comment for attachment in Drafty",
     "missing": false,
     "obsolete": false
   },
   "drafty_form": {
     "translation": "Form:",
     "defaultMessage": "Form:",
-    "description": "Comment for form in drafty",
+    "description": "Comment for form in Drafty",
     "missing": false,
     "obsolete": false
   },
   "drafty_image": {
     "translation": "Picture",
     "defaultMessage": "Picture",
-    "description": "Comment for embedded images in drafty",
+    "description": "Comment for embedded images in Drafty",
     "missing": false,
     "obsolete": false
   },
@@ -1526,6 +1526,13 @@
     "translation": "Drag file here",
     "defaultMessage": "Drag file here",
     "description": "Prompt on the file drag-n-drop overlay banner",
+    "missing": false,
+    "obsolete": false
+  },
+  "drafty_video": {
+    "translation": "Video recording",
+    "defaultMessage": "Video recording",
+    "description": "Comment for videos embedded in Drafty",
     "missing": false,
     "obsolete": false
   }

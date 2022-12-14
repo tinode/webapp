@@ -225,19 +225,23 @@
   },
   "drafty_attachment": {
     "defaultMessage": "Attachment",
-    "description": "Comment for attachment in drafty"
+    "description": "Comment for attachment in Drafty"
   },
   "drafty_form": {
     "defaultMessage": "Form:",
-    "description": "Comment for form in drafty"
+    "description": "Comment for form in Drafty"
   },
   "drafty_image": {
     "defaultMessage": "Picture",
-    "description": "Comment for embedded images in drafty"
+    "description": "Comment for embedded images in Drafty"
   },
   "drafty_unknown": {
     "defaultMessage": "Unsupported",
     "description": "Unsupported entity in drafty"
+  },
+  "drafty_video": {
+    "defaultMessage": "Video recording",
+    "description": "Comment for videos embedded in Drafty"
   },
   "drag_file": {
     "defaultMessage": "Drag file here",
