@@ -19,17 +19,22 @@ const messages = defineMessages({
   drafty_form: {
     id: 'drafty_form',
     defaultMessage: 'Form: ',
-    description: 'Comment for form in drafty'
+    description: 'Comment for form in Drafty'
   },
   drafty_attachment: {
     id: 'drafty_attachment',
     defaultMessage: 'Attachment',
-    description: 'Comment for attachment in drafty'
+    description: 'Comment for attachment in Drafty'
   },
   drafty_image: {
     id: 'drafty_image',
     defaultMessage: 'Picture',
-    description: 'Comment for embedded images in drafty'
+    description: 'Comment for embedded images in Drafty'
+  },
+  drafty_video: {
+    id: 'drafty_video',
+    defaultMessage: 'Video recording',
+    description: 'Comment for videos embedded in Drafty'
   },
   drafty_unknown: {
     id: 'drafty_unknown',
@@ -319,6 +324,11 @@ export function previewFormatter(style, data, values, key) {
       el = null;
       values = null;
       break;
+    case 'VD':
+      // Replace image with '[icon] Video'.
+      el = React.Fragment;
+      values = [<i key="im" className="material-icons">play_circle_outline</i>, ' ', this.formatMessage(messages.drafty_video)];
+      break;
     default:
       if (!el) {
         // Unknown element.
@@ -333,7 +343,7 @@ export function previewFormatter(style, data, values, key) {
   return React.createElement(el, attr, values);
 };
 
-// Converts Drafty object into a quoted reply. 'this' is set by the caller.
+// Converts Drafty object into a quoted reply; 'this' is set by the caller.
 function inlineImageAttr(attr, data) {
   attr.style = {
     width: IMAGE_THUMBNAIL_DIM + 'px',
@@ -347,6 +357,17 @@ function inlineImageAttr(attr, data) {
     attr.src = 'img/broken_image.png';
   }
   attr.title = attr.alt;
+  return attr;
+}
+
+// Converts Drafty object into a quoted reply; 'this' is set by the caller.
+function inlineVideoAttr(attr, data) {
+  inlineImageAttr.call(this, attr, data);
+  attr.alt = this.formatMessage(messages.drafty_video);
+  attr.title = attr.alt;
+  if (!data) {
+    attr.src = 'img/broken_video.png';
+  }
   return attr;
 }
 
@@ -367,6 +388,13 @@ function quoteFormatter(style, data, values, key) {
         break;
       case 'IM':
         attr = inlineImageAttr.call(this, attr, data);
+        values = [React.createElement('img', attr, null), ' ', attr.alt];
+        el = React.Fragment;
+        // Fragment attributes.
+        attr = {key: key};
+        break;
+      case 'VD':
+        attr = inlineVideoAttr.call(this, attr, data);
         values = [React.createElement('img', attr, null), ' ', attr.alt];
         el = React.Fragment;
         // Fragment attributes.
@@ -454,8 +482,9 @@ function quoteImage(data) {
 
 // Create a preview of a reply.
 export function replyFormatter(style, data, values, key, stack) {
-  if (style == 'IM') {
-    const attr = inlineImageAttr.call(this, {key: key}, data);
+  if (style == 'IM' || style == 'VD') {
+    const attr = style == 'IM' ? inlineImageAttr.call(this, {key: key}, data) :
+      inlineVideoAttr.call(this, {key: key}, data);
     let loadedPromise;
     try {
       loadedPromise = cancelablePromise(quoteImage.call(this, data));
@@ -463,7 +492,6 @@ export function replyFormatter(style, data, values, key, stack) {
       console.error("Failed to quote image", error);
       loadedPromise = cancelablePromise(error);
     }
-
     attr.whenDone = loadedPromise;
     values = [React.createElement(LazyImage, attr, null), ' ', attr.alt];
     return React.createElement(React.Fragment, {key: key}, values);
