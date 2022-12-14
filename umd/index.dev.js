@@ -6712,7 +6712,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           onClearError: this.props.onError
         }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
           show: this.state.fetchingMessages
-        }), !this.state.unconfirmed && !this.props.forwardMessage ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_drag_and_drop_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
+        }), !this.state.unconfirmed && !this.props.forwardMessage && this.state.isWriter && !this.state.peerMessagingDisabled ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_drag_and_drop_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
           actionPrompt: this.props.intl.formatMessage(messages.drag_file),
           onDrop: this.handleFileDrop
         }, messagesComponent) : messagesComponent);
@@ -12702,14 +12702,14 @@ class DragAndDrop extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     this.handleDrop = this.handleDrop.bind(this);
   }
   componentDidMount() {
-    let div = this.dropRef.current;
+    const div = this.dropRef.current;
     div.addEventListener('dragenter', this.handleDragIn);
     div.addEventListener('dragleave', this.handleDragOut);
     div.addEventListener('dragover', this.handleDrag);
     div.addEventListener('drop', this.handleDrop);
   }
   componentWillUnmount() {
-    let div = this.dropRef.current;
+    const div = this.dropRef.current;
     div.removeEventListener('dragenter', this.handleDragIn);
     div.removeEventListener('dragleave', this.handleDragOut);
     div.removeEventListener('dragover', this.handleDrag);
@@ -12733,7 +12733,7 @@ class DragAndDrop extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     e.preventDefault();
     e.stopPropagation();
     this.dragCounter--;
-    if (this.dragCounter == 0) {
+    if (this.dragCounter <= 0) {
       this.setState({
         dragging: false
       });

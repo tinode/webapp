@@ -1486,8 +1486,9 @@ class MessagesView extends React.Component {
                 onClearError={this.props.onError} />
               : null}
             <LoadSpinner show={this.state.fetchingMessages} />
-            {!this.state.unconfirmed && !this.props.forwardMessage ?
-              <DragAndDrop actionPrompt={this.props.intl.formatMessage(messages.drag_file)} onDrop={this.handleFileDrop} >{messagesComponent}</DragAndDrop>
+            {!this.state.unconfirmed && !this.props.forwardMessage && this.state.isWriter && !this.state.peerMessagingDisabled ?
+              <DragAndDrop actionPrompt={this.props.intl.formatMessage(messages.drag_file)}
+                onDrop={this.handleFileDrop} >{messagesComponent}</DragAndDrop>
               : messagesComponent}
           </>
         );

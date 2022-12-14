@@ -2982,25 +2982,28 @@ ul.tabbar li.active > a {
   display: flex;
   flex-direction: column;
   position: absolute;
-  width: 100%;
-  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 .drag-and-drop .banner {
-  border: dashed grey 1px;
-  background-color: rgba(255,255,255,.8);
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 9999;
-  /* Center text & font. */
   display: flex;
+  border: dashed grey 0.15rem;
+  border-radius: 1rem;
+  background-color: rgba(255,255,255,.95);
+  position: absolute;
+  top: 1.5rem;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  right: 1.5rem;
+  z-index: 3;
   justify-content: center;
   align-items: center;
   font-size: 2rem;
   color: grey;
+  outline: 0.5rem solid rgba(255,255,255,.95);
 }
 
 /*

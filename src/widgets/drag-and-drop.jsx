@@ -22,7 +22,7 @@ export default class DragAndDrop extends React.PureComponent {
   }
 
   componentDidMount() {
-    let div = this.dropRef.current;
+    const div = this.dropRef.current;
     div.addEventListener('dragenter', this.handleDragIn);
     div.addEventListener('dragleave', this.handleDragOut);
     div.addEventListener('dragover', this.handleDrag);
@@ -30,7 +30,7 @@ export default class DragAndDrop extends React.PureComponent {
   }
 
   componentWillUnmount() {
-    let div = this.dropRef.current;
+    const div = this.dropRef.current;
     div.removeEventListener('dragenter', this.handleDragIn);
     div.removeEventListener('dragleave', this.handleDragOut);
     div.removeEventListener('dragover', this.handleDrag);
@@ -55,7 +55,7 @@ export default class DragAndDrop extends React.PureComponent {
     e.preventDefault();
     e.stopPropagation();
     this.dragCounter--;
-    if (this.dragCounter == 0) {
+    if (this.dragCounter <= 0) {
       this.setState({dragging: false});
     }
   }
@@ -73,9 +73,9 @@ export default class DragAndDrop extends React.PureComponent {
 
   render() {
     return (
-      <div className='drag-and-drop' ref={this.dropRef}>
+      <div className="drag-and-drop" ref={this.dropRef}>
         {this.state.dragging ?
-          <div className='banner'>{this.props.actionPrompt}</div>
+          <div className="banner">{this.props.actionPrompt}</div>
           : null}
         {this.props.children}
       </div>
