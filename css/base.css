@@ -2976,19 +2976,9 @@ ul.tabbar li.active > a {
 }
 
 /*
- Drag-and-drop container.
+ Drag-and-drop area.
  */
-.drag-and-drop {
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-
-.drag-and-drop .banner {
+.drag-n-drop {
   display: flex;
   border: dashed grey 0.15rem;
   border-radius: 1rem;

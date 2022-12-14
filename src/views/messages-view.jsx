@@ -9,7 +9,6 @@ import CallPanel from '../widgets/call-panel.jsx';
 import ChatMessage from '../widgets/chat-message.jsx';
 import ContactBadges from '../widgets/contact-badges.jsx';
 import DocPreview from '../widgets/doc-preview.jsx';
-import DragAndDrop from '../widgets/drag-and-drop.jsx'
 import ErrorPanel from '../widgets/error-panel.jsx';
 import GroupSubs from '../widgets/group-subs.jsx';
 import ImagePreview from '../widgets/image-preview.jsx';
@@ -117,6 +116,7 @@ class MessagesView extends React.Component {
     this.sendKeyPress = this.sendKeyPress.bind(this);
     this.subscribe = this.subscribe.bind(this);
     this.handleScrollReference = this.handleScrollReference.bind(this);
+    this.mountDnDEvents = this.mountDnDEvents.bind(this);
     this.handleScrollEvent = this.handleScrollEvent.bind(this);
     this.handleDescChange = this.handleDescChange.bind(this);
     this.handleSubsUpdated = this.handleSubsUpdated.bind(this);
@@ -144,8 +144,21 @@ class MessagesView extends React.Component {
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
     this.handleCallHangup = this.handleCallHangup.bind(this);
 
+    this.isDragEnabled = this.isDragEnabled.bind(this);
+    this.handleDragIn = this.handleDragIn.bind(this);
+    this.handleDragOut = this.handleDragOut.bind(this);
+    this.handleDrag = this.handleDrag.bind(this);
+    this.handleDrop = this.handleDrop.bind(this);
+
     this.chatMessageRefs = {};
     this.getOrCreateMessageRef = this.getOrCreateMessageRef.bind(this);
+
+    // Keeps track of the drag event.
+    // Need a counter b/c the browser's 'drag' events may fire multiple times
+    // when the user takes the mouse pointer over the container:
+    // for the component itself and for all nested/child elements.
+    this.dragCounter = 0;
+    this.dndRef = null;
 
     this.readNotificationQueue = [];
     this.readNotificationTimer = null;
@@ -166,6 +179,14 @@ class MessagesView extends React.Component {
     if (this.messagesScroller) {
       this.messagesScroller.addEventListener('scroll', this.handleScrollEvent);
     }
+
+    // Drag and drop events
+    if (this.dndRef) {
+      this.dndRef.addEventListener('dragenter', this.handleDragIn);
+      this.dndRef.addEventListener('dragleave', this.handleDragOut);
+      this.dndRef.addEventListener('dragover', this.handleDrag);
+      this.dndRef.addEventListener('drop', this.handleDrop);
+    }
   }
 
   componentWillUnmount() {
@@ -175,6 +196,14 @@ class MessagesView extends React.Component {
 
     // Flush all notifications.
     this.clearNotificationQueue();
+
+    // Drag and drop events
+    if (this.dndRef) {
+      this.dndRef.removeEventListener('dragenter', this.handleDragIn);
+      this.dndRef.removeEventListener('dragleave', this.handleDragOut);
+      this.dndRef.removeEventListener('dragover', this.handleDrag);
+      this.dndRef.removeEventListener('drop', this.handleDrop);
+    }
   }
 
   // Scroll last message into view on component update e.g. on message received
@@ -502,6 +531,17 @@ class MessagesView extends React.Component {
             .finally(_ => this.setState({fetchingMessages: false}));
           });
       }
+    }
+  }
+
+  /* Mound draf and drop events */
+  mountDnDEvents(dnd) {
+    if (dnd) {
+      dnd.addEventListener('dragenter', this.handleDragIn);
+      dnd.addEventListener('dragleave', this.handleDragOut);
+      dnd.addEventListener('dragover', this.handleDrag);
+      dnd.addEventListener('drop', this.handleDrop);
+      this.dndRef = dnd;
     }
   }
 
@@ -1188,6 +1228,44 @@ class MessagesView extends React.Component {
     }
   }
 
+  isDragEnabled() {
+    return this.state.isWriter && !this.state.unconfirmed && !this.props.forwardMessage && !this.state.peerMessagingDisabled;
+  }
+
+  handleDrag(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  handleDragIn(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.dragCounter++;
+    if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
+      this.setState({dragging: true});
+    }
+  }
+
+  handleDragOut(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.dragCounter--;
+    if (this.dragCounter <= 0) {
+      this.setState({dragging: false});
+    }
+  }
+
+  handleDrop(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.setState({dragging: false});
+    if (this.isDragEnabled() && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      this.handleFileDrop(e.dataTransfer.files);
+      e.dataTransfer.clearData();
+      this.dragCounter = 0;
+    }
+  }
+
   render() {
     const {formatMessage} = this.props.intl;
 
@@ -1486,14 +1564,14 @@ class MessagesView extends React.Component {
                 onClearError={this.props.onError} />
               : null}
             <LoadSpinner show={this.state.fetchingMessages} />
-            {!this.state.unconfirmed && !this.props.forwardMessage && this.state.isWriter && !this.state.peerMessagingDisabled ?
-              <DragAndDrop actionPrompt={this.props.intl.formatMessage(messages.drag_file)}
-                onDrop={this.handleFileDrop} >{messagesComponent}</DragAndDrop>
-              : messagesComponent}
+            {messagesComponent}
+            {this.state.dragging && this.isDragEnabled() ?
+              <div className="drag-n-drop">{formatMessage(messages.drag_file)}</div>
+            : null}
           </>
         );
       }
-      component = <div id="topic-view">{component2}</div>
+      component = <div id="topic-view"  ref={this.mountDnDEvents}>{component2}</div>
     }
     return component;
   }
