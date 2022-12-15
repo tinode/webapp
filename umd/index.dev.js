@@ -2193,7 +2193,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "QUOTED_REPLY_LENGTH": () => (/* binding */ QUOTED_REPLY_LENGTH),
 /* harmony export */   "READ_DELAY": () => (/* binding */ READ_DELAY),
 /* harmony export */   "REM_SIZE": () => (/* binding */ REM_SIZE),
-/* harmony export */   "VIDEO_PREVIEW_DIM": () => (/* binding */ VIDEO_PREVIEW_DIM)
+/* harmony export */   "VIDEO_PREVIEW_DIM": () => (/* binding */ VIDEO_PREVIEW_DIM),
+/* harmony export */   "VIDEO_THUMBNAIL_WIDTH": () => (/* binding */ VIDEO_THUMBNAIL_WIDTH)
 /* harmony export */ });
 /* harmony import */ var _version_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./version.js */ "./src/version.js");
 
@@ -2226,6 +2227,7 @@ const MAX_IMAGE_DIM = 1024;
 const IMAGE_PREVIEW_DIM = 64;
 const VIDEO_PREVIEW_DIM = 96;
 const IMAGE_THUMBNAIL_DIM = 36;
+const VIDEO_THUMBNAIL_WIDTH = 48;
 const MAX_ONLINE_IN_TOPIC = 4;
 const MAX_TITLE_LENGTH = 60;
 const MAX_TOPIC_DESCRIPTION_LENGTH = 360;
@@ -2912,16 +2914,24 @@ function inlineImageAttr(attr, data) {
   return attr;
 }
 function inlineVideoAttr(attr, data) {
-  inlineImageAttr.call(this, attr, data);
+  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__.fitImageSize)(data.width, data.height, _config_js__WEBPACK_IMPORTED_MODULE_9__.VIDEO_THUMBNAIL_WIDTH, _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM);
+  attr.style = {
+    width: dim.width + 'px',
+    height: dim.height + 'px',
+    maxWidth: _config_js__WEBPACK_IMPORTED_MODULE_9__.VIDEO_THUMBNAIL_WIDTH + 'px',
+    maxHeight: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px'
+  };
   attr.alt = this.formatMessage(messages.drafty_video);
+  attr.className = 'inline-image';
   attr.title = attr.alt;
   if (!data) {
     attr.src = 'img/broken_video.png';
   }
+  attr.isvideo = 'T';
   return attr;
 }
 function quoteFormatter(style, data, values, key) {
-  if (['BR', 'EX', 'IM', 'MN'].includes(style)) {
+  if (['BR', 'EX', 'IM', 'MN', 'VD'].includes(style)) {
     let el = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.tagName(style);
     let attr = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attrValue(style, data) || {};
     attr.key = key;
@@ -2973,16 +2983,26 @@ function quoteFormatter(style, data, values, key) {
   }
   return previewFormatter.call(this, style, data, values, key);
 }
-function quoteImage(data) {
+function quoteImageOrVideo(data, isVideo) {
   let promise;
-  if (data.val) {
-    const blob = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__.base64ToBlob)(data.val, data.mime);
+  let bits, ref, mime;
+  if (isVideo) {
+    bits = data.preview;
+    mime = data.premime || 'image/jpeg';
+    ref = data.preref;
+  } else {
+    bits = data.val;
+    mime = data.mime;
+    ref = data.ref;
+  }
+  if (bits) {
+    const blob = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__.base64ToBlob)(bits, mime);
     if (!blob) {
       throw new Error("Invalid image");
     }
     promise = Promise.resolve(blob);
-  } else if (data.ref) {
-    promise = fetch(this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.sanitizeUrlForMime)(data.ref, 'image'))).then(evt => {
+  } else if (ref) {
+    promise = fetch(this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.sanitizeUrlForMime)(ref, 'image'))).then(evt => {
       if (evt.ok) {
         return evt.blob();
       } else {
@@ -2993,20 +3013,30 @@ function quoteImage(data) {
     throw new Error("Missing image data");
   }
   return promise.then(blob => {
-    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM, _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM, -1, true);
+    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__.imageScaled)(blob, isVideo ? _config_js__WEBPACK_IMPORTED_MODULE_9__.VIDEO_THUMBNAIL_WIDTH : _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM, _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM, -1, !isVideo);
   }).then(scaled => {
-    data.mime = scaled.mime;
+    if (isVideo) {
+      data.premime = scaled.mime;
+    } else {
+      data.mime = scaled.mime;
+    }
     data.size = scaled.blob.size;
     data.width = scaled.width;
     data.height = scaled.height;
     delete data.ref;
+    delete data.preref;
     data.src = URL.createObjectURL(scaled.blob);
     return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__.blobToBase64)(scaled.blob);
   }).then(b64 => {
-    data.val = b64.bits;
+    if (isVideo) {
+      data.preview = b64.bits;
+    } else {
+      data.val = b64.bits;
+    }
     return data;
   }).catch(err => {
     delete data.val;
+    delete data.preview;
     delete data.src;
     data.width = _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM;
     data.height = _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM;
@@ -3015,16 +3045,17 @@ function quoteImage(data) {
 }
 function replyFormatter(style, data, values, key, stack) {
   if (style == 'IM' || style == 'VD') {
-    const attr = style == 'IM' ? inlineImageAttr.call(this, {
+    const isImage = style == 'IM';
+    const attr = isImage ? inlineImageAttr.call(this, {
       key: key
     }, data) : inlineVideoAttr.call(this, {
       key: key
     }, data);
     let loadedPromise;
     try {
-      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.cancelablePromise)(quoteImage.call(this, data));
+      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.cancelablePromise)(quoteImageOrVideo.call(this, data, style == 'VD'));
     } catch (error) {
-      console.error("Failed to quote image", error);
+      console.warn("Failed to quote image:", error.message);
       loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.cancelablePromise)(error);
     }
     attr.whenDone = loadedPromise;
@@ -13839,7 +13870,7 @@ class LazyImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   constructor(props) {
     super(props);
     this.state = {
-      src: 'img/placeholder.png',
+      src: this.props.isvideo ? 'img/blankvid.png' : 'img/blankimg.png',
       style: Object.assign({
         padding: '4px'
       }, this.props.style),
@@ -13856,7 +13887,7 @@ class LazyImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
         padding: 0
       }
     })).catch(_ => this.setState({
-      src: 'img/broken_image.png'
+      src: this.props.isvideo ? 'img/broken_video.png' : 'img/broken_image.png'
     }));
   }
   componentWillUnmount() {
@@ -13865,7 +13896,7 @@ class LazyImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   componentDidUpdate(prevProps) {
     if (prevProps.whenDone != this.props.whenDone) {
       this.setState({
-        src: 'img/placeholder.png',
+        src: this.props.isvideo ? 'img/blankvid.png' : 'img/blankimg.png',
         style: {
           ...this.state.style,
           padding: '4px'
@@ -13878,7 +13909,7 @@ class LazyImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
           padding: 0
         }
       })).catch(_ => this.setState({
-        src: 'img/broken_image.png'
+        src: this.props.isvideo ? 'img/broken_video.png' : 'img/broken_image.png'
       }));
     }
   }

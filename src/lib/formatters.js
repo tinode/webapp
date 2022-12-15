@@ -10,7 +10,7 @@ import InlineVideo from '../widgets/inline-video.jsx';
 import LazyImage from '../widgets/lazy-image.jsx'
 import UploadingImage from '../widgets/uploading-image.jsx'
 
-import { IMAGE_THUMBNAIL_DIM, BROKEN_IMAGE_SIZE, REM_SIZE } from '../config.js';
+import { BROKEN_IMAGE_SIZE, IMAGE_THUMBNAIL_DIM, REM_SIZE, VIDEO_THUMBNAIL_WIDTH } from '../config.js';
 import { base64ToBlob, blobToBase64, fitImageSize, imageScaled } from './blob-helpers.js';
 import { idToColorClass, secondsToTime, shortenFileName } from './strformat.js';
 import { cancelablePromise, sanitizeUrlForMime } from './utils.js';
@@ -363,12 +363,21 @@ function inlineImageAttr(attr, data) {
 
 // Converts Drafty object into a quoted reply; 'this' is set by the caller.
 function inlineVideoAttr(attr, data) {
-  inlineImageAttr.call(this, attr, data);
+  const dim = fitImageSize(data.width, data.height, VIDEO_THUMBNAIL_WIDTH, IMAGE_THUMBNAIL_DIM);
+  attr.style = {
+    width: dim.width + 'px',
+    height: dim.height + 'px',
+    maxWidth: VIDEO_THUMBNAIL_WIDTH + 'px',
+    maxHeight: IMAGE_THUMBNAIL_DIM + 'px',
+  }
   attr.alt = this.formatMessage(messages.drafty_video);
+  attr.className = 'inline-image';
   attr.title = attr.alt;
   if (!data) {
     attr.src = 'img/broken_video.png';
   }
+  // React requires this parameter to be lowercase and string.
+  attr.isvideo = 'T';
   return attr;
 }
 
@@ -379,7 +388,7 @@ function inlineVideoAttr(attr, data) {
 //    authorizeURL: this.props.tinode.authorizeURL
 //    onQuoteClick: this.handleQuoteClick (optional)
 function quoteFormatter(style, data, values, key) {
-  if (['BR', 'EX', 'IM', 'MN'].includes(style)) {
+  if (['BR', 'EX', 'IM', 'MN', 'VD'].includes(style)) {
     let el = Drafty.tagName(style);
     let attr = Drafty.attrValue(style, data) || {};
     attr.key = key;
@@ -431,17 +440,27 @@ function quoteFormatter(style, data, values, key) {
 }
 
 // Create image thumbnail suitable for inclusion in a quote.
-function quoteImage(data) {
+function quoteImageOrVideo(data, isVideo) {
   let promise;
+  let bits, ref, mime;
+  if (isVideo) {
+    bits = data.preview;
+    mime = data.premime || 'image/jpeg';
+    ref = data.preref;
+  } else {
+    bits = data.val;
+    mime = data.mime;
+    ref = data.ref;
+  }
   // Get the blob from the image data.
-  if (data.val) {
-    const blob = base64ToBlob(data.val, data.mime);
+  if (bits) {
+    const blob = base64ToBlob(bits, mime);
     if (!blob) {
       throw new Error("Invalid image");
     }
     promise = Promise.resolve(blob);
-  } else if (data.ref) {
-    promise = fetch(this.authorizeURL(sanitizeUrlForMime(data.ref, 'image')))
+  } else if (ref) {
+    promise = fetch(this.authorizeURL(sanitizeUrlForMime(ref, 'image')))
       .then(evt => {
         if (evt.ok) {
           return evt.blob();
@@ -456,23 +475,34 @@ function quoteImage(data) {
   // Scale the blob.
   return promise
     .then(blob => {
-      // Cut the square from the center of the image and shrink it.
-      return imageScaled(blob, IMAGE_THUMBNAIL_DIM, IMAGE_THUMBNAIL_DIM, -1, true)
+      // If it's an image, cut the square from the center of the image and shrink it.
+      // If it's a video, allow it to be rectantular.
+      return imageScaled(blob, isVideo ? VIDEO_THUMBNAIL_WIDTH : IMAGE_THUMBNAIL_DIM, IMAGE_THUMBNAIL_DIM, -1, !isVideo)
     }).then(scaled => {
-      data.mime = scaled.mime;
+      if (isVideo) {
+        data.premime = scaled.mime;
+      } else {
+        data.mime = scaled.mime;
+      }
       data.size = scaled.blob.size;
       data.width = scaled.width;
       data.height = scaled.height;
       delete data.ref;
+      delete data.preref;
       // Keeping the original file name, if provided: ex.data.name;
 
       data.src = URL.createObjectURL(scaled.blob);
       return blobToBase64(scaled.blob);
     }).then(b64 => {
-      data.val = b64.bits;
+      if (isVideo) {
+        data.preview = b64.bits;
+      } else {
+        data.val = b64.bits;
+      }
       return data;
     }).catch(err => {
       delete data.val;
+      delete data.preview;
       delete data.src;
       data.width = IMAGE_THUMBNAIL_DIM;
       data.height = IMAGE_THUMBNAIL_DIM;
@@ -484,13 +514,15 @@ function quoteImage(data) {
 // Create a preview of a reply.
 export function replyFormatter(style, data, values, key, stack) {
   if (style == 'IM' || style == 'VD') {
-    const attr = style == 'IM' ? inlineImageAttr.call(this, {key: key}, data) :
+    const isImage = style == 'IM';
+    const attr = isImage ? inlineImageAttr.call(this, {key: key}, data) :
       inlineVideoAttr.call(this, {key: key}, data);
+
     let loadedPromise;
     try {
-      loadedPromise = cancelablePromise(quoteImage.call(this, data));
+      loadedPromise = cancelablePromise(quoteImageOrVideo.call(this, data, style == 'VD'));
     } catch (error) {
-      console.error("Failed to quote image", error);
+      console.warn("Failed to quote image:", error.message);
       loadedPromise = cancelablePromise(error);
     }
     attr.whenDone = loadedPromise;

@@ -81,6 +81,8 @@ export const VIDEO_PREVIEW_DIM = 96;
 
 // Linear dimensions of image thumbnail: shrink image under this size for thumbnails in reply quote previews.
 export const IMAGE_THUMBNAIL_DIM = 36;
+// Width of video thumbnail: allow it to be wider, but not taller. Use IMAGE_THUMBNAIL_DIM for height.
+export const VIDEO_THUMBNAIL_WIDTH = 48;
 
 // Maximum number of online users to be shown in a topic title bar. Others will be
 // hidden under "+X more"

@@ -1990,7 +1990,6 @@ video {
 
 /* Inline and preview image styles */
 .inline-image, .image-preview {
-  display: flex;
   position: relative;
   overflow: hidden;
   border-radius: 0.1rem;
