@@ -1523,17 +1523,17 @@
     "obsolete": false
   },
   "drag_file": {
-    "translation": "",
+    "translation": "将文件拖到这里",
     "defaultMessage": "Drag file here",
     "description": "Prompt on the file drag-n-drop overlay banner",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "drafty_video": {
-    "translation": "",
+    "translation": "视频录制",
     "defaultMessage": "Video recording",
     "description": "Comment for videos embedded in Drafty",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   }
 }
