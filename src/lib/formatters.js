@@ -189,6 +189,7 @@ function handleImageData(el, data, attr) {
   };
   if (!Drafty.isProcessing(data)) {
     attr.src = this.authorizeURL(sanitizeUrlForMime(attr.src, 'image'));
+    attr['data-src'] = sanitizeUrlForMime(attr.src, 'video');
     attr.alt = data.name;
     if (attr.src) {
       if (Math.max(data.width || 0, data.height || 0) > IMAGE_THUMBNAIL_DIM) {

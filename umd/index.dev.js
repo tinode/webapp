@@ -2747,6 +2747,7 @@ function handleImageData(el, data, attr) {
   };
   if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isProcessing(data)) {
     attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.sanitizeUrlForMime)(attr.src, 'image'));
+    attr['data-src'] = (0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.sanitizeUrlForMime)(attr.src, 'video');
     attr.alt = data.name;
     if (attr.src) {
       if (Math.max(data.width || 0, data.height || 0) > _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM) {
@@ -5535,7 +5536,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.handleMessageUpdate = this.handleMessageUpdate.bind(this);
     this.handleAllMessagesReceived = this.handleAllMessagesReceived.bind(this);
     this.handleInfoReceipt = this.handleInfoReceipt.bind(this);
-    this.handleImagePostview = this.handleImagePostview.bind(this);
+    this.handleExpandMedia = this.handleExpandMedia.bind(this);
     this.handleClosePreview = this.handleClosePreview.bind(this);
     this.handleFormResponse = this.handleFormResponse.bind(this);
     this.handleContextClick = this.handleContextClick.bind(this);
@@ -5651,6 +5652,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         docPreview: null,
         imagePreview: null,
         imagePostview: null,
+        videoPreview: null,
+        videoPostview: null,
         rtcPanel: null,
         typingIndicator: false,
         scrollPosition: 0,
@@ -5659,7 +5662,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         channel: false,
         reply: null,
         contentToEdit: null,
-        showGoToLastButton: false
+        showGoToLastButton: false,
+        dragging: false
       };
     } else if (nextProps.topic != prevState.topic) {
       const topic = nextProps.tinode.getTopic(nextProps.topic);
@@ -5668,12 +5672,15 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         docPreview: null,
         imagePreview: null,
         imagePostview: null,
+        videoPreview: null,
+        videoPostview: null,
         rtcPanel: null,
         typingIndicator: false,
         scrollPosition: 0,
         fetchingMessages: false,
         showGoToLastButton: false,
-        deleted: topic._deleted
+        deleted: topic._deleted,
+        dragging: false
       };
       if (nextProps.forwardMessage) {
         nextState.reply = {
@@ -6042,10 +6049,19 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         console.info("Other change in topic: ", info.what);
     }
   }
-  handleImagePostview(content) {
-    this.setState({
-      imagePostview: content
-    });
+  handleExpandMedia(content) {
+    if (!content) {
+      return;
+    }
+    if (content.video) {
+      this.setState({
+        videoPostview: content
+      });
+    } else {
+      this.setState({
+        imagePostview: content
+      });
+    }
   }
   handleClosePreview() {
     if (this.state.imagePreview && this.state.imagePreview.url) {
@@ -6058,7 +6074,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       imagePostview: null,
       imagePreview: null,
       docPreview: null,
-      videoPreview: null
+      videoPreview: null,
+      videoPostview: null
     });
   }
   handleFormResponse(action, text, data) {
@@ -6217,7 +6234,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     const mime = this.state.imagePreview.mime;
     const width = this.state.imagePreview.width;
     const height = this.state.imagePreview.height;
-    const fname = this.state.imagePreview.name;
+    const fname = this.state.imagePreview.filename;
     const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_17__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
     if (blob.size > maxInbandAttachmentSize) {
       const uploader = this.props.tinode.getLargeFileHelper();
@@ -6332,7 +6349,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         videoPreview: {
           url: URL.createObjectURL(file),
           blob: file,
-          name: file.name,
+          filename: file.name,
           size: file.size,
           mime: file.type
         }
@@ -6344,7 +6361,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         imagePreview: {
           url: URL.createObjectURL(scaled.blob),
           blob: scaled.blob,
-          name: scaled.name,
+          filename: scaled.name,
           width: scaled.width,
           height: scaled.height,
           size: scaled.blob.size,
@@ -6551,6 +6568,12 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           content: this.state.imagePostview,
           onClose: this.handleClosePreview
         });
+      } else if (this.state.videoPostview) {
+        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_video_preview_jsx__WEBPACK_IMPORTED_MODULE_16__["default"], {
+          content: this.state.videoPostview,
+          tinode: this.props.tinode,
+          onClose: this.handleClosePreview
+        });
       } else if (this.state.docPreview) {
         component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_doc_preview_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
           content: this.state.docPreview,
@@ -6669,7 +6692,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
               userIsWriter: this.state.isWriter,
               viewportWidth: this.props.viewportWidth,
               showContextMenu: this.handleShowMessageContextMenu,
-              onImagePreview: this.handleImagePostview,
+              onExpandMedia: this.handleExpandMedia,
               onFormResponse: this.handleFormResponse,
               onCancelUpload: this.handleCancelUpload,
               pickReply: this.handlePickReply,
@@ -11101,7 +11124,8 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     if (props.uploader) {
       props.uploader.onProgress = this.handleProgress.bind(this);
     }
-    this.handleImagePreview = this.handleImagePreview.bind(this);
+    this.handleExpandImage = this.handleExpandImage.bind(this);
+    this.handlePlayVideo = this.handlePlayVideo.bind(this);
     this.handleFormButtonClick = this.handleFormButtonClick.bind(this);
     this.handleContextClick = this.handleContextClick.bind(this);
     this.handleCancelUpload = this.handleCancelUpload.bind(this);
@@ -11110,19 +11134,33 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       formatMessage: props.intl.formatMessage.bind(props.intl),
       viewportWidth: props.viewportWidth,
       authorizeURL: props.tinode.authorizeURL.bind(props.tinode),
-      onImagePreview: this.handleImagePreview,
-      onVideoPreview: this.handleImagePreview,
+      onImagePreview: this.handleExpandImage,
+      onVideoPreview: this.handlePlayVideo,
       onFormButtonClick: this.handleFormButtonClick,
       onQuoteClick: this.handleQuoteClick
     };
   }
-  handleImagePreview(e) {
+  handleExpandImage(e) {
     e.preventDefault();
-    this.props.onImagePreview({
+    this.props.onExpandMedia({
       url: e.target.src,
-      filename: e.target.title,
+      filename: e.target.dataset.name,
       width: e.target.dataset.width,
       height: e.target.dataset.height,
+      size: e.target.dataset.size,
+      type: e.target.dataset.mime
+    });
+  }
+  handlePlayVideo(e) {
+    e.preventDefault();
+    this.props.onExpandMedia({
+      video: true,
+      url: e.target.dataset.src,
+      preview: e.target.src,
+      filename: e.target.dataset.name,
+      width: e.target.dataset.width,
+      height: e.target.dataset.height,
+      duration: e.target.dataset.duration,
       size: e.target.dataset.size,
       type: e.target.dataset.mime
     });
@@ -13455,16 +13493,16 @@ class ImagePreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
     size.maxWidth = '100%';
     size.maxHeight = '100%';
     const maxlength = Math.max((this.state.width / _config_js__WEBPACK_IMPORTED_MODULE_3__.REM_SIZE / 1.5 | 0) - 2, 12);
-    const fname = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__.shortenFileName)(this.props.content.name, maxlength) || '-';
+    const fname = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__.shortenFileName)(this.props.content.filename, maxlength) || '-';
     const width = this.props.content.width || '-';
     const height = this.props.content.height || '-';
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "image-preview"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "image-preview-caption-panel"
-    }, !this.props.onSendMessage ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    }, this.props.onSendMessage ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, fname) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: this.props.content.url,
-      download: true
+      download: this.props.content.filename
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, "file_download"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
@@ -13473,7 +13511,7 @@ class ImagePreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
         "type": 0,
         "value": "download"
       }]
-    })) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, fname), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: e => {
         e.preventDefault();
@@ -13488,7 +13526,7 @@ class ImagePreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       src: this.props.content.url,
       style: size,
       className: "image-preview",
-      alt: this.props.content.name
+      alt: this.props.content.filename
     })), this.props.onSendMessage ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_send_message_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       messagePrompt: "add_image_caption",
       acceptBlank: true,
@@ -13506,7 +13544,7 @@ class ImagePreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
         "value": "File name:"
       }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      title: this.props.content.name
+      title: this.props.content.filename
     }, fname))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_content_type",
       defaultMessage: [{
@@ -13680,14 +13718,21 @@ __webpack_require__.r(__webpack_exports__);
 class InlineVideo extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
+    this.videoRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
+    this.handleClick = this.handleClick.bind(this);
+  }
+  handleClick(e) {
+    if (this.props.onClick) {
+      this.props.onClick(e);
+    }
   }
   render() {
     const duration = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(this.props['data-duration'] / 1000);
+    const className = 'inline-video' + (this.props.onClick ? ' clickable' : '');
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "inline-video"
+      className: className
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement('img', this.props), this.props.onClick ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "play-control",
-      onClick: this.props.onClick
+      className: "play-control"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons white bigger"
     }, "play_arrow")) : null, duration ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -16381,7 +16426,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _send_message_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./send-message.jsx */ "./src/widgets/send-message.jsx");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _send_message_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./send-message.jsx */ "./src/widgets/send-message.jsx");
+/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+
+
 
 
 class VideoPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -16397,7 +16447,7 @@ class VideoPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       height: this.videoRef.current.videoHeight,
       duration: this.videoRef.current.duration * 1000 | 0,
       mime: this.props.content.mime,
-      name: this.props.content.name
+      name: this.props.content.filename
     };
     const canvas = document.createElement('canvas');
     canvas.width = params.width;
@@ -16410,11 +16460,14 @@ class VideoPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
     if (!this.props.content) {
       return null;
     }
+    const width = this.props.content.width || '-';
+    const height = this.props.content.height || '-';
+    const controlist = this.props.onSendMessage ? 'nodownload' : '';
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "image-preview"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "image-preview-caption-panel"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, this.props.content.name), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, this.props.content.filename), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: e => {
         e.preventDefault();
@@ -16425,12 +16478,15 @@ class VideoPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
     }, "close"))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "image-preview-container"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
-      controls: true,
-      ref: this.videoRef,
-      src: this.props.content.url,
       className: "image-preview",
-      alt: this.props.content.name
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_send_message_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      controls: true,
+      controlist: controlist,
+      disablePictureInPicture: true,
+      ref: this.videoRef,
+      src: this.props.tinode.authorizeURL(this.props.content.url),
+      poster: this.props.content.preview,
+      alt: this.props.content.filename
+    })), this.props.onSendMessage ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_send_message_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       messagePrompt: "add_image_caption",
       acceptBlank: true,
       tinode: this.props.tinode,
@@ -16438,7 +16494,29 @@ class VideoPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       onCancelReply: this.props.onCancelReply,
       onSendMessage: this.handleSendVideo,
       onError: this.props.onError
-    }));
+    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "image-preview-footer"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "label_file_name",
+      defaultMessage: [{
+        "type": 0,
+        "value": "File name:"
+      }]
+    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+      title: this.props.content.filename
+    }, this.props.content.filename))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "label_content_type",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Content type:"
+      }]
+    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.props.content.type)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "label_size",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Size:"
+      }]
+    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, width, " \xD7 ", height, " px; ", (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__.bytesToHumanSize)(this.props.content.size)))));
   }
 }
 ;

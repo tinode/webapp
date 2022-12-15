@@ -123,7 +123,7 @@ class MessagesView extends React.Component {
     this.handleMessageUpdate = this.handleMessageUpdate.bind(this);
     this.handleAllMessagesReceived = this.handleAllMessagesReceived.bind(this);
     this.handleInfoReceipt = this.handleInfoReceipt.bind(this);
-    this.handleImagePostview = this.handleImagePostview.bind(this);
+    this.handleExpandMedia = this.handleExpandMedia.bind(this);
     this.handleClosePreview = this.handleClosePreview.bind(this);
     this.handleFormResponse = this.handleFormResponse.bind(this);
     this.handleContextClick = this.handleContextClick.bind(this);
@@ -274,6 +274,8 @@ class MessagesView extends React.Component {
         docPreview: null,
         imagePreview: null,
         imagePostview: null,
+        videoPreview: null,
+        videoPostview: null,
         rtcPanel: null,
         typingIndicator: false,
         scrollPosition: 0,
@@ -282,7 +284,8 @@ class MessagesView extends React.Component {
         channel: false,
         reply: null,
         contentToEdit: null,
-        showGoToLastButton: false
+        showGoToLastButton: false,
+        dragging: false
       };
     } else if (nextProps.topic != prevState.topic) {
       const topic = nextProps.tinode.getTopic(nextProps.topic);
@@ -292,12 +295,15 @@ class MessagesView extends React.Component {
         docPreview: null,
         imagePreview: null,
         imagePostview: null,
+        videoPreview: null,
+        videoPostview: null,
         rtcPanel: null,
         typingIndicator: false,
         scrollPosition: 0,
         fetchingMessages: false,
         showGoToLastButton: false,
-        deleted: topic._deleted
+        deleted: topic._deleted,
+        dragging: false
       };
 
       if (nextProps.forwardMessage) {
@@ -721,8 +727,16 @@ class MessagesView extends React.Component {
     }
   }
 
-  handleImagePostview(content) {
-    this.setState({ imagePostview: content });
+  handleExpandMedia(content) {
+    if (!content) {
+      return;
+    }
+
+    if (content.video) {
+      this.setState({ videoPostview: content });
+    } else {
+      this.setState({ imagePostview: content });
+    }
   }
 
   handleClosePreview() {
@@ -732,7 +746,7 @@ class MessagesView extends React.Component {
     if (this.state.videoPreview && this.state.videoPreview.url) {
       URL.revokeObjectURL(this.state.videoPreview.url);
     }
-    this.setState({ imagePostview: null, imagePreview: null, docPreview: null, videoPreview: null });
+    this.setState({ imagePostview: null, imagePreview: null, docPreview: null, videoPreview: null, videoPostview: null});
   }
 
   handleFormResponse(action, text, data) {
@@ -912,7 +926,7 @@ class MessagesView extends React.Component {
     const mime = this.state.imagePreview.mime;
     const width = this.state.imagePreview.width;
     const height = this.state.imagePreview.height;
-    const fname = this.state.imagePreview.name;
+    const fname = this.state.imagePreview.filename;
 
     // Server-provided limit reduced for base64 encoding and overhead.
     const maxInbandAttachmentSize = (this.props.tinode.getServerParam('maxMessageSize',
@@ -1067,7 +1081,7 @@ class MessagesView extends React.Component {
       this.setState({videoPreview: {
         url: URL.createObjectURL(file),
         blob: file,
-        name: file.name,
+        filename: file.name,
         size: file.size,
         mime: file.type
       }});
@@ -1080,7 +1094,7 @@ class MessagesView extends React.Component {
         this.setState({imagePreview: {
           url: URL.createObjectURL(scaled.blob),
           blob: scaled.blob,
-          name: scaled.name,
+          filename: scaled.name,
           width: scaled.width,
           height: scaled.height,
           size: scaled.blob.size,
@@ -1309,6 +1323,14 @@ class MessagesView extends React.Component {
             content={this.state.imagePostview}
             onClose={this.handleClosePreview} />
         );
+      } else if (this.state.videoPostview) {
+        // Play received video.
+        component2 = (
+          <VideoPreview
+            content={this.state.videoPostview}
+            tinode={this.props.tinode}
+            onClose={this.handleClosePreview} />
+        );
       } else if (this.state.docPreview) {
         // Preview attachment before sending.
         component2 = (
@@ -1432,7 +1454,7 @@ class MessagesView extends React.Component {
                 userIsWriter={this.state.isWriter}
                 viewportWidth={this.props.viewportWidth}  // Used by `formatter`.
                 showContextMenu={this.handleShowMessageContextMenu}
-                onImagePreview={this.handleImagePostview}
+                onExpandMedia={this.handleExpandMedia}
                 onFormResponse={this.handleFormResponse}
                 onCancelUpload={this.handleCancelUpload}
                 pickReply={this.handlePickReply}

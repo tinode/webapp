@@ -47,25 +47,25 @@ export default class ImagePreview extends React.PureComponent {
 
     // Average font aspect ratio is ~0.5; File name takes 1/3 of the viewport width.
     const maxlength = Math.max(((this.state.width / REM_SIZE / 1.5) | 0) - 2, 12);
-    const fname = shortenFileName(this.props.content.name, maxlength) || '-';
+    const fname = shortenFileName(this.props.content.filename, maxlength) || '-';
 
     const width = this.props.content.width || '-';
     const height = this.props.content.height || '-';
     return (
       <div id="image-preview">
         <div id="image-preview-caption-panel">
-          {!this.props.onSendMessage ?
-            <a href={this.props.content.url} download={true}>
+          {this.props.onSendMessage ?
+            <span>{fname}</span>
+            :
+            <a href={this.props.content.url} download={this.props.content.filename}>
               <i className="material-icons">file_download</i> <FormattedMessage
                 id="download_action" defaultMessage="download" description="Call to action [download]" />
             </a>
-            :
-            <span>{fname}</span>
           }
           <a href="#" onClick={(e) => {e.preventDefault(); this.props.onClose();}}><i className="material-icons gray">close</i></a>
         </div>
         <div id="image-preview-container" ref={(node) => this.assignWidth(node)}>
-          <img src={this.props.content.url} style={size} className="image-preview" alt={this.props.content.name} />
+          <img src={this.props.content.url} style={size} className="image-preview" alt={this.props.content.filename} />
         </div>
         {this.props.onSendMessage ?
           <SendMessage
@@ -81,7 +81,7 @@ export default class ImagePreview extends React.PureComponent {
             <div>
               <div><b><FormattedMessage id="label_file_name" defaultMessage="File name:"
                 description="Label for a file name" /></b></div>
-              <div><span title={this.props.content.name}>{fname}</span></div>
+              <div><span title={this.props.content.filename}>{fname}</span></div>
             </div>
             <div>
               <div><b><FormattedMessage id="label_content_type" defaultMessage="Content type:"

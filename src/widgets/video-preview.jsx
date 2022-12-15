@@ -1,5 +1,8 @@
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import SendMessage from './send-message.jsx';
+
+import { bytesToHumanSize } from '../lib/strformat.js';
 
 export default class VideoPreview extends React.PureComponent {
   constructor(props) {
@@ -17,7 +20,7 @@ export default class VideoPreview extends React.PureComponent {
       height: this.videoRef.current.videoHeight,
       duration: (this.videoRef.current.duration * 1000) | 0,
       mime: this.props.content.mime,
-      name: this.props.content.name
+      name: this.props.content.filename
     }
 
     // Capture screen from a video.
@@ -37,15 +40,27 @@ export default class VideoPreview extends React.PureComponent {
       return null;
     }
 
+    const width = this.props.content.width || '-';
+    const height = this.props.content.height || '-';
+
+    const controlist = this.props.onSendMessage ? 'nodownload' : '';
+
     return (
       <div id="image-preview">
         <div id="image-preview-caption-panel">
-          <span>{this.props.content.name}</span>
+          <span>{this.props.content.filename}</span>
           <a href="#" onClick={e => {e.preventDefault(); this.props.onClose();}}><i className="material-icons gray">close</i></a>
         </div>
         <div id="image-preview-container">
-          <video controls ref={this.videoRef} src={this.props.content.url} className="image-preview" alt={this.props.content.name} />
+          <video
+            className="image-preview"
+            controls controlist={controlist}
+            disablePictureInPicture ref={this.videoRef}
+            src={this.props.tinode.authorizeURL(this.props.content.url)}
+            poster={this.props.content.preview}
+            alt={this.props.content.filename} />
         </div>
+        {this.props.onSendMessage ?
         <SendMessage
           messagePrompt="add_image_caption"
           acceptBlank={true}
@@ -54,6 +69,24 @@ export default class VideoPreview extends React.PureComponent {
           onCancelReply={this.props.onCancelReply}
           onSendMessage={this.handleSendVideo}
           onError={this.props.onError} />
+          :
+          <div id="image-preview-footer">
+            <div>
+              <div><b><FormattedMessage id="label_file_name" defaultMessage="File name:"
+                description="Label for a file name" /></b></div>
+              <div><span title={this.props.content.filename}>{this.props.content.filename}</span></div>
+            </div>
+            <div>
+              <div><b><FormattedMessage id="label_content_type" defaultMessage="Content type:"
+                description="Label for file content type (mime)" /></b></div>
+              <div>{this.props.content.type}</div>
+            </div>
+            <div>
+              <div><b><FormattedMessage id="label_size" defaultMessage="Size:"
+                description="Label for file size" /></b></div>
+              <div>{width} &times; {height} px; {bytesToHumanSize(this.props.content.size)}</div>
+            </div>
+          </div>}
       </div>
     );
   }

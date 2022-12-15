@@ -23,7 +23,8 @@ class BaseChatMessage extends React.PureComponent {
       props.uploader.onProgress = this.handleProgress.bind(this);
     }
 
-    this.handleImagePreview = this.handleImagePreview.bind(this);
+    this.handleExpandImage = this.handleExpandImage.bind(this);
+    this.handlePlayVideo = this.handlePlayVideo.bind(this);
     this.handleFormButtonClick = this.handleFormButtonClick.bind(this);
     this.handleContextClick = this.handleContextClick.bind(this);
     this.handleCancelUpload = this.handleCancelUpload.bind(this);
@@ -34,20 +35,35 @@ class BaseChatMessage extends React.PureComponent {
       viewportWidth: props.viewportWidth,
       authorizeURL: props.tinode.authorizeURL.bind(props.tinode),
 
-      onImagePreview: this.handleImagePreview,
-      onVideoPreview: this.handleImagePreview,
+      onImagePreview: this.handleExpandImage,
+      onVideoPreview: this.handlePlayVideo,
       onFormButtonClick: this.handleFormButtonClick,
       onQuoteClick: this.handleQuoteClick
     };
   }
 
-  handleImagePreview(e) {
+  handleExpandImage(e) {
     e.preventDefault();
-    this.props.onImagePreview({
+    this.props.onExpandMedia({
       url: e.target.src,
-      filename: e.target.title,
+      filename: e.target.dataset.name,
       width: e.target.dataset.width,
       height: e.target.dataset.height,
+      size: e.target.dataset.size,
+      type: e.target.dataset.mime
+    });
+  }
+
+  handlePlayVideo(e) {
+    e.preventDefault();
+    this.props.onExpandMedia({
+      video: true,
+      url: e.target.dataset.src,
+      preview: e.target.src,
+      filename: e.target.dataset.name,
+      width: e.target.dataset.width,
+      height: e.target.dataset.height,
+      duration: e.target.dataset.duration,
       size: e.target.dataset.size,
       type: e.target.dataset.mime
     });
