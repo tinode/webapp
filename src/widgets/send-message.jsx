@@ -162,7 +162,6 @@ class SendMessage extends React.PureComponent {
 
   handleDropAttach(files) {
     if (files && files.length > 0) {
-      console.log('Dropping ', files);
       this.props.onAttachFile(files[0]);
     }
   }

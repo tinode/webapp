@@ -2909,6 +2909,8 @@ function inlineImageAttr(attr, data) {
   attr.alt = this.formatMessage(messages.drafty_image);
   if (!data) {
     attr.src = 'img/broken_image.png';
+  } else {
+    attr.src = attr.src || 'img/broken_image.png';
   }
   attr.title = attr.alt;
   return attr;
@@ -2921,13 +2923,14 @@ function inlineVideoAttr(attr, data) {
     maxWidth: _config_js__WEBPACK_IMPORTED_MODULE_9__.VIDEO_THUMBNAIL_WIDTH + 'px',
     maxHeight: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px'
   };
-  attr.alt = this.formatMessage(messages.drafty_video);
   attr.className = 'inline-image';
+  attr.alt = this.formatMessage(messages.drafty_video);
   attr.title = attr.alt;
   if (!data) {
     attr.src = 'img/broken_video.png';
+  } else {
+    attr.src = attr.src || 'img/broken_video.png';
   }
-  attr.isvideo = 'T';
   return attr;
 }
 function quoteFormatter(style, data, values, key) {
@@ -15154,7 +15157,6 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
   }
   handleDropAttach(files) {
     if (files && files.length > 0) {
-      console.log('Dropping ', files);
       this.props.onAttachFile(files[0]);
     }
   }

@@ -356,6 +356,8 @@ function inlineImageAttr(attr, data) {
   attr.alt = this.formatMessage(messages.drafty_image);
   if (!data) {
     attr.src = 'img/broken_image.png';
+  } else {
+    attr.src = attr.src || 'img/broken_image.png';
   }
   attr.title = attr.alt;
   return attr;
@@ -370,14 +372,14 @@ function inlineVideoAttr(attr, data) {
     maxWidth: VIDEO_THUMBNAIL_WIDTH + 'px',
     maxHeight: IMAGE_THUMBNAIL_DIM + 'px',
   }
-  attr.alt = this.formatMessage(messages.drafty_video);
   attr.className = 'inline-image';
+  attr.alt = this.formatMessage(messages.drafty_video);
   attr.title = attr.alt;
   if (!data) {
     attr.src = 'img/broken_video.png';
+  } else {
+    attr.src = attr.src || 'img/broken_video.png';
   }
-  // React requires this parameter to be lowercase and string.
-  attr.isvideo = 'T';
   return attr;
 }
 
