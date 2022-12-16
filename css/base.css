@@ -1076,15 +1076,15 @@ i.search {
 }
 
 img.channel {
-  width: 1rem;
-  height: 1rem;
+  width: 1.25rem;
+  height: 1.25rem;
   vertical-align: middle;
   margin-left: 0.3rem;
 }
 
 .large img.channel {
-  width: 1.35rem;
-  height: 1.35rem;
+  width: 1.45rem;
+  height: 1.45rem;
   margin-left: 0.5rem;
   margin-bottom: 0.15rem;
 }
