@@ -2175,8 +2175,8 @@ ul.tabbar li.active > a {
 
 .material-icons.as-badge {
   padding-left: 0.2rem;
-  font-size: 1.25rem;
-  color: #bbb;
+  font-size: 1.15rem;
+  color: #aaa;
 }
 
 /* Badge with a label, like [you], [muted], etc */

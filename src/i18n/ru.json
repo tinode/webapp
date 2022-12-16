@@ -1125,7 +1125,7 @@
     "obsolete": false
   },
   "tags_not_found": {
-    "translation": "Тегов нет. Добавьте",
+    "translation": "Тегов нет. Добавьте.",
     "defaultMessage": "No tags defined. Add some.",
     "description": "",
     "missing": false,

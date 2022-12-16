@@ -105,6 +105,7 @@ class Contact extends React.Component {
         </div>
         <div className="text-box">
           <div><span className={titleClass}>{title}</span>
+            {this.props.isGroup ? <i className="material-icons as-badge">group</i> : null}
             {this.props.isChannel ? <img src="/img/channel.png" className="channel" alt="channel" /> : null}
             <ContactBadges badges={icon_badges} />
             {!this.props.deleted ? <UnreadBadge count={this.props.unread} /> : null}
