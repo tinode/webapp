@@ -1011,7 +1011,8 @@ i.search {
 }
 
 .contact-box .contact-comment .material-icons {
-  margin-bottom: .2rem;
+  margin-bottom: 0.2rem;
+  color: #777;
 }
 
 /* Avatar and online-offline indicator */
