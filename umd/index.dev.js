@@ -11779,6 +11779,7 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
             }
           }
           const isChannel = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isChannelTopicName(key);
+          const isGroup = !isChannel && tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.isGroupTopicName(key);
           const selected = showCheckmark ? this.props.topicSelected.indexOf(key) > -1 : this.props.topicSelected === key;
           const badges = [];
           if (this.props.showMode) {
@@ -11829,6 +11830,7 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
             selected: selected,
             showOnline: this.props.showOnline && !isChannel,
             isChannel: isChannel,
+            isGroup: isGroup,
             showContextMenu: this.props.showContextMenu,
             isVerified: c.trusted && c.trusted.verified,
             isStaff: c.trusted && c.trusted.staff,
@@ -12011,7 +12013,9 @@ class Contact extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
       className: "text-box"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       className: titleClass
-    }, title), this.props.isChannel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
+    }, title), this.props.isGroup ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons as-badge"
+    }, "group") : null, this.props.isChannel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
       src: "/img/channel.png",
       className: "channel",
       alt: "channel"
