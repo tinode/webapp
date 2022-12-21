@@ -44,6 +44,7 @@ export default class VideoPreview extends React.PureComponent {
     const height = this.props.content.height || '-';
 
     const controlist = this.props.onSendMessage ? 'nodownload' : '';
+    const autoPlay = !this.props.onSendMessage;
 
     return (
       <div id="image-preview">
@@ -56,6 +57,7 @@ export default class VideoPreview extends React.PureComponent {
             className="image-preview"
             controls controlist={controlist}
             disablePictureInPicture ref={this.videoRef}
+            autoPlay={autoPlay}
             src={this.props.tinode.authorizeURL(this.props.content.url)}
             poster={this.props.content.preview}
             alt={this.props.content.filename} />

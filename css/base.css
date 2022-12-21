@@ -2075,6 +2075,7 @@ img.image-preview::before {
   height: 4rem;
   background-color: rgba(0, 0, 0, 0.4);
   border-radius: 50%;
+  pointer-events: none;
   cursor: pointer;
 }
 

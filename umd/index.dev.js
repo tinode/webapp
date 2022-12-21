@@ -16500,6 +16500,7 @@ class VideoPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
     const width = this.props.content.width || '-';
     const height = this.props.content.height || '-';
     const controlist = this.props.onSendMessage ? 'nodownload' : '';
+    const autoPlay = !this.props.onSendMessage;
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "image-preview"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -16520,6 +16521,7 @@ class VideoPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       controlist: controlist,
       disablePictureInPicture: true,
       ref: this.videoRef,
+      autoPlay: autoPlay,
       src: this.props.tinode.authorizeURL(this.props.content.url),
       poster: this.props.content.preview,
       alt: this.props.content.filename

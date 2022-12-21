@@ -31,7 +31,7 @@ export default class InlineVideo extends React.PureComponent {
           <div className="play-control">
             <i className="material-icons white bigger">play_arrow</i>
           </div>
-        : null}
+          : null}
         {duration ? <div className="duration">{duration}</div> : null}
       </div>
     );
