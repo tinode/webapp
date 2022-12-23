@@ -15,6 +15,10 @@ const i18n = {
     'new_message': "Neue Nachricht",
     'new_chat': "Neuer Chat",
   },
+  'dv': {
+    'new_message': "އާ މެސެޖް",
+    'new_chat': "އާ ޗެޓް",
+  },
   'en': {
     'new_message': "New message",
     'new_chat': "New chat",
