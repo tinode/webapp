@@ -350,7 +350,7 @@
     "obsolete": false
   },
   "email_prompt": {
-    "translation": "maniku@example.com އީމެއިލް: މިސާލަކަށް",
+    "translation": "maniku@example.com އީމެއިލް: މިސާލް",
     "defaultMessage": "Email, e.g. jdoe@example.com",
     "description": "Input placeholder for email entry",
     "missing": false,
@@ -392,7 +392,7 @@
     "obsolete": false
   },
   "full_name_prompt": {
-    "translation": "ފުރިހަމަ ނަން: މިސާލު: އަލީ ނިޔާޒް",
+    "translation": "ފުރިހަމަ ނަން: މިސާލް: އަލީ ނިޔާޒް",
     "defaultMessage": "Full name, e.g. John Doe",
     "description": "Input placeholder for person's full name",
     "missing": false,
@@ -1034,7 +1034,7 @@
     "obsolete": false
   },
   "sidepanel_title_account_settings": {
-    "translation": "އެކައުންޓް ސެޓިންގތައް",
+    "translation": "އެކައުންޓް ސެޓިންތައް",
     "defaultMessage": "Account Settings",
     "description": "Sidepanel title for AccountSettingsView.",
     "missing": false,
@@ -1068,7 +1068,7 @@
     "obsolete": false
   },
   "sidepanel_title_newtpk": {
-    "translation": "އާޗެއް ފައްޓަވާ",
+    "translation": "އާ ޗެޓެއް ފައްޓަވާ",
     "defaultMessage": "Start New Chat",
     "description": "Sidepanel title for NewTopicView.",
     "missing": false,
@@ -1089,7 +1089,7 @@
     "obsolete": false
   },
   "sidepanel_title_settings": {
-    "translation": "ސެޓީންގތައް",
+    "translation": "ސެޓިންތައް",
     "defaultMessage": "Settings",
     "description": "Sidepanel title for SettingsView.",
     "missing": false,
@@ -1194,7 +1194,7 @@
     "obsolete": false
   },
   "topic_name_editing_placeholder": {
-    "translation": "ގްރޫޕްގެ ނަން ",
+    "translation": "ގްރޫޕްގެ ނަން",
     "defaultMessage": "Freeform name of the group",
     "description": "Prompt for entering topic name",
     "missing": false,
