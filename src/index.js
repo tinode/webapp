@@ -29,6 +29,12 @@ const messages = allMessages[htmlLang];
 // Set lang attribute of the HTML element: <html lang="XX">
 document.getElementsByTagName('html')[0].setAttribute('lang', htmlLang);
 
+//TODO check if the language is rtl, following is only for 'dv' dhivehi language
+//dv is rtl language, so setting dir attribute of the HTML element: <html dir="rtl"> 
+if (language=='dv'){
+document.getElementsByTagName('html')[0].setAttribute('dir', 'rtl');
+}
+
 ReactDOM.render(
   <React.StrictMode>
     <IntlProvider locale={language} messages={messages} textComponent={React.Fragment}>
