@@ -441,7 +441,7 @@
     "obsolete": false
   },
   "label_client": {
-    "translation": "ކްލައަންޓް:",
+    "translation": "ކްލައެންޓް:",
     "defaultMessage": "Client:",
     "description": "Label for a client version",
     "missing": false,
