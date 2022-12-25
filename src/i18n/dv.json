@@ -98,7 +98,7 @@
     "obsolete": false
   },
   "button_add_another": {
-    "translation": "އެހެންފަރާތެއް އެއްކުރޭ",
+    "translation": "އިތުރަށް އެއްކުރޭ",
     "defaultMessage": "Add another",
     "description": "Call to action [+ add another]",
     "missing": false,
@@ -957,7 +957,7 @@
     "obsolete": false
   },
   "reconnect_countdown": {
-    "translation": "...އިން{seconds} ޑިސްކަނެކްޓްވެއްޖެ، އަލުން ގުޅޭނީ",
+    "translation": "...ފަހުން އަލުން ގުޅޭނެ {seconds} ޑިސްކަނެކްޓްވެއްޖެ،",
     "defaultMessage": "Disconnected. Reconnecting in {seconds}…",
     "description": "Message shown when an app update is available.",
     "missing": false,
@@ -1041,9 +1041,9 @@
     "obsolete": false
   },
   "sidepanel_title_archive": {
-    "defaultMessage": "އަރުޝީފްކުރެވިވާ ޗެޓްތައް",
+    "defaultMessage": "Archived Chats",
     "description": "Sidepanel title for ContactsView-Archive.",
-    "missing": false,
+    "missing": true,
     "obsolete": false
   },
   "sidepanel_title_blocked": {
