@@ -2749,7 +2749,6 @@ function handleImageData(el, data, attr) {
   };
   if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isProcessing(data)) {
     attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.sanitizeUrlForMime)(attr.src, 'image'));
-    attr['data-src'] = (0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.sanitizeUrlForMime)(attr.src, 'video');
     attr.alt = data.name;
     if (attr.src) {
       if (Math.max(data.width || 0, data.height || 0) > _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM) {
@@ -2786,6 +2785,7 @@ function handleVideoData(el, data, attr) {
     minHeight: dim.dstHeight + 'px'
   };
   if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isProcessing(data)) {
+    attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.sanitizeUrlForMime)(attr.src, 'image'));
     attr.alt = data.name;
     if (data.ref || data.val) {
       attr.onClick = this.onVideoPreview;
@@ -13758,6 +13758,7 @@ class InlineVideo extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     super(props);
     this.videoRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
     this.handleClick = this.handleClick.bind(this);
+    console.log(props);
   }
   handleClick(e) {
     if (this.props.onClick) {

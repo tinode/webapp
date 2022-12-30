@@ -189,7 +189,6 @@ function handleImageData(el, data, attr) {
   };
   if (!Drafty.isProcessing(data)) {
     attr.src = this.authorizeURL(sanitizeUrlForMime(attr.src, 'image'));
-    attr['data-src'] = sanitizeUrlForMime(attr.src, 'video');
     attr.alt = data.name;
     if (attr.src) {
       if (Math.max(data.width || 0, data.height || 0) > IMAGE_THUMBNAIL_DIM) {
@@ -219,7 +218,6 @@ function handleVideoData(el, data, attr) {
     };
     return el;
   }
-
   attr.className = 'inline-image';
   const dim = fitImageSize(data.width, data.height,
     this.viewportWidth > 0 ? Math.min(this.viewportWidth - REM_SIZE * 6.5, REM_SIZE * 34.5) :
@@ -233,6 +231,7 @@ function handleVideoData(el, data, attr) {
     minHeight: dim.dstHeight + 'px'
   };
   if (!Drafty.isProcessing(data)) {
+    attr.src = this.authorizeURL(sanitizeUrlForMime(attr.src, 'image'));
     attr.alt = data.name;
     if (data.ref || data.val) {
       attr.onClick = this.onVideoPreview;
