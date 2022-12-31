@@ -13758,7 +13758,6 @@ class InlineVideo extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     super(props);
     this.videoRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
     this.handleClick = this.handleClick.bind(this);
-    console.log(props);
   }
   handleClick(e) {
     if (this.props.onClick) {
@@ -13767,7 +13766,7 @@ class InlineVideo extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
   }
   render() {
     const duration = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(this.props['data-duration'] / 1000);
-    const className = 'inline-video' + (this.props.onClick ? ' clickable' : '');
+    const className = 'inline-video' + (this.props.onClick ? ' image-clickable' : '');
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: className
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement('img', this.props), this.props.onClick ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
