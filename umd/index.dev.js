@@ -2195,6 +2195,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "MIN_TAG_LENGTH": () => (/* binding */ MIN_TAG_LENGTH),
 /* harmony export */   "NEW_GRP_ACCESS_MODE": () => (/* binding */ NEW_GRP_ACCESS_MODE),
 /* harmony export */   "NO_ACCESS_MODE": () => (/* binding */ NO_ACCESS_MODE),
+/* harmony export */   "NO_DIMENSIONS_VIDEO": () => (/* binding */ NO_DIMENSIONS_VIDEO),
 /* harmony export */   "QUOTED_REPLY_LENGTH": () => (/* binding */ QUOTED_REPLY_LENGTH),
 /* harmony export */   "READ_DELAY": () => (/* binding */ READ_DELAY),
 /* harmony export */   "REM_SIZE": () => (/* binding */ REM_SIZE),
@@ -2225,6 +2226,7 @@ const REM_SIZE = 13;
 const AVATAR_SIZE = 384;
 const MAX_AVATAR_BYTES = 4096;
 const BROKEN_IMAGE_SIZE = 32;
+const NO_DIMENSIONS_VIDEO = 128;
 const MESSAGES_PAGE = 24;
 const MAX_INBAND_ATTACHMENT_SIZE = 262_144;
 const MAX_EXTERN_ATTACHMENT_SIZE = 1 << 23;
@@ -2780,8 +2782,8 @@ function handleVideoData(el, data, attr) {
   }
   attr.className = 'inline-image';
   const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 24, false) || {
-    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_9__.BROKEN_IMAGE_SIZE,
-    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_9__.BROKEN_IMAGE_SIZE
+    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_9__.NO_DIMENSIONS_VIDEO,
+    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_9__.NO_DIMENSIONS_VIDEO
   };
   attr.style = {
     width: dim.dstWidth + 'px',

@@ -10,7 +10,7 @@ import InlineVideo from '../widgets/inline-video.jsx';
 import LazyImage from '../widgets/lazy-image.jsx'
 import UploadingImage from '../widgets/uploading-image.jsx'
 
-import { BROKEN_IMAGE_SIZE, IMAGE_THUMBNAIL_DIM, REM_SIZE, VIDEO_THUMBNAIL_WIDTH } from '../config.js';
+import { BROKEN_IMAGE_SIZE, IMAGE_THUMBNAIL_DIM, NO_DIMENSIONS_VIDEO, REM_SIZE, VIDEO_THUMBNAIL_WIDTH } from '../config.js';
 import { base64ToBlob, blobToBase64, fitImageSize, imageScaled } from './blob-helpers.js';
 import { idToColorClass, secondsToTime, shortenFileName } from './strformat.js';
 import { cancelablePromise, sanitizeUrlForMime } from './utils.js';
@@ -222,7 +222,7 @@ function handleVideoData(el, data, attr) {
   const dim = fitImageSize(data.width, data.height,
     this.viewportWidth > 0 ? Math.min(this.viewportWidth - REM_SIZE * 6.5, REM_SIZE * 34.5) :
       REM_SIZE * 34.5, REM_SIZE * 24, false) ||
-      {dstWidth: BROKEN_IMAGE_SIZE, dstHeight: BROKEN_IMAGE_SIZE};
+      {dstWidth: NO_DIMENSIONS_VIDEO, dstHeight: NO_DIMENSIONS_VIDEO};
   attr.style = {
     width: dim.dstWidth + 'px',
     height: dim.dstHeight + 'px',

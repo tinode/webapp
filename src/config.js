@@ -53,6 +53,9 @@ export const MAX_AVATAR_BYTES = 4096;
 // Size of the broken_image shown in MessagesView
 export const BROKEN_IMAGE_SIZE = 32;
 
+// Size of video preview when dimensions are missing.
+export const NO_DIMENSIONS_VIDEO = 128;
+
 // Number of chat messages to fetch in one call.
 export const MESSAGES_PAGE = 24;
 
