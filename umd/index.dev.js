@@ -5710,6 +5710,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       const topic = nextProps.tinode.getTopic(nextProps.topic);
       nextState = {
         topic: nextProps.topic,
+        deleted: topic._deleted,
         docPreview: null,
         imagePreview: null,
         imagePostview: null,
@@ -5720,7 +5721,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         scrollPosition: 0,
         fetchingMessages: false,
         showGoToLastButton: false,
-        deleted: topic._deleted,
+        contentToEdit: null,
         dragging: false
       };
       if (nextProps.forwardMessage) {

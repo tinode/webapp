@@ -292,6 +292,7 @@ class MessagesView extends React.Component {
 
       nextState = {
         topic: nextProps.topic,
+        deleted: topic._deleted,
         docPreview: null,
         imagePreview: null,
         imagePostview: null,
@@ -302,7 +303,7 @@ class MessagesView extends React.Component {
         scrollPosition: 0,
         fetchingMessages: false,
         showGoToLastButton: false,
-        deleted: topic._deleted,
+        contentToEdit: null,
         dragging: false
       };
 
