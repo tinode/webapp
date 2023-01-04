@@ -11241,9 +11241,15 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       if (!this.props.response) {
         let immutable = false;
         tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.entities(this.props.content, (_0, _1, tp) => {
-          immutable = ['AU', 'EX', 'FM', 'IM', 'QQ', 'VC', 'VD'].includes(tp);
+          immutable = ['AU', 'EX', 'FM', 'IM', 'VC', 'VD'].includes(tp);
           return immutable;
         });
+        if (!immutable) {
+          tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.styles(this.props.content, tp => {
+            immutable = ['QQ'].includes(tp);
+            return immutable;
+          });
+        }
         if (!immutable) {
           menuItems.push('menu_item_edit');
         }

@@ -98,9 +98,15 @@ class BaseChatMessage extends React.PureComponent {
       if (!this.props.response) {
         let immutable = false;
         Drafty.entities(this.props.content, (_0, _1, tp) => {
-          immutable = ['AU', 'EX', 'FM', 'IM', 'QQ', 'VC', 'VD'].includes(tp);
+          immutable = ['AU', 'EX', 'FM', 'IM', 'VC', 'VD'].includes(tp);
           return immutable;
         });
+        if (!immutable) {
+          Drafty.styles(this.props.content, tp => {
+            immutable = ['QQ'].includes(tp);
+            return immutable;
+          });
+        }
         if (!immutable) {
           menuItems.push('menu_item_edit');
         }
