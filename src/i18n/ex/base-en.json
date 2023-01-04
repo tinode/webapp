@@ -135,6 +135,10 @@
     "defaultMessage": "disconnected",
     "description": "Label for disconnected call"
   },
+  "call_in_progress": {
+    "defaultMessage": "in progress",
+    "description": "Label for call in progress"
+  },
   "call_missed": {
     "defaultMessage": "missed",
     "description": "Label for missed incoming call"

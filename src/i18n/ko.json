@@ -1535,5 +1535,12 @@
     "description": "Comment for videos embedded in Drafty",
     "missing": false,
     "obsolete": false
+  },
+  "call_in_progress": {
+    "translation": "통화 중",
+    "defaultMessage": "in progress",
+    "description": "Label for call in progress",
+    "missing": false,
+    "obsolete": false
   }
 }

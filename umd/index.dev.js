@@ -11110,6 +11110,14 @@ class CallStatus extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
           });
           break;
       }
+    } else if (this.props.callState == 'started' && !this.props.duration) {
+      duration = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+        id: "call_in_progress",
+        defaultMessage: [{
+          "type": 0,
+          "value": "in progress"
+        }]
+      });
     } else {
       duration = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__.secondsToTime)(this.props.duration / 1000));
     }
