@@ -1542,5 +1542,12 @@
     "description": "Label for call in progress",
     "missing": false,
     "obsolete": false
+  },
+  "menu_item_audio_call": {
+    "translation": "",
+    "defaultMessage": "Call",
+    "description": "Start audio call",
+    "missing": true,
+    "obsolete": false
   }
 }

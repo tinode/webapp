@@ -6629,6 +6629,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           topic: this.state.topic,
           seq: this.props.callSeq,
           callState: this.props.callState,
+          callAudioOnly: this.props.callAudioOnly,
           tinode: this.props.tinode,
           title: this.state.title,
           avatar: this.state.avatar || true,
@@ -7766,6 +7767,13 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
       "value": "Info"
     }]
   },
+  menu_item_audio_call: {
+    id: "menu_item_audio_call",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Call"
+    }]
+  },
   menu_item_video_call: {
     id: "menu_item_video_call",
     defaultMessage: [{
@@ -7853,6 +7861,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.handleShowForwardDialog = this.handleShowForwardDialog.bind(this);
     this.handleHideForwardDialog = this.handleHideForwardDialog.bind(this);
     this.handleStartVideoCall = this.handleStartVideoCall.bind(this);
+    this.handleStartAudioCall = this.handleStartAudioCall.bind(this);
     this.handleInfoMessage = this.handleInfoMessage.bind(this);
     this.handleDataMessage = this.handleDataMessage.bind(this);
     this.handleCallClose = this.handleCallClose.bind(this);
@@ -7907,6 +7916,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       mobilePanel: 'sidepanel',
       callTopic: undefined,
       callState: _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_NONE,
+      callAudioOnly: undefined,
       callShouldStart: false,
       contextMenuVisible: false,
       contextMenuBounds: null,
@@ -9100,6 +9110,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       title: this.props.intl.formatMessage(messages.menu_item_info),
       handler: this.handleShowInfoView
     } : null, subscribed && tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.isP2PTopicName(topicName) && webrtc ? {
+      title: this.props.intl.formatMessage(messages.menu_item_audio_call),
+      handler: this.handleStartAudioCall
+    } : null, subscribed && tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.isP2PTopicName(topicName) && webrtc ? {
       title: this.props.intl.formatMessage(messages.menu_item_video_call),
       handler: this.handleStartVideoCall
     } : null, subscribed ? 'messages_clear' : null, subscribed && deleter ? 'messages_clear_hard' : null, muted ? blocked ? null : 'topic_unmute' : 'topic_mute', self_blocked ? 'topic_unblock' : 'topic_block', archived ? 'topic_restore' : 'topic_archive', 'topic_delete'];
@@ -9207,14 +9220,23 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   handleStartVideoCall() {
     this.setState({
       callTopic: this.state.topicSelected,
-      callState: _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_OUTGOING_INITATED
+      callState: _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_OUTGOING_INITATED,
+      callAudioOnly: false
     });
   }
-  handleCallInvite(callTopic, callSeq, callState) {
+  handleStartAudioCall() {
+    this.setState({
+      callTopic: this.state.topicSelected,
+      callState: _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_OUTGOING_INITATED,
+      callAudioOnly: true
+    });
+  }
+  handleCallInvite(callTopic, callSeq, callState, audioOnly) {
     switch (callState) {
       case _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_OUTGOING_INITATED:
-        let head = {
-          webrtc: _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_HEAD_STARTED
+        const head = {
+          webrtc: _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_HEAD_STARTED,
+          aonly: !!audioOnly
         };
         this.handleSendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.videoCall(), undefined, undefined, head).then(ctrl => {
           if (ctrl.code < 200 || ctrl.code >= 300 || !ctrl.params || !ctrl.params.seq) {
@@ -9276,7 +9298,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
     this.setState({
       callTopic: undefined,
-      callState: _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_NONE
+      callState: _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_NONE,
+      callAudioOnly: undefined
     });
   }
   handleCallAccept(topicName) {
@@ -9305,7 +9328,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           this.setState({
             callTopic: null,
             callState: _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_NONE,
-            callSeq: null
+            callSeq: null,
+            callAudioOnly: undefined
           });
           return;
         }
@@ -9331,7 +9355,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
               this.setState({
                 callTopic: data.topic,
                 callState: _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_INCOMING_RECEIVED,
-                callSeq: data.seq
+                callSeq: data.seq,
+                callAudioOnly: !!msg.head.aonly
               });
             } else {
               this.handleCallHangup(data.topic, data.seq);
@@ -9378,6 +9403,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       topic: this.state.callTopic,
       seq: this.state.callSeq,
       callState: this.state.callState,
+      audioOnly: this.state.callAudioOnly,
       onRinging: this.handleCallRinging,
       onAcceptCall: this.handleCallAccept,
       onReject: this.handleCallHangup
@@ -9480,6 +9506,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       callTopic: this.state.callTopic,
       callSeq: this.state.callSeq,
       callState: this.state.callState,
+      callAudioOnly: this.state.callAudioOnly,
       onCallHangup: this.handleCallHangup,
       onCallInvite: this.handleCallInvite,
       onCallSendOffer: this.handleCallSendOffer,
@@ -10675,9 +10702,10 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       waitingForPeer: false,
       callInitialSetupComplete: false
     };
+    console.log("CallPanel", props.callAudioOnly);
     this.localStreamConstraints = {
       audio: true,
-      video: true
+      video: !props.callAudioOnly
     };
     this.isOutgoingCall = props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_OUTGOING_INITATED;
     this.localRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
@@ -10765,7 +10793,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       return;
     }
     if (this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_IN_PROGRESS) {
-      this.props.onInvite(this.props.topic, this.props.seq, this.props.callState);
+      this.props.onInvite(this.props.topic, this.props.seq, this.props.callState, this.props.callAudioOnly);
       return;
     }
     navigator.mediaDevices.getUserMedia(this.localStreamConstraints).then(stream => {
@@ -10775,7 +10803,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       });
       this.localRef.current.srcObject = stream;
       DIALING_SOUND.play();
-      this.props.onInvite(this.props.topic, this.props.seq, this.props.callState);
+      this.props.onInvite(this.props.topic, this.props.seq, this.props.callState, this.props.callAudioOnly);
     }).catch(this.handleGetUserMediaError);
   }
   stop() {
@@ -10981,9 +11009,12 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   }
   render() {
     const remoteActive = this.remoteRef.current && this.remoteRef.current.srcObject;
-    const disabled = !(this.state.localStream && this.state.localStream.getTracks());
-    const audioIcon = this.state.localStream && this.state.localStream.getAudioTracks()[0].enabled ? 'mic' : 'mic_off';
-    const videoIcon = this.state.localStream && this.state.localStream.getVideoTracks()[0].enabled ? 'videocam' : 'videocam_off';
+    const noVideo = this.props.callAudioOnly;
+    const audioTracks = this.state.localStream && this.state.localStream.getAudioTracks();
+    const videoTracks = !noVideo && this.state.localStream && this.state.localStream.getVideoTracks();
+    const enabled = !!(audioTracks && audioTracks[0]);
+    const audioIcon = audioTracks && audioTracks[0] && audioTracks[0].enabled ? 'mic' : 'mic_off';
+    const videoIcon = videoTracks && videoTracks[0] && videoTracks[0].enabled ? 'videocam' : 'videocam_off';
     const peerTitle = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_5__.clipStr)(this.props.title, _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_PEER_TITLE_LENGTH);
     const pulseAnimation = this.state.waitingForPeer ? ' pulse' : '';
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -10991,7 +11022,8 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "video-container-panel"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "call-party self"
+      className: "call-party self",
+      disabled: noVideo
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
       ref: this.localRef,
       autoPlay: true,
@@ -11006,7 +11038,8 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
         "value": "You"
       }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "call-party peer"
+      className: "call-party peer",
+      disabled: noVideo
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
       ref: this.remoteRef,
       autoPlay: true,
@@ -11034,13 +11067,13 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     }, "call_end")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       className: "secondary",
       onClick: this.handleToggleCameraClick,
-      disabled: disabled
+      disabled: !enabled
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, videoIcon)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       className: "secondary",
       onClick: this.handleToggleMicClick,
-      disabled: disabled
+      disabled: !enabled
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, audioIcon)))));

@@ -1348,6 +1348,7 @@ class MessagesView extends React.Component {
             topic={this.state.topic}
             seq={this.props.callSeq}
             callState={this.props.callState}
+            callAudioOnly={this.props.callAudioOnly}
             tinode={this.props.tinode}
             title={this.state.title}
             avatar={this.state.avatar || true}

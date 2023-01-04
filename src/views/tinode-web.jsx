@@ -69,6 +69,11 @@ const messages = defineMessages({
     defaultMessage: 'Info',
     description: 'Show extended topic information'
   },
+  menu_item_audio_call: {
+    id: 'menu_item_audio_call',
+    defaultMessage: 'Call',
+    description: 'Start audio call'
+  },
   menu_item_video_call: {
     id: 'menu_item_video_call',
     defaultMessage: 'Video call',
@@ -158,6 +163,7 @@ class TinodeWeb extends React.Component {
     this.handleHideForwardDialog = this.handleHideForwardDialog.bind(this);
 
     this.handleStartVideoCall = this.handleStartVideoCall.bind(this);
+    this.handleStartAudioCall = this.handleStartAudioCall.bind(this);
     this.handleInfoMessage = this.handleInfoMessage.bind(this);
     this.handleDataMessage = this.handleDataMessage.bind(this);
     this.handleCallClose = this.handleCallClose.bind(this);
@@ -233,6 +239,7 @@ class TinodeWeb extends React.Component {
       // Video calls.
       callTopic: undefined,
       callState: CALL_STATE_NONE,
+      callAudioOnly: undefined,
       // If true, call state should be transitioned to CALL_STATE_IN_PROGRESS upon
       // switching to the call topic.
       callShouldStart: false,
@@ -1585,6 +1592,10 @@ class TinodeWeb extends React.Component {
         handler: this.handleShowInfoView
       } : null,
       subscribed && Tinode.isP2PTopicName(topicName) && webrtc ? {
+        title: this.props.intl.formatMessage(messages.menu_item_audio_call),
+        handler: this.handleStartAudioCall
+      } : null,
+      subscribed && Tinode.isP2PTopicName(topicName) && webrtc ? {
         title: this.props.intl.formatMessage(messages.menu_item_video_call),
         handler: this.handleStartVideoCall
       } : null,
@@ -1709,14 +1720,23 @@ class TinodeWeb extends React.Component {
   handleStartVideoCall() {
     this.setState({
       callTopic: this.state.topicSelected,
-      callState: CALL_STATE_OUTGOING_INITATED
+      callState: CALL_STATE_OUTGOING_INITATED,
+      callAudioOnly: false
     });
   }
 
-  handleCallInvite(callTopic, callSeq, callState) {
+  handleStartAudioCall() {
+    this.setState({
+      callTopic: this.state.topicSelected,
+      callState: CALL_STATE_OUTGOING_INITATED,
+      callAudioOnly: true
+    });
+  }
+
+  handleCallInvite(callTopic, callSeq, callState, audioOnly) {
     switch (callState) {
       case CALL_STATE_OUTGOING_INITATED:
-        let head = { webrtc: CALL_HEAD_STARTED };
+        const head = { webrtc: CALL_HEAD_STARTED, aonly: !!audioOnly };
         this.handleSendMessage(Drafty.videoCall(), undefined, undefined, head)
           .then(ctrl => {
             if (ctrl.code < 200 || ctrl.code >= 300 || !ctrl.params || !ctrl.params.seq) {
@@ -1787,7 +1807,8 @@ class TinodeWeb extends React.Component {
     }
     this.setState({
       callTopic: undefined,
-      callState: CALL_STATE_NONE
+      callState: CALL_STATE_NONE,
+      callAudioOnly: undefined
     });
   }
 
@@ -1820,7 +1841,8 @@ class TinodeWeb extends React.Component {
           this.setState({
             callTopic: null,
             callState: CALL_STATE_NONE,
-            callSeq: null
+            callSeq: null,
+            callAudioOnly: undefined
           });
           return;
         }
@@ -1853,7 +1875,8 @@ class TinodeWeb extends React.Component {
               this.setState({
                 callTopic: data.topic,
                 callState: CALL_STATE_INCOMING_RECEIVED,
-                callSeq: data.seq
+                callSeq: data.seq,
+                callAudioOnly: !!msg.head.aonly
               });
             } else {
               // Another call is either in progress or being established.
@@ -1913,6 +1936,7 @@ class TinodeWeb extends React.Component {
             topic={this.state.callTopic}
             seq={this.state.callSeq}
             callState={this.state.callState}
+            audioOnly={this.state.callAudioOnly}
             onRinging={this.handleCallRinging}
             onAcceptCall={this.handleCallAccept}
             onReject={this.handleCallHangup}
@@ -2024,6 +2048,7 @@ class TinodeWeb extends React.Component {
           callTopic={this.state.callTopic}
           callSeq={this.state.callSeq}
           callState={this.state.callState}
+          callAudioOnly={this.state.callAudioOnly}
           onCallHangup={this.handleCallHangup}
 
           onCallInvite={this.handleCallInvite}

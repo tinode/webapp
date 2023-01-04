@@ -500,6 +500,10 @@
     "defaultMessage": "Archive",
     "description": "Move topic from the list of active chats to archive"
   },
+  "menu_item_audio_call": {
+    "defaultMessage": "Call",
+    "description": "Start audio call"
+  },
   "menu_item_block": {
     "defaultMessage": "Block",
     "description": "Block topic or user"
