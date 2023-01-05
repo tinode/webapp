@@ -1544,10 +1544,10 @@
     "obsolete": false
   },
   "unrecognized_video_format": {
-    "translation": "",
+    "translation": "No se reconoce el formato de este video",
     "defaultMessage": "Format of this video is not recognized",
     "description": "Error message when uploaded video is invalid",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   }
 }

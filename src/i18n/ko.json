@@ -1544,10 +1544,10 @@
     "obsolete": false
   },
   "unrecognized_video_format": {
-    "translation": "",
+    "translation": "이 동영상의 형식을 인식할 수 없습니다.",
     "defaultMessage": "Format of this video is not recognized",
     "description": "Error message when uploaded video is invalid",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   }
 }

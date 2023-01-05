@@ -1544,10 +1544,10 @@
     "obsolete": false
   },
   "unrecognized_video_format": {
-    "translation": "",
+    "translation": "無法識別此視頻的格式",
     "defaultMessage": "Format of this video is not recognized",
     "description": "Error message when uploaded video is invalid",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   }
 }
