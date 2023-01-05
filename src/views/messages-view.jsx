@@ -292,6 +292,7 @@ class MessagesView extends React.Component {
 
       nextState = {
         topic: nextProps.topic,
+        deleted: topic._deleted,
         docPreview: null,
         imagePreview: null,
         imagePostview: null,
@@ -302,7 +303,9 @@ class MessagesView extends React.Component {
         scrollPosition: 0,
         fetchingMessages: false,
         showGoToLastButton: false,
-        deleted: topic._deleted,
+        forwardMessage: null,
+        reply: null,
+        contentToEdit: null,
         dragging: false
       };
 
@@ -1012,7 +1015,7 @@ class MessagesView extends React.Component {
 
     if (uploads.length == 0) {
       // Both video and preview are small enough to send inband.
-      Promise.all(blobToBase64(videoBlob), blobToBase64(previewBlob))
+      Promise.all([blobToBase64(videoBlob), blobToBase64(previewBlob)])
         .then(b64s => {
           const [v64, i64] = b64s;
           let msg = Drafty.insertVideo(null, 0, {
@@ -1312,6 +1315,7 @@ class MessagesView extends React.Component {
             content={this.state.videoPreview}
             tinode={this.props.tinode}
             reply={this.state.reply}
+            onError={this.props.onError}
             onCancelReply={this.handleCancelReply}
             onClose={this.handleClosePreview}
             onSendMessage={this.sendVideoAttachment} />
@@ -1329,6 +1333,7 @@ class MessagesView extends React.Component {
           <VideoPreview
             content={this.state.videoPostview}
             tinode={this.props.tinode}
+            onError={this.props.onError}
             onClose={this.handleClosePreview} />
         );
       } else if (this.state.docPreview) {

@@ -1549,5 +1549,12 @@
     "description": "Start audio call",
     "missing": true,
     "obsolete": false
+  },
+  "unrecognized_video_format": {
+    "translation": "Das Format dieses Videos wird nicht erkannt",
+    "defaultMessage": "Format of this video is not recognized",
+    "description": "Error message when uploaded video is invalid",
+    "missing": false,
+    "obsolete": false
   }
 }

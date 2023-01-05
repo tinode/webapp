@@ -868,6 +868,10 @@
     "defaultMessage": "Unnamed",
     "description": "Title shown when the topic has no name"
   },
+  "unrecognized_video_format": {
+    "defaultMessage": "Format of this video is not recognized",
+    "description": "Error message when uploaded video is invalid"
+  },
   "update_available": {
     "defaultMessage": "Update available.",
     "description": "Message shown when an app update is available."
