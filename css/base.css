@@ -400,6 +400,10 @@ div.trusted-badge {
   color: #388e3c; /* green 700 */
 }
 
+.white {
+  color: #FFF!important; /* 100% white */
+}
+
 .red {
   color: #D32F2F!important; /* red 700 */
 }
@@ -1007,7 +1011,8 @@ i.search {
 }
 
 .contact-box .contact-comment .material-icons {
-  margin-bottom: .2rem;
+  margin-bottom: 0.2rem;
+  color: #777;
 }
 
 /* Avatar and online-offline indicator */
@@ -1878,6 +1883,7 @@ video {
   font-size: smaller;
   padding: 0.5rem 0.5rem 0.5rem 0.5rem;
   background-color: rgb(244 244 244 / 66%);
+  text-transform: uppercase;
 }
 
 /* Left triangle placed bottom left flush. */
@@ -2022,12 +2028,55 @@ img.inline-image::before, img.image-preview::before {
 
 img.inline-image::before {
   content: attr(alt);
-  background-size: 2rem 2rem;
+  background-size: 3rem 3rem;
 }
 
 img.image-preview::before {
   content: " ";
   background-size: 10rem 10rem;
+}
+
+.inline-image.video > img.inline-image::before, img.image-preview.video::before {
+  background: center no-repeat #ccc url("../img/broken_video.png");
+}
+
+.inline-image.video > img.inline-image::before {
+  background-size: 3rem 3rem;
+}
+
+.inline-video {
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+}
+
+.inline-video > img.inline-image::before {
+  background: #ccc;
+}
+
+.inline-video .duration {
+  padding: 0.25rem 0.5rem;
+  color: #333;
+  background-color: rgba(255, 255, 255, 0.5);
+  position: absolute;
+  bottom: 0.25rem;
+  left: 0.25rem;
+  font-size: 80%;
+  border-radius: 0.3rem;
+}
+
+.inline-video .play-control {
+  display: flex;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 50%;
+  pointer-events: none;
+  cursor: pointer;
 }
 
 /* Attachment styles */
@@ -2469,6 +2518,9 @@ ul.tabbar li.active > a {
 }
 .material-icons.big {
   font-size: 2.2rem;
+}
+.material-icons.bigger {
+  font-size: 3rem;
 }
 .material-icons.huge {
   font-size: 4rem;
@@ -2922,6 +2974,27 @@ ul.tabbar li.active > a {
 .audio-player .timer {
   font-size: smaller;
   color: #666C;
+}
+
+/*
+ Drag-and-drop area.
+ */
+.drag-n-drop {
+  display: flex;
+  border: dashed grey 0.15rem;
+  border-radius: 1rem;
+  background-color: rgba(255,255,255,.95);
+  position: absolute;
+  top: 1.5rem;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  right: 1.5rem;
+  z-index: 3;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  color: grey;
+  outline: 0.5rem solid rgba(255,255,255,.95);
 }
 
 /*

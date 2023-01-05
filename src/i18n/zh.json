@@ -307,13 +307,6 @@
     "missing": false,
     "obsolete": false
   },
-  "deleted_content": {
-    "translation": "内容已删除",
-    "defaultMessage": "content deleted",
-    "description": "Shown when messages are deleted",
-    "missing": false,
-    "obsolete": false
-  },
   "download_action": {
     "translation": "下载",
     "defaultMessage": "download",
@@ -324,21 +317,21 @@
   "drafty_attachment": {
     "translation": "附件",
     "defaultMessage": "Attachment",
-    "description": "Comment for attachment in drafty",
+    "description": "Comment for attachment in Drafty",
     "missing": false,
     "obsolete": false
   },
   "drafty_form": {
     "translation": "形式：",
     "defaultMessage": "Form:",
-    "description": "Comment for form in drafty",
+    "description": "Comment for form in Drafty",
     "missing": false,
     "obsolete": false
   },
   "drafty_image": {
     "translation": "图像",
     "defaultMessage": "Picture",
-    "description": "Comment for embedded images in drafty",
+    "description": "Comment for embedded images in Drafty",
     "missing": false,
     "obsolete": false
   },
@@ -1449,6 +1442,111 @@
     "translation": "确认成功",
     "defaultMessage": "Confirmed successfully",
     "description": "Message explaining that the credential was successfully validated.",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_edit": {
+    "translation": "编辑",
+    "defaultMessage": "Edit",
+    "description": "Edit message",
+    "missing": false,
+    "obsolete": false
+  },
+  "editing_message": {
+    "translation": "编辑",
+    "defaultMessage": "Editing",
+    "description": "Title over message editing preview",
+    "missing": false,
+    "obsolete": false
+  },
+  "message_edited_marker": {
+    "translation": "，编辑",
+    "defaultMessage": ", edited",
+    "description": "Marker indicating that the message was edited",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_add_image": {
+    "translation": "添加图片",
+    "defaultMessage": "Add image",
+    "description": "Icon tool tip for attaching an image",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_attach_file": {
+    "translation": "附加文件",
+    "defaultMessage": "Attach file",
+    "description": "Icon tool tip for attaching a file",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_delete": {
+    "translation": "删除录音",
+    "defaultMessage": "Delete recording",
+    "description": "Icon tool tip for deleting recorded audio",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_pause": {
+    "translation": "暂停播放",
+    "defaultMessage": "Pause playback",
+    "description": "Icon tool tip for pausing audio playback",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_play": {
+    "translation": "播放录音",
+    "defaultMessage": "Play recording",
+    "description": "Icon tool tip for starting audio playback",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_record_voice": {
+    "translation": "录制语音信息",
+    "defaultMessage": "Record voice message",
+    "description": "Icon tool tip for recording a voice message",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_resume": {
+    "translation": "恢复播放",
+    "defaultMessage": "Resume playback",
+    "description": "Icon tool tip for resuming audio playback",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_send": {
+    "translation": "发信息",
+    "defaultMessage": "Send message",
+    "description": "Icon tool tip for sending a message",
+    "missing": false,
+    "obsolete": false
+  },
+  "drag_file": {
+    "translation": "将文件拖到这里",
+    "defaultMessage": "Drag file here",
+    "description": "Prompt on the file drag-n-drop overlay banner",
+    "missing": false,
+    "obsolete": false
+  },
+  "drafty_video": {
+    "translation": "视频录制",
+    "defaultMessage": "Video recording",
+    "description": "Comment for videos embedded in Drafty",
+    "missing": false,
+    "obsolete": false
+  },
+  "call_in_progress": {
+    "translation": "通话中",
+    "defaultMessage": "in progress",
+    "description": "Label for call in progress",
+    "missing": false,
+    "obsolete": false
+  },
+  "unrecognized_video_format": {
+    "translation": "无法识别此视频的格式",
+    "defaultMessage": "Format of this video is not recognized",
+    "description": "Error message when uploaded video is invalid",
     "missing": false,
     "obsolete": false
   }

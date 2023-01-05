@@ -35,9 +35,7 @@ export default class PasswordResetView extends React.PureComponent {
     } else {
       const email = this.state.email.trim();
       this.setState({email: email});
-      this.props.onRequest('email', email).then(() => {
-        this.setState({sent: true});
-      });
+      this.props.onRequest('email', email).then(_ => this.setState({sent: true}));
     }
   }
 

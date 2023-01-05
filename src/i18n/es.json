@@ -307,13 +307,6 @@
     "missing": false,
     "obsolete": false
   },
-  "deleted_content": {
-    "translation": "este mensaje fue eliminado",
-    "defaultMessage": "content deleted",
-    "description": "Shown when messages are deleted",
-    "missing": false,
-    "obsolete": false
-  },
   "download_action": {
     "translation": "descargar",
     "defaultMessage": "download",
@@ -324,21 +317,21 @@
   "drafty_attachment": {
     "translation": "Archivo",
     "defaultMessage": "Attachment",
-    "description": "Comment for attachment in drafty",
+    "description": "Comment for attachment in Drafty",
     "missing": false,
     "obsolete": false
   },
   "drafty_form": {
     "translation": "Formulario:",
     "defaultMessage": "Form:",
-    "description": "Comment for form in drafty",
+    "description": "Comment for form in Drafty",
     "missing": false,
     "obsolete": false
   },
   "drafty_image": {
     "translation": "Imagen",
     "defaultMessage": "Picture",
-    "description": "Comment for embedded images in drafty",
+    "description": "Comment for embedded images in Drafty",
     "missing": false,
     "obsolete": false
   },
@@ -1449,6 +1442,111 @@
     "translation": "Confirmado con éxito",
     "defaultMessage": "Confirmed successfully",
     "description": "Message explaining that the credential was successfully validated.",
+    "missing": false,
+    "obsolete": false
+  },
+  "menu_item_edit": {
+    "translation": "Editar",
+    "defaultMessage": "Edit",
+    "description": "Edit message",
+    "missing": false,
+    "obsolete": false
+  },
+  "editing_message": {
+    "translation": "Edición",
+    "defaultMessage": "Editing",
+    "description": "Title over message editing preview",
+    "missing": false,
+    "obsolete": false
+  },
+  "message_edited_marker": {
+    "translation": ", editado",
+    "defaultMessage": ", edited",
+    "description": "Marker indicating that the message was edited",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_add_image": {
+    "translation": "Añadir imagen",
+    "defaultMessage": "Add image",
+    "description": "Icon tool tip for attaching an image",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_attach_file": {
+    "translation": "Adjuntar archivo",
+    "defaultMessage": "Attach file",
+    "description": "Icon tool tip for attaching a file",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_delete": {
+    "translation": "Eliminar grabación",
+    "defaultMessage": "Delete recording",
+    "description": "Icon tool tip for deleting recorded audio",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_pause": {
+    "translation": "Pausar reproducción",
+    "defaultMessage": "Pause playback",
+    "description": "Icon tool tip for pausing audio playback",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_play": {
+    "translation": "Reproducir grabación",
+    "defaultMessage": "Play recording",
+    "description": "Icon tool tip for starting audio playback",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_record_voice": {
+    "translation": "Grabar mensaje de voz",
+    "defaultMessage": "Record voice message",
+    "description": "Icon tool tip for recording a voice message",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_resume": {
+    "translation": "Reanudar la reproducción",
+    "defaultMessage": "Resume playback",
+    "description": "Icon tool tip for resuming audio playback",
+    "missing": false,
+    "obsolete": false
+  },
+  "icon_title_send": {
+    "translation": "Enviar mensaje",
+    "defaultMessage": "Send message",
+    "description": "Icon tool tip for sending a message",
+    "missing": false,
+    "obsolete": false
+  },
+  "drag_file": {
+    "translation": "Arrastra el archivo aquí",
+    "defaultMessage": "Drag file here",
+    "description": "Prompt on the file drag-n-drop overlay banner",
+    "missing": false,
+    "obsolete": false
+  },
+  "drafty_video": {
+    "translation": "Grabación de vídeo",
+    "defaultMessage": "Video recording",
+    "description": "Comment for videos embedded in Drafty",
+    "missing": false,
+    "obsolete": false
+  },
+  "call_in_progress": {
+    "translation": "en progreso",
+    "defaultMessage": "in progress",
+    "description": "Label for call in progress",
+    "missing": false,
+    "obsolete": false
+  },
+  "unrecognized_video_format": {
+    "translation": "No se reconoce el formato de este video",
+    "defaultMessage": "Format of this video is not recognized",
+    "description": "Error message when uploaded video is invalid",
     "missing": false,
     "obsolete": false
   }

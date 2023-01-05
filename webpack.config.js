@@ -63,7 +63,6 @@ module.exports = (env, argv) => {
       }),
     ],
     externals: {
-      // 'fix-webm-duration': 'fixWebmDuration',
       'react': 'React',
       'react-dom': 'ReactDOM',
       'react-intl': 'ReactIntl',

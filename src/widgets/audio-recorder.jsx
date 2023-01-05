@@ -1,14 +1,16 @@
 // Audio recorder widget.
 
 import React from 'react';
+import { defineMessages, injectIntl } from 'react-intl';
 
 import AudioPlayer from './audio-player.jsx';
 // Workaround for https://bugs.chromium.org/p/chromium/issues/detail?id=642012
-// import fixWebmDuration from 'fix-webm-duration';
+// It adds duration and SeekHead to the webm record.
+import fixWebmDuration from 'webm-duration-fix';
 
 import { intArrayToBase64 } from '../lib/blob-helpers.js'
 import { secondsToTime } from '../lib/strformat';
-import { MAX_DURATION, MIN_DURATION } from '../config.js';
+import { KEYPRESS_DELAY, MAX_DURATION, MIN_DURATION } from '../config.js';
 
 // FFT resolution.
 const BUFFER_SIZE = 256;
@@ -32,7 +34,30 @@ const MAX_SAMPLES_PER_BAR = 10;
 // Recording format.
 const AUDIO_MIME_TYPE = 'audio/webm';
 
-export default class AudioRecorder extends React.PureComponent {
+const messages = defineMessages({
+  icon_title_delete: {
+    id: 'icon_title_delete',
+    defaultMessage: 'Delete recording',
+    description: 'Icon tool tip for deleting recorded audio'
+  },
+  icon_title_pause: {
+    id: 'icon_title_pause',
+    defaultMessage: 'Pause playback',
+    description: 'Icon tool tip for pausing audio playback'
+  },
+  icon_title_resume: {
+    id: 'icon_title_resume',
+    defaultMessage: 'Resume playback',
+    description: 'Icon tool tip for resuming audio playback'
+  },
+  icon_title_send: {
+    id: 'icon_title_send',
+    defaultMessage: 'Send message',
+    description: 'Icon tool tip for sending a message'
+  },
+});
+
+class AudioRecorder extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -61,6 +86,9 @@ export default class AudioRecorder extends React.PureComponent {
     this.startedOn = null;
     this.viewBuffer = [];
     this.canvasRef = React.createRef();
+
+    // Timestamp for sending "recording" notifications.
+    this.recordingTimestamp = 0;
   }
 
   componentDidMount() {
@@ -105,7 +133,7 @@ export default class AudioRecorder extends React.PureComponent {
     let prevBarCount = 0;
     let volume = 0.0;
     let countPerBar = 0;
-    const drawFrame = () => {
+    const drawFrame = _ => {
       if (!this.startedOn) {
         return;
       }
@@ -167,6 +195,13 @@ export default class AudioRecorder extends React.PureComponent {
       }
       // Actually draw the bars on canvas.
       this.canvasContext.stroke();
+
+      // Send notification, if needed.
+      const now = new Date().getTime();
+      if (now - this.recordingTimestamp > KEYPRESS_DELAY) {
+        this.props.onRecordingProgress();
+        this.recordingTimestamp = now;
+      }
     }
 
     drawFrame();
@@ -237,7 +272,7 @@ export default class AudioRecorder extends React.PureComponent {
 
     this.mediaRecorder.onstop = _ => {
       if (this.durationMillis > MIN_DURATION) {
-        this.getRecording(this.mediaRecorder.mimeType, this.durationMillis)
+        this.getRecording(this.mediaRecorder.mimeType)
           .then(result => this.props.onFinished(result.url, result.preview, this.durationMillis));
       } else {
         this.props.onDeleted();
@@ -264,13 +299,17 @@ export default class AudioRecorder extends React.PureComponent {
     this.startedOn = Date.now();
     this.mediaRecorder.start();
     this.visualize();
+
+    this.props.onRecordingProgress();
+    this.recordingTimestamp = this.startedOn;
   }
 
   // Obtain data in a form sutable for sending or playing back.
   // If duration is valid, apply fix for Chrome's WebM duration bug.
-  getRecording(mimeType, duration) {
-    let blob = new Blob(this.audioChunks, {type: mimeType || AUDIO_MIME_TYPE});
-    return (duration > 0 ? ysFixWebmDuration(blob, duration, {logger: false}) : Promise.resolve(blob))
+  getRecording(mimeType) {
+    mimeType = mimeType || AUDIO_MIME_TYPE;
+    let blob = new Blob(this.audioChunks, {type: mimeType});
+    return fixWebmDuration(blob, mimeType)
       .then(fixedBlob => { blob = fixedBlob; return fixedBlob.arrayBuffer(); })
       .then(arrayBuff => this.audioContext.decodeAudioData(arrayBuff))
       .then(decoded => this.createPreview(decoded))
@@ -313,10 +352,11 @@ export default class AudioRecorder extends React.PureComponent {
   }
 
   render() {
+    const {formatMessage} = this.props.intl;
     const resumeClass = 'material-icons ' + (this.state.enabled ? 'red' : 'gray');
     return (
       <div className="audio">
-        <a href="#" onClick={this.handleDelete} title="Delete">
+        <a href="#" onClick={this.handleDelete} title={formatMessage(messages.icon_title_delete)}>
           <i className="material-icons gray">delete_outline</i>
         </a>
         {this.state.recording ?
@@ -330,17 +370,19 @@ export default class AudioRecorder extends React.PureComponent {
         }
         <div className="duration">{this.state.duration}</div>
         {this.state.recording ?
-          <a href="#" onClick={this.handlePause} title="Pause">
+          <a href="#" onClick={this.handlePause} title={formatMessage(messages.icon_title_pause)}>
             <i className="material-icons">pause_circle_outline</i>
           </a> :
-          <a href="#" onClick={this.handleResume} title="Resume">
+          <a href="#" onClick={this.handleResume} title={formatMessage(messages.icon_title_resume)}>
             <i className={resumeClass}>radio_button_checked</i>
           </a>
         }
-        <a href="#" onClick={this.handleDone} title="Send">
+        <a href="#" onClick={this.handleDone} title={formatMessage(messages.icon_title_send)}>
           <i className="material-icons">send</i>
         </a>
       </div>
     );
   }
 }
+
+export default injectIntl(AudioRecorder);

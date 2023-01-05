@@ -635,7 +635,12 @@ function isSafari() {
  * @return true if indexedDB is supported by current browser/service worker context
  */
 function isIndexedDBAvailable() {
-    return typeof indexedDB === 'object';
+    try {
+        return typeof indexedDB === 'object';
+    }
+    catch (e) {
+        return false;
+    }
 }
 /**
  * This method validates browser/sw context for indexedDB by opening a dummy indexedDB database and reject
@@ -2162,6 +2167,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "CHANNEL_ACCESS_MODE": () => (/* binding */ CHANNEL_ACCESS_MODE),
 /* harmony export */   "DEFAULT_HOST": () => (/* binding */ DEFAULT_HOST),
 /* harmony export */   "DEFAULT_P2P_ACCESS_MODE": () => (/* binding */ DEFAULT_P2P_ACCESS_MODE),
+/* harmony export */   "EDIT_PREVIEW_LENGTH": () => (/* binding */ EDIT_PREVIEW_LENGTH),
 /* harmony export */   "FORWARDED_PREVIEW_LENGTH": () => (/* binding */ FORWARDED_PREVIEW_LENGTH),
 /* harmony export */   "IMAGE_PREVIEW_DIM": () => (/* binding */ IMAGE_PREVIEW_DIM),
 /* harmony export */   "IMAGE_THUMBNAIL_DIM": () => (/* binding */ IMAGE_THUMBNAIL_DIM),
@@ -2189,13 +2195,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "MIN_TAG_LENGTH": () => (/* binding */ MIN_TAG_LENGTH),
 /* harmony export */   "NEW_GRP_ACCESS_MODE": () => (/* binding */ NEW_GRP_ACCESS_MODE),
 /* harmony export */   "NO_ACCESS_MODE": () => (/* binding */ NO_ACCESS_MODE),
+/* harmony export */   "NO_DIMENSIONS_VIDEO": () => (/* binding */ NO_DIMENSIONS_VIDEO),
 /* harmony export */   "QUOTED_REPLY_LENGTH": () => (/* binding */ QUOTED_REPLY_LENGTH),
 /* harmony export */   "READ_DELAY": () => (/* binding */ READ_DELAY),
-/* harmony export */   "REM_SIZE": () => (/* binding */ REM_SIZE)
+/* harmony export */   "REM_SIZE": () => (/* binding */ REM_SIZE),
+/* harmony export */   "VIDEO_PREVIEW_DIM": () => (/* binding */ VIDEO_PREVIEW_DIM),
+/* harmony export */   "VIDEO_THUMBNAIL_WIDTH": () => (/* binding */ VIDEO_THUMBNAIL_WIDTH)
 /* harmony export */ });
 /* harmony import */ var _version_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./version.js */ "./src/version.js");
 
-const APP_NAME = 'TinodeWeb/' + (_version_js__WEBPACK_IMPORTED_MODULE_0__.PACKAGE_VERSION || '0.17');
+const APP_NAME = 'TinodeWeb/' + (_version_js__WEBPACK_IMPORTED_MODULE_0__.PACKAGE_VERSION || '0.21');
 const API_KEY = 'AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K';
 const KNOWN_HOSTS = {
   hosted: 'web.tinode.co',
@@ -2217,12 +2226,15 @@ const REM_SIZE = 13;
 const AVATAR_SIZE = 384;
 const MAX_AVATAR_BYTES = 4096;
 const BROKEN_IMAGE_SIZE = 32;
+const NO_DIMENSIONS_VIDEO = 128;
 const MESSAGES_PAGE = 24;
 const MAX_INBAND_ATTACHMENT_SIZE = 262_144;
 const MAX_EXTERN_ATTACHMENT_SIZE = 1 << 23;
 const MAX_IMAGE_DIM = 1024;
 const IMAGE_PREVIEW_DIM = 64;
+const VIDEO_PREVIEW_DIM = 96;
 const IMAGE_THUMBNAIL_DIM = 36;
+const VIDEO_THUMBNAIL_WIDTH = 48;
 const MAX_ONLINE_IN_TOPIC = 4;
 const MAX_TITLE_LENGTH = 60;
 const MAX_TOPIC_DESCRIPTION_LENGTH = 360;
@@ -2230,6 +2242,7 @@ const MAX_PEER_TITLE_LENGTH = 20;
 const MESSAGE_PREVIEW_LENGTH = 80;
 const QUOTED_REPLY_LENGTH = 30;
 const FORWARDED_PREVIEW_LENGTH = 84;
+const EDIT_PREVIEW_LENGTH = 48;
 const MIN_DURATION = 2_000;
 const MAX_DURATION = 600_000;
 const LINK_CONTACT_US = 'mailto:support@tinode.co';
@@ -2392,10 +2405,10 @@ function imageCrop(mime, objURL, left, top, width, height, scale) {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.crossOrigin = 'Anonymous';
-    img.onerror = err => {
+    img.onerror = _ => {
       reject(new Error("Image format unrecognized"));
     };
-    img.onload = () => {
+    img.onload = _ => {
       URL.revokeObjectURL(img.src);
       let canvas = document.createElement('canvas');
       canvas.width = width * scale;
@@ -2424,10 +2437,10 @@ function imageCrop(mime, objURL, left, top, width, height, scale) {
 function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onerror = evt => {
+    reader.onerror = _ => {
       reject(reader.error);
     };
-    reader.onload = () => {
+    reader.onload = _ => {
       resolve({
         mime: file.type,
         bits: reader.result.split(',')[1],
@@ -2443,7 +2456,7 @@ function blobToBase64(blob) {
     reader.onerror = _ => {
       reject(reader.error);
     };
-    reader.onload = () => {
+    reader.onload = _ => {
       resolve({
         mime: blob.type,
         bits: reader.result.split(',')[1]
@@ -2564,12 +2577,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _widgets_audio_player_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/audio-player.jsx */ "./src/widgets/audio-player.jsx");
 /* harmony import */ var _widgets_call_message_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../widgets/call-message.jsx */ "./src/widgets/call-message.jsx");
 /* harmony import */ var _widgets_call_status_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/call-status.jsx */ "./src/widgets/call-status.jsx");
-/* harmony import */ var _widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/lazy-image.jsx */ "./src/widgets/lazy-image.jsx");
-/* harmony import */ var _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../widgets/uploading-image.jsx */ "./src/widgets/uploading-image.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _strformat_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./strformat.js */ "./src/lib/strformat.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./utils.js */ "./src/lib/utils.js");
+/* harmony import */ var _widgets_inline_video_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../widgets/inline-video.jsx */ "./src/widgets/inline-video.jsx");
+/* harmony import */ var _widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../widgets/lazy-image.jsx */ "./src/widgets/lazy-image.jsx");
+/* harmony import */ var _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../widgets/uploading-image.jsx */ "./src/widgets/uploading-image.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _strformat_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./utils.js */ "./src/lib/utils.js");
+
 
 
 
@@ -2604,6 +2619,13 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
       "value": "Picture"
     }]
   },
+  drafty_video: {
+    id: "drafty_video",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Video recording"
+    }]
+  },
   drafty_unknown: {
     id: "drafty_unknown",
     defaultMessage: [{
@@ -2612,43 +2634,6 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     }]
   }
 });
-function handleImageData(el, data, attr) {
-  if (!data) {
-    attr.src = 'img/broken_image.png';
-    attr.style = {
-      width: _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM + 'px',
-      height: _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM + 'px'
-    };
-    return el;
-  }
-  attr.className = 'inline-image';
-  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_8__.REM_SIZE * 24, false) || {
-    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_8__.BROKEN_IMAGE_SIZE,
-    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_8__.BROKEN_IMAGE_SIZE
-  };
-  attr.style = {
-    width: dim.dstWidth + 'px',
-    height: dim.dstHeight + 'px',
-    minWidth: dim.dstWidth + 'px',
-    minHeight: dim.dstHeight + 'px'
-  };
-  if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isProcessing(data)) {
-    attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.sanitizeUrlForMime)(attr.src, 'image'));
-    attr.alt = data.name;
-    if (attr.src) {
-      if (Math.max(data.width || 0, data.height || 0) > _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM) {
-        attr.onClick = this.onImagePreview;
-        attr.className += ' image-clickable';
-      }
-      attr.loading = 'lazy';
-    } else {
-      attr.src = 'img/broken_image.png';
-    }
-  } else {
-    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_7__["default"];
-  }
-  return el;
-}
 function fullFormatter(style, data, values, key, stack) {
   if (stack.includes('QQ')) {
     return quoteFormatter.call(this, style, data, values, key);
@@ -2662,7 +2647,7 @@ function fullFormatter(style, data, values, key, stack) {
   switch (style) {
     case 'AU':
       if (attr.src) {
-        attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.sanitizeUrlForMime)(attr.src, 'audio'));
+        attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.sanitizeUrlForMime)(attr.src, 'audio'));
         attr.duration = data.duration > 0 ? data.duration | 0 : undefined;
         attr.preview = data.preview;
         attr.loading = 'lazy';
@@ -2699,7 +2684,7 @@ function fullFormatter(style, data, values, key, stack) {
     case 'MN':
       attr.className = 'mention';
       if (data) {
-        attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_10__.idToColorClass)(data.val, false, true);
+        attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_11__.idToColorClass)(data.val, false, true);
       }
       break;
     case 'FM':
@@ -2719,6 +2704,10 @@ function fullFormatter(style, data, values, key, stack) {
         attr.incoming = data.incoming;
         attr.duration = data.duration;
       }
+      break;
+    case 'VD':
+      el = handleVideoData.call(this, el, data, attr);
+      values = null;
       break;
     default:
       if (!el) {
@@ -2745,6 +2734,78 @@ function fullFormatter(style, data, values, key, stack) {
   }
   return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(el, attr, values);
 }
+function handleImageData(el, data, attr) {
+  if (!data) {
+    attr.src = 'img/broken_image.png';
+    attr.style = {
+      width: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px',
+      height: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px'
+    };
+    return el;
+  }
+  attr.className = 'inline-image';
+  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 24, false) || {
+    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_9__.BROKEN_IMAGE_SIZE,
+    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_9__.BROKEN_IMAGE_SIZE
+  };
+  attr.style = {
+    width: dim.dstWidth + 'px',
+    height: dim.dstHeight + 'px',
+    minWidth: dim.dstWidth + 'px',
+    minHeight: dim.dstHeight + 'px'
+  };
+  if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isProcessing(data)) {
+    attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.sanitizeUrlForMime)(attr.src, 'image'));
+    attr.alt = data.name;
+    if (attr.src) {
+      if (Math.max(data.width || 0, data.height || 0) > _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM) {
+        attr.onClick = this.onImagePreview;
+        attr.className += ' image-clickable';
+      }
+      attr.loading = 'lazy';
+    } else {
+      attr.src = null;
+    }
+  } else {
+    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_8__["default"];
+  }
+  return el;
+}
+function handleVideoData(el, data, attr) {
+  if (!data) {
+    attr.src = 'img/broken_video.png';
+    attr.style = {
+      width: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px',
+      height: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px'
+    };
+    return el;
+  }
+  attr.className = 'inline-image';
+  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__.fitImageSize)(data.width, data.height, this.viewportWidth > 0 ? Math.min(this.viewportWidth - _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 6.5, _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 34.5) : _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 34.5, _config_js__WEBPACK_IMPORTED_MODULE_9__.REM_SIZE * 24, false) || {
+    dstWidth: _config_js__WEBPACK_IMPORTED_MODULE_9__.NO_DIMENSIONS_VIDEO,
+    dstHeight: _config_js__WEBPACK_IMPORTED_MODULE_9__.NO_DIMENSIONS_VIDEO
+  };
+  attr.style = {
+    width: dim.dstWidth + 'px',
+    height: dim.dstHeight + 'px',
+    minWidth: dim.dstWidth + 'px',
+    minHeight: dim.dstHeight + 'px'
+  };
+  if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isProcessing(data)) {
+    attr.src = this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.sanitizeUrlForMime)(attr.src, 'image'));
+    attr.alt = data.name;
+    if (data.ref || data.val) {
+      attr.onClick = this.onVideoPreview;
+      attr.loading = 'lazy';
+    } else {
+      attr.src = null;
+    }
+    el = _widgets_inline_video_jsx__WEBPACK_IMPORTED_MODULE_6__["default"];
+  } else {
+    el = _widgets_uploading_image_jsx__WEBPACK_IMPORTED_MODULE_8__["default"];
+  }
+  return el;
+}
 function previewFormatter(style, data, values, key) {
   if (!style) {
     return values;
@@ -2759,7 +2820,7 @@ function previewFormatter(style, data, values, key) {
       values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
         key: "au",
         className: "material-icons"
-      }, "mic"), ' ', (0,_strformat_js__WEBPACK_IMPORTED_MODULE_10__.secondsToTime)(data.duration / 1000)];
+      }, "mic"), ' ', (0,_strformat_js__WEBPACK_IMPORTED_MODULE_11__.secondsToTime)(data.duration / 1000)];
       break;
     case 'BR':
       el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
@@ -2821,6 +2882,13 @@ function previewFormatter(style, data, values, key) {
       el = null;
       values = null;
       break;
+    case 'VD':
+      el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
+      values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+        key: "im",
+        className: "material-icons"
+      }, "play_circle_outline"), ' ', this.formatMessage(messages.drafty_video)];
+      break;
     default:
       if (!el) {
         el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
@@ -2839,21 +2907,41 @@ function previewFormatter(style, data, values, key) {
 ;
 function inlineImageAttr(attr, data) {
   attr.style = {
-    width: _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM + 'px',
-    height: _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM + 'px',
-    maxWidth: _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM + 'px',
-    maxHeight: _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM + 'px'
+    width: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px',
+    height: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px',
+    maxWidth: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px',
+    maxHeight: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px'
   };
   attr.className = 'inline-image';
   attr.alt = this.formatMessage(messages.drafty_image);
   if (!data) {
     attr.src = 'img/broken_image.png';
+  } else {
+    attr.src = attr.src || 'img/broken_image.png';
   }
   attr.title = attr.alt;
   return attr;
 }
+function inlineVideoAttr(attr, data) {
+  const dim = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__.fitImageSize)(data.width, data.height, _config_js__WEBPACK_IMPORTED_MODULE_9__.VIDEO_THUMBNAIL_WIDTH, _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM);
+  attr.style = {
+    width: dim.width + 'px',
+    height: dim.height + 'px',
+    maxWidth: _config_js__WEBPACK_IMPORTED_MODULE_9__.VIDEO_THUMBNAIL_WIDTH + 'px',
+    maxHeight: _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM + 'px'
+  };
+  attr.className = 'inline-image';
+  attr.alt = this.formatMessage(messages.drafty_video);
+  attr.title = attr.alt;
+  if (!data) {
+    attr.src = 'img/broken_video.png';
+  } else {
+    attr.src = attr.src || 'img/broken_video.png';
+  }
+  return attr;
+}
 function quoteFormatter(style, data, values, key) {
-  if (['BR', 'EX', 'IM', 'MN'].includes(style)) {
+  if (['BR', 'EX', 'IM', 'MN', 'VD'].includes(style)) {
     let el = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.tagName(style);
     let attr = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attrValue(style, data) || {};
     attr.key = key;
@@ -2869,11 +2957,19 @@ function quoteFormatter(style, data, values, key) {
           key: key
         };
         break;
+      case 'VD':
+        attr = inlineVideoAttr.call(this, attr, data);
+        values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement('img', attr, null), ' ', attr.alt];
+        el = (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment);
+        attr = {
+          key: key
+        };
+        break;
       case 'MN':
         el = 'span';
         attr.className = 'mention';
         if (data) {
-          attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_10__.idToColorClass)(data.val, false, true);
+          attr.className += ' ' + (0,_strformat_js__WEBPACK_IMPORTED_MODULE_11__.idToColorClass)(data.val, false, true);
         }
         break;
       case 'EX':
@@ -2890,23 +2986,33 @@ function quoteFormatter(style, data, values, key) {
         values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
           key: "ex",
           className: "material-icons"
-        }, "attachment"), (0,_strformat_js__WEBPACK_IMPORTED_MODULE_10__.shortenFileName)(fname, 16) || this.formatMessage(messages.drafty_attachment)];
+        }, "attachment"), (0,_strformat_js__WEBPACK_IMPORTED_MODULE_11__.shortenFileName)(fname, 16) || this.formatMessage(messages.drafty_attachment)];
         break;
     }
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(el, attr, values);
   }
   return previewFormatter.call(this, style, data, values, key);
 }
-function quoteImage(data) {
+function quoteImageOrVideo(data, isVideo) {
   let promise;
-  if (data.val) {
-    const blob = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__.base64ToBlob)(data.val, data.mime);
+  let bits, ref, mime;
+  if (isVideo) {
+    bits = data.preview;
+    mime = data.premime || 'image/jpeg';
+    ref = data.preref;
+  } else {
+    bits = data.val;
+    mime = data.mime;
+    ref = data.ref;
+  }
+  if (bits) {
+    const blob = (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__.base64ToBlob)(bits, mime);
     if (!blob) {
       throw new Error("Invalid image");
     }
     promise = Promise.resolve(blob);
-  } else if (data.ref) {
-    promise = fetch(this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.sanitizeUrlForMime)(data.ref, 'image'))).then(evt => {
+  } else if (ref) {
+    promise = fetch(this.authorizeURL((0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.sanitizeUrlForMime)(ref, 'image'))).then(evt => {
       if (evt.ok) {
         return evt.blob();
       } else {
@@ -2917,39 +3023,53 @@ function quoteImage(data) {
     throw new Error("Missing image data");
   }
   return promise.then(blob => {
-    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM, _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM, -1, true);
+    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__.imageScaled)(blob, isVideo ? _config_js__WEBPACK_IMPORTED_MODULE_9__.VIDEO_THUMBNAIL_WIDTH : _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM, _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM, -1, !isVideo);
   }).then(scaled => {
-    data.mime = scaled.mime;
+    if (isVideo) {
+      data.premime = scaled.mime;
+    } else {
+      data.mime = scaled.mime;
+    }
     data.size = scaled.blob.size;
     data.width = scaled.width;
     data.height = scaled.height;
     delete data.ref;
+    delete data.preref;
     data.src = URL.createObjectURL(scaled.blob);
-    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_9__.blobToBase64)(scaled.blob);
+    return (0,_blob_helpers_js__WEBPACK_IMPORTED_MODULE_10__.blobToBase64)(scaled.blob);
   }).then(b64 => {
-    data.val = b64.bits;
+    if (isVideo) {
+      data.preview = b64.bits;
+    } else {
+      data.val = b64.bits;
+    }
     return data;
   }).catch(err => {
     delete data.val;
+    delete data.preview;
     delete data.src;
-    data.width = _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM;
-    data.height = _config_js__WEBPACK_IMPORTED_MODULE_8__.IMAGE_THUMBNAIL_DIM;
+    data.width = _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM;
+    data.height = _config_js__WEBPACK_IMPORTED_MODULE_9__.IMAGE_THUMBNAIL_DIM;
     throw err;
   });
 }
 function replyFormatter(style, data, values, key, stack) {
-  if (style == 'IM') {
-    const attr = inlineImageAttr.call(this, {
+  if (style == 'IM' || style == 'VD') {
+    const isImage = style == 'IM';
+    const attr = isImage ? inlineImageAttr.call(this, {
+      key: key
+    }, data) : inlineVideoAttr.call(this, {
       key: key
     }, data);
     let loadedPromise;
     try {
-      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.cancelablePromise)(quoteImage.call(this, data));
+      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.cancelablePromise)(quoteImageOrVideo.call(this, data, style == 'VD'));
     } catch (error) {
-      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.cancelablePromise)(error);
+      console.warn("Failed to quote image:", error.message);
+      loadedPromise = (0,_utils_js__WEBPACK_IMPORTED_MODULE_12__.cancelablePromise)(error);
     }
     attr.whenDone = loadedPromise;
-    values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], attr, null), ' ', attr.alt];
+    values = [react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_lazy_image_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], attr, null), ' ', attr.alt];
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), {
       key: key
     }, values);
@@ -3133,6 +3253,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "bytesToHumanSize": () => (/* binding */ bytesToHumanSize),
 /* harmony export */   "idToColorClass": () => (/* binding */ idToColorClass),
 /* harmony export */   "letterTileColorId": () => (/* binding */ letterTileColorId),
+/* harmony export */   "relativeDateFormat": () => (/* binding */ relativeDateFormat),
 /* harmony export */   "secondsToTime": () => (/* binding */ secondsToTime),
 /* harmony export */   "shortDateFormat": () => (/* binding */ shortDateFormat),
 /* harmony export */   "shortenFileName": () => (/* binding */ shortenFileName)
@@ -3162,13 +3283,29 @@ function shortDateFormat(then, locale) {
     day: 'numeric'
   });
 }
+function relativeDateFormat(then, locale) {
+  locale = locale || window.navigator.userLanguage || window.navigator.language;
+  const now = new Date();
+  const thenDays = Math.floor((then.getTime() - then.getTimezoneOffset() * 60_000) / 86_400_000);
+  const nowDays = Math.floor((now.getTime() - now.getTimezoneOffset() * 60_000) / 86_400_000);
+  const diff = thenDays - nowDays;
+  if (Math.abs(diff) < 2) {
+    return new Intl.RelativeTimeFormat(locale, {
+      numeric: 'auto'
+    }).format(diff, 'day');
+  }
+  return new Intl.DateTimeFormat(locale).format(then);
+}
 function secondsToTime(seconds, fixedMin) {
-  let min = Math.floor(seconds / 60) | 0;
-  let hours = Math.floor(min / 60) | 0;
+  if (typeof seconds != 'number') {
+    return '';
+  }
+  let min = (Math.floor(seconds / 60) | 0) % 60;
+  let hours = Math.floor(seconds / 36000) | 0;
   if (fixedMin || hours > 0) {
     min = min < 10 ? `0${min}` : min;
   }
-  let sec = seconds % 60 | 0;
+  let sec = (seconds | 0) % 60;
   sec = sec < 10 ? `0${sec}` : sec;
   if (hours == 0) {
     return `${min}:${sec}`;
@@ -3407,7 +3544,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "PACKAGE_VERSION": () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.20.4";
+const PACKAGE_VERSION = "0.21.0-beta1";
 
 /***/ }),
 
@@ -3595,9 +3732,7 @@ class AccSecurityView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Comp
     const {
       formatMessage
     } = this.props.intl;
-    this.props.onShowAlert(formatMessage(messages.delete_account), formatMessage(messages.delete_account_warning), () => {
-      this.props.onDeleteAccount();
-    }, null, true, null);
+    this.props.onShowAlert(formatMessage(messages.delete_account), formatMessage(messages.delete_account_warning), _ => this.props.onDeleteAccount(), null, true, null);
   }
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, this.state.showPermissionEditorFor ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_permissions_editor_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
@@ -4824,9 +4959,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
     const isMe = this.props.tinode.isMe(params.topicName);
     const menuItems = [{
       title: formatMessage(messages.edit_permissions),
-      handler: () => {
-        this.handleLaunchPermissionsEditor(isMe ? 'want' : 'user', params.topicName);
-      }
+      handler: _ => this.handleLaunchPermissionsEditor(isMe ? 'want' : 'user', params.topicName)
     }];
     if (!isMe) {
       menuItems.push('member_delete');
@@ -5306,11 +5439,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _logo_view_jsx__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./logo-view.jsx */ "./src/views/logo-view.jsx");
 /* harmony import */ var _widgets_meta_message_jsx__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../widgets/meta-message.jsx */ "./src/widgets/meta-message.jsx");
 /* harmony import */ var _widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../widgets/send-message.jsx */ "./src/widgets/send-message.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../constants.js */ "./src/constants.js");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
-/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+/* harmony import */ var _widgets_video_preview_jsx__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../widgets/video-preview.jsx */ "./src/widgets/video-preview.jsx");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _constants_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../constants.js */ "./src/constants.js");
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
+/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+
 
 
 
@@ -5388,6 +5523,20 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
       "type": 0,
       "value": "invalid content"
     }]
+  },
+  editing_message: {
+    id: "editing_message",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Editing"
+    }]
+  },
+  drag_file: {
+    id: "drag_file",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Drag file here"
+    }]
   }
 });
 function isUnconfirmed(acs) {
@@ -5405,7 +5554,7 @@ function isPeerRestricted(acs) {
   return false;
 }
 function shouldPresentCallPanel(callState) {
-  return callState == _constants_js__WEBPACK_IMPORTED_MODULE_17__.CALL_STATE_OUTGOING_INITATED || callState == _constants_js__WEBPACK_IMPORTED_MODULE_17__.CALL_STATE_IN_PROGRESS;
+  return callState == _constants_js__WEBPACK_IMPORTED_MODULE_18__.CALL_STATE_OUTGOING_INITATED || callState == _constants_js__WEBPACK_IMPORTED_MODULE_18__.CALL_STATE_IN_PROGRESS;
 }
 class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
   constructor(props) {
@@ -5415,18 +5564,20 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.sendMessage = this.sendMessage.bind(this);
     this.retrySend = this.retrySend.bind(this);
     this.sendImageAttachment = this.sendImageAttachment.bind(this);
+    this.sendVideoAttachment = this.sendVideoAttachment.bind(this);
     this.sendFileAttachment = this.sendFileAttachment.bind(this);
     this.sendAudioAttachment = this.sendAudioAttachment.bind(this);
     this.sendKeyPress = this.sendKeyPress.bind(this);
     this.subscribe = this.subscribe.bind(this);
     this.handleScrollReference = this.handleScrollReference.bind(this);
+    this.mountDnDEvents = this.mountDnDEvents.bind(this);
     this.handleScrollEvent = this.handleScrollEvent.bind(this);
     this.handleDescChange = this.handleDescChange.bind(this);
     this.handleSubsUpdated = this.handleSubsUpdated.bind(this);
     this.handleMessageUpdate = this.handleMessageUpdate.bind(this);
     this.handleAllMessagesReceived = this.handleAllMessagesReceived.bind(this);
     this.handleInfoReceipt = this.handleInfoReceipt.bind(this);
-    this.handleImagePostview = this.handleImagePostview.bind(this);
+    this.handleExpandMedia = this.handleExpandMedia.bind(this);
     this.handleClosePreview = this.handleClosePreview.bind(this);
     this.handleFormResponse = this.handleFormResponse.bind(this);
     this.handleContextClick = this.handleContextClick.bind(this);
@@ -5434,17 +5585,26 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.handleNewChatAcceptance = this.handleNewChatAcceptance.bind(this);
     this.handleEnablePeer = this.handleEnablePeer.bind(this);
     this.handleAttachFile = this.handleAttachFile.bind(this);
-    this.handleAttachImage = this.handleAttachImage.bind(this);
+    this.handleAttachImageOrVideo = this.handleAttachImageOrVideo.bind(this);
     this.handleCancelUpload = this.handleCancelUpload.bind(this);
     this.postReadNotification = this.postReadNotification.bind(this);
     this.clearNotificationQueue = this.clearNotificationQueue.bind(this);
     this.goToLatestMessage = this.goToLatestMessage.bind(this);
+    this.handleFileDrop = this.handleFileDrop.bind(this);
     this.handlePickReply = this.handlePickReply.bind(this);
+    this.handleEditMessage = this.handleEditMessage.bind(this);
     this.handleCancelReply = this.handleCancelReply.bind(this);
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
     this.handleCallHangup = this.handleCallHangup.bind(this);
+    this.isDragEnabled = this.isDragEnabled.bind(this);
+    this.handleDragIn = this.handleDragIn.bind(this);
+    this.handleDragOut = this.handleDragOut.bind(this);
+    this.handleDrag = this.handleDrag.bind(this);
+    this.handleDrop = this.handleDrop.bind(this);
     this.chatMessageRefs = {};
     this.getOrCreateMessageRef = this.getOrCreateMessageRef.bind(this);
+    this.dragCounter = 0;
+    this.dndRef = null;
     this.readNotificationQueue = [];
     this.readNotificationTimer = null;
     this.keyPressTimer = null;
@@ -5461,12 +5621,24 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     if (this.messagesScroller) {
       this.messagesScroller.addEventListener('scroll', this.handleScrollEvent);
     }
+    if (this.dndRef) {
+      this.dndRef.addEventListener('dragenter', this.handleDragIn);
+      this.dndRef.addEventListener('dragleave', this.handleDragOut);
+      this.dndRef.addEventListener('dragover', this.handleDrag);
+      this.dndRef.addEventListener('drop', this.handleDrop);
+    }
   }
   componentWillUnmount() {
     if (this.messagesScroller) {
       this.messagesScroller.removeEventListener('scroll', this.handleScrollEvent);
     }
     this.clearNotificationQueue();
+    if (this.dndRef) {
+      this.dndRef.removeEventListener('dragenter', this.handleDragIn);
+      this.dndRef.removeEventListener('dragleave', this.handleDragOut);
+      this.dndRef.removeEventListener('dragover', this.handleDrag);
+      this.dndRef.removeEventListener('drop', this.handleDrop);
+    }
   }
   componentDidUpdate(prevProps, prevState) {
     if (this.messagesScroller && (prevState.topic != this.state.topic || prevState.messageCount != this.state.messageCount)) {
@@ -5521,6 +5693,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         docPreview: null,
         imagePreview: null,
         imagePostview: null,
+        videoPreview: null,
+        videoPostview: null,
         rtcPanel: null,
         typingIndicator: false,
         scrollPosition: 0,
@@ -5528,21 +5702,29 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         peerMessagingDisabled: false,
         channel: false,
         reply: null,
-        showGoToLastButton: false
+        contentToEdit: null,
+        showGoToLastButton: false,
+        dragging: false
       };
     } else if (nextProps.topic != prevState.topic) {
       const topic = nextProps.tinode.getTopic(nextProps.topic);
       nextState = {
         topic: nextProps.topic,
+        deleted: topic._deleted,
         docPreview: null,
         imagePreview: null,
         imagePostview: null,
+        videoPreview: null,
+        videoPostview: null,
         rtcPanel: null,
         typingIndicator: false,
         scrollPosition: 0,
         fetchingMessages: false,
         showGoToLastButton: false,
-        deleted: topic._deleted
+        forwardMessage: null,
+        reply: null,
+        contentToEdit: null,
+        dragging: false
       };
       if (nextProps.forwardMessage) {
         nextState.reply = {
@@ -5565,7 +5747,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         if (topic.public) {
           Object.assign(nextState, {
             title: topic.public.fn,
-            avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_18__.makeImageUrl)(topic.public.photo)
+            avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.makeImageUrl)(topic.public.photo)
           });
         } else {
           Object.assign(nextState, {
@@ -5649,7 +5831,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     const newTopic = this.props.newTopicParams && this.props.newTopicParams._topicName == this.props.topic;
     let getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub();
     if (this.state.isReader || newTopic) {
-      getQuery = getQuery.withLaterData(_config_js__WEBPACK_IMPORTED_MODULE_16__.MESSAGES_PAGE);
+      getQuery = getQuery.withLaterData(_config_js__WEBPACK_IMPORTED_MODULE_17__.MESSAGES_PAGE);
       if (this.state.isReader) {
         getQuery = getQuery.withLaterDel();
       }
@@ -5660,7 +5842,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     const setQuery = newTopic ? this.props.newTopicParams : undefined;
     topic.subscribe(getQuery.build(), setQuery).then(ctrl => {
       if (ctrl.code == 303) {
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_19__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_19__["default"].setUrlTopic('', ctrl.params.topic));
+        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_20__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_20__["default"].setUrlTopic('', ctrl.params.topic));
         return;
       }
       if (this.state.topic != ctrl.topic) {
@@ -5699,7 +5881,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
     const oldTopic = this.props.tinode.getTopic(oldTopicName);
     if (oldTopic && oldTopic.isSubscribed()) {
-      oldTopic.leave(false).catch(() => {}).finally(() => {
+      oldTopic.leave(false).catch(_ => {}).finally(_ => {
         this.setState({
           fetchingMessages: false
         });
@@ -5733,12 +5915,21 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       if (topic && topic.isSubscribed() && topic.msgHasMoreMessages()) {
         this.setState({
           fetchingMessages: true
-        }, () => {
-          topic.getMessagesPage(_config_js__WEBPACK_IMPORTED_MODULE_16__.MESSAGES_PAGE).catch(err => this.props.onError(err.message, 'err')).finally(() => this.setState({
+        }, _ => {
+          topic.getMessagesPage(_config_js__WEBPACK_IMPORTED_MODULE_17__.MESSAGES_PAGE).catch(err => this.props.onError(err.message, 'err')).finally(_ => this.setState({
             fetchingMessages: false
           }));
         });
       }
+    }
+  }
+  mountDnDEvents(dnd) {
+    if (dnd) {
+      dnd.addEventListener('dragenter', this.handleDragIn);
+      dnd.addEventListener('dragleave', this.handleDragOut);
+      dnd.addEventListener('dragover', this.handleDrag);
+      dnd.addEventListener('drop', this.handleDrop);
+      this.dndRef = dnd;
     }
   }
   goToLatestMessage() {
@@ -5753,7 +5944,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     if (desc.public) {
       this.setState({
         title: desc.public.fn,
-        avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_18__.makeImageUrl)(desc.public.photo)
+        avatar: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.makeImageUrl)(desc.public.photo)
       });
     } else {
       this.setState({
@@ -5808,7 +5999,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.readNotificationQueue.push({
       topicName: this.state.topic,
       seq: seq,
-      sendAt: now.setMilliseconds(now.getMilliseconds() + _config_js__WEBPACK_IMPORTED_MODULE_16__.READ_DELAY)
+      sendAt: now.setMilliseconds(now.getMilliseconds() + _config_js__WEBPACK_IMPORTED_MODULE_17__.READ_DELAY)
     });
   }
   clearNotificationQueue() {
@@ -5884,11 +6075,9 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       case 'kp':
         {
           clearTimeout(this.keyPressTimer);
-          this.keyPressTimer = setTimeout(() => {
-            this.setState({
-              typingIndicator: false
-            });
-          }, _config_js__WEBPACK_IMPORTED_MODULE_16__.KEYPRESS_DELAY + 1000);
+          this.keyPressTimer = setTimeout(_ => this.setState({
+            typingIndicator: false
+          }), _config_js__WEBPACK_IMPORTED_MODULE_17__.KEYPRESS_DELAY + 1000);
           if (!this.state.typingIndicator) {
             this.setState({
               typingIndicator: true
@@ -5904,19 +6093,33 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         console.info("Other change in topic: ", info.what);
     }
   }
-  handleImagePostview(content) {
-    this.setState({
-      imagePostview: content
-    });
+  handleExpandMedia(content) {
+    if (!content) {
+      return;
+    }
+    if (content.video) {
+      this.setState({
+        videoPostview: content
+      });
+    } else {
+      this.setState({
+        imagePostview: content
+      });
+    }
   }
   handleClosePreview() {
     if (this.state.imagePreview && this.state.imagePreview.url) {
       URL.revokeObjectURL(this.state.imagePreview.url);
     }
+    if (this.state.videoPreview && this.state.videoPreview.url) {
+      URL.revokeObjectURL(this.state.videoPreview.url);
+    }
     this.setState({
       imagePostview: null,
       imagePreview: null,
-      docPreview: null
+      docPreview: null,
+      videoPreview: null,
+      videoPostview: null
     });
   }
   handleFormResponse(action, text, data) {
@@ -5976,12 +6179,16 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
   handleEnablePeer(e) {
     e.preventDefault();
-    this.props.onChangePermissions(this.state.topic, _config_js__WEBPACK_IMPORTED_MODULE_16__.DEFAULT_P2P_ACCESS_MODE, this.state.topic);
+    this.props.onChangePermissions(this.state.topic, _config_js__WEBPACK_IMPORTED_MODULE_17__.DEFAULT_P2P_ACCESS_MODE, this.state.topic);
   }
-  sendKeyPress() {
+  sendKeyPress(audio) {
     const topic = this.props.tinode.getTopic(this.state.topic);
     if (topic.isSubscribed()) {
-      topic.noteKeyPress();
+      if (audio) {
+        topic.noteRecording(true);
+      } else {
+        topic.noteKeyPress();
+      }
     }
   }
   sendMessage(msg, uploadCompletionPromise, uploader) {
@@ -5990,26 +6197,36 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       msg = this.props.forwardMessage.msg;
       head = this.props.forwardMessage.head;
       this.handleCancelReply();
-    } else if (this.state.reply && this.state.reply.content) {
-      head = {
-        reply: '' + this.state.reply.seq
-      };
-      if (typeof msg == 'string') {
-        msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.parse(msg);
+    } else if (this.state.reply) {
+      if (this.state.reply.editing) {
+        if (msg == this.state.contentToEdit) {
+          this.handleCancelReply();
+          return;
+        }
+        head = {
+          replace: ':' + this.state.reply.seq
+        };
+      } else if (this.state.reply.content) {
+        head = {
+          reply: '' + this.state.reply.seq
+        };
+        if (typeof msg == 'string') {
+          msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.parse(msg);
+        }
+        msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.sanitizeEntities(this.state.reply.content), msg);
       }
-      msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.sanitizeEntities(this.state.reply.content), msg);
       this.handleCancelReply();
     }
     this.props.sendMessage(msg, uploadCompletionPromise, uploader, head);
   }
   retrySend(pub) {
-    this.props.sendMessage(pub.content, undefined, undefined, pub.head).then(() => {
+    this.props.sendMessage(pub.content, undefined, undefined, pub.head).then(_ => {
       const topic = this.props.tinode.getTopic(this.state.topic);
       topic.delMessagesList([pub.seq], true);
     });
   }
   sendFileAttachment(file) {
-    const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
+    const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_17__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
     if (file.size > maxInbandAttachmentSize) {
       const uploader = this.props.tinode.getLargeFileHelper();
       if (!uploader) {
@@ -6025,19 +6242,19 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       });
       this.sendMessage(msg, uploadCompletionPromise, uploader);
     } else {
-      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_18__.fileToBase64)(file).then(b64 => this.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachFile(null, {
+      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.fileToBase64)(file).then(b64 => this.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachFile(null, {
         mime: b64.mime,
         data: b64.bits,
         filename: b64.name
-      }))).catch(err => this.props.onError(err));
+      }))).catch(err => this.props.onError(err.message, 'err'));
     }
   }
   handleAttachFile(file) {
-    const maxExternAttachmentSize = this.props.tinode.getServerParam('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_EXTERN_ATTACHMENT_SIZE);
+    const maxExternAttachmentSize = this.props.tinode.getServerParam('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_17__.MAX_EXTERN_ATTACHMENT_SIZE);
     if (file.size > maxExternAttachmentSize) {
       this.props.onError(this.props.intl.formatMessage(messages.file_attachment_too_large, {
-        size: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_20__.bytesToHumanSize)(file.size),
-        limit: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_20__.bytesToHumanSize)(maxExternAttachmentSize)
+        size: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_21__.bytesToHumanSize)(file.size),
+        limit: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_21__.bytesToHumanSize)(maxExternAttachmentSize)
       }), 'err');
     } else {
       this.setState({
@@ -6061,8 +6278,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     const mime = this.state.imagePreview.mime;
     const width = this.state.imagePreview.width;
     const height = this.state.imagePreview.height;
-    const fname = this.state.imagePreview.name;
-    const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
+    const fname = this.state.imagePreview.filename;
+    const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_17__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
     if (blob.size > maxInbandAttachmentSize) {
       const uploader = this.props.tinode.getLargeFileHelper();
       if (!uploader) {
@@ -6070,10 +6287,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         return;
       }
       const uploadCompletionPromise = uploader.upload(blob);
-      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_18__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_16__.IMAGE_PREVIEW_DIM, _config_js__WEBPACK_IMPORTED_MODULE_16__.IMAGE_PREVIEW_DIM, -1, false).then(scaled => (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_18__.blobToBase64)(scaled.blob)).then(b64 => {
+      (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.imageScaled)(blob, _config_js__WEBPACK_IMPORTED_MODULE_17__.IMAGE_PREVIEW_DIM, _config_js__WEBPACK_IMPORTED_MODULE_17__.IMAGE_PREVIEW_DIM, -1, false).then(scaled => (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(scaled.blob)).then(b64 => {
         let msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.insertImage(null, 0, {
           mime: mime,
           _tempPreview: b64.bits,
+          bits: b64.bits,
           width: width,
           height: height,
           filename: fname,
@@ -6085,15 +6303,13 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(msg, tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.parse(caption));
         }
         this.sendMessage(msg, uploadCompletionPromise, uploader);
-      }).catch(err => {
-        this.props.onError(err, 'err');
-      });
+      }).catch(err => this.props.onError(err, 'err'));
       return;
     }
-    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_18__.blobToBase64)(blob).then(b64 => {
+    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(blob).then(b64 => {
       let msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.insertImage(null, 0, {
         mime: b64.mime,
-        preview: b64.bits,
+        bits: b64.bits,
         width: width,
         height: height,
         filename: fname,
@@ -6106,14 +6322,90 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       this.sendMessage(msg);
     });
   }
-  handleAttachImage(file) {
-    const maxExternAttachmentSize = this.props.tinode.getServerParam('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_EXTERN_ATTACHMENT_SIZE);
-    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_18__.imageScaled)(file, _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_IMAGE_DIM, _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_IMAGE_DIM, maxExternAttachmentSize, false).then(scaled => {
+  sendVideoAttachment(caption, videoBlob, previewBlob, params) {
+    const width = params.width;
+    const height = params.height;
+    const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_17__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024 | 0;
+    const uploads = [];
+    let uploader;
+    if (videoBlob.size + previewBlob.size > maxInbandAttachmentSize) {
+      uploader = this.props.tinode.getLargeFileHelper();
+      if (!uploader) {
+        this.props.onError(this.props.intl.formatMessage(messages.cannot_initiate_upload));
+        return;
+      }
+      uploads[0] = videoBlob.size > maxInbandAttachmentSize * 0.675 ? uploader.upload(videoBlob) : null;
+      uploads[1] = previewBlob.size > maxInbandAttachmentSize * 0.275 ? uploader.upload(previewBlob) : null;
+    }
+    if (uploads.length == 0) {
+      Promise.all([(0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(videoBlob), (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(previewBlob)]).then(b64s => {
+        const [v64, i64] = b64s;
+        let msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.insertVideo(null, 0, {
+          mime: v64.mime,
+          bits: v64.bits,
+          preview: i64.bits,
+          premime: i64.mime,
+          width: width,
+          height: height,
+          duration: params.duration,
+          filename: params.name,
+          size: videoBlob.size
+        });
+        if (caption) {
+          msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendLineBreak(msg);
+          msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(msg, tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.parse(caption));
+        }
+        this.sendMessage(msg);
+      });
+      return;
+    }
+    const uploadCompletionPromise = Promise.all(uploads);
+    const b64conv = [];
+    b64conv[0] = uploads[0] ? null : (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(videoBlob);
+    b64conv[1] = uploads[1] ? null : (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.imageScaled)(previewBlob, _config_js__WEBPACK_IMPORTED_MODULE_17__.MAX_IMAGE_DIM, _config_js__WEBPACK_IMPORTED_MODULE_17__.MAX_IMAGE_DIM, -1, false).then(scaled => (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(scaled.blob));
+    b64conv[2] = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.imageScaled)(previewBlob, _config_js__WEBPACK_IMPORTED_MODULE_17__.VIDEO_PREVIEW_DIM, _config_js__WEBPACK_IMPORTED_MODULE_17__.VIDEO_PREVIEW_DIM, -1, false).then(scaled => (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(scaled.blob));
+    Promise.all(b64conv).then(b64s => {
+      const [video, img, preview] = b64s;
+      let msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.insertVideo(null, 0, {
+        mime: params.mime,
+        bits: video ? video.bits : null,
+        _tempPreview: preview.bits,
+        preview: img ? img.bits : preview.bits,
+        premime: img ? img.mime : preview.mime,
+        width: width,
+        height: height,
+        duration: params.duration,
+        filename: params.name,
+        size: videoBlob.size,
+        urlPromise: uploadCompletionPromise
+      });
+      if (caption) {
+        msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendLineBreak(msg);
+        msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(msg, tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.parse(caption));
+      }
+      this.sendMessage(msg, uploadCompletionPromise, uploader);
+    }).catch(err => this.props.onError(err.message, 'err'));
+  }
+  handleAttachImageOrVideo(file) {
+    const maxExternAttachmentSize = this.props.tinode.getServerParam('maxFileUploadSize', _config_js__WEBPACK_IMPORTED_MODULE_17__.MAX_EXTERN_ATTACHMENT_SIZE);
+    if (file.type.startsWith('video/')) {
+      this.setState({
+        videoPreview: {
+          url: URL.createObjectURL(file),
+          blob: file,
+          filename: file.name,
+          size: file.size,
+          mime: file.type
+        }
+      });
+      return;
+    }
+    (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.imageScaled)(file, _config_js__WEBPACK_IMPORTED_MODULE_17__.MAX_IMAGE_DIM, _config_js__WEBPACK_IMPORTED_MODULE_17__.MAX_IMAGE_DIM, maxExternAttachmentSize, false).then(scaled => {
       this.setState({
         imagePreview: {
           url: URL.createObjectURL(scaled.blob),
           blob: scaled.blob,
-          name: scaled.name,
+          filename: scaled.name,
           width: scaled.width,
           height: scaled.height,
           size: scaled.blob.size,
@@ -6121,12 +6413,23 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         }
       });
     }).catch(err => {
-      this.props.onError(err, 'err');
+      this.props.onError(err.message, 'err');
     });
+  }
+  handleFileDrop(files) {
+    if (!files || files.length == 0) {
+      return;
+    }
+    const file = files[0];
+    if (file.type && file.type.startsWith('image/')) {
+      this.handleAttachImageOrVideo(file);
+    } else {
+      this.handleAttachFile(file);
+    }
   }
   sendAudioAttachment(url, preview, duration) {
     fetch(url).then(result => result.blob()).then(blob => {
-      const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_16__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024;
+      const maxInbandAttachmentSize = this.props.tinode.getServerParam('maxMessageSize', _config_js__WEBPACK_IMPORTED_MODULE_17__.MAX_INBAND_ATTACHMENT_SIZE) * 0.75 - 1024;
       if (blob.size > maxInbandAttachmentSize) {
         const uploader = this.props.tinode.getLargeFileHelper();
         if (!uploader) {
@@ -6143,18 +6446,18 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         });
         this.sendMessage(msg, uploadCompletionPromise, uploader);
       } else {
-        (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_18__.blobToBase64)(blob).then(b64 => {
+        (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(blob).then(b64 => {
           this.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.appendAudio(null, {
             mime: b64.mime,
+            bits: b64.bits,
             size: blob.size,
-            data: b64.bits,
             duration: duration,
             preview: preview
           }));
         });
       }
     }).catch(err => {
-      this.props.onError(err);
+      this.props.onError(err.message, 'err');
     });
     ;
   }
@@ -6167,15 +6470,15 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     uploader.cancel();
   }
   handlePickReply(seq, content, senderId, senderName) {
-    this.setState({
-      reply: null
-    });
     if (!seq || !content) {
+      this.setState({
+        reply: null
+      });
       return;
     }
     content = typeof content == 'string' ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.init(content) : content;
     if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isValid(content)) {
-      content = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.replyContent(content, _config_js__WEBPACK_IMPORTED_MODULE_16__.QUOTED_REPLY_LENGTH);
+      content = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.replyContent(content, _config_js__WEBPACK_IMPORTED_MODULE_17__.QUOTED_REPLY_LENGTH);
     } else {
       content = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.init('\u26A0 '), tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.wrapInto(this.props.intl.formatMessage(messages.invalid_content), 'EM'));
     }
@@ -6187,9 +6490,34 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     });
     this.props.onCancelForwardMessage();
   }
+  handleEditMessage(seq, content) {
+    if (!seq || !content) {
+      this.setState({
+        reply: null
+      });
+      return;
+    }
+    content = typeof content == 'string' ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.init(content) : content;
+    const editable = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.toMarkdown(content);
+    if (tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.isValid(content)) {
+      content = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.replyContent(content, _config_js__WEBPACK_IMPORTED_MODULE_17__.EDIT_PREVIEW_LENGTH);
+    } else {
+      content = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.append(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.init('\u26A0 '), tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.wrapInto(this.props.intl.formatMessage(messages.invalid_content), 'EM'));
+    }
+    this.setState({
+      reply: {
+        content: tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.quote(this.props.intl.formatMessage(messages.editing_message), null, content),
+        seq: seq,
+        editing: true
+      },
+      contentToEdit: editable
+    });
+    this.props.onCancelForwardMessage();
+  }
   handleCancelReply() {
     this.setState({
-      reply: null
+      reply: null,
+      contentToEdit: null
     });
     this.props.onCancelForwardMessage();
   }
@@ -6201,11 +6529,50 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         behavior: "smooth"
       });
       ref.current.classList.add('flash');
-      setTimeout(() => {
+      setTimeout(_ => {
         ref.current.classList.remove('flash');
       }, 1000);
     } else {
       console.error("Unresolved message ref", replyToSeq);
+    }
+  }
+  isDragEnabled() {
+    return this.state.isWriter && !this.state.unconfirmed && !this.props.forwardMessage && !this.state.peerMessagingDisabled;
+  }
+  handleDrag(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  handleDragIn(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.dragCounter++;
+    if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
+      this.setState({
+        dragging: true
+      });
+    }
+  }
+  handleDragOut(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.dragCounter--;
+    if (this.dragCounter <= 0) {
+      this.setState({
+        dragging: false
+      });
+    }
+  }
+  handleDrop(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.setState({
+      dragging: false
+    });
+    if (this.isDragEnabled() && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      this.handleFileDrop(e.dataTransfer.files);
+      e.dataTransfer.clearData();
+      this.dragCounter = 0;
     }
   }
   render() {
@@ -6231,9 +6598,26 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           onClose: this.handleClosePreview,
           onSendMessage: this.sendImageAttachment
         });
+      } else if (this.state.videoPreview) {
+        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_video_preview_jsx__WEBPACK_IMPORTED_MODULE_16__["default"], {
+          content: this.state.videoPreview,
+          tinode: this.props.tinode,
+          reply: this.state.reply,
+          onError: this.props.onError,
+          onCancelReply: this.handleCancelReply,
+          onClose: this.handleClosePreview,
+          onSendMessage: this.sendVideoAttachment
+        });
       } else if (this.state.imagePostview) {
         component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_image_preview_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
           content: this.state.imagePostview,
+          onClose: this.handleClosePreview
+        });
+      } else if (this.state.videoPostview) {
+        component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_video_preview_jsx__WEBPACK_IMPORTED_MODULE_16__["default"], {
+          content: this.state.videoPostview,
+          tinode: this.props.tinode,
+          onError: this.props.onError,
           onClose: this.handleClosePreview
         });
       } else if (this.state.docPreview) {
@@ -6289,7 +6673,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         let previousFrom = null;
         let prevDate = null;
         let chatBoxClass = null;
-        const dateFmt = new Intl.DateTimeFormat(this.props.intl.locale);
         topic.messages((msg, prev, next, i) => {
           let nextFrom = next ? next.from || 'chan' : null;
           let sequence = 'single';
@@ -6312,7 +6695,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           const user = topic.userDesc(thisFrom);
           if (user && user.public) {
             userName = user.public.fn;
-            userAvatar = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_18__.makeImageUrl)(user.public.photo);
+            userAvatar = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.makeImageUrl)(user.public.photo);
           }
           chatBoxClass = groupTopic ? 'chat-box group' : 'chat-box';
           const ref = this.getOrCreateMessageRef(msg.seq);
@@ -6329,7 +6712,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             const thisDate = new Date(msg.ts);
             if (!prevDate || prevDate.toDateString() != thisDate.toDateString()) {
               messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_meta_message_jsx__WEBPACK_IMPORTED_MODULE_14__["default"], {
-                date: dateFmt.format(msg.ts),
+                date: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_21__.relativeDateFormat)(msg.ts),
                 locale: this.props.intl.locale,
                 key: 'date-' + msg.seq
               }));
@@ -6339,6 +6722,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
               tinode: this.props.tinode,
               content: msg.content,
               mimeType: msg.head && msg.head.mime,
+              replyToSeq: replyToSeq,
+              edited: msg.head && !msg.head.webrtc && msg.head.replace,
               timestamp: msg.ts,
               response: isReply,
               seq: msg.seq,
@@ -6350,17 +6735,17 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
               sequence: sequence,
               received: deliveryStatus,
               uploader: msg._uploader,
+              userIsWriter: this.state.isWriter,
               viewportWidth: this.props.viewportWidth,
               showContextMenu: this.handleShowMessageContextMenu,
-              onImagePreview: this.handleImagePostview,
+              onExpandMedia: this.handleExpandMedia,
               onFormResponse: this.handleFormResponse,
-              onError: this.props.onError,
               onCancelUpload: this.handleCancelUpload,
               pickReply: this.handlePickReply,
-              replyToSeq: replyToSeq,
+              editMessage: this.handleEditMessage,
               onQuoteClick: this.handleQuoteClick,
+              onError: this.props.onError,
               ref: ref,
-              userIsWriter: this.state.isWriter,
               key: msg.seq
             }));
           }
@@ -6374,13 +6759,74 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             if (cont.online) {
               lastSeen = formatMessage(messages.online_now);
             } else if (cont.seen) {
-              lastSeen = formatMessage(messages.last_seen) + ": " + (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_20__.shortDateFormat)(cont.seen.when, this.props.intl.locale);
+              lastSeen = formatMessage(messages.last_seen) + ": " + (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_21__.shortDateFormat)(cont.seen.when, this.props.intl.locale);
             }
           }
         }
         const avatar = this.state.avatar || true;
         const online = this.state.deleted ? null : this.props.online ? 'online' + (this.state.typingIndicator ? ' typing' : '') : 'offline';
         const titleClass = 'panel-title' + (this.state.deleted ? ' deleted' : '');
+        let messagesComponent = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+          id: "messages-container"
+        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+          className: 'action-button' + (this.state.showGoToLastButton ? '' : ' hidden'),
+          onClick: this.goToLatestMessage
+        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+          className: "material-icons"
+        }, "arrow_downward")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+          id: "messages-panel",
+          ref: this.handleScrollReference
+        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
+          id: "scroller",
+          className: chatBoxClass
+        }, messageNodes)), !this.state.isReader ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+          id: "write-only-background"
+        }, this.state.readingBlocked ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+          id: "write-only-note"
+        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+          id: "messages_not_readable",
+          defaultMessage: [{
+            "type": 0,
+            "value": "no access to messages"
+          }]
+        })) : null) : null), this.state.peerMessagingDisabled && !this.state.unconfirmed ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+          id: "peer-messaging-disabled-note"
+        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+          className: "material-icons secondary"
+        }, "block"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+          id: "peers_messaging_disabled",
+          defaultMessage: [{
+            "type": 0,
+            "value": "Peer's messaging is disabled."
+          }]
+        }), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+          href: "#",
+          onClick: this.handleEnablePeer
+        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+          id: "enable_peers_messaging",
+          defaultMessage: [{
+            "type": 0,
+            "value": "Enable"
+          }]
+        })), ".") : null, this.state.unconfirmed ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_invitation_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
+          onAction: this.handleNewChatAcceptance
+        }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_15__["default"], {
+          tinode: this.props.tinode,
+          topicName: this.state.topic,
+          noInput: !!this.props.forwardMessage,
+          disabled: !this.state.isWriter || this.state.deleted,
+          reply: this.state.reply,
+          initMessage: this.state.contentToEdit,
+          onKeyPress: this.sendKeyPress,
+          onRecordingProgress: this.sendKeyPress,
+          onSendMessage: this.sendMessage,
+          onAttachFile: this.props.forwardMessage ? null : this.handleAttachFile,
+          onAttachImage: this.props.forwardMessage ? null : this.handleAttachImageOrVideo,
+          onAttachAudio: this.props.forwardMessage ? null : this.sendAudioAttachment,
+          onError: this.props.onError,
+          onQuoteClick: this.handleQuoteClick,
+          onCancelReply: this.handleCancelReply
+        }));
         component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "topic-caption-panel",
           className: "caption-panel"
@@ -6434,68 +6880,13 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           onClearError: this.props.onError
         }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
           show: this.state.fetchingMessages
-        }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          id: "messages-container"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-          className: 'action-button' + (this.state.showGoToLastButton ? '' : ' hidden'),
-          onClick: this.goToLatestMessage
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-          className: "material-icons"
-        }, "arrow_downward")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          id: "messages-panel",
-          ref: this.handleScrollReference
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
-          id: "scroller",
-          className: chatBoxClass
-        }, messageNodes)), !this.state.isReader ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          id: "write-only-background"
-        }, this.state.readingBlocked ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          id: "write-only-note"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-          id: "messages_not_readable",
-          defaultMessage: [{
-            "type": 0,
-            "value": "no access to messages"
-          }]
-        })) : null) : null), this.state.peerMessagingDisabled && !this.state.unconfirmed ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-          id: "peer-messaging-disabled-note"
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-          className: "material-icons secondary"
-        }, "block"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-          id: "peers_messaging_disabled",
-          defaultMessage: [{
-            "type": 0,
-            "value": "Peer's messaging is disabled."
-          }]
-        }), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-          href: "#",
-          onClick: this.handleEnablePeer
-        }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-          id: "enable_peers_messaging",
-          defaultMessage: [{
-            "type": 0,
-            "value": "Enable"
-          }]
-        })), ".") : null, this.state.unconfirmed ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_invitation_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
-          onAction: this.handleNewChatAcceptance
-        }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_15__["default"], {
-          tinode: this.props.tinode,
-          topicName: this.state.topic,
-          noInput: !!this.props.forwardMessage,
-          disabled: !this.state.isWriter || this.state.deleted,
-          onKeyPress: this.sendKeyPress,
-          onSendMessage: this.sendMessage,
-          onAttachFile: this.props.forwardMessage ? null : this.handleAttachFile,
-          onAttachImage: this.props.forwardMessage ? null : this.handleAttachImage,
-          onAttachAudio: this.props.forwardMessage ? null : this.sendAudioAttachment,
-          onError: this.props.onError,
-          reply: this.state.reply,
-          onQuoteClick: this.handleQuoteClick,
-          onCancelReply: this.handleCancelReply
-        }));
+        }), messagesComponent, this.state.dragging && this.isDragEnabled() ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+          className: "drag-n-drop"
+        }, formatMessage(messages.drag_file)) : null);
       }
       component = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-        id: "topic-view"
+        id: "topic-view",
+        ref: this.mountDnDEvents
       }, component2);
     }
     return component;
@@ -6732,11 +7123,9 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       this.setState({
         email: email
       });
-      this.props.onRequest('email', email).then(() => {
-        this.setState({
-          sent: true
-        });
-      });
+      this.props.onRequest('email', email).then(_ => this.setState({
+        sent: true
+      }));
     }
   }
   handleEmailChange(e) {
@@ -7284,8 +7673,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var firebase_app__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! firebase/app */ "./node_modules/firebase/app/dist/index.esm.js");
-/* harmony import */ var firebase_messaging__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! firebase/messaging */ "./node_modules/firebase/messaging/dist/index.esm.js");
+/* harmony import */ var firebase_app__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! firebase/app */ "./node_modules/firebase/app/dist/esm/index.esm.js");
+/* harmony import */ var firebase_messaging__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! firebase/messaging */ "./node_modules/firebase/messaging/dist/esm/index.esm.js");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _widgets_alert_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/alert.jsx */ "./src/widgets/alert.jsx");
@@ -7478,7 +7867,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.handleCallSendOffer = this.handleCallSendOffer.bind(this);
     this.handleCallIceCandidate = this.handleCallIceCandidate.bind(this);
     this.handleCallSendAnswer = this.handleCallSendAnswer.bind(this);
-    this.handleCallAcceptCall = this.handleCallAcceptCall.bind(this);
+    this.handleCallAccept = this.handleCallAccept.bind(this);
     this.sendMessageToTopic = this.sendMessageToTopic.bind(this);
     this.callTimeoutTimer = null;
   }
@@ -7575,7 +7964,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           if (this.state.desktopAlerts) {
             this.tinode.setDeviceToken(this.state.firebaseToken);
           }
-        }).catch(() => {});
+        }).catch(_ => {});
       }
       const parsedNav = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].parseUrlHash(window.location.hash);
       this.resetContactList();
@@ -7720,9 +8109,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
   }
   checkForAppUpdate(reg) {
-    reg.onupdatefound = () => {
+    reg.onupdatefound = _ => {
       const installingWorker = reg.installing;
-      installingWorker.onstatechange = () => {
+      installingWorker.onstatechange = _ => {
         if (installingWorker.state == 'installed' && navigator.serviceWorker.controller) {
           const msg = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
             id: "update_available",
@@ -7842,14 +8231,14 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
   handlePersistenceChange(persist) {
     if (persist) {
-      this.tinode.initStorage().then(() => {
+      this.tinode.initStorage().then(_ => {
         _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].setObject('keep-logged-in', true);
         this.setState({
           persist: true
         });
       });
     } else {
-      this.tinode.clearStorage().then(() => {
+      this.tinode.clearStorage().then(_ => {
         _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].setObject('keep-logged-in', false);
         this.setState({
           persist: false
@@ -8003,7 +8392,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       localStorage.removeItem('auth-token');
       this.handleError(err.message, 'err');
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo('');
-    }).finally(() => {
+    }).finally(_ => {
       this.setState({
         loadSpinnerVisible: false
       });
@@ -8148,11 +8537,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       desc: {
         public: query
       }
-    }).then(ctrl => {
-      return fnd.getMeta(fnd.startMetaQuery().withSub().build());
-    }).catch(err => {
-      this.handleError(err.message, 'err');
-    });
+    }).then(_ => fnd.getMeta(fnd.startMetaQuery().withSub().build())).catch(err => this.handleError(err.message, 'err'));
   }
   handleTopicSelected(topicName) {
     if (this.state.newTopicParams && this.state.newTopicParams._topicName != topicName) {
@@ -8209,7 +8594,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       completion.push(uploadCompletionPromise);
     }
     if (!topic.isSubscribed()) {
-      const subscribePromise = topic.subscribe().then(() => {
+      const subscribePromise = topic.subscribe().then(_ => {
         let calls = [];
         topic.queuedMessages(pub => {
           if (pub._sending || pub.seq == msg.seq) {
@@ -8234,9 +8619,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         topic.archive(false);
       }
       return ctrl;
-    }).catch(err => {
-      this.handleError(err.message, 'err');
-    });
+    }).catch(err => this.handleError(err.message, 'err'));
   }
   handleNewChatInvitation(topicName, action) {
     const topic = this.tinode.getTopic(topicName);
@@ -8250,14 +8633,12 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           }
         });
         if (topic.isP2PType()) {
-          response = response.then(ctrl => {
-            topic.setMeta({
-              sub: {
-                user: topicName,
-                mode: mode
-              }
-            });
-          });
+          response = response.then(_ => topic.setMeta({
+            sub: {
+              user: topicName,
+              mode: mode
+            }
+          }));
         }
         break;
       case 'delete':
@@ -8269,17 +8650,13 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           sub: {
             mode: am
           }
-        }).then(ctrl => {
-          return this.handleTopicSelected(null);
-        });
+        }).then(_ => this.handleTopicSelected(null));
         break;
       default:
         console.warn("Unknown invitation action", '"' + action + '""');
     }
     if (response != null) {
-      response.catch(err => {
-        this.handleError(err.message, 'err');
-      });
+      response.catch(err => this.handleError(err.message, 'err'));
     }
   }
   handleNewAccount() {
@@ -8329,9 +8706,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   handleUpdateAccountTagsRequest(tags) {
     this.tinode.getMeTopic().setMeta({
       tags: tags
-    }).catch(err => {
-      this.handleError(err.message, 'err');
-    });
+    }).catch(err => this.handleError(err.message, 'err'));
   }
   handleSettings() {
     this.handleError();
@@ -8390,7 +8765,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     } else if (this.state.firebaseToken && this.fcm) {
       (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.deleteToken)(this.fcm).catch(err => {
         console.error("Unable to delete token.", err);
-      }).finally(() => {
+      }).finally(_ => {
         _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].updateObject('settings', {
           desktopAlerts: false
         });
@@ -8426,15 +8801,11 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         meth: method,
         val: value
       }
-    }).catch(err => {
-      this.handleError(err.message, 'err');
-    });
+    }).catch(err => this.handleError(err.message, 'err'));
   }
   handleCredDelete(method, value) {
     const me = this.tinode.getMeTopic();
-    me.delCredential(method, value).catch(err => {
-      this.handleError(err.message, 'err');
-    });
+    me.delCredential(method, value).catch(err => this.handleError(err.message, 'err'));
   }
   handleCredConfirm(method, response) {
     TinodeWeb.navigateToCredentialsView({
@@ -8503,7 +8874,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     params._topicName = topicName;
     this.setState({
       newTopicParams: params
-    }, () => {
+    }, _ => {
       this.handleTopicSelected(topicName);
     });
   }
@@ -8549,25 +8920,19 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       topic.setMeta({
         desc: params,
         attachments: attachments
-      }).catch(err => {
-        this.handleError(err.message, 'err');
-      });
+      }).catch(err => this.handleError(err.message, 'err'));
     }
   }
   handleUnarchive(topicName) {
     const topic = this.tinode.getTopic(topicName);
     if (topic) {
-      topic.archive(false).catch(err => {
-        this.handleError(err.message, 'err');
-      });
+      topic.archive(false).catch(err => this.handleError(err.message, 'err'));
     }
   }
   handleUpdatePasswordRequest(password) {
     this.handleError();
     if (password) {
-      this.tinode.updateAccountBasic(null, this.tinode.getCurrentLogin(), password).catch(err => {
-        this.handleError(err.message, 'err');
-      });
+      this.tinode.updateAccountBasic(null, this.tinode.getCurrentLogin(), password).catch(err => this.handleError(err.message, 'err'));
     }
   }
   handleChangePermissions(topicName, mode, uid) {
@@ -8586,9 +8951,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           user: uid,
           mode: mode
         }
-      }).catch(err => {
-        this.handleError(err.message, 'err');
-      });
+      }).catch(err => this.handleError(err.message, 'err'));
     }
   }
   handleTagsUpdateRequest(topicName, tags) {
@@ -8596,9 +8959,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     if (topic) {
       topic.setMeta({
         tags: tags
-      }).catch(err => {
-        this.handleError(err.message, 'err');
-      });
+      }).catch(err => this.handleError(err.message, 'err'));
     }
   }
   handleLogout() {
@@ -8619,8 +8980,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       cleared = Promose.resolve();
     }
     this.setState(this.getBlankState());
-    cleared.then(() => {
-      this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_16__.isSecureConnection)(), this.state.transport, this.props.intl.locale, _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].getObject('keep-logged-in'), () => {
+    cleared.then(_ => {
+      this.tinode = TinodeWeb.tnSetup(this.state.serverAddress, (0,_lib_host_name_js__WEBPACK_IMPORTED_MODULE_16__.isSecureConnection)(), this.state.transport, this.props.intl.locale, _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].getObject('keep-logged-in'), _ => {
         this.tinode.onConnect = this.handleConnected;
         this.tinode.onDisconnect = this.handleDisconnect;
         this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
@@ -8640,7 +9001,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     if (!topic) {
       return;
     }
-    topic.delTopic(true).then(ctrl => {
+    topic.delTopic(true).then(_ => {
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].setUrlTopic(window.location.hash, ''));
     }).catch(err => {
       this.handleError(err.message, 'err');
@@ -8651,16 +9012,14 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     if (!topic) {
       return;
     }
-    topic.delMessagesAll(true).catch(err => {
-      this.handleError(err.message, 'err');
-    });
+    topic.delMessagesAll(true).catch(err => this.handleError(err.message, 'err'));
   }
   handleLeaveUnsubRequest(topicName) {
     const topic = this.tinode.getTopic(topicName);
     if (!topic) {
       return;
     }
-    topic.leave(true).then(ctrl => {
+    topic.leave(true).then(_ => {
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].setUrlTopic(window.location.hash, ''));
     }).catch(err => {
       this.handleError(err.message, 'err');
@@ -8673,9 +9032,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
     topic.updateMode(null, '-JP').then(_ => {
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].setUrlTopic(window.location.hash, ''));
-    }).catch(err => {
-      this.handleError(err.message, 'err');
-    });
+    }).catch(err => this.handleError(err.message, 'err'));
   }
   handleReportTopic(topicName) {
     const topic = this.tinode.getTopic(topicName);
@@ -8683,11 +9040,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       return;
     }
     this.tinode.report('report', topicName);
-    topic.updateMode(null, '-JP').then(ctrl => {
+    topic.updateMode(null, '-JP').then(_ => {
       _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo(_lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].setUrlTopic(window.location.hash, ''));
-    }).catch(err => {
-      this.handleError(err.message, 'err');
-    });
+    }).catch(err => this.handleError(err.message, 'err'));
   }
   handleShowContextMenu(params, menuItems) {
     this.setState({
@@ -8771,7 +9126,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   handleContextMenuAction(action, promise, params) {
     if (action == 'topic_archive') {
       if (promise && params.topicName && params.topicName == this.state.topicSelected) {
-        promise.then(() => {
+        promise.then(_ => {
           this.handleTopicSelected(null);
         });
       }
@@ -8808,16 +9163,12 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
     if (added && added.length > 0) {
       added.map(uid => {
-        topic.invite(uid, null).catch(err => {
-          this.handleError(err.message, 'err');
-        });
+        topic.invite(uid, null).catch(err => this.handleError(err.message, 'err'));
       });
     }
     if (removed && removed.length > 0) {
       removed.map(uid => {
-        topic.delSubscription(uid).catch(err => {
-          this.handleError(err.message, 'err');
-        });
+        topic.delSubscription(uid).catch(err => this.handleError(err.message, 'err'));
       });
     }
   }
@@ -8828,9 +9179,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           meth: cred,
           resp: code
         }
-      }).catch(err => {
-        this.handleError(err.message, 'err');
-      });
+      }).catch(err => this.handleError(err.message, 'err'));
     } else {
       this.setState({
         credMethod: cred,
@@ -8844,9 +9193,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
   }
   handlePasswordResetRequest(method, value) {
-    return this.tinode.connect().then(() => {
-      return this.tinode.requestResetAuthSecret('basic', method, value);
-    }).catch(err => {
+    return this.tinode.connect().then(_ => this.tinode.requestResetAuthSecret('basic', method, value)).catch(err => {
       this.handleError(err.message, 'err');
     });
   }
@@ -8855,13 +9202,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     if (!token) {
       this.handleError(this.props.intl.formatMessage(messages.invalid_security_token), 'err');
     } else {
-      this.tinode.connect().then(() => {
-        return this.tinode.updateAccountBasic(null, null, newPassword, {
-          token: token
-        });
-      }).then(() => {
-        _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo('');
-      }).catch(err => {
+      this.tinode.connect().then(_ => this.tinode.updateAccountBasic(null, null, newPassword, {
+        token: token
+      })).then(_ => _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo('')).catch(err => {
         this.handleError(err.message, 'err');
       });
     }
@@ -8941,7 +9284,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       callState: _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_NONE
     });
   }
-  handleCallAcceptCall(topicName) {
+  handleCallAccept(topicName) {
     const topic = this.tinode.getTopic(topicName);
     if (!topic) {
       return;
@@ -8954,7 +9297,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     } else {
       this.setState({
         callShouldStart: true
-      }, () => this.handleTopicSelected(this.state.callTopic));
+      }, _ => this.handleTopicSelected(this.state.callTopic));
     }
   }
   handleInfoMessage(info) {
@@ -9041,19 +9384,17 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       seq: this.state.callSeq,
       callState: this.state.callState,
       onRinging: this.handleCallRinging,
-      onAcceptCall: this.handleCallAcceptCall,
+      onAcceptCall: this.handleCallAccept,
       onReject: this.handleCallHangup
     }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_alert_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
       visible: this.state.alertVisible,
       title: this.state.alertParams.title,
       content: this.state.alertParams.content,
-      onReject: this.state.alertParams.onReject ? () => {
-        this.setState({
-          alertVisible: false
-        });
-      } : null,
+      onReject: this.state.alertParams.onReject ? _ => this.setState({
+        alertVisible: false
+      }) : null,
       reject: this.state.alertParams.reject,
-      onConfirm: () => {
+      onConfirm: _ => {
         this.setState({
           alertVisible: false
         });
@@ -9452,18 +9793,12 @@ class Attachment extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
     this.setState({
       downloader: downloader
     });
-    downloader.download(url, filename, mimetype, loaded => {
-      this.setState({
-        progress: loaded / this.props.size
-      });
-    }, err => {
-      this.props.onError(err, 'err');
-    }).then(() => {
-      this.setState({
-        downloader: null,
-        progress: 0
-      });
-    }).catch(err => {
+    downloader.download(url, filename, mimetype, loaded => this.setState({
+      progress: loaded / this.props.size
+    }), err => this.props.onError(err, 'err')).then(_ => this.setState({
+      downloader: null,
+      progress: 0
+    })).catch(err => {
       if (err) {
         this.props.onError("Error downloading file: " + err.message, 'err');
       }
@@ -9538,12 +9873,15 @@ class Attachment extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ AudioPlayer)
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _lib_strformat__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/strformat */ "./src/lib/strformat.js");
-/* harmony import */ var _lib_blob_helpers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/blob-helpers */ "./src/lib/blob-helpers.js");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _lib_strformat__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/strformat */ "./src/lib/strformat.js");
+/* harmony import */ var _lib_blob_helpers__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/blob-helpers */ "./src/lib/blob-helpers.js");
+
 
 
 
@@ -9554,10 +9892,19 @@ const BAR_COLOR = '#888A';
 const BAR_COLOR_DARK = '#666C';
 const THUMB_COLOR = '#444E';
 const MIN_PREVIEW_LENGTH = 16;
+const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
+  icon_title_play: {
+    id: "icon_title_play",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Play recording"
+    }]
+  }
+});
 class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
-    let preview = (0,_lib_blob_helpers__WEBPACK_IMPORTED_MODULE_2__.base64ToIntArray)(this.props.preview);
+    let preview = (0,_lib_blob_helpers__WEBPACK_IMPORTED_MODULE_3__.base64ToIntArray)(this.props.preview);
     if (!Array.isArray(preview) || preview.length < MIN_PREVIEW_LENGTH) {
       preview = null;
     }
@@ -9565,7 +9912,7 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       canPlay: false,
       playing: false,
       currentTime: '0:00',
-      duration: this.props.duration > 0 ? (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(this.props.duration / 1000) : '-:--',
+      duration: this.props.duration > 0 ? (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_2__.secondsToTime)(this.props.duration / 1000) : '-:--',
       longMin: this.props.duration >= 600000,
       preview: preview
     };
@@ -9600,7 +9947,7 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       this.initAudio();
     }
     if (this.props.preview != prevProps.preview) {
-      let preview = (0,_lib_blob_helpers__WEBPACK_IMPORTED_MODULE_2__.base64ToIntArray)(this.props.preview);
+      let preview = (0,_lib_blob_helpers__WEBPACK_IMPORTED_MODULE_3__.base64ToIntArray)(this.props.preview);
       if (!Array.isArray(preview) || preview.length < MIN_PREVIEW_LENGTH) {
         preview = null;
       }
@@ -9615,13 +9962,13 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       canPlay: true
     });
     this.audioPlayer.ontimeupdate = _ => this.setState({
-      currentTime: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(this.audioPlayer.currentTime, this.state.longMin)
+      currentTime: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_2__.secondsToTime)(this.audioPlayer.currentTime, this.state.longMin)
     });
     this.audioPlayer.onended = _ => {
       this.audioPlayer.currentTime = 0;
       this.setState({
         playing: false,
-        currentTime: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(0, this.state.longMin)
+        currentTime: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_2__.secondsToTime)(0, this.state.longMin)
       });
     };
   }
@@ -9640,7 +9987,7 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     const width = this.effectiveWidth;
     const height = this.canvasRef.current.height;
     this.canvasContext.lineWidth = LINE_WIDTH;
-    const drawFrame = () => {
+    const drawFrame = _ => {
       if (!this.canvasRef.current || !this.audioPlayer) {
         return;
       }
@@ -9730,7 +10077,7 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       const offset = (e.clientX - rect.left) / this.effectiveWidth * CANVAS_UPSCALING;
       this.audioPlayer.currentTime = this.props.duration * offset / 1000;
       this.setState({
-        currentTime: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(this.audioPlayer.currentTime, this.state.longMin)
+        currentTime: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_2__.secondsToTime)(this.audioPlayer.currentTime, this.state.longMin)
       });
       if (!this.state.playing) {
         this.visualize();
@@ -9742,7 +10089,7 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     const play = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: this.handlePlay,
-      title: "Play"
+      title: this.props.intl.formatMessage(messages.icon_title_play)
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: playClass
     }, this.state.playing ? 'pause_circle' : this.state.canPlay ? 'play_circle' : 'not_interested'));
@@ -9761,319 +10108,7 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     }, this.state.currentTime, "/", this.state.duration))));
   }
 }
-
-/***/ }),
-
-/***/ "./src/widgets/audio-recorder.jsx":
-/*!****************************************!*\
-  !*** ./src/widgets/audio-recorder.jsx ***!
-  \****************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ AudioRecorder)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _audio_player_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./audio-player.jsx */ "./src/widgets/audio-player.jsx");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_strformat__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/strformat */ "./src/lib/strformat.js");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-
-
-
-
-
-const BUFFER_SIZE = 256;
-const CANVAS_UPSCALING = 2.0;
-const LINE_WIDTH = 3 * CANVAS_UPSCALING;
-const SPACING = 2 * CANVAS_UPSCALING;
-const MILLIS_PER_BAR = 100;
-const BAR_COLOR = '#BBBD';
-const BAR_SCALE = 64.0;
-const VISUALIZATION_BARS = 96;
-const MAX_SAMPLES_PER_BAR = 10;
-const AUDIO_MIME_TYPE = 'audio/webm';
-class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
-  constructor(props) {
-    super(props);
-    this.state = {
-      enabled: true,
-      audioRecord: null,
-      recording: true,
-      paused: false,
-      duration: '0:00',
-      blobUrl: null,
-      preview: null
-    };
-    this.visualize = this.visualize.bind(this);
-    this.initMediaRecording = this.initMediaRecording.bind(this);
-    this.initCanvas = this.initCanvas.bind(this);
-    this.getRecording = this.getRecording.bind(this);
-    this.cleanUp = this.cleanUp.bind(this);
-    this.handleResume = this.handleResume.bind(this);
-    this.handlePause = this.handlePause.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
-    this.handleDone = this.handleDone.bind(this);
-    this.durationMillis = 0;
-    this.startedOn = null;
-    this.viewBuffer = [];
-    this.canvasRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
-  }
-  componentDidMount() {
-    this.stream = null;
-    this.mediaRecorder = null;
-    this.audioContext = null;
-    this.audioInput = null;
-    this.analyser = null;
-    this.audioChunks = [];
-    try {
-      navigator.mediaDevices.getUserMedia({
-        audio: true,
-        video: false
-      }).then(this.initMediaRecording, this.props.onError);
-    } catch (err) {
-      this.props.onError(err);
-    }
-  }
-  componentWillUnmount() {
-    this.startedOn = null;
-    if (this.stream) {
-      this.cleanUp();
-    }
-  }
-  visualize() {
-    this.initCanvas();
-    const pcmData = new Uint8Array(this.analyser.frequencyBinCount);
-    const width = this.canvasWidth;
-    const height = this.canvasHeight;
-    const viewLength = width / (LINE_WIDTH + SPACING) | 0;
-    const viewDuration = MILLIS_PER_BAR * viewLength;
-    this.canvasContext.lineWidth = LINE_WIDTH;
-    this.canvasContext.strokeStyle = BAR_COLOR;
-    let prevBarCount = 0;
-    let volume = 0.0;
-    let countPerBar = 0;
-    const drawFrame = () => {
-      if (!this.startedOn) {
-        return;
-      }
-      window.requestAnimationFrame(drawFrame);
-      const duration = this.durationMillis + (Date.now() - this.startedOn);
-      this.setState({
-        duration: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_3__.secondsToTime)(duration / 1000)
-      });
-      if (duration > _config_js__WEBPACK_IMPORTED_MODULE_4__.MAX_DURATION) {
-        this.startedOn = null;
-        this.mediaRecorder.pause();
-        this.durationMillis += Date.now() - this.startedOn;
-        this.setState({
-          enabled: false,
-          recording: false,
-          duration: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_3__.secondsToTime)(this.durationMillis / 1000)
-        });
-      }
-      this.analyser.getByteTimeDomainData(pcmData);
-      let amp = 0.0;
-      for (const amplitude of pcmData) {
-        amp += (amplitude - 127) ** 2;
-      }
-      volume += Math.sqrt(amp / pcmData.length);
-      countPerBar++;
-      let barCount = duration / MILLIS_PER_BAR | 0;
-      const dx = viewDuration > duration ? 0 : (duration - MILLIS_PER_BAR * barCount) / MILLIS_PER_BAR * (LINE_WIDTH + SPACING);
-      if (prevBarCount != barCount) {
-        prevBarCount = barCount;
-        this.viewBuffer.push(volume / countPerBar);
-        volume = 0.0;
-        countPerBar = 0;
-        if (this.viewBuffer.length > viewLength) {
-          this.viewBuffer.shift();
-        }
-      }
-      this.canvasContext.clearRect(0, 0, width, height);
-      this.canvasContext.beginPath();
-      for (let i = 0; i < this.viewBuffer.length; i++) {
-        let x = i * (LINE_WIDTH + SPACING) - dx;
-        let y = Math.min(this.viewBuffer[i] / BAR_SCALE, 0.9) * height;
-        this.canvasContext.moveTo(x, (height - y) * 0.5);
-        this.canvasContext.lineTo(x, height * 0.5 + y * 0.5);
-      }
-      this.canvasContext.stroke();
-    };
-    drawFrame();
-  }
-  handlePause(e) {
-    e.preventDefault();
-    this.mediaRecorder.pause();
-    this.mediaRecorder.requestData();
-    this.durationMillis += Date.now() - this.startedOn;
-    this.startedOn = null;
-    this.setState({
-      recording: false
-    });
-  }
-  handleResume(e) {
-    e.preventDefault();
-    if (this.state.enabled) {
-      this.startedOn = Date.now();
-      this.mediaRecorder.resume();
-      this.setState({
-        recording: true
-      }, this.visualize);
-    }
-  }
-  handleDelete(e) {
-    e.preventDefault();
-    this.durationMillis = 0;
-    this.startedOn = null;
-    this.mediaRecorder.stop();
-    this.cleanUp();
-    this.setState({
-      recording: false
-    });
-  }
-  handleDone(e) {
-    e.preventDefault();
-    this.setState({
-      recording: false
-    });
-    if (this.startedOn) {
-      this.durationMillis += Date.now() - this.startedOn;
-      this.startedOn = null;
-    }
-    if (this.mediaRecorder) {
-      this.mediaRecorder.stop();
-    }
-  }
-  initCanvas() {
-    this.canvasRef.current.width = this.canvasRef.current.offsetWidth * CANVAS_UPSCALING;
-    this.canvasRef.current.height = this.canvasRef.current.offsetHeight * CANVAS_UPSCALING;
-    this.canvasContext = this.canvasRef.current.getContext('2d');
-    this.canvasContext.lineCap = 'round';
-    this.canvasContext.translate(0.5, 0.5);
-    this.canvasWidth = this.canvasRef.current.width;
-    this.canvasHeight = this.canvasRef.current.height;
-  }
-  initMediaRecording(stream) {
-    this.stream = stream;
-    this.mediaRecorder = new MediaRecorder(stream, {
-      mimeType: AUDIO_MIME_TYPE,
-      audioBitsPerSecond: 24_000
-    });
-    this.audioContext = new AudioContext();
-    this.audioInput = this.audioContext.createMediaStreamSource(stream);
-    this.analyser = this.audioContext.createAnalyser();
-    this.analyser.fftSize = BUFFER_SIZE;
-    this.audioInput.connect(this.analyser);
-    this.mediaRecorder.onstop = _ => {
-      if (this.durationMillis > _config_js__WEBPACK_IMPORTED_MODULE_4__.MIN_DURATION) {
-        this.getRecording(this.mediaRecorder.mimeType, this.durationMillis).then(result => this.props.onFinished(result.url, result.preview, this.durationMillis));
-      } else {
-        this.props.onDeleted();
-      }
-      this.cleanUp();
-    };
-    this.mediaRecorder.ondataavailable = e => {
-      if (e.data.size > 0) {
-        this.audioChunks.push(e.data);
-      }
-      if (this.mediaRecorder.state != 'inactive') {
-        this.getRecording(this.mediaRecorder.mimeType).then(result => {
-          this.setState({
-            blobUrl: result.url,
-            preview: result.preview
-          });
-        });
-      }
-    };
-    this.durationMillis = 0;
-    this.startedOn = Date.now();
-    this.mediaRecorder.start();
-    this.visualize();
-  }
-  getRecording(mimeType, duration) {
-    let blob = new Blob(this.audioChunks, {
-      type: mimeType || AUDIO_MIME_TYPE
-    });
-    return (duration > 0 ? ysFixWebmDuration(blob, duration, {
-      logger: false
-    }) : Promise.resolve(blob)).then(fixedBlob => {
-      blob = fixedBlob;
-      return fixedBlob.arrayBuffer();
-    }).then(arrayBuff => this.audioContext.decodeAudioData(arrayBuff)).then(decoded => this.createPreview(decoded)).then(preview => ({
-      url: window.URL.createObjectURL(blob),
-      preview: (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_2__.intArrayToBase64)(preview)
-    }));
-  }
-  createPreview(audio) {
-    const data = audio.getChannelData(0);
-    const viewLength = Math.min(data.length, VISUALIZATION_BARS);
-    const totalSPB = data.length / viewLength | 0;
-    const samplingRate = Math.max(1, totalSPB / MAX_SAMPLES_PER_BAR | 0);
-    let buffer = [];
-    let max = -1;
-    for (let i = 0; i < viewLength; i++) {
-      let amplitude = 0;
-      let count = 0;
-      for (let j = 0; j < totalSPB; j += samplingRate) {
-        amplitude += data[totalSPB * i + j] ** 2;
-        count++;
-      }
-      const val = Math.sqrt(amplitude / count);
-      buffer.push(val);
-      max = Math.max(max, val);
-    }
-    if (max > 0) {
-      buffer = buffer.map(a => 100 * a / max | 0);
-    }
-    return buffer;
-  }
-  cleanUp() {
-    this.audioInput.disconnect();
-    this.stream.getTracks().forEach(track => track.stop());
-  }
-  render() {
-    const resumeClass = 'material-icons ' + (this.state.enabled ? 'red' : 'gray');
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "audio"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: this.handleDelete,
-      title: "Delete"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons gray"
-    }, "delete_outline")), this.state.recording ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("canvas", {
-      ref: this.canvasRef
-    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_audio_player_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
-      src: this.state.blobUrl,
-      preview: this.state.preview,
-      duration: this.durationMillis,
-      short: true
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "duration"
-    }, this.state.duration), this.state.recording ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: this.handlePause,
-      title: "Pause"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, "pause_circle_outline")) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: this.handleResume,
-      title: "Resume"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: resumeClass
-    }, "radio_button_checked")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: this.handleDone,
-      title: "Send"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons"
-    }, "send")));
-  }
-}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(AudioPlayer));
 
 /***/ }),
 
@@ -10397,7 +10432,7 @@ class CallIncoming extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     if (!topic) {
       return;
     }
-    this.resetDesc(topic, this.props);
+    this.resetDesc(topic);
     if (this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_INCOMING_RECEIVED) {
       RING_SOUND.play().catch(_ => {});
       this.ringTimer = setInterval(_ => {
@@ -10436,9 +10471,7 @@ class CallIncoming extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     });
     topic.onMetaDesc = this.previousMetaDesc;
   }
-  resetDesc(topic, props) {
-    const defacs = topic.getDefaultAccess() || {};
-    const acs = topic.getAccessMode();
+  resetDesc(topic) {
     const badges = [];
     if (topic.trusted) {
       for (const [key, val] of Object.entries(topic.trusted)) {
@@ -10458,7 +10491,7 @@ class CallIncoming extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     if (!topic) {
       return;
     }
-    this.resetDesc(topic, this.props);
+    this.resetDesc(topic);
     if (this.previousMetaDesc && this.previousMetaDesc != this.onMetaDesc) {
       this.previousMetaDesc(desc);
     }
@@ -10733,7 +10766,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   }
   start() {
     if (this.state.localStream) {
-      this.props.onError(this.props.intl.formatMessage(messages.already_in_call));
+      this.props.onError(this.props.intl.formatMessage(messages.already_in_call), 'info');
       return;
     }
     if (this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_IN_PROGRESS) {
@@ -10815,7 +10848,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     this.state.pc.setRemoteDescription(desc).then(_ => {
       this.setState({
         callInitialSetupComplete: true
-      }, () => this.drainRemoteIceCandidatesCache());
+      }, _ => this.drainRemoteIceCandidatesCache());
     }).catch(this.reportError);
   }
   reportError(err) {
@@ -10912,7 +10945,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       this.props.onSendAnswer(this.props.topic, this.props.seq, pc.localDescription.toJSON());
       this.setState({
         callInitialSetupComplete: true
-      }, () => this.drainRemoteIceCandidatesCache());
+      }, _ => this.drainRemoteIceCandidatesCache());
     }).catch(this.handleGetUserMediaError);
   }
   handleRemoteHangup() {
@@ -11082,6 +11115,14 @@ class CallStatus extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
           });
           break;
       }
+    } else if (this.props.callState == 'started' && !this.props.duration) {
+      duration = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+        id: "call_in_progress",
+        defaultMessage: [{
+          "type": 0,
+          "value": "in progress"
+        }]
+      });
     } else {
       duration = react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_2__.secondsToTime)(this.props.duration / 1000));
     }
@@ -11137,7 +11178,8 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     if (props.uploader) {
       props.uploader.onProgress = this.handleProgress.bind(this);
     }
-    this.handleImagePreview = this.handleImagePreview.bind(this);
+    this.handleExpandImage = this.handleExpandImage.bind(this);
+    this.handlePlayVideo = this.handlePlayVideo.bind(this);
     this.handleFormButtonClick = this.handleFormButtonClick.bind(this);
     this.handleContextClick = this.handleContextClick.bind(this);
     this.handleCancelUpload = this.handleCancelUpload.bind(this);
@@ -11146,18 +11188,33 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       formatMessage: props.intl.formatMessage.bind(props.intl),
       viewportWidth: props.viewportWidth,
       authorizeURL: props.tinode.authorizeURL.bind(props.tinode),
-      onImagePreview: this.handleImagePreview,
+      onImagePreview: this.handleExpandImage,
+      onVideoPreview: this.handlePlayVideo,
       onFormButtonClick: this.handleFormButtonClick,
       onQuoteClick: this.handleQuoteClick
     };
   }
-  handleImagePreview(e) {
+  handleExpandImage(e) {
     e.preventDefault();
-    this.props.onImagePreview({
+    this.props.onExpandMedia({
       url: e.target.src,
-      filename: e.target.title,
+      filename: e.target.dataset.name,
       width: e.target.dataset.width,
       height: e.target.dataset.height,
+      size: e.target.dataset.size,
+      type: e.target.dataset.mime
+    });
+  }
+  handlePlayVideo(e) {
+    e.preventDefault();
+    this.props.onExpandMedia({
+      video: true,
+      url: e.target.dataset.src,
+      preview: e.target.src,
+      filename: e.target.dataset.name,
+      width: e.target.dataset.width,
+      height: e.target.dataset.height,
+      duration: e.target.dataset.duration,
       size: e.target.dataset.size,
       type: e.target.dataset.mime
     });
@@ -11184,18 +11241,36 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     if (this.props.received == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_FAILED) {
       menuItems.push('menu_item_send_retry');
     }
-    if (this.props.userIsWriter && this.props.received > tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_FAILED && this.props.received < tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_DEL_RANGE) {
+    if (this.props.userIsWriter && this.props.received > tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_FAILED) {
       menuItems.push('menu_item_reply');
+      if (!this.props.response) {
+        let immutable = false;
+        tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.entities(this.props.content, (_0, _1, tp) => {
+          immutable = ['AU', 'EX', 'FM', 'IM', 'VC', 'VD'].includes(tp);
+          return immutable;
+        });
+        if (!immutable) {
+          tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.styles(this.props.content, tp => {
+            immutable = ['QQ'].includes(tp);
+            return immutable;
+          });
+        }
+        if (!immutable) {
+          menuItems.push('menu_item_edit');
+        }
+      }
     }
     menuItems.push('menu_item_forward');
     this.props.showContextMenu({
       seq: this.props.seq,
+      replace: this.props.edited ? parseInt(this.props.edited.split(':')[1]) : 0,
       content: this.props.content,
       userFrom: this.props.userFrom,
       userName: this.props.userName,
       y: e.pageY,
       x: e.pageX,
-      pickReply: this.props.pickReply
+      pickReply: this.props.pickReply,
+      editMessage: this.props.editMessage
     }, menuItems);
   }
   handleProgress(ratio) {
@@ -11241,18 +11316,6 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
       }, this);
       const tree = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__.fullFormatter, this.formatterContext);
       content = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, tree);
-    } else if (this.props.deleted) {
-      content = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        className: "material-icons gray"
-      }, "block"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        className: "gray"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-        id: "deleted_content",
-        defaultMessage: [{
-          "type": 0,
-          "value": "content deleted"
-        }]
-      })));
     } else if (typeof content != 'string') {
       content = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
         className: "material-icons gray"
@@ -11283,6 +11346,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "message-content"
     }, content, attachments), this.props.timestamp ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_received_marker_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      edited: this.props.edited,
       timestamp: this.props.timestamp,
       received: this.props.received
     }) : null), this.props.showContextMenu ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
@@ -11764,7 +11828,7 @@ class ContactList extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
           let previewIsResponse;
           let deliveryStatus;
           if (!this.props.showMode && c.latestMessage) {
-            const msg = c.latestMessage(true);
+            const msg = c.latestMessage();
             if (msg) {
               forwarded = msg.head ? msg.head.forwarded : null;
               deliveryStatus = msg._status || c.msgStatus(msg, true);
@@ -12093,6 +12157,13 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
       "value": "Forward"
     }]
   },
+  edit: {
+    id: "menu_item_edit",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Edit"
+    }]
+  },
   topic_delete: {
     id: "menu_item_delete_topic",
     defaultMessage: [{
@@ -12236,7 +12307,14 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
       'menu_item_forward': {
         id: 'menu_item_forward',
         title: formatMessage(messages.forward),
-        handler: () => {}
+        handler: _ => {}
+      },
+      'menu_item_edit': {
+        id: 'menu_item_edit',
+        title: formatMessage(messages.edit),
+        handler: (params, errorHandler) => {
+          return this.editMessage(params, errorHandler);
+        }
       },
       'topic_unmute': {
         id: 'topic_unmute',
@@ -12257,19 +12335,17 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         id: 'topic_block',
         title: formatMessage(messages.block),
         handler: (params, errorHandler) => {
-          return props.onShowAlert(formatMessage(messages.block), formatMessage(messages.topic_block_warning), () => {
-            return this.topicPermissionSetter('-JP', params, errorHandler).then(ctrl => {
-              this.props.onTopicRemoved(params.topicName);
-              return ctrl;
-            });
-          }, null, true, null);
+          return props.onShowAlert(formatMessage(messages.block), formatMessage(messages.topic_block_warning), _ => this.topicPermissionSetter('-JP', params, errorHandler).then(ctrl => {
+            this.props.onTopicRemoved(params.topicName);
+            return ctrl;
+          }), null, true, null);
         }
       },
       'topic_delete': {
         id: 'topic_delete',
         title: formatMessage(messages.topic_delete),
         handler: (params, errorHandler) => {
-          return props.onShowAlert(formatMessage(messages.topic_delete), formatMessage(messages.topic_delete_warning), () => {
+          return props.onShowAlert(formatMessage(messages.topic_delete), formatMessage(messages.topic_delete_warning), _ => {
             const topic = this.props.tinode.getTopic(params.topicName);
             if (!topic) {
               console.warn("Topic not found: ", params.topicName);
@@ -12402,7 +12478,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     if (!all && topic.cancelSend(params.seq)) {
       return;
     }
-    const promise = all ? topic.delMessagesAll(hard) : topic.delMessagesList([params.seq], hard);
+    const promise = all ? topic.delMessagesAll(hard) : params.replace > 0 ? topic.delMessagesEdits(params.replace, hard) : topic.delMessagesList([params.seq], hard);
     return promise.catch(err => {
       if (errorHandler) {
         errorHandler(err.message, 'err');
@@ -12429,14 +12505,15 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     }
     let result = topic.updateMode(params.user, mode);
     if (errorHandler) {
-      result = result.catch(err => {
-        errorHandler(err.message, 'err');
-      });
+      result = result.catch(err => errorHandler(err.message, 'err'));
     }
     return result;
   }
   replyToMessage(params, errorHandler) {
     params.pickReply(params.seq, params.content, params.userFrom, params.userName, errorHandler);
+  }
+  editMessage(params, errorHandler) {
+    params.editMessage(params.replace || params.seq, params.content, errorHandler);
   }
   render() {
     const menu = [];
@@ -13432,7 +13509,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/send-message.jsx */ "./src/widgets/send-message.jsx");
+/* harmony import */ var _send_message_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./send-message.jsx */ "./src/widgets/send-message.jsx");
 /* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
 /* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
 /* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
@@ -13480,16 +13557,16 @@ class ImagePreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
     size.maxWidth = '100%';
     size.maxHeight = '100%';
     const maxlength = Math.max((this.state.width / _config_js__WEBPACK_IMPORTED_MODULE_3__.REM_SIZE / 1.5 | 0) - 2, 12);
-    const fname = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__.shortenFileName)(this.props.content.name, maxlength) || '-';
+    const fname = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_5__.shortenFileName)(this.props.content.filename, maxlength) || '-';
     const width = this.props.content.width || '-';
     const height = this.props.content.height || '-';
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "image-preview"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "image-preview-caption-panel"
-    }, !this.props.onSendMessage ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    }, this.props.onSendMessage ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, fname) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: this.props.content.url,
-      download: true
+      download: this.props.content.filename
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, "file_download"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
@@ -13498,7 +13575,7 @@ class ImagePreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
         "type": 0,
         "value": "download"
       }]
-    })) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, fname), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: e => {
         e.preventDefault();
@@ -13513,8 +13590,8 @@ class ImagePreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       src: this.props.content.url,
       style: size,
       className: "image-preview",
-      alt: this.props.content.name
-    })), this.props.onSendMessage ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_send_message_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      alt: this.props.content.filename
+    })), this.props.onSendMessage ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_send_message_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
       messagePrompt: "add_image_caption",
       acceptBlank: true,
       tinode: this.props.tinode,
@@ -13531,7 +13608,7 @@ class ImagePreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
         "value": "File name:"
       }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
-      title: this.props.content.name
+      title: this.props.content.filename
     }, fname))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_content_type",
       defaultMessage: [{
@@ -13609,7 +13686,7 @@ class InPlaceEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     if (!this.props.readOnly) {
       this.setState({
         active: true
-      }, () => {
+      }, _ => {
         if (this.selfRef.current) {
           this.selfRef.current.focus();
         }
@@ -13681,6 +13758,50 @@ class InPlaceEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
     attr.autoComplete = this.props.autoComplete;
     attr.autoFocus = true;
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(element, attr, null);
+  }
+}
+;
+
+/***/ }),
+
+/***/ "./src/widgets/inline-video.jsx":
+/*!**************************************!*\
+  !*** ./src/widgets/inline-video.jsx ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ InlineVideo)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+
+
+class InlineVideo extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
+  constructor(props) {
+    super(props);
+    this.videoRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
+    this.handleClick = this.handleClick.bind(this);
+  }
+  handleClick(e) {
+    if (this.props.onClick) {
+      this.props.onClick(e);
+    }
+  }
+  render() {
+    const duration = (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_1__.secondsToTime)(this.props['data-duration'] / 1000);
+    const className = 'inline-video' + (this.props.onClick ? ' image-clickable' : '');
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: className
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement('img', this.props), this.props.onClick ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "play-control"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons white bigger"
+    }, "play_arrow")) : null, duration ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "duration"
+    }, duration) : null);
   }
 }
 ;
@@ -13777,15 +13898,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-
 
 class LazyImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
     this.state = {
-      src: 'img/placeholder.png',
+      src: this.props.isvideo ? 'img/blankvid.png' : 'img/blankimg.png',
       style: Object.assign({
         padding: '4px'
       }, this.props.style),
@@ -13801,8 +13919,8 @@ class LazyImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
         ...this.state.style,
         padding: 0
       }
-    })).catch(() => this.setState({
-      src: 'img/broken_image.png'
+    })).catch(_ => this.setState({
+      src: this.props.isvideo ? 'img/broken_video.png' : 'img/broken_image.png'
     }));
   }
   componentWillUnmount() {
@@ -13811,7 +13929,7 @@ class LazyImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   componentDidUpdate(prevProps) {
     if (prevProps.whenDone != this.props.whenDone) {
       this.setState({
-        src: 'img/placeholder.png',
+        src: this.props.isvideo ? 'img/blankvid.png' : 'img/blankimg.png',
         style: {
           ...this.state.style,
           padding: '4px'
@@ -13823,8 +13941,8 @@ class LazyImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
           ...this.state.style,
           padding: 0
         }
-      })).catch(() => this.setState({
-        src: 'img/broken_image.png'
+      })).catch(_ => this.setState({
+        src: this.props.isvideo ? 'img/broken_video.png' : 'img/broken_image.png'
       }));
     }
   }
@@ -14040,9 +14158,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-
 
 class MetaMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
@@ -14051,20 +14166,7 @@ class MetaMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
   render() {
     let content = null;
     let bubbleClass = 'bubble';
-    if (this.props.deleted) {
-      content = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        className: "material-icons gray"
-      }, "block"), " ", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-        className: "gray"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-        id: "deleted_content",
-        defaultMessage: [{
-          "type": 0,
-          "value": "content deleted"
-        }]
-      })));
-      bubbleClass += ' deleted';
-    } else if (this.props.date) {
+    if (this.props.date) {
       content = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, this.props.date);
       bubbleClass += ' date';
     }
@@ -14755,6 +14857,13 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
       "type": 0,
       "value": "failed"
     }]
+  },
+  message_edited_marker: {
+    id: "message_edited_marker",
+    defaultMessage: [{
+      "type": 0,
+      "value": ", edited"
+    }]
   }
 });
 class ReceivedMarker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -14776,9 +14885,10 @@ class ReceivedMarker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     const marker = icon ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: 'material-icons small ' + icon.color
     }, icon.name) : null;
+    const edited = this.props.edited ? formatMessage(messages.message_edited_marker) : null;
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       className: "timestamp"
-    }, timestamp, '\u00a0', marker);
+    }, timestamp, edited, '\u00a0', marker);
   }
 }
 ;
@@ -14899,14 +15009,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _audio_recorder_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./audio-recorder.jsx */ "./src/widgets/audio-recorder.jsx");
-/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
-/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
-/* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config.js */ "./src/config.js");
+/* harmony import */ var _lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/blob-helpers.js */ "./src/lib/blob-helpers.js");
+/* harmony import */ var _lib_formatters_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../lib/formatters.js */ "./src/lib/formatters.js");
 
 
 
-
+const AudioRecorder = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_webm-duration-fix_lib_index_js"), __webpack_require__.e("src_widgets_audio-recorder_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./audio-recorder.jsx */ "./src/widgets/audio-recorder.jsx")));
 
 
 
@@ -14957,6 +15066,34 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
       "type": 0,
       "value": "Cannot initiate file upload."
     }]
+  },
+  icon_title_record_voice: {
+    id: "icon_title_record_voice",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Record voice message"
+    }]
+  },
+  icon_title_attach_file: {
+    id: "icon_title_attach_file",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Attach file"
+    }]
+  },
+  icon_title_add_image: {
+    id: "icon_title_add_image",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Add image"
+    }]
+  },
+  icon_title_send: {
+    id: "icon_title_send",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Send message"
+    }]
   }
 });
 class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -14966,9 +15103,9 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       quote: null,
       message: '',
       audioRec: false,
-      audioAvailable: !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia),
-      keypressTimestamp: new Date().getTime() - _config_js__WEBPACK_IMPORTED_MODULE_4__.KEYPRESS_DELAY - 1
+      audioAvailable: !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
     };
+    this.keypressTimestamp = 0;
     this.handlePasteEvent = this.handlePasteEvent.bind(this);
     this.handleAttachImage = this.handleAttachImage.bind(this);
     this.handleAttachFile = this.handleAttachFile.bind(this);
@@ -14976,6 +15113,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     this.handleSend = this.handleSend.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleMessageTyping = this.handleMessageTyping.bind(this);
+    this.handleDropAttach = this.handleDropAttach.bind(this);
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
     this.formatReply = this.formatReply.bind(this);
   }
@@ -14998,9 +15136,17 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     }
     if (prevProps.topicName != this.props.topicName) {
       this.setState({
-        message: '',
+        message: this.props.initMessage || '',
         audioRec: false,
         quote: null
+      });
+    } else if (prevProps.initMessage != this.props.initMessage) {
+      const msg = this.props.initMessage || '';
+      this.setState({
+        message: msg
+      }, _ => {
+        this.messageEditArea.scrollTop = this.messageEditArea.scrollHeight;
+        this.messageEditArea.setSelectionRange(msg.length, msg.length);
       });
     }
     if (prevProps.reply != this.props.reply) {
@@ -15010,7 +15156,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     }
   }
   formatReply() {
-    return this.props.reply ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(this.props.reply.content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_6__.replyFormatter, {
+    return this.props.reply ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(this.props.reply.content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_5__.replyFormatter, {
       formatMessage: this.props.intl.formatMessage.bind(this.props.intl),
       authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
     }) : null;
@@ -15019,7 +15165,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     if (this.props.disabled) {
       return;
     }
-    if ((0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_5__.filePasted)(e, file => {
+    if ((0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_4__.filePasted)(e, file => {
       this.props.onAttachImage(file);
     }, file => {
       this.props.onAttachFile(file);
@@ -15038,6 +15184,11 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       this.props.onAttachFile(e.target.files[0]);
     }
     e.target.value = '';
+  }
+  handleDropAttach(files) {
+    if (files && files.length > 0) {
+      this.props.onAttachFile(files[0]);
+    }
   }
   handleAttachAudio(url, preview, duration) {
     this.setState({
@@ -15070,17 +15221,16 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     }
   }
   handleMessageTyping(e) {
-    const newState = {
+    this.setState({
       message: e.target.value
-    };
+    });
     if (this.props.onKeyPress) {
       const now = new Date().getTime();
-      if (now - this.state.keypressTimestamp > _config_js__WEBPACK_IMPORTED_MODULE_4__.KEYPRESS_DELAY) {
+      if (now - this.keypressTimestamp > _config_js__WEBPACK_IMPORTED_MODULE_3__.KEYPRESS_DELAY) {
         this.props.onKeyPress();
-        newState.keypressTimestamp = now;
+        this.keypressTimestamp = now;
       }
     }
-    this.setState(newState);
   }
   handleQuoteClick(e) {
     e.preventDefault();
@@ -15095,6 +15245,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       formatMessage
     } = this.props.intl;
     const prompt = this.props.disabled ? formatMessage(messages.messaging_disabled) : this.props.messagePrompt ? formatMessage(messages[this.props.messagePrompt]) : formatMessage(messages.type_new_message);
+    const sendIcon = this.props.reply && this.props.reply.editing ? 'check_circle' : 'send';
     const quote = this.state.quote ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "reply-quote-preview"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -15119,7 +15270,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
         e.preventDefault();
         this.attachImage.click();
       },
-      title: "Add image"
+      title: formatMessage(messages.icon_title_add_image)
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons secondary"
     }, "photo")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
@@ -15128,17 +15279,20 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
         e.preventDefault();
         this.attachFile.click();
       },
-      title: "Attach file"
+      title: formatMessage(messages.icon_title_attach_file)
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons secondary"
     }, "attach_file"))) : null, this.props.noInput ? quote || react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "hr thin"
-    }) : this.state.audioRec ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_audio_recorder_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    }) : this.state.audioRec ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
+      fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Loading...")
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(AudioRecorder, {
+      onRecordingProgress: _ => this.props.onKeyPress(true),
       onDeleted: _ => this.setState({
         audioRec: false
       }),
       onFinished: this.handleAttachAudio
-    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("textarea", {
+    })) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("textarea", {
       id: "sendMessage",
       placeholder: prompt,
       value: this.state.message,
@@ -15151,10 +15305,10 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     }), this.state.message || !audioEnabled ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: this.handleSend,
-      title: "Send"
+      title: formatMessage(messages.icon_title_send)
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
-    }, "send")) : !this.state.audioRec ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+    }, sendIcon)) : !this.state.audioRec ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: e => {
         e.preventDefault();
@@ -15162,7 +15316,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
           audioRec: true
         });
       },
-      title: "Voice"
+      title: formatMessage(messages.icon_title_record_voice)
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, "mic")) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
@@ -15179,7 +15333,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       ref: ref => {
         this.attachImage = ref;
       },
-      accept: "image/*",
+      accept: "image/*, video/*",
       onChange: this.handleAttachImage,
       style: {
         display: 'none'
@@ -16111,36 +16265,28 @@ class TopicSecurity extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     const {
       formatMessage
     } = this.props.intl;
-    this.props.onShowAlert(formatMessage(messages.topic_delete), formatMessage(messages.topic_delete_warning), () => {
-      this.props.onDeleteTopic(this.props.topic);
-    }, null, true, null);
+    this.props.onShowAlert(formatMessage(messages.topic_delete), formatMessage(messages.topic_delete_warning), _ => this.props.onDeleteTopic(this.props.topic), null, true, null);
   }
   handleDeleteMessages(e) {
     e.preventDefault();
     const {
       formatMessage
     } = this.props.intl;
-    this.props.onShowAlert(formatMessage(this.props.deleter ? messages.delete_messages : messages.clear_messages), formatMessage(this.props.deleter ? messages.delete_messages_warning : messages.clear_messages_warning), () => {
-      this.props.onDeleteMessages(this.props.topic);
-    }, null, true, null);
+    this.props.onShowAlert(formatMessage(this.props.deleter ? messages.delete_messages : messages.clear_messages), formatMessage(this.props.deleter ? messages.delete_messages_warning : messages.clear_messages_warning), _ => this.props.onDeleteMessages(this.props.topic), null, true, null);
   }
   handleLeave(e) {
     e.preventDefault();
     const {
       formatMessage
     } = this.props.intl;
-    this.props.onShowAlert(formatMessage(messages.leave_chat), formatMessage(messages.leave_chat_warning), () => {
-      this.props.onLeaveTopic(this.props.topic);
-    }, null, true, null);
+    this.props.onShowAlert(formatMessage(messages.leave_chat), formatMessage(messages.leave_chat_warning), _ => this.props.onLeaveTopic(this.props.topic), null, true, null);
   }
   handleBlock(e) {
     e.preventDefault();
     const {
       formatMessage
     } = this.props.intl;
-    this.props.onShowAlert(formatMessage(messages.block_contact), formatMessage(messages.block_contact_warning), () => {
-      this.props.onBlockTopic(this.props.topic);
-    }, null, true, null);
+    this.props.onShowAlert(formatMessage(messages.block_contact), formatMessage(messages.block_contact_warning), _ => this.props.onBlockTopic(this.props.topic), null, true, null);
   }
   handleReport(e) {
     e.preventDefault();
@@ -16309,10 +16455,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
-/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _file_progress_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./file-progress.jsx */ "./src/widgets/file-progress.jsx");
-
+/* harmony import */ var _file_progress_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./file-progress.jsx */ "./src/widgets/file-progress.jsx");
 
 
 class UploadingImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -16324,13 +16467,138 @@ class UploadingImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       className: "inline-image"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement('img', this.props), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "rounded-container"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_file_progress_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_file_progress_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
       progress: this.props.progress,
       onCancel: this.props.onCancelUpload
     })));
   }
 }
 ;
+
+/***/ }),
+
+/***/ "./src/widgets/video-preview.jsx":
+/*!***************************************!*\
+  !*** ./src/widgets/video-preview.jsx ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _send_message_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./send-message.jsx */ "./src/widgets/send-message.jsx");
+/* harmony import */ var _lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/strformat.js */ "./src/lib/strformat.js");
+
+
+
+
+const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
+  unrecognized_video_format: {
+    id: "unrecognized_video_format",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Format of this video is not recognized"
+    }]
+  }
+});
+class VideoPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
+  constructor(props) {
+    super(props);
+    this.videoRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
+    this.handleSendVideo = this.handleSendVideo.bind(this);
+  }
+  handleSendVideo(caption) {
+    this.props.onClose();
+    const params = {
+      width: this.videoRef.current.videoWidth,
+      height: this.videoRef.current.videoHeight,
+      duration: this.videoRef.current.duration * 1000 | 0,
+      mime: this.props.content.mime,
+      name: this.props.content.filename
+    };
+    if (params.width == 0 || params.height == 0) {
+      this.props.onError(this.props.intl.formatMessage(messages.unrecognized_video_format), 'err');
+      return;
+    }
+    const canvas = document.createElement('canvas');
+    canvas.width = params.width;
+    canvas.height = params.height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(this.videoRef.current, 0, 0, canvas.width, canvas.height);
+    ctx.canvas.toBlob(preview => this.props.onSendMessage(caption, this.props.content.blob, preview, params), 'image/jpeg', 0.75);
+  }
+  render() {
+    if (!this.props.content) {
+      return null;
+    }
+    const width = this.props.content.width || '-';
+    const height = this.props.content.height || '-';
+    const controlist = this.props.onSendMessage ? 'nodownload' : '';
+    const autoPlay = !this.props.onSendMessage;
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "image-preview"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "image-preview-caption-panel"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, this.props.content.filename), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+      href: "#",
+      onClick: e => {
+        e.preventDefault();
+        this.props.onClose();
+      }
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons gray"
+    }, "close"))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "image-preview-container"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
+      className: "image-preview",
+      controls: true,
+      controlsList: controlist,
+      disablePictureInPicture: true,
+      ref: this.videoRef,
+      autoPlay: autoPlay,
+      src: this.props.tinode.authorizeURL(this.props.content.url),
+      poster: this.props.content.preview,
+      alt: this.props.content.filename
+    })), this.props.onSendMessage ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_send_message_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      messagePrompt: "add_image_caption",
+      acceptBlank: true,
+      tinode: this.props.tinode,
+      reply: this.props.reply,
+      onCancelReply: this.props.onCancelReply,
+      onSendMessage: this.handleSendVideo,
+      onError: this.props.onError
+    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      id: "image-preview-footer"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "label_file_name",
+      defaultMessage: [{
+        "type": 0,
+        "value": "File name:"
+      }]
+    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+      title: this.props.content.filename
+    }, this.props.content.filename))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "label_content_type",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Content type:"
+      }]
+    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.props.content.type)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("b", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "label_size",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Size:"
+      }]
+    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, width, " \xD7 ", height, " px; ", (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_3__.bytesToHumanSize)(this.props.content.size)))));
+  }
+}
+;
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(VideoPreview));
 
 /***/ }),
 
@@ -16395,7 +16663,7 @@ class VisiblePassword extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
   handleEditingFinished(e) {
     if (e) {
       let currentTarget = e.currentTarget;
-      setTimeout(() => {
+      setTimeout(_ => {
         if (!currentTarget.contains(document.activeElement)) {
           if (this.props.onFinished) {
             this.props.onFinished(this.state.value);
@@ -16432,79 +16700,34 @@ class VisiblePassword extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
 
 /***/ }),
 
-/***/ "./node_modules/firebase/app/dist/index.esm.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/firebase/app/dist/index.esm.js ***!
-  \*****************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "FirebaseError": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.FirebaseError),
-/* harmony export */   "SDK_VERSION": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.SDK_VERSION),
-/* harmony export */   "_DEFAULT_ENTRY_NAME": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._DEFAULT_ENTRY_NAME),
-/* harmony export */   "_addComponent": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._addComponent),
-/* harmony export */   "_addOrOverwriteComponent": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._addOrOverwriteComponent),
-/* harmony export */   "_apps": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._apps),
-/* harmony export */   "_clearComponents": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._clearComponents),
-/* harmony export */   "_components": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._components),
-/* harmony export */   "_getProvider": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._getProvider),
-/* harmony export */   "_registerComponent": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._registerComponent),
-/* harmony export */   "_removeServiceInstance": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._removeServiceInstance),
-/* harmony export */   "deleteApp": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.deleteApp),
-/* harmony export */   "getApp": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.getApp),
-/* harmony export */   "getApps": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.getApps),
-/* harmony export */   "initializeApp": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.initializeApp),
-/* harmony export */   "onLog": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.onLog),
-/* harmony export */   "registerVersion": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion),
-/* harmony export */   "setLogLevel": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.setLogLevel)
-/* harmony export */ });
-/* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
+/***/ "./node_modules/react-dom/client.js":
+/*!******************************************!*\
+  !*** ./node_modules/react-dom/client.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 
-var name = "firebase";
-var version = "9.14.0";
-
-/**
- * @license
- * Copyright 2020 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-(0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion)(name, version, 'app');
-//# sourceMappingURL=index.esm.js.map
-
-
-/***/ }),
-
-/***/ "./node_modules/firebase/messaging/dist/index.esm.js":
-/*!***********************************************************!*\
-  !*** ./node_modules/firebase/messaging/dist/index.esm.js ***!
-  \***********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "deleteToken": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.deleteToken),
-/* harmony export */   "getMessaging": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.getMessaging),
-/* harmony export */   "getToken": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.getToken),
-/* harmony export */   "isSupported": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.isSupported),
-/* harmony export */   "onMessage": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.onMessage)
-/* harmony export */ });
-/* harmony import */ var _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/messaging */ "./node_modules/@firebase/messaging/dist/esm/index.esm2017.js");
-
-//# sourceMappingURL=index.esm.js.map
+var m = __webpack_require__(/*! react-dom */ "react-dom");
+if (false) {} else {
+  var i = m.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+  exports.createRoot = function(c, o) {
+    i.usingClientEntryPoint = true;
+    try {
+      return m.createRoot(c, o);
+    } finally {
+      i.usingClientEntryPoint = false;
+    }
+  };
+  exports.hydrateRoot = function(c, h, o) {
+    i.usingClientEntryPoint = true;
+    try {
+      return m.hydrateRoot(c, h, o);
+    } finally {
+      i.usingClientEntryPoint = false;
+    }
+  };
+}
 
 
 /***/ }),
@@ -16636,11 +16859,11 @@ class PlatformLoggerServiceImpl {
  */
 function isVersionServiceProvider(provider) {
     const component = provider.getComponent();
-    return (component === null || component === void 0 ? void 0 : component.type) === "VERSION" /* VERSION */;
+    return (component === null || component === void 0 ? void 0 : component.type) === "VERSION" /* ComponentType.VERSION */;
 }
 
 const name$o = "@firebase/app";
-const version$1 = "0.8.4";
+const version$1 = "0.9.0";
 
 /**
  * @license
@@ -16707,7 +16930,7 @@ const name$2 = "@firebase/firestore";
 const name$1 = "@firebase/firestore-compat";
 
 const name = "firebase";
-const version = "9.14.0";
+const version = "9.15.0";
 
 /**
  * @license
@@ -16882,19 +17105,19 @@ function _clearComponents() {
  * limitations under the License.
  */
 const ERRORS = {
-    ["no-app" /* NO_APP */]: "No Firebase App '{$appName}' has been created - " +
+    ["no-app" /* AppError.NO_APP */]: "No Firebase App '{$appName}' has been created - " +
         'call Firebase App.initializeApp()',
-    ["bad-app-name" /* BAD_APP_NAME */]: "Illegal App name: '{$appName}",
-    ["duplicate-app" /* DUPLICATE_APP */]: "Firebase App named '{$appName}' already exists with different options or config",
-    ["app-deleted" /* APP_DELETED */]: "Firebase App named '{$appName}' already deleted",
-    ["no-options" /* NO_OPTIONS */]: 'Need to provide options, when not being deployed to hosting via source.',
-    ["invalid-app-argument" /* INVALID_APP_ARGUMENT */]: 'firebase.{$appName}() takes either no argument or a ' +
+    ["bad-app-name" /* AppError.BAD_APP_NAME */]: "Illegal App name: '{$appName}",
+    ["duplicate-app" /* AppError.DUPLICATE_APP */]: "Firebase App named '{$appName}' already exists with different options or config",
+    ["app-deleted" /* AppError.APP_DELETED */]: "Firebase App named '{$appName}' already deleted",
+    ["no-options" /* AppError.NO_OPTIONS */]: 'Need to provide options, when not being deployed to hosting via source.',
+    ["invalid-app-argument" /* AppError.INVALID_APP_ARGUMENT */]: 'firebase.{$appName}() takes either no argument or a ' +
         'Firebase App instance.',
-    ["invalid-log-argument" /* INVALID_LOG_ARGUMENT */]: 'First argument to `onLog` must be null or a function.',
-    ["idb-open" /* IDB_OPEN */]: 'Error thrown when opening IndexedDB. Original error: {$originalErrorMessage}.',
-    ["idb-get" /* IDB_GET */]: 'Error thrown when reading from IndexedDB. Original error: {$originalErrorMessage}.',
-    ["idb-set" /* IDB_WRITE */]: 'Error thrown when writing to IndexedDB. Original error: {$originalErrorMessage}.',
-    ["idb-delete" /* IDB_DELETE */]: 'Error thrown when deleting from IndexedDB. Original error: {$originalErrorMessage}.'
+    ["invalid-log-argument" /* AppError.INVALID_LOG_ARGUMENT */]: 'First argument to `onLog` must be null or a function.',
+    ["idb-open" /* AppError.IDB_OPEN */]: 'Error thrown when opening IndexedDB. Original error: {$originalErrorMessage}.',
+    ["idb-get" /* AppError.IDB_GET */]: 'Error thrown when reading from IndexedDB. Original error: {$originalErrorMessage}.',
+    ["idb-set" /* AppError.IDB_WRITE */]: 'Error thrown when writing to IndexedDB. Original error: {$originalErrorMessage}.',
+    ["idb-delete" /* AppError.IDB_DELETE */]: 'Error thrown when deleting from IndexedDB. Original error: {$originalErrorMessage}.'
 };
 const ERROR_FACTORY = new _firebase_util__WEBPACK_IMPORTED_MODULE_2__.ErrorFactory('app', 'Firebase', ERRORS);
 
@@ -16923,7 +17146,7 @@ class FirebaseAppImpl {
         this._automaticDataCollectionEnabled =
             config.automaticDataCollectionEnabled;
         this._container = container;
-        this.container.addComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component('app', () => this, "PUBLIC" /* PUBLIC */));
+        this.container.addComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component('app', () => this, "PUBLIC" /* ComponentType.PUBLIC */));
     }
     get automaticDataCollectionEnabled() {
         this.checkDestroyed();
@@ -16960,7 +17183,7 @@ class FirebaseAppImpl {
      */
     checkDestroyed() {
         if (this.isDeleted) {
-            throw ERROR_FACTORY.create("app-deleted" /* APP_DELETED */, { appName: this._name });
+            throw ERROR_FACTORY.create("app-deleted" /* AppError.APP_DELETED */, { appName: this._name });
         }
     }
 }
@@ -16996,13 +17219,13 @@ function initializeApp(_options, rawConfig = {}) {
     const config = Object.assign({ name: DEFAULT_ENTRY_NAME, automaticDataCollectionEnabled: false }, rawConfig);
     const name = config.name;
     if (typeof name !== 'string' || !name) {
-        throw ERROR_FACTORY.create("bad-app-name" /* BAD_APP_NAME */, {
+        throw ERROR_FACTORY.create("bad-app-name" /* AppError.BAD_APP_NAME */, {
             appName: String(name)
         });
     }
     options || (options = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.getDefaultAppConfig)());
     if (!options) {
-        throw ERROR_FACTORY.create("no-options" /* NO_OPTIONS */);
+        throw ERROR_FACTORY.create("no-options" /* AppError.NO_OPTIONS */);
     }
     const existingApp = _apps.get(name);
     if (existingApp) {
@@ -17012,7 +17235,7 @@ function initializeApp(_options, rawConfig = {}) {
             return existingApp;
         }
         else {
-            throw ERROR_FACTORY.create("duplicate-app" /* DUPLICATE_APP */, { appName: name });
+            throw ERROR_FACTORY.create("duplicate-app" /* AppError.DUPLICATE_APP */, { appName: name });
         }
     }
     const container = new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.ComponentContainer(name);
@@ -17058,7 +17281,7 @@ function getApp(name = DEFAULT_ENTRY_NAME) {
         return initializeApp();
     }
     if (!app) {
-        throw ERROR_FACTORY.create("no-app" /* NO_APP */, { appName: name });
+        throw ERROR_FACTORY.create("no-app" /* AppError.NO_APP */, { appName: name });
     }
     return app;
 }
@@ -17130,7 +17353,7 @@ function registerVersion(libraryKeyOrName, version, variant) {
         logger.warn(warning.join(' '));
         return;
     }
-    _registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component(`${library}-version`, () => ({ library, version }), "VERSION" /* VERSION */));
+    _registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component(`${library}-version`, () => ({ library, version }), "VERSION" /* ComponentType.VERSION */));
 }
 /**
  * Sets log handler for all Firebase SDKs.
@@ -17141,7 +17364,7 @@ function registerVersion(libraryKeyOrName, version, variant) {
  */
 function onLog(logCallback, options) {
     if (logCallback !== null && typeof logCallback !== 'function') {
-        throw ERROR_FACTORY.create("invalid-log-argument" /* INVALID_LOG_ARGUMENT */);
+        throw ERROR_FACTORY.create("invalid-log-argument" /* AppError.INVALID_LOG_ARGUMENT */);
     }
     (0,_firebase_logger__WEBPACK_IMPORTED_MODULE_1__.setUserLogHandler)(logCallback, options);
 }
@@ -17193,7 +17416,7 @@ function getDbPromise() {
                 }
             }
         }).catch(e => {
-            throw ERROR_FACTORY.create("idb-open" /* IDB_OPEN */, {
+            throw ERROR_FACTORY.create("idb-open" /* AppError.IDB_OPEN */, {
                 originalErrorMessage: e.message
             });
         });
@@ -17201,7 +17424,6 @@ function getDbPromise() {
     return dbPromise;
 }
 async function readHeartbeatsFromIndexedDB(app) {
-    var _a;
     try {
         const db = await getDbPromise();
         return db
@@ -17214,15 +17436,14 @@ async function readHeartbeatsFromIndexedDB(app) {
             logger.warn(e.message);
         }
         else {
-            const idbGetError = ERROR_FACTORY.create("idb-get" /* IDB_GET */, {
-                originalErrorMessage: (_a = e) === null || _a === void 0 ? void 0 : _a.message
+            const idbGetError = ERROR_FACTORY.create("idb-get" /* AppError.IDB_GET */, {
+                originalErrorMessage: e === null || e === void 0 ? void 0 : e.message
             });
             logger.warn(idbGetError.message);
         }
     }
 }
 async function writeHeartbeatsToIndexedDB(app, heartbeatObject) {
-    var _a;
     try {
         const db = await getDbPromise();
         const tx = db.transaction(STORE_NAME, 'readwrite');
@@ -17235,8 +17456,8 @@ async function writeHeartbeatsToIndexedDB(app, heartbeatObject) {
             logger.warn(e.message);
         }
         else {
-            const idbGetError = ERROR_FACTORY.create("idb-set" /* IDB_WRITE */, {
-                originalErrorMessage: (_a = e) === null || _a === void 0 ? void 0 : _a.message
+            const idbGetError = ERROR_FACTORY.create("idb-set" /* AppError.IDB_WRITE */, {
+                originalErrorMessage: e === null || e === void 0 ? void 0 : e.message
             });
             logger.warn(idbGetError.message);
         }
@@ -17495,8 +17716,8 @@ function countBytes(heartbeatsCache) {
  * limitations under the License.
  */
 function registerCoreComponents(variant) {
-    _registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component('platform-logger', container => new PlatformLoggerServiceImpl(container), "PRIVATE" /* PRIVATE */));
-    _registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component('heartbeat', container => new HeartbeatServiceImpl(container), "PRIVATE" /* PRIVATE */));
+    _registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component('platform-logger', container => new PlatformLoggerServiceImpl(container), "PRIVATE" /* ComponentType.PRIVATE */));
+    _registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component('heartbeat', container => new HeartbeatServiceImpl(container), "PRIVATE" /* ComponentType.PRIVATE */));
     // Register `app` package.
     registerVersion(name$o, version$1, variant);
     // BUILD_TARGET will be replaced by values like esm5, esm2017, cjs5, etc during the compilation
@@ -17553,7 +17774,7 @@ class Component {
          * Properties to be added to the service namespace
          */
         this.serviceProps = {};
-        this.instantiationMode = "LAZY" /* LAZY */;
+        this.instantiationMode = "LAZY" /* InstantiationMode.LAZY */;
         this.onInstanceCreated = null;
     }
     setInstantiationMode(mode) {
@@ -17859,7 +18080,7 @@ class Provider {
     }
     shouldAutoInitialize() {
         return (!!this.component &&
-            this.component.instantiationMode !== "EXPLICIT" /* EXPLICIT */);
+            this.component.instantiationMode !== "EXPLICIT" /* InstantiationMode.EXPLICIT */);
     }
 }
 // undefined should be passed to the service factory for the default instance
@@ -17867,7 +18088,7 @@ function normalizeIdentifierForFactory(identifier) {
     return identifier === DEFAULT_ENTRY_NAME ? undefined : identifier;
 }
 function isComponentEager(component) {
-    return component.instantiationMode === "EAGER" /* EAGER */;
+    return component.instantiationMode === "EAGER" /* InstantiationMode.EAGER */;
 }
 
 /**
@@ -17969,7 +18190,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const name = "@firebase/installations";
-const version = "0.5.16";
+const version = "0.6.0";
 
 /**
  * @license
@@ -18012,18 +18233,18 @@ const SERVICE_NAME = 'Installations';
  * limitations under the License.
  */
 const ERROR_DESCRIPTION_MAP = {
-    ["missing-app-config-values" /* MISSING_APP_CONFIG_VALUES */]: 'Missing App configuration value: "{$valueName}"',
-    ["not-registered" /* NOT_REGISTERED */]: 'Firebase Installation is not registered.',
-    ["installation-not-found" /* INSTALLATION_NOT_FOUND */]: 'Firebase Installation not found.',
-    ["request-failed" /* REQUEST_FAILED */]: '{$requestName} request failed with error "{$serverCode} {$serverStatus}: {$serverMessage}"',
-    ["app-offline" /* APP_OFFLINE */]: 'Could not process request. Application offline.',
-    ["delete-pending-registration" /* DELETE_PENDING_REGISTRATION */]: "Can't delete installation while there is a pending registration request."
+    ["missing-app-config-values" /* ErrorCode.MISSING_APP_CONFIG_VALUES */]: 'Missing App configuration value: "{$valueName}"',
+    ["not-registered" /* ErrorCode.NOT_REGISTERED */]: 'Firebase Installation is not registered.',
+    ["installation-not-found" /* ErrorCode.INSTALLATION_NOT_FOUND */]: 'Firebase Installation not found.',
+    ["request-failed" /* ErrorCode.REQUEST_FAILED */]: '{$requestName} request failed with error "{$serverCode} {$serverStatus}: {$serverMessage}"',
+    ["app-offline" /* ErrorCode.APP_OFFLINE */]: 'Could not process request. Application offline.',
+    ["delete-pending-registration" /* ErrorCode.DELETE_PENDING_REGISTRATION */]: "Can't delete installation while there is a pending registration request."
 };
 const ERROR_FACTORY = new _firebase_util__WEBPACK_IMPORTED_MODULE_2__.ErrorFactory(SERVICE, SERVICE_NAME, ERROR_DESCRIPTION_MAP);
 /** Returns true if error is a FirebaseError that is based on an error from the server. */
 function isServerError(error) {
     return (error instanceof _firebase_util__WEBPACK_IMPORTED_MODULE_2__.FirebaseError &&
-        error.code.includes("request-failed" /* REQUEST_FAILED */));
+        error.code.includes("request-failed" /* ErrorCode.REQUEST_FAILED */));
 }
 
 /**
@@ -18048,7 +18269,7 @@ function getInstallationsEndpoint({ projectId }) {
 function extractAuthTokenInfoFromResponse(response) {
     return {
         token: response.token,
-        requestStatus: 2 /* COMPLETED */,
+        requestStatus: 2 /* RequestStatus.COMPLETED */,
         expiresIn: getExpiresInFromResponseExpiresIn(response.expiresIn),
         creationTime: Date.now()
     };
@@ -18056,7 +18277,7 @@ function extractAuthTokenInfoFromResponse(response) {
 async function getErrorFromResponse(requestName, response) {
     const responseJson = await response.json();
     const errorData = responseJson.error;
-    return ERROR_FACTORY.create("request-failed" /* REQUEST_FAILED */, {
+    return ERROR_FACTORY.create("request-failed" /* ErrorCode.REQUEST_FAILED */, {
         requestName,
         serverCode: errorData.code,
         serverMessage: errorData.message,
@@ -18141,7 +18362,7 @@ async function createInstallationRequest({ appConfig, heartbeatServiceProvider }
         const responseValue = await response.json();
         const registeredInstallationEntry = {
             fid: responseValue.fid || fid,
-            registrationStatus: 2 /* COMPLETED */,
+            registrationStatus: 2 /* RequestStatus.COMPLETED */,
             refreshToken: responseValue.refreshToken,
             authToken: extractAuthTokenInfoFromResponse(responseValue.authToken)
         };
@@ -18479,7 +18700,7 @@ async function getInstallationEntry(installations) {
 function updateOrCreateInstallationEntry(oldEntry) {
     const entry = oldEntry || {
         fid: generateFid(),
-        registrationStatus: 0 /* NOT_STARTED */
+        registrationStatus: 0 /* RequestStatus.NOT_STARTED */
     };
     return clearTimedOutRequest(entry);
 }
@@ -18491,10 +18712,10 @@ function updateOrCreateInstallationEntry(oldEntry) {
  * to be registered.
  */
 function triggerRegistrationIfNecessary(installations, installationEntry) {
-    if (installationEntry.registrationStatus === 0 /* NOT_STARTED */) {
+    if (installationEntry.registrationStatus === 0 /* RequestStatus.NOT_STARTED */) {
         if (!navigator.onLine) {
             // Registration required but app is offline.
-            const registrationPromiseWithError = Promise.reject(ERROR_FACTORY.create("app-offline" /* APP_OFFLINE */));
+            const registrationPromiseWithError = Promise.reject(ERROR_FACTORY.create("app-offline" /* ErrorCode.APP_OFFLINE */));
             return {
                 installationEntry,
                 registrationPromise: registrationPromiseWithError
@@ -18503,13 +18724,13 @@ function triggerRegistrationIfNecessary(installations, installationEntry) {
         // Try registering. Change status to IN_PROGRESS.
         const inProgressEntry = {
             fid: installationEntry.fid,
-            registrationStatus: 1 /* IN_PROGRESS */,
+            registrationStatus: 1 /* RequestStatus.IN_PROGRESS */,
             registrationTime: Date.now()
         };
         const registrationPromise = registerInstallation(installations, inProgressEntry);
         return { installationEntry: inProgressEntry, registrationPromise };
     }
-    else if (installationEntry.registrationStatus === 1 /* IN_PROGRESS */) {
+    else if (installationEntry.registrationStatus === 1 /* RequestStatus.IN_PROGRESS */) {
         return {
             installationEntry,
             registrationPromise: waitUntilFidRegistration(installations)
@@ -18535,7 +18756,7 @@ async function registerInstallation(installations, installationEntry) {
             // Registration failed. Set FID as not registered.
             await set(installations.appConfig, {
                 fid: installationEntry.fid,
-                registrationStatus: 0 /* NOT_STARTED */
+                registrationStatus: 0 /* RequestStatus.NOT_STARTED */
             });
         }
         throw e;
@@ -18547,12 +18768,12 @@ async function waitUntilFidRegistration(installations) {
     // IndexedDB changes (yet, see https://github.com/WICG/indexed-db-observers),
     // so we need to poll.
     let entry = await updateInstallationRequest(installations.appConfig);
-    while (entry.registrationStatus === 1 /* IN_PROGRESS */) {
+    while (entry.registrationStatus === 1 /* RequestStatus.IN_PROGRESS */) {
         // createInstallation request still in progress.
         await sleep(100);
         entry = await updateInstallationRequest(installations.appConfig);
     }
-    if (entry.registrationStatus === 0 /* NOT_STARTED */) {
+    if (entry.registrationStatus === 0 /* RequestStatus.NOT_STARTED */) {
         // The request timed out or failed in a different call. Try again.
         const { installationEntry, registrationPromise } = await getInstallationEntry(installations);
         if (registrationPromise) {
@@ -18576,7 +18797,7 @@ async function waitUntilFidRegistration(installations) {
 function updateInstallationRequest(appConfig) {
     return update(appConfig, oldEntry => {
         if (!oldEntry) {
-            throw ERROR_FACTORY.create("installation-not-found" /* INSTALLATION_NOT_FOUND */);
+            throw ERROR_FACTORY.create("installation-not-found" /* ErrorCode.INSTALLATION_NOT_FOUND */);
         }
         return clearTimedOutRequest(oldEntry);
     });
@@ -18585,13 +18806,13 @@ function clearTimedOutRequest(entry) {
     if (hasInstallationRequestTimedOut(entry)) {
         return {
             fid: entry.fid,
-            registrationStatus: 0 /* NOT_STARTED */
+            registrationStatus: 0 /* RequestStatus.NOT_STARTED */
         };
     }
     return entry;
 }
 function hasInstallationRequestTimedOut(installationEntry) {
-    return (installationEntry.registrationStatus === 1 /* IN_PROGRESS */ &&
+    return (installationEntry.registrationStatus === 1 /* RequestStatus.IN_PROGRESS */ &&
         installationEntry.registrationTime + PENDING_TIMEOUT_MS < Date.now());
 }
 
@@ -18675,14 +18896,14 @@ async function refreshAuthToken(installations, forceRefresh = false) {
     let tokenPromise;
     const entry = await update(installations.appConfig, oldEntry => {
         if (!isEntryRegistered(oldEntry)) {
-            throw ERROR_FACTORY.create("not-registered" /* NOT_REGISTERED */);
+            throw ERROR_FACTORY.create("not-registered" /* ErrorCode.NOT_REGISTERED */);
         }
         const oldAuthToken = oldEntry.authToken;
         if (!forceRefresh && isAuthTokenValid(oldAuthToken)) {
             // There is a valid token in the DB.
             return oldEntry;
         }
-        else if (oldAuthToken.requestStatus === 1 /* IN_PROGRESS */) {
+        else if (oldAuthToken.requestStatus === 1 /* RequestStatus.IN_PROGRESS */) {
             // There already is a token request in progress.
             tokenPromise = waitUntilAuthTokenRequest(installations, forceRefresh);
             return oldEntry;
@@ -18690,7 +18911,7 @@ async function refreshAuthToken(installations, forceRefresh = false) {
         else {
             // No token or token expired.
             if (!navigator.onLine) {
-                throw ERROR_FACTORY.create("app-offline" /* APP_OFFLINE */);
+                throw ERROR_FACTORY.create("app-offline" /* ErrorCode.APP_OFFLINE */);
             }
             const inProgressEntry = makeAuthTokenRequestInProgressEntry(oldEntry);
             tokenPromise = fetchAuthTokenFromServer(installations, inProgressEntry);
@@ -18713,13 +18934,13 @@ async function waitUntilAuthTokenRequest(installations, forceRefresh) {
     // IndexedDB changes (yet, see https://github.com/WICG/indexed-db-observers),
     // so we need to poll.
     let entry = await updateAuthTokenRequest(installations.appConfig);
-    while (entry.authToken.requestStatus === 1 /* IN_PROGRESS */) {
+    while (entry.authToken.requestStatus === 1 /* RequestStatus.IN_PROGRESS */) {
         // generateAuthToken still in progress.
         await sleep(100);
         entry = await updateAuthTokenRequest(installations.appConfig);
     }
     const authToken = entry.authToken;
-    if (authToken.requestStatus === 0 /* NOT_STARTED */) {
+    if (authToken.requestStatus === 0 /* RequestStatus.NOT_STARTED */) {
         // The request timed out or failed in a different call. Try again.
         return refreshAuthToken(installations, forceRefresh);
     }
@@ -18738,11 +18959,11 @@ async function waitUntilAuthTokenRequest(installations, forceRefresh) {
 function updateAuthTokenRequest(appConfig) {
     return update(appConfig, oldEntry => {
         if (!isEntryRegistered(oldEntry)) {
-            throw ERROR_FACTORY.create("not-registered" /* NOT_REGISTERED */);
+            throw ERROR_FACTORY.create("not-registered" /* ErrorCode.NOT_REGISTERED */);
         }
         const oldAuthToken = oldEntry.authToken;
         if (hasAuthTokenRequestTimedOut(oldAuthToken)) {
-            return Object.assign(Object.assign({}, oldEntry), { authToken: { requestStatus: 0 /* NOT_STARTED */ } });
+            return Object.assign(Object.assign({}, oldEntry), { authToken: { requestStatus: 0 /* RequestStatus.NOT_STARTED */ } });
         }
         return oldEntry;
     });
@@ -18762,7 +18983,7 @@ async function fetchAuthTokenFromServer(installations, installationEntry) {
             await remove(installations.appConfig);
         }
         else {
-            const updatedInstallationEntry = Object.assign(Object.assign({}, installationEntry), { authToken: { requestStatus: 0 /* NOT_STARTED */ } });
+            const updatedInstallationEntry = Object.assign(Object.assign({}, installationEntry), { authToken: { requestStatus: 0 /* RequestStatus.NOT_STARTED */ } });
             await set(installations.appConfig, updatedInstallationEntry);
         }
         throw e;
@@ -18770,10 +18991,10 @@ async function fetchAuthTokenFromServer(installations, installationEntry) {
 }
 function isEntryRegistered(installationEntry) {
     return (installationEntry !== undefined &&
-        installationEntry.registrationStatus === 2 /* COMPLETED */);
+        installationEntry.registrationStatus === 2 /* RequestStatus.COMPLETED */);
 }
 function isAuthTokenValid(authToken) {
-    return (authToken.requestStatus === 2 /* COMPLETED */ &&
+    return (authToken.requestStatus === 2 /* RequestStatus.COMPLETED */ &&
         !isAuthTokenExpired(authToken));
 }
 function isAuthTokenExpired(authToken) {
@@ -18784,13 +19005,13 @@ function isAuthTokenExpired(authToken) {
 /** Returns an updated InstallationEntry with an InProgressAuthToken. */
 function makeAuthTokenRequestInProgressEntry(oldEntry) {
     const inProgressAuthToken = {
-        requestStatus: 1 /* IN_PROGRESS */,
+        requestStatus: 1 /* RequestStatus.IN_PROGRESS */,
         requestTime: Date.now()
     };
     return Object.assign(Object.assign({}, oldEntry), { authToken: inProgressAuthToken });
 }
 function hasAuthTokenRequestTimedOut(authToken) {
-    return (authToken.requestStatus === 1 /* IN_PROGRESS */ &&
+    return (authToken.requestStatus === 1 /* RequestStatus.IN_PROGRESS */ &&
         authToken.requestTime + PENDING_TIMEOUT_MS < Date.now());
 }
 
@@ -18928,20 +19149,20 @@ function getDeleteEndpoint(appConfig, { fid }) {
 async function deleteInstallations(installations) {
     const { appConfig } = installations;
     const entry = await update(appConfig, oldEntry => {
-        if (oldEntry && oldEntry.registrationStatus === 0 /* NOT_STARTED */) {
+        if (oldEntry && oldEntry.registrationStatus === 0 /* RequestStatus.NOT_STARTED */) {
             // Delete the unregistered entry without sending a deleteInstallation request.
             return undefined;
         }
         return oldEntry;
     });
     if (entry) {
-        if (entry.registrationStatus === 1 /* IN_PROGRESS */) {
+        if (entry.registrationStatus === 1 /* RequestStatus.IN_PROGRESS */) {
             // Can't delete while trying to register.
-            throw ERROR_FACTORY.create("delete-pending-registration" /* DELETE_PENDING_REGISTRATION */);
+            throw ERROR_FACTORY.create("delete-pending-registration" /* ErrorCode.DELETE_PENDING_REGISTRATION */);
         }
-        else if (entry.registrationStatus === 2 /* COMPLETED */) {
+        else if (entry.registrationStatus === 2 /* RequestStatus.COMPLETED */) {
             if (!navigator.onLine) {
-                throw ERROR_FACTORY.create("app-offline" /* APP_OFFLINE */);
+                throw ERROR_FACTORY.create("app-offline" /* ErrorCode.APP_OFFLINE */);
             }
             else {
                 await deleteInstallationRequest(appConfig, entry);
@@ -19054,7 +19275,7 @@ function extractAppConfig(app) {
     };
 }
 function getMissingValueError(valueName) {
-    return ERROR_FACTORY.create("missing-app-config-values" /* MISSING_APP_CONFIG_VALUES */, {
+    return ERROR_FACTORY.create("missing-app-config-values" /* ErrorCode.MISSING_APP_CONFIG_VALUES */, {
         valueName
     });
 }
@@ -19101,8 +19322,8 @@ const internalFactory = (container) => {
     return installationsInternal;
 };
 function registerInstallations() {
-    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component(INSTALLATIONS_NAME, publicFactory, "PUBLIC" /* PUBLIC */));
-    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component(INSTALLATIONS_NAME_INTERNAL, internalFactory, "PRIVATE" /* PRIVATE */));
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component(INSTALLATIONS_NAME, publicFactory, "PUBLIC" /* ComponentType.PUBLIC */));
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component(INSTALLATIONS_NAME_INTERNAL, internalFactory, "PRIVATE" /* ComponentType.PRIVATE */));
 }
 
 /**
@@ -19693,26 +19914,26 @@ function getKey({ appConfig }) {
  * limitations under the License.
  */
 const ERROR_MAP = {
-    ["missing-app-config-values" /* MISSING_APP_CONFIG_VALUES */]: 'Missing App configuration value: "{$valueName}"',
-    ["only-available-in-window" /* AVAILABLE_IN_WINDOW */]: 'This method is available in a Window context.',
-    ["only-available-in-sw" /* AVAILABLE_IN_SW */]: 'This method is available in a service worker context.',
-    ["permission-default" /* PERMISSION_DEFAULT */]: 'The notification permission was not granted and dismissed instead.',
-    ["permission-blocked" /* PERMISSION_BLOCKED */]: 'The notification permission was not granted and blocked instead.',
-    ["unsupported-browser" /* UNSUPPORTED_BROWSER */]: "This browser doesn't support the API's required to use the Firebase SDK.",
-    ["indexed-db-unsupported" /* INDEXED_DB_UNSUPPORTED */]: "This browser doesn't support indexedDb.open() (ex. Safari iFrame, Firefox Private Browsing, etc)",
-    ["failed-service-worker-registration" /* FAILED_DEFAULT_REGISTRATION */]: 'We are unable to register the default service worker. {$browserErrorMessage}',
-    ["token-subscribe-failed" /* TOKEN_SUBSCRIBE_FAILED */]: 'A problem occurred while subscribing the user to FCM: {$errorInfo}',
-    ["token-subscribe-no-token" /* TOKEN_SUBSCRIBE_NO_TOKEN */]: 'FCM returned no token when subscribing the user to push.',
-    ["token-unsubscribe-failed" /* TOKEN_UNSUBSCRIBE_FAILED */]: 'A problem occurred while unsubscribing the ' +
+    ["missing-app-config-values" /* ErrorCode.MISSING_APP_CONFIG_VALUES */]: 'Missing App configuration value: "{$valueName}"',
+    ["only-available-in-window" /* ErrorCode.AVAILABLE_IN_WINDOW */]: 'This method is available in a Window context.',
+    ["only-available-in-sw" /* ErrorCode.AVAILABLE_IN_SW */]: 'This method is available in a service worker context.',
+    ["permission-default" /* ErrorCode.PERMISSION_DEFAULT */]: 'The notification permission was not granted and dismissed instead.',
+    ["permission-blocked" /* ErrorCode.PERMISSION_BLOCKED */]: 'The notification permission was not granted and blocked instead.',
+    ["unsupported-browser" /* ErrorCode.UNSUPPORTED_BROWSER */]: "This browser doesn't support the API's required to use the Firebase SDK.",
+    ["indexed-db-unsupported" /* ErrorCode.INDEXED_DB_UNSUPPORTED */]: "This browser doesn't support indexedDb.open() (ex. Safari iFrame, Firefox Private Browsing, etc)",
+    ["failed-service-worker-registration" /* ErrorCode.FAILED_DEFAULT_REGISTRATION */]: 'We are unable to register the default service worker. {$browserErrorMessage}',
+    ["token-subscribe-failed" /* ErrorCode.TOKEN_SUBSCRIBE_FAILED */]: 'A problem occurred while subscribing the user to FCM: {$errorInfo}',
+    ["token-subscribe-no-token" /* ErrorCode.TOKEN_SUBSCRIBE_NO_TOKEN */]: 'FCM returned no token when subscribing the user to push.',
+    ["token-unsubscribe-failed" /* ErrorCode.TOKEN_UNSUBSCRIBE_FAILED */]: 'A problem occurred while unsubscribing the ' +
         'user from FCM: {$errorInfo}',
-    ["token-update-failed" /* TOKEN_UPDATE_FAILED */]: 'A problem occurred while updating the user from FCM: {$errorInfo}',
-    ["token-update-no-token" /* TOKEN_UPDATE_NO_TOKEN */]: 'FCM returned no token when updating the user to push.',
-    ["use-sw-after-get-token" /* USE_SW_AFTER_GET_TOKEN */]: 'The useServiceWorker() method may only be called once and must be ' +
+    ["token-update-failed" /* ErrorCode.TOKEN_UPDATE_FAILED */]: 'A problem occurred while updating the user from FCM: {$errorInfo}',
+    ["token-update-no-token" /* ErrorCode.TOKEN_UPDATE_NO_TOKEN */]: 'FCM returned no token when updating the user to push.',
+    ["use-sw-after-get-token" /* ErrorCode.USE_SW_AFTER_GET_TOKEN */]: 'The useServiceWorker() method may only be called once and must be ' +
         'called before calling getToken() to ensure your service worker is used.',
-    ["invalid-sw-registration" /* INVALID_SW_REGISTRATION */]: 'The input to useServiceWorker() must be a ServiceWorkerRegistration.',
-    ["invalid-bg-handler" /* INVALID_BG_HANDLER */]: 'The input to setBackgroundMessageHandler() must be a function.',
-    ["invalid-vapid-key" /* INVALID_VAPID_KEY */]: 'The public VAPID key must be a string.',
-    ["use-vapid-key-after-get-token" /* USE_VAPID_KEY_AFTER_GET_TOKEN */]: 'The usePublicVapidKey() method may only be called once and must be ' +
+    ["invalid-sw-registration" /* ErrorCode.INVALID_SW_REGISTRATION */]: 'The input to useServiceWorker() must be a ServiceWorkerRegistration.',
+    ["invalid-bg-handler" /* ErrorCode.INVALID_BG_HANDLER */]: 'The input to setBackgroundMessageHandler() must be a function.',
+    ["invalid-vapid-key" /* ErrorCode.INVALID_VAPID_KEY */]: 'The public VAPID key must be a string.',
+    ["use-vapid-key-after-get-token" /* ErrorCode.USE_VAPID_KEY_AFTER_GET_TOKEN */]: 'The usePublicVapidKey() method may only be called once and must be ' +
         'called before calling getToken() to ensure your VAPID key is used.'
 };
 const ERROR_FACTORY = new _firebase_util__WEBPACK_IMPORTED_MODULE_3__.ErrorFactory('messaging', 'Messaging', ERROR_MAP);
@@ -19734,7 +19955,6 @@ const ERROR_FACTORY = new _firebase_util__WEBPACK_IMPORTED_MODULE_3__.ErrorFacto
  * limitations under the License.
  */
 async function requestGetToken(firebaseDependencies, subscriptionOptions) {
-    var _a;
     const headers = await getHeaders(firebaseDependencies);
     const body = getBody(subscriptionOptions);
     const subscribeOptions = {
@@ -19748,23 +19968,22 @@ async function requestGetToken(firebaseDependencies, subscriptionOptions) {
         responseData = await response.json();
     }
     catch (err) {
-        throw ERROR_FACTORY.create("token-subscribe-failed" /* TOKEN_SUBSCRIBE_FAILED */, {
-            errorInfo: (_a = err) === null || _a === void 0 ? void 0 : _a.toString()
+        throw ERROR_FACTORY.create("token-subscribe-failed" /* ErrorCode.TOKEN_SUBSCRIBE_FAILED */, {
+            errorInfo: err === null || err === void 0 ? void 0 : err.toString()
         });
     }
     if (responseData.error) {
         const message = responseData.error.message;
-        throw ERROR_FACTORY.create("token-subscribe-failed" /* TOKEN_SUBSCRIBE_FAILED */, {
+        throw ERROR_FACTORY.create("token-subscribe-failed" /* ErrorCode.TOKEN_SUBSCRIBE_FAILED */, {
             errorInfo: message
         });
     }
     if (!responseData.token) {
-        throw ERROR_FACTORY.create("token-subscribe-no-token" /* TOKEN_SUBSCRIBE_NO_TOKEN */);
+        throw ERROR_FACTORY.create("token-subscribe-no-token" /* ErrorCode.TOKEN_SUBSCRIBE_NO_TOKEN */);
     }
     return responseData.token;
 }
 async function requestUpdateToken(firebaseDependencies, tokenDetails) {
-    var _a;
     const headers = await getHeaders(firebaseDependencies);
     const body = getBody(tokenDetails.subscriptionOptions);
     const updateOptions = {
@@ -19778,23 +19997,22 @@ async function requestUpdateToken(firebaseDependencies, tokenDetails) {
         responseData = await response.json();
     }
     catch (err) {
-        throw ERROR_FACTORY.create("token-update-failed" /* TOKEN_UPDATE_FAILED */, {
-            errorInfo: (_a = err) === null || _a === void 0 ? void 0 : _a.toString()
+        throw ERROR_FACTORY.create("token-update-failed" /* ErrorCode.TOKEN_UPDATE_FAILED */, {
+            errorInfo: err === null || err === void 0 ? void 0 : err.toString()
         });
     }
     if (responseData.error) {
         const message = responseData.error.message;
-        throw ERROR_FACTORY.create("token-update-failed" /* TOKEN_UPDATE_FAILED */, {
+        throw ERROR_FACTORY.create("token-update-failed" /* ErrorCode.TOKEN_UPDATE_FAILED */, {
             errorInfo: message
         });
     }
     if (!responseData.token) {
-        throw ERROR_FACTORY.create("token-update-no-token" /* TOKEN_UPDATE_NO_TOKEN */);
+        throw ERROR_FACTORY.create("token-update-no-token" /* ErrorCode.TOKEN_UPDATE_NO_TOKEN */);
     }
     return responseData.token;
 }
 async function requestDeleteToken(firebaseDependencies, token) {
-    var _a;
     const headers = await getHeaders(firebaseDependencies);
     const unsubscribeOptions = {
         method: 'DELETE',
@@ -19805,14 +20023,14 @@ async function requestDeleteToken(firebaseDependencies, token) {
         const responseData = await response.json();
         if (responseData.error) {
             const message = responseData.error.message;
-            throw ERROR_FACTORY.create("token-unsubscribe-failed" /* TOKEN_UNSUBSCRIBE_FAILED */, {
+            throw ERROR_FACTORY.create("token-unsubscribe-failed" /* ErrorCode.TOKEN_UNSUBSCRIBE_FAILED */, {
                 errorInfo: message
             });
         }
     }
     catch (err) {
-        throw ERROR_FACTORY.create("token-unsubscribe-failed" /* TOKEN_UNSUBSCRIBE_FAILED */, {
-            errorInfo: (_a = err) === null || _a === void 0 ? void 0 : _a.toString()
+        throw ERROR_FACTORY.create("token-unsubscribe-failed" /* ErrorCode.TOKEN_UNSUBSCRIBE_FAILED */, {
+            errorInfo: err === null || err === void 0 ? void 0 : err.toString()
         });
     }
 }
@@ -20135,7 +20353,7 @@ function extractAppConfig(app) {
     };
 }
 function getMissingValueError(valueName) {
-    return ERROR_FACTORY.create("missing-app-config-values" /* MISSING_APP_CONFIG_VALUES */, {
+    return ERROR_FACTORY.create("missing-app-config-values" /* ErrorCode.MISSING_APP_CONFIG_VALUES */, {
         valueName
     });
 }
@@ -20194,7 +20412,6 @@ class MessagingService {
  * limitations under the License.
  */
 async function registerDefaultSw(messaging) {
-    var _a;
     try {
         messaging.swRegistration = await navigator.serviceWorker.register(DEFAULT_SW_PATH, {
             scope: DEFAULT_SW_SCOPE
@@ -20209,8 +20426,8 @@ async function registerDefaultSw(messaging) {
         });
     }
     catch (e) {
-        throw ERROR_FACTORY.create("failed-service-worker-registration" /* FAILED_DEFAULT_REGISTRATION */, {
-            browserErrorMessage: (_a = e) === null || _a === void 0 ? void 0 : _a.message
+        throw ERROR_FACTORY.create("failed-service-worker-registration" /* ErrorCode.FAILED_DEFAULT_REGISTRATION */, {
+            browserErrorMessage: e === null || e === void 0 ? void 0 : e.message
         });
     }
 }
@@ -20239,7 +20456,7 @@ async function updateSwReg(messaging, swRegistration) {
         return;
     }
     if (!(swRegistration instanceof ServiceWorkerRegistration)) {
-        throw ERROR_FACTORY.create("invalid-sw-registration" /* INVALID_SW_REGISTRATION */);
+        throw ERROR_FACTORY.create("invalid-sw-registration" /* ErrorCode.INVALID_SW_REGISTRATION */);
     }
     messaging.swRegistration = swRegistration;
 }
@@ -20287,13 +20504,13 @@ async function updateVapidKey(messaging, vapidKey) {
  */
 async function getToken$1(messaging, options) {
     if (!navigator) {
-        throw ERROR_FACTORY.create("only-available-in-window" /* AVAILABLE_IN_WINDOW */);
+        throw ERROR_FACTORY.create("only-available-in-window" /* ErrorCode.AVAILABLE_IN_WINDOW */);
     }
     if (Notification.permission === 'default') {
         await Notification.requestPermission();
     }
     if (Notification.permission !== 'granted') {
-        throw ERROR_FACTORY.create("permission-blocked" /* PERMISSION_BLOCKED */);
+        throw ERROR_FACTORY.create("permission-blocked" /* ErrorCode.PERMISSION_BLOCKED */);
     }
     await updateVapidKey(messaging, options === null || options === void 0 ? void 0 : options.vapidKey);
     await updateSwReg(messaging, options === null || options === void 0 ? void 0 : options.serviceWorkerRegistration);
@@ -20378,7 +20595,7 @@ async function messageEventListener(messaging, event) {
 }
 
 const name = "@firebase/messaging";
-const version = "0.11.0";
+const version = "0.12.0";
 
 /**
  * @license
@@ -20411,8 +20628,8 @@ const WindowMessagingInternalFactory = (container) => {
     return messagingInternal;
 };
 function registerMessagingInWindow() {
-    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component('messaging', WindowMessagingFactory, "PUBLIC" /* PUBLIC */));
-    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component('messaging-internal', WindowMessagingInternalFactory, "PRIVATE" /* PRIVATE */));
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component('messaging', WindowMessagingFactory, "PUBLIC" /* ComponentType.PUBLIC */));
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component('messaging-internal', WindowMessagingInternalFactory, "PRIVATE" /* ComponentType.PRIVATE */));
     (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__.registerVersion)(name, version);
     // BUILD_TARGET will be replaced by values like esm5, esm2017, cjs5, etc during the compilation
     (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__.registerVersion)(name, version, 'esm2017');
@@ -20481,7 +20698,7 @@ async function isWindowSupported() {
  */
 async function deleteToken$1(messaging) {
     if (!navigator) {
-        throw ERROR_FACTORY.create("only-available-in-window" /* AVAILABLE_IN_WINDOW */);
+        throw ERROR_FACTORY.create("only-available-in-window" /* ErrorCode.AVAILABLE_IN_WINDOW */);
     }
     if (!messaging.swRegistration) {
         await registerDefaultSw(messaging);
@@ -20507,7 +20724,7 @@ async function deleteToken$1(messaging) {
  */
 function onMessage$1(messaging, nextOrObserver) {
     if (!navigator) {
-        throw ERROR_FACTORY.create("only-available-in-window" /* AVAILABLE_IN_WINDOW */);
+        throw ERROR_FACTORY.create("only-available-in-window" /* ErrorCode.AVAILABLE_IN_WINDOW */);
     }
     messaging.onMessageHandler = nextOrObserver;
     return () => {
@@ -20546,11 +20763,11 @@ function getMessagingInWindow(app = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4_
     isWindowSupported().then(isSupported => {
         // If `isWindowSupported()` resolved, but returned false.
         if (!isSupported) {
-            throw ERROR_FACTORY.create("unsupported-browser" /* UNSUPPORTED_BROWSER */);
+            throw ERROR_FACTORY.create("unsupported-browser" /* ErrorCode.UNSUPPORTED_BROWSER */);
         }
     }, _ => {
         // If `isWindowSupported()` rejected.
-        throw ERROR_FACTORY.create("indexed-db-unsupported" /* INDEXED_DB_UNSUPPORTED */);
+        throw ERROR_FACTORY.create("indexed-db-unsupported" /* ErrorCode.INDEXED_DB_UNSUPPORTED */);
     });
     return (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__._getProvider)((0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.getModularInstance)(app), 'messaging').getImmediate();
 }
@@ -20614,6 +20831,83 @@ registerMessagingInWindow();
 
 
 //# sourceMappingURL=index.esm2017.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/firebase/app/dist/esm/index.esm.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/firebase/app/dist/esm/index.esm.js ***!
+  \*********************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "FirebaseError": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.FirebaseError),
+/* harmony export */   "SDK_VERSION": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.SDK_VERSION),
+/* harmony export */   "_DEFAULT_ENTRY_NAME": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._DEFAULT_ENTRY_NAME),
+/* harmony export */   "_addComponent": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._addComponent),
+/* harmony export */   "_addOrOverwriteComponent": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._addOrOverwriteComponent),
+/* harmony export */   "_apps": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._apps),
+/* harmony export */   "_clearComponents": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._clearComponents),
+/* harmony export */   "_components": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._components),
+/* harmony export */   "_getProvider": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._getProvider),
+/* harmony export */   "_registerComponent": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._registerComponent),
+/* harmony export */   "_removeServiceInstance": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._removeServiceInstance),
+/* harmony export */   "deleteApp": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.deleteApp),
+/* harmony export */   "getApp": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.getApp),
+/* harmony export */   "getApps": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.getApps),
+/* harmony export */   "initializeApp": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.initializeApp),
+/* harmony export */   "onLog": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.onLog),
+/* harmony export */   "registerVersion": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion),
+/* harmony export */   "setLogLevel": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.setLogLevel)
+/* harmony export */ });
+/* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
+
+
+
+var name = "firebase";
+var version = "9.15.0";
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+(0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion)(name, version, 'app');
+//# sourceMappingURL=index.esm.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/firebase/messaging/dist/esm/index.esm.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/firebase/messaging/dist/esm/index.esm.js ***!
+  \***************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "deleteToken": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.deleteToken),
+/* harmony export */   "getMessaging": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.getMessaging),
+/* harmony export */   "getToken": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.getToken),
+/* harmony export */   "isSupported": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.isSupported),
+/* harmony export */   "onMessage": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.onMessage)
+/* harmony export */ });
+/* harmony import */ var _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/messaging */ "./node_modules/@firebase/messaging/dist/esm/index.esm2017.js");
+
+//# sourceMappingURL=index.esm.js.map
 
 
 /***/ }),
@@ -20925,16 +21219,6 @@ const unwrap = (value) => reverseTransformCache.get(value);
 
 
 
-/***/ }),
-
-/***/ "./src/messages.json":
-/*!***************************!*\
-  !*** ./src/messages.json ***!
-  \***************************/
-/***/ ((module) => {
-
-module.exports = JSON.parse('{"de":{"action_block_contact":"Kontakt blockieren","action_cancel":"Abbrechen","action_clear_messages":"Nachrichten leeren","action_delete_messages":"Nachrichten für alle löschen","action_leave_chat":"Unterhaltung verlassen","action_report_chat":"Unterhaltung melden","archived_contacts":"Archivierte Kontakte ({count})","badge_danger":"Verdächtig","badge_owner":"Besitzer","badge_staff":"Verwaltung","badge_verified":"Verifiziert","badge_you":"Sie","block_contact_warning":"Möchten Sie diesen Kontakt wirklich blockieren?","blocked_contacts_link":"Blockierte Kontakte ({count})","button_add_another":"Hinzufügen","button_add_members":"Mitglieder hinzufügen","button_cancel":"Abbrechen","button_confirm":"Bestätigen","button_create":"Erstellen","button_delete_account":"Konto löschen","button_edit":"Bearbeiten","button_logout":"Abmelden","button_ok":"OK","button_reset":"Zurücksetzen","button_send_request":"Anfrage senden","button_sign_in":"Anmelden","button_sign_up":"Anmelden","button_subscribe":"Abbonieren","button_update":"Aktualisieren","cannot_initiate_file_upload":"Datei kann nicht hochgeladen werden.","channel":"Sender","channel_prompt":"Dies ist ein Sender","chat_invitation":"Sie sind eingeladen, an einem neuen Chat teilzunehmen. Was möchten Sie tun?","chat_invitation_accept":"Akzeptieren","chat_invitation_block":"Blockieren","chat_invitation_ignore":"Ignorieren","clear_messages_warning":"Sind Sie sicher, dass Sie diese Unterhaltung für alle leeren wollen? Das kann nicht rückgängig gemacht werden.","code_doesnot_match":"Code stimmt nicht überein","contacts_not_found":"Sie haben keine Unterhaltungen<br />¯∖_(ツ)_/¯","contacts_not_found_short":"Keine Kontakte für \'\'{query}\'\'","credential_email_prompt":"E-Mail Adresse für Registrierung","delete_account":"Konto löschen","delete_account_warning":"Möchten Sie das Konto wirklich löschen? Das kann nicht rückgängig gemacht werden","delete_messages_warning":"Sind Sie sicher, dass Sie diese Unterhaltung für alle löschen wollen? Das kann nicht rückgängig gemacht werden.","deleted_content":"Inhalt gelöscht","download_action":"herunterladen","drafty_attachment":"Dateianhang","drafty_form":"Formular:","drafty_image":"Bild","email_dative":"E-Mail","email_prompt":"E-Mail, z.B. lisam@beispiel.de","enable_peers_messaging":"Aktivieren","enter_confirmation_code_prompt":"Geben Sie den Bestätigungscode ein, der per {method} geschickt wurde:","error_invalid_id":"ungültige ID","file_attachment_too_large":"Die Dateigröße {size} überschreitet das Limit von {limit}.","forgot_password_link":"Passwort vergessen?","full_name_prompt":"Vollständiger Name, z.B. Lisa Musterfrau","granted_permissions":"Erteilt","group_has_no_members":"Keine Mitglieder","group_user_id_prompt":"Gruppe oder Benutzer ID","image_caption_prompt":"Bildunterschrift","invalid_content":"ungültiger Inhalt","invalid_security_token":"Ungültiger Sicherheitsschlüssel","label_client":"Client:","label_content_type":"Inhaltsart:","label_default_access_mode":"Standard Zugriffsmodus:","label_file_name":"Dateiname:","label_group_members":"Gruppenmitglieder:","label_incognito_mode":"inkognito-Modus:","label_message_sound":"Benachrichtigungston:","label_muting_topic":"Stumm geschaltet:","label_other_user":"Andere","label_password":"Passwort","label_permissions":"Berechtigungen:","label_private":"Privater Kommentar","label_push_notifications":"Benachrichtigungsmeldungen:","label_push_notifications_disabled":"Benachrichtigungsmeldungen (erfordert HTTPS):","label_reset_password":"Passwort per E-Mail wiederherstellen:","label_sdk":"SDK:","label_server":"Server:","label_server_address":"Server Adresse:","label_server_to_use":"Server verwenden:","label_size":"Größe:","label_topic_name":"Name","label_user_contacts":"Kontakte:","label_user_id":"ID:","label_wire_transport":"Übertragung per Kabel:","label_you":"Sie:","label_your_name":"Ihr Name","label_your_permissions":"Ihre Berechtigungen:","last_seen_timestamp":"Zuletzt gesehen","leave_chat_warning":"Möchten Sie diese Unterhaltung wirklich verlassen?","link_contact_us":"Kontakt","link_privacy_policy":"Datenschutzerklärung","link_terms_of_service":"Nutzungsbedingungen","login_prompt":"Anmelden","menu_item_archive_topic":"Archivieren","menu_item_block":"Blockieren","menu_item_clear_messages":"Nachrichten leeren","menu_item_clear_messages_for_all":"Für alle leeren","menu_item_delete":"Löschen","menu_item_delete_for_all":"Für alle löschen","menu_item_delete_topic":"Entfernen","menu_item_edit_permissions":"Berechtigungen ändern","menu_item_info":"Info","menu_item_member_delete":"Entfernen","menu_item_mute":"Unterhaltung stumm schalten","menu_item_restore_topic":"Wiederherstellen","menu_item_send_retry":"Wiederholen","menu_item_unblock":"Blockierung aufheben","menu_item_unmute":"Stumm schalten beenden","message_sending":"wird gesendet...","message_sending_failed":"fehlgeschlagen","messages_not_readable":"Neue Nachrichten können nicht gelesen werden","messaging_disabled_prompt":"Nachrichtenübermittlung deaktiviert","more_online_members":"+{overflow} mehr","new_message_prompt":"Neue Nachricht","new_password_placeholder":"Geben Sie ein neues Passwort ein","no_connection":"Keine Verbindung","no_contacts":"Sie haben keine Kontakte :-(","numeric_confirmation_code_prompt":"Nur zahlen","online_now":"jetzt online","password_prompt":"Passwort","password_unchanged_prompt":"unverändert","peers_messaging_disabled":"Gruppennachrichten sind deaktiviert","permission_admin":"Bestätigen ({val})","permission_delete":"Entfernen ({val})","permission_join":"Beitreten ({val})","permission_owner":"Besitzer ({val})","permission_pres":"Benachrichtigt werden ({val})","permission_read":"Lesen ({val})","permission_share":"Teilen ({val})","permission_write":"Schreiben ({val})","phone_dative":"Telefon","private_editing_placeholder":"Nur für Sie sichtbar","push_init_failed":"Initialisierung von Push-Benachrichtigungen fehlgeschlagen","reconnect_countdown":"Getrennt. Wiederverbinden in {seconds}…","reconnect_now":"Jetzt probieren","reload_update":"Neu laden","report_chat_warning":"Möchten Sie diese Unterhaltung wirklich blockieren und melden?","requested_permissions":"Angefordert","save_attachment":"Speichern","search_for_contacts":"Nutzen Sie die Suche um Kontakte zu finden","search_no_results":"Die Suche hatte keine Ergebnisse","search_placeholder":"Liste: email:lisa@beispiel.de, tel:17025550003...","sidepanel_title_acc_notifications":"Benachrichtigungen","sidepanel_title_acc_support":"Unterstützung","sidepanel_title_account_settings":"Konto-Einstellungen","sidepanel_title_archive":"Archivierte Unterhaltungen","sidepanel_title_blocked":"Blockierte Unterhaltungen","sidepanel_title_cred":"Anmeldeinformationen bestätigen","sidepanel_title_login":"Anmelden","sidepanel_title_newtpk":"Neue Unterhaltung starten","sidepanel_title_register":"Konto erstellen","sidepanel_title_reset":"Passwort zurücksetzen","sidepanel_title_settings":"Einstellungen","stay_logged_in":"Angemeldet bleiben","tabtitle_find_user":"Suchen","tabtitle_group_by_id":"nach ID","tabtitle_new_group":"Neue Gruppe","tags_editor_no_tags":"Schlagworte hinzufügen","tags_not_found":"Keine Schlagworte definiert. Erstellen Sie welche.","title_all_contacts":"Alle Kontakte","title_group_members":"Gruppenmitglieder","panel_title_info":"Info","title_manage_tags":"Verwalten","title_not_found":"Nicht gefunden","title_permissions":"Berechtigungen","title_tag_manager":"Schlagworte (Nutzer entdecken)","topic_block_warning":"Möchten Sie diese Unterhaltung wirklich blockieren?","topic_delete_warning":"Möchten Sie diese Unterhaltung wirklich löschen?","topic_name_editing_placeholder":"Freiform Name der Gruppe","unnamed_topic":"Unbenannt","update_available":"Aktualisierung verfügbar.","upload_finishing":"wird abgeschlossen...","user_not_found":"Nicht gefunden","validate_credential_action":"bestätigen","description_editing_placeholder":"Beschreibung (optional)","label_description":"Beschreibung","button_security":"Sicherheit","panel_title_general":"Allgemein","panel_title_security":"Sicherheit","panel_title_crop":"Zum Anpassen ziehen","panel_title_members":"Mitglieder","permissions_anonymous":"Anonym","permissions_authenticated":"Authentifiziert","topic_delete":"Chat löschen","permissions_user":"Benutzerberechtigungen","password_reset_email_sent":"Eine E-Mail wurde an {email} gesendet. Folgen Sie den Anweisungen in der E-Mail, um Ihr Passwort zurückzusetzen.","label_unarchive_topic":"Archiviert:","menu_item_reply":"Antwort","menu_item_forward":"Nach vorne","forward_to":"Weiterleiten","forward_to_search_placeholder":"Kontakte durchsuchen","label_new_password":"Neues Kennwort","drafty_unknown":"Nicht unterstützt","calls_incoming":"Eingehender Anruf","calls_outgoing":"Ausgehender Anruf","calls_you_label":"Du","menu_item_video_call":"Videoanruf","already_in_call":"Du redest schon!","call_cancelled":"abgebrochen","call_missed":"verpasster","call_declined":"abgelehnt","call_disconnected":"getrennt","label_use_secure_connection":"Verwenden Sie eine sichere Verbindung","phone_or_email_prompt":"Telefonnummer oder E-Mail","cred_confirmed_successfully":"Erfolgreich bestätigt"},"en":{"action_block_contact":"Block Contact","action_cancel":"cancel","action_clear_messages":"Clear Messages","action_delete_messages":"Clear Messages for All","action_leave_chat":"Leave Conversation","action_report_chat":"Report Conversation","archived_contacts":"Archived contacts ({count})","badge_danger":"Untrustworthy","badge_owner":"owner","badge_staff":"Staff-managed","badge_verified":"Verified/official","badge_you":"you","block_contact_warning":"Are you sure you want to block this contact?","blocked_contacts_link":"Blocked contacts ({count})","button_add_another":"Add another","button_add_members":"Add members","button_cancel":"Cancel","button_confirm":"Confirm","button_create":"Create","button_delete_account":"Delete account","button_edit":"Edit","button_logout":"Logout","button_ok":"OK","button_reset":"Reset","button_send_request":"Send request","button_sign_in":"Sign in","button_sign_up":"Sign up","button_subscribe":"Subscribe","button_update":"Update","cannot_initiate_file_upload":"Cannot initiate file upload.","channel":"channel","channel_prompt":"This is a channel","chat_invitation":"You are invited to start a new chat. What would you like to do?","chat_invitation_accept":"Accept","chat_invitation_block":"Block","chat_invitation_ignore":"Ignore","clear_messages_warning":"Are you sure you want to clear all messages? It cannot be undone.","code_doesnot_match":"Code does not match","contacts_not_found":"You have no chats<br />¯∖_(ツ)_/¯","contacts_not_found_short":"No contacts match \'\'{query}\'\'","credential_email_prompt":"Your registration email","delete_account":"Delete account","delete_account_warning":"Are you sure you want to delete your account? It cannot be undone.","delete_messages_warning":"Are you sure you want to delete all messages for everyone? It cannot be undone.","deleted_content":"content deleted","download_action":"download","drafty_attachment":"Attachment","drafty_form":"Form:","drafty_image":"Picture","email_dative":"email","email_prompt":"Email, e.g. jdoe@example.com","enable_peers_messaging":"Enable","enter_confirmation_code_prompt":"Enter confirmation code sent to you by {method}:","error_invalid_id":"Invalid ID","file_attachment_too_large":"The file size {size} exceeds the {limit} limit.","forgot_password_link":"Forgot password?","full_name_prompt":"Full name, e.g. John Doe","granted_permissions":"Granted","group_has_no_members":"No members","group_user_id_prompt":"Group or User ID","image_caption_prompt":"Image caption","invalid_content":"invalid content","invalid_security_token":"Invalid security token","label_client":"Client:","label_content_type":"Content type:","label_default_access_mode":"Default access mode:","label_file_name":"File name:","label_group_members":"Group members:","label_incognito_mode":"Incognito mode:","label_message_sound":"Message sound:","label_muting_topic":"Muted:","label_other_user":"Other","label_password":"Password","label_permissions":"Permissions:","label_private":"Private comment","label_push_notifications":"Notification alerts:","label_push_notifications_disabled":"Notification alerts (requires HTTPS):","label_reset_password":"Send a password reset email:","label_sdk":"SDK:","label_server":"Server:","label_server_address":"Server address:","label_server_to_use":"Server to use:","label_size":"Size:","label_topic_name":"Name","label_user_contacts":"Contacts:","label_user_id":"ID:","label_wire_transport":"Wire transport:","label_you":"You:","label_your_name":"Your name","label_your_permissions":"Your permissions:","last_seen_timestamp":"Last seen","leave_chat_warning":"Are you sure you want to leave this conversation?","link_contact_us":"Contact Us","link_privacy_policy":"Privacy Policy","link_terms_of_service":"Terms of Service","login_prompt":"Login","menu_item_archive_topic":"Archive","menu_item_block":"Block","menu_item_clear_messages":"Clear messages","menu_item_clear_messages_for_all":"Clear for All","menu_item_delete":"Delete","menu_item_delete_for_all":"Delete for All","menu_item_delete_topic":"Delete","menu_item_edit_permissions":"Edit permissions","menu_item_info":"Info","menu_item_member_delete":"Remove","menu_item_mute":"Mute","menu_item_reply":"Reply","menu_item_restore_topic":"Restore","menu_item_send_retry":"Retry","menu_item_unblock":"Unblock","menu_item_unmute":"Unmute","message_sending":"sending...","message_sending_failed":"failed","messages_not_readable":"no access to messages","messaging_disabled_prompt":"Messaging disabled","more_online_members":"+{overflow} more","new_message_prompt":"New message","new_password_placeholder":"Enter new password","no_connection":"No connection","no_contacts":"You have no contacts :-(","numeric_confirmation_code_prompt":"Numbers only","online_now":"online now","password_prompt":"Password","password_unchanged_prompt":"Unchanged","peers_messaging_disabled":"Peer\'s messaging is disabled.","permission_admin":"Approve ({val})","permission_delete":"Delete ({val})","permission_join":"Join ({val})","permission_owner":"Owner ({val})","permission_pres":"Get notified ({val})","permission_read":"Read ({val})","permission_share":"Share ({val})","permission_write":"Write ({val})","phone_dative":"phone","private_editing_placeholder":"Visible to you only","push_init_failed":"Failed to initialize push notifications","reconnect_countdown":"Disconnected. Reconnecting in {seconds}…","reconnect_now":"Try now","reload_update":"Reload","report_chat_warning":"Are you sure you want to block and report this conversation?","requested_permissions":"Requested","save_attachment":"save","search_for_contacts":"Use search to find contacts","search_no_results":"Search returned no results","search_placeholder":"List like email:alice@example.com, tel:17025550003...","sidepanel_title_acc_notifications":"Notifications","sidepanel_title_acc_support":"Support","sidepanel_title_account_settings":"Account Settings","sidepanel_title_archive":"Archived Chats","sidepanel_title_blocked":"Blocked Chats","sidepanel_title_cred":"Confirm Credentials","sidepanel_title_login":"Sign In","sidepanel_title_newtpk":"Start New Chat","sidepanel_title_register":"Create Account","sidepanel_title_reset":"Reset Password","sidepanel_title_settings":"Settings","stay_logged_in":"Stay logged in","tabtitle_find_user":"find","tabtitle_group_by_id":"by id","tabtitle_new_group":"new group","tags_editor_no_tags":"Add some tags","tags_not_found":"No tags defined. Add some.","title_all_contacts":"All Contacts","title_group_members":"Group Members","title_manage_tags":"Manage","title_not_found":"Not found","title_permissions":"Permissions","title_tag_manager":"Tags (search & discovery)","topic_block_warning":"Are you sure you want to block this conversation?","topic_delete_warning":"Are you sure you want to delete this conversation?","topic_name_editing_placeholder":"Freeform name of the group","unnamed_topic":"Unnamed","update_available":"Update available.","upload_finishing":"finishing...","user_not_found":"Not found","validate_credential_action":"confirm","description_editing_placeholder":"Optional description","label_description":"Description","button_security":"Security","panel_title_crop":"Drag to Adjust","panel_title_general":"General","panel_title_members":"Members","panel_title_security":"Security","panel_title_info":"Info","permissions_anonymous":"Anonymous","permissions_authenticated":"Authenticated","topic_delete":"Delete Conversation","permissions_user":"User\'s Permissions","password_reset_email_sent":"An email has been sent to {email}. Follow the directions in the email to reset your password.","label_unarchive_topic":"Archived:","menu_item_forward":"Forward","forward_to":"Forward to","forward_to_search_placeholder":"Search contacts","label_new_password":"New password","drafty_unknown":"Unsupported","calls_incoming":"Incoming call","calls_outgoing":"Outgoing call","calls_you_label":"You","menu_item_video_call":"Video call","already_in_call":"You already in an ongoing call!","call_cancelled":"cancelled","call_missed":"missed","call_declined":"declined","call_disconnected":"disconnected","label_use_secure_connection":"Use secure connection","phone_or_email_prompt":"Phone number or email","cred_confirmed_successfully":"Confirmed successfully"},"es":{"action_block_contact":"Bloquear contacto","action_cancel":"cancelar","action_clear_messages":"Borrar mensajes","action_delete_messages":"Borrar mensajes para todos","action_leave_chat":"Dejar conversación","action_report_chat":"Reportar conversación","archived_contacts":"Contactos archivados ({count})","badge_danger":"Suspicaz","badge_owner":"propietario","badge_staff":"Administración","badge_verified":"Verificado","badge_you":"tú","block_contact_warning":"¿Estás seguro de que quieres bloquear a este contacto?","blocked_contacts_link":"Contactos bloqueados ({count})","button_add_another":"Añadir contacto","button_add_members":"Añadir miembros","button_cancel":"Cancelar","button_confirm":"Confirmar","button_create":"Crear","button_delete_account":"Eliminar cuenta","button_edit":"Editar","button_logout":"Cerrar sesión","button_ok":"OK","button_reset":"Restablecer","button_send_request":"Enviar petición","button_sign_in":"Entrar","button_sign_up":"Regístrate","button_subscribe":"Suscribirse","button_update":"Actualizar","cannot_initiate_file_upload":"No se pudo iniciar la carga del archivo.","channel":"canal","channel_prompt":"Este es un canal","chat_invitation":"Estás invitado a participar en un nuevo chat. ¿Qué te gustaría hacer?","chat_invitation_accept":"Aceptar","chat_invitation_block":"Bloquear","chat_invitation_ignore":"Ignorar","clear_messages_warning":"¿Estás seguro de que quieres eliminar todos los mensajes? Esta acción es irreversible.","code_doesnot_match":"El código no coincide","contacts_not_found":"No tienes chats<br />¯∖_(ツ)_/¯","contacts_not_found_short":"Ningún contacto coincide con \'\'{query}\'\'","credential_email_prompt":"Tu correo electrónico de registro","delete_account":"Eliminar cuenta","delete_account_warning":"¿Estás seguro de que deseas eliminar permanentemente tu cuenta? Esta acción es irreversible.","delete_messages_warning":"¿Estás seguro de que quieres eliminar todos los mensajes para todos? Esta acción es irreversible.","deleted_content":"este mensaje fue eliminado","download_action":"descargar","drafty_attachment":"Archivo","drafty_form":"Formulario:","drafty_image":"Imagen","email_dative":"correo electrónico","email_prompt":"Correo electrónico, p.ej. juan@example.com","enable_peers_messaging":"Habilitar","enter_confirmation_code_prompt":"Introduzca el código de confirmación enviado a tu {method}:","error_invalid_id":"ID inválido","file_attachment_too_large":"El tamaño del archivo {size} excede el límite de {limit}.","forgot_password_link":"¿Olvidaste tu contraseña?","full_name_prompt":"Nombre completo, p.ej. Juan González Hernández","granted_permissions":"Otorgados","group_has_no_members":"No hay miembros","group_user_id_prompt":"ID del grupo o usuario","image_caption_prompt":"Añade un comentario","invalid_content":"contenido inválido","invalid_security_token":"Token de seguridad inválido","label_client":"Cliente:","label_content_type":"Tipo de contenido:","label_default_access_mode":"Modo de acceso predeterminado:","label_file_name":"Nombre del archivo:","label_group_members":"Miembros del grupo:","label_incognito_mode":"Modo incógnito:","label_message_sound":"Sonido de mensaje:","label_muting_topic":"Silenciado:","label_other_user":"Otros","label_password":"Contraseña","label_permissions":"Permisos:","label_private":"Comentario privado","label_push_notifications":"Alertas de notificaciones:","label_push_notifications_disabled":"Alertas de notificaciones (requiere HTTPS):","label_reset_password":"Enviar un correo electrónico de restablecimiento de contraseña:","label_sdk":"SDK:","label_server":"Servidor:","label_server_address":"Dirección del servidor:","label_server_to_use":"Servidor para usar:","label_size":"Tamaño:","label_topic_name":"Nombre del tema","label_user_contacts":"Contactos:","label_user_id":"ID:","label_wire_transport":"Transporte de alambre:","label_you":"Tú:","label_your_name":"Tu nombre","label_your_permissions":"Tus permisos:","last_seen_timestamp":"Últ. vez","leave_chat_warning":"¿Estás seguro de que quieres dejar esta conversación?","link_contact_us":"Contáctanos","link_privacy_policy":"Política de privacidad","link_terms_of_service":"Términos de uso","login_prompt":"Nombre de usuario","menu_item_archive_topic":"Archivar","menu_item_block":"Bloquear","menu_item_clear_messages":"Borrar mensajes","menu_item_clear_messages_for_all":"Borrar para todos","menu_item_delete":"Eliminar","menu_item_delete_for_all":"Eliminar para todos","menu_item_delete_topic":"Eliminar","menu_item_edit_permissions":"Editar permisos","menu_item_info":"Información","menu_item_member_delete":"Eliminar","menu_item_mute":"Silenciar","menu_item_restore_topic":"Restaurar","menu_item_send_retry":"Inténtalo de nuevo","menu_item_unblock":"Desbloquear","menu_item_unmute":"Anular el silencio","message_sending":"enviando...","message_sending_failed":"no se pudo enviar el mensaje","messages_not_readable":"sin acceso a mensajes","messaging_disabled_prompt":"El envío de mensajes está deshabilitado","more_online_members":"+{overflow} más","new_message_prompt":"Nuevo mensaje","new_password_placeholder":"Introduzca una nueva contraseña","no_connection":"Sin conexión","no_contacts":"No tienes contactos :-(","numeric_confirmation_code_prompt":"Sólo números","online_now":"en línea","password_prompt":"Contraseña","password_unchanged_prompt":"Sin cambios","peers_messaging_disabled":"La mensajería Peer está deshabilitada.","permission_admin":"Approbar ({val})","permission_delete":"Eliminar ({val})","permission_join":"Unirse ({val})","permission_owner":"Propietario ({val})","permission_pres":"Ser notificado ({val})","permission_read":"Leer ({val})","permission_share":"Compartir ({val})","permission_write":"Escribir ({val})","phone_dative":"teléfono","private_editing_placeholder":"Sólo visible para tí","push_init_failed":"Error al inicializar las notificaciones push","reconnect_countdown":"Desconectado. Reconectando en {seconds}…","reconnect_now":"Reintentar","reload_update":"Recargar","report_chat_warning":"¿Estás seguro de que quieres bloquear y reportar a esta conversación?","requested_permissions":"Solicitados","save_attachment":"guardar","search_for_contacts":"Usa la búsqueda para encontrar contactos","search_no_results":"La búsqueda no arrojó resultados","search_placeholder":"Ej. email:alice@example.com, tel:17025550003...","sidepanel_title_acc_notifications":"Notificaciones","sidepanel_title_acc_support":"Soporte","sidepanel_title_account_settings":"Ajustes de la cuenta","sidepanel_title_archive":"Chats archivados","sidepanel_title_blocked":"Chats bloqueados","sidepanel_title_cred":"Confirmar credenciales","sidepanel_title_login":"Iniciar sesión","sidepanel_title_newtpk":"Iniciar un nuevo chat","sidepanel_title_register":"Crear cuenta","sidepanel_title_reset":"Restablecer contraseña","sidepanel_title_settings":"Ajustes","stay_logged_in":"Permanecer conectado","tabtitle_find_user":"encontrar","tabtitle_group_by_id":"por ID","tabtitle_new_group":"nuevo grupo","tags_editor_no_tags":"Añadir etiquetas","tags_not_found":"No hay etiquetas definidas. Añade unas.","title_all_contacts":"Todos los contactos","title_group_members":"Miembros del grupo","title_manage_tags":"Gestionar","title_not_found":"No encontrado","title_permissions":"Permisos","title_tag_manager":"Etiquetas (descubrimiento de usuarios)","topic_block_warning":"¿Estás seguro de que quieres bloquear esta conversación","topic_delete_warning":"¿Estás seguro de que quieres eliminar esta conversación?","topic_name_editing_placeholder":"Nombre del grupo","unnamed_topic":"Sin nombre","update_available":"Actualización disponible.","upload_finishing":"terminando...","user_not_found":"Usuario no encontrado","validate_credential_action":"confirmar","description_editing_placeholder":"Descripción (opcional)","label_description":"Descripción","button_security":"Seguridad","panel_title_crop":"Arrastra para ajustar","panel_title_general":"General","panel_title_members":"Miembros","panel_title_security":"Seguridad","panel_title_info":"Información","permissions_anonymous":"Anónimo","permissions_authenticated":"Autenticado","topic_delete":"Eliminar chat","permissions_user":"Permisos del usuario","password_reset_email_sent":"Se ha enviado un correo electrónico a {email}. Siga las instrucciones del correo electrónico para restablecer su contraseña.","label_unarchive_topic":"Archivado:","menu_item_reply":"Respuesta","menu_item_forward":"Reenviar","forward_to":"Reenviar a","forward_to_search_placeholder":"Buscar contactos","label_new_password":"Nueva contraseña","drafty_unknown":"No soportado","calls_incoming":"Llamada entrante","calls_outgoing":"Llamada saliente","calls_you_label":"Tú","menu_item_video_call":"Videollamada","already_in_call":"¡Ya estás hablando!","call_cancelled":"cancelada","call_missed":"perdida","call_declined":"rechazada","call_disconnected":"desconectada","label_use_secure_connection":"Usar conexión segura","phone_or_email_prompt":"Número de teléfono o correo electrónico","cred_confirmed_successfully":"Confirmado con éxito"},"fr":{"action_block_contact":"Bloquer le Contact","action_cancel":"annuler","action_clear_messages":"Effacer les Messages","action_delete_messages":"Effacer les Messages pour Tous","action_leave_chat":"Quitter la Conversation","action_report_chat":"Signaler la Conversation","archived_contacts":"Contacts archivés ({count})","badge_danger":"Non fiable","badge_owner":"propriétaire","badge_staff":"Géré par le Staff","badge_verified":"Vérifié / Officiel","badge_you":"vous","block_contact_warning":"Êtes-vous sûr de bloquer le contact ?","blocked_contacts_link":"Contacts bloqués ({count})","button_add_another":"Ajouter un autre","button_add_members":"Ajouter des membres","button_cancel":"Annuler","button_confirm":"Confirmer","button_create":"Créer","button_delete_account":"Supprimer le compte","button_edit":"Modifier","button_logout":"Déconnexion","button_ok":"OK","button_reset":"Remettre à Zéro","button_send_request":"Envoyer une demande","button_sign_in":"Connexion","button_sign_up":"Créer un compte","button_subscribe":"S\'abonner","button_update":"Mettre à jour","cannot_initiate_file_upload":"Impossible de démarrer l\'envoi.","channel":"canal","channel_prompt":"C\'est un canal","chat_invitation":"Vous êtes invité à démarrer une conversation. Que voulez vous faire ?","chat_invitation_accept":"Accepter","chat_invitation_block":"Bloquer","chat_invitation_ignore":"Ignorer","clear_messages_warning":"Êtes-vous sûr de vouloir effacer tous les messages ? Aucun retour possible.","code_doesnot_match":"Le code ne correspond pas","contacts_not_found":"Vous n\'avez aucune conversation<br />¯∖_(ツ)_/¯","contacts_not_found_short":"Aucun contact ne correspond à \'\'{query}\'\'","credential_email_prompt":"Votre email d\'enregistrement","delete_account":"Supprimer le compte","delete_account_warning":"Êtes-vous sûr de vouloir supprimer votre compte ? Aucun retour possible.","delete_messages_warning":"Êtes-vous sûr de vouloir supprimer tous les messages pour tous ? Aucun retour possible.","deleted_content":"contenu supprimé","download_action":"télécharger","drafty_attachment":"Pièce(s) jointe(s)","drafty_form":"Formulaire:","drafty_image":"Image","email_dative":"email","email_prompt":"Email, par exemple jdoe@exemple.com","enable_peers_messaging":"Activer","enter_confirmation_code_prompt":"Entrez le code de confirmation envoyé par {method}:","error_invalid_id":"Identifiant invalide","file_attachment_too_large":"Le fichier de taille {size} dépasse la limite de {limit}.","forgot_password_link":"Mot de passe oublié ?","full_name_prompt":"Nom complet, par exemple John Doe","granted_permissions":"Accordé","group_has_no_members":"Aucun membre","group_user_id_prompt":"Identifiant d\'utilisateur ou de groupe","image_caption_prompt":"Description de l\'image","invalid_content":"contenu invalide","invalid_security_token":"Token de sécurité invalide","label_client":"Client :","label_content_type":"Type de contenu :","label_default_access_mode":"Mode d\'accès par défaut :","label_file_name":"Nom du fichier :","label_group_members":"Membres du groupe :","label_incognito_mode":"Mode incognito :","label_message_sound":"Son du message :","label_muting_topic":"Mué :","label_other_user":"Autre","label_password":"Mot de passe","label_permissions":"Permissions :","label_private":"Commentaire privé","label_push_notifications":"Notifications :","label_push_notifications_disabled":"Notifications (requière HTTPS):","label_reset_password":"Envoyer un mail de remise à zéro de mot de passe :","label_sdk":"SDK :","label_server":"Serveur :","label_server_address":"Adresse du serveur :","label_server_to_use":"Serveur à utiliser :","label_size":"Taille :","label_topic_name":"Nom","label_user_contacts":"Contacts :","label_user_id":"ID :","label_wire_transport":"Transport par cable :","label_you":"Vous :","label_your_name":"Votre nom","label_your_permissions":"Vos permissions :","last_seen_timestamp":"Vu pour la dernière fois","leave_chat_warning":"Êtes-vous sûr de vouloir quitter cette conversation ?","link_contact_us":"Contactez Nous","link_privacy_policy":"Politique de confidentialité","link_terms_of_service":"Conditions d\'utilisation","login_prompt":"Connexion","menu_item_archive_topic":"Archiver","menu_item_block":"Bloquer","menu_item_clear_messages":"Effacer les messages","menu_item_clear_messages_for_all":"Effacer pour Tous","menu_item_delete":"Supprimer","menu_item_delete_for_all":"Supprimer pour Tous","menu_item_delete_topic":"Supprimer","menu_item_edit_permissions":"Modifier les permissions","menu_item_info":"Informations","menu_item_member_delete":"Supprimer","menu_item_mute":"Rendre muer","menu_item_reply":"Répondre","menu_item_restore_topic":"Restorer","menu_item_send_retry":"Réessayer","menu_item_unblock":"Débloquer","menu_item_unmute":"Recevoir à nouveau","message_sending":"envoi en cours...","message_sending_failed":"échoué","messages_not_readable":"aucun accès aux messages","messaging_disabled_prompt":"Discussion désactivée","more_online_members":"+{overflow} de plus","new_message_prompt":"Nouveau message","new_password_placeholder":"Entrez un nouveau mot de passe","no_connection":"Aucune connexion","no_contacts":"Vous n\'avez pas de contacts :-(","numeric_confirmation_code_prompt":"Nombres seulement","online_now":"en ligne","password_prompt":"Mot de passe","password_unchanged_prompt":"Non changé","peers_messaging_disabled":"La messagerie point à point est désactivée.","permission_admin":"Approver ({val})","permission_delete":"Supprimer ({val})","permission_join":"Rejoindre ({val})","permission_owner":"Propriétaire ({val})","permission_pres":"Recevoir une notification ({val})","permission_read":"Lire ({val})","permission_share":"Partager ({val})","permission_write":"Ecrire ({val})","phone_dative":"téléphone","private_editing_placeholder":"Visible par vous seulement","push_init_failed":"Impossible d\'initialiser les notifications push","reconnect_countdown":"Déconnecté. Reconnexion dans {seconds}…","reconnect_now":"Essayer maintenant","reload_update":"Recharger","report_chat_warning":"Êtes-vous sûr de vouloir bloquer et signaler cette conversation ?","requested_permissions":"Demandé","save_attachment":"sauvegarder","search_for_contacts":"Utilisez la recherche pour trouver des contacts","search_no_results":"La recherche n\'a donné aucun résultat","search_placeholder":"Liste comme email:alice@exemple.com, tel:17025550003...","sidepanel_title_acc_notifications":"Notifications","sidepanel_title_acc_support":"Support","sidepanel_title_account_settings":"Paramètres du compte","sidepanel_title_archive":"Conversations Archivées","sidepanel_title_blocked":"Conversations Bloquées","sidepanel_title_cred":"Confirmer les identifiants","sidepanel_title_login":"Se Connecter","sidepanel_title_newtpk":"Démarrer une nouvelle Conversation","sidepanel_title_register":"Créer un compte","sidepanel_title_reset":"Remettre à Zéro le Mot de Passe","sidepanel_title_settings":"Paramètres","stay_logged_in":"Rester connecté","tabtitle_find_user":"trouver","tabtitle_group_by_id":"par identifiant","tabtitle_new_group":"nouveau groupe","tags_editor_no_tags":"Ajouter des étiquettes","tags_not_found":"Aucune étiquette définie. Ajoutez en.","title_all_contacts":"Tous les Contacts","title_group_members":"Membres du Groupe","title_manage_tags":"Gérer","title_not_found":"Pas trouvé","title_permissions":"Permissions","title_tag_manager":"Etiquettes (recherche & découverte)","topic_block_warning":"Êtes-vous sûr de vouloir bloquer cette conversation ?","topic_delete_warning":"Êtes-vous sûr de vouloir supprimer cette conversation ?","topic_name_editing_placeholder":"Nom libre du groupe","unnamed_topic":"Non nommé","update_available":"Mise à jour disponible.","upload_finishing":"fin...","user_not_found":"Pas trouvé","validate_credential_action":"confirmer","description_editing_placeholder":"Description facultative","label_description":"Description","button_security":"Sécurité","panel_title_crop":"Déplacez pour ajuster","panel_title_general":"Général","panel_title_members":"Membres","panel_title_security":"Sécurité","panel_title_info":"Informations","permissions_anonymous":"Anonyme","permissions_authenticated":"Authentifié","topic_delete":"Supprimer la Conversation","permissions_user":"Permissions d\'Utilisateur","password_reset_email_sent":"Un email a été envoyé à {email}. Suivez les instructions du mail pour remettre à zéro votre mot de passe.","label_unarchive_topic":"Archivé:","menu_item_forward":"Transférer","forward_to":"Transférer à","forward_to_search_placeholder":"Rechercher des contacts","label_new_password":"Nouveau mot de passe","drafty_unknown":"Non supporté","already_in_call":"Vous êtes déjà dans un appel en cours!","call_cancelled":"annulé","call_declined":"refusé","call_missed":"manqué","calls_incoming":"Appel entrant","calls_outgoing":"Appel sortant","calls_you_label":"Tu","menu_item_video_call":"Appel vidéo","call_disconnected":"débranché","label_use_secure_connection":"Utiliser une connexion sécurisée","phone_or_email_prompt":"Numéro de téléphone ou email","cred_confirmed_successfully":"Confirmé avec succès"},"ko":{"action_block_contact":"연락차단","action_cancel":"취소","action_clear_messages":"메시지지우기","action_delete_messages":"모든메시지지우기","action_leave_chat":"대화나누기","action_report_chat":"대화기록","archived_contacts":"보관된연락처({수})","badge_danger":"의심 많은","badge_owner":"소유자","badge_staff":"직원 관리하에","badge_verified":"확인 됨","badge_you":"당신","block_contact_warning":"이연락처를차단하시겠습니까?","blocked_contacts_link":"차단된연락처({수})","button_add_another":"다른항목추가","button_add_members":"회원추가","button_cancel":"취소","button_confirm":"확인","button_create":"작성","button_delete_account":"계정삭제","button_edit":"편집","button_logout":"로그아웃","button_ok":"OK","button_reset":"재설정","button_send_request":"요청보내기","button_sign_in":"로그인","button_sign_up":"가입","button_subscribe":"구독","button_update":"업데이트","cannot_initiate_file_upload":"파일업로드를시작할수없습니다.","channel":"채널","channel_prompt":"이 채널입니다","chat_invitation":"새로운대화를시작하도록초대되었습니다.무엇을하시겠습니까?","chat_invitation_accept":"수락","chat_invitation_block":"차단","chat_invitation_ignore":"무시","clear_messages_warning":"모든메시지를지우시겠습니까?실행취소할수없습니다.","code_doesnot_match":"코드가일치하지않습니다","contacts_not_found":"채팅이없습니다<br/>¯∖_(ツ)_/¯","contacts_not_found_short":"\'{문의}\'와일치하는연락처가없습니다.","credential_email_prompt":"등록이메일","delete_account":"계정삭제","delete_account_warning":"계정을삭제하시겠습니까?실행취소할수없습니다.","delete_messages_warning":"모든사람의모든메시지를삭제하시겠습니까?실행취소할수없습니다.","deleted_content":"내용이 삭제되었습니다","download_action":"다운로드","drafty_attachment":"부착","drafty_form":"형태:","drafty_image":"이미지","email_dative":"이메일","email_prompt":"이메일(예:hong@example.com)","enable_peers_messaging":"활성화","enter_confirmation_code_prompt":"{방법}으로보낸확인코드를입력하십시오:","error_invalid_id":"잘못된ID","file_attachment_too_large":"파일크기{크기}이(가){제한}제한을초과합니다.","forgot_password_link":"비밀번호를잊으셨습니까?","full_name_prompt":"전체이름(예:홍길동)","granted_permissions":"승낙하다","group_has_no_members":"회원없음","group_user_id_prompt":"그룹또는사용자ID","image_caption_prompt":"이미지설명","invalid_content":"잘못된내용","invalid_security_token":"유효하지않은보안토큰","label_client":"클라이언트: ","label_content_type":"컨텐츠유형: ","label_default_access_mode":"기본액세스모드: ","label_file_name":"파일이름: ","label_group_members":"그룹회원: ","label_incognito_mode":"시크릿모드: ","label_message_sound":"메시지소리: ","label_muting_topic":"음소거: ","label_other_user":"기타","label_password":"비밀번호","label_permissions":"권한: ","label_private":"개인코멘트","label_push_notifications":"통지경보: ","label_push_notifications_disabled":"통지경보(HTTPS필요): ","label_reset_password":"비밀번호재설정이메일보내기: ","label_sdk":"SDK:","label_server":"서버: ","label_server_address":"서버주소: ","label_server_to_use":"사용할서버:","label_size":"크기: ","label_topic_name":"이름","label_user_contacts":"연락처: ","label_user_id":"ID:","label_wire_transport":"와이어수송:","label_you":"당신: ","label_your_name":"이름","label_your_permissions":"권한: ","last_seen_timestamp":"마지막으로본","leave_chat_warning":"이대화를나가시겠습니까?","link_contact_us":"문의처","link_privacy_policy":"개인정보보호정책","link_terms_of_service":"서비스약관","login_prompt":"로그인","menu_item_archive_topic":"보관","menu_item_block":"차단","menu_item_clear_messages":"메시지지우기","menu_item_clear_messages_for_all":"모두지우기","menu_item_delete":"삭제","menu_item_delete_for_all":"모두삭제","menu_item_delete_topic":"삭제","menu_item_edit_permissions":"편집권한","menu_item_info":"정보","menu_item_member_delete":"제거","menu_item_mute":"음소거","menu_item_restore_topic":"복원","menu_item_send_retry":"다시시도","menu_item_unblock":"차단해제","menu_item_unmute":"음소거해제","message_sending":"보내기...","message_sending_failed":"실패","messages_not_readable":"메시지에 액세스 할 수 없습니다","messaging_disabled_prompt":"메시지비활성화","more_online_members":"+{넘침}더보기","new_message_prompt":"새메시지","new_password_placeholder":"새비밀번호입력","no_connection":"연결없음","no_contacts":"연락처가없습니다 (._.)","numeric_confirmation_code_prompt":"숫자만","online_now":"현재접속중","password_prompt":"비밀번호","password_unchanged_prompt":"변경되지않음","peers_messaging_disabled":"동료의메시지가비활성화되었습니다.","permission_admin":"승인({val})","permission_delete":"삭제({val})","permission_join":"참여({val})","permission_owner":"소유자({val})","permission_pres":"알림받기({val})","permission_read":"읽기({val})","permission_share":"공유({val})","permission_write":"쓰기({val})","phone_dative":"전화","private_editing_placeholder":"나만볼수있습니다","push_init_failed":"푸시알림을초기화하지못했습니다","reconnect_countdown":"연결이끊어졌습니다.다시연결하는중{초}…","reconnect_now":"지금시도","reload_update":"재로드","report_chat_warning":"이대화를차단하고기록하시겠습니까?","requested_permissions":"요청","save_attachment":"저장","search_for_contacts":"검색을사용하여연락처찾기","search_no_results":"검색결과가없습니다","search_placeholder":"email:alice@example.com,tel:17025550003...와같은목록","sidepanel_title_acc_notifications":"알림","sidepanel_title_acc_support":"지원","sidepanel_title_account_settings":"계정설정","sidepanel_title_archive":"보관된채팅","sidepanel_title_blocked":"차단된채팅","sidepanel_title_cred":"자격증명확인","sidepanel_title_login":"로그인","sidepanel_title_newtpk":"새채팅시작","sidepanel_title_register":"계정만들기","sidepanel_title_reset":"비밀번호재설정","sidepanel_title_settings":"설정","stay_logged_in":"로그인상태유지","tabtitle_find_user":"찾기","tabtitle_group_by_id":"id로","tabtitle_new_group":"새그룹","tags_editor_no_tags":"일부태그추가","tags_not_found":"태그가정의되지않았습니다.일부를추가하십시오.","title_all_contacts":"모든연락처","title_group_members":"그룹구성원","title_manage_tags":"관리","title_not_found":"찾을수없음","title_permissions":"권한","title_tag_manager":"태그(사용자검색)","topic_block_warning":"이대화를차단하시겠습니까?","topic_delete_warning":"이대화를삭제하시겠습니까?","topic_name_editing_placeholder":"그룹의자유형이름","unnamed_topic":"이름없는","update_available":"업데이트가능.","upload_finishing":"마무리...","user_not_found":"찾을수없음","validate_credential_action":"확인","description_editing_placeholder":"설명(선택 사항)","label_description":"설명","button_security":"보안","panel_title_crop":"드래그하여 조정","panel_title_general":"일반","panel_title_members":"구성원","panel_title_security":"보안","panel_title_info":"정보","permissions_anonymous":"익명","permissions_authenticated":"인증됨","topic_delete":"채팅 삭제","permissions_user":"사용자 권한","password_reset_email_sent":"이메일이 {email}(으)로 전송되었습니다. 이메일의 지침에 따라 비밀번호를 재설정하세요.","label_unarchive_topic":"보관됨:","menu_item_reply":"회신하다","menu_item_forward":"리디렉션","forward_to":"메시지를 리디렉션","forward_to_search_placeholder":"연락처 검색","label_new_password":"새 비밀번호","drafty_unknown":"지원되지 않음","calls_incoming":"수신 전화","calls_outgoing":"발신 전화","calls_you_label":"너","menu_item_video_call":"영상 통화","already_in_call":"당신은 이미 말하고 있습니다!","call_cancelled":"취소 된","call_missed":"부재중","call_declined":"통화 거부","call_disconnected":"연결 끊김","label_use_secure_connection":"보안 연결 사용","phone_or_email_prompt":"전화번호 또는 이메일","cred_confirmed_successfully":"성공적으로 확인됨"},"ro":{"action_block_contact":"Blochează contact","action_cancel":"anulează","action_clear_messages":"Șterge mesajele","action_delete_messages":"Șterge toate mesajele","action_leave_chat":"Ieși din conversație","action_report_chat":"Raportează conversația","archived_contacts":"Contacte arhivate ({count})","badge_danger":"Suspicios","badge_owner":"owner","badge_staff":"Administrare","badge_verified":"Verificat","badge_you":"tu","block_contact_warning":"Ești sigur că dorești să blochezi acest contact?","blocked_contacts_link":"Contact blocate ({count})","button_add_another":"Adaugă","button_add_members":"Adaugă persoane","button_cancel":"Anulează","button_confirm":"Confirmă","button_create":"Creează","button_delete_account":"Șterge cont","button_edit":"Editează","button_logout":"Deconectare","button_ok":"OK","button_reset":"Resetează","button_send_request":"Trimite cerere","button_sign_in":"Conectează-te","button_sign_up":"Creează cont","button_subscribe":"Subscribe","button_update":"Actualizează","cannot_initiate_file_upload":"Nu se poate face încărcarea.","channel":"canal","channel_prompt":"Acesta este un canal","chat_invitation":"Ai primit invitație într-o conversație. Accepți?","chat_invitation_accept":"Da, accept","chat_invitation_block":"Blochează","chat_invitation_ignore":"Ignoră","clear_messages_warning":"Ești sigur că dorești să ștergi mesajele? Acestea nu pot fi recuperate.","code_doesnot_match":"Codul furnizat nu este valid","contacts_not_found":"Nu ai contacte salvate<br />¯∖_(ツ)_/¯","contacts_not_found_short":"Niciun contact găsit după criteriile \'\'{query}\'\'","credential_email_prompt":"Adresa de e-mail","delete_account":"Șterge contul","delete_account_warning":"Ești sigur că dorești să ștergi contul? Acesta nu va putea fi recuperat.","delete_messages_warning":"Ești sigur că dorești să șterge mesajele din toate conversațiile? Acestea nu pot fi recuperate.","deleted_content":"conținut șters","download_action":"download","drafty_attachment":"Atasament","drafty_form":"Formă:","drafty_image":"Imagine","email_dative":"email","email_prompt":"Adresa de e-mail","enable_peers_messaging":"Activează","enter_confirmation_code_prompt":"Introu codul de confirmare trimis pe {method}:","error_invalid_id":"ID Invalid","file_attachment_too_large":"Dimensiunea fișiterului {size} depășește limita de {limit}.","forgot_password_link":"Ți-ai uitat parola?","full_name_prompt":"Numele tău","granted_permissions":"Oferite","group_has_no_members":"În acest grup nu se află persoane","group_user_id_prompt":"Grup sau user ID","image_caption_prompt":"Titlul imaginii","invalid_content":"conținut invalid","invalid_security_token":"Codul de securitate este invalid","label_client":"Client:","label_content_type":"Tip conținut:","label_default_access_mode":"Default access mode:","label_file_name":"Nume fișier:","label_group_members":"Membrii grupului:","label_incognito_mode":"Mod incognito:","label_message_sound":"Sunet de mesaj:","label_muting_topic":"Mod silențios (muted):","label_other_user":"Altele","label_password":"Parola","label_permissions":"Permisiuni:","label_private":"Comentariu privat","label_push_notifications":"Alerte de notificare:","label_push_notifications_disabled":"Alerte de notificare (necesită HTTPS):","label_reset_password":"Resetează parola:","label_sdk":"SDK:","label_server":"Server:","label_server_address":"Adresa serverului:","label_server_to_use":"Server de utilizat:","label_size":"Size:","label_topic_name":"Nume","label_user_contacts":"Contacte:","label_user_id":"ID:","label_wire_transport":"Transportul legat:","label_you":"Tu:","label_your_name":"Numele tău","label_your_permissions":"Permisiuniile tale:","last_seen_timestamp":"Văzut ultima dată","leave_chat_warning":"Ești sigur că dorești să ieși din conersație?","link_contact_us":"Contactează-ne","link_privacy_policy":"Politica de Confidențialitate","link_terms_of_service":"Termenii Serviciului","login_prompt":"Conectează-te","menu_item_archive_topic":"Arhivează","menu_item_block":"Blochează","menu_item_clear_messages":"Șterge mesajele","menu_item_clear_messages_for_all":"Ștergele pe toate","menu_item_delete":"Șterge","menu_item_delete_for_all":"Ștergele pe toate","menu_item_delete_topic":"Șterge","menu_item_edit_permissions":"Editează permisiuni","menu_item_info":"Info","menu_item_member_delete":"Șterge persoană","menu_item_mute":"Mute","menu_item_restore_topic":"Restabili","menu_item_send_retry":"Reîncearcă","menu_item_unblock":"Deblochează","menu_item_unmute":"Unmute","message_sending":"se trimite...","message_sending_failed":"eroare","messages_not_readable":"Mesajele nu pot fi citite","messaging_disabled_prompt":"Mesageria este dezactivată","more_online_members":"+{overflow} mai mult","new_message_prompt":"Mesaj nou","new_password_placeholder":"Introdu parolă","no_connection":"Nu există conexiune","no_contacts":"Nu ai contacte adăugate :-(","numeric_confirmation_code_prompt":"Doar cifre","online_now":"online acum","password_prompt":"Parola","password_unchanged_prompt":"Neschimbată","peers_messaging_disabled":"Mesageria de tip Peer este dezactivată.","permission_admin":"Aprobare ({val})","permission_delete":"Ștergere ({val})","permission_join":"Participare ({val})","permission_owner":"Deținător ({val})","permission_pres":"Notificare ({val})","permission_read":"Citire ({val})","permission_share":"Distribuire ({val})","permission_write":"Scriere ({val})","phone_dative":"telefon","private_editing_placeholder":"Vizibil doar ție","push_init_failed":"Nu s-a reușit inițializarea tip push notifications","reconnect_countdown":"Deconectat. Se încearcă conectarea în {seconds}…","reconnect_now":"Încearcă din nou","reload_update":"Reîncarcă","report_chat_warning":"Ești sigur că dorești să blochezi și să raportezi această conversație?","requested_permissions":"Necesare","save_attachment":"salvează","search_for_contacts":"Caută în contacte","search_no_results":"Nu s-au găsit rezultate","search_placeholder":"Caută după e-mail sau număr telefon...","sidepanel_title_acc_notifications":"Notificări","sidepanel_title_acc_support":"Ajutor","sidepanel_title_account_settings":"Setările Contului","sidepanel_title_archive":"Conversații Arhivate","sidepanel_title_blocked":"Conversații Blocate","sidepanel_title_cred":"Confirmă credențiale","sidepanel_title_login":"Conectează-te","sidepanel_title_newtpk":"Creeză un nou Chat","sidepanel_title_register":"Creează Cont","sidepanel_title_reset":"Resetează Parola","sidepanel_title_settings":"Setări","stay_logged_in":"Rămâi conectat","tabtitle_find_user":"caută","tabtitle_group_by_id":"după id","tabtitle_new_group":"grup nou","tags_editor_no_tags":"Adaugă tag-uri","tags_not_found":"Niciun tag definit. Adaugă.","title_all_contacts":"Toate Contactele","title_group_members":"Persoanele din grup","title_manage_tags":"Administrează","title_not_found":"Nu a fost găsit","title_permissions":"Permisiuni","title_tag_manager":"Tag-uri (user discovery)","topic_block_warning":"Ești sigur că dorești să blochezi această conversație?","topic_delete_warning":"Ești sigur că dorești să șterge această conversație?","topic_name_editing_placeholder":"Numele grupului","unnamed_topic":"Nedenumit","update_available":"Actualizare disponibilă.","upload_finishing":"se încarcă...","user_not_found":"Utilizatorul nu a fost găsit","validate_credential_action":"confirmă","description_editing_placeholder":"Descriere (opțional)","label_description":"Descriere","button_security":"Securitate","panel_title_crop":"Trageți pentru a ajusta","panel_title_general":"Generale","panel_title_members":"Membri","panel_title_security":"Securitate","panel_title_info":"Info","permissions_anonymous":"Anonim","permissions_authenticated":"Autentificat","topic_delete":"Ștergeți Chat","permissions_user":"Permisiunile utilizatorului","password_reset_email_sent":"Un e-mail a fost trimis către {email}. Urmați instrucțiunile din e-mail pentru a vă reseta parola.","label_unarchive_topic":"Arhivat:","menu_item_reply":"A raspunde","menu_item_forward":"Redirecţiona","forward_to":"Redirecționați către","forward_to_search_placeholder":"Căutați contacte","label_new_password":"Parolă Nouă","drafty_unknown":"Neacceptat","calls_incoming":"Apel primit","calls_outgoing":"Apel efectuat","calls_you_label":"Tu","menu_item_video_call":"Apel video","already_in_call":"Deja vorbesti!","call_cancelled":"anulat","call_missed":"pierdut","call_declined":"refuzat","call_disconnected":"deconectat","label_use_secure_connection":"Utilizați conexiune securizată","phone_or_email_prompt":"Număr de telefon sau e-mail","cred_confirmed_successfully":"Confirmat cu succes"},"ru":{"action_block_contact":"Заблокировать контакт","action_cancel":"отменить","action_clear_messages":"Удалить сообщения","action_delete_messages":"Удалить сообщения","action_leave_chat":"Уйти из чата","action_report_chat":"Сообщить о нарушении","archived_contacts":"Чаты в архиве ({count})","badge_danger":"Подозрительный","badge_owner":"влад.","badge_staff":"Администрация","badge_verified":"Верифицированный","badge_you":"вы","block_contact_warning":"Вы действительно заблокировать этот контакт?","blocked_contacts_link":"Заблокированные ({count})","button_add_another":"Добавить","button_add_members":"Добавить","button_cancel":"Отменить","button_confirm":"Подтвердить","button_create":"Создать","button_delete_account":"Удалить аккаунт","button_edit":"Изменить","button_logout":"Выйти","button_ok":"OK","button_reset":"Изменить","button_send_request":"Отправить","button_sign_in":"Войти","button_sign_up":"Создать аккаунт","button_subscribe":"Подписаться","button_update":"Применить","cannot_initiate_file_upload":"Ошибка загрузки файла.","channel":"канал","channel_prompt":"Создать канал","chat_invitation":"Вас пригласили начать новый чат. Как вы хотите поступить?","chat_invitation_accept":"Принять","chat_invitation_block":"Заблокировать","chat_invitation_ignore":"Игнорировать","clear_messages_warning":"Вы действительно хотите удалить все сообщения в чате? Их будет невозможно восстановить.","code_doesnot_match":"Код не совпадает","contacts_not_found":"Чатов нет<br />¯∖_(ツ)_/¯","contacts_not_found_short":"Нет контактов для запроса \'\'{query}\'\'","credential_email_prompt":"Регистрационный емейл","delete_account":"Удалить аккаунт","delete_account_warning":"Вы уверены, что ходите удалить свой аккаунт? Его невозможно будет восстановить.","delete_messages_warning":"Вы действительно хотите удалить все сообщения?","deleted_content":"удалено","download_action":"скачать","drafty_attachment":"Аттачмент","drafty_form":"Форма:","drafty_image":"Картинка","email_dative":"емейлу","email_prompt":"Email, напр. ivan@example.com","enable_peers_messaging":"Разблокировать.","enter_confirmation_code_prompt":"Код подтверждения, полученный по {method}:","error_invalid_id":"Неверный ID","file_attachment_too_large":"Размер файла {size} превышает {limit} лимит.","forgot_password_link":"Напомнить пароль","full_name_prompt":"Полное имя, напр. Иван Петров","granted_permissions":"Получены","group_has_no_members":"Нет участников","group_user_id_prompt":"ID чата или пользователя","image_caption_prompt":"Подпись к фото","invalid_content":"сообщение не читается","invalid_security_token":"Токен некорректен","label_client":"Клиент:","label_content_type":"Тип:","label_default_access_mode":"Доступ по умолчанию:","label_file_name":"Имя файла:","label_group_members":"Участники чата:","label_incognito_mode":"Режим инкогнито:","label_message_sound":"Звук нового сообщения:","label_muting_topic":"Без уведомлений","label_other_user":"Второй","label_password":"Пароль","label_permissions":"Права доступа:","label_private":"Комментарий","label_push_notifications":"Уведомления:","label_push_notifications_disabled":"Уведомления (требуют HTTPS):","label_reset_password":"Отправить емейл для смены пароля:","label_sdk":"SDK:","label_server":"Сервер:","label_server_address":"Адрес сервера:","label_server_to_use":"Использовать сервер:","label_size":"Размер:","label_topic_name":"Название","label_user_contacts":"Конакты:","label_user_id":"ID:","label_wire_transport":"Соединение:","label_you":"Вы:","label_your_name":"Ваше имя","label_your_permissions":"Ваши права доступа:","last_seen_timestamp":"Был активен","leave_chat_warning":"Вы действительно хотите покинуть этот чат?","link_contact_us":"Связаться с нами","link_privacy_policy":"Политика конфиденциальности","link_terms_of_service":"Условия сервиса","login_prompt":"Логин","menu_item_archive_topic":"В архив","menu_item_block":"Заблокировать","menu_item_clear_messages":"Удалить сообщения","menu_item_clear_messages_for_all":"Удалить для всех","menu_item_delete":"Удалить","menu_item_delete_for_all":"Удалить для всех","menu_item_delete_topic":"Удалить чат","menu_item_edit_permissions":"Права доступа","menu_item_info":"Информация","menu_item_member_delete":"Отписать","menu_item_mute":"Не уведомлять","menu_item_restore_topic":"Разархивировать","menu_item_send_retry":"Отправить заново","menu_item_unblock":"Разблокировать","menu_item_unmute":"Уведомлять","message_sending":"в пути...","message_sending_failed":"ошибка","messages_not_readable":"нет доступа к сообщениям","messaging_disabled_prompt":"Отправка недоступна","more_online_members":"+еще {overflow}","new_message_prompt":"Новое сообщение","new_password_placeholder":"Введите новый пароль","no_connection":"Нет связи","no_contacts":"Ничего нет :-(","numeric_confirmation_code_prompt":"Только цифры","online_now":"онлайн","password_prompt":"Пароль","password_unchanged_prompt":"Не изменен","peers_messaging_disabled":"Чат заблокирован у корреспондента.","permission_admin":"Подтверждать ({val})","permission_delete":"Удалять ({val})","permission_join":"Подписываться ({val})","permission_owner":"Владелец ({val})","permission_pres":"Уведомлять ({val})","permission_read":"Читать ({val})","permission_share":"Приглашать ({val})","permission_write":"Писать ({val})","phone_dative":"телефону","private_editing_placeholder":"Виден только вам","push_init_failed":"Ошибка инициализации пуш уведомлений","reconnect_countdown":"Нет связи. Подключение через {seconds}…","reconnect_now":"Подключить сейчас.","reload_update":"Обновить","report_chat_warning":"Вы действительно хотите сообщить о нарушении и заблокировать этот чат?","requested_permissions":"Требуются","save_attachment":"сохранить","search_for_contacts":"Поиск контактов","search_no_results":"Ничего не найдено","search_placeholder":"Список, напр. email:alice@example.com, tel:+17025550003...","sidepanel_title_acc_notifications":"Уведомления","sidepanel_title_acc_support":"Поддержка","sidepanel_title_account_settings":"Настройки аккаунта","sidepanel_title_archive":"Архив чатов","sidepanel_title_blocked":"Заблокированные чаты","sidepanel_title_cred":"Подтвердить","sidepanel_title_login":"Авторизация","sidepanel_title_newtpk":"Новый чат","sidepanel_title_register":"Зарегистрироваться","sidepanel_title_reset":"Сменить пароль","sidepanel_title_settings":"Настройки","stay_logged_in":"Запомнить","tabtitle_find_user":"найти","tabtitle_group_by_id":"по id","tabtitle_new_group":"создать","tags_editor_no_tags":"Добавьте теги","tags_not_found":"Тегов нет. Добавьте.","title_all_contacts":"Все контакты","title_group_members":"Участники","title_manage_tags":"Редактировать","title_not_found":"Не найден","title_permissions":"Права доступа","title_tag_manager":"Теги для поиска","topic_block_warning":"Вы действительно хотите заблокировать этот чат?","topic_delete_warning":"Вы действительно хотите удалить этот чат?","topic_name_editing_placeholder":"Название чата","unnamed_topic":"Без названия","update_available":"Есть новая версия приложения.","upload_finishing":"завершение...","user_not_found":"Не найден","validate_credential_action":"подтвердить","description_editing_placeholder":"Описание (не обязательно)","label_description":"Описание","button_security":"Безопасность","panel_title_crop":"Обрезать картинку","panel_title_general":"Общие настройки","panel_title_members":"Участники","panel_title_security":"Безопасность","panel_title_info":"Подробности","permissions_anonymous":"Анонимный","permissions_authenticated":"Авторизованный","topic_delete":"Удалить чат","permissions_user":"Права доступа","password_reset_email_sent":"Сообщение было отправлено на адрес {email}. Следуйте инструкциям в сообщении, чтобы изменить пароль.","label_unarchive_topic":"Архивирован:","menu_item_reply":"Ответить","menu_item_forward":"Переслать","forward_to":"Переслать","forward_to_search_placeholder":"Поиск контактов","label_new_password":"Новый пароль","drafty_unknown":"Не поддерживается","calls_incoming":"Входящий звонок","calls_outgoing":"Исходящий звонок","calls_you_label":"Вы","menu_item_video_call":"Видеозвонок","already_in_call":"Вы уже звоните кому-то!","call_cancelled":"отменен","call_missed":"пропущен","call_declined":"отклонен","call_disconnected":"разъединен","label_use_secure_connection":"Безопасное соединение","phone_or_email_prompt":"Телефон или емейл","cred_confirmed_successfully":"Подтверждено успешно"},"zh-TW":{"action_block_contact":"封鎖聯絡人","action_cancel":"取消","action_clear_messages":"清除訊息","action_delete_messages":"為所有人清除訊息","action_leave_chat":"離開對話","action_report_chat":"檢舉對話","archived_contacts":"已封存的聯絡人 ({count})","badge_danger":"不可信","badge_owner":"擁有者","badge_staff":"員工管理","badge_verified":"已驗證/官方","badge_you":"您","block_contact_warning":"您確定要封鎖此聯絡人嗎？","blocked_contacts_link":"已封鎖的聯絡人 ({count})","button_add_another":"新增其他人","button_add_members":"新增成員","button_cancel":"取消","button_confirm":"確認","button_create":"建立","button_delete_account":"刪除帳號","button_edit":"編輯","button_logout":"登出","button_ok":"OK","button_reset":"重設","button_send_request":"傳送要求","button_sign_in":"登入","button_sign_up":"註冊","button_subscribe":"訂閱","button_update":"更新","cannot_initiate_file_upload":"無法為檔案上傳初始化。","channel":"頻道","channel_prompt":"這是頻道","chat_invitation":"您已被邀請開始新對話。您接下來要做什麼呢？","chat_invitation_accept":"接受","chat_invitation_block":"封鎖","chat_invitation_ignore":"忽略","clear_messages_warning":"您確定要清除所有訊息嗎？此操作無法復原。","code_doesnot_match":"代碼不相符","contacts_not_found":"您沒有任何對話<br />¯∖_(ツ)_/¯","contacts_not_found_short":"沒有符合 \'\'{query}\'\' 的聯絡人","credential_email_prompt":"您的註冊電子郵件地址","delete_account":"刪除帳號","delete_account_warning":"您確定要刪除您的帳戶嗎？此操作無法撤消。","delete_messages_warning":"您確定要為所有人刪除所有訊息嗎？此操作無法復原。","deleted_content":"內容已被刪除","download_action":"下載","drafty_attachment":"附加檔案","drafty_form":"表單：","drafty_image":"圖片","email_dative":"電子郵件地址","email_prompt":"電子郵件地址，例如：jdoe@example.com","enable_peers_messaging":"啟用","enter_confirmation_code_prompt":"輸入透過 {method} 傳送給您的確認碼：","error_invalid_id":"ID 無效","file_attachment_too_large":"檔案大小 {size} 超出 {limit} 限制。","forgot_password_link":"忘記密碼？","full_name_prompt":"全名，例如：王小明","granted_permissions":"已授權","group_has_no_members":"無成員","group_user_id_prompt":"群組或使用者 ID","image_caption_prompt":"圖片說明","invalid_content":"內容無效","invalid_security_token":"安全權杖無效","label_client":"客戶端：","label_content_type":"類型：","label_default_access_mode":"預設存取模式：","label_file_name":"檔名：","label_group_members":"群組成員：","label_incognito_mode":"無痕模式：","label_message_sound":"訊息提示聲：","label_muting_topic":"靜音：","label_other_user":"其他","label_password":"密碼","label_permissions":"權限：","label_private":"私人留言","label_push_notifications":"通知：","label_push_notifications_disabled":"通知 (需要 HTTPS)：","label_reset_password":"傳送重設密碼郵件：","label_sdk":"SDK：","label_server":"伺服器：","label_server_address":"伺服器位址：","label_server_to_use":"使用的伺服器：","label_size":"大小：","label_topic_name":"名稱","label_user_contacts":"聯絡人：","label_user_id":"ID：","label_wire_transport":"Wire transport：","label_you":"您：","label_your_name":"您的名字","label_your_permissions":"您的權限：","last_seen_timestamp":"最後上線","leave_chat_warning":"您確定要離開此對話嗎？","link_contact_us":"聯絡我們","link_privacy_policy":"隱私權政策","link_terms_of_service":"服務條款","login_prompt":"登入","menu_item_archive_topic":"封存","menu_item_block":"封鎖","menu_item_clear_messages":"清除訊息","menu_item_clear_messages_for_all":"為所有人清除訊息","menu_item_delete":"刪除","menu_item_delete_for_all":"為所有人刪除","menu_item_delete_topic":"刪除","menu_item_edit_permissions":"編輯權限","menu_item_info":"Info","menu_item_member_delete":"移除","menu_item_mute":"靜音","menu_item_restore_topic":"恢復","menu_item_send_retry":"重試","menu_item_unblock":"解除封鎖","menu_item_unmute":"解除靜音","message_sending":"正在傳送...","message_sending_failed":"失敗","messages_not_readable":"沒有存取訊息的權限","messaging_disabled_prompt":"停用訊息","more_online_members":"+{overflow}","new_message_prompt":"新訊息","new_password_placeholder":"輸入新的密碼","no_connection":"無連線","no_contacts":"您沒有任何聯絡人 :-(","numeric_confirmation_code_prompt":"僅數字","online_now":"上線中","password_prompt":"密碼","password_unchanged_prompt":"未修改","peers_messaging_disabled":"Peer 已停用訊息。","permission_admin":"核可 ({val})","permission_delete":"刪除 ({val})","permission_join":"加入 ({val})","permission_owner":"擁有者 ({val})","permission_pres":"收到通知 ({val})","permission_read":"讀取 ({val})","permission_share":"分享 ({val})","permission_write":"撰寫 ({val})","phone_dative":"phone","private_editing_placeholder":"僅您可見","push_init_failed":"初始化通知失敗。","reconnect_countdown":"已斷線。將在 {seconds} 秒後重新連線…","reconnect_now":"現在重試","reload_update":"重新載入","report_chat_warning":"您確定要封鎖並檢舉此對話嗎？","requested_permissions":"重新請求","save_attachment":"儲存","search_for_contacts":"使用搜尋來尋找聯絡人","search_no_results":"搜尋無結果","search_placeholder":"例如 email:alice@example.com, tel:17025550003... 的清單","sidepanel_title_acc_notifications":"通知","sidepanel_title_acc_support":"支援","sidepanel_title_account_settings":"帳號設定","sidepanel_title_archive":"已封存的對話","sidepanel_title_blocked":"已封鎖的對話","sidepanel_title_cred":"確認認證","sidepanel_title_login":"登入","sidepanel_title_newtpk":"開始新對話","sidepanel_title_register":"建立帳號","sidepanel_title_reset":"重設密碼","sidepanel_title_settings":"設定","stay_logged_in":"保持登入","tabtitle_find_user":"尋找","tabtitle_group_by_id":"以 id","tabtitle_new_group":"新群組","tags_editor_no_tags":"新增一些標籤","tags_not_found":"未定義任何標籤。請新增一些標籤。","title_all_contacts":"所有聯絡人","title_group_members":"群組成員","title_manage_tags":"管理","title_not_found":"找不到","title_permissions":"權限","title_tag_manager":"標籤 (使用者探索)","topic_block_warning":"您確定要封鎖此對話嗎？","topic_delete_warning":"您確定要刪除此對話嗎？","topic_name_editing_placeholder":"群組的任意名稱","unnamed_topic":"未命名","update_available":"有可用的更新。","upload_finishing":"正在完成...","user_not_found":"找不到","validate_credential_action":"確認","description_editing_placeholder":"說明（可選）","label_description":"說明","button_security":"安全性","panel_title_crop":"拖動調整","panel_title_general":"一般","panel_title_members":"成員","panel_title_security":"安全性","panel_title_info":"資訊","permissions_anonymous":"匿名","permissions_authenticated":"已認證","topic_delete":"刪除聊天","permissions_user":"用戶權限","password_reset_email_sent":"一封電子郵件已發送至 {email}。按照電子郵件中的說明重置密碼。","label_unarchive_topic":"存檔聊天：","menu_item_reply":"回答","menu_item_forward":"重定向","forward_to":"重定向消息","forward_to_search_placeholder":"搜索聯繫人","label_new_password":"新密碼","drafty_unknown":"不支持","calls_incoming":"來電","calls_outgoing":"撥出電話","calls_you_label":"你","menu_item_video_call":"視頻電話","already_in_call":"你已經在說話了！","call_cancelled":"取消","call_missed":"未接","call_declined":"被拒","call_disconnected":"斷開連接","label_use_secure_connection":"使用安全連接","phone_or_email_prompt":"電話號碼或電子郵件","cred_confirmed_successfully":"確認成功"},"zh":{"action_block_contact":"屏蔽联系人","action_cancel":"取消","action_clear_messages":"删除讯息","action_delete_messages":"删除所有帖子","action_leave_chat":"离开","action_report_chat":"检举垃圾邮件","archived_contacts":"已归档联系人 ({count})","badge_danger":"可疑的","badge_owner":"所有者","badge_staff":"在员工管理下","badge_verified":"值得信赖","badge_you":"你","block_contact_warning":"您确定要阻止此联系人吗？","blocked_contacts_link":"封锁的联络人 ({count})","button_add_another":"加上另一个","button_add_members":"添加成员","button_cancel":"取消","button_confirm":"确认","button_create":"创建","button_delete_account":"删除帐户","button_edit":"编辑","button_logout":"登出","button_ok":"好","button_reset":"重置","button_send_request":"发送请求","button_sign_in":"登录","button_sign_up":"注册","button_subscribe":"订阅","button_update":"更新","cannot_initiate_file_upload":"无法初始化文件上传。","channel":"频道","channel_prompt":"这是一个频道","chat_invitation":"你受邀开始新会话。你想怎么做？","chat_invitation_accept":"接受","chat_invitation_block":"屏蔽","chat_invitation_ignore":"忽略","clear_messages_warning":"您确定要清除所有消息吗？无法撤消。","code_doesnot_match":"代码不匹配","contacts_not_found":"你尚无会话<br />¯∖_(ツ)_/¯","contacts_not_found_short":"无联系人匹配\'\'{query}\'\'","credential_email_prompt":"你的注册邮箱","delete_account":"删除帐户","delete_account_warning":"您确定要删除您的帐户吗？无法撤消。","delete_messages_warning":"您确定要删除所有消息吗？无法撤消。","deleted_content":"内容已删除","download_action":"下载","drafty_attachment":"附件","drafty_form":"形式：","drafty_image":"图像","email_dative":"电子邮件","email_prompt":"电子邮件，例如 zhang@example.com","enable_peers_messaging":"启用","enter_confirmation_code_prompt":"输入通过{method}发送的验证码：","error_invalid_id":"无效 ID","file_attachment_too_large":"文件大小 {size} 超过 {limit} 限制。","forgot_password_link":"忘记密码？","full_name_prompt":"全名，例如张伟","granted_permissions":"已授予","group_has_no_members":"无成员","group_user_id_prompt":"群组或用户 ID","image_caption_prompt":"图片标题","invalid_content":"无效内容","invalid_security_token":"无效的安全令牌","label_client":"客户端：","label_content_type":"内容类型：","label_default_access_mode":"蓦然访问模式：","label_file_name":"文件名：","label_group_members":"群组成员：","label_incognito_mode":"无痕模式：","label_message_sound":"消息提示音：","label_muting_topic":"已静音：","label_other_user":"其他","label_password":"密码","label_permissions":"权限：","label_private":"私人评论","label_push_notifications":"通知提醒：","label_push_notifications_disabled":"通知提醒（需要 HTTPS）：","label_reset_password":"发送密码重置邮件：","label_sdk":"开发包：","label_server":"服务器：","label_server_address":"服务器地址：","label_server_to_use":"使用的服务器：","label_size":"大小：","label_topic_name":"名称","label_user_contacts":"往来：","label_user_id":"地址：","label_wire_transport":"线路传输：","label_you":"你：","label_your_name":"你的姓名","label_your_permissions":"你的权限：","last_seen_timestamp":"最后可见","leave_chat_warning":"您确定要退出此对话吗？","link_contact_us":"联系我们","link_privacy_policy":"隐私政策","link_terms_of_service":"条款和条件","login_prompt":"登录","menu_item_archive_topic":"归档","menu_item_block":"屏蔽","menu_item_clear_messages":"清空消息","menu_item_clear_messages_for_all":"全部清除","menu_item_delete":"删除","menu_item_delete_for_all":"全部删除","menu_item_delete_topic":"删除","menu_item_edit_permissions":"编辑权限","menu_item_info":"信息","menu_item_member_delete":"移除","menu_item_mute":"静音","menu_item_restore_topic":"从存档中恢复","menu_item_send_retry":"重试","menu_item_unblock":"取消屏蔽","menu_item_unmute":"取消静音","message_sending":"正在发送...","message_sending_failed":"发送失败","messages_not_readable":"无消息访问权限","messaging_disabled_prompt":"消息已禁用","more_online_members":"还有{overflow}个","new_message_prompt":"新消息","new_password_placeholder":"输入新密码","no_connection":"无连接","no_contacts":"你尚无联系人 (._.)","numeric_confirmation_code_prompt":"仅数字","online_now":"在线","password_prompt":"密码","password_unchanged_prompt":"未改变","peers_messaging_disabled":"成员间消息已禁用。","permission_admin":"批准 ({val})","permission_delete":"删除 ({val})","permission_join":"加入 ({val})","permission_owner":"所有者 ({val})","permission_pres":"获取通知 ({val})","permission_read":"读取 ({val})","permission_share":"分享 ({val})","permission_write":"写入 ({val})","phone_dative":"电话","private_editing_placeholder":"仅自己可见","push_init_failed":"初始化推送通知失败","reconnect_countdown":"连接已断开。{seconds} 秒后重新连接…","reconnect_now":"立即尝试","reload_update":"重新载入","report_chat_warning":"您确定要停止并报告此对话吗？","requested_permissions":"已请求","save_attachment":"保存","search_for_contacts":"使用搜索寻找联系人","search_no_results":"搜索返回任何结果","search_placeholder":"列表如 email:alice@example.com, tel:+17025550003...","sidepanel_title_acc_notifications":"通知","sidepanel_title_acc_support":"支持","sidepanel_title_account_settings":"帐号设定","sidepanel_title_archive":"已存档会话","sidepanel_title_blocked":"被阻止的聊天","sidepanel_title_cred":"确认凭据","sidepanel_title_login":"登录","sidepanel_title_newtpk":"开始新会话","sidepanel_title_register":"创建账户","sidepanel_title_reset":"重置密码","sidepanel_title_settings":"设置","stay_logged_in":"保持登录","tabtitle_find_user":"搜索","tabtitle_group_by_id":"通过 id","tabtitle_new_group":"新群组","tags_editor_no_tags":"添加一些标签","tags_not_found":"尚未定义标签。添加一些。","title_all_contacts":"全部联系人","title_group_members":"群组成员","title_manage_tags":"管理标签","title_not_found":"无法找到","title_permissions":"权限","title_tag_manager":"标签（用户发现）","topic_block_warning":"您确定要阻止此对话吗？","topic_delete_warning":"您确定要删除此对话吗？","topic_name_editing_placeholder":"群组自由格式名称","unnamed_topic":"未命名","update_available":"更新可用。","upload_finishing":"正在结束...","user_not_found":"未找到","validate_credential_action":"确认","description_editing_placeholder":"说明（可选）","label_description":"说明","button_security":"安全","panel_title_crop":"拖动调整","panel_title_general":"常用设定","panel_title_members":"成员","panel_title_security":"安全","panel_title_info":"信息","permissions_anonymous":"匿名","permissions_authenticated":"已认证","topic_delete":"删除聊天","permissions_user":"用户权限","password_reset_email_sent":"一封电子邮件已发送至 {email}。按照电子邮件中的说明重置密码。","label_unarchive_topic":"存档：","menu_item_reply":"回复","menu_item_forward":"重定向","forward_to":"重定向消息","forward_to_search_placeholder":"搜索联系人","label_new_password":"新密码","drafty_unknown":"不支持","calls_incoming":"来电","calls_outgoing":"拨出电话","calls_you_label":"你","menu_item_video_call":"视频电话","already_in_call":"你已经在说话了！","call_cancelled":"取消","call_missed":"未接","call_declined":"被拒","call_disconnected":"断开连接","label_use_secure_connection":"使用安全连接","phone_or_email_prompt":"电话号码或电子邮件","cred_confirmed_successfully":"确认成功"}}');
-
 /***/ })
 
 /******/ 	});
@@ -20957,11 +21241,14 @@ module.exports = JSON.parse('{"de":{"action_block_contact":"Kontakt blockieren",
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
+/******/ 	
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = __webpack_modules__;
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
@@ -20976,6 +21263,36 @@ module.exports = JSON.parse('{"de":{"action_block_contact":"Kontakt blockieren",
 /******/ 		};
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/create fake namespace object */
+/******/ 	(() => {
+/******/ 		var getProto = Object.getPrototypeOf ? (obj) => (Object.getPrototypeOf(obj)) : (obj) => (obj.__proto__);
+/******/ 		var leafPrototypes;
+/******/ 		// create a fake namespace object
+/******/ 		// mode & 1: value is a module id, require it
+/******/ 		// mode & 2: merge all properties of value into the ns
+/******/ 		// mode & 4: return value when already ns object
+/******/ 		// mode & 16: return value when it's Promise-like
+/******/ 		// mode & 8|1: behave like require
+/******/ 		__webpack_require__.t = function(value, mode) {
+/******/ 			if(mode & 1) value = this(value);
+/******/ 			if(mode & 8) return value;
+/******/ 			if(typeof value === 'object' && value) {
+/******/ 				if((mode & 4) && value.__esModule) return value;
+/******/ 				if((mode & 16) && typeof value.then === 'function') return value;
+/******/ 			}
+/******/ 			var ns = Object.create(null);
+/******/ 			__webpack_require__.r(ns);
+/******/ 			var def = {};
+/******/ 			leafPrototypes = leafPrototypes || [null, getProto({}), getProto([]), getProto(getProto)];
+/******/ 			for(var current = mode & 2 && value; typeof current == 'object' && !~leafPrototypes.indexOf(current); current = getProto(current)) {
+/******/ 				Object.getOwnPropertyNames(current).forEach((key) => (def[key] = () => (value[key])));
+/******/ 			}
+/******/ 			def['default'] = () => (value);
+/******/ 			__webpack_require__.d(ns, def);
+/******/ 			return ns;
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -20985,6 +21302,28 @@ module.exports = JSON.parse('{"de":{"action_block_contact":"Kontakt blockieren",
 /******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 				}
 /******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/ensure chunk */
+/******/ 	(() => {
+/******/ 		__webpack_require__.f = {};
+/******/ 		// This file contains only the entry chunk.
+/******/ 		// The chunk loading function for additional chunks
+/******/ 		__webpack_require__.e = (chunkId) => {
+/******/ 			return Promise.all(Object.keys(__webpack_require__.f).reduce((promises, key) => {
+/******/ 				__webpack_require__.f[key](chunkId, promises);
+/******/ 				return promises;
+/******/ 			}, []));
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/get javascript chunk filename */
+/******/ 	(() => {
+/******/ 		// This function allow to reference async chunks
+/******/ 		__webpack_require__.u = (chunkId) => {
+/******/ 			// return url for filenames based on template
+/******/ 			return "" + chunkId + ".dev.js";
 /******/ 		};
 /******/ 	})();
 /******/ 	
@@ -21005,6 +21344,51 @@ module.exports = JSON.parse('{"de":{"action_block_contact":"Kontakt blockieren",
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/load script */
+/******/ 	(() => {
+/******/ 		var inProgress = {};
+/******/ 		var dataWebpackPrefix = "tinode-webapp:";
+/******/ 		// loadScript function to load a script via script tag
+/******/ 		__webpack_require__.l = (url, done, key, chunkId) => {
+/******/ 			if(inProgress[url]) { inProgress[url].push(done); return; }
+/******/ 			var script, needAttach;
+/******/ 			if(key !== undefined) {
+/******/ 				var scripts = document.getElementsByTagName("script");
+/******/ 				for(var i = 0; i < scripts.length; i++) {
+/******/ 					var s = scripts[i];
+/******/ 					if(s.getAttribute("src") == url || s.getAttribute("data-webpack") == dataWebpackPrefix + key) { script = s; break; }
+/******/ 				}
+/******/ 			}
+/******/ 			if(!script) {
+/******/ 				needAttach = true;
+/******/ 				script = document.createElement('script');
+/******/ 		
+/******/ 				script.charset = 'utf-8';
+/******/ 				script.timeout = 120;
+/******/ 				if (__webpack_require__.nc) {
+/******/ 					script.setAttribute("nonce", __webpack_require__.nc);
+/******/ 				}
+/******/ 				script.setAttribute("data-webpack", dataWebpackPrefix + key);
+/******/ 				script.src = url;
+/******/ 			}
+/******/ 			inProgress[url] = [done];
+/******/ 			var onScriptComplete = (prev, event) => {
+/******/ 				// avoid mem leaks in IE.
+/******/ 				script.onerror = script.onload = null;
+/******/ 				clearTimeout(timeout);
+/******/ 				var doneFns = inProgress[url];
+/******/ 				delete inProgress[url];
+/******/ 				script.parentNode && script.parentNode.removeChild(script);
+/******/ 				doneFns && doneFns.forEach((fn) => (fn(event)));
+/******/ 				if(prev) return prev(event);
+/******/ 			};
+/******/ 			var timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
+/******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
+/******/ 			script.onload = onScriptComplete.bind(null, script.onload);
+/******/ 			needAttach && document.head.appendChild(script);
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -21014,6 +21398,101 @@ module.exports = JSON.parse('{"de":{"action_block_contact":"Kontakt blockieren",
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/publicPath */
+/******/ 	(() => {
+/******/ 		__webpack_require__.p = "/umd/";
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/jsonp chunk loading */
+/******/ 	(() => {
+/******/ 		// no baseURI
+/******/ 		
+/******/ 		// object to store loaded and loading chunks
+/******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
+/******/ 		var installedChunks = {
+/******/ 			"index": 0
+/******/ 		};
+/******/ 		
+/******/ 		__webpack_require__.f.j = (chunkId, promises) => {
+/******/ 				// JSONP chunk loading for javascript
+/******/ 				var installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
+/******/ 				if(installedChunkData !== 0) { // 0 means "already installed".
+/******/ 		
+/******/ 					// a Promise means "currently loading".
+/******/ 					if(installedChunkData) {
+/******/ 						promises.push(installedChunkData[2]);
+/******/ 					} else {
+/******/ 						if(true) { // all chunks have JS
+/******/ 							// setup Promise in chunk cache
+/******/ 							var promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
+/******/ 							promises.push(installedChunkData[2] = promise);
+/******/ 		
+/******/ 							// start chunk loading
+/******/ 							var url = __webpack_require__.p + __webpack_require__.u(chunkId);
+/******/ 							// create error before stack unwound to get useful stacktrace later
+/******/ 							var error = new Error();
+/******/ 							var loadingEnded = (event) => {
+/******/ 								if(__webpack_require__.o(installedChunks, chunkId)) {
+/******/ 									installedChunkData = installedChunks[chunkId];
+/******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
+/******/ 									if(installedChunkData) {
+/******/ 										var errorType = event && (event.type === 'load' ? 'missing' : event.type);
+/******/ 										var realSrc = event && event.target && event.target.src;
+/******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
+/******/ 										error.name = 'ChunkLoadError';
+/******/ 										error.type = errorType;
+/******/ 										error.request = realSrc;
+/******/ 										installedChunkData[1](error);
+/******/ 									}
+/******/ 								}
+/******/ 							};
+/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
+/******/ 						} else installedChunks[chunkId] = 0;
+/******/ 					}
+/******/ 				}
+/******/ 		};
+/******/ 		
+/******/ 		// no prefetching
+/******/ 		
+/******/ 		// no preloaded
+/******/ 		
+/******/ 		// no HMR
+/******/ 		
+/******/ 		// no HMR manifest
+/******/ 		
+/******/ 		// no on chunks loaded
+/******/ 		
+/******/ 		// install a JSONP callback for chunk loading
+/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
+/******/ 			var [chunkIds, moreModules, runtime] = data;
+/******/ 			// add "moreModules" to the modules object,
+/******/ 			// then flag all "chunkIds" as loaded and fire callback
+/******/ 			var moduleId, chunkId, i = 0;
+/******/ 			if(chunkIds.some((id) => (installedChunks[id] !== 0))) {
+/******/ 				for(moduleId in moreModules) {
+/******/ 					if(__webpack_require__.o(moreModules, moduleId)) {
+/******/ 						__webpack_require__.m[moduleId] = moreModules[moduleId];
+/******/ 					}
+/******/ 				}
+/******/ 				if(runtime) var result = runtime(__webpack_require__);
+/******/ 			}
+/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
+/******/ 			for(;i < chunkIds.length; i++) {
+/******/ 				chunkId = chunkIds[i];
+/******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
+/******/ 					installedChunks[chunkId][0]();
+/******/ 				}
+/******/ 				installedChunks[chunkId] = 0;
+/******/ 			}
+/******/ 		
+/******/ 		}
+/******/ 		
+/******/ 		var chunkLoadingGlobal = globalThis["webpackChunktinode_webapp"] = globalThis["webpackChunktinode_webapp"] || [];
+/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
 /******/ 	
 /************************************************************************/
@@ -21026,32 +21505,41 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "react-dom");
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _messages_json__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./messages.json */ "./src/messages.json");
-/* harmony import */ var _views_tinode_web_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./views/tinode-web.jsx */ "./src/views/tinode-web.jsx");
-/* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./lib/navigation.js */ "./src/lib/navigation.js");
+/* harmony import */ var _views_tinode_web_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./views/tinode-web.jsx */ "./src/views/tinode-web.jsx");
+/* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./lib/navigation.js */ "./src/lib/navigation.js");
 
 
 
 
 
-
+const messageLoader = {
+  'de': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_de_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/de.json */ "./src/i18n.min/de.json", 19)),
+  'en': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_en_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/en.json */ "./src/i18n.min/en.json", 19)),
+  'es': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_es_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/es.json */ "./src/i18n.min/es.json", 19)),
+  'fr': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_fr_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/fr.json */ "./src/i18n.min/fr.json", 19)),
+  'ko': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_ko_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/ko.json */ "./src/i18n.min/ko.json", 19)),
+  'ro': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_ro_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/ro.json */ "./src/i18n.min/ro.json", 19)),
+  'ru': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_ru_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/ru.json */ "./src/i18n.min/ru.json", 19)),
+  'zh': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_zh_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/zh.json */ "./src/i18n.min/zh.json", 19)),
+  'zh-TW': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_zh-TW_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/zh-TW.json */ "./src/i18n.min/zh-TW.json", 19))
+};
 const {
   params
-} = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_5__["default"].parseUrlHash(window.location.hash);
+} = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_4__["default"].parseUrlHash(window.location.hash);
 const language = params && params.hl || navigator.languages && navigator.languages[0] || navigator.language || navigator.userLanguage || 'en';
-const baseLanguage = language.toLowerCase().split(/[-_]/)[0];
-const htmlLang = _messages_json__WEBPACK_IMPORTED_MODULE_3__[language] ? language : _messages_json__WEBPACK_IMPORTED_MODULE_3__[baseLanguage] ? baseLanguage : 'en';
-const messages = _messages_json__WEBPACK_IMPORTED_MODULE_3__[htmlLang];
+const normalized = language.replace('_', '-');
+const baseLanguage = normalized.split('-')[0].toLowerCase();
+const htmlLang = messageLoader[normalized] ? language : messageLoader[baseLanguage] ? baseLanguage : 'en';
 document.getElementsByTagName('html')[0].setAttribute('lang', htmlLang);
-react_dom__WEBPACK_IMPORTED_MODULE_1___default().render(react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().StrictMode), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_2__.IntlProvider, {
+const root = (0,react_dom_client__WEBPACK_IMPORTED_MODULE_1__.createRoot)(document.getElementById('mountPoint'));
+messageLoader[htmlLang]().then(messages => root.render(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_2__.IntlProvider, {
   locale: language,
   messages: messages,
   textComponent: (react__WEBPACK_IMPORTED_MODULE_0___default().Fragment)
-}, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_views_tinode_web_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], null))), document.getElementById('mountPoint'));
+}, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_views_tinode_web_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], null))));
 })();
 
 /******/ })()

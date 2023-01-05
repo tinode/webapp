@@ -1,13 +1,12 @@
 // Image with a placeholder which is replaced when the promise is resolved.
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
 
 export default class LazyImage extends React.PureComponent {
   constructor(props) {
     super(props);
 
     this.state = {
-      src: 'img/placeholder.png',
+      src: this.props.isvideo ? 'img/blankvid.png' : 'img/blankimg.png',
       style: Object.assign({padding: '4px'}, this.props.style),
       className: this.props.className,
       alt: this.props.alt,
@@ -20,7 +19,7 @@ export default class LazyImage extends React.PureComponent {
     this.props.whenDone
       .promise
       .then(data => this.setState({src: data.src, style: {...this.state.style, padding: 0}}))
-      .catch(() => this.setState({src: 'img/broken_image.png'}));
+      .catch(_ => this.setState({src: this.props.isvideo ? 'img/broken_video.png' : 'img/broken_image.png'}));
   }
 
   componentWillUnmount() {
@@ -29,11 +28,11 @@ export default class LazyImage extends React.PureComponent {
 
   componentDidUpdate(prevProps) {
     if (prevProps.whenDone != this.props.whenDone) {
-      this.setState({src: 'img/placeholder.png', style: {...this.state.style, padding: '4px'}});
+      this.setState({src: this.props.isvideo ? 'img/blankvid.png' : 'img/blankimg.png', style: {...this.state.style, padding: '4px'}});
       this.props.whenDone
         .promise
         .then(data => this.setState({src: data.src, style: {...this.state.style, padding: 0}}))
-        .catch(() => this.setState({src: 'img/broken_image.png'}));
+        .catch(_ => this.setState({src: this.props.isvideo ? 'img/broken_video.png' : 'img/broken_image.png'}));
     }
   }
 

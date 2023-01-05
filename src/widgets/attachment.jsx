@@ -27,15 +27,11 @@ export default class Attachment extends React.Component {
     const downloader = this.props.tinode.getLargeFileHelper();
     this.setState({downloader: downloader});
     downloader.download(url, filename, mimetype,
-      (loaded) => {
-        this.setState({progress: loaded / this.props.size});
-      },
-      (err) => {
-        this.props.onError(err, 'err');
-      }
-    ).then(() => {
-      this.setState({downloader: null, progress: 0});
-    }).catch((err) => {
+      loaded => this.setState({progress: loaded / this.props.size}),
+      err => this.props.onError(err, 'err')
+    )
+    .then(_ => this.setState({downloader: null, progress: 0}))
+    .catch(err => {
       if (err) {
         this.props.onError("Error downloading file: " + err.message, 'err');
       }

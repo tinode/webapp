@@ -23,7 +23,8 @@ class BaseChatMessage extends React.PureComponent {
       props.uploader.onProgress = this.handleProgress.bind(this);
     }
 
-    this.handleImagePreview = this.handleImagePreview.bind(this);
+    this.handleExpandImage = this.handleExpandImage.bind(this);
+    this.handlePlayVideo = this.handlePlayVideo.bind(this);
     this.handleFormButtonClick = this.handleFormButtonClick.bind(this);
     this.handleContextClick = this.handleContextClick.bind(this);
     this.handleCancelUpload = this.handleCancelUpload.bind(this);
@@ -34,19 +35,35 @@ class BaseChatMessage extends React.PureComponent {
       viewportWidth: props.viewportWidth,
       authorizeURL: props.tinode.authorizeURL.bind(props.tinode),
 
-      onImagePreview: this.handleImagePreview,
+      onImagePreview: this.handleExpandImage,
+      onVideoPreview: this.handlePlayVideo,
       onFormButtonClick: this.handleFormButtonClick,
       onQuoteClick: this.handleQuoteClick
     };
   }
 
-  handleImagePreview(e) {
+  handleExpandImage(e) {
     e.preventDefault();
-    this.props.onImagePreview({
+    this.props.onExpandMedia({
       url: e.target.src,
-      filename: e.target.title,
+      filename: e.target.dataset.name,
       width: e.target.dataset.width,
       height: e.target.dataset.height,
+      size: e.target.dataset.size,
+      type: e.target.dataset.mime
+    });
+  }
+
+  handlePlayVideo(e) {
+    e.preventDefault();
+    this.props.onExpandMedia({
+      video: true,
+      url: e.target.dataset.src,
+      preview: e.target.src,
+      filename: e.target.dataset.name,
+      width: e.target.dataset.width,
+      height: e.target.dataset.height,
+      duration: e.target.dataset.duration,
       size: e.target.dataset.size,
       type: e.target.dataset.mime
     });
@@ -76,21 +93,37 @@ class BaseChatMessage extends React.PureComponent {
     if (this.props.received == Tinode.MESSAGE_STATUS_FAILED) {
       menuItems.push('menu_item_send_retry');
     }
-    if (this.props.userIsWriter &&
-        this.props.received > Tinode.MESSAGE_STATUS_FAILED &&
-        this.props.received < Tinode.MESSAGE_STATUS_DEL_RANGE) {
+    if (this.props.userIsWriter && this.props.received > Tinode.MESSAGE_STATUS_FAILED) {
       menuItems.push('menu_item_reply');
+      if (!this.props.response) {
+        let immutable = false;
+        Drafty.entities(this.props.content, (_0, _1, tp) => {
+          immutable = ['AU', 'EX', 'FM', 'IM', 'VC', 'VD'].includes(tp);
+          return immutable;
+        });
+        if (!immutable) {
+          Drafty.styles(this.props.content, tp => {
+            immutable = ['QQ'].includes(tp);
+            return immutable;
+          });
+        }
+        if (!immutable) {
+          menuItems.push('menu_item_edit');
+        }
+      }
     }
     menuItems.push('menu_item_forward');
 
     this.props.showContextMenu({
       seq: this.props.seq,
+      replace: this.props.edited ? parseInt(this.props.edited.split(':')[1]) : 0,
       content: this.props.content,
       userFrom: this.props.userFrom,
       userName: this.props.userName,
       y: e.pageY,
       x: e.pageX,
-      pickReply: this.props.pickReply
+      pickReply: this.props.pickReply,
+      editMessage: this.props.editMessage,
     }, menuItems);
   }
 
@@ -141,12 +174,6 @@ class BaseChatMessage extends React.PureComponent {
       }, this);
       const tree = Drafty.format(content, fullFormatter, this.formatterContext);
       content = React.createElement(React.Fragment, null, tree);
-    } else if (this.props.deleted) {
-      // Message represents a range of deleted messages.
-      content = <><i className="material-icons gray">block</i> <i className="gray">
-        <FormattedMessage id="deleted_content"
-          defaultMessage="content deleted" description="Shown when messages are deleted" />
-      </i></>
     } else if (typeof content != 'string') {
       content = <><i className="material-icons gray">warning_amber</i> <i className="gray">
         <FormattedMessage id="invalid_content"
@@ -175,6 +202,7 @@ class BaseChatMessage extends React.PureComponent {
               </div>
               {this.props.timestamp ?
                 <ReceivedMarker
+                  edited={this.props.edited}
                   timestamp={this.props.timestamp}
                   received={this.props.received} />
                 : null}

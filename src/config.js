@@ -1,7 +1,7 @@
 import { PACKAGE_VERSION } from './version.js';
 
 // Name of this application, used in the User-Agent.
-export const APP_NAME = 'TinodeWeb/' + (PACKAGE_VERSION || '0.17');
+export const APP_NAME = 'TinodeWeb/' + (PACKAGE_VERSION || '0.21');
 
 // API key. Use https://github.com/tinode/chat/tree/master/keygen to generate your own
 export const API_KEY = 'AQEAAAABAAD_rAp4DJh05a1HAwFT3A6K';
@@ -53,6 +53,9 @@ export const MAX_AVATAR_BYTES = 4096;
 // Size of the broken_image shown in MessagesView
 export const BROKEN_IMAGE_SIZE = 32;
 
+// Size of video preview when dimensions are missing.
+export const NO_DIMENSIONS_VIDEO = 128;
+
 // Number of chat messages to fetch in one call.
 export const MESSAGES_PAGE = 24;
 
@@ -76,8 +79,13 @@ export const MAX_IMAGE_DIM = 1024;
 // Linear dimensions of image preview: shrink image under this size for previews.
 export const IMAGE_PREVIEW_DIM = 64;
 
+// Linear dimensions of video screencapture: shrink image under this size for previews.
+export const VIDEO_PREVIEW_DIM = 96;
+
 // Linear dimensions of image thumbnail: shrink image under this size for thumbnails in reply quote previews.
 export const IMAGE_THUMBNAIL_DIM = 36;
+// Width of video thumbnail: allow it to be wider, but not taller. Use IMAGE_THUMBNAIL_DIM for height.
+export const VIDEO_THUMBNAIL_WIDTH = 48;
 
 // Maximum number of online users to be shown in a topic title bar. Others will be
 // hidden under "+X more"
@@ -97,6 +105,8 @@ export const MESSAGE_PREVIEW_LENGTH = 80;
 export const QUOTED_REPLY_LENGTH = 30;
 // Length of a preview of a forwarded message.
 export const FORWARDED_PREVIEW_LENGTH = 84;
+// Length of preview for a message being edited.
+export const EDIT_PREVIEW_LENGTH = 48;
 
 // Minimum duration of an audio recording in milliseconds (2 sec).
 export const MIN_DURATION = 2_000;

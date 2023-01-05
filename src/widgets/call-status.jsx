@@ -28,6 +28,8 @@ export default class CallStatus extends React.PureComponent {
           duration = <FormattedMessage id="call_disconnected" defaultMessage="disconnected" description="Label for disconnected call" />;
           break;
       }
+    } else if (this.props.callState == 'started' && !this.props.duration) {
+      duration = <FormattedMessage id="call_in_progress" defaultMessage="in progress" description="Label for call in progress" />
     } else {
       duration = <span>{secondsToTime(this.props.duration / 1000)}</span>;
     }

@@ -1,6 +1,7 @@
 // Audio recorder widget.
 
 import React from 'react';
+import { defineMessages, injectIntl } from 'react-intl';
 
 import { secondsToTime } from '../lib/strformat';
 import { base64ToIntArray } from '../lib/blob-helpers';
@@ -18,7 +19,15 @@ const THUMB_COLOR = '#444E';
 // Minimum number of amplitude bars to draw.
 const MIN_PREVIEW_LENGTH = 16;
 
-export default class AudioPlayer extends React.PureComponent {
+const messages = defineMessages({
+  icon_title_play: {
+    id: 'icon_title_play',
+    defaultMessage: 'Play recording',
+    description: 'Icon tool tip for starting audio playback'
+  }
+});
+
+class AudioPlayer extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -118,7 +127,7 @@ export default class AudioPlayer extends React.PureComponent {
 
     this.canvasContext.lineWidth = LINE_WIDTH;
 
-    const drawFrame = () => {
+    const drawFrame = _ => {
       if (!this.canvasRef.current || !this.audioPlayer) {
         // The component is unmounted.
         return;
@@ -237,7 +246,7 @@ export default class AudioPlayer extends React.PureComponent {
     const playClass = 'material-icons' +
       (this.props.short ? '' : ' large') +
       (this.state.canPlay ? '' : ' disabled');
-    const play = (<a href="#" onClick={this.handlePlay} title="Play">
+    const play = (<a href="#" onClick={this.handlePlay} title={this.props.intl.formatMessage(messages.icon_title_play)}>
         <i className={playClass}>{this.state.playing ? 'pause_circle' :
           (this.state.canPlay ? 'play_circle' : 'not_interested')}</i>
       </a>);
@@ -258,3 +267,5 @@ export default class AudioPlayer extends React.PureComponent {
     </div>);
   }
 }
+
+export default injectIntl(AudioPlayer);

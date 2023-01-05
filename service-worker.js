@@ -1,7 +1,6 @@
 // Must be located at the root.
-// FIXME: update Firebase version.
-importScripts('https://cdn.jsdelivr.net/npm/firebase@8.10.1/firebase-app.js');
-importScripts('https://cdn.jsdelivr.net/npm/firebase@8.10.1/firebase-messaging.js');
+importScripts('https://cdn.jsdelivr.net/npm/firebase@9.14.0/firebase-app-compat.js');
+importScripts('https://cdn.jsdelivr.net/npm/firebase@9.14.0/firebase-messaging-compat.js');
 importScripts('firebase-init.js');
 importScripts('version.js');
 
@@ -64,7 +63,7 @@ firebase.initializeApp(FIREBASE_INIT);
 const fbMessaging = firebase.messaging();
 
 // This method shows the push notifications while the window is in background.
-fbMessaging.onBackgroundMessage((payload) => {
+fbMessaging.onBackgroundMessage(payload => {
   if (payload.data.silent == 'true') {
     // TODO: if this is an 'msg', fetch the new message in the background.
     return;
@@ -94,7 +93,7 @@ fbMessaging.onBackgroundMessage((payload) => {
 
 // Update service worker immediately for both the current client
 // and all other active clients.
-self.addEventListener('install', event => {
+self.addEventListener('install', _ => {
   self.skipWaiting();
 });
 
@@ -113,7 +112,7 @@ self.addEventListener('notificationclick', event => {
   event.waitUntil(self.clients.matchAll({
     type: 'window',
     includeUncontrolled: true
-  }).then((windowClients) => {
+  }).then(windowClients => {
     let anyClient = null;
     for (let i = 0; i < windowClients.length; i++) {
       const url = new URL(windowClients[i].url);
@@ -149,7 +148,7 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  event.respondWith((async () => {
+  event.respondWith((async _ => {
     //  Try to find the response in the cache.
     const cache = await caches.open(PACKAGE_VERSION);
 

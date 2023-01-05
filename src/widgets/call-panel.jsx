@@ -140,7 +140,7 @@ class CallPanel extends React.PureComponent {
 
   start() {
     if (this.state.localStream) {
-      this.props.onError(this.props.intl.formatMessage(messages.already_in_call));
+      this.props.onError(this.props.intl.formatMessage(messages.already_in_call), 'info');
       return;
     }
 
@@ -231,7 +231,7 @@ class CallPanel extends React.PureComponent {
     const desc = new RTCSessionDescription(info.payload);
     this.state.pc.setRemoteDescription(desc)
       .then(_ => {
-        this.setState({ callInitialSetupComplete: true }, () => this.drainRemoteIceCandidatesCache());
+        this.setState({ callInitialSetupComplete: true }, _ => this.drainRemoteIceCandidatesCache());
       })
       .catch(this.reportError);
   }
@@ -357,7 +357,7 @@ class CallPanel extends React.PureComponent {
     })
     .then(_ => {
       this.props.onSendAnswer(this.props.topic, this.props.seq, pc.localDescription.toJSON());
-      this.setState({ callInitialSetupComplete: true }, () => this.drainRemoteIceCandidatesCache());
+      this.setState({ callInitialSetupComplete: true }, _ => this.drainRemoteIceCandidatesCache());
     })
     .catch(this.handleGetUserMediaError);
   }
@@ -421,14 +421,14 @@ class CallPanel extends React.PureComponent {
         <div id="video-container">
           <div id="video-container-panel">
             <div className="call-party self">
-              <video ref={this.localRef} autoPlay muted playsInline></video>
+              <video ref={this.localRef} autoPlay muted playsInline />
               <div className="caller-name inactive">
                 <FormattedMessage id="calls_you_label"
                   defaultMessage="You" description="Shown over the local video screen" />
               </div>
             </div>
             <div className="call-party peer">
-              <video ref={this.remoteRef} autoPlay playsInline></video>
+              <video ref={this.remoteRef} autoPlay playsInline />
               {remoteActive ?
                 <div className="caller-name inactive">{peerTitle}</div> :
                 <div className={`caller-card${pulseAnimation}`}>

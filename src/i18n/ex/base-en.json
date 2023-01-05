@@ -135,6 +135,10 @@
     "defaultMessage": "disconnected",
     "description": "Label for disconnected call"
   },
+  "call_in_progress": {
+    "defaultMessage": "in progress",
+    "description": "Label for call in progress"
+  },
   "call_missed": {
     "defaultMessage": "missed",
     "description": "Label for missed incoming call"
@@ -215,10 +219,6 @@
     "defaultMessage": "Are you sure you want to delete all messages for everyone? It cannot be undone.",
     "description": "Alert dialog warning when hard-deleting all messages."
   },
-  "deleted_content": {
-    "defaultMessage": "content deleted",
-    "description": "Shown when messages are deleted"
-  },
   "description_editing_placeholder": {
     "defaultMessage": "Description (optional)",
     "description": "Placeholder for editing topic description"
@@ -229,19 +229,31 @@
   },
   "drafty_attachment": {
     "defaultMessage": "Attachment",
-    "description": "Comment for attachment in drafty"
+    "description": "Comment for attachment in Drafty"
   },
   "drafty_form": {
     "defaultMessage": "Form:",
-    "description": "Comment for form in drafty"
+    "description": "Comment for form in Drafty"
   },
   "drafty_image": {
     "defaultMessage": "Picture",
-    "description": "Comment for embedded images in drafty"
+    "description": "Comment for embedded images in Drafty"
   },
   "drafty_unknown": {
     "defaultMessage": "Unsupported",
     "description": "Unsupported entity in drafty"
+  },
+  "drafty_video": {
+    "defaultMessage": "Video recording",
+    "description": "Comment for videos embedded in Drafty"
+  },
+  "drag_file": {
+    "defaultMessage": "Drag file here",
+    "description": "Prompt on the file drag-n-drop overlay banner"
+  },
+  "editing_message": {
+    "defaultMessage": "Editing",
+    "description": "Title over message editing preview"
   },
   "email_dative": {
     "defaultMessage": "email",
@@ -293,6 +305,38 @@
   "group_user_id_prompt": {
     "defaultMessage": "Group or User ID",
     "description": "Prompt for entering user or group ID"
+  },
+  "icon_title_add_image": {
+    "defaultMessage": "Add image",
+    "description": "Icon tool tip for attaching an image"
+  },
+  "icon_title_attach_file": {
+    "defaultMessage": "Attach file",
+    "description": "Icon tool tip for attaching a file"
+  },
+  "icon_title_delete": {
+    "defaultMessage": "Delete recording",
+    "description": "Icon tool tip for deleting recorded audio"
+  },
+  "icon_title_pause": {
+    "defaultMessage": "Pause playback",
+    "description": "Icon tool tip for pausing audio playback"
+  },
+  "icon_title_play": {
+    "defaultMessage": "Play recording",
+    "description": "Icon tool tip for starting audio playback"
+  },
+  "icon_title_record_voice": {
+    "defaultMessage": "Record voice message",
+    "description": "Icon tool tip for recording a voice message"
+  },
+  "icon_title_resume": {
+    "defaultMessage": "Resume playback",
+    "description": "Icon tool tip for resuming audio playback"
+  },
+  "icon_title_send": {
+    "defaultMessage": "Send message",
+    "description": "Icon tool tip for sending a message"
   },
   "image_caption_prompt": {
     "defaultMessage": "Image caption",
@@ -480,6 +524,10 @@
     "defaultMessage": "Delete",
     "description": "Delete entire topic"
   },
+  "menu_item_edit": {
+    "defaultMessage": "Edit",
+    "description": "Edit message"
+  },
   "menu_item_edit_permissions": {
     "defaultMessage": "Edit permissions",
     "description": "Menu item [Edit permissions]"
@@ -523,6 +571,10 @@
   "menu_item_video_call": {
     "defaultMessage": "Video call",
     "description": "Start video call"
+  },
+  "message_edited_marker": {
+    "defaultMessage": ", edited",
+    "description": "Marker indicating that the message was edited"
   },
   "message_sending": {
     "defaultMessage": "sending...",
@@ -811,6 +863,10 @@
   "unnamed_topic": {
     "defaultMessage": "Unnamed",
     "description": "Title shown when the topic has no name"
+  },
+  "unrecognized_video_format": {
+    "defaultMessage": "Format of this video is not recognized",
+    "description": "Error message when uploaded video is invalid"
   },
   "update_available": {
     "defaultMessage": "Update available.",

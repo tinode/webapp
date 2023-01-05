@@ -1,9 +1,11 @@
 // Send message form.
-import React from 'react';
+import React, { Suspense } from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
 import { Drafty } from 'tinode-sdk';
 
-import AudioRecorder from './audio-recorder.jsx';
+// Lazy-loading AudioRecorder because it's quite large due to
+// a dependency on webm-duration-fix.
+const AudioRecorder = React.lazy(_ => import('./audio-recorder.jsx'));
 
 import { KEYPRESS_DELAY } from '../config.js';
 import { filePasted } from '../lib/blob-helpers.js';
@@ -35,6 +37,26 @@ const messages = defineMessages({
     defaultMessage: 'Cannot initiate file upload.',
     description: 'Generic error messagewhen attachment fails'
   },
+  icon_title_record_voice: {
+    id: 'icon_title_record_voice',
+    defaultMessage: 'Record voice message',
+    description: 'Icon tool tip for recording a voice message'
+  },
+  icon_title_attach_file: {
+    id: 'icon_title_attach_file',
+    defaultMessage: 'Attach file',
+    description: 'Icon tool tip for attaching a file'
+  },
+  icon_title_add_image: {
+    id: 'icon_title_add_image',
+    defaultMessage: 'Add image',
+    description: 'Icon tool tip for attaching an image'
+  },
+  icon_title_send: {
+    id: 'icon_title_send',
+    defaultMessage: 'Send message',
+    description: 'Icon tool tip for sending a message'
+  },
 });
 
 class SendMessage extends React.PureComponent {
@@ -46,9 +68,10 @@ class SendMessage extends React.PureComponent {
       message: '',
       audioRec: false,
       audioAvailable: !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia),
-      // Make initial keypress time as if it happened 5001 milliseconds in the past.
-      keypressTimestamp: new Date().getTime() - KEYPRESS_DELAY - 1
     };
+
+    // Timestamp when the previous key press was sent to the server.
+    this.keypressTimestamp = 0;
 
     this.handlePasteEvent = this.handlePasteEvent.bind(this);
     this.handleAttachImage = this.handleAttachImage.bind(this);
@@ -57,6 +80,7 @@ class SendMessage extends React.PureComponent {
     this.handleSend = this.handleSend.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleMessageTyping = this.handleMessageTyping.bind(this);
+    this.handleDropAttach = this.handleDropAttach.bind(this);
 
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
 
@@ -83,7 +107,14 @@ class SendMessage extends React.PureComponent {
     }
 
     if (prevProps.topicName != this.props.topicName) {
-      this.setState({message: '', audioRec: false, quote: null});
+      this.setState({message: this.props.initMessage || '', audioRec: false, quote: null});
+    } else if (prevProps.initMessage != this.props.initMessage) {
+      const msg = this.props.initMessage || '';
+      this.setState({message: msg}, _ => {
+        // If there is text, scroll to bottom and set caret to the end.
+        this.messageEditArea.scrollTop = this.messageEditArea.scrollHeight;
+        this.messageEditArea.setSelectionRange(msg.length, msg.length);
+      });
     }
     if (prevProps.reply != this.props.reply) {
       this.setState({quote: this.formatReply()});
@@ -129,6 +160,12 @@ class SendMessage extends React.PureComponent {
     e.target.value = '';
   }
 
+  handleDropAttach(files) {
+    if (files && files.length > 0) {
+      this.props.onAttachFile(files[0]);
+    }
+  }
+
   handleAttachAudio(url, preview, duration) {
     this.setState({audioRec: false});
     this.props.onAttachAudio(url, preview, duration);
@@ -165,15 +202,14 @@ class SendMessage extends React.PureComponent {
   }
 
   handleMessageTyping(e) {
-    const newState = {message: e.target.value};
+    this.setState({message: e.target.value});
     if (this.props.onKeyPress) {
       const now = new Date().getTime();
-      if (now - this.state.keypressTimestamp > KEYPRESS_DELAY) {
+      if (now - this.keypressTimestamp > KEYPRESS_DELAY) {
         this.props.onKeyPress();
-        newState.keypressTimestamp = now;
+        this.keypressTimestamp = now;
       }
     }
-    this.setState(newState);
   }
 
   handleQuoteClick(e) {
@@ -193,10 +229,13 @@ class SendMessage extends React.PureComponent {
         formatMessage(messages[this.props.messagePrompt]) :
         formatMessage(messages.type_new_message));
 
+    const sendIcon = (this.props.reply && this.props.reply.editing) ?
+      'check_circle' : 'send';
+
     const quote = this.state.quote ?
       (<div id="reply-quote-preview">
         <div className="cancel">
-          <a href="#" onClick={(e) => {e.preventDefault(); this.props.onCancelReply();}}><i className="material-icons gray">close</i></a>
+          <a href="#" onClick={e => {e.preventDefault(); this.props.onCancelReply();}}><i className="material-icons gray">close</i></a>
         </div>
         {this.state.quote}
       </div>) : null;
@@ -209,10 +248,10 @@ class SendMessage extends React.PureComponent {
             <>
               {this.props.onAttachFile && !this.state.audioRec ?
                 <>
-                  <a href="#" onClick={(e) => {e.preventDefault(); this.attachImage.click();}} title="Add image">
+                  <a href="#" onClick={e => {e.preventDefault(); this.attachImage.click();}} title={formatMessage(messages.icon_title_add_image)}>
                     <i className="material-icons secondary">photo</i>
                   </a>
-                  <a href="#" onClick={(e) => {e.preventDefault(); this.attachFile.click();}} title="Attach file">
+                  <a href="#" onClick={e => {e.preventDefault(); this.attachFile.click();}} title={formatMessage(messages.icon_title_attach_file)}>
                     <i className="material-icons secondary">attach_file</i>
                   </a>
                 </>
@@ -221,27 +260,30 @@ class SendMessage extends React.PureComponent {
               {this.props.noInput ?
                 (quote || <div className="hr thin" />) :
                 (this.state.audioRec ?
-                  <AudioRecorder
-                    onDeleted={_ => this.setState({audioRec: false})}
-                    onFinished={this.handleAttachAudio}/> :
+                  (<Suspense fallback={<div>Loading...</div>}>
+                    <AudioRecorder
+                      onRecordingProgress={_ => this.props.onKeyPress(true)}
+                      onDeleted={_ => this.setState({audioRec: false})}
+                      onFinished={this.handleAttachAudio}/>
+                  </Suspense>) :
                   <textarea id="sendMessage" placeholder={prompt}
                     value={this.state.message} onChange={this.handleMessageTyping}
                     onKeyPress={this.handleKeyPress}
                     ref={(ref) => {this.messageEditArea = ref;}}
                     autoFocus />)}
               {this.state.message || !audioEnabled ?
-                <a href="#" onClick={this.handleSend} title="Send">
-                  <i className="material-icons">send</i>
+                <a href="#" onClick={this.handleSend} title={formatMessage(messages.icon_title_send)}>
+                  <i className="material-icons">{sendIcon}</i>
                 </a> :
                 !this.state.audioRec ?
-                  <a href="#" onClick={e => {e.preventDefault(); this.setState({audioRec: true})}} title="Voice">
+                  <a href="#" onClick={e => {e.preventDefault(); this.setState({audioRec: true})}} title={formatMessage(messages.icon_title_record_voice)}>
                     <i className="material-icons">mic</i>
                   </a> :
                   null
               }
-              <input type="file" ref={(ref) => {this.attachFile = ref;}}
+              <input type="file" ref={ref => {this.attachFile = ref}}
                 onChange={this.handleAttachFile} style={{display: 'none'}} />
-              <input type="file" ref={(ref) => {this.attachImage = ref;}} accept="image/*"
+              <input type="file" ref={ref => {this.attachImage = ref}} accept="image/*, video/*"
                 onChange={this.handleAttachImage} style={{display: 'none'}} />
             </>
             :

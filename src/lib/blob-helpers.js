@@ -138,10 +138,10 @@ export function imageCrop(mime, objURL, left, top, width, height, scale) {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.crossOrigin = 'Anonymous';
-    img.onerror = (err) => {
+    img.onerror = _ => {
       reject(new Error("Image format unrecognized"));
     };
-    img.onload = () => {
+    img.onload = _ => {
       // Once the image is loaded, the URL is no longer needed.
       URL.revokeObjectURL(img.src);
 
@@ -172,10 +172,10 @@ export function imageCrop(mime, objURL, left, top, width, height, scale) {
 export function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onerror = (evt) => {
+    reader.onerror = _ => {
       reject(reader.error);
     };
-    reader.onload = () => {
+    reader.onload = _ => {
       resolve({mime: file.type, bits: reader.result.split(',')[1], name: file.name});
     };
     reader.readAsDataURL(file);
@@ -189,7 +189,7 @@ export function blobToBase64(blob) {
     reader.onerror = _ => {
       reject(reader.error);
     };
-    reader.onload = () => {
+    reader.onload = _ => {
       resolve({mime: blob.type, bits: reader.result.split(',')[1]});
     };
     reader.readAsDataURL(blob);

@@ -55,6 +55,11 @@ const messages = defineMessages({
     defaultMessage: 'Forward',
     description: 'Forward message'
   },
+  edit: {
+    id: 'menu_item_edit',
+    defaultMessage: 'Edit',
+    description: 'Edit message'
+  },
   topic_delete: {
     id: 'menu_item_delete_topic',
     defaultMessage: 'Delete',
@@ -191,7 +196,14 @@ class ContextMenu extends React.Component {
       'menu_item_forward': {
         id: 'menu_item_forward',
         title: formatMessage(messages.forward),
-        handler: () => {} /* the action is taken directly in tinode-web */
+        handler: _ => {} /* the action is taken directly in tinode-web */
+      },
+      'menu_item_edit': {
+        id: 'menu_item_edit',
+        title: formatMessage(messages.edit),
+        handler: (params, errorHandler) => {
+          return this.editMessage(params, errorHandler);
+        }
       },
       'topic_unmute': {
         id: 'topic_unmute',
@@ -215,12 +227,10 @@ class ContextMenu extends React.Component {
           return props.onShowAlert(
             formatMessage(messages.block), // title
             formatMessage(messages.topic_block_warning), // content
-            (() => {
-              return this.topicPermissionSetter('-JP', params, errorHandler).then((ctrl) => {
-                this.props.onTopicRemoved(params.topicName);
-                return ctrl;
-              });
-            }),
+            (_ => this.topicPermissionSetter('-JP', params, errorHandler).then(ctrl => {
+              this.props.onTopicRemoved(params.topicName);
+              return ctrl;
+            })),
             null, // "OK"
             true, // Show Reject button
             null  // "Cancel"
@@ -234,13 +244,13 @@ class ContextMenu extends React.Component {
           return props.onShowAlert(
             formatMessage(messages.topic_delete), // title
             formatMessage(messages.topic_delete_warning), // content
-            (() => {
+            (_ => {
               const topic = this.props.tinode.getTopic(params.topicName);
               if (!topic) {
                 console.warn("Topic not found: ", params.topicName);
                 return;
               }
-              return topic.delTopic(true).catch((err) => {
+              return topic.delTopic(true).catch(err => {
                 if (errorHandler) {
                   errorHandler(err.message, 'err');
                 }
@@ -261,7 +271,7 @@ class ContextMenu extends React.Component {
             console.warn("Topic not found: ", params.topicName);
             return;
           }
-          return topic.archive(true).catch((err) => {
+          return topic.archive(true).catch(err => {
             if (errorHandler) {
               errorHandler(err.message, 'err');
             }
@@ -277,7 +287,7 @@ class ContextMenu extends React.Component {
             console.warn("Topic not found: ", params.topicName);
             return;
           }
-          return topic.archive(false).catch((err) => {
+          return topic.archive(false).catch(err => {
             if (errorHandler) {
               errorHandler(err.message, 'err');
             }
@@ -299,7 +309,7 @@ class ContextMenu extends React.Component {
             console.warn("Topic or user not found: '" + params.topicName + "', '" + params.user + "'");
             return;
           }
-          return topic.delSubscription(params.user).catch((err) => {
+          return topic.delSubscription(params.user).catch(err => {
             if (errorHandler) {
               errorHandler(err.message, 'err');
             }
@@ -389,12 +399,14 @@ class ContextMenu extends React.Component {
     if (!all && topic.cancelSend(params.seq)) {
       return;
     }
-    // Can't cancel. Delete instead.
+
     const promise = all ?
       topic.delMessagesAll(hard) :
-      topic.delMessagesList([params.seq], hard);
+      params.replace > 0 ?
+        topic.delMessagesEdits(params.replace, hard) :
+        topic.delMessagesList([params.seq], hard);
 
-    return promise.catch((err) => {
+    return promise.catch(err => {
       if (errorHandler) {
         errorHandler(err.message, 'err');
       }
@@ -409,7 +421,7 @@ class ContextMenu extends React.Component {
       return;
     }
     const msg = topic.createMessage(params.content, false);
-    return topic.publishDraft(msg).catch((err) => {
+    return topic.publishDraft(msg).catch(err => {
       if (errorHandler) {
         errorHandler(err.message, 'err');
       }
@@ -426,15 +438,17 @@ class ContextMenu extends React.Component {
 
     let result = topic.updateMode(params.user, mode);
     if (errorHandler) {
-      result = result.catch((err) => {
-        errorHandler(err.message, 'err');
-      });
+      result = result.catch(err => errorHandler(err.message, 'err'));
     }
     return result;
   }
 
   replyToMessage(params, errorHandler) {
     params.pickReply(params.seq, params.content, params.userFrom, params.userName, errorHandler);
+  }
+
+  editMessage(params, errorHandler) {
+    params.editMessage(params.replace || params.seq, params.content, errorHandler);
   }
 
   render() {

@@ -81,7 +81,7 @@ class ContactList extends React.Component {
           let previewIsResponse;
           let deliveryStatus;
           if (!this.props.showMode && c.latestMessage) {
-            const msg = c.latestMessage(true);
+            const msg = c.latestMessage();
             if (msg) {
               forwarded = msg.head ? msg.head.forwarded : null;
               deliveryStatus = msg._status || c.msgStatus(msg, true);

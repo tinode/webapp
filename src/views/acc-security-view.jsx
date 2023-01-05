@@ -76,7 +76,7 @@ class AccSecurityView extends React.Component {
     this.props.onShowAlert(
       formatMessage(messages.delete_account), // title
       formatMessage(messages.delete_account_warning), // content
-      (() => { this.props.onDeleteAccount(); }), // onConfirm
+      (_ => this.props.onDeleteAccount()), // onConfirm
       null, // use default text "OK"
       true, // Show Reject button
       null  // use default text "Cancel"
