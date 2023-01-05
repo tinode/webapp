@@ -140,7 +140,7 @@ class CallPanel extends React.PureComponent {
 
   start() {
     if (this.state.localStream) {
-      this.props.onError(this.props.intl.formatMessage(messages.already_in_call));
+      this.props.onError(this.props.intl.formatMessage(messages.already_in_call), 'info');
       return;
     }
 

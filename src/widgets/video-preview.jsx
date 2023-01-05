@@ -1,10 +1,18 @@
 import React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import SendMessage from './send-message.jsx';
 
 import { bytesToHumanSize } from '../lib/strformat.js';
 
-export default class VideoPreview extends React.PureComponent {
+const messages = defineMessages({
+  unrecognized_video_format: {
+    id: 'unrecognized_video_format',
+    defaultMessage: 'Format of this video is not recognized',
+    description: 'Error message when uploaded video is invalid',
+  }
+});
+
+class VideoPreview extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -21,6 +29,11 @@ export default class VideoPreview extends React.PureComponent {
       duration: (this.videoRef.current.duration * 1000) | 0,
       mime: this.props.content.mime,
       name: this.props.content.filename
+    }
+
+    if (params.width == 0 || params.height == 0) {
+      this.props.onError(this.props.intl.formatMessage(messages.unrecognized_video_format), 'err');
+      return;
     }
 
     // Capture screen from a video.
@@ -55,7 +68,7 @@ export default class VideoPreview extends React.PureComponent {
         <div id="image-preview-container">
           <video
             className="image-preview"
-            controls controlist={controlist}
+            controls controlsList={controlist}
             disablePictureInPicture ref={this.videoRef}
             autoPlay={autoPlay}
             src={this.props.tinode.authorizeURL(this.props.content.url)}
@@ -93,3 +106,5 @@ export default class VideoPreview extends React.PureComponent {
     );
   }
 };
+
+export default injectIntl(VideoPreview);

@@ -6336,7 +6336,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       uploads[1] = previewBlob.size > maxInbandAttachmentSize * 0.275 ? uploader.upload(previewBlob) : null;
     }
     if (uploads.length == 0) {
-      Promise.all((0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(videoBlob), (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(previewBlob)).then(b64s => {
+      Promise.all([(0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(videoBlob), (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.blobToBase64)(previewBlob)]).then(b64s => {
         const [v64, i64] = b64s;
         let msg = tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.insertVideo(null, 0, {
           mime: v64.mime,
@@ -6601,6 +6601,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           content: this.state.videoPreview,
           tinode: this.props.tinode,
           reply: this.state.reply,
+          onError: this.props.onError,
           onCancelReply: this.handleCancelReply,
           onClose: this.handleClosePreview,
           onSendMessage: this.sendVideoAttachment
@@ -6614,6 +6615,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         component2 = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_video_preview_jsx__WEBPACK_IMPORTED_MODULE_16__["default"], {
           content: this.state.videoPostview,
           tinode: this.props.tinode,
+          onError: this.props.onError,
           onClose: this.handleClosePreview
         });
       } else if (this.state.docPreview) {
@@ -10762,7 +10764,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   }
   start() {
     if (this.state.localStream) {
-      this.props.onError(this.props.intl.formatMessage(messages.already_in_call));
+      this.props.onError(this.props.intl.formatMessage(messages.already_in_call), 'info');
       return;
     }
     if (this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_IN_PROGRESS) {
@@ -16481,7 +16483,7 @@ class UploadingImage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ VideoPreview)
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
@@ -16493,6 +16495,15 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
+  unrecognized_video_format: {
+    id: "unrecognized_video_format",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Format of this video is not recognized"
+    }]
+  }
+});
 class VideoPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
@@ -16508,6 +16519,10 @@ class VideoPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       mime: this.props.content.mime,
       name: this.props.content.filename
     };
+    if (params.width == 0 || params.height == 0) {
+      this.props.onError(this.props.intl.formatMessage(messages.unrecognized_video_format), 'err');
+      return;
+    }
     const canvas = document.createElement('canvas');
     canvas.width = params.width;
     canvas.height = params.height;
@@ -16540,7 +16555,7 @@ class VideoPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
       className: "image-preview",
       controls: true,
-      controlist: controlist,
+      controlsList: controlist,
       disablePictureInPicture: true,
       ref: this.videoRef,
       autoPlay: autoPlay,
@@ -16581,6 +16596,7 @@ class VideoPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
   }
 }
 ;
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(VideoPreview));
 
 /***/ }),
 
