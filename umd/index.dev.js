@@ -6245,7 +6245,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.fileToBase64)(file).then(b64 => this.sendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.attachFile(null, {
         mime: b64.mime,
         data: b64.bits,
-        filename: b64.name
+        filename: b64.name,
+        size: file.size
       }))).catch(err => this.props.onError(err.message, 'err'));
     }
   }
