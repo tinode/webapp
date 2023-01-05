@@ -303,8 +303,6 @@ class MessagesView extends React.Component {
         scrollPosition: 0,
         fetchingMessages: false,
         showGoToLastButton: false,
-        forwardMessage: null,
-        reply: null,
         contentToEdit: null,
         dragging: false
       };
@@ -315,6 +313,8 @@ class MessagesView extends React.Component {
           content: nextProps.forwardMessage.preview,
           seq: null
         };
+      } else {
+        nextState.reply = null;
       }
 
       if (topic) {

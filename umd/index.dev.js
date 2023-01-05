@@ -5721,8 +5721,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         scrollPosition: 0,
         fetchingMessages: false,
         showGoToLastButton: false,
-        forwardMessage: null,
-        reply: null,
         contentToEdit: null,
         dragging: false
       };
@@ -5731,6 +5729,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           content: nextProps.forwardMessage.preview,
           seq: null
         };
+      } else {
+        nextState.reply = null;
       }
       if (topic) {
         const subs = [];
