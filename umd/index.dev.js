@@ -5721,6 +5721,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         scrollPosition: 0,
         fetchingMessages: false,
         showGoToLastButton: false,
+        forwardMessage: null,
+        reply: null,
         contentToEdit: null,
         dragging: false
       };
