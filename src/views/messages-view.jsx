@@ -1417,8 +1417,9 @@ class MessagesView extends React.Component {
           }
           chatBoxClass = groupTopic ? 'chat-box group' : 'chat-box';
 
+          const effectiveSeq = msg.head && msg.head.replace ? parseInt(msg.head.replace.split(':')[1]) : msg.seq;
           // Ref for this chat message.
-          const ref = this.getOrCreateMessageRef(msg.seq);
+          const ref = this.getOrCreateMessageRef(effectiveSeq);
           let replyToSeq = msg.head ? parseInt(msg.head.reply) : null;
           if (!replyToSeq || isNaN(replyToSeq)) {
             replyToSeq = null;
@@ -1429,7 +1430,7 @@ class MessagesView extends React.Component {
             messageNodes.push(
               <MetaMessage
                 deleted={true}
-                key={msg.seq} />
+                key={effectiveSeq} />
               );
           } else {
             const thisDate = new Date(msg.ts);
@@ -1439,7 +1440,7 @@ class MessagesView extends React.Component {
                 <MetaMessage
                   date={relativeDateFormat(msg.ts)}
                   locale={this.props.intl.locale}
-                  key={'date-' + msg.seq} />
+                  key={'date-' + effectiveSeq} />
               );
               prevDate = thisDate;
             }
@@ -1452,7 +1453,7 @@ class MessagesView extends React.Component {
                 edited={msg.head && !msg.head.webrtc && msg.head.replace}
                 timestamp={msg.ts}
                 response={isReply}
-                seq={msg.seq}
+                seq={effectiveSeq}
                 isGroup={groupTopic}
                 isChan={this.state.channel}
                 userFrom={userFrom}
@@ -1472,7 +1473,7 @@ class MessagesView extends React.Component {
                 onQuoteClick={this.handleQuoteClick}
                 onError={this.props.onError}
                 ref={ref}
-                key={msg.seq} />
+                key={effectiveSeq} />
             );
           }
         });

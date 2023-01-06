@@ -635,12 +635,7 @@ function isSafari() {
  * @return true if indexedDB is supported by current browser/service worker context
  */
 function isIndexedDBAvailable() {
-    try {
-        return typeof indexedDB === 'object';
-    }
-    catch (e) {
-        return false;
-    }
+    return typeof indexedDB === 'object';
 }
 /**
  * This method validates browser/sw context for indexedDB by opening a dummy indexedDB database and reject
@@ -6699,7 +6694,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             userAvatar = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_19__.makeImageUrl)(user.public.photo);
           }
           chatBoxClass = groupTopic ? 'chat-box group' : 'chat-box';
-          const ref = this.getOrCreateMessageRef(msg.seq);
+          const effectiveSeq = msg.head && msg.head.replace ? parseInt(msg.head.replace.split(':')[1]) : msg.seq;
+          const ref = this.getOrCreateMessageRef(effectiveSeq);
           let replyToSeq = msg.head ? parseInt(msg.head.reply) : null;
           if (!replyToSeq || isNaN(replyToSeq)) {
             replyToSeq = null;
@@ -6707,7 +6703,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           if (msg.hi) {
             messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_meta_message_jsx__WEBPACK_IMPORTED_MODULE_14__["default"], {
               deleted: true,
-              key: msg.seq
+              key: effectiveSeq
             }));
           } else {
             const thisDate = new Date(msg.ts);
@@ -6715,7 +6711,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
               messageNodes.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_meta_message_jsx__WEBPACK_IMPORTED_MODULE_14__["default"], {
                 date: (0,_lib_strformat_js__WEBPACK_IMPORTED_MODULE_21__.relativeDateFormat)(msg.ts),
                 locale: this.props.intl.locale,
-                key: 'date-' + msg.seq
+                key: 'date-' + effectiveSeq
               }));
               prevDate = thisDate;
             }
@@ -6727,7 +6723,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
               edited: msg.head && !msg.head.webrtc && msg.head.replace,
               timestamp: msg.ts,
               response: isReply,
-              seq: msg.seq,
+              seq: effectiveSeq,
               isGroup: groupTopic,
               isChan: this.state.channel,
               userFrom: userFrom,
@@ -6747,7 +6743,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
               onQuoteClick: this.handleQuoteClick,
               onError: this.props.onError,
               ref: ref,
-              key: msg.seq
+              key: effectiveSeq
             }));
           }
         });
@@ -7674,8 +7670,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var firebase_app__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! firebase/app */ "./node_modules/firebase/app/dist/esm/index.esm.js");
-/* harmony import */ var firebase_messaging__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! firebase/messaging */ "./node_modules/firebase/messaging/dist/esm/index.esm.js");
+/* harmony import */ var firebase_app__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! firebase/app */ "./node_modules/firebase/app/dist/index.esm.js");
+/* harmony import */ var firebase_messaging__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! firebase/messaging */ "./node_modules/firebase/messaging/dist/index.esm.js");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! tinode-sdk */ "tinode-sdk");
 /* harmony import */ var tinode_sdk__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(tinode_sdk__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _widgets_alert_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../widgets/alert.jsx */ "./src/widgets/alert.jsx");
@@ -16701,6 +16697,83 @@ class VisiblePassword extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
 
 /***/ }),
 
+/***/ "./node_modules/firebase/app/dist/index.esm.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/firebase/app/dist/index.esm.js ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "FirebaseError": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.FirebaseError),
+/* harmony export */   "SDK_VERSION": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.SDK_VERSION),
+/* harmony export */   "_DEFAULT_ENTRY_NAME": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._DEFAULT_ENTRY_NAME),
+/* harmony export */   "_addComponent": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._addComponent),
+/* harmony export */   "_addOrOverwriteComponent": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._addOrOverwriteComponent),
+/* harmony export */   "_apps": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._apps),
+/* harmony export */   "_clearComponents": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._clearComponents),
+/* harmony export */   "_components": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._components),
+/* harmony export */   "_getProvider": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._getProvider),
+/* harmony export */   "_registerComponent": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._registerComponent),
+/* harmony export */   "_removeServiceInstance": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._removeServiceInstance),
+/* harmony export */   "deleteApp": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.deleteApp),
+/* harmony export */   "getApp": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.getApp),
+/* harmony export */   "getApps": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.getApps),
+/* harmony export */   "initializeApp": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.initializeApp),
+/* harmony export */   "onLog": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.onLog),
+/* harmony export */   "registerVersion": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion),
+/* harmony export */   "setLogLevel": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.setLogLevel)
+/* harmony export */ });
+/* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
+
+
+
+var name = "firebase";
+var version = "9.14.0";
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+(0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion)(name, version, 'app');
+//# sourceMappingURL=index.esm.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/firebase/messaging/dist/index.esm.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/firebase/messaging/dist/index.esm.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "deleteToken": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.deleteToken),
+/* harmony export */   "getMessaging": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.getMessaging),
+/* harmony export */   "getToken": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.getToken),
+/* harmony export */   "isSupported": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.isSupported),
+/* harmony export */   "onMessage": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.onMessage)
+/* harmony export */ });
+/* harmony import */ var _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/messaging */ "./node_modules/@firebase/messaging/dist/esm/index.esm2017.js");
+
+//# sourceMappingURL=index.esm.js.map
+
+
+/***/ }),
+
 /***/ "./node_modules/react-dom/client.js":
 /*!******************************************!*\
   !*** ./node_modules/react-dom/client.js ***!
@@ -16860,11 +16933,11 @@ class PlatformLoggerServiceImpl {
  */
 function isVersionServiceProvider(provider) {
     const component = provider.getComponent();
-    return (component === null || component === void 0 ? void 0 : component.type) === "VERSION" /* ComponentType.VERSION */;
+    return (component === null || component === void 0 ? void 0 : component.type) === "VERSION" /* VERSION */;
 }
 
 const name$o = "@firebase/app";
-const version$1 = "0.9.0";
+const version$1 = "0.8.4";
 
 /**
  * @license
@@ -16931,7 +17004,7 @@ const name$2 = "@firebase/firestore";
 const name$1 = "@firebase/firestore-compat";
 
 const name = "firebase";
-const version = "9.15.0";
+const version = "9.14.0";
 
 /**
  * @license
@@ -17106,19 +17179,19 @@ function _clearComponents() {
  * limitations under the License.
  */
 const ERRORS = {
-    ["no-app" /* AppError.NO_APP */]: "No Firebase App '{$appName}' has been created - " +
+    ["no-app" /* NO_APP */]: "No Firebase App '{$appName}' has been created - " +
         'call Firebase App.initializeApp()',
-    ["bad-app-name" /* AppError.BAD_APP_NAME */]: "Illegal App name: '{$appName}",
-    ["duplicate-app" /* AppError.DUPLICATE_APP */]: "Firebase App named '{$appName}' already exists with different options or config",
-    ["app-deleted" /* AppError.APP_DELETED */]: "Firebase App named '{$appName}' already deleted",
-    ["no-options" /* AppError.NO_OPTIONS */]: 'Need to provide options, when not being deployed to hosting via source.',
-    ["invalid-app-argument" /* AppError.INVALID_APP_ARGUMENT */]: 'firebase.{$appName}() takes either no argument or a ' +
+    ["bad-app-name" /* BAD_APP_NAME */]: "Illegal App name: '{$appName}",
+    ["duplicate-app" /* DUPLICATE_APP */]: "Firebase App named '{$appName}' already exists with different options or config",
+    ["app-deleted" /* APP_DELETED */]: "Firebase App named '{$appName}' already deleted",
+    ["no-options" /* NO_OPTIONS */]: 'Need to provide options, when not being deployed to hosting via source.',
+    ["invalid-app-argument" /* INVALID_APP_ARGUMENT */]: 'firebase.{$appName}() takes either no argument or a ' +
         'Firebase App instance.',
-    ["invalid-log-argument" /* AppError.INVALID_LOG_ARGUMENT */]: 'First argument to `onLog` must be null or a function.',
-    ["idb-open" /* AppError.IDB_OPEN */]: 'Error thrown when opening IndexedDB. Original error: {$originalErrorMessage}.',
-    ["idb-get" /* AppError.IDB_GET */]: 'Error thrown when reading from IndexedDB. Original error: {$originalErrorMessage}.',
-    ["idb-set" /* AppError.IDB_WRITE */]: 'Error thrown when writing to IndexedDB. Original error: {$originalErrorMessage}.',
-    ["idb-delete" /* AppError.IDB_DELETE */]: 'Error thrown when deleting from IndexedDB. Original error: {$originalErrorMessage}.'
+    ["invalid-log-argument" /* INVALID_LOG_ARGUMENT */]: 'First argument to `onLog` must be null or a function.',
+    ["idb-open" /* IDB_OPEN */]: 'Error thrown when opening IndexedDB. Original error: {$originalErrorMessage}.',
+    ["idb-get" /* IDB_GET */]: 'Error thrown when reading from IndexedDB. Original error: {$originalErrorMessage}.',
+    ["idb-set" /* IDB_WRITE */]: 'Error thrown when writing to IndexedDB. Original error: {$originalErrorMessage}.',
+    ["idb-delete" /* IDB_DELETE */]: 'Error thrown when deleting from IndexedDB. Original error: {$originalErrorMessage}.'
 };
 const ERROR_FACTORY = new _firebase_util__WEBPACK_IMPORTED_MODULE_2__.ErrorFactory('app', 'Firebase', ERRORS);
 
@@ -17147,7 +17220,7 @@ class FirebaseAppImpl {
         this._automaticDataCollectionEnabled =
             config.automaticDataCollectionEnabled;
         this._container = container;
-        this.container.addComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component('app', () => this, "PUBLIC" /* ComponentType.PUBLIC */));
+        this.container.addComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component('app', () => this, "PUBLIC" /* PUBLIC */));
     }
     get automaticDataCollectionEnabled() {
         this.checkDestroyed();
@@ -17184,7 +17257,7 @@ class FirebaseAppImpl {
      */
     checkDestroyed() {
         if (this.isDeleted) {
-            throw ERROR_FACTORY.create("app-deleted" /* AppError.APP_DELETED */, { appName: this._name });
+            throw ERROR_FACTORY.create("app-deleted" /* APP_DELETED */, { appName: this._name });
         }
     }
 }
@@ -17220,13 +17293,13 @@ function initializeApp(_options, rawConfig = {}) {
     const config = Object.assign({ name: DEFAULT_ENTRY_NAME, automaticDataCollectionEnabled: false }, rawConfig);
     const name = config.name;
     if (typeof name !== 'string' || !name) {
-        throw ERROR_FACTORY.create("bad-app-name" /* AppError.BAD_APP_NAME */, {
+        throw ERROR_FACTORY.create("bad-app-name" /* BAD_APP_NAME */, {
             appName: String(name)
         });
     }
     options || (options = (0,_firebase_util__WEBPACK_IMPORTED_MODULE_2__.getDefaultAppConfig)());
     if (!options) {
-        throw ERROR_FACTORY.create("no-options" /* AppError.NO_OPTIONS */);
+        throw ERROR_FACTORY.create("no-options" /* NO_OPTIONS */);
     }
     const existingApp = _apps.get(name);
     if (existingApp) {
@@ -17236,7 +17309,7 @@ function initializeApp(_options, rawConfig = {}) {
             return existingApp;
         }
         else {
-            throw ERROR_FACTORY.create("duplicate-app" /* AppError.DUPLICATE_APP */, { appName: name });
+            throw ERROR_FACTORY.create("duplicate-app" /* DUPLICATE_APP */, { appName: name });
         }
     }
     const container = new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.ComponentContainer(name);
@@ -17282,7 +17355,7 @@ function getApp(name = DEFAULT_ENTRY_NAME) {
         return initializeApp();
     }
     if (!app) {
-        throw ERROR_FACTORY.create("no-app" /* AppError.NO_APP */, { appName: name });
+        throw ERROR_FACTORY.create("no-app" /* NO_APP */, { appName: name });
     }
     return app;
 }
@@ -17354,7 +17427,7 @@ function registerVersion(libraryKeyOrName, version, variant) {
         logger.warn(warning.join(' '));
         return;
     }
-    _registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component(`${library}-version`, () => ({ library, version }), "VERSION" /* ComponentType.VERSION */));
+    _registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component(`${library}-version`, () => ({ library, version }), "VERSION" /* VERSION */));
 }
 /**
  * Sets log handler for all Firebase SDKs.
@@ -17365,7 +17438,7 @@ function registerVersion(libraryKeyOrName, version, variant) {
  */
 function onLog(logCallback, options) {
     if (logCallback !== null && typeof logCallback !== 'function') {
-        throw ERROR_FACTORY.create("invalid-log-argument" /* AppError.INVALID_LOG_ARGUMENT */);
+        throw ERROR_FACTORY.create("invalid-log-argument" /* INVALID_LOG_ARGUMENT */);
     }
     (0,_firebase_logger__WEBPACK_IMPORTED_MODULE_1__.setUserLogHandler)(logCallback, options);
 }
@@ -17417,7 +17490,7 @@ function getDbPromise() {
                 }
             }
         }).catch(e => {
-            throw ERROR_FACTORY.create("idb-open" /* AppError.IDB_OPEN */, {
+            throw ERROR_FACTORY.create("idb-open" /* IDB_OPEN */, {
                 originalErrorMessage: e.message
             });
         });
@@ -17425,6 +17498,7 @@ function getDbPromise() {
     return dbPromise;
 }
 async function readHeartbeatsFromIndexedDB(app) {
+    var _a;
     try {
         const db = await getDbPromise();
         return db
@@ -17437,14 +17511,15 @@ async function readHeartbeatsFromIndexedDB(app) {
             logger.warn(e.message);
         }
         else {
-            const idbGetError = ERROR_FACTORY.create("idb-get" /* AppError.IDB_GET */, {
-                originalErrorMessage: e === null || e === void 0 ? void 0 : e.message
+            const idbGetError = ERROR_FACTORY.create("idb-get" /* IDB_GET */, {
+                originalErrorMessage: (_a = e) === null || _a === void 0 ? void 0 : _a.message
             });
             logger.warn(idbGetError.message);
         }
     }
 }
 async function writeHeartbeatsToIndexedDB(app, heartbeatObject) {
+    var _a;
     try {
         const db = await getDbPromise();
         const tx = db.transaction(STORE_NAME, 'readwrite');
@@ -17457,8 +17532,8 @@ async function writeHeartbeatsToIndexedDB(app, heartbeatObject) {
             logger.warn(e.message);
         }
         else {
-            const idbGetError = ERROR_FACTORY.create("idb-set" /* AppError.IDB_WRITE */, {
-                originalErrorMessage: e === null || e === void 0 ? void 0 : e.message
+            const idbGetError = ERROR_FACTORY.create("idb-set" /* IDB_WRITE */, {
+                originalErrorMessage: (_a = e) === null || _a === void 0 ? void 0 : _a.message
             });
             logger.warn(idbGetError.message);
         }
@@ -17717,8 +17792,8 @@ function countBytes(heartbeatsCache) {
  * limitations under the License.
  */
 function registerCoreComponents(variant) {
-    _registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component('platform-logger', container => new PlatformLoggerServiceImpl(container), "PRIVATE" /* ComponentType.PRIVATE */));
-    _registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component('heartbeat', container => new HeartbeatServiceImpl(container), "PRIVATE" /* ComponentType.PRIVATE */));
+    _registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component('platform-logger', container => new PlatformLoggerServiceImpl(container), "PRIVATE" /* PRIVATE */));
+    _registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_0__.Component('heartbeat', container => new HeartbeatServiceImpl(container), "PRIVATE" /* PRIVATE */));
     // Register `app` package.
     registerVersion(name$o, version$1, variant);
     // BUILD_TARGET will be replaced by values like esm5, esm2017, cjs5, etc during the compilation
@@ -17775,7 +17850,7 @@ class Component {
          * Properties to be added to the service namespace
          */
         this.serviceProps = {};
-        this.instantiationMode = "LAZY" /* InstantiationMode.LAZY */;
+        this.instantiationMode = "LAZY" /* LAZY */;
         this.onInstanceCreated = null;
     }
     setInstantiationMode(mode) {
@@ -18081,7 +18156,7 @@ class Provider {
     }
     shouldAutoInitialize() {
         return (!!this.component &&
-            this.component.instantiationMode !== "EXPLICIT" /* InstantiationMode.EXPLICIT */);
+            this.component.instantiationMode !== "EXPLICIT" /* EXPLICIT */);
     }
 }
 // undefined should be passed to the service factory for the default instance
@@ -18089,7 +18164,7 @@ function normalizeIdentifierForFactory(identifier) {
     return identifier === DEFAULT_ENTRY_NAME ? undefined : identifier;
 }
 function isComponentEager(component) {
-    return component.instantiationMode === "EAGER" /* InstantiationMode.EAGER */;
+    return component.instantiationMode === "EAGER" /* EAGER */;
 }
 
 /**
@@ -18191,7 +18266,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const name = "@firebase/installations";
-const version = "0.6.0";
+const version = "0.5.16";
 
 /**
  * @license
@@ -18234,18 +18309,18 @@ const SERVICE_NAME = 'Installations';
  * limitations under the License.
  */
 const ERROR_DESCRIPTION_MAP = {
-    ["missing-app-config-values" /* ErrorCode.MISSING_APP_CONFIG_VALUES */]: 'Missing App configuration value: "{$valueName}"',
-    ["not-registered" /* ErrorCode.NOT_REGISTERED */]: 'Firebase Installation is not registered.',
-    ["installation-not-found" /* ErrorCode.INSTALLATION_NOT_FOUND */]: 'Firebase Installation not found.',
-    ["request-failed" /* ErrorCode.REQUEST_FAILED */]: '{$requestName} request failed with error "{$serverCode} {$serverStatus}: {$serverMessage}"',
-    ["app-offline" /* ErrorCode.APP_OFFLINE */]: 'Could not process request. Application offline.',
-    ["delete-pending-registration" /* ErrorCode.DELETE_PENDING_REGISTRATION */]: "Can't delete installation while there is a pending registration request."
+    ["missing-app-config-values" /* MISSING_APP_CONFIG_VALUES */]: 'Missing App configuration value: "{$valueName}"',
+    ["not-registered" /* NOT_REGISTERED */]: 'Firebase Installation is not registered.',
+    ["installation-not-found" /* INSTALLATION_NOT_FOUND */]: 'Firebase Installation not found.',
+    ["request-failed" /* REQUEST_FAILED */]: '{$requestName} request failed with error "{$serverCode} {$serverStatus}: {$serverMessage}"',
+    ["app-offline" /* APP_OFFLINE */]: 'Could not process request. Application offline.',
+    ["delete-pending-registration" /* DELETE_PENDING_REGISTRATION */]: "Can't delete installation while there is a pending registration request."
 };
 const ERROR_FACTORY = new _firebase_util__WEBPACK_IMPORTED_MODULE_2__.ErrorFactory(SERVICE, SERVICE_NAME, ERROR_DESCRIPTION_MAP);
 /** Returns true if error is a FirebaseError that is based on an error from the server. */
 function isServerError(error) {
     return (error instanceof _firebase_util__WEBPACK_IMPORTED_MODULE_2__.FirebaseError &&
-        error.code.includes("request-failed" /* ErrorCode.REQUEST_FAILED */));
+        error.code.includes("request-failed" /* REQUEST_FAILED */));
 }
 
 /**
@@ -18270,7 +18345,7 @@ function getInstallationsEndpoint({ projectId }) {
 function extractAuthTokenInfoFromResponse(response) {
     return {
         token: response.token,
-        requestStatus: 2 /* RequestStatus.COMPLETED */,
+        requestStatus: 2 /* COMPLETED */,
         expiresIn: getExpiresInFromResponseExpiresIn(response.expiresIn),
         creationTime: Date.now()
     };
@@ -18278,7 +18353,7 @@ function extractAuthTokenInfoFromResponse(response) {
 async function getErrorFromResponse(requestName, response) {
     const responseJson = await response.json();
     const errorData = responseJson.error;
-    return ERROR_FACTORY.create("request-failed" /* ErrorCode.REQUEST_FAILED */, {
+    return ERROR_FACTORY.create("request-failed" /* REQUEST_FAILED */, {
         requestName,
         serverCode: errorData.code,
         serverMessage: errorData.message,
@@ -18363,7 +18438,7 @@ async function createInstallationRequest({ appConfig, heartbeatServiceProvider }
         const responseValue = await response.json();
         const registeredInstallationEntry = {
             fid: responseValue.fid || fid,
-            registrationStatus: 2 /* RequestStatus.COMPLETED */,
+            registrationStatus: 2 /* COMPLETED */,
             refreshToken: responseValue.refreshToken,
             authToken: extractAuthTokenInfoFromResponse(responseValue.authToken)
         };
@@ -18701,7 +18776,7 @@ async function getInstallationEntry(installations) {
 function updateOrCreateInstallationEntry(oldEntry) {
     const entry = oldEntry || {
         fid: generateFid(),
-        registrationStatus: 0 /* RequestStatus.NOT_STARTED */
+        registrationStatus: 0 /* NOT_STARTED */
     };
     return clearTimedOutRequest(entry);
 }
@@ -18713,10 +18788,10 @@ function updateOrCreateInstallationEntry(oldEntry) {
  * to be registered.
  */
 function triggerRegistrationIfNecessary(installations, installationEntry) {
-    if (installationEntry.registrationStatus === 0 /* RequestStatus.NOT_STARTED */) {
+    if (installationEntry.registrationStatus === 0 /* NOT_STARTED */) {
         if (!navigator.onLine) {
             // Registration required but app is offline.
-            const registrationPromiseWithError = Promise.reject(ERROR_FACTORY.create("app-offline" /* ErrorCode.APP_OFFLINE */));
+            const registrationPromiseWithError = Promise.reject(ERROR_FACTORY.create("app-offline" /* APP_OFFLINE */));
             return {
                 installationEntry,
                 registrationPromise: registrationPromiseWithError
@@ -18725,13 +18800,13 @@ function triggerRegistrationIfNecessary(installations, installationEntry) {
         // Try registering. Change status to IN_PROGRESS.
         const inProgressEntry = {
             fid: installationEntry.fid,
-            registrationStatus: 1 /* RequestStatus.IN_PROGRESS */,
+            registrationStatus: 1 /* IN_PROGRESS */,
             registrationTime: Date.now()
         };
         const registrationPromise = registerInstallation(installations, inProgressEntry);
         return { installationEntry: inProgressEntry, registrationPromise };
     }
-    else if (installationEntry.registrationStatus === 1 /* RequestStatus.IN_PROGRESS */) {
+    else if (installationEntry.registrationStatus === 1 /* IN_PROGRESS */) {
         return {
             installationEntry,
             registrationPromise: waitUntilFidRegistration(installations)
@@ -18757,7 +18832,7 @@ async function registerInstallation(installations, installationEntry) {
             // Registration failed. Set FID as not registered.
             await set(installations.appConfig, {
                 fid: installationEntry.fid,
-                registrationStatus: 0 /* RequestStatus.NOT_STARTED */
+                registrationStatus: 0 /* NOT_STARTED */
             });
         }
         throw e;
@@ -18769,12 +18844,12 @@ async function waitUntilFidRegistration(installations) {
     // IndexedDB changes (yet, see https://github.com/WICG/indexed-db-observers),
     // so we need to poll.
     let entry = await updateInstallationRequest(installations.appConfig);
-    while (entry.registrationStatus === 1 /* RequestStatus.IN_PROGRESS */) {
+    while (entry.registrationStatus === 1 /* IN_PROGRESS */) {
         // createInstallation request still in progress.
         await sleep(100);
         entry = await updateInstallationRequest(installations.appConfig);
     }
-    if (entry.registrationStatus === 0 /* RequestStatus.NOT_STARTED */) {
+    if (entry.registrationStatus === 0 /* NOT_STARTED */) {
         // The request timed out or failed in a different call. Try again.
         const { installationEntry, registrationPromise } = await getInstallationEntry(installations);
         if (registrationPromise) {
@@ -18798,7 +18873,7 @@ async function waitUntilFidRegistration(installations) {
 function updateInstallationRequest(appConfig) {
     return update(appConfig, oldEntry => {
         if (!oldEntry) {
-            throw ERROR_FACTORY.create("installation-not-found" /* ErrorCode.INSTALLATION_NOT_FOUND */);
+            throw ERROR_FACTORY.create("installation-not-found" /* INSTALLATION_NOT_FOUND */);
         }
         return clearTimedOutRequest(oldEntry);
     });
@@ -18807,13 +18882,13 @@ function clearTimedOutRequest(entry) {
     if (hasInstallationRequestTimedOut(entry)) {
         return {
             fid: entry.fid,
-            registrationStatus: 0 /* RequestStatus.NOT_STARTED */
+            registrationStatus: 0 /* NOT_STARTED */
         };
     }
     return entry;
 }
 function hasInstallationRequestTimedOut(installationEntry) {
-    return (installationEntry.registrationStatus === 1 /* RequestStatus.IN_PROGRESS */ &&
+    return (installationEntry.registrationStatus === 1 /* IN_PROGRESS */ &&
         installationEntry.registrationTime + PENDING_TIMEOUT_MS < Date.now());
 }
 
@@ -18897,14 +18972,14 @@ async function refreshAuthToken(installations, forceRefresh = false) {
     let tokenPromise;
     const entry = await update(installations.appConfig, oldEntry => {
         if (!isEntryRegistered(oldEntry)) {
-            throw ERROR_FACTORY.create("not-registered" /* ErrorCode.NOT_REGISTERED */);
+            throw ERROR_FACTORY.create("not-registered" /* NOT_REGISTERED */);
         }
         const oldAuthToken = oldEntry.authToken;
         if (!forceRefresh && isAuthTokenValid(oldAuthToken)) {
             // There is a valid token in the DB.
             return oldEntry;
         }
-        else if (oldAuthToken.requestStatus === 1 /* RequestStatus.IN_PROGRESS */) {
+        else if (oldAuthToken.requestStatus === 1 /* IN_PROGRESS */) {
             // There already is a token request in progress.
             tokenPromise = waitUntilAuthTokenRequest(installations, forceRefresh);
             return oldEntry;
@@ -18912,7 +18987,7 @@ async function refreshAuthToken(installations, forceRefresh = false) {
         else {
             // No token or token expired.
             if (!navigator.onLine) {
-                throw ERROR_FACTORY.create("app-offline" /* ErrorCode.APP_OFFLINE */);
+                throw ERROR_FACTORY.create("app-offline" /* APP_OFFLINE */);
             }
             const inProgressEntry = makeAuthTokenRequestInProgressEntry(oldEntry);
             tokenPromise = fetchAuthTokenFromServer(installations, inProgressEntry);
@@ -18935,13 +19010,13 @@ async function waitUntilAuthTokenRequest(installations, forceRefresh) {
     // IndexedDB changes (yet, see https://github.com/WICG/indexed-db-observers),
     // so we need to poll.
     let entry = await updateAuthTokenRequest(installations.appConfig);
-    while (entry.authToken.requestStatus === 1 /* RequestStatus.IN_PROGRESS */) {
+    while (entry.authToken.requestStatus === 1 /* IN_PROGRESS */) {
         // generateAuthToken still in progress.
         await sleep(100);
         entry = await updateAuthTokenRequest(installations.appConfig);
     }
     const authToken = entry.authToken;
-    if (authToken.requestStatus === 0 /* RequestStatus.NOT_STARTED */) {
+    if (authToken.requestStatus === 0 /* NOT_STARTED */) {
         // The request timed out or failed in a different call. Try again.
         return refreshAuthToken(installations, forceRefresh);
     }
@@ -18960,11 +19035,11 @@ async function waitUntilAuthTokenRequest(installations, forceRefresh) {
 function updateAuthTokenRequest(appConfig) {
     return update(appConfig, oldEntry => {
         if (!isEntryRegistered(oldEntry)) {
-            throw ERROR_FACTORY.create("not-registered" /* ErrorCode.NOT_REGISTERED */);
+            throw ERROR_FACTORY.create("not-registered" /* NOT_REGISTERED */);
         }
         const oldAuthToken = oldEntry.authToken;
         if (hasAuthTokenRequestTimedOut(oldAuthToken)) {
-            return Object.assign(Object.assign({}, oldEntry), { authToken: { requestStatus: 0 /* RequestStatus.NOT_STARTED */ } });
+            return Object.assign(Object.assign({}, oldEntry), { authToken: { requestStatus: 0 /* NOT_STARTED */ } });
         }
         return oldEntry;
     });
@@ -18984,7 +19059,7 @@ async function fetchAuthTokenFromServer(installations, installationEntry) {
             await remove(installations.appConfig);
         }
         else {
-            const updatedInstallationEntry = Object.assign(Object.assign({}, installationEntry), { authToken: { requestStatus: 0 /* RequestStatus.NOT_STARTED */ } });
+            const updatedInstallationEntry = Object.assign(Object.assign({}, installationEntry), { authToken: { requestStatus: 0 /* NOT_STARTED */ } });
             await set(installations.appConfig, updatedInstallationEntry);
         }
         throw e;
@@ -18992,10 +19067,10 @@ async function fetchAuthTokenFromServer(installations, installationEntry) {
 }
 function isEntryRegistered(installationEntry) {
     return (installationEntry !== undefined &&
-        installationEntry.registrationStatus === 2 /* RequestStatus.COMPLETED */);
+        installationEntry.registrationStatus === 2 /* COMPLETED */);
 }
 function isAuthTokenValid(authToken) {
-    return (authToken.requestStatus === 2 /* RequestStatus.COMPLETED */ &&
+    return (authToken.requestStatus === 2 /* COMPLETED */ &&
         !isAuthTokenExpired(authToken));
 }
 function isAuthTokenExpired(authToken) {
@@ -19006,13 +19081,13 @@ function isAuthTokenExpired(authToken) {
 /** Returns an updated InstallationEntry with an InProgressAuthToken. */
 function makeAuthTokenRequestInProgressEntry(oldEntry) {
     const inProgressAuthToken = {
-        requestStatus: 1 /* RequestStatus.IN_PROGRESS */,
+        requestStatus: 1 /* IN_PROGRESS */,
         requestTime: Date.now()
     };
     return Object.assign(Object.assign({}, oldEntry), { authToken: inProgressAuthToken });
 }
 function hasAuthTokenRequestTimedOut(authToken) {
-    return (authToken.requestStatus === 1 /* RequestStatus.IN_PROGRESS */ &&
+    return (authToken.requestStatus === 1 /* IN_PROGRESS */ &&
         authToken.requestTime + PENDING_TIMEOUT_MS < Date.now());
 }
 
@@ -19150,20 +19225,20 @@ function getDeleteEndpoint(appConfig, { fid }) {
 async function deleteInstallations(installations) {
     const { appConfig } = installations;
     const entry = await update(appConfig, oldEntry => {
-        if (oldEntry && oldEntry.registrationStatus === 0 /* RequestStatus.NOT_STARTED */) {
+        if (oldEntry && oldEntry.registrationStatus === 0 /* NOT_STARTED */) {
             // Delete the unregistered entry without sending a deleteInstallation request.
             return undefined;
         }
         return oldEntry;
     });
     if (entry) {
-        if (entry.registrationStatus === 1 /* RequestStatus.IN_PROGRESS */) {
+        if (entry.registrationStatus === 1 /* IN_PROGRESS */) {
             // Can't delete while trying to register.
-            throw ERROR_FACTORY.create("delete-pending-registration" /* ErrorCode.DELETE_PENDING_REGISTRATION */);
+            throw ERROR_FACTORY.create("delete-pending-registration" /* DELETE_PENDING_REGISTRATION */);
         }
-        else if (entry.registrationStatus === 2 /* RequestStatus.COMPLETED */) {
+        else if (entry.registrationStatus === 2 /* COMPLETED */) {
             if (!navigator.onLine) {
-                throw ERROR_FACTORY.create("app-offline" /* ErrorCode.APP_OFFLINE */);
+                throw ERROR_FACTORY.create("app-offline" /* APP_OFFLINE */);
             }
             else {
                 await deleteInstallationRequest(appConfig, entry);
@@ -19276,7 +19351,7 @@ function extractAppConfig(app) {
     };
 }
 function getMissingValueError(valueName) {
-    return ERROR_FACTORY.create("missing-app-config-values" /* ErrorCode.MISSING_APP_CONFIG_VALUES */, {
+    return ERROR_FACTORY.create("missing-app-config-values" /* MISSING_APP_CONFIG_VALUES */, {
         valueName
     });
 }
@@ -19323,8 +19398,8 @@ const internalFactory = (container) => {
     return installationsInternal;
 };
 function registerInstallations() {
-    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component(INSTALLATIONS_NAME, publicFactory, "PUBLIC" /* ComponentType.PUBLIC */));
-    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component(INSTALLATIONS_NAME_INTERNAL, internalFactory, "PRIVATE" /* ComponentType.PRIVATE */));
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component(INSTALLATIONS_NAME, publicFactory, "PUBLIC" /* PUBLIC */));
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component(INSTALLATIONS_NAME_INTERNAL, internalFactory, "PRIVATE" /* PRIVATE */));
 }
 
 /**
@@ -19915,26 +19990,26 @@ function getKey({ appConfig }) {
  * limitations under the License.
  */
 const ERROR_MAP = {
-    ["missing-app-config-values" /* ErrorCode.MISSING_APP_CONFIG_VALUES */]: 'Missing App configuration value: "{$valueName}"',
-    ["only-available-in-window" /* ErrorCode.AVAILABLE_IN_WINDOW */]: 'This method is available in a Window context.',
-    ["only-available-in-sw" /* ErrorCode.AVAILABLE_IN_SW */]: 'This method is available in a service worker context.',
-    ["permission-default" /* ErrorCode.PERMISSION_DEFAULT */]: 'The notification permission was not granted and dismissed instead.',
-    ["permission-blocked" /* ErrorCode.PERMISSION_BLOCKED */]: 'The notification permission was not granted and blocked instead.',
-    ["unsupported-browser" /* ErrorCode.UNSUPPORTED_BROWSER */]: "This browser doesn't support the API's required to use the Firebase SDK.",
-    ["indexed-db-unsupported" /* ErrorCode.INDEXED_DB_UNSUPPORTED */]: "This browser doesn't support indexedDb.open() (ex. Safari iFrame, Firefox Private Browsing, etc)",
-    ["failed-service-worker-registration" /* ErrorCode.FAILED_DEFAULT_REGISTRATION */]: 'We are unable to register the default service worker. {$browserErrorMessage}',
-    ["token-subscribe-failed" /* ErrorCode.TOKEN_SUBSCRIBE_FAILED */]: 'A problem occurred while subscribing the user to FCM: {$errorInfo}',
-    ["token-subscribe-no-token" /* ErrorCode.TOKEN_SUBSCRIBE_NO_TOKEN */]: 'FCM returned no token when subscribing the user to push.',
-    ["token-unsubscribe-failed" /* ErrorCode.TOKEN_UNSUBSCRIBE_FAILED */]: 'A problem occurred while unsubscribing the ' +
+    ["missing-app-config-values" /* MISSING_APP_CONFIG_VALUES */]: 'Missing App configuration value: "{$valueName}"',
+    ["only-available-in-window" /* AVAILABLE_IN_WINDOW */]: 'This method is available in a Window context.',
+    ["only-available-in-sw" /* AVAILABLE_IN_SW */]: 'This method is available in a service worker context.',
+    ["permission-default" /* PERMISSION_DEFAULT */]: 'The notification permission was not granted and dismissed instead.',
+    ["permission-blocked" /* PERMISSION_BLOCKED */]: 'The notification permission was not granted and blocked instead.',
+    ["unsupported-browser" /* UNSUPPORTED_BROWSER */]: "This browser doesn't support the API's required to use the Firebase SDK.",
+    ["indexed-db-unsupported" /* INDEXED_DB_UNSUPPORTED */]: "This browser doesn't support indexedDb.open() (ex. Safari iFrame, Firefox Private Browsing, etc)",
+    ["failed-service-worker-registration" /* FAILED_DEFAULT_REGISTRATION */]: 'We are unable to register the default service worker. {$browserErrorMessage}',
+    ["token-subscribe-failed" /* TOKEN_SUBSCRIBE_FAILED */]: 'A problem occurred while subscribing the user to FCM: {$errorInfo}',
+    ["token-subscribe-no-token" /* TOKEN_SUBSCRIBE_NO_TOKEN */]: 'FCM returned no token when subscribing the user to push.',
+    ["token-unsubscribe-failed" /* TOKEN_UNSUBSCRIBE_FAILED */]: 'A problem occurred while unsubscribing the ' +
         'user from FCM: {$errorInfo}',
-    ["token-update-failed" /* ErrorCode.TOKEN_UPDATE_FAILED */]: 'A problem occurred while updating the user from FCM: {$errorInfo}',
-    ["token-update-no-token" /* ErrorCode.TOKEN_UPDATE_NO_TOKEN */]: 'FCM returned no token when updating the user to push.',
-    ["use-sw-after-get-token" /* ErrorCode.USE_SW_AFTER_GET_TOKEN */]: 'The useServiceWorker() method may only be called once and must be ' +
+    ["token-update-failed" /* TOKEN_UPDATE_FAILED */]: 'A problem occurred while updating the user from FCM: {$errorInfo}',
+    ["token-update-no-token" /* TOKEN_UPDATE_NO_TOKEN */]: 'FCM returned no token when updating the user to push.',
+    ["use-sw-after-get-token" /* USE_SW_AFTER_GET_TOKEN */]: 'The useServiceWorker() method may only be called once and must be ' +
         'called before calling getToken() to ensure your service worker is used.',
-    ["invalid-sw-registration" /* ErrorCode.INVALID_SW_REGISTRATION */]: 'The input to useServiceWorker() must be a ServiceWorkerRegistration.',
-    ["invalid-bg-handler" /* ErrorCode.INVALID_BG_HANDLER */]: 'The input to setBackgroundMessageHandler() must be a function.',
-    ["invalid-vapid-key" /* ErrorCode.INVALID_VAPID_KEY */]: 'The public VAPID key must be a string.',
-    ["use-vapid-key-after-get-token" /* ErrorCode.USE_VAPID_KEY_AFTER_GET_TOKEN */]: 'The usePublicVapidKey() method may only be called once and must be ' +
+    ["invalid-sw-registration" /* INVALID_SW_REGISTRATION */]: 'The input to useServiceWorker() must be a ServiceWorkerRegistration.',
+    ["invalid-bg-handler" /* INVALID_BG_HANDLER */]: 'The input to setBackgroundMessageHandler() must be a function.',
+    ["invalid-vapid-key" /* INVALID_VAPID_KEY */]: 'The public VAPID key must be a string.',
+    ["use-vapid-key-after-get-token" /* USE_VAPID_KEY_AFTER_GET_TOKEN */]: 'The usePublicVapidKey() method may only be called once and must be ' +
         'called before calling getToken() to ensure your VAPID key is used.'
 };
 const ERROR_FACTORY = new _firebase_util__WEBPACK_IMPORTED_MODULE_3__.ErrorFactory('messaging', 'Messaging', ERROR_MAP);
@@ -19956,6 +20031,7 @@ const ERROR_FACTORY = new _firebase_util__WEBPACK_IMPORTED_MODULE_3__.ErrorFacto
  * limitations under the License.
  */
 async function requestGetToken(firebaseDependencies, subscriptionOptions) {
+    var _a;
     const headers = await getHeaders(firebaseDependencies);
     const body = getBody(subscriptionOptions);
     const subscribeOptions = {
@@ -19969,22 +20045,23 @@ async function requestGetToken(firebaseDependencies, subscriptionOptions) {
         responseData = await response.json();
     }
     catch (err) {
-        throw ERROR_FACTORY.create("token-subscribe-failed" /* ErrorCode.TOKEN_SUBSCRIBE_FAILED */, {
-            errorInfo: err === null || err === void 0 ? void 0 : err.toString()
+        throw ERROR_FACTORY.create("token-subscribe-failed" /* TOKEN_SUBSCRIBE_FAILED */, {
+            errorInfo: (_a = err) === null || _a === void 0 ? void 0 : _a.toString()
         });
     }
     if (responseData.error) {
         const message = responseData.error.message;
-        throw ERROR_FACTORY.create("token-subscribe-failed" /* ErrorCode.TOKEN_SUBSCRIBE_FAILED */, {
+        throw ERROR_FACTORY.create("token-subscribe-failed" /* TOKEN_SUBSCRIBE_FAILED */, {
             errorInfo: message
         });
     }
     if (!responseData.token) {
-        throw ERROR_FACTORY.create("token-subscribe-no-token" /* ErrorCode.TOKEN_SUBSCRIBE_NO_TOKEN */);
+        throw ERROR_FACTORY.create("token-subscribe-no-token" /* TOKEN_SUBSCRIBE_NO_TOKEN */);
     }
     return responseData.token;
 }
 async function requestUpdateToken(firebaseDependencies, tokenDetails) {
+    var _a;
     const headers = await getHeaders(firebaseDependencies);
     const body = getBody(tokenDetails.subscriptionOptions);
     const updateOptions = {
@@ -19998,22 +20075,23 @@ async function requestUpdateToken(firebaseDependencies, tokenDetails) {
         responseData = await response.json();
     }
     catch (err) {
-        throw ERROR_FACTORY.create("token-update-failed" /* ErrorCode.TOKEN_UPDATE_FAILED */, {
-            errorInfo: err === null || err === void 0 ? void 0 : err.toString()
+        throw ERROR_FACTORY.create("token-update-failed" /* TOKEN_UPDATE_FAILED */, {
+            errorInfo: (_a = err) === null || _a === void 0 ? void 0 : _a.toString()
         });
     }
     if (responseData.error) {
         const message = responseData.error.message;
-        throw ERROR_FACTORY.create("token-update-failed" /* ErrorCode.TOKEN_UPDATE_FAILED */, {
+        throw ERROR_FACTORY.create("token-update-failed" /* TOKEN_UPDATE_FAILED */, {
             errorInfo: message
         });
     }
     if (!responseData.token) {
-        throw ERROR_FACTORY.create("token-update-no-token" /* ErrorCode.TOKEN_UPDATE_NO_TOKEN */);
+        throw ERROR_FACTORY.create("token-update-no-token" /* TOKEN_UPDATE_NO_TOKEN */);
     }
     return responseData.token;
 }
 async function requestDeleteToken(firebaseDependencies, token) {
+    var _a;
     const headers = await getHeaders(firebaseDependencies);
     const unsubscribeOptions = {
         method: 'DELETE',
@@ -20024,14 +20102,14 @@ async function requestDeleteToken(firebaseDependencies, token) {
         const responseData = await response.json();
         if (responseData.error) {
             const message = responseData.error.message;
-            throw ERROR_FACTORY.create("token-unsubscribe-failed" /* ErrorCode.TOKEN_UNSUBSCRIBE_FAILED */, {
+            throw ERROR_FACTORY.create("token-unsubscribe-failed" /* TOKEN_UNSUBSCRIBE_FAILED */, {
                 errorInfo: message
             });
         }
     }
     catch (err) {
-        throw ERROR_FACTORY.create("token-unsubscribe-failed" /* ErrorCode.TOKEN_UNSUBSCRIBE_FAILED */, {
-            errorInfo: err === null || err === void 0 ? void 0 : err.toString()
+        throw ERROR_FACTORY.create("token-unsubscribe-failed" /* TOKEN_UNSUBSCRIBE_FAILED */, {
+            errorInfo: (_a = err) === null || _a === void 0 ? void 0 : _a.toString()
         });
     }
 }
@@ -20354,7 +20432,7 @@ function extractAppConfig(app) {
     };
 }
 function getMissingValueError(valueName) {
-    return ERROR_FACTORY.create("missing-app-config-values" /* ErrorCode.MISSING_APP_CONFIG_VALUES */, {
+    return ERROR_FACTORY.create("missing-app-config-values" /* MISSING_APP_CONFIG_VALUES */, {
         valueName
     });
 }
@@ -20413,6 +20491,7 @@ class MessagingService {
  * limitations under the License.
  */
 async function registerDefaultSw(messaging) {
+    var _a;
     try {
         messaging.swRegistration = await navigator.serviceWorker.register(DEFAULT_SW_PATH, {
             scope: DEFAULT_SW_SCOPE
@@ -20427,8 +20506,8 @@ async function registerDefaultSw(messaging) {
         });
     }
     catch (e) {
-        throw ERROR_FACTORY.create("failed-service-worker-registration" /* ErrorCode.FAILED_DEFAULT_REGISTRATION */, {
-            browserErrorMessage: e === null || e === void 0 ? void 0 : e.message
+        throw ERROR_FACTORY.create("failed-service-worker-registration" /* FAILED_DEFAULT_REGISTRATION */, {
+            browserErrorMessage: (_a = e) === null || _a === void 0 ? void 0 : _a.message
         });
     }
 }
@@ -20457,7 +20536,7 @@ async function updateSwReg(messaging, swRegistration) {
         return;
     }
     if (!(swRegistration instanceof ServiceWorkerRegistration)) {
-        throw ERROR_FACTORY.create("invalid-sw-registration" /* ErrorCode.INVALID_SW_REGISTRATION */);
+        throw ERROR_FACTORY.create("invalid-sw-registration" /* INVALID_SW_REGISTRATION */);
     }
     messaging.swRegistration = swRegistration;
 }
@@ -20505,13 +20584,13 @@ async function updateVapidKey(messaging, vapidKey) {
  */
 async function getToken$1(messaging, options) {
     if (!navigator) {
-        throw ERROR_FACTORY.create("only-available-in-window" /* ErrorCode.AVAILABLE_IN_WINDOW */);
+        throw ERROR_FACTORY.create("only-available-in-window" /* AVAILABLE_IN_WINDOW */);
     }
     if (Notification.permission === 'default') {
         await Notification.requestPermission();
     }
     if (Notification.permission !== 'granted') {
-        throw ERROR_FACTORY.create("permission-blocked" /* ErrorCode.PERMISSION_BLOCKED */);
+        throw ERROR_FACTORY.create("permission-blocked" /* PERMISSION_BLOCKED */);
     }
     await updateVapidKey(messaging, options === null || options === void 0 ? void 0 : options.vapidKey);
     await updateSwReg(messaging, options === null || options === void 0 ? void 0 : options.serviceWorkerRegistration);
@@ -20596,7 +20675,7 @@ async function messageEventListener(messaging, event) {
 }
 
 const name = "@firebase/messaging";
-const version = "0.12.0";
+const version = "0.11.0";
 
 /**
  * @license
@@ -20629,8 +20708,8 @@ const WindowMessagingInternalFactory = (container) => {
     return messagingInternal;
 };
 function registerMessagingInWindow() {
-    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component('messaging', WindowMessagingFactory, "PUBLIC" /* ComponentType.PUBLIC */));
-    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component('messaging-internal', WindowMessagingInternalFactory, "PRIVATE" /* ComponentType.PRIVATE */));
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component('messaging', WindowMessagingFactory, "PUBLIC" /* PUBLIC */));
+    (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__._registerComponent)(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__.Component('messaging-internal', WindowMessagingInternalFactory, "PRIVATE" /* PRIVATE */));
     (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__.registerVersion)(name, version);
     // BUILD_TARGET will be replaced by values like esm5, esm2017, cjs5, etc during the compilation
     (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__.registerVersion)(name, version, 'esm2017');
@@ -20699,7 +20778,7 @@ async function isWindowSupported() {
  */
 async function deleteToken$1(messaging) {
     if (!navigator) {
-        throw ERROR_FACTORY.create("only-available-in-window" /* ErrorCode.AVAILABLE_IN_WINDOW */);
+        throw ERROR_FACTORY.create("only-available-in-window" /* AVAILABLE_IN_WINDOW */);
     }
     if (!messaging.swRegistration) {
         await registerDefaultSw(messaging);
@@ -20725,7 +20804,7 @@ async function deleteToken$1(messaging) {
  */
 function onMessage$1(messaging, nextOrObserver) {
     if (!navigator) {
-        throw ERROR_FACTORY.create("only-available-in-window" /* ErrorCode.AVAILABLE_IN_WINDOW */);
+        throw ERROR_FACTORY.create("only-available-in-window" /* AVAILABLE_IN_WINDOW */);
     }
     messaging.onMessageHandler = nextOrObserver;
     return () => {
@@ -20764,11 +20843,11 @@ function getMessagingInWindow(app = (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4_
     isWindowSupported().then(isSupported => {
         // If `isWindowSupported()` resolved, but returned false.
         if (!isSupported) {
-            throw ERROR_FACTORY.create("unsupported-browser" /* ErrorCode.UNSUPPORTED_BROWSER */);
+            throw ERROR_FACTORY.create("unsupported-browser" /* UNSUPPORTED_BROWSER */);
         }
     }, _ => {
         // If `isWindowSupported()` rejected.
-        throw ERROR_FACTORY.create("indexed-db-unsupported" /* ErrorCode.INDEXED_DB_UNSUPPORTED */);
+        throw ERROR_FACTORY.create("indexed-db-unsupported" /* INDEXED_DB_UNSUPPORTED */);
     });
     return (0,_firebase_app__WEBPACK_IMPORTED_MODULE_4__._getProvider)((0,_firebase_util__WEBPACK_IMPORTED_MODULE_3__.getModularInstance)(app), 'messaging').getImmediate();
 }
@@ -20832,83 +20911,6 @@ registerMessagingInWindow();
 
 
 //# sourceMappingURL=index.esm2017.js.map
-
-
-/***/ }),
-
-/***/ "./node_modules/firebase/app/dist/esm/index.esm.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/firebase/app/dist/esm/index.esm.js ***!
-  \*********************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "FirebaseError": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.FirebaseError),
-/* harmony export */   "SDK_VERSION": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.SDK_VERSION),
-/* harmony export */   "_DEFAULT_ENTRY_NAME": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._DEFAULT_ENTRY_NAME),
-/* harmony export */   "_addComponent": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._addComponent),
-/* harmony export */   "_addOrOverwriteComponent": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._addOrOverwriteComponent),
-/* harmony export */   "_apps": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._apps),
-/* harmony export */   "_clearComponents": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._clearComponents),
-/* harmony export */   "_components": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._components),
-/* harmony export */   "_getProvider": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._getProvider),
-/* harmony export */   "_registerComponent": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._registerComponent),
-/* harmony export */   "_removeServiceInstance": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__._removeServiceInstance),
-/* harmony export */   "deleteApp": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.deleteApp),
-/* harmony export */   "getApp": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.getApp),
-/* harmony export */   "getApps": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.getApps),
-/* harmony export */   "initializeApp": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.initializeApp),
-/* harmony export */   "onLog": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.onLog),
-/* harmony export */   "registerVersion": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion),
-/* harmony export */   "setLogLevel": () => (/* reexport safe */ _firebase_app__WEBPACK_IMPORTED_MODULE_0__.setLogLevel)
-/* harmony export */ });
-/* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/esm/index.esm2017.js");
-
-
-
-var name = "firebase";
-var version = "9.15.0";
-
-/**
- * @license
- * Copyright 2020 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-(0,_firebase_app__WEBPACK_IMPORTED_MODULE_0__.registerVersion)(name, version, 'app');
-//# sourceMappingURL=index.esm.js.map
-
-
-/***/ }),
-
-/***/ "./node_modules/firebase/messaging/dist/esm/index.esm.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/firebase/messaging/dist/esm/index.esm.js ***!
-  \***************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "deleteToken": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.deleteToken),
-/* harmony export */   "getMessaging": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.getMessaging),
-/* harmony export */   "getToken": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.getToken),
-/* harmony export */   "isSupported": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.isSupported),
-/* harmony export */   "onMessage": () => (/* reexport safe */ _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__.onMessage)
-/* harmony export */ });
-/* harmony import */ var _firebase_messaging__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/messaging */ "./node_modules/@firebase/messaging/dist/esm/index.esm2017.js");
-
-//# sourceMappingURL=index.esm.js.map
 
 
 /***/ }),
