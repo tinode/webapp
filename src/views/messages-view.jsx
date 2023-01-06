@@ -891,7 +891,12 @@ class MessagesView extends React.Component {
     } else {
       // Small enough to send inband.
       fileToBase64(file)
-        .then(b64 => this.sendMessage(Drafty.attachFile(null, {mime: b64.mime, data: b64.bits, filename: b64.name})))
+        .then(b64 => this.sendMessage(Drafty.attachFile(null, {
+          mime: b64.mime,
+          data: b64.bits,
+          filename: b64.name,
+          size: file.size
+        })))
         .catch(err => this.props.onError(err.message, 'err'));
     }
   }
