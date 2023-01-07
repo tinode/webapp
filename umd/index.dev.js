@@ -9244,7 +9244,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           webrtc: _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_HEAD_STARTED,
           aonly: !!audioOnly
         };
-        this.handleSendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.videoCall(), undefined, undefined, head).then(ctrl => {
+        this.handleSendMessage(tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Drafty.videoCall(audioOnly), undefined, undefined, head).then(ctrl => {
           if (ctrl.code < 200 || ctrl.code >= 300 || !ctrl.params || !ctrl.params.seq) {
             this.handleCallClose();
             return;
@@ -10706,9 +10706,9 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       pc: undefined,
       previousOnInfo: undefined,
       waitingForPeer: false,
-      callInitialSetupComplete: false
+      callInitialSetupComplete: false,
+      audioOnly: props.callAudioOnly
     };
-    console.log("CallPanel", props.callAudioOnly);
     this.localStreamConstraints = {
       audio: true,
       video: !props.callAudioOnly
@@ -10799,7 +10799,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       return;
     }
     if (this.props.callState == _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_IN_PROGRESS) {
-      this.props.onInvite(this.props.topic, this.props.seq, this.props.callState, this.props.callAudioOnly);
+      this.props.onInvite(this.props.topic, this.props.seq, _constants_js__WEBPACK_IMPORTED_MODULE_4__.CALL_STATE_IN_PROGRESS, this.props.callAudioOnly);
       return;
     }
     navigator.mediaDevices.getUserMedia(this.localStreamConstraints).then(stream => {
@@ -11009,16 +11009,18 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   }
   handleToggleCameraClick() {
     this.toggleMedia('video');
+    this.setState({
+      audioOnly: !this.state.audioOnly
+    });
   }
   handleToggleMicClick() {
     this.toggleMedia('audio');
   }
   render() {
     const remoteActive = this.remoteRef.current && this.remoteRef.current.srcObject;
-    const noVideo = this.props.callAudioOnly;
     const audioTracks = this.state.localStream && this.state.localStream.getAudioTracks();
-    const videoTracks = !noVideo && this.state.localStream && this.state.localStream.getVideoTracks();
-    const enabled = !!(audioTracks && audioTracks[0]);
+    const videoTracks = !this.state.audioOnly && this.state.localStream && this.state.localStream.getVideoTracks();
+    const disabled = !(audioTracks && audioTracks[0]);
     const audioIcon = audioTracks && audioTracks[0] && audioTracks[0].enabled ? 'mic' : 'mic_off';
     const videoIcon = videoTracks && videoTracks[0] && videoTracks[0].enabled ? 'videocam' : 'videocam_off';
     const peerTitle = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_5__.clipStr)(this.props.title, _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_PEER_TITLE_LENGTH);
@@ -11029,7 +11031,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       id: "video-container-panel"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "call-party self",
-      disabled: noVideo
+      disabled: this.state.audioOnly
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
       ref: this.localRef,
       autoPlay: true,
@@ -11045,12 +11047,12 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "call-party peer",
-      disabled: noVideo
+      disabled: this.state.audioOnly
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
       ref: this.remoteRef,
       autoPlay: true,
       playsInline: true
-    }), remoteActive ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }), remoteActive && !this.state.audioOnly ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "caller-name inactive"
     }, peerTitle) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: `caller-card${pulseAnimation}`
@@ -11073,13 +11075,13 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     }, "call_end")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       className: "secondary",
       onClick: this.handleToggleCameraClick,
-      disabled: !enabled
+      disabled: disabled
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, videoIcon)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       className: "secondary",
       onClick: this.handleToggleMicClick,
-      disabled: !enabled
+      disabled: disabled
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons"
     }, audioIcon)))));
@@ -11149,7 +11151,7 @@ class CallStatus extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
           });
           break;
       }
-    } else if (this.props.callState == 'started' && !this.props.duration) {
+    } else if (['accepted', 'started'].includes(this.props.callState) && !this.props.duration) {
       duration = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
         id: "call_in_progress",
         defaultMessage: [{

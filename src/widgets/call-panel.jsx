@@ -34,10 +34,9 @@ class CallPanel extends React.PureComponent {
       previousOnInfo: undefined,
       waitingForPeer: false,
       // If true, the client has received a remote SDP from the peer and has sent a local SDP to the peer.
-      callInitialSetupComplete: false
+      callInitialSetupComplete: false,
+      audioOnly: props.callAudioOnly,
     };
-
-    console.log("CallPanel", props.callAudioOnly);
 
     this.localStreamConstraints = {
       audio: true,
@@ -148,7 +147,7 @@ class CallPanel extends React.PureComponent {
 
     if (this.props.callState == CALL_STATE_IN_PROGRESS) {
       // We apparently just accepted the call.
-      this.props.onInvite(this.props.topic, this.props.seq, this.props.callState, this.props.callAudioOnly);
+      this.props.onInvite(this.props.topic, this.props.seq, CALL_STATE_IN_PROGRESS, this.props.callAudioOnly);
       return;
     }
 
@@ -404,6 +403,7 @@ class CallPanel extends React.PureComponent {
 
   handleToggleCameraClick() {
     this.toggleMedia('video');
+    this.setState({audioOnly: !this.state.audioOnly});
   }
 
   handleToggleMicClick() {
@@ -412,10 +412,9 @@ class CallPanel extends React.PureComponent {
 
   render() {
     const remoteActive = this.remoteRef.current && this.remoteRef.current.srcObject;
-    const noVideo = this.props.callAudioOnly;
     const audioTracks = this.state.localStream && this.state.localStream.getAudioTracks();
-    const videoTracks = !noVideo && this.state.localStream && this.state.localStream.getVideoTracks();
-    const enabled = !!(audioTracks && audioTracks[0]);
+    const videoTracks = !this.state.audioOnly && this.state.localStream && this.state.localStream.getVideoTracks();
+    const disabled = !(audioTracks && audioTracks[0]);
     const audioIcon = audioTracks && audioTracks[0] && audioTracks[0].enabled ? 'mic' : 'mic_off';
     const videoIcon = videoTracks && videoTracks[0] && videoTracks[0].enabled ? 'videocam' : 'videocam_off';
     const peerTitle = clipStr(this.props.title, MAX_PEER_TITLE_LENGTH);
@@ -425,16 +424,16 @@ class CallPanel extends React.PureComponent {
       <>
         <div id="video-container">
           <div id="video-container-panel">
-            <div className="call-party self" disabled={noVideo}>
+            <div className="call-party self" disabled={this.state.audioOnly}>
               <video ref={this.localRef} autoPlay muted playsInline />
               <div className="caller-name inactive">
                 <FormattedMessage id="calls_you_label"
                   defaultMessage="You" description="Shown over the local video screen" />
               </div>
             </div>
-            <div className="call-party peer" disabled={noVideo}>
+            <div className="call-party peer" disabled={this.state.audioOnly}>
               <video ref={this.remoteRef} autoPlay playsInline />
-              {remoteActive ?
+              {remoteActive && !this.state.audioOnly ?
                 <div className="caller-name inactive">{peerTitle}</div> :
                 <div className={`caller-card${pulseAnimation}`}>
                   <div className="avatar-box">
@@ -453,10 +452,10 @@ class CallPanel extends React.PureComponent {
             <button className="danger" onClick={this.handleCloseClick}>
               <i className="material-icons">call_end</i>
             </button>
-            <button className="secondary" onClick={this.handleToggleCameraClick} disabled={!enabled}>
+            <button className="secondary" onClick={this.handleToggleCameraClick} disabled={disabled}>
               <i className="material-icons">{videoIcon}</i>
             </button>
-            <button className="secondary" onClick={this.handleToggleMicClick} disabled={!enabled}>
+            <button className="secondary" onClick={this.handleToggleMicClick} disabled={disabled}>
               <i className="material-icons">{audioIcon}</i>
             </button>
           </div>

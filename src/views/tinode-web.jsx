@@ -1737,7 +1737,7 @@ class TinodeWeb extends React.Component {
     switch (callState) {
       case CALL_STATE_OUTGOING_INITATED:
         const head = { webrtc: CALL_HEAD_STARTED, aonly: !!audioOnly };
-        this.handleSendMessage(Drafty.videoCall(), undefined, undefined, head)
+        this.handleSendMessage(Drafty.videoCall(audioOnly), undefined, undefined, head)
           .then(ctrl => {
             if (ctrl.code < 200 || ctrl.code >= 300 || !ctrl.params || !ctrl.params.seq) {
               this.handleCallClose();
