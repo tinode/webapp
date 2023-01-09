@@ -8028,15 +8028,11 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     try {
       this.fcm = (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.getMessaging)((0,firebase_app__WEBPACK_IMPORTED_MODULE_2__.initializeApp)(FIREBASE_INIT, _config_js__WEBPACK_IMPORTED_MODULE_12__.APP_NAME));
       return navigator.serviceWorker.getRegistration('/service-worker.js').then(reg => {
-        if (reg) {
-          return reg;
-        }
-        return navigator.serviceWorker.register('/service-worker.js').then(reg => {
+        return reg || navigator.serviceWorker.register('/service-worker.js').then(reg => {
           this.checkForAppUpdate(reg);
           return reg;
         });
       }).then(reg => {
-        console.log("SW active:", reg.active, "installing:", reg.installing);
         (reg.active || reg.installing).postMessage(JSON.stringify({
           locale: locale,
           version: _version_js__WEBPACK_IMPORTED_MODULE_14__.PACKAGE_VERSION

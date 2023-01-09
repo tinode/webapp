@@ -373,16 +373,12 @@ class TinodeWeb extends React.Component {
     try {
       this.fcm = firebaseGetMessaging(firebaseInitApp(FIREBASE_INIT, APP_NAME));
       return navigator.serviceWorker.getRegistration('/service-worker.js').then(reg => {
-        if (reg) {
-          return reg
-        }
-        return navigator.serviceWorker.register('/service-worker.js').then(reg => {
+        return reg || navigator.serviceWorker.register('/service-worker.js').then(reg => {
           this.checkForAppUpdate(reg);
           return reg;
         });
       }).then(reg => {
         // Pass locale and version config to the service worker.
-        console.log("SW active:", reg.active, "installing:", reg.installing);
         (reg.active || reg.installing).postMessage(JSON.stringify({locale: locale, version: PACKAGE_VERSION}));
         // Request token.
         return TinodeWeb.requestFCMToken(this.fcm, reg);
@@ -402,7 +398,7 @@ class TinodeWeb extends React.Component {
         // Handhe FCM pushes
         // (a) for channels always,
         // (b) pushes when the app is in foreground but has no focus.
-        firebaseOnMessage(this.fcm, (payload) => { this.handlePushMessage(payload); });
+        firebaseOnMessage(this.fcm, payload => { this.handlePushMessage(payload); });
       }).catch(err => {
         // SW registration or FCM has failed :(
         onError(err);
