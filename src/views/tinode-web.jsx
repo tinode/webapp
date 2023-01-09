@@ -1932,11 +1932,11 @@ class TinodeWeb extends React.Component {
         {this.state.callTopic && this.state.callState == CALL_STATE_INCOMING_RECEIVED ?
           <CallIncoming
             tinode={this.tinode}
-            onClose={this.handleCallClose}
             topic={this.state.callTopic}
             seq={this.state.callSeq}
             callState={this.state.callState}
             audioOnly={this.state.callAudioOnly}
+            onClose={this.handleCallClose}
             onRinging={this.handleCallRinging}
             onAcceptCall={this.handleCallAccept}
             onReject={this.handleCallHangup}

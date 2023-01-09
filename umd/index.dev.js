@@ -9405,11 +9405,11 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       onTopicSelected: this.handleStartTopicRequest
     }) : null, this.state.callTopic && this.state.callState == _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_STATE_INCOMING_RECEIVED ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_call_incoming_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
       tinode: this.tinode,
-      onClose: this.handleCallClose,
       topic: this.state.callTopic,
       seq: this.state.callSeq,
       callState: this.state.callState,
       audioOnly: this.state.callAudioOnly,
+      onClose: this.handleCallClose,
       onRinging: this.handleCallRinging,
       onAcceptCall: this.handleCallAccept,
       onReject: this.handleCallHangup
