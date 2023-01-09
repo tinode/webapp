@@ -7971,11 +7971,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.tinode.onDataMessage = this.handleDataMessage;
     }).then(_ => {
       if (this.state.desktopAlertsEnabled) {
-        this.initFCMessaging().then(_ => {
-          if (this.state.desktopAlerts) {
-            this.tinode.setDeviceToken(this.state.firebaseToken);
-          }
-        }).catch(_ => {});
+        this.initFCMessaging().catch(_ => {});
       }
       const parsedNav = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].parseUrlHash(window.location.hash);
       this.resetContactList();
@@ -8033,7 +8029,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       console.error(msg, err);
       this.handleError(formatMessage(messages.push_init_failed), 'err');
       this.setState({
-        desktopAlertsEnabled: false,
         firebaseToken: null
       });
       _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].updateObject('settings', {
@@ -8042,14 +8037,16 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     };
     try {
       this.fcm = (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.getMessaging)((0,firebase_app__WEBPACK_IMPORTED_MODULE_2__.initializeApp)(FIREBASE_INIT, _config_js__WEBPACK_IMPORTED_MODULE_12__.APP_NAME));
-      return navigator.serviceWorker.register('/service-worker.js').then(reg => {
-        this.checkForAppUpdate(reg);
-        reg.active.postMessage(JSON.stringify({
+      return navigator.serviceWorker.getRegistration('/service-worker.js').then(reg => {
+        return reg || navigator.serviceWorker.register('/service-worker.js').then(reg => {
+          this.checkForAppUpdate(reg);
+          return reg;
+        });
+      }).then(reg => {
+        (reg.active || reg.installing).postMessage(JSON.stringify({
           locale: locale,
           version: _version_js__WEBPACK_IMPORTED_MODULE_14__.PACKAGE_VERSION
         }));
-        return reg;
-      }).then(reg => {
         return TinodeWeb.requestFCMToken(this.fcm, reg);
       }).then(token => {
         const persist = _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].getObject('keep-logged-in');
@@ -8238,6 +8235,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         });
         this.handleError(err.message, 'err');
       });
+    }
+    if (this.state.desktopAlertsEnabled && !this.state.firebaseToken) {
+      this.initFCMessaging();
     }
   }
   handlePersistenceChange(persist) {
@@ -9413,7 +9413,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       onRinging: this.handleCallRinging,
       onAcceptCall: this.handleCallAccept,
       onReject: this.handleCallHangup
-    }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_alert_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    }) : null, this.state.alertVisible ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_alert_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
       visible: this.state.alertVisible,
       title: this.state.alertParams.title,
       content: this.state.alertParams.content,
@@ -9428,7 +9428,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         this.state.alertParams.onConfirm();
       },
       confirm: this.state.alertParams.confirm
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_sidepanel_view_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
+    }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_sidepanel_view_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
       tinode: this.tinode,
       connected: this.state.connected,
       displayMobile: this.state.displayMobile,
@@ -9745,7 +9745,7 @@ __webpack_require__.r(__webpack_exports__);
 
 class Alert extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
-    return this.props.visible ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "alert-container"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "alert"
@@ -9773,7 +9773,7 @@ class Alert extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent)
         "type": 0,
         "value": "OK"
       }]
-    }))))) : null;
+    })))));
   }
 }
 ;

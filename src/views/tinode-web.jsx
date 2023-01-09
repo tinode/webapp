@@ -306,11 +306,7 @@ class TinodeWeb extends React.Component {
     }).then(_ => {
       // Initialize desktop alerts.
       if (this.state.desktopAlertsEnabled) {
-        this.initFCMessaging().then(_ => {
-          if (this.state.desktopAlerts) {
-            this.tinode.setDeviceToken(this.state.firebaseToken);
-          }
-        }).catch(_ => {
+        this.initFCMessaging().catch(_ => {
           // do nothing: handled earlier.
           // catch needed to pervent unnecessary logging of error.
         });
@@ -377,20 +373,23 @@ class TinodeWeb extends React.Component {
     const onError = (msg, err) => {
       console.error(msg, err);
       this.handleError(formatMessage(messages.push_init_failed), 'err');
-      this.setState({desktopAlertsEnabled: false, firebaseToken: null});
+      this.setState({firebaseToken: null});
       LocalStorageUtil.updateObject('settings', {desktopAlerts: false});
     }
 
     try {
       this.fcm = firebaseGetMessaging(firebaseInitApp(FIREBASE_INIT, APP_NAME));
-      return navigator.serviceWorker.register('/service-worker.js').then((reg) => {
-        this.checkForAppUpdate(reg);
-        reg.active.postMessage(JSON.stringify({locale: locale, version: PACKAGE_VERSION}));
-        return reg;
-      }).then((reg) => {
+      return navigator.serviceWorker.getRegistration('/service-worker.js').then(reg => {
+        return reg || navigator.serviceWorker.register('/service-worker.js').then(reg => {
+          this.checkForAppUpdate(reg);
+          return reg;
+        });
+      }).then(reg => {
+        // Pass locale and version config to the service worker.
+        (reg.active || reg.installing).postMessage(JSON.stringify({locale: locale, version: PACKAGE_VERSION}));
         // Request token.
         return TinodeWeb.requestFCMToken(this.fcm, reg);
-      }).then((token) => {
+      }).then(token => {
         const persist = LocalStorageUtil.getObject('keep-logged-in');
         if (token != this.state.firebaseToken) {
           this.tinode.setDeviceToken(token);
@@ -406,7 +405,7 @@ class TinodeWeb extends React.Component {
         // Handhe FCM pushes
         // (a) for channels always,
         // (b) pushes when the app is in foreground but has no focus.
-        firebaseOnMessage(this.fcm, (payload) => { this.handlePushMessage(payload); });
+        firebaseOnMessage(this.fcm, payload => { this.handlePushMessage(payload); });
       }).catch(err => {
         // SW registration or FCM has failed :(
         onError(err);
@@ -423,17 +422,17 @@ class TinodeWeb extends React.Component {
     return firebaseGetToken(fcm, {
       serviceWorkerRegistration: sw,
       vapidKey: FIREBASE_INIT.messagingVapidKey
-    }).then((token) => {
+    }).then(token => {
       if (token) {
         return token;
       } else {
         // Try to request permissions.
-        return Notification.requestPermission().then((permission) => {
+        return Notification.requestPermission().then(permission => {
           if (permission === 'granted') {
             return firebaseGetToken(fcm, {
               serviceWorkerRegistration: reg,
               vapidKey: FIREBASE_INIT.messagingVapidKey
-            }).then((token) => {
+            }).then(token => {
               if (token) {
                 return token;
               } else {
@@ -582,6 +581,12 @@ class TinodeWeb extends React.Component {
         this.setState({loginDisabled: false, autoLogin: false, loadSpinnerVisible: false});
         this.handleError(err.message, 'err');
       });
+    }
+
+    if (this.state.desktopAlertsEnabled && !this.state.firebaseToken) {
+      // Firefox and Safari: "The Notification permission may only be requested from inside a
+      // short running user-generated event handler".
+      this.initFCMessaging();
     }
   }
 
@@ -1944,15 +1949,16 @@ class TinodeWeb extends React.Component {
           :
           null
         }
-        <Alert
-          visible={this.state.alertVisible}
-          title={this.state.alertParams.title}
-          content={this.state.alertParams.content}
-          onReject={this.state.alertParams.onReject ? (_ => this.setState({alertVisible: false})) : null}
-          reject={this.state.alertParams.reject}
-          onConfirm={_ => {this.setState({alertVisible: false}); this.state.alertParams.onConfirm();}}
-          confirm={this.state.alertParams.confirm}
-          />
+        {this.state.alertVisible ?
+          <Alert
+            visible={this.state.alertVisible}
+            title={this.state.alertParams.title}
+            content={this.state.alertParams.content}
+            onReject={this.state.alertParams.onReject ? (_ => this.setState({alertVisible: false})) : null}
+            reject={this.state.alertParams.reject}
+            onConfirm={_ => {this.setState({alertVisible: false}); this.state.alertParams.onConfirm();}}
+            confirm={this.state.alertParams.confirm}
+            /> : null}
         <SidepanelView
           tinode={this.tinode}
           connected={this.state.connected}
