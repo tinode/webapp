@@ -78,10 +78,13 @@ class CallPanel extends React.PureComponent {
     this.handleCloseClick = this.handleCloseClick.bind(this);
     this.handleToggleCameraClick = this.handleToggleCameraClick.bind(this);
     this.handleToggleMicClick = this.handleToggleMicClick.bind(this);
-    this.toggleMedia = this.toggleMedia.bind(this);
 
     this.handleRemoteHangup = this.handleRemoteHangup.bind(this);
     this.handleVideoCallAccepted = this.handleVideoCallAccepted.bind(this);
+
+    this.muteVideo = this.muteVideo.bind(this);
+    this.unmuteVideo = this.unmuteVideo.bind(this);
+    this.emptyVideoTrack = this.emptyVideoTrack.bind(this);
   }
 
   componentDidMount() {
@@ -106,6 +109,13 @@ class CallPanel extends React.PureComponent {
     const stream = this.state.localStream;
     stream.getTracks().forEach(track => {
       pc.addTrack(track, stream);
+
+      if (track.kind == 'video' && !this.localStreamConstraints.video) {
+        // This is an audio-only call.
+        // Remove dummy video track (placeholder remains).
+        track.stop();
+        stream.removeTrack(track);
+      }
     });
   }
 
@@ -139,6 +149,16 @@ class CallPanel extends React.PureComponent {
     }
   }
 
+  // Creates an empty video track placeholder.
+  emptyVideoTrack() {
+    const width = 640;
+    const height = 480;
+    let canvas = Object.assign(document.createElement("canvas"), {width, height});
+    canvas.getContext('2d').fillRect(0, 0, width, height);
+    let stream = canvas.captureStream();
+    return Object.assign(stream.getVideoTracks()[0], {enabled: false});
+  }
+
   start() {
     if (this.state.localStream) {
       this.props.onError(this.props.intl.formatMessage(messages.already_in_call), 'info');
@@ -155,6 +175,12 @@ class CallPanel extends React.PureComponent {
     // Start local video.
     navigator.mediaDevices.getUserMedia(this.localStreamConstraints)
       .then(stream => {
+        if (!this.localStreamConstraints.video) {
+          // Starting an audio-only call. Create a dummy video track
+          // (so video can be enabled during the call if the user desires).
+          const dummy = this.emptyVideoTrack();
+          stream.addTrack(dummy);
+        }
         this.setState({localStream: stream, waitingForPeer: true});
         this.localRef.current.srcObject = stream;
 
@@ -308,6 +334,13 @@ class CallPanel extends React.PureComponent {
   handleTrackEvent(event) {
     // Remote video becomes available.
     this.remoteRef.current.srcObject = event.streams[0];
+
+    if (event.track.kind == 'video') {
+      // Redraw the screen when remote video stream state changes.
+      event.track.onended = _ => { this.forceUpdate(); };
+      event.track.onmute = () => { this.forceUpdate(); };
+      event.track.onunmute = () => { this.forceUpdate(); };
+    }
     // Make sure we display the title (peer's name) over the remote video.
     this.forceUpdate();
   }
@@ -335,13 +368,20 @@ class CallPanel extends React.PureComponent {
 
   handleVideoOfferMsg(info) {
     let localStream = null;
-    const pc = this.createPeerConnection();
+    const pc = this.state.pc ? this.state.pc : this.createPeerConnection();
     const desc = new RTCSessionDescription(info.payload);
 
     pc.setRemoteDescription(desc).then(_ => {
       return navigator.mediaDevices.getUserMedia(this.localStreamConstraints);
     })
     .then(stream => {
+      let dummyVideo;
+      if (!this.localStreamConstraints.video) {
+        // Starting an audio-only call. Create an empty video track so
+        // so the user can enable the video during the call.
+        dummyVideo = this.emptyVideoTrack();
+        stream.addTrack(dummyVideo);
+      }
       localStream = stream;
       this.localRef.current.srcObject = stream;
       this.setState({localStream: stream});
@@ -349,6 +389,11 @@ class CallPanel extends React.PureComponent {
       localStream.getTracks().forEach(track => {
         pc.addTrack(track, localStream);
       });
+
+      if (dummyVideo) {
+        dummyVideo.stop();
+        stream.removeTrack(dummyVideo);
+      }
     })
     .then(_ => {
       return pc.createAnswer();
@@ -388,37 +433,73 @@ class CallPanel extends React.PureComponent {
     this.props.onHangup(this.props.topic, this.props.seq);
   }
 
-  // Mute/unmute audio/video (specified by kind).
-  toggleMedia(kind) {
+  // Ends video track and turns off the camera.
+  muteVideo() {
     const stream = this.state.localStream;
-    stream.getTracks().forEach(track => {
-      if (track.kind != kind) {
-        return;
-      }
-      track.enabled = !track.enabled;
-    });
-    // Make sure we redraw the mute/unmute icons (e.g. mic -> mic_off).
-    this.forceUpdate();
+    const t = stream.getVideoTracks()[0];
+    t.enabled = false;
+    t.stop();
+
+    stream.removeTrack(t);
+  }
+
+  unmuteVideo() {
+    const pc = this.state.pc;
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        // Will extract video track from stream and throw stream away,
+        // and replace video track in the media sender.
+        this.localRef.current.srcObject = null;
+        const sender = pc.getSenders().find(s => s.track.kind == 'video');
+        const track = stream.getVideoTracks()[0];
+        // Remote track from new stream.
+        stream.removeTrack(track);
+        // Add this track to the existing local stream.
+        this.state.localStream.addTrack(track);
+        return sender.replaceTrack(track);
+      })
+      .then(_ => {
+        this.localRef.current.srcObject = this.state.localStream;
+      })
+      .catch(this.handleGetUserMediaError)
+      .finally(() => { this.forceUpdate() }); // Make sure we redraw the mute/unmute icons (e.g. camera -> camera_off).
   }
 
   handleToggleCameraClick() {
-    this.toggleMedia('video');
+    const tracks = this.state.localStream.getVideoTracks();
+    if (tracks && tracks.length > 0 && tracks[0].enabled && tracks[0].readyState == 'live') {
+      this.muteVideo();
+    } else {
+      this.unmuteVideo();
+    }
     this.setState({audioOnly: !this.state.audioOnly});
   }
 
   handleToggleMicClick() {
-    this.toggleMedia('audio');
+    const stream = this.state.localStream;
+    const t = stream.getAudioTracks()[0];
+    t.enabled = !t.enabled;
+    // Make sure we redraw the mute/unmute icons (e.g. mic -> mic_off).
+    this.forceUpdate();
   }
 
   render() {
-    const remoteActive = this.remoteRef.current && this.remoteRef.current.srcObject;
     const audioTracks = this.state.localStream && this.state.localStream.getAudioTracks();
     const videoTracks = !this.state.audioOnly && this.state.localStream && this.state.localStream.getVideoTracks();
     const disabled = !(audioTracks && audioTracks[0]);
     const audioIcon = audioTracks && audioTracks[0] && audioTracks[0].enabled ? 'mic' : 'mic_off';
-    const videoIcon = videoTracks && videoTracks[0] && videoTracks[0].enabled ? 'videocam' : 'videocam_off';
+    const videoIcon = videoTracks && videoTracks[0] && videoTracks[0].enabled && videoTracks[0].readyState == 'live' ? 'videocam' : 'videocam_off';
     const peerTitle = clipStr(this.props.title, MAX_PEER_TITLE_LENGTH);
     const pulseAnimation = this.state.waitingForPeer ? ' pulse' : '';
+
+    let remoteLive = false;
+    if (this.remoteRef.current && this.remoteRef.current.srcObject) {
+      const rstream = this.remoteRef.current.srcObject;
+      if (rstream.getVideoTracks().length > 0) {
+        const t = rstream.getVideoTracks()[0];
+        remoteLive = t.enabled && t.readyState == 'live' && !t.muted;
+      }
+    }
 
     return (
       <>
@@ -431,9 +512,9 @@ class CallPanel extends React.PureComponent {
                   defaultMessage="You" description="Shown over the local video screen" />
               </div>
             </div>
-            <div className="call-party peer" disabled={this.state.audioOnly}>
+            <div className="call-party peer" disabled={!remoteLive}>
               <video ref={this.remoteRef} autoPlay playsInline />
-              {remoteActive && !this.state.audioOnly ?
+              {remoteLive ?
                 <div className="caller-name inactive">{peerTitle}</div> :
                 <div className={`caller-card${pulseAnimation}`}>
                   <div className="avatar-box">
