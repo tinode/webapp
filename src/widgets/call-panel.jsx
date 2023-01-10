@@ -36,6 +36,8 @@ class CallPanel extends React.PureComponent {
       // If true, the client has received a remote SDP from the peer and has sent a local SDP to the peer.
       callInitialSetupComplete: false,
       audioOnly: props.callAudioOnly,
+      // Video mute/unmute in progress.
+      videoToggleInProgress: false,
     };
 
     this.localStreamConstraints = {
@@ -153,9 +155,9 @@ class CallPanel extends React.PureComponent {
   emptyVideoTrack() {
     const width = 640;
     const height = 480;
-    let canvas = Object.assign(document.createElement("canvas"), {width, height});
+    const canvas = Object.assign(document.createElement("canvas"), {width, height});
     canvas.getContext('2d').fillRect(0, 0, width, height);
-    let stream = canvas.captureStream();
+    const stream = canvas.captureStream(0);
     return Object.assign(stream.getVideoTracks()[0], {enabled: false});
   }
 
@@ -178,8 +180,7 @@ class CallPanel extends React.PureComponent {
         if (!this.localStreamConstraints.video) {
           // Starting an audio-only call. Create a dummy video track
           // (so video can be enabled during the call if the user desires).
-          const dummy = this.emptyVideoTrack();
-          stream.addTrack(dummy);
+          stream.addTrack(this.emptyVideoTrack());
         }
         this.setState({localStream: stream, waitingForPeer: true});
         this.localRef.current.srcObject = stream;
@@ -338,8 +339,8 @@ class CallPanel extends React.PureComponent {
     if (event.track.kind == 'video') {
       // Redraw the screen when remote video stream state changes.
       event.track.onended = _ => { this.forceUpdate(); };
-      event.track.onmute = () => { this.forceUpdate(); };
-      event.track.onunmute = () => { this.forceUpdate(); };
+      event.track.onmute = _ => { this.forceUpdate(); };
+      event.track.onunmute = _ => { this.forceUpdate(); };
     }
     // Make sure we display the title (peer's name) over the remote video.
     this.forceUpdate();
@@ -441,6 +442,7 @@ class CallPanel extends React.PureComponent {
     t.stop();
 
     stream.removeTrack(t);
+    this.setState({videoToggleInProgress: false});
   }
 
   unmuteVideo() {
@@ -462,11 +464,16 @@ class CallPanel extends React.PureComponent {
         this.localRef.current.srcObject = this.state.localStream;
       })
       .catch(this.handleGetUserMediaError)
-      .finally(() => { this.forceUpdate() }); // Make sure we redraw the mute/unmute icons (e.g. camera -> camera_off).
+      .finally(_ => { this.setState({videoToggleInProgress: false}); }); // Make sure we redraw the mute/unmute icons (e.g. camera -> camera_off).
   }
 
   handleToggleCameraClick() {
+    if (this.state.videoToggleInProgress) {
+      // Toggle currently in progress.
+      return;
+    }
     const tracks = this.state.localStream.getVideoTracks();
+    this.setState({videoToggleInProgress: true});
     if (tracks && tracks.length > 0 && tracks[0].enabled && tracks[0].readyState == 'live') {
       this.muteVideo();
     } else {

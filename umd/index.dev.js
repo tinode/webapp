@@ -10702,7 +10702,8 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       previousOnInfo: undefined,
       waitingForPeer: false,
       callInitialSetupComplete: false,
-      audioOnly: props.callAudioOnly
+      audioOnly: props.callAudioOnly,
+      videoToggleInProgress: false
     };
     this.localStreamConstraints = {
       audio: true,
@@ -10797,12 +10798,12 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   emptyVideoTrack() {
     const width = 640;
     const height = 480;
-    let canvas = Object.assign(document.createElement("canvas"), {
+    const canvas = Object.assign(document.createElement("canvas"), {
       width,
       height
     });
     canvas.getContext('2d').fillRect(0, 0, width, height);
-    let stream = canvas.captureStream();
+    const stream = canvas.captureStream(0);
     return Object.assign(stream.getVideoTracks()[0], {
       enabled: false
     });
@@ -10818,8 +10819,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     }
     navigator.mediaDevices.getUserMedia(this.localStreamConstraints).then(stream => {
       if (!this.localStreamConstraints.video) {
-        const dummy = this.emptyVideoTrack();
-        stream.addTrack(dummy);
+        stream.addTrack(this.emptyVideoTrack());
       }
       this.setState({
         localStream: stream,
@@ -10956,10 +10956,10 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       event.track.onended = _ => {
         this.forceUpdate();
       };
-      event.track.onmute = () => {
+      event.track.onmute = _ => {
         this.forceUpdate();
       };
-      event.track.onunmute = () => {
+      event.track.onunmute = _ => {
         this.forceUpdate();
       };
     }
@@ -11041,6 +11041,9 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     t.enabled = false;
     t.stop();
     stream.removeTrack(t);
+    this.setState({
+      videoToggleInProgress: false
+    });
   }
   unmuteVideo() {
     const pc = this.state.pc;
@@ -11055,12 +11058,20 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       return sender.replaceTrack(track);
     }).then(_ => {
       this.localRef.current.srcObject = this.state.localStream;
-    }).catch(this.handleGetUserMediaError).finally(() => {
-      this.forceUpdate();
+    }).catch(this.handleGetUserMediaError).finally(_ => {
+      this.setState({
+        videoToggleInProgress: false
+      });
     });
   }
   handleToggleCameraClick() {
+    if (this.state.videoToggleInProgress) {
+      return;
+    }
     const tracks = this.state.localStream.getVideoTracks();
+    this.setState({
+      videoToggleInProgress: true
+    });
     if (tracks && tracks.length > 0 && tracks[0].enabled && tracks[0].readyState == 'live') {
       this.muteVideo();
     } else {
