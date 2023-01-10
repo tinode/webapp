@@ -15,6 +15,9 @@ const CALL_ENDED_SOUND = new Audio('audio/call-end.m4a');
 CALL_ENDED_SOUND.loop = true;
 const DIALING_SOUND = new Audio('audio/dialing.m4a');
 
+const VIDEO_MUTED_EVENT = 'video:muted';
+const VIDEO_UNMUTED_EVENT = 'video:unmuted';
+
 const messages = defineMessages({
   already_in_call: {
     id: 'already_in_call',
@@ -30,6 +33,7 @@ class CallPanel extends React.PureComponent {
     this.state = {
       localStream: undefined,
       pc: undefined,
+      dataChannel: undefined,
 
       previousOnInfo: undefined,
       waitingForPeer: false,
@@ -38,6 +42,8 @@ class CallPanel extends React.PureComponent {
       audioOnly: props.callAudioOnly,
       // Video mute/unmute in progress.
       videoToggleInProgress: false,
+      // Indicates if the remote peer has informed us that their camera is on.
+      remoteVideoLive: false,
     };
 
     this.localStreamConstraints = {
@@ -87,6 +93,12 @@ class CallPanel extends React.PureComponent {
     this.muteVideo = this.muteVideo.bind(this);
     this.unmuteVideo = this.unmuteVideo.bind(this);
     this.emptyVideoTrack = this.emptyVideoTrack.bind(this);
+
+    this.handleDataChannelEvent = this.handleDataChannelEvent.bind(this);
+    this.handleDataChannelError = this.handleDataChannelError.bind(this);
+    this.handleDataChannelMessage = this.handleDataChannelMessage.bind(this);
+    this.handleDataChannelOpen = this.handleDataChannelOpen.bind(this);
+    this.handleDataChannelClose = this.handleDataChannelClose.bind(this);
   }
 
   componentDidMount() {
@@ -211,7 +223,11 @@ class CallPanel extends React.PureComponent {
       this.state.pc.onicegatheringstatechange = null;
       this.state.pc.onnegotiationneeded = null;
       this.state.pc.onicecandidateerror = null;
+      this.state.pc.ondatachannel = null;
 
+      if (this.state.dataChannel) {
+        this.state.dataChannel.close();
+      }
       this.state.pc.close();
     }
     this.setState({pc: null, waitingForPeer: false});
@@ -237,6 +253,45 @@ class CallPanel extends React.PureComponent {
     el.src = '';
   }
 
+  handleDataChannelError(error) {
+    console.error('data channel error', error);
+  }
+
+  handleDataChannelMessage(event) {
+    console.log('Received data channel message: ', event.data);
+    switch (event.data) {
+    case VIDEO_MUTED_EVENT:
+      this.setState({remoteVideoLive: false});
+      break;
+    case VIDEO_UNMUTED_EVENT:
+      this.setState({remoteVideoLive: true});
+      break;
+    default:
+      break;
+    }
+  }
+
+  handleDataChannelOpen(event) {
+    console.log('data channel open');
+    if (!this.state.audioOnly) {
+      event.target.send(VIDEO_UNMUTED_EVENT);
+    }
+  }
+
+  handleDataChannelClose() {
+    console.log('data channel close');
+  }
+
+  handleDataChannelEvent(event) {
+    console.log('data channel evt', event);
+    const channel = event.channel;
+    channel.onerror = this.handleDataChannelError;
+    channel.onmessage = this.handleDataChannelMessage;
+    channel.onopen = this.handleDataChannelOpen;
+    channel.onclose = this.handleDataChannelClose;
+    this.setState({dataChannel: channel});
+  }
+
   createPeerConnection() {
     const iceServers = this.props.tinode.getServerParam('iceServers', null);
     const pc = iceServers ? new RTCPeerConnection({iceServers: iceServers}) : new RTCPeerConnection();
@@ -248,8 +303,17 @@ class CallPanel extends React.PureComponent {
     pc.onnegotiationneeded = this.handleNegotiationNeededEvent;
     pc.onicecandidateerror = this.handleIceCandidateErrorEvent;
     pc.ontrack = this.handleTrackEvent;
+    pc.ondatachannel = this.handleDataChannelEvent;
+
+    console.log('creating data channel events');
+    const channel = pc.createDataChannel("events", {ordered: true});
+    channel.onerror = this.handleDataChannelError;
+    channel.onmessage = this.handleDataChannelMessage;
+    channel.onopen = this.handleDataChannelOpen;
+    channel.onclose = this.handleDataChannelClose;
 
     this.setState({pc: pc, waitingForPeer: false});
+
     return pc;
   }
 
@@ -337,12 +401,6 @@ class CallPanel extends React.PureComponent {
     // Remote video becomes available.
     this.remoteRef.current.srcObject = event.streams[0];
 
-    if (event.track.kind == 'video') {
-      // Redraw the screen when remote video stream state changes.
-      event.track.onended = _ => { this.forceUpdate(); };
-      event.track.onmute = _ => { this.forceUpdate(); };
-      event.track.onunmute = _ => { this.forceUpdate(); };
-    }
     // Make sure we display the title (peer's name) over the remote video.
     this.forceUpdate();
   }
@@ -443,6 +501,7 @@ class CallPanel extends React.PureComponent {
     t.stop();
 
     stream.removeTrack(t);
+    this.state.dataChannel.send(VIDEO_MUTED_EVENT);
     this.setState({videoToggleInProgress: false});
   }
 
@@ -463,6 +522,7 @@ class CallPanel extends React.PureComponent {
       })
       .then(_ => {
         this.localRef.current.srcObject = this.state.localStream;
+        this.state.dataChannel.send(VIDEO_UNMUTED_EVENT);
       })
       .catch(this.handleGetUserMediaError)
       .finally(_ => { this.setState({videoToggleInProgress: false}); }); // Make sure we redraw the mute/unmute icons (e.g. camera -> camera_off).
@@ -474,13 +534,14 @@ class CallPanel extends React.PureComponent {
       return;
     }
     const tracks = this.state.localStream.getVideoTracks();
-    this.setState({videoToggleInProgress: true});
-    if (tracks && tracks.length > 0 && tracks[0].enabled && tracks[0].readyState == 'live') {
-      this.muteVideo();
-    } else {
-      this.unmuteVideo();
-    }
-    this.setState({audioOnly: !this.state.audioOnly});
+    this.setState({videoToggleInProgress: true}, _ => {
+      if (tracks && tracks.length > 0 && tracks[0].enabled && tracks[0].readyState == 'live') {
+        this.muteVideo();
+      } else {
+        this.unmuteVideo();
+      }
+      this.setState({audioOnly: !this.state.audioOnly});
+    });
   }
 
   handleToggleMicClick() {
@@ -500,12 +561,12 @@ class CallPanel extends React.PureComponent {
     const peerTitle = clipStr(this.props.title, MAX_PEER_TITLE_LENGTH);
     const pulseAnimation = this.state.waitingForPeer ? ' pulse' : '';
 
-    let remoteLive = false;
-    if (this.remoteRef.current && this.remoteRef.current.srcObject) {
+    let removeActive = false;
+    if (this.remoteRef.current && this.remoteRef.current.srcObject && this.state.remoteVideoLive) {
       const rstream = this.remoteRef.current.srcObject;
       if (rstream.getVideoTracks().length > 0) {
         const t = rstream.getVideoTracks()[0];
-        remoteLive = t.enabled && t.readyState == 'live' && !t.muted;
+        removeActive = t.enabled && t.readyState == 'live';
       }
     }
 
@@ -520,9 +581,9 @@ class CallPanel extends React.PureComponent {
                   defaultMessage="You" description="Shown over the local video screen" />
               </div>
             </div>
-            <div className="call-party peer" disabled={!remoteLive}>
+            <div className="call-party peer" disabled={!removeActive}>
               <video ref={this.remoteRef} autoPlay playsInline />
-              {remoteLive ?
+              {removeActive ?
                 <div className="caller-name inactive">{peerTitle}</div> :
                 <div className={`caller-card${pulseAnimation}`}>
                   <div className="avatar-box">

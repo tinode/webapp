@@ -10689,6 +10689,8 @@ RING_SOUND.loop = true;
 const CALL_ENDED_SOUND = new Audio('audio/call-end.m4a');
 CALL_ENDED_SOUND.loop = true;
 const DIALING_SOUND = new Audio('audio/dialing.m4a');
+const VIDEO_MUTED_EVENT = 'video:muted';
+const VIDEO_UNMUTED_EVENT = 'video:unmuted';
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   already_in_call: {
     id: "already_in_call",
@@ -10704,11 +10706,13 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     this.state = {
       localStream: undefined,
       pc: undefined,
+      dataChannel: undefined,
       previousOnInfo: undefined,
       waitingForPeer: false,
       callInitialSetupComplete: false,
       audioOnly: props.callAudioOnly,
-      videoToggleInProgress: false
+      videoToggleInProgress: false,
+      remoteVideoLive: false
     };
     this.localStreamConstraints = {
       audio: true,
@@ -10746,6 +10750,11 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     this.muteVideo = this.muteVideo.bind(this);
     this.unmuteVideo = this.unmuteVideo.bind(this);
     this.emptyVideoTrack = this.emptyVideoTrack.bind(this);
+    this.handleDataChannelEvent = this.handleDataChannelEvent.bind(this);
+    this.handleDataChannelError = this.handleDataChannelError.bind(this);
+    this.handleDataChannelMessage = this.handleDataChannelMessage.bind(this);
+    this.handleDataChannelOpen = this.handleDataChannelOpen.bind(this);
+    this.handleDataChannelClose = this.handleDataChannelClose.bind(this);
   }
   componentDidMount() {
     const topic = this.props.tinode.getTopic(this.props.topic);
@@ -10852,6 +10861,10 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       this.state.pc.onicegatheringstatechange = null;
       this.state.pc.onnegotiationneeded = null;
       this.state.pc.onicecandidateerror = null;
+      this.state.pc.ondatachannel = null;
+      if (this.state.dataChannel) {
+        this.state.dataChannel.close();
+      }
       this.state.pc.close();
     }
     this.setState({
@@ -10877,7 +10890,47 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     el.srcObject = null;
     el.src = '';
   }
-  createPeerConnection() {
+  handleDataChannelError(error) {
+    console.error('data channel error', error);
+  }
+  handleDataChannelMessage(event) {
+    console.log('Received data channel message: ', event.data);
+    switch (event.data) {
+      case VIDEO_MUTED_EVENT:
+        this.setState({
+          remoteVideoLive: false
+        });
+        break;
+      case VIDEO_UNMUTED_EVENT:
+        this.setState({
+          remoteVideoLive: true
+        });
+        break;
+      default:
+        break;
+    }
+  }
+  handleDataChannelOpen(event) {
+    console.log('data channel open');
+    if (!this.state.audioOnly) {
+      event.target.send(VIDEO_UNMUTED_EVENT);
+    }
+  }
+  handleDataChannelClose() {
+    console.log('data channel close');
+  }
+  handleDataChannelEvent(event) {
+    console.log('data channel evt', event);
+    const channel = event.channel;
+    channel.onerror = this.handleDataChannelError;
+    channel.onmessage = this.handleDataChannelMessage;
+    channel.onopen = this.handleDataChannelOpen;
+    channel.onclose = this.handleDataChannelClose;
+    this.setState({
+      dataChannel: channel
+    });
+  }
+  createPeerConnection(withDataChannel) {
     const iceServers = this.props.tinode.getServerParam('iceServers', null);
     const pc = iceServers ? new RTCPeerConnection({
       iceServers: iceServers
@@ -10889,6 +10942,15 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     pc.onnegotiationneeded = this.handleNegotiationNeededEvent;
     pc.onicecandidateerror = this.handleIceCandidateErrorEvent;
     pc.ontrack = this.handleTrackEvent;
+    pc.ondatachannel = this.handleDataChannelEvent;
+    console.log('creating data channel events');
+    const channel = pc.createDataChannel("events", {
+      ordered: true
+    });
+    channel.onerror = this.handleDataChannelError;
+    channel.onmessage = this.handleDataChannelMessage;
+    channel.onopen = this.handleDataChannelOpen;
+    channel.onclose = this.handleDataChannelClose;
     this.setState({
       pc: pc,
       waitingForPeer: false
@@ -10958,17 +11020,6 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   handleICEGatheringStateChangeEvent(event) {}
   handleTrackEvent(event) {
     this.remoteRef.current.srcObject = event.streams[0];
-    if (event.track.kind == 'video') {
-      event.track.onended = _ => {
-        this.forceUpdate();
-      };
-      event.track.onmute = _ => {
-        this.forceUpdate();
-      };
-      event.track.onunmute = _ => {
-        this.forceUpdate();
-      };
-    }
     this.forceUpdate();
   }
   handleGetUserMediaError(e) {
@@ -11047,6 +11098,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     t.enabled = false;
     t.stop();
     stream.removeTrack(t);
+    this.state.dataChannel.send(VIDEO_MUTED_EVENT);
     this.setState({
       videoToggleInProgress: false
     });
@@ -11064,6 +11116,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       return sender.replaceTrack(track);
     }).then(_ => {
       this.localRef.current.srcObject = this.state.localStream;
+      this.state.dataChannel.send(VIDEO_UNMUTED_EVENT);
     }).catch(this.handleGetUserMediaError).finally(_ => {
       this.setState({
         videoToggleInProgress: false
@@ -11077,14 +11130,15 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     const tracks = this.state.localStream.getVideoTracks();
     this.setState({
       videoToggleInProgress: true
-    });
-    if (tracks && tracks.length > 0 && tracks[0].enabled && tracks[0].readyState == 'live') {
-      this.muteVideo();
-    } else {
-      this.unmuteVideo();
-    }
-    this.setState({
-      audioOnly: !this.state.audioOnly
+    }, _ => {
+      if (tracks && tracks.length > 0 && tracks[0].enabled && tracks[0].readyState == 'live') {
+        this.muteVideo();
+      } else {
+        this.unmuteVideo();
+      }
+      this.setState({
+        audioOnly: !this.state.audioOnly
+      });
     });
   }
   handleToggleMicClick() {
@@ -11101,12 +11155,12 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     const videoIcon = videoTracks && videoTracks[0] && videoTracks[0].enabled && videoTracks[0].readyState == 'live' ? 'videocam' : 'videocam_off';
     const peerTitle = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_5__.clipStr)(this.props.title, _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_PEER_TITLE_LENGTH);
     const pulseAnimation = this.state.waitingForPeer ? ' pulse' : '';
-    let remoteLive = false;
-    if (this.remoteRef.current && this.remoteRef.current.srcObject) {
+    let removeActive = false;
+    if (this.remoteRef.current && this.remoteRef.current.srcObject && this.state.remoteVideoLive) {
       const rstream = this.remoteRef.current.srcObject;
       if (rstream.getVideoTracks().length > 0) {
         const t = rstream.getVideoTracks()[0];
-        remoteLive = t.enabled && t.readyState == 'live' && !t.muted;
+        removeActive = t.enabled && t.readyState == 'live';
       }
     }
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -11131,12 +11185,12 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "call-party peer",
-      disabled: !remoteLive
+      disabled: !removeActive
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
       ref: this.remoteRef,
       autoPlay: true,
       playsInline: true
-    }), remoteLive ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }), removeActive ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "caller-name inactive"
     }, peerTitle) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: `caller-card${pulseAnimation}`
