@@ -272,15 +272,16 @@ class CallPanel extends React.PureComponent {
     return this.isOutgoingCall || this.state.callInitialSetupComplete;
   }
 
-  handleNegotiationNeededEvent() {
+  handleNegotiationNeededEvent(event) {
+    const pc = event.target;
     if (!this.canSendOffer()) {
       return;
     }
-    this.state.pc.createOffer().then(offer => {
-      return this.state.pc.setLocalDescription(offer);
+    pc.createOffer().then(offer => {
+      return pc.setLocalDescription(offer);
     })
     .then(_ => {
-      this.props.onSendOffer(this.props.topic, this.props.seq, this.state.pc.localDescription.toJSON());
+      this.props.onSendOffer(this.props.topic, this.props.seq, pc.localDescription.toJSON());
     })
     .catch(this.reportError);
   }
@@ -323,7 +324,7 @@ class CallPanel extends React.PureComponent {
   }
 
   handleSignalingStateChangeEvent(event) {
-    if (this.state.pc.signalingState == 'closed') {
+    if (event.target.signalingState == 'closed') {
       this.handleCloseClick();
     }
   }
