@@ -724,20 +724,23 @@ class TinodeWeb extends React.Component {
         this.handleLoginSuccessful();
       }
     }).catch(err => {
+      const autoLogin = err.code >= 500;
       // Connection or login failed, report error.
       this.setState({
         loginDisabled: false,
         credMethod: undefined,
         credCode: undefined,
         loadSpinnerVisible: false,
-        autoLogin: false
+        autoLogin: autoLogin
       });
       this.handleError(err.message, 'err');
       console.warn("Login failed", err);
-      if (token) {
-        this.handleLogout();
+      if (!autoLogin) {
+        if (token) {
+          this.handleLogout();
+        }
+        HashNavigation.navigateTo('');
       }
-      HashNavigation.navigateTo('');
     });
   }
 
