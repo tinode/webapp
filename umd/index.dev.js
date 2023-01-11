@@ -7969,6 +7969,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
       this.tinode.onInfoMessage = this.handleInfoMessage;
       this.tinode.onDataMessage = this.handleDataMessage;
+      console.log("handleDataMessage assigned", this.tinode.onDataMessage);
     }).then(_ => {
       if (this.state.desktopAlertsEnabled) {
         this.initFCMessaging().catch(_ => {});
@@ -8738,6 +8739,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
     this.tinode.onInfoMessage = this.handleInfoMessage;
     this.tinode.onDataMessage = this.handleDataMessage;
+    console.log("handleDataMessage assigned 2", this.tinode.onDataMessage);
     this.setState({
       serverAddress: serverAddress,
       transport: transport,
@@ -8998,6 +9000,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
         this.tinode.onInfoMessage = this.handleInfoMessage;
         this.tinode.onDataMessage = this.handleDataMessage;
+        console.log("handleDataMessage assigned 3", this.tinode.onDataMessage);
         _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo('');
       });
     });
@@ -9351,6 +9354,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
   }
   handleDataMessage(data) {
+    console.log("=== TinodeWeb handleDataMessage", data);
     if (data.head && data.head.webrtc && data.head.webrtc == _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_HEAD_STARTED) {
       const topic = this.tinode.getTopic(data.topic);
       if (topic) {
@@ -10930,7 +10934,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       dataChannel: channel
     });
   }
-  createPeerConnection(withDataChannel) {
+  createPeerConnection() {
     const iceServers = this.props.tinode.getServerParam('iceServers', null);
     const pc = iceServers ? new RTCPeerConnection({
       iceServers: iceServers
@@ -10963,9 +10967,10 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       this.setState({
         callInitialSetupComplete: true
       }, _ => this.drainRemoteIceCandidatesCache());
-    }).catch(this.reportError);
+    }).catch(err => this.reportError(err));
   }
   reportError(err) {
+    console.log(`Error! '${err.message}'`, err, new Error("stacktrace!"));
     this.props.onError(err.message, 'err');
   }
   canSendOffer() {
@@ -10980,7 +10985,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       return pc.setLocalDescription(offer);
     }).then(_ => {
       this.props.onSendOffer(this.props.topic, this.props.seq, pc.localDescription.toJSON());
-    }).catch(this.reportError);
+    }).catch(err => this.reportError(err));
   }
   handleIceCandidateErrorEvent(event) {
     console.warn("ICE candidate error:", event);
@@ -10993,14 +10998,24 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   handleNewICECandidateMsg(info) {
     const candidate = new RTCIceCandidate(info.payload);
     if (this.state.callInitialSetupComplete) {
-      this.state.pc.addIceCandidate(candidate).catch(this.reportError);
+      this.state.pc.addIceCandidate(candidate).catch(err => {
+        if (candidate.candidate) {
+          this.reportError(err);
+        }
+        console.warn("Error adding new ice candidate", candidate, err);
+      });
     } else {
       this.remoteIceCandidatesCache.push(candidate);
     }
   }
   drainRemoteIceCandidatesCache() {
     this.remoteIceCandidatesCache.forEach(candidate => {
-      this.state.pc.addIceCandidate(candidate).catch(this.reportError);
+      this.state.pc.addIceCandidate(candidate).catch(err => {
+        if (candidate.candidate) {
+          this.reportError(err);
+        }
+        console.warn("Error adding cached ice candidate", candidate, err);
+      });
     });
     this.remoteIceCandidatesCache = [];
   }
@@ -11023,16 +11038,16 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     this.forceUpdate();
   }
   handleGetUserMediaError(e) {
+    console.error("Error opening camera and/or microphone", e);
     switch (e.name) {
       case 'NotFoundError':
-        this.reportError(e.message);
+        this.reportError(e);
         break;
       case 'SecurityError':
       case 'PermissionDeniedError':
         break;
       default:
-        this.reportError(e.message);
-        console.error("Error opening your camera and/or microphone:", e.message);
+        this.reportError(e);
         break;
     }
     this.handleCloseClick();
@@ -11093,6 +11108,9 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     this.props.onHangup(this.props.topic, this.props.seq);
   }
   muteVideo() {
+    if (!this.state.pc || !this.state.dataChannel) {
+      return;
+    }
     const stream = this.state.localStream;
     const t = stream.getVideoTracks()[0];
     t.enabled = false;
@@ -11104,12 +11122,14 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     });
   }
   unmuteVideo() {
-    const pc = this.state.pc;
+    if (!this.state.pc || !this.state.dataChannel) {
+      return;
+    }
     navigator.mediaDevices.getUserMedia({
       video: true
     }).then(stream => {
       this.localRef.current.srcObject = null;
-      const sender = pc.getSenders().find(s => s.track.kind == 'video');
+      const sender = this.state.pc.getSenders().find(s => s.track.kind == 'video');
       const track = stream.getVideoTracks()[0];
       stream.removeTrack(track);
       this.state.localStream.addTrack(track);
@@ -11117,7 +11137,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     }).then(_ => {
       this.localRef.current.srcObject = this.state.localStream;
       this.state.dataChannel.send(VIDEO_UNMUTED_EVENT);
-    }).catch(this.handleGetUserMediaError).finally(_ => {
+    }).catch(err => this.handleGetUserMediaError(err)).finally(_ => {
       this.setState({
         videoToggleInProgress: false
       });
@@ -11150,7 +11170,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   render() {
     const audioTracks = this.state.localStream && this.state.localStream.getAudioTracks();
     const videoTracks = !this.state.audioOnly && this.state.localStream && this.state.localStream.getVideoTracks();
-    const disabled = !(audioTracks && audioTracks[0]);
+    const disabled = !this.state.pc || !this.state.dataChannel || !(audioTracks && audioTracks[0]);
     const audioIcon = audioTracks && audioTracks[0] && audioTracks[0].enabled ? 'mic' : 'mic_off';
     const videoIcon = videoTracks && videoTracks[0] && videoTracks[0].enabled && videoTracks[0].readyState == 'live' ? 'videocam' : 'videocam_off';
     const peerTitle = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_5__.clipStr)(this.props.title, _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_PEER_TITLE_LENGTH);

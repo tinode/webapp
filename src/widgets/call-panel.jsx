@@ -325,7 +325,7 @@ class CallPanel extends React.PureComponent {
       .then(_ => {
         this.setState({ callInitialSetupComplete: true }, _ => this.drainRemoteIceCandidatesCache());
       })
-      .catch(this.reportError);
+      .catch(err => this.reportError(err));
   }
 
   reportError(err) {
@@ -347,7 +347,7 @@ class CallPanel extends React.PureComponent {
     .then(_ => {
       this.props.onSendOffer(this.props.topic, this.props.seq, pc.localDescription.toJSON());
     })
-    .catch(this.reportError);
+    .catch(err => this.reportError(err));
   }
 
   handleIceCandidateErrorEvent(event) {
@@ -364,7 +364,12 @@ class CallPanel extends React.PureComponent {
     const candidate = new RTCIceCandidate(info.payload);
     if (this.state.callInitialSetupComplete) {
       this.state.pc.addIceCandidate(candidate)
-        .catch(this.reportError);
+        .catch(err => {
+          if (candidate.candidate) {
+            this.reportError(err);
+          }
+          console.warn("Error adding new ice candidate", candidate, err);
+        });
     } else {
       this.remoteIceCandidatesCache.push(candidate);
     }
@@ -373,7 +378,12 @@ class CallPanel extends React.PureComponent {
   drainRemoteIceCandidatesCache() {
     this.remoteIceCandidatesCache.forEach(candidate => {
       this.state.pc.addIceCandidate(candidate)
-        .catch(this.reportError);
+        .catch(err => {
+          if (candidate.candidate) {
+            this.reportError(err);
+          }
+          console.warn("Error adding cached ice candidate", candidate, err);
+        });
     });
     this.remoteIceCandidatesCache = [];
   }
@@ -406,18 +416,18 @@ class CallPanel extends React.PureComponent {
   }
 
   handleGetUserMediaError(e) {
+    console.error("Error opening camera and/or microphone", e);
     switch(e.name) {
       case 'NotFoundError':
         // Cannot start the call b/c no camera and/or microphone found.
-        this.reportError(e.message);
+        this.reportError(e);
         break;
       case 'SecurityError':
       case 'PermissionDeniedError':
         // Do nothing; this is the same as the user canceling the call.
         break;
       default:
-        this.reportError(e.message);
-        console.error("Error opening your camera and/or microphone:", e.message);
+        this.reportError(e);
         break;
     }
 
@@ -495,6 +505,10 @@ class CallPanel extends React.PureComponent {
 
   // Ends video track and turns off the camera.
   muteVideo() {
+    if (!this.state.pc || !this.state.dataChannel) {
+      return;
+    }
+
     const stream = this.state.localStream;
     const t = stream.getVideoTracks()[0];
     t.enabled = false;
@@ -506,13 +520,15 @@ class CallPanel extends React.PureComponent {
   }
 
   unmuteVideo() {
-    const pc = this.state.pc;
+    if (!this.state.pc || !this.state.dataChannel) {
+      return;
+    }
     navigator.mediaDevices.getUserMedia({ video: true })
       .then(stream => {
         // Will extract video track from stream and throw stream away,
         // and replace video track in the media sender.
         this.localRef.current.srcObject = null;
-        const sender = pc.getSenders().find(s => s.track.kind == 'video');
+        const sender = this.state.pc.getSenders().find(s => s.track.kind == 'video');
         const track = stream.getVideoTracks()[0];
         // Remote track from new stream.
         stream.removeTrack(track);
@@ -524,7 +540,7 @@ class CallPanel extends React.PureComponent {
         this.localRef.current.srcObject = this.state.localStream;
         this.state.dataChannel.send(VIDEO_UNMUTED_EVENT);
       })
-      .catch(this.handleGetUserMediaError)
+      .catch(err => this.handleGetUserMediaError(err))
       .finally(_ => { this.setState({videoToggleInProgress: false}); }); // Make sure we redraw the mute/unmute icons (e.g. camera -> camera_off).
   }
 
@@ -555,7 +571,7 @@ class CallPanel extends React.PureComponent {
   render() {
     const audioTracks = this.state.localStream && this.state.localStream.getAudioTracks();
     const videoTracks = !this.state.audioOnly && this.state.localStream && this.state.localStream.getVideoTracks();
-    const disabled = !(audioTracks && audioTracks[0]);
+    const disabled = !this.state.pc || !this.state.dataChannel || !(audioTracks && audioTracks[0]);
     const audioIcon = audioTracks && audioTracks[0] && audioTracks[0].enabled ? 'mic' : 'mic_off';
     const videoIcon = videoTracks && videoTracks[0] && videoTracks[0].enabled && videoTracks[0].readyState == 'live' ? 'videocam' : 'videocam_off';
     const peerTitle = clipStr(this.props.title, MAX_PEER_TITLE_LENGTH);
