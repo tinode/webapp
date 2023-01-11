@@ -7969,6 +7969,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
       this.tinode.onInfoMessage = this.handleInfoMessage;
       this.tinode.onDataMessage = this.handleDataMessage;
+      console.log("handleDataMessage assigned", this.tinode.onDataMessage);
     }).then(_ => {
       if (this.state.desktopAlertsEnabled) {
         this.initFCMessaging().catch(_ => {});
@@ -8738,6 +8739,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
     this.tinode.onInfoMessage = this.handleInfoMessage;
     this.tinode.onDataMessage = this.handleDataMessage;
+    console.log("handleDataMessage assigned 2", this.tinode.onDataMessage);
     this.setState({
       serverAddress: serverAddress,
       transport: transport,
@@ -8998,6 +9000,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
         this.tinode.onInfoMessage = this.handleInfoMessage;
         this.tinode.onDataMessage = this.handleDataMessage;
+        console.log("handleDataMessage assigned 3", this.tinode.onDataMessage);
         _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo('');
       });
     });
@@ -9351,6 +9354,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
   }
   handleDataMessage(data) {
+    console.log("=== TinodeWeb handleDataMessage", data);
     if (data.head && data.head.webrtc && data.head.webrtc == _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_HEAD_STARTED) {
       const topic = this.tinode.getTopic(data.topic);
       if (topic) {
@@ -10689,6 +10693,8 @@ RING_SOUND.loop = true;
 const CALL_ENDED_SOUND = new Audio('audio/call-end.m4a');
 CALL_ENDED_SOUND.loop = true;
 const DIALING_SOUND = new Audio('audio/dialing.m4a');
+const VIDEO_MUTED_EVENT = 'video:muted';
+const VIDEO_UNMUTED_EVENT = 'video:unmuted';
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   already_in_call: {
     id: "already_in_call",
@@ -10704,10 +10710,13 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     this.state = {
       localStream: undefined,
       pc: undefined,
+      dataChannel: undefined,
       previousOnInfo: undefined,
       waitingForPeer: false,
       callInitialSetupComplete: false,
-      audioOnly: props.callAudioOnly
+      audioOnly: props.callAudioOnly,
+      videoToggleInProgress: false,
+      remoteVideoLive: false
     };
     this.localStreamConstraints = {
       audio: true,
@@ -10740,9 +10749,16 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     this.handleCloseClick = this.handleCloseClick.bind(this);
     this.handleToggleCameraClick = this.handleToggleCameraClick.bind(this);
     this.handleToggleMicClick = this.handleToggleMicClick.bind(this);
-    this.toggleMedia = this.toggleMedia.bind(this);
     this.handleRemoteHangup = this.handleRemoteHangup.bind(this);
     this.handleVideoCallAccepted = this.handleVideoCallAccepted.bind(this);
+    this.muteVideo = this.muteVideo.bind(this);
+    this.unmuteVideo = this.unmuteVideo.bind(this);
+    this.emptyVideoTrack = this.emptyVideoTrack.bind(this);
+    this.handleDataChannelEvent = this.handleDataChannelEvent.bind(this);
+    this.handleDataChannelError = this.handleDataChannelError.bind(this);
+    this.handleDataChannelMessage = this.handleDataChannelMessage.bind(this);
+    this.handleDataChannelOpen = this.handleDataChannelOpen.bind(this);
+    this.handleDataChannelClose = this.handleDataChannelClose.bind(this);
   }
   componentDidMount() {
     const topic = this.props.tinode.getTopic(this.props.topic);
@@ -10763,6 +10779,10 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     const stream = this.state.localStream;
     stream.getTracks().forEach(track => {
       pc.addTrack(track, stream);
+      if (track.kind == 'video' && !this.localStreamConstraints.video) {
+        track.stop();
+        stream.removeTrack(track);
+      }
     });
   }
   onInfo(info) {
@@ -10793,6 +10813,19 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
         break;
     }
   }
+  emptyVideoTrack() {
+    const width = 640;
+    const height = 480;
+    const canvas = Object.assign(document.createElement("canvas"), {
+      width,
+      height
+    });
+    canvas.getContext('2d').fillRect(0, 0, width, height);
+    const stream = canvas.captureStream(0);
+    return Object.assign(stream.getVideoTracks()[0], {
+      enabled: false
+    });
+  }
   start() {
     if (this.state.localStream) {
       this.props.onError(this.props.intl.formatMessage(messages.already_in_call), 'info');
@@ -10803,6 +10836,9 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       return;
     }
     navigator.mediaDevices.getUserMedia(this.localStreamConstraints).then(stream => {
+      if (!this.localStreamConstraints.video) {
+        stream.addTrack(this.emptyVideoTrack());
+      }
       this.setState({
         localStream: stream,
         waitingForPeer: true
@@ -10829,6 +10865,10 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       this.state.pc.onicegatheringstatechange = null;
       this.state.pc.onnegotiationneeded = null;
       this.state.pc.onicecandidateerror = null;
+      this.state.pc.ondatachannel = null;
+      if (this.state.dataChannel) {
+        this.state.dataChannel.close();
+      }
       this.state.pc.close();
     }
     this.setState({
@@ -10854,6 +10894,46 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     el.srcObject = null;
     el.src = '';
   }
+  handleDataChannelError(error) {
+    console.error('data channel error', error);
+  }
+  handleDataChannelMessage(event) {
+    console.log('Received data channel message: ', event.data);
+    switch (event.data) {
+      case VIDEO_MUTED_EVENT:
+        this.setState({
+          remoteVideoLive: false
+        });
+        break;
+      case VIDEO_UNMUTED_EVENT:
+        this.setState({
+          remoteVideoLive: true
+        });
+        break;
+      default:
+        break;
+    }
+  }
+  handleDataChannelOpen(event) {
+    console.log('data channel open');
+    if (!this.state.audioOnly) {
+      event.target.send(VIDEO_UNMUTED_EVENT);
+    }
+  }
+  handleDataChannelClose() {
+    console.log('data channel close');
+  }
+  handleDataChannelEvent(event) {
+    console.log('data channel evt', event);
+    const channel = event.channel;
+    channel.onerror = this.handleDataChannelError;
+    channel.onmessage = this.handleDataChannelMessage;
+    channel.onopen = this.handleDataChannelOpen;
+    channel.onclose = this.handleDataChannelClose;
+    this.setState({
+      dataChannel: channel
+    });
+  }
   createPeerConnection() {
     const iceServers = this.props.tinode.getServerParam('iceServers', null);
     const pc = iceServers ? new RTCPeerConnection({
@@ -10866,6 +10946,15 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     pc.onnegotiationneeded = this.handleNegotiationNeededEvent;
     pc.onicecandidateerror = this.handleIceCandidateErrorEvent;
     pc.ontrack = this.handleTrackEvent;
+    pc.ondatachannel = this.handleDataChannelEvent;
+    console.log('creating data channel events');
+    const channel = pc.createDataChannel("events", {
+      ordered: true
+    });
+    channel.onerror = this.handleDataChannelError;
+    channel.onmessage = this.handleDataChannelMessage;
+    channel.onopen = this.handleDataChannelOpen;
+    channel.onclose = this.handleDataChannelClose;
     this.setState({
       pc: pc,
       waitingForPeer: false
@@ -10878,23 +10967,25 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       this.setState({
         callInitialSetupComplete: true
       }, _ => this.drainRemoteIceCandidatesCache());
-    }).catch(this.reportError);
+    }).catch(err => this.reportError(err));
   }
   reportError(err) {
+    console.log(`Error! '${err.message}'`, err, new Error("stacktrace!"));
     this.props.onError(err.message, 'err');
   }
   canSendOffer() {
     return this.isOutgoingCall || this.state.callInitialSetupComplete;
   }
-  handleNegotiationNeededEvent() {
+  handleNegotiationNeededEvent(event) {
+    const pc = event.target;
     if (!this.canSendOffer()) {
       return;
     }
-    this.state.pc.createOffer().then(offer => {
-      return this.state.pc.setLocalDescription(offer);
+    pc.createOffer().then(offer => {
+      return pc.setLocalDescription(offer);
     }).then(_ => {
-      this.props.onSendOffer(this.props.topic, this.props.seq, this.state.pc.localDescription.toJSON());
-    }).catch(this.reportError);
+      this.props.onSendOffer(this.props.topic, this.props.seq, pc.localDescription.toJSON());
+    }).catch(err => this.reportError(err));
   }
   handleIceCandidateErrorEvent(event) {
     console.warn("ICE candidate error:", event);
@@ -10907,14 +10998,24 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   handleNewICECandidateMsg(info) {
     const candidate = new RTCIceCandidate(info.payload);
     if (this.state.callInitialSetupComplete) {
-      this.state.pc.addIceCandidate(candidate).catch(this.reportError);
+      this.state.pc.addIceCandidate(candidate).catch(err => {
+        if (candidate.candidate) {
+          this.reportError(err);
+        }
+        console.warn("Error adding new ice candidate", candidate, err);
+      });
     } else {
       this.remoteIceCandidatesCache.push(candidate);
     }
   }
   drainRemoteIceCandidatesCache() {
     this.remoteIceCandidatesCache.forEach(candidate => {
-      this.state.pc.addIceCandidate(candidate).catch(this.reportError);
+      this.state.pc.addIceCandidate(candidate).catch(err => {
+        if (candidate.candidate) {
+          this.reportError(err);
+        }
+        console.warn("Error adding cached ice candidate", candidate, err);
+      });
     });
     this.remoteIceCandidatesCache = [];
   }
@@ -10927,7 +11028,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     }
   }
   handleSignalingStateChangeEvent(event) {
-    if (this.state.pc.signalingState == 'closed') {
+    if (event.target.signalingState == 'closed') {
       this.handleCloseClick();
     }
   }
@@ -10937,27 +11038,32 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     this.forceUpdate();
   }
   handleGetUserMediaError(e) {
+    console.error("Error opening camera and/or microphone", e);
     switch (e.name) {
       case 'NotFoundError':
-        this.reportError(e.message);
+        this.reportError(e);
         break;
       case 'SecurityError':
       case 'PermissionDeniedError':
         break;
       default:
-        this.reportError(e.message);
-        console.error("Error opening your camera and/or microphone:", e.message);
+        this.reportError(e);
         break;
     }
     this.handleCloseClick();
   }
   handleVideoOfferMsg(info) {
     let localStream = null;
-    const pc = this.createPeerConnection();
+    const pc = this.state.pc ? this.state.pc : this.createPeerConnection();
     const desc = new RTCSessionDescription(info.payload);
     pc.setRemoteDescription(desc).then(_ => {
       return navigator.mediaDevices.getUserMedia(this.localStreamConstraints);
     }).then(stream => {
+      let dummyVideo;
+      if (!this.localStreamConstraints.video) {
+        dummyVideo = this.emptyVideoTrack();
+        stream.addTrack(dummyVideo);
+      }
       localStream = stream;
       this.localRef.current.srcObject = stream;
       this.setState({
@@ -10966,6 +11072,10 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       localStream.getTracks().forEach(track => {
         pc.addTrack(track, localStream);
       });
+      if (dummyVideo) {
+        dummyVideo.stop();
+        stream.removeTrack(dummyVideo);
+      }
     }).then(_ => {
       return pc.createAnswer();
     }).then(answer => {
@@ -10997,34 +11107,82 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     this.stop();
     this.props.onHangup(this.props.topic, this.props.seq);
   }
-  toggleMedia(kind) {
+  muteVideo() {
+    if (!this.state.pc || !this.state.dataChannel) {
+      return;
+    }
     const stream = this.state.localStream;
-    stream.getTracks().forEach(track => {
-      if (track.kind != kind) {
-        return;
-      }
-      track.enabled = !track.enabled;
+    const t = stream.getVideoTracks()[0];
+    t.enabled = false;
+    t.stop();
+    stream.removeTrack(t);
+    this.state.dataChannel.send(VIDEO_MUTED_EVENT);
+    this.setState({
+      videoToggleInProgress: false
     });
-    this.forceUpdate();
+  }
+  unmuteVideo() {
+    if (!this.state.pc || !this.state.dataChannel) {
+      return;
+    }
+    navigator.mediaDevices.getUserMedia({
+      video: true
+    }).then(stream => {
+      this.localRef.current.srcObject = null;
+      const sender = this.state.pc.getSenders().find(s => s.track.kind == 'video');
+      const track = stream.getVideoTracks()[0];
+      stream.removeTrack(track);
+      this.state.localStream.addTrack(track);
+      return sender.replaceTrack(track);
+    }).then(_ => {
+      this.localRef.current.srcObject = this.state.localStream;
+      this.state.dataChannel.send(VIDEO_UNMUTED_EVENT);
+    }).catch(err => this.handleGetUserMediaError(err)).finally(_ => {
+      this.setState({
+        videoToggleInProgress: false
+      });
+    });
   }
   handleToggleCameraClick() {
-    this.toggleMedia('video');
+    if (this.state.videoToggleInProgress) {
+      return;
+    }
+    const tracks = this.state.localStream.getVideoTracks();
     this.setState({
-      audioOnly: !this.state.audioOnly
+      videoToggleInProgress: true
+    }, _ => {
+      if (tracks && tracks.length > 0 && tracks[0].enabled && tracks[0].readyState == 'live') {
+        this.muteVideo();
+      } else {
+        this.unmuteVideo();
+      }
+      this.setState({
+        audioOnly: !this.state.audioOnly
+      });
     });
   }
   handleToggleMicClick() {
-    this.toggleMedia('audio');
+    const stream = this.state.localStream;
+    const t = stream.getAudioTracks()[0];
+    t.enabled = !t.enabled;
+    this.forceUpdate();
   }
   render() {
-    const remoteActive = this.remoteRef.current && this.remoteRef.current.srcObject;
     const audioTracks = this.state.localStream && this.state.localStream.getAudioTracks();
     const videoTracks = !this.state.audioOnly && this.state.localStream && this.state.localStream.getVideoTracks();
-    const disabled = !(audioTracks && audioTracks[0]);
+    const disabled = !this.state.pc || !this.state.dataChannel || !(audioTracks && audioTracks[0]);
     const audioIcon = audioTracks && audioTracks[0] && audioTracks[0].enabled ? 'mic' : 'mic_off';
-    const videoIcon = videoTracks && videoTracks[0] && videoTracks[0].enabled ? 'videocam' : 'videocam_off';
+    const videoIcon = videoTracks && videoTracks[0] && videoTracks[0].enabled && videoTracks[0].readyState == 'live' ? 'videocam' : 'videocam_off';
     const peerTitle = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_5__.clipStr)(this.props.title, _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_PEER_TITLE_LENGTH);
     const pulseAnimation = this.state.waitingForPeer ? ' pulse' : '';
+    let removeActive = false;
+    if (this.remoteRef.current && this.remoteRef.current.srcObject && this.state.remoteVideoLive) {
+      const rstream = this.remoteRef.current.srcObject;
+      if (rstream.getVideoTracks().length > 0) {
+        const t = rstream.getVideoTracks()[0];
+        removeActive = t.enabled && t.readyState == 'live';
+      }
+    }
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "video-container"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -11047,12 +11205,12 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       }]
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "call-party peer",
-      disabled: this.state.audioOnly
+      disabled: !removeActive
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("video", {
       ref: this.remoteRef,
       autoPlay: true,
       playsInline: true
-    }), remoteActive && !this.state.audioOnly ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }), removeActive ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "caller-name inactive"
     }, peerTitle) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: `caller-card${pulseAnimation}`
