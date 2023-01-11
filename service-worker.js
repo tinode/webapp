@@ -64,14 +64,14 @@ const fbMessaging = firebase.messaging();
 
 // This method shows the push notifications while the window is in background.
 fbMessaging.onBackgroundMessage(payload => {
-  if (payload.data.silent == 'true') {
-    // TODO: if this is an 'msg', fetch the new message in the background.
-    return;
-  }
-
   // Notify webapp that a message was received.
   if (webAppChannel) {
     webAppChannel.postMessage(payload.data);
+  }
+
+  if (payload.data.silent == 'true') {
+    // No need to show anything.
+    return;
   }
 
   const titles = {'msg': 'new_message', 'sub': 'new_chat'};
