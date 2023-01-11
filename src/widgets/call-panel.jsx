@@ -258,7 +258,6 @@ class CallPanel extends React.PureComponent {
   }
 
   handleDataChannelMessage(event) {
-    console.log('Received data channel message: ', event.data);
     switch (event.data) {
     case VIDEO_MUTED_EVENT:
       this.setState({remoteVideoLive: false});
@@ -272,18 +271,16 @@ class CallPanel extends React.PureComponent {
   }
 
   handleDataChannelOpen(event) {
-    console.log('data channel open');
     if (!this.state.audioOnly) {
       event.target.send(VIDEO_UNMUTED_EVENT);
     }
   }
 
   handleDataChannelClose() {
-    console.log('data channel close');
+    /* no action */
   }
 
   handleDataChannelEvent(event) {
-    console.log('data channel evt', event);
     const channel = event.channel;
     channel.onerror = this.handleDataChannelError;
     channel.onmessage = this.handleDataChannelMessage;
@@ -305,7 +302,7 @@ class CallPanel extends React.PureComponent {
     pc.ontrack = this.handleTrackEvent;
     pc.ondatachannel = this.handleDataChannelEvent;
 
-    console.log('creating data channel events');
+    // creating data channel events
     const channel = pc.createDataChannel("events", {ordered: true});
     channel.onerror = this.handleDataChannelError;
     channel.onmessage = this.handleDataChannelMessage;

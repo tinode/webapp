@@ -7969,7 +7969,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
       this.tinode.onInfoMessage = this.handleInfoMessage;
       this.tinode.onDataMessage = this.handleDataMessage;
-      console.log("handleDataMessage assigned", this.tinode.onDataMessage);
     }).then(_ => {
       if (this.state.desktopAlertsEnabled) {
         this.initFCMessaging().catch(_ => {});
@@ -8739,7 +8738,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
     this.tinode.onInfoMessage = this.handleInfoMessage;
     this.tinode.onDataMessage = this.handleDataMessage;
-    console.log("handleDataMessage assigned 2", this.tinode.onDataMessage);
     this.setState({
       serverAddress: serverAddress,
       transport: transport,
@@ -9000,7 +8998,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         this.tinode.onAutoreconnectIteration = this.handleAutoreconnectIteration;
         this.tinode.onInfoMessage = this.handleInfoMessage;
         this.tinode.onDataMessage = this.handleDataMessage;
-        console.log("handleDataMessage assigned 3", this.tinode.onDataMessage);
         _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo('');
       });
     });
@@ -9354,7 +9351,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
   }
   handleDataMessage(data) {
-    console.log("=== TinodeWeb handleDataMessage", data);
     if (data.head && data.head.webrtc && data.head.webrtc == _constants_js__WEBPACK_IMPORTED_MODULE_13__.CALL_HEAD_STARTED) {
       const topic = this.tinode.getTopic(data.topic);
       if (topic) {
@@ -10898,7 +10894,6 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     console.error('data channel error', error);
   }
   handleDataChannelMessage(event) {
-    console.log('Received data channel message: ', event.data);
     switch (event.data) {
       case VIDEO_MUTED_EVENT:
         this.setState({
@@ -10915,16 +10910,12 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     }
   }
   handleDataChannelOpen(event) {
-    console.log('data channel open');
     if (!this.state.audioOnly) {
       event.target.send(VIDEO_UNMUTED_EVENT);
     }
   }
-  handleDataChannelClose() {
-    console.log('data channel close');
-  }
+  handleDataChannelClose() {}
   handleDataChannelEvent(event) {
-    console.log('data channel evt', event);
     const channel = event.channel;
     channel.onerror = this.handleDataChannelError;
     channel.onmessage = this.handleDataChannelMessage;
@@ -10947,7 +10938,6 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     pc.onicecandidateerror = this.handleIceCandidateErrorEvent;
     pc.ontrack = this.handleTrackEvent;
     pc.ondatachannel = this.handleDataChannelEvent;
-    console.log('creating data channel events');
     const channel = pc.createDataChannel("events", {
       ordered: true
     });
@@ -10970,7 +10960,6 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     }).catch(err => this.reportError(err));
   }
   reportError(err) {
-    console.log(`Error! '${err.message}'`, err, new Error("stacktrace!"));
     this.props.onError(err.message, 'err');
   }
   canSendOffer() {
