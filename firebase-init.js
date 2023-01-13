@@ -9,5 +9,7 @@ const FIREBASE_INIT = {
   // Project Settings -> Cloud Messaging -> Web configuration -> Web Push certificates.
   // This value IS NOT included in the generated js config you get from
   // the firebase console. It needs to be added separately.
-  messagingVapidKey: "BOgQVPOMzIMXUpsYGpbVkZoEBc0ifKY_f2kSU5DNDGYI6i6CoKqqxDd7w7PJ3FaGRBgVGJffldETumOx831jl58"
+  messagingVapidKey: "BOgQVPOMzIMXUpsYGpbVkZoEBc0ifKY_f2kSU5DNDGYI6i6CoKqqxDd7w7PJ3FaGRBgVGJffldETumOx831jl58",
+  // Google analytics tag. Uncomment and use one you got from https://analytics.google.com/.
+  // measurementId: "G-ABCDEF1234"
 };
