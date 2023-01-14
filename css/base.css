@@ -96,6 +96,7 @@ html input[disabled] {
   cursor: default;
   opacity: 0.65;
   box-shadow: none;
+  filter: grayscale(50%);
 }
 
 button.round {
@@ -117,7 +118,7 @@ button.round.small {
   box-shadow: 0 2px 0.35rem 0 rgba(0, 0, 0, 0.25);
 }
 
-button:focus, button:hover, button:active {
+button:hover:not([disabled]), button:active:not([disabled]) {
   color: #fff;
 }
 button:active {
@@ -131,7 +132,7 @@ button.primary {
   background-color: #1e88e5; /* blue 600 */
   color: white;
 }
-button.primary:focus, button.primary:hover, button.primary:active {
+button.primary:hover:not([disabled]), button.primary:active:not([disabled]) {
   background-color: #2962ff;
 }
 
@@ -139,7 +140,7 @@ button.secondary {
   background-color: #FFF;
   color: #2196f3; /* blue 500 */
 }
-button.secondary:focus, button.secondary:hover, button.secondary:active {
+button.secondary:hover:not([disabled]), button.secondary:active:not([disabled]) {
   background-color: #e3f2fd;
 }
 
@@ -149,7 +150,7 @@ button.outline {
   border: 1px solid silver;
   box-shadow: none;
 }
-button.outline:focus, button.outline:hover, button.outline:active {
+button.outline:hover:not([disabled]), button.outline:active:not([disabled]) {
   background-color: #e8eaf6; /* indigo 50 */
 }
 
@@ -157,7 +158,7 @@ button.danger {
   background-color: #ec6560;
   color: white;
 }
-button.danger:focus, button.danger:hover, button.danger:active {
+button.danger:hover:not([disabled]), button.danger:active:not([disabled]) {
   background-color: #f77;
 }
 
@@ -165,7 +166,7 @@ button.positive {
   background-color: #71c46f;
   color: white;
 }
-button.positive:focus, button.positive:hover, button.positive:active {
+button.positive:hover:not([disabled]), button.positive:active:not([disabled]) {
   background-color: rgb(127, 237, 127);
 }
 
@@ -1605,13 +1606,26 @@ img.channel {
 }
 
 .controls {
+  position: absolute;
   display: flex;
+  column-gap: 1rem;
   align-items: center;
   justify-content: center;
-  height: 3.2rem;
+  width: 100%;
+  bottom: 2.5rem;
   z-index: 1;
-  background-color: #eceff1;
-  box-shadow: 0px -2px 3px -1px rgba(0,0,0,0.1); /* Faint shadow above panel */
+}
+
+.incoming-call .controls {
+  bottom: 1rem;
+}
+
+.controls button {
+  border-radius: 50%;
+  width: 4rem;
+  height: 4rem;
+  min-width: initial;
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.25);
 }
 
 #video-container-panel {
@@ -1649,6 +1663,10 @@ img.channel {
   z-index: 2;
 }
 
+.call-party.self[disabled] {
+  display: none;
+}
+
 video {
   width: 100%;
   height: 100%;
@@ -1657,6 +1675,10 @@ video {
 
 .call-party.self video {
   transform: scaleX(-1);
+}
+
+.call-party[disabled] video {
+  display: none;
 }
 
 .caller-card {
@@ -1737,7 +1759,7 @@ video {
   left: initial;
   width: 100%;
   height: 100%;
-  padding: 5rem 3.5rem 2rem 3.5rem;
+  padding: 4rem 3.5rem 5.5rem 3.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
