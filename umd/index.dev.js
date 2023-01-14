@@ -21701,6 +21701,19 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+if (FIREBASE_INIT && FIREBASE_INIT.measurementId) {
+  const head = document.getElementsByTagName('head')[0];
+  let script = document.createElement('script');
+  script.src = 'https://www.googletagmanager.com/gtag/js?id=' + FIREBASE_INIT.measurementId;
+  script.async = true;
+  head.prepend(script);
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag('js', new Date());
+  gtag('config', FIREBASE_INIT.measurementId);
+}
 const messageLoader = {
   'de': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_de_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/de.json */ "./src/i18n.min/de.json", 19)),
   'en': _ => __webpack_require__.e(/*! import() */ "src_i18n_min_en_json").then(__webpack_require__.t.bind(__webpack_require__, /*! ./i18n.min/en.json */ "./src/i18n.min/en.json", 19)),

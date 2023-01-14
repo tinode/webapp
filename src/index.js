@@ -9,6 +9,19 @@ import { IntlProvider } from 'react-intl';
 import TinodeWeb from './views/tinode-web.jsx';
 import HashNavigation from './lib/navigation.js';
 
+// Insert google analytics script and tag if configured.
+if (FIREBASE_INIT && FIREBASE_INIT.measurementId) {
+  const head = document.getElementsByTagName('head')[0];
+  let script = document.createElement('script');
+  script.src = 'https://www.googletagmanager.com/gtag/js?id=' + FIREBASE_INIT.measurementId;
+  script.async = true;
+  head.prepend(script);
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', FIREBASE_INIT.measurementId);
+}
+
 // Allow loading translation strings for just one language.
 const messageLoader = {
   'de': _ => import('./i18n.min/de.json'),
