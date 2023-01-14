@@ -69,6 +69,11 @@ const messages = defineMessages({
     defaultMessage: 'Info',
     description: 'Show extended topic information'
   },
+  menu_item_audio_call: {
+    id: 'menu_item_audio_call',
+    defaultMessage: 'Call',
+    description: 'Start audio call'
+  },
   menu_item_video_call: {
     id: 'menu_item_video_call',
     defaultMessage: 'Video call',
@@ -158,6 +163,7 @@ class TinodeWeb extends React.Component {
     this.handleHideForwardDialog = this.handleHideForwardDialog.bind(this);
 
     this.handleStartVideoCall = this.handleStartVideoCall.bind(this);
+    this.handleStartAudioCall = this.handleStartAudioCall.bind(this);
     this.handleInfoMessage = this.handleInfoMessage.bind(this);
     this.handleDataMessage = this.handleDataMessage.bind(this);
     this.handleCallClose = this.handleCallClose.bind(this);
@@ -233,6 +239,7 @@ class TinodeWeb extends React.Component {
       // Video calls.
       callTopic: undefined,
       callState: CALL_STATE_NONE,
+      callAudioOnly: undefined,
       // If true, call state should be transitioned to CALL_STATE_IN_PROGRESS upon
       // switching to the call topic.
       callShouldStart: false,
@@ -299,11 +306,7 @@ class TinodeWeb extends React.Component {
     }).then(_ => {
       // Initialize desktop alerts.
       if (this.state.desktopAlertsEnabled) {
-        this.initFCMessaging().then(_ => {
-          if (this.state.desktopAlerts) {
-            this.tinode.setDeviceToken(this.state.firebaseToken);
-          }
-        }).catch(_ => {
+        this.initFCMessaging().catch(_ => {
           // do nothing: handled earlier.
           // catch needed to pervent unnecessary logging of error.
         });
@@ -370,20 +373,23 @@ class TinodeWeb extends React.Component {
     const onError = (msg, err) => {
       console.error(msg, err);
       this.handleError(formatMessage(messages.push_init_failed), 'err');
-      this.setState({desktopAlertsEnabled: false, firebaseToken: null});
+      this.setState({firebaseToken: null});
       LocalStorageUtil.updateObject('settings', {desktopAlerts: false});
     }
 
     try {
       this.fcm = firebaseGetMessaging(firebaseInitApp(FIREBASE_INIT, APP_NAME));
-      return navigator.serviceWorker.register('/service-worker.js').then((reg) => {
-        this.checkForAppUpdate(reg);
-        reg.active.postMessage(JSON.stringify({locale: locale, version: PACKAGE_VERSION}));
-        return reg;
-      }).then((reg) => {
+      return navigator.serviceWorker.getRegistration('/service-worker.js').then(reg => {
+        return reg || navigator.serviceWorker.register('/service-worker.js').then(reg => {
+          this.checkForAppUpdate(reg);
+          return reg;
+        });
+      }).then(reg => {
+        // Pass locale and version config to the service worker.
+        (reg.active || reg.installing).postMessage(JSON.stringify({locale: locale, version: PACKAGE_VERSION}));
         // Request token.
         return TinodeWeb.requestFCMToken(this.fcm, reg);
-      }).then((token) => {
+      }).then(token => {
         const persist = LocalStorageUtil.getObject('keep-logged-in');
         if (token != this.state.firebaseToken) {
           this.tinode.setDeviceToken(token);
@@ -399,7 +405,7 @@ class TinodeWeb extends React.Component {
         // Handhe FCM pushes
         // (a) for channels always,
         // (b) pushes when the app is in foreground but has no focus.
-        firebaseOnMessage(this.fcm, (payload) => { this.handlePushMessage(payload); });
+        firebaseOnMessage(this.fcm, payload => { this.handlePushMessage(payload); });
       }).catch(err => {
         // SW registration or FCM has failed :(
         onError(err);
@@ -416,17 +422,17 @@ class TinodeWeb extends React.Component {
     return firebaseGetToken(fcm, {
       serviceWorkerRegistration: sw,
       vapidKey: FIREBASE_INIT.messagingVapidKey
-    }).then((token) => {
+    }).then(token => {
       if (token) {
         return token;
       } else {
         // Try to request permissions.
-        return Notification.requestPermission().then((permission) => {
+        return Notification.requestPermission().then(permission => {
           if (permission === 'granted') {
             return firebaseGetToken(fcm, {
               serviceWorkerRegistration: reg,
               vapidKey: FIREBASE_INIT.messagingVapidKey
-            }).then((token) => {
+            }).then(token => {
               if (token) {
                 return token;
               } else {
@@ -576,6 +582,12 @@ class TinodeWeb extends React.Component {
         this.handleError(err.message, 'err');
       });
     }
+
+    if (this.state.desktopAlertsEnabled && !this.state.firebaseToken) {
+      // Firefox and Safari: "The Notification permission may only be requested from inside a
+      // short running user-generated event handler".
+      this.initFCMessaging();
+    }
   }
 
   // Enable or disable saving the password and IndexedDB.
@@ -712,20 +724,23 @@ class TinodeWeb extends React.Component {
         this.handleLoginSuccessful();
       }
     }).catch(err => {
+      const autoLogin = err.code >= 500;
       // Connection or login failed, report error.
       this.setState({
         loginDisabled: false,
         credMethod: undefined,
         credCode: undefined,
         loadSpinnerVisible: false,
-        autoLogin: false
+        autoLogin: autoLogin
       });
       this.handleError(err.message, 'err');
       console.warn("Login failed", err);
-      if (token) {
-        this.handleLogout();
+      if (!autoLogin) {
+        if (token) {
+          this.handleLogout();
+        }
+        HashNavigation.navigateTo('');
       }
-      HashNavigation.navigateTo('');
     });
   }
 
@@ -1585,6 +1600,10 @@ class TinodeWeb extends React.Component {
         handler: this.handleShowInfoView
       } : null,
       subscribed && Tinode.isP2PTopicName(topicName) && webrtc ? {
+        title: this.props.intl.formatMessage(messages.menu_item_audio_call),
+        handler: this.handleStartAudioCall
+      } : null,
+      subscribed && Tinode.isP2PTopicName(topicName) && webrtc ? {
         title: this.props.intl.formatMessage(messages.menu_item_video_call),
         handler: this.handleStartVideoCall
       } : null,
@@ -1709,15 +1728,24 @@ class TinodeWeb extends React.Component {
   handleStartVideoCall() {
     this.setState({
       callTopic: this.state.topicSelected,
-      callState: CALL_STATE_OUTGOING_INITATED
+      callState: CALL_STATE_OUTGOING_INITATED,
+      callAudioOnly: false
     });
   }
 
-  handleCallInvite(callTopic, callSeq, callState) {
+  handleStartAudioCall() {
+    this.setState({
+      callTopic: this.state.topicSelected,
+      callState: CALL_STATE_OUTGOING_INITATED,
+      callAudioOnly: true
+    });
+  }
+
+  handleCallInvite(callTopic, callSeq, callState, audioOnly) {
     switch (callState) {
       case CALL_STATE_OUTGOING_INITATED:
-        let head = { webrtc: CALL_HEAD_STARTED };
-        this.handleSendMessage(Drafty.videoCall(), undefined, undefined, head)
+        const head = { webrtc: CALL_HEAD_STARTED, aonly: !!audioOnly };
+        this.handleSendMessage(Drafty.videoCall(audioOnly), undefined, undefined, head)
           .then(ctrl => {
             if (ctrl.code < 200 || ctrl.code >= 300 || !ctrl.params || !ctrl.params.seq) {
               this.handleCallClose();
@@ -1787,7 +1815,8 @@ class TinodeWeb extends React.Component {
     }
     this.setState({
       callTopic: undefined,
-      callState: CALL_STATE_NONE
+      callState: CALL_STATE_NONE,
+      callAudioOnly: undefined
     });
   }
 
@@ -1820,7 +1849,8 @@ class TinodeWeb extends React.Component {
           this.setState({
             callTopic: null,
             callState: CALL_STATE_NONE,
-            callSeq: null
+            callSeq: null,
+            callAudioOnly: undefined
           });
           return;
         }
@@ -1853,7 +1883,8 @@ class TinodeWeb extends React.Component {
               this.setState({
                 callTopic: data.topic,
                 callState: CALL_STATE_INCOMING_RECEIVED,
-                callSeq: data.seq
+                callSeq: data.seq,
+                callAudioOnly: !!msg.head.aonly
               });
             } else {
               // Another call is either in progress or being established.
@@ -1909,10 +1940,11 @@ class TinodeWeb extends React.Component {
         {this.state.callTopic && this.state.callState == CALL_STATE_INCOMING_RECEIVED ?
           <CallIncoming
             tinode={this.tinode}
-            onClose={this.handleCallClose}
             topic={this.state.callTopic}
             seq={this.state.callSeq}
             callState={this.state.callState}
+            audioOnly={this.state.callAudioOnly}
+            onClose={this.handleCallClose}
             onRinging={this.handleCallRinging}
             onAcceptCall={this.handleCallAccept}
             onReject={this.handleCallHangup}
@@ -1920,15 +1952,16 @@ class TinodeWeb extends React.Component {
           :
           null
         }
-        <Alert
-          visible={this.state.alertVisible}
-          title={this.state.alertParams.title}
-          content={this.state.alertParams.content}
-          onReject={this.state.alertParams.onReject ? (_ => this.setState({alertVisible: false})) : null}
-          reject={this.state.alertParams.reject}
-          onConfirm={_ => {this.setState({alertVisible: false}); this.state.alertParams.onConfirm();}}
-          confirm={this.state.alertParams.confirm}
-          />
+        {this.state.alertVisible ?
+          <Alert
+            visible={this.state.alertVisible}
+            title={this.state.alertParams.title}
+            content={this.state.alertParams.content}
+            onReject={this.state.alertParams.onReject ? (_ => this.setState({alertVisible: false})) : null}
+            reject={this.state.alertParams.reject}
+            onConfirm={_ => {this.setState({alertVisible: false}); this.state.alertParams.onConfirm();}}
+            confirm={this.state.alertParams.confirm}
+            /> : null}
         <SidepanelView
           tinode={this.tinode}
           connected={this.state.connected}
@@ -2024,6 +2057,7 @@ class TinodeWeb extends React.Component {
           callTopic={this.state.callTopic}
           callSeq={this.state.callSeq}
           callState={this.state.callState}
+          callAudioOnly={this.state.callAudioOnly}
           onCallHangup={this.handleCallHangup}
 
           onCallInvite={this.handleCallInvite}

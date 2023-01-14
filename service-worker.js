@@ -64,14 +64,14 @@ const fbMessaging = firebase.messaging();
 
 // This method shows the push notifications while the window is in background.
 fbMessaging.onBackgroundMessage(payload => {
-  if (payload.data.silent == 'true') {
-    // TODO: if this is an 'msg', fetch the new message in the background.
-    return;
-  }
-
   // Notify webapp that a message was received.
   if (webAppChannel) {
     webAppChannel.postMessage(payload.data);
+  }
+
+  if (payload.data.silent == 'true') {
+    // No need to show anything.
+    return;
   }
 
   const titles = {'msg': 'new_message', 'sub': 'new_chat'};
@@ -111,35 +111,35 @@ self.addEventListener('notificationclick', event => {
 
   event.waitUntil(self.clients.matchAll({
     type: 'window',
-    includeUncontrolled: true
-  }).then(windowClients => {
-    let anyClient = null;
-    for (let i = 0; i < windowClients.length; i++) {
-      const url = new URL(windowClients[i].url);
-      if (url.hash.includes(data.topic)) {
-        // Found the Tinode tab with the right topic open.
-        return windowClients[i].focus();
-      } else {
-        // This will be the least recently used tab.
-        anyClient = windowClients[i];
+    includeUncontrolled: true})
+    .then(windowClients => {
+      let anyClient = null;
+      for (let i = 0; i < windowClients.length; i++) {
+        const url = new URL(windowClients[i].url);
+        if (url.hash.includes(data.topic)) {
+          // Found the Tinode tab with the right topic open.
+          return windowClients[i].focus();
+        } else {
+          // This will be the least recently used tab.
+          anyClient = windowClients[i];
+        }
       }
-    }
 
-    // Found tab with Tinode on a different topic,
-    // navigate to the right topic.
-    if (anyClient) {
-      const url = new URL(anyClient.url);
+      // Found tab with Tinode on a different topic,
+      // navigate to the right topic.
+      if (anyClient) {
+        const url = new URL(anyClient.url);
+        url.hash = urlHash;
+        return anyClient.focus().then(thisClient => {
+          return thisClient.navigate(url);
+        });
+      }
+
+      // Did not find a Tinode browser tab. Open one.
+      const url = new URL(self.location.origin);
       url.hash = urlHash;
-      return anyClient.focus().then(thisClient => {
-        return thisClient.navigate(url);
-      });
-    }
-
-    // Did not find a Tinode browser tab. Open one.
-    const url = new URL(self.location.origin);
-    url.hash = urlHash;
-    return clients.openWindow(url);
-  }));
+      return clients.openWindow(url);
+    }));
 });
 
 // This is needed for 'Add to Home Screen'.

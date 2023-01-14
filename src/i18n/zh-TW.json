@@ -1543,6 +1543,13 @@
     "missing": false,
     "obsolete": false
   },
+  "menu_item_audio_call": {
+    "translation": "",
+    "defaultMessage": "Call",
+    "description": "Start audio call",
+    "missing": true,
+    "obsolete": false
+  },
   "unrecognized_video_format": {
     "translation": "無法識別此視頻的格式",
     "defaultMessage": "Format of this video is not recognized",

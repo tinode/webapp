@@ -1,12 +1,13 @@
 {
   "name": "tinode-webapp",
   "description": "Tinode messenger for the web",
-  "version": "0.21.0-beta1",
+  "version": "0.21.0-rc1",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinode/example-react-js.git"
   },
   "scripts": {
+    "start": "echo 'Read installation instructions'",
     "build": "npm run vers && npm run build:css && npm run extract && npm run build:i18n && npm run build:prod && npm run build:dev",
     "clean": "rm umd/* && rm css/base.min.css && rm i18n.min/*",
     "build:css": "postcss css/base.css > css/base.min.css",
@@ -67,7 +68,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-intl": "^6.2.1",
-    "tinode-sdk": "^0.21.0-beta1",
+    "tinode-sdk": "^0.21.0-rc1",
     "webm-duration-fix": "^1.0.4"
   },
   "devDependencies": {
