@@ -118,7 +118,7 @@ button.round.small {
   box-shadow: 0 2px 0.35rem 0 rgba(0, 0, 0, 0.25);
 }
 
-button:focus:not([disabled]), button:hover:not([disabled]), button:active:not([disabled]) {
+button:hover:not([disabled]), button:active:not([disabled]) {
   color: #fff;
 }
 button:active {
@@ -132,7 +132,7 @@ button.primary {
   background-color: #1e88e5; /* blue 600 */
   color: white;
 }
-button.primary:focus:not([disabled]), button.primary:hover:not([disabled]), button.primary:active:not([disabled]) {
+button.primary:hover:not([disabled]), button.primary:active:not([disabled]) {
   background-color: #2962ff;
 }
 
@@ -140,7 +140,7 @@ button.secondary {
   background-color: #FFF;
   color: #2196f3; /* blue 500 */
 }
-button.secondary:focus:not([disabled]), button.secondary:hover:not([disabled]), button.secondary:active:not([disabled]) {
+button.secondary:hover:not([disabled]), button.secondary:active:not([disabled]) {
   background-color: #e3f2fd;
 }
 
@@ -150,7 +150,7 @@ button.outline {
   border: 1px solid silver;
   box-shadow: none;
 }
-button.outline:focus:not([disabled]), button.outline:hover:not([disabled]), button.outline:active:not([disabled]) {
+button.outline:hover:not([disabled]), button.outline:active:not([disabled]) {
   background-color: #e8eaf6; /* indigo 50 */
 }
 
@@ -158,7 +158,7 @@ button.danger {
   background-color: #ec6560;
   color: white;
 }
-button.danger:focus:not([disabled]), button.danger:hover:not([disabled]), button.danger:active:not([disabled]) {
+button.danger:hover:not([disabled]), button.danger:active:not([disabled]) {
   background-color: #f77;
 }
 
@@ -166,7 +166,7 @@ button.positive {
   background-color: #71c46f;
   color: white;
 }
-button.positive:focus:not([disabled]), button.positive:hover:not([disabled]), button.positive:active:not([disabled]) {
+button.positive:hover:not([disabled]), button.positive:active:not([disabled]) {
   background-color: rgb(127, 237, 127);
 }
 
