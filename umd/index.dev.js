@@ -15306,6 +15306,9 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
   componentDidMount() {
     if (this.messageEditArea) {
       this.messageEditArea.addEventListener('paste', this.handlePasteEvent, false);
+      if (window.getComputedStyle(this.messageEditArea).getPropertyValue('transition-property') == 'all') {
+        this.messageEditArea.focus();
+      }
     }
     this.setState({
       quote: this.formatReply()
@@ -15318,7 +15321,9 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
   }
   componentDidUpdate(prevProps) {
     if (this.messageEditArea) {
-      this.messageEditArea.focus();
+      if (window.getComputedStyle(this.messageEditArea).getPropertyValue('transition-property') == 'all') {
+        this.messageEditArea.focus();
+      }
     }
     if (prevProps.topicName != this.props.topicName) {
       this.setState({
@@ -15479,15 +15484,14 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       }),
       onFinished: this.handleAttachAudio
     })) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("textarea", {
-      id: "sendMessage",
+      id: "send-message-input",
       placeholder: prompt,
       value: this.state.message,
       onChange: this.handleMessageTyping,
       onKeyPress: this.handleKeyPress,
       ref: ref => {
         this.messageEditArea = ref;
-      },
-      autoFocus: true
+      }
     }), this.state.message || !audioEnabled ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: this.handleSend,

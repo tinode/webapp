@@ -90,6 +90,10 @@ class SendMessage extends React.PureComponent {
   componentDidMount() {
     if (this.messageEditArea) {
       this.messageEditArea.addEventListener('paste', this.handlePasteEvent, false);
+      if (window.getComputedStyle(this.messageEditArea).getPropertyValue('transition-property') == 'all') {
+        // Set focus on desktop, but not on mobile: focus causes soft keyboard to pop up.
+        this.messageEditArea.focus();
+      }
     }
 
     this.setState({quote: this.formatReply()});
@@ -103,7 +107,10 @@ class SendMessage extends React.PureComponent {
 
   componentDidUpdate(prevProps) {
     if (this.messageEditArea) {
-      this.messageEditArea.focus();
+      if (window.getComputedStyle(this.messageEditArea).getPropertyValue('transition-property') == 'all') {
+        // Set focus on desktop, but not on mobile: focus causes soft keyboard to pop up.
+        this.messageEditArea.focus();
+      }
     }
 
     if (prevProps.topicName != this.props.topicName) {
@@ -266,11 +273,10 @@ class SendMessage extends React.PureComponent {
                       onDeleted={_ => this.setState({audioRec: false})}
                       onFinished={this.handleAttachAudio}/>
                   </Suspense>) :
-                  <textarea id="sendMessage" placeholder={prompt}
+                  <textarea id="send-message-input" placeholder={prompt}
                     value={this.state.message} onChange={this.handleMessageTyping}
                     onKeyPress={this.handleKeyPress}
-                    ref={(ref) => {this.messageEditArea = ref;}}
-                    autoFocus />)}
+                    ref={ref => {this.messageEditArea = ref;}} />)}
               {this.state.message || !audioEnabled ?
                 <a href="#" onClick={this.handleSend} title={formatMessage(messages.icon_title_send)}>
                   <i className="material-icons">{sendIcon}</i>
