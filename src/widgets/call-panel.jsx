@@ -309,7 +309,7 @@ class CallPanel extends React.PureComponent {
     channel.onopen = this.handleDataChannelOpen;
     channel.onclose = this.handleDataChannelClose;
 
-    this.setState({pc: pc, waitingForPeer: false});
+    this.setState({pc: pc, dataChannel: channel, waitingForPeer: false});
 
     return pc;
   }

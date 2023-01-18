@@ -10950,6 +10950,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     channel.onclose = this.handleDataChannelClose;
     this.setState({
       pc: pc,
+      dataChannel: channel,
       waitingForPeer: false
     });
     return pc;
