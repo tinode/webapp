@@ -20,7 +20,6 @@ class PhoneEdit extends React.PureComponent {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleFinished = this.handleFinished.bind(this);
-    this.handleClear = this.handleClear.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.showCountrySelector = this.showCountrySelector.bind(this);
   }
@@ -34,17 +33,10 @@ class PhoneEdit extends React.PureComponent {
     this.props.onSubmit(this.state.localNumber.trim());
   }
 
-  handleClear(e) {
-    e.preventDefault();
-    const countryCode = this.props.countryCode || 'US';
-    this.setState({localNumber: '', countryCode: countryCode, dialCode: this.codeMap[countryCode || 'US']});
-  }
 
   handleKeyDown(e) {
     if (e.key === 'Enter') {
       this.handleFinished(e);
-    } else if (e.key === 'Escape') {
-      this.handleClear(e);
     }
   }
 
@@ -64,17 +56,14 @@ class PhoneEdit extends React.PureComponent {
 
   render() {
     return (
-      <div className="panel-form-row">
+      <>
         <span className="dial-code" onClick={this.showCountrySelector}>
           <span className="country-flag">{flagEmoji(this.state.countryCode)}&nbsp;</span>
           +{this.state.dialCode}&nbsp;</span>
         <input type="tel" placeholder={this.state.placeholder}
             value={this.state.localNumber} onChange={this.handleChange}
             maxLength={17} onKeyDown={this.handleKeyDown} required autoFocus={this.props.autoFocus} />
-        {this.state.localNumber ?
-          <a href="#" onClick={this.handleClear}><i className="material-icons">highlight_off</i></a>
-          : <span><i className="material-icons">&nbsp;</i></span>}
-      </div>
+      </>
     );
   }
 }

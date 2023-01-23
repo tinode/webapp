@@ -1,5 +1,5 @@
 // Account registration.
-import React from 'react';
+import React, { Suspense } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import AvatarCrop from '../widgets/avatar-crop.jsx';
@@ -178,11 +178,15 @@ export default class CreateAccountView extends React.PureComponent {
           }</FormattedMessage>
         </div>
         <div className="panel-form-row">
-          (<Suspense fallback={<div>Loading...</div>}>
+          <label className="small gray">Mobile phone number:</label>
+        </div>
+        <div className="panel-form-row">
+          <Suspense fallback={<div>Loading...</div>}>
             <PhoneEdit
+              autoFocus={false}
               onShowCountrySelector={(code, dial) => console.log('onShowCountrySelector', code, dial)}
               onSubmit={(code, dial) => console.log('onSubmit', code, dial)} />
-          </Suspense>)
+          </Suspense>
         </div>
         <div className="panel-form-row">
           <CheckBox id="save-token" name="save-token" checked={this.state.saveToken}

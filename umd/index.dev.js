@@ -4308,6 +4308,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+const PhoneEdit = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => __webpack_require__.e(/*! import() */ "src_widgets_phone-edit_jsx").then(__webpack_require__.bind(__webpack_require__, /*! ../widgets/phone-edit.jsx */ "./src/widgets/phone-edit.jsx")));
 
 
 
@@ -4520,6 +4521,18 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       value: this.state.email,
       onChange: this.handleEmailChange,
       required: true
+    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "panel-form-row"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+      className: "small gray"
+    }, "Mobile phone number:")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "panel-form-row"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
+      fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Loading...")
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(PhoneEdit, {
+      autoFocus: false,
+      onShowCountrySelector: (code, dial) => console.log('onShowCountrySelector', code, dial),
+      onSubmit: (code, dial) => console.log('onSubmit', code, dial)
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
