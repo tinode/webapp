@@ -1168,7 +1168,7 @@ class TinodeWeb extends React.Component {
     });
   }
 
-  handleUpdateAccountTagsRequest(tags) {
+  handleUpdateAccountTagsRequest(_, tags) {
     this.tinode.getMeTopic().setMeta({tags: tags})
       .catch(err => this.handleError(err.message, 'err'));
   }

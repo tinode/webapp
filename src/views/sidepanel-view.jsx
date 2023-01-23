@@ -182,7 +182,7 @@ class SidepanelView extends React.PureComponent {
             tinode={this.props.tinode}
             myUserId={this.props.myUserId}
             onUpdateTopicDesc={this.props.onUpdateAccountDesc}
-            onUpdateTags={this.props.onUpdateAccountTags}
+            onUpdateTagsRequest={this.props.onUpdateAccountTags}
             onCredAdd={this.props.onCredAdd}
             onCredDelete={this.props.onCredDelete}
             onCredConfirm={this.props.onCredConfirm}
