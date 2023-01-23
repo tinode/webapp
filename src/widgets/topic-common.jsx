@@ -117,7 +117,7 @@ export default class TopicCommon extends React.Component {
   // Request server to change tags.
   handleTagsUpdated(tags) {
     if (!arrayEqual(this.state.tags.slice(0), tags.slice(0))) {
-      this.props.onTopicTagsUpdateRequest(this.props.topic, tags);
+      this.props.onUpdateTagsRequest(this.props.topic, tags);
     }
   }
 
