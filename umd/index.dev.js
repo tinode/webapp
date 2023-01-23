@@ -5022,7 +5022,7 @@ class InfoView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) 
       tinode: this.props.tinode,
       topic: this.props.topic,
       onCredAdd: this.props.onCredAdd,
-      onTopicTagsUpdateRequest: this.props.onTopicTagsUpdateRequest,
+      onUpdateTagsRequest: this.props.onTopicTagsUpdateRequest,
       onCredConfirm: this.props.onCredConfirm,
       onCredDelete: this.props.onCredDelete,
       onUpdateTopicDesc: this.props.onTopicDescUpdateRequest,
@@ -7601,7 +7601,7 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       tinode: this.props.tinode,
       myUserId: this.props.myUserId,
       onUpdateTopicDesc: this.props.onUpdateAccountDesc,
-      onUpdateTags: this.props.onUpdateAccountTags,
+      onUpdateTagsRequest: this.props.onUpdateAccountTags,
       onCredAdd: this.props.onCredAdd,
       onCredDelete: this.props.onCredDelete,
       onCredConfirm: this.props.onCredConfirm,
@@ -8717,7 +8717,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.handleError(err.message, 'err');
     });
   }
-  handleUpdateAccountTagsRequest(tags) {
+  handleUpdateAccountTagsRequest(_, tags) {
     this.tinode.getMeTopic().setMeta({
       tags: tags
     }).catch(err => this.handleError(err.message, 'err'));
@@ -15323,6 +15323,9 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
   componentDidMount() {
     if (this.messageEditArea) {
       this.messageEditArea.addEventListener('paste', this.handlePasteEvent, false);
+      if (window.getComputedStyle(this.messageEditArea).getPropertyValue('transition-property') == 'all') {
+        this.messageEditArea.focus();
+      }
     }
     this.setState({
       quote: this.formatReply()
@@ -15335,7 +15338,9 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
   }
   componentDidUpdate(prevProps) {
     if (this.messageEditArea) {
-      this.messageEditArea.focus();
+      if (window.getComputedStyle(this.messageEditArea).getPropertyValue('transition-property') == 'all') {
+        this.messageEditArea.focus();
+      }
     }
     if (prevProps.topicName != this.props.topicName) {
       this.setState({
@@ -15496,15 +15501,14 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       }),
       onFinished: this.handleAttachAudio
     })) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("textarea", {
-      id: "sendMessage",
+      id: "send-message-input",
       placeholder: prompt,
       value: this.state.message,
       onChange: this.handleMessageTyping,
       onKeyPress: this.handleKeyPress,
       ref: ref => {
         this.messageEditArea = ref;
-      },
-      autoFocus: true
+      }
     }), this.state.message || !audioEnabled ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: this.handleSend,
@@ -15952,7 +15956,7 @@ class TopicCommon extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
   }
   handleTagsUpdated(tags) {
     if (!(0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_3__.arrayEqual)(this.state.tags.slice(0), tags.slice(0))) {
-      this.props.onTopicTagsUpdateRequest(this.props.topic, tags);
+      this.props.onUpdateTagsRequest(this.props.topic, tags);
     }
   }
   render() {

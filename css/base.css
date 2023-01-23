@@ -3064,4 +3064,9 @@ ul.tabbar li.active > a {
   li .menuTrigger {
     opacity: 0.3;
   }
+
+  #send-message-input {
+    /* Just an indicator that the screen is in mobile mode */
+    transition-property: -tinode-mobile;
+  }
 }
