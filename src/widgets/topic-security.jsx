@@ -2,10 +2,6 @@
 import React from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
-import InPlaceEdit from './in-place-edit.jsx';
-
-import { NO_ACCESS_MODE } from '../config.js';
-
 const messages = defineMessages({
   clear_messages: {
     id: 'action_clear_messages',

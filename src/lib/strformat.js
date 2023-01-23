@@ -99,3 +99,12 @@ export function letterTileColorId(userId) {
 export function idToColorClass(id, light, fg) {
   return (light ? 'lt-' : 'dk-') + (fg ? 'fg-' : 'bg-') + letterTileColorId(id);
 }
+
+// Takes ISO Alpha-2 country code, like 'US' and converts it to a flag emoji.
+export function flagEmoji(countryCode) {
+  const codePoints = countryCode
+    .toUpperCase()
+    .split('')
+    .map(char => 0x1F1A5 + char.charCodeAt());
+  return String.fromCodePoint(...codePoints);
+}

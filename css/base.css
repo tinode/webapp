@@ -185,6 +185,7 @@ input[type="text"],
 input[type="email"],
 input[type="password"],
 input[type="search"],
+input[type="tel"],
 textarea {
   height: 2.5rem;
   border-bottom: 1px solid #ccc;
@@ -195,6 +196,7 @@ textarea {
 input[type="text"],
 input[type="email"],
 input[type="password"],
+input[type="tel"],
 textarea {
   width: 100%;
 }
@@ -203,7 +205,8 @@ textarea:focus,
 input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="password"]:focus,
-input[type="search"]:focus {
+input[type="search"]:focus,
+input[type="tel"]:focus {
   border-bottom: 1px solid #2196f3;
   box-shadow: 0 1px 0 rgba(33, 150, 243, 0.25);
 }
@@ -212,7 +215,8 @@ textarea.invalid,
 input[type="text"].invalid,
 input[type="email"].invalid,
 input[type="password"].invalid,
-input[type="search"].invalid {
+input[type="search"].invalid,
+input[type="tel"].invalid {
   border-bottom: 1px solid #e57373;
   box-shadow: 0 1px 0 rgba(229, 115, 115, 0.25);
 }
@@ -221,6 +225,7 @@ input[type="text"]::placeholder,
 input[type="email"]::placeholder,
 input[type="password"]::placeholder,
 input[type="search"]::placeholder,
+input[type="tel"]::placeholder,
 textarea::placeholder {
   color: #bbb;
   font-weight: lighter;
@@ -3017,6 +3022,45 @@ ul.tabbar li.active > a {
   font-size: 2rem;
   color: grey;
   outline: 0.5rem solid rgba(255,255,255,.95);
+}
+
+.country-flag {
+  display: inline-block;
+  font-size: larger;
+  vertical-align: middle;
+}
+
+.dial-code {
+  white-space: nowrap;
+  display: inline-block;
+  cursor: pointer;
+  margin-top: 0.1rem;
+}
+
+ul.phone-country-selector {
+  list-style: none;
+  overflow-x: hidden;
+}
+
+ul.phone-country-selector > li {
+  position: relative;
+  font-weight: lighter;
+  padding: 0.25rem 0.5rem 0.15rem 0.5rem;
+  cursor: pointer;
+}
+
+ul.phone-country-selector > li:hover {
+  background-color: #eceff1; /* blue-gray 50 highlight */
+}
+ul.phone-country-selector > li.selected {
+  background-color: #cfd8dc; /* blue-gray 100 highlight */
+}
+
+ul.phone-country-selector .dial-code {
+  position: absolute;
+  right: 0.5rem;
+  color: #1e88e5;
+  font-weight: normal;
 }
 
 /*

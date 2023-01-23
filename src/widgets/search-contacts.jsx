@@ -30,7 +30,7 @@ export default class SearchContacts extends React.PureComponent {
 
   handleSearch(e) {
     e.preventDefault();
-    var query = this.state.search.trim();
+    const query = this.state.search.trim();
     this.setState({edited: (query.length > 0)});
     this.props.onSearchContacts(query.length > 0 ? query : Tinode.DEL_CHAR);
   }
