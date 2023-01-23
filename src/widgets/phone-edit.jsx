@@ -29,8 +29,10 @@ class PhoneEdit extends React.PureComponent {
   }
 
   handleFinished(e) {
+    // this.setCustomValidity("Mobile phone number required");
     e.preventDefault();
-    this.props.onSubmit(this.state.localNumber.trim());
+    const number = `${this.state.dialCode}${this.state.localNumber.trim()}`.replace(/[^\d]/g, '')
+    this.props.onSubmit(`+${number}`);
   }
 
 
@@ -62,7 +64,8 @@ class PhoneEdit extends React.PureComponent {
           +{this.state.dialCode}&nbsp;</span>
         <input type="tel" placeholder={this.state.placeholder}
             value={this.state.localNumber} onChange={this.handleChange}
-            maxLength={17} onKeyDown={this.handleKeyDown} required autoFocus={this.props.autoFocus} />
+            maxLength={17} onKeyDown={this.handleKeyDown} onblur={this.handleFinished}
+            required autoFocus={this.props.autoFocus} />
       </>
     );
   }
