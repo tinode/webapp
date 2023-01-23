@@ -5,6 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import AvatarCrop from '../widgets/avatar-crop.jsx';
 import AvatarUpload from '../widgets/avatar-upload.jsx';
 import CheckBox from '../widgets/checkbox.jsx';
+const PhoneEdit = React.lazy(_ => import('../widgets/phone-edit.jsx'));
 import VisiblePassword from '../widgets/visible-password.jsx';
 
 import LocalStorageUtil from '../lib/local-storage.js';
@@ -175,6 +176,13 @@ export default class CreateAccountView extends React.PureComponent {
             (email_prompt) => <input type="email" placeholder={email_prompt} autoComplete="email"
               value={this.state.email} onChange={this.handleEmailChange} required/>
           }</FormattedMessage>
+        </div>
+        <div className="panel-form-row">
+          (<Suspense fallback={<div>Loading...</div>}>
+            <PhoneEdit
+              onShowCountrySelector={(code, dial) => console.log('onShowCountrySelector', code, dial)}
+              onSubmit={(code, dial) => console.log('onSubmit', code, dial)} />
+          </Suspense>)
         </div>
         <div className="panel-form-row">
           <CheckBox id="save-token" name="save-token" checked={this.state.saveToken}
