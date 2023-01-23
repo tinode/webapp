@@ -480,7 +480,7 @@ class InfoView extends React.Component {
             tinode={this.props.tinode}
             topic={this.props.topic}
             onCredAdd={this.props.onCredAdd}
-            onTopicTagsUpdateRequest={this.props.onTopicTagsUpdateRequest}
+            onUpdateTagsRequest={this.props.onTopicTagsUpdateRequest}
             onCredConfirm={this.props.onCredConfirm}
             onCredDelete={this.props.onCredDelete}
             onUpdateTopicDesc={this.props.onTopicDescUpdateRequest}
