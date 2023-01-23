@@ -32,6 +32,7 @@ class CallPanel extends React.PureComponent {
 
     this.state = {
       localStream: undefined,
+      remoteStream: undefined,
       pc: undefined,
       dataChannel: undefined,
 
@@ -82,6 +83,7 @@ class CallPanel extends React.PureComponent {
     this.handleGetUserMediaError = this.handleGetUserMediaError.bind(this);
 
     this.stopTracks = this.stopTracks.bind(this);
+    this.disconnectMedia = this.disconnectMedia.bind(this);
 
     this.handleCloseClick = this.handleCloseClick.bind(this);
     this.handleToggleCameraClick = this.handleToggleCameraClick.bind(this);
@@ -124,9 +126,10 @@ class CallPanel extends React.PureComponent {
     stream.getTracks().forEach(track => {
       pc.addTrack(track, stream);
 
-      if (track.kind == 'video' && !this.localStreamConstraints.video) {
+      if (track.kind == 'video' && this.state.audioOnly) {
         // This is an audio-only call.
         // Remove dummy video track (placeholder remains).
+        track.enabled = false;
         track.stop();
         stream.removeTrack(track);
       }
@@ -211,8 +214,10 @@ class CallPanel extends React.PureComponent {
     RING_SOUND.pause();
     RING_SOUND.currentTime = 0;
 
-    this.stopTracks(this.localRef.current);
-    this.stopTracks(this.remoteRef.current);
+    this.stopTracks(this.state.localStream);
+    this.stopTracks(this.state.remoteStream);
+    this.disconnectMedia(this.localRef.current);
+    this.disconnectMedia(this.remoteRef.current);
     if (this.state.pc) {
       this.state.pc.ontrack = null;
       this.state.pc.onremovetrack = null;
@@ -233,11 +238,16 @@ class CallPanel extends React.PureComponent {
     this.setState({pc: null, waitingForPeer: false});
   }
 
-  stopTracks(el) {
+  disconnectMedia(el) {
     if (!el) {
       return;
     }
-    let stream = el.srcObject;
+
+    el.srcObject = null;
+    el.src = '';
+  }
+
+  stopTracks(stream) {
     if (!stream) {
       return;
     }
@@ -249,8 +259,6 @@ class CallPanel extends React.PureComponent {
         track.enabled = false;
       });
     }
-    el.srcObject = null;
-    el.src = '';
   }
 
   handleDataChannelError(error) {
@@ -260,10 +268,10 @@ class CallPanel extends React.PureComponent {
   handleDataChannelMessage(event) {
     switch (event.data) {
     case VIDEO_MUTED_EVENT:
-      this.setState({remoteVideoLive: false});
+      this.setState({remoteVideoLive: false}, _ => { this.remoteRef.current.srcObject = this.state.remoteStream; });
       break;
     case VIDEO_UNMUTED_EVENT:
-      this.setState({remoteVideoLive: true});
+      this.setState({remoteVideoLive: true}, _ => { this.remoteRef.current.srcObject = this.state.remoteStream; });
       break;
     default:
       break;
@@ -386,7 +394,7 @@ class CallPanel extends React.PureComponent {
   }
 
   handleICEConnectionStateChangeEvent(event) {
-    switch (this.state.pc.iceConnectionState) {
+    switch (event.target.iceConnectionState) {
       case 'closed':
       case 'failed':
         this.handleCloseClick();
@@ -407,9 +415,7 @@ class CallPanel extends React.PureComponent {
   handleTrackEvent(event) {
     // Remote video becomes available.
     this.remoteRef.current.srcObject = event.streams[0];
-
-    // Make sure we display the title (peer's name) over the remote video.
-    this.forceUpdate();
+    this.setState({remoteStream: event.streams[0]});
   }
 
   handleGetUserMediaError(e) {
@@ -458,6 +464,7 @@ class CallPanel extends React.PureComponent {
       });
 
       if (dummyVideo) {
+        dummyVideo.enabled = false;
         dummyVideo.stop();
         stream.removeTrack(dummyVideo);
       }
@@ -574,12 +581,12 @@ class CallPanel extends React.PureComponent {
     const peerTitle = clipStr(this.props.title, MAX_PEER_TITLE_LENGTH);
     const pulseAnimation = this.state.waitingForPeer ? ' pulse' : '';
 
-    let removeActive = false;
+    let remoteActive = false;
     if (this.remoteRef.current && this.remoteRef.current.srcObject && this.state.remoteVideoLive) {
       const rstream = this.remoteRef.current.srcObject;
       if (rstream.getVideoTracks().length > 0) {
         const t = rstream.getVideoTracks()[0];
-        removeActive = t.enabled && t.readyState == 'live';
+        remoteActive = t.enabled && t.readyState == 'live';
       }
     }
 
@@ -594,20 +601,25 @@ class CallPanel extends React.PureComponent {
                   defaultMessage="You" description="Shown over the local video screen" />
               </div>
             </div>
-            <div className="call-party peer" disabled={!removeActive}>
-              <video ref={this.remoteRef} autoPlay playsInline />
-              {removeActive ?
-                <div className="caller-name inactive">{peerTitle}</div> :
-                <div className={`caller-card${pulseAnimation}`}>
-                  <div className="avatar-box">
-                    <LetterTile
-                      tinode={this.props.tinode}
-                      avatar={this.props.avatar}
-                      topic={this.props.topic}
-                      title={this.props.title} />
+            <div className="call-party peer" disabled={!remoteActive}>
+              {remoteActive ?
+                <>
+                  <video ref={this.remoteRef} autoPlay playsInline />
+                  <div className="caller-name inactive">{peerTitle}</div>
+                </> :
+                <>
+                  <audio ref={this.remoteRef} autoPlay />
+                  <div className={`caller-card${pulseAnimation}`}>
+                    <div className="avatar-box">
+                      <LetterTile
+                        tinode={this.props.tinode}
+                        avatar={this.props.avatar}
+                        topic={this.props.topic}
+                        title={this.props.title} />
+                    </div>
+                    <div className="caller-name">{peerTitle}</div>
                   </div>
-                  <div className="caller-name">{peerTitle}</div>
-                </div>
+                </>
               }
             </div>
           </div>
