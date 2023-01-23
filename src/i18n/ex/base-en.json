@@ -492,6 +492,10 @@
     "defaultMessage": "Terms of Service",
     "description": "Ancor text for terms of service link"
   },
+  "loading_note": {
+    "defaultMessage": "Loading...",
+    "description": "Message shown when component is loading"
+  },
   "login_prompt": {
     "defaultMessage": "Login",
     "description": "Placeholer for username/login"

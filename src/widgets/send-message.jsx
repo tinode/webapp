@@ -1,6 +1,6 @@
 // Send message form.
 import React, { Suspense } from 'react';
-import { defineMessages, injectIntl } from 'react-intl';
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import { Drafty } from 'tinode-sdk';
 
 // Lazy-loading AudioRecorder because it's quite large due to
@@ -267,7 +267,8 @@ class SendMessage extends React.PureComponent {
               {this.props.noInput ?
                 (quote || <div className="hr thin" />) :
                 (this.state.audioRec ?
-                  (<Suspense fallback={<div>Loading...</div>}>
+                  (<Suspense fallback={<div><FormattedMessage id="loading_note" defaultMessage="Loading..."
+                  description="Message shown when component is loading"/></div>}>
                     <AudioRecorder
                       onRecordingProgress={_ => this.props.onKeyPress(true)}
                       onDeleted={_ => this.setState({audioRec: false})}

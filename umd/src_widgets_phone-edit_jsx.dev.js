@@ -75,7 +75,7 @@ class PhoneEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       onChange: this.handleChange,
       maxLength: 17,
       onKeyDown: this.handleKeyDown,
-      onblur: this.handleFinished,
+      onBlur: this.handleFinished,
       required: true,
       autoFocus: this.props.autoFocus
     }));

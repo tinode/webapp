@@ -4320,7 +4320,9 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
     this.state = {
       login: '',
       password: '',
+      meth: '',
       email: '',
+      tel: '',
       fn: '',
       imageUrl: null,
       uploadUrl: null,
@@ -4328,11 +4330,13 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       newAvatarMime: null,
       errorCleared: false,
       buttonDisabled: false,
+      method: '',
       saveToken: _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_6__["default"].getObject('keep-logged-in')
     };
     this.handleLoginChange = this.handleLoginChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
     this.handleEmailChange = this.handleEmailChange.bind(this);
+    this.handlePhoneChange = this.handlePhoneChange.bind(this);
     this.handleFnChange = this.handleFnChange.bind(this);
     this.handleImageChanged = this.handleImageChanged.bind(this);
     this.handleToggleSaveToken = this.handleToggleSaveToken.bind(this);
@@ -4340,6 +4344,12 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
     this.handleAvatarCropCancel = this.handleAvatarCropCancel.bind(this);
     this.uploadAvatar = this.uploadAvatar.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    props.tinode.connect().catch(err => {
+      ;
+      this.props.onError(err.message, 'err');
+    }).finally(_ => this.setState({
+      method: (props.tinode.getServerParam('reqCred', {}).auth || [])[0] || 'email'
+    }));
   }
   handleLoginChange(e) {
     this.setState({
@@ -4348,12 +4358,19 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
   }
   handlePasswordChange(password) {
     this.setState({
+      meth: 'tel',
       password: password
     });
   }
   handleEmailChange(e) {
     this.setState({
+      meth: 'email',
       email: e.target.value
+    });
+  }
+  handlePhoneChange(number) {
+    this.setState({
+      tel: number
     });
   }
   handleFnChange(e) {
@@ -4379,8 +4396,8 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       errorCleared: false
     });
     this.props.onCreateAccount(this.state.login.trim(), this.state.password.trim(), (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_8__.theCard)(this.state.fn.trim().substring(0, _config_js__WEBPACK_IMPORTED_MODULE_9__.MAX_TITLE_LENGTH), this.state.uploadUrl), {
-      'meth': 'email',
-      'val': this.state.email
+      'meth': this.state.meth,
+      'val': this.state.meth == 'email' ? this.state.email : this.state.meth == 'tel' ? this.state.tel : null
     });
   }
   handleAvatarCropped(mime, blob, width, height) {
@@ -4506,7 +4523,7 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       value: this.state.fn,
       onChange: this.handleFnChange,
       required: true
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }))), this.state.method == 'email' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "email_prompt",
@@ -4521,19 +4538,25 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       value: this.state.email,
       onChange: this.handleEmailChange,
       required: true
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }))) : this.state.method == 'tel' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "small gray"
     }, "Mobile phone number:")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
-      fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Loading...")
+      fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+        id: "loading_note",
+        defaultMessage: [{
+          "type": 0,
+          "value": "Loading..."
+        }]
+      }))
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(PhoneEdit, {
       autoFocus: false,
       onShowCountrySelector: (code, dial) => console.log('onShowCountrySelector', code, dial),
       onSubmit: (code, dial) => console.log('onSubmit', code, dial)
-    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    })))) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
       id: "save-token",
@@ -15526,7 +15549,13 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     }, "attach_file"))) : null, this.props.noInput ? quote || react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "hr thin"
     }) : this.state.audioRec ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
-      fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Loading...")
+      fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+        id: "loading_note",
+        defaultMessage: [{
+          "type": 0,
+          "value": "Loading..."
+        }]
+      }))
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(AudioRecorder, {
       onRecordingProgress: _ => this.props.onKeyPress(true),
       onDeleted: _ => this.setState({

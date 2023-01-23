@@ -64,7 +64,7 @@ class PhoneEdit extends React.PureComponent {
           +{this.state.dialCode}&nbsp;</span>
         <input type="tel" placeholder={this.state.placeholder}
             value={this.state.localNumber} onChange={this.handleChange}
-            maxLength={17} onKeyDown={this.handleKeyDown} onblur={this.handleFinished}
+            maxLength={17} onKeyDown={this.handleKeyDown} onBlur={this.handleFinished}
             required autoFocus={this.props.autoFocus} />
       </>
     );

@@ -1556,5 +1556,12 @@
     "description": "Error message when uploaded video is invalid",
     "missing": false,
     "obsolete": false
+  },
+  "loading_note": {
+    "translation": "",
+    "defaultMessage": "Loading...",
+    "description": "Message shown when component is loading",
+    "missing": true,
+    "obsolete": false
   }
 }
