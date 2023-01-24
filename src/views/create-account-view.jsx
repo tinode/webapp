@@ -49,7 +49,7 @@ export default class CreateAccountView extends React.PureComponent {
     this.handleSubmit = this.handleSubmit.bind(this);
 
     props.tinode.connect()
-      .catch(err => {;
+      .catch(err => {
         this.props.onError(err.message, 'err');
       })
       // "reqCred":{"auth":["email"]}
@@ -201,7 +201,8 @@ export default class CreateAccountView extends React.PureComponent {
           </div>
           : this.state.method == 'tel' ?
           <><div className="panel-form-row">
-            <label className="small gray">Mobile phone number:</label>
+            <label className="small gray"><FormattedMessage id="mobile_phone_number" defaultMessage="Mobile phone number"
+              description="Prompt for entering a mobile phone number" /></label>
           </div>
           <div className="panel-form-row">
             <Suspense fallback={<div><FormattedMessage id="loading_note" defaultMessage="Loading..."

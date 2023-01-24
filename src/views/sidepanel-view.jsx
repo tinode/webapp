@@ -245,6 +245,7 @@ class SidepanelView extends React.PureComponent {
 
           view === 'reset' ?
           <PasswordResetView
+            tinode={this.props.tinode}
             onRequest={this.props.onPasswordResetRequest}
             onReset={this.props.onResetPassword}
             onCancel={this.props.onCancel} /> :

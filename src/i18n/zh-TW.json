@@ -1308,7 +1308,7 @@
   },
   "password_reset_email_sent": {
     "translation": "一封電子郵件已發送至 {email}。按照電子郵件中的說明重置密碼。",
-    "defaultMessage": "An email has been sent to {email}. Follow the directions in the email to reset your password.",
+    "defaultMessage": "An email with security code has been sent to {email}. Enter the code below.",
     "description": "Notification that the email with password reset instructions has been sent",
     "missing": false,
     "obsolete": false
@@ -1561,6 +1561,41 @@
     "translation": "",
     "defaultMessage": "Loading...",
     "description": "Message shown when component is loading",
+    "missing": true,
+    "obsolete": false
+  },
+  "password_i_have_code": {
+    "translation": "",
+    "defaultMessage": "I have code",
+    "description": "Call to open field to enter password reset code",
+    "missing": true,
+    "obsolete": false
+  },
+  "uG7N1B": {
+    "translation": "",
+    "defaultMessage": "Mobile phone number",
+    "description": "Prompt for entering a mobile phone number",
+    "missing": true,
+    "obsolete": true
+  },
+  "label_reset_password_tel": {
+    "translation": "",
+    "defaultMessage": "Send a password reset SMS:",
+    "description": "Label for password reset field by phone",
+    "missing": true,
+    "obsolete": false
+  },
+  "mobile_phone_number": {
+    "translation": "",
+    "defaultMessage": "Mobile phone number",
+    "description": "Prompt for entering a mobile phone number",
+    "missing": true,
+    "obsolete": false
+  },
+  "password_reset_sms_sent": {
+    "translation": "",
+    "defaultMessage": "A text message with security code has been sent to {phone}. Enter the code below.",
+    "description": "Notification that the SMS with password reset instructions has been sent",
     "missing": true,
     "obsolete": false
   }

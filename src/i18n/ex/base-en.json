@@ -418,6 +418,10 @@
     "defaultMessage": "Send a password reset email:",
     "description": "Label for password reset field"
   },
+  "label_reset_password_tel": {
+    "defaultMessage": "Send a password reset SMS:",
+    "description": "Label for password reset field by phone"
+  },
   "label_sdk": {
     "defaultMessage": "SDK:"
   },
@@ -600,6 +604,10 @@
     "defaultMessage": "Messaging disabled",
     "description": "Prompt in SendMessage in read-only topic"
   },
+  "mobile_phone_number": {
+    "defaultMessage": "Mobile phone number",
+    "description": "Prompt for entering a mobile phone number"
+  },
   "more_online_members": {
     "defaultMessage": "+{overflow} more",
     "description": "Shown in MessagesView title bar when the number of online subscribers exceeds MAX_ONLINE_IN_TOPIC"
@@ -648,13 +656,21 @@
     "defaultMessage": "Security",
     "description": "Title for TopicSecirity and AccSecurity."
   },
+  "password_i_have_code": {
+    "defaultMessage": "I have code",
+    "description": "Call to open field to enter password reset code"
+  },
   "password_prompt": {
     "defaultMessage": "Password",
     "description": "Placeholder/prompt for entering password"
   },
   "password_reset_email_sent": {
-    "defaultMessage": "An email has been sent to {email}. Follow the directions in the email to reset your password.",
+    "defaultMessage": "An email with security code has been sent to {email}. Enter the code below.",
     "description": "Notification that the email with password reset instructions has been sent"
+  },
+  "password_reset_sms_sent": {
+    "defaultMessage": "A text message with security code has been sent to {phone}. Enter the code below.",
+    "description": "Notification that the SMS with password reset instructions has been sent"
   },
   "password_unchanged_prompt": {
     "defaultMessage": "Unchanged",
