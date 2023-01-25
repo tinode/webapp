@@ -9779,7 +9779,7 @@ __webpack_require__.r(__webpack_exports__);
 
 class Alert extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
-    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "alert-container"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "alert"

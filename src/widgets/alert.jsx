@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl';
 
 export default class Alert extends React.PureComponent {
   render() {
-    <div className="alert-container">
+    return (<div className="alert-container">
       <div className="alert">
         <div className="title">{this.props.title}</div>
         <div className="content">{this.props.content}</div>
@@ -20,6 +20,6 @@ export default class Alert extends React.PureComponent {
           </button>
         </div>
       </div>
-    </div>
+    </div>);
   }
 };
