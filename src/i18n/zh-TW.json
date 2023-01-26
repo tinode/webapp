@@ -358,7 +358,7 @@
   },
   "enter_confirmation_code_prompt": {
     "translation": "輸入透過 {method} 傳送給您的確認碼：",
-    "defaultMessage": "Enter confirmation code sent to you by {method}:",
+    "defaultMessage": "Confirmation code",
     "description": "Request to enter confirmation code",
     "missing": false,
     "obsolete": false
@@ -533,7 +533,7 @@
   },
   "label_reset_password": {
     "translation": "傳送重設密碼郵件：",
-    "defaultMessage": "Send a password reset email:",
+    "defaultMessage": "Send a password reset email",
     "description": "Label for password reset field",
     "missing": false,
     "obsolete": false
@@ -1544,10 +1544,10 @@
     "obsolete": false
   },
   "menu_item_audio_call": {
-    "translation": "",
+    "translation": "稱呼",
     "defaultMessage": "Call",
     "description": "Start audio call",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "unrecognized_video_format": {
@@ -1558,45 +1558,45 @@
     "obsolete": false
   },
   "loading_note": {
-    "translation": "",
+    "translation": "加載中...",
     "defaultMessage": "Loading...",
     "description": "Message shown when component is loading",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "password_i_have_code": {
-    "translation": "",
+    "translation": "我有代碼",
     "defaultMessage": "I have code",
     "description": "Call to open field to enter password reset code",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
-  "uG7N1B": {
-    "translation": "",
-    "defaultMessage": "Mobile phone number",
-    "description": "Prompt for entering a mobile phone number",
-    "missing": true,
-    "obsolete": true
-  },
   "label_reset_password_tel": {
-    "translation": "",
-    "defaultMessage": "Send a password reset SMS:",
+    "translation": "發送短信重置密碼",
+    "defaultMessage": "Send SMS to reset password",
     "description": "Label for password reset field by phone",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "mobile_phone_number": {
-    "translation": "",
+    "translation": "手機號碼",
     "defaultMessage": "Mobile phone number",
     "description": "Prompt for entering a mobile phone number",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "password_reset_sms_sent": {
-    "translation": "",
+    "translation": "帶有安全碼的短信已發送至{phone}。請在下方輸入密碼。",
     "defaultMessage": "A text message with security code has been sent to {phone}. Enter the code below.",
     "description": "Notification that the SMS with password reset instructions has been sent",
-    "missing": true,
+    "missing": false,
+    "obsolete": false
+  },
+  "mobile_number_required": {
+    "translation": "需要手機號",
+    "defaultMessage": "Mobile phone number required",
+    "description": "Error message",
+    "missing": false,
     "obsolete": false
   }
 }

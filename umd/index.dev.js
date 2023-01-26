@@ -4330,7 +4330,6 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       newAvatarMime: null,
       errorCleared: false,
       buttonDisabled: false,
-      method: 'tel',
       saveToken: _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_6__["default"].getObject('keep-logged-in')
     };
     this.handleLoginChange = this.handleLoginChange.bind(this);
@@ -4454,6 +4453,7 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
     }
   }
   render() {
+    const method = (this.props.tinode.getServerParam('reqCred', {}).auth || [])[0] || 'email';
     if (this.state.newAvatar) {
       return react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_avatar_crop_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
         avatar: this.state.newAvatar,
@@ -4473,7 +4473,7 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-column"
+      className: "umn"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "login_prompt",
       defaultMessage: [{
@@ -4520,7 +4520,7 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       value: this.state.fn,
       onChange: this.handleFnChange,
       required: true
-    }))), this.state.method == 'email' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }))), method == 'email' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "email_prompt",
@@ -4535,7 +4535,7 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       value: this.state.email,
       onChange: this.handleEmailChange,
       required: true
-    }))) : this.state.method == 'tel' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }))) : method == 'tel' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "small gray"
@@ -7179,18 +7179,17 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       email: '',
       password: '',
       sent: false,
-      method: '',
-      haveCode: false
+      haveCode: false,
+      code: ''
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleEmailChange = this.handleEmailChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
+    this.handleCodeChange = this.handleCodeChange.bind(this);
     this.handleShowCodeField = this.handleShowCodeField.bind(this);
     props.tinode.connect().catch(err => {
       this.props.onError(err.message, 'err');
-    }).finally(_ => this.setState({
-      method: (props.tinode.getServerParam('reqCred', {}).auth || [])[0] || 'email'
-    }));
+    });
   }
   componentDidMount() {
     const parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_3__["default"].parseUrlHash(window.location.hash);
@@ -7202,15 +7201,24 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
   handleSubmit(e) {
     e.preventDefault();
     if (this.state.token) {
-      this.props.onReset(this.state.scheme, this.state.password.trim(), this.state.token);
-    } else if (this.state.sent) {
-      this.props.onCancel();
+      this.props.onReset(this.state.password.trim(), {
+        scheme: 'token',
+        token: this.state.token
+      });
+    } else if (this.state.code && this.method) {
+      const cred = this.state.email.trim() || this.state.tel.trim();
+      this.props.onReset(this.state.password.trim(), {
+        scheme: 'code',
+        secret: `${this.state.code}:${this.method}:${cred}`
+      });
     } else {
       const email = this.state.email.trim();
+      const tel = this.state.tel.trim();
       this.setState({
-        email: email
+        email: email,
+        tel: tel
       });
-      this.props.onRequest('email', email).then(_ => this.setState({
+      this.props.onRequest(this.method, email || tel).then(_ => this.setState({
         sent: true
       }));
     }
@@ -7225,6 +7233,11 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       password: e.target.value
     });
   }
+  handleCodeChange(e) {
+    this.setState({
+      code: e.target.value.replace(/[^\d]/g, '')
+    });
+  }
   handleShowCodeField(e) {
     e.preventDefault();
     this.setState({
@@ -7232,8 +7245,11 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
     });
   }
   render() {
-    const showPasswordInput = this.state.token && this.state.scheme || this.state.haveCode;
+    this.method = (this.props.tinode.getServerParam('reqCred', {}).auth || [])[0] || 'email';
+    const showCredentialInput = !(this.state.token && this.state.scheme);
+    const showPasswordInput = !showCredentialInput || this.state.haveCode || this.state.sent;
     const passwordInput = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+      className: "small gray",
       htmlFor: "new-password"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_new_password",
@@ -7262,7 +7278,7 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       id: "label_reset_password",
       defaultMessage: [{
         "type": 0,
-        "value": "Send a password reset email:"
+        "value": "Send a password reset email"
       }]
     })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "credential_email_prompt",
@@ -7280,13 +7296,13 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       required: true,
       autoFocus: true
     })));
-    const phoneInput = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, this.state.haveCode ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+    const phoneInput = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, this.state.haveCode ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "label_reset_password_tel",
       defaultMessage: [{
         "type": 0,
-        "value": "Send a password reset SMS:"
+        "value": "Send SMS to reset password"
       }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "small gray"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "mobile_phone_number",
@@ -7294,8 +7310,12 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
         "type": 0,
         "value": "Mobile phone number"
       }]
-    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
-      fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "panel-form-row"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
+      fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+        className: "panel-form-row"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
         id: "loading_note",
         defaultMessage: [{
           "type": 0,
@@ -7303,16 +7323,13 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
         }]
       }))
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(PhoneEdit, {
-      autoFocus: false,
-      onShowCountrySelector: (code, dial) => console.log('onShowCountrySelector', code, dial),
-      onSubmit: (code, dial) => console.log('onSubmit', code, dial)
-    })));
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
-      id: "password-reset-form",
-      onSubmit: this.handleSubmit
-    }, showPasswordInput ? passwordInput : this.state.sent ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("center", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
-      className: "material-icons huge green"
-    }, "task_alt")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("center", null, this.state.method == 'email' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      autoFocus: true,
+      onShowCountrySelector: this.props.onShowCountrySelector,
+      onSubmit: number => this.setState({
+        tel: number
+      })
+    }))));
+    const sentNotification = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, this.method == 'email' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "password_reset_email_sent",
       defaultMessage: [{
         "type": 0,
@@ -7327,7 +7344,7 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       values: {
         email: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", null, this.state.email)
       }
-    }) : this.state.method == 'tel' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+    }) : this.method == 'tel' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "password_reset_sms_sent",
       defaultMessage: [{
         "type": 0,
@@ -7340,41 +7357,65 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
         "value": ". Enter the code below."
       }],
       values: {
-        email: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", null, this.state.tel)
+        phone: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", null, this.state.tel)
       }
-    }) : null)) : this.state.method == 'email' ? emailInput : this.state.method == 'tel' ? phoneInput : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }) : null);
+    const codeInput = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+      className: "small gray",
+      htmlFor: "enter-confirmation-code"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "enter_confirmation_code_prompt",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Confirmation code"
+      }]
+    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "numeric_confirmation_code_prompt",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Numbers only"
+      }]
+    }, numbers_only => react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+      type: "text",
+      id: "enter-confirmation-code",
+      placeholder: numbers_only,
+      maxLength: 10,
+      value: this.state.code,
+      onChange: this.handleCodeChange,
+      required: true
+    }))));
+    const credentialInput = this.method == 'email' ? emailInput : this.method == 'tel' ? phoneInput : null;
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
+      id: "password-reset-form",
+      onSubmit: this.handleSubmit
+    }, this.state.sent ? sentNotification : showCredentialInput ? credentialInput : null, this.state.haveCode || this.state.sent ? codeInput : null, showPasswordInput ? passwordInput : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "dialog-buttons"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+    }, this.state.haveCode || this.state.sent ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+      href: "#",
+      onClick: this.handleShowCodeField,
+      style: {
+        marginRight: 'auto'
+      }
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "password_i_have_code",
+      defaultMessage: [{
+        "type": 0,
+        "value": "I have code"
+      }]
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       className: "primary",
       type: "submit"
-    }, this.state.token && this.state.scheme ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+    }, showPasswordInput ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_reset",
       defaultMessage: [{
         "type": 0,
         "value": "Reset"
-      }]
-    }) : this.state.sent ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "button_ok",
-      defaultMessage: [{
-        "type": 0,
-        "value": "OK"
       }]
     }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "button_send_request",
       defaultMessage: [{
         "type": 0,
         "value": "Send request"
-      }]
-    }))), this.state.haveCode ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
-      href: "#",
-      onClick: this.handleShowCodeField
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "password_i_have_code",
-      defaultMessage: [{
-        "type": 0,
-        "value": "I have code"
       }]
     }))));
   }
@@ -7729,6 +7770,7 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       onPersistenceChange: this.props.onPersistenceChange
     }) : view === 'register' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_create_account_view_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
       tinode: this.props.tinode,
+      serverVersion: this.props.serverVersion,
       onShowCountrySelector: this.props.onShowCountrySelector,
       onCreateAccount: this.props.onCreateAccount,
       onCancel: this.props.onCancel,
@@ -7799,6 +7841,8 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       onCancel: this.props.onCancel
     }) : view === 'reset' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_password_reset_view_jsx__WEBPACK_IMPORTED_MODULE_14__["default"], {
       tinode: this.props.tinode,
+      serverVersion: this.props.serverVersion,
+      onShowCountrySelector: this.props.onShowCountrySelector,
       onRequest: this.props.onPasswordResetRequest,
       onReset: this.props.onResetPassword,
       onCancel: this.props.onCancel
@@ -9365,13 +9409,14 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       this.handleError(err.message, 'err');
     });
   }
-  handleResetPassword(scheme, newPassword, token) {
-    token = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.base64ReEncode)(token);
-    if (!token) {
+  handleResetPassword(newPassword, tempAuth) {
+    const secret = (0,_lib_blob_helpers_js__WEBPACK_IMPORTED_MODULE_15__.base64ReEncode)(tempAuth.secret);
+    if (!secret || !tempAuth.scheme) {
       this.handleError(this.props.intl.formatMessage(messages.invalid_security_token), 'err');
     } else {
       this.tinode.connect().then(_ => this.tinode.updateAccountBasic(null, null, newPassword, {
-        token: token
+        scheme: tempAuth.scheme,
+        secret: secret
       })).then(_ => _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].navigateTo('')).catch(err => {
         this.handleError(err.message, 'err');
       });
@@ -9839,19 +9884,13 @@ class ValidationView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
-      className: "small",
+      className: "small gray",
       htmlFor: "enter-confirmation-code"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "enter_confirmation_code_prompt",
       defaultMessage: [{
         "type": 0,
-        "value": "Enter confirmation code sent to you by "
-      }, {
-        "type": 1,
-        "value": "method"
-      }, {
-        "type": 0,
-        "value": ":"
+        "value": "Confirmation code"
       }],
       values: {
         method: method

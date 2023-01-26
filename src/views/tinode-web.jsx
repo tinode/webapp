@@ -1712,13 +1712,13 @@ class TinodeWeb extends React.Component {
       });
   }
 
-  handleResetPassword(scheme, newPassword, token) {
-    token = base64ReEncode(token);
-    if (!token) {
+  handleResetPassword(newPassword, tempAuth) {
+    const secret = base64ReEncode(tempAuth.secret);
+    if (!secret || !tempAuth.scheme) {
       this.handleError(this.props.intl.formatMessage(messages.invalid_security_token), 'err');
     } else {
       this.tinode.connect()
-        .then(_ => this.tinode.updateAccountBasic(null, null, newPassword, {token: token}))
+        .then(_ => this.tinode.updateAccountBasic(null, null, newPassword, {scheme: tempAuth.scheme, secret: secret}))
         .then(_ => HashNavigation.navigateTo(''))
         .catch(err => {
           // Socket error

@@ -358,7 +358,7 @@
   },
   "enter_confirmation_code_prompt": {
     "translation": "{방법}으로보낸확인코드를입력하십시오:",
-    "defaultMessage": "Enter confirmation code sent to you by {method}:",
+    "defaultMessage": "Confirmation code",
     "description": "Request to enter confirmation code",
     "missing": false,
     "obsolete": false
@@ -533,7 +533,7 @@
   },
   "label_reset_password": {
     "translation": "비밀번호재설정이메일보내기: ",
-    "defaultMessage": "Send a password reset email:",
+    "defaultMessage": "Send a password reset email",
     "description": "Label for password reset field",
     "missing": false,
     "obsolete": false
@@ -1544,10 +1544,10 @@
     "obsolete": false
   },
   "menu_item_audio_call": {
-    "translation": "",
+    "translation": "부르다",
     "defaultMessage": "Call",
     "description": "Start audio call",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "unrecognized_video_format": {
@@ -1558,45 +1558,45 @@
     "obsolete": false
   },
   "loading_note": {
-    "translation": "",
+    "translation": "로드 중...",
     "defaultMessage": "Loading...",
     "description": "Message shown when component is loading",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "password_i_have_code": {
-    "translation": "",
+    "translation": "코드가 있습니다",
     "defaultMessage": "I have code",
     "description": "Call to open field to enter password reset code",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
-  "uG7N1B": {
-    "translation": "",
-    "defaultMessage": "Mobile phone number",
-    "description": "Prompt for entering a mobile phone number",
-    "missing": true,
-    "obsolete": true
-  },
   "label_reset_password_tel": {
-    "translation": "",
-    "defaultMessage": "Send a password reset SMS:",
+    "translation": "비밀번호 재설정을 위해 SMS 보내기",
+    "defaultMessage": "Send SMS to reset password",
     "description": "Label for password reset field by phone",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "mobile_phone_number": {
-    "translation": "",
+    "translation": "휴대전화 번호",
     "defaultMessage": "Mobile phone number",
     "description": "Prompt for entering a mobile phone number",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "password_reset_sms_sent": {
-    "translation": "",
+    "translation": "보안 코드가 포함된 문자 메시지가 {phone}로 전송되었습니다. 아래 코드를 입력하세요.",
     "defaultMessage": "A text message with security code has been sent to {phone}. Enter the code below.",
     "description": "Notification that the SMS with password reset instructions has been sent",
-    "missing": true,
+    "missing": false,
+    "obsolete": false
+  },
+  "mobile_number_required": {
+    "translation": "휴대전화 번호 필요",
+    "defaultMessage": "Mobile phone number required",
+    "description": "Error message",
+    "missing": false,
     "obsolete": false
   }
 }

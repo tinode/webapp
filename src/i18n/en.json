@@ -357,8 +357,8 @@
     "obsolete": false
   },
   "enter_confirmation_code_prompt": {
-    "translation": "Enter confirmation code sent to you by {method}:",
-    "defaultMessage": "Enter confirmation code sent to you by {method}:",
+    "translation": "Confirmation code",
+    "defaultMessage": "Confirmation code",
     "description": "Request to enter confirmation code",
     "missing": false,
     "obsolete": false
@@ -533,7 +533,7 @@
   },
   "label_reset_password": {
     "translation": "Send a password reset email:",
-    "defaultMessage": "Send a password reset email:",
+    "defaultMessage": "Send a password reset email",
     "description": "Label for password reset field",
     "missing": false,
     "obsolete": false
@@ -1571,16 +1571,9 @@
     "missing": false,
     "obsolete": false
   },
-  "uG7N1B": {
-    "translation": "Mobile phone number",
-    "defaultMessage": "Mobile phone number",
-    "description": "Prompt for entering a mobile phone number",
-    "missing": false,
-    "obsolete": true
-  },
   "label_reset_password_tel": {
     "translation": "Send a password reset SMS:",
-    "defaultMessage": "Send a password reset SMS:",
+    "defaultMessage": "Send SMS to reset password",
     "description": "Label for password reset field by phone",
     "missing": false,
     "obsolete": false
@@ -1596,6 +1589,13 @@
     "translation": "A text message with security code has been sent to {phone}. Enter the code below.",
     "defaultMessage": "A text message with security code has been sent to {phone}. Enter the code below.",
     "description": "Notification that the SMS with password reset instructions has been sent",
+    "missing": false,
+    "obsolete": false
+  },
+  "mobile_number_required": {
+    "translation": "Mobile phone number required",
+    "defaultMessage": "Mobile phone number required",
+    "description": "Error message",
     "missing": false,
     "obsolete": false
   }

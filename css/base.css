@@ -774,6 +774,7 @@ table.permission-editor td.checkbox {
   display: flex;
   padding: 0.5rem;
   justify-content: flex-end;
+  align-items: center;
 }
 
 .dialog-buttons button {

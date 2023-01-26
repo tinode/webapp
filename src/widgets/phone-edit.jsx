@@ -1,12 +1,20 @@
 // Editor for a phone number.
 
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { getExampleNumber, parsePhoneNumber } from 'libphonenumber-js/mobile';
 import examples from 'libphonenumber-js/mobile/examples'
 
 import * as dcodes from '../dcodes.json';
 import { flagEmoji } from '../lib/strformat';
+
+const messages = defineMessages({
+  mobile_number_required: {
+    id: 'mobile_number_required',
+    defaultMessage: 'Mobile phone number required',
+    description: 'Error message'
+  }
+});
 
 class PhoneEdit extends React.PureComponent {
   constructor(props) {
@@ -37,14 +45,14 @@ class PhoneEdit extends React.PureComponent {
 
   handleFinished(e) {
     e.preventDefault();
-    const raw = `${this.state.dialCode}${this.state.localNumber.trim()}`.replace(/[^\d]/g, '')
+    const raw = `${this.state.dialCode}${this.state.localNumber.trim()}`.replace(/[^\d]/g, '');
     let number = null;
     try {
-      number = parsePhoneNumber(raw);
+      number = parsePhoneNumber(`+${raw}`);
     } catch (err) {}
 
     if (!number || !number.isValid()) {
-      this.inputField.setCustomValidity("Mobile phone number required");
+      this.inputField.setCustomValidity(this.props.intl.formatMessage(messages.mobile_number_required));
       return;
     }
     this.props.onSubmit(number.format('E.164'));
@@ -80,7 +88,7 @@ class PhoneEdit extends React.PureComponent {
 
   placeholderNumber(code, dial) {
     const sample = getExampleNumber(code, examples);
-    return sample ? sample.formatInternational().substring(dial.length + 1).trim() : '123 456';
+    return sample ? sample.formatInternational().substring(dial.length + 1).trim() : '123 0123';
   }
 
   render() {

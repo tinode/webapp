@@ -32,8 +32,6 @@ export default class CreateAccountView extends React.PureComponent {
       newAvatarMime: null,
       errorCleared: false,
       buttonDisabled: false,
-      // method: '',
-      method: 'tel',
       saveToken: LocalStorageUtil.getObject('keep-logged-in')
     };
 
@@ -49,12 +47,11 @@ export default class CreateAccountView extends React.PureComponent {
     this.uploadAvatar = this.uploadAvatar.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
 
+    // Connection will trigger change by changing the this.props.serverVersion.
     props.tinode.connect()
       .catch(err => {
         this.props.onError(err.message, 'err');
-      })
-      // "reqCred":{"auth":["email"]}
-      //.finally(_ => this.setState({method: (props.tinode.getServerParam('reqCred', {}).auth || [])[0] || 'email'}));
+      });
   }
 
   handleLoginChange(e) {
@@ -147,6 +144,9 @@ export default class CreateAccountView extends React.PureComponent {
   }
 
   render() {
+    // "reqCred":{"auth":["email"]}
+    const method = (this.props.tinode.getServerParam('reqCred', {}).auth || [])[0] || 'email';
+
     if (this.state.newAvatar) {
       return (
         <AvatarCrop
@@ -166,7 +166,7 @@ export default class CreateAccountView extends React.PureComponent {
     return (
       <form className="panel-form-column" onSubmit={this.handleSubmit}>
         <div className="panel-form-row">
-          <div className="panel-form-column">
+          <div className="umn">
             <FormattedMessage id="login_prompt" defaultMessage="Login"
               description="Placeholer for username/login">{
               (login_prompt) => <input type="text" placeholder={login_prompt} autoComplete="user-name"
@@ -192,7 +192,7 @@ export default class CreateAccountView extends React.PureComponent {
               value={this.state.fn} onChange={this.handleFnChange} required/>
           }</FormattedMessage>
         </div>
-        {this.state.method == 'email' ?
+        {method == 'email' ?
           <div className="panel-form-row">
             <FormattedMessage id="email_prompt" defaultMessage="Email, e.g. jdoe@example.com"
               description="Input placeholder for email entry">{
@@ -200,7 +200,7 @@ export default class CreateAccountView extends React.PureComponent {
                 value={this.state.email} onChange={this.handleEmailChange} required/>
             }</FormattedMessage>
           </div>
-          : this.state.method == 'tel' ?
+          : method == 'tel' ?
           <><div className="panel-form-row">
             <label className="small gray"><FormattedMessage id="mobile_phone_number" defaultMessage="Mobile phone number"
               description="Prompt for entering a mobile phone number" /></label>

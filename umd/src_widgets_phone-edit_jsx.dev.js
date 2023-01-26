@@ -26,6 +26,15 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
+  mobile_number_required: {
+    id: "mobile_number_required",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Mobile phone number required"
+    }]
+  }
+});
 class PhoneEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
@@ -56,10 +65,10 @@ class PhoneEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     const raw = `${this.state.dialCode}${this.state.localNumber.trim()}`.replace(/[^\d]/g, '');
     let number = null;
     try {
-      number = (0,libphonenumber_js_mobile__WEBPACK_IMPORTED_MODULE_4__.parsePhoneNumberWithError)(raw);
+      number = (0,libphonenumber_js_mobile__WEBPACK_IMPORTED_MODULE_4__.parsePhoneNumberWithError)(`+${raw}`);
     } catch (err) {}
     if (!number || !number.isValid()) {
-      this.inputField.setCustomValidity("Mobile phone number required");
+      this.inputField.setCustomValidity(this.props.intl.formatMessage(messages.mobile_number_required));
       return;
     }
     this.props.onSubmit(number.format('E.164'));
@@ -86,7 +95,7 @@ class PhoneEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   }
   placeholderNumber(code, dial) {
     const sample = (0,libphonenumber_js_mobile__WEBPACK_IMPORTED_MODULE_5__.getExampleNumber)(code, libphonenumber_js_mobile_examples__WEBPACK_IMPORTED_MODULE_6__["default"]);
-    return sample ? sample.formatInternational().substring(dial.length + 1).trim() : '123 456';
+    return sample ? sample.formatInternational().substring(dial.length + 1).trim() : '123 0123';
   }
   render() {
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {

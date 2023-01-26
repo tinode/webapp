@@ -157,6 +157,7 @@ class SidepanelView extends React.PureComponent {
           view === 'register' ?
           <CreateAccountView
             tinode={this.props.tinode}
+            serverVersion={this.props.serverVersion}
             onShowCountrySelector={this.props.onShowCountrySelector}
             onCreateAccount={this.props.onCreateAccount}
             onCancel={this.props.onCancel}
@@ -247,6 +248,8 @@ class SidepanelView extends React.PureComponent {
           view === 'reset' ?
           <PasswordResetView
             tinode={this.props.tinode}
+            serverVersion={this.props.serverVersion}
+            onShowCountrySelector={this.props.onShowCountrySelector}
             onRequest={this.props.onPasswordResetRequest}
             onReset={this.props.onResetPassword}
             onCancel={this.props.onCancel} /> :

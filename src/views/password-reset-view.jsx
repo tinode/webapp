@@ -16,21 +16,21 @@ export default class PasswordResetView extends React.PureComponent {
       email: '',
       password: '',
       sent: false,
-      method: '',
-      haveCode: false
+      haveCode: false,
+      code: ''
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleEmailChange = this.handleEmailChange.bind(this);
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
+    this.handleCodeChange = this.handleCodeChange.bind(this);
     this.handleShowCodeField = this.handleShowCodeField.bind(this);
 
+    // Connection will trigger change by changing the this.props.serverVersion.
     props.tinode.connect()
       .catch(err => {
         this.props.onError(err.message, 'err');
-      })
-      // "reqCred":{"auth":["email"]}
-      .finally(_ => this.setState({method: (props.tinode.getServerParam('reqCred', {}).auth || [])[0] || 'email'}));
+      });
   }
 
   componentDidMount() {
@@ -41,13 +41,24 @@ export default class PasswordResetView extends React.PureComponent {
   handleSubmit(e) {
     e.preventDefault();
     if (this.state.token) {
-      this.props.onReset(this.state.scheme, this.state.password.trim(), this.state.token);
-    } else if (this.state.sent) {
-      this.props.onCancel();
+      // Reset using token.
+      this.props.onReset(this.state.password.trim(), {
+        scheme: 'token',
+        token: this.state.token
+      });
+    } else if (this.state.code && this.method) {
+      // Reset using security code.
+      // The secret is structured as <code>:<cred_method>:<cred_value>, "123456:email:alice@example.com".
+      const cred = this.state.email.trim() || this.state.tel.trim();
+      this.props.onReset(this.state.password.trim(), {
+        scheme: 'code',
+        secret: `${this.state.code}:${this.method}:${cred}`
+      });
     } else {
       const email = this.state.email.trim();
-      this.setState({email: email});
-      this.props.onRequest('email', email).then(_ => this.setState({sent: true}));
+      const tel = this.state.tel.trim();
+      this.setState({email: email, tel: tel});
+      this.props.onRequest(this.method, email || tel).then(_ => this.setState({sent: true}));
     }
   }
 
@@ -59,15 +70,24 @@ export default class PasswordResetView extends React.PureComponent {
     this.setState({password: e.target.value});
   }
 
+  handleCodeChange(e) {
+    this.setState({code: e.target.value.replace(/[^\d]/g, '')});
+  }
+
   handleShowCodeField(e) {
     e.preventDefault();
     this.setState({haveCode: true});
   }
 
   render() {
-    const showPasswordInput = (this.state.token && this.state.scheme) || this.state.haveCode;
+    // "reqCred":{"auth":["email"]}
+    this.method = (this.props.tinode.getServerParam('reqCred', {}).auth || [])[0] || 'email';
+
+    const showCredentialInput = !(this.state.token && this.state.scheme);
+    const showPasswordInput = !showCredentialInput || this.state.haveCode || this.state.sent;
+
     const passwordInput = (<>
-        <label htmlFor="new-password">
+        <label className="small gray" htmlFor="new-password">
           <FormattedMessage id="label_new_password"
             defaultMessage="New password"
             description="Label for entering a new password" />
@@ -89,7 +109,7 @@ export default class PasswordResetView extends React.PureComponent {
           null :
           <label htmlFor="inputEmail">
             <FormattedMessage id="label_reset_password"
-              defaultMessage="Send a password reset email:"
+              defaultMessage="Send a password reset email"
               description="Label for password reset field" />
           </label>
         }
@@ -107,71 +127,84 @@ export default class PasswordResetView extends React.PureComponent {
     const phoneInput = (<>
         {this.state.haveCode ?
           null :
-          <label>
+          <div><label>
             <FormattedMessage id="label_reset_password_tel"
-              defaultMessage="Send a password reset SMS:"
+              defaultMessage="Send SMS to reset password"
               description="Label for password reset field by phone" />
-          </label>
+          </label></div>
         }
-        <label className="small gray">
-          <FormattedMessage id="mobile_phone_number" defaultMessage="Mobile phone number"
-            description="Prompt for entering a mobile phone number" />
-        </label>
-        <Suspense fallback={<div><FormattedMessage id="loading_note" defaultMessage="Loading..."
-          description="Message shown when component is loading"/></div>}>
-          <PhoneEdit
-            autoFocus={false}
-            onShowCountrySelector={(code, dial) => console.log('onShowCountrySelector', code, dial)}
-            onSubmit={(code, dial) => console.log('onSubmit', code, dial)} />
-        </Suspense>
+        <div>
+          <label className="small gray">
+            <FormattedMessage id="mobile_phone_number" defaultMessage="Mobile phone number"
+              description="Prompt for entering a mobile phone number" />
+          </label>
+        </div>
+        <div className="panel-form-row">
+          <Suspense fallback={<div className="panel-form-row"><FormattedMessage id="loading_note"
+            defaultMessage="Loading..." description="Message shown when component is loading"/></div>}>
+            <PhoneEdit
+              autoFocus={true}
+              onShowCountrySelector={this.props.onShowCountrySelector}
+              onSubmit={number => this.setState({tel: number})} />
+          </Suspense>
+        </div>
       </>);
+
+    const sentNotification = (<>{
+        this.method == 'email' ?
+          <FormattedMessage id="password_reset_email_sent"
+            defaultMessage="An email with security code has been sent to {email}. Enter the code below."
+            values={{email: <tt>{this.state.email}</tt>}}
+            description="Notification that the email with password reset instructions has been sent" />
+        : this.method == 'tel' ?
+          <FormattedMessage id="password_reset_sms_sent"
+            defaultMessage="A text message with security code has been sent to {phone}. Enter the code below."
+            values={{phone: <tt>{this.state.tel}</tt>}}
+            description="Notification that the SMS with password reset instructions has been sent" />
+        :
+        null
+      }</>);
+
+    const codeInput = (<>
+        <div>
+          <label className="small gray" htmlFor="enter-confirmation-code">
+            <FormattedMessage id="enter_confirmation_code_prompt"
+              defaultMessage="Confirmation code"
+              description="Request to enter confirmation code" />
+          </label>
+        </div>
+        <div>
+          <FormattedMessage id="numeric_confirmation_code_prompt"
+            defaultMessage="Numbers only" description="Prompt for numeric conformation code">{
+            (numbers_only) => <input type="text" id="enter-confirmation-code"
+              placeholder={numbers_only} maxLength={10}
+              value={this.state.code} onChange={this.handleCodeChange} required />
+          }</FormattedMessage>
+        </div>
+      </>);
+
+    const credentialInput = this.method == 'email' ? emailInput : this.method == 'tel' ? phoneInput : null;
 
     return (
       <form id="password-reset-form" onSubmit={this.handleSubmit}>
-        {showPasswordInput ?
-          passwordInput
-        : this.state.sent ?
-          <>
-            <br/>
-            <center><i className="material-icons huge green">task_alt</i></center>
-            <br/>
-            <center>{
-              this.state.method == 'email' ?
-                <FormattedMessage id="password_reset_email_sent"
-                  defaultMessage="An email with security code has been sent to {email}. Enter the code below."
-                  values={{ email: <tt>{this.state.email}</tt> }}
-                  description="Notification that the email with password reset instructions has been sent" />
-              : this.state.method == 'tel' ?
-                <FormattedMessage id="password_reset_sms_sent"
-                  defaultMessage="A text message with security code has been sent to {phone}. Enter the code below."
-                  values={{ email: <tt>{this.state.tel}</tt> }}
-                  description="Notification that the SMS with password reset instructions has been sent" />
-              :
-              null
-            }</center>
-          </>
-        : this.state.method == 'email' ? emailInput : this.state.method == 'tel' ? phoneInput : null
-        }
+        {this.state.sent ? sentNotification : showCredentialInput ? credentialInput : null}
+        {this.state.haveCode || this.state.sent ? codeInput : null}
+        {showPasswordInput ? passwordInput : null}
         <div className="dialog-buttons">
-          <button className="primary" type="submit">{
-            (this.state.token && this.state.scheme) ?
-            <FormattedMessage id="button_reset" defaultMessage="Reset" description="Button [Reset]" />
-            : this.state.sent ?
-            <FormattedMessage id="button_ok" defaultMessage="OK"
-              description="Button [OK]" />
-            :
-            <FormattedMessage id="button_send_request" defaultMessage="Send request"
-              description="Button [Send request]" />
-          }</button>
-        </div>
-        {this.state.haveCode ? null :
-          <div className="panel-form-row">
-            <a href="#" onClick={this.handleShowCodeField}>
+          {this.state.haveCode || this.state.sent ? null :
+            <a href="#" onClick={this.handleShowCodeField} style={{marginRight: 'auto'}}>
               <FormattedMessage id="password_i_have_code" defaultMessage="I have code"
                 description="Call to open field to enter password reset code" />
             </a>
-          </div>
-        }
+          }
+          <button className="primary" type="submit">{
+            showPasswordInput ?
+              <FormattedMessage id="button_reset" defaultMessage="Reset" description="Button [Reset]" />
+            :
+              <FormattedMessage id="button_send_request" defaultMessage="Send request"
+                description="Button [Send request]" />
+          }</button>
+        </div>
       </form>
     );
   }

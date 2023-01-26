@@ -268,7 +268,7 @@
     "description": "Call to action to enable peer's messaging"
   },
   "enter_confirmation_code_prompt": {
-    "defaultMessage": "Enter confirmation code sent to you by {method}:",
+    "defaultMessage": "Confirmation code",
     "description": "Request to enter confirmation code"
   },
   "error_invalid_id": {
@@ -415,11 +415,11 @@
     "description": "Label for push notifications switch"
   },
   "label_reset_password": {
-    "defaultMessage": "Send a password reset email:",
+    "defaultMessage": "Send a password reset email",
     "description": "Label for password reset field"
   },
   "label_reset_password_tel": {
-    "defaultMessage": "Send a password reset SMS:",
+    "defaultMessage": "Send SMS to reset password",
     "description": "Label for password reset field by phone"
   },
   "label_sdk": {
@@ -603,6 +603,10 @@
   "messaging_disabled_prompt": {
     "defaultMessage": "Messaging disabled",
     "description": "Prompt in SendMessage in read-only topic"
+  },
+  "mobile_number_required": {
+    "defaultMessage": "Mobile phone number required",
+    "description": "Error message"
   },
   "mobile_phone_number": {
     "defaultMessage": "Mobile phone number",

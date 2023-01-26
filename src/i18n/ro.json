@@ -358,7 +358,7 @@
   },
   "enter_confirmation_code_prompt": {
     "translation": "Introu codul de confirmare trimis pe {method}:",
-    "defaultMessage": "Enter confirmation code sent to you by {method}:",
+    "defaultMessage": "Confirmation code",
     "description": "Request to enter confirmation code",
     "missing": false,
     "obsolete": false
@@ -533,7 +533,7 @@
   },
   "label_reset_password": {
     "translation": "Resetează parola:",
-    "defaultMessage": "Send a password reset email:",
+    "defaultMessage": "Send a password reset email",
     "description": "Label for password reset field",
     "missing": false,
     "obsolete": false
@@ -1544,10 +1544,10 @@
     "obsolete": false
   },
   "menu_item_audio_call": {
-    "translation": "",
+    "translation": "Apel",
     "defaultMessage": "Call",
     "description": "Start audio call",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "unrecognized_video_format": {
@@ -1558,45 +1558,45 @@
     "obsolete": false
   },
   "loading_note": {
-    "translation": "",
+    "translation": "Se încarcă...",
     "defaultMessage": "Loading...",
     "description": "Message shown when component is loading",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "password_i_have_code": {
-    "translation": "",
+    "translation": "Am cod",
     "defaultMessage": "I have code",
     "description": "Call to open field to enter password reset code",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
-  "uG7N1B": {
-    "translation": "",
-    "defaultMessage": "Mobile phone number",
-    "description": "Prompt for entering a mobile phone number",
-    "missing": true,
-    "obsolete": true
-  },
   "label_reset_password_tel": {
-    "translation": "",
-    "defaultMessage": "Send a password reset SMS:",
+    "translation": "Trimite SMS pentru a reseta parola",
+    "defaultMessage": "Send SMS to reset password",
     "description": "Label for password reset field by phone",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "mobile_phone_number": {
-    "translation": "",
+    "translation": "Număr de telefon mobil",
     "defaultMessage": "Mobile phone number",
     "description": "Prompt for entering a mobile phone number",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "password_reset_sms_sent": {
-    "translation": "",
+    "translation": "Un mesaj text cu cod de securitate a fost trimis la {phone}. Introduceți codul de mai jos.",
     "defaultMessage": "A text message with security code has been sent to {phone}. Enter the code below.",
     "description": "Notification that the SMS with password reset instructions has been sent",
-    "missing": true,
+    "missing": false,
+    "obsolete": false
+  },
+  "mobile_number_required": {
+    "translation": "Este necesar un număr de telefon mobil",
+    "defaultMessage": "Mobile phone number required",
+    "description": "Error message",
+    "missing": false,
     "obsolete": false
   }
 }
