@@ -43,6 +43,14 @@ class PhoneCountrySelector extends (react__WEBPACK_IMPORTED_MODULE_0___default()
     });
     this.countries.sort((a, b) => a.name.localeCompare(b.name));
   }
+  componentDidMount() {
+    if (this.selectedRef) {
+      this.selectedRef.scrollIntoView({
+        block: 'center',
+        inline: 'nearest'
+      });
+    }
+  }
   render() {
     const countries = [];
     const selected = this.props.selected || 'US';
@@ -51,6 +59,11 @@ class PhoneCountrySelector extends (react__WEBPACK_IMPORTED_MODULE_0___default()
       countries.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
         className: style,
         key: idx,
+        ref: ref => {
+          if (c.code == selected) {
+            this.selectedRef = ref;
+          }
+        },
         onClick: _ => this.props.onSubmit(c.code, c.dial)
       }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
         className: "country-flag"

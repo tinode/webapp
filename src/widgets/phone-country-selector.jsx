@@ -28,12 +28,20 @@ class PhoneCountrySelector extends React.PureComponent {
     this.countries.sort((a, b) => a.name.localeCompare(b.name));
   }
 
+  componentDidMount() {
+    if (this.selectedRef) {
+      this.selectedRef.scrollIntoView({block: 'center', inline: 'nearest'});
+    }
+  }
+
   render() {
     const countries = [];
     const selected = this.props.selected || 'US';
     this.countries.forEach((c, idx) => {
       const style = (c.code == selected ? 'selected ' : '');
-      countries.push(<li className={style} key={idx} onClick={_ => this.props.onSubmit(c.code, c.dial)}>
+      countries.push(<li className={style} key={idx}
+        ref={ref => {if (c.code == selected) {this.selectedRef = ref}}}
+        onClick={_ => this.props.onSubmit(c.code, c.dial)}>
         <span className="country-flag">{c.flag}</span>
         <span className="country">&nbsp;{c.name}</span>
         <span className="dial-code">&nbsp;+{c.dial}</span>

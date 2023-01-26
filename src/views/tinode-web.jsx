@@ -1728,14 +1728,12 @@ class TinodeWeb extends React.Component {
   }
 
   handleShowCountrySelector(code, dial, selectedCallback) {
-    console.log('handleShowCountrySelector', code, dial);
     this.handleShowAlert("Select country",
       <Suspense fallback={<div><FormattedMessage id="loading_note" defaultMessage="Loading..."
         description="Message shown when component is loading"/></div>}>
         <PhoneCountrySelector
           selected={code}
           onSubmit={(c, d) => {
-            console.log("handleShowCountrySelector click", c, d);
             this.setState({alertVisible: false});
             selectedCallback(c, d);
           }} />

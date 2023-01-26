@@ -70,7 +70,6 @@ export default class CreateAccountView extends React.PureComponent {
   }
 
   handlePhoneChange(number) {
-    console.log('handlePhoneChange', number)
     this.setState({meth: 'tel', tel: number});
   }
 

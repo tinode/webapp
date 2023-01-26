@@ -71,7 +71,6 @@ class PhoneEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   }
   showCountrySelector() {
     this.props.onShowCountrySelector(this.state.countryCode, this.state.dialCode, (code, dial) => {
-      console.log('Callback', code, dial);
       this.setState({
         countryCode: code,
         dialCode: dial,
@@ -86,12 +85,10 @@ class PhoneEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     return number.replace(/[^-\s().\d]/g, '');
   }
   placeholderNumber(code, dial) {
-    console.log('In nplaceholder', code, dial);
-    const number = (0,libphonenumber_js_mobile__WEBPACK_IMPORTED_MODULE_5__.getExampleNumber)(code, libphonenumber_js_mobile_examples__WEBPACK_IMPORTED_MODULE_6__["default"]).formatInternational();
-    return number.substring(dial.length + 1).trim();
+    const sample = (0,libphonenumber_js_mobile__WEBPACK_IMPORTED_MODULE_5__.getExampleNumber)(code, libphonenumber_js_mobile_examples__WEBPACK_IMPORTED_MODULE_6__["default"]);
+    return sample ? sample.formatInternational().substring(dial.length + 1).trim() : '123 456';
   }
   render() {
-    console.log('placeholder:', this.state.placeholderNumber);
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       className: "dial-code",
       onClick: this.showCountrySelector

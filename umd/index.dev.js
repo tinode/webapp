@@ -4365,7 +4365,6 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
     });
   }
   handlePhoneChange(number) {
-    console.log('handlePhoneChange', number);
     this.setState({
       meth: 'tel',
       tel: number
@@ -9379,7 +9378,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }
   }
   handleShowCountrySelector(code, dial, selectedCallback) {
-    console.log('handleShowCountrySelector', code, dial);
     this.handleShowAlert("Select country", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
       fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
         id: "loading_note",
@@ -9391,7 +9389,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(PhoneCountrySelector, {
       selected: code,
       onSubmit: (c, d) => {
-        console.log("handleShowCountrySelector click", c, d);
         this.setState({
           alertVisible: false
         });

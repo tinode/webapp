@@ -60,7 +60,6 @@ class PhoneEdit extends React.PureComponent {
   showCountrySelector() {
     this.props.onShowCountrySelector(this.state.countryCode, this.state.dialCode,
       (code, dial) => {
-          console.log('Callback', code, dial);
           this.setState({
             countryCode: code,
             dialCode: dial,
@@ -80,13 +79,11 @@ class PhoneEdit extends React.PureComponent {
   }
 
   placeholderNumber(code, dial) {
-    console.log('In nplaceholder', code, dial);
-    const number = getExampleNumber(code, examples).formatInternational();
-    return number.substring(dial.length + 1).trim();
+    const sample = getExampleNumber(code, examples);
+    return sample ? sample.formatInternational().substring(dial.length + 1).trim() : '123 456';
   }
 
   render() {
-    console.log('placeholder:', this.state.placeholderNumber);
     return (
       <>
         <span className="dial-code" onClick={this.showCountrySelector}>
