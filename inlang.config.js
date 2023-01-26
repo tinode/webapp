@@ -7,7 +7,7 @@ export async function defineConfig(env) {
   );
 
   const pluginConfig = {
-    pathPattern: "./{language}.json",
+    pathPattern: "./src/i18n/{language}.json",
   };
 
   return {
