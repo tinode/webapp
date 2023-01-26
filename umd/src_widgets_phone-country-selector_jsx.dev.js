@@ -26,44 +26,45 @@ class PhoneCountrySelector extends (react__WEBPACK_IMPORTED_MODULE_0___default()
     super(props);
     this.countries = [];
     const {
-      formattedDisplayName
+      formatDisplayName
     } = props.intl;
     _dcodes_json__WEBPACK_IMPORTED_MODULE_2__.forEach(dc => {
-      this.countries.push({
-        dial: dc.dial,
-        code: dc.code,
-        flag: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_3__.flagEmoji)(dc.code),
-        name: formattedDisplayName(dc.code, {
-          type: 'region'
-        })
+      const parts = dc.dial.split(',');
+      parts.forEach(part => {
+        this.countries.push({
+          dial: part.trim(),
+          code: dc.code,
+          flag: (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_3__.flagEmoji)(dc.code),
+          name: formatDisplayName(dc.code, {
+            type: 'region'
+          })
+        });
       });
     });
     this.countries.sort((a, b) => a.name.localeCompare(b.name));
-    this.handleClick = this.handleClick.bind(this);
-  }
-  handleClick(e) {
-    e.preventDefault();
-    this.props.onSubmit(e.target.dataset.code, e.target.dataset.dial);
   }
   render() {
     const countries = [];
     const selected = this.props.selected || 'US';
-    this.countries.forEach(c => {
+    this.countries.forEach((c, idx) => {
       const style = c.code == selected ? 'selected ' : '';
       countries.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
         className: style,
         key: idx,
-        "data-code": c.code,
-        "data-dial": c.dial,
-        onClick: this.handleClick
+        onClick: _ => this.props.onSubmit(c.code, c.dial)
       }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
         className: "country-flag"
-      }, c.flag), "\xA0", c.name, "\xA0", react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+      }, c.flag), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+        className: "country"
+      }, "\xA0", c.name), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
         className: "dial-code"
-      }, "+", c.dial)));
+      }, "\xA0+", c.dial)));
     });
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "scrollable-panel"
+      className: "scrollable-panel",
+      style: {
+        height: '30rem'
+      }
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", {
       className: "phone-country-selector"
     }, countries));

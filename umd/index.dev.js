@@ -4308,7 +4308,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const PhoneEdit = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => __webpack_require__.e(/*! import() */ "src_widgets_phone-edit_jsx").then(__webpack_require__.bind(__webpack_require__, /*! ../widgets/phone-edit.jsx */ "./src/widgets/phone-edit.jsx")));
+const PhoneEdit = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_libphonenumber-js_examples_mobile_json_js-node_modules_libphonenumber-js-3ba9d5"), __webpack_require__.e("src_widgets_phone-edit_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ../widgets/phone-edit.jsx */ "./src/widgets/phone-edit.jsx")));
 
 
 
@@ -4330,7 +4330,7 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       newAvatarMime: null,
       errorCleared: false,
       buttonDisabled: false,
-      method: '',
+      method: 'tel',
       saveToken: _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_6__["default"].getObject('keep-logged-in')
     };
     this.handleLoginChange = this.handleLoginChange.bind(this);
@@ -4346,9 +4346,7 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
     this.handleSubmit = this.handleSubmit.bind(this);
     props.tinode.connect().catch(err => {
       this.props.onError(err.message, 'err');
-    }).finally(_ => this.setState({
-      method: (props.tinode.getServerParam('reqCred', {}).auth || [])[0] || 'email'
-    }));
+    });
   }
   handleLoginChange(e) {
     this.setState({
@@ -4357,7 +4355,6 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
   }
   handlePasswordChange(password) {
     this.setState({
-      meth: 'tel',
       password: password
     });
   }
@@ -4368,7 +4365,9 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
     });
   }
   handlePhoneChange(number) {
+    console.log('handlePhoneChange', number);
     this.setState({
+      meth: 'tel',
       tel: number
     });
   }
@@ -4559,8 +4558,8 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       }))
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(PhoneEdit, {
       autoFocus: false,
-      onShowCountrySelector: (code, dial) => console.log('onShowCountrySelector', code, dial),
-      onSubmit: (code, dial) => console.log('onSubmit', code, dial)
+      onShowCountrySelector: this.props.onShowCountrySelector,
+      onSubmit: this.handlePhoneChange
     })))) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_checkbox_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
@@ -7170,7 +7169,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
 
 
-const PhoneEdit = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => __webpack_require__.e(/*! import() */ "src_widgets_phone-edit_jsx").then(__webpack_require__.bind(__webpack_require__, /*! ../widgets/phone-edit.jsx */ "./src/widgets/phone-edit.jsx")));
+const PhoneEdit = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_libphonenumber-js_examples_mobile_json_js-node_modules_libphonenumber-js-3ba9d5"), __webpack_require__.e("src_widgets_phone-edit_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ../widgets/phone-edit.jsx */ "./src/widgets/phone-edit.jsx")));
 
 
 class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
@@ -7731,6 +7730,7 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       onPersistenceChange: this.props.onPersistenceChange
     }) : view === 'register' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_create_account_view_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
       tinode: this.props.tinode,
+      onShowCountrySelector: this.props.onShowCountrySelector,
       onCreateAccount: this.props.onCreateAccount,
       onCancel: this.props.onCancel,
       onError: this.props.onError
@@ -7854,6 +7854,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+const PhoneCountrySelector = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => __webpack_require__.e(/*! import() */ "src_widgets_phone-country-selector_jsx").then(__webpack_require__.bind(__webpack_require__, /*! ../widgets/phone-country-selector.jsx */ "./src/widgets/phone-country-selector.jsx")));
 
 
 
@@ -8014,6 +8015,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     this.handlePasswordResetRequest = this.handlePasswordResetRequest.bind(this);
     this.handleResetPassword = this.handleResetPassword.bind(this);
     this.handleContextMenuAction = this.handleContextMenuAction.bind(this);
+    this.handleShowCountrySelector = this.handleShowCountrySelector.bind(this);
     this.handleShowForwardDialog = this.handleShowForwardDialog.bind(this);
     this.handleHideForwardDialog = this.handleHideForwardDialog.bind(this);
     this.handleStartVideoCall = this.handleStartVideoCall.bind(this);
@@ -9376,6 +9378,27 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       });
     }
   }
+  handleShowCountrySelector(code, dial, selectedCallback) {
+    console.log('handleShowCountrySelector', code, dial);
+    this.handleShowAlert("Select country", react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react__WEBPACK_IMPORTED_MODULE_0__.Suspense, {
+      fallback: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+        id: "loading_note",
+        defaultMessage: [{
+          "type": 0,
+          "value": "Loading..."
+        }]
+      }))
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(PhoneCountrySelector, {
+      selected: code,
+      onSubmit: (c, d) => {
+        console.log("handleShowCountrySelector click", c, d);
+        this.setState({
+          alertVisible: false
+        });
+        selectedCallback(c, d);
+      }
+    })), null, null, _ => {}, "Cancel");
+  }
   handleStartVideoCall() {
     this.setState({
       callTopic: this.state.topicSelected,
@@ -9567,19 +9590,18 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       onAcceptCall: this.handleCallAccept,
       onReject: this.handleCallHangup
     }) : null, this.state.alertVisible ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_alert_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      visible: this.state.alertVisible,
       title: this.state.alertParams.title,
       content: this.state.alertParams.content,
       onReject: this.state.alertParams.onReject ? _ => this.setState({
         alertVisible: false
       }) : null,
       reject: this.state.alertParams.reject,
-      onConfirm: _ => {
+      onConfirm: this.state.alertParams.onConfirm ? _ => {
         this.setState({
           alertVisible: false
         });
         this.state.alertParams.onConfirm();
-      },
+      } : null,
       confirm: this.state.alertParams.confirm
     }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_sidepanel_view_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
       tinode: this.tinode,
@@ -9640,6 +9662,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       onResetPassword: this.handleResetPassword,
       onShowArchive: this.handleShowArchive,
       onShowBlocked: this.handleShowBlocked,
+      onShowCountrySelector: this.handleShowCountrySelector,
       onInitFind: this.tnInitFind,
       searchResults: this.state.searchResults,
       onSearchContacts: this.handleSearchContacts,
@@ -9917,7 +9940,7 @@ class Alert extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent)
         "type": 0,
         "value": "Cancel"
       }]
-    })) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+    })) : null, this.props.onConfirm ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       className: "primary",
       onClick: this.props.onConfirm
     }, this.props.confirm || react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
@@ -9926,7 +9949,7 @@ class Alert extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent)
         "type": 0,
         "value": "OK"
       }]
-    })))));
+    })) : null)));
   }
 }
 ;

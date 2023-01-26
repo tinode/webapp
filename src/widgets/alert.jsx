@@ -15,9 +15,13 @@ export default class Alert extends React.PureComponent {
             :
             null
           }
-          <button className="primary" onClick={this.props.onConfirm}>
-            {this.props.confirm || <FormattedMessage id="button_ok" defaultMessage="OK" description="Button [OK]"  />}
-          </button>
+          {this.props.onConfirm ?
+            <button className="primary" onClick={this.props.onConfirm}>
+              {this.props.confirm || <FormattedMessage id="button_ok" defaultMessage="OK" description="Button [OK]"  />}
+            </button>
+            :
+            null
+          }
         </div>
       </div>
     </div>);

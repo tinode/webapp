@@ -1,39 +1,47 @@
 // Selector for country dialing code.
 
 import React from 'react';
-import { FormattedDisplayName } from 'react-intl';
+import { injectIntl } from 'react-intl';
+
 import * as dcodes from '../dcodes.json';
+
 import { flagEmoji } from '../lib/strformat';
 
-export default class PhoneCountrySelector extends React.PureComponent {
+class PhoneCountrySelector extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    this.codeMap = {};
-    dcodes.default.forEach(dc => { this.codeMap[dc.code] = dc.dial; });
+    this.countries = [];
+    const { formatDisplayName } = props.intl;
+    dcodes.default.forEach(dc => {
+      const parts = dc.dial.split(',');
+      parts.forEach(part => {
+        this.countries.push({
+          dial: part.trim(),
+          code: dc.code,
+          flag: flagEmoji(dc.code),
+          name: formatDisplayName(dc.code, {type: 'region'})
+        });
+      });
+    });
 
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  handleClick(e) {
-    e.preventDefault();
-    this.props.onSubmit(e.target.dataset.code, e.target.dataset.dial);
+    this.countries.sort((a, b) => a.name.localeCompare(b.name));
   }
 
   render() {
     const countries = [];
     const selected = this.props.selected || 'US';
-    dcodes.default.forEach((dc, idx) => {
-      const style = (dc.code == selected ? 'selected ' : '');
-      countries.push(<li className={style} key={idx} data-code={dc.code} data-dial={dc.dial} onClick={this.handleClick}>
-        <span  className="country-flag">{flagEmoji(dc.code)}</span>&nbsp;
-        <FormattedDisplayName type="region" value={dc.code} />
-        &nbsp;<span className="dial-code">+{dc.dial}</span>
+    this.countries.forEach((c, idx) => {
+      const style = (c.code == selected ? 'selected ' : '');
+      countries.push(<li className={style} key={idx} onClick={_ => this.props.onSubmit(c.code, c.dial)}>
+        <span className="country-flag">{c.flag}</span>
+        <span className="country">&nbsp;{c.name}</span>
+        <span className="dial-code">&nbsp;+{c.dial}</span>
       </li>);
     });
 
     return (
-      <div className="scrollable-panel">
+      <div className="scrollable-panel" style={{height: '30rem'}}>
         <ul className="phone-country-selector">
           {countries}
         </ul>
@@ -41,3 +49,5 @@ export default class PhoneCountrySelector extends React.PureComponent {
     );
   }
 }
+
+export default injectIntl(PhoneCountrySelector);

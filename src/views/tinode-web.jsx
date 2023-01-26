@@ -1,5 +1,5 @@
 // The top-level class to hold all functionality together.
-import React from 'react';
+import React, { Suspense } from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
 import { initializeApp as firebaseInitApp } from 'firebase/app';
@@ -12,6 +12,7 @@ import Alert from '../widgets/alert.jsx';
 import ContextMenu from '../widgets/context-menu.jsx';
 import ForwardDialog from '../widgets/forward-dialog.jsx';
 import CallIncoming from '../widgets/call-incoming.jsx';
+const PhoneCountrySelector = React.lazy(_ => import('../widgets/phone-country-selector.jsx'));
 
 import InfoView from './info-view.jsx';
 import MessagesView from './messages-view.jsx';
@@ -158,6 +159,7 @@ class TinodeWeb extends React.Component {
     this.handlePasswordResetRequest = this.handlePasswordResetRequest.bind(this);
     this.handleResetPassword = this.handleResetPassword.bind(this);
     this.handleContextMenuAction = this.handleContextMenuAction.bind(this);
+    this.handleShowCountrySelector =  this.handleShowCountrySelector.bind(this);
 
     this.handleShowForwardDialog = this.handleShowForwardDialog.bind(this);
     this.handleHideForwardDialog = this.handleHideForwardDialog.bind(this);
@@ -1725,6 +1727,22 @@ class TinodeWeb extends React.Component {
     }
   }
 
+  handleShowCountrySelector(code, dial, selectedCallback) {
+    console.log('handleShowCountrySelector', code, dial);
+    this.handleShowAlert("Select country",
+      <Suspense fallback={<div><FormattedMessage id="loading_note" defaultMessage="Loading..."
+        description="Message shown when component is loading"/></div>}>
+        <PhoneCountrySelector
+          selected={code}
+          onSubmit={(c, d) => {
+            console.log("handleShowCountrySelector click", c, d);
+            this.setState({alertVisible: false});
+            selectedCallback(c, d);
+          }} />
+      </Suspense>,
+      null, null, _ => {}, "Cancel");
+  }
+
   handleStartVideoCall() {
     this.setState({
       callTopic: this.state.topicSelected,
@@ -1954,12 +1972,12 @@ class TinodeWeb extends React.Component {
         }
         {this.state.alertVisible ?
           <Alert
-            visible={this.state.alertVisible}
             title={this.state.alertParams.title}
             content={this.state.alertParams.content}
             onReject={this.state.alertParams.onReject ? (_ => this.setState({alertVisible: false})) : null}
             reject={this.state.alertParams.reject}
-            onConfirm={_ => {this.setState({alertVisible: false}); this.state.alertParams.onConfirm();}}
+            onConfirm={this.state.alertParams.onConfirm ?
+              (_ => {this.setState({alertVisible: false}); this.state.alertParams.onConfirm();}) : null}
             confirm={this.state.alertParams.confirm}
             /> : null}
         <SidepanelView
@@ -2025,6 +2043,7 @@ class TinodeWeb extends React.Component {
           onResetPassword={this.handleResetPassword}
           onShowArchive={this.handleShowArchive}
           onShowBlocked={this.handleShowBlocked}
+          onShowCountrySelector={this.handleShowCountrySelector}
 
           onInitFind={this.tnInitFind}
           searchResults={this.state.searchResults}

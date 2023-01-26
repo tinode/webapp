@@ -4,6 +4,8 @@
   margin: 0;
   font-family: Roboto, Arial, sans-serif;
   text-rendering: optimizeLegibility;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.3) rgba(255,255,255,0.1);
 }
 
 /* Basic elements defined */
@@ -333,13 +335,16 @@ li:hover .menuTrigger a {
 div.alert-container {
   position: absolute;
   display: flex;
+  padding: 1rem;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 100%;
+  overflow: hidden;
   background: rgba(240,240,240,0.85);
   z-index: 3;
 }
+
 div.alert {
   position: relative;
   background-color: white;
@@ -348,10 +353,15 @@ div.alert {
   border-radius: 0.3rem;
   margin: auto 2rem auto 2rem;
   width: fit-content;
+  height: min-content;
   min-width: 16rem;
   max-width: 24rem;
+  max-height: 40rem;
+  overflow: hidden;
 }
+
 div.alert-container .title {
+  position: relative;
   color: #2196f3;
   font-size: 1.2rem;
   font-weight: 500;
@@ -360,6 +370,7 @@ div.alert-container .title {
 }
 
 div.alert-container .title.with-control {
+  position: relative;
   display: flex;
   padding: 0.5rem 0.5rem 0 0.5rem;
   align-items: center;
@@ -368,6 +379,7 @@ div.alert-container .title.with-control {
 }
 
 div.alert-container .content {
+  position: relative;
   padding: 0.5rem 0 0.5rem 0;
 }
 /* END Alert */
@@ -1923,10 +1935,8 @@ video {
   bottom: 0;
   background-color: #c5e1a5;
   clip-path: polygon(100% 0, 0 110%, 100% 110%);
-  -webkit-clip-path: polygon(100% 0, 0 110%, 100% 110%);
   box-shadow: 0 1px 0.5px rgb(0 0 0 / 12%);
   border-bottom-left-radius: 0.3rem;
-  -moz-transition: ease-out background-color 0.5s;
   transition: ease-out background-color 0.5s;
   transition-delay: 0.3s;
 }
@@ -1945,10 +1955,8 @@ video {
   bottom: 0;
   background-color: #fafafa;
   clip-path: polygon(0 0, 100% 110%, 0 110%);
-  -webkit-clip-path: polygon(0 0, 100% 110%, 0 110%);
   box-shadow: 0 1px 0.5px rgb(0 0 0 / 12%);
   border-bottom-right-radius: 0.3rem;
-  -moz-transition: ease-out background-color 0.5s;
   transition: ease-out background-color 0.5s;
   transition-delay: 0.3s;
 }
@@ -3027,14 +3035,14 @@ ul.tabbar li.active > a {
 .country-flag {
   display: inline-block;
   font-size: larger;
-  vertical-align: middle;
 }
 
 .dial-code {
   white-space: nowrap;
   display: inline-block;
   cursor: pointer;
-  margin-top: 0.1rem;
+  vertical-align: middle;
+  margin-bottom: 0.15rem;
 }
 
 ul.phone-country-selector {
@@ -3047,6 +3055,7 @@ ul.phone-country-selector > li {
   font-weight: lighter;
   padding: 0.25rem 0.5rem 0.15rem 0.5rem;
   cursor: pointer;
+  width: 100%;
 }
 
 ul.phone-country-selector > li:hover {
@@ -3061,6 +3070,15 @@ ul.phone-country-selector .dial-code {
   right: 0.5rem;
   color: #1e88e5;
   font-weight: normal;
+}
+
+ul.phone-country-selector span {
+  display: inline-block;
+}
+
+ul.phone-country-selector span.country {
+  text-overflow: ellipsis;
+  overflow-x: hidden;
 }
 
 /*

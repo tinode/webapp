@@ -15,8 +15,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var libphonenumber_js_mobile__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! libphonenumber-js/mobile */ "./node_modules/libphonenumber-js/mobile/exports/parsePhoneNumberWithError.js");
+/* harmony import */ var libphonenumber_js_mobile__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! libphonenumber-js/mobile */ "./node_modules/libphonenumber-js/mobile/exports/getExampleNumber.js");
+/* harmony import */ var libphonenumber_js_mobile_examples__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! libphonenumber-js/mobile/examples */ "./node_modules/libphonenumber-js/examples.mobile.json.js");
 /* harmony import */ var _dcodes_json__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../dcodes.json */ "./src/dcodes.json");
 /* harmony import */ var _lib_strformat__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/strformat */ "./src/lib/strformat.js");
+
+
 
 
 
@@ -28,10 +33,13 @@ class PhoneEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     _dcodes_json__WEBPACK_IMPORTED_MODULE_2__.forEach(dc => {
       this.codeMap[dc.code] = dc.dial;
     });
+    const code = props.countryCode || 'US';
+    const dial = this.codeMap[code];
     this.state = {
-      countryCode: props.countryCode || 'US',
-      dialCode: this.codeMap[props.countryCode || 'US'],
-      localNumber: ''
+      countryCode: code,
+      dialCode: dial,
+      localNumber: '',
+      placeholderNumber: this.placeholderNumber(code, dial)
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleFinished = this.handleFinished.bind(this);
@@ -45,8 +53,16 @@ class PhoneEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   }
   handleFinished(e) {
     e.preventDefault();
-    const number = `${this.state.dialCode}${this.state.localNumber.trim()}`.replace(/[^\d]/g, '');
-    this.props.onSubmit(`+${number}`);
+    const raw = `${this.state.dialCode}${this.state.localNumber.trim()}`.replace(/[^\d]/g, '');
+    let number = null;
+    try {
+      number = (0,libphonenumber_js_mobile__WEBPACK_IMPORTED_MODULE_4__.parsePhoneNumberWithError)(raw);
+    } catch (err) {}
+    if (!number || !number.isValid()) {
+      this.inputField.setCustomValidity("Mobile phone number required");
+      return;
+    }
+    this.props.onSubmit(number.format('E.164'));
   }
   handleKeyDown(e) {
     if (e.key === 'Enter') {
@@ -54,7 +70,14 @@ class PhoneEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     }
   }
   showCountrySelector() {
-    this.props.onShowCountrySelector(this.state.countryCode, this.state.dialCode);
+    this.props.onShowCountrySelector(this.state.countryCode, this.state.dialCode, (code, dial) => {
+      console.log('Callback', code, dial);
+      this.setState({
+        countryCode: code,
+        dialCode: dial,
+        placeholderNumber: this.placeholderNumber(code, dial)
+      });
+    });
   }
   filterNumber(number) {
     if (!number) {
@@ -62,7 +85,13 @@ class PhoneEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     }
     return number.replace(/[^-\s().\d]/g, '');
   }
+  placeholderNumber(code, dial) {
+    console.log('In nplaceholder', code, dial);
+    const number = (0,libphonenumber_js_mobile__WEBPACK_IMPORTED_MODULE_5__.getExampleNumber)(code, libphonenumber_js_mobile_examples__WEBPACK_IMPORTED_MODULE_6__["default"]).formatInternational();
+    return number.substring(dial.length + 1).trim();
+  }
   render() {
+    console.log('placeholder:', this.state.placeholderNumber);
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       className: "dial-code",
       onClick: this.showCountrySelector
@@ -70,7 +99,10 @@ class PhoneEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       className: "country-flag"
     }, (0,_lib_strformat__WEBPACK_IMPORTED_MODULE_3__.flagEmoji)(this.state.countryCode), "\xA0"), "+", this.state.dialCode, "\xA0"), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
       type: "tel",
-      placeholder: this.state.placeholder,
+      ref: ref => {
+        this.inputField = ref;
+      },
+      placeholder: this.state.placeholderNumber,
       value: this.state.localNumber,
       onChange: this.handleChange,
       maxLength: 17,

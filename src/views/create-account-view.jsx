@@ -32,7 +32,8 @@ export default class CreateAccountView extends React.PureComponent {
       newAvatarMime: null,
       errorCleared: false,
       buttonDisabled: false,
-      method: '',
+      // method: '',
+      method: 'tel',
       saveToken: LocalStorageUtil.getObject('keep-logged-in')
     };
 
@@ -53,7 +54,7 @@ export default class CreateAccountView extends React.PureComponent {
         this.props.onError(err.message, 'err');
       })
       // "reqCred":{"auth":["email"]}
-      .finally(_ => this.setState({method: (props.tinode.getServerParam('reqCred', {}).auth || [])[0] || 'email'}));
+      //.finally(_ => this.setState({method: (props.tinode.getServerParam('reqCred', {}).auth || [])[0] || 'email'}));
   }
 
   handleLoginChange(e) {
@@ -61,7 +62,7 @@ export default class CreateAccountView extends React.PureComponent {
   }
 
   handlePasswordChange(password) {
-    this.setState({meth: 'tel', password: password});
+    this.setState({password: password});
   }
 
   handleEmailChange(e) {
@@ -69,7 +70,8 @@ export default class CreateAccountView extends React.PureComponent {
   }
 
   handlePhoneChange(number) {
-    this.setState({tel: number});
+    console.log('handlePhoneChange', number)
+    this.setState({meth: 'tel', tel: number});
   }
 
   handleFnChange(e) {
@@ -209,8 +211,8 @@ export default class CreateAccountView extends React.PureComponent {
               description="Message shown when component is loading"/></div>}>
               <PhoneEdit
                 autoFocus={false}
-                onShowCountrySelector={(code, dial) => console.log('onShowCountrySelector', code, dial)}
-                onSubmit={(code, dial) => console.log('onSubmit', code, dial)} />
+                onShowCountrySelector={this.props.onShowCountrySelector}
+                onSubmit={this.handlePhoneChange} />
             </Suspense>
           </div></>
           : null
