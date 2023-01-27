@@ -1754,9 +1754,8 @@ video {
 .call-party.peer .caller-name.inactive {
   position: absolute;
   font-size: larger;
-  left: 50%;
+  left: 1rem;
   bottom: 0.5rem;
-  transform: translateX(-50%);
   margin: 0 auto;
 }
 
