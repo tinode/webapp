@@ -12,7 +12,7 @@ import ErrorPanel from '../widgets/error-panel.jsx';
 import GroupManager from '../widgets/group-manager.jsx';
 import MenuCancel from '../widgets/menu-cancel.jsx';
 import PermissionsEditor from '../widgets/permissions-editor.jsx';
-import TopicCommon from '../widgets/topic-common.jsx';
+import TopicCommonView from './topic-common-view.jsx';
 import TopicSecurity from '../widgets/topic-security.jsx';
 
 import { MAX_TITLE_LENGTH, MAX_TOPIC_DESCRIPTION_LENGTH, NO_ACCESS_MODE } from '../config.js';
@@ -476,9 +476,10 @@ class InfoView extends React.Component {
             onCancel={this.handleBackNavigate} />
           :
         view == 'general' ?
-          <TopicCommon
+          <TopicCommonView
             tinode={this.props.tinode}
             topic={this.props.topic}
+            reqCredMethod={this.props.reqCredMethod}
             onCredAdd={this.props.onCredAdd}
             onUpdateTagsRequest={this.props.onTopicTagsUpdateRequest}
             onCredConfirm={this.props.onCredConfirm}

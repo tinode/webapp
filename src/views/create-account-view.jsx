@@ -30,7 +30,6 @@ export default class CreateAccountView extends React.PureComponent {
       uploadUrl: null,
       newAvatar: null,
       newAvatarMime: null,
-      errorCleared: false,
       buttonDisabled: false,
       saveToken: LocalStorageUtil.getObject('keep-logged-in')
     };
@@ -85,7 +84,6 @@ export default class CreateAccountView extends React.PureComponent {
 
   handleSubmit(e) {
     e.preventDefault();
-    this.setState({errorCleared: false});
     this.props.onCreateAccount(
       this.state.login.trim(),
       this.state.password.trim(),
@@ -144,9 +142,6 @@ export default class CreateAccountView extends React.PureComponent {
   }
 
   render() {
-    // "reqCred":{"auth":["email"]}
-    const method = (this.props.tinode.getServerParam('reqCred', {}).auth || [])[0] || 'email';
-
     if (this.state.newAvatar) {
       return (
         <AvatarCrop
@@ -192,7 +187,7 @@ export default class CreateAccountView extends React.PureComponent {
               value={this.state.fn} onChange={this.handleFnChange} required/>
           }</FormattedMessage>
         </div>
-        {method == 'email' ?
+        {props.reqCredMethod == 'email' ?
           <div className="panel-form-row">
             <FormattedMessage id="email_prompt" defaultMessage="Email, e.g. jdoe@example.com"
               description="Input placeholder for email entry">{
@@ -200,7 +195,7 @@ export default class CreateAccountView extends React.PureComponent {
                 value={this.state.email} onChange={this.handleEmailChange} required/>
             }</FormattedMessage>
           </div>
-          : method == 'tel' ?
+          : props.reqCredMethod == 'tel' ?
           <><div className="panel-form-row">
             <label className="small gray"><FormattedMessage id="mobile_phone_number" defaultMessage="Mobile phone number"
               description="Prompt for entering a mobile phone number" /></label>

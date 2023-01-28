@@ -102,7 +102,7 @@
     "defaultMessage": "Add another",
     "description": "Call to action [+ add another]",
     "missing": false,
-    "obsolete": false
+    "obsolete": true
   },
   "button_add_members": {
     "translation": "Добавить",
@@ -579,8 +579,8 @@
     "obsolete": false
   },
   "label_user_contacts": {
-    "translation": "Конакты:",
-    "defaultMessage": "Contacts:",
+    "translation": "Конакты",
+    "defaultMessage": "Contacts",
     "description": "Label for user contacts",
     "missing": false,
     "obsolete": false
@@ -1220,7 +1220,7 @@
     "defaultMessage": "confirm",
     "description": "Validate credentail call to action",
     "missing": false,
-    "obsolete": false
+    "obsolete": true
   },
   "description_editing_placeholder": {
     "translation": "Описание (не обязательно)",
@@ -1436,7 +1436,7 @@
     "defaultMessage": "Phone number or email",
     "description": "Placeholer for phone or email",
     "missing": false,
-    "obsolete": false
+    "obsolete": true
   },
   "cred_confirmed_successfully": {
     "translation": "Подтверждено успешно",
@@ -1597,6 +1597,48 @@
     "defaultMessage": "Mobile phone number required",
     "description": "Error message",
     "missing": false,
+    "obsolete": false
+  },
+  "current_email": {
+    "translation": "",
+    "defaultMessage": "Current email",
+    "description": "Label for old email",
+    "missing": true,
+    "obsolete": false
+  },
+  "current_phone": {
+    "translation": "",
+    "defaultMessage": "Current phone number",
+    "description": "Label for old phone",
+    "missing": true,
+    "obsolete": false
+  },
+  "new_email": {
+    "translation": "",
+    "defaultMessage": "New email",
+    "description": "Prompt for entering a new email",
+    "missing": true,
+    "obsolete": false
+  },
+  "new_phone_number": {
+    "translation": "",
+    "defaultMessage": "New phone number",
+    "description": "Prompt for entering a new telephone number",
+    "missing": true,
+    "obsolete": false
+  },
+  "change_email": {
+    "translation": "",
+    "defaultMessage": "Change email",
+    "description": "Prompt to change current email",
+    "missing": true,
+    "obsolete": false
+  },
+  "change_phonel": {
+    "translation": "",
+    "defaultMessage": "Change phone number",
+    "description": "Prompt to change current phone number",
+    "missing": true,
     "obsolete": false
   }
 }

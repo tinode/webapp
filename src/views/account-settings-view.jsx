@@ -1,12 +1,14 @@
 // Edit account parameters.
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
+import { parsePhoneNumber } from 'libphonenumber-js/mobile';
 
 import AvatarUpload from '../widgets/avatar-upload.jsx';
 import BadgeList from '../widgets/badge-list.jsx';
 
 import { makeImageUrl } from '../lib/blob-helpers.js';
 import { MAX_TITLE_LENGTH, MAX_TOPIC_DESCRIPTION_LENGTH } from '../config.js';
+import CredentialEdit from '../widgets/credential-edit.jsx';
 
 function _clip(str, length) {
   return str && str.substring(0, length);
@@ -20,15 +22,57 @@ export default class AccountSettingsView extends React.Component {
     this.state = {
       fullName: _clip(me.public ? me.public.fn : undefined, MAX_TITLE_LENGTH),
       description: _clip(me.public ? me.public.note : undefined, MAX_TOPIC_DESCRIPTION_LENGTH),
-      avatar: makeImageUrl(me.public ? me.public.photo : null)
+      avatar: makeImageUrl(me.public ? me.public.photo : null),
+      credentials: me.getCredentials() || [],
+      credEdit: undefined
     };
   }
 
   render() {
+    if (this.state.credEdit) {
+      return (
+        <CredentialEdit
+          method={this.state.credEdit.meth}
+          val={this.state.credEdit.val}
+          done={this.state.credEdit.done}
+          onShowCountrySelector={this.props.onShowCountrySelector}
+          onSubmit={cred => {this.setState({credEdit: undefined}); console.log("Credential editing done", cred)}}
+          onCancel={_ => this.setState({credEdit: undefined})} />
+      );
+    }
+
+    const credentials = [];
+    this.state.credentials.forEach((cred, idx) => {
+      if (!['email', 'tel'].includes(cred.meth)) {
+        // Skip unknown methods.
+        return ;
+      }
+
+      let val = cred.val
+      if (cred.meth == 'tel') {
+        const number = parsePhoneNumber(cred.val);
+        val = number ? number.formatInternational() : cred.val;
+      }
+
+      credentials.push(
+        <div className="group quoted" key={idx}>
+          <tt className="clickable" onClick={e => {e.preventDefault(); this.setState({credEdit: cred});}}>{val}</tt>
+          <span> {cred.done ? null : <i className="material-icons">pending</i>}</span>
+        </div>);
+    });
+    if (credentials.length > 0) {
+      // Add title as the first element.
+      credentials.unshift(
+        <label className="small" key={'title'}>
+          <FormattedMessage id="label_user_contacts" defaultMessage="Contacts"
+            description="Label for user contacts" />
+        </label>);
+    }
+
     return (
       <div className="scrollable-panel">
         <div className="panel-form-column">
-          <a href="#" className="flat-button float-right" onClick={(e) => {e.preventDefault(); this.props.onNavigate('general');}}>
+          <a href="#" className="flat-button float-right" onClick={e => {e.preventDefault(); this.props.onNavigate('general');}}>
             <i className="material-icons">edit</i>&nbsp;
             <FormattedMessage id="button_edit" defaultMessage="Edit" description="Call to action [Edit]" />
           </a>
@@ -61,8 +105,12 @@ export default class AccountSettingsView extends React.Component {
                 <FormattedMessage id="label_description" defaultMessage="Description"
                   description="Label for editing topic description" />
               </label>
-              <div>{this.state.description}</div>
+              <div className="quoted">{this.state.description}</div>
             </div> : null}
+        </div>
+        <div className="hr" />
+        <div className="panel-form-column">
+          <div className="group">{credentials}</div>
         </div>
         <div className="hr" />
         <div className="panel-form-column">

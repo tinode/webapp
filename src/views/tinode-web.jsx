@@ -266,6 +266,7 @@ class TinodeWeb extends React.Component {
       // Merged results of a search query and p2p chats.
       searchableContacts: [],
       // Credential validation.
+      reqCredMethod: undefined,
       credMethod: undefined,
       credCode: undefined,
       credToken: undefined,
@@ -615,7 +616,9 @@ class TinodeWeb extends React.Component {
 
     const params = this.tinode.getServerInfo();
     this.setState({
-      serverVersion: params.ver + ' ' + (params.build ? params.build : 'none')
+      serverVersion: params.ver + ' ' + (params.build ? params.build : 'none'),
+      // "reqCred":{"auth":["email"]}
+      reqCredMethod: ((params.reqCred || {}).auth || [])[0] || 'email'
     });
 
     if (this.state.autoLogin) {
@@ -2012,6 +2015,7 @@ class TinodeWeb extends React.Component {
           serverAddress={this.state.serverAddress}
           secureConnection={this.state.secureConnection}
           serverVersion={this.state.serverVersion}
+          reqCredMethod={this.state.reqCredMethod}
 
           onGlobalSettings={this.handleGlobalSettings}
           onSignUp={this.handleNewAccount}

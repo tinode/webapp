@@ -59,10 +59,6 @@
     "defaultMessage": "Blocked contacts ({count})",
     "description": "Blocked contacts link"
   },
-  "button_add_another": {
-    "defaultMessage": "Add another",
-    "description": "Call to action [+ add another]"
-  },
   "button_add_members": {
     "defaultMessage": "Add members",
     "description": "Flat button [Add members] (to topic)"
@@ -159,6 +155,14 @@
     "defaultMessage": "Cannot initiate file upload.",
     "description": "Generic error messagewhen attachment fails"
   },
+  "change_email": {
+    "defaultMessage": "Change email",
+    "description": "Prompt to change current email"
+  },
+  "change_phonel": {
+    "defaultMessage": "Change phone number",
+    "description": "Prompt to change current phone number"
+  },
   "channel": {
     "defaultMessage": "channel",
     "description": "Subtitle shown for channels in MessagesView instead of last seen"
@@ -206,6 +210,14 @@
   "credential_email_prompt": {
     "defaultMessage": "Your registration email",
     "description": "Placeholder for entering email"
+  },
+  "current_email": {
+    "defaultMessage": "Current email",
+    "description": "Label for old email"
+  },
+  "current_phone": {
+    "defaultMessage": "Current phone number",
+    "description": "Label for old phone"
   },
   "delete_account": {
     "defaultMessage": "Delete account",
@@ -453,7 +465,7 @@
     "description": "Label for WS/WSS connection type in SettingsView"
   },
   "label_user_contacts": {
-    "defaultMessage": "Contacts:",
+    "defaultMessage": "Contacts",
     "description": "Label for user contacts"
   },
   "label_user_id": {
@@ -616,6 +628,10 @@
     "defaultMessage": "+{overflow} more",
     "description": "Shown in MessagesView title bar when the number of online subscribers exceeds MAX_ONLINE_IN_TOPIC"
   },
+  "new_email": {
+    "defaultMessage": "New email",
+    "description": "Prompt for entering a new email"
+  },
   "new_message_prompt": {
     "defaultMessage": "New message",
     "description": "Prompt in send message field"
@@ -623,6 +639,10 @@
   "new_password_placeholder": {
     "defaultMessage": "Enter new password",
     "description": "Placeholder for entering new password"
+  },
+  "new_phone_number": {
+    "defaultMessage": "New phone number",
+    "description": "Prompt for entering a new telephone number"
   },
   "no_connection": {
     "defaultMessage": "No connection",
@@ -731,10 +751,6 @@
   "phone_dative": {
     "defaultMessage": "phone",
     "description": "Dative case of 'phone', i.e. 'phone' in 'by phone'"
-  },
-  "phone_or_email_prompt": {
-    "defaultMessage": "Phone number or email",
-    "description": "Placeholer for phone or email"
   },
   "private_editing_placeholder": {
     "defaultMessage": "Visible to you only",
@@ -907,9 +923,5 @@
   "user_not_found": {
     "defaultMessage": "Not found",
     "description": "In place of a user's full name when the user is not found."
-  },
-  "validate_credential_action": {
-    "defaultMessage": "confirm",
-    "description": "Validate credentail call to action"
   }
 }

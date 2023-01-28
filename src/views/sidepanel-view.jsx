@@ -4,7 +4,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import ErrorPanel from '../widgets/error-panel.jsx';
 import LoadSpinner from '../widgets/load-spinner.jsx';
 import SideNavbar from '../widgets/side-navbar.jsx';
-import TopicCommon from '../widgets/topic-common.jsx';
+import TopicCommonView from './topic-common-view.jsx';
 
 import AccountSettingsView from './account-settings-view.jsx';
 import ContactsView from './contacts-view.jsx';
@@ -157,7 +157,7 @@ class SidepanelView extends React.PureComponent {
           view === 'register' ?
           <CreateAccountView
             tinode={this.props.tinode}
-            serverVersion={this.props.serverVersion}
+            reqCredMethod={this.props.reqCredMethod}
             onShowCountrySelector={this.props.onShowCountrySelector}
             onCreateAccount={this.props.onCreateAccount}
             onCancel={this.props.onCancel}
@@ -176,13 +176,15 @@ class SidepanelView extends React.PureComponent {
             tinode={this.props.tinode}
             myUserId={this.props.myUserId}
             trustedBadges={this.props.trustedBadges}
+            onShowCountrySelector={this.props.onShowCountrySelector}
             onNavigate={this.props.onNavigate} /> :
 
           (view === 'general' || view === 'crop') ?
-          <TopicCommon
+          <TopicCommonView
             topic="me"
             tinode={this.props.tinode}
             myUserId={this.props.myUserId}
+            reqCredMethod={this.props.reqCredMethod}
             onUpdateTopicDesc={this.props.onUpdateAccountDesc}
             onUpdateTagsRequest={this.props.onUpdateAccountTags}
             onCredAdd={this.props.onCredAdd}
@@ -248,7 +250,7 @@ class SidepanelView extends React.PureComponent {
           view === 'reset' ?
           <PasswordResetView
             tinode={this.props.tinode}
-            serverVersion={this.props.serverVersion}
+            reqCredMethod={this.props.reqCredMethod}
             onShowCountrySelector={this.props.onShowCountrySelector}
             onRequest={this.props.onPasswordResetRequest}
             onReset={this.props.onResetPassword}
