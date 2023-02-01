@@ -177,7 +177,11 @@ class SidepanelView extends React.PureComponent {
             myUserId={this.props.myUserId}
             trustedBadges={this.props.trustedBadges}
             onShowCountrySelector={this.props.onShowCountrySelector}
-            onNavigate={this.props.onNavigate} /> :
+            onNavigate={this.props.onNavigate}
+            onCredAdd={this.props.onCredAdd}
+            onCredDelete={this.props.onCredDelete}
+            onCredConfirm={this.props.onCredConfirm}
+            onError={this.props.onError} /> :
 
           (view === 'general' || view === 'crop') ?
           <TopicCommonView
@@ -187,9 +191,6 @@ class SidepanelView extends React.PureComponent {
             reqCredMethod={this.props.reqCredMethod}
             onUpdateTopicDesc={this.props.onUpdateAccountDesc}
             onUpdateTagsRequest={this.props.onUpdateAccountTags}
-            onCredAdd={this.props.onCredAdd}
-            onCredDelete={this.props.onCredDelete}
-            onCredConfirm={this.props.onCredConfirm}
             onError={this.props.onError} /> :
 
           view === 'notif' ?
@@ -254,7 +255,8 @@ class SidepanelView extends React.PureComponent {
             onShowCountrySelector={this.props.onShowCountrySelector}
             onRequest={this.props.onPasswordResetRequest}
             onReset={this.props.onResetPassword}
-            onCancel={this.props.onCancel} /> :
+            onCancel={this.props.onCancel}
+            onError={this.props.onError} /> :
           null}
       </div>
     );

@@ -187,7 +187,7 @@ export default class CreateAccountView extends React.PureComponent {
               value={this.state.fn} onChange={this.handleFnChange} required/>
           }</FormattedMessage>
         </div>
-        {props.reqCredMethod == 'email' ?
+        {this.props.reqCredMethod == 'email' ?
           <div className="panel-form-row">
             <FormattedMessage id="email_prompt" defaultMessage="Email, e.g. jdoe@example.com"
               description="Input placeholder for email entry">{
@@ -195,7 +195,7 @@ export default class CreateAccountView extends React.PureComponent {
                 value={this.state.email} onChange={this.handleEmailChange} required/>
             }</FormattedMessage>
           </div>
-          : props.reqCredMethod == 'tel' ?
+          : this.props.reqCredMethod == 'tel' ?
           <><div className="panel-form-row">
             <label className="small gray"><FormattedMessage id="mobile_phone_number" defaultMessage="Mobile phone number"
               description="Prompt for entering a mobile phone number" /></label>

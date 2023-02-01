@@ -36,8 +36,9 @@ export default class AccountSettingsView extends React.Component {
           val={this.state.credEdit.val}
           done={this.state.credEdit.done}
           onShowCountrySelector={this.props.onShowCountrySelector}
-          onSubmit={cred => {this.setState({credEdit: undefined}); console.log("Credential editing done", cred)}}
-          onCancel={_ => this.setState({credEdit: undefined})} />
+          onSubmit={this.props.onCredAdd}
+          onCancel={_ => this.setState({credEdit: undefined})}
+          onError={this.props.onError} />
       );
     }
 

@@ -1,13 +1,26 @@
 // A password reset form.
 import React, { Suspense } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
 const PhoneEdit = React.lazy(_ => import('../widgets/phone-edit.jsx'));
 import VisiblePassword from '../widgets/visible-password.jsx';
 
 import HashNavigation from '../lib/navigation.js';
 
-export default class PasswordResetView extends React.PureComponent {
+const messages = defineMessages({
+  password_reset_email_sent: {
+    id: 'password_reset_email_sent',
+    defaultMessage: 'An email with security code has been sent.',
+    description: 'Notification that the email with password reset instructions has been sent'
+  },
+  password_reset_sms_sent: {
+    id: 'password_reset_sms_sent',
+    defaultMessage: 'A text message with security code has been sent.',
+    description: 'Notification that the SMS with password reset instructions has been sent'
+  }
+});
+
+class PasswordResetView extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -52,13 +65,22 @@ export default class PasswordResetView extends React.PureComponent {
       const cred = this.state.email.trim() || this.state.tel.trim();
       this.props.onReset(this.state.password.trim(), {
         scheme: 'code',
-        secret: `${this.state.code}:${this.props.reqCredMethod}:${cred}`
+        secret: btoa(`${this.state.code}:${this.props.reqCredMethod}:${cred}`)
       });
     } else {
+      // Send email or SMS with the secret code.
       const email = this.state.email.trim();
       const tel = this.state.tel.trim();
       this.setState({email: email, tel: tel});
-      this.props.onRequest(this.props.reqCredMethod, email || tel).then(_ => this.setState({sent: true}));
+      this.props.onRequest(this.props.reqCredMethod, email || tel)
+        .then(_ => {
+          this.setState({sent: true});
+          const msg = this.props.reqCredMethod == 'email' ? messages.password_reset_email_sent :
+            this.props.reqCredMethod == 'tel' ? messages.password_reset_sms_sent : null;
+          if (msg) {
+            this.props.onError(this.props.intl.formatMessage(msg), 'info');
+          }
+        });
     }
   }
 
@@ -147,21 +169,6 @@ export default class PasswordResetView extends React.PureComponent {
         </div>
       </>);
 
-    const sentNotification = (<>{
-        this.props.reqCredMethod == 'email' ?
-          <FormattedMessage id="password_reset_email_sent"
-            defaultMessage="An email with security code has been sent to {email}. Enter the code below."
-            values={{email: <tt>{this.state.email}</tt>}}
-            description="Notification that the email with password reset instructions has been sent" />
-        : this.props.reqCredMethod == 'tel' ?
-          <FormattedMessage id="password_reset_sms_sent"
-            defaultMessage="A text message with security code has been sent to {phone}. Enter the code below."
-            values={{phone: <tt>{this.state.tel}</tt>}}
-            description="Notification that the SMS with password reset instructions has been sent" />
-        :
-        null
-      }</>);
-
     const codeInput = (<>
         <div>
           <label className="small gray" htmlFor="enter-confirmation-code">
@@ -185,7 +192,7 @@ export default class PasswordResetView extends React.PureComponent {
 
     return (
       <form id="password-reset-form" onSubmit={this.handleSubmit}>
-        {this.state.sent ? sentNotification : showCredentialInput ? credentialInput : null}
+        {!this.state.sent && showCredentialInput ? credentialInput : null}
         {this.state.haveCode || this.state.sent ? codeInput : null}
         {showPasswordInput ? passwordInput : null}
         <div className="dialog-buttons">
@@ -207,3 +214,5 @@ export default class PasswordResetView extends React.PureComponent {
     );
   }
 }
+
+export default injectIntl(PasswordResetView);

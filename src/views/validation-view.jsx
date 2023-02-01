@@ -24,7 +24,7 @@ class ValidationView extends React.PureComponent {
       codeReceived: props.credCode
     };
 
-    this.handleChange = this.handleChange.bind(this);
+    this.handleCodeChange = this.handleCodeChange.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
@@ -56,8 +56,8 @@ class ValidationView extends React.PureComponent {
   }
 
 
-  handleChange(e) {
-    this.setState({code: e.target.value.trim()});
+  handleCodeChange(e) {
+    this.setState({code: e.target.value.replace(/[^\d]/g, '')});
   }
 
   handleKeyPress(e) {
@@ -99,7 +99,7 @@ class ValidationView extends React.PureComponent {
             defaultMessage="Numbers only" description="Prompt for numeric conformation code">{
             (numbers_only) => <input type="text" id="enter-confirmation-code"
               placeholder={numbers_only}
-              value={this.state.code} onChange={this.handleChange}
+              value={this.state.code} onChange={this.handleCodeChange}
               onKeyPress={this.handleKeyPress} required />
           }</FormattedMessage>
         </div>

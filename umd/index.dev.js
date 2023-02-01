@@ -4043,13 +4043,6 @@ class AccountSettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().
       credentials: me.getCredentials() || [],
       credEdit: undefined
     };
-    this.handleEditCred = this.handleEditCred.bind(this);
-  }
-  handleEditCred(cred) {
-    console.log("Start editing cred", cred);
-    this.setState({
-      credEdit: cred
-    });
   }
   render() {
     if (this.state.credEdit) {
@@ -4058,15 +4051,11 @@ class AccountSettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().
         val: this.state.credEdit.val,
         done: this.state.credEdit.done,
         onShowCountrySelector: this.props.onShowCountrySelector,
-        onSubmit: cred => {
-          this.setState({
-            credEdit: undefined
-          });
-          console.log("Credential editing done", cred);
-        },
+        onSubmit: this.props.onCredAdd,
         onCancel: _ => this.setState({
           credEdit: undefined
-        })
+        }),
+        onError: this.props.onError
       });
     }
     const credentials = [];
@@ -4086,7 +4075,9 @@ class AccountSettingsView extends (react__WEBPACK_IMPORTED_MODULE_0___default().
         className: "clickable",
         onClick: e => {
           e.preventDefault();
-          this.handleEditCred(cred);
+          this.setState({
+            credEdit: cred
+          });
         }
       }, val), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null, " ", cred.done ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
         className: "material-icons"
@@ -4588,7 +4579,7 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       value: this.state.fn,
       onChange: this.handleFnChange,
       required: true
-    }))), props.reqCredMethod == 'email' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }))), this.props.reqCredMethod == 'email' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
       id: "email_prompt",
@@ -4603,7 +4594,7 @@ class CreateAccountView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       value: this.state.email,
       onChange: this.handleEmailChange,
       required: true
-    }))) : props.reqCredMethod == 'tel' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }))) : this.props.reqCredMethod == 'tel' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "small gray"
@@ -7227,7 +7218,7 @@ class NewTopicView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ PasswordResetView)
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
@@ -7240,6 +7231,22 @@ __webpack_require__.r(__webpack_exports__);
 const PhoneEdit = react__WEBPACK_IMPORTED_MODULE_0___default().lazy(_ => Promise.resolve(/*! import() */).then(__webpack_require__.bind(__webpack_require__, /*! ../widgets/phone-edit.jsx */ "./src/widgets/phone-edit.jsx")));
 
 
+const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
+  password_reset_email_sent: {
+    id: "password_reset_email_sent",
+    defaultMessage: [{
+      "type": 0,
+      "value": "An email with security code has been sent."
+    }]
+  },
+  password_reset_sms_sent: {
+    id: "password_reset_sms_sent",
+    defaultMessage: [{
+      "type": 0,
+      "value": "A text message with security code has been sent."
+    }]
+  }
+});
 class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
@@ -7278,7 +7285,7 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
       const cred = this.state.email.trim() || this.state.tel.trim();
       this.props.onReset(this.state.password.trim(), {
         scheme: 'code',
-        secret: `${this.state.code}:${this.props.reqCredMethod}:${cred}`
+        secret: btoa(`${this.state.code}:${this.props.reqCredMethod}:${cred}`)
       });
     } else {
       const email = this.state.email.trim();
@@ -7287,9 +7294,15 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
         email: email,
         tel: tel
       });
-      this.props.onRequest(this.props.reqCredMethod, email || tel).then(_ => this.setState({
-        sent: true
-      }));
+      this.props.onRequest(this.props.reqCredMethod, email || tel).then(_ => {
+        this.setState({
+          sent: true
+        });
+        const msg = this.props.reqCredMethod == 'email' ? messages.password_reset_email_sent : this.props.reqCredMethod == 'tel' ? messages.password_reset_sms_sent : null;
+        if (msg) {
+          this.props.onError(this.props.intl.formatMessage(msg), 'info');
+        }
+      });
     }
   }
   handleEmailChange(e) {
@@ -7397,37 +7410,6 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
         tel: number
       })
     }))));
-    const sentNotification = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, this.props.reqCredMethod == 'email' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "password_reset_email_sent",
-      defaultMessage: [{
-        "type": 0,
-        "value": "An email with security code has been sent to "
-      }, {
-        "type": 1,
-        "value": "email"
-      }, {
-        "type": 0,
-        "value": ". Enter the code below."
-      }],
-      values: {
-        email: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", null, this.state.email)
-      }
-    }) : this.props.reqCredMethod == 'tel' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "password_reset_sms_sent",
-      defaultMessage: [{
-        "type": 0,
-        "value": "A text message with security code has been sent to "
-      }, {
-        "type": 1,
-        "value": "phone"
-      }, {
-        "type": 0,
-        "value": ". Enter the code below."
-      }],
-      values: {
-        phone: react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", null, this.state.tel)
-      }
-    }) : null);
     const codeInput = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "small gray",
       htmlFor: "enter-confirmation-code"
@@ -7456,7 +7438,7 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
       id: "password-reset-form",
       onSubmit: this.handleSubmit
-    }, this.state.sent ? sentNotification : showCredentialInput ? credentialInput : null, this.state.haveCode || this.state.sent ? codeInput : null, showPasswordInput ? passwordInput : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, !this.state.sent && showCredentialInput ? credentialInput : null, this.state.haveCode || this.state.sent ? codeInput : null, showPasswordInput ? passwordInput : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "dialog-buttons"
     }, this.state.haveCode || this.state.sent ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
@@ -7488,6 +7470,7 @@ class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pu
     }))));
   }
 }
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(PasswordResetView));
 
 /***/ }),
 
@@ -7854,7 +7837,11 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       myUserId: this.props.myUserId,
       trustedBadges: this.props.trustedBadges,
       onShowCountrySelector: this.props.onShowCountrySelector,
-      onNavigate: this.props.onNavigate
+      onNavigate: this.props.onNavigate,
+      onCredAdd: this.props.onCredAdd,
+      onCredDelete: this.props.onCredDelete,
+      onCredConfirm: this.props.onCredConfirm,
+      onError: this.props.onError
     }) : view === 'general' || view === 'crop' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_topic_common_view_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
       topic: "me",
       tinode: this.props.tinode,
@@ -7862,9 +7849,6 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       reqCredMethod: this.props.reqCredMethod,
       onUpdateTopicDesc: this.props.onUpdateAccountDesc,
       onUpdateTagsRequest: this.props.onUpdateAccountTags,
-      onCredAdd: this.props.onCredAdd,
-      onCredDelete: this.props.onCredDelete,
-      onCredConfirm: this.props.onCredConfirm,
       onError: this.props.onError
     }) : view === 'notif' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_acc_notifications_view_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
       messageSounds: this.props.messageSounds,
@@ -7915,7 +7899,8 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       onShowCountrySelector: this.props.onShowCountrySelector,
       onRequest: this.props.onPasswordResetRequest,
       onReset: this.props.onResetPassword,
-      onCancel: this.props.onCancel
+      onCancel: this.props.onCancel,
+      onError: this.props.onError
     }) : null);
   }
 }
@@ -9978,7 +9963,7 @@ class ValidationView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       code: props.credCode || '',
       codeReceived: props.credCode
     };
-    this.handleChange = this.handleChange.bind(this);
+    this.handleCodeChange = this.handleCodeChange.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
@@ -10002,9 +9987,9 @@ class ValidationView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       this.props.onSubmit(this.props.credMethod, this.state.code, this.props.credToken);
     }
   }
-  handleChange(e) {
+  handleCodeChange(e) {
     this.setState({
-      code: e.target.value.trim()
+      code: e.target.value.replace(/[^\d]/g, '')
     });
   }
   handleKeyPress(e) {
@@ -10062,7 +10047,7 @@ class ValidationView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       id: "enter-confirmation-code",
       placeholder: numbers_only,
       value: this.state.code,
-      onChange: this.handleChange,
+      onChange: this.handleCodeChange,
       onKeyPress: this.handleKeyPress,
       required: true
     }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -13127,7 +13112,7 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ CredentialEdit)
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
@@ -13139,19 +13124,41 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
+  password_reset_email_sent: {
+    id: "password_reset_email_sent",
+    defaultMessage: [{
+      "type": 0,
+      "value": "An email with security code has been sent."
+    }]
+  },
+  password_reset_sms_sent: {
+    id: "password_reset_sms_sent",
+    defaultMessage: [{
+      "type": 0,
+      "value": "A text message with security code has been sent."
+    }]
+  }
+});
 class CredentialEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
     this.state = {
+      code: '',
       tel: '',
-      email: ''
+      email: '',
+      sent: false
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleEmailChange = this.handleEmailChange.bind(this);
     this.handlePhoneChange = this.handlePhoneChange.bind(this);
+    this.handleCodeChange = this.handleCodeChange.bind(this);
   }
-  formatPhoneNumber(raw) {
-    const number = (0,libphonenumber_js_mobile__WEBPACK_IMPORTED_MODULE_3__.parsePhoneNumberWithError)(raw);
+  static formatPhoneNumber(raw) {
+    let number;
+    try {
+      number = (0,libphonenumber_js_mobile__WEBPACK_IMPORTED_MODULE_3__.parsePhoneNumberWithError)(raw);
+    } catch (err) {}
     return number ? number.formatInternational() : raw;
   }
   handleEmailChange(e) {
@@ -13160,24 +13167,31 @@ class CredentialEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     });
   }
   handlePhoneChange(number) {
-    console.log("handlePhoneChange", number);
     this.setState({
       tel: number
+    });
+  }
+  handleCodeChange(e) {
+    this.setState({
+      code: e.target.value.replace(/[^\d]/g, '')
     });
   }
   handleSubmit(e) {
     e.preventDefault();
     const value = this.props.method == 'email' ? this.state.email : this.state.tel;
-    console.log("handleSubmit", value);
     if (value) {
-      this.props.onSubmit(value);
+      this.props.onSubmit(this.props.method, value);
+      this.setState({
+        sent: true
+      });
+      const msg = this.props.method == 'email' ? messages.password_reset_email_sent : messages.password_reset_sms_sent;
+      this.props.onError(this.props.intl.formatMessage(msg), 'info');
     }
   }
   render() {
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
-      className: "panel-form-column",
-      onSubmit: this.handleSubmit
-    }, this.props.method == 'email' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    const readyForCode = this.state.sent || !this.props.done;
+    const currentValue = CredentialEdit.formatPhoneNumber(readyForCode ? this.state.tel || this.state.email : this.props.val);
+    const currentEmail = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "large"
@@ -13197,7 +13211,8 @@ class CredentialEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
         "type": 0,
         "value": "Current email"
       }]
-    })))) : this.props.method == 'tel' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }))));
+    const currentPhone = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "panel-form-row"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "large"
@@ -13217,11 +13232,8 @@ class CredentialEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
         "type": 0,
         "value": "Current phone number"
       }]
-    })))) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      className: "panel-form-row"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", {
-      className: "quoted"
-    }, this.formatPhoneNumber(this.props.val))), this.props.method == 'email' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }))));
+    const newEmailInput = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "group"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "small gray"
@@ -13246,7 +13258,8 @@ class CredentialEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       value: this.state.email,
       onChange: this.handleEmailChange,
       required: true
-    })))) : this.props.method == 'tel' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }))));
+    const newPhoneInput = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "group"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "small gray"
@@ -13262,7 +13275,41 @@ class CredentialEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
       autoFocus: true,
       onShowCountrySelector: this.props.onShowCountrySelector,
       onSubmit: this.handlePhoneChange
-    }))) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    })));
+    const codeInput = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "group"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+      className: "small gray"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "enter_confirmation_code_prompt",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Confirmation code"
+      }]
+    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "group"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "numeric_confirmation_code_prompt",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Numbers only"
+      }]
+    }, numbers_only => react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+      type: "text",
+      placeholder: numbers_only,
+      maxLength: 10,
+      value: this.state.code,
+      onChange: this.handleCodeChange,
+      required: true
+    }))));
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
+      className: "panel-form-column",
+      onSubmit: this.handleSubmit
+    }, readyForCode ? null : this.props.method == 'email' ? currentEmail : this.props.method == 'tel' ? currentPhone : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "panel-form-row"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("tt", {
+      className: "quoted"
+    }, currentValue)), readyForCode ? null : this.props.method == 'email' ? newEmailInput : this.props.method == 'tel' ? newPhoneInput : null, readyForCode ? codeInput : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "dialog-buttons"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       className: "secondary",
@@ -13285,6 +13332,7 @@ class CredentialEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     }))));
   }
 }
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(CredentialEdit));
 
 /***/ }),
 
@@ -15627,6 +15675,7 @@ class PhoneEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       this.inputField.setCustomValidity(this.props.intl.formatMessage(messages.mobile_number_required));
       return;
     }
+    this.inputField.setCustomValidity('');
     this.props.onSubmit(number.format('E.164'));
   }
   handleKeyDown(e) {

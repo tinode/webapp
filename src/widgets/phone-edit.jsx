@@ -55,6 +55,8 @@ class PhoneEdit extends React.PureComponent {
       this.inputField.setCustomValidity(this.props.intl.formatMessage(messages.mobile_number_required));
       return;
     }
+
+    this.inputField.setCustomValidity('');
     this.props.onSubmit(number.format('E.164'));
   }
 

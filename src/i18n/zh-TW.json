@@ -1307,8 +1307,8 @@
     "obsolete": false
   },
   "password_reset_email_sent": {
-    "translation": "一封電子郵件已發送至 {email}。按照電子郵件中的說明重置密碼。",
-    "defaultMessage": "An email with security code has been sent to {email}. Enter the code below.",
+    "translation": "已發送一封帶有安全代碼的電子郵件。",
+    "defaultMessage": "An email with security code has been sent.",
     "description": "Notification that the email with password reset instructions has been sent",
     "missing": false,
     "obsolete": false
@@ -1586,8 +1586,8 @@
     "obsolete": false
   },
   "password_reset_sms_sent": {
-    "translation": "帶有安全碼的短信已發送至{phone}。請在下方輸入密碼。",
-    "defaultMessage": "A text message with security code has been sent to {phone}. Enter the code below.",
+    "translation": "已發送帶有安全代碼的短信。",
+    "defaultMessage": "A text message with security code has been sent.",
     "description": "Notification that the SMS with password reset instructions has been sent",
     "missing": false,
     "obsolete": false

@@ -1314,8 +1314,8 @@
     "obsolete": false
   },
   "password_reset_email_sent": {
-    "translation": "An email has been sent to {email}. Follow the directions in the email to reset your password.",
-    "defaultMessage": "An email with security code has been sent to {email}. Enter the code below.",
+    "translation": "An email with security code has been sent.",
+    "defaultMessage": "An email with security code has been sent.",
     "description": "Notification that the email with password reset instructions has been sent",
     "missing": false,
     "obsolete": false
@@ -1586,8 +1586,8 @@
     "obsolete": false
   },
   "password_reset_sms_sent": {
-    "translation": "A text message with security code has been sent to {phone}. Enter the code below.",
-    "defaultMessage": "A text message with security code has been sent to {phone}. Enter the code below.",
+    "translation": "A text message with security code has been sent.",
+    "defaultMessage": "A text message with security code has been sent.",
     "description": "Notification that the SMS with password reset instructions has been sent",
     "missing": false,
     "obsolete": false
