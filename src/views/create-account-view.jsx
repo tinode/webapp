@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import AvatarCrop from '../widgets/avatar-crop.jsx';
 import AvatarUpload from '../widgets/avatar-upload.jsx';
 import CheckBox from '../widgets/checkbox.jsx';
-const PhoneEdit = React.lazy(_ => import('../widgets/phone-edit.jsx'));
+import PhoneEdit from '../widgets/phone-edit.jsx';
 import VisiblePassword from '../widgets/visible-password.jsx';
 
 import LocalStorageUtil from '../lib/local-storage.js';
@@ -201,13 +201,10 @@ export default class CreateAccountView extends React.PureComponent {
               description="Prompt for entering a mobile phone number" /></label>
           </div>
           <div className="panel-form-row">
-            <Suspense fallback={<div><FormattedMessage id="loading_note" defaultMessage="Loading..."
-              description="Message shown when component is loading"/></div>}>
-              <PhoneEdit
-                autoFocus={false}
-                onShowCountrySelector={this.props.onShowCountrySelector}
-                onSubmit={this.handlePhoneChange} />
-            </Suspense>
+            <PhoneEdit
+              autoFocus={false}
+              onShowCountrySelector={this.props.onShowCountrySelector}
+              onSubmit={this.handlePhoneChange} />
           </div></>
           : null
         }

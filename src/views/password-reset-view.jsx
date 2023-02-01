@@ -1,8 +1,8 @@
 // A password reset form.
-import React, { Suspense } from 'react';
+import React from 'react';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 
-const PhoneEdit = React.lazy(_ => import('../widgets/phone-edit.jsx'));
+import PhoneEdit from '../widgets/phone-edit.jsx';
 import VisiblePassword from '../widgets/visible-password.jsx';
 
 import HashNavigation from '../lib/navigation.js';
@@ -159,13 +159,10 @@ class PasswordResetView extends React.PureComponent {
           </label>
         </div>
         <div className="panel-form-row">
-          <Suspense fallback={<div className="panel-form-row"><FormattedMessage id="loading_note"
-            defaultMessage="Loading..." description="Message shown when component is loading"/></div>}>
-            <PhoneEdit
-              autoFocus={true}
-              onShowCountrySelector={this.props.onShowCountrySelector}
-              onSubmit={number => this.setState({tel: number})} />
-          </Suspense>
+          <PhoneEdit
+            autoFocus={true}
+            onShowCountrySelector={this.props.onShowCountrySelector}
+            onSubmit={number => this.setState({tel: number})} />
         </div>
       </>);
 

@@ -71,7 +71,7 @@ class CredentialEdit extends React.PureComponent {
     const currentValue = CredentialEdit.formatPhoneNumber(readyForCode ?
       (this.state.tel || this.state.email) : this.props.val);
 
-    const currentEmail = (
+    const changeEmail = (
       <><div className="panel-form-row">
         <label className="large"><FormattedMessage id="change_email" defaultMessage="Change email"
           description="Prompt to change current email" /></label>
@@ -82,7 +82,7 @@ class CredentialEdit extends React.PureComponent {
         </label>
       </div></>);
 
-    const currentPhone = (
+    const changePhone = (
       <><div className="panel-form-row">
       <label className="large"><FormattedMessage id="change_phonel" defaultMessage="Change phone number"
         description="Prompt to change current phone number"/></label>
@@ -94,11 +94,13 @@ class CredentialEdit extends React.PureComponent {
       </div></>
     );
 
+    const newEmailLabel = (<label className="small gray">
+        <FormattedMessage id="new_email" defaultMessage="New email"
+          description="Prompt for entering a new email" />
+      </label>);
+
     const newEmailInput = (
-      <><div className="group">
-        <label className="small gray"><FormattedMessage id="new_email" defaultMessage="New email"
-          description="Prompt for entering a new email" /></label>
-      </div>
+      <><div className="group">{newEmailLabel}</div>
       <div className="group">
         <FormattedMessage id="email_prompt" defaultMessage="Email, e.g. jdoe@example.com"
           description="Input placeholder for email entry">{
@@ -108,11 +110,13 @@ class CredentialEdit extends React.PureComponent {
       </div></>
     );
 
+    const newPhoneLabel = (<label className="small gray">
+        <FormattedMessage id="new_phone_number" defaultMessage="New phone number"
+        description="Prompt for entering a new telephone number" />
+      </label>);
+
     const newPhoneInput = (
-      <><div className="group">
-        <label className="small gray"><FormattedMessage id="new_phone_number" defaultMessage="New phone number"
-          description="Prompt for entering a new telephone number" /></label>
-      </div>
+      <><div className="group">{newPhoneLabel}</div>
       <div className="panel-form-row">
         <PhoneEdit
           autoFocus={true}
@@ -138,9 +142,9 @@ class CredentialEdit extends React.PureComponent {
     return (<form className="panel-form-column" onSubmit={this.handleSubmit}>
       {readyForCode ? null :
       this.props.method == 'email' ?
-        currentEmail
+        changeEmail
       : this.props.method == 'tel' ?
-        currentPhone
+        changePhone
       : null}
       <div className="panel-form-row">
         <tt className="quoted">{currentValue}</tt>

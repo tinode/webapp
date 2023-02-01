@@ -28,6 +28,16 @@ export default class AccountSettingsView extends React.Component {
     };
   }
 
+  componentDidMount() {
+    const me = this.props.tinode.getMeTopic();
+    me.onCredsUpdated = _ => this.setState({credentials: me.getCredentials()});
+  }
+
+  componentWillUnmount() {
+    const me = this.props.tinode.getMeTopic();
+    me.onCredsUpdated = null;
+  }
+
   render() {
     if (this.state.credEdit) {
       return (
@@ -58,7 +68,15 @@ export default class AccountSettingsView extends React.Component {
       credentials.push(
         <div className="group quoted" key={idx}>
           <tt className="clickable" onClick={e => {e.preventDefault(); this.setState({credEdit: cred});}}>{val}</tt>
-          <span> {cred.done ? null : <i className="material-icons">pending</i>}</span>
+          <span> {
+            cred.done ? null :
+            <>
+              <i className="material-icons">pending</i>&nbsp;
+              <a href="#" onClick={e => {e.preventDefault(); this.props.onCredDelete(cred.meth, cred.val);}}>
+                <i className="material-icons">delete</i>
+              </a>
+            </>
+          }</span>
         </div>);
     });
     if (credentials.length > 0) {
@@ -115,15 +133,15 @@ export default class AccountSettingsView extends React.Component {
         </div>
         <div className="hr" />
         <div className="panel-form-column">
-          <a href="#" className="flat-button" onClick={(e) => {e.preventDefault(); this.props.onNavigate('notif');}}>
+          <a href="#" className="flat-button" onClick={e => {e.preventDefault(); this.props.onNavigate('notif');}}>
             <i className="material-icons">notifications</i>&nbsp;<FormattedMessage id="sidepanel_title_acc_notifications"
               defaultMessage="Notifications" description="Sidepanel title for AccNotificationsView." />
           </a>
-          <a href="#" className="flat-button" onClick={(e) => {e.preventDefault(); this.props.onNavigate('security');}}>
+          <a href="#" className="flat-button" onClick={e => {e.preventDefault(); this.props.onNavigate('security');}}>
             <i className="material-icons">security</i>&nbsp;<FormattedMessage id="button_security"
               defaultMessage="Security" description="Navigaton button for security panel." />
           </a>
-          <a href="#" className="flat-button" onClick={(e) => {e.preventDefault(); this.props.onNavigate('support');}}>
+          <a href="#" className="flat-button" onClick={e => {e.preventDefault(); this.props.onNavigate('support');}}>
             <i className="material-icons">contact_support</i>&nbsp;<FormattedMessage id="sidepanel_title_acc_support"
               defaultMessage="Support" description="Sidepanel title for AccSupportView." />
           </a>

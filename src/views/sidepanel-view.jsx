@@ -1,20 +1,20 @@
-import React from 'react';
-import { defineMessages, injectIntl } from 'react-intl';
+import React, { Suspense } from 'react';
+import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
 import ErrorPanel from '../widgets/error-panel.jsx';
 import LoadSpinner from '../widgets/load-spinner.jsx';
 import SideNavbar from '../widgets/side-navbar.jsx';
 import TopicCommonView from './topic-common-view.jsx';
 
-import AccountSettingsView from './account-settings-view.jsx';
+const AccountSettingsView = React.lazy(_ => import('./account-settings-view.jsx'));
 import ContactsView from './contacts-view.jsx';
-import CreateAccountView from './create-account-view.jsx';
+const CreateAccountView = React.lazy(_ => import('./create-account-view.jsx'));
 import AccNotificationsView from './acc-notifications-view.jsx';
 import AccSecurityView from './acc-security-view.jsx';
 import AccSupportView from './acc-support-view.jsx';
 import LoginView from './login-view.jsx';
 import NewTopicView from './new-topic-view.jsx';
-import PasswordResetView from './password-reset-view.jsx';
+const PasswordResetView = React.lazy(_ => import('./password-reset-view.jsx'));
 import SettingsView from './settings-view.jsx';
 import ValidationView from './validation-view.jsx';
 
@@ -155,13 +155,16 @@ class SidepanelView extends React.PureComponent {
             onPersistenceChange={this.props.onPersistenceChange} /> :
 
           view === 'register' ?
-          <CreateAccountView
-            tinode={this.props.tinode}
-            reqCredMethod={this.props.reqCredMethod}
-            onShowCountrySelector={this.props.onShowCountrySelector}
-            onCreateAccount={this.props.onCreateAccount}
-            onCancel={this.props.onCancel}
-            onError={this.props.onError} /> :
+          <Suspense fallback={<div className="panel-form-row"><FormattedMessage id="loading_note"
+            defaultMessage="Loading..." description="Message shown when component is loading"/></div>}>
+            <CreateAccountView
+              tinode={this.props.tinode}
+              reqCredMethod={this.props.reqCredMethod}
+              onShowCountrySelector={this.props.onShowCountrySelector}
+              onCreateAccount={this.props.onCreateAccount}
+              onCancel={this.props.onCancel}
+              onError={this.props.onError} />
+          </Suspense> :
 
           view === 'settings' ?
           <SettingsView
@@ -172,16 +175,19 @@ class SidepanelView extends React.PureComponent {
             onUpdate={this.props.onGlobalSettings} /> :
 
           view === 'edit' ?
-          <AccountSettingsView
-            tinode={this.props.tinode}
-            myUserId={this.props.myUserId}
-            trustedBadges={this.props.trustedBadges}
-            onShowCountrySelector={this.props.onShowCountrySelector}
-            onNavigate={this.props.onNavigate}
-            onCredAdd={this.props.onCredAdd}
-            onCredDelete={this.props.onCredDelete}
-            onCredConfirm={this.props.onCredConfirm}
-            onError={this.props.onError} /> :
+          <Suspense fallback={<div className="panel-form-row"><FormattedMessage id="loading_note"
+            defaultMessage="Loading..." description="Message shown when component is loading"/></div>}>
+            <AccountSettingsView
+              tinode={this.props.tinode}
+              myUserId={this.props.myUserId}
+              trustedBadges={this.props.trustedBadges}
+              onShowCountrySelector={this.props.onShowCountrySelector}
+              onNavigate={this.props.onNavigate}
+              onCredAdd={this.props.onCredAdd}
+              onCredDelete={this.props.onCredDelete}
+              onCredConfirm={this.props.onCredConfirm}
+              onError={this.props.onError} />
+          </Suspense> :
 
           (view === 'general' || view === 'crop') ?
           <TopicCommonView
@@ -249,14 +255,17 @@ class SidepanelView extends React.PureComponent {
             onCancel={this.props.onCancel} /> :
 
           view === 'reset' ?
-          <PasswordResetView
-            tinode={this.props.tinode}
-            reqCredMethod={this.props.reqCredMethod}
-            onShowCountrySelector={this.props.onShowCountrySelector}
-            onRequest={this.props.onPasswordResetRequest}
-            onReset={this.props.onResetPassword}
-            onCancel={this.props.onCancel}
-            onError={this.props.onError} /> :
+          <Suspense fallback={<div className="panel-form-row"><FormattedMessage id="loading_note"
+            defaultMessage="Loading..." description="Message shown when component is loading"/></div>}>
+            <PasswordResetView
+              tinode={this.props.tinode}
+              reqCredMethod={this.props.reqCredMethod}
+              onShowCountrySelector={this.props.onShowCountrySelector}
+              onRequest={this.props.onPasswordResetRequest}
+              onReset={this.props.onResetPassword}
+              onCancel={this.props.onCancel}
+              onError={this.props.onError} />
+          </Suspense> :
           null}
       </div>
     );

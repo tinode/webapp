@@ -1,5 +1,260 @@
 "use strict";
-(globalThis["webpackChunktinode_webapp"] = globalThis["webpackChunktinode_webapp"] || []).push([["src_widgets_phone-edit_jsx"],{
+(globalThis["webpackChunktinode_webapp"] = globalThis["webpackChunktinode_webapp"] || []).push([["src_views_password-reset-view_jsx"],{
+
+/***/ "./src/views/password-reset-view.jsx":
+/*!*******************************************!*\
+  !*** ./src/views/password-reset-view.jsx ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
+/* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _widgets_phone_edit_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../widgets/phone-edit.jsx */ "./src/widgets/phone-edit.jsx");
+/* harmony import */ var _widgets_visible_password_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../widgets/visible-password.jsx */ "./src/widgets/visible-password.jsx");
+/* harmony import */ var _lib_navigation_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../lib/navigation.js */ "./src/lib/navigation.js");
+
+
+
+
+
+const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
+  password_reset_email_sent: {
+    id: "password_reset_email_sent",
+    defaultMessage: [{
+      "type": 0,
+      "value": "An email with security code has been sent."
+    }]
+  },
+  password_reset_sms_sent: {
+    id: "password_reset_sms_sent",
+    defaultMessage: [{
+      "type": 0,
+      "value": "A text message with security code has been sent."
+    }]
+  }
+});
+class PasswordResetView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
+  constructor(props) {
+    super(props);
+    this.state = {
+      tel: '',
+      email: '',
+      password: '',
+      sent: false,
+      haveCode: false,
+      code: ''
+    };
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleEmailChange = this.handleEmailChange.bind(this);
+    this.handlePasswordChange = this.handlePasswordChange.bind(this);
+    this.handleCodeChange = this.handleCodeChange.bind(this);
+    this.handleShowCodeField = this.handleShowCodeField.bind(this);
+    props.tinode.connect().catch(err => {
+      this.props.onError(err.message, 'err');
+    });
+  }
+  componentDidMount() {
+    const parsed = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_4__["default"].parseUrlHash(window.location.hash);
+    this.setState({
+      token: parsed.params.token,
+      scheme: parsed.params.scheme
+    });
+  }
+  handleSubmit(e) {
+    e.preventDefault();
+    if (this.state.token) {
+      this.props.onReset(this.state.password.trim(), {
+        scheme: 'token',
+        token: this.state.token
+      });
+    } else if (this.state.code && this.props.reqCredMethod) {
+      const cred = this.state.email.trim() || this.state.tel.trim();
+      this.props.onReset(this.state.password.trim(), {
+        scheme: 'code',
+        secret: btoa(`${this.state.code}:${this.props.reqCredMethod}:${cred}`)
+      });
+    } else {
+      const email = this.state.email.trim();
+      const tel = this.state.tel.trim();
+      this.setState({
+        email: email,
+        tel: tel
+      });
+      this.props.onRequest(this.props.reqCredMethod, email || tel).then(_ => {
+        this.setState({
+          sent: true
+        });
+        const msg = this.props.reqCredMethod == 'email' ? messages.password_reset_email_sent : this.props.reqCredMethod == 'tel' ? messages.password_reset_sms_sent : null;
+        if (msg) {
+          this.props.onError(this.props.intl.formatMessage(msg), 'info');
+        }
+      });
+    }
+  }
+  handleEmailChange(e) {
+    this.setState({
+      email: e.target.value
+    });
+  }
+  handlePasswordChange(e) {
+    this.setState({
+      password: e.target.value
+    });
+  }
+  handleCodeChange(e) {
+    this.setState({
+      code: e.target.value.replace(/[^\d]/g, '')
+    });
+  }
+  handleShowCodeField(e) {
+    e.preventDefault();
+    this.setState({
+      haveCode: true
+    });
+  }
+  render() {
+    const showCredentialInput = !(this.state.token && this.state.scheme);
+    const showPasswordInput = !showCredentialInput || this.state.haveCode || this.state.sent;
+    const passwordInput = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+      className: "small gray",
+      htmlFor: "new-password"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "label_new_password",
+      defaultMessage: [{
+        "type": 0,
+        "value": "New password"
+      }]
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "new_password_placeholder",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Enter new password"
+      }]
+    }, placeholder => react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_visible_password_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      id: "new-password",
+      placeholder: placeholder,
+      autoComplete: "new-password",
+      value: this.state.password,
+      required: true,
+      autoFocus: true,
+      onChange: this.handlePasswordChange
+    })));
+    const emailInput = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, this.state.haveCode ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+      htmlFor: "inputEmail"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "label_reset_password",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Send a password reset email"
+      }]
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "credential_email_prompt",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Your registration email"
+      }]
+    }, placeholder => react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+      type: "email",
+      id: "inputEmail",
+      placeholder: placeholder,
+      autoComplete: "email",
+      value: this.state.email,
+      onChange: this.handleEmailChange,
+      required: true,
+      autoFocus: true
+    })));
+    const phoneInput = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, this.state.haveCode ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "label_reset_password_tel",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Send SMS to reset password"
+      }]
+    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+      className: "small gray"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "mobile_phone_number",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Mobile phone number"
+      }]
+    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "panel-form-row"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_phone_edit_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      autoFocus: true,
+      onShowCountrySelector: this.props.onShowCountrySelector,
+      onSubmit: number => this.setState({
+        tel: number
+      })
+    })));
+    const codeInput = react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
+      className: "small gray",
+      htmlFor: "enter-confirmation-code"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "enter_confirmation_code_prompt",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Confirmation code"
+      }]
+    }))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "numeric_confirmation_code_prompt",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Numbers only"
+      }]
+    }, numbers_only => react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+      type: "text",
+      id: "enter-confirmation-code",
+      placeholder: numbers_only,
+      maxLength: 10,
+      value: this.state.code,
+      onChange: this.handleCodeChange,
+      required: true
+    }))));
+    const credentialInput = this.props.reqCredMethod == 'email' ? emailInput : this.props.reqCredMethod == 'tel' ? phoneInput : null;
+    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
+      id: "password-reset-form",
+      onSubmit: this.handleSubmit
+    }, !this.state.sent && showCredentialInput ? credentialInput : null, this.state.haveCode || this.state.sent ? codeInput : null, showPasswordInput ? passwordInput : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "dialog-buttons"
+    }, this.state.haveCode || this.state.sent ? null : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+      href: "#",
+      onClick: this.handleShowCodeField,
+      style: {
+        marginRight: 'auto'
+      }
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "password_i_have_code",
+      defaultMessage: [{
+        "type": 0,
+        "value": "I have code"
+      }]
+    })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+      className: "primary",
+      type: "submit"
+    }, showPasswordInput ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "button_reset",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Reset"
+      }]
+    }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+      id: "button_send_request",
+      defaultMessage: [{
+        "type": 0,
+        "value": "Send request"
+      }]
+    }))));
+  }
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(PasswordResetView));
+
+/***/ }),
 
 /***/ "./src/widgets/phone-edit.jsx":
 /*!************************************!*\
@@ -71,6 +326,7 @@ class PhoneEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       this.inputField.setCustomValidity(this.props.intl.formatMessage(messages.mobile_number_required));
       return;
     }
+    this.inputField.setCustomValidity('');
     this.props.onSubmit(number.format('E.164'));
   }
   handleKeyDown(e) {
@@ -123,65 +379,6 @@ class PhoneEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
 
 /***/ }),
 
-/***/ "./node_modules/libphonenumber-js/es6/getExampleNumber.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/libphonenumber-js/es6/getExampleNumber.js ***!
-  \****************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ getExampleNumber)
-/* harmony export */ });
-/* harmony import */ var _PhoneNumber_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PhoneNumber.js */ "./node_modules/libphonenumber-js/es6/PhoneNumber.js");
-
-function getExampleNumber(country, examples, metadata) {
-  if (examples[country]) {
-    return new _PhoneNumber_js__WEBPACK_IMPORTED_MODULE_0__["default"](country, examples[country], metadata);
-  }
-}
-//# sourceMappingURL=getExampleNumber.js.map
-
-/***/ }),
-
-/***/ "./node_modules/libphonenumber-js/examples.mobile.json.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/libphonenumber-js/examples.mobile.json.js ***!
-  \****************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-// This file is a workaround for a bug in web browsers' "native"
-// ES6 importing system which is uncapable of importing "*.json" files.
-// https://github.com/catamphetamine/libphonenumber-js/issues/239
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({"AC":"40123","AD":"312345","AE":"501234567","AF":"701234567","AG":"2684641234","AI":"2642351234","AL":"672123456","AM":"77123456","AO":"923123456","AR":"91123456789","AS":"6847331234","AT":"664123456","AU":"412345678","AW":"5601234","AX":"412345678","AZ":"401234567","BA":"61123456","BB":"2462501234","BD":"1812345678","BE":"470123456","BF":"70123456","BG":"43012345","BH":"36001234","BI":"79561234","BJ":"90011234","BL":"690001234","BM":"4413701234","BN":"7123456","BO":"71234567","BQ":"3181234","BR":"11961234567","BS":"2423591234","BT":"17123456","BW":"71123456","BY":"294911911","BZ":"6221234","CA":"5062345678","CC":"412345678","CD":"991234567","CF":"70012345","CG":"061234567","CH":"781234567","CI":"0123456789","CK":"71234","CL":"221234567","CM":"671234567","CN":"13123456789","CO":"3211234567","CR":"83123456","CU":"51234567","CV":"9911234","CW":"95181234","CX":"412345678","CY":"96123456","CZ":"601123456","DE":"15123456789","DJ":"77831001","DK":"32123456","DM":"7672251234","DO":"8092345678","DZ":"551234567","EC":"991234567","EE":"51234567","EG":"1001234567","EH":"650123456","ER":"7123456","ES":"612345678","ET":"911234567","FI":"412345678","FJ":"7012345","FK":"51234","FM":"3501234","FO":"211234","FR":"612345678","GA":"06031234","GB":"7400123456","GD":"4734031234","GE":"555123456","GF":"694201234","GG":"7781123456","GH":"231234567","GI":"57123456","GL":"221234","GM":"3012345","GN":"601123456","GP":"690001234","GQ":"222123456","GR":"6912345678","GT":"51234567","GU":"6713001234","GW":"955012345","GY":"6091234","HK":"51234567","HN":"91234567","HR":"921234567","HT":"34101234","HU":"201234567","ID":"812345678","IE":"850123456","IL":"502345678","IM":"7924123456","IN":"8123456789","IO":"3801234","IQ":"7912345678","IR":"9123456789","IS":"6111234","IT":"3123456789","JE":"7797712345","JM":"8762101234","JO":"790123456","JP":"9012345678","KE":"712123456","KG":"700123456","KH":"91234567","KI":"72001234","KM":"3212345","KN":"8697652917","KP":"1921234567","KR":"1020000000","KW":"50012345","KY":"3453231234","KZ":"7710009998","LA":"2023123456","LB":"71123456","LC":"7582845678","LI":"660234567","LK":"712345678","LR":"770123456","LS":"50123456","LT":"61234567","LU":"628123456","LV":"21234567","LY":"912345678","MA":"650123456","MC":"612345678","MD":"62112345","ME":"67622901","MF":"690001234","MG":"321234567","MH":"2351234","MK":"72345678","ML":"65012345","MM":"92123456","MN":"88123456","MO":"66123456","MP":"6702345678","MQ":"696201234","MR":"22123456","MS":"6644923456","MT":"96961234","MU":"52512345","MV":"7712345","MW":"991234567","MX":"12221234567","MY":"123456789","MZ":"821234567","NA":"811234567","NC":"751234","NE":"93123456","NF":"381234","NG":"8021234567","NI":"81234567","NL":"612345678","NO":"40612345","NP":"9841234567","NR":"5551234","NU":"8884012","NZ":"211234567","OM":"92123456","PA":"61234567","PE":"912345678","PF":"87123456","PG":"70123456","PH":"9051234567","PK":"3012345678","PL":"512345678","PM":"551234","PR":"7872345678","PS":"599123456","PT":"912345678","PW":"6201234","PY":"961456789","QA":"33123456","RE":"692123456","RO":"712034567","RS":"601234567","RU":"9123456789","RW":"720123456","SA":"512345678","SB":"7421234","SC":"2510123","SD":"911231234","SE":"701234567","SG":"81234567","SH":"51234","SI":"31234567","SJ":"41234567","SK":"912123456","SL":"25123456","SM":"66661212","SN":"701234567","SO":"71123456","SR":"7412345","SS":"977123456","ST":"9812345","SV":"70123456","SX":"7215205678","SY":"944567890","SZ":"76123456","TA":"8999","TC":"6492311234","TD":"63012345","TG":"90112345","TH":"812345678","TJ":"917123456","TK":"7290","TL":"77212345","TM":"66123456","TN":"20123456","TO":"7715123","TR":"5012345678","TT":"8682911234","TV":"901234","TW":"912345678","TZ":"621234567","UA":"501234567","UG":"712345678","US":"2015550123","UY":"94231234","UZ":"912345678","VA":"3123456789","VC":"7844301234","VE":"4121234567","VG":"2843001234","VI":"3406421234","VN":"912345678","VU":"5912345","WF":"821234","WS":"7212345","XK":"43201234","YE":"712345678","YT":"639012345","ZA":"711234567","ZM":"955123456","ZW":"712345678"});
-
-/***/ }),
-
-/***/ "./node_modules/libphonenumber-js/mobile/exports/getExampleNumber.js":
-/*!***************************************************************************!*\
-  !*** ./node_modules/libphonenumber-js/mobile/exports/getExampleNumber.js ***!
-  \***************************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "getExampleNumber": () => (/* binding */ getExampleNumber)
-/* harmony export */ });
-/* harmony import */ var _withMetadataArgument_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./withMetadataArgument.js */ "./node_modules/libphonenumber-js/mobile/exports/withMetadataArgument.js");
-/* harmony import */ var _core_index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../core/index.js */ "./node_modules/libphonenumber-js/es6/getExampleNumber.js");
-
-
-
-function getExampleNumber() {
-	return (0,_withMetadataArgument_js__WEBPACK_IMPORTED_MODULE_0__["default"])(_core_index_js__WEBPACK_IMPORTED_MODULE_1__["default"], arguments)
-}
-
-/***/ }),
-
 /***/ "./src/dcodes.json":
 /*!*************************!*\
   !*** ./src/dcodes.json ***!
@@ -193,4 +390,4 @@ module.exports = JSON.parse('[{"dial":"93","code":"AF"},{"dial":"355","code":"AL
 /***/ })
 
 }]);
-//# sourceMappingURL=src_widgets_phone-edit_jsx.dev.js.map
+//# sourceMappingURL=src_views_password-reset-view_jsx.dev.js.map
