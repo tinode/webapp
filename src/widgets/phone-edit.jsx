@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { defineMessages, injectIntl } from 'react-intl';
-import { getExampleNumber, parsePhoneNumber } from 'libphonenumber-js/mobile';
+import { AsYouType, getExampleNumber, parsePhoneNumber } from 'libphonenumber-js/mobile';
 import examples from 'libphonenumber-js/mobile/examples'
 
 import * as dcodes from '../dcodes.json';
@@ -40,7 +40,10 @@ class PhoneEdit extends React.PureComponent {
   }
 
   handleChange(e) {
-    this.setState({localNumber: this.filterNumber(e.target.value)});
+    const prefix = `+${this.state.dialCode}`;
+    let formatted = new AsYouType().input(`${prefix}${this.filterNumber(e.target.value)}`);
+    formatted = formatted.substring(prefix.length).trim();
+    this.setState({localNumber: formatted});
   }
 
   handleFinished(e) {

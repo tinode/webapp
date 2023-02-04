@@ -315,9 +315,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-intl */ "react-intl");
 /* harmony import */ var react_intl__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_intl__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var libphonenumber_js_mobile__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! libphonenumber-js/mobile */ "./node_modules/libphonenumber-js/mobile/exports/parsePhoneNumberWithError.js");
-/* harmony import */ var libphonenumber_js_mobile__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! libphonenumber-js/mobile */ "./node_modules/libphonenumber-js/mobile/exports/getExampleNumber.js");
-/* harmony import */ var libphonenumber_js_mobile_examples__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! libphonenumber-js/mobile/examples */ "./node_modules/libphonenumber-js/examples.mobile.json.js");
+/* harmony import */ var libphonenumber_js_mobile__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! libphonenumber-js/mobile */ "./node_modules/libphonenumber-js/mobile/exports/AsYouType.js");
+/* harmony import */ var libphonenumber_js_mobile__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! libphonenumber-js/mobile */ "./node_modules/libphonenumber-js/mobile/exports/parsePhoneNumberWithError.js");
+/* harmony import */ var libphonenumber_js_mobile__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! libphonenumber-js/mobile */ "./node_modules/libphonenumber-js/mobile/exports/getExampleNumber.js");
+/* harmony import */ var libphonenumber_js_mobile_examples__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! libphonenumber-js/mobile/examples */ "./node_modules/libphonenumber-js/examples.mobile.json.js");
 /* harmony import */ var _dcodes_json__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../dcodes.json */ "./src/dcodes.json");
 /* harmony import */ var _lib_strformat__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/strformat */ "./src/lib/strformat.js");
 
@@ -356,8 +357,11 @@ class PhoneEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     this.showCountrySelector = this.showCountrySelector.bind(this);
   }
   handleChange(e) {
+    const prefix = `+${this.state.dialCode}`;
+    let formatted = new libphonenumber_js_mobile__WEBPACK_IMPORTED_MODULE_4__.AsYouType().input(`${prefix}${this.filterNumber(e.target.value)}`);
+    formatted = formatted.substring(prefix.length).trim();
     this.setState({
-      localNumber: this.filterNumber(e.target.value)
+      localNumber: formatted
     });
   }
   handleFinished(e) {
@@ -365,7 +369,7 @@ class PhoneEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     const raw = `${this.state.dialCode}${this.state.localNumber.trim()}`.replace(/[^\d]/g, '');
     let number = null;
     try {
-      number = (0,libphonenumber_js_mobile__WEBPACK_IMPORTED_MODULE_4__.parsePhoneNumberWithError)(`+${raw}`);
+      number = (0,libphonenumber_js_mobile__WEBPACK_IMPORTED_MODULE_5__.parsePhoneNumberWithError)(`+${raw}`);
     } catch (err) {}
     if (!number || !number.isValid()) {
       this.inputField.setCustomValidity(this.props.intl.formatMessage(messages.mobile_number_required));
@@ -395,7 +399,7 @@ class PhoneEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     return number.replace(/[^-\s().\d]/g, '');
   }
   placeholderNumber(code, dial) {
-    const sample = (0,libphonenumber_js_mobile__WEBPACK_IMPORTED_MODULE_5__.getExampleNumber)(code, libphonenumber_js_mobile_examples__WEBPACK_IMPORTED_MODULE_6__["default"]);
+    const sample = (0,libphonenumber_js_mobile__WEBPACK_IMPORTED_MODULE_6__.getExampleNumber)(code, libphonenumber_js_mobile_examples__WEBPACK_IMPORTED_MODULE_7__["default"]);
     return sample ? sample.formatInternational().substring(dial.length + 1).trim() : '123 0123';
   }
   render() {
