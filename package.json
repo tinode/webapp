@@ -9,7 +9,7 @@
   "scripts": {
     "start": "echo 'Read installation instructions'",
     "build": "npm run vers && npm run build:css && npm run extract && npm run build:i18n && npm run build:prod && npm run build:dev",
-    "clean": "rm umd/* && rm css/base.min.css && rm i18n.min/*",
+    "clean": "rm umd/* && rm css/base.min.css && rm src/i18n.min/*",
     "build:css": "postcss css/base.css > css/base.min.css",
     "build:dev": "webpack --mode development",
     "build:prod": "webpack --mode production",
