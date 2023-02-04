@@ -17005,11 +17005,11 @@ module.exports = ReactIntl;
 
 /***/ "tinode-sdk":
 /*!*************************!*\
-  !*** external "Tinode" ***!
+  !*** external "tinode" ***!
   \*************************/
 /***/ ((module) => {
 
-module.exports = Tinode;
+module.exports = tinode;
 
 /***/ }),
 
