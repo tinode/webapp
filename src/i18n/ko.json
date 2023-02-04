@@ -1544,7 +1544,7 @@
     "obsolete": false
   },
   "menu_item_audio_call": {
-    "translation": "부르다",
+    "translation": "전화",
     "defaultMessage": "Call",
     "description": "Start audio call",
     "missing": false,

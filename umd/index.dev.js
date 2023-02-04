@@ -3580,7 +3580,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "PACKAGE_VERSION": () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.21.0-rc2";
+const PACKAGE_VERSION = "0.21.0";
 
 /***/ }),
 
@@ -16435,7 +16435,7 @@ function isVersionServiceProvider(provider) {
 }
 
 const name$o = "@firebase/app";
-const version$1 = "0.9.1";
+const version$1 = "0.9.3";
 
 /**
  * @license
@@ -16502,7 +16502,7 @@ const name$2 = "@firebase/firestore";
 const name$1 = "@firebase/firestore-compat";
 
 const name = "firebase";
-const version = "9.16.0";
+const version = "9.17.1";
 
 /**
  * @license
@@ -17762,7 +17762,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const name = "@firebase/installations";
-const version = "0.6.1";
+const version = "0.6.3";
 
 /**
  * @license
@@ -20167,7 +20167,7 @@ async function messageEventListener(messaging, event) {
 }
 
 const name = "@firebase/messaging";
-const version = "0.12.1";
+const version = "0.12.3";
 
 /**
  * @license
@@ -20439,7 +20439,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var name = "firebase";
-var version = "9.16.0";
+var version = "9.17.1";
 
 /**
  * @license
