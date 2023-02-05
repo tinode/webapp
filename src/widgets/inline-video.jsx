@@ -27,11 +27,12 @@ export default class InlineVideo extends React.PureComponent {
     return (
       <div className={className}>
         {React.createElement('img', this.props)}
+        <div className="play-control">
         {this.props.onClick ?
-          <div className="play-control">
-            <i className="material-icons white bigger">play_arrow</i>
-          </div>
-          : null}
+          <i className="material-icons white bigger">play_arrow</i>
+          :
+          <img src="img/broken_video.png" width="36" height="36" />}
+        </div>
         {duration ? <div className="duration">{duration}</div> : null}
       </div>
     );

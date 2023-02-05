@@ -2828,8 +2828,6 @@ function handleVideoData(el, data, attr) {
     if (data.ref || data.val) {
       attr.onClick = this.onVideoPreview;
       attr.loading = 'lazy';
-    } else {
-      attr.src = null;
     }
     el = _widgets_inline_video_jsx__WEBPACK_IMPORTED_MODULE_6__["default"];
   } else {
@@ -13586,11 +13584,15 @@ class InlineVideo extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
     const className = 'inline-video' + (this.props.onClick ? ' image-clickable' : '');
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: className
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement('img', this.props), this.props.onClick ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement('img', this.props), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "play-control"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+    }, this.props.onClick ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons white bigger"
-    }, "play_arrow")) : null, duration ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, "play_arrow") : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
+      src: "img/broken_video.png",
+      width: "36",
+      height: "36"
+    })), duration ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "duration"
     }, duration) : null);
   }
