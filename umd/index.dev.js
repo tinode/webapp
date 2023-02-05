@@ -5644,6 +5644,9 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
   }
   handleMessageUpdate(msg) {
+    if (!this.state.topic) {
+      return;
+    }
     const topic = this.props.tinode.getTopic(this.state.topic);
     if (!msg) {
       this.setState({

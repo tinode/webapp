@@ -672,6 +672,9 @@ class MessagesView extends React.Component {
 
   // The 'msg' could be false-ish if some message ranges were deleted.
   handleMessageUpdate(msg) {
+    if (!this.state.topic) {
+      return;
+    }
     const topic = this.props.tinode.getTopic(this.state.topic);
     if (!msg) {
       // msg could be null if one or more messages were deleted.
