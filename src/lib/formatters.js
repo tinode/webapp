@@ -236,8 +236,6 @@ function handleVideoData(el, data, attr) {
     if (data.ref || data.val) {
       attr.onClick = this.onVideoPreview;
       attr.loading = 'lazy';
-    } else {
-      attr.src = null;
     }
     el = InlineVideo;
   } else {
