@@ -2701,6 +2701,7 @@ function fullFormatter(style, data, values, key, stack) {
       }
       break;
     case 'VD':
+      console.log("Video data/attr:", data, attr);
       el = handleVideoData.call(this, el, data, attr);
       values = null;
       break;
