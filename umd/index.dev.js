@@ -3525,6 +3525,7 @@ function deliveryMarker(received) {
         name: 'access_time'
       };
     case tinode_sdk__WEBPACK_IMPORTED_MODULE_0__.Tinode.MESSAGE_STATUS_FAILED:
+    case tinode_sdk__WEBPACK_IMPORTED_MODULE_0__.Tinode.MESSAGE_STATUS_FATAL:
       return {
         name: 'warning',
         color: 'danger-color'
@@ -5458,21 +5459,21 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         });
       }
       this.props.onNewTopicCreated(this.props.topic, ctrl.topic);
-      let calls = [];
+      let discard = [];
       topic.queuedMessages(pub => {
         if (pub._sending) {
           return;
         }
-        if (pub.head && pub.head.webrtc) {
-          calls.push(pub.seq);
+        if (pub._fatal || pub.head && pub.head.webrtc) {
+          discard.push(pub.seq);
           return;
         }
         if (topic.isSubscribed()) {
           this.retrySend(pub);
         }
       });
-      if (calls.length > 0) {
-        topic.delMessagesList(calls, true);
+      if (discard.length > 0) {
+        topic.delMessagesList(discard, true);
       }
     }).catch(err => {
       console.error("Failed subscription to", this.state.topic, err);
@@ -11030,7 +11031,7 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     if (this.props.received == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_FAILED) {
       menuItems.push('menu_item_send_retry');
     }
-    if (this.props.userIsWriter && this.props.received > tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_FAILED) {
+    if (this.props.userIsWriter && this.props.received > tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_FATAL) {
       menuItems.push('menu_item_reply');
       if (!this.props.response) {
         let immutable = false;
@@ -13590,6 +13591,9 @@ class InlineVideo extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       className: "material-icons white bigger"
     }, "play_arrow") : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
       src: "img/broken_video.png",
+      style: {
+        filter: 'invert(100%)'
+      },
       width: "36",
       height: "36"
     })), duration ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -14667,7 +14671,7 @@ class ReceivedMarker extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     let timestamp;
     if (this.props.received <= tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_SENDING) {
       timestamp = formatMessage(messages.message_sending);
-    } else if (this.props.received == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_FAILED) {
+    } else if (this.props.received == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_FAILED || this.props.received == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_FATAL) {
       timestamp = formatMessage(messages.message_sending_failed);
     } else {
       timestamp = this.props.timestamp.toLocaleTimeString(this.props.intl.locale, {

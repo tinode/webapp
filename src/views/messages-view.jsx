@@ -457,24 +457,24 @@ class MessagesView extends React.Component {
           this.setState({topic: ctrl.topic});
         }
         this.props.onNewTopicCreated(this.props.topic, ctrl.topic);
-        // If there are unsent messages (except video call messages),
-        // try sending them now. Unsent video call messages will be dropped.
-        let calls = [];
-        topic.queuedMessages((pub) => {
+        // If there are unsent messages (except hard-failed and video call messages),
+        // try sending them now. Hard-failed and unsent video call messages will be dropped.
+        let discard = [];
+        topic.queuedMessages(pub => {
           if (pub._sending) {
             return;
           }
-          if (pub.head && pub.head.webrtc) {
-            // Filter out unsent video call messages.
-            calls.push(pub.seq);
+          if (pub._fatal || (pub.head && pub.head.webrtc)) {
+            // Filter out unsent failed & video call messages.
+            discard.push(pub.seq);
             return;
           }
           if (topic.isSubscribed()) {
             this.retrySend(pub);
           }
         });
-        if (calls.length > 0) {
-          topic.delMessagesList(calls, true);
+        if (discard.length > 0) {
+          topic.delMessagesList(discard, true);
         }
       })
       .catch(err => {
@@ -1057,8 +1057,8 @@ class MessagesView extends React.Component {
     // Small preview to show while uploading.
     b64conv[2] = imageScaled(previewBlob, VIDEO_PREVIEW_DIM, VIDEO_PREVIEW_DIM, -1, false)
       .then(scaled => blobToBase64(scaled.blob));
+    // Convert tiny image into base64 for serialization and previewing.
     Promise.all(b64conv)
-      // Convert tiny image into base64 for serialization and previewing.
       .then(b64s => {
         const [video, img, preview] = b64s;
         let msg = Drafty.insertVideo(null, 0, {
@@ -1074,6 +1074,7 @@ class MessagesView extends React.Component {
           size: videoBlob.size,
           urlPromise: uploadCompletionPromise
         });
+
         if (caption) {
           msg = Drafty.appendLineBreak(msg);
           msg = Drafty.append(msg, Drafty.parse(caption));
