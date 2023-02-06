@@ -93,7 +93,7 @@ class BaseChatMessage extends React.PureComponent {
     if (this.props.received == Tinode.MESSAGE_STATUS_FAILED) {
       menuItems.push('menu_item_send_retry');
     }
-    if (this.props.userIsWriter && this.props.received > Tinode.MESSAGE_STATUS_FAILED) {
+    if (this.props.userIsWriter && this.props.received > Tinode.MESSAGE_STATUS_FATAL) {
       menuItems.push('menu_item_reply');
       if (!this.props.response) {
         let immutable = false;
