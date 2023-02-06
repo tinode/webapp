@@ -3537,8 +3537,13 @@ class Topic {
     if (_drafty_js__WEBPACK_IMPORTED_MODULE_4___default().hasEntities(pub.content)) {
       attachments = [];
       _drafty_js__WEBPACK_IMPORTED_MODULE_4___default().entities(pub.content, data => {
-        if (data && data.ref) {
-          attachments.push(data.ref);
+        if (data) {
+          if (data.ref) {
+            attachments.push(data.ref);
+          }
+          if (data.preref) {
+            attachments.push(data.preref);
+          }
         }
       });
       if (attachments.length == 0) {
