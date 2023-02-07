@@ -3330,7 +3330,7 @@ function secondsToTime(seconds, fixedMin) {
     return '';
   }
   let min = (Math.floor(seconds / 60) | 0) % 60;
-  let hours = Math.floor(seconds / 36000) | 0;
+  let hours = Math.floor(seconds / 3600) | 0;
   if (fixedMin || hours > 0) {
     min = min < 10 ? `0${min}` : min;
   }
