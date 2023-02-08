@@ -84,7 +84,7 @@ class CredentialEdit extends React.PureComponent {
 
     const changePhone = (
       <><div className="panel-form-row">
-      <label className="large"><FormattedMessage id="change_phonel" defaultMessage="Change phone number"
+      <label className="large"><FormattedMessage id="change_phone" defaultMessage="Change phone number"
         description="Prompt to change current phone number"/></label>
       </div>
       <div className="group">

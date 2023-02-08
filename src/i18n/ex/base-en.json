@@ -119,6 +119,10 @@
     "defaultMessage": "Update",
     "description": "Button [Update]"
   },
+  "call_busy": {
+    "defaultMessage": "busy",
+    "description": "Label for busy call line"
+  },
   "call_cancelled": {
     "defaultMessage": "cancelled",
     "description": "Label for cancelled outgoing call"
@@ -159,7 +163,7 @@
     "defaultMessage": "Change email",
     "description": "Prompt to change current email"
   },
-  "change_phonel": {
+  "change_phone": {
     "defaultMessage": "Change phone number",
     "description": "Prompt to change current phone number"
   },

@@ -351,7 +351,7 @@ class CredentialEdit extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", {
       className: "large"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
-      id: "change_phonel",
+      id: "change_phone",
       defaultMessage: [{
         "type": 0,
         "value": "Change phone number"
