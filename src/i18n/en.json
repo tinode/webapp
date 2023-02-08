@@ -1556,5 +1556,12 @@
     "description": "Error message when uploaded video is invalid",
     "missing": false,
     "obsolete": false
+  },
+  "call_busy": {
+    "translation": "busy",
+    "defaultMessage": "busy",
+    "description": "Label for busy call line",
+    "missing": false,
+    "obsolete": false
   }
 }

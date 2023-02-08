@@ -10625,12 +10625,21 @@ __webpack_require__.r(__webpack_exports__);
 
 class CallMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
-    const isCallDropped = ['declined', 'disconnected', 'missed'].includes(this.props.callState);
+    const isCallDropped = ['busy', 'declined', 'disconnected', 'missed'].includes(this.props.callState);
     const successClass = 'material-icons medium ' + (isCallDropped ? 'red' : 'green');
     const callIcon = this.props.incoming ? isCallDropped ? 'call_missed' : 'call_received' : isCallDropped ? 'call_missed_outgoing' : 'call_made';
     let duration;
     if (isCallDropped) {
       switch (this.props.callState) {
+        case 'busy':
+          duration = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "call_busy",
+            defaultMessage: [{
+              "type": 0,
+              "value": "busy"
+            }]
+          });
+          break;
         case 'declined':
           duration = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
             id: "call_declined",
@@ -11312,11 +11321,20 @@ __webpack_require__.r(__webpack_exports__);
 
 class CallStatus extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   render() {
-    const isCallDropped = ['declined', 'disconnected', 'missed'].includes(this.props.callState);
+    const isCallDropped = ['busy', 'declined', 'disconnected', 'missed'].includes(this.props.callState);
     const icon2 = this.props.incoming ? isCallDropped ? 'call_missed' : 'call_received' : isCallDropped ? 'call_missed_outgoing' : 'call_made';
     let duration;
     if (isCallDropped) {
       switch (this.props.callState) {
+        case 'busy':
+          duration = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
+            id: "call_busy",
+            defaultMessage: [{
+              "type": 0,
+              "value": "busy"
+            }]
+          });
+          break;
         case 'declined':
           duration = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_intl__WEBPACK_IMPORTED_MODULE_1__.FormattedMessage, {
             id: "call_declined",

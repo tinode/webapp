@@ -9,13 +9,16 @@ import { secondsToTime } from '../lib/strformat.js';
 //  success: true | false.
 export default class CallStatus extends React.PureComponent {
   render() {
-    const isCallDropped = ['declined', 'disconnected', 'missed'].includes(this.props.callState);
+    const isCallDropped = ['busy', 'declined', 'disconnected', 'missed'].includes(this.props.callState);
     const icon2 = this.props.incoming ?
       (isCallDropped ? 'call_missed' : 'call_received') :
       (isCallDropped ? 'call_missed_outgoing' : 'call_made');
     let duration;
     if (isCallDropped) {
       switch (this.props.callState) {
+        case 'busy':
+          duration = <FormattedMessage id="call_busy" defaultMessage="busy" description="Label for busy call line" />;
+          break;
         case 'declined':
           duration = <FormattedMessage id="call_declined" defaultMessage="declined" description="Label for declined call" />;
           break;
