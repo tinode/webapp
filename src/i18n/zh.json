@@ -448,7 +448,7 @@
     "obsolete": false
   },
   "label_default_access_mode": {
-    "translation": "蓦然访问模式：",
+    "translation": "默认访问模式：",
     "defaultMessage": "Default access mode:",
     "description": "Label for default access mode",
     "missing": false,
