@@ -121,7 +121,8 @@ class CallPanel extends React.PureComponent {
 
   handleVideoCallAccepted(info) {
     RING_SOUND.pause();
-    const pc = this.createPeerConnection();
+    // Create peer connection with a data channel.
+    const pc = this.createPeerConnection(true);
     const stream = this.state.localStream;
     stream.getTracks().forEach(track => {
       pc.addTrack(track, stream);
@@ -230,7 +231,7 @@ class CallPanel extends React.PureComponent {
       this.state.pc.onicecandidateerror = null;
       this.state.pc.ondatachannel = null;
 
-      if (this.state.dataChannel) {
+      if (this.state.dataChannel && (this.state.dataChannel.readyState == 'open' || this.state.dataChannel.readyState == 'connecting')) {
         this.state.dataChannel.close();
       }
       this.state.pc.close();
@@ -284,11 +285,12 @@ class CallPanel extends React.PureComponent {
     }
   }
 
-  handleDataChannelClose() {
-    /* no action */
+  handleDataChannelClose(event) {
+    console.log('close data channel:', event);
   }
 
   handleDataChannelEvent(event) {
+    console.log('data channel event:', event);
     const channel = event.channel;
     channel.onerror = this.handleDataChannelError;
     channel.onmessage = this.handleDataChannelMessage;
@@ -297,7 +299,7 @@ class CallPanel extends React.PureComponent {
     this.setState({dataChannel: channel});
   }
 
-  createPeerConnection() {
+  createPeerConnection(withDataChannel) {
     const iceServers = this.props.tinode.getServerParam('iceServers', null);
     const pc = iceServers ? new RTCPeerConnection({iceServers: iceServers}) : new RTCPeerConnection();
 
@@ -310,15 +312,17 @@ class CallPanel extends React.PureComponent {
     pc.ontrack = this.handleTrackEvent;
     pc.ondatachannel = this.handleDataChannelEvent;
 
-    // creating data channel events
-    const channel = pc.createDataChannel("events", {ordered: true});
-    channel.onerror = this.handleDataChannelError;
-    channel.onmessage = this.handleDataChannelMessage;
-    channel.onopen = this.handleDataChannelOpen;
-    channel.onclose = this.handleDataChannelClose;
-
-    this.setState({pc: pc, dataChannel: channel, waitingForPeer: false});
-
+    let stateUpdate = {pc: pc, waitingForPeer: false};
+    if (withDataChannel) {
+      // Create data channel for exchanging events.
+      const channel = pc.createDataChannel("events", {ordered: true});
+      channel.onerror = this.handleDataChannelError;
+      channel.onmessage = this.handleDataChannelMessage;
+      channel.onopen = this.handleDataChannelOpen;
+      channel.onclose = this.handleDataChannelClose;
+      stateUpdate.dataChannel = channel;
+    }
+    this.setState(stateUpdate);
     return pc;
   }
 
@@ -441,7 +445,9 @@ class CallPanel extends React.PureComponent {
 
   handleVideoOfferMsg(info) {
     let localStream = null;
-    const pc = this.state.pc ? this.state.pc : this.createPeerConnection();
+    // If needed, create peer connection.
+    // Not creating data channel since it should be created by the peer.
+    const pc = this.state.pc ? this.state.pc : this.createPeerConnection(false);
     const desc = new RTCSessionDescription(info.payload);
 
     pc.setRemoteDescription(desc).then(_ => {

@@ -10372,7 +10372,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   }
   handleVideoCallAccepted(info) {
     RING_SOUND.pause();
-    const pc = this.createPeerConnection();
+    const pc = this.createPeerConnection(true);
     const stream = this.state.localStream;
     stream.getTracks().forEach(track => {
       pc.addTrack(track, stream);
@@ -10466,7 +10466,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       this.state.pc.onnegotiationneeded = null;
       this.state.pc.onicecandidateerror = null;
       this.state.pc.ondatachannel = null;
-      if (this.state.dataChannel) {
+      if (this.state.dataChannel && (this.state.dataChannel.readyState == 'open' || this.state.dataChannel.readyState == 'connecting')) {
         this.state.dataChannel.close();
       }
       this.state.pc.close();
@@ -10523,8 +10523,11 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       event.target.send(VIDEO_UNMUTED_EVENT);
     }
   }
-  handleDataChannelClose() {}
+  handleDataChannelClose(event) {
+    console.log('close data channel:', event);
+  }
   handleDataChannelEvent(event) {
+    console.log('data channel event:', event);
     const channel = event.channel;
     channel.onerror = this.handleDataChannelError;
     channel.onmessage = this.handleDataChannelMessage;
@@ -10534,7 +10537,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
       dataChannel: channel
     });
   }
-  createPeerConnection() {
+  createPeerConnection(withDataChannel) {
     const iceServers = this.props.tinode.getServerParam('iceServers', null);
     const pc = iceServers ? new RTCPeerConnection({
       iceServers: iceServers
@@ -10547,18 +10550,21 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
     pc.onicecandidateerror = this.handleIceCandidateErrorEvent;
     pc.ontrack = this.handleTrackEvent;
     pc.ondatachannel = this.handleDataChannelEvent;
-    const channel = pc.createDataChannel("events", {
-      ordered: true
-    });
-    channel.onerror = this.handleDataChannelError;
-    channel.onmessage = this.handleDataChannelMessage;
-    channel.onopen = this.handleDataChannelOpen;
-    channel.onclose = this.handleDataChannelClose;
-    this.setState({
+    let stateUpdate = {
       pc: pc,
-      dataChannel: channel,
       waitingForPeer: false
-    });
+    };
+    if (withDataChannel) {
+      const channel = pc.createDataChannel("events", {
+        ordered: true
+      });
+      channel.onerror = this.handleDataChannelError;
+      channel.onmessage = this.handleDataChannelMessage;
+      channel.onopen = this.handleDataChannelOpen;
+      channel.onclose = this.handleDataChannelClose;
+      stateUpdate.dataChannel = channel;
+    }
+    this.setState(stateUpdate);
     return pc;
   }
   handleVideoAnswerMsg(info) {
@@ -10655,7 +10661,7 @@ class CallPanel extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompon
   }
   handleVideoOfferMsg(info) {
     let localStream = null;
-    const pc = this.state.pc ? this.state.pc : this.createPeerConnection();
+    const pc = this.state.pc ? this.state.pc : this.createPeerConnection(false);
     const desc = new RTCSessionDescription(info.payload);
     pc.setRemoteDescription(desc).then(_ => {
       return navigator.mediaDevices.getUserMedia(this.localStreamConstraints);
