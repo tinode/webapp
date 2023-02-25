@@ -1903,7 +1903,7 @@ video {
 .meta .bubble.date {
   font-size: smaller;
   padding: 0.5rem 0.5rem 0.5rem 0.5rem;
-  background-color: rgb(244 244 244 / 66%);
+  background-color: rgb(244 244 244 / 90%);
   text-transform: uppercase;
 }
 
