@@ -1833,9 +1833,9 @@ video {
   text-align: left;
   color: #212121;
   border-radius: 0.5rem;
-  box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.12);
   transition: ease-out background-color 0.5s;
   transition-delay: 0.3s;
+  filter: drop-shadow(0.5px 0.5px 0.7px rgb(0,0,0,0.3));
 }
 
 .chat-box li.single {
@@ -1903,7 +1903,7 @@ video {
 .meta .bubble.date {
   font-size: smaller;
   padding: 0.5rem 0.5rem 0.5rem 0.5rem;
-  background-color: rgb(244 244 244 / 66%);
+  background-color: rgb(255 255 255 / 80%);
   text-transform: uppercase;
 }
 
@@ -1918,7 +1918,6 @@ video {
   background-color: #c5e1a5;
   clip-path: polygon(100% 0, 0 110%, 100% 110%);
   -webkit-clip-path: polygon(100% 0, 0 110%, 100% 110%);
-  box-shadow: 0 1px 0.5px rgb(0 0 0 / 12%);
   border-bottom-left-radius: 0.3rem;
   -moz-transition: ease-out background-color 0.5s;
   transition: ease-out background-color 0.5s;
@@ -1940,7 +1939,6 @@ video {
   background-color: #fafafa;
   clip-path: polygon(0 0, 100% 110%, 0 110%);
   -webkit-clip-path: polygon(0 0, 100% 110%, 0 110%);
-  box-shadow: 0 1px 0.5px rgb(0 0 0 / 12%);
   border-bottom-right-radius: 0.3rem;
   -moz-transition: ease-out background-color 0.5s;
   transition: ease-out background-color 0.5s;
