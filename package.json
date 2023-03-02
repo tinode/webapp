@@ -1,10 +1,10 @@
 {
   "name": "tinode-webapp",
   "description": "Tinode messenger for the web",
-  "version": "0.21.1",
+  "version": "0.22.0-rc1",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tinode/example-react-js.git"
+    "url": "https://github.com/tinode/webapp.git"
   },
   "scripts": {
     "start": "echo 'Read installation instructions'",
@@ -58,7 +58,7 @@
   ],
   "main": "umd/index.prod.js",
   "bugs": {
-    "url": "https://github.com/tinode/example-react-js/issues"
+    "url": "https://github.com/tinode/webapp/issues"
   },
   "homepage": "https://github.com/tinode/chat",
   "email": "info@tinode.co",
@@ -70,7 +70,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-intl": "^6.2.1",
-    "tinode-sdk": "^0.21.0",
+    "tinode-sdk": "^0.22.0-rc1",
     "webm-duration-fix": "^1.0.4"
   },
   "devDependencies": {

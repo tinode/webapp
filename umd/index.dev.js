@@ -11,6 +11,7 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "CONSTANTS": () => (/* binding */ CONSTANTS),
+/* harmony export */   "DecodeBase64StringError": () => (/* binding */ DecodeBase64StringError),
 /* harmony export */   "Deferred": () => (/* binding */ Deferred),
 /* harmony export */   "ErrorFactory": () => (/* binding */ ErrorFactory),
 /* harmony export */   "FirebaseError": () => (/* binding */ FirebaseError),
@@ -378,7 +379,7 @@ const base64 = {
             const byte4 = haveByte4 ? charToByteMap[input.charAt(i)] : 64;
             ++i;
             if (byte1 == null || byte2 == null || byte3 == null || byte4 == null) {
-                throw Error();
+                throw new DecodeBase64StringError();
             }
             const outByte1 = (byte1 << 2) | (byte2 >> 4);
             output.push(outByte1);
@@ -419,6 +420,15 @@ const base64 = {
         }
     }
 };
+/**
+ * An error encountered while decoding base64 string.
+ */
+class DecodeBase64StringError extends Error {
+    constructor() {
+        super(...arguments);
+        this.name = 'DecodeBase64StringError';
+    }
+}
 /**
  * URL-safe base64 encoding
  */
@@ -3579,7 +3589,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "PACKAGE_VERSION": () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.21.1";
+const PACKAGE_VERSION = "0.22.0-rc1";
 
 /***/ }),
 
@@ -16468,7 +16478,7 @@ function isVersionServiceProvider(provider) {
 }
 
 const name$o = "@firebase/app";
-const version$1 = "0.9.3";
+const version$1 = "0.9.4";
 
 /**
  * @license
@@ -16535,7 +16545,7 @@ const name$2 = "@firebase/firestore";
 const name$1 = "@firebase/firestore-compat";
 
 const name = "firebase";
-const version = "9.17.1";
+const version = "9.17.2";
 
 /**
  * @license
@@ -17795,7 +17805,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const name = "@firebase/installations";
-const version = "0.6.3";
+const version = "0.6.4";
 
 /**
  * @license
@@ -20200,7 +20210,7 @@ async function messageEventListener(messaging, event) {
 }
 
 const name = "@firebase/messaging";
-const version = "0.12.3";
+const version = "0.12.4";
 
 /**
  * @license
@@ -20472,7 +20482,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var name = "firebase";
-var version = "9.17.1";
+var version = "9.17.2";
 
 /**
  * @license
