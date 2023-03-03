@@ -273,11 +273,6 @@ textarea.inplace-edit {
   background-color: rgba(0,0,0,0.3);
 }
 
-/* Firefox only */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: silver;
-}
 /* END of Scrollbar styling.  */
 
 /* BEGIN Popup/dropdown menu */
