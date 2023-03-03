@@ -5215,6 +5215,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
     this.handleCallHangup = this.handleCallHangup.bind(this);
     this.isDragEnabled = this.isDragEnabled.bind(this);
+    this.handleDragStart = this.handleDragStart.bind(this);
     this.handleDragIn = this.handleDragIn.bind(this);
     this.handleDragOut = this.handleDragOut.bind(this);
     this.handleDrag = this.handleDrag.bind(this);
@@ -5240,6 +5241,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       this.messagesScroller.addEventListener('scroll', this.handleScrollEvent);
     }
     if (this.dndRef) {
+      this.dndRef.addEventListener('dragstart', this.handleDragStart);
       this.dndRef.addEventListener('dragenter', this.handleDragIn);
       this.dndRef.addEventListener('dragleave', this.handleDragOut);
       this.dndRef.addEventListener('dragover', this.handleDrag);
@@ -5252,6 +5254,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
     this.clearNotificationQueue();
     if (this.dndRef) {
+      this.dndRef.removeEventListener('dragstart', this.handleDragStart);
       this.dndRef.removeEventListener('dragenter', this.handleDragIn);
       this.dndRef.removeEventListener('dragleave', this.handleDragOut);
       this.dndRef.removeEventListener('dragover', this.handleDrag);
@@ -5543,6 +5546,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   }
   mountDnDEvents(dnd) {
     if (dnd) {
+      dnd.addEventListener('dragstart', this.handleDragStart);
       dnd.addEventListener('dragenter', this.handleDragIn);
       dnd.addEventListener('dragleave', this.handleDragOut);
       dnd.addEventListener('dragover', this.handleDrag);
@@ -6161,9 +6165,10 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
   isDragEnabled() {
     return this.state.isWriter && !this.state.unconfirmed && !this.props.forwardMessage && !this.state.peerMessagingDisabled;
   }
-  handleDrag(e) {
+  handleDragStart(e) {
     e.preventDefault();
     e.stopPropagation();
+    e.dataTransfer.clearData();
   }
   handleDragIn(e) {
     e.preventDefault();
@@ -6185,6 +6190,10 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       });
     }
   }
+  handleDrag(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
   handleDrop(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -6193,7 +6202,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     });
     if (this.isDragEnabled() && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       this.handleFileDrop(e.dataTransfer.files);
-      e.dataTransfer.clearData();
       this.dragCounter = 0;
     }
   }

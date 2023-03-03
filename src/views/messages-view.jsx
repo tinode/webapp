@@ -145,6 +145,7 @@ class MessagesView extends React.Component {
     this.handleCallHangup = this.handleCallHangup.bind(this);
 
     this.isDragEnabled = this.isDragEnabled.bind(this);
+    this.handleDragStart = this.handleDragStart.bind(this);
     this.handleDragIn = this.handleDragIn.bind(this);
     this.handleDragOut = this.handleDragOut.bind(this);
     this.handleDrag = this.handleDrag.bind(this);
@@ -182,6 +183,7 @@ class MessagesView extends React.Component {
 
     // Drag and drop events
     if (this.dndRef) {
+      this.dndRef.addEventListener('dragstart', this.handleDragStart);
       this.dndRef.addEventListener('dragenter', this.handleDragIn);
       this.dndRef.addEventListener('dragleave', this.handleDragOut);
       this.dndRef.addEventListener('dragover', this.handleDrag);
@@ -199,6 +201,7 @@ class MessagesView extends React.Component {
 
     // Drag and drop events
     if (this.dndRef) {
+      this.dndRef.removeEventListener('dragstart', this.handleDragStart);
       this.dndRef.removeEventListener('dragenter', this.handleDragIn);
       this.dndRef.removeEventListener('dragleave', this.handleDragOut);
       this.dndRef.removeEventListener('dragover', this.handleDrag);
@@ -543,9 +546,10 @@ class MessagesView extends React.Component {
     }
   }
 
-  /* Mound draf and drop events */
+  /* Mount drag and drop events */
   mountDnDEvents(dnd) {
     if (dnd) {
+      dnd.addEventListener('dragstart', this.handleDragStart);
       dnd.addEventListener('dragenter', this.handleDragIn);
       dnd.addEventListener('dragleave', this.handleDragOut);
       dnd.addEventListener('dragover', this.handleDrag);
@@ -1258,9 +1262,10 @@ class MessagesView extends React.Component {
     return this.state.isWriter && !this.state.unconfirmed && !this.props.forwardMessage && !this.state.peerMessagingDisabled;
   }
 
-  handleDrag(e) {
+  handleDragStart(e) {
     e.preventDefault();
     e.stopPropagation();
+    e.dataTransfer.clearData();
   }
 
   handleDragIn(e) {
@@ -1281,13 +1286,17 @@ class MessagesView extends React.Component {
     }
   }
 
+  handleDrag(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
   handleDrop(e) {
     e.preventDefault();
     e.stopPropagation();
     this.setState({dragging: false});
     if (this.isDragEnabled() && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       this.handleFileDrop(e.dataTransfer.files);
-      e.dataTransfer.clearData();
       this.dragCounter = 0;
     }
   }
