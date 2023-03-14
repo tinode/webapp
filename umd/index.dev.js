@@ -12653,6 +12653,19 @@ class DocPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCompo
   constructor(props) {
     super(props);
     this.handleSendDoc = this.handleSendDoc.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+  }
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleKeyDown);
+  }
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyDown);
+  }
+  handleKeyDown(e) {
+    e.preventDefault();
+    if (e.key === 'Escape') {
+      this.props.onClose();
+    }
   }
   handleSendDoc(caption) {
     this.props.onClose();
@@ -13363,6 +13376,22 @@ class ImagePreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
       height: 0
     };
     this.handleSendImage = this.handleSendImage.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+  }
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleKeyDown);
+  }
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyDown);
+  }
+  handleKeyDown(e) {
+    if (this.props.onSendMessage) {
+      return;
+    }
+    e.preventDefault();
+    if (e.key === 'Escape') {
+      this.props.onClose();
+    }
   }
   assignWidth(node) {
     if (node && !this.state.width) {
@@ -16140,6 +16169,22 @@ class VideoPreview extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCom
     super(props);
     this.videoRef = react__WEBPACK_IMPORTED_MODULE_0___default().createRef();
     this.handleSendVideo = this.handleSendVideo.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+  }
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleKeyDown);
+  }
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyDown);
+  }
+  handleKeyDown(e) {
+    if (this.props.onSendMessage) {
+      return;
+    }
+    e.preventDefault();
+    if (e.key === 'Escape') {
+      this.props.onClose();
+    }
   }
   handleSendVideo(caption) {
     this.props.onClose();

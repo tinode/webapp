@@ -16,6 +16,26 @@ export default class ImagePreview extends React.PureComponent {
     };
 
     this.handleSendImage = this.handleSendImage.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+  }
+
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleKeyDown);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyDown);
+  }
+
+  handleKeyDown(e) {
+    if (this.props.onSendMessage) {
+      return;
+    }
+
+    e.preventDefault();
+    if (e.key === 'Escape') {
+      this.props.onClose();
+    }
   }
 
   assignWidth(node) {
@@ -64,7 +84,7 @@ export default class ImagePreview extends React.PureComponent {
           }
           <a href="#" onClick={(e) => {e.preventDefault(); this.props.onClose();}}><i className="material-icons gray">close</i></a>
         </div>
-        <div id="image-preview-container" ref={(node) => this.assignWidth(node)}>
+        <div id="image-preview-container" ref={node => this.assignWidth(node)}>
           <img src={this.props.content.url} style={size} className="image-preview" alt={this.props.content.filename} />
         </div>
         {this.props.onSendMessage ?

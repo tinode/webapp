@@ -19,6 +19,26 @@ class VideoPreview extends React.PureComponent {
     this.videoRef = React.createRef();
 
     this.handleSendVideo = this.handleSendVideo.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+  }
+
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleKeyDown);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyDown);
+  }
+
+  handleKeyDown(e) {
+    if (this.props.onSendMessage) {
+      return;
+    }
+
+    e.preventDefault();
+    if (e.key === 'Escape') {
+      this.props.onClose();
+    }
   }
 
   handleSendVideo(caption) {

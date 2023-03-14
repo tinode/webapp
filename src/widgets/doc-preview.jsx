@@ -17,6 +17,22 @@ export default class DocPreview extends React.PureComponent {
     super(props);
 
     this.handleSendDoc = this.handleSendDoc.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+  }
+
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleKeyDown);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyDown);
+  }
+
+  handleKeyDown(e) {
+    e.preventDefault();
+    if (e.key === 'Escape') {
+      this.props.onClose();
+    }
   }
 
   handleSendDoc(caption) {
