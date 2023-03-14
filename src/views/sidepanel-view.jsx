@@ -124,7 +124,7 @@ class SidepanelView extends React.PureComponent {
     }
 
     return (
-      <div id="sidepanel" className={this.props.hideSelf ? 'nodisplay' : null}>
+      <div id="sidepanel">
         <SideNavbar
           state={view}
           title={title}

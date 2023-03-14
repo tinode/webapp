@@ -6210,9 +6210,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       formatMessage
     } = this.props.intl;
     let component;
-    if (this.props.hideSelf) {
-      component = null;
-    } else if (!this.state.topic) {
+    if (!this.state.topic) {
       component = react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_logo_view_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
         serverVersion: this.props.serverVersion,
         serverAddress: this.props.serverAddress
@@ -7019,8 +7017,7 @@ class SidepanelView extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       onCancel = this.props.onCancel;
     }
     return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-      id: "sidepanel",
-      className: this.props.hideSelf ? 'nodisplay' : null
+      id: "sidepanel"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_side_navbar_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
       state: view,
       title: title,
@@ -8963,11 +8960,10 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
         this.state.alertParams.onConfirm();
       } : null,
       confirm: this.state.alertParams.confirm
-    }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_sidepanel_view_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
+    }) : null, !this.state.displayMobile || this.state.mobilePanel == 'sidepanel' ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_sidepanel_view_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
       tinode: this.tinode,
       connected: this.state.connected,
       displayMobile: this.state.displayMobile,
-      hideSelf: this.state.displayMobile && this.state.mobilePanel !== 'sidepanel',
       state: this.state.sidePanelSelected,
       title: this.state.sidePanelTitle,
       avatar: this.state.sidePanelAvatar,
@@ -9028,7 +9024,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       searchResults: this.state.searchResults,
       onSearchContacts: this.handleSearchContacts,
       showContextMenu: this.handleShowContextMenu
-    }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_messages_view_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
+    }) : null, !this.state.displayMobile || this.state.mobilePanel == 'topic-view' && !this.state.infoPanel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_messages_view_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
       tinode: this.tinode,
       connected: this.state.connected,
       ready: this.state.ready,
@@ -9037,7 +9033,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       displayMobile: this.state.displayMobile,
       viewportWidth: this.state.viewportWidth,
       viewportHeight: this.state.viewportHeight,
-      hideSelf: this.state.displayMobile && (this.state.mobilePanel !== 'topic-view' || this.state.infoPanel),
       topic: this.state.topicSelected,
       myUserId: this.state.myUserId,
       myUserName: this.state.sidePanelTitle,
@@ -9068,7 +9063,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       onNewChat: this.handleNewChatInvitation,
       sendMessage: this.handleSendMessage,
       onVideoCallClosed: this.handleCallClose
-    }), this.state.infoPanel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_info_view_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
+    }) : null, this.state.infoPanel ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_info_view_jsx__WEBPACK_IMPORTED_MODULE_9__["default"], {
       tinode: this.tinode,
       connected: this.state.connected,
       displayMobile: this.state.displayMobile,

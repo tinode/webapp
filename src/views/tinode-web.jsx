@@ -1985,126 +1985,127 @@ class TinodeWeb extends React.Component {
               (_ => {this.setState({alertVisible: false}); this.state.alertParams.onConfirm();}) : null}
             confirm={this.state.alertParams.confirm}
             /> : null}
-        <SidepanelView
-          tinode={this.tinode}
-          connected={this.state.connected}
-          displayMobile={this.state.displayMobile}
-          hideSelf={this.state.displayMobile && this.state.mobilePanel !== 'sidepanel'}
-          state={this.state.sidePanelSelected}
-          title={this.state.sidePanelTitle}
-          avatar={this.state.sidePanelAvatar}
-          trustedBadges={this.state.myTrustedBadges}
-          login={this.state.login}
-          persist={this.state.persist}
-          myUserId={this.state.myUserId}
-          loginDisabled={this.state.loginDisabled}
-          loadSpinnerVisible={this.state.loadSpinnerVisible}
+        {!this.state.displayMobile || this.state.mobilePanel == 'sidepanel' ?
+          <SidepanelView
+            tinode={this.tinode}
+            connected={this.state.connected}
+            displayMobile={this.state.displayMobile}
+            state={this.state.sidePanelSelected}
+            title={this.state.sidePanelTitle}
+            avatar={this.state.sidePanelAvatar}
+            trustedBadges={this.state.myTrustedBadges}
+            login={this.state.login}
+            persist={this.state.persist}
+            myUserId={this.state.myUserId}
+            loginDisabled={this.state.loginDisabled}
+            loadSpinnerVisible={this.state.loadSpinnerVisible}
 
-          errorText={this.state.errorText}
-          errorLevel={this.state.errorLevel}
-          errorAction={this.state.errorAction}
-          errorActionText={this.state.errorActionText}
+            errorText={this.state.errorText}
+            errorLevel={this.state.errorLevel}
+            errorAction={this.state.errorAction}
+            errorActionText={this.state.errorActionText}
 
-          topicSelected={this.state.topicSelected}
-          chatList={this.state.chatList}
-          credMethod={this.state.credMethod}
-          credCode={this.state.credCode}
-          credToken={this.state.credToken}
+            topicSelected={this.state.topicSelected}
+            chatList={this.state.chatList}
+            credMethod={this.state.credMethod}
+            credCode={this.state.credCode}
+            credToken={this.state.credToken}
 
-          transport={this.state.transport}
-          messageSounds={this.state.messageSounds}
-          desktopAlerts={this.state.desktopAlerts}
-          desktopAlertsEnabled={this.state.desktopAlertsEnabled}
-          incognitoMode={this.state.incognitoMode}
-          serverAddress={this.state.serverAddress}
-          secureConnection={this.state.secureConnection}
-          serverVersion={this.state.serverVersion}
-          reqCredMethod={this.state.reqCredMethod}
+            transport={this.state.transport}
+            messageSounds={this.state.messageSounds}
+            desktopAlerts={this.state.desktopAlerts}
+            desktopAlertsEnabled={this.state.desktopAlertsEnabled}
+            incognitoMode={this.state.incognitoMode}
+            serverAddress={this.state.serverAddress}
+            secureConnection={this.state.secureConnection}
+            serverVersion={this.state.serverVersion}
+            reqCredMethod={this.state.reqCredMethod}
 
-          onGlobalSettings={this.handleGlobalSettings}
-          onSignUp={this.handleNewAccount}
-          onSettings={this.handleSettings}
-          onNavigate={this.basicNavigator}
-          onLoginRequest={this.handleLoginRequest}
-          onPersistenceChange={this.handlePersistenceChange}
-          onCreateAccount={this.handleNewAccountRequest}
-          onUpdateAccountDesc={this.handleTopicUpdateRequest}
-          onUpdatePassword={this.handleUpdatePasswordRequest}
-          onUpdateAccountTags={this.handleUpdateAccountTagsRequest}
-          onTogglePushNotifications={this.toggleFCMToken}
-          onToggleMessageSounds={this.handleToggleMessageSounds}
-          onToggleIncognitoMode={this.handleToggleIncognitoMode}
-          onCredAdd={this.handleCredAdd}
-          onCredDelete={this.handleCredDelete}
-          onCredConfirm={this.handleCredConfirm}
-          onTopicSelected={this.handleTopicSelected}
-          onCreateTopic={this.handleStartTopicRequest}
-          onLogout={this.handleLogout}
-          onDeleteAccount={this.handleDeleteAccount}
-          onShowAlert={this.handleShowAlert}
-          onCancel={this.handleSidepanelCancel}
-          onError={this.handleError}
-          onValidateCredentials={this.handleValidateCredentialsRequest}
-          onPasswordResetRequest={this.handlePasswordResetRequest}
-          onResetPassword={this.handleResetPassword}
-          onShowArchive={this.handleShowArchive}
-          onShowBlocked={this.handleShowBlocked}
-          onShowCountrySelector={this.handleShowCountrySelector}
+            onGlobalSettings={this.handleGlobalSettings}
+            onSignUp={this.handleNewAccount}
+            onSettings={this.handleSettings}
+            onNavigate={this.basicNavigator}
+            onLoginRequest={this.handleLoginRequest}
+            onPersistenceChange={this.handlePersistenceChange}
+            onCreateAccount={this.handleNewAccountRequest}
+            onUpdateAccountDesc={this.handleTopicUpdateRequest}
+            onUpdatePassword={this.handleUpdatePasswordRequest}
+            onUpdateAccountTags={this.handleUpdateAccountTagsRequest}
+            onTogglePushNotifications={this.toggleFCMToken}
+            onToggleMessageSounds={this.handleToggleMessageSounds}
+            onToggleIncognitoMode={this.handleToggleIncognitoMode}
+            onCredAdd={this.handleCredAdd}
+            onCredDelete={this.handleCredDelete}
+            onCredConfirm={this.handleCredConfirm}
+            onTopicSelected={this.handleTopicSelected}
+            onCreateTopic={this.handleStartTopicRequest}
+            onLogout={this.handleLogout}
+            onDeleteAccount={this.handleDeleteAccount}
+            onShowAlert={this.handleShowAlert}
+            onCancel={this.handleSidepanelCancel}
+            onError={this.handleError}
+            onValidateCredentials={this.handleValidateCredentialsRequest}
+            onPasswordResetRequest={this.handlePasswordResetRequest}
+            onResetPassword={this.handleResetPassword}
+            onShowArchive={this.handleShowArchive}
+            onShowBlocked={this.handleShowBlocked}
+            onShowCountrySelector={this.handleShowCountrySelector}
 
-          onInitFind={this.tnInitFind}
-          searchResults={this.state.searchResults}
-          onSearchContacts={this.handleSearchContacts}
+            onInitFind={this.tnInitFind}
+            searchResults={this.state.searchResults}
+            onSearchContacts={this.handleSearchContacts}
 
-          showContextMenu={this.handleShowContextMenu} />
+            showContextMenu={this.handleShowContextMenu} />
+          : null}
 
-        <MessagesView
-          tinode={this.tinode}
-          connected={this.state.connected}
-          ready={this.state.ready}
-          online={this.state.topicSelectedOnline}
-          acs={this.state.topicSelectedAcs}
-          displayMobile={this.state.displayMobile}
-          viewportWidth={this.state.viewportWidth}
-          viewportHeight={this.state.viewportHeight}
-          hideSelf={this.state.displayMobile &&
-            (this.state.mobilePanel !== 'topic-view' || this.state.infoPanel)}
-          topic={this.state.topicSelected}
-          myUserId={this.state.myUserId}
-          // User public.fn.
-          myUserName={this.state.sidePanelTitle}
-          serverVersion={this.state.serverVersion}
-          serverAddress={this.state.serverAddress}
-          applicationVisible={this.state.applicationVisible}
+        {!this.state.displayMobile || (this.state.mobilePanel == 'topic-view' && !this.state.infoPanel) ?
+          <MessagesView
+            tinode={this.tinode}
+            connected={this.state.connected}
+            ready={this.state.ready}
+            online={this.state.topicSelectedOnline}
+            acs={this.state.topicSelectedAcs}
+            displayMobile={this.state.displayMobile}
+            viewportWidth={this.state.viewportWidth}
+            viewportHeight={this.state.viewportHeight}
+            topic={this.state.topicSelected}
+            myUserId={this.state.myUserId}
+            // User public.fn.
+            myUserName={this.state.sidePanelTitle}
+            serverVersion={this.state.serverVersion}
+            serverAddress={this.state.serverAddress}
+            applicationVisible={this.state.applicationVisible}
 
-          forwardMessage={this.state.forwardMessage}
-          onCancelForwardMessage={this.handleHideForwardDialog}
+            forwardMessage={this.state.forwardMessage}
+            onCancelForwardMessage={this.handleHideForwardDialog}
 
-          callTopic={this.state.callTopic}
-          callSeq={this.state.callSeq}
-          callState={this.state.callState}
-          callAudioOnly={this.state.callAudioOnly}
-          onCallHangup={this.handleCallHangup}
+            callTopic={this.state.callTopic}
+            callSeq={this.state.callSeq}
+            callState={this.state.callState}
+            callAudioOnly={this.state.callAudioOnly}
+            onCallHangup={this.handleCallHangup}
 
-          onCallInvite={this.handleCallInvite}
-          onCallSendOffer={this.handleCallSendOffer}
-          onCallIceCandidate={this.handleCallIceCandidate}
-          onCallSendAnswer={this.handleCallSendAnswer}
+            onCallInvite={this.handleCallInvite}
+            onCallSendOffer={this.handleCallSendOffer}
+            onCallIceCandidate={this.handleCallIceCandidate}
+            onCallSendAnswer={this.handleCallSendAnswer}
 
-          errorText={this.state.errorText}
-          errorLevel={this.state.errorLevel}
-          errorAction={this.state.errorAction}
-          errorActionText={this.state.errorActionText}
+            errorText={this.state.errorText}
+            errorLevel={this.state.errorLevel}
+            errorAction={this.state.errorAction}
+            errorActionText={this.state.errorActionText}
 
-          newTopicParams={this.state.newTopicParams}
+            newTopicParams={this.state.newTopicParams}
 
-          onHideMessagesView={this.handleHideMessagesView}
-          onError={this.handleError}
-          onNewTopicCreated={this.handleNewTopicCreated}
-          showContextMenu={this.handleShowContextMenu}
-          onChangePermissions={this.handleChangePermissions}
-          onNewChat={this.handleNewChatInvitation}
-          sendMessage={this.handleSendMessage}
-          onVideoCallClosed={this.handleCallClose} />
+            onHideMessagesView={this.handleHideMessagesView}
+            onError={this.handleError}
+            onNewTopicCreated={this.handleNewTopicCreated}
+            showContextMenu={this.handleShowContextMenu}
+            onChangePermissions={this.handleChangePermissions}
+            onNewChat={this.handleNewChatInvitation}
+            sendMessage={this.handleSendMessage}
+            onVideoCallClosed={this.handleCallClose} />
+          : null}
 
         {this.state.infoPanel ?
           <InfoView

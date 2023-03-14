@@ -1305,9 +1305,7 @@ class MessagesView extends React.Component {
     const {formatMessage} = this.props.intl;
 
     let component;
-    if (this.props.hideSelf) {
-      component = null;
-    } else if (!this.state.topic) {
+    if (!this.state.topic) {
       component = (
         <LogoView
           serverVersion={this.props.serverVersion}
