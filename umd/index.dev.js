@@ -14981,6 +14981,8 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       if (window.getComputedStyle(this.messageEditArea).getPropertyValue('transition-property') == 'all') {
         this.messageEditArea.focus();
       }
+      this.messageEditArea.style.height = '0px';
+      this.messageEditArea.style.height = this.messageEditArea.scrollHeight + 'px';
     }
     if (prevProps.topicName != this.props.topicName) {
       this.setState({
@@ -15151,7 +15153,7 @@ class SendMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       placeholder: prompt,
       value: this.state.message,
       onChange: this.handleMessageTyping,
-      onKeyPress: this.handleKeyPress,
+      onKeyDown: this.handleKeyPress,
       ref: ref => {
         this.messageEditArea = ref;
       }

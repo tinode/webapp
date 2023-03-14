@@ -197,7 +197,7 @@ textarea {
   height: 2.5rem;
   border-bottom: 1px solid #ccc;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-  transition: all 0.1s ease-in-out;
+  transition: all 0.1s ease-in-out, height 0s;
 }
 
 input[type="text"],
@@ -1506,6 +1506,13 @@ img.channel {
 
 #send-message-panel .material-icons.secondary:hover {
   color: #2196f3!important;
+}
+
+/* The textarea where the message is entered. */
+#send-message-input {
+  overflow: hidden auto;
+  min-height: 2.5rem;
+  max-height: 6rem;
 }
 
 /* New chat invitation panel */
