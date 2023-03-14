@@ -7452,12 +7452,14 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   }
   componentDidMount() {
     window.addEventListener('resize', this.handleResize);
-    window.addEventListener('online', e => {
+    this.handleOnlineOn = _ => {
       this.handleOnline(true);
-    });
-    window.addEventListener('offline', e => {
+    };
+    window.addEventListener('online', this.handleOnlineOn);
+    this.handleOnlineOff = _ => {
       this.handleOnline(false);
-    });
+    };
+    window.addEventListener('offline', this.handleOnlineOff);
     window.addEventListener('hashchange', this.handleHashRoute);
     if (typeof BroadcastChannel == 'function') {
       const serviceWorkerChannel = new BroadcastChannel('tinode-sw');
@@ -7510,6 +7512,8 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize);
     window.removeEventListener('hashchange', this.handleHashRoute);
+    window.removeEventListener('online', this.handleOnlineOn);
+    window.removeEventListener('offline', this.handleOnlineOff);
     document.removeEventListener('visibilitychange', this.handleVisibilityEvent);
   }
   static tnSetup(serverAddress, secureConnection, transport, locale, persistentCache, onSetupCompleted) {

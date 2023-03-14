@@ -2312,6 +2312,7 @@ ul.tabbar li.active > a {
   width: 100%;
   padding-bottom: 100%;
   border-radius: 50%;
+  user-select: none;
 }
 
 /* Div with letter tile content */

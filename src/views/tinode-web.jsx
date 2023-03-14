@@ -277,8 +277,10 @@ class TinodeWeb extends React.Component {
 
   componentDidMount() {
     window.addEventListener('resize', this.handleResize);
-    window.addEventListener('online', (e) => { this.handleOnline(true); });
-    window.addEventListener('offline', (e) => { this.handleOnline(false); });
+    this.handleOnlineOn = _ => { this.handleOnline(true); }
+    window.addEventListener('online', this.handleOnlineOn);
+    this.handleOnlineOff = _ => { this.handleOnline(false); }
+    window.addEventListener('offline', this.handleOnlineOff);
     window.addEventListener('hashchange', this.handleHashRoute);
 
     // Process background notifications from the service worker.
@@ -354,6 +356,8 @@ class TinodeWeb extends React.Component {
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize);
     window.removeEventListener('hashchange', this.handleHashRoute);
+    window.removeEventListener('online', this.handleOnlineOn);
+    window.removeEventListener('offline', this.handleOnlineOff);
     document.removeEventListener('visibilitychange', this.handleVisibilityEvent);
   }
 
