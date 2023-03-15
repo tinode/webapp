@@ -317,9 +317,6 @@ class TinodeWeb extends React.Component {
         });
       }
 
-      // Parse and save the hash navigation params.
-      const parsedNav = HashNavigation.parseUrlHash(window.location.hash);
-
       // Read contacts from cache.
       this.resetContactList();
 
@@ -339,6 +336,8 @@ class TinodeWeb extends React.Component {
       this.readTimer = null;
       this.readTimerCallback = null;
 
+      // Parse the hash navigation params.
+      const parsedNav = HashNavigation.parseUrlHash(window.location.hash);
       // Maybe navigate to home screen.
       if (!['cred', 'reset', 'register'].includes(parsedNav.path[0])) {
         // Save possible topic name.
@@ -507,8 +506,12 @@ class TinodeWeb extends React.Component {
       let topicName = hash.path[1] || null;
       if (topicName != this.state.topicSelected) {
         if (!Tinode.topicType(topicName)) {
-          // Clear invalid topic name.
+          // Clear invalid topic name and hide messages view on mobile.
           topicName = null;
+          newState.mobilePanel = 'sidepanel';
+        } else {
+          // Topic valid: show messages view on mobile.
+          newState.mobilePanel = 'topic-view';
         }
         Object.assign(newState, {
           topicSelected: topicName,
@@ -1985,6 +1988,7 @@ class TinodeWeb extends React.Component {
               (_ => {this.setState({alertVisible: false}); this.state.alertParams.onConfirm();}) : null}
             confirm={this.state.alertParams.confirm}
             /> : null}
+
         {!this.state.displayMobile || this.state.mobilePanel == 'sidepanel' ?
           <SidepanelView
             tinode={this.tinode}

@@ -7480,7 +7480,6 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       if (this.state.desktopAlertsEnabled) {
         this.initFCMessaging().catch(_ => {});
       }
-      const parsedNav = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].parseUrlHash(window.location.hash);
       this.resetContactList();
       const token = this.state.persist ? _lib_local_storage_js__WEBPACK_IMPORTED_MODULE_17__["default"].getObject('auth-token') : undefined;
       if (token) {
@@ -7495,6 +7494,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       }
       this.readTimer = null;
       this.readTimerCallback = null;
+      const parsedNav = _lib_navigation_js__WEBPACK_IMPORTED_MODULE_18__["default"].parseUrlHash(window.location.hash);
       if (!['cred', 'reset', 'register'].includes(parsedNav.path[0])) {
         this.setState({
           requestedTopic: parsedNav.path[1]
@@ -7666,6 +7666,9 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
       if (topicName != this.state.topicSelected) {
         if (!tinode_sdk__WEBPACK_IMPORTED_MODULE_4__.Tinode.topicType(topicName)) {
           topicName = null;
+          newState.mobilePanel = 'sidepanel';
+        } else {
+          newState.mobilePanel = 'topic-view';
         }
         Object.assign(newState, {
           topicSelected: topicName,
