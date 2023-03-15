@@ -1,7 +1,7 @@
 {
   "name": "tinode-webapp",
   "description": "Tinode messenger for the web",
-  "version": "0.22.0-rc1",
+  "version": "0.22.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/tinode/webapp.git"
@@ -65,28 +65,29 @@
   "author": "Tinode Authors <info@tinode.co>",
   "license": "Apache-2.0",
   "dependencies": {
-    "firebase": "^9.14.0",
-    "libphonenumber-js": "^1.10.18",
+    "firebase": "^9.17.2",
+    "libphonenumber-js": "^1.10.24",
+    "npm-check-updates": "^16.7.12",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-intl": "^6.2.1",
-    "tinode-sdk": "^0.22.0-rc1",
+    "react-intl": "^6.3.0",
+    "tinode-sdk": "^0.22.0",
     "webm-duration-fix": "^1.0.4"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.2",
+    "@babel/core": "^7.21.3",
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-react": "^7.18.6",
-    "@formatjs/cli": "^5.1.3",
-    "babel-loader": "^9.1.0",
-    "babel-plugin-formatjs": "^10.3.31",
-    "browserslist": "^4.21.4",
+    "@formatjs/cli": "^6.0.4",
+    "babel-loader": "^9.1.2",
+    "babel-plugin-formatjs": "^10.4.0",
+    "browserslist": "^4.21.5",
     "copy-webpack-plugin": "^11.0.0",
-    "cssnano": "^5.1.14",
-    "glob": "^8.0.3",
-    "postcss": "^8.4.19",
-    "postcss-cli": "^10.0.0",
-    "webpack": "^5.75.0",
-    "webpack-cli": "^5.0.0"
+    "cssnano": "^5.1.15",
+    "glob": "^9.3.0",
+    "postcss": "^8.4.21",
+    "postcss-cli": "^10.1.0",
+    "webpack": "^5.76.1",
+    "webpack-cli": "^5.0.1"
   }
 }
