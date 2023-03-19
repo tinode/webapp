@@ -10,7 +10,7 @@ import TinodeWeb from './views/tinode-web.jsx';
 import HashNavigation from './lib/navigation.js';
 
 // Insert google analytics script and tag if configured.
-if (FIREBASE_INIT && FIREBASE_INIT.measurementId) {
+if (typeof FIREBASE_INIT != 'undefined' && FIREBASE_INIT && FIREBASE_INIT.measurementId) {
   const head = document.getElementsByTagName('head')[0];
   let script = document.createElement('script');
   script.src = 'https://www.googletagmanager.com/gtag/js?id=' + FIREBASE_INIT.measurementId;
