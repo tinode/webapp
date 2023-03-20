@@ -4009,9 +4009,6 @@ class Topic {
   maxMsgSeq() {
     return this._maxSeq;
   }
-  minMsgSeq() {
-    return this._minSeq;
-  }
   maxClearId() {
     return this._maxDel;
   }
@@ -4944,7 +4941,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "PACKAGE_VERSION": () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.22.1";
+const PACKAGE_VERSION = "0.22.0";
 
 /***/ })
 
