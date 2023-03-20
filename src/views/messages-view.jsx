@@ -32,6 +32,8 @@ import { bytesToHumanSize, relativeDateFormat, shortDateFormat } from '../lib/st
 const NOTIFICATION_EXEC_INTERVAL = 300;
 // Scroll distance before [go to latest message] button is shown.
 const SHOW_GO_TO_LAST_DIST = 100;
+// Sctoll distance from the top when fetching the page of earlier messages is triggered.
+const FETCH_PAGE_TRIGGER = 40;
 
 const messages = defineMessages({
   online_now: {
@@ -182,13 +184,7 @@ class MessagesView extends React.Component {
     }
 
     // Drag and drop events
-    if (this.dndRef) {
-      this.dndRef.addEventListener('dragstart', this.handleDragStart);
-      this.dndRef.addEventListener('dragenter', this.handleDragIn);
-      this.dndRef.addEventListener('dragleave', this.handleDragOut);
-      this.dndRef.addEventListener('dragover', this.handleDrag);
-      this.dndRef.addEventListener('drop', this.handleDrop);
-    }
+    this.mountDnDEvents(this.dndRef);
   }
 
   componentWillUnmount() {
@@ -213,12 +209,12 @@ class MessagesView extends React.Component {
   // or vertical shrinking.
   componentDidUpdate(prevProps, prevState) {
     if (this.messagesScroller &&
-      (prevState.topic != this.state.topic || prevState.messageCount != this.state.messageCount)) {
+      (prevState.topic != this.state.topic || prevState.maxSeqId != this.state.maxSeqId ||
+        prevState.minSeqId != this.state.minSeqId)) {
       // New message.
       if (this.state.scrollPosition < SHOW_GO_TO_LAST_DIST) {
         this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight -
-          this.state.scrollPosition -
-          this.messagesScroller.offsetHeight;
+          this.state.scrollPosition - this.messagesScroller.offsetHeight;
       }
     }
 
@@ -264,7 +260,8 @@ class MessagesView extends React.Component {
     if (!nextProps.topic) {
       // Default state: no topic.
       nextState = {
-        messageCount: 0,
+        minSeqId: -1,
+        maxSeqId: -1,
         latestClearId: -1,
         onlineSubs: [],
         topic: null,
@@ -359,7 +356,8 @@ class MessagesView extends React.Component {
           });
         }
         Object.assign(nextState, {
-          messageCount: topic.messageCount(),
+          minSeqId: topic.minMsgSeq(),
+          maxSeqId: topic.maxMsgSeq(),
           latestClearId: topic.maxClearId(),
           channel: topic.isChannelType()
         });
@@ -370,7 +368,8 @@ class MessagesView extends React.Component {
       } else {
         // Invalid topic.
         Object.assign(nextState, {
-          messageCount: 0,
+          minSeqId: -1,
+          maxSeqId: -1,
           latestClearId: -1,
           onlineSubs: [],
           title: '',
@@ -517,7 +516,8 @@ class MessagesView extends React.Component {
     if (node) {
       node.addEventListener('scroll', this.handleScrollEvent);
       this.messagesScroller = node;
-      this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition;
+      this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight -
+        this.state.scrollPosition - this.messagesScroller.offsetHeight;
     }
   }
 
@@ -534,7 +534,7 @@ class MessagesView extends React.Component {
       return;
     }
 
-    if (event.target.scrollTop <= 0) {
+    if (event.target.scrollTop <= FETCH_PAGE_TRIGGER) {
       const topic = this.props.tinode.getTopic(this.state.topic);
       if (topic && topic.isSubscribed() && topic.msgHasMoreMessages()) {
         this.setState({fetchingMessages: true}, _ => {
@@ -561,7 +561,7 @@ class MessagesView extends React.Component {
   goToLatestMessage() {
     this.setState({scrollPosition: 0});
     if (this.messagesScroller) {
-      this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight;
+      this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.messagesScroller.offsetHeight;
     }
   }
 
@@ -688,7 +688,7 @@ class MessagesView extends React.Component {
     }
 
     clearTimeout(this.keyPressTimer)
-    this.setState({messageCount: topic.messageCount(), typingIndicator: false}, _ => {
+    this.setState({maxSeqId: topic.maxMsgSeq(), minSeqId: topic.minMsgSeq(), typingIndicator: false}, _ => {
       // Scroll to the bottom if the message is added to the end of the message
       // list if already at the bottom, otherwise show [go to latest] button.
       // Implemented as a callback to be sure the scroll height has been updated.
@@ -697,6 +697,11 @@ class MessagesView extends React.Component {
           this.setState({showGoToLastButton: true});
         } else {
           this.goToLatestMessage();
+        }
+      } else {
+        if (this.messagesScroller) {
+          this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition -
+            this.messagesScroller.offsetHeight;
         }
       }
     });

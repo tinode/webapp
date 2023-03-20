@@ -3589,7 +3589,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "PACKAGE_VERSION": () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.22.0";
+const PACKAGE_VERSION = "0.22.1";
 
 /***/ }),
 
@@ -5087,6 +5087,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const NOTIFICATION_EXEC_INTERVAL = 300;
 const SHOW_GO_TO_LAST_DIST = 100;
+const FETCH_PAGE_TRIGGER = 40;
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   online_now: {
     id: "online_now",
@@ -5240,13 +5241,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     if (this.messagesScroller) {
       this.messagesScroller.addEventListener('scroll', this.handleScrollEvent);
     }
-    if (this.dndRef) {
-      this.dndRef.addEventListener('dragstart', this.handleDragStart);
-      this.dndRef.addEventListener('dragenter', this.handleDragIn);
-      this.dndRef.addEventListener('dragleave', this.handleDragOut);
-      this.dndRef.addEventListener('dragover', this.handleDrag);
-      this.dndRef.addEventListener('drop', this.handleDrop);
-    }
+    this.mountDnDEvents(this.dndRef);
   }
   componentWillUnmount() {
     if (this.messagesScroller) {
@@ -5262,7 +5257,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
   }
   componentDidUpdate(prevProps, prevState) {
-    if (this.messagesScroller && (prevState.topic != this.state.topic || prevState.messageCount != this.state.messageCount)) {
+    if (this.messagesScroller && (prevState.topic != this.state.topic || prevState.maxSeqId != this.state.maxSeqId || prevState.minSeqId != this.state.minSeqId)) {
       if (this.state.scrollPosition < SHOW_GO_TO_LAST_DIST) {
         this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition - this.messagesScroller.offsetHeight;
       }
@@ -5301,7 +5296,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     let nextState = {};
     if (!nextProps.topic) {
       nextState = {
-        messageCount: 0,
+        minSeqId: -1,
+        maxSeqId: -1,
         latestClearId: -1,
         onlineSubs: [],
         topic: null,
@@ -5387,7 +5383,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           });
         }
         Object.assign(nextState, {
-          messageCount: topic.messageCount(),
+          minSeqId: topic.minMsgSeq(),
+          maxSeqId: topic.maxMsgSeq(),
           latestClearId: topic.maxClearId(),
           channel: topic.isChannelType()
         });
@@ -5396,7 +5393,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         }
       } else {
         Object.assign(nextState, {
-          messageCount: 0,
+          minSeqId: -1,
+          maxSeqId: -1,
           latestClearId: -1,
           onlineSubs: [],
           title: '',
@@ -5519,7 +5517,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     if (node) {
       node.addEventListener('scroll', this.handleScrollEvent);
       this.messagesScroller = node;
-      this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition;
+      this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition - this.messagesScroller.offsetHeight;
     }
   }
   handleScrollEvent(event) {
@@ -5531,7 +5529,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     if (this.state.fetchingMessages) {
       return;
     }
-    if (event.target.scrollTop <= 0) {
+    if (event.target.scrollTop <= FETCH_PAGE_TRIGGER) {
       const topic = this.props.tinode.getTopic(this.state.topic);
       if (topic && topic.isSubscribed() && topic.msgHasMoreMessages()) {
         this.setState({
@@ -5559,7 +5557,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       scrollPosition: 0
     });
     if (this.messagesScroller) {
-      this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight;
+      this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.messagesScroller.offsetHeight;
     }
   }
   handleDescChange(desc) {
@@ -5669,7 +5667,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
     clearTimeout(this.keyPressTimer);
     this.setState({
-      messageCount: topic.messageCount(),
+      maxSeqId: topic.maxMsgSeq(),
+      minSeqId: topic.minMsgSeq(),
       typingIndicator: false
     }, _ => {
       if (topic.isNewMessage(msg.seq)) {
@@ -5679,6 +5678,10 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           });
         } else {
           this.goToLatestMessage();
+        }
+      } else {
+        if (this.messagesScroller) {
+          this.messagesScroller.scrollTop = this.messagesScroller.scrollHeight - this.state.scrollPosition - this.messagesScroller.offsetHeight;
         }
       }
     });
