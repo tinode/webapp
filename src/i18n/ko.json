@@ -1647,5 +1647,19 @@
     "description": "Label for busy call line",
     "missing": false,
     "obsolete": false
+  },
+  "pin_message": {
+    "translation": "",
+    "defaultMessage": "Pin",
+    "description": "Menu item [Pin] for pinning message to the top.",
+    "missing": true,
+    "obsolete": false
+  },
+  "unpin_message": {
+    "translation": "",
+    "defaultMessage": "Unpin",
+    "description": "Menu item [Unpin] for un-pinning the message.",
+    "missing": true,
+    "obsolete": false
   }
 }

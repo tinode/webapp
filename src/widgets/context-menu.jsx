@@ -116,6 +116,16 @@ const messages = defineMessages({
     defaultMessage: 'Are you sure you want to clear all messages? It cannot be undone.',
     description: 'Alert dialog warning when deleting all messages.'
   },
+  pin_message: {
+    id: 'pin_message',
+    defaultMessage: 'Pin',
+    description: 'Menu item [Pin] for pinning message to the top.'
+  },
+  unpin_message: {
+    id: 'unpin_message',
+    defaultMessage: 'Unpin',
+    description: 'Menu item [Unpin] for un-pinning the message.'
+  },
 });
 
 class ContextMenu extends React.Component {
@@ -203,6 +213,20 @@ class ContextMenu extends React.Component {
         title: formatMessage(messages.edit),
         handler: (params, errorHandler) => {
           return this.editMessage(params, errorHandler);
+        }
+      },
+      'menu_item_pin': {
+        id: 'menu_item_pin',
+        title: formatMessage(messages.pin_message),
+        handler: (params, errorHandler) => {
+          return this.pinMessage(true, params, errorHandler);
+        }
+      },
+      'menu_item_unpin': {
+        id: 'menu_item_unpin',
+        title: formatMessage(messages.unpin_message),
+        handler: (params, errorHandler) => {
+          return this.pinMessage(false, params, errorHandler);
         }
       },
       'topic_unmute': {
@@ -426,6 +450,37 @@ class ContextMenu extends React.Component {
         errorHandler(err.message, 'err');
       }
     });
+  }
+
+  // Pin or unpin the message.
+  pinMessage(pin, params, errorHandler) {
+    const topic = this.props.tinode.getTopic(params.topicName);
+    if (!topic) {
+      return;
+    }
+
+    let pinned = topic.aux('pins');
+    console.log("topic.aux[pins]=", pinned);
+    if (!Array.isArray(pinned)) {
+      pinned = [];
+    }
+    let changed = false;
+    if (pin) {
+      if (!pinned.includes(params.seq)) {
+        changed = true;
+        pinned.push(params.seq);
+      }
+    } else {
+      if (pinned.includes(params.seq)) {
+        changed = true;
+        pinned = pinned.filter(seq => seq != params.seq)
+      }
+    }
+    if (changed) {
+      console.log("sending pins=", pinned);
+      topic.setMeta({aux: {pins: pinned}})
+        .catch(err => errorHandler ? errorHandler(err.message, 'err') : null);
+    }
   }
 
   // Function is used by context menu to set permissions.

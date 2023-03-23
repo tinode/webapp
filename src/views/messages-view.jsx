@@ -123,6 +123,7 @@ class MessagesView extends React.Component {
     this.handleDescChange = this.handleDescChange.bind(this);
     this.handleSubsUpdated = this.handleSubsUpdated.bind(this);
     this.handleMessageUpdate = this.handleMessageUpdate.bind(this);
+    this.handleAuxUpdate = this.handleAuxUpdate.bind(this);
     this.handleAllMessagesReceived = this.handleAllMessagesReceived.bind(this);
     this.handleInfoReceipt = this.handleInfoReceipt.bind(this);
     this.handleExpandMedia = this.handleExpandMedia.bind(this);
@@ -234,6 +235,7 @@ class MessagesView extends React.Component {
         topic.onMetaDesc = this.handleDescChange;
         topic.onSubsUpdated = this.handleSubsUpdated;
         topic.onPres = this.handleSubsUpdated;
+        topic.onAux = this.handleAuxUpdate;
       }
     }
 
@@ -359,7 +361,8 @@ class MessagesView extends React.Component {
           minSeqId: topic.minMsgSeq(),
           maxSeqId: topic.maxMsgSeq(),
           latestClearId: topic.maxClearId(),
-          channel: topic.isChannelType()
+          channel: topic.isChannelType(),
+          pins: topic.aux('pins')
         });
 
         if (nextProps.callTopic == topic.name && shouldPresentCallPanel(nextProps.callState)) {
@@ -393,6 +396,9 @@ class MessagesView extends React.Component {
       if (nextProps.acs.isReader() != prevState.isReader) {
         nextState.isReader = !prevState.isReader;
       }
+      if (nextProps.acs.isAdmin() != prevState.isAdmin) {
+        nextState.isAdmin = !prevState.isAdmin;
+      }
       if (!nextProps.acs.isReader('given') != prevState.readingBlocked) {
         nextState.readingBlocked = !prevState.readingBlocked;
       }
@@ -405,6 +411,9 @@ class MessagesView extends React.Component {
       }
       if (prevState.isReader) {
         nextState.isReader = false;
+      }
+      if (prevState.isAdmin) {
+        nextState.isAdmin = false;
       }
       if (!prevState.readingBlocked) {
         prevState.readingBlocked = true;
@@ -582,6 +591,7 @@ class MessagesView extends React.Component {
       this.setState({
         isWriter: desc.acs.isWriter(),
         isReader: desc.acs.isReader(),
+        isAdmin: desc.acs.isAdmin(),
         readingBlocked: !desc.acs.isReader('given'),
         unconfirmed: isUnconfirmed(desc.acs),
       });
@@ -722,6 +732,10 @@ class MessagesView extends React.Component {
     }
   }
 
+  handleAuxUpdate(aux) {
+    this.setState({pins: aux['pins']});
+  }
+
   handleInfoReceipt(info) {
     switch (info.what) {
       case 'kp': {
@@ -748,9 +762,9 @@ class MessagesView extends React.Component {
     }
 
     if (content.video) {
-      this.setState({ videoPostview: content });
+      this.setState({videoPostview: content});
     } else {
-      this.setState({ imagePostview: content });
+      this.setState({imagePostview: content});
     }
   }
 
@@ -1479,6 +1493,7 @@ class MessagesView extends React.Component {
                 received={deliveryStatus}
                 uploader={msg._uploader}
                 userIsWriter={this.state.isWriter}
+                userIsAdmin={this.state.isAdmin}
                 viewportWidth={this.props.viewportWidth}  // Used by `formatter`.
                 showContextMenu={this.handleShowMessageContextMenu}
                 onExpandMedia={this.handleExpandMedia}
@@ -1594,6 +1609,7 @@ class MessagesView extends React.Component {
                 }<ContactBadges badges={icon_badges} /></div>
                 <div id="topic-last-seen">{lastSeen}</div>
               </div>
+              <div>{this.state.pins}</div>
               {groupTopic ?
                 <GroupSubs
                   tinode={this.props.tinode}

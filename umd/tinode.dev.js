@@ -1306,7 +1306,7 @@ function _serializeMessage(dst, msg) {
 }
 var _topic_fields = {
   writable: true,
-  value: ['created', 'updated', 'deleted', 'read', 'recv', 'seq', 'clear', 'defacs', 'creds', 'public', 'trusted', 'private', 'touched', '_deleted']
+  value: ['created', 'updated', 'deleted', 'touched', 'read', 'recv', 'seq', 'clear', 'defacs', 'creds', 'public', 'trusted', 'private', 'tags', 'aux', '_deleted']
 };
 
 /***/ }),
@@ -3419,6 +3419,7 @@ class Topic {
     this._recvNotificationTimer = null;
     this._tags = [];
     this._credentials = [];
+    this._aux = {};
     this._messageVersions = {};
     this._messages = new _cbuffer_js__WEBPACK_IMPORTED_MODULE_1__["default"]((a, b) => {
       return a.seq - b.seq;
@@ -3438,6 +3439,7 @@ class Topic {
       this.onSubsUpdated = callbacks.onSubsUpdated;
       this.onTagsUpdated = callbacks.onTagsUpdated;
       this.onCredsUpdated = callbacks.onCredsUpdated;
+      this.onAuxUpdated = callbacks.onAuxUpdated;
       this.onDeleteTopic = callbacks.onDeleteTopic;
       this.onAllMessagesReceived = callbacks.onAllMessagesReceived;
     }
@@ -3681,6 +3683,9 @@ class Topic {
       }
       if (params.cred) {
         this._processMetaCreds([params.cred], true);
+      }
+      if (params.aux) {
+        this._processMetaAux(params.aux, true);
       }
       return ctrl;
     });
@@ -3943,6 +3948,9 @@ class Topic {
   }
   tags() {
     return this._tags.slice(0);
+  }
+  aux(key) {
+    return this._aux[key];
   }
   subscriber(uid) {
     return this._users[uid];
@@ -4244,6 +4252,9 @@ class Topic {
     if (meta.cred) {
       this._processMetaCreds(meta.cred);
     }
+    if (meta.aux) {
+      this._processMetaAux(meta.aux);
+    }
     if (this.onMeta) {
       this.onMeta(meta);
     }
@@ -4385,7 +4396,7 @@ class Topic {
     }
   }
   _processMetaTags(tags) {
-    if (tags.length == 1 && tags[0] == _config_js__WEBPACK_IMPORTED_MODULE_3__.DEL_CHAR) {
+    if (tags == _config_js__WEBPACK_IMPORTED_MODULE_3__.DEL_CHAR || tags.length == 1 && tags[0] == _config_js__WEBPACK_IMPORTED_MODULE_3__.DEL_CHAR) {
       tags = [];
     }
     this._tags = tags;
@@ -4394,13 +4405,20 @@ class Topic {
     }
   }
   _processMetaCreds(creds) {}
+  _processMetaAux(aux) {
+    aux = !aux || aux == _config_js__WEBPACK_IMPORTED_MODULE_3__.DEL_CHAR ? {} : aux;
+    this._aux = (0,_utils_js__WEBPACK_IMPORTED_MODULE_6__.mergeObj)(this._aux, aux);
+    if (this.onAuxUpdated) {
+      this.onAuxUpdated(this._aux);
+    }
+  }
   _processDelMessages(clear, delseq) {
     this._maxDel = Math.max(clear, this._maxDel);
     this.clear = Math.max(clear, this.clear);
     const topic = this;
     let count = 0;
     if (Array.isArray(delseq)) {
-      delseq.forEach(function (range) {
+      delseq.forEach(range => {
         if (!range.hi) {
           count++;
           topic.flushMessage(range.low);
@@ -4944,7 +4962,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "PACKAGE_VERSION": () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.22.2";
+const PACKAGE_VERSION = "0.23.0-rc1";
 
 /***/ })
 
@@ -5664,6 +5682,9 @@ class Tinode {
       if (setParams.tags) {
         pkt.sub.set.tags = setParams.tags;
       }
+      if (setParams.aux) {
+        pkt.sub.set.aux = setParams.aux;
+      }
     }
     return _classPrivateMethodGet(this, _send, _send2).call(this, pkt, pkt.sub.id);
   }
@@ -5778,7 +5799,8 @@ class Tinode {
     const pkt = _classPrivateMethodGet(this, _initPacket, _initPacket2).call(this, 'set', topic);
     const what = [];
     if (params) {
-      ['desc', 'sub', 'tags', 'cred', 'ephemeral'].forEach(function (key) {
+      console.log("setMeta, params=", params);
+      ['desc', 'sub', 'tags', 'cred', 'aux'].forEach(key => {
         if (params.hasOwnProperty(key)) {
           what.push(key);
           pkt.set[key] = params[key];
@@ -6204,7 +6226,7 @@ function _initPacket2(type, topic) {
           'desc': {},
           'sub': {},
           'tags': [],
-          'ephemeral': {}
+          'aux': {}
         }
       };
     case 'del':

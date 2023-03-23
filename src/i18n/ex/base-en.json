@@ -756,6 +756,10 @@
     "defaultMessage": "phone",
     "description": "Dative case of 'phone', i.e. 'phone' in 'by phone'"
   },
+  "pin_message": {
+    "defaultMessage": "Pin",
+    "description": "Menu item [Pin] for pinning message to the top."
+  },
   "private_editing_placeholder": {
     "defaultMessage": "Visible to you only",
     "description": "Placeholder for editing 'private'"
@@ -911,6 +915,10 @@
   "unnamed_topic": {
     "defaultMessage": "Unnamed",
     "description": "Title shown when the topic has no name"
+  },
+  "unpin_message": {
+    "defaultMessage": "Unpin",
+    "description": "Menu item [Unpin] for un-pinning the message."
   },
   "unrecognized_video_format": {
     "defaultMessage": "Format of this video is not recognized",

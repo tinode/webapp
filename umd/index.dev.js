@@ -3589,7 +3589,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "PACKAGE_VERSION": () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.22.2";
+const PACKAGE_VERSION = "0.23.0-rc1";
 
 /***/ }),
 
@@ -5194,6 +5194,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     this.handleDescChange = this.handleDescChange.bind(this);
     this.handleSubsUpdated = this.handleSubsUpdated.bind(this);
     this.handleMessageUpdate = this.handleMessageUpdate.bind(this);
+    this.handleAuxUpdate = this.handleAuxUpdate.bind(this);
     this.handleAllMessagesReceived = this.handleAllMessagesReceived.bind(this);
     this.handleInfoReceipt = this.handleInfoReceipt.bind(this);
     this.handleExpandMedia = this.handleExpandMedia.bind(this);
@@ -5277,6 +5278,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         topic.onMetaDesc = this.handleDescChange;
         topic.onSubsUpdated = this.handleSubsUpdated;
         topic.onPres = this.handleSubsUpdated;
+        topic.onAux = this.handleAuxUpdate;
       }
     }
     if (!this.props.applicationVisible) {
@@ -5386,7 +5388,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           minSeqId: topic.minMsgSeq(),
           maxSeqId: topic.maxMsgSeq(),
           latestClearId: topic.maxClearId(),
-          channel: topic.isChannelType()
+          channel: topic.isChannelType(),
+          pins: topic.aux('pins')
         });
         if (nextProps.callTopic == topic.name && shouldPresentCallPanel(nextProps.callState)) {
           nextState.rtcPanel = nextProps.callTopic;
@@ -5415,6 +5418,9 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       if (nextProps.acs.isReader() != prevState.isReader) {
         nextState.isReader = !prevState.isReader;
       }
+      if (nextProps.acs.isAdmin() != prevState.isAdmin) {
+        nextState.isAdmin = !prevState.isAdmin;
+      }
       if (!nextProps.acs.isReader('given') != prevState.readingBlocked) {
         nextState.readingBlocked = !prevState.readingBlocked;
       }
@@ -5427,6 +5433,9 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       }
       if (prevState.isReader) {
         nextState.isReader = false;
+      }
+      if (prevState.isAdmin) {
+        nextState.isAdmin = false;
       }
       if (!prevState.readingBlocked) {
         prevState.readingBlocked = true;
@@ -5576,6 +5585,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
       this.setState({
         isWriter: desc.acs.isWriter(),
         isReader: desc.acs.isReader(),
+        isAdmin: desc.acs.isAdmin(),
         readingBlocked: !desc.acs.isReader('given'),
         unconfirmed: isUnconfirmed(desc.acs)
       });
@@ -5697,6 +5707,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     if (count > 0) {
       this.postReadNotification(0);
     }
+  }
+  handleAuxUpdate(aux) {
+    this.setState({
+      pins: aux['pins']
+    });
   }
   handleInfoReceipt(info) {
     switch (info.what) {
@@ -6368,6 +6383,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
               received: deliveryStatus,
               uploader: msg._uploader,
               userIsWriter: this.state.isWriter,
+              userIsAdmin: this.state.isAdmin,
               viewportWidth: this.props.viewportWidth,
               showContextMenu: this.handleShowMessageContextMenu,
               onExpandMedia: this.handleExpandMedia,
@@ -6496,7 +6512,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           badges: icon_badges
         })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "topic-last-seen"
-        }, lastSeen)), groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_group_subs_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
+        }, lastSeen)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, this.state.pins), groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_group_subs_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
           tinode: this.props.tinode,
           subscribers: this.state.onlineSubs
         }) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
@@ -11078,23 +11094,28 @@ class BaseChatMessage extends (react__WEBPACK_IMPORTED_MODULE_0___default().Pure
     if (this.props.received == tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_FAILED) {
       menuItems.push('menu_item_send_retry');
     }
-    if (this.props.userIsWriter && this.props.received > tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_FATAL) {
-      menuItems.push('menu_item_reply');
-      if (!this.props.response) {
-        let immutable = false;
-        tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.entities(this.props.content, (_0, _1, tp) => {
-          immutable = ['AU', 'EX', 'FM', 'IM', 'VC', 'VD'].includes(tp);
-          return immutable;
-        });
-        if (!immutable) {
-          tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.styles(this.props.content, tp => {
-            immutable = ['QQ'].includes(tp);
+    if (this.props.received > tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Tinode.MESSAGE_STATUS_FATAL) {
+      if (this.props.userIsWriter) {
+        menuItems.push('menu_item_reply');
+        if (!this.props.response) {
+          let immutable = false;
+          tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.entities(this.props.content, (_0, _1, tp) => {
+            immutable = ['AU', 'EX', 'FM', 'IM', 'VC', 'VD'].includes(tp);
             return immutable;
           });
+          if (!immutable) {
+            tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.styles(this.props.content, tp => {
+              immutable = ['QQ'].includes(tp);
+              return immutable;
+            });
+          }
+          if (!immutable) {
+            menuItems.push('menu_item_edit');
+          }
         }
-        if (!immutable) {
-          menuItems.push('menu_item_edit');
-        }
+      }
+      if (this.props.userIsAdmin) {
+        menuItems.push('menu_item_pin');
       }
     }
     menuItems.push('menu_item_forward');
@@ -12077,6 +12098,20 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
       "type": 0,
       "value": "Are you sure you want to clear all messages? It cannot be undone."
     }]
+  },
+  pin_message: {
+    id: "pin_message",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Pin"
+    }]
+  },
+  unpin_message: {
+    id: "unpin_message",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Unpin"
+    }]
   }
 });
 class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component) {
@@ -12151,6 +12186,20 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         title: formatMessage(messages.edit),
         handler: (params, errorHandler) => {
           return this.editMessage(params, errorHandler);
+        }
+      },
+      'menu_item_pin': {
+        id: 'menu_item_pin',
+        title: formatMessage(messages.pin_message),
+        handler: (params, errorHandler) => {
+          return this.pinMessage(true, params, errorHandler);
+        }
+      },
+      'menu_item_unpin': {
+        id: 'menu_item_unpin',
+        title: formatMessage(messages.unpin_message),
+        handler: (params, errorHandler) => {
+          return this.pinMessage(false, params, errorHandler);
         }
       },
       'topic_unmute': {
@@ -12333,6 +12382,37 @@ class ContextMenu extends (react__WEBPACK_IMPORTED_MODULE_0___default().Componen
         errorHandler(err.message, 'err');
       }
     });
+  }
+  pinMessage(pin, params, errorHandler) {
+    const topic = this.props.tinode.getTopic(params.topicName);
+    if (!topic) {
+      return;
+    }
+    let pinned = topic.aux('pins');
+    console.log("topic.aux[pins]=", pinned);
+    if (!Array.isArray(pinned)) {
+      pinned = [];
+    }
+    let changed = false;
+    if (pin) {
+      if (!pinned.includes(params.seq)) {
+        changed = true;
+        pinned.push(params.seq);
+      }
+    } else {
+      if (pinned.includes(params.seq)) {
+        changed = true;
+        pinned = pinned.filter(seq => seq != params.seq);
+      }
+    }
+    if (changed) {
+      console.log("sending pins=", pinned);
+      topic.setMeta({
+        aux: {
+          pins: pinned
+        }
+      }).catch(err => errorHandler ? errorHandler(err.message, 'err') : null);
+    }
   }
   topicPermissionSetter(mode, params, errorHandler) {
     const topic = this.props.tinode.getTopic(params.topicName);

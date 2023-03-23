@@ -93,23 +93,28 @@ class BaseChatMessage extends React.PureComponent {
     if (this.props.received == Tinode.MESSAGE_STATUS_FAILED) {
       menuItems.push('menu_item_send_retry');
     }
-    if (this.props.userIsWriter && this.props.received > Tinode.MESSAGE_STATUS_FATAL) {
-      menuItems.push('menu_item_reply');
-      if (!this.props.response) {
-        let immutable = false;
-        Drafty.entities(this.props.content, (_0, _1, tp) => {
-          immutable = ['AU', 'EX', 'FM', 'IM', 'VC', 'VD'].includes(tp);
-          return immutable;
-        });
-        if (!immutable) {
-          Drafty.styles(this.props.content, tp => {
-            immutable = ['QQ'].includes(tp);
+    if (this.props.received > Tinode.MESSAGE_STATUS_FATAL) {
+      if (this.props.userIsWriter) {
+        menuItems.push('menu_item_reply');
+        if (!this.props.response) {
+          let immutable = false;
+          Drafty.entities(this.props.content, (_0, _1, tp) => {
+            immutable = ['AU', 'EX', 'FM', 'IM', 'VC', 'VD'].includes(tp);
             return immutable;
           });
+          if (!immutable) {
+            Drafty.styles(this.props.content, tp => {
+              immutable = ['QQ'].includes(tp);
+              return immutable;
+            });
+          }
+          if (!immutable) {
+            menuItems.push('menu_item_edit');
+          }
         }
-        if (!immutable) {
-          menuItems.push('menu_item_edit');
-        }
+      }
+      if (this.props.userIsAdmin) {
+        menuItems.push('menu_item_pin');
       }
     }
     menuItems.push('menu_item_forward');
