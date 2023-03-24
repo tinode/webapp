@@ -8,7 +8,7 @@ export default class ContactBadges extends React.PureComponent {
     let badges = null;
     if (this.props.badges && this.props.badges.length > 0) {
       badges = [];
-      this.props.badges.map((b) => {
+      this.props.badges.forEach(b => {
         const color = (b.color ? ' ' + b.color : '');
         if (b.icon) {
           badges.push(<i className={'material-icons as-badge' + color} key={b.key || b.icon}>{icon_mapping[b.icon] || b.icon}</i>);

@@ -1686,14 +1686,14 @@ class TinodeWeb extends React.Component {
     }
 
     if (added && added.length > 0) {
-      added.map((uid) => {
+      added.forEach(uid => {
         topic.invite(uid, null)
           .catch(err => this.handleError(err.message, 'err'));
       });
     }
 
     if (removed && removed.length > 0) {
-      removed.map((uid) => {
+      removed.forEach(uid => {
         topic.delSubscription(uid)
           .catch(err => this.handleError(err.message, 'err'));
       });

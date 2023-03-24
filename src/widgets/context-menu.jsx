@@ -458,29 +458,8 @@ class ContextMenu extends React.Component {
     if (!topic) {
       return;
     }
-
-    let pinned = topic.aux('pins');
-    console.log("topic.aux[pins]=", pinned);
-    if (!Array.isArray(pinned)) {
-      pinned = [];
-    }
-    let changed = false;
-    if (pin) {
-      if (!pinned.includes(params.seq)) {
-        changed = true;
-        pinned.push(params.seq);
-      }
-    } else {
-      if (pinned.includes(params.seq)) {
-        changed = true;
-        pinned = pinned.filter(seq => seq != params.seq)
-      }
-    }
-    if (changed) {
-      console.log("sending pins=", pinned);
-      topic.setMeta({aux: {pins: pinned}})
-        .catch(err => errorHandler ? errorHandler(err.message, 'err') : null);
-    }
+    topic.pinMessage(params.seq, pin)
+      .catch(err => errorHandler ? errorHandler(err.message, 'err') : null);
   }
 
   // Function is used by context menu to set permissions.
@@ -509,7 +488,7 @@ class ContextMenu extends React.Component {
   render() {
     const menu = [];
     let count = 0;
-    this.props.items.map((item) => {
+    this.props.items.forEach(item => {
       if (typeof item == 'string') {
         item = this.MenuItems[item];
       }

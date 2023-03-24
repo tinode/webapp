@@ -46,7 +46,7 @@ export default class SettingsView extends React.PureComponent {
   render() {
     const names = {def: "default", ws: "websocket", lp: "long polling"};
     const transportOptions = [];
-    ['def', 'ws', 'lp'].map((item) => {
+    ['def', 'ws', 'lp'].forEach(item => {
       const id = 'transport-' + item;
       const name = names[item];
       transportOptions.push(

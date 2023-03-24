@@ -1306,7 +1306,7 @@ function _serializeMessage(dst, msg) {
 }
 var _topic_fields = {
   writable: true,
-  value: ['created', 'updated', 'deleted', 'touched', 'read', 'recv', 'seq', 'clear', 'defacs', 'creds', 'public', 'trusted', 'private', 'tags', 'aux', '_deleted']
+  value: ['created', 'updated', 'deleted', 'touched', 'read', 'recv', 'seq', 'clear', 'defacs', 'creds', 'public', 'trusted', 'private', '_aux', '_deleted']
 };
 
 /***/ }),
@@ -3321,6 +3321,10 @@ class MetaGetBuilder {
     }
     return this;
   }
+  withAux() {
+    this.what['aux'] = true;
+    return this;
+  }
   withDel(since, limit) {
     if (since || limit) {
       this.what['del'] = {
@@ -3339,7 +3343,7 @@ class MetaGetBuilder {
   build() {
     const what = [];
     let params = {};
-    ['data', 'sub', 'desc', 'tags', 'cred', 'del'].forEach(key => {
+    ['data', 'sub', 'desc', 'tags', 'cred', 'aux', 'del'].forEach(key => {
       if (this.what.hasOwnProperty(key)) {
         what.push(key);
         if (Object.getOwnPropertyNames(this.what[key]).length > 0) {
@@ -3685,7 +3689,7 @@ class Topic {
         this._processMetaCreds([params.cred], true);
       }
       if (params.aux) {
-        this._processMetaAux(params.aux, true);
+        this._processMetaAux(params.aux);
       }
       return ctrl;
     });
@@ -3719,6 +3723,35 @@ class Topic {
         }
       }
     });
+  }
+  pinMessage(seq, pin) {
+    let pinned = this.aux('pins');
+    if (!Array.isArray(pinned)) {
+      pinned = [];
+    }
+    let changed = false;
+    if (pin) {
+      if (!pinned.includes(seq)) {
+        changed = true;
+        pinned.push(seq);
+      }
+    } else {
+      if (pinned.includes(seq)) {
+        changed = true;
+        pinned = pinned.filter(id => id != seq);
+        if (pinned.length == 0) {
+          pinned = _config_js__WEBPACK_IMPORTED_MODULE_3__.DEL_CHAR;
+        }
+      }
+    }
+    if (changed) {
+      return this.setMeta({
+        aux: {
+          pins: pinned
+        }
+      });
+    }
+    return Promise.resolve();
   }
   delMessages(ranges, hard) {
     if (!this._attached) {
@@ -4282,6 +4315,9 @@ class Topic {
           this.getMeta(this.startMetaQuery().withLaterOneSub(pres.src).build());
         }
         break;
+      case 'aux':
+        this.getMeta(this.startMetaQuery().withAux().build());
+        break;
       case 'acs':
         uid = pres.src || this._tinode.getCurrentUserID();
         user = this._users[uid];
@@ -4400,6 +4436,7 @@ class Topic {
       tags = [];
     }
     this._tags = tags;
+    this._tinode._db.updTopic(this);
     if (this.onTagsUpdated) {
       this.onTagsUpdated(tags);
     }
@@ -4408,6 +4445,7 @@ class Topic {
   _processMetaAux(aux) {
     aux = !aux || aux == _config_js__WEBPACK_IMPORTED_MODULE_3__.DEL_CHAR ? {} : aux;
     this._aux = (0,_utils_js__WEBPACK_IMPORTED_MODULE_6__.mergeObj)(this._aux, aux);
+    this._tinode._db.updTopic(this);
     if (this.onAuxUpdated) {
       this.onAuxUpdated(this._aux);
     }
@@ -4940,7 +4978,7 @@ function normalizeArray(arr) {
         }
       }
     }
-    out.sort().filter(function (item, pos, ary) {
+    out.sort().filter((item, pos, ary) => {
       return !pos || item != ary[pos - 1];
     });
   }

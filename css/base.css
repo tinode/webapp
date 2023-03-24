@@ -1387,6 +1387,7 @@ img.channel {
 #topic-users {
   margin-left: auto;
   margin-right: 1rem;
+  width: min-content;
 }
 
 #topic-users .avatar-box {
@@ -3018,6 +3019,70 @@ ul.tabbar li.active > a {
 .audio-player .timer {
   font-size: smaller;
   color: #666C;
+}
+
+/* Pinned messages */
+#pinned-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  margin-left: auto;
+  margin-right: 1rem;
+}
+
+.pinned {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0.15rem 0.5rem 0.25rem 0.5rem;
+  background-color: #fafafa;
+  background-position: center;
+  line-height: 1.5em;
+  font-weight: lighter;
+  border-radius: 0 0.25rem 0.25rem 0;
+  color: #666;
+  height: 100%;
+  width: 100%;
+  min-width: 24rem;
+  cursor: pointer;
+  transition: background 0.8s;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
+
+.pinned:active {
+  background-color: #bdd8f7;
+  background-size: 200%;
+  transition: background 0s;
+}
+
+
+.pinned-scroll {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 0.25rem 0 0 0.25rem;
+  background-color: #eeee;
+  justify-content: space-evenly;
+  height: 100%;
+  padding: 0.1rem;
+  margin-left: 0.35rem;
+}
+
+.pinned-scroll .dot {
+  width: 0.3rem;
+  height: 0.3rem;
+  border-radius: 50%;
+  background-color: #999;
+}
+
+.pinned-scroll .adot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background-color: #039be5;
 }
 
 /*

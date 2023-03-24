@@ -12,7 +12,7 @@ export default class SideNavbar extends React.PureComponent {
   render() {
     const icon_badges = [];
     if (this.props.trustedBadges) {
-      this.props.trustedBadges.map((b) => {
+      this.props.trustedBadges.forEach(b => {
         icon_badges.push({icon: b, color: 'badge-inv'});
       });
     }

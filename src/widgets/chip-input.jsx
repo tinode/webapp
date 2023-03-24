@@ -44,7 +44,7 @@ export default class ChipInput extends React.Component {
   static indexChips(chips) {
     const index = {};
     let count = 0;
-    chips.map((item) => {
+    chips.forEach(item => {
       index[item.user] = count;
       count ++;
     });
@@ -55,7 +55,7 @@ export default class ChipInput extends React.Component {
   static sortChips(chips, keep) {
     const required = [];
     const normal = [];
-    chips.map((item) => {
+    chips.forEach(item => {
       if (keep && keep.includes(item.user)) {
         required.push(item);
       } else {
@@ -115,7 +115,7 @@ export default class ChipInput extends React.Component {
     const chips = [];
     let count = 0;
     const staticMembers = this.props.staticMembers || [];
-    this.state.sortedChips.map((item) => {
+    this.state.sortedChips.forEach(item => {
       chips.push(
         <Chip
           tinode={this.props.tinode}

@@ -27,7 +27,7 @@ export default class ContactsView extends React.Component {
     const contacts = [];
     let unreadThreads = 0;
     let archivedCount = 0;
-    props.chatList.map((c) => {
+    props.chatList.forEach(c => {
       const blocked = c.acs && !c.acs.isJoiner();
       // Show only blocked contacts only when props.blocked == true.
       if (blocked && props.blocked) {

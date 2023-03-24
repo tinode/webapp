@@ -114,7 +114,7 @@ class BaseChatMessage extends React.PureComponent {
         }
       }
       if (this.props.userIsAdmin) {
-        menuItems.push('menu_item_pin');
+        menuItems.push(this.props.pinned ? 'menu_item_unpin' : 'menu_item_pin');
       }
     }
     menuItems.push('menu_item_forward');

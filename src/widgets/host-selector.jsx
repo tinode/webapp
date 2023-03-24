@@ -36,7 +36,7 @@ export default class HostSelector extends React.PureComponent {
   }
 
   render() {
-    var hostOptions = [];
+    const hostOptions = [];
     for (let key in KNOWN_HOSTS) {
       let item = KNOWN_HOSTS[key];
       hostOptions.push(

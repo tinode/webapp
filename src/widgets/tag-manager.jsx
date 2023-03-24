@@ -92,11 +92,11 @@ export default class TagManager extends React.Component {
 
     let tags = [];
     if (this.state.activated) {
-      this.state.tags.map((tag) => {
+      this.state.tags.forEach(tag => {
         tags.push({user: tag, invalid: (tag.length < minTagLength || tag.length > maxTagLength)});
       });
     } else {
-      this.state.tags.map((tag) => {
+      this.state.tags.forEach(tag => {
         tags.push(<span className="badge" key={tags.length}>{tag}</span>);
       });
       if (tags.length == 0) {

@@ -41,7 +41,7 @@ class GroupManager extends React.Component {
 
   static indexMembers(members) {
     let index = {};
-    members.map((m) => {
+    members.forEach(m => {
       index[m.user] = {delta: 0, present: true}; // Delta: 0 unchanged, +1 added, -1 removed
     });
     return index;
@@ -49,7 +49,7 @@ class GroupManager extends React.Component {
 
   static staticMembers(members, keepInitial, requiredMember) {
     let stat = [];
-    members.map((m) => {
+    members.forEach(m => {
       if (keepInitial || m.user == requiredMember) {
         stat.push(m.user);
       }
@@ -59,7 +59,7 @@ class GroupManager extends React.Component {
 
   static selectedContacts(members) {
     let sel = [];
-    members.map((m) => {
+    members.forEach(m => {
       sel.push(m.user);
     });
     return sel;
@@ -130,20 +130,19 @@ class GroupManager extends React.Component {
   }
 
   handleSubmit() {
-    var instance = this;
-    var members = [];
-    var added = [];
-    var removed = [];
+    const members = [];
+    const added = [];
+    const removed = [];
 
-    var keys = Object.keys(this.state.index);
-    keys.map(function(k) {
-      if (instance.state.index[k].present) {
+    const keys = Object.keys(this.state.index);
+    keys.forEach(k => {
+      if (this.state.index[k].present) {
         members.push(k);
       }
 
-      if (instance.state.index[k].delta > 0) {
+      if (this.state.index[k].delta > 0) {
         added.push(k);
-      } else if (instance.state.index[k].delta < 0) {
+      } else if (this.state.index[k].delta < 0) {
         removed.push(k);
       }
     });
@@ -155,7 +154,6 @@ class GroupManager extends React.Component {
   }
 
   render() {
-    const {formatMessage} = this.props.intl;
     return (
       <div id="group-manager">
         <div className="panel-form-row">

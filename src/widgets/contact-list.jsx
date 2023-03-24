@@ -32,7 +32,7 @@ class ContactList extends React.Component {
     const contactNodes = [];
     let contactsCount = 0;
     if (this.props.contacts && this.props.contacts.length > 0) {
-      this.props.contacts.map((c) => {
+      this.props.contacts.forEach(c => {
         if (c.action) {
           // Action item
           contactNodes.push(

@@ -17,6 +17,7 @@ import LetterTile from '../widgets/letter-tile.jsx';
 import LoadSpinner from '../widgets/load-spinner.jsx';
 import LogoView from './logo-view.jsx';
 import MetaMessage from '../widgets/meta-message.jsx';
+import PinnedMessages from '../widgets/pinned-messages.jsx';
 import SendMessage from '../widgets/send-message.jsx';
 import VideoPreview from '../widgets/video-preview.jsx';
 
@@ -145,6 +146,7 @@ class MessagesView extends React.Component {
     this.handleEditMessage = this.handleEditMessage.bind(this);
     this.handleCancelReply = this.handleCancelReply.bind(this);
     this.handleQuoteClick = this.handleQuoteClick.bind(this);
+    this.handleUnpinMessage = this.handleUnpinMessage.bind(this);
     this.handleCallHangup = this.handleCallHangup.bind(this);
 
     this.isDragEnabled = this.isDragEnabled.bind(this);
@@ -235,7 +237,7 @@ class MessagesView extends React.Component {
         topic.onMetaDesc = this.handleDescChange;
         topic.onSubsUpdated = this.handleSubsUpdated;
         topic.onPres = this.handleSubsUpdated;
-        topic.onAux = this.handleAuxUpdate;
+        topic.onAuxUpdated = this.handleAuxUpdate;
       }
     }
 
@@ -445,7 +447,7 @@ class MessagesView extends React.Component {
 
     // Don't request the tags. They are useless unless the user
     // is the owner and is editing the topic.
-    let getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub();
+    let getQuery = topic.startMetaQuery().withLaterDesc().withLaterSub().withAux();
     if (this.state.isReader || newTopic) {
       // Reading is either permitted or we don't know because it's a new topic. Ask for messages.
       getQuery = getQuery.withLaterData(MESSAGES_PAGE);
@@ -516,6 +518,7 @@ class MessagesView extends React.Component {
           oldTopic.onMetaDesc = undefined;
           oldTopic.onSubsUpdated = undefined;
           oldTopic.onPres = undefined;
+          oldTopic.onAuxUpdated = undefined;
         });
     }
   }
@@ -789,7 +792,7 @@ class MessagesView extends React.Component {
           params.set(key, data.resp[key]);
         }
       }
-      ['name', 'seq'].map((key) => {
+      ['name', 'seq'].forEach(key => {
         if (data[key]) {
           params.set(key, data[key]);
         }
@@ -1277,6 +1280,11 @@ class MessagesView extends React.Component {
     }
   }
 
+  handleUnpinMessage(seq) {
+    const topic = this.props.tinode.getTopic(this.state.topic);
+    topic.pinMessage(seq, false);
+  }
+
   isDragEnabled() {
     return this.state.isWriter && !this.state.unconfirmed && !this.props.forwardMessage && !this.state.peerMessagingDisabled;
   }
@@ -1417,6 +1425,9 @@ class MessagesView extends React.Component {
           }
         }
 
+        const pinnedMessages = [];
+        (this.state.pins || []).forEach(seq => pinnedMessages.push(topic.findMessage(seq)));
+
         const messageNodes = [];
         let previousFrom = null;
         let prevDate = null;
@@ -1494,6 +1505,7 @@ class MessagesView extends React.Component {
                 uploader={msg._uploader}
                 userIsWriter={this.state.isWriter}
                 userIsAdmin={this.state.isAdmin}
+                pinned={(this.state.pins || []).includes(msg.seq)}
                 viewportWidth={this.props.viewportWidth}  // Used by `formatter`.
                 showContextMenu={this.handleShowMessageContextMenu}
                 onExpandMedia={this.handleExpandMedia}
@@ -1609,12 +1621,17 @@ class MessagesView extends React.Component {
                 }<ContactBadges badges={icon_badges} /></div>
                 <div id="topic-last-seen">{lastSeen}</div>
               </div>
-              <div>{this.state.pins}</div>
+              <PinnedMessages
+                tinode={this.props.tinode}
+                messages={pinnedMessages}
+                selected={0}
+                onSelected={this.handleQuoteClick}
+                onCancel={this.handleUnpinMessage} />
               {groupTopic ?
                 <GroupSubs
                   tinode={this.props.tinode}
                   subscribers={this.state.onlineSubs} /> :
-                <div id="topic-users" />
+                null
               }
               <div>
                 <a href="#" onClick={this.handleContextClick}>

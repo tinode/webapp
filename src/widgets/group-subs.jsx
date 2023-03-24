@@ -30,7 +30,9 @@ export default class GroupSubs extends React.Component {
       );
       return usersOnline.length == countToShow;
     });
-
+    if (usersOnline.length == 0) {
+      return null;
+    }
     return (
       <div id="topic-users">{usersOnline} {totalCount > countToShow ?
         <span>

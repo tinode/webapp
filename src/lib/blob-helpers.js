@@ -227,7 +227,7 @@ export function filePasted(event, onImageSuccess, onAttachmentSuccess, onError) 
 
 // Get mime type from data URL header.
 export function getMimeType(header) {
-  var mime = /^data:(image\/[-+a-z0-9.]+);base64/.exec(header);
+  const mime = /^data:(image\/[-+a-z0-9.]+);base64/.exec(header);
   return (mime && mime.length > 1) ? mime[1] : null;
 }
 
