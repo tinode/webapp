@@ -310,9 +310,8 @@ ul.menu > li.separator:hover {
 }
 
 /* The down arrow head - trigger for context menu */
-li .menuTrigger {
+.menuTrigger {
   position: absolute;
-  top: 0.25rem;
   right: 0.25rem;
   width: 1.4rem;
   height: 1.4rem;
@@ -321,6 +320,10 @@ li .menuTrigger {
   text-align: center;
   opacity: 0;
   background-color: inherit;
+}
+
+li .menuTrigger {
+  top: 0.25rem;
 }
 li:hover .menuTrigger {
   opacity: 0.9;
@@ -3060,7 +3063,6 @@ ul.tabbar li.active > a {
   transition: background 0s;
 }
 
-
 .pinned-scroll {
   position: relative;
   display: flex;
@@ -3086,6 +3088,19 @@ ul.tabbar li.active > a {
   height: 0.45rem;
   border-radius: 50%;
   background-color: #039be5;
+}
+
+#pinned-wrapper .menuTrigger.upper {
+  top: 0.25rem;
+}
+#pinned-wrapper .menuTrigger.lower {
+  bottom: 0.25rem;
+}
+#pinned-wrapper:hover .menuTrigger {
+  opacity: 0.9;
+}
+#pinned-wrapper:hover .menuTrigger a {
+  color: #757575;
 }
 
 /*
@@ -3200,7 +3215,7 @@ ul.phone-country-selector span.country {
   }
 
   /* Must make it a bit visible on mobile because there is no :hover */
-  li .menuTrigger {
+  .menuTrigger {
     opacity: 0.3;
   }
 

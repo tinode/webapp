@@ -5837,7 +5837,6 @@ class Tinode {
     const pkt = _classPrivateMethodGet(this, _initPacket, _initPacket2).call(this, 'set', topic);
     const what = [];
     if (params) {
-      console.log("setMeta, params=", params);
       ['desc', 'sub', 'tags', 'cred', 'aux'].forEach(key => {
         if (params.hasOwnProperty(key)) {
           what.push(key);

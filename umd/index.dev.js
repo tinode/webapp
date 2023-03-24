@@ -5326,7 +5326,9 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         reply: null,
         contentToEdit: null,
         showGoToLastButton: false,
-        dragging: false
+        dragging: false,
+        pins: [],
+        selectedPin: 0
       };
     } else if (nextProps.topic != prevState.topic) {
       const topic = nextProps.tinode.getTopic(nextProps.topic);
@@ -5344,7 +5346,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         fetchingMessages: false,
         showGoToLastButton: false,
         contentToEdit: null,
-        dragging: false
+        dragging: false,
+        selectedPin: 0
       };
       if (nextProps.forwardMessage) {
         nextState.reply = {
@@ -5387,12 +5390,13 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             peerMessagingDisabled: false
           });
         }
+        console.log("getDerivedStateFromProps", nextProps.topic, prevState.topic);
         Object.assign(nextState, {
           minSeqId: topic.minMsgSeq(),
           maxSeqId: topic.maxMsgSeq(),
           latestClearId: topic.maxClearId(),
           channel: topic.isChannelType(),
-          pins: topic.aux('pins')
+          pins: (topic.aux('pins') || []).slice()
         });
         if (nextProps.callTopic == topic.name && shouldPresentCallPanel(nextProps.callState)) {
           nextState.rtcPanel = nextProps.callTopic;
@@ -5406,7 +5410,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           title: '',
           avatar: null,
           peerMessagingDisabled: false,
-          channel: false
+          channel: false,
+          pins: []
         });
       }
     } else {
@@ -5713,8 +5718,16 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     }
   }
   handleAuxUpdate(aux) {
+    const pins = (aux['pins'] || []).slice();
+    let selectedPin = this.state.selectedPin;
+    if (pins.length > this.state.pins.length) {
+      selectedPin = 0;
+    } else if (selectedPin >= pins.length) {
+      selectedPin = Math.max(0, pins.length - 1);
+    }
     this.setState({
-      pins: aux['pins']
+      pins: pins,
+      selectedPin: selectedPin
     });
   }
   handleInfoReceipt(info) {
@@ -6325,7 +6338,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           }
         }
         const pinnedMessages = [];
-        (this.state.pins || []).forEach(seq => pinnedMessages.push(topic.findMessage(seq)));
+        this.state.pins.forEach(seq => pinnedMessages.push(topic.findMessage(seq)));
         const messageNodes = [];
         let previousFrom = null;
         let prevDate = null;
@@ -6394,7 +6407,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
               uploader: msg._uploader,
               userIsWriter: this.state.isWriter,
               userIsAdmin: this.state.isAdmin,
-              pinned: (this.state.pins || []).includes(msg.seq),
+              pinned: this.state.pins.includes(msg.seq),
               viewportWidth: this.props.viewportWidth,
               showContextMenu: this.handleShowMessageContextMenu,
               onExpandMedia: this.handleExpandMedia,
@@ -6526,7 +6539,10 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
         }, lastSeen)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_pinned_messages_jsx__WEBPACK_IMPORTED_MODULE_15__["default"], {
           tinode: this.props.tinode,
           messages: pinnedMessages,
-          selected: 0,
+          selected: this.state.selectedPin,
+          setSelected: index => this.setState({
+            selectedPin: index
+          }),
           onSelected: this.handleQuoteClick,
           onCancel: this.handleUnpinMessage
         }), groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_group_subs_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
@@ -14789,26 +14805,52 @@ __webpack_require__.r(__webpack_exports__);
 class PinnedMessages extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComponent) {
   constructor(props) {
     super(props);
+    this.getSelectedIndex = this.getSelectedIndex.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.handleSelected = this.handleSelected.bind(this);
+    this.handleMoveNext = this.handleMoveNext.bind(this);
+    this.handleMovePrev = this.handleMovePrev.bind(this);
+  }
+  getSelectedIndex() {
+    const list = this.props.messages || [];
+    return list.length - this.props.selected - 1;
   }
   handleCancel(e) {
     e.preventDefault();
-    this.props.onCancel(this.props.messages[this.props.selected].seq);
+    this.props.onCancel(this.props.messages[this.getSelectedIndex()].seq);
   }
   handleSelected(e) {
     e.preventDefault();
-    this.props.onSelected(this.props.messages[this.props.selected].seq);
+    this.props.onSelected(this.props.messages[this.getSelectedIndex()].seq);
+  }
+  handleMoveNext(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const idx = Math.max(this.props.selected - 1, 0);
+    if (idx != this.props.selected) {
+      console.log("Move selection to ", idx);
+      this.props.setSelected(idx);
+    }
+  }
+  handleMovePrev(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const idx = Math.min(this.props.selected + 1, (this.props.messages || []).length - 1);
+    if (idx != this.props.selected) {
+      console.log("Move selection to ", idx);
+      this.props.setSelected(idx);
+    }
   }
   render() {
-    let shown = (this.props.messages || [])[this.props.selected];
+    const selected = this.getSelectedIndex();
+    let shown = (this.props.messages || [])[selected];
     shown = shown ? tinode_sdk__WEBPACK_IMPORTED_MODULE_2__.Drafty.format(shown.content, _lib_formatters_js__WEBPACK_IMPORTED_MODULE_3__.previewFormatter, {
       formatMessage: this.props.intl.formatMessage.bind(this.props.intl),
       authorizeURL: this.props.tinode.authorizeURL.bind(this.props.tinode)
     }) : null;
     const dots = [];
     this.props.messages.forEach(_ => {
-      const cn = dots.length == this.props.selected ? 'adot' : 'dot';
+      const cn = dots.length == selected ? 'adot' : 'dot';
       dots.push(react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
         key: dots.length,
         className: cn
@@ -14828,7 +14870,21 @@ class PinnedMessages extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     }, dots), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "pinned",
       onClick: this.handleSelected
-    }, shown)) : null;
+    }, shown), selected > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+      className: "menuTrigger upper"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+      href: "#",
+      onClick: this.handleMovePrev
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, "expand_less"))) : null, this.props.selected > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
+      className: "menuTrigger lower"
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
+      href: "#",
+      onClick: this.handleMoveNext
+    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons"
+    }, "expand_more"))) : null) : null;
   }
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,react_intl__WEBPACK_IMPORTED_MODULE_1__.injectIntl)(PinnedMessages));

@@ -289,7 +289,9 @@ class MessagesView extends React.Component {
         reply: null,
         contentToEdit: null,
         showGoToLastButton: false,
-        dragging: false
+        dragging: false,
+        pins: [],
+        selectedPin: 0
       };
     } else if (nextProps.topic != prevState.topic) {
       const topic = nextProps.tinode.getTopic(nextProps.topic);
@@ -308,7 +310,8 @@ class MessagesView extends React.Component {
         fetchingMessages: false,
         showGoToLastButton: false,
         contentToEdit: null,
-        dragging: false
+        dragging: false,
+        selectedPin: 0
       };
 
       if (nextProps.forwardMessage) {
@@ -359,12 +362,13 @@ class MessagesView extends React.Component {
             peerMessagingDisabled: false
           });
         }
+        console.log("getDerivedStateFromProps", nextProps.topic, prevState.topic);
         Object.assign(nextState, {
           minSeqId: topic.minMsgSeq(),
           maxSeqId: topic.maxMsgSeq(),
           latestClearId: topic.maxClearId(),
           channel: topic.isChannelType(),
-          pins: topic.aux('pins')
+          pins: (topic.aux('pins') || []).slice()
         });
 
         if (nextProps.callTopic == topic.name && shouldPresentCallPanel(nextProps.callState)) {
@@ -380,7 +384,8 @@ class MessagesView extends React.Component {
           title: '',
           avatar: null,
           peerMessagingDisabled: false,
-          channel: false
+          channel: false,
+          pins: []
         });
       }
     } else {
@@ -736,7 +741,15 @@ class MessagesView extends React.Component {
   }
 
   handleAuxUpdate(aux) {
-    this.setState({pins: aux['pins']});
+    const pins = (aux['pins'] || []).slice();
+    let selectedPin = this.state.selectedPin;
+    if (pins.length > this.state.pins.length) {
+      // New pins added, show the latest.
+      selectedPin = 0;
+    } else if (selectedPin >= pins.length) {
+      selectedPin =  Math.max(0, pins.length - 1);
+    }
+    this.setState({pins: pins, selectedPin: selectedPin});
   }
 
   handleInfoReceipt(info) {
@@ -1426,7 +1439,7 @@ class MessagesView extends React.Component {
         }
 
         const pinnedMessages = [];
-        (this.state.pins || []).forEach(seq => pinnedMessages.push(topic.findMessage(seq)));
+        this.state.pins.forEach(seq => pinnedMessages.push(topic.findMessage(seq)));
 
         const messageNodes = [];
         let previousFrom = null;
@@ -1505,7 +1518,7 @@ class MessagesView extends React.Component {
                 uploader={msg._uploader}
                 userIsWriter={this.state.isWriter}
                 userIsAdmin={this.state.isAdmin}
-                pinned={(this.state.pins || []).includes(msg.seq)}
+                pinned={this.state.pins.includes(msg.seq)}
                 viewportWidth={this.props.viewportWidth}  // Used by `formatter`.
                 showContextMenu={this.handleShowMessageContextMenu}
                 onExpandMedia={this.handleExpandMedia}
@@ -1624,7 +1637,8 @@ class MessagesView extends React.Component {
               <PinnedMessages
                 tinode={this.props.tinode}
                 messages={pinnedMessages}
-                selected={0}
+                selected={this.state.selectedPin}
+                setSelected={index => this.setState({selectedPin: index})}
                 onSelected={this.handleQuoteClick}
                 onCancel={this.handleUnpinMessage} />
               {groupTopic ?
