@@ -3046,14 +3046,17 @@ ul.tabbar li.active > a {
   width: 100%;
   min-width: 24rem;
   cursor: pointer;
-  transition: background 0.8s;
+  transition: background 0.4s;
   overflow-x: hidden;
   text-overflow: ellipsis;
 }
 
+.pinned:hover {
+  background-color: #fafdff;
+}
+
 .pinned:active {
-  background-color: #bdd8f7;
-  background-size: 200%;
+  background-color: #d8e8ff;
   transition: background 0s;
 }
 
