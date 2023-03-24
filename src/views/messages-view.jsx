@@ -362,7 +362,6 @@ class MessagesView extends React.Component {
             peerMessagingDisabled: false
           });
         }
-        console.log("getDerivedStateFromProps", nextProps.topic, prevState.topic);
         Object.assign(nextState, {
           minSeqId: topic.minMsgSeq(),
           maxSeqId: topic.maxMsgSeq(),
@@ -1634,13 +1633,16 @@ class MessagesView extends React.Component {
                 }<ContactBadges badges={icon_badges} /></div>
                 <div id="topic-last-seen">{lastSeen}</div>
               </div>
-              <PinnedMessages
-                tinode={this.props.tinode}
-                messages={pinnedMessages}
-                selected={this.state.selectedPin}
-                setSelected={index => this.setState({selectedPin: index})}
-                onSelected={this.handleQuoteClick}
-                onCancel={this.handleUnpinMessage} />
+              {!this.props.displayMobile ?
+                <PinnedMessages
+                  tinode={this.props.tinode}
+                  messages={pinnedMessages}
+                  selected={this.state.selectedPin}
+                  isAdmin={this.state.isAdmin}
+                  setSelected={index => this.setState({selectedPin: index})}
+                  onSelected={this.handleQuoteClick}
+                  onCancel={this.handleUnpinMessage} />
+                : null}
               {groupTopic ?
                 <GroupSubs
                   tinode={this.props.tinode}
@@ -1654,10 +1656,20 @@ class MessagesView extends React.Component {
               </div>
             </div>
             {this.props.displayMobile ?
-              <ErrorPanel
-                level={this.props.errorLevel}
-                text={this.props.errorText}
-                onClearError={this.props.onError} />
+              <>
+                <PinnedMessages
+                  tinode={this.props.tinode}
+                  messages={pinnedMessages}
+                  selected={this.state.selectedPin}
+                  isAdmin={this.state.isAdmin}
+                  setSelected={index => this.setState({selectedPin: index})}
+                  onSelected={this.handleQuoteClick}
+                  onCancel={this.handleUnpinMessage} />
+                <ErrorPanel
+                  level={this.props.errorLevel}
+                  text={this.props.errorText}
+                  onClearError={this.props.onError} />
+              </>
               : null}
             <LoadSpinner show={this.state.fetchingMessages} />
             {messagesComponent}

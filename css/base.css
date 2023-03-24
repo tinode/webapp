@@ -3190,6 +3190,10 @@ ul.phone-country-selector span.country {
   #mountPoint {
     padding: 0;
   }
+
+  .pinned {
+    min-width: 16rem;
+  }
 }
 
 @media (max-width: 640px) {
@@ -3222,5 +3226,14 @@ ul.phone-country-selector span.country {
   #send-message-input {
     /* Just an indicator that the screen is in mobile mode */
     transition-property: -tinode-mobile;
+  }
+
+  #pinned-wrapper {
+    height: 3.5rem;
+    margin: 0.25rem;
+  }
+
+  .pinned {
+    min-width: unset;
   }
 }

@@ -5390,7 +5390,6 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
             peerMessagingDisabled: false
           });
         }
-        console.log("getDerivedStateFromProps", nextProps.topic, prevState.topic);
         Object.assign(nextState, {
           minSeqId: topic.minMsgSeq(),
           maxSeqId: topic.maxMsgSeq(),
@@ -6536,16 +6535,17 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           badges: icon_badges
         })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "topic-last-seen"
-        }, lastSeen)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_pinned_messages_jsx__WEBPACK_IMPORTED_MODULE_15__["default"], {
+        }, lastSeen)), !this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_pinned_messages_jsx__WEBPACK_IMPORTED_MODULE_15__["default"], {
           tinode: this.props.tinode,
           messages: pinnedMessages,
           selected: this.state.selectedPin,
+          isAdmin: this.state.isAdmin,
           setSelected: index => this.setState({
             selectedPin: index
           }),
           onSelected: this.handleQuoteClick,
           onCancel: this.handleUnpinMessage
-        }), groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_group_subs_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
+        }) : null, groupTopic ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_group_subs_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
           tinode: this.props.tinode,
           subscribers: this.state.onlineSubs
         }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
@@ -6553,11 +6553,21 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           onClick: this.handleContextClick
         }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
           className: "material-icons"
-        }, "more_vert")))), this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
+        }, "more_vert")))), this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_pinned_messages_jsx__WEBPACK_IMPORTED_MODULE_15__["default"], {
+          tinode: this.props.tinode,
+          messages: pinnedMessages,
+          selected: this.state.selectedPin,
+          isAdmin: this.state.isAdmin,
+          setSelected: index => this.setState({
+            selectedPin: index
+          }),
+          onSelected: this.handleQuoteClick,
+          onCancel: this.handleUnpinMessage
+        }), react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_error_panel_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
           level: this.props.errorLevel,
           text: this.props.errorText,
           onClearError: this.props.onError
-        }) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
+        })) : null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_load_spinner_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
           show: this.state.fetchingMessages
         }), messagesComponent, this.state.dragging && this.isDragEnabled() ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           className: "drag-n-drop"
@@ -14828,7 +14838,6 @@ class PinnedMessages extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     e.stopPropagation();
     const idx = Math.max(this.props.selected - 1, 0);
     if (idx != this.props.selected) {
-      console.log("Move selection to ", idx);
       this.props.setSelected(idx);
     }
   }
@@ -14837,7 +14846,6 @@ class PinnedMessages extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     e.stopPropagation();
     const idx = Math.min(this.props.selected + 1, (this.props.messages || []).length - 1);
     if (idx != this.props.selected) {
-      console.log("Move selection to ", idx);
       this.props.setSelected(idx);
     }
   }
@@ -14858,14 +14866,16 @@ class PinnedMessages extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureC
     });
     return shown ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       id: "pinned-wrapper"
-    }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, this.props.isAdmin ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "cancel"
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("a", {
       href: "#",
       onClick: this.handleCancel
     }, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
       className: "material-icons gray"
-    }, "close"))), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    }, "close"))) : react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default().createElement("i", {
+      className: "material-icons gray"
+    }, "push_pin")), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "pinned-scroll"
     }, dots), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
       className: "pinned",

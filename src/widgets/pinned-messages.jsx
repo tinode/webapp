@@ -36,7 +36,6 @@ class PinnedMessages extends React.PureComponent {
     e.stopPropagation();
     const idx = Math.max(this.props.selected - 1, 0);
     if (idx != this.props.selected) {
-      console.log("Move selection to ", idx);
       this.props.setSelected(idx);
     }
   }
@@ -46,7 +45,6 @@ class PinnedMessages extends React.PureComponent {
     e.stopPropagation();
     const idx = Math.min(this.props.selected + 1, (this.props.messages || []).length - 1);
     if (idx != this.props.selected) {
-      console.log("Move selection to ", idx);
       this.props.setSelected(idx);
     }
   }
@@ -67,9 +65,12 @@ class PinnedMessages extends React.PureComponent {
 
     return shown ?
       (<div id="pinned-wrapper">
-        <div className="cancel">
-          <a href="#" onClick={this.handleCancel}><i className="material-icons gray">close</i></a>
-        </div>
+        {this.props.isAdmin ?
+          <div className="cancel">
+            <a href="#" onClick={this.handleCancel}><i className="material-icons gray">close</i></a>
+          </div> :
+          <div><i className="material-icons gray">push_pin</i></div>
+        }
         <div className="pinned-scroll">{dots}</div>
         <div className="pinned" onClick={this.handleSelected}>{shown}</div>
         {selected > 0 ?
