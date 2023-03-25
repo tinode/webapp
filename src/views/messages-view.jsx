@@ -1633,6 +1633,7 @@ class MessagesView extends React.Component {
                 }<ContactBadges badges={icon_badges} /></div>
                 <div id="topic-last-seen">{lastSeen}</div>
               </div>
+              <div style={{marginLeft: 'auto'}}/>
               {!this.props.displayMobile ?
                 <PinnedMessages
                   tinode={this.props.tinode}

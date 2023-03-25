@@ -6535,7 +6535,11 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           badges: icon_badges
         })), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
           id: "topic-last-seen"
-        }, lastSeen)), !this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_pinned_messages_jsx__WEBPACK_IMPORTED_MODULE_15__["default"], {
+        }, lastSeen)), react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+          style: {
+            marginLeft: 'auto'
+          }
+        }), !this.props.displayMobile ? react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_widgets_pinned_messages_jsx__WEBPACK_IMPORTED_MODULE_15__["default"], {
           tinode: this.props.tinode,
           messages: pinnedMessages,
           selected: this.state.selectedPin,

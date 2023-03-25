@@ -321,6 +321,9 @@ ul.menu > li.separator:hover {
   opacity: 0;
   background-color: inherit;
 }
+.menuTrigger a {
+  color: #757575;
+}
 
 li .menuTrigger {
   top: 0.25rem;
@@ -3030,7 +3033,6 @@ ul.tabbar li.active > a {
   display: flex;
   align-items: center;
   height: 100%;
-  margin-left: auto;
   margin-right: 1rem;
 }
 
@@ -3192,7 +3194,7 @@ ul.phone-country-selector span.country {
   }
 
   .pinned {
-    min-width: 16rem;
+    min-width: 12rem;
   }
 }
 
