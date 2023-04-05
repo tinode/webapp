@@ -410,6 +410,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "EXPIRE_PROMISES_TIMEOUT": () => (/* binding */ EXPIRE_PROMISES_TIMEOUT),
 /* harmony export */   "LIBRARY": () => (/* binding */ LIBRARY),
 /* harmony export */   "LOCAL_SEQID": () => (/* binding */ LOCAL_SEQID),
+/* harmony export */   "MAX_PINNED_COUNT": () => (/* binding */ MAX_PINNED_COUNT),
 /* harmony export */   "MESSAGE_STATUS_FAILED": () => (/* binding */ MESSAGE_STATUS_FAILED),
 /* harmony export */   "MESSAGE_STATUS_FATAL": () => (/* binding */ MESSAGE_STATUS_FATAL),
 /* harmony export */   "MESSAGE_STATUS_NONE": () => (/* binding */ MESSAGE_STATUS_NONE),
@@ -463,6 +464,7 @@ const EXPIRE_PROMISES_PERIOD = 1000;
 const RECV_TIMEOUT = 100;
 const DEFAULT_MESSAGES_PAGE = 24;
 const DEL_CHAR = '\u2421';
+const MAX_PINNED_COUNT = 5;
 
 /***/ }),
 
@@ -3733,6 +3735,9 @@ class Topic {
     if (pin) {
       if (!pinned.includes(seq)) {
         changed = true;
+        if (pinned.length == _config_js__WEBPACK_IMPORTED_MODULE_3__.MAX_PINNED_COUNT) {
+          pinned.shift();
+        }
         pinned.push(seq);
       }
     } else {

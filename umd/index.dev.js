@@ -6337,7 +6337,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           }
         }
         const pinnedMessages = [];
-        this.state.pins.forEach(seq => pinnedMessages.push(topic.findMessage(seq)));
+        this.state.pins.forEach(seq => pinnedMessages.push(topic.latestMsgVersion(seq)));
         const messageNodes = [];
         let previousFrom = null;
         let prevDate = null;
