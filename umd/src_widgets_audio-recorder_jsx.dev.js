@@ -37,7 +37,9 @@ const BAR_COLOR = '#BBBD';
 const BAR_SCALE = 64.0;
 const VISUALIZATION_BARS = 96;
 const MAX_SAMPLES_PER_BAR = 10;
-const AUDIO_MIME_TYPE = 'audio/webm';
+const DEFAULT_AUDIO_MIME_TYPE = 'audio/webm';
+const SAFARI_AUDIO_MIME_TYPE = 'audio/mp4';
+const AUDIO_MIME_TYPES = [DEFAULT_AUDIO_MIME_TYPE, SAFARI_AUDIO_MIME_TYPE, ''];
 const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
   icon_title_delete: {
     id: "icon_title_delete",
@@ -65,6 +67,13 @@ const messages = (0,react_intl__WEBPACK_IMPORTED_MODULE_1__.defineMessages)({
     defaultMessage: [{
       "type": 0,
       "value": "Send message"
+    }]
+  },
+  failed_to_init_audio: {
+    id: "failed_to_init_audio",
+    defaultMessage: [{
+      "type": 0,
+      "value": "Failed to initialize audio recording"
     }]
   }
 });
@@ -170,9 +179,9 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
       this.canvasContext.beginPath();
       for (let i = 0; i < this.viewBuffer.length; i++) {
         let x = i * (LINE_WIDTH + SPACING) - dx;
-        let y = Math.min(this.viewBuffer[i] / BAR_SCALE, 0.9) * height;
+        let y = Math.max(Math.min(this.viewBuffer[i] / BAR_SCALE, 0.9) * height, 1);
         this.canvasContext.moveTo(x, (height - y) * 0.5);
-        this.canvasContext.lineTo(x, height * 0.5 + y * 0.5);
+        this.canvasContext.lineTo(x, (height + y) * 0.5);
       }
       this.canvasContext.stroke();
       const now = new Date().getTime();
@@ -237,12 +246,28 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
   }
   initMediaRecording(stream) {
     this.stream = stream;
-    this.mediaRecorder = new MediaRecorder(stream, {
-      mimeType: AUDIO_MIME_TYPE,
-      audioBitsPerSecond: 24_000
+    AUDIO_MIME_TYPES.some(mimeType => {
+      if (MediaRecorder.isTypeSupported(mimeType)) {
+        this.mediaRecorder = new MediaRecorder(stream, {
+          mimeType: mimeType,
+          audioBitsPerSecond: 24_000
+        });
+        return true;
+      }
+      return false;
     });
+    if (!this.mediaRecorder) {
+      console.warn('MediaRecorder failed to initialize: no supported audio formats');
+      this.props.onError(this.props.intl.formatMessage(messages.failed_to_init_audio));
+      return;
+    }
     this.audioContext = new AudioContext();
     this.audioInput = this.audioContext.createMediaStreamSource(stream);
+    if (!this.audioInput) {
+      console.warn('createMediaStreamSource returned null: audio input unavailable');
+      this.props.onError(this.props.intl.formatMessage(messages.failed_to_init_audio));
+      return;
+    }
     this.analyser = this.audioContext.createAnalyser();
     this.analyser.fftSize = BUFFER_SIZE;
     this.audioInput.connect(this.analyser);
@@ -275,11 +300,12 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     this.recordingTimestamp = this.startedOn;
   }
   getRecording(mimeType) {
-    mimeType = mimeType || AUDIO_MIME_TYPE;
+    mimeType = mimeType || DEFAULT_AUDIO_MIME_TYPE;
     let blob = new Blob(this.audioChunks, {
       type: mimeType
     });
-    return webm_duration_fix__WEBPACK_IMPORTED_MODULE_3___default()(blob, mimeType).then(fixedBlob => {
+    const result = mimeType == DEFAULT_AUDIO_MIME_TYPE ? webm_duration_fix__WEBPACK_IMPORTED_MODULE_3___default()(blob, mimeType) : Promise.resolve(blob);
+    return result.then(fixedBlob => {
       blob = fixedBlob;
       return fixedBlob.arrayBuffer();
     }).then(arrayBuff => this.audioContext.decodeAudioData(arrayBuff)).then(decoded => this.createPreview(decoded)).then(preview => ({
@@ -311,7 +337,9 @@ class AudioRecorder extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureCo
     return buffer;
   }
   cleanUp() {
-    this.audioInput.disconnect();
+    if (this.audioInput) {
+      this.audioInput.disconnect();
+    }
     this.stream.getTracks().forEach(track => track.stop());
   }
   render() {

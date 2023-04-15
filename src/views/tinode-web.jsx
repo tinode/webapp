@@ -431,7 +431,7 @@ class TinodeWeb extends React.Component {
     }).then(token => {
       if (token) {
         return token;
-      } else {
+      } else if (typeof Notification != 'undefined') {
         // Try to request permissions.
         return Notification.requestPermission().then(permission => {
           if (permission === 'granted') {
@@ -450,6 +450,7 @@ class TinodeWeb extends React.Component {
           }
         });
       }
+      throw new Error("Notifications are not supported");
     });
   }
 

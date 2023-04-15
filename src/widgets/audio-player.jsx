@@ -70,7 +70,7 @@ class AudioPlayer extends React.PureComponent {
 
   componentWillUnmount() {
     if (this.audioPlayer) {
-      this.audioPlayer.oncanplay = null;
+      this.audioPlayer.onloadedmetadata = null;
       this.audioPlayer.ontimeupdate = null;
       this.audioPlayer.onended = null;
       this.audioPlayer.pause();
@@ -94,7 +94,7 @@ class AudioPlayer extends React.PureComponent {
 
   initAudio() {
     this.audioPlayer = new Audio(this.props.src);
-    this.audioPlayer.oncanplay = _ => this.setState({canPlay: true});
+    this.audioPlayer.onloadedmetadata = _ => this.setState({canPlay: true});
     this.audioPlayer.ontimeupdate = _ => this.setState({
       currentTime: secondsToTime(this.audioPlayer.currentTime, this.state.longMin)
     });
@@ -149,7 +149,7 @@ class AudioPlayer extends React.PureComponent {
         this.canvasContext.strokeStyle = BAR_COLOR_DARK;
         for (let i = 0; i < this.viewBuffer.length; i++) {
           let x = 1 + i * (LINE_WIDTH + SPACING) + LINE_WIDTH * 0.5;
-          let y = this.viewBuffer[i] * height * 0.9;
+          let y = Math.max(this.viewBuffer[i] * height * 0.9, 1);
 
           const color = x < thumbAt ? BAR_COLOR_DARK : BAR_COLOR;
           if (this.canvasContext.strokeStyle != color) {
@@ -159,7 +159,7 @@ class AudioPlayer extends React.PureComponent {
           }
 
           this.canvasContext.moveTo(x, (height - y) * 0.5);
-          this.canvasContext.lineTo(x, height * 0.5 + y * 0.5);
+          this.canvasContext.lineTo(x, (height + y) * 0.5);
         }
         // Actually draw the bars on canvas.
         this.canvasContext.stroke();
@@ -216,10 +216,11 @@ class AudioPlayer extends React.PureComponent {
     if (!this.state.canPlay) {
       return;
     }
+
     if (this.state.playing) {
       this.audioPlayer.pause();
       this.setState({playing: false});
-    } else {
+    } else if (this.audioPlayer.readyState >= 2) {
       this.audioPlayer.play();
       this.setState({playing: true}, this.visualize);
     }
