@@ -586,10 +586,10 @@
     "obsolete": false
   },
   "label_wire_transport": {
-    "translation": "",
+    "translation": "線路傳輸：",
     "defaultMessage": "Wire transport:",
     "description": "Label for wire transport selection in SettingsView",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "label_you": {
