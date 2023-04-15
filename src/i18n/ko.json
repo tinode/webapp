@@ -97,13 +97,6 @@
     "missing": false,
     "obsolete": false
   },
-  "button_add_another": {
-    "translation": "다른항목추가",
-    "defaultMessage": "Add another",
-    "description": "Call to action [+ add another]",
-    "missing": false,
-    "obsolete": true
-  },
   "button_add_members": {
     "translation": "회원추가",
     "defaultMessage": "Add members",
@@ -1215,13 +1208,6 @@
     "missing": false,
     "obsolete": false
   },
-  "validate_credential_action": {
-    "translation": "확인",
-    "defaultMessage": "confirm",
-    "description": "Validate credentail call to action",
-    "missing": false,
-    "obsolete": true
-  },
   "description_editing_placeholder": {
     "translation": "설명(선택 사항)",
     "defaultMessage": "Description (optional)",
@@ -1430,13 +1416,6 @@
     "description": "Label for WS/WSS connection type in SettingsView",
     "missing": false,
     "obsolete": false
-  },
-  "phone_or_email_prompt": {
-    "translation": "전화번호 또는 이메일",
-    "defaultMessage": "Phone number or email",
-    "description": "Placeholer for phone or email",
-    "missing": false,
-    "obsolete": true
   },
   "cred_confirmed_successfully": {
     "translation": "성공적으로 확인됨",

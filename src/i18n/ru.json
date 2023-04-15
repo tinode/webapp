@@ -97,13 +97,6 @@
     "missing": false,
     "obsolete": false
   },
-  "button_add_another": {
-    "translation": "Добавить",
-    "defaultMessage": "Add another",
-    "description": "Call to action [+ add another]",
-    "missing": false,
-    "obsolete": true
-  },
   "button_add_members": {
     "translation": "Добавить",
     "defaultMessage": "Add members",
@@ -1215,13 +1208,6 @@
     "missing": false,
     "obsolete": false
   },
-  "validate_credential_action": {
-    "translation": "подтвердить",
-    "defaultMessage": "confirm",
-    "description": "Validate credentail call to action",
-    "missing": false,
-    "obsolete": true
-  },
   "description_editing_placeholder": {
     "translation": "Описание (не обязательно)",
     "defaultMessage": "Description (optional)",
@@ -1430,13 +1416,6 @@
     "description": "Label for WS/WSS connection type in SettingsView",
     "missing": false,
     "obsolete": false
-  },
-  "phone_or_email_prompt": {
-    "translation": "Телефон или емейл",
-    "defaultMessage": "Phone number or email",
-    "description": "Placeholer for phone or email",
-    "missing": false,
-    "obsolete": true
   },
   "cred_confirmed_successfully": {
     "translation": "Подтверждено успешно",
