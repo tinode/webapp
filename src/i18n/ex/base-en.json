@@ -291,6 +291,10 @@
     "defaultMessage": "Invalid ID",
     "description": "Error message"
   },
+  "failed_to_init_audio": {
+    "defaultMessage": "Failed to initialize audio recording",
+    "description": "Error message when audio is not available"
+  },
   "file_attachment_too_large": {
     "defaultMessage": "The file size {size} exceeds the {limit} limit.",
     "description": "Error message when attachment is too large"

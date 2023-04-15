@@ -7657,7 +7657,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
     }).then(token => {
       if (token) {
         return token;
-      } else {
+      } else if (typeof Notification != 'undefined') {
         return Notification.requestPermission().then(permission => {
           if (permission === 'granted') {
             return (0,firebase_messaging__WEBPACK_IMPORTED_MODULE_3__.getToken)(fcm, {
@@ -7675,6 +7675,7 @@ class TinodeWeb extends (react__WEBPACK_IMPORTED_MODULE_0___default().Component)
           }
         });
       }
+      throw new Error("Notifications are not supported");
     });
   }
   handleResize() {
@@ -9637,7 +9638,7 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
   }
   componentWillUnmount() {
     if (this.audioPlayer) {
-      this.audioPlayer.oncanplay = null;
+      this.audioPlayer.onloadedmetadata = null;
       this.audioPlayer.ontimeupdate = null;
       this.audioPlayer.onended = null;
       this.audioPlayer.pause();
@@ -9660,7 +9661,7 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
   }
   initAudio() {
     this.audioPlayer = new Audio(this.props.src);
-    this.audioPlayer.oncanplay = _ => this.setState({
+    this.audioPlayer.onloadedmetadata = _ => this.setState({
       canPlay: true
     });
     this.audioPlayer.ontimeupdate = _ => this.setState({
@@ -9703,7 +9704,7 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
         this.canvasContext.strokeStyle = BAR_COLOR_DARK;
         for (let i = 0; i < this.viewBuffer.length; i++) {
           let x = 1 + i * (LINE_WIDTH + SPACING) + LINE_WIDTH * 0.5;
-          let y = this.viewBuffer[i] * height * 0.9;
+          let y = Math.max(this.viewBuffer[i] * height * 0.9, 1);
           const color = x < thumbAt ? BAR_COLOR_DARK : BAR_COLOR;
           if (this.canvasContext.strokeStyle != color) {
             this.canvasContext.stroke();
@@ -9711,7 +9712,7 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
             this.canvasContext.strokeStyle = color;
           }
           this.canvasContext.moveTo(x, (height - y) * 0.5);
-          this.canvasContext.lineTo(x, height * 0.5 + y * 0.5);
+          this.canvasContext.lineTo(x, (height + y) * 0.5);
         }
         this.canvasContext.stroke();
         if (this.props.duration) {
@@ -9762,7 +9763,7 @@ class AudioPlayer extends (react__WEBPACK_IMPORTED_MODULE_0___default().PureComp
       this.setState({
         playing: false
       });
-    } else {
+    } else if (this.audioPlayer.readyState >= 2) {
       this.audioPlayer.play();
       this.setState({
         playing: true

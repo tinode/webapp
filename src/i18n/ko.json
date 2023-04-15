@@ -1661,5 +1661,12 @@
     "description": "Menu item [Unpin] for un-pinning the message.",
     "missing": true,
     "obsolete": false
+  },
+  "failed_to_init_audio": {
+    "translation": "",
+    "defaultMessage": "Failed to initialize audio recording",
+    "description": "Error message when audio is not available",
+    "missing": true,
+    "obsolete": false
   }
 }

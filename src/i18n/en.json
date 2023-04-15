@@ -1648,6 +1648,13 @@
     "missing": false,
     "obsolete": false
   },
+  "failed_to_init_audio": {
+    "translation": "Failed to initialize audio recording",
+    "defaultMessage": "Failed to initialize audio recording",
+    "description": "Error message when audio is not available",
+    "missing": false,
+    "obsolete": false
+  },
   "pin_message": {
     "translation": "Pin",
     "defaultMessage": "Pin",
