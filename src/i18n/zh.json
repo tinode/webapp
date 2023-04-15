@@ -1579,45 +1579,45 @@
     "obsolete": false
   },
   "current_email": {
-    "translation": "",
+    "translation": "当前邮箱",
     "defaultMessage": "Current email",
     "description": "Label for old email",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "current_phone": {
-    "translation": "",
+    "translation": "当前电话号码",
     "defaultMessage": "Current phone number",
     "description": "Label for old phone",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "new_email": {
-    "translation": "",
+    "translation": "新电子邮件地址",
     "defaultMessage": "New email",
     "description": "Prompt for entering a new email",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "new_phone_number": {
-    "translation": "",
+    "translation": "新电话号码",
     "defaultMessage": "New phone number",
     "description": "Prompt for entering a new telephone number",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "change_email": {
-    "translation": "",
+    "translation": "更改邮箱",
     "defaultMessage": "Change email",
     "description": "Prompt to change current email",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "change_phone": {
-    "translation": "",
+    "translation": "更改电话号码",
     "defaultMessage": "Change phone number",
     "description": "Prompt to change current phone number",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "call_busy": {
@@ -1628,10 +1628,10 @@
     "obsolete": false
   },
   "failed_to_init_audio": {
-    "translation": "",
+    "translation": "初始化录音失败",
     "defaultMessage": "Failed to initialize audio recording",
     "description": "Error message when audio is not available",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   }
 }
