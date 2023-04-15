@@ -3028,6 +3028,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 let XHRProvider;
+function addURLParam(relUrl, key, value) {
+  const url = new URL(relUrl, window.location.origin);
+  url.searchParams.append(key, value);
+  return url.toString().substring(window.location.origin.length);
+}
 class LargeFileHelper {
   constructor(tinode, version) {
     this._tinode = tinode;
@@ -3158,6 +3163,7 @@ class LargeFileHelper {
     const instance = this;
     const xhr = new XHRProvider();
     this.xhr.push(xhr);
+    relativeUrl = addURLParam(relativeUrl, 'asatt', '1');
     xhr.open('GET', relativeUrl, true);
     xhr.setRequestHeader('X-Tinode-APIKey', this._apiKey);
     xhr.setRequestHeader('X-Tinode-Auth', 'Token ' + this._authToken.token);
@@ -4944,7 +4950,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "PACKAGE_VERSION": () => (/* binding */ PACKAGE_VERSION)
 /* harmony export */ });
-const PACKAGE_VERSION = "0.22.2";
+const PACKAGE_VERSION = "0.22.3";
 
 /***/ })
 
