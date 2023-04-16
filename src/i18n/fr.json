@@ -97,13 +97,6 @@
     "missing": false,
     "obsolete": false
   },
-  "button_add_another": {
-    "translation": "Ajouter un autre",
-    "defaultMessage": "Add another",
-    "description": "Call to action [+ add another]",
-    "missing": false,
-    "obsolete": true
-  },
   "button_add_members": {
     "translation": "Ajouter des membres",
     "defaultMessage": "Add members",
@@ -1222,13 +1215,6 @@
     "missing": false,
     "obsolete": false
   },
-  "validate_credential_action": {
-    "translation": "confirmer",
-    "defaultMessage": "confirm",
-    "description": "Validate credentail call to action",
-    "missing": false,
-    "obsolete": true
-  },
   "description_editing_placeholder": {
     "translation": "Description facultative",
     "defaultMessage": "Description (optional)",
@@ -1431,13 +1417,6 @@
     "missing": false,
     "obsolete": false
   },
-  "phone_or_email_prompt": {
-    "translation": "Numéro de téléphone ou email",
-    "defaultMessage": "Phone number or email",
-    "description": "Placeholer for phone or email",
-    "missing": false,
-    "obsolete": true
-  },
   "cred_confirmed_successfully": {
     "translation": "Confirmé avec succès",
     "defaultMessage": "Confirmed successfully",
@@ -1600,45 +1579,45 @@
     "obsolete": false
   },
   "current_email": {
-    "translation": "",
+    "translation": "Courriel actuel",
     "defaultMessage": "Current email",
     "description": "Label for old email",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "current_phone": {
-    "translation": "",
+    "translation": "Numéro de téléphone actuel",
     "defaultMessage": "Current phone number",
     "description": "Label for old phone",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "new_email": {
-    "translation": "",
+    "translation": "Nouvel e-mail",
     "defaultMessage": "New email",
     "description": "Prompt for entering a new email",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "new_phone_number": {
-    "translation": "",
+    "translation": "Nouveau numéro de téléphone",
     "defaultMessage": "New phone number",
     "description": "Prompt for entering a new telephone number",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "change_email": {
-    "translation": "",
+    "translation": "Modifier l'e-mail",
     "defaultMessage": "Change email",
     "description": "Prompt to change current email",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "change_phone": {
-    "translation": "",
+    "translation": "Modifier le numéro de téléphone",
     "defaultMessage": "Change phone number",
     "description": "Prompt to change current phone number",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   },
   "call_busy": {
@@ -1663,10 +1642,10 @@
     "obsolete": false
   },
   "failed_to_init_audio": {
-    "translation": "",
+    "translation": "Échec de l'initialisation de l'enregistrement audio",
     "defaultMessage": "Failed to initialize audio recording",
     "description": "Error message when audio is not available",
-    "missing": true,
+    "missing": false,
     "obsolete": false
   }
 }
