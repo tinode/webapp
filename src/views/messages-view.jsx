@@ -737,6 +737,10 @@ class MessagesView extends React.Component {
       // 0 means "latest".
       this.postReadNotification(0);
     }
+
+    // Load pinned message too (if any);
+    const topic = this.props.tinode.getTopic(this.state.topic);
+    topic.getPinnedMessages();
   }
 
   handleAuxUpdate(aux) {
@@ -1438,7 +1442,7 @@ class MessagesView extends React.Component {
         }
 
         const pinnedMessages = [];
-        this.state.pins.forEach(seq => pinnedMessages.push(topic.latestMsgVersion(seq)));
+        this.state.pins.forEach(seq => pinnedMessages.push(topic.latestMsgVersion(seq) || topic.findMessage(seq)));
 
         const messageNodes = [];
         let previousFrom = null;

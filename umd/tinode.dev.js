@@ -1119,18 +1119,42 @@ class DB {
     if (!this.isReady()) {
       return this.disabled ? Promise.resolve([]) : Promise.reject(new Error("not initialized"));
     }
+    const trx = this.db.transaction(['message']);
+    const result = [];
+    if (Array.isArray(query.ranges)) {
+      return new Promise((resolve, reject) => {
+        trx.onerror = event => {
+          this.#logger('PCache', 'readMessages', event.target.error);
+          reject(event.target.error);
+        };
+        let count = 0;
+        query.ranges.forEach(range => {
+          const key = range.hi ? IDBKeyRange.bound([topicName, range.low], [topicName, range.Hi], false, true) : IDBKeyRange.only([topicName, range.low]);
+          const req = trx.objectStore('message').get(key);
+          req.onsuccess = event => {
+            count++;
+            if (Array.isArray(event.target.result)) {
+              result.concat(event.target.result);
+            } else {
+              result.push(event.target.result);
+            }
+            if (count == query.ranges.length) {
+              resolve(result);
+            }
+          };
+        });
+      });
+    }
     return new Promise((resolve, reject) => {
       query = query || {};
       const since = query.since > 0 ? query.since : 0;
       const before = query.before > 0 ? query.before : Number.MAX_SAFE_INTEGER;
       const limit = query.limit | 0;
-      const result = [];
-      const range = IDBKeyRange.bound([topicName, since], [topicName, before], false, true);
-      const trx = this.db.transaction(['message']);
       trx.onerror = event => {
         this.#logger('PCache', 'readMessages', event.target.error);
         reject(event.target.error);
       };
+      const range = IDBKeyRange.bound([topicName, since], [topicName, before], false, true);
       trx.objectStore('message').openCursor(range, 'prev').onsuccess = event => {
         const cursor = event.target.result;
         if (cursor) {
@@ -2913,6 +2937,70 @@ if (true) {
 
 /***/ }),
 
+/***/ "./src/fnd-topic.js":
+/*!**************************!*\
+  !*** ./src/fnd-topic.js ***!
+  \**************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ TopicFnd)
+/* harmony export */ });
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./config.js */ "./src/config.js");
+/* harmony import */ var _topic_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./topic.js */ "./src/topic.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils.js */ "./src/utils.js");
+
+
+
+
+
+class TopicFnd extends _topic_js__WEBPACK_IMPORTED_MODULE_1__["default"] {
+  _contacts = {};
+  constructor(callbacks) {
+    super(_config_js__WEBPACK_IMPORTED_MODULE_0__.TOPIC_FND, callbacks);
+  }
+  _processMetaSub(subs) {
+    let updateCount = Object.getOwnPropertyNames(this._contacts).length;
+    this._contacts = {};
+    for (let idx in subs) {
+      let sub = subs[idx];
+      const indexBy = sub.topic ? sub.topic : sub.user;
+      sub = (0,_utils_js__WEBPACK_IMPORTED_MODULE_2__.mergeToCache)(this._contacts, indexBy, sub);
+      updateCount++;
+      if (this.onMetaSub) {
+        this.onMetaSub(sub);
+      }
+    }
+    if (updateCount > 0 && this.onSubsUpdated) {
+      this.onSubsUpdated(Object.keys(this._contacts));
+    }
+  }
+  publish() {
+    return Promise.reject(new Error("Publishing to 'fnd' is not supported"));
+  }
+  setMeta(params) {
+    return Object.getPrototypeOf(TopicFnd.prototype).setMeta.call(this, params).then(_ => {
+      if (Object.keys(this._contacts).length > 0) {
+        this._contacts = {};
+        if (this.onSubsUpdated) {
+          this.onSubsUpdated([]);
+        }
+      }
+    });
+  }
+  contacts(callback, context) {
+    const cb = callback || this.onMetaSub;
+    if (cb) {
+      for (let idx in this._contacts) {
+        cb.call(context, this._contacts[idx], idx, this._contacts);
+      }
+    }
+  }
+}
+
+/***/ }),
+
 /***/ "./src/large-file.js":
 /*!***************************!*\
   !*** ./src/large-file.js ***!
@@ -3149,6 +3237,287 @@ class LargeFileHelper {
 
 /***/ }),
 
+/***/ "./src/me-topic.js":
+/*!*************************!*\
+  !*** ./src/me-topic.js ***!
+  \*************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ TopicMe)
+/* harmony export */ });
+/* harmony import */ var _access_mode_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./access-mode.js */ "./src/access-mode.js");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./config.js */ "./src/config.js");
+/* harmony import */ var _topic_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./topic.js */ "./src/topic.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils.js */ "./src/utils.js");
+
+
+
+
+
+
+class TopicMe extends _topic_js__WEBPACK_IMPORTED_MODULE_2__["default"] {
+  onContactUpdate;
+  constructor(callbacks) {
+    super(_config_js__WEBPACK_IMPORTED_MODULE_1__.TOPIC_ME, callbacks);
+    if (callbacks) {
+      this.onContactUpdate = callbacks.onContactUpdate;
+    }
+  }
+  _processMetaDesc(desc) {
+    const turnOff = desc.acs && !desc.acs.isPresencer() && this.acs && this.acs.isPresencer();
+    (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.mergeObj)(this, desc);
+    this._tinode._db.updTopic(this);
+    this._updateCachedUser(this._tinode._myUID, desc);
+    if (turnOff) {
+      this._tinode.mapTopics(cont => {
+        if (cont.online) {
+          cont.online = false;
+          cont.seen = Object.assign(cont.seen || {}, {
+            when: new Date()
+          });
+          this._refreshContact('off', cont);
+        }
+      });
+    }
+    if (this.onMetaDesc) {
+      this.onMetaDesc(this);
+    }
+  }
+  _processMetaSub(subs) {
+    let updateCount = 0;
+    subs.forEach(sub => {
+      const topicName = sub.topic;
+      if (topicName == _config_js__WEBPACK_IMPORTED_MODULE_1__.TOPIC_FND || topicName == _config_js__WEBPACK_IMPORTED_MODULE_1__.TOPIC_ME) {
+        return;
+      }
+      sub.online = !!sub.online;
+      let cont = null;
+      if (sub.deleted) {
+        cont = sub;
+        this._tinode.cacheRemTopic(topicName);
+        this._tinode._db.remTopic(topicName);
+      } else {
+        if (typeof sub.seq != 'undefined') {
+          sub.seq = sub.seq | 0;
+          sub.recv = sub.recv | 0;
+          sub.read = sub.read | 0;
+          sub.unread = sub.seq - sub.read;
+        }
+        const topic = this._tinode.getTopic(topicName);
+        if (topic._new) {
+          delete topic._new;
+        }
+        cont = (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.mergeObj)(topic, sub);
+        this._tinode._db.updTopic(cont);
+        if (_topic_js__WEBPACK_IMPORTED_MODULE_2__["default"].isP2PTopicName(topicName)) {
+          this._cachePutUser(topicName, cont);
+          this._tinode._db.updUser(topicName, cont.public);
+        }
+        if (!sub._noForwarding && topic) {
+          sub._noForwarding = true;
+          topic._processMetaDesc(sub);
+        }
+      }
+      updateCount++;
+      if (this.onMetaSub) {
+        this.onMetaSub(cont);
+      }
+    });
+    if (this.onSubsUpdated && updateCount > 0) {
+      const keys = [];
+      subs.forEach(s => {
+        keys.push(s.topic);
+      });
+      this.onSubsUpdated(keys, updateCount);
+    }
+  }
+  _processMetaCreds(creds, upd) {
+    if (creds.length == 1 && creds[0] == _config_js__WEBPACK_IMPORTED_MODULE_1__.DEL_CHAR) {
+      creds = [];
+    }
+    if (upd) {
+      creds.forEach(cr => {
+        if (cr.val) {
+          let idx = this._credentials.findIndex(el => {
+            return el.meth == cr.meth && el.val == cr.val;
+          });
+          if (idx < 0) {
+            if (!cr.done) {
+              idx = this._credentials.findIndex(el => {
+                return el.meth == cr.meth && !el.done;
+              });
+              if (idx >= 0) {
+                this._credentials.splice(idx, 1);
+              }
+            }
+            this._credentials.push(cr);
+          } else {
+            this._credentials[idx].done = cr.done;
+          }
+        } else if (cr.resp) {
+          const idx = this._credentials.findIndex(el => {
+            return el.meth == cr.meth && !el.done;
+          });
+          if (idx >= 0) {
+            this._credentials[idx].done = true;
+          }
+        }
+      });
+    } else {
+      this._credentials = creds;
+    }
+    if (this.onCredsUpdated) {
+      this.onCredsUpdated(this._credentials);
+    }
+  }
+  _routePres(pres) {
+    if (pres.what == 'term') {
+      this._resetSub();
+      return;
+    }
+    if (pres.what == 'upd' && pres.src == _config_js__WEBPACK_IMPORTED_MODULE_1__.TOPIC_ME) {
+      this.getMeta(this.startMetaQuery().withDesc().build());
+      return;
+    }
+    const cont = this._tinode.cacheGetTopic(pres.src);
+    if (cont) {
+      switch (pres.what) {
+        case 'on':
+          cont.online = true;
+          break;
+        case 'off':
+          if (cont.online) {
+            cont.online = false;
+            cont.seen = Object.assign(cont.seen || {}, {
+              when: new Date()
+            });
+          }
+          break;
+        case 'msg':
+          cont._updateReceived(pres.seq, pres.act);
+          break;
+        case 'upd':
+          this.getMeta(this.startMetaQuery().withLaterOneSub(pres.src).build());
+          break;
+        case 'acs':
+          if (cont.acs) {
+            cont.acs.updateAll(pres.dacs);
+          } else {
+            cont.acs = new _access_mode_js__WEBPACK_IMPORTED_MODULE_0__["default"]().updateAll(pres.dacs);
+          }
+          cont.touched = new Date();
+          break;
+        case 'ua':
+          cont.seen = {
+            when: new Date(),
+            ua: pres.ua
+          };
+          break;
+        case 'recv':
+          pres.seq = pres.seq | 0;
+          cont.recv = cont.recv ? Math.max(cont.recv, pres.seq) : pres.seq;
+          break;
+        case 'read':
+          pres.seq = pres.seq | 0;
+          cont.read = cont.read ? Math.max(cont.read, pres.seq) : pres.seq;
+          cont.recv = cont.recv ? Math.max(cont.read, cont.recv) : cont.recv;
+          cont.unread = cont.seq - cont.read;
+          break;
+        case 'gone':
+          if (!cont._deleted) {
+            cont._deleted = true;
+            cont._attached = false;
+            this._tinode._db.markTopicAsDeleted(pres.src);
+          } else {
+            this._tinode._db.remTopic(pres.src);
+          }
+          break;
+        case 'del':
+          break;
+        default:
+          this._tinode.logger("INFO: Unsupported presence update in 'me'", pres.what);
+      }
+      this._refreshContact(pres.what, cont);
+    } else {
+      if (pres.what == 'acs') {
+        const acs = new _access_mode_js__WEBPACK_IMPORTED_MODULE_0__["default"](pres.dacs);
+        if (!acs || acs.mode == _access_mode_js__WEBPACK_IMPORTED_MODULE_0__["default"]._INVALID) {
+          this._tinode.logger("ERROR: Invalid access mode update", pres.src, pres.dacs);
+          return;
+        } else if (acs.mode == _access_mode_js__WEBPACK_IMPORTED_MODULE_0__["default"]._NONE) {
+          this._tinode.logger("WARNING: Removing non-existent subscription", pres.src, pres.dacs);
+          return;
+        } else {
+          this.getMeta(this.startMetaQuery().withOneSub(undefined, pres.src).build());
+          const dummy = this._tinode.getTopic(pres.src);
+          dummy.topic = pres.src;
+          dummy.online = false;
+          dummy.acs = acs;
+          this._tinode._db.updTopic(dummy);
+        }
+      } else if (pres.what == 'tags') {
+        this.getMeta(this.startMetaQuery().withTags().build());
+      }
+    }
+    if (this.onPres) {
+      this.onPres(pres);
+    }
+  }
+  _refreshContact(what, cont) {
+    if (this.onContactUpdate) {
+      this.onContactUpdate(what, cont);
+    }
+  }
+  publish() {
+    return Promise.reject(new Error("Publishing to 'me' is not supported"));
+  }
+  delCredential(method, value) {
+    if (!this._attached) {
+      return Promise.reject(new Error("Cannot delete credential in inactive 'me' topic"));
+    }
+    return this._tinode.delCredential(method, value).then(ctrl => {
+      const index = this._credentials.findIndex(el => {
+        return el.meth == method && el.val == value;
+      });
+      if (index > -1) {
+        this._credentials.splice(index, 1);
+      }
+      if (this.onCredsUpdated) {
+        this.onCredsUpdated(this._credentials);
+      }
+      return ctrl;
+    });
+  }
+  contacts(callback, filter, context) {
+    this._tinode.mapTopics((c, idx) => {
+      if (c.isCommType() && (!filter || filter(c))) {
+        callback.call(context, c, idx);
+      }
+    });
+  }
+  getContact(name) {
+    return this._tinode.cacheGetTopic(name);
+  }
+  getAccessMode(name) {
+    if (name) {
+      const cont = this._tinode.cacheGetTopic(name);
+      return cont ? cont.acs : null;
+    }
+    return this.acs;
+  }
+  isArchived(name) {
+    const cont = this._tinode.cacheGetTopic(name);
+    return cont && cont.private && !!cont.private.arch;
+  }
+  getCredentials() {
+    return this._credentials;
+  }
+}
+
+/***/ }),
+
 /***/ "./src/meta-builder.js":
 /*!*****************************!*\
   !*** ./src/meta-builder.js ***!
@@ -3159,6 +3528,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ MetaGetBuilder)
 /* harmony export */ });
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils */ "./src/utils.js");
+
+
 
 class MetaGetBuilder {
   constructor(parent) {
@@ -3184,6 +3556,15 @@ class MetaGetBuilder {
   }
   withLaterData(limit) {
     return this.withData(this.topic._maxSeq > 0 ? this.topic._maxSeq + 1 : undefined, undefined, limit);
+  }
+  withDataRanges(ranges) {
+    this.what['data'] = {
+      ranges: (0,_utils__WEBPACK_IMPORTED_MODULE_0__.normalizeRanges)(ranges, this.topic._maxSeq)
+    };
+    return this;
+  }
+  withDataList(list) {
+    return this.withDataRanges((0,_utils__WEBPACK_IMPORTED_MODULE_0__.listToRanges)(list));
   }
   withEarlierData(limit) {
     return this.withData(undefined, this.topic._minSeq > 0 ? this.topic._minSeq : undefined, limit);
@@ -3280,9 +3661,7 @@ class MetaGetBuilder {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Topic": () => (/* binding */ Topic),
-/* harmony export */   "TopicFnd": () => (/* binding */ TopicFnd),
-/* harmony export */   "TopicMe": () => (/* binding */ TopicMe)
+/* harmony export */   "default": () => (/* binding */ Topic)
 /* harmony export */ });
 /* harmony import */ var _access_mode_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./access-mode.js */ "./src/access-mode.js");
 /* harmony import */ var _cbuffer_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./cbuffer.js */ "./src/cbuffer.js");
@@ -3550,6 +3929,35 @@ class Topic {
       return promise;
     });
   }
+  getPinnedMessages() {
+    const pins = this.aux('pins');
+    if (!Array.isArray(pins)) {
+      return Promise.resolve(0);
+    }
+    const loaded = [];
+    return this._tinode._db.readMessages(this.name, {
+      ranges: (0,_utils_js__WEBPACK_IMPORTED_MODULE_6__.listToRanges)(pins)
+    }).then(msgs => {
+      msgs.forEach(data => {
+        loaded.push(data.seq);
+        this._messages.put(data);
+        this._maybeUpdateMessageVersionsCache(data);
+      });
+      return msgs.length;
+    }).then(count => {
+      if (count == pins.length) {
+        return Promise.resolve({
+          topic: this.name,
+          code: 200,
+          params: {
+            count: count
+          }
+        });
+      }
+      const remains = pins.filter(seq => !loaded.includes(seq));
+      return this.getMeta(this.startMetaQuery().withDataList(remains).build());
+    });
+  }
   setMeta(params) {
     if (params.tags) {
       params.tags = (0,_utils_js__WEBPACK_IMPORTED_MODULE_6__.normalizeArray)(params.tags);
@@ -3658,28 +4066,7 @@ class Topic {
     if (!this._attached) {
       return Promise.reject(new Error("Cannot delete messages in inactive topic"));
     }
-    ranges.sort((r1, r2) => {
-      if (r1.low < r2.low) {
-        return true;
-      }
-      if (r1.low == r2.low) {
-        return !r2.hi || r1.hi >= r2.hi;
-      }
-      return false;
-    });
-    let tosend = ranges.reduce((out, r) => {
-      if (r.low < _config_js__WEBPACK_IMPORTED_MODULE_3__.LOCAL_SEQID) {
-        if (!r.hi || r.hi < _config_js__WEBPACK_IMPORTED_MODULE_3__.LOCAL_SEQID) {
-          out.push(r);
-        } else {
-          out.push({
-            low: r.low,
-            hi: this._maxSeq + 1
-          });
-        }
-      }
-      return out;
-    }, []);
+    const tosend = (0,_utils_js__WEBPACK_IMPORTED_MODULE_6__.normalizeRanges)(ranges, this._maxSeq);
     let result;
     if (tosend.length > 0) {
       result = this._tinode.delMessages(this.name, tosend, hard);
@@ -3692,7 +4079,8 @@ class Topic {
     }
     return result.then(ctrl => {
       if (ctrl.params.del > this._maxDel) {
-        this._maxDel = ctrl.params.del;
+        this._maxDel = Math.max(ctrl.params.del, this._maxDel);
+        this.clear = Math.max(ctrl.params.del, this.clear);
       }
       ranges.forEach(r => {
         if (r.hi) {
@@ -3718,25 +4106,7 @@ class Topic {
     }], hardDel);
   }
   delMessagesList(list, hardDel) {
-    list.sort((a, b) => a - b);
-    let ranges = list.reduce((out, id) => {
-      if (out.length == 0) {
-        out.push({
-          low: id
-        });
-      } else {
-        let prev = out[out.length - 1];
-        if (!prev.hi && id != prev.low + 1 || id > prev.hi) {
-          out.push({
-            low: id
-          });
-        } else {
-          prev.hi = prev.hi ? Math.max(prev.hi, id + 1) : id + 1;
-        }
-      }
-      return out;
-    }, []);
-    return this.delMessages(ranges, hardDel);
+    return this.delMessages((0,_utils_js__WEBPACK_IMPORTED_MODULE_6__.listToRanges)(list), hardDel);
   }
   delMessagesEdits(seq, hardDel) {
     const list = [seq];
@@ -4354,18 +4724,15 @@ class Topic {
   _processDelMessages(clear, delseq) {
     this._maxDel = Math.max(clear, this._maxDel);
     this.clear = Math.max(clear, this.clear);
-    const topic = this;
     let count = 0;
     if (Array.isArray(delseq)) {
       delseq.forEach(range => {
         if (!range.hi) {
           count++;
-          topic.flushMessage(range.low);
+          this.flushMessage(range.low);
         } else {
-          for (let i = range.low; i < range.hi; i++) {
-            count++;
-            topic.flushMessage(i);
-          }
+          count += range.hi - range.low;
+          this.flushMessageRange(range.low, range.hi);
         }
       });
     }
@@ -4451,307 +4818,6 @@ class Topic {
     this._tinode._db.updTopic(this);
   }
 }
-class TopicMe extends Topic {
-  onContactUpdate;
-  constructor(callbacks) {
-    super(_config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_ME, callbacks);
-    if (callbacks) {
-      this.onContactUpdate = callbacks.onContactUpdate;
-    }
-  }
-  _processMetaDesc(desc) {
-    const turnOff = desc.acs && !desc.acs.isPresencer() && this.acs && this.acs.isPresencer();
-    (0,_utils_js__WEBPACK_IMPORTED_MODULE_6__.mergeObj)(this, desc);
-    this._tinode._db.updTopic(this);
-    this._updateCachedUser(this._tinode._myUID, desc);
-    if (turnOff) {
-      this._tinode.mapTopics(cont => {
-        if (cont.online) {
-          cont.online = false;
-          cont.seen = Object.assign(cont.seen || {}, {
-            when: new Date()
-          });
-          this._refreshContact('off', cont);
-        }
-      });
-    }
-    if (this.onMetaDesc) {
-      this.onMetaDesc(this);
-    }
-  }
-  _processMetaSub(subs) {
-    let updateCount = 0;
-    subs.forEach(sub => {
-      const topicName = sub.topic;
-      if (topicName == _config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_FND || topicName == _config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_ME) {
-        return;
-      }
-      sub.online = !!sub.online;
-      let cont = null;
-      if (sub.deleted) {
-        cont = sub;
-        this._tinode.cacheRemTopic(topicName);
-        this._tinode._db.remTopic(topicName);
-      } else {
-        if (typeof sub.seq != 'undefined') {
-          sub.seq = sub.seq | 0;
-          sub.recv = sub.recv | 0;
-          sub.read = sub.read | 0;
-          sub.unread = sub.seq - sub.read;
-        }
-        const topic = this._tinode.getTopic(topicName);
-        if (topic._new) {
-          delete topic._new;
-        }
-        cont = (0,_utils_js__WEBPACK_IMPORTED_MODULE_6__.mergeObj)(topic, sub);
-        this._tinode._db.updTopic(cont);
-        if (Topic.isP2PTopicName(topicName)) {
-          this._cachePutUser(topicName, cont);
-          this._tinode._db.updUser(topicName, cont.public);
-        }
-        if (!sub._noForwarding && topic) {
-          sub._noForwarding = true;
-          topic._processMetaDesc(sub);
-        }
-      }
-      updateCount++;
-      if (this.onMetaSub) {
-        this.onMetaSub(cont);
-      }
-    });
-    if (this.onSubsUpdated && updateCount > 0) {
-      const keys = [];
-      subs.forEach(s => {
-        keys.push(s.topic);
-      });
-      this.onSubsUpdated(keys, updateCount);
-    }
-  }
-  _processMetaCreds(creds, upd) {
-    if (creds.length == 1 && creds[0] == _config_js__WEBPACK_IMPORTED_MODULE_3__.DEL_CHAR) {
-      creds = [];
-    }
-    if (upd) {
-      creds.forEach(cr => {
-        if (cr.val) {
-          let idx = this._credentials.findIndex(el => {
-            return el.meth == cr.meth && el.val == cr.val;
-          });
-          if (idx < 0) {
-            if (!cr.done) {
-              idx = this._credentials.findIndex(el => {
-                return el.meth == cr.meth && !el.done;
-              });
-              if (idx >= 0) {
-                this._credentials.splice(idx, 1);
-              }
-            }
-            this._credentials.push(cr);
-          } else {
-            this._credentials[idx].done = cr.done;
-          }
-        } else if (cr.resp) {
-          const idx = this._credentials.findIndex(el => {
-            return el.meth == cr.meth && !el.done;
-          });
-          if (idx >= 0) {
-            this._credentials[idx].done = true;
-          }
-        }
-      });
-    } else {
-      this._credentials = creds;
-    }
-    if (this.onCredsUpdated) {
-      this.onCredsUpdated(this._credentials);
-    }
-  }
-  _routePres(pres) {
-    if (pres.what == 'term') {
-      this._resetSub();
-      return;
-    }
-    if (pres.what == 'upd' && pres.src == _config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_ME) {
-      this.getMeta(this.startMetaQuery().withDesc().build());
-      return;
-    }
-    const cont = this._tinode.cacheGetTopic(pres.src);
-    if (cont) {
-      switch (pres.what) {
-        case 'on':
-          cont.online = true;
-          break;
-        case 'off':
-          if (cont.online) {
-            cont.online = false;
-            cont.seen = Object.assign(cont.seen || {}, {
-              when: new Date()
-            });
-          }
-          break;
-        case 'msg':
-          cont._updateReceived(pres.seq, pres.act);
-          break;
-        case 'upd':
-          this.getMeta(this.startMetaQuery().withLaterOneSub(pres.src).build());
-          break;
-        case 'acs':
-          if (cont.acs) {
-            cont.acs.updateAll(pres.dacs);
-          } else {
-            cont.acs = new _access_mode_js__WEBPACK_IMPORTED_MODULE_0__["default"]().updateAll(pres.dacs);
-          }
-          cont.touched = new Date();
-          break;
-        case 'ua':
-          cont.seen = {
-            when: new Date(),
-            ua: pres.ua
-          };
-          break;
-        case 'recv':
-          pres.seq = pres.seq | 0;
-          cont.recv = cont.recv ? Math.max(cont.recv, pres.seq) : pres.seq;
-          break;
-        case 'read':
-          pres.seq = pres.seq | 0;
-          cont.read = cont.read ? Math.max(cont.read, pres.seq) : pres.seq;
-          cont.recv = cont.recv ? Math.max(cont.read, cont.recv) : cont.recv;
-          cont.unread = cont.seq - cont.read;
-          break;
-        case 'gone':
-          if (!cont._deleted) {
-            cont._deleted = true;
-            cont._attached = false;
-            this._tinode._db.markTopicAsDeleted(pres.src);
-          } else {
-            this._tinode._db.remTopic(pres.src);
-          }
-          break;
-        case 'del':
-          break;
-        default:
-          this._tinode.logger("INFO: Unsupported presence update in 'me'", pres.what);
-      }
-      this._refreshContact(pres.what, cont);
-    } else {
-      if (pres.what == 'acs') {
-        const acs = new _access_mode_js__WEBPACK_IMPORTED_MODULE_0__["default"](pres.dacs);
-        if (!acs || acs.mode == _access_mode_js__WEBPACK_IMPORTED_MODULE_0__["default"]._INVALID) {
-          this._tinode.logger("ERROR: Invalid access mode update", pres.src, pres.dacs);
-          return;
-        } else if (acs.mode == _access_mode_js__WEBPACK_IMPORTED_MODULE_0__["default"]._NONE) {
-          this._tinode.logger("WARNING: Removing non-existent subscription", pres.src, pres.dacs);
-          return;
-        } else {
-          this.getMeta(this.startMetaQuery().withOneSub(undefined, pres.src).build());
-          const dummy = this._tinode.getTopic(pres.src);
-          dummy.topic = pres.src;
-          dummy.online = false;
-          dummy.acs = acs;
-          this._tinode._db.updTopic(dummy);
-        }
-      } else if (pres.what == 'tags') {
-        this.getMeta(this.startMetaQuery().withTags().build());
-      }
-    }
-    if (this.onPres) {
-      this.onPres(pres);
-    }
-  }
-  _refreshContact(what, cont) {
-    if (this.onContactUpdate) {
-      this.onContactUpdate(what, cont);
-    }
-  }
-  publish() {
-    return Promise.reject(new Error("Publishing to 'me' is not supported"));
-  }
-  delCredential(method, value) {
-    if (!this._attached) {
-      return Promise.reject(new Error("Cannot delete credential in inactive 'me' topic"));
-    }
-    return this._tinode.delCredential(method, value).then(ctrl => {
-      const index = this._credentials.findIndex(el => {
-        return el.meth == method && el.val == value;
-      });
-      if (index > -1) {
-        this._credentials.splice(index, 1);
-      }
-      if (this.onCredsUpdated) {
-        this.onCredsUpdated(this._credentials);
-      }
-      return ctrl;
-    });
-  }
-  contacts(callback, filter, context) {
-    this._tinode.mapTopics((c, idx) => {
-      if (c.isCommType() && (!filter || filter(c))) {
-        callback.call(context, c, idx);
-      }
-    });
-  }
-  getContact(name) {
-    return this._tinode.cacheGetTopic(name);
-  }
-  getAccessMode(name) {
-    if (name) {
-      const cont = this._tinode.cacheGetTopic(name);
-      return cont ? cont.acs : null;
-    }
-    return this.acs;
-  }
-  isArchived(name) {
-    const cont = this._tinode.cacheGetTopic(name);
-    return cont && cont.private && !!cont.private.arch;
-  }
-  getCredentials() {
-    return this._credentials;
-  }
-}
-class TopicFnd extends Topic {
-  _contacts = {};
-  constructor(callbacks) {
-    super(_config_js__WEBPACK_IMPORTED_MODULE_3__.TOPIC_FND, callbacks);
-  }
-  _processMetaSub(subs) {
-    let updateCount = Object.getOwnPropertyNames(this._contacts).length;
-    this._contacts = {};
-    for (let idx in subs) {
-      let sub = subs[idx];
-      const indexBy = sub.topic ? sub.topic : sub.user;
-      sub = (0,_utils_js__WEBPACK_IMPORTED_MODULE_6__.mergeToCache)(this._contacts, indexBy, sub);
-      updateCount++;
-      if (this.onMetaSub) {
-        this.onMetaSub(sub);
-      }
-    }
-    if (updateCount > 0 && this.onSubsUpdated) {
-      this.onSubsUpdated(Object.keys(this._contacts));
-    }
-  }
-  publish() {
-    return Promise.reject(new Error("Publishing to 'fnd' is not supported"));
-  }
-  setMeta(params) {
-    return Object.getPrototypeOf(TopicFnd.prototype).setMeta.call(this, params).then(_ => {
-      if (Object.keys(this._contacts).length > 0) {
-        this._contacts = {};
-        if (this.onSubsUpdated) {
-          this.onSubsUpdated([]);
-        }
-      }
-    });
-  }
-  contacts(callback, context) {
-    const cb = callback || this.onMetaSub;
-    if (cb) {
-      for (let idx in this._contacts) {
-        cb.call(context, this._contacts[idx], idx, this._contacts);
-      }
-    }
-  }
-}
 
 /***/ }),
 
@@ -4765,9 +4831,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "isUrlRelative": () => (/* binding */ isUrlRelative),
 /* harmony export */   "jsonParseHelper": () => (/* binding */ jsonParseHelper),
+/* harmony export */   "listToRanges": () => (/* binding */ listToRanges),
 /* harmony export */   "mergeObj": () => (/* binding */ mergeObj),
 /* harmony export */   "mergeToCache": () => (/* binding */ mergeToCache),
 /* harmony export */   "normalizeArray": () => (/* binding */ normalizeArray),
+/* harmony export */   "normalizeRanges": () => (/* binding */ normalizeRanges),
 /* harmony export */   "rfc3339DateString": () => (/* binding */ rfc3339DateString),
 /* harmony export */   "simplify": () => (/* binding */ simplify)
 /* harmony export */ });
@@ -4888,6 +4956,53 @@ function normalizeArray(arr) {
   }
   return out;
 }
+function normalizeRanges(ranges, maxSeq) {
+  if (!Array.isArray(ranges)) {
+    return [];
+  }
+  ranges.sort((r1, r2) => {
+    if (r1.low < r2.low) {
+      return true;
+    }
+    if (r1.low == r2.low) {
+      return !r2.hi || r1.hi >= r2.hi;
+    }
+    return false;
+  });
+  return ranges.reduce((out, r) => {
+    if (r.low < _config_js__WEBPACK_IMPORTED_MODULE_1__.LOCAL_SEQID && r.low > 0) {
+      if (!r.hi || r.hi < _config_js__WEBPACK_IMPORTED_MODULE_1__.LOCAL_SEQID) {
+        out.push(r);
+      } else {
+        out.push({
+          low: r.low,
+          hi: maxSeq + 1
+        });
+      }
+    }
+    return out;
+  }, []);
+}
+function listToRanges(list) {
+  list.sort((a, b) => a - b);
+  return list.reduce((out, id) => {
+    if (out.length == 0) {
+      out.push({
+        low: id
+      });
+    } else {
+      let prev = out[out.length - 1];
+      if (!prev.hi && id != prev.low + 1 || id > prev.hi) {
+        out.push({
+          low: id
+        });
+      } else {
+        prev.hi = prev.hi ? Math.max(prev.hi, id + 1) : id + 1;
+      }
+    }
+    return out;
+  }, []);
+}
 
 /***/ }),
 
@@ -5007,7 +5122,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _large_file_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./large-file.js */ "./src/large-file.js");
 /* harmony import */ var _meta_builder_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./meta-builder.js */ "./src/meta-builder.js");
 /* harmony import */ var _topic_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./topic.js */ "./src/topic.js");
-/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./utils.js */ "./src/utils.js");
+/* harmony import */ var _fnd_topic_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./fnd-topic.js */ "./src/fnd-topic.js");
+/* harmony import */ var _me_topic_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./me-topic.js */ "./src/me-topic.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./utils.js */ "./src/utils.js");
 /**
  * @module tinode-sdk
  *
@@ -5052,6 +5169,8 @@ __webpack_require__.r(__webpack_exports__);
  * </script>
  * </body>
  */
+
+
 
 
 
@@ -5142,7 +5261,7 @@ function b64EncodeUnicode(str) {
 }
 function jsonBuildHelper(key, val) {
   if (val instanceof Date) {
-    val = (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.rfc3339DateString)(val);
+    val = (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.rfc3339DateString)(val);
   } else if (val instanceof _access_mode_js__WEBPACK_IMPORTED_MODULE_0__["default"]) {
     val = val.jsonHelper();
   } else if (val === undefined || val === null || val === false || Array.isArray(val) && val.length == 0 || typeof val == 'object' && Object.keys(val).length == 0) {
@@ -5287,11 +5406,11 @@ class Tinode {
             return;
           }
           if (data.name == _config_js__WEBPACK_IMPORTED_MODULE_1__.TOPIC_ME) {
-            topic = new _topic_js__WEBPACK_IMPORTED_MODULE_8__.TopicMe();
+            topic = new _me_topic_js__WEBPACK_IMPORTED_MODULE_10__["default"]();
           } else if (data.name == _config_js__WEBPACK_IMPORTED_MODULE_1__.TOPIC_FND) {
-            topic = new _topic_js__WEBPACK_IMPORTED_MODULE_8__.TopicFnd();
+            topic = new _fnd_topic_js__WEBPACK_IMPORTED_MODULE_9__["default"]();
           } else {
-            topic = new _topic_js__WEBPACK_IMPORTED_MODULE_8__.Topic(data.name);
+            topic = new _topic_js__WEBPACK_IMPORTED_MODULE_8__["default"](data.name);
           }
           this._db.deserializeTopic(topic, data);
           this.#attachCacheToTopic(topic);
@@ -5301,7 +5420,7 @@ class Tinode {
         });
       }).then(_ => {
         return this._db.mapUsers(data => {
-          this.#cachePut('user', data.uid, (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.mergeObj)({}, data.public));
+          this.#cachePut('user', data.uid, (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.mergeObj)({}, data.public));
         });
       }).then(_ => {
         return Promise.all(prom);
@@ -5365,7 +5484,7 @@ class Tinode {
     if (id) {
       promise = this.#makePromise(id);
     }
-    pkt = (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.simplify)(pkt);
+    pkt = (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.simplify)(pkt);
     let msg = JSON.stringify(pkt);
     this.logger("out: " + (this._trimLongStrings ? JSON.stringify(pkt, jsonLoggerHelper) : msg));
     try {
@@ -5391,7 +5510,7 @@ class Tinode {
       }
       return;
     }
-    let pkt = JSON.parse(data, _utils_js__WEBPACK_IMPORTED_MODULE_9__.jsonParseHelper);
+    let pkt = JSON.parse(data, _utils_js__WEBPACK_IMPORTED_MODULE_11__.jsonParseHelper);
     if (!pkt) {
       this.logger("in: " + data);
       this.logger("ERROR: failed to parse data");
@@ -5652,13 +5771,13 @@ class Tinode {
       if (pub) {
         return {
           user: uid,
-          public: (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.mergeObj)({}, pub)
+          public: (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.mergeObj)({}, pub)
         };
       }
       return undefined;
     };
     topic._cachePutUser = (uid, user) => {
-      this.#cachePut('user', uid, (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.mergeObj)({}, user.public));
+      this.#cachePut('user', uid, (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.mergeObj)({}, user.public));
     };
     topic._cacheDelUser = uid => {
       this.#cacheDel('user', uid);
@@ -5709,25 +5828,25 @@ class Tinode {
     return null;
   }
   static topicType(name) {
-    return _topic_js__WEBPACK_IMPORTED_MODULE_8__.Topic.topicType(name);
+    return _topic_js__WEBPACK_IMPORTED_MODULE_8__["default"].topicType(name);
   }
   static isMeTopicName(name) {
-    return _topic_js__WEBPACK_IMPORTED_MODULE_8__.Topic.isMeTopicName(name);
+    return _topic_js__WEBPACK_IMPORTED_MODULE_8__["default"].isMeTopicName(name);
   }
   static isGroupTopicName(name) {
-    return _topic_js__WEBPACK_IMPORTED_MODULE_8__.Topic.isGroupTopicName(name);
+    return _topic_js__WEBPACK_IMPORTED_MODULE_8__["default"].isGroupTopicName(name);
   }
   static isP2PTopicName(name) {
-    return _topic_js__WEBPACK_IMPORTED_MODULE_8__.Topic.isP2PTopicName(name);
+    return _topic_js__WEBPACK_IMPORTED_MODULE_8__["default"].isP2PTopicName(name);
   }
   static isCommTopicName(name) {
-    return _topic_js__WEBPACK_IMPORTED_MODULE_8__.Topic.isCommTopicName(name);
+    return _topic_js__WEBPACK_IMPORTED_MODULE_8__["default"].isCommTopicName(name);
   }
   static isNewGroupTopicName(name) {
-    return _topic_js__WEBPACK_IMPORTED_MODULE_8__.Topic.isNewGroupTopicName(name);
+    return _topic_js__WEBPACK_IMPORTED_MODULE_8__["default"].isNewGroupTopicName(name);
   }
   static isChannelTopicName(name) {
-    return _topic_js__WEBPACK_IMPORTED_MODULE_8__.Topic.isChannelTopicName(name);
+    return _topic_js__WEBPACK_IMPORTED_MODULE_8__["default"].isChannelTopicName(name);
   }
   static getVersion() {
     return _config_js__WEBPACK_IMPORTED_MODULE_1__.VERSION;
@@ -5785,7 +5904,7 @@ class Tinode {
     if (typeof url != 'string') {
       return url;
     }
-    if ((0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.isUrlRelative)(url)) {
+    if ((0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.isUrlRelative)(url)) {
       const base = 'scheme://host/';
       const parsed = new URL(url, base);
       if (this._apiKey) {
@@ -5816,7 +5935,7 @@ class Tinode {
       pkt.acc.tmpsecret = params.secret;
       if (Array.isArray(params.attachments) && params.attachments.length > 0) {
         pkt.extra = {
-          attachments: params.attachments.filter(ref => (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.isUrlRelative)(ref))
+          attachments: params.attachments.filter(ref => (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.isUrlRelative)(ref))
         };
       }
     }
@@ -5925,7 +6044,7 @@ class Tinode {
       }
       if (Array.isArray(setParams.attachments) && setParams.attachments.length > 0) {
         pkt.extra = {
-          attachments: setParams.attachments.filter(ref => (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.isUrlRelative)(ref))
+          attachments: setParams.attachments.filter(ref => (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.isUrlRelative)(ref))
         };
       }
       if (setParams.tags) {
@@ -5968,7 +6087,7 @@ class Tinode {
     };
     if (attachments) {
       msg.extra = {
-        attachments: attachments.filter(ref => (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.isUrlRelative)(ref))
+        attachments: attachments.filter(ref => (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.isUrlRelative)(ref))
       };
     }
     return this.#send(msg, pub.id);
@@ -6041,7 +6160,7 @@ class Tinode {
   }
   getMeta(topic, params) {
     const pkt = this.#initPacket('get', topic);
-    pkt.get = (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.mergeObj)(pkt.get, params);
+    pkt.get = (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.mergeObj)(pkt.get, params);
     return this.#send(pkt, pkt.get.id);
   }
   setMeta(topic, params) {
@@ -6056,7 +6175,7 @@ class Tinode {
       });
       if (Array.isArray(params.attachments) && params.attachments.length > 0) {
         pkt.extra = {
-          attachments: params.attachments.filter(ref => (0,_utils_js__WEBPACK_IMPORTED_MODULE_9__.isUrlRelative)(ref))
+          attachments: params.attachments.filter(ref => (0,_utils_js__WEBPACK_IMPORTED_MODULE_11__.isUrlRelative)(ref))
         };
       }
     }
@@ -6127,11 +6246,11 @@ class Tinode {
     let topic = this.#cacheGet('topic', topicName);
     if (!topic && topicName) {
       if (topicName == _config_js__WEBPACK_IMPORTED_MODULE_1__.TOPIC_ME) {
-        topic = new _topic_js__WEBPACK_IMPORTED_MODULE_8__.TopicMe();
+        topic = new _me_topic_js__WEBPACK_IMPORTED_MODULE_10__["default"]();
       } else if (topicName == _config_js__WEBPACK_IMPORTED_MODULE_1__.TOPIC_FND) {
-        topic = new _topic_js__WEBPACK_IMPORTED_MODULE_8__.TopicFnd();
+        topic = new _fnd_topic_js__WEBPACK_IMPORTED_MODULE_9__["default"]();
       } else {
-        topic = new _topic_js__WEBPACK_IMPORTED_MODULE_8__.Topic(topicName);
+        topic = new _topic_js__WEBPACK_IMPORTED_MODULE_8__["default"](topicName);
       }
       this.#attachCacheToTopic(topic);
       topic._cachePutSelf();

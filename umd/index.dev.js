@@ -5715,6 +5715,8 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
     if (count > 0) {
       this.postReadNotification(0);
     }
+    const topic = this.props.tinode.getTopic(this.state.topic);
+    topic.getPinnedMessages();
   }
   handleAuxUpdate(aux) {
     const pins = (aux['pins'] || []).slice();
@@ -6337,7 +6339,7 @@ class MessagesView extends (react__WEBPACK_IMPORTED_MODULE_0___default().Compone
           }
         }
         const pinnedMessages = [];
-        this.state.pins.forEach(seq => pinnedMessages.push(topic.latestMsgVersion(seq)));
+        this.state.pins.forEach(seq => pinnedMessages.push(topic.latestMsgVersion(seq) || topic.findMessage(seq)));
         const messageNodes = [];
         let previousFrom = null;
         let prevDate = null;
